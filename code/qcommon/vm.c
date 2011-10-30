@@ -479,26 +479,22 @@ vmHeader_t *VM_LoadQVM( vm_t *vm, qboolean alloc, qboolean unpure)
 		*(int *)(vm->dataBase + i) = LittleLong( *(int *)(vm->dataBase + i ) );
 	}
 
-	if(header.h->vmMagic == VM_MAGIC_VER2)
-	{
-		Com_Printf("Loading %d jump table targets\n", vm->numJumpTableTargets);
+	if(header.h->vmMagic == VM_MAGIC_VER2) {
+        int prevNumJumpTableTargets = vm->numJumpTableTargets;
 
 		header.h->jtrgLength &= ~0x03;
+        vm->numJumpTableTargets = header.h->jtrgLength >> 2;
+        Com_Printf("Loading %d jump table targets\n", vm->numJumpTableTargets);
 
-		if(alloc)
-		{
+		if(alloc) {
 			vm->jumpTableTargets = Hunk_Alloc(header.h->jtrgLength, h_high);
-			vm->numJumpTableTargets = header.h->jtrgLength >> 2;
-		}
-		else
-		{
-			if((header.h->jtrgLength >> 2) != vm->numJumpTableTargets)
-			{
+		} else {
+            if (vm->numJumpTableTargets != prevNumJumpTableTargets) {
 				VM_Free(vm);
 				FS_FreeFile(header.v);
 
 				Com_Printf(S_COLOR_YELLOW "Warning: Jump table size of %s not matching after "
-						"VM_Restart()\n", filename);
+			        "VM_Restart()\n", filename);
 				return NULL;
 			}
 
