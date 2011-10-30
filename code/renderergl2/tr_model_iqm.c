@@ -96,7 +96,7 @@ static void Matrix34Invert( float *inMat, float *outMat )
 {
 	vec3_t trans;
 	float invSqrLen, *v;
-
+ 
 	outMat[ 0] = inMat[ 0]; outMat[ 1] = inMat[ 4]; outMat[ 2] = inMat[ 8];
 	outMat[ 4] = inMat[ 1]; outMat[ 5] = inMat[ 5]; outMat[ 6] = inMat[ 9];
 	outMat[ 8] = inMat[ 2]; outMat[ 9] = inMat[ 6]; outMat[10] = inMat[10];
@@ -284,9 +284,9 @@ qboolean R_LoadIQM( model_t *mod, void *buffer, int filesize, const char *mod_na
 		LL( triangle->vertex[1] );
 		LL( triangle->vertex[2] );
 		
-		if( triangle->vertex[0] < 0 || triangle->vertex[0] > header->num_vertexes ||
-		    triangle->vertex[1] < 0 || triangle->vertex[1] > header->num_vertexes ||
-		    triangle->vertex[2] < 0 || triangle->vertex[2] > header->num_vertexes ) {
+		if( triangle->vertex[0] > header->num_vertexes ||
+		    triangle->vertex[1] > header->num_vertexes ||
+		    triangle->vertex[2] > header->num_vertexes ) {
 			return qfalse;
 		}
 	}
@@ -323,9 +323,7 @@ qboolean R_LoadIQM( model_t *mod, void *buffer, int filesize, const char *mod_na
 		    mesh->first_vertex + mesh->num_vertexes > header->num_vertexes ||
 		    mesh->first_triangle >= header->num_triangles ||
 		    mesh->first_triangle + mesh->num_triangles > header->num_triangles ||
-		    mesh->name < 0 ||
 		    mesh->name >= header->num_text ||
-		    mesh->material < 0 ||
 		    mesh->material >= header->num_text ) {
 			return qfalse;
 		}
@@ -354,7 +352,6 @@ qboolean R_LoadIQM( model_t *mod, void *buffer, int filesize, const char *mod_na
 
 		if( joint->parent < -1 ||
 		    joint->parent >= (int)header->num_joints ||
-		    joint->name < 0 ||
 		    joint->name >= (int)header->num_text ) {
 			return qfalse;
 		}
@@ -470,24 +467,24 @@ qboolean R_LoadIQM( model_t *mod, void *buffer, int filesize, const char *mod_na
 	joint = (iqmJoint_t *)((byte *)header + header->ofs_joints);
 	for( i = 0; i < header->num_joints; i++, joint++ ) {
 		float baseFrame[12], invBaseFrame[12];
-
+ 
 		JointToMatrix( joint->rotate, joint->scale, joint->translate, baseFrame );
 		Matrix34Invert( baseFrame, invBaseFrame );
-
+ 
 		if ( joint->parent >= 0 )
 		{
 			Matrix34Multiply( jointMats + 2 * 12 * joint->parent, baseFrame, mat );
 			mat += 12;
 			Matrix34Multiply( invBaseFrame, jointMats + 2 * 12 * joint->parent + 12, mat );
 			mat += 12;
-		}
+ 		}
 		else
 		{
 			Com_Memcpy( mat, baseFrame,    sizeof(baseFrame)    );
 			mat += 12;
 			Com_Memcpy( mat, invBaseFrame, sizeof(invBaseFrame) );
 			mat += 12;
-		}
+ 		}
 	}
 
 	// calculate pose matrices
@@ -844,7 +841,7 @@ void R_AddIQMSurfaces( trRefEntity_t *ent ) {
 			&& fogNum == 0
 			&& !(ent->e.renderfx & ( RF_NOSHADOW | RF_DEPTHHACK ) ) 
 			&& shader->sort == SS_OPAQUE ) {
-			R_AddDrawSurf( (void *)surface, tr.shadowShader, 0, 0 );
+			R_AddDrawSurf( (void *)surface, tr.shadowShader, 0, 0, 0 );
 		}
 
 		// projection shadows work fine with personal models
@@ -852,11 +849,11 @@ void R_AddIQMSurfaces( trRefEntity_t *ent ) {
 			&& fogNum == 0
 			&& (ent->e.renderfx & RF_SHADOW_PLANE )
 			&& shader->sort == SS_OPAQUE ) {
-			R_AddDrawSurf( (void *)surface, tr.projectionShadowShader, 0, 0 );
+			R_AddDrawSurf( (void *)surface, tr.projectionShadowShader, 0, 0, 0 );
 		}
 
 		if( !personalModel ) {
-			R_AddDrawSurf( (void *)surface, shader, fogNum, 0 );
+			R_AddDrawSurf( (void *)surface, shader, fogNum, 0, 0 );
 		}
 
 		surface++;

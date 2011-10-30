@@ -125,18 +125,71 @@ static	void R_ColorShiftLightingBytes( byte in[4], byte out[4] ) {
 	out[3] = in[3];
 }
 
+void ColorToRGBE(const vec3_t color, unsigned char rgbe[4])
+{
+	vec3_t          sample;
+	float			maxComponent;
+	int				e;
+
+	VectorCopy(color, sample);
+
+	maxComponent = sample[0];
+	if(sample[1] > maxComponent)
+		maxComponent = sample[1];
+	if(sample[2] > maxComponent)
+		maxComponent = sample[2];
+
+	if(maxComponent < 1e-32)
+	{
+		rgbe[0] = 0;
+		rgbe[1] = 0;
+		rgbe[2] = 0;
+		rgbe[3] = 0;
+	}
+	else
+	{
+#if 0
+		maxComponent = frexp(maxComponent, &e) * 255.0 / maxComponent;
+		rgbe[0] = (unsigned char) (sample[0] * maxComponent);
+		rgbe[1] = (unsigned char) (sample[1] * maxComponent);
+		rgbe[2] = (unsigned char) (sample[2] * maxComponent);
+		rgbe[3] = (unsigned char) (e + 128);
+#else
+		e = ceil(log(maxComponent) / log(2.0f));//ceil(log2(maxComponent));
+		VectorScale(sample, 1.0 / pow(2.0f, e)/*exp2(e)*/, sample);
+
+		rgbe[0] = (unsigned char) (sample[0] * 255);
+		rgbe[1] = (unsigned char) (sample[1] * 255);
+		rgbe[2] = (unsigned char) (sample[2] * 255);
+		rgbe[3] = (unsigned char) (e + 128);
+#endif
+	}
+}
+
+
+void ColorToRGBA16F(const vec3_t color, unsigned short rgba16f[4])
+{
+	rgba16f[0] = FloatToHalf(color[0]);
+	rgba16f[1] = FloatToHalf(color[1]);
+	rgba16f[2] = FloatToHalf(color[2]);
+	rgba16f[3] = FloatToHalf(1.0f);
+}
+
+
 /*
 ===============
 R_LoadLightmaps
 
 ===============
 */
-#define	LIGHTMAP_SIZE	128
-static	void R_LoadLightmaps( lump_t *l ) {
+#define	DEFAULT_LIGHTMAP_SIZE	128
+#define MAX_LIGHTMAP_PAGES 2
+static	void R_LoadLightmaps( lump_t *l, lump_t *surfs ) {
 	byte		*buf, *buf_p;
+	dsurface_t  *surf;
 	int			len;
-	byte		image[LIGHTMAP_SIZE*LIGHTMAP_SIZE*4];
-	int			i, j;
+	byte		*image;
+	int			i, j, numLightmaps, textureInternalFormat = 0;
 	float maxIntensity = 0;
 	double sumIntensity = 0;
 
@@ -149,68 +202,332 @@ static	void R_LoadLightmaps( lump_t *l ) {
 	// we are about to upload textures
 	R_SyncRenderThread();
 
-	// create all the lightmaps
-	tr.numLightmaps = len / (LIGHTMAP_SIZE * LIGHTMAP_SIZE * 3);
-	if ( tr.numLightmaps == 1 ) {
-		//FIXME: HACK: maps with only one lightmap turn up fullbright for some reason.
-		//this avoids this, but isn't the correct solution.
-		tr.numLightmaps++;
+	// check for deluxe mapping
+	tr.worldDeluxeMapping = qtrue;
+	for( i = 0, surf = (dsurface_t *)(fileBase + surfs->fileofs);
+		i < surfs->filelen / sizeof(dsurface_t); i++, surf++ ) {
+		int lightmapNum = LittleLong( surf->lightmapNum );
+
+		if ( lightmapNum >= 0 && (lightmapNum & 1) != 0 ) {
+			tr.worldDeluxeMapping = qfalse;
+			break;
+		}
 	}
 
-	// if we are in r_vertexLight mode, we don't need the lightmaps at all
-	if ( r_vertexLight->integer || glConfig.hardwareType == GLHW_PERMEDIA2 ) {
-		return;
+	tr.lightmapSize = DEFAULT_LIGHTMAP_SIZE;
+	numLightmaps = len / (tr.lightmapSize * tr.lightmapSize * 3);
+
+	image = ri.Malloc(tr.lightmapSize * tr.lightmapSize * 4 * 2);
+
+	if (tr.worldDeluxeMapping)
+		numLightmaps >>= 1;
+
+	if(numLightmaps == 1)
+	{
+		//FIXME: HACK: maps with only one lightmap turn up fullbright for some reason.
+		//this avoids this, but isn't the correct solution.
+		numLightmaps++;
+	}
+	else if (r_mergeLightmaps->integer && numLightmaps >= 1024 )
+	{
+		// FIXME: fat light maps don't support more than 1024 light maps
+		ri.Printf(PRINT_WARNING, "WARNING: number of lightmaps > 1024\n");
+		numLightmaps = 1024;
+	}
+
+	// use fat lightmaps of an appropriate size
+	if (r_mergeLightmaps->integer)
+	{
+		tr.fatLightmapSize = 512;
+		tr.fatLightmapStep = tr.fatLightmapSize / tr.lightmapSize;
+
+		// at most MAX_LIGHTMAP_PAGES
+		while (tr.fatLightmapStep * tr.fatLightmapStep * MAX_LIGHTMAP_PAGES < numLightmaps && tr.fatLightmapSize != glConfig.maxTextureSize )
+		{
+			tr.fatLightmapSize <<= 1;
+			tr.fatLightmapStep = tr.fatLightmapSize / tr.lightmapSize;
+		}
+
+		tr.numLightmaps = numLightmaps / (tr.fatLightmapStep * tr.fatLightmapStep);
+
+		if (numLightmaps % (tr.fatLightmapStep * tr.fatLightmapStep) != 0)
+			tr.numLightmaps++;
+	}
+	else
+	{
+		tr.numLightmaps = numLightmaps;
 	}
 
 	tr.lightmaps = ri.Hunk_Alloc( tr.numLightmaps * sizeof(image_t *), h_low );
-	for ( i = 0 ; i < tr.numLightmaps ; i++ ) {
-		// expand the 24 bit on-disk to 32 bit
-		buf_p = buf + i * LIGHTMAP_SIZE*LIGHTMAP_SIZE * 3;
 
-		if ( r_lightmap->integer == 2 )
-		{	// color code by intensity as development tool	(FIXME: check range)
-			for ( j = 0; j < LIGHTMAP_SIZE * LIGHTMAP_SIZE; j++ )
+	if (tr.worldDeluxeMapping || r_deluxeMapping->integer == 2)
+	{
+		tr.deluxemaps = ri.Hunk_Alloc( tr.numLightmaps * sizeof(image_t *), h_low );
+	}
+
+	if (r_hdr->integer && glRefConfig.textureFloat && glRefConfig.halfFloatPixel)
+		textureInternalFormat = GL_RGBA16F_ARB;
+
+	if (r_mergeLightmaps->integer)
+	{
+		for (i = 0; i < tr.numLightmaps; i++)
+		{
+			tr.lightmaps[i] = R_CreateImage2(va("_fatlightmap%d", i), NULL, tr.fatLightmapSize, tr.fatLightmapSize, IMGFLAG_NOLIGHTSCALE | IMGFLAG_NO_COMPRESSION | IMGFLAG_CLAMPTOEDGE, textureInternalFormat );
+
+			if (tr.worldDeluxeMapping)
 			{
-				float r = buf_p[j*3+0];
-				float g = buf_p[j*3+1];
-				float b = buf_p[j*3+2];
-				float intensity;
-				float out[3] = {0.0, 0.0, 0.0};
-
-				intensity = 0.33f * r + 0.685f * g + 0.063f * b;
-
-				if ( intensity > 255 )
-					intensity = 1.0f;
-				else
-					intensity /= 255.0f;
-
-				if ( intensity > maxIntensity )
-					maxIntensity = intensity;
-
-				HSVtoRGB( intensity, 1.00, 0.50, out );
-
-				image[j*4+0] = out[0] * 255;
-				image[j*4+1] = out[1] * 255;
-				image[j*4+2] = out[2] * 255;
-				image[j*4+3] = 255;
-
-				sumIntensity += intensity;
-			}
-		} else {
-			for ( j = 0 ; j < LIGHTMAP_SIZE * LIGHTMAP_SIZE; j++ ) {
-				R_ColorShiftLightingBytes( &buf_p[j*3], &image[j*4] );
-				image[j*4+3] = 255;
+				tr.deluxemaps[i] = R_CreateImage2(va("_fatdeluxemap%d", i), NULL, tr.fatLightmapSize, tr.fatLightmapSize, IMGFLAG_NORMALIZED | IMGFLAG_NOLIGHTSCALE | IMGFLAG_NO_COMPRESSION | IMGFLAG_CLAMPTOEDGE, 0 );
 			}
 		}
-		tr.lightmaps[i] = R_CreateImage( va("*lightmap%d",i), image, 
-			LIGHTMAP_SIZE, LIGHTMAP_SIZE, qfalse, qfalse, GL_CLAMP_TO_EDGE );
+	}
+
+	for(i = 0; i < numLightmaps; i++)
+	{
+		int xoff = 0, yoff = 0;
+		int lightmapnum = i;
+		// expand the 24 bit on-disk to 32 bit
+
+		if (r_mergeLightmaps->integer)
+		{
+			int lightmaponpage = i % (tr.fatLightmapStep * tr.fatLightmapStep);
+			xoff = (lightmaponpage % tr.fatLightmapStep) * tr.lightmapSize;
+			yoff = (lightmaponpage / tr.fatLightmapStep) * tr.lightmapSize;
+
+			lightmapnum /= (tr.fatLightmapStep * tr.fatLightmapStep);
+		}
+
+		// if (tr.worldLightmapping)
+		{
+			char filename[MAX_QPATH];
+			byte *hdrLightmap = NULL;
+			float lightScale = 1.0f;
+			int size = 0;
+
+			// look for hdr lightmaps
+			if (r_hdr->integer && glRefConfig.halfFloatPixel)
+			{
+				Com_sprintf( filename, sizeof( filename ), "maps/%s/lm_%04d.hdr", s_worldData.baseName, i * (tr.worldDeluxeMapping ? 2 : 1) );
+				//ri.Printf(PRINT_ALL, "looking for %s\n", filename);
+
+				size = ri.FS_ReadFile(filename, (void **)&hdrLightmap);
+			}
+
+			if (hdrLightmap)
+			{
+				byte *p = hdrLightmap;
+				//ri.Printf(PRINT_ALL, "found!\n");
+				
+				/* FIXME: don't just skip over this header and actually parse it */
+				while (size && !(*p == '\n' && *(p+1) == '\n'))
+				{
+					size--;
+					p++;
+				}
+
+				if (!size)
+					ri.Error(ERR_DROP, "Bad header for %s!\n", filename);
+
+				size -= 2;
+				p += 2;
+				
+				while (size && !(*p == '\n'))
+				{
+					size--;
+					p++;
+				}
+
+				size--;
+				p++;
+
+				buf_p = (byte *)p;
+
+#if 0 // HDRFILE_RGBE
+				if (size != tr.lightmapSize * tr.lightmapSize * 4)
+					ri.Error(ERR_DROP, "Bad size for %s (%i)!\n", filename, size);
+#else // HDRFILE_FLOAT
+				if (size != tr.lightmapSize * tr.lightmapSize * 12)
+					ri.Error(ERR_DROP, "Bad size for %s (%i)!\n", filename, size);
+#endif
+			}
+			else
+			{
+				if (tr.worldDeluxeMapping)
+					buf_p = buf + (i * 2) * tr.lightmapSize * tr.lightmapSize * 3;
+				else
+					buf_p = buf + i * tr.lightmapSize * tr.lightmapSize * 3;
+			}
+
+			lightScale = pow(2, r_mapOverBrightBits->integer - tr.overbrightBits - 8); //exp2(r_mapOverBrightBits->integer - tr.overbrightBits - 8);
+
+			for ( j = 0 ; j < tr.lightmapSize * tr.lightmapSize; j++ ) 
+			{
+				if (r_hdr->integer)
+				{
+					float color[3];
+
+					if (hdrLightmap)
+					{
+#if 0 // HDRFILE_RGBE
+						float exponent = exp2(buf_p[j*4+3] - 128);
+
+						color[0] = buf_p[j*4+0] * exponent;
+						color[1] = buf_p[j*4+1] * exponent;
+						color[2] = buf_p[j*4+2] * exponent;
+#else // HDRFILE_FLOAT
+						memcpy(color, &buf_p[j*12], 12);
+
+						color[0] = LittleFloat(color[0]);
+						color[1] = LittleFloat(color[1]);
+						color[2] = LittleFloat(color[2]);
+#endif
+					}
+					else
+					{
+						//hack: convert LDR lightmap to HDR one
+						color[0] = (buf_p[j*3+0] + 1.0f);
+						color[1] = (buf_p[j*3+1] + 1.0f);
+						color[2] = (buf_p[j*3+2] + 1.0f);
+					}
+
+					VectorScale(color, lightScale, color);
+
+					if (glRefConfig.textureFloat && glRefConfig.halfFloatPixel)
+						ColorToRGBA16F(color, (unsigned short *)(&image[j*8]));
+					else
+						ColorToRGBE(color, &image[j*4]);
+				}
+				else
+				{
+					if ( r_lightmap->integer == 2 )
+					{	// color code by intensity as development tool	(FIXME: check range)
+						float r = buf_p[j*3+0];
+						float g = buf_p[j*3+1];
+						float b = buf_p[j*3+2];
+						float intensity;
+						float out[3] = {0.0, 0.0, 0.0};
+
+						intensity = 0.33f * r + 0.685f * g + 0.063f * b;
+
+						if ( intensity > 255 )
+							intensity = 1.0f;
+						else
+							intensity /= 255.0f;
+
+						if ( intensity > maxIntensity )
+							maxIntensity = intensity;
+
+						HSVtoRGB( intensity, 1.00, 0.50, out );
+
+						image[j*4+0] = out[0] * 255;
+						image[j*4+1] = out[1] * 255;
+						image[j*4+2] = out[2] * 255;
+						image[j*4+3] = 255;
+
+						sumIntensity += intensity;
+					}
+					else
+					{
+						R_ColorShiftLightingBytes( &buf_p[j*3], &image[j*4] );
+						image[j*4+3] = 255;
+					}
+				}
+			}
+
+			if (r_mergeLightmaps->integer)
+				R_UpdateSubImage(tr.lightmaps[lightmapnum], image, xoff, yoff, tr.lightmapSize, tr.lightmapSize);
+			else
+				tr.lightmaps[i] = R_CreateImage2(va("*lightmap%d", i), image, tr.lightmapSize, tr.lightmapSize, IMGFLAG_NOLIGHTSCALE | IMGFLAG_NO_COMPRESSION | IMGFLAG_CLAMPTOEDGE, textureInternalFormat );
+
+			if (hdrLightmap)
+				ri.FS_FreeFile(hdrLightmap);
+		}
+
+		if (tr.worldDeluxeMapping)
+		{
+			buf_p = buf + (i * 2 + 1) * tr.lightmapSize * tr.lightmapSize * 3;
+
+			for ( j = 0 ; j < tr.lightmapSize * tr.lightmapSize; j++ ) {
+				image[j*4+0] = buf_p[j*3+0];
+				image[j*4+1] = buf_p[j*3+1];
+				image[j*4+2] = buf_p[j*3+2];
+				image[j*4+3] = 255;
+			}
+
+			if (r_mergeLightmaps->integer)
+			{
+				R_UpdateSubImage(tr.deluxemaps[lightmapnum], image, xoff, yoff, tr.lightmapSize, tr.lightmapSize );
+			}
+			else
+			{
+				tr.deluxemaps[i] = R_CreateImage( va("*deluxemap%d",i), image, tr.lightmapSize, tr.lightmapSize, qfalse, qfalse, GL_CLAMP_TO_EDGE );
+			}
+		}
 	}
 
 	if ( r_lightmap->integer == 2 )	{
 		ri.Printf( PRINT_ALL, "Brightest lightmap value: %d\n", ( int ) ( maxIntensity * 255 ) );
 	}
+
+	ri.Free(image);
 }
 
+
+static float FatPackU(float input, int lightmapnum)
+{
+	if (lightmapnum < 0)
+		return input;
+
+	if (tr.worldDeluxeMapping)
+		lightmapnum >>= 1;
+
+	lightmapnum %= (tr.fatLightmapStep * tr.fatLightmapStep);
+
+	if(tr.fatLightmapSize > 0)
+	{
+		int             x = lightmapnum % tr.fatLightmapStep;
+
+		return (input / ((float)tr.fatLightmapStep)) + ((1.0 / ((float)tr.fatLightmapStep)) * (float)x);
+	}
+
+	return input;
+}
+
+static float FatPackV(float input, int lightmapnum)
+{
+	if (lightmapnum < 0)
+		return input;
+
+	if (tr.worldDeluxeMapping)
+		lightmapnum >>= 1;
+
+	lightmapnum %= (tr.fatLightmapStep * tr.fatLightmapStep);
+
+	if(tr.fatLightmapSize > 0)
+	{
+		int             y = lightmapnum / tr.fatLightmapStep;
+
+		return (input / ((float)tr.fatLightmapStep)) + ((1.0 / ((float)tr.fatLightmapStep)) * (float)y);
+	}
+
+	return input;
+}
+
+
+static int FatLightmap(int lightmapnum)
+{
+	if (lightmapnum < 0)
+		return lightmapnum;
+
+	if (tr.worldDeluxeMapping)
+		lightmapnum >>= 1;
+
+	if (tr.fatLightmapSize > 0)
+	{
+		return lightmapnum / (tr.fatLightmapStep * tr.fatLightmapStep);
+	}
+	
+	return lightmapnum;
+}
 
 /*
 =================
@@ -304,67 +621,100 @@ ParseFace
 static void ParseFace( dsurface_t *ds, drawVert_t *verts, msurface_t *surf, int *indexes  ) {
 	int			i, j;
 	srfSurfaceFace_t	*cv;
-	int			numPoints, numIndexes;
-	int			lightmapNum;
-	int			sfaceSize, ofsIndexes;
+	srfTriangle_t  *tri;
+	int			numVerts, numTriangles;
+	int realLightmapNum;
 
-	lightmapNum = LittleLong( ds->lightmapNum );
+	realLightmapNum = LittleLong( ds->lightmapNum );
 
 	// get fog volume
 	surf->fogIndex = LittleLong( ds->fogNum ) + 1;
 
 	// get shader value
-	surf->shader = ShaderForShaderNum( ds->shaderNum, lightmapNum );
+	surf->shader = ShaderForShaderNum( ds->shaderNum, FatLightmap(realLightmapNum) );
 	if ( r_singleShader->integer && !surf->shader->isSky ) {
 		surf->shader = tr.defaultShader;
 	}
 
-	numPoints = LittleLong( ds->numVerts );
-	if (numPoints > MAX_FACE_POINTS) {
-		ri.Printf( PRINT_WARNING, "WARNING: MAX_FACE_POINTS exceeded: %i\n", numPoints);
-    numPoints = MAX_FACE_POINTS;
-    surf->shader = tr.defaultShader;
+	numVerts = LittleLong(ds->numVerts);
+	if (numVerts > MAX_FACE_POINTS) {
+		ri.Printf( PRINT_WARNING, "WARNING: MAX_FACE_POINTS exceeded: %i\n", numVerts);
+		numVerts = MAX_FACE_POINTS;
+		surf->shader = tr.defaultShader;
 	}
 
-	numIndexes = LittleLong( ds->numIndexes );
+	numTriangles = LittleLong(ds->numIndexes) / 3;
 
-	// create the srfSurfaceFace_t
-	sfaceSize = ( size_t ) &((srfSurfaceFace_t *)0)->points[numPoints];
-	ofsIndexes = sfaceSize;
-	sfaceSize += sizeof( int ) * numIndexes;
-
-	cv = ri.Hunk_Alloc( sfaceSize, h_low );
+	//cv = ri.Hunk_Alloc(sizeof(*cv), h_low);
+	cv = (void *)surf->data;
 	cv->surfaceType = SF_FACE;
-	cv->numPoints = numPoints;
-	cv->numIndices = numIndexes;
-	cv->ofsIndices = ofsIndexes;
 
-	verts += LittleLong( ds->firstVert );
-	for ( i = 0 ; i < numPoints ; i++ ) {
-		for ( j = 0 ; j < 3 ; j++ ) {
-			cv->points[i][j] = LittleFloat( verts[i].xyz[j] );
+	cv->numTriangles = numTriangles;
+	cv->triangles = ri.Hunk_Alloc(numTriangles * sizeof(cv->triangles[0]), h_low);
+
+	cv->numVerts = numVerts;
+	cv->verts = ri.Hunk_Alloc(numVerts * sizeof(cv->verts[0]), h_low);
+
+	// copy vertexes
+	ClearBounds(cv->bounds[0], cv->bounds[1]);
+	verts += LittleLong(ds->firstVert);
+	for(i = 0; i < numVerts; i++)
+	{
+		for(j = 0; j < 3; j++)
+		{
+			cv->verts[i].xyz[j] = LittleFloat(verts[i].xyz[j]);
+			cv->verts[i].normal[j] = LittleFloat(verts[i].normal[j]);
 		}
-		for ( j = 0 ; j < 2 ; j++ ) {
-			cv->points[i][3+j] = LittleFloat( verts[i].st[j] );
-			cv->points[i][5+j] = LittleFloat( verts[i].lightmap[j] );
+		AddPointToBounds(cv->verts[i].xyz, cv->bounds[0], cv->bounds[1]);
+		for(j = 0; j < 2; j++)
+		{
+			cv->verts[i].st[j] = LittleFloat(verts[i].st[j]);
+			//cv->verts[i].lightmap[j] = LittleFloat(verts[i].lightmap[j]);
 		}
-		R_ColorShiftLightingBytes( verts[i].color, (byte *)&cv->points[i][7] );
+		cv->verts[i].lightmap[0] = FatPackU(LittleFloat(verts[i].lightmap[0]), realLightmapNum);
+		cv->verts[i].lightmap[1] = FatPackV(LittleFloat(verts[i].lightmap[1]), realLightmapNum);
+
+		R_ColorShiftLightingBytes( verts[i].color, cv->verts[i].vertexColors );
 	}
 
-	indexes += LittleLong( ds->firstIndex );
-	for ( i = 0 ; i < numIndexes ; i++ ) {
-		((int *)((byte *)cv + cv->ofsIndices ))[i] = LittleLong( indexes[ i ] );
+	// copy triangles
+	indexes += LittleLong(ds->firstIndex);
+	for(i = 0, tri = cv->triangles; i < numTriangles; i++, tri++)
+	{
+		for(j = 0; j < 3; j++)
+		{
+			tri->indexes[j] = LittleLong(indexes[i * 3 + j]);
+
+			if(tri->indexes[j] < 0 || tri->indexes[j] >= numVerts)
+			{
+				ri.Error(ERR_DROP, "Bad index in face surface");
+			}
+		}
 	}
 
 	// take the plane information from the lightmap vector
 	for ( i = 0 ; i < 3 ; i++ ) {
 		cv->plane.normal[i] = LittleFloat( ds->lightmapVecs[2][i] );
 	}
-	cv->plane.dist = DotProduct( cv->points[0], cv->plane.normal );
+	cv->plane.dist = DotProduct( cv->verts[0].xyz, cv->plane.normal );
 	SetPlaneSignbits( &cv->plane );
 	cv->plane.type = PlaneTypeForNormal( cv->plane.normal );
 
 	surf->data = (surfaceType_t *)cv;
+
+	// Tr3B - calc tangent spaces
+	{
+		srfVert_t      *dv[3];
+
+		for(i = 0, tri = cv->triangles; i < numTriangles; i++, tri++)
+		{
+			dv[0] = &cv->verts[tri->indexes[0]];
+			dv[1] = &cv->verts[tri->indexes[1]];
+			dv[2] = &cv->verts[tri->indexes[2]];
+
+			R_CalcTangentVectors(dv);
+		}
+	}
 }
 
 
@@ -377,19 +727,19 @@ static void ParseMesh ( dsurface_t *ds, drawVert_t *verts, msurface_t *surf ) {
 	srfGridMesh_t	*grid;
 	int				i, j;
 	int				width, height, numPoints;
-	drawVert_t points[MAX_PATCH_SIZE*MAX_PATCH_SIZE];
-	int				lightmapNum;
+	srfVert_t points[MAX_PATCH_SIZE*MAX_PATCH_SIZE];
 	vec3_t			bounds[2];
 	vec3_t			tmpVec;
 	static surfaceType_t	skipData = SF_SKIP;
+	int realLightmapNum;
 
-	lightmapNum = LittleLong( ds->lightmapNum );
+	realLightmapNum = LittleLong( ds->lightmapNum );
 
 	// get fog volume
 	surf->fogIndex = LittleLong( ds->fogNum ) + 1;
 
 	// get shader value
-	surf->shader = ShaderForShaderNum( ds->shaderNum, lightmapNum );
+	surf->shader = ShaderForShaderNum( ds->shaderNum, FatLightmap(realLightmapNum) );
 	if ( r_singleShader->integer && !surf->shader->isSky ) {
 		surf->shader = tr.defaultShader;
 	}
@@ -404,18 +754,28 @@ static void ParseMesh ( dsurface_t *ds, drawVert_t *verts, msurface_t *surf ) {
 	width = LittleLong( ds->patchWidth );
 	height = LittleLong( ds->patchHeight );
 
+	if(width < 0 || width > MAX_PATCH_SIZE || height < 0 || height > MAX_PATCH_SIZE)
+		ri.Error(ERR_DROP, "ParseMesh: bad size");
+
 	verts += LittleLong( ds->firstVert );
 	numPoints = width * height;
-	for ( i = 0 ; i < numPoints ; i++ ) {
-		for ( j = 0 ; j < 3 ; j++ ) {
-			points[i].xyz[j] = LittleFloat( verts[i].xyz[j] );
-			points[i].normal[j] = LittleFloat( verts[i].normal[j] );
+	for(i = 0; i < numPoints; i++)
+	{
+		for(j = 0; j < 3; j++)
+		{
+			points[i].xyz[j] = LittleFloat(verts[i].xyz[j]);
+			points[i].normal[j] = LittleFloat(verts[i].normal[j]);
 		}
-		for ( j = 0 ; j < 2 ; j++ ) {
-			points[i].st[j] = LittleFloat( verts[i].st[j] );
-			points[i].lightmap[j] = LittleFloat( verts[i].lightmap[j] );
+
+		for(j = 0; j < 2; j++)
+		{
+			points[i].st[j] = LittleFloat(verts[i].st[j]);
+			//points[i].lightmap[j] = LittleFloat(verts[i].lightmap[j]);
 		}
-		R_ColorShiftLightingBytes( verts[i].color, points[i].color );
+		points[i].lightmap[0] = FatPackU(LittleFloat(verts[i].lightmap[0]), realLightmapNum);
+		points[i].lightmap[1] = FatPackV(LittleFloat(verts[i].lightmap[1]), realLightmapNum);
+
+		R_ColorShiftLightingBytes( verts[i].color, points[i].vertexColors );
 	}
 
 	// pre-tesseleate
@@ -441,9 +801,10 @@ ParseTriSurf
 ===============
 */
 static void ParseTriSurf( dsurface_t *ds, drawVert_t *verts, msurface_t *surf, int *indexes ) {
-	srfTriangles_t	*tri;
-	int				i, j;
-	int				numVerts, numIndexes;
+	srfTriangles_t *cv;
+	srfTriangle_t  *tri;
+	int             i, j;
+	int             numVerts, numTriangles, badTriangles;
 
 	// get fog volume
 	surf->fogIndex = LittleLong( ds->fogNum ) + 1;
@@ -454,42 +815,83 @@ static void ParseTriSurf( dsurface_t *ds, drawVert_t *verts, msurface_t *surf, i
 		surf->shader = tr.defaultShader;
 	}
 
-	numVerts = LittleLong( ds->numVerts );
-	numIndexes = LittleLong( ds->numIndexes );
+	numVerts = LittleLong(ds->numVerts);
+	numTriangles = LittleLong(ds->numIndexes) / 3;
 
-	tri = ri.Hunk_Alloc( sizeof( *tri ) + numVerts * sizeof( tri->verts[0] ) 
-		+ numIndexes * sizeof( tri->indexes[0] ), h_low );
-	tri->surfaceType = SF_TRIANGLES;
-	tri->numVerts = numVerts;
-	tri->numIndexes = numIndexes;
-	tri->verts = (drawVert_t *)(tri + 1);
-	tri->indexes = (int *)(tri->verts + tri->numVerts );
+	//cv = ri.Hunk_Alloc(sizeof(*cv), h_low);
+	cv = (void *)surf->data;
+	cv->surfaceType = SF_TRIANGLES;
 
-	surf->data = (surfaceType_t *)tri;
+	cv->numTriangles = numTriangles;
+	cv->triangles = ri.Hunk_Alloc(numTriangles * sizeof(cv->triangles[0]), h_low);
+
+	cv->numVerts = numVerts;
+	cv->verts = ri.Hunk_Alloc(numVerts * sizeof(cv->verts[0]), h_low);
+
+	surf->data = (surfaceType_t *) cv;
 
 	// copy vertexes
-	ClearBounds( tri->bounds[0], tri->bounds[1] );
-	verts += LittleLong( ds->firstVert );
-	for ( i = 0 ; i < numVerts ; i++ ) {
-		for ( j = 0 ; j < 3 ; j++ ) {
-			tri->verts[i].xyz[j] = LittleFloat( verts[i].xyz[j] );
-			tri->verts[i].normal[j] = LittleFloat( verts[i].normal[j] );
-		}
-		AddPointToBounds( tri->verts[i].xyz, tri->bounds[0], tri->bounds[1] );
-		for ( j = 0 ; j < 2 ; j++ ) {
-			tri->verts[i].st[j] = LittleFloat( verts[i].st[j] );
-			tri->verts[i].lightmap[j] = LittleFloat( verts[i].lightmap[j] );
+	ClearBounds(cv->bounds[0], cv->bounds[1]);
+	verts += LittleLong(ds->firstVert);
+	for(i = 0; i < numVerts; i++)
+	{
+		for(j = 0; j < 3; j++)
+		{
+			cv->verts[i].xyz[j] = LittleFloat(verts[i].xyz[j]);
+			cv->verts[i].normal[j] = LittleFloat(verts[i].normal[j]);
 		}
 
-		R_ColorShiftLightingBytes( verts[i].color, tri->verts[i].color );
+		AddPointToBounds( cv->verts[i].xyz, cv->bounds[0], cv->bounds[1] );
+
+		for(j = 0; j < 2; j++)
+		{
+			cv->verts[i].st[j] = LittleFloat(verts[i].st[j]);
+			cv->verts[i].lightmap[j] = LittleFloat(verts[i].lightmap[j]);
+		}
+
+		R_ColorShiftLightingBytes( verts[i].color, cv->verts[i].vertexColors );
+
 	}
 
-	// copy indexes
-	indexes += LittleLong( ds->firstIndex );
-	for ( i = 0 ; i < numIndexes ; i++ ) {
-		tri->indexes[i] = LittleLong( indexes[i] );
-		if ( tri->indexes[i] < 0 || tri->indexes[i] >= numVerts ) {
-			ri.Error( ERR_DROP, "Bad index in triangle surface" );
+	// copy triangles
+	badTriangles = 0;
+	indexes += LittleLong(ds->firstIndex);
+	for(i = 0, tri = cv->triangles; i < numTriangles; i++, tri++)
+	{
+		for(j = 0; j < 3; j++)
+		{
+			tri->indexes[j] = LittleLong(indexes[i * 3 + j]);
+
+			if(tri->indexes[j] < 0 || tri->indexes[j] >= numVerts)
+			{
+				ri.Error(ERR_DROP, "Bad index in face surface");
+			}
+		}
+
+		if ((tri->indexes[0] == tri->indexes[1]) || (tri->indexes[1] == tri->indexes[2]) || (tri->indexes[0] == tri->indexes[2]))
+		{
+			tri--;
+			badTriangles++;
+		}
+	}
+
+	if (badTriangles)
+	{
+		ri.Printf(PRINT_WARNING, "Surface has bad triangles, originally shader %s %d tris %d verts, now %d tris\n", surf->shader->name, numTriangles, numVerts, numTriangles - badTriangles);
+		cv->numTriangles -= badTriangles;
+	}
+
+	// Tr3B - calc tangent spaces
+	{
+		srfVert_t      *dv[3];
+
+		for(i = 0, tri = cv->triangles; i < numTriangles; i++, tri++)
+		{
+			dv[0] = &cv->verts[tri->indexes[0]];
+			dv[1] = &cv->verts[tri->indexes[1]];
+			dv[2] = &cv->verts[tri->indexes[2]];
+
+			R_CalcTangentVectors(dv);
 		}
 	}
 }
@@ -512,7 +914,8 @@ static void ParseFlare( dsurface_t *ds, drawVert_t *verts, msurface_t *surf, int
 		surf->shader = tr.defaultShader;
 	}
 
-	flare = ri.Hunk_Alloc( sizeof( *flare ), h_low );
+	//flare = ri.Hunk_Alloc( sizeof( *flare ), h_low );
+	flare = (void *)surf->data;
 	flare->surfaceType = SF_FLARE;
 
 	surf->data = (surfaceType_t *)flare;
@@ -1204,8 +1607,8 @@ void R_MovePatchSurfacesToHunk(void) {
 		if ( grid->surfaceType != SF_GRID )
 			continue;
 		//
-		size = (grid->width * grid->height - 1) * sizeof( drawVert_t ) + sizeof( *grid );
-		hunkgrid = ri.Hunk_Alloc( size, h_low );
+		size = sizeof(*grid);
+		hunkgrid = ri.Hunk_Alloc(size, h_low);
 		Com_Memcpy(hunkgrid, grid, size);
 
 		hunkgrid->widthLodError = ri.Hunk_Alloc( grid->width * 4, h_low );
@@ -1214,10 +1617,352 @@ void R_MovePatchSurfacesToHunk(void) {
 		hunkgrid->heightLodError = ri.Hunk_Alloc( grid->height * 4, h_low );
 		Com_Memcpy( hunkgrid->heightLodError, grid->heightLodError, grid->height * 4 );
 
+		hunkgrid->numTriangles = grid->numTriangles;
+		hunkgrid->triangles = ri.Hunk_Alloc(grid->numTriangles * sizeof(srfTriangle_t), h_low);
+		Com_Memcpy(hunkgrid->triangles, grid->triangles, grid->numTriangles * sizeof(srfTriangle_t));
+
+		hunkgrid->numVerts = grid->numVerts;
+		hunkgrid->verts = ri.Hunk_Alloc(grid->numVerts * sizeof(srfVert_t), h_low);
+		Com_Memcpy(hunkgrid->verts, grid->verts, grid->numVerts * sizeof(srfVert_t));
+
 		R_FreeSurfaceGridMesh( grid );
 
 		s_worldData.surfaces[i].data = (void *) hunkgrid;
 	}
+}
+
+
+/*
+=================
+BSPSurfaceCompare
+compare function for qsort()
+=================
+*/
+static int BSPSurfaceCompare(const void *a, const void *b)
+{
+	msurface_t   *aa, *bb;
+
+	aa = *(msurface_t **) a;
+	bb = *(msurface_t **) b;
+
+	// shader first
+	if(aa->shader->sortedIndex < bb->shader->sortedIndex)
+		return -1;
+
+	else if(aa->shader->sortedIndex > bb->shader->sortedIndex)
+		return 1;
+
+	// by fogIndex
+	if(aa->fogIndex < bb->fogIndex)
+		return -1;
+
+	else if(aa->fogIndex > bb->fogIndex)
+		return 1;
+
+	return 0;
+}
+
+
+static void CopyVert(const srfVert_t * in, srfVert_t * out)
+{
+	int             j;
+
+	for(j = 0; j < 3; j++)
+	{
+		out->xyz[j]       = in->xyz[j];
+		out->tangent[j]   = in->tangent[j];
+		out->bitangent[j] = in->bitangent[j];
+		out->normal[j]    = in->normal[j];
+	}
+
+	for(j = 0; j < 2; j++)
+	{
+		out->st[j] = in->st[j];
+		out->lightmap[j] = in->lightmap[j];
+	}
+
+	for(j = 0; j < 4; j++)
+	{
+		out->vertexColors[j] = in->vertexColors[j];
+	}
+}
+
+
+/*
+===============
+R_CreateWorldVBO
+===============
+*/
+static void R_CreateWorldVBO(void)
+{
+	int             i, j, k;
+
+	int             numVerts;
+	srfVert_t      *verts;
+
+	int             numTriangles;
+	srfTriangle_t  *triangles;
+
+    int             numSurfaces;
+	msurface_t   *surface;
+	msurface_t  **surfacesSorted;
+
+	int             startTime, endTime;
+
+	startTime = ri.Milliseconds();
+
+	numVerts = 0;
+	numTriangles = 0;
+	numSurfaces = 0;
+	for(k = 0, surface = &s_worldData.surfaces[0]; k < s_worldData.numsurfaces /* s_worldData.numWorldSurfaces */; k++, surface++)
+	{
+		if(*surface->data == SF_FACE)
+		{
+			srfSurfaceFace_t *face = (srfSurfaceFace_t *) surface->data;
+
+			if(face->numVerts)
+				numVerts += face->numVerts;
+
+			if(face->numTriangles)
+				numTriangles += face->numTriangles;
+
+			numSurfaces++;
+		}
+		else if(*surface->data == SF_GRID)
+		{
+			srfGridMesh_t  *grid = (srfGridMesh_t *) surface->data;
+
+			if(grid->numVerts)
+				numVerts += grid->numVerts;
+
+			if(grid->numTriangles)
+				numTriangles += grid->numTriangles;
+
+			numSurfaces++;
+		}
+		else if(*surface->data == SF_TRIANGLES)
+		{
+			srfTriangles_t *tri = (srfTriangles_t *) surface->data;
+
+			if(tri->numVerts)
+				numVerts += tri->numVerts;
+
+			if(tri->numTriangles)
+				numTriangles += tri->numTriangles;
+
+			numSurfaces++;
+		}
+	}
+
+	if(!numVerts || !numTriangles)
+		return;
+
+	ri.Printf(PRINT_ALL, "...calculating world VBO ( %i verts %i tris )\n", numVerts, numTriangles);
+
+	// create arrays
+
+	verts = ri.Hunk_AllocateTempMemory(numVerts * sizeof(srfVert_t));
+
+	triangles = ri.Hunk_AllocateTempMemory(numTriangles * sizeof(srfTriangle_t));
+
+	// presort surfaces
+	surfacesSorted = ri.Malloc(numSurfaces * sizeof(*surfacesSorted));
+
+	j = 0;
+	for(k = 0, surface = &s_worldData.surfaces[0]; k < s_worldData.numsurfaces; k++, surface++)
+	{
+		if(*surface->data == SF_FACE || *surface->data == SF_GRID || *surface->data == SF_TRIANGLES)
+		{
+			surfacesSorted[j++] = surface;
+		}
+	}
+
+	qsort(surfacesSorted, numSurfaces, sizeof(*surfacesSorted), BSPSurfaceCompare);
+
+	// set up triangle indices
+	numVerts = 0;
+	numTriangles = 0;
+	for(k = 0, surface = surfacesSorted[k]; k < numSurfaces; k++, surface = surfacesSorted[k])
+	{
+		if(*surface->data == SF_FACE)
+		{
+			srfSurfaceFace_t *srf = (srfSurfaceFace_t *) surface->data;
+
+			srf->firstIndex = numTriangles * 3;
+
+			if(srf->numTriangles)
+			{
+				srfTriangle_t  *tri;
+
+				for(i = 0, tri = srf->triangles; i < srf->numTriangles; i++, tri++)
+				{
+					for(j = 0; j < 3; j++)
+					{
+						triangles[numTriangles + i].indexes[j] = numVerts + tri->indexes[j];
+					}
+				}
+
+				numTriangles += srf->numTriangles;
+			}
+
+			if(srf->numVerts)
+				numVerts += srf->numVerts;
+		}
+		else if(*surface->data == SF_GRID)
+		{
+			srfGridMesh_t  *srf = (srfGridMesh_t *) surface->data;
+
+			srf->firstIndex = numTriangles * 3;
+
+			if(srf->numTriangles)
+			{
+				srfTriangle_t  *tri;
+
+				for(i = 0, tri = srf->triangles; i < srf->numTriangles; i++, tri++)
+				{
+					for(j = 0; j < 3; j++)
+					{
+						triangles[numTriangles + i].indexes[j] = numVerts + tri->indexes[j];
+					}
+				}
+
+				numTriangles += srf->numTriangles;
+			}
+
+			if(srf->numVerts)
+				numVerts += srf->numVerts;
+		}
+		else if(*surface->data == SF_TRIANGLES)
+		{
+			srfTriangles_t *srf = (srfTriangles_t *) surface->data;
+
+			srf->firstIndex = numTriangles * 3;
+
+			if(srf->numTriangles)
+			{
+				srfTriangle_t  *tri;
+
+				for(i = 0, tri = srf->triangles; i < srf->numTriangles; i++, tri++)
+				{
+					for(j = 0; j < 3; j++)
+					{
+						triangles[numTriangles + i].indexes[j] = numVerts + tri->indexes[j];
+					}
+				}
+
+				numTriangles += srf->numTriangles;
+			}
+
+			if(srf->numVerts)
+				numVerts += srf->numVerts;
+		}
+	}
+
+	// build vertices
+	numVerts = 0;
+	for(k = 0, surface = surfacesSorted[k]; k < numSurfaces; k++, surface = surfacesSorted[k])
+	{
+		if(*surface->data == SF_FACE)
+		{
+			srfSurfaceFace_t *srf = (srfSurfaceFace_t *) surface->data;
+
+			srf->firstVert = numVerts;
+
+			if(srf->numVerts)
+			{
+				for(i = 0; i < srf->numVerts; i++)
+				{
+					CopyVert(&srf->verts[i], &verts[numVerts + i]);
+				}
+
+				numVerts += srf->numVerts;
+			}
+		}
+		else if(*surface->data == SF_GRID)
+		{
+			srfGridMesh_t  *srf = (srfGridMesh_t *) surface->data;
+
+			srf->firstVert = numVerts;
+
+			if(srf->numVerts)
+			{
+				for(i = 0; i < srf->numVerts; i++)
+				{
+					CopyVert(&srf->verts[i], &verts[numVerts + i]);
+				}
+
+				numVerts += srf->numVerts;
+			}
+		}
+		else if(*surface->data == SF_TRIANGLES)
+		{
+			srfTriangles_t *srf = (srfTriangles_t *) surface->data;
+
+			srf->firstVert = numVerts;
+
+			if(srf->numVerts)
+			{
+				for(i = 0; i < srf->numVerts; i++)
+				{
+					CopyVert(&srf->verts[i], &verts[numVerts + i]);
+				}
+
+				numVerts += srf->numVerts;
+			}
+		}
+	}
+
+	s_worldData.vbo = R_CreateVBO2(va("staticBspModel0_VBO %i", 0), numVerts, verts,
+								   ATTR_POSITION | ATTR_TEXCOORD | ATTR_LIGHTCOORD | ATTR_TANGENT | ATTR_BITANGENT |
+								   ATTR_NORMAL | ATTR_COLOR, VBO_USAGE_STATIC);
+
+	s_worldData.ibo = R_CreateIBO2(va("staticBspModel0_IBO %i", 0), numTriangles, triangles, VBO_USAGE_STATIC);
+
+	endTime = ri.Milliseconds();
+	ri.Printf(PRINT_ALL, "world VBO calculation time = %5.2f seconds\n", (endTime - startTime) / 1000.0);
+
+	// point triangle surfaces to world VBO
+	for(k = 0, surface = surfacesSorted[k]; k < numSurfaces; k++, surface = surfacesSorted[k])
+	{
+		if(*surface->data == SF_FACE)
+		{
+			srfSurfaceFace_t *srf = (srfSurfaceFace_t *) surface->data;
+
+			if( srf->numVerts && srf->numTriangles)
+			{
+				srf->vbo = s_worldData.vbo;
+				srf->ibo = s_worldData.ibo;
+			}
+		}
+		else if(*surface->data == SF_GRID)
+		{
+			srfGridMesh_t  *srf = (srfGridMesh_t *) surface->data;
+
+			if( srf->numVerts && srf->numTriangles)
+			{
+				srf->vbo = s_worldData.vbo;
+				srf->ibo = s_worldData.ibo;
+			}
+		}
+		else if(*surface->data == SF_TRIANGLES)
+		{
+			srfTriangles_t *srf = (srfTriangles_t *) surface->data;
+
+			if( srf->numVerts && srf->numTriangles)
+			{
+				srf->vbo = s_worldData.vbo;
+				srf->ibo = s_worldData.ibo;
+			}
+		}
+	}
+
+
+	startTime = ri.Milliseconds();
+
+	ri.Free(surfacesSorted);
+
+	ri.Hunk_FreeTempMemory(triangles);
+	ri.Hunk_FreeTempMemory(verts);
 }
 
 /*
@@ -1256,23 +2001,79 @@ static	void R_LoadSurfaces( lump_t *surfs, lump_t *verts, lump_t *indexLump ) {
 
 	s_worldData.surfaces = out;
 	s_worldData.numsurfaces = count;
+	s_worldData.surfacesViewCount = ri.Hunk_Alloc ( count * sizeof(*s_worldData.surfacesViewCount), h_low );
+	s_worldData.surfacesDlightBits = ri.Hunk_Alloc ( count * sizeof(*s_worldData.surfacesDlightBits), h_low );
+	s_worldData.surfacesPshadowBits = ri.Hunk_Alloc ( count * sizeof(*s_worldData.surfacesPshadowBits), h_low );
 
+	// Two passes, allocate surfaces first, then load them full of data
+	// This ensures surfaces are close together to reduce L2 cache misses when using VBOs,
+	// which don't actually use the verts and tris
+	in = (void *)(fileBase + surfs->fileofs);
+	out = s_worldData.surfaces;
+	for ( i = 0 ; i < count ; i++, in++, out++ ) {
+		switch ( LittleLong( in->surfaceType ) ) {
+			case MST_PATCH:
+				// FIXME: do this
+				break;
+			case MST_TRIANGLE_SOUP:
+				out->data = ri.Hunk_Alloc( sizeof(srfTriangles_t), h_low);
+				break;
+			case MST_PLANAR:
+				out->data = ri.Hunk_Alloc( sizeof(srfSurfaceFace_t), h_low);
+				break;
+			case MST_FLARE:
+				out->data = ri.Hunk_Alloc( sizeof(srfFlare_t), h_low);
+				break;
+			default:
+				break;
+		}
+	}
+
+	in = (void *)(fileBase + surfs->fileofs);
+	out = s_worldData.surfaces;
 	for ( i = 0 ; i < count ; i++, in++, out++ ) {
 		switch ( LittleLong( in->surfaceType ) ) {
 		case MST_PATCH:
 			ParseMesh ( in, dv, out );
+			{
+				srfGridMesh_t *surface = (srfGridMesh_t *)out->data;
+
+				out->cullinfo.type = CULLINFO_BOX | CULLINFO_SPHERE;
+				VectorCopy(surface->meshBounds[0], out->cullinfo.bounds[0]);
+				VectorCopy(surface->meshBounds[1], out->cullinfo.bounds[1]);
+				VectorCopy(surface->localOrigin, out->cullinfo.localOrigin);
+				out->cullinfo.radius = surface->meshRadius;
+			}
 			numMeshes++;
 			break;
 		case MST_TRIANGLE_SOUP:
 			ParseTriSurf( in, dv, out, indexes );
+			{
+				srfTriangles_t *surface = (srfTriangles_t *)out->data;
+
+				out->cullinfo.type = CULLINFO_BOX;
+				VectorCopy(surface->bounds[0], out->cullinfo.bounds[0]);
+				VectorCopy(surface->bounds[1], out->cullinfo.bounds[1]);
+			}
 			numTriSurfs++;
 			break;
 		case MST_PLANAR:
 			ParseFace( in, dv, out, indexes );
+			{
+				srfSurfaceFace_t *surface = (srfSurfaceFace_t *)out->data;
+
+				out->cullinfo.type = CULLINFO_PLANE | CULLINFO_BOX;
+				VectorCopy(surface->bounds[0], out->cullinfo.bounds[0]);
+				VectorCopy(surface->bounds[1], out->cullinfo.bounds[1]);
+				out->cullinfo.plane = surface->plane;
+			}
 			numFaces++;
 			break;
 		case MST_FLARE:
 			ParseFlare( in, dv, out, indexes );
+			{
+				out->cullinfo.type = CULLINFO_NONE;
+			}
 			numFlares++;
 			break;
 		default:
@@ -1311,6 +2112,7 @@ static	void R_LoadSubmodels( lump_t *l ) {
 		ri.Error (ERR_DROP, "LoadMap: funny lump size in %s",s_worldData.name);
 	count = l->filelen / sizeof(*in);
 
+	s_worldData.numBModels = count;
 	s_worldData.bmodels = out = ri.Hunk_Alloc( count * sizeof(*out), h_low );
 
 	for ( i=0 ; i<count ; i++, in++, out++ ) {
@@ -1332,8 +2134,14 @@ static	void R_LoadSubmodels( lump_t *l ) {
 			out->bounds[1][j] = LittleFloat (in->maxs[j]);
 		}
 
-		out->firstSurface = s_worldData.surfaces + LittleLong( in->firstSurface );
+		out->firstSurface = LittleLong( in->firstSurface );
 		out->numSurfaces = LittleLong( in->numSurfaces );
+
+		if(i == 0)
+		{
+			// Tr3B: add this for limiting VBO surface creation
+			s_worldData.numWorldSurfaces = out->numSurfaces;
+		}
 	}
 }
 
@@ -1422,8 +2230,7 @@ static	void R_LoadNodesAndLeafs (lump_t *nodeLump, lump_t *leafLump) {
 			s_worldData.numClusters = out->cluster + 1;
 		}
 
-		out->firstmarksurface = s_worldData.marksurfaces +
-			LittleLong(inLeaf->firstLeafSurface);
+		out->firstmarksurface = LittleLong(inLeaf->firstLeafSurface);
 		out->nummarksurfaces = LittleLong(inLeaf->numLeafSurfaces);
 	}	
 
@@ -1469,7 +2276,7 @@ static	void R_LoadMarksurfaces (lump_t *l)
 {	
 	int		i, j, count;
 	int		*in;
-	msurface_t **out;
+	int     *out;
 	
 	in = (void *)(fileBase + l->fileofs);
 	if (l->filelen % sizeof(*in))
@@ -1483,7 +2290,7 @@ static	void R_LoadMarksurfaces (lump_t *l)
 	for ( i=0 ; i<count ; i++)
 	{
 		j = LittleLong(in[i]);
-		out[i] = s_worldData.surfaces + j;
+		out[i] = j;
 	}
 }
 
@@ -1762,6 +2569,22 @@ void R_LoadEntities( lump_t *l ) {
 			sscanf(value, "%f %f %f", &w->lightGridSize[0], &w->lightGridSize[1], &w->lightGridSize[2] );
 			continue;
 		}
+
+		// check for auto exposure
+		if (!Q_stricmp(keyname, "autoExposure")) {
+			int check;
+			sscanf(value, "%d", &check );
+
+			if (check) {
+				tr.autoExposure = qtrue;
+			}
+			continue;
+		}
+
+		if (!Q_stricmp(keyname, "autoExposureMinMax")) {
+			sscanf(value, "%f %f", &tr.autoExposureMinMax[0], &tr.autoExposureMinMax[1]);
+			continue;
+		}
 	}
 }
 
@@ -1783,6 +2606,371 @@ qboolean R_GetEntityToken( char *buffer, int size ) {
 	}
 }
 
+
+/*
+=================
+R_MergeLeafSurfaces
+
+Merges surfaces that share a common leaf
+=================
+*/
+void R_MergeLeafSurfaces(void)
+{
+	int i, j, k;
+	int numWorldSurfaces;
+	int mergedSurfIndex;
+	int numMergedSurfaces;
+	int numUnmergedSurfaces;
+	IBO_t *ibo;
+
+	msurface_t *mergedSurf;
+
+	glIndex_t *iboIndexes, *outIboIndexes;
+	int numIboIndexes;
+
+	int startTime, endTime;
+
+	startTime = ri.Milliseconds();
+
+	numWorldSurfaces = s_worldData.numWorldSurfaces;
+
+	// use viewcount to keep track of mergers
+	for (i = 0; i < numWorldSurfaces; i++)
+	{
+		s_worldData.surfacesViewCount[i] = -1;
+	}
+
+	// create ibo
+	ibo = tr.ibos[tr.numIBOs++] = ri.Hunk_Alloc(sizeof(*ibo), h_low);
+	memset(ibo, 0, sizeof(*ibo));
+	Q_strncpyz(ibo->name, "staticWorldMesh_IBO_mergedSurfs", sizeof(ibo->name));
+
+	// allocate more than we need
+	iboIndexes = outIboIndexes = ri.Malloc(s_worldData.ibo->indexesSize);
+
+	// mark matching surfaces
+	for (i = 0; i < s_worldData.numnodes - s_worldData.numDecisionNodes; i++)
+	{
+		mnode_t *leaf = s_worldData.nodes + s_worldData.numDecisionNodes + i;
+
+		for (j = 0; j < leaf->nummarksurfaces; j++)
+		{
+			msurface_t *surf1;
+			shader_t *shader1;
+			int fogIndex1;
+			int surfNum1;
+
+			surfNum1 = *(s_worldData.marksurfaces + leaf->firstmarksurface + j);
+
+			if (s_worldData.surfacesViewCount[surfNum1] != -1)
+				continue;
+
+			surf1 = s_worldData.surfaces + surfNum1;
+
+			if ((*surf1->data != SF_GRID) && (*surf1->data != SF_TRIANGLES) && (*surf1->data != SF_FACE))
+				continue;
+
+			shader1 = surf1->shader;
+
+			if(shader1->isSky)
+				continue;
+
+			if(shader1->isPortal)
+				continue;
+
+			if(ShaderRequiresCPUDeforms(shader1))
+				continue;
+
+			fogIndex1 = surf1->fogIndex;
+
+			s_worldData.surfacesViewCount[surfNum1] = surfNum1;
+
+			for (k = j + 1; k < leaf->nummarksurfaces; k++)
+			{
+				msurface_t *surf2;
+				shader_t *shader2;
+				int fogIndex2;
+				int surfNum2;
+
+				surfNum2 = *(s_worldData.marksurfaces + leaf->firstmarksurface + k);
+
+				if (s_worldData.surfacesViewCount[surfNum2] != -1)
+					continue;
+				
+				surf2 = s_worldData.surfaces + surfNum2;
+
+				if ((*surf2->data != SF_GRID) && (*surf2->data != SF_TRIANGLES) && (*surf2->data != SF_FACE))
+					continue;
+
+				shader2 = surf2->shader;
+
+				if (shader1 != shader2)
+					continue;
+
+				fogIndex2 = surf2->fogIndex;
+
+				if (fogIndex1 != fogIndex2)
+					continue;
+
+				s_worldData.surfacesViewCount[surfNum2] = surfNum1;
+			}
+		}
+	}
+
+	// count merged/unmerged surfaces
+	numMergedSurfaces = 0;
+	numUnmergedSurfaces = 0;
+	for (i = 0; i < numWorldSurfaces; i++)
+	{
+		if (s_worldData.surfacesViewCount[i] == i)
+		{
+			numMergedSurfaces++;
+		}
+		else if (s_worldData.surfacesViewCount[i] == -1)
+		{
+			numUnmergedSurfaces++;
+		}
+	}
+
+	// Allocate merged surfaces
+	s_worldData.mergedSurfaces = ri.Hunk_Alloc(sizeof(*s_worldData.mergedSurfaces) * numMergedSurfaces, h_low);
+	s_worldData.mergedSurfacesViewCount = ri.Hunk_Alloc(sizeof(*s_worldData.mergedSurfacesViewCount) * numMergedSurfaces, h_low);
+	s_worldData.mergedSurfacesDlightBits = ri.Hunk_Alloc(sizeof(*s_worldData.mergedSurfacesDlightBits) * numMergedSurfaces, h_low);
+	s_worldData.numMergedSurfaces = numMergedSurfaces;
+	
+	// view surfaces are like mark surfaces, except negative ones represent merged surfaces
+	// -1 represents 0, -2 represents 1, and so on
+	s_worldData.viewSurfaces = ri.Hunk_Alloc(sizeof(*s_worldData.viewSurfaces) * s_worldData.nummarksurfaces, h_low);
+
+	// copy view surfaces into mark surfaces
+	for (i = 0; i < s_worldData.nummarksurfaces; i++)
+	{
+		s_worldData.viewSurfaces[i] = s_worldData.marksurfaces[i];
+	}
+
+	// actually merge surfaces
+	numIboIndexes = 0;
+	mergedSurfIndex = 0;
+	mergedSurf = s_worldData.mergedSurfaces;
+	for (i = 0; i < numWorldSurfaces; i++)
+	{
+		msurface_t *surf1;
+
+		vec3_t bounds[2];
+
+		int numSurfsToMerge;
+		int numTriangles;
+		int numVerts;
+		int firstIndex;
+
+		srfVBOMesh_t *vboSurf;
+
+		if (s_worldData.surfacesViewCount[i] != i)
+			continue;
+
+		surf1 = s_worldData.surfaces + i;
+
+		// count verts, indexes, and surfaces
+		numSurfsToMerge = 0;
+		numTriangles = 0;
+		numVerts = 0;
+		for (j = i; j < numWorldSurfaces; j++)
+		{
+			msurface_t *surf2;
+
+			if (s_worldData.surfacesViewCount[j] != i)
+				continue;
+
+			surf2 = s_worldData.surfaces + j;
+
+			switch(*surf2->data)
+			{
+				case SF_FACE:
+					{
+						srfSurfaceFace_t *face;
+
+						face = (srfSurfaceFace_t *) surf2->data;
+						numTriangles += face->numTriangles;
+						numVerts += face->numVerts;
+					}
+					break;
+
+				case SF_GRID:
+					{
+						srfGridMesh_t *grid;
+
+						grid = (srfGridMesh_t *) surf2->data;
+						numTriangles += grid->numTriangles;
+						numVerts += grid->numVerts;
+					}
+					break;
+
+				case SF_TRIANGLES:
+					{
+						srfTriangles_t *tris;
+
+						tris = (srfTriangles_t *) surf2->data;
+						numTriangles += tris->numTriangles;
+						numVerts += tris->numVerts;
+					}
+					break;
+
+				default:
+					break;
+			}
+
+			numSurfsToMerge++;
+		}
+
+		if (numVerts == 0 || numTriangles == 0 || numSurfsToMerge < 2)
+		{
+			continue;
+		}
+
+		// Merge surfaces (indexes) and calculate bounds
+		ClearBounds(bounds[0], bounds[1]);
+		firstIndex = numIboIndexes;
+		for (j = i; j < numWorldSurfaces; j++)
+		{
+			msurface_t *surf2;
+
+			if (s_worldData.surfacesViewCount[j] != i)
+				continue;
+
+			surf2 = s_worldData.surfaces + j;
+
+			AddPointToBounds(surf2->cullinfo.bounds[0], bounds[0], bounds[1]);
+			AddPointToBounds(surf2->cullinfo.bounds[1], bounds[0], bounds[1]);
+
+			switch(*surf2->data)
+			{
+				case SF_FACE:
+					{
+						srfSurfaceFace_t *face;
+
+						face = (srfSurfaceFace_t *) surf2->data;
+
+						for (k = 0; k < face->numTriangles; k++)
+						{
+							*outIboIndexes++ = face->triangles[k].indexes[0] + face->firstVert;
+							*outIboIndexes++ = face->triangles[k].indexes[1] + face->firstVert;
+							*outIboIndexes++ = face->triangles[k].indexes[2] + face->firstVert;
+							numIboIndexes += 3;
+						}
+					}
+					break;
+
+				case SF_GRID:
+					{
+						srfGridMesh_t *grid;
+
+						grid = (srfGridMesh_t *) surf2->data;
+
+						for (k = 0; k < grid->numTriangles; k++)
+						{
+							*outIboIndexes++ = grid->triangles[k].indexes[0] + grid->firstVert;
+							*outIboIndexes++ = grid->triangles[k].indexes[1] + grid->firstVert;
+							*outIboIndexes++ = grid->triangles[k].indexes[2] + grid->firstVert;
+							numIboIndexes += 3;
+						}
+					}
+					break;
+
+				case SF_TRIANGLES:
+					{
+						srfTriangles_t *tris;
+
+						tris = (srfTriangles_t *) surf2->data;
+
+						for (k = 0; k < tris->numTriangles; k++)
+						{
+							*outIboIndexes++ = tris->triangles[k].indexes[0] + tris->firstVert;
+							*outIboIndexes++ = tris->triangles[k].indexes[1] + tris->firstVert;
+							*outIboIndexes++ = tris->triangles[k].indexes[2] + tris->firstVert;
+							numIboIndexes += 3;
+						}
+					}
+					break;
+
+				// never happens, but silences a compile warning
+				default:
+					break;
+			}
+		}
+
+		vboSurf = ri.Hunk_Alloc(sizeof(*vboSurf), h_low);
+		memset(vboSurf, 0, sizeof(*vboSurf));
+		vboSurf->surfaceType = SF_VBO_MESH;
+
+		vboSurf->vbo = s_worldData.vbo;
+		vboSurf->ibo = ibo;
+
+		vboSurf->numIndexes = numTriangles * 3;
+		vboSurf->numVerts = numVerts;
+		vboSurf->firstIndex = firstIndex;
+
+		vboSurf->shader = surf1->shader;
+		vboSurf->fogIndex = surf1->fogIndex;
+
+		VectorCopy(bounds[0], vboSurf->bounds[0]);
+		VectorCopy(bounds[1], vboSurf->bounds[1]);
+
+		VectorCopy(bounds[0], mergedSurf->cullinfo.bounds[0]);
+		VectorCopy(bounds[1], mergedSurf->cullinfo.bounds[1]);
+
+		mergedSurf->cullinfo.type = CULLINFO_BOX;
+		mergedSurf->data          = (surfaceType_t *)vboSurf;
+		mergedSurf->fogIndex      = surf1->fogIndex;
+		mergedSurf->shader        = surf1->shader;
+
+		// redirect view surfaces to this surf
+		for (j = i; j < numWorldSurfaces; j++)
+		{
+			if (s_worldData.surfacesViewCount[j] != i)
+				continue;
+
+			for (k = 0; k < s_worldData.nummarksurfaces; k++)
+			{
+				int *mark = s_worldData.marksurfaces + k;
+				int *view = s_worldData.viewSurfaces + k;
+
+				if (*mark == j)
+					*view = -(mergedSurfIndex + 1);
+			}
+		}
+
+		mergedSurfIndex++;
+		mergedSurf++;
+	}
+
+	// finish up the ibo
+	R_SyncRenderThread();
+
+	qglGenBuffersARB(1, &ibo->indexesVBO);
+
+	R_BindIBO(ibo);
+
+	qglBufferDataARB(GL_ELEMENT_ARRAY_BUFFER_ARB, numIboIndexes * sizeof(*iboIndexes), iboIndexes, GL_STATIC_DRAW_ARB);
+
+	R_BindNullIBO();
+
+	GL_CheckErrors();
+
+	ri.Free(iboIndexes);
+
+	endTime = ri.Milliseconds();
+
+	ri.Printf(PRINT_ALL, "Processed %d surfaces into %d merged, %d unmerged in %5.2f seconds\n", 
+		numWorldSurfaces, numMergedSurfaces, numUnmergedSurfaces, (endTime - startTime) / 1000.0f);
+
+	// reset viewcounts
+	for (i = 0; i < numWorldSurfaces; i++)
+	{
+		s_worldData.surfacesViewCount[i] = -1;
+	}
+}
+
+
 /*
 =================
 RE_LoadWorldMap
@@ -1800,7 +2988,7 @@ void RE_LoadWorldMap( const char *name ) {
 	byte		*startMarker;
 
 	if ( tr.worldMapLoaded ) {
-		ri.Error( ERR_DROP, "ERROR: attempted to redundantly load world map" );
+		ri.Error( ERR_DROP, "ERROR: attempted to redundantly load world map\n" );
 	}
 
 	// set default sun direction to be used if it isn't
@@ -1810,6 +2998,10 @@ void RE_LoadWorldMap( const char *name ) {
 	tr.sunDirection[2] = 0.9f;
 
 	VectorNormalize( tr.sunDirection );
+
+	// set default autoexposure settings
+	tr.autoExposureMinMax[0] = -2.0;
+	tr.autoExposureMinMax[1] = 2.0;
 
 	tr.worldMapLoaded = qtrue;
 
@@ -1847,8 +3039,9 @@ void RE_LoadWorldMap( const char *name ) {
 	}
 
 	// load into heap
+	R_LoadEntities( &header->lumps[LUMP_ENTITIES] );
 	R_LoadShaders( &header->lumps[LUMP_SHADERS] );
-	R_LoadLightmaps( &header->lumps[LUMP_LIGHTMAPS] );
+	R_LoadLightmaps( &header->lumps[LUMP_LIGHTMAPS], &header->lumps[LUMP_SURFACES] );
 	R_LoadPlanes (&header->lumps[LUMP_PLANES]);
 	R_LoadFogs( &header->lumps[LUMP_FOGS], &header->lumps[LUMP_BRUSHES], &header->lumps[LUMP_BRUSHSIDES] );
 	R_LoadSurfaces( &header->lumps[LUMP_SURFACES], &header->lumps[LUMP_DRAWVERTS], &header->lumps[LUMP_DRAWINDEXES] );
@@ -1856,14 +3049,27 @@ void RE_LoadWorldMap( const char *name ) {
 	R_LoadNodesAndLeafs (&header->lumps[LUMP_NODES], &header->lumps[LUMP_LEAFS]);
 	R_LoadSubmodels (&header->lumps[LUMP_MODELS]);
 	R_LoadVisibility( &header->lumps[LUMP_VISIBILITY] );
-	R_LoadEntities( &header->lumps[LUMP_ENTITIES] );
 	R_LoadLightGrid( &header->lumps[LUMP_LIGHTGRID] );
+
+	// create static VBOS from the world
+	R_CreateWorldVBO();
+	if (r_mergeLeafSurfaces->integer)
+	{
+		R_MergeLeafSurfaces();
+	}
 
 	s_worldData.dataSize = (byte *)ri.Hunk_Alloc(0, h_low) - startMarker;
 
 	// only set tr.world now that we know the entire level has loaded properly
 	tr.world = &s_worldData;
 
+	// make sure the VBO glState entries are safe
+	R_BindNullVBO();
+	R_BindNullIBO();
+
     ri.FS_FreeFile( buffer.v );
 }
+
+
+
 

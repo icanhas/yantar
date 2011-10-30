@@ -706,12 +706,11 @@ int Q_isalpha( int c )
 qboolean Q_isanumber( const char *s )
 {
 	char *p;
-	double UNUSED_VAR d;
 
 	if( *s == '\0' )
 		return qfalse;
 
-	d = strtod( s, &p );
+	strtod( s, &p );
 
 	return *p == '\0';
 }

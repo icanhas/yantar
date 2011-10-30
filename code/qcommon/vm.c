@@ -481,20 +481,18 @@ vmHeader_t *VM_LoadQVM( vm_t *vm, qboolean alloc, qboolean unpure)
 
 	if(header.h->vmMagic == VM_MAGIC_VER2)
 	{
-		int previousNumJumpTableTargets = vm->numJumpTableTargets;
+		Com_Printf("Loading %d jump table targets\n", vm->numJumpTableTargets);
 
 		header.h->jtrgLength &= ~0x03;
-
-		vm->numJumpTableTargets = header.h->jtrgLength >> 2;
-		Com_Printf("Loading %d jump table targets\n", vm->numJumpTableTargets);
 
 		if(alloc)
 		{
 			vm->jumpTableTargets = Hunk_Alloc(header.h->jtrgLength, h_high);
+			vm->numJumpTableTargets = header.h->jtrgLength >> 2;
 		}
 		else
 		{
-			if(vm->numJumpTableTargets != previousNumJumpTableTargets)
+			if((header.h->jtrgLength >> 2) != vm->numJumpTableTargets)
 			{
 				VM_Free(vm);
 				FS_FreeFile(header.v);
