@@ -323,9 +323,7 @@ qboolean R_LoadIQM( model_t *mod, void *buffer, int filesize, const char *mod_na
 		    mesh->first_vertex + mesh->num_vertexes > header->num_vertexes ||
 		    mesh->first_triangle >= header->num_triangles ||
 		    mesh->first_triangle + mesh->num_triangles > header->num_triangles ||
-		    mesh->name < 0 ||
 		    mesh->name >= header->num_text ||
-		    mesh->material < 0 ||
 		    mesh->material >= header->num_text ) {
 			return qfalse;
 		}
