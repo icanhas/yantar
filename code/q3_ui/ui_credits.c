@@ -168,6 +168,11 @@ UI_CreditMenu
 ===============
 */
 void UI_CreditMenu( void ) {
+    if (ui_creditsOnExit.integer == 0) {
+        trap_Cmd_ExecuteText(EXEC_APPEND, "quit\n");
+        return;
+    }
+
 	memset( &s_credits, 0 ,sizeof(s_credits) );
 
 	s_credits.menu.draw = UI_CreditMenu_Draw;
