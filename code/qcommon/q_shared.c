@@ -710,7 +710,7 @@ qboolean Q_isanumber( const char *s )
 	if( *s == '\0' )
 		return qfalse;
 
-	strtod( s, &p );
+	(void)strtod( s, &p );
 
 	return *p == '\0';
 }
