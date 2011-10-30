@@ -1319,5 +1319,6 @@ void Cvar_Init (void)
 	Cmd_SetCommandCompletionFunc("unset", Cvar_CompleteCvarName);
 
 	Cmd_AddCommand ("cvarlist", Cvar_List_f);
+    Cmd_AddCommand ("find", Cvar_List_f);
 	Cmd_AddCommand ("cvar_restart", Cvar_Restart_f);
 }
