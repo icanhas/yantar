@@ -1320,5 +1320,5 @@ void Cvar_Init (void)
 
 	Cmd_AddCommand ("cvarlist", Cvar_List_f);
     Cmd_AddCommand ("find", Cvar_List_f);
-	Cmd_AddCommand ("cvar_restart", Cvar_Restart_f);
+	Cmd_AddCommand ("cvar_reset", Cvar_Restart_f);
 }
