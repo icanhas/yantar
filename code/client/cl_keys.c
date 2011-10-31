@@ -626,20 +626,23 @@ void Console_Key (int key) {
 		CL_SaveConsoleHistory( );
 
 		if ( clc.state == CA_DISCONNECTED ) {
-			SCR_UpdateScreen ();	// force an update, because the command
-		}							// may take some time
+            /* force an update, because the command may take some time */
+			SCR_UpdateScreen ();
+		}
 		return;
 	}
 
-	// command completion
-
+    /*
+     * command completion
+     */
 	if (key == K_TAB) {
 		Field_AutoComplete(&g_consoleField);
 		return;
 	}
 
-	// command history (ctrl-p ctrl-n for unix style)
-
+    /* 
+     * command history (ctrl-p ctrl-n for unix style)
+     */
 	if ( (key == K_MWHEELUP && keys[K_SHIFT].down) || ( key == K_UPARROW ) || ( key == K_KP_UPARROW ) ||
 		 ( ( tolower(key) == 'p' ) && keys[K_CTRL].down ) ) {
 		if ( nextHistoryLine - historyLine < COMMAND_HISTORY 
@@ -663,43 +666,55 @@ void Console_Key (int key) {
 		return;
 	}
 
-	// console scrolling
+    /* 
+     * console scrolling
+     */
 	if ( key == K_PGUP ) {
+        /* hold shift to accelerate scrolling */
+        if (keys[K_SHIFT].down) {
+            Con_PageUp();
+            Con_PageUp();
+        }
 		Con_PageUp();
 		return;
 	}
 
 	if ( key == K_PGDN) {
+        if (keys[K_SHIFT].down) {
+            Con_PageDown();
+            Con_PageDown();
+        }
 		Con_PageDown();
 		return;
 	}
 
-	if ( key == K_MWHEELUP) {	//----(SA)	added some mousewheel functionality to the console
+	if ( key == K_MWHEELUP) {
 		Con_PageUp();
-		if(keys[K_CTRL].down) {	// hold <ctrl> to accelerate scrolling
-			Con_PageUp();
+        /* hold ctrl to accelerate scrolling */
+		if(keys[K_CTRL].down) {
+            Con_PageUp();
 			Con_PageUp();
 		}
 		return;
 	}
 
-	if ( key == K_MWHEELDOWN) {	//----(SA)	added some mousewheel functionality to the console
+	if ( key == K_MWHEELDOWN) {
 		Con_PageDown();
-		if(keys[K_CTRL].down) {	// hold <ctrl> to accelerate scrolling
+		if(keys[K_CTRL].down) {
 			Con_PageDown();
 			Con_PageDown();
 		}
 		return;
 	}
 
-	// ctrl-home = top of console
-	if ( key == K_HOME && keys[K_CTRL].down ) {
+	// shift-home = top of console
+	if (key == K_HOME && keys[K_SHIFT].down) {
 		Con_Top();
 		return;
 	}
 
-	// ctrl-end = bottom of console
-	if ( key == K_END && keys[K_CTRL].down ) {
+	// shift-end = bottom of console
+	if (key == K_END && keys[K_SHIFT].down) {
 		Con_Bottom();
 		return;
 	}
