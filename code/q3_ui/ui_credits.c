@@ -168,7 +168,7 @@ UI_CreditMenu
 ===============
 */
 void UI_CreditMenu( void ) {
-    if (ui_creditsOnExit.integer == 0) {
+    if (ui_skipExitCredits.integer > 0) {
         trap_Cmd_ExecuteText(EXEC_APPEND, "quit\n");
         return;
     }

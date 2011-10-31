@@ -156,7 +156,7 @@ vmCvar_t	ui_server16;
 
 vmCvar_t	ui_cdkeychecked;
 vmCvar_t	ui_ioq3;
-vmCvar_t    ui_creditsOnExit;
+vmCvar_t    ui_skipExitCredits;
 
 static cvarTable_t		cvarTable[] = {
 	{ &ui_ffa_fraglimit, "ui_ffa_fraglimit", "20", CVAR_ARCHIVE },
@@ -216,7 +216,7 @@ static cvarTable_t		cvarTable[] = {
 
 	{ &ui_cdkeychecked, "ui_cdkeychecked", "0", CVAR_ROM },
 	{ &ui_ioq3, "ui_ioq3", "1", CVAR_ROM },
-    { &ui_creditsOnExit, "ui_creditsOnExit", "0", CVAR_ARCHIVE }
+    { &ui_skipExitCredits, "ui_skipExitCredits", "1", CVAR_ARCHIVE }
 };
 
 static int cvarTableSize = ARRAY_LEN( cvarTable );
