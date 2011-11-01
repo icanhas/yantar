@@ -1065,9 +1065,19 @@ $(echo_cmd) "DED_CC $<"
 $(Q)$(CC) $(NOTSHLIBCFLAGS) -DDEDICATED $(CFLAGS) $(SERVER_CFLAGS) $(OPTIMIZE) -o $@ -c $<
 endef
 
+ifeq ($(COMPILE_ARCH),x86)
+	WINDRES_FLAGS=-Fpe-i386
+else
+ifeq ($(COMPILE_ARCH),x64)
+	WINDRES_FLAGS=-Fpe-x86-64
+else
+	WINDRES_FLAGS=
+endif
+endif
+
 define DO_WINDRES
 $(echo_cmd) "WINDRES $<"
-$(Q)$(WINDRES) -i $< -o $@
+$(Q)$(WINDRES) $(WINDRES_FLAGS) -i $< -o $@
 endef
 
 
