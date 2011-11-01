@@ -252,9 +252,13 @@ Sys_Init
 */
 void Sys_Init(void)
 {
+    char pidstr[32];
+    Com_sprintf(pidstr, sizeof(pidstr), "%d", Sys_PID());
+
 	Cmd_AddCommand( "in_restart", Sys_In_Restart_f );
 	Cvar_Set( "arch", OS_STRING " " ARCH_STRING );
 	Cvar_Set( "username", Sys_GetCurrentUser( ) );
+    Cvar_Set( "pid", pidstr );
 }
 
 /*
