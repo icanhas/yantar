@@ -486,6 +486,17 @@ ifeq ($(PLATFORM),mingw32)
     WINDRES=windres
   endif
 
+  # Give windres a target flag
+  ifeq ($(COMPILE_ARCH),x86)
+    WINDRES_FLAGS=-Fpe-i386
+  else
+    ifeq ($(COMPILE_ARCH),x64)
+      WINDRES_FLAGS=-Fpe-x86-64
+    else
+      WINDRES_FLAGS=
+    endif
+  endif
+
   BASE_CFLAGS = -Wall -fno-strict-aliasing -Wimplicit -Wstrict-prototypes \
     -DUSE_ICON
 
@@ -1064,16 +1075,6 @@ define DO_DED_CC
 $(echo_cmd) "DED_CC $<"
 $(Q)$(CC) $(NOTSHLIBCFLAGS) -DDEDICATED $(CFLAGS) $(SERVER_CFLAGS) $(OPTIMIZE) -o $@ -c $<
 endef
-
-ifeq ($(COMPILE_ARCH),x86)
-	WINDRES_FLAGS=-Fpe-i386
-else
-ifeq ($(COMPILE_ARCH),x64)
-	WINDRES_FLAGS=-Fpe-x86-64
-else
-	WINDRES_FLAGS=
-endif
-endif
 
 define DO_WINDRES
 $(echo_cmd) "WINDRES $<"
