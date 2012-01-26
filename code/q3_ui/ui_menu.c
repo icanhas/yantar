@@ -137,8 +137,8 @@ void Main_MenuEvent (void* ptr, int event) {
 MainMenu_Cache
 ===============
 */
-void MainMenu_Cache( void ) {
-	s_main.bannerModel = trap_R_RegisterModel( MAIN_BANNER_MODEL );
+void MainMenu_Cache( void ) 
+{
 }
 
 sfxHandle_t ErrorMessage_Key(int key)
@@ -162,7 +162,7 @@ static void Main_MenuDraw( void ) {
 	vec3_t			angles;
 	float			adjust;
 	float			x, y, w, h;
-	vec4_t			color = {0.5, 0, 0, 1};
+	vec4_t			color = {0.5, 0, 0.5, 0.8};
 
 	// setup the refdef
 
@@ -194,6 +194,7 @@ static void Main_MenuDraw( void ) {
 
 	trap_R_ClearScene();
 
+    /*
 	// add the model
 
 	memset( &ent, 0, sizeof(ent) );
@@ -210,6 +211,7 @@ static void Main_MenuDraw( void ) {
 	trap_R_AddRefEntityToScene( &ent );
 
 	trap_R_RenderScene( &refdef );
+    */
 	
 	if (strlen(s_errorMessage.errorMessage))
 	{
@@ -225,7 +227,7 @@ static void Main_MenuDraw( void ) {
 		UI_DrawProportionalString( 320, 372, "DEMO      FOR MATURE AUDIENCES      DEMO", UI_CENTER|UI_SMALLFONT, color );
 		UI_DrawString( 320, 400, "Quake III Arena(c) 1999-2000, Id Software, Inc.  All Rights Reserved", UI_CENTER|UI_SMALLFONT, color );
 	} else {
-		UI_DrawString( 320, 450, "Quake III Arena(c) 1999-2000, Id Software, Inc.  All Rights Reserved", UI_CENTER|UI_SMALLFONT, color );
+		UI_DrawString( 320, 450, "YANTAR", UI_CENTER|UI_SMALLFONT, color );
 	}
 }
 
@@ -269,7 +271,7 @@ and that local cinematics are killed
 void UI_MainMenu( void ) {
 	int		y;
 	qboolean teamArena = qfalse;
-	int		style = UI_CENTER | UI_DROPSHADOW;
+	int		style = 0; // UI_CENTER | UI_DROPSHADOW;
 
 	trap_Cvar_Set( "sv_killserver", "1" );
 
@@ -318,7 +320,7 @@ void UI_MainMenu( void ) {
 	s_main.singleplayer.generic.id			= ID_SINGLEPLAYER;
 	s_main.singleplayer.generic.callback	= Main_MenuEvent; 
 	s_main.singleplayer.string				= "SINGLE PLAYER";
-	s_main.singleplayer.color				= color_red;
+	s_main.singleplayer.color				= color_black;
 	s_main.singleplayer.style				= style;
 
 	y += MAIN_MENU_VERTICAL_SPACING;
@@ -329,7 +331,7 @@ void UI_MainMenu( void ) {
 	s_main.multiplayer.generic.id			= ID_MULTIPLAYER;
 	s_main.multiplayer.generic.callback		= Main_MenuEvent; 
 	s_main.multiplayer.string				= "MULTIPLAYER";
-	s_main.multiplayer.color				= color_red;
+	s_main.multiplayer.color				= color_black;
 	s_main.multiplayer.style				= style;
 
 	y += MAIN_MENU_VERTICAL_SPACING;
@@ -340,7 +342,7 @@ void UI_MainMenu( void ) {
 	s_main.setup.generic.id					= ID_SETUP;
 	s_main.setup.generic.callback			= Main_MenuEvent; 
 	s_main.setup.string						= "SETUP";
-	s_main.setup.color						= color_red;
+	s_main.setup.color						= color_black;
 	s_main.setup.style						= style;
 
 	y += MAIN_MENU_VERTICAL_SPACING;
@@ -351,7 +353,7 @@ void UI_MainMenu( void ) {
 	s_main.demos.generic.id					= ID_DEMOS;
 	s_main.demos.generic.callback			= Main_MenuEvent; 
 	s_main.demos.string						= "DEMOS";
-	s_main.demos.color						= color_red;
+	s_main.demos.color						= color_black;
 	s_main.demos.style						= style;
 
 	y += MAIN_MENU_VERTICAL_SPACING;
@@ -362,7 +364,7 @@ void UI_MainMenu( void ) {
 	s_main.cinematics.generic.id			= ID_CINEMATICS;
 	s_main.cinematics.generic.callback		= Main_MenuEvent; 
 	s_main.cinematics.string				= "CINEMATICS";
-	s_main.cinematics.color					= color_red;
+	s_main.cinematics.color					= color_black;
 	s_main.cinematics.style					= style;
 
 	if (UI_TeamArenaExists()) {
@@ -375,7 +377,7 @@ void UI_MainMenu( void ) {
 		s_main.teamArena.generic.id				= ID_TEAMARENA;
 		s_main.teamArena.generic.callback		= Main_MenuEvent; 
 		s_main.teamArena.string					= "TEAM ARENA";
-		s_main.teamArena.color					= color_red;
+		s_main.teamArena.color					= color_black;
 		s_main.teamArena.style					= style;
 	}
 
@@ -387,7 +389,7 @@ void UI_MainMenu( void ) {
 	s_main.mods.generic.id				= ID_MODS;
 	s_main.mods.generic.callback		= Main_MenuEvent; 
 	s_main.mods.string					= "MODS";
-	s_main.mods.color					= color_red;
+	s_main.mods.color					= color_black;
 	s_main.mods.style					= style;
 
 	y += MAIN_MENU_VERTICAL_SPACING;
@@ -398,7 +400,7 @@ void UI_MainMenu( void ) {
 	s_main.exit.generic.id					= ID_EXIT;
 	s_main.exit.generic.callback			= Main_MenuEvent; 
 	s_main.exit.string						= "EXIT";
-	s_main.exit.color						= color_red;
+	s_main.exit.color						= color_black;
 	s_main.exit.style						= style;
 
 	Menu_AddItem( &s_main.menu,	&s_main.singleplayer );

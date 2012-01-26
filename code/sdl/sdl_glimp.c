@@ -406,7 +406,6 @@ static int GLimp_SetMode(int mode, qboolean fullscreen, qboolean noborder)
 		}
 #endif
 
-		SDL_WM_SetCaption(CLIENT_WINDOW_TITLE, CLIENT_WINDOW_MIN_TITLE);
 		SDL_ShowCursor(0);
 
 		if (!(vidscreen = SDL_SetVideoMode(glConfig.vidWidth, glConfig.vidHeight, colorbits, flags)))
@@ -414,6 +413,8 @@ static int GLimp_SetMode(int mode, qboolean fullscreen, qboolean noborder)
 			ri.Printf( PRINT_DEVELOPER, "SDL_SetVideoMode failed: %s\n", SDL_GetError( ) );
 			continue;
 		}
+
+		SDL_WM_SetCaption(CLIENT_WINDOW_TITLE, CLIENT_WINDOW_MIN_TITLE);
 
 		opengl_context = GLimp_GetCurrentContext();
 
@@ -423,6 +424,7 @@ static int GLimp_SetMode(int mode, qboolean fullscreen, qboolean noborder)
 		glConfig.colorBits = tcolorbits;
 		glConfig.depthBits = tdepthbits;
 		glConfig.stencilBits = tstencilbits;
+
 		break;
 	}
 

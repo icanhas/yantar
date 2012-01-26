@@ -38,7 +38,7 @@ static qhandle_t	sliderBar;
 static qhandle_t	sliderButton_0;
 static qhandle_t	sliderButton_1;
 
-vec4_t menu_text_color	    = {1.0f, 1.0f, 1.0f, 1.0f};
+vec4_t menu_text_color	    = {0.0f, 0.0f, 0.0f, 0.0f};
 vec4_t menu_dim_color       = {0.0f, 0.0f, 0.0f, 0.75f};
 vec4_t color_black	    = {0.00f, 0.00f, 0.00f, 1.00f};
 vec4_t color_white	    = {1.00f, 1.00f, 1.00f, 1.00f};
@@ -50,7 +50,7 @@ vec4_t color_red	    = {1.00f, 0.00f, 0.00f, 1.00f};
 vec4_t color_dim	    = {0.00f, 0.00f, 0.00f, 0.25f};
 
 // current color scheme
-vec4_t pulse_color          = {1.00f, 1.00f, 1.00f, 1.00f};
+vec4_t pulse_color          = {0.00f, 0.00f, 0.00f, 0.00f};
 vec4_t text_color_disabled  = {0.50f, 0.50f, 0.50f, 1.00f};	// light gray
 vec4_t text_color_normal    = {1.00f, 0.43f, 0.00f, 1.00f};	// light orange
 vec4_t text_color_highlight = {1.00f, 1.00f, 0.00f, 1.00f};	// bright yellow
