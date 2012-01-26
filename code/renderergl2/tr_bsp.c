@@ -125,6 +125,24 @@ static	void R_ColorShiftLightingBytes( byte in[4], byte out[4] ) {
 	out[3] = in[3];
 }
 
+
+/*
+===============
+R_ColorShiftLightingBytes
+
+===============
+*/
+static void R_ColorShiftLightingFloats(float in[4], float out[4], float scale )
+{
+	scale *= pow(2.0f, r_mapOverBrightBits->integer - tr.overbrightBits);
+
+	out[0] = in[0] * scale;
+	out[1] = in[1] * scale;
+	out[2] = in[2] * scale;
+	out[3] = in[3];
+}
+
+
 void ColorToRGBE(const vec3_t color, unsigned char rgbe[4])
 {
 	vec3_t          sample;
@@ -304,7 +322,7 @@ static	void R_LoadLightmaps( lump_t *l, lump_t *surfs ) {
 			int size = 0;
 
 			// look for hdr lightmaps
-			if (r_hdr->integer && glRefConfig.halfFloatPixel)
+			if (r_hdr->integer)
 			{
 				Com_sprintf( filename, sizeof( filename ), "maps/%s/lm_%04d.hdr", s_worldData.baseName, i * (tr.worldDeluxeMapping ? 2 : 1) );
 				//ri.Printf(PRINT_ALL, "looking for %s\n", filename);
@@ -450,6 +468,15 @@ static	void R_LoadLightmaps( lump_t *l, lump_t *surfs ) {
 				image[j*4+0] = buf_p[j*3+0];
 				image[j*4+1] = buf_p[j*3+1];
 				image[j*4+2] = buf_p[j*3+2];
+
+				// make 0,0,0 into 127,127,127
+				if ((image[j*4+0] == 0) && (image[j*4+0] == 0) && (image[j*4+2] == 0))
+				{
+					image[j*4+0] =
+					image[j*4+1] =
+					image[j*4+2] = 127;
+				}
+
 				image[j*4+3] = 255;
 			}
 
@@ -459,7 +486,7 @@ static	void R_LoadLightmaps( lump_t *l, lump_t *surfs ) {
 			}
 			else
 			{
-				tr.deluxemaps[i] = R_CreateImage( va("*deluxemap%d",i), image, tr.lightmapSize, tr.lightmapSize, qfalse, qfalse, GL_CLAMP_TO_EDGE );
+				tr.deluxemaps[i] = R_CreateImage2(va("*deluxemap%d", i), image, tr.lightmapSize, tr.lightmapSize, IMGFLAG_NORMALIZED | IMGFLAG_NOLIGHTSCALE | IMGFLAG_NO_COMPRESSION | IMGFLAG_CLAMPTOEDGE, 0 );
 			}
 		}
 	}
@@ -618,7 +645,7 @@ static shader_t *ShaderForShaderNum( int shaderNum, int lightmapNum ) {
 ParseFace
 ===============
 */
-static void ParseFace( dsurface_t *ds, drawVert_t *verts, msurface_t *surf, int *indexes  ) {
+static void ParseFace( dsurface_t *ds, drawVert_t *verts, float *hdrVertColors, msurface_t *surf, int *indexes  ) {
 	int			i, j;
 	srfSurfaceFace_t	*cv;
 	srfTriangle_t  *tri;
@@ -660,6 +687,8 @@ static void ParseFace( dsurface_t *ds, drawVert_t *verts, msurface_t *surf, int 
 	verts += LittleLong(ds->firstVert);
 	for(i = 0; i < numVerts; i++)
 	{
+		vec4_t color;
+
 		for(j = 0; j < 3; j++)
 		{
 			cv->verts[i].xyz[j] = LittleFloat(verts[i].xyz[j]);
@@ -674,7 +703,32 @@ static void ParseFace( dsurface_t *ds, drawVert_t *verts, msurface_t *surf, int 
 		cv->verts[i].lightmap[0] = FatPackU(LittleFloat(verts[i].lightmap[0]), realLightmapNum);
 		cv->verts[i].lightmap[1] = FatPackV(LittleFloat(verts[i].lightmap[1]), realLightmapNum);
 
-		R_ColorShiftLightingBytes( verts[i].color, cv->verts[i].vertexColors );
+		if (hdrVertColors)
+		{
+			color[0] = hdrVertColors[(ds->firstVert + i) * 3    ];
+			color[1] = hdrVertColors[(ds->firstVert + i) * 3 + 1];
+			color[2] = hdrVertColors[(ds->firstVert + i) * 3 + 2];
+		}
+		else
+		{
+			//hack: convert LDR vertex colors to HDR
+			if (r_hdr->integer)
+			{
+				color[0] = verts[i].color[0] + 1.0f;
+				color[1] = verts[i].color[1] + 1.0f;
+				color[2] = verts[i].color[2] + 1.0f;
+			}
+			else
+			{
+				color[0] = verts[i].color[0];
+				color[1] = verts[i].color[1];
+				color[2] = verts[i].color[2];
+			}
+
+		}
+		color[3] = verts[i].color[3] / 255.0f;
+
+		R_ColorShiftLightingFloats( color, cv->verts[i].vertexColors, 1.0f / 255.0f );
 	}
 
 	// copy triangles
@@ -723,7 +777,7 @@ static void ParseFace( dsurface_t *ds, drawVert_t *verts, msurface_t *surf, int 
 ParseMesh
 ===============
 */
-static void ParseMesh ( dsurface_t *ds, drawVert_t *verts, msurface_t *surf ) {
+static void ParseMesh ( dsurface_t *ds, drawVert_t *verts, float *hdrVertColors, msurface_t *surf ) {
 	srfGridMesh_t	*grid;
 	int				i, j;
 	int				width, height, numPoints;
@@ -761,6 +815,8 @@ static void ParseMesh ( dsurface_t *ds, drawVert_t *verts, msurface_t *surf ) {
 	numPoints = width * height;
 	for(i = 0; i < numPoints; i++)
 	{
+		vec4_t color;
+
 		for(j = 0; j < 3; j++)
 		{
 			points[i].xyz[j] = LittleFloat(verts[i].xyz[j]);
@@ -775,7 +831,31 @@ static void ParseMesh ( dsurface_t *ds, drawVert_t *verts, msurface_t *surf ) {
 		points[i].lightmap[0] = FatPackU(LittleFloat(verts[i].lightmap[0]), realLightmapNum);
 		points[i].lightmap[1] = FatPackV(LittleFloat(verts[i].lightmap[1]), realLightmapNum);
 
-		R_ColorShiftLightingBytes( verts[i].color, points[i].vertexColors );
+		if (hdrVertColors)
+		{
+			color[0] = hdrVertColors[(ds->firstVert + i) * 3    ];
+			color[1] = hdrVertColors[(ds->firstVert + i) * 3 + 1];
+			color[2] = hdrVertColors[(ds->firstVert + i) * 3 + 2];
+		}
+		else
+		{
+			//hack: convert LDR vertex colors to HDR
+			if (r_hdr->integer)
+			{
+				color[0] = verts[i].color[0] + 1.0f;
+				color[1] = verts[i].color[1] + 1.0f;
+				color[2] = verts[i].color[2] + 1.0f;
+			}
+			else
+			{
+				color[0] = verts[i].color[0];
+				color[1] = verts[i].color[1];
+				color[2] = verts[i].color[2];
+			}
+		}
+		color[3] = verts[i].color[3] / 255.0f;
+
+		R_ColorShiftLightingFloats( color, points[i].vertexColors, 1.0f / 255.0f );
 	}
 
 	// pre-tesseleate
@@ -800,7 +880,7 @@ static void ParseMesh ( dsurface_t *ds, drawVert_t *verts, msurface_t *surf ) {
 ParseTriSurf
 ===============
 */
-static void ParseTriSurf( dsurface_t *ds, drawVert_t *verts, msurface_t *surf, int *indexes ) {
+static void ParseTriSurf( dsurface_t *ds, drawVert_t *verts, float *hdrVertColors, msurface_t *surf, int *indexes ) {
 	srfTriangles_t *cv;
 	srfTriangle_t  *tri;
 	int             i, j;
@@ -835,6 +915,8 @@ static void ParseTriSurf( dsurface_t *ds, drawVert_t *verts, msurface_t *surf, i
 	verts += LittleLong(ds->firstVert);
 	for(i = 0; i < numVerts; i++)
 	{
+		vec4_t color;
+
 		for(j = 0; j < 3; j++)
 		{
 			cv->verts[i].xyz[j] = LittleFloat(verts[i].xyz[j]);
@@ -849,8 +931,31 @@ static void ParseTriSurf( dsurface_t *ds, drawVert_t *verts, msurface_t *surf, i
 			cv->verts[i].lightmap[j] = LittleFloat(verts[i].lightmap[j]);
 		}
 
-		R_ColorShiftLightingBytes( verts[i].color, cv->verts[i].vertexColors );
+		if (hdrVertColors)
+		{
+			color[0] = hdrVertColors[(ds->firstVert + i) * 3    ];
+			color[1] = hdrVertColors[(ds->firstVert + i) * 3 + 1];
+			color[2] = hdrVertColors[(ds->firstVert + i) * 3 + 2];
+		}
+		else
+		{
+			//hack: convert LDR vertex colors to HDR
+			if (r_hdr->integer)
+			{
+				color[0] = verts[i].color[0] + 1.0f;
+				color[1] = verts[i].color[1] + 1.0f;
+				color[2] = verts[i].color[2] + 1.0f;
+			}
+			else
+			{
+				color[0] = verts[i].color[0];
+				color[1] = verts[i].color[1];
+				color[2] = verts[i].color[2];
+			}
+		}
+		color[3] = verts[i].color[3] / 255.0f;
 
+		R_ColorShiftLightingFloats( color, cv->verts[i].vertexColors, 1.0f / 255.0f );
 	}
 
 	// copy triangles
@@ -1673,6 +1778,7 @@ static void CopyVert(const srfVert_t * in, srfVert_t * out)
 		out->tangent[j]   = in->tangent[j];
 		out->bitangent[j] = in->bitangent[j];
 		out->normal[j]    = in->normal[j];
+		out->lightdir[j]  = in->lightdir[j];
 	}
 
 	for(j = 0; j < 2; j++)
@@ -1914,7 +2020,7 @@ static void R_CreateWorldVBO(void)
 
 	s_worldData.vbo = R_CreateVBO2(va("staticBspModel0_VBO %i", 0), numVerts, verts,
 								   ATTR_POSITION | ATTR_TEXCOORD | ATTR_LIGHTCOORD | ATTR_TANGENT | ATTR_BITANGENT |
-								   ATTR_NORMAL | ATTR_COLOR, VBO_USAGE_STATIC);
+								   ATTR_NORMAL | ATTR_COLOR | ATTR_LIGHTDIRECTION, VBO_USAGE_STATIC);
 
 	s_worldData.ibo = R_CreateIBO2(va("staticBspModel0_IBO %i", 0), numTriangles, triangles, VBO_USAGE_STATIC);
 
@@ -1978,6 +2084,7 @@ static	void R_LoadSurfaces( lump_t *surfs, lump_t *verts, lump_t *indexLump ) {
 	int			count;
 	int			numFaces, numMeshes, numTriSurfs, numFlares;
 	int			i;
+	float *hdrVertColors = NULL;
 
 	numFaces = 0;
 	numMeshes = 0;
@@ -2004,6 +2111,26 @@ static	void R_LoadSurfaces( lump_t *surfs, lump_t *verts, lump_t *indexLump ) {
 	s_worldData.surfacesViewCount = ri.Hunk_Alloc ( count * sizeof(*s_worldData.surfacesViewCount), h_low );
 	s_worldData.surfacesDlightBits = ri.Hunk_Alloc ( count * sizeof(*s_worldData.surfacesDlightBits), h_low );
 	s_worldData.surfacesPshadowBits = ri.Hunk_Alloc ( count * sizeof(*s_worldData.surfacesPshadowBits), h_low );
+
+	// load hdr vertex colors
+	if (r_hdr->integer)
+	{
+		char filename[MAX_QPATH];
+		int size;
+
+		Com_sprintf( filename, sizeof( filename ), "maps/%s/vertlight.raw", s_worldData.baseName);
+		//ri.Printf(PRINT_ALL, "looking for %s\n", filename);
+
+		size = ri.FS_ReadFile(filename, (void **)&hdrVertColors);
+
+		if (hdrVertColors)
+		{
+			//ri.Printf(PRINT_ALL, "Found!\n");
+			if (size != sizeof(float) * 3 * (verts->filelen / sizeof(*dv)))
+				ri.Error(ERR_DROP, "Bad size for %s (%i, expected %i)!\n", filename, size, sizeof(float) * 3 * (verts->filelen / sizeof(*dv)));
+		}
+	}
+
 
 	// Two passes, allocate surfaces first, then load them full of data
 	// This ensures surfaces are close together to reduce L2 cache misses when using VBOs,
@@ -2034,7 +2161,7 @@ static	void R_LoadSurfaces( lump_t *surfs, lump_t *verts, lump_t *indexLump ) {
 	for ( i = 0 ; i < count ; i++, in++, out++ ) {
 		switch ( LittleLong( in->surfaceType ) ) {
 		case MST_PATCH:
-			ParseMesh ( in, dv, out );
+			ParseMesh ( in, dv, hdrVertColors, out );
 			{
 				srfGridMesh_t *surface = (srfGridMesh_t *)out->data;
 
@@ -2047,7 +2174,7 @@ static	void R_LoadSurfaces( lump_t *surfs, lump_t *verts, lump_t *indexLump ) {
 			numMeshes++;
 			break;
 		case MST_TRIANGLE_SOUP:
-			ParseTriSurf( in, dv, out, indexes );
+			ParseTriSurf( in, dv, hdrVertColors, out, indexes );
 			{
 				srfTriangles_t *surface = (srfTriangles_t *)out->data;
 
@@ -2058,7 +2185,7 @@ static	void R_LoadSurfaces( lump_t *surfs, lump_t *verts, lump_t *indexLump ) {
 			numTriSurfs++;
 			break;
 		case MST_PLANAR:
-			ParseFace( in, dv, out, indexes );
+			ParseFace( in, dv, hdrVertColors, out, indexes );
 			{
 				srfSurfaceFace_t *surface = (srfSurfaceFace_t *)out->data;
 
@@ -2079,6 +2206,11 @@ static	void R_LoadSurfaces( lump_t *surfs, lump_t *verts, lump_t *indexLump ) {
 		default:
 			ri.Error( ERR_DROP, "Bad surfaceType" );
 		}
+	}
+
+	if (hdrVertColors)
+	{
+		ri.FS_FreeFile(hdrVertColors);
 	}
 
 #ifdef PATCH_STITCHING
@@ -2489,6 +2621,46 @@ void R_LoadLightGrid( lump_t *l ) {
 	for ( i = 0 ; i < numGridPoints ; i++ ) {
 		R_ColorShiftLightingBytes( &w->lightGridData[i*8], &w->lightGridData[i*8] );
 		R_ColorShiftLightingBytes( &w->lightGridData[i*8+3], &w->lightGridData[i*8+3] );
+	}
+
+	// load hdr lightgrid
+	if (r_hdr->integer)
+	{
+		char filename[MAX_QPATH];
+		float *hdrLightGrid;
+		int size;
+
+		Com_sprintf( filename, sizeof( filename ), "maps/%s/lightgrid.raw", s_worldData.baseName);
+		//ri.Printf(PRINT_ALL, "looking for %s\n", filename);
+
+		size = ri.FS_ReadFile(filename, (void **)&hdrLightGrid);
+
+		if (hdrLightGrid)
+		{
+			float lightScale = pow(2, r_mapOverBrightBits->integer - tr.overbrightBits);
+
+			//ri.Printf(PRINT_ALL, "found!\n");
+
+			if (size != sizeof(float) * 6 * numGridPoints)
+			{
+				ri.Error(ERR_DROP, "Bad size for %s (%i, expected %i)!\n", filename, size, sizeof(float) * 6 * numGridPoints);
+			}
+
+			w->hdrLightGrid = ri.Hunk_Alloc(size, h_low);
+
+			for (i = 0; i < numGridPoints ; i++)
+			{
+				w->hdrLightGrid[i * 6    ] = hdrLightGrid[i * 6    ] * lightScale;
+				w->hdrLightGrid[i * 6 + 1] = hdrLightGrid[i * 6 + 1] * lightScale;
+				w->hdrLightGrid[i * 6 + 2] = hdrLightGrid[i * 6 + 2] * lightScale;
+				w->hdrLightGrid[i * 6 + 3] = hdrLightGrid[i * 6 + 3] * lightScale;
+				w->hdrLightGrid[i * 6 + 4] = hdrLightGrid[i * 6 + 4] * lightScale;
+				w->hdrLightGrid[i * 6 + 5] = hdrLightGrid[i * 6 + 5] * lightScale;
+			}
+		}
+
+		if (hdrLightGrid)
+			ri.FS_FreeFile(hdrLightGrid);
 	}
 }
 
@@ -2971,6 +3143,53 @@ void R_MergeLeafSurfaces(void)
 }
 
 
+void R_CalcVertexLightDirs( void )
+{
+	int i, k;
+	msurface_t *surface;
+
+	for(k = 0, surface = &s_worldData.surfaces[0]; k < s_worldData.numsurfaces /* s_worldData.numWorldSurfaces */; k++, surface++)
+	{
+		if(*surface->data == SF_FACE)
+		{
+			srfSurfaceFace_t *srf = (srfSurfaceFace_t *) surface->data;
+
+			if(srf->numVerts)
+			{
+				for(i = 0; i < srf->numVerts; i++)
+				{
+					R_LightDirForPoint( srf->verts[i].xyz, srf->verts[i].lightdir, srf->verts[i].normal, &s_worldData );
+				}
+			}
+		}
+		else if(*surface->data == SF_GRID)
+		{
+			srfGridMesh_t  *srf = (srfGridMesh_t *) surface->data;
+
+			if(srf->numVerts)
+			{
+				for(i = 0; i < srf->numVerts; i++)
+				{
+					R_LightDirForPoint( srf->verts[i].xyz, srf->verts[i].lightdir, srf->verts[i].normal, &s_worldData );
+				}
+			}
+		}
+		else if(*surface->data == SF_TRIANGLES)
+		{
+			srfTriangles_t *srf = (srfTriangles_t *) surface->data;
+
+			if(srf->numVerts)
+			{
+				for(i = 0; i < srf->numVerts; i++)
+				{
+					R_LightDirForPoint( srf->verts[i].xyz, srf->verts[i].lightdir, srf->verts[i].normal, &s_worldData );
+				}
+			}
+		}
+	}
+}
+
+
 /*
 =================
 RE_LoadWorldMap
@@ -3051,6 +3270,9 @@ void RE_LoadWorldMap( const char *name ) {
 	R_LoadVisibility( &header->lumps[LUMP_VISIBILITY] );
 	R_LoadLightGrid( &header->lumps[LUMP_LIGHTGRID] );
 
+	// determine vertex light directions
+	R_CalcVertexLightDirs();
+
 	// create static VBOS from the world
 	R_CreateWorldVBO();
 	if (r_mergeLeafSurfaces->integer)
@@ -3069,7 +3291,3 @@ void RE_LoadWorldMap( const char *name ) {
 
     ri.FS_FreeFile( buffer.v );
 }
-
-
-
-

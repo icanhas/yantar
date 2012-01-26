@@ -177,6 +177,12 @@ VBO_t          *R_CreateVBO2(const char *name, int numVertexes, srfVert_t * vert
 			dataSize += sizeof(verts[0].vertexColors);
 		}
 
+		if(stateBits & ATTR_LIGHTDIRECTION)
+		{
+			vbo->ofs_lightdir = dataSize;
+			dataSize += sizeof(verts[0].lightdir);
+		}
+
 		vbo->stride_xyz         = dataSize;
 		vbo->stride_normal      = dataSize;
 		vbo->stride_tangent     = dataSize;
@@ -184,6 +190,7 @@ VBO_t          *R_CreateVBO2(const char *name, int numVertexes, srfVert_t * vert
 		vbo->stride_st          = dataSize;
 		vbo->stride_lightmap    = dataSize;
 		vbo->stride_vertexcolor = dataSize;
+		vbo->stride_lightdir    = dataSize;
 
 		// create VBO
 		dataSize *= numVertexes;
@@ -240,6 +247,13 @@ VBO_t          *R_CreateVBO2(const char *name, int numVertexes, srfVert_t * vert
 				memcpy(data + dataOfs, &verts[i].vertexColors, sizeof(verts[i].vertexColors));
 				dataOfs += sizeof(verts[i].vertexColors);
 			}
+
+			// feed vertex light directions
+			if(stateBits & ATTR_LIGHTDIRECTION)
+			{
+				memcpy(data + dataOfs, &verts[i].lightdir, sizeof(verts[i].lightdir));
+				dataOfs += sizeof(verts[i].lightdir);
+			}
 		}
 	}
 	else
@@ -277,6 +291,11 @@ VBO_t          *R_CreateVBO2(const char *name, int numVertexes, srfVert_t * vert
 			dataSize += sizeof(verts[0].vertexColors);
 		}
 
+		if(stateBits & ATTR_LIGHTDIRECTION)
+		{
+			dataSize += sizeof(verts[0].lightdir);
+		}
+
 		// create VBO
 		dataSize *= numVertexes;
 		data = ri.Hunk_AllocateTempMemory(dataSize);
@@ -289,6 +308,7 @@ VBO_t          *R_CreateVBO2(const char *name, int numVertexes, srfVert_t * vert
 		vbo->ofs_st             = 0;
 		vbo->ofs_lightmap       = 0;
 		vbo->ofs_vertexcolor    = 0;
+		vbo->ofs_lightdir       = 0;
 
 		vbo->stride_xyz         = sizeof(verts[0].xyz);
 		vbo->stride_normal      = sizeof(verts[0].normal);
@@ -297,6 +317,7 @@ VBO_t          *R_CreateVBO2(const char *name, int numVertexes, srfVert_t * vert
 		vbo->stride_vertexcolor = sizeof(verts[0].vertexColors);
 		vbo->stride_st          = sizeof(verts[0].st);
 		vbo->stride_lightmap    = sizeof(verts[0].lightmap);
+		vbo->stride_lightdir    = sizeof(verts[0].lightdir);
 
 		//ri.Printf(PRINT_ALL, "2CreateVBO: %d, %d %d %d %d %d, %d %d %d %d %d\n", dataSize, vbo->ofs_xyz, vbo->ofs_normal, vbo->ofs_st, vbo->ofs_lightmap, vbo->ofs_vertexcolor,
 			//vbo->stride_xyz, vbo->stride_normal, vbo->stride_st, vbo->stride_lightmap, vbo->stride_vertexcolor);
@@ -371,6 +392,17 @@ VBO_t          *R_CreateVBO2(const char *name, int numVertexes, srfVert_t * vert
 			{
 				memcpy(data + dataOfs, &verts[i].vertexColors, sizeof(verts[i].vertexColors));
 				dataOfs += sizeof(verts[i].vertexColors);
+			}
+		}
+
+		// feed vertex lightdirs
+		if(stateBits & ATTR_LIGHTDIRECTION)
+		{
+			vbo->ofs_lightdir = dataOfs;
+			for (i = 0; i < numVertexes; i++)
+			{
+				memcpy(data + dataOfs, &verts[i].lightdir, sizeof(verts[i].lightdir));
+				dataOfs += sizeof(verts[i].lightdir);
 			}
 		}
 	}
@@ -659,6 +691,7 @@ void R_InitVBOs(void)
 	dataSize += sizeof(tess.bitangent[0]);
 	dataSize += sizeof(tess.vertexColors[0]);
 	dataSize += sizeof(tess.texCoords[0][0]) * 2;
+	dataSize += sizeof(tess.lightdir[0]);
 	dataSize *= SHADER_MAX_VERTEXES;
 
 	data = ri.Malloc(dataSize);
@@ -669,14 +702,15 @@ void R_InitVBOs(void)
 	ri.Free(data);
 
 	tess.vbo->ofs_xyz         = 0;
-	tess.vbo->ofs_normal      = tess.vbo->ofs_xyz       + sizeof(tess.xyz[0])              * SHADER_MAX_VERTEXES;
-	tess.vbo->ofs_tangent     = tess.vbo->ofs_normal    + sizeof(tess.normal[0])           * SHADER_MAX_VERTEXES;
-	tess.vbo->ofs_bitangent   = tess.vbo->ofs_tangent   + sizeof(tess.tangent[0])          * SHADER_MAX_VERTEXES;
+	tess.vbo->ofs_normal      = tess.vbo->ofs_xyz         + sizeof(tess.xyz[0])              * SHADER_MAX_VERTEXES;
+	tess.vbo->ofs_tangent     = tess.vbo->ofs_normal      + sizeof(tess.normal[0])           * SHADER_MAX_VERTEXES;
+	tess.vbo->ofs_bitangent   = tess.vbo->ofs_tangent     + sizeof(tess.tangent[0])          * SHADER_MAX_VERTEXES;
 	// these next two are actually interleaved
-	tess.vbo->ofs_st          = tess.vbo->ofs_bitangent + sizeof(tess.bitangent[0])        * SHADER_MAX_VERTEXES;
-	tess.vbo->ofs_lightmap    = tess.vbo->ofs_st        + sizeof(tess.texCoords[0][0]);
+	tess.vbo->ofs_st          = tess.vbo->ofs_bitangent   + sizeof(tess.bitangent[0])        * SHADER_MAX_VERTEXES;
+	tess.vbo->ofs_lightmap    = tess.vbo->ofs_st          + sizeof(tess.texCoords[0][0]);
 
-	tess.vbo->ofs_vertexcolor = tess.vbo->ofs_st        + sizeof(tess.texCoords[0][0]) * 2 * SHADER_MAX_VERTEXES;
+	tess.vbo->ofs_vertexcolor = tess.vbo->ofs_st          + sizeof(tess.texCoords[0][0]) * 2 * SHADER_MAX_VERTEXES;
+	tess.vbo->ofs_lightdir    = tess.vbo->ofs_vertexcolor + sizeof(tess.vertexColors[0])     * SHADER_MAX_VERTEXES;
 
 	tess.vbo->stride_xyz         = sizeof(tess.xyz[0]);
 	tess.vbo->stride_normal      = sizeof(tess.normal[0]);
@@ -685,6 +719,7 @@ void R_InitVBOs(void)
 	tess.vbo->stride_vertexcolor = sizeof(tess.vertexColors[0]);
 	tess.vbo->stride_st          = sizeof(tess.texCoords[0][0]) * 2;
 	tess.vbo->stride_lightmap    = sizeof(tess.texCoords[0][0]) * 2;
+	tess.vbo->stride_lightdir    = sizeof(tess.lightdir[0]);
 
 	dataSize = sizeof(tess.indexes[0]) * SHADER_MAX_INDEXES;
 
@@ -816,33 +851,45 @@ void RB_UpdateVBOs(unsigned int attribBits)
 		{
 			if(attribBits & ATTR_POSITION)
 			{
+				//ri.Printf(PRINT_ALL, "offset %d, size %d\n", tess.vbo->ofs_xyz, tess.numVertexes * sizeof(tess.xyz[0]));
 				qglBufferSubDataARB(GL_ARRAY_BUFFER_ARB, tess.vbo->ofs_xyz,         tess.numVertexes * sizeof(tess.xyz[0]),              tess.xyz);
 			}
 
 			if(attribBits & ATTR_TEXCOORD || attribBits & ATTR_LIGHTCOORD)
 			{
 				// these are interleaved, so we update both if either need it
+				//ri.Printf(PRINT_ALL, "offset %d, size %d\n", tess.vbo->ofs_st, tess.numVertexes * sizeof(tess.texCoords[0][0]) * 2);
 				qglBufferSubDataARB(GL_ARRAY_BUFFER_ARB, tess.vbo->ofs_st,          tess.numVertexes * sizeof(tess.texCoords[0][0]) * 2, tess.texCoords);
 			}
 
 			if(attribBits & ATTR_NORMAL)
 			{
+				//ri.Printf(PRINT_ALL, "offset %d, size %d\n", tess.vbo->ofs_normal, tess.numVertexes * sizeof(tess.normal[0]));
 				qglBufferSubDataARB(GL_ARRAY_BUFFER_ARB, tess.vbo->ofs_normal,      tess.numVertexes * sizeof(tess.normal[0]),           tess.normal);
 			}
 
 			if(attribBits & ATTR_TANGENT)
 			{
+				//ri.Printf(PRINT_ALL, "offset %d, size %d\n", tess.vbo->ofs_tangent, tess.numVertexes * sizeof(tess.tangent[0]));
 				qglBufferSubDataARB(GL_ARRAY_BUFFER_ARB, tess.vbo->ofs_tangent,     tess.numVertexes * sizeof(tess.tangent[0]),          tess.tangent);
 			}
 
 			if(attribBits & ATTR_BITANGENT)
 			{
+				//ri.Printf(PRINT_ALL, "offset %d, size %d\n", tess.vbo->ofs_bitangent, tess.numVertexes * sizeof(tess.bitangent[0]));
 				qglBufferSubDataARB(GL_ARRAY_BUFFER_ARB, tess.vbo->ofs_bitangent,   tess.numVertexes * sizeof(tess.bitangent[0]),        tess.bitangent);
 			}
 
 			if(attribBits & ATTR_COLOR)
 			{
+				//ri.Printf(PRINT_ALL, "offset %d, size %d\n", tess.vbo->ofs_vertexcolor, tess.numVertexes * sizeof(tess.vertexColors[0]));
 				qglBufferSubDataARB(GL_ARRAY_BUFFER_ARB, tess.vbo->ofs_vertexcolor, tess.numVertexes * sizeof(tess.vertexColors[0]),     tess.vertexColors);
+			}
+
+			if(attribBits & ATTR_LIGHTDIRECTION)
+			{
+				//ri.Printf(PRINT_ALL, "offset %d, size %d\n", tess.vbo->ofs_lightdir, tess.numVertexes * sizeof(tess.lightdir[0]));
+				qglBufferSubDataARB(GL_ARRAY_BUFFER_ARB, tess.vbo->ofs_lightdir,    tess.numVertexes * sizeof(tess.lightdir[0]),         tess.lightdir);
 			}
 		}
 		else
@@ -853,6 +900,7 @@ void RB_UpdateVBOs(unsigned int attribBits)
 			qglBufferSubDataARB(GL_ARRAY_BUFFER_ARB, tess.vbo->ofs_tangent,     tess.numVertexes * sizeof(tess.tangent[0]),          tess.tangent);
 			qglBufferSubDataARB(GL_ARRAY_BUFFER_ARB, tess.vbo->ofs_bitangent,   tess.numVertexes * sizeof(tess.bitangent[0]),        tess.bitangent);
 			qglBufferSubDataARB(GL_ARRAY_BUFFER_ARB, tess.vbo->ofs_vertexcolor, tess.numVertexes * sizeof(tess.vertexColors[0]),     tess.vertexColors);
+			qglBufferSubDataARB(GL_ARRAY_BUFFER_ARB, tess.vbo->ofs_lightdir,    tess.numVertexes * sizeof(tess.lightdir[0]),         tess.lightdir);
 		}
 
 	}

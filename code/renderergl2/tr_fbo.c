@@ -454,6 +454,10 @@ void FBO_Init(void)
 		FBO_CreateBuffer(tr.screenScratchFbo, GL_RGBA8, 0);
 		FBO_AttachTextureImage(tr.screenScratchImage, 0);
 
+		// FIXME: hack: share zbuffer between render fbo and pre-screen fbo
+		FBO_CreateBuffer(tr.screenScratchFbo, GL_DEPTH_COMPONENT24_ARB, 0);
+		R_AttachFBOTextureDepth(tr.renderDepthImage->texnum);
+
 		R_CheckFBO(tr.screenScratchFbo);
 	}
 

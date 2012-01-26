@@ -914,7 +914,7 @@ void RB_IQMSurfaceAnim( surfaceType_t *surface ) {
 	vec4_t		*outXYZ = &tess.xyz[tess.numVertexes];
 	vec4_t		*outNormal = &tess.normal[tess.numVertexes];
 	vec2_t		(*outTexCoord)[2] = &tess.texCoords[tess.numVertexes];
-	color4ub_t	*outColor = &tess.vertexColors[tess.numVertexes];
+	vec4_t	*outColor = &tess.vertexColors[tess.numVertexes];
 
 	int	frame = backEnd.currentEntity->e.frame % data->num_frames;
 	int	oldframe = backEnd.currentEntity->e.oldframe % data->num_frames;
@@ -1000,10 +1000,10 @@ void RB_IQMSurfaceAnim( surfaceType_t *surface ) {
 			nrmMat[ 8] * data->normals[3*vtx+2];
 		(*outNormal)[3] = 0.0f;
 
-		(*outColor)[0] = data->colors[4*vtx+0];
-		(*outColor)[1] = data->colors[4*vtx+1];
-		(*outColor)[2] = data->colors[4*vtx+2];
-		(*outColor)[3] = data->colors[4*vtx+3];
+		(*outColor)[0] = data->colors[4*vtx+0] / 255.0f;
+		(*outColor)[1] = data->colors[4*vtx+1] / 255.0f;
+		(*outColor)[2] = data->colors[4*vtx+2] / 255.0f;
+		(*outColor)[3] = data->colors[4*vtx+3] / 255.0f;
 	}
 
 	tri = data->triangles + 3 * surf->first_triangle;

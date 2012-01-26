@@ -1146,7 +1146,8 @@ static void RawImage_ScaleToPower2( byte **data, int *inout_width, int *inout_he
 	if ( r_roundImagesDown->integer && scaled_height > height )
 		scaled_height >>= 1;
 
-	if ( picmip && data && resampledBuffer && r_imageUpsample->integer )
+	if ( picmip && data && resampledBuffer && r_imageUpsample->integer && 
+	     scaled_width < r_imageUpsampleMaxSize->integer && scaled_height < r_imageUpsampleMaxSize->integer)
 	{
 		int finalwidth, finalheight;
 		//int startTime, endTime;
@@ -2291,13 +2292,7 @@ void R_SetColorMappings( void ) {
 	}
 
 	// never overbright in windowed mode
-	if ( !glConfig.isFullscreen ) 
-	{
-		tr.overbrightBits = 0;
-	}
-
-	// no overbright with r_hdr
-	if ( r_hdr->integer)
+	if ( 0 /* !glConfig.isFullscreen */ ) 
 	{
 		tr.overbrightBits = 0;
 	}
@@ -2333,6 +2328,9 @@ void R_SetColorMappings( void ) {
 	g = r_gamma->value;
 
 	shift = tr.overbrightBits;
+
+	if (glRefConfig.framebufferObject)
+		shift = 0;
 
 	for ( i = 0; i < 256; i++ ) {
 		if ( g == 1 ) {

@@ -472,7 +472,17 @@ void RB_BeginDrawingView (void) {
 	backEnd.projection2D = qfalse;
 
 	if (glRefConfig.framebufferObject)
-		FBO_Bind(backEnd.viewParms.targetFbo);
+	{
+		// FIXME: HUGE HACK: render to the screen fbo if we've already postprocessed the frame and aren't drawing more world
+		if (backEnd.viewParms.targetFbo == tr.renderFbo && backEnd.framePostProcessed && (backEnd.refdef.rdflags & RDF_NOWORLDMODEL))
+		{
+			FBO_Bind(tr.screenScratchFbo);
+		}
+		else
+		{
+			FBO_Bind(backEnd.viewParms.targetFbo);
+		}
+	}
 
 	//
 	// set the modelview matrix for the viewer
@@ -915,6 +925,19 @@ void RE_StretchRaw (int x, int y, int w, int h, int cols, int rows, const byte *
 		ri.Printf( PRINT_ALL, "qglTexSubImage2D %i, %i: %i msec\n", cols, rows, end - start );
 	}
 
+	// FIXME: HUGE hack
+	if (glRefConfig.framebufferObject && !glState.currentFBO)
+	{
+		if (backEnd.framePostProcessed)
+		{
+			FBO_Bind(tr.screenScratchFbo);
+		}
+		else
+		{
+			FBO_Bind(tr.renderFbo);
+		}
+	}
+
 	RB_SetGL2D();
 
 	tess.numIndexes = 0;
@@ -1045,6 +1068,19 @@ const void *RB_StretchPic ( const void *data ) {
 
 	cmd = (const stretchPicCommand_t *)data;
 
+	// FIXME: HUGE hack
+	if (glRefConfig.framebufferObject && !glState.currentFBO)
+	{
+		if (backEnd.framePostProcessed)
+		{
+			FBO_Bind(tr.screenScratchFbo);
+		}
+		else
+		{
+			FBO_Bind(tr.renderFbo);
+		}
+	}
+
 	RB_SetGL2D();
 
 	shader = cmd->shader;
@@ -1070,10 +1106,16 @@ const void *RB_StretchPic ( const void *data ) {
 	tess.indexes[ numIndexes + 4 ] = numVerts + 0;
 	tess.indexes[ numIndexes + 5 ] = numVerts + 1;
 
-	*(int *)tess.vertexColors[ numVerts ] =
-		*(int *)tess.vertexColors[ numVerts + 1 ] =
-		*(int *)tess.vertexColors[ numVerts + 2 ] =
-		*(int *)tess.vertexColors[ numVerts + 3 ] = *(int *)backEnd.color2D;
+	{
+		vec4_t color;
+
+		VectorScale4(backEnd.color2D, 1.0f / 255.0f, color);
+
+		VectorCopy4(color, tess.vertexColors[ numVerts ]);
+		VectorCopy4(color, tess.vertexColors[ numVerts + 1]);
+		VectorCopy4(color, tess.vertexColors[ numVerts + 2]);
+		VectorCopy4(color, tess.vertexColors[ numVerts + 3 ]);
+	}
 
 	tess.xyz[ numVerts ][0] = cmd->x;
 	tess.xyz[ numVerts ][1] = cmd->y;
@@ -1289,6 +1331,37 @@ const void	*RB_SwapBuffers( const void *data ) {
 		ri.Hunk_FreeTempMemory( stencilReadback );
 	}
 
+	if (glRefConfig.framebufferObject)
+	{
+		// copy final image to screen
+		vec2_t texScale;
+		vec4_t srcBox, dstBox, white;
+
+		texScale[0] =
+		texScale[1] = 1.0f;
+
+		white[0] =
+		white[1] =
+		white[2] = pow(2, tr.overbrightBits); //exp2(tr.overbrightBits);
+		white[3] = 1.0f;
+
+		VectorSet4(dstBox, 0, 0, glConfig.vidWidth, glConfig.vidHeight);
+		
+		if (backEnd.framePostProcessed)
+		{
+			// frame was postprocessed into screen fbo, copy from there
+			VectorSet4(srcBox, 0, 0, tr.screenScratchFbo->width, tr.screenScratchFbo->height);
+
+			FBO_Blit(tr.screenScratchFbo, srcBox, texScale, NULL, dstBox, &tr.textureColorShader, white, 0);
+		}
+		else
+		{
+			// frame still in render fbo, copy from there
+			VectorSet4(srcBox, 0, 0, tr.renderFbo->width, tr.renderFbo->height);
+
+			FBO_Blit(tr.renderFbo, srcBox, texScale, NULL, dstBox, &tr.textureColorShader, white, 0);
+		}
+	}
 
 	if ( !glState.finishCalled ) {
 		qglFinish();
@@ -1298,6 +1371,7 @@ const void	*RB_SwapBuffers( const void *data ) {
 
 	GLimp_EndFrame();
 
+	backEnd.framePostProcessed = qfalse;
 	backEnd.projection2D = qfalse;
 
 	return (const void *)(cmd + 1);
@@ -1359,15 +1433,19 @@ const void *RB_PostProcess(const void *data)
 			vec4_t srcBox, dstBox, color;
 
 			VectorSet4(srcBox, 0, 0, tr.renderFbo->width, tr.renderFbo->height);
-			VectorSet4(dstBox, 0, 0, glConfig.vidWidth, glConfig.vidHeight);
+			//VectorSet4(dstBox, 0, 0, glConfig.vidWidth, glConfig.vidHeight);
+			VectorSet4(dstBox, 0, 0, tr.screenScratchFbo->width, tr.screenScratchFbo->height);
 
 			color[0] =
 			color[1] =
 			color[2] = pow(2, r_cameraExposure->value); //exp2(r_cameraExposure->value);
 			color[3] = 1.0f;
 
-			FBO_Blit(tr.renderFbo, srcBox, texScale, NULL, dstBox, &tr.textureColorShader, color, 0);
+			//FBO_Blit(tr.renderFbo, srcBox, texScale, NULL, dstBox, &tr.textureColorShader, color, 0);
+			FBO_Blit(tr.renderFbo, srcBox, texScale, tr.screenScratchFbo, dstBox, &tr.textureColorShader, color, 0);
 		}
+
+		backEnd.framePostProcessed = qtrue;
 
 		return (const void *)(cmd + 1);
 	}
@@ -1381,8 +1459,25 @@ const void *RB_PostProcess(const void *data)
 	}
 #endif
 
-	autoExposure = ((r_hdr->integer == 1) && tr.autoExposure) || (r_hdr->integer == 3);
-	RB_ToneMap(autoExposure);
+	if (r_hdr->integer && (r_toneMap->integer == 2 || (r_toneMap->integer == 1 && tr.autoExposure)))
+	{
+		autoExposure = (r_autoExposure->integer == 1 && tr.autoExposure) || (r_autoExposure->integer == 2);
+		RB_ToneMap(autoExposure);
+	}
+	else
+	{
+		vec4_t srcBox, dstBox, color;
+
+		VectorSet4(srcBox, 0, 0, tr.renderFbo->width, tr.renderFbo->height);
+		VectorSet4(dstBox, 0, 0, tr.screenScratchFbo->width, tr.screenScratchFbo->height);
+
+		color[0] =
+		color[1] =
+		color[2] = pow(2, r_cameraExposure->value); //exp2(r_cameraExposure->value);
+		color[3] = 1.0f;
+
+		FBO_Blit(tr.renderFbo, srcBox, texScale, tr.screenScratchFbo, dstBox, &tr.textureColorShader, color, 0);
+	}
 
 #ifdef REACTION
 	RB_GodRays();
@@ -1392,7 +1487,7 @@ const void *RB_PostProcess(const void *data)
 	else
 		RB_GaussianBlur(backEnd.refdef.blurFactor);
 #endif
-
+/*
 	if (glRefConfig.framebufferObject)
 	{
 		// copy final image to screen
@@ -1403,6 +1498,8 @@ const void *RB_PostProcess(const void *data)
 
 		FBO_Blit(tr.screenScratchFbo, srcBox, texScale, NULL, dstBox, &tr.textureColorShader, white, 0);
 	}
+*/
+	backEnd.framePostProcessed = qtrue;
 
 	return (const void *)(cmd + 1);
 }

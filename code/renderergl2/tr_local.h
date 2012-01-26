@@ -152,6 +152,7 @@ typedef struct VBO_s
 	uint32_t        ofs_st;
 	uint32_t        ofs_lightmap;
 	uint32_t        ofs_vertexcolor;
+	uint32_t        ofs_lightdir;
 	uint32_t        ofs_tangent;
 	uint32_t        ofs_bitangent;
 	uint32_t        stride_xyz;
@@ -159,6 +160,7 @@ typedef struct VBO_s
 	uint32_t        stride_st;
 	uint32_t        stride_lightmap;
 	uint32_t        stride_vertexcolor;
+	uint32_t        stride_lightdir;
 	uint32_t        stride_tangent;
 	uint32_t        stride_bitangent;
 	uint32_t        size_xyz;
@@ -282,6 +284,8 @@ typedef enum {
 	CGEN_ONE_MINUS_ENTITY,	// grabbed from 1 - entity.modulate
 	CGEN_EXACT_VERTEX,		// tess.vertexColors
 	CGEN_VERTEX,			// tess.vertexColors * tr.identityLight
+	CGEN_EXACT_VERTEX_LIT,	// like CGEN_EXACT_VERTEX but takes a light direction from the lightgrid
+	CGEN_VERTEX_LIT,		// like CGEN_VERTEX but takes a light direction from the lightgrid
 	CGEN_ONE_MINUS_VERTEX,
 	CGEN_WAVEFORM,			// programmatically generated
 	CGEN_LIGHTING_DIFFUSE,
@@ -715,6 +719,8 @@ enum
 {
 	LIGHTDEF_USE_LIGHTMAP      = 0x0001,
 	LIGHTDEF_USE_LIGHT_VECTOR  = 0x0002,
+	LIGHTDEF_USE_LIGHT_VERTEX  = 0x0003,
+	LIGHTDEF_LIGHTTYPE_MASK    = 0x0003,
 	LIGHTDEF_USE_NORMALMAP     = 0x0004,
 	LIGHTDEF_USE_SPECULARMAP   = 0x0008,
 	LIGHTDEF_USE_DELUXEMAP     = 0x0010,
@@ -876,8 +882,8 @@ typedef struct {
 
 #ifdef REACTION
 	float		blurFactor;
-
 #endif
+
 	// text messages for deform text shaders
 	char		text[MAX_RENDER_STRINGS][MAX_RENDER_STRING_LENGTH];
 
@@ -1022,14 +1028,15 @@ typedef struct
 	vec3_t          normal;
 	vec3_t          tangent;
 	vec3_t          bitangent;
-	color4ub_t      vertexColors;
+	vec3_t          lightdir;
+	vec4_t			vertexColors;
 
 #if DEBUG_OPTIMIZEVERTICES
 	unsigned int    id;
 #endif
 } srfVert_t;
 
-#define srfVert_t_cleared(x) srfVert_t (x) = {{0, 0, 0}, {0, 0}, {0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0, 0}}
+#define srfVert_t_cleared(x) srfVert_t (x) = {{0, 0, 0}, {0, 0}, {0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0, 0}}
 
 typedef struct
 {
@@ -1357,6 +1364,7 @@ typedef struct {
 	vec3_t		lightGridInverseSize;
 	int			lightGridBounds[3];
 	byte		*lightGridData;
+	float		*hdrLightGrid;
 
 
 	int			numClusters;
@@ -1649,6 +1657,7 @@ typedef struct {
 	trRefEntity_t	entity2D;	// currentEntity will point at this when doing 2D rendering
 
 	FBO_t *last2DFBO;
+	qboolean    framePostProcessed;
 } backEndState_t;
 
 /*
@@ -1947,6 +1956,8 @@ extern  cvar_t  *r_mergeLeafSurfaces;
 
 extern  cvar_t  *r_hdr;
 extern  cvar_t  *r_postProcess;
+extern  cvar_t  *r_toneMap;
+extern  cvar_t  *r_autoExposure;
 extern  cvar_t  *r_cameraExposure;
 
 extern  cvar_t  *r_normalMapping;
@@ -2190,7 +2201,8 @@ typedef struct shaderCommands_s
 	vec4_t		tangent[SHADER_MAX_VERTEXES] QALIGN(16);
 	vec4_t		bitangent[SHADER_MAX_VERTEXES] QALIGN(16);
 	vec2_t		texCoords[SHADER_MAX_VERTEXES][2] QALIGN(16);
-	color4ub_t	vertexColors[SHADER_MAX_VERTEXES] QALIGN(16);
+	vec4_t		vertexColors[SHADER_MAX_VERTEXES] QALIGN(16);
+	vec4_t      lightdir[SHADER_MAX_VERTEXES] QALIGN(16);
 	//int			vertexDlightBits[SHADER_MAX_VERTEXES] QALIGN(16);
 
 	VBO_t       *vbo;
@@ -2199,7 +2211,7 @@ typedef struct shaderCommands_s
 
 	stageVars_t	svars QALIGN(16);
 
-	color4ub_t	constantColor255[SHADER_MAX_VERTEXES] QALIGN(16);
+	//color4ub_t	constantColor255[SHADER_MAX_VERTEXES] QALIGN(16);
 
 	shader_t	*shader;
 	float		shaderTime;
@@ -2235,8 +2247,8 @@ void RB_StageIteratorSky( void );
 void RB_StageIteratorVertexLitTexture( void );
 void RB_StageIteratorLightmappedMultitexture( void );
 
-void RB_AddQuadStamp( vec3_t origin, vec3_t left, vec3_t up, byte *color );
-void RB_AddQuadStampExt( vec3_t origin, vec3_t left, vec3_t up, byte *color, float s1, float t1, float s2, float t2 );
+void RB_AddQuadStamp( vec3_t origin, vec3_t left, vec3_t up, float color[4] );
+void RB_AddQuadStampExt( vec3_t origin, vec3_t left, vec3_t up, float color[4], float s1, float t1, float s2, float t2 );
 void RB_InstantQuad( vec4_t quadVerts[4] );
 void RB_InstantQuad2(vec4_t quadVerts[4], vec2_t texCoords[4], vec4_t color, shaderProgram_t *sp, vec2_t invTexRes);
 
@@ -2282,6 +2294,7 @@ void R_DlightBmodel( bmodel_t *bmodel );
 void R_SetupEntityLighting( const trRefdef_t *refdef, trRefEntity_t *ent );
 void R_TransformDlights( int count, dlight_t *dl, orientationr_t *or );
 int R_LightForPoint( vec3_t point, vec3_t ambientLight, vec3_t directedLight, vec3_t lightDir );
+int R_LightDirForPoint( vec3_t point, vec3_t lightDir, vec3_t normal, world_t *world );
 
 
 /*

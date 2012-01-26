@@ -966,6 +966,17 @@ static qboolean ParseStage( shaderStage_t *stage, char **text )
 			{
 				stage->rgbGen = CGEN_EXACT_VERTEX;
 			}
+			else if ( !Q_stricmp( token, "vertexLit" ) )
+			{
+				stage->rgbGen = CGEN_VERTEX_LIT;
+				if ( stage->alphaGen == 0 ) {
+					stage->alphaGen = AGEN_VERTEX;
+				}
+			}
+			else if ( !Q_stricmp( token, "exactVertexLit" ) )
+			{
+				stage->rgbGen = CGEN_EXACT_VERTEX_LIT;
+			}
 			else if ( !Q_stricmp( token, "lightingDiffuse" ) )
 			{
 				stage->rgbGen = CGEN_LIGHTING_DIFFUSE;
@@ -1844,6 +1855,16 @@ static void ComputeVertexAttribs(void)
 			{
 				shader.vertexAttribs |= ATTR_BITANGENT | ATTR_TANGENT;
 			}
+
+			switch (pStage->glslShaderIndex & LIGHTDEF_LIGHTTYPE_MASK)
+			{
+				case LIGHTDEF_USE_LIGHTMAP:
+				case LIGHTDEF_USE_LIGHT_VERTEX:
+					shader.vertexAttribs |= ATTR_LIGHTDIRECTION;
+					break;
+				default:
+					break;
+			}
 		}
 
 		for (i = 0; i < NUM_TEXTURE_BUNDLES; i++)
@@ -1874,6 +1895,8 @@ static void ComputeVertexAttribs(void)
 		{
 			case CGEN_EXACT_VERTEX:
 			case CGEN_VERTEX:
+			case CGEN_EXACT_VERTEX_LIT:
+			case CGEN_VERTEX_LIT:
 			case CGEN_ONE_MINUS_VERTEX:
 				shader.vertexAttribs |= ATTR_COLOR;
 				break;
@@ -2062,7 +2085,7 @@ static qboolean CollapseMultitexture( void ) {
 
 static void CollapseStagesToLightall(shaderStage_t *diffuse, 
 	shaderStage_t *normal, shaderStage_t *specular, shaderStage_t *lightmap, 
-	qboolean useLightVector, qboolean parallax, qboolean environment)
+	qboolean useLightVector, qboolean useLightVertex, qboolean parallax, qboolean environment)
 {
 	int defs = 0;
 
@@ -2080,6 +2103,10 @@ static void CollapseStagesToLightall(shaderStage_t *diffuse,
 	else if (useLightVector)
 	{
 		defs |= LIGHTDEF_USE_LIGHT_VECTOR;
+	}
+	else if (useLightVertex)
+	{
+		defs |= LIGHTDEF_USE_LIGHT_VERTEX;
 	}
 
 	if (r_deluxeMapping->integer && tr.worldDeluxeMapping && lightmap)
@@ -2233,7 +2260,7 @@ static qboolean CollapseStagesToGLSL(void)
 		{
 			shaderStage_t *pStage = &stages[i];
 			shaderStage_t *diffuse, *normal, *specular, *lightmap;
-			qboolean parallax, environment, entity;
+			qboolean parallax, environment, diffuselit, vertexlit;
 
 			if (!pStage->active)
 				continue;
@@ -2302,13 +2329,19 @@ static qboolean CollapseStagesToGLSL(void)
 				environment = qtrue;
 			}
 
-			entity = qfalse;
+			diffuselit = qfalse;
 			if (diffuse->rgbGen == CGEN_LIGHTING_DIFFUSE)
 			{
-				entity = qtrue;
+				diffuselit = qtrue;
 			}
 
-			CollapseStagesToLightall(diffuse, normal, specular, lightmap, entity, parallax, environment);
+			vertexlit = qfalse;
+			if (diffuse->rgbGen == CGEN_VERTEX_LIT || diffuse->rgbGen == CGEN_EXACT_VERTEX_LIT)
+			{
+				vertexlit = qtrue;
+			}
+
+			CollapseStagesToLightall(diffuse, normal, specular, lightmap, diffuselit, vertexlit, parallax, environment);
 		}
 
 		// deactivate lightmap stages

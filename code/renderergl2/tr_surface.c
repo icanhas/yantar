@@ -86,7 +86,7 @@ void RB_CheckVBOandIBO(VBO_t *vbo, IBO_t *ibo)
 RB_AddQuadStampExt
 ==============
 */
-void RB_AddQuadStampExt( vec3_t origin, vec3_t left, vec3_t up, byte *color, float s1, float t1, float s2, float t2 ) {
+void RB_AddQuadStampExt( vec3_t origin, vec3_t left, vec3_t up, float color[4], float s1, float t1, float s2, float t2 ) {
 	vec3_t		normal;
 	int			ndx;
 
@@ -142,12 +142,25 @@ void RB_AddQuadStampExt( vec3_t origin, vec3_t left, vec3_t up, byte *color, flo
 
 	// constant color all the way around
 	// should this be identity and let the shader specify from entity?
-	* ( unsigned int * ) &tess.vertexColors[ndx] = 
-	* ( unsigned int * ) &tess.vertexColors[ndx+1] = 
-	* ( unsigned int * ) &tess.vertexColors[ndx+2] = 
-	* ( unsigned int * ) &tess.vertexColors[ndx+3] = 
-		* ( unsigned int * )color;
+	tess.vertexColors[ndx][0] = color[0];
+	tess.vertexColors[ndx][1] = color[1];
+	tess.vertexColors[ndx][2] = color[2];
+	tess.vertexColors[ndx][3] = color[3];
 
+	tess.vertexColors[ndx+1][0] = color[0];
+	tess.vertexColors[ndx+1][1] = color[1];
+	tess.vertexColors[ndx+1][2] = color[2];
+	tess.vertexColors[ndx+1][3] = color[3];
+
+	tess.vertexColors[ndx+2][0] = color[0];
+	tess.vertexColors[ndx+2][1] = color[1];
+	tess.vertexColors[ndx+2][2] = color[2];
+	tess.vertexColors[ndx+2][3] = color[3];
+
+	tess.vertexColors[ndx+3][0] = color[0];
+	tess.vertexColors[ndx+3][1] = color[1];
+	tess.vertexColors[ndx+3][2] = color[2];
+	tess.vertexColors[ndx+3][3] = color[3];
 
 	tess.numVertexes += 4;
 	tess.numIndexes += 6;
@@ -158,7 +171,7 @@ void RB_AddQuadStampExt( vec3_t origin, vec3_t left, vec3_t up, byte *color, flo
 RB_AddQuadStamp
 ==============
 */
-void RB_AddQuadStamp( vec3_t origin, vec3_t left, vec3_t up, byte *color ) {
+void RB_AddQuadStamp( vec3_t origin, vec3_t left, vec3_t up, float color[4] ) {
 	RB_AddQuadStampExt( origin, left, up, color, 0, 0, 1, 1 );
 }
 
@@ -254,7 +267,7 @@ RB_SurfaceSprite
 static void RB_SurfaceSprite( void ) {
 	vec3_t		left, up;
 	float		radius;
-	byte			colors[4];
+	float			colors[4];
 	trRefEntity_t	*ent = backEnd.currentEntity;
 
 	// calculate the xyz locations for the four corners
@@ -290,7 +303,7 @@ static void RB_SurfaceSprite( void ) {
 		}
 		if (R_CullPointAndRadiusEx(ent->e.origin, ent->e.radius, backEnd.viewParms.frustum, ARRAY_LEN(backEnd.viewParms.frustum)) == CULL_OUT)
 			return;
-		colors[0] = colors[1] = colors[2] = colors[3] = ent->e.shaderRGBA[glRefConfig.framebufferObject];
+		colors[0] = colors[1] = colors[2] = colors[3] = ent->e.shaderRGBA[glRefConfig.framebufferObject] / 255.0f;
 		if (colors[0] == 0)
 			return;
 		backEnd.hasSunFlare = qtrue;
@@ -298,7 +311,7 @@ static void RB_SurfaceSprite( void ) {
 	else
 #endif
 	{
-		Vector4Copy(ent->e.shaderRGBA, colors);
+		VectorScale4(ent->e.shaderRGBA, 1.0f / 255.0f, colors);
 	}
 
 	RB_AddQuadStamp( ent->e.origin, left, up, colors );
@@ -322,7 +335,10 @@ static void RB_SurfacePolychain( srfPoly_t *p ) {
 		VectorCopy( p->verts[i].xyz, tess.xyz[numv] );
 		tess.texCoords[numv][0][0] = p->verts[i].st[0];
 		tess.texCoords[numv][0][1] = p->verts[i].st[1];
-		*(int *)&tess.vertexColors[numv] = *(int *)p->verts[ i ].modulate;
+		tess.vertexColors[numv][0] = p->verts[ i ].modulate[0] / 255.0f;
+		tess.vertexColors[numv][1] = p->verts[ i ].modulate[1] / 255.0f;
+		tess.vertexColors[numv][2] = p->verts[ i ].modulate[2] / 255.0f;
+		tess.vertexColors[numv][3] = p->verts[ i ].modulate[3] / 255.0f;
 
 		numv++;
 	}
@@ -343,9 +359,9 @@ static void RB_SurfaceHelper( int numVerts, srfVert_t *verts, int numTriangles, 
 	int			i;
 	srfTriangle_t  *tri;
 	srfVert_t      *dv;
-	float          *xyz, *normal, *tangent, *bitangent, *texCoords, *lightCoords;
+	float          *xyz, *normal, *tangent, *bitangent, *texCoords, *lightCoords, *lightdir;
 	glIndex_t      *index;
-	byte		*color;
+	float		*color;
 
 	RB_CHECKOVERFLOW( numVerts, numTriangles * 3 );
 
@@ -411,7 +427,15 @@ static void RB_SurfaceHelper( int numVerts, srfVert_t *verts, int numTriangles, 
 		dv = verts;
 		color = tess.vertexColors[ tess.numVertexes ];
 		for ( i = 0 ; i < numVerts ; i++, dv++, color+=4 )
-			*(int *)color = *(int *)dv->vertexColors;
+			VectorCopy4(dv->vertexColors, color);
+	}
+
+	if ( tess.shader->vertexAttribs & ATTR_LIGHTDIRECTION )
+	{
+		dv = verts;
+		lightdir = tess.lightdir[ tess.numVertexes ];
+		for ( i = 0 ; i < numVerts ; i++, dv++, lightdir+=4 )
+			VectorCopy(dv->lightdir, lightdir);
 	}
 
 #if 0  // nothing even uses vertex dlightbits
@@ -646,34 +670,34 @@ static void DoRailCore( const vec3_t start, const vec3_t end, const vec3_t up, f
 	VectorMA( start, spanWidth, up, tess.xyz[tess.numVertexes] );
 	tess.texCoords[tess.numVertexes][0][0] = 0;
 	tess.texCoords[tess.numVertexes][0][1] = 0;
-	tess.vertexColors[tess.numVertexes][0] = backEnd.currentEntity->e.shaderRGBA[0] * 0.25;
-	tess.vertexColors[tess.numVertexes][1] = backEnd.currentEntity->e.shaderRGBA[1] * 0.25;
-	tess.vertexColors[tess.numVertexes][2] = backEnd.currentEntity->e.shaderRGBA[2] * 0.25;
+	tess.vertexColors[tess.numVertexes][0] = backEnd.currentEntity->e.shaderRGBA[0] * 0.25 / 255.0f;
+	tess.vertexColors[tess.numVertexes][1] = backEnd.currentEntity->e.shaderRGBA[1] * 0.25 / 255.0f;
+	tess.vertexColors[tess.numVertexes][2] = backEnd.currentEntity->e.shaderRGBA[2] * 0.25 / 255.0f;
 	tess.numVertexes++;
 
 	VectorMA( start, spanWidth2, up, tess.xyz[tess.numVertexes] );
 	tess.texCoords[tess.numVertexes][0][0] = 0;
 	tess.texCoords[tess.numVertexes][0][1] = 1;
-	tess.vertexColors[tess.numVertexes][0] = backEnd.currentEntity->e.shaderRGBA[0];
-	tess.vertexColors[tess.numVertexes][1] = backEnd.currentEntity->e.shaderRGBA[1];
-	tess.vertexColors[tess.numVertexes][2] = backEnd.currentEntity->e.shaderRGBA[2];
+	tess.vertexColors[tess.numVertexes][0] = backEnd.currentEntity->e.shaderRGBA[0] / 255.0f;
+	tess.vertexColors[tess.numVertexes][1] = backEnd.currentEntity->e.shaderRGBA[1] / 255.0f;
+	tess.vertexColors[tess.numVertexes][2] = backEnd.currentEntity->e.shaderRGBA[2] / 255.0f;
 	tess.numVertexes++;
 
 	VectorMA( end, spanWidth, up, tess.xyz[tess.numVertexes] );
 
 	tess.texCoords[tess.numVertexes][0][0] = t;
 	tess.texCoords[tess.numVertexes][0][1] = 0;
-	tess.vertexColors[tess.numVertexes][0] = backEnd.currentEntity->e.shaderRGBA[0];
-	tess.vertexColors[tess.numVertexes][1] = backEnd.currentEntity->e.shaderRGBA[1];
-	tess.vertexColors[tess.numVertexes][2] = backEnd.currentEntity->e.shaderRGBA[2];
+	tess.vertexColors[tess.numVertexes][0] = backEnd.currentEntity->e.shaderRGBA[0] / 255.0f;
+	tess.vertexColors[tess.numVertexes][1] = backEnd.currentEntity->e.shaderRGBA[1] / 255.0f;
+	tess.vertexColors[tess.numVertexes][2] = backEnd.currentEntity->e.shaderRGBA[2] / 255.0f;
 	tess.numVertexes++;
 
 	VectorMA( end, spanWidth2, up, tess.xyz[tess.numVertexes] );
 	tess.texCoords[tess.numVertexes][0][0] = t;
 	tess.texCoords[tess.numVertexes][0][1] = 1;
-	tess.vertexColors[tess.numVertexes][0] = backEnd.currentEntity->e.shaderRGBA[0];
-	tess.vertexColors[tess.numVertexes][1] = backEnd.currentEntity->e.shaderRGBA[1];
-	tess.vertexColors[tess.numVertexes][2] = backEnd.currentEntity->e.shaderRGBA[2];
+	tess.vertexColors[tess.numVertexes][0] = backEnd.currentEntity->e.shaderRGBA[0] / 255.0f;
+	tess.vertexColors[tess.numVertexes][1] = backEnd.currentEntity->e.shaderRGBA[1] / 255.0f;
+	tess.vertexColors[tess.numVertexes][2] = backEnd.currentEntity->e.shaderRGBA[2] / 255.0f;
 	tess.numVertexes++;
 
 	tess.indexes[tess.numIndexes++] = vbase;
@@ -728,9 +752,9 @@ static void DoRailDiscs( int numSegs, const vec3_t start, const vec3_t dir, cons
 			VectorCopy( pos[j], tess.xyz[tess.numVertexes] );
 			tess.texCoords[tess.numVertexes][0][0] = ( j < 2 );
 			tess.texCoords[tess.numVertexes][0][1] = ( j && j != 3 );
-			tess.vertexColors[tess.numVertexes][0] = backEnd.currentEntity->e.shaderRGBA[0];
-			tess.vertexColors[tess.numVertexes][1] = backEnd.currentEntity->e.shaderRGBA[1];
-			tess.vertexColors[tess.numVertexes][2] = backEnd.currentEntity->e.shaderRGBA[2];
+			tess.vertexColors[tess.numVertexes][0] = backEnd.currentEntity->e.shaderRGBA[0] / 255.0f;
+			tess.vertexColors[tess.numVertexes][1] = backEnd.currentEntity->e.shaderRGBA[1] / 255.0f;
+			tess.vertexColors[tess.numVertexes][2] = backEnd.currentEntity->e.shaderRGBA[2] / 255.0f;
 			tess.numVertexes++;
 
 			VectorAdd( pos[j], dir, pos[j] );
@@ -1302,7 +1326,7 @@ static void RB_SurfaceGrid( srfGridMesh_t *srf ) {
 	float	*xyz;
 	float	*texCoords, *lightCoords;
 	float	*normal, *tangent, *bitangent;
-	unsigned char *color;
+	float   *color, *lightdir;
 	srfVert_t	*dv;
 	int		rows, irows, vrows;
 	int		used;
@@ -1389,7 +1413,8 @@ static void RB_SurfaceGrid( srfGridMesh_t *srf ) {
 		bitangent = tess.bitangent[numVertexes];
 		texCoords = tess.texCoords[numVertexes][0];
 		lightCoords = tess.texCoords[numVertexes][1];
-		color = ( unsigned char * ) &tess.vertexColors[numVertexes];
+		color = tess.vertexColors[numVertexes];
+		lightdir = tess.lightdir[numVertexes];
 		//vDlightBits = &tess.vertexDlightBits[numVertexes];
 
 		for ( i = 0 ; i < rows ; i++ ) {
@@ -1435,8 +1460,14 @@ static void RB_SurfaceGrid( srfGridMesh_t *srf ) {
 
 				if ( tess.shader->vertexAttribs & ATTR_COLOR )
 				{
-					*(int *)color = *(int *)dv->vertexColors;
+					VectorCopy4(dv->vertexColors, color);
 					color += 4;
+				}
+
+				if ( tess.shader->vertexAttribs & ATTR_LIGHTDIRECTION )
+				{
+					VectorCopy(dv->lightdir, lightdir);
+					lightdir += 4;
 				}
 
 				//*vDlightBits++ = dlightBits;

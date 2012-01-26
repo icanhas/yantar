@@ -436,6 +436,7 @@ static void ComputeShaderColors( shaderStage_t *pStage, vec4_t baseColor, vec4_t
 			vertColor[3] = 0.0f;
 			break;
 		case CGEN_EXACT_VERTEX:
+		case CGEN_EXACT_VERTEX_LIT:
 			baseColor[0] = 
 			baseColor[1] =
 			baseColor[2] =
@@ -458,6 +459,7 @@ static void ComputeShaderColors( shaderStage_t *pStage, vec4_t baseColor, vec4_t
 			vertColor[3] = 0.0f;
 			break;
 		case CGEN_VERTEX:
+		case CGEN_VERTEX_LIT:
 			baseColor[0] = 
 			baseColor[1] =
 			baseColor[2] =

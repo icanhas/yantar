@@ -103,6 +103,8 @@ cvar_t  *r_mergeLeafSurfaces;
 cvar_t  *r_cameraExposure;
 cvar_t  *r_hdr;
 cvar_t  *r_postProcess;
+cvar_t  *r_toneMap;
+cvar_t  *r_autoExposure;
 
 cvar_t  *r_normalMapping;
 cvar_t  *r_specularMapping;
@@ -1112,6 +1114,8 @@ void R_Register( void )
 
 	r_hdr = ri.Cvar_Get( "r_hdr", "1", CVAR_ARCHIVE | CVAR_LATCH );
 	r_postProcess = ri.Cvar_Get( "r_postProcess", "1", CVAR_ARCHIVE );
+	r_toneMap = ri.Cvar_Get( "r_toneMap", "1", CVAR_ARCHIVE );
+	r_autoExposure = ri.Cvar_Get( "r_autoExposure", "1", CVAR_ARCHIVE );
 	r_cameraExposure = ri.Cvar_Get( "r_cameraExposure", "0", CVAR_CHEAT );
 
 	r_normalMapping = ri.Cvar_Get( "r_normalMapping", "1", CVAR_ARCHIVE | CVAR_LATCH );
@@ -1282,7 +1286,7 @@ void R_Init( void ) {
 	if ( (intptr_t)tess.xyz & 15 ) {
 		ri.Printf( PRINT_WARNING, "tess.xyz not 16 byte aligned\n" );
 	}
-	Com_Memset( tess.constantColor255, 255, sizeof( tess.constantColor255 ) );
+	//Com_Memset( tess.constantColor255, 255, sizeof( tess.constantColor255 ) );
 
 	//
 	// init function tables
@@ -1341,9 +1345,9 @@ void R_Init( void ) {
 
 	InitOpenGL();
 
-	GLSL_InitGPUShaders();
-
 	R_InitImages();
+
+	GLSL_InitGPUShaders();
 
 	FBO_Init();
 
