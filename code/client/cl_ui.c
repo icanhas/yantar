@@ -766,10 +766,9 @@ intptr_t CL_UISystemCalls( intptr_t *args ) {
 
 	case UI_CMD_EXECUTETEXT:
 		if(args[1] == EXEC_NOW
-		&& (!strncmp(VMA(2), "snd_restart", 11)
-		|| !strncmp(VMA(2), "vid_restart", 11)
-		|| !strncmp(VMA(2), "quit", 5)))
-		{
+			&& (!strncmp(VMA(2), "snd_restart", 11)
+			|| !strncmp(VMA(2), "vid_restart", 11)
+			|| !strncmp(VMA(2), "quit", 5))){
 			Com_Printf (S_COLOR_YELLOW "turning EXEC_NOW '%.11s' into EXEC_INSERT\n", (const char*)VMA(2));
 			args[1] = EXEC_INSERT;
 		}
@@ -1070,85 +1069,72 @@ intptr_t CL_UISystemCalls( intptr_t *args ) {
 	return 0;
 }
 
-/*
-====================
-CL_ShutdownUI
-====================
-*/
-void CL_ShutdownUI( void ) {
-	Key_SetCatcher( Key_GetCatcher( ) & ~KEYCATCH_UI );
+void
+CL_ShutdownUI(void)
+{
+	Key_SetCatcher(Key_GetCatcher() & ~KEYCATCH_UI);
 	cls.uiStarted = qfalse;
-	if ( !uivm ) {
+	if(uivm == NULL)
 		return;
-	}
-	VM_Call( uivm, UI_SHUTDOWN );
-	VM_Free( uivm );
+	VM_Call(uivm, UI_SHUTDOWN);
+	VM_Free(uivm);
 	uivm = NULL;
 }
 
-/*
-====================
-CL_InitUI
-====================
-*/
-#define UI_OLD_API_VERSION	4
+enum{
+	UI_OLD_API_VERSION = 4
+};
 
-void CL_InitUI( void ) {
+void
+CL_InitUI(void)
+{
 	int		v;
-	vmInterpret_t		interpret;
+	vmInterpret_t	interpret;
 
-	// load the dll or bytecode
+	/* load the dll or bytecode */
 	interpret = Cvar_VariableValue("vm_ui");
-	if(cl_connectedToPureServer)
-	{
-		// if sv_pure is set we only allow qvms to be loaded
+	if(cl_connectedToPureServer){
+		/* if sv_pure is set we only allow qvms to be loaded */
 		if(interpret != VMI_COMPILED && interpret != VMI_BYTECODE)
 			interpret = VMI_COMPILED;
 	}
 
-	uivm = VM_Create( "ui", CL_UISystemCalls, interpret );
-	if ( !uivm ) {
-		Com_Error( ERR_FATAL, "VM_Create on UI failed" );
-	}
+	uivm = VM_Create("ui", CL_UISystemCalls, interpret);
+	if(uivm == NULL)
+		Com_Error(ERR_FATAL, "VM_Create on UI failed");
 
 	// sanity check
-	v = VM_Call( uivm, UI_GETAPIVERSION );
-	if (v == UI_OLD_API_VERSION) {
-//		Com_Printf(S_COLOR_YELLOW "WARNING: loading old Quake III Arena User Interface version %d\n", v );
-		// init for this gamestate
-		VM_Call( uivm, UI_INIT, (clc.state >= CA_AUTHORIZING && clc.state < CA_ACTIVE));
-	}
-	else if (v != UI_API_VERSION) {
-		Com_Error( ERR_DROP, "User Interface is version %d, expected %d", v, UI_API_VERSION );
+	v = VM_Call(uivm, UI_GETAPIVERSION);
+	if(v == UI_OLD_API_VERSION){
+		//Com_Printf(S_COLOR_YELLOW "WARNING: loading old Quake III Arena User Interface version %d\n", v );
+		/* init for this gamestate */
+		VM_Call(uivm, UI_INIT, (clc.state >= CA_AUTHORIZING && clc.state < CA_ACTIVE));
+	}else if(v != UI_API_VERSION){
+		VM_Free(uivm);
+		uivm = NULL;
+		Com_Error(ERR_DROP, "User Interface is version %d, expected %d", v, UI_API_VERSION);
 		cls.uiStarted = qfalse;
-	}
-	else {
-		// init for this gamestate
-		VM_Call( uivm, UI_INIT, (clc.state >= CA_AUTHORIZING && clc.state < CA_ACTIVE) );
+	}else{
+		/* init for this gamestate */
+		VM_Call(uivm, UI_INIT, (clc.state >= CA_AUTHORIZING && clc.state < CA_ACTIVE));
 	}
 }
 
 #ifndef STANDALONE
-qboolean UI_usesUniqueCDKey( void ) {
-	if (uivm) {
-		return (VM_Call( uivm, UI_HASUNIQUECDKEY) == qtrue);
-	} else {
+qboolean
+UI_usesUniqueCDKey(void)
+{
+	if(uivm == NULL)
 		return qfalse;
-	}
+	return VM_Call(uivm, UI_HASUNIQUECDKEY);
 }
 #endif
 
-/*
-====================
-UI_GameCommand
-
-See if the current console command is claimed by the ui
-====================
-*/
-qboolean UI_GameCommand( void ) {
-	if ( !uivm ) {
+/* UI_GameCommand: See if the current console command is claimed by the ui */
+qboolean
+UI_GameCommand(void)
+{
+	if(uivm == NULL)
 		return qfalse;
-	}
-
-	return VM_Call( uivm, UI_CONSOLE_COMMAND, cls.realtime );
+	return VM_Call(uivm, UI_CONSOLE_COMMAND, cls.realtime);
 }
