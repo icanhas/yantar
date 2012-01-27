@@ -1493,7 +1493,7 @@ void		R_Modellist_f (void);
 extern	refimport_t		ri;
 
 #define	MAX_DRAWIMAGES			2048
-#define	MAX_SKINS				1024
+#define	MAX_SKINS			1024
 
 
 #define	MAX_DRAWSURFS			0x10000
@@ -1525,13 +1525,15 @@ the bits are allocated as follows:
 1     : pshadow flag
 0     : dlight flag
 */
-#define	QSORT_FOGNUM_SHIFT	2
-#define	QSORT_ENTITYNUM_SHIFT	7
-#define	QSORT_SHADERNUM_SHIFT	(QSORT_ENTITYNUM_SHIFT+GENTITYNUM_BITS)
-#if (QSORT_SHADERNUM_SHIFT+SHADERNUM_BITS) > 32
+enum{
+	QSORT_FOGNUM_SHIFT	= 2,
+	QSORT_ENTITYNUM_SHIFT	= 7,
+	QSORT_SHADERNUM_SHIFT	= (QSORT_ENTITYNUM_SHIFT + ENTITYNUM_BITS),
+	QSORT_PSHADOW_SHIFT	= 1
+};
+#if (QSORT_SHADERNUM_SHIFT + SHADERNUM_BITS) > 32
 	#error "Need to update sorting, too many bits."
 #endif
-#define QSORT_PSHADOW_SHIFT     1
 
 extern	int			gl_filter_min, gl_filter_max;
 
