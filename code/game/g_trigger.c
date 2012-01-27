@@ -380,29 +380,23 @@ void hurt_touch( gentity_t *self, gentity_t *other, trace_t *trace ) {
 	G_Damage (other, self, self, NULL, NULL, self->damage, dflags, MOD_TRIGGER_HURT);
 }
 
-void SP_trigger_hurt( gentity_t *self ) {
-	InitTrigger (self);
+void
+SP_trigger_hurt(gentity_t *self)
+{
+	InitTrigger(self);
 
-	self->noise_index = G_SoundIndex( "sound/world/electro.wav" );
+	self->noise_index = G_SoundIndex("sound/world/electro.wav");
 	self->touch = hurt_touch;
 
-	if ( !self->damage ) {
+	if(!self->damage)
 		self->damage = 5;
-	}
-
-	self->r.contents = CONTENTS_TRIGGER;
-
 	self->use = hurt_use;
-
-	// link in to the world if starting active
-	if ( self->spawnflags & 1 ) {
+	/* link in to the world if starting active */
+	if(self->spawnflags & 1)
 		trap_UnlinkEntity (self);
-	}
-	else {
+	else
 		trap_LinkEntity (self);
-	}
 }
-
 
 /*
 ==============================================================================
