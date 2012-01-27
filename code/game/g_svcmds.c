@@ -437,69 +437,56 @@ void	Svcmd_ForceTeam_f( void ) {
 
 char	*ConcatArgs( int start );
 
-/*
-=================
-ConsoleCommand
+qboolean
+ConsoleCommand(void) 
+{
+	char cmd[MAX_TOKEN_CHARS];
 
-=================
-*/
-qboolean	ConsoleCommand( void ) {
-	char	cmd[MAX_TOKEN_CHARS];
+	trap_Argv(0, cmd, sizeof(cmd));
 
-	trap_Argv( 0, cmd, sizeof( cmd ) );
-
-	if ( Q_stricmp (cmd, "entitylist") == 0 ) {
+	if(Q_stricmp(cmd, "entitylist") == 0){
 		Svcmd_EntityList_f();
 		return qtrue;
 	}
-
-	if ( Q_stricmp (cmd, "forceteam") == 0 ) {
+	if(Q_stricmp(cmd, "forceteam") == 0){
 		Svcmd_ForceTeam_f();
 		return qtrue;
 	}
-
-	if (Q_stricmp (cmd, "game_memory") == 0) {
+	if(Q_stricmp(cmd, "game_memory") == 0){
 		Svcmd_GameMem_f();
 		return qtrue;
 	}
-
-	if (Q_stricmp (cmd, "addbot") == 0) {
+	if(Q_stricmp(cmd, "addbot") == 0){
 		Svcmd_AddBot_f();
 		return qtrue;
 	}
-
-	if (Q_stricmp (cmd, "botlist") == 0) {
+	if(Q_stricmp(cmd, "botlist") == 0){
 		Svcmd_BotList_f();
 		return qtrue;
 	}
-
-	if (Q_stricmp (cmd, "abort_podium") == 0) {
+	if(Q_stricmp(cmd, "abort_podium") == 0){
 		Svcmd_AbortPodium_f();
 		return qtrue;
 	}
-
-	if (Q_stricmp (cmd, "addip") == 0) {
+	if(Q_stricmp(cmd, "addip") == 0){
 		Svcmd_AddIP_f();
 		return qtrue;
 	}
-
-	if (Q_stricmp (cmd, "removeip") == 0) {
+	if(Q_stricmp(cmd, "removeip") == 0){
 		Svcmd_RemoveIP_f();
 		return qtrue;
 	}
-
-	if (Q_stricmp (cmd, "listip") == 0) {
-		trap_SendConsoleCommand( EXEC_NOW, "g_banIPs\n" );
+	if(Q_stricmp(cmd, "listip") == 0){
+		trap_SendConsoleCommand(EXEC_NOW, "g_banIPs\n");
 		return qtrue;
 	}
-
-	if (g_dedicated.integer) {
-		if (Q_stricmp (cmd, "say") == 0) {
-			trap_SendServerCommand( -1, va("print \"server: %s\"", ConcatArgs(1) ) );
+	if(g_dedicated.integer){
+		if(Q_stricmp(cmd, "say") == 0){
+			trap_SendServerCommand(-1, va("print \"server: %s\n\"", ConcatArgs(1)));
 			return qtrue;
 		}
-		// everything else will also be printed as a say command
-		trap_SendServerCommand( -1, va("print \"server: %s\"", ConcatArgs(0) ) );
+		/* everything else will also be printed as a say command */
+		trap_SendServerCommand(-1, va("print \"server: %s\n\"", ConcatArgs(0)));
 		return qtrue;
 	}
 
