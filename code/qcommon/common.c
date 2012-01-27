@@ -1349,14 +1349,10 @@ void Com_Meminfo_f( void ) {
 	Com_Printf( "        %8i bytes in small Zone memory\n", smallZoneBytes );
 }
 
-/*
-===============
-Com_TouchMemory
-
-Touch all known used data to make sure it is paged in
-===============
-*/
-void Com_TouchMemory( void ) {
+/* Com_TouchMemory: Touch all known used data to make sure it is paged in */
+void
+Com_TouchMemory(void)
+{
 	int		start, end;
 	int		i, j;
 	int		sum;
@@ -1365,79 +1361,66 @@ void Com_TouchMemory( void ) {
 	Z_CheckHeap();
 
 	start = Sys_Milliseconds();
-
 	sum = 0;
 
 	j = hunk_low.permanent >> 2;
-	for ( i = 0 ; i < j ; i+=64 ) {			// only need to touch each page
+	for(i = 0; i < j; i += 64)	/* only need to touch each page */
 		sum += ((int *)s_hunkData)[i];
-	}
 
-	i = ( s_hunkTotal - hunk_high.permanent ) >> 2;
+	i = (s_hunkTotal - hunk_high.permanent) >> 2;
 	j = hunk_high.permanent >> 2;
-	for (  ; i < j ; i+=64 ) {			// only need to touch each page
+	for(; i < j; i += 64)		/* only need to touch each page */
 		sum += ((int *)s_hunkData)[i];
-	}
 
-	for (block = mainzone->blocklist.next ; ; block = block->next) {
-		if ( block->tag ) {
+	for(block = mainzone->blocklist.next; ; block = block->next){
+		if(block->tag){
 			j = block->size >> 2;
-			for ( i = 0 ; i < j ; i+=64 ) {				// only need to touch each page
+			for(i = 0; i < j; i += 64) /* ...each page... */
 				sum += ((int *)block)[i];
-			}
 		}
-		if ( block->next == &mainzone->blocklist ) {
-			break;			// all blocks have been hit	
-		}
+		if(block->next == &mainzone->blocklist)
+			break;	/* all blocks have been hit */
 	}
 
 	end = Sys_Milliseconds();
-
-	Com_Printf( "Com_TouchMemory: %i msec\n", end - start );
+	Com_Printf("Com_TouchMemory: %i msec\n", end - start);
 }
 
-
-
-/*
-=================
-Com_InitZoneMemory
-=================
-*/
-void Com_InitSmallZoneMemory( void ) {
+void
+Com_InitSmallZoneMemory(void)
+{
 	s_smallZoneTotal = 512 * 1024;
-	smallzone = calloc( s_smallZoneTotal, 1 );
-	if ( !smallzone ) {
-		Com_Error( ERR_FATAL, "Small zone data failed to allocate %1.1f megs", (float)s_smallZoneTotal / (1024*1024) );
-	}
-	Z_ClearZone( smallzone, s_smallZoneTotal );
-	
-	return;
+	smallzone = calloc(s_smallZoneTotal, 1);
+	if(smallzone == NULL)
+		Com_Error(ERR_FATAL, "Small zone data failed to allocate %1.1f"
+			"megs", (float)s_smallZoneTotal / (1024*1024) );
+	Z_ClearZone(smallzone, s_smallZoneTotal);
 }
 
-void Com_InitZoneMemory( void ) {
+void
+Com_InitZoneMemory(void)
+{
 	cvar_t	*cv;
 
-	// Please note: com_zoneMegs can only be set on the command line, and
-	// not in q3config.cfg or Com_StartupVariable, as they haven't been
-	// executed by this point. It's a chicken and egg problem. We need the
-	// memory manager configured to handle those places where you would
-	// configure the memory manager.
-
-	// allocate the random block zone
-	cv = Cvar_Get( "com_zoneMegs", DEF_COMZONEMEGS_S, CVAR_LATCH | CVAR_ARCHIVE );
-
-	if ( cv->integer < DEF_COMZONEMEGS ) {
+	/* 
+	 * Please note: com_zoneMegs can only be set on the command line, and
+	 * not in q3config.cfg or Com_StartupVariable, as they haven't been
+	 * executed by this point. It's a chicken and egg problem. We need the
+	 * memory manager configured to handle those places where you would
+	 * configure the memory manager.
+	 */
+	/* allocate the random block zone */
+	cv = Cvar_Get("com_zoneMegs", DEF_COMZONEMEGS_S, CVAR_LATCH | CVAR_ARCHIVE);
+	if(cv->integer < DEF_COMZONEMEGS)
 		s_zoneTotal = 1024 * 1024 * DEF_COMZONEMEGS;
-	} else {
+	else
 		s_zoneTotal = cv->integer * 1024 * 1024;
-	}
 
-	mainzone = calloc( s_zoneTotal, 1 );
-	if ( !mainzone ) {
-		Com_Error( ERR_FATAL, "Zone data failed to allocate %i megs", s_zoneTotal / (1024*1024) );
-	}
-	Z_ClearZone( mainzone, s_zoneTotal );
-
+	mainzone = calloc(s_zoneTotal, 1);
+	if (!mainzone)
+		Com_Error( ERR_FATAL, "Zone data failed to allocate %i megs"
+			, s_zoneTotal / (1024*1024) );
+	Z_ClearZone(mainzone, s_zoneTotal);
 }
 
 /*
