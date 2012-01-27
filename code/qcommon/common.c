@@ -930,33 +930,31 @@ Z_TagMalloc
 ================
 */
 #ifdef ZONE_DEBUG
-void *Z_TagMallocDebug( int size, int tag, char *label, char *file, int line ) {
+void
+*Z_TagMallocDebug(int size, int tag, char *label, char *file, int line)
 	int		allocSize;
 #else
-void *Z_TagMalloc( int size, int tag ) {
+void
+*Z_TagMalloc(int size, int tag)
 #endif
+{
 	int		extra;
 	memblock_t	*start, *rover, *new, *base;
 	memzone_t *zone;
 
-	if (!tag) {
-		Com_Error( ERR_FATAL, "Z_TagMalloc: tried to use a 0 tag" );
-	}
+	if(!tag)
+		Com_Error(ERR_FATAL, "Z_TagMalloc: tried to use a 0 tag");
 
-	if ( tag == TAG_SMALL ) {
+	if(tag == TAG_SMALL)
 		zone = smallzone;
-	}
-	else {
+	else
 		zone = mainzone;
-	}
-
+	
 #ifdef ZONE_DEBUG
 	allocSize = size;
 #endif
-	//
 	// scan through the block list looking for the first free block
 	// of sufficient size
-	//
 	size += sizeof(memblock_t);	// account for size of block header
 	size += 4;					// space for memory trash tester
 	size = PAD(size, sizeof(intptr_t));		// align to 32/64 bit boundary
@@ -964,30 +962,33 @@ void *Z_TagMalloc( int size, int tag ) {
 	base = rover = zone->rover;
 	start = base->prev;
 	
-	do {
-		if (rover == start)	{
+	do{
+		if(rover == start){
+			// scaned all the way around the list
 #ifdef ZONE_DEBUG
 			Z_LogHeap();
+			Com_Error(ERR_FATAL, "Z_Malloc: failed on allocation of"
+				"%i bytes from the %s zone: %s, line: %d (%s)",
+				size, zone == smallzone ? "small" : "main", 
+				file, line, label);
+#else
+			Com_Error(ERR_FATAL, "Z_Malloc: failed on allocation of"
+				"%i bytes from the %s zone",
+				size, zone == smallzone ? "small" : "main");
 #endif
-			// scaned all the way around the list
-			Com_Error( ERR_FATAL, "Z_Malloc: failed on allocation of %i bytes from the %s zone",
-								size, zone == smallzone ? "small" : "main");
 			return NULL;
 		}
-		if (rover->tag) {
+		if(rover->tag)
 			base = rover = rover->next;
-		} else {
+		else
 			rover = rover->next;
-		}
-	} while (base->tag || base->size < size);
+	}while(base->tag || base->size < size);
 	
-	//
 	// found a block big enough
-	//
 	extra = base->size - size;
-	if (extra > MINFRAGMENT) {
+	if(extra > MINFRAGMENT){
 		// there will be a free fragment after the allocated block
-		new = (memblock_t *) ((byte *)base + size );
+		new = (memblock_t *) ((byte *)base + size);
 		new->size = extra;
 		new->tag = 0;			// free block
 		new->prev = base;
@@ -1004,7 +1005,6 @@ void *Z_TagMalloc( int size, int tag ) {
 	zone->used += base->size;	//
 	
 	base->id = ZONEID;
-
 #ifdef ZONE_DEBUG
 	base->d.label = label;
 	base->d.file = file;
@@ -1683,32 +1683,28 @@ static void Hunk_SwapBanks( void ) {
 	}
 }
 
-/*
-=================
-Hunk_Alloc
-
-Allocate permanent (until the hunk is cleared) memory
-=================
-*/
+/* Hunk_Alloc: Allocate permanent (until the hunk is cleared) memory */
 #ifdef HUNK_DEBUG
-void *Hunk_AllocDebug( int size, ha_pref preference, char *label, char *file, int line ) {
+void
+*Hunk_AllocDebug(int size, ha_pref preference, char *label, char *file, int line)
 #else
-void *Hunk_Alloc( int size, ha_pref preference ) {
+void
+*Hunk_Alloc(int size, ha_pref preference)
 #endif
-	void	*buf;
+{
+	void *buf;
 
-	if ( s_hunkData == NULL)
-	{
-		Com_Error( ERR_FATAL, "Hunk_Alloc: Hunk memory system not initialized" );
+	if(s_hunkData == NULL){
+		Com_Error(ERR_FATAL, "Hunk_Alloc: Hunk memory system not initialized");
 	}
 
 	// can't do preference if there is any temp allocated
-	if (preference == h_dontcare || hunk_temp->temp != hunk_temp->permanent) {
+	if(preference == h_dontcare || hunk_temp->temp != hunk_temp->permanent){
 		Hunk_SwapBanks();
-	} else {
-		if (preference == h_low && hunk_permanent != &hunk_low) {
+	}else{
+		if(preference == h_low && hunk_permanent != &hunk_low){
 			Hunk_SwapBanks();
-		} else if (preference == h_high && hunk_permanent != &hunk_high) {
+		}else if(preference == h_high && hunk_permanent != &hunk_high){
 			Hunk_SwapBanks();
 		}
 	}
@@ -1720,18 +1716,22 @@ void *Hunk_Alloc( int size, ha_pref preference ) {
 	// round to cacheline
 	size = (size+31)&~31;
 
-	if ( hunk_low.temp + hunk_high.temp + size > s_hunkTotal ) {
+	if(hunk_low.temp + hunk_high.temp + size > s_hunkTotal){
 #ifdef HUNK_DEBUG
 		Hunk_Log();
 		Hunk_SmallLog();
+
+		Com_Error(ERR_DROP, "Hunk_Alloc failed on %i: %s, line: %d (%s)"
+			, size, file, line, label);
+#else
+		Com_Error(ERR_DROP, "Hunk_Alloc failed on %i", size);
 #endif
-		Com_Error( ERR_DROP, "Hunk_Alloc failed on %i", size );
 	}
 
-	if ( hunk_permanent == &hunk_low ) {
+	if(hunk_permanent == &hunk_low){
 		buf = (void *)(s_hunkData + hunk_permanent->permanent);
 		hunk_permanent->permanent += size;
-	} else {
+	}else{
 		hunk_permanent->permanent += size;
 		buf = (void *)(s_hunkData + s_hunkTotal - hunk_permanent->permanent );
 	}
