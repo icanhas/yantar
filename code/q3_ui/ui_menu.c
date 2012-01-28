@@ -258,7 +258,7 @@ UI_MainMenu(void)
 
 	y = Ybegin;
 	s_main.singleplayer.generic.type	= MTYPE_PTEXT;
-	s_main.singleplayer.generic.flags	= QMF_CENTER_JUSTIFY|QMF_PULSEIFFOCUS;
+	s_main.singleplayer.generic.flags	= QMF_LEFT_JUSTIFY|QMF_PULSEIFFOCUS;
 	s_main.singleplayer.generic.x		= Xbegin;
 	s_main.singleplayer.generic.y		= y;
 	s_main.singleplayer.generic.id		= ID_SINGLEPLAYER;
@@ -269,7 +269,7 @@ UI_MainMenu(void)
 
 	y += Yspacing;
 	s_main.multiplayer.generic.type		= MTYPE_PTEXT;
-	s_main.multiplayer.generic.flags	= QMF_CENTER_JUSTIFY|QMF_PULSEIFFOCUS;
+	s_main.multiplayer.generic.flags	= QMF_LEFT_JUSTIFY|QMF_PULSEIFFOCUS;
 	s_main.multiplayer.generic.x		= Xbegin;
 	s_main.multiplayer.generic.y		= y;
 	s_main.multiplayer.generic.id		= ID_MULTIPLAYER;
@@ -280,7 +280,7 @@ UI_MainMenu(void)
 
 	y += Yspacing;
 	s_main.setup.generic.type		= MTYPE_PTEXT;
-	s_main.setup.generic.flags		= QMF_CENTER_JUSTIFY|QMF_PULSEIFFOCUS;
+	s_main.setup.generic.flags		= QMF_LEFT_JUSTIFY|QMF_PULSEIFFOCUS;
 	s_main.setup.generic.x			= Xbegin;
 	s_main.setup.generic.y			= y;
 	s_main.setup.generic.id			= ID_SETUP;
@@ -291,7 +291,7 @@ UI_MainMenu(void)
 
 	y += Yspacing;
 	s_main.demos.generic.type		= MTYPE_PTEXT;
-	s_main.demos.generic.flags		= QMF_CENTER_JUSTIFY|QMF_PULSEIFFOCUS;
+	s_main.demos.generic.flags		= QMF_LEFT_JUSTIFY|QMF_PULSEIFFOCUS;
 	s_main.demos.generic.x			= Xbegin;
 	s_main.demos.generic.y			= y;
 	s_main.demos.generic.id			= ID_DEMOS;
@@ -302,7 +302,7 @@ UI_MainMenu(void)
 
 	y += Yspacing;
 	s_main.cinematics.generic.type		= MTYPE_PTEXT;
-	s_main.cinematics.generic.flags		= QMF_CENTER_JUSTIFY|QMF_PULSEIFFOCUS;
+	s_main.cinematics.generic.flags		= QMF_LEFT_JUSTIFY|QMF_PULSEIFFOCUS;
 	s_main.cinematics.generic.x		= Xbegin;
 	s_main.cinematics.generic.y		= y;
 	s_main.cinematics.generic.id		= ID_CINEMATICS;
@@ -315,7 +315,7 @@ UI_MainMenu(void)
 		teamArena = qtrue;
 		y += Yspacing;
 		s_main.teamArena.generic.type		= MTYPE_PTEXT;
-		s_main.teamArena.generic.flags		= QMF_CENTER_JUSTIFY|QMF_PULSEIFFOCUS;
+		s_main.teamArena.generic.flags		= QMF_LEFT_JUSTIFY|QMF_PULSEIFFOCUS;
 		s_main.teamArena.generic.x		= Xbegin;
 		s_main.teamArena.generic.y		= y;
 		s_main.teamArena.generic.id		= ID_TEAMARENA;
@@ -327,7 +327,7 @@ UI_MainMenu(void)
 
 	y += Yspacing;
 	s_main.mods.generic.type		= MTYPE_PTEXT;
-	s_main.mods.generic.flags		= QMF_CENTER_JUSTIFY|QMF_PULSEIFFOCUS;
+	s_main.mods.generic.flags		= QMF_LEFT_JUSTIFY|QMF_PULSEIFFOCUS;
 	s_main.mods.generic.x			= Xbegin;
 	s_main.mods.generic.y			= y;
 	s_main.mods.generic.id			= ID_MODS;
@@ -338,7 +338,7 @@ UI_MainMenu(void)
 
 	y += Yspacing;
 	s_main.exit.generic.type		= MTYPE_PTEXT;
-	s_main.exit.generic.flags		= QMF_CENTER_JUSTIFY|QMF_PULSEIFFOCUS;
+	s_main.exit.generic.flags		= QMF_LEFT_JUSTIFY|QMF_PULSEIFFOCUS;
 	s_main.exit.generic.x			= Xbegin;
 	s_main.exit.generic.y			= y;
 	s_main.exit.generic.id			= ID_EXIT;
