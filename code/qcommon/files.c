@@ -1,3 +1,4 @@
+/* Handle-based filesystem */
 /*
 ===========================================================================
 Copyright (C) 1999-2005 Id Software, Inc.
@@ -19,8 +20,6 @@ along with Quake III Arena source code; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 ===========================================================================
 */
-/* Handle-based filesystem for Quake III Arena */
-
 #include "q_shared.h"
 #include "qcommon.h"
 #include "unzip.h"
