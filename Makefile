@@ -27,19 +27,19 @@ ifeq ($(COMPILE_PLATFORM),mingw32)
 endif
 
 ifndef BUILD_STANDALONE
-  BUILD_STANDALONE =
+  BUILD_STANDALONE = 1
 endif
 ifndef BUILD_CLIENT
-  BUILD_CLIENT     =
+  BUILD_CLIENT     = 1
 endif
 ifndef BUILD_CLIENT_SMP
-  BUILD_CLIENT_SMP =
+  BUILD_CLIENT_SMP = 0
 endif
 ifndef BUILD_SERVER
-  BUILD_SERVER     =
+  BUILD_SERVER     = 1
 endif
 ifndef BUILD_GAME_SO
-  BUILD_GAME_SO    =
+  BUILD_GAME_SO    = 1
 endif
 ifndef BUILD_GAME_QVM
   BUILD_GAME_QVM   =
@@ -51,7 +51,10 @@ ifndef BUILD_MISSIONPACK
   BUILD_MISSIONPACK=
 endif
 ifndef BUILD_RENDERER_GL2
-  BUILD_RENDERER_GL2=
+  BUILD_RENDERER_GL2 = 1
+endif
+ifndef BUILD_RENDERER_GL1
+  BUILD_RENDERER_GL1 = 0
 endif
 
 ifneq ($(PLATFORM),darwin)
@@ -169,15 +172,15 @@ ifndef USE_CURL_DLOPEN
 endif
 
 ifndef USE_CODEC_VORBIS
-USE_CODEC_VORBIS=0
+USE_CODEC_VORBIS=1
 endif
 
 ifndef USE_MUMBLE
-USE_MUMBLE=1
+USE_MUMBLE=0
 endif
 
 ifndef USE_VOIP
-USE_VOIP=1
+USE_VOIP=0
 endif
 
 ifndef USE_INTERNAL_SPEEX
@@ -856,9 +859,12 @@ endif
 
 ifneq ($(BUILD_CLIENT),0)
   ifneq ($(USE_RENDERER_DLOPEN),0)
-    TARGETS += $(B)/$(CLIENTBIN)$(FULLBINEXT) $(B)/renderer_opengl1_$(SHLIBNAME)
-    ifneq ($(BUILD_CLIENT_SMP),0)
-      TARGETS += $(B)/renderer_opengl1_smp_$(SHLIBNAME)
+    TARGETS += $(B)/$(CLIENTBIN)$(FULLBINEXT)
+    ifneq ($(BUILD_RENDERER_GL1),0)
+      TARGETS += $(B)/renderer_opengl1_$(SHLIBNAME)
+        ifneq ($(BUILD_CLIENT_SMP),0)
+          TARGETS += $(B)/renderer_opengl1_smp_$(SHLIBNAME)
+        endif
     endif
     ifneq ($(BUILD_RENDERER_GL2), 0)
       TARGETS += $(B)/renderer_opengl2_$(SHLIBNAME)
@@ -2482,7 +2488,9 @@ endif
 ifneq ($(BUILD_CLIENT),0)
 	$(INSTALL) $(STRIP_FLAG) -m 0755 $(BR)/$(CLIENTBIN)$(FULLBINEXT) $(COPYBINDIR)/$(CLIENTBIN)$(FULLBINEXT)
   ifneq ($(USE_RENDERER_DLOPEN),0)
+    ifneq ($(BUILD_RENDERER_GL1),0)
 	$(INSTALL) $(STRIP_FLAG) -m 0755 $(BR)/renderer_opengl1_$(SHLIBNAME) $(COPYBINDIR)/renderer_opengl1_$(SHLIBNAME)
+    endif
     ifneq ($(BUILD_RENDERER_GL2),0)
 	$(INSTALL) $(STRIP_FLAG) -m 0755 $(BR)/renderer_opengl2_$(SHLIBNAME) $(COPYBINDIR)/renderer_opengl2_$(SHLIBNAME)
     endif
