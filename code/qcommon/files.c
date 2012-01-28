@@ -19,23 +19,13 @@ along with Quake III Arena source code; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 ===========================================================================
 */
-/*****************************************************************************
- * name:		files.c
- *
- * desc:		handle based filesystem for Quake III Arena 
- *
- * $Archive: /MissionPack/code/qcommon/files.c $
- *
- *****************************************************************************/
-
+/* Handle-based filesystem for Quake III Arena */
 
 #include "q_shared.h"
 #include "qcommon.h"
 #include "unzip.h"
 
 /*
-=============================================================================
-
 QUAKE3 FILESYSTEM
 
 All of Quake's data access is through a hierarchical file system, but the contents of 
@@ -167,9 +157,6 @@ or configs will never get loaded from disk!
 
   downloading (outside fs?)
   game directory passing and restarting
-
-=============================================================================
-
 */
 
 // every time a new demo pk3 file is built, this checksum must be updated.
@@ -2814,71 +2801,103 @@ static int QDECL paksort( const void *a, const void *b ) {
 }
 
 /*
-================
-FS_AddGameDirectory
-
-Sets fs_gamedir, adds the directory to the head of the path,
-then loads the zip headers
-================
-*/
-void FS_AddGameDirectory( const char *path, const char *dir ) {
+ * FS_AddGameDirectory: Sets fs_gamedir, adds the directory to the head of the 
+ * path, then loads the zip headers
+ */
+void
+FS_AddGameDirectory(const char *path, const char *dir)
+{
+	int		i;	/* index into pakfiles */
+	int		j;	/* index into pakdirs */
+	int		nfiles, ndirs;
+	char		**pakfiles, **pakdirs;
+	char		*pakfile, curpath[MAX_OSPATH + 1];
+	enum {Pakfile, Pakdir} paktype;
+	pack_t		*pak;
 	searchpath_t	*sp;
-	int				i;
-	searchpath_t	*search;
-	pack_t			*pak;
-	char			curpath[MAX_OSPATH + 1], *pakfile;
-	int				numfiles;
-	char			**pakfiles;
 
-	// Unique
-	for ( sp = fs_searchpaths ; sp ; sp = sp->next ) {
-		if ( sp->dir && !Q_stricmp(sp->dir->path, path) && !Q_stricmp(sp->dir->gamedir, dir)) {
-			return;			// we've already got this one
+	for(sp = fs_searchpaths; sp != NULL; sp = sp->next){
+		if(sp->dir && Q_stricmp(sp->dir->gamedir, dir)
+			&& Q_stricmp(sp->dir->path, path)
+		)	return; /* ignore; we've already got this one */
+	}
+
+	Q_strncpyz(fs_gamedir, dir, sizeof(fs_gamedir));
+	/*
+	 * find all pakfiles in this directory, and get _all_ dirs to later 
+	 * filter down to pakdirs
+	 */
+	Q_strncpyz(curpath, FS_BuildOSPath(path, dir, ""), sizeof(curpath));
+	curpath[strlen(curpath) - 1] = '\0'; /* strip trailing slash */
+	pakfiles = Sys_ListFiles(curpath, ".pk3", NULL, &nfiles, qfalse);
+	pakdirs = Sys_ListFiles(curpath, "/", NULL, &ndirs, qfalse);
+	qsort(pakfiles, nfiles, sizeof(char *), paksort);
+	qsort(pakdirs, ndirs, sizeof(char *), paksort);
+
+	for(i = 0, j = 0; ((i + j) < (nfiles + ndirs));){
+		if(i >= nfiles){
+			paktype = Pakdir;  /* out of files; must be a pakdir */
+		}else if(j >= ndirs){
+			paktype = Pakfile; /* vice versa */
+		}else{
+			/* could be either; let's see... */
+			if(paksort(&pakfiles[i], &pakdirs[j]) < 0)
+				paktype = Pakdir;
+			else
+				paktype = Pakfile;
+		}
+
+		/* add pakfile or add pakdir */
+		if(paktype == Pakfile){
+			pakfile = FS_BuildOSPath(path, dir, pakfiles[i]);
+			if((pak = FS_LoadZipFile(pakfile, pakfiles[i])) == 0)
+				continue;
+			Q_strncpyz(pak->pakPathname, curpath, 
+				sizeof(pak->pakPathname));
+			/* store the game name for downloading */
+			Q_strncpyz(pak->pakGamename, dir,
+				sizeof(pak->pakGamename));
+			fs_packFiles += pak->numfiles;
+
+			sp = Z_Malloc(sizeof(*sp));
+			sp->pack = pak;
+			sp->next = fs_searchpaths;
+			fs_searchpaths = sp;
+
+			++i;
+		}else{
+			int len;
+			directory_t *p;
+
+			len = strlen(pakdirs[j]);
+			/* filter out anything that doesn't end with .dir3 */
+			if(!FS_IsExt(pakdirs[j], ".dir3", len)){
+				++j;
+				continue;
+			}
+			pakfile = FS_BuildOSPath(path, dir, pakdirs[j]);
+			/* add to the search path */
+			sp = Z_Malloc(sizeof(*sp));
+			sp->dir = Z_Malloc(sizeof(*sp->dir));
+			p = sp->dir;
+			Q_strncpyz(p->path, curpath, sizeof(p->path));
+			Q_strncpyz(p->fullpath, pakfile, sizeof(p->fullpath));
+			Q_strncpyz(p->gamedir, pakdirs[j], sizeof(p->gamedir));
+
+			++j;
 		}
 	}
-	
-	Q_strncpyz( fs_gamedir, dir, sizeof( fs_gamedir ) );
+	Sys_FreeFileList(pakfiles);
+	Sys_FreeFileList(pakdirs);
 
-	// find all pak files in this directory
-	Q_strncpyz(curpath, FS_BuildOSPath(path, dir, ""), sizeof(curpath));
-	curpath[strlen(curpath) - 1] = '\0';	// strip the trailing slash
-
-	pakfiles = Sys_ListFiles(curpath, ".pk3", NULL, &numfiles, qfalse);
-
-	qsort( pakfiles, numfiles, sizeof(char*), paksort );
-
-	for ( i = 0 ; i < numfiles ; i++ ) {
-		pakfile = FS_BuildOSPath( path, dir, pakfiles[i] );
-		if ( ( pak = FS_LoadZipFile( pakfile, pakfiles[i] ) ) == 0 )
-			continue;
-
-		Q_strncpyz(pak->pakPathname, curpath, sizeof(pak->pakPathname));
-		// store the game name for downloading
-		Q_strncpyz(pak->pakGamename, dir, sizeof(pak->pakGamename));
-		
-		fs_packFiles += pak->numfiles;
-
-		search = Z_Malloc (sizeof(searchpath_t));
-		search->pack = pak;
-		search->next = fs_searchpaths;
-		fs_searchpaths = search;
-	}
-
-	// done
-	Sys_FreeFileList( pakfiles );
-
-	//
-	// add the directory to the search path
-	//
-	search = Z_Malloc (sizeof(searchpath_t));
-	search->dir = Z_Malloc( sizeof( *search->dir ) );
-
-	Q_strncpyz(search->dir->path, path, sizeof(search->dir->path));
-	Q_strncpyz(search->dir->fullpath, curpath, sizeof(search->dir->fullpath));
-	Q_strncpyz(search->dir->gamedir, dir, sizeof(search->dir->gamedir));
-
-	search->next = fs_searchpaths;
-	fs_searchpaths = search;
+	/* add the directory to the search path */
+	sp = Z_Malloc(sizeof(*sp));
+	sp->dir = Z_Malloc(sizeof(*sp->dir));
+	Q_strncpyz(sp->dir->path, path, sizeof(sp->dir->path));
+	Q_strncpyz(sp->dir->fullpath, curpath, sizeof(sp->dir->fullpath));
+	Q_strncpyz(sp->dir->gamedir, dir, sizeof(sp->dir->gamedir));
+	sp->next = fs_searchpaths;
+	fs_searchpaths = sp;
 }
 
 /*
