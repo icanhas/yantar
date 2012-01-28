@@ -38,7 +38,7 @@ static qhandle_t	sliderBar;
 static qhandle_t	sliderButton_0;
 static qhandle_t	sliderButton_1;
 
-vec4_t menu_text_color	    = {0.0f, 0.0f, 0.0f, 0.0f};
+vec4_t menu_text_color	    = {0.0f, 0.0f, 0.0f, 1.0f};
 vec4_t menu_dim_color       = {0.0f, 0.0f, 0.0f, 0.75f};
 vec4_t color_black	    = {0.00f, 0.00f, 0.00f, 1.00f};
 vec4_t color_white	    = {1.00f, 1.00f, 1.00f, 1.00f};
