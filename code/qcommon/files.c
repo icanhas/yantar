@@ -2856,6 +2856,7 @@ FS_AddGameDirectory(const char *path, const char *dir)
 			/* store the game name for downloading */
 			Q_strncpyz(pak->pakGamename, dir,
 				sizeof(pak->pakGamename));
+
 			fs_packFiles += pak->numfiles;
 
 			sp = Z_Malloc(sizeof(*sp));
@@ -2865,8 +2866,8 @@ FS_AddGameDirectory(const char *path, const char *dir)
 
 			++i;
 		}else{
-			int len;
-			directory_t *p;
+			int		len;
+			directory_t	*p;
 
 			len = strlen(pakdirs[j]);
 			/* filter out anything that doesn't end with .dir3 */
@@ -2875,6 +2876,7 @@ FS_AddGameDirectory(const char *path, const char *dir)
 				continue;
 			}
 			pakfile = FS_BuildOSPath(path, dir, pakdirs[j]);
+			/* FIXME: increase fs_packFiles */
 			/* add to the search path */
 			sp = Z_Malloc(sizeof(*sp));
 			sp->dir = Z_Malloc(sizeof(*sp->dir));
