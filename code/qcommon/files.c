@@ -3181,85 +3181,80 @@ FS_Startup(const char *gameName)
 			homePath = fs_basepath->string; /* fallback */
 
 #endif
-	fs_homepath = Cvar_Get ("fs_homepath", homePath, CVAR_INIT|CVAR_PROTECTED );
-	fs_gamedirvar = Cvar_Get ("fs_game", "", CVAR_INIT|CVAR_SYSTEMINFO );
+	fs_homepath = Cvar_Get("fs_homepath", homePath, CVAR_INIT|CVAR_PROTECTED);
+	fs_gamedirvar = Cvar_Get("fs_game", "", CVAR_INIT|CVAR_SYSTEMINFO);
 
-	// add search path elements in reverse priority order
-	if (fs_basepath->string[0]) {
-		FS_AddGameDirectory( fs_basepath->string, gameName );
-	}
-	// fs_homepath is somewhat particular to *nix systems, only add if relevant
+	/* add search path elements in reverse priority order */
+	if(fs_basepath->string[0])
+		FS_AddGameDirectory(fs_basepath->string, gameName);
+	/* fs_homepath is somewhat particular to *nix systems, only add if relevant */
 	
 	#ifdef MACOS_X
-	fs_apppath = Cvar_Get ("fs_apppath", Sys_DefaultAppPath(), CVAR_INIT|CVAR_PROTECTED );
-	// Make MacOSX also include the base path included with the .app bundle
-	if (fs_apppath->string[0])
+	fs_apppath = Cvar_Get("fs_apppath", Sys_DefaultAppPath(), 
+		CVAR_INIT|CVAR_PROTECTED);
+	/* Make MacOSX also include the base path included with the .app bundle */
+	if(fs_apppath->string[0])
 		FS_AddGameDirectory(fs_apppath->string, gameName);
 	#endif
 	
-	// NOTE: same filtering below for mods and basegame
-	if (fs_homepath->string[0] && Q_stricmp(fs_homepath->string,fs_basepath->string)) {
-		FS_CreatePath ( fs_homepath->string );
-		FS_AddGameDirectory ( fs_homepath->string, gameName );
+	/* NOTE: same filtering below for mods and basegame */
+	if(fs_homepath->string[0] && Q_stricmp(fs_homepath->string,
+				fs_basepath->string)){
+		FS_CreatePath(fs_homepath->string);
+		FS_AddGameDirectory(fs_homepath->string, gameName);
 	}
 
-	// check for additional base game so mods can be based upon other mods
-	if ( fs_basegame->string[0] && Q_stricmp( fs_basegame->string, gameName ) ) {
-		if (fs_basepath->string[0]) {
+	/* check for additional base game so mods can be based upon other mods */
+	if(fs_basegame->string[0] && Q_stricmp(fs_basegame->string, gameName)){
+		if(fs_basepath->string[0])
 			FS_AddGameDirectory(fs_basepath->string, fs_basegame->string);
-		}
-		if (fs_homepath->string[0] && Q_stricmp(fs_homepath->string,fs_basepath->string)) {
+		if(fs_homepath->string[0] && Q_stricmp(fs_homepath->string,fs_basepath->string))
 			FS_AddGameDirectory(fs_homepath->string, fs_basegame->string);
-		}
 	}
 
-	// check for additional game folder for mods
-	if ( fs_gamedirvar->string[0] && Q_stricmp( fs_gamedirvar->string, gameName ) ) {
-		if (fs_basepath->string[0]) {
+	/* check for additional game folder for mods */
+	if(fs_gamedirvar->string[0] && Q_stricmp(fs_gamedirvar->string, gameName)){
+		if(fs_basepath->string[0])
 			FS_AddGameDirectory(fs_basepath->string, fs_gamedirvar->string);
-		}
-		if (fs_homepath->string[0] && Q_stricmp(fs_homepath->string,fs_basepath->string)) {
+		if(fs_homepath->string[0] && Q_stricmp(fs_homepath->string,fs_basepath->string))
 			FS_AddGameDirectory(fs_homepath->string, fs_gamedirvar->string);
-		}
 	}
 
 #ifndef STANDALONE
-	if(!com_standalone->integer)
-	{
+	if(!com_standalone->integer){
 		cvar_t	*fs;
 
 		Com_ReadCDKey(BASEGAME);
 		fs = Cvar_Get ("fs_game", "", CVAR_INIT|CVAR_SYSTEMINFO );
-		if (fs && fs->string[0] != 0) {
-			Com_AppendCDKey( fs->string );
+		if(fs && fs->string[0] != 0) {
+			Com_AppendCDKey(fs->string);
 		}
 	}
 #endif
 
-	// add our commands
-	Cmd_AddCommand ("path", FS_Path_f);
-	Cmd_AddCommand ("dir", FS_Dir_f );
-	Cmd_AddCommand ("fdir", FS_NewDir_f );
-	Cmd_AddCommand ("touchFile", FS_TouchFile_f );
-	Cmd_AddCommand ("which", FS_Which_f );
+	/* add our commands */
+	Cmd_AddCommand("path", FS_Path_f);
+	Cmd_AddCommand("dir", FS_Dir_f );
+	Cmd_AddCommand("fdir", FS_NewDir_f );
+	Cmd_AddCommand("touchFile", FS_TouchFile_f );
+	Cmd_AddCommand("which", FS_Which_f );
 
-	// https://zerowing.idsoftware.com/bugzilla/show_bug.cgi?id=506
-	// reorder the pure pk3 files according to server order
+	/* https://zerowing.idsoftware.com/bugzilla/show_bug.cgi?id=506 */
+	/* reorder the pure pk3 files according to server order */
 	FS_ReorderPurePaks();
 
-	// print the current search paths
+	/* print the current search paths */
 	FS_Path_f();
 
-	fs_gamedirvar->modified = qfalse; // We just loaded, it's not modified
+	fs_gamedirvar->modified = qfalse; /* We just loaded, it's not modified */
 
 	Com_Printf( "----------------------\n" );
 
 #ifdef FS_MISSING
-	if (missingFiles == NULL) {
-		missingFiles = fopen( "\\missing.txt", "ab" );
-	}
+	if(missingFiles == NULL)
+		missingFiles = fopen("\\missing.txt", "ab");
 #endif
-	Com_Printf( "%d files in pk3 files\n", fs_packFiles );
+	Com_Printf("%d files in pk3 files\n", fs_packFiles);
 }
 
 #ifndef STANDALONE
