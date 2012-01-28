@@ -260,7 +260,7 @@ ifneq ($(BUILD_CLIENT),0)
   ifeq ($(SDL_CFLAGS),)
     ifneq ($(call bin_path, sdl-config),)
       SDL_CFLAGS=$(shell sdl-config --cflags)
-      SDL_LIBS=$(shell sdl-config --libs)
+      SDL_LIBS=$(shell sdl-config --static-libs)
     endif
   endif
 endif
