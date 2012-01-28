@@ -3157,26 +3157,30 @@ static void FS_ReorderPurePaks( void )
 	}
 }
 
-/*
-================
-FS_Startup
-================
-*/
-static void FS_Startup( const char *gameName )
+static void 
+FS_Startup(const char *gameName)
 {
-	const char *homePath;
+	const char	*homePath;
 
-	Com_Printf( "----- FS_Startup -----\n" );
-
+	Com_Printf("----- FS_Startup -----\n");
 	fs_packFiles = 0;
-
-	fs_debug = Cvar_Get( "fs_debug", "0", 0 );
-	fs_basepath = Cvar_Get ("fs_basepath", Sys_DefaultInstallPath(), CVAR_INIT|CVAR_PROTECTED );
-	fs_basegame = Cvar_Get ("fs_basegame", "", CVAR_INIT );
+	fs_debug = Cvar_Get("fs_debug", "0", 0);
+	fs_basepath = Cvar_Get("fs_basepath", Sys_DefaultInstallPath(), CVAR_INIT|CVAR_PROTECTED);
+	fs_basegame = Cvar_Get("fs_basegame", "", CVAR_INIT);
+#ifdef _WIN32	
+	/* 
+	 * Don't use home on windows. It would be cleaner to allow the user to 
+	 * decide whether to use the home dir via an archived cvar such as 
+	 * "fs_usehome"; but, of course, the filesystem isn't initialized at this 
+	 * point, so we cannot get cvars from the config.
+	 */
+	homePath = fs_basepath->string;
+#else
 	homePath = Sys_DefaultHomePath();
-	if (!homePath || !homePath[0]) {
-		homePath = fs_basepath->string;
-	}
+		if(!homePath || !homePath[0])
+			homePath = fs_basepath->string; /* fallback */
+
+#endif
 	fs_homepath = Cvar_Get ("fs_homepath", homePath, CVAR_INIT|CVAR_PROTECTED );
 	fs_gamedirvar = Cvar_Get ("fs_game", "", CVAR_INIT|CVAR_SYSTEMINFO );
 
