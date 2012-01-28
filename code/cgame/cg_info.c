@@ -24,20 +24,21 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 #include "cg_local.h"
 
-#define MAX_LOADING_PLAYER_ICONS	16
-#define MAX_LOADING_ITEM_ICONS		26
+enum {
+	MAX_LOADING_PLAYER_ICONS	= 16,
+	MAX_LOADING_ITEM_ICONS		= 26
+};
 
-static int			loadingPlayerIconCount;
-static int			loadingItemIconCount;
+/* file extensions to expect */
+#define Iconext	"tga"	/* player icons */
+#define Annext	"wav"	/* announce */
+#define Lsext	"tga"	/* levelshot */
+
+static int		loadingPlayerIconCount;
+static int		loadingItemIconCount;
 static qhandle_t	loadingPlayerIcons[MAX_LOADING_PLAYER_ICONS];
 static qhandle_t	loadingItemIcons[MAX_LOADING_ITEM_ICONS];
 
-
-/*
-===================
-CG_DrawLoadingIcons
-===================
-*/
 static void CG_DrawLoadingIcons( void ) {
 	int		n;
 	int		x, y;
@@ -58,24 +59,12 @@ static void CG_DrawLoadingIcons( void ) {
 	}
 }
 
-
-/*
-======================
-CG_LoadingString
-
-======================
-*/
 void CG_LoadingString( const char *s ) {
 	Q_strncpyz( cg.infoScreenText, s, sizeof( cg.infoScreenText ) );
 
 	trap_UpdateScreen();
 }
 
-/*
-===================
-CG_LoadingItem
-===================
-*/
 void CG_LoadingItem( int itemNum ) {
 	gitem_t		*item;
 
@@ -88,11 +77,6 @@ void CG_LoadingItem( int itemNum ) {
 	CG_LoadingString( item->pickup_name );
 }
 
-/*
-===================
-CG_LoadingClient
-===================
-*/
 void CG_LoadingClient( int clientNum ) {
 	const char		*info;
 	char			*skin;
@@ -111,40 +95,41 @@ void CG_LoadingClient( int clientNum ) {
 			skin = "default";
 		}
 
-		Com_sprintf( iconName, MAX_QPATH, "models/players/%s/icon_%s.tga", model, skin );
+		Com_sprintf( iconName, MAX_QPATH, 
+			"models/players/%s/icon_%s." Iconext, model, skin );
 		
-		loadingPlayerIcons[loadingPlayerIconCount] = trap_R_RegisterShaderNoMip( iconName );
+		loadingPlayerIcons[loadingPlayerIconCount] 
+			= trap_R_RegisterShaderNoMip(iconName);
 		if ( !loadingPlayerIcons[loadingPlayerIconCount] ) {
-			Com_sprintf( iconName, MAX_QPATH, "models/players/characters/%s/icon_%s.tga", model, skin );
-			loadingPlayerIcons[loadingPlayerIconCount] = trap_R_RegisterShaderNoMip( iconName );
+			Com_sprintf( iconName, MAX_QPATH, 
+				"models/players/characters/%s/icon_%s." Iconext, 
+				model, skin );
+			loadingPlayerIcons[loadingPlayerIconCount] 
+				= trap_R_RegisterShaderNoMip( iconName );
 		}
 		if ( !loadingPlayerIcons[loadingPlayerIconCount] ) {
-			Com_sprintf( iconName, MAX_QPATH, "models/players/%s/icon_%s.tga", DEFAULT_MODEL, "default" );
-			loadingPlayerIcons[loadingPlayerIconCount] = trap_R_RegisterShaderNoMip( iconName );
+			Com_sprintf(iconName, MAX_QPATH,
+				"models/players/%s/icon_%s." Iconext, 
+				DEFAULT_MODEL, "default");
+			loadingPlayerIcons[loadingPlayerIconCount] 
+				= trap_R_RegisterShaderNoMip( iconName );
 		}
 		if ( loadingPlayerIcons[loadingPlayerIconCount] ) {
 			loadingPlayerIconCount++;
 		}
 	}
 
-	Q_strncpyz( personality, Info_ValueForKey( info, "n" ), sizeof(personality) );
+	Q_strncpyz( personality, Info_ValueForKey( info, "n" ), 
+		sizeof(personality) );
 	Q_CleanStr( personality );
 
-	if( cgs.gametype == GT_SINGLE_PLAYER ) {
-		trap_S_RegisterSound( va( "sound/player/announce/%s.wav", personality ), qtrue );
-	}
+	if( cgs.gametype == GT_SINGLE_PLAYER )
+		trap_S_RegisterSound( va( "sound/player/announce/%s." Annext, 
+			personality ), qtrue );
 
 	CG_LoadingString( personality );
 }
 
-
-/*
-====================
-CG_DrawInformation
-
-Draw all the status / pacifier stuff during level loading
-====================
-*/
 void CG_DrawInformation( void ) {
 	const char	*s;
 	const char	*info;
@@ -159,7 +144,7 @@ void CG_DrawInformation( void ) {
 	sysInfo = CG_ConfigString( CS_SYSTEMINFO );
 
 	s = Info_ValueForKey( info, "mapname" );
-	levelshot = trap_R_RegisterShaderNoMip( va( "levelshots/%s.tga", s ) );
+	levelshot = trap_R_RegisterShaderNoMip(va("levelshots/%s." Lsext, s));
 	if ( !levelshot ) {
 		levelshot = trap_R_RegisterShaderNoMip( "menu/art/unknownmap" );
 	}
@@ -168,20 +153,21 @@ void CG_DrawInformation( void ) {
 
 	// blend a detail texture over it
 	detail = trap_R_RegisterShader( "levelShotDetail" );
-	trap_R_DrawStretchPic( 0, 0, cgs.glconfig.vidWidth, cgs.glconfig.vidHeight, 0, 0, 2.5, 2, detail );
+	trap_R_DrawStretchPic( 0, 0, cgs.glconfig.vidWidth,
+		cgs.glconfig.vidHeight, 0, 0, 2.5, 2, detail );
 
 	// draw the icons of things as they are loaded
 	CG_DrawLoadingIcons();
 
 	// the first 150 rows are reserved for the client connection
 	// screen to write into
-	if ( cg.infoScreenText[0] ) {
-		UI_DrawProportionalString( 320, 128-32, va("Loading... %s", cg.infoScreenText),
-			UI_CENTER|UI_SMALLFONT|UI_DROPSHADOW, colorWhite );
-	} else {
+	if ( cg.infoScreenText[0] )
+		UI_DrawProportionalString(320, 128-32, va("Loading... %s", 
+			cg.infoScreenText), 
+			UI_CENTER|UI_SMALLFONT|UI_DROPSHADOW, colorWhite);
+	else
 		UI_DrawProportionalString( 320, 128-32, "Awaiting snapshot...",
 			UI_CENTER|UI_SMALLFONT|UI_DROPSHADOW, colorWhite );
-	}
 
 	// draw info string information
 
@@ -201,7 +187,8 @@ void CG_DrawInformation( void ) {
 		s = Info_ValueForKey( sysInfo, "sv_pure" );
 		if ( s[0] == '1' ) {
 			UI_DrawProportionalString( 320, y, "Pure Server",
-				UI_CENTER|UI_SMALLFONT|UI_DROPSHADOW, colorWhite );
+				UI_CENTER|UI_SMALLFONT|UI_DROPSHADOW, 
+				colorWhite );
 			y += PROP_HEIGHT;
 		}
 
@@ -209,7 +196,8 @@ void CG_DrawInformation( void ) {
 		s = CG_ConfigString( CS_MOTD );
 		if ( s[0] ) {
 			UI_DrawProportionalString( 320, y, s,
-				UI_CENTER|UI_SMALLFONT|UI_DROPSHADOW, colorWhite );
+				UI_CENTER|UI_SMALLFONT|UI_DROPSHADOW,
+				colorWhite );
 			y += PROP_HEIGHT;
 		}
 
