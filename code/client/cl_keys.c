@@ -309,6 +309,7 @@ Handles horizontal scrolling and cursor blinking
 x, y, and width are in pixels
 ===================
 */
+/* FIXME: this is all shit */
 void Field_VariableSizeDraw( field_t *edit, int x, int y, int width, int size, qboolean showCursor,
 		qboolean noColorEscape ) {
 	int		len;
@@ -350,7 +351,8 @@ void Field_VariableSizeDraw( field_t *edit, int x, int y, int width, int size, q
 	if ( size == SMALLCHAR_WIDTH ) {
 		float	color[4];
 
-		color[0] = color[1] = color[2] = color[3] = 1.0;
+		color[0] = color[1] = color[2] = 0.0f;
+		color[3] = 1.0;
 		SCR_DrawSmallStringExt( x, y, str, color, qfalse, noColorEscape );
 	} else {
 		// draw big string with drop shadow
@@ -359,15 +361,11 @@ void Field_VariableSizeDraw( field_t *edit, int x, int y, int width, int size, q
 
 	// draw the cursor
 	if ( showCursor ) {
-		if ( (int)( cls.realtime >> 8 ) & 1 ) {
+		if ( (int)( cls.realtime >> 7 ) & 1 ) {
 			return;		// off blink
 		}
 
-		if ( key_overstrikeMode ) {
-			cursorChar = 11;
-		} else {
-			cursorChar = 10;
-		}
+		cursorChar = 11; /* a block */
 
 		i = drawLen - strlen( str );
 

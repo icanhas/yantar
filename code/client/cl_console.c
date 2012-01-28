@@ -43,8 +43,8 @@ typedef struct {
 
 	float	xadjust;		// for wide aspect screens
 
-	float	displayFrac;	// aproaches finalFrac at scr_conspeed
-	float	finalFrac;		// 0.0 to 1.0 lines of console to display
+	float	opacity;	// aproaches finalopac at scr_conspeed
+	float	finalopac;
 
 	int		vislines;		// in scanlines
 
@@ -244,7 +244,7 @@ If the line width has changed, reformat the buffer.
 */
 void Con_CheckResize (void)
 {
-	int		i, j, width, oldwidth, oldtotallines, numlines, numchars;
+	int		i,j, width, oldwidth, oldtotallines, numlines, numchars;
 	short	tbuf[CON_TEXTSIZE];
 
 	width = (SCREEN_WIDTH / SMALLCHAR_WIDTH) - 2;
@@ -494,7 +494,7 @@ DRAWING
 ================
 Con_DrawInput
 
-Draw the editline after a ] prompt
+Draw the editline after a >>> prompt
 ================
 */
 void Con_DrawInput (void) {
@@ -508,9 +508,9 @@ void Con_DrawInput (void) {
 
 	re.SetColor( con.color );
 
-	SCR_DrawSmallChar( con.xadjust + 1 * SMALLCHAR_WIDTH, y, ']' );
+	SCR_DrawSmallStringExt(con.xadjust + 1 * SMALLCHAR_WIDTH, y, ">>>", colorBlack, qtrue, qfalse);
 
-	Field_Draw( &g_consoleField, con.xadjust + 2 * SMALLCHAR_WIDTH, y,
+	Field_Draw( &g_consoleField, con.xadjust + 5*SMALLCHAR_WIDTH, y,
 		SCREEN_WIDTH - 3 * SMALLCHAR_WIDTH, qtrue, qtrue );
 }
 
@@ -531,7 +531,7 @@ void Con_DrawNotify (void)
 	int		skip;
 	int		currentColor;
 
-	currentColor = 7;
+	currentColor = 8;
 	re.SetColor( g_color_table[currentColor] );
 
 	v = 0;
@@ -555,8 +555,8 @@ void Con_DrawNotify (void)
 			if ( ( text[x] & 0xff ) == ' ' ) {
 				continue;
 			}
-			if ( ( (text[x]>>8)&7 ) != currentColor ) {
-				currentColor = (text[x]>>8)&7;
+			if ( ( (text[x]>>8)&8 ) != currentColor ) {
+				currentColor = (text[x]>>8)&8;
 				re.SetColor( g_color_table[currentColor] );
 			}
 			SCR_DrawSmallChar( cl_conXOffset->integer + con.xadjust + (x+1)*SMALLCHAR_WIDTH, v, text[x] & 0xff );
@@ -594,24 +594,22 @@ void Con_DrawNotify (void)
 }
 
 /*
-================
-Con_DrawSolidConsole
-
-Draws the console with the solid background
-================
-*/
-void Con_DrawSolidConsole( float frac ) {
-	int				i, x, y;
-	int				rows;
-	short			*text;
-	int				row;
-	int				lines;
-//	qhandle_t		conShader;
-	int				currentColor;
-	vec4_t			color;
+ * Con_DrawSolidConsole: Draws the console to the desired opacity and screen
+ * coverage
+ */
+void
+Con_DrawSolidConsole(float frac, float opac)
+{
+	int		i, x, y;
+	int		rows;
+	short		*text;
+	int		row;
+	int		lines;
+	int		currentColor;
+	vec4_t		color;
 
 	lines = cls.glconfig.vidHeight * frac;
-	if (lines <= 0)
+	if(lines <= 0)
 		return;
 
 	if (lines > cls.glconfig.vidHeight )
@@ -621,25 +619,25 @@ void Con_DrawSolidConsole( float frac ) {
 	con.xadjust = 0;
 	SCR_AdjustFrom640( &con.xadjust, NULL, NULL, NULL );
 
-	// draw the background
+	/* draw the background */
 	y = frac * SCREEN_HEIGHT;
 	if ( y < 1 ) {
 		y = 0;
 	}
-	else {
-		SCR_DrawPic( 0, 0, SCREEN_WIDTH, y, cls.consoleShader );
-	}
 
-	color[0] = 1;
-	color[1] = 0;
-	color[2] = 0;
-	color[3] = 1;
-	SCR_FillRect( 0, y, SCREEN_WIDTH, 2, color );
-
+	color[0] =
+	color[1] =
+	color[2] = 1.0f;
+	color[3] = opac;
+	SCR_FillRect(0, 0, SCREEN_WIDTH, y, color); /* bg */
+	color[0] =
+	color[1] =
+	color[2] = 0.0f;
+	SCR_FillRect( 0, y, SCREEN_WIDTH, 1, color ); /* border */
 
 	// draw the version number
 
-	re.SetColor( g_color_table[ColorIndex(COLOR_RED)] );
+	re.SetColor( g_color_table[ColorIndex(COLOR_BLACK)] );
 
 	i = strlen( Q3_VERSION );
 
@@ -649,7 +647,7 @@ void Con_DrawSolidConsole( float frac ) {
 	}
 
 
-	// draw the text
+	// draw the console text
 	con.vislines = lines;
 	rows = (lines-SMALLCHAR_WIDTH)/SMALLCHAR_WIDTH;		// rows of text to draw
 
@@ -659,7 +657,7 @@ void Con_DrawSolidConsole( float frac ) {
 	if (con.display != con.current)
 	{
 	// draw arrows to show the buffer is backscrolled
-		re.SetColor( g_color_table[ColorIndex(COLOR_RED)] );
+		re.SetColor( g_color_table[ColorIndex(COLOR_BLACK)] );
 		for (x=0 ; x<con.linewidth ; x+=4)
 			SCR_DrawSmallChar( con.xadjust + (x+1)*SMALLCHAR_WIDTH, y, '^' );
 		y -= SMALLCHAR_HEIGHT;
@@ -672,7 +670,7 @@ void Con_DrawSolidConsole( float frac ) {
 		row--;
 	}
 
-	currentColor = 7;
+	currentColor = 8;
 	re.SetColor( g_color_table[currentColor] );
 
 	for (i=0 ; i<rows ; i++, y -= SMALLCHAR_HEIGHT, row--)
@@ -691,8 +689,8 @@ void Con_DrawSolidConsole( float frac ) {
 				continue;
 			}
 
-			if ( ( (text[x]>>8)&7 ) != currentColor ) {
-				currentColor = (text[x]>>8)&7;
+			if ( ( (text[x]>>8)&8 ) != currentColor ) {
+				currentColor = (text[x]>>8)&8;
 				re.SetColor( g_color_table[currentColor] );
 			}
 			SCR_DrawSmallChar(  con.xadjust + (x+1)*SMALLCHAR_WIDTH, y, text[x] & 0xff );
@@ -719,14 +717,14 @@ void Con_DrawConsole( void ) {
 	// if disconnected, render console full screen
 	if ( clc.state == CA_DISCONNECTED ) {
 		if ( !( Key_GetCatcher( ) & (KEYCATCH_UI | KEYCATCH_CGAME)) ) {
-			Con_DrawSolidConsole( 1.0 );
+			Con_DrawSolidConsole(1.0f, 1.0f);
 			return;
 		}
 	}
 
-	if ( con.displayFrac ) {
-		Con_DrawSolidConsole( con.displayFrac );
-	} else {
+	if(con.opacity > 0.0f){
+		Con_DrawSolidConsole(0.5f, con.opacity);
+	}else{
 		// draw notify lines
 		if ( clc.state == CA_ACTIVE ) {
 			Con_DrawNotify ();
@@ -734,39 +732,31 @@ void Con_DrawConsole( void ) {
 	}
 }
 
-//================================================================
-
 /*
-==================
-Con_RunConsole
-
-Scroll it up or down
-==================
-*/
-void Con_RunConsole (void) {
-	// decide on the destination height of the console
-	if ( Key_GetCatcher( ) & KEYCATCH_CONSOLE )
-		con.finalFrac = 0.5;		// half screen
+ * Con_RunConsole: Fade it in or out
+ */
+void
+Con_RunConsole(void) 
+{
+	/* decide on the destined opacity of the console */
+	if(Key_GetCatcher() & KEYCATCH_CONSOLE)
+		con.finalopac = 0.75f;
 	else
-		con.finalFrac = 0;				// none visible
+		con.finalopac = 0.0f;	/* not visible */
 	
-	// scroll towards the destination height
-	if (con.finalFrac < con.displayFrac)
-	{
-		con.displayFrac -= con_conspeed->value*cls.realFrametime*0.001;
-		if (con.finalFrac > con.displayFrac)
-			con.displayFrac = con.finalFrac;
+	/* fade it towards the destined opacity */
+	if(con.finalopac < con.opacity){
+		con.opacity -= con_conspeed->value*cls.realFrametime*0.001;
+		if(con.finalopac > con.opacity)
+			con.opacity = con.finalopac;
 
-	}
-	else if (con.finalFrac > con.displayFrac)
-	{
-		con.displayFrac += con_conspeed->value*cls.realFrametime*0.001;
-		if (con.finalFrac < con.displayFrac)
-			con.displayFrac = con.finalFrac;
+	}else if(con.finalopac > con.opacity){
+		con.opacity += con_conspeed->value*cls.realFrametime*0.001;
+		if(con.finalopac < con.opacity)
+			con.opacity = con.finalopac;
 	}
 
 }
-
 
 void Con_PageUp( void ) {
 	con.display -= 2;
@@ -801,6 +791,6 @@ void Con_Close( void ) {
 	Field_Clear( &g_consoleField );
 	Con_ClearNotify ();
 	Key_SetCatcher( Key_GetCatcher( ) & ~KEYCATCH_CONSOLE );
-	con.finalFrac = 0;				// none visible
-	con.displayFrac = 0;
+	con.finalopac = 0;				// none visible
+	con.opacity = 0;
 }
