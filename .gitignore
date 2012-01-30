@@ -1,2 +1,7 @@
 bin/
 Makefile.local
+*.swp
+*.orig
+*.rej
+*tags
+*.stackdump
