@@ -100,7 +100,7 @@ endif
 export CROSS_COMPILING
 
 ifndef VERSION
-	VERSION=0.1
+	VERSION=0.1.1
 endif
 
 ifndef CLIENTBIN
@@ -215,6 +215,7 @@ endif
 
 BD=$(BUILD_DIR)/debug-$(PLATFORM)-$(ARCH)
 BR=$(BUILD_DIR)/release-$(PLATFORM)-$(ARCH)
+O=obj
 CDIR=$(MOUNT_DIR)/client
 SDIR=$(MOUNT_DIR)/server
 RDIR=$(MOUNT_DIR)/renderer
@@ -1096,12 +1097,12 @@ default: release
 all: debug release
 
 debug:
-	@$(MAKE) targets B=$(BD) CFLAGS="$(CFLAGS) $(BASE_CFLAGS) $(DEPEND_CFLAGS)" \
+	@$(MAKE) targets B=$(BD) O=$(BD)/obj CFLAGS="$(CFLAGS) $(BASE_CFLAGS) $(DEPEND_CFLAGS)" \
 	  OPTIMIZE="$(DEBUG_CFLAGS)" OPTIMIZEVM="$(DEBUG_CFLAGS)" \
 	  CLIENT_CFLAGS="$(CLIENT_CFLAGS)" SERVER_CFLAGS="$(SERVER_CFLAGS)" V=$(V)
 
 release:
-	@$(MAKE) targets B=$(BR) CFLAGS="$(CFLAGS) $(BASE_CFLAGS) $(DEPEND_CFLAGS)" \
+	@$(MAKE) targets B=$(BR) O=$(BR)/obj CFLAGS="$(CFLAGS) $(BASE_CFLAGS) $(DEPEND_CFLAGS)" \
 	  OPTIMIZE="-DNDEBUG $(OPTIMIZE)" OPTIMIZEVM="-DNDEBUG $(OPTIMIZEVM)" \
 	  CLIENT_CFLAGS="$(CLIENT_CFLAGS)" SERVER_CFLAGS="$(SERVER_CFLAGS)" V=$(V)
 
@@ -1170,29 +1171,34 @@ endif
 makedirs:
 	@if [ ! -d $(BUILD_DIR) ];then $(MKDIR) $(BUILD_DIR);fi
 	@if [ ! -d $(B) ];then $(MKDIR) $(B);fi
-	@if [ ! -d $(B)/client ];then $(MKDIR) $(B)/client;fi
-	@if [ ! -d $(B)/renderer ];then $(MKDIR) $(B)/renderer;fi
-	@if [ ! -d $(B)/renderergl2 ];then $(MKDIR) $(B)/renderergl2;fi
-	@if [ ! -d $(B)/renderersmp ];then $(MKDIR) $(B)/renderersmp;fi
-	@if [ ! -d $(B)/ded ];then $(MKDIR) $(B)/ded;fi
+	@if [ ! -d $(O) ];then $(MKDIR) $(O);fi
+	@if [ ! -d $(O)/client ];then $(MKDIR) $(O)/client;fi
+	@if [ ! -d $(O)/renderer ];then $(MKDIR) $(O)/renderer;fi
+	@if [ ! -d $(O)/renderergl2 ];then $(MKDIR) $(O)/renderergl2;fi
+	@if [ ! -d $(O)/renderersmp ];then $(MKDIR) $(O)/renderersmp;fi
+	@if [ ! -d $(O)/ded ];then $(MKDIR) $(O)/ded;fi
 	@if [ ! -d $(B)/$(BASEGAME) ];then $(MKDIR) $(B)/$(BASEGAME);fi
-	@if [ ! -d $(B)/$(BASEGAME)/cgame ];then $(MKDIR) $(B)/$(BASEGAME)/cgame;fi
-	@if [ ! -d $(B)/$(BASEGAME)/game ];then $(MKDIR) $(B)/$(BASEGAME)/game;fi
-	@if [ ! -d $(B)/$(BASEGAME)/ui ];then $(MKDIR) $(B)/$(BASEGAME)/ui;fi
-	@if [ ! -d $(B)/$(BASEGAME)/qcommon ];then $(MKDIR) $(B)/$(BASEGAME)/qcommon;fi
+	@if [ ! -d $(O)/$(BASEGAME) ];then $(MKDIR) $(O)/$(BASEGAME);fi
+	@if [ ! -d $(O)/$(BASEGAME)/cgame ];then $(MKDIR) $(O)/$(BASEGAME)/cgame;fi
+	@if [ ! -d $(O)/$(BASEGAME)/game ];then $(MKDIR) $(O)/$(BASEGAME)/game;fi
+	@if [ ! -d $(O)/$(BASEGAME)/ui ];then $(MKDIR) $(O)/$(BASEGAME)/ui;fi
+	@if [ ! -d $(O)/$(BASEGAME)/qcommon ];then $(MKDIR) $(O)/$(BASEGAME)/qcommon;fi
 	@if [ ! -d $(B)/$(BASEGAME)/vm ];then $(MKDIR) $(B)/$(BASEGAME)/vm;fi
+	@if [ ! -d $(O)/$(BASEGAME)/vm ];then $(MKDIR) $(O)/$(BASEGAME)/vm;fi
 	@if [ ! -d $(B)/$(MISSIONPACK) ];then $(MKDIR) $(B)/$(MISSIONPACK);fi
-	@if [ ! -d $(B)/$(MISSIONPACK)/cgame ];then $(MKDIR) $(B)/$(MISSIONPACK)/cgame;fi
-	@if [ ! -d $(B)/$(MISSIONPACK)/game ];then $(MKDIR) $(B)/$(MISSIONPACK)/game;fi
-	@if [ ! -d $(B)/$(MISSIONPACK)/ui ];then $(MKDIR) $(B)/$(MISSIONPACK)/ui;fi
-	@if [ ! -d $(B)/$(MISSIONPACK)/qcommon ];then $(MKDIR) $(B)/$(MISSIONPACK)/qcommon;fi
+	@if [ ! -d $(O)/$(MISSIONPACK) ];then $(MKDIR) $(O)/$(MISSIONPACK);fi
+	@if [ ! -d $(O)/$(MISSIONPACK)/cgame ];then $(MKDIR) $(O)/$(MISSIONPACK)/cgame;fi
+	@if [ ! -d $(O)/$(MISSIONPACK)/game ];then $(MKDIR) $(O)/$(MISSIONPACK)/game;fi
+	@if [ ! -d $(O)/$(MISSIONPACK)/ui ];then $(MKDIR) $(O)/$(MISSIONPACK)/ui;fi
+	@if [ ! -d $(O)/$(MISSIONPACK)/qcommon ];then $(MKDIR) $(O)/$(MISSIONPACK)/qcommon;fi
 	@if [ ! -d $(B)/$(MISSIONPACK)/vm ];then $(MKDIR) $(B)/$(MISSIONPACK)/vm;fi
-	@if [ ! -d $(B)/tools ];then $(MKDIR) $(B)/tools;fi
-	@if [ ! -d $(B)/tools/asm ];then $(MKDIR) $(B)/tools/asm;fi
-	@if [ ! -d $(B)/tools/etc ];then $(MKDIR) $(B)/tools/etc;fi
-	@if [ ! -d $(B)/tools/rcc ];then $(MKDIR) $(B)/tools/rcc;fi
-	@if [ ! -d $(B)/tools/cpp ];then $(MKDIR) $(B)/tools/cpp;fi
-	@if [ ! -d $(B)/tools/lburg ];then $(MKDIR) $(B)/tools/lburg;fi
+	@if [ ! -d $(O)/$(MISSIONPACK)/vm ];then $(MKDIR) $(O)/$(MISSIONPACK)/vm;fi
+	@if [ ! -d $(O)/tools ];then $(MKDIR) $(O)/tools;fi
+	@if [ ! -d $(O)/tools/asm ];then $(MKDIR) $(O)/tools/asm;fi
+	@if [ ! -d $(O)/tools/etc ];then $(MKDIR) $(O)/tools/etc;fi
+	@if [ ! -d $(O)/tools/rcc ];then $(MKDIR) $(O)/tools/rcc;fi
+	@if [ ! -d $(O)/tools/cpp ];then $(MKDIR) $(O)/tools/cpp;fi
+	@if [ ! -d $(O)/tools/lburg ];then $(MKDIR) $(O)/tools/lburg;fi
 
 #############################################################################
 # QVM BUILD TOOLS
@@ -1228,10 +1234,10 @@ Q3LCC       = $(B)/tools/q3lcc$(BINEXT)
 Q3ASM       = $(B)/tools/q3asm$(BINEXT)
 
 LBURGOBJ= \
-	$(B)/tools/lburg/lburg.o \
-	$(B)/tools/lburg/gram.o
+	$(O)/tools/lburg/lburg.o \
+	$(O)/tools/lburg/gram.o
 
-$(B)/tools/lburg/%.o: $(LBURGDIR)/%.c
+$(O)/tools/lburg/%.o: $(LBURGDIR)/%.c
 	$(DO_TOOLS_CC)
 
 $(LBURG): $(LBURGOBJ)
@@ -1239,44 +1245,44 @@ $(LBURG): $(LBURGOBJ)
 	$(Q)$(CC) $(TOOLS_CFLAGS) $(TOOLS_LDFLAGS) -o $@ $^ $(TOOLS_LIBS)
 
 Q3RCCOBJ = \
-  $(B)/tools/rcc/alloc.o \
-  $(B)/tools/rcc/bind.o \
-  $(B)/tools/rcc/bytecode.o \
-  $(B)/tools/rcc/dag.o \
-  $(B)/tools/rcc/dagcheck.o \
-  $(B)/tools/rcc/decl.o \
-  $(B)/tools/rcc/enode.o \
-  $(B)/tools/rcc/error.o \
-  $(B)/tools/rcc/event.o \
-  $(B)/tools/rcc/expr.o \
-  $(B)/tools/rcc/gen.o \
-  $(B)/tools/rcc/init.o \
-  $(B)/tools/rcc/inits.o \
-  $(B)/tools/rcc/input.o \
-  $(B)/tools/rcc/lex.o \
-  $(B)/tools/rcc/list.o \
-  $(B)/tools/rcc/main.o \
-  $(B)/tools/rcc/null.o \
-  $(B)/tools/rcc/output.o \
-  $(B)/tools/rcc/prof.o \
-  $(B)/tools/rcc/profio.o \
-  $(B)/tools/rcc/simp.o \
-  $(B)/tools/rcc/stmt.o \
-  $(B)/tools/rcc/string.o \
-  $(B)/tools/rcc/sym.o \
-  $(B)/tools/rcc/symbolic.o \
-  $(B)/tools/rcc/trace.o \
-  $(B)/tools/rcc/tree.o \
-  $(B)/tools/rcc/types.o
+  $(O)/tools/rcc/alloc.o \
+  $(O)/tools/rcc/bind.o \
+  $(O)/tools/rcc/bytecode.o \
+  $(O)/tools/rcc/dag.o \
+  $(O)/tools/rcc/dagcheck.o \
+  $(O)/tools/rcc/decl.o \
+  $(O)/tools/rcc/enode.o \
+  $(O)/tools/rcc/error.o \
+  $(O)/tools/rcc/event.o \
+  $(O)/tools/rcc/expr.o \
+  $(O)/tools/rcc/gen.o \
+  $(O)/tools/rcc/init.o \
+  $(O)/tools/rcc/inits.o \
+  $(O)/tools/rcc/input.o \
+  $(O)/tools/rcc/lex.o \
+  $(O)/tools/rcc/list.o \
+  $(O)/tools/rcc/main.o \
+  $(O)/tools/rcc/null.o \
+  $(O)/tools/rcc/output.o \
+  $(O)/tools/rcc/prof.o \
+  $(O)/tools/rcc/profio.o \
+  $(O)/tools/rcc/simp.o \
+  $(O)/tools/rcc/stmt.o \
+  $(O)/tools/rcc/string.o \
+  $(O)/tools/rcc/sym.o \
+  $(O)/tools/rcc/symbolic.o \
+  $(O)/tools/rcc/trace.o \
+  $(O)/tools/rcc/tree.o \
+  $(O)/tools/rcc/types.o
 
 $(DAGCHECK_C): $(LBURG) $(Q3LCCSRCDIR)/dagcheck.md
 	$(echo_cmd) "LBURG $(Q3LCCSRCDIR)/dagcheck.md"
 	$(Q)$(LBURG) $(Q3LCCSRCDIR)/dagcheck.md $@
 
-$(B)/tools/rcc/dagcheck.o: $(DAGCHECK_C)
+$(O)/tools/rcc/dagcheck.o: $(DAGCHECK_C)
 	$(DO_TOOLS_CC_DAGCHECK)
 
-$(B)/tools/rcc/%.o: $(Q3LCCSRCDIR)/%.c
+$(O)/tools/rcc/%.o: $(Q3LCCSRCDIR)/%.c
 	$(DO_TOOLS_CC)
 
 $(Q3RCC): $(Q3RCCOBJ)
@@ -1284,18 +1290,18 @@ $(Q3RCC): $(Q3RCCOBJ)
 	$(Q)$(CC) $(TOOLS_CFLAGS) $(TOOLS_LDFLAGS) -o $@ $^ $(TOOLS_LIBS)
 
 Q3CPPOBJ = \
-	$(B)/tools/cpp/cpp.o \
-	$(B)/tools/cpp/lex.o \
-	$(B)/tools/cpp/nlist.o \
-	$(B)/tools/cpp/tokens.o \
-	$(B)/tools/cpp/macro.o \
-	$(B)/tools/cpp/eval.o \
-	$(B)/tools/cpp/include.o \
-	$(B)/tools/cpp/hideset.o \
-	$(B)/tools/cpp/getopt.o \
-	$(B)/tools/cpp/unix.o
+	$(O)/tools/cpp/cpp.o \
+	$(O)/tools/cpp/lex.o \
+	$(O)/tools/cpp/nlist.o \
+	$(O)/tools/cpp/tokens.o \
+	$(O)/tools/cpp/macro.o \
+	$(O)/tools/cpp/eval.o \
+	$(O)/tools/cpp/include.o \
+	$(O)/tools/cpp/hideset.o \
+	$(O)/tools/cpp/getopt.o \
+	$(O)/tools/cpp/unix.o
 
-$(B)/tools/cpp/%.o: $(Q3CPPDIR)/%.c
+$(O)/tools/cpp/%.o: $(Q3CPPDIR)/%.c
 	$(DO_TOOLS_CC)
 
 $(Q3CPP): $(Q3CPPOBJ)
@@ -1306,7 +1312,7 @@ Q3LCCOBJ = \
 	$(B)/tools/etc/lcc.o \
 	$(B)/tools/etc/bytecode.o
 
-$(B)/tools/etc/%.o: $(Q3LCCETCDIR)/%.c
+$(O)/tools/etc/%.o: $(Q3LCCETCDIR)/%.c
 	$(DO_TOOLS_CC)
 
 $(Q3LCC): $(Q3LCCOBJ) $(Q3RCC) $(Q3CPP)
@@ -1355,10 +1361,10 @@ endef
 
 
 Q3ASMOBJ = \
-  $(B)/tools/asm/q3asm.o \
-  $(B)/tools/asm/cmdlib.o
+  $(O)/tools/asm/q3asm.o \
+  $(O)/tools/asm/cmdlib.o
 
-$(B)/tools/asm/%.o: $(Q3ASMDIR)/%.c
+$(O)/tools/asm/%.o: $(Q3ASMDIR)/%.c
 	$(DO_TOOLS_CC)
 
 $(Q3ASM): $(Q3ASMOBJ)
@@ -1371,397 +1377,397 @@ $(Q3ASM): $(Q3ASMOBJ)
 #############################################################################
 
 Q3OBJ = \
-  $(B)/client/cl_cgame.o \
-  $(B)/client/cl_cin.o \
-  $(B)/client/cl_console.o \
-  $(B)/client/cl_input.o \
-  $(B)/client/cl_keys.o \
-  $(B)/client/cl_main.o \
-  $(B)/client/cl_net_chan.o \
-  $(B)/client/cl_parse.o \
-  $(B)/client/cl_scrn.o \
-  $(B)/client/cl_ui.o \
-  $(B)/client/cl_avi.o \
+  $(O)/client/cl_cgame.o \
+  $(O)/client/cl_cin.o \
+  $(O)/client/cl_console.o \
+  $(O)/client/cl_input.o \
+  $(O)/client/cl_keys.o \
+  $(O)/client/cl_main.o \
+  $(O)/client/cl_net_chan.o \
+  $(O)/client/cl_parse.o \
+  $(O)/client/cl_scrn.o \
+  $(O)/client/cl_ui.o \
+  $(O)/client/cl_avi.o \
   \
-  $(B)/client/cm_load.o \
-  $(B)/client/cm_patch.o \
-  $(B)/client/cm_polylib.o \
-  $(B)/client/cm_test.o \
-  $(B)/client/cm_trace.o \
+  $(O)/client/cm_load.o \
+  $(O)/client/cm_patch.o \
+  $(O)/client/cm_polylib.o \
+  $(O)/client/cm_test.o \
+  $(O)/client/cm_trace.o \
   \
-  $(B)/client/cmd.o \
-  $(B)/client/common.o \
-  $(B)/client/cvar.o \
-  $(B)/client/files.o \
-  $(B)/client/md4.o \
-  $(B)/client/md5.o \
-  $(B)/client/msg.o \
-  $(B)/client/net_chan.o \
-  $(B)/client/net_ip.o \
-  $(B)/client/huffman.o \
+  $(O)/client/cmd.o \
+  $(O)/client/common.o \
+  $(O)/client/cvar.o \
+  $(O)/client/files.o \
+  $(O)/client/md4.o \
+  $(O)/client/md5.o \
+  $(O)/client/msg.o \
+  $(O)/client/net_chan.o \
+  $(O)/client/net_ip.o \
+  $(O)/client/huffman.o \
   \
-  $(B)/client/snd_adpcm.o \
-  $(B)/client/snd_dma.o \
-  $(B)/client/snd_mem.o \
-  $(B)/client/snd_mix.o \
-  $(B)/client/snd_wavelet.o \
+  $(O)/client/snd_adpcm.o \
+  $(O)/client/snd_dma.o \
+  $(O)/client/snd_mem.o \
+  $(O)/client/snd_mix.o \
+  $(O)/client/snd_wavelet.o \
   \
-  $(B)/client/snd_main.o \
-  $(B)/client/snd_codec.o \
-  $(B)/client/snd_codec_wav.o \
-  $(B)/client/snd_codec_ogg.o \
+  $(O)/client/snd_main.o \
+  $(O)/client/snd_codec.o \
+  $(O)/client/snd_codec_wav.o \
+  $(O)/client/snd_codec_ogg.o \
   \
-  $(B)/client/qal.o \
-  $(B)/client/snd_openal.o \
+  $(O)/client/qal.o \
+  $(O)/client/snd_openal.o \
   \
-  $(B)/client/cl_curl.o \
+  $(O)/client/cl_curl.o \
   \
-  $(B)/client/sv_bot.o \
-  $(B)/client/sv_ccmds.o \
-  $(B)/client/sv_client.o \
-  $(B)/client/sv_game.o \
-  $(B)/client/sv_init.o \
-  $(B)/client/sv_main.o \
-  $(B)/client/sv_net_chan.o \
-  $(B)/client/sv_snapshot.o \
-  $(B)/client/sv_world.o \
+  $(O)/client/sv_bot.o \
+  $(O)/client/sv_ccmds.o \
+  $(O)/client/sv_client.o \
+  $(O)/client/sv_game.o \
+  $(O)/client/sv_init.o \
+  $(O)/client/sv_main.o \
+  $(O)/client/sv_net_chan.o \
+  $(O)/client/sv_snapshot.o \
+  $(O)/client/sv_world.o \
   \
-  $(B)/client/q_math.o \
-  $(B)/client/q_shared.o \
+  $(O)/client/q_math.o \
+  $(O)/client/q_shared.o \
   \
-  $(B)/client/unzip.o \
-  $(B)/client/ioapi.o \
-  $(B)/client/puff.o \
-  $(B)/client/vm.o \
-  $(B)/client/vm_interpreted.o \
+  $(O)/client/unzip.o \
+  $(O)/client/ioapi.o \
+  $(O)/client/puff.o \
+  $(O)/client/vm.o \
+  $(O)/client/vm_interpreted.o \
   \
-  $(B)/client/be_aas_bspq3.o \
-  $(B)/client/be_aas_cluster.o \
-  $(B)/client/be_aas_debug.o \
-  $(B)/client/be_aas_entity.o \
-  $(B)/client/be_aas_file.o \
-  $(B)/client/be_aas_main.o \
-  $(B)/client/be_aas_move.o \
-  $(B)/client/be_aas_optimize.o \
-  $(B)/client/be_aas_reach.o \
-  $(B)/client/be_aas_route.o \
-  $(B)/client/be_aas_routealt.o \
-  $(B)/client/be_aas_sample.o \
-  $(B)/client/be_ai_char.o \
-  $(B)/client/be_ai_chat.o \
-  $(B)/client/be_ai_gen.o \
-  $(B)/client/be_ai_goal.o \
-  $(B)/client/be_ai_move.o \
-  $(B)/client/be_ai_weap.o \
-  $(B)/client/be_ai_weight.o \
-  $(B)/client/be_ea.o \
-  $(B)/client/be_interface.o \
-  $(B)/client/l_crc.o \
-  $(B)/client/l_libvar.o \
-  $(B)/client/l_log.o \
-  $(B)/client/l_memory.o \
-  $(B)/client/l_precomp.o \
-  $(B)/client/l_script.o \
-  $(B)/client/l_struct.o \
+  $(O)/client/be_aas_bspq3.o \
+  $(O)/client/be_aas_cluster.o \
+  $(O)/client/be_aas_debug.o \
+  $(O)/client/be_aas_entity.o \
+  $(O)/client/be_aas_file.o \
+  $(O)/client/be_aas_main.o \
+  $(O)/client/be_aas_move.o \
+  $(O)/client/be_aas_optimize.o \
+  $(O)/client/be_aas_reach.o \
+  $(O)/client/be_aas_route.o \
+  $(O)/client/be_aas_routealt.o \
+  $(O)/client/be_aas_sample.o \
+  $(O)/client/be_ai_char.o \
+  $(O)/client/be_ai_chat.o \
+  $(O)/client/be_ai_gen.o \
+  $(O)/client/be_ai_goal.o \
+  $(O)/client/be_ai_move.o \
+  $(O)/client/be_ai_weap.o \
+  $(O)/client/be_ai_weight.o \
+  $(O)/client/be_ea.o \
+  $(O)/client/be_interface.o \
+  $(O)/client/l_crc.o \
+  $(O)/client/l_libvar.o \
+  $(O)/client/l_log.o \
+  $(O)/client/l_memory.o \
+  $(O)/client/l_precomp.o \
+  $(O)/client/l_script.o \
+  $(O)/client/l_struct.o \
   \
-  $(B)/client/sdl_input.o \
-  $(B)/client/sdl_snd.o \
+  $(O)/client/sdl_input.o \
+  $(O)/client/sdl_snd.o \
   \
-  $(B)/client/con_passive.o \
-  $(B)/client/con_log.o \
-  $(B)/client/sys_main.o
+  $(O)/client/con_passive.o \
+  $(O)/client/con_log.o \
+  $(O)/client/sys_main.o
 
 Q3R2OBJ = \
-  $(B)/renderergl2/tr_animation.o \
-  $(B)/renderergl2/tr_backend.o \
-  $(B)/renderergl2/tr_bsp.o \
-  $(B)/renderergl2/tr_cmds.o \
-  $(B)/renderergl2/tr_curve.o \
-  $(B)/renderergl2/tr_extramath.o \
-  $(B)/renderergl2/tr_extensions.o \
-  $(B)/renderergl2/tr_fbo.o \
-  $(B)/renderergl2/tr_flares.o \
-  $(B)/renderergl2/tr_font.o \
-  $(B)/renderergl2/tr_glsl.o \
-  $(B)/renderergl2/tr_image.o \
-  $(B)/renderer/tr_image_png.o \
-  $(B)/renderer/tr_image_jpg.o \
-  $(B)/renderer/tr_image_bmp.o \
-  $(B)/renderer/tr_image_tga.o \
-  $(B)/renderer/tr_image_pcx.o \
-  $(B)/renderergl2/tr_init.o \
-  $(B)/renderergl2/tr_light.o \
-  $(B)/renderergl2/tr_main.o \
-  $(B)/renderergl2/tr_marks.o \
-  $(B)/renderergl2/tr_mesh.o \
-  $(B)/renderergl2/tr_model.o \
-  $(B)/renderergl2/tr_model_iqm.o \
-  $(B)/renderer/tr_noise.o \
-  $(B)/renderergl2/tr_postprocess.o \
-  $(B)/renderergl2/tr_scene.o \
-  $(B)/renderergl2/tr_shade.o \
-  $(B)/renderergl2/tr_shade_calc.o \
-  $(B)/renderergl2/tr_shader.o \
-  $(B)/renderergl2/tr_shadows.o \
-  $(B)/renderergl2/tr_sky.o \
-  $(B)/renderergl2/tr_surface.o \
-  $(B)/renderergl2/tr_vbo.o \
-  $(B)/renderergl2/tr_world.o \
+  $(O)/renderergl2/tr_animation.o \
+  $(O)/renderergl2/tr_backend.o \
+  $(O)/renderergl2/tr_bsp.o \
+  $(O)/renderergl2/tr_cmds.o \
+  $(O)/renderergl2/tr_curve.o \
+  $(O)/renderergl2/tr_extramath.o \
+  $(O)/renderergl2/tr_extensions.o \
+  $(O)/renderergl2/tr_fbo.o \
+  $(O)/renderergl2/tr_flares.o \
+  $(O)/renderergl2/tr_font.o \
+  $(O)/renderergl2/tr_glsl.o \
+  $(O)/renderergl2/tr_image.o \
+  $(O)/renderer/tr_image_png.o \
+  $(O)/renderer/tr_image_jpg.o \
+  $(O)/renderer/tr_image_bmp.o \
+  $(O)/renderer/tr_image_tga.o \
+  $(O)/renderer/tr_image_pcx.o \
+  $(O)/renderergl2/tr_init.o \
+  $(O)/renderergl2/tr_light.o \
+  $(O)/renderergl2/tr_main.o \
+  $(O)/renderergl2/tr_marks.o \
+  $(O)/renderergl2/tr_mesh.o \
+  $(O)/renderergl2/tr_model.o \
+  $(O)/renderergl2/tr_model_iqm.o \
+  $(O)/renderer/tr_noise.o \
+  $(O)/renderergl2/tr_postprocess.o \
+  $(O)/renderergl2/tr_scene.o \
+  $(O)/renderergl2/tr_shade.o \
+  $(O)/renderergl2/tr_shade_calc.o \
+  $(O)/renderergl2/tr_shader.o \
+  $(O)/renderergl2/tr_shadows.o \
+  $(O)/renderergl2/tr_sky.o \
+  $(O)/renderergl2/tr_surface.o \
+  $(O)/renderergl2/tr_vbo.o \
+  $(O)/renderergl2/tr_world.o \
   \
-  $(B)/renderer/sdl_gamma.o \
-  $(B)/renderer/sdl_glimp.o
+  $(O)/renderer/sdl_gamma.o \
+  $(O)/renderer/sdl_glimp.o
 
 Q3ROBJ = \
-  $(B)/renderer/tr_animation.o \
-  $(B)/renderer/tr_backend.o \
-  $(B)/renderer/tr_bsp.o \
-  $(B)/renderer/tr_cmds.o \
-  $(B)/renderer/tr_curve.o \
-  $(B)/renderer/tr_flares.o \
-  $(B)/renderer/tr_font.o \
-  $(B)/renderer/tr_image.o \
-  $(B)/renderer/tr_image_png.o \
-  $(B)/renderer/tr_image_jpg.o \
-  $(B)/renderer/tr_image_bmp.o \
-  $(B)/renderer/tr_image_tga.o \
-  $(B)/renderer/tr_image_pcx.o \
-  $(B)/renderer/tr_init.o \
-  $(B)/renderer/tr_light.o \
-  $(B)/renderer/tr_main.o \
-  $(B)/renderer/tr_marks.o \
-  $(B)/renderer/tr_mesh.o \
-  $(B)/renderer/tr_model.o \
-  $(B)/renderer/tr_model_iqm.o \
-  $(B)/renderer/tr_noise.o \
-  $(B)/renderer/tr_scene.o \
-  $(B)/renderer/tr_shade.o \
-  $(B)/renderer/tr_shade_calc.o \
-  $(B)/renderer/tr_shader.o \
-  $(B)/renderer/tr_shadows.o \
-  $(B)/renderer/tr_sky.o \
-  $(B)/renderer/tr_surface.o \
-  $(B)/renderer/tr_world.o \
+  $(O)/renderer/tr_animation.o \
+  $(O)/renderer/tr_backend.o \
+  $(O)/renderer/tr_bsp.o \
+  $(O)/renderer/tr_cmds.o \
+  $(O)/renderer/tr_curve.o \
+  $(O)/renderer/tr_flares.o \
+  $(O)/renderer/tr_font.o \
+  $(O)/renderer/tr_image.o \
+  $(O)/renderer/tr_image_png.o \
+  $(O)/renderer/tr_image_jpg.o \
+  $(O)/renderer/tr_image_bmp.o \
+  $(O)/renderer/tr_image_tga.o \
+  $(O)/renderer/tr_image_pcx.o \
+  $(O)/renderer/tr_init.o \
+  $(O)/renderer/tr_light.o \
+  $(O)/renderer/tr_main.o \
+  $(O)/renderer/tr_marks.o \
+  $(O)/renderer/tr_mesh.o \
+  $(O)/renderer/tr_model.o \
+  $(O)/renderer/tr_model_iqm.o \
+  $(O)/renderer/tr_noise.o \
+  $(O)/renderer/tr_scene.o \
+  $(O)/renderer/tr_shade.o \
+  $(O)/renderer/tr_shade_calc.o \
+  $(O)/renderer/tr_shader.o \
+  $(O)/renderer/tr_shadows.o \
+  $(O)/renderer/tr_sky.o \
+  $(O)/renderer/tr_surface.o \
+  $(O)/renderer/tr_world.o \
   \
-  $(B)/renderer/sdl_gamma.o \
-  $(B)/renderer/sdl_glimp.o
+  $(O)/renderer/sdl_gamma.o \
+  $(O)/renderer/sdl_glimp.o
 
 ifneq ($(USE_RENDERER_DLOPEN), 0)
   Q3ROBJ += \
-    $(B)/renderer/q_shared.o \
-    $(B)/renderer/puff.o \
-    $(B)/renderer/q_math.o \
-    $(B)/renderer/tr_subs.o
+    $(O)/renderer/q_shared.o \
+    $(O)/renderer/puff.o \
+    $(O)/renderer/q_math.o \
+    $(O)/renderer/tr_subs.o
 
   Q3R2OBJ += \
-    $(B)/renderer/q_shared.o \
-    $(B)/renderer/puff.o \
-    $(B)/renderer/q_math.o \
-    $(B)/renderer/tr_subs.o
+    $(O)/renderer/q_shared.o \
+    $(O)/renderer/puff.o \
+    $(O)/renderer/q_math.o \
+    $(O)/renderer/tr_subs.o
 endif
 
 ifneq ($(USE_INTERNAL_JPEG),0)
   JPGOBJ = \
-    $(B)/renderer/jaricom.o \
-    $(B)/renderer/jcapimin.o \
-    $(B)/renderer/jcapistd.o \
-    $(B)/renderer/jcarith.o \
-    $(B)/renderer/jccoefct.o  \
-    $(B)/renderer/jccolor.o \
-    $(B)/renderer/jcdctmgr.o \
-    $(B)/renderer/jchuff.o   \
-    $(B)/renderer/jcinit.o \
-    $(B)/renderer/jcmainct.o \
-    $(B)/renderer/jcmarker.o \
-    $(B)/renderer/jcmaster.o \
-    $(B)/renderer/jcomapi.o \
-    $(B)/renderer/jcparam.o \
-    $(B)/renderer/jcprepct.o \
-    $(B)/renderer/jcsample.o \
-    $(B)/renderer/jctrans.o \
-    $(B)/renderer/jdapimin.o \
-    $(B)/renderer/jdapistd.o \
-    $(B)/renderer/jdarith.o \
-    $(B)/renderer/jdatadst.o \
-    $(B)/renderer/jdatasrc.o \
-    $(B)/renderer/jdcoefct.o \
-    $(B)/renderer/jdcolor.o \
-    $(B)/renderer/jddctmgr.o \
-    $(B)/renderer/jdhuff.o \
-    $(B)/renderer/jdinput.o \
-    $(B)/renderer/jdmainct.o \
-    $(B)/renderer/jdmarker.o \
-    $(B)/renderer/jdmaster.o \
-    $(B)/renderer/jdmerge.o \
-    $(B)/renderer/jdpostct.o \
-    $(B)/renderer/jdsample.o \
-    $(B)/renderer/jdtrans.o \
-    $(B)/renderer/jerror.o \
-    $(B)/renderer/jfdctflt.o \
-    $(B)/renderer/jfdctfst.o \
-    $(B)/renderer/jfdctint.o \
-    $(B)/renderer/jidctflt.o \
-    $(B)/renderer/jidctfst.o \
-    $(B)/renderer/jidctint.o \
-    $(B)/renderer/jmemmgr.o \
-    $(B)/renderer/jmemnobs.o \
-    $(B)/renderer/jquant1.o \
-    $(B)/renderer/jquant2.o \
-    $(B)/renderer/jutils.o
+    $(O)/renderer/jaricom.o \
+    $(O)/renderer/jcapimin.o \
+    $(O)/renderer/jcapistd.o \
+    $(O)/renderer/jcarith.o \
+    $(O)/renderer/jccoefct.o  \
+    $(O)/renderer/jccolor.o \
+    $(O)/renderer/jcdctmgr.o \
+    $(O)/renderer/jchuff.o   \
+    $(O)/renderer/jcinit.o \
+    $(O)/renderer/jcmainct.o \
+    $(O)/renderer/jcmarker.o \
+    $(O)/renderer/jcmaster.o \
+    $(O)/renderer/jcomapi.o \
+    $(O)/renderer/jcparam.o \
+    $(O)/renderer/jcprepct.o \
+    $(O)/renderer/jcsample.o \
+    $(O)/renderer/jctrans.o \
+    $(O)/renderer/jdapimin.o \
+    $(O)/renderer/jdapistd.o \
+    $(O)/renderer/jdarith.o \
+    $(O)/renderer/jdatadst.o \
+    $(O)/renderer/jdatasrc.o \
+    $(O)/renderer/jdcoefct.o \
+    $(O)/renderer/jdcolor.o \
+    $(O)/renderer/jddctmgr.o \
+    $(O)/renderer/jdhuff.o \
+    $(O)/renderer/jdinput.o \
+    $(O)/renderer/jdmainct.o \
+    $(O)/renderer/jdmarker.o \
+    $(O)/renderer/jdmaster.o \
+    $(O)/renderer/jdmerge.o \
+    $(O)/renderer/jdpostct.o \
+    $(O)/renderer/jdsample.o \
+    $(O)/renderer/jdtrans.o \
+    $(O)/renderer/jerror.o \
+    $(O)/renderer/jfdctflt.o \
+    $(O)/renderer/jfdctfst.o \
+    $(O)/renderer/jfdctint.o \
+    $(O)/renderer/jidctflt.o \
+    $(O)/renderer/jidctfst.o \
+    $(O)/renderer/jidctint.o \
+    $(O)/renderer/jmemmgr.o \
+    $(O)/renderer/jmemnobs.o \
+    $(O)/renderer/jquant1.o \
+    $(O)/renderer/jquant2.o \
+    $(O)/renderer/jutils.o
 endif
 
 ifeq ($(ARCH),i386)
   Q3OBJ += \
-    $(B)/client/snd_mixa.o \
-    $(B)/client/matha.o \
-    $(B)/client/snapvector.o \
-    $(B)/client/ftola.o
+    $(O)/client/snd_mixa.o \
+    $(O)/client/matha.o \
+    $(O)/client/snapvector.o \
+    $(O)/client/ftola.o
 endif
 ifeq ($(ARCH),x86)
   Q3OBJ += \
-    $(B)/client/snd_mixa.o \
-    $(B)/client/matha.o \
-    $(B)/client/snapvector.o \
-    $(B)/client/ftola.o
+    $(O)/client/snd_mixa.o \
+    $(O)/client/matha.o \
+    $(O)/client/snapvector.o \
+    $(O)/client/ftola.o
 endif
 ifeq ($(ARCH),x86_64)
   Q3OBJ += \
-    $(B)/client/snapvector.o \
-    $(B)/client/ftola.o
+    $(O)/client/snapvector.o \
+    $(O)/client/ftola.o
 endif
 ifeq ($(ARCH),amd64)
   Q3OBJ += \
-    $(B)/client/snapvector.o \
-    $(B)/client/ftola.o
+    $(O)/client/snapvector.o \
+    $(O)/client/ftola.o
 endif
 ifeq ($(ARCH),x64)
   Q3OBJ += \
-    $(B)/client/snapvector.o \
-    $(B)/client/ftola.o
+    $(O)/client/snapvector.o \
+    $(O)/client/ftola.o
 endif
 
 ifeq ($(USE_VOIP),1)
 ifeq ($(USE_INTERNAL_SPEEX),1)
 Q3OBJ += \
-  $(B)/client/bits.o \
-  $(B)/client/buffer.o \
-  $(B)/client/cb_search.o \
-  $(B)/client/exc_10_16_table.o \
-  $(B)/client/exc_10_32_table.o \
-  $(B)/client/exc_20_32_table.o \
-  $(B)/client/exc_5_256_table.o \
-  $(B)/client/exc_5_64_table.o \
-  $(B)/client/exc_8_128_table.o \
-  $(B)/client/fftwrap.o \
-  $(B)/client/filterbank.o \
-  $(B)/client/filters.o \
-  $(B)/client/gain_table.o \
-  $(B)/client/gain_table_lbr.o \
-  $(B)/client/hexc_10_32_table.o \
-  $(B)/client/hexc_table.o \
-  $(B)/client/high_lsp_tables.o \
-  $(B)/client/jitter.o \
-  $(B)/client/kiss_fft.o \
-  $(B)/client/kiss_fftr.o \
-  $(B)/client/lpc.o \
-  $(B)/client/lsp.o \
-  $(B)/client/lsp_tables_nb.o \
-  $(B)/client/ltp.o \
-  $(B)/client/mdf.o \
-  $(B)/client/modes.o \
-  $(B)/client/modes_wb.o \
-  $(B)/client/nb_celp.o \
-  $(B)/client/preprocess.o \
-  $(B)/client/quant_lsp.o \
-  $(B)/client/resample.o \
-  $(B)/client/sb_celp.o \
-  $(B)/client/smallft.o \
-  $(B)/client/speex.o \
-  $(B)/client/speex_callbacks.o \
-  $(B)/client/speex_header.o \
-  $(B)/client/stereo.o \
-  $(B)/client/vbr.o \
-  $(B)/client/vq.o \
-  $(B)/client/window.o
+  $(O)/client/bits.o \
+  $(O)/client/buffer.o \
+  $(O)/client/cb_search.o \
+  $(O)/client/exc_10_16_table.o \
+  $(O)/client/exc_10_32_table.o \
+  $(O)/client/exc_20_32_table.o \
+  $(O)/client/exc_5_256_table.o \
+  $(O)/client/exc_5_64_table.o \
+  $(O)/client/exc_8_128_table.o \
+  $(O)/client/fftwrap.o \
+  $(O)/client/filterbank.o \
+  $(O)/client/filters.o \
+  $(O)/client/gain_table.o \
+  $(O)/client/gain_table_lbr.o \
+  $(O)/client/hexc_10_32_table.o \
+  $(O)/client/hexc_table.o \
+  $(O)/client/high_lsp_tables.o \
+  $(O)/client/jitter.o \
+  $(O)/client/kiss_fft.o \
+  $(O)/client/kiss_fftr.o \
+  $(O)/client/lpc.o \
+  $(O)/client/lsp.o \
+  $(O)/client/lsp_tables_nb.o \
+  $(O)/client/ltp.o \
+  $(O)/client/mdf.o \
+  $(O)/client/modes.o \
+  $(O)/client/modes_wb.o \
+  $(O)/client/nb_celp.o \
+  $(O)/client/preprocess.o \
+  $(O)/client/quant_lsp.o \
+  $(O)/client/resample.o \
+  $(O)/client/sb_celp.o \
+  $(O)/client/smallft.o \
+  $(O)/client/speex.o \
+  $(O)/client/speex_callbacks.o \
+  $(O)/client/speex_header.o \
+  $(O)/client/stereo.o \
+  $(O)/client/vbr.o \
+  $(O)/client/vq.o \
+  $(O)/client/window.o
 endif
 endif
 
 ifeq ($(USE_INTERNAL_ZLIB),1)
 Q3OBJ += \
-  $(B)/client/adler32.o \
-  $(B)/client/crc32.o \
-  $(B)/client/inffast.o \
-  $(B)/client/inflate.o \
-  $(B)/client/inftrees.o \
-  $(B)/client/zutil.o
+  $(O)/client/adler32.o \
+  $(O)/client/crc32.o \
+  $(O)/client/inffast.o \
+  $(O)/client/inflate.o \
+  $(O)/client/inftrees.o \
+  $(O)/client/zutil.o
 endif
 
 ifeq ($(HAVE_VM_COMPILED),true)
   ifeq ($(ARCH),i386)
     Q3OBJ += \
-      $(B)/client/vm_x86.o
+      $(O)/client/vm_x86.o
   endif
   ifeq ($(ARCH),x86)
     Q3OBJ += \
-      $(B)/client/vm_x86.o
+      $(O)/client/vm_x86.o
   endif
   ifeq ($(ARCH),x86_64)
     ifeq ($(USE_OLD_VM64),1)
       Q3OBJ += \
-        $(B)/client/vm_x86_64.o \
-        $(B)/client/vm_x86_64_assembler.o
+        $(O)/client/vm_x86_64.o \
+        $(O)/client/vm_x86_64_assembler.o
     else
       Q3OBJ += \
-        $(B)/client/vm_x86.o
+        $(O)/client/vm_x86.o
     endif
   endif
   ifeq ($(ARCH),amd64)
     ifeq ($(USE_OLD_VM64),1)
       Q3OBJ += \
-        $(B)/client/vm_x86_64.o \
-        $(B)/client/vm_x86_64_assembler.o
+        $(O)/client/vm_x86_64.o \
+        $(O)/client/vm_x86_64_assembler.o
     else
       Q3OBJ += \
-        $(B)/client/vm_x86.o
+        $(O)/client/vm_x86.o
     endif
   endif
   ifeq ($(ARCH),x64)
     ifeq ($(USE_OLD_VM64),1)
       Q3OBJ += \
-        $(B)/client/vm_x86_64.o \
-        $(B)/client/vm_x86_64_assembler.o
+        $(O)/client/vm_x86_64.o \
+        $(O)/client/vm_x86_64_assembler.o
     else
       Q3OBJ += \
-        $(B)/client/vm_x86.o
+        $(O)/client/vm_x86.o
     endif
   endif
   ifeq ($(ARCH),ppc)
-    Q3OBJ += $(B)/client/vm_powerpc.o $(B)/client/vm_powerpc_asm.o
+    Q3OBJ += $(O)/client/vm_powerpc.o $(B)/client/vm_powerpc_asm.o
   endif
   ifeq ($(ARCH),ppc64)
-    Q3OBJ += $(B)/client/vm_powerpc.o $(B)/client/vm_powerpc_asm.o
+    Q3OBJ += $(O)/client/vm_powerpc.o $(B)/client/vm_powerpc_asm.o
   endif
   ifeq ($(ARCH),sparc)
-    Q3OBJ += $(B)/client/vm_sparc.o
+    Q3OBJ += $(O)/client/vm_sparc.o
   endif
 endif
 
 ifeq ($(PLATFORM),mingw32)
   Q3OBJ += \
-    $(B)/client/win_resource.o \
-    $(B)/client/sys_win32.o
+    $(O)/client/win_resource.o \
+    $(O)/client/sys_win32.o
 else
   Q3OBJ += \
-    $(B)/client/sys_unix.o
+    $(O)/client/sys_unix.o
 endif
 
 ifeq ($(PLATFORM),darwin)
   Q3OBJ += \
-    $(B)/client/sys_osx.o
+    $(O)/client/sys_osx.o
 endif
 
 ifeq ($(USE_MUMBLE),1)
   Q3OBJ += \
-    $(B)/client/libmumblelink.o
+    $(O)/client/libmumblelink.o
 endif
 
 ifneq ($(USE_RENDERER_DLOPEN),0)
@@ -1820,177 +1826,181 @@ endif
 #############################################################################
 
 Q3DOBJ = \
-  $(B)/ded/sv_bot.o \
-  $(B)/ded/sv_client.o \
-  $(B)/ded/sv_ccmds.o \
-  $(B)/ded/sv_game.o \
-  $(B)/ded/sv_init.o \
-  $(B)/ded/sv_main.o \
-  $(B)/ded/sv_net_chan.o \
-  $(B)/ded/sv_snapshot.o \
-  $(B)/ded/sv_world.o \
+  $(O)/ded/sv_bot.o \
+  $(O)/ded/sv_client.o \
+  $(O)/ded/sv_ccmds.o \
+  $(O)/ded/sv_game.o \
+  $(O)/ded/sv_init.o \
+  $(O)/ded/sv_main.o \
+  $(O)/ded/sv_net_chan.o \
+  $(O)/ded/sv_snapshot.o \
+  $(O)/ded/sv_world.o \
   \
-  $(B)/ded/cm_load.o \
-  $(B)/ded/cm_patch.o \
-  $(B)/ded/cm_polylib.o \
-  $(B)/ded/cm_test.o \
-  $(B)/ded/cm_trace.o \
-  $(B)/ded/cmd.o \
-  $(B)/ded/common.o \
-  $(B)/ded/cvar.o \
-  $(B)/ded/files.o \
-  $(B)/ded/md4.o \
-  $(B)/ded/msg.o \
-  $(B)/ded/net_chan.o \
-  $(B)/ded/net_ip.o \
-  $(B)/ded/huffman.o \
+  $(O)/ded/cm_load.o \
+  $(O)/ded/cm_patch.o \
+  $(O)/ded/cm_polylib.o \
+  $(O)/ded/cm_test.o \
+  $(O)/ded/cm_trace.o \
+  $(O)/ded/cmd.o \
+  $(O)/ded/common.o \
+  $(O)/ded/cvar.o \
+  $(O)/ded/files.o \
+  $(O)/ded/md4.o \
+  $(O)/ded/msg.o \
+  $(O)/ded/net_chan.o \
+  $(O)/ded/net_ip.o \
+  $(O)/ded/huffman.o \
   \
-  $(B)/ded/q_math.o \
-  $(B)/ded/q_shared.o \
+  $(O)/ded/q_math.o \
+  $(O)/ded/q_shared.o \
   \
-  $(B)/ded/unzip.o \
-  $(B)/ded/ioapi.o \
-  $(B)/ded/vm.o \
-  $(B)/ded/vm_interpreted.o \
+  $(O)/ded/unzip.o \
+  $(O)/ded/ioapi.o \
+  $(O)/ded/vm.o \
+  $(O)/ded/vm_interpreted.o \
   \
-  $(B)/ded/be_aas_bspq3.o \
-  $(B)/ded/be_aas_cluster.o \
-  $(B)/ded/be_aas_debug.o \
-  $(B)/ded/be_aas_entity.o \
-  $(B)/ded/be_aas_file.o \
-  $(B)/ded/be_aas_main.o \
-  $(B)/ded/be_aas_move.o \
-  $(B)/ded/be_aas_optimize.o \
-  $(B)/ded/be_aas_reach.o \
-  $(B)/ded/be_aas_route.o \
-  $(B)/ded/be_aas_routealt.o \
-  $(B)/ded/be_aas_sample.o \
-  $(B)/ded/be_ai_char.o \
-  $(B)/ded/be_ai_chat.o \
-  $(B)/ded/be_ai_gen.o \
-  $(B)/ded/be_ai_goal.o \
-  $(B)/ded/be_ai_move.o \
-  $(B)/ded/be_ai_weap.o \
-  $(B)/ded/be_ai_weight.o \
-  $(B)/ded/be_ea.o \
-  $(B)/ded/be_interface.o \
-  $(B)/ded/l_crc.o \
-  $(B)/ded/l_libvar.o \
-  $(B)/ded/l_log.o \
-  $(B)/ded/l_memory.o \
-  $(B)/ded/l_precomp.o \
-  $(B)/ded/l_script.o \
-  $(B)/ded/l_struct.o \
+  $(O)/ded/be_aas_bspq3.o \
+  $(O)/ded/be_aas_cluster.o \
+  $(O)/ded/be_aas_debug.o \
+  $(O)/ded/be_aas_entity.o \
+  $(O)/ded/be_aas_file.o \
+  $(O)/ded/be_aas_main.o \
+  $(O)/ded/be_aas_move.o \
+  $(O)/ded/be_aas_optimize.o \
+  $(O)/ded/be_aas_reach.o \
+  $(O)/ded/be_aas_route.o \
+  $(O)/ded/be_aas_routealt.o \
+  $(O)/ded/be_aas_sample.o \
+  $(O)/ded/be_ai_char.o \
+  $(O)/ded/be_ai_chat.o \
+  $(O)/ded/be_ai_gen.o \
+  $(O)/ded/be_ai_goal.o \
+  $(O)/ded/be_ai_move.o \
+  $(O)/ded/be_ai_weap.o \
+  $(O)/ded/be_ai_weight.o \
+  $(O)/ded/be_ea.o \
+  $(O)/ded/be_interface.o \
+  $(O)/ded/l_crc.o \
+  $(O)/ded/l_libvar.o \
+  $(O)/ded/l_log.o \
+  $(O)/ded/l_memory.o \
+  $(O)/ded/l_precomp.o \
+  $(O)/ded/l_script.o \
+  $(O)/ded/l_struct.o \
   \
-  $(B)/ded/null_client.o \
-  $(B)/ded/null_input.o \
-  $(B)/ded/null_snddma.o \
+  $(O)/ded/null_client.o \
+  $(O)/ded/null_input.o \
+  $(O)/ded/null_snddma.o \
   \
-  $(B)/ded/con_log.o \
-  $(B)/ded/sys_main.o
+  $(O)/ded/con_log.o \
+  $(O)/ded/sys_main.o
 
 ifeq ($(ARCH),i386)
   Q3DOBJ += \
-      $(B)/ded/matha.o \
-      $(B)/ded/snapvector.o \
-      $(B)/ded/ftola.o
+      $(O)/ded/matha.o \
+      $(O)/ded/snapvector.o \
+      $(O)/ded/ftola.o
 endif
 ifeq ($(ARCH),x86)
   Q3DOBJ += \
-      $(B)/ded/matha.o \
-      $(B)/ded/snapvector.o \
-      $(B)/ded/ftola.o 
+      $(O)/ded/matha.o \
+      $(O)/ded/snapvector.o \
+      $(O)/ded/ftola.o 
 endif
 ifeq ($(ARCH),x86_64)
   Q3DOBJ += \
-      $(B)/ded/snapvector.o \
-      $(B)/ded/ftola.o 
+      $(O)/ded/snapvector.o \
+      $(O)/ded/ftola.o 
 endif
 ifeq ($(ARCH),amd64)
   Q3DOBJ += \
-      $(B)/ded/snapvector.o \
-      $(B)/ded/ftola.o 
+      $(O)/ded/snapvector.o \
+      $(O)/ded/ftola.o 
 endif
 ifeq ($(ARCH),x64)
   Q3DOBJ += \
-      $(B)/ded/snapvector.o \
-      $(B)/ded/ftola.o 
+      $(O)/ded/snapvector.o \
+      $(O)/ded/ftola.o 
 endif
 
 ifeq ($(USE_INTERNAL_ZLIB),1)
 Q3DOBJ += \
-  $(B)/ded/adler32.o \
-  $(B)/ded/crc32.o \
-  $(B)/ded/inffast.o \
-  $(B)/ded/inflate.o \
-  $(B)/ded/inftrees.o \
-  $(B)/ded/zutil.o
+  $(O)/ded/adler32.o \
+  $(O)/ded/crc32.o \
+  $(O)/ded/inffast.o \
+  $(O)/ded/inflate.o \
+  $(O)/ded/inftrees.o \
+  $(O)/ded/zutil.o
 endif
 
 ifeq ($(HAVE_VM_COMPILED),true)
   ifeq ($(ARCH),i386)
     Q3DOBJ += \
-      $(B)/ded/vm_x86.o
+      $(O)/ded/vm_x86.o
   endif
   ifeq ($(ARCH),x86)
     Q3DOBJ += \
-      $(B)/ded/vm_x86.o
+      $(O)/ded/vm_x86.o
   endif
   ifeq ($(ARCH),x86_64)
     ifeq ($(USE_OLD_VM64),1)
       Q3DOBJ += \
-        $(B)/ded/vm_x86_64.o \
-        $(B)/ded/vm_x86_64_assembler.o
+        $(O)/ded/vm_x86_64.o \
+        $(O)/ded/vm_x86_64_assembler.o
     else
       Q3DOBJ += \
-        $(B)/ded/vm_x86.o
+        $(O)/ded/vm_x86.o
     endif
   endif
   ifeq ($(ARCH),amd64)
     ifeq ($(USE_OLD_VM64),1)
       Q3DOBJ += \
-        $(B)/ded/vm_x86_64.o \
-        $(B)/ded/vm_x86_64_assembler.o
+        $(O)/ded/vm_x86_64.o \
+        $(O)/ded/vm_x86_64_assembler.o
     else
       Q3DOBJ += \
-        $(B)/ded/vm_x86.o
+        $(O)/ded/vm_x86.o
     endif
   endif
   ifeq ($(ARCH),x64)
     ifeq ($(USE_OLD_VM64),1)
       Q3DOBJ += \
-        $(B)/ded/vm_x86_64.o \
-        $(B)/ded/vm_x86_64_assembler.o
+        $(O)/ded/vm_x86_64.o \
+        $(O)/ded/vm_x86_64_assembler.o
     else
       Q3DOBJ += \
-        $(B)/ded/vm_x86.o
+        $(O)/ded/vm_x86.o
     endif
   endif
   ifeq ($(ARCH),ppc)
-    Q3DOBJ += $(B)/ded/vm_powerpc.o $(B)/ded/vm_powerpc_asm.o
+    Q3DOBJ += \
+      $(O)/ded/vm_powerpc.o \
+      $(O)/ded/vm_powerpc_asm.o
   endif
   ifeq ($(ARCH),ppc64)
-    Q3DOBJ += $(B)/ded/vm_powerpc.o $(B)/ded/vm_powerpc_asm.o
+    Q3DOBJ += \
+      $(O)/ded/vm_powerpc.o \
+      $(O)/ded/vm_powerpc_asm.o
   endif
   ifeq ($(ARCH),sparc)
-    Q3DOBJ += $(B)/ded/vm_sparc.o
+    Q3DOBJ += $(O)/ded/vm_sparc.o
   endif
 endif
 
 ifeq ($(PLATFORM),mingw32)
   Q3DOBJ += \
-    $(B)/ded/win_resource.o \
-    $(B)/ded/sys_win32.o \
-    $(B)/ded/con_win32.o
+    $(O)/ded/win_resource.o \
+    $(O)/ded/sys_win32.o \
+    $(O)/ded/con_win32.o
 else
   Q3DOBJ += \
-    $(B)/ded/sys_unix.o \
-    $(B)/ded/con_tty.o
+    $(O)/ded/sys_unix.o \
+    $(O)/ded/con_tty.o
 endif
 
 ifeq ($(PLATFORM),darwin)
   Q3DOBJ += \
-    $(B)/ded/sys_osx.o
+    $(O)/ded/sys_osx.o
 endif
 
 $(B)/$(SERVERBIN)$(FULLBINEXT): $(Q3DOBJ)
@@ -2004,34 +2014,34 @@ $(B)/$(SERVERBIN)$(FULLBINEXT): $(Q3DOBJ)
 #############################################################################
 
 Q3CGOBJ_ = \
-  $(B)/$(BASEGAME)/cgame/cg_main.o \
-  $(B)/$(BASEGAME)/cgame/bg_misc.o \
-  $(B)/$(BASEGAME)/cgame/bg_pmove.o \
-  $(B)/$(BASEGAME)/cgame/bg_slidemove.o \
-  $(B)/$(BASEGAME)/cgame/bg_lib.o \
-  $(B)/$(BASEGAME)/cgame/cg_consolecmds.o \
-  $(B)/$(BASEGAME)/cgame/cg_draw.o \
-  $(B)/$(BASEGAME)/cgame/cg_drawtools.o \
-  $(B)/$(BASEGAME)/cgame/cg_effects.o \
-  $(B)/$(BASEGAME)/cgame/cg_ents.o \
-  $(B)/$(BASEGAME)/cgame/cg_event.o \
-  $(B)/$(BASEGAME)/cgame/cg_info.o \
-  $(B)/$(BASEGAME)/cgame/cg_localents.o \
-  $(B)/$(BASEGAME)/cgame/cg_marks.o \
-  $(B)/$(BASEGAME)/cgame/cg_particles.o \
-  $(B)/$(BASEGAME)/cgame/cg_players.o \
-  $(B)/$(BASEGAME)/cgame/cg_playerstate.o \
-  $(B)/$(BASEGAME)/cgame/cg_predict.o \
-  $(B)/$(BASEGAME)/cgame/cg_scoreboard.o \
-  $(B)/$(BASEGAME)/cgame/cg_servercmds.o \
-  $(B)/$(BASEGAME)/cgame/cg_snapshot.o \
-  $(B)/$(BASEGAME)/cgame/cg_view.o \
-  $(B)/$(BASEGAME)/cgame/cg_weapons.o \
+  $(O)/$(BASEGAME)/cgame/cg_main.o \
+  $(O)/$(BASEGAME)/cgame/bg_misc.o \
+  $(O)/$(BASEGAME)/cgame/bg_pmove.o \
+  $(O)/$(BASEGAME)/cgame/bg_slidemove.o \
+  $(O)/$(BASEGAME)/cgame/bg_lib.o \
+  $(O)/$(BASEGAME)/cgame/cg_consolecmds.o \
+  $(O)/$(BASEGAME)/cgame/cg_draw.o \
+  $(O)/$(BASEGAME)/cgame/cg_drawtools.o \
+  $(O)/$(BASEGAME)/cgame/cg_effects.o \
+  $(O)/$(BASEGAME)/cgame/cg_ents.o \
+  $(O)/$(BASEGAME)/cgame/cg_event.o \
+  $(O)/$(BASEGAME)/cgame/cg_info.o \
+  $(O)/$(BASEGAME)/cgame/cg_localents.o \
+  $(O)/$(BASEGAME)/cgame/cg_marks.o \
+  $(O)/$(BASEGAME)/cgame/cg_particles.o \
+  $(O)/$(BASEGAME)/cgame/cg_players.o \
+  $(O)/$(BASEGAME)/cgame/cg_playerstate.o \
+  $(O)/$(BASEGAME)/cgame/cg_predict.o \
+  $(O)/$(BASEGAME)/cgame/cg_scoreboard.o \
+  $(O)/$(BASEGAME)/cgame/cg_servercmds.o \
+  $(O)/$(BASEGAME)/cgame/cg_snapshot.o \
+  $(O)/$(BASEGAME)/cgame/cg_view.o \
+  $(O)/$(BASEGAME)/cgame/cg_weapons.o \
   \
-  $(B)/$(BASEGAME)/qcommon/q_math.o \
-  $(B)/$(BASEGAME)/qcommon/q_shared.o
+  $(O)/$(BASEGAME)/qcommon/q_math.o \
+  $(O)/$(BASEGAME)/qcommon/q_shared.o
 
-Q3CGOBJ = $(Q3CGOBJ_) $(B)/$(BASEGAME)/cgame/cg_syscalls.o
+Q3CGOBJ = $(Q3CGOBJ_) $(O)/$(BASEGAME)/cgame/cg_syscalls.o
 Q3CGVMOBJ = $(Q3CGOBJ_:%.o=%.asm)
 
 $(B)/$(BASEGAME)/cgame$(SHLIBNAME): $(Q3CGOBJ)
@@ -2047,36 +2057,36 @@ $(B)/$(BASEGAME)/vm/cgame.qvm: $(Q3CGVMOBJ) $(CGDIR)/cg_syscalls.asm $(Q3ASM)
 #############################################################################
 
 MPCGOBJ_ = \
-  $(B)/$(MISSIONPACK)/cgame/cg_main.o \
-  $(B)/$(MISSIONPACK)/cgame/bg_misc.o \
-  $(B)/$(MISSIONPACK)/cgame/bg_pmove.o \
-  $(B)/$(MISSIONPACK)/cgame/bg_slidemove.o \
-  $(B)/$(MISSIONPACK)/cgame/bg_lib.o \
-  $(B)/$(MISSIONPACK)/cgame/cg_consolecmds.o \
-  $(B)/$(MISSIONPACK)/cgame/cg_newdraw.o \
-  $(B)/$(MISSIONPACK)/cgame/cg_draw.o \
-  $(B)/$(MISSIONPACK)/cgame/cg_drawtools.o \
-  $(B)/$(MISSIONPACK)/cgame/cg_effects.o \
-  $(B)/$(MISSIONPACK)/cgame/cg_ents.o \
-  $(B)/$(MISSIONPACK)/cgame/cg_event.o \
-  $(B)/$(MISSIONPACK)/cgame/cg_info.o \
-  $(B)/$(MISSIONPACK)/cgame/cg_localents.o \
-  $(B)/$(MISSIONPACK)/cgame/cg_marks.o \
-  $(B)/$(MISSIONPACK)/cgame/cg_particles.o \
-  $(B)/$(MISSIONPACK)/cgame/cg_players.o \
-  $(B)/$(MISSIONPACK)/cgame/cg_playerstate.o \
-  $(B)/$(MISSIONPACK)/cgame/cg_predict.o \
-  $(B)/$(MISSIONPACK)/cgame/cg_scoreboard.o \
-  $(B)/$(MISSIONPACK)/cgame/cg_servercmds.o \
-  $(B)/$(MISSIONPACK)/cgame/cg_snapshot.o \
-  $(B)/$(MISSIONPACK)/cgame/cg_view.o \
-  $(B)/$(MISSIONPACK)/cgame/cg_weapons.o \
-  $(B)/$(MISSIONPACK)/ui/ui_shared.o \
+  $(O)/$(MISSIONPACK)/cgame/cg_main.o \
+  $(O)/$(MISSIONPACK)/cgame/bg_misc.o \
+  $(O)/$(MISSIONPACK)/cgame/bg_pmove.o \
+  $(O)/$(MISSIONPACK)/cgame/bg_slidemove.o \
+  $(O)/$(MISSIONPACK)/cgame/bg_lib.o \
+  $(O)/$(MISSIONPACK)/cgame/cg_consolecmds.o \
+  $(O)/$(MISSIONPACK)/cgame/cg_newdraw.o \
+  $(O)/$(MISSIONPACK)/cgame/cg_draw.o \
+  $(O)/$(MISSIONPACK)/cgame/cg_drawtools.o \
+  $(O)/$(MISSIONPACK)/cgame/cg_effects.o \
+  $(O)/$(MISSIONPACK)/cgame/cg_ents.o \
+  $(O)/$(MISSIONPACK)/cgame/cg_event.o \
+  $(O)/$(MISSIONPACK)/cgame/cg_info.o \
+  $(O)/$(MISSIONPACK)/cgame/cg_localents.o \
+  $(O)/$(MISSIONPACK)/cgame/cg_marks.o \
+  $(O)/$(MISSIONPACK)/cgame/cg_particles.o \
+  $(O)/$(MISSIONPACK)/cgame/cg_players.o \
+  $(O)/$(MISSIONPACK)/cgame/cg_playerstate.o \
+  $(O)/$(MISSIONPACK)/cgame/cg_predict.o \
+  $(O)/$(MISSIONPACK)/cgame/cg_scoreboard.o \
+  $(O)/$(MISSIONPACK)/cgame/cg_servercmds.o \
+  $(O)/$(MISSIONPACK)/cgame/cg_snapshot.o \
+  $(O)/$(MISSIONPACK)/cgame/cg_view.o \
+  $(O)/$(MISSIONPACK)/cgame/cg_weapons.o \
+  $(O)/$(MISSIONPACK)/ui/ui_shared.o \
   \
-  $(B)/$(MISSIONPACK)/qcommon/q_math.o \
-  $(B)/$(MISSIONPACK)/qcommon/q_shared.o
+  $(O)/$(MISSIONPACK)/qcommon/q_math.o \
+  $(O)/$(MISSIONPACK)/qcommon/q_shared.o
 
-MPCGOBJ = $(MPCGOBJ_) $(B)/$(MISSIONPACK)/cgame/cg_syscalls.o
+MPCGOBJ = $(MPCGOBJ_) $(O)/$(MISSIONPACK)/cgame/cg_syscalls.o
 MPCGVMOBJ = $(MPCGOBJ_:%.o=%.asm)
 
 $(B)/$(MISSIONPACK)/cgame$(SHLIBNAME): $(MPCGOBJ)
@@ -2094,42 +2104,42 @@ $(B)/$(MISSIONPACK)/vm/cgame.qvm: $(MPCGVMOBJ) $(CGDIR)/cg_syscalls.asm $(Q3ASM)
 #############################################################################
 
 Q3GOBJ_ = \
-  $(B)/$(BASEGAME)/game/g_main.o \
-  $(B)/$(BASEGAME)/game/ai_chat.o \
-  $(B)/$(BASEGAME)/game/ai_cmd.o \
-  $(B)/$(BASEGAME)/game/ai_dmnet.o \
-  $(B)/$(BASEGAME)/game/ai_dmq3.o \
-  $(B)/$(BASEGAME)/game/ai_main.o \
-  $(B)/$(BASEGAME)/game/ai_team.o \
-  $(B)/$(BASEGAME)/game/ai_vcmd.o \
-  $(B)/$(BASEGAME)/game/bg_misc.o \
-  $(B)/$(BASEGAME)/game/bg_pmove.o \
-  $(B)/$(BASEGAME)/game/bg_slidemove.o \
-  $(B)/$(BASEGAME)/game/bg_lib.o \
-  $(B)/$(BASEGAME)/game/g_active.o \
-  $(B)/$(BASEGAME)/game/g_arenas.o \
-  $(B)/$(BASEGAME)/game/g_bot.o \
-  $(B)/$(BASEGAME)/game/g_client.o \
-  $(B)/$(BASEGAME)/game/g_cmds.o \
-  $(B)/$(BASEGAME)/game/g_combat.o \
-  $(B)/$(BASEGAME)/game/g_items.o \
-  $(B)/$(BASEGAME)/game/g_mem.o \
-  $(B)/$(BASEGAME)/game/g_misc.o \
-  $(B)/$(BASEGAME)/game/g_missile.o \
-  $(B)/$(BASEGAME)/game/g_mover.o \
-  $(B)/$(BASEGAME)/game/g_session.o \
-  $(B)/$(BASEGAME)/game/g_spawn.o \
-  $(B)/$(BASEGAME)/game/g_svcmds.o \
-  $(B)/$(BASEGAME)/game/g_target.o \
-  $(B)/$(BASEGAME)/game/g_team.o \
-  $(B)/$(BASEGAME)/game/g_trigger.o \
-  $(B)/$(BASEGAME)/game/g_utils.o \
-  $(B)/$(BASEGAME)/game/g_weapon.o \
+  $(O)/$(BASEGAME)/game/g_main.o \
+  $(O)/$(BASEGAME)/game/ai_chat.o \
+  $(O)/$(BASEGAME)/game/ai_cmd.o \
+  $(O)/$(BASEGAME)/game/ai_dmnet.o \
+  $(O)/$(BASEGAME)/game/ai_dmq3.o \
+  $(O)/$(BASEGAME)/game/ai_main.o \
+  $(O)/$(BASEGAME)/game/ai_team.o \
+  $(O)/$(BASEGAME)/game/ai_vcmd.o \
+  $(O)/$(BASEGAME)/game/bg_misc.o \
+  $(O)/$(BASEGAME)/game/bg_pmove.o \
+  $(O)/$(BASEGAME)/game/bg_slidemove.o \
+  $(O)/$(BASEGAME)/game/bg_lib.o \
+  $(O)/$(BASEGAME)/game/g_active.o \
+  $(O)/$(BASEGAME)/game/g_arenas.o \
+  $(O)/$(BASEGAME)/game/g_bot.o \
+  $(O)/$(BASEGAME)/game/g_client.o \
+  $(O)/$(BASEGAME)/game/g_cmds.o \
+  $(O)/$(BASEGAME)/game/g_combat.o \
+  $(O)/$(BASEGAME)/game/g_items.o \
+  $(O)/$(BASEGAME)/game/g_mem.o \
+  $(O)/$(BASEGAME)/game/g_misc.o \
+  $(O)/$(BASEGAME)/game/g_missile.o \
+  $(O)/$(BASEGAME)/game/g_mover.o \
+  $(O)/$(BASEGAME)/game/g_session.o \
+  $(O)/$(BASEGAME)/game/g_spawn.o \
+  $(O)/$(BASEGAME)/game/g_svcmds.o \
+  $(O)/$(BASEGAME)/game/g_target.o \
+  $(O)/$(BASEGAME)/game/g_team.o \
+  $(O)/$(BASEGAME)/game/g_trigger.o \
+  $(O)/$(BASEGAME)/game/g_utils.o \
+  $(O)/$(BASEGAME)/game/g_weapon.o \
   \
-  $(B)/$(BASEGAME)/qcommon/q_math.o \
-  $(B)/$(BASEGAME)/qcommon/q_shared.o
+  $(O)/$(BASEGAME)/qcommon/q_math.o \
+  $(O)/$(BASEGAME)/qcommon/q_shared.o
 
-Q3GOBJ = $(Q3GOBJ_) $(B)/$(BASEGAME)/game/g_syscalls.o
+Q3GOBJ = $(Q3GOBJ_) $(O)/$(BASEGAME)/game/g_syscalls.o
 Q3GVMOBJ = $(Q3GOBJ_:%.o=%.asm)
 
 $(B)/$(BASEGAME)/qagame$(SHLIBNAME): $(Q3GOBJ)
@@ -2145,42 +2155,42 @@ $(B)/$(BASEGAME)/vm/qagame.qvm: $(Q3GVMOBJ) $(GDIR)/g_syscalls.asm $(Q3ASM)
 #############################################################################
 
 MPGOBJ_ = \
-  $(B)/$(MISSIONPACK)/game/g_main.o \
-  $(B)/$(MISSIONPACK)/game/ai_chat.o \
-  $(B)/$(MISSIONPACK)/game/ai_cmd.o \
-  $(B)/$(MISSIONPACK)/game/ai_dmnet.o \
-  $(B)/$(MISSIONPACK)/game/ai_dmq3.o \
-  $(B)/$(MISSIONPACK)/game/ai_main.o \
-  $(B)/$(MISSIONPACK)/game/ai_team.o \
-  $(B)/$(MISSIONPACK)/game/ai_vcmd.o \
-  $(B)/$(MISSIONPACK)/game/bg_misc.o \
-  $(B)/$(MISSIONPACK)/game/bg_pmove.o \
-  $(B)/$(MISSIONPACK)/game/bg_slidemove.o \
-  $(B)/$(MISSIONPACK)/game/bg_lib.o \
-  $(B)/$(MISSIONPACK)/game/g_active.o \
-  $(B)/$(MISSIONPACK)/game/g_arenas.o \
-  $(B)/$(MISSIONPACK)/game/g_bot.o \
-  $(B)/$(MISSIONPACK)/game/g_client.o \
-  $(B)/$(MISSIONPACK)/game/g_cmds.o \
-  $(B)/$(MISSIONPACK)/game/g_combat.o \
-  $(B)/$(MISSIONPACK)/game/g_items.o \
-  $(B)/$(MISSIONPACK)/game/g_mem.o \
-  $(B)/$(MISSIONPACK)/game/g_misc.o \
-  $(B)/$(MISSIONPACK)/game/g_missile.o \
-  $(B)/$(MISSIONPACK)/game/g_mover.o \
-  $(B)/$(MISSIONPACK)/game/g_session.o \
-  $(B)/$(MISSIONPACK)/game/g_spawn.o \
-  $(B)/$(MISSIONPACK)/game/g_svcmds.o \
-  $(B)/$(MISSIONPACK)/game/g_target.o \
-  $(B)/$(MISSIONPACK)/game/g_team.o \
-  $(B)/$(MISSIONPACK)/game/g_trigger.o \
-  $(B)/$(MISSIONPACK)/game/g_utils.o \
-  $(B)/$(MISSIONPACK)/game/g_weapon.o \
+  $(O)/$(MISSIONPACK)/game/g_main.o \
+  $(O)/$(MISSIONPACK)/game/ai_chat.o \
+  $(O)/$(MISSIONPACK)/game/ai_cmd.o \
+  $(O)/$(MISSIONPACK)/game/ai_dmnet.o \
+  $(O)/$(MISSIONPACK)/game/ai_dmq3.o \
+  $(O)/$(MISSIONPACK)/game/ai_main.o \
+  $(O)/$(MISSIONPACK)/game/ai_team.o \
+  $(O)/$(MISSIONPACK)/game/ai_vcmd.o \
+  $(O)/$(MISSIONPACK)/game/bg_misc.o \
+  $(O)/$(MISSIONPACK)/game/bg_pmove.o \
+  $(O)/$(MISSIONPACK)/game/bg_slidemove.o \
+  $(O)/$(MISSIONPACK)/game/bg_lib.o \
+  $(O)/$(MISSIONPACK)/game/g_active.o \
+  $(O)/$(MISSIONPACK)/game/g_arenas.o \
+  $(O)/$(MISSIONPACK)/game/g_bot.o \
+  $(O)/$(MISSIONPACK)/game/g_client.o \
+  $(O)/$(MISSIONPACK)/game/g_cmds.o \
+  $(O)/$(MISSIONPACK)/game/g_combat.o \
+  $(O)/$(MISSIONPACK)/game/g_items.o \
+  $(O)/$(MISSIONPACK)/game/g_mem.o \
+  $(O)/$(MISSIONPACK)/game/g_misc.o \
+  $(O)/$(MISSIONPACK)/game/g_missile.o \
+  $(O)/$(MISSIONPACK)/game/g_mover.o \
+  $(O)/$(MISSIONPACK)/game/g_session.o \
+  $(O)/$(MISSIONPACK)/game/g_spawn.o \
+  $(O)/$(MISSIONPACK)/game/g_svcmds.o \
+  $(O)/$(MISSIONPACK)/game/g_target.o \
+  $(O)/$(MISSIONPACK)/game/g_team.o \
+  $(O)/$(MISSIONPACK)/game/g_trigger.o \
+  $(O)/$(MISSIONPACK)/game/g_utils.o \
+  $(O)/$(MISSIONPACK)/game/g_weapon.o \
   \
-  $(B)/$(MISSIONPACK)/qcommon/q_math.o \
-  $(B)/$(MISSIONPACK)/qcommon/q_shared.o
+  $(O)/$(MISSIONPACK)/qcommon/q_math.o \
+  $(O)/$(MISSIONPACK)/qcommon/q_shared.o
 
-MPGOBJ = $(MPGOBJ_) $(B)/$(MISSIONPACK)/game/g_syscalls.o
+MPGOBJ = $(MPGOBJ_) $(O)/$(MISSIONPACK)/game/g_syscalls.o
 MPGVMOBJ = $(MPGOBJ_:%.o=%.asm)
 
 $(B)/$(MISSIONPACK)/qagame$(SHLIBNAME): $(MPGOBJ)
@@ -2198,52 +2208,52 @@ $(B)/$(MISSIONPACK)/vm/qagame.qvm: $(MPGVMOBJ) $(GDIR)/g_syscalls.asm $(Q3ASM)
 #############################################################################
 
 Q3UIOBJ_ = \
-  $(B)/$(BASEGAME)/ui/ui_main.o \
-  $(B)/$(BASEGAME)/ui/bg_misc.o \
-  $(B)/$(BASEGAME)/ui/bg_lib.o \
-  $(B)/$(BASEGAME)/ui/ui_addbots.o \
-  $(B)/$(BASEGAME)/ui/ui_atoms.o \
-  $(B)/$(BASEGAME)/ui/ui_cdkey.o \
-  $(B)/$(BASEGAME)/ui/ui_cinematics.o \
-  $(B)/$(BASEGAME)/ui/ui_confirm.o \
-  $(B)/$(BASEGAME)/ui/ui_connect.o \
-  $(B)/$(BASEGAME)/ui/ui_controls2.o \
-  $(B)/$(BASEGAME)/ui/ui_credits.o \
-  $(B)/$(BASEGAME)/ui/ui_demo2.o \
-  $(B)/$(BASEGAME)/ui/ui_display.o \
-  $(B)/$(BASEGAME)/ui/ui_gameinfo.o \
-  $(B)/$(BASEGAME)/ui/ui_ingame.o \
-  $(B)/$(BASEGAME)/ui/ui_loadconfig.o \
-  $(B)/$(BASEGAME)/ui/ui_menu.o \
-  $(B)/$(BASEGAME)/ui/ui_mfield.o \
-  $(B)/$(BASEGAME)/ui/ui_mods.o \
-  $(B)/$(BASEGAME)/ui/ui_network.o \
-  $(B)/$(BASEGAME)/ui/ui_options.o \
-  $(B)/$(BASEGAME)/ui/ui_playermodel.o \
-  $(B)/$(BASEGAME)/ui/ui_players.o \
-  $(B)/$(BASEGAME)/ui/ui_playersettings.o \
-  $(B)/$(BASEGAME)/ui/ui_preferences.o \
-  $(B)/$(BASEGAME)/ui/ui_qmenu.o \
-  $(B)/$(BASEGAME)/ui/ui_removebots.o \
-  $(B)/$(BASEGAME)/ui/ui_saveconfig.o \
-  $(B)/$(BASEGAME)/ui/ui_serverinfo.o \
-  $(B)/$(BASEGAME)/ui/ui_servers2.o \
-  $(B)/$(BASEGAME)/ui/ui_setup.o \
-  $(B)/$(BASEGAME)/ui/ui_sound.o \
-  $(B)/$(BASEGAME)/ui/ui_sparena.o \
-  $(B)/$(BASEGAME)/ui/ui_specifyserver.o \
-  $(B)/$(BASEGAME)/ui/ui_splevel.o \
-  $(B)/$(BASEGAME)/ui/ui_sppostgame.o \
-  $(B)/$(BASEGAME)/ui/ui_spskill.o \
-  $(B)/$(BASEGAME)/ui/ui_startserver.o \
-  $(B)/$(BASEGAME)/ui/ui_team.o \
-  $(B)/$(BASEGAME)/ui/ui_teamorders.o \
-  $(B)/$(BASEGAME)/ui/ui_video.o \
+  $(O)/$(BASEGAME)/ui/ui_main.o \
+  $(O)/$(BASEGAME)/ui/bg_misc.o \
+  $(O)/$(BASEGAME)/ui/bg_lib.o \
+  $(O)/$(BASEGAME)/ui/ui_addbots.o \
+  $(O)/$(BASEGAME)/ui/ui_atoms.o \
+  $(O)/$(BASEGAME)/ui/ui_cdkey.o \
+  $(O)/$(BASEGAME)/ui/ui_cinematics.o \
+  $(O)/$(BASEGAME)/ui/ui_confirm.o \
+  $(O)/$(BASEGAME)/ui/ui_connect.o \
+  $(O)/$(BASEGAME)/ui/ui_controls2.o \
+  $(O)/$(BASEGAME)/ui/ui_credits.o \
+  $(O)/$(BASEGAME)/ui/ui_demo2.o \
+  $(O)/$(BASEGAME)/ui/ui_display.o \
+  $(O)/$(BASEGAME)/ui/ui_gameinfo.o \
+  $(O)/$(BASEGAME)/ui/ui_ingame.o \
+  $(O)/$(BASEGAME)/ui/ui_loadconfig.o \
+  $(O)/$(BASEGAME)/ui/ui_menu.o \
+  $(O)/$(BASEGAME)/ui/ui_mfield.o \
+  $(O)/$(BASEGAME)/ui/ui_mods.o \
+  $(O)/$(BASEGAME)/ui/ui_network.o \
+  $(O)/$(BASEGAME)/ui/ui_options.o \
+  $(O)/$(BASEGAME)/ui/ui_playermodel.o \
+  $(O)/$(BASEGAME)/ui/ui_players.o \
+  $(O)/$(BASEGAME)/ui/ui_playersettings.o \
+  $(O)/$(BASEGAME)/ui/ui_preferences.o \
+  $(O)/$(BASEGAME)/ui/ui_qmenu.o \
+  $(O)/$(BASEGAME)/ui/ui_removebots.o \
+  $(O)/$(BASEGAME)/ui/ui_saveconfig.o \
+  $(O)/$(BASEGAME)/ui/ui_serverinfo.o \
+  $(O)/$(BASEGAME)/ui/ui_servers2.o \
+  $(O)/$(BASEGAME)/ui/ui_setup.o \
+  $(O)/$(BASEGAME)/ui/ui_sound.o \
+  $(O)/$(BASEGAME)/ui/ui_sparena.o \
+  $(O)/$(BASEGAME)/ui/ui_specifyserver.o \
+  $(O)/$(BASEGAME)/ui/ui_splevel.o \
+  $(O)/$(BASEGAME)/ui/ui_sppostgame.o \
+  $(O)/$(BASEGAME)/ui/ui_spskill.o \
+  $(O)/$(BASEGAME)/ui/ui_startserver.o \
+  $(O)/$(BASEGAME)/ui/ui_team.o \
+  $(O)/$(BASEGAME)/ui/ui_teamorders.o \
+  $(O)/$(BASEGAME)/ui/ui_video.o \
   \
-  $(B)/$(BASEGAME)/qcommon/q_math.o \
-  $(B)/$(BASEGAME)/qcommon/q_shared.o
+  $(O)/$(BASEGAME)/qcommon/q_math.o \
+  $(O)/$(BASEGAME)/qcommon/q_shared.o
 
-Q3UIOBJ = $(Q3UIOBJ_) $(B)/$(MISSIONPACK)/ui/ui_syscalls.o
+Q3UIOBJ = $(Q3UIOBJ_) $(O)/$(MISSIONPACK)/ui/ui_syscalls.o
 Q3UIVMOBJ = $(Q3UIOBJ_:%.o=%.asm)
 
 $(B)/$(BASEGAME)/ui$(SHLIBNAME): $(Q3UIOBJ)
@@ -2259,19 +2269,19 @@ $(B)/$(BASEGAME)/vm/ui.qvm: $(Q3UIVMOBJ) $(UIDIR)/ui_syscalls.asm $(Q3ASM)
 #############################################################################
 
 MPUIOBJ_ = \
-  $(B)/$(MISSIONPACK)/ui/ui_main.o \
-  $(B)/$(MISSIONPACK)/ui/ui_atoms.o \
-  $(B)/$(MISSIONPACK)/ui/ui_gameinfo.o \
-  $(B)/$(MISSIONPACK)/ui/ui_players.o \
-  $(B)/$(MISSIONPACK)/ui/ui_shared.o \
+  $(O)/$(MISSIONPACK)/ui/ui_main.o \
+  $(O)/$(MISSIONPACK)/ui/ui_atoms.o \
+  $(O)/$(MISSIONPACK)/ui/ui_gameinfo.o \
+  $(O)/$(MISSIONPACK)/ui/ui_players.o \
+  $(O)/$(MISSIONPACK)/ui/ui_shared.o \
   \
-  $(B)/$(MISSIONPACK)/ui/bg_misc.o \
-  $(B)/$(MISSIONPACK)/ui/bg_lib.o \
+  $(O)/$(MISSIONPACK)/ui/bg_misc.o \
+  $(O)/$(MISSIONPACK)/ui/bg_lib.o \
   \
-  $(B)/$(MISSIONPACK)/qcommon/q_math.o \
-  $(B)/$(MISSIONPACK)/qcommon/q_shared.o
+  $(O)/$(MISSIONPACK)/qcommon/q_math.o \
+  $(O)/$(MISSIONPACK)/qcommon/q_shared.o
 
-MPUIOBJ = $(MPUIOBJ_) $(B)/$(MISSIONPACK)/ui/ui_syscalls.o
+MPUIOBJ = $(MPUIOBJ_) $(O)/$(MISSIONPACK)/ui/ui_syscalls.o
 MPUIVMOBJ = $(MPUIOBJ_:%.o=%.asm)
 
 $(B)/$(MISSIONPACK)/ui$(SHLIBNAME): $(MPUIOBJ)
@@ -2288,99 +2298,99 @@ $(B)/$(MISSIONPACK)/vm/ui.qvm: $(MPUIVMOBJ) $(UIDIR)/ui_syscalls.asm $(Q3ASM)
 ## CLIENT/SERVER RULES
 #############################################################################
 
-$(B)/client/%.o: $(ASMDIR)/%.s
+$(O)/client/%.o: $(ASMDIR)/%.s
 	$(DO_AS)
 
 # k8 so inline assembler knows about SSE
-$(B)/client/%.o: $(ASMDIR)/%.c
+$(O)/client/%.o: $(ASMDIR)/%.c
 	$(DO_CC) -march=k8
 
-$(B)/client/%.o: $(CDIR)/%.c
+$(O)/client/%.o: $(CDIR)/%.c
 	$(DO_CC)
 
-$(B)/client/%.o: $(SDIR)/%.c
+$(O)/client/%.o: $(SDIR)/%.c
 	$(DO_CC)
 
-$(B)/client/%.o: $(CMDIR)/%.c
+$(O)/client/%.o: $(CMDIR)/%.c
 	$(DO_CC)
 
-$(B)/client/%.o: $(BLIBDIR)/%.c
+$(O)/client/%.o: $(BLIBDIR)/%.c
 	$(DO_BOT_CC)
 
-$(B)/client/%.o: $(SPEEXDIR)/%.c
+$(O)/client/%.o: $(SPEEXDIR)/%.c
 	$(DO_CC)
 
-$(B)/client/%.o: $(ZDIR)/%.c
+$(O)/client/%.o: $(ZDIR)/%.c
 	$(DO_CC)
 
-$(B)/client/%.o: $(SDLDIR)/%.c
+$(O)/client/%.o: $(SDLDIR)/%.c
 	$(DO_CC)
 
-$(B)/renderersmp/%.o: $(SDLDIR)/%.c
+$(O)/renderersmp/%.o: $(SDLDIR)/%.c
 	$(DO_SMP_CC)
 
-$(B)/client/%.o: $(SYSDIR)/%.c
+$(O)/client/%.o: $(SYSDIR)/%.c
 	$(DO_CC)
 
-$(B)/client/%.o: $(SYSDIR)/%.m
+$(O)/client/%.o: $(SYSDIR)/%.m
 	$(DO_CC)
 
-$(B)/client/%.o: $(SYSDIR)/%.rc
+$(O)/client/%.o: $(SYSDIR)/%.rc
 	$(DO_WINDRES)
 
 
-$(B)/renderer/%.o: $(CMDIR)/%.c
+$(O)/renderer/%.o: $(CMDIR)/%.c
 	$(DO_REF_CC)
 
-$(B)/renderer/%.o: $(SDLDIR)/%.c
+$(O)/renderer/%.o: $(SDLDIR)/%.c
 	$(DO_REF_CC)
 
-$(B)/renderer/%.o: $(JPDIR)/%.c
+$(O)/renderer/%.o: $(JPDIR)/%.c
 	$(DO_REF_CC)
 
-$(B)/renderer/%.o: $(RDIR)/%.c
+$(O)/renderer/%.o: $(RDIR)/%.c
 	$(DO_REF_CC)
 	
-$(B)/renderergl2/%.o: $(R2DIR)/%.c
+$(O)/renderergl2/%.o: $(R2DIR)/%.c
 	$(DO_REF_CC)
 
 
-$(B)/ded/%.o: $(ASMDIR)/%.s
+$(O)/ded/%.o: $(ASMDIR)/%.s
 	$(DO_AS)
 
 # k8 so inline assembler knows about SSE
-$(B)/ded/%.o: $(ASMDIR)/%.c
+$(O)/ded/%.o: $(ASMDIR)/%.c
 	$(DO_CC) -march=k8
 
-$(B)/ded/%.o: $(SDIR)/%.c
+$(O)/ded/%.o: $(SDIR)/%.c
 	$(DO_DED_CC)
 
-$(B)/ded/%.o: $(CMDIR)/%.c
+$(O)/ded/%.o: $(CMDIR)/%.c
 	$(DO_DED_CC)
 
-$(B)/ded/%.o: $(ZDIR)/%.c
+$(O)/ded/%.o: $(ZDIR)/%.c
 	$(DO_DED_CC)
 
-$(B)/ded/%.o: $(BLIBDIR)/%.c
+$(O)/ded/%.o: $(BLIBDIR)/%.c
 	$(DO_BOT_CC)
 
-$(B)/ded/%.o: $(SYSDIR)/%.c
+$(O)/ded/%.o: $(SYSDIR)/%.c
 	$(DO_DED_CC)
 
-$(B)/ded/%.o: $(SYSDIR)/%.m
+$(O)/ded/%.o: $(SYSDIR)/%.m
 	$(DO_DED_CC)
 
-$(B)/ded/%.o: $(SYSDIR)/%.rc
+$(O)/ded/%.o: $(SYSDIR)/%.rc
 	$(DO_WINDRES)
 
-$(B)/ded/%.o: $(NDIR)/%.c
+$(O)/ded/%.o: $(NDIR)/%.c
 	$(DO_DED_CC)
 
 # Extra dependencies to ensure the SVN version is incorporated
 ifeq ($(USE_SVN),1)
-  $(B)/client/cl_console.o : .svn/entries
-  $(B)/client/common.o : .svn/entries
-  $(B)/ded/common.o : .svn/entries
+  $(O)/client/cl_console.o : .svn/entries
+  $(O)/client/common.o : .svn/entries
+  $(O)/ded/common.o : .svn/entries
 endif
 
 
@@ -2388,79 +2398,79 @@ endif
 ## GAME MODULE RULES
 #############################################################################
 
-$(B)/$(BASEGAME)/cgame/bg_%.o: $(GDIR)/bg_%.c
+$(O)/$(BASEGAME)/cgame/bg_%.o: $(GDIR)/bg_%.c
 	$(DO_CGAME_CC)
 
-$(B)/$(BASEGAME)/cgame/%.o: $(CGDIR)/%.c
+$(O)/$(BASEGAME)/cgame/%.o: $(CGDIR)/%.c
 	$(DO_CGAME_CC)
 
-$(B)/$(BASEGAME)/cgame/bg_%.asm: $(GDIR)/bg_%.c $(Q3LCC)
+$(O)/$(BASEGAME)/cgame/bg_%.asm: $(GDIR)/bg_%.c $(Q3LCC)
 	$(DO_CGAME_Q3LCC)
 
-$(B)/$(BASEGAME)/cgame/%.asm: $(CGDIR)/%.c $(Q3LCC)
+$(O)/$(BASEGAME)/cgame/%.asm: $(CGDIR)/%.c $(Q3LCC)
 	$(DO_CGAME_Q3LCC)
 
-$(B)/$(MISSIONPACK)/cgame/bg_%.o: $(GDIR)/bg_%.c
+$(O)/$(MISSIONPACK)/cgame/bg_%.o: $(GDIR)/bg_%.c
 	$(DO_CGAME_CC_MISSIONPACK)
 
-$(B)/$(MISSIONPACK)/cgame/%.o: $(CGDIR)/%.c
+$(O)/$(MISSIONPACK)/cgame/%.o: $(CGDIR)/%.c
 	$(DO_CGAME_CC_MISSIONPACK)
 
-$(B)/$(MISSIONPACK)/cgame/bg_%.asm: $(GDIR)/bg_%.c $(Q3LCC)
+$(O)/$(MISSIONPACK)/cgame/bg_%.asm: $(GDIR)/bg_%.c $(Q3LCC)
 	$(DO_CGAME_Q3LCC_MISSIONPACK)
 
-$(B)/$(MISSIONPACK)/cgame/%.asm: $(CGDIR)/%.c $(Q3LCC)
+$(O)/$(MISSIONPACK)/cgame/%.asm: $(CGDIR)/%.c $(Q3LCC)
 	$(DO_CGAME_Q3LCC_MISSIONPACK)
 
 
-$(B)/$(BASEGAME)/game/%.o: $(GDIR)/%.c
+$(O)/$(BASEGAME)/game/%.o: $(GDIR)/%.c
 	$(DO_GAME_CC)
 
-$(B)/$(BASEGAME)/game/%.asm: $(GDIR)/%.c $(Q3LCC)
+$(O)/$(BASEGAME)/game/%.asm: $(GDIR)/%.c $(Q3LCC)
 	$(DO_GAME_Q3LCC)
 
-$(B)/$(MISSIONPACK)/game/%.o: $(GDIR)/%.c
+$(O)/$(MISSIONPACK)/game/%.o: $(GDIR)/%.c
 	$(DO_GAME_CC_MISSIONPACK)
 
-$(B)/$(MISSIONPACK)/game/%.asm: $(GDIR)/%.c $(Q3LCC)
+$(O)/$(MISSIONPACK)/game/%.asm: $(GDIR)/%.c $(Q3LCC)
 	$(DO_GAME_Q3LCC_MISSIONPACK)
 
 
-$(B)/$(BASEGAME)/ui/bg_%.o: $(GDIR)/bg_%.c
+$(O)/$(BASEGAME)/ui/bg_%.o: $(GDIR)/bg_%.c
 	$(DO_UI_CC)
 
-$(B)/$(BASEGAME)/ui/%.o: $(Q3UIDIR)/%.c
+$(O)/$(BASEGAME)/ui/%.o: $(Q3UIDIR)/%.c
 	$(DO_UI_CC)
 
-$(B)/$(BASEGAME)/ui/bg_%.asm: $(GDIR)/bg_%.c $(Q3LCC)
+$(O)/$(BASEGAME)/ui/bg_%.asm: $(GDIR)/bg_%.c $(Q3LCC)
 	$(DO_UI_Q3LCC)
 
-$(B)/$(BASEGAME)/ui/%.asm: $(Q3UIDIR)/%.c $(Q3LCC)
+$(O)/$(BASEGAME)/ui/%.asm: $(Q3UIDIR)/%.c $(Q3LCC)
 	$(DO_UI_Q3LCC)
 
-$(B)/$(MISSIONPACK)/ui/bg_%.o: $(GDIR)/bg_%.c
+$(O)/$(MISSIONPACK)/ui/bg_%.o: $(GDIR)/bg_%.c
 	$(DO_UI_CC_MISSIONPACK)
 
-$(B)/$(MISSIONPACK)/ui/%.o: $(UIDIR)/%.c
+$(O)/$(MISSIONPACK)/ui/%.o: $(UIDIR)/%.c
 	$(DO_UI_CC_MISSIONPACK)
 
-$(B)/$(MISSIONPACK)/ui/bg_%.asm: $(GDIR)/bg_%.c $(Q3LCC)
+$(O)/$(MISSIONPACK)/ui/bg_%.asm: $(GDIR)/bg_%.c $(Q3LCC)
 	$(DO_UI_Q3LCC_MISSIONPACK)
 
-$(B)/$(MISSIONPACK)/ui/%.asm: $(UIDIR)/%.c $(Q3LCC)
+$(O)/$(MISSIONPACK)/ui/%.asm: $(UIDIR)/%.c $(Q3LCC)
 	$(DO_UI_Q3LCC_MISSIONPACK)
 
 
-$(B)/$(BASEGAME)/qcommon/%.o: $(CMDIR)/%.c
+$(O)/$(BASEGAME)/qcommon/%.o: $(CMDIR)/%.c
 	$(DO_SHLIB_CC)
 
-$(B)/$(BASEGAME)/qcommon/%.asm: $(CMDIR)/%.c $(Q3LCC)
+$(O)/$(BASEGAME)/qcommon/%.asm: $(CMDIR)/%.c $(Q3LCC)
 	$(DO_Q3LCC)
 
-$(B)/$(MISSIONPACK)/qcommon/%.o: $(CMDIR)/%.c
+$(O)/$(MISSIONPACK)/qcommon/%.o: $(CMDIR)/%.c
 	$(DO_SHLIB_CC_MISSIONPACK)
 
-$(B)/$(MISSIONPACK)/qcommon/%.asm: $(CMDIR)/%.c $(Q3LCC)
+$(O)/$(MISSIONPACK)/qcommon/%.asm: $(CMDIR)/%.c $(Q3LCC)
 	$(DO_Q3LCC_MISSIONPACK)
 
 
@@ -2538,13 +2548,13 @@ else
 endif
 
 clean-debug:
-	@$(MAKE) clean2 B=$(BD)
+	@$(MAKE) clean2 B=$(BD) O=$(BD)/obj
 
 clean-release:
-	@$(MAKE) clean2 B=$(BR)
+	@$(MAKE) clean2 B=$(BR) O=$(BR)/obj
 
 clean2:
-	@echo "CLEAN $(B)"
+	@echo "clean $(B) & $(O)"
 	@rm -f $(OBJ)
 	@rm -f $(OBJ_D_FILES)
 	@rm -f $(TARGETS)
@@ -2552,10 +2562,10 @@ clean2:
 toolsclean: toolsclean-debug toolsclean-release
 
 toolsclean-debug:
-	@$(MAKE) toolsclean2 B=$(BD)
+	@$(MAKE) toolsclean2 B=$(BD) O=$(BD)/obj
 
 toolsclean-release:
-	@$(MAKE) toolsclean2 B=$(BR)
+	@$(MAKE) toolsclean2 B=$(BR) O=$(BR)/obj 
 
 toolsclean2:
 	@echo "TOOLS_CLEAN $(B)"
