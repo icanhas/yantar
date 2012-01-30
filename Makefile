@@ -136,11 +136,11 @@ COPYBINDIR=$(COPYDIR)
 endif
 
 ifndef MOUNT_DIR
-MOUNT_DIR=code
+MOUNT_DIR=src
 endif
 
 ifndef BUILD_DIR
-BUILD_DIR=build
+BUILD_DIR=bin
 endif
 
 ifndef TEMPDIR
