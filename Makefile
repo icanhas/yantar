@@ -2580,10 +2580,7 @@ else
 endif
 
 dist:
-	rm -rf $(CLIENTBIN)-$(VERSION)
-	svn export . $(CLIENTBIN)-$(VERSION)
-	tar --owner=root --group=root --force-local -cjf $(CLIENTBIN)-$(VERSION).tar.bz2 $(CLIENTBIN)-$(VERSION)
-	rm -rf $(CLIENTBIN)-$(VERSION)
+	git archive HEAD | xz > $(CLIENTBIN)-$(VERSION)-src.tar.xz
 
 #############################################################################
 # DEPENDENCIES
