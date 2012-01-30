@@ -104,15 +104,15 @@ ifndef VERSION
 endif
 
 ifndef CLIENTBIN
-	CLIENTBIN=ioquake3
+	CLIENTBIN=yantar
 endif
 
 ifndef SERVERBIN
-	SERVERBIN=ioq3ded
+	SERVERBIN=yantarded
 endif
 
 ifndef BASEGAME
-	BASEGAME=baseq3
+	BASEGAME=base
 endif
 
 ifndef BASEGAME_CFLAGS
