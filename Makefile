@@ -1193,11 +1193,17 @@ makedirs:
 	@if [ ! -d $(O)/$(MISSIONPACK)/qcommon ];then $(MKDIR) $(O)/$(MISSIONPACK)/qcommon;fi
 	@if [ ! -d $(B)/$(MISSIONPACK)/vm ];then $(MKDIR) $(B)/$(MISSIONPACK)/vm;fi
 	@if [ ! -d $(O)/$(MISSIONPACK)/vm ];then $(MKDIR) $(O)/$(MISSIONPACK)/vm;fi
+	@if [ ! -d $(B)/tools ];then $(MKDIR) $(B)/tools;fi
 	@if [ ! -d $(O)/tools ];then $(MKDIR) $(O)/tools;fi
+	@if [ ! -d $(B)/tools/asm ];then $(MKDIR) $(B)/tools/asm;fi
 	@if [ ! -d $(O)/tools/asm ];then $(MKDIR) $(O)/tools/asm;fi
+	@if [ ! -d $(B)/tools/etc ];then $(MKDIR) $(B)/tools/etc;fi
 	@if [ ! -d $(O)/tools/etc ];then $(MKDIR) $(O)/tools/etc;fi
+	@if [ ! -d $(B)/tools/rcc ];then $(MKDIR) $(B)/tools/rcc;fi
 	@if [ ! -d $(O)/tools/rcc ];then $(MKDIR) $(O)/tools/rcc;fi
+	@if [ ! -d $(B)/tools/cpp ];then $(MKDIR) $(B)/tools/cpp;fi
 	@if [ ! -d $(O)/tools/cpp ];then $(MKDIR) $(O)/tools/cpp;fi
+	@if [ ! -d $(B)/tools/lburg ];then $(MKDIR) $(B)/tools/lburg;fi
 	@if [ ! -d $(O)/tools/lburg ];then $(MKDIR) $(O)/tools/lburg;fi
 
 #############################################################################
@@ -1309,8 +1315,8 @@ $(Q3CPP): $(Q3CPPOBJ)
 	$(Q)$(CC) $(TOOLS_CFLAGS) $(TOOLS_LDFLAGS) -o $@ $^ $(TOOLS_LIBS)
 
 Q3LCCOBJ = \
-	$(B)/tools/etc/lcc.o \
-	$(B)/tools/etc/bytecode.o
+	$(O)/tools/etc/lcc.o \
+	$(O)/tools/etc/bytecode.o
 
 $(O)/tools/etc/%.o: $(Q3LCCETCDIR)/%.c
 	$(DO_TOOLS_CC)
