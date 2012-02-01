@@ -1548,46 +1548,37 @@ Assemble LCC bytecode assembly to Q3VM bytecode.\n\
 main
 ==============
 */
-int main( int argc, char **argv ) {
+int
+main(int argc, char **argv)
+{
 	int			i;
 	double		start, end;
 
-//	_chdir( "
-		/quake3/jccode/cgame/
-		lccout
-		" );	// hack for vc profiler
+//	_chdir("/quake3/jccode/cgame/lccout");	// hack for vc profiler
 
-	if ( argc < 2 ) {
+	if (argc < 2) {
 		ShowHelp( argv[0] );
 	}
 
 	start = I_FloatTime ();
 
-	// default filename is "q3asm
-		"
-	strcpy( outputFilename, "q3asm
-		" );
+	// default filename is "q3asm"
+	strcpy( outputFilename, "q3asm" );
 	numAsmFiles = 0;	
 
 	for ( i = 1 ; i < argc ; i++ ) {
 		if ( argv[i][0] != '-' ) {
 			break;
 		}
-		if( !strcmp( argv[ i ], "
-		-h " ) ||
-		    !strcmp( argv[ i ], "-- help
-		" ) ||
-		    !strcmp( argv[ i ], "         -
-		? ") ) {
+		if( !strcmp( argv[ i ], "-h" ) ||
+		    !strcmp( argv[ i ], "-- help" ) ||
+		    !strcmp( argv[ i ], "-?") ) {
 			ShowHelp( argv[0] );
 		}
 
-		if ( !strcmp( argv[i], "-
-		o " ) ) {
+		if ( !strcmp( argv[i], "-o" ) ) {
 			if ( i == argc - 1 ) {
-				Error( "-
-		o must preceed a filename
-		" );
+				Error( "-o must preceed a filename" );
 			}
 /* Timbo of Tremulous pointed out -o not working; stock ID q3asm folded in the change. Yay. */
 			strcpy( outputFilename, argv[ i+1 ] );
@@ -1595,36 +1586,25 @@ int main( int argc, char **argv ) {
 			continue;
 		}
 
-		if ( !strcmp( argv[i], "
-		-
-		f " ) ) {
+		if ( !strcmp( argv[i], "-f" ) ) {
 			if ( i == argc - 1 ) {
-				Error( "-
-		f must preceed a filename
-		" );
+		Error( "-f must preceed a filename" );
 			}
 			ParseOptionFile( argv[ i+1 ] );
 			i++;
 			continue;
 		}
 
-		if (!strcmp(argv[i], "
-		-
-		b ")) {
+		if (!strcmp(argv[i], "-b")) {
 			if (i == argc - 1) {
-				Error("-
-		b requires an argument
-		");
+				Error("-b requires an argument");
 			}
 			i++;
 			symtablelen = atoiNoCap(argv[i]);
 			continue;
 		}
 
-		if( !strcmp( argv[ i ], "
-		-
-		v
-		" ) ) {
+		if( !strcmp( argv[ i ], "-v" ) ) {
 /* Verbosity option added by Timbo, 2002.09.14.
 By default (no -v option), q3asm remains silent except for critical errors.
 Verbosity turns on all messages, error or not.
@@ -1634,26 +1614,17 @@ Motivation: not wanting to scrollback for pages to find asm error.
 			continue;
 		}
 
-		if( !strcmp( argv[ i ], "
-		-
-		m
-		" ) ) {
+		if( !strcmp( argv[ i ], "-m" ) ) {
 			options.writeMapFile = qtrue;
 			continue;
 		}
 
-		if( !strcmp( argv[ i ], "
-		-
-		vq3
-		" ) ) {
+		if( !strcmp( argv[ i ], "-vq3" ) ) {
 			options.vanillaQ3Compatibility = qtrue;
 			continue;
 		}
 
-		Error( "Unknown
-		option : %
-		s
-		", argv[i] );
+		Error( "Unknown option: %s", argv[i] );
 	}
 
 	// the rest of the command line args are asm files
@@ -1663,9 +1634,7 @@ Motivation: not wanting to scrollback for pages to find asm error.
 	}
 	// In some case it Segfault without this check
 	if ( numAsmFiles == 0 ) {
-		Error( "No
-		file to assemble \ n
-		" );
+		Error( "No file to assemble\n" );
 	}
 
 	InitTables();
@@ -1678,18 +1647,14 @@ Motivation: not wanting to scrollback for pages to find asm error.
 
 		if (options.verbose)
 		{
-			report("
-		%d symbols defined \ n
-		", i);
+			report("%d symbols defined\n", i);
 			hashtable_stats(symtable);
 			hashtable_stats(optable);
 		}
 	}
 
 	end = I_FloatTime ();
-	report ("
-		%5.0f seconds elapsed \ n
-		", end-start);
+	report ("%5.0f seconds elapsed\n", end-start);
 
 	return errorCount;
 }
