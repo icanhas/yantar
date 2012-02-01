@@ -1,3 +1,4 @@
+align_assign_thresh = 1
 align_on_tabstop = true # align on tabstops
 align_with_tabs = true # use tabs to align
 cmt_c_group = true
@@ -7,6 +8,7 @@ cmt_star_cont = true
 cmt_width = 81
 cmt_reflow_mode = 2
 code_width = 81
+indent_align_assign = true
 indent_align_string = true
 indent_columns = output_tab_size
 indent_func_call_param = true
