@@ -42,6 +42,8 @@ nl_before_case = false
 nl_brace_else = remove # "} else" vs "} \n else" - cuddle else= add
 nl_brace_while = remove # "} while" vs "} \n while" - cuddle while
 nl_collapse_empty_body = false
+nl_create_if_one_liner = false
+nl_create_for_one_liner = false
 nl_do_brace = remove # "do {" vs "do \n {"
 nl_else_brace = remove # "else {" vs "else \n {"
 nl_end_of_file = force
