@@ -8,10 +8,10 @@ for d in $subdirs; do
 	fi
 
 	filt="$d/*.c $d/*.h"
-	echo -n .
 	for f in $filt; do
 		uncrustify -q -c .uncrustify -f $f -o $f
 	done
+	echo -n .
 done
 echo
 
