@@ -1571,7 +1571,7 @@ main(int argc, char **argv)
 			break;
 		}
 		if( !strcmp( argv[ i ], "-h" ) ||
-		    !strcmp( argv[ i ], "-- help" ) ||
+		    !strcmp( argv[ i ], "--help" ) ||
 		    !strcmp( argv[ i ], "-?") ) {
 			ShowHelp( argv[0] );
 		}
