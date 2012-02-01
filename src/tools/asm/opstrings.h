@@ -1,24 +1,24 @@
 /*
-===========================================================================
-Copyright (C) 1999-2005 Id Software, Inc.
-
-This file is part of Quake III Arena source code.
-
-Quake III Arena source code is free software; you can redistribute it
-and/or modify it under the terms of the GNU General Public License as
-published by the Free Software Foundation; either version 2 of the License,
-or (at your option) any later version.
-
-Quake III Arena source code is distributed in the hope that it will be
-useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with Quake III Arena source code; if not, write to the Free Software
-Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-===========================================================================
-*/
+ * ===========================================================================
+ * Copyright (C) 1999-2005 Id Software, Inc.
+ *
+ * This file is part of Quake III Arena source code.
+ *
+ * Quake III Arena source code is free software; you can redistribute it
+ * and/or modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of the License,
+ * or (at your option) any later version.
+ *
+ * Quake III Arena source code is distributed in the hope that it will be
+ * useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Quake III Arena source code; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ * ===========================================================================
+ */
 { "BREAK", OP_BREAK },
 
 { "CNSTF4", OP_CONST },
@@ -32,13 +32,13 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 { "CNSTI1", OP_CONST },
 { "CNSTU1", OP_CONST },
 
-//{ "ARGB", OP_ARG },
-//{ "ARGF", OP_ARG },
-//{ "ARGI", OP_ARG },
-//{ "ARGP", OP_ARG },
-//{ "ARGU", OP_ARG },
+/* { "ARGB", OP_ARG },
+ * { "ARGF", OP_ARG },
+ * { "ARGI", OP_ARG },
+ * { "ARGP", OP_ARG },
+ * { "ARGU", OP_ARG }, */
 
-{ "ASGNB", 	OP_BLOCK_COPY },
+{ "ASGNB",      OP_BLOCK_COPY },
 { "ASGNF4", OP_STORE4 },
 { "ASGNI4", OP_STORE4 },
 { "ASGNP4", OP_STORE4 },
@@ -50,7 +50,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 { "ASGNI1", OP_STORE1 },
 { "ASGNU1", OP_STORE1 },
 
-{ "INDIRB", OP_IGNORE },	// block copy deals with this
+{ "INDIRB", OP_IGNORE },	/* block copy deals with this */
 { "INDIRF4", OP_LOAD4 },
 { "INDIRI4", OP_LOAD4 },
 { "INDIRP4", OP_LOAD4 },
@@ -66,7 +66,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 { "CVFI4", OP_CVFI },
 
 { "CVIF4", OP_CVIF },
-{ "CVII4", OP_SEX8 },	// will be either SEX8 or SEX16
+{ "CVII4", OP_SEX8 },	/* will be either SEX8 or SEX16 */
 { "CVII1", OP_IGNORE },
 { "CVII2", OP_IGNORE },
 { "CVIU4", OP_IGNORE },
@@ -82,23 +82,23 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 { "NEGF4", OP_NEGF },
 { "NEGI4", OP_NEGI },
 
-//{ "CALLB", OP_UNDEF },
-//{ "CALLF", OP_UNDEF },
-//{ "CALLI", OP_UNDEF },
-//{ "CALLP", OP_UNDEF },
-//{ "CALLU", OP_UNDEF },
-//{ "CALLV", OP_CALL },
+/* { "CALLB", OP_UNDEF },
+ * { "CALLF", OP_UNDEF },
+ * { "CALLI", OP_UNDEF },
+ * { "CALLP", OP_UNDEF },
+ * { "CALLU", OP_UNDEF },
+ * { "CALLV", OP_CALL }, */
 
-//{ "RETF", OP_UNDEF },
-//{ "RETI", OP_UNDEF },
-//{ "RETP", OP_UNDEF },
-//{ "RETU", OP_UNDEF },
-//{ "RETV", OP_UNDEF },
+/* { "RETF", OP_UNDEF },
+ * { "RETI", OP_UNDEF },
+ * { "RETP", OP_UNDEF },
+ * { "RETU", OP_UNDEF },
+ * { "RETV", OP_UNDEF }, */
 
 { "ADDRGP4", OP_CONST },
 
-//{ "ADDRFP", OP_PARM },
-//{ "ADDRLP", OP_LOCAL },
+/* { "ADDRFP", OP_PARM },
+ * { "ADDRLP", OP_LOCAL }, */
 
 { "ADDF4", OP_ADDF },
 { "ADDI4", OP_ADD },
@@ -171,5 +171,3 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 { "LOADI4", OP_UNDEF },
 { "LOADP4", OP_UNDEF },
 { "LOADU4", OP_UNDEF },
-
-

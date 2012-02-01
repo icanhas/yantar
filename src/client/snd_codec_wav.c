@@ -1,61 +1,66 @@
 /*
-===========================================================================
-Copyright (C) 1999-2005 Id Software, Inc.
-Copyright (C) 2005 Stuart Dalton (badcdev@gmail.com)
-
-This file is part of Quake III Arena source code.
-
-Quake III Arena source code is free software; you can redistribute it
-and/or modify it under the terms of the GNU General Public License as
-published by the Free Software Foundation; either version 2 of the License,
-or (at your option) any later version.
-
-Quake III Arena source code is distributed in the hope that it will be
-useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with Quake III Arena source code; if not, write to the Free Software
-Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-===========================================================================
-*/
+ * ===========================================================================
+ * Copyright (C) 1999-2005 Id Software, Inc.
+ * Copyright (C) 2005 Stuart Dalton (badcdev@gmail.com)
+ *
+ * This file is part of Quake III Arena source code.
+ *
+ * Quake III Arena source code is free software; you can redistribute it
+ * and/or modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of the License,
+ * or (at your option) any later version.
+ *
+ * Quake III Arena source code is distributed in the hope that it will be
+ * useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Quake III Arena source code; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ * ===========================================================================
+ */
 
 #include "client.h"
 #include "snd_codec.h"
 
 /*
-=================
-FGetLittleLong
-=================
-*/
-static int FGetLittleLong( fileHandle_t f ) {
-	int		v;
+ * =================
+ * FGetLittleLong
+ * =================
+ */
+static int
+FGetLittleLong(fileHandle_t f)
+{
+	int v;
 
-	FS_Read( &v, sizeof(v), f );
+	FS_Read(&v, sizeof(v), f);
 
-	return LittleLong( v);
+	return LittleLong(v);
 }
 
 /*
-=================
-FGetLittleShort
-=================
-*/
-static short FGetLittleShort( fileHandle_t f ) {
-	short	v;
+ * =================
+ * FGetLittleShort
+ * =================
+ */
+static short
+FGetLittleShort(fileHandle_t f)
+{
+	short v;
 
-	FS_Read( &v, sizeof(v), f );
+	FS_Read(&v, sizeof(v), f);
 
-	return LittleShort( v);
+	return LittleShort(v);
 }
 
 /*
-=================
-S_ReadChunkInfo
-=================
-*/
-static int S_ReadChunkInfo(fileHandle_t f, char *name)
+ * =================
+ * S_ReadChunkInfo
+ * =================
+ */
+static int
+S_ReadChunkInfo(fileHandle_t f, char *name)
 {
 	int len, r;
 
@@ -66,8 +71,8 @@ static int S_ReadChunkInfo(fileHandle_t f, char *name)
 		return -1;
 
 	len = FGetLittleLong(f);
-	if( len < 0 ) {
-		Com_Printf( S_COLOR_YELLOW "WARNING: Negative chunk length\n" );
+	if( len < 0 ){
+		Com_Printf(S_COLOR_YELLOW "WARNING: Negative chunk length\n");
 		return -1;
 	}
 
@@ -75,103 +80,101 @@ static int S_ReadChunkInfo(fileHandle_t f, char *name)
 }
 
 /*
-=================
-S_FindRIFFChunk
-
-Returns the length of the data in the chunk, or -1 if not found
-=================
-*/
-static int S_FindRIFFChunk( fileHandle_t f, char *chunk ) {
+ * =================
+ * S_FindRIFFChunk
+ *
+ * Returns the length of the data in the chunk, or -1 if not found
+ * =================
+ */
+static int
+S_FindRIFFChunk(fileHandle_t f, char *chunk)
+{
 	char	name[5];
-	int		len;
+	int	len;
 
-	while( ( len = S_ReadChunkInfo(f, name) ) >= 0 )
-	{
-		// If this is the right chunk, return
-		if( !Q_strncmp( name, chunk, 4 ) )
+	while((len = S_ReadChunkInfo(f, name)) >= 0 ){
+		/* If this is the right chunk, return */
+		if( !Q_strncmp(name, chunk, 4))
 			return len;
 
-		len = PAD( len, 2 );
+		len = PAD(len, 2);
 
-		// Not the right chunk - skip it
-		FS_Seek( f, len, FS_SEEK_CUR );
+		/* Not the right chunk - skip it */
+		FS_Seek(f, len, FS_SEEK_CUR);
 	}
 
 	return -1;
 }
 
 /*
-=================
-S_ByteSwapRawSamples
-=================
-*/
-static void S_ByteSwapRawSamples( int samples, int width, int s_channels, const byte *data ) {
-	int		i;
+ * =================
+ * S_ByteSwapRawSamples
+ * =================
+ */
+static void
+S_ByteSwapRawSamples(int samples, int width, int s_channels, const byte *data)
+{
+	int i;
 
-	if ( width != 2 ) {
+	if( width != 2 )
 		return;
-	}
-	if ( LittleShort( 256 ) == 256 ) {
+	if( LittleShort(256) == 256 )
 		return;
-	}
 
-	if ( s_channels == 2 ) {
+	if( s_channels == 2 )
 		samples <<= 1;
-	}
-	for ( i = 0 ; i < samples ; i++ ) {
-		((short *)data)[i] = LittleShort( ((short *)data)[i] );
-	}
+	for( i = 0; i < samples; i++ )
+		((short *) data)[i] = LittleShort(((short *) data)[i]);
 }
 
 /*
-=================
-S_ReadRIFFHeader
-=================
-*/
-static qboolean S_ReadRIFFHeader(fileHandle_t file, snd_info_t *info)
+ * =================
+ * S_ReadRIFFHeader
+ * =================
+ */
+static qboolean
+S_ReadRIFFHeader(fileHandle_t file, snd_info_t *info)
 {
-	char dump[16];
-	int bits;
-	int fmtlen = 0;
+	char	dump[16];
+	int	bits;
+	int	fmtlen = 0;
 
-	// skip the riff wav header
+	/* skip the riff wav header */
 	FS_Read(dump, 12, file);
 
-	// Scan for the format chunk
-	if((fmtlen = S_FindRIFFChunk(file, "fmt ")) < 0)
-	{
-		Com_Printf( S_COLOR_RED "ERROR: Couldn't find \"fmt\" chunk\n");
+	/* Scan for the format chunk */
+	if((fmtlen = S_FindRIFFChunk(file, "fmt ")) < 0){
+		Com_Printf(S_COLOR_RED "ERROR: Couldn't find \"fmt\" chunk\n");
 		return qfalse;
 	}
 
-	// Save the parameters
-	FGetLittleShort(file); // wav_format
+	/* Save the parameters */
+	FGetLittleShort(file);	/* wav_format */
 	info->channels = FGetLittleShort(file);
 	info->rate = FGetLittleLong(file);
 	FGetLittleLong(file);
 	FGetLittleShort(file);
 	bits = FGetLittleShort(file);
 
-	if( bits < 8 )
-	{
-	  Com_Printf( S_COLOR_RED "ERROR: Less than 8 bit sound is not supported\n");
-	  return qfalse;
+	if( bits < 8 ){
+		Com_Printf(
+			S_COLOR_RED
+			"ERROR: Less than 8 bit sound is not supported\n");
+		return qfalse;
 	}
 
-	info->width = bits / 8;
-	info->dataofs = 0;
+	info->width	= bits / 8;
+	info->dataofs	= 0;
 
-	// Skip the rest of the format chunk if required
-	if(fmtlen > 16)
-	{
+	/* Skip the rest of the format chunk if required */
+	if(fmtlen > 16){
 		fmtlen -= 16;
-		FS_Seek( file, fmtlen, FS_SEEK_CUR );
+		FS_Seek(file, fmtlen, FS_SEEK_CUR);
 	}
 
-	// Scan for the data chunk
-	if( (info->size = S_FindRIFFChunk(file, "data")) < 0)
-	{
-		Com_Printf( S_COLOR_RED "ERROR: Couldn't find \"data\" chunk\n");
+	/* Scan for the data chunk */
+	if((info->size = S_FindRIFFChunk(file, "data")) < 0){
+		Com_Printf(S_COLOR_RED "ERROR: Couldn't find \"data\" chunk\n");
 		return qfalse;
 	}
 	info->samples = (info->size / info->width) / info->channels;
@@ -179,7 +182,7 @@ static qboolean S_ReadRIFFHeader(fileHandle_t file, snd_info_t *info)
 	return qtrue;
 }
 
-// WAV codec
+/* WAV codec */
 snd_codec_t wav_codec =
 {
 	"wav",
@@ -191,67 +194,67 @@ snd_codec_t wav_codec =
 };
 
 /*
-=================
-S_WAV_CodecLoad
-=================
-*/
-void *S_WAV_CodecLoad(const char *filename, snd_info_t *info)
+ * =================
+ * S_WAV_CodecLoad
+ * =================
+ */
+void *
+S_WAV_CodecLoad(const char *filename, snd_info_t *info)
 {
 	fileHandle_t file;
 	void *buffer;
 
-	// Try to open the file
+	/* Try to open the file */
 	FS_FOpenFileRead(filename, &file, qtrue);
 	if(!file)
-	{
 		return NULL;
-	}
 
-	// Read the RIFF header
-	if(!S_ReadRIFFHeader(file, info))
-	{
+	/* Read the RIFF header */
+	if(!S_ReadRIFFHeader(file, info)){
 		FS_FCloseFile(file);
-		Com_Printf( S_COLOR_RED "ERROR: Incorrect/unsupported format in \"%s\"\n",
-				filename);
+		Com_Printf(
+			S_COLOR_RED
+			"ERROR: Incorrect/unsupported format in \"%s\"\n",
+			filename);
 		return NULL;
 	}
 
-	// Allocate some memory
+	/* Allocate some memory */
 	buffer = Hunk_AllocateTempMemory(info->size);
-	if(!buffer)
-	{
+	if(!buffer){
 		FS_FCloseFile(file);
-		Com_Printf( S_COLOR_RED "ERROR: Out of memory reading \"%s\"\n",
-				filename);
+		Com_Printf(S_COLOR_RED "ERROR: Out of memory reading \"%s\"\n",
+			filename);
 		return NULL;
 	}
 
-	// Read, byteswap
+	/* Read, byteswap */
 	FS_Read(buffer, info->size, file);
-	S_ByteSwapRawSamples(info->samples, info->width, info->channels, (byte *)buffer);
+	S_ByteSwapRawSamples(info->samples, info->width, info->channels,
+		(byte *) buffer);
 
-	// Close and return
+	/* Close and return */
 	FS_FCloseFile(file);
 	return buffer;
 }
 
 /*
-=================
-S_WAV_CodecOpenStream
-=================
-*/
-snd_stream_t *S_WAV_CodecOpenStream(const char *filename)
+ * =================
+ * S_WAV_CodecOpenStream
+ * =================
+ */
+snd_stream_t *
+S_WAV_CodecOpenStream(const char *filename)
 {
 	snd_stream_t *rv;
 
-	// Open
+	/* Open */
 	rv = S_CodecUtilOpen(filename, &wav_codec);
 	if(!rv)
 		return NULL;
 
-	// Read the RIFF header
-	if(!S_ReadRIFFHeader(rv->file, &rv->info))
-	{
+	/* Read the RIFF header */
+	if(!S_ReadRIFFHeader(rv->file, &rv->info)){
 		S_CodecUtilClose(&rv);
 		return NULL;
 	}
@@ -260,24 +263,26 @@ snd_stream_t *S_WAV_CodecOpenStream(const char *filename)
 }
 
 /*
-=================
-S_WAV_CodecCloseStream
-=================
-*/
-void S_WAV_CodecCloseStream(snd_stream_t *stream)
+ * =================
+ * S_WAV_CodecCloseStream
+ * =================
+ */
+void
+S_WAV_CodecCloseStream(snd_stream_t *stream)
 {
 	S_CodecUtilClose(&stream);
 }
 
 /*
-=================
-S_WAV_CodecReadStream
-=================
-*/
-int S_WAV_CodecReadStream(snd_stream_t *stream, int bytes, void *buffer)
+ * =================
+ * S_WAV_CodecReadStream
+ * =================
+ */
+int
+S_WAV_CodecReadStream(snd_stream_t *stream, int bytes, void *buffer)
 {
-	int remaining = stream->info.size - stream->pos;
-	int samples;
+	int	remaining = stream->info.size - stream->pos;
+	int	samples;
 
 	if(remaining <= 0)
 		return 0;
@@ -286,6 +291,7 @@ int S_WAV_CodecReadStream(snd_stream_t *stream, int bytes, void *buffer)
 	stream->pos += bytes;
 	samples = (bytes / stream->info.width) / stream->info.channels;
 	FS_Read(buffer, bytes, stream->file);
-	S_ByteSwapRawSamples(samples, stream->info.width, stream->info.channels, buffer);
+	S_ByteSwapRawSamples(samples, stream->info.width, stream->info.channels,
+		buffer);
 	return bytes;
 }

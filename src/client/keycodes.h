@@ -1,39 +1,39 @@
 /*
-===========================================================================
-Copyright (C) 1999-2005 Id Software, Inc.
-
-This file is part of Quake III Arena source code.
-
-Quake III Arena source code is free software; you can redistribute it
-and/or modify it under the terms of the GNU General Public License as
-published by the Free Software Foundation; either version 2 of the License,
-or (at your option) any later version.
-
-Quake III Arena source code is distributed in the hope that it will be
-useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with Quake III Arena source code; if not, write to the Free Software
-Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-===========================================================================
-*/
-//
+ * ===========================================================================
+ * Copyright (C) 1999-2005 Id Software, Inc.
+ *
+ * This file is part of Quake III Arena source code.
+ *
+ * Quake III Arena source code is free software; you can redistribute it
+ * and/or modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of the License,
+ * or (at your option) any later version.
+ *
+ * Quake III Arena source code is distributed in the hope that it will be
+ * useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Quake III Arena source code; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ * ===========================================================================
+ */
+/*  */
 #ifndef __KEYCODES_H__
 #define __KEYCODES_H__
 
-//
-// these are the key numbers that should be passed to KeyEvent
-//
+/*
+ * these are the key numbers that should be passed to KeyEvent
+ *  */
 
-// normal keys should be passed as lowercased ascii
+/* normal keys should be passed as lowercased ascii */
 
 typedef enum {
-	K_TAB = 9,
-	K_ENTER = 13,
-	K_ESCAPE = 27,
-	K_SPACE = 32,
+	K_TAB		= 9,
+	K_ENTER		= 13,
+	K_ESCAPE	= 27,
+	K_SPACE		= 32,
 
 	K_BACKSPACE = 127,
 
@@ -260,20 +260,20 @@ typedef enum {
 	K_EURO,
 	K_UNDO,
 
-	// Pseudo-key that brings the console down
+	/* Pseudo-key that brings the console down */
 	K_CONSOLE,
 
 	MAX_KEYS
 } keyNum_t;
 
-// MAX_KEYS replaces K_LAST_KEY, however some mods may have used K_LAST_KEY
-// in detecting binds, so we leave it defined to the old hardcoded value
-// of maxiumum keys to prevent mods from crashing older versions of the engine
-#define K_LAST_KEY              256
+/* MAX_KEYS replaces K_LAST_KEY, however some mods may have used K_LAST_KEY
+ * in detecting binds, so we leave it defined to the old hardcoded value
+ * of maxiumum keys to prevent mods from crashing older versions of the engine */
+#define K_LAST_KEY 256
 
-// The menu code needs to get both key and char events, but
-// to avoid duplicating the paths, the char events are just
-// distinguished by or'ing in K_CHAR_FLAG (ugly)
-#define	K_CHAR_FLAG		1024
+/* The menu code needs to get both key and char events, but
+ * to avoid duplicating the paths, the char events are just
+ * distinguished by or'ing in K_CHAR_FLAG (ugly) */
+#define K_CHAR_FLAG 1024
 
 #endif
