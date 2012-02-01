@@ -1,8 +1,13 @@
-align_assign_thresh = 1
+#align_assign_thresh = 1
+align_assign_span = 1
 align_on_tabstop = true # align on tabstops
 align_right_cmt_gap = 1
 align_right_cmt_span = 1
 align_right_cmt_at_col = 1
+align_single_line_func = true
+align_var_def_gap = 1
+align_var_def_span = 1
+align_var_def_attribute = false
 align_with_tabs = true # use tabs to align
 cmt_c_group = true
 cmt_cpp_group = true
