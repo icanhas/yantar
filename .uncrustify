@@ -1,12 +1,15 @@
 align_assign_thresh = 1
 align_on_tabstop = true # align on tabstops
+align_right_cmt_gap = 1
+align_right_cmt_span = 1
+align_right_cmt_at_col = 1
 align_with_tabs = true # use tabs to align
 cmt_c_group = true
 cmt_cpp_group = true
 cmt_cpp_to_c = true
 cmt_star_cont = true
 cmt_width = 81
-cmt_reflow_mode = 2
+cmt_reflow_mode = 0
 code_width = 81
 indent_align_assign = true
 indent_align_string = true
