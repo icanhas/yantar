@@ -1,5 +1,4 @@
-subdirs="asm botlib cgame client game null q3_ui qcommon server sys tools/asm
-ui"
+subdirs="asm botlib cgame client game null q3_ui qcommon server sys tools/asm ui"
 for d in $subdirs; do
 	d="src/$d"
 	if [ ! -d $d ]; then
