@@ -1068,7 +1068,7 @@ S_Base_RawSamples(int stream, int samples, int rate, int width, int s_channels,
 void
 S_Base_UpdateEntityPosition(int entityNum, const vec3_t origin)
 {
-	if( entityNum < 0 || entityNum > MAX_GENTITIES )
+	if((entityNum < 0) || (entityNum >= MAX_GENTITIES))
 		Com_Error(ERR_DROP, "S_UpdateEntityPosition: bad entitynum %i",
 			entityNum);
 	VectorCopy(origin, loopSounds[entityNum].origin);
