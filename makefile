@@ -2,7 +2,6 @@
 # new file named "makefile.local" in the same directory as this file and define
 # your parameters there. This allows you to change configuration without
 # causing problems with keeping up to date with the repository.
--include makefile.local
 
 COMPILE_PLATFORM=$(shell uname|sed -e s/_.*//|tr '[:upper:]' '[:lower:]'|sed -e 's/\//_/g')
 
@@ -61,7 +60,8 @@ ifneq ($(PLATFORM),darwin)
   BUILD_CLIENT_SMP = 0
 endif
 
-##
+#########
+-include makefile.local
 
 ifndef PLATFORM
 PLATFORM=$(COMPILE_PLATFORM)
