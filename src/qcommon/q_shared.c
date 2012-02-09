@@ -445,14 +445,14 @@ COM_ParseExt(char **data_p, qboolean allowLineBreaks)
 		/* skip double slash comments */
 		if((c == '/') && (data[1] == '/')){
 			data += 2;
-			while((*data != NULL) && (*data != '\n'))
+			while((*data != '\0') && (*data != '\n'))
 				++data;
 		}else if((c == '/') && (data[1] == '*')){
 			/* skip '/ * * /' comments */
 			data += 2;
-			while(*data && ((*data != '*') || (data[1] != '/')))
+			while((*data != '\0') && ((*data != '*') || (data[1] != '/')))
 				++data;
-			if(*data != NULL)
+			if(*data != '\0')
 				data += 2;
 		}else
 			break;
@@ -463,7 +463,7 @@ COM_ParseExt(char **data_p, qboolean allowLineBreaks)
 		++data;
 		for(;;){
 			c = *data++;
-			if((c == '\"') || (c == NULL)){
+			if((c == '\"') || (c == '\0')){
 				com_token[len] = 0;
 				*data_p = (char *) data;
 				return com_token;
@@ -581,7 +581,7 @@ Parse3DMatrix(char **buf_p, int z, int y, int x, float *m)
 int
 Com_HexStrToInt(const char *str)
 {
-	if((str == NULL) || (str[0] == NULL))
+	if((str == NULL) || (str[0] == '\0'))
 		return -1;
 
 	/* check for hex code */
