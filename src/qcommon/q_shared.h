@@ -181,6 +181,8 @@ typedef int clipHandle_t;
 #define NULL ((void *) 0)
 #endif
 
+#define nil NULL
+
 #define STRING(s)	# s
 /* expand constants before stringifying them */
 #define XSTRING(s)	STRING(s)
