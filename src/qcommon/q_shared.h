@@ -1,4 +1,8 @@
 /*
+ * included first by ALL program modules.
+ * a user mod should never modify this file.
+ */
+/*
  * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
@@ -23,38 +27,38 @@
 #ifndef __Q_SHARED_H
 #define __Q_SHARED_H
 
-/* q_shared.h -- included first by ALL program modules.
- * A user mod should never modify this file */
-
 #ifdef STANDALONE
-  #define PRODUCT_NAME			"yantar"
-  #define BASEGAME			"base"
-  #define CLIENT_WINDOW_TITLE		"Yantar"
-  #define CLIENT_WINDOW_MIN_TITLE	"Yantar"
-  #define HOMEPATH_NAME_UNIX		".yantar"
-  #define HOMEPATH_NAME_WIN		"yantar"
-  #define HOMEPATH_NAME_MACOSX		HOMEPATH_NAME_WIN
-  #define GAMENAME_FOR_MASTER		"foobar"	/* must NOT contain whitespace */
-/*  #define LEGACY_PROTOCOL	// You probably don't need this for your standalone game */
+#define PRODUCT_NAME			"yantar"
+#define BASEGAME			"base"
+#define CLIENT_WINDOW_TITLE		"Yantar"
+#define CLIENT_WINDOW_MIN_TITLE		"Yantar"
+#define HOMEPATH_NAME_UNIX		".yantar"
+#define HOMEPATH_NAME_WIN		"yantar"
+#define HOMEPATH_NAME_MACOSX		HOMEPATH_NAME_WIN
+/* must not contain whitespace */
+#define GAMENAME_FOR_MASTER		"foobar"
 #else
-  #define PRODUCT_NAME			"ioq3"
-  #define BASEGAME			"baseq3"
-  #define CLIENT_WINDOW_TITLE		"ioquake3"
-  #define CLIENT_WINDOW_MIN_TITLE	"ioq3"
-  #define HOMEPATH_NAME_UNIX		".q3a"
-  #define HOMEPATH_NAME_WIN		"Quake3"
-  #define HOMEPATH_NAME_MACOSX		HOMEPATH_NAME_WIN
-  #define GAMENAME_FOR_MASTER		"Quake3Arena"
-  #define LEGACY_PROTOCOL
+#define PRODUCT_NAME			"ioq3"
+#define BASEGAME			"baseq3"
+#define CLIENT_WINDOW_TITLE		"ioquake3"
+#define CLIENT_WINDOW_MIN_TITLE		"ioq3"
+#define HOMEPATH_NAME_UNIX		".q3a"
+#define HOMEPATH_NAME_WIN		"Quake3"
+#define HOMEPATH_NAME_MACOSX		HOMEPATH_NAME_WIN
+#define GAMENAME_FOR_MASTER		"Quake3Arena"
+#define LEGACY_PROTOCOL
 #endif
 
-/* Heartbeat for dpmaster protocol. You shouldn't change this unless you know what you're doing */
+/*
+ * Heartbeat for dpmaster protocol. You shouldn't change this unless you know 
+ * what you're doing 
+ */
 #define HEARTBEAT_FOR_MASTER	"DarkPlaces"
 
 #define BASETA			"missionpack"
 
 #ifndef PRODUCT_VERSION
-  #define PRODUCT_VERSION "1.36"
+#define PRODUCT_VERSION "1.36"
 #endif
 
 #define Q3_VERSION		PRODUCT_NAME " " PRODUCT_VERSION
@@ -81,22 +85,21 @@
 #define Q_EXPORT
 #endif
 
-/**********************************************************************
-*  VM Considerations
-*
-*  The VM can not use the standard system headers because we aren't really
-*  using the compiler they were meant for.  We use bg_lib.h which contains
-*  prototypes for the functions we define for our own use in bg_lib.c.
-*
-*  When writing mods, please add needed headers HERE, do not start including
-*  stuff like <stdio.h> in the various .c files that make up each of the VMs
-*  since you will be including system headers files can will have issues.
-*
-*  Remember, if you use a C library function that is not defined in bg_lib.c,
-*  you will have to add your own version for support in the VM.
-*
-**********************************************************************/
-
+/*
+ * VM Considerations
+ *
+ *  The VM can not use the standard system headers because we aren't really
+ *  using the compiler they were meant for.  We use bg_lib.h which contains
+ *  prototypes for the functions we define for our own use in bg_lib.c.
+ *
+ *  When writing mods, please add needed headers HERE, do not start including
+ *  stuff like <stdio.h> in the various .c files that make up each of the VMs
+ *  since you will be including system headers files can will have issues.
+ *
+ *  Remember, if you use a C library function that is not defined in bg_lib.c,
+ *  you will have to add your own version for support in the VM.
+ *
+ */
 #ifdef Q3_VM
 
 #include "../game/bg_lib.h"
@@ -127,8 +130,10 @@ typedef unsigned __int32 uint32_t;
 typedef unsigned __int16 uint16_t;
 typedef unsigned __int8 uint8_t;
 
-/* vsnprintf is ISO/IEC 9899:1999
- * abstracting this to make it portable */
+/*
+ * vsnprintf is ISO/IEC 9899:1999
+ * abstracting this to make it portable 
+ */
 int Q_vsnprintf(char *str, size_t size, const char *format, va_list ap);
 #else
   #include <stdint.h>
@@ -141,13 +146,16 @@ int Q_vsnprintf(char *str, size_t size, const char *format, va_list ap);
 
 #include "q_platform.h"
 
-/* ============================================================= */
-
 typedef unsigned char byte;
 
-typedef enum {qfalse, qtrue}    qboolean;
+typedef enum 
+{
+	qfalse, 
+	qtrue 
+} qboolean;
 
-typedef union {
+typedef union
+{
 	float		f;
 	int		i;
 	unsigned int	ui;
@@ -183,36 +191,42 @@ typedef int clipHandle_t;
 #define ARRAY_LEN(x)	(sizeof(x) / sizeof(*(x)))
 #define STRARRAY_LEN(x) (ARRAY_LEN(x) - 1)
 
-/* angle indexes */
-#define PITCH	0	/* up / down */
-#define YAW	1	/* left / right */
-#define ROLL	2	/* fall over */
+enum
+{
+	/* angle indexes */
+	PITCH,	/* up / down */
+	YAW,	/* left / right */
+	ROLL,	/* fall over */
 
-/* the game guarantees that no string from the network will ever
- * exceed MAX_STRING_CHARS */
-#define MAX_STRING_CHARS	1024	/* max length of a string passed to Cmd_TokenizeString */
-#define MAX_STRING_TOKENS	1024	/* max tokens resulting from Cmd_TokenizeString */
-#define MAX_TOKEN_CHARS		1024	/* max length of an individual token */
+	/* 
+	 * the game guarantees that no string from the network will ever
+	 * exceed MAX_STRING_CHARS 
+	 */
+	MAX_STRING_CHARS	= 1024,	/* max len of a string passed 
+					   to Cmd_TokenizeString */
+	MAX_STRING_TOKENS	= 1024,	/* max tokens resulting 
+					   from Cmd_TokenizeString */
+	MAX_TOKEN_CHARS		= 1024,	/* max length of an individual token */
 
-#define MAX_INFO_STRING		1024
-#define MAX_INFO_KEY		1024
-#define MAX_INFO_VALUE		1024
+	MAX_INFO_STRING		= 1024,
+	MAX_INFO_KEY		= 1024,
+	MAX_INFO_VALUE		= 1024,
 
-#define BIG_INFO_STRING		8192	/* used for system info key only */
-#define BIG_INFO_KEY		8192
-#define BIG_INFO_VALUE		8192
+	BIG_INFO_STRING		= 8192,	/* used for system info key only */
+	BIG_INFO_KEY		= 8192,
+	BIG_INFO_VALUE		= 8192,
 
-
-#define MAX_QPATH	64	/* max length of a quake game pathname */
+	MAX_QPATH	= 64,	/* max length of a quake game pathname */
 #ifdef PATH_MAX
-#define MAX_OSPATH	PATH_MAX
+	MAX_OSPATH	= PATH_MAX,
 #else
-#define MAX_OSPATH	256	/* max length of a filesystem pathname */
+	MAX_OSPATH	= 256,	/* max length of a filesystem pathname */
 #endif
 
-#define MAX_NAME_LENGTH 32	/* max length of a client name */
+	MAX_NAME_LENGTH	= 32,	/* max length of a client name */
 
-#define MAX_SAY_TEXT	150
+	MAX_SAY_TEXT	= 150
+};
 
 /* paramters for command buffer stuffing */
 typedef enum {
@@ -222,28 +236,25 @@ typedef enum {
 	EXEC_APPEND	/* add to end of the command buffer (normal case) */
 } cbufExec_t;
 
-
-/*
- * these aren't needed by any of the VMs.  put in another header?
- *  */
+/* these aren't needed by any of the VMs.  put in another header? */
 #define MAX_MAP_AREA_BYTES 32	/* bit vector of area visibility */
 
-
 /* print levels from renderer (FIXME: set up for game / cgame?) */
-typedef enum {
+typedef enum 
+{
 	PRINT_ALL,
 	PRINT_DEVELOPER,	/* only print when "developer 1" */
 	PRINT_WARNING,
 	PRINT_ERROR
 } printParm_t;
 
-
 #ifdef ERR_FATAL
 #undef ERR_FATAL	/* this is be defined in malloc.h */
 #endif
 
 /* parameters to the main Error routine */
-typedef enum {
+typedef enum 
+{
 	ERR_FATAL,		/* exit the entire game with a popup window */
 	ERR_DROP,		/* print to console and disconnect from game */
 	ERR_SERVERDISCONNECT,	/* don't kill server */
@@ -251,34 +262,38 @@ typedef enum {
 	ERR_NEED_CD		/* pop up the need-cd dialog */
 } errorParm_t;
 
-
 /* font rendering values used by ui and cgame */
-
-#define PROP_GAP_WIDTH		3
-#define PROP_SPACE_WIDTH	8
-#define PROP_HEIGHT		27
 #define PROP_SMALL_SIZE_SCALE	0.75
 
-#define BLINK_DIVISOR		200
-#define PULSE_DIVISOR		75
+enum
+{	
+	PROP_GAP_WIDTH	= 3,
+	PROP_SPACE_WIDTH= 8,
+	PROP_HEIGHT	= 27,
 
-#define UI_LEFT			0x00000000	/* default */
-#define UI_CENTER		0x00000001
-#define UI_RIGHT		0x00000002
-#define UI_FORMATMASK		0x00000007
-#define UI_SMALLFONT		0x00000010
-#define UI_BIGFONT		0x00000020	/* default */
-#define UI_GIANTFONT		0x00000040
-#define UI_DROPSHADOW		0x00000800
-#define UI_BLINK		0x00001000
-#define UI_INVERSE		0x00002000
-#define UI_PULSE		0x00004000
+	BLINK_DIVISOR	= 200,
+	PULSE_DIVISOR	= 75,
 
+	UI_LEFT		= 0, /* default */
+	UI_CENTER	= 0x1,
+	UI_RIGHT	= 0x2,
+	UI_FORMATMASK	= 0x7,
+	UI_SMALLFONT	= 0x10,
+	UI_BIGFONT	= 0x20, /* default */
+	UI_GIANTFONT	= 0x40,
+	UI_DROPSHADOW	= 0x800,
+	UI_BLINK	= 0x1000,
+	UI_INVERSE	= 0x2000,
+	UI_PULSE	= 0x4000
+};
+
+/* memory */
 #if !defined(NDEBUG) && !defined(BSPC)
-	#define HUNK_DEBUG
+#define HUNK_DEBUG
 #endif
 
-typedef enum {
+typedef enum 
+{
 	h_high,
 	h_low,
 	h_dontcare
@@ -297,21 +312,14 @@ void *Hunk_Alloc(int size, ha_pref preference);
 #define Com_Memset	memset
 #define Com_Memcpy	memcpy
 
+/* cin */
 #define CIN_system	1
 #define CIN_loop	2
 #define CIN_hold	4
 #define CIN_silent	8
 #define CIN_shader	16
 
-/*
- * ==============================================================
- *
- * MATHLIB
- *
- * ==============================================================
- */
-
-
+/* mathlib */
 typedef float vec_t;
 typedef vec_t vec2_t[2];
 typedef vec_t vec3_t[3];
@@ -329,22 +337,23 @@ typedef int fixed16_t;
 #define NUMVERTEXNORMALS 162
 extern vec3_t bytedirs[NUMVERTEXNORMALS];
 
-/* all drawing is done to a 640*480 virtual screen size
- * and will be automatically scaled to the real resolution */
-#define SCREEN_WIDTH		640
-#define SCREEN_HEIGHT		480
-
-#define TINYCHAR_WIDTH		(SMALLCHAR_WIDTH)
-#define TINYCHAR_HEIGHT		(SMALLCHAR_HEIGHT/2)
-
-#define SMALLCHAR_WIDTH		8
-#define SMALLCHAR_HEIGHT	16
-
-#define BIGCHAR_WIDTH		16
-#define BIGCHAR_HEIGHT		16
-
-#define GIANTCHAR_WIDTH		32
-#define GIANTCHAR_HEIGHT	48
+/*
+ * all drawing is done to a 640*480 virtual screen size and will be 
+ * automatically scaled to the real resolution 
+ */
+enum
+{
+	SCREEN_WIDTH		= 640,
+	SCREEN_HEIGHT		= 480,
+	SMALLCHAR_WIDTH		= 8,
+	SMALLCHAR_HEIGHT	= 16,
+	TINYCHAR_WIDTH		= SMALLCHAR_WIDTH,
+	TINYCHAR_HEIGHT		= SMALLCHAR_HEIGHT / 2,
+	BIGCHAR_WIDTH		= 16,
+	BIGCHAR_HEIGHT		= 16,
+	GIANTCHAR_WIDTH		= 32,
+	GIANTCHAR_HEIGHT	= 48
+};
 
 extern vec4_t colorBlack;
 extern vec4_t colorRed;
@@ -386,15 +395,15 @@ extern vec4_t g_color_table[8];
 #define MAKERGB(v, r, g, b)	v[0]=r; v[1]=g; v[2]=b
 #define MAKERGBA(v, r, g, b, a) v[0]=r; v[1]=g; v[2]=b; v[3]=a
 
-#define DEG2RAD(a)		(((a) * M_PI) / 180.0F)
-#define RAD2DEG(a)		(((a) * 180.0f) / M_PI)
+#define DEG2RAD(a)	(((a) * M_PI) / 180.0F)
+#define RAD2DEG(a)	(((a) * 180.0f) / M_PI)
 
 struct cplane_s;
 
 extern vec3_t vec3_origin;
 extern vec3_t axisDefault[3];
 
-#define nanmask (255<<23)
+#define nanmask (255 << 23)
 
 #define IS_NAN(x) (((*(int *) &x)&nanmask)==nanmask)
 
@@ -405,8 +414,8 @@ extern long qftolsse(float f);
 extern int qvmftolsse(void);
 extern void qsnapvectorsse(vec3_t vec);
 
-  #define Q_ftol	qftolsse
-  #define Q_SnapVector	qsnapvectorsse
+#define Q_ftol	qftolsse
+#define Q_SnapVector	qsnapvectorsse
 
 extern int (*Q_VMftol)(void);
 #elif id386
@@ -709,8 +718,7 @@ void PerpendicularVector(vec3_t dst, const vec3_t src);
 #define MIN(x,y) ((x)<(y) ? (x) : (y))
 #endif
 
-/* ============================================= */
-
+/* common */
 float Com_Clamp(float min, float max, float value);
 
 char    *COM_SkipPath(char *pathname);
@@ -728,18 +736,20 @@ void    COM_ParseError(char *format, ...) __attribute__ ((format (printf, 1, 2))
 void    COM_ParseWarning(char *format, ...) __attribute__ ((format (printf, 1, 2)));
 /* int		COM_ParseInfos( char *buf, int max, char infos[][MAX_INFO_STRING] ); */
 
-#define MAX_TOKENLENGTH 1024
+enum
+{
+	/* token types */
+	TT_STRING,
+	TT_LITERAL,
+	TT_NUMBER,
+	TT_NAME,
+	TT_PUNCTUATION,
 
-#ifndef TT_STRING
-/* token types */
-#define TT_STRING	1	/* string */
-#define TT_LITERAL	2	/* literal */
-#define TT_NUMBER	3	/* number */
-#define TT_NAME		4	/* name */
-#define TT_PUNCTUATION	5	/* punctuation */
-#endif
+	MAX_TOKENLENGTH	= 1024 
+};
 
-typedef struct pc_token_s {
+typedef struct pc_token_s 
+{
 	int	type;
 	int	subtype;
 	int	intvalue;
@@ -748,41 +758,41 @@ typedef struct pc_token_s {
 } pc_token_t;
 
 /* data is an in/out parm, returns a parsed out token */
+void	COM_MatchToken(char**buf_p, char *match);
 
-void    COM_MatchToken(char**buf_p, char *match);
+void	SkipBracedSection(char **program);
+void	SkipRestOfLine(char **data);
 
-void SkipBracedSection(char **program);
-void SkipRestOfLine(char **data);
+void	Parse1DMatrix(char **buf_p, int x, float *m);
+void	Parse2DMatrix(char **buf_p, int y, int x, float *m);
+void	Parse3DMatrix(char **buf_p, int z, int y, int x, float *m);
+int	Com_HexStrToInt(const char *str);
 
-void Parse1DMatrix(char **buf_p, int x, float *m);
-void Parse2DMatrix(char **buf_p, int y, int x, float *m);
-void Parse3DMatrix(char **buf_p, int z, int y, int x, float *m);
-int Com_HexStrToInt(const char *str);
-
-int QDECL Com_sprintf(char *dest, int size, const char *fmt,
+int QDECL	Com_sprintf(char *dest, int size, const char *fmt,
 		      ...) __attribute__ ((format (printf, 3, 4)));
 
-char *Com_SkipTokens(char *s, int numTokens, char *sep);
-char *Com_SkipCharset(char *s, char *sep);
+char	*Com_SkipTokens(char *s, int numTokens, char *sep);
+char	*Com_SkipCharset(char *s, char *sep);
 
-void Com_RandomBytes(byte *string, int len);
+void	Com_RandomBytes(byte *string, int len);
 
 /* mode parm for FS_FOpenFile */
-typedef enum {
+typedef enum 
+{
 	FS_READ,
 	FS_WRITE,
 	FS_APPEND,
 	FS_APPEND_SYNC
 } fsMode_t;
 
-typedef enum {
+typedef enum 
+{
 	FS_SEEK_CUR,
 	FS_SEEK_END,
 	FS_SEEK_SET
 } fsOrigin_t;
 
-/* ============================================= */
-
+/* strings */
 int Q_isprint(int c);
 int Q_islower(int c);
 int Q_isupper(int c);
@@ -809,7 +819,6 @@ char *Q_CleanStr(char *string);
 /* Count the number of char tocount encountered in string */
 int Q_CountChar(const char *string, char tocount);
 
-/* ============================================= */
 
 /* 64-bit integers for global rankings interface
  * implemented as a struct for qvm compatibility */
@@ -824,7 +833,6 @@ typedef struct {
 	byte	b7;
 } qint64;
 
-/* ============================================= */
 /*
  * short	BigShort(short l);
  * short	LittleShort(short l);
@@ -839,14 +847,14 @@ typedef struct {
  */
 char    * QDECL va(char *format, ...) __attribute__ ((format (printf, 1, 2)));
 
-#define TRUNCATE_LENGTH 64
+enum
+{
+	TRUNCATE_LENGTH	= 64
+};
+
 void Com_TruncateLongString(char *buffer, const char *s);
 
-/* ============================================= */
-
-/*
- * key / value info strings
- *  */
+/* key / value info strings */
 char *Info_ValueForKey(const char *s, const char *key);
 void Info_RemoveKey(char *s, const char *key);
 void Info_RemoveKey_big(char *s, const char *key);
@@ -862,46 +870,48 @@ void QDECL Com_Printf(const char *msg, ...) __attribute__ ((format (printf, 1, 2
 
 
 /*
- * ==========================================================
- *
- * CVARS (console variables)
+ * cvars -- console variables
  *
  * Many variables can be used for cheating purposes, so when
  * cheats is zero, force all unspecified variables to their
  * default values.
- * ==========================================================
  */
+enum
+{
+	MAX_CVAR_VALUE_STRING 	= 256,
 
-#define CVAR_ARCHIVE 0x0001		/* set to cause it to be saved to vars.rc
-					 * used for system variables, not for player
-					 * specific configurations */
-#define CVAR_USERINFO	0x0002		/* sent to server on connect or change */
-#define CVAR_SERVERINFO 0x0004		/* sent in response to front end requests */
-#define CVAR_SYSTEMINFO 0x0008		/* these cvars will be duplicated on all clients */
-#define CVAR_INIT	0x0010		/* don't allow change from console at all,
-					 * but can be set from the command line */
-#define CVAR_LATCH	0x0020		/* will only change when C code next does
-					 * a Cvar_Get(), so it can't be changed
-					 * without proper initialization.  modified
-					 * will be set, even though the value hasn't
-					 * changed yet */
-#define CVAR_ROM		0x0040	/* display only, cannot be set by user at all */
-#define CVAR_USER_CREATED	0x0080	/* created by a set command */
-#define CVAR_TEMP		0x0100	/* can be set even when cheats are disabled, but is not archived */
-#define CVAR_CHEAT		0x0200	/* can not be changed if cheats are disabled */
-#define CVAR_NORESTART		0x0400	/* do not clear when a cvar_restart is issued */
+	/* flags */
+	CVAR_ARCHIVE		= 1 << 0,	/* set to cause it to be saved to vars.rc
+						 * used for system variables, not for player
+						 * specific configurations */
+	CVAR_USERINFO		= 1 << 1,	/* sent to server on connect or change */
+	CVAR_SERVERINFO 	= 1 << 2,	/* sent in response to front end requests */
+	CVAR_SYSTEMINFO 	= 1 << 3,	/* these cvars will be duplicated on all clients */
+	CVAR_INIT		= 1 << 4,	/* don't allow change from console at all,
+						 * but can be set from the command line */
+	CVAR_LATCH		= 1 << 5,	/* will only change when C code next does
+						 * a Cvar_Get(), so it can't be changed
+						 * without proper initialization.  modified
+						 * will be set, even though the value hasn't
+						 * changed yet */
+	CVAR_ROM		= 1 << 6,	/* display only, cannot be set by user at all */
+	CVAR_USER_CREATED	= 1 << 7,	/* created by a set command */
+	CVAR_TEMP		= 1 << 8,	/* can be set even when cheats are disabled, but is not archived */
+	CVAR_CHEAT		= 1 << 9,	/* can not be changed if cheats are disabled */
+	CVAR_NORESTART		= 1 << 10,	/* do not clear when a cvar_restart is issued */
 
-#define CVAR_SERVER_CREATED	0x0800	/* cvar was created by a server the client connected to. */
-#define CVAR_VM_CREATED		0x1000	/* cvar was created exclusively in one of the VMs. */
-#define CVAR_PROTECTED		0x2000	/* prevent modifying this var from VMs or the server */
-/* These flags are only returned by the Cvar_Flags() function */
-#define CVAR_MODIFIED		0x40000000	/* Cvar was modified */
-#define CVAR_NONEXISTENT	0x80000000	/* Cvar doesn't exist. */
+	CVAR_SERVER_CREATED	= 1 << 11,	/* cvar was created by a server the client connected to. */
+	CVAR_VM_CREATED		= 1 << 12,	/* cvar was created exclusively in one of the VMs. */
+	CVAR_PROTECTED		= 1 << 13,	/* prevent modifying this var from VMs or the server */
+	/* These flags are only returned by the Cvar_Flags() function */
+	CVAR_MODIFIED		= 1 << 30,	/* Cvar was modified */
+	CVAR_NONEXISTENT	= 1 << 31	/* Cvar doesn't exist. */
+};
 
 /* nothing outside the Cvar_*() functions should modify these fields! */
 typedef struct cvar_s cvar_t;
-
-struct cvar_s {
+struct cvar_s 
+{
 	char		*name;
 	char		*string;
 	char		*resetString;		/* cvar_restart will reset to this value */
@@ -923,13 +933,14 @@ struct cvar_s {
 	int		hashIndex;
 };
 
-#define MAX_CVAR_VALUE_STRING 256
-
 typedef int cvarHandle_t;
 
-/* the modules that run in the virtual machine can't access the cvar_t directly,
- * so they must ask for structured updates */
-typedef struct {
+/*
+ * the modules that run in the virtual machine can't access the cvar_t directly,
+ * so they must ask for structured updates 
+ */
+typedef struct 
+{
 	cvarHandle_t	handle;
 	int		modificationCount;
 	float		value;
@@ -937,56 +948,45 @@ typedef struct {
 	char		string[MAX_CVAR_VALUE_STRING];
 } vmCvar_t;
 
+/* VoIP */
+enum
+{
+	/* if you change the count of flags be sure to also change VOIP_FLAGNUM */
+	VOIP_SPATIAL	= 0x01,	/* spatialized voip message */
+	VOIP_DIRECT	= 0x02,	/* non-spatialized voip message */
 
-/*
- * ==============================================================
- *
- * VoIP
- *
- * ==============================================================
- */
+	/* 
+	 * number of flags voip knows. You will have to bump protocol version 
+	 * number if you change this. 
+	 */
+	VOIP_FLAGCNT	= 2
+};
 
-/* if you change the count of flags be sure to also change VOIP_FLAGNUM */
-#define VOIP_SPATIAL	0x01	/* spatialized voip message */
-#define VOIP_DIRECT	0x02	/* non-spatialized voip message */
-
-/* number of flags voip knows. You will have to bump protocol version number if you
- * change this. */
-#define VOIP_FLAGCNT 2
-
-/*
- * ==============================================================
- *
- * COLLISION DETECTION
- *
- * ==============================================================
- */
-
+/* collision detection */
 #include "surfaceflags.h"	/* shared with the q3map utility */
 
-/* plane types are used to speed some tests
- * 0-2 are axial planes */
-#define PLANE_X		0
-#define PLANE_Y		1
-#define PLANE_Z		2
-#define PLANE_NON_AXIAL 3
-
-
-/*
- * =================
- * PlaneTypeForNormal
- * =================
+/* 
+ * plane types are used to speed some tests
+ * 0-2 are axial planes 
  */
+enum
+{
+	PLANE_X,
+	PLANE_Y,
+	PLANE_Z,
+	PLANE_NON_AXIAL
+};
 
 #define PlaneTypeForNormal(x) (x[0] == \
-			       1.0 ? PLANE_X : (x[1] ==	\
-						1.0 ? PLANE_Y : (x[2] == \
-								 1.0 ? PLANE_Z : \
-								 PLANE_NON_AXIAL)))
+	1.0 ? PLANE_X : (x[1] ==	\
+	1.0 ? PLANE_Y : (x[2] == \
+	1.0 ? PLANE_Z : \
+	PLANE_NON_AXIAL)))
 
 /* plane_t structure
  * !!! if this is changed, it must be changed in asm code too !!! */
-typedef struct cplane_s {
+typedef struct cplane_s 
+{
 	vec3_t	normal;
 	float	dist;
 	byte	type;		/* for fast side tests: 0,1,2 = axial, 3 = nonaxial */
@@ -996,7 +996,8 @@ typedef struct cplane_s {
 
 
 /* a trace is returned when a box is swept through the world */
-typedef struct {
+typedef struct 
+{
 	qboolean	allsolid;	/* if true, plane is not valid */
 	qboolean	startsolid;	/* if true, the initial point was in a solid area */
 	float		fraction;	/* time completed, 1.0 = didn't hit anything */
@@ -1010,37 +1011,41 @@ typedef struct {
 /* trace->entityNum can also be 0 to (MAX_GENTITIES-1)
  * or ENTITYNUM_NONE, ENTITYNUM_WORLD */
 
-
 /* markfragments are returned by CM_MarkFragments() */
-typedef struct {
+typedef struct 
+{
 	int	firstPoint;
 	int	numPoints;
 } markFragment_t;
 
-
-
-typedef struct {
+typedef struct 
+{
 	vec3_t	origin;
 	vec3_t	axis[3];
 } orientation_t;
 
-/* ===================================================================== */
+/* keys/console */
+/* 
+ * in order from highest priority to lowest
+ * if none of the catchers are active, bound key strings will be executed 
+ */
+enum
+{
+	KEYCATCH_CONSOLE	= 1 << 0,
+	KEYCATCH_UI		= 1 << 1,
+	KEYCATCH_MESSAGE	= 1 << 2,
+	KEYCATCH_CGAME		= 1 << 3
+};
 
-
-/* in order from highest priority to lowest
- * if none of the catchers are active, bound key strings will be executed */
-#define KEYCATCH_CONSOLE	0x0001
-#define KEYCATCH_UI		0x0002
-#define KEYCATCH_MESSAGE	0x0004
-#define KEYCATCH_CGAME		0x0008
-
-
-/* sound channels
- * channel 0 never willingly overrides
- * other channels will allways override a playing sound on that channel */
-typedef enum {
+/* sound channels */
+/*
+ * channel 0 never willingly overrides 
+ * other channels will always override a playing sound on that channel 
+ */
+typedef enum 
+{
 	CHAN_AUTO,
-	CHAN_LOCAL,	/* menu sounds, etc */
+	CHAN_LOCAL,		/* menu sounds, etc */
 	CHAN_WEAPON,
 	CHAN_VOICE,
 	CHAN_ITEM,
@@ -1049,15 +1054,7 @@ typedef enum {
 	CHAN_ANNOUNCER		/* announcer voices, etc */
 } soundChannel_t;
 
-
-/*
- * ========================================================================
- *
- * ELEMENTS COMMUNICATED ACROSS THE NET
- *
- * ========================================================================
- */
-
+/* elements communicated across the net */
 #define ANGLE2SHORT(x)	((int) ((x)*65536/360) & 65535)
 #define SHORT2ANGLE(x)	((x)*(360.0/65536))
 
@@ -1065,44 +1062,43 @@ typedef enum {
 #define SNAPFLAG_NOT_ACTIVE	2	/* snapshot used during connection and for zombies */
 #define SNAPFLAG_SERVERCOUNT	4	/* toggled every map_restart so transitions can be detected */
 
-/*
- * per-level limits
- *  */
+/* per-level limits */
 #define MAX_CLIENTS	64	/* absolute limit */
 #define MAX_LOCATIONS	64
 
 #define GENTITYNUM_BITS 10	/* don't need to send any more */
-#define MAX_GENTITIES	(1<<GENTITYNUM_BITS)
+#define MAX_GENTITIES	(1 << GENTITYNUM_BITS)
 
-/* entitynums are communicated with GENTITY_BITS, so any reserved
+/* 
+ * entitynums are communicated with GENTITY_BITS, so any reserved
  * values that are going to be communcated over the net need to
- * also be in this range */
+ * also be in this range 
+ */
 #define ENTITYNUM_NONE		(MAX_GENTITIES-1)
 #define ENTITYNUM_WORLD		(MAX_GENTITIES-2)
 #define ENTITYNUM_MAX_NORMAL	(MAX_GENTITIES-2)
 
-
 #define MAX_MODELS	256	/* these are sent over the net as 8 bits */
 #define MAX_SOUNDS	256	/* so they cannot be blindly increased */
 
-
 #define MAX_CONFIGSTRINGS 1024
 
-/* these are the only configstrings that the system reserves, all the
- * other ones are strictly for servergame to clientgame communication */
+/* 
+ * these are the only configstrings that the system reserves, all the
+ * other ones are strictly for servergame to clientgame communication 
+ */
 #define CS_SERVERINFO		0	/* an info string with all the serverinfo cvars */
 #define CS_SYSTEMINFO		1	/* an info string for server system to client system configuration (timescale, etc) */
 
 #define RESERVED_CONFIGSTRINGS	2	/* game can't modify below this, only the system can */
 
 #define MAX_GAMESTATE_CHARS	16000
-typedef struct {
+typedef struct 
+{
 	int	stringOffsets[MAX_CONFIGSTRINGS];
 	char	stringData[MAX_GAMESTATE_CHARS];
 	int	dataCount;
 } gameState_t;
-
-/* ========================================================= */
 
 /* bit field limits */
 #define MAX_STATS		16
@@ -1114,17 +1110,22 @@ typedef struct {
 
 #define PS_PMOVEFRAMECOUNTBITS	6
 
-/* playerState_t is the information needed by both the client and server
+/* 
+ * playerState_t is the information needed by both the client and server
  * to predict player motion and actions
  * nothing outside of pmove should modify these, or some degree of prediction error
- * will occur */
+ * will occur 
+ */
 
 /* you can't add anything to this without modifying the code in msg.c */
 
-/* playerState_t is a full superset of entityState_t as it is used by players,
+/* 
+ * playerState_t is a full superset of entityState_t as it is used by players,
  * so if a playerState_t is transmitted, the entityState_t can be fully derived
- * from it. */
-typedef struct playerState_s {
+ * from it. 
+ */
+typedef struct playerState_s 
+{
 	int	commandTime;	/* cmd->serverTime of last executed command */
 	int	pm_type;
 	int	bobCycle;	/* for view bobbing and footstep generation */
@@ -1193,14 +1194,10 @@ typedef struct playerState_s {
 	int	entityEventSequence;
 } playerState_t;
 
-
-/* ==================================================================== */
-
-
 /*
  * usercmd_t->button bits, many of which are generated by the client system,
  * so they aren't game/cgame only definitions
- *  */
+ */
 #define BUTTON_ATTACK		1
 #define BUTTON_TALK		2	/* displays talk balloon and disables actions */
 #define BUTTON_USE_HOLDABLE	4
@@ -1224,7 +1221,8 @@ typedef struct playerState_s {
 /* then BUTTON_WALKING should be set */
 
 /* usercmd_t is sent to the server each client frame */
-typedef struct usercmd_s {
+typedef struct usercmd_s 
+{
 	int		serverTime;
 	int		angles[3];
 	int		buttons;
@@ -1232,12 +1230,12 @@ typedef struct usercmd_s {
 	signed char	forwardmove, rightmove, upmove;
 } usercmd_t;
 
-/* =================================================================== */
-
+/* entities */
 /* if entityState->solid == SOLID_BMODEL, modelindex is an inline model number */
 #define SOLID_BMODEL 0xffffff
 
-typedef enum {
+typedef enum 
+{
 	TR_STATIONARY,
 	TR_INTERPOLATE,	/* non-parametric, but interpolate between snapshots */
 	TR_LINEAR,
@@ -1246,7 +1244,8 @@ typedef enum {
 	TR_GRAVITY
 } trType_t;
 
-typedef struct {
+typedef struct 
+{
 	trType_t	trType;
 	int		trTime;
 	int		trDuration;	/* if non 0, trTime + trDuration = stop time */
@@ -1260,8 +1259,8 @@ typedef struct {
  * Different eTypes may use the information in different ways
  * The messages are delta compressed, so it doesn't really matter if
  * the structure size is fairly large */
-
-typedef struct entityState_s {
+typedef struct entityState_s 
+{
 	int		number;	/* entity index */
 	int		eType;	/* entityType_t */
 	int		eFlags;
@@ -1305,7 +1304,8 @@ typedef struct entityState_s {
 	int	generic1;
 } entityState_t;
 
-typedef enum {
+typedef enum 
+{
 	CA_UNINITIALIZED,
 	CA_DISCONNECTED,	/* not talking to a server */
 	CA_AUTHORIZING,		/* not used any more, was checking cd key */
@@ -1319,13 +1319,14 @@ typedef enum {
 } connstate_t;
 
 /* font support */
-
 #define GLYPH_START	0
 #define GLYPH_END	255
 #define GLYPH_CHARSTART 32
 #define GLYPH_CHAREND	127
 #define GLYPHS_PER_FONT GLYPH_END - GLYPH_START + 1
-typedef struct {
+
+typedef struct 
+{
 	int		height;		/* number of scan lines */
 	int		top;		/* top of glyph in buffer */
 	int		bottom;		/* bottom of glyph in buffer */
@@ -1341,7 +1342,8 @@ typedef struct {
 	char		shaderName[32];
 } glyphInfo_t;
 
-typedef struct {
+typedef struct 
+{
 	glyphInfo_t	glyphs [GLYPHS_PER_FONT];
 	float		glyphScale;
 	char		name[MAX_QPATH];
@@ -1349,11 +1351,9 @@ typedef struct {
 
 #define Square(x) ((x)*(x))
 
-/* real time
- * ============================================= */
-
-
-typedef struct qtime_s {
+/* real time */
+typedef struct qtime_s
+{
 	int	tm_sec;		/* seconds after the minute - [0,59] */
 	int	tm_min;		/* minutes after the hour - [0,59] */
 	int	tm_hour;	/* hours since midnight - [0,23] */
@@ -1365,7 +1365,6 @@ typedef struct qtime_s {
 	int	tm_isdst;	/* daylight savings time flag */
 } qtime_t;
 
-
 /* server browser sources
  * TTimo: AS_MPLAYER is no longer used */
 #define AS_LOCAL	0
@@ -1373,9 +1372,9 @@ typedef struct qtime_s {
 #define AS_GLOBAL	2
 #define AS_FAVORITES	3
 
-
 /* cinematic states */
-typedef enum {
+typedef enum 
+{
 	FMV_IDLE,
 	FMV_PLAY,	/* play */
 	FMV_EOF,	/* all other conditions, i.e. stop/EOF/abort */
@@ -1385,15 +1384,14 @@ typedef enum {
 	FMV_ID_WAIT
 } e_status;
 
-typedef enum _flag_status {
+typedef enum _flag_status 
+{
 	FLAG_ATBASE = 0,
 	FLAG_TAKEN,		/* CTF */
 	FLAG_TAKEN_RED,		/* One Flag CTF */
 	FLAG_TAKEN_BLUE,	/* One Flag CTF */
 	FLAG_DROPPED
 } flagStatus_t;
-
-
 
 #define MAX_GLOBAL_SERVERS		4096
 #define MAX_OTHER_SERVERS		128
@@ -1406,7 +1404,6 @@ typedef enum _flag_status {
 
 #define CDKEY_LEN			16
 #define CDCHKSUM_LEN			2
-
 
 #define LERP(a, b, w)		((a) * (1.0f - (w)) + (b) * (w))
 #define LUMA(red, green, blue)	(0.2126f * (red) + 0.7152f * (green) + 0.0722f * \
