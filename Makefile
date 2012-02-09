@@ -225,11 +225,11 @@ Q3UIDIR=$(MOUNT_DIR)/q3_ui
 JPDIR=$(MOUNT_DIR)/jpeg-8c
 SPEEXDIR=$(MOUNT_DIR)/libspeex
 ZDIR=$(MOUNT_DIR)/zlib
-Q3ASMDIR=$(MOUNT_DIR)/tools/asm
-LBURGDIR=$(MOUNT_DIR)/tools/lcc/lburg
-Q3CPPDIR=$(MOUNT_DIR)/tools/lcc/cpp
-Q3LCCETCDIR=$(MOUNT_DIR)/tools/lcc/etc
-Q3LCCSRCDIR=$(MOUNT_DIR)/tools/lcc/src
+Q3ASMDIR=$(MOUNT_DIR)/cmd/asm
+LBURGDIR=$(MOUNT_DIR)/cmd/lcc/lburg
+Q3CPPDIR=$(MOUNT_DIR)/cmd/lcc/cpp
+Q3LCCETCDIR=$(MOUNT_DIR)/cmd/lcc/etc
+Q3LCCSRCDIR=$(MOUNT_DIR)/cmd/lcc/src
 LOKISETUPDIR=misc/setup
 NSISDIR=misc/nsis
 SDLHDIR=$(MOUNT_DIR)/SDL12
@@ -1185,18 +1185,18 @@ makedirs:
 	@if [ ! -d $(O)/$(MISSIONPACK)/qcommon ];then $(MKDIR) $(O)/$(MISSIONPACK)/qcommon;fi
 	@if [ ! -d $(B)/$(MISSIONPACK)/vm ];then $(MKDIR) $(B)/$(MISSIONPACK)/vm;fi
 	@if [ ! -d $(O)/$(MISSIONPACK)/vm ];then $(MKDIR) $(O)/$(MISSIONPACK)/vm;fi
-	@if [ ! -d $(B)/tools ];then $(MKDIR) $(B)/tools;fi
-	@if [ ! -d $(O)/tools ];then $(MKDIR) $(O)/tools;fi
-	@if [ ! -d $(B)/tools/asm ];then $(MKDIR) $(B)/tools/asm;fi
-	@if [ ! -d $(O)/tools/asm ];then $(MKDIR) $(O)/tools/asm;fi
-	@if [ ! -d $(B)/tools/etc ];then $(MKDIR) $(B)/tools/etc;fi
-	@if [ ! -d $(O)/tools/etc ];then $(MKDIR) $(O)/tools/etc;fi
-	@if [ ! -d $(B)/tools/rcc ];then $(MKDIR) $(B)/tools/rcc;fi
-	@if [ ! -d $(O)/tools/rcc ];then $(MKDIR) $(O)/tools/rcc;fi
-	@if [ ! -d $(B)/tools/cpp ];then $(MKDIR) $(B)/tools/cpp;fi
-	@if [ ! -d $(O)/tools/cpp ];then $(MKDIR) $(O)/tools/cpp;fi
-	@if [ ! -d $(B)/tools/lburg ];then $(MKDIR) $(B)/tools/lburg;fi
-	@if [ ! -d $(O)/tools/lburg ];then $(MKDIR) $(O)/tools/lburg;fi
+	@if [ ! -d $(B)/cmd ];then $(MKDIR) $(B)/cmd;fi
+	@if [ ! -d $(O)/cmd ];then $(MKDIR) $(O)/cmd;fi
+	@if [ ! -d $(B)/cmd/asm ];then $(MKDIR) $(B)/cmd/asm;fi
+	@if [ ! -d $(O)/cmd/asm ];then $(MKDIR) $(O)/cmd/asm;fi
+	@if [ ! -d $(B)/cmd/etc ];then $(MKDIR) $(B)/cmd/etc;fi
+	@if [ ! -d $(O)/cmd/etc ];then $(MKDIR) $(O)/cmd/etc;fi
+	@if [ ! -d $(B)/cmd/rcc ];then $(MKDIR) $(B)/cmd/rcc;fi
+	@if [ ! -d $(O)/cmd/rcc ];then $(MKDIR) $(O)/cmd/rcc;fi
+	@if [ ! -d $(B)/cmd/cpp ];then $(MKDIR) $(B)/cmd/cpp;fi
+	@if [ ! -d $(O)/cmd/cpp ];then $(MKDIR) $(O)/cmd/cpp;fi
+	@if [ ! -d $(B)/cmd/lburg ];then $(MKDIR) $(B)/cmd/lburg;fi
+	@if [ ! -d $(O)/cmd/lburg ];then $(MKDIR) $(O)/cmd/lburg;fi
 
 #############################################################################
 # QVM BUILD TOOLS
@@ -1224,18 +1224,18 @@ $(echo_cmd) "TOOLS_CC_DAGCHECK $<"
 $(Q)$(CC) $(TOOLS_CFLAGS) -Wno-unused -o $@ -c $<
 endef
 
-LBURG       = $(B)/tools/lburg/lburg$(BINEXT)
-DAGCHECK_C  = $(B)/tools/rcc/dagcheck.c
-Q3RCC       = $(B)/tools/q3rcc$(BINEXT)
-Q3CPP       = $(B)/tools/q3cpp$(BINEXT)
-Q3LCC       = $(B)/tools/q3lcc$(BINEXT)
-Q3ASM       = $(B)/tools/q3asm$(BINEXT)
+LBURG       = $(B)/cmd/lburg/lburg$(BINEXT)
+DAGCHECK_C  = $(B)/cmd/rcc/dagcheck.c
+Q3RCC       = $(B)/cmd/q3rcc$(BINEXT)
+Q3CPP       = $(B)/cmd/q3cpp$(BINEXT)
+Q3LCC       = $(B)/cmd/q3lcc$(BINEXT)
+Q3ASM       = $(B)/cmd/q3asm$(BINEXT)
 
 LBURGOBJ= \
-	$(O)/tools/lburg/lburg.o \
-	$(O)/tools/lburg/gram.o
+	$(O)/cmd/lburg/lburg.o \
+	$(O)/cmd/lburg/gram.o
 
-$(O)/tools/lburg/%.o: $(LBURGDIR)/%.c
+$(O)/cmd/lburg/%.o: $(LBURGDIR)/%.c
 	$(DO_TOOLS_CC)
 
 $(LBURG): $(LBURGOBJ)
@@ -1243,44 +1243,44 @@ $(LBURG): $(LBURGOBJ)
 	$(Q)$(CC) $(TOOLS_CFLAGS) $(TOOLS_LDFLAGS) -o $@ $^ $(TOOLS_LIBS)
 
 Q3RCCOBJ = \
-  $(O)/tools/rcc/alloc.o \
-  $(O)/tools/rcc/bind.o \
-  $(O)/tools/rcc/bytecode.o \
-  $(O)/tools/rcc/dag.o \
-  $(O)/tools/rcc/dagcheck.o \
-  $(O)/tools/rcc/decl.o \
-  $(O)/tools/rcc/enode.o \
-  $(O)/tools/rcc/error.o \
-  $(O)/tools/rcc/event.o \
-  $(O)/tools/rcc/expr.o \
-  $(O)/tools/rcc/gen.o \
-  $(O)/tools/rcc/init.o \
-  $(O)/tools/rcc/inits.o \
-  $(O)/tools/rcc/input.o \
-  $(O)/tools/rcc/lex.o \
-  $(O)/tools/rcc/list.o \
-  $(O)/tools/rcc/main.o \
-  $(O)/tools/rcc/null.o \
-  $(O)/tools/rcc/output.o \
-  $(O)/tools/rcc/prof.o \
-  $(O)/tools/rcc/profio.o \
-  $(O)/tools/rcc/simp.o \
-  $(O)/tools/rcc/stmt.o \
-  $(O)/tools/rcc/string.o \
-  $(O)/tools/rcc/sym.o \
-  $(O)/tools/rcc/symbolic.o \
-  $(O)/tools/rcc/trace.o \
-  $(O)/tools/rcc/tree.o \
-  $(O)/tools/rcc/types.o
+  $(O)/cmd/rcc/alloc.o \
+  $(O)/cmd/rcc/bind.o \
+  $(O)/cmd/rcc/bytecode.o \
+  $(O)/cmd/rcc/dag.o \
+  $(O)/cmd/rcc/dagcheck.o \
+  $(O)/cmd/rcc/decl.o \
+  $(O)/cmd/rcc/enode.o \
+  $(O)/cmd/rcc/error.o \
+  $(O)/cmd/rcc/event.o \
+  $(O)/cmd/rcc/expr.o \
+  $(O)/cmd/rcc/gen.o \
+  $(O)/cmd/rcc/init.o \
+  $(O)/cmd/rcc/inits.o \
+  $(O)/cmd/rcc/input.o \
+  $(O)/cmd/rcc/lex.o \
+  $(O)/cmd/rcc/list.o \
+  $(O)/cmd/rcc/main.o \
+  $(O)/cmd/rcc/null.o \
+  $(O)/cmd/rcc/output.o \
+  $(O)/cmd/rcc/prof.o \
+  $(O)/cmd/rcc/profio.o \
+  $(O)/cmd/rcc/simp.o \
+  $(O)/cmd/rcc/stmt.o \
+  $(O)/cmd/rcc/string.o \
+  $(O)/cmd/rcc/sym.o \
+  $(O)/cmd/rcc/symbolic.o \
+  $(O)/cmd/rcc/trace.o \
+  $(O)/cmd/rcc/tree.o \
+  $(O)/cmd/rcc/types.o
 
 $(DAGCHECK_C): $(LBURG) $(Q3LCCSRCDIR)/dagcheck.md
 	$(echo_cmd) "LBURG $(Q3LCCSRCDIR)/dagcheck.md"
 	$(Q)$(LBURG) $(Q3LCCSRCDIR)/dagcheck.md $@
 
-$(O)/tools/rcc/dagcheck.o: $(DAGCHECK_C)
+$(O)/cmd/rcc/dagcheck.o: $(DAGCHECK_C)
 	$(DO_TOOLS_CC_DAGCHECK)
 
-$(O)/tools/rcc/%.o: $(Q3LCCSRCDIR)/%.c
+$(O)/cmd/rcc/%.o: $(Q3LCCSRCDIR)/%.c
 	$(DO_TOOLS_CC)
 
 $(Q3RCC): $(Q3RCCOBJ)
@@ -1288,18 +1288,18 @@ $(Q3RCC): $(Q3RCCOBJ)
 	$(Q)$(CC) $(TOOLS_CFLAGS) $(TOOLS_LDFLAGS) -o $@ $^ $(TOOLS_LIBS)
 
 Q3CPPOBJ = \
-	$(O)/tools/cpp/cpp.o \
-	$(O)/tools/cpp/lex.o \
-	$(O)/tools/cpp/nlist.o \
-	$(O)/tools/cpp/tokens.o \
-	$(O)/tools/cpp/macro.o \
-	$(O)/tools/cpp/eval.o \
-	$(O)/tools/cpp/include.o \
-	$(O)/tools/cpp/hideset.o \
-	$(O)/tools/cpp/getopt.o \
-	$(O)/tools/cpp/unix.o
+	$(O)/cmd/cpp/cpp.o \
+	$(O)/cmd/cpp/lex.o \
+	$(O)/cmd/cpp/nlist.o \
+	$(O)/cmd/cpp/tokens.o \
+	$(O)/cmd/cpp/macro.o \
+	$(O)/cmd/cpp/eval.o \
+	$(O)/cmd/cpp/include.o \
+	$(O)/cmd/cpp/hideset.o \
+	$(O)/cmd/cpp/getopt.o \
+	$(O)/cmd/cpp/unix.o
 
-$(O)/tools/cpp/%.o: $(Q3CPPDIR)/%.c
+$(O)/cmd/cpp/%.o: $(Q3CPPDIR)/%.c
 	$(DO_TOOLS_CC)
 
 $(Q3CPP): $(Q3CPPOBJ)
@@ -1307,10 +1307,10 @@ $(Q3CPP): $(Q3CPPOBJ)
 	$(Q)$(CC) $(TOOLS_CFLAGS) $(TOOLS_LDFLAGS) -o $@ $^ $(TOOLS_LIBS)
 
 Q3LCCOBJ = \
-	$(O)/tools/etc/lcc.o \
-	$(O)/tools/etc/bytecode.o
+	$(O)/cmd/etc/lcc.o \
+	$(O)/cmd/etc/bytecode.o
 
-$(O)/tools/etc/%.o: $(Q3LCCETCDIR)/%.c
+$(O)/cmd/etc/%.o: $(Q3LCCETCDIR)/%.c
 	$(DO_TOOLS_CC)
 
 $(Q3LCC): $(Q3LCCOBJ) $(Q3RCC) $(Q3CPP)
@@ -1359,10 +1359,10 @@ endef
 
 
 Q3ASMOBJ = \
-  $(O)/tools/asm/q3asm.o \
-  $(O)/tools/asm/cmdlib.o
+  $(O)/cmd/asm/q3asm.o \
+  $(O)/cmd/asm/cmdlib.o
 
-$(O)/tools/asm/%.o: $(Q3ASMDIR)/%.c
+$(O)/cmd/asm/%.o: $(Q3ASMDIR)/%.c
 	$(DO_TOOLS_CC)
 
 $(Q3ASM): $(Q3ASMOBJ)
@@ -2557,21 +2557,21 @@ clean2:
 	@rm -f $(OBJ_D_FILES)
 	@rm -f $(TARGETS)
 
-toolsclean: toolsclean-debug toolsclean-release
+cmdclean: cmdclean-debug cmdclean-release
 
-toolsclean-debug:
-	@$(MAKE) toolsclean2 B=$(BD) O=$(BD)/obj
+cmdclean-debug:
+	@$(MAKE) cmdclean2 B=$(BD) O=$(BD)/obj
 
-toolsclean-release:
-	@$(MAKE) toolsclean2 B=$(BR) O=$(BR)/obj 
+cmdclean-release:
+	@$(MAKE) cmdclean2 B=$(BR) O=$(BR)/obj 
 
-toolsclean2:
-	@echo "TOOLS_CLEAN $(B)"
+cmdclean2:
+	@echo "CMD_CLEAN $(B)"
 	@rm -f $(TOOLSOBJ)
 	@rm -f $(TOOLSOBJ_D_FILES)
 	@rm -f $(LBURG) $(DAGCHECK_C) $(Q3RCC) $(Q3CPP) $(Q3LCC) $(Q3ASM)
 
-distclean: clean toolsclean
+distclean: clean cmdclean
 	@rm -rf $(BUILD_DIR)
 
 installer: release
@@ -2603,5 +2603,5 @@ endif
 .PHONY: all clean clean2 clean-debug clean-release copyfiles \
 	debug default dist distclean installer makedirs \
 	release targets \
-	toolsclean toolsclean2 toolsclean-debug toolsclean-release \
+	cmdclean cmdclean2 cmdclean-debug cmdclean-release \
 	$(OBJ_D_FILES) $(TOOLSOBJ_D_FILES)
