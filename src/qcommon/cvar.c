@@ -24,13 +24,13 @@
 #include "q_shared.h"
 #include "qcommon.h"
 
-cvar_t	*cvar_vars = NULL;
-cvar_t          *cvar_cheats;
 int	cvar_modifiedFlags;
+static cvar_t	*cvar_vars = NULL;
+static cvar_t	*cvar_cheats;
 
 #define MAX_CVARS 1024
-cvar_t	cvar_indexes[MAX_CVARS];
-int	cvar_numIndexes;
+static cvar_t	cvar_indexes[MAX_CVARS];
+static int	cvar_numIndexes;
 
 #define FILE_HASH_SIZE 256
 static cvar_t *hashTable[FILE_HASH_SIZE];
