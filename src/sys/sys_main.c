@@ -258,13 +258,14 @@ Sys_GetProcessorFeatures(void)
 void
 Sys_Init(void)
 {
-	char pidstr[32];
-	Com_sprintf(pidstr, sizeof(pidstr), "%d", Sys_PID());
+	char pidstr[64];
 
 	Cmd_AddCommand("in_restart", Sys_In_Restart_f);
 	Cvar_Set("arch", OS_STRING " " ARCH_STRING);
 	Cvar_Set("username", Sys_GetCurrentUser( ));
-	Cvar_Set("pid", pidstr);
+
+	Com_sprintf(pidstr, sizeof(pidstr), "%d", Sys_PID());
+	Cvar_Get("com_pid", pidstr, CVAR_ROM);
 }
 
 /*
