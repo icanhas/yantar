@@ -1,3 +1,4 @@
+/* Dynamic variable tracking */
 /*
  * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
@@ -19,27 +20,25 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  * ===========================================================================
  */
-/* cvar.c -- dynamic variable tracking */
 
 #include "q_shared.h"
 #include "qcommon.h"
 
+enum
+{
+	MAX_CVARS	= 1024,
+	FILE_HASH_SIZE	= 256
+};
+
 int	cvar_modifiedFlags;
+
 static cvar_t	*cvar_vars = NULL;
 static cvar_t	*cvar_cheats;
-
-#define MAX_CVARS 1024
 static cvar_t	cvar_indexes[MAX_CVARS];
 static int	cvar_numIndexes;
+static cvar_t	*hashTable[FILE_HASH_SIZE];
 
-#define FILE_HASH_SIZE 256
-static cvar_t *hashTable[FILE_HASH_SIZE];
-
-/*
- * ================
- * return a hash value for the filename
- * ================
- */
+/* return a hash value for the filename */
 static long
 generateHashValue(const char *fname)
 {
@@ -58,30 +57,20 @@ generateHashValue(const char *fname)
 	return hash;
 }
 
-/*
- * ============
- * Cvar_ValidateString
- * ============
- */
 static qboolean
 Cvar_ValidateString(const char *s)
 {
-	if( !s )
+	if(s == nil)
 		return qfalse;
-	if( strchr(s, '\\'))
+	if(strchr(s, '\\'))
 		return qfalse;
-	if( strchr(s, '\"'))
+	if(strchr(s, '\"'))
 		return qfalse;
-	if( strchr(s, ';'))
+	if(strchr(s, ';'))
 		return qfalse;
 	return qtrue;
 }
 
-/*
- * ============
- * Cvar_FindVar
- * ============
- */
 static cvar_t *
 Cvar_FindVar(const char *var_name)
 {
@@ -90,92 +79,67 @@ Cvar_FindVar(const char *var_name)
 
 	hash = generateHashValue(var_name);
 
-	for(var=hashTable[hash]; var; var=var->hashNext)
+	for(var=hashTable[hash]; var != nil; var=var->hashNext)
 		if(!Q_stricmp(var_name, var->name))
 			return var;
 
 	return NULL;
 }
 
-/*
- * ============
- * Cvar_VariableValue
- * ============
- */
 float
 Cvar_VariableValue(const char *var_name)
 {
 	cvar_t *var;
 
-	var = Cvar_FindVar (var_name);
-	if(!var)
+	var = Cvar_FindVar(var_name);
+	if(var == nil)
 		return 0;
 	return var->value;
 }
 
-
-/*
- * ============
- * Cvar_VariableIntegerValue
- * ============
- */
 int
 Cvar_VariableIntegerValue(const char *var_name)
 {
 	cvar_t *var;
 
-	var = Cvar_FindVar (var_name);
-	if(!var)
+	var = Cvar_FindVar(var_name);
+	if(var == nil)
 		return 0;
 	return var->integer;
 }
 
 
-/*
- * ============
- * Cvar_VariableString
- * ============
- */
 char *
 Cvar_VariableString(const char *var_name)
 {
 	cvar_t *var;
 
-	var = Cvar_FindVar (var_name);
-	if(!var)
+	var = Cvar_FindVar(var_name);
+	if(var == nil)
 		return "";
 	return var->string;
 }
 
 
-/*
- * ============
- * Cvar_VariableStringBuffer
- * ============
- */
 void
 Cvar_VariableStringBuffer(const char *var_name, char *buffer, int bufsize)
 {
 	cvar_t *var;
 
-	var = Cvar_FindVar (var_name);
-	if(!var)
+	var = Cvar_FindVar(var_name);
+	if(var == nil)
 		*buffer = 0;
 	else
 		Q_strncpyz(buffer, var->string, bufsize);
 }
 
-/*
- * ============
- * Cvar_Flags
- * ============
- */
 int
 Cvar_Flags(const char *var_name)
 {
 	cvar_t *var;
 
-	if(!(var = Cvar_FindVar(var_name)))
+	var = Cvar_FindVar(var_name);
+	if(var == nil)
 		return CVAR_NONEXISTENT;
 	else{
 		if(var->modified)
@@ -185,55 +149,42 @@ Cvar_Flags(const char *var_name)
 	}
 }
 
-/*
- * ============
- * Cvar_CommandCompletion
- * ============
- */
 void
 Cvar_CommandCompletion(void (*callback)(const char *s))
 {
 	cvar_t *cvar;
 
 	for(cvar = cvar_vars; cvar; cvar = cvar->next)
-		if(cvar->name)
+		if(cvar->name != nil)
 			callback(cvar->name);
 }
 
-/*
- * ============
- * Cvar_Validate
- * ============
- */
 static const char *
-Cvar_Validate(cvar_t *var,
-	      const char *value, qboolean warn)
+Cvar_Validate(cvar_t *var, const char *value, qboolean warn)
 {
-	static char s[ MAX_CVAR_VALUE_STRING ];
+	static char s[MAX_CVAR_VALUE_STRING];
 	float valuef;
 	qboolean changed = qfalse;
 
-	if( !var->validate )
+	if(!var->validate)
 		return value;
 
-	if( !value )
+	if(value == nil)
 		return value;
 
-	if( Q_isanumber(value)){
+	if(Q_isanumber(value)){
 		valuef = atof(value);
+		if(var->integral)
+			if(!Q_isintegral(valuef)){
+				if(warn)
+					Com_Printf("WARNING: cvar '%s' must"
+						" be integral", var->name);
 
-		if( var->integral )
-			if( !Q_isintegral(valuef)){
-				if( warn )
-					Com_Printf(
-						"WARNING: cvar '%s' must be integral",
-						var->name);
-
-				valuef	= (int) valuef;
+				valuef	= (int)valuef;
 				changed = qtrue;
 			}
 	}else{
-		if( warn )
+		if(warn)
 			Com_Printf("WARNING: cvar '%s' must be numeric",
 				var->name);
 
@@ -241,32 +192,32 @@ Cvar_Validate(cvar_t *var,
 		changed = qtrue;
 	}
 
-	if( valuef < var->min ){
-		if( warn ){
-			if( changed )
+	if(valuef < var->min){
+		if(warn){
+			if(changed)
 				Com_Printf(" and is");
 			else
 				Com_Printf("WARNING: cvar '%s'", var->name);
 
-			if( Q_isintegral(var->min))
+			if(Q_isintegral(var->min))
 				Com_Printf(" out of range (min %d)",
-					(int) var->min);
+					(int)var->min);
 			else
 				Com_Printf(" out of range (min %f)", var->min);
 		}
 
 		valuef	= var->min;
 		changed = qtrue;
-	}else if( valuef > var->max ){
-		if( warn ){
-			if( changed )
+	}else if(valuef > var->max){
+		if(warn){
+			if(changed)
 				Com_Printf(" and is");
 			else
 				Com_Printf("WARNING: cvar '%s'", var->name);
 
-			if( Q_isintegral(var->max))
+			if(Q_isintegral(var->max))
 				Com_Printf(" out of range (max %d)",
-					(int) var->max);
+					(int)var->max);
 			else
 				Com_Printf(" out of range (max %f)", var->max);
 		}
@@ -275,16 +226,16 @@ Cvar_Validate(cvar_t *var,
 		changed = qtrue;
 	}
 
-	if( changed ){
-		if( Q_isintegral(valuef)){
-			Com_sprintf(s, sizeof(s), "%d", (int) valuef);
+	if(changed){
+		if(Q_isintegral(valuef)){
+			Com_sprintf(s, sizeof(s), "%d", (int)valuef);
 
-			if( warn )
-				Com_Printf(", setting to %d\n", (int) valuef);
+			if(warn)
+				Com_Printf(", setting to %d\n", (int)valuef);
 		}else{
 			Com_sprintf(s, sizeof(s), "%f", valuef);
 
-			if( warn )
+			if(warn)
 				Com_Printf(", setting to %f\n", valuef);
 		}
 
@@ -295,12 +246,8 @@ Cvar_Validate(cvar_t *var,
 
 
 /*
- * ============
- * Cvar_Get
- *
- * If the variable already exists, the value will not be set unless CVAR_ROM
- * The flags will be or'ed in if the variable exists.
- * ============
+ * Cvar_Get: If the variable already exists, the value will not be set unless 
+ * CVAR_ROM. The flags will be or'ed in if the variable exists.
  */
 cvar_t *
 Cvar_Get(const char *var_name, const char *var_value, int flags)
@@ -309,22 +256,22 @@ Cvar_Get(const char *var_name, const char *var_value, int flags)
 	long	hash;
 	int	index;
 
-	if( !var_name || !var_value )
+	if(var_name == nil || var_value == nil)
 		Com_Error(ERR_FATAL, "Cvar_Get: NULL parameter");
 
-	if( !Cvar_ValidateString(var_name)){
+	if(!Cvar_ValidateString(var_name)){
 		Com_Printf("invalid cvar name string: %s\n", var_name);
 		var_name = "BADNAME";
 	}
 
 #if 0	/* FIXME: values with backslash happen */
-	if( !Cvar_ValidateString(var_value)){
+	if(!Cvar_ValidateString(var_value)){
 		Com_Printf("invalid cvar value string: %s\n", var_value);
 		var_value = "BADVALUE";
 	}
 #endif
 
-	var = Cvar_FindVar (var_name);
+	var = Cvar_FindVar(var_name);
 
 	if(var){
 		var_value = Cvar_Validate(var, var_value, qfalse);
