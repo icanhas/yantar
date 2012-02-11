@@ -1,3 +1,4 @@
+/* Definitions local to snd */
 /*
  * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
@@ -19,8 +20,6 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  * ===========================================================================
  */
-/* snd_local.h -- private sound definations */
-
 
 #include "../qcommon/q_shared.h"
 #include "../qcommon/qcommon.h"

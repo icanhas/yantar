@@ -502,7 +502,7 @@ S_PaintChannelFrom16(channel_t *ch, const sfx_t *sc, int count, int sampleOffset
 {
 #if idppc_altivec
 	if(com_altivec->integer){
-		/* must be in a seperate function or G3 systems will crash. */
+		/* must be in a separate function or G3 systems will crash. */
 		S_PaintChannelFrom16_altivec(ch, sc, count, sampleOffset,
 			bufferOffset);
 		return;
