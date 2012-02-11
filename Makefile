@@ -839,7 +839,7 @@ endif
 TARGETS =
 
 ifndef FULLBINEXT
-  FULLBINEXT=.$(ARCH)$(BINEXT)
+  FULLBINEXT=-$(ARCH)$(BINEXT)
 endif
 
 ifndef SHLIBNAME
