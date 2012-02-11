@@ -104,7 +104,7 @@ ifndef SERVERBIN
 endif
 
 ifndef BASEGAME
-	BASEGAME=../base
+	BASEGAME=base
 endif
 
 ifndef BASEGAME_CFLAGS
