@@ -104,7 +104,7 @@ ifndef SERVERBIN
 endif
 
 ifndef BASEGAME
-	BASEGAME=base
+	BASEGAME=../base
 endif
 
 ifndef BASEGAME_CFLAGS
@@ -131,8 +131,12 @@ ifndef MOUNT_DIR
 MOUNT_DIR=src
 endif
 
-ifndef BUILD_DIR
-BUILD_DIR=bin
+ifndef BIN_DIR
+BIN_DIR=bin
+endif
+
+ifndef OBJ_DIR
+OBJ_DIR=obj
 endif
 
 ifndef TEMPDIR
@@ -205,9 +209,10 @@ endif
 
 #############################################################################
 
-BD=$(BUILD_DIR)/debug-$(PLATFORM)-$(ARCH)
-BR=$(BUILD_DIR)/release-$(PLATFORM)-$(ARCH)
-O=obj
+DP=debug-$(PLATFORM)-$(ARCH)
+RP=release-$(PLATFORM)-$(ARCH)
+BD=$(BIN_DIR)
+BR=$(BIN_DIR)
 CDIR=$(MOUNT_DIR)/client
 SDIR=$(MOUNT_DIR)/server
 RDIR=$(MOUNT_DIR)/renderer
@@ -1089,12 +1094,12 @@ default: release
 all: debug release
 
 debug:
-	@$(MAKE) targets B=$(BD) O=$(BD)/obj CFLAGS="$(CFLAGS) $(BASE_CFLAGS) $(DEPEND_CFLAGS)" \
+	@$(MAKE) targets B=$(BIN_DIR) O=$(OBJ_DIR)/$(DP) CFLAGS="$(CFLAGS) $(BASE_CFLAGS) $(DEPEND_CFLAGS)" \
 	  OPTIMIZE="$(DEBUG_CFLAGS)" OPTIMIZEVM="$(DEBUG_CFLAGS)" \
 	  CLIENT_CFLAGS="$(CLIENT_CFLAGS)" SERVER_CFLAGS="$(SERVER_CFLAGS)" V=$(V)
 
 release:
-	@$(MAKE) targets B=$(BR) O=$(BR)/obj CFLAGS="$(CFLAGS) $(BASE_CFLAGS) $(DEPEND_CFLAGS)" \
+	@$(MAKE) targets B=$(BIN_DIR) O=$(OBJ_DIR)/$(RP) CFLAGS="$(CFLAGS) $(BASE_CFLAGS) $(DEPEND_CFLAGS)" \
 	  OPTIMIZE="-DNDEBUG $(OPTIMIZE)" OPTIMIZEVM="-DNDEBUG $(OPTIMIZEVM)" \
 	  CLIENT_CFLAGS="$(CLIENT_CFLAGS)" SERVER_CFLAGS="$(SERVER_CFLAGS)" V=$(V)
 
@@ -1161,7 +1166,8 @@ ifneq ($(TARGETS),)
 endif
 
 makedirs:
-	@if [ ! -d $(BUILD_DIR) ];then $(MKDIR) $(BUILD_DIR);fi
+	@if [ ! -d $(BIN_DIR) ];then $(MKDIR) $(BIN_DIR);fi
+	@if [ ! -d $(OBJ_DIR) ];then $(MKDIR) $(OBJ_DIR);fi
 	@if [ ! -d $(B) ];then $(MKDIR) $(B);fi
 	@if [ ! -d $(O) ];then $(MKDIR) $(O);fi
 	@if [ ! -d $(O)/client ];then $(MKDIR) $(O)/client;fi
@@ -2546,10 +2552,10 @@ else
 endif
 
 clean-debug:
-	@$(MAKE) clean2 B=$(BD) O=$(BD)/obj
+	@$(MAKE) clean2 B=$(BIN_DIR) O=$(OBJ_DIR)/$(DP)
 
 clean-release:
-	@$(MAKE) clean2 B=$(BR) O=$(BR)/obj
+	@$(MAKE) clean2 B=$(BIN_DIR) O=$(OBJ_DIR)/$(RP)
 
 clean2:
 	@echo "clean $(B) & $(O)"
@@ -2560,10 +2566,10 @@ clean2:
 cmdclean: cmdclean-debug cmdclean-release
 
 cmdclean-debug:
-	@$(MAKE) cmdclean2 B=$(BD) O=$(BD)/obj
+	@$(MAKE) cmdclean2 B=$(BIN_DIR) O=$(OBJ_DIR)/$(DP)
 
 cmdclean-release:
-	@$(MAKE) cmdclean2 B=$(BR) O=$(BR)/obj 
+	@$(MAKE) cmdclean2 B=$(BIN_DIR) O=$(OBJ_DIR)/$(RP)
 
 cmdclean2:
 	@echo "CMD_CLEAN $(B)"
@@ -2572,7 +2578,7 @@ cmdclean2:
 	@rm -f $(LBURG) $(DAGCHECK_C) $(Q3RCC) $(Q3CPP) $(Q3LCC) $(Q3ASM)
 
 distclean: clean cmdclean
-	@rm -rf $(BUILD_DIR)
+	@rm -rf $(BIN_DIR)
 
 installer: release
 ifeq ($(PLATFORM),mingw32)
