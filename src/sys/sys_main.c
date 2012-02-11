@@ -265,7 +265,7 @@ Sys_Init(void)
 	Cvar_Set("username", Sys_GetCurrentUser( ));
 
 	Com_sprintf(pidstr, sizeof(pidstr), "%d", Sys_PID());
-	Cvar_Get("com_pid", pidstr, CVAR_ROM);
+	Cvar_Get("pid", pidstr, CVAR_ROM);
 }
 
 /*
