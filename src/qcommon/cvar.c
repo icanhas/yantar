@@ -399,13 +399,13 @@ Cvar_Get(const char *var_name, const char *var_value, int flags)
 void
 Cvar_Print(cvar_t *v)
 {
-	Com_Printf("\"%s\" is:\"%s" S_COLOR_WHITE "\"",
+	Com_Printf("%s is \"%s" S_COLOR_WHITE "\"",
 		v->name, v->string);
 	if(!(v->flags & CVAR_ROM)){
 		if(!Q_stricmp(v->string, v->resetString))
 			Com_Printf(", the default");
 		else
-			Com_Printf(" default:\"%s" S_COLOR_WHITE "\"",
+			Com_Printf(", default: \"%s" S_COLOR_WHITE "\"",
 				v->resetString);
 	}
 	Com_Printf("\n");
