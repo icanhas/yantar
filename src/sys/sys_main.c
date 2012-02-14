@@ -266,6 +266,7 @@ Sys_Init(void)
 
 	Com_sprintf(pidstr, sizeof(pidstr), "%d", Sys_PID());
 	Cvar_Get("pid", pidstr, CVAR_ROM);
+	Cvar_SetDesc("pid", "This program's process ID, for debugging purposes");
 }
 
 /*

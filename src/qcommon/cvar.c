@@ -374,16 +374,22 @@ Cvar_Get(const char *var_name, const char *var_value, int flags)
 }
 
 /*
- * Cvar_Print: Prints the value, default, and latched string of the given 
- * variable
+ * Cvar_Print: Prints the description, value, default, and latched string of 
+ * the given variable
  */
 void
 Cvar_Print(cvar_t *v)
 {
+	Com_Printf("%s: ", v->name);
+	if(v->desc != nil)
+		Com_Printf("%s\n", v->desc);
+	else
+		Com_Printf("no description\n");
+
 	Com_Printf("%s is \"%s" S_COLOR_WHITE "\"",
 		v->name, v->string);
 	if(!(v->flags & CVAR_ROM)){
-		if(!Q_stricmp(v->string, v->resetString))
+		if(Q_stricmp(v->string, v->resetString) == 0)
 			Com_Printf(", the default");
 		else
 			Com_Printf(", default: \"%s" S_COLOR_WHITE "\"",
@@ -394,6 +400,19 @@ Cvar_Print(cvar_t *v)
 		Com_Printf("latched: \"%s\"\n", v->latchedString);
 }
 
+void
+Cvar_SetDesc(const char *name, const char *desc)
+{
+	cvar_t *cv;
+
+	cv = Cvar_FindVar(name);
+	if((cv == nil) || (desc == nil))
+		return;
+	if(cv->desc != nil)
+		Z_Free(cv->desc);
+	cv->desc = CopyString(desc);
+}
+	
 cvar_t *
 Cvar_Set2(const char *var_name, const char *value, qboolean force)
 {
@@ -413,7 +432,7 @@ Cvar_Set2(const char *var_name, const char *value, qboolean force)
 	}
 #endif
 
-	var = Cvar_FindVar (var_name);
+	var = Cvar_FindVar(var_name);
 	if(var == nil){
 		if(value == nil)
 			return nil;
