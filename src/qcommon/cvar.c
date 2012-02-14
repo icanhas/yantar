@@ -27,7 +27,7 @@
 enum
 {
 	MAX_CVARS	= 1024,
-	FILE_HASH_SIZE	= 256
+	HASH_SIZE	= 256
 };
 
 int	cvar_modifiedFlags;
@@ -36,26 +36,7 @@ static cvar_t	*cvar_vars = nil;
 static cvar_t	*cvar_cheats;
 static cvar_t	cvar_indexes[MAX_CVARS];
 static int	cvar_numIndexes;
-static cvar_t	*hashTable[FILE_HASH_SIZE];
-
-/* return a hash value for the filename */
-static long
-generateHashValue(const char *fname)
-{
-	int i;
-	long hash;
-	char letter;
-
-	hash = 0;
-	i = 0;
-	while(fname[i] != '\0'){
-		letter = tolower(fname[i]);
-		hash+=(long)(letter)*(i+119);
-		i++;
-	}
-	hash &= (FILE_HASH_SIZE-1);
-	return hash;
-}
+static cvar_t	*hashTable[HASH_SIZE];
 
 static qboolean
 Cvar_ValidateString(const char *s)
@@ -77,7 +58,7 @@ Cvar_FindVar(const char *var_name)
 	cvar_t	*var;
 	long	hash;
 
-	hash = generateHashValue(var_name);
+	hash = Com_HashString(var_name, HASH_SIZE);
 
 	for(var=hashTable[hash]; var != nil; var=var->hashNext)
 		if(!Q_stricmp(var_name, var->name))
@@ -379,7 +360,7 @@ Cvar_Get(const char *var_name, const char *var_value, int flags)
 	/* note what types of cvars have been modified (userinfo, archive, serverinfo, systeminfo) */
 	cvar_modifiedFlags |= var->flags;
 
-	hash = generateHashValue(var_name);
+	hash = Com_HashString(var_name, HASH_SIZE);
 	var->hashIndex = hash;
 
 	var->hashNext = hashTable[hash];

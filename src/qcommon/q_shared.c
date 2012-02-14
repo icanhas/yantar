@@ -22,6 +22,30 @@
  */
 #include "q_shared.h"
 
+/*
+ * Com_HashString: Return the hashed value of string s. Will skip file extension
+ * if passed a pathname.
+ */
+long
+Com_HashString(const char *s, int size)
+{
+	int i, c;
+	long hash;
+
+	hash = 0;
+	for(i = 0; s[i] != '\0'; ++i){
+		c = tolower(s[i]);
+		if(c == '.')
+			break; /* don't include extension */
+		if((c == PATH_SEP) && (c != '/'))
+			c = '/';
+		hash += c * (i + 119);
+	}
+	hash ^= (hash >> 10) ^ (hash >> 20);
+	hash &= size-1;
+	return hash;
+}
+
 float
 Com_Clamp(float min, float max, float value)
 {

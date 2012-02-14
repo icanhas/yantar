@@ -57,29 +57,6 @@ textureMode_t modes[] = {
 };
 
 /*
-================
-return a hash value for the filename
-================
-*/
-static long generateHashValue( const char *fname ) {
-	int		i;
-	long	hash;
-	char	letter;
-
-	hash = 0;
-	i = 0;
-	while (fname[i] != '\0') {
-		letter = tolower(fname[i]);
-		if (letter =='.') break;				// don't include extension
-		if (letter =='\\') letter = '/';		// damn path names
-		hash+=(long)(letter)*(i+119);
-		i++;
-	}
-	hash &= (FILE_HASH_SIZE-1);
-	return hash;
-}
-
-/*
 ===============
 GL_TextureMode
 ===============
@@ -1703,7 +1680,7 @@ image_t *R_CreateImage2( const char *name, byte *pic, int width, int height, img
 
 	GL_SelectTexture( 0 );
 
-	hash = generateHashValue(name);
+	hash = Com_HashString(name, FILE_HASH_SIZE);
 	image->next = hashTable[hash];
 	hashTable[hash] = image;
 
@@ -1943,7 +1920,7 @@ image_t	*R_FindImageFile2( const char *name, imgFlags_t flags )
 		return NULL;
 	}
 
-	hash = generateHashValue(name);
+	hash = Com_HashString(name, FILE_HASH_SIZE);
 
 	//
 	// see if the image is already loaded

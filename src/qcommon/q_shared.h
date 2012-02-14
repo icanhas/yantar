@@ -23,7 +23,6 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  * ===========================================================================
  */
-/*  */
 #ifndef __Q_SHARED_H
 #define __Q_SHARED_H
 
@@ -721,6 +720,8 @@ void PerpendicularVector(vec3_t dst, const vec3_t src);
 #endif
 
 /* common */
+long	Com_HashString(const char *s, int size);
+
 float Com_Clamp(float min, float max, float value);
 
 char    *COM_SkipPath(char *pathname);
