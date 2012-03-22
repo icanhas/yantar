@@ -52,22 +52,20 @@ LibVarStringValue(char *string)
 		if(*string < '0' || *string > '9'){
 			if(dotfound || *string != '.')
 				return 0;
-				/* end if */
 			else{
 				dotfound = 10;
 				string++;
-			}	/* end if */
-		}		/* end if */
+			}	
+		}		
 		if(dotfound){
 			value = value +
 				(float) (*string - '0') / (float) dotfound;
 			dotfound *= 10;
-		}	/* end if */
+		}	
 		else
 			value = value * 10.0 + (float) (*string - '0');
-			/* end else */
 		string++;
-	}	/* end while */
+	}	
 	return value;
 }	/* end of the function LibVarStringValue */
 /* ===========================================================================
@@ -117,7 +115,7 @@ LibVarDeAllocAll(void)
 	for(v = libvarlist; v; v = libvarlist){
 		libvarlist = libvarlist->next;
 		LibVarDeAlloc(v);
-	}	/* end for */
+	}	
 	libvarlist = NULL;
 }	/* end of the function LibVarDeAllocAll */
 /* ===========================================================================
@@ -134,8 +132,6 @@ LibVarGet(char *var_name)
 	for(v = libvarlist; v; v = v->next)
 		if(!Q_stricmp(v->name, var_name))
 			return v;
-			/* end if */
-			/* end for */
 	return NULL;
 }	/* end of the function LibVarGet */
 /* ===========================================================================
@@ -152,10 +148,8 @@ LibVarGetString(char *var_name)
 	v = LibVarGet(var_name);
 	if(v)
 		return v->string;
-		/* end if */
 	else
 		return "";
-		/* end else */
 }	/* end of the function LibVarGetString */
 /* ===========================================================================
  *
@@ -171,10 +165,8 @@ LibVarGetValue(char *var_name)
 	v = LibVarGet(var_name);
 	if(v)
 		return v->value;
-		/* end if */
 	else
 		return 0;
-		/* end else */
 }	/* end of the function LibVarGetValue */
 /* ===========================================================================
  *
@@ -242,10 +234,8 @@ LibVarSet(char *var_name, char *value)
 	v = LibVarGet(var_name);
 	if(v)
 		FreeMemory(v->string);
-		/* end if */
 	else
 		v = LibVarAlloc(var_name);
-		/* end else */
 	/* variable string */
 	v->string = (char *) GetMemory(strlen(value) + 1);
 	strcpy(v->string, value);
@@ -268,10 +258,8 @@ LibVarChanged(char *var_name)
 	v = LibVarGet(var_name);
 	if(v)
 		return v->modified;
-		/* end if */
 	else
 		return qfalse;
-		/* end else */
 }	/* end of the function LibVarChanged */
 /* ===========================================================================
  *
@@ -287,5 +275,4 @@ LibVarSetNotModified(char *var_name)
 	v = LibVarGet(var_name);
 	if(v)
 		v->modified = qfalse;
-		/* end if */
 }	/* end of the function LibVarSetNotModified */

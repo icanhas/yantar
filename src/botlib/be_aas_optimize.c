@@ -99,7 +99,7 @@ AAS_OptimizeEdge(optimized_t *optimized, int edgenum)
 		/* keep the edge reversed sign */
 		if(edgenum > 0) return optedgenum;
 		else return -optedgenum;
-	}	/* end if */
+	}	
 
 	optedge = &optimized->edges[optimized->numedges];
 
@@ -107,7 +107,6 @@ AAS_OptimizeEdge(optimized_t *optimized, int edgenum)
 		if(optimized->vertexoptimizeindex[edge->v[i]])
 			optedge->v[i] =
 				optimized->vertexoptimizeindex[edge->v[i]];
-			/* end if */
 		else{
 			VectorCopy(aasworld.vertexes[edge->v[i]],
 				optimized->vertexes[optimized->numvertexes]);
@@ -115,8 +114,8 @@ AAS_OptimizeEdge(optimized_t *optimized, int edgenum)
 			optimized->vertexoptimizeindex[edge->v[i]] =
 				optimized->numvertexes;
 			optimized->numvertexes++;
-		}	/* end else */
-	}		/* end for */
+		}	
+	}		
 	optimized->edgeoptimizeindex[abs(edgenum)] = optimized->numedges;
 	optedgenum = optimized->numedges;
 	optimized->numedges++;
@@ -156,7 +155,7 @@ AAS_OptimizeFace(optimized_t *optimized, int facenum)
 		/* keep the face side sign */
 		if(facenum > 0) return optfacenum;
 		else return -optfacenum;
-	}	/* end if */
+	}	
 
 	optface = &optimized->faces[optimized->numfaces];
 	Com_Memcpy(optface, face, sizeof(aas_face_t));
@@ -171,8 +170,8 @@ AAS_OptimizeFace(optimized_t *optimized, int facenum)
 					     optface->numedges] = optedgenum;
 			optface->numedges++;
 			optimized->edgeindexsize++;
-		}	/* end if */
-	}		/* end for */
+		}	
+	}		
 	optimized->faceoptimizeindex[abs(facenum)] = optimized->numfaces;
 	optfacenum = optimized->numfaces;
 	optimized->numfaces++;
@@ -206,8 +205,8 @@ AAS_OptimizeArea(optimized_t *optimized, int areanum)
 					     optarea->numfaces] = optfacenum;
 			optarea->numfaces++;
 			optimized->faceindexsize++;
-		}	/* end if */
-	}		/* end for */
+		}	
+	}		
 }			/* end of the function AAS_OptimizeArea */
 /* ===========================================================================
  *
@@ -297,7 +296,6 @@ AAS_Optimize(void)
 	AAS_OptimizeAlloc(&optimized);
 	for(i = 1; i < aasworld.numareas; i++)
 		AAS_OptimizeArea(&optimized, i);
-		/* end for */
 	/* reset the reachability face pointers */
 	for(i = 0; i < aasworld.reachabilitysize; i++){
 		/* NOTE: for TRAVEL_ELEVATOR the facenum is the model number of
@@ -325,7 +323,7 @@ AAS_Optimize(void)
 			];
 		if(sign < 0) aasworld.reachability[i].edgenum =
 				-aasworld.reachability[i].edgenum;
-	}	/* end for */
+	}	
 		/* store the optimized AAS data into aasworld */
 	AAS_OptimizeStore(&optimized);
 	/* print some nice stuff :) */

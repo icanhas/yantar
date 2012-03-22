@@ -79,21 +79,20 @@ AAS_StringFromIndex(char *indexname, char *stringindex[], int numindexes,
 		botimport.Print(PRT_ERROR, "%s: index %d not setup\n", indexname,
 			index);
 		return "";
-	}	/* end if */
+	}	
 	if(index < 0 || index >= numindexes){
 		botimport.Print(PRT_ERROR, "%s: index %d out of range\n",
 			indexname,
 			index);
 		return "";
-	}	/* end if */
+	}	
 	if(!stringindex[index]){
 		if(index)
 			botimport.Print(PRT_ERROR,
 				"%s: reference to unused index %d\n", indexname,
 				index);
-			/* end if */
 		return "";
-	}	/* end if */
+	}	
 	return stringindex[index];
 }	/* end of the function AAS_StringFromIndex */
 /* ===========================================================================
@@ -112,11 +111,11 @@ AAS_IndexFromString(char *indexname, char *stringindex[], int numindexes,
 			indexname,
 			string);
 		return 0;
-	}	/* end if */
+	}	
 	for(i = 0; i < numindexes; i++){
 		if(!stringindex[i]) continue;
 		if(!Q_stricmp(stringindex[i], string)) return i;
-	}	/* end for */
+	}	
 	return 0;
 }	/* end of the function AAS_IndexFromString */
 /* ===========================================================================
@@ -160,8 +159,7 @@ AAS_UpdateStringIndexes(int numconfigstrings, char *configstrings[])
 			aasworld.configstrings[i] =
 				(char *) GetMemory(strlen(configstrings[i]) + 1);
 			strcpy(aasworld.configstrings[i], configstrings[i]);
-		}	/* end if */
-	/* end for */
+		}	
 	aasworld.indexessetup = qtrue;
 }	/* end of the function AAS_UpdateStringIndexes */
 /* ===========================================================================
@@ -230,12 +228,10 @@ AAS_ContinueInit(float time)
 		if(AAS_WriteAASFile(aasworld.filename))
 			botimport.Print(PRT_MESSAGE, "%s written successfully\n",
 				aasworld.filename);
-			/* end if */
 		else
 			botimport.Print(PRT_ERROR, "couldn't write %s\n",
 				aasworld.filename);
-			/* end else */
-	}	/* end if */
+	}	
 		/* initialize the routing */
 	AAS_InitRouting();
 	/* at this point AAS is initialized */
@@ -265,21 +261,21 @@ AAS_StartFrame(float time)
 		if(LibVarGetValue("showcacheupdates")){
 			AAS_RoutingInfo();
 			LibVarSet("showcacheupdates", "0");
-		}	/* end if */
+		}	
 		if(LibVarGetValue("showmemoryusage")){
 			PrintUsedMemorySize();
 			LibVarSet("showmemoryusage", "0");
-		}	/* end if */
+		}	
 		if(LibVarGetValue("memorydump")){
 			PrintMemoryLabels();
 			LibVarSet("memorydump", "0");
-		}	/* end if */
-	}		/* end if */
+		}	
+	}		
 		/*  */
 	if(saveroutingcache->value){
 		AAS_WriteRouteCache();
 		LibVarSet("saveroutingcache", "0");
-	}	/* end if */
+	}	
 		/*  */
 	aasworld.numframes++;
 	return BLERR_NOERROR;
@@ -359,7 +355,6 @@ AAS_LoadMap(const char *mapname)
 	/* if no mapname is provided then the string indexes are updated */
 	if(!mapname)
 		return 0;
-		/* end if */
 	/*  */
 	aasworld.initialized = qfalse;
 	/* NOTE: free the routing caches before loading a new map because
@@ -371,7 +366,7 @@ AAS_LoadMap(const char *mapname)
 	if(errnum != BLERR_NOERROR){
 		aasworld.loaded = qfalse;
 		return errnum;
-	}	/* end if */
+	}	
 		/*  */
 	AAS_InitSettings();
 	/* initialize the AAS link heap for the new map */

@@ -214,17 +214,17 @@ BlockFromPointer(void *ptr, char *str)
 		botimport.Print(PRT_FATAL, "%s: NULL pointer\n", str);
 #endif	/* MEMDEBUG */
 		return NULL;
-	}	/* end if */
+	}	
 	block = (memoryblock_t *) ((char *) ptr - sizeof(memoryblock_t));
 	if(block->id != MEM_ID && block->id != HUNK_ID){
 		botimport.Print(PRT_FATAL, "%s: invalid memory block\n", str);
 		return NULL;
-	}	/* end if */
+	}	
 	if(block->ptr != ptr){
 		botimport.Print(PRT_FATAL, "%s: memory block pointer invalid\n",
 			str);
 		return NULL;
-	}	/* end if */
+	}	
 	return block;
 }	/* end of the function BlockFromPointer */
 /* ===========================================================================
@@ -247,7 +247,6 @@ FreeMemory(void *ptr)
 	/*  */
 	if(block->id == MEM_ID)
 		botimport.FreeMemory(block);
-		/* end if */
 }	/* end of the function FreeMemory */
 /* ===========================================================================
  *
@@ -313,16 +312,14 @@ PrintMemoryLabels(void)
 				block->ptr, block->size, block->file,
 				block->line,
 				block->label);
-			/* end if */
 		else
 			Log_Write("%6d,      %p, %8d: %24s line %6d: %s\r\n", i,
 				block->ptr, block->size, block->file,
 				block->line,
 				block->label);
-			/* end else */
 #endif	/* MEMDEBUG */
 		i++;
-	}	/* end for */
+	}	
 }		/* end of the function PrintMemoryLabels */
 /* ===========================================================================
  *
@@ -337,7 +334,6 @@ DumpMemory(void)
 
 	for(block = memory; block; block = memory)
 		FreeMemory(block->ptr);
-		/* end for */
 	totalmemorysize = 0;
 	allocatedmemory = 0;
 }	/* end of the function DumpMemory */
@@ -447,7 +443,6 @@ FreeMemory(void *ptr)
 
 	if(*memid == MEM_ID)
 		botimport.FreeMemory(memid);
-		/* end if */
 }	/* end of the function FreeMemory */
 /* ===========================================================================
  *

@@ -3164,7 +3164,6 @@ BotFindEnemy(bot_state_t *bs, int curenemy)
 		if(!EntityCarriesFlag(&entinfo))
 			/* if this enemy is further away than the current one */
 			if(curenemy >= 0 && squaredist > cursquaredist) continue;
-			/* end if */
 		/* if the bot has no */
 		if(squaredist > Square(900.0 + alertness * 4000.0)) continue;
 		/* if on the same team */
@@ -4167,7 +4166,7 @@ BotFuncButtonActivateGoal(bot_state_t *bs, int bspent,
 					else activategoal->goal.mins[i] += fabs(
 							movedir[i]) * fabs(
 							extramins[i]);
-				}	/* end for */
+				}	
 					/*  */
 				activategoal->goal.entitynum = entitynum;
 				activategoal->goal.number = 0;
@@ -4212,7 +4211,7 @@ BotFuncButtonActivateGoal(bot_state_t *bs, int bspent,
 				else activategoal->goal.mins[i] +=
 						fabs(movedir[i]) * fabs(
 							extramins[i]);
-			}	/* end for */
+			}	
 				/*  */
 			activategoal->goal.entitynum = entitynum;
 			activategoal->goal.number = 0;

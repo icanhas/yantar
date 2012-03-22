@@ -62,18 +62,18 @@ Log_Open(char *filename)
 	if(!filename || !strlen(filename)){
 		botimport.Print(PRT_MESSAGE, "openlog <filename>\n");
 		return;
-	}	/* end if */
+	}	
 	if(logfile.fp){
 		botimport.Print(PRT_ERROR, "log file %s is already opened\n",
 			logfile.filename);
 		return;
-	}	/* end if */
+	}	
 	logfile.fp = fopen(filename, "wb");
 	if(!logfile.fp){
 		botimport.Print(PRT_ERROR, "can't open the log file %s\n",
 			filename);
 		return;
-	}	/* end if */
+	}	
 	strncpy(logfile.filename, filename, MAX_LOGFILENAMESIZE);
 	botimport.Print(PRT_MESSAGE, "Opened log %s\n", logfile.filename);
 }	/* end of the function Log_Create */
@@ -91,7 +91,7 @@ Log_Close(void)
 		botimport.Print(PRT_ERROR, "can't close log file %s\n",
 			logfile.filename);
 		return;
-	}	/* end if */
+	}	
 	logfile.fp = NULL;
 	botimport.Print(PRT_MESSAGE, "Closed log %s\n", logfile.filename);
 }	/* end of the function Log_Close */

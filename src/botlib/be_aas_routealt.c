@@ -89,7 +89,7 @@ AAS_AltRoutingFloodCluster_r(int areanum)
 		if(!midrangeareas[otherareanum].valid) continue;
 		/*  */
 		AAS_AltRoutingFloodCluster_r(otherareanum);
-	}	/* end for */
+	}	
 }		/* end of the function AAS_AltRoutingFloodCluster_r */
 /* ===========================================================================
  *
@@ -140,9 +140,6 @@ AAS_AlternativeRouteGoals(vec3_t start, int startareanum, vec3_t goal,
 				     (aasworld.areasettings[i].contents &
 				      AREACONTENTS_VIEWPORTAL)))
 					continue;
-					/* end if */
-					/* end if */
-					/* end if */
 		/* if the area has no reachabilities */
 		if(!AAS_AreaReachability(i)) continue;
 		/* tavel time from the area to the start area */
@@ -163,7 +160,7 @@ AAS_AlternativeRouteGoals(vec3_t start, int startareanum, vec3_t goal,
 		midrangeareas[i].goaltime	= goaltime;
 		Log_Write("%d midrange area %d", nummidrangeareas, i);
 		nummidrangeareas++;
-	}	/* end for */
+	}	
 		/*  */
 	for(i = 1; i < aasworld.numareas; i++){
 		if(!midrangeareas[i].valid) continue;
@@ -176,7 +173,6 @@ AAS_AlternativeRouteGoals(vec3_t start, int startareanum, vec3_t goal,
 		for(j = 0; j < numclusterareas; j++)
 			VectorAdd(mid, aasworld.areas[clusterareas[j]].center,
 				mid);
-			/* end for */
 		VectorScale(mid, 1.0 / numclusterareas, mid);
 		/* get the area closest to the center of the cluster */
 		bestdist = 999999;
@@ -189,8 +185,8 @@ AAS_AlternativeRouteGoals(vec3_t start, int startareanum, vec3_t goal,
 			if(dist < bestdist){
 				bestdist = dist;
 				bestareanum = clusterareas[j];
-			}	/* end if */
-		}		/* end for */
+			}	
+		}		
 			/* now we've got an area for an alternative route */
 			/* FIXME: add alternative goal origin */
 		VectorCopy(aasworld.areas[bestareanum].center,
@@ -211,7 +207,7 @@ AAS_AlternativeRouteGoals(vec3_t start, int startareanum, vec3_t goal,
 #endif
 		/* don't return more than the maximum alternative route goals */
 		if(numaltroutegoals >= maxaltroutegoals) break;
-	}	/* end for */
+	}	
 #ifdef ALTROUTE_DEBUG
 	botimport.Print(PRT_MESSAGE, "alternative route goals in %d msec\n",
 		Sys_MilliSeconds() - startmillisecs);

@@ -959,7 +959,7 @@ CM_AddFacetBevels(facet_t *facet)
 								numBorders]){
 						VectorNegate(newplane, newplane);
 						newplane[3] = -newplane[3];
-					}	/* end if */
+					}	
 					ChopWindingInPlace(&w2, newplane,
 						newplane[3],
 						0.1f);
@@ -1751,7 +1751,7 @@ CM_DrawDebugSurface(void (*drawPoly)(int color, int numPoints, float *points))
 			for(n = 0; n < 3; n++){
 				if(plane[n] > 0) v1[n] = maxs[n];
 				else v1[n] = mins[n];
-			}	/* end for */
+			}	
 			VectorNegate(plane, v2);
 			plane[3] += fabs(DotProduct(v1, v2));
 			/* * / */
@@ -1782,7 +1782,7 @@ CM_DrawDebugSurface(void (*drawPoly)(int color, int numPoints, float *points))
 				for(n = 0; n < 3; n++){
 					if(plane[n] > 0) v1[n] = maxs[n];
 					else v1[n] = mins[n];
-				}	/* end for */
+				}	
 				VectorNegate(plane, v2);
 				plane[3] -= fabs(DotProduct(v1, v2));
 

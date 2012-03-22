@@ -127,8 +127,6 @@ PrintContents(int contents)
 		if(contents & contentnames[i].value)
 			botimport.Print(PRT_MESSAGE, "%s\n",
 				contentnames[i].name);
-			/* end if */
-			/* end for */
 }	/* end of the function PrintContents */
 
 #endif	/* BSP_DEBUG */
@@ -177,7 +175,7 @@ AAS_EntityCollision(int entnum,
 	if(enttrace.fraction < trace->fraction){
 		Com_Memcpy(trace, &enttrace, sizeof(bsp_trace_t));
 		return qtrue;
-	}	/* end if */
+	}	
 	return qfalse;
 }	/* end of the function AAS_EntityCollision */
 /* ===========================================================================
@@ -274,7 +272,7 @@ AAS_BSPEntityInRange(int ent)
 	if(ent <= 0 || ent >= bspworld.numentities){
 		botimport.Print(PRT_MESSAGE, "bsp entity out of range\n");
 		return qfalse;
-	}	/* end if */
+	}	
 	return qtrue;
 }	/* end of the function AAS_BSPEntityInRange */
 /* ===========================================================================
@@ -295,8 +293,7 @@ AAS_ValueForBSPEpairKey(int ent, char *key, char *value, int size)
 			strncpy(value, epair->value, size-1);
 			value[size-1] = '\0';
 			return qtrue;
-		}	/* end if */
-	/* end for */
+		}	
 	return qfalse;
 }	/* end of the function AAS_FindBSPEpair */
 /* ===========================================================================
@@ -374,8 +371,8 @@ AAS_FreeBSPEntities(void)
 			if(epair->key) FreeMemory(epair->key);
 			if(epair->value) FreeMemory(epair->value);
 			FreeMemory(epair);
-		}	/* end for */
-	}		/* end for */
+		}	
+	}		
 	bspworld.numentities = 0;
 }	/* end of the function AAS_FreeBSPEntities */
 /* ===========================================================================
@@ -404,12 +401,12 @@ AAS_ParseBSPEntities(void)
 			AAS_FreeBSPEntities();
 			FreeScript(script);
 			return;
-		}	/* end if */
+		}	
 		if(bspworld.numentities >= MAX_BSPENTITIES){
 			botimport.Print(PRT_MESSAGE,
 				"too many entities in BSP file\n");
 			break;
-		}	/* end if */
+		}	
 		ent = &bspworld.entities[bspworld.numentities];
 		bspworld.numentities++;
 		ent->epairs = NULL;
@@ -425,7 +422,7 @@ AAS_ParseBSPEntities(void)
 				AAS_FreeBSPEntities();
 				FreeScript(script);
 				return;
-			}	/* end if */
+			}	
 			StripDoubleQuotes(token.string);
 			epair->key = (char *) GetHunkMemory(strlen(
 					token.string) + 1);
@@ -434,19 +431,19 @@ AAS_ParseBSPEntities(void)
 				AAS_FreeBSPEntities();
 				FreeScript(script);
 				return;
-			}	/* end if */
+			}	
 			StripDoubleQuotes(token.string);
 			epair->value =
 				(char *) GetHunkMemory(strlen(token.string) + 1);
 			strcpy(epair->value, token.string);
-		}	/* end while */
+		}	
 		if(strcmp(token.string, "}")){
 			ScriptError(script, "missing }\n");
 			AAS_FreeBSPEntities();
 			FreeScript(script);
 			return;
-		}	/* end if */
-	}		/* end while */
+		}	
+	}		
 	FreeScript(script);
 }	/* end of the function AAS_ParseBSPEntities */
 /* ===========================================================================
