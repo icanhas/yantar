@@ -89,13 +89,13 @@ tryagain:
 	if( weaponNum == WP_MACHINEGUN || weaponNum == WP_GAUNTLET ||
 	    weaponNum == WP_BFG ){
 		strcpy(path, item->world_model[0]);
-		COM_StripExtension(path, path, sizeof(path));
+		Com_StripExtension(path, path, sizeof(path));
 		strcat(path, "_barrel.md3");
 		pi->barrelModel = trap_R_RegisterModel(path);
 	}
 
 	strcpy(path, item->world_model[0]);
-	COM_StripExtension(path, path, sizeof(path));
+	Com_StripExtension(path, path, sizeof(path));
 	strcat(path, "_flash.md3");
 	pi->flashModel = trap_R_RegisterModel(path);
 
@@ -1100,7 +1100,7 @@ UI_ParseAnimationFile(const char *filename, animation_t *animations)
 	text[len] = 0;
 	trap_FS_FCloseFile(f);
 
-	COM_Compress(text);
+	Com_Compress(text);
 
 	/* parse the text */
 	text_p	= text;
@@ -1109,23 +1109,23 @@ UI_ParseAnimationFile(const char *filename, animation_t *animations)
 	/* read optional parameters */
 	while( 1 ){
 		prev	= text_p;	/* so we can unget */
-		token	= COM_Parse(&text_p);
+		token	= Com_Parse(&text_p);
 		if( !token )
 			break;
 		if( !Q_stricmp(token, "footsteps")){
-			token = COM_Parse(&text_p);
+			token = Com_Parse(&text_p);
 			if( !token )
 				break;
 			continue;
 		}else if( !Q_stricmp(token, "headoffset")){
 			for( i = 0; i < 3; i++ ){
-				token = COM_Parse(&text_p);
+				token = Com_Parse(&text_p);
 				if( !token )
 					break;
 			}
 			continue;
 		}else if( !Q_stricmp(token, "sex")){
-			token = COM_Parse(&text_p);
+			token = Com_Parse(&text_p);
 			if( !token )
 				break;
 			continue;
@@ -1143,7 +1143,7 @@ UI_ParseAnimationFile(const char *filename, animation_t *animations)
 	/* read information for each frame */
 	for( i = 0; i < MAX_ANIMATIONS; i++ ){
 
-		token = COM_Parse(&text_p);
+		token = Com_Parse(&text_p);
 		if( !token )
 			break;
 		animations[i].firstFrame = atoi(token);
@@ -1154,17 +1154,17 @@ UI_ParseAnimationFile(const char *filename, animation_t *animations)
 		if( i >= LEGS_WALKCR )
 			animations[i].firstFrame -= skip;
 
-		token = COM_Parse(&text_p);
+		token = Com_Parse(&text_p);
 		if( !token )
 			break;
 		animations[i].numFrames = atoi(token);
 
-		token = COM_Parse(&text_p);
+		token = Com_Parse(&text_p);
 		if( !token )
 			break;
 		animations[i].loopFrames = atoi(token);
 
-		token = COM_Parse(&text_p);
+		token = Com_Parse(&text_p);
 		if( !token )
 			break;
 		fps = atof(token);

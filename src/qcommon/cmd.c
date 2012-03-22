@@ -286,7 +286,7 @@ Cmd_Exec_f(void)
 	}
 
 	Q_strncpyz(filename, Cmd_Argv(1), sizeof(filename));
-	COM_DefaultExtension(filename, sizeof(filename), ".cfg");
+	Com_DefaultExtension(filename, sizeof(filename), ".cfg");
 	FS_ReadFile(filename, &f.v);
 	if(!f.c){
 		Com_Printf ("couldn't exec %s\n",Cmd_Argv(1));

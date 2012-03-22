@@ -740,7 +740,7 @@ GetMenuBuffer(const char *filename)
 	trap_FS_Read(buf, len, f);
 	buf[len] = 0;
 	trap_FS_FCloseFile(f);
-	/* COM_Compress(buf); */
+	/* Com_Compress(buf); */
 	return buf;
 
 }
@@ -5305,14 +5305,14 @@ Team_Parse(char **p)
 	const char	*tempStr;
 	int		i;
 
-	token = COM_ParseExt(p, qtrue);
+	token = Com_ParseExt(p, qtrue);
 
 	if(token[0] != '{')
 		return qfalse;
 
 	while( 1 ){
 
-		token = COM_ParseExt(p, qtrue);
+		token = Com_ParseExt(p, qtrue);
 
 		if(Q_stricmp(token, "}") == 0)
 			return qtrue;
@@ -5365,7 +5365,7 @@ Team_Parse(char **p)
 			else
 				Com_Printf(
 					"Too many teams, last team replaced!\n");
-			token = COM_ParseExt(p, qtrue);
+			token = Com_ParseExt(p, qtrue);
 			if(token[0] != '}')
 				return qfalse;
 		}
@@ -5380,14 +5380,14 @@ Character_Parse(char **p)
 	char *token;
 	const char *tempStr;
 
-	token = COM_ParseExt(p, qtrue);
+	token = Com_ParseExt(p, qtrue);
 
 	if(token[0] != '{')
 		return qfalse;
 
 
 	while( 1 ){
-		token = COM_ParseExt(p, qtrue);
+		token = Com_ParseExt(p, qtrue);
 
 		if(Q_stricmp(token, "}") == 0)
 			return qtrue;
@@ -5432,7 +5432,7 @@ Character_Parse(char **p)
 				Com_Printf(
 					"Too many characters, last character replaced!\n");
 
-			token = COM_ParseExt(p, qtrue);
+			token = Com_ParseExt(p, qtrue);
 			if(token[0] != '}')
 				return qfalse;
 		}
@@ -5447,13 +5447,13 @@ Alias_Parse(char **p)
 {
 	char *token;
 
-	token = COM_ParseExt(p, qtrue);
+	token = Com_ParseExt(p, qtrue);
 
 	if(token[0] != '{')
 		return qfalse;
 
 	while( 1 ){
-		token = COM_ParseExt(p, qtrue);
+		token = Com_ParseExt(p, qtrue);
 
 		if(Q_stricmp(token, "}") == 0)
 			return qtrue;
@@ -5481,7 +5481,7 @@ Alias_Parse(char **p)
 				Com_Printf(
 					"Too many aliases, last alias replaced!\n");
 
-			token = COM_ParseExt(p, qtrue);
+			token = Com_ParseExt(p, qtrue);
 			if(token[0] != '}')
 				return qfalse;
 		}
@@ -5511,7 +5511,7 @@ UI_ParseTeamInfo(const char *teamFile)
 	p = buff;
 
 	while( 1 ){
-		token = COM_ParseExt(&p, qtrue);
+		token = Com_ParseExt(&p, qtrue);
 		if( !token || token[0] == 0 || token[0] == '}')
 			break;
 
@@ -5542,7 +5542,7 @@ GameType_Parse(char **p, qboolean join)
 {
 	char *token;
 
-	token = COM_ParseExt(p, qtrue);
+	token = Com_ParseExt(p, qtrue);
 
 	if(token[0] != '{')
 		return qfalse;
@@ -5553,7 +5553,7 @@ GameType_Parse(char **p, qboolean join)
 		uiInfo.numGameTypes = 0;
 
 	while( 1 ){
-		token = COM_ParseExt(p, qtrue);
+		token = Com_ParseExt(p, qtrue);
 
 		if(Q_stricmp(token, "}") == 0)
 			return qtrue;
@@ -5598,7 +5598,7 @@ GameType_Parse(char **p, qboolean join)
 						"Too many game types, last one replace!\n");
 			}
 
-			token = COM_ParseExt(p, qtrue);
+			token = Com_ParseExt(p, qtrue);
 			if(token[0] != '}')
 				return qfalse;
 		}
@@ -5611,7 +5611,7 @@ MapList_Parse(char **p)
 {
 	char *token;
 
-	token = COM_ParseExt(p, qtrue);
+	token = Com_ParseExt(p, qtrue);
 
 	if(token[0] != '{')
 		return qfalse;
@@ -5619,7 +5619,7 @@ MapList_Parse(char **p)
 	uiInfo.mapCount = 0;
 
 	while( 1 ){
-		token = COM_ParseExt(p, qtrue);
+		token = Com_ParseExt(p, qtrue);
 
 		if(Q_stricmp(token, "}") == 0)
 			return qtrue;
@@ -5643,7 +5643,7 @@ MapList_Parse(char **p)
 			uiInfo.mapList[uiInfo.mapCount].typeBits = 0;
 
 			while(1){
-				token = COM_ParseExt(p, qtrue);
+				token = Com_ParseExt(p, qtrue);
 				if(token[0] >= '0' && token[0] <= '9'){
 					uiInfo.mapList[uiInfo.mapCount].typeBits
 						|= (1 << (token[0] - 0x030));
@@ -5692,7 +5692,7 @@ UI_ParseGameInfo(const char *teamFile)
 	p = buff;
 
 	while( 1 ){
-		token = COM_ParseExt(&p, qtrue);
+		token = Com_ParseExt(&p, qtrue);
 		if( !token || token[0] == 0 || token[0] == '}')
 			break;
 
@@ -5846,7 +5846,7 @@ UI_BuildQ3Model_List(void)
 		    j++,fileptr+=filelen+1){
 			filelen = strlen(fileptr);
 
-			COM_StripExtension(fileptr, skinname, sizeof(skinname));
+			Com_StripExtension(fileptr, skinname, sizeof(skinname));
 
 			/* look for icon_???? */
 			if(Q_stricmpn(skinname, "icon_",

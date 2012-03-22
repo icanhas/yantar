@@ -591,7 +591,7 @@ CG_ParseVoiceChats(const char *filename, voiceChatList_t *voiceChatList,
 	voiceChats = voiceChatList->voiceChats;
 	for( i = 0; i < maxVoiceChats; i++ )
 		voiceChats[i].id[0] = 0;
-	token = COM_ParseExt(p, qtrue);
+	token = Com_ParseExt(p, qtrue);
 	if(!token || token[0] == 0)
 		return qtrue;
 	if(!Q_stricmp(token, "female"))
@@ -609,14 +609,14 @@ CG_ParseVoiceChats(const char *filename, voiceChatList_t *voiceChatList,
 
 	voiceChatList->numVoiceChats = 0;
 	while( 1 ){
-		token = COM_ParseExt(p, qtrue);
+		token = Com_ParseExt(p, qtrue);
 		if(!token || token[0] == 0)
 			return qtrue;
 		Com_sprintf(voiceChats[voiceChatList->numVoiceChats].id,
 			sizeof(voiceChats[voiceChatList->numVoiceChats].id),
 			"%s",
 			token);
-		token = COM_ParseExt(p, qtrue);
+		token = Com_ParseExt(p, qtrue);
 		if(Q_stricmp(token, "{")){
 			trap_Print(va(S_COLOR_RED
 					"expected { found %s in voice chat file: %s\n",
@@ -626,7 +626,7 @@ CG_ParseVoiceChats(const char *filename, voiceChatList_t *voiceChatList,
 		}
 		voiceChats[voiceChatList->numVoiceChats].numSounds = 0;
 		while(1){
-			token = COM_ParseExt(p, qtrue);
+			token = Com_ParseExt(p, qtrue);
 			if(!token || token[0] == 0)
 				return qtrue;
 			if(!Q_stricmp(token, "}"))
@@ -636,7 +636,7 @@ CG_ParseVoiceChats(const char *filename, voiceChatList_t *voiceChatList,
 				voiceChats[voiceChatList->numVoiceChats].
 				numSounds] =
 				sound;
-			token = COM_ParseExt(p, qtrue);
+			token = Com_ParseExt(p, qtrue);
 			if(!token || token[0] == 0)
 				return qtrue;
 			Com_sprintf(
@@ -720,7 +720,7 @@ CG_HeadModelVoiceChats(char *filename)
 	ptr	= buf;
 	p	= &ptr;
 
-	token = COM_ParseExt(p, qtrue);
+	token = Com_ParseExt(p, qtrue);
 	if(!token || token[0] == 0)
 		return -1;
 

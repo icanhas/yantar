@@ -3055,7 +3055,7 @@ Com_WriteConfig_f(void)
 	}
 
 	Q_strncpyz(filename, Cmd_Argv(1), sizeof(filename));
-	COM_DefaultExtension(filename, sizeof(filename), ".cfg");
+	Com_DefaultExtension(filename, sizeof(filename), ".cfg");
 	Com_Printf("Writing %s.\n", filename);
 	Com_WriteConfigToFile(filename);
 }

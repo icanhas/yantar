@@ -385,7 +385,7 @@ RE_RegisterFont(const char *fontName, int pointSize, fontInfo_t *font)
 		return;
 	}
 	
-	COM_StripExtension(fontName, strippedname, sizeof(strippedname));
+	Com_StripExtension(fontName, strippedname, sizeof(strippedname));
 	Com_sprintf(filename, sizeof(filename),"%s_%i.dat", strippedname, pointSize);
 	for(i = 0; i < registeredFontCount; i++){
 		if(Q_stricmp(filename, registeredFont[i].name) == 0){

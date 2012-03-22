@@ -57,7 +57,7 @@ Com_Clamp(float min, float max, float value)
 }
 
 char *
-COM_SkipPath(char *pathname)
+Com_SkipPath(char *pathname)
 {
 	char *last;
 
@@ -71,7 +71,7 @@ COM_SkipPath(char *pathname)
 }
 
 const char *
-COM_GetExtension(const char *name)
+Com_GetExtension(const char *name)
 {
 	const char *dot = strrchr(name, '.'), *slash;
 	if(dot && (!(slash = strrchr(name, '/')) || slash < dot))
@@ -81,7 +81,7 @@ COM_GetExtension(const char *name)
 }
 
 void
-COM_StripExtension(const char *in, char *out, int destsize)
+Com_StripExtension(const char *in, char *out, int destsize)
 {
 	const char *dot = strrchr(in, '.'), *slash;
 	if(dot && (!(slash = strrchr(in, '/')) || slash < dot))
@@ -91,11 +91,11 @@ COM_StripExtension(const char *in, char *out, int destsize)
 }
 
 /*
- * COM_CompareExtension: string compare the end of the strings and return 
+ * Com_CompareExtension: string compare the end of the strings and return 
  * qtrue if strings match
  */
 qboolean
-COM_CompareExtension(const char *in, const char *ext)
+Com_CompareExtension(const char *in, const char *ext)
 {
 	int inlen, extlen;
 
@@ -112,11 +112,11 @@ COM_CompareExtension(const char *in, const char *ext)
 }
 
 /*
- * COM_DefaultExtension: if path doesn't have an extension, then append the 
+ * Com_DefaultExtension: if path doesn't have an extension, then append the 
  * specified one (which should include the .)
  */
 void
-COM_DefaultExtension(char *path, int maxSize, const char *extension)
+Com_DefaultExtension(char *path, int maxSize, const char *extension)
 {
 	const char *dot = strrchr(path, '.'), *slash;
 	if(dot && (!(slash = strrchr(path, '/')) || slash < dot))
@@ -287,30 +287,30 @@ static char com_parsename[MAX_TOKEN_CHARS];
 static int com_lines;
 
 void
-COM_BeginParseSession(const char *name)
+Com_BeginParseSession(const char *name)
 {
 	com_lines = 0;
 	Com_sprintf(com_parsename, sizeof(com_parsename), "%s", name);
 }
 
 int
-COM_GetCurrentParseLine(void)
+Com_GetCurrentParseLine(void)
 {
 	return com_lines;
 }
 
 /*
- * COM_Parse: Parse a token out of a string. Will never return nil, just empty
+ * Com_Parse: Parse a token out of a string. Will never return nil, just empty
  * strings
  */
 char *
-COM_Parse(char **data_p)
+Com_Parse(char **data_p)
 {
-	return COM_ParseExt(data_p, qtrue);
+	return Com_ParseExt(data_p, qtrue);
 }
 
 void
-COM_ParseError(char *format, ...)
+Com_ParseError(char *format, ...)
 {
 	va_list argptr;
 	static char string[4096];
@@ -324,7 +324,7 @@ COM_ParseError(char *format, ...)
 }
 
 void
-COM_ParseWarning(char *format, ...)
+Com_ParseWarning(char *format, ...)
 {
 	va_list argptr;
 	static char string[4096];
@@ -357,7 +357,7 @@ SkipWhitespace(char *data, qboolean *hasNewLines)
 }
 
 int
-COM_Compress(char *data_p)
+Com_Compress(char *data_p)
 {
 	char *in, *out;
 	int c;
@@ -430,12 +430,12 @@ COM_Compress(char *data_p)
 }
 
 /*
- * COM_ParseExt: Parse a token out of a string. Will never return nil, just 
+ * Com_ParseExt: Parse a token out of a string. Will never return nil, just 
  * empty strings. If "allowLineBreaks" is qtrue then an empty string will be 
  * returned if the next token is a newline.
  */
 char *
-COM_ParseExt(char **data_p, qboolean allowLineBreaks)
+Com_ParseExt(char **data_p, qboolean allowLineBreaks)
 {
 	int c, len;
 	qboolean hasNewLines = qfalse;
@@ -518,11 +518,11 @@ COM_ParseExt(char **data_p, qboolean allowLineBreaks)
 }
 
 void
-COM_MatchToken(char **buf_p, char *match)
+Com_MatchToken(char **buf_p, char *match)
 {
 	char *token;
 
-	token = COM_Parse(buf_p);
+	token = Com_Parse(buf_p);
 	if(strcmp(token, match))
 		Com_Error(ERR_DROP, "MatchToken: %s != %s", token, match);
 }
@@ -539,7 +539,7 @@ SkipBracedSection(char **program)
 
 	depth = 0;
 	do{
-		token = COM_ParseExt(program, qtrue);
+		token = Com_ParseExt(program, qtrue);
 		if(token[1] == 0){
 			if(token[0] == '{')
 				depth++;
@@ -571,12 +571,12 @@ Parse1DMatrix(char **buf_p, int x, float *m)
 	char *token;
 	int i;
 
-	COM_MatchToken(buf_p, "(");
+	Com_MatchToken(buf_p, "(");
 	for(i = 0; i < x; i++){
-		token	= COM_Parse(buf_p);
+		token	= Com_Parse(buf_p);
 		m[i]	= atof(token);
 	}
-	COM_MatchToken(buf_p, ")");
+	Com_MatchToken(buf_p, ")");
 }
 
 void
@@ -584,10 +584,10 @@ Parse2DMatrix(char **buf_p, int y, int x, float *m)
 {
 	int i;
 
-	COM_MatchToken(buf_p, "(");
+	Com_MatchToken(buf_p, "(");
 	for(i = 0; i < y; i++)
 		Parse1DMatrix (buf_p, x, m + i * x);
-	COM_MatchToken(buf_p, ")");
+	Com_MatchToken(buf_p, ")");
 }
 
 void
@@ -595,10 +595,10 @@ Parse3DMatrix(char **buf_p, int z, int y, int x, float *m)
 {
 	int i;
 
-	COM_MatchToken(buf_p, "(");
+	Com_MatchToken(buf_p, "(");
 	for(i = 0; i < z; i++)
 		Parse2DMatrix (buf_p, y, x, m + i * x*y);
-	COM_MatchToken(buf_p, ")");
+	Com_MatchToken(buf_p, ")");
 }
 
 int

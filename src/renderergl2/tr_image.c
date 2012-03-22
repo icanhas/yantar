@@ -1841,7 +1841,7 @@ void R_LoadImage( const char *name, byte **pic, int *width, int *height )
 
 	Q_strncpyz( localName, name, MAX_QPATH );
 
-	ext = COM_GetExtension( localName );
+	ext = Com_GetExtension( localName );
 
 	if( *ext )
 	{
@@ -1865,7 +1865,7 @@ void R_LoadImage( const char *name, byte **pic, int *width, int *height )
 				// try again without the extension
 				orgNameFailed = qtrue;
 				orgLoader = i;
-				COM_StripExtension( name, localName, MAX_QPATH );
+				Com_StripExtension( name, localName, MAX_QPATH );
 			}
 			else
 			{
