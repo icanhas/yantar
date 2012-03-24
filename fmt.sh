@@ -1,5 +1,5 @@
-subdirs="asm botlib cgame client game q3_ui qcommon server renderergl2 renderer
-sys sys/sdl cmd/asm cmd/lcc ui"
+whitelist="asm botlib cgame client game q3_ui qcommon server renderergl2 renderer
+sys sys/sdl cmd/asm ui"
 
 opt= << "END"
 align_assign_thresh = 2
@@ -86,7 +86,7 @@ END
 
 echo $opt > .uncrustify
 
-for d in $subdirs; do
+for d in $whitelist; do
 	d="src/$d"
 	if [ ! -d $d ]; then
 		echo "$d is missing. I can't believe you've done this."
@@ -95,7 +95,8 @@ for d in $subdirs; do
 
 	filt="$d/*.c $d/*.h"
 	for f in $filt; do
-		uncrustify --no-backup -q -c .uncrustify -f $f -o $f
+		cat $f | uncrustify -q -c .uncrustify > "$f.tmp"
+		mv "$f.tmp" $f
 	done
 	echo -n .
 done
