@@ -88,7 +88,7 @@ char		*ui_medalSounds[] = {
 	Pfeedback "/impressive_a",
 	Pfeedback "/excellent_a",
 	Pfeedback "/gauntlet",
-	Pfeedback "frags",
+	Pfeedback "/frags",
 	Pfeedback "/perfect"
 };
 
