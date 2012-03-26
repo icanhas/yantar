@@ -1,7 +1,4 @@
-/*
- * included first by ALL program modules.
- * a user mod should never modify this file.
- */
+/* included first by ALL program modules. */
 /*
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
@@ -23,6 +20,8 @@
  */
 #ifndef __Q_SHARED_H
 #define __Q_SHARED_H
+
+#include "paths.h"
 
 #ifdef STANDALONE
 #define PRODUCT_NAME		"yantar"
