@@ -1,7 +1,7 @@
-whitelist="asm botlib cgame client game q3_ui qcommon server renderergl2 renderer
-sys sys/sdl cmd/asm ui"
+whitelist='asm botlib cgame client game q3_ui qcommon server renderergl2 renderer
+sys sys/sdl cmd/asm ui'
 
-opt= << "END"
+opt='
 align_assign_thresh = 2
 align_assign_span = 1
 align_on_tabstop = true # align on tabstops
@@ -82,9 +82,9 @@ sp_paren_brace = remove
 sp_paren_paren = remove
 sp_sizeof_paren = remove # "sizeof (int)" vs "sizeof(int)"
 sp_type_func = ignore # break between return type and func name
-END
+'
 
-echo $opt > .uncrustify
+echo "$opt" >.cb
 
 for d in $whitelist; do
 	d="src/$d"
@@ -95,12 +95,12 @@ for d in $whitelist; do
 
 	filt="$d/*.c $d/*.h"
 	for f in $filt; do
-		cat $f | uncrustify -q -c .uncrustify > "$f.tmp"
+		cat $f | uncrustify -q -c .cb > "$f.tmp"
 		mv "$f.tmp" $f
 	done
 	echo -n .
 done
 echo
 
-rm .uncrustify
+rm .cb
 
