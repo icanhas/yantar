@@ -84,12 +84,12 @@ char		*ui_medalPicNames[] = {
 	"menu/medals/medal_victory"
 };
 char		*ui_medalSounds[] = {
-	"sound/feedback/accuracy.wav",
-	"sound/feedback/impressive_a.wav",
-	"sound/feedback/excellent_a.wav",
-	"sound/feedback/gauntlet.wav",
-	"sound/feedback/frags.wav",
-	"sound/feedback/perfect.wav"
+	Pfeedback "/accuracy",
+	Pfeedback "/impressive_a",
+	Pfeedback "/excellent_a",
+	Pfeedback "/gauntlet",
+	Pfeedback "frags",
+	Pfeedback "/perfect"
 };
 
 
@@ -423,9 +423,9 @@ UI_SPPostgameMenu_Cache(void)
 	}
 
 	if(buildscript){
-		trap_S_RegisterSound("music/loss.wav", qfalse);
-		trap_S_RegisterSound("music/win.wav", qfalse);
-		trap_S_RegisterSound("sound/player/announce/youwin.wav", qfalse);
+		trap_S_RegisterSound(Pmusic "/loss", qfalse);
+		trap_S_RegisterSound(Pmusic "/win", qfalse);
+		trap_S_RegisterSound(Pannounce "/youwin", qfalse);
 	}
 }
 
@@ -660,14 +660,14 @@ UI_SPPostgameMenu_f(void)
 
 	if(playerGameRank != 1){
 		postgameMenuInfo.winnerSound =
-			trap_S_RegisterSound(va(
-					"sound/player/announce/%s_wins.wav",
-					postgameMenuInfo.placeNames[0]), qfalse);
-		trap_Cmd_ExecuteText(EXEC_APPEND, "music music/loss\n");
+			trap_S_RegisterSound(
+				va(Pannounce "/%s_wins",
+				postgameMenuInfo.placeNames[0]), qfalse);
+		trap_Cmd_ExecuteText(EXEC_APPEND, "music " Pmusic "/loss\n");
 	}else{
 		postgameMenuInfo.winnerSound = trap_S_RegisterSound(
-			"sound/player/announce/youwin.wav", qfalse);
-		trap_Cmd_ExecuteText(EXEC_APPEND, "music music/win\n");
+			Pannounce "/youwin", qfalse);
+		trap_Cmd_ExecuteText(EXEC_APPEND, "music " Pmusic "/win\n");
 	}
 
 	postgameMenuInfo.phase = 1;
