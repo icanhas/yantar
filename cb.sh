@@ -39,7 +39,6 @@ indent_with_tabs = 2 # 1=indent to level only, 2=indent with tabs
 indent_cmt_with_tabs = true
 input_tab_size = 8 # original tab size
 mod_full_brace_for = remove
-mod_full_brace_if = remove
 mod_full_brace_while = remove
 nl_after_brace_close = false
 nl_before_case = false
