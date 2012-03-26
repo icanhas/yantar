@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /*  */
 #include "g_local.h"
@@ -69,18 +67,14 @@ SP_info_player_intermission(gentity_t *ent)
 
 
 /*
- * =======================================================================
  *
  * SelectSpawnPoint
  *
- * =======================================================================
  */
 
 /*
- * ================
  * SpotWouldTelefrag
  *
- * ================
  */
 qboolean
 SpotWouldTelefrag(gentity_t *spot)
@@ -106,11 +100,9 @@ SpotWouldTelefrag(gentity_t *spot)
 }
 
 /*
- * ================
  * SelectNearestDeathmatchSpawnPoint
  *
  * Find the spot that we DON'T want to use
- * ================
  */
 #define MAX_SPAWN_POINTS 128
 gentity_t *
@@ -142,11 +134,9 @@ SelectNearestDeathmatchSpawnPoint(vec3_t from)
 
 
 /*
- * ================
  * SelectRandomDeathmatchSpawnPoint
  *
  * go to a random point that doesn't telefrag
- * ================
  */
 #define MAX_SPAWN_POINTS 128
 gentity_t *
@@ -184,11 +174,9 @@ SelectRandomDeathmatchSpawnPoint(qboolean isbot)
 }
 
 /*
- * ===========
  * SelectRandomFurthestSpawnPoint
  *
  * Chooses a player start, deathmatch start, etc
- * ============
  */
 gentity_t *
 SelectRandomFurthestSpawnPoint(vec3_t avoidPoint, vec3_t origin, vec3_t angles,
@@ -265,11 +253,9 @@ SelectRandomFurthestSpawnPoint(vec3_t avoidPoint, vec3_t origin, vec3_t angles,
 }
 
 /*
- * ===========
  * SelectSpawnPoint
  *
  * Chooses a player start, deathmatch start, etc
- * ============
  */
 gentity_t *
 SelectSpawnPoint(vec3_t avoidPoint, vec3_t origin, vec3_t angles, qboolean isbot)
@@ -306,12 +292,10 @@ SelectSpawnPoint(vec3_t avoidPoint, vec3_t origin, vec3_t angles, qboolean isbot
 }
 
 /*
- * ===========
  * SelectInitialSpawnPoint
  *
  * Try to find a spawn point marked 'initial', otherwise
  * use normal spawn selection.
- * ============
  */
 gentity_t *
 SelectInitialSpawnPoint(vec3_t origin, vec3_t angles, qboolean isbot)
@@ -342,10 +326,8 @@ SelectInitialSpawnPoint(vec3_t origin, vec3_t angles, qboolean isbot)
 }
 
 /*
- * ===========
  * SelectSpectatorSpawnPoint
  *
- * ============
  */
 gentity_t *
 SelectSpectatorSpawnPoint(vec3_t origin, vec3_t angles)
@@ -359,17 +341,13 @@ SelectSpectatorSpawnPoint(vec3_t origin, vec3_t angles)
 }
 
 /*
- * =======================================================================
  *
  * BODYQUE
  *
- * =======================================================================
  */
 
 /*
- * ===============
  * InitBodyQue
- * ===============
  */
 void
 InitBodyQue(void)
@@ -387,11 +365,9 @@ InitBodyQue(void)
 }
 
 /*
- * =============
  * BodySink
  *
  * After sitting around for five seconds, fall into the ground and dissapear
- * =============
  */
 void
 BodySink(gentity_t *ent)
@@ -407,12 +383,10 @@ BodySink(gentity_t *ent)
 }
 
 /*
- * =============
  * CopyToBodyQue
  *
  * A player is respawning, so make an entity that looks
  * just like the existing corpse to leave behind.
- * =============
  */
 void
 CopyToBodyQue(gentity_t *ent)
@@ -517,10 +491,8 @@ CopyToBodyQue(gentity_t *ent)
 
 
 /*
- * ==================
  * SetClientViewAngle
  *
- * ==================
  */
 void
 SetClientViewAngle(gentity_t *ent, vec3_t angle)
@@ -541,9 +513,7 @@ SetClientViewAngle(gentity_t *ent, vec3_t angle)
 }
 
 /*
- * ================
  * ClientRespawn
- * ================
  */
 void
 ClientRespawn(gentity_t *ent)
@@ -554,11 +524,9 @@ ClientRespawn(gentity_t *ent)
 }
 
 /*
- * ================
  * TeamCount
  *
  * Returns number of players on a team
- * ================
  */
 team_t
 TeamCount(int ignoreClientNum, int team)
@@ -579,11 +547,9 @@ TeamCount(int ignoreClientNum, int team)
 }
 
 /*
- * ================
  * TeamLeader
  *
  * Returns the client number of the team leader
- * ================
  */
 int
 TeamLeader(int team)
@@ -603,10 +569,8 @@ TeamLeader(int team)
 
 
 /*
- * ================
  * PickTeam
  *
- * ================
  */
 team_t
 PickTeam(int ignoreClientNum)
@@ -627,11 +591,9 @@ PickTeam(int ignoreClientNum)
 }
 
 /*
- * ===========
  * ForceClientSkin
  *
  * Forces a client's skin (for teamplay)
- * ===========
  */
 /*
  * static void ForceClientSkin( gclient_t *client, char *model, const char *skin ) {
@@ -647,9 +609,7 @@ PickTeam(int ignoreClientNum)
  */
 
 /*
- * ===========
  * ClientCheckName
- * ============
  */
 static void
 ClientCleanName(const char *in, char *out, int outSize)
@@ -699,7 +659,6 @@ ClientCleanName(const char *in, char *out, int outSize)
 
 
 /*
- * ===========
  * ClientUserInfoChanged
  *
  * Called from ClientConnect when the player first connects and
@@ -707,7 +666,6 @@ ClientCleanName(const char *in, char *out, int outSize)
  *
  * The game can override any of the settings and call trap_SetUserinfo
  * if desired.
- * ============
  */
 void
 ClientUserinfoChanged(int clientNum)
@@ -899,7 +857,6 @@ ClientUserinfoChanged(int clientNum)
 
 
 /*
- * ===========
  * ClientConnect
  *
  * Called when a player begins connecting to the server.
@@ -916,7 +873,6 @@ ClientUserinfoChanged(int clientNum)
  * firstTime will be qtrue the very first time a client connects
  * to the server machine, but qfalse on map changes and tournement
  * restarts.
- * ============
  */
 char *
 ClientConnect(int clientNum, qboolean firstTime, qboolean isBot)
@@ -999,13 +955,11 @@ ClientConnect(int clientNum, qboolean firstTime, qboolean isBot)
 }
 
 /*
- * ===========
  * ClientBegin
  *
  * called when a client has finished connecting, and is ready
  * to be placed into the level.  This will happen every level load,
  * and on transition between teams, but doesn't happen on respawns
- * ============
  */
 void
 ClientBegin(int clientNum)
@@ -1054,13 +1008,11 @@ ClientBegin(int clientNum)
 }
 
 /*
- * ===========
  * ClientSpawn
  *
  * Called every time a client is placed fresh in the world:
  * after the first ClientBegin, and after each respawn
  * Initializes all non-persistant parts of playerState
- * ============
  */
 void
 ClientSpawn(gentity_t *ent)
@@ -1257,7 +1209,6 @@ ClientSpawn(gentity_t *ent)
 
 
 /*
- * ===========
  * ClientDisconnect
  *
  * Called when a player drops from the server.
@@ -1266,7 +1217,6 @@ ClientSpawn(gentity_t *ent)
  * This should NOT be called directly by any game logic,
  * call trap_DropClient(), which will call this and do
  * server system housekeeping.
- * ============
  */
 void
 ClientDisconnect(int clientNum)

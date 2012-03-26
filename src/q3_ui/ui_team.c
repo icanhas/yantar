@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /*
  *
@@ -47,9 +45,7 @@ typedef struct {
 static teammain_t s_teammain;
 
 /*
- * ===============
  * TeamMain_MenuEvent
- * ===============
  */
 static void
 TeamMain_MenuEvent(void* ptr, int event)
@@ -82,9 +78,7 @@ TeamMain_MenuEvent(void* ptr, int event)
 
 
 /*
- * ===============
  * TeamMain_MenuInit
- * ===============
  */
 void
 TeamMain_MenuInit(void)
@@ -182,9 +176,7 @@ TeamMain_MenuInit(void)
 
 
 /*
- * ===============
  * TeamMain_Cache
- * ===============
  */
 void
 TeamMain_Cache(void)
@@ -194,9 +186,7 @@ TeamMain_Cache(void)
 
 
 /*
- * ===============
  * UI_TeamMainMenu
- * ===============
  */
 void
 UI_TeamMainMenu(void)

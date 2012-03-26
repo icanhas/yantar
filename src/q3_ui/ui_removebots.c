@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,15 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /*  */
 /*
- * =======================================================================
  *
  * REMOVE BOTS MENU
  *
- * =======================================================================
  */
 
 
@@ -80,9 +76,7 @@ static removeBotsMenuInfo_t removeBotsMenuInfo;
 
 
 /*
- * =================
  * UI_RemoveBotsMenu_SetBotNames
- * =================
  */
 static void
 UI_RemoveBotsMenu_SetBotNames(void)
@@ -110,9 +104,7 @@ UI_RemoveBotsMenu_SetBotNames(void)
 
 
 /*
- * =================
  * UI_RemoveBotsMenu_DeleteEvent
- * =================
  */
 static void
 UI_RemoveBotsMenu_DeleteEvent(void* ptr, int event)
@@ -130,9 +122,7 @@ UI_RemoveBotsMenu_DeleteEvent(void* ptr, int event)
 
 
 /*
- * =================
  * UI_RemoveBotsMenu_BotEvent
- * =================
  */
 static void
 UI_RemoveBotsMenu_BotEvent(void* ptr, int event)
@@ -150,9 +140,7 @@ UI_RemoveBotsMenu_BotEvent(void* ptr, int event)
 
 
 /*
- * =================
  * UI_RemoveAddBotsMenu_BackEvent
- * =================
  */
 static void
 UI_RemoveBotsMenu_BackEvent(void* ptr, int event)
@@ -164,9 +152,7 @@ UI_RemoveBotsMenu_BackEvent(void* ptr, int event)
 
 
 /*
- * =================
  * UI_RemoveBotsMenu_UpEvent
- * =================
  */
 static void
 UI_RemoveBotsMenu_UpEvent(void* ptr, int event)
@@ -182,9 +168,7 @@ UI_RemoveBotsMenu_UpEvent(void* ptr, int event)
 
 
 /*
- * =================
  * UI_RemoveBotsMenu_DownEvent
- * =================
  */
 static void
 UI_RemoveBotsMenu_DownEvent(void* ptr, int event)
@@ -200,9 +184,7 @@ UI_RemoveBotsMenu_DownEvent(void* ptr, int event)
 
 
 /*
- * =================
  * UI_RemoveBotsMenu_GetBots
- * =================
  */
 static void
 UI_RemoveBotsMenu_GetBots(void)
@@ -230,9 +212,7 @@ UI_RemoveBotsMenu_GetBots(void)
 
 
 /*
- * =================
  * UI_RemoveBots_Cache
- * =================
  */
 void
 UI_RemoveBots_Cache(void)
@@ -246,9 +226,7 @@ UI_RemoveBots_Cache(void)
 
 
 /*
- * =================
  * UI_RemoveBotsMenu_Init
- * =================
  */
 static void
 UI_RemoveBotsMenu_Init(void)
@@ -373,9 +351,7 @@ UI_RemoveBotsMenu_Init(void)
 
 
 /*
- * =================
  * UI_RemoveBotsMenu
- * =================
  */
 void
 UI_RemoveBotsMenu(void)

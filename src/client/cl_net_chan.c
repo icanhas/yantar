@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 
 #include "../qcommon/q_shared.h"
@@ -26,7 +24,6 @@
 
 #ifdef LEGACY_PROTOCOL
 /*
- * ==============
  * CL_Netchan_Encode
  *
  *      // first 12 bytes of the data are always:
@@ -34,7 +31,6 @@
  *      long messageAcknowledge;
  *      long reliableAcknowledge;
  *
- * ==============
  */
 static void
 CL_Netchan_Encode(msg_t *msg)
@@ -83,13 +79,11 @@ CL_Netchan_Encode(msg_t *msg)
 }
 
 /*
- * ==============
  * CL_Netchan_Decode
  *
  *      // first four bytes of the data are always:
  *      long reliableAcknowledge;
  *
- * ==============
  */
 static void
 CL_Netchan_Decode(msg_t *msg)
@@ -132,9 +126,7 @@ CL_Netchan_Decode(msg_t *msg)
 #endif
 
 /*
- * =================
  * CL_Netchan_TransmitNextFragment
- * =================
  */
 qboolean
 CL_Netchan_TransmitNextFragment(netchan_t *chan)
@@ -148,9 +140,7 @@ CL_Netchan_TransmitNextFragment(netchan_t *chan)
 }
 
 /*
- * ===============
  * CL_Netchan_Transmit
- * ================
  */
 void
 CL_Netchan_Transmit(netchan_t *chan, msg_t* msg)
@@ -171,9 +161,7 @@ CL_Netchan_Transmit(netchan_t *chan, msg_t* msg)
 }
 
 /*
- * =================
  * CL_Netchan_Process
- * =================
  */
 qboolean
 CL_Netchan_Process(netchan_t *chan, msg_t *msg)

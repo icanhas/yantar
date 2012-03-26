@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 
 #include "../qcommon/q_shared.h"
@@ -46,7 +44,6 @@ static HANDLE	qconsole_hout;
 static HANDLE	qconsole_hin;
 
 /*
- * ==================
  * CON_CtrlHandler
  *
  * The Windows Console doesn't use signals for terminating the application
@@ -55,7 +52,6 @@ static HANDLE	qconsole_hin;
  * overlap with true signal codes that Windows provides, so calling
  * Sys_SigHandler() with those numbers should be safe for generating unique
  * shutdown messages.
- * ==================
  */
 static BOOL WINAPI
 CON_CtrlHandler(DWORD sig)
@@ -65,9 +61,7 @@ CON_CtrlHandler(DWORD sig)
 }
 
 /*
- * ==================
  * CON_HistAdd
- * ==================
  */
 static void
 CON_HistAdd(void)
@@ -84,9 +78,7 @@ CON_HistAdd(void)
 }
 
 /*
- * ==================
  * CON_HistPrev
- * ==================
  */
 static void
 CON_HistPrev(void)
@@ -107,9 +99,7 @@ CON_HistPrev(void)
 }
 
 /*
- * ==================
  * CON_HistNext
- * ==================
  */
 static void
 CON_HistNext(void)
@@ -134,9 +124,7 @@ CON_HistNext(void)
 
 
 /*
- * ==================
  * CON_Show
- * ==================
  */
 static void
 CON_Show(void)
@@ -179,9 +167,7 @@ CON_Show(void)
 }
 
 /*
- * ==================
  * CON_Shutdown
- * ==================
  */
 void
 CON_Shutdown(void)
@@ -193,9 +179,7 @@ CON_Shutdown(void)
 }
 
 /*
- * ==================
  * CON_Init
- * ==================
  */
 void
 CON_Init(void)
@@ -240,9 +224,7 @@ CON_Init(void)
 }
 
 /*
- * ==================
  * CON_Input
- * ==================
  */
 char *
 CON_Input(void)
@@ -336,9 +318,7 @@ CON_Input(void)
 }
 
 /*
- * ==================
  * CON_Print
- * ==================
  */
 void
 CON_Print(const char *msg)

@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /*  */
 #include "ui_local.h"
@@ -54,11 +52,9 @@ static serverinfo_t s_serverinfo;
 
 
 /*
- * =================
  * Favorites_Add
  *
  * Add current server to favorites
- * =================
  */
 void
 Favorites_Add(void)
@@ -92,9 +88,7 @@ Favorites_Add(void)
 
 
 /*
- * =================
  * ServerInfo_Event
- * =================
  */
 static void
 ServerInfo_Event(void* ptr, int event)
@@ -118,9 +112,7 @@ ServerInfo_Event(void* ptr, int event)
 }
 
 /*
- * =================
  * ServerInfo_MenuDraw
- * =================
  */
 static void
 ServerInfo_MenuDraw(void)
@@ -153,9 +145,7 @@ ServerInfo_MenuDraw(void)
 }
 
 /*
- * =================
  * ServerInfo_MenuKey
- * =================
  */
 static sfxHandle_t
 ServerInfo_MenuKey(int key)
@@ -164,9 +154,7 @@ ServerInfo_MenuKey(int key)
 }
 
 /*
- * =================
  * ServerInfo_Cache
- * =================
  */
 void
 ServerInfo_Cache(void)
@@ -182,9 +170,7 @@ ServerInfo_Cache(void)
 }
 
 /*
- * =================
  * UI_ServerInfoMenu
- * =================
  */
 void
 UI_ServerInfoMenu(void)

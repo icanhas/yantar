@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /*
  *
@@ -60,9 +58,7 @@ static menuaction_s	s_rankings_leave;
 
 
 /*
- * ===============
  * Rankings_DrawText
- * ===============
  */
 void
 Rankings_DrawText(void* self)
@@ -114,9 +110,7 @@ Rankings_DrawText(void* self)
 }
 
 /*
- * ===============
  * Rankings_DrawName
- * ===============
  */
 void
 Rankings_DrawName(void* self)
@@ -144,9 +138,7 @@ Rankings_DrawName(void* self)
 
 #if 0	/* old version */
 /*
- * ===============
  * Rankings_DrawName
- * ===============
  */
 void
 Rankings_DrawName(void* self)
@@ -179,9 +171,7 @@ Rankings_DrawName(void* self)
 #endif
 
 /*
- * ===============
  * Rankings_DrawPassword
- * ===============
  */
 void
 Rankings_DrawPassword(void* self)
@@ -220,9 +210,7 @@ Rankings_DrawPassword(void* self)
 }
 
 /*
- * ===============
  * Rankings_MenuEvent
- * ===============
  */
 static void
 Rankings_MenuEvent(void* ptr, int event)
@@ -264,9 +252,7 @@ Rankings_MenuEvent(void* ptr, int event)
 
 
 /*
- * ===============
  * Rankings_MenuInit
- * ===============
  */
 void
 Rankings_MenuInit(void)
@@ -392,9 +378,7 @@ Rankings_MenuInit(void)
 
 
 /*
- * ===============
  * Rankings_Cache
- * ===============
  */
 void
 Rankings_Cache(void)
@@ -404,9 +388,7 @@ Rankings_Cache(void)
 
 
 /*
- * ===============
  * UI_RankingsMenu
- * ===============
  */
 void
 UI_RankingsMenu(void)

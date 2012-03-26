@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,28 +16,23 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /*  */
 #include "g_local.h"
 
 
 /*
- * =======================================================================
  *
  * SESSION DATA
  *
  * Session data is the only data that stays persistant across level loads
  * and tournament restarts.
- * =======================================================================
  */
 
 /*
- * ================
  * G_WriteClientSessionData
  *
  * Called on game shutdown
- * ================
  */
 void
 G_WriteClientSessionData(gclient_t *client)
@@ -62,11 +56,9 @@ G_WriteClientSessionData(gclient_t *client)
 }
 
 /*
- * ================
  * G_ReadSessionData
  *
  * Called on a reconnect
- * ================
  */
 void
 G_ReadSessionData(gclient_t *client)
@@ -97,11 +89,9 @@ G_ReadSessionData(gclient_t *client)
 
 
 /*
- * ================
  * G_InitSessionData
  *
  * Called on a first-time connect
- * ================
  */
 void
 G_InitSessionData(gclient_t *client, char *userinfo)
@@ -155,10 +145,8 @@ G_InitSessionData(gclient_t *client, char *userinfo)
 
 
 /*
- * ==================
  * G_InitWorldSession
  *
- * ==================
  */
 void
 G_InitWorldSession(void)
@@ -178,10 +166,8 @@ G_InitWorldSession(void)
 }
 
 /*
- * ==================
  * G_WriteSessionData
  *
- * ==================
  */
 void
 G_WriteSessionData(void)

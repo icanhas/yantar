@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /*  */
 /**********************************************************************
@@ -93,9 +91,7 @@ static void BText_Init(menutext_s *b);
 static void BText_Draw(menutext_s *b);
 
 /*
- * =================
  * Text_Init
- * =================
  */
 static void
 Text_Init(menutext_s *t)
@@ -104,9 +100,7 @@ Text_Init(menutext_s *t)
 }
 
 /*
- * =================
  * Text_Draw
- * =================
  */
 static void
 Text_Draw(menutext_s *t)
@@ -138,9 +132,7 @@ Text_Draw(menutext_s *t)
 }
 
 /*
- * =================
  * BText_Init
- * =================
  */
 static void
 BText_Init(menutext_s *t)
@@ -149,9 +141,7 @@ BText_Init(menutext_s *t)
 }
 
 /*
- * =================
  * BText_Draw
- * =================
  */
 static void
 BText_Draw(menutext_s *t)
@@ -172,9 +162,7 @@ BText_Draw(menutext_s *t)
 }
 
 /*
- * =================
  * PText_Init
- * =================
  */
 static void
 PText_Init(menutext_s *t)
@@ -204,9 +192,7 @@ PText_Init(menutext_s *t)
 }
 
 /*
- * =================
  * PText_Draw
- * =================
  */
 static void
 PText_Draw(menutext_s *t)
@@ -236,9 +222,7 @@ PText_Draw(menutext_s *t)
 }
 
 /*
- * =================
  * Bitmap_Init
- * =================
  */
 void
 Bitmap_Init(menubitmap_s *b)
@@ -272,9 +256,7 @@ Bitmap_Init(menubitmap_s *b)
 }
 
 /*
- * =================
  * Bitmap_Draw
- * =================
  */
 void
 Bitmap_Draw(menubitmap_s *b)
@@ -345,9 +327,7 @@ Bitmap_Draw(menubitmap_s *b)
 }
 
 /*
- * =================
  * Action_Init
- * =================
  */
 static void
 Action_Init(menuaction_s *a)
@@ -368,9 +348,7 @@ Action_Init(menuaction_s *a)
 }
 
 /*
- * =================
  * Action_Draw
- * =================
  */
 static void
 Action_Draw(menuaction_s *a)
@@ -406,9 +384,7 @@ Action_Draw(menuaction_s *a)
 }
 
 /*
- * =================
  * RadioButton_Init
- * =================
  */
 static void
 RadioButton_Init(menuradiobutton_s *rb)
@@ -428,9 +404,7 @@ RadioButton_Init(menuradiobutton_s *rb)
 }
 
 /*
- * =================
  * RadioButton_Key
- * =================
  */
 static sfxHandle_t
 RadioButton_Key(menuradiobutton_s *rb, int key)
@@ -462,9 +436,7 @@ RadioButton_Key(menuradiobutton_s *rb, int key)
 }
 
 /*
- * =================
  * RadioButton_Draw
- * =================
  */
 static void
 RadioButton_Draw(menuradiobutton_s *rb)
@@ -516,9 +488,7 @@ RadioButton_Draw(menuradiobutton_s *rb)
 }
 
 /*
- * =================
  * Slider_Init
- * =================
  */
 static void
 Slider_Init(menuslider_s *s)
@@ -539,9 +509,7 @@ Slider_Init(menuslider_s *s)
 }
 
 /*
- * =================
  * Slider_Key
- * =================
  */
 static sfxHandle_t
 Slider_Key(menuslider_s *s, int key)
@@ -602,9 +570,7 @@ Slider_Key(menuslider_s *s, int key)
 
 #if 1
 /*
- * =================
  * Slider_Draw
- * =================
  */
 static void
 Slider_Draw(menuslider_s *s)
@@ -665,9 +631,7 @@ Slider_Draw(menuslider_s *s)
 }
 #else
 /*
- * =================
  * Slider_Draw
- * =================
  */
 static void
 Slider_Draw(menuslider_s *s)
@@ -736,9 +700,7 @@ Slider_Draw(menuslider_s *s)
 #endif
 
 /*
- * =================
  * SpinControl_Init
- * =================
  */
 static void
 SpinControl_Init(menulist_s *s)
@@ -769,9 +731,7 @@ SpinControl_Init(menulist_s *s)
 }
 
 /*
- * =================
  * SpinControl_Key
- * =================
  */
 static sfxHandle_t
 SpinControl_Key(menulist_s *s, int key)
@@ -805,9 +765,7 @@ SpinControl_Key(menulist_s *s, int key)
 }
 
 /*
- * =================
  * SpinControl_Draw
- * =================
  */
 static void
 SpinControl_Draw(menulist_s *s)
@@ -850,9 +808,7 @@ SpinControl_Draw(menulist_s *s)
 }
 
 /*
- * =================
  * ScrollList_Init
- * =================
  */
 static void
 ScrollList_Init(menulist_s *l)
@@ -886,9 +842,7 @@ ScrollList_Init(menulist_s *l)
 }
 
 /*
- * =================
  * ScrollList_Key
- * =================
  */
 sfxHandle_t
 ScrollList_Key(menulist_s *l, int key)
@@ -1133,9 +1087,7 @@ ScrollList_Key(menulist_s *l, int key)
 }
 
 /*
- * =================
  * ScrollList_Draw
- * =================
  */
 void
 ScrollList_Draw(menulist_s *l)
@@ -1197,9 +1149,7 @@ ScrollList_Draw(menulist_s *l)
 }
 
 /*
- * =================
  * Menu_AddItem
- * =================
  */
 void
 Menu_AddItem(menuframework_s *menu, void *item)
@@ -1270,9 +1220,7 @@ Menu_AddItem(menuframework_s *menu, void *item)
 }
 
 /*
- * =================
  * Menu_CursorMoved
- * =================
  */
 void
 Menu_CursorMoved(menuframework_s *m)
@@ -1297,9 +1245,7 @@ Menu_CursorMoved(menuframework_s *m)
 }
 
 /*
- * =================
  * Menu_SetCursor
- * =================
  */
 void
 Menu_SetCursor(menuframework_s *m, int cursor)
@@ -1316,9 +1262,7 @@ Menu_SetCursor(menuframework_s *m, int cursor)
 }
 
 /*
- * =================
  * Menu_SetCursorToItem
- * =================
  */
 void
 Menu_SetCursorToItem(menuframework_s *m, void* ptr)
@@ -1382,9 +1326,7 @@ wrap:
 }
 
 /*
- * =================
  * Menu_Draw
- * =================
  */
 void
 Menu_Draw(menuframework_s *menu)
@@ -1477,9 +1419,7 @@ Menu_Draw(menuframework_s *menu)
 }
 
 /*
- * =================
  * Menu_ItemAtCursor
- * =================
  */
 void *
 Menu_ItemAtCursor(menuframework_s *m)
@@ -1491,9 +1431,7 @@ Menu_ItemAtCursor(menuframework_s *m)
 }
 
 /*
- * =================
  * Menu_ActivateItem
- * =================
  */
 sfxHandle_t
 Menu_ActivateItem(menuframework_s *s, menucommon_s* item)
@@ -1508,9 +1446,7 @@ Menu_ActivateItem(menuframework_s *s, menucommon_s* item)
 }
 
 /*
- * =================
  * Menu_DefaultKey
- * =================
  */
 sfxHandle_t
 Menu_DefaultKey(menuframework_s *m, int key)
@@ -1637,9 +1573,7 @@ Menu_DefaultKey(menuframework_s *m, int key)
 }
 
 /*
- * =================
  * Menu_Cache
- * =================
  */
 void
 Menu_Cache(void)

@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,18 +16,15 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /*  */
 #include "ui_local.h"
 
 /*
- * ===================
  * MField_Draw
  *
  * Handles horizontal scrolling and cursor blinking
  * x, y, are in pixels
- * ===================
  */
 void
 MField_Draw(mfield_t *edit, int x, int y, int style, vec4_t color)
@@ -100,9 +96,7 @@ MField_Draw(mfield_t *edit, int x, int y, int style, vec4_t color)
 }
 
 /*
- * ================
  * MField_Paste
- * ================
  */
 void
 MField_Paste(mfield_t *edit)
@@ -119,14 +113,12 @@ MField_Paste(mfield_t *edit)
 }
 
 /*
- * =================
  * MField_KeyDownEvent
  *
  * Performs the basic line editing functions for the console,
  * in-game talk, and menu fields
  *
  * Key events are used for non-printable characters, others are gotten from char events.
- * =================
  */
 void
 MField_KeyDownEvent(mfield_t *edit, int key)
@@ -189,9 +181,7 @@ MField_KeyDownEvent(mfield_t *edit, int key)
 }
 
 /*
- * ==================
  * MField_CharEvent
- * ==================
  */
 void
 MField_CharEvent(mfield_t *edit, int ch)
@@ -268,9 +258,7 @@ MField_CharEvent(mfield_t *edit, int ch)
 }
 
 /*
- * ==================
  * MField_Clear
- * ==================
  */
 void
 MField_Clear(mfield_t *edit)
@@ -281,9 +269,7 @@ MField_Clear(mfield_t *edit)
 }
 
 /*
- * ==================
  * MenuField_Init
- * ==================
  */
 void
 MenuField_Init(menufield_s* m)
@@ -314,9 +300,7 @@ MenuField_Init(menufield_s* m)
 }
 
 /*
- * ==================
  * MenuField_Draw
- * ==================
  */
 void
 MenuField_Draw(menufield_s *f)
@@ -367,9 +351,7 @@ MenuField_Draw(menufield_s *f)
 }
 
 /*
- * ==================
  * MenuField_Key
- * ==================
  */
 sfxHandle_t
 MenuField_Key(menufield_s* m, int* key)

@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /* tr_shade.c */
 
@@ -34,11 +32,9 @@
  */
 
 /*
- * ================
  * R_ArrayElementDiscrete
  *
  * This is just for OpenGL conformance testing, it should never be the fastest
- * ================
  */
 static void APIENTRY
 R_ArrayElementDiscrete(GLint index)
@@ -56,10 +52,8 @@ R_ArrayElementDiscrete(GLint index)
 }
 
 /*
- * ===================
  * R_DrawStripElements
  *
- * ===================
  */
 static int c_vertexes;	/* for seeing how long our average strips are */
 static int c_begins;
@@ -153,13 +147,11 @@ R_DrawStripElements(int numIndexes, const glIndex_t *indexes, void (APIENTRY *el
 
 
 /*
- * ==================
  * R_DrawElements
  *
  * Optionally performs our own glDrawElements that looks for strip conditions
  * instead of using the single glDrawElements call that may be inefficient
  * without compiled vertex arrays.
- * ==================
  */
 static void
 R_DrawElements(int numIndexes, const glIndex_t *indexes)
@@ -201,21 +193,17 @@ R_DrawElements(int numIndexes, const glIndex_t *indexes)
 
 
 /*
- * =============================================================
  *
  * SURFACE SHADERS
  *
- * =============================================================
  */
 
 shaderCommands_t tess;
 static qboolean setArraysOnce;
 
 /*
- * =================
  * R_BindAnimatedImage
  *
- * =================
  */
 static void
 R_BindAnimatedImage(textureBundle_t *bundle)
@@ -247,11 +235,9 @@ R_BindAnimatedImage(textureBundle_t *bundle)
 }
 
 /*
- * ================
  * DrawTris
  *
  * Draws triangle outlines for debugging
- * ================
  */
 static void
 DrawTris(shaderCommands_t *input)
@@ -283,11 +269,9 @@ DrawTris(shaderCommands_t *input)
 
 
 /*
- * ================
  * DrawNormals
  *
  * Draws vertex normals for debugging
- * ================
  */
 static void
 DrawNormals(shaderCommands_t *input)
@@ -312,13 +296,11 @@ DrawNormals(shaderCommands_t *input)
 }
 
 /*
- * ==============
  * RB_BeginSurface
  *
  * We must set some things up before beginning any tesselation,
  * because a surface may be forced to perform a RB_End due
  * to overflow.
- * ==============
  */
 void
 RB_BeginSurface(shader_t *shader, int fogNum)
@@ -344,14 +326,12 @@ RB_BeginSurface(shader_t *shader, int fogNum)
 }
 
 /*
- * ===================
  * DrawMultitextured
  *
  * output = t0 * t1 or t0 + t1
  *
  * t0 = most upstream according to spec
  * t1 = most downstream according to spec
- * ===================
  */
 static void
 DrawMultitextured(shaderCommands_t *input, int stage)
@@ -406,11 +386,9 @@ DrawMultitextured(shaderCommands_t *input, int stage)
 
 
 /*
- * ===================
  * ProjectDlightTexture
  *
  * Perform dynamic lighting with another rendering pass
- * ===================
  */
 #if idppc_altivec
 static void
@@ -754,11 +732,9 @@ ProjectDlightTexture(void)
 
 
 /*
- * ===================
  * RB_FogPass
  *
  * Blends a fog texture on top of everything else
- * ===================
  */
 static void
 RB_FogPass(void)
@@ -791,9 +767,7 @@ RB_FogPass(void)
 }
 
 /*
- * ===============
  * ComputeColors
- * ===============
  */
 static void
 ComputeColors(shaderStage_t *pStage)
@@ -982,9 +956,7 @@ ComputeColors(shaderStage_t *pStage)
 }
 
 /*
- * ===============
  * ComputeTexCoords
- * ===============
  */
 static void
 ComputeTexCoords(shaderStage_t *pStage)

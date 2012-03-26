@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /* tr_surf.c */
 #include "tr_local.h"
@@ -44,9 +42,7 @@
 
 
 /*
- * ==============
  * RB_CheckOverflow
- * ==============
  */
 void
 RB_CheckOverflow(int verts, int indexes)
@@ -70,9 +66,7 @@ RB_CheckOverflow(int verts, int indexes)
 
 
 /*
- * ==============
  * RB_AddQuadStampExt
- * ==============
  */
 void
 RB_AddQuadStampExt(vec3_t origin, vec3_t left, vec3_t up, byte *color, float s1, float t1, float s2, float t2)
@@ -147,9 +141,7 @@ RB_AddQuadStampExt(vec3_t origin, vec3_t left, vec3_t up, byte *color, float s1,
 }
 
 /*
- * ==============
  * RB_AddQuadStamp
- * ==============
  */
 void
 RB_AddQuadStamp(vec3_t origin, vec3_t left, vec3_t up, byte *color)
@@ -158,9 +150,7 @@ RB_AddQuadStamp(vec3_t origin, vec3_t left, vec3_t up, byte *color)
 }
 
 /*
- * ==============
  * RB_SurfaceSprite
- * ==============
  */
 static void
 RB_SurfaceSprite(void)
@@ -196,9 +186,7 @@ RB_SurfaceSprite(void)
 
 
 /*
- * =============
  * RB_SurfacePolychain
- * =============
  */
 static void
 RB_SurfacePolychain(srfPoly_t *p)
@@ -232,9 +220,7 @@ RB_SurfacePolychain(srfPoly_t *p)
 
 
 /*
- * =============
  * RB_SurfaceTriangles
- * =============
  */
 static void
 RB_SurfaceTriangles(srfTriangles_t *srf)
@@ -294,9 +280,7 @@ RB_SurfaceTriangles(srfTriangles_t *srf)
 
 
 /*
- * ==============
  * RB_SurfaceBeam
- * ==============
  */
 static void
 RB_SurfaceBeam(void)
@@ -889,9 +873,7 @@ LerpMeshVertexes(md3Surface_t *surf, float backlerp)
 
 
 /*
- * =============
  * RB_SurfaceMesh
- * =============
  */
 static void
 RB_SurfaceMesh(md3Surface_t *surface)
@@ -937,9 +919,7 @@ RB_SurfaceMesh(md3Surface_t *surface)
 
 
 /*
- * ==============
  * RB_SurfaceFace
- * ==============
  */
 static void
 RB_SurfaceFace(srfSurfaceFace_t *surf)
@@ -1023,11 +1003,9 @@ LodErrorForVolume(vec3_t local, float radius)
 }
 
 /*
- * =============
  * RB_SurfaceGrid
  *
  * Just copy the grid of points and triangulate
- * =============
  */
 static void
 RB_SurfaceGrid(srfGridMesh_t *cv)
@@ -1179,19 +1157,15 @@ RB_SurfaceGrid(srfGridMesh_t *cv)
 
 
 /*
- * ===========================================================================
  *
  * NULL MODEL
  *
- * ===========================================================================
  */
 
 /*
- * ===================
  * RB_SurfaceAxis
  *
  * Draws x/y/z lines from the origin for orientation debugging
- * ===================
  */
 static void
 RB_SurfaceAxis(void)
@@ -1215,11 +1189,9 @@ RB_SurfaceAxis(void)
 /* =========================================================================== */
 
 /*
- * ====================
  * RB_SurfaceEntity
  *
  * Entities that have a single procedurally generated surface
- * ====================
  */
 static void
 RB_SurfaceEntity(surfaceType_t *surfType)

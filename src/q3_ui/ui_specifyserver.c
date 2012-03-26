@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /*  */
 #include "ui_local.h"
@@ -61,9 +59,7 @@ typedef struct {
 static specifyserver_t s_specifyserver;
 
 /*
- * =================
  * SpecifyServer_Event
- * =================
  */
 static void
 SpecifyServer_Event(void* ptr, int event)
@@ -97,9 +93,7 @@ SpecifyServer_Event(void* ptr, int event)
 }
 
 /*
- * =================
  * SpecifyServer_MenuInit
- * =================
  */
 void
 SpecifyServer_MenuInit(void)
@@ -189,9 +183,7 @@ SpecifyServer_MenuInit(void)
 }
 
 /*
- * =================
  * SpecifyServer_Cache
- * =================
  */
 void
 SpecifyServer_Cache(void)
@@ -207,9 +199,7 @@ SpecifyServer_Cache(void)
 }
 
 /*
- * =================
  * UI_SpecifyServerMenu
- * =================
  */
 void
 UI_SpecifyServerMenu(void)

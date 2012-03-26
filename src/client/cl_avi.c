@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 2005-2006 Tim Angus
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 
 #include "client.h"
@@ -73,9 +71,7 @@ static byte	buffer[ MAX_AVI_BUFFER ];
 static int	bufIndex;
 
 /*
- * ===============
  * SafeFS_Write
- * ===============
  */
 static ID_INLINE void
 SafeFS_Write(const void *buffer, int len, fileHandle_t f)
@@ -85,9 +81,7 @@ SafeFS_Write(const void *buffer, int len, fileHandle_t f)
 }
 
 /*
- * ===============
  * WRITE_STRING
- * ===============
  */
 static ID_INLINE void
 WRITE_STRING(const char *s)
@@ -97,9 +91,7 @@ WRITE_STRING(const char *s)
 }
 
 /*
- * ===============
  * WRITE_4BYTES
- * ===============
  */
 static ID_INLINE void
 WRITE_4BYTES(int x)
@@ -112,9 +104,7 @@ WRITE_4BYTES(int x)
 }
 
 /*
- * ===============
  * WRITE_2BYTES
- * ===============
  */
 static ID_INLINE void
 WRITE_2BYTES(int x)
@@ -125,9 +115,7 @@ WRITE_2BYTES(int x)
 }
 
 /*
- * ===============
  * WRITE_1BYTES
- * ===============
  */
 static ID_INLINE void
 WRITE_1BYTES(int x)
@@ -137,9 +125,7 @@ WRITE_1BYTES(int x)
 }
 
 /*
- * ===============
  * START_CHUNK
- * ===============
  */
 static ID_INLINE void
 START_CHUNK(const char *s)
@@ -154,9 +140,7 @@ START_CHUNK(const char *s)
 }
 
 /*
- * ===============
  * END_CHUNK
- * ===============
  */
 static ID_INLINE void
 END_CHUNK(void)
@@ -175,9 +159,7 @@ END_CHUNK(void)
 }
 
 /*
- * ===============
  * CL_WriteAVIHeader
- * ===============
  */
 void
 CL_WriteAVIHeader(void)
@@ -323,12 +305,10 @@ CL_WriteAVIHeader(void)
 }
 
 /*
- * ===============
  * CL_OpenAVIForWriting
  *
  * Creates an AVI file and gets it into a state where
  * writing the actual data can begin
- * ===============
  */
 qboolean
 CL_OpenAVIForWriting(const char *fileName)
@@ -431,9 +411,7 @@ CL_OpenAVIForWriting(const char *fileName)
 }
 
 /*
- * ===============
  * CL_CheckFileSize
- * ===============
  */
 static qboolean
 CL_CheckFileSize(int bytesToAdd)
@@ -462,9 +440,7 @@ CL_CheckFileSize(int bytesToAdd)
 }
 
 /*
- * ===============
  * CL_WriteAVIVideoFrame
- * ===============
  */
 void
 CL_WriteAVIVideoFrame(const byte *imageBuffer, int size)
@@ -510,9 +486,7 @@ CL_WriteAVIVideoFrame(const byte *imageBuffer, int size)
 #define PCM_BUFFER_SIZE 44100
 
 /*
- * ===============
  * CL_WriteAVIAudioFrame
- * ===============
  */
 void
 CL_WriteAVIAudioFrame(const byte *pcmBuffer, int size)
@@ -576,9 +550,7 @@ CL_WriteAVIAudioFrame(const byte *pcmBuffer, int size)
 }
 
 /*
- * ===============
  * CL_TakeVideoFrame
- * ===============
  */
 void
 CL_TakeVideoFrame(void)
@@ -592,11 +564,9 @@ CL_TakeVideoFrame(void)
 }
 
 /*
- * ===============
  * CL_CloseAVI
  *
  * Closes the AVI file and writes an index chunk
- * ===============
  */
 qboolean
 CL_CloseAVI(void)
@@ -667,9 +637,7 @@ CL_CloseAVI(void)
 }
 
 /*
- * ===============
  * CL_VideoRecording
- * ===============
  */
 qboolean
 CL_VideoRecording(void)

@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 
 #include <stdlib.h>
@@ -45,9 +43,7 @@ static int	dmapos	= 0;
 static int	dmasize = 0;
 
 /*
- * ===============
  * SNDDMA_AudioCallback
- * ===============
  */
 static void
 SNDDMA_AudioCallback(void *userdata, Uint8 *stream, int len)
@@ -97,9 +93,7 @@ static struct {
 static int formatToStringTableSize = ARRAY_LEN(formatToStringTable);
 
 /*
- * ===============
  * SNDDMA_PrintAudiospec
- * ===============
  */
 static void
 SNDDMA_PrintAudiospec(const char *str, const SDL_AudioSpec *spec)
@@ -126,9 +120,7 @@ SNDDMA_PrintAudiospec(const char *str, const SDL_AudioSpec *spec)
 }
 
 /*
- * ===============
  * SNDDMA_Init
- * ===============
  */
 qboolean
 SNDDMA_Init(void)
@@ -239,9 +231,7 @@ SNDDMA_Init(void)
 }
 
 /*
- * ===============
  * SNDDMA_GetDMAPos
- * ===============
  */
 int
 SNDDMA_GetDMAPos(void)
@@ -250,9 +240,7 @@ SNDDMA_GetDMAPos(void)
 }
 
 /*
- * ===============
  * SNDDMA_Shutdown
- * ===============
  */
 void
 SNDDMA_Shutdown(void)
@@ -269,11 +257,9 @@ SNDDMA_Shutdown(void)
 }
 
 /*
- * ===============
  * SNDDMA_Submit
  *
  * Send sound to device if buffer isn't really the dma buffer
- * ===============
  */
 void
 SNDDMA_Submit(void)
@@ -282,9 +268,7 @@ SNDDMA_Submit(void)
 }
 
 /*
- * ===============
  * SNDDMA_BeginPainting
- * ===============
  */
 void
 SNDDMA_BeginPainting(void)

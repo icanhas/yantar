@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  * Copyright (C) 2005 Stuart Dalton (badcdev@gmail.com)
  *
@@ -18,7 +17,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 
 #include "client.h"
@@ -27,12 +25,10 @@
 static snd_codec_t *codecs;
 
 /*
- * =================
  * S_CodecGetSound
  *
  * Opens/loads a sound, tries codec based on the sound's file extension
  * then tries all supported codecs.
- * =================
  */
 static void *
 S_CodecGetSound(const char *filename, snd_info_t *info)
@@ -110,9 +106,7 @@ S_CodecGetSound(const char *filename, snd_info_t *info)
 }
 
 /*
- * =================
  * S_CodecInit
- * =================
  */
 void
 S_CodecInit()
@@ -128,9 +122,7 @@ S_CodecInit()
 }
 
 /*
- * =================
  * S_CodecShutdown
- * =================
  */
 void
 S_CodecShutdown()
@@ -139,9 +131,7 @@ S_CodecShutdown()
 }
 
 /*
- * =================
  * S_CodecRegister
- * =================
  */
 void
 S_CodecRegister(snd_codec_t *codec)
@@ -151,9 +141,7 @@ S_CodecRegister(snd_codec_t *codec)
 }
 
 /*
- * =================
  * S_CodecLoad
- * =================
  */
 void *
 S_CodecLoad(const char *filename, snd_info_t *info)
@@ -162,9 +150,7 @@ S_CodecLoad(const char *filename, snd_info_t *info)
 }
 
 /*
- * =================
  * S_CodecOpenStream
- * =================
  */
 snd_stream_t *
 S_CodecOpenStream(const char *filename)
@@ -188,9 +174,7 @@ S_CodecReadStream(snd_stream_t *stream, int bytes, void *buffer)
  * Util functions (used by codecs) */
 
 /*
- * =================
  * S_CodecUtilOpen
- * =================
  */
 snd_stream_t *
 S_CodecUtilOpen(const char *filename, snd_codec_t *codec)
@@ -221,9 +205,7 @@ S_CodecUtilOpen(const char *filename, snd_codec_t *codec)
 }
 
 /*
- * =================
  * S_CodecUtilClose
- * =================
  */
 void
 S_CodecUtilClose(snd_stream_t **stream)

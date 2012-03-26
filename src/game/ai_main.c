@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /*  */
 
@@ -90,9 +88,7 @@ void ExitLevel(void);
 
 
 /*
- * ==================
  * BotAI_Print
- * ==================
  */
 void QDECL
 BotAI_Print(int type, char *fmt, ...)
@@ -134,9 +130,7 @@ BotAI_Print(int type, char *fmt, ...)
 
 
 /*
- * ==================
  * BotAI_Trace
- * ==================
  */
 void
 BotAI_Trace(bsp_trace_t *bsptrace, vec3_t start, vec3_t mins, vec3_t maxs,
@@ -163,9 +157,7 @@ BotAI_Trace(bsp_trace_t *bsptrace, vec3_t start, vec3_t mins, vec3_t maxs,
 }
 
 /*
- * ==================
  * BotAI_GetClientState
- * ==================
  */
 int
 BotAI_GetClientState(int clientNum, playerState_t *state)
@@ -183,9 +175,7 @@ BotAI_GetClientState(int clientNum, playerState_t *state)
 }
 
 /*
- * ==================
  * BotAI_GetEntityState
- * ==================
  */
 int
 BotAI_GetEntityState(int entityNum, entityState_t *state)
@@ -202,9 +192,7 @@ BotAI_GetEntityState(int entityNum, entityState_t *state)
 }
 
 /*
- * ==================
  * BotAI_GetSnapshotEntity
- * ==================
  */
 int
 BotAI_GetSnapshotEntity(int clientNum, int sequence, entityState_t *state)
@@ -223,9 +211,7 @@ BotAI_GetSnapshotEntity(int clientNum, int sequence, entityState_t *state)
 }
 
 /*
- * ==================
  * BotAI_BotInitialChat
- * ==================
  */
 void QDECL
 BotAI_BotInitialChat(bot_state_t *bs, char *type, ...)
@@ -255,9 +241,7 @@ BotAI_BotInitialChat(bot_state_t *bs, char *type, ...)
 
 
 /*
- * ==================
  * BotTestAAS
- * ==================
  */
 void
 BotTestAAS(vec3_t origin)
@@ -288,9 +272,7 @@ BotTestAAS(vec3_t origin)
 }
 
 /*
- * ==================
  * BotReportStatus
- * ==================
  */
 void
 BotReportStatus(bot_state_t *bs)
@@ -431,9 +413,7 @@ BotReportStatus(bot_state_t *bs)
 }
 
 /*
- * ==================
  * BotTeamplayReport
- * ==================
  */
 void
 BotTeamplayReport(void)
@@ -468,9 +448,7 @@ BotTeamplayReport(void)
 }
 
 /*
- * ==================
  * BotSetInfoConfigString
- * ==================
  */
 void
 BotSetInfoConfigString(bot_state_t *bs)
@@ -589,9 +567,7 @@ BotSetInfoConfigString(bot_state_t *bs)
 }
 
 /*
- * ==============
  * BotUpdateInfoConfigStrings
- * ==============
  */
 void
 BotUpdateInfoConfigStrings(void)
@@ -613,9 +589,7 @@ BotUpdateInfoConfigStrings(void)
 }
 
 /*
- * ==============
  * BotInterbreedBots
- * ==============
  */
 void
 BotInterbreedBots(void)
@@ -649,9 +623,7 @@ BotInterbreedBots(void)
 }
 
 /*
- * ==============
  * BotWriteInterbreeded
- * ==============
  */
 void
 BotWriteInterbreeded(char *filename)
@@ -679,11 +651,9 @@ BotWriteInterbreeded(char *filename)
 }
 
 /*
- * ==============
  * BotInterbreedEndMatch
  *
  * add link back into ExitLevel?
- * ==============
  */
 void
 BotInterbreedEndMatch(void)
@@ -704,9 +674,7 @@ BotInterbreedEndMatch(void)
 }
 
 /*
- * ==============
  * BotInterbreeding
- * ==============
  */
 void
 BotInterbreeding(void)
@@ -739,9 +707,7 @@ BotInterbreeding(void)
 }
 
 /*
- * ==============
  * BotEntityInfo
- * ==============
  */
 void
 BotEntityInfo(int entnum, aas_entityinfo_t *info)
@@ -750,9 +716,7 @@ BotEntityInfo(int entnum, aas_entityinfo_t *info)
 }
 
 /*
- * ==============
  * NumBots
- * ==============
  */
 int
 NumBots(void)
@@ -761,9 +725,7 @@ NumBots(void)
 }
 
 /*
- * ==============
  * BotTeamLeader
- * ==============
  */
 int
 BotTeamLeader(bot_state_t *bs)
@@ -777,9 +739,7 @@ BotTeamLeader(bot_state_t *bs)
 }
 
 /*
- * ==============
  * AngleDifference
- * ==============
  */
 float
 AngleDifference(float ang1, float ang2)
@@ -794,9 +754,7 @@ AngleDifference(float ang1, float ang2)
 }
 
 /*
- * ==============
  * BotChangeViewAngle
- * ==============
  */
 float
 BotChangeViewAngle(float angle, float ideal_angle, float speed)
@@ -817,9 +775,7 @@ BotChangeViewAngle(float angle, float ideal_angle, float speed)
 }
 
 /*
- * ==============
  * BotChangeViewAngles
- * ==============
  */
 void
 BotChangeViewAngles(bot_state_t *bs, float thinktime)
@@ -886,9 +842,7 @@ BotChangeViewAngles(bot_state_t *bs, float thinktime)
 }
 
 /*
- * ==============
  * BotInputToUserCommand
- * ==============
  */
 void
 BotInputToUserCommand(bot_input_t *bi, usercmd_t *ucmd, int delta_angles[3],
@@ -984,9 +938,7 @@ BotInputToUserCommand(bot_input_t *bi, usercmd_t *ucmd, int delta_angles[3],
 }
 
 /*
- * ==============
  * BotUpdateInput
- * ==============
  */
 void
 BotUpdateInput(bot_state_t *bs, int time, int elapsed_time)
@@ -1017,9 +969,7 @@ BotUpdateInput(bot_state_t *bs, int time, int elapsed_time)
 }
 
 /*
- * ==============
  * BotAIRegularUpdate
- * ==============
  */
 void
 BotAIRegularUpdate(void)
@@ -1031,9 +981,7 @@ BotAIRegularUpdate(void)
 }
 
 /*
- * ==============
  * RemoveColorEscapeSequences
- * ==============
  */
 void
 RemoveColorEscapeSequences(char *text)
@@ -1054,9 +1002,7 @@ RemoveColorEscapeSequences(char *text)
 }
 
 /*
- * ==============
  * BotAI
- * ==============
  */
 int
 BotAI(int client, float thinktime)
@@ -1147,9 +1093,7 @@ BotAI(int client, float thinktime)
 }
 
 /*
- * ==================
  * BotScheduleBotThink
- * ==================
  */
 void
 BotScheduleBotThink(void)
@@ -1169,9 +1113,7 @@ BotScheduleBotThink(void)
 }
 
 /*
- * ==============
  * BotWriteSessionData
- * ==============
  */
 void
 BotWriteSessionData(bot_state_t *bs)
@@ -1209,9 +1151,7 @@ BotWriteSessionData(bot_state_t *bs)
 }
 
 /*
- * ==============
  * BotReadSessionData
- * ==============
  */
 void
 BotReadSessionData(bot_state_t *bs)
@@ -1248,9 +1188,7 @@ BotReadSessionData(bot_state_t *bs)
 }
 
 /*
- * ==============
  * BotAISetupClient
- * ==============
  */
 int
 BotAISetupClient(int client, struct bot_settings_s *settings, qboolean restart)
@@ -1362,9 +1300,7 @@ BotAISetupClient(int client, struct bot_settings_s *settings, qboolean restart)
 }
 
 /*
- * ==============
  * BotAIShutdownClient
- * ==============
  */
 int
 BotAIShutdownClient(int client, qboolean restart)
@@ -1407,12 +1343,10 @@ BotAIShutdownClient(int client, qboolean restart)
 }
 
 /*
- * ==============
  * BotResetState
  *
  * called when a bot enters the intermission or observer mode and
  * when the level is changed
- * ==============
  */
 void
 BotResetState(bot_state_t *bs)
@@ -1462,9 +1396,7 @@ BotResetState(bot_state_t *bs)
 }
 
 /*
- * ==============
  * BotAILoadMap
- * ==============
  */
 int
 BotAILoadMap(int restart)
@@ -1494,9 +1426,7 @@ void ProximityMine_Trigger(gentity_t *trigger, gentity_t *other, trace_t *trace)
 #endif
 
 /*
- * ==================
  * BotAIStartFrame
- * ==================
  */
 int
 BotAIStartFrame(int time)
@@ -1684,9 +1614,7 @@ BotAIStartFrame(int time)
 }
 
 /*
- * ==============
  * BotInitLibrary
- * ==============
  */
 int
 BotInitLibrary(void)
@@ -1759,9 +1687,7 @@ BotInitLibrary(void)
 }
 
 /*
- * ==============
  * BotAISetup
- * ==============
  */
 int
 BotAISetup(int restart)
@@ -1796,9 +1722,7 @@ BotAISetup(int restart)
 }
 
 /*
- * ==============
  * BotAIShutdown
- * ==============
  */
 int
 BotAIShutdown(int restart)

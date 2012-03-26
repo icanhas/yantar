@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,16 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /*
  * cg_weapons.c -- events and effects dealing with weapons */
 #include "cg_local.h"
 
 /*
- * ==========================
  * CG_MachineGunEjectBrass
- * ==========================
  */
 static void
 CG_MachineGunEjectBrass(centity_t *cent)
@@ -103,9 +99,7 @@ CG_MachineGunEjectBrass(centity_t *cent)
 }
 
 /*
- * ==========================
  * CG_ShotgunEjectBrass
- * ==========================
  */
 static void
 CG_ShotgunEjectBrass(centity_t *cent)
@@ -188,9 +182,7 @@ CG_ShotgunEjectBrass(centity_t *cent)
 
 #ifdef MISSIONPACK
 /*
- * ==========================
  * CG_NailgunEjectBrass
- * ==========================
  */
 static void
 CG_NailgunEjectBrass(centity_t *cent)
@@ -227,9 +219,7 @@ CG_NailgunEjectBrass(centity_t *cent)
 
 
 /*
- * ==========================
  * CG_RailTrail
- * ==========================
  */
 void
 CG_RailTrail(clientInfo_t *ci, vec3_t start, vec3_t end)
@@ -339,9 +329,7 @@ CG_RailTrail(clientInfo_t *ci, vec3_t start, vec3_t end)
 }
 
 /*
- * ==========================
  * CG_RocketTrail
- * ==========================
  */
 static void
 CG_RocketTrail(centity_t *ent, const weaponInfo_t *wi)
@@ -407,9 +395,7 @@ CG_RocketTrail(centity_t *ent, const weaponInfo_t *wi)
 
 #ifdef MISSIONPACK
 /*
- * ==========================
  * CG_NailTrail
- * ==========================
  */
 static void
 CG_NailTrail(centity_t *ent, const weaponInfo_t *wi)
@@ -475,9 +461,7 @@ CG_NailTrail(centity_t *ent, const weaponInfo_t *wi)
 #endif
 
 /*
- * ==========================
  * CG_NailTrail
- * ==========================
  */
 static void
 CG_PlasmaTrail(centity_t *cent, const weaponInfo_t *wi)
@@ -571,9 +555,7 @@ CG_PlasmaTrail(centity_t *cent, const weaponInfo_t *wi)
 
 }
 /*
- * ==========================
  * CG_GrappleTrail
- * ==========================
  */
 void
 CG_GrappleTrail(centity_t *ent, const weaponInfo_t *wi)
@@ -614,9 +596,7 @@ CG_GrappleTrail(centity_t *ent, const weaponInfo_t *wi)
 }
 
 /*
- * ==========================
  * CG_GrenadeTrail
- * ==========================
  */
 static void
 CG_GrenadeTrail(centity_t *ent, const weaponInfo_t *wi)
@@ -626,11 +606,9 @@ CG_GrenadeTrail(centity_t *ent, const weaponInfo_t *wi)
 
 
 /*
- * =================
  * CG_RegisterWeapon
  *
  * The server says this item is used on this level
- * =================
  */
 void
 CG_RegisterWeapon(int weaponNum)
@@ -898,11 +876,9 @@ CG_RegisterWeapon(int weaponNum)
 }
 
 /*
- * =================
  * CG_RegisterItemVisuals
  *
  * The server says this item is used on this level
- * =================
  */
 void
 CG_RegisterItemVisuals(int itemNum)
@@ -944,18 +920,14 @@ CG_RegisterItemVisuals(int itemNum)
 
 
 /*
- * ========================================================================================
  *
  * VIEW WEAPON
  *
- * ========================================================================================
  */
 
 /*
- * =================
  * CG_MapTorsoToWeaponFrame
  *
- * =================
  */
 static int
 CG_MapTorsoToWeaponFrame(clientInfo_t *ci, int frame)
@@ -981,9 +953,7 @@ CG_MapTorsoToWeaponFrame(clientInfo_t *ci, int frame)
 
 
 /*
- * ==============
  * CG_CalculateWeaponPosition
- * ==============
  */
 static void
 CG_CalculateWeaponPosition(vec3_t origin, vec3_t angles)
@@ -1036,7 +1006,6 @@ CG_CalculateWeaponPosition(vec3_t origin, vec3_t angles)
 
 
 /*
- * ===============
  * CG_LightningBolt
  *
  * Origin will be the exact tag point, which is slightly
@@ -1044,7 +1013,6 @@ CG_CalculateWeaponPosition(vec3_t origin, vec3_t angles)
  * The cent should be the non-predicted cent if it is from the player,
  * so the endpoint will reflect the simulated strike (lagging the predicted
  * angle)
- * ===============
  */
 static void
 CG_LightningBolt(centity_t *cent, vec3_t origin)
@@ -1203,9 +1171,7 @@ CG_LightningBolt(centity_t *cent, vec3_t origin)
 
 
 /*
- * ======================
  * CG_MachinegunSpinAngle
- * ======================
  */
 #define         SPIN_SPEED	0.9
 #define         COAST_TIME	1000
@@ -1251,9 +1217,7 @@ CG_MachinegunSpinAngle(centity_t *cent)
 
 
 /*
- * ========================
  * CG_AddWeaponWithPowerups
- * ========================
  */
 static void
 CG_AddWeaponWithPowerups(refEntity_t *gun, int powerups)
@@ -1278,13 +1242,11 @@ CG_AddWeaponWithPowerups(refEntity_t *gun, int powerups)
 
 
 /*
- * =============
  * CG_AddPlayerWeapon
  *
  * Used for both the view weapon (ps is valid) and the world modelother character models (ps is NULL)
  * The main player will have this called for BOTH cases, so effects like light and
  * sound should only be done on the world model case.
- * =============
  */
 void
 CG_AddPlayerWeapon(refEntity_t *parent, playerState_t *ps, centity_t *cent,
@@ -1446,11 +1408,9 @@ CG_AddPlayerWeapon(refEntity_t *parent, playerState_t *ps, centity_t *cent,
 }
 
 /*
- * ==============
  * CG_AddViewWeapon
  *
  * Add the weapon, and flash for the player's view
- * ==============
  */
 void
 CG_AddViewWeapon(playerState_t *ps)
@@ -1536,17 +1496,13 @@ CG_AddViewWeapon(playerState_t *ps)
 }
 
 /*
- * ==============================================================================
  *
  * WEAPON SELECTION
  *
- * ==============================================================================
  */
 
 /*
- * ===================
  * CG_DrawWeaponSelect
- * ===================
  */
 void
 CG_DrawWeaponSelect(void)
@@ -1615,9 +1571,7 @@ CG_DrawWeaponSelect(void)
 
 
 /*
- * ===============
  * CG_WeaponSelectable
- * ===============
  */
 static qboolean
 CG_WeaponSelectable(int i)
@@ -1631,9 +1585,7 @@ CG_WeaponSelectable(int i)
 }
 
 /*
- * ===============
  * CG_NextWeapon_f
- * ===============
  */
 void
 CG_NextWeapon_f(void)
@@ -1663,9 +1615,7 @@ CG_NextWeapon_f(void)
 }
 
 /*
- * ===============
  * CG_PrevWeapon_f
- * ===============
  */
 void
 CG_PrevWeapon_f(void)
@@ -1695,9 +1645,7 @@ CG_PrevWeapon_f(void)
 }
 
 /*
- * ===============
  * CG_Weapon_f
- * ===============
  */
 void
 CG_Weapon_f(void)
@@ -1723,11 +1671,9 @@ CG_Weapon_f(void)
 }
 
 /*
- * ===================
  * CG_OutOfAmmoChange
  *
  * The current weapon has just run out of ammo
- * ===================
  */
 void
 CG_OutOfAmmoChange(void)
@@ -1746,19 +1692,15 @@ CG_OutOfAmmoChange(void)
 
 
 /*
- * ===================================================================================================
  *
  * WEAPON EVENTS
  *
- * ===================================================================================================
  */
 
 /*
- * ================
  * CG_FireWeapon
  *
  * Caused by an EV_FIRE_WEAPON event
- * ================
  */
 void
 CG_FireWeapon(centity_t *cent)
@@ -1811,11 +1753,9 @@ CG_FireWeapon(centity_t *cent)
 
 
 /*
- * =================
  * CG_MissileHitWall
  *
  * Caused by an EV_MISSILE_MISS event, or directly by local bullet tracing
- * =================
  */
 void
 CG_MissileHitWall(int weapon, int clientNum, vec3_t origin, vec3_t dir,
@@ -2023,9 +1963,7 @@ CG_MissileHitWall(int weapon, int clientNum, vec3_t origin, vec3_t dir,
 
 
 /*
- * =================
  * CG_MissileHitPlayer
- * =================
  */
 void
 CG_MissileHitPlayer(int weapon, vec3_t origin, vec3_t dir, int entityNum)
@@ -2054,17 +1992,13 @@ CG_MissileHitPlayer(int weapon, vec3_t origin, vec3_t dir, int entityNum)
 
 
 /*
- * ============================================================================
  *
  * SHOTGUN TRACING
  *
- * ============================================================================
  */
 
 /*
- * ================
  * CG_ShotgunPellet
- * ================
  */
 static void
 CG_ShotgunPellet(vec3_t start, vec3_t end, int skipNum)
@@ -2117,12 +2051,10 @@ CG_ShotgunPellet(vec3_t start, vec3_t end, int skipNum)
 }
 
 /*
- * ================
  * CG_ShotgunPattern
  *
  * Perform the same traces the server did to locate the
  * hit splashes
- * ================
  */
 static void
 CG_ShotgunPattern(vec3_t origin, vec3_t origin2, int seed, int otherEntNum)
@@ -2151,9 +2083,7 @@ CG_ShotgunPattern(vec3_t origin, vec3_t origin2, int seed, int otherEntNum)
 }
 
 /*
- * ==============
  * CG_ShotgunFire
- * ==============
  */
 void
 CG_ShotgunFire(entityState_t *es)
@@ -2182,18 +2112,14 @@ CG_ShotgunFire(entityState_t *es)
 }
 
 /*
- * ============================================================================
  *
  * BULLETS
  *
- * ============================================================================
  */
 
 
 /*
- * ===============
  * CG_Tracer
- * ===============
  */
 void
 CG_Tracer(vec3_t source, vec3_t dest)
@@ -2272,9 +2198,7 @@ CG_Tracer(vec3_t source, vec3_t dest)
 
 
 /*
- * ======================
  * CG_CalcMuzzlePoint
- * ======================
  */
 static qboolean
 CG_CalcMuzzlePoint(int entityNum, vec3_t muzzle)
@@ -2311,11 +2235,9 @@ CG_CalcMuzzlePoint(int entityNum, vec3_t muzzle)
 }
 
 /*
- * ======================
  * CG_Bullet
  *
  * Renders bullet effects.
- * ======================
  */
 void
 CG_Bullet(vec3_t end, int sourceEntityNum, vec3_t normal, qboolean flesh,

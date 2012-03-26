@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 #include "q_shared.h"
 #include "qcommon.h"
@@ -29,12 +27,10 @@ static qboolean		msgInit = qfalse;
 int pcount[256];
 
 /*
- * ==============================================================================
  *
  *                      MESSAGE IO FUNCTIONS
  *
  * Handles byte ordering and avoids alignment errors
- * ==============================================================================
  */
 
 int oldsize = 0;
@@ -105,11 +101,9 @@ MSG_Copy(msg_t *buf, byte *data, int length, msg_t *src)
 }
 
 /*
- * =============================================================================
  *
  * bit functions
  *
- * =============================================================================
  */
 
 int overflows;
@@ -573,11 +567,9 @@ MSG_HashKey(const char *string, int maxlen)
 }
 
 /*
- * =============================================================================
  *
  * delta functions
  *
- * =============================================================================
  */
 
 extern cvar_t *cl_shownet;
@@ -629,11 +621,9 @@ MSG_ReadDeltaFloat(msg_t *msg, float oldV)
 }
 
 /*
- * =============================================================================
  *
  * delta functions with keys
  *
- * =============================================================================
  */
 
 int kbitmask[32] = {
@@ -693,11 +683,9 @@ MSG_ReadDeltaKeyFloat(msg_t *msg, int key, float oldV)
 
 
 /*
- * ============================================================================
  *
  * usercmd_t communication
  *
- * ============================================================================
  */
 
 /* ms is allways sent, the others are optional */
@@ -711,9 +699,7 @@ MSG_ReadDeltaKeyFloat(msg_t *msg, int key, float oldV)
 #define CM_WEAPON	(1<<7)
 
 /*
- * =====================
  * MSG_WriteDeltaUsercmd
- * =====================
  */
 void
 MSG_WriteDeltaUsercmd(msg_t *msg, usercmd_t *from, usercmd_t *to)
@@ -760,9 +746,7 @@ MSG_ReadDeltaUsercmd(msg_t *msg, usercmd_t *from, usercmd_t *to)
 }
 
 /*
- * =====================
  * MSG_WriteDeltaUsercmd
- * =====================
  */
 void
 MSG_WriteDeltaUsercmdKey(msg_t *msg, int key, usercmd_t *from, usercmd_t *to)
@@ -800,9 +784,7 @@ MSG_WriteDeltaUsercmdKey(msg_t *msg, int key, usercmd_t *from, usercmd_t *to)
 
 
 /*
- * =====================
  * MSG_ReadDeltaUsercmd
- * =====================
  */
 void
 MSG_ReadDeltaUsercmdKey(msg_t *msg, int key, usercmd_t *from, usercmd_t *to)
@@ -835,19 +817,15 @@ MSG_ReadDeltaUsercmdKey(msg_t *msg, int key, usercmd_t *from, usercmd_t *to)
 }
 
 /*
- * =============================================================================
  *
  * entityState_t communication
  *
- * =============================================================================
  */
 
 /*
- * =================
  * MSG_ReportChangeVectors_f
  *
  * Prints out a table from the current statistics for copying to code
- * =================
  */
 void
 MSG_ReportChangeVectors_f(void)
@@ -929,7 +907,6 @@ netField_t entityStateFields[] =
 #define FLOAT_INT_BIAS	(1<<(FLOAT_INT_BITS-1))
 
 /*
- * ==================
  * MSG_WriteDeltaEntity
  *
  * Writes part of a packetentities message, including the entity number.
@@ -937,7 +914,6 @@ netField_t entityStateFields[] =
  * If to is NULL, a remove entity update will be sent
  * If force is not set, then nothing at all will be generated if the entity is
  * identical, under the assumption that the in-order delta code will catch it.
- * ==================
  */
 void
 MSG_WriteDeltaEntity(msg_t *msg, struct entityState_s *from,
@@ -1050,7 +1026,6 @@ MSG_WriteDeltaEntity(msg_t *msg, struct entityState_s *from,
 }
 
 /*
- * ==================
  * MSG_ReadDeltaEntity
  *
  * The entity number has already been read from the message, which
@@ -1059,7 +1034,6 @@ MSG_WriteDeltaEntity(msg_t *msg, struct entityState_s *from,
  * If the delta removes the entity, entityState_t->number will be set to MAX_GENTITIES-1
  *
  * Can go from either a baseline or a previous packet_entity
- * ==================
  */
 void
 MSG_ReadDeltaEntity(msg_t *msg, entityState_t *from, entityState_t *to,
@@ -1182,11 +1156,9 @@ MSG_ReadDeltaEntity(msg_t *msg, entityState_t *from, entityState_t *to,
 
 
 /*
- * ============================================================================
  *
  * plyer_state_t communication
  *
- * ============================================================================
  */
 
 /* using the stringizing operator to save typing... */
@@ -1245,10 +1217,8 @@ netField_t playerStateFields[] =
 };
 
 /*
- * =============
  * MSG_WriteDeltaPlayerstate
  *
- * =============
  */
 void
 MSG_WriteDeltaPlayerstate(msg_t *msg, struct playerState_s *from,
@@ -1388,9 +1358,7 @@ MSG_WriteDeltaPlayerstate(msg_t *msg, struct playerState_s *from,
 
 
 /*
- * ===================
  * MSG_ReadDeltaPlayerstate
- * ===================
  */
 void
 MSG_ReadDeltaPlayerstate(msg_t *msg, playerState_t *from, playerState_t *to)

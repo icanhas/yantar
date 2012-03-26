@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,19 +16,16 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 
 #include "server.h"
 
 
 /*
- * ===============
  * SV_SendConfigstring
  *
  * Creates and sends the server command necessary to update the CS index for the
  * given client
- * ===============
  */
 static void
 SV_SendConfigstring(client_t *client, int index)
@@ -68,12 +64,10 @@ SV_SendConfigstring(client_t *client, int index)
 }
 
 /*
- * ===============
  * SV_UpdateConfigstrings
  *
  * Called when a client goes from CS_PRIMED to CS_ACTIVE.  Updates all
  * Configstring indexes that have changed while the client was in CS_PRIMED
- * ===============
  */
 void
 SV_UpdateConfigstrings(client_t *client)
@@ -95,10 +89,8 @@ SV_UpdateConfigstrings(client_t *client)
 }
 
 /*
- * ===============
  * SV_SetConfigstring
  *
- * ===============
  */
 void
 SV_SetConfigstring(int index, const char *val)
@@ -142,10 +134,8 @@ SV_SetConfigstring(int index, const char *val)
 }
 
 /*
- * ===============
  * SV_GetConfigstring
  *
- * ===============
  */
 void
 SV_GetConfigstring(int index, char *buffer, int bufferSize)
@@ -165,10 +155,8 @@ SV_GetConfigstring(int index, char *buffer, int bufferSize)
 
 
 /*
- * ===============
  * SV_SetUserinfo
  *
- * ===============
  */
 void
 SV_SetUserinfo(int index, const char *val)
@@ -188,10 +176,8 @@ SV_SetUserinfo(int index, const char *val)
 
 
 /*
- * ===============
  * SV_GetUserinfo
  *
- * ===============
  */
 void
 SV_GetUserinfo(int index, char *buffer, int bufferSize)
@@ -206,13 +192,11 @@ SV_GetUserinfo(int index, char *buffer, int bufferSize)
 
 
 /*
- * ================
  * SV_CreateBaseline
  *
  * Entity baselines are used to compress non-delta messages
  * to the clients -- only the fields that differ from the
  * baseline will be transmitted
- * ================
  */
 static void
 SV_CreateBaseline(void)
@@ -235,10 +219,8 @@ SV_CreateBaseline(void)
 
 
 /*
- * ===============
  * SV_BoundMaxClients
  *
- * ===============
  */
 static void
 SV_BoundMaxClients(int minimum)
@@ -256,14 +238,12 @@ SV_BoundMaxClients(int minimum)
 
 
 /*
- * ===============
  * SV_Startup
  *
  * Called when a host starts a map when it wasn't running
  * one before.  Successive map or map_restart commands will
  * NOT cause this to be called, unless the game is exited to
  * the menu system first.
- * ===============
  */
 static void
 SV_Startup(void)
@@ -293,9 +273,7 @@ SV_Startup(void)
 
 
 /*
- * ==================
  * SV_ChangeMaxClients
- * ==================
  */
 void
 SV_ChangeMaxClients(void)
@@ -354,9 +332,7 @@ SV_ChangeMaxClients(void)
 }
 
 /*
- * ================
  * SV_ClearServer
- * ================
  */
 static void
 SV_ClearServer(void)
@@ -370,11 +346,9 @@ SV_ClearServer(void)
 }
 
 /*
- * ================
  * SV_TouchCGame
  *
  * touch the cgame.vm so that a pure client can load it if it's in a seperate pk3
- * ================
  */
 static void
 SV_TouchCGame(void)
@@ -389,13 +363,11 @@ SV_TouchCGame(void)
 }
 
 /*
- * ================
  * SV_SpawnServer
  *
  * Change the server to a new map, taking all connected
  * clients along with it.
  * This is NOT called for map_restart
- * ================
  */
 void
 SV_SpawnServer(char *server, qboolean killBots)
@@ -613,11 +585,9 @@ SV_SpawnServer(char *server, qboolean killBots)
 }
 
 /*
- * ===============
  * SV_Init
  *
  * Only called at main exe startup, not for each game
- * ===============
  */
 void
 SV_Init(void)
@@ -705,14 +675,12 @@ SV_Init(void)
 
 
 /*
- * ==================
  * SV_FinalMessage
  *
  * Used by SV_Shutdown to send a final message to all
  * connected clients before the server goes down.  The messages are sent immediately,
  * not just stuck on the outgoing message list, because the server is going
  * to totally exit after returning from this function.
- * ==================
  */
 void
 SV_FinalMessage(char *message)
@@ -743,12 +711,10 @@ SV_FinalMessage(char *message)
 
 
 /*
- * ================
  * SV_Shutdown
  *
  * Called when each game quits,
  * before Sys_Quit or Sys_Error
- * ================
  */
 void
 SV_Shutdown(char *finalmsg)

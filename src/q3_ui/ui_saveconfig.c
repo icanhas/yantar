@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,15 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /*  */
 /*
- * =============================================================================
  *
  * SAVE CONFIG MENU
  *
- * =============================================================================
  */
 
 #include "ui_local.h"
@@ -56,9 +52,7 @@ static saveConfig_t saveConfig;
 
 
 /*
- * ===============
  * UI_SaveConfigMenu_BackEvent
- * ===============
  */
 static void
 UI_SaveConfigMenu_BackEvent(void *ptr, int event)
@@ -71,9 +65,7 @@ UI_SaveConfigMenu_BackEvent(void *ptr, int event)
 
 
 /*
- * ===============
  * UI_SaveConfigMenu_SaveEvent
- * ===============
  */
 static void
 UI_SaveConfigMenu_SaveEvent(void *ptr, int event)
@@ -94,9 +86,7 @@ UI_SaveConfigMenu_SaveEvent(void *ptr, int event)
 
 
 /*
- * ===============
  * UI_SaveConfigMenu_SavenameDraw
- * ===============
  */
 static void
 UI_SaveConfigMenu_SavenameDraw(void *self)
@@ -126,9 +116,7 @@ UI_SaveConfigMenu_SavenameDraw(void *self)
 
 
 /*
- * =================
  * UI_SaveConfigMenu_Init
- * =================
  */
 static void
 UI_SaveConfigMenu_Init(void)
@@ -198,9 +186,7 @@ UI_SaveConfigMenu_Init(void)
 
 
 /*
- * =================
  * UI_SaveConfigMenu_Cache
- * =================
  */
 void
 UI_SaveConfigMenu_Cache(void)
@@ -214,9 +200,7 @@ UI_SaveConfigMenu_Cache(void)
 
 
 /*
- * ===============
  * UI_SaveConfigMenu
- * ===============
  */
 void
 UI_SaveConfigMenu(void)

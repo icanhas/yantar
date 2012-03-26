@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /* tr_marks.c -- polygon projection on the world polygons */
 
@@ -29,11 +27,9 @@
 #define MARKER_OFFSET		0	/* 1 */
 
 /*
- * =============
  * R_ChopPolyBehindPlane
  *
  * Out must have space for two more vertexes than in
- * =============
  */
 #define SIDE_FRONT	0
 #define SIDE_BACK	1
@@ -127,10 +123,8 @@ R_ChopPolyBehindPlane(int numInPoints, vec3_t inPoints[MAX_VERTS_ON_POLY],
 }
 
 /*
- * =================
  * R_BoxSurfaces_r
  *
- * =================
  */
 void
 R_BoxSurfaces_r(mnode_t *node, vec3_t mins, vec3_t maxs, surfaceType_t **list, int listsize, int *listlength,
@@ -191,10 +185,8 @@ R_BoxSurfaces_r(mnode_t *node, vec3_t mins, vec3_t maxs, surfaceType_t **list, i
 }
 
 /*
- * =================
  * R_AddMarkFragments
  *
- * =================
  */
 void
 R_AddMarkFragments(int numClipPoints, vec3_t clipPoints[2][MAX_VERTS_ON_POLY],
@@ -252,10 +244,8 @@ R_AddMarkFragments(int numClipPoints, vec3_t clipPoints[2][MAX_VERTS_ON_POLY],
 }
 
 /*
- * =================
  * R_MarkFragments
  *
- * =================
  */
 int
 R_MarkFragments(int numPoints, const vec3_t *points, const vec3_t projection,

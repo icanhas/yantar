@@ -1194,7 +1194,6 @@ loop:   SWAPINIT(a, es);
 	}
 
 /*
- * ==============
  * strtod
  *
  * Without an errno variable, this is a fair bit less useful than it is in libc
@@ -1205,7 +1204,6 @@ loop:   SWAPINIT(a, es);
  * 0x7f8p20 == 0x7f800000 (decimal power of two)
  * The variable pointed to by endptr will hold the location of the first character
  * in the nptr string that was not used in the conversion
- * ==============
  */
 	double
 	strtod(const char *nptr, char **endptr)
@@ -1494,14 +1492,12 @@ loop:   SWAPINIT(a, es);
 	}
 
 /*
- * ==============
  * strtol
  *
  * Handles any base from 2 to 36. If base is 0 then it guesses
  * decimal, hex, or octal based on the format of the number (leading 0 or 0x)
  * Will not overflow - returns LONG_MIN or LONG_MAX as appropriate
  * *endptr is set to the location of the first character not used
- * ==============
  */
 	long
 	strtol(const char *nptr, char **endptr, int base)

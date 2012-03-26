@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /* tr_sky.c */
 #include "tr_local.h"
@@ -29,11 +27,9 @@ static float s_cloudTexCoords[6][SKY_SUBDIVISIONS+1][SKY_SUBDIVISIONS+1][2];
 static float s_cloudTexP[6][SKY_SUBDIVISIONS+1][SKY_SUBDIVISIONS+1];
 
 /*
- * ===================================================================================
  *
  * POLYGON TO BOX SIDE PROJECTION
  *
- * ===================================================================================
  */
 
 static vec3_t sky_clip[6] =
@@ -50,9 +46,7 @@ static float sky_mins[2][6], sky_maxs[2][6];
 static float sky_min, sky_max;
 
 /*
- * ================
  * AddSkyPolygon
- * ================
  */
 static void
 AddSkyPolygon(int nump, vec3_t vecs)
@@ -136,9 +130,7 @@ AddSkyPolygon(int nump, vec3_t vecs)
 #define ON_EPSILON	0.1f	/* point on plane side epsilon */
 #define MAX_CLIP_VERTS	64
 /*
- * ================
  * ClipSkyPolygon
- * ================
  */
 static void
 ClipSkyPolygon(int nump, vec3_t vecs, int stage)
@@ -223,9 +215,7 @@ ClipSkyPolygon(int nump, vec3_t vecs, int stage)
 }
 
 /*
- * ==============
  * ClearSkyBox
- * ==============
  */
 static void
 ClearSkyBox(void)
@@ -239,9 +229,7 @@ ClearSkyBox(void)
 }
 
 /*
- * ================
  * RB_ClipSkyPolygons
- * ================
  */
 void
 RB_ClipSkyPolygons(shaderCommands_t *input)
@@ -261,11 +249,9 @@ RB_ClipSkyPolygons(shaderCommands_t *input)
 }
 
 /*
- * ===================================================================================
  *
  * CLOUD VERTEX GENERATION
  *
- * ===================================================================================
  */
 
 /*
@@ -839,13 +825,11 @@ RB_DrawSun(void)
 
 
 /*
- * ================
  * RB_StageIteratorSky
  *
  * All of the visible sky triangles are in tess
  *
  * Other things could be stuck in here, like birds in the sky, etc
- * ================
  */
 void
 RB_StageIteratorSky(void)

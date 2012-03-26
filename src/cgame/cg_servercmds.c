@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /*
  * cg_servercmds.c -- reliably sequenced text commands sent by the server
@@ -66,10 +64,8 @@ CG_ValidOrder(const char *p)
 #endif
 
 /*
- * =================
  * CG_ParseScores
  *
- * =================
  */
 static void
 CG_ParseScores(void)
@@ -116,10 +112,8 @@ CG_ParseScores(void)
 }
 
 /*
- * =================
  * CG_ParseTeamInfo
  *
- * =================
  */
 static void
 CG_ParseTeamInfo(void)
@@ -156,12 +150,10 @@ CG_ParseTeamInfo(void)
 
 
 /*
- * ================
  * CG_ParseServerinfo
  *
  * This is called explicitly when the gamestate is first received,
  * and whenever the server updates any serverinfo flagged cvars
- * ================
  */
 void
 CG_ParseServerinfo(void)
@@ -189,9 +181,7 @@ CG_ParseServerinfo(void)
 }
 
 /*
- * ==================
  * CG_ParseWarmup
- * ==================
  */
 static void
 CG_ParseWarmup(void)
@@ -223,11 +213,9 @@ CG_ParseWarmup(void)
 }
 
 /*
- * ================
  * CG_SetConfigValues
  *
  * Called on load to set the initial values from configure strings
- * ================
  */
 void
 CG_SetConfigValues(void)
@@ -252,9 +240,7 @@ CG_SetConfigValues(void)
 }
 
 /*
- * =====================
  * CG_ShaderStateChanged
- * =====================
  */
 void
 CG_ShaderStateChanged(void)
@@ -293,10 +279,8 @@ CG_ShaderStateChanged(void)
 }
 
 /*
- * ================
  * CG_ConfigStringModified
  *
- * ================
  */
 static void
 CG_ConfigStringModified(void)
@@ -384,10 +368,8 @@ CG_ConfigStringModified(void)
 
 
 /*
- * =======================
  * CG_AddToTeamChat
  *
- * =======================
  */
 static void
 CG_AddToTeamChat(const char *str)
@@ -458,7 +440,6 @@ CG_AddToTeamChat(const char *str)
 }
 
 /*
- * ===============
  * CG_MapRestart
  *
  * The server has issued a map_restart, so the next snapshot
@@ -466,7 +447,6 @@ CG_AddToTeamChat(const char *str)
  *
  * A tournement restart will clear everything, but doesn't
  * require a reload of all the media
- * ===============
  */
 static void
 CG_MapRestart(void)
@@ -544,9 +524,7 @@ voiceChatList_t voiceChatLists[MAX_VOICEFILES];
 headModelVoiceChat_t headModelVoiceChat[MAX_HEADMODELS];
 
 /*
- * =================
  * CG_ParseVoiceChats
- * =================
  */
 int
 CG_ParseVoiceChats(const char *filename, voiceChatList_t *voiceChatList,
@@ -658,9 +636,7 @@ CG_ParseVoiceChats(const char *filename, voiceChatList_t *voiceChatList,
 }
 
 /*
- * =================
  * CG_LoadVoiceChats
- * =================
  */
 void
 CG_LoadVoiceChats(void)
@@ -688,9 +664,7 @@ CG_LoadVoiceChats(void)
 }
 
 /*
- * =================
  * CG_HeadModelVoiceChats
- * =================
  */
 int
 CG_HeadModelVoiceChats(char *filename)
@@ -735,9 +709,7 @@ CG_HeadModelVoiceChats(char *filename)
 
 
 /*
- * =================
  * CG_GetVoiceChat
- * =================
  */
 int
 CG_GetVoiceChat(voiceChatList_t *voiceChatList, const char *id, sfxHandle_t *snd,
@@ -757,9 +729,7 @@ CG_GetVoiceChat(voiceChatList_t *voiceChatList, const char *id, sfxHandle_t *snd
 }
 
 /*
- * =================
  * CG_VoiceChatListForClient
- * =================
  */
 voiceChatList_t *
 CG_VoiceChatListForClient(int clientNum)
@@ -877,9 +847,7 @@ typedef struct bufferedVoiceChat_s {
 bufferedVoiceChat_t voiceChatBuffer[MAX_VOICECHATBUFFER];
 
 /*
- * =================
  * CG_PlayVoiceChat
- * =================
  */
 void
 CG_PlayVoiceChat(bufferedVoiceChat_t *vchat)
@@ -913,9 +881,7 @@ CG_PlayVoiceChat(bufferedVoiceChat_t *vchat)
 }
 
 /*
- * =====================
  * CG_PlayBufferedVoieChats
- * =====================
  */
 void
 CG_PlayBufferedVoiceChats(void)
@@ -937,9 +903,7 @@ CG_PlayBufferedVoiceChats(void)
 }
 
 /*
- * =====================
  * CG_AddBufferedVoiceChat
- * =====================
  */
 void
 CG_AddBufferedVoiceChat(bufferedVoiceChat_t *vchat)
@@ -960,9 +924,7 @@ CG_AddBufferedVoiceChat(bufferedVoiceChat_t *vchat)
 }
 
 /*
- * =================
  * CG_VoiceChatLocal
- * =================
  */
 void
 CG_VoiceChatLocal(int mode, qboolean voiceOnly, int clientNum, int color,
@@ -1016,9 +978,7 @@ CG_VoiceChatLocal(int mode, qboolean voiceOnly, int clientNum, int color,
 }
 
 /*
- * =================
  * CG_VoiceChat
- * =================
  */
 void
 CG_VoiceChat(int mode)
@@ -1048,9 +1008,7 @@ CG_VoiceChat(int mode)
 }
 
 /*
- * =================
  * CG_RemoveChatEscapeChar
- * =================
  */
 static void
 CG_RemoveChatEscapeChar(char *text)
@@ -1067,12 +1025,10 @@ CG_RemoveChatEscapeChar(char *text)
 }
 
 /*
- * =================
  * CG_ServerCommand
  *
  * The string has been tokenized and can be retrieved with
  * Cmd_Argc() / Cmd_Argv()
- * =================
  */
 static void
 CG_ServerCommand(void)
@@ -1197,12 +1153,10 @@ CG_ServerCommand(void)
 
 
 /*
- * ====================
  * CG_ExecuteNewServerCommands
  *
  * Execute all of the server commands that were received along
  * with this this snapshot.
- * ====================
  */
 void
 CG_ExecuteNewServerCommands(int latestSequence)

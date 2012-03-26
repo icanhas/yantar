@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /*
  *
@@ -51,9 +49,7 @@ static char * s_rankstatus_message = NULL;
 static vec4_t s_rankingstatus_color_prompt = {1.00, 0.43, 0.00, 1.00};
 
 /*
- * ===============
  * RankStatus_MenuEvent
- * ===============
  */
 static void
 RankStatus_MenuEvent(void* ptr, int event)
@@ -99,9 +95,7 @@ RankStatus_MenuEvent(void* ptr, int event)
 
 
 /*
- * ===============
  * RankStatus_MenuInit
- * ===============
  */
 void
 RankStatus_MenuInit(void)
@@ -152,9 +146,7 @@ RankStatus_MenuInit(void)
 
 
 /*
- * ===============
  * RankStatus_Cache
- * ===============
  */
 void
 RankStatus_Cache(void)
@@ -164,9 +156,7 @@ RankStatus_Cache(void)
 
 
 /*
- * ===============
  * UI_RankStatusMenu
- * ===============
  */
 void
 UI_RankStatusMenu(void)

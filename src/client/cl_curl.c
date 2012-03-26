@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 2006 Tony J. White (tjw@tjw.org)
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 
 #ifdef USE_CURL
@@ -59,9 +57,7 @@ const char *(*qcurl_multi_strerror)(CURLMcode);
 static void *cURLLib = NULL;
 
 /*
- * =================
  * GPA
- * =================
  */
 static void *
 GPA(char *str)
@@ -81,9 +77,7 @@ GPA(char *str)
 #endif	/* USE_CURL_DLOPEN */
 
 /*
- * =================
  * CL_cURL_Init
- * =================
  */
 qboolean
 CL_cURL_Init()
@@ -139,9 +133,7 @@ CL_cURL_Init()
 }
 
 /*
- * =================
  * CL_cURL_Shutdown
- * =================
  */
 void
 CL_cURL_Shutdown(void)

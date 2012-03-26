@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /*
  * string allocation/managment */
@@ -85,9 +83,7 @@ static int	allocPoint, outOfMemory;
 
 
 /*
- * ===============
  * UI_Alloc
- * ===============
  */
 void *
 UI_Alloc(int size)
@@ -110,9 +106,7 @@ UI_Alloc(int size)
 }
 
 /*
- * ===============
  * UI_InitMemory
- * ===============
  */
 void
 UI_InitMemory(void)
@@ -133,9 +127,7 @@ UI_OutOfMemory(void)
 
 #define HASH_TABLE_SIZE 2048
 /*
- * ================
  * return a hash value for the string
- * ================
  */
 static unsigned
 hashForString(const char *str)
@@ -236,9 +228,7 @@ String_Report(void)
 }
 
 /*
- * =================
  * String_Init
- * =================
  */
 void
 String_Init(void)
@@ -259,9 +249,7 @@ String_Init(void)
 
 #if 0
 /*
- * =================
  * PC_SourceWarning
- * =================
  */
 static __attribute__ ((format (printf, 2, 3))) void
 PC_SourceWarning(int handle, char *format, ...)
@@ -285,9 +273,7 @@ PC_SourceWarning(int handle, char *format, ...)
 #endif
 
 /*
- * =================
  * PC_SourceError
- * =================
  */
 static __attribute__ ((format (printf, 2, 3))) void
 PC_SourceError(int handle, char *format, ...)
@@ -310,9 +296,7 @@ PC_SourceError(int handle, char *format, ...)
 }
 
 /*
- * =================
  * LerpColor
- * =================
  */
 void
 LerpColor(vec4_t a, vec4_t b, vec4_t c, float t)
@@ -330,9 +314,7 @@ LerpColor(vec4_t a, vec4_t b, vec4_t c, float t)
 }
 
 /*
- * =================
  * Float_Parse
- * =================
  */
 qboolean
 Float_Parse(char **p, float *f)
@@ -347,9 +329,7 @@ Float_Parse(char **p, float *f)
 }
 
 /*
- * =================
  * PC_Float_Parse
- * =================
  */
 qboolean
 PC_Float_Parse(int handle, float *f)
@@ -377,9 +357,7 @@ PC_Float_Parse(int handle, float *f)
 }
 
 /*
- * =================
  * Color_Parse
- * =================
  */
 qboolean
 Color_Parse(char **p, vec4_t *c)
@@ -396,9 +374,7 @@ Color_Parse(char **p, vec4_t *c)
 }
 
 /*
- * =================
  * PC_Color_Parse
- * =================
  */
 qboolean
 PC_Color_Parse(int handle, vec4_t *c)
@@ -415,9 +391,7 @@ PC_Color_Parse(int handle, vec4_t *c)
 }
 
 /*
- * =================
  * Int_Parse
- * =================
  */
 qboolean
 Int_Parse(char **p, int *i)
@@ -433,9 +407,7 @@ Int_Parse(char **p, int *i)
 }
 
 /*
- * =================
  * PC_Int_Parse
- * =================
  */
 qboolean
 PC_Int_Parse(int handle, int *i)
@@ -462,9 +434,7 @@ PC_Int_Parse(int handle, int *i)
 }
 
 /*
- * =================
  * Rect_Parse
- * =================
  */
 qboolean
 Rect_Parse(char **p, rectDef_t *r)
@@ -478,9 +448,7 @@ Rect_Parse(char **p, rectDef_t *r)
 }
 
 /*
- * =================
  * PC_Rect_Parse
- * =================
  */
 qboolean
 PC_Rect_Parse(int handle, rectDef_t *r)
@@ -494,9 +462,7 @@ PC_Rect_Parse(int handle, rectDef_t *r)
 }
 
 /*
- * =================
  * String_Parse
- * =================
  */
 qboolean
 String_Parse(char **p, const char **out)
@@ -512,9 +478,7 @@ String_Parse(char **p, const char **out)
 }
 
 /*
- * =================
  * PC_String_Parse
- * =================
  */
 qboolean
 PC_String_Parse(int handle, const char **out)
@@ -529,9 +493,7 @@ PC_String_Parse(int handle, const char **out)
 }
 
 /*
- * =================
  * PC_Script_Parse
- * =================
  */
 qboolean
 PC_Script_Parse(int handle, const char **out)
@@ -570,11 +532,9 @@ PC_Script_Parse(int handle, const char **out)
  *  */
 
 /*
- * ==================
  * Init_Display
  *
  * Initializes the display with a structure to all the drawing routines
- * ==================
  */
 void
 Init_Display(displayContextDef_t *dc)
@@ -598,12 +558,10 @@ GradientBar_Paint(rectDef_t *rect, vec4_t color)
 
 
 /*
- * ==================
  * Window_Init
  *
  * Initializes a window structure ( windowDef_t ) with defaults
  *
- * ==================
  */
 void
 Window_Init(Window *w)
@@ -3475,9 +3433,7 @@ static configcvar_t g_configcvars[] =
 #endif
 
 /*
- * =================
  * Controls_GetKeyAssignment
- * =================
  */
 static void
 Controls_GetKeyAssignment(char *command, int *twokeys)
@@ -3503,9 +3459,7 @@ Controls_GetKeyAssignment(char *command, int *twokeys)
 }
 
 /*
- * =================
  * Controls_GetConfig
- * =================
  */
 void
 Controls_GetConfig(void)
@@ -3533,9 +3487,7 @@ Controls_GetConfig(void)
 }
 
 /*
- * =================
  * Controls_SetConfig
- * =================
  */
 void
 Controls_SetConfig(qboolean restart)
@@ -3571,9 +3523,7 @@ Controls_SetConfig(qboolean restart)
 }
 
 /*
- * =================
  * Controls_SetDefaults
- * =================
  */
 void
 Controls_SetDefaults(void)
@@ -4693,9 +4643,7 @@ Menu_Paint(menuDef_t *menu, qboolean forcePaint)
 }
 
 /*
- * ===============
  * Item_ValidateTypeData
- * ===============
  */
 void
 Item_ValidateTypeData(itemDef_t *item)
@@ -4725,9 +4673,7 @@ Item_ValidateTypeData(itemDef_t *item)
 }
 
 /*
- * ===============
  * Keyword Hash
- * ===============
  */
 
 #define KEYWORDHASH_SIZE 512
@@ -4783,9 +4729,7 @@ KeywordHash_Find(keywordHash_t *table[], char *keyword)
 }
 
 /*
- * ===============
  * Item Keyword Parse functions
- * ===============
  */
 
 /* name <string> */
@@ -5625,9 +5569,7 @@ keywordHash_t	itemParseKeywords[] = {
 keywordHash_t	*itemParseKeywordHash[KEYWORDHASH_SIZE];
 
 /*
- * ===============
  * Item_SetupKeywordHash
- * ===============
  */
 void
 Item_SetupKeywordHash(void)
@@ -5640,9 +5582,7 @@ Item_SetupKeywordHash(void)
 }
 
 /*
- * ===============
  * Item_Parse
- * ===============
  */
 qboolean
 Item_Parse(int handle, itemDef_t *item)
@@ -5701,9 +5641,7 @@ Item_InitControls(itemDef_t *item)
 }
 
 /*
- * ===============
  * Menu Keyword Parse functions
- * ===============
  */
 
 qboolean
@@ -6066,9 +6004,7 @@ keywordHash_t	menuParseKeywords[] = {
 keywordHash_t	*menuParseKeywordHash[KEYWORDHASH_SIZE];
 
 /*
- * ===============
  * Menu_SetupKeywordHash
- * ===============
  */
 void
 Menu_SetupKeywordHash(void)
@@ -6081,9 +6017,7 @@ Menu_SetupKeywordHash(void)
 }
 
 /*
- * ===============
  * Menu_Parse
- * ===============
  */
 qboolean
 Menu_Parse(int handle, menuDef_t *menu)
@@ -6123,9 +6057,7 @@ Menu_Parse(int handle, menuDef_t *menu)
 }
 
 /*
- * ===============
  * Menu_New
- * ===============
  */
 void
 Menu_New(int handle)

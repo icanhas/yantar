@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 
 #include "cm_local.h"
@@ -90,9 +88,7 @@ static qboolean debugBlock;
 static vec3_t	debugBlockPoints[4];
 
 /*
- * =================
  * CM_ClearLevelPatches
- * =================
  */
 void
 CM_ClearLevelPatches(void)
@@ -102,9 +98,7 @@ CM_ClearLevelPatches(void)
 }
 
 /*
- * =================
  * CM_SignbitsForNormal
- * =================
  */
 static int
 CM_SignbitsForNormal(vec3_t normal)
@@ -119,12 +113,10 @@ CM_SignbitsForNormal(vec3_t normal)
 }
 
 /*
- * =====================
  * CM_PlaneFromPoints
  *
  * Returns false if the triangle is degenrate.
  * The normal will point out of the clock for clockwise ordered points
- * =====================
  */
 static qboolean
 CM_PlaneFromPoints(vec4_t plane, vec3_t a, vec3_t b, vec3_t c)
@@ -143,20 +135,16 @@ CM_PlaneFromPoints(vec4_t plane, vec3_t a, vec3_t b, vec3_t c)
 
 
 /*
- * ================================================================================
  *
  * GRID SUBDIVISION
  *
- * ================================================================================
  */
 
 /*
- * =================
  * CM_NeedsSubdivision
  *
  * Returns true if the given quadratic curve is not flat enough for our
  * collision detection purposes
- * =================
  */
 static qboolean
 CM_NeedsSubdivision(vec3_t a, vec3_t b, vec3_t c)
@@ -183,12 +171,10 @@ CM_NeedsSubdivision(vec3_t a, vec3_t b, vec3_t c)
 }
 
 /*
- * ===============
  * CM_Subdivide
  *
  * a, b, and c are control points.
  * the subdivided sequence will be: a, out1, out2, out3, c
- * ===============
  */
 static void
 CM_Subdivide(vec3_t a, vec3_t b, vec3_t c, vec3_t out1, vec3_t out2, vec3_t out3)
@@ -203,11 +189,9 @@ CM_Subdivide(vec3_t a, vec3_t b, vec3_t c, vec3_t out1, vec3_t out2, vec3_t out3
 }
 
 /*
- * =================
  * CM_TransposeGrid
  *
  * Swaps the rows and columns in place
- * =================
  */
 static void
 CM_TransposeGrid(cGrid_t *grid)
@@ -256,11 +240,9 @@ CM_TransposeGrid(cGrid_t *grid)
 }
 
 /*
- * ===================
  * CM_SetGridWrapWidth
  *
  * If the left and right columns are exactly equal, set grid->wrapWidth qtrue
- * ===================
  */
 static void
 CM_SetGridWrapWidth(cGrid_t *grid)
@@ -285,13 +267,11 @@ CM_SetGridWrapWidth(cGrid_t *grid)
 }
 
 /*
- * =================
  * CM_SubdivideGridColumns
  *
  * Adds columns as necessary to the grid until
  * all the aproximating points are within SUBDIVIDE_DISTANCE
  * from the true curve
- * =================
  */
 static void
 CM_SubdivideGridColumns(cGrid_t *grid)
@@ -358,9 +338,7 @@ CM_SubdivideGridColumns(cGrid_t *grid)
 }
 
 /*
- * ======================
  * CM_ComparePoints
- * ======================
  */
 #define POINT_EPSILON 0.1
 static qboolean
@@ -381,11 +359,9 @@ CM_ComparePoints(float *a, float *b)
 }
 
 /*
- * =================
  * CM_RemoveDegenerateColumns
  *
  * If there are any identical columns, remove them
- * =================
  */
 static void
 CM_RemoveDegenerateColumns(cGrid_t *grid)
@@ -414,11 +390,9 @@ CM_RemoveDegenerateColumns(cGrid_t *grid)
 }
 
 /*
- * ================================================================================
  *
  * PATCH COLLIDE GENERATION
  *
- * ================================================================================
  */
 
 static int numPlanes;
@@ -431,9 +405,7 @@ static facet_t facets[MAX_PATCH_PLANES];	/* maybe MAX_FACETS ?? */
 #define DIST_EPSILON	0.02
 
 /*
- * ==================
  * CM_PlaneEqual
- * ==================
  */
 int
 CM_PlaneEqual(patchPlane_t *p, float plane[4], int *flipped)
@@ -465,9 +437,7 @@ CM_PlaneEqual(patchPlane_t *p, float plane[4], int *flipped)
 }
 
 /*
- * ==================
  * CM_SnapVector
- * ==================
  */
 void
 CM_SnapVector(vec3_t normal)
@@ -489,9 +459,7 @@ CM_SnapVector(vec3_t normal)
 }
 
 /*
- * ==================
  * CM_FindPlane2
- * ==================
  */
 int
 CM_FindPlane2(float plane[4], int *flipped)
@@ -517,9 +485,7 @@ CM_FindPlane2(float plane[4], int *flipped)
 }
 
 /*
- * ==================
  * CM_FindPlane
- * ==================
  */
 static int
 CM_FindPlane(float *p1, float *p2, float *p3)
@@ -565,9 +531,7 @@ CM_FindPlane(float *p1, float *p2, float *p3)
 }
 
 /*
- * ==================
  * CM_PointOnPlaneSide
- * ==================
  */
 static int
 CM_PointOnPlaneSide(float *p, int planeNum)
@@ -591,9 +555,7 @@ CM_PointOnPlaneSide(float *p, int planeNum)
 }
 
 /*
- * ==================
  * CM_GridPlane
- * ==================
  */
 static int
 CM_GridPlane(int gridPlanes[MAX_GRID_SIZE][MAX_GRID_SIZE][2], int i, int j,
@@ -614,9 +576,7 @@ CM_GridPlane(int gridPlanes[MAX_GRID_SIZE][MAX_GRID_SIZE][2], int i, int j,
 }
 
 /*
- * ==================
  * CM_EdgePlaneNum
- * ==================
  */
 static int
 CM_EdgePlaneNum(cGrid_t *grid, int gridPlanes[MAX_GRID_SIZE][MAX_GRID_SIZE][2],
@@ -677,9 +637,7 @@ CM_EdgePlaneNum(cGrid_t *grid, int gridPlanes[MAX_GRID_SIZE][MAX_GRID_SIZE][2],
 }
 
 /*
- * ===================
  * CM_SetBorderInward
- * ===================
  */
 static void
 CM_SetBorderInward(facet_t *facet, cGrid_t *grid,
@@ -762,11 +720,9 @@ CM_SetBorderInward(facet_t *facet, cGrid_t *grid,
 }
 
 /*
- * ==================
  * CM_ValidateFacet
  *
  * If the facet isn't bounded by its borders, we screwed up.
- * ==================
  */
 static qboolean
 CM_ValidateFacet(facet_t *facet)
@@ -813,9 +769,7 @@ CM_ValidateFacet(facet_t *facet)
 }
 
 /*
- * ==================
  * CM_AddFacetBevels
- * ==================
  */
 void
 CM_AddFacetBevels(facet_t *facet)
@@ -996,9 +950,7 @@ typedef enum {
 } edgeName_t;
 
 /*
- * ==================
  * CM_PatchCollideFromGrid
- * ==================
  */
 static void
 CM_PatchCollideFromGrid(cGrid_t *grid, patchCollide_t *pf)
@@ -1190,14 +1142,12 @@ CM_PatchCollideFromGrid(cGrid_t *grid, patchCollide_t *pf)
 
 
 /*
- * ===================
  * CM_GeneratePatchCollide
  *
  * Creates an internal structure that will be used to perform
  * collision detection with a patch mesh.
  *
  * Points is packed as concatenated rows.
- * ===================
  */
 struct patchCollide_s   *
 CM_GeneratePatchCollide(int width, int height, vec3_t *points)
@@ -1269,19 +1219,15 @@ CM_GeneratePatchCollide(int width, int height, vec3_t *points)
 }
 
 /*
- * ================================================================================
  *
  * TRACE TESTING
  *
- * ================================================================================
  */
 
 /*
- * ====================
  * CM_TracePointThroughPatchCollide
  *
  * special case for point traces because the patch collide "brushes" have no volume
- * ====================
  */
 void
 CM_TracePointThroughPatchCollide(traceWork_t *tw,
@@ -1385,9 +1331,7 @@ CM_TracePointThroughPatchCollide(traceWork_t *tw,
 }
 
 /*
- * ====================
  * CM_CheckFacetPlane
- * ====================
  */
 int
 CM_CheckFacetPlane(float *plane, vec3_t start, vec3_t end, float *enterFrac,
@@ -1430,9 +1374,7 @@ CM_CheckFacetPlane(float *plane, vec3_t start, vec3_t end, float *enterFrac,
 }
 
 /*
- * ====================
  * CM_TraceThroughPatchCollide
- * ====================
  */
 void
 CM_TraceThroughPatchCollide(traceWork_t *tw, const struct patchCollide_s *pc)
@@ -1572,17 +1514,13 @@ CM_TraceThroughPatchCollide(traceWork_t *tw, const struct patchCollide_s *pc)
 
 
 /*
- * =======================================================================
  *
  * POSITION TEST
  *
- * =======================================================================
  */
 
 /*
- * ====================
  * CM_PositionTestInPatchCollide
- * ====================
  */
 qboolean
 CM_PositionTestInPatchCollide(traceWork_t *tw, const struct patchCollide_s *pc)
@@ -1668,20 +1606,16 @@ CM_PositionTestInPatchCollide(traceWork_t *tw, const struct patchCollide_s *pc)
 }
 
 /*
- * =======================================================================
  *
  * DEBUGGING
  *
- * =======================================================================
  */
 
 
 /*
- * ==================
  * CM_DrawDebugSurface
  *
  * Called from the renderer
- * ==================
  */
 #ifndef BSPC
 void BotDrawDebugPolygons(void (*drawPoly)(int color, int numPoints,

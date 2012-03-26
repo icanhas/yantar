@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,15 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /*  */
 /*
- * =======================================================================
  *
  * TEAM ORDERS MENU
  *
- * =======================================================================
  */
 
 
@@ -104,9 +100,7 @@ static const char	*teamMessages[] = {
 
 
 /*
- * ===============
  * UI_TeamOrdersMenu_BackEvent
- * ===============
  */
 static void
 UI_TeamOrdersMenu_BackEvent(void *ptr, int event)
@@ -118,9 +112,7 @@ UI_TeamOrdersMenu_BackEvent(void *ptr, int event)
 
 
 /*
- * ===============
  * UI_TeamOrdersMenu_SetList
- * ===============
  */
 static void
 UI_TeamOrdersMenu_SetList(int id)
@@ -156,9 +148,7 @@ UI_TeamOrdersMenu_SetList(int id)
 
 
 /*
- * =================
  * UI_TeamOrdersMenu_Key
- * =================
  */
 sfxHandle_t
 UI_TeamOrdersMenu_Key(int key)
@@ -215,9 +205,7 @@ UI_TeamOrdersMenu_Key(int key)
 
 
 /*
- * =================
  * UI_TeamOrdersMenu_ListDraw
- * =================
  */
 static void
 UI_TeamOrdersMenu_ListDraw(void *self)
@@ -252,9 +240,7 @@ UI_TeamOrdersMenu_ListDraw(void *self)
 
 
 /*
- * ===============
  * UI_TeamOrdersMenu_ListEvent
- * ===============
  */
 static void
 UI_TeamOrdersMenu_ListEvent(void *ptr, int event)
@@ -295,9 +281,7 @@ UI_TeamOrdersMenu_ListEvent(void *ptr, int event)
 
 
 /*
- * ===============
  * UI_TeamOrdersMenu_BuildBotList
- * ===============
  */
 static void
 UI_TeamOrdersMenu_BuildBotList(void)
@@ -350,9 +334,7 @@ UI_TeamOrdersMenu_BuildBotList(void)
 
 
 /*
- * ===============
  * UI_TeamOrdersMenu_Init
- * ===============
  */
 static void
 UI_TeamOrdersMenu_Init(void)
@@ -415,9 +397,7 @@ UI_TeamOrdersMenu_Init(void)
 
 
 /*
- * =================
  * UI_TeamOrdersMenu_Cache
- * =================
  */
 void
 UI_TeamOrdersMenu_Cache(void)
@@ -429,9 +409,7 @@ UI_TeamOrdersMenu_Cache(void)
 
 
 /*
- * ===============
  * UI_TeamOrdersMenu
- * ===============
  */
 void
 UI_TeamOrdersMenu(void)
@@ -442,9 +420,7 @@ UI_TeamOrdersMenu(void)
 
 
 /*
- * ===============
  * UI_TeamOrdersMenu_f
- * ===============
  */
 void
 UI_TeamOrdersMenu_f(void)

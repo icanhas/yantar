@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /*  */
 
@@ -26,11 +24,9 @@
 
 
 /*
- * ===============================================================================
  *
  * PUSHMOVE
  *
- * ===============================================================================
  */
 
 void MatchTeam(gentity_t *teamLeader, int moverState, int time);
@@ -45,10 +41,8 @@ pushed_t pushed[MAX_GENTITIES], *pushed_p;
 
 
 /*
- * ============
  * G_TestEntityPosition
  *
- * ============
  */
 gentity_t       *
 G_TestEntityPosition(gentity_t *ent)
@@ -76,9 +70,7 @@ G_TestEntityPosition(gentity_t *ent)
 }
 
 /*
- * ================
  * G_CreateRotationMatrix
- * ================
  */
 void
 G_CreateRotationMatrix(vec3_t angles, vec3_t matrix[3])
@@ -88,9 +80,7 @@ G_CreateRotationMatrix(vec3_t angles, vec3_t matrix[3])
 }
 
 /*
- * ================
  * G_TransposeMatrix
- * ================
  */
 void
 G_TransposeMatrix(vec3_t matrix[3], vec3_t transpose[3])
@@ -102,9 +92,7 @@ G_TransposeMatrix(vec3_t matrix[3], vec3_t transpose[3])
 }
 
 /*
- * ================
  * G_RotatePoint
- * ================
  */
 void
 G_RotatePoint(vec3_t point, vec3_t matrix[3])
@@ -118,11 +106,9 @@ G_RotatePoint(vec3_t point, vec3_t matrix[3])
 }
 
 /*
- * ==================
  * G_TryPushingEntity
  *
  * Returns qfalse if the move is blocked
- * ==================
  */
 qboolean
 G_TryPushingEntity(gentity_t *check, gentity_t *pusher, vec3_t move,
@@ -211,9 +197,7 @@ G_TryPushingEntity(gentity_t *check, gentity_t *pusher, vec3_t move,
 }
 
 /*
- * ==================
  * G_CheckProxMinePosition
- * ==================
  */
 qboolean
 G_CheckProxMinePosition(gentity_t *check)
@@ -232,9 +216,7 @@ G_CheckProxMinePosition(gentity_t *check)
 }
 
 /*
- * ==================
  * G_TryPushingProxMine
- * ==================
  */
 qboolean
 G_TryPushingProxMine(gentity_t *check, gentity_t *pusher, vec3_t move,
@@ -270,13 +252,11 @@ G_TryPushingProxMine(gentity_t *check, gentity_t *pusher, vec3_t move,
 void G_ExplodeMissile(gentity_t *ent);
 
 /*
- * ============
  * G_MoverPush
  *
  * Objects need to be moved back on a failed push,
  * otherwise riders would continue to slide.
  * If qfalse is returned, *obstacle will be the blocking entity
- * ============
  */
 qboolean
 G_MoverPush(gentity_t *pusher, vec3_t move, vec3_t amove, gentity_t **obstacle)
@@ -438,9 +418,7 @@ G_MoverPush(gentity_t *pusher, vec3_t move, vec3_t amove, gentity_t **obstacle)
 
 
 /*
- * =================
  * G_MoverTeam
- * =================
  */
 void
 G_MoverTeam(gentity_t *ent)
@@ -496,10 +474,8 @@ G_MoverTeam(gentity_t *ent)
 }
 
 /*
- * ================
  * G_RunMover
  *
- * ================
  */
 void
 G_RunMover(gentity_t *ent)
@@ -519,19 +495,15 @@ G_RunMover(gentity_t *ent)
 }
 
 /*
- * ============================================================================
  *
  * GENERAL MOVERS
  *
  * Doors, plats, and buttons are all binary (two position) movers
  * Pos1 is "at rest", pos2 is "activated"
- * ============================================================================
  */
 
 /*
- * ===============
  * SetMoverState
- * ===============
  */
 void
 SetMoverState(gentity_t *ent, moverState_t moverState, int time)
@@ -571,12 +543,10 @@ SetMoverState(gentity_t *ent, moverState_t moverState, int time)
 }
 
 /*
- * ================
  * MatchTeam
  *
  * All entities in a mover team will move from pos1 to pos2
  * in the same amount of time
- * ================
  */
 void
 MatchTeam(gentity_t *teamLeader, int moverState, int time)
@@ -590,9 +560,7 @@ MatchTeam(gentity_t *teamLeader, int moverState, int time)
 
 
 /*
- * ================
  * ReturnToPos1
- * ================
  */
 void
 ReturnToPos1(gentity_t *ent)
@@ -609,9 +577,7 @@ ReturnToPos1(gentity_t *ent)
 
 
 /*
- * ================
  * Reached_BinaryMover
- * ================
  */
 void
 Reached_BinaryMover(gentity_t *ent)
@@ -653,9 +619,7 @@ Reached_BinaryMover(gentity_t *ent)
 
 
 /*
- * ================
  * Use_BinaryMover
- * ================
  */
 void
 Use_BinaryMover(gentity_t *ent, gentity_t *other, gentity_t *activator)
@@ -727,12 +691,10 @@ Use_BinaryMover(gentity_t *ent, gentity_t *other, gentity_t *activator)
 
 
 /*
- * ================
  * InitMover
  *
  * "pos1", "pos2", and "speed" should be set before calling,
  * so the movement delta can be calculated
- * ================
  */
 void
 InitMover(gentity_t *ent)
@@ -800,20 +762,16 @@ InitMover(gentity_t *ent)
 
 
 /*
- * ===============================================================================
  *
  * DOOR
  *
  * A use can be triggered either by a touch function, by being shot, or by being
  * targeted by another entity.
  *
- * ===============================================================================
  */
 
 /*
- * ================
  * Blocked_Door
- * ================
  */
 void
 Blocked_Door(gentity_t *ent, gentity_t *other)
@@ -841,9 +799,7 @@ Blocked_Door(gentity_t *ent, gentity_t *other)
 }
 
 /*
- * ================
  * Touch_DoorTriggerSpectator
- * ================
  */
 static void
 Touch_DoorTriggerSpectator(gentity_t *ent, gentity_t *other, trace_t *trace)
@@ -870,9 +826,7 @@ Touch_DoorTriggerSpectator(gentity_t *ent, gentity_t *other, trace_t *trace)
 }
 
 /*
- * ================
  * Touch_DoorTrigger
- * ================
  */
 void
 Touch_DoorTrigger(gentity_t *ent, gentity_t *other, trace_t *trace)
@@ -889,12 +843,10 @@ Touch_DoorTrigger(gentity_t *ent, gentity_t *other, trace_t *trace)
 
 
 /*
- * ======================
  * Think_SpawnNewDoorTrigger
  *
  * All of the parts of a door have been spawned, so create
  * a trigger that encloses all of them
- * ======================
  */
 void
 Think_SpawnNewDoorTrigger(gentity_t *ent)
@@ -1035,19 +987,15 @@ SP_func_door(gentity_t *ent)
 }
 
 /*
- * ===============================================================================
  *
  * PLAT
  *
- * ===============================================================================
  */
 
 /*
- * ==============
  * Touch_Plat
  *
  * Don't allow decent if a living player is on it
- * ===============
  */
 void
 Touch_Plat(gentity_t *ent, gentity_t *other, trace_t *trace)
@@ -1061,11 +1009,9 @@ Touch_Plat(gentity_t *ent, gentity_t *other, trace_t *trace)
 }
 
 /*
- * ==============
  * Touch_PlatCenterTrigger
  *
  * If the plat is at the bottom position, start it going up
- * ===============
  */
 void
 Touch_PlatCenterTrigger(gentity_t *ent, gentity_t *other, trace_t *trace)
@@ -1079,13 +1025,11 @@ Touch_PlatCenterTrigger(gentity_t *ent, gentity_t *other, trace_t *trace)
 
 
 /*
- * ================
  * SpawnPlatTrigger
  *
  * Spawn a trigger in the middle of the plat's low position
  * Elevator cars require that the trigger extend through the entire low position,
  * not just sit on top of it.
- * ================
  */
 void
 SpawnPlatTrigger(gentity_t *ent)
@@ -1183,18 +1127,14 @@ SP_func_plat(gentity_t *ent)
 
 
 /*
- * ===============================================================================
  *
  * BUTTON
  *
- * ===============================================================================
  */
 
 /*
- * ==============
  * Touch_Button
  *
- * ===============
  */
 void
 Touch_Button(gentity_t *ent, gentity_t *other, trace_t *trace)
@@ -1267,11 +1207,9 @@ SP_func_button(gentity_t *ent)
 
 
 /*
- * ===============================================================================
  *
  * TRAIN
  *
- * ===============================================================================
  */
 
 
@@ -1280,11 +1218,9 @@ SP_func_button(gentity_t *ent)
 #define TRAIN_BLOCK_STOPS	4
 
 /*
- * ===============
  * Think_BeginMoving
  *
  * The wait time at a corner has completed, so start moving again
- * ===============
  */
 void
 Think_BeginMoving(gentity_t *ent)
@@ -1294,9 +1230,7 @@ Think_BeginMoving(gentity_t *ent)
 }
 
 /*
- * ===============
  * Reached_Train
- * ===============
  */
 void
 Reached_Train(gentity_t *ent)
@@ -1369,11 +1303,9 @@ Reached_Train(gentity_t *ent)
 
 
 /*
- * ===============
  * Think_SetupTrainTargets
  *
  * Link all the corners together
- * ===============
  */
 void
 Think_SetupTrainTargets(gentity_t *ent)
@@ -1486,11 +1418,9 @@ SP_func_train(gentity_t *self)
 }
 
 /*
- * ===============================================================================
  *
  * STATIC
  *
- * ===============================================================================
  */
 
 
@@ -1511,11 +1441,9 @@ SP_func_static(gentity_t *ent)
 
 
 /*
- * ===============================================================================
  *
  * ROTATING
  *
- * ===============================================================================
  */
 
 
@@ -1560,11 +1488,9 @@ SP_func_rotating(gentity_t *ent)
 
 
 /*
- * ===============================================================================
  *
  * BOBBING
  *
- * ===============================================================================
  */
 
 
@@ -1609,11 +1535,9 @@ SP_func_bobbing(gentity_t *ent)
 }
 
 /*
- * ===============================================================================
  *
  * PENDULUM
  *
- * ===============================================================================
  */
 
 

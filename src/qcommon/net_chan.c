@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 
 #include "q_shared.h"
@@ -64,10 +62,8 @@ static char *netsrcString[2] = {
 };
 
 /*
- * ===============
  * Netchan_Init
  *
- * ===============
  */
 void
 Netchan_Init(int port)
@@ -79,11 +75,9 @@ Netchan_Init(int port)
 }
 
 /*
- * ==============
  * Netchan_Setup
  *
  * called to open a channel to a remote system
- * ==============
  */
 void
 Netchan_Setup(netsrc_t sock, netchan_t *chan, netadr_t adr, int qport,
@@ -105,11 +99,9 @@ Netchan_Setup(netsrc_t sock, netchan_t *chan, netadr_t adr, int qport,
 }
 
 /*
- * =================
  * Netchan_TransmitNextFragment
  *
  * Send one fragment of the current message
- * =================
  */
 void
 Netchan_TransmitNextFragment(netchan_t *chan)
@@ -174,12 +166,10 @@ Netchan_TransmitNextFragment(netchan_t *chan)
 
 
 /*
- * ===============
  * Netchan_Transmit
  *
  * Sends a message to a connection, fragmenting if necessary
  * A 0 length will still generate a packet.
- * ================
  */
 void
 Netchan_Transmit(netchan_t *chan, int length, const byte *data)
@@ -238,7 +228,6 @@ Netchan_Transmit(netchan_t *chan, int length, const byte *data)
 }
 
 /*
- * =================
  * Netchan_Process
  *
  * Returns qfalse if the message should not be processed due to being
@@ -247,7 +236,6 @@ Netchan_Transmit(netchan_t *chan, int length, const byte *data)
  * Msg must be large enough to hold MAX_MSGLEN, because if this is the
  * final fragment of a multi-part message, the entire thing will be
  * copied out.
- * =================
  */
 qboolean
 Netchan_Process(netchan_t *chan, msg_t *msg)
@@ -416,11 +404,9 @@ Netchan_Process(netchan_t *chan, msg_t *msg)
 
 
 /*
- * =============================================================================
  *
  * LOOPBACK BUFFERS FOR LOCAL PLAYER
  *
- * =============================================================================
  */
 
 /* there needs to be enough loopback messages to hold a complete
@@ -569,11 +555,9 @@ NET_SendPacket(netsrc_t sock, int length, const void *data, netadr_t to)
 }
 
 /*
- * ===============
  * NET_OutOfBandPrint
  *
  * Sends a text message in an out-of-band datagram
- * ================
  */
 void QDECL
 NET_OutOfBandPrint(netsrc_t sock, netadr_t adr, const char *format, ...)
@@ -597,11 +581,9 @@ NET_OutOfBandPrint(netsrc_t sock, netadr_t adr, const char *format, ...)
 }
 
 /*
- * ===============
  * NET_OutOfBandPrint
  *
  * Sends a data message in an out-of-band datagram (only used for "connect")
- * ================
  */
 void QDECL
 NET_OutOfBandData(netsrc_t sock, netadr_t adr, byte *format, int len)
@@ -627,12 +609,10 @@ NET_OutOfBandData(netsrc_t sock, netadr_t adr, byte *format, int len)
 }
 
 /*
- * =============
  * NET_StringToAdr
  *
  * Traps "localhost" for loopback, passes everything else to system
  * return 0 on address not found, 1 on address found with port, 2 on address found without port.
- * =============
  */
 int
 NET_StringToAdr(const char *s, netadr_t *a, netadrtype_t family)

@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /* snd_mix.c -- portable code to mix sounds for snd_dma.c */
 
@@ -146,10 +144,8 @@ S_TransferStereo16(unsigned long *pbuf, int endtime)
 }
 
 /*
- * ===================
  * S_TransferPaintBuffer
  *
- * ===================
  */
 void
 S_TransferPaintBuffer(int endtime)
@@ -217,11 +213,9 @@ S_TransferPaintBuffer(int endtime)
 
 
 /*
- * ===============================================================================
  *
  * CHANNEL MIXING
  *
- * ===============================================================================
  */
 
 #if idppc_altivec
@@ -662,9 +656,7 @@ S_PaintChannelFromMuLaw(channel_t *ch, sfx_t *sc, int count, int sampleOffset,
 }
 
 /*
- * ===================
  * S_PaintChannels
- * ===================
  */
 void
 S_PaintChannels(int endtime)

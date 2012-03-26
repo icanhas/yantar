@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /*
  * cg_players.c -- handle the media and animation for player entities */
@@ -41,10 +39,8 @@ char *cg_customSoundNames[MAX_CUSTOM_SOUNDS] = {
 
 
 /*
- * ================
  * CG_CustomSound
  *
- * ================
  */
 sfxHandle_t
 CG_CustomSound(int clientNum, const char *soundName)
@@ -70,20 +66,16 @@ CG_CustomSound(int clientNum, const char *soundName)
 
 
 /*
- * =============================================================================
  *
  * CLIENT INFO
  *
- * =============================================================================
  */
 
 /*
- * ======================
  * CG_ParseAnimationFile
  *
  * Read a configuration file containing animation coutns and rates
  * models/players/visor/animation.cfg, etc
- * ======================
  */
 static qboolean
 CG_ParseAnimationFile(const char *filename, clientInfo_t *ci)
@@ -289,9 +281,7 @@ CG_ParseAnimationFile(const char *filename, clientInfo_t *ci)
 }
 
 /*
- * ==========================
  * CG_FileExists
- * ==========================
  */
 static qboolean
 CG_FileExists(const char *filename)
@@ -305,9 +295,7 @@ CG_FileExists(const char *filename)
 }
 
 /*
- * ==========================
  * CG_FindClientModelFile
- * ==========================
  */
 static qboolean
 CG_FindClientModelFile(char *filename, int length, clientInfo_t *ci,
@@ -402,9 +390,7 @@ CG_FindClientModelFile(char *filename, int length, clientInfo_t *ci,
 }
 
 /*
- * ==========================
  * CG_FindClientHeadFile
- * ==========================
  */
 static qboolean
 CG_FindClientHeadFile(char *filename, int length, clientInfo_t *ci,
@@ -497,9 +483,7 @@ CG_FindClientHeadFile(char *filename, int length, clientInfo_t *ci,
 }
 
 /*
- * ==========================
  * CG_RegisterClientSkin
- * ==========================
  */
 static qboolean
 CG_RegisterClientSkin(clientInfo_t *ci, const char *teamName,
@@ -556,9 +540,7 @@ CG_RegisterClientSkin(clientInfo_t *ci, const char *teamName,
 }
 
 /*
- * ==========================
  * CG_RegisterClientModelname
- * ==========================
  */
 static qboolean
 CG_RegisterClientModelname(clientInfo_t *ci, const char *modelName,
@@ -686,9 +668,7 @@ CG_RegisterClientModelname(clientInfo_t *ci, const char *modelName,
 }
 
 /*
- * ====================
  * CG_ColorFromString
- * ====================
  */
 static void
 CG_ColorFromString(const char *v, vec3_t color)
@@ -713,12 +693,10 @@ CG_ColorFromString(const char *v, vec3_t color)
 }
 
 /*
- * ===================
  * CG_LoadClientInfo
  *
  * Load it now, taking the disk hits.
  * This will usually be deferred to a safe time
- * ===================
  */
 static void
 CG_LoadClientInfo(int clientNum, clientInfo_t *ci)
@@ -816,9 +794,7 @@ CG_LoadClientInfo(int clientNum, clientInfo_t *ci)
 }
 
 /*
- * ======================
  * CG_CopyClientInfoModel
- * ======================
  */
 static void
 CG_CopyClientInfoModel(clientInfo_t *from, clientInfo_t *to)
@@ -842,9 +818,7 @@ CG_CopyClientInfoModel(clientInfo_t *from, clientInfo_t *to)
 }
 
 /*
- * ======================
  * CG_ScanForExistingClientInfo
- * ======================
  */
 static qboolean
 CG_ScanForExistingClientInfo(clientInfo_t *ci)
@@ -880,12 +854,10 @@ CG_ScanForExistingClientInfo(clientInfo_t *ci)
 }
 
 /*
- * ======================
  * CG_SetDeferredClientInfo
  *
  * We aren't going to load it now, so grab some other
  * client's info to use until we have some spare time.
- * ======================
  */
 static void
 CG_SetDeferredClientInfo(int clientNum, clientInfo_t *ci)
@@ -950,9 +922,7 @@ CG_SetDeferredClientInfo(int clientNum, clientInfo_t *ci)
 
 
 /*
- * ======================
  * CG_NewClientInfo
- * ======================
  */
 void
 CG_NewClientInfo(int clientNum)
@@ -1162,13 +1132,11 @@ CG_NewClientInfo(int clientNum)
 
 
 /*
- * ======================
  * CG_LoadDeferredPlayers
  *
  * Called each frame when a player is dead
  * and the scoreboard is up
  * so deferred players can be loaded
- * ======================
  */
 void
 CG_LoadDeferredPlayers(void)
@@ -1192,20 +1160,16 @@ CG_LoadDeferredPlayers(void)
 }
 
 /*
- * =============================================================================
  *
  * PLAYER ANIMATION
  *
- * =============================================================================
  */
 
 
 /*
- * ===============
  * CG_SetLerpFrameAnimation
  *
  * may include ANIM_TOGGLEBIT
- * ===============
  */
 static void
 CG_SetLerpFrameAnimation(clientInfo_t *ci, lerpFrame_t *lf, int newAnimation)
@@ -1228,12 +1192,10 @@ CG_SetLerpFrameAnimation(clientInfo_t *ci, lerpFrame_t *lf, int newAnimation)
 }
 
 /*
- * ===============
  * CG_RunLerpFrame
  *
  * Sets cg.snap, cg.oldFrame, and cg.backlerp
  * cg.time should be between oldFrameTime and frameTime after exit
- * ===============
  */
 static void
 CG_RunLerpFrame(clientInfo_t *ci, lerpFrame_t *lf, int newAnimation,
@@ -1315,9 +1277,7 @@ CG_RunLerpFrame(clientInfo_t *ci, lerpFrame_t *lf, int newAnimation,
 
 
 /*
- * ===============
  * CG_ClearLerpFrame
- * ===============
  */
 static void
 CG_ClearLerpFrame(clientInfo_t *ci, lerpFrame_t *lf, int animationNumber)
@@ -1329,9 +1289,7 @@ CG_ClearLerpFrame(clientInfo_t *ci, lerpFrame_t *lf, int animationNumber)
 
 
 /*
- * ===============
  * CG_PlayerAnimation
- * ===============
  */
 static void
 CG_PlayerAnimation(centity_t *cent, int *legsOld, int *legs, float *legsBackLerp,
@@ -1376,17 +1334,13 @@ CG_PlayerAnimation(centity_t *cent, int *legsOld, int *legs, float *legsBackLerp
 }
 
 /*
- * =============================================================================
  *
  * PLAYER ANGLES
  *
- * =============================================================================
  */
 
 /*
- * ==================
  * CG_SwingAngles
- * ==================
  */
 static void
 CG_SwingAngles(float destination, float swingTolerance, float clampTolerance,
@@ -1443,9 +1397,7 @@ CG_SwingAngles(float destination, float swingTolerance, float clampTolerance,
 }
 
 /*
- * =================
  * CG_AddPainTwitch
- * =================
  */
 static void
 CG_AddPainTwitch(centity_t *cent, vec3_t torsoAngles)
@@ -1467,7 +1419,6 @@ CG_AddPainTwitch(centity_t *cent, vec3_t torsoAngles)
 
 
 /*
- * ===============
  * CG_PlayerAngles
  *
  * Handles seperate torso motion
@@ -1478,7 +1429,6 @@ CG_AddPainTwitch(centity_t *cent, vec3_t torsoAngles)
  *
  * if motion < 20 degrees, show in head only
  * if < 45 degrees, also show in torso
- * ===============
  */
 static void
 CG_PlayerAngles(centity_t *cent, vec3_t legs[3], vec3_t torso[3], vec3_t head[3])
@@ -1599,9 +1549,7 @@ CG_PlayerAngles(centity_t *cent, vec3_t legs[3], vec3_t torso[3], vec3_t head[3]
 /* ========================================================================== */
 
 /*
- * ===============
  * CG_HasteTrail
- * ===============
  */
 static void
 CG_HasteTrail(centity_t *cent)
@@ -1638,9 +1586,7 @@ CG_HasteTrail(centity_t *cent)
 
 #ifdef MISSIONPACK
 /*
- * ===============
  * CG_BreathPuffs
- * ===============
  */
 static void
 CG_BreathPuffs(centity_t *cent, refEntity_t *head)
@@ -1674,9 +1620,7 @@ CG_BreathPuffs(centity_t *cent, refEntity_t *head)
 }
 
 /*
- * ===============
  * CG_DustTrail
- * ===============
  */
 static void
 CG_DustTrail(centity_t *cent)
@@ -1725,9 +1669,7 @@ CG_DustTrail(centity_t *cent)
 #endif
 
 /*
- * ===============
  * CG_TrailItem
- * ===============
  */
 static void
 CG_TrailItem(centity_t *cent, qhandle_t hModel)
@@ -1753,9 +1695,7 @@ CG_TrailItem(centity_t *cent, qhandle_t hModel)
 
 
 /*
- * ===============
  * CG_PlayerFlag
- * ===============
  */
 static void
 CG_PlayerFlag(centity_t *cent, qhandle_t hSkin, refEntity_t *torso)
@@ -1871,9 +1811,7 @@ CG_PlayerFlag(centity_t *cent, qhandle_t hSkin, refEntity_t *torso)
 
 #ifdef MISSIONPACK
 /*
- * ===============
  * CG_PlayerTokens
- * ===============
  */
 static void
 CG_PlayerTokens(centity_t *cent, int renderfx)
@@ -1938,9 +1876,7 @@ CG_PlayerTokens(centity_t *cent, int renderfx)
 
 
 /*
- * ===============
  * CG_PlayerPowerups
- * ===============
  */
 static void
 CG_PlayerPowerups(centity_t *cent, refEntity_t *torso)
@@ -2001,11 +1937,9 @@ CG_PlayerPowerups(centity_t *cent, refEntity_t *torso)
 
 
 /*
- * ===============
  * CG_PlayerFloatSprite
  *
  * Float a sprite over the player's head
- * ===============
  */
 static void
 CG_PlayerFloatSprite(centity_t *cent, qhandle_t shader)
@@ -2036,11 +1970,9 @@ CG_PlayerFloatSprite(centity_t *cent, qhandle_t shader)
 
 
 /*
- * ===============
  * CG_PlayerSprites
  *
  * Float sprites over the player's head
- * ===============
  */
 static void
 CG_PlayerSprites(centity_t *cent)
@@ -2098,13 +2030,11 @@ CG_PlayerSprites(centity_t *cent)
 }
 
 /*
- * ===============
  * CG_PlayerShadow
  *
  * Returns the Z component of the surface being shadowed
  *
  * should it return a full plane instead of a Z?
- * ===============
  */
 #define SHADOW_DISTANCE 128
 static qboolean
@@ -2157,11 +2087,9 @@ CG_PlayerShadow(centity_t *cent, float *shadowPlane)
 
 
 /*
- * ===============
  * CG_PlayerSplash
  *
  * Draw a mark at the water surface
- * ===============
  */
 static void
 CG_PlayerSplash(centity_t *cent)
@@ -2246,12 +2174,10 @@ CG_PlayerSplash(centity_t *cent)
 
 
 /*
- * ===============
  * CG_AddRefEntityWithPowerups
  *
  * Adds a piece with modifications or duplications for powerups
  * Also called by CG_Missile for quad rockets, but nobody can tell...
- * ===============
  */
 void
 CG_AddRefEntityWithPowerups(refEntity_t *ent, entityState_t *state, int team)
@@ -2293,9 +2219,7 @@ CG_AddRefEntityWithPowerups(refEntity_t *ent, entityState_t *state, int team)
 }
 
 /*
- * =================
  * CG_LightVerts
- * =================
  */
 int
 CG_LightVerts(vec3_t normal, int numVerts, polyVert_t *verts)
@@ -2338,9 +2262,7 @@ CG_LightVerts(vec3_t normal, int numVerts, polyVert_t *verts)
 }
 
 /*
- * ===============
  * CG_Player
- * ===============
  */
 void
 CG_Player(centity_t *cent)
@@ -2690,11 +2612,9 @@ CG_Player(centity_t *cent)
 /* ===================================================================== */
 
 /*
- * ===============
  * CG_ResetPlayerEntity
  *
  * A player just came into view or teleported, so reset all animation info
- * ===============
  */
 void
 CG_ResetPlayerEntity(centity_t *cent)

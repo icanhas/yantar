@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /* vm.c -- virtual machine */
 
@@ -69,9 +67,7 @@ VM_Debug(int level)
 }
 
 /*
- * ==============
  * VM_Init
- * ==============
  */
 void
 VM_Init(void)
@@ -88,11 +84,9 @@ VM_Init(void)
 
 
 /*
- * ===============
  * VM_ValueToSymbol
  *
  * Assumes a program counter value
- * ===============
  */
 const char *
 VM_ValueToSymbol(vm_t *vm, int value)
@@ -118,11 +112,9 @@ VM_ValueToSymbol(vm_t *vm, int value)
 }
 
 /*
- * ===============
  * VM_ValueToFunctionSymbol
  *
  * For profiling, find the symbol behind this value
- * ===============
  */
 vmSymbol_t *
 VM_ValueToFunctionSymbol(vm_t *vm, int value)
@@ -142,9 +134,7 @@ VM_ValueToFunctionSymbol(vm_t *vm, int value)
 
 
 /*
- * ===============
  * VM_SymbolToValue
- * ===============
  */
 int
 VM_SymbolToValue(vm_t *vm, const char *symbol)
@@ -159,9 +149,7 @@ VM_SymbolToValue(vm_t *vm, const char *symbol)
 
 
 /*
- * =====================
  * VM_SymbolForCompiledPointer
- * =====================
  */
 #if 0	/* 64bit! */
 const char *
@@ -188,9 +176,7 @@ VM_SymbolForCompiledPointer(vm_t *vm, void *code)
 
 
 /*
- * ===============
  * ParseHex
- * ===============
  */
 int
 ParseHex(const char *text)
@@ -218,9 +204,7 @@ ParseHex(const char *text)
 }
 
 /*
- * ===============
  * VM_LoadSymbols
- * ===============
  */
 void
 VM_LoadSymbols(vm_t *vm)
@@ -303,7 +287,6 @@ VM_LoadSymbols(vm_t *vm)
 }
 
 /*
- * ============
  * VM_DllSyscall
  *
  * Dlls will call this directly
@@ -338,7 +321,6 @@ VM_LoadSymbols(vm_t *vm)
  * For speed, we just grab 15 arguments, and don't worry about exactly
  * how many the syscall actually needs; the extra is thrown away.
  *
- * ============
  */
 intptr_t QDECL
 VM_DllSyscall(intptr_t arg, ...)
@@ -364,11 +346,9 @@ VM_DllSyscall(intptr_t arg, ...)
 
 
 /*
- * =================
  * VM_LoadQVM
  *
  * Load a .qvm file
- * =================
  */
 vmHeader_t *
 VM_LoadQVM(vm_t *vm, qboolean alloc, qboolean unpure)
@@ -531,7 +511,6 @@ VM_LoadQVM(vm_t *vm, qboolean alloc, qboolean unpure)
 }
 
 /*
- * =================
  * VM_Restart
  *
  * Reload the data, but leave everything else in place
@@ -539,7 +518,6 @@ VM_LoadQVM(vm_t *vm, qboolean alloc, qboolean unpure)
  *
  * We need to make sure that servers can access unpure QVMs (not contained in any pak)
  * even if the client is pure, so take "unpure" as argument.
- * =================
  */
 vm_t *
 VM_Restart(vm_t *vm, qboolean unpure)
@@ -575,12 +553,10 @@ VM_Restart(vm_t *vm, qboolean unpure)
 }
 
 /*
- * ================
  * VM_Create
  *
  * If image ends in .qvm it will be interpreted, otherwise
  * it will attempt to load as a system dll
- * ================
  */
 vm_t *
 VM_Create(const char *module, intptr_t (*systemCalls)(intptr_t *),
@@ -695,9 +671,7 @@ VM_Create(const char *module, intptr_t (*systemCalls)(intptr_t *),
 }
 
 /*
- * ==============
  * VM_Free
- * ==============
  */
 void
 VM_Free(vm_t *vm)
@@ -792,7 +766,6 @@ VM_ExplicitArgPtr(vm_t *vm, intptr_t intValue)
 
 
 /*
- * ==============
  * VM_Call
  *
  *
@@ -812,7 +785,6 @@ VM_ExplicitArgPtr(vm_t *vm, intptr_t intValue)
  * An interpreted function will immediately execute
  * an OP_ENTER instruction, which will subtract space for
  * locals from sp
- * ==============
  */
 
 intptr_t QDECL
@@ -902,10 +874,8 @@ VM_ProfileSort(const void *a, const void *b)
 }
 
 /*
- * ==============
  * VM_VmProfile_f
  *
- * ==============
  */
 void
 VM_VmProfile_f(void)
@@ -950,10 +920,8 @@ VM_VmProfile_f(void)
 }
 
 /*
- * ==============
  * VM_VmInfo_f
  *
- * ==============
  */
 void
 VM_VmInfo_f(void)
@@ -982,11 +950,9 @@ VM_VmInfo_f(void)
 }
 
 /*
- * ===============
  * VM_LogSyscalls
  *
  * Insert calls to this while debugging the vm compiler
- * ===============
  */
 void
 VM_LogSyscalls(int *args)
@@ -1003,10 +969,8 @@ VM_LogSyscalls(int *args)
 }
 
 /*
- * =================
  * VM_BlockCopy
  * Executes a block copy operation within currentVM data space
- * =================
  */
 
 void

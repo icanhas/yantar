@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /* tr_shade.c */
 
@@ -35,13 +33,11 @@
 
 
 /*
- * ==================
  * R_DrawElements
  *
  * Optionally performs our own glDrawElements that looks for strip conditions
  * instead of using the single glDrawElements call that may be inefficient
  * without compiled vertex arrays.
- * ==================
  */
 
 static void
@@ -70,21 +66,17 @@ R_DrawMultiElementsVBO(int multiDrawPrimitives, const GLvoid **multiDrawFirstInd
 
 
 /*
- * =============================================================
  *
  * SURFACE SHADERS
  *
- * =============================================================
  */
 
 shaderCommands_t tess;
 
 
 /*
- * =================
  * R_BindAnimatedImageToTMU
  *
- * =================
  */
 static void
 R_BindAnimatedImageToTMU(textureBundle_t *bundle, int tmu)
@@ -120,11 +112,9 @@ R_BindAnimatedImageToTMU(textureBundle_t *bundle, int tmu)
 
 
 /*
- * ================
  * DrawTris
  *
  * Draws triangle outlines for debugging
- * ================
  */
 static void
 DrawTris(shaderCommands_t *input)
@@ -160,11 +150,9 @@ DrawTris(shaderCommands_t *input)
 
 
 /*
- * ================
  * DrawNormals
  *
  * Draws vertex normals for debugging
- * ================
  */
 static void
 DrawNormals(shaderCommands_t *input)
@@ -173,13 +161,11 @@ DrawNormals(shaderCommands_t *input)
 }
 
 /*
- * ==============
  * RB_BeginSurface
  *
  * We must set some things up before beginning any tesselation,
  * because a surface may be forced to perform a RB_End due
  * to overflow.
- * ==============
  */
 void
 RB_BeginSurface(shader_t *shader, int fogNum)
@@ -931,11 +917,9 @@ ProjectPshadowVBOGLSL(void)
 
 
 /*
- * ===================
  * RB_FogPass
  *
  * Blends a fog texture on top of everything else
- * ===================
  */
 static void
 RB_FogPass(void)

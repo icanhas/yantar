@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /* sv_bot.c */
 
@@ -39,9 +37,7 @@ int bot_enable;
 
 
 /*
- * ==================
  * SV_BotAllocateClient
- * ==================
  */
 int
 SV_BotAllocateClient(void)
@@ -68,9 +64,7 @@ SV_BotAllocateClient(void)
 }
 
 /*
- * ==================
  * SV_BotFreeClient
- * ==================
  */
 void
 SV_BotFreeClient(int clientNum)
@@ -88,9 +82,7 @@ SV_BotFreeClient(int clientNum)
 }
 
 /*
- * ==================
  * BotDrawDebugPolygons
- * ==================
  */
 void
 BotDrawDebugPolygons(void (*drawPoly)(int color, int numPoints,
@@ -139,9 +131,7 @@ BotDrawDebugPolygons(void (*drawPoly)(int color, int numPoints,
 }
 
 /*
- * ==================
  * BotImport_Print
- * ==================
  */
 static __attribute__ ((format (printf, 2, 3))) void QDECL
 BotImport_Print(int type, char *fmt, ...)
@@ -182,9 +172,7 @@ BotImport_Print(int type, char *fmt, ...)
 }
 
 /*
- * ==================
  * BotImport_Trace
- * ==================
  */
 static void
 BotImport_Trace(bsp_trace_t *bsptrace, vec3_t start, vec3_t mins, vec3_t maxs,
@@ -211,9 +199,7 @@ BotImport_Trace(bsp_trace_t *bsptrace, vec3_t start, vec3_t mins, vec3_t maxs,
 }
 
 /*
- * ==================
  * BotImport_EntityTrace
- * ==================
  */
 static void
 BotImport_EntityTrace(bsp_trace_t *bsptrace, vec3_t start, vec3_t mins,
@@ -242,9 +228,7 @@ BotImport_EntityTrace(bsp_trace_t *bsptrace, vec3_t start, vec3_t mins,
 
 
 /*
- * ==================
  * BotImport_PointContents
- * ==================
  */
 static int
 BotImport_PointContents(vec3_t point)
@@ -253,9 +237,7 @@ BotImport_PointContents(vec3_t point)
 }
 
 /*
- * ==================
  * BotImport_inPVS
- * ==================
  */
 static int
 BotImport_inPVS(vec3_t p1, vec3_t p2)
@@ -264,9 +246,7 @@ BotImport_inPVS(vec3_t p1, vec3_t p2)
 }
 
 /*
- * ==================
  * BotImport_BSPEntityData
- * ==================
  */
 static char *
 BotImport_BSPEntityData(void)
@@ -275,9 +255,7 @@ BotImport_BSPEntityData(void)
 }
 
 /*
- * ==================
  * BotImport_BSPModelMinsMaxsOrigin
- * ==================
  */
 static void
 BotImport_BSPModelMinsMaxsOrigin(int modelnum, vec3_t angles, vec3_t outmins,
@@ -307,9 +285,7 @@ BotImport_BSPModelMinsMaxsOrigin(int modelnum, vec3_t angles, vec3_t outmins,
 }
 
 /*
- * ==================
  * BotImport_GetMemory
- * ==================
  */
 static void *
 BotImport_GetMemory(int size)
@@ -321,9 +297,7 @@ BotImport_GetMemory(int size)
 }
 
 /*
- * ==================
  * BotImport_FreeMemory
- * ==================
  */
 static void
 BotImport_FreeMemory(void *ptr)
@@ -332,9 +306,7 @@ BotImport_FreeMemory(void *ptr)
 }
 
 /*
- * =================
  * BotImport_HunkAlloc
- * =================
  */
 static void *
 BotImport_HunkAlloc(int size)
@@ -346,9 +318,7 @@ BotImport_HunkAlloc(int size)
 }
 
 /*
- * ==================
  * BotImport_DebugPolygonCreate
- * ==================
  */
 int
 BotImport_DebugPolygonCreate(int color, int numPoints, vec3_t *points)
@@ -374,9 +344,7 @@ BotImport_DebugPolygonCreate(int color, int numPoints, vec3_t *points)
 }
 
 /*
- * ==================
  * BotImport_DebugPolygonShow
- * ==================
  */
 static void
 BotImport_DebugPolygonShow(int id, int color, int numPoints, vec3_t *points)
@@ -392,9 +360,7 @@ BotImport_DebugPolygonShow(int id, int color, int numPoints, vec3_t *points)
 }
 
 /*
- * ==================
  * BotImport_DebugPolygonDelete
- * ==================
  */
 void
 BotImport_DebugPolygonDelete(int id)
@@ -404,9 +370,7 @@ BotImport_DebugPolygonDelete(int id)
 }
 
 /*
- * ==================
  * BotImport_DebugLineCreate
- * ==================
  */
 static int
 BotImport_DebugLineCreate(void)
@@ -416,9 +380,7 @@ BotImport_DebugLineCreate(void)
 }
 
 /*
- * ==================
  * BotImport_DebugLineDelete
- * ==================
  */
 static void
 BotImport_DebugLineDelete(int line)
@@ -427,9 +389,7 @@ BotImport_DebugLineDelete(int line)
 }
 
 /*
- * ==================
  * BotImport_DebugLineShow
- * ==================
  */
 static void
 BotImport_DebugLineShow(int line, vec3_t start, vec3_t end, int color)
@@ -462,9 +422,7 @@ BotImport_DebugLineShow(int line, vec3_t start, vec3_t end, int color)
 }
 
 /*
- * ==================
  * SV_BotClientCommand
- * ==================
  */
 static void
 BotClientCommand(int client, char *command)
@@ -473,9 +431,7 @@ BotClientCommand(int client, char *command)
 }
 
 /*
- * ==================
  * SV_BotFrame
- * ==================
  */
 void
 SV_BotFrame(int time)
@@ -487,9 +443,7 @@ SV_BotFrame(int time)
 }
 
 /*
- * ===============
  * SV_BotLibSetup
- * ===============
  */
 int
 SV_BotLibSetup(void)
@@ -508,12 +462,10 @@ SV_BotLibSetup(void)
 }
 
 /*
- * ===============
  * SV_ShutdownBotLib
  *
  * Called when either the entire server is being killed, or
  * it is changing to a different game directory.
- * ===============
  */
 int
 SV_BotLibShutdown(void)
@@ -526,9 +478,7 @@ SV_BotLibShutdown(void)
 }
 
 /*
- * ==================
  * SV_BotInitCvars
- * ==================
  */
 void
 SV_BotInitCvars(void)
@@ -567,9 +517,7 @@ SV_BotInitCvars(void)
 }
 
 /*
- * ==================
  * SV_BotInitBotLib
- * ==================
  */
 void
 SV_BotInitBotLib(void)
@@ -622,9 +570,7 @@ SV_BotInitBotLib(void)
  *  */
 
 /*
- * ==================
  * SV_BotGetConsoleMessage
- * ==================
  */
 int
 SV_BotGetConsoleMessage(int client, char *buf, int size)
@@ -650,9 +596,7 @@ SV_BotGetConsoleMessage(int client, char *buf, int size)
 
 #if 0
 /*
- * ==================
  * EntityInPVS
- * ==================
  */
 int
 EntityInPVS(int client, int entityNum)
@@ -674,9 +618,7 @@ EntityInPVS(int client, int entityNum)
 #endif
 
 /*
- * ==================
  * SV_BotGetSnapshotEntity
- * ==================
  */
 int
 SV_BotGetSnapshotEntity(int client, int sequence)

@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /* tr_shade_calc.c */
 
@@ -130,18 +128,14 @@ RB_CalcStretchTexMatrix(const waveForm_t *wf, float *matrix)
 }
 
 /*
- * ====================================================================
  *
  * DEFORMATIONS
  *
- * ====================================================================
  */
 
 /*
- * ========================
  * RB_CalcDeformVertexes
  *
- * ========================
  */
 void
 RB_CalcDeformVertexes(deformStage_t *ds)
@@ -184,11 +178,9 @@ RB_CalcDeformVertexes(deformStage_t *ds)
 }
 
 /*
- * =========================
  * RB_CalcDeformNormals
  *
  * Wiggle the normals for wavy environment mapping
- * =========================
  */
 void
 RB_CalcDeformNormals(deformStage_t *ds)
@@ -219,10 +211,8 @@ RB_CalcDeformNormals(deformStage_t *ds)
 }
 
 /*
- * ========================
  * RB_CalcBulgeVertexes
  *
- * ========================
  */
 void
 RB_CalcBulgeVertexes(deformStage_t *ds)
@@ -251,11 +241,9 @@ RB_CalcBulgeVertexes(deformStage_t *ds)
 
 
 /*
- * ======================
  * RB_CalcMoveVertexes
  *
  * A deformation that can move an entire surface along a wave path
- * ======================
  */
 void
 RB_CalcMoveVertexes(deformStage_t *ds)
@@ -282,11 +270,9 @@ RB_CalcMoveVertexes(deformStage_t *ds)
 
 
 /*
- * =============
  * DeformText
  *
  * Change a polygon into a bunch of text polygons
- * =============
  */
 void
 DeformText(const char *text)
@@ -360,9 +346,7 @@ DeformText(const char *text)
 }
 
 /*
- * ==================
  * GlobalVectorToLocal
- * ==================
  */
 static void
 GlobalVectorToLocal(const vec3_t in, vec3_t out)
@@ -373,12 +357,10 @@ GlobalVectorToLocal(const vec3_t in, vec3_t out)
 }
 
 /*
- * =====================
  * AutospriteDeform
  *
  * Assuming all the triangles for this shader are independant
  * quads, rebuild them as forward facing sprites
- * =====================
  */
 static void
 AutospriteDeform(void)
@@ -448,11 +430,9 @@ AutospriteDeform(void)
 
 
 /*
- * =====================
  * Autosprite2Deform
  *
  * Autosprite2 will pivot a rectangular quad along the center of its long axis
- * =====================
  */
 int edgeVerts[6][2] = {
 	{ 0, 1 },
@@ -568,10 +548,8 @@ Autosprite2Deform(void)
 
 
 /*
- * =====================
  * RB_DeformTessGeometry
  *
- * =====================
  */
 void
 RB_DeformTessGeometry(void)
@@ -626,11 +604,9 @@ RB_DeformTessGeometry(void)
 }
 
 /*
- * ====================================================================
  *
  * COLORS
  *
- * ====================================================================
  */
 
 
@@ -853,21 +829,17 @@ RB_CalcModulateRGBAsByFog(unsigned char *colors)
 
 
 /*
- * ====================================================================
  *
  * TEX COORDS
  *
- * ====================================================================
  */
 
 /*
- * ========================
  * RB_CalcFogTexCoords
  *
  * To do the clipped fog plane really correctly, we should use
  * projected textures, but I don't trust the drivers and it
  * doesn't fit our shader data.
- * ========================
  */
 void
 RB_CalcFogTexCoords(float *st)

@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /* vm_x86.c -- load time compiler and execution environment for x86 */
 
@@ -377,10 +375,8 @@ EmitMovEDXStack(vm_t *vm, int andit)
 
 
 /*
- * =================
  * ErrJump
  * Error handler for jump/call to invalid instruction number
- * =================
  */
 
 static void
@@ -391,10 +387,8 @@ ErrJump(void)
 }
 
 /*
- * =================
  * DoSyscall
  * Uses asm to retrieve arguments from registers to work around different calling conventions
- * =================
  */
 
 #if defined(_MSC_VER) && idx64
@@ -492,10 +486,8 @@ DoSyscall(void)
 }
 
 /*
- * =================
  * EmitCallRel
  * Relative call to vm->codeBase + callOfs
- * =================
  */
 
 void
@@ -506,10 +498,8 @@ EmitCallRel(vm_t *vm, int callOfs)
 }
 
 /*
- * =================
  * EmitCallDoSyscall
  * Call to DoSyscall()
- * =================
  */
 
 int
@@ -561,10 +551,8 @@ EmitCallDoSyscall(vm_t *vm)
 }
 
 /*
- * =================
  * EmitCallErrJump
  * Emit the code that triggers execution of the jump violation handler
- * =================
  */
 
 static void
@@ -577,10 +565,8 @@ EmitCallErrJump(vm_t *vm, int sysCallOfs)
 }
 
 /*
- * =================
  * EmitCallProcedure
  * VM OP_CALL procedure for call destinations obtained at runtime
- * =================
  */
 
 int
@@ -635,10 +621,8 @@ EmitCallProcedure(vm_t *vm, int sysCallOfs)
 }
 
 /*
- * =================
  * EmitJumpIns
  * Jump to constant instruction number
- * =================
  */
 
 void
@@ -656,10 +640,8 @@ EmitJumpIns(vm_t *vm, const char *jmpop, int cdest)
 }
 
 /*
- * =================
  * EmitCallIns
  * Call to constant instruction number
- * =================
  */
 
 void
@@ -677,10 +659,8 @@ EmitCallIns(vm_t *vm, int cdest)
 }
 
 /*
- * =================
  * EmitCallConst
  * Call to constant instruction number or syscall
- * =================
  */
 
 void
@@ -696,10 +676,8 @@ EmitCallConst(vm_t *vm, int cdest, int callProcOfsSyscall)
 }
 
 /*
- * =================
  * EmitBranchConditions
  * Emits x86 branch condition as given in op
- * =================
  */
 void
 EmitBranchConditions(vm_t *vm, int op)
@@ -740,11 +718,9 @@ EmitBranchConditions(vm_t *vm, int op)
 
 
 /*
- * =================
  * ConstOptimize
  * Constant values for immediately following instructions may be translated to immediate values
  * instead of opStack operations, which will save expensive operations on memory
- * =================
  */
 
 qboolean
@@ -1066,9 +1042,7 @@ ConstOptimize(vm_t *vm, int callProcOfsSyscall)
 }
 
 /*
- * =================
  * VM_Compile
- * =================
  */
 void
 VM_Compile(vm_t *vm, vmHeader_t *header)
@@ -1730,11 +1704,9 @@ VM_Destroy_Compiled(vm_t* self)
 }
 
 /*
- * ==============
  * VM_CallCompiled
  *
  * This function is called directly by the generated code
- * ==============
  */
 
 int

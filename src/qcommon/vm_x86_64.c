@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  * Copyright (C) 2005 Ludwig Nussel <ludwig.nussel@web.de>
  *
@@ -18,7 +17,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /* vm_x86_64.c -- load time compiler and execution environment for x86-64 */
 
@@ -425,9 +423,7 @@ opstackviolation(void)
 #endif
 
 /*
- * =================
  * VM_Compile
- * =================
  */
 void
 VM_Compile(vm_t *vm, vmHeader_t *header)
@@ -1033,11 +1029,9 @@ VM_Destroy_Compiled(vm_t* self)
 }
 
 /*
- * ==============
  * VM_CallCompiled
  *
  * This function is called directly by the generated code
- * ==============
  */
 
 #ifdef DEBUG_VM

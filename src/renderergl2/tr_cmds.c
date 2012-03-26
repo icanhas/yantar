@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 #include "tr_local.h"
 
@@ -27,9 +25,7 @@ volatile qboolean renderThreadActive;
 
 
 /*
- * =====================
  * R_PerformanceCounters
- * =====================
  */
 void
 R_PerformanceCounters(void)
@@ -87,9 +83,7 @@ R_PerformanceCounters(void)
 
 
 /*
- * ====================
  * R_InitCommandBuffers
- * ====================
  */
 void
 R_InitCommandBuffers(void)
@@ -107,9 +101,7 @@ R_InitCommandBuffers(void)
 }
 
 /*
- * ====================
  * R_ShutdownCommandBuffers
- * ====================
  */
 void
 R_ShutdownCommandBuffers(void)
@@ -122,9 +114,7 @@ R_ShutdownCommandBuffers(void)
 }
 
 /*
- * ====================
  * R_IssueRenderCommands
- * ====================
  */
 int c_blockedOnRender;
 int c_blockedOnMain;
@@ -179,14 +169,12 @@ R_IssueRenderCommands(qboolean runPerformanceCounters)
 
 
 /*
- * ====================
  * R_SyncRenderThread
  *
  * Issue any pending commands and wait for them to complete.
  * After exiting, the render thread will have completed its work
  * and will remain idle and the main thread is free to issue
  * OpenGL calls until R_IssueRenderCommands is called.
- * ====================
  */
 void
 R_SyncRenderThread(void)
@@ -203,12 +191,10 @@ R_SyncRenderThread(void)
 }
 
 /*
- * ============
  * R_GetCommandBuffer
  *
  * make sure there is enough command space, waiting on the
  * render thread if needed.
- * ============
  */
 void *
 R_GetCommandBuffer(int bytes)
@@ -234,10 +220,8 @@ R_GetCommandBuffer(int bytes)
 
 
 /*
- * =============
  * R_AddDrawSurfCmd
  *
- * =============
  */
 void
 R_AddDrawSurfCmd(drawSurf_t *drawSurfs, int numDrawSurfs)
@@ -259,10 +243,8 @@ R_AddDrawSurfCmd(drawSurf_t *drawSurfs, int numDrawSurfs)
 
 
 /*
- * =============
  * R_AddCapShadowmapCmd
  *
- * =============
  */
 void
 R_AddCapShadowmapCmd(int map, int cubeSide)
@@ -281,10 +263,8 @@ R_AddCapShadowmapCmd(int map, int cubeSide)
 
 
 /*
- * =============
  * R_PostProcessingCmd
  *
- * =============
  */
 void
 R_AddPostProcessCmd( )
@@ -302,11 +282,9 @@ R_AddPostProcessCmd( )
 }
 
 /*
- * =============
  * RE_SetColor
  *
  * Passing NULL will set the color to white
- * =============
  */
 void
 RE_SetColor(const float *rgba)
@@ -335,9 +313,7 @@ RE_SetColor(const float *rgba)
 
 
 /*
- * =============
  * RE_StretchPic
- * =============
  */
 void
 RE_StretchPic(float x, float y, float w, float h,
@@ -397,12 +373,10 @@ R_SetColorMode(GLboolean *rgba, stereoFrame_t stereoFrame, int colormode)
 
 
 /*
- * ====================
  * RE_BeginFrame
  *
  * If running in stereo, RE_BeginFrame will be called twice
  * for each RE_EndFrame
- * ====================
  */
 void
 RE_BeginFrame(stereoFrame_t stereoFrame)
@@ -561,11 +535,9 @@ RE_BeginFrame(stereoFrame_t stereoFrame)
 
 
 /*
- * =============
  * RE_EndFrame
  *
  * Returns the number of msec spent in the back end
- * =============
  */
 void
 RE_EndFrame(int *frontEndMsec, int *backEndMsec)
@@ -598,9 +570,7 @@ RE_EndFrame(int *frontEndMsec, int *backEndMsec)
 }
 
 /*
- * =============
  * RE_TakeVideoFrame
- * =============
  */
 void
 RE_TakeVideoFrame(int width, int height,

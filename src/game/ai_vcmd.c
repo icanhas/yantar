@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /*  */
 
@@ -64,9 +62,7 @@ typedef struct voiceCommand_s {
 } voiceCommand_t;
 
 /*
- * ==================
  * BotVoiceChat_GetFlag
- * ==================
  */
 void
 BotVoiceChat_GetFlag(bot_state_t *bs, int client, int mode)
@@ -109,9 +105,7 @@ BotVoiceChat_GetFlag(bot_state_t *bs, int client, int mode)
 }
 
 /*
- * ==================
  * BotVoiceChat_Offense
- * ==================
  */
 void
 BotVoiceChat_Offense(bot_state_t *bs, int client, int mode)
@@ -167,9 +161,7 @@ BotVoiceChat_Offense(bot_state_t *bs, int client, int mode)
 }
 
 /*
- * ==================
  * BotVoiceChat_Defend
- * ==================
  */
 void
 BotVoiceChat_Defend(bot_state_t *bs, int client, int mode)
@@ -223,9 +215,7 @@ BotVoiceChat_Defend(bot_state_t *bs, int client, int mode)
 }
 
 /*
- * ==================
  * BotVoiceChat_DefendFlag
- * ==================
  */
 void
 BotVoiceChat_DefendFlag(bot_state_t *bs, int client, int mode)
@@ -234,9 +224,7 @@ BotVoiceChat_DefendFlag(bot_state_t *bs, int client, int mode)
 }
 
 /*
- * ==================
  * BotVoiceChat_Patrol
- * ==================
  */
 void
 BotVoiceChat_Patrol(bot_state_t *bs, int client, int mode)
@@ -259,9 +247,7 @@ BotVoiceChat_Patrol(bot_state_t *bs, int client, int mode)
 }
 
 /*
- * ==================
  * BotVoiceChat_Camp
- * ==================
  */
 void
 BotVoiceChat_Camp(bot_state_t *bs, int client, int mode)
@@ -318,9 +304,7 @@ BotVoiceChat_Camp(bot_state_t *bs, int client, int mode)
 }
 
 /*
- * ==================
  * BotVoiceChat_FollowMe
- * ==================
  */
 void
 BotVoiceChat_FollowMe(bot_state_t *bs, int client, int mode)
@@ -375,9 +359,7 @@ BotVoiceChat_FollowMe(bot_state_t *bs, int client, int mode)
 }
 
 /*
- * ==================
  * BotVoiceChat_FollowFlagCarrier
- * ==================
  */
 void
 BotVoiceChat_FollowFlagCarrier(bot_state_t *bs, int client, int mode)
@@ -393,9 +375,7 @@ BotVoiceChat_FollowFlagCarrier(bot_state_t *bs, int client, int mode)
 }
 
 /*
- * ==================
  * BotVoiceChat_ReturnFlag
- * ==================
  */
 void
 BotVoiceChat_ReturnFlag(bot_state_t *bs, int client, int mode)
@@ -426,9 +406,7 @@ BotVoiceChat_ReturnFlag(bot_state_t *bs, int client, int mode)
 }
 
 /*
- * ==================
  * BotVoiceChat_StartLeader
- * ==================
  */
 void
 BotVoiceChat_StartLeader(bot_state_t *bs, int client, int mode)
@@ -437,9 +415,7 @@ BotVoiceChat_StartLeader(bot_state_t *bs, int client, int mode)
 }
 
 /*
- * ==================
  * BotVoiceChat_StopLeader
- * ==================
  */
 void
 BotVoiceChat_StopLeader(bot_state_t *bs, int client, int mode)
@@ -454,9 +430,7 @@ BotVoiceChat_StopLeader(bot_state_t *bs, int client, int mode)
 }
 
 /*
- * ==================
  * BotVoiceChat_WhoIsLeader
- * ==================
  */
 void
 BotVoiceChat_WhoIsLeader(bot_state_t *bs, int client, int mode)
@@ -475,9 +449,7 @@ BotVoiceChat_WhoIsLeader(bot_state_t *bs, int client, int mode)
 }
 
 /*
- * ==================
  * BotVoiceChat_WantOnDefense
- * ==================
  */
 void
 BotVoiceChat_WantOnDefense(bot_state_t *bs, int client, int mode)
@@ -498,9 +470,7 @@ BotVoiceChat_WantOnDefense(bot_state_t *bs, int client, int mode)
 }
 
 /*
- * ==================
  * BotVoiceChat_WantOnOffense
- * ==================
  */
 void
 BotVoiceChat_WantOnOffense(bot_state_t *bs, int client, int mode)

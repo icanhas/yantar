@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 
 /*****************************************************************************
@@ -1469,9 +1467,7 @@ RoQShutdown(void)
 }
 
 /*
- * ==================
  * CIN_StopCinematic
- * ==================
  */
 e_status
 CIN_StopCinematic(int handle)
@@ -1497,11 +1493,9 @@ CIN_StopCinematic(int handle)
 }
 
 /*
- * ==================
  * CIN_RunCinematic
  *
  * Fetch and decompress the pending frame
- * ==================
  */
 
 
@@ -1576,9 +1570,7 @@ CIN_RunCinematic(int handle)
 }
 
 /*
- * ==================
  * CIN_PlayCinematic
- * ==================
  */
 int
 CIN_PlayCinematic(const char *arg, int x, int y, int w, int h, int systemBits)
@@ -1684,11 +1676,9 @@ CIN_SetLooping(int handle, qboolean loop)
 }
 
 /*
- * ==================
  * CIN_ResampleCinematic
  *
  * Resample cinematic to 256x256 and store in buf2
- * ==================
  */
 void
 CIN_ResampleCinematic(int handle, int *buf2)
@@ -1746,9 +1736,7 @@ CIN_ResampleCinematic(int handle, int *buf2)
 }
 
 /*
- * ==================
  * CIN_DrawCinematic
- * ==================
  */
 void
 CIN_DrawCinematic(int handle)

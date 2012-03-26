@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 
 #include "client.h"
@@ -29,9 +27,7 @@ extern botlib_export_t *botlib_export;
 vm_t *uivm;
 
 /*
- * ====================
  * GetClientState
- * ====================
  */
 static void
 GetClientState(uiClientState_t *state)
@@ -47,9 +43,7 @@ GetClientState(uiClientState_t *state)
 }
 
 /*
- * ====================
  * LAN_LoadCachedServers
- * ====================
  */
 void
 LAN_LoadCachedServers(void)
@@ -77,9 +71,7 @@ LAN_LoadCachedServers(void)
 }
 
 /*
- * ====================
  * LAN_SaveServersToCache
- * ====================
  */
 void
 LAN_SaveServersToCache(void)
@@ -97,9 +89,7 @@ LAN_SaveServersToCache(void)
 
 
 /*
- * ====================
  * LAN_ResetPings
- * ====================
  */
 static void
 LAN_ResetPings(int source)
@@ -129,9 +119,7 @@ LAN_ResetPings(int source)
 }
 
 /*
- * ====================
  * LAN_AddServer
- * ====================
  */
 static int
 LAN_AddServer(int source, const char *name, const char *address)
@@ -177,9 +165,7 @@ LAN_AddServer(int source, const char *name, const char *address)
 }
 
 /*
- * ====================
  * LAN_RemoveServer
- * ====================
  */
 static void
 LAN_RemoveServer(int source, const char *addr)
@@ -221,9 +207,7 @@ LAN_RemoveServer(int source, const char *addr)
 
 
 /*
- * ====================
  * LAN_GetServerCount
- * ====================
  */
 static int
 LAN_GetServerCount(int source)
@@ -244,9 +228,7 @@ LAN_GetServerCount(int source)
 }
 
 /*
- * ====================
  * LAN_GetLocalServerAddressString
- * ====================
  */
 static void
 LAN_GetServerAddressString(int source, int n, char *buf, int buflen)
@@ -282,9 +264,7 @@ LAN_GetServerAddressString(int source, int n, char *buf, int buflen)
 }
 
 /*
- * ====================
  * LAN_GetServerInfo
- * ====================
  */
 static void
 LAN_GetServerInfo(int source, int n, char *buf, int buflen)
@@ -335,9 +315,7 @@ LAN_GetServerInfo(int source, int n, char *buf, int buflen)
 }
 
 /*
- * ====================
  * LAN_GetServerPing
- * ====================
  */
 static int
 LAN_GetServerPing(int source, int n)
@@ -364,9 +342,7 @@ LAN_GetServerPing(int source, int n)
 }
 
 /*
- * ====================
  * LAN_GetServerPtr
- * ====================
  */
 static serverInfo_t *
 LAN_GetServerPtr(int source, int n)
@@ -390,9 +366,7 @@ LAN_GetServerPtr(int source, int n)
 }
 
 /*
- * ====================
  * LAN_CompareServers
- * ====================
  */
 static int
 LAN_CompareServers(int source, int sortKey, int sortDir, int s1, int s2)
@@ -451,9 +425,7 @@ LAN_CompareServers(int source, int sortKey, int sortDir, int s1, int s2)
 }
 
 /*
- * ====================
  * LAN_GetPingQueueCount
- * ====================
  */
 static int
 LAN_GetPingQueueCount(void)
@@ -462,9 +434,7 @@ LAN_GetPingQueueCount(void)
 }
 
 /*
- * ====================
  * LAN_ClearPing
- * ====================
  */
 static void
 LAN_ClearPing(int n)
@@ -473,9 +443,7 @@ LAN_ClearPing(int n)
 }
 
 /*
- * ====================
  * LAN_GetPing
- * ====================
  */
 static void
 LAN_GetPing(int n, char *buf, int buflen, int *pingtime)
@@ -484,9 +452,7 @@ LAN_GetPing(int n, char *buf, int buflen, int *pingtime)
 }
 
 /*
- * ====================
  * LAN_GetPingInfo
- * ====================
  */
 static void
 LAN_GetPingInfo(int n, char *buf, int buflen)
@@ -495,9 +461,7 @@ LAN_GetPingInfo(int n, char *buf, int buflen)
 }
 
 /*
- * ====================
  * LAN_MarkServerVisible
- * ====================
  */
 static void
 LAN_MarkServerVisible(int source, int n, qboolean visible)
@@ -543,9 +507,7 @@ LAN_MarkServerVisible(int source, int n, qboolean visible)
 
 
 /*
- * =======================
  * LAN_ServerIsVisible
- * =======================
  */
 static int
 LAN_ServerIsVisible(int source, int n)
@@ -569,9 +531,7 @@ LAN_ServerIsVisible(int source, int n)
 }
 
 /*
- * =======================
  * LAN_UpdateVisiblePings
- * =======================
  */
 qboolean
 LAN_UpdateVisiblePings(int source)
@@ -580,9 +540,7 @@ LAN_UpdateVisiblePings(int source)
 }
 
 /*
- * ====================
  * LAN_GetServerStatus
- * ====================
  */
 int
 LAN_GetServerStatus(char *serverAddress, char *serverStatus, int maxLen)
@@ -591,9 +549,7 @@ LAN_GetServerStatus(char *serverAddress, char *serverStatus, int maxLen)
 }
 
 /*
- * ====================
  * CL_GetGlConfig
- * ====================
  */
 static void
 CL_GetGlconfig(glconfig_t *config)
@@ -602,9 +558,7 @@ CL_GetGlconfig(glconfig_t *config)
 }
 
 /*
- * ====================
  * CL_GetClipboardData
- * ====================
  */
 static void
 CL_GetClipboardData(char *buf, int buflen)
@@ -624,9 +578,7 @@ CL_GetClipboardData(char *buf, int buflen)
 }
 
 /*
- * ====================
  * Key_KeynumToStringBuf
- * ====================
  */
 static void
 Key_KeynumToStringBuf(int keynum, char *buf, int buflen)
@@ -635,9 +587,7 @@ Key_KeynumToStringBuf(int keynum, char *buf, int buflen)
 }
 
 /*
- * ====================
  * Key_GetBindingBuf
- * ====================
  */
 static void
 Key_GetBindingBuf(int keynum, char *buf, int buflen)
@@ -652,9 +602,7 @@ Key_GetBindingBuf(int keynum, char *buf, int buflen)
 }
 
 /*
- * ====================
  * CLUI_GetCDKey
- * ====================
  */
 static void
 CLUI_GetCDKey(char *buf, int buflen)
@@ -676,9 +624,7 @@ CLUI_GetCDKey(char *buf, int buflen)
 
 
 /*
- * ====================
  * CLUI_SetCDKey
- * ====================
  */
 #ifndef STANDALONE
 static void
@@ -700,9 +646,7 @@ CLUI_SetCDKey(char *buf)
 #endif
 
 /*
- * ====================
  * GetConfigString
- * ====================
  */
 static int
 GetConfigString(int index, char *buf, int size)
@@ -725,9 +669,7 @@ GetConfigString(int index, char *buf, int size)
 }
 
 /*
- * ====================
  * FloatAsInt
- * ====================
  */
 static int
 FloatAsInt(float f)
@@ -738,11 +680,9 @@ FloatAsInt(float f)
 }
 
 /*
- * ====================
  * CL_UISystemCalls
  *
  * The ui module is making a system call
- * ====================
  */
 intptr_t
 CL_UISystemCalls(intptr_t *args)

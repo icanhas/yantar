@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /*
  * cg_consolecmds.c -- text commands typed in at the local console, or
@@ -48,11 +46,9 @@ CG_TargetCommand_f(void)
 
 
 /*
- * =================
  * CG_SizeUp_f
  *
  * Keybinding command
- * =================
  */
 static void
 CG_SizeUp_f(void)
@@ -62,11 +58,9 @@ CG_SizeUp_f(void)
 
 
 /*
- * =================
  * CG_SizeDown_f
  *
  * Keybinding command
- * =================
  */
 static void
 CG_SizeDown_f(void)
@@ -76,11 +70,9 @@ CG_SizeDown_f(void)
 
 
 /*
- * =============
  * CG_Viewpos_f
  *
  * Debugging command to print the current position
- * =============
  */
 static void
 CG_Viewpos_f(void)
@@ -435,9 +427,7 @@ CG_TaskSuicide_f(void)
 
 
 /*
- * ==================
  * CG_TeamMenu_f
- * ==================
  */
 /*
  * static void CG_TeamMenu_f( void ) {
@@ -452,9 +442,7 @@ CG_TaskSuicide_f(void)
  */
 
 /*
- * ==================
  * CG_EditHud_f
- * ==================
  */
 /*
  * static void CG_EditHud_f( void ) {
@@ -466,9 +454,7 @@ CG_TaskSuicide_f(void)
 #endif
 
 /*
- * ==================
  * CG_StartOrbit_f
- * ==================
  */
 
 static void
@@ -564,12 +550,10 @@ static consoleCommand_t commands[] = {
 
 
 /*
- * =================
  * CG_ConsoleCommand
  *
  * The string has been tokenized and can be retrieved with
  * Cmd_Argc() / Cmd_Argv()
- * =================
  */
 qboolean
 CG_ConsoleCommand(void)
@@ -590,12 +574,10 @@ CG_ConsoleCommand(void)
 
 
 /*
- * =================
  * CG_InitConsoleCommands
  *
  * Let the client system know about all of our commands
  * so it can perform tab completion
- * =================
  */
 void
 CG_InitConsoleCommands(void)

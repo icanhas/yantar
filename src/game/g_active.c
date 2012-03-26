@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /*  */
 
@@ -25,14 +23,12 @@
 
 
 /*
- * ===============
  * G_DamageFeedback
  *
  * Called just before a snapshot is sent to the given player.
  * Totals up all damage and generates both the player_state_t
  * damage values to that client for pain blends and kicks, and
  * global pain sound events for all clients.
- * ===============
  */
 void
 P_DamageFeedback(gentity_t *player)
@@ -90,11 +86,9 @@ P_DamageFeedback(gentity_t *player)
 
 
 /*
- * =============
  * P_WorldEffects
  *
  * Check for lava / slime contents and drowning
- * =============
  */
 void
 P_WorldEffects(gentity_t *ent)
@@ -166,9 +160,7 @@ P_WorldEffects(gentity_t *ent)
 
 
 /*
- * ===============
  * G_SetClientSound
- * ===============
  */
 void
 G_SetClientSound(gentity_t *ent)
@@ -190,9 +182,7 @@ G_SetClientSound(gentity_t *ent)
 /* ============================================================== */
 
 /*
- * ==============
  * ClientImpacts
- * ==============
  */
 void
 ClientImpacts(gentity_t *ent, pmove_t *pm)
@@ -222,12 +212,10 @@ ClientImpacts(gentity_t *ent, pmove_t *pm)
 }
 
 /*
- * ============
  * G_TouchTriggers
  *
  * Find all trigger entities that ent's current position touches.
  * Spectators will only interact with teleporters.
- * ============
  */
 void
 G_TouchTriggers(gentity_t *ent)
@@ -298,9 +286,7 @@ G_TouchTriggers(gentity_t *ent)
 }
 
 /*
- * =================
  * SpectatorThink
- * =================
  */
 void
 SpectatorThink(gentity_t *ent, usercmd_t *ucmd)
@@ -343,11 +329,9 @@ SpectatorThink(gentity_t *ent, usercmd_t *ucmd)
 
 
 /*
- * =================
  * ClientInactivityTimer
  *
  * Returns qfalse if the client is dropped
- * =================
  */
 qboolean
 ClientInactivityTimer(gclient_t *client)
@@ -382,11 +366,9 @@ ClientInactivityTimer(gclient_t *client)
 }
 
 /*
- * ==================
  * ClientTimerActions
  *
  * Actions that happen once a second
- * ==================
  */
 void
 ClientTimerActions(gentity_t *ent, int msec)
@@ -500,9 +482,7 @@ ClientTimerActions(gentity_t *ent, int msec)
 }
 
 /*
- * ====================
  * ClientIntermissionThink
- * ====================
  */
 void
 ClientIntermissionThink(gclient_t *client)
@@ -524,12 +504,10 @@ ClientIntermissionThink(gclient_t *client)
 
 
 /*
- * ================
  * ClientEvents
  *
  * Events will be passed on to the clients for presentation,
  * but any server game effects are handled here
- * ================
  */
 void
 ClientEvents(gentity_t *ent, int oldEventSequence)
@@ -669,9 +647,7 @@ ClientEvents(gentity_t *ent, int oldEventSequence)
 
 #ifdef MISSIONPACK
 /*
- * ==============
  * StuckInOtherClient
- * ==============
  */
 static int
 StuckInOtherClient(gentity_t *ent)
@@ -711,9 +687,7 @@ StuckInOtherClient(gentity_t *ent)
 void BotTestSolid(vec3_t origin);
 
 /*
- * ==============
  * SendPendingPredictableEvents
- * ==============
  */
 void
 SendPendingPredictableEvents(playerState_t *ps)
@@ -749,7 +723,6 @@ SendPendingPredictableEvents(playerState_t *ps)
 }
 
 /*
- * ==============
  * ClientThink
  *
  * This will be called once for each client frame, which will
@@ -757,7 +730,6 @@ SendPendingPredictableEvents(playerState_t *ps)
  *
  * If "g_synchronousClients 1" is set, this will be called exactly
  * once for each server frame, which makes for smooth demo recording.
- * ==============
  */
 void
 ClientThink_real(gentity_t *ent)
@@ -1009,11 +981,9 @@ ClientThink_real(gentity_t *ent)
 }
 
 /*
- * ==================
  * ClientThink
  *
  * A new command has arrived from the client
- * ==================
  */
 void
 ClientThink(int clientNum)
@@ -1043,10 +1013,8 @@ G_RunClient(gentity_t *ent)
 
 
 /*
- * ==================
  * SpectatorClientEndFrame
  *
- * ==================
  */
 void
 SpectatorClientEndFrame(gentity_t *ent)
@@ -1095,13 +1063,11 @@ SpectatorClientEndFrame(gentity_t *ent)
 }
 
 /*
- * ==============
  * ClientEndFrame
  *
  * Called at the end of each server frame for each connected client
  * A fast client will have multiple ClientThink for each ClientEdFrame,
  * while a slow client may have multiple ClientEndFrame between ClientThink.
- * ==============
  */
 void
 ClientEndFrame(gentity_t *ent)

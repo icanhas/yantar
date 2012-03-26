@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 
 #include "tr_local.h"
@@ -37,10 +35,8 @@ int r_numpolyverts;
 
 
 /*
- * ====================
  * R_ToggleSmpFrame
  *
- * ====================
  */
 void
 R_ToggleSmpFrame(void)
@@ -71,10 +67,8 @@ R_ToggleSmpFrame(void)
 
 
 /*
- * ====================
  * RE_ClearScene
  *
- * ====================
  */
 void
 RE_ClearScene(void)
@@ -85,19 +79,15 @@ RE_ClearScene(void)
 }
 
 /*
- * ===========================================================================
  *
  * DISCRETE POLYS
  *
- * ===========================================================================
  */
 
 /*
- * =====================
  * R_AddPolygonSurfaces
  *
  * Adds all the scene's polys into this view's drawsurf list
- * =====================
  */
 void
 R_AddPolygonSurfaces(void)
@@ -119,10 +109,8 @@ R_AddPolygonSurfaces(void)
 }
 
 /*
- * =====================
  * RE_AddPolyToScene
  *
- * =====================
  */
 void
 RE_AddPolyToScene(qhandle_t hShader, int numVerts, const polyVert_t *verts, int numPolys)
@@ -212,10 +200,8 @@ RE_AddPolyToScene(qhandle_t hShader, int numVerts, const polyVert_t *verts, int 
 
 
 /*
- * =====================
  * RE_AddRefEntityToScene
  *
- * =====================
  */
 void
 RE_AddRefEntityToScene(const refEntity_t *ent)
@@ -261,10 +247,8 @@ RE_AddRefEntityToScene(const refEntity_t *ent)
 
 
 /*
- * =====================
  * RE_AddDynamicLightToScene
  *
- * =====================
  */
 void
 RE_AddDynamicLightToScene(const vec3_t org, float intensity, float r, float g, float b, int additive)
@@ -294,10 +278,8 @@ RE_AddDynamicLightToScene(const vec3_t org, float intensity, float r, float g, f
 }
 
 /*
- * =====================
  * RE_AddLightToScene
  *
- * =====================
  */
 void
 RE_AddLightToScene(const vec3_t org, float intensity, float r, float g, float b)
@@ -306,10 +288,8 @@ RE_AddLightToScene(const vec3_t org, float intensity, float r, float g, float b)
 }
 
 /*
- * =====================
  * RE_AddAdditiveLightToScene
  *
- * =====================
  */
 void
 RE_AddAdditiveLightToScene(const vec3_t org, float intensity, float r, float g, float b)

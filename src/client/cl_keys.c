@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 #include "client.h"
 
@@ -293,21 +291,17 @@ keyname_t keynames[] =
 };
 
 /*
- * =============================================================================
  *
  * EDIT FIELDS
  *
- * =============================================================================
  */
 
 
 /*
- * ===================
  * Field_Draw
  *
  * Handles horizontal scrolling and cursor blinking
  * x, y, and width are in pixels
- * ===================
  */
 /* FIXME: this is all shit */
 void
@@ -400,9 +394,7 @@ Field_BigDraw(field_t *edit, int x, int y, int width, qboolean showCursor,
 }
 
 /*
- * ================
  * Field_Paste
- * ================
  */
 void
 Field_Paste(field_t *edit)
@@ -424,14 +416,12 @@ Field_Paste(field_t *edit)
 }
 
 /*
- * =================
  * Field_KeyDownEvent
  *
  * Performs the basic line editing functions for the console,
  * in-game talk, and menu fields
  *
  * Key events are used for non-printable characters, others are gotten from char events.
- * =================
  */
 void
 Field_KeyDownEvent(field_t *edit, int key)
@@ -490,9 +480,7 @@ Field_KeyDownEvent(field_t *edit, int key)
 }
 
 /*
- * ==================
  * Field_CharEvent
- * ==================
  */
 void
 Field_CharEvent(field_t *edit, int ch)
@@ -566,19 +554,15 @@ Field_CharEvent(field_t *edit, int ch)
 }
 
 /*
- * =============================================================================
  *
  * CONSOLE LINE EDITING
  *
- * ==============================================================================
  */
 
 /*
- * ====================
  * Console_Key
  *
  * Handles history and console scrollback
- * ====================
  */
 void
 Console_Key(int key)
@@ -740,11 +724,9 @@ Console_Key(int key)
 
 
 /*
- * ================
  * Message_Key
  *
  * In game talk message
- * ================
  */
 void
 Message_Key(int key)
@@ -807,9 +789,7 @@ Key_SetOverstrikeMode(qboolean state)
 
 
 /*
- * ===================
  * Key_IsDown
- * ===================
  */
 qboolean
 Key_IsDown(int keynum)
@@ -821,7 +801,6 @@ Key_IsDown(int keynum)
 }
 
 /*
- * ===================
  * Key_StringToKeynum
  *
  * Returns a key number to be used to index keys[] by looking at
@@ -831,7 +810,6 @@ Key_IsDown(int keynum)
  * 0x11 will be interpreted as raw hex, which will allow new controlers
  *
  * to be configured even if they don't have defined names.
- * ===================
  */
 int
 Key_StringToKeynum(char *str)
@@ -860,12 +838,10 @@ Key_StringToKeynum(char *str)
 }
 
 /*
- * ===================
  * Key_KeynumToString
  *
  * Returns a string (either a single ascii char, a K_* name, or a 0x11 hex string) for the
  * given keynum.
- * ===================
  */
 char *
 Key_KeynumToString(int keynum)
@@ -907,9 +883,7 @@ Key_KeynumToString(int keynum)
 
 
 /*
- * ===================
  * Key_SetBinding
- * ===================
  */
 void
 Key_SetBinding(int keynum, const char *binding)
@@ -931,9 +905,7 @@ Key_SetBinding(int keynum, const char *binding)
 
 
 /*
- * ===================
  * Key_GetBinding
- * ===================
  */
 char *
 Key_GetBinding(int keynum)
@@ -945,9 +917,7 @@ Key_GetBinding(int keynum)
 }
 
 /*
- * ===================
  * Key_GetKey
- * ===================
  */
 
 int
@@ -964,9 +934,7 @@ Key_GetKey(const char *binding)
 }
 
 /*
- * ===================
  * Key_Unbind_f
- * ===================
  */
 void
 Key_Unbind_f(void)
@@ -988,9 +956,7 @@ Key_Unbind_f(void)
 }
 
 /*
- * ===================
  * Key_Unbindall_f
- * ===================
  */
 void
 Key_Unbindall_f(void)
@@ -1004,9 +970,7 @@ Key_Unbindall_f(void)
 
 
 /*
- * ===================
  * Key_Bind_f
- * ===================
  */
 void
 Key_Bind_f(void)
@@ -1047,11 +1011,9 @@ Key_Bind_f(void)
 }
 
 /*
- * ============
  * Key_WriteBindings
  *
  * Writes lines containing "bind key value"
- * ============
  */
 void
 Key_WriteBindings(fileHandle_t f)
@@ -1070,10 +1032,8 @@ Key_WriteBindings(fileHandle_t f)
 
 
 /*
- * ============
  * Key_Bindlist_f
  *
- * ============
  */
 void
 Key_Bindlist_f(void)
@@ -1087,9 +1047,7 @@ Key_Bindlist_f(void)
 }
 
 /*
- * ============
  * Key_KeynameCompletion
- * ============
  */
 void
 Key_KeynameCompletion(void (*callback)(const char *s))
@@ -1101,9 +1059,7 @@ Key_KeynameCompletion(void (*callback)(const char *s))
 }
 
 /*
- * ====================
  * Key_CompleteUnbind
- * ====================
  */
 static void
 Key_CompleteUnbind(char *args, int argNum)
@@ -1118,9 +1074,7 @@ Key_CompleteUnbind(char *args, int argNum)
 }
 
 /*
- * ====================
  * Key_CompleteBind
- * ====================
  */
 static void
 Key_CompleteBind(char *args, int argNum)
@@ -1143,9 +1097,7 @@ Key_CompleteBind(char *args, int argNum)
 }
 
 /*
- * ===================
  * CL_InitKeyCommands
- * ===================
  */
 void
 CL_InitKeyCommands(void)
@@ -1160,11 +1112,9 @@ CL_InitKeyCommands(void)
 }
 
 /*
- * ===================
  * CL_ParseBinding
  *
  * Execute the commands in the bind string
- * ===================
  */
 void
 CL_ParseBinding(int key, qboolean down, unsigned time)
@@ -1201,11 +1151,9 @@ CL_ParseBinding(int key, qboolean down, unsigned time)
 }
 
 /*
- * ===================
  * CL_KeyDownEvent
  *
  * Called by CL_KeyEvent to handle a keypress
- * ===================
  */
 void
 CL_KeyDownEvent(int key, unsigned time)
@@ -1290,11 +1238,9 @@ CL_KeyDownEvent(int key, unsigned time)
 }
 
 /*
- * ===================
  * CL_KeyUpEvent
  *
  * Called by CL_KeyEvent to handle a keyrelease
- * ===================
  */
 void
 CL_KeyUpEvent(int key, unsigned time)
@@ -1327,11 +1273,9 @@ CL_KeyUpEvent(int key, unsigned time)
 }
 
 /*
- * ===================
  * CL_KeyEvent
  *
  * Called by the system for both key up and key down events
- * ===================
  */
 void
 CL_KeyEvent(int key, qboolean down, unsigned time)
@@ -1343,11 +1287,9 @@ CL_KeyEvent(int key, qboolean down, unsigned time)
 }
 
 /*
- * ===================
  * CL_CharEvent
  *
  * Normal keyboard characters, already shifted / capslocked / etc
- * ===================
  */
 void
 CL_CharEvent(int key)
@@ -1370,9 +1312,7 @@ CL_CharEvent(int key)
 
 
 /*
- * ===================
  * Key_ClearStates
- * ===================
  */
 void
 Key_ClearStates(void)
@@ -1396,9 +1336,7 @@ Key_ClearStates(void)
 static int keyCatchers = 0;
 
 /*
- * ====================
  * Key_GetCatcher
- * ====================
  */
 int
 Key_GetCatcher(void)
@@ -1407,9 +1345,7 @@ Key_GetCatcher(void)
 }
 
 /*
- * ====================
  * Key_SetCatcher
- * ====================
  */
 void
 Key_SetCatcher(int catcher)
@@ -1428,11 +1364,9 @@ static char	consoleSaveBuffer[ MAX_CONSOLE_SAVE_BUFFER ];
 static int	consoleSaveBufferSize = 0;
 
 /*
- * ================
  * CL_LoadConsoleHistory
  *
  * Load the console history from cl_consoleHistory
- * ================
  */
 void
 CL_LoadConsoleHistory(void)
@@ -1498,12 +1432,10 @@ CL_LoadConsoleHistory(void)
 }
 
 /*
- * ================
  * CL_SaveConsoleHistory
  *
  * Save the console history into the cvar cl_consoleHistory
  * so that it persists across invocations of q3
- * ================
  */
 void
 CL_SaveConsoleHistory(void)

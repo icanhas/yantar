@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /* tr_light.c */
 
@@ -31,13 +29,11 @@
 
 
 /*
- * ===============
  * R_TransformDlights
  *
  * Transforms the origins of an array of dlights.
  * Used by both the front end (for DlightBmodel) and
  * the back end (before doing the lighting calculation)
- * ===============
  */
 void
 R_TransformDlights(int count, dlight_t *dl, orientationr_t *or)
@@ -54,11 +50,9 @@ R_TransformDlights(int count, dlight_t *dl, orientationr_t *or)
 }
 
 /*
- * =============
  * R_DlightBmodel
  *
  * Determine which dynamic lights may effect this bmodel
- * =============
  */
 void
 R_DlightBmodel(bmodel_t *bmodel)
@@ -110,11 +104,9 @@ R_DlightBmodel(bmodel_t *bmodel)
 
 
 /*
- * =============================================================================
  *
  * LIGHT SAMPLING
  *
- * =============================================================================
  */
 
 extern cvar_t *r_ambientScale;
@@ -122,10 +114,8 @@ extern cvar_t *r_directedScale;
 extern cvar_t *r_debugLight;
 
 /*
- * =================
  * R_SetupEntityLightingGrid
  *
- * =================
  */
 static void
 R_SetupEntityLightingGrid(trRefEntity_t *ent, world_t *world)
@@ -277,9 +267,7 @@ R_SetupEntityLightingGrid(trRefEntity_t *ent, world_t *world)
 
 
 /*
- * ===============
  * LogLight
- * ===============
  */
 static void
 LogLight(trRefEntity_t *ent)
@@ -308,12 +296,10 @@ LogLight(trRefEntity_t *ent)
 }
 
 /*
- * =================
  * R_SetupEntityLighting
  *
  * Calculates all the lighting values that will be used
  * by the Calc_* functions
- * =================
  */
 void
 R_SetupEntityLighting(const trRefdef_t *refdef, trRefEntity_t *ent)
@@ -410,9 +396,7 @@ R_SetupEntityLighting(const trRefdef_t *refdef, trRefEntity_t *ent)
 }
 
 /*
- * =================
  * R_LightForPoint
- * =================
  */
 int
 R_LightForPoint(vec3_t point, vec3_t ambientLight, vec3_t directedLight, vec3_t lightDir)

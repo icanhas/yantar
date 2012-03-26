@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /*  */
 
@@ -266,12 +264,10 @@ spawn_t spawns[] = {
 };
 
 /*
- * ===============
  * G_CallSpawn
  *
  * Finds the spawn function for the entity and calls it,
  * returning qfalse if not found
- * ===============
  */
 qboolean
 G_CallSpawn(gentity_t *ent)
@@ -303,12 +299,10 @@ G_CallSpawn(gentity_t *ent)
 }
 
 /*
- * =============
  * G_NewString
  *
  * Builds a copy of the string, translating \n to real linefeeds
  * so message texts can be multi-line
- * =============
  */
 char *
 G_NewString(const char *string)
@@ -341,12 +335,10 @@ G_NewString(const char *string)
 
 
 /*
- * ===============
  * G_ParseField
  *
  * Takes a key/value pair and sets the binary values
  * in a gentity
- * ===============
  */
 void
 G_ParseField(const char *key, const char *value, gentity_t *ent)
@@ -397,12 +389,10 @@ G_ParseField(const char *key, const char *value, gentity_t *ent)
 	}
 
 /*
- * ===================
  * G_SpawnGEntityFromSpawnVars
  *
  * Spawn an entity and fill in all of the level fields from
  * level.spawnVars[], then call the class specfic spawn function
- * ===================
  */
 void
 G_SpawnGEntityFromSpawnVars(void)
@@ -487,9 +477,7 @@ G_SpawnGEntityFromSpawnVars(void)
 
 
 /*
- * ====================
  * G_AddSpawnVarToken
- * ====================
  */
 char *
 G_AddSpawnVarToken(const char *string)
@@ -510,14 +498,12 @@ G_AddSpawnVarToken(const char *string)
 }
 
 /*
- * ====================
  * G_ParseSpawnVars
  *
  * Parses a brace bounded set of key / value pairs out of the
  * level's entity strings into level.spawnVars[]
  *
  * This does not actually spawn an entity.
- * ====================
  */
 qboolean
 G_ParseSpawnVars(void)
@@ -625,11 +611,9 @@ SP_worldspawn(void)
 
 
 /*
- * ==============
  * G_SpawnEntitiesFromString
  *
  * Parses textual entity definitions out of an entstring and spawns gentities.
- * ==============
  */
 void
 G_SpawnEntitiesFromString(void)

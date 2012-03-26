@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /*
  * cg_event.c -- handle entity events at snapshot or playerstate transitions */
@@ -31,11 +29,9 @@
 /* ========================================================================== */
 
 /*
- * ===================
  * CG_PlaceString
  *
  * Also called by scoreboard drawing
- * ===================
  */
 const char      *
 CG_PlaceString(int rank)
@@ -75,9 +71,7 @@ CG_PlaceString(int rank)
 }
 
 /*
- * =============
  * CG_Obituary
- * =============
  */
 static void
 CG_Obituary(entityState_t *ent)
@@ -338,9 +332,7 @@ CG_Obituary(entityState_t *ent)
 /* ========================================================================== */
 
 /*
- * ===============
  * CG_UseItem
- * ===============
  */
 static void
 CG_UseItem(centity_t *cent)
@@ -405,11 +397,9 @@ CG_UseItem(centity_t *cent)
 }
 
 /*
- * ================
  * CG_ItemPickup
  *
  * A new item was picked up this frame
- * ================
  */
 static void
 CG_ItemPickup(int itemNum)
@@ -429,11 +419,9 @@ CG_ItemPickup(int itemNum)
 }
 
 /*
- * ================
  * CG_WaterLevel
  *
  * Returns waterlevel for entity origin
- * ================
  */
 int
 CG_WaterLevel(centity_t *cent)
@@ -475,11 +463,9 @@ CG_WaterLevel(centity_t *cent)
 }
 
 /*
- * ================
  * CG_PainEvent
  *
  * Also called by playerstate transition
- * ================
  */
 void
 CG_PainEvent(centity_t *cent, int health)
@@ -522,12 +508,10 @@ CG_PainEvent(centity_t *cent, int health)
 
 
 /*
- * ==============
  * CG_EntityEvent
  *
  * An entity has an event value
  * also called by CG_CheckPlayerstateEvents
- * ==============
  */
 #define DEBUGNAME(x) if(cg_debugEvents.integer){CG_Printf(x "\n"); }
 void
@@ -1325,10 +1309,8 @@ CG_EntityEvent(centity_t *cent, vec3_t position)
 
 
 /*
- * ==============
  * CG_CheckEvents
  *
- * ==============
  */
 void
 CG_CheckEvents(centity_t *cent)

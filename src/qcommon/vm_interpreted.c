@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 #include "vm_local.h"
 
@@ -172,9 +170,7 @@ VM_StackTrace(vm_t *vm, int programCounter, int programStack)
 
 
 /*
- * ====================
  * VM_PrepareInterpreter
- * ====================
  */
 void
 VM_PrepareInterpreter(vm_t *vm, vmHeader_t *header)
@@ -307,7 +303,6 @@ VM_PrepareInterpreter(vm_t *vm, vmHeader_t *header)
 }
 
 /*
- * ==============
  * VM_Call
  *
  *
@@ -327,7 +322,6 @@ VM_PrepareInterpreter(vm_t *vm, vmHeader_t *header)
  * An interpreted function will immediately execute
  * an OP_ENTER instruction, which will subtract space for
  * locals from sp
- * ==============
  */
 
 #define DEBUGSTR va("%s%i", VM_Indent(vm), opStackOfs)

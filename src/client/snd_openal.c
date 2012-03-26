@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  * Copyright (C) 2005 Stuart Dalton (badcdev@gmail.com)
  *
@@ -18,7 +17,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 
 #include "snd_local.h"
@@ -52,9 +50,7 @@ static qboolean capture_ext = qfalse;
 #endif
 
 /*
- * =================
  * S_AL_Format
- * =================
  */
 static
 ALuint
@@ -79,9 +75,7 @@ S_AL_Format(int width, int channels)
 }
 
 /*
- * =================
  * S_AL_ErrorMsg
- * =================
  */
 static const char *
 S_AL_ErrorMsg(ALenum error)
@@ -105,9 +99,7 @@ S_AL_ErrorMsg(ALenum error)
 }
 
 /*
- * =================
  * S_AL_ClearError
- * =================
  */
 static void
 S_AL_ClearError(qboolean quiet)
@@ -151,11 +143,9 @@ static sfxHandle_t	numSfx = 0;
 static sfxHandle_t	default_sfx;
 
 /*
- * =================
  * S_AL_BufferFindFree
  *
  * Find a free handle
- * =================
  */
 static sfxHandle_t
 S_AL_BufferFindFree(void)
@@ -176,11 +166,9 @@ S_AL_BufferFindFree(void)
 }
 
 /*
- * =================
  * S_AL_BufferFind
  *
  * Find a sound effect if loaded, set up a handle otherwise
- * =================
  */
 static sfxHandle_t
 S_AL_BufferFind(const char *filename)
@@ -213,9 +201,7 @@ S_AL_BufferFind(const char *filename)
 }
 
 /*
- * =================
  * S_AL_BufferUseDefault
- * =================
  */
 static void
 S_AL_BufferUseDefault(sfxHandle_t sfx)
@@ -231,9 +217,7 @@ S_AL_BufferUseDefault(sfxHandle_t sfx)
 }
 
 /*
- * =================
  * S_AL_BufferUnload
- * =================
  */
 static void
 S_AL_BufferUnload(sfxHandle_t sfx)
@@ -256,9 +240,7 @@ S_AL_BufferUnload(sfxHandle_t sfx)
 }
 
 /*
- * =================
  * S_AL_BufferEvict
- * =================
  */
 static qboolean
 S_AL_BufferEvict(void)
@@ -287,9 +269,7 @@ S_AL_BufferEvict(void)
 }
 
 /*
- * =================
  * S_AL_BufferLoad
- * =================
  */
 static void
 S_AL_BufferLoad(sfxHandle_t sfx, qboolean cache)
@@ -394,9 +374,7 @@ S_AL_BufferLoad(sfxHandle_t sfx, qboolean cache)
 }
 
 /*
- * =================
  * S_AL_BufferUse
- * =================
  */
 static
 void
@@ -411,9 +389,7 @@ S_AL_BufferUse(sfxHandle_t sfx)
 }
 
 /*
- * =================
  * S_AL_BufferInit
- * =================
  */
 static
 qboolean
@@ -437,9 +413,7 @@ S_AL_BufferInit(void)
 }
 
 /*
- * =================
  * S_AL_BufferShutdown
- * =================
  */
 static
 void
@@ -465,9 +439,7 @@ S_AL_BufferShutdown(void)
 }
 
 /*
- * =================
  * S_AL_RegisterSound
- * =================
  */
 static
 sfxHandle_t
@@ -486,11 +458,9 @@ S_AL_RegisterSound(const char *sample, qboolean compressed)
 }
 
 /*
- * =================
  * S_AL_BufferGet
  *
  * Return's an sfx's buffer
- * =================
  */
 static
 ALuint
@@ -555,9 +525,7 @@ typedef struct sentity_s {
 static sentity_t entityList[MAX_GENTITIES];
 
 /*
- * =================
  * S_AL_SanitiseVector
- * =================
  */
 #define S_AL_SanitiseVector(v) _S_AL_SanitiseVector(v,__LINE__)
 static void
@@ -577,10 +545,8 @@ _S_AL_SanitiseVector(vec3_t v, int line)
 #define AL_THIRD_PERSON_THRESHOLD_SQ (48.0f*48.0f)
 
 /*
- * =================
  * S_AL_Gain
  * Set gain to 0 if muted, otherwise set it to given value.
- * =================
  */
 
 static void
@@ -593,10 +559,8 @@ S_AL_Gain(ALuint source, float gainval)
 }
 
 /*
- * =================
  * S_AL_ScaleGain
  * Adapt the gain if necessary to get a quicker fadeout when the source is too far away.
- * =================
  */
 
 static void
@@ -630,9 +594,7 @@ S_AL_ScaleGain(src_t *chksrc, vec3_t origin)
 }
 
 /*
- * =================
  * S_AL_HearingThroughEntity
- * =================
  */
 static qboolean
 S_AL_HearingThroughEntity(int entityNum)
@@ -659,9 +621,7 @@ S_AL_HearingThroughEntity(int entityNum)
 }
 
 /*
- * =================
  * S_AL_SrcInit
- * =================
  */
 static
 qboolean
@@ -698,9 +658,7 @@ S_AL_SrcInit(void)
 }
 
 /*
- * =================
  * S_AL_SrcShutdown
- * =================
  */
 static
 void
@@ -734,9 +692,7 @@ S_AL_SrcShutdown(void)
 }
 
 /*
- * =================
  * S_AL_SrcSetup
- * =================
  */
 static void
 S_AL_SrcSetup(srcHandle_t src, sfxHandle_t sfx, alSrcPriority_t priority,
@@ -787,10 +743,8 @@ S_AL_SrcSetup(srcHandle_t src, sfxHandle_t sfx, alSrcPriority_t priority,
 }
 
 /*
- * =================
  * S_AL_NewLoopMaster
  * Remove given source as loop master if it is the master and hand off master status to another source in this case.
- * =================
  */
 
 static void
@@ -816,10 +770,8 @@ S_AL_SaveLoopPos(src_t *dest, ALuint alSource)
 }
 
 /*
- * =================
  * S_AL_NewLoopMaster
  * Remove given source as loop master if it is the master and hand off master status to another source in this case.
- * =================
  */
 
 static void
@@ -897,9 +849,7 @@ S_AL_NewLoopMaster(src_t *rmSource, qboolean iskilled)
 }
 
 /*
- * =================
  * S_AL_SrcKill
- * =================
  */
 static void
 S_AL_SrcKill(srcHandle_t src)
@@ -950,9 +900,7 @@ S_AL_SrcKill(srcHandle_t src)
 }
 
 /*
- * =================
  * S_AL_SrcAlloc
- * =================
  */
 static
 srcHandle_t
@@ -1040,12 +988,10 @@ S_AL_SrcAlloc(alSrcPriority_t priority, int entnum, int channel)
 }
 
 /*
- * =================
  * S_AL_SrcFind
  *
  * Finds an active source with matching entity and channel numbers
  * Returns -1 if there isn't one
- * =================
  */
 #if 0
 static
@@ -1065,11 +1011,9 @@ S_AL_SrcFind(int entnum, int channel)
 #endif
 
 /*
- * =================
  * S_AL_SrcLock
  *
  * Locked sources will not be automatically reallocated or managed
- * =================
  */
 static
 void
@@ -1079,11 +1023,9 @@ S_AL_SrcLock(srcHandle_t src)
 }
 
 /*
- * =================
  * S_AL_SrcUnlock
  *
  * Once unlocked, the source may be reallocated again
- * =================
  */
 static
 void
@@ -1093,9 +1035,7 @@ S_AL_SrcUnlock(srcHandle_t src)
 }
 
 /*
- * =================
  * S_AL_UpdateEntityPosition
- * =================
  */
 static
 void
@@ -1112,11 +1052,9 @@ S_AL_UpdateEntityPosition(int entityNum, const vec3_t origin)
 }
 
 /*
- * =================
  * S_AL_CheckInput
  * Check whether input values from mods are out of range.
  * Necessary for i.g. Western Quake3 mod which is buggy.
- * =================
  */
 static qboolean
 S_AL_CheckInput(int entityNum, sfxHandle_t sfx)
@@ -1137,11 +1075,9 @@ S_AL_CheckInput(int entityNum, sfxHandle_t sfx)
 }
 
 /*
- * =================
  * S_AL_StartLocalSound
  *
  * Play a local (non-spatialized) sound effect
- * =================
  */
 static
 void
@@ -1167,11 +1103,9 @@ S_AL_StartLocalSound(sfxHandle_t sfx, int channel)
 }
 
 /*
- * =================
  * S_AL_StartSound
  *
  * Play a one-shot sound effect
- * =================
  */
 static void
 S_AL_StartSound(vec3_t origin, int entnum, int entchannel, sfxHandle_t sfx)
@@ -1228,9 +1162,7 @@ S_AL_StartSound(vec3_t origin, int entnum, int entchannel, sfxHandle_t sfx)
 }
 
 /*
- * =================
  * S_AL_ClearLoopingSounds
- * =================
  */
 static
 void
@@ -1244,9 +1176,7 @@ S_AL_ClearLoopingSounds(qboolean killall)
 }
 
 /*
- * =================
  * S_AL_SrcLoop
- * =================
  */
 static void
 S_AL_SrcLoop(alSrcPriority_t priority, sfxHandle_t sfx,
@@ -1333,9 +1263,7 @@ S_AL_SrcLoop(alSrcPriority_t priority, sfxHandle_t sfx,
 }
 
 /*
- * =================
  * S_AL_AddLoopingSound
- * =================
  */
 static void
 S_AL_AddLoopingSound(int entityNum, const vec3_t origin, const vec3_t velocity,
@@ -1345,9 +1273,7 @@ S_AL_AddLoopingSound(int entityNum, const vec3_t origin, const vec3_t velocity,
 }
 
 /*
- * =================
  * S_AL_AddRealLoopingSound
- * =================
  */
 static void
 S_AL_AddRealLoopingSound(int entityNum, const vec3_t origin,
@@ -1358,9 +1284,7 @@ S_AL_AddRealLoopingSound(int entityNum, const vec3_t origin,
 }
 
 /*
- * =================
  * S_AL_StopLoopingSound
- * =================
  */
 static
 void
@@ -1371,11 +1295,9 @@ S_AL_StopLoopingSound(int entityNum)
 }
 
 /*
- * =================
  * S_AL_SrcUpdate
  *
  * Update state (move things around, manage sources, and so on)
- * =================
  */
 static
 void
@@ -1632,9 +1554,7 @@ S_AL_SrcUpdate(void)
 }
 
 /*
- * =================
  * S_AL_SrcShutup
- * =================
  */
 static
 void
@@ -1646,9 +1566,7 @@ S_AL_SrcShutup(void)
 }
 
 /*
- * =================
  * S_AL_SrcGet
- * =================
  */
 static
 ALuint
@@ -1665,9 +1583,7 @@ static qboolean		streamPlaying[MAX_RAW_STREAMS];
 static ALuint streamSources[MAX_RAW_STREAMS];
 
 /*
- * =================
  * S_AL_AllocateStreamChannel
- * =================
  */
 static void
 S_AL_AllocateStreamChannel(int stream, int entityNum)
@@ -1721,9 +1637,7 @@ S_AL_AllocateStreamChannel(int stream, int entityNum)
 }
 
 /*
- * =================
  * S_AL_FreeStreamChannel
- * =================
  */
 static void
 S_AL_FreeStreamChannel(int stream)
@@ -1739,9 +1653,7 @@ S_AL_FreeStreamChannel(int stream)
 }
 
 /*
- * =================
  * S_AL_RawSamples
- * =================
  */
 static
 void
@@ -1785,9 +1697,7 @@ S_AL_RawSamples(int stream, int samples, int rate, int width, int channels,
 }
 
 /*
- * =================
  * S_AL_StreamUpdate
- * =================
  */
 static
 void
@@ -1829,9 +1739,7 @@ S_AL_StreamUpdate(int stream)
 }
 
 /*
- * =================
  * S_AL_StreamDie
- * =================
  */
 static
 void
@@ -1878,9 +1786,7 @@ static char	s_backgroundLoop[MAX_QPATH];
 static byte	decode_buffer[MUSIC_BUFFER_SIZE];
 
 /*
- * =================
  * S_AL_MusicSourceGet
- * =================
  */
 static void
 S_AL_MusicSourceGet(void)
@@ -1907,9 +1813,7 @@ S_AL_MusicSourceGet(void)
 }
 
 /*
- * =================
  * S_AL_MusicSourceFree
- * =================
  */
 static void
 S_AL_MusicSourceFree(void)
@@ -1921,9 +1825,7 @@ S_AL_MusicSourceFree(void)
 }
 
 /*
- * =================
  * S_AL_CloseMusicFiles
- * =================
  */
 static void
 S_AL_CloseMusicFiles(void)
@@ -1940,9 +1842,7 @@ S_AL_CloseMusicFiles(void)
 }
 
 /*
- * =================
  * S_AL_StopBackgroundTrack
- * =================
  */
 static
 void
@@ -1970,9 +1870,7 @@ S_AL_StopBackgroundTrack(void)
 }
 
 /*
- * =================
  * S_AL_MusicProcess
- * =================
  */
 static
 void
@@ -2038,9 +1936,7 @@ S_AL_MusicProcess(ALuint b)
 }
 
 /*
- * =================
  * S_AL_StartBackgroundTrack
- * =================
  */
 static
 void
@@ -2104,9 +2000,7 @@ S_AL_StartBackgroundTrack(const char *intro, const char *loop)
 }
 
 /*
- * =================
  * S_AL_MusicUpdate
- * =================
  */
 static
 void
@@ -2163,9 +2057,7 @@ static cvar_t *s_alCapture;
 #endif
 
 /*
- * =================
  * S_AL_StopAllSounds
- * =================
  */
 static
 void
@@ -2179,9 +2071,7 @@ S_AL_StopAllSounds(void)
 }
 
 /*
- * =================
  * S_AL_Respatialize
- * =================
  */
 static
 void
@@ -2212,9 +2102,7 @@ S_AL_Respatialize(int entityNum, const vec3_t origin, vec3_t axis[3],
 }
 
 /*
- * =================
  * S_AL_Update
- * =================
  */
 static
 void
@@ -2268,9 +2156,7 @@ S_AL_Update(void)
 }
 
 /*
- * =================
  * S_AL_DisableSounds
- * =================
  */
 static
 void
@@ -2280,9 +2166,7 @@ S_AL_DisableSounds(void)
 }
 
 /*
- * =================
  * S_AL_BeginRegistration
- * =================
  */
 static
 void
@@ -2293,9 +2177,7 @@ S_AL_BeginRegistration(void)
 }
 
 /*
- * =================
  * S_AL_ClearSoundBuffer
- * =================
  */
 static
 void
@@ -2304,9 +2186,7 @@ S_AL_ClearSoundBuffer(void)
 }
 
 /*
- * =================
  * S_AL_SoundList
- * =================
  */
 static
 void
@@ -2361,9 +2241,7 @@ S_AL_MasterGain(float gain)
 
 
 /*
- * =================
  * S_AL_SoundInfo
- * =================
  */
 static void
 S_AL_SoundInfo(void)
@@ -2401,9 +2279,7 @@ S_AL_SoundInfo(void)
 
 
 /*
- * =================
  * S_AL_Shutdown
- * =================
  */
 static
 void
@@ -2441,9 +2317,7 @@ S_AL_Shutdown(void)
 #endif
 
 /*
- * =================
  * S_AL_Init
- * =================
  */
 qboolean
 S_AL_Init(soundInterface_t *si)

@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /*
  * bg_slidemove.c -- part of bg_pmove functionality */
@@ -35,11 +33,9 @@
  */
 
 /*
- * ==================
  * PM_SlideMove
  *
  * Returns qtrue if the velocity was clipped in some way
- * ==================
  */
 #define MAX_CLIP_PLANES 5
 qboolean
@@ -226,10 +222,8 @@ PM_SlideMove(qboolean gravity)
 }
 
 /*
- * ==================
  * PM_StepSlideMove
  *
- * ==================
  */
 void
 PM_StepSlideMove(qboolean gravity)

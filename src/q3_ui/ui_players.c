@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /*
  * ui_players.c */
@@ -46,9 +44,7 @@ static float jumpHeight;
 
 
 /*
- * ===============
  * UI_PlayerInfo_SetWeapon
- * ===============
  */
 static void
 UI_PlayerInfo_SetWeapon(playerInfo_t *pi, weapon_t weaponNum)
@@ -147,9 +143,7 @@ tryagain:
 
 
 /*
- * ===============
  * UI_ForceLegsAnim
- * ===============
  */
 static void
 UI_ForceLegsAnim(playerInfo_t *pi, int anim)
@@ -162,9 +156,7 @@ UI_ForceLegsAnim(playerInfo_t *pi, int anim)
 
 
 /*
- * ===============
  * UI_SetLegsAnim
- * ===============
  */
 static void
 UI_SetLegsAnim(playerInfo_t *pi, int anim)
@@ -178,9 +170,7 @@ UI_SetLegsAnim(playerInfo_t *pi, int anim)
 
 
 /*
- * ===============
  * UI_ForceTorsoAnim
- * ===============
  */
 static void
 UI_ForceTorsoAnim(playerInfo_t *pi, int anim)
@@ -197,9 +187,7 @@ UI_ForceTorsoAnim(playerInfo_t *pi, int anim)
 
 
 /*
- * ===============
  * UI_SetTorsoAnim
- * ===============
  */
 static void
 UI_SetTorsoAnim(playerInfo_t *pi, int anim)
@@ -214,9 +202,7 @@ UI_SetTorsoAnim(playerInfo_t *pi, int anim)
 
 
 /*
- * ===============
  * UI_TorsoSequencing
- * ===============
  */
 static void
 UI_TorsoSequencing(playerInfo_t *pi)
@@ -259,9 +245,7 @@ UI_TorsoSequencing(playerInfo_t *pi)
 
 
 /*
- * ===============
  * UI_LegsSequencing
- * ===============
  */
 static void
 UI_LegsSequencing(playerInfo_t *pi)
@@ -295,9 +279,7 @@ UI_LegsSequencing(playerInfo_t *pi)
 
 
 /*
- * ======================
  * UI_PositionEntityOnTag
- * ======================
  */
 static void
 UI_PositionEntityOnTag(refEntity_t *entity, const refEntity_t *parent,
@@ -323,9 +305,7 @@ UI_PositionEntityOnTag(refEntity_t *entity, const refEntity_t *parent,
 
 
 /*
- * ======================
  * UI_PositionRotatedEntityOnTag
- * ======================
  */
 static void
 UI_PositionRotatedEntityOnTag(refEntity_t *entity, const refEntity_t *parent,
@@ -352,9 +332,7 @@ UI_PositionRotatedEntityOnTag(refEntity_t *entity, const refEntity_t *parent,
 
 
 /*
- * ===============
  * UI_SetLerpFrameAnimation
- * ===============
  */
 static void
 UI_SetLerpFrameAnimation(playerInfo_t *ci, lerpFrame_t *lf, int newAnimation)
@@ -375,9 +353,7 @@ UI_SetLerpFrameAnimation(playerInfo_t *ci, lerpFrame_t *lf, int newAnimation)
 
 
 /*
- * ===============
  * UI_RunLerpFrame
- * ===============
  */
 static void
 UI_RunLerpFrame(playerInfo_t *ci, lerpFrame_t *lf, int newAnimation)
@@ -436,9 +412,7 @@ UI_RunLerpFrame(playerInfo_t *ci, lerpFrame_t *lf, int newAnimation)
 
 
 /*
- * ===============
  * UI_PlayerAnimation
- * ===============
  */
 static void
 UI_PlayerAnimation(playerInfo_t *pi, int *legsOld, int *legs,
@@ -477,9 +451,7 @@ UI_PlayerAnimation(playerInfo_t *pi, int *legsOld, int *legs,
 
 
 /*
- * ==================
  * UI_SwingAngles
- * ==================
  */
 static void
 UI_SwingAngles(float destination, float swingTolerance, float clampTolerance,
@@ -537,9 +509,7 @@ UI_SwingAngles(float destination, float swingTolerance, float clampTolerance,
 
 
 /*
- * ======================
  * UI_MovedirAdjustment
- * ======================
  */
 static float
 UI_MovedirAdjustment(playerInfo_t *pi)
@@ -574,9 +544,7 @@ UI_MovedirAdjustment(playerInfo_t *pi)
 
 
 /*
- * ===============
  * UI_PlayerAngles
- * ===============
  */
 static void
 UI_PlayerAngles(playerInfo_t *pi, vec3_t legs[3], vec3_t torso[3],
@@ -638,9 +606,7 @@ UI_PlayerAngles(playerInfo_t *pi, vec3_t legs[3], vec3_t torso[3],
 
 
 /*
- * ===============
  * UI_PlayerFloatSprite
- * ===============
  */
 static void
 UI_PlayerFloatSprite(playerInfo_t *pi, vec3_t origin, qhandle_t shader)
@@ -659,9 +625,7 @@ UI_PlayerFloatSprite(playerInfo_t *pi, vec3_t origin, qhandle_t shader)
 
 
 /*
- * ======================
  * UI_MachinegunSpinAngle
- * ======================
  */
 float
 UI_MachinegunSpinAngle(playerInfo_t *pi)
@@ -697,9 +661,7 @@ UI_MachinegunSpinAngle(playerInfo_t *pi)
 
 
 /*
- * ===============
  * UI_DrawPlayer
- * ===============
  */
 void
 UI_DrawPlayer(float x, float y, float w, float h, playerInfo_t *pi, int time)
@@ -920,9 +882,7 @@ UI_DrawPlayer(float x, float y, float w, float h, playerInfo_t *pi, int time)
 
 
 /*
- * ==========================
  * UI_RegisterClientSkin
- * ==========================
  */
 static qboolean
 UI_RegisterClientSkin(playerInfo_t *pi, const char *modelName,
@@ -953,9 +913,7 @@ UI_RegisterClientSkin(playerInfo_t *pi, const char *modelName,
 
 
 /*
- * ======================
  * UI_ParseAnimationFile
- * ======================
  */
 static qboolean
 UI_ParseAnimationFile(const char *filename, animation_t *animations)
@@ -1066,9 +1024,7 @@ UI_ParseAnimationFile(const char *filename, animation_t *animations)
 
 
 /*
- * ==========================
  * UI_RegisterClientModelname
- * ==========================
  */
 qboolean
 UI_RegisterClientModelname(playerInfo_t *pi, const char *modelSkinName)
@@ -1145,9 +1101,7 @@ UI_RegisterClientModelname(playerInfo_t *pi, const char *modelSkinName)
 
 
 /*
- * ===============
  * UI_PlayerInfo_SetModel
- * ===============
  */
 void
 UI_PlayerInfo_SetModel(playerInfo_t *pi, const char *model)
@@ -1166,9 +1120,7 @@ UI_PlayerInfo_SetModel(playerInfo_t *pi, const char *model)
 
 
 /*
- * ===============
  * UI_PlayerInfo_SetInfo
- * ===============
  */
 void
 UI_PlayerInfo_SetInfo(playerInfo_t *pi, int legsAnim, int torsoAnim,

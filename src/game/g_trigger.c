@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /*  */
 #include "g_local.h"
@@ -119,11 +117,9 @@ SP_trigger_multiple(gentity_t *ent)
 
 
 /*
- * ==============================================================================
  *
  * trigger_always
  *
- * ==============================================================================
  */
 
 void
@@ -146,11 +142,9 @@ SP_trigger_always(gentity_t *ent)
 
 
 /*
- * ==============================================================================
  *
  * trigger_push
  *
- * ==============================================================================
  */
 
 void
@@ -165,11 +159,9 @@ trigger_push_touch(gentity_t *self, gentity_t *other, trace_t *trace)
 
 
 /*
- * =================
  * AimAtTarget
  *
  * Calculate origin2 so the target apogee will be hit
- * =================
  */
 void
 AimAtTarget(gentity_t *self)
@@ -278,11 +270,9 @@ SP_target_push(gentity_t *self)
 }
 
 /*
- * ==============================================================================
  *
  * trigger_teleport
  *
- * ==============================================================================
  */
 
 void
@@ -341,11 +331,9 @@ SP_trigger_teleport(gentity_t *self)
 
 
 /*
- * ==============================================================================
  *
  * trigger_hurt
  *
- * ==============================================================================
  */
 
 /*QUAKED trigger_hurt (.5 .5 .5) ? START_OFF - SILENT NO_PROTECTION SLOW
@@ -416,11 +404,9 @@ SP_trigger_hurt(gentity_t *self)
 }
 
 /*
- * ==============================================================================
  *
  * timer
  *
- * ==============================================================================
  */
 
 

@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 
 #include <signal.h>
@@ -51,9 +49,7 @@ static char	binaryPath[ MAX_OSPATH ] = { 0 };
 static char	installPath[ MAX_OSPATH ] = { 0 };
 
 /*
- * =================
  * Sys_SetBinaryPath
- * =================
  */
 void
 Sys_SetBinaryPath(const char *path)
@@ -62,9 +58,7 @@ Sys_SetBinaryPath(const char *path)
 }
 
 /*
- * =================
  * Sys_BinaryPath
- * =================
  */
 char *
 Sys_BinaryPath(void)
@@ -73,9 +67,7 @@ Sys_BinaryPath(void)
 }
 
 /*
- * =================
  * Sys_SetDefaultInstallPath
- * =================
  */
 void
 Sys_SetDefaultInstallPath(const char *path)
@@ -84,9 +76,7 @@ Sys_SetDefaultInstallPath(const char *path)
 }
 
 /*
- * =================
  * Sys_DefaultInstallPath
- * =================
  */
 char *
 Sys_DefaultInstallPath(void)
@@ -98,9 +88,7 @@ Sys_DefaultInstallPath(void)
 }
 
 /*
- * =================
  * Sys_DefaultAppPath
- * =================
  */
 char *
 Sys_DefaultAppPath(void)
@@ -109,11 +97,9 @@ Sys_DefaultAppPath(void)
 }
 
 /*
- * =================
  * Sys_In_Restart_f
  *
  * Restart the input subsystem
- * =================
  */
 void
 Sys_In_Restart_f(void)
@@ -122,11 +108,9 @@ Sys_In_Restart_f(void)
 }
 
 /*
- * =================
  * Sys_ConsoleInput
  *
  * Handle new console input
- * =================
  */
 char *
 Sys_ConsoleInput(void)
@@ -141,9 +125,7 @@ Sys_ConsoleInput(void)
 #endif
 
 /*
- * =================
  * Sys_PIDFileName
- * =================
  */
 static char *
 Sys_PIDFileName(void)
@@ -152,11 +134,9 @@ Sys_PIDFileName(void)
 }
 
 /*
- * =================
  * Sys_WritePIDFile
  *
  * Return qtrue if there is an existing stale PID file
- * =================
  */
 qboolean
 Sys_WritePIDFile(void)
@@ -191,11 +171,9 @@ Sys_WritePIDFile(void)
 }
 
 /*
- * =================
  * Sys_Exit
  *
  * Single exit point (regular exit or in case of error)
- * =================
  */
 static __attribute__ ((noreturn)) void
 Sys_Exit(int exitCode)
@@ -216,9 +194,7 @@ Sys_Exit(int exitCode)
 }
 
 /*
- * =================
  * Sys_Quit
- * =================
  */
 void
 Sys_Quit(void)
@@ -227,9 +203,7 @@ Sys_Quit(void)
 }
 
 /*
- * =================
  * Sys_GetProcessorFeatures
- * =================
  */
 cpuFeatures_t
 Sys_GetProcessorFeatures(void)
@@ -251,9 +225,7 @@ Sys_GetProcessorFeatures(void)
 }
 
 /*
- * =================
  * Sys_Init
- * =================
  */
 void
 Sys_Init(void)
@@ -270,11 +242,9 @@ Sys_Init(void)
 }
 
 /*
- * =================
  * Sys_AnsiColorPrint
  *
  * Transform Q3 colour codes to ANSI escape sequences
- * =================
  */
 void
 Sys_AnsiColorPrint(const char *msg)
@@ -331,9 +301,7 @@ Sys_AnsiColorPrint(const char *msg)
 }
 
 /*
- * =================
  * Sys_Print
- * =================
  */
 void
 Sys_Print(const char *msg)
@@ -343,9 +311,7 @@ Sys_Print(const char *msg)
 }
 
 /*
- * =================
  * Sys_Error
- * =================
  */
 void
 Sys_Error(const char *error, ...)
@@ -364,9 +330,7 @@ Sys_Error(const char *error, ...)
 
 #if 0
 /*
- * =================
  * Sys_Warn
- * =================
  */
 static __attribute__ ((format (printf, 1, 2))) void
 Sys_Warn(char *warning, ...)
@@ -383,11 +347,9 @@ Sys_Warn(char *warning, ...)
 #endif
 
 /*
- * ============
  * Sys_FileTime
  *
  * returns -1 if not present
- * ============
  */
 int
 Sys_FileTime(char *path)
@@ -401,9 +363,7 @@ Sys_FileTime(char *path)
 }
 
 /*
- * =================
  * Sys_UnloadDll
- * =================
  */
 void
 Sys_UnloadDll(void *dllHandle)
@@ -417,12 +377,10 @@ Sys_UnloadDll(void *dllHandle)
 }
 
 /*
- * =================
  * Sys_LoadDll
  *
  * First try to load library name from system library path,
  * from executable path, then fs_basepath.
- * =================
  */
 
 void *
@@ -473,11 +431,9 @@ Sys_LoadDll(const char *name, qboolean useSystemLib)
 }
 
 /*
- * =================
  * Sys_LoadGameDll
  *
  * Used to load a development dll instead of a virtual machine
- * =================
  */
 void *
 Sys_LoadGameDll(const char *name,
@@ -518,9 +474,7 @@ Sys_LoadGameDll(const char *name,
 }
 
 /*
- * =================
  * Sys_ParseArgs
- * =================
  */
 void
 Sys_ParseArgs(int argc, char **argv)
@@ -549,9 +503,7 @@ Sys_ParseArgs(int argc, char **argv)
 #endif
 
 /*
- * =================
  * Sys_SigHandler
- * =================
  */
 void
 Sys_SigHandler(int signal)
@@ -579,9 +531,7 @@ Sys_SigHandler(int signal)
 }
 
 /*
- * =================
  * main
- * =================
  */
 int
 main(int argc, char **argv)

@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /* sv_game.c -- interface to the game dll */
 
@@ -77,11 +75,9 @@ SV_GEntityForSvEntity(svEntity_t *svEnt)
 }
 
 /*
- * ===============
  * SV_GameSendServerCommand
  *
  * Sends a command string to a client
- * ===============
  */
 void
 SV_GameSendServerCommand(int clientNum, const char *text)
@@ -97,11 +93,9 @@ SV_GameSendServerCommand(int clientNum, const char *text)
 
 
 /*
- * ===============
  * SV_GameDropClient
  *
  * Disconnects the client with a message
- * ===============
  */
 void
 SV_GameDropClient(int clientNum, const char *reason)
@@ -113,11 +107,9 @@ SV_GameDropClient(int clientNum, const char *reason)
 
 
 /*
- * =================
  * SV_SetBrushModel
  *
  * sets mins and maxs for inline bmodels
- * =================
  */
 void
 SV_SetBrushModel(sharedEntity_t *ent, const char *name)
@@ -149,11 +141,9 @@ SV_SetBrushModel(sharedEntity_t *ent, const char *name)
 
 
 /*
- * =================
  * SV_inPVS
  *
  * Also checks portalareas so that doors block sight
- * =================
  */
 qboolean
 SV_inPVS(const vec3_t p1, const vec3_t p2)
@@ -180,11 +170,9 @@ SV_inPVS(const vec3_t p1, const vec3_t p2)
 
 
 /*
- * =================
  * SV_inPVSIgnorePortals
  *
  * Does NOT check portalareas
- * =================
  */
 qboolean
 SV_inPVSIgnorePortals(const vec3_t p1, const vec3_t p2)
@@ -208,9 +196,7 @@ SV_inPVSIgnorePortals(const vec3_t p1, const vec3_t p2)
 
 
 /*
- * ========================
  * SV_AdjustAreaPortalState
- * ========================
  */
 void
 SV_AdjustAreaPortalState(sharedEntity_t *ent, qboolean open)
@@ -225,9 +211,7 @@ SV_AdjustAreaPortalState(sharedEntity_t *ent, qboolean open)
 
 
 /*
- * ==================
  * SV_EntityContact
- * ==================
  */
 qboolean
 SV_EntityContact(vec3_t mins, vec3_t maxs, const sharedEntity_t *gEnt,
@@ -250,10 +234,8 @@ SV_EntityContact(vec3_t mins, vec3_t maxs, const sharedEntity_t *gEnt,
 
 
 /*
- * ===============
  * SV_GetServerinfo
  *
- * ===============
  */
 void
 SV_GetServerinfo(char *buffer, int bufferSize)
@@ -265,10 +247,8 @@ SV_GetServerinfo(char *buffer, int bufferSize)
 }
 
 /*
- * ===============
  * SV_LocateGameData
  *
- * ===============
  */
 void
 SV_LocateGameData(sharedEntity_t *gEnts, int numGEntities, int sizeofGEntity_t,
@@ -284,10 +264,8 @@ SV_LocateGameData(sharedEntity_t *gEnts, int numGEntities, int sizeofGEntity_t,
 
 
 /*
- * ===============
  * SV_GetUsercmd
  *
- * ===============
  */
 void
 SV_GetUsercmd(int clientNum, usercmd_t *cmd)
@@ -308,11 +286,9 @@ FloatAsInt(float f)
 }
 
 /*
- * ====================
  * SV_GameSystemCalls
  *
  * The module is making a system call
- * ====================
  */
 intptr_t
 SV_GameSystemCalls(intptr_t *args)
@@ -917,11 +893,9 @@ SV_GameSystemCalls(intptr_t *args)
 }
 
 /*
- * ===============
  * SV_ShutdownGameProgs
  *
  * Called every time a map changes
- * ===============
  */
 void
 SV_ShutdownGameProgs(void)
@@ -934,11 +908,9 @@ SV_ShutdownGameProgs(void)
 }
 
 /*
- * ==================
  * SV_InitGameVM
  *
  * Called for both a full init and a restart
- * ==================
  */
 static void
 SV_InitGameVM(qboolean restart)
@@ -963,11 +935,9 @@ SV_InitGameVM(qboolean restart)
 
 
 /*
- * ===================
  * SV_RestartGameProgs
  *
  * Called on a map_restart, but not on a normal map change
- * ===================
  */
 void
 SV_RestartGameProgs(void)
@@ -986,11 +956,9 @@ SV_RestartGameProgs(void)
 
 
 /*
- * ===============
  * SV_InitGameProgs
  *
  * Called on a normal map change, not on a map_restart
- * ===============
  */
 void
 SV_InitGameProgs(void)
@@ -1017,11 +985,9 @@ SV_InitGameProgs(void)
 
 
 /*
- * ====================
  * SV_GameCommand
  *
  * See if the current console command is claimed by the game
- * ====================
  */
 qboolean
 SV_GameCommand(void)

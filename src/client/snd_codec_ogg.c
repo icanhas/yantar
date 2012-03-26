@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  * Copyright (C) 2005 Stuart Dalton (badcdev@gmail.com)
  * Copyright (C) 2005-2006 Joerg Dietrich <dietrich_joerg@gmx.de>
@@ -19,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 
 /* OGG support is enabled by this define */
@@ -218,9 +216,7 @@ const ov_callbacks S_OGG_Callbacks =
 };
 
 /*
- * =================
  * S_OGG_CodecOpenStream
- * =================
  */
 snd_stream_t *
 S_OGG_CodecOpenStream(const char *filename)
@@ -316,9 +312,7 @@ S_OGG_CodecOpenStream(const char *filename)
 }
 
 /*
- * =================
  * S_OGG_CodecCloseStream
- * =================
  */
 void
 S_OGG_CodecCloseStream(snd_stream_t *stream)
@@ -338,9 +332,7 @@ S_OGG_CodecCloseStream(snd_stream_t *stream)
 }
 
 /*
- * =================
  * S_OGG_CodecReadStream
- * =================
  */
 int
 S_OGG_CodecReadStream(snd_stream_t *stream, int bytes, void *buffer)
@@ -396,12 +388,10 @@ S_OGG_CodecReadStream(snd_stream_t *stream, int bytes, void *buffer)
 }
 
 /*
- * =====================================================================
  * S_OGG_CodecLoad
  *
  * We handle S_OGG_CodecLoad as a special case of the streaming functions
  * where we read the whole stream at once.
- * ======================================================================
  */
 void *
 S_OGG_CodecLoad(const char *filename, snd_info_t *info)

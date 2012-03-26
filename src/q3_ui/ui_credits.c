@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,15 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /*  */
 /*
- * =======================================================================
  *
  * CREDITS
  *
- * =======================================================================
  */
 
 
@@ -41,9 +37,7 @@ static creditsmenu_t s_credits;
 
 
 /*
- * ===============
  * UI_CreditMenu_Draw_ioq3
- * ===============
  */
 static void
 UI_CreditMenu_Draw_ioq3(void)
@@ -93,9 +87,7 @@ UI_CreditMenu_Draw_ioq3(void)
 
 
 /*
- * =================
  * UI_CreditMenu_Key
- * =================
  */
 static sfxHandle_t
 UI_CreditMenu_Key(int key)
@@ -113,9 +105,7 @@ UI_CreditMenu_Key(int key)
 
 
 /*
- * ===============
  * UI_CreditMenu_Draw
- * ===============
  */
 static void
 UI_CreditMenu_Draw(void)
@@ -215,9 +205,7 @@ UI_CreditMenu_Draw(void)
 
 
 /*
- * ===============
  * UI_CreditMenu
- * ===============
  */
 void
 UI_CreditMenu(void)

@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,20 +16,17 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /* world.c -- world query functions */
 
 #include "server.h"
 
 /*
- * ================
  * SV_ClipHandleForEntity
  *
  * Returns a headnode that can be used for testing or clipping to a
  * given entity.  If the entity is a bsp model, the headnode will
  * be returned, otherwise a custom box tree will be constructed.
- * ================
  */
 clipHandle_t
 SV_ClipHandleForEntity(const sharedEntity_t *ent)
@@ -49,7 +45,6 @@ SV_ClipHandleForEntity(const sharedEntity_t *ent)
 
 
 /*
- * ===============================================================================
  *
  * ENTITY CHECKING
  *
@@ -58,7 +53,6 @@ SV_ClipHandleForEntity(const sharedEntity_t *ent)
  * are kept in chains either at the final leafs, or at the first node that splits
  * them, which prevents having to deal with multiple fragments of a single entity.
  *
- * ===============================================================================
  */
 
 typedef struct worldSector_s {
@@ -76,9 +70,7 @@ int sv_numworldSectors;
 
 
 /*
- * ===============
  * SV_SectorList_f
- * ===============
  */
 void
 SV_SectorList_f(void)
@@ -99,11 +91,9 @@ SV_SectorList_f(void)
 }
 
 /*
- * ===============
  * SV_CreateworldSector
  *
  * Builds a uniformly subdivided tree for the given world size
- * ===============
  */
 static worldSector_t *
 SV_CreateworldSector(int depth, vec3_t mins, vec3_t maxs)
@@ -142,10 +132,8 @@ SV_CreateworldSector(int depth, vec3_t mins, vec3_t maxs)
 }
 
 /*
- * ===============
  * SV_ClearWorld
  *
- * ===============
  */
 void
 SV_ClearWorld(void)
@@ -164,10 +152,8 @@ SV_ClearWorld(void)
 
 
 /*
- * ===============
  * SV_UnlinkEntity
  *
- * ===============
  */
 void
 SV_UnlinkEntity(sharedEntity_t *gEnt)
@@ -202,10 +188,8 @@ SV_UnlinkEntity(sharedEntity_t *gEnt)
 
 
 /*
- * ===============
  * SV_LinkEntity
  *
- * ===============
  */
 #define MAX_TOTAL_ENT_LEAFS 128
 void
@@ -360,13 +344,11 @@ SV_LinkEntity(sharedEntity_t *gEnt)
 }
 
 /*
- * ============================================================================
  *
  * AREA QUERY
  *
  * Fills in a list of all entities who's absmin / absmax intersects the given
  * bounds.  This does NOT mean that they actually touch in the case of bmodels.
- * ============================================================================
  */
 
 typedef struct {
@@ -378,10 +360,8 @@ typedef struct {
 
 
 /*
- * ====================
  * SV_AreaEntities_r
  *
- * ====================
  */
 static void
 SV_AreaEntities_r(worldSector_t *node, areaParms_t *ap)
@@ -422,9 +402,7 @@ SV_AreaEntities_r(worldSector_t *node, areaParms_t *ap)
 }
 
 /*
- * ================
  * SV_AreaEntities
- * ================
  */
 int
 SV_AreaEntities(const vec3_t mins, const vec3_t maxs, int *entityList,
@@ -462,10 +440,8 @@ typedef struct {
 
 
 /*
- * ====================
  * SV_ClipToEntity
  *
- * ====================
  */
 void
 SV_ClipToEntity(trace_t *trace, const vec3_t start, const vec3_t mins,
@@ -507,10 +483,8 @@ SV_ClipToEntity(trace_t *trace, const vec3_t start, const vec3_t mins,
 
 
 /*
- * ====================
  * SV_ClipMoveToEntities
  *
- * ====================
  */
 static void
 SV_ClipMoveToEntities(moveclip_t *clip)
@@ -593,12 +567,10 @@ SV_ClipMoveToEntities(moveclip_t *clip)
 
 
 /*
- * ==================
  * SV_Trace
  *
  * Moves the given mins/maxs volume through the world from start to end.
  * passEntityNum and entities owned by passEntityNum are explicitly not checked.
- * ==================
  */
 void
 SV_Trace(trace_t *results, const vec3_t start, vec3_t mins, vec3_t maxs,
@@ -656,9 +628,7 @@ SV_Trace(trace_t *results, const vec3_t start, vec3_t mins, vec3_t maxs,
 
 
 /*
- * =============
  * SV_PointContents
- * =============
  */
 int
 SV_PointContents(const vec3_t p, int passEntityNum)

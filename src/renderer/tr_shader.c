@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 #include "tr_local.h"
 
@@ -38,9 +36,7 @@ static shader_t * hashTable[FILE_HASH_SIZE];
 static char **shaderTextHashTable[MAX_SHADERTEXT_HASH];
 
 /*
- * ================
  * return a hash value for the filename
- * ================
  */
 #ifdef __GNUCC__
   #warning TODO: check if long is ok here
@@ -114,9 +110,7 @@ R_RemapShader(const char *shaderName, const char *newShaderName, const char *tim
 }
 
 /*
- * ===============
  * ParseVector
- * ===============
  */
 static qboolean
 ParseVector(char **text, int count, float *v)
@@ -152,9 +146,7 @@ ParseVector(char **text, int count, float *v)
 
 
 /*
- * ===============
  * NameToAFunc
- * ===============
  */
 static unsigned
 NameToAFunc(const char *funcname)
@@ -174,9 +166,7 @@ NameToAFunc(const char *funcname)
 
 
 /*
- * ===============
  * NameToSrcBlendMode
- * ===============
  */
 static int
 NameToSrcBlendMode(const char *name)
@@ -208,9 +198,7 @@ NameToSrcBlendMode(const char *name)
 }
 
 /*
- * ===============
  * NameToDstBlendMode
- * ===============
  */
 static int
 NameToDstBlendMode(const char *name)
@@ -240,9 +228,7 @@ NameToDstBlendMode(const char *name)
 }
 
 /*
- * ===============
  * NameToGenFunc
- * ===============
  */
 static genFunc_t
 NameToGenFunc(const char *funcname)
@@ -267,9 +253,7 @@ NameToGenFunc(const char *funcname)
 
 
 /*
- * ===================
  * ParseWaveForm
- * ===================
  */
 static void
 ParseWaveForm(char **text, waveForm_t *wave)
@@ -315,9 +299,7 @@ ParseWaveForm(char **text, waveForm_t *wave)
 
 
 /*
- * ===================
  * ParseTexMod
- * ===================
  */
 static void
 ParseTexMod(char *_text, shaderStage_t *stage)
@@ -532,9 +514,7 @@ ParseTexMod(char *_text, shaderStage_t *stage)
 
 
 /*
- * ===================
  * ParseStage
- * ===================
  */
 static qboolean
 ParseStage(shaderStage_t *stage, char **text)
@@ -962,7 +942,6 @@ ParseStage(shaderStage_t *stage, char **text)
 }
 
 /*
- * ===============
  * ParseDeform
  *
  * deformVertexes wave <spread> <waveform> <base> <amplitude> <phase> <frequency>
@@ -973,7 +952,6 @@ ParseStage(shaderStage_t *stage, char **text)
  * deformVertexes autoSprite
  * deformVertexes autoSprite2
  * deformVertexes text[0-7]
- * ===============
  */
 static void
 ParseDeform(char **text)
@@ -1122,11 +1100,9 @@ ParseDeform(char **text)
 
 
 /*
- * ===============
  * ParseSkyParms
  *
  * skyParms <outerbox> <cloudheight> <innerbox>
- * ===============
  */
 static void
 ParseSkyParms(char **text)
@@ -1193,9 +1169,7 @@ ParseSkyParms(char **text)
 
 
 /*
- * =================
  * ParseSort
- * =================
  */
 void
 ParseSort(char **text)
@@ -1285,11 +1259,9 @@ infoParm_t infoParms[] = {
 
 
 /*
- * ===============
  * ParseSurfaceParm
  *
  * surfaceparm <name>
- * ===============
  */
 static void
 ParseSurfaceParm(char **text)
@@ -1314,13 +1286,11 @@ ParseSurfaceParm(char **text)
 }
 
 /*
- * =================
  * ParseShader
  *
  * The current text pointer is at the explicit text definition of the
  * shader.  Parse it into the global shader variable.  Later functions
  * will optimize it.
- * =================
  */
 static qboolean
 ParseShader(char **text)
@@ -1525,20 +1495,16 @@ ParseShader(char **text)
 }
 
 /*
- * ========================================================================================
  *
  * SHADER OPTIMIZATION AND FOGGING
  *
- * ========================================================================================
  */
 
 /*
- * ===================
  * ComputeStageIteratorFunc
  *
  * See if we can use on of the simple fastpath stage functions,
  * otherwise set to the generic stage function
- * ===================
  */
 static void
 ComputeStageIteratorFunc(void)
@@ -1642,12 +1608,10 @@ static collapse_t collapse[] = {
 };
 
 /*
- * ================
  * CollapseMultitexture
  *
  * Attempt to combine two stages into a single multitexture stage
  * FIXME: I think modulated add + modulated add collapses incorrectly
- * =================
  */
 static qboolean
 CollapseMultitexture(void)
@@ -1753,7 +1717,6 @@ CollapseMultitexture(void)
 }
 
 /*
- * =============
  *
  * FixRenderCommandList
  * https://zerowing.idsoftware.com/bugzilla/show_bug.cgi?id=493
@@ -1761,7 +1724,6 @@ CollapseMultitexture(void)
  * but before the frame is rendered. This will, for the duration of one frame, cause drawsurfaces
  * to be rendered with bad shaders. To fix this, need to go through all render commands and fix
  * sortedIndex.
- * ==============
  */
 static void
 FixRenderCommandList(int newShader)
@@ -1836,7 +1798,6 @@ FixRenderCommandList(int newShader)
 }
 
 /*
- * ==============
  * SortNewShader
  *
  * Positions the most recently created shader in the tr.sortedShaders[]
@@ -1844,7 +1805,6 @@ FixRenderCommandList(int newShader)
  * shaders.
  *
  * Sets shader->sortedIndex
- * ==============
  */
 static void
 SortNewShader(void)
@@ -1874,9 +1834,7 @@ SortNewShader(void)
 
 
 /*
- * ====================
  * GeneratePermanentShader
- * ====================
  */
 static shader_t *
 GeneratePermanentShader(void)
@@ -1932,13 +1890,11 @@ GeneratePermanentShader(void)
 }
 
 /*
- * =================
  * VertexLightingCollapse
  *
  * If vertex lighting is enabled, only render a single
  * pass, trying to guess which is the correct one to best aproximate
  * what it is supposed to look like.
- * =================
  */
 static void
 VertexLightingCollapse(void)
@@ -2023,12 +1979,10 @@ VertexLightingCollapse(void)
 }
 
 /*
- * =========================
  * FinishShader
  *
  * Returns a freshly allocated shader with all the needed info
  * from the current global working shader
- * =========================
  */
 static shader_t *
 FinishShader(void)
@@ -2219,7 +2173,6 @@ FinishShader(void)
 /* ======================================================================================== */
 
 /*
- * ====================
  * FindShaderInShaderText
  *
  * Scans the combined text description of all the shader files for
@@ -2228,7 +2181,6 @@ FinishShader(void)
  * return NULL if not found
  *
  * If found, it will return a valid shader
- * =====================
  */
 static char *
 FindShaderInShaderText(const char *shadername)
@@ -2276,12 +2228,10 @@ FindShaderInShaderText(const char *shadername)
 
 
 /*
- * ==================
  * R_FindShaderByName
  *
  * Will always return a valid shader, but it might be the
  * default shader if the real one can't be found.
- * ==================
  */
 shader_t *
 R_FindShaderByName(const char *name)
@@ -2316,7 +2266,6 @@ R_FindShaderByName(const char *name)
 
 
 /*
- * ===============
  * R_FindShader
  *
  * Will always return a valid shader, but it might be the
@@ -2341,7 +2290,6 @@ R_FindShaderByName(const char *name)
  * and src*dest blending applied with the texture, as apropriate for
  * most world construction surfaces.
  *
- * ===============
  */
 shader_t *
 R_FindShader(const char *name, int lightmapIndex, qboolean mipRawImage)
@@ -2598,7 +2546,6 @@ RE_RegisterShaderFromImage(const char *name, int lightmapIndex, image_t *image, 
 
 
 /*
- * ====================
  * RE_RegisterShader
  *
  * This is the exported shader entry point for the rest of the system
@@ -2606,7 +2553,6 @@ RE_RegisterShaderFromImage(const char *name, int lightmapIndex, image_t *image, 
  *
  * This should really only be used for explicit shaders, because there is no
  * way to ask for different implicit lighting modes (vertex, lightmap, etc)
- * ====================
  */
 qhandle_t
 RE_RegisterShaderLightMap(const char *name, int lightmapIndex)
@@ -2634,7 +2580,6 @@ RE_RegisterShaderLightMap(const char *name, int lightmapIndex)
 
 
 /*
- * ====================
  * RE_RegisterShader
  *
  * This is the exported shader entry point for the rest of the system
@@ -2642,7 +2587,6 @@ RE_RegisterShaderLightMap(const char *name, int lightmapIndex)
  *
  * This should really only be used for explicit shaders, because there is no
  * way to ask for different implicit lighting modes (vertex, lightmap, etc)
- * ====================
  */
 qhandle_t
 RE_RegisterShader(const char *name)
@@ -2670,11 +2614,9 @@ RE_RegisterShader(const char *name)
 
 
 /*
- * ====================
  * RE_RegisterShaderNoMip
  *
  * For menu graphics that should never be picmiped
- * ====================
  */
 qhandle_t
 RE_RegisterShaderNoMip(const char *name)
@@ -2701,12 +2643,10 @@ RE_RegisterShaderNoMip(const char *name)
 }
 
 /*
- * ====================
  * R_GetShaderByHandle
  *
  * When a handle is passed in by another module, this range checks
  * it and returns a valid (possibly default) shader_t to be used internally.
- * ====================
  */
 shader_t *
 R_GetShaderByHandle(qhandle_t hShader)
@@ -2723,12 +2663,10 @@ R_GetShaderByHandle(qhandle_t hShader)
 }
 
 /*
- * ===============
  * R_ShaderList_f
  *
  * Dump information on all valid shaders to the console
  * A second parameter will cause it to print in sorted order
- * ===============
  */
 void
 R_ShaderList_f(void)
@@ -2793,12 +2731,10 @@ R_ShaderList_f(void)
 }
 
 /*
- * ====================
  * ScanAndLoadShaderFiles
  *
  * Finds and loads all .shader files, combining them into
  * a single large text block that can be scanned for shader names
- * =====================
  */
 #define MAX_SHADER_FILES 4096
 static void
@@ -2935,9 +2871,7 @@ ScanAndLoadShaderFiles(void)
 
 
 /*
- * ====================
  * CreateInternalShaders
- * ====================
  */
 static void
 CreateInternalShaders(void)
@@ -2983,9 +2917,7 @@ CreateExternalShaders(void)
 }
 
 /*
- * ==================
  * R_InitShaders
- * ==================
  */
 void
 R_InitShaders(void)

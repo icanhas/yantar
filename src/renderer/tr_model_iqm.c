@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 2011 Thilo Schulz <thilo@tjps.eu>
  * Copyright (C) 2011 Matthias Bentrup <matthias.bentrup@googlemail.com>
  *
@@ -18,7 +17,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 
 #include "tr_local.h"
@@ -124,11 +122,9 @@ Matrix34Invert(float *inMat, float *outMat)
 }
 
 /*
- * =================
  * R_LoadIQM
  *
  * Load an IQM model and compute the joint matrices for every frame.
- * =================
  */
 qboolean
 R_LoadIQM(model_t *mod, void *buffer, int filesize, const char *mod_name)
@@ -662,9 +658,7 @@ R_LoadIQM(model_t *mod, void *buffer, int filesize, const char *mod_name)
 }
 
 /*
- * =============
  * R_CullIQM
- * =============
  */
 static int
 R_CullIQM(iqmData_t *data, trRefEntity_t *ent)
@@ -703,10 +697,8 @@ R_CullIQM(iqmData_t *data, trRefEntity_t *ent)
 }
 
 /*
- * =================
  * R_ComputeIQMFogNum
  *
- * =================
  */
 int
 R_ComputeIQMFogNum(iqmData_t *data, trRefEntity_t *ent)
@@ -753,11 +745,9 @@ R_ComputeIQMFogNum(iqmData_t *data, trRefEntity_t *ent)
 }
 
 /*
- * =================
  * R_AddIQMSurfaces
  *
  * Add all surfaces of this model
- * =================
  */
 void
 R_AddIQMSurfaces(trRefEntity_t *ent)
@@ -904,11 +894,9 @@ ComputeJointMats(iqmData_t *data, int frame, int oldframe,
 
 
 /*
- * =================
  * RB_AddIQMSurfaces
  *
  * Compute vertices for this model surface
- * =================
  */
 void
 RB_IQMSurfaceAnim(surfaceType_t *surface)

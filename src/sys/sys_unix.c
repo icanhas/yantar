@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 
 #include "../qcommon/q_shared.h"
@@ -45,9 +43,7 @@ qboolean stdinIsATTY;
 static char homePath[ MAX_OSPATH ] = { 0 };
 
 /*
- * ==================
  * Sys_DefaultHomePath
- * ==================
  */
 char *
 Sys_DefaultHomePath(void)
@@ -84,9 +80,7 @@ Sys_DefaultHomePath(void)
 
 #ifndef MACOS_X
 /*
- * ================
  * Sys_TempPath
- * ================
  */
 const char *
 Sys_TempPath(void)
@@ -101,9 +95,7 @@ Sys_TempPath(void)
 #endif
 
 /*
- * ================
  * Sys_Milliseconds
- * ================
  */
 /* base time in seconds, that's our origin
  * timeval:tv_sec is an int:
@@ -133,9 +125,7 @@ Sys_Milliseconds(void)
 }
 
 /*
- * ==================
  * Sys_RandomBytes
- * ==================
  */
 qboolean
 Sys_RandomBytes(byte *string, int len)
@@ -156,9 +146,7 @@ Sys_RandomBytes(byte *string, int len)
 }
 
 /*
- * ==================
  * Sys_GetCurrentUser
- * ==================
  */
 char *
 Sys_GetCurrentUser(void)
@@ -171,9 +159,7 @@ Sys_GetCurrentUser(void)
 }
 
 /*
- * ==================
  * Sys_GetClipboardData
- * ==================
  */
 char *
 Sys_GetClipboardData(void)
@@ -184,11 +170,9 @@ Sys_GetClipboardData(void)
 #define MEM_THRESHOLD 96*1024*1024
 
 /*
- * ==================
  * Sys_LowPhysicalMemory
  *
  * TODO
- * ==================
  */
 qboolean
 Sys_LowPhysicalMemory(void)
@@ -197,9 +181,7 @@ Sys_LowPhysicalMemory(void)
 }
 
 /*
- * ==================
  * Sys_Basename
- * ==================
  */
 const char *
 Sys_Basename(char *path)
@@ -208,9 +190,7 @@ Sys_Basename(char *path)
 }
 
 /*
- * ==================
  * Sys_Dirname
- * ==================
  */
 const char *
 Sys_Dirname(char *path)
@@ -219,9 +199,7 @@ Sys_Dirname(char *path)
 }
 
 /*
- * ==================
  * Sys_Mkdir
- * ==================
  */
 qboolean
 Sys_Mkdir(const char *path)
@@ -235,9 +213,7 @@ Sys_Mkdir(const char *path)
 }
 
 /*
- * ==================
  * Sys_Mkfifo
- * ==================
  */
 FILE *
 Sys_Mkfifo(const char *ospath)
@@ -265,9 +241,7 @@ Sys_Mkfifo(const char *ospath)
 }
 
 /*
- * ==================
  * Sys_Cwd
- * ==================
  */
 char *
 Sys_Cwd(void)
@@ -284,19 +258,15 @@ Sys_Cwd(void)
 }
 
 /*
- * ==============================================================
  *
  * DIRECTORY SCANNING
  *
- * ==============================================================
  */
 
 #define MAX_FOUND_FILES 0x1000
 
 /*
- * ==================
  * Sys_ListFilteredFiles
- * ==================
  */
 void
 Sys_ListFilteredFiles(const char *basedir, char *subdirs, char *filter,
@@ -356,9 +326,7 @@ Sys_ListFilteredFiles(const char *basedir, char *subdirs, char *filter,
 }
 
 /*
- * ==================
  * Sys_ListFiles
- * ==================
  */
 char **
 Sys_ListFiles(const char *directory, const char *extension, char *filter,
@@ -455,9 +423,7 @@ Sys_ListFiles(const char *directory, const char *extension, char *filter,
 }
 
 /*
- * ==================
  * Sys_FreeFileList
- * ==================
  */
 void
 Sys_FreeFileList(char **list)
@@ -474,11 +440,9 @@ Sys_FreeFileList(char **list)
 }
 
 /*
- * ==================
  * Sys_Sleep
  *
  * Block execution for msec or until input is recieved.
- * ==================
  */
 void
 Sys_Sleep(int msec)
@@ -510,11 +474,9 @@ Sys_Sleep(int msec)
 }
 
 /*
- * ==============
  * Sys_ErrorDialog
  *
  * Display an error message
- * ==============
  */
 void
 Sys_ErrorDialog(const char *error)
@@ -568,9 +530,7 @@ static char     *execArgv[ 16 ];
 static int	execArgc;
 
 /*
- * ==============
  * Sys_ClearExecBuffer
- * ==============
  */
 static void
 Sys_ClearExecBuffer(void)
@@ -581,9 +541,7 @@ Sys_ClearExecBuffer(void)
 }
 
 /*
- * ==============
  * Sys_AppendToExecBuffer
- * ==============
  */
 static void
 Sys_AppendToExecBuffer(const char *text)
@@ -601,9 +559,7 @@ Sys_AppendToExecBuffer(const char *text)
 }
 
 /*
- * ==============
  * Sys_Exec
- * ==============
  */
 static int
 Sys_Exec(void)
@@ -632,9 +588,7 @@ Sys_Exec(void)
 }
 
 /*
- * ==============
  * Sys_ZenityCommand
- * ==============
  */
 static void
 Sys_ZenityCommand(dialogType_t type, const char *message, const char *title)
@@ -665,9 +619,7 @@ Sys_ZenityCommand(dialogType_t type, const char *message, const char *title)
 }
 
 /*
- * ==============
  * Sys_KdialogCommand
- * ==============
  */
 static void
 Sys_KdialogCommand(dialogType_t type, const char *message, const char *title)
@@ -690,9 +642,7 @@ Sys_KdialogCommand(dialogType_t type, const char *message, const char *title)
 }
 
 /*
- * ==============
  * Sys_XmessageCommand
- * ==============
  */
 static void
 Sys_XmessageCommand(dialogType_t type, const char *message, const char *title)
@@ -712,11 +662,9 @@ Sys_XmessageCommand(dialogType_t type, const char *message, const char *title)
 }
 
 /*
- * ==============
  * Sys_Dialog
  *
  * Display a *nix dialog box
- * ==============
  */
 dialogResult_t
 Sys_Dialog(dialogType_t type, const char *message, const char *title)
@@ -793,11 +741,9 @@ Sys_Dialog(dialogType_t type, const char *message, const char *title)
 #endif
 
 /*
- * ==============
  * Sys_GLimpSafeInit
  *
  * Unix specific "safe" GL implementation initialisation
- * ==============
  */
 void
 Sys_GLimpSafeInit(void)
@@ -806,11 +752,9 @@ Sys_GLimpSafeInit(void)
 }
 
 /*
- * ==============
  * Sys_GLimpInit
  *
  * Unix specific GL implementation initialisation
- * ==============
  */
 void
 Sys_GLimpInit(void)
@@ -826,11 +770,9 @@ Sys_SetFloatEnv(void)
 }
 
 /*
- * ==============
  * Sys_PlatformInit
  *
  * Unix specific initialisation
- * ==============
  */
 void
 Sys_PlatformInit(void)
@@ -848,11 +790,9 @@ Sys_PlatformInit(void)
 }
 
 /*
- * ==============
  * Sys_PlatformExit
  *
  * Unix specific deinitialisation
- * ==============
  */
 void
 Sys_PlatformExit(void)
@@ -860,11 +800,9 @@ Sys_PlatformExit(void)
 }
 
 /*
- * ==============
  * Sys_SetEnv
  *
  * set/unset environment variables (empty value removes it)
- * ==============
  */
 
 void
@@ -877,9 +815,7 @@ Sys_SetEnv(const char *name, const char *value)
 }
 
 /*
- * ==============
  * Sys_PID
- * ==============
  */
 int
 Sys_PID(void)
@@ -888,9 +824,7 @@ Sys_PID(void)
 }
 
 /*
- * ==============
  * Sys_PIDIsRunning
- * ==============
  */
 qboolean
 Sys_PIDIsRunning(int pid)

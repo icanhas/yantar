@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /*
  * cg_scoreboard -- draw the scoreboard on top of the game screen */
@@ -74,9 +72,7 @@ static qboolean localClient;	/* true if local client has been displayed */
 
 
 /*
- * =================
  * CG_DrawScoreboard
- * =================
  */
 static void
 CG_DrawClientScore(int y, score_t *score, float *color, float fade,
@@ -242,9 +238,7 @@ CG_DrawClientScore(int y, score_t *score, float *color, float fade,
 }
 
 /*
- * =================
  * CG_TeamScoreboard
- * =================
  */
 static int
 CG_TeamScoreboard(int y, team_t team, float fade, int maxClients, int lineHeight)
@@ -276,11 +270,9 @@ CG_TeamScoreboard(int y, team_t team, float fade, int maxClients, int lineHeight
 }
 
 /*
- * =================
  * CG_DrawScoreboard
  *
  * Draw the normal in-game scoreboard
- * =================
  */
 qboolean
 CG_DrawOldScoreboard(void)
@@ -469,9 +461,7 @@ CG_DrawOldScoreboard(void)
 /* ================================================================================ */
 
 /*
- * ================
  * CG_CenterGiantLine
- * ================
  */
 static void
 CG_CenterGiantLine(float y, const char *string)
@@ -492,11 +482,9 @@ CG_CenterGiantLine(float y, const char *string)
 }
 
 /*
- * =================
  * CG_DrawTourneyScoreboard
  *
  * Draw the oversize scoreboard for tournements
- * =================
  */
 void
 CG_DrawOldTourneyScoreboard(void)

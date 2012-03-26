@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /*
  *
@@ -44,9 +42,7 @@ static int	ui_numSpecialSinglePlayerArenas;
 #endif
 
 /*
- * ===============
  * UI_ParseInfos
- * ===============
  */
 int
 UI_ParseInfos(char *buf, int max, char *infos[])
@@ -100,9 +96,7 @@ UI_ParseInfos(char *buf, int max, char *infos[])
 }
 
 /*
- * ===============
  * UI_LoadArenasFromFile
- * ===============
  */
 static void
 UI_LoadArenasFromFile(char *filename)
@@ -134,9 +128,7 @@ UI_LoadArenasFromFile(char *filename)
 }
 
 /*
- * ===============
  * UI_LoadArenas
- * ===============
  */
 void
 UI_LoadArenas(void)
@@ -220,9 +212,7 @@ UI_LoadArenas(void)
 
 
 /*
- * ===============
  * UI_LoadBotsFromFile
- * ===============
  */
 static void
 UI_LoadBotsFromFile(char *filename)
@@ -257,9 +247,7 @@ UI_LoadBotsFromFile(char *filename)
 }
 
 /*
- * ===============
  * UI_LoadBots
- * ===============
  */
 void
 UI_LoadBots(void)
@@ -294,9 +282,7 @@ UI_LoadBots(void)
 
 
 /*
- * ===============
  * UI_GetBotInfoByNumber
- * ===============
  */
 char *
 UI_GetBotInfoByNumber(int num)
@@ -310,9 +296,7 @@ UI_GetBotInfoByNumber(int num)
 
 
 /*
- * ===============
  * UI_GetBotInfoByName
- * ===============
  */
 char *
 UI_GetBotInfoByName(const char *name)

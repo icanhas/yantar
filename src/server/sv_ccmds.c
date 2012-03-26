@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,27 +16,22 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 
 #include "server.h"
 
 /*
- * ===============================================================================
  *
  * OPERATOR CONSOLE ONLY COMMANDS
  *
  * These commands can only be entered from stdin or by a remote operator datagram
- * ===============================================================================
  */
 
 
 /*
- * ==================
  * SV_GetPlayerByHandle
  *
  * Returns the player with player id or name from Cmd_Argv(1)
- * ==================
  */
 static client_t *
 SV_GetPlayerByHandle(void)
@@ -92,11 +86,9 @@ SV_GetPlayerByHandle(void)
 }
 
 /*
- * ==================
  * SV_GetPlayerByNum
  *
  * Returns the player with idnum from Cmd_Argv(1)
- * ==================
  */
 static client_t *
 SV_GetPlayerByNum(void)
@@ -140,11 +132,9 @@ SV_GetPlayerByNum(void)
 
 
 /*
- * ==================
  * SV_Map_f
  *
  * Restart the server on a different map
- * ==================
  */
 static void
 SV_Map_f(void)
@@ -213,12 +203,10 @@ SV_Map_f(void)
 }
 
 /*
- * ================
  * SV_MapRestart_f
  *
  * Completely restarts a level, but doesn't send a new gamestate to the clients.
  * This allows fair starts with variable load times.
- * ================
  */
 static void
 SV_MapRestart_f(void)
@@ -349,11 +337,9 @@ SV_MapRestart_f(void)
 /* =============================================================== */
 
 /*
- * ==================
  * SV_Kick_f
  *
  * Kick a user off of the server  FIXME: move to game
- * ==================
  */
 static void
 SV_Kick_f(void)
@@ -412,12 +398,10 @@ SV_Kick_f(void)
 /* these functions require the auth server which of course is not available anymore for stand-alone games. */
 
 /*
- * ==================
  * SV_Ban_f
  *
  * Ban a user from being able to play on this server through the auth
  * server
- * ==================
  */
 static void
 SV_Ban_f(void)
@@ -476,12 +460,10 @@ SV_Ban_f(void)
 }
 
 /*
- * ==================
  * SV_BanNum_f
  *
  * Ban a user from being able to play on this server through the auth
  * server
- * ==================
  */
 static void
 SV_BanNum_f(void)
@@ -539,11 +521,9 @@ SV_BanNum_f(void)
 #endif
 
 /*
- * ==================
  * SV_RehashBans_f
  *
  * Load saved bans from file.
- * ==================
  */
 static void
 SV_RehashBans_f(void)
@@ -623,11 +603,9 @@ SV_RehashBans_f(void)
 }
 
 /*
- * ==================
  * SV_WriteBans_f
  *
  * Save bans to file.
- * ==================
  */
 static void
 SV_WriteBans(void)
@@ -660,11 +638,9 @@ SV_WriteBans(void)
 }
 
 /*
- * ==================
  * SV_DelBanEntryFromList
  *
  * Remove a ban or an exception from the list.
- * ==================
  */
 
 static qboolean
@@ -683,11 +659,9 @@ SV_DelBanEntryFromList(int index)
 }
 
 /*
- * ==================
  * SV_ParseCIDRNotation
  *
  * Parse a CIDR notation type string and return a netadr_t and suffix by reference
- * ==================
  */
 
 static qboolean
@@ -721,11 +695,9 @@ SV_ParseCIDRNotation(netadr_t *dest, int *mask, char *adrstr)
 }
 
 /*
- * ==================
  * SV_AddBanToList
  *
  * Ban a user from being able to play on this server based on his ip address.
- * ==================
  */
 
 static void
@@ -864,11 +836,9 @@ SV_AddBanToList(qboolean isexception)
 }
 
 /*
- * ==================
  * SV_DelBanFromList
  *
  * Remove a ban or an exception from the list.
- * ==================
  */
 
 static void
@@ -944,11 +914,9 @@ SV_DelBanFromList(qboolean isexception)
 
 
 /*
- * ==================
  * SV_ListBans_f
  *
  * List all bans and exceptions on console
- * ==================
  */
 
 static void
@@ -980,11 +948,9 @@ SV_ListBans_f(void)
 }
 
 /*
- * ==================
  * SV_FlushBans_f
  *
  * Delete all bans and exceptions.
- * ==================
  */
 
 static void
@@ -1023,11 +989,9 @@ SV_ExceptDel_f(void)
 }
 
 /*
- * ==================
  * SV_KickNum_f
  *
  * Kick a user off of the server  FIXME: move to game
- * ==================
  */
 static void
 SV_KickNum_f(void)
@@ -1059,9 +1023,7 @@ SV_KickNum_f(void)
 }
 
 /*
- * ================
  * SV_Status_f
- * ================
  */
 static void
 SV_Status_f(void)
@@ -1135,9 +1097,7 @@ SV_Status_f(void)
 }
 
 /*
- * ==================
  * SV_ConSay_f
- * ==================
  */
 static void
 SV_ConSay_f(void)
@@ -1169,11 +1129,9 @@ SV_ConSay_f(void)
 
 
 /*
- * ==================
  * SV_Heartbeat_f
  *
  * Also called by SV_DropClient, SV_DirectConnect, and SV_SpawnServer
- * ==================
  */
 void
 SV_Heartbeat_f(void)
@@ -1183,11 +1141,9 @@ SV_Heartbeat_f(void)
 
 
 /*
- * ===========
  * SV_Serverinfo_f
  *
  * Examine the serverinfo string
- * ===========
  */
 static void
 SV_Serverinfo_f(void)
@@ -1198,11 +1154,9 @@ SV_Serverinfo_f(void)
 
 
 /*
- * ===========
  * SV_Systeminfo_f
  *
  * Examine or change the serverinfo string
- * ===========
  */
 static void
 SV_Systeminfo_f(void)
@@ -1213,11 +1167,9 @@ SV_Systeminfo_f(void)
 
 
 /*
- * ===========
  * SV_DumpUser_f
  *
  * Examine all a users info strings FIXME: move to game
- * ===========
  */
 static void
 SV_DumpUser_f(void)
@@ -1246,9 +1198,7 @@ SV_DumpUser_f(void)
 
 
 /*
- * =================
  * SV_KillServer
- * =================
  */
 static void
 SV_KillServer_f(void)
@@ -1259,9 +1209,7 @@ SV_KillServer_f(void)
 /* =========================================================== */
 
 /*
- * ==================
  * SV_CompleteMapName
- * ==================
  */
 static void
 SV_CompleteMapName(char *args, int argNum)
@@ -1271,9 +1219,7 @@ SV_CompleteMapName(char *args, int argNum)
 }
 
 /*
- * ==================
  * SV_AddOperatorCommands
- * ==================
  */
 void
 SV_AddOperatorCommands(void)
@@ -1323,9 +1269,7 @@ SV_AddOperatorCommands(void)
 }
 
 /*
- * ==================
  * SV_RemoveOperatorCommands
- * ==================
  */
 void
 SV_RemoveOperatorCommands(void)

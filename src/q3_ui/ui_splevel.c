@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,15 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /*  */
 /*
- * =============================================================================
  *
  * SINGLE PLAYER LEVEL SELECT MENU
  *
- * =============================================================================
  */
 
 #include "ui_local.h"
@@ -121,9 +117,7 @@ static int	maxTier;
 
 
 /*
- * =================
  * PlayerIcon
- * =================
  */
 static void
 PlayerIcon(const char *modelAndSkin, char *iconName, int iconNameMaxSize)
@@ -151,9 +145,7 @@ PlayerIcon(const char *modelAndSkin, char *iconName, int iconNameMaxSize)
 
 
 /*
- * =================
  * PlayerIconhandle
- * =================
  */
 static qhandle_t
 PlayerIconHandle(const char *modelAndSkin)
@@ -166,9 +158,7 @@ PlayerIconHandle(const char *modelAndSkin)
 
 
 /*
- * =================
  * UI_SPLevelMenu_SetBots
- * =================
  */
 static void
 UI_SPLevelMenu_SetBots(void)
@@ -227,9 +217,7 @@ UI_SPLevelMenu_SetBots(void)
 
 
 /*
- * =================
  * UI_SPLevelMenu_SetMenuItems
- * =================
  */
 static void
 UI_SPLevelMenu_SetMenuArena(int n, int level, const char *arenaInfo)
@@ -358,9 +346,7 @@ UI_SPLevelMenu_SetMenuItems(void)
 
 
 /*
- * =================
  * UI_SPLevelMenu_ResetEvent
- * =================
  */
 static void
 UI_SPLevelMenu_ResetDraw(void)
@@ -406,9 +392,7 @@ UI_SPLevelMenu_ResetEvent(void* ptr, int event)
 
 
 /*
- * =================
  * UI_SPLevelMenu_LevelEvent
- * =================
  */
 static void
 UI_SPLevelMenu_LevelEvent(void* ptr, int notification)
@@ -430,9 +414,7 @@ UI_SPLevelMenu_LevelEvent(void* ptr, int notification)
 
 
 /*
- * =================
  * UI_SPLevelMenu_LeftArrowEvent
- * =================
  */
 static void
 UI_SPLevelMenu_LeftArrowEvent(void* ptr, int notification)
@@ -449,9 +431,7 @@ UI_SPLevelMenu_LeftArrowEvent(void* ptr, int notification)
 
 
 /*
- * =================
  * UI_SPLevelMenu_RightArrowEvent
- * =================
  */
 static void
 UI_SPLevelMenu_RightArrowEvent(void* ptr, int notification)
@@ -468,9 +448,7 @@ UI_SPLevelMenu_RightArrowEvent(void* ptr, int notification)
 
 
 /*
- * =================
  * UI_SPLevelMenu_PlayerEvent
- * =================
  */
 static void
 UI_SPLevelMenu_PlayerEvent(void* ptr, int notification)
@@ -483,9 +461,7 @@ UI_SPLevelMenu_PlayerEvent(void* ptr, int notification)
 
 
 /*
- * =================
  * UI_SPLevelMenu_AwardEvent
- * =================
  */
 static void
 UI_SPLevelMenu_AwardEvent(void* ptr, int notification)
@@ -501,9 +477,7 @@ UI_SPLevelMenu_AwardEvent(void* ptr, int notification)
 
 
 /*
- * =================
  * UI_SPLevelMenu_NextEvent
- * =================
  */
 static void
 UI_SPLevelMenu_NextEvent(void* ptr, int notification)
@@ -522,9 +496,7 @@ UI_SPLevelMenu_NextEvent(void* ptr, int notification)
 
 
 /*
- * =================
  * UI_SPLevelMenu_BackEvent
- * =================
  */
 static void
 UI_SPLevelMenu_BackEvent(void* ptr, int notification)
@@ -540,9 +512,7 @@ UI_SPLevelMenu_BackEvent(void* ptr, int notification)
 
 
 /*
- * =================
  * UI_SPLevelMenu_CustomEvent
- * =================
  */
 static void
 UI_SPLevelMenu_CustomEvent(void* ptr, int notification)
@@ -555,9 +525,7 @@ UI_SPLevelMenu_CustomEvent(void* ptr, int notification)
 
 
 /*
- * =================
  * UI_SPLevelMenu_MenuDraw
- * =================
  */
 #define LEVEL_DESC_LEFT_MARGIN 332
 
@@ -712,9 +680,7 @@ UI_SPLevelMenu_MenuDraw(void)
 
 
 /*
- * =================
  * UI_SPLevelMenu_Cache
- * =================
  */
 void
 UI_SPLevelMenu_Cache(void)
@@ -764,9 +730,7 @@ UI_SPLevelMenu_Cache(void)
 
 
 /*
- * =================
  * UI_SPLevelMenu_Init
- * =================
  */
 static void
 UI_SPLevelMenu_Init(void)
@@ -1006,9 +970,7 @@ UI_SPLevelMenu_Init(void)
 
 
 /*
- * =================
  * UI_SPLevelMenu
- * =================
  */
 void
 UI_SPLevelMenu(void)
@@ -1059,9 +1021,7 @@ UI_SPLevelMenu(void)
 
 
 /*
- * =================
  * UI_SPLevelMenu_f
- * =================
  */
 void
 UI_SPLevelMenu_f(void)
@@ -1073,9 +1033,7 @@ UI_SPLevelMenu_f(void)
 
 
 /*
- * =================
  * UI_SPLevelMenu_ReInit
- * =================
  */
 void
 UI_SPLevelMenu_ReInit(void)

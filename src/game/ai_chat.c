@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /*  */
 
@@ -61,9 +59,7 @@
 
 
 /*
- * ==================
  * BotNumActivePlayers
- * ==================
  */
 int
 BotNumActivePlayers(void)
@@ -89,9 +85,7 @@ BotNumActivePlayers(void)
 }
 
 /*
- * ==================
  * BotIsFirstInRankings
- * ==================
  */
 int
 BotIsFirstInRankings(bot_state_t *bs)
@@ -119,9 +113,7 @@ BotIsFirstInRankings(bot_state_t *bs)
 }
 
 /*
- * ==================
  * BotIsLastInRankings
- * ==================
  */
 int
 BotIsLastInRankings(bot_state_t *bs)
@@ -149,9 +141,7 @@ BotIsLastInRankings(bot_state_t *bs)
 }
 
 /*
- * ==================
  * BotFirstClientInRankings
- * ==================
  */
 char *
 BotFirstClientInRankings(void)
@@ -185,9 +175,7 @@ BotFirstClientInRankings(void)
 }
 
 /*
- * ==================
  * BotLastClientInRankings
- * ==================
  */
 char *
 BotLastClientInRankings(void)
@@ -221,9 +209,7 @@ BotLastClientInRankings(void)
 }
 
 /*
- * ==================
  * BotRandomOpponentName
- * ==================
  */
 char *
 BotRandomOpponentName(bot_state_t *bs)
@@ -266,9 +252,7 @@ BotRandomOpponentName(bot_state_t *bs)
 }
 
 /*
- * ==================
  * BotMapTitle
- * ==================
  */
 
 char *
@@ -287,9 +271,7 @@ BotMapTitle(void)
 
 
 /*
- * ==================
  * BotWeaponNameForMeansOfDeath
- * ==================
  */
 
 char *
@@ -322,9 +304,7 @@ BotWeaponNameForMeansOfDeath(int mod)
 }
 
 /*
- * ==================
  * BotRandomWeaponName
- * ==================
  */
 char *
 BotRandomWeaponName(void)
@@ -355,9 +335,7 @@ BotRandomWeaponName(void)
 }
 
 /*
- * ==================
  * BotVisibleEnemies
- * ==================
  */
 int
 BotVisibleEnemies(bot_state_t *bs)
@@ -392,9 +370,7 @@ BotVisibleEnemies(bot_state_t *bs)
 }
 
 /*
- * ==================
  * BotValidChatPosition
- * ==================
  */
 int
 BotValidChatPosition(bot_state_t *bs)
@@ -436,9 +412,7 @@ BotValidChatPosition(bot_state_t *bs)
 }
 
 /*
- * ==================
  * BotChat_EnterGame
- * ==================
  */
 int
 BotChat_EnterGame(bot_state_t *bs)
@@ -474,9 +448,7 @@ BotChat_EnterGame(bot_state_t *bs)
 }
 
 /*
- * ==================
  * BotChat_ExitGame
- * ==================
  */
 int
 BotChat_ExitGame(bot_state_t *bs)
@@ -512,9 +484,7 @@ BotChat_ExitGame(bot_state_t *bs)
 }
 
 /*
- * ==================
  * BotChat_StartLevel
- * ==================
  */
 int
 BotChat_StartLevel(bot_state_t *bs)
@@ -549,9 +519,7 @@ BotChat_StartLevel(bot_state_t *bs)
 }
 
 /*
- * ==================
  * BotChat_EndLevel
- * ==================
  */
 int
 BotChat_EndLevel(bot_state_t *bs)
@@ -609,9 +577,7 @@ BotChat_EndLevel(bot_state_t *bs)
 }
 
 /*
- * ==================
  * BotChat_Death
- * ==================
  */
 int
 BotChat_Death(bot_state_t *bs)
@@ -730,9 +696,7 @@ BotChat_Death(bot_state_t *bs)
 }
 
 /*
- * ==================
  * BotChat_Kill
- * ==================
  */
 int
 BotChat_Kill(bot_state_t *bs)
@@ -796,9 +760,7 @@ BotChat_Kill(bot_state_t *bs)
 }
 
 /*
- * ==================
  * BotChat_EnemySuicide
- * ==================
  */
 int
 BotChat_EnemySuicide(bot_state_t *bs)
@@ -835,9 +797,7 @@ BotChat_EnemySuicide(bot_state_t *bs)
 }
 
 /*
- * ==================
  * BotChat_HitTalking
- * ==================
  */
 int
 BotChat_HitTalking(bot_state_t *bs)
@@ -881,9 +841,7 @@ BotChat_HitTalking(bot_state_t *bs)
 }
 
 /*
- * ==================
  * BotChat_HitNoDeath
- * ==================
  */
 int
 BotChat_HitNoDeath(bot_state_t *bs)
@@ -932,9 +890,7 @@ BotChat_HitNoDeath(bot_state_t *bs)
 }
 
 /*
- * ==================
  * BotChat_HitNoKill
- * ==================
  */
 int
 BotChat_HitNoKill(bot_state_t *bs)
@@ -976,9 +932,7 @@ BotChat_HitNoKill(bot_state_t *bs)
 }
 
 /*
- * ==================
  * BotChat_Random
- * ==================
  */
 int
 BotChat_Random(bot_state_t *bs)
@@ -1046,9 +1000,7 @@ BotChat_Random(bot_state_t *bs)
 }
 
 /*
- * ==================
  * BotChatTime
- * ==================
  */
 float
 BotChatTime(bot_state_t *bs)
@@ -1061,9 +1013,7 @@ BotChatTime(bot_state_t *bs)
 }
 
 /*
- * ==================
  * BotChatTest
- * ==================
  */
 void
 BotChatTest(bot_state_t *bs)

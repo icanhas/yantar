@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /* client.h -- primary header for client */
 
@@ -70,12 +68,10 @@ typedef struct {
 
 
 /*
- * =============================================================================
  *
  * the clientActive_t structure is wiped completely at every
  * new gamestate_t, potentially several times during an established connection
  *
- * =============================================================================
  */
 
 typedef struct {
@@ -147,7 +143,6 @@ typedef struct {
 extern clientActive_t cl;
 
 /*
- * =============================================================================
  *
  * the clientConnection_t structure is wiped when disconnecting from a server,
  * either to go to a full screen console, play a demo, or connect to a different server
@@ -155,7 +150,6 @@ extern clientActive_t cl;
  * A connection can be to either a server through the network layer or a
  * demo through a file.
  *
- * =============================================================================
  */
 
 #define MAX_TIMEDEMO_DURATIONS 4096
@@ -276,12 +270,10 @@ typedef struct {
 extern clientConnection_t clc;
 
 /*
- * ==================================================================
  *
  * the clientStatic_t structure is never wiped, and is used even when
  * no client connection is active at all
  *
- * ==================================================================
  */
 
 typedef struct {

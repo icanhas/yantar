@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /* tr_map.c */
 
@@ -92,10 +90,8 @@ HSVtoRGB(float h, float s, float v, float rgb[3])
 }
 
 /*
- * ===============
  * R_ColorShiftLightingBytes
  *
- * ===============
  */
 static void
 R_ColorShiftLightingBytes(byte in[4], byte out[4])
@@ -129,10 +125,8 @@ R_ColorShiftLightingBytes(byte in[4], byte out[4])
 
 
 /*
- * ===============
  * R_ColorShiftLightingBytes
  *
- * ===============
  */
 static void
 R_ColorShiftLightingFloats(float in[4], float out[4], float scale)
@@ -197,10 +191,8 @@ ColorToRGBA16F(const vec3_t color, unsigned short rgba16f[4])
 
 
 /*
- * ===============
  * R_LoadLightmaps
  *
- * ===============
  */
 #define DEFAULT_LIGHTMAP_SIZE	128
 #define MAX_LIGHTMAP_PAGES	2
@@ -550,12 +542,10 @@ FatLightmap(int lightmapnum)
 }
 
 /*
- * =================
  * RE_SetWorldVisData
  *
  * This is called by the clipmodel subsystem so we can share the 1.8 megs of
  * space in big maps...
- * =================
  */
 void
 RE_SetWorldVisData(const byte *vis)
@@ -565,9 +555,7 @@ RE_SetWorldVisData(const byte *vis)
 
 
 /*
- * =================
  * R_LoadVisibility
- * =================
  */
 static void
 R_LoadVisibility(lump_t *l)
@@ -605,9 +593,7 @@ R_LoadVisibility(lump_t *l)
 
 
 /*
- * ===============
  * ShaderForShaderNum
- * ===============
  */
 static shader_t *
 ShaderForShaderNum(int shaderNum, int lightmapNum)
@@ -640,9 +626,7 @@ ShaderForShaderNum(int shaderNum, int lightmapNum)
 }
 
 /*
- * ===============
  * ParseFace
- * ===============
  */
 static void
 ParseFace(dsurface_t *ds, drawVert_t *verts, float *hdrVertColors, msurface_t *surf, int *indexes)
@@ -758,9 +742,7 @@ ParseFace(dsurface_t *ds, drawVert_t *verts, float *hdrVertColors, msurface_t *s
 
 
 /*
- * ===============
  * ParseMesh
- * ===============
  */
 static void
 ParseMesh(dsurface_t *ds, drawVert_t *verts, float *hdrVertColors, msurface_t *surf)
@@ -853,9 +835,7 @@ ParseMesh(dsurface_t *ds, drawVert_t *verts, float *hdrVertColors, msurface_t *s
 }
 
 /*
- * ===============
  * ParseTriSurf
- * ===============
  */
 static void
 ParseTriSurf(dsurface_t *ds, drawVert_t *verts, float *hdrVertColors, msurface_t *surf, int *indexes)
@@ -970,9 +950,7 @@ ParseTriSurf(dsurface_t *ds, drawVert_t *verts, float *hdrVertColors, msurface_t
 }
 
 /*
- * ===============
  * ParseFlare
- * ===============
  */
 static void
 ParseFlare(dsurface_t *ds, drawVert_t *verts, msurface_t *surf, int *indexes)
@@ -1004,11 +982,9 @@ ParseFlare(dsurface_t *ds, drawVert_t *verts, msurface_t *surf, int *indexes)
 
 
 /*
- * =================
  * R_MergedWidthPoints
  *
  * returns true if there are grid points merged on a width edge
- * =================
  */
 int
 R_MergedWidthPoints(srfGridMesh_t *grid, int offset)
@@ -1029,11 +1005,9 @@ R_MergedWidthPoints(srfGridMesh_t *grid, int offset)
 }
 
 /*
- * =================
  * R_MergedHeightPoints
  *
  * returns true if there are grid points merged on a height edge
- * =================
  */
 int
 R_MergedHeightPoints(srfGridMesh_t *grid, int offset)
@@ -1057,13 +1031,11 @@ R_MergedHeightPoints(srfGridMesh_t *grid, int offset)
 }
 
 /*
- * =================
  * R_FixSharedVertexLodError_r
  *
  * NOTE: never sync LoD through grid edges with merged points!
  *
  * FIXME: write generalized version that also avoids cracks between a patch and one that meets half way?
- * =================
  */
 void
 R_FixSharedVertexLodError_r(int start, srfGridMesh_t *grid1)
@@ -1208,12 +1180,10 @@ R_FixSharedVertexLodError_r(int start, srfGridMesh_t *grid1)
 }
 
 /*
- * =================
  * R_FixSharedVertexLodError
  *
  * This function assumes that all patches in one group are nicely stitched together for the highest LoD.
  * If this is not the case this function will still do its job but won't fix the highest LoD cracks.
- * =================
  */
 void
 R_FixSharedVertexLodError(void)
@@ -1239,9 +1209,7 @@ R_FixSharedVertexLodError(void)
 
 
 /*
- * ===============
  * R_StitchPatches
- * ===============
  */
 int
 R_StitchPatches(int grid1num, int grid2num)
@@ -1656,7 +1624,6 @@ R_StitchPatches(int grid1num, int grid2num)
 }
 
 /*
- * ===============
  * R_TryStitchPatch
  *
  * This function will try to stitch patches in the same LoD group together for the highest LoD.
@@ -1666,7 +1633,6 @@ R_StitchPatches(int grid1num, int grid2num)
  * Vertices will be joined at the patch side a crack is first found, at the other side
  * of the patch (on the same row or column) the vertices will not be joined and cracks
  * might still appear at that side.
- * ===============
  */
 int
 R_TryStitchingPatch(int grid1num)
@@ -1695,9 +1661,7 @@ R_TryStitchingPatch(int grid1num)
 }
 
 /*
- * ===============
  * R_StitchAllPatches
- * ===============
  */
 void
 R_StitchAllPatches(void)
@@ -1728,9 +1692,7 @@ R_StitchAllPatches(void)
 }
 
 /*
- * ===============
  * R_MovePatchSurfacesToHunk
- * ===============
  */
 void
 R_MovePatchSurfacesToHunk(void)
@@ -1771,10 +1733,8 @@ R_MovePatchSurfacesToHunk(void)
 
 
 /*
- * =================
  * BSPSurfaceCompare
  * compare function for qsort()
- * =================
  */
 static int
 BSPSurfaceCompare(const void *a, const void *b)
@@ -1826,9 +1786,7 @@ CopyVert(const srfVert_t * in, srfVert_t * out)
 
 
 /*
- * ===============
  * R_CreateWorldVBO
- * ===============
  */
 static void
 R_CreateWorldVBO(void)
@@ -2055,9 +2013,7 @@ R_CreateWorldVBO(void)
 }
 
 /*
- * ===============
  * R_LoadSurfaces
- * ===============
  */
 static void
 R_LoadSurfaces(lump_t *surfs, lump_t *verts, lump_t *indexLump)
@@ -2216,9 +2172,7 @@ R_LoadSurfaces(lump_t *surfs, lump_t *verts, lump_t *indexLump)
 
 
 /*
- * =================
  * R_LoadSubmodels
- * =================
  */
 static void
 R_LoadSubmodels(lump_t *l)
@@ -2269,9 +2223,7 @@ R_LoadSubmodels(lump_t *l)
 /* ================================================================== */
 
 /*
- * =================
  * R_SetParent
- * =================
  */
 static void
 R_SetParent(mnode_t *node, mnode_t *parent)
@@ -2284,9 +2236,7 @@ R_SetParent(mnode_t *node, mnode_t *parent)
 }
 
 /*
- * =================
  * R_LoadNodesAndLeafs
- * =================
  */
 static void
 R_LoadNodesAndLeafs(lump_t *nodeLump, lump_t *leafLump)
@@ -2358,9 +2308,7 @@ R_LoadNodesAndLeafs(lump_t *nodeLump, lump_t *leafLump)
 /* ============================================================================= */
 
 /*
- * =================
  * R_LoadShaders
- * =================
  */
 static void
 R_LoadShaders(lump_t *l)
@@ -2387,9 +2335,7 @@ R_LoadShaders(lump_t *l)
 
 
 /*
- * =================
  * R_LoadMarksurfaces
- * =================
  */
 static void
 R_LoadMarksurfaces(lump_t *l)
@@ -2415,9 +2361,7 @@ R_LoadMarksurfaces(lump_t *l)
 
 
 /*
- * =================
  * R_LoadPlanes
- * =================
  */
 static void
 R_LoadPlanes(lump_t *l)
@@ -2453,10 +2397,8 @@ R_LoadPlanes(lump_t *l)
 }
 
 /*
- * =================
  * R_LoadFogs
  *
- * =================
  */
 static void
 R_LoadFogs(lump_t *l, lump_t *brushesLump, lump_t *sidesLump)
@@ -2570,10 +2512,8 @@ R_LoadFogs(lump_t *l, lump_t *brushesLump, lump_t *sidesLump)
 
 
 /*
- * ================
  * R_LoadLightGrid
  *
- * ================
  */
 void
 R_LoadLightGrid(lump_t *l)
@@ -2655,9 +2595,7 @@ R_LoadLightGrid(lump_t *l)
 }
 
 /*
- * ================
  * R_LoadEntities
- * ================
  */
 void
 R_LoadEntities(lump_t *l)
@@ -2756,9 +2694,7 @@ R_LoadEntities(lump_t *l)
 }
 
 /*
- * =================
  * R_GetEntityToken
- * =================
  */
 qboolean
 R_GetEntityToken(char *buffer, int size)
@@ -2777,11 +2713,9 @@ R_GetEntityToken(char *buffer, int size)
 
 
 /*
- * =================
  * R_MergeLeafSurfaces
  *
  * Merges surfaces that share a common leaf
- * =================
  */
 void
 R_MergeLeafSurfaces(void)
@@ -3174,11 +3108,9 @@ R_CalcVertexLightDirs(void)
 
 
 /*
- * =================
  * RE_LoadWorldMap
  *
  * Called directly from cgame
- * =================
  */
 void
 RE_LoadWorldMap(const char *name)

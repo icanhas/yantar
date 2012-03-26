@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /*
  *
@@ -33,9 +31,7 @@ gentity_t *podium3;
 
 
 /*
- * ==================
  * UpdateTournamentInfo
- * ==================
  */
 void
 UpdateTournamentInfo(void)
@@ -372,9 +368,7 @@ SpawnPodium(void)
 
 
 /*
- * ==================
  * SpawnModelsOnVictoryPads
- * ==================
  */
 void
 SpawnModelsOnVictoryPads(void)
@@ -423,9 +417,7 @@ SpawnModelsOnVictoryPads(void)
 
 
 /*
- * ===============
  * Svcmd_AbortPodium_f
- * ===============
  */
 void
 Svcmd_AbortPodium_f(void)

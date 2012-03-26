@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,14 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 
 #include "server.h"
 
 
 /*
- * =============================================================================
  *
  * Delta encode a client frame onto the network channel
  *
@@ -42,15 +39,12 @@
  * <playerstate>
  * <packetentities>
  *
- * =============================================================================
  */
 
 /*
- * =============
  * SV_EmitPacketEntities
  *
  * Writes a delta update of an entityState_t list to the message.
- * =============
  */
 static void
 SV_EmitPacketEntities(clientSnapshot_t *from, clientSnapshot_t *to, msg_t *msg)
@@ -124,9 +118,7 @@ SV_EmitPacketEntities(clientSnapshot_t *from, clientSnapshot_t *to, msg_t *msg)
 
 
 /*
- * ==================
  * SV_WriteSnapshotToClient
- * ==================
  */
 static void
 SV_WriteSnapshotToClient(client_t *client, msg_t *msg)
@@ -222,11 +214,9 @@ SV_WriteSnapshotToClient(client_t *client, msg_t *msg)
 
 
 /*
- * ==================
  * SV_UpdateServerCommandsToClient
  *
  * (re)send all server commands the client hasn't acknowledged yet
- * ==================
  */
 void
 SV_UpdateServerCommandsToClient(client_t *client, msg_t *msg)
@@ -247,11 +237,9 @@ SV_UpdateServerCommandsToClient(client_t *client, msg_t *msg)
 }
 
 /*
- * =============================================================================
  *
  * Build a client snapshot structure
  *
- * =============================================================================
  */
 
 #define MAX_SNAPSHOT_ENTITIES 1024
@@ -261,9 +249,7 @@ typedef struct {
 } snapshotEntityNumbers_t;
 
 /*
- * =======================
  * SV_QsortEntityNumbers
- * =======================
  */
 static int QDECL
 SV_QsortEntityNumbers(const void *a, const void *b)
@@ -284,9 +270,7 @@ SV_QsortEntityNumbers(const void *a, const void *b)
 
 
 /*
- * ===============
  * SV_AddEntToSnapshot
- * ===============
  */
 static void
 SV_AddEntToSnapshot(svEntity_t *svEnt, sharedEntity_t *gEnt,
@@ -306,9 +290,7 @@ SV_AddEntToSnapshot(svEntity_t *svEnt, sharedEntity_t *gEnt,
 }
 
 /*
- * ===============
  * SV_AddEntitiesVisibleFromPoint
- * ===============
  */
 static void
 SV_AddEntitiesVisibleFromPoint(vec3_t origin, clientSnapshot_t *frame,
@@ -437,7 +419,6 @@ SV_AddEntitiesVisibleFromPoint(vec3_t origin, clientSnapshot_t *frame,
 }
 
 /*
- * =============
  * SV_BuildClientSnapshot
  *
  * Decides which entities are going to be visible to the client, and
@@ -447,7 +428,6 @@ SV_AddEntitiesVisibleFromPoint(vec3_t origin, clientSnapshot_t *frame,
  * currently doesn't.
  *
  * For viewing through other player's eyes, clent can be something other than client->gentity
- * =============
  */
 static void
 SV_BuildClientSnapshot(client_t *client)
@@ -534,11 +514,9 @@ SV_BuildClientSnapshot(client_t *client)
 
 #ifdef USE_VOIP
 /*
- * ==================
  * SV_WriteVoipToClient
  *
  * Check to see if there is any VoIP queued for a client, and send if there is.
- * ==================
  */
 static void
 SV_WriteVoipToClient(client_t *cl, msg_t *msg)
@@ -582,11 +560,9 @@ SV_WriteVoipToClient(client_t *cl, msg_t *msg)
 #endif
 
 /*
- * =======================
  * SV_SendMessageToClient
  *
  * Called by SV_SendClientSnapshot and SV_SendClientGameState
- * =======================
  */
 void
 SV_SendMessageToClient(msg_t *msg, client_t *client)
@@ -605,12 +581,10 @@ SV_SendMessageToClient(msg_t *msg, client_t *client)
 
 
 /*
- * =======================
  * SV_SendClientSnapshot
  *
  * Also called by SV_FinalMessage
  *
- * =======================
  */
 void
 SV_SendClientSnapshot(client_t *client)
@@ -655,9 +629,7 @@ SV_SendClientSnapshot(client_t *client)
 
 
 /*
- * =======================
  * SV_SendClientMessages
- * =======================
  */
 void
 SV_SendClientMessages(void)

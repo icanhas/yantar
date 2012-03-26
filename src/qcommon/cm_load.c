@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /* cmodel.c -- model loading */
 
@@ -75,17 +73,13 @@ void    CM_FloodAreaConnections(void);
 
 
 /*
- * ===============================================================================
  *
  *                                      MAP LOADING
  *
- * ===============================================================================
  */
 
 /*
- * =================
  * CMod_LoadShaders
- * =================
  */
 void
 CMod_LoadShaders(lump_t *l)
@@ -114,9 +108,7 @@ CMod_LoadShaders(lump_t *l)
 
 
 /*
- * =================
  * CMod_LoadSubmodels
- * =================
  */
 void
 CMod_LoadSubmodels(lump_t *l)
@@ -167,10 +159,8 @@ CMod_LoadSubmodels(lump_t *l)
 
 
 /*
- * =================
  * CMod_LoadNodes
  *
- * =================
  */
 void
 CMod_LoadNodes(lump_t *l)
@@ -203,10 +193,8 @@ CMod_LoadNodes(lump_t *l)
 }
 
 /*
- * =================
  * CM_BoundBrush
  *
- * =================
  */
 void
 CM_BoundBrush(cbrush_t *b)
@@ -223,10 +211,8 @@ CM_BoundBrush(cbrush_t *b)
 
 
 /*
- * =================
  * CMod_LoadBrushes
  *
- * =================
  */
 void
 CMod_LoadBrushes(lump_t *l)
@@ -263,9 +249,7 @@ CMod_LoadBrushes(lump_t *l)
 }
 
 /*
- * =================
  * CMod_LoadLeafs
- * =================
  */
 void
 CMod_LoadLeafs(lump_t *l)
@@ -308,9 +292,7 @@ CMod_LoadLeafs(lump_t *l)
 }
 
 /*
- * =================
  * CMod_LoadPlanes
- * =================
  */
 void
 CMod_LoadPlanes(lump_t *l)
@@ -348,9 +330,7 @@ CMod_LoadPlanes(lump_t *l)
 }
 
 /*
- * =================
  * CMod_LoadLeafBrushes
- * =================
  */
 void
 CMod_LoadLeafBrushes(lump_t *l)
@@ -377,9 +357,7 @@ CMod_LoadLeafBrushes(lump_t *l)
 }
 
 /*
- * =================
  * CMod_LoadLeafSurfaces
- * =================
  */
 void
 CMod_LoadLeafSurfaces(lump_t *l)
@@ -404,9 +382,7 @@ CMod_LoadLeafSurfaces(lump_t *l)
 }
 
 /*
- * =================
  * CMod_LoadBrushSides
- * =================
  */
 void
 CMod_LoadBrushSides(lump_t *l)
@@ -442,9 +418,7 @@ CMod_LoadBrushSides(lump_t *l)
 
 
 /*
- * =================
  * CMod_LoadEntityString
- * =================
  */
 void
 CMod_LoadEntityString(lump_t *l)
@@ -455,9 +429,7 @@ CMod_LoadEntityString(lump_t *l)
 }
 
 /*
- * =================
  * CMod_LoadVisibility
- * =================
  */
 #define VIS_HEADER 8
 void
@@ -486,9 +458,7 @@ CMod_LoadVisibility(lump_t *l)
 
 
 /*
- * =================
  * CMod_LoadPatches
- * =================
  */
 #define MAX_PATCH_VERTS 1024
 void
@@ -575,11 +545,9 @@ CM_Checksum(dheader_t *header)
 }
 
 /*
- * ==================
  * CM_LoadMap
  *
  * Loads in the map and all submodels
- * ==================
  */
 void
 CM_LoadMap(const char *name, qboolean clientload, int *checksum)
@@ -677,9 +645,7 @@ CM_LoadMap(const char *name, qboolean clientload, int *checksum)
 }
 
 /*
- * ==================
  * CM_ClearMap
- * ==================
  */
 void
 CM_ClearMap(void)
@@ -689,9 +655,7 @@ CM_ClearMap(void)
 }
 
 /*
- * ==================
  * CM_ClipHandleToModel
- * ==================
  */
 cmodel_t        *
 CM_ClipHandleToModel(clipHandle_t handle)
@@ -716,9 +680,7 @@ CM_ClipHandleToModel(clipHandle_t handle)
 }
 
 /*
- * ==================
  * CM_InlineModel
- * ==================
  */
 clipHandle_t
 CM_InlineModel(int index)
@@ -766,12 +728,10 @@ CM_LeafArea(int leafnum)
 
 
 /*
- * ===================
  * CM_InitBoxHull
  *
  * Set up the planes and nodes so that the six floats of a bounding box
  * can just be stored out and get a proper clipping hull structure.
- * ===================
  */
 void
 CM_InitBoxHull(void)
@@ -819,13 +779,11 @@ CM_InitBoxHull(void)
 }
 
 /*
- * ===================
  * CM_TempBoxModel
  *
  * To keep everything totally uniform, bounding boxes are turned into small
  * BSP trees instead of being compared directly.
  * Capsules are handled differently though.
- * ===================
  */
 clipHandle_t
 CM_TempBoxModel(const vec3_t mins, const vec3_t maxs, int capsule)
@@ -857,9 +815,7 @@ CM_TempBoxModel(const vec3_t mins, const vec3_t maxs, int capsule)
 }
 
 /*
- * ===================
  * CM_ModelBounds
- * ===================
  */
 void
 CM_ModelBounds(clipHandle_t model, vec3_t mins, vec3_t maxs)

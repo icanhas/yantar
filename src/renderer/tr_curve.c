@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 
 #include "tr_local.h"
@@ -39,9 +37,7 @@
 
 
 /*
- * ============
  * LerpDrawVert
- * ============
  */
 static void
 LerpDrawVert(drawVert_t *a, drawVert_t *b, drawVert_t *out)
@@ -63,9 +59,7 @@ LerpDrawVert(drawVert_t *a, drawVert_t *b, drawVert_t *out)
 }
 
 /*
- * ============
  * Transpose
- * ============
  */
 static void
 Transpose(int width, int height, drawVert_t ctrl[MAX_GRID_SIZE][MAX_GRID_SIZE])
@@ -105,11 +99,9 @@ Transpose(int width, int height, drawVert_t ctrl[MAX_GRID_SIZE][MAX_GRID_SIZE])
 
 
 /*
- * =================
  * MakeMeshNormals
  *
  * Handles all the complicated wrapping and degenerate cases
- * =================
  */
 static void
 MakeMeshNormals(int width, int height, drawVert_t ctrl[MAX_GRID_SIZE][MAX_GRID_SIZE])
@@ -217,9 +209,7 @@ MakeMeshNormals(int width, int height, drawVert_t ctrl[MAX_GRID_SIZE][MAX_GRID_S
 
 
 /*
- * ============
  * InvertCtrl
- * ============
  */
 static void
 InvertCtrl(int width, int height, drawVert_t ctrl[MAX_GRID_SIZE][MAX_GRID_SIZE])
@@ -237,9 +227,7 @@ InvertCtrl(int width, int height, drawVert_t ctrl[MAX_GRID_SIZE][MAX_GRID_SIZE])
 
 
 /*
- * =================
  * InvertErrorTable
- * =================
  */
 static void
 InvertErrorTable(float errorTable[2][MAX_GRID_SIZE], int width, int height)
@@ -258,9 +246,7 @@ InvertErrorTable(float errorTable[2][MAX_GRID_SIZE], int width, int height)
 }
 
 /*
- * ==================
  * PutPointsOnCurve
- * ==================
  */
 static void
 PutPointsOnCurve(drawVert_t ctrl[MAX_GRID_SIZE][MAX_GRID_SIZE],
@@ -286,9 +272,7 @@ PutPointsOnCurve(drawVert_t ctrl[MAX_GRID_SIZE][MAX_GRID_SIZE],
 }
 
 /*
- * =================
  * R_CreateSurfaceGridMesh
- * =================
  */
 srfGridMesh_t *
 R_CreateSurfaceGridMesh(int width, int height,
@@ -346,9 +330,7 @@ R_CreateSurfaceGridMesh(int width, int height,
 }
 
 /*
- * =================
  * R_FreeSurfaceGridMesh
- * =================
  */
 void
 R_FreeSurfaceGridMesh(srfGridMesh_t *grid)
@@ -359,9 +341,7 @@ R_FreeSurfaceGridMesh(srfGridMesh_t *grid)
 }
 
 /*
- * =================
  * R_SubdividePatchToGrid
- * =================
  */
 srfGridMesh_t *
 R_SubdividePatchToGrid(int width, int height,
@@ -519,9 +499,7 @@ R_SubdividePatchToGrid(int width, int height,
 }
 
 /*
- * ===============
  * R_GridInsertColumn
- * ===============
  */
 srfGridMesh_t *
 R_GridInsertColumn(srfGridMesh_t *grid, int column, int row, vec3_t point, float loderror)
@@ -574,9 +552,7 @@ R_GridInsertColumn(srfGridMesh_t *grid, int column, int row, vec3_t point, float
 }
 
 /*
- * ===============
  * R_GridInsertRow
- * ===============
  */
 srfGridMesh_t *
 R_GridInsertRow(srfGridMesh_t *grid, int row, int column, vec3_t point, float loderror)

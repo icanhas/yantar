@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 
 /*****************************************************************************
@@ -925,7 +923,6 @@ AAS_TraceAreas(vec3_t start, vec3_t end, int *areas, vec3_t *points,
  * Parameter:				-
  * Returns:					-
  * Changes Globals:		-
- * ===========================================================================
  * void AAS_OrthogonalToVectors(vec3_t v1, vec3_t v2, vec3_t res) */
 #define AAS_OrthogonalToVectors(v1, v2, res) \
 	(res)[0] = ((v1)[1] * (v2)[2]) - ((v1)[2] * (v2)[1]); \
@@ -1171,7 +1168,6 @@ AAS_BoxOnPlaneSide2(vec3_t absmins, vec3_t absmaxs, aas_plane_t *p)
  * Parameter:				-
  * Returns:					-
  * Changes Globals:		-
- * ===========================================================================
  * int AAS_BoxOnPlaneSide(vec3_t absmins, vec3_t absmaxs, aas_plane_t *p) */
 #define AAS_BoxOnPlaneSide(absmins, absmaxs, p) ( \
 		((p)->type < 3) ? \

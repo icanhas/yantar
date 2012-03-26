@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 
 #ifdef USE_LOCAL_HEADERS
@@ -83,9 +81,7 @@ void	(APIENTRYP qglLockArraysEXT)(GLint first, GLsizei count);
 void	(APIENTRYP qglUnlockArraysEXT)(void);
 
 /*
- * ===============
  * GLimp_Shutdown
- * ===============
  */
 void
 GLimp_Shutdown(void)
@@ -100,11 +96,9 @@ GLimp_Shutdown(void)
 }
 
 /*
- * ===============
  * GLimp_Minimize
  *
  * Minimize the game so that user is back at the desktop
- * ===============
  */
 void
 GLimp_Minimize(void)
@@ -114,9 +108,7 @@ GLimp_Minimize(void)
 
 
 /*
- * ===============
  * GLimp_LogComment
- * ===============
  */
 void
 GLimp_LogComment(char *comment)
@@ -124,9 +116,7 @@ GLimp_LogComment(char *comment)
 }
 
 /*
- * ===============
  * GLimp_CompareModes
- * ===============
  */
 static int
 GLimp_CompareModes(const void *a, const void *b)
@@ -152,9 +142,7 @@ GLimp_CompareModes(const void *a, const void *b)
 
 
 /*
- * ===============
  * GLimp_DetectAvailableModes
- * ===============
  */
 static void
 GLimp_DetectAvailableModes(void)
@@ -199,9 +187,7 @@ GLimp_DetectAvailableModes(void)
 }
 
 /*
- * ===============
  * GLimp_SetMode
- * ===============
  */
 static int
 GLimp_SetMode(int mode, qboolean fullscreen, qboolean noborder)
@@ -426,9 +412,7 @@ GLimp_SetMode(int mode, qboolean fullscreen, qboolean noborder)
 }
 
 /*
- * ===============
  * GLimp_StartDriverAndSetMode
- * ===============
  */
 static qboolean
 GLimp_StartDriverAndSetMode(int mode, qboolean fullscreen, qboolean noborder)
@@ -484,9 +468,7 @@ GLimp_HaveExtension(const char *ext)
 
 
 /*
- * ===============
  * GLimp_InitExtensions
- * ===============
  */
 static void
 GLimp_InitExtensions(void)
@@ -615,12 +597,10 @@ GLimp_InitExtensions(void)
 #define R_MODE_FALLBACK 3	/* 640 * 480 */
 
 /*
- * ===============
  * GLimp_Init
  *
  * This routine is responsible for initializing the OS specific portions
  * of OpenGL
- * ===============
  */
 void
 GLimp_Init(void)
@@ -697,11 +677,9 @@ success:
 
 
 /*
- * ===============
  * GLimp_EndFrame
  *
  * Responsible for doing a swapbuffers
- * ===============
  */
 void
 GLimp_EndFrame(void)
@@ -750,11 +728,9 @@ GLimp_EndFrame(void)
 
 #ifdef SMP
 /*
- * ===========================================================
  *
  * SMP acceleration
  *
- * ===========================================================
  */
 
 /*
@@ -771,9 +747,7 @@ static void (*glimpRenderThread)(void) = NULL;
 static SDL_Thread *renderThread = NULL;
 
 /*
- * ===============
  * GLimp_ShutdownRenderThread
- * ===============
  */
 static void
 GLimp_ShutdownRenderThread(void)
@@ -797,9 +771,7 @@ GLimp_ShutdownRenderThread(void)
 }
 
 /*
- * ===============
  * GLimp_RenderThreadWrapper
- * ===============
  */
 static int
 GLimp_RenderThreadWrapper(void *arg)
@@ -816,9 +788,7 @@ GLimp_RenderThreadWrapper(void *arg)
 }
 
 /*
- * ===============
  * GLimp_SpawnRenderThread
- * ===============
  */
 qboolean
 GLimp_SpawnRenderThread(void (*function)(void))
@@ -884,9 +854,7 @@ static volatile void *smpData = NULL;
 static volatile qboolean smpDataReady;
 
 /*
- * ===============
  * GLimp_RendererSleep
- * ===============
  */
 void *
 GLimp_RendererSleep(void)
@@ -916,9 +884,7 @@ GLimp_RendererSleep(void)
 }
 
 /*
- * ===============
  * GLimp_FrontEndSleep
- * ===============
  */
 void
 GLimp_FrontEndSleep(void)
@@ -934,9 +900,7 @@ GLimp_FrontEndSleep(void)
 }
 
 /*
- * ===============
  * GLimp_WakeRenderer
- * ===============
  */
 void
 GLimp_WakeRenderer(void *data)

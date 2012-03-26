@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /* cl_cgame.c  -- client system interaction with client game */
 
@@ -36,9 +34,7 @@ extern void startCamera(int time);
 extern qboolean getCameraInfo(int time, vec3_t *origin, vec3_t *angles);
 
 /*
- * ====================
  * CL_GetGameState
- * ====================
  */
 void
 CL_GetGameState(gameState_t *gs)
@@ -47,9 +43,7 @@ CL_GetGameState(gameState_t *gs)
 }
 
 /*
- * ====================
  * CL_GetGlconfig
- * ====================
  */
 void
 CL_GetGlconfig(glconfig_t *glconfig)
@@ -59,9 +53,7 @@ CL_GetGlconfig(glconfig_t *glconfig)
 
 
 /*
- * ====================
  * CL_GetUserCmd
- * ====================
  */
 qboolean
 CL_GetUserCmd(int cmdNumber, usercmd_t *ucmd)
@@ -91,9 +83,7 @@ CL_GetCurrentCmdNumber(void)
 
 
 /*
- * ====================
  * CL_GetParseEntityState
- * ====================
  */
 qboolean
 CL_GetParseEntityState(int parseEntityNumber, entityState_t *state)
@@ -113,9 +103,7 @@ CL_GetParseEntityState(int parseEntityNumber, entityState_t *state)
 }
 
 /*
- * ====================
  * CL_GetCurrentSnapshotNumber
- * ====================
  */
 void
 CL_GetCurrentSnapshotNumber(int *snapshotNumber, int *serverTime)
@@ -125,9 +113,7 @@ CL_GetCurrentSnapshotNumber(int *snapshotNumber, int *serverTime)
 }
 
 /*
- * ====================
  * CL_GetSnapshot
- * ====================
  */
 qboolean
 CL_GetSnapshot(int snapshotNumber, snapshot_t *snapshot)
@@ -181,9 +167,7 @@ CL_GetSnapshot(int snapshotNumber, snapshot_t *snapshot)
 }
 
 /*
- * =====================
  * CL_SetUserCmdValue
- * =====================
  */
 void
 CL_SetUserCmdValue(int userCmdValue, float sensitivityScale)
@@ -193,9 +177,7 @@ CL_SetUserCmdValue(int userCmdValue, float sensitivityScale)
 }
 
 /*
- * =====================
  * CL_AddCgameCommand
- * =====================
  */
 void
 CL_AddCgameCommand(const char *cmdName)
@@ -204,9 +186,7 @@ CL_AddCgameCommand(const char *cmdName)
 }
 
 /*
- * =====================
  * CL_CgameError
- * =====================
  */
 void
 CL_CgameError(const char *string)
@@ -216,9 +196,7 @@ CL_CgameError(const char *string)
 
 
 /*
- * =====================
  * CL_ConfigstringModified
- * =====================
  */
 void
 CL_ConfigstringModified(void)
@@ -275,11 +253,9 @@ CL_ConfigstringModified(void)
 
 
 /*
- * ===================
  * CL_GetServerCommand
  *
  * Set up argc/argv for the given command
- * ===================
  */
 qboolean
 CL_GetServerCommand(int serverCommandNumber)
@@ -401,11 +377,9 @@ rescan:
 
 
 /*
- * ====================
  * CL_CM_LoadMap
  *
  * Just adds default parameters that cgame doesn't need to know about
- * ====================
  */
 void
 CL_CM_LoadMap(const char *mapname)
@@ -416,10 +390,8 @@ CL_CM_LoadMap(const char *mapname)
 }
 
 /*
- * ====================
  * CL_ShutdonwCGame
  *
- * ====================
  */
 void
 CL_ShutdownCGame(void)
@@ -442,11 +414,9 @@ FloatAsInt(float f)
 }
 
 /*
- * ====================
  * CL_CgameSystemCalls
  *
  * The cgame module is making a system call
- * ====================
  */
 intptr_t
 CL_CgameSystemCalls(intptr_t *args)
@@ -758,11 +728,9 @@ CL_CgameSystemCalls(intptr_t *args)
 
 
 /*
- * ====================
  * CL_InitCGame
  *
  * Should only be called by CL_StartHunkUsers
- * ====================
  */
 void
 CL_InitCGame(void)
@@ -828,11 +796,9 @@ CL_InitCGame(void)
 
 
 /*
- * ====================
  * CL_GameCommand
  *
  * See if the current console command is claimed by the cgame
- * ====================
  */
 qboolean
 CL_GameCommand(void)
@@ -846,9 +812,7 @@ CL_GameCommand(void)
 
 
 /*
- * =====================
  * CL_CGameRendering
- * =====================
  */
 void
 CL_CGameRendering(stereoFrame_t stereo)
@@ -860,7 +824,6 @@ CL_CGameRendering(stereoFrame_t stereo)
 
 
 /*
- * =================
  * CL_AdjustTimeDelta
  *
  * Adjust the clients view of server time.
@@ -876,7 +839,6 @@ CL_CGameRendering(stereoFrame_t stereo)
  * latency, which keeps the adjustment process framerate independent and
  * prevents massive overadjustment during times of significant packet loss
  * or bursted delayed packets.
- * =================
  */
 
 #define RESET_TIME 500
@@ -927,9 +889,7 @@ CL_AdjustTimeDelta(void)
 
 
 /*
- * ==================
  * CL_FirstSnapshot
- * ==================
  */
 void
 CL_FirstSnapshot(void)
@@ -1005,9 +965,7 @@ CL_FirstSnapshot(void)
 }
 
 /*
- * ==================
  * CL_SetCGameTime
- * ==================
  */
 void
 CL_SetCGameTime(void)

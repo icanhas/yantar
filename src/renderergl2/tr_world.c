@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,19 +16,16 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 #include "tr_local.h"
 
 
 
 /*
- * ================
  * R_CullSurface
  *
  * Tries to cull surfaces before they are lighted or
  * added to the sorting list.
- * ================
  */
 static qboolean
 R_CullSurface(msurface_t *surf)
@@ -122,13 +118,11 @@ R_CullSurface(msurface_t *surf)
 
 
 /*
- * ====================
  * R_DlightSurface
  *
  * The given surface is going to be drawn, and it touches a leaf
  * that is touched by one or more dlights, so try to throw out
  * more dlights if possible.
- * ====================
  */
 static int
 R_DlightSurface(msurface_t *surf, int dlightBits)
@@ -208,11 +202,9 @@ R_DlightSurface(msurface_t *surf, int dlightBits)
 }
 
 /*
- * ====================
  * R_PshadowSurface
  *
  * Just like R_DlightSurface, cull any we can
- * ====================
  */
 static int
 R_PshadowSurface(msurface_t *surf, int pshadowBits)
@@ -299,9 +291,7 @@ R_PshadowSurface(msurface_t *surf, int pshadowBits)
 
 
 /*
- * ======================
  * R_AddWorldSurface
- * ======================
  */
 static void
 R_AddWorldSurface(msurface_t *surf, int dlightBits, int pshadowBits)
@@ -329,17 +319,13 @@ R_AddWorldSurface(msurface_t *surf, int dlightBits, int pshadowBits)
 }
 
 /*
- * =============================================================
  *
  *      BRUSH MODELS
  *
- * =============================================================
  */
 
 /*
- * =================
  * R_AddBrushModelSurfaces
- * =================
  */
 void
 R_AddBrushModelSurfaces(trRefEntity_t *ent)
@@ -373,18 +359,14 @@ R_AddBrushModelSurfaces(trRefEntity_t *ent)
 
 
 /*
- * =============================================================
  *
  *      WORLD MODEL
  *
- * =============================================================
  */
 
 
 /*
- * ================
  * R_RecursiveWorldNode
- * ================
  */
 static void
 R_RecursiveWorldNode(mnode_t *node, int planeBits, int dlightBits, int pshadowBits)
@@ -588,9 +570,7 @@ R_RecursiveWorldNode(mnode_t *node, int planeBits, int dlightBits, int pshadowBi
 
 
 /*
- * ===============
  * R_PointInLeaf
- * ===============
  */
 static mnode_t *
 R_PointInLeaf(const vec3_t p)
@@ -621,9 +601,7 @@ R_PointInLeaf(const vec3_t p)
 }
 
 /*
- * ==============
  * R_ClusterPVS
- * ==============
  */
 static const byte *
 R_ClusterPVS(int cluster)
@@ -636,9 +614,7 @@ R_ClusterPVS(int cluster)
 }
 
 /*
- * =================
  * R_inPVS
- * =================
  */
 qboolean
 R_inPVS(const vec3_t p1, const vec3_t p2)
@@ -657,12 +633,10 @@ R_inPVS(const vec3_t p1, const vec3_t p2)
 }
 
 /*
- * ===============
  * R_MarkLeaves
  *
  * Mark the leaves and nodes that are in the PVS for the current
  * cluster
- * ===============
  */
 static void
 R_MarkLeaves(void)
@@ -757,9 +731,7 @@ R_MarkLeaves(void)
 
 
 /*
- * =============
  * R_AddWorldSurfaces
- * =============
  */
 void
 R_AddWorldSurfaces(void)

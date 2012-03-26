@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /* g_rankings.h -- score keys for global rankings */
 
@@ -25,7 +23,6 @@
 #define _G_RANKINGS_H_
 
 /*
- * ==============================================================================
  *
  * Key digits:
  *      10^9: report type
@@ -63,7 +60,6 @@
  *      10^1:
  *      10^0: ordinal
  *
- * ==============================================================================
  */
 
 /* general keys */

@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /*  */
 
@@ -27,7 +25,6 @@
 
 
 /*
- * ==============================================================================
  *
  * PACKET FILTERING
  *
@@ -56,7 +53,6 @@
  * this could be improved by putting some g_banIPs2 g_banIps3 etc. maybe
  * still, you should rely on PB for banning instead
  *
- * ==============================================================================
  */
 
 typedef struct ipFilter_s {
@@ -70,9 +66,7 @@ static ipFilter_t ipFilters[MAX_IPFILTERS];
 static int numIPFilters;
 
 /*
- * =================
  * StringToFilter
- * =================
  */
 static qboolean
 StringToFilter(char *s, ipFilter_t *f)
@@ -120,9 +114,7 @@ StringToFilter(char *s, ipFilter_t *f)
 }
 
 /*
- * =================
  * UpdateIPBans
- * =================
  */
 static void
 UpdateIPBans(void)
@@ -161,9 +153,7 @@ UpdateIPBans(void)
 }
 
 /*
- * =================
  * G_FilterPacket
- * =================
  */
 qboolean
 G_FilterPacket(char *from)
@@ -196,9 +186,7 @@ G_FilterPacket(char *from)
 }
 
 /*
- * =================
  * AddIP
- * =================
  */
 static void
 AddIP(char *str)
@@ -223,9 +211,7 @@ AddIP(char *str)
 }
 
 /*
- * =================
  * G_ProcessIPBans
- * =================
  */
 void
 G_ProcessIPBans(void)
@@ -249,9 +235,7 @@ G_ProcessIPBans(void)
 
 
 /*
- * =================
  * Svcmd_AddIP_f
- * =================
  */
 void
 Svcmd_AddIP_f(void)
@@ -270,9 +254,7 @@ Svcmd_AddIP_f(void)
 }
 
 /*
- * =================
  * Svcmd_RemoveIP_f
- * =================
  */
 void
 Svcmd_RemoveIP_f(void)
@@ -305,9 +287,7 @@ Svcmd_RemoveIP_f(void)
 }
 
 /*
- * ===================
  * Svcmd_EntityList_f
- * ===================
  */
 void
 Svcmd_EntityList_f(void)
@@ -406,11 +386,9 @@ ClientForString(const char *s)
 }
 
 /*
- * ===================
  * Svcmd_ForceTeam_f
  *
  * forceteam <player> <team>
- * ===================
  */
 void
 Svcmd_ForceTeam_f(void)

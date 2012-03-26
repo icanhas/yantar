@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,15 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /*  */
 /*
- * =======================================================================
  *
  * DISPLAY OPTIONS MENU
  *
- * =======================================================================
  */
 
 #include "ui_local.h"
@@ -67,9 +63,7 @@ static displayOptionsInfo_t displayOptionsInfo;
 
 
 /*
- * =================
  * UI_DisplayOptionsMenu_Event
- * =================
  */
 static void
 UI_DisplayOptionsMenu_Event(void* ptr, int event)
@@ -115,9 +109,7 @@ UI_DisplayOptionsMenu_Event(void* ptr, int event)
 
 
 /*
- * ===============
  * UI_DisplayOptionsMenu_Init
- * ===============
  */
 static void
 UI_DisplayOptionsMenu_Init(void)
@@ -271,9 +263,7 @@ UI_DisplayOptionsMenu_Init(void)
 
 
 /*
- * ===============
  * UI_DisplayOptionsMenu_Cache
- * ===============
  */
 void
 UI_DisplayOptionsMenu_Cache(void)
@@ -286,9 +276,7 @@ UI_DisplayOptionsMenu_Cache(void)
 
 
 /*
- * ===============
  * UI_DisplayOptionsMenu
- * ===============
  */
 void
 UI_DisplayOptionsMenu(void)

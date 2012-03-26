@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /*
  * cg_predict.c -- this file generates cg.predictedPlayerState by either
@@ -35,13 +33,11 @@ static int	cg_numTriggerEntities;
 static centity_t *cg_triggerEntities[MAX_ENTITIES_IN_SNAPSHOT];
 
 /*
- * ====================
  * CG_BuildSolidList
  *
  * When a new cg.snap has been set, this function builds a sublist
  * of the entities that are actually solid, to make for more
  * efficient collision detection
- * ====================
  */
 void
 CG_BuildSolidList(void)
@@ -79,10 +75,8 @@ CG_BuildSolidList(void)
 }
 
 /*
- * ====================
  * CG_ClipMoveToEntities
  *
- * ====================
  */
 static void
 CG_ClipMoveToEntities(const vec3_t start, const vec3_t mins, const vec3_t maxs,
@@ -143,9 +137,7 @@ CG_ClipMoveToEntities(const vec3_t start, const vec3_t mins, const vec3_t maxs,
 }
 
 /*
- * ================
  * CG_Trace
- * ================
  */
 void
 CG_Trace(trace_t *result, const vec3_t start, const vec3_t mins,
@@ -164,9 +156,7 @@ CG_Trace(trace_t *result, const vec3_t start, const vec3_t mins,
 }
 
 /*
- * ================
  * CG_PointContents
- * ================
  */
 int
 CG_PointContents(const vec3_t point, int passEntityNum)
@@ -205,12 +195,10 @@ CG_PointContents(const vec3_t point, int passEntityNum)
 
 
 /*
- * ========================
  * CG_InterpolatePlayerState
  *
  * Generates cg.predictedPlayerState by interpolating between
  * cg.snap->player_state and cg.nextFrame->player_state
- * ========================
  */
 static void
 CG_InterpolatePlayerState(qboolean grabAngles)
@@ -269,9 +257,7 @@ CG_InterpolatePlayerState(qboolean grabAngles)
 }
 
 /*
- * ===================
  * CG_TouchItem
- * ===================
  */
 static void
 CG_TouchItem(centity_t *cent)
@@ -333,11 +319,9 @@ CG_TouchItem(centity_t *cent)
 
 
 /*
- * =========================
  * CG_TouchTriggerPrediction
  *
  * Predict push triggers and items
- * =========================
  */
 static void
 CG_TouchTriggerPrediction(void)
@@ -399,7 +383,6 @@ CG_TouchTriggerPrediction(void)
 
 
 /*
- * =================
  * CG_PredictPlayerState
  *
  * Generates cg.predictedPlayerState for the current cg.time
@@ -422,7 +405,6 @@ CG_TouchTriggerPrediction(void)
  *
  * We detect prediction errors and allow them to be decayed off over several frames
  * to ease the jerk.
- * =================
  */
 void
 CG_PredictPlayerState(void)

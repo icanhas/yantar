@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,14 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /* tr_flares.c */
 
 #include "tr_local.h"
 
 /*
- * =============================================================================
  *
  * LIGHT FLARES
  *
@@ -51,7 +48,6 @@
  * RB_RenderFlares() will be called once per view (twice in a mirrored scene, potentially
  * up to five or more times in a frame with 3D status bar icons).
  *
- * =============================================================================
  */
 
 
@@ -87,9 +83,7 @@ flare_t *r_activeFlares, *r_inactiveFlares;
 int flareCoeff;
 
 /*
- * ==================
  * R_ClearFlares
- * ==================
  */
 void
 R_ClearFlares(void)
@@ -108,11 +102,9 @@ R_ClearFlares(void)
 
 
 /*
- * ==================
  * RB_AddFlare
  *
  * This is called at surface tesselation time
- * ==================
  */
 void
 RB_AddFlare(void *surface, int fogNum, vec3_t point, vec3_t color, vec3_t normal)
@@ -200,9 +192,7 @@ RB_AddFlare(void *surface, int fogNum, vec3_t point, vec3_t color, vec3_t normal
 }
 
 /*
- * ==================
  * RB_AddDlightFlares
- * ==================
  */
 void
 RB_AddDlightFlares(void)
@@ -246,17 +236,13 @@ RB_AddDlightFlares(void)
 }
 
 /*
- * ===============================================================================
  *
  * FLARE BACK END
  *
- * ===============================================================================
  */
 
 /*
- * ==================
  * RB_TestFlare
- * ==================
  */
 void
 RB_TestFlare(flare_t *f)
@@ -307,9 +293,7 @@ RB_TestFlare(flare_t *f)
 
 
 /*
- * ==================
  * RB_RenderFlare
- * ==================
  */
 void
 RB_RenderFlare(flare_t *f)
@@ -429,7 +413,6 @@ RB_RenderFlare(flare_t *f)
 }
 
 /*
- * ==================
  * RB_RenderFlares
  *
  * Because flares are simulating an occular effect, they should be drawn after
@@ -442,7 +425,6 @@ RB_RenderFlare(flare_t *f)
  * The resulting artifact is that flares in mirrors or portals don't dim properly
  * when occluded by something in the main view, and portal flares that should
  * extend past the portal edge will be overwritten.
- * ==================
  */
 void
 RB_RenderFlares(void)

@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 2007-2009 Robert Beckebans <trebor_7@users.sourceforge.net>
  *
  * This file is part of XreaL source code.
@@ -17,15 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with XreaL source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /* tr_vbo.c */
 #include "tr_local.h"
 
 /*
- * ============
  * R_CreateVBO
- * ============
  */
 VBO_t          *
 R_CreateVBO(const char *name, byte * vertexes, int vertexesSize, vboUsage_t usage)
@@ -82,9 +78,7 @@ R_CreateVBO(const char *name, byte * vertexes, int vertexesSize, vboUsage_t usag
 }
 
 /*
- * ============
  * R_CreateVBO2
- * ============
  */
 VBO_t          *
 R_CreateVBO2(const char *name, int numVertexes, srfVert_t * verts, unsigned int stateBits, vboUsage_t usage)
@@ -386,9 +380,7 @@ R_CreateVBO2(const char *name, int numVertexes, srfVert_t * verts, unsigned int 
 
 
 /*
- * ============
  * R_CreateIBO
- * ============
  */
 IBO_t          *
 R_CreateIBO(const char *name, byte * indexes, int indexesSize, vboUsage_t usage)
@@ -443,9 +435,7 @@ R_CreateIBO(const char *name, byte * indexes, int indexesSize, vboUsage_t usage)
 }
 
 /*
- * ============
  * R_CreateIBO2
- * ============
  */
 IBO_t          *
 R_CreateIBO2(const char *name, int numTriangles, srfTriangle_t * triangles, vboUsage_t usage)
@@ -524,9 +514,7 @@ R_CreateIBO2(const char *name, int numTriangles, srfTriangle_t * triangles, vboU
 }
 
 /*
- * ============
  * R_BindVBO
- * ============
  */
 void
 R_BindVBO(VBO_t * vbo)
@@ -557,9 +545,7 @@ R_BindVBO(VBO_t * vbo)
 }
 
 /*
- * ============
  * R_BindNullVBO
- * ============
  */
 void
 R_BindNullVBO(void)
@@ -575,9 +561,7 @@ R_BindNullVBO(void)
 }
 
 /*
- * ============
  * R_BindIBO
- * ============
  */
 void
 R_BindIBO(IBO_t * ibo)
@@ -603,9 +587,7 @@ R_BindIBO(IBO_t * ibo)
 }
 
 /*
- * ============
  * R_BindNullIBO
- * ============
  */
 void
 R_BindNullIBO(void)
@@ -620,9 +602,7 @@ R_BindNullIBO(void)
 }
 
 /*
- * ============
  * R_InitVBOs
- * ============
  */
 void
 R_InitVBOs(void)
@@ -692,9 +672,7 @@ R_InitVBOs(void)
 }
 
 /*
- * ============
  * R_ShutdownVBOs
- * ============
  */
 void
 R_ShutdownVBOs(void)
@@ -734,9 +712,7 @@ R_ShutdownVBOs(void)
 }
 
 /*
- * ============
  * R_VBOList_f
- * ============
  */
 void
 R_VBOList_f(void)
@@ -779,13 +755,11 @@ R_VBOList_f(void)
 
 
 /*
- * ==============
  * RB_UpdateVBOs
  *
  * Adapted from Tess_UpdateVBOs from xreal
  *
  * Tr3B: update the default VBO to replace the client side vertex arrays
- * ==============
  */
 void
 RB_UpdateVBOs(unsigned int attribBits)

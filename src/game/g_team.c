@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /*  */
 
@@ -121,12 +119,10 @@ PrintMsg(gentity_t *ent, const char *fmt, ...)
 }
 
 /*
- * ==============
  * AddTeamScore
  *
  * used for gametype > GT_TEAM
  * for gametype GT_TEAM the level.teamScores is updated in AddScore in g_combat.c
- * ==============
  */
 void
 AddTeamScore(vec3_t origin, int team, int score)
@@ -169,9 +165,7 @@ AddTeamScore(vec3_t origin, int team, int score)
 }
 
 /*
- * ==============
  * OnSameTeam
- * ==============
  */
 qboolean
 OnSameTeam(gentity_t *ent1, gentity_t *ent2)
@@ -248,9 +242,7 @@ Team_CheckDroppedItem(gentity_t *dropped)
 }
 
 /*
- * ================
  * Team_ForceGesture
- * ================
  */
 void
 Team_ForceGesture(int team)
@@ -272,13 +264,11 @@ Team_ForceGesture(int team)
 }
 
 /*
- * ================
  * Team_FragBonuses
  *
  * Calculate the bonuses for flag defense, flag carrier defense, etc.
  * Note that bonuses are not cumulative.  You get one, they are in importance
  * order.
- * ================
  */
 void
 Team_FragBonuses(gentity_t *targ, gentity_t *inflictor, gentity_t *attacker)
@@ -530,12 +520,10 @@ Team_FragBonuses(gentity_t *targ, gentity_t *inflictor, gentity_t *attacker)
 }
 
 /*
- * ================
  * Team_CheckHurtCarrier
  *
  * Check to see if attacker hurt the flag carrier.  Needed when handing out bonuses for assistance to flag
  * carrier defense.
- * ================
  */
 void
 Team_CheckHurtCarrier(gentity_t *targ, gentity_t *attacker)
@@ -705,13 +693,11 @@ Team_FreeEntity(gentity_t *ent)
 }
 
 /*
- * ==============
  * Team_DroppedFlagThink
  *
  * Automatically set in Launch_Item if the item is one of the flags
  *
  * Flags are unique in that if they are dropped, the base flag must be respawned when they time out
- * ==============
  */
 void
 Team_DroppedFlagThink(gentity_t *ent)
@@ -731,9 +717,7 @@ Team_DroppedFlagThink(gentity_t *ent)
 
 
 /*
- * ==============
  * Team_DroppedFlagThink
- * ==============
  */
 int
 Team_TouchOurFlag(gentity_t *ent, gentity_t *other, int team)
@@ -964,11 +948,9 @@ Pickup_Team(gentity_t *ent, gentity_t *other)
 }
 
 /*
- * ===========
  * Team_GetLocation
  *
  * Report a location for the player. Uses placed nearby target_location entities
- * ============
  */
 gentity_t *
 Team_GetLocation(gentity_t *ent)
@@ -1009,11 +991,9 @@ Team_GetLocation(gentity_t *ent)
 
 
 /*
- * ===========
  * Team_GetLocation
  *
  * Report a location for the player. Uses placed nearby target_location entities
- * ============
  */
 qboolean
 Team_GetLocationMsg(gentity_t *ent, char *loc, int loclen)
@@ -1043,11 +1023,9 @@ Team_GetLocationMsg(gentity_t *ent, char *loc, int loclen)
 /*---------------------------------------------------------------------------*/
 
 /*
- * ================
  * SelectRandomTeamSpawnPoint
  *
  * go to a random point that doesn't telefrag
- * ================
  */
 #define MAX_TEAM_SPAWN_POINTS 32
 gentity_t *
@@ -1095,10 +1073,8 @@ SelectRandomTeamSpawnPoint(int teamstate, team_t team)
 
 
 /*
- * ===========
  * SelectCTFSpawnPoint
  *
- * ============
  */
 gentity_t *
 SelectCTFSpawnPoint(team_t team, int teamstate, vec3_t origin, vec3_t angles,
@@ -1128,13 +1104,11 @@ SortClients(const void *a, const void *b)
 
 
 /*
- * ==================
  * TeamplayLocationsMessage
  *
  * Format:
  *      clientNum location health armor weapon powerups
  *
- * ==================
  */
 void
 TeamplayInfoMessage(gentity_t *ent)
@@ -1280,9 +1254,7 @@ SP_team_CTF_bluespawn(gentity_t *ent)
 
 #ifdef MISSIONPACK
 /*
- * ================
  * Obelisks
- * ================
  */
 
 static void
@@ -1550,9 +1522,7 @@ SP_team_neutralobelisk(gentity_t *ent)
 
 
 /*
- * ================
  * CheckObeliskAttack
- * ================
  */
 qboolean
 CheckObeliskAttack(gentity_t *obelisk, gentity_t *attacker)

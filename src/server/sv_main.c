@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 
 #include "server.h"
@@ -66,19 +64,15 @@ serverBan_t serverBans[SERVER_MAXBANS];
 int serverBansCount = 0;
 
 /*
- * =============================================================================
  *
  * EVENT MESSAGES
  *
- * =============================================================================
  */
 
 /*
- * ===============
  * SV_ExpandNewlines
  *
  * Converts newlines to "\n" so a line prints nicer
- * ===============
  */
 static char     *
 SV_ExpandNewlines(char *in)
@@ -101,11 +95,9 @@ SV_ExpandNewlines(char *in)
 }
 
 /*
- * ======================
  * SV_ReplacePendingServerCommands
  *
  * FIXME: This is ugly
- * ======================
  */
 #if 0	/* unused */
 static int
@@ -139,12 +131,10 @@ SV_ReplacePendingServerCommands(client_t *client, const char *cmd)
 #endif
 
 /*
- * ======================
  * SV_AddServerCommand
  *
  * The given command will be transmitted to the client, and is guaranteed to
  * not have future snapshot_t executed before it is executed
- * ======================
  */
 void
 SV_AddServerCommand(client_t *client, const char *cmd)
@@ -186,13 +176,11 @@ SV_AddServerCommand(client_t *client, const char *cmd)
 
 
 /*
- * =================
  * SV_SendServerCommand
  *
  * Sends a reliable command string to be interpreted by
  * the client game module: "cp", "print", "chat", etc
  * A NULL client will broadcast to all clients
- * =================
  */
 void QDECL
 SV_SendServerCommand(client_t *cl, const char *fmt, ...)
@@ -231,15 +219,12 @@ SV_SendServerCommand(client_t *cl, const char *fmt, ...)
 
 
 /*
- * ==============================================================================
  *
  * MASTER SERVER FUNCTIONS
  *
- * ==============================================================================
  */
 
 /*
- * ================
  * SV_MasterHeartbeat
  *
  * Send a message to the masters every few minutes to
@@ -247,7 +232,6 @@ SV_SendServerCommand(client_t *cl, const char *fmt, ...)
  * We will also have a heartbeat sent when a server
  * changes from empty to non-empty, and full to non-full,
  * but not on every player enter or exit.
- * ================
  */
 #define HEARTBEAT_MSEC 300*1000
 void
@@ -357,11 +341,9 @@ SV_MasterHeartbeat(const char *message)
 }
 
 /*
- * =================
  * SV_MasterShutdown
  *
  * Informs all masters that this server is going down
- * =================
  */
 void
 SV_MasterShutdown(void)
@@ -380,11 +362,9 @@ SV_MasterShutdown(void)
 
 
 /*
- * ==============================================================================
  *
  * CONNECTIONLESS COMMANDS
  *
- * ==============================================================================
  */
 
 typedef struct leakyBucket_s leakyBucket_t;
@@ -412,9 +392,7 @@ static leakyBucket_t	buckets[ MAX_BUCKETS ];
 static leakyBucket_t	*bucketHashes[ MAX_HASHES ];
 
 /*
- * ================
  * SVC_HashForAddress
- * ================
  */
 static long
 SVC_HashForAddress(netadr_t address)
@@ -440,11 +418,9 @@ SVC_HashForAddress(netadr_t address)
 }
 
 /*
- * ================
  * SVC_BucketForAddress
  *
  * Find or allocate a bucket for an address
- * ================
  */
 static leakyBucket_t *
 SVC_BucketForAddress(netadr_t address, int burst, int period)
@@ -522,9 +498,7 @@ SVC_BucketForAddress(netadr_t address, int burst, int period)
 }
 
 /*
- * ================
  * SVC_RateLimit
- * ================
  */
 static qboolean
 SVC_RateLimit(leakyBucket_t *bucket, int burst, int period)
@@ -554,11 +528,9 @@ SVC_RateLimit(leakyBucket_t *bucket, int burst, int period)
 }
 
 /*
- * ================
  * SVC_RateLimitAddress
  *
  * Rate limit for a particular address
- * ================
  */
 static qboolean
 SVC_RateLimitAddress(netadr_t from, int burst, int period)
@@ -569,13 +541,11 @@ SVC_RateLimitAddress(netadr_t from, int burst, int period)
 }
 
 /*
- * ================
  * SVC_Status
  *
  * Responds with all the info that qplug or qspy can see about the server
  * and all connected players.  Used for getting detailed information after
  * the simple info query.
- * ================
  */
 static void
 SVC_Status(netadr_t from)
@@ -638,12 +608,10 @@ SVC_Status(netadr_t from)
 }
 
 /*
- * ================
  * SVC_Info
  *
  * Responds with a short info message that should be enough to determine
  * if a user is interested in a server to do a full status
- * ================
  */
 void
 SVC_Info(netadr_t from)
@@ -725,10 +693,8 @@ SVC_Info(netadr_t from)
 }
 
 /*
- * ================
  * SVC_FlushRedirect
  *
- * ================
  */
 static void
 SV_FlushRedirect(char *outputbuf)
@@ -738,13 +704,11 @@ SV_FlushRedirect(char *outputbuf)
 }
 
 /*
- * ===============
  * SVC_RemoteCommand
  *
  * An rcon packet arrived from the network.
  * Shift down the remaining args
  * Redirect all printfs
- * ===============
  */
 static void
 SVC_RemoteCommand(netadr_t from, msg_t *msg)
@@ -819,14 +783,12 @@ SVC_RemoteCommand(netadr_t from, msg_t *msg)
 }
 
 /*
- * =================
  * SV_ConnectionlessPacket
  *
  * A connectionless packet has four leading 0xff
  * characters to distinguish it from a game channel.
  * Clients that are in the game can still send
  * connectionless packets.
- * =================
  */
 static void
 SV_ConnectionlessPacket(netadr_t from, msg_t *msg)
@@ -872,9 +834,7 @@ SV_ConnectionlessPacket(netadr_t from, msg_t *msg)
 /* ============================================================================ */
 
 /*
- * =================
  * SV_PacketEvent
- * =================
  */
 void
 SV_PacketEvent(netadr_t from, msg_t *msg)
@@ -930,11 +890,9 @@ SV_PacketEvent(netadr_t from, msg_t *msg)
 
 
 /*
- * ===================
  * SV_CalcPings
  *
  * Updates the cl->ping variables
- * ===================
  */
 static void
 SV_CalcPings(void)
@@ -985,7 +943,6 @@ SV_CalcPings(void)
 }
 
 /*
- * ==================
  * SV_CheckTimeouts
  *
  * If a packet has not been received from a client for timeout->integer
@@ -995,7 +952,6 @@ SV_CalcPings(void)
  * When a client is normally dropped, the client_t goes into a zombie state
  * for a few seconds to make sure any final reliable message gets resent
  * if necessary
- * ==================
  */
 static void
 SV_CheckTimeouts(void)
@@ -1037,9 +993,7 @@ SV_CheckTimeouts(void)
 
 
 /*
- * ==================
  * SV_CheckPaused
- * ==================
  */
 static qboolean
 SV_CheckPaused(void)
@@ -1071,10 +1025,8 @@ SV_CheckPaused(void)
 }
 
 /*
- * ==================
  * SV_FrameMsec
  * Return time in millseconds until processing of the next server frame.
- * ==================
  */
 int
 SV_FrameMsec()
@@ -1093,12 +1045,10 @@ SV_FrameMsec()
 }
 
 /*
- * ==================
  * SV_Frame
  *
  * Player movement occurs as a result of packet events, which
  * happen before SV_Frame is called
- * ==================
  */
 void
 SV_Frame(int msec)
@@ -1211,12 +1161,10 @@ SV_Frame(int msec)
 }
 
 /*
- * ====================
  * SV_RateMsec
  *
  * Return the number of msec until another message can be sent to
  * a client based on its rate settings
- * ====================
  */
 
 #define UDPIP_HEADER_SIZE	28
@@ -1260,13 +1208,11 @@ SV_RateMsec(client_t *client)
 }
 
 /*
- * ====================
  * SV_SendQueuedPackets
  *
  * Send download messages and queued packets in the time that we're idle, i.e.
  * not computing a server frame or sending client snapshots.
  * Return the time in msec until we expect to be called next
- * ====================
  */
 
 int

@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,15 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /*  */
 /*
- * =======================================================================
  *
  * CONTROLS MENU
  *
- * =======================================================================
  */
 
 
@@ -396,9 +392,7 @@ static menucommon_s **g_controls[] = {
 };
 
 /*
- * =================
  * Controls_InitCvars
- * =================
  */
 static void
 Controls_InitCvars(void)
@@ -424,9 +418,7 @@ Controls_InitCvars(void)
 }
 
 /*
- * =================
  * Controls_GetCvarDefault
- * =================
  */
 static float
 Controls_GetCvarDefault(char* name)
@@ -447,9 +439,7 @@ Controls_GetCvarDefault(char* name)
 }
 
 /*
- * =================
  * Controls_GetCvarValue
- * =================
  */
 static float
 Controls_GetCvarValue(char* name)
@@ -471,9 +461,7 @@ Controls_GetCvarValue(char* name)
 
 
 /*
- * =================
  * Controls_UpdateModel
- * =================
  */
 static void
 Controls_UpdateModel(int anim)
@@ -607,9 +595,7 @@ Controls_UpdateModel(int anim)
 
 
 /*
- * =================
  * Controls_Update
- * =================
  */
 static void
 Controls_Update(void)
@@ -710,9 +696,7 @@ Controls_Update(void)
 
 
 /*
- * =================
  * Controls_DrawKeyBinding
- * =================
  */
 static void
 Controls_DrawKeyBinding(void *self)
@@ -804,9 +788,7 @@ Controls_DrawKeyBinding(void *self)
 }
 
 /*
- * =================
  * Controls_StatusBar
- * =================
  */
 static void
 Controls_StatusBar(void *self)
@@ -818,9 +800,7 @@ Controls_StatusBar(void *self)
 
 
 /*
- * =================
  * Controls_DrawPlayer
- * =================
  */
 static void
 Controls_DrawPlayer(void *self)
@@ -843,9 +823,7 @@ Controls_DrawPlayer(void *self)
 
 
 /*
- * =================
  * Controls_GetKeyAssignment
- * =================
  */
 static void
 Controls_GetKeyAssignment(char *command, int *twokeys)
@@ -871,9 +849,7 @@ Controls_GetKeyAssignment(char *command, int *twokeys)
 }
 
 /*
- * =================
  * Controls_GetConfig
- * =================
  */
 static void
 Controls_GetConfig(void)
@@ -915,9 +891,7 @@ Controls_GetConfig(void)
 }
 
 /*
- * =================
  * Controls_SetConfig
- * =================
  */
 static void
 Controls_SetConfig(void)
@@ -960,9 +934,7 @@ Controls_SetConfig(void)
 }
 
 /*
- * =================
  * Controls_SetDefaults
- * =================
  */
 static void
 Controls_SetDefaults(void)
@@ -1001,9 +973,7 @@ Controls_SetDefaults(void)
 }
 
 /*
- * =================
  * Controls_MenuKey
- * =================
  */
 static sfxHandle_t
 Controls_MenuKey(int key)
@@ -1109,9 +1079,7 @@ ignorekey:
 }
 
 /*
- * =================
  * Controls_ResetDefaults_Action
- * =================
  */
 static void
 Controls_ResetDefaults_Action(qboolean result)
@@ -1125,9 +1093,7 @@ Controls_ResetDefaults_Action(qboolean result)
 }
 
 /*
- * =================
  * Controls_ResetDefaults_Draw
- * =================
  */
 static void
 Controls_ResetDefaults_Draw(void)
@@ -1141,9 +1107,7 @@ Controls_ResetDefaults_Draw(void)
 }
 
 /*
- * =================
  * Controls_MenuEvent
- * =================
  */
 static void
 Controls_MenuEvent(void* ptr, int event)
@@ -1219,9 +1183,7 @@ Controls_MenuEvent(void* ptr, int event)
 }
 
 /*
- * =================
  * Controls_ActionEvent
- * =================
  */
 static void
 Controls_ActionEvent(void* ptr, int event)
@@ -1237,9 +1199,7 @@ Controls_ActionEvent(void* ptr, int event)
 }
 
 /*
- * =================
  * Controls_InitModel
- * =================
  */
 static void
 Controls_InitModel(void)
@@ -1253,9 +1213,7 @@ Controls_InitModel(void)
 }
 
 /*
- * =================
  * Controls_InitWeapons
- * =================
  */
 static void
 Controls_InitWeapons(void)
@@ -1270,9 +1228,7 @@ Controls_InitWeapons(void)
 }
 
 /*
- * =================
  * Controls_MenuInit
- * =================
  */
 static void
 Controls_MenuInit(void)
@@ -1798,9 +1754,7 @@ Controls_MenuInit(void)
 
 
 /*
- * =================
  * Controls_Cache
- * =================
  */
 void
 Controls_Cache(void)
@@ -1813,9 +1767,7 @@ Controls_Cache(void)
 
 
 /*
- * =================
  * UI_ControlsMenu
- * =================
  */
 void
 UI_ControlsMenu(void)

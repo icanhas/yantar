@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  * Copyright (C) 2005 Stuart Dalton (badcdev@gmail.com)
  *
@@ -18,16 +17,13 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 
 #include "client.h"
 #include "snd_codec.h"
 
 /*
- * =================
  * FGetLittleLong
- * =================
  */
 static int
 FGetLittleLong(fileHandle_t f)
@@ -40,9 +36,7 @@ FGetLittleLong(fileHandle_t f)
 }
 
 /*
- * =================
  * FGetLittleShort
- * =================
  */
 static short
 FGetLittleShort(fileHandle_t f)
@@ -55,9 +49,7 @@ FGetLittleShort(fileHandle_t f)
 }
 
 /*
- * =================
  * S_ReadChunkInfo
- * =================
  */
 static int
 S_ReadChunkInfo(fileHandle_t f, char *name)
@@ -80,11 +72,9 @@ S_ReadChunkInfo(fileHandle_t f, char *name)
 }
 
 /*
- * =================
  * S_FindRIFFChunk
  *
  * Returns the length of the data in the chunk, or -1 if not found
- * =================
  */
 static int
 S_FindRIFFChunk(fileHandle_t f, char *chunk)
@@ -107,9 +97,7 @@ S_FindRIFFChunk(fileHandle_t f, char *chunk)
 }
 
 /*
- * =================
  * S_ByteSwapRawSamples
- * =================
  */
 static void
 S_ByteSwapRawSamples(int samples, int width, int s_channels, const byte *data)
@@ -128,9 +116,7 @@ S_ByteSwapRawSamples(int samples, int width, int s_channels, const byte *data)
 }
 
 /*
- * =================
  * S_ReadRIFFHeader
- * =================
  */
 static qboolean
 S_ReadRIFFHeader(fileHandle_t file, snd_info_t *info)
@@ -194,9 +180,7 @@ snd_codec_t wav_codec =
 };
 
 /*
- * =================
  * S_WAV_CodecLoad
- * =================
  */
 void *
 S_WAV_CodecLoad(const char *filename, snd_info_t *info)
@@ -239,9 +223,7 @@ S_WAV_CodecLoad(const char *filename, snd_info_t *info)
 }
 
 /*
- * =================
  * S_WAV_CodecOpenStream
- * =================
  */
 snd_stream_t *
 S_WAV_CodecOpenStream(const char *filename)
@@ -263,9 +245,7 @@ S_WAV_CodecOpenStream(const char *filename)
 }
 
 /*
- * =================
  * S_WAV_CodecCloseStream
- * =================
  */
 void
 S_WAV_CodecCloseStream(snd_stream_t *stream)
@@ -274,9 +254,7 @@ S_WAV_CodecCloseStream(snd_stream_t *stream)
 }
 
 /*
- * =================
  * S_WAV_CodecReadStream
- * =================
  */
 int
 S_WAV_CodecReadStream(snd_stream_t *stream, int bytes, void *buffer)

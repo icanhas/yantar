@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 
 #include "tr_local.h"
@@ -34,9 +32,7 @@
  */
 
 /*
- * ==============
  * R_AddAnimSurfaces
- * ==============
  */
 void
 R_AddAnimSurfaces(trRefEntity_t *ent)
@@ -59,9 +55,7 @@ R_AddAnimSurfaces(trRefEntity_t *ent)
 }
 
 /*
- * ==============
  * RB_SurfaceAnim
- * ==============
  */
 void
 RB_SurfaceAnim(md4Surface_t *surface)
@@ -178,9 +172,7 @@ RB_SurfaceAnim(md4Surface_t *surface)
 /* copied and adapted from tr_mesh.c */
 
 /*
- * =============
  * R_MDRCullModel
- * =============
  */
 
 static int
@@ -263,10 +255,8 @@ R_MDRCullModel(mdrHeader_t *header, trRefEntity_t *ent)
 }
 
 /*
- * =================
  * R_MDRComputeFogNum
  *
- * =================
  */
 
 int
@@ -307,9 +297,7 @@ R_MDRComputeFogNum(mdrHeader_t *header, trRefEntity_t *ent)
 
 
 /*
- * ==============
  * R_MDRAddAnimSurfaces
- * ==============
  */
 
 /* much stuff in there is just copied from R_AddMd3Surfaces in tr_mesh.c */
@@ -429,9 +417,7 @@ R_MDRAddAnimSurfaces(trRefEntity_t *ent)
 }
 
 /*
- * ==============
  * RB_MDRSurfaceAnim
- * ==============
  */
 void
 RB_MDRSurfaceAnim(md4Surface_t *surface)

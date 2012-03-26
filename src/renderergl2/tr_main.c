@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /* tr_main.c -- main control flow for each frame */
 
@@ -44,9 +42,7 @@ refimport_t ri;
 surfaceType_t entitySurface = SF_ENTITY;
 
 /*
- * ================
  * R_CompareVert
- * ================
  */
 qboolean
 R_CompareVert(srfVert_t * v1, srfVert_t * v2, qboolean checkST)
@@ -67,9 +63,7 @@ R_CompareVert(srfVert_t * v1, srfVert_t * v2, qboolean checkST)
 }
 
 /*
- * =============
  * R_CalcNormalForTriangle
- * =============
  */
 void
 R_CalcNormalForTriangle(vec3_t normal, const vec3_t v0, const vec3_t v1, const vec3_t v2)
@@ -85,10 +79,8 @@ R_CalcNormalForTriangle(vec3_t normal, const vec3_t v0, const vec3_t v1, const v
 }
 
 /*
- * =============
  * R_CalcTangentsForTriangle
  * http://members.rogers.com/deseric/tangentspace.htm
- * =============
  */
 void
 R_CalcTangentsForTriangle(vec3_t tangent, vec3_t bitangent,
@@ -132,9 +124,7 @@ R_CalcTangentsForTriangle(vec3_t tangent, vec3_t bitangent,
 
 
 /*
- * =============
  * R_CalcTangentSpace
- * =============
  */
 void
 R_CalcTangentSpace(vec3_t tangent, vec3_t bitangent, vec3_t normal,
@@ -505,10 +495,8 @@ R_CalcTangentVectors(srfVert_t * dv[3])
 
 
 /*
- * =================
  * R_FindSurfaceTriangleWithEdge
  * Tr3B - recoded from Q2E
- * =================
  */
 static int
 R_FindSurfaceTriangleWithEdge(int numTriangles, srfTriangle_t * triangles, int start, int end, int ignore)
@@ -546,10 +534,8 @@ R_FindSurfaceTriangleWithEdge(int numTriangles, srfTriangle_t * triangles, int s
 
 
 /*
- * =================
  * R_CalcSurfaceTriangleNeighbors
  * Tr3B - recoded from Q2E
- * =================
  */
 void
 R_CalcSurfaceTriangleNeighbors(int numTriangles, srfTriangle_t * triangles)
@@ -574,9 +560,7 @@ R_CalcSurfaceTriangleNeighbors(int numTriangles, srfTriangle_t * triangles)
 }
 
 /*
- * =================
  * R_CalcSurfaceTrianglePlanes
- * =================
  */
 void
 R_CalcSurfaceTrianglePlanes(int numTriangles, srfTriangle_t * triangles, srfVert_t * verts)
@@ -602,11 +586,9 @@ R_CalcSurfaceTrianglePlanes(int numTriangles, srfTriangle_t * triangles, srfVert
 
 
 /*
- * =================
  * R_CullLocalBox
  *
  * Returns CULL_IN, CULL_CLIP, or CULL_OUT
- * =================
  */
 int
 R_CullLocalBox(vec3_t localBounds[2])
@@ -693,11 +675,9 @@ R_CullLocalBox(vec3_t localBounds[2])
 }
 
 /*
- * =================
  * R_CullBox
  *
  * Returns CULL_IN, CULL_CLIP, or CULL_OUT
- * =================
  */
 int
 R_CullBox(vec3_t worldBounds[2])
@@ -789,10 +769,8 @@ R_CullPointAndRadius(const vec3_t pt, float radius)
 }
 
 /*
- * =================
  * R_LocalNormalToWorld
  *
- * =================
  */
 void
 R_LocalNormalToWorld(const vec3_t local, vec3_t world)
@@ -806,10 +784,8 @@ R_LocalNormalToWorld(const vec3_t local, vec3_t world)
 }
 
 /*
- * =================
  * R_LocalPointToWorld
  *
- * =================
  */
 void
 R_LocalPointToWorld(const vec3_t local, vec3_t world)
@@ -823,10 +799,8 @@ R_LocalPointToWorld(const vec3_t local, vec3_t world)
 }
 
 /*
- * =================
  * R_WorldToLocal
  *
- * =================
  */
 void
 R_WorldToLocal(const vec3_t world, vec3_t local)
@@ -837,10 +811,8 @@ R_WorldToLocal(const vec3_t world, vec3_t local)
 }
 
 /*
- * ==========================
  * R_TransformModelToClip
  *
- * ==========================
  */
 void
 R_TransformModelToClip(const vec3_t src, const float *modelMatrix, const float *projectionMatrix,
@@ -864,10 +836,8 @@ R_TransformModelToClip(const vec3_t src, const float *modelMatrix, const float *
 }
 
 /*
- * ==========================
  * R_TransformClipToWindow
  *
- * ==========================
  */
 void
 R_TransformClipToWindow(const vec4_t clip, const viewParms_t *view, vec4_t normalized, vec4_t window)
@@ -886,10 +856,8 @@ R_TransformClipToWindow(const vec4_t clip, const viewParms_t *view, vec4_t norma
 
 
 /*
- * ==========================
  * myGlMultMatrix
  *
- * ==========================
  */
 void
 myGlMultMatrix(const float *a, const float *b, float *out)
@@ -906,13 +874,11 @@ myGlMultMatrix(const float *a, const float *b, float *out)
 }
 
 /*
- * =================
  * R_RotateForEntity
  *
  * Generates an orientation for an entity and viewParms
  * Does NOT produce any GL calls
  * Called by both the front end and the back end
- * =================
  */
 void
 R_RotateForEntity(const trRefEntity_t *ent, const viewParms_t *viewParms,
@@ -978,11 +944,9 @@ R_RotateForEntity(const trRefEntity_t *ent, const viewParms_t *viewParms,
 }
 
 /*
- * =================
  * R_RotateForViewer
  *
  * Sets up the modelview matrix for a given viewParm
- * =================
  */
 void
 R_RotateForViewer(void)
@@ -1085,12 +1049,10 @@ R_SetFarClip(void)
 }
 
 /*
- * =================
  * R_SetupFrustum
  *
  * Set up the culling frustum planes for the current view using the results we got from computing the first two rows of
  * the projection matrix.
- * =================
  */
 void
 R_SetupFrustum(viewParms_t *dest, float xmin, float xmax, float ymax, float zProj, float zFar,
@@ -1158,9 +1120,7 @@ R_SetupFrustum(viewParms_t *dest, float xmin, float xmax, float ymax, float zPro
 }
 
 /*
- * ===============
  * R_SetupProjection
- * ===============
  */
 void
 R_SetupProjection(viewParms_t *dest, float zProj, float zFar, qboolean computeFrustum)
@@ -1212,11 +1172,9 @@ R_SetupProjection(viewParms_t *dest, float zProj, float zFar, qboolean computeFr
 }
 
 /*
- * ===============
  * R_SetupProjectionZ
  *
  * Sets the z-component transformation part in the projection matrix
- * ===============
  */
 void
 R_SetupProjectionZ(viewParms_t *dest)
@@ -1268,9 +1226,7 @@ R_SetupProjectionZ(viewParms_t *dest)
 }
 
 /*
- * =================
  * R_MirrorPoint
- * =================
  */
 void
 R_MirrorPoint(vec3_t in, orientation_t *surface, orientation_t *camera, vec3_t out)
@@ -1306,9 +1262,7 @@ R_MirrorVector(vec3_t in, orientation_t *surface, orientation_t *camera, vec3_t 
 
 
 /*
- * =============
  * R_PlaneForSurface
- * =============
  */
 void
 R_PlaneForSurface(surfaceType_t *surfType, cplane_t *plane)
@@ -1350,14 +1304,12 @@ R_PlaneForSurface(surfaceType_t *surfType, cplane_t *plane)
 }
 
 /*
- * =================
  * R_GetPortalOrientation
  *
  * entityNum is the entity that the portal surface is a part of, which may
  * be moving and rotating.
  *
  * Returns qtrue if it should be mirrored
- * =================
  */
 qboolean
 R_GetPortalOrientations(drawSurf_t *drawSurf, int entityNum,
@@ -1630,11 +1582,9 @@ SurfIsOffscreen(const drawSurf_t *drawSurf, vec4_t clipDest[128])
 }
 
 /*
- * ========================
  * R_MirrorViewBySurface
  *
  * Returns qtrue if another view has been rendered
- * ========================
  */
 qboolean
 R_MirrorViewBySurface(drawSurf_t *drawSurf, int entityNum)
@@ -1689,11 +1639,9 @@ R_MirrorViewBySurface(drawSurf_t *drawSurf, int entityNum)
 }
 
 /*
- * =================
  * R_SpriteFogNum
  *
  * See if a sprite is inside a fog volume
- * =================
  */
 int
 R_SpriteFogNum(trRefEntity_t *ent)
@@ -1724,17 +1672,13 @@ R_SpriteFogNum(trRefEntity_t *ent)
 }
 
 /*
- * ==========================================================================================
  *
  * DRAWSURF SORTING
  *
- * ==========================================================================================
  */
 
 /*
- * ===============
  * R_Radix
- * ===============
  */
 static ID_INLINE void
 R_Radix(int byte, int size, drawSurf_t *source, drawSurf_t *dest)
@@ -1761,11 +1705,9 @@ R_Radix(int byte, int size, drawSurf_t *source, drawSurf_t *dest)
 }
 
 /*
- * ===============
  * R_RadixSort
  *
  * Radix sort with 4 byte size buckets
- * ===============
  */
 static void
 R_RadixSort(drawSurf_t *source, int size)
@@ -1787,9 +1729,7 @@ R_RadixSort(drawSurf_t *source, int size)
 /* ========================================================================================== */
 
 /*
- * =================
  * R_AddDrawSurf
- * =================
  */
 void
 R_AddDrawSurf(surfaceType_t *surface, shader_t *shader,
@@ -1810,9 +1750,7 @@ R_AddDrawSurf(surfaceType_t *surface, shader_t *shader,
 }
 
 /*
- * =================
  * R_DecomposeSort
- * =================
  */
 void
 R_DecomposeSort(unsigned sort, int *entityNum, shader_t **shader,
@@ -1826,9 +1764,7 @@ R_DecomposeSort(unsigned sort, int *entityNum, shader_t **shader,
 }
 
 /*
- * =================
  * R_SortDrawSurfs
- * =================
  */
 void
 R_SortDrawSurfs(drawSurf_t *drawSurfs, int numDrawSurfs)
@@ -1976,9 +1912,7 @@ R_AddEntitySurface(int entityNum)
 }
 
 /*
- * =============
  * R_AddEntitySurfaces
- * =============
  */
 void
 R_AddEntitySurfaces(void)
@@ -1995,9 +1929,7 @@ R_AddEntitySurfaces(void)
 
 
 /*
- * ====================
  * R_GenerateDrawSurfs
- * ====================
  */
 void
 R_GenerateDrawSurfs(void)
@@ -2024,9 +1956,7 @@ R_GenerateDrawSurfs(void)
 }
 
 /*
- * ================
  * R_DebugPolygon
- * ================
  */
 void
 R_DebugPolygon(int color, int numPoints, float *points)
@@ -2058,11 +1988,9 @@ R_DebugPolygon(int color, int numPoints, float *points)
 }
 
 /*
- * ====================
  * R_DebugGraphics
  *
  * Visualization aid for movement clipping debugging
- * ====================
  */
 void
 R_DebugGraphics(void)
@@ -2081,12 +2009,10 @@ R_DebugGraphics(void)
 
 
 /*
- * ================
  * R_RenderView
  *
  * A view may be either the actual camera view,
  * or a mirror / remote location
- * ================
  */
 void
 R_RenderView(viewParms_t *parms)

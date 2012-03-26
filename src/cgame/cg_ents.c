@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /*
  * cg_ents.c -- present snapshot entities, happens every single frame */
@@ -26,12 +24,10 @@
 
 
 /*
- * ======================
  * CG_PositionEntityOnTag
  *
  * Modifies the entities position and axis by the given
  * tag location
- * ======================
  */
 void
 CG_PositionEntityOnTag(refEntity_t *entity, const refEntity_t *parent,
@@ -57,12 +53,10 @@ CG_PositionEntityOnTag(refEntity_t *entity, const refEntity_t *parent,
 
 
 /*
- * ======================
  * CG_PositionRotatedEntityOnTag
  *
  * Modifies the entities position and axis by the given
  * tag location
- * ======================
  */
 void
 CG_PositionRotatedEntityOnTag(refEntity_t *entity, const refEntity_t *parent,
@@ -91,19 +85,15 @@ CG_PositionRotatedEntityOnTag(refEntity_t *entity, const refEntity_t *parent,
 
 
 /*
- * ==========================================================================
  *
  * FUNCTIONS CALLED EACH FRAME
  *
- * ==========================================================================
  */
 
 /*
- * ======================
  * CG_SetEntitySoundPosition
  *
  * Also called by event processing code
- * ======================
  */
 void
 CG_SetEntitySoundPosition(centity_t *cent)
@@ -121,11 +111,9 @@ CG_SetEntitySoundPosition(centity_t *cent)
 }
 
 /*
- * ==================
  * CG_EntityEffects
  *
  * Add continuous entity effects, like local entity emission and lighting
- * ==================
  */
 static void
 CG_EntityEffects(centity_t *cent)
@@ -166,9 +154,7 @@ CG_EntityEffects(centity_t *cent)
 
 
 /*
- * ==================
  * CG_General
- * ==================
  */
 static void
 CG_General(centity_t *cent)
@@ -207,11 +193,9 @@ CG_General(centity_t *cent)
 }
 
 /*
- * ==================
  * CG_Speaker
  *
  * Speaker entities can automatically play sounds
- * ==================
  */
 static void
 CG_Speaker(centity_t *cent)
@@ -232,9 +216,7 @@ CG_Speaker(centity_t *cent)
 }
 
 /*
- * ==================
  * CG_Item
- * ==================
  */
 static void
 CG_Item(centity_t *cent)
@@ -418,9 +400,7 @@ CG_Item(centity_t *cent)
 /* ============================================================================ */
 
 /*
- * ===============
  * CG_Missile
- * ===============
  */
 static void
 CG_Missile(centity_t *cent)
@@ -526,11 +506,9 @@ CG_Missile(centity_t *cent)
 }
 
 /*
- * ===============
  * CG_Grapple
  *
  * This is called when the grapple is sitting up against the wall
- * ===============
  */
 static void
 CG_Grapple(centity_t *cent)
@@ -577,9 +555,7 @@ CG_Grapple(centity_t *cent)
 }
 
 /*
- * ===============
  * CG_Mover
- * ===============
  */
 static void
 CG_Mover(centity_t *cent)
@@ -619,11 +595,9 @@ CG_Mover(centity_t *cent)
 }
 
 /*
- * ===============
  * CG_Beam
  *
  * Also called as an event
- * ===============
  */
 void
 CG_Beam(centity_t *cent)
@@ -648,9 +622,7 @@ CG_Beam(centity_t *cent)
 
 
 /*
- * ===============
  * CG_Portal
- * ===============
  */
 static void
 CG_Portal(centity_t *cent)
@@ -683,11 +655,9 @@ CG_Portal(centity_t *cent)
 
 
 /*
- * =========================
  * CG_AdjustPositionForMover
  *
  * Also called by client movement prediction code
- * =========================
  */
 void
 CG_AdjustPositionForMover(const vec3_t in, int moverNum, int fromTime,
@@ -726,9 +696,7 @@ CG_AdjustPositionForMover(const vec3_t in, int moverNum, int fromTime,
 
 
 /*
- * =============================
  * CG_InterpolateEntityPosition
- * =============================
  */
 static void
 CG_InterpolateEntityPosition(centity_t *cent)
@@ -766,10 +734,8 @@ CG_InterpolateEntityPosition(centity_t *cent)
 }
 
 /*
- * ===============
  * CG_CalcEntityLerpPositions
  *
- * ===============
  */
 static void
 CG_CalcEntityLerpPositions(centity_t *cent)
@@ -813,9 +779,7 @@ CG_CalcEntityLerpPositions(centity_t *cent)
 }
 
 /*
- * ===============
  * CG_TeamBase
- * ===============
  */
 static void
 CG_TeamBase(centity_t *cent)
@@ -961,10 +925,8 @@ CG_TeamBase(centity_t *cent)
 }
 
 /*
- * ===============
  * CG_AddCEntity
  *
- * ===============
  */
 static void
 CG_AddCEntity(centity_t *cent)
@@ -1021,10 +983,8 @@ CG_AddCEntity(centity_t *cent)
 }
 
 /*
- * ===============
  * CG_AddPacketEntities
  *
- * ===============
  */
 void
 CG_AddPacketEntities(void)

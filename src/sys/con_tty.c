@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 
 #include "../qcommon/q_shared.h"
@@ -31,13 +29,11 @@
 #include <sys/time.h>
 
 /*
- * =============================================================
  * tty console routines
  *
  * NOTE: if the user is editing a line when something gets printed to the early
  * console then it won't look good so we provide CON_Hide and CON_Show to be
  * called before and after a stdout or stderr output
- * =============================================================
  */
 
 extern qboolean stdinIsATTY;
@@ -61,12 +57,10 @@ static field_t ttyEditLines[ CON_HISTORY ];
 static int hist_current = -1, hist_count = 0;
 
 /*
- * ==================
  * CON_FlushIn
  *
  * Flush stdin, I suspect some terminals are sending a LOT of shit
  * FIXME relevant?
- * ==================
  */
 static void
 CON_FlushIn(void)
@@ -76,7 +70,6 @@ CON_FlushIn(void)
 }
 
 /*
- * ==================
  * CON_Back
  *
  * Output a backspace
@@ -84,7 +77,6 @@ CON_FlushIn(void)
  * NOTE: it seems on some terminals just sending '\b' is not enough so instead we
  * send "\b \b"
  * (FIXME there may be a way to find out if '\b' alone would work though)
- * ==================
  */
 static void
 CON_Back(void)
@@ -100,12 +92,10 @@ CON_Back(void)
 }
 
 /*
- * ==================
  * CON_Hide
  *
  * Clear the display of the line currently edited
  * bring cursor back to beginning of line
- * ==================
  */
 static void
 CON_Hide(void)
@@ -125,12 +115,10 @@ CON_Hide(void)
 }
 
 /*
- * ==================
  * CON_Show
  *
  * Show the current line
  * FIXME need to position the cursor if needed?
- * ==================
  */
 static void
 CON_Show(void)
@@ -152,11 +140,9 @@ CON_Show(void)
 }
 
 /*
- * ==================
  * CON_Shutdown
  *
  * Never exit without calling this, or your terminal will be left in a pretty bad state
- * ==================
  */
 void
 CON_Shutdown(void)
@@ -172,9 +158,7 @@ CON_Shutdown(void)
 }
 
 /*
- * ==================
  * Hist_Add
- * ==================
  */
 void
 Hist_Add(field_t *field)
@@ -194,9 +178,7 @@ Hist_Add(field_t *field)
 }
 
 /*
- * ==================
  * Hist_Prev
- * ==================
  */
 field_t *
 Hist_Prev(void)
@@ -214,9 +196,7 @@ Hist_Prev(void)
 }
 
 /*
- * ==================
  * Hist_Next
- * ==================
  */
 field_t *
 Hist_Next(void)
@@ -233,11 +213,9 @@ Hist_Next(void)
 }
 
 /*
- * ==================
  * CON_SigCont
  * Reinitialize console input after receiving SIGCONT, as on Linux the terminal seems to lose all
  * set attributes if user did CTRL+Z and then does fg again.
- * ==================
  */
 
 void
@@ -247,11 +225,9 @@ CON_SigCont(int signum)
 }
 
 /*
- * ==================
  * CON_Init
  *
  * Initialize the console input (tty mode if possible)
- * ==================
  */
 void
 CON_Init(void)
@@ -306,9 +282,7 @@ CON_Init(void)
 }
 
 /*
- * ==================
  * CON_Input
- * ==================
  */
 char *
 CON_Input(void)
@@ -443,9 +417,7 @@ CON_Input(void)
 }
 
 /*
- * ==================
  * CON_Print
- * ==================
  */
 void
 CON_Print(const char *msg)

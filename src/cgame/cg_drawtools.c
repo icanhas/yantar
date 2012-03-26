@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,18 +16,15 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /*
  * cg_drawtools.c -- helper functions called by cg_draw, cg_scoreboard, cg_info, etc */
 #include "cg_local.h"
 
 /*
- * ================
  * CG_AdjustFrom640
  *
  * Adjusted for resolution and screen aspect ratio
- * ================
  */
 void
 CG_AdjustFrom640(float *x, float *y, float *w, float *h)
@@ -49,11 +45,9 @@ CG_AdjustFrom640(float *x, float *y, float *w, float *h)
 }
 
 /*
- * ================
  * CG_FillRect
  *
  * Coordinates are 640*480 virtual values
- * =================
  */
 void
 CG_FillRect(float x, float y, float width, float height, const float *color)
@@ -68,11 +62,9 @@ CG_FillRect(float x, float y, float width, float height, const float *color)
 }
 
 /*
- * ================
  * CG_DrawSides
  *
  * Coords are virtual 640x480
- * ================
  */
 void
 CG_DrawSides(float x, float y, float w, float h, float size)
@@ -94,11 +86,9 @@ CG_DrawTopBottom(float x, float y, float w, float h, float size)
 		cgs.media.whiteShader);
 }
 /*
- * ================
  * UI_DrawRect
  *
  * Coordinates are 640*480 virtual values
- * =================
  */
 void
 CG_DrawRect(float x, float y, float width, float height, float size,
@@ -115,11 +105,9 @@ CG_DrawRect(float x, float y, float width, float height, float size,
 
 
 /*
- * ================
  * CG_DrawPic
  *
  * Coordinates are 640*480 virtual values
- * =================
  */
 void
 CG_DrawPic(float x, float y, float width, float height, qhandle_t hShader)
@@ -131,11 +119,9 @@ CG_DrawPic(float x, float y, float width, float height, qhandle_t hShader)
 
 
 /*
- * ===============
  * CG_DrawChar
  *
  * Coordinates and size in 640*480 virtual screen size
- * ===============
  */
 void
 CG_DrawChar(int x, int y, int width, int height, int ch)
@@ -171,14 +157,12 @@ CG_DrawChar(int x, int y, int width, int height, int ch)
 
 
 /*
- * ==================
  * CG_DrawStringExt
  *
  * Draws a multi-colored string with a drop shadow, optionally forcing
  * to a fixed color.
  *
  * Coordinates are at 640 by 480 virtual resolution
- * ==================
  */
 void
 CG_DrawStringExt(int x, int y, const char *string, const float *setColor,
@@ -280,11 +264,9 @@ CG_DrawSmallStringColor(int x, int y, const char *s, vec4_t color)
 }
 
 /*
- * =================
  * CG_DrawStrlen
  *
  * Returns character count, skiping color escape codes
- * =================
  */
 int
 CG_DrawStrlen(const char *str)
@@ -305,12 +287,10 @@ CG_DrawStrlen(const char *str)
 }
 
 /*
- * =============
  * CG_TileClearBox
  *
  * This repeats a 64*64 tile graphic to fill the screen around a sized down
  * refresh window.
- * =============
  */
 static void
 CG_TileClearBox(int x, int y, int w, int h, qhandle_t hShader)
@@ -327,11 +307,9 @@ CG_TileClearBox(int x, int y, int w, int h, qhandle_t hShader)
 
 
 /*
- * ==============
  * CG_TileClear
  *
  * Clear around a sized down screen
- * ==============
  */
 void
 CG_TileClear(void)
@@ -368,9 +346,7 @@ CG_TileClear(void)
 
 
 /*
- * ================
  * CG_FadeColor
- * ================
  */
 float *
 CG_FadeColor(int startMsec, int totalMsec)
@@ -398,9 +374,7 @@ CG_FadeColor(int startMsec, int totalMsec)
 
 
 /*
- * ================
  * CG_TeamColor
- * ================
  */
 float *
 CG_TeamColor(int team)
@@ -425,9 +399,7 @@ CG_TeamColor(int team)
 
 
 /*
- * =================
  * CG_GetColorForHealth
- * =================
  */
 void
 CG_GetColorForHealth(int health, int armor, vec4_t hcolor)
@@ -467,9 +439,7 @@ CG_GetColorForHealth(int health, int armor, vec4_t hcolor)
 }
 
 /*
- * =================
  * CG_ColorForHealth
- * =================
  */
 void
 CG_ColorForHealth(vec4_t hcolor)
@@ -481,9 +451,7 @@ CG_ColorForHealth(vec4_t hcolor)
 
 
 /*
- * =================
  * UI_DrawProportionalString2
- * =================
  */
 static int	propMap[128][3] = {
 	{0, 0,
@@ -648,9 +616,7 @@ static int	propMapB[26][3] = {
 #define PROPB_HEIGHT		36
 
 /*
- * =================
  * UI_DrawBannerString
- * =================
  */
 static void
 UI_DrawBannerString2(int x, int y, const char* str, vec4_t color)
@@ -820,9 +786,7 @@ UI_DrawProportionalString2(int x, int y, const char* str, vec4_t color,
 }
 
 /*
- * =================
  * UI_ProportionalSizeScale
- * =================
  */
 float
 UI_ProportionalSizeScale(int style)
@@ -835,9 +799,7 @@ UI_ProportionalSizeScale(int style)
 
 
 /*
- * =================
  * UI_DrawProportionalString
- * =================
  */
 void
 UI_DrawProportionalString(int x, int y, const char* str, int style, vec4_t color)

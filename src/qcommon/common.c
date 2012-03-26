@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /* common.c -- misc functions used in client and server */
 
@@ -149,14 +147,12 @@ Com_EndRedirect(void)
 }
 
 /*
- * =============
  * Com_Printf
  *
  * Both client and server can use this, and it will output
  * to the apropriate place.
  *
  * A raw string should NEVER be passed as fmt, because of "%f" type crashers.
- * =============
  */
 void QDECL
 Com_Printf(const char *fmt, ...)
@@ -226,11 +222,9 @@ Com_Printf(const char *fmt, ...)
 
 
 /*
- * ================
  * Com_DPrintf
  *
  * A Com_Printf that only shows up if the "developer" cvar is set
- * ================
  */
 void QDECL
 Com_DPrintf(const char *fmt, ...)
@@ -249,12 +243,10 @@ Com_DPrintf(const char *fmt, ...)
 }
 
 /*
- * =============
  * Com_Error
  *
  * Both client and server can use this, and it will
  * do the appropriate thing.
- * =============
  */
 void QDECL
 Com_Error(int code, const char *fmt, ...)
@@ -346,12 +338,10 @@ Com_Error(int code, const char *fmt, ...)
 
 
 /*
- * =============
  * Com_Quit_f
  *
  * Both client and server can use this, and it will
  * do the apropriate things.
- * =============
  */
 void
 Com_Quit_f(void)
@@ -376,7 +366,6 @@ Com_Quit_f(void)
 
 
 /*
- * ============================================================================
  *
  * COMMAND LINE FUNCTIONS
  *
@@ -397,11 +386,9 @@ int com_numConsoleLines;
 char *com_consoleLines[MAX_CONSOLE_LINES];
 
 /*
- * ==================
  * Com_ParseCommandLine
  *
  * Break it up into multiple console lines
- * ==================
  */
 void
 Com_ParseCommandLine(char *commandLine)
@@ -429,12 +416,10 @@ Com_ParseCommandLine(char *commandLine)
 
 
 /*
- * ===================
  * Com_SafeMode
  *
  * Check for "safe" on the command line, which will
  * skip loading of q3config.cfg
- * ===================
  */
 qboolean
 Com_SafeMode(void)
@@ -454,7 +439,6 @@ Com_SafeMode(void)
 
 
 /*
- * ===============
  * Com_StartupVariable
  *
  * Searches for command line parameters that are set commands.
@@ -462,7 +446,6 @@ Com_SafeMode(void)
  * That is necessary because cddir and basedir need to be set
  * before the filesystem is started, but all other sets should
  * be after execing the config and default.
- * ===============
  */
 void
 Com_StartupVariable(const char *match)
@@ -488,7 +471,6 @@ Com_StartupVariable(const char *match)
 
 
 /*
- * =================
  * Com_AddStartupCommands
  *
  * Adds command line parameters as script statements
@@ -496,7 +478,6 @@ Com_StartupVariable(const char *match)
  *
  * Returns qtrue if any late commands were added, which
  * will keep the demoloop from immediately starting
- * =================
  */
 qboolean
 Com_AddStartupCommands(void)
@@ -566,9 +547,7 @@ Info_Print(const char *s)
 }
 
 /*
- * ============
  * Com_StringContains
- * ============
  */
 char *
 Com_StringContains(char *str1, char *str2, int casesensitive)
@@ -592,9 +571,7 @@ Com_StringContains(char *str1, char *str2, int casesensitive)
 }
 
 /*
- * ============
  * Com_Filter
- * ============
  */
 int
 Com_Filter(char *filter, char *name, int casesensitive)
@@ -669,9 +646,7 @@ Com_Filter(char *filter, char *name, int casesensitive)
 }
 
 /*
- * ============
  * Com_FilterPath
- * ============
  */
 int
 Com_FilterPath(char *filter, char *name, int casesensitive)
@@ -698,9 +673,7 @@ Com_FilterPath(char *filter, char *name, int casesensitive)
 }
 
 /*
- * ================
  * Com_RealTime
- * ================
  */
 int
 Com_RealTime(qtime_t *qtime)
@@ -728,7 +701,6 @@ Com_RealTime(qtime_t *qtime)
 
 
 /*
- * ==============================================================================
  *
  *                                              ZONE MEMORY ALLOCATION
  *
@@ -739,7 +711,6 @@ Com_RealTime(qtime_t *qtime)
  *
  * The zone calls are pretty much only used for small strings and structures,
  * all big things are allocated on the hunk.
- * ==============================================================================
  */
 
 #define ZONEID		0x1d4a11
@@ -778,9 +749,7 @@ memzone_t *smallzone;
 void Z_CheckHeap(void);
 
 /*
- * ========================
  * Z_ClearZone
- * ========================
  */
 void
 Z_ClearZone(memzone_t *zone, int size)
@@ -809,9 +778,7 @@ Z_ClearZone(memzone_t *zone, int size)
 }
 
 /*
- * ========================
  * Z_AvailableZoneMemory
- * ========================
  */
 int
 Z_AvailableZoneMemory(memzone_t *zone)
@@ -820,9 +787,7 @@ Z_AvailableZoneMemory(memzone_t *zone)
 }
 
 /*
- * ========================
  * Z_AvailableMemory
- * ========================
  */
 int
 Z_AvailableMemory(void)
@@ -831,9 +796,7 @@ Z_AvailableMemory(void)
 }
 
 /*
- * ========================
  * Z_Free
- * ========================
  */
 void
 Z_Free(void *ptr)
@@ -895,9 +858,7 @@ Z_Free(void *ptr)
 
 
 /*
- * ================
  * Z_FreeTags
- * ================
  */
 void
 Z_FreeTags(int tag)
@@ -925,9 +886,7 @@ Z_FreeTags(int tag)
 
 
 /*
- * ================
  * Z_TagMalloc
- * ================
  */
 #ifdef ZONE_DEBUG
 void
@@ -1021,9 +980,7 @@ Z_TagMalloc(int size, int tag)
 }
 
 /*
- * ========================
  * Z_Malloc
- * ========================
  */
 #ifdef ZONE_DEBUG
 void *
@@ -1063,9 +1020,7 @@ S_Malloc(int size)
 #endif
 
 /*
- * ========================
  * Z_CheckHeap
- * ========================
  */
 void
 Z_CheckHeap(void)
@@ -1090,9 +1045,7 @@ Z_CheckHeap(void)
 }
 
 /*
- * ========================
  * Z_LogZoneHeap
- * ========================
  */
 void
 Z_LogZoneHeap(memzone_t *zone, char *name)
@@ -1157,9 +1110,7 @@ Z_LogZoneHeap(memzone_t *zone, char *name)
 }
 
 /*
- * ========================
  * Z_LogHeap
- * ========================
  */
 void
 Z_LogHeap(void)
@@ -1200,12 +1151,10 @@ memstatic_t	numberstring[] = {
 };
 
 /*
- * ========================
  * CopyString
  *
  * NOTE:	never write over the memory CopyString returns because
  *              memory from a memstatic_t might be returned
- * ========================
  */
 char *
 CopyString(const char *in)
@@ -1224,7 +1173,6 @@ CopyString(const char *in)
 }
 
 /*
- * ==============================================================================
  *
  * Goals:
  *      reproducable without history effects -- no out of memory errors on weird map to map changes
@@ -1254,7 +1202,6 @@ CopyString(const char *in)
  * permanent allocations to the other side.  Permanent allocations should be
  * kept on the side that has the current greatest wasted highwater mark.
  *
- * ==============================================================================
  */
 
 
@@ -1295,9 +1242,7 @@ static int	s_smallZoneTotal;
 
 
 /*
- * =================
  * Com_Meminfo_f
- * =================
  */
 void
 Com_Meminfo_f(void)
@@ -1458,9 +1403,7 @@ Com_InitZoneMemory(void)
 }
 
 /*
- * =================
  * Hunk_Log
- * =================
  */
 void
 Hunk_Log(void)
@@ -1495,9 +1438,7 @@ Hunk_Log(void)
 }
 
 /*
- * =================
  * Hunk_SmallLog
- * =================
  */
 void
 Hunk_SmallLog(void)
@@ -1547,9 +1488,7 @@ Hunk_SmallLog(void)
 }
 
 /*
- * =================
  * Com_InitZoneMemory
- * =================
  */
 void
 Com_InitHunkMemory(void)
@@ -1606,9 +1545,7 @@ Com_InitHunkMemory(void)
 }
 
 /*
- * ====================
  * Hunk_MemoryRemaining
- * ====================
  */
 int
 Hunk_MemoryRemaining(void)
@@ -1624,11 +1561,9 @@ Hunk_MemoryRemaining(void)
 }
 
 /*
- * ===================
  * Hunk_SetMark
  *
  * The server calls this after the level and game VM have been loaded
- * ===================
  */
 void
 Hunk_SetMark(void)
@@ -1638,11 +1573,9 @@ Hunk_SetMark(void)
 }
 
 /*
- * =================
  * Hunk_ClearToMark
  *
  * The client calls this before starting a vid_restart or snd_restart
- * =================
  */
 void
 Hunk_ClearToMark(void)
@@ -1652,9 +1585,7 @@ Hunk_ClearToMark(void)
 }
 
 /*
- * =================
  * Hunk_CheckMark
- * =================
  */
 qboolean
 Hunk_CheckMark(void)
@@ -1669,11 +1600,9 @@ void CL_ShutdownUI(void);
 void SV_ShutdownGameProgs(void);
 
 /*
- * =================
  * Hunk_Clear
  *
  * The server calls this before shutting down or loading a new map
- * =================
  */
 void
 Hunk_Clear(void)
@@ -1803,13 +1732,11 @@ void
 }
 
 /*
- * =================
  * Hunk_AllocateTempMemory
  *
  * This is used by the file loading system.
  * Multiple files can be loaded in temporary memory.
  * When the files-in-use count reaches zero, all temp memory will be deleted
- * =================
  */
 void *
 Hunk_AllocateTempMemory(int size)
@@ -1855,9 +1782,7 @@ Hunk_AllocateTempMemory(int size)
 
 
 /*
- * ==================
  * Hunk_FreeTempMemory
- * ==================
  */
 void
 Hunk_FreeTempMemory(void *buf)
@@ -1897,13 +1822,11 @@ Hunk_FreeTempMemory(void *buf)
 
 
 /*
- * =================
  * Hunk_ClearTempMemory
  *
  * The temp space is no longer needed.  If we have left more
  * touched but unused memory on this side, have future
  * permanent allocs use this side.
- * =================
  */
 void
 Hunk_ClearTempMemory(void)
@@ -1913,9 +1836,7 @@ Hunk_ClearTempMemory(void)
 }
 
 /*
- * =================
  * Hunk_Trash
- * =================
  */
 void
 Hunk_Trash(void)
@@ -1956,13 +1877,11 @@ Hunk_Trash(void)
 }
 
 /*
- * ===================================================================
  *
  * EVENTS AND JOURNALING
  *
  * In addition to these events, .cfg files are also copied to the
  * journaled file
- * ===================================================================
  */
 
 #define MAX_PUSHED_EVENTS 1024
@@ -1971,9 +1890,7 @@ static int	com_pushedEventsTail = 0;
 static sysEvent_t com_pushedEvents[MAX_PUSHED_EVENTS];
 
 /*
- * =================
  * Com_InitJournaling
- * =================
  */
 void
 Com_InitJournaling(void)
@@ -2002,11 +1919,9 @@ Com_InitJournaling(void)
 }
 
 /*
- * ========================================================================
  *
  * EVENT LOOP
  *
- * ========================================================================
  */
 
 #define MAX_QUEUED_EVENTS	256
@@ -2017,13 +1932,11 @@ static int	eventHead = 0;
 static int	eventTail = 0;
 
 /*
- * ================
  * Com_QueueEvent
  *
  * A time of 0 will get the current time
  * Ptr should either be null, or point to a block of data that can
  * be freed by the game later.
- * ================
  */
 void
 Com_QueueEvent(int time, sysEventType_t type, int value, int value2,
@@ -2056,10 +1969,8 @@ Com_QueueEvent(int time, sysEventType_t type, int value, int value2,
 }
 
 /*
- * ================
  * Com_GetSystemEvent
  *
- * ================
  */
 sysEvent_t
 Com_GetSystemEvent(void)
@@ -2099,9 +2010,7 @@ Com_GetSystemEvent(void)
 }
 
 /*
- * =================
  * Com_GetRealEvent
- * =================
  */
 sysEvent_t
 Com_GetRealEvent(void)
@@ -2146,9 +2055,7 @@ Com_GetRealEvent(void)
 
 
 /*
- * =================
  * Com_InitPushEvent
- * =================
  */
 void
 Com_InitPushEvent(void)
@@ -2164,9 +2071,7 @@ Com_InitPushEvent(void)
 
 
 /*
- * =================
  * Com_PushEvent
- * =================
  */
 void
 Com_PushEvent(sysEvent_t *event)
@@ -2195,9 +2100,7 @@ Com_PushEvent(sysEvent_t *event)
 }
 
 /*
- * =================
  * Com_GetEvent
- * =================
  */
 sysEvent_t
 Com_GetEvent(void)
@@ -2211,9 +2114,7 @@ Com_GetEvent(void)
 }
 
 /*
- * =================
  * Com_RunAndTimeServerPacket
- * =================
  */
 void
 Com_RunAndTimeServerPacket(netadr_t *evFrom, msg_t *buf)
@@ -2236,11 +2137,9 @@ Com_RunAndTimeServerPacket(netadr_t *evFrom, msg_t *buf)
 }
 
 /*
- * =================
  * Com_EventLoop
  *
  * Returns last event time
- * =================
  */
 int
 Com_EventLoop(void)
@@ -2302,11 +2201,9 @@ Com_EventLoop(void)
 }
 
 /*
- * ================
  * Com_Milliseconds
  *
  * Can be used for profiling, but will be journaled accurately
- * ================
  */
 int
 Com_Milliseconds(void)
@@ -2327,12 +2224,10 @@ Com_Milliseconds(void)
 /* ============================================================================ */
 
 /*
- * =============
  * Com_Error_f
  *
  * Just throw a fatal error to
  * test error shutdown procedures
- * =============
  */
 static void
 Com_Error_f(void)
@@ -2345,12 +2240,10 @@ Com_Error_f(void)
 
 
 /*
- * =============
  * Com_Freeze_f
  *
  * Just freeze in place for a given number of seconds to test
  * error recovery
- * =============
  */
 static void
 Com_Freeze_f(void)
@@ -2374,11 +2267,9 @@ Com_Freeze_f(void)
 }
 
 /*
- * =================
  * Com_Crash_f
  *
  * A way to force a bus error for development reasons
- * =================
  */
 static void
 Com_Crash_f(void)
@@ -2387,11 +2278,9 @@ Com_Crash_f(void)
 }
 
 /*
- * ==================
  * Com_Setenv_f
  *
  * For controlling environment variables
- * ==================
  */
 void
 Com_Setenv_f(void)
@@ -2414,11 +2303,9 @@ Com_Setenv_f(void)
 }
 
 /*
- * ==================
  * Com_ExecuteCfg
  *
  * For controlling environment variables
- * ==================
  */
 
 void
@@ -2437,11 +2324,9 @@ Com_ExecuteCfg(void)
 }
 
 /*
- * ==================
  * Com_GameRestart
  *
  * Change to a new mod properly with cleaning up cvars before switching.
- * ==================
  */
 
 void
@@ -2487,11 +2372,9 @@ Com_GameRestart(int checksumFeed, qboolean disconnect)
 }
 
 /*
- * ==================
  * Com_GameRestart_f
  *
  * Expose possibility to change current running mod to the user
- * ==================
  */
 
 void
@@ -2521,9 +2404,7 @@ char	cl_cdkey[34] = "123456789";
 #endif
 
 /*
- * =================
  * Com_ReadCDKey
- * =================
  */
 qboolean CL_CDKeyValidate(const char *key, const char *checksum);
 void
@@ -2553,9 +2434,7 @@ Com_ReadCDKey(const char *filename)
 }
 
 /*
- * =================
  * Com_AppendCDKey
- * =================
  */
 void
 Com_AppendCDKey(const char *filename)
@@ -2585,9 +2464,7 @@ Com_AppendCDKey(const char *filename)
 
 #ifndef DEDICATED
 /*
- * =================
  * Com_WriteCDKey
- * =================
  */
 static void
 Com_WriteCDKey(const char *filename, const char *ikey)
@@ -2655,10 +2532,8 @@ Com_DetectAltivec(void)
 }
 
 /*
- * =================
  * Com_DetectSSE
  * Find out whether we have SSE support for Q_ftol function
- * =================
  */
 
 #if id386 || idx64
@@ -2700,10 +2575,8 @@ Com_DetectSSE(void)
 #endif
 
 /*
- * =================
  * Com_InitRand
  * Seed the random number generator, if possible with an OS supplied random seed.
- * =================
  */
 static void
 Com_InitRand(void)
@@ -2717,9 +2590,7 @@ Com_InitRand(void)
 }
 
 /*
- * =================
  * Com_Init
- * =================
  */
 void
 Com_Init(char *commandLine)
@@ -2931,11 +2802,9 @@ Com_Init(char *commandLine)
 }
 
 /*
- * ===============
  * Com_ReadFromPipe
  *
  * Read whatever is in com_pipefile, if anything, and execute it
- * ===============
  */
 void
 Com_ReadFromPipe(void)
@@ -3000,11 +2869,9 @@ Com_WriteConfigToFile(const char *filename)
 
 
 /*
- * ===============
  * Com_WriteConfiguration
  *
  * Writes key bindings and archived cvars to config file if modified
- * ===============
  */
 void
 Com_WriteConfiguration(void)
@@ -3038,11 +2905,9 @@ Com_WriteConfiguration(void)
 
 
 /*
- * ===============
  * Com_WriteConfig_f
  *
  * Write the config file to a specific name
- * ===============
  */
 void
 Com_WriteConfig_f(void)
@@ -3061,9 +2926,7 @@ Com_WriteConfig_f(void)
 }
 
 /*
- * ================
  * Com_ModifyMsec
- * ================
  */
 int
 Com_ModifyMsec(int msec)
@@ -3110,9 +2973,7 @@ Com_ModifyMsec(int msec)
 }
 
 /*
- * =================
  * Com_TimeVal
- * =================
  */
 
 int
@@ -3131,9 +2992,7 @@ Com_TimeVal(int minMsec)
 }
 
 /*
- * =================
  * Com_Frame
- * =================
  */
 void
 Com_Frame(void)
@@ -3329,9 +3188,7 @@ Com_Frame(void)
 }
 
 /*
- * =================
  * Com_Shutdown
- * =================
  */
 void
 Com_Shutdown(void)
@@ -3354,15 +3211,11 @@ Com_Shutdown(void)
 }
 
 /*
- * ===========================================
  * command line completion
- * ===========================================
  */
 
 /*
- * ==================
  * Field_Clear
- * ==================
  */
 void
 Field_Clear(field_t *edit)
@@ -3379,10 +3232,8 @@ static int	matchCount;
 static field_t *completionField;
 
 /*
- * ===============
  * FindMatches
  *
- * ===============
  */
 static void
 FindMatches(const char *s)
@@ -3410,10 +3261,8 @@ FindMatches(const char *s)
 }
 
 /*
- * ===============
  * PrintMatches
  *
- * ===============
  */
 static void
 PrintMatches(const char *s)
@@ -3423,10 +3272,8 @@ PrintMatches(const char *s)
 }
 
 /*
- * ===============
  * PrintCvarMatches
  *
- * ===============
  */
 static void
 PrintCvarMatches(const char *s)
@@ -3440,9 +3287,7 @@ PrintCvarMatches(const char *s)
 }
 
 /*
- * ===============
  * Field_FindFirstSeparator
- * ===============
  */
 static char *
 Field_FindFirstSeparator(char *s)
@@ -3457,9 +3302,7 @@ Field_FindFirstSeparator(char *s)
 }
 
 /*
- * ===============
  * Field_Complete
- * ===============
  */
 static qboolean
 Field_Complete(void)
@@ -3491,9 +3334,7 @@ Field_Complete(void)
 
 #ifndef DEDICATED
 /*
- * ===============
  * Field_CompleteKeyname
- * ===============
  */
 void
 Field_CompleteKeyname(void)
@@ -3509,9 +3350,7 @@ Field_CompleteKeyname(void)
 #endif
 
 /*
- * ===============
  * Field_CompleteFilename
- * ===============
  */
 void
 Field_CompleteFilename(const char *dir,
@@ -3530,9 +3369,7 @@ Field_CompleteFilename(const char *dir,
 }
 
 /*
- * ===============
  * Field_CompleteCommand
- * ===============
  */
 void
 Field_CompleteCommand(char *cmd,
@@ -3615,11 +3452,9 @@ Field_CompleteCommand(char *cmd,
 }
 
 /*
- * ===============
  * Field_AutoComplete
  *
  * Perform Tab expansion
- * ===============
  */
 void
 Field_AutoComplete(field_t *field)
@@ -3630,11 +3465,9 @@ Field_AutoComplete(field_t *field)
 }
 
 /*
- * ==================
  * Com_RandomBytes
  *
  * fills string array with len radom bytes, peferably from the OS randomizer
- * ==================
  */
 void
 Com_RandomBytes(byte *string, int len)
@@ -3651,12 +3484,10 @@ Com_RandomBytes(byte *string, int len)
 
 
 /*
- * ==================
  * Com_IsVoipTarget
  *
  * Returns non-zero if given clientNum is enabled in voipTargets, zero otherwise.
  * If clientNum is negative return if any bit is set.
- * ==================
  */
 qboolean
 Com_IsVoipTarget(uint8_t *voipTargets, int voipTargetsSize, int clientNum)

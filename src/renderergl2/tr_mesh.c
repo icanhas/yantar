@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /* tr_mesh.c: triangle model functions */
 
@@ -72,9 +70,7 @@ ProjectRadius(float r, vec3_t location)
 }
 
 /*
- * =============
  * R_CullModel
- * =============
  */
 static int
 R_CullModel(mdvModel_t *model, trRefEntity_t *ent)
@@ -152,10 +148,8 @@ R_CullModel(mdvModel_t *model, trRefEntity_t *ent)
 
 
 /*
- * =================
  * R_ComputeLOD
  *
- * =================
  */
 int
 R_ComputeLOD(trRefEntity_t *ent)
@@ -227,10 +221,8 @@ R_ComputeLOD(trRefEntity_t *ent)
 }
 
 /*
- * =================
  * R_ComputeFogNum
  *
- * =================
  */
 int
 R_ComputeFogNum(mdvModel_t *model, trRefEntity_t *ent)
@@ -266,10 +258,8 @@ R_ComputeFogNum(mdvModel_t *model, trRefEntity_t *ent)
 }
 
 /*
- * =================
  * R_AddMD3Surfaces
  *
- * =================
  */
 void
 R_AddMD3Surfaces(trRefEntity_t *ent)

@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /*
  * cg_view.c -- setup all the parameters (position, angle, etc)
@@ -26,7 +24,6 @@
 
 
 /*
- * =============================================================================
  *
  * MODEL TESTING
  *
@@ -57,16 +54,13 @@
  * it may be convenient to test with deathmatch set to 1 so that bringing down the
  * console doesn't pause the game.
  *
- * =============================================================================
  */
 
 /*
- * =================
  * CG_TestModel_f
  *
  * Creates an entity in front of the current position, which
  * can then be moved around
- * =================
  */
 void
 CG_TestModel_f(void)
@@ -102,11 +96,9 @@ CG_TestModel_f(void)
 }
 
 /*
- * =================
  * CG_TestGun_f
  *
  * Replaces the current view weapon with the given model
- * =================
  */
 void
 CG_TestGun_f(void)
@@ -189,11 +181,9 @@ CG_AddTestModel(void)
 
 
 /*
- * =================
  * CG_CalcVrect
  *
  * Sets the coordinates of the rendered window
- * =================
  */
 static void
 CG_CalcVrect(void)
@@ -229,10 +219,8 @@ CG_CalcVrect(void)
 
 
 /*
- * ===============
  * CG_OffsetThirdPersonView
  *
- * ===============
  */
 #define FOCUS_DISTANCE 512
 static void
@@ -328,10 +316,8 @@ CG_StepOffset(void)
 }
 
 /*
- * ===============
  * CG_OffsetFirstPersonView
  *
- * ===============
  */
 static void
 CG_OffsetFirstPersonView(void)
@@ -481,11 +467,9 @@ CG_ZoomUp_f(void)
 
 
 /*
- * ====================
  * CG_CalcFov
  *
  * Fixed fov at intermissions, otherwise account for fov variable and zooms.
- * ====================
  */
 #define WAVE_AMPLITUDE	1
 #define WAVE_FREQUENCY	0.4
@@ -569,10 +553,8 @@ CG_CalcFov(void)
 
 
 /*
- * ===============
  * CG_DamageBlendBlob
  *
- * ===============
  */
 static void
 CG_DamageBlendBlob(void)
@@ -617,11 +599,9 @@ CG_DamageBlendBlob(void)
 
 
 /*
- * ===============
  * CG_CalcViewValues
  *
  * Sets cg.refdef view values
- * ===============
  */
 static int
 CG_CalcViewValues(void)
@@ -707,9 +687,7 @@ CG_CalcViewValues(void)
 
 
 /*
- * =====================
  * CG_PowerupTimerSounds
- * =====================
  */
 static void
 CG_PowerupTimerSounds(void)
@@ -732,9 +710,7 @@ CG_PowerupTimerSounds(void)
 }
 
 /*
- * =====================
  * CG_AddBufferedSound
- * =====================
  */
 void
 CG_AddBufferedSound(sfxHandle_t sfx)
@@ -748,9 +724,7 @@ CG_AddBufferedSound(sfxHandle_t sfx)
 }
 
 /*
- * =====================
  * CG_PlayBufferedSounds
- * =====================
  */
 static void
 CG_PlayBufferedSounds(void)
@@ -770,11 +744,9 @@ CG_PlayBufferedSounds(void)
 /* ========================================================================= */
 
 /*
- * =================
  * CG_DrawActiveFrame
  *
  * Generates and draws a game scene and status information at the given time.
- * =================
  */
 void
 CG_DrawActiveFrame(int serverTime, stereoFrame_t stereoView,

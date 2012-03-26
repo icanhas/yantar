@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /*
  * cg_draw.c -- draw all of the graphical elements during
@@ -213,11 +211,9 @@ CG_Text_Paint(float x, float y, float scale, vec4_t color, const char *text,
 #endif
 
 /*
- * ==============
  * CG_DrawField
  *
  * Draws large numbers for status bar and powerups
- * ==============
  */
 #ifndef MISSIONPACK
 static void
@@ -276,10 +272,8 @@ CG_DrawField(int x, int y, int width, int value)
 #endif	/* MISSIONPACK */
 
 /*
- * ================
  * CG_Draw3DModel
  *
- * ================
  */
 void
 CG_Draw3DModel(float x, float y, float w, float h, qhandle_t model,
@@ -323,11 +317,9 @@ CG_Draw3DModel(float x, float y, float w, float h, qhandle_t model,
 }
 
 /*
- * ================
  * CG_DrawHead
  *
  * Used for both the status bar and the scoreboard
- * ================
  */
 void
 CG_DrawHead(float x, float y, float w, float h, int clientNum, vec3_t headAngles)
@@ -370,11 +362,9 @@ CG_DrawHead(float x, float y, float w, float h, int clientNum, vec3_t headAngles
 }
 
 /*
- * ================
  * CG_DrawFlagModel
  *
  * Used for both the status bar and the scoreboard
- * ================
  */
 void
 CG_DrawFlagModel(float x, float y, float w, float h, int team, qboolean force2D)
@@ -430,10 +420,8 @@ CG_DrawFlagModel(float x, float y, float w, float h, int team, qboolean force2D)
 }
 
 /*
- * ================
  * CG_DrawStatusBarHead
  *
- * ================
  */
 #ifndef MISSIONPACK
 
@@ -496,10 +484,8 @@ CG_DrawStatusBarHead(float x)
 #endif	/* MISSIONPACK */
 
 /*
- * ================
  * CG_DrawStatusBarFlag
  *
- * ================
  */
 #ifndef MISSIONPACK
 static void
@@ -510,10 +496,8 @@ CG_DrawStatusBarFlag(float x, int team)
 #endif	/* MISSIONPACK */
 
 /*
- * ================
  * CG_DrawTeamBackground
  *
- * ================
  */
 void
 CG_DrawTeamBackground(int x, int y, int w, int h, float alpha, int team)
@@ -537,10 +521,8 @@ CG_DrawTeamBackground(int x, int y, int w, int h, float alpha, int team)
 }
 
 /*
- * ================
  * CG_DrawStatusBar
  *
- * ================
  */
 #ifndef MISSIONPACK
 static void
@@ -690,18 +672,14 @@ CG_DrawStatusBar(void)
 #endif
 
 /*
- * ===========================================================================================
  *
  * UPPER RIGHT CORNER
  *
- * ===========================================================================================
  */
 
 /*
- * ================
  * CG_DrawAttacker
  *
- * ================
  */
 static float
 CG_DrawAttacker(float y)
@@ -747,9 +725,7 @@ CG_DrawAttacker(float y)
 }
 
 /*
- * ==================
  * CG_DrawSnapshot
- * ==================
  */
 static float
 CG_DrawSnapshot(float y)
@@ -767,9 +743,7 @@ CG_DrawSnapshot(float y)
 }
 
 /*
- * ==================
  * CG_DrawFPS
- * ==================
  */
 #define FPS_FRAMES 4
 static float
@@ -811,9 +785,7 @@ CG_DrawFPS(float y)
 }
 
 /*
- * =================
  * CG_DrawTimer
- * =================
  */
 static float
 CG_DrawTimer(float y)
@@ -841,9 +813,7 @@ CG_DrawTimer(float y)
 
 
 /*
- * =================
  * CG_DrawTeamOverlay
- * =================
  */
 
 static float
@@ -1023,10 +993,8 @@ CG_DrawTeamOverlay(float y, qboolean right, qboolean upper)
 
 
 /*
- * =====================
  * CG_DrawUpperRight
  *
- * =====================
  */
 static void
 CG_DrawUpperRight(stereoFrame_t stereoFrame)
@@ -1050,19 +1018,15 @@ CG_DrawUpperRight(stereoFrame_t stereoFrame)
 }
 
 /*
- * ===========================================================================================
  *
  * LOWER RIGHT CORNER
  *
- * ===========================================================================================
  */
 
 /*
- * =================
  * CG_DrawScores
  *
  * Draw the small two score display
- * =================
  */
 #ifndef MISSIONPACK
 static float
@@ -1220,9 +1184,7 @@ CG_DrawScores(float y)
 #endif	/* MISSIONPACK */
 
 /*
- * ================
  * CG_DrawPowerups
- * ================
  */
 #ifndef MISSIONPACK
 static float
@@ -1326,10 +1288,8 @@ CG_DrawPowerups(float y)
 #endif	/* MISSIONPACK */
 
 /*
- * =====================
  * CG_DrawLowerRight
  *
- * =====================
  */
 #ifndef MISSIONPACK
 static void
@@ -1348,9 +1308,7 @@ CG_DrawLowerRight(void)
 #endif	/* MISSIONPACK */
 
 /*
- * ===================
  * CG_DrawPickupItem
- * ===================
  */
 #ifndef MISSIONPACK
 static int
@@ -1385,10 +1343,8 @@ CG_DrawPickupItem(int y)
 #endif	/* MISSIONPACK */
 
 /*
- * =====================
  * CG_DrawLowerLeft
  *
- * =====================
  */
 #ifndef MISSIONPACK
 static void
@@ -1410,9 +1366,7 @@ CG_DrawLowerLeft(void)
 /* =========================================================================================== */
 
 /*
- * =================
  * CG_DrawTeamInfo
- * =================
  */
 #ifndef MISSIONPACK
 static void
@@ -1479,9 +1433,7 @@ CG_DrawTeamInfo(void)
 #endif	/* MISSIONPACK */
 
 /*
- * ===================
  * CG_DrawHoldableItem
- * ===================
  */
 #ifndef MISSIONPACK
 static void
@@ -1502,9 +1454,7 @@ CG_DrawHoldableItem(void)
 
 #ifdef MISSIONPACK
 /*
- * ===================
  * CG_DrawPersistantPowerup
- * ===================
  */
 #if 0	/* sos001208 - DEAD */
 static void
@@ -1526,9 +1476,7 @@ CG_DrawPersistantPowerup(void)
 
 
 /*
- * ===================
  * CG_DrawReward
- * ===================
  */
 static void
 CG_DrawReward(void)
@@ -1599,11 +1547,9 @@ CG_DrawReward(void)
 
 
 /*
- * ===============================================================================
  *
  * LAGOMETER
  *
- * ===============================================================================
  */
 
 #define LAG_SAMPLES 128
@@ -1620,11 +1566,9 @@ typedef struct {
 lagometer_t lagometer;
 
 /*
- * ==============
  * CG_AddLagometerFrameInfo
  *
  * Adds the current interpolate / extrapolate bar for this frame
- * ==============
  */
 void
 CG_AddLagometerFrameInfo(void)
@@ -1638,14 +1582,12 @@ CG_AddLagometerFrameInfo(void)
 }
 
 /*
- * ==============
  * CG_AddLagometerSnapshotInfo
  *
  * Each time a snapshot is received, log its ping time and
  * the number of snapshots that were dropped before it.
  *
  * Pass NULL for a dropped packet.
- * ==============
  */
 void
 CG_AddLagometerSnapshotInfo(snapshot_t *snap)
@@ -1667,11 +1609,9 @@ CG_AddLagometerSnapshotInfo(snapshot_t *snap)
 }
 
 /*
- * ==============
  * CG_DrawDisconnect
  *
  * Should we draw something differnet for long lag vs no packets?
- * ==============
  */
 static void
 CG_DrawDisconnect(void)
@@ -1709,9 +1649,7 @@ CG_DrawDisconnect(void)
 #define MAX_LAGOMETER_RANGE	300
 
 /*
- * ==============
  * CG_DrawLagometer
- * ==============
  */
 static void
 CG_DrawLagometer(void)
@@ -1837,21 +1775,17 @@ CG_DrawLagometer(void)
 
 
 /*
- * ===============================================================================
  *
  * CENTER PRINTING
  *
- * ===============================================================================
  */
 
 
 /*
- * ==============
  * CG_CenterPrint
  *
  * Called for important messages that should stay in the center of the screen
  * for a few moments
- * ==============
  */
 void
 CG_CenterPrint(const char *str, int y, int charWidth)
@@ -1876,9 +1810,7 @@ CG_CenterPrint(const char *str, int y, int charWidth)
 
 
 /*
- * ===================
  * CG_DrawCenterString
- * ===================
  */
 static void
 CG_DrawCenterString(void)
@@ -1945,18 +1877,14 @@ CG_DrawCenterString(void)
 
 
 /*
- * ================================================================================
  *
  * CROSSHAIR
  *
- * ================================================================================
  */
 
 
 /*
- * =================
  * CG_DrawCrosshair
- * =================
  */
 static void
 CG_DrawCrosshair(void)
@@ -2010,9 +1938,7 @@ CG_DrawCrosshair(void)
 }
 
 /*
- * =================
  * CG_DrawCrosshair3D
- * =================
  */
 static void
 CG_DrawCrosshair3D(void)
@@ -2086,9 +2012,7 @@ CG_DrawCrosshair3D(void)
 
 
 /*
- * =================
  * CG_ScanForCrosshairEntity
- * =================
  */
 static void
 CG_ScanForCrosshairEntity(void)
@@ -2122,9 +2046,7 @@ CG_ScanForCrosshairEntity(void)
 
 
 /*
- * =====================
  * CG_DrawCrosshairNames
- * =====================
  */
 static void
 CG_DrawCrosshairNames(void)
@@ -2167,9 +2089,7 @@ CG_DrawCrosshairNames(void)
 /* ============================================================================== */
 
 /*
- * =================
  * CG_DrawSpectator
- * =================
  */
 static void
 CG_DrawSpectator(void)
@@ -2184,9 +2104,7 @@ CG_DrawSpectator(void)
 }
 
 /*
- * =================
  * CG_DrawVote
- * =================
  */
 static void
 CG_DrawVote(void)
@@ -2221,9 +2139,7 @@ CG_DrawVote(void)
 }
 
 /*
- * =================
  * CG_DrawTeamVote
- * =================
  */
 static void
 CG_DrawTeamVote(void)
@@ -2321,9 +2237,7 @@ CG_DrawScoreboard(void)
 }
 
 /*
- * =================
  * CG_DrawIntermission
- * =================
  */
 static void
 CG_DrawIntermission(void)
@@ -2345,9 +2259,7 @@ CG_DrawIntermission(void)
 }
 
 /*
- * =================
  * CG_DrawFollow
- * =================
  */
 static qboolean
 CG_DrawFollow(void)
@@ -2380,9 +2292,7 @@ CG_DrawFollow(void)
 
 
 /*
- * =================
  * CG_DrawAmmoWarning
- * =================
  */
 static void
 CG_DrawAmmoWarning(void)
@@ -2407,9 +2317,7 @@ CG_DrawAmmoWarning(void)
 
 #ifdef MISSIONPACK
 /*
- * =================
  * CG_DrawProxWarning
- * =================
  */
 static void
 CG_DrawProxWarning(void)
@@ -2450,9 +2358,7 @@ CG_DrawProxWarning(void)
 
 
 /*
- * =================
  * CG_DrawWarmup
- * =================
  */
 static void
 CG_DrawWarmup(void)
@@ -2612,9 +2518,7 @@ CG_DrawWarmup(void)
 /* ================================================================================== */
 #ifdef MISSIONPACK
 /*
- * =================
  * CG_DrawTimedMenus
- * =================
  */
 void
 CG_DrawTimedMenus(void)
@@ -2630,9 +2534,7 @@ CG_DrawTimedMenus(void)
 }
 #endif
 /*
- * =================
  * CG_Draw2D
- * =================
  */
 static void
 CG_Draw2D(stereoFrame_t stereoFrame)
@@ -2742,11 +2644,9 @@ CG_DrawTourneyScoreboard(void)
 }
 
 /*
- * =====================
  * CG_DrawActive
  *
  * Perform all drawing needed to completely fill the screen
- * =====================
  */
 void
 CG_DrawActive(stereoFrame_t stereoView)

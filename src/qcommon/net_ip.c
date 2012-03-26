@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 
 #include "../qcommon/q_shared.h"
@@ -149,9 +147,7 @@ static int numIP;
 
 
 /*
- * ====================
  * NET_ErrorString
- * ====================
  */
 char *
 NET_ErrorString(void)
@@ -267,9 +263,7 @@ SearchAddrInfo(struct addrinfo *hints, sa_family_t family)
 }
 
 /*
- * =============
  * Sys_StringToSockaddr
- * =============
  */
 static qboolean
 Sys_StringToSockaddr(const char *s, struct sockaddr *sadr, int sadr_len,
@@ -335,9 +329,7 @@ Sys_StringToSockaddr(const char *s, struct sockaddr *sadr, int sadr_len,
 }
 
 /*
- * =============
  * Sys_SockaddrToString
- * =============
  */
 static void
 Sys_SockaddrToString(char *dest, int destlen, struct sockaddr *input)
@@ -355,9 +347,7 @@ Sys_SockaddrToString(char *dest, int destlen, struct sockaddr *input)
 }
 
 /*
- * =============
  * Sys_StringToAdr
- * =============
  */
 qboolean
 Sys_StringToAdr(const char *s, netadr_t *a, netadrtype_t family)
@@ -385,11 +375,9 @@ Sys_StringToAdr(const char *s, netadr_t *a, netadrtype_t family)
 }
 
 /*
- * ===================
  * NET_CompareBaseAdrMask
  *
  * Compare without port, and up to the bit number given in netmask.
- * ===================
  */
 qboolean
 NET_CompareBaseAdrMask(netadr_t a, netadr_t b, int netmask)
@@ -440,11 +428,9 @@ NET_CompareBaseAdrMask(netadr_t a, netadr_t b, int netmask)
 
 
 /*
- * ===================
  * NET_CompareBaseAdr
  *
  * Compares without the port
- * ===================
  */
 qboolean
 NET_CompareBaseAdr(netadr_t a, netadr_t b)
@@ -517,11 +503,9 @@ NET_IsLocalAddress(netadr_t adr)
 /* ============================================================================= */
 
 /*
- * ==================
  * NET_GetPacket
  *
  * Receive one packet
- * ==================
  */
 #ifdef _DEBUG
 int recvfromCount;
@@ -660,9 +644,7 @@ NET_GetPacket(netadr_t *net_from, msg_t *net_message, fd_set *fdr)
 static char socksBuf[4096];
 
 /*
- * ==================
  * Sys_SendPacket
- * ==================
  */
 void
 Sys_SendPacket(int length, const void *data, netadr_t to)
@@ -730,11 +712,9 @@ Sys_SendPacket(int length, const void *data, netadr_t to)
 /* ============================================================================= */
 
 /*
- * ==================
  * Sys_IsLANAddress
  *
  * LAN clients will have their rate var ignored
- * ==================
  */
 qboolean
 Sys_IsLANAddress(netadr_t adr)
@@ -815,9 +795,7 @@ Sys_IsLANAddress(netadr_t adr)
 }
 
 /*
- * ==================
  * Sys_ShowIP
- * ==================
  */
 void
 Sys_ShowIP(void)
@@ -841,9 +819,7 @@ Sys_ShowIP(void)
 
 
 /*
- * ====================
  * NET_IPSocket
- * ====================
  */
 int
 NET_IPSocket(char *net_interface, int port, int *err)
@@ -911,9 +887,7 @@ NET_IPSocket(char *net_interface, int port, int *err)
 }
 
 /*
- * ====================
  * NET_IP6Socket
- * ====================
  */
 int
 NET_IP6Socket(char *net_interface, int port, struct sockaddr_in6 *bindto,
@@ -999,10 +973,8 @@ NET_IP6Socket(char *net_interface, int port, struct sockaddr_in6 *bindto,
 }
 
 /*
- * ====================
  * NET_SetMulticast
  * Set the current multicast group
- * ====================
  */
 void
 NET_SetMulticast6(void)
@@ -1039,10 +1011,8 @@ NET_SetMulticast6(void)
 }
 
 /*
- * ====================
  * NET_JoinMulticast
  * Join an ipv6 multicast group
- * ====================
  */
 void
 NET_JoinMulticast6(void)
@@ -1110,9 +1080,7 @@ NET_LeaveMulticast6()
 }
 
 /*
- * ====================
  * NET_OpenSocks
- * ====================
  */
 void
 NET_OpenSocks(int port)
@@ -1282,9 +1250,7 @@ NET_OpenSocks(int port)
 
 
 /*
- * =====================
  * NET_AddLocalAddress
- * =====================
  */
 static void
 NET_AddLocalAddress(char *ifname, struct sockaddr *addr,
@@ -1401,9 +1367,7 @@ NET_GetLocalAddress(void)
 #endif
 
 /*
- * ====================
  * NET_OpenIP
- * ====================
  */
 void
 NET_OpenIP(void)
@@ -1464,9 +1428,7 @@ NET_OpenIP(void)
 
 
 /*
- * ====================
  * NET_GetCvars
- * ====================
  */
 static qboolean
 NET_GetCvars(void)
@@ -1549,9 +1511,7 @@ NET_GetCvars(void)
 
 
 /*
- * ====================
  * NET_Config
- * ====================
  */
 void
 NET_Config(qboolean enableNetworking)
@@ -1623,9 +1583,7 @@ NET_Config(qboolean enableNetworking)
 
 
 /*
- * ====================
  * NET_Init
- * ====================
  */
 void
 NET_Init(void)
@@ -1652,9 +1610,7 @@ NET_Init(void)
 
 
 /*
- * ====================
  * NET_Shutdown
- * ====================
  */
 void
 NET_Shutdown(void)
@@ -1671,11 +1627,9 @@ NET_Shutdown(void)
 }
 
 /*
- * ====================
  * NET_Event
  *
  * Called from NET_Sleep which uses select() to determine which sockets have seen action.
- * ====================
  */
 
 void
@@ -1707,11 +1661,9 @@ NET_Event(fd_set *fdr)
 }
 
 /*
- * ====================
  * NET_Sleep
  *
  * Sleeps msec or until something happens on the network
- * ====================
  */
 void
 NET_Sleep(int msec)
@@ -1758,9 +1710,7 @@ NET_Sleep(int msec)
 }
 
 /*
- * ====================
  * NET_Restart_f
- * ====================
  */
 void
 NET_Restart_f(void)

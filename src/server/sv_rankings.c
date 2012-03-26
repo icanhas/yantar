@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /* sv_rankings.c -- global rankings interface */
 
@@ -75,9 +73,7 @@ static void             SV_RankError(const char* fmt,
 static char SV_RankGameKey[64];
 
 /*
- * ================
  * SV_RankBegin
- * ================
  */
 void
 SV_RankBegin(char *gamekey)
@@ -186,9 +182,7 @@ SV_RankBegin(char *gamekey)
 }
 
 /*
- * ================
  * SV_RankEnd
- * ================
  */
 void
 SV_RankEnd(void)
@@ -238,9 +232,7 @@ SV_RankEnd(void)
 }
 
 /*
- * ================
  * SV_RankPoll
- * ================
  */
 void
 SV_RankPoll(void)
@@ -249,9 +241,7 @@ SV_RankPoll(void)
 }
 
 /*
- * ================
  * SV_RankCheckInit
- * ================
  */
 qboolean
 SV_RankCheckInit(void)
@@ -260,9 +250,7 @@ SV_RankCheckInit(void)
 }
 
 /*
- * ================
  * SV_RankActive
- * ================
  */
 qboolean
 SV_RankActive(void)
@@ -271,9 +259,7 @@ SV_RankActive(void)
 }
 
 /*
- * =================
  * SV_RankUserStatus
- * =================
  */
 grank_status_t
 SV_RankUserStatus(int index)
@@ -289,9 +275,7 @@ SV_RankUserStatus(int index)
 }
 
 /*
- * ================
  * SV_RankUserGRank
- * ================
  */
 int
 SV_RankUserGrank(int index)
@@ -307,9 +291,7 @@ SV_RankUserGrank(int index)
 }
 
 /*
- * ================
  * SV_RankUserReset
- * ================
  */
 void
 SV_RankUserReset(int index)
@@ -337,9 +319,7 @@ SV_RankUserReset(int index)
 }
 
 /*
- * ================
  * SV_RankUserSpectate
- * ================
  */
 void
 SV_RankUserSpectate(int index)
@@ -356,9 +336,7 @@ SV_RankUserSpectate(int index)
 }
 
 /*
- * ================
  * SV_RankUserCreate
- * ================
  */
 void
 SV_RankUserCreate(int index, char* username, char* password,
@@ -421,9 +399,7 @@ SV_RankUserCreate(int index, char* username, char* password,
 }
 
 /*
- * ================
  * SV_RankUserLogin
- * ================
  */
 void
 SV_RankUserLogin(int index, char* username, char* password)
@@ -482,9 +458,7 @@ SV_RankUserLogin(int index, char* username, char* password)
 }
 
 /*
- * ===================
  * SV_RankUserValidate
- * ===================
  */
 qboolean
 SV_RankUserValidate(int index, const char* player_id, const char* key,
@@ -584,9 +558,7 @@ SV_RankUserValidate(int index, const char* player_id, const char* key,
 }
 
 /*
- * ================
  * SV_RankUserLogout
- * ================
  */
 void
 SV_RankUserLogout(int index)
@@ -648,9 +620,7 @@ SV_RankUserLogout(int index)
 }
 
 /*
- * ================
  * SV_RankReportInt
- * ================
  */
 void
 SV_RankReportInt(int index1, int index2, int key, int value,
@@ -752,9 +722,7 @@ SV_RankReportInt(int index1, int index2, int key, int value,
 }
 
 /*
- * ================
  * SV_RankReportStr
- * ================
  */
 void
 SV_RankReportStr(int index1, int index2, int key, char* value)
@@ -846,9 +814,7 @@ SV_RankReportStr(int index1, int index2, int key, char* value)
 }
 
 /*
- * ================
  * SV_RankQuit
- * ================
  */
 void
 SV_RankQuit(void)
@@ -895,17 +861,13 @@ SV_RankQuit(void)
 }
 
 /*
- * ==============================================================================
  *
  * Private Functions
  *
- * ==============================================================================
  */
 
 /*
- * =================
  * SV_RankNewGameCBF
- * =================
  */
 static void
 SV_RankNewGameCBF(GR_NEWGAME* gr_newgame, void* cbf_arg)
@@ -958,9 +920,7 @@ SV_RankNewGameCBF(GR_NEWGAME* gr_newgame, void* cbf_arg)
 }
 
 /*
- * ================
  * SV_RankUserCBF
- * ================
  */
 static void
 SV_RankUserCBF(GR_LOGIN* gr_login, void* cbf_arg)
@@ -1040,9 +1000,7 @@ SV_RankUserCBF(GR_LOGIN* gr_login, void* cbf_arg)
 }
 
 /*
- * ================
  * SV_RankJoinGameCBF
- * ================
  */
 static void
 SV_RankJoinGameCBF(GR_JOINGAME* gr_joingame, void* cbf_arg)
@@ -1102,9 +1060,7 @@ SV_RankJoinGameCBF(GR_JOINGAME* gr_joingame, void* cbf_arg)
 }
 
 /*
- * ================
  * SV_RankSendReportsCBF
- * ================
  */
 static void
 SV_RankSendReportsCBF(GR_STATUS* status, void* cbf_arg)
@@ -1156,9 +1112,7 @@ SV_RankSendReportsCBF(GR_STATUS* status, void* cbf_arg)
 }
 
 /*
- * ================
  * SV_RankCleanupCBF
- * ================
  */
 static void
 SV_RankCleanupCBF(GR_STATUS* status, void* cbf_arg)
@@ -1179,9 +1133,7 @@ SV_RankCleanupCBF(GR_STATUS* status, void* cbf_arg)
 }
 
 /*
- * ================
  * SV_RankCloseContext
- * ================
  */
 static void
 SV_RankCloseContext(ranked_player_t* ranked_player)
@@ -1226,7 +1178,6 @@ SV_RankCloseContext(ranked_player_t* ranked_player)
 }
 
 /*
- * ================
  * SV_RankAsciiEncode
  *
  * Encodes src_len bytes of binary data from the src buffer as ASCII text,
@@ -1236,7 +1187,6 @@ SV_RankCloseContext(ranked_player_t* ranked_player)
  * The dest buffer must be at least (src_len * 4) / 3 + 2 bytes in length.
  *
  * Returns the length of the result string, not including the null.
- * ================
  */
 static int
 SV_RankAsciiEncode(char* dest, const unsigned char* src,
@@ -1275,7 +1225,6 @@ SV_RankAsciiEncode(char* dest, const unsigned char* src,
 }
 
 /*
- * ================
  * SV_RankAsciiDecode
  *
  * Decodes src_len characters of ASCII text from the src buffer, stores
@@ -1284,7 +1233,6 @@ SV_RankAsciiEncode(char* dest, const unsigned char* src,
  * The dest buffer must be at least (src_len * 3) / 4 bytes in length.
  *
  * Returns the length of the binary result, or zero for invalid input.
- * ================
  */
 static int
 SV_RankAsciiDecode(unsigned char* dest, const char* src,
@@ -1336,9 +1284,7 @@ SV_RankAsciiDecode(unsigned char* dest, const char* src,
 }
 
 /*
- * ================
  * SV_RankEncodeGameID
- * ================
  */
 static void
 SV_RankEncodeGameID(uint64_t game_id, char* result,
@@ -1357,9 +1303,7 @@ SV_RankEncodeGameID(uint64_t game_id, char* result,
 }
 
 /*
- * ================
  * SV_RankDecodePlayerID
- * ================
  */
 static uint64_t
 SV_RankDecodePlayerID(const char* string)
@@ -1378,9 +1322,7 @@ SV_RankDecodePlayerID(const char* string)
 }
 
 /*
- * ================
  * SV_RankDecodePlayerKey
- * ================
  */
 static void
 SV_RankDecodePlayerKey(const char* string, GR_PLAYER_TOKEN key)
@@ -1398,9 +1340,7 @@ SV_RankDecodePlayerKey(const char* string, GR_PLAYER_TOKEN key)
 }
 
 /*
- * ================
  * SV_RankStatusString
- * ================
  */
 static char*
 SV_RankStatusString(GR_STATUS status)
@@ -1425,9 +1365,7 @@ SV_RankStatusString(GR_STATUS status)
 }
 
 /*
- * ================
  * SV_RankError
- * ================
  */
 static void
 SV_RankError(const char* fmt, ...)

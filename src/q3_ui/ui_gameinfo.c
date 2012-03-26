@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /*
  *
@@ -47,9 +45,7 @@ static int	allocPoint, outOfMemory;
 
 
 /*
- * ===============
  * UI_Alloc
- * ===============
  */
 void *
 UI_Alloc(int size)
@@ -69,9 +65,7 @@ UI_Alloc(int size)
 }
 
 /*
- * ===============
  * UI_InitMemory
- * ===============
  */
 void
 UI_InitMemory(void)
@@ -81,9 +75,7 @@ UI_InitMemory(void)
 }
 
 /*
- * ===============
  * UI_ParseInfos
- * ===============
  */
 int
 UI_ParseInfos(char *buf, int max, char *infos[])
@@ -137,9 +129,7 @@ UI_ParseInfos(char *buf, int max, char *infos[])
 }
 
 /*
- * ===============
  * UI_LoadArenasFromFile
- * ===============
  */
 static void
 UI_LoadArenasFromFile(char *filename)
@@ -171,9 +161,7 @@ UI_LoadArenasFromFile(char *filename)
 }
 
 /*
- * ===============
  * UI_LoadArenas
- * ===============
  */
 static void
 UI_LoadArenas(void)
@@ -278,9 +266,7 @@ UI_LoadArenas(void)
 }
 
 /*
- * ===============
  * UI_GetArenaInfoByNumber
- * ===============
  */
 const char *
 UI_GetArenaInfoByNumber(int num)
@@ -304,9 +290,7 @@ UI_GetArenaInfoByNumber(int num)
 
 
 /*
- * ===============
  * UI_GetArenaInfoByNumber
- * ===============
  */
 const char *
 UI_GetArenaInfoByMap(const char *map)
@@ -323,9 +307,7 @@ UI_GetArenaInfoByMap(const char *map)
 
 
 /*
- * ===============
  * UI_GetSpecialArenaInfo
- * ===============
  */
 const char *
 UI_GetSpecialArenaInfo(const char *tag)
@@ -341,9 +323,7 @@ UI_GetSpecialArenaInfo(const char *tag)
 }
 
 /*
- * ===============
  * UI_LoadBotsFromFile
- * ===============
  */
 static void
 UI_LoadBotsFromFile(char *filename)
@@ -379,9 +359,7 @@ UI_LoadBotsFromFile(char *filename)
 }
 
 /*
- * ===============
  * UI_LoadBots
- * ===============
  */
 static void
 UI_LoadBots(void)
@@ -416,9 +394,7 @@ UI_LoadBots(void)
 
 
 /*
- * ===============
  * UI_GetBotInfoByNumber
- * ===============
  */
 char *
 UI_GetBotInfoByNumber(int num)
@@ -432,9 +408,7 @@ UI_GetBotInfoByNumber(int num)
 
 
 /*
- * ===============
  * UI_GetBotInfoByName
- * ===============
  */
 char *
 UI_GetBotInfoByName(const char *name)
@@ -457,11 +431,9 @@ UI_GetBotInfoByName(const char *name)
  *  */
 
 /*
- * ===============
  * UI_GetBestScore
  *
  * Returns the player's best finish on a given level, 0 if the have not played the level
- * ===============
  */
 void
 UI_GetBestScore(int level, int *score, int *skill)
@@ -504,11 +476,9 @@ UI_GetBestScore(int level, int *score, int *skill)
 
 
 /*
- * ===============
  * UI_SetBestScore
  *
  * Set the player's best finish for a level
- * ===============
  */
 void
 UI_SetBestScore(int level, int score)
@@ -544,9 +514,7 @@ UI_SetBestScore(int level, int score)
 
 
 /*
- * ===============
  * UI_LogAwardData
- * ===============
  */
 void
 UI_LogAwardData(int award, int data)
@@ -575,9 +543,7 @@ UI_LogAwardData(int award, int data)
 
 
 /*
- * ===============
  * UI_GetAwardLevel
- * ===============
  */
 int
 UI_GetAwardLevel(int award)
@@ -593,9 +559,7 @@ UI_GetAwardLevel(int award)
 
 
 /*
- * ===============
  * UI_TierCompleted
- * ===============
  */
 int
 UI_TierCompleted(int levelWon)
@@ -630,9 +594,7 @@ UI_TierCompleted(int levelWon)
 
 
 /*
- * ===============
  * UI_ShowTierVideo
- * ===============
  */
 qboolean
 UI_ShowTierVideo(int tier)
@@ -657,9 +619,7 @@ UI_ShowTierVideo(int tier)
 
 
 /*
- * ===============
  * UI_CanShowTierVideo
- * ===============
  */
 qboolean
 UI_CanShowTierVideo(int tier)
@@ -684,11 +644,9 @@ UI_CanShowTierVideo(int tier)
 
 
 /*
- * ===============
  * UI_GetCurrentGame
  *
  * Returns the next level the player has not won
- * ===============
  */
 int
 UI_GetCurrentGame(void)
@@ -720,11 +678,9 @@ UI_GetCurrentGame(void)
 
 
 /*
- * ===============
  * UI_NewGame
  *
  * Clears the scores and sets the difficutly level
- * ===============
  */
 void
 UI_NewGame(void)
@@ -740,9 +696,7 @@ UI_NewGame(void)
 
 
 /*
- * ===============
  * UI_GetNumArenas
- * ===============
  */
 int
 UI_GetNumArenas(void)
@@ -752,9 +706,7 @@ UI_GetNumArenas(void)
 
 
 /*
- * ===============
  * UI_GetNumSPArenas
- * ===============
  */
 int
 UI_GetNumSPArenas(void)
@@ -764,9 +716,7 @@ UI_GetNumSPArenas(void)
 
 
 /*
- * ===============
  * UI_GetNumSPTiers
- * ===============
  */
 int
 UI_GetNumSPTiers(void)
@@ -776,9 +726,7 @@ UI_GetNumSPTiers(void)
 
 
 /*
- * ===============
  * UI_GetNumBots
- * ===============
  */
 int
 UI_GetNumBots(void)
@@ -788,9 +736,7 @@ UI_GetNumBots(void)
 
 
 /*
- * ===============
  * UI_SPUnlock_f
- * ===============
  */
 void
 UI_SPUnlock_f(void)
@@ -823,9 +769,7 @@ UI_SPUnlock_f(void)
 
 
 /*
- * ===============
  * UI_SPUnlockMedals_f
- * ===============
  */
 void
 UI_SPUnlockMedals_f(void)
@@ -848,9 +792,7 @@ UI_SPUnlockMedals_f(void)
 
 
 /*
- * ===============
  * UI_InitGameinfo
- * ===============
  */
 void
 UI_InitGameinfo(void)

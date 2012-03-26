@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 
 
@@ -507,11 +505,9 @@ typedef struct {
 
 
 /*
- * ==============================================================================
  *
  * SURFACES
  *
- * ==============================================================================
  */
 
 /* any changes in surfaceType must be mirrored in rb_surfaceTable[] */
@@ -672,11 +668,9 @@ typedef struct srfIQModel_s {
 extern void (*rb_surfaceTable[SF_NUM_SURFACE_TYPES]) (void *);
 
 /*
- * ==============================================================================
  *
  * BRUSH MODELS
  *
- * ==============================================================================
  */
 
 
@@ -1291,11 +1285,9 @@ void            R_ShaderList_f(void);
 void    R_RemapShader(const char *oldShader, const char *newShader, const char *timeOffset);
 
 /*
- * ====================================================================
  *
  * IMPLEMENTATION SPECIFIC FUNCTIONS
  *
- * ====================================================================
  */
 
 void            GLimp_Init(void);
@@ -1318,11 +1310,9 @@ void            GLimp_SetGamma(unsigned char red[256],
 
 
 /*
- * ====================================================================
  *
  * TESSELATOR/SHADER DECLARATIONS
  *
- * ====================================================================
  */
 typedef byte color4ub_t[4];
 
@@ -1380,11 +1370,9 @@ void RB_ShowImages(void);
 
 
 /*
- * ============================================================
  *
  * WORLD MAP
  *
- * ============================================================
  */
 
 void R_AddBrushModelSurfaces(trRefEntity_t *e);
@@ -1393,11 +1381,9 @@ qboolean R_inPVS(const vec3_t p1, const vec3_t p2);
 
 
 /*
- * ============================================================
  *
  * FLARES
  *
- * ============================================================
  */
 
 void R_ClearFlares(void);
@@ -1407,11 +1393,9 @@ void RB_AddDlightFlares(void);
 void RB_RenderFlares(void);
 
 /*
- * ============================================================
  *
  * LIGHTS
  *
- * ============================================================
  */
 
 void R_DlightBmodel(bmodel_t *bmodel);
@@ -1421,11 +1405,9 @@ int R_LightForPoint(vec3_t point, vec3_t ambientLight, vec3_t directedLight, vec
 
 
 /*
- * ============================================================
  *
  * SHADOWS
  *
- * ============================================================
  */
 
 void RB_ShadowTessEnd(void);
@@ -1433,11 +1415,9 @@ void RB_ShadowFinish(void);
 void RB_ProjectionShadowDeform(void);
 
 /*
- * ============================================================
  *
  * SKIES
  *
- * ============================================================
  */
 
 void R_BuildCloudData(shaderCommands_t *shader);
@@ -1447,11 +1427,9 @@ void RB_DrawSun(void);
 void RB_ClipSkyPolygons(shaderCommands_t *shader);
 
 /*
- * ============================================================
  *
  * CURVE TESSELATION
  *
- * ============================================================
  */
 
 #define PATCH_STITCHING
@@ -1463,11 +1441,9 @@ srfGridMesh_t*R_GridInsertRow(srfGridMesh_t *grid, int row, int column, vec3_t p
 void R_FreeSurfaceGridMesh(srfGridMesh_t *grid);
 
 /*
- * ============================================================
  *
  * MARKERS, POLYGON PROJECTION ON WORLD POLYGONS
  *
- * ============================================================
  */
 
 int R_MarkFragments(int numPoints, const vec3_t *points, const vec3_t projection,
@@ -1475,11 +1451,9 @@ int R_MarkFragments(int numPoints, const vec3_t *points, const vec3_t projection
 
 
 /*
- * ============================================================
  *
  * SCENE GENERATION
  *
- * ============================================================
  */
 
 void R_ToggleSmpFrame(void);
@@ -1493,11 +1467,9 @@ void RE_RenderScene(const refdef_t *fd);
 
 #ifdef RAVENMD4
 /*
- * =============================================================
  *
  * UNCOMPRESSING BONES
  *
- * =============================================================
  */
 
 #define MC_BITS_X	(16)
@@ -1513,11 +1485,9 @@ void MC_UnCompress(float mat[3][4],const unsigned char * comp);
 #endif
 
 /*
- * =============================================================
  *
  * ANIMATED MODELS
  *
- * =============================================================
  */
 
 /* void R_MakeAnimModel( model_t *model );      haven't seen this one really, so not needed I guess. */
@@ -1535,11 +1505,9 @@ int R_IQMLerpTag(orientation_t *tag, iqmData_t *data,
 		 float frac, const char *tagName);
 
 /*
- * =============================================================
  *
  * IMAGE LOADERS
  *
- * =============================================================
  */
 
 void R_LoadBMP(const char *name, byte **pic, int *width, int *height);
@@ -1549,8 +1517,6 @@ void R_LoadPNG(const char *name, byte **pic, int *width, int *height);
 void R_LoadTGA(const char *name, byte **pic, int *width, int *height);
 
 /*
- * =============================================================
- * =============================================================
  */
 void    R_TransformModelToClip(const vec3_t src, const float *modelMatrix, const float *projectionMatrix,
 			       vec4_t eye, vec4_t dst);
@@ -1579,22 +1545,18 @@ void    RB_CalcSpecularAlpha(unsigned char *alphas);
 void    RB_CalcDiffuseColor(unsigned char *colors);
 
 /*
- * =============================================================
  *
  * RENDERER BACK END FUNCTIONS
  *
- * =============================================================
  */
 
 void RB_RenderThread(void);
 void RB_ExecuteRenderCommands(const void *data);
 
 /*
- * =============================================================
  *
  * RENDERER BACK END COMMAND QUEUE
  *
- * =============================================================
  */
 
 #define MAX_RENDER_COMMANDS 0x40000

@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /*  */
 
@@ -64,9 +62,7 @@ bot_ctftaskpreference_t ctftaskpreferences[MAX_CLIENTS];
 
 
 /*
- * ==================
  * BotValidTeamLeader
- * ==================
  */
 int
 BotValidTeamLeader(bot_state_t *bs)
@@ -77,9 +73,7 @@ BotValidTeamLeader(bot_state_t *bs)
 }
 
 /*
- * ==================
  * BotNumTeamMates
- * ==================
  */
 int
 BotNumTeamMates(bot_state_t *bs)
@@ -106,9 +100,7 @@ BotNumTeamMates(bot_state_t *bs)
 }
 
 /*
- * ==================
  * BotClientTravelTimeToGoal
- * ==================
  */
 int
 BotClientTravelTimeToGoal(int client, bot_goal_t *goal)
@@ -125,9 +117,7 @@ BotClientTravelTimeToGoal(int client, bot_goal_t *goal)
 }
 
 /*
- * ==================
  * BotSortTeamMatesByBaseTravelTime
- * ==================
  */
 int
 BotSortTeamMatesByBaseTravelTime(bot_state_t *bs, int *teammates,
@@ -188,9 +178,7 @@ BotSortTeamMatesByBaseTravelTime(bot_state_t *bs, int *teammates,
 }
 
 /*
- * ==================
  * BotSetTeamMateTaskPreference
- * ==================
  */
 void
 BotSetTeamMateTaskPreference(bot_state_t *bs, int teammate, int preference)
@@ -203,9 +191,7 @@ BotSetTeamMateTaskPreference(bot_state_t *bs, int teammate, int preference)
 }
 
 /*
- * ==================
  * BotGetTeamMateTaskPreference
- * ==================
  */
 int
 BotGetTeamMateTaskPreference(bot_state_t *bs, int teammate)
@@ -219,9 +205,7 @@ BotGetTeamMateTaskPreference(bot_state_t *bs, int teammate)
 }
 
 /*
- * ==================
  * BotSortTeamMatesByTaskPreference
- * ==================
  */
 int
 BotSortTeamMatesByTaskPreference(bot_state_t *bs, int *teammates,
@@ -257,9 +241,7 @@ BotSortTeamMatesByTaskPreference(bot_state_t *bs, int *teammates,
 }
 
 /*
- * ==================
  * BotSayTeamOrders
- * ==================
  */
 void
 BotSayTeamOrderAlways(bot_state_t *bs, int toclient)
@@ -282,9 +264,7 @@ BotSayTeamOrderAlways(bot_state_t *bs, int toclient)
 }
 
 /*
- * ==================
  * BotSayTeamOrders
- * ==================
  */
 void
 BotSayTeamOrder(bot_state_t *bs, int toclient)
@@ -300,9 +280,7 @@ BotSayTeamOrder(bot_state_t *bs, int toclient)
 }
 
 /*
- * ==================
  * BotVoiceChat
- * ==================
  */
 void
 BotVoiceChat(bot_state_t *bs, int toclient, char *voicechat)
@@ -319,9 +297,7 @@ BotVoiceChat(bot_state_t *bs, int toclient, char *voicechat)
 }
 
 /*
- * ==================
  * BotVoiceChatOnly
- * ==================
  */
 void
 BotVoiceChatOnly(bot_state_t *bs, int toclient, char *voicechat)
@@ -338,9 +314,7 @@ BotVoiceChatOnly(bot_state_t *bs, int toclient, char *voicechat)
 }
 
 /*
- * ==================
  * BotSayVoiceTeamOrder
- * ==================
  */
 void
 BotSayVoiceTeamOrder(bot_state_t *bs, int toclient, char *voicechat)
@@ -351,9 +325,7 @@ BotSayVoiceTeamOrder(bot_state_t *bs, int toclient, char *voicechat)
 }
 
 /*
- * ==================
  * BotCTFOrders
- * ==================
  */
 void
 BotCTFOrders_BothFlagsNotAtBase(bot_state_t *bs)
@@ -478,9 +450,7 @@ BotCTFOrders_BothFlagsNotAtBase(bot_state_t *bs)
 }
 
 /*
- * ==================
  * BotCTFOrders
- * ==================
  */
 void
 BotCTFOrders_FlagNotAtBase(bot_state_t *bs)
@@ -635,9 +605,7 @@ BotCTFOrders_FlagNotAtBase(bot_state_t *bs)
 }
 
 /*
- * ==================
  * BotCTFOrders
- * ==================
  */
 void
 BotCTFOrders_EnemyFlagNotAtBase(bot_state_t *bs)
@@ -756,9 +724,7 @@ BotCTFOrders_EnemyFlagNotAtBase(bot_state_t *bs)
 
 
 /*
- * ==================
  * BotCTFOrders
- * ==================
  */
 void
 BotCTFOrders_BothFlagsAtBase(bot_state_t *bs)
@@ -915,9 +881,7 @@ BotCTFOrders_BothFlagsAtBase(bot_state_t *bs)
 }
 
 /*
- * ==================
  * BotCTFOrders
- * ==================
  */
 void
 BotCTFOrders(bot_state_t *bs)
@@ -939,9 +903,7 @@ BotCTFOrders(bot_state_t *bs)
 
 
 /*
- * ==================
  * BotCreateGroup
- * ==================
  */
 void
 BotCreateGroup(bot_state_t *bs, int *teammates, int groupsize)
@@ -964,11 +926,9 @@ BotCreateGroup(bot_state_t *bs, int *teammates, int groupsize)
 }
 
 /*
- * ==================
  * BotTeamOrders
  *
  * FIXME: defend key areas?
- * ==================
  */
 void
 BotTeamOrders(bot_state_t *bs)
@@ -1033,11 +993,9 @@ BotTeamOrders(bot_state_t *bs)
 #ifdef MISSIONPACK
 
 /*
- * ==================
  * Bot1FCTFOrders_FlagAtCenter
  *
  * X% defend the base, Y% get the flag
- * ==================
  */
 void
 Bot1FCTFOrders_FlagAtCenter(bot_state_t *bs)
@@ -1198,11 +1156,9 @@ Bot1FCTFOrders_FlagAtCenter(bot_state_t *bs)
 }
 
 /*
- * ==================
  * Bot1FCTFOrders_TeamHasFlag
  *
  * X% towards neutral flag, Y% go towards enemy base and accompany flag carrier if visible
- * ==================
  */
 void
 Bot1FCTFOrders_TeamHasFlag(bot_state_t *bs)
@@ -1453,11 +1409,9 @@ Bot1FCTFOrders_TeamHasFlag(bot_state_t *bs)
 }
 
 /*
- * ==================
  * Bot1FCTFOrders_EnemyHasFlag
  *
  * X% defend the base, Y% towards neutral flag
- * ==================
  */
 void
 Bot1FCTFOrders_EnemyHasFlag(bot_state_t *bs)
@@ -1618,11 +1572,9 @@ Bot1FCTFOrders_EnemyHasFlag(bot_state_t *bs)
 }
 
 /*
- * ==================
  * Bot1FCTFOrders_EnemyDroppedFlag
  *
  * X% defend the base, Y% get the flag
- * ==================
  */
 void
 Bot1FCTFOrders_EnemyDroppedFlag(bot_state_t *bs)
@@ -1783,9 +1735,7 @@ Bot1FCTFOrders_EnemyDroppedFlag(bot_state_t *bs)
 }
 
 /*
- * ==================
  * Bot1FCTFOrders
- * ==================
  */
 void
 Bot1FCTFOrders(bot_state_t *bs)
@@ -1799,11 +1749,9 @@ Bot1FCTFOrders(bot_state_t *bs)
 }
 
 /*
- * ==================
  * BotObeliskOrders
  *
  * X% in defence Y% in offence
- * ==================
  */
 void
 BotObeliskOrders(bot_state_t *bs)
@@ -1971,11 +1919,9 @@ BotObeliskOrders(bot_state_t *bs)
 }
 
 /*
- * ==================
  * BotHarvesterOrders
  *
  * X% defend the base, Y% harvest
- * ==================
  */
 void
 BotHarvesterOrders(bot_state_t *bs)
@@ -2137,9 +2083,7 @@ BotHarvesterOrders(bot_state_t *bs)
 #endif
 
 /*
- * ==================
  * FindHumanTeamLeader
- * ==================
  */
 int
 FindHumanTeamLeader(bot_state_t *bs)
@@ -2170,9 +2114,7 @@ FindHumanTeamLeader(bot_state_t *bs)
 }
 
 /*
- * ==================
  * BotTeamAI
- * ==================
  */
 void
 BotTeamAI(bot_state_t *bs)

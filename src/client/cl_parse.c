@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /* cl_parse.c  -- parse a message received from the server */
 
@@ -46,20 +44,16 @@ SHOWNET(msg_t *msg, char *s)
 
 
 /*
- * =========================================================================
  *
  * MESSAGE PARSING
  *
- * =========================================================================
  */
 
 /*
- * ==================
  * CL_DeltaEntity
  *
  * Parses deltas from the given base and adds the resulting entity
  * to the current frame
- * ==================
  */
 void
 CL_DeltaEntity(msg_t *msg, clSnapshot_t *frame, int newnum, entityState_t *old,
@@ -83,10 +77,8 @@ CL_DeltaEntity(msg_t *msg, clSnapshot_t *frame, int newnum, entityState_t *old,
 }
 
 /*
- * ==================
  * CL_ParsePacketEntities
  *
- * ==================
  */
 void
 CL_ParsePacketEntities(msg_t *msg, clSnapshot_t *oldframe,
@@ -202,13 +194,11 @@ CL_ParsePacketEntities(msg_t *msg, clSnapshot_t *oldframe,
 
 
 /*
- * ================
  * CL_ParseSnapshot
  *
  * If the snapshot is parsed properly, it will be copied to
  * cl.snap and saved in cl.snapshots[].  If the snapshot is invalid
  * for any reason, no changes to the state will be made at all.
- * ================
  */
 void
 CL_ParseSnapshot(msg_t *msg)
@@ -343,13 +333,11 @@ int	cl_connectedToPureServer;
 int	cl_connectedToCheatServer;
 
 /*
- * ==================
  * CL_SystemInfoChanged
  *
  * The systeminfo configstring has been changed, so parse
  * new information out of it.  This will happen at every
  * gamestate, and possibly during gameplay.
- * ==================
  */
 void
 CL_SystemInfoChanged(void)
@@ -457,9 +445,7 @@ CL_SystemInfoChanged(void)
 }
 
 /*
- * ==================
  * CL_ParseServerInfo
- * ==================
  */
 static void
 CL_ParseServerInfo(void)
@@ -477,9 +463,7 @@ CL_ParseServerInfo(void)
 }
 
 /*
- * ==================
  * CL_ParseGamestate
- * ==================
  */
 void
 CL_ParseGamestate(msg_t *msg)
@@ -583,11 +567,9 @@ CL_ParseGamestate(msg_t *msg)
 /* ===================================================================== */
 
 /*
- * =====================
  * CL_ParseDownload
  *
  * A download message has been received from the server
- * =====================
  */
 void
 CL_ParseDownload(msg_t *msg)
@@ -699,11 +681,9 @@ CL_ShouldIgnoreVoipSender(int sender)
 }
 
 /*
- * =====================
  * CL_PlayVoip
  *
  * Play raw data
- * =====================
  */
 
 static void
@@ -721,11 +701,9 @@ CL_PlayVoip(int sender, int samplecnt, const byte *data, int flags)
 }
 
 /*
- * =====================
  * CL_ParseVoip
  *
  * A VoIP message has been received from the server
- * =====================
  */
 static
 void
@@ -874,12 +852,10 @@ CL_ParseVoip(msg_t *msg)
 
 
 /*
- * =====================
  * CL_ParseCommandString
  *
  * Command strings are just saved off until cgame asks for them
  * when it transitions a snapshot
- * =====================
  */
 void
 CL_ParseCommandString(msg_t *msg)
@@ -903,9 +879,7 @@ CL_ParseCommandString(msg_t *msg)
 
 
 /*
- * =====================
  * CL_ParseServerMessage
- * =====================
  */
 void
 CL_ParseServerMessage(msg_t *msg)

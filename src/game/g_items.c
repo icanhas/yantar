@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /*  */
 #include "g_local.h"
@@ -346,9 +344,7 @@ Pickup_Armor(gentity_t *ent, gentity_t *other)
 /* ====================================================================== */
 
 /*
- * ===============
  * RespawnItem
- * ===============
  */
 void
 RespawnItem(gentity_t *ent)
@@ -413,9 +409,7 @@ RespawnItem(gentity_t *ent)
 
 
 /*
- * ===============
  * Touch_Item
- * ===============
  */
 void
 Touch_Item(gentity_t *ent, gentity_t *other, trace_t *trace)
@@ -554,11 +548,9 @@ Touch_Item(gentity_t *ent, gentity_t *other, trace_t *trace)
 /* ====================================================================== */
 
 /*
- * ================
  * LaunchItem
  *
  * Spawns an item and tosses it forward
- * ================
  */
 gentity_t *
 LaunchItem(gitem_t *item, vec3_t origin, vec3_t velocity)
@@ -607,11 +599,9 @@ LaunchItem(gitem_t *item, vec3_t origin, vec3_t velocity)
 }
 
 /*
- * ================
  * Drop_Item
  *
  * Spawns an item and tosses it forward
- * ================
  */
 gentity_t *
 Drop_Item(gentity_t *ent, gitem_t *item, float angle)
@@ -632,11 +622,9 @@ Drop_Item(gentity_t *ent, gitem_t *item, float angle)
 
 
 /*
- * ================
  * Use_Item
  *
  * Respawn the item
- * ================
  */
 void
 Use_Item(gentity_t *ent, gentity_t *other, gentity_t *activator)
@@ -647,12 +635,10 @@ Use_Item(gentity_t *ent, gentity_t *other, gentity_t *activator)
 /* ====================================================================== */
 
 /*
- * ================
  * FinishSpawningItem
  *
  * Traces down to find where an item should rest, instead of letting them
  * free fall from their spawn points
- * ================
  */
 void
 FinishSpawningItem(gentity_t *ent)
@@ -723,9 +709,7 @@ FinishSpawningItem(gentity_t *ent)
 qboolean itemRegistered[MAX_ITEMS];
 
 /*
- * ==================
  * G_CheckTeamItems
- * ==================
  */
 void
 G_CheckTeamItems(void)
@@ -819,9 +803,7 @@ G_CheckTeamItems(void)
 }
 
 /*
- * ==============
  * ClearRegisteredItems
- * ==============
  */
 void
 ClearRegisteredItems(void)
@@ -840,11 +822,9 @@ ClearRegisteredItems(void)
 }
 
 /*
- * ===============
  * RegisterItem
  *
  * The item will be added to the precache list
- * ===============
  */
 void
 RegisterItem(gitem_t *item)
@@ -856,12 +836,10 @@ RegisterItem(gitem_t *item)
 
 
 /*
- * ===============
  * SaveRegisteredItems
  *
  * Write the needed items to a config string
  * so the client will know which ones to precache
- * ===============
  */
 void
 SaveRegisteredItems(void)
@@ -885,9 +863,7 @@ SaveRegisteredItems(void)
 }
 
 /*
- * ============
  * G_ItemDisabled
- * ============
  */
 int
 G_ItemDisabled(gitem_t *item)
@@ -900,14 +876,12 @@ G_ItemDisabled(gitem_t *item)
 }
 
 /*
- * ============
  * G_SpawnItem
  *
  * Sets the clipping size and plants the object on the floor.
  *
  * Items can't be immediately dropped to floor, because they might
  * be on an entity that hasn't spawned yet.
- * ============
  */
 void
 G_SpawnItem(gentity_t *ent, gitem_t *item)
@@ -941,10 +915,8 @@ G_SpawnItem(gentity_t *ent, gitem_t *item)
 
 
 /*
- * ================
  * G_BounceItem
  *
- * ================
  */
 void
 G_BounceItem(gentity_t *ent, trace_t *trace)
@@ -980,10 +952,8 @@ G_BounceItem(gentity_t *ent, trace_t *trace)
 
 
 /*
- * ================
  * G_RunItem
  *
- * ================
  */
 void
 G_RunItem(gentity_t *ent)

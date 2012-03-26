@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 
 #ifndef MISSIONPACK
@@ -1975,9 +1973,7 @@ CG_MouseEvent(int x, int y)
 }
 
 /*
- * ==================
  * CG_HideTeamMenus
- * ==================
  *
  */
 void
@@ -1988,9 +1984,7 @@ CG_HideTeamMenu(void)
 }
 
 /*
- * ==================
  * CG_ShowTeamMenus
- * ==================
  *
  */
 void
@@ -2003,9 +1997,7 @@ CG_ShowTeamMenu(void)
 
 
 /*
- * ==================
  * CG_EventHandling
- * ==================
  * type 0 - no event handling
  *    1 - team menu
  *    2 - hud editor

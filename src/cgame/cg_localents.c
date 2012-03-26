@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /*  */
 
@@ -32,11 +30,9 @@ localEntity_t	cg_activeLocalEntities;	/* double linked list */
 localEntity_t	*cg_freeLocalEntities;	/* single linked list */
 
 /*
- * ===================
  * CG_InitLocalEntities
  *
  * This is called at startup and for tournement restarts
- * ===================
  */
 void
 CG_InitLocalEntities(void)
@@ -53,9 +49,7 @@ CG_InitLocalEntities(void)
 
 
 /*
- * ==================
  * CG_FreeLocalEntity
- * ==================
  */
 void
 CG_FreeLocalEntity(localEntity_t *le)
@@ -73,11 +67,9 @@ CG_FreeLocalEntity(localEntity_t *le)
 }
 
 /*
- * ===================
  * CG_AllocLocalEntity
  *
  * Will allways succeed, even if it requires freeing an old active entity
- * ===================
  */
 localEntity_t   *
 CG_AllocLocalEntity(void)
@@ -104,22 +96,18 @@ CG_AllocLocalEntity(void)
 
 
 /*
- * ====================================================================================
  *
  * FRAGMENT PROCESSING
  *
  * A fragment localentity interacts with the environment in some way (hitting walls),
  * or generates more localentities along a trail.
  *
- * ====================================================================================
  */
 
 /*
- * ================
  * CG_BloodTrail
  *
  * Leave expanding blood puffs behind gibs
- * ================
  */
 void
 CG_BloodTrail(localEntity_t *le)
@@ -154,9 +142,7 @@ CG_BloodTrail(localEntity_t *le)
 
 
 /*
- * ================
  * CG_FragmentBounceMark
- * ================
  */
 void
 CG_FragmentBounceMark(localEntity_t *le, trace_t *trace)
@@ -186,9 +172,7 @@ CG_FragmentBounceMark(localEntity_t *le, trace_t *trace)
 }
 
 /*
- * ================
  * CG_FragmentBounceSound
- * ================
  */
 void
 CG_FragmentBounceSound(localEntity_t *le, trace_t *trace)
@@ -220,9 +204,7 @@ CG_FragmentBounceSound(localEntity_t *le, trace_t *trace)
 
 
 /*
- * ================
  * CG_ReflectVelocity
- * ================
  */
 void
 CG_ReflectVelocity(localEntity_t *le, trace_t *trace)
@@ -255,9 +237,7 @@ CG_ReflectVelocity(localEntity_t *le, trace_t *trace)
 }
 
 /*
- * ================
  * CG_AddFragment
- * ================
  */
 void
 CG_AddFragment(localEntity_t *le)
@@ -336,18 +316,14 @@ CG_AddFragment(localEntity_t *le)
 }
 
 /*
- * =====================================================================
  *
  * TRIVIAL LOCAL ENTITIES
  *
  * These only do simple scaling or modulation before passing to the renderer
- * =====================================================================
  */
 
 /*
- * ====================
  * CG_AddFadeRGB
- * ====================
  */
 void
 CG_AddFadeRGB(localEntity_t *le)
@@ -369,9 +345,7 @@ CG_AddFadeRGB(localEntity_t *le)
 }
 
 /*
- * ==================
  * CG_AddMoveScaleFade
- * ==================
  */
 static void
 CG_AddMoveScaleFade(localEntity_t *le)
@@ -413,13 +387,11 @@ CG_AddMoveScaleFade(localEntity_t *le)
 
 
 /*
- * ===================
  * CG_AddScaleFade
  *
  * For rocket smokes that hang in place, fade out, and are
  * removed if the view passes through them.
  * There are often many of these, so it needs to be simple.
- * ===================
  */
 static void
 CG_AddScaleFade(localEntity_t *le)
@@ -451,14 +423,12 @@ CG_AddScaleFade(localEntity_t *le)
 
 
 /*
- * =================
  * CG_AddFallScaleFade
  *
  * This is just an optimized CG_AddMoveScaleFade
  * For blood mists that drift down, fade out, and are
  * removed if the view passes through them.
  * There are often 100+ of these, so it needs to be simple.
- * =================
  */
 static void
 CG_AddFallScaleFade(localEntity_t *le)
@@ -494,9 +464,7 @@ CG_AddFallScaleFade(localEntity_t *le)
 
 
 /*
- * ================
  * CG_AddExplosion
- * ================
  */
 static void
 CG_AddExplosion(localEntity_t *ex)
@@ -527,9 +495,7 @@ CG_AddExplosion(localEntity_t *ex)
 }
 
 /*
- * ================
  * CG_AddSpriteExplosion
- * ================
  */
 static void
 CG_AddSpriteExplosion(localEntity_t *le)
@@ -574,9 +540,7 @@ CG_AddSpriteExplosion(localEntity_t *le)
 
 #ifdef MISSIONPACK
 /*
- * ====================
  * CG_AddKamikaze
- * ====================
  */
 void
 CG_AddKamikaze(localEntity_t *le)
@@ -741,9 +705,7 @@ CG_AddKamikaze(localEntity_t *le)
 }
 
 /*
- * ===================
  * CG_AddInvulnerabilityImpact
- * ===================
  */
 void
 CG_AddInvulnerabilityImpact(localEntity_t *le)
@@ -752,9 +714,7 @@ CG_AddInvulnerabilityImpact(localEntity_t *le)
 }
 
 /*
- * ===================
  * CG_AddInvulnerabilityJuiced
- * ===================
  */
 void
 CG_AddInvulnerabilityJuiced(localEntity_t *le)
@@ -778,9 +738,7 @@ CG_AddInvulnerabilityJuiced(localEntity_t *le)
 }
 
 /*
- * ===================
  * CG_AddRefEntity
- * ===================
  */
 void
 CG_AddRefEntity(localEntity_t *le)
@@ -794,9 +752,7 @@ CG_AddRefEntity(localEntity_t *le)
 
 #endif
 /*
- * ===================
  * CG_AddScorePlum
- * ===================
  */
 #define NUMBER_SIZE 8
 
@@ -888,10 +844,8 @@ CG_AddScorePlum(localEntity_t *le)
 /* ============================================================================== */
 
 /*
- * ===================
  * CG_AddLocalEntities
  *
- * ===================
  */
 void
 CG_AddLocalEntities(void)

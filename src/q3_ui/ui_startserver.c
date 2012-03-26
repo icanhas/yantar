@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,15 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /*  */
 /*
- * =============================================================================
  *
  * START SERVER MENU *****
  *
- * =============================================================================
  */
 
 
@@ -106,9 +102,7 @@ static void UI_ServerOptionsMenu(qboolean multiplayer);
 
 
 /*
- * =================
  * GametypeBits
- * =================
  */
 static int
 GametypeBits(char *string)
@@ -155,9 +149,7 @@ GametypeBits(char *string)
 
 
 /*
- * =================
  * StartServer_Update
- * =================
  */
 static void
 StartServer_Update(void)
@@ -236,9 +228,7 @@ StartServer_Update(void)
 
 
 /*
- * =================
  * StartServer_MapEvent
- * =================
  */
 static void
 StartServer_MapEvent(void* ptr, int event)
@@ -254,9 +244,7 @@ StartServer_MapEvent(void* ptr, int event)
 
 
 /*
- * =================
  * StartServer_GametypeEvent
- * =================
  */
 static void
 StartServer_GametypeEvent(void* ptr, int event)
@@ -295,9 +283,7 @@ StartServer_GametypeEvent(void* ptr, int event)
 
 
 /*
- * =================
  * StartServer_MenuEvent
- * =================
  */
 static void
 StartServer_MenuEvent(void* ptr, int event)
@@ -334,9 +320,7 @@ StartServer_MenuEvent(void* ptr, int event)
 
 
 /*
- * ===============
  * StartServer_LevelshotDraw
- * ===============
  */
 static void
 StartServer_LevelshotDraw(void *self)
@@ -393,9 +377,7 @@ StartServer_LevelshotDraw(void *self)
 
 
 /*
- * =================
  * StartServer_MenuInit
- * =================
  */
 static void
 StartServer_MenuInit(void)
@@ -577,9 +559,7 @@ StartServer_MenuInit(void)
 
 
 /*
- * =================
  * StartServer_Cache
- * =================
  */
 void
 StartServer_Cache(void)
@@ -620,9 +600,7 @@ StartServer_Cache(void)
 
 
 /*
- * =================
  * UI_StartServerMenu
- * =================
  */
 void
 UI_StartServerMenu(qboolean multiplayer)
@@ -635,11 +613,9 @@ UI_StartServerMenu(qboolean multiplayer)
 
 
 /*
- * =============================================================================
  *
  * SERVER OPTIONS MENU *****
  *
- * =============================================================================
  */
 
 #define ID_PLAYER_TYPE	20
@@ -722,9 +698,7 @@ static const char	*botSkill_list[] = {
 
 
 /*
- * =================
  * BotAlreadySelected
- * =================
  */
 static qboolean
 BotAlreadySelected(const char *checkName)
@@ -749,9 +723,7 @@ BotAlreadySelected(const char *checkName)
 
 
 /*
- * =================
  * ServerOptions_Start
- * =================
  */
 static void
 ServerOptions_Start(void)
@@ -861,9 +833,7 @@ ServerOptions_Start(void)
 
 
 /*
- * =================
  * ServerOptions_InitPlayerItems
- * =================
  */
 static void
 ServerOptions_InitPlayerItems(void)
@@ -909,9 +879,7 @@ ServerOptions_InitPlayerItems(void)
 
 
 /*
- * =================
  * ServerOptions_SetPlayerItems
- * =================
  */
 static void
 ServerOptions_SetPlayerItems(void)
@@ -960,9 +928,7 @@ ServerOptions_SetPlayerItems(void)
 
 
 /*
- * =================
  * ServerOptions_Event
- * =================
  */
 static void
 ServerOptions_Event(void* ptr, int event)
@@ -1015,9 +981,7 @@ ServerOptions_PlayerNameEvent(void* ptr, int event)
 
 
 /*
- * =================
  * ServerOptions_StatusBar
- * =================
  */
 static void
 ServerOptions_StatusBar(void* ptr)
@@ -1032,9 +996,7 @@ ServerOptions_StatusBar(void* ptr)
 
 
 /*
- * ===============
  * ServerOptions_LevelshotDraw
- * ===============
  */
 static void
 ServerOptions_LevelshotDraw(void *self)
@@ -1161,9 +1123,7 @@ ServerOptions_InitBotNames(void)
 
 
 /*
- * =================
  * ServerOptions_SetMenuItems
- * =================
  */
 static void
 ServerOptions_SetMenuItems(void)
@@ -1244,9 +1204,7 @@ ServerOptions_SetMenuItems(void)
 }
 
 /*
- * =================
  * PlayerName_Draw
- * =================
  */
 static void
 PlayerName_Draw(void *item)
@@ -1291,9 +1249,7 @@ PlayerName_Draw(void *item)
 
 
 /*
- * =================
  * ServerOptions_MenuInit
- * =================
  */
 #define OPTIONS_X 456
 
@@ -1580,9 +1536,7 @@ ServerOptions_MenuInit(qboolean multiplayer)
 }
 
 /*
- * =================
  * ServerOptions_Cache
- * =================
  */
 void
 ServerOptions_Cache(void)
@@ -1597,9 +1551,7 @@ ServerOptions_Cache(void)
 
 
 /*
- * =================
  * UI_ServerOptionsMenu
- * =================
  */
 static void
 UI_ServerOptionsMenu(qboolean multiplayer)
@@ -1611,11 +1563,9 @@ UI_ServerOptionsMenu(qboolean multiplayer)
 
 
 /*
- * =============================================================================
  *
  * BOT SELECT MENU *****
  *
- * =============================================================================
  */
 
 
@@ -1663,9 +1613,7 @@ static botSelectInfo_t botSelectInfo;
 
 
 /*
- * =================
  * UI_BotSelectMenu_SortCompare
- * =================
  */
 static int QDECL
 UI_BotSelectMenu_SortCompare(const void *arg1, const void *arg2)
@@ -1688,9 +1636,7 @@ UI_BotSelectMenu_SortCompare(const void *arg1, const void *arg2)
 
 
 /*
- * =================
  * UI_BotSelectMenu_BuildList
- * =================
  */
 static void
 UI_BotSelectMenu_BuildList(void)
@@ -1715,9 +1661,7 @@ UI_BotSelectMenu_BuildList(void)
 
 
 /*
- * =================
  * ServerPlayerIcon
- * =================
  */
 static void
 ServerPlayerIcon(const char *modelAndSkin, char *iconName, int iconNameMaxSize)
@@ -1745,9 +1689,7 @@ ServerPlayerIcon(const char *modelAndSkin, char *iconName, int iconNameMaxSize)
 
 
 /*
- * =================
  * UI_BotSelectMenu_UpdateGrid
- * =================
  */
 static void
 UI_BotSelectMenu_UpdateGrid(void)
@@ -1812,9 +1754,7 @@ UI_BotSelectMenu_UpdateGrid(void)
 
 
 /*
- * =================
  * UI_BotSelectMenu_Default
- * =================
  */
 static void
 UI_BotSelectMenu_Default(char *bot)
@@ -1848,9 +1788,7 @@ UI_BotSelectMenu_Default(char *bot)
 
 
 /*
- * =================
  * UI_BotSelectMenu_LeftEvent
- * =================
  */
 static void
 UI_BotSelectMenu_LeftEvent(void* ptr, int event)
@@ -1867,9 +1805,7 @@ UI_BotSelectMenu_LeftEvent(void* ptr, int event)
 
 
 /*
- * =================
  * UI_BotSelectMenu_RightEvent
- * =================
  */
 static void
 UI_BotSelectMenu_RightEvent(void* ptr, int event)
@@ -1886,9 +1822,7 @@ UI_BotSelectMenu_RightEvent(void* ptr, int event)
 
 
 /*
- * =================
  * UI_BotSelectMenu_BotEvent
- * =================
  */
 static void
 UI_BotSelectMenu_BotEvent(void* ptr, int event)
@@ -1913,9 +1847,7 @@ UI_BotSelectMenu_BotEvent(void* ptr, int event)
 
 
 /*
- * =================
  * UI_BotSelectMenu_BackEvent
- * =================
  */
 static void
 UI_BotSelectMenu_BackEvent(void* ptr, int event)
@@ -1927,9 +1859,7 @@ UI_BotSelectMenu_BackEvent(void* ptr, int event)
 
 
 /*
- * =================
  * UI_BotSelectMenu_SelectEvent
- * =================
  */
 static void
 UI_BotSelectMenu_SelectEvent(void* ptr, int event)
@@ -1948,9 +1878,7 @@ UI_BotSelectMenu_SelectEvent(void* ptr, int event)
 
 
 /*
- * =================
  * UI_BotSelectMenu_Cache
- * =================
  */
 void
 UI_BotSelectMenu_Cache(void)
@@ -2110,9 +2038,7 @@ UI_BotSelectMenu_Init(char *bot)
 
 
 /*
- * =================
  * UI_BotSelectMenu
- * =================
  */
 void
 UI_BotSelectMenu(char *bot)

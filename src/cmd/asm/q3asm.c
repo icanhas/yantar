@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 
 #include "../../qcommon/q_platform.h"
@@ -454,9 +452,7 @@ atoiNoCap(const char *s)
 
 
 /*
- * =============
  * HashString
- * =============
  */
 /* Default hash function of Kazlib 1.19, slightly modified. */
 static unsigned int
@@ -485,9 +481,7 @@ HashString(const char *key)
 
 
 /*
- * ============
  * CodeError
- * ============
  */
 static void
 CodeError(char *fmt, ...)
@@ -504,9 +498,7 @@ CodeError(char *fmt, ...)
 }
 
 /*
- * ============
  * EmitByte
- * ============
  */
 static void
 EmitByte(segment_t *seg, int v)
@@ -518,9 +510,7 @@ EmitByte(segment_t *seg, int v)
 }
 
 /*
- * ============
  * EmitInt
- * ============
  */
 static void
 EmitInt(segment_t *seg, int v)
@@ -535,11 +525,9 @@ EmitInt(segment_t *seg, int v)
 }
 
 /*
- * ============
  * DefineSymbol
  *
  * Symbols can only be defined on pass 0
- * ============
  */
 static void
 DefineSymbol(char *sym, int value)
@@ -592,11 +580,9 @@ DefineSymbol(char *sym, int value)
 
 
 /*
- * ============
  * LookupSymbol
  *
  * Symbols can only be evaluated on pass 1
- * ============
  */
 static int
 LookupSymbol(char *sym)
@@ -638,13 +624,11 @@ LookupSymbol(char *sym)
 
 
 /*
- * ==============
  * ExtractLine
  *
  * Extracts the next line from the given text block.
  * If a full line isn't parsed, returns NULL
  * Otherwise returns the updated parse pointer
- * ===============
  */
 static char *
 ExtractLine(char *data)
@@ -683,11 +667,9 @@ ExtractLine(char *data)
 
 
 /*
- * ==============
  * Parse
  *
  * Parse a token out of linebuffer
- * ==============
  */
 static qboolean
 Parse(void)
@@ -723,9 +705,7 @@ Parse(void)
 
 
 /*
- * ==============
  * ParseValue
- * ==============
  */
 static int
 ParseValue(void)
@@ -736,9 +716,7 @@ ParseValue(void)
 
 
 /*
- * ==============
  * ParseExpression
- * ==============
  */
 static int
 ParseExpression(void)
@@ -794,7 +772,6 @@ ParseExpression(void)
 
 
 /*
- * ==============
  * HackToSegment
  *
  * BIG HACK: I want to put all 32 bit values in the data
@@ -807,7 +784,6 @@ ParseExpression(void)
  *
  * Note that the lit segment is read-write in the VM, so strings
  * aren't read only as in some architectures.
- * ==============
  */
 static void
 HackToSegment(segmentName_t seg)
@@ -1161,10 +1137,8 @@ ASM(LABEL)
 
 
 /*
- * ==============
  * AssembleLine
  *
- * ==============
  */
 static void
 AssembleLine(void)
@@ -1297,9 +1271,7 @@ AssembleLine(void)
 }
 
 /*
- * ==============
  * InitTables
- * ==============
  */
 void
 InitTables(void)
@@ -1317,9 +1289,7 @@ InitTables(void)
 
 
 /*
- * ==============
  * WriteMapFile
- * ==============
  */
 static void
 WriteMapFile(void)
@@ -1348,9 +1318,7 @@ WriteMapFile(void)
 }
 
 /*
- * ===============
  * WriteVmFile
- * ===============
  */
 static void
 WriteVmFile(void)
@@ -1427,9 +1395,7 @@ WriteVmFile(void)
 }
 
 /*
- * ===============
  * Assemble
- * ===============
  */
 static void
 Assemble(void)
@@ -1493,10 +1459,8 @@ Assemble(void)
 
 
 /*
- * =============
  * ParseOptionFile
  *
- * =============
  */
 static void
 ParseOptionFile(const char *filename)

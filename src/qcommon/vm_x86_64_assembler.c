@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * vm_x86_64_assembler.c -- assembler for x86-64
  *
  * Copyright (C) 2007 Ludwig Nussel <ludwig.nussel@suse.de>, Novell inc.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 
 #define _ISOC99_SOURCE

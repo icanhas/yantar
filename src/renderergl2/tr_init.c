@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /* tr_init.c -- functions that are not called every frame */
 
@@ -244,9 +242,7 @@ InitOpenGL(void)
 }
 
 /*
- * ==================
  * GL_CheckErrors
- * ==================
  */
 void
 GL_CheckErrs(char *file, int line)
@@ -361,7 +357,6 @@ R_ModeList_f(void)
 
 
 /*
- * ==============================================================================
  *
  *                                              SCREEN SHOTS
  *
@@ -376,11 +371,9 @@ R_ModeList_f(void)
  * (with FS_FileExists / FS_FOpenFileWrite calls)
  * FIXME: the statics don't get a reinit between fs_game changes
  *
- * ==============================================================================
  */
 
 /*
- * ==================
  * RB_ReadPixels
  *
  * Reads an image but takes care of alignment issues for reading RGB images.
@@ -393,7 +386,6 @@ R_ModeList_f(void)
  * Stores the length of padding after a line of pixels to address padlen
  *
  * Return value must be freed with ri.Hunk_FreeTempMemory()
- * ==================
  */
 
 byte *
@@ -421,9 +413,7 @@ RB_ReadPixels(int x, int y, int width, int height, size_t *offset, int *padlen)
 }
 
 /*
- * ==================
  * RB_TakeScreenshot
- * ==================
  */
 void
 RB_TakeScreenshot(int x, int y, int width, int height, char *fileName)
@@ -481,9 +471,7 @@ RB_TakeScreenshot(int x, int y, int width, int height, char *fileName)
 }
 
 /*
- * ==================
  * RB_TakeScreenshotJPEG
- * ==================
  */
 
 void
@@ -505,9 +493,7 @@ RB_TakeScreenshotJPEG(int x, int y, int width, int height, char *fileName)
 }
 
 /*
- * ==================
  * RB_TakeScreenshotCmd
- * ==================
  */
 const void *
 RB_TakeScreenshotCmd(const void *data)
@@ -525,9 +511,7 @@ RB_TakeScreenshotCmd(const void *data)
 }
 
 /*
- * ==================
  * R_TakeScreenshot
- * ==================
  */
 void
 R_TakeScreenshot(int x, int y, int width, int height, char *name, qboolean jpeg)
@@ -551,9 +535,7 @@ R_TakeScreenshot(int x, int y, int width, int height, char *name, qboolean jpeg)
 }
 
 /*
- * ==================
  * R_ScreenshotFilename
- * ==================
  */
 void
 R_ScreenshotFilename(int lastNumber, char *fileName)
@@ -578,9 +560,7 @@ R_ScreenshotFilename(int lastNumber, char *fileName)
 }
 
 /*
- * ==================
  * R_ScreenshotFilename
- * ==================
  */
 void
 R_ScreenshotFilenameJPEG(int lastNumber, char *fileName)
@@ -605,12 +585,10 @@ R_ScreenshotFilenameJPEG(int lastNumber, char *fileName)
 }
 
 /*
- * ====================
  * R_LevelShot
  *
  * levelshots are specialized 128*128 thumbnails for
  * the menu system, sampled down from full screen distorted images
- * ====================
  */
 void
 R_LevelShot(void)
@@ -673,7 +651,6 @@ R_LevelShot(void)
 }
 
 /*
- * ==================
  * R_ScreenShot_f
  *
  * screenshot
@@ -682,7 +659,6 @@ R_LevelShot(void)
  * screenshot [filename]
  *
  * Doesn't print the pacifier message if there is a second arg
- * ==================
  */
 void
 R_ScreenShot_f(void)
@@ -795,9 +771,7 @@ R_ScreenShotJPEG_f(void)
 /* ============================================================================ */
 
 /*
- * ==================
  * RB_TakeVideoFrameCmd
- * ==================
  */
 const void *
 RB_TakeVideoFrameCmd(const void *data)
@@ -927,9 +901,7 @@ GL_SetDefaultState(void)
 
 
 /*
- * ================
  * GfxInfo_f
- * ================
  */
 void
 GfxInfo_f(void)
@@ -1010,9 +982,7 @@ GfxInfo_f(void)
 }
 
 /*
- * ================
  * GfxMemInfo_f
- * ================
  */
 void
 GfxMemInfo_f(void)
@@ -1071,9 +1041,7 @@ GfxMemInfo_f(void)
 }
 
 /*
- * ===============
  * R_Register
- * ===============
  */
 void
 R_Register(void)
@@ -1279,9 +1247,7 @@ R_ShutDownQueries(void)
 }
 
 /*
- * ===============
  * R_Init
- * ===============
  */
 void
 R_Init(void)
@@ -1393,9 +1359,7 @@ R_Init(void)
 }
 
 /*
- * ===============
  * RE_Shutdown
- * ===============
  */
 void
 RE_Shutdown(qboolean destroyWindow)
@@ -1437,11 +1401,9 @@ RE_Shutdown(qboolean destroyWindow)
 
 
 /*
- * =============
  * RE_EndRegistration
  *
  * Touch all images to make sure they are resident
- * =============
  */
 void
 RE_EndRegistration(void)

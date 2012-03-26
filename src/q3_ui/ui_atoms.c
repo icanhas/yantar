@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /*  */
 /**********************************************************************
@@ -57,9 +55,7 @@ Com_Printf(const char *msg, ...)
 }
 
 /*
- * =================
  * UI_ClampCvar
- * =================
  */
 float
 UI_ClampCvar(float min, float max, float value)
@@ -70,9 +66,7 @@ UI_ClampCvar(float min, float max, float value)
 }
 
 /*
- * =================
  * UI_StartDemoLoop
- * =================
  */
 void
 UI_StartDemoLoop(void)
@@ -81,9 +75,7 @@ UI_StartDemoLoop(void)
 }
 
 /*
- * =================
  * UI_PushMenu
- * =================
  */
 void
 UI_PushMenu(menuframework_s *menu)
@@ -129,9 +121,7 @@ UI_PushMenu(menuframework_s *menu)
 }
 
 /*
- * =================
  * UI_PopMenu
- * =================
  */
 void
 UI_PopMenu(void)
@@ -162,9 +152,7 @@ UI_ForceMenuOff(void)
 }
 
 /*
- * =================
  * UI_LerpColor
- * =================
  */
 void
 UI_LerpColor(vec4_t a, vec4_t b, vec4_t c, float t)
@@ -182,9 +170,7 @@ UI_LerpColor(vec4_t a, vec4_t b, vec4_t c, float t)
 }
 
 /*
- * =================
  * UI_DrawProportionalString2
- * =================
  */
 static int	propMap[128][3] = {
 	{0, 0,
@@ -349,9 +335,7 @@ static int	propMapB[26][3] = {
 #define PROPB_HEIGHT		36
 
 /*
- * =================
  * UI_DrawBannerString
- * =================
  */
 static void
 UI_DrawBannerString2(int x, int y, const char* str, vec4_t color)
@@ -516,9 +500,7 @@ UI_DrawProportionalString2(int x, int y, const char* str, vec4_t color,
 }
 
 /*
- * =================
  * UI_ProportionalSizeScale
- * =================
  */
 float
 UI_ProportionalSizeScale(int style)
@@ -531,9 +513,7 @@ UI_ProportionalSizeScale(int style)
 
 
 /*
- * =================
  * UI_DrawProportionalString
- * =================
  */
 void
 UI_DrawProportionalString(int x, int y, const char* str, int style, vec4_t color)
@@ -598,9 +578,7 @@ UI_DrawProportionalString(int x, int y, const char* str, int style, vec4_t color
 }
 
 /*
- * =================
  * UI_DrawProportionalString_Wrapped
- * =================
  */
 void
 UI_DrawProportionalString_AutoWrapped(int x, int y, int xmax, int ystep,
@@ -662,9 +640,7 @@ UI_DrawProportionalString_AutoWrapped(int x, int y, int xmax, int ystep,
 }
 
 /*
- * =================
  * UI_DrawString2
- * =================
  */
 static void
 UI_DrawString2(int x, int y, const char* str, vec4_t color, int charw, int charh)
@@ -723,9 +699,7 @@ UI_DrawString2(int x, int y, const char* str, vec4_t color, int charw, int charh
 }
 
 /*
- * =================
  * UI_DrawString
- * =================
  */
 void
 UI_DrawString(int x, int y, const char* str, int style, vec4_t color)
@@ -794,9 +768,7 @@ UI_DrawString(int x, int y, const char* str, int style, vec4_t color)
 }
 
 /*
- * =================
  * UI_DrawChar
- * =================
  */
 void
 UI_DrawChar(int x, int y, int ch, int style, vec4_t color)
@@ -873,9 +845,7 @@ UI_SetActiveMenu(uiMenuCommand_t menu)
 }
 
 /*
- * =================
  * UI_KeyEvent
- * =================
  */
 void
 UI_KeyEvent(int key, int down)
@@ -898,9 +868,7 @@ UI_KeyEvent(int key, int down)
 }
 
 /*
- * =================
  * UI_MouseEvent
- * =================
  */
 void
 UI_MouseEvent(int dx, int dy)
@@ -987,9 +955,7 @@ UI_Cvar_VariableString(const char *var_name)
 
 
 /*
- * =================
  * UI_Cache
- * =================
  */
 void
 UI_Cache_f(void)
@@ -1030,9 +996,7 @@ UI_Cache_f(void)
 
 
 /*
- * =================
  * UI_ConsoleCommand
- * =================
  */
 qboolean
 UI_ConsoleCommand(int realTime)
@@ -1091,9 +1055,7 @@ UI_ConsoleCommand(int realTime)
 }
 
 /*
- * =================
  * UI_Shutdown
- * =================
  */
 void
 UI_Shutdown(void)
@@ -1101,9 +1063,7 @@ UI_Shutdown(void)
 }
 
 /*
- * =================
  * UI_Init
- * =================
  */
 void
 UI_Init(void)
@@ -1136,11 +1096,9 @@ UI_Init(void)
 }
 
 /*
- * ================
  * UI_AdjustFrom640
  *
  * Adjusted for resolution and screen aspect ratio
- * ================
  */
 void
 UI_AdjustFrom640(float *x, float *y, float *w, float *h)
@@ -1193,11 +1151,9 @@ UI_DrawHandlePic(float x, float y, float w, float h, qhandle_t hShader)
 }
 
 /*
- * ================
  * UI_FillRect
  *
  * Coordinates are 640*480 virtual values
- * =================
  */
 void
 UI_FillRect(float x, float y, float width, float height, const float *color)
@@ -1211,11 +1167,9 @@ UI_FillRect(float x, float y, float width, float height, const float *color)
 }
 
 /*
- * ================
  * UI_DrawRect
  *
  * Coordinates are 640*480 virtual values
- * =================
  */
 void
 UI_DrawRect(float x, float y, float width, float height, const float *color)
@@ -1247,9 +1201,7 @@ UI_UpdateScreen(void)
 }
 
 /*
- * =================
  * UI_Refresh
- * =================
  */
 void
 UI_Refresh(int realtime)

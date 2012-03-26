@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,15 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /*  */
 /*
- * =======================================================================
  *
  * DEMOS MENU
  *
- * =======================================================================
  */
 
 
@@ -80,9 +76,7 @@ static demos_t s_demos;
 
 
 /*
- * ===============
  * Demos_MenuEvent
- * ===============
  */
 static void
 Demos_MenuEvent(void *ptr, int event)
@@ -113,9 +107,7 @@ Demos_MenuEvent(void *ptr, int event)
 
 
 /*
- * ===============
  * Demos_MenuInit
- * ===============
  */
 static void
 Demos_MenuInit(void)
@@ -282,9 +274,7 @@ Demos_MenuInit(void)
 }
 
 /*
- * =================
  * Demos_Cache
- * =================
  */
 void
 Demos_Cache(void)
@@ -301,9 +291,7 @@ Demos_Cache(void)
 }
 
 /*
- * ===============
  * UI_DemosMenu
- * ===============
  */
 void
 UI_DemosMenu(void)

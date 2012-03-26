@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /*
  * cg_marks.c -- wall marks */
@@ -25,11 +23,9 @@
 #include "cg_local.h"
 
 /*
- * ===================================================================
  *
  * MARK POLYS
  *
- * ===================================================================
  */
 
 
@@ -39,11 +35,9 @@ markPoly_t	cg_markPolys[MAX_MARK_POLYS];
 static int	markTotal;
 
 /*
- * ===================
  * CG_InitMarkPolys
  *
  * This is called at startup and for tournement restarts
- * ===================
  */
 void
 CG_InitMarkPolys(void)
@@ -61,9 +55,7 @@ CG_InitMarkPolys(void)
 
 
 /*
- * ==================
  * CG_FreeMarkPoly
- * ==================
  */
 void
 CG_FreeMarkPoly(markPoly_t *le)
@@ -81,11 +73,9 @@ CG_FreeMarkPoly(markPoly_t *le)
 }
 
 /*
- * ===================
  * CG_AllocMark
  *
  * Will allways succeed, even if it requires freeing an old active mark
- * ===================
  */
 markPoly_t      *
 CG_AllocMark(void)
@@ -118,7 +108,6 @@ CG_AllocMark(void)
 
 
 /*
- * =================
  * CG_ImpactMark
  *
  * origin should be a point within a unit of the plane
@@ -126,7 +115,6 @@ CG_AllocMark(void)
  *
  * temporary marks will not be stored or randomly oriented, but immediately
  * passed to the renderer.
- * =================
  */
 #define MAX_MARK_FRAGMENTS	128
 #define MAX_MARK_POINTS		384
@@ -232,9 +220,7 @@ CG_ImpactMark(qhandle_t markShader, const vec3_t origin, const vec3_t dir,
 
 
 /*
- * ===============
  * CG_AddMarks
- * ===============
  */
 #define MARK_TOTAL_TIME 10000
 #define MARK_FADE_TIME	1000

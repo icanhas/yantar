@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /*  */
 #include "ui_local.h"
@@ -25,11 +23,9 @@
 void GraphicsOptions_MenuInit(void);
 
 /*
- * =======================================================================
  *
  * DRIVER INFORMATION MENU
  *
- * =======================================================================
  */
 
 
@@ -63,9 +59,7 @@ typedef struct {
 static driverinfo_t s_driverinfo;
 
 /*
- * =================
  * DriverInfo_Event
- * =================
  */
 static void
 DriverInfo_Event(void* ptr, int event)
@@ -81,9 +75,7 @@ DriverInfo_Event(void* ptr, int event)
 }
 
 /*
- * =================
  * DriverInfo_MenuDraw
- * =================
  */
 static void
 DriverInfo_MenuDraw(void)
@@ -133,9 +125,7 @@ DriverInfo_MenuDraw(void)
 }
 
 /*
- * =================
  * DriverInfo_Cache
- * =================
  */
 void
 DriverInfo_Cache(void)
@@ -151,9 +141,7 @@ DriverInfo_Cache(void)
 }
 
 /*
- * =================
  * UI_DriverInfo_Menu
- * =================
  */
 static void
 UI_DriverInfo_Menu(void)
@@ -242,11 +230,9 @@ UI_DriverInfo_Menu(void)
 }
 
 /*
- * =======================================================================
  *
  * GRAPHICS OPTIONS MENU
  *
- * =======================================================================
  */
 
 #define GRAPHICSOPTIONS_FRAMEL	"menu/art/frame2_l"
@@ -378,9 +364,7 @@ static const char	** resolutions = builtinResolutions;
 static qboolean		resolutionsDetected = qfalse;
 
 /*
- * =================
  * GraphicsOptions_FindBuiltinResolution
- * =================
  */
 static int
 GraphicsOptions_FindBuiltinResolution(int mode)
@@ -402,9 +386,7 @@ GraphicsOptions_FindBuiltinResolution(int mode)
 }
 
 /*
- * =================
  * GraphicsOptions_FindDetectedResolution
- * =================
  */
 static int
 GraphicsOptions_FindDetectedResolution(int mode)
@@ -426,9 +408,7 @@ GraphicsOptions_FindDetectedResolution(int mode)
 }
 
 /*
- * =================
  * GraphicsOptions_GetAspectRatios
- * =================
  */
 static void
 GraphicsOptions_GetAspectRatios(void)
@@ -473,9 +453,7 @@ GraphicsOptions_GetAspectRatios(void)
 }
 
 /*
- * =================
  * GraphicsOptions_GetInitialVideo
- * =================
  */
 static void
 GraphicsOptions_GetInitialVideo(void)
@@ -492,9 +470,7 @@ GraphicsOptions_GetInitialVideo(void)
 }
 
 /*
- * =================
  * GraphicsOptions_GetResolutions
- * =================
  */
 static void
 GraphicsOptions_GetResolutions(void)
@@ -520,9 +496,7 @@ GraphicsOptions_GetResolutions(void)
 }
 
 /*
- * =================
  * GraphicsOptions_CheckConfig
- * =================
  */
 static void
 GraphicsOptions_CheckConfig(void)
@@ -561,9 +535,7 @@ GraphicsOptions_CheckConfig(void)
 }
 
 /*
- * =================
  * GraphicsOptions_UpdateMenuItems
- * =================
  */
 static void
 GraphicsOptions_UpdateMenuItems(void)
@@ -612,9 +584,7 @@ GraphicsOptions_UpdateMenuItems(void)
 }
 
 /*
- * =================
  * GraphicsOptions_ApplyChanges
- * =================
  */
 static void
 GraphicsOptions_ApplyChanges(void *unused, int notification)
@@ -696,9 +666,7 @@ GraphicsOptions_ApplyChanges(void *unused, int notification)
 }
 
 /*
- * =================
  * GraphicsOptions_Event
- * =================
  */
 static void
 GraphicsOptions_Event(void* ptr, int event)
@@ -771,9 +739,7 @@ GraphicsOptions_Event(void* ptr, int event)
 
 
 /*
- * ================
  * GraphicsOptions_TQEvent
- * ================
  */
 static void
 GraphicsOptions_TQEvent(void *ptr, int event)
@@ -786,9 +752,7 @@ GraphicsOptions_TQEvent(void *ptr, int event)
 
 
 /*
- * ================
  * GraphicsOptions_MenuDraw
- * ================
  */
 void
 GraphicsOptions_MenuDraw(void)
@@ -800,9 +764,7 @@ GraphicsOptions_MenuDraw(void)
 }
 
 /*
- * =================
  * GraphicsOptions_SetMenuItems
- * =================
  */
 static void
 GraphicsOptions_SetMenuItems(void)
@@ -875,9 +837,7 @@ GraphicsOptions_SetMenuItems(void)
 }
 
 /*
- * ================
  * GraphicsOptions_MenuInit
- * ================
  */
 void
 GraphicsOptions_MenuInit(void)
@@ -1218,9 +1178,7 @@ GraphicsOptions_MenuInit(void)
 
 
 /*
- * =================
  * GraphicsOptions_Cache
- * =================
  */
 void
 GraphicsOptions_Cache(void)
@@ -1235,9 +1193,7 @@ GraphicsOptions_Cache(void)
 
 
 /*
- * =================
  * UI_GraphicsOptionsMenu
- * =================
  */
 void
 UI_GraphicsOptionsMenu(void)

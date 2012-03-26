@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /* cl.input.c  -- builds an intended movement command to send to the server */
 
@@ -27,7 +25,6 @@ unsigned frame_msec;
 int old_com_frameTime;
 
 /*
- * ===============================================================================
  *
  * KEY BUTTONS
  *
@@ -43,7 +40,6 @@ int old_com_frameTime;
  * control even at low framerates when the down and up events may both get qued
  * at the same time.
  *
- * ===============================================================================
  */
 
 
@@ -153,11 +149,9 @@ IN_KeyUp(kbutton_t *b)
 
 
 /*
- * ===============
  * CL_KeyState
  *
  * Returns the fraction of the frame that the key was down
- * ===============
  */
 float
 CL_KeyState(kbutton_t *key)
@@ -511,11 +505,9 @@ cvar_t	*cl_anglespeedkey;
 
 
 /*
- * ================
  * CL_AdjustAngles
  *
  * Moves the local angle positions
- * ================
  */
 void
 CL_AdjustAngles(void)
@@ -541,11 +533,9 @@ CL_AdjustAngles(void)
 }
 
 /*
- * ================
  * CL_KeyMove
  *
  * Sets the usercmd_t based on key states
- * ================
  */
 void
 CL_KeyMove(usercmd_t *cmd)
@@ -590,9 +580,7 @@ CL_KeyMove(usercmd_t *cmd)
 }
 
 /*
- * =================
  * CL_MouseEvent
- * =================
  */
 void
 CL_MouseEvent(int dx, int dy, int time)
@@ -608,11 +596,9 @@ CL_MouseEvent(int dx, int dy, int time)
 }
 
 /*
- * =================
  * CL_JoystickEvent
  *
  * Joystick values stay set until changed
- * =================
  */
 void
 CL_JoystickEvent(int axis, int value, int time)
@@ -623,9 +609,7 @@ CL_JoystickEvent(int axis, int value, int time)
 }
 
 /*
- * =================
  * CL_JoystickMove
- * =================
  */
 void
 CL_JoystickMove(usercmd_t *cmd)
@@ -676,9 +660,7 @@ CL_JoystickMove(usercmd_t *cmd)
 }
 
 /*
- * =================
  * CL_MouseMove
- * =================
  */
 
 void
@@ -776,9 +758,7 @@ CL_MouseMove(usercmd_t *cmd)
 
 
 /*
- * ==============
  * CL_CmdButtons
- * ==============
  */
 void
 CL_CmdButtons(usercmd_t *cmd)
@@ -807,9 +787,7 @@ CL_CmdButtons(usercmd_t *cmd)
 
 
 /*
- * ==============
  * CL_FinishMove
- * ==============
  */
 void
 CL_FinishMove(usercmd_t *cmd)
@@ -829,9 +807,7 @@ CL_FinishMove(usercmd_t *cmd)
 
 
 /*
- * =================
  * CL_CreateCmd
- * =================
  */
 usercmd_t
 CL_CreateCmd(void)
@@ -880,11 +856,9 @@ CL_CreateCmd(void)
 
 
 /*
- * =================
  * CL_CreateNewCommands
  *
  * Create a new usercmd_t structure for this frame
- * =================
  */
 void
 CL_CreateNewCommands(void)
@@ -911,7 +885,6 @@ CL_CreateNewCommands(void)
 }
 
 /*
- * =================
  * CL_ReadyToSendPacket
  *
  * Returns qfalse if we are over the maxpackets limit
@@ -919,7 +892,6 @@ CL_CreateNewCommands(void)
  * a packet this frame.  All the commands will still get
  * delivered in the next packet, but saving a header and
  * getting more delta compression will reduce total bandwidth.
- * =================
  */
 qboolean
 CL_ReadyToSendPacket(void)
@@ -968,7 +940,6 @@ CL_ReadyToSendPacket(void)
 }
 
 /*
- * ===================
  * CL_WritePacket
  *
  * Create and send the command packet to the server
@@ -986,7 +957,6 @@ CL_ReadyToSendPacket(void)
  * 1	command count
  * <count * usercmds>
  *
- * ===================
  */
 void
 CL_WritePacket(void)
@@ -1153,11 +1123,9 @@ CL_WritePacket(void)
 }
 
 /*
- * =================
  * CL_SendCmd
  *
  * Called every frame to builds and sends a command packet to the server.
- * =================
  */
 void
 CL_SendCmd(void)
@@ -1184,9 +1152,7 @@ CL_SendCmd(void)
 }
 
 /*
- * ============
  * CL_InitInput
- * ============
  */
 void
 CL_InitInput(void)
@@ -1262,9 +1228,7 @@ CL_InitInput(void)
 }
 
 /*
- * ============
  * CL_ShutdownInput
- * ============
  */
 void
 CL_ShutdownInput(void)

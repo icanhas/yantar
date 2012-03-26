@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 
 #include "../qcommon/q_shared.h"
@@ -47,10 +45,8 @@ static UINT timerResolution = 0;
 #endif
 
 /*
- * ================
  * Sys_SetFPUCW
  * Set FPU control word to default value
- * ================
  */
 
 #ifndef _RC_CHOP
@@ -81,9 +77,7 @@ Sys_SetFloatEnv(void)
 }
 
 /*
- * ================
  * Sys_DefaultHomePath
- * ================
  */
 char *
 Sys_DefaultHomePath(void)
@@ -128,9 +122,7 @@ Sys_DefaultHomePath(void)
 }
 
 /*
- * ================
  * Sys_TempPath
- * ================
  */
 const char *
 Sys_TempPath(void)
@@ -147,9 +139,7 @@ Sys_TempPath(void)
 }
 
 /*
- * ================
  * Sys_Milliseconds
- * ================
  */
 int sys_timeBase;
 int
@@ -168,9 +158,7 @@ Sys_Milliseconds(void)
 }
 
 /*
- * ================
  * Sys_RandomBytes
- * ================
  */
 qboolean
 Sys_RandomBytes(byte *string, int len)
@@ -191,9 +179,7 @@ Sys_RandomBytes(byte *string, int len)
 }
 
 /*
- * ================
  * Sys_GetCurrentUser
- * ================
  */
 char *
 Sys_GetCurrentUser(void)
@@ -211,9 +197,7 @@ Sys_GetCurrentUser(void)
 }
 
 /*
- * ================
  * Sys_GetClipboardData
- * ================
  */
 char *
 Sys_GetClipboardData(void)
@@ -241,9 +225,7 @@ Sys_GetClipboardData(void)
 #define MEM_THRESHOLD 96*1024*1024
 
 /*
- * ==================
  * Sys_LowPhysicalMemory
- * ==================
  */
 qboolean
 Sys_LowPhysicalMemory(void)
@@ -254,9 +236,7 @@ Sys_LowPhysicalMemory(void)
 }
 
 /*
- * ==============
  * Sys_Basename
- * ==============
  */
 const char *
 Sys_Basename(char *path)
@@ -285,9 +265,7 @@ Sys_Basename(char *path)
 }
 
 /*
- * ==============
  * Sys_Dirname
- * ==============
  */
 const char *
 Sys_Dirname(char *path)
@@ -307,9 +285,7 @@ Sys_Dirname(char *path)
 }
 
 /*
- * ==============
  * Sys_Mkdir
- * ==============
  */
 qboolean
 Sys_Mkdir(const char *path)
@@ -322,10 +298,8 @@ Sys_Mkdir(const char *path)
 }
 
 /*
- * ==================
  * Sys_Mkfifo
  * Noop on windows because named pipes do not function the same way
- * ==================
  */
 FILE *
 Sys_Mkfifo(const char *ospath)
@@ -334,9 +308,7 @@ Sys_Mkfifo(const char *ospath)
 }
 
 /*
- * ==============
  * Sys_Cwd
- * ==============
  */
 char *
 Sys_Cwd(void)
@@ -350,19 +322,15 @@ Sys_Cwd(void)
 }
 
 /*
- * ==============================================================
  *
  * DIRECTORY SCANNING
  *
- * ==============================================================
  */
 
 #define MAX_FOUND_FILES 0x1000
 
 /*
- * ==============
  * Sys_ListFilteredFiles
- * ==============
  */
 void
 Sys_ListFilteredFiles(const char *basedir, char *subdirs, char *filter,
@@ -418,9 +386,7 @@ Sys_ListFilteredFiles(const char *basedir, char *subdirs, char *filter,
 }
 
 /*
- * ==============
  * strgtr
- * ==============
  */
 static qboolean
 strgtr(const char *s0, const char *s1)
@@ -443,9 +409,7 @@ strgtr(const char *s0, const char *s1)
 }
 
 /*
- * ==============
  * Sys_ListFiles
- * ==============
  */
 char **
 Sys_ListFiles(const char *directory, const char *extension, char *filter,
@@ -542,9 +506,7 @@ Sys_ListFiles(const char *directory, const char *extension, char *filter,
 }
 
 /*
- * ==============
  * Sys_FreeFileList
- * ==============
  */
 void
 Sys_FreeFileList(char **list)
@@ -562,11 +524,9 @@ Sys_FreeFileList(char **list)
 
 
 /*
- * ==============
  * Sys_Sleep
  *
  * Block execution for msec or until input is received.
- * ==============
  */
 void
 Sys_Sleep(int msec)
@@ -589,11 +549,9 @@ Sys_Sleep(int msec)
 }
 
 /*
- * ==============
  * Sys_ErrorDialog
  *
  * Display an error message
- * ==============
  */
 void
 Sys_ErrorDialog(const char *error)
@@ -631,11 +589,9 @@ Sys_ErrorDialog(const char *error)
 }
 
 /*
- * ==============
  * Sys_Dialog
  *
  * Display a win32 dialog box
- * ==============
  */
 dialogResult_t
 Sys_Dialog(dialogType_t type, const char *message, const char *title)
@@ -665,11 +621,9 @@ static qboolean SDL_VIDEODRIVER_externallySet = qfalse;
 #endif
 
 /*
- * ==============
  * Sys_GLimpSafeInit
  *
  * Windows specific "safe" GL implementation initialisation
- * ==============
  */
 void
 Sys_GLimpSafeInit(void)
@@ -684,11 +638,9 @@ Sys_GLimpSafeInit(void)
 }
 
 /*
- * ==============
  * Sys_GLimpInit
  *
  * Windows specific GL implementation initialisation
- * ==============
  */
 void
 Sys_GLimpInit(void)
@@ -710,11 +662,9 @@ Sys_GLimpInit(void)
 }
 
 /*
- * ==============
  * Sys_PlatformInit
  *
  * Windows specific initialisation
- * ==============
  */
 void
 Sys_PlatformInit(void)
@@ -750,11 +700,9 @@ Sys_PlatformInit(void)
 }
 
 /*
- * ==============
  * Sys_PlatformExit
  *
  * Windows specific initialisation
- * ==============
  */
 void
 Sys_PlatformExit(void)
@@ -766,11 +714,9 @@ Sys_PlatformExit(void)
 }
 
 /*
- * ==============
  * Sys_SetEnv
  *
  * set/unset environment variables (empty value removes it)
- * ==============
  */
 void
 Sys_SetEnv(const char *name, const char *value)
@@ -782,9 +728,7 @@ Sys_SetEnv(const char *name, const char *value)
 }
 
 /*
- * ==============
  * Sys_PID
- * ==============
  */
 int
 Sys_PID(void)
@@ -793,9 +737,7 @@ Sys_PID(void)
 }
 
 /*
- * ==============
  * Sys_PIDIsRunning
- * ==============
  */
 qboolean
 Sys_PIDIsRunning(int pid)

@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 
 /*****************************************************************************
@@ -35,11 +33,9 @@
 #define DEF_COMSOUNDMEGS "8"
 
 /*
- * ===============================================================================
  *
  * memory management
  *
- * ===============================================================================
  */
 
 static sndBuffer *buffer = NULL;
@@ -115,11 +111,9 @@ SND_shutdown(void)
 }
 
 /*
- * ================
  * ResampleSfx
  *
  * resample / decimate to the current source rate
- * ================
  */
 static void
 ResampleSfx(sfx_t *sfx, int inrate, int inwidth, byte *data, qboolean compressed)
@@ -166,11 +160,9 @@ ResampleSfx(sfx_t *sfx, int inrate, int inwidth, byte *data, qboolean compressed
 }
 
 /*
- * ================
  * ResampleSfx
  *
  * resample / decimate to the current source rate
- * ================
  */
 static int
 ResampleSfxRaw(short *sfx, int inrate, int inwidth, int samples, byte *data)
@@ -205,12 +197,10 @@ ResampleSfxRaw(short *sfx, int inrate, int inwidth, int samples, byte *data)
 /* ============================================================================= */
 
 /*
- * ==============
  * S_LoadSound
  *
  * The filename may be different than sfx->name in the case
  * of a forced fallback of a player specific sound
- * ==============
  */
 qboolean
 S_LoadSound(sfx_t *sfx)

@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /*
  * q_math.c -- stateless support routines that are included in each code module */
@@ -275,12 +273,10 @@ NormalizeColor(const vec3_t in, vec3_t out)
 
 
 /*
- * =====================
  * PlaneFromPoints
  *
  * Returns false if the triangle is degenrate.
  * The normal will point out of the clock for clockwise ordered points
- * =====================
  */
 qboolean
 PlaneFromPoints(vec4_t plane, const vec3_t a, const vec3_t b, const vec3_t c)
@@ -298,11 +294,9 @@ PlaneFromPoints(vec4_t plane, const vec3_t a, const vec3_t b, const vec3_t c)
 }
 
 /*
- * ===============
  * RotatePointAroundVector
  *
  * This is not implemented very well...
- * ===============
  */
 void
 RotatePointAroundVector(vec3_t dst, const vec3_t dir, const vec3_t point,
@@ -363,9 +357,7 @@ RotatePointAroundVector(vec3_t dst, const vec3_t dir, const vec3_t point,
 }
 
 /*
- * ===============
  * RotateAroundDirection
- * ===============
  */
 void
 RotateAroundDirection(vec3_t axis[3], float yaw)
@@ -423,9 +415,7 @@ vectoangles(const vec3_t value1, vec3_t angles)
 
 
 /*
- * =================
  * AnglesToAxis
- * =================
  */
 void
 AnglesToAxis(const vec3_t angles, vec3_t axis[3])
@@ -484,12 +474,10 @@ ProjectPointOnPlane(vec3_t dst, const vec3_t p, const vec3_t normal)
 }
 
 /*
- * ================
  * MakeNormalVectors
  *
  * Given a normalized forward vector, create two
  * other perpendicular vectors
- * ================
  */
 void
 MakeNormalVectors(const vec3_t forward, vec3_t right, vec3_t up)
@@ -551,10 +539,8 @@ Q_fabs(float f)
 /* ============================================================ */
 
 /*
- * ===============
  * LerpAngle
  *
- * ===============
  */
 float
 LerpAngle(float from, float to, float frac)
@@ -572,11 +558,9 @@ LerpAngle(float from, float to, float frac)
 
 
 /*
- * =================
  * AngleSubtract
  *
  * Always returns a value from -180 to 180
- * =================
  */
 float
 AngleSubtract(float a1, float a2)
@@ -610,11 +594,9 @@ AngleMod(float a)
 
 
 /*
- * =================
  * AngleNormalize360
  *
  * returns angle normalized to the range [0 <= angle < 360]
- * =================
  */
 float
 AngleNormalize360(float angle)
@@ -624,11 +606,9 @@ AngleNormalize360(float angle)
 
 
 /*
- * =================
  * AngleNormalize180
  *
  * returns angle normalized to the range [-180 < angle <= 180]
- * =================
  */
 float
 AngleNormalize180(float angle)
@@ -641,11 +621,9 @@ AngleNormalize180(float angle)
 
 
 /*
- * =================
  * AngleDelta
  *
  * returns the normalized delta from angle1 to angle2
- * =================
  */
 float
 AngleDelta(float angle1, float angle2)
@@ -658,9 +636,7 @@ AngleDelta(float angle1, float angle2)
 
 
 /*
- * =================
  * SetPlaneSignbits
- * =================
  */
 void
 SetPlaneSignbits(cplane_t *out)
@@ -677,11 +653,9 @@ SetPlaneSignbits(cplane_t *out)
 
 
 /*
- * ==================
  * BoxOnPlaneSide
  *
  * Returns 1, 2, or 1 + 2
- * ==================
  */
 int
 BoxOnPlaneSide(vec3_t emins, vec3_t emaxs, struct cplane_s *p)
@@ -777,9 +751,7 @@ BoxOnPlaneSide(vec3_t emins, vec3_t emaxs, struct cplane_s *p)
 
 
 /*
- * =================
  * RadiusFromBounds
- * =================
  */
 float
 RadiusFromBounds(const vec3_t mins, const vec3_t maxs)
@@ -983,9 +955,7 @@ Q_log2(int val)
 
 
 /*
- * =================
  * PlaneTypeForNormal
- * =================
  */
 /*
  * int	PlaneTypeForNormal (vec3_t normal) {
@@ -1002,9 +972,7 @@ Q_log2(int val)
 
 
 /*
- * ================
  * MatrixMultiply
- * ================
  */
 void
 MatrixMultiply(float in1[3][3], float in2[3][3], float out[3][3])
@@ -1098,11 +1066,9 @@ PerpendicularVector(vec3_t dst, const vec3_t src)
 }
 
 /*
- * ================
  * Q_isnan
  *
  * Don't pass doubles to this
- * ================
  */
 int
 Q_isnan(float x)
@@ -1119,7 +1085,6 @@ Q_isnan(float x)
 
 #ifndef Q3_VM
 /*
- * =====================
  * Q_acos
  *
  * the msvc acos doesn't always return a value between -PI and PI:
@@ -1128,7 +1093,6 @@ Q_isnan(float x)
  * i = 1065353246;
  * acos(*(float*) &i) == -1.#IND0
  *
- * =====================
  */
 float
 Q_acos(float c)

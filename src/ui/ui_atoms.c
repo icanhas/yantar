@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /*  */
 /**********************************************************************
@@ -59,9 +57,7 @@ qboolean newUI = qfalse;
 
 
 /*
- * =================
  * UI_ClampCvar
- * =================
  */
 float
 UI_ClampCvar(float min, float max, float value)
@@ -72,9 +68,7 @@ UI_ClampCvar(float min, float max, float value)
 }
 
 /*
- * =================
  * UI_StartDemoLoop
- * =================
  */
 void
 UI_StartDemoLoop(void)
@@ -237,9 +231,7 @@ UI_LoadBestScores(const char *map, int game)
 }
 
 /*
- * ===============
  * UI_ClearScores
- * ===============
  */
 void
 UI_ClearScores(void)
@@ -282,9 +274,7 @@ UI_Cache_f(void)
 }
 
 /*
- * =======================
  * UI_CalcPostGameStats
- * =======================
  */
 static void
 UI_CalcPostGameStats(void)
@@ -385,9 +375,7 @@ UI_CalcPostGameStats(void)
 
 
 /*
- * =================
  * UI_ConsoleCommand
- * =================
  */
 qboolean
 UI_ConsoleCommand(int realTime)
@@ -452,9 +440,7 @@ UI_ConsoleCommand(int realTime)
 }
 
 /*
- * =================
  * UI_Shutdown
- * =================
  */
 void
 UI_Shutdown(void)
@@ -462,11 +448,9 @@ UI_Shutdown(void)
 }
 
 /*
- * ================
  * UI_AdjustFrom640
  *
  * Adjusted for resolution and screen aspect ratio
- * ================
  */
 void
 UI_AdjustFrom640(float *x, float *y, float *w, float *h)
@@ -527,11 +511,9 @@ UI_DrawHandlePic(float x, float y, float w, float h, qhandle_t hShader)
 }
 
 /*
- * ================
  * UI_FillRect
  *
  * Coordinates are 640*480 virtual values
- * =================
  */
 void
 UI_FillRect(float x, float y, float width, float height, const float *color)
@@ -563,11 +545,9 @@ UI_DrawTopBottom(float x, float y, float w, float h)
 		uiInfo.uiDC.whiteShader);
 }
 /*
- * ================
  * UI_DrawRect
  *
  * Coordinates are 640*480 virtual values
- * =================
  */
 void
 UI_DrawRect(float x, float y, float width, float height, const float *color)

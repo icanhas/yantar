@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /*  */
 #include "ui_local.h"
@@ -77,9 +75,7 @@ static char *cinematics[] = {
 };
 
 /*
- * ===============
  * UI_CinematicsMenu_BackEvent
- * ===============
  */
 static void
 UI_CinematicsMenu_BackEvent(void *ptr, int event)
@@ -91,9 +87,7 @@ UI_CinematicsMenu_BackEvent(void *ptr, int event)
 
 
 /*
- * ===============
  * UI_CinematicsMenu_Event
- * ===============
  */
 static void
 UI_CinematicsMenu_Event(void *ptr, int event)
@@ -115,9 +109,7 @@ UI_CinematicsMenu_Event(void *ptr, int event)
 
 
 /*
- * ===============
  * UI_CinematicsMenu_Init
- * ===============
  */
 static void
 UI_CinematicsMenu_Init(void)
@@ -320,9 +312,7 @@ UI_CinematicsMenu_Init(void)
 
 
 /*
- * =================
  * UI_CinematicsMenu_Cache
- * =================
  */
 void
 UI_CinematicsMenu_Cache(void)
@@ -335,9 +325,7 @@ UI_CinematicsMenu_Cache(void)
 
 
 /*
- * ===============
  * UI_CinematicsMenu
- * ===============
  */
 void
 UI_CinematicsMenu(void)
@@ -348,9 +336,7 @@ UI_CinematicsMenu(void)
 
 
 /*
- * ===============
  * UI_CinematicsMenu_f
- * ===============
  */
 void
 UI_CinematicsMenu_f(void)

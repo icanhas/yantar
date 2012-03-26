@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /* sv_client.c -- server code for dealing with clients */
 
@@ -26,7 +24,6 @@
 static void SV_CloseDownload(client_t *cl);
 
 /*
- * =================
  * SV_GetChallenge
  *
  * A "getchallenge" OOB command has been received
@@ -48,7 +45,6 @@ static void SV_CloseDownload(client_t *cl);
  * Also, the auth stuff is completely disabled for com_standalone games
  * as well as IPv6 connections, since there is no way to use the
  * v4-only auth server for these new types of connections.
- * =================
  */
 void
 SV_GetChallenge(netadr_t from)
@@ -197,13 +193,11 @@ SV_GetChallenge(netadr_t from)
 
 #ifndef STANDALONE
 /*
- * ====================
  * SV_AuthorizeIpPacket
  *
  * A packet has been returned from the authorize server.
  * If we have a challenge adr for that ip, send the
  * challengeResponse to it
- * ====================
  */
 void
 SV_AuthorizeIpPacket(netadr_t from)
@@ -279,11 +273,9 @@ SV_AuthorizeIpPacket(netadr_t from)
 #endif
 
 /*
- * ==================
  * SV_IsBanned
  *
  * Check whether a certain address is banned
- * ==================
  */
 
 static qboolean
@@ -310,11 +302,9 @@ SV_IsBanned(netadr_t *from, qboolean isexception)
 }
 
 /*
- * ==================
  * SV_DirectConnect
  *
  * A "connect" OOB command has been received
- * ==================
  */
 
 void
@@ -603,11 +593,9 @@ gotnewcl:
 }
 
 /*
- * =====================
  * SV_FreeClient
  *
  * Destructor for data allocated in a client structure
- * =====================
  */
 void
 SV_FreeClient(client_t *client)
@@ -630,13 +618,11 @@ SV_FreeClient(client_t *client)
 }
 
 /*
- * =====================
  * SV_DropClient
  *
  * Called when the player is totally leaving the server, either willingly
  * or unwillingly.  This is NOT called if the entire server is quiting
  * or crashing -- SV_FinalMessage() will handle that
- * =====================
  */
 void
 SV_DropClient(client_t *drop, const char *reason)
@@ -701,7 +687,6 @@ SV_DropClient(client_t *drop, const char *reason)
 }
 
 /*
- * ================
  * SV_SendClientGameState
  *
  * Sends the first message from the server to a connected client.
@@ -709,7 +694,6 @@ SV_DropClient(client_t *drop, const char *reason)
  *
  * It will be resent if the client acknowledges a later message but has
  * the wrong gamestate.
- * ================
  */
 static void
 SV_SendClientGameState(client_t *client)
@@ -778,9 +762,7 @@ SV_SendClientGameState(client_t *client)
 
 
 /*
- * ==================
  * SV_ClientEnterWorld
- * ==================
  */
 void
 SV_ClientEnterWorld(client_t *client, usercmd_t *cmd)
@@ -814,19 +796,15 @@ SV_ClientEnterWorld(client_t *client, usercmd_t *cmd)
 }
 
 /*
- * ============================================================
  *
  * CLIENT COMMAND EXECUTION
  *
- * ============================================================
  */
 
 /*
- * ==================
  * SV_CloseDownload
  *
  * clear/free any download vars
- * ==================
  */
 static void
 SV_CloseDownload(client_t *cl)
@@ -849,11 +827,9 @@ SV_CloseDownload(client_t *cl)
 }
 
 /*
- * ==================
  * SV_StopDownload_f
  *
  * Abort a download if in progress
- * ==================
  */
 static void
 SV_StopDownload_f(client_t *cl)
@@ -866,11 +842,9 @@ SV_StopDownload_f(client_t *cl)
 }
 
 /*
- * ==================
  * SV_DoneDownload_f
  *
  * Downloads are finished
- * ==================
  */
 static void
 SV_DoneDownload_f(client_t *cl)
@@ -881,12 +855,10 @@ SV_DoneDownload_f(client_t *cl)
 }
 
 /*
- * ==================
  * SV_NextDownload_f
  *
  * The argument will be the last acknowledged block from the client, it should be
  * the same as cl->downloadClientBlock
- * ==================
  */
 static void
 SV_NextDownload_f(client_t *cl)
@@ -919,9 +891,7 @@ SV_NextDownload_f(client_t *cl)
 }
 
 /*
- * ==================
  * SV_BeginDownload_f
- * ==================
  */
 static void
 SV_BeginDownload_f(client_t *cl)
@@ -936,12 +906,10 @@ SV_BeginDownload_f(client_t *cl)
 }
 
 /*
- * ==================
  * SV_WriteDownloadToClient
  *
  * Check to see if the client wants a file, open it if needed and start pumping the client
  * Fill up msg with data, return number of download blocks added
- * ==================
  */
 int
 SV_WriteDownloadToClient(client_t *cl, msg_t *msg)
@@ -1185,12 +1153,10 @@ SV_WriteDownloadToClient(client_t *cl, msg_t *msg)
 }
 
 /*
- * ==================
  * SV_SendQueuedMessages
  *
  * Send one round of fragments, or queued messages to all clients that have data pending.
  * Return the shortest time interval for sending next packet to client
- * ==================
  */
 
 int
@@ -1218,11 +1184,9 @@ SV_SendQueuedMessages(void)
 
 
 /*
- * ==================
  * SV_SendDownloadMessages
  *
  * Send one round of download messages to all clients
- * ==================
  */
 
 int
@@ -1254,11 +1218,9 @@ SV_SendDownloadMessages(void)
 }
 
 /*
- * =================
  * SV_Disconnect_f
  *
  * The client is going to disconnect, so remove the connection immediately  FIXME: move to game?
- * =================
  */
 static void
 SV_Disconnect_f(client_t *cl)
@@ -1267,7 +1229,6 @@ SV_Disconnect_f(client_t *cl)
 }
 
 /*
- * =================
  * SV_VerifyPaks_f
  *
  * If we are pure, disconnect the client if they do no meet the following conditions:
@@ -1277,7 +1238,6 @@ SV_Disconnect_f(client_t *cl)
  *
  * This routine would be a bit simpler with a goto but i abstained
  *
- * =================
  */
 static void
 SV_VerifyPaks_f(client_t *cl)
@@ -1425,9 +1385,7 @@ SV_VerifyPaks_f(client_t *cl)
 }
 
 /*
- * =================
  * SV_ResetPureClient_f
- * =================
  */
 static void
 SV_ResetPureClient_f(client_t *cl)
@@ -1437,12 +1395,10 @@ SV_ResetPureClient_f(client_t *cl)
 }
 
 /*
- * =================
  * SV_UserinfoChanged
  *
  * Pull specific info from a newly changed userinfo string
  * into a more C friendly form.
- * =================
  */
 void
 SV_UserinfoChanged(client_t *cl)
@@ -1538,9 +1494,7 @@ SV_UserinfoChanged(client_t *cl)
 
 
 /*
- * ==================
  * SV_UpdateUserinfo_f
- * ==================
  */
 static void
 SV_UpdateUserinfo_f(client_t *cl)
@@ -1566,9 +1520,7 @@ SV_UpdateVoipIgnore(client_t *cl, const char *idstr, qboolean ignore)
 }
 
 /*
- * ==================
  * SV_Voip_f
- * ==================
  */
 static void
 SV_Voip_f(client_t *cl)
@@ -1609,11 +1561,9 @@ static ucmd_t ucmds[] = {
 };
 
 /*
- * ==================
  * SV_ExecuteClientCommand
  *
  * Also called by bot code
- * ==================
  */
 void
 SV_ExecuteClientCommand(client_t *cl, const char *s, qboolean clientOK)
@@ -1645,9 +1595,7 @@ SV_ExecuteClientCommand(client_t *cl, const char *s, qboolean clientOK)
 }
 
 /*
- * ===============
  * SV_ClientCommand
- * ===============
  */
 static qboolean
 SV_ClientCommand(client_t *cl, msg_t *msg)
@@ -1705,11 +1653,9 @@ SV_ClientCommand(client_t *cl, msg_t *msg)
 
 
 /*
- * ==================
  * SV_ClientThink
  *
  * Also called by bot code
- * ==================
  */
 void
 SV_ClientThink(client_t *cl, usercmd_t *cmd)
@@ -1723,7 +1669,6 @@ SV_ClientThink(client_t *cl, usercmd_t *cmd)
 }
 
 /*
- * ==================
  * SV_UserMove
  *
  * The message usually contains all the movement commands
@@ -1732,7 +1677,6 @@ SV_ClientThink(client_t *cl, usercmd_t *cmd)
  *
  * On very fast clients, there may be multiple usercmd packed into
  * each of the backup packets.
- * ==================
  */
 static void
 SV_UserMove(client_t *cl, msg_t *msg, qboolean delta)
@@ -1837,11 +1781,9 @@ SV_UserMove(client_t *cl, msg_t *msg, qboolean delta)
 
 #ifdef USE_VOIP
 /*
- * ==================
  * SV_ShouldIgnoreVoipSender
  *
  * Blocking of voip packets based on source client
- * ==================
  */
 
 static qboolean
@@ -1954,19 +1896,15 @@ SV_UserVoip(client_t *cl, msg_t *msg)
 
 
 /*
- * ===========================================================================
  *
  * USER CMD EXECUTION
  *
- * ===========================================================================
  */
 
 /*
- * ===================
  * SV_ExecuteClientMessage
  *
  * Parse a client packet
- * ===================
  */
 void
 SV_ExecuteClientMessage(client_t *cl, msg_t *msg)

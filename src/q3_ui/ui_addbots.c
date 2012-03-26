@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,15 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /*  */
 /*
- * =======================================================================
  *
  * ADD BOTS MENU
  *
- * =======================================================================
  */
 
 
@@ -80,9 +76,7 @@ static addBotsMenuInfo_t addBotsMenuInfo;
 
 
 /*
- * =================
  * UI_AddBotsMenu_FightEvent
- * =================
  */
 static void
 UI_AddBotsMenu_FightEvent(void* ptr, int event)
@@ -105,9 +99,7 @@ UI_AddBotsMenu_FightEvent(void* ptr, int event)
 
 
 /*
- * =================
  * UI_AddBotsMenu_BotEvent
- * =================
  */
 static void
 UI_AddBotsMenu_BotEvent(void* ptr, int event)
@@ -124,9 +116,7 @@ UI_AddBotsMenu_BotEvent(void* ptr, int event)
 
 
 /*
- * =================
  * UI_AddBotsMenu_BackEvent
- * =================
  */
 static void
 UI_AddBotsMenu_BackEvent(void* ptr, int event)
@@ -138,9 +128,7 @@ UI_AddBotsMenu_BackEvent(void* ptr, int event)
 
 
 /*
- * =================
  * UI_AddBotsMenu_SetBotNames
- * =================
  */
 static void
 UI_AddBotsMenu_SetBotNames(void)
@@ -163,9 +151,7 @@ UI_AddBotsMenu_SetBotNames(void)
 
 
 /*
- * =================
  * UI_AddBotsMenu_UpEvent
- * =================
  */
 static void
 UI_AddBotsMenu_UpEvent(void* ptr, int event)
@@ -181,9 +167,7 @@ UI_AddBotsMenu_UpEvent(void* ptr, int event)
 
 
 /*
- * =================
  * UI_AddBotsMenu_DownEvent
- * =================
  */
 static void
 UI_AddBotsMenu_DownEvent(void* ptr, int event)
@@ -199,9 +183,7 @@ UI_AddBotsMenu_DownEvent(void* ptr, int event)
 
 
 /*
- * =================
  * UI_AddBotsMenu_GetSortedBotNums
- * =================
  */
 static int QDECL
 UI_AddBotsMenu_SortCompare(const void *arg1, const void *arg2)
@@ -238,9 +220,7 @@ UI_AddBotsMenu_GetSortedBotNums(void)
 
 
 /*
- * =================
  * UI_AddBotsMenu_Draw
- * =================
  */
 static void
 UI_AddBotsMenu_Draw(void)
@@ -254,9 +234,7 @@ UI_AddBotsMenu_Draw(void)
 
 
 /*
- * =================
  * UI_AddBotsMenu_Init
- * =================
  */
 static const char *skillNames[] = {
 	"I Can Win",
@@ -415,9 +393,7 @@ UI_AddBotsMenu_Init(void)
 
 
 /*
- * =================
  * UI_AddBots_Cache
- * =================
  */
 void
 UI_AddBots_Cache(void)
@@ -434,9 +410,7 @@ UI_AddBots_Cache(void)
 
 
 /*
- * =================
  * UI_AddBotsMenu
- * =================
  */
 void
 UI_AddBotsMenu(void)

@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,15 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /*  */
 /*
- * =======================================================================
  *
  * MULTIPLAYER MENU (SERVER BROWSER)
  *
- * =======================================================================
  */
 
 
@@ -258,9 +254,7 @@ static int	g_fullservers;
 
 
 /*
- * =================
  * ArenaServers_MaxPing
- * =================
  */
 static int
 ArenaServers_MaxPing(void)
@@ -275,9 +269,7 @@ ArenaServers_MaxPing(void)
 
 
 /*
- * =================
  * ArenaServers_Compare
- * =================
  */
 static int QDECL
 ArenaServers_Compare(const void *arg1, const void *arg2)
@@ -331,11 +323,9 @@ ArenaServers_Compare(const void *arg1, const void *arg2)
 }
 
 /*
- * =================
  * ArenaServers_SourceForLAN
  *
  * Convert ui's g_servertype to AS_* used by trap calls.
- * =================
  */
 int
 ArenaServers_SourceForLAN(void)
@@ -356,9 +346,7 @@ ArenaServers_SourceForLAN(void)
 }
 
 /*
- * =================
  * ArenaServers_Go
- * =================
  */
 static void
 ArenaServers_Go(void)
@@ -374,9 +362,7 @@ ArenaServers_Go(void)
 
 
 /*
- * =================
  * ArenaServers_UpdatePicture
- * =================
  */
 static void
 ArenaServers_UpdatePicture(void)
@@ -402,9 +388,7 @@ ArenaServers_UpdatePicture(void)
 
 
 /*
- * =================
  * ArenaServers_UpdateMenu
- * =================
  */
 static void
 ArenaServers_UpdateMenu(void)
@@ -583,9 +567,7 @@ ArenaServers_UpdateMenu(void)
 
 
 /*
- * =================
  * ArenaServers_Remove
- * =================
  */
 static void
 ArenaServers_Remove(void)
@@ -652,9 +634,7 @@ ArenaServers_Remove(void)
 
 
 /*
- * =================
  * ArenaServers_Insert
- * =================
  */
 static void
 ArenaServers_Insert(char* adrstr, char* info, int pingtime)
@@ -740,11 +720,9 @@ ArenaServers_Insert(char* adrstr, char* info, int pingtime)
 
 
 /*
- * =================
  * ArenaServers_InsertFavorites
  *
  * Insert nonresponsive address book entries into display lists.
- * =================
  */
 void
 ArenaServers_InsertFavorites(void)
@@ -773,11 +751,9 @@ ArenaServers_InsertFavorites(void)
 
 
 /*
- * =================
  * ArenaServers_LoadFavorites
  *
  * Load cvar address book entries into local lists.
- * =================
  */
 void
 ArenaServers_LoadFavorites(void)
@@ -852,9 +828,7 @@ ArenaServers_LoadFavorites(void)
 
 
 /*
- * =================
  * ArenaServers_StopRefresh
- * =================
  */
 static void
 ArenaServers_StopRefresh(void)
@@ -884,9 +858,7 @@ ArenaServers_StopRefresh(void)
 
 
 /*
- * =================
  * ArenaServers_DoRefresh
- * =================
  */
 static void
 ArenaServers_DoRefresh(void)
@@ -1020,9 +992,7 @@ ArenaServers_DoRefresh(void)
 
 
 /*
- * =================
  * ArenaServers_StartRefresh
- * =================
  */
 static void
 ArenaServers_StartRefresh(void)
@@ -1104,9 +1074,7 @@ ArenaServers_StartRefresh(void)
 
 
 /*
- * =================
  * ArenaServers_SaveChanges
- * =================
  */
 void
 ArenaServers_SaveChanges(void)
@@ -1123,9 +1091,7 @@ ArenaServers_SaveChanges(void)
 
 
 /*
- * =================
  * ArenaServers_Sort
- * =================
  */
 void
 ArenaServers_Sort(int type)
@@ -1140,9 +1106,7 @@ ArenaServers_Sort(int type)
 
 
 /*
- * =================
  * ArenaServers_SetType
- * =================
  */
 int
 ArenaServers_SetType(int type)
@@ -1207,9 +1171,7 @@ ArenaServers_SetType(int type)
 }
 
 /*
- * =================
  * PunkBuster_Confirm
- * =================
  */
 static void
 Punkbuster_ConfirmEnable(qboolean result)
@@ -1232,9 +1194,7 @@ Punkbuster_ConfirmDisable(qboolean result)
 }
 
 /*
- * =================
  * ArenaServers_Event
- * =================
  */
 static void
 ArenaServers_Event(void* ptr, int event)
@@ -1337,9 +1297,7 @@ ArenaServers_Event(void* ptr, int event)
 
 
 /*
- * =================
  * ArenaServers_MenuDraw
- * =================
  */
 static void
 ArenaServers_MenuDraw(void)
@@ -1352,9 +1310,7 @@ ArenaServers_MenuDraw(void)
 
 
 /*
- * =================
  * ArenaServers_MenuKey
- * =================
  */
 static sfxHandle_t
 ArenaServers_MenuKey(int key)
@@ -1383,9 +1339,7 @@ ArenaServers_MenuKey(int key)
 
 
 /*
- * =================
  * ArenaServers_MenuInit
- * =================
  */
 static void
 ArenaServers_MenuInit(void)
@@ -1673,9 +1627,7 @@ ArenaServers_MenuInit(void)
 
 
 /*
- * =================
  * ArenaServers_Cache
- * =================
  */
 void
 ArenaServers_Cache(void)
@@ -1699,9 +1651,7 @@ ArenaServers_Cache(void)
 
 
 /*
- * =================
  * UI_ArenaServersMenu
- * =================
  */
 void
 UI_ArenaServersMenu(void)

@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /*  */
 #include "ui_local.h"
@@ -64,9 +62,7 @@ static mods_t s_mods;
 
 
 /*
- * ===============
  * UI_Mods_MenuEvent
- * ===============
  */
 static void
 UI_Mods_MenuEvent(void *ptr, int event)
@@ -90,9 +86,7 @@ UI_Mods_MenuEvent(void *ptr, int event)
 
 
 /*
- * ===============
  * UI_Mods_ParseInfos
- * ===============
  */
 static void
 UI_Mods_ParseInfos(char *modDir, char *modDesc)
@@ -111,9 +105,7 @@ UI_Mods_ParseInfos(char *modDir, char *modDesc)
 
 
 /*
- * ===============
  * UI_Mods_LoadMods
- * ===============
  */
 static void
 UI_Mods_LoadMods(void)
@@ -150,9 +142,7 @@ UI_Mods_LoadMods(void)
 
 
 /*
- * ===============
  * UI_Mods_MenuInit
- * ===============
  */
 static void
 UI_Mods_MenuInit(void)
@@ -229,9 +219,7 @@ UI_Mods_MenuInit(void)
 }
 
 /*
- * =================
  * UI_Mods_Cache
- * =================
  */
 void
 UI_ModsMenu_Cache(void)
@@ -246,9 +234,7 @@ UI_ModsMenu_Cache(void)
 
 
 /*
- * ===============
  * UI_ModsMenu
- * ===============
  */
 void
 UI_ModsMenu(void)

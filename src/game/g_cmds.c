@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /*  */
 #include "g_local.h"
@@ -25,10 +23,8 @@
 #include "../../ui/menudef.h"	/* for the voice chats */
 
 /*
- * ==================
  * DeathmatchScoreboardMessage
  *
- * ==================
  */
 void
 DeathmatchScoreboardMessage(gentity_t *ent)
@@ -93,11 +89,9 @@ DeathmatchScoreboardMessage(gentity_t *ent)
 
 
 /*
- * ==================
  * Cmd_Score_f
  *
  * Request current scoreboard information
- * ==================
  */
 void
 Cmd_Score_f(gentity_t *ent)
@@ -108,9 +102,7 @@ Cmd_Score_f(gentity_t *ent)
 
 
 /*
- * ==================
  * CheatsOk
- * ==================
  */
 qboolean
 CheatsOk(gentity_t *ent)
@@ -130,9 +122,7 @@ CheatsOk(gentity_t *ent)
 
 
 /*
- * ==================
  * ConcatArgs
- * ==================
  */
 char    *
 ConcatArgs(int start)
@@ -163,12 +153,10 @@ ConcatArgs(int start)
 }
 
 /*
- * ==================
  * ClientNumberFromString
  *
  * Returns a player number for either a number or name string
  * Returns -1 if invalid
- * ==================
  */
 int
 ClientNumberFromString(gentity_t *to, char *s)
@@ -211,11 +199,9 @@ ClientNumberFromString(gentity_t *to, char *s)
 }
 
 /*
- * ==================
  * Cmd_Give_f
  *
  * Give items to a client
- * ==================
  */
 void
 Cmd_Give_f(gentity_t *ent)
@@ -308,13 +294,11 @@ Cmd_Give_f(gentity_t *ent)
 
 
 /*
- * ==================
  * Cmd_God_f
  *
  * Sets client to godmode
  *
  * argv(0) god
- * ==================
  */
 void
 Cmd_God_f(gentity_t *ent)
@@ -335,13 +319,11 @@ Cmd_God_f(gentity_t *ent)
 
 
 /*
- * ==================
  * Cmd_Notarget_f
  *
  * Sets client to notarget
  *
  * argv(0) notarget
- * ==================
  */
 void
 Cmd_Notarget_f(gentity_t *ent)
@@ -362,11 +344,9 @@ Cmd_Notarget_f(gentity_t *ent)
 
 
 /*
- * ==================
  * Cmd_Noclip_f
  *
  * argv(0) noclip
- * ==================
  */
 void
 Cmd_Noclip_f(gentity_t *ent)
@@ -387,14 +367,12 @@ Cmd_Noclip_f(gentity_t *ent)
 
 
 /*
- * ==================
  * Cmd_LevelShot_f
  *
  * This is just to help generate the level pictures
  * for the menus.  It goes to the intermission immediately
  * and sends over a command to the client to resize the view,
  * hide the scoreboard, and take a special screenshot
- * ==================
  */
 void
 Cmd_LevelShot_f(gentity_t *ent)
@@ -423,9 +401,7 @@ Cmd_LevelShot_f(gentity_t *ent)
 
 
 /*
- * ==================
  * Cmd_TeamTask_f
- * ==================
  */
 void
 Cmd_TeamTask_f(gentity_t *ent)
@@ -448,9 +424,7 @@ Cmd_TeamTask_f(gentity_t *ent)
 
 
 /*
- * =================
  * Cmd_Kill_f
- * =================
  */
 void
 Cmd_Kill_f(gentity_t *ent)
@@ -465,11 +439,9 @@ Cmd_Kill_f(gentity_t *ent)
 }
 
 /*
- * =================
  * BroadCastTeamChange
  *
  * Let everyone know about a team change
- * =================
  */
 void
 BroadcastTeamChange(gclient_t *client, int oldTeam)
@@ -494,9 +466,7 @@ BroadcastTeamChange(gclient_t *client, int oldTeam)
 }
 
 /*
- * =================
  * SetTeam
- * =================
  */
 void
 SetTeam(gentity_t *ent, char *s)
@@ -633,12 +603,10 @@ SetTeam(gentity_t *ent, char *s)
 }
 
 /*
- * =================
  * StopFollowing
  *
  * If the client being followed leaves the game, or you just want to drop
  * to free floating spectator mode
- * =================
  */
 void
 StopFollowing(gentity_t *ent)
@@ -652,9 +620,7 @@ StopFollowing(gentity_t *ent)
 }
 
 /*
- * =================
  * Cmd_Team_f
- * =================
  */
 void
 Cmd_Team_f(gentity_t *ent)
@@ -706,9 +672,7 @@ Cmd_Team_f(gentity_t *ent)
 
 
 /*
- * =================
  * Cmd_Follow_f
- * =================
  */
 void
 Cmd_Follow_f(gentity_t *ent)
@@ -749,9 +713,7 @@ Cmd_Follow_f(gentity_t *ent)
 }
 
 /*
- * =================
  * Cmd_FollowCycle_f
- * =================
  */
 void
 Cmd_FollowCycle_f(gentity_t *ent, int dir)
@@ -799,9 +761,7 @@ Cmd_FollowCycle_f(gentity_t *ent, int dir)
 
 
 /*
- * ==================
  * G_Say
- * ==================
  */
 
 static void
@@ -910,9 +870,7 @@ G_Say(gentity_t *ent, gentity_t *target, int mode, const char *chatText)
 
 
 /*
- * ==================
  * Cmd_Say_f
- * ==================
  */
 static void
 Cmd_Say_f(gentity_t *ent, int mode, qboolean arg0)
@@ -931,9 +889,7 @@ Cmd_Say_f(gentity_t *ent, int mode, qboolean arg0)
 }
 
 /*
- * ==================
  * Cmd_Tell_f
- * ==================
  */
 static void
 Cmd_Tell_f(gentity_t *ent)
@@ -1029,9 +985,7 @@ G_Voice(gentity_t *ent, gentity_t *target, int mode, const char *id,
 }
 
 /*
- * ==================
  * Cmd_Voice_f
- * ==================
  */
 static void
 Cmd_Voice_f(gentity_t *ent, int mode, qboolean arg0, qboolean voiceonly)
@@ -1050,9 +1004,7 @@ Cmd_Voice_f(gentity_t *ent, int mode, qboolean arg0, qboolean voiceonly)
 }
 
 /*
- * ==================
  * Cmd_VoiceTell_f
- * ==================
  */
 static void
 Cmd_VoiceTell_f(gentity_t *ent, qboolean voiceonly)
@@ -1088,9 +1040,7 @@ Cmd_VoiceTell_f(gentity_t *ent, qboolean voiceonly)
 
 
 /*
- * ==================
  * Cmd_VoiceTaunt_f
- * ==================
  */
 static void
 Cmd_VoiceTaunt_f(gentity_t *ent)
@@ -1201,9 +1151,7 @@ Cmd_GameCommand_f(gentity_t *ent)
 }
 
 /*
- * ==================
  * Cmd_Where_f
- * ==================
  */
 void
 Cmd_Where_f(gentity_t *ent)
@@ -1224,9 +1172,7 @@ static const char *gameNames[] = {
 };
 
 /*
- * ==================
  * Cmd_CallVote_f
- * ==================
  */
 void
 Cmd_CallVote_f(gentity_t *ent)
@@ -1375,9 +1321,7 @@ Cmd_CallVote_f(gentity_t *ent)
 }
 
 /*
- * ==================
  * Cmd_Vote_f
- * ==================
  */
 void
 Cmd_Vote_f(gentity_t *ent)
@@ -1420,9 +1364,7 @@ Cmd_Vote_f(gentity_t *ent)
 }
 
 /*
- * ==================
  * Cmd_CallTeamVote_f
- * ==================
  */
 void
 Cmd_CallTeamVote_f(gentity_t *ent)
@@ -1578,9 +1520,7 @@ Cmd_CallTeamVote_f(gentity_t *ent)
 }
 
 /*
- * ==================
  * Cmd_TeamVote_f
- * ==================
  */
 void
 Cmd_TeamVote_f(gentity_t *ent)
@@ -1635,9 +1575,7 @@ Cmd_TeamVote_f(gentity_t *ent)
 
 
 /*
- * =================
  * Cmd_SetViewpos_f
- * =================
  */
 void
 Cmd_SetViewpos_f(gentity_t *ent)
@@ -1672,9 +1610,7 @@ Cmd_SetViewpos_f(gentity_t *ent)
 
 
 /*
- * =================
  * Cmd_Stats_f
- * =================
  */
 void
 Cmd_Stats_f(gentity_t *ent)
@@ -1696,9 +1632,7 @@ Cmd_Stats_f(gentity_t *ent)
 }
 
 /*
- * =================
  * ClientCommand
- * =================
  */
 void
 ClientCommand(int clientNum)

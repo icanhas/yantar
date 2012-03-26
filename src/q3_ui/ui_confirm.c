@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,15 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /*  */
 /*
- * =======================================================================
  *
  * CONFIRMATION MENU
  *
- * =======================================================================
  */
 
 
@@ -58,9 +54,7 @@ static confirmMenu_t s_confirm;
 
 
 /*
- * =================
  * ConfirmMenu_Event
- * =================
  */
 static void
 ConfirmMenu_Event(void* ptr, int event)
@@ -83,9 +77,7 @@ ConfirmMenu_Event(void* ptr, int event)
 
 
 /*
- * =================
  * ConfirmMenu_Key
- * =================
  */
 static sfxHandle_t
 ConfirmMenu_Key(int key)
@@ -114,9 +106,7 @@ ConfirmMenu_Key(int key)
 
 
 /*
- * =================
  * MessaheMenu_Draw
- * =================
  */
 static void
 MessageMenu_Draw(void)
@@ -140,9 +130,7 @@ MessageMenu_Draw(void)
 }
 
 /*
- * =================
  * ConfirmMenu_Draw
- * =================
  */
 static void
 ConfirmMenu_Draw(void)
@@ -161,9 +149,7 @@ ConfirmMenu_Draw(void)
 
 
 /*
- * =================
  * ConfirmMenu_Cache
- * =================
  */
 void
 ConfirmMenu_Cache(void)
@@ -173,9 +159,7 @@ ConfirmMenu_Cache(void)
 
 
 /*
- * =================
  * UI_ConfirmMenu_Stlye
- * =================
  */
 void
 UI_ConfirmMenu_Style(const char *question, int style, void (*draw)(
@@ -242,9 +226,7 @@ UI_ConfirmMenu_Style(const char *question, int style, void (*draw)(
 }
 
 /*
- * =================
  * UI_ConfirmMenu
- * =================
  */
 void
 UI_ConfirmMenu(const char *question, void (*draw)(void), void (*action)(
@@ -254,10 +236,8 @@ UI_ConfirmMenu(const char *question, void (*draw)(void), void (*action)(
 }
 
 /*
- * =================
  * UI_Message
  * hacked over from Confirm stuff
- * =================
  */
 void
 UI_Message(const char **lines)

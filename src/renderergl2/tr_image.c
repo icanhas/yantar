@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /* tr_image.c */
 #include "tr_local.h"
@@ -58,9 +56,7 @@ textureMode_t modes[] = {
 };
 
 /*
- * ===============
  * GL_TextureMode
- * ===============
  */
 void
 GL_TextureMode(const char *string)
@@ -101,9 +97,7 @@ GL_TextureMode(const char *string)
 }
 
 /*
- * ===============
  * R_SumOfUsedImages
- * ===============
  */
 int
 R_SumOfUsedImages(void)
@@ -121,9 +115,7 @@ R_SumOfUsedImages(void)
 }
 
 /*
- * ===============
  * R_ImageList_f
- * ===============
  */
 void
 R_ImageList_f(void)
@@ -201,7 +193,6 @@ R_ImageList_f(void)
 /* ======================================================================= */
 
 /*
- * ================
  * ResampleTexture
  *
  * Used to resample images in a more general than quartering fashion.
@@ -211,7 +202,6 @@ R_ImageList_f(void)
  *
  * If a larger shrinking is needed, use the mipmap function
  * before or after.
- * ================
  */
 static void
 ResampleTexture(byte *in, int inwidth, int inheight, byte *out,
@@ -752,12 +742,10 @@ FCBIByBlock(byte *data, int width, int height, qboolean clampToEdge)
 #undef COPYSAMPLE
 
 /*
- * ================
  * R_LightScaleTexture
  *
  * Scale up the pixel values in a texture to increase the
  * lighting range
- * ================
  */
 void
 R_LightScaleTexture(byte *in, int inwidth, int inheight, qboolean only_gamma)
@@ -802,12 +790,10 @@ R_LightScaleTexture(byte *in, int inwidth, int inheight, qboolean only_gamma)
 
 
 /*
- * ================
  * R_MipMap2
  *
  * Operates in place, quartering the size of the texture
  * Proper linear filter
- * ================
  */
 static void
 R_MipMap2(byte *in, int inWidth, int inHeight)
@@ -898,11 +884,9 @@ R_MipMap2(byte *in, int inWidth, int inHeight)
 }
 
 /*
- * ================
  * R_MipMap
  *
  * Operates in place, quartering the size of the texture
- * ================
  */
 static void
 R_MipMap(byte *in, int width, int height)
@@ -1018,11 +1002,9 @@ R_MipMapNormalHeight(byte *in, int width, int height, qboolean swizzle)
 
 
 /*
- * ==================
  * R_BlendOverTexture
  *
  * Apply a color blend over a set of pixels
- * ==================
  */
 static void
 R_BlendOverTexture(byte *data, int pixelCount, byte blend[4])
@@ -1101,10 +1083,8 @@ RawImage_Normalize(byte *data, int width, int height, qboolean swizzle)
 #endif
 
 /*
- * ===============
  * RawImage_ScaleToPower2
  *
- * ===============
  */
 static void
 RawImage_ScaleToPower2(byte **data, int *inout_width, int *inout_height, int *inout_scaled_width,
@@ -1389,10 +1369,8 @@ RawImage_UploadTexture(byte *data, int x, int y, int width, int height, GLenum i
 
 
 /*
- * ===============
  * Upload32
  *
- * ===============
  */
 extern qboolean charSet;
 static void
@@ -1543,11 +1521,9 @@ EmptyTexture(int width, int height, imgFlags_t flags,
 
 
 /*
- * ================
  * R_CreateImage
  *
  * This is the only way any image_t are created
- * ================
  */
 image_t *
 R_CreateImage2(const char *name, byte *pic, int width, int height, imgFlags_t flags, int internalFormat)
@@ -1790,12 +1766,10 @@ static imageExtToLoaderMap_t imageLoaders[] =
 static int numImageLoaders = ARRAY_LEN(imageLoaders);
 
 /*
- * =================
  * R_LoadImage
  *
  * Loads any of the supported image types into a cannonical
  * 32 bit format.
- * =================
  */
 void
 R_LoadImage(const char *name, byte **pic, int *width, int *height)
@@ -1863,12 +1837,10 @@ R_LoadImage(const char *name, byte **pic, int *width, int *height)
 
 
 /*
- * ===============
  * R_FindImageFile
  *
  * Finds or loads the given image.
  * Returns NULL if it fails, not a default image.
- * ==============
  */
 image_t *
 R_FindImageFile2(const char *name, imgFlags_t flags)
@@ -1937,9 +1909,7 @@ R_FindImageFile(const char *name, qboolean mipmap, qboolean allowPicmip, int glW
 
 
 /*
- * ================
  * R_CreateDlightImage
- * ================
  */
 #define DLIGHT_SIZE 16
 static void
@@ -1973,9 +1943,7 @@ R_CreateDlightImage(void)
 
 
 /*
- * =================
  * R_InitFogTable
- * =================
  */
 void
 R_InitFogTable(void)
@@ -1994,13 +1962,11 @@ R_InitFogTable(void)
 }
 
 /*
- * ================
  * R_FogFactor
  *
  * Returns a 0.0 to 1.0 fog density value
  * This is called for each texel of the fog texture on startup
  * and for each vertex of transparent shaders in fog dynamically
- * ================
  */
 float
 R_FogFactor(float s, float t)
@@ -2031,9 +1997,7 @@ R_FogFactor(float s, float t)
 }
 
 /*
- * ================
  * R_CreateFogImage
- * ================
  */
 #define FOG_S	256
 #define FOG_T	32
@@ -2072,9 +2036,7 @@ R_CreateFogImage(void)
 }
 
 /*
- * ==================
  * R_CreateDefaultImage
- * ==================
  */
 #define DEFAULT_SIZE 16
 static void
@@ -2111,9 +2073,7 @@ R_CreateDefaultImage(void)
 }
 
 /*
- * ==================
  * R_CreateBuiltinImages
- * ==================
  */
 void
 R_CreateBuiltinImages(void)
@@ -2242,9 +2202,7 @@ R_CreateBuiltinImages(void)
 
 
 /*
- * ===============
  * R_SetColorMappings
- * ===============
  */
 void
 R_SetColorMappings(void)
@@ -2330,9 +2288,7 @@ R_SetColorMappings(void)
 }
 
 /*
- * ===============
  * R_InitImages
- * ===============
  */
 void
 R_InitImages(void)
@@ -2346,9 +2302,7 @@ R_InitImages(void)
 }
 
 /*
- * ===============
  * R_DeleteTextures
- * ===============
  */
 void
 R_DeleteTextures(void)
@@ -2373,20 +2327,16 @@ R_DeleteTextures(void)
 }
 
 /*
- * ============================================================================
  *
  * SKINS
  *
- * ============================================================================
  */
 
 /*
- * ==================
  * CommaParse
  *
  * This is unfortunate, but the skin files aren't
  * compatable with our normal parsing rules.
- * ==================
  */
 static char *
 CommaParse(char **data_p)
@@ -2477,10 +2427,8 @@ CommaParse(char **data_p)
 
 
 /*
- * ===============
  * RE_RegisterSkin
  *
- * ===============
  */
 qhandle_t
 RE_RegisterSkin(const char *name)
@@ -2588,9 +2536,7 @@ RE_RegisterSkin(const char *name)
 
 
 /*
- * ===============
  * R_InitSkins
- * ===============
  */
 void
 R_InitSkins(void)
@@ -2608,9 +2554,7 @@ R_InitSkins(void)
 }
 
 /*
- * ===============
  * R_GetSkinByHandle
- * ===============
  */
 skin_t  *
 R_GetSkinByHandle(qhandle_t hSkin)
@@ -2622,9 +2566,7 @@ R_GetSkinByHandle(qhandle_t hSkin)
 }
 
 /*
- * ===============
  * R_SkinList_f
- * ===============
  */
 void
 R_SkinList_f(void)

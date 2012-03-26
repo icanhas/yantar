@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,15 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /*  */
 /*
- * =======================================================================
  *
  * USER INTERFACE MAIN
  *
- * =======================================================================
  */
 
 
@@ -33,12 +29,10 @@
 
 
 /*
- * ================
  * vmMain
  *
  * This is the only way control passes into the module.
  * This must be the very first function compiled into the .qvm file
- * ================
  */
 Q_EXPORT intptr_t
 vmMain(int command, int arg0, int arg1, int arg2, int arg3, int arg4, int arg5,
@@ -91,9 +85,7 @@ vmMain(int command, int arg0, int arg1, int arg2, int arg3, int arg4, int arg5,
 
 
 /*
- * ================
  * cvars
- * ================
  */
 
 typedef struct {
@@ -227,9 +219,7 @@ static int cvarTableSize = ARRAY_LEN(cvarTable);
 
 
 /*
- * =================
  * UI_RegisterCvars
- * =================
  */
 void
 UI_RegisterCvars(void)
@@ -243,9 +233,7 @@ UI_RegisterCvars(void)
 }
 
 /*
- * =================
  * UI_UpdateCvars
- * =================
  */
 void
 UI_UpdateCvars(void)

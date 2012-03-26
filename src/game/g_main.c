@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /*  */
 
@@ -202,12 +200,10 @@ void CheckExitRules(void);
 
 
 /*
- * ================
  * vmMain
  *
  * This is the only way control passes into the module.
  * This must be the very first function compiled into the .q3vm file
- * ================
  */
 Q_EXPORT intptr_t
 vmMain(int command, int arg0, int arg1, int arg2, int arg3, int arg4, int arg5,
@@ -278,7 +274,6 @@ G_Error(const char *fmt, ...)
 }
 
 /*
- * ================
  * G_FindTeams
  *
  * Chain together all entities with a matching team field.
@@ -286,7 +281,6 @@ G_Error(const char *fmt, ...)
  *
  * All but the first will have the FL_TEAMSLAVE flag set and teammaster field set
  * All but the last will have the teamchain field set to the next one
- * ================
  */
 void
 G_FindTeams(void)
@@ -352,9 +346,7 @@ G_RemapTeamShaders(void)
 
 
 /*
- * =================
  * G_RegisterCvars
- * =================
  */
 void
 G_RegisterCvars(void)
@@ -387,9 +379,7 @@ G_RegisterCvars(void)
 }
 
 /*
- * =================
  * G_UpdateCvars
- * =================
  */
 void
 G_UpdateCvars(void)
@@ -424,10 +414,8 @@ G_UpdateCvars(void)
 }
 
 /*
- * ============
  * G_InitGame
  *
- * ============
  */
 void
 G_InitGame(int levelTime, int randomSeed, int restart)
@@ -539,9 +527,7 @@ G_InitGame(int levelTime, int randomSeed, int restart)
 
 
 /*
- * =================
  * G_ShutdownGame
- * =================
  */
 void
 G_ShutdownGame(int restart)
@@ -594,20 +580,16 @@ Com_Printf(const char *msg, ...)
 }
 
 /*
- * ========================================================================
  *
  * PLAYER COUNTING / SCORE SORTING
  *
- * ========================================================================
  */
 
 /*
- * =============
  * AddTournamentPlayer
  *
  * If there are less than two tournament players, put a
  * spectator in the game and restart
- * =============
  */
 void
 AddTournamentPlayer(void)
@@ -651,11 +633,9 @@ AddTournamentPlayer(void)
 }
 
 /*
- * =======================
  * AddTournamentQueue
  *
  * Add client to end of tournament queue
- * =======================
  */
 
 void
@@ -677,11 +657,9 @@ AddTournamentQueue(gclient_t *client)
 }
 
 /*
- * =======================
  * RemoveTournamentLoser
  *
  * Make the loser a spectator at the back of the line
- * =======================
  */
 void
 RemoveTournamentLoser(void)
@@ -701,9 +679,7 @@ RemoveTournamentLoser(void)
 }
 
 /*
- * =======================
  * RemoveTournamentWinner
- * =======================
  */
 void
 RemoveTournamentWinner(void)
@@ -723,9 +699,7 @@ RemoveTournamentWinner(void)
 }
 
 /*
- * =======================
  * AdjustTournamentScores
- * =======================
  */
 void
 AdjustTournamentScores(void)
@@ -747,10 +721,8 @@ AdjustTournamentScores(void)
 }
 
 /*
- * =============
  * SortRanks
  *
- * =============
  */
 int QDECL
 SortRanks(const void *a, const void *b)
@@ -800,13 +772,11 @@ SortRanks(const void *a, const void *b)
 }
 
 /*
- * ============
  * CalculateRanks
  *
  * Recalculates the score ranks of all players
  * This will be called on every client connect, begin, disconnect, death,
  * and team change.
- * ============
  */
 void
 CalculateRanks(void)
@@ -953,20 +923,16 @@ CalculateRanks(void)
 
 
 /*
- * ========================================================================
  *
  * MAP CHANGING
  *
- * ========================================================================
  */
 
 /*
- * ========================
  * SendScoreboardMessageToAllClients
  *
  * Do this at BeginIntermission time and whenever ranks are recalculated
  * due to enters/exits/forced team changes
- * ========================
  */
 void
 SendScoreboardMessageToAllClients(void)
@@ -979,12 +945,10 @@ SendScoreboardMessageToAllClients(void)
 }
 
 /*
- * ========================
  * MoveClientToIntermission
  *
  * When the intermission starts, this will be called for all players.
  * If a new client connects, this will be called after the spawn function.
- * ========================
  */
 void
 MoveClientToIntermission(gentity_t *ent)
@@ -1013,11 +977,9 @@ MoveClientToIntermission(gentity_t *ent)
 }
 
 /*
- * ==================
  * FindIntermissionPoint
  *
  * This is also used for spectator spawns
- * ==================
  */
 void
 FindIntermissionPoint(void)
@@ -1049,9 +1011,7 @@ FindIntermissionPoint(void)
 }
 
 /*
- * ==================
  * BeginIntermission
- * ==================
  */
 void
 BeginIntermission(void)
@@ -1096,13 +1056,11 @@ BeginIntermission(void)
 
 
 /*
- * =============
  * ExitLevel
  *
  * When the intermission has been exited, the server is either killed
  * or moved to a new level based on the "nextmap" cvar
  *
- * =============
  */
 void
 ExitLevel(void)
@@ -1162,11 +1120,9 @@ ExitLevel(void)
 }
 
 /*
- * =================
  * G_LogPrintf
  *
  * Print to the logfile with a time stamp if it is open
- * =================
  */
 void QDECL
 G_LogPrintf(const char *fmt, ...)
@@ -1198,11 +1154,9 @@ G_LogPrintf(const char *fmt, ...)
 }
 
 /*
- * ================
  * LogExit
  *
  * Append information about this game to the log file
- * ================
  */
 void
 LogExit(const char *string)
@@ -1270,14 +1224,12 @@ LogExit(const char *string)
 
 
 /*
- * =================
  * CheckIntermissionExit
  *
  * The level will stay at the intermission for a minimum of 5 seconds
  * If all players wish to continue, the level will then exit.
  * If one or more players have not acknowledged the continue, the game will
  * wait 10 seconds before going on.
- * =================
  */
 void
 CheckIntermissionExit(void)
@@ -1354,9 +1306,7 @@ CheckIntermissionExit(void)
 }
 
 /*
- * =============
  * ScoreIsTied
- * =============
  */
 qboolean
 ScoreIsTied(void)
@@ -1378,13 +1328,11 @@ ScoreIsTied(void)
 }
 
 /*
- * =================
  * CheckExitRules
  *
  * There will be a delay between the time the exit is qualified for
  * and the time everyone is moved to the intermission spot, so you
  * can see the last frag.
- * =================
  */
 void
 CheckExitRules(void)
@@ -1487,20 +1435,16 @@ CheckExitRules(void)
 
 
 /*
- * ========================================================================
  *
  * FUNCTIONS CALLED EVERY FRAME
  *
- * ========================================================================
  */
 
 
 /*
- * =============
  * CheckTournament
  *
  * Once a frame, check for changes in tournement player state
- * =============
  */
 void
 CheckTournament(void)
@@ -1621,9 +1565,7 @@ CheckTournament(void)
 
 
 /*
- * ==================
  * CheckVote
- * ==================
  */
 void
 CheckVote(void)
@@ -1655,9 +1597,7 @@ CheckVote(void)
 }
 
 /*
- * ==================
  * PrintTeam
- * ==================
  */
 void
 PrintTeam(int team, char *message)
@@ -1672,9 +1612,7 @@ PrintTeam(int team, char *message)
 }
 
 /*
- * ==================
  * SetLeader
- * ==================
  */
 void
 SetLeader(int team, int client)
@@ -1709,9 +1647,7 @@ SetLeader(int team, int client)
 }
 
 /*
- * ==================
  * CheckTeamLeader
- * ==================
  */
 void
 CheckTeamLeader(int team)
@@ -1743,9 +1679,7 @@ CheckTeamLeader(int team)
 }
 
 /*
- * ==================
  * CheckTeamVote
- * ==================
  */
 void
 CheckTeamVote(int team)
@@ -1795,9 +1729,7 @@ CheckTeamVote(int team)
 
 
 /*
- * ==================
  * CheckCvars
- * ==================
  */
 void
 CheckCvars(void)
@@ -1814,11 +1746,9 @@ CheckCvars(void)
 }
 
 /*
- * =============
  * G_RunThink
  *
  * Runs thinking code for this frame if necessary
- * =============
  */
 void
 G_RunThink(gentity_t *ent)
@@ -1838,11 +1768,9 @@ G_RunThink(gentity_t *ent)
 }
 
 /*
- * ================
  * G_RunFrame
  *
  * Advances the non-player objects in the world
- * ================
  */
 void
 G_RunFrame(int levelTime)

@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /*
  * cg_snapshot.c -- things that happen on snapshot transition,
@@ -28,9 +26,7 @@
 
 
 /*
- * ==================
  * CG_ResetEntity
- * ==================
  */
 static void
 CG_ResetEntity(centity_t *cent)
@@ -49,11 +45,9 @@ CG_ResetEntity(centity_t *cent)
 }
 
 /*
- * ===============
  * CG_TransitionEntity
  *
  * cent->nextState is moved to cent->currentState and events are fired
- * ===============
  */
 static void
 CG_TransitionEntity(centity_t *cent)
@@ -74,7 +68,6 @@ CG_TransitionEntity(centity_t *cent)
 
 
 /*
- * ==================
  * CG_SetInitialSnapshot
  *
  * This will only happen on the very first snapshot, or
@@ -82,7 +75,6 @@ CG_TransitionEntity(centity_t *cent)
  * CG_TransitionSnapshot instead.
  *
  * FIXME: Also called by map_restart?
- * ==================
  */
 void
 CG_SetInitialSnapshot(snapshot_t *snap)
@@ -124,11 +116,9 @@ CG_SetInitialSnapshot(snapshot_t *snap)
 
 
 /*
- * ===================
  * CG_TransitionSnapshot
  *
  * The transition point from snap to nextSnap has passed
- * ===================
  */
 static void
 CG_TransitionSnapshot(void)
@@ -194,11 +184,9 @@ CG_TransitionSnapshot(void)
 
 
 /*
- * ===================
  * CG_SetNextSnap
  *
  * A new snapshot has just been read in from the client system.
- * ===================
  */
 static void
 CG_SetNextSnap(snapshot_t *snap)
@@ -252,14 +240,12 @@ CG_SetNextSnap(snapshot_t *snap)
 
 
 /*
- * ========================
  * CG_ReadNextSnapshot
  *
  * This is the only place new snapshots are requested
  * This may increment cgs.processedSnapshotNum multiple
  * times if the client system fails to return a
  * valid snapshot.
- * ========================
  */
 static snapshot_t *
 CG_ReadNextSnapshot(void)
@@ -312,7 +298,6 @@ CG_ReadNextSnapshot(void)
 
 
 /*
- * ============
  * CG_ProcessSnapshots
  *
  * We are trying to set up a renderable view, so determine
@@ -328,7 +313,6 @@ CG_ReadNextSnapshot(void)
  * hasn't arrived yet (it becomes an extrapolating situation instead
  * of an interpolating one)
  *
- * ============
  */
 void
 CG_ProcessSnapshots(void)

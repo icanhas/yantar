@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /* g_rankings.c -- reports for global rankings system */
 
@@ -25,9 +23,7 @@
 #include "g_rankings.h"
 
 /*
- * ================
  * G_RankRunFrame
- * ================
  */
 void
 G_RankRunFrame()
@@ -153,9 +149,7 @@ G_RankRunFrame()
 }
 
 /*
- * ================
  * G_RankFireWeapon
- * ================
  */
 void
 G_RankFireWeapon(int self, int weapon)
@@ -204,9 +198,7 @@ G_RankFireWeapon(int self, int weapon)
 }
 
 /*
- * ================
  * G_RankDamage
- * ================
  */
 void
 G_RankDamage(int self, int attacker, int damage, int means_of_death)
@@ -469,9 +461,7 @@ G_RankDamage(int self, int attacker, int damage, int means_of_death)
 }
 
 /*
- * ================
  * G_RankPlayerDie
- * ================
  */
 void
 G_RankPlayerDie(int self, int attacker, int means_of_death)
@@ -615,9 +605,7 @@ G_RankPlayerDie(int self, int attacker, int means_of_death)
 }
 
 /*
- * ================
  * G_RankWeaponTime
- * ================
  */
 void
 G_RankWeaponTime(int self, int weapon)
@@ -675,9 +663,7 @@ G_RankWeaponTime(int self, int weapon)
 }
 
 /*
- * ================
  * G_RankPickupWeapon
- * ================
  */
 void
 G_RankPickupWeapon(int self, int weapon)
@@ -724,9 +710,7 @@ G_RankPickupWeapon(int self, int weapon)
 }
 
 /*
- * ================
  * G_RankPickupAmmo
- * ================
  */
 void
 G_RankPickupAmmo(int self, int weapon, int quantity)
@@ -779,9 +763,7 @@ G_RankPickupAmmo(int self, int weapon, int quantity)
 }
 
 /*
- * ================
  * G_RankPickupHealth
- * ================
  */
 void
 G_RankPickupHealth(int self, int quantity)
@@ -812,9 +794,7 @@ G_RankPickupHealth(int self, int quantity)
 }
 
 /*
- * ================
  * G_RankPickupArmor
- * ================
  */
 void
 G_RankPickupArmor(int self, int quantity)
@@ -842,9 +822,7 @@ G_RankPickupArmor(int self, int quantity)
 }
 
 /*
- * ================
  * G_RankPickupPowerup
- * ================
  */
 void
 G_RankPickupPowerup(int self, int powerup)
@@ -886,9 +864,7 @@ G_RankPickupPowerup(int self, int powerup)
 }
 
 /*
- * ================
  * G_RankPickupHoldable
- * ================
  */
 void
 G_RankPickupHoldable(int self, int holdable)
@@ -910,9 +886,7 @@ G_RankPickupHoldable(int self, int holdable)
 }
 
 /*
- * ================
  * G_RankUseHoldable
- * ================
  */
 void
 G_RankUseHoldable(int self, int holdable)
@@ -934,9 +908,7 @@ G_RankUseHoldable(int self, int holdable)
 }
 
 /*
- * ================
  * G_RankReward
- * ================
  */
 void
 G_RankReward(int self, int award)
@@ -958,9 +930,7 @@ G_RankReward(int self, int award)
 }
 
 /*
- * ================
  * G_RankCapture
- * ================
  */
 void
 G_RankCapture(int self)
@@ -973,9 +943,7 @@ G_RankCapture(int self)
 }
 
 /*
- * ================
  * G_RankUserTeamName
- * ================
  */
 void
 G_RankUserTeamName(int self, char* team_name)
@@ -988,9 +956,7 @@ G_RankUserTeamName(int self, char* team_name)
 }
 
 /*
- * ================
  * G_RankClientDisconnect
- * ================
  */
 void
 G_RankClientDisconnect(int self)
@@ -1014,9 +980,7 @@ G_RankClientDisconnect(int self)
 }
 
 /*
- * ================
  * G_RankGameOver
- * ================
  */
 void
 G_RankGameOver(void)

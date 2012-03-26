@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /*  */
 #include "ui_local.h"
@@ -100,9 +98,7 @@ static const char *handicap_items[] = {
 
 
 /*
- * =================
  * PlayerSettings_DrawName
- * =================
  */
 static void
 PlayerSettings_DrawName(void *self)
@@ -175,9 +171,7 @@ PlayerSettings_DrawName(void *self)
 
 
 /*
- * =================
  * PlayerSettings_DrawHandicap
- * =================
  */
 static void
 PlayerSettings_DrawHandicap(void *self)
@@ -207,9 +201,7 @@ PlayerSettings_DrawHandicap(void *self)
 
 
 /*
- * =================
  * PlayerSettings_DrawEffects
- * =================
  */
 static void
 PlayerSettings_DrawEffects(void *self)
@@ -243,9 +235,7 @@ PlayerSettings_DrawEffects(void *self)
 
 
 /*
- * =================
  * PlayerSettings_DrawPlayer
- * =================
  */
 static void
 PlayerSettings_DrawPlayer(void *self)
@@ -275,9 +265,7 @@ PlayerSettings_DrawPlayer(void *self)
 
 
 /*
- * =================
  * PlayerSettings_SaveChanges
- * =================
  */
 static void
 PlayerSettings_SaveChanges(void)
@@ -296,9 +284,7 @@ PlayerSettings_SaveChanges(void)
 
 
 /*
- * =================
  * PlayerSettings_MenuKey
- * =================
  */
 static sfxHandle_t
 PlayerSettings_MenuKey(int key)
@@ -310,9 +296,7 @@ PlayerSettings_MenuKey(int key)
 
 
 /*
- * =================
  * PlayerSettings_SetMenuItems
- * =================
  */
 static void
 PlayerSettings_SetMenuItems(void)
@@ -353,9 +337,7 @@ PlayerSettings_SetMenuItems(void)
 
 
 /*
- * =================
  * PlayerSettings_MenuEvent
- * =================
  */
 static void
 PlayerSettings_MenuEvent(void* ptr, int event)
@@ -383,9 +365,7 @@ PlayerSettings_MenuEvent(void* ptr, int event)
 
 
 /*
- * =================
  * PlayerSettings_MenuInit
- * =================
  */
 static void
 PlayerSettings_MenuInit(void)
@@ -525,9 +505,7 @@ PlayerSettings_MenuInit(void)
 
 
 /*
- * =================
  * PlayerSettings_Cache
- * =================
  */
 void
 PlayerSettings_Cache(void)
@@ -554,9 +532,7 @@ PlayerSettings_Cache(void)
 
 
 /*
- * =================
  * UI_PlayerSettingsMenu
- * =================
  */
 void
 UI_PlayerSettingsMenu(void)

@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /*
  * g_bot.c */
@@ -63,9 +61,7 @@ trap_Cvar_VariableValue(const char *var_name)
 
 
 /*
- * ===============
  * G_ParseInfos
- * ===============
  */
 int
 G_ParseInfos(char *buf, int max, char *infos[])
@@ -120,9 +116,7 @@ G_ParseInfos(char *buf, int max, char *infos[])
 }
 
 /*
- * ===============
  * G_LoadArenasFromFile
- * ===============
  */
 static void
 G_LoadArenasFromFile(char *filename)
@@ -154,9 +148,7 @@ G_LoadArenasFromFile(char *filename)
 }
 
 /*
- * ===============
  * G_LoadArenas
- * ===============
  */
 static void
 G_LoadArenas(void)
@@ -194,9 +186,7 @@ G_LoadArenas(void)
 
 
 /*
- * ===============
  * G_GetArenaInfoByNumber
- * ===============
  */
 const char *
 G_GetArenaInfoByMap(const char *map)
@@ -213,9 +203,7 @@ G_GetArenaInfoByMap(const char *map)
 
 
 /*
- * =================
  * PlayerIntroSound
- * =================
  */
 static void
 PlayerIntroSound(const char *modelAndSkin)
@@ -238,9 +226,7 @@ PlayerIntroSound(const char *modelAndSkin)
 }
 
 /*
- * ===============
  * G_AddRandomBot
- * ===============
  */
 void
 G_AddRandomBot(int team)
@@ -304,9 +290,7 @@ G_AddRandomBot(int team)
 }
 
 /*
- * ===============
  * G_RemoveRandomBot
- * ===============
  */
 int
 G_RemoveRandomBot(int team)
@@ -330,9 +314,7 @@ G_RemoveRandomBot(int team)
 }
 
 /*
- * ===============
  * G_CountHumanPlayers
- * ===============
  */
 int
 G_CountHumanPlayers(int team)
@@ -355,9 +337,7 @@ G_CountHumanPlayers(int team)
 }
 
 /*
- * ===============
  * G_CountBotPlayers
- * ===============
  */
 int
 G_CountBotPlayers(int team)
@@ -387,9 +367,7 @@ G_CountBotPlayers(int team)
 }
 
 /*
- * ===============
  * G_CheckMinimumPlayers
- * ===============
  */
 void
 G_CheckMinimumPlayers(void)
@@ -453,9 +431,7 @@ G_CheckMinimumPlayers(void)
 }
 
 /*
- * ===============
  * G_CheckBotSpawn
- * ===============
  */
 void
 G_CheckBotSpawn(void)
@@ -483,9 +459,7 @@ G_CheckBotSpawn(void)
 
 
 /*
- * ===============
  * AddBotToSpawnQueue
- * ===============
  */
 static void
 AddBotToSpawnQueue(int clientNum, int delay)
@@ -505,12 +479,10 @@ AddBotToSpawnQueue(int clientNum, int delay)
 
 
 /*
- * ===============
  * G_RemoveQueuedBotBegin
  *
  * Called on client disconnect to make sure the delayed spawn
  * doesn't happen on a freed index
- * ===============
  */
 void
 G_RemoveQueuedBotBegin(int clientNum)
@@ -526,9 +498,7 @@ G_RemoveQueuedBotBegin(int clientNum)
 
 
 /*
- * ===============
  * G_BotConnect
- * ===============
  */
 qboolean
 G_BotConnect(int clientNum, qboolean restart)
@@ -555,9 +525,7 @@ G_BotConnect(int clientNum, qboolean restart)
 
 
 /*
- * ===============
  * G_AddBot
- * ===============
  */
 static void
 G_AddBot(const char *name, float skill, const char *team, int delay,
@@ -689,9 +657,7 @@ G_AddBot(const char *name, float skill, const char *team, int delay,
 
 
 /*
- * ===============
  * Svcmd_AddBot_f
- * ===============
  */
 void
 Svcmd_AddBot_f(void)
@@ -745,9 +711,7 @@ Svcmd_AddBot_f(void)
 }
 
 /*
- * ===============
  * Svcmd_BotList_f
- * ===============
  */
 void
 Svcmd_BotList_f(void)
@@ -780,9 +744,7 @@ Svcmd_BotList_f(void)
 
 
 /*
- * ===============
  * G_SpawnBots
- * ===============
  */
 static void
 G_SpawnBots(char *botList, int baseDelay)
@@ -836,9 +798,7 @@ G_SpawnBots(char *botList, int baseDelay)
 
 
 /*
- * ===============
  * G_LoadBotsFromFile
- * ===============
  */
 static void
 G_LoadBotsFromFile(char *filename)
@@ -870,9 +830,7 @@ G_LoadBotsFromFile(char *filename)
 }
 
 /*
- * ===============
  * G_LoadBots
- * ===============
  */
 static void
 G_LoadBots(void)
@@ -911,9 +869,7 @@ G_LoadBots(void)
 
 
 /*
- * ===============
  * G_GetBotInfoByNumber
- * ===============
  */
 char *
 G_GetBotInfoByNumber(int num)
@@ -927,9 +883,7 @@ G_GetBotInfoByNumber(int num)
 
 
 /*
- * ===============
  * G_GetBotInfoByName
- * ===============
  */
 char *
 G_GetBotInfoByName(const char *name)
@@ -947,9 +901,7 @@ G_GetBotInfoByName(const char *name)
 }
 
 /*
- * ===============
  * G_InitBots
- * ===============
  */
 void
 G_InitBots(qboolean restart)

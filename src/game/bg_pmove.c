@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /*
  * bg_pmove.c -- both games player movement code
@@ -49,10 +47,8 @@ int	c_pmove = 0;
 
 
 /*
- * ===============
  * PM_AddEvent
  *
- * ===============
  */
 void
 PM_AddEvent(int newEvent)
@@ -61,9 +57,7 @@ PM_AddEvent(int newEvent)
 }
 
 /*
- * ===============
  * PM_AddTouchEnt
- * ===============
  */
 void
 PM_AddTouchEnt(int entityNum)
@@ -86,9 +80,7 @@ PM_AddTouchEnt(int entityNum)
 }
 
 /*
- * ===================
  * PM_StartTorsoAnim
- * ===================
  */
 static void
 PM_StartTorsoAnim(int anim)
@@ -139,11 +131,9 @@ PM_ForceLegsAnim(int anim)
 
 
 /*
- * ==================
  * PM_ClipVelocity
  *
  * Slide off of the impacting surface
- * ==================
  */
 void
 PM_ClipVelocity(vec3_t in, vec3_t normal, vec3_t out, float overbounce)
@@ -167,11 +157,9 @@ PM_ClipVelocity(vec3_t in, vec3_t normal, vec3_t out, float overbounce)
 
 
 /*
- * ==================
  * PM_Friction
  *
  * Handles both ground friction and water friction
- * ==================
  */
 static void
 PM_Friction(void)
@@ -232,11 +220,9 @@ PM_Friction(void)
 
 
 /*
- * ==============
  * PM_Accelerate
  *
  * Handles user intended acceleration
- * ==============
  */
 static void
 PM_Accelerate(vec3_t wishdir, float wishspeed, float accel)
@@ -279,13 +265,11 @@ PM_Accelerate(vec3_t wishdir, float wishspeed, float accel)
 
 
 /*
- * ============
  * PM_CmdScale
  *
  * Returns the scale factor to apply to cmd movements
  * This allows the clients to use axial -127 to 127 values for all directions
  * without getting a sqrt(2) distortion in speed.
- * ============
  */
 static float
 PM_CmdScale(usercmd_t *cmd)
@@ -311,12 +295,10 @@ PM_CmdScale(usercmd_t *cmd)
 
 
 /*
- * ================
  * PM_SetMovementDir
  *
  * Determine the rotation of the legs reletive
  * to the facing dir
- * ================
  */
 static void
 PM_SetMovementDir(void)
@@ -351,9 +333,7 @@ PM_SetMovementDir(void)
 
 
 /*
- * =============
  * PM_CheckJump
- * =============
  */
 static qboolean
 PM_CheckJump(void)
@@ -392,9 +372,7 @@ PM_CheckJump(void)
 }
 
 /*
- * =============
  * PM_CheckWaterJump
- * =============
  */
 static qboolean
 PM_CheckWaterJump(void)
@@ -440,11 +418,9 @@ PM_CheckWaterJump(void)
 
 
 /*
- * ===================
  * PM_WaterJumpMove
  *
  * Flying out of the water
- * ===================
  */
 static void
 PM_WaterJumpMove(void)
@@ -462,10 +438,8 @@ PM_WaterJumpMove(void)
 }
 
 /*
- * ===================
  * PM_WaterMove
  *
- * ===================
  */
 static void
 PM_WaterMove(void)
@@ -538,11 +512,9 @@ PM_WaterMove(void)
 
 #ifdef MISSIONPACK
 /*
- * ===================
  * PM_InvulnerabilityMove
  *
  * Only with the invulnerability powerup
- * ===================
  */
 static void
 PM_InvulnerabilityMove(void)
@@ -555,11 +527,9 @@ PM_InvulnerabilityMove(void)
 #endif
 
 /*
- * ===================
  * PM_FlyMove
  *
  * Only with the flight powerup
- * ===================
  */
 static void
 PM_FlyMove(void)
@@ -600,10 +570,8 @@ PM_FlyMove(void)
 
 
 /*
- * ===================
  * PM_AirMove
  *
- * ===================
  */
 static void
 PM_AirMove(void)
@@ -665,10 +633,8 @@ PM_AirMove(void)
 }
 
 /*
- * ===================
  * PM_GrappleMove
  *
- * ===================
  */
 static void
 PM_GrappleMove(void)
@@ -693,10 +659,8 @@ PM_GrappleMove(void)
 }
 
 /*
- * ===================
  * PM_WalkMove
  *
- * ===================
  */
 static void
 PM_WalkMove(void)
@@ -819,9 +783,7 @@ PM_WalkMove(void)
 
 
 /*
- * ==============
  * PM_DeadMove
- * ==============
  */
 static void
 PM_DeadMove(void)
@@ -845,9 +807,7 @@ PM_DeadMove(void)
 
 
 /*
- * ===============
  * PM_NoclipMove
- * ===============
  */
 static void
 PM_NoclipMove(void)
@@ -907,11 +867,9 @@ PM_NoclipMove(void)
 /* ============================================================================ */
 
 /*
- * ================
  * PM_FootstepForSurface
  *
  * Returns an event number apropriate for the groundsurface
- * ================
  */
 static int
 PM_FootstepForSurface(void)
@@ -925,11 +883,9 @@ PM_FootstepForSurface(void)
 
 
 /*
- * =================
  * PM_CrashLand
  *
  * Check for hard landings that generate sound events
- * =================
  */
 static void
 PM_CrashLand(void)
@@ -1004,9 +960,7 @@ PM_CrashLand(void)
 }
 
 /*
- * =============
  * PM_CheckStuck
- * =============
  */
 /*
  * void PM_CheckStuck(void) {
@@ -1020,9 +974,7 @@ PM_CrashLand(void)
  */
 
 /*
- * =============
  * PM_CorrectAllSolid
- * =============
  */
 static int
 PM_CorrectAllSolid(trace_t *trace)
@@ -1069,11 +1021,9 @@ PM_CorrectAllSolid(trace_t *trace)
 
 
 /*
- * =============
  * PM_GroundTraceMissed
  *
  * The ground trace didn't hit a surface, so we are in freefall
- * =============
  */
 static void
 PM_GroundTraceMissed(void)
@@ -1112,9 +1062,7 @@ PM_GroundTraceMissed(void)
 
 
 /*
- * =============
  * PM_GroundTrace
- * =============
  */
 static void
 PM_GroundTrace(void)
@@ -1210,9 +1158,7 @@ PM_GroundTrace(void)
 
 
 /*
- * =============
  * PM_SetWaterLevel	FIXME: avoid this twice?  certainly if not moving
- * =============
  */
 static void
 PM_SetWaterLevel(void)
@@ -1253,11 +1199,9 @@ PM_SetWaterLevel(void)
 }
 
 /*
- * ==============
  * PM_CheckDuck
  *
  * Sets mins, maxs, and pm->ps->viewheight
- * ==============
  */
 static void
 PM_CheckDuck(void)
@@ -1322,9 +1266,7 @@ PM_CheckDuck(void)
 
 
 /*
- * ===============
  * PM_Footsteps
- * ===============
  */
 static void
 PM_Footsteps(void)
@@ -1423,11 +1365,9 @@ PM_Footsteps(void)
 }
 
 /*
- * ==============
  * PM_WaterEvents
  *
  * Generate sound events for entering and leaving water
- * ==============
  */
 static void
 PM_WaterEvents(void)	/* FIXME? */
@@ -1458,9 +1398,7 @@ PM_WaterEvents(void)	/* FIXME? */
 
 
 /*
- * ===============
  * PM_BeginWeaponChange
- * ===============
  */
 static void
 PM_BeginWeaponChange(int weapon)
@@ -1482,9 +1420,7 @@ PM_BeginWeaponChange(int weapon)
 
 
 /*
- * ===============
  * PM_FinishWeaponChange
- * ===============
  */
 static void
 PM_FinishWeaponChange(void)
@@ -1506,10 +1442,8 @@ PM_FinishWeaponChange(void)
 
 
 /*
- * ==============
  * PM_TorsoAnimation
  *
- * ==============
  */
 static void
 PM_TorsoAnimation(void)
@@ -1525,11 +1459,9 @@ PM_TorsoAnimation(void)
 
 
 /*
- * ==============
  * PM_Weapon
  *
  * Generates weapon events and modifes the weapon counter
- * ==============
  */
 static void
 PM_Weapon(void)
@@ -1700,9 +1632,7 @@ PM_Weapon(void)
 }
 
 /*
- * ================
  * PM_Animate
- * ================
  */
 
 static void
@@ -1751,9 +1681,7 @@ PM_Animate(void)
 
 
 /*
- * ================
  * PM_DropTimers
- * ================
  */
 static void
 PM_DropTimers(void)
@@ -1782,12 +1710,10 @@ PM_DropTimers(void)
 }
 
 /*
- * ================
  * PM_UpdateViewAngles
  *
  * This can be used as another entry point when only the viewangles
  * are being updated isntead of a full move
- * ================
  */
 void
 PM_UpdateViewAngles(playerState_t *ps, const usercmd_t *cmd)
@@ -1821,10 +1747,8 @@ PM_UpdateViewAngles(playerState_t *ps, const usercmd_t *cmd)
 
 
 /*
- * ================
  * PmoveSingle
  *
- * ================
  */
 void trap_SnapVector(float *v);
 
@@ -2006,11 +1930,9 @@ PmoveSingle(pmove_t *pmove)
 
 
 /*
- * ================
  * Pmove
  *
  * Can be called by either the server or the client
- * ================
  */
 void
 Pmove(pmove_t *pmove)

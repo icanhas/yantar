@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,16 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 #include "cm_local.h"
 
 
 /*
- * ==================
  * CM_PointLeafnum_r
  *
- * ==================
  */
 int
 CM_PointLeafnum_r(const vec3_t p, int num)
@@ -64,11 +60,9 @@ CM_PointLeafnum(const vec3_t p)
 
 
 /*
- * ======================================================================
  *
  * LEAF LISTING
  *
- * ======================================================================
  */
 
 
@@ -134,11 +128,9 @@ CM_StoreBrushes(leafList_t *ll, int nodenum)
 }
 
 /*
- * =============
  * CM_BoxLeafnums
  *
  * Fills in a list of all the leafs touched
- * =============
  */
 void
 CM_BoxLeafnums_r(leafList_t *ll, int nodenum)
@@ -170,9 +162,7 @@ CM_BoxLeafnums_r(leafList_t *ll, int nodenum)
 }
 
 /*
- * ==================
  * CM_BoxLeafnums
- * ==================
  */
 int
 CM_BoxLeafnums(const vec3_t mins, const vec3_t maxs, int *list, int listsize,
@@ -198,9 +188,7 @@ CM_BoxLeafnums(const vec3_t mins, const vec3_t maxs, int *list, int listsize,
 }
 
 /*
- * ==================
  * CM_BoxBrushes
- * ==================
  */
 int
 CM_BoxBrushes(const vec3_t mins, const vec3_t maxs, cbrush_t **list,
@@ -229,10 +217,8 @@ CM_BoxBrushes(const vec3_t mins, const vec3_t maxs, cbrush_t **list,
 
 
 /*
- * ==================
  * CM_PointContents
  *
- * ==================
  */
 int
 CM_PointContents(const vec3_t p, clipHandle_t model)
@@ -282,12 +268,10 @@ CM_PointContents(const vec3_t p, clipHandle_t model)
 }
 
 /*
- * ==================
  * CM_TransformedPointContents
  *
  * Handles offseting and rotation of the end points for moving and
  * rotating entities
- * ==================
  */
 int
 CM_TransformedPointContents(const vec3_t p, clipHandle_t model,
@@ -318,11 +302,9 @@ CM_TransformedPointContents(const vec3_t p, clipHandle_t model,
 
 
 /*
- * ===============================================================================
  *
  * PVS
  *
- * ===============================================================================
  */
 
 byte    *
@@ -337,11 +319,9 @@ CM_ClusterPVS(int cluster)
 
 
 /*
- * ===============================================================================
  *
  * AREAPORTALS
  *
- * ===============================================================================
  */
 
 void
@@ -368,10 +348,8 @@ CM_FloodArea_r(int areaNum, int floodnum)
 }
 
 /*
- * ====================
  * CM_FloodAreaConnections
  *
- * ====================
  */
 void
 CM_FloodAreaConnections(void)
@@ -395,10 +373,8 @@ CM_FloodAreaConnections(void)
 }
 
 /*
- * ====================
  * CM_AdjustAreaPortalState
  *
- * ====================
  */
 void
 CM_AdjustAreaPortalState(int area1, int area2, qboolean open)
@@ -425,10 +401,8 @@ CM_AdjustAreaPortalState(int area1, int area2, qboolean open)
 }
 
 /*
- * ====================
  * CM_AreasConnected
  *
- * ====================
  */
 qboolean
 CM_AreasConnected(int area1, int area2)
@@ -452,7 +426,6 @@ CM_AreasConnected(int area1, int area2)
 
 
 /*
- * =================
  * CM_WriteAreaBits
  *
  * Writes a bit vector of all the areas
@@ -463,7 +436,6 @@ CM_AreasConnected(int area1, int area2)
  * viewpoints and get the union of all visible areas.
  *
  * This is used to cull non-visible entities from snapshots
- * =================
  */
 int
 CM_WriteAreaBits(byte *buffer, int area)
@@ -492,9 +464,7 @@ CM_WriteAreaBits(byte *buffer, int area)
 }
 
 /*
- * ====================
  * CM_BoundsIntersect
- * ====================
  */
 qboolean
 CM_BoundsIntersect(const vec3_t mins, const vec3_t maxs, const vec3_t mins2,
@@ -512,9 +482,7 @@ CM_BoundsIntersect(const vec3_t mins, const vec3_t maxs, const vec3_t mins2,
 }
 
 /*
- * ====================
  * CM_BoundsIntersectPoint
- * ====================
  */
 qboolean
 CM_BoundsIntersectPoint(const vec3_t mins, const vec3_t maxs, const vec3_t point)

@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /* console.c */
 
@@ -64,9 +62,7 @@ cvar_t		*con_notifytime;
 
 
 /*
- * ================
  * Con_ToggleConsole_f
- * ================
  */
 void
 Con_ToggleConsole_f(void)
@@ -84,9 +80,7 @@ Con_ToggleConsole_f(void)
 }
 
 /*
- * ================
  * Con_MessageMode_f
- * ================
  */
 void
 Con_MessageMode_f(void)
@@ -100,9 +94,7 @@ Con_MessageMode_f(void)
 }
 
 /*
- * ================
  * Con_MessageMode2_f
- * ================
  */
 void
 Con_MessageMode2_f(void)
@@ -115,9 +107,7 @@ Con_MessageMode2_f(void)
 }
 
 /*
- * ================
  * Con_MessageMode3_f
- * ================
  */
 void
 Con_MessageMode3_f(void)
@@ -134,9 +124,7 @@ Con_MessageMode3_f(void)
 }
 
 /*
- * ================
  * Con_MessageMode4_f
- * ================
  */
 void
 Con_MessageMode4_f(void)
@@ -153,9 +141,7 @@ Con_MessageMode4_f(void)
 }
 
 /*
- * ================
  * Con_Clear_f
- * ================
  */
 void
 Con_Clear_f(void)
@@ -170,11 +156,9 @@ Con_Clear_f(void)
 
 
 /*
- * ================
  * Con_Dump_f
  *
  * Save the console contents out to a file
- * ================
  */
 void
 Con_Dump_f(void)
@@ -228,9 +212,7 @@ Con_Dump_f(void)
 
 
 /*
- * ================
  * Con_ClearNotify
- * ================
  */
 void
 Con_ClearNotify(void)
@@ -244,11 +226,9 @@ Con_ClearNotify(void)
 
 
 /*
- * ================
  * Con_CheckResize
  *
  * If the line width has changed, reformat the buffer.
- * ================
  */
 void
 Con_CheckResize(void)
@@ -305,9 +285,7 @@ Con_CheckResize(void)
 }
 
 /*
- * ==================
  * Cmd_CompleteTxtName
- * ==================
  */
 void
 Cmd_CompleteTxtName(char *args, int argNum)
@@ -318,9 +296,7 @@ Cmd_CompleteTxtName(char *args, int argNum)
 
 
 /*
- * ================
  * Con_Init
- * ================
  */
 void
 Con_Init(void)
@@ -349,9 +325,7 @@ Con_Init(void)
 }
 
 /*
- * ================
  * Con_Shutdown
- * ================
  */
 void
 Con_Shutdown(void)
@@ -366,9 +340,7 @@ Con_Shutdown(void)
 }
 
 /*
- * ===============
  * Con_Linefeed
- * ===============
  */
 void
 Con_Linefeed(qboolean skipnotify)
@@ -394,13 +366,11 @@ Con_Linefeed(qboolean skipnotify)
 }
 
 /*
- * ================
  * CL_ConsolePrint
  *
  * Handles cursor positioning, line wrapping, etc
  * All console printing must go through this in order to be logged to disk
  * If no console is visible, the text will appear at the top of the game window
- * ================
  */
 void
 CL_ConsolePrint(char *txt)
@@ -488,20 +458,16 @@ CL_ConsolePrint(char *txt)
 
 
 /*
- * ==============================================================================
  *
  * DRAWING
  *
- * ==============================================================================
  */
 
 
 /*
- * ================
  * Con_DrawInput
  *
  * Draw the editline after a >>> prompt
- * ================
  */
 void
 Con_DrawInput(void)
@@ -526,11 +492,9 @@ Con_DrawInput(void)
 
 
 /*
- * ================
  * Con_DrawNotify
  *
  * Draws the last few lines of output transparently over the game top
- * ================
  */
 void
 Con_DrawNotify(void)
@@ -707,9 +671,7 @@ Con_DrawSolidConsole(float frac, float opac)
 
 
 /*
- * ==================
  * Con_DrawConsole
- * ==================
  */
 void
 Con_DrawConsole(void)

@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  * Copyright (C) 2005 Stuart Dalton (badcdev@gmail.com)
  *
@@ -18,7 +17,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 
 /* Dynamically loads OpenAL */
@@ -112,9 +110,7 @@ static void *OpenALLib = NULL;
 static qboolean alinit_fail = qfalse;
 
 /*
- * =================
  * GPA
- * =================
  */
 static void *
 GPA(char *str)
@@ -133,9 +129,7 @@ GPA(char *str)
 }
 
 /*
- * =================
  * QAL_Init
- * =================
  */
 qboolean
 QAL_Init(const char *libname)
@@ -234,9 +228,7 @@ QAL_Init(const char *libname)
 }
 
 /*
- * =================
  * QAL_Shutdown
- * =================
  */
 void
 QAL_Shutdown(void)

@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /* qcommon.h -- definitions common between client and server, but not game.or ref modules */
 #ifndef _QCOMMON_H_
@@ -122,11 +120,9 @@ void MSG_ReportChangeVectors_f(void);
 /* ============================================================================ */
 
 /*
- * ==============================================================
  *
  * NET
  *
- * ==============================================================
  */
 
 #define NET_ENABLEV4		0x01
@@ -259,11 +255,9 @@ qboolean Netchan_Process(netchan_t *chan, msg_t *msg);
 
 
 /*
- * ==============================================================
  *
  * PROTOCOL
  *
- * ==============================================================
  */
 
 #define PROTOCOL_VERSION	71
@@ -335,11 +329,9 @@ enum clc_ops_e {
 };
 
 /*
- * ==============================================================
  *
  * VIRTUAL MACHINE
  *
- * ==============================================================
  */
 
 typedef struct vm_s vm_t;
@@ -398,13 +390,11 @@ _vmf(intptr_t x)
 
 
 /*
- * ==============================================================
  *
  * CMD
  *
  * Command text buffering and command execution
  *
- * ==============================================================
  */
 
 /*
@@ -487,11 +477,9 @@ void    Cmd_ExecuteString(const char *text);
 
 
 /*
- * ==============================================================
  *
  * CVAR
  *
- * ==============================================================
  */
 
 /*
@@ -598,14 +586,12 @@ void Cvar_CompleteCvarName(char *args, int argNum);
 extern int cvar_modifiedFlags;
 
 /*
- * ==============================================================
  *
  * FILESYSTEM
  *
  * No stdio calls should be used by any part of the game, because
  * we need to deal with all sorts of directory and seperator char
  * issues.
- * ==============================================================
  */
 
 /* referenced flags
@@ -775,11 +761,9 @@ const char*FS_GetCurrentGameDir(void);
 qboolean FS_Which(const char *filename, void *searchPath);
 
 /*
- * ==============================================================
  *
  * Edit fields and command line history/completion
  *
- * ==============================================================
  */
 
 #define MAX_EDIT_LINE 256
@@ -800,11 +784,9 @@ void Field_CompleteCommand(char *cmd,
 			   qboolean doCommands, qboolean doCvars);
 
 /*
- * ==============================================================
  *
  * MISC
  *
- * ==============================================================
  */
 
 /* centralizing the declarations for cl_cdkey
@@ -1003,11 +985,9 @@ void Com_Shutdown(void);
 
 
 /*
- * ==============================================================
  *
  * CLIENT / SERVER SYSTEMS
  *
- * ==============================================================
  */
 
 /*
@@ -1096,11 +1076,9 @@ qboolean UI_GameCommand(void);
 qboolean UI_usesUniqueCDKey(void);
 
 /*
- * ==============================================================
  *
  * NON-PORTABLE SYSTEM SERVICES
  *
- * ==============================================================
  */
 
 typedef enum {

@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,15 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /*  */
 /*
- * =======================================================================
  *
  * USER INTERFACE MAIN
  *
- * =======================================================================
  */
 
 /* use this to get a demo build without an explicit demo build, i.e. to get the demo ui files to build
@@ -136,12 +132,10 @@ int ProcessNewUI(int command, int arg0, int arg1, int arg2, int arg3, int arg4,
 		 int arg6);
 
 /*
- * ================
  * vmMain
  *
  * This is the only way control passes into the module.
  * This must be the very first function compiled into the .qvm file
- * ================
  */
 vmCvar_t	ui_new;
 vmCvar_t	ui_debug;
@@ -273,11 +267,9 @@ _UI_DrawTopBottom(float x, float y, float w, float h, float size)
 		uiInfo.uiDC.whiteShader);
 }
 /*
- * ================
  * UI_DrawRect
  *
  * Coordinates are 640*480 virtual values
- * =================
  */
 void
 _UI_DrawRect(float x, float y, float width, float height, float size,
@@ -625,9 +617,7 @@ UI_ShowPostGame(qboolean newHigh)
 	_UI_SetActiveMenu(UIMENU_POSTGAME);
 }
 /*
- * =================
  * _UI_Refresh
- * =================
  */
 
 void
@@ -702,9 +692,7 @@ _UI_Refresh(int realtime)
 }
 
 /*
- * =================
  * _UI_Shutdown
- * =================
  */
 void
 _UI_Shutdown(void)
@@ -2053,9 +2041,7 @@ UI_DrawCrosshair(rectDef_t *rect, float scale, vec4_t color)
 }
 
 /*
- * ===============
  * UI_BuildPlayerList
- * ===============
  */
 static void
 UI_BuildPlayerList(void)
@@ -3127,9 +3113,7 @@ UI_GetValue(int ownerDraw)
 }
 
 /*
- * =================
  * UI_ServersQsortCompare
- * =================
  */
 static int QDECL
 UI_ServersQsortCompare(const void *arg1, const void *arg2)
@@ -3141,9 +3125,7 @@ UI_ServersQsortCompare(const void *arg1, const void *arg2)
 
 
 /*
- * =================
  * UI_ServersSort
- * =================
  */
 void
 UI_ServersSort(int column, qboolean force)
@@ -3200,9 +3182,7 @@ UI_ServersSort(int column, qboolean force)
  */
 
 /*
- * ===============
  * UI_LoadMods
- * ===============
  */
 static void
 UI_LoadMods(void)
@@ -3234,9 +3214,7 @@ UI_LoadMods(void)
 
 
 /*
- * ===============
  * UI_LoadTeams
- * ===============
  */
 static void
 UI_LoadTeams(void)
@@ -3260,9 +3238,7 @@ UI_LoadTeams(void)
 
 
 /*
- * ===============
  * UI_LoadMovies
- * ===============
  */
 static void
 UI_LoadMovies(void)
@@ -3292,9 +3268,7 @@ UI_LoadMovies(void)
 #define NAMEBUFSIZE (MAX_DEMOS * 32)
 
 /*
- * ===============
  * UI_LoadDemos
- * ===============
  */
 static void
 UI_LoadDemos(void)
@@ -4141,9 +4115,7 @@ UI_GetTeamColor(vec4_t *color)
 }
 
 /*
- * ==================
  * UI_MapCountByGameType
- * ==================
  */
 static int
 UI_MapCountByGameType(qboolean singlePlayer)
@@ -4194,9 +4166,7 @@ UI_hasSkinForBase(const char *base, const char *team)
 }
 
 /*
- * ==================
  * UI_MapCountByTeam
- * ==================
  */
 static int
 UI_HeadCountByTeam(void)
@@ -4268,9 +4238,7 @@ UI_HeadCountByTeam(void)
 }
 
 /*
- * ==================
  * UI_InsertServerIntoDisplayList
- * ==================
  */
 static void
 UI_InsertServerIntoDisplayList(int num, int position)
@@ -4288,9 +4256,7 @@ UI_InsertServerIntoDisplayList(int num, int position)
 }
 
 /*
- * ==================
  * UI_RemoveServerFromDisplayList
- * ==================
  */
 static void
 UI_RemoveServerFromDisplayList(int num)
@@ -4309,9 +4275,7 @@ UI_RemoveServerFromDisplayList(int num)
 }
 
 /*
- * ==================
  * UI_BinaryServerInsertion
- * ==================
  */
 static void
 UI_BinaryServerInsertion(int num)
@@ -4350,9 +4314,7 @@ UI_BinaryServerInsertion(int num)
 }
 
 /*
- * ==================
  * UI_BuildServerDisplayList
- * ==================
  */
 static void
 UI_BuildServerDisplayList(qboolean force)
@@ -4504,9 +4466,7 @@ serverStatusCvar_t serverStatusCvars[] = {
 };
 
 /*
- * ==================
  * UI_SortServerStatusInfo
- * ==================
  */
 static void
 UI_SortServerStatusInfo(serverStatusInfo_t *info)
@@ -4541,9 +4501,7 @@ UI_SortServerStatusInfo(serverStatusInfo_t *info)
 }
 
 /*
- * ==================
  * UI_GetServerStatusInfo
- * ==================
  */
 static int
 UI_GetServerStatusInfo(const char *serverAddress, serverStatusInfo_t *info)
@@ -4644,9 +4602,7 @@ UI_GetServerStatusInfo(const char *serverAddress, serverStatusInfo_t *info)
 }
 
 /*
- * ==================
  * stristr
- * ==================
  */
 static char *
 stristr(char *str, char *charset)
@@ -4663,9 +4619,7 @@ stristr(char *str, char *charset)
 }
 
 /*
- * ==================
  * UI_BuildFindPlayerList
- * ==================
  */
 static void
 UI_BuildFindPlayerList(qboolean force)
@@ -4885,9 +4839,7 @@ UI_BuildFindPlayerList(qboolean force)
 }
 
 /*
- * ==================
  * UI_BuildServerStatus
- * ==================
  */
 static void
 UI_BuildServerStatus(qboolean force)
@@ -4919,9 +4871,7 @@ UI_BuildServerStatus(qboolean force)
 }
 
 /*
- * ==================
  * UI_FeederCount
- * ==================
  */
 static int
 UI_FeederCount(float feederID)
@@ -5803,9 +5753,7 @@ UI_RunCinematicFrame(int handle)
 
 
 /*
- * =================
  * PlayerModel_BuildList
- * =================
  */
 static void
 UI_BuildQ3Model_List(void)
@@ -5895,9 +5843,7 @@ UI_BuildQ3Model_List(void)
 
 
 /*
- * =================
  * UI_Init
- * =================
  */
 void
 _UI_Init(qboolean inGameLoad)
@@ -6048,9 +5994,7 @@ _UI_Init(qboolean inGameLoad)
 
 
 /*
- * =================
  * UI_KeyEvent
- * =================
  */
 void
 _UI_KeyEvent(int key, qboolean down)
@@ -6077,9 +6021,7 @@ _UI_KeyEvent(int key, qboolean down)
 }
 
 /*
- * =================
  * UI_MouseEvent
- * =================
  */
 void
 _UI_MouseEvent(int dx, int dy)
@@ -6386,12 +6328,10 @@ UI_DisplayDownloadInfo(const char *downloadName, float centerPoint, float yStart
 }
 
 /*
- * ========================
  * UI_DrawConnectScreen
  *
  * This will also be overlaid on the cgame info screen during loading
  * to prevent it from blinking away too rapidly on local or lan games.
- * ========================
  */
 void
 UI_DrawConnectScreen(qboolean overlay)
@@ -6484,9 +6424,7 @@ UI_DrawConnectScreen(qboolean overlay)
 
 
 /*
- * ================
  * cvars
- * ================
  */
 
 typedef struct {
@@ -6746,9 +6684,7 @@ static int cvarTableSize = ARRAY_LEN(cvarTable);
 
 
 /*
- * =================
  * UI_RegisterCvars
- * =================
  */
 void
 UI_RegisterCvars(void)
@@ -6762,9 +6698,7 @@ UI_RegisterCvars(void)
 }
 
 /*
- * =================
  * UI_UpdateCvars
- * =================
  */
 void
 UI_UpdateCvars(void)
@@ -6778,9 +6712,7 @@ UI_UpdateCvars(void)
 
 
 /*
- * =================
  * ArenaServers_StopRefresh
- * =================
  */
 static void
 UI_StopServerRefresh(void)
@@ -6804,9 +6736,7 @@ UI_StopServerRefresh(void)
 }
 
 /*
- * =================
  * ArenaServers_MaxPing
- * =================
  */
 #ifndef MISSIONPACK
 static int
@@ -6822,9 +6752,7 @@ ArenaServers_MaxPing(void)
 #endif
 
 /*
- * =================
  * UI_DoServerRefresh
- * =================
  */
 static void
 UI_DoServerRefresh(void)
@@ -6860,9 +6788,7 @@ UI_DoServerRefresh(void)
 }
 
 /*
- * =================
  * UI_StartServerRefresh
- * =================
  */
 static void
 UI_StartServerRefresh(qboolean full)

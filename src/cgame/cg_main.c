@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /*
  * cg_main.c -- initialization and primary entry point for cgame */
@@ -36,12 +34,10 @@ void CG_Shutdown(void);
 
 
 /*
- * ================
  * vmMain
  *
  * This is the only way control passes into the module.
  * This must be the very first function compiled into the .q3vm file
- * ================
  */
 Q_EXPORT intptr_t
 vmMain(int command, int arg0, int arg1, int arg2, int arg3, int arg4, int arg5,
@@ -329,9 +325,7 @@ static cvarTable_t cvarTable[] = {
 static int cvarTableSize = ARRAY_LEN(cvarTable);
 
 /*
- * =================
  * CG_RegisterCvars
- * =================
  */
 void
 CG_RegisterCvars(void)
@@ -361,9 +355,7 @@ CG_RegisterCvars(void)
 }
 
 /*
- * ===================
  * CG_ForceModelChange
- * ===================
  */
 static void
 CG_ForceModelChange(void)
@@ -381,9 +373,7 @@ CG_ForceModelChange(void)
 }
 
 /*
- * =================
  * CG_UpdateCvars
- * =================
  */
 void
 CG_UpdateCvars(void)
@@ -485,9 +475,7 @@ Com_Printf(const char *msg, ...)
 }
 
 /*
- * ================
  * CG_Argv
- * ================
  */
 const char *
 CG_Argv(int arg)
@@ -503,11 +491,9 @@ CG_Argv(int arg)
 /* ======================================================================== */
 
 /*
- * =================
  * CG_RegisterItemSounds
  *
  * The server says this item is used on this level
- * =================
  */
 static void
 CG_RegisterItemSounds(int itemNum)
@@ -550,11 +536,9 @@ CG_RegisterItemSounds(int itemNum)
 
 
 /*
- * =================
  * CG_RegisterSounds
  *
  * called during a precache command
- * =================
  */
 static void
 CG_RegisterSounds(void)
@@ -974,11 +958,9 @@ CG_RegisterSounds(void)
 
 
 /*
- * =================
  * CG_RegisterGraphics
  *
  * This function may execute for a couple of minutes with a slow disk.
- * =================
  */
 static void
 CG_RegisterGraphics(void)
@@ -1379,10 +1361,8 @@ CG_RegisterGraphics(void)
 
 
 /*
- * =======================
  * CG_BuildSpectatorString
  *
- * =======================
  */
 void
 CG_BuildSpectatorString(void)
@@ -1403,9 +1383,7 @@ CG_BuildSpectatorString(void)
 
 
 /*
- * ===================
  * CG_RegisterClients
- * ===================
  */
 static void
 CG_RegisterClients(void)
@@ -1433,9 +1411,7 @@ CG_RegisterClients(void)
 /* =========================================================================== */
 
 /*
- * =================
  * CG_ConfigString
- * =================
  */
 const char *
 CG_ConfigString(int index)
@@ -1448,10 +1424,8 @@ CG_ConfigString(int index)
 /* ================================================================== */
 
 /*
- * ======================
  * CG_StartMusic
  *
- * ======================
  */
 void
 CG_StartMusic(void)
@@ -1498,9 +1472,7 @@ CG_GetMenuBuffer(const char *filename)
 }
 
 /*
- * ==============================
  * new hud stuff ( mission pack )
- * ==============================
  *  */
 qboolean
 CG_Asset_Parse(int handle)
@@ -2053,10 +2025,8 @@ CG_RunCinematicFrame(int handle)
 }
 
 /*
- * =================
  * CG_LoadHudMenu();
  *
- * =================
  */
 void
 CG_LoadHudMenu(void)
@@ -2159,12 +2129,10 @@ CG_AssetCache(void)
 }
 #endif
 /*
- * =================
  * CG_Init
  *
  * Called after every level change or subsystem restart
  * Will perform callbacks to make the loading info screen update.
- * =================
  */
 void
 CG_Init(int serverMessageNum, int serverCommandSequence, int clientNum)
@@ -2276,11 +2244,9 @@ CG_Init(int serverMessageNum, int serverCommandSequence, int clientNum)
 }
 
 /*
- * =================
  * CG_Shutdown
  *
  * Called before every level change or subsystem restart
- * =================
  */
 void
 CG_Shutdown(void)
@@ -2291,9 +2257,7 @@ CG_Shutdown(void)
 
 
 /*
- * ==================
  * CG_EventHandling
- * ==================
  * type 0 - no event handling
  *    1 - team menu
  *    2 - hud editor

@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 #include "cm_local.h"
 
@@ -29,17 +27,13 @@
 /* #define CAPSULE_DEBUG */
 
 /*
- * ===============================================================================
  *
  * BASIC MATH
  *
- * ===============================================================================
  */
 
 /*
- * ================
  * RotatePoint
- * ================
  */
 void
 RotatePoint(vec3_t point, /*const*/ vec3_t matrix[3])	/* FIXME */
@@ -53,9 +47,7 @@ RotatePoint(vec3_t point, /*const*/ vec3_t matrix[3])	/* FIXME */
 }
 
 /*
- * ================
  * TransposeMatrix
- * ================
  */
 void
 TransposeMatrix(/*const*/ vec3_t matrix[3], vec3_t transpose[3])	/* FIXME */
@@ -67,9 +59,7 @@ TransposeMatrix(/*const*/ vec3_t matrix[3], vec3_t transpose[3])	/* FIXME */
 }
 
 /*
- * ================
  * CreateRotationMatrix
- * ================
  */
 void
 CreateRotationMatrix(const vec3_t angles, vec3_t matrix[3])
@@ -79,9 +69,7 @@ CreateRotationMatrix(const vec3_t angles, vec3_t matrix[3])
 }
 
 /*
- * ================
  * CM_ProjectPointOntoVector
- * ================
  */
 void
 CM_ProjectPointOntoVector(vec3_t point, vec3_t vStart, vec3_t vDir, vec3_t vProj)
@@ -94,9 +82,7 @@ CM_ProjectPointOntoVector(vec3_t point, vec3_t vStart, vec3_t vDir, vec3_t vProj
 }
 
 /*
- * ================
  * CM_DistanceFromLineSquared
- * ================
  */
 float
 CM_DistanceFromLineSquared(vec3_t p, vec3_t lp1, vec3_t lp2, vec3_t dir)
@@ -121,9 +107,7 @@ CM_DistanceFromLineSquared(vec3_t p, vec3_t lp1, vec3_t lp2, vec3_t dir)
 }
 
 /*
- * ================
  * CM_VectorDistanceSquared
- * ================
  */
 float
 CM_VectorDistanceSquared(vec3_t p1, vec3_t p2)
@@ -135,9 +119,7 @@ CM_VectorDistanceSquared(vec3_t p1, vec3_t p2)
 }
 
 /*
- * ================
  * SquareRootFloat
- * ================
  */
 float
 SquareRootFloat(float number)
@@ -157,17 +139,13 @@ SquareRootFloat(float number)
 
 
 /*
- * ===============================================================================
  *
  * POSITION TESTING
  *
- * ===============================================================================
  */
 
 /*
- * ================
  * CM_TestBoxInBrush
- * ================
  */
 void
 CM_TestBoxInBrush(traceWork_t *tw, cbrush_t *brush)
@@ -242,9 +220,7 @@ CM_TestBoxInBrush(traceWork_t *tw, cbrush_t *brush)
 
 
 /*
- * ================
  * CM_TestInLeaf
- * ================
  */
 void
 CM_TestInLeaf(traceWork_t *tw, cLeaf_t *leaf)
@@ -302,11 +278,9 @@ CM_TestInLeaf(traceWork_t *tw, cLeaf_t *leaf)
 }
 
 /*
- * ==================
  * CM_TestCapsuleInCapsule
  *
  * capsule inside capsule check
- * ==================
  */
 void
 CM_TestCapsuleInCapsule(traceWork_t *tw, clipHandle_t model)
@@ -373,11 +347,9 @@ CM_TestCapsuleInCapsule(traceWork_t *tw, clipHandle_t model)
 }
 
 /*
- * ==================
  * CM_TestBoundingBoxInCapsule
  *
  * bounding box inside capsule check
- * ==================
  */
 void
 CM_TestBoundingBoxInCapsule(traceWork_t *tw, clipHandle_t model)
@@ -413,9 +385,7 @@ CM_TestBoundingBoxInCapsule(traceWork_t *tw, clipHandle_t model)
 }
 
 /*
- * ==================
  * CM_PositionTest
- * ==================
  */
 #define MAX_POSITION_LEAFS 1024
 void
@@ -457,18 +427,14 @@ CM_PositionTest(traceWork_t *tw)
 }
 
 /*
- * ===============================================================================
  *
  * TRACING
  *
- * ===============================================================================
  */
 
 
 /*
- * ================
  * CM_TraceThroughPatch
- * ================
  */
 
 void
@@ -489,9 +455,7 @@ CM_TraceThroughPatch(traceWork_t *tw, cPatch_t *patch)
 }
 
 /*
- * ================
  * CM_TraceThroughBrush
- * ================
  */
 void
 CM_TraceThroughBrush(traceWork_t *tw, cbrush_t *brush)
@@ -656,9 +620,7 @@ CM_TraceThroughBrush(traceWork_t *tw, cbrush_t *brush)
 }
 
 /*
- * ================
  * CM_TraceThroughLeaf
- * ================
  */
 void
 CM_TraceThroughLeaf(traceWork_t *tw, cLeaf_t *leaf)
@@ -719,11 +681,9 @@ CM_TraceThroughLeaf(traceWork_t *tw, cLeaf_t *leaf)
 #define RADIUS_EPSILON 1.0f
 
 /*
- * ================
  * CM_TraceThroughSphere
  *
  * get the first intersection of the ray with the sphere
- * ================
  */
 void
 CM_TraceThroughSphere(traceWork_t *tw, vec3_t origin, float radius, vec3_t start,
@@ -807,12 +767,10 @@ CM_TraceThroughSphere(traceWork_t *tw, vec3_t origin, float radius, vec3_t start
 }
 
 /*
- * ================
  * CM_TraceThroughVerticalCylinder
  *
  * get the first intersection of the ray with the cylinder
  * the cylinder extends halfheight above and below the origin
- * ================
  */
 void
 CM_TraceThroughVerticalCylinder(traceWork_t *tw, vec3_t origin, float radius,
@@ -914,11 +872,9 @@ CM_TraceThroughVerticalCylinder(traceWork_t *tw, vec3_t origin, float radius,
 }
 
 /*
- * ================
  * CM_TraceCapsuleThroughCapsule
  *
  * capsule vs. capsule collision (not rotated)
- * ================
  */
 void
 CM_TraceCapsuleThroughCapsule(traceWork_t *tw, clipHandle_t model)
@@ -978,11 +934,9 @@ CM_TraceCapsuleThroughCapsule(traceWork_t *tw, clipHandle_t model)
 }
 
 /*
- * ================
  * CM_TraceBoundingBoxThroughCapsule
  *
  * bounding box vs. capsule collision
- * ================
  */
 void
 CM_TraceBoundingBoxThroughCapsule(traceWork_t *tw, clipHandle_t model)
@@ -1020,14 +974,12 @@ CM_TraceBoundingBoxThroughCapsule(traceWork_t *tw, clipHandle_t model)
 /* ========================================================================================= */
 
 /*
- * ==================
  * CM_TraceThroughTree
  *
  * Traverse all the contacted leafs from the start to the end position.
  * If the trace is a point, they will be exactly in order, but for larger
  * trace volumes it is possible to hit something in a later leaf with
  * a smaller intercept fraction.
- * ==================
  */
 void
 CM_TraceThroughTree(traceWork_t *tw, int num, float p1f, float p2f, vec3_t p1,
@@ -1135,9 +1087,7 @@ CM_TraceThroughTree(traceWork_t *tw, int num, float p1f, float p2f, vec3_t p1,
 
 
 /*
- * ==================
  * CM_Trace
- * ==================
  */
 void
 CM_Trace(trace_t *results, const vec3_t start, const vec3_t end, vec3_t mins,
@@ -1350,9 +1300,7 @@ CM_Trace(trace_t *results, const vec3_t start, const vec3_t end, vec3_t mins,
 }
 
 /*
- * ==================
  * CM_BoxTrace
- * ==================
  */
 void
 CM_BoxTrace(trace_t *results, const vec3_t start, const vec3_t end,
@@ -1365,12 +1313,10 @@ CM_BoxTrace(trace_t *results, const vec3_t start, const vec3_t end,
 }
 
 /*
- * ==================
  * CM_TransformedBoxTrace
  *
  * Handles offseting and rotation of the end points for moving and
  * rotating entities
- * ==================
  */
 void
 CM_TransformedBoxTrace(trace_t *results, const vec3_t start, const vec3_t end,

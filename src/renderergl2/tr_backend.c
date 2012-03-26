@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 #include "tr_local.h"
 
@@ -400,11 +398,9 @@ GL_SetModelviewMatrix(matrix_t matrix)
 
 
 /*
- * ================
  * RB_Hyperspace
  *
  * A player has predicted a teleport, but hasn't arrived yet
- * ================
  */
 static void
 RB_Hyperspace(void)
@@ -436,12 +432,10 @@ SetViewportAndScissor(void)
 }
 
 /*
- * =================
  * RB_BeginDrawingView
  *
  * Any mirrored or portaled views have already been drawn, so prepare
  * to actually render the visible surfaces for this view
- * =================
  */
 void
 RB_BeginDrawingView(void)
@@ -540,9 +534,7 @@ RB_BeginDrawingView(void)
 #define MAC_EVENT_PUMP_MSEC 5
 
 /*
- * ==================
  * RB_RenderDrawSurfList
- * ==================
  */
 void
 RB_RenderDrawSurfList(drawSurf_t *drawSurfs, int numDrawSurfs)
@@ -786,18 +778,14 @@ RB_RenderDrawSurfList(drawSurf_t *drawSurfs, int numDrawSurfs)
 
 
 /*
- * ============================================================================
  *
  * RENDER BACK END THREAD FUNCTIONS
  *
- * ============================================================================
  */
 
 /*
- * ================
  * RB_SetGL2D
  *
- * ================
  */
 void
 RB_SetGL2D(void)
@@ -842,13 +830,11 @@ RB_SetGL2D(void)
 
 
 /*
- * =============
  * RE_StretchRaw
  *
  * FIXME: not exactly backend
  * Stretches a raw 32 bit power of 2 bitmap image over the given screen rectangle.
  * Used for cinematics.
- * =============
  */
 void
 RE_StretchRaw(int x, int y, int w, int h, int cols, int rows, const byte *data, int client, qboolean dirty)
@@ -1016,10 +1002,8 @@ RE_UploadCinematic(int w, int h, int cols, int rows, const byte *data, int clien
 
 
 /*
- * =============
  * RB_SetColor
  *
- * =============
  */
 const void      *
 RB_SetColor(const void *data)
@@ -1037,9 +1021,7 @@ RB_SetColor(const void *data)
 }
 
 /*
- * =============
  * RB_StretchPic
- * =============
  */
 const void *
 RB_StretchPic(const void *data)
@@ -1128,10 +1110,8 @@ RB_StretchPic(const void *data)
 
 
 /*
- * =============
  * RB_DrawSurfs
  *
- * =============
  */
 const void      *
 RB_DrawSurfs(const void *data)
@@ -1155,10 +1135,8 @@ RB_DrawSurfs(const void *data)
 
 
 /*
- * =============
  * RB_DrawBuffer
  *
- * =============
  */
 const void      *
 RB_DrawBuffer(const void *data)
@@ -1179,14 +1157,12 @@ RB_DrawBuffer(const void *data)
 }
 
 /*
- * ===============
  * RB_ShowImages
  *
  * Draw all the images to the screen, on top of whatever
  * was there.  This is used to test for texture thrashing.
  *
  * Also called by RE_EndRegistration
- * ===============
  */
 void
 RB_ShowImages(void)
@@ -1240,10 +1216,8 @@ RB_ShowImages(void)
 }
 
 /*
- * =============
  * RB_ColorMask
  *
- * =============
  */
 const void *
 RB_ColorMask(const void *data)
@@ -1256,10 +1230,8 @@ RB_ColorMask(const void *data)
 }
 
 /*
- * =============
  * RB_ClearDepth
  *
- * =============
  */
 const void *
 RB_ClearDepth(const void *data)
@@ -1279,10 +1251,8 @@ RB_ClearDepth(const void *data)
 }
 
 /*
- * =============
  * RB_SwapBuffers
  *
- * =============
  */
 const void      *
 RB_SwapBuffers(const void *data)
@@ -1365,10 +1335,8 @@ RB_SwapBuffers(const void *data)
 }
 
 /*
- * =============
  * RB_CapShadowMap
  *
- * =============
  */
 const void *
 RB_CapShadowMap(const void *data)
@@ -1395,10 +1363,8 @@ RB_CapShadowMap(const void *data)
 
 
 /*
- * =============
  * RB_PostProcess
  *
- * =============
  */
 const void *
 RB_PostProcess(const void *data)
@@ -1492,12 +1458,10 @@ RB_PostProcess(const void *data)
 }
 
 /*
- * ====================
  * RB_ExecuteRenderCommands
  *
  * This function will be called synchronously if running without
  * smp extensions, or asynchronously by another thread.
- * ====================
  */
 void
 RB_ExecuteRenderCommands(const void *data)
@@ -1562,9 +1526,7 @@ RB_ExecuteRenderCommands(const void *data)
 
 
 /*
- * ================
  * RB_RenderThread
- * ================
  */
 void
 RB_RenderThread(void)

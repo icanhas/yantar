@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /*
  * bg_misc.c -- both games misc functions, all completely stateless */
@@ -926,9 +924,7 @@ int bg_numItems = ARRAY_LEN(bg_itemlist) - 1;
 
 
 /*
- * ==============
  * BG_FindItemForPowerup
- * ==============
  */
 gitem_t *
 BG_FindItemForPowerup(powerup_t pw)
@@ -947,9 +943,7 @@ BG_FindItemForPowerup(powerup_t pw)
 
 
 /*
- * ==============
  * BG_FindItemForHoldable
- * ==============
  */
 gitem_t *
 BG_FindItemForHoldable(holdable_t pw)
@@ -968,10 +962,8 @@ BG_FindItemForHoldable(holdable_t pw)
 
 
 /*
- * ===============
  * BG_FindItemForWeapon
  *
- * ===============
  */
 gitem_t *
 BG_FindItemForWeapon(weapon_t weapon)
@@ -987,10 +979,8 @@ BG_FindItemForWeapon(weapon_t weapon)
 }
 
 /*
- * ===============
  * BG_FindItem
  *
- * ===============
  */
 gitem_t *
 BG_FindItem(const char *pickupName)
@@ -1005,12 +995,10 @@ BG_FindItem(const char *pickupName)
 }
 
 /*
- * ============
  * BG_PlayerTouchesItem
  *
  * Items can be picked up without actually touching their physical bounds to make
  * grabbing them easier
- * ============
  */
 qboolean
 BG_PlayerTouchesItem(playerState_t *ps, entityState_t *item, int atTime)
@@ -1034,12 +1022,10 @@ BG_PlayerTouchesItem(playerState_t *ps, entityState_t *item, int atTime)
 
 
 /*
- * ================
  * BG_CanItemBeGrabbed
  *
  * Returns false if the item should not be picked up.
  * This needs to be the same for client side prediction and server use.
- * ================
  */
 qboolean
 BG_CanItemBeGrabbed(int gametype, const entityState_t *ent,
@@ -1193,10 +1179,8 @@ BG_CanItemBeGrabbed(int gametype, const entityState_t *ent,
 /* ====================================================================== */
 
 /*
- * ================
  * BG_EvaluateTrajectory
  *
- * ================
  */
 void
 BG_EvaluateTrajectory(const trajectory_t *tr, int atTime, vec3_t result)
@@ -1239,11 +1223,9 @@ BG_EvaluateTrajectory(const trajectory_t *tr, int atTime, vec3_t result)
 }
 
 /*
- * ================
  * BG_EvaluateTrajectoryDelta
  *
  * For determining velocity at a given time
- * ================
  */
 void
 BG_EvaluateTrajectoryDelta(const trajectory_t *tr, int atTime, vec3_t result)
@@ -1393,11 +1375,9 @@ char *eventnames[] = {
 };
 
 /*
- * ===============
  * BG_AddPredictableEventToPlayerstate
  *
  * Handles the sequence numbers
- * ===============
  */
 
 void    trap_Cvar_VariableStringBuffer(const char *var_name, char *buffer,
@@ -1435,9 +1415,7 @@ BG_AddPredictableEventToPlayerstate(int newEvent, int eventParm,
 }
 
 /*
- * ========================
  * BG_TouchJumpPad
- * ========================
  */
 void
 BG_TouchJumpPad(playerState_t *ps, entityState_t *jumppad)
@@ -1474,12 +1452,10 @@ BG_TouchJumpPad(playerState_t *ps, entityState_t *jumppad)
 }
 
 /*
- * ========================
  * BG_PlayerStateToEntityState
  *
  * This is done after each set of usercmd_t on the server,
  * and after local prediction on the client
- * ========================
  */
 void
 BG_PlayerStateToEntityState(playerState_t *ps, entityState_t *s, qboolean snap)
@@ -1547,12 +1523,10 @@ BG_PlayerStateToEntityState(playerState_t *ps, entityState_t *s, qboolean snap)
 }
 
 /*
- * ========================
  * BG_PlayerStateToEntityStateExtraPolate
  *
  * This is done after each set of usercmd_t on the server,
  * and after local prediction on the client
- * ========================
  */
 void
 BG_PlayerStateToEntityStateExtraPolate(playerState_t *ps, entityState_t *s,

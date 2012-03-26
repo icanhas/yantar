@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /* Rafael particles
 * cg_particles.c */
@@ -153,9 +151,7 @@ vec3_t		rforward, rright, rup;
 float		oldtime;
 
 /*
- * ===============
  * CL_ClearParticles
- * ===============
  */
 void
 CG_ClearParticles(void)
@@ -192,9 +188,7 @@ CG_ClearParticles(void)
 
 
 /*
- * =====================
  * CG_AddParticleToScene
- * =====================
  */
 void
 CG_AddParticleToScene(cparticle_t *p, vec3_t org, float alpha)
@@ -794,9 +788,7 @@ CG_AddParticleToScene(cparticle_t *p, vec3_t org, float alpha)
 static float roll = 0.0;
 
 /*
- * ===============
  * CG_AddParticles
- * ===============
  */
 void
 CG_AddParticles(void)
@@ -912,9 +904,7 @@ CG_AddParticles(void)
 }
 
 /*
- * ======================
  * CG_AddParticles
- * ======================
  */
 void
 CG_ParticleSnowFlurry(qhandle_t pshader, centity_t *cent)
@@ -1187,9 +1177,7 @@ CG_ParticleBulletDebris(vec3_t org, vec3_t vel, int duration)
 }
 
 /*
- * ======================
  * CG_ParticleExplosion
- * ======================
  */
 
 void

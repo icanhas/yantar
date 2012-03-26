@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /*
  * cg_playerstate.c -- this file acts on changes in a new playerState_t
@@ -28,11 +26,9 @@
 #include "cg_local.h"
 
 /*
- * ==============
  * CG_CheckAmmo
  *
  * If the ammo has gone low enough to generate the warning, play a sound
- * ==============
  */
 void
 CG_CheckAmmo(void)
@@ -81,9 +77,7 @@ CG_CheckAmmo(void)
 }
 
 /*
- * ==============
  * CG_DamageFeedback
- * ==============
  */
 void
 CG_DamageFeedback(int yawByte, int pitchByte, int damage)
@@ -175,11 +169,9 @@ CG_DamageFeedback(int yawByte, int pitchByte, int damage)
 
 
 /*
- * ================
  * CG_Respawn
  *
  * A respawn happened this snapshot
- * ================
  */
 void
 CG_Respawn(void)
@@ -197,9 +189,7 @@ CG_Respawn(void)
 extern char *eventnames[];
 
 /*
- * ==============
  * CG_CheckPlayerstateEvents
- * ==============
  */
 void
 CG_CheckPlayerstateEvents(playerState_t *ps, playerState_t *ops)
@@ -240,9 +230,7 @@ CG_CheckPlayerstateEvents(playerState_t *ps, playerState_t *ops)
 }
 
 /*
- * ==================
  * CG_CheckChangedPredictableEvents
- * ==================
  */
 void
 CG_CheckChangedPredictableEvents(playerState_t *ps)
@@ -282,9 +270,7 @@ CG_CheckChangedPredictableEvents(playerState_t *ps)
 }
 
 /*
- * ==================
  * pushReward
- * ==================
  */
 static void
 pushReward(sfxHandle_t sfx, qhandle_t shader, int rewardCount)
@@ -298,9 +284,7 @@ pushReward(sfxHandle_t sfx, qhandle_t shader, int rewardCount)
 }
 
 /*
- * ==================
  * CG_CheckLocalSounds
- * ==================
  */
 void
 CG_CheckLocalSounds(playerState_t *ps, playerState_t *ops)
@@ -522,10 +506,8 @@ CG_CheckLocalSounds(playerState_t *ps, playerState_t *ops)
 }
 
 /*
- * ===============
  * CG_TransitionPlayerState
  *
- * ===============
  */
 void
 CG_TransitionPlayerState(playerState_t *ps, playerState_t *ops)

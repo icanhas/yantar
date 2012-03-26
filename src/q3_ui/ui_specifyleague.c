@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /*  */
 #include "ui_local.h"
@@ -116,9 +114,7 @@ SpecifyLeague_GetList()
 }
 
 /*
- * =================
  * SpecifyLeague_Event
- * =================
  */
 static void
 SpecifyLeague_Event(void* ptr, int event)
@@ -167,9 +163,7 @@ SpecifyLeague_Event(void* ptr, int event)
 }
 
 /*
- * =================
  * SpecifyLeague_MenuInit
- * =================
  */
 void
 SpecifyLeague_MenuInit(void)
@@ -310,9 +304,7 @@ SpecifyLeague_MenuInit(void)
 }
 
 /*
- * =================
  * SpecifyLeague_Cache
- * =================
  */
 void
 SpecifyLeague_Cache(void)
@@ -328,9 +320,7 @@ SpecifyLeague_Cache(void)
 }
 
 /*
- * =================
  * UI_SpecifyLeagueMenu
- * =================
  */
 void
 UI_SpecifyLeagueMenu(void)

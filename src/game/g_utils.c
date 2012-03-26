@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /*
  * g_utils.c -- misc utility functions for game module */
@@ -74,18 +72,14 @@ BuildShaderStateConfig(void)
 }
 
 /*
- * =========================================================================
  *
  * model / sound configstring indexes
  *
- * =========================================================================
  */
 
 /*
- * ================
  * G_FindConfigstringIndex
  *
- * ================
  */
 int
 G_FindConfigstringIndex(char *name, int start, int max, qboolean create)
@@ -132,11 +126,9 @@ G_SoundIndex(char *name)
 
 
 /*
- * ================
  * G_TeamCommand
  *
  * Broadcasts a command to only a specific team
- * ================
  */
 void
 G_TeamCommand(team_t team, char *cmd)
@@ -151,7 +143,6 @@ G_TeamCommand(team_t team, char *cmd)
 
 
 /*
- * =============
  * G_Find
  *
  * Searches all active entities for the next one that holds
@@ -160,7 +151,6 @@ G_TeamCommand(team_t team, char *cmd)
  * Searches beginning at the entity after from, or the beginning if NULL
  * NULL will be returned if the end of the list is reached.
  *
- * =============
  */
 gentity_t *
 G_Find(gentity_t *from, int fieldofs, const char *match)
@@ -187,11 +177,9 @@ G_Find(gentity_t *from, int fieldofs, const char *match)
 
 
 /*
- * =============
  * G_PickTarget
  *
  * Selects a random entity from among the targets
- * =============
  */
 #define MAXCHOICES 32
 
@@ -226,7 +214,6 @@ G_PickTarget(char *targetname)
 
 
 /*
- * ==============================
  * G_UseTargets
  *
  * "activator" should be set to the entity that initiated the firing.
@@ -234,7 +221,6 @@ G_PickTarget(char *targetname)
  * Search for (string)targetname in all entities that
  * match (string)self.target and call their .use function
  *
- * ==============================
  */
 void
 G_UseTargets(gentity_t *ent, gentity_t *activator)
@@ -269,12 +255,10 @@ G_UseTargets(gentity_t *ent, gentity_t *activator)
 
 
 /*
- * =============
  * TempVector
  *
  * This is just a convenience function
  * for making temporary vectors for function calls
- * =============
  */
 float   *
 tv(float x, float y, float z)
@@ -297,12 +281,10 @@ tv(float x, float y, float z)
 
 
 /*
- * =============
  * VectorToString
  *
  * This is just a convenience function
  * for printing vectors
- * =============
  */
 char    *
 vtos(const vec3_t v)
@@ -322,14 +304,12 @@ vtos(const vec3_t v)
 
 
 /*
- * ===============
  * G_SetMovedir
  *
  * The editor only specifies a single value for angles (yaw),
  * but we have special constants to generate an up or down direction.
  * Angles will be cleared, because it is being used to represent a direction
  * instead of an orientation.
- * ===============
  */
 void
 G_SetMovedir(vec3_t angles, vec3_t movedir)
@@ -381,7 +361,6 @@ G_InitGentity(gentity_t *e)
 }
 
 /*
- * =================
  * G_Spawn
  *
  * Either finds a free entity, or allocates a new one.
@@ -393,7 +372,6 @@ G_InitGentity(gentity_t *e)
  * can cause the client to think the entity morphed into something else
  * instead of being removed and recreated, which can cause interpolated
  * angles and bad trails.
- * =================
  */
 gentity_t *
 G_Spawn(void)
@@ -443,9 +421,7 @@ G_Spawn(void)
 }
 
 /*
- * =================
  * G_EntitiesFree
- * =================
  */
 qboolean
 G_EntitiesFree(void)
@@ -465,11 +441,9 @@ G_EntitiesFree(void)
 
 
 /*
- * =================
  * G_FreeEntity
  *
  * Marks the entity as free
- * =================
  */
 void
 G_FreeEntity(gentity_t *ed)
@@ -486,13 +460,11 @@ G_FreeEntity(gentity_t *ed)
 }
 
 /*
- * =================
  * G_TempEntity
  *
  * Spawns an event entity that will be auto-removed
  * The origin will be snapped to save net bandwidth, so care
  * must be taken if the origin is right on a surface (snap towards start vector first)
- * =================
  */
 gentity_t *
 G_TempEntity(vec3_t origin, int event)
@@ -520,20 +492,16 @@ G_TempEntity(vec3_t origin, int event)
 
 
 /*
- * ==============================================================================
  *
  * Kill box
  *
- * ==============================================================================
  */
 
 /*
- * =================
  * G_KillBox
  *
  * Kills all entities that would touch the proposed new positioning
  * of ent.  Ent should be unlinked before calling this!
- * =================
  */
 void
 G_KillBox(gentity_t *ent)
@@ -562,13 +530,11 @@ G_KillBox(gentity_t *ent)
 /* ============================================================================== */
 
 /*
- * ===============
  * G_AddPredictableEvent
  *
  * Use for non-pmove events that would also be predicted on the
  * client side: jumppads and item pickups
  * Adds an event+parm and twiddles the event counter
- * ===============
  */
 void
 G_AddPredictableEvent(gentity_t *ent, int event, int eventParm)
@@ -580,11 +546,9 @@ G_AddPredictableEvent(gentity_t *ent, int event, int eventParm)
 
 
 /*
- * ===============
  * G_AddEvent
  *
  * Adds an event+parm and twiddles the event counter
- * ===============
  */
 void
 G_AddEvent(gentity_t *ent, int event, int eventParm)
@@ -615,9 +579,7 @@ G_AddEvent(gentity_t *ent, int event, int eventParm)
 
 
 /*
- * =============
  * G_Sound
- * =============
  */
 void
 G_Sound(gentity_t *ent, int channel, int soundIndex)
@@ -633,11 +595,9 @@ G_Sound(gentity_t *ent, int channel, int soundIndex)
 
 
 /*
- * ================
  * G_SetOrigin
  *
  * Sets the pos trajectory for a fixed position
- * ================
  */
 void
 G_SetOrigin(gentity_t *ent, vec3_t origin)
@@ -652,12 +612,10 @@ G_SetOrigin(gentity_t *ent, vec3_t origin)
 }
 
 /*
- * ================
  * DebugLine
  *
  * debug polygons only work when running a local game
  * with r_debugSurface set to 2
- * ================
  */
 int
 DebugLine(vec3_t start, vec3_t end, int color)

@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,11 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 
 /* ========================================================
- * ========================================================
  * name */
 #define CHARACTERISTIC_NAME				0	/* string */
 /* gender of the bot */
@@ -66,7 +63,6 @@
 #define CHARACTERISTIC_AIM_SKILL_BFG10K			20	/* float [0, 1] */
 /* ========================================================
  * chat
- * ========================================================
  * file with chats */
 #define CHARACTERISTIC_CHAT_FILE			21	/* string */
 /* name of the chat character */
@@ -99,7 +95,6 @@
 #define CHARACTERISTIC_CHAT_REPLY			35	/* float [0, 1] */
 /* ========================================================
  * movement
- * ========================================================
  * tendency to crouch */
 #define CHARACTERISTIC_CROUCHER				36	/* float [0, 1] */
 /* tendency to jump */
@@ -112,7 +107,6 @@
 #define CHARACTERISTIC_GRAPPLE_USER			39	/* float [0, 1]	//use this!! */
 /* ========================================================
  * goal
- * ========================================================
  * item weight file */
 #define CHARACTERISTIC_ITEMWEIGHTS			40	/* string */
 /* the aggression of the bot */
@@ -124,7 +118,6 @@
 /* tendency to camp */
 #define CHARACTERISTIC_CAMPER				44	/* float [0, 1] */
 /* ========================================================
- * ========================================================
  * tendency to get easy frags */
 #define CHARACTERISTIC_EASY_FRAGGER			45	/* float [0, 1] */
 /* how alert the bot is (view distance) */

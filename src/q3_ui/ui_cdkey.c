@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,15 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /*  */
 /*
- * =======================================================================
  *
  * CD KEY MENU
  *
- * =======================================================================
  */
 
 
@@ -59,9 +55,7 @@ static cdkeyMenuInfo_t cdkeyMenuInfo;
 
 
 /*
- * ===============
  * UI_CDKeyMenu_Event
- * ===============
  */
 static void
 UI_CDKeyMenu_Event(void *ptr, int event)
@@ -84,9 +78,7 @@ UI_CDKeyMenu_Event(void *ptr, int event)
 
 
 /*
- * =================
  * UI_CDKeyMenu_PreValidateKey
- * =================
  */
 static int
 UI_CDKeyMenu_PreValidateKey(const char *key)
@@ -125,9 +117,7 @@ UI_CDKeyMenu_PreValidateKey(const char *key)
 
 
 /*
- * =================
  * UI_CDKeyMenu_DrawKey
- * =================
  */
 static void
 UI_CDKeyMenu_DrawKey(void *self)
@@ -187,9 +177,7 @@ UI_CDKeyMenu_DrawKey(void *self)
 
 
 /*
- * ===============
  * UI_CDKeyMenu_Init
- * ===============
  */
 static void
 UI_CDKeyMenu_Init(void)
@@ -265,9 +253,7 @@ UI_CDKeyMenu_Init(void)
 
 
 /*
- * =================
  * UI_CDKeyMenu_Cache
- * =================
  */
 void
 UI_CDKeyMenu_Cache(void)
@@ -281,9 +267,7 @@ UI_CDKeyMenu_Cache(void)
 
 
 /*
- * ===============
  * UI_CDKeyMenu
- * ===============
  */
 void
 UI_CDKeyMenu(void)
@@ -294,9 +278,7 @@ UI_CDKeyMenu(void)
 
 
 /*
- * ===============
  * UI_CDKeyMenu_f
- * ===============
  */
 void
 UI_CDKeyMenu_f(void)

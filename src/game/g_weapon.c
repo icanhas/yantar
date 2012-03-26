@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /*
  * g_weapon.c
@@ -32,9 +30,7 @@ static vec3_t	muzzle;
 #define NUM_NAILSHOTS 15
 
 /*
- * ================
  * G_BounceProjectile
- * ================
  */
 void
 G_BounceProjectile(vec3_t start, vec3_t impact, vec3_t dir, vec3_t endout)
@@ -52,11 +48,9 @@ G_BounceProjectile(vec3_t start, vec3_t impact, vec3_t dir, vec3_t endout)
 
 
 /*
- * ======================================================================
  *
  * GAUNTLET
  *
- * ======================================================================
  */
 
 void
@@ -66,9 +60,7 @@ Weapon_Gauntlet(gentity_t *ent)
 }
 
 /*
- * ===============
  * CheckGauntletAttack
- * ===============
  */
 qboolean
 CheckGauntletAttack(gentity_t *ent)
@@ -129,22 +121,18 @@ CheckGauntletAttack(gentity_t *ent)
 
 
 /*
- * ======================================================================
  *
  * MACHINEGUN
  *
- * ======================================================================
  */
 
 /*
- * ======================
  * SnapVectorTowards
  *
  * Round a vector to integers for more efficient network
  * transmission, but make sure that it rounds towards a given point
  * rather than blindly truncating.  This prevents it from truncating
  * into a wall.
- * ======================
  */
 void
 SnapVectorTowards(vec3_t v, vec3_t to)
@@ -245,11 +233,9 @@ Bullet_Fire(gentity_t *ent, float spread, int damage)
 
 
 /*
- * ======================================================================
  *
  * BFG
  *
- * ======================================================================
  */
 
 void
@@ -266,11 +252,9 @@ BFG_Fire(gentity_t *ent)
 
 
 /*
- * ======================================================================
  *
  * SHOTGUN
  *
- * ======================================================================
  */
 
 /* DEFAULT_SHOTGUN_SPREAD and DEFAULT_SHOTGUN_COUNT	are in bg_public.h, because
@@ -388,11 +372,9 @@ weapon_supershotgun_fire(gentity_t *ent)
 
 
 /*
- * ======================================================================
  *
  * GRENADE LAUNCHER
  *
- * ======================================================================
  */
 
 void
@@ -412,11 +394,9 @@ weapon_grenadelauncher_fire(gentity_t *ent)
 }
 
 /*
- * ======================================================================
  *
  * ROCKET
  *
- * ======================================================================
  */
 
 void
@@ -433,11 +413,9 @@ Weapon_RocketLauncher_Fire(gentity_t *ent)
 
 
 /*
- * ======================================================================
  *
  * PLASMA GUN
  *
- * ======================================================================
  */
 
 void
@@ -453,18 +431,14 @@ Weapon_Plasmagun_Fire(gentity_t *ent)
 }
 
 /*
- * ======================================================================
  *
  * RAILGUN
  *
- * ======================================================================
  */
 
 
 /*
- * =================
  * weapon_railgun_fire
- * =================
  */
 #define MAX_RAIL_HITS 4
 void
@@ -604,11 +578,9 @@ weapon_railgun_fire(gentity_t *ent)
 
 
 /*
- * ======================================================================
  *
  * GRAPPLING HOOK
  *
- * ======================================================================
  */
 
 void
@@ -650,11 +622,9 @@ Weapon_HookThink(gentity_t *ent)
 }
 
 /*
- * ======================================================================
  *
  * LIGHTNING GUN
  *
- * ======================================================================
  */
 
 void
@@ -741,11 +711,9 @@ Weapon_LightningFire(gentity_t *ent)
 
 #ifdef MISSIONPACK
 /*
- * ======================================================================
  *
  * NAILGUN
  *
- * ======================================================================
  */
 
 void
@@ -765,11 +733,9 @@ Weapon_Nailgun_Fire(gentity_t *ent)
 
 
 /*
- * ======================================================================
  *
  * PROXIMITY MINE LAUNCHER
  *
- * ======================================================================
  */
 
 void
@@ -794,9 +760,7 @@ weapon_proxlauncher_fire(gentity_t *ent)
 
 
 /*
- * ===============
  * LogAccuracyHit
- * ===============
  */
 qboolean
 LogAccuracyHit(gentity_t *target, gentity_t *attacker)
@@ -824,11 +788,9 @@ LogAccuracyHit(gentity_t *target, gentity_t *attacker)
 
 
 /*
- * ===============
  * CalcMuzzlePoint
  *
  * set muzzle location relative to pivoting eye
- * ===============
  */
 void
 CalcMuzzlePoint(gentity_t *ent, vec3_t forward, vec3_t right, vec3_t up,
@@ -842,11 +804,9 @@ CalcMuzzlePoint(gentity_t *ent, vec3_t forward, vec3_t right, vec3_t up,
 }
 
 /*
- * ===============
  * CalcMuzzlePointOrigin
  *
  * set muzzle location relative to pivoting eye
- * ===============
  */
 void
 CalcMuzzlePointOrigin(gentity_t *ent, vec3_t origin, vec3_t forward,
@@ -863,9 +823,7 @@ CalcMuzzlePointOrigin(gentity_t *ent, vec3_t origin, vec3_t forward,
 
 
 /*
- * ===============
  * FireWeapon
- * ===============
  */
 void
 FireWeapon(gentity_t *ent)
@@ -960,9 +918,7 @@ FireWeapon(gentity_t *ent)
 #ifdef MISSIONPACK
 
 /*
- * ===============
  * KamikazeRadiusDamage
- * ===============
  */
 static void
 KamikazeRadiusDamage(vec3_t origin, gentity_t *attacker, float damage,
@@ -1026,9 +982,7 @@ KamikazeRadiusDamage(vec3_t origin, gentity_t *attacker, float damage,
 }
 
 /*
- * ===============
  * KamikazeShockWave
- * ===============
  */
 static void
 KamikazeShockWave(vec3_t origin, gentity_t *attacker, float damage, float push,
@@ -1095,9 +1049,7 @@ KamikazeShockWave(vec3_t origin, gentity_t *attacker, float damage, float push,
 }
 
 /*
- * ===============
  * KamikazeDamage
- * ===============
  */
 static void
 KamikazeDamage(gentity_t *self)
@@ -1160,9 +1112,7 @@ KamikazeDamage(gentity_t *self)
 }
 
 /*
- * ===============
  * G_StartKamikaze
- * ===============
  */
 void
 G_StartKamikaze(gentity_t *ent)

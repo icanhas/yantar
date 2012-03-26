@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 
 #include "../qcommon/q_shared.h"
@@ -26,13 +24,11 @@
 
 #ifdef LEGACY_PROTOCOL
 /*
- * ==============
  * SV_Netchan_Encode
  *
  *      // first four bytes of the data are always:
  *      long reliableAcknowledge;
  *
- * ==============
  */
 static void
 SV_Netchan_Encode(client_t *client, msg_t *msg, const char *clientCommandString)
@@ -78,7 +74,6 @@ SV_Netchan_Encode(client_t *client, msg_t *msg, const char *clientCommandString)
 }
 
 /*
- * ==============
  * SV_Netchan_Decode
  *
  *      // first 12 bytes of the data are always:
@@ -86,7 +81,6 @@ SV_Netchan_Encode(client_t *client, msg_t *msg, const char *clientCommandString)
  *      long messageAcknowledge;
  *      long reliableAcknowledge;
  *
- * ==============
  */
 static void
 SV_Netchan_Decode(client_t *client, msg_t *msg)
@@ -134,9 +128,7 @@ SV_Netchan_Decode(client_t *client, msg_t *msg)
 
 
 /*
- * =================
  * SV_Netchan_FreeQueue
- * =================
  */
 void
 SV_Netchan_FreeQueue(client_t *client)
@@ -153,9 +145,7 @@ SV_Netchan_FreeQueue(client_t *client)
 }
 
 /*
- * =================
  * SV_Netchan_TransmitNextInQueue
- * =================
  */
 void
 SV_Netchan_TransmitNextInQueue(client_t *client)
@@ -187,12 +177,10 @@ SV_Netchan_TransmitNextInQueue(client_t *client)
 }
 
 /*
- * =================
  * SV_Netchan_TransmitNextFragment
  * Transmit the next fragment and the next queued packet
  * Return number of ms until next message can be sent based on throughput given by client rate,
  * -1 if no packet was sent.
- * =================
  */
 
 int
@@ -211,14 +199,12 @@ SV_Netchan_TransmitNextFragment(client_t *client)
 
 
 /*
- * ===============
  * SV_Netchan_Transmit
  * TTimo
  * https://zerowing.idsoftware.com/bugzilla/show_bug.cgi?id=462
  * if there are some unsent fragments (which may happen if the snapshots
  * and the gamestate are fragmenting, and collide on send for instance)
  * then buffer them and make sure they get sent in correct order
- * ================
  */
 
 void
@@ -257,9 +243,7 @@ SV_Netchan_Transmit(client_t *client, msg_t *msg)
 }
 
 /*
- * =================
  * Netchan_SV_Process
- * =================
  */
 qboolean
 SV_Netchan_Process(client_t *client, msg_t *msg)

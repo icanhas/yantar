@@ -232,11 +232,9 @@ S_AdpcmDecode(const char indata[], short *outdata, int len,
 
 
 /*
- * ====================
  * S_AdpcmMemoryNeeded
  *
  * Returns the amount of memory (in bytes) needed to store the samples in out internal adpcm format
- * ====================
  */
 int
 S_AdpcmMemoryNeeded(const wavinfo_t *info)
@@ -269,9 +267,7 @@ S_AdpcmMemoryNeeded(const wavinfo_t *info)
 
 
 /*
- * ====================
  * S_AdpcmGetSamples
- * ====================
  */
 void
 S_AdpcmGetSamples(sndBuffer *chunk, short *to)
@@ -290,9 +286,7 @@ S_AdpcmGetSamples(sndBuffer *chunk, short *to)
 
 
 /*
- * ====================
  * S_AdpcmEncodeSound
- * ====================
  */
 void
 S_AdpcmEncodeSound(sfx_t *sfx, short *samples)

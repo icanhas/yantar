@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /*
  *
@@ -57,9 +55,7 @@ static menuaction_s	s_login_cancel;
 static vec4_t s_login_color_prompt = {1.00, 0.43, 0.00, 1.00};
 
 /*
- * ===============
  * Login_MenuEvent
- * ===============
  */
 static void
 Login_MenuEvent(void* ptr, int event)
@@ -92,9 +88,7 @@ Login_MenuEvent(void* ptr, int event)
 
 
 /*
- * ===============
  * Login_MenuInit
- * ===============
  */
 void
 Login_MenuInit(void)
@@ -188,9 +182,7 @@ Login_MenuInit(void)
 
 
 /*
- * ===============
  * Login_Cache
- * ===============
  */
 void
 Login_Cache(void)
@@ -200,9 +192,7 @@ Login_Cache(void)
 
 
 /*
- * ===============
  * UI_LoginMenu
- * ===============
  */
 void
 UI_LoginMenu(void)

@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 2008 Przemyslaw Iskra <sparky@pld-linux.org>
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  *
  * File includes code from GNU binutils, exactly:
  * - include/opcode/ppc.h - licensed under GPL v1 or later

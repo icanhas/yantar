@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 
 /*****************************************************************************
@@ -684,9 +682,7 @@ BotExportTest(int parm0, char *parm1, vec3_t parm2, vec3_t parm3)
 
 
 /*
- * ============
  * Init_AAS_Export
- * ============
  */
 static void
 Init_AAS_Export(aas_export_t *aas)
@@ -741,9 +737,7 @@ Init_AAS_Export(aas_export_t *aas)
 
 
 /*
- * ============
  * Init_EA_Export
- * ============
  */
 static void
 Init_EA_Export(ea_export_t *ea)
@@ -779,9 +773,7 @@ Init_EA_Export(ea_export_t *ea)
 
 
 /*
- * ============
  * Init_AI_Export
- * ============
  */
 static void
 Init_AI_Export(ai_export_t *ai)
@@ -883,9 +875,7 @@ Init_AI_Export(ai_export_t *ai)
 
 
 /*
- * ============
  * GetBotLibAPI
- * ============
  */
 botlib_export_t *
 GetBotLibAPI(int apiVersion, botlib_import_t *import)

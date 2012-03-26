@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /* cmdlib.c */
 
@@ -49,11 +47,9 @@ char archivedir[1024];
 
 
 /*
- * ===================
  * ExpandWildcards
  *
  * Mimic unix command line expansion
- * ===================
  */
 #define MAX_EX_ARGC 1024
 int ex_argc;
@@ -106,11 +102,9 @@ ExpandWildcards(int *argc, char ***argv)
 #ifdef WIN_ERROR
 #include <windows.h>
 /*
- * =================
  * Error
  *
  * For abnormal program terminations in windowed apps
- * =================
  */
 void
 Error(const char *error, ...)
@@ -134,11 +128,9 @@ Error(const char *error, ...)
 
 #else
 /*
- * =================
  * Error
  *
  * For abnormal program terminations in console apps
- * =================
  */
 void
 Error(const char *error, ...)
@@ -362,9 +354,7 @@ copystring(const char *s)
 
 
 /*
- * ================
  * I_FloatTime
- * ================
  */
 double
 I_FloatTime(void)
@@ -429,11 +419,9 @@ Q_mkdir(const char *path)
 }
 
 /*
- * ============
  * FileTime
  *
  * returns -1 if not present
- * ============
  */
 int
 FileTime(const char *path)
@@ -449,11 +437,9 @@ FileTime(const char *path)
 
 
 /*
- * ==============
  * Com_Parse
  *
  * Parse a token out of a string
- * ==============
  */
 char *
 Com_Parse(char *data)
@@ -580,21 +566,17 @@ strlower(char *start)
 
 
 /*
- * =============================================================================
  *
  *                                              MISC FUNCTIONS
  *
- * =============================================================================
  */
 
 
 /*
- * =================
  * CheckParm
  *
  * Checks for the given parameter in the program's command line arguments
  * Returns the argument number (1 to argc-1) or 0 if not present
- * =================
  */
 int
 CheckParm(const char *check)
@@ -611,9 +593,7 @@ CheckParm(const char *check)
 
 
 /*
- * ================
  * Q_filelength
- * ================
  */
 int
 Q_filelength(FILE *f)
@@ -692,9 +672,7 @@ SafeWrite(FILE *f, const void *buffer, int count)
 
 
 /*
- * ==============
  * FileExists
- * ==============
  */
 qboolean
 FileExists(const char *filename)
@@ -709,9 +687,7 @@ FileExists(const char *filename)
 }
 
 /*
- * ==============
  * LoadFile
- * ==============
  */
 int
 LoadFile(const char *filename, void **bufferptr)
@@ -733,12 +709,10 @@ LoadFile(const char *filename, void **bufferptr)
 
 
 /*
- * ==============
  * LoadFileBlock
  * -
  * rounds up memory allocation to 4K boundry
  * -
- * ==============
  */
 int
 LoadFileBlock(const char *filename, void **bufferptr)
@@ -764,11 +738,9 @@ LoadFileBlock(const char *filename, void **bufferptr)
 
 
 /*
- * ==============
  * TryLoadFile
  *
  * Allows failure
- * ==============
  */
 int
 TryLoadFile(const char *filename, void **bufferptr)
@@ -794,9 +766,7 @@ TryLoadFile(const char *filename, void **bufferptr)
 
 
 /*
- * ==============
  * SaveFile
- * ==============
  */
 void
 SaveFile(const char *filename, const void *buffer, int count)
@@ -871,9 +841,7 @@ StripExtension(char *path)
 
 
 /*
- * ====================
  * Extract file parts
- * ====================
  */
 /* FIXME: should include the slash, otherwise
  * backing to an empty path will be wrong when appending a slash */
@@ -934,9 +902,7 @@ ExtractFileExtension(const char *path, char *dest)
 
 
 /*
- * ==============
  * ParseNum / ParseHex
- * ==============
  */
 int
 ParseHex(const char *hex)
@@ -977,11 +943,9 @@ ParseNum(const char *str)
 
 
 /*
- * ============================================================================
  *
  *                                      BYTE ORDER FUNCTIONS
  *
- * ============================================================================
  */
 
 short
@@ -1092,9 +1056,7 @@ CRC_Value(unsigned short crcvalue)
 /* ============================================================================= */
 
 /*
- * ============
  * CreatePath
- * ============
  */
 void
 CreatePath(const char *path)
@@ -1133,11 +1095,9 @@ CreatePath(const char *path)
 
 
 /*
- * ============
  * QCopyFile
  *
  * Used to archive source files
- * ============
  */
 void
 QCopyFile(const char *from, const char *to)

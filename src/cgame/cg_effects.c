@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /*
  * cg_effects.c -- these functions generate localentities, usually as a result
@@ -27,11 +25,9 @@
 
 
 /*
- * ==================
  * CG_BubbleTrail
  *
  * Bullets shot underwater
- * ==================
  */
 void
 CG_BubbleTrail(vec3_t start, vec3_t end, float spacing)
@@ -91,11 +87,9 @@ CG_BubbleTrail(vec3_t start, vec3_t end, float spacing)
 }
 
 /*
- * =====================
  * CG_SmokePuff
  *
  * Adds a smoke puff or blood trail localEntity.
- * =====================
  */
 localEntity_t *
 CG_SmokePuff(const vec3_t p, const vec3_t vel,
@@ -164,11 +158,9 @@ CG_SmokePuff(const vec3_t p, const vec3_t vel,
 }
 
 /*
- * ==================
  * CG_SpawnEffect
  *
  * Player teleporting in or out
- * ==================
  */
 void
 CG_SpawnEffect(vec3_t org)
@@ -207,9 +199,7 @@ CG_SpawnEffect(vec3_t org)
 
 #ifdef MISSIONPACK
 /*
- * ===============
  * CG_LightningBoltBeam
- * ===============
  */
 void
 CG_LightningBoltBeam(vec3_t start, vec3_t end)
@@ -234,9 +224,7 @@ CG_LightningBoltBeam(vec3_t start, vec3_t end)
 }
 
 /*
- * ==================
  * CG_KamikazeEffect
- * ==================
  */
 void
 CG_KamikazeEffect(vec3_t org)
@@ -267,9 +255,7 @@ CG_KamikazeEffect(vec3_t org)
 }
 
 /*
- * ==================
  * CG_ObeliskExplode
- * ==================
  */
 void
 CG_ObeliskExplode(vec3_t org, int entityNum)
@@ -291,9 +277,7 @@ CG_ObeliskExplode(vec3_t org, int entityNum)
 }
 
 /*
- * ==================
  * CG_ObeliskPain
- * ==================
  */
 void
 CG_ObeliskPain(vec3_t org)
@@ -314,9 +298,7 @@ CG_ObeliskPain(vec3_t org)
 
 
 /*
- * ==================
  * CG_InvulnerabilityImpact
- * ==================
  */
 void
 CG_InvulnerabilityImpact(vec3_t org, vec3_t angles)
@@ -356,9 +338,7 @@ CG_InvulnerabilityImpact(vec3_t org, vec3_t angles)
 }
 
 /*
- * ==================
  * CG_InvulnerabilityJuiced
- * ==================
  */
 void
 CG_InvulnerabilityJuiced(vec3_t org)
@@ -394,9 +374,7 @@ CG_InvulnerabilityJuiced(vec3_t org)
 #endif
 
 /*
- * ==================
  * CG_ScorePlum
- * ==================
  */
 void
 CG_ScorePlum(int client, vec3_t org, int score)
@@ -441,9 +419,7 @@ CG_ScorePlum(int client, vec3_t org, int score)
 
 
 /*
- * ====================
  * CG_MakeExplosion
- * ====================
  */
 localEntity_t *
 CG_MakeExplosion(vec3_t origin, vec3_t dir,
@@ -503,11 +479,9 @@ CG_MakeExplosion(vec3_t origin, vec3_t dir,
 
 
 /*
- * =================
  * CG_Bleed
  *
  * This is the spurt of blood when a character gets hit
- * =================
  */
 void
 CG_Bleed(vec3_t origin, int entityNum)
@@ -538,9 +512,7 @@ CG_Bleed(vec3_t origin, int entityNum)
 
 
 /*
- * ==================
  * CG_LaunchGib
- * ==================
  */
 void
 CG_LaunchGib(vec3_t origin, vec3_t velocity, qhandle_t hModel)
@@ -571,11 +543,9 @@ CG_LaunchGib(vec3_t origin, vec3_t velocity, qhandle_t hModel)
 }
 
 /*
- * ===================
  * CG_GibPlayer
  *
  * Generated a bunch of gibs launching out from the bodies location
- * ===================
  */
 #define GIB_VELOCITY	250
 #define GIB_JUMP	250
@@ -656,9 +626,7 @@ CG_GibPlayer(vec3_t playerOrigin)
 }
 
 /*
- * ==================
  * CG_LaunchGib
- * ==================
  */
 void
 CG_LaunchExplode(vec3_t origin, vec3_t velocity, qhandle_t hModel)
@@ -691,11 +659,9 @@ CG_LaunchExplode(vec3_t origin, vec3_t velocity, qhandle_t hModel)
 #define EXP_VELOCITY	100
 #define EXP_JUMP	150
 /*
- * ===================
  * CG_GibPlayer
  *
  * Generated a bunch of gibs launching out from the bodies location
- * ===================
  */
 void
 CG_BigExplode(vec3_t playerOrigin)

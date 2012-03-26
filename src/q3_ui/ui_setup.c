@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,15 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /*  */
 /*
- * =======================================================================
  *
  * SETUP MENU
  *
- * =======================================================================
  */
 
 
@@ -70,9 +66,7 @@ static setupMenuInfo_t setupMenuInfo;
 
 
 /*
- * =================
  * Setup_ResetDefaults_Action
- * =================
  */
 static void
 Setup_ResetDefaults_Action(qboolean result)
@@ -86,9 +80,7 @@ Setup_ResetDefaults_Action(qboolean result)
 
 
 /*
- * =================
  * Setup_ResetDefaults_Draw
- * =================
  */
 static void
 Setup_ResetDefaults_Draw(void)
@@ -103,9 +95,7 @@ Setup_ResetDefaults_Draw(void)
 
 
 /*
- * ===============
  * UI_SetupMenu_Event
- * ===============
  */
 static void
 UI_SetupMenu_Event(void *ptr, int event)
@@ -162,9 +152,7 @@ enum {
 };
 
 /*
- * ===============
  * UI_SetupMenu_Init
- * ===============
  */
 static void
 UI_SetupMenu_Init(void)
@@ -334,9 +322,7 @@ UI_SetupMenu_Init(void)
 
 
 /*
- * =================
  * UI_SetupMenu_Cache
- * =================
  */
 void
 UI_SetupMenu_Cache(void)
@@ -349,9 +335,7 @@ UI_SetupMenu_Cache(void)
 
 
 /*
- * ===============
  * UI_SetupMenu
- * ===============
  */
 void
 UI_SetupMenu(void)

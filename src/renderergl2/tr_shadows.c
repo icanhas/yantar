@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 #include "tr_local.h"
 
@@ -143,7 +141,6 @@ R_RenderShadowEdges(void)
 }
 
 /*
- * =================
  * RB_ShadowTessEnd
  *
  * triangleFromEdge[ v1 ][ v2 ]
@@ -152,7 +149,6 @@ R_RenderShadowEdges(void)
  * set triangle from edge( v1, v2, tri )
  * if ( facing[ triangleFromEdge[ v1 ][ v2 ] ] && !facing[ triangleFromEdge[ v2 ][ v1 ] ) {
  * }
- * =================
  */
 void
 RB_ShadowTessEnd(void)
@@ -256,14 +252,12 @@ RB_ShadowTessEnd(void)
 
 
 /*
- * =================
  * RB_ShadowFinish
  *
  * Darken everything that is is a shadow volume.
  * We have to delay this until everything has been shadowed,
  * because otherwise shadows from different body parts would
  * overlap and double darken.
- * =================
  */
 void
 RB_ShadowFinish(void)
@@ -303,10 +297,8 @@ RB_ShadowFinish(void)
 
 
 /*
- * =================
  * RB_ProjectionShadowDeform
  *
- * =================
  */
 void
 RB_ProjectionShadowDeform(void)

@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 
 #ifdef USE_LOCAL_HEADERS
@@ -74,9 +72,7 @@ static int vidRestartTime = 0;
 #define CTRL(a) ((a)-'a'+1)
 
 /*
- * ===============
  * IN_PrintKey
- * ===============
  */
 static void
 IN_PrintKey(const SDL_keysym *keysym, keyNum_t key, qboolean down)
@@ -117,9 +113,7 @@ IN_PrintKey(const SDL_keysym *keysym, keyNum_t key, qboolean down)
 #define MAX_CONSOLE_KEYS 16
 
 /*
- * ===============
  * IN_IsConsoleKey
- * ===============
  */
 static qboolean
 IN_IsConsoleKey(keyNum_t key, const unsigned char character)
@@ -199,9 +193,7 @@ IN_IsConsoleKey(keyNum_t key, const unsigned char character)
 }
 
 /*
- * ===============
  * IN_TranslateSDLToQ3Key
- * ===============
  */
 static const char *
 IN_TranslateSDLToQ3Key(SDL_keysym *keysym,
@@ -346,9 +338,7 @@ IN_TranslateSDLToQ3Key(SDL_keysym *keysym,
 
 #ifdef MACOS_X_ACCELERATION_HACK
 /*
- * ===============
  * IN_GetIOHandle
- * ===============
  */
 static io_connect_t
 IN_GetIOHandle(void)	/* mac os x mouse accel hack */
@@ -374,9 +364,7 @@ IN_GetIOHandle(void)	/* mac os x mouse accel hack */
 #endif
 
 /*
- * ===============
  * IN_GobbleMotionEvents
- * ===============
  */
 static void
 IN_GobbleMotionEvents(void)
@@ -391,9 +379,7 @@ IN_GobbleMotionEvents(void)
 }
 
 /*
- * ===============
  * IN_ActivateMouse
- * ===============
  */
 static void
 IN_ActivateMouse(void)
@@ -462,9 +448,7 @@ IN_ActivateMouse(void)
 }
 
 /*
- * ===============
  * IN_DeactivateMouse
- * ===============
  */
 static void
 IN_DeactivateMouse(void)
@@ -546,9 +530,7 @@ struct {
 
 
 /*
- * ===============
  * IN_InitJoystick
- * ===============
  */
 static void
 IN_InitJoystick(void)
@@ -614,9 +596,7 @@ IN_InitJoystick(void)
 }
 
 /*
- * ===============
  * IN_ShutdownJoystick
- * ===============
  */
 static void
 IN_ShutdownJoystick(void)
@@ -630,9 +610,7 @@ IN_ShutdownJoystick(void)
 }
 
 /*
- * ===============
  * IN_JoyMove
- * ===============
  */
 static void
 IN_JoyMove(void)
@@ -816,9 +794,7 @@ IN_JoyMove(void)
 }
 
 /*
- * ===============
  * IN_ProcessEvents
- * ===============
  */
 static void
 IN_ProcessEvents(void)
@@ -915,9 +891,7 @@ IN_ProcessEvents(void)
 }
 
 /*
- * ===============
  * IN_Frame
- * ===============
  */
 void
 IN_Frame(void)
@@ -950,9 +924,7 @@ IN_Frame(void)
 }
 
 /*
- * ===============
  * IN_InitKeyLockStates
- * ===============
  */
 void
 IN_InitKeyLockStates(void)
@@ -965,9 +937,7 @@ IN_InitKeyLockStates(void)
 }
 
 /*
- * ===============
  * IN_Init
- * ===============
  */
 void
 IN_Init(void)
@@ -1013,9 +983,7 @@ IN_Init(void)
 }
 
 /*
- * ===============
  * IN_Shutdown
- * ===============
  */
 void
 IN_Shutdown(void)
@@ -1027,9 +995,7 @@ IN_Shutdown(void)
 }
 
 /*
- * ===============
  * IN_Restart
- * ===============
  */
 void
 IN_Restart(void)

@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /*
  * bg_public.h -- definitions shared by both the server game and client game modules */
@@ -112,14 +110,12 @@ typedef enum {
 typedef enum { GENDER_MALE, GENDER_FEMALE, GENDER_NEUTER } gender_t;
 
 /*
- * ===================================================================================
  *
  * PMOVE MODULE
  *
  * The pmove code takes a player_state_t and a usercmd_t and generates a new player_state_t
  * and some other output data.  Used for local prediction on the client game and true
  * movement on the server game.
- * ===================================================================================
  */
 
 typedef enum {

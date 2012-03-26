@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /* tr_models.c -- model loading and caching */
 
@@ -32,9 +30,7 @@ static qboolean R_LoadMDR(model_t *mod, void *buffer, int filesize, const char *
 #endif
 
 /*
- * ====================
  * R_RegisterMD3
- * ====================
  */
 qhandle_t
 R_RegisterMD3(const char *name, model_t *mod)
@@ -113,9 +109,7 @@ R_RegisterMD3(const char *name, model_t *mod)
 
 #ifdef RAVENMD4
 /*
- * ====================
  * R_RegisterMDR
- * ====================
  */
 qhandle_t
 R_RegisterMDR(const char *name, model_t *mod)
@@ -151,9 +145,7 @@ R_RegisterMDR(const char *name, model_t *mod)
 #endif
 
 /*
- * ====================
  * R_RegisterIQM
- * ====================
  */
 qhandle_t
 R_RegisterIQM(const char *name, model_t *mod)
@@ -247,7 +239,6 @@ R_AllocModel(void)
 }
 
 /*
- * ====================
  * RE_RegisterModel
  *
  * Loads in a model for the given name
@@ -256,7 +247,6 @@ R_AllocModel(void)
  * An entry will be retained for failed models as an
  * optimization to prevent disk rescanning if they are
  * asked for again.
- * ====================
  */
 qhandle_t
 RE_RegisterModel(const char *name)
@@ -366,9 +356,7 @@ RE_RegisterModel(const char *name)
 }
 
 /*
- * =================
  * R_LoadMD3
- * =================
  */
 static qboolean
 R_LoadMD3(model_t * mod, int lod, void *buffer, int bufferSize, const char *modName)
@@ -745,9 +733,7 @@ R_LoadMD3(model_t * mod, int lod, void *buffer, int bufferSize, const char *modN
 #ifdef RAVENMD4
 
 /*
- * =================
  * R_LoadMDR
- * =================
  */
 static qboolean
 R_LoadMDR(model_t *mod, void *buffer, int filesize, const char *mod_name)
@@ -1067,9 +1053,7 @@ R_LoadMDR(model_t *mod, void *buffer, int filesize, const char *mod_name)
 #endif
 
 /*
- * =================
  * R_LoadMD4
- * =================
  */
 
 static qboolean
@@ -1260,9 +1244,7 @@ RE_BeginRegistration(glconfig_t *glconfigOut)
 /* ============================================================================= */
 
 /*
- * ===============
  * R_ModelInit
- * ===============
  */
 void
 R_ModelInit(void)
@@ -1278,9 +1260,7 @@ R_ModelInit(void)
 
 
 /*
- * ================
  * R_Modellist_f
- * ================
  */
 void
 R_Modellist_f(void)
@@ -1315,9 +1295,7 @@ R_Modellist_f(void)
 
 
 /*
- * ================
  * R_GetTag
- * ================
  */
 static mdvTag_t *
 R_GetTag(mdvModel_t *mod, int frame, const char *_tagName)
@@ -1383,9 +1361,7 @@ R_GetAnimTag(mdrHeader_t *mod, int framenum, const char *tagName, md3Tag_t * des
 #endif
 
 /*
- * ================
  * R_LerpTag
- * ================
  */
 int
 R_LerpTag(orientation_t *tag, qhandle_t handle, int startFrame, int endFrame,
@@ -1447,9 +1423,7 @@ R_LerpTag(orientation_t *tag, qhandle_t handle, int startFrame, int endFrame,
 
 
 /*
- * ====================
  * R_ModelBounds
- * ====================
  */
 void
 R_ModelBounds(qhandle_t handle, vec3_t mins, vec3_t maxs)

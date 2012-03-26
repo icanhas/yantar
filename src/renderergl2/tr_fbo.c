@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 2006 Kirk Barnes
  * Copyright (C) 2006-2008 Robert Beckebans <trebor_7@users.sourceforge.net>
  *
@@ -18,15 +17,12 @@
  * You should have received a copy of the GNU General Public License
  * along with XreaL source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 /* tr_fbo.c */
 #include "tr_local.h"
 
 /*
- * =============
  * R_CheckFBO
- * =============
  */
 qboolean
 R_CheckFBO(const FBO_t * fbo)
@@ -102,9 +98,7 @@ R_CheckFBO(const FBO_t * fbo)
 }
 
 /*
- * ============
  * FBO_Create
- * ============
  */
 FBO_t          *
 FBO_Create(const char *name, int width, int height)
@@ -213,9 +207,7 @@ FBO_CreateBuffer(FBO_t *fbo, int format, int index)
 
 
 /*
- * =================
  * R_AttachFBOTexture1D
- * =================
  */
 void
 R_AttachFBOTexture1D(int texId, int index)
@@ -230,9 +222,7 @@ R_AttachFBOTexture1D(int texId, int index)
 }
 
 /*
- * =================
  * R_AttachFBOTexture2D
- * =================
  */
 void
 R_AttachFBOTexture2D(int target, int texId, int index)
@@ -252,9 +242,7 @@ R_AttachFBOTexture2D(int target, int texId, int index)
 }
 
 /*
- * =================
  * R_AttachFBOTexture3D
- * =================
  */
 void
 R_AttachFBOTexture3D(int texId, int index, int zOffset)
@@ -270,9 +258,7 @@ R_AttachFBOTexture3D(int texId, int index, int zOffset)
 }
 
 /*
- * =================
  * R_AttachFBOTextureDepth
- * =================
  */
 void
 R_AttachFBOTextureDepth(int texId)
@@ -281,9 +267,7 @@ R_AttachFBOTextureDepth(int texId)
 }
 
 /*
- * =================
  * R_AttachFBOTexturePackedDepthStencil
- * =================
  */
 void
 R_AttachFBOTexturePackedDepthStencil(int texId)
@@ -305,9 +289,7 @@ FBO_AttachTextureImage(image_t *img, int index)
 }
 
 /*
- * ============
  * FBO_Bind
- * ============
  */
 void
 FBO_Bind(FBO_t * fbo)
@@ -349,9 +331,7 @@ FBO_Bind(FBO_t * fbo)
 }
 
 /*
- * ============
  * FBO_Init
- * ============
  */
 void
 FBO_Init(void)
@@ -484,9 +464,7 @@ FBO_Init(void)
 }
 
 /*
- * ============
  * FBO_Shutdown
- * ============
  */
 void
 FBO_Shutdown(void)
@@ -520,9 +498,7 @@ FBO_Shutdown(void)
 }
 
 /*
- * ============
  * R_FBOList_f
- * ============
  */
 void
 R_FBOList_f(void)
