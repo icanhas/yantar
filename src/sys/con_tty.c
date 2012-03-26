@@ -92,11 +92,11 @@ CON_Back(void)
 	char key;
 
 	key = '\b';
-	(void) write(STDOUT_FILENO, &key, 1);
+	(void)write(STDOUT_FILENO, &key, 1);
 	key = ' ';
-	(void) write(STDOUT_FILENO, &key, 1);
+	(void)write(STDOUT_FILENO, &key, 1);
 	key = '\b';
-	(void) write(STDOUT_FILENO, &key, 1);
+	(void)write(STDOUT_FILENO, &key, 1);
 }
 
 /*
@@ -110,7 +110,7 @@ CON_Back(void)
 static void
 CON_Hide(void)
 {
-	if( ttycon_on ){
+	if(ttycon_on){
 		int i;
 		if(ttycon_hide){
 			ttycon_hide++;
@@ -135,16 +135,16 @@ CON_Hide(void)
 static void
 CON_Show(void)
 {
-	if( ttycon_on ){
+	if(ttycon_on){
 		int i;
 
 		assert(ttycon_hide>0);
 		ttycon_hide--;
 		if(ttycon_hide == 0){
-			(void) write(STDOUT_FILENO, "]", 1);
+			(void)write(STDOUT_FILENO, "]", 1);
 			if(TTY_con.cursor)
 				for(i=0; i<TTY_con.cursor; i++)
-					(void) write(STDOUT_FILENO,
+					(void)write(STDOUT_FILENO,
 						TTY_con.buffer+i,
 						1);
 		}
@@ -279,8 +279,8 @@ CON_Init(void)
 
 	Field_Clear(&TTY_con);
 	tcgetattr (STDIN_FILENO, &TTY_tc);
-	TTY_erase	= TTY_tc.c_cc[VERASE];
-	TTY_eof		= TTY_tc.c_cc[VEOF];
+	TTY_erase = TTY_tc.c_cc[VERASE];
+	TTY_eof = TTY_tc.c_cc[VEOF];
 	tc = TTY_tc;
 
 	/*
@@ -342,8 +342,8 @@ CON_Input(void)
 						sizeof(text));
 					Field_Clear(&TTY_con);
 					key = '\n';
-					(void) write(STDOUT_FILENO, &key, 1);
-					(void) write(STDOUT_FILENO, "]", 1);
+					(void)write(STDOUT_FILENO, &key, 1);
+					(void)write(STDOUT_FILENO, "]", 1);
 					return text;
 				}
 				if(key == '\t'){
@@ -410,7 +410,7 @@ CON_Input(void)
 			TTY_con.buffer[TTY_con.cursor] = key;
 			TTY_con.cursor++;
 			/* print the current line (this is differential) */
-			(void) write(STDOUT_FILENO, &key, 1);
+			(void)write(STDOUT_FILENO, &key, 1);
 		}
 
 		return NULL;
@@ -452,7 +452,7 @@ CON_Print(const char *msg)
 {
 	CON_Hide( );
 
-	if( com_ansiColor && com_ansiColor->integer )
+	if(com_ansiColor && com_ansiColor->integer)
 		Sys_AnsiColorPrint(msg);
 	else
 		fputs(msg, stderr);

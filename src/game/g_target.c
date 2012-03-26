@@ -30,19 +30,19 @@
 void
 Use_Target_Give(gentity_t *ent, gentity_t *other, gentity_t *activator)
 {
-	gentity_t *t;
-	trace_t trace;
+	gentity_t	*t;
+	trace_t		trace;
 
-	if( !activator->client )
+	if(!activator->client)
 		return;
 
-	if( !ent->target )
+	if(!ent->target)
 		return;
 
 	memset(&trace, 0, sizeof(trace));
 	t = NULL;
-	while((t = G_Find (t, FOFS(targetname), ent->target)) != NULL ){
-		if( !t->item )
+	while((t = G_Find (t, FOFS(targetname), ent->target)) != NULL){
+		if(!t->item)
 			continue;
 		Touch_Item(t, activator, &trace);
 
@@ -69,14 +69,14 @@ void
 Use_target_remove_powerups(gentity_t *ent, gentity_t *other,
 			   gentity_t *activator)
 {
-	if( !activator->client )
+	if(!activator->client)
 		return;
 
-	if( activator->client->ps.powerups[PW_REDFLAG] )
+	if(activator->client->ps.powerups[PW_REDFLAG])
 		Team_ReturnFlag(TEAM_RED);
-	else if( activator->client->ps.powerups[PW_BLUEFLAG] )
+	else if(activator->client->ps.powerups[PW_BLUEFLAG])
 		Team_ReturnFlag(TEAM_BLUE);
-	else if( activator->client->ps.powerups[PW_NEUTRALFLAG] )
+	else if(activator->client->ps.powerups[PW_NEUTRALFLAG])
 		Team_ReturnFlag(TEAM_FREE);
 
 	memset(activator->client->ps.powerups, 0,
@@ -115,10 +115,10 @@ void
 SP_target_delay(gentity_t *ent)
 {
 	/* check delay for backwards compatability */
-	if( !G_SpawnFloat("delay", "0", &ent->wait))
+	if(!G_SpawnFloat("delay", "0", &ent->wait))
 		G_SpawnFloat("wait", "1", &ent->wait);
 
-	if( !ent->wait )
+	if(!ent->wait)
 		ent->wait = 1;
 	ent->use = Use_Target_Delay;
 }
@@ -140,7 +140,7 @@ Use_Target_Score(gentity_t *ent, gentity_t *other, gentity_t *activator)
 void
 SP_target_score(gentity_t *ent)
 {
-	if( !ent->count )
+	if(!ent->count)
 		ent->count = 1;
 	ent->use = Use_Target_Score;
 }
@@ -155,16 +155,16 @@ SP_target_score(gentity_t *ent)
 void
 Use_Target_Print(gentity_t *ent, gentity_t *other, gentity_t *activator)
 {
-	if( activator->client && (ent->spawnflags & 4)){
+	if(activator->client && (ent->spawnflags & 4)){
 		trap_SendServerCommand(activator-g_entities,
 			va("cp \"%s\"", ent->message));
 		return;
 	}
 
-	if( ent->spawnflags & 3 ){
-		if( ent->spawnflags & 1 )
+	if(ent->spawnflags & 3){
+		if(ent->spawnflags & 1)
 			G_TeamCommand(TEAM_RED, va("cp \"%s\"", ent->message));
-		if( ent->spawnflags & 2 )
+		if(ent->spawnflags & 2)
 			G_TeamCommand(TEAM_BLUE, va("cp \"%s\"", ent->message));
 		return;
 	}
@@ -203,7 +203,7 @@ Use_Target_Speaker(gentity_t *ent, gentity_t *other, gentity_t *activator)
 		else
 			ent->s.loopSound = ent->noise_index;	/* start it */
 	}else{							/* normal sound */
-		if( ent->spawnflags & 8 )
+		if(ent->spawnflags & 8)
 			G_AddEvent(activator, EV_GENERAL_SOUND, ent->noise_index);
 		else if(ent->spawnflags & 4)
 			G_AddEvent(ent, EV_GLOBAL_SOUND, ent->noise_index);
@@ -215,19 +215,19 @@ Use_Target_Speaker(gentity_t *ent, gentity_t *other, gentity_t *activator)
 void
 SP_target_speaker(gentity_t *ent)
 {
-	char	buffer[MAX_QPATH];
-	char	*s;
+	char buffer[MAX_QPATH];
+	char *s;
 
 	G_SpawnFloat("wait", "0", &ent->wait);
 	G_SpawnFloat("random", "0", &ent->random);
 
-	if( !G_SpawnString("noise", "NOSOUND", &s))
+	if(!G_SpawnString("noise", "NOSOUND", &s))
 		G_Error("target_speaker without a noise key at %s",
 			vtos(ent->s.origin));
 
 	/* force all client reletive sounds to be "activator" speakers that
 	 * play on the entity that activates it */
-	if( s[0] == '*' )
+	if(s[0] == '*')
 		ent->spawnflags |= 8;
 
 	if(!strstr(s, ".wav"))
@@ -244,7 +244,7 @@ SP_target_speaker(gentity_t *ent)
 
 
 	/* check for prestarted looping sound */
-	if( ent->spawnflags & 1 )
+	if(ent->spawnflags & 1)
 		ent->s.loopSound = ent->noise_index;
 
 	ent->use = Use_Target_Speaker;
@@ -274,7 +274,7 @@ target_laser_think(gentity_t *self)
 	vec3_t	point;
 
 	/* if pointed at another entity, set movedir to point at it */
-	if( self->enemy ){
+	if(self->enemy){
 		VectorMA (self->enemy->s.origin, 0.5, self->enemy->r.mins, point);
 		VectorMA (point, 0.5, self->enemy->r.maxs, point);
 		VectorSubtract (point, self->s.origin, self->movedir);
@@ -287,7 +287,7 @@ target_laser_think(gentity_t *self)
 	trap_Trace(&tr, self->s.origin, NULL, NULL, end, self->s.number,
 		CONTENTS_SOLID|CONTENTS_BODY|CONTENTS_CORPSE);
 
-	if( tr.entityNum )
+	if(tr.entityNum)
 		/* hurt it if we can */
 		G_Damage (&g_entities[tr.entityNum], self, self->activator,
 			self->movedir,
@@ -319,7 +319,7 @@ void
 target_laser_use(gentity_t *self, gentity_t *other, gentity_t *activator)
 {
 	self->activator = activator;
-	if( self->nextthink > 0 )
+	if(self->nextthink > 0)
 		target_laser_off (self);
 	else
 		target_laser_on (self);
@@ -342,10 +342,10 @@ target_laser_start(gentity_t *self)
 	}else
 		G_SetMovedir (self->s.angles, self->movedir);
 
-	self->use = target_laser_use;
-	self->think = target_laser_think;
+	self->use	= target_laser_use;
+	self->think	= target_laser_think;
 
-	if( !self->damage )
+	if(!self->damage)
 		self->damage = 1;
 
 	if(self->spawnflags & 1)
@@ -406,16 +406,16 @@ void
 target_relay_use(gentity_t *self, gentity_t *other, gentity_t *activator)
 {
 	if((self->spawnflags & 1) && activator->client
-	   && activator->client->sess.sessionTeam != TEAM_RED )
+	   && activator->client->sess.sessionTeam != TEAM_RED)
 		return;
 	if((self->spawnflags & 2) && activator->client
-	   && activator->client->sess.sessionTeam != TEAM_BLUE )
+	   && activator->client->sess.sessionTeam != TEAM_BLUE)
 		return;
-	if( self->spawnflags & 4 ){
+	if(self->spawnflags & 4){
 		gentity_t *ent;
 
 		ent = G_PickTarget(self->target);
-		if( ent && ent->use )
+		if(ent && ent->use)
 			ent->use(ent, self, activator);
 		return;
 	}
@@ -460,8 +460,8 @@ SP_target_position(gentity_t *self)
 static void
 target_location_linkup(gentity_t *ent)
 {
-	int i;
-	int n;
+	int	i;
+	int	n;
 
 	if(level.locationLinked)
 		return;

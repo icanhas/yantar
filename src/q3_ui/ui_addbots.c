@@ -93,8 +93,8 @@ UI_AddBotsMenu_FightEvent(void* ptr, int event)
 	if(event != QM_ACTIVATED)
 		return;
 
-	team	= addBotsMenuInfo.team.itemnames[addBotsMenuInfo.team.curvalue];
-	skill	= addBotsMenuInfo.skill.curvalue + 1;
+	team = addBotsMenuInfo.team.itemnames[addBotsMenuInfo.team.curvalue];
+	skill = addBotsMenuInfo.skill.curvalue + 1;
 
 	trap_Cmd_ExecuteText(EXEC_APPEND, va("addbot %s %i %s %i\n",
 			addBotsMenuInfo.botnames[addBotsMenuInfo.selectedBotNum],
@@ -117,7 +117,7 @@ UI_AddBotsMenu_BotEvent(void* ptr, int event)
 
 	addBotsMenuInfo.bots[addBotsMenuInfo.selectedBotNum].color =
 		color_orange;
-	addBotsMenuInfo.selectedBotNum = ((menucommon_s *) ptr)->id -
+	addBotsMenuInfo.selectedBotNum = ((menucommon_s*)ptr)->id -
 					 ID_BOTNAME0;
 	addBotsMenuInfo.bots[addBotsMenuInfo.selectedBotNum].color = color_white;
 }
@@ -148,7 +148,7 @@ UI_AddBotsMenu_SetBotNames(void)
 	int n;
 	const char *info;
 
-	for( n = 0; n < 7; n++ ){
+	for(n = 0; n < 7; n++){
 		info =
 			UI_GetBotInfoByNumber(addBotsMenuInfo.sortedBotNums[
 					addBotsMenuInfo
@@ -173,7 +173,7 @@ UI_AddBotsMenu_UpEvent(void* ptr, int event)
 	if(event != QM_ACTIVATED)
 		return;
 
-	if( addBotsMenuInfo.baseBotNum > 0 ){
+	if(addBotsMenuInfo.baseBotNum > 0){
 		addBotsMenuInfo.baseBotNum--;
 		UI_AddBotsMenu_SetBotNames();
 	}
@@ -191,7 +191,7 @@ UI_AddBotsMenu_DownEvent(void* ptr, int event)
 	if(event != QM_ACTIVATED)
 		return;
 
-	if( addBotsMenuInfo.baseBotNum + 7 < addBotsMenuInfo.numBots ){
+	if(addBotsMenuInfo.baseBotNum + 7 < addBotsMenuInfo.numBots){
 		addBotsMenuInfo.baseBotNum++;
 		UI_AddBotsMenu_SetBotNames();
 	}
@@ -207,11 +207,11 @@ static int QDECL
 UI_AddBotsMenu_SortCompare(const void *arg1, const void *arg2)
 {
 	int num1, num2;
-	const char *info1, *info2;
-	const char *name1, *name2;
+	const char	*info1, *info2;
+	const char	*name1, *name2;
 
-	num1	= *(int *) arg1;
-	num2	= *(int *) arg2;
+	num1 = *(int*)arg1;
+	num2 = *(int*)arg2;
 
 	info1	= UI_GetBotInfoByNumber(num1);
 	info2	= UI_GetBotInfoByNumber(num2);
@@ -228,7 +228,7 @@ UI_AddBotsMenu_GetSortedBotNums(void)
 	int n;
 
 	/* initialize the array */
-	for( n = 0; n < addBotsMenuInfo.numBots; n++ )
+	for(n = 0; n < addBotsMenuInfo.numBots; n++)
 		addBotsMenuInfo.sortedBotNums[n] = n;
 
 	qsort(addBotsMenuInfo.sortedBotNums, addBotsMenuInfo.numBots,
@@ -258,7 +258,7 @@ UI_AddBotsMenu_Draw(void)
  * UI_AddBotsMenu_Init
  * =================
  */
-static const char	*skillNames[] = {
+static const char *skillNames[] = {
 	"I Can Win",
 	"Bring It On",
 	"Hurt Me Plenty",
@@ -267,12 +267,12 @@ static const char	*skillNames[] = {
 	NULL
 };
 
-static const char	*teamNames1[] = {
+static const char *teamNames1[] = {
 	"Free",
 	NULL
 };
 
-static const char	*teamNames2[] = {
+static const char *teamNames2[] = {
 	"Red",
 	"Blue",
 	NULL
@@ -301,43 +301,43 @@ UI_AddBotsMenu_Init(void)
 	addBotsMenuInfo.numBots = UI_GetNumBots();
 	count = addBotsMenuInfo.numBots < 7 ? addBotsMenuInfo.numBots : 7;
 
-	addBotsMenuInfo.arrows.generic.type	= MTYPE_BITMAP;
-	addBotsMenuInfo.arrows.generic.name	= ART_ARROWS;
-	addBotsMenuInfo.arrows.generic.flags	= QMF_INACTIVE;
+	addBotsMenuInfo.arrows.generic.type = MTYPE_BITMAP;
+	addBotsMenuInfo.arrows.generic.name = ART_ARROWS;
+	addBotsMenuInfo.arrows.generic.flags = QMF_INACTIVE;
 	addBotsMenuInfo.arrows.generic.x = 200;
 	addBotsMenuInfo.arrows.generic.y	= 128;
-	addBotsMenuInfo.arrows.width	= 64;
-	addBotsMenuInfo.arrows.height	= 128;
+	addBotsMenuInfo.arrows.width		= 64;
+	addBotsMenuInfo.arrows.height		= 128;
 
-	addBotsMenuInfo.up.generic.type = MTYPE_BITMAP;
-	addBotsMenuInfo.up.generic.flags = QMF_LEFT_JUSTIFY|
-					   QMF_PULSEIFFOCUS;
-	addBotsMenuInfo.up.generic.x = 200;
-	addBotsMenuInfo.up.generic.y = 128;
-	addBotsMenuInfo.up.generic.id = ID_UP;
+	addBotsMenuInfo.up.generic.type		= MTYPE_BITMAP;
+	addBotsMenuInfo.up.generic.flags	= QMF_LEFT_JUSTIFY|
+						  QMF_PULSEIFFOCUS;
+	addBotsMenuInfo.up.generic.x	= 200;
+	addBotsMenuInfo.up.generic.y	= 128;
+	addBotsMenuInfo.up.generic.id	= ID_UP;
 	addBotsMenuInfo.up.generic.callback = UI_AddBotsMenu_UpEvent;
-	addBotsMenuInfo.up.width = 64;
-	addBotsMenuInfo.up.height = 64;
-	addBotsMenuInfo.up.focuspic = ART_ARROWUP;
+	addBotsMenuInfo.up.width	= 64;
+	addBotsMenuInfo.up.height	= 64;
+	addBotsMenuInfo.up.focuspic	= ART_ARROWUP;
 
-	addBotsMenuInfo.down.generic.type = MTYPE_BITMAP;
-	addBotsMenuInfo.down.generic.flags = QMF_LEFT_JUSTIFY|
-					     QMF_PULSEIFFOCUS;
+	addBotsMenuInfo.down.generic.type	= MTYPE_BITMAP;
+	addBotsMenuInfo.down.generic.flags	= QMF_LEFT_JUSTIFY|
+						  QMF_PULSEIFFOCUS;
 	addBotsMenuInfo.down.generic.x	= 200;
 	addBotsMenuInfo.down.generic.y	= 128+64;
 	addBotsMenuInfo.down.generic.id = ID_DOWN;
 	addBotsMenuInfo.down.generic.callback = UI_AddBotsMenu_DownEvent;
-	addBotsMenuInfo.down.width = 64;
-	addBotsMenuInfo.down.height = 64;
-	addBotsMenuInfo.down.focuspic = ART_ARROWDOWN;
+	addBotsMenuInfo.down.width	= 64;
+	addBotsMenuInfo.down.height	= 64;
+	addBotsMenuInfo.down.focuspic	= ART_ARROWDOWN;
 
-	for( n = 0, y = 120; n < count; n++, y += 20 ){
-		addBotsMenuInfo.bots[n].generic.type = MTYPE_PTEXT;
-		addBotsMenuInfo.bots[n].generic.flags = QMF_LEFT_JUSTIFY|
-							QMF_PULSEIFFOCUS;
-		addBotsMenuInfo.bots[n].generic.id = ID_BOTNAME0 + n;
-		addBotsMenuInfo.bots[n].generic.x = 320 - 56;
-		addBotsMenuInfo.bots[n].generic.y = y;
+	for(n = 0, y = 120; n < count; n++, y += 20){
+		addBotsMenuInfo.bots[n].generic.type	= MTYPE_PTEXT;
+		addBotsMenuInfo.bots[n].generic.flags	= QMF_LEFT_JUSTIFY|
+							  QMF_PULSEIFFOCUS;
+		addBotsMenuInfo.bots[n].generic.id	= ID_BOTNAME0 + n;
+		addBotsMenuInfo.bots[n].generic.x	= 320 - 56;
+		addBotsMenuInfo.bots[n].generic.y	= y;
 		addBotsMenuInfo.bots[n].generic.callback =
 			UI_AddBotsMenu_BotEvent;
 		addBotsMenuInfo.bots[n].string	= addBotsMenuInfo.botnames[n];
@@ -346,46 +346,46 @@ UI_AddBotsMenu_Init(void)
 	}
 
 	y += 12;
-	addBotsMenuInfo.skill.generic.type = MTYPE_SPINCONTROL;
-	addBotsMenuInfo.skill.generic.flags = QMF_PULSEIFFOCUS|QMF_SMALLFONT;
+	addBotsMenuInfo.skill.generic.type	= MTYPE_SPINCONTROL;
+	addBotsMenuInfo.skill.generic.flags	= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
 	addBotsMenuInfo.skill.generic.x = 320;
 	addBotsMenuInfo.skill.generic.y = y;
 	addBotsMenuInfo.skill.generic.name = "Skill:";
 	addBotsMenuInfo.skill.generic.id	= ID_SKILL;
-	addBotsMenuInfo.skill.itemnames = skillNames;
-	addBotsMenuInfo.skill.curvalue	= Com_Clamp(
-		0, 4, (int) trap_Cvar_VariableValue("g_spSkill") - 1);
+	addBotsMenuInfo.skill.itemnames		= skillNames;
+	addBotsMenuInfo.skill.curvalue		= Com_Clamp(
+		0, 4, (int)trap_Cvar_VariableValue("g_spSkill") - 1);
 
 	y += SMALLCHAR_HEIGHT;
-	addBotsMenuInfo.team.generic.type = MTYPE_SPINCONTROL;
-	addBotsMenuInfo.team.generic.flags = QMF_PULSEIFFOCUS|QMF_SMALLFONT;
+	addBotsMenuInfo.team.generic.type	= MTYPE_SPINCONTROL;
+	addBotsMenuInfo.team.generic.flags	= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
 	addBotsMenuInfo.team.generic.x	= 320;
 	addBotsMenuInfo.team.generic.y	= y;
-	addBotsMenuInfo.team.generic.name = "Team: ";
-	addBotsMenuInfo.team.generic.id = ID_TEAM;
-	if( gametype >= GT_TEAM )
+	addBotsMenuInfo.team.generic.name	= "Team: ";
+	addBotsMenuInfo.team.generic.id		= ID_TEAM;
+	if(gametype >= GT_TEAM)
 		addBotsMenuInfo.team.itemnames = teamNames2;
 	else{
 		addBotsMenuInfo.team.itemnames = teamNames1;
 		addBotsMenuInfo.team.generic.flags = QMF_GRAYED;
 	}
 
-	addBotsMenuInfo.go.generic.type = MTYPE_BITMAP;
-	addBotsMenuInfo.go.generic.name = ART_FIGHT0;
-	addBotsMenuInfo.go.generic.flags = QMF_LEFT_JUSTIFY|
-					   QMF_PULSEIFFOCUS;
+	addBotsMenuInfo.go.generic.type		= MTYPE_BITMAP;
+	addBotsMenuInfo.go.generic.name		= ART_FIGHT0;
+	addBotsMenuInfo.go.generic.flags	= QMF_LEFT_JUSTIFY|
+						  QMF_PULSEIFFOCUS;
 	addBotsMenuInfo.go.generic.id = ID_GO;
 	addBotsMenuInfo.go.generic.callback = UI_AddBotsMenu_FightEvent;
-	addBotsMenuInfo.go.generic.x = 320+128-128;
-	addBotsMenuInfo.go.generic.y = 256+128-64;
-	addBotsMenuInfo.go.width = 128;
-	addBotsMenuInfo.go.height = 64;
-	addBotsMenuInfo.go.focuspic = ART_FIGHT1;
+	addBotsMenuInfo.go.generic.x	= 320+128-128;
+	addBotsMenuInfo.go.generic.y	= 256+128-64;
+	addBotsMenuInfo.go.width	= 128;
+	addBotsMenuInfo.go.height	= 64;
+	addBotsMenuInfo.go.focuspic	= ART_FIGHT1;
 
-	addBotsMenuInfo.back.generic.type = MTYPE_BITMAP;
-	addBotsMenuInfo.back.generic.name = ART_BACK0;
-	addBotsMenuInfo.back.generic.flags = QMF_LEFT_JUSTIFY|
-					     QMF_PULSEIFFOCUS;
+	addBotsMenuInfo.back.generic.type	= MTYPE_BITMAP;
+	addBotsMenuInfo.back.generic.name	= ART_BACK0;
+	addBotsMenuInfo.back.generic.flags	= QMF_LEFT_JUSTIFY|
+						  QMF_PULSEIFFOCUS;
 	addBotsMenuInfo.back.generic.id = ID_BACK;
 	addBotsMenuInfo.back.generic.callback = UI_AddBotsMenu_BackEvent;
 	addBotsMenuInfo.back.generic.x	= 320-128;
@@ -405,7 +405,7 @@ UI_AddBotsMenu_Init(void)
 
 	Menu_AddItem(&addBotsMenuInfo.menu, &addBotsMenuInfo.up);
 	Menu_AddItem(&addBotsMenuInfo.menu, &addBotsMenuInfo.down);
-	for( n = 0; n < count; n++ )
+	for(n = 0; n < count; n++)
 		Menu_AddItem(&addBotsMenuInfo.menu, &addBotsMenuInfo.bots[n]);
 	Menu_AddItem(&addBotsMenuInfo.menu, &addBotsMenuInfo.skill);
 	Menu_AddItem(&addBotsMenuInfo.menu, &addBotsMenuInfo.team);

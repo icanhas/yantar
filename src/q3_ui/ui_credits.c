@@ -100,7 +100,7 @@ UI_CreditMenu_Draw_ioq3(void)
 static sfxHandle_t
 UI_CreditMenu_Key(int key)
 {
-	if( key & K_CHAR_FLAG )
+	if(key & K_CHAR_FLAG)
 		return 0;
 
 	s_credits.frame++;
@@ -229,8 +229,8 @@ UI_CreditMenu(void)
 
 	memset(&s_credits, 0,sizeof(s_credits));
 
-	s_credits.menu.draw	= UI_CreditMenu_Draw;
-	s_credits.menu.key	= UI_CreditMenu_Key;
+	s_credits.menu.draw = UI_CreditMenu_Draw;
+	s_credits.menu.key = UI_CreditMenu_Key;
 	s_credits.menu.fullscreen = qtrue;
 	UI_PushMenu (&s_credits.menu);
 }

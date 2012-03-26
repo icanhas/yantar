@@ -117,9 +117,9 @@ typedef struct unz_file_info_s {
 	tm_unz	tmu_date;
 } unz_file_info;
 
-extern int ZEXPORT unzStringFileNameCompare OF ((const char* fileName1,
-						 const char* fileName2,
-						 int iCaseSensitivity));
+extern int ZEXPORT unzStringFileNameCompare OF((const char* fileName1,
+						const char* fileName2,
+						int iCaseSensitivity));
 /*
  * Compare two filename (fileName1,fileName2).
  * If iCaseSenisivity = 1, comparision is case sensitivity (like strcmp)
@@ -130,7 +130,7 @@ extern int ZEXPORT unzStringFileNameCompare OF ((const char* fileName1,
  */
 
 
-extern unzFile ZEXPORT unzOpen OF((const char * path));
+extern unzFile ZEXPORT unzOpen OF((const char*path));
 /*
  * Open a Zip file. path contain the full pathname (by example,
  *   on a Windows XP computer "c:\\zlib\\zlib113.zip" or on an Unix computer

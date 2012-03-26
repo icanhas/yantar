@@ -103,7 +103,7 @@ static const struct powerpc_opcode powerpc_opcodes[];
 struct powerpc_operand {
 	unsigned int	bitm;
 	int		shift;
-	unsigned long (*insert)
+	unsigned long(*insert)
 	(unsigned long, long, int, const char **);
 	unsigned long flags;
 };
@@ -141,8 +141,8 @@ static const struct powerpc_operand powerpc_operands[];
 ppc_instruction_t
 asm_instruction(powerpc_iname_t sname, const int argc, const long int *argv)
 {
-	const char *errmsg = NULL;
-	const char *name;
+	const char	*errmsg = NULL;
+	const char	*name;
 	unsigned long int ret;
 	const struct powerpc_opcode *opcode = NULL;
 	int argi, argj;
@@ -150,11 +150,11 @@ asm_instruction(powerpc_iname_t sname, const int argc, const long int *argv)
 	opcode	= &powerpc_opcodes[ sname ];
 	name	= opcode->name;
 
-	if( !opcode ){
+	if(!opcode){
 		printf("Can't find opcode %d\n", sname);
 		return ASM_ERROR_OPC;
 	}
-	if((opcode->flags & PPC_DEST_ARCH) != PPC_DEST_ARCH ){
+	if((opcode->flags & PPC_DEST_ARCH) != PPC_DEST_ARCH){
 		printf("opcode %s not defined for this arch\n", name);
 		return ASM_ERROR_OPC;
 	}
@@ -162,13 +162,13 @@ asm_instruction(powerpc_iname_t sname, const int argc, const long int *argv)
 	ret = opcode->opcode;
 
 	argi = argj = 0;
-	while( opcode->operands[ argi ] != 0 ){
+	while(opcode->operands[ argi ] != 0){
 		long int op = 0;
 		const struct powerpc_operand *operand =
 			&powerpc_operands[ opcode->operands[ argi ] ];
 
-		if( !(operand->flags & PPC_OPERAND_FAKE)){
-			if( argj >= argc ){
+		if(!(operand->flags & PPC_OPERAND_FAKE)){
+			if(argj >= argc){
 				printf("Not enough arguments for %s, got %d\n",
 					name,
 					argc);
@@ -178,34 +178,34 @@ asm_instruction(powerpc_iname_t sname, const int argc, const long int *argv)
 			op = argv[ argj++ ];
 		}
 
-		if( operand->insert ){
+		if(operand->insert){
 			errmsg = NULL;
 			ret = operand->insert(ret, op, PPC_DEST_ARCH, &errmsg);
-			if( errmsg )
+			if(errmsg)
 				printf(
 					"%s: error while inserting operand %d (0x%.2lx): %s\n",
 					name, argi, op, errmsg);
 		}else{
-			unsigned long int opu =
-				*(unsigned long int *) &op;
-			unsigned long int bitm = operand->bitm;
-			unsigned long int bitm_full = bitm |
-						      (bitm & 1 ? 0 : 0xf);
+			unsigned long int	opu =
+				*(unsigned long int*)&op;
+			unsigned long int	bitm = operand->bitm;
+			unsigned long int	bitm_full = bitm |
+							    (bitm & 1 ? 0 : 0xf);
 
-			if( operand->flags & PPC_OPERAND_SIGNED ){
+			if(operand->flags & PPC_OPERAND_SIGNED){
 				bitm_full >>= 1;
 
 				if((opu & ~bitm_full) != 0 &&
-				   (opu | bitm_full) != -1 )
+				   (opu | bitm_full) != -1)
 					printf(
 						"%s: signed operand nr.%d to wide. op: %.8lx, mask: %.8lx\n",
 						name, argi, opu, bitm);
-			}else  if((opu & ~bitm_full) != 0 )
+			}else if((opu & ~bitm_full) != 0)
 				printf(
 					"%s: unsigned operand nr.%d to wide. op: %.8lx, mask: %.8lx\n",
 					name, argi, opu, bitm);
-			if((bitm & 1) == 0 )
-				if( opu & 0xf & ~bitm )
+			if((bitm & 1) == 0)
+				if(opu & 0xf & ~bitm)
 					printf(
 						"%s: operand nr.%d not aligned correctly. op: %.8lx, mask: %.8lx\n",
 						name, argi, opu, bitm);
@@ -214,7 +214,7 @@ asm_instruction(powerpc_iname_t sname, const int argc, const long int *argv)
 		}
 		argi++;
 	}
-	if( argc > argj ){
+	if(argc > argj){
 		printf("Too many arguments for %s, got %d\n", name, argc);
 		return ASM_ERROR_OPC;
 	}
@@ -536,25 +536,25 @@ insert_rbs(unsigned long insn,
 /* Macros used to form opcodes.  */
 
 /* The main opcode.  */
-#define OP(x) ((((unsigned long) (x)) & 0x3f) << 26)
+#define OP(x) ((((unsigned long)(x)) & 0x3f) << 26)
 #define OP_MASK OP (0x3f)
 
 /* The main opcode combined with a trap code in the TO field of a D
  * form instruction.  Used for extended mnemonics for the trap
  * instructions.  */
-#define OPTO(x,to) (OP (x) | ((((unsigned long) (to)) & 0x1f) << 21))
+#define OPTO(x,to) (OP (x) | ((((unsigned long)(to)) & 0x1f) << 21))
 #define OPTO_MASK (OP_MASK | TO_MASK)
 
 /* The main opcode combined with a comparison size bit in the L field
  * of a D form or X form instruction.  Used for extended mnemonics for
  * the comparison instructions.  */
-#define OPL(x,l) (OP (x) | ((((unsigned long) (l)) & 1) << 21))
+#define OPL(x,l) (OP (x) | ((((unsigned long)(l)) & 1) << 21))
 #define OPL_MASK OPL (0x3f,1)
 
 /* An A form instruction.  */
 #define A(op, xop, rc) (OP (op) | \
-			((((unsigned long) (xop)) & \
-			  0x1f) << 1) | (((unsigned long) (rc)) & 1))
+			((((unsigned long)(xop)) & \
+			  0x1f) << 1) | (((unsigned long)(rc)) & 1))
 #define A_MASK A (0x3f, 0x1f, 1)
 
 /* An A_MASK with the FRB field fixed.  */
@@ -567,30 +567,30 @@ insert_rbs(unsigned long insn,
 #define AFRAFRC_MASK (A_MASK | FRA_MASK | FRC_MASK)
 
 /* An AFRAFRC_MASK, but with L bit clear.  */
-#define AFRALFRC_MASK (AFRAFRC_MASK & ~((unsigned long) 1 << 16))
+#define AFRALFRC_MASK (AFRAFRC_MASK & ~((unsigned long)1 << 16))
 
 /* A B form instruction.  */
-#define B(op, aa, lk) (OP (op) | ((((unsigned long) (aa)) & 1) << 1) | ((lk) & 1))
+#define B(op, aa, lk) (OP (op) | ((((unsigned long)(aa)) & 1) << 1) | ((lk) & 1))
 #define B_MASK B (0x3f, 1, 1)
 
 /* A B form instruction setting the BO field.  */
 #define BBO(op, bo, aa,	\
-	    lk) (B ((op), (aa), (lk)) | ((((unsigned long) (bo)) & 0x1f) << 21))
+	    lk) (B ((op), (aa), (lk)) | ((((unsigned long)(bo)) & 0x1f) << 21))
 #define BBO_MASK BBO (0x3f, 0x1f, 1, 1)
 
 /* A BBO_MASK with the y bit of the BO field removed.  This permits
-*  matching a conditional branch regardless of the setting of the y
-*  bit.  Similarly for the 'at' bits used for power4 branch hints.  */
-#define Y_MASK		(((unsigned long) 1) << 21)
-#define AT1_MASK	(((unsigned long) 3) << 21)
-#define AT2_MASK	(((unsigned long) 9) << 21)
+ *  matching a conditional branch regardless of the setting of the y
+ *  bit.  Similarly for the 'at' bits used for power4 branch hints.  */
+#define Y_MASK		(((unsigned long)1) << 21)
+#define AT1_MASK	(((unsigned long)3) << 21)
+#define AT2_MASK	(((unsigned long)9) << 21)
 #define BBOY_MASK	(BBO_MASK &~Y_MASK)
 #define BBOAT_MASK	(BBO_MASK &~AT1_MASK)
 
 /* A B form instruction setting the BO field and the condition bits of
  * the BI field.  */
 #define BBOCB(op, bo, cb, aa, lk) \
-	(BBO ((op), (bo), (aa), (lk)) | ((((unsigned long) (cb)) & 0x3) << 16))
+	(BBO ((op), (bo), (aa), (lk)) | ((((unsigned long)(cb)) & 0x3) << 16))
 #define BBOCB_MASK BBOCB (0x3f, 0x1f, 0x3, 1, 1)
 
 /* A BBOCB_MASK with the y bit of the BO field removed.  */
@@ -603,11 +603,11 @@ insert_rbs(unsigned long insn,
 #define BBOATBI_MASK	(BBOAT2CB_MASK | BI_MASK)
 
 /* An Context form instruction.  */
-#define CTX(op, xop) (OP (op) | (((unsigned long) (xop)) & 0x7))
+#define CTX(op, xop) (OP (op) | (((unsigned long)(xop)) & 0x7))
 #define CTX_MASK CTX(0x3f, 0x7)
 
 /* An User Context form instruction.  */
-#define UCTX(op, xop) (OP (op) | (((unsigned long) (xop)) & 0x1f))
+#define UCTX(op, xop) (OP (op) | (((unsigned long)(xop)) & 0x1f))
 #define UCTX_MASK UCTX(0x3f, 0x1f)
 
 /* The main opcode mask with the RA field clear.  */
@@ -622,7 +622,7 @@ insert_rbs(unsigned long insn,
 #define DE_MASK DEO (0x3e, 0xf)
 
 /* An EVSEL form instruction.  */
-#define EVSEL(op, xop) (OP (op) | (((unsigned long) (xop)) & 0xff) << 3)
+#define EVSEL(op, xop) (OP (op) | (((unsigned long)(xop)) & 0xff) << 3)
 #define EVSEL_MASK EVSEL(0x3f, 0xff)
 
 /* An M form instruction.  */
@@ -630,7 +630,7 @@ insert_rbs(unsigned long insn,
 #define M_MASK M (0x3f, 1)
 
 /* An M form instruction with the ME field specified.  */
-#define MME(op, me, rc) (M ((op), (rc)) | ((((unsigned long) (me)) & 0x1f) << 1))
+#define MME(op, me, rc) (M ((op), (rc)) | ((((unsigned long)(me)) & 0x1f) << 1))
 
 /* An M_MASK with the MB and ME fields fixed.  */
 #define MMBME_MASK (M_MASK | MB_MASK | ME_MASK)
@@ -640,7 +640,7 @@ insert_rbs(unsigned long insn,
 
 /* An MD form instruction.  */
 #define MD(op, xop, rc) (OP (op) | \
-			 ((((unsigned long) (xop)) & 0x7) << 2) | ((rc) & 1))
+			 ((((unsigned long)(xop)) & 0x7) << 2) | ((rc) & 1))
 #define MD_MASK MD (0x3f, 0x7, 1)
 
 /* An MD_MASK with the MB field fixed.  */
@@ -651,7 +651,7 @@ insert_rbs(unsigned long insn,
 
 /* An MDS form instruction.  */
 #define MDS(op, xop, rc) (OP (op) | \
-			  ((((unsigned long) (xop)) & 0xf) << 1) | ((rc) & 1))
+			  ((((unsigned long)(xop)) & 0xf) << 1) | ((rc) & 1))
 #define MDS_MASK MDS (0x3f, 0xf, 1)
 
 /* An MDS_MASK with the MB field fixed.  */
@@ -659,35 +659,35 @@ insert_rbs(unsigned long insn,
 
 /* An SC form instruction.  */
 #define SC(op, sa, lk) (OP (op) | \
-			((((unsigned long) (sa)) & 1) << 1) | ((lk) & 1))
+			((((unsigned long)(sa)) & 1) << 1) | ((lk) & 1))
 #define SC_MASK (OP_MASK | \
-		 (((unsigned long) 0x3ff) << \
-		  16) | (((unsigned long) 1) << 1) | 1)
+		 (((unsigned long)0x3ff) << \
+		  16) | (((unsigned long)1) << 1) | 1)
 
 /* An VX form instruction.  */
-#define VX(op, xop) (OP (op) | (((unsigned long) (xop)) & 0x7ff))
+#define VX(op, xop) (OP (op) | (((unsigned long)(xop)) & 0x7ff))
 
 /* The mask for an VX form instruction.  */
 #define VX_MASK VX(0x3f, 0x7ff)
 
 /* An VA form instruction.  */
-#define VXA(op, xop) (OP (op) | (((unsigned long) (xop)) & 0x03f))
+#define VXA(op, xop) (OP (op) | (((unsigned long)(xop)) & 0x03f))
 
 /* The mask for an VA form instruction.  */
 #define VXA_MASK VXA(0x3f, 0x3f)
 
 /* An VXR form instruction.  */
 #define VXR(op, xop, rc) (OP (op) | \
-			  (((rc) & 1) << 10) | (((unsigned long) (xop)) & 0x3ff))
+			  (((rc) & 1) << 10) | (((unsigned long)(xop)) & 0x3ff))
 
 /* The mask for a VXR form instruction.  */
 #define VXR_MASK VXR(0x3f, 0x3ff, 1)
 
 /* An X form instruction.  */
-#define X(op, xop) (OP (op) | ((((unsigned long) (xop)) & 0x3ff) << 1))
+#define X(op, xop) (OP (op) | ((((unsigned long)(xop)) & 0x3ff) << 1))
 
 /* A Z form instruction.  */
-#define Z(op, xop) (OP (op) | ((((unsigned long) (xop)) & 0x1ff) << 1))
+#define Z(op, xop) (OP (op) | ((((unsigned long)(xop)) & 0x1ff) << 1))
 
 /* An X form instruction with the RC bit specified.  */
 #define XRC(op, xop, rc) (X ((op), (xop)) | ((rc) & 1))
@@ -706,7 +706,7 @@ insert_rbs(unsigned long insn,
 #define XRA_MASK (X_MASK | RA_MASK)
 
 /* An XRA_MASK with the W field clear.  */
-#define XWRA_MASK (XRA_MASK & ~((unsigned long) 1 << 16))
+#define XWRA_MASK (XRA_MASK & ~((unsigned long)1 << 16))
 
 /* An X_MASK with the RB field fixed.  */
 #define XRB_MASK (X_MASK | RB_MASK)
@@ -715,65 +715,65 @@ insert_rbs(unsigned long insn,
 #define XRT_MASK (X_MASK | RT_MASK)
 
 /* An XRT_MASK mask with the L bits clear.  */
-#define XLRT_MASK (XRT_MASK & ~((unsigned long) 0x3 << 21))
+#define XLRT_MASK (XRT_MASK & ~((unsigned long)0x3 << 21))
 
 /* An X_MASK with the RA and RB fields fixed.  */
 #define XRARB_MASK (X_MASK | RA_MASK | RB_MASK)
 
 /* An XRARB_MASK, but with the L bit clear.  */
-#define XRLARB_MASK (XRARB_MASK & ~((unsigned long) 1 << 16))
+#define XRLARB_MASK (XRARB_MASK & ~((unsigned long)1 << 16))
 
 /* An X_MASK with the RT and RA fields fixed.  */
 #define XRTRA_MASK (X_MASK | RT_MASK | RA_MASK)
 
 /* An XRTRA_MASK, but with L bit clear.  */
-#define XRTLRA_MASK (XRTRA_MASK & ~((unsigned long) 1 << 21))
+#define XRTLRA_MASK (XRTRA_MASK & ~((unsigned long)1 << 21))
 
 /* An X form instruction with the L bit specified.  */
-#define XOPL(op, xop, l) (X ((op), (xop)) | ((((unsigned long) (l)) & 1) << 21))
+#define XOPL(op, xop, l) (X ((op), (xop)) | ((((unsigned long)(l)) & 1) << 21))
 
 /* The mask for an X form comparison instruction.  */
-#define XCMP_MASK (X_MASK | (((unsigned long) 1) << 22))
+#define XCMP_MASK (X_MASK | (((unsigned long)1) << 22))
 
 /* The mask for an X form comparison instruction with the L field
  * fixed.  */
-#define XCMPL_MASK (XCMP_MASK | (((unsigned long) 1) << 21))
+#define XCMPL_MASK (XCMP_MASK | (((unsigned long)1) << 21))
 
 /* An X form trap instruction with the TO field specified.  */
 #define XTO(op, xop, \
-	    to) (X ((op), (xop)) | ((((unsigned long) (to)) & 0x1f) << 21))
+	    to) (X ((op), (xop)) | ((((unsigned long)(to)) & 0x1f) << 21))
 #define XTO_MASK (X_MASK | TO_MASK)
 
 /* An X form tlb instruction with the SH field specified.  */
 #define XTLB(op, xop, \
-	     sh) (X ((op), (xop)) | ((((unsigned long) (sh)) & 0x1f) << 11))
+	     sh) (X ((op), (xop)) | ((((unsigned long)(sh)) & 0x1f) << 11))
 #define XTLB_MASK (X_MASK | SH_MASK)
 
 /* An X form sync instruction.  */
-#define XSYNC(op, xop, l) (X ((op), (xop)) | ((((unsigned long) (l)) & 3) << 21))
+#define XSYNC(op, xop, l) (X ((op), (xop)) | ((((unsigned long)(l)) & 3) << 21))
 
 /* An X form sync instruction with everything filled in except the LS field.  */
 #define XSYNC_MASK (0xff9fffff)
 
 /* An X_MASK, but with the EH bit clear.  */
-#define XEH_MASK (X_MASK & ~((unsigned long ) 1))
+#define XEH_MASK (X_MASK & ~((unsigned long )1))
 
 /* An X form AltiVec dss instruction.  */
-#define XDSS(op, xop, a) (X ((op), (xop)) | ((((unsigned long) (a)) & 1) << 25))
+#define XDSS(op, xop, a) (X ((op), (xop)) | ((((unsigned long)(a)) & 1) << 25))
 #define XDSS_MASK XDSS(0x3f, 0x3ff, 1)
 
 /* An XFL form instruction.  */
 #define XFL(op, xop, rc) (OP (op) | \
-			  ((((unsigned long) (xop)) & \
-			    0x3ff) << 1) | (((unsigned long) (rc)) & 1))
+			  ((((unsigned long)(xop)) & \
+			    0x3ff) << 1) | (((unsigned long)(rc)) & 1))
 #define XFL_MASK XFL (0x3f, 0x3ff, 1)
 
 /* An X form isel instruction.  */
-#define XISEL(op, xop) (OP (op) | ((((unsigned long) (xop)) & 0x1f) << 1))
+#define XISEL(op, xop) (OP (op) | ((((unsigned long)(xop)) & 0x1f) << 1))
 #define XISEL_MASK XISEL(0x3f, 0x1f)
 
 /* An XL form instruction with the LK field set to 0.  */
-#define XL(op, xop) (OP (op) | ((((unsigned long) (xop)) & 0x3ff) << 1))
+#define XL(op, xop) (OP (op) | ((((unsigned long)(xop)) & 0x3ff) << 1))
 
 /* An XL form instruction which uses the LK field.  */
 #define XLLK(op, xop, lk) (XL ((op), (xop)) | ((lk) & 1))
@@ -783,19 +783,19 @@ insert_rbs(unsigned long insn,
 
 /* An XL form instruction which explicitly sets the BO field.  */
 #define XLO(op, bo, xop, lk) \
-	(XLLK ((op), (xop), (lk)) | ((((unsigned long) (bo)) & 0x1f) << 21))
+	(XLLK ((op), (xop), (lk)) | ((((unsigned long)(bo)) & 0x1f) << 21))
 #define XLO_MASK (XL_MASK | BO_MASK)
 
 /* An XL form instruction which explicitly sets the y bit of the BO
  * field.  */
 #define XLYLK(op, xop, y, \
-	      lk) (XLLK ((op), (xop), (lk)) | ((((unsigned long) (y)) & 1) << 21))
+	      lk) (XLLK ((op), (xop), (lk)) | ((((unsigned long)(y)) & 1) << 21))
 #define XLYLK_MASK (XL_MASK | Y_MASK)
 
 /* An XL form instruction which sets the BO field and the condition
  * bits of the BI field.  */
 #define XLOCB(op, bo, cb, xop, lk) \
-	(XLO ((op), (bo), (xop), (lk)) | ((((unsigned long) (cb)) & 3) << 16))
+	(XLO ((op), (bo), (xop), (lk)) | ((((unsigned long)(cb)) & 3) << 16))
 #define XLOCB_MASK	XLOCB (0x3f, 0x1f, 0x3, 0x3ff, 1)
 
 #define BB_MASK		(0x1f << 11)
@@ -816,10 +816,10 @@ insert_rbs(unsigned long insn,
 /* An XO form instruction.  */
 #define XO(op, xop, oe, rc) \
 	(OP (op) | \
-	 ((((unsigned long) (xop)) & \
+	 ((((unsigned long)(xop)) & \
 	   0x1ff) << \
 	  1) | \
-	 ((((unsigned long) (oe)) & 1) << 10) | (((unsigned long) (rc)) & 1))
+	 ((((unsigned long)(oe)) & 1) << 10) | (((unsigned long)(rc)) & 1))
 #define XO_MASK XO (0x3f, 0x1ff, 1, 1)
 
 /* An XO_MASK with the RB field fixed.  */
@@ -827,8 +827,8 @@ insert_rbs(unsigned long insn,
 
 /* An XS form instruction.  */
 #define XS(op, xop, rc) (OP (op) | \
-			 ((((unsigned long) (xop)) & \
-			   0x1ff) << 2) | (((unsigned long) (rc)) & 1))
+			 ((((unsigned long)(xop)) & \
+			   0x1ff) << 2) | (((unsigned long)(rc)) & 1))
 #define XS_MASK XS (0x3f, 0x1ff, 1)
 
 /* A mask for the FXM version of an XFX form instruction.  */
@@ -836,16 +836,16 @@ insert_rbs(unsigned long insn,
 
 /* An XFX form instruction with the FXM field filled in.  */
 #define XFXM(op, xop, fxm, p4) \
-	(X ((op), (xop)) | ((((unsigned long) (fxm)) & 0xff) << 12) \
-	 | ((unsigned long) (p4) << 20))
+	(X ((op), (xop)) | ((((unsigned long)(fxm)) & 0xff) << 12) \
+	 | ((unsigned long)(p4) << 20))
 
 #define SPR_MASK (0x3ff << 11)
 /* An XFX form instruction with the SPR field filled in.  */
 #define XSPR(op, xop, spr) \
 	(X ((op), \
 		 (xop)) | \
-	 ((((unsigned long) (spr)) & \
-	   0x1f) << 16) | ((((unsigned long) (spr)) & 0x3e0) << 6))
+	 ((((unsigned long)(spr)) & \
+	   0x1f) << 16) | ((((unsigned long)(spr)) & 0x3e0) << 6))
 #define XSPR_MASK (X_MASK | SPR_MASK)
 
 /* An XFX form instruction with the SPR field filled in except for the
@@ -860,7 +860,7 @@ insert_rbs(unsigned long insn,
 #define XE_MASK (0xffff7fff)
 
 /* An X form user context instruction.  */
-#define XUC(op, xop) (OP (op) | (((unsigned long) (xop)) & 0x1f))
+#define XUC(op, xop) (OP (op) | (((unsigned long)(xop)) & 0x1f))
 #define XUC_MASK XUC(0x3f, 0x1f)
 
 /* The BO encodings used in extended conditional branch mnemonics.  */

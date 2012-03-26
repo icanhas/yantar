@@ -54,8 +54,8 @@ Sys_DefaultHomePath(void)
 {
 	char *p;
 
-	if( !*homePath ){
-		if((p = getenv("HOME")) != NULL ){
+	if(!*homePath){
+		if((p = getenv("HOME")) != NULL){
 			Com_sprintf(homePath, sizeof(homePath), "%s%c", p,
 				PATH_SEP);
 #ifdef MACOS_X
@@ -93,7 +93,7 @@ Sys_TempPath(void)
 {
 	const char *TMPDIR = getenv("TMPDIR");
 
-	if( TMPDIR == NULL || TMPDIR[ 0 ] == '\0' )
+	if(TMPDIR == NULL || TMPDIR[ 0 ] == '\0')
 		return "/tmp";
 	else
 		return TMPDIR;
@@ -143,10 +143,10 @@ Sys_RandomBytes(byte *string, int len)
 	FILE *fp;
 
 	fp = fopen("/dev/urandom", "r");
-	if( !fp )
+	if(!fp)
 		return qfalse;
 
-	if( !fread(string, sizeof(byte), len, fp)){
+	if(!fread(string, sizeof(byte), len, fp)){
 		fclose(fp);
 		return qfalse;
 	}
@@ -165,7 +165,7 @@ Sys_GetCurrentUser(void)
 {
 	struct passwd *p;
 
-	if((p = getpwuid(getuid())) == NULL )
+	if((p = getpwuid(getuid())) == NULL)
 		return "player";
 	return p->pw_name;
 }
@@ -228,7 +228,7 @@ Sys_Mkdir(const char *path)
 {
 	int result = mkdir(path, 0750);
 
-	if( result != 0 )
+	if(result != 0)
 		return errno == EEXIST;
 
 	return qtrue;
@@ -248,15 +248,15 @@ Sys_Mkfifo(const char *ospath)
 	struct  stat buf;
 
 	/* if file already exists AND is a pipefile, remove it */
-	if( !stat(ospath, &buf) && S_ISFIFO(buf.st_mode))
+	if(!stat(ospath, &buf) && S_ISFIFO(buf.st_mode))
 		FS_Remove(ospath);
 
 	result = mkfifo(ospath, 0600);
-	if( result != 0 )
+	if(result != 0)
 		return NULL;
 
 	fifo = fopen(ospath, "w+");
-	if( fifo ){
+	if(fifo){
 		fn = fileno(fifo);
 		fcntl(fn, F_SETFL, O_NONBLOCK);
 	}
@@ -275,7 +275,7 @@ Sys_Cwd(void)
 	static char cwd[MAX_OSPATH];
 
 	char *result = getcwd(cwd, sizeof(cwd) - 1);
-	if( result != cwd )
+	if(result != cwd)
 		return NULL;
 
 	cwd[MAX_OSPATH-1] = 0;
@@ -303,13 +303,13 @@ Sys_ListFilteredFiles(const char *basedir, char *subdirs, char *filter,
 		      char **list,
 		      int *numfiles)
 {
-	char search[MAX_OSPATH], newsubdirs[MAX_OSPATH];
-	char filename[MAX_OSPATH];
-	DIR *fdir;
+	char	search[MAX_OSPATH], newsubdirs[MAX_OSPATH];
+	char	filename[MAX_OSPATH];
+	DIR	*fdir;
 	struct dirent	*d;
 	struct stat	st;
 
-	if( *numfiles >= MAX_FOUND_FILES - 1 )
+	if(*numfiles >= MAX_FOUND_FILES - 1)
 		return;
 
 	if(strlen(subdirs))
@@ -342,7 +342,7 @@ Sys_ListFilteredFiles(const char *basedir, char *subdirs, char *filter,
 					filter, list,
 					numfiles);
 			}
-		if( *numfiles >= MAX_FOUND_FILES - 1 )
+		if(*numfiles >= MAX_FOUND_FILES - 1)
 			break;
 		Com_sprintf(filename, sizeof(filename), "%s/%s", subdirs,
 			d->d_name);
@@ -370,8 +370,8 @@ Sys_ListFiles(const char *directory, const char *extension, char *filter,
 	qboolean dironly = wantsubs;
 	char	search[MAX_OSPATH];
 	int	nfiles;
-	char **listCopy;
-	char	*list[MAX_FOUND_FILES];
+	char	**listCopy;
+	char    *list[MAX_FOUND_FILES];
 	int	i;
 	struct stat st;
 
@@ -389,19 +389,19 @@ Sys_ListFiles(const char *directory, const char *extension, char *filter,
 			return NULL;
 
 		listCopy = Z_Malloc((nfiles + 1) * sizeof(*listCopy));
-		for( i = 0; i < nfiles; i++ )
+		for(i = 0; i < nfiles; i++)
 			listCopy[i] = list[i];
 		listCopy[i] = NULL;
 
 		return listCopy;
 	}
 
-	if( !extension)
+	if(!extension)
 		extension = "";
 
-	if( extension[0] == '/' && extension[1] == 0 ){
-		extension	= "";
-		dironly		= qtrue;
+	if(extension[0] == '/' && extension[1] == 0){
+		extension = "";
+		dironly = qtrue;
 	}
 
 	extLen = strlen(extension);
@@ -424,13 +424,13 @@ Sys_ListFiles(const char *directory, const char *extension, char *filter,
 			continue;
 
 		if(*extension)
-			if( strlen(d->d_name) < extLen ||
-			    Q_stricmp(
-				    d->d_name + strlen(d->d_name) - extLen,
-				    extension))
+			if(strlen(d->d_name) < extLen ||
+			   Q_stricmp(
+				   d->d_name + strlen(d->d_name) - extLen,
+				   extension))
 				continue;	/* didn't match */
 
-		if( nfiles == MAX_FOUND_FILES - 1 )
+		if(nfiles == MAX_FOUND_FILES - 1)
 			break;
 		list[ nfiles ] = CopyString(d->d_name);
 		nfiles++;
@@ -443,11 +443,11 @@ Sys_ListFiles(const char *directory, const char *extension, char *filter,
 	/* return a copy of the list */
 	*numfiles = nfiles;
 
-	if( !nfiles )
+	if(!nfiles)
 		return NULL;
 
 	listCopy = Z_Malloc((nfiles + 1) * sizeof(*listCopy));
-	for( i = 0; i < nfiles; i++ )
+	for(i = 0; i < nfiles; i++)
 		listCopy[i] = list[i];
 	listCopy[i] = NULL;
 
@@ -464,10 +464,10 @@ Sys_FreeFileList(char **list)
 {
 	int i;
 
-	if( !list )
+	if(!list)
 		return;
 
-	for( i = 0; list[i]; i++ )
+	for(i = 0; list[i]; i++)
 		Z_Free(list[i]);
 
 	Z_Free(list);
@@ -483,15 +483,15 @@ Sys_FreeFileList(char **list)
 void
 Sys_Sleep(int msec)
 {
-	if( msec == 0 )
+	if(msec == 0)
 		return;
 
-	if( stdinIsATTY ){
+	if(stdinIsATTY){
 		fd_set fdset;
 
 		FD_ZERO(&fdset);
 		FD_SET(STDIN_FILENO, &fdset);
-		if( msec < 0 )
+		if(msec < 0)
 			select(STDIN_FILENO + 1, &fdset, NULL, NULL, NULL);
 		else{
 			struct timeval timeout;
@@ -502,7 +502,7 @@ Sys_Sleep(int msec)
 		}
 	}else{
 		/* With nothing to select() on, we can't wait indefinitely */
-		if( msec < 0 )
+		if(msec < 0)
 			msec = 10;
 
 		usleep(msec * 1000);
@@ -522,9 +522,9 @@ Sys_ErrorDialog(const char *error)
 	char	buffer[ 1024 ];
 	unsigned int size;
 	int	f = -1;
-	const char	*homepath	= Cvar_VariableString("fs_homepath");
-	const char	*gamedir	= Cvar_VariableString("fs_game");
-	const char	*fileName	= "crashlog.txt";
+	const char *homepath = Cvar_VariableString("fs_homepath");
+	const char *gamedir = Cvar_VariableString("fs_game");
+	const char *fileName = "crashlog.txt";
 	char *ospath = FS_BuildOSPath(homepath, gamedir, fileName);
 
 	Sys_Print(va("%s\n", error));
@@ -535,7 +535,7 @@ Sys_ErrorDialog(const char *error)
 #endif
 
 	/* Make sure the write path for the crashlog exists... */
-	if( FS_CreatePath(ospath)){
+	if(FS_CreatePath(ospath)){
 		Com_Printf("ERROR: couldn't create path '%s' for crash log.\n",
 			ospath);
 		return;
@@ -545,14 +545,14 @@ Sys_ErrorDialog(const char *error)
 	 * which will come through here, so we don't want to recurse forever by
 	 * calling FS_FOpenFileWrite()...use the Unix system APIs instead. */
 	f = open(ospath, O_CREAT | O_TRUNC | O_WRONLY, 0640);
-	if( f == -1 ){
+	if(f == -1){
 		Com_Printf("ERROR: couldn't open %s\n", fileName);
 		return;
 	}
 
 	/* We're crashing, so we don't care much if write() or close() fails. */
-	while((size = CON_LogRead(buffer, sizeof(buffer))) > 0 )
-		if( write(f, buffer, size) != size ){
+	while((size = CON_LogRead(buffer, sizeof(buffer))) > 0)
+		if(write(f, buffer, size) != size){
 			Com_Printf("ERROR: couldn't fully write to %s\n",
 				fileName);
 			break;
@@ -562,9 +562,9 @@ Sys_ErrorDialog(const char *error)
 }
 
 #ifndef MACOS_X
-static char	execBuffer[ 1024 ];
+static char execBuffer[ 1024 ];
 static char	*execBufferPointer;
-static char	*execArgv[ 16 ];
+static char     *execArgv[ 16 ];
 static int	execArgc;
 
 /*
@@ -588,10 +588,10 @@ Sys_ClearExecBuffer(void)
 static void
 Sys_AppendToExecBuffer(const char *text)
 {
-	size_t	size	= sizeof(execBuffer) - (execBufferPointer - execBuffer);
-	int	length	= strlen(text) + 1;
+	size_t	size = sizeof(execBuffer) - (execBufferPointer - execBuffer);
+	int	length = strlen(text) + 1;
 
-	if( length > size || execArgc >= ARRAY_LEN(execArgv))
+	if(length > size || execArgc >= ARRAY_LEN(execArgv))
 		return;
 
 	Q_strncpyz(execBufferPointer, text, size);
@@ -610,10 +610,10 @@ Sys_Exec(void)
 {
 	pid_t pid = fork( );
 
-	if( pid < 0 )
+	if(pid < 0)
 		return -1;
 
-	if( pid ){
+	if(pid){
 		/* Parent */
 		int exitCode;
 
@@ -642,7 +642,7 @@ Sys_ZenityCommand(dialogType_t type, const char *message, const char *title)
 	Sys_ClearExecBuffer( );
 	Sys_AppendToExecBuffer("zenity");
 
-	switch( type ){
+	switch(type){
 	default:
 	case DT_INFO:      Sys_AppendToExecBuffer("--info"); break;
 	case DT_WARNING:   Sys_AppendToExecBuffer("--warning"); break;
@@ -675,7 +675,7 @@ Sys_KdialogCommand(dialogType_t type, const char *message, const char *title)
 	Sys_ClearExecBuffer( );
 	Sys_AppendToExecBuffer("kdialog");
 
-	switch( type ){
+	switch(type){
 	default:
 	case DT_INFO:      Sys_AppendToExecBuffer("--msgbox"); break;
 	case DT_WARNING:   Sys_AppendToExecBuffer("--sorry"); break;
@@ -701,7 +701,7 @@ Sys_XmessageCommand(dialogType_t type, const char *message, const char *title)
 	Sys_AppendToExecBuffer("xmessage");
 	Sys_AppendToExecBuffer("-buttons");
 
-	switch( type ){
+	switch(type){
 	default:           Sys_AppendToExecBuffer("OK:0"); break;
 	case DT_YES_NO:    Sys_AppendToExecBuffer("Yes:0,No:1"); break;
 	case DT_OK_CANCEL: Sys_AppendToExecBuffer("OK:0,Cancel:1"); break;
@@ -736,32 +736,32 @@ Sys_Dialog(dialogType_t type, const char *message, const char *title)
 	dialogCommandBuilder_t	commands[ NUM_DIALOG_PROGRAMS ] = { NULL };
 	dialogCommandType_t	preferredCommandType = NONE;
 
-	commands[ ZENITY ]	= &Sys_ZenityCommand;
-	commands[ KDIALOG ]	= &Sys_KdialogCommand;
-	commands[ XMESSAGE ]	= &Sys_XmessageCommand;
+	commands[ ZENITY ] = &Sys_ZenityCommand;
+	commands[ KDIALOG ] = &Sys_KdialogCommand;
+	commands[ XMESSAGE ] = &Sys_XmessageCommand;
 
 	/* This may not be the best way */
-	if( !Q_stricmp(session, "gnome"))
+	if(!Q_stricmp(session, "gnome"))
 		preferredCommandType = ZENITY;
-	else if( !Q_stricmp(session, "kde"))
+	else if(!Q_stricmp(session, "kde"))
 		preferredCommandType = KDIALOG;
 
-	while( 1 ){
+	while(1){
 		int i;
 
-		for( i = NONE + 1; i < NUM_DIALOG_PROGRAMS; i++ ){
-			if( preferredCommandType != NONE &&
-			    preferredCommandType != i )
+		for(i = NONE + 1; i < NUM_DIALOG_PROGRAMS; i++){
+			if(preferredCommandType != NONE &&
+			   preferredCommandType != i)
 				continue;
 
-			if( !tried[ i ] ){
+			if(!tried[ i ]){
 				int exitCode;
 
 				commands[ i ](type, message, title);
 				exitCode = Sys_Exec( );
 
-				if( exitCode >= 0 ){
-					switch( type ){
+				if(exitCode >= 0){
+					switch(type){
 					case DT_YES_NO:    return exitCode ?
 						       DR_NO : DR_YES;
 					case DT_OK_CANCEL: return exitCode ?
@@ -773,15 +773,15 @@ Sys_Dialog(dialogType_t type, const char *message, const char *title)
 				tried[ i ] = qtrue;
 
 				/* The preference failed, so start again in order */
-				if( preferredCommandType != NONE ){
+				if(preferredCommandType != NONE){
 					preferredCommandType = NONE;
 					break;
 				}
 			}
 		}
 
-		for( i = NONE + 1; i < NUM_DIALOG_PROGRAMS; i++ )
-			if( !tried[ i ] )
+		for(i = NONE + 1; i < NUM_DIALOG_PROGRAMS; i++)
+			if(!tried[ i ])
 				continue;
 
 		break;

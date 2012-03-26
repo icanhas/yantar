@@ -45,8 +45,8 @@ libvar_t *libvarlist = NULL;
 float
 LibVarStringValue(char *string)
 {
-	int dotfound = 0;
-	float value = 0;
+	int dotfound	= 0;
+	float value	= 0;
 
 	while(*string){
 		if(*string < '0' || *string > '9'){
@@ -55,17 +55,16 @@ LibVarStringValue(char *string)
 			else{
 				dotfound = 10;
 				string++;
-			}	
-		}		
+			}
+		}
 		if(dotfound){
 			value = value +
-				(float) (*string - '0') / (float) dotfound;
+				(float)(*string - '0') / (float)dotfound;
 			dotfound *= 10;
-		}	
-		else
-			value = value * 10.0 + (float) (*string - '0');
+		}else
+			value = value * 10.0 + (float)(*string - '0');
 		string++;
-	}	
+	}
 	return value;
 }	/* end of the function LibVarStringValue */
 /* ===========================================================================
@@ -79,9 +78,9 @@ LibVarAlloc(char *var_name)
 {
 	libvar_t *v;
 
-	v = (libvar_t *) GetMemory(sizeof(libvar_t));
+	v = (libvar_t*)GetMemory(sizeof(libvar_t));
 	Com_Memset(v, 0, sizeof(libvar_t));
-	v->name = (char *) GetMemory(strlen(var_name)+1);
+	v->name = (char*)GetMemory(strlen(var_name)+1);
 	strcpy(v->name, var_name);
 	/* add the variable in the list */
 	v->next = libvarlist;
@@ -115,7 +114,7 @@ LibVarDeAllocAll(void)
 	for(v = libvarlist; v; v = libvarlist){
 		libvarlist = libvarlist->next;
 		LibVarDeAlloc(v);
-	}	
+	}
 	libvarlist = NULL;
 }	/* end of the function LibVarDeAllocAll */
 /* ===========================================================================
@@ -183,7 +182,7 @@ LibVar(char *var_name, char *value)
 	/* create new variable */
 	v = LibVarAlloc(var_name);
 	/* variable string */
-	v->string = (char *) GetMemory(strlen(value) + 1);
+	v->string = (char*)GetMemory(strlen(value) + 1);
 	strcpy(v->string, value);
 	/* the value */
 	v->value = LibVarStringValue(v->string);
@@ -237,7 +236,7 @@ LibVarSet(char *var_name, char *value)
 	else
 		v = LibVarAlloc(var_name);
 	/* variable string */
-	v->string = (char *) GetMemory(strlen(value) + 1);
+	v->string = (char*)GetMemory(strlen(value) + 1);
 	strcpy(v->string, value);
 	/* the value */
 	v->value = LibVarStringValue(v->string);

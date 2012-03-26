@@ -24,19 +24,18 @@
 #include "q_shared.h"
 #include "qcommon.h"
 
-enum
-{
-	MAX_CVARS	= 1024,
-	HASH_SIZE	= 256
+enum {
+	MAX_CVARS = 1024,
+	HASH_SIZE = 256
 };
 
-int	cvar_modifiedFlags;
+int cvar_modifiedFlags;
 
 static cvar_t	*cvar_vars = nil;
-static cvar_t	*cvar_cheats;
+static cvar_t   *cvar_cheats;
 static cvar_t	cvar_indexes[MAX_CVARS];
 static int	cvar_numIndexes;
-static cvar_t	*hashTable[HASH_SIZE];
+static cvar_t *hashTable[HASH_SIZE];
 
 static qboolean
 Cvar_ValidateString(const char *s)
@@ -143,9 +142,9 @@ Cvar_CommandCompletion(void (*callback)(const char *s))
 static const char *
 Cvar_Validate(cvar_t *var, const char *value, qboolean warn)
 {
-	static char s[MAX_CVAR_VALUE_STRING];
+	static char	s[MAX_CVAR_VALUE_STRING];
 	float valuef;
-	qboolean changed = qfalse;
+	qboolean	changed = qfalse;
 
 	if(!var->validate)
 		return value;
@@ -159,7 +158,7 @@ Cvar_Validate(cvar_t *var, const char *value, qboolean warn)
 			if(!Q_isintegral(valuef)){
 				if(warn)
 					Com_Printf("WARNING: cvar '%s' must"
-						" be integral", var->name);
+						   " be integral", var->name);
 
 				valuef	= (int)valuef;
 				changed = qtrue;
@@ -232,7 +231,7 @@ setNewVal(cvar_t *var, const char *var_name, const char *var_value, int flags)
 	var_value = Cvar_Validate(var, var_value, qfalse);
 	/*
 	 * if the C code is now specifying a variable that the user already
-	 * set a value for, take the new value as the reset value 
+	 * set a value for, take the new value as the reset value
 	 */
 	if(var->flags & CVAR_USER_CREATED){
 		var->flags &= ~CVAR_USER_CREATED;
@@ -242,7 +241,7 @@ setNewVal(cvar_t *var, const char *var_name, const char *var_value, int flags)
 		if(flags & CVAR_ROM){
 			/*
 			 * this variable was set by the user,
-			 * so force it to value given by the engine. 
+			 * so force it to value given by the engine.
 			 */
 			if(var->latchedString != '\0')
 				Z_Free(var->latchedString);
@@ -273,13 +272,13 @@ setNewVal(cvar_t *var, const char *var_name, const char *var_value, int flags)
 		var->resetString = CopyString(var_value);
 	}else if(var_value[0] && strcmp(var->resetString, var_value))
 		Com_DPrintf("Warning: cvar \"%s\" given initial values: \"%s\""
-			" and \"%s\"\n", var_name, var->resetString, var_value);
+			    " and \"%s\"\n", var_name, var->resetString, var_value);
 	/* if we have a latched string, take that value now */
 	if(var->latchedString != nil){
 		char *s;
 
 		s = var->latchedString;
-		var->latchedString = nil; /* otherwise cvar_set2 would free it */
+		var->latchedString = nil;	/* otherwise cvar_set2 would free it */
 		Cvar_Set2(var_name, s, qtrue);
 		Z_Free(s);
 	}
@@ -289,7 +288,7 @@ setNewVal(cvar_t *var, const char *var_name, const char *var_value, int flags)
 }
 
 /*
- * Cvar_Get: If the variable already exists, the value will not be set unless 
+ * Cvar_Get: If the variable already exists, the value will not be set unless
  * CVAR_ROM. The flags will be or'ed in if the variable exists.
  */
 cvar_t *
@@ -339,12 +338,12 @@ Cvar_Get(const char *var_name, const char *var_value, int flags)
 	if(index >= cvar_numIndexes)
 		cvar_numIndexes = index + 1;
 
-	var->name = CopyString (var_name);
-	var->string = CopyString (var_value);
-	var->modified = qtrue;
+	var->name	= CopyString (var_name);
+	var->string	= CopyString (var_value);
+	var->modified	= qtrue;
 	var->modificationCount = 1;
-	var->value = atof(var->string);
-	var->integer = atoi(var->string);
+	var->value	= atof(var->string);
+	var->integer	= atoi(var->string);
 	var->resetString = CopyString(var_value);
 	var->validate = qfalse;
 
@@ -353,8 +352,8 @@ Cvar_Get(const char *var_name, const char *var_value, int flags)
 	if(cvar_vars != nil)
 		cvar_vars->prev = var;
 
-	var->prev = nil;
-	cvar_vars = var;
+	var->prev	= nil;
+	cvar_vars	= var;
 
 	var->flags = flags;
 	/* note what types of cvars have been modified (userinfo, archive, serverinfo, systeminfo) */
@@ -374,7 +373,7 @@ Cvar_Get(const char *var_name, const char *var_value, int flags)
 }
 
 /*
- * Cvar_Print: Prints the description, value, default, and latched string of 
+ * Cvar_Print: Prints the description, value, default, and latched string of
  * the given variable
  */
 void
@@ -412,7 +411,7 @@ Cvar_SetDesc(const char *name, const char *desc)
 		Z_Free(cv->desc);
 	cv->desc = CopyString(desc);
 }
-	
+
 cvar_t *
 Cvar_Set2(const char *var_name, const char *value, qboolean force)
 {
@@ -426,7 +425,7 @@ Cvar_Set2(const char *var_name, const char *value, qboolean force)
 	}
 
 #if 0	/* FIXME */
-	if( value && !Cvar_ValidateString(value)){
+	if(value && !Cvar_ValidateString(value)){
 		Com_Printf("invalid cvar value string: %s\n", value);
 		var_value = "BADVALUE";
 	}
@@ -479,7 +478,7 @@ Cvar_Set2(const char *var_name, const char *value, qboolean force)
 				if(strcmp(value, var->latchedString) == 0)
 					return var;
 				Z_Free(var->latchedString);
-			}else    if(strcmp(value, var->string) == 0)
+			}else if(strcmp(value, var->string) == 0)
 				return var;
 
 			Com_Printf("%s will be changed upon restarting.\n",
@@ -508,9 +507,9 @@ Cvar_Set2(const char *var_name, const char *value, qboolean force)
 
 	Z_Free(var->string);	/* free the old value string */
 
-	var->string = CopyString(value);
-	var->value = atof (var->string);
-	var->integer = atoi (var->string);
+	var->string	= CopyString(value);
+	var->value	= atof (var->string);
+	var->integer	= atoi (var->string);
 
 	return var;
 }
@@ -591,10 +590,10 @@ Cvar_SetCheatState(void)
 	/* set all default vars to the safe value */
 	for(var = cvar_vars; var != nil; var = var->next)
 		if(var->flags & CVAR_CHEAT){
-			/* 
-			 * the CVAR_LATCHED|CVAR_CHEAT vars might escape the 
-			 * reset here because of a 
-			 * different var->latchedString 
+			/*
+			 * the CVAR_LATCHED|CVAR_CHEAT vars might escape the
+			 * reset here because of a
+			 * different var->latchedString
 			 * */
 			if(var->latchedString != nil){
 				Z_Free(var->latchedString);
@@ -656,7 +655,7 @@ Cvar_Print_f(void)
 }
 
 /*
- * Cvar_Toggle_f: Toggles a cvar for easy single key binding, optionally 
+ * Cvar_Toggle_f: Toggles a cvar for easy single key binding, optionally
  * through a list of given values.
  */
 void
@@ -672,7 +671,7 @@ Cvar_Toggle_f(void)
 
 	if(c == 2){
 		Cvar_Set2(Cmd_Argv(1), va("%d",
-			!Cvar_VariableValue(Cmd_Argv(1))),
+				!Cvar_VariableValue(Cmd_Argv(1))),
 			qfalse);
 		return;
 	}
@@ -696,7 +695,7 @@ Cvar_Toggle_f(void)
 }
 
 /*
- * Cvar_Set_f: Allows setting and defining of arbitrary cvars from console, 
+ * Cvar_Set_f: Allows setting and defining of arbitrary cvars from console,
  * even if they weren't declared in C code.
  */
 void
@@ -706,8 +705,8 @@ Cvar_Set_f(void)
 	char *cmd;
 	cvar_t *v;
 
-	c = Cmd_Argc();
-	cmd = Cmd_Argv(0);
+	c	= Cmd_Argc();
+	cmd	= Cmd_Argv(0);
 
 	if(c < 2){
 		Com_Printf("usage: %s <variable> <value>\n", cmd);
@@ -721,7 +720,7 @@ Cvar_Set_f(void)
 	v = Cvar_Set2 (Cmd_Argv(1), Cmd_ArgsFrom(2), qfalse);
 	if(v == nil)
 		return;
-	switch( cmd[3] ){
+	switch(cmd[3]){
 	case 'a':
 		if(!(v->flags & CVAR_ARCHIVE)){
 			v->flags |= CVAR_ARCHIVE;
@@ -754,15 +753,15 @@ Cvar_Reset_f(void)
 }
 
 /*
- * Cvar_WriteVariables: Appends lines containing "set variable value" for 
+ * Cvar_WriteVariables: Appends lines containing "set variable value" for
  * all variables with the archive flag set.
  */
 void
 Cvar_WriteVariables(fileHandle_t f)
 {
-	int	len; /* total length of name + archival string */
+	int	len;	/* total length of name + archival string */
 	char	buffer[1024];
-	cvar_t	*var;
+	cvar_t *var;
 
 	for(var = cvar_vars; var != nil; var = var->next){
 		if((var->name == nil) || Q_stricmp(var->name, "cl_cdkey") == 0)
@@ -807,7 +806,7 @@ Cvar_List_f(void)
 {
 	cvar_t	*var;
 	int	i;
-	char	*match;
+	char *match;
 
 	if(Cmd_Argc() > 1)
 		match = Cmd_Argv(1);
@@ -815,9 +814,8 @@ Cvar_List_f(void)
 		match = nil;
 
 	for(var = cvar_vars, i = 0; var != nil; var = var->next, i++){
-		if((var->name == nil) || 
-			(match && !Com_Filter(match, var->name, qfalse)))
-		{
+		if((var->name == nil) ||
+		   (match && !Com_Filter(match, var->name, qfalse))){
 			continue;
 		}
 
@@ -936,7 +934,7 @@ Cvar_Unset_f(void)
 
 
 /*
- * Cvar_Restart: Resets all cvars to their hardcoded values and removes 
+ * Cvar_Restart: Resets all cvars to their hardcoded values and removes
  * user-defined variables and variables added via the VMs if requested.
  */
 void
@@ -1018,7 +1016,7 @@ Cvar_CheckRange(cvar_t *var, float min, float max, qboolean integral)
 }
 
 /*
- * Cvar_Register: basically a slightly modified Cvar_Get for the interpreted 
+ * Cvar_Register: basically a slightly modified Cvar_Get for the interpreted
  * modules
  */
 void
@@ -1034,7 +1032,7 @@ Cvar_Register(vmCvar_t *vmCvar, const char *varName, const char *defaultValue,
 	if((flags & (CVAR_ARCHIVE | CVAR_ROM)) == (CVAR_ARCHIVE | CVAR_ROM)){
 		Com_DPrintf(
 			S_COLOR_YELLOW "WARNING: Unsetting CVAR_ROM cvar '%s', "
-			"since it is also CVAR_ARCHIVE\n",
+				       "since it is also CVAR_ARCHIVE\n",
 			varName);
 		flags &= ~CVAR_ROM;
 	}
@@ -1064,14 +1062,14 @@ Cvar_Update(vmCvar_t *vmCvar)
 	if(cv->modificationCount == vmCvar->modificationCount)
 		return;
 	if(cv->string == nil)
-		return;	/* variable might have been cleared by a cvar_restart */
+		return;		/* variable might have been cleared by a cvar_restart */
 
 	vmCvar->modificationCount = cv->modificationCount;
 	if(strlen(cv->string)+1 > MAX_CVAR_VALUE_STRING)
 		Com_Error(ERR_DROP,
 			"Cvar_Update: src %s length %u exceeds MAX_CVAR_VALUE_STRING",
 			cv->string,
-			(unsigned int) strlen(cv->string));
+			(unsigned int)strlen(cv->string));
 	Q_strncpyz(vmCvar->string, cv->string,  MAX_CVAR_VALUE_STRING);
 	vmCvar->value	= cv->value;
 	vmCvar->integer = cv->integer;
@@ -1083,7 +1081,7 @@ Cvar_CompleteCvarName(char *args, int argNum)
 	if(argNum == 2){
 		/* Skip "<cmd> " */
 		char *p;
-		
+
 		p = Com_SkipTokens(args, 1, " ");
 		if(p > args)
 			Field_CompleteCommand(p, qfalse, qtrue);

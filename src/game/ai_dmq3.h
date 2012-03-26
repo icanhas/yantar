@@ -71,11 +71,11 @@ void BotSetUserInfo(bot_state_t *bs, char *key, char *value);
 /* set the team status (offense, defense etc.) */
 void BotSetTeamStatus(bot_state_t *bs);
 /* returns the name of the client */
-char *ClientName(int client, char *name, int size);
+char*ClientName(int client, char *name, int size);
 /* returns an simplyfied client name */
-char *EasyClientName(int client, char *name, int size);
+char*EasyClientName(int client, char *name, int size);
 /* returns the skin used by the client */
-char *ClientSkin(int client, char *skin, int size);
+char*ClientSkin(int client, char *skin, int size);
 /* returns the appropriate synonym context for the current game type and situation */
 int BotSynonymContext(bot_state_t *bs);
 /* set last ordered task */
@@ -165,13 +165,13 @@ int BotEnemyCubeCarrierVisible(bot_state_t *bs);
 /* get a random alternate route goal towards the given base */
 int BotGetAlternateRouteGoal(bot_state_t *bs, int base);
 /* returns either the alternate route goal or the given goal */
-bot_goal_t *BotAlternateRoute(bot_state_t *bs, bot_goal_t *goal);
+bot_goal_t*BotAlternateRoute(bot_state_t *bs, bot_goal_t *goal);
 /* create a new waypoint */
-bot_waypoint_t *BotCreateWayPoint(char *name, vec3_t origin, int areanum);
+bot_waypoint_t*BotCreateWayPoint(char *name, vec3_t origin, int areanum);
 /* find a waypoint with the given name */
-bot_waypoint_t *BotFindWayPoint(bot_waypoint_t *waypoints, char *name);
+bot_waypoint_t*BotFindWayPoint(bot_waypoint_t *waypoints, char *name);
 /* strstr but case insensitive */
-char *stristr(char *str, char *charset);
+char*stristr(char *str, char *charset);
 /* returns the number of the client with the given name */
 int ClientFromName(char *name);
 int ClientOnSameTeamFromName(bot_state_t *bs, char *name);
@@ -188,8 +188,8 @@ void BotMapScripts(bot_state_t *bs);
 #define CTF_SKIN_REDTEAM	"red"
 #define CTF_SKIN_BLUETEAM	"blue"
 
-extern int gametype;	/* game type */
-extern int maxclients;	/* maximum number of clients */
+extern int	gametype;	/* game type */
+extern int	maxclients;	/* maximum number of clients */
 
 extern vmCvar_t bot_grapple;
 extern vmCvar_t bot_rocketjump;
@@ -198,11 +198,11 @@ extern vmCvar_t bot_nochat;
 extern vmCvar_t bot_testrchat;
 extern vmCvar_t bot_challenge;
 
-extern bot_goal_t ctf_redflag;
-extern bot_goal_t ctf_blueflag;
+extern bot_goal_t	ctf_redflag;
+extern bot_goal_t	ctf_blueflag;
 #ifdef MISSIONPACK
-extern bot_goal_t ctf_neutralflag;
-extern bot_goal_t redobelisk;
-extern bot_goal_t blueobelisk;
-extern bot_goal_t neutralobelisk;
+extern bot_goal_t	ctf_neutralflag;
+extern bot_goal_t	redobelisk;
+extern bot_goal_t	blueobelisk;
+extern bot_goal_t	neutralobelisk;
 #endif

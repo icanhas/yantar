@@ -148,10 +148,10 @@ QAL_Init(const char *libname)
 
 	alinit_fail = qfalse;
 
-	qalEnable	= GPA("alEnable");
-	qalDisable	= GPA("alDisable");
-	qalIsEnabled	= GPA("alIsEnabled");
-	qalGetString	= GPA("alGetString");
+	qalEnable = GPA("alEnable");
+	qalDisable = GPA("alDisable");
+	qalIsEnabled = GPA("alIsEnabled");
+	qalGetString = GPA("alGetString");
 	qalGetBooleanv	= GPA("alGetBooleanv");
 	qalGetIntegerv	= GPA("alGetIntegerv");
 	qalGetFloatv	= GPA("alGetFloatv");
@@ -161,7 +161,7 @@ QAL_Init(const char *libname)
 	qalGetFloat	= GPA("alGetFloat");
 	qalGetDouble	= GPA("alGetDouble");
 	qalGetError	= GPA("alGetError");
-	qalIsExtensionPresent = GPA("alIsExtensionPresent");
+	qalIsExtensionPresent	= GPA("alIsExtensionPresent");
 	qalGetProcAddress	= GPA("alGetProcAddress");
 	qalGetEnumValue		= GPA("alGetEnumValue");
 	qalListenerf		= GPA("alListenerf");
@@ -193,18 +193,18 @@ QAL_Init(const char *libname)
 	qalSourcePause		= GPA("alSourcePause");
 	qalSourceQueueBuffers	= GPA("alSourceQueueBuffers");
 	qalSourceUnqueueBuffers = GPA("alSourceUnqueueBuffers");
-	qalGenBuffers = GPA("alGenBuffers");
-	qalDeleteBuffers = GPA("alDeleteBuffers");
-	qalIsBuffer	= GPA("alIsBuffer");
-	qalBufferData	= GPA("alBufferData");
-	qalGetBufferf	= GPA("alGetBufferf");
-	qalGetBufferi	= GPA("alGetBufferi");
+	qalGenBuffers		= GPA("alGenBuffers");
+	qalDeleteBuffers	= GPA("alDeleteBuffers");
+	qalIsBuffer		= GPA("alIsBuffer");
+	qalBufferData		= GPA("alBufferData");
+	qalGetBufferf		= GPA("alGetBufferf");
+	qalGetBufferi		= GPA("alGetBufferi");
 	qalDopplerFactor	= GPA("alDopplerFactor");
 	qalDopplerVelocity	= GPA("alDopplerVelocity");
 	qalDistanceModel	= GPA("alDistanceModel");
 
 	qalcCreateContext = GPA("alcCreateContext");
-	qalcMakeContextCurrent = GPA("alcMakeContextCurrent");
+	qalcMakeContextCurrent	= GPA("alcMakeContextCurrent");
 	qalcProcessContext	= GPA("alcProcessContext");
 	qalcSuspendContext	= GPA("alcSuspendContext");
 	qalcDestroyContext	= GPA("alcDestroyContext");
@@ -213,7 +213,7 @@ QAL_Init(const char *libname)
 	qalcOpenDevice	= GPA("alcOpenDevice");
 	qalcCloseDevice = GPA("alcCloseDevice");
 	qalcGetError = GPA("alcGetError");
-	qalcIsExtensionPresent = GPA("alcIsExtensionPresent");
+	qalcIsExtensionPresent	= GPA("alcIsExtensionPresent");
 	qalcGetProcAddress	= GPA("alcGetProcAddress");
 	qalcGetEnumValue	= GPA("alcGetEnumValue");
 	qalcGetString	= GPA("alcGetString");
@@ -246,10 +246,10 @@ QAL_Shutdown(void)
 		OpenALLib = NULL;
 	}
 
-	qalEnable	= NULL;
-	qalDisable	= NULL;
-	qalIsEnabled	= NULL;
-	qalGetString	= NULL;
+	qalEnable = NULL;
+	qalDisable = NULL;
+	qalIsEnabled = NULL;
+	qalGetString = NULL;
 	qalGetBooleanv	= NULL;
 	qalGetIntegerv	= NULL;
 	qalGetFloatv	= NULL;
@@ -259,7 +259,7 @@ QAL_Shutdown(void)
 	qalGetFloat	= NULL;
 	qalGetDouble	= NULL;
 	qalGetError	= NULL;
-	qalIsExtensionPresent = NULL;
+	qalIsExtensionPresent	= NULL;
 	qalGetProcAddress	= NULL;
 	qalGetEnumValue		= NULL;
 	qalListenerf		= NULL;
@@ -291,18 +291,18 @@ QAL_Shutdown(void)
 	qalSourcePause		= NULL;
 	qalSourceQueueBuffers	= NULL;
 	qalSourceUnqueueBuffers = NULL;
-	qalGenBuffers = NULL;
-	qalDeleteBuffers = NULL;
-	qalIsBuffer	= NULL;
-	qalBufferData	= NULL;
-	qalGetBufferf	= NULL;
-	qalGetBufferi	= NULL;
+	qalGenBuffers		= NULL;
+	qalDeleteBuffers	= NULL;
+	qalIsBuffer		= NULL;
+	qalBufferData		= NULL;
+	qalGetBufferf		= NULL;
+	qalGetBufferi		= NULL;
 	qalDopplerFactor	= NULL;
 	qalDopplerVelocity	= NULL;
 	qalDistanceModel	= NULL;
 
 	qalcCreateContext = NULL;
-	qalcMakeContextCurrent = NULL;
+	qalcMakeContextCurrent	= NULL;
 	qalcProcessContext	= NULL;
 	qalcSuspendContext	= NULL;
 	qalcDestroyContext	= NULL;
@@ -311,7 +311,7 @@ QAL_Shutdown(void)
 	qalcOpenDevice	= NULL;
 	qalcCloseDevice = NULL;
 	qalcGetError = NULL;
-	qalcIsExtensionPresent = NULL;
+	qalcIsExtensionPresent	= NULL;
 	qalcGetProcAddress	= NULL;
 	qalcGetEnumValue	= NULL;
 	qalcGetString	= NULL;

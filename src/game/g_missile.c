@@ -44,11 +44,11 @@ G_BounceMissile(gentity_t *ent, trace_t *trace)
 	dot = DotProduct(velocity, trace->plane.normal);
 	VectorMA(velocity, -2*dot, trace->plane.normal, ent->s.pos.trDelta);
 
-	if( ent->s.eFlags & EF_BOUNCE_HALF ){
+	if(ent->s.eFlags & EF_BOUNCE_HALF){
 		VectorScale(ent->s.pos.trDelta, 0.65, ent->s.pos.trDelta);
 		/* check for stop */
-		if( trace->plane.normal[2] > 0.2 &&
-		    VectorLength(ent->s.pos.trDelta) < 40 ){
+		if(trace->plane.normal[2] > 0.2 &&
+		   VectorLength(ent->s.pos.trDelta) < 40){
 			G_SetOrigin(ent, trace->endpos);
 			ent->s.time = level.time / 4;
 			return;
@@ -89,10 +89,10 @@ G_ExplodeMissile(gentity_t *ent)
 	ent->freeAfterEvent = qtrue;
 
 	/* splash damage */
-	if( ent->splashDamage )
-		if( G_RadiusDamage(ent->r.currentOrigin, ent->parent,
-			    ent->splashDamage, ent->splashRadius, ent
-			    , ent->splashMethodOfDeath))
+	if(ent->splashDamage)
+		if(G_RadiusDamage(ent->r.currentOrigin, ent->parent,
+			   ent->splashDamage, ent->splashRadius, ent
+			   , ent->splashMethodOfDeath))
 			g_entities[ent->r.ownerNum].client->accuracy_hits++;
 
 	trap_LinkEntity(ent);
@@ -141,23 +141,23 @@ ProximityMine_Trigger(gentity_t *trigger, gentity_t *other, trace_t *trace)
 	vec3_t v;
 	gentity_t *mine;
 
-	if( !other->client )
+	if(!other->client)
 		return;
 
 	/* trigger is a cube, do a distance test now to act as if it's a sphere */
 	VectorSubtract(trigger->s.pos.trBase, other->s.pos.trBase, v);
-	if( VectorLength(v) > trigger->parent->splashRadius )
+	if(VectorLength(v) > trigger->parent->splashRadius)
 		return;
 
 
-	if( g_gametype.integer >= GT_TEAM )
+	if(g_gametype.integer >= GT_TEAM)
 		/* don't trigger same team mines */
 		if(trigger->parent->s.generic1 ==
 		   other->client->sess.sessionTeam)
 			return;
 
 	/* ok, now check for ability to damage so we don't get triggered thru walls, closed doors, etc... */
-	if( !CanDamage(other, trigger->s.pos.trBase))
+	if(!CanDamage(other, trigger->s.pos.trBase))
 		return;
 
 	/* trigger the mine! */
@@ -223,7 +223,7 @@ ProximityMine_ExplodeOnPlayer(gentity_t *mine)
 	player = mine->enemy;
 	player->client->ps.eFlags &= ~EF_TICKING;
 
-	if( player->client->invulnerabilityTime > level.time ){
+	if(player->client->invulnerabilityTime > level.time){
 		G_Damage(player, mine->parent, mine->parent, vec3_origin,
 			mine->s.origin, 1000, DAMAGE_NO_KNOCKBACK,
 			MOD_JUICED);
@@ -246,12 +246,12 @@ ProximityMine_ExplodeOnPlayer(gentity_t *mine)
 static void
 ProximityMine_Player(gentity_t *mine, gentity_t *player)
 {
-	if( mine->s.eFlags & EF_NODRAW )
+	if(mine->s.eFlags & EF_NODRAW)
 		return;
 
 	G_AddEvent(mine, EV_PROXIMITY_MINE_STICK, 0);
 
-	if( player->s.eFlags & EF_TICKING ){
+	if(player->s.eFlags & EF_TICKING){
 		player->activator->splashDamage += mine->splashDamage;
 		player->activator->splashRadius *= 1.50;
 		mine->think = G_FreeEntity;
@@ -267,9 +267,9 @@ ProximityMine_Player(gentity_t *mine, gentity_t *player)
 	mine->s.pos.trType = TR_LINEAR;
 	VectorClear(mine->s.pos.trDelta);
 
-	mine->enemy	= player;
-	mine->think	= ProximityMine_ExplodeOnPlayer;
-	if( player->client->invulnerabilityTime > level.time )
+	mine->enemy = player;
+	mine->think = ProximityMine_ExplodeOnPlayer;
+	if(player->client->invulnerabilityTime > level.time)
 		mine->nextthink = level.time + 2 * 1000;
 	else
 		mine->nextthink = level.time + 10 * 1000;
@@ -287,24 +287,24 @@ G_MissileImpact(gentity_t *ent, trace_t *trace)
 	gentity_t	*other;
 	qboolean	hitClient = qfalse;
 #ifdef MISSIONPACK
-	vec3_t	forward, impactpoint, bouncedir;
-	int	eFlags;
+	vec3_t		forward, impactpoint, bouncedir;
+	int eFlags;
 #endif
 	other = &g_entities[trace->entityNum];
 
 	/* check for bounce */
-	if( !other->takedamage &&
-	    (ent->s.eFlags & (EF_BOUNCE | EF_BOUNCE_HALF))){
+	if(!other->takedamage &&
+	   (ent->s.eFlags & (EF_BOUNCE | EF_BOUNCE_HALF))){
 		G_BounceMissile(ent, trace);
 		G_AddEvent(ent, EV_GRENADE_BOUNCE, 0);
 		return;
 	}
 
 #ifdef MISSIONPACK
-	if( other->takedamage ){
-		if( ent->s.weapon != WP_PROX_LAUNCHER )
-			if( other->client &&
-			    other->client->invulnerabilityTime > level.time ){
+	if(other->takedamage){
+		if(ent->s.weapon != WP_PROX_LAUNCHER)
+			if(other->client &&
+			   other->client->invulnerabilityTime > level.time){
 				/*  */
 				VectorCopy(ent->s.pos.trDelta, forward);
 				VectorNormalize(forward);
@@ -326,18 +326,18 @@ G_MissileImpact(gentity_t *ent, trace_t *trace)
 	/* impact damage */
 	if(other->takedamage)
 		/* FIXME: wrong damage direction? */
-		if( ent->damage ){
+		if(ent->damage){
 			vec3_t velocity;
 
-			if( LogAccuracyHit(other,
-				    &g_entities[ent->r.ownerNum])){
+			if(LogAccuracyHit(other,
+				   &g_entities[ent->r.ownerNum])){
 				g_entities[ent->r.ownerNum].client->
 				accuracy_hits++;
 				hitClient = qtrue;
 			}
 			BG_EvaluateTrajectoryDelta(&ent->s.pos, level.time,
 				velocity);
-			if( VectorLength(velocity) == 0 )
+			if(VectorLength(velocity) == 0)
 				velocity[2] = 1;	/* stepped on a grenade */
 			G_Damage (other, ent, &g_entities[ent->r.ownerNum],
 				velocity,
@@ -347,12 +347,12 @@ G_MissileImpact(gentity_t *ent, trace_t *trace)
 		}
 
 #ifdef MISSIONPACK
-	if( ent->s.weapon == WP_PROX_LAUNCHER ){
-		if( ent->s.pos.trType != TR_GRAVITY )
+	if(ent->s.weapon == WP_PROX_LAUNCHER){
+		if(ent->s.pos.trType != TR_GRAVITY)
 			return;
 
 		/* if it's a player, stick it on to them (flag them and remove this entity) */
-		if( other->s.eType == ET_PLAYER && other->health > 0 ){
+		if(other->s.eType == ET_PLAYER && other->health > 0){
 			ProximityMine_Player(ent, other);
 			return;
 		}
@@ -371,8 +371,8 @@ G_MissileImpact(gentity_t *ent, trace_t *trace)
 		ent->s.angles[0] += 90;
 
 		/* link the prox mine to the other entity */
-		ent->enemy	= other;
-		ent->die	= ProximityMine_Die;
+		ent->enemy = other;
+		ent->die = ProximityMine_Die;
 		VectorCopy(trace->plane.normal, ent->movedir);
 		VectorSet(ent->r.mins, -4, -4, -4);
 		VectorSet(ent->r.maxs, 4, 4, 4);
@@ -387,7 +387,7 @@ G_MissileImpact(gentity_t *ent, trace_t *trace)
 		vec3_t		v;
 
 		nent = G_Spawn();
-		if( other->takedamage && other->client ){
+		if(other->takedamage && other->client){
 
 			G_AddEvent(nent, EV_MISSILE_HIT,
 				DirToByte(trace->plane.normal));
@@ -436,10 +436,10 @@ G_MissileImpact(gentity_t *ent, trace_t *trace)
 	/* is it cheaper in bandwidth to just remove this ent and create a new
 	 * one, rather than changing the missile into the explosion? */
 
-	if( other->takedamage && other->client ){
+	if(other->takedamage && other->client){
 		G_AddEvent(ent, EV_MISSILE_HIT, DirToByte(trace->plane.normal));
 		ent->s.otherEntityNum = other->s.number;
-	}else if( trace->surfaceFlags & SURF_METALSTEPS )
+	}else if(trace->surfaceFlags & SURF_METALSTEPS)
 		G_AddEvent(ent, EV_MISSILE_MISS_METAL,
 			DirToByte(trace->plane.normal));
 	else
@@ -455,11 +455,11 @@ G_MissileImpact(gentity_t *ent, trace_t *trace)
 	G_SetOrigin(ent, trace->endpos);
 
 	/* splash damage (doesn't apply to person directly hit) */
-	if( ent->splashDamage )
-		if( G_RadiusDamage(trace->endpos, ent->parent, ent->splashDamage,
-			    ent->splashRadius,
-			    other, ent->splashMethodOfDeath))
-			if( !hitClient )
+	if(ent->splashDamage)
+		if(G_RadiusDamage(trace->endpos, ent->parent, ent->splashDamage,
+			   ent->splashRadius,
+			   other, ent->splashMethodOfDeath))
+			if(!hitClient)
 				g_entities[ent->r.ownerNum].client->
 				accuracy_hits++;
 
@@ -482,7 +482,7 @@ G_RunMissile(gentity_t *ent)
 	BG_EvaluateTrajectory(&ent->s.pos, level.time, origin);
 
 	/* if this missile bounced off an invulnerability sphere */
-	if( ent->target_ent )
+	if(ent->target_ent)
 		passent = ent->target_ent->s.number;
 
 #ifdef MISSIONPACK
@@ -499,7 +499,7 @@ G_RunMissile(gentity_t *ent)
 		passent,
 		ent->clipmask);
 
-	if( tr.startsolid || tr.allsolid ){
+	if(tr.startsolid || tr.allsolid){
 		/* make sure the tr.entityNum is set to the entity we're stuck in */
 		trap_Trace(&tr, ent->r.currentOrigin, ent->r.mins, ent->r.maxs,
 			ent->r.currentOrigin, passent,
@@ -510,9 +510,9 @@ G_RunMissile(gentity_t *ent)
 
 	trap_LinkEntity(ent);
 
-	if( tr.fraction != 1 ){
+	if(tr.fraction != 1){
 		/* never explode or bounce on sky */
-		if( tr.surfaceFlags & SURF_NOIMPACT ){
+		if(tr.surfaceFlags & SURF_NOIMPACT){
 			/* If grapple, reset owner */
 			if(ent->parent && ent->parent->client &&
 			   ent->parent->client->hook == ent)
@@ -521,8 +521,8 @@ G_RunMissile(gentity_t *ent)
 			return;
 		}
 		G_MissileImpact(ent, &tr);
-		if( ent->s.eType != ET_MISSILE )
-			return;	/* exploded */
+		if(ent->s.eType != ET_MISSILE)
+			return;		/* exploded */
 	}
 #ifdef MISSIONPACK
 	/* if the prox mine wasn't yet outside the player body */
@@ -558,22 +558,22 @@ fire_plasma(gentity_t *self, vec3_t start, vec3_t dir)
 	bolt = G_Spawn();
 	bolt->classname = "plasma";
 	bolt->nextthink = level.time + 10000;
-	bolt->think		= G_ExplodeMissile;
-	bolt->s.eType		= ET_MISSILE;
-	bolt->r.svFlags		= SVF_USE_CURRENT_ORIGIN;
-	bolt->s.weapon		= WP_PLASMAGUN;
-	bolt->r.ownerNum	= self->s.number;
-	bolt->parent		= self;
-	bolt->damage		= 20;
-	bolt->splashDamage	= 15;
-	bolt->splashRadius	= 20;
-	bolt->methodOfDeath	= MOD_PLASMA;
+	bolt->think = G_ExplodeMissile;
+	bolt->s.eType = ET_MISSILE;
+	bolt->r.svFlags = SVF_USE_CURRENT_ORIGIN;
+	bolt->s.weapon = WP_PLASMAGUN;
+	bolt->r.ownerNum = self->s.number;
+	bolt->parent = self;
+	bolt->damage = 20;
+	bolt->splashDamage = 15;
+	bolt->splashRadius = 20;
+	bolt->methodOfDeath = MOD_PLASMA;
 	bolt->splashMethodOfDeath	= MOD_PLASMA_SPLASH;
-	bolt->clipmask		= MASK_SHOT;
-	bolt->target_ent	= NULL;
+	bolt->clipmask			= MASK_SHOT;
+	bolt->target_ent		= NULL;
 
-	bolt->s.pos.trType	= TR_LINEAR;
-	bolt->s.pos.trTime	= level.time - MISSILE_PRESTEP_TIME;	/* move a bit on the very first frame */
+	bolt->s.pos.trType = TR_LINEAR;
+	bolt->s.pos.trTime = level.time - MISSILE_PRESTEP_TIME;	/* move a bit on the very first frame */
 	VectorCopy(start, bolt->s.pos.trBase);
 	VectorScale(dir, 2000, bolt->s.pos.trDelta);
 	SnapVector(bolt->s.pos.trDelta);	/* save net bandwidth */
@@ -601,23 +601,23 @@ fire_grenade(gentity_t *self, vec3_t start, vec3_t dir)
 	bolt = G_Spawn();
 	bolt->classname = "grenade";
 	bolt->nextthink = level.time + 2500;
-	bolt->think		= G_ExplodeMissile;
-	bolt->s.eType		= ET_MISSILE;
-	bolt->r.svFlags		= SVF_USE_CURRENT_ORIGIN;
-	bolt->s.weapon		= WP_GRENADE_LAUNCHER;
-	bolt->s.eFlags		= EF_BOUNCE_HALF;
-	bolt->r.ownerNum	= self->s.number;
-	bolt->parent		= self;
-	bolt->damage		= 100;
-	bolt->splashDamage	= 100;
-	bolt->splashRadius	= 150;
-	bolt->methodOfDeath	= MOD_GRENADE;
+	bolt->think = G_ExplodeMissile;
+	bolt->s.eType = ET_MISSILE;
+	bolt->r.svFlags = SVF_USE_CURRENT_ORIGIN;
+	bolt->s.weapon = WP_GRENADE_LAUNCHER;
+	bolt->s.eFlags = EF_BOUNCE_HALF;
+	bolt->r.ownerNum = self->s.number;
+	bolt->parent = self;
+	bolt->damage = 100;
+	bolt->splashDamage = 100;
+	bolt->splashRadius = 150;
+	bolt->methodOfDeath = MOD_GRENADE;
 	bolt->splashMethodOfDeath	= MOD_GRENADE_SPLASH;
-	bolt->clipmask		= MASK_SHOT;
-	bolt->target_ent	= NULL;
+	bolt->clipmask			= MASK_SHOT;
+	bolt->target_ent		= NULL;
 
-	bolt->s.pos.trType	= TR_GRAVITY;
-	bolt->s.pos.trTime	= level.time - MISSILE_PRESTEP_TIME;	/* move a bit on the very first frame */
+	bolt->s.pos.trType = TR_GRAVITY;
+	bolt->s.pos.trTime = level.time - MISSILE_PRESTEP_TIME;	/* move a bit on the very first frame */
 	VectorCopy(start, bolt->s.pos.trBase);
 	VectorScale(dir, 700, bolt->s.pos.trDelta);
 	SnapVector(bolt->s.pos.trDelta);	/* save net bandwidth */
@@ -645,22 +645,22 @@ fire_bfg(gentity_t *self, vec3_t start, vec3_t dir)
 	bolt = G_Spawn();
 	bolt->classname = "bfg";
 	bolt->nextthink = level.time + 10000;
-	bolt->think		= G_ExplodeMissile;
-	bolt->s.eType		= ET_MISSILE;
-	bolt->r.svFlags		= SVF_USE_CURRENT_ORIGIN;
-	bolt->s.weapon		= WP_BFG;
-	bolt->r.ownerNum	= self->s.number;
-	bolt->parent		= self;
-	bolt->damage		= 100;
-	bolt->splashDamage	= 100;
-	bolt->splashRadius	= 120;
-	bolt->methodOfDeath	= MOD_BFG;
+	bolt->think = G_ExplodeMissile;
+	bolt->s.eType = ET_MISSILE;
+	bolt->r.svFlags = SVF_USE_CURRENT_ORIGIN;
+	bolt->s.weapon = WP_BFG;
+	bolt->r.ownerNum = self->s.number;
+	bolt->parent = self;
+	bolt->damage = 100;
+	bolt->splashDamage = 100;
+	bolt->splashRadius = 120;
+	bolt->methodOfDeath = MOD_BFG;
 	bolt->splashMethodOfDeath	= MOD_BFG_SPLASH;
-	bolt->clipmask		= MASK_SHOT;
-	bolt->target_ent	= NULL;
+	bolt->clipmask			= MASK_SHOT;
+	bolt->target_ent		= NULL;
 
-	bolt->s.pos.trType	= TR_LINEAR;
-	bolt->s.pos.trTime	= level.time - MISSILE_PRESTEP_TIME;	/* move a bit on the very first frame */
+	bolt->s.pos.trType = TR_LINEAR;
+	bolt->s.pos.trTime = level.time - MISSILE_PRESTEP_TIME;	/* move a bit on the very first frame */
 	VectorCopy(start, bolt->s.pos.trBase);
 	VectorScale(dir, 2000, bolt->s.pos.trDelta);
 	SnapVector(bolt->s.pos.trDelta);	/* save net bandwidth */
@@ -687,22 +687,22 @@ fire_rocket(gentity_t *self, vec3_t start, vec3_t dir)
 	bolt = G_Spawn();
 	bolt->classname = "rocket";
 	bolt->nextthink = level.time + 15000;
-	bolt->think		= G_ExplodeMissile;
-	bolt->s.eType		= ET_MISSILE;
-	bolt->r.svFlags		= SVF_USE_CURRENT_ORIGIN;
-	bolt->s.weapon		= WP_ROCKET_LAUNCHER;
-	bolt->r.ownerNum	= self->s.number;
-	bolt->parent		= self;
-	bolt->damage		= 100;
-	bolt->splashDamage	= 100;
-	bolt->splashRadius	= 120;
-	bolt->methodOfDeath	= MOD_ROCKET;
+	bolt->think = G_ExplodeMissile;
+	bolt->s.eType = ET_MISSILE;
+	bolt->r.svFlags = SVF_USE_CURRENT_ORIGIN;
+	bolt->s.weapon = WP_ROCKET_LAUNCHER;
+	bolt->r.ownerNum = self->s.number;
+	bolt->parent = self;
+	bolt->damage = 100;
+	bolt->splashDamage = 100;
+	bolt->splashRadius = 120;
+	bolt->methodOfDeath = MOD_ROCKET;
 	bolt->splashMethodOfDeath	= MOD_ROCKET_SPLASH;
-	bolt->clipmask		= MASK_SHOT;
-	bolt->target_ent	= NULL;
+	bolt->clipmask			= MASK_SHOT;
+	bolt->target_ent		= NULL;
 
-	bolt->s.pos.trType	= TR_LINEAR;
-	bolt->s.pos.trTime	= level.time - MISSILE_PRESTEP_TIME;	/* move a bit on the very first frame */
+	bolt->s.pos.trType = TR_LINEAR;
+	bolt->s.pos.trTime = level.time - MISSILE_PRESTEP_TIME;	/* move a bit on the very first frame */
 	VectorCopy(start, bolt->s.pos.trBase);
 	VectorScale(dir, 900, bolt->s.pos.trDelta);
 	SnapVector(bolt->s.pos.trDelta);	/* save net bandwidth */
@@ -726,19 +726,19 @@ fire_grapple(gentity_t *self, vec3_t start, vec3_t dir)
 	hook = G_Spawn();
 	hook->classname = "hook";
 	hook->nextthink = level.time + 10000;
-	hook->think		= Weapon_HookFree;
-	hook->s.eType		= ET_MISSILE;
-	hook->r.svFlags		= SVF_USE_CURRENT_ORIGIN;
-	hook->s.weapon		= WP_GRAPPLING_HOOK;
-	hook->r.ownerNum	= self->s.number;
+	hook->think = Weapon_HookFree;
+	hook->s.eType = ET_MISSILE;
+	hook->r.svFlags = SVF_USE_CURRENT_ORIGIN;
+	hook->s.weapon = WP_GRAPPLING_HOOK;
+	hook->r.ownerNum = self->s.number;
 	hook->methodOfDeath = MOD_GRAPPLE;
-	hook->clipmask		= MASK_SHOT;
-	hook->parent		= self;
-	hook->target_ent	= NULL;
+	hook->clipmask = MASK_SHOT;
+	hook->parent = self;
+	hook->target_ent = NULL;
 
-	hook->s.pos.trType	= TR_LINEAR;
-	hook->s.pos.trTime	= level.time - MISSILE_PRESTEP_TIME;	/* move a bit on the very first frame */
-	hook->s.otherEntityNum = self->s.number;			/* use to match beam in client */
+	hook->s.pos.trType = TR_LINEAR;
+	hook->s.pos.trTime = level.time - MISSILE_PRESTEP_TIME;	/* move a bit on the very first frame */
+	hook->s.otherEntityNum = self->s.number;		/* use to match beam in client */
 	VectorCopy(start, hook->s.pos.trBase);
 	VectorScale(dir, 800, hook->s.pos.trDelta);
 	SnapVector(hook->s.pos.trDelta);	/* save net bandwidth */
@@ -762,31 +762,31 @@ gentity_t *
 fire_nail(gentity_t *self, vec3_t start, vec3_t forward, vec3_t right, vec3_t up)
 {
 	gentity_t	*bolt;
-	vec3_t	dir;
+	vec3_t		dir;
 	vec3_t		end;
-	float	r, u, scale;
+	float r, u, scale;
 
 	bolt = G_Spawn();
 	bolt->classname = "nail";
 	bolt->nextthink = level.time + 10000;
-	bolt->think		= G_ExplodeMissile;
-	bolt->s.eType		= ET_MISSILE;
-	bolt->r.svFlags		= SVF_USE_CURRENT_ORIGIN;
-	bolt->s.weapon		= WP_NAILGUN;
+	bolt->think = G_ExplodeMissile;
+	bolt->s.eType = ET_MISSILE;
+	bolt->r.svFlags = SVF_USE_CURRENT_ORIGIN;
+	bolt->s.weapon = WP_NAILGUN;
 	bolt->r.ownerNum	= self->s.number;
-	bolt->parent	= self;
-	bolt->damage	= 20;
+	bolt->parent		= self;
+	bolt->damage		= 20;
 	bolt->methodOfDeath = MOD_NAIL;
-	bolt->clipmask		= MASK_SHOT;
-	bolt->target_ent	= NULL;
+	bolt->clipmask = MASK_SHOT;
+	bolt->target_ent = NULL;
 
-	bolt->s.pos.trType	= TR_LINEAR;
-	bolt->s.pos.trTime	= level.time;
+	bolt->s.pos.trType = TR_LINEAR;
+	bolt->s.pos.trTime = level.time;
 	VectorCopy(start, bolt->s.pos.trBase);
 
-	r	= random() * M_PI * 2.0f;
-	u	= sin(r) * crandom() * NAILGUN_SPREAD * 16;
-	r	= cos(r) * crandom() * NAILGUN_SPREAD * 16;
+	r = random() * M_PI * 2.0f;
+	u = sin(r) * crandom() * NAILGUN_SPREAD * 16;
+	r = cos(r) * crandom() * NAILGUN_SPREAD * 16;
 	VectorMA(start, 8192 * 16, forward, end);
 	VectorMA (end, r, right, end);
 	VectorMA (end, u, up, end);
@@ -818,20 +818,20 @@ fire_prox(gentity_t *self, vec3_t start, vec3_t dir)
 	bolt = G_Spawn();
 	bolt->classname = "prox mine";
 	bolt->nextthink = level.time + 3000;
-	bolt->think		= G_ExplodeMissile;
-	bolt->s.eType		= ET_MISSILE;
-	bolt->r.svFlags		= SVF_USE_CURRENT_ORIGIN;
-	bolt->s.weapon		= WP_PROX_LAUNCHER;
-	bolt->s.eFlags		= 0;
-	bolt->r.ownerNum	= self->s.number;
-	bolt->parent		= self;
-	bolt->damage		= 0;
-	bolt->splashDamage	= 100;
-	bolt->splashRadius	= 150;
-	bolt->methodOfDeath	= MOD_PROXIMITY_MINE;
+	bolt->think = G_ExplodeMissile;
+	bolt->s.eType = ET_MISSILE;
+	bolt->r.svFlags = SVF_USE_CURRENT_ORIGIN;
+	bolt->s.weapon = WP_PROX_LAUNCHER;
+	bolt->s.eFlags = 0;
+	bolt->r.ownerNum = self->s.number;
+	bolt->parent = self;
+	bolt->damage = 0;
+	bolt->splashDamage = 100;
+	bolt->splashRadius = 150;
+	bolt->methodOfDeath = MOD_PROXIMITY_MINE;
 	bolt->splashMethodOfDeath	= MOD_PROXIMITY_MINE;
-	bolt->clipmask		= MASK_SHOT;
-	bolt->target_ent	= NULL;
+	bolt->clipmask			= MASK_SHOT;
+	bolt->target_ent		= NULL;
 	/* count is used to check if the prox mine left the player bbox
 	 * if count == 1 then the prox mine left the player bbox and can attack to it */
 	bolt->count = 0;
@@ -839,8 +839,8 @@ fire_prox(gentity_t *self, vec3_t start, vec3_t dir)
 	/* FIXME: we prolly wanna abuse another field */
 	bolt->s.generic1 = self->client->sess.sessionTeam;
 
-	bolt->s.pos.trType	= TR_GRAVITY;
-	bolt->s.pos.trTime	= level.time - MISSILE_PRESTEP_TIME;	/* move a bit on the very first frame */
+	bolt->s.pos.trType = TR_GRAVITY;
+	bolt->s.pos.trTime = level.time - MISSILE_PRESTEP_TIME;	/* move a bit on the very first frame */
 	VectorCopy(start, bolt->s.pos.trBase);
 	VectorScale(dir, 700, bolt->s.pos.trDelta);
 	SnapVector(bolt->s.pos.trDelta);	/* save net bandwidth */

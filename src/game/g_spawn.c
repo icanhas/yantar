@@ -28,17 +28,17 @@ G_SpawnString(const char *key, const char *defaultString, char **out)
 {
 	int i;
 
-	if( !level.spawning )
-		*out = (char *) defaultString;
+	if(!level.spawning)
+		*out = (char*)defaultString;
 /*		G_Error( "G_SpawnString() called while not spawning" ); */
 
-	for( i = 0; i < level.numSpawnVars; i++ )
-		if( !Q_stricmp(key, level.spawnVars[i][0])){
+	for(i = 0; i < level.numSpawnVars; i++)
+		if(!Q_stricmp(key, level.spawnVars[i][0])){
 			*out = level.spawnVars[i][1];
 			return qtrue;
 		}
 
-	*out = (char *) defaultString;
+	*out = (char*)defaultString;
 	return qfalse;
 }
 
@@ -279,21 +279,21 @@ G_CallSpawn(gentity_t *ent)
 	spawn_t *s;
 	gitem_t *item;
 
-	if( !ent->classname ){
+	if(!ent->classname){
 		G_Printf ("G_CallSpawn: NULL classname\n");
 		return qfalse;
 	}
 
 	/* check item spawn functions */
-	for( item=bg_itemlist+1; item->classname; item++ )
-		if( !strcmp(item->classname, ent->classname)){
+	for(item=bg_itemlist+1; item->classname; item++)
+		if(!strcmp(item->classname, ent->classname)){
 			G_SpawnItem(ent, item);
 			return qtrue;
 		}
 
 	/* check normal spawn functions */
-	for( s=spawns; s->name; s++ )
-		if( !strcmp(s->name, ent->classname)){
+	for(s=spawns; s->name; s++)
+		if(!strcmp(s->name, ent->classname)){
 			/* found it */
 			s->spawn(ent);
 			return qtrue;
@@ -313,8 +313,8 @@ G_CallSpawn(gentity_t *ent)
 char *
 G_NewString(const char *string)
 {
-	char *newb, *new_p;
-	int i,l;
+	char	*newb, *new_p;
+	int	i,l;
 
 	l = strlen(string) + 1;
 
@@ -323,7 +323,7 @@ G_NewString(const char *string)
 	new_p = newb;
 
 	/* turn \n into a real linefeed */
-	for( i=0; i< l; i++ ){
+	for(i=0; i< l; i++){
 		if(string[i] == '\\' && i < l-1){
 			i++;
 			if(string[i] == 'n')
@@ -356,33 +356,33 @@ G_ParseField(const char *key, const char *value, gentity_t *ent)
 	float	v;
 	vec3_t	vec;
 
-	for( f=fields; f->name; f++ )
-		if( !Q_stricmp(f->name, key)){
+	for(f=fields; f->name; f++)
+		if(!Q_stricmp(f->name, key)){
 			/* found it */
-			b = (byte *) ent;
+			b = (byte*)ent;
 
-			switch( f->type ){
+			switch(f->type){
 			case F_STRING:
-				*(char * *) (b+f->ofs) = G_NewString (value);
+				*(char**)(b+f->ofs) = G_NewString (value);
 				break;
 			case F_VECTOR:
 				sscanf (value, "%f %f %f", &vec[0], &vec[1],
 					&vec[2]);
-				((float *) (b+f->ofs))[0] = vec[0];
-				((float *) (b+f->ofs))[1] = vec[1];
-				((float *) (b+f->ofs))[2] = vec[2];
+				((float*)(b+f->ofs))[0] = vec[0];
+				((float*)(b+f->ofs))[1] = vec[1];
+				((float*)(b+f->ofs))[2] = vec[2];
 				break;
 			case F_INT:
-				*(int *) (b+f->ofs) = atoi(value);
+				*(int*)(b+f->ofs) = atoi(value);
 				break;
 			case F_FLOAT:
-				*(float *) (b+f->ofs) = atof(value);
+				*(float*)(b+f->ofs) = atof(value);
 				break;
 			case F_ANGLEHACK:
 				v = atof(value);
-				((float *) (b+f->ofs))[0] = 0;
-				((float *) (b+f->ofs))[1] = v;
-				((float *) (b+f->ofs))[2] = 0;
+				((float*)(b+f->ofs))[0] = 0;
+				((float*)(b+f->ofs))[1] = v;
+				((float*)(b+f->ofs))[2] = 0;
 				break;
 			}
 			return;
@@ -412,34 +412,34 @@ G_SpawnGEntityFromSpawnVars(void)
 	char *s, *value, *gametypeName;
 	static char *gametypeNames[] =
 	{"ffa", "tournament", "single", "team", "ctf", "oneflag", "obelisk",
-	"harvester"};
+	 "harvester"};
 
 	/* get the next free entity */
 	ent = G_Spawn();
 
-	for( i = 0; i < level.numSpawnVars; i++ )
+	for(i = 0; i < level.numSpawnVars; i++)
 		G_ParseField(level.spawnVars[i][0], level.spawnVars[i][1], ent);
 
 	/* check for "notsingle" flag */
-	if( g_gametype.integer == GT_SINGLE_PLAYER ){
+	if(g_gametype.integer == GT_SINGLE_PLAYER){
 		G_SpawnInt("notsingle", "0", &i);
-		if( i ){
+		if(i){
 			ADJUST_AREAPORTAL();
 			G_FreeEntity(ent);
 			return;
 		}
 	}
 	/* check for "notteam" flag (GT_FFA, GT_TOURNAMENT, GT_SINGLE_PLAYER) */
-	if( g_gametype.integer >= GT_TEAM ){
+	if(g_gametype.integer >= GT_TEAM){
 		G_SpawnInt("notteam", "0", &i);
-		if( i ){
+		if(i){
 			ADJUST_AREAPORTAL();
 			G_FreeEntity(ent);
 			return;
 		}
 	}else{
 		G_SpawnInt("notfree", "0", &i);
-		if( i ){
+		if(i){
 			ADJUST_AREAPORTAL();
 			G_FreeEntity(ent);
 			return;
@@ -448,27 +448,27 @@ G_SpawnGEntityFromSpawnVars(void)
 
 #ifdef MISSIONPACK
 	G_SpawnInt("notta", "0", &i);
-	if( i ){
+	if(i){
 		ADJUST_AREAPORTAL();
 		G_FreeEntity(ent);
 		return;
 	}
 #else
 	G_SpawnInt("notq3a", "0", &i);
-	if( i ){
+	if(i){
 		ADJUST_AREAPORTAL();
 		G_FreeEntity(ent);
 		return;
 	}
 #endif
 
-	if( G_SpawnString("gametype", NULL, &value))
-		if( g_gametype.integer >= GT_FFA && g_gametype.integer <
-		    GT_MAX_GAME_TYPE ){
+	if(G_SpawnString("gametype", NULL, &value))
+		if(g_gametype.integer >= GT_FFA && g_gametype.integer <
+		   GT_MAX_GAME_TYPE){
 			gametypeName = gametypeNames[g_gametype.integer];
 
 			s = strstr(value, gametypeName);
-			if( !s ){
+			if(!s){
 				ADJUST_AREAPORTAL();
 				G_FreeEntity(ent);
 				return;
@@ -480,7 +480,7 @@ G_SpawnGEntityFromSpawnVars(void)
 	VectorCopy(ent->s.origin, ent->r.currentOrigin);
 
 	/* if we didn't get a classname, don't bother spawning anything */
-	if( !G_CallSpawn(ent))
+	if(!G_CallSpawn(ent))
 		G_FreeEntity(ent);
 }
 
@@ -498,7 +498,7 @@ G_AddSpawnVarToken(const char *string)
 	char *dest;
 
 	l = strlen(string);
-	if( level.numSpawnVarChars + l + 1 > MAX_SPAWN_VARS_CHARS )
+	if(level.numSpawnVarChars + l + 1 > MAX_SPAWN_VARS_CHARS)
 		G_Error("G_AddSpawnVarToken: MAX_SPAWN_VARS");
 
 	dest = level.spawnVarChars + level.numSpawnVarChars;
@@ -522,35 +522,35 @@ G_AddSpawnVarToken(const char *string)
 qboolean
 G_ParseSpawnVars(void)
 {
-	char keyname[MAX_TOKEN_CHARS];
-	char com_token[MAX_TOKEN_CHARS];
+	char	keyname[MAX_TOKEN_CHARS];
+	char	com_token[MAX_TOKEN_CHARS];
 
 	level.numSpawnVars = 0;
 	level.numSpawnVarChars = 0;
 
 	/* parse the opening brace */
-	if( !trap_GetEntityToken(com_token, sizeof(com_token)))
+	if(!trap_GetEntityToken(com_token, sizeof(com_token)))
 		/* end of spawn string */
 		return qfalse;
-	if( com_token[0] != '{' )
+	if(com_token[0] != '{')
 		G_Error("G_ParseSpawnVars: found %s when expecting {",com_token);
 
 	/* go through all the key / value pairs */
-	while( 1 ){
+	while(1){
 		/* parse key */
-		if( !trap_GetEntityToken(keyname, sizeof(keyname)))
+		if(!trap_GetEntityToken(keyname, sizeof(keyname)))
 			G_Error("G_ParseSpawnVars: EOF without closing brace");
 
-		if( keyname[0] == '}' )
+		if(keyname[0] == '}')
 			break;
 
 		/* parse value */
-		if( !trap_GetEntityToken(com_token, sizeof(com_token)))
+		if(!trap_GetEntityToken(com_token, sizeof(com_token)))
 			G_Error("G_ParseSpawnVars: EOF without closing brace");
 
-		if( com_token[0] == '}' )
+		if(com_token[0] == '}')
 			G_Error("G_ParseSpawnVars: closing brace without data");
-		if( level.numSpawnVars == MAX_SPAWN_VARS )
+		if(level.numSpawnVars == MAX_SPAWN_VARS)
 			G_Error("G_ParseSpawnVars: MAX_SPAWN_VARS");
 		level.spawnVars[ level.numSpawnVars ][0] =
 			G_AddSpawnVarToken(keyname);
@@ -577,7 +577,7 @@ SP_worldspawn(void)
 	char *s;
 
 	G_SpawnString("classname", "", &s);
-	if( Q_stricmp(s, "worldspawn"))
+	if(Q_stricmp(s, "worldspawn"))
 		G_Error("SP_worldspawn: The first entity isn't 'worldspawn'");
 
 	/* make some data visible to connecting client */
@@ -612,10 +612,10 @@ SP_worldspawn(void)
 
 	/* see if we want a warmup time */
 	trap_SetConfigstring(CS_WARMUP, "");
-	if( g_restarted.integer ){
+	if(g_restarted.integer){
 		trap_Cvar_Set("g_restarted", "0");
 		level.warmupTime = 0;
-	}else if( g_doWarmup.integer ){	/* Turn it on */
+	}else if(g_doWarmup.integer){	/* Turn it on */
 		level.warmupTime = -1;
 		trap_SetConfigstring(CS_WARMUP, va("%i", level.warmupTime));
 		G_LogPrintf("Warmup:\n");
@@ -641,12 +641,12 @@ G_SpawnEntitiesFromString(void)
 	/* the worldspawn is not an actual entity, but it still
 	 * has a "spawn" function to perform any global setup
 	 * needed by a level (setting configstrings or cvars, etc) */
-	if( !G_ParseSpawnVars())
+	if(!G_ParseSpawnVars())
 		G_Error("SpawnEntities: no entities");
 	SP_worldspawn();
 
 	/* parse ents */
-	while( G_ParseSpawnVars())
+	while(G_ParseSpawnVars())
 		G_SpawnGEntityFromSpawnVars();
 
 	level.spawning = qfalse;	/* any future calls to G_Spawn*() will be errors */

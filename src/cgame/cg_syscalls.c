@@ -29,7 +29,7 @@
 #include "cg_local.h"
 
 static intptr_t (QDECL *syscall)(intptr_t arg,
-				 ...) = (intptr_t (QDECL *) (intptr_t, ...))-1;
+				 ...) = (intptr_t (QDECL*)(intptr_t, ...))-1;
 
 
 Q_EXPORT void
@@ -614,7 +614,7 @@ trap_CIN_PlayCinematic(const char *arg0, int xpos, int ypos, int width,
 }
 
 /* stops playing the cinematic and ends it.  should always return FMV_EOF
- * cinematics must be stopped in reverse order of when they are started */
+* cinematics must be stopped in reverse order of when they are started */
 e_status
 trap_CIN_StopCinematic(int handle)
 {

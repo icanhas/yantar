@@ -124,26 +124,26 @@ enum {
 };
 
 enum {
-	MODRM_MOD_00 = 0x00,
-	MODRM_MOD_01 = 0x01 << 6,
-	MODRM_MOD_10 = 0x02 << 6,
-	MODRM_MOD_11 = 0x03 << 6,
-	MODRM_RM_SIB = 0x04,
+	MODRM_MOD_00	= 0x00,
+	MODRM_MOD_01	= 0x01 << 6,
+	MODRM_MOD_10	= 0x02 << 6,
+	MODRM_MOD_11	= 0x03 << 6,
+	MODRM_RM_SIB	= 0x04,
 };
 
 typedef enum {
 	T_NONE = 0x00,
-	T_REGISTER = 0x01,
-	T_IMMEDIATE = 0x02,
-	T_MEMORY = 0x04,
-	T_LABEL = 0x08,
-	T_ABSOLUTE = 0x80
+	T_REGISTER	= 0x01,
+	T_IMMEDIATE	= 0x02,
+	T_MEMORY	= 0x04,
+	T_LABEL		= 0x08,
+	T_ABSOLUTE	= 0x80
 } argtype_t;
 
 typedef enum {
-	R_8 = 0x100,
-	R_16 = 0x200,
-	R_64 = 0x800,
+	R_8	= 0x100,
+	R_16	= 0x200,
+	R_64	= 0x800,
 	R_MSZ	= 0xF00,	/* size mask */
 	R_XMM	= 0x2000,	/* xmm register. year, sucks */
 	R_EAX	=  0x00,
@@ -173,8 +173,8 @@ typedef enum {
 } reg_t;
 
 typedef enum {
-	MODRM_SIB = 0,
-	MODRM_NOSIB = 0x3,
+	MODRM_SIB	= 0,
+	MODRM_NOSIB	= 0x3,
 } modrm_sib_t;
 
 typedef struct {
@@ -222,32 +222,32 @@ typedef struct {
 	u8	rcode;		/* opcode for reg/mem */
 } opparam_t;
 
-static opparam_t params_add = { subcode: 0, rmcode: 0x01, };
-static opparam_t params_or = { subcode: 1, rmcode: 0x09, };
-static opparam_t params_and = { subcode: 4, rmcode: 0x21, };
-static opparam_t params_sub = { subcode: 5, rmcode: 0x29, };
-static opparam_t params_xor = { subcode: 6, rmcode: 0x31, };
-static opparam_t params_cmp = { subcode: 7, rmcode: 0x39, mrcode: 0x3b, };
-static opparam_t params_dec = { subcode: 1, rcode: 0xff, rcode8: 0xfe, };
-static opparam_t params_sar = { subcode: 7, rcode: 0xd3, rcode8: 0xd2, };
-static opparam_t params_shl = { subcode: 4, rcode: 0xd3, rcode8: 0xd2, };
-static opparam_t params_shr = { subcode: 5, rcode: 0xd3, rcode8: 0xd2, };
-static opparam_t params_idiv = { subcode: 7, rcode: 0xf7, rcode8: 0xf6, };
-static opparam_t params_div = { subcode: 6, rcode: 0xf7, rcode8: 0xf6, };
-static opparam_t params_imul = { subcode: 5, rcode: 0xf7, rcode8: 0xf6, };
-static opparam_t params_mul = { subcode: 4, rcode: 0xf7, rcode8: 0xf6, };
-static opparam_t params_neg = { subcode: 3, rcode: 0xf7, rcode8: 0xf6, };
-static opparam_t params_not = { subcode: 2, rcode: 0xf7, rcode8: 0xf6, };
+static opparam_t	params_add = { subcode: 0, rmcode: 0x01, };
+static opparam_t	params_or = { subcode: 1, rmcode: 0x09, };
+static opparam_t	params_and = { subcode: 4, rmcode: 0x21, };
+static opparam_t	params_sub = { subcode: 5, rmcode: 0x29, };
+static opparam_t	params_xor = { subcode: 6, rmcode: 0x31, };
+static opparam_t	params_cmp = { subcode: 7, rmcode: 0x39, mrcode: 0x3b, };
+static opparam_t	params_dec = { subcode: 1, rcode: 0xff, rcode8: 0xfe, };
+static opparam_t	params_sar = { subcode: 7, rcode: 0xd3, rcode8: 0xd2, };
+static opparam_t	params_shl = { subcode: 4, rcode: 0xd3, rcode8: 0xd2, };
+static opparam_t	params_shr = { subcode: 5, rcode: 0xd3, rcode8: 0xd2, };
+static opparam_t	params_idiv = { subcode: 7, rcode: 0xf7, rcode8: 0xf6, };
+static opparam_t	params_div = { subcode: 6, rcode: 0xf7, rcode8: 0xf6, };
+static opparam_t	params_imul = { subcode: 5, rcode: 0xf7, rcode8: 0xf6, };
+static opparam_t	params_mul = { subcode: 4, rcode: 0xf7, rcode8: 0xf6, };
+static opparam_t	params_neg = { subcode: 3, rcode: 0xf7, rcode8: 0xf6, };
+static opparam_t	params_not = { subcode: 2, rcode: 0xf7, rcode8: 0xf6, };
 
-static opparam_t params_cvtsi2ss = { xmmprefix: 0xf3, rmcode: 0x2a };
-static opparam_t params_cvttss2si = { xmmprefix: 0xf3, rmcode: 0x2c };
-static opparam_t params_addss = { xmmprefix: 0xf3, mrcode: 0x58 };
-static opparam_t params_divss = { xmmprefix: 0xf3, mrcode: 0x5e };
-static opparam_t params_movss =
+static opparam_t	params_cvtsi2ss = { xmmprefix: 0xf3, rmcode: 0x2a };
+static opparam_t	params_cvttss2si = { xmmprefix: 0xf3, rmcode: 0x2c };
+static opparam_t	params_addss = { xmmprefix: 0xf3, mrcode: 0x58 };
+static opparam_t	params_divss = { xmmprefix: 0xf3, mrcode: 0x5e };
+static opparam_t	params_movss =
 { xmmprefix: 0xf3, mrcode: 0x10, rmcode: 0x11 };
-static opparam_t params_mulss = { xmmprefix: 0xf3, mrcode: 0x59 };
-static opparam_t params_subss = { xmmprefix: 0xf3, mrcode: 0x5c };
-static opparam_t params_ucomiss = { mrcode: 0x2e };
+static opparam_t	params_mulss = { xmmprefix: 0xf3, mrcode: 0x59 };
+static opparam_t	params_subss = { xmmprefix: 0xf3, mrcode: 0x5c };
+static opparam_t	params_ucomiss = { mrcode: 0x2e };
 
 /* ************************* */
 
@@ -264,9 +264,9 @@ hashkey(const char *string, unsigned len)
 }
 
 struct hashentry {
-	char * label;
-	unsigned address;
-	struct hashentry* next;
+	char			* label;
+	unsigned		address;
+	struct hashentry	* next;
 };
 static struct hashentry * labelhash[1021];
 
@@ -278,11 +278,11 @@ hash_add_label(const char* label, unsigned address)
 	unsigned i = hashkey(label, -1U);
 	int labellen;
 
-	i %= ARRAY_LEN(labelhash);
-	h = Z_Malloc(sizeof(struct hashentry));
+	i	%= ARRAY_LEN(labelhash);
+	h	= Z_Malloc(sizeof(struct hashentry));
 
-	labellen = strlen(label) + 1;
-	h->label = Z_Malloc(labellen);
+	labellen	= strlen(label) + 1;
+	h->label	= Z_Malloc(labellen);
 	memcpy(h->label, label, labellen);
 
 	h->address = address;
@@ -296,7 +296,7 @@ lookup_label(const char* label)
 	struct hashentry * h;
 	unsigned i = hashkey(label, -1U);
 	i %= ARRAY_LEN(labelhash);
-	for(h = labelhash[i]; h; h = h->next )
+	for(h = labelhash[i]; h; h = h->next)
 		if(!strcmp(h->label, label))
 			return h->address;
 	if(assembler_pass)
@@ -307,10 +307,10 @@ lookup_label(const char* label)
 static void
 labelhash_free(void)
 {
-	struct hashentry	* h;
+	struct hashentry * h;
 	unsigned	i;
 	unsigned	z = 0, min = -1U, max = 0, t = 0;
-	for( i = 0; i < ARRAY_LEN(labelhash); ++i){
+	for(i = 0; i < ARRAY_LEN(labelhash); ++i){
 		unsigned n = 0;
 		h = labelhash[i];
 		while(h){
@@ -323,8 +323,8 @@ labelhash_free(void)
 		t+=n;
 		if(!n) ++z;
 		/* else printf("%u\n", n); */
-		min = MIN(min, n);
-		max = MAX(max, n);
+		min	= MIN(min, n);
+		max	= MAX(max, n);
 	}
 	printf("total %u, hsize %" PRIu64 ", zero %u, min %u, max %u\n", t,
 		ARRAY_LEN(
@@ -391,7 +391,7 @@ isu32(u64 v)
 static void
 emit_opsingle(const char* mnemonic, arg_t arg1, arg_t arg2, void* data)
 {
-	u8 op = (u8) ((uint64_t) data);
+	u8 op = (u8)((uint64_t)data);
 
 	if(arg1.type != T_NONE || arg2.type != T_NONE)
 		CRAP_INVALID_ARGS;
@@ -409,9 +409,9 @@ emit_opsingle16(const char* mnemonic, arg_t arg1, arg_t arg2, void* data)
 static void
 compute_rexmodrmsib(u8* rex_r, u8* modrm_r, u8* sib_r, arg_t* arg1, arg_t* arg2)
 {
-	u8 rex		= 0;
-	u8 modrm	= 0;
-	u8 sib		= 0;
+	u8	rex = 0;
+	u8	modrm = 0;
+	u8	sib = 0;
 
 	if((arg1->type == T_REGISTER && arg2->type == T_REGISTER)
 	   && ((arg1->v.reg & R_MSZ) != (arg2->v.reg & R_MSZ))
@@ -466,12 +466,12 @@ compute_rexmodrmsib(u8* rex_r, u8* modrm_r, u8* sib_r, arg_t* arg1, arg_t* arg2)
 				crap("base must be register");
 			switch(arg2->v.mem.scale){
 			case 1: break;
-			case 2: sib |= 1 << 6; break;
-			case 4: sib |= 2 << 6; break;
-			case 8: sib |= 3 << 6; break;
+			case 2: sib	|= 1 << 6; break;
+			case 4: sib	|= 2 << 6; break;
+			case 8: sib	|= 3 << 6; break;
 			}
-			sib |= (arg2->v.mem.index.reg & 0x07) << 3;
-			sib |= (arg2->v.mem.base.reg & 0x07);
+			sib	|= (arg2->v.mem.index.reg & 0x07) << 3;
+			sib	|= (arg2->v.mem.base.reg & 0x07);
 		}else if(arg2->v.mem.indextype == T_NONE){
 			if(!arg2->v.mem.disp)
 				modrm |= MODRM_MOD_00;
@@ -497,9 +497,9 @@ compute_rexmodrmsib(u8* rex_r, u8* modrm_r, u8* sib_r, arg_t* arg1, arg_t* arg2)
 	if(rex)
 		rex |= 0x40;	/* XXX */
 
-	*rex_r = rex;
-	*modrm_r = modrm;
-	*sib_r = sib;
+	*rex_r		= rex;
+	*modrm_r	= modrm;
+	*sib_r		= sib;
 }
 
 static void
@@ -510,7 +510,7 @@ maybe_emit_displacement(arg_t* arg)
 
 	if(arg->v.mem.disp){
 		if(iss8(arg->v.mem.disp))
-			emit1((u8) arg->v.mem.disp);
+			emit1((u8)arg->v.mem.disp);
 		else if(isu32(arg->v.mem.disp))
 			emit4(arg->v.mem.disp);
 		else
@@ -522,7 +522,7 @@ maybe_emit_displacement(arg_t* arg)
 static void
 emit_opreg(const char* mnemonic, arg_t arg1, arg_t arg2, void* data)
 {
-	u8 op = (u8) ((uint64_t) data);
+	u8 op = (u8)((uint64_t)data);
 
 	if(arg1.type != T_REGISTER || arg2.type != T_NONE)
 		CRAP_INVALID_ARGS;
@@ -602,9 +602,9 @@ emit_op_rm_cl(const char* mnemonic, arg_t arg1, arg_t arg2, void* data)
 static void
 emit_mov(const char* mnemonic, arg_t arg1, arg_t arg2, void* data)
 {
-	u8 rex		= 0;
-	u8 modrm	= 0;
-	u8 sib		= 0;
+	u8	rex = 0;
+	u8	modrm = 0;
+	u8	sib = 0;
 
 	if(arg1.type == T_IMMEDIATE && arg2.type == T_REGISTER){
 		u8 op = 0xb8;
@@ -697,9 +697,9 @@ emit_mov(const char* mnemonic, arg_t arg1, arg_t arg2, void* data)
 static void
 emit_subaddand(const char* mnemonic, arg_t arg1, arg_t arg2, void* data)
 {
-	u8 rex		= 0;
-	u8 modrm	= 0;
-	u8 sib		= 0;
+	u8	rex = 0;
+	u8	modrm = 0;
+	u8	sib = 0;
 
 	opparam_t * params = data;
 
@@ -756,15 +756,15 @@ emit_condjump(const char* mnemonic, arg_t arg1, arg_t arg2, void* data)
 {
 	unsigned off;
 	int disp;
-	unsigned char opcode = (unsigned char) (((uint64_t) data)&0xFF);
+	unsigned char opcode = (unsigned char)(((uint64_t)data)&0xFF);
 
 	if(arg1.type != T_LABEL || arg2.type != T_NONE)
 		crap("%s: argument must be label", mnemonic);
 
 	emit1(opcode);
 
-	off = lookup_label(arg1.v.label);
-	disp = off-(compiledOfs+1);
+	off	= lookup_label(arg1.v.label);
+	disp	= off-(compiledOfs+1);
 	if(assembler_pass && abs(disp) > 127)
 		crap("cannot jump that far (%x -> %x = %x)", compiledOfs, off,
 			disp);
@@ -783,8 +783,8 @@ emit_jmp(const char* mnemonic, arg_t arg1, arg_t arg2, void* data)
 		unsigned off;
 		int disp;
 
-		off = lookup_label(arg1.v.label);
-		disp = off-(compiledOfs+5);
+		off	= lookup_label(arg1.v.label);
+		disp	= off-(compiledOfs+5);
 		emit1(0xe9);
 		emit4(disp);
 	}else{
@@ -884,8 +884,8 @@ emit_twobyte(const char* mnemonic, arg_t arg1, arg_t arg2, void* data)
 		CRAP_INVALID_ARGS;
 }
 
-static int ops_sorted = 0;
-static op_t ops[] = {
+static int	ops_sorted = 0;
+static op_t	ops[] = {
 	{ "addb", emit_subaddand, &params_add },
 	{ "addl", emit_subaddand, &params_add },
 	{ "addq", emit_subaddand, &params_add },
@@ -894,14 +894,14 @@ static op_t ops[] = {
 	{ "andl", emit_subaddand, &params_and },
 	{ "andq", emit_subaddand, &params_and },
 	{ "callq", emit_call, NULL },
-	{ "cbw", emit_opsingle16, (void *) 0x98 },
-	{ "cdq", emit_opsingle, (void *) 0x99 },
+	{ "cbw", emit_opsingle16, (void*)0x98 },
+	{ "cdq", emit_opsingle, (void*)0x99 },
 	{ "cmpb", emit_subaddand, &params_cmp },
 	{ "cmpl", emit_subaddand, &params_cmp },
 	{ "cmpq", emit_subaddand, &params_cmp },
 	{ "cvtsi2ss", emit_twobyte, &params_cvtsi2ss },
 	{ "cvttss2si", emit_twobyte, &params_cvttss2si },
-	{ "cwde", emit_opsingle, (void *) 0x98 },
+	{ "cwde", emit_opsingle, (void*)0x98 },
 	{ "decl", emit_op_rm, &params_dec },
 	{ "decq", emit_op_rm, &params_dec },
 	{ "divl", emit_op_rm, &params_div },
@@ -909,27 +909,27 @@ static op_t ops[] = {
 	{ "divss", emit_twobyte, &params_divss },
 	{ "idivl", emit_op_rm, &params_idiv },
 	{ "imull", emit_op_rm, &params_imul },
-	{ "int3", emit_opsingle, (void *) 0xcc },
-	{ "ja", emit_condjump, (void *) 0x77 },
-	{ "jbe", emit_condjump, (void *) 0x76 },
-	{ "jb", emit_condjump, (void *) 0x72 },
-	{ "je", emit_condjump, (void *) 0x74 },
-	{ "jl", emit_condjump, (void *) 0x7c },
+	{ "int3", emit_opsingle, (void*)0xcc },
+	{ "ja", emit_condjump, (void*)0x77 },
+	{ "jbe", emit_condjump, (void*)0x76 },
+	{ "jb", emit_condjump, (void*)0x72 },
+	{ "je", emit_condjump, (void*)0x74 },
+	{ "jl", emit_condjump, (void*)0x7c },
 	{ "jmp", emit_jmp, NULL },
 	{ "jmpq", emit_jmp, NULL },
-	{ "jnae", emit_condjump, (void *) 0x72 },
-	{ "jna", emit_condjump, (void *) 0x76 },
-	{ "jnbe", emit_condjump, (void *) 0x77 },
-	{ "jnb", emit_condjump, (void *) 0x73 },
-	{ "jnc", emit_condjump, (void *) 0x73 },
-	{ "jne", emit_condjump, (void *) 0x75 },
-	{ "jnge", emit_condjump, (void *) 0x7c },
-	{ "jng", emit_condjump, (void *) 0x7e },
-	{ "jnle", emit_condjump, (void *) 0x7f },
-	{ "jnl", emit_condjump, (void *) 0x7d },
-	{ "jnz", emit_condjump, (void *) 0x75 },
-	{ "jp", emit_condjump, (void *) 0x7a },
-	{ "jz", emit_condjump, (void *) 0x74 },
+	{ "jnae", emit_condjump, (void*)0x72 },
+	{ "jna", emit_condjump, (void*)0x76 },
+	{ "jnbe", emit_condjump, (void*)0x77 },
+	{ "jnb", emit_condjump, (void*)0x73 },
+	{ "jnc", emit_condjump, (void*)0x73 },
+	{ "jne", emit_condjump, (void*)0x75 },
+	{ "jnge", emit_condjump, (void*)0x7c },
+	{ "jng", emit_condjump, (void*)0x7e },
+	{ "jnle", emit_condjump, (void*)0x7f },
+	{ "jnl", emit_condjump, (void*)0x7d },
+	{ "jnz", emit_condjump, (void*)0x75 },
+	{ "jp", emit_condjump, (void*)0x7a },
+	{ "jz", emit_condjump, (void*)0x74 },
 	{ "movb", emit_mov, NULL },
 	{ "movl", emit_mov, NULL },
 	{ "movq", emit_mov, NULL },
@@ -939,15 +939,15 @@ static op_t ops[] = {
 	{ "mulss", emit_twobyte, &params_mulss },
 	{ "negl", emit_op_rm, &params_neg },
 	{ "negq", emit_op_rm, &params_neg },
-	{ "nop", emit_opsingle, (void *) 0x90 },
+	{ "nop", emit_opsingle, (void*)0x90 },
 	{ "notl", emit_op_rm, &params_not },
 	{ "notq", emit_op_rm, &params_not },
 	{ "orb",   emit_subaddand, &params_or },
 	{ "orl",  emit_subaddand, &params_or },
 	{ "orq",  emit_subaddand, &params_or },
-	{ "pop", emit_opreg, (void *) 0x58 },
-	{ "push", emit_opreg, (void *) 0x50 },
-	{ "ret", emit_opsingle, (void *) 0xc3 },
+	{ "pop", emit_opreg, (void*)0x58 },
+	{ "push", emit_opreg, (void*)0x50 },
+	{ "ret", emit_opsingle, (void*)0xc3 },
 	{ "sarl", emit_op_rm_cl, &params_sar },
 	{ "shl", emit_op_rm_cl, &params_shl },
 	{ "shrl", emit_op_rm_cl, &params_shr },
@@ -1066,10 +1066,10 @@ parsereg(const char* str)
 }
 
 typedef enum {
-	TOK_LABEL = 0x80,
-	TOK_INT = 0x81,
-	TOK_END = 0x82,
-	TOK_INVALID = 0x83,
+	TOK_LABEL	= 0x80,
+	TOK_INT		= 0x81,
+	TOK_END		= 0x82,
+	TOK_INVALID	= 0x83,
 } token_t;
 
 static unsigned char
@@ -1101,8 +1101,8 @@ nexttok(const char** str, char* label, u64* val)
 		*str = s+a+1;
 		return TOK_LABEL;
 	}else if(*s >= '0' && *s <= '9'){
-		char * endptr = NULL;
-		u64 v = strtoull(s, &endptr, 0);
+		char	* endptr = NULL;
+		u64	v = strtoull(s, &endptr, 0);
 		if(endptr && (endptr-s == 0))
 			crap("invalid integer %s", s);
 		if(val) *val = v;
@@ -1137,8 +1137,8 @@ parsearg(const char** str)
 		}
 		if(ttype != TOK_INT)
 			crap("expected integer");
-		arg.type = T_IMMEDIATE;
-		arg.v.imm = negative * val;
+		arg.type	= T_IMMEDIATE;
+		arg.v.imm	= negative * val;
 		break;
 	case '*':
 		if((ttype = nexttok(&s, NULL, NULL)) != '%'){
@@ -1151,8 +1151,8 @@ parsearg(const char** str)
 	case '%':
 		if(nexttok(&s, label, &val) != TOK_LABEL)
 			crap("expected label");
-		arg.type = T_REGISTER;
-		arg.v.reg = parsereg(label);
+		arg.type	= T_REGISTER;
+		arg.v.reg	= parsereg(label);
 		break;
 	case TOK_LABEL:
 		arg.type = T_LABEL;
@@ -1176,23 +1176,23 @@ tok_memory:
 		if(ttype == '%' && nexttok(&s, label, &val) != TOK_LABEL)
 			crap("expected register");
 		if(ttype == '%'){
-			arg.v.mem.basetype = T_REGISTER;
-			arg.v.mem.base.reg = parsereg(label);
+			arg.v.mem.basetype	= T_REGISTER;
+			arg.v.mem.base.reg	= parsereg(label);
 		}else if(ttype == TOK_INT){
-			arg.v.mem.basetype = T_IMMEDIATE;
-			arg.v.mem.base.imm = val;
+			arg.v.mem.basetype	= T_IMMEDIATE;
+			arg.v.mem.base.imm	= val;
 		}
 		if((ttype = nexttok(&s, NULL, NULL)) == ','){
 			ttype = nexttok(&s, label, &val);
 			if(ttype == '%' && nexttok(&s, label, &val) != TOK_LABEL)
 				crap("expected register");
 			if(ttype == '%'){
-				arg.v.mem.indextype = T_REGISTER;
-				arg.v.mem.index.reg = parsereg(label);
+				arg.v.mem.indextype	= T_REGISTER;
+				arg.v.mem.index.reg	= parsereg(label);
 			}else if(ttype == TOK_INT){
 				crap("index must be register");
-				arg.v.mem.indextype = T_IMMEDIATE;
-				arg.v.mem.index.imm = val;
+				arg.v.mem.indextype	= T_IMMEDIATE;
+				arg.v.mem.index.imm	= val;
 			}
 			if(nexttok(&s, NULL, NULL) != ',')
 				crap("expected ','");
@@ -1208,7 +1208,7 @@ tok_memory:
 			crap("expected ')' or ','");
 		break;
 	default:
-		crap("invalid token %hu in %s", *(unsigned char *) s, *str);
+		crap("invalid token %hu in %s", *(unsigned char*)s, *str);
 		break;
 	}
 
@@ -1251,14 +1251,14 @@ assemble_line(const char* input, size_t len)
 {
 	char line[4096];
 	char * s;
-	op_t * o;
-	char * opn;
-	arg_t arg1, arg2;
+	op_t	* o;
+	char	* opn;
+	arg_t	arg1, arg2;
 
 	arg1.type = T_NONE;
 	arg2.type	= T_NONE;
-	opn	= NULL;
-	o	= NULL;
+	opn		= NULL;
+	o		= NULL;
 
 	if(len < 1)
 		return;
@@ -1277,16 +1277,16 @@ assemble_line(const char* input, size_t len)
 		else
 			hash_add_label(line, compiledOfs);
 	}else{
-		opn = line;
-		s = strchr(line, ' ');
+		opn	= line;
+		s	= strchr(line, ' ');
 		if(s){
-			*s++ = 0;
-			arg1 = parsearg((const char * *) &s);
+			*s++	= 0;
+			arg1	= parsearg((const char**)&s);
 			if(*s){
 				if(*s != ',')
 					crap("expected ',', got '%c'", *s);
 				++s;
-				arg2 = parsearg((const char * *) &s);
+				arg2 = parsearg((const char**)&s);
 			}
 		}
 
@@ -1309,8 +1309,8 @@ assemble_line(const char* input, size_t len)
 int
 main(int argc, char* argv[])
 {
-	char line[4096];
-	size_t	len;
+	char	line[4096];
+	size_t len;
 	int	pass;
 	FILE * file = NULL;
 

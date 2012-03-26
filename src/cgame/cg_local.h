@@ -234,9 +234,9 @@ typedef enum {
 
 typedef enum {
 	LEF_PUFF_DONT_SCALE = 0x0001,	/* do not scale size over time */
-	LEF_TUMBLE = 0x0002,		/* tumble over time, used for ejecting shells */
-	LEF_SOUND1 = 0x0004,		/* sound 1 for kamikaze */
-	LEF_SOUND2 = 0x0008		/* sound 2 for kamikaze */
+	LEF_TUMBLE	= 0x0002,	/* tumble over time, used for ejecting shells */
+	LEF_SOUND1	= 0x0004,	/* sound 1 for kamikaze */
+	LEF_SOUND2	= 0x0008	/* sound 2 for kamikaze */
 } leFlag_t;
 
 typedef enum {
@@ -990,7 +990,7 @@ typedef struct {
 	float		screenXBias;
 
 	int		serverCommandSequence;	/* reliable command stream counter */
-	int		processedSnapshotNum;			/* the number of snapshots cgame has requested */
+	int		processedSnapshotNum;	/* the number of snapshots cgame has requested */
 
 	qboolean	localServer;	/* detected on startup by checking sv_running */
 
@@ -1076,115 +1076,115 @@ extern weaponInfo_t cg_weapons[MAX_WEAPONS];
 extern itemInfo_t	cg_items[MAX_ITEMS];
 extern markPoly_t	cg_markPolys[MAX_MARK_POLYS];
 
-extern vmCvar_t cg_centertime;
-extern vmCvar_t cg_runpitch;
-extern vmCvar_t cg_runroll;
-extern vmCvar_t cg_bobup;
-extern vmCvar_t cg_bobpitch;
-extern vmCvar_t cg_bobroll;
-extern vmCvar_t cg_swingSpeed;
-extern vmCvar_t cg_shadows;
-extern vmCvar_t cg_gibs;
-extern vmCvar_t cg_drawTimer;
-extern vmCvar_t cg_drawFPS;
-extern vmCvar_t cg_drawSnapshot;
-extern vmCvar_t cg_draw3dIcons;
-extern vmCvar_t cg_drawIcons;
-extern vmCvar_t cg_drawAmmoWarning;
-extern vmCvar_t cg_drawCrosshair;
-extern vmCvar_t cg_drawCrosshairNames;
-extern vmCvar_t cg_drawRewards;
-extern vmCvar_t cg_drawTeamOverlay;
-extern vmCvar_t cg_teamOverlayUserinfo;
-extern vmCvar_t cg_crosshairX;
-extern vmCvar_t cg_crosshairY;
-extern vmCvar_t cg_crosshairSize;
-extern vmCvar_t cg_crosshairHealth;
-extern vmCvar_t cg_drawStatus;
-extern vmCvar_t cg_draw2D;
-extern vmCvar_t cg_animSpeed;
-extern vmCvar_t cg_debugAnim;
-extern vmCvar_t cg_debugPosition;
-extern vmCvar_t cg_debugEvents;
-extern vmCvar_t cg_railTrailTime;
-extern vmCvar_t cg_errorDecay;
-extern vmCvar_t cg_nopredict;
-extern vmCvar_t cg_noPlayerAnims;
-extern vmCvar_t cg_showmiss;
-extern vmCvar_t cg_footsteps;
-extern vmCvar_t cg_addMarks;
-extern vmCvar_t cg_brassTime;
-extern vmCvar_t cg_gun_frame;
-extern vmCvar_t cg_gun_x;
-extern vmCvar_t cg_gun_y;
-extern vmCvar_t cg_gun_z;
-extern vmCvar_t cg_drawGun;
-extern vmCvar_t cg_viewsize;
-extern vmCvar_t cg_tracerChance;
-extern vmCvar_t cg_tracerWidth;
-extern vmCvar_t cg_tracerLength;
-extern vmCvar_t cg_autoswitch;
-extern vmCvar_t cg_ignore;
-extern vmCvar_t cg_simpleItems;
-extern vmCvar_t cg_fov;
-extern vmCvar_t cg_zoomFov;
-extern vmCvar_t cg_thirdPersonRange;
-extern vmCvar_t cg_thirdPersonAngle;
-extern vmCvar_t cg_thirdPerson;
-extern vmCvar_t cg_lagometer;
-extern vmCvar_t cg_drawAttacker;
-extern vmCvar_t cg_synchronousClients;
-extern vmCvar_t cg_teamChatTime;
-extern vmCvar_t cg_teamChatHeight;
-extern vmCvar_t cg_stats;
-extern vmCvar_t cg_forceModel;
-extern vmCvar_t cg_buildScript;
-extern vmCvar_t cg_paused;
-extern vmCvar_t cg_blood;
-extern vmCvar_t cg_predictItems;
-extern vmCvar_t cg_deferPlayers;
-extern vmCvar_t cg_drawFriend;
-extern vmCvar_t cg_teamChatsOnly;
-extern vmCvar_t cg_noVoiceChats;
-extern vmCvar_t cg_noVoiceText;
-extern vmCvar_t cg_scorePlum;
-extern vmCvar_t cg_smoothClients;
-extern vmCvar_t pmove_fixed;
-extern vmCvar_t pmove_msec;
+extern vmCvar_t		cg_centertime;
+extern vmCvar_t		cg_runpitch;
+extern vmCvar_t		cg_runroll;
+extern vmCvar_t		cg_bobup;
+extern vmCvar_t		cg_bobpitch;
+extern vmCvar_t		cg_bobroll;
+extern vmCvar_t		cg_swingSpeed;
+extern vmCvar_t		cg_shadows;
+extern vmCvar_t		cg_gibs;
+extern vmCvar_t		cg_drawTimer;
+extern vmCvar_t		cg_drawFPS;
+extern vmCvar_t		cg_drawSnapshot;
+extern vmCvar_t		cg_draw3dIcons;
+extern vmCvar_t		cg_drawIcons;
+extern vmCvar_t		cg_drawAmmoWarning;
+extern vmCvar_t		cg_drawCrosshair;
+extern vmCvar_t		cg_drawCrosshairNames;
+extern vmCvar_t		cg_drawRewards;
+extern vmCvar_t		cg_drawTeamOverlay;
+extern vmCvar_t		cg_teamOverlayUserinfo;
+extern vmCvar_t		cg_crosshairX;
+extern vmCvar_t		cg_crosshairY;
+extern vmCvar_t		cg_crosshairSize;
+extern vmCvar_t		cg_crosshairHealth;
+extern vmCvar_t		cg_drawStatus;
+extern vmCvar_t		cg_draw2D;
+extern vmCvar_t		cg_animSpeed;
+extern vmCvar_t		cg_debugAnim;
+extern vmCvar_t		cg_debugPosition;
+extern vmCvar_t		cg_debugEvents;
+extern vmCvar_t		cg_railTrailTime;
+extern vmCvar_t		cg_errorDecay;
+extern vmCvar_t		cg_nopredict;
+extern vmCvar_t		cg_noPlayerAnims;
+extern vmCvar_t		cg_showmiss;
+extern vmCvar_t		cg_footsteps;
+extern vmCvar_t		cg_addMarks;
+extern vmCvar_t		cg_brassTime;
+extern vmCvar_t		cg_gun_frame;
+extern vmCvar_t		cg_gun_x;
+extern vmCvar_t		cg_gun_y;
+extern vmCvar_t		cg_gun_z;
+extern vmCvar_t		cg_drawGun;
+extern vmCvar_t		cg_viewsize;
+extern vmCvar_t		cg_tracerChance;
+extern vmCvar_t		cg_tracerWidth;
+extern vmCvar_t		cg_tracerLength;
+extern vmCvar_t		cg_autoswitch;
+extern vmCvar_t		cg_ignore;
+extern vmCvar_t		cg_simpleItems;
+extern vmCvar_t		cg_fov;
+extern vmCvar_t		cg_zoomFov;
+extern vmCvar_t		cg_thirdPersonRange;
+extern vmCvar_t		cg_thirdPersonAngle;
+extern vmCvar_t		cg_thirdPerson;
+extern vmCvar_t		cg_lagometer;
+extern vmCvar_t		cg_drawAttacker;
+extern vmCvar_t		cg_synchronousClients;
+extern vmCvar_t		cg_teamChatTime;
+extern vmCvar_t		cg_teamChatHeight;
+extern vmCvar_t		cg_stats;
+extern vmCvar_t		cg_forceModel;
+extern vmCvar_t		cg_buildScript;
+extern vmCvar_t		cg_paused;
+extern vmCvar_t		cg_blood;
+extern vmCvar_t		cg_predictItems;
+extern vmCvar_t		cg_deferPlayers;
+extern vmCvar_t		cg_drawFriend;
+extern vmCvar_t		cg_teamChatsOnly;
+extern vmCvar_t		cg_noVoiceChats;
+extern vmCvar_t		cg_noVoiceText;
+extern vmCvar_t		cg_scorePlum;
+extern vmCvar_t		cg_smoothClients;
+extern vmCvar_t		pmove_fixed;
+extern vmCvar_t		pmove_msec;
 /* extern	vmCvar_t		cg_pmove_fixed; */
-extern vmCvar_t cg_cameraOrbit;
-extern vmCvar_t cg_cameraOrbitDelay;
-extern vmCvar_t cg_timescaleFadeEnd;
-extern vmCvar_t cg_timescaleFadeSpeed;
-extern vmCvar_t cg_timescale;
-extern vmCvar_t cg_cameraMode;
-extern vmCvar_t cg_smallFont;
-extern vmCvar_t cg_bigFont;
-extern vmCvar_t cg_noTaunt;
-extern vmCvar_t cg_noProjectileTrail;
-extern vmCvar_t cg_oldRail;
-extern vmCvar_t cg_oldRocket;
-extern vmCvar_t cg_oldPlasma;
-extern vmCvar_t cg_trueLightning;
+extern vmCvar_t		cg_cameraOrbit;
+extern vmCvar_t		cg_cameraOrbitDelay;
+extern vmCvar_t		cg_timescaleFadeEnd;
+extern vmCvar_t		cg_timescaleFadeSpeed;
+extern vmCvar_t		cg_timescale;
+extern vmCvar_t		cg_cameraMode;
+extern vmCvar_t		cg_smallFont;
+extern vmCvar_t		cg_bigFont;
+extern vmCvar_t		cg_noTaunt;
+extern vmCvar_t		cg_noProjectileTrail;
+extern vmCvar_t		cg_oldRail;
+extern vmCvar_t		cg_oldRocket;
+extern vmCvar_t		cg_oldPlasma;
+extern vmCvar_t		cg_trueLightning;
 #ifdef MISSIONPACK
-extern vmCvar_t cg_redTeamName;
-extern vmCvar_t cg_blueTeamName;
-extern vmCvar_t cg_currentSelectedPlayer;
-extern vmCvar_t cg_currentSelectedPlayerName;
-extern vmCvar_t cg_singlePlayer;
-extern vmCvar_t cg_enableDust;
-extern vmCvar_t cg_enableBreath;
-extern vmCvar_t cg_singlePlayerActive;
-extern vmCvar_t cg_recordSPDemo;
-extern vmCvar_t cg_recordSPDemoName;
-extern vmCvar_t cg_obeliskRespawnDelay;
+extern vmCvar_t		cg_redTeamName;
+extern vmCvar_t		cg_blueTeamName;
+extern vmCvar_t		cg_currentSelectedPlayer;
+extern vmCvar_t		cg_currentSelectedPlayerName;
+extern vmCvar_t		cg_singlePlayer;
+extern vmCvar_t		cg_enableDust;
+extern vmCvar_t		cg_enableBreath;
+extern vmCvar_t		cg_singlePlayerActive;
+extern vmCvar_t		cg_recordSPDemo;
+extern vmCvar_t		cg_recordSPDemoName;
+extern vmCvar_t		cg_obeliskRespawnDelay;
 #endif
 
 /*
  * cg_main.c
  *  */
-const char *CG_ConfigString(int index);
-const char *CG_Argv(int arg);
+const char*CG_ConfigString(int index);
+const char*CG_Argv(int arg);
 
 void QDECL CG_Printf(const char *msg, ...) __attribute__ ((format (printf, 1, 2)));
 void QDECL CG_Error(const char *msg,
@@ -1202,7 +1202,7 @@ void CG_MouseEvent(int x, int y);
 void CG_EventHandling(int type);
 void CG_RankRunFrame(void);
 void CG_SetScoreSelection(void *menu);
-score_t *CG_GetSelectedScore(void);
+score_t*CG_GetSelectedScore(void);
 void CG_BuildSpectatorString(void);
 
 
@@ -1244,8 +1244,8 @@ void CG_DrawSmallStringColor(int x, int y, const char *s, vec4_t color);
 
 int CG_DrawStrlen(const char *str);
 
-float   *CG_FadeColor(int startMsec, int totalMsec);
-float *CG_TeamColor(int team);
+float*CG_FadeColor(int startMsec, int totalMsec);
+float*CG_TeamColor(int team);
 void CG_TileClear(void);
 void CG_ColorForHealth(vec4_t hcolor);
 void CG_GetColorForHealth(int health, int armor, vec4_t hcolor);
@@ -1296,8 +1296,8 @@ void CG_ShowResponseHead(void);
 void CG_SetPrintString(int type, const char *p);
 void CG_InitTeamChat(void);
 void CG_GetTeamColor(vec4_t *color);
-const char *CG_GetGameStatusText(void);
-const char *CG_GetKillerText(void);
+const char*CG_GetGameStatusText(void);
+const char*CG_GetKillerText(void);
 void CG_Draw3DModel(float x, float y, float w, float h, qhandle_t model,
 		    qhandle_t skin, vec3_t origin,
 		    vec3_t angles);
@@ -1305,7 +1305,7 @@ void CG_Text_PaintChar(float x, float y, float width, float height, float scale,
 		       float s, float t, float s2, float t2,
 		       qhandle_t hShader);
 void CG_CheckOrderPending(void);
-const char *CG_GameTypeString(void);
+const char*CG_GameTypeString(void);
 qboolean CG_YourTeamHasFlag(void);
 qboolean CG_OtherTeamHasFlag(void);
 qhandle_t CG_StatusHandle(int task);
@@ -1339,7 +1339,7 @@ void CG_LoadDeferredPlayers(void);
  * cg_events.c
  *  */
 void CG_CheckEvents(centity_t *cent);
-const char      *CG_PlaceString(int rank);
+const char*CG_PlaceString(int rank);
 void CG_EntityEvent(centity_t *cent, vec3_t position);
 void CG_PainEvent(centity_t *cent, int health);
 
@@ -1406,21 +1406,21 @@ void    CG_ImpactMark(qhandle_t markShader,
  * cg_localents.c
  *  */
 void    CG_InitLocalEntities(void);
-localEntity_t   *CG_AllocLocalEntity(void);
+localEntity_t*CG_AllocLocalEntity(void);
 void    CG_AddLocalEntities(void);
 
 /*
  * cg_effects.c
  *  */
-localEntity_t *CG_SmokePuff(const vec3_t p,
-			    const vec3_t vel,
-			    float radius,
-			    float r, float g, float b, float a,
-			    float duration,
-			    int startTime,
-			    int fadeInTime,
-			    int leFlags,
-			    qhandle_t hShader);
+localEntity_t*CG_SmokePuff(const vec3_t p,
+			   const vec3_t vel,
+			   float radius,
+			   float r, float g, float b, float a,
+			   float duration,
+			   int startTime,
+			   int fadeInTime,
+			   int leFlags,
+			   qhandle_t hShader);
 void CG_BubbleTrail(vec3_t start, vec3_t end, float spacing);
 void CG_SpawnEffect(vec3_t org);
 #ifdef MISSIONPACK
@@ -1438,9 +1438,9 @@ void CG_BigExplode(vec3_t playerOrigin);
 
 void CG_Bleed(vec3_t origin, int entityNum);
 
-localEntity_t *CG_MakeExplosion(vec3_t origin, vec3_t dir,
-				qhandle_t hModel, qhandle_t shader, int msec,
-				qboolean isSprite);
+localEntity_t*CG_MakeExplosion(vec3_t origin, vec3_t dir,
+			       qhandle_t hModel, qhandle_t shader, int msec,
+			       qboolean isSprite);
 
 /*
  * cg_snapshot.c

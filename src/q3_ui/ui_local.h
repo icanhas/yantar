@@ -121,27 +121,27 @@ extern vmCvar_t ui_skipExitCredits;
 #define MTYPE_PTEXT		9
 #define MTYPE_BTEXT		10
 
-#define QMF_BLINK		((unsigned int) 0x00000001)
-#define QMF_SMALLFONT		((unsigned int) 0x00000002)
-#define QMF_LEFT_JUSTIFY	((unsigned int) 0x00000004)
-#define QMF_CENTER_JUSTIFY	((unsigned int) 0x00000008)
-#define QMF_RIGHT_JUSTIFY	((unsigned int) 0x00000010)
-#define QMF_NUMBERSONLY		((unsigned int) 0x00000020)	/* edit field is only numbers */
-#define QMF_HIGHLIGHT		((unsigned int) 0x00000040)
-#define QMF_HIGHLIGHT_IF_FOCUS	((unsigned int) 0x00000080)	/* steady focus */
-#define QMF_PULSEIFFOCUS	((unsigned int) 0x00000100)	/* pulse if focus */
-#define QMF_HASMOUSEFOCUS	((unsigned int) 0x00000200)
-#define QMF_NOONOFFTEXT		((unsigned int) 0x00000400)
-#define QMF_MOUSEONLY		((unsigned int) 0x00000800)	/* only mouse input allowed */
-#define QMF_HIDDEN		((unsigned int) 0x00001000)	/* skips drawing */
-#define QMF_GRAYED		((unsigned int) 0x00002000)	/* grays and disables */
-#define QMF_INACTIVE		((unsigned int) 0x00004000)	/* disables any input */
-#define QMF_NODEFAULTINIT	((unsigned int) 0x00008000)	/* skip default initialization */
-#define QMF_OWNERDRAW		((unsigned int) 0x00010000)
-#define QMF_PULSE		((unsigned int) 0x00020000)
-#define QMF_LOWERCASE		((unsigned int) 0x00040000)	/* edit field is all lower case */
-#define QMF_UPPERCASE		((unsigned int) 0x00080000)	/* edit field is all upper case */
-#define QMF_SILENT		((unsigned int) 0x00100000)
+#define QMF_BLINK		((unsigned int)0x00000001)
+#define QMF_SMALLFONT		((unsigned int)0x00000002)
+#define QMF_LEFT_JUSTIFY	((unsigned int)0x00000004)
+#define QMF_CENTER_JUSTIFY	((unsigned int)0x00000008)
+#define QMF_RIGHT_JUSTIFY	((unsigned int)0x00000010)
+#define QMF_NUMBERSONLY		((unsigned int)0x00000020)	/* edit field is only numbers */
+#define QMF_HIGHLIGHT		((unsigned int)0x00000040)
+#define QMF_HIGHLIGHT_IF_FOCUS	((unsigned int)0x00000080)	/* steady focus */
+#define QMF_PULSEIFFOCUS	((unsigned int)0x00000100)	/* pulse if focus */
+#define QMF_HASMOUSEFOCUS	((unsigned int)0x00000200)
+#define QMF_NOONOFFTEXT		((unsigned int)0x00000400)
+#define QMF_MOUSEONLY		((unsigned int)0x00000800)	/* only mouse input allowed */
+#define QMF_HIDDEN		((unsigned int)0x00001000)	/* skips drawing */
+#define QMF_GRAYED		((unsigned int)0x00002000)	/* grays and disables */
+#define QMF_INACTIVE		((unsigned int)0x00004000)	/* disables any input */
+#define QMF_NODEFAULTINIT	((unsigned int)0x00008000)	/* skip default initialization */
+#define QMF_OWNERDRAW		((unsigned int)0x00010000)
+#define QMF_PULSE		((unsigned int)0x00020000)
+#define QMF_LOWERCASE		((unsigned int)0x00040000)	/* edit field is all lower case */
+#define QMF_UPPERCASE		((unsigned int)0x00080000)	/* edit field is all upper case */
+#define QMF_SILENT		((unsigned int)0x00100000)
 
 /* callback notifications */
 #define QM_GOTFOCUS	1
@@ -252,7 +252,7 @@ extern void                     Menu_Focus(menucommon_s *m);
 extern void                     Menu_AddItem(menuframework_s *menu, void *item);
 extern void                     Menu_AdjustCursor(menuframework_s *menu, int dir);
 extern void                     Menu_Draw(menuframework_s *menu);
-extern void                     *Menu_ItemAtCursor(menuframework_s *m);
+extern void*Menu_ItemAtCursor(menuframework_s *m);
 extern sfxHandle_t      Menu_ActivateItem(menuframework_s *s, menucommon_s* item);
 extern void                     Menu_SetCursor(menuframework_s *s, int cursor);
 extern void                     Menu_SetCursorToItem(menuframework_s *m,
@@ -289,9 +289,9 @@ extern vec4_t	text_color_disabled;
 extern vec4_t	text_color_normal;
 extern vec4_t	text_color_highlight;
 
-extern char	*ui_medalNames[];
-extern char	*ui_medalPicNames[];
-extern char	*ui_medalSounds[];
+extern char *ui_medalNames[];
+extern char *ui_medalPicNames[];
+extern char *ui_medalSounds[];
 
 /*
  * ui_mfield.c
@@ -609,8 +609,8 @@ extern void                     UI_SetActiveMenu(uiMenuCommand_t menu);
 extern void                     UI_PushMenu(menuframework_s *menu);
 extern void                     UI_PopMenu(void);
 extern void                     UI_ForceMenuOff(void);
-extern char                     *UI_Argv(int arg);
-extern char                     *UI_Cvar_VariableString(const char *var_name);
+extern char*UI_Argv(int arg);
+extern char*UI_Cvar_VariableString(const char *var_name);
 extern void                     UI_Refresh(int time);
 extern void                     UI_StartDemoLoop(void);
 extern qboolean m_entersound;
@@ -800,15 +800,15 @@ typedef enum {
 	AWARD_PERFECT
 } awardType_t;
 
-const char *UI_GetArenaInfoByNumber(int num);
-const char *UI_GetArenaInfoByMap(const char *map);
-const char *UI_GetSpecialArenaInfo(const char *tag);
+const char*UI_GetArenaInfoByNumber(int num);
+const char*UI_GetArenaInfoByMap(const char *map);
+const char*UI_GetSpecialArenaInfo(const char *tag);
 int UI_GetNumArenas(void);
 int UI_GetNumSPArenas(void);
 int UI_GetNumSPTiers(void);
 
-char *UI_GetBotInfoByNumber(int num);
-char *UI_GetBotInfoByName(const char *name);
+char*UI_GetBotInfoByNumber(int num);
+char*UI_GetBotInfoByName(const char *name);
 int UI_GetNumBots(void);
 
 void UI_GetBestScore(int level, int *score, int *skill);

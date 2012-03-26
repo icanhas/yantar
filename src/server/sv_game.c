@@ -34,7 +34,7 @@ SV_NumForGentity(sharedEntity_t *ent)
 {
 	int num;
 
-	num = ((byte *) ent - (byte *) sv.gentities) / sv.gentitySize;
+	num = ((byte*)ent - (byte*)sv.gentities) / sv.gentitySize;
 
 	return num;
 }
@@ -44,7 +44,7 @@ SV_GentityNum(int num)
 {
 	sharedEntity_t *ent;
 
-	ent = (sharedEntity_t *) ((byte *) sv.gentities + sv.gentitySize*(num));
+	ent = (sharedEntity_t*)((byte*)sv.gentities + sv.gentitySize*(num));
 
 	return ent;
 }
@@ -54,7 +54,7 @@ SV_GameClientNum(int num)
 {
 	playerState_t *ps;
 
-	ps = (playerState_t *) ((byte *) sv.gameClients + sv.gameClientSize*(num));
+	ps = (playerState_t*)((byte*)sv.gameClients + sv.gameClientSize*(num));
 
 	return ps;
 }
@@ -62,7 +62,7 @@ SV_GameClientNum(int num)
 svEntity_t      *
 SV_SvEntityForGentity(sharedEntity_t *gEnt)
 {
-	if( !gEnt || gEnt->s.number < 0 || gEnt->s.number >= MAX_GENTITIES )
+	if(!gEnt || gEnt->s.number < 0 || gEnt->s.number >= MAX_GENTITIES)
 		Com_Error(ERR_DROP, "SV_SvEntityForGentity: bad gEnt");
 	return &sv.svEntities[ gEnt->s.number ];
 }
@@ -86,10 +86,10 @@ SV_GEntityForSvEntity(svEntity_t *svEnt)
 void
 SV_GameSendServerCommand(int clientNum, const char *text)
 {
-	if( clientNum == -1 )
+	if(clientNum == -1)
 		SV_SendServerCommand(NULL, "%s", text);
 	else{
-		if( clientNum < 0 || clientNum >= sv_maxclients->integer )
+		if(clientNum < 0 || clientNum >= sv_maxclients->integer)
 			return;
 		SV_SendServerCommand(svs.clients + clientNum, "%s", text);
 	}
@@ -106,7 +106,7 @@ SV_GameSendServerCommand(int clientNum, const char *text)
 void
 SV_GameDropClient(int clientNum, const char *reason)
 {
-	if( clientNum < 0 || clientNum >= sv_maxclients->integer )
+	if(clientNum < 0 || clientNum >= sv_maxclients->integer)
 		return;
 	SV_DropClient(svs.clients + clientNum, reason);
 }
@@ -171,7 +171,7 @@ SV_inPVS(const vec3_t p1, const vec3_t p2)
 	leafnum = CM_PointLeafnum (p2);
 	cluster = CM_LeafCluster (leafnum);
 	area2	= CM_LeafArea (leafnum);
-	if( mask && (!(mask[cluster>>3] & (1<<(cluster&7)))))
+	if(mask && (!(mask[cluster>>3] & (1<<(cluster&7)))))
 		return qfalse;
 	if(!CM_AreasConnected (area1, area2))
 		return qfalse;	/* a door blocks sight */
@@ -200,7 +200,7 @@ SV_inPVSIgnorePortals(const vec3_t p1, const vec3_t p2)
 	leafnum = CM_PointLeafnum (p2);
 	cluster = CM_LeafCluster (leafnum);
 
-	if( mask && (!(mask[cluster>>3] & (1<<(cluster&7)))))
+	if(mask && (!(mask[cluster>>3] & (1<<(cluster&7)))))
 		return qfalse;
 
 	return qtrue;
@@ -218,7 +218,7 @@ SV_AdjustAreaPortalState(sharedEntity_t *ent, qboolean open)
 	svEntity_t *svEnt;
 
 	svEnt = SV_SvEntityForGentity(ent);
-	if( svEnt->areanum2 == -1 )
+	if(svEnt->areanum2 == -1)
 		return;
 	CM_AdjustAreaPortalState(svEnt->areanum, svEnt->areanum2, open);
 }
@@ -258,7 +258,7 @@ SV_EntityContact(vec3_t mins, vec3_t maxs, const sharedEntity_t *gEnt,
 void
 SV_GetServerinfo(char *buffer, int bufferSize)
 {
-	if( bufferSize < 1 )
+	if(bufferSize < 1)
 		Com_Error(ERR_DROP, "SV_GetServerinfo: bufferSize == %i",
 			bufferSize);
 	Q_strncpyz(buffer, Cvar_InfoString(CVAR_SERVERINFO), bufferSize);
@@ -292,7 +292,7 @@ SV_LocateGameData(sharedEntity_t *gEnts, int numGEntities, int sizeofGEntity_t,
 void
 SV_GetUsercmd(int clientNum, usercmd_t *cmd)
 {
-	if( clientNum < 0 || clientNum >= sv_maxclients->integer )
+	if(clientNum < 0 || clientNum >= sv_maxclients->integer)
 		Com_Error(ERR_DROP, "SV_GetUsercmd: bad clientNum:%i", clientNum);
 	*cmd = svs.clients[clientNum].lastUsercmd;
 }
@@ -317,12 +317,12 @@ FloatAsInt(float f)
 intptr_t
 SV_GameSystemCalls(intptr_t *args)
 {
-	switch( args[0] ){
+	switch(args[0]){
 	case G_PRINT:
-		Com_Printf("%s", (const char *) VMA(1));
+		Com_Printf("%s", (const char*)VMA(1));
 		return 0;
 	case G_ERROR:
-		Com_Error(ERR_DROP, "%s", (const char *) VMA(1));
+		Com_Error(ERR_DROP, "%s", (const char*)VMA(1));
 		return 0;
 	case G_MILLISECONDS:
 		return Sys_Milliseconds();
@@ -333,10 +333,10 @@ SV_GameSystemCalls(intptr_t *args)
 		Cvar_Update(VMA(1));
 		return 0;
 	case G_CVAR_SET:
-		Cvar_SetSafe((const char *) VMA(1), (const char *) VMA(2));
+		Cvar_SetSafe((const char*)VMA(1), (const char*)VMA(2));
 		return 0;
 	case G_CVAR_VARIABLE_INTEGER_VALUE:
-		return Cvar_VariableIntegerValue((const char *) VMA(1));
+		return Cvar_VariableIntegerValue((const char*)VMA(1));
 	case G_CVAR_VARIABLE_STRING_BUFFER:
 		Cvar_VariableStringBuffer(VMA(1), VMA(2), args[3]);
 		return 0;
@@ -442,7 +442,7 @@ SV_GameSystemCalls(intptr_t *args)
 
 		s = Com_Parse(&sv.entityParsePoint);
 		Q_strncpyz(VMA(1), s, args[2]);
-		if( !sv.entityParsePoint && !s[0] )
+		if(!sv.entityParsePoint && !s[0])
 			return qfalse;
 		else
 			return qtrue;
@@ -911,7 +911,7 @@ SV_GameSystemCalls(intptr_t *args)
 
 	default:
 		Com_Error(ERR_DROP, "Bad game system trap: %ld",
-			(long int) args[0]);
+			(long int)args[0]);
 	}
 	return 0;
 }
@@ -926,7 +926,7 @@ SV_GameSystemCalls(intptr_t *args)
 void
 SV_ShutdownGameProgs(void)
 {
-	if( !gvm )
+	if(!gvm)
 		return;
 	VM_Call(gvm, GAME_SHUTDOWN, qfalse);
 	VM_Free(gvm);
@@ -952,7 +952,7 @@ SV_InitGameVM(qboolean restart)
 	 * a previous level
 	 * https://zerowing.idsoftware.com/bugzilla/show_bug.cgi?id=522
 	 *   now done before GAME_INIT call */
-	for( i = 0; i < sv_maxclients->integer; i++ )
+	for(i = 0; i < sv_maxclients->integer; i++)
 		svs.clients[i].gentity = NULL;
 
 	/* use the current msec count for a random seed
@@ -972,13 +972,13 @@ SV_InitGameVM(qboolean restart)
 void
 SV_RestartGameProgs(void)
 {
-	if( !gvm )
+	if(!gvm)
 		return;
 	VM_Call(gvm, GAME_SHUTDOWN, qtrue);
 
 	/* do a restart instead of a free */
 	gvm = VM_Restart(gvm, qtrue);
-	if( !gvm )
+	if(!gvm)
 		Com_Error(ERR_FATAL, "VM_Restart on game failed");
 
 	SV_InitGameVM(qtrue);
@@ -1000,7 +1000,7 @@ SV_InitGameProgs(void)
 	extern int bot_enable;
 
 	var = Cvar_Get("bot_enable", "1", CVAR_LATCH);
-	if( var )
+	if(var)
 		bot_enable = var->integer;
 	else
 		bot_enable = 0;
@@ -1009,7 +1009,7 @@ SV_InitGameProgs(void)
 	gvm =
 		VM_Create("qagame", SV_GameSystemCalls,
 			Cvar_VariableValue("vm_game"));
-	if( !gvm )
+	if(!gvm)
 		Com_Error(ERR_FATAL, "VM_Create on game failed");
 
 	SV_InitGameVM(qfalse);
@@ -1026,7 +1026,7 @@ SV_InitGameProgs(void)
 qboolean
 SV_GameCommand(void)
 {
-	if( sv.state != SS_GAME )
+	if(sv.state != SS_GAME)
 		return qfalse;
 
 	return VM_Call(gvm, GAME_CONSOLE_COMMAND);

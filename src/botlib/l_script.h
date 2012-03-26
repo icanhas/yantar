@@ -68,16 +68,16 @@
  *      the ASCII code of the literal
  * number sub type
  * --------------- */
-#define TT_DECIMAL	0x0008	/* decimal number */
-#define TT_HEX		0x0100	/* hexadecimal number */
-#define TT_OCTAL	0x0200	/* octal number */
+#define TT_DECIMAL		0x0008	/* decimal number */
+#define TT_HEX			0x0100	/* hexadecimal number */
+#define TT_OCTAL		0x0200	/* octal number */
 #ifdef BINARYNUMBERS
-#define TT_BINARY	0x0400	/* binary number */
+#define TT_BINARY		0x0400	/* binary number */
 #endif	/* BINARYNUMBERS */
-#define TT_FLOAT	0x0800	/* floating point number */
-#define TT_INTEGER	0x1000	/* integer number */
-#define TT_LONG		0x2000	/* long number */
-#define TT_UNSIGNED	0x4000	/* unsigned number */
+#define TT_FLOAT		0x0800	/* floating point number */
+#define TT_INTEGER		0x1000	/* integer number */
+#define TT_LONG			0x2000	/* long number */
+#define TT_UNSIGNED		0x4000	/* unsigned number */
 /* punctuation sub type
  * -------------------- */
 #define P_RSHIFT_ASSIGN		1
@@ -154,9 +154,9 @@ typedef struct punctuation_s {
 
 /* token */
 typedef struct token_s {
-	char string[MAX_TOKEN];	/* available token */
-	int type;		/* last read token type */
-	int subtype;		/* last read token sub type */
+	char			string[MAX_TOKEN];	/* available token */
+	int			type;			/* last read token type */
+	int			subtype;		/* last read token sub type */
 #ifdef NUMBERVALUE
 	unsigned long int	intvalue;	/* integer value */
 	float			floatvalue;	/* floating point value */
@@ -227,11 +227,11 @@ void ResetScript(script_t *script);
 /* returns true if at the end of the script */
 int EndOfScript(script_t *script);
 /* returns a pointer to the punctuation with the given number */
-char *PunctuationFromNum(script_t *script, int num);
+char*PunctuationFromNum(script_t *script, int num);
 /* load a script from the given file at the given offset with the given length */
-script_t *LoadScriptFile(const char *filename);
+script_t*LoadScriptFile(const char *filename);
 /* load a script from the given memory with the given length */
-script_t *LoadScriptMemory(char *ptr, int length, char *name);
+script_t*LoadScriptMemory(char *ptr, int length, char *name);
 /* free a script */
 void FreeScript(script_t *script);
 /* set the base folder to load files from */

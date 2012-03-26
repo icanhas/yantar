@@ -77,14 +77,14 @@ static int numIPFilters;
 static qboolean
 StringToFilter(char *s, ipFilter_t *f)
 {
-	char num[128];
-	int i, j;
-	byte b[4];
-	byte m[4];
+	char	num[128];
+	int	i, j;
+	byte	b[4];
+	byte	m[4];
 
 	for(i=0; i<4; i++){
-		b[i] = 0;
-		m[i] = 0;
+		b[i]	= 0;
+		m[i]	= 0;
 	}
 
 	for(i=0; i<4; i++){
@@ -113,8 +113,8 @@ StringToFilter(char *s, ipFilter_t *f)
 		s++;
 	}
 
-	f->mask = *(unsigned *) m;
-	f->compare = *(unsigned *) b;
+	f->mask = *(unsigned*)m;
+	f->compare = *(unsigned*)b;
 
 	return qtrue;
 }
@@ -127,19 +127,19 @@ StringToFilter(char *s, ipFilter_t *f)
 static void
 UpdateIPBans(void)
 {
-	byte b[4];
-	byte m[4];
-	int i,j;
-	char iplist_final[MAX_CVAR_VALUE_STRING];
-	char ip[64];
+	byte	b[4];
+	byte	m[4];
+	int	i,j;
+	char	iplist_final[MAX_CVAR_VALUE_STRING];
+	char	ip[64];
 
 	*iplist_final = 0;
 	for(i = 0; i < numIPFilters; i++){
 		if(ipFilters[i].compare == 0xffffffff)
 			continue;
 
-		*(unsigned *) b = ipFilters[i].compare;
-		*(unsigned *) m = ipFilters[i].mask;
+		*(unsigned*)b	= ipFilters[i].compare;
+		*(unsigned*)m	= ipFilters[i].mask;
 		*ip = 0;
 		for(j = 0; j < 4; j++){
 			if(m[j]!=255)
@@ -168,13 +168,13 @@ UpdateIPBans(void)
 qboolean
 G_FilterPacket(char *from)
 {
-	int i;
-	unsigned	in;
-	byte		m[4];
-	char		*p;
+	int	i;
+	unsigned in;
+	byte	m[4];
+	char *p;
 
-	i = 0;
-	p = from;
+	i	= 0;
+	p	= from;
 	while(*p && i < 4){
 		m[i] = 0;
 		while(*p >= '0' && *p <= '9'){
@@ -186,7 +186,7 @@ G_FilterPacket(char *from)
 		i++, p++;
 	}
 
-	in = *(unsigned *) m;
+	in = *(unsigned*)m;
 
 	for(i=0; i<numIPFilters; i++)
 		if((in & ipFilters[i].mask) == ipFilters[i].compare)
@@ -230,12 +230,12 @@ AddIP(char *str)
 void
 G_ProcessIPBans(void)
 {
-	char *s, *t;
-	char str[MAX_CVAR_VALUE_STRING];
+	char	*s, *t;
+	char	str[MAX_CVAR_VALUE_STRING];
 
 	Q_strncpyz(str, g_banIPs.string, sizeof(str));
 
-	for(t = s = g_banIPs.string; *t; /* */ ){
+	for(t = s = g_banIPs.string; *t; /* */){
 		s = strchr(s, ' ');
 		if(!s)
 			break;
@@ -258,7 +258,7 @@ Svcmd_AddIP_f(void)
 {
 	char str[MAX_TOKEN_CHARS];
 
-	if( trap_Argc() < 2 ){
+	if(trap_Argc() < 2){
 		G_Printf("Usage:  addip <ip-mask>\n");
 		return;
 	}
@@ -277,11 +277,11 @@ Svcmd_AddIP_f(void)
 void
 Svcmd_RemoveIP_f(void)
 {
-	ipFilter_t	f;
+	ipFilter_t f;
 	int	i;
 	char	str[MAX_TOKEN_CHARS];
 
-	if( trap_Argc() < 2 ){
+	if(trap_Argc() < 2){
 		G_Printf("Usage:  sv removeip <ip-mask>\n");
 		return;
 	}
@@ -317,10 +317,10 @@ Svcmd_EntityList_f(void)
 
 	check = g_entities+1;
 	for(e = 1; e < level.num_entities; e++, check++){
-		if( !check->inuse )
+		if(!check->inuse)
 			continue;
 		G_Printf("%3i:", e);
-		switch( check->s.eType ){
+		switch(check->s.eType){
 		case ET_GENERAL:
 			G_Printf("ET_GENERAL          ");
 			break;
@@ -362,7 +362,7 @@ Svcmd_EntityList_f(void)
 			break;
 		}
 
-		if( check->classname )
+		if(check->classname)
 			G_Printf("%s", check->classname);
 		G_Printf("\n");
 	}
@@ -371,20 +371,20 @@ Svcmd_EntityList_f(void)
 gclient_t       *
 ClientForString(const char *s)
 {
-	gclient_t	*cl;
+	gclient_t *cl;
 	int	i;
 	int	idnum;
 
 	/* numeric values are just slot numbers */
-	if( s[0] >= '0' && s[0] <= '9' ){
+	if(s[0] >= '0' && s[0] <= '9'){
 		idnum = atoi(s);
-		if( idnum < 0 || idnum >= level.maxclients ){
+		if(idnum < 0 || idnum >= level.maxclients){
 			Com_Printf("Bad client slot: %i\n", idnum);
 			return NULL;
 		}
 
 		cl = &level.clients[idnum];
-		if( cl->pers.connected == CON_DISCONNECTED ){
+		if(cl->pers.connected == CON_DISCONNECTED){
 			G_Printf("Client %i is not connected\n", idnum);
 			return NULL;
 		}
@@ -392,11 +392,11 @@ ClientForString(const char *s)
 	}
 
 	/* check for a name match */
-	for( i=0; i < level.maxclients; i++ ){
+	for(i=0; i < level.maxclients; i++){
 		cl = &level.clients[i];
-		if( cl->pers.connected == CON_DISCONNECTED )
+		if(cl->pers.connected == CON_DISCONNECTED)
 			continue;
-		if( !Q_stricmp(cl->pers.netname, s))
+		if(!Q_stricmp(cl->pers.netname, s))
 			return cl;
 	}
 
@@ -421,7 +421,7 @@ Svcmd_ForceTeam_f(void)
 	/* find the player */
 	trap_Argv(1, str, sizeof(str));
 	cl = ClientForString(str);
-	if( !cl )
+	if(!cl)
 		return;
 
 	/* set the team */
@@ -429,7 +429,7 @@ Svcmd_ForceTeam_f(void)
 	SetTeam(&g_entities[cl - level.clients], str);
 }
 
-char    *ConcatArgs(int start);
+char*ConcatArgs(int start);
 
 qboolean
 ConsoleCommand(void)

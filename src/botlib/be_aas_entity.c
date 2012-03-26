@@ -70,7 +70,7 @@ AAS_UpdateEntity(int entnum, bot_entitystate_t *state)
 	if(!aasworld.loaded){
 		botimport.Print(PRT_MESSAGE, "AAS_UpdateEntity: not loaded\n");
 		return BLERR_NOAASFILE;
-	}	
+	}
 
 	ent = &aasworld.entities[entnum];
 
@@ -87,22 +87,22 @@ AAS_UpdateEntity(int entnum, bot_entitystate_t *state)
 	}
 
 	ent->i.update_time = AAS_Time() - ent->i.ltime;
-	ent->i.type	= state->type;
-	ent->i.flags	= state->flags;
-	ent->i.ltime	= AAS_Time();
+	ent->i.type = state->type;
+	ent->i.flags = state->flags;
+	ent->i.ltime = AAS_Time();
 	VectorCopy(ent->i.origin, ent->i.lastvisorigin);
 	VectorCopy(state->old_origin, ent->i.old_origin);
 	ent->i.solid = state->solid;
-	ent->i.groundent	= state->groundent;
-	ent->i.modelindex	= state->modelindex;
-	ent->i.modelindex2	= state->modelindex2;
-	ent->i.frame	= state->frame;
-	ent->i.event	= state->event;
-	ent->i.eventParm	= state->eventParm;
-	ent->i.powerups		= state->powerups;
-	ent->i.weapon		= state->weapon;
-	ent->i.legsAnim		= state->legsAnim;
-	ent->i.torsoAnim	= state->torsoAnim;
+	ent->i.groundent = state->groundent;
+	ent->i.modelindex = state->modelindex;
+	ent->i.modelindex2 = state->modelindex2;
+	ent->i.frame = state->frame;
+	ent->i.event = state->event;
+	ent->i.eventParm = state->eventParm;
+	ent->i.powerups = state->powerups;
+	ent->i.weapon = state->weapon;
+	ent->i.legsAnim = state->legsAnim;
+	ent->i.torsoAnim = state->torsoAnim;
 	/* number of the entity */
 	ent->i.number = entnum;
 	/* updated so set valid flag */
@@ -116,29 +116,28 @@ AAS_UpdateEntity(int entnum, bot_entitystate_t *state)
 		if(!VectorCompare(state->angles, ent->i.angles)){
 			VectorCopy(state->angles, ent->i.angles);
 			relink = qtrue;
-		}	
-			/* get the mins and maxs of the model */
-			/* FIXME: rotate mins and maxs */
+		}
+		/* get the mins and maxs of the model */
+		/* FIXME: rotate mins and maxs */
 		AAS_BSPModelMinsMaxsOrigin(ent->i.modelindex, ent->i.angles,
 			ent->i.mins, ent->i.maxs,
 			NULL);
-	}	
-	else if(ent->i.solid == SOLID_BBOX){
+	}else if(ent->i.solid == SOLID_BBOX){
 		/* if the bounding box size changed */
 		if(!VectorCompare(state->mins, ent->i.mins) ||
 		   !VectorCompare(state->maxs, ent->i.maxs)){
 			VectorCopy(state->mins, ent->i.mins);
 			VectorCopy(state->maxs, ent->i.maxs);
 			relink = qtrue;
-		}	
+		}
 		VectorCopy(state->angles, ent->i.angles);
-	}	
-		/* if the origin changed */
+	}
+	/* if the origin changed */
 	if(!VectorCompare(state->origin, ent->i.origin)){
 		VectorCopy(state->origin, ent->i.origin);
 		relink = qtrue;
-	}	
-		/* if the entity should be relinked */
+	}
+	/* if the entity should be relinked */
 	if(relink)
 		/* don't link the world model */
 		if(entnum != ENTITYNUM_WORLD){
@@ -157,7 +156,7 @@ AAS_UpdateEntity(int entnum, bot_entitystate_t *state)
 			/* link the entity to the world BSP tree */
 			ent->leaves = AAS_BSPLinkEntity(absmins, absmaxs, entnum,
 				0);
-		}	
+		}
 	return BLERR_NOERROR;
 }	/* end of the function AAS_UpdateEntity */
 /* ===========================================================================
@@ -174,7 +173,7 @@ AAS_EntityInfo(int entnum, aas_entityinfo_t *info)
 			"AAS_EntityInfo: aasworld not initialized\n");
 		Com_Memset(info, 0, sizeof(aas_entityinfo_t));
 		return;
-	}	
+	}
 
 	if(entnum < 0 || entnum >= aasworld.maxentities){
 		botimport.Print(PRT_FATAL,
@@ -182,7 +181,7 @@ AAS_EntityInfo(int entnum, aas_entityinfo_t *info)
 			entnum);
 		Com_Memset(info, 0, sizeof(aas_entityinfo_t));
 		return;
-	}	
+	}
 
 	Com_Memcpy(info, &aasworld.entities[entnum].i, sizeof(aas_entityinfo_t));
 }	/* end of the function AAS_EntityInfo */
@@ -201,7 +200,7 @@ AAS_EntityOrigin(int entnum, vec3_t origin)
 			entnum);
 		VectorClear(origin);
 		return;
-	}	
+	}
 
 	VectorCopy(aasworld.entities[entnum].i.origin, origin);
 }	/* end of the function AAS_EntityOrigin */
@@ -219,7 +218,7 @@ AAS_EntityModelindex(int entnum)
 			"AAS_EntityModelindex: entnum %d out of range\n",
 			entnum);
 		return 0;
-	}	
+	}
 	return aasworld.entities[entnum].i.modelindex;
 }	/* end of the function AAS_EntityModelindex */
 /* ===========================================================================
@@ -238,7 +237,7 @@ AAS_EntityType(int entnum)
 			"AAS_EntityType: entnum %d out of range\n",
 			entnum);
 		return 0;
-	}	
+	}
 	return aasworld.entities[entnum].i.type;
 }	/* end of the AAS_EntityType */
 /* ===========================================================================
@@ -257,7 +256,7 @@ AAS_EntityModelNum(int entnum)
 			"AAS_EntityModelNum: entnum %d out of range\n",
 			entnum);
 		return 0;
-	}	
+	}
 	return aasworld.entities[entnum].i.modelindex;
 }	/* end of the function AAS_EntityModelNum */
 /* ===========================================================================
@@ -278,8 +277,8 @@ AAS_OriginOfMoverWithModelNum(int modelnum, vec3_t origin)
 			if(ent->i.modelindex == modelnum){
 				VectorCopy(ent->i.origin, origin);
 				return qtrue;
-			}	
-	}	
+			}
+	}
 	return qfalse;
 }	/* end of the function AAS_OriginOfMoverWithModelNum */
 /* ===========================================================================
@@ -300,7 +299,7 @@ AAS_EntitySize(int entnum, vec3_t mins, vec3_t maxs)
 			"AAS_EntitySize: entnum %d out of range\n",
 			entnum);
 		return;
-	}	
+	}
 
 	ent = &aasworld.entities[entnum];
 	VectorCopy(ent->i.mins, mins);
@@ -336,10 +335,10 @@ AAS_ResetEntityLinks(void)
 {
 	int i;
 	for(i = 0; i < aasworld.maxentities; i++){
-		aasworld.entities[i].areas	= NULL;
-		aasworld.entities[i].leaves	= NULL;
-	}	
-}		/* end of the function AAS_ResetEntityLinks */
+		aasworld.entities[i].areas = NULL;
+		aasworld.entities[i].leaves = NULL;
+	}
+}	/* end of the function AAS_ResetEntityLinks */
 /* ===========================================================================
  *
  * Parameter:				-
@@ -351,10 +350,10 @@ AAS_InvalidateEntities(void)
 {
 	int i;
 	for(i = 0; i < aasworld.maxentities; i++){
-		aasworld.entities[i].i.valid	= qfalse;
-		aasworld.entities[i].i.number	= i;
-	}	
-}		/* end of the function AAS_InvalidateEntities */
+		aasworld.entities[i].i.valid = qfalse;
+		aasworld.entities[i].i.number = i;
+	}
+}	/* end of the function AAS_InvalidateEntities */
 /* ===========================================================================
  *
  * Parameter:				-
@@ -374,9 +373,9 @@ AAS_UnlinkInvalidEntities(void)
 			ent->areas = NULL;
 			AAS_UnlinkFromBSPLeaves(ent->leaves);
 			ent->leaves = NULL;
-		}	
-	}		
-}			/* end of the function AAS_UnlinkInvalidEntities */
+		}
+	}
+}	/* end of the function AAS_UnlinkInvalidEntities */
 /* ===========================================================================
  *
  * Parameter:				-
@@ -391,8 +390,8 @@ AAS_NearestEntity(vec3_t origin, int modelindex)
 	aas_entity_t *ent;
 	vec3_t	dir;
 
-	bestentnum	= 0;
-	bestdist	= 99999;
+	bestentnum = 0;
+	bestdist = 99999;
 	for(i = 0; i < aasworld.maxentities; i++){
 		ent = &aasworld.entities[i];
 		if(ent->i.modelindex != modelindex) continue;
@@ -401,11 +400,11 @@ AAS_NearestEntity(vec3_t origin, int modelindex)
 			if(abs(dir[1]) < 40){
 				dist = VectorLength(dir);
 				if(dist < bestdist){
-					bestdist	= dist;
-					bestentnum	= i;
-				}	
-			}		
-	}	
+					bestdist = dist;
+					bestentnum = i;
+				}
+			}
+	}
 	return bestentnum;
 }	/* end of the function AAS_NearestEntity */
 /* ===========================================================================

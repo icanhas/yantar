@@ -165,8 +165,8 @@ BotFirstClientInRankings(void)
 	if(!maxclients)
 		maxclients = trap_Cvar_VariableIntegerValue("sv_maxclients");
 
-	bestscore	= -999999;
-	bestclient	= 0;
+	bestscore = -999999;
+	bestclient = 0;
 	for(i = 0; i < maxclients && i < MAX_CLIENTS; i++){
 		trap_GetConfigstring(CS_PLAYERS+i, buf, sizeof(buf));
 		/* if no config string or no name */
@@ -176,8 +176,8 @@ BotFirstClientInRankings(void)
 		/*  */
 		BotAI_GetClientState(i, &ps);
 		if(ps.persistant[PERS_SCORE] > bestscore){
-			bestscore	= ps.persistant[PERS_SCORE];
-			bestclient	= i;
+			bestscore = ps.persistant[PERS_SCORE];
+			bestclient = i;
 		}
 	}
 	EasyClientName(bestclient, name, 32);
@@ -201,8 +201,8 @@ BotLastClientInRankings(void)
 	if(!maxclients)
 		maxclients = trap_Cvar_VariableIntegerValue("sv_maxclients");
 
-	worstscore	= 999999;
-	bestclient	= 0;
+	worstscore = 999999;
+	bestclient = 0;
 	for(i = 0; i < maxclients && i < MAX_CLIENTS; i++){
 		trap_GetConfigstring(CS_PLAYERS+i, buf, sizeof(buf));
 		/* if no config string or no name */
@@ -212,8 +212,8 @@ BotLastClientInRankings(void)
 		/*  */
 		BotAI_GetClientState(i, &ps);
 		if(ps.persistant[PERS_SCORE] < worstscore){
-			worstscore	= ps.persistant[PERS_SCORE];
-			bestclient	= i;
+			worstscore = ps.persistant[PERS_SCORE];
+			bestclient = i;
 		}
 	}
 	EasyClientName(bestclient, name, 32);
@@ -237,8 +237,8 @@ BotRandomOpponentName(bot_state_t *bs)
 	if(!maxclients)
 		maxclients = trap_Cvar_VariableIntegerValue("sv_maxclients");
 
-	numopponents	= 0;
-	opponents[0]	= 0;
+	numopponents = 0;
+	opponents[0] = 0;
 	for(i = 0; i < maxclients && i < MAX_CLIENTS; i++){
 		if(i == bs->client) continue;
 		/*  */
@@ -426,8 +426,8 @@ BotValidChatPosition(bot_state_t *bs)
 	/* must be standing on the world entity */
 	VectorCopy(bs->origin, start);
 	VectorCopy(bs->origin, end);
-	start[2]	+= 1;
-	end[2]		-= 10;
+	start[2] += 1;
+	end[2] -= 10;
 	trap_AAS_PresenceTypeBoundingBox(PRESENCE_CROUCH, mins, maxs);
 	BotAI_Trace(&trace, start, mins, maxs, end, bs->client, MASK_SOLID);
 	if(trace.ent != ENTITYNUM_WORLD) return qfalse;
@@ -1070,7 +1070,7 @@ BotChatTest(bot_state_t *bs)
 {
 
 	char	name[32];
-	char	*weap;
+	char    *weap;
 	int	num, i;
 
 	num = trap_BotNumInitialChats(bs->cs, "game_enter");
@@ -1243,9 +1243,9 @@ BotChatTest(bot_state_t *bs)
 	}
 	ClientName(g_entities[bs->client].client->lasthurt_client, name,
 		sizeof(name));
-	weap	= BotWeaponNameForMeansOfDeath(
+	weap = BotWeaponNameForMeansOfDeath(
 		g_entities[bs->client].client->lasthurt_client);
-	num	= trap_BotNumInitialChats(bs->cs, "hit_talking");
+	num = trap_BotNumInitialChats(bs->cs, "hit_talking");
 	for(i = 0; i < num; i++){
 		BotAI_BotInitialChat(bs, "hit_talking", name, weap, NULL);
 		trap_BotEnterChat(bs->cs, 0, CHAT_ALL);

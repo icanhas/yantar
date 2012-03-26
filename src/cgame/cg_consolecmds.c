@@ -34,11 +34,11 @@ extern menuDef_t *menuScoreboard;
 void
 CG_TargetCommand_f(void)
 {
-	int targetNum;
-	char test[4];
+	int	targetNum;
+	char	test[4];
 
 	targetNum = CG_CrosshairPlayer();
-	if(!targetNum )
+	if(!targetNum)
 		return;
 
 	trap_Argv(1, test, 4);
@@ -57,7 +57,7 @@ CG_TargetCommand_f(void)
 static void
 CG_SizeUp_f(void)
 {
-	trap_Cvar_Set("cg_viewsize", va("%i",(int) (cg_viewsize.integer+10)));
+	trap_Cvar_Set("cg_viewsize", va("%i",(int)(cg_viewsize.integer+10)));
 }
 
 
@@ -71,7 +71,7 @@ CG_SizeUp_f(void)
 static void
 CG_SizeDown_f(void)
 {
-	trap_Cvar_Set("cg_viewsize", va("%i",(int) (cg_viewsize.integer-10)));
+	trap_Cvar_Set("cg_viewsize", va("%i",(int)(cg_viewsize.integer-10)));
 }
 
 
@@ -85,9 +85,9 @@ CG_SizeDown_f(void)
 static void
 CG_Viewpos_f(void)
 {
-	CG_Printf ("(%i %i %i) : %i\n", (int) cg.refdef.vieworg[0],
-		(int) cg.refdef.vieworg[1], (int) cg.refdef.vieworg[2],
-		(int) cg.refdefViewAngles[YAW]);
+	CG_Printf ("(%i %i %i) : %i\n", (int)cg.refdef.vieworg[0],
+		(int)cg.refdef.vieworg[1], (int)cg.refdef.vieworg[2],
+		(int)cg.refdefViewAngles[YAW]);
 }
 
 
@@ -98,7 +98,7 @@ CG_ScoresDown_f(void)
 #ifdef MISSIONPACK
 	CG_BuildSpectatorString();
 #endif
-	if( cg.scoresRequestTime + 2000 < cg.time ){
+	if(cg.scoresRequestTime + 2000 < cg.time){
 		/* the scores are more than two seconds out of data,
 		 * so request new ones */
 		cg.scoresRequestTime = cg.time;
@@ -106,7 +106,7 @@ CG_ScoresDown_f(void)
 
 		/* leave the current scores up if they were already
 		 * displayed, but if this is the first hit, clear them out */
-		if( !cg.showScores ){
+		if(!cg.showScores){
 			cg.showScores	= qtrue;
 			cg.numScores	= 0;
 		}
@@ -119,7 +119,7 @@ CG_ScoresDown_f(void)
 static void
 CG_ScoresUp_f(void)
 {
-	if( cg.showScores ){
+	if(cg.showScores){
 		cg.showScores = qfalse;
 		cg.scoreFadeTime = cg.time;
 	}
@@ -202,12 +202,12 @@ CG_spLose_f(void)
 static void
 CG_TellTarget_f(void)
 {
-	int clientNum;
-	char command[128];
-	char message[128];
+	int	clientNum;
+	char	command[128];
+	char	message[128];
 
 	clientNum = CG_CrosshairPlayer();
-	if( clientNum == -1 )
+	if(clientNum == -1)
 		return;
 
 	trap_Args(message, 128);
@@ -218,12 +218,12 @@ CG_TellTarget_f(void)
 static void
 CG_TellAttacker_f(void)
 {
-	int clientNum;
-	char command[128];
-	char message[128];
+	int	clientNum;
+	char	command[128];
+	char	message[128];
 
 	clientNum = CG_LastAttacker();
-	if( clientNum == -1 )
+	if(clientNum == -1)
 		return;
 
 	trap_Args(message, 128);
@@ -234,12 +234,12 @@ CG_TellAttacker_f(void)
 static void
 CG_VoiceTellTarget_f(void)
 {
-	int clientNum;
-	char command[128];
-	char message[128];
+	int	clientNum;
+	char	command[128];
+	char	message[128];
 
 	clientNum = CG_CrosshairPlayer();
-	if( clientNum == -1 )
+	if(clientNum == -1)
 		return;
 
 	trap_Args(message, 128);
@@ -250,12 +250,12 @@ CG_VoiceTellTarget_f(void)
 static void
 CG_VoiceTellAttacker_f(void)
 {
-	int clientNum;
-	char command[128];
-	char message[128];
+	int	clientNum;
+	char	command[128];
+	char	message[128];
 
 	clientNum = CG_LastAttacker();
-	if( clientNum == -1 )
+	if(clientNum == -1)
 		return;
 
 	trap_Args(message, 128);
@@ -421,11 +421,11 @@ CG_TauntGauntlet_f(void)
 static void
 CG_TaskSuicide_f(void)
 {
-	int clientNum;
-	char command[128];
+	int	clientNum;
+	char	command[128];
 
 	clientNum = CG_CrosshairPlayer();
-	if( clientNum == -1 )
+	if(clientNum == -1)
 		return;
 
 	Com_sprintf(command, 128, "tell %i suicide", clientNum);
@@ -477,7 +477,7 @@ CG_StartOrbit_f(void)
 	char var[MAX_TOKEN_CHARS];
 
 	trap_Cvar_VariableStringBuffer("developer", var, sizeof(var));
-	if( !atoi(var))
+	if(!atoi(var))
 		return;
 	if(cg_cameraOrbit.value != 0){
 		trap_Cvar_Set ("cg_cameraOrbit", "0");
@@ -579,8 +579,8 @@ CG_ConsoleCommand(void)
 
 	cmd = CG_Argv(0);
 
-	for( i = 0; i < ARRAY_LEN(commands); i++ )
-		if( !Q_stricmp(cmd, commands[i].cmd)){
+	for(i = 0; i < ARRAY_LEN(commands); i++)
+		if(!Q_stricmp(cmd, commands[i].cmd)){
 			commands[i].function();
 			return qtrue;
 		}
@@ -602,7 +602,7 @@ CG_InitConsoleCommands(void)
 {
 	int i;
 
-	for( i = 0; i < ARRAY_LEN(commands); i++ )
+	for(i = 0; i < ARRAY_LEN(commands); i++)
 		trap_AddCommand(commands[i].cmd);
 
 	/*

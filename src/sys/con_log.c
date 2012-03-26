@@ -27,8 +27,8 @@
 #define MAX_LOG 32768
 
 static char consoleLog[ MAX_LOG ];
-static unsigned int	writePos	= 0;
-static unsigned int	readPos		= 0;
+static unsigned int	writePos = 0;
+static unsigned int	readPos = 0;
 
 /*
  * ==================
@@ -38,7 +38,7 @@ static unsigned int	readPos		= 0;
 unsigned int
 CON_LogSize(void)
 {
-	if( readPos <= writePos )
+	if(readPos <= writePos)
 		return writePos - readPos;
 	else
 		return writePos + MAX_LOG - readPos;
@@ -67,24 +67,24 @@ CON_LogWrite(const char *in)
 	unsigned int	firstChunk;
 	unsigned int	secondChunk;
 
-	while( CON_LogFree( ) < length && CON_LogSize( ) > 0 ){
+	while(CON_LogFree( ) < length && CON_LogSize( ) > 0){
 		/* Free enough space */
-		while( consoleLog[ readPos ] != '\n' && CON_LogSize( ) > 1 )
+		while(consoleLog[ readPos ] != '\n' && CON_LogSize( ) > 1)
 			readPos = (readPos + 1) % MAX_LOG;
 
 		/* Skip past the '\n' */
 		readPos = (readPos + 1) % MAX_LOG;
 	}
 
-	if( CON_LogFree( ) < length )
+	if(CON_LogFree( ) < length)
 		return 0;
 
-	if( writePos + length > MAX_LOG ){
-		firstChunk	= MAX_LOG - writePos;
-		secondChunk	= length - firstChunk;
+	if(writePos + length > MAX_LOG){
+		firstChunk = MAX_LOG - writePos;
+		secondChunk = length - firstChunk;
 	}else{
-		firstChunk	= length;
-		secondChunk	= 0;
+		firstChunk = length;
+		secondChunk = 0;
 	}
 
 	Com_Memcpy(consoleLog + writePos, in, firstChunk);
@@ -106,15 +106,15 @@ CON_LogRead(char *out, unsigned int outSize)
 	unsigned int	firstChunk;
 	unsigned int	secondChunk;
 
-	if( CON_LogSize( ) < outSize )
+	if(CON_LogSize( ) < outSize)
 		outSize = CON_LogSize( );
 
-	if( readPos + outSize > MAX_LOG ){
-		firstChunk	= MAX_LOG - readPos;
-		secondChunk	= outSize - firstChunk;
+	if(readPos + outSize > MAX_LOG){
+		firstChunk = MAX_LOG - readPos;
+		secondChunk = outSize - firstChunk;
 	}else{
-		firstChunk	= outSize;
-		secondChunk	= 0;
+		firstChunk = outSize;
+		secondChunk = 0;
 	}
 
 	Com_Memcpy(out, consoleLog + readPos, firstChunk);

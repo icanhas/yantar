@@ -135,7 +135,7 @@ CRC_ProcessString(unsigned char *data, int length)
 		ind = (crcvalue >> 8) ^ data[i];
 		if(ind < 0 || ind > 256) ind = 0;
 		crcvalue = (crcvalue << 8) ^ crctable[ind];
-	}	
+	}
 	return CRC_Value(crcvalue);
 }	/* end of the function CRC_ProcessString */
 /* ===========================================================================

@@ -53,8 +53,8 @@ static void      swapfunc(char *, char *, int, int);
  */
 #define swapcode(TYPE, parmi, parmj, n) {		\
 		long i = (n) / sizeof(TYPE);		       \
-		register TYPE	*pi	= (TYPE *) (parmi);	      \
-		register TYPE	*pj	= (TYPE *) (parmj);	      \
+		register TYPE *pi = (TYPE*)(parmi);	      \
+		register TYPE *pj = (TYPE*)(parmj);	      \
 		do {						\
 			register TYPE t = *pi;		      \
 			*pi++	= *pj;				  \
@@ -64,7 +64,7 @@ static void      swapfunc(char *, char *, int, int);
 
 #define SWAPINIT(a, \
 		 es)			swaptype = \
-	((char *) a - (char *) 0) % sizeof(long) || \
+	((char*)a - (char*)0) % sizeof(long) ||	\
 	es % sizeof(long) ? 2 : es == \
 	sizeof(long) ? 0 : 1;
 
@@ -80,15 +80,15 @@ int n, swaptype;
 
 #define swap(a, b)					\
 	if(swaptype == 0){			      \
-		long t = *(long *) (a);			 \
-		*(long *) (a)	= *(long *) (b);	    \
-		*(long *) (b)	= t;			   \
+		long t = *(long*)(a);		       \
+		*(long*)(a)	= *(long*)(b);		  \
+		*(long*)(b)	= t;			   \
 	}else					       \
 		swapfunc(a, b, es, swaptype)
 
 #define vecswap(a, b, n) if((n) > 0) swapfunc(a, b, n, swaptype)
 
-			static char *med3(a, b, c, cmp)
+			static char*med3(a, b, c, cmp)
 			char *a, *b, *c;
 	cmp_t *cmp;
 	{
@@ -99,8 +99,8 @@ int n, swaptype;
 
 	void qsort(a, n, es, cmp)
 	void *a;
-	size_t	n, es;
-	cmp_t	*cmp;
+	size_t n, es;
+	cmp_t *cmp;
 	{
 		char	*pa, *pb, *pc, *pd, *pl, *pm, *pn;
 		int	d, r, swaptype, swap_cnt;
@@ -108,30 +108,30 @@ int n, swaptype;
 loop:   SWAPINIT(a, es);
 		swap_cnt = 0;
 		if(n < 7){
-			for(pm = (char *) a + es; pm < (char *) a + n * es;
+			for(pm = (char*)a + es; pm < (char*)a + n * es;
 			    pm += es)
 				for(pl = pm;
-				    pl > (char *) a && cmp(pl - es, pl) > 0;
+				    pl > (char*)a && cmp(pl - es, pl) > 0;
 				    pl -= es)
 					swap(pl, pl - es);
 			return;
 		}
-		pm = (char *) a + (n / 2) * es;
+		pm = (char*)a + (n / 2) * es;
 		if(n > 7){
-			pl	= a;
-			pn	= (char *) a + (n - 1) * es;
+			pl = a;
+			pn = (char*)a + (n - 1) * es;
 			if(n > 40){
-				d	= (n / 8) * es;
-				pl	= med3(pl, pl + d, pl + 2 * d, cmp);
-				pm	= med3(pm - d, pm, pm + d, cmp);
-				pn	= med3(pn - 2 * d, pn - d, pn, cmp);
+				d = (n / 8) * es;
+				pl = med3(pl, pl + d, pl + 2 * d, cmp);
+				pm = med3(pm - d, pm, pm + d, cmp);
+				pn = med3(pn - 2 * d, pn - d, pn, cmp);
 			}
 			pm = med3(pl, pm, pn, cmp);
 		}
 		swap(a, pm);
-		pa = pb = (char *) a + es;
+		pa = pb = (char*)a + es;
 
-		pc = pd = (char *) a + (n - 1) * es;
+		pc = pd = (char*)a + (n - 1) * es;
 		for(;; ){
 			while(pb <= pc && (r = cmp(pb, a)) <= 0){
 				if(r == 0){
@@ -153,21 +153,21 @@ loop:   SWAPINIT(a, es);
 				break;
 			swap(pb, pc);
 			swap_cnt	= 1;
-			pb	+= es;
-			pc	-= es;
+			pb		+= es;
+			pc		-= es;
 		}
 		if(swap_cnt == 0){	/* Switch to insertion sort */
-			for(pm = (char *) a + es; pm < (char *) a + n * es;
+			for(pm = (char*)a + es; pm < (char*)a + n * es;
 			    pm += es)
 				for(pl = pm;
-				    pl > (char *) a && cmp(pl - es, pl) > 0;
+				    pl > (char*)a && cmp(pl - es, pl) > 0;
 				    pl -= es)
 					swap(pl, pl - es);
 			return;
 		}
 
-		pn	= (char *) a + n * es;
-		r	= MIN(pa - (char *) a, pb - pa);
+		pn = (char*)a + n * es;
+		r = MIN(pa - (char*)a, pb - pa);
 		vecswap(a, pb - r, r);
 		r = MIN(pd - pc, pn - pd - es);
 		vecswap(pb, pn - r, r);
@@ -175,8 +175,8 @@ loop:   SWAPINIT(a, es);
 			qsort(a, r / es, es, cmp);
 		if((r = pd - pc) > es){
 			/* Iterate rather than recurse to save stack space */
-			a	= pn - r;
-			n	= r / es;
+			a = pn - r;
+			n = r / es;
 			goto loop;
 		}
 /*		qsort(pn - r, r / es, es, cmp);*/
@@ -190,7 +190,7 @@ loop:   SWAPINIT(a, es);
 		const char *s;
 
 		s = string;
-		while( *s )
+		while(*s)
 			s++;
 		return s - string;
 	}
@@ -202,9 +202,9 @@ loop:   SWAPINIT(a, es);
 		char *s;
 
 		s = strDestination;
-		while( *s )
+		while(*s)
 			s++;
-		while( *strSource )
+		while(*strSource)
 			*s++ = *strSource++;
 		*s = 0;
 		return strDestination;
@@ -216,7 +216,7 @@ loop:   SWAPINIT(a, es);
 		char *s;
 
 		s = strDestination;
-		while( *strSource )
+		while(*strSource)
 			*s++ = *strSource++;
 		*s = 0;
 		return strDestination;
@@ -226,7 +226,7 @@ loop:   SWAPINIT(a, es);
 	int
 	strcmp(const char *string1, const char *string2)
 	{
-		while( *string1 == *string2 && *string1 && *string2 ){
+		while(*string1 == *string2 && *string1 && *string2){
 			string1++;
 			string2++;
 		}
@@ -237,16 +237,16 @@ loop:   SWAPINIT(a, es);
 	char *
 	strchr(const char *string, int c)
 	{
-		while( *string ){
-			if( *string == c )
-				return ( char * ) string;
+		while(*string){
+			if(*string == c)
+				return ( char* )string;
 			string++;
 		}
 
 		if(c)
 			return NULL;
 		else
-			return (char *) string;
+			return (char*)string;
 	}
 
 	char *
@@ -262,31 +262,31 @@ loop:   SWAPINIT(a, es);
 		}
 
 		if(c)
-			return (char *) found;
+			return (char*)found;
 		else
-			return (char *) string;
+			return (char*)string;
 	}
 
 	char *
 	strstr(const char *string, const char *strCharSet)
 	{
-		while( *string ){
+		while(*string){
 			int i;
 
-			for( i = 0; strCharSet[i]; i++ )
-				if( string[i] != strCharSet[i] )
+			for(i = 0; strCharSet[i]; i++)
+				if(string[i] != strCharSet[i])
 					break;
-			if( !strCharSet[i] )
-				return (char *) string;
+			if(!strCharSet[i])
+				return (char*)string;
 			string++;
 		}
-		return (char *) 0;
+		return (char*)0;
 	}
 
 	int
 	tolower(int c)
 	{
-		if( c >= 'A' && c <= 'Z' )
+		if(c >= 'A' && c <= 'Z')
 			c += 'a' - 'A';
 		return c;
 	}
@@ -295,7 +295,7 @@ loop:   SWAPINIT(a, es);
 	int
 	toupper(int c)
 	{
-		if( c >= 'a' && c <= 'z' )
+		if(c >= 'a' && c <= 'z')
 			c += 'A' - 'a';
 		return c;
 	}
@@ -311,11 +311,11 @@ loop:   SWAPINIT(a, es);
 
 				do {
 					i--;
-					((char *) dest)[i] = ((char *) src)[i];
+					((char*)dest)[i] = ((char*)src)[i];
 				} while(i > 0);
 			}else
 				for(i = 0; i < count; i++)
-					((char *) dest)[i] = ((char *) src)[i];
+					((char*)dest)[i] = ((char*)src)[i];
 		}
 
 		return dest;
@@ -327,22 +327,22 @@ loop:   SWAPINIT(a, es);
 	double
 	floor(double x)
 	{
-		return (int) (x + 0x40000000) - 0x40000000;
+		return (int)(x + 0x40000000) - 0x40000000;
 	}
 
 	void *
 	memset(void *dest, int c, size_t count)
 	{
-		while( count-- )
-			((char *) dest)[count] = c;
+		while(count--)
+			((char*)dest)[count] = c;
 		return dest;
 	}
 
 	void *
 	memcpy(void *dest, const void *src, size_t count)
 	{
-		while( count-- )
-			((char *) dest)[count] = ((char *) src)[count];
+		while(count--)
+			((char*)dest)[count] = ((char*)src)[count];
 		return dest;
 	}
 
@@ -352,11 +352,11 @@ loop:   SWAPINIT(a, es);
 		char *s;
 
 		s = strDest;
-		while( *strSource && count ){
+		while(*strSource && count){
 			*s++ = *strSource++;
 			count--;
 		}
-		while( count-- )
+		while(count--)
 			*s++ = 0;
 		return strDest;
 	}
@@ -368,7 +368,7 @@ loop:   SWAPINIT(a, es);
 		float	delta;
 		float	maxError;
 
-		if( x <= 0 )
+		if(x <= 0)
 			return 0;
 
 		/* initial guess */
@@ -380,7 +380,7 @@ loop:   SWAPINIT(a, es);
 		do {
 			delta = (y * y) - x;
 			y -= delta / (2 * y);
-		} while( delta > maxError || delta < -maxError );
+		} while(delta > maxError || delta < -maxError);
 
 		return y;
 	}
@@ -654,7 +654,7 @@ loop:   SWAPINIT(a, es);
 		index	= 1024 * x / (M_PI * 0.5);
 		quad	= (index >> 10) & 3;
 		index	&= 1023;
-		switch( quad ){
+		switch(quad){
 		case 0:
 			return sintable[index];
 		case 1:
@@ -677,7 +677,7 @@ loop:   SWAPINIT(a, es);
 		index	= 1024 * x / (M_PI * 0.5);
 		quad	= (index >> 10) & 3;
 		index	&= 1023;
-		switch( quad ){
+		switch(quad){
 		case 3:
 			return sintable[index];
 		case 0:
@@ -978,7 +978,7 @@ loop:   SWAPINIT(a, es);
 			x = -1;
 		if(x > 1)
 			x = 1;
-		index = (float) (1.0 + x) * 511.9;
+		index = (float)(1.0 + x) * 511.9;
 		return acostable[index];
 	}
 
@@ -991,44 +991,44 @@ loop:   SWAPINIT(a, es);
 		float	test;
 		int	i;
 
-		if( x < 0 ){
-			if( y >= 0 ){
+		if(x < 0){
+			if(y >= 0){
 				/* quad 1 */
-				base	= M_PI / 2;
-				temp	= x;
-				x	= y;
-				y	= -temp;
+				base = M_PI / 2;
+				temp = x;
+				x = y;
+				y = -temp;
 			}else{
 				/* quad 2 */
 				base = M_PI;
-				x	= -x;
-				y	= -y;
+				x = -x;
+				y = -y;
 			}
-		}else  if( y < 0 ){
+		}else if(y < 0){
 			/* quad 3 */
-			base	= 3 * M_PI / 2;
-			temp	= x;
-			x	= -y;
-			y	= temp;
+			base = 3 * M_PI / 2;
+			temp = x;
+			x = -y;
+			y = temp;
 		}
 
-		if( y > x ){
-			base	+= M_PI/2;
-			temp	= x;
-			x	= y;
-			y	= temp;
-			dir	= -1;
+		if(y > x){
+			base += M_PI/2;
+			temp = x;
+			x = y;
+			y = temp;
+			dir = -1;
 		}else
 			dir = 1;
 
 		/* calcualte angle in octant 0 */
-		if( x == 0 )
+		if(x == 0)
 			return base;
 		y /= x;
 
-		for( i = 0; i < 512; i++ ){
+		for(i = 0; i < 512; i++){
 			test = sintable[i] / sintable[1023-i];
-			if( test > y )
+			if(test > y)
 				break;
 		}
 
@@ -1069,14 +1069,14 @@ loop:   SWAPINIT(a, es);
 
 
 		/* skip whitespace */
-		while( *string <= ' ' ){
-			if( !*string )
+		while(*string <= ' '){
+			if(!*string)
 				return 0;
 			string++;
 		}
 
 		/* check sign */
-		switch( *string ){
+		switch(*string){
 		case '+':
 			string++;
 			sign = 1;
@@ -1093,30 +1093,30 @@ loop:   SWAPINIT(a, es);
 		/* read digits */
 		value = 0;
 		c = string[0];
-		if( c != '.' ){
+		if(c != '.'){
 			do {
 				c = *string++;
-				if( c < '0' || c > '9' )
+				if(c < '0' || c > '9')
 					break;
 				c -= '0';
 				value = value * 10 + c;
-			} while( 1 );
+			} while(1);
 		}else
 			string++;
 
 		/* check for decimal point */
-		if( c == '.' ){
+		if(c == '.'){
 			double fraction;
 
 			fraction = 0.1;
 			do {
 				c = *string++;
-				if( c < '0' || c > '9' )
+				if(c < '0' || c > '9')
 					break;
 				c -= '0';
 				value += c * fraction;
 				fraction *= 0.1;
-			} while( 1 );
+			} while(1);
 
 		}
 
@@ -1128,7 +1128,7 @@ loop:   SWAPINIT(a, es);
 	double
 	_atof(const char **stringPtr)
 	{
-		const char	*string;
+		const char *string;
 		float	sign;
 		float	value;
 		int	c = '0';
@@ -1136,8 +1136,8 @@ loop:   SWAPINIT(a, es);
 		string = *stringPtr;
 
 		/* skip whitespace */
-		while( *string <= ' ' ){
-			if( !*string ){
+		while(*string <= ' '){
+			if(!*string){
 				*stringPtr = string;
 				return 0;
 			}
@@ -1145,7 +1145,7 @@ loop:   SWAPINIT(a, es);
 		}
 
 		/* check sign */
-		switch( *string ){
+		switch(*string){
 		case '+':
 			string++;
 			sign = 1;
@@ -1161,29 +1161,29 @@ loop:   SWAPINIT(a, es);
 
 		/* read digits */
 		value = 0;
-		if( string[0] != '.' ){
+		if(string[0] != '.'){
 			do {
 				c = *string++;
-				if( c < '0' || c > '9' )
+				if(c < '0' || c > '9')
 					break;
 				c -= '0';
 				value = value * 10 + c;
-			} while( 1 );
+			} while(1);
 		}
 
 		/* check for decimal point */
-		if( c == '.' ){
+		if(c == '.'){
 			double fraction;
 
 			fraction = 0.1;
 			do {
 				c = *string++;
-				if( c < '0' || c > '9' )
+				if(c < '0' || c > '9')
 					break;
 				c -= '0';
 				value += c * fraction;
 				fraction *= 0.1;
-			} while( 1 );
+			} while(1);
 
 		}
 
@@ -1214,28 +1214,28 @@ loop:   SWAPINIT(a, es);
 		qboolean neg = qfalse;
 
 		/* skip whitespace */
-		while( isspace(*nptr))
+		while(isspace(*nptr))
 			nptr++;
 
 		/* special string parsing */
-		if( Q_stricmpn(nptr, "nan", 3) == 0 ){
+		if(Q_stricmpn(nptr, "nan", 3) == 0){
 			floatint_t nan;
 
-			if( endptr )
-				*endptr = (char *) &nptr[3];
+			if(endptr)
+				*endptr = (char*)&nptr[3];
 
 			/* nan can be followed by a bracketed number (in hex, octal,
 			 * or decimal) which is then put in the mantissa
 			 * this can be used to generate signalling or quiet NaNs, for
 			 * example (though I doubt it'll ever be used)
 			 * note that nan(0) is infinity! */
-			if( nptr[3] == '(' ){
+			if(nptr[3] == '('){
 				char	*end;
 				int	mantissa = strtol(&nptr[4], &end, 0);
-				if( *end == ')' ){
+				if(*end == ')'){
 					nan.ui = 0x7f800000 |
 						 (mantissa & 0x7fffff);
-					if( endptr )
+					if(endptr)
 						*endptr = &end[1];
 					return nan.f;
 				}
@@ -1243,101 +1243,101 @@ loop:   SWAPINIT(a, es);
 			nan.ui = 0x7fffffff;
 			return nan.f;
 		}
-		if( Q_stricmpn(nptr, "inf", 3) == 0 ){
+		if(Q_stricmpn(nptr, "inf", 3) == 0){
 			floatint_t inf;
 			inf.ui = 0x7f800000;
-			if( endptr == NULL )
+			if(endptr == NULL)
 				return inf.f;
-			if( Q_stricmpn(&nptr[3], "inity", 5) == 0 )
-				*endptr = (char *) &nptr[8];
+			if(Q_stricmpn(&nptr[3], "inity", 5) == 0)
+				*endptr = (char*)&nptr[8];
 			else
-				*endptr = (char *) &nptr[3];
+				*endptr = (char*)&nptr[3];
 			return inf.f;
 		}
 
 		/* normal numeric parsing
 		 * sign */
-		if( *nptr == '-' ){
+		if(*nptr == '-'){
 			nptr++;
 			neg = qtrue;
-		}else if( *nptr == '+' )
+		}else if(*nptr == '+')
 			nptr++;
 		/* hex */
-		if( Q_stricmpn(nptr, "0x", 2) == 0 ){
+		if(Q_stricmpn(nptr, "0x", 2) == 0){
 			/* track if we use any digits */
 			const char *s = &nptr[1], *end = s;
-			nptr	+= 2;
-			res	= 0;
-			while( qtrue ){
-				if( isdigit(*nptr))
+			nptr += 2;
+			res = 0;
+			while(qtrue){
+				if(isdigit(*nptr))
 					res = 16 * res + (*nptr++ - '0');
-				else if( *nptr >= 'A' && *nptr <= 'F' )
+				else if(*nptr >= 'A' && *nptr <= 'F')
 					res = 16 * res + 10 + *nptr++ - 'A';
-				else if( *nptr >= 'a' && *nptr <= 'f' )
+				else if(*nptr >= 'a' && *nptr <= 'f')
 					res = 16 * res + 10 + *nptr++ - 'a';
 				else
 					break;
 			}
 			/* if nptr moved, save it */
-			if( end + 1 < nptr )
+			if(end + 1 < nptr)
 				end = nptr;
-			if( *nptr == '.' ){
+			if(*nptr == '.'){
 				float place;
 				nptr++;
 				/* 1.0 / 16.0 == 0.0625
 				 * I don't expect the float accuracy to hold out for
 				 * very long but since we need to know the length of
 				 * the string anyway we keep on going regardless */
-				for( place = 0.0625;; place /= 16.0 ){
-					if( isdigit(*nptr))
+				for(place = 0.0625;; place /= 16.0){
+					if(isdigit(*nptr))
 						res += place * (*nptr++ - '0');
-					else if( *nptr >= 'A' && *nptr <= 'F' )
+					else if(*nptr >= 'A' && *nptr <= 'F')
 						res += place *
 						       (10 + *nptr++ - 'A');
-					else if( *nptr >= 'a' && *nptr <= 'f' )
+					else if(*nptr >= 'a' && *nptr <= 'f')
 						res += place *
 						       (10 + *nptr++ - 'a');
 					else
 						break;
 				}
-				if( end < nptr )
+				if(end < nptr)
 					end = nptr;
 			}
 			/* parse an optional exponent, representing multiplication
 			 * by a power of two
 			 * exponents are only valid if we encountered at least one
 			 * digit already (and have therefore set end to something) */
-			if( end != s && tolower(*nptr) == 'p' ){
+			if(end != s && tolower(*nptr) == 'p'){
 				int exp;
 				float res2;
 				/* apparently (confusingly) the exponent should be
 				 * decimal */
-				exp = strtol(&nptr[1], (char * *) &end, 10);
-				if( &nptr[1] == end ){
+				exp = strtol(&nptr[1], (char**)&end, 10);
+				if(&nptr[1] == end){
 					/* no exponent */
-					if( endptr )
-						*endptr = (char *) nptr;
+					if(endptr)
+						*endptr = (char*)nptr;
 					return res;
 				}
-				if( exp > 0 )
-					while( exp-- > 0 ){
+				if(exp > 0)
+					while(exp-- > 0){
 						res2 = res * 2;
 						/* check for infinity */
-						if( res2 <= res )
+						if(res2 <= res)
 							break;
 						res = res2;
 					}
 				else
-					while( exp++ < 0 ){
+					while(exp++ < 0){
 						res2 = res / 2;
 						/* check for underflow */
-						if( res2 >= res )
+						if(res2 >= res)
 							break;
 						res = res2;
 					}
 			}
-			if( endptr )
-				*endptr = (char *) end;
+			if(endptr)
+				*endptr = (char*)end;
 			return res;
 		}
 		/* decimal */
@@ -1345,55 +1345,55 @@ loop:   SWAPINIT(a, es);
 			/* track if we find any digits */
 			const char *end = nptr, *p = nptr;
 			/* this is most of the work */
-			for( res = 0; isdigit(*nptr);
-			     res = 10 * res + *nptr++ - '0' ) ;
+			for(res = 0; isdigit(*nptr);
+			    res = 10 * res + *nptr++ - '0') ;
 			/* if nptr moved, we read something */
-			if( end < nptr )
+			if(end < nptr)
 				end = nptr;
-			if( *nptr == '.' ){
+			if(*nptr == '.'){
 				/* fractional part */
 				float place;
 				nptr++;
-				for( place = 0.1; isdigit(*nptr); place /= 10.0 )
+				for(place = 0.1; isdigit(*nptr); place /= 10.0)
 					res += (*nptr++ - '0') * place;
 				/* if nptr moved, we read something */
-				if( end + 1 < nptr )
+				if(end + 1 < nptr)
 					end = nptr;
 			}
 			/* exponent
 			 * meaningless without having already read digits, so check
 			 * we've set end to something */
-			if( p != end && tolower(*nptr) == 'e' ){
+			if(p != end && tolower(*nptr) == 'e'){
 				int exp;
 				float res10;
-				exp = strtol(&nptr[1], (char * *) &end, 10);
-				if( &nptr[1] == end ){
+				exp = strtol(&nptr[1], (char**)&end, 10);
+				if(&nptr[1] == end){
 					/* no exponent */
-					if( endptr )
-						*endptr = (char *) nptr;
+					if(endptr)
+						*endptr = (char*)nptr;
 					return res;
 				}
-				if( exp > 0 )
-					while( exp-- > 0 ){
+				if(exp > 0)
+					while(exp-- > 0){
 						res10 = res * 10;
 						/* check for infinity to save us time */
-						if( res10 <= res )
+						if(res10 <= res)
 							break;
 						res = res10;
 					}
-				else if( exp < 0 )
-					while( exp++ < 0 ){
+				else if(exp < 0)
+					while(exp++ < 0){
 						res10 = res / 10;
 						/* check for underflow
 						 * (test for 0 would probably be just
 						 * as good) */
-						if( res10 >= res )
+						if(res10 >= res)
 							break;
 						res = res10;
 					}
 			}
-			if( endptr )
-				*endptr = (char *) end;
+			if(endptr)
+				*endptr = (char*)end;
 			return res;
 		}
 	}
@@ -1407,14 +1407,14 @@ loop:   SWAPINIT(a, es);
 
 
 		/* skip whitespace */
-		while( *string <= ' ' ){
-			if( !*string )
+		while(*string <= ' '){
+			if(!*string)
 				return 0;
 			string++;
 		}
 
 		/* check sign */
-		switch( *string ){
+		switch(*string){
 		case '+':
 			string++;
 			sign = 1;
@@ -1432,11 +1432,11 @@ loop:   SWAPINIT(a, es);
 		value = 0;
 		do {
 			c = *string++;
-			if( c < '0' || c > '9' )
+			if(c < '0' || c > '9')
 				break;
 			c -= '0';
 			value = value * 10 + c;
-		} while( 1 );
+		} while(1);
 
 		/* not handling 10e10 notation... */
 
@@ -1455,14 +1455,14 @@ loop:   SWAPINIT(a, es);
 		string = *stringPtr;
 
 		/* skip whitespace */
-		while( *string <= ' ' ){
-			if( !*string )
+		while(*string <= ' '){
+			if(!*string)
 				return 0;
 			string++;
 		}
 
 		/* check sign */
-		switch( *string ){
+		switch(*string){
 		case '+':
 			string++;
 			sign = 1;
@@ -1480,11 +1480,11 @@ loop:   SWAPINIT(a, es);
 		value = 0;
 		do {
 			c = *string++;
-			if( c < '0' || c > '9' )
+			if(c < '0' || c > '9')
 				break;
 			c -= '0';
 			value = value * 10 + c;
-		} while( 1 );
+		} while(1);
 
 		/* not handling 10e10 notation... */
 
@@ -1509,66 +1509,66 @@ loop:   SWAPINIT(a, es);
 		long res;
 		qboolean pos = qtrue;
 
-		if( endptr )
-			*endptr = (char *) nptr;
+		if(endptr)
+			*endptr = (char*)nptr;
 		/* bases other than 0, 2, 8, 16 are very rarely used, but they're
 		 * not much extra effort to support */
-		if( base < 0 || base == 1 || base > 36 )
+		if(base < 0 || base == 1 || base > 36)
 			return 0;
 		/* skip leading whitespace */
-		while( isspace(*nptr))
+		while(isspace(*nptr))
 			nptr++;
 		/* sign */
-		if( *nptr == '-' ){
+		if(*nptr == '-'){
 			nptr++;
 			pos = qfalse;
-		}else if( *nptr == '+' )
+		}else if(*nptr == '+')
 			nptr++;
 		/* look for base-identifying sequences e.g. 0x for hex, 0 for octal */
-		if( nptr[0] == '0' ){
+		if(nptr[0] == '0'){
 			nptr++;
 			/* 0 is always a valid digit */
-			if( endptr )
-				*endptr = (char *) nptr;
-			if( *nptr == 'x' || *nptr == 'X' ){
-				if( base != 0 && base != 16 ){
+			if(endptr)
+				*endptr = (char*)nptr;
+			if(*nptr == 'x' || *nptr == 'X'){
+				if(base != 0 && base != 16){
 					/* can't be hex, reject x (accept 0) */
-					if( endptr )
-						*endptr = (char *) nptr;
+					if(endptr)
+						*endptr = (char*)nptr;
 					return 0;
 				}
 				nptr++;
 				base = 16;
-			}else if( base == 0 )
+			}else if(base == 0)
 				base = 8;
-		}else if( base == 0 )
+		}else if(base == 0)
 			base = 10;
 		res = 0;
-		while( qtrue ){
+		while(qtrue){
 			int val;
-			if( isdigit(*nptr))
+			if(isdigit(*nptr))
 				val = *nptr - '0';
-			else if( islower(*nptr))
+			else if(islower(*nptr))
 				val = 10 + *nptr - 'a';
-			else if( isupper(*nptr))
+			else if(isupper(*nptr))
 				val = 10 + *nptr - 'A';
 			else
 				break;
-			if( val >= base )
+			if(val >= base)
 				break;
 			/* we go negative because LONG_MIN is further from 0 than
 			 * LONG_MAX */
-			if( res < (LONG_MIN + val) / base )
+			if(res < (LONG_MIN + val) / base)
 				res = LONG_MIN;		/* overflow */
 			else
 				res = res * base - val;
 			nptr++;
-			if( endptr )
-				*endptr = (char *) nptr;
+			if(endptr)
+				*endptr = (char*)nptr;
 		}
-		if( pos ){
+		if(pos){
 			/* can't represent LONG_MIN positive */
-			if( res == LONG_MIN )
+			if(res == LONG_MIN)
 				res = LONG_MAX;
 			else
 				res = -res;
@@ -1735,7 +1735,7 @@ loop:   SWAPINIT(a, es);
 		int	flags;
 		int	cflags;
 		int	total;
-		size_t	currlen;
+		size_t currlen;
 
 		state	= DP_S_DEFAULT;
 		currlen = flags = cflags = min = 0;
@@ -1747,310 +1747,310 @@ loop:   SWAPINIT(a, es);
 			if(ch == '\0')
 				state = DP_S_DONE;
 
-			switch(state){
-			case DP_S_DEFAULT:
-				if(ch == '%')
-					state = DP_S_FLAGS;
-				else
-					total +=
-						dopr_outch (buffer, &currlen,
-							maxlen,
-							ch);
+		switch(state){
+		case DP_S_DEFAULT:
+			if(ch == '%')
+				state = DP_S_FLAGS;
+			else
+				total +=
+					dopr_outch (buffer, &currlen,
+						maxlen,
+						ch);
+			ch = *format++;
+			break;
+		case DP_S_FLAGS:
+			switch(ch){
+			case '-':
+				flags |= DP_F_MINUS;
 				ch = *format++;
 				break;
-			case DP_S_FLAGS:
-				switch(ch){
-				case '-':
-					flags |= DP_F_MINUS;
-					ch = *format++;
-					break;
-				case '+':
-					flags |= DP_F_PLUS;
-					ch = *format++;
-					break;
-				case ' ':
-					flags |= DP_F_SPACE;
-					ch = *format++;
-					break;
-				case '#':
-					flags |= DP_F_NUM;
-					ch = *format++;
-					break;
-				case '0':
-					flags |= DP_F_ZERO;
-					ch = *format++;
-					break;
-				default:
-					state = DP_S_MIN;
-					break;
-				}
-				break;
-			case DP_S_MIN:
-				if('0' <= ch && ch <= '9'){
-					min	= 10*min + char_to_int (ch);
-					ch	= *format++;
-				}else if(ch == '*'){
-					min	= va_arg (args, int);
-					ch	= *format++;
-					state	= DP_S_DOT;
-				}else
-					state = DP_S_DOT;
-				break;
-			case DP_S_DOT:
-				if(ch == '.'){
-					state = DP_S_MAX;
-					ch = *format++;
-				}else
-					state = DP_S_MOD;
-				break;
-			case DP_S_MAX:
-				if('0' <= ch && ch <= '9'){
-					if(max < 0)
-						max = 0;
-					max	= 10*max + char_to_int (ch);
-					ch	= *format++;
-				}else if(ch == '*'){
-					max	= va_arg (args, int);
-					ch	= *format++;
-					state	= DP_S_MOD;
-				}else
-					state = DP_S_MOD;
-				break;
-			case DP_S_MOD:
-				switch(ch){
-				case 'h':
-					cflags = DP_C_SHORT;
-					ch = *format++;
-					break;
-				case 'l':
-					cflags = DP_C_LONG;
-					ch = *format++;
-					break;
-				case 'L':
-					cflags = DP_C_LDOUBLE;
-					ch = *format++;
-					break;
-				default:
-					break;
-				}
-				if(cflags != DP_C_LONG)
-					state = DP_S_CONV;
-				else
-					state = DP_S_MOD_L;
-				break;
-			case DP_S_MOD_L:
-				switch(ch){
-				case 'l':
-					cflags = DP_C_LLONG;
-					ch = *format++;
-					break;
-				default:
-					break;
-				}
-				state = DP_S_CONV;
-				break;
-			case DP_S_CONV:
-				switch(ch){
-				case 'd':
-				case 'i':
-					if(cflags == DP_C_SHORT)
-						value = (short int) va_arg (args,
-							int);
-					else if(cflags == DP_C_LONG)
-						value = va_arg (args, long int);
-					else if(cflags == DP_C_LLONG)
-						value = va_arg (args, LLONG);
-					else
-						value = va_arg (args, int);
-					total +=
-						fmtint (buffer, &currlen, maxlen,
-							value,
-							10, min, max,
-							flags);
-					break;
-				case 'o':
-					flags |= DP_F_UNSIGNED;
-					if(cflags == DP_C_SHORT)
-/*	  value = (unsigned short int) va_arg (args, unsigned short int); // Thilo: This does not work because the rcc compiler cannot do that cast correctly. */
-						value = va_arg (args,
-							unsigned int) &
-							((1 <<
-							  sizeof(unsigned short
-								 int) *
-							  8) - 1);	/* Using this workaround instead. */
-					else if(cflags == DP_C_LONG)
-						value = va_arg (
-							args, unsigned long int);
-					else if(cflags == DP_C_LLONG)
-						value = va_arg (args,
-							unsigned LLONG);
-					else
-						value = va_arg (args,
-							unsigned int);
-					total +=
-						fmtint (buffer, &currlen, maxlen,
-							value,
-							8, min, max,
-							flags);
-					break;
-				case 'u':
-					flags |= DP_F_UNSIGNED;
-					if(cflags == DP_C_SHORT)
-						value = va_arg (args,
-							unsigned int) &
-							((1 <<
-							  sizeof(unsigned short
-								 int) *
-							  8) - 1);
-					else if(cflags == DP_C_LONG)
-						value = va_arg (
-							args, unsigned long int);
-					else if(cflags == DP_C_LLONG)
-						value = va_arg (args,
-							unsigned LLONG);
-					else
-						value = va_arg (args,
-							unsigned int);
-					total +=
-						fmtint (buffer, &currlen, maxlen,
-							value,
-							10, min, max,
-							flags);
-					break;
-				case 'X':
-					flags |= DP_F_UP;
-				case 'x':
-					flags |= DP_F_UNSIGNED;
-					if(cflags == DP_C_SHORT)
-						value = va_arg (args,
-							unsigned int) &
-							((1 <<
-							  sizeof(unsigned short
-								 int) *
-							  8) - 1);
-					else if(cflags == DP_C_LONG)
-						value = va_arg (
-							args, unsigned long int);
-					else if(cflags == DP_C_LLONG)
-						value = va_arg (args,
-							unsigned LLONG);
-					else
-						value = va_arg (args,
-							unsigned int);
-					total +=
-						fmtint (buffer, &currlen, maxlen,
-							value,
-							16, min, max,
-							flags);
-					break;
-				case 'f':
-					if(cflags == DP_C_LDOUBLE)
-						fvalue = va_arg (args, LDOUBLE);
-					else
-						fvalue = va_arg (args, double);
-					/* um, floating point? */
-					total +=
-						fmtfp (buffer, &currlen, maxlen,
-							fvalue,
-							min, max,
-							flags);
-					break;
-				case 'E':
-					flags |= DP_F_UP;
-				case 'e':
-					if(cflags == DP_C_LDOUBLE)
-						fvalue = va_arg (args, LDOUBLE);
-					else
-						fvalue = va_arg (args, double);
-					/* um, floating point? */
-					total +=
-						fmtfp (buffer, &currlen, maxlen,
-							fvalue,
-							min, max,
-							flags);
-					break;
-				case 'G':
-					flags |= DP_F_UP;
-				case 'g':
-					if(cflags == DP_C_LDOUBLE)
-						fvalue = va_arg (args, LDOUBLE);
-					else
-						fvalue = va_arg (args, double);
-					/* um, floating point? */
-					total +=
-						fmtfp (buffer, &currlen, maxlen,
-							fvalue,
-							min, max,
-							flags);
-					break;
-				case 'c':
-					total +=
-						dopr_outch (buffer, &currlen,
-							maxlen,
-							va_arg (args,
-								int));
-					break;
-				case 's':
-					strvalue = va_arg (args, char *);
-					total +=
-						fmtstr (buffer, &currlen, maxlen,
-							strvalue, flags, min,
-							max);
-					break;
-				case 'p':
-					strvalue = va_arg (args, void *);
-					total +=
-						fmtint (buffer, &currlen, maxlen,
-							(long) strvalue, 16, min,
-							max,
-							flags);
-					break;
-				case 'n':
-					if(cflags == DP_C_SHORT){
-						short int *num;
-						num	= va_arg (args,
-							short int *);
-						*num	= currlen;
-					}else if(cflags == DP_C_LONG){
-						long int *num;
-						num	= va_arg (args,
-							long int *);
-						*num	= currlen;
-					}else if(cflags == DP_C_LLONG){
-						LLONG *num;
-						num	= va_arg (args, LLONG *);
-						*num	= currlen;
-					}else{
-						int *num;
-						num	= va_arg (args, int *);
-						*num	= currlen;
-					}
-					break;
-				case '%':
-					total +=
-						dopr_outch (buffer, &currlen,
-							maxlen,
-							ch);
-					break;
-				case 'w':
-					/* not supported yet, treat as next char */
-					ch = *format++;
-					break;
-				default:
-					/* Unknown, skip */
-					break;
-				}
+			case '+':
+				flags |= DP_F_PLUS;
 				ch = *format++;
-				state	= DP_S_DEFAULT;
-				flags	= cflags = min = 0;
-				max	= -1;
 				break;
-			case DP_S_DONE:
+			case ' ':
+				flags |= DP_F_SPACE;
+				ch = *format++;
+				break;
+			case '#':
+				flags |= DP_F_NUM;
+				ch = *format++;
+				break;
+			case '0':
+				flags |= DP_F_ZERO;
+				ch = *format++;
 				break;
 			default:
-				/* hmm? */
-				break;	/* some picky compilers need this */
+				state = DP_S_MIN;
+				break;
 			}
+			break;
+		case DP_S_MIN:
+			if('0' <= ch && ch <= '9'){
+				min = 10*min + char_to_int (ch);
+				ch = *format++;
+			}else if(ch == '*'){
+				min = va_arg (args, int);
+				ch = *format++;
+				state = DP_S_DOT;
+			}else
+				state = DP_S_DOT;
+			break;
+		case DP_S_DOT:
+			if(ch == '.'){
+				state = DP_S_MAX;
+				ch = *format++;
+			}else
+				state = DP_S_MOD;
+			break;
+		case DP_S_MAX:
+			if('0' <= ch && ch <= '9'){
+				if(max < 0)
+					max = 0;
+				max = 10*max + char_to_int (ch);
+				ch = *format++;
+			}else if(ch == '*'){
+				max = va_arg (args, int);
+				ch = *format++;
+				state = DP_S_MOD;
+			}else
+				state = DP_S_MOD;
+			break;
+		case DP_S_MOD:
+			switch(ch){
+			case 'h':
+				cflags = DP_C_SHORT;
+				ch = *format++;
+				break;
+			case 'l':
+				cflags = DP_C_LONG;
+				ch = *format++;
+				break;
+			case 'L':
+				cflags = DP_C_LDOUBLE;
+				ch = *format++;
+				break;
+			default:
+				break;
+			}
+			if(cflags != DP_C_LONG)
+				state = DP_S_CONV;
+			else
+				state = DP_S_MOD_L;
+			break;
+		case DP_S_MOD_L:
+			switch(ch){
+			case 'l':
+				cflags = DP_C_LLONG;
+				ch = *format++;
+				break;
+			default:
+				break;
+			}
+			state = DP_S_CONV;
+			break;
+		case DP_S_CONV:
+			switch(ch){
+			case 'd':
+			case 'i':
+				if(cflags == DP_C_SHORT)
+					value = (short int)va_arg (args,
+						int);
+				else if(cflags == DP_C_LONG)
+					value = va_arg (args, long int);
+				else if(cflags == DP_C_LLONG)
+					value = va_arg (args, LLONG);
+				else
+					value = va_arg (args, int);
+				total +=
+					fmtint (buffer, &currlen, maxlen,
+						value,
+						10, min, max,
+						flags);
+				break;
+			case 'o':
+				flags |= DP_F_UNSIGNED;
+				if(cflags == DP_C_SHORT)
+/*	  value = (unsigned short int) va_arg (args, unsigned short int); // Thilo: This does not work because the rcc compiler cannot do that cast correctly. */
+					value = va_arg (args,
+						unsigned int) &
+						((1 <<
+						  sizeof(unsigned short
+							 int) *
+						  8) - 1);	/* Using this workaround instead. */
+				else if(cflags == DP_C_LONG)
+					value = va_arg (
+						args, unsigned long int);
+				else if(cflags == DP_C_LLONG)
+					value = va_arg (args,
+						unsigned LLONG);
+				else
+					value = va_arg (args,
+						unsigned int);
+				total +=
+					fmtint (buffer, &currlen, maxlen,
+						value,
+						8, min, max,
+						flags);
+				break;
+			case 'u':
+				flags |= DP_F_UNSIGNED;
+				if(cflags == DP_C_SHORT)
+					value = va_arg (args,
+						unsigned int) &
+						((1 <<
+						  sizeof(unsigned short
+							 int) *
+						  8) - 1);
+				else if(cflags == DP_C_LONG)
+					value = va_arg (
+						args, unsigned long int);
+				else if(cflags == DP_C_LLONG)
+					value = va_arg (args,
+						unsigned LLONG);
+				else
+					value = va_arg (args,
+						unsigned int);
+				total +=
+					fmtint (buffer, &currlen, maxlen,
+						value,
+						10, min, max,
+						flags);
+				break;
+			case 'X':
+				flags |= DP_F_UP;
+			case 'x':
+				flags |= DP_F_UNSIGNED;
+				if(cflags == DP_C_SHORT)
+					value = va_arg (args,
+						unsigned int) &
+						((1 <<
+						  sizeof(unsigned short
+							 int) *
+						  8) - 1);
+				else if(cflags == DP_C_LONG)
+					value = va_arg (
+						args, unsigned long int);
+				else if(cflags == DP_C_LLONG)
+					value = va_arg (args,
+						unsigned LLONG);
+				else
+					value = va_arg (args,
+						unsigned int);
+				total +=
+					fmtint (buffer, &currlen, maxlen,
+						value,
+						16, min, max,
+						flags);
+				break;
+			case 'f':
+				if(cflags == DP_C_LDOUBLE)
+					fvalue = va_arg (args, LDOUBLE);
+				else
+					fvalue = va_arg (args, double);
+				/* um, floating point? */
+				total +=
+					fmtfp (buffer, &currlen, maxlen,
+						fvalue,
+						min, max,
+						flags);
+				break;
+			case 'E':
+				flags |= DP_F_UP;
+			case 'e':
+				if(cflags == DP_C_LDOUBLE)
+					fvalue = va_arg (args, LDOUBLE);
+				else
+					fvalue = va_arg (args, double);
+				/* um, floating point? */
+				total +=
+					fmtfp (buffer, &currlen, maxlen,
+						fvalue,
+						min, max,
+						flags);
+				break;
+			case 'G':
+				flags |= DP_F_UP;
+			case 'g':
+				if(cflags == DP_C_LDOUBLE)
+					fvalue = va_arg (args, LDOUBLE);
+				else
+					fvalue = va_arg (args, double);
+				/* um, floating point? */
+				total +=
+					fmtfp (buffer, &currlen, maxlen,
+						fvalue,
+						min, max,
+						flags);
+				break;
+			case 'c':
+				total +=
+					dopr_outch (buffer, &currlen,
+						maxlen,
+						va_arg (args,
+							int));
+				break;
+			case 's':
+				strvalue = va_arg (args, char *);
+				total +=
+					fmtstr (buffer, &currlen, maxlen,
+						strvalue, flags, min,
+						max);
+				break;
+			case 'p':
+				strvalue = va_arg (args, void *);
+				total +=
+					fmtint (buffer, &currlen, maxlen,
+						(long)strvalue, 16, min,
+						max,
+						flags);
+				break;
+			case 'n':
+				if(cflags == DP_C_SHORT){
+					short int *num;
+					num = va_arg (args,
+						short int *);
+					*num = currlen;
+				}else if(cflags == DP_C_LONG){
+					long int *num;
+					num = va_arg (args,
+						long int *);
+					*num = currlen;
+				}else if(cflags == DP_C_LLONG){
+					LLONG *num;
+					num = va_arg (args, LLONG *);
+					*num = currlen;
+				}else{
+					int *num;
+					num = va_arg (args, int *);
+					*num = currlen;
+				}
+				break;
+			case '%':
+				total +=
+					dopr_outch (buffer, &currlen,
+						maxlen,
+						ch);
+				break;
+			case 'w':
+				/* not supported yet, treat as next char */
+				ch = *format++;
+				break;
+			default:
+				/* Unknown, skip */
+				break;
+			}
+			ch = *format++;
+			state	= DP_S_DEFAULT;
+			flags	= cflags = min = 0;
+			max	= -1;
+			break;
+		case DP_S_DONE:
+			break;
+		default:
+			/* hmm? */
+			break;	/* some picky compilers need this */
+		}
 		if(maxlen > 0)
 			buffer[currlen] = '\0';
 		return total;
@@ -2061,8 +2061,8 @@ loop:   SWAPINIT(a, es);
 	       char *value, int flags, int min, int max)
 	{
 		int	padlen, strln;	/* amount to pad */
-		int	cnt	= 0;
-		int	total	= 0;
+		int	cnt = 0;
+		int	total = 0;
 
 		if(value == 0)
 			value = "<NULL>";
@@ -2100,11 +2100,11 @@ loop:   SWAPINIT(a, es);
 		int	signvalue = 0;
 		unsigned LLONG uvalue;
 		char	convert[24];
-		int	place = 0;
+		int	place	= 0;
 		int	spadlen = 0;	/* amount to space pad */
 		int	zpadlen = 0;	/* amount to zero pad */
 		const char *digits;
-		int total = 0;
+		int	total = 0;
 
 		if(max < 0)
 			max = 0;
@@ -2112,7 +2112,7 @@ loop:   SWAPINIT(a, es);
 		uvalue = value;
 
 		if(!(flags & DP_F_UNSIGNED)){
-			if( value < 0 ){
+			if(value < 0){
 				signvalue = '-';
 				uvalue = -value;
 			}else
@@ -2130,8 +2130,8 @@ loop:   SWAPINIT(a, es);
 			digits = "0123456789abcdef";
 
 		do {
-			convert[place++] = digits[uvalue % (unsigned) base];
-			uvalue = (uvalue / (unsigned) base);
+			convert[place++] = digits[uvalue % (unsigned)base];
+			uvalue = (uvalue / (unsigned)base);
 		} while(uvalue && (place < sizeof(convert)));
 		if(place == sizeof(convert)) place--;
 		convert[place] = 0;
@@ -2228,7 +2228,7 @@ loop:   SWAPINIT(a, es);
 	fmtfp(char *buffer, size_t *currlen, size_t maxlen,
 	      LDOUBLE fvalue, int min, int max, int flags)
 	{
-		int signvalue = 0;
+		int	signvalue = 0;
 		LDOUBLE ufvalue;
 		char	iconvert[20];
 		char	fconvert[20];
@@ -2385,16 +2385,16 @@ loop:   SWAPINIT(a, es);
 	int
 	sscanf(const char *buffer, const char *fmt, ...)
 	{
-		int cmd;
+		int	cmd;
 		va_list ap;
 		int	count;
-		size_t	len;
+		size_t len;
 
 		va_start (ap, fmt);
 		count = 0;
 
-		while( *fmt ){
-			if( fmt[0] != '%' ){
+		while(*fmt){
+			if(fmt[0] != '%'){
 				fmt++;
 				continue;
 			}
@@ -2403,14 +2403,14 @@ loop:   SWAPINIT(a, es);
 			cmd = *fmt;
 
 			if(isdigit (cmd)){
-				len	= (size_t) _atoi (&fmt);
-				cmd	= *(fmt - 1);
+				len = (size_t)_atoi (&fmt);
+				cmd = *(fmt - 1);
 			}else{
 				len = MAX_STRING_CHARS - 1;
 				fmt++;
 			}
 
-			switch( cmd ){
+			switch(cmd){
 			case 'i':
 			case 'd':
 			case 'u':
@@ -2424,7 +2424,7 @@ loop:   SWAPINIT(a, es);
 				char *s = va_arg (ap, char *);
 				while(isspace (*buffer))
 					buffer++;
-				while(*buffer && !isspace (*buffer) && len-- > 0 )
+				while(*buffer && !isspace (*buffer) && len-- > 0)
 					*s++ = *buffer++;
 				*s++ = '\0';
 				break;

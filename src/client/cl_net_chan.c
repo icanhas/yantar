@@ -39,32 +39,32 @@
 static void
 CL_Netchan_Encode(msg_t *msg)
 {
-	int serverId, messageAcknowledge, reliableAcknowledge;
-	int i, index, srdc, sbit, soob;
-	byte key, *string;
+	int	serverId, messageAcknowledge, reliableAcknowledge;
+	int	i, index, srdc, sbit, soob;
+	byte	key, *string;
 
-	if( msg->cursize <= CL_ENCODE_START )
+	if(msg->cursize <= CL_ENCODE_START)
 		return;
 
-	srdc = msg->readcount;
-	sbit = msg->bit;
-	soob = msg->oob;
+	srdc	= msg->readcount;
+	sbit	= msg->bit;
+	soob	= msg->oob;
 
 	msg->bit = 0;
 	msg->readcount = 0;
 	msg->oob = 0;
 
 	serverId = MSG_ReadLong(msg);
-	messageAcknowledge = MSG_ReadLong(msg);
-	reliableAcknowledge = MSG_ReadLong(msg);
+	messageAcknowledge	= MSG_ReadLong(msg);
+	reliableAcknowledge	= MSG_ReadLong(msg);
 
-	msg->oob = soob;
-	msg->bit = sbit;
+	msg->oob	= soob;
+	msg->bit	= sbit;
 	msg->readcount = srdc;
 
 	string =
-		(byte *) clc.serverCommands[ reliableAcknowledge &
-					     (MAX_RELIABLE_COMMANDS-1) ];
+		(byte*)clc.serverCommands[ reliableAcknowledge &
+					   (MAX_RELIABLE_COMMANDS-1) ];
 	index = 0;
 	/*  */
 	key = clc.challenge ^ serverId ^ messageAcknowledge;
@@ -94,28 +94,28 @@ CL_Netchan_Encode(msg_t *msg)
 static void
 CL_Netchan_Decode(msg_t *msg)
 {
-	long reliableAcknowledge, i, index;
-	byte key, *string;
-	int srdc, sbit, soob;
+	long	reliableAcknowledge, i, index;
+	byte	key, *string;
+	int	srdc, sbit, soob;
 
-	srdc = msg->readcount;
-	sbit = msg->bit;
-	soob = msg->oob;
+	srdc	= msg->readcount;
+	sbit	= msg->bit;
+	soob	= msg->oob;
 
 	msg->oob = 0;
 
 	reliableAcknowledge = MSG_ReadLong(msg);
 
-	msg->oob = soob;
-	msg->bit = sbit;
+	msg->oob	= soob;
+	msg->bit	= sbit;
 	msg->readcount = srdc;
 
 	string =
-		(byte *) clc.reliableCommands[ reliableAcknowledge &
-					       (MAX_RELIABLE_COMMANDS-1) ];
+		(byte*)clc.reliableCommands[ reliableAcknowledge &
+					     (MAX_RELIABLE_COMMANDS-1) ];
 	index = 0;
 	/* xor the client challenge with the netchan sequence number (need something that changes every message) */
-	key = clc.challenge ^ LittleLong(*(unsigned *) msg->data);
+	key = clc.challenge ^ LittleLong(*(unsigned*)msg->data);
 	for(i = msg->readcount + CL_DECODE_START; i < msg->cursize; i++){
 		/* modify the key with the last sent and with this message acknowledged client command */
 		if(!string[index])

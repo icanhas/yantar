@@ -62,18 +62,18 @@ Log_Open(char *filename)
 	if(!filename || !strlen(filename)){
 		botimport.Print(PRT_MESSAGE, "openlog <filename>\n");
 		return;
-	}	
+	}
 	if(logfile.fp){
 		botimport.Print(PRT_ERROR, "log file %s is already opened\n",
 			logfile.filename);
 		return;
-	}	
+	}
 	logfile.fp = fopen(filename, "wb");
 	if(!logfile.fp){
 		botimport.Print(PRT_ERROR, "can't open the log file %s\n",
 			filename);
 		return;
-	}	
+	}
 	strncpy(logfile.filename, filename, MAX_LOGFILENAMESIZE);
 	botimport.Print(PRT_MESSAGE, "Opened log %s\n", logfile.filename);
 }	/* end of the function Log_Create */
@@ -91,7 +91,7 @@ Log_Close(void)
 		botimport.Print(PRT_ERROR, "can't close log file %s\n",
 			logfile.filename);
 		return;
-	}	
+	}
 	logfile.fp = NULL;
 	botimport.Print(PRT_MESSAGE, "Closed log %s\n", logfile.filename);
 }	/* end of the function Log_Close */
@@ -138,11 +138,11 @@ Log_WriteTimeStamped(char *fmt, ...)
 	if(!logfile.fp) return;
 	fprintf(logfile.fp, "%d   %02d:%02d:%02d:%02d   ",
 		logfile.numwrites,
-		(int) (botlibglobals.time / 60 / 60),
-		(int) (botlibglobals.time / 60),
-		(int) (botlibglobals.time),
-		(int) ((int) (botlibglobals.time * 100)) -
-		((int) botlibglobals.time) * 100);
+		(int)(botlibglobals.time / 60 / 60),
+		(int)(botlibglobals.time / 60),
+		(int)(botlibglobals.time),
+		(int)((int)(botlibglobals.time * 100)) -
+		((int)botlibglobals.time) * 100);
 	va_start(ap, fmt);
 	vfprintf(logfile.fp, fmt, ap);
 	va_end(ap);

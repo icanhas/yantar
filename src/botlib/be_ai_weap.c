@@ -48,8 +48,8 @@
 /* #define DEBUG_AI_WEAP */
 
 /* structure field offsets */
-#define WEAPON_OFS(x)		(size_t) &(((weaponinfo_t *) 0)->x)
-#define PROJECTILE_OFS(x)	(size_t) &(((projectileinfo_t *) 0)->x)
+#define WEAPON_OFS(x)		(size_t)&(((weaponinfo_t*)0)->x)
+#define PROJECTILE_OFS(x)	(size_t)&(((projectileinfo_t*)0)->x)
 
 /* weapon definition */
 static fielddef_t weaponinfo_fields[] =
@@ -57,25 +57,25 @@ static fielddef_t weaponinfo_fields[] =
 	{"number", WEAPON_OFS(number), FT_INT},	/* weapon number */
 	{"name", WEAPON_OFS(name), FT_STRING},	/* name of the weapon */
 	{"level", WEAPON_OFS(level), FT_INT},
-	{"model", WEAPON_OFS(model), FT_STRING},		/* model of the weapon */
-	{"weaponindex", WEAPON_OFS(weaponindex), FT_INT},	/* index of weapon in inventory */
-	{"flags", WEAPON_OFS(flags), FT_INT},			/* special flags */
-	{"projectile", WEAPON_OFS(projectile), FT_STRING},	/* projectile used by the weapon */
-	{"numprojectiles", WEAPON_OFS(numprojectiles), FT_INT},	/* number of projectiles */
-	{"hspread", WEAPON_OFS(hspread), FT_FLOAT},		/* horizontal spread of projectiles (degrees from middle) */
-	{"vspread", WEAPON_OFS(vspread), FT_FLOAT},		/* vertical spread of projectiles (degrees from middle) */
-	{"speed", WEAPON_OFS(speed), FT_FLOAT},			/* speed of the projectile (0 = instant hit) */
-	{"acceleration", WEAPON_OFS(acceleration), FT_FLOAT},	/* "acceleration" * time (in seconds) + "speed" = projectile speed */
-	{"recoil", WEAPON_OFS(recoil), FT_FLOAT|FT_ARRAY, 3},	/* amount of recoil the player gets from the weapon */
-	{"offset", WEAPON_OFS(offset), FT_FLOAT|FT_ARRAY, 3},	/* projectile start offset relative to eye and view angles */
+	{"model", WEAPON_OFS(model), FT_STRING},			/* model of the weapon */
+	{"weaponindex", WEAPON_OFS(weaponindex), FT_INT},		/* index of weapon in inventory */
+	{"flags", WEAPON_OFS(flags), FT_INT},				/* special flags */
+	{"projectile", WEAPON_OFS(projectile), FT_STRING},		/* projectile used by the weapon */
+	{"numprojectiles", WEAPON_OFS(numprojectiles), FT_INT},		/* number of projectiles */
+	{"hspread", WEAPON_OFS(hspread), FT_FLOAT},			/* horizontal spread of projectiles (degrees from middle) */
+	{"vspread", WEAPON_OFS(vspread), FT_FLOAT},			/* vertical spread of projectiles (degrees from middle) */
+	{"speed", WEAPON_OFS(speed), FT_FLOAT},				/* speed of the projectile (0 = instant hit) */
+	{"acceleration", WEAPON_OFS(acceleration), FT_FLOAT},		/* "acceleration" * time (in seconds) + "speed" = projectile speed */
+	{"recoil", WEAPON_OFS(recoil), FT_FLOAT|FT_ARRAY, 3},		/* amount of recoil the player gets from the weapon */
+	{"offset", WEAPON_OFS(offset), FT_FLOAT|FT_ARRAY, 3},		/* projectile start offset relative to eye and view angles */
 	{"angleoffset", WEAPON_OFS(angleoffset), FT_FLOAT|FT_ARRAY, 3},	/* offset of the shoot angles relative to the view angles */
 	{"extrazvelocity", WEAPON_OFS(extrazvelocity), FT_FLOAT},	/* extra z velocity the projectile gets */
-	{"ammoamount", WEAPON_OFS(ammoamount), FT_INT},	/* ammo amount used per shot */
-	{"ammoindex", WEAPON_OFS(ammoindex), FT_INT},	/* index of ammo in inventory */
-	{"activate", WEAPON_OFS(activate), FT_FLOAT},	/* time it takes to select the weapon */
-	{"reload", WEAPON_OFS(reload), FT_FLOAT},	/* time it takes to reload the weapon */
-	{"spinup", WEAPON_OFS(spinup), FT_FLOAT},	/* time it takes before first shot */
-	{"spindown", WEAPON_OFS(spindown), FT_FLOAT},	/* time it takes before weapon stops firing */
+	{"ammoamount", WEAPON_OFS(ammoamount), FT_INT},			/* ammo amount used per shot */
+	{"ammoindex", WEAPON_OFS(ammoindex), FT_INT},			/* index of ammo in inventory */
+	{"activate", WEAPON_OFS(activate), FT_FLOAT},			/* time it takes to select the weapon */
+	{"reload", WEAPON_OFS(reload), FT_FLOAT},			/* time it takes to reload the weapon */
+	{"spinup", WEAPON_OFS(spinup), FT_FLOAT},			/* time it takes before first shot */
+	{"spindown", WEAPON_OFS(spindown), FT_FLOAT},			/* time it takes before weapon stops firing */
 	{NULL, 0, 0, 0}
 };
 
@@ -100,11 +100,11 @@ static fielddef_t projectileinfo_fields[] =
 	{NULL, 0, 0, 0}
 };
 
-static structdef_t weaponinfo_struct =
+static structdef_t	weaponinfo_struct =
 {
 	sizeof(weaponinfo_t), weaponinfo_fields
 };
-static structdef_t projectileinfo_struct =
+static structdef_t	projectileinfo_struct =
 {
 	sizeof(projectileinfo_t), projectileinfo_fields
 };
@@ -123,8 +123,8 @@ typedef struct bot_weaponstate_s {
 	int			*weaponweightindex;	/* weapon weight index */
 } bot_weaponstate_t;
 
-static bot_weaponstate_t *botweaponstates[MAX_CLIENTS+1];
-static weaponconfig_t *weaponconfig;
+static bot_weaponstate_t	*botweaponstates[MAX_CLIENTS+1];
+static weaponconfig_t		*weaponconfig;
 
 /* ========================================================================
  *
@@ -138,7 +138,7 @@ BotValidWeaponNumber(int weaponnum)
 	if(weaponnum <= 0 || weaponnum > weaponconfig->numweapons){
 		botimport.Print(PRT_ERROR, "weapon number out of range\n");
 		return qfalse;
-	}	
+	}
 	return qtrue;
 }	/* end of the function BotValidWeaponNumber */
 /* ========================================================================
@@ -154,11 +154,11 @@ BotWeaponStateFromHandle(int handle)
 		botimport.Print(PRT_FATAL, "move state handle %d out of range\n",
 			handle);
 		return NULL;
-	}	
+	}
 	if(!botweaponstates[handle]){
 		botimport.Print(PRT_FATAL, "invalid move state %d\n", handle);
 		return NULL;
-	}	
+	}
 	return botweaponstates[handle];
 }	/* end of the function BotWeaponStateFromHandle */
 /* ===========================================================================
@@ -171,22 +171,22 @@ BotWeaponStateFromHandle(int handle)
 void
 DumpWeaponConfig(weaponconfig_t *wc)
 {
-	FILE *fp;
-	int i;
+	FILE	*fp;
+	int	i;
 
 	fp = Log_FileStruct();
 	if(!fp) return;
 	for(i = 0; i < wc->numprojectiles; i++){
 		WriteStructure(fp, &projectileinfo_struct,
-			(char *) &wc->projectileinfo[i]);
+			(char*)&wc->projectileinfo[i]);
 		Log_Flush();
-	}	
+	}
 	for(i = 0; i < wc->numweapons; i++){
 		WriteStructure(fp, &weaponinfo_struct,
-			(char *) &wc->weaponinfo[i]);
+			(char*)&wc->weaponinfo[i]);
 		Log_Flush();
-	}	
-}		/* end of the function DumpWeaponConfig */
+	}
+}	/* end of the function DumpWeaponConfig */
 #endif	/* DEBUG_AI_WEAP */
 /* ===========================================================================
  *
@@ -197,7 +197,7 @@ DumpWeaponConfig(weaponconfig_t *wc)
 weaponconfig_t *
 LoadWeaponConfig(char *filename)
 {
-	int max_weaponinfo, max_projectileinfo;
+	int	max_weaponinfo, max_projectileinfo;
 	token_t token;
 	char	path[MAX_PATH];
 	int	i, j;
@@ -205,35 +205,35 @@ LoadWeaponConfig(char *filename)
 	weaponconfig_t	*wc;
 	weaponinfo_t	weaponinfo;
 
-	max_weaponinfo = (int) LibVarValue("max_weaponinfo", "32");
+	max_weaponinfo = (int)LibVarValue("max_weaponinfo", "32");
 	if(max_weaponinfo < 0){
 		botimport.Print(PRT_ERROR, "max_weaponinfo = %d\n",
 			max_weaponinfo);
 		max_weaponinfo = 32;
 		LibVarSet("max_weaponinfo", "32");
-	}	
-	max_projectileinfo = (int) LibVarValue("max_projectileinfo", "32");
+	}
+	max_projectileinfo = (int)LibVarValue("max_projectileinfo", "32");
 	if(max_projectileinfo < 0){
 		botimport.Print(PRT_ERROR, "max_projectileinfo = %d\n",
 			max_projectileinfo);
 		max_projectileinfo = 32;
 		LibVarSet("max_projectileinfo", "32");
-	}	
+	}
 	strncpy(path, filename, MAX_PATH);
 	PC_SetBaseFolder(BOTFILESBASEFOLDER);
 	source = LoadSourceFile(path);
 	if(!source){
 		botimport.Print(PRT_ERROR, "counldn't load %s\n", path);
 		return NULL;
-	}	
-		/* initialize weapon config */
-	wc = (weaponconfig_t *) GetClearedHunkMemory(sizeof(weaponconfig_t) +
+	}
+	/* initialize weapon config */
+	wc = (weaponconfig_t*)GetClearedHunkMemory(sizeof(weaponconfig_t) +
 		max_weaponinfo * sizeof(weaponinfo_t) +
 		max_projectileinfo * sizeof(projectileinfo_t));
-	wc->weaponinfo = (weaponinfo_t *) ((char *) wc + sizeof(weaponconfig_t));
-	wc->projectileinfo = (projectileinfo_t *) ((char *) wc->weaponinfo +
-						   max_weaponinfo *
-						   sizeof(weaponinfo_t));
+	wc->weaponinfo = (weaponinfo_t*)((char*)wc + sizeof(weaponconfig_t));
+	wc->projectileinfo = (projectileinfo_t*)((char*)wc->weaponinfo +
+						 max_weaponinfo *
+						 sizeof(weaponinfo_t));
 	wc->numweapons = max_weaponinfo;
 	wc->numprojectiles = 0;
 	/* parse the source file */
@@ -241,11 +241,11 @@ LoadWeaponConfig(char *filename)
 		if(!strcmp(token.string, "weaponinfo")){
 			Com_Memset(&weaponinfo, 0, sizeof(weaponinfo_t));
 			if(!ReadStructure(source, &weaponinfo_struct,
-				   (char *) &weaponinfo)){
+				   (char*)&weaponinfo)){
 				FreeMemory(wc);
 				FreeSource(source);
 				return NULL;
-			}	
+			}
 			if(weaponinfo.number < 0 || weaponinfo.number >=
 			   max_weaponinfo){
 				botimport.Print(
@@ -255,13 +255,12 @@ LoadWeaponConfig(char *filename)
 				FreeMemory(wc);
 				FreeSource(source);
 				return NULL;
-			}	
+			}
 			Com_Memcpy(&wc->weaponinfo[weaponinfo.number],
 				&weaponinfo,
 				sizeof(weaponinfo_t));
 			wc->weaponinfo[weaponinfo.number].valid = qtrue;
-		}	
-		else if(!strcmp(token.string, "projectileinfo")){
+		}else if(!strcmp(token.string, "projectileinfo")){
 			if(wc->numprojectiles >= max_projectileinfo){
 				botimport.Print(
 					PRT_ERROR,
@@ -270,28 +269,26 @@ LoadWeaponConfig(char *filename)
 				FreeMemory(wc);
 				FreeSource(source);
 				return NULL;
-			}	
+			}
 			Com_Memset(&wc->projectileinfo[wc->numprojectiles], 0,
 				sizeof(projectileinfo_t));
 			if(!ReadStructure(source, &projectileinfo_struct,
-				   (char *) &wc->projectileinfo[wc->
-								numprojectiles]))
-			{
+				   (char*)&wc->projectileinfo[wc->
+							      numprojectiles])){
 				FreeMemory(wc);
 				FreeSource(source);
 				return NULL;
-			}	
+			}
 			wc->numprojectiles++;
-		}	
-		else{
+		}else{
 			botimport.Print(PRT_ERROR,
 				"unknown definition %s in %s\n", token.string,
 				path);
 			FreeMemory(wc);
 			FreeSource(source);
 			return NULL;
-		}	
-	}		
+		}
+	}
 	FreeSource(source);
 	/* fix up weapons */
 	for(i = 0; i < wc->numweapons; i++){
@@ -302,7 +299,7 @@ LoadWeaponConfig(char *filename)
 				path);
 			FreeMemory(wc);
 			return NULL;
-		}	
+		}
 		if(!wc->weaponinfo[i].projectile[0]){
 			botimport.Print(PRT_ERROR,
 				"weapon %s has no projectile in %s\n",
@@ -310,8 +307,8 @@ LoadWeaponConfig(char *filename)
 				path);
 			FreeMemory(wc);
 			return NULL;
-		}	
-			/* find the projectile info and copy it to the weapon info */
+		}
+		/* find the projectile info and copy it to the weapon info */
 		for(j = 0; j < wc->numprojectiles; j++)
 			if(!strcmp(wc->projectileinfo[j].name,
 				   wc->weaponinfo[i].projectile)){
@@ -319,7 +316,7 @@ LoadWeaponConfig(char *filename)
 					&wc->projectileinfo[j],
 					sizeof(projectileinfo_t));
 				break;
-			}	
+			}
 		if(j == wc->numprojectiles){
 			botimport.Print(
 				PRT_ERROR,
@@ -327,8 +324,8 @@ LoadWeaponConfig(char *filename)
 				wc->weaponinfo[i].name, path);
 			FreeMemory(wc);
 			return NULL;
-		}	
-	}		
+		}
+	}
 	if(!wc->numweapons) botimport.Print(PRT_WARNING,
 			"no weapon info loaded\n");
 	botimport.Print(PRT_MESSAGE, "loaded %s\n", path);
@@ -346,7 +343,7 @@ WeaponWeightIndex(weightconfig_t *wwc, weaponconfig_t *wc)
 	int *index, i;
 
 	/* initialize item weight index */
-	index = (int *) GetClearedMemory(sizeof(int) * wc->numweapons);
+	index = (int*)GetClearedMemory(sizeof(int) * wc->numweapons);
 
 	for(i = 0; i < wc->numweapons; i++)
 		index[i] = FindFuzzyWeight(wwc, wc->weaponinfo[i].name);
@@ -388,7 +385,7 @@ BotLoadWeaponWeights(int weaponstate, char *filename)
 		botimport.Print(PRT_FATAL, "couldn't load weapon config %s\n",
 			filename);
 		return BLERR_CANNOTLOADWEAPONWEIGHTS;
-	}	
+	}
 	if(!weaponconfig) return BLERR_CANNOTLOADWEAPONCONFIG;
 	ws->weaponweightindex = WeaponWeightIndex(ws->weaponweightconfig,
 		weaponconfig);
@@ -434,18 +431,18 @@ BotChooseBestFightWeapon(int weaponstate, int *inventory)
 	/* if the bot has no weapon weight configuration */
 	if(!ws->weaponweightconfig) return 0;
 
-	bestweight = 0;
-	bestweapon = 0;
+	bestweight	= 0;
+	bestweapon	= 0;
 	for(i = 0; i < wc->numweapons; i++){
 		if(!wc->weaponinfo[i].valid) continue;
 		index = ws->weaponweightindex[i];
 		if(index < 0) continue;
 		weight = FuzzyWeight(inventory, ws->weaponweightconfig, index);
 		if(weight > bestweight){
-			bestweight = weight;
-			bestweapon = i;
-		}	
-	}		
+			bestweight	= weight;
+			bestweapon	= i;
+		}
+	}
 	return bestweapon;
 }	/* end of the function BotChooseBestFightWeapon */
 /* ===========================================================================
@@ -457,14 +454,14 @@ BotChooseBestFightWeapon(int weaponstate, int *inventory)
 void
 BotResetWeaponState(int weaponstate)
 {
-	struct weightconfig_s *weaponweightconfig;
+	struct weightconfig_s	*weaponweightconfig;
 	int *weaponweightindex;
-	bot_weaponstate_t *ws;
+	bot_weaponstate_t	*ws;
 
 	ws = BotWeaponStateFromHandle(weaponstate);
 	if(!ws) return;
-	weaponweightconfig = ws->weaponweightconfig;
-	weaponweightindex = ws->weaponweightindex;
+	weaponweightconfig	= ws->weaponweightconfig;
+	weaponweightindex	= ws->weaponweightindex;
 
 	/* Com_Memset(ws, 0, sizeof(bot_weaponstate_t)); */
 	ws->weaponweightconfig	= weaponweightconfig;
@@ -486,7 +483,7 @@ BotAllocWeaponState(void)
 			botweaponstates[i] =
 				GetClearedMemory(sizeof(bot_weaponstate_t));
 			return i;
-		}	
+		}
 	return 0;
 }	/* end of the function BotAllocWeaponState */
 /* ========================================================================
@@ -502,11 +499,11 @@ BotFreeWeaponState(int handle)
 		botimport.Print(PRT_FATAL, "move state handle %d out of range\n",
 			handle);
 		return;
-	}	
+	}
 	if(!botweaponstates[handle]){
 		botimport.Print(PRT_FATAL, "invalid move state %d\n", handle);
 		return;
-	}	
+	}
 	BotFreeWeaponWeights(handle);
 	FreeMemory(botweaponstates[handle]);
 	botweaponstates[handle] = NULL;
@@ -527,7 +524,7 @@ BotSetupWeaponAI(void)
 	if(!weaponconfig){
 		botimport.Print(PRT_FATAL, "couldn't load the weapon config\n");
 		return BLERR_CANNOTLOADWEAPONCONFIG;
-	}	
+	}
 
 #ifdef DEBUG_AI_WEAP
 	DumpWeaponConfig(weaponconfig);

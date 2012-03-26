@@ -288,7 +288,7 @@ extern void                     Menu_Focus(menucommon_s *m);
 extern void                     Menu_AddItem(menuframework_s *menu, void *item);
 extern void                     Menu_AdjustCursor(menuframework_s *menu, int dir);
 extern void                     Menu_Draw(menuframework_s *menu);
-extern void                     *Menu_ItemAtCursor(menuframework_s *m);
+extern void*Menu_ItemAtCursor(menuframework_s *m);
 extern sfxHandle_t      Menu_ActivateItem(menuframework_s *s, menucommon_s* item);
 extern void                     Menu_SetCursor(menuframework_s *s, int cursor);
 extern void                     Menu_SetCursorToItem(menuframework_s *m,
@@ -325,9 +325,9 @@ extern vec4_t	text_color_disabled;
 extern vec4_t	text_color_normal;
 extern vec4_t	text_color_highlight;
 
-extern char	*ui_medalNames[];
-extern char	*ui_medalPicNames[];
-extern char	*ui_medalSounds[];
+extern char *ui_medalNames[];
+extern char *ui_medalPicNames[];
+extern char *ui_medalSounds[];
 
 /*
  * ui_mfield.c
@@ -818,7 +818,7 @@ typedef struct {
 	serverStatus_t	serverStatus;
 
 	/* for the showing the status of a server */
-	char serverStatusAddress[MAX_ADDRESSLENGTH];
+	char			serverStatusAddress[MAX_ADDRESSLENGTH];
 	serverStatusInfo_t	serverStatusInfo;
 	int			nextServerStatusRefresh;
 
@@ -900,8 +900,8 @@ extern void                     UI_SetActiveMenu(uiMenuCommand_t menu);
 extern void                     UI_PushMenu(menuframework_s *menu);
 extern void                     UI_PopMenu(void);
 extern void                     UI_ForceMenuOff(void);
-extern char                     *UI_Argv(int arg);
-extern char                     *UI_Cvar_VariableString(const char *var_name);
+extern char*UI_Argv(int arg);
+extern char*UI_Cvar_VariableString(const char *var_name);
 extern void                     UI_Refresh(int time);
 extern void                     UI_KeyEvent(int key);
 extern void                     UI_StartDemoLoop(void);
@@ -1127,18 +1127,18 @@ typedef enum {
 	AWARD_PERFECT
 } awardType_t;
 
-const char *UI_GetArenaInfoByNumber(int num);
-const char *UI_GetArenaInfoByMap(const char *map);
-const char *UI_GetSpecialArenaInfo(const char *tag);
+const char*UI_GetArenaInfoByNumber(int num);
+const char*UI_GetArenaInfoByMap(const char *map);
+const char*UI_GetSpecialArenaInfo(const char *tag);
 int UI_GetNumArenas(void);
 int UI_GetNumSPArenas(void);
 int UI_GetNumSPTiers(void);
 
-char *UI_GetBotInfoByNumber(int num);
-char *UI_GetBotInfoByName(const char *name);
+char*UI_GetBotInfoByNumber(int num);
+char*UI_GetBotInfoByName(const char *name);
 int UI_GetNumBots(void);
 void UI_LoadBots(void);
-char *UI_GetBotNameByNumber(int num);
+char*UI_GetBotNameByNumber(int num);
 
 void UI_GetBestScore(int level, int *score, int *skill);
 void UI_SetBestScore(int level, int score);

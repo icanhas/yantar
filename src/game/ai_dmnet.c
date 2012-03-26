@@ -59,8 +59,8 @@
 /* goal flag, see ../botlib/be_ai_goal.h for the other GFL_* */
 #define GFL_AIR 128
 
-int numnodeswitches;
-char nodeswitch[MAX_NODESWITCHES+1][144];
+int	numnodeswitches;
+char	nodeswitch[MAX_NODESWITCHES+1][144];
 
 #define LOOKAHEAD_DISTANCE 300
 
@@ -83,8 +83,8 @@ BotResetNodeSwitches(void)
 void
 BotDumpNodeSwitches(bot_state_t *bs)
 {
-	int i;
-	char netname[MAX_NETNAME];
+	int	i;
+	char	netname[MAX_NETNAME];
 
 	ClientName(bs->client, netname, sizeof(netname));
 	BotAI_Print(PRT_MESSAGE, "%s at %1.1f switched more than %d AI nodes\n",
@@ -222,7 +222,7 @@ BotNearbyGoal(bot_state_t *bs, int tfl, bot_goal_t *ltg, float range)
 			   bs->teamgoal.areanum, TFL_DEFAULT) < 300)
 			/* make the range really small */
 			range = 50;
-		/*  */
+	/*  */
 	ret = trap_BotChooseNBGItem(bs->gs, bs->origin, bs->inventory, tfl, ltg,
 		range);
 	/*
@@ -359,8 +359,8 @@ BotGetLongTermGoal(bot_state_t *bs, int tfl, int retreat, bot_goal_t *goal)
 	char	buf[MAX_MESSAGE_SIZE];
 	int	areanum;
 	float	croucher;
-	aas_entityinfo_t entinfo, botinfo;
-	bot_waypoint_t *wp;
+	aas_entityinfo_t	entinfo, botinfo;
+	bot_waypoint_t		*wp;
 
 	if(bs->ltgtype == LTG_TEAMHELP && !retreat){
 		/* check for bot typing status message */
@@ -613,7 +613,7 @@ BotGetLongTermGoal(bot_state_t *bs, int tfl, int retreat, bot_goal_t *goal)
 			   bs->teamgoal.areanum,
 			   TFL_DEFAULT) > bs->defendaway_range)
 			bs->defendaway_time = 0;
-		/* if defending a key area */
+	/* if defending a key area */
 	if(bs->ltgtype == LTG_DEFENDKEYAREA && !retreat &&
 	   bs->defendaway_time < FloatTime()){
 		/* check for bot typing status message */
@@ -1164,10 +1164,10 @@ int
 BotLongTermGoal(bot_state_t *bs, int tfl, int retreat, bot_goal_t *goal)
 {
 	aas_entityinfo_t entinfo;
-	char teammate[MAX_MESSAGE_SIZE];
-	float squaredist;
-	int areanum;
-	vec3_t dir;
+	char	teammate[MAX_MESSAGE_SIZE];
+	float	squaredist;
+	int	areanum;
+	vec3_t	dir;
 
 	/* FIXME: also have air long term goals?
 	 *
@@ -1487,16 +1487,16 @@ void
 BotClearPath(bot_state_t *bs, bot_moveresult_t *moveresult)
 {
 	int i, bestmine;
-	float dist, bestdist;
-	vec3_t target, dir;
+	float	dist, bestdist;
+	vec3_t	target, dir;
 	bsp_trace_t bsptrace;
 	entityState_t state;
 
 	/* if there is a dead body wearing kamikze nearby */
 	if(bs->kamikazebody)
 		/* if the bot's view angles and weapon are not used for movement */
-		if( !(moveresult->flags &
-		      (MOVERESULT_MOVEMENTVIEW | MOVERESULT_MOVEMENTWEAPON))){
+		if(!(moveresult->flags &
+		     (MOVERESULT_MOVEMENTVIEW | MOVERESULT_MOVEMENTWEAPON))){
 			/*  */
 			BotAI_GetEntityState(bs->kamikazebody, &state);
 			VectorCopy(state.pos.trBase, target);
@@ -1516,8 +1516,7 @@ BotClearPath(bot_state_t *bs, bot_moveresult_t *moveresult)
 				if(bs->cur_ps.weapon == moveresult->weapon)
 					/* if the bot is pretty close with its aim */
 					if(InFieldOfVision(bs->viewangles, 20,
-						   moveresult->ideal_viewangles))
-					{
+						   moveresult->ideal_viewangles)){
 						/*  */
 						BotAI_Trace(&bsptrace, bs->eye,
 							NULL, NULL, target,
@@ -1538,15 +1537,15 @@ BotClearPath(bot_state_t *bs, bot_moveresult_t *moveresult)
 	if(bs->blockedbyavoidspot_time > FloatTime() &&
 	   !(moveresult->flags &
 	     (MOVERESULT_MOVEMENTVIEW | MOVERESULT_MOVEMENTWEAPON))){
-		bestdist = 300;
-		bestmine = -1;
+		bestdist	= 300;
+		bestmine	= -1;
 		for(i = 0; i < bs->numproxmines; i++){
 			BotAI_GetEntityState(bs->proxmines[i], &state);
 			VectorSubtract(state.pos.trBase, bs->origin, dir);
 			dist = VectorLength(dir);
 			if(dist < bestdist){
-				bestdist = dist;
-				bestmine = i;
+				bestdist	= dist;
+				bestmine	= i;
 			}
 		}
 		if(bestmine != -1){
@@ -1580,8 +1579,7 @@ BotClearPath(bot_state_t *bs, bot_moveresult_t *moveresult)
 				if(bs->cur_ps.weapon == moveresult->weapon)
 					/* if the bot is pretty close with its aim */
 					if(InFieldOfVision(bs->viewangles, 20,
-						   moveresult->ideal_viewangles))
-					{
+						   moveresult->ideal_viewangles)){
 						/*  */
 						BotAI_Trace(&bsptrace, bs->eye,
 							NULL, NULL, target,
@@ -1620,9 +1618,9 @@ int
 AINode_Seek_ActivateEntity(bot_state_t *bs)
 {
 	bot_goal_t *goal;
-	vec3_t target, dir, ideal_viewangles;
+	vec3_t	target, dir, ideal_viewangles;
 	bot_moveresult_t moveresult;
-	int targetvisible;
+	int	targetvisible;
 	bsp_trace_t bsptrace;
 	aas_entityinfo_t entinfo;
 
@@ -1977,7 +1975,7 @@ AIEnter_Seek_LTG(bot_state_t *bs, char *s)
 int
 AINode_Seek_LTG(bot_state_t *bs)
 {
-	bot_goal_t	goal;
+	bot_goal_t goal;
 	vec3_t	target, dir;
 	bot_moveresult_t moveresult;
 	int	range;
@@ -2020,7 +2018,7 @@ AINode_Seek_LTG(bot_state_t *bs)
 	if(bs->killedenemy_time > FloatTime() - 2)
 		if(random() < bs->thinktime * 1)
 			trap_EA_Gesture(bs->client);
-		/* if there is an enemy */
+	/* if there is an enemy */
 	if(BotFindEnemy(bs, -1)){
 		if(BotWantsToRetreat(bs)){
 			/* keep the current long term goal and retreat */
@@ -2143,8 +2141,8 @@ AIEnter_Battle_Fight(bot_state_t *bs, char *s)
 {
 	BotRecordNodeSwitch(bs, "battle fight", "", s);
 	trap_BotResetLastAvoidReach(bs->ms);
-	bs->ainode = AINode_Battle_Fight;
-	bs->flags &= ~BFL_FIGHTSUICIDAL;
+	bs->ainode	= AINode_Battle_Fight;
+	bs->flags	&= ~BFL_FIGHTSUICIDAL;
 }
 
 /*
@@ -2157,8 +2155,8 @@ AIEnter_Battle_SuicidalFight(bot_state_t *bs, char *s)
 {
 	BotRecordNodeSwitch(bs, "battle fight", "", s);
 	trap_BotResetLastAvoidReach(bs->ms);
-	bs->ainode = AINode_Battle_Fight;
-	bs->flags |= BFL_FIGHTSUICIDAL;
+	bs->ainode	= AINode_Battle_Fight;
+	bs->flags	|= BFL_FIGHTSUICIDAL;
 }
 
 /*
@@ -2171,8 +2169,8 @@ AINode_Battle_Fight(bot_state_t *bs)
 {
 	int areanum;
 	vec3_t target;
-	aas_entityinfo_t entinfo;
-	bot_moveresult_t moveresult;
+	aas_entityinfo_t	entinfo;
+	bot_moveresult_t	moveresult;
 
 	if(BotIsObserver(bs)){
 		AIEnter_Observer(bs, "battle fight: observer");
@@ -2218,7 +2216,7 @@ AINode_Battle_Fight(bot_state_t *bs)
 			}
 			return qfalse;
 		}
-	}else    if(EntityIsDead(&entinfo))
+	}else if(EntityIsDead(&entinfo))
 		bs->enemydeath_time = FloatTime();
 
 	/* if the enemy is invisible and not shooting the bot looses track easily */
@@ -2233,8 +2231,8 @@ AINode_Battle_Fight(bot_state_t *bs)
 	if(bs->enemy >= MAX_CLIENTS){
 #ifdef MISSIONPACK
 		/* if attacking an obelisk */
-		if( bs->enemy == redobelisk.entitynum ||
-		    bs->enemy == blueobelisk.entitynum )
+		if(bs->enemy == redobelisk.entitynum ||
+		   bs->enemy == blueobelisk.entitynum)
 			target[2] += 16;
 
 #endif
@@ -2339,7 +2337,7 @@ AIEnter_Battle_Chase(bot_state_t *bs, char *s)
 int
 AINode_Battle_Chase(bot_state_t *bs)
 {
-	bot_goal_t	goal;
+	bot_goal_t goal;
 	vec3_t	target, dir;
 	bot_moveresult_t moveresult;
 	float	range;
@@ -2483,8 +2481,8 @@ int
 AINode_Battle_Retreat(bot_state_t *bs)
 {
 	bot_goal_t goal;
-	aas_entityinfo_t entinfo;
-	bot_moveresult_t moveresult;
+	aas_entityinfo_t	entinfo;
+	bot_moveresult_t	moveresult;
 	vec3_t	target, dir;
 	float	attack_skill, range;
 	int	areanum;
@@ -2546,8 +2544,8 @@ AINode_Battle_Retreat(bot_state_t *bs)
 		if(bs->enemy >= MAX_CLIENTS){
 #ifdef MISSIONPACK
 			/* if attacking an obelisk */
-			if( bs->enemy == redobelisk.entitynum ||
-			    bs->enemy == blueobelisk.entitynum )
+			if(bs->enemy == redobelisk.entitynum ||
+			   bs->enemy == blueobelisk.entitynum)
 				target[2] += 16;
 
 #endif
@@ -2676,10 +2674,10 @@ AINode_Battle_NBG(bot_state_t *bs)
 {
 	int areanum;
 	bot_goal_t goal;
-	aas_entityinfo_t entinfo;
-	bot_moveresult_t moveresult;
-	float attack_skill;
-	vec3_t target, dir;
+	aas_entityinfo_t	entinfo;
+	bot_moveresult_t	moveresult;
+	float	attack_skill;
+	vec3_t	target, dir;
 
 	if(BotIsObserver(bs)){
 		AIEnter_Observer(bs, "battle nbg: observer");
@@ -2725,8 +2723,8 @@ AINode_Battle_NBG(bot_state_t *bs)
 		if(bs->enemy >= MAX_CLIENTS){
 #ifdef MISSIONPACK
 			/* if attacking an obelisk */
-			if( bs->enemy == redobelisk.entitynum ||
-			    bs->enemy == blueobelisk.entitynum )
+			if(bs->enemy == redobelisk.entitynum ||
+			   bs->enemy == blueobelisk.entitynum)
 				target[2] += 16;
 
 #endif

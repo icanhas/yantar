@@ -27,9 +27,9 @@
 #include "g_local.h"
 
 
-gentity_t	*podium1;
-gentity_t	*podium2;
-gentity_t	*podium3;
+gentity_t *podium1;
+gentity_t *podium2;
+gentity_t *podium3;
 
 
 /*
@@ -46,28 +46,28 @@ UpdateTournamentInfo(void)
 	int	n, accuracy, perfect,   msglen;
 #ifdef MISSIONPACK
 	int	score1, score2;
-	qboolean	won;
+	qboolean won;
 #endif
 	char	buf[32];
 	char	msg[MAX_STRING_CHARS];
 
 	/* find the real player */
 	player = NULL;
-	for(i = 0; i < level.maxclients; i++ ){
+	for(i = 0; i < level.maxclients; i++){
 		player = &g_entities[i];
-		if( !player->inuse )
+		if(!player->inuse)
 			continue;
-		if( !(player->r.svFlags & SVF_BOT))
+		if(!(player->r.svFlags & SVF_BOT))
 			break;
 	}
 	/* this should never happen! */
-	if( !player || i == level.maxclients )
+	if(!player || i == level.maxclients)
 		return;
 	playerClientNum = i;
 
 	CalculateRanks();
 
-	if( level.clients[playerClientNum].sess.sessionTeam == TEAM_SPECTATOR ){
+	if(level.clients[playerClientNum].sess.sessionTeam == TEAM_SPECTATOR){
 #ifdef MISSIONPACK
 		Com_sprintf(msg, sizeof(msg),
 			"postgame %i %i 0 0 0 0 0 0 0 0 0 0 0",
@@ -79,7 +79,7 @@ UpdateTournamentInfo(void)
 			playerClientNum);
 #endif
 	}else{
-		if( player->client->accuracy_shots )
+		if(player->client->accuracy_shots)
 			accuracy = player->client->accuracy_hits * 100 /
 				   player->client->accuracy_shots;
 		else
@@ -157,13 +157,13 @@ UpdateTournamentInfo(void)
 	}
 
 	msglen = strlen(msg);
-	for( i = 0; i < level.numNonSpectatorClients; i++ ){
+	for(i = 0; i < level.numNonSpectatorClients; i++){
 		n = level.sortedClients[i];
 		Com_sprintf(buf, sizeof(buf), " %i %i %i", n,
 			level.clients[n].ps.persistant[PERS_RANK],
 			level.clients[n].ps.persistant[PERS_SCORE]);
 		msglen += strlen(buf);
-		if( msglen >= sizeof(msg))
+		if(msglen >= sizeof(msg))
 			break;
 		strcat(msg, buf);
 	}
@@ -175,11 +175,11 @@ static gentity_t *
 SpawnModelOnVictoryPad(gentity_t *pad, vec3_t offset, gentity_t *ent, int place)
 {
 	gentity_t	*body;
-	vec3_t	vec;
-	vec3_t	f, r, u;
+	vec3_t		vec;
+	vec3_t		f, r, u;
 
 	body = G_Spawn();
-	if( !body ){
+	if(!body){
 		G_Printf(S_COLOR_RED "ERROR: out of gentities\n");
 		return NULL;
 	}
@@ -187,22 +187,22 @@ SpawnModelOnVictoryPad(gentity_t *pad, vec3_t offset, gentity_t *ent, int place)
 	body->classname = ent->client->pers.netname;
 	body->client = ent->client;
 	body->s = ent->s;
-	body->s.eType = ET_PLAYER;	/* could be ET_INVISIBLE */
-	body->s.eFlags = 0;		/* clear EF_TALK, etc */
-	body->s.powerups = 0;		/* clear powerups */
-	body->s.loopSound = 0;		/* clear lava burning */
-	body->s.number = body - g_entities;
-	body->timestamp = level.time;
-	body->physicsObject = qtrue;
-	body->physicsBounce = 0;	/* don't bounce */
-	body->s.event = 0;
-	body->s.pos.trType = TR_STATIONARY;
+	body->s.eType		= ET_PLAYER;	/* could be ET_INVISIBLE */
+	body->s.eFlags		= 0;		/* clear EF_TALK, etc */
+	body->s.powerups	= 0;		/* clear powerups */
+	body->s.loopSound	= 0;		/* clear lava burning */
+	body->s.number		= body - g_entities;
+	body->timestamp		= level.time;
+	body->physicsObject	= qtrue;
+	body->physicsBounce	= 0;	/* don't bounce */
+	body->s.event		= 0;
+	body->s.pos.trType	= TR_STATIONARY;
 	body->s.groundEntityNum = ENTITYNUM_WORLD;
 	body->s.legsAnim	= LEGS_IDLE;
 	body->s.torsoAnim	= TORSO_STAND;
-	if( body->s.weapon == WP_NONE )
+	if(body->s.weapon == WP_NONE)
 		body->s.weapon = WP_MACHINEGUN;
-	if( body->s.weapon == WP_GAUNTLET)
+	if(body->s.weapon == WP_GAUNTLET)
 		body->s.torsoAnim = TORSO_STAND2;
 	body->s.event	= 0;
 	body->r.svFlags = ent->r.svFlags;
@@ -210,15 +210,15 @@ SpawnModelOnVictoryPad(gentity_t *pad, vec3_t offset, gentity_t *ent, int place)
 	VectorCopy (ent->r.maxs, body->r.maxs);
 	VectorCopy (ent->r.absmin, body->r.absmin);
 	VectorCopy (ent->r.absmax, body->r.absmax);
-	body->clipmask = CONTENTS_SOLID | CONTENTS_PLAYERCLIP;
-	body->r.contents = CONTENTS_BODY;
-	body->r.ownerNum = ent->r.ownerNum;
-	body->takedamage = qfalse;
+	body->clipmask		= CONTENTS_SOLID | CONTENTS_PLAYERCLIP;
+	body->r.contents	= CONTENTS_BODY;
+	body->r.ownerNum	= ent->r.ownerNum;
+	body->takedamage	= qfalse;
 
 	VectorSubtract(level.intermission_origin, pad->r.currentOrigin, vec);
 	vectoangles(vec, body->s.apos.trBase);
-	body->s.apos.trBase[PITCH] = 0;
-	body->s.apos.trBase[ROLL] = 0;
+	body->s.apos.trBase[PITCH]	= 0;
+	body->s.apos.trBase[ROLL]	= 0;
 
 	AngleVectors(body->s.apos.trBase, f, r, u);
 	VectorMA(pad->r.currentOrigin, offset[0], f, vec);
@@ -240,7 +240,7 @@ CelebrateStop(gentity_t *player)
 {
 	int anim;
 
-	if( player->s.weapon == WP_GAUNTLET)
+	if(player->s.weapon == WP_GAUNTLET)
 		anim = TORSO_STAND2;
 	else
 		anim = TORSO_STAND;
@@ -268,9 +268,9 @@ CelebrateStart(gentity_t *player)
 }
 
 
-static vec3_t offsetFirst = {0, 0, 74};
-static vec3_t offsetSecond = {-10, 60, 54};
-static vec3_t offsetThird = {-19, -60, 45};
+static vec3_t	offsetFirst = {0, 0, 74};
+static vec3_t	offsetSecond = {-10, 60, 54};
+static vec3_t	offsetThird = {-19, -60, 45};
 
 static void
 PodiumPlacementThink(gentity_t *podium)
@@ -287,7 +287,7 @@ PodiumPlacementThink(gentity_t *podium)
 	origin[2] -= trap_Cvar_VariableIntegerValue("g_podiumDrop");
 	G_SetOrigin(podium, origin);
 
-	if( podium1 ){
+	if(podium1){
 		VectorSubtract(level.intermission_origin,
 			podium->r.currentOrigin,
 			vec);
@@ -303,7 +303,7 @@ PodiumPlacementThink(gentity_t *podium)
 		G_SetOrigin(podium1, vec);
 	}
 
-	if( podium2 ){
+	if(podium2){
 		VectorSubtract(level.intermission_origin,
 			podium->r.currentOrigin,
 			vec);
@@ -319,7 +319,7 @@ PodiumPlacementThink(gentity_t *podium)
 		G_SetOrigin(podium2, vec);
 	}
 
-	if( podium3 ){
+	if(podium3){
 		VectorSubtract(level.intermission_origin,
 			podium->r.currentOrigin,
 			vec);
@@ -341,19 +341,19 @@ static gentity_t *
 SpawnPodium(void)
 {
 	gentity_t	*podium;
-	vec3_t	vec;
-	vec3_t	origin;
+	vec3_t		vec;
+	vec3_t		origin;
 
 	podium = G_Spawn();
-	if( !podium )
+	if(!podium)
 		return NULL;
 
-	podium->classname = "podium";
-	podium->s.eType = ET_GENERAL;
-	podium->s.number = podium - g_entities;
-	podium->clipmask = CONTENTS_SOLID;
-	podium->r.contents = CONTENTS_SOLID;
-	podium->s.modelindex = G_ModelIndex(SP_PODIUM_MODEL);
+	podium->classname	= "podium";
+	podium->s.eType		= ET_GENERAL;
+	podium->s.number	= podium - g_entities;
+	podium->clipmask	= CONTENTS_SOLID;
+	podium->r.contents	= CONTENTS_SOLID;
+	podium->s.modelindex	= G_ModelIndex(SP_PODIUM_MODEL);
 
 	AngleVectors(level.intermission_angle, vec, NULL, NULL);
 	VectorMA(level.intermission_origin,
@@ -379,8 +379,8 @@ SpawnPodium(void)
 void
 SpawnModelsOnVictoryPads(void)
 {
-	gentity_t	*player;
-	gentity_t	*podium;
+	gentity_t *player;
+	gentity_t *podium;
 
 	podium1 = NULL;
 	podium2 = NULL;
@@ -395,7 +395,7 @@ SpawnModelsOnVictoryPads(void)
 			level.clients[ level.sortedClients[0] ].ps.persistant[
 				PERS_RANK]
 			&~RANK_TIED_FLAG);
-	if( player ){
+	if(player){
 		player->nextthink = level.time + 2000;
 		player->think = CelebrateStart;
 		podium1 = player;
@@ -408,15 +408,15 @@ SpawnModelsOnVictoryPads(void)
 			level.clients[ level.sortedClients[1] ].ps.persistant[
 				PERS_RANK]
 			&~RANK_TIED_FLAG);
-	if( player )
+	if(player)
 		podium2 = player;
 
-	if( level.numNonSpectatorClients > 2 ){
+	if(level.numNonSpectatorClients > 2){
 		player = SpawnModelOnVictoryPad(
 			podium, offsetThird, &g_entities[level.sortedClients[2]],
 			level.clients[ level.sortedClients[2] ].ps.persistant[
 				PERS_RANK] &~RANK_TIED_FLAG);
-		if( player )
+		if(player)
 			podium3 = player;
 	}
 }
@@ -430,10 +430,10 @@ SpawnModelsOnVictoryPads(void)
 void
 Svcmd_AbortPodium_f(void)
 {
-	if( g_gametype.integer != GT_SINGLE_PLAYER )
+	if(g_gametype.integer != GT_SINGLE_PLAYER)
 		return;
 
-	if( podium1 ){
+	if(podium1){
 		podium1->nextthink = level.time;
 		podium1->think = CelebrateStop;
 	}

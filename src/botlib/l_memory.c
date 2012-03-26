@@ -70,8 +70,8 @@ memoryblock_t *memory;
 void
 LinkMemoryBlock(memoryblock_t *block)
 {
-	block->prev	= NULL;
-	block->next	= memory;
+	block->prev = NULL;
+	block->next = memory;
 	if(memory) memory->prev = block;
 	memory = block;
 }	/* end of the function LinkMemoryBlock */
@@ -104,15 +104,15 @@ void *GetMemory(unsigned long size)
 	void *ptr;
 	memoryblock_t *block;
 	assert(botimport.GetMemory);
-	ptr	= botimport.GetMemory(size + sizeof(memoryblock_t));
-	block	= (memoryblock_t *) ptr;
-	block->id	= MEM_ID;
-	block->ptr	= (char *) ptr + sizeof(memoryblock_t);
-	block->size	= size + sizeof(memoryblock_t);
+	ptr = botimport.GetMemory(size + sizeof(memoryblock_t));
+	block = (memoryblock_t*)ptr;
+	block->id = MEM_ID;
+	block->ptr = (char*)ptr + sizeof(memoryblock_t);
+	block->size = size + sizeof(memoryblock_t);
 #ifdef MEMDEBUG
-	block->label	= label;
-	block->file	= file;
-	block->line	= line;
+	block->label = label;
+	block->file = file;
+	block->line = line;
 #endif	/* MEMDEBUG */
 	LinkMemoryBlock(block);
 	allocatedmemory += block->size;
@@ -158,15 +158,15 @@ void *GetHunkMemory(unsigned long size)
 	void *ptr;
 	memoryblock_t *block;
 
-	ptr	= botimport.HunkAlloc(size + sizeof(memoryblock_t));
-	block	= (memoryblock_t *) ptr;
-	block->id	= HUNK_ID;
-	block->ptr	= (char *) ptr + sizeof(memoryblock_t);
-	block->size	= size + sizeof(memoryblock_t);
+	ptr = botimport.HunkAlloc(size + sizeof(memoryblock_t));
+	block = (memoryblock_t*)ptr;
+	block->id = HUNK_ID;
+	block->ptr = (char*)ptr + sizeof(memoryblock_t);
+	block->size = size + sizeof(memoryblock_t);
 #ifdef MEMDEBUG
-	block->label	= label;
-	block->file	= file;
-	block->line	= line;
+	block->label = label;
+	block->file = file;
+	block->line = line;
 #endif	/* MEMDEBUG */
 	LinkMemoryBlock(block);
 	allocatedmemory += block->size;
@@ -214,17 +214,17 @@ BlockFromPointer(void *ptr, char *str)
 		botimport.Print(PRT_FATAL, "%s: NULL pointer\n", str);
 #endif	/* MEMDEBUG */
 		return NULL;
-	}	
-	block = (memoryblock_t *) ((char *) ptr - sizeof(memoryblock_t));
+	}
+	block = (memoryblock_t*)((char*)ptr - sizeof(memoryblock_t));
 	if(block->id != MEM_ID && block->id != HUNK_ID){
 		botimport.Print(PRT_FATAL, "%s: invalid memory block\n", str);
 		return NULL;
-	}	
+	}
 	if(block->ptr != ptr){
 		botimport.Print(PRT_FATAL, "%s: memory block pointer invalid\n",
 			str);
 		return NULL;
-	}	
+	}
 	return block;
 }	/* end of the function BlockFromPointer */
 /* ===========================================================================
@@ -319,8 +319,8 @@ PrintMemoryLabels(void)
 				block->label);
 #endif	/* MEMDEBUG */
 		i++;
-	}	
-}		/* end of the function PrintMemoryLabels */
+	}
+}	/* end of the function PrintMemoryLabels */
 /* ===========================================================================
  *
  * Parameter:			-
@@ -358,9 +358,9 @@ void *GetMemory(unsigned long size)
 
 	ptr = botimport.GetMemory(size + sizeof(unsigned long int));
 	if(!ptr) return NULL;
-	memid	= (unsigned long int *) ptr;
+	memid	= (unsigned long int*)ptr;
 	*memid	= MEM_ID;
-	return (unsigned long int *) ((char *) ptr + sizeof(unsigned long int));
+	return (unsigned long int*)((char*)ptr + sizeof(unsigned long int));
 }	/* end of the function GetMemory */
 /* ===========================================================================
  *
@@ -402,9 +402,9 @@ void *GetHunkMemory(unsigned long size)
 
 	ptr = botimport.HunkAlloc(size + sizeof(unsigned long int));
 	if(!ptr) return NULL;
-	memid	= (unsigned long int *) ptr;
+	memid	= (unsigned long int*)ptr;
 	*memid	= HUNK_ID;
-	return (unsigned long int *) ((char *) ptr + sizeof(unsigned long int));
+	return (unsigned long int*)((char*)ptr + sizeof(unsigned long int));
 }	/* end of the function GetHunkMemory */
 /* ===========================================================================
  *
@@ -439,7 +439,7 @@ FreeMemory(void *ptr)
 {
 	unsigned long int *memid;
 
-	memid = (unsigned long int *) ((char *) ptr - sizeof(unsigned long int));
+	memid = (unsigned long int*)((char*)ptr - sizeof(unsigned long int));
 
 	if(*memid == MEM_ID)
 		botimport.FreeMemory(memid);

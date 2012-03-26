@@ -69,7 +69,7 @@ static void VM_Destroy_Compiled(vm_t* self);
  * |=====================|
  * ^       dataMask      ^- programStack rdi
  |
- |+- r8
+ ||+- r8
  |
  | eax		scratch
  | rbx/bl	opStack offset
@@ -106,9 +106,9 @@ callAsmCall(intptr_t callProgramStack, int64_t callSyscallNum)
 /*		iargs[i+1] = *(int *)((byte *)currentVM->dataBase + callProgramStack + 8 + 4*i); */
 		args[i+
 		     1] =
-			*(int *) ((byte *) currentVM->dataBase +
-				  callProgramStack + 8 +
-				  4*i);
+			*(int*)((byte*)currentVM->dataBase +
+				callProgramStack + 8 +
+				4*i);
 	ret = currentVM->systemCall(args);
 
 	currentVM = savedVM;
@@ -209,27 +209,27 @@ static char *opnames[256] = {
 
 static unsigned char op_argsize[256] =
 {
-	[OP_ENTER] = 4,
-	[OP_LEAVE] = 4,
-	[OP_CONST] = 4,
-	[OP_LOCAL] = 4,
-	[OP_EQ] = 4,
-	[OP_NE] = 4,
-	[OP_LTI] = 4,
-	[OP_LEI] = 4,
-	[OP_GTI] = 4,
-	[OP_GEI] = 4,
-	[OP_LTU] = 4,
-	[OP_LEU] = 4,
-	[OP_GTU] = 4,
-	[OP_GEU] = 4,
-	[OP_EQF] = 4,
-	[OP_NEF] = 4,
-	[OP_LTF] = 4,
-	[OP_LEF] = 4,
-	[OP_GTF] = 4,
-	[OP_GEF] = 4,
-	[OP_ARG] = 1,
+	[OP_ENTER]	= 4,
+	[OP_LEAVE]	= 4,
+	[OP_CONST]	= 4,
+	[OP_LOCAL]	= 4,
+	[OP_EQ]		= 4,
+	[OP_NE]		= 4,
+	[OP_LTI]	= 4,
+	[OP_LEI]	= 4,
+	[OP_GTI]	= 4,
+	[OP_GEI]	= 4,
+	[OP_LTU]	= 4,
+	[OP_LEU]	= 4,
+	[OP_GTU]	= 4,
+	[OP_GEU]	= 4,
+	[OP_EQF]	= 4,
+	[OP_NEF]	= 4,
+	[OP_LTF]	= 4,
+	[OP_LEF]	= 4,
+	[OP_GTF]	= 4,
+	[OP_GEF]	= 4,
+	[OP_ARG]	= 1,
 	[OP_BLOCK_COPY] = 4,
 };
 
@@ -250,7 +250,7 @@ emit(const char* fmt, ...)
 	emit("andl $0x%x, %%ecx", vm->dataMask & ~(bytes-1)); \
 	emit("cmpl %%" # reg ", %%ecx"); \
 	emit("jz rc_ok_i_%08x", instruction); \
-	emit("movq $%" PRIu64 ", %%rax", (intptr_t) memviolation); \
+	emit("movq $%" PRIu64 ", %%rax", (intptr_t)memviolation); \
 	emit("callq *%%rax"); \
 	emit("rc_ok_i_%08x:", instruction)
 #elif 1
@@ -270,13 +270,13 @@ emit(const char* fmt, ...)
 #define CHECK_INSTR_REG(reg) \
 	emit("cmpl $%u, %%" # reg, header->instructionCount); \
 	emit("jb jmp_ok_i_%08x", instruction); \
-	emit("movq $%" PRIu64 ", %%rax", (intptr_t) jmpviolation); \
+	emit("movq $%" PRIu64 ", %%rax", (intptr_t)jmpviolation); \
 	emit("callq *%%rax"); \
 	emit("jmp_ok_i_%08x:", instruction)
 
 #define PREPARE_JMP(reg) \
 	CHECK_INSTR_REG(reg); \
-	emit("movq $%" PRIu64 ", %%rsi", (intptr_t) vm->instructionPointers); \
+	emit("movq $%" PRIu64 ", %%rsi", (intptr_t)vm->instructionPointers); \
 	emit("movl (%%rsi, %%rax, 8), %%eax"); \
 	emit("addq %%r10, %%rax")
 
@@ -435,9 +435,9 @@ VM_Compile(vm_t *vm, vmHeader_t *header)
 	unsigned char op;
 	int pc;
 	unsigned	instruction;
-	char		* code;
-	unsigned	iarg	= 0;
-	unsigned char	barg	= 0;
+	char            * code;
+	unsigned	iarg = 0;
+	unsigned char	barg = 0;
 	int neednilabel = 0;
 	struct timeval	tvstart =  {0, 0};
 #ifdef DEBUG_VM
@@ -486,7 +486,7 @@ VM_Compile(vm_t *vm, vmHeader_t *header)
 					"VM_CompileX86_64: Failed to allocate memory");
 		#endif
 
-			assembler_set_output((char *) vm->codeBase);
+			assembler_set_output((char*)vm->codeBase);
 		}
 
 		assembler_init(pass);
@@ -499,11 +499,11 @@ VM_Compile(vm_t *vm, vmHeader_t *header)
 #endif
 
 		/* translate all instructions */
-		pc	= 0;
-		code	= (char *) header + header->codeOffset;
+		pc = 0;
+		code = (char*)header + header->codeOffset;
 
-		for( instruction = 0; instruction < header->instructionCount;
-		     ++instruction ){
+		for(instruction = 0; instruction < header->instructionCount;
+		    ++instruction){
 			op = code[ pc ];
 			++pc;
 
@@ -518,8 +518,8 @@ VM_Compile(vm_t *vm, vmHeader_t *header)
 #endif
 
 			if(op_argsize[op] == 4){
-				iarg	= *(int *) (code+pc);
-				pc	+= 4;
+				iarg = *(int*)(code+pc);
+				pc += 4;
 				Dfprintf(qdasmout, "%s %8u\n", opnames[op], iarg);
 			}else if(op_argsize[op] == 1){
 				barg = code[pc++];
@@ -533,7 +533,7 @@ VM_Compile(vm_t *vm, vmHeader_t *header)
 				neednilabel = 0;
 			}
 
-			switch( op ){
+			switch(op){
 			case OP_UNDEF:
 				NOTIMPL(op);
 				break;
@@ -559,7 +559,7 @@ VM_Compile(vm_t *vm, vmHeader_t *header)
 				emit("movl $%d, (%%r8, %%rdi, 1)", instruction+1);	/* save next instruction */
 
 				if(got_const){
-					if((int) const_value >= 0){
+					if((int)const_value >= 0){
 						CHECK_INSTR(const_value);
 						emit(
 							"movq $%" PRIu64
@@ -605,7 +605,7 @@ VM_Compile(vm_t *vm, vmHeader_t *header)
 					emit("movq %%rax, %%rsi");	/* second argument in rsi */
 				}
 				emit("movq $%" PRIu64 ", %%rax",
-					(intptr_t) callAsmCall);
+					(intptr_t)callAsmCall);
 				emit("callq *%%rax");
 				emit("pop %%rsi");
 				emit("addq %%rsi, %%rsp");
@@ -629,8 +629,8 @@ VM_Compile(vm_t *vm, vmHeader_t *header)
 			case OP_CONST:
 				MAYBE_EMIT_CONST();
 #ifdef CONST_OPTIMIZE
-				got_const	= 1;
-				const_value	= iarg;
+				got_const = 1;
+				const_value = iarg;
 #else
 				STACK_PUSH(4);
 				emit("movl $%d, (%%r9, %%rbx, 4)", iarg);
@@ -793,7 +793,7 @@ VM_Compile(vm_t *vm, vmHeader_t *header)
 				emit("movl 8(%%r9, %%rbx, 4), %%rsi");	/* 2nd argument src */
 				emit("movl $%d, %%edx", iarg);		/* 3rd argument count */
 				emit("movq $%" PRIu64 ", %%rax",
-					(intptr_t) VM_BlockCopy);
+					(intptr_t)VM_BlockCopy);
 				emit("callq *%%rax");
 				emit("pop %%rsi");
 				emit("addq %%rsi, %%rsp");
@@ -962,7 +962,7 @@ VM_Compile(vm_t *vm, vmHeader_t *header)
 			Com_Error(ERR_DROP, "leftover const");
 		}
 
-		emit("movq $%" PRIu64 ", %%rax", (intptr_t) eop);
+		emit("movq $%" PRIu64 ", %%rax", (intptr_t)eop);
 		emit("callq *%%rax");
 
 	}	/* pass loop */
@@ -1051,10 +1051,10 @@ VM_CallCompiled(vm_t *vm, int *args)
 	int	programCounter;
 	int	programStack;
 	int	stackOnEntry;
-	long opStackRet;
-	byte *image;
-	void *entryPoint;
-	int *opStack;
+	long	opStackRet;
+	byte	*image;
+	void	*entryPoint;
+	int	*opStack;
 
 	currentVM = vm;
 
@@ -1066,38 +1066,38 @@ VM_CallCompiled(vm_t *vm, int *args)
 /*	callMask = vm->dataMask; */
 
 	/* we might be called recursively, so this might not be the very top */
-	programStack	= vm->programStack;
-	stackOnEntry	= programStack;
+	programStack = vm->programStack;
+	stackOnEntry = programStack;
 
 	/* set up the stack frame */
 	image = vm->dataBase;
 #ifdef DEBUG_VM
-	memData = (char *) image;
+	memData = (char*)image;
 #endif
 
 	programCounter = 0;
 
 	programStack -= 48;
 
-	*(int *) &image[ programStack + 44]	= args[9];
-	*(int *) &image[ programStack + 40]	= args[8];
-	*(int *) &image[ programStack + 36]	= args[7];
-	*(int *) &image[ programStack + 32]	= args[6];
-	*(int *) &image[ programStack + 28]	= args[5];
-	*(int *) &image[ programStack + 24]	= args[4];
-	*(int *) &image[ programStack + 20]	= args[3];
-	*(int *) &image[ programStack + 16]	= args[2];
-	*(int *) &image[ programStack + 12]	= args[1];
-	*(int *) &image[ programStack + 8 ]	= args[0];
-	*(int *) &image[ programStack + 4 ]	= 0x77777777;	/* return stack */
-	*(int *) &image[ programStack ] = -1;			/* will terminate the loop on return */
+	*(int*)&image[ programStack + 44] = args[9];
+	*(int*)&image[ programStack + 40] = args[8];
+	*(int*)&image[ programStack + 36] = args[7];
+	*(int*)&image[ programStack + 32] = args[6];
+	*(int*)&image[ programStack + 28] = args[5];
+	*(int*)&image[ programStack + 24] = args[4];
+	*(int*)&image[ programStack + 20] = args[3];
+	*(int*)&image[ programStack + 16] = args[2];
+	*(int*)&image[ programStack + 12] = args[1];
+	*(int*)&image[ programStack + 8 ] = args[0];
+	*(int*)&image[ programStack + 4 ] = 0x77777777;	/* return stack */
+	*(int*)&image[ programStack ] = -1;		/* will terminate the loop on return */
 
 	/* off we go into generated code... */
 	entryPoint = getentrypoint(vm);
 	opStack = PADP(stack, 16);
 
-	*opStack	= 0xDEADBEEF;
-	opStackRet	= 0;
+	*opStack = 0xDEADBEEF;
+	opStackRet = 0;
 
 	__asm__ __volatile__ (
 		"	movq %4,%%r8		\r\n" \
@@ -1126,7 +1126,7 @@ VM_CallCompiled(vm_t *vm, int *args)
 			"opStack corrupted in compiled code (offset %ld)",
 			opStackRet);
 
-	if( programStack != stackOnEntry - 48 )
+	if(programStack != stackOnEntry - 48)
 		Com_Error(ERR_DROP, "programStack corrupted in compiled code");
 
 /*	Com_Printf("exiting %s level %d\n", vm->name, vm->callLevel); */

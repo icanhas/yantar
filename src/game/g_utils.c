@@ -93,21 +93,21 @@ G_FindConfigstringIndex(char *name, int start, int max, qboolean create)
 	int	i;
 	char	s[MAX_STRING_CHARS];
 
-	if( !name || !name[0] )
+	if(!name || !name[0])
 		return 0;
 
-	for( i=1; i<max; i++ ){
+	for(i=1; i<max; i++){
 		trap_GetConfigstring(start + i, s, sizeof(s));
-		if( !s[0] )
+		if(!s[0])
 			break;
-		if( !strcmp(s, name))
+		if(!strcmp(s, name))
 			return i;
 	}
 
-	if( !create )
+	if(!create)
 		return 0;
 
-	if( i == max )
+	if(i == max)
 		G_Error("G_FindConfigstringIndex: overflow");
 
 	trap_SetConfigstring(start + i, name);
@@ -143,9 +143,9 @@ G_TeamCommand(team_t team, char *cmd)
 {
 	int i;
 
-	for( i = 0; i < level.maxclients; i++ )
-		if( level.clients[i].pers.connected == CON_CONNECTED )
-			if( level.clients[i].sess.sessionTeam == team )
+	for(i = 0; i < level.maxclients; i++)
+		if(level.clients[i].pers.connected == CON_CONNECTED)
+			if(level.clients[i].sess.sessionTeam == team)
 				trap_SendServerCommand(i, va("%s", cmd));
 }
 
@@ -175,7 +175,7 @@ G_Find(gentity_t *from, int fieldofs, const char *match)
 	for(; from < &g_entities[level.num_entities]; from++){
 		if(!from->inuse)
 			continue;
-		s = *(char * *) ((byte *) from + fieldofs);
+		s = *(char**)((byte*)from + fieldofs);
 		if(!s)
 			continue;
 		if(!Q_stricmp (s, match))
@@ -198,9 +198,9 @@ G_Find(gentity_t *from, int fieldofs, const char *match)
 gentity_t *
 G_PickTarget(char *targetname)
 {
-	gentity_t *ent	= NULL;
+	gentity_t	*ent = NULL;
 	int num_choices = 0;
-	gentity_t *choice[MAXCHOICES];
+	gentity_t	*choice[MAXCHOICES];
 
 	if(!targetname){
 		G_Printf("G_PickTarget called with NULL targetname\n");
@@ -241,7 +241,7 @@ G_UseTargets(gentity_t *ent, gentity_t *activator)
 {
 	gentity_t *t;
 
-	if( !ent )
+	if(!ent)
 		return;
 
 	if(ent->targetShaderName && ent->targetShaderNewName){
@@ -250,17 +250,17 @@ G_UseTargets(gentity_t *ent, gentity_t *activator)
 		trap_SetConfigstring(CS_SHADERSTATE, BuildShaderStateConfig());
 	}
 
-	if( !ent->target )
+	if(!ent->target)
 		return;
 
 	t = NULL;
-	while((t = G_Find (t, FOFS(targetname), ent->target)) != NULL ){
-		if( t == ent )
+	while((t = G_Find (t, FOFS(targetname), ent->target)) != NULL){
+		if(t == ent)
 			G_Printf ("WARNING: Entity used itself.\n");
-		else  if( t->use )
+		else if(t->use)
 			t->use (t, ent, activator);
 
-		if( !ent->inuse ){
+		if(!ent->inuse){
 			G_Printf("entity was removed while using targets\n");
 			return;
 		}
@@ -288,9 +288,9 @@ tv(float x, float y, float z)
 	v = vecs[index];
 	index = (index + 1)&7;
 
-	v[0]	= x;
-	v[1]	= y;
-	v[2]	= z;
+	v[0] = x;
+	v[1] = y;
+	v[2] = z;
 
 	return v;
 }
@@ -315,7 +315,7 @@ vtos(const vec3_t v)
 	s = str[index];
 	index = (index + 1)&7;
 
-	Com_sprintf (s, 32, "(%i %i %i)", (int) v[0], (int) v[1], (int) v[2]);
+	Com_sprintf (s, 32, "(%i %i %i)", (int)v[0], (int)v[1], (int)v[2]);
 
 	return s;
 }
@@ -335,13 +335,13 @@ void
 G_SetMovedir(vec3_t angles, vec3_t movedir)
 {
 	static vec3_t	VEC_UP = {0, -1, 0};
-	static vec3_t	MOVEDIR_UP = {0, 0, 1};
-	static vec3_t	VEC_DOWN = {0, -2, 0};
-	static vec3_t	MOVEDIR_DOWN = {0, 0, -1};
+	static vec3_t	MOVEDIR_UP	= {0, 0, 1};
+	static vec3_t	VEC_DOWN	= {0, -2, 0};
+	static vec3_t	MOVEDIR_DOWN	= {0, 0, -1};
 
-	if( VectorCompare (angles, VEC_UP))
+	if(VectorCompare (angles, VEC_UP))
 		VectorCopy (MOVEDIR_UP, movedir);
-	else if( VectorCompare (angles, VEC_DOWN))
+	else if(VectorCompare (angles, VEC_DOWN))
 		VectorCopy (MOVEDIR_DOWN, movedir);
 	else
 		AngleVectors (angles, movedir, NULL, NULL);
@@ -375,9 +375,9 @@ void
 G_InitGentity(gentity_t *e)
 {
 	e->inuse = qtrue;
-	e->classname	= "noclass";
-	e->s.number	= e - g_entities;
-	e->r.ownerNum	= ENTITYNUM_NONE;
+	e->classname = "noclass";
+	e->s.number = e - g_entities;
+	e->r.ownerNum = ENTITYNUM_NONE;
 }
 
 /*
@@ -401,30 +401,30 @@ G_Spawn(void)
 	int i, force;
 	gentity_t *e;
 
-	e	= NULL;	/* shut up warning */
-	i	= 0;	/* shut up warning */
-	for( force = 0; force < 2; force++ ){
+	e = NULL;	/* shut up warning */
+	i = 0;		/* shut up warning */
+	for(force = 0; force < 2; force++){
 		/* if we go through all entities and can't find one to free,
 		 * override the normal minimum times before use */
 		e = &g_entities[MAX_CLIENTS];
-		for( i = MAX_CLIENTS; i<level.num_entities; i++, e++){
-			if( e->inuse )
+		for(i = MAX_CLIENTS; i<level.num_entities; i++, e++){
+			if(e->inuse)
 				continue;
 
 			/* the first couple seconds of server time can involve a lot of
 			 * freeing and allocating, so relax the replacement policy */
-			if( !force && e->freetime > level.startTime + 2000 &&
-			    level.time - e->freetime < 1000 )
+			if(!force && e->freetime > level.startTime + 2000 &&
+			   level.time - e->freetime < 1000)
 				continue;
 
 			/* reuse this slot */
 			G_InitGentity(e);
 			return e;
 		}
-		if( i != MAX_GENTITIES )
+		if(i != MAX_GENTITIES)
 			break;
 	}
-	if( i == ENTITYNUM_MAX_NORMAL ){
+	if(i == ENTITYNUM_MAX_NORMAL){
 		for(i = 0; i < MAX_GENTITIES; i++)
 			G_Printf("%4i: %s\n", i, g_entities[i].classname);
 		G_Error("G_Spawn: no free entities");
@@ -454,8 +454,8 @@ G_EntitiesFree(void)
 	gentity_t *e;
 
 	e = &g_entities[MAX_CLIENTS];
-	for( i = MAX_CLIENTS; i < level.num_entities; i++, e++){
-		if( e->inuse )
+	for(i = MAX_CLIENTS; i < level.num_entities; i++, e++){
+		if(e->inuse)
 			continue;
 		/* slot available */
 		return qtrue;
@@ -476,7 +476,7 @@ G_FreeEntity(gentity_t *ed)
 {
 	trap_UnlinkEntity (ed);	/* unlink from world */
 
-	if( ed->neverFree )
+	if(ed->neverFree)
 		return;
 
 	memset (ed, 0, sizeof(*ed));
@@ -503,8 +503,8 @@ G_TempEntity(vec3_t origin, int event)
 	e = G_Spawn();
 	e->s.eType = ET_EVENTS + event;
 
-	e->classname	= "tempEntity";
-	e->eventTime	= level.time;
+	e->classname = "tempEntity";
+	e->eventTime = level.time;
 	e->freeAfterEvent = qtrue;
 
 	VectorCopy(origin, snapped);
@@ -549,7 +549,7 @@ G_KillBox(gentity_t *ent)
 
 	for(i=0; i<num; i++){
 		hit = &g_entities[touch[i]];
-		if( !hit->client )
+		if(!hit->client)
 			continue;
 
 		/* nail it */
@@ -573,7 +573,7 @@ G_KillBox(gentity_t *ent)
 void
 G_AddPredictableEvent(gentity_t *ent, int event, int eventParm)
 {
-	if( !ent->client )
+	if(!ent->client)
 		return;
 	BG_AddPredictableEventToPlayerstate(event, eventParm, &ent->client->ps);
 }
@@ -591,22 +591,22 @@ G_AddEvent(gentity_t *ent, int event, int eventParm)
 {
 	int bits;
 
-	if( !event ){
+	if(!event){
 		G_Printf("G_AddEvent: zero event added for entity %i\n",
 			ent->s.number);
 		return;
 	}
 
 	/* clients need to add the event in playerState_t instead of entityState_t */
-	if( ent->client ){
-		bits	= ent->client->ps.externalEvent & EV_EVENT_BITS;
-		bits	= (bits + EV_EVENT_BIT1) & EV_EVENT_BITS;
+	if(ent->client){
+		bits = ent->client->ps.externalEvent & EV_EVENT_BITS;
+		bits = (bits + EV_EVENT_BIT1) & EV_EVENT_BITS;
 		ent->client->ps.externalEvent = event | bits;
-		ent->client->ps.externalEventParm	= eventParm;
-		ent->client->ps.externalEventTime	= level.time;
+		ent->client->ps.externalEventParm = eventParm;
+		ent->client->ps.externalEventTime = level.time;
 	}else{
-		bits	= ent->s.event & EV_EVENT_BITS;
-		bits	= (bits + EV_EVENT_BIT1) & EV_EVENT_BITS;
+		bits = ent->s.event & EV_EVENT_BITS;
+		bits = (bits + EV_EVENT_BIT1) & EV_EVENT_BITS;
 		ent->s.event = event | bits;
 		ent->s.eventParm = eventParm;
 	}
@@ -643,8 +643,8 @@ void
 G_SetOrigin(gentity_t *ent, vec3_t origin)
 {
 	VectorCopy(origin, ent->s.pos.trBase);
-	ent->s.pos.trType	= TR_STATIONARY;
-	ent->s.pos.trTime	= 0;
+	ent->s.pos.trType = TR_STATIONARY;
+	ent->s.pos.trTime = 0;
 	ent->s.pos.trDuration = 0;
 	VectorClear(ent->s.pos.trDelta);
 

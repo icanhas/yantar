@@ -40,19 +40,19 @@ G_RankRunFrame()
 	int	i;
 	int	j;
 
-	if( !trap_RankCheckInit())
+	if(!trap_RankCheckInit())
 		trap_RankBegin(GR_GAMEKEY);
 
 	trap_RankPoll();
 
-	if( trap_RankActive()){
-		for( i = 0; i < level.maxclients; i++ ){
+	if(trap_RankActive()){
+		for(i = 0; i < level.maxclients; i++){
 			ent = &(g_entities[i]);
-			if( !ent->inuse )
+			if(!ent->inuse)
 				continue;
-			if( ent->client == NULL )
+			if(ent->client == NULL)
 				continue;
-			if( ent->r.svFlags & SVF_BOT){
+			if(ent->r.svFlags & SVF_BOT){
 				/* no bots in ranked games */
 				trap_SendConsoleCommand(EXEC_INSERT,
 					va("kick %s\n",
@@ -63,21 +63,21 @@ G_RankRunFrame()
 			old_status = ent->client->client_status;
 			status = trap_RankUserStatus(i);
 
-			if( ent->client->client_status != status ){
+			if(ent->client->client_status != status){
 				/* inform client of current status
 				 * not needed for client side log in */
 				trap_SendServerCommand(i,
 					va("rank_status %i\n",status));
-				if( i == 0 )
+				if(i == 0)
 					int j = 0;
 				ent->client->client_status = status;
 			}
 
-			switch( status ){
+			switch(status){
 			case QGR_STATUS_NEW:
 			case QGR_STATUS_SPECTATOR:
-				if( ent->client->sess.sessionTeam !=
-				    TEAM_SPECTATOR ){
+				if(ent->client->sess.sessionTeam !=
+				   TEAM_SPECTATOR){
 					ent->client->sess.sessionTeam =
 						TEAM_SPECTATOR;
 					ent->client->sess.spectatorState =
@@ -95,7 +95,7 @@ G_RankRunFrame()
 			case QGR_STATUS_NO_MEMBERSHIP:
 			case QGR_STATUS_INVALIDUSER:
 			case QGR_STATUS_ERROR:
-				if((ent->r.svFlags & SVF_BOT) == 0 )
+				if((ent->r.svFlags & SVF_BOT) == 0)
 					trap_RankUserReset(ent->s.clientNum);
 				break;
 			case QGR_STATUS_ACTIVE:
@@ -104,15 +104,15 @@ G_RankRunFrame()
 				   (g_gametype.integer < GT_TEAM))
 					SetTeam(ent, "free");
 
-				if( old_status != QGR_STATUS_ACTIVE )
+				if(old_status != QGR_STATUS_ACTIVE)
 					/* player has just become active */
-					for( j = 0; j < level.maxclients; j++ ){
+					for(j = 0; j < level.maxclients; j++){
 						ent2 = &(g_entities[j]);
-						if( !ent2->inuse )
+						if(!ent2->inuse)
 							continue;
-						if( ent2->client == NULL )
+						if(ent2->client == NULL)
 							continue;
-						if( ent2->r.svFlags & SVF_BOT)
+						if(ent2->r.svFlags & SVF_BOT)
 							continue;
 
 						if((i != j) &&
@@ -141,10 +141,10 @@ G_RankRunFrame()
 	}
 
 	/* tell time to clients so they can show current match rating */
-	if( level.intermissiontime == 0 )
-		for( i = 0; i < level.maxclients; i++ ){
+	if(level.intermissiontime == 0)
+		for(i = 0; i < level.maxclients; i++){
 			ent = &(g_entities[i]);
-			if( ent->client == NULL )
+			if(ent->client == NULL)
 				continue;
 
 			time = (level.time - ent->client->pers.enterTime) / 1000;
@@ -160,17 +160,17 @@ G_RankRunFrame()
 void
 G_RankFireWeapon(int self, int weapon)
 {
-	if( level.warmupTime != 0 )
+	if(level.warmupTime != 0)
 		/* no reports during warmup period */
 		return;
 
-	if( weapon == WP_GAUNTLET )
+	if(weapon == WP_GAUNTLET)
 		/* the gauntlet only "fires" when it actually hits something */
 		return;
 
 	trap_RankReportInt(self, -1, QGR_KEY_SHOT_FIRED, 1, 1);
 
-	switch( weapon ){
+	switch(weapon){
 	case WP_MACHINEGUN:
 		trap_RankReportInt(self, -1, QGR_KEY_SHOT_FIRED_MACHINEGUN, 1, 1);
 		break;
@@ -223,7 +223,7 @@ G_RankDamage(int self, int attacker, int damage, int means_of_death)
 	int	key_damage;
 	int	key_splash;
 
-	if( level.warmupTime != 0 )
+	if(level.warmupTime != 0)
 		/* no reports during warmup period */
 		return;
 
@@ -246,7 +246,7 @@ G_RankDamage(int self, int attacker, int damage, int means_of_death)
 			1);
 
 	/* don't track hazard damage, just deaths */
-	switch( means_of_death ){
+	switch(means_of_death){
 	case MOD_WATER:
 	case MOD_SLIME:
 	case MOD_LAVA:
@@ -261,7 +261,7 @@ G_RankDamage(int self, int attacker, int damage, int means_of_death)
 	}
 
 	/* get splash damage */
-	switch( means_of_death ){
+	switch(means_of_death){
 	case MOD_GRENADE_SPLASH:
 	case MOD_ROCKET_SPLASH:
 	case MOD_PLASMA_SPLASH:
@@ -275,7 +275,7 @@ G_RankDamage(int self, int attacker, int damage, int means_of_death)
 	}
 
 	/* hit, damage, and splash taken */
-	switch( means_of_death ){
+	switch(means_of_death){
 	case MOD_GAUNTLET:
 		key_hit = QGR_KEY_HIT_TAKEN_GAUNTLET;
 		key_damage = QGR_KEY_DAMAGE_TAKEN_GAUNTLET;
@@ -291,20 +291,20 @@ G_RankDamage(int self, int attacker, int damage, int means_of_death)
 	case MOD_GRENADE:
 	case MOD_GRENADE_SPLASH:
 		key_hit = QGR_KEY_HIT_TAKEN_GRENADE;
-		key_damage	= QGR_KEY_DAMAGE_TAKEN_GRENADE;
-		key_splash	= QGR_KEY_SPLASH_TAKEN_GRENADE;
+		key_damage = QGR_KEY_DAMAGE_TAKEN_GRENADE;
+		key_splash = QGR_KEY_SPLASH_TAKEN_GRENADE;
 		break;
 	case MOD_ROCKET:
 	case MOD_ROCKET_SPLASH:
 		key_hit = QGR_KEY_HIT_TAKEN_ROCKET;
-		key_damage	= QGR_KEY_DAMAGE_TAKEN_ROCKET;
-		key_splash	= QGR_KEY_SPLASH_TAKEN_ROCKET;
+		key_damage = QGR_KEY_DAMAGE_TAKEN_ROCKET;
+		key_splash = QGR_KEY_SPLASH_TAKEN_ROCKET;
 		break;
 	case MOD_PLASMA:
 	case MOD_PLASMA_SPLASH:
 		key_hit = QGR_KEY_HIT_TAKEN_PLASMA;
-		key_damage	= QGR_KEY_DAMAGE_TAKEN_PLASMA;
-		key_splash	= QGR_KEY_SPLASH_TAKEN_PLASMA;
+		key_damage = QGR_KEY_DAMAGE_TAKEN_PLASMA;
+		key_splash = QGR_KEY_SPLASH_TAKEN_PLASMA;
 		break;
 	case MOD_RAILGUN:
 		key_hit = QGR_KEY_HIT_TAKEN_RAILGUN;
@@ -317,8 +317,8 @@ G_RankDamage(int self, int attacker, int damage, int means_of_death)
 	case MOD_BFG:
 	case MOD_BFG_SPLASH:
 		key_hit = QGR_KEY_HIT_TAKEN_BFG;
-		key_damage	= QGR_KEY_DAMAGE_TAKEN_BFG;
-		key_splash	= QGR_KEY_SPLASH_TAKEN_BFG;
+		key_damage = QGR_KEY_DAMAGE_TAKEN_BFG;
+		key_splash = QGR_KEY_SPLASH_TAKEN_BFG;
 		break;
 	case MOD_GRAPPLE:
 		key_hit = QGR_KEY_HIT_TAKEN_GRAPPLE;
@@ -331,7 +331,7 @@ G_RankDamage(int self, int attacker, int damage, int means_of_death)
 	}
 
 	/* report general and specific hit taken */
-	if( new_hit ){
+	if(new_hit){
 		trap_RankReportInt(self, -1, QGR_KEY_HIT_TAKEN, 1, 1);
 		trap_RankReportInt(self, -1, key_hit, 1, 1);
 	}
@@ -341,14 +341,14 @@ G_RankDamage(int self, int attacker, int damage, int means_of_death)
 	trap_RankReportInt(self, -1, key_damage, damage, 1);
 
 	/* report general and specific splash taken */
-	if( splash != 0 ){
+	if(splash != 0){
 		trap_RankReportInt(self, -1, QGR_KEY_SPLASH_TAKEN, splash, 1);
 		trap_RankReportInt(self, -1, key_splash, splash, 1);
 	}
 
 	/* hit, damage, and splash given */
 	if((attacker != ENTITYNUM_WORLD) && (attacker != self)){
-		switch( means_of_death ){
+		switch(means_of_death){
 		case MOD_GAUNTLET:
 			key_hit = QGR_KEY_HIT_GIVEN_GAUNTLET;
 			key_damage = QGR_KEY_DAMAGE_GIVEN_GAUNTLET;
@@ -364,20 +364,20 @@ G_RankDamage(int self, int attacker, int damage, int means_of_death)
 		case MOD_GRENADE:
 		case MOD_GRENADE_SPLASH:
 			key_hit = QGR_KEY_HIT_GIVEN_GRENADE;
-			key_damage	= QGR_KEY_DAMAGE_GIVEN_GRENADE;
-			key_splash	= QGR_KEY_SPLASH_GIVEN_GRENADE;
+			key_damage = QGR_KEY_DAMAGE_GIVEN_GRENADE;
+			key_splash = QGR_KEY_SPLASH_GIVEN_GRENADE;
 			break;
 		case MOD_ROCKET:
 		case MOD_ROCKET_SPLASH:
 			key_hit = QGR_KEY_HIT_GIVEN_ROCKET;
-			key_damage	= QGR_KEY_DAMAGE_GIVEN_ROCKET;
-			key_splash	= QGR_KEY_SPLASH_GIVEN_ROCKET;
+			key_damage = QGR_KEY_DAMAGE_GIVEN_ROCKET;
+			key_splash = QGR_KEY_SPLASH_GIVEN_ROCKET;
 			break;
 		case MOD_PLASMA:
 		case MOD_PLASMA_SPLASH:
 			key_hit = QGR_KEY_HIT_GIVEN_PLASMA;
-			key_damage	= QGR_KEY_DAMAGE_GIVEN_PLASMA;
-			key_splash	= QGR_KEY_SPLASH_GIVEN_PLASMA;
+			key_damage = QGR_KEY_DAMAGE_GIVEN_PLASMA;
+			key_splash = QGR_KEY_SPLASH_GIVEN_PLASMA;
 			break;
 		case MOD_RAILGUN:
 			key_hit = QGR_KEY_HIT_GIVEN_RAILGUN;
@@ -390,8 +390,8 @@ G_RankDamage(int self, int attacker, int damage, int means_of_death)
 		case MOD_BFG:
 		case MOD_BFG_SPLASH:
 			key_hit = QGR_KEY_HIT_GIVEN_BFG;
-			key_damage	= QGR_KEY_DAMAGE_GIVEN_BFG;
-			key_splash	= QGR_KEY_SPLASH_GIVEN_BFG;
+			key_damage = QGR_KEY_DAMAGE_GIVEN_BFG;
+			key_splash = QGR_KEY_SPLASH_GIVEN_BFG;
 			break;
 		case MOD_GRAPPLE:
 			key_hit = QGR_KEY_HIT_GIVEN_GRAPPLE;
@@ -408,7 +408,7 @@ G_RankDamage(int self, int attacker, int damage, int means_of_death)
 		 * had a case where attacker is 245 which is grnadeshooter attacker is
 		 * g_entities index not necessarilly clientnum */
 		if(g_entities[attacker].client){
-			if( new_hit ){
+			if(new_hit){
 				trap_RankReportInt(attacker, -1,
 					QGR_KEY_HIT_GIVEN, 1,
 					1);
@@ -422,7 +422,7 @@ G_RankDamage(int self, int attacker, int damage, int means_of_death)
 			trap_RankReportInt(attacker, -1, key_damage, damage, 1);
 
 			/* report general and specific splash given */
-			if( splash != 0 ){
+			if(splash != 0){
 				trap_RankReportInt(attacker, -1,
 					QGR_KEY_SPLASH_GIVEN, splash,
 					1);
@@ -438,7 +438,7 @@ G_RankDamage(int self, int attacker, int damage, int means_of_death)
 	   OnSameTeam(&(g_entities[self]), &(g_entities[attacker])) &&
 	   (g_entities[attacker].client)){
 		/* report teammate hit */
-		if( new_hit ){
+		if(new_hit){
 			trap_RankReportInt(self, -1, QGR_KEY_TEAMMATE_HIT_TAKEN,
 				1,
 				1);
@@ -455,7 +455,7 @@ G_RankDamage(int self, int attacker, int damage, int means_of_death)
 			damage, 1);
 
 		/* report teammate splash */
-		if( splash != 0 ){
+		if(splash != 0){
 			trap_RankReportInt(self, -1,
 				QGR_KEY_TEAMMATE_SPLASH_TAKEN,
 				splash,
@@ -479,17 +479,17 @@ G_RankPlayerDie(int self, int attacker, int means_of_death)
 	int	p1;
 	int	p2;
 
-	if( level.warmupTime != 0 )
+	if(level.warmupTime != 0)
 		/* no reports during warmup period */
 		return;
 
-	if( attacker == ENTITYNUM_WORLD ){
-		p1	= self;
-		p2	= -1;
+	if(attacker == ENTITYNUM_WORLD){
+		p1 = self;
+		p2 = -1;
 
 		trap_RankReportInt(p1, p2, QGR_KEY_HAZARD_DEATH, 1, 1);
 
-		switch( means_of_death ){
+		switch(means_of_death){
 		case MOD_WATER:
 			trap_RankReportInt(p1, p2, QGR_KEY_WATER, 1, 1);
 			break;
@@ -518,13 +518,13 @@ G_RankPlayerDie(int self, int attacker, int means_of_death)
 			trap_RankReportInt(p1, p2, QGR_KEY_HAZARD_MISC, 1, 1);
 			break;
 		}
-	}else if( attacker == self ){
-		p1	= self;
-		p2	= -1;
+	}else if(attacker == self){
+		p1 = self;
+		p2 = -1;
 
 		trap_RankReportInt(p1, p2, QGR_KEY_SUICIDE, 1, 1);
 
-		switch( means_of_death ){
+		switch(means_of_death){
 		case MOD_GAUNTLET:
 			trap_RankReportInt(p1, p2, QGR_KEY_SUICIDE_GAUNTLET, 1,
 				1);
@@ -567,12 +567,12 @@ G_RankPlayerDie(int self, int attacker, int means_of_death)
 			break;
 		}
 	}else{
-		p1	= attacker;
-		p2	= self;
+		p1 = attacker;
+		p2 = self;
 
 		trap_RankReportInt(p1, p2, QGR_KEY_FRAG, 1, 1);
 
-		switch( means_of_death ){
+		switch(means_of_death){
 		case MOD_GAUNTLET:
 			trap_RankReportInt(p1, p2, QGR_KEY_FRAG_GAUNTLET, 1, 1);
 			break;
@@ -625,7 +625,7 @@ G_RankWeaponTime(int self, int weapon)
 	gclient_t * client;
 	int time;
 
-	if( level.warmupTime != 0 )
+	if(level.warmupTime != 0)
 		/* no reports during warmup period */
 		return;
 
@@ -633,12 +633,12 @@ G_RankWeaponTime(int self, int weapon)
 	time	= (level.time - client->weapon_change_time) / 1000;
 	client->weapon_change_time = level.time;
 
-	if( time <= 0 )
+	if(time <= 0)
 		return;
 
 	trap_RankReportInt(self, -1, QGR_KEY_TIME, time, 1);
 
-	switch( weapon ){
+	switch(weapon){
 	case WP_GAUNTLET:
 		trap_RankReportInt(self, -1, QGR_KEY_TIME_GAUNTLET, time, 1);
 		break;
@@ -682,12 +682,12 @@ G_RankWeaponTime(int self, int weapon)
 void
 G_RankPickupWeapon(int self, int weapon)
 {
-	if( level.warmupTime != 0 )
+	if(level.warmupTime != 0)
 		/* no reports during warmup period */
 		return;
 
 	trap_RankReportInt(self, -1, QGR_KEY_PICKUP_WEAPON, 1, 1);
-	switch( weapon ){
+	switch(weapon){
 	case WP_GAUNTLET:
 		trap_RankReportInt(self, -1, QGR_KEY_PICKUP_GAUNTLET, 1, 1);
 		break;
@@ -731,14 +731,14 @@ G_RankPickupWeapon(int self, int weapon)
 void
 G_RankPickupAmmo(int self, int weapon, int quantity)
 {
-	if( level.warmupTime != 0 )
+	if(level.warmupTime != 0)
 		/* no reports during warmup period */
 		return;
 
 	trap_RankReportInt(self, -1, QGR_KEY_BOXES, 1, 1);
 	trap_RankReportInt(self, -1, QGR_KEY_ROUNDS, quantity, 1);
 
-	switch( weapon ){
+	switch(weapon){
 	case WP_MACHINEGUN:
 		trap_RankReportInt(self, -1, QGR_KEY_BOXES_BULLETS, 1, 1);
 		trap_RankReportInt(self, -1, QGR_KEY_ROUNDS_BULLETS, quantity, 1);
@@ -786,14 +786,14 @@ G_RankPickupAmmo(int self, int weapon, int quantity)
 void
 G_RankPickupHealth(int self, int quantity)
 {
-	if( level.warmupTime != 0 )
+	if(level.warmupTime != 0)
 		/* no reports during warmup period */
 		return;
 
 	trap_RankReportInt(self, -1, QGR_KEY_HEALTH, 1, 1);
 	trap_RankReportInt(self, -1, QGR_KEY_HEALTH_TOTAL, quantity, 1);
 
-	switch( quantity ){
+	switch(quantity){
 	case 5:
 		trap_RankReportInt(self, -1, QGR_KEY_HEALTH_5, 1, 1);
 		break;
@@ -819,14 +819,14 @@ G_RankPickupHealth(int self, int quantity)
 void
 G_RankPickupArmor(int self, int quantity)
 {
-	if( level.warmupTime != 0 )
+	if(level.warmupTime != 0)
 		/* no reports during warmup period */
 		return;
 
 	trap_RankReportInt(self, -1, QGR_KEY_ARMOR, 1, 1);
 	trap_RankReportInt(self, -1, QGR_KEY_ARMOR_TOTAL, quantity, 1);
 
-	switch( quantity ){
+	switch(quantity){
 	case 5:
 		trap_RankReportInt(self, -1, QGR_KEY_ARMOR_SHARD, 1, 1);
 		break;
@@ -849,7 +849,7 @@ G_RankPickupArmor(int self, int quantity)
 void
 G_RankPickupPowerup(int self, int powerup)
 {
-	if( level.warmupTime != 0 )
+	if(level.warmupTime != 0)
 		/* no reports during warmup period */
 		return;
 
@@ -861,7 +861,7 @@ G_RankPickupPowerup(int self, int powerup)
 
 	trap_RankReportInt(self, -1, QGR_KEY_POWERUP, 1, 1);
 
-	switch( powerup ){
+	switch(powerup){
 	case PW_QUAD:
 		trap_RankReportInt(self, -1, QGR_KEY_QUAD, 1, 1);
 		break;
@@ -893,11 +893,11 @@ G_RankPickupPowerup(int self, int powerup)
 void
 G_RankPickupHoldable(int self, int holdable)
 {
-	if( level.warmupTime != 0 )
+	if(level.warmupTime != 0)
 		/* no reports during warmup period */
 		return;
 
-	switch( holdable ){
+	switch(holdable){
 	case HI_MEDKIT:
 		trap_RankReportInt(self, -1, QGR_KEY_MEDKIT, 1, 1);
 		break;
@@ -917,11 +917,11 @@ G_RankPickupHoldable(int self, int holdable)
 void
 G_RankUseHoldable(int self, int holdable)
 {
-	if( level.warmupTime != 0 )
+	if(level.warmupTime != 0)
 		/* no reports during warmup period */
 		return;
 
-	switch( holdable ){
+	switch(holdable){
 	case HI_MEDKIT:
 		trap_RankReportInt(self, -1, QGR_KEY_MEDKIT_USE, 1, 1);
 		break;
@@ -941,11 +941,11 @@ G_RankUseHoldable(int self, int holdable)
 void
 G_RankReward(int self, int award)
 {
-	if( level.warmupTime != 0 )
+	if(level.warmupTime != 0)
 		/* no reports during warmup period */
 		return;
 
-	switch( award ){
+	switch(award){
 	case EF_AWARD_IMPRESSIVE:
 		trap_RankReportInt(self, -1, QGR_KEY_IMPRESSIVE, 1, 1);
 		break;
@@ -965,7 +965,7 @@ G_RankReward(int self, int award)
 void
 G_RankCapture(int self)
 {
-	if( level.warmupTime != 0 )
+	if(level.warmupTime != 0)
 		/* no reports during warmup period */
 		return;
 
@@ -980,7 +980,7 @@ G_RankCapture(int self)
 void
 G_RankUserTeamName(int self, char* team_name)
 {
-	if( level.warmupTime != 0 )
+	if(level.warmupTime != 0)
 		/* no reports during warmup period */
 		return;
 
@@ -995,18 +995,18 @@ G_RankUserTeamName(int self, char* team_name)
 void
 G_RankClientDisconnect(int self)
 {
-	gclient_t	* client;
+	gclient_t * client;
 	int	time;
 	int	match_rating;
 
-	if( level.warmupTime != 0 )
+	if(level.warmupTime != 0)
 		/* no reports during warmup period */
 		return;
 
 	/* match rating */
 	client	= g_entities[self].client;
 	time	= (level.time - client->pers.enterTime) / 1000;
-	if( time < 60 )
+	if(time < 60)
 		match_rating = 0;
 	else
 		match_rating = client->ps.persistant[PERS_MATCH_RATING] / time;
@@ -1025,12 +1025,12 @@ G_RankGameOver(void)
 	char	str[MAX_INFO_VALUE];
 	int	num;
 
-	if( level.warmupTime != 0 )
+	if(level.warmupTime != 0)
 		/* no reports during warmup period */
 		return;
 
-	for( i = 0; i < level.maxclients; i++ )
-		if( trap_RankUserStatus(i) == QGR_STATUS_ACTIVE )
+	for(i = 0; i < level.maxclients; i++)
+		if(trap_RankUserStatus(i) == QGR_STATUS_ACTIVE)
 			G_RankClientDisconnect(i);
 
 	/* hostname */

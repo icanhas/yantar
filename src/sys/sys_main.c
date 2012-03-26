@@ -161,12 +161,12 @@ Sys_PIDFileName(void)
 qboolean
 Sys_WritePIDFile(void)
 {
-	char *pidFile = Sys_PIDFileName( );
-	FILE *f;
+	char	*pidFile = Sys_PIDFileName( );
+	FILE	*f;
 	qboolean stale = qfalse;
 
 	/* First, check if the pid file is already there */
-	if((f = fopen(pidFile, "r")) != NULL ){
+	if((f = fopen(pidFile, "r")) != NULL){
 		char	pidBuffer[ 64 ] = { 0 };
 		int	pid;
 
@@ -175,13 +175,13 @@ Sys_WritePIDFile(void)
 
 		if(pid > 0){
 			pid = atoi(pidBuffer);
-			if( !Sys_PIDIsRunning(pid))
+			if(!Sys_PIDIsRunning(pid))
 				stale = qtrue;
 		}else
 			stale = qtrue;
 	}
 
-	if((f = fopen(pidFile, "w")) != NULL ){
+	if((f = fopen(pidFile, "w")) != NULL){
 		fprintf(f, "%d", Sys_PID( ));
 		fclose(f);
 	}else
@@ -206,7 +206,7 @@ Sys_Exit(int exitCode)
 	SDL_Quit( );
 #endif
 
-	if( exitCode < 2 )
+	if(exitCode < 2)
 		/* Normal exit */
 		remove(Sys_PIDFileName( ));
 
@@ -237,14 +237,14 @@ Sys_GetProcessorFeatures(void)
 	cpuFeatures_t features = 0;
 
 #ifndef DEDICATED
-	if( SDL_HasRDTSC( )) features |= CF_RDTSC;
-	if( SDL_HasMMX( )) features |= CF_MMX;
-	if( SDL_HasMMXExt( )) features |= CF_MMX_EXT;
-	if( SDL_Has3DNow( )) features |= CF_3DNOW;
-	if( SDL_Has3DNowExt( )) features |= CF_3DNOW_EXT;
-	if( SDL_HasSSE( )) features |= CF_SSE;
-	if( SDL_HasSSE2( )) features |= CF_SSE2;
-	if( SDL_HasAltiVec( )) features |= CF_ALTIVEC;
+	if(SDL_HasRDTSC( )) features |= CF_RDTSC;
+	if(SDL_HasMMX( )) features |= CF_MMX;
+	if(SDL_HasMMXExt( )) features |= CF_MMX_EXT;
+	if(SDL_Has3DNow( )) features |= CF_3DNOW;
+	if(SDL_Has3DNowExt( )) features |= CF_3DNOW_EXT;
+	if(SDL_HasSSE( )) features |= CF_SSE;
+	if(SDL_HasSSE2( )) features |= CF_SSE2;
+	if(SDL_HasAltiVec( )) features |= CF_ALTIVEC;
 #endif
 
 	return features;
@@ -293,16 +293,16 @@ Sys_AnsiColorPrint(const char *msg)
 		0	/* COLOR_WHITE */
 	};
 
-	while( *msg ){
-		if( Q_IsColorString(msg) || *msg == '\n' ){
+	while(*msg){
+		if(Q_IsColorString(msg) || *msg == '\n'){
 			/* First empty the buffer */
-			if( length > 0 ){
+			if(length > 0){
 				buffer[ length ] = '\0';
 				fputs(buffer, stderr);
 				length = 0;
 			}
 
-			if( *msg == '\n' ){
+			if(*msg == '\n'){
 				/* Issue a reset and then the newline */
 				fputs("\033[0m\n", stderr);
 				msg++;
@@ -314,7 +314,7 @@ Sys_AnsiColorPrint(const char *msg)
 				msg += 2;
 			}
 		}else{
-			if( length >= MAXPRINTMSG - 1 )
+			if(length >= MAXPRINTMSG - 1)
 				break;
 
 			buffer[ length ] = *msg;
@@ -324,7 +324,7 @@ Sys_AnsiColorPrint(const char *msg)
 	}
 
 	/* Empty anything still left in the buffer */
-	if( length > 0 ){
+	if(length > 0){
 		buffer[ length ] = '\0';
 		fputs(buffer, stderr);
 	}
@@ -408,7 +408,7 @@ Sys_FileTime(char *path)
 void
 Sys_UnloadDll(void *dllHandle)
 {
-	if( !dllHandle ){
+	if(!dllHandle){
 		Com_Printf("Sys_UnloadDll(NULL)\n");
 		return;
 	}
@@ -501,7 +501,7 @@ Sys_LoadGameDll(const char *name,
 	dllEntry = Sys_LoadFunction(libHandle, "dllEntry");
 	*entryPoint = Sys_LoadFunction(libHandle, "vmMain");
 
-	if( !*entryPoint || !dllEntry ){
+	if(!*entryPoint || !dllEntry){
 		Com_Printf (
 			"Sys_LoadGameDll(%s) failed to find vmMain function:\n\"%s\" !\n",
 			name, Sys_LibraryError( ));
@@ -525,9 +525,9 @@ Sys_LoadGameDll(const char *name,
 void
 Sys_ParseArgs(int argc, char **argv)
 {
-	if( argc == 2 ){
-		if( !strcmp(argv[1], "--version") ||
-		    !strcmp(argv[1], "-v")){
+	if(argc == 2){
+		if(!strcmp(argv[1], "--version") ||
+		   !strcmp(argv[1], "-v")){
 			const char * date = __DATE__;
 #ifdef DEDICATED
 			fprintf(stdout, Q3_VERSION " dedicated server (%s)\n",
@@ -558,7 +558,7 @@ Sys_SigHandler(int signal)
 {
 	static qboolean signalcaught = qfalse;
 
-	if( signalcaught )
+	if(signalcaught)
 		fprintf(stderr,
 			"DOUBLE SIGNAL FAULT: Received signal %d, exiting...\n",
 			signal);
@@ -572,7 +572,7 @@ Sys_SigHandler(int signal)
 		VM_Forced_Unload_Done();
 	}
 
-	if( signal == SIGTERM || signal == SIGINT )
+	if(signal == SIGTERM || signal == SIGINT)
 		Sys_Exit(1);
 	else
 		Sys_Exit(2);
@@ -605,8 +605,8 @@ main(int argc, char **argv)
 	XSTRING(MINSDL_MINOR) "." \
 	XSTRING(MINSDL_PATCH)
 
-	if( SDL_VERSIONNUM(ver->major, ver->minor, ver->patch) <
-	    SDL_VERSIONNUM(MINSDL_MAJOR, MINSDL_MINOR, MINSDL_PATCH)){
+	if(SDL_VERSIONNUM(ver->major, ver->minor, ver->patch) <
+	   SDL_VERSIONNUM(MINSDL_MAJOR, MINSDL_MINOR, MINSDL_PATCH)){
 		Sys_Dialog(DT_ERROR,
 			va(
 				"SDL version " MINSDL_VERSION
@@ -630,7 +630,7 @@ main(int argc, char **argv)
 	Sys_SetDefaultInstallPath(DEFAULT_BASEDIR);
 
 	/* Concatenate the command line for passing to Com_Init */
-	for( i = 1; i < argc; i++ ){
+	for(i = 1; i < argc; i++){
 		const qboolean containsSpaces = strchr(argv[i], ' ') != NULL;
 		if(containsSpaces)
 			Q_strcat(commandLine, sizeof(commandLine), "\"");
@@ -654,7 +654,7 @@ main(int argc, char **argv)
 	signal(SIGTERM, Sys_SigHandler);
 	signal(SIGINT, Sys_SigHandler);
 
-	while( 1 ){
+	while(1){
 		IN_Frame( );
 		Com_Frame( );
 	}

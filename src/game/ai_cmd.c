@@ -490,7 +490,7 @@ BotAddressedToBot(bot_state_t *bs, bot_match_t *match)
 			   MTCONTEXT_REPLYCHAT) ||
 		   tellmatch.type != MSG_CHATTELL)
 			/* make sure not everyone reacts to this message */
-			if(random() > (float ) 1.0 /
+			if(random() > (float )1.0 /
 			   (NumPlayersOnSameTeam(bs)-1)) return qfalse;
 	}
 	return qtrue;
@@ -525,7 +525,7 @@ BotGPSToPosition(char *buf, vec3_t position)
 			}
 		}
 		BotAI_Print(PRT_MESSAGE, "%d\n", sign * num);
-		position[i] = (float) sign * num;
+		position[i] = (float)sign * num;
 	}
 	return qtrue;
 }
@@ -968,8 +968,8 @@ BotMatch_AttackEnemyBase(bot_state_t *bs, bot_match_t *match)
 	/* set the ltg type */
 	bs->ltgtype = LTG_ATTACKENEMYBASE;
 	/* set the team goal time */
-	bs->teamgoal_time	= FloatTime() + TEAM_ATTACKENEMYBASE_TIME;
-	bs->attackaway_time	= 0;
+	bs->teamgoal_time = FloatTime() + TEAM_ATTACKENEMYBASE_TIME;
+	bs->attackaway_time = 0;
 	/*  */
 	BotSetTeamStatus(bs);
 	/* remember last ordered task */
@@ -1094,14 +1094,14 @@ BotMatch_TaskPreference(bot_state_t *bs, bot_match_t *match)
 	switch(match->subtype){
 	case ST_DEFENDER:
 	{
-		preference	&= ~TEAMTP_ATTACKER;
-		preference	|= TEAMTP_DEFENDER;
+		preference &= ~TEAMTP_ATTACKER;
+		preference |= TEAMTP_DEFENDER;
 		break;
 	}
 	case ST_ATTACKER:
 	{
-		preference	&= ~TEAMTP_DEFENDER;
-		preference	|= TEAMTP_ATTACKER;
+		preference &= ~TEAMTP_DEFENDER;
+		preference |= TEAMTP_ATTACKER;
 		break;
 	}
 	case ST_ROAMER:
@@ -1210,7 +1210,7 @@ BotMatch_LeaveSubteam(bot_state_t *bs, bot_match_t *match)
 		trap_BotMatchVariable(match, NETNAME, netname, sizeof(netname));
 		client = ClientFromName(netname);
 		trap_BotEnterChat(bs->cs, client, CHAT_TELL);
-	}	
+	}
 	strcpy(bs->subteam, "");
 }
 
@@ -1338,8 +1338,8 @@ BotMatch_Dismiss(bot_state_t *bs, bot_match_t *match)
 	/*  */
 	bs->decisionmaker = client;
 	/*  */
-	bs->ltgtype	= 0;
-	bs->lead_time	= 0;
+	bs->ltgtype = 0;
+	bs->lead_time = 0;
 	bs->lastgoal_ltgtype = 0;
 	/*  */
 	BotAI_BotInitialChat(bs, "dismissed", NULL);
@@ -1425,8 +1425,8 @@ BotMatch_StopTeamLeaderShip(bot_state_t *bs, bot_match_t *match)
 	if(client >= 0)
 		if(!Q_stricmp(bs->teamleader,
 			   ClientName(client, netname, sizeof(netname)))){
-			bs->teamleader[0]	= '\0';
-			notleader[client]	= qtrue;
+			bs->teamleader[0] = '\0';
+			notleader[client] = qtrue;
 		}
 }
 
@@ -1570,8 +1570,8 @@ BotNearestVisibleItem(bot_state_t *bs, char *itemname, bot_goal_t *goal)
 	int	i;
 	char	name[64];
 	bot_goal_t tmpgoal;
-	float dist, bestdist;
-	vec3_t dir;
+	float	dist, bestdist;
+	vec3_t	dir;
 	bsp_trace_t trace;
 
 	bestdist = 999999;
@@ -1608,8 +1608,8 @@ BotMatch_WhereAreYou(bot_state_t *bs, bot_match_t *match)
 	float	dist, bestdist;
 	int	i, bestitem, redtt, bluett, client;
 	bot_goal_t goal;
-	char netname[MAX_MESSAGE_SIZE];
-	char *nearbyitems[] = {
+	char	netname[MAX_MESSAGE_SIZE];
+	char	*nearbyitems[] = {
 		"Shotgun",
 		"Grenade Launcher",
 		"Rocket Launcher",
@@ -1649,13 +1649,13 @@ BotMatch_WhereAreYou(bot_state_t *bs, bot_match_t *match)
 	if(!BotAddressedToBot(bs, match))
 		return;
 
-	bestitem	= -1;
-	bestdist	= 999999;
+	bestitem = -1;
+	bestdist = 999999;
 	for(i = 0; nearbyitems[i]; i++){
 		dist = BotNearestVisibleItem(bs, nearbyitems[i], &goal);
 		if(dist < bestdist){
-			bestdist	= dist;
-			bestitem	= i;
+			bestdist = dist;
+			bestitem = i;
 		}
 	}
 	if(bestitem != -1){
@@ -1664,10 +1664,10 @@ BotMatch_WhereAreYou(bot_state_t *bs, bot_match_t *match)
 		   || gametype == GT_1FCTF
 #endif
 		   ){
-			redtt	= trap_AAS_AreaTravelTimeToGoalArea(
+			redtt = trap_AAS_AreaTravelTimeToGoalArea(
 				bs->areanum, bs->origin, ctf_redflag.areanum,
 				TFL_DEFAULT);
-			bluett	= trap_AAS_AreaTravelTimeToGoalArea(
+			bluett = trap_AAS_AreaTravelTimeToGoalArea(
 				bs->areanum, bs->origin, ctf_blueflag.areanum,
 				TFL_DEFAULT);
 			if(redtt < (redtt + bluett) * 0.4)
@@ -1685,10 +1685,10 @@ BotMatch_WhereAreYou(bot_state_t *bs, bot_match_t *match)
 		}
 #ifdef MISSIONPACK
 		else if(gametype == GT_OBELISK || gametype == GT_HARVESTER){
-			redtt	= trap_AAS_AreaTravelTimeToGoalArea(
+			redtt = trap_AAS_AreaTravelTimeToGoalArea(
 				bs->areanum, bs->origin, redobelisk.areanum,
 				TFL_DEFAULT);
-			bluett	= trap_AAS_AreaTravelTimeToGoalArea(
+			bluett = trap_AAS_AreaTravelTimeToGoalArea(
 				bs->areanum, bs->origin, blueobelisk.areanum,
 				TFL_DEFAULT);
 			if(redtt < (redtt + bluett) * 0.4)
@@ -1761,8 +1761,8 @@ BotMatch_LeadTheWay(bot_state_t *bs, bot_match_t *match)
 	if(entinfo.valid){
 		areanum = BotPointAreaNum(entinfo.origin);
 		if(areanum){	/* && trap_AAS_AreaReachability(areanum)) { */
-			bs->lead_teamgoal.entitynum	= client;
-			bs->lead_teamgoal.areanum	= areanum;
+			bs->lead_teamgoal.entitynum = client;
+			bs->lead_teamgoal.areanum = areanum;
 			VectorCopy(entinfo.origin, bs->lead_teamgoal.origin);
 			VectorSet(bs->lead_teamgoal.mins, -8, -8, -8);
 			VectorSet(bs->lead_teamgoal.maxs, 8, 8, 8);
@@ -1777,8 +1777,8 @@ BotMatch_LeadTheWay(bot_state_t *bs, bot_match_t *match)
 	}
 	bs->lead_teammate = client;
 	bs->lead_time = FloatTime() + TEAM_LEAD_TIME;
-	bs->leadvisible_time	= 0;
-	bs->leadmessage_time	= -(FloatTime() + 2 * random());
+	bs->leadvisible_time = 0;
+	bs->leadmessage_time = -(FloatTime() + 2 * random());
 }
 
 /*
@@ -1855,8 +1855,8 @@ BotMatch_CTF(bot_state_t *bs, bot_match_t *match)
 			bs->flagstatuschanged = 1;
 			bs->lastflagcapture_time = FloatTime();
 		}else if(match->subtype & ST_CAPTUREDFLAG){
-			bs->redflagstatus	= 0;
-			bs->blueflagstatus	= 0;
+			bs->redflagstatus = 0;
+			bs->blueflagstatus = 0;
 			bs->flagcarrier = 0;
 			bs->flagstatuschanged = 1;
 		}else if(match->subtype & ST_RETURNEDFLAG){

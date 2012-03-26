@@ -122,16 +122,16 @@ bits(struct state *s, int32_t need)
 	val = s->bitbuf;
 	while(s->bitcnt < need){
 		if(s->incnt == s->inlen) longjmp(s->env, 1);		/* out of input */
-		val |= (int32_t) (s->in[s->incnt++]) << s->bitcnt;	/* load eight bits */
+		val |= (int32_t)(s->in[s->incnt++]) << s->bitcnt;	/* load eight bits */
 		s->bitcnt += 8;
 	}
 
 	/* drop need bits and update buffer, always zero to seven bits left */
-	s->bitbuf = (int32_t) (val >> need);
-	s->bitcnt -= need;
+	s->bitbuf	= (int32_t)(val >> need);
+	s->bitcnt	-= need;
 
 	/* return need bits, zeroing the bits above that */
-	return (int32_t) (val & ((1L << need) - 1));
+	return (int32_t)(val & ((1L << need) - 1));
 }
 
 /*
@@ -157,13 +157,13 @@ stored(struct state *s)
 	uint32_t len;	/* length of stored block */
 
 	/* discard leftover bits from current byte (assumes s->bitcnt < 8) */
-	s->bitbuf = 0;
-	s->bitcnt = 0;
+	s->bitbuf	= 0;
+	s->bitcnt	= 0;
 
 	/* get length and check against its one's complement */
 	if(s->incnt + 4 > s->inlen) return 2;	/* not enough input */
-	len = s->in[s->incnt++];
-	len |= s->in[s->incnt++] << 8;
+	len	= s->in[s->incnt++];
+	len	|= s->in[s->incnt++] << 8;
 	if(s->in[s->incnt++] != (~len & 0xff) ||
 	   s->in[s->incnt++] != ((~len >> 8) & 0xff))
 		return -2;	/* didn't match complement! */
@@ -176,8 +176,8 @@ stored(struct state *s)
 		while(len--)
 			s->out[s->outcnt++] = s->in[s->incnt++];
 	}else{	/* just scanning */
-		s->outcnt += len;
-		s->incnt += len;
+		s->outcnt	+= len;
+		s->incnt	+= len;
 	}
 
 	/* done with a valid stored block */
@@ -242,8 +242,8 @@ decode(struct state *s, struct huffman *h)
 			bitbuf	>>= 1;
 			count	= *next++;
 			if(code < first + count){	/* if length len, return symbol */
-				s->bitbuf = bitbuf;
-				s->bitcnt = (s->bitcnt - len) & 7;
+				s->bitbuf	= bitbuf;
+				s->bitcnt	= (s->bitcnt - len) & 7;
 				return h->symbol[index + (code - first)];
 			}
 			index	+= count;	/* else update for next length */
@@ -312,8 +312,8 @@ construct(struct huffman *h, int16_t *length, int32_t n)
 	/* check for an over-subscribed or incomplete set of lengths */
 	left = 1;	/* one possible code of zero length */
 	for(len = 1; len <= MAXBITS; len++){
-		left <<= 1;			/* one more bit, double codes left */
-		left -= h->count[len];		/* deduct count from possible codes */
+		left	<<= 1;			/* one more bit, double codes left */
+		left	-= h->count[len];	/* deduct count from possible codes */
 		if(left < 0) return left;	/* over-subscribed--return negative */
 	}					/* left > 0 means incomplete */
 
@@ -394,23 +394,23 @@ codes(struct state *s,
       struct huffman *lencode,
       struct huffman *distcode)
 {
-	int32_t symbol;				/* decoded symbol */
-	int32_t len;				/* length for copy */
-	uint32_t dist;				/* distance for copy */
-	static const int16_t lens[29] = {	/* Size base for length codes 257..285 */
+	int32_t		symbol;			/* decoded symbol */
+	int32_t		len;			/* length for copy */
+	uint32_t	dist;			/* distance for copy */
+	static const int16_t	lens[29] = {	/* Size base for length codes 257..285 */
 		3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 15, 17, 19, 23, 27, 31,
 		35, 43, 51, 59, 67, 83, 99, 115, 131, 163, 195, 227, 258
 	};
-	static const int16_t lext[29] = {	/* Extra bits for length codes 257..285 */
+	static const int16_t	lext[29] = {	/* Extra bits for length codes 257..285 */
 		0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2,
 		3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 0
 	};
-	static const int16_t dists[30] = {	/* Offset base for distance codes 0..29 */
+	static const int16_t	dists[30] = {	/* Offset base for distance codes 0..29 */
 		1, 2, 3, 4, 5, 7, 9, 13, 17, 25, 33, 49, 65, 97, 129, 193,
 		257, 385, 513, 769, 1025, 1537, 2049, 3073, 4097, 6145,
 		8193, 12289, 16385, 24577
 	};
-	static const int16_t dext[30] = {	/* Extra bits for distance codes 0..29 */
+	static const int16_t	dext[30] = {	/* Extra bits for distance codes 0..29 */
 		0, 0, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6,
 		7, 7, 8, 8, 9, 9, 10, 10, 11, 11,
 		12, 12, 13, 13
@@ -487,8 +487,8 @@ fixed(struct state *s)
 	static int32_t	virgin = 1;
 	static int16_t	lencnt[MAXBITS+1], lensym[FIXLCODES];
 	static int16_t	distcnt[MAXBITS+1], distsym[MAXDCODES];
-	static struct huffman lencode = {lencnt, lensym};
-	static struct huffman distcode = {distcnt, distsym};
+	static struct huffman	lencode		= {lencnt, lensym};
+	static struct huffman	distcode	= {distcnt, distsym};
 
 	/* build fixed huffman tables if first call (may not be thread safe) */
 	if(virgin){
@@ -609,15 +609,15 @@ fixed(struct state *s)
 local int32_t
 dynamic(struct state *s)
 {
-	int32_t nlen, ndist, ncode;			/* number of lengths in descriptor */
-	int32_t index;					/* index of lengths[] */
-	int32_t err;					/* construct() return value */
-	int16_t lengths[MAXCODES];			/* descriptor code lengths */
-	int16_t lencnt[MAXBITS+1], lensym[MAXLCODES];	/* lencode memory */
-	int16_t distcnt[MAXBITS+1], distsym[MAXDCODES];	/* distcode memory */
-	struct huffman	lencode = {lencnt, lensym};	/* length code */
-	struct huffman	distcode = {distcnt, distsym};	/* distance code */
-	static const int16_t order[19] =		/* permutation of code length codes */
+	int32_t nlen, ndist, ncode;				/* number of lengths in descriptor */
+	int32_t index;						/* index of lengths[] */
+	int32_t err;						/* construct() return value */
+	int16_t lengths[MAXCODES];				/* descriptor code lengths */
+	int16_t lencnt[MAXBITS+1], lensym[MAXLCODES];		/* lencode memory */
+	int16_t distcnt[MAXBITS+1], distsym[MAXDCODES];		/* distcode memory */
+	struct huffman	lencode		= {lencnt, lensym};	/* length code */
+	struct huffman	distcode	= {distcnt, distsym};	/* distance code */
+	static const int16_t order[19] =			/* permutation of code length codes */
 	{16, 17, 18, 0, 8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13, 2, 14, 1, 15};
 
 	/* get number of lengths in each table, check lengths */
@@ -732,15 +732,15 @@ puff(uint8_t  *dest,		/* pointer to destination pointer */
 
 	/* initialize output state */
 	s.out = dest;
-	s.outlen = *destlen;	/* ignored if dest is NULL */
-	s.outcnt = 0;
+	s.outlen	= *destlen;	/* ignored if dest is NULL */
+	s.outcnt	= 0;
 
 	/* initialize input state */
 	s.in = source;
-	s.inlen = *sourcelen;
-	s.incnt = 0;
-	s.bitbuf = 0;
-	s.bitcnt = 0;
+	s.inlen		= *sourcelen;
+	s.incnt		= 0;
+	s.bitbuf	= 0;
+	s.bitcnt	= 0;
 
 	/* return if bits() or decode() tries to read past available input */
 	if(setjmp(s.env) != 0)	/* if came back here via longjmp() */
@@ -748,11 +748,11 @@ puff(uint8_t  *dest,		/* pointer to destination pointer */
 	else{
 		/* process blocks until last block or error */
 		do {
-			last = bits(&s, 1);	/* one if last block */
-			type = bits(&s, 2);	/* block type 0..3 */
-			err = type == 0 ? stored(&s) :
-			      (type == 1 ? fixed(&s) :
-				   (type == 2 ? dynamic(&s) :
+			last	= bits(&s, 1);	/* one if last block */
+			type	= bits(&s, 2);	/* block type 0..3 */
+			err	= type == 0 ? stored(&s) :
+				  (type == 1 ? fixed(&s) :
+			       (type == 2 ? dynamic(&s) :
 				-1));		/* type == 3, invalid */
 			if(err != 0) break;	/* return with error */
 		} while(!last);
@@ -760,8 +760,8 @@ puff(uint8_t  *dest,		/* pointer to destination pointer */
 
 	/* update the lengths and return */
 	if(err <= 0){
-		*destlen = s.outcnt;
-		*sourcelen = s.incnt;
+		*destlen	= s.outcnt;
+		*sourcelen	= s.incnt;
 	}
 	return err;
 }

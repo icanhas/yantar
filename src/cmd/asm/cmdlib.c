@@ -39,12 +39,12 @@
 
 /* set these before calling CheckParm */
 int myargc;
-char **myargv;
+char	**myargv;
 
-char com_token[1024];
-qboolean com_eof;
+char	com_token[1024];
+qboolean	com_eof;
 
-qboolean archive;
+qboolean	archive;
 char archivedir[1024];
 
 
@@ -64,17 +64,17 @@ void
 ExpandWildcards(int *argc, char ***argv)
 {
 	struct _finddata_t fileinfo;
-	intptr_t	handle;
+	intptr_t handle;
 	int	i;
 	char	filename[1024];
 	char	filebase[1024];
-	char	*path;
+	char *path;
 
 	ex_argc = 0;
 	for(i=0; i<*argc; i++){
 		path = (*argv)[i];
-		if( path[0] == '-'
-		    || (!strstr(path, "*") && !strstr(path, "?"))){
+		if(path[0] == '-'
+		   || (!strstr(path, "*") && !strstr(path, "?"))){
 			ex_argv[ex_argc++] = path;
 			continue;
 		}
@@ -173,9 +173,9 @@ qprintf(const char *format, ...)
 }
 
 #ifdef WIN32
-HWND hwndOut = NULL;
-qboolean	lookedForServer = qfalse;
-UINT		wm_BroadcastCommand = -1;
+HWND	hwndOut = NULL;
+qboolean lookedForServer = qfalse;
+UINT	wm_BroadcastCommand = -1;
 #endif
 
 void
@@ -202,7 +202,7 @@ _printf(const char *format, ...)
 	}
 	if(hwndOut){
 		a = GlobalAddAtom(text);
-		PostMessage(hwndOut, wm_BroadcastCommand, 0, (LPARAM) a);
+		PostMessage(hwndOut, wm_BroadcastCommand, 0, (LPARAM)a);
 	}
 #endif
 }
@@ -219,16 +219,16 @@ _printf(const char *format, ...)
  *
  */
 
-char qdir[1024];
-char gamedir[1024];
-char writedir[1024];
+char	qdir[1024];
+char	gamedir[1024];
+char	writedir[1024];
 
 void
 SetQdirFromPath(const char *path)
 {
 	char temp[1024];
-	const char *c;
-	const char *sep;
+	const char	*c;
+	const char	*sep;
 	int len, count;
 
 	if(!(path[0] == '/' || path[0] == '\\' || path[1] == ':')){	/* path is partial */
@@ -249,16 +249,16 @@ SetQdirFromPath(const char *path)
 			 * the +2 assumes a 2 or 3 following quake which is not the
 			 * case with a retail install
 			 * so we need to add up how much to the next separator */
-			sep = c + len;
-			count = 1;
+			sep	= c + len;
+			count	= 1;
 			while(*sep && *sep != '/' && *sep != '\\'){
 				sep++;
 				count++;
 			}
 			strncpy (qdir, path, c+len+count-path);
 			qprintf ("qdir: %s\n", qdir);
-			for( i = 0; i < strlen(qdir); i++ )
-				if( qdir[i] == '\\' )
+			for(i = 0; i < strlen(qdir); i++)
+				if(qdir[i] == '\\')
 					qdir[i] = '/';
 
 			c += len+count;
@@ -266,16 +266,16 @@ SetQdirFromPath(const char *path)
 				if(*c == '/' || *c == '\\'){
 					strncpy (gamedir, path, c+1-path);
 
-					for( i = 0; i < strlen(gamedir); i++ )
-						if( gamedir[i] == '\\' )
+					for(i = 0; i < strlen(gamedir); i++)
+						if(gamedir[i] == '\\')
 							gamedir[i] = '/';
 
 					qprintf ("gamedir: %s\n", gamedir);
 
-					if( !writedir[0] )
+					if(!writedir[0])
 						strcpy(writedir, gamedir);
-					else if( writedir[strlen(writedir)-1] !=
-						 '/' ){
+					else if(writedir[strlen(writedir)-1] !=
+						'/'){
 						writedir[strlen(writedir)]
 							= '/';
 						writedir[strlen(writedir)+
@@ -337,8 +337,8 @@ ExpandGamePath(const char *path)
 char *
 ExpandPathAndArchive(const char *path)
 {
-	char *expanded;
-	char archivename[1024];
+	char	*expanded;
+	char	archivename[1024];
 
 	expanded = ExpandPath (path);
 
@@ -406,8 +406,8 @@ Q_getwd(char *out)
 	strcat (out, "/");
 #endif
 
-	while( out[i] != 0 ){
-		if( out[i] == '\\' )
+	while(out[i] != 0){
+		if(out[i] == '\\')
 			out[i] = '/';
 		i++;
 	}
@@ -458,8 +458,8 @@ FileTime(const char *path)
 char *
 Com_Parse(char *data)
 {
-	int c;
-	int len;
+	int	c;
+	int	len;
 
 	len = 0;
 	com_token[0] = 0;
@@ -528,8 +528,8 @@ Q_strncasecmp(const char *s1, const char *s2, int n)
 	int c1, c2;
 
 	do {
-		c1 = *s1++;
-		c2 = *s2++;
+		c1	= *s1++;
+		c2	= *s2++;
 
 		if(!n--)
 			return 0;	/* strings are equal until end point */
@@ -602,7 +602,7 @@ CheckParm(const char *check)
 	int i;
 
 	for(i = 1; i<myargc; i++)
-		if( !Q_stricmp(check, myargv[i]))
+		if(!Q_stricmp(check, myargv[i]))
 			return i;
 
 	return 0;
@@ -618,8 +618,8 @@ CheckParm(const char *check)
 int
 Q_filelength(FILE *f)
 {
-	int pos;
-	int end;
+	int	pos;
+	int	end;
 
 	pos = ftell (f);
 	fseek (f, 0, SEEK_END);
@@ -636,8 +636,8 @@ Q_filelength(FILE *f)
 static FILE*
 myfopen(const char* filename, const char* mode)
 {
-	char * p;
-	char fn[MAX_PATH];
+	char	* p;
+	char	fn[MAX_PATH];
 
 	fn[0] = '\0';
 	strncat(fn, filename, sizeof(fn)-1);
@@ -678,7 +678,7 @@ SafeOpenRead(const char *filename)
 void
 SafeRead(FILE *f, void *buffer, int count)
 {
-	if( fread (buffer, 1, count, f) != (size_t) count)
+	if(fread (buffer, 1, count, f) != (size_t)count)
 		Error ("File read failure");
 }
 
@@ -686,7 +686,7 @@ SafeRead(FILE *f, void *buffer, int count)
 void
 SafeWrite(FILE *f, const void *buffer, int count)
 {
-	if(fwrite (buffer, 1, count, f) != (size_t) count)
+	if(fwrite (buffer, 1, count, f) != (size_t)count)
 		Error ("File write failure");
 }
 
@@ -718,12 +718,12 @@ LoadFile(const char *filename, void **bufferptr)
 {
 	FILE	*f;
 	int	length;
-	void	*buffer;
+	void *buffer;
 
 	f = SafeOpenRead (filename);
 	length	= Q_filelength (f);
 	buffer	= malloc (length+1);
-	((char *) buffer)[length] = 0;
+	((char*)buffer)[length] = 0;
 	SafeRead (f, buffer, length);
 	fclose (f);
 
@@ -745,13 +745,13 @@ LoadFileBlock(const char *filename, void **bufferptr)
 {
 	FILE	*f;
 	int	length, nBlock, nAllocSize;
-	void	*buffer;
+	void *buffer;
 
 	f = SafeOpenRead (filename);
 	length = Q_filelength (f);
 	nAllocSize = length;
 	nBlock = nAllocSize % MEM_BLOCKSIZE;
-	if( nBlock > 0)
+	if(nBlock > 0)
 		nAllocSize += MEM_BLOCKSIZE - nBlock;
 	buffer = malloc (nAllocSize+1);
 	memset(buffer, 0, nAllocSize+1);
@@ -775,7 +775,7 @@ TryLoadFile(const char *filename, void **bufferptr)
 {
 	FILE	*f;
 	int	length;
-	void	*buffer;
+	void *buffer;
 
 	*bufferptr = NULL;
 
@@ -784,7 +784,7 @@ TryLoadFile(const char *filename, void **bufferptr)
 		return -1;
 	length	= Q_filelength (f);
 	buffer	= malloc (length+1);
-	((char *) buffer)[length] = 0;
+	((char*)buffer)[length] = 0;
 	SafeRead (f, buffer, length);
 	fclose (f);
 
@@ -944,8 +944,8 @@ ParseHex(const char *hex)
 	const char *str;
 	int num;
 
-	num = 0;
-	str = hex;
+	num	= 0;
+	str	= hex;
 
 	while(*str){
 		num <<= 4;
@@ -989,8 +989,8 @@ ShortSwap(short l)
 {
 	byte b1,b2;
 
-	b1 = l&255;
-	b2 = (l>>8)&255;
+	b1	= l&255;
+	b2	= (l>>8)&255;
 
 	return (b1<<8) + b2;
 }
@@ -1000,12 +1000,12 @@ LongSwap(int l)
 {
 	byte b1,b2,b3,b4;
 
-	b1 = l&255;
-	b2 = (l>>8)&255;
-	b3 = (l>>16)&255;
-	b4 = (l>>24)&255;
+	b1	= l&255;
+	b2	= (l>>8)&255;
+	b3	= (l>>16)&255;
+	b4	= (l>>24)&255;
 
-	return ((int) b1<<24) + ((int) b2<<16) + ((int) b3<<8) + b4;
+	return ((int)b1<<24) + ((int)b2<<16) + ((int)b3<<8) + b4;
 }
 
 typedef union {
@@ -1099,14 +1099,14 @@ CRC_Value(unsigned short crcvalue)
 void
 CreatePath(const char *path)
 {
-	const char	*ofs;
+	const char *ofs;
 	char	c;
 	char	dir[1024];
 
 #ifdef _WIN32
 	int olddrive = -1;
 
-	if( path[1] == ':' ){
+	if(path[1] == ':'){
 		olddrive = _getdrive();
 		_chdrive(toupper(path[0]) - 'A' + 1);
 	}
@@ -1125,7 +1125,7 @@ CreatePath(const char *path)
 	}
 
 #ifdef _WIN32
-	if( olddrive != -1 )
+	if(olddrive != -1)
 		_chdrive(olddrive);
 
 #endif
@@ -1142,8 +1142,8 @@ CreatePath(const char *path)
 void
 QCopyFile(const char *from, const char *to)
 {
-	void *buffer;
-	int length;
+	void	*buffer;
+	int	length;
 
 	length = LoadFile (from, &buffer);
 	CreatePath (to);

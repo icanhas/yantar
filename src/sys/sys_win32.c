@@ -92,7 +92,7 @@ Sys_DefaultHomePath(void)
 	FARPROC qSHGetFolderPath;
 	HMODULE shfolder = LoadLibrary("shfolder.dll");
 
-	if( !*homePath ){
+	if(!*homePath){
 		if(shfolder == NULL){
 			Com_Printf("Unable to load SHFolder.dll\n");
 			return NULL;
@@ -106,8 +106,8 @@ Sys_DefaultHomePath(void)
 			return NULL;
 		}
 
-		if( !SUCCEEDED(qSHGetFolderPath(NULL, CSIDL_APPDATA,
-				    NULL, 0, szPath))){
+		if(!SUCCEEDED(qSHGetFolderPath(NULL, CSIDL_APPDATA,
+				   NULL, 0, szPath))){
 			Com_Printf("Unable to detect CSIDL_APPDATA\n");
 			FreeLibrary(shfolder);
 			return NULL;
@@ -140,7 +140,7 @@ Sys_TempPath(void)
 
 	length = GetTempPath(sizeof(path), path);
 
-	if( length > sizeof(path) || length == 0 )
+	if(length > sizeof(path) || length == 0)
 		return Sys_DefaultHomePath( );
 	else
 		return path;
@@ -159,8 +159,8 @@ Sys_Milliseconds(void)
 	static qboolean initialized = qfalse;
 
 	if(!initialized){
-		sys_timeBase	= timeGetTime();
-		initialized	= qtrue;
+		sys_timeBase = timeGetTime();
+		initialized = qtrue;
 	}
 	sys_curtime = timeGetTime() - sys_timeBase;
 
@@ -177,12 +177,12 @@ Sys_RandomBytes(byte *string, int len)
 {
 	HCRYPTPROV prov;
 
-	if( !CryptAcquireContext(&prov, NULL, NULL,
-		    PROV_RSA_FULL, CRYPT_VERIFYCONTEXT))
+	if(!CryptAcquireContext(&prov, NULL, NULL,
+		   PROV_RSA_FULL, CRYPT_VERIFYCONTEXT))
 
 		return qfalse;
 
-	if( !CryptGenRandom(prov, len, (BYTE *) string)){
+	if(!CryptGenRandom(prov, len, (BYTE*)string)){
 		CryptReleaseContext(prov, 0);
 		return qfalse;
 	}
@@ -201,10 +201,10 @@ Sys_GetCurrentUser(void)
 	static char s_userName[1024];
 	unsigned long size = sizeof(s_userName);
 
-	if( !GetUserName(s_userName, &size))
+	if(!GetUserName(s_userName, &size))
 		strcpy(s_userName, "player");
 
-	if( !s_userName[0] )
+	if(!s_userName[0])
 		strcpy(s_userName, "player");
 
 	return s_userName;
@@ -218,14 +218,14 @@ Sys_GetCurrentUser(void)
 char *
 Sys_GetClipboardData(void)
 {
-	char	*data = NULL;
-	char	*cliptext;
+	char *data = NULL;
+	char *cliptext;
 
-	if( OpenClipboard(NULL) != 0 ){
+	if(OpenClipboard(NULL) != 0){
 		HANDLE hClipboardData;
 
-		if((hClipboardData = GetClipboardData(CF_TEXT)) != 0 )
-			if((cliptext = GlobalLock(hClipboardData)) != 0 ){
+		if((hClipboardData = GetClipboardData(CF_TEXT)) != 0)
+			if((cliptext = GlobalLock(hClipboardData)) != 0){
 				data = Z_Malloc(GlobalSize(hClipboardData) + 1);
 				Q_strncpyz(data, cliptext,
 					GlobalSize(hClipboardData));
@@ -267,10 +267,10 @@ Sys_Basename(char *path)
 	length = strlen(path) - 1;
 
 	/* Skip trailing slashes */
-	while( length > 0 && path[ length ] == '\\' )
+	while(length > 0 && path[ length ] == '\\')
 		length--;
 
-	while( length > 0 && path[ length - 1 ] != '\\' )
+	while(length > 0 && path[ length - 1 ] != '\\')
 		length--;
 
 	Q_strncpyz(base, &path[ length ], sizeof(base));
@@ -278,7 +278,7 @@ Sys_Basename(char *path)
 	length = strlen(base) - 1;
 
 	/* Strip trailing slashes */
-	while( length > 0 && base[ length ] == '\\' )
+	while(length > 0 && base[ length ] == '\\')
 		base[ length-- ] = '\0';
 
 	return base;
@@ -298,7 +298,7 @@ Sys_Dirname(char *path)
 	Q_strncpyz(dir, path, sizeof(dir));
 	length = strlen(dir) - 1;
 
-	while( length > 0 && dir[ length ] != '\\' )
+	while(length > 0 && dir[ length ] != '\\')
 		length--;
 
 	dir[ length ] = '\0';
@@ -314,8 +314,8 @@ Sys_Dirname(char *path)
 qboolean
 Sys_Mkdir(const char *path)
 {
-	if( !CreateDirectory(path, NULL))
-		if( GetLastError( ) != ERROR_ALREADY_EXISTS )
+	if(!CreateDirectory(path, NULL))
+		if(GetLastError( ) != ERROR_ALREADY_EXISTS)
 			return qfalse;
 
 	return qtrue;
@@ -374,7 +374,7 @@ Sys_ListFilteredFiles(const char *basedir, char *subdirs, char *filter,
 	intptr_t findhandle;
 	struct _finddata_t findinfo;
 
-	if( *numfiles >= MAX_FOUND_FILES - 1 )
+	if(*numfiles >= MAX_FOUND_FILES - 1)
 		return;
 
 	if(strlen(subdirs))
@@ -404,7 +404,7 @@ Sys_ListFilteredFiles(const char *basedir, char *subdirs, char *filter,
 					filter, list,
 					numfiles);
 			}
-		if( *numfiles >= MAX_FOUND_FILES - 1 )
+		if(*numfiles >= MAX_FOUND_FILES - 1)
 			break;
 		Com_sprintf(filename, sizeof(filename), "%s\\%s", subdirs,
 			findinfo.name);
@@ -412,7 +412,7 @@ Sys_ListFilteredFiles(const char *basedir, char *subdirs, char *filter,
 			continue;
 		list[ *numfiles ] = CopyString(filename);
 		(*numfiles)++;
-	} while( _findnext (findhandle, &findinfo) != -1 );
+	} while(_findnext (findhandle, &findinfo) != -1);
 
 	_findclose (findhandle);
 }
@@ -427,8 +427,8 @@ strgtr(const char *s0, const char *s1)
 {
 	int l0, l1, i;
 
-	l0	= strlen(s0);
-	l1	= strlen(s1);
+	l0 = strlen(s0);
+	l1 = strlen(s1);
 
 	if(l1<l0)
 		l0 = l1;
@@ -455,11 +455,11 @@ Sys_ListFiles(const char *directory, const char *extension, char *filter,
 	char	search[MAX_OSPATH];
 	int	nfiles;
 	char **listCopy;
-	char *list[MAX_FOUND_FILES];
-	struct _finddata_t	findinfo;
-	intptr_t		findhandle;
-	int flag;
-	int i;
+	char	*list[MAX_FOUND_FILES];
+	struct _finddata_t findinfo;
+	intptr_t findhandle;
+	int	flag;
+	int	i;
 
 	if(filter){
 
@@ -473,18 +473,18 @@ Sys_ListFiles(const char *directory, const char *extension, char *filter,
 			return NULL;
 
 		listCopy = Z_Malloc((nfiles + 1) * sizeof(*listCopy));
-		for( i = 0; i < nfiles; i++ )
+		for(i = 0; i < nfiles; i++)
 			listCopy[i] = list[i];
 		listCopy[i] = NULL;
 
 		return listCopy;
 	}
 
-	if( !extension)
+	if(!extension)
 		extension = "";
 
 	/* passing a slash as extension will find directories */
-	if( extension[0] == '/' && extension[1] == 0 ){
+	if(extension[0] == '/' && extension[1] == 0){
 		extension = "";
 		flag = 0;
 	}else
@@ -505,12 +505,12 @@ Sys_ListFiles(const char *directory, const char *extension, char *filter,
 		if((!wantsubs &&
 		    flag ^ (findinfo.attrib & _A_SUBDIR)) ||
 		   (wantsubs && findinfo.attrib & _A_SUBDIR)){
-			if( nfiles == MAX_FOUND_FILES - 1 )
+			if(nfiles == MAX_FOUND_FILES - 1)
 				break;
 			list[ nfiles ] = CopyString(findinfo.name);
 			nfiles++;
 		}
-	} while( _findnext (findhandle, &findinfo) != -1 );
+	} while(_findnext (findhandle, &findinfo) != -1);
 
 	list[ nfiles ] = 0;
 
@@ -519,11 +519,11 @@ Sys_ListFiles(const char *directory, const char *extension, char *filter,
 	/* return a copy of the list */
 	*numfiles = nfiles;
 
-	if( !nfiles )
+	if(!nfiles)
 		return NULL;
 
 	listCopy = Z_Malloc((nfiles + 1) * sizeof(*listCopy));
-	for( i = 0; i < nfiles; i++ )
+	for(i = 0; i < nfiles; i++)
 		listCopy[i] = list[i];
 	listCopy[i] = NULL;
 
@@ -532,8 +532,8 @@ Sys_ListFiles(const char *directory, const char *extension, char *filter,
 		for(i=1; i<nfiles; i++)
 			if(strgtr(listCopy[i-1], listCopy[i])){
 				char *temp = listCopy[i];
-				listCopy[i]	= listCopy[i-1];
-				listCopy[i-1]	= temp;
+				listCopy[i] = listCopy[i-1];
+				listCopy[i-1] = temp;
 				flag = 1;
 			}
 	} while(flag);
@@ -551,10 +551,10 @@ Sys_FreeFileList(char **list)
 {
 	int i;
 
-	if( !list )
+	if(!list)
 		return;
 
-	for( i = 0; list[i]; i++ )
+	for(i = 0; list[i]; i++)
 		Z_Free(list[i]);
 
 	Z_Free(list);
@@ -571,17 +571,17 @@ Sys_FreeFileList(char **list)
 void
 Sys_Sleep(int msec)
 {
-	if( msec == 0 )
+	if(msec == 0)
 		return;
 
 #ifdef DEDICATED
-	if( msec < 0 )
+	if(msec < 0)
 		WaitForSingleObject(GetStdHandle(STD_INPUT_HANDLE), INFINITE);
 	else
 		WaitForSingleObject(GetStdHandle(STD_INPUT_HANDLE), msec);
 #else
 	/* Client Sys_Sleep doesn't support waiting on stdin */
-	if( msec < 0 )
+	if(msec < 0)
 		return;
 
 	Sleep(msec);
@@ -598,30 +598,30 @@ Sys_Sleep(int msec)
 void
 Sys_ErrorDialog(const char *error)
 {
-	if( Sys_Dialog(DT_YES_NO, va("%s. Copy console log to clipboard?", error),
-		    "Error") == DR_YES ){
+	if(Sys_Dialog(DT_YES_NO, va("%s. Copy console log to clipboard?", error),
+		   "Error") == DR_YES){
 		HGLOBAL memoryHandle;
 		char	*clipMemory;
 
-		memoryHandle	= GlobalAlloc(GMEM_MOVEABLE|GMEM_DDESHARE,
+		memoryHandle = GlobalAlloc(GMEM_MOVEABLE|GMEM_DDESHARE,
 			CON_LogSize( ) + 1);
-		clipMemory	= (char *) GlobalLock(memoryHandle);
+		clipMemory = (char*)GlobalLock(memoryHandle);
 
-		if( clipMemory ){
+		if(clipMemory){
 			char	*p = clipMemory;
 			char	buffer[ 1024 ];
 			unsigned int size;
 
 			while((size =
 				       CON_LogRead(buffer,
-					       sizeof(buffer))) > 0 ){
+					       sizeof(buffer))) > 0){
 				Com_Memcpy(p, buffer, size);
 				p += size;
 			}
 
 			*p = '\0';
 
-			if( OpenClipboard(NULL) && EmptyClipboard( ))
+			if(OpenClipboard(NULL) && EmptyClipboard( ))
 				SetClipboardData(CF_TEXT, memoryHandle);
 
 			GlobalUnlock(clipMemory);
@@ -642,16 +642,16 @@ Sys_Dialog(dialogType_t type, const char *message, const char *title)
 {
 	UINT uType;
 
-	switch( type ){
+	switch(type){
 	default:
-	case DT_INFO:      uType	= MB_ICONINFORMATION|MB_OK; break;
-	case DT_WARNING:   uType	= MB_ICONWARNING|MB_OK; break;
-	case DT_ERROR:     uType	= MB_ICONERROR|MB_OK; break;
-	case DT_YES_NO:    uType	= MB_ICONQUESTION|MB_YESNO; break;
-	case DT_OK_CANCEL: uType	= MB_ICONWARNING|MB_OKCANCEL; break;
+	case DT_INFO:      uType = MB_ICONINFORMATION|MB_OK; break;
+	case DT_WARNING:   uType = MB_ICONWARNING|MB_OK; break;
+	case DT_ERROR:     uType = MB_ICONERROR|MB_OK; break;
+	case DT_YES_NO:    uType = MB_ICONQUESTION|MB_YESNO; break;
+	case DT_OK_CANCEL: uType = MB_ICONWARNING|MB_OKCANCEL; break;
 	}
 
-	switch( MessageBox(NULL, message, title, uType)){
+	switch(MessageBox(NULL, message, title, uType)){
 	default:
 	case IDOK:      return DR_OK;
 	case IDCANCEL:  return DR_CANCEL;
@@ -675,7 +675,7 @@ void
 Sys_GLimpSafeInit(void)
 {
 #ifndef DEDICATED
-	if( !SDL_VIDEODRIVER_externallySet )
+	if(!SDL_VIDEODRIVER_externallySet)
 		/* Here, we want to let SDL decide what do to unless
 		 * explicitly requested otherwise */
 		_putenv("SDL_VIDEODRIVER=");
@@ -694,13 +694,13 @@ void
 Sys_GLimpInit(void)
 {
 #ifndef DEDICATED
-	if( !SDL_VIDEODRIVER_externallySet ){
+	if(!SDL_VIDEODRIVER_externallySet){
 		/* It's a little bit weird having in_mouse control the
 		 * video driver, but from ioq3's point of view they're
 		 * virtually the same except for the mouse input anyway */
-		if( Cvar_VariableIntegerValue("in_mouse") == -1 )
+		if(Cvar_VariableIntegerValue("in_mouse") == -1)
 			/* Use the windib SDL backend, which is closest to
-			 * the behaviour of idq3 with in_mouse set to -1 */
+			* the behaviour of idq3 with in_mouse set to -1 */
 			_putenv("SDL_VIDEODRIVER=windib");
 		else
 			/* Use the DirectX SDL backend */
@@ -727,7 +727,7 @@ Sys_PlatformInit(void)
 	Sys_SetFloatEnv();
 
 #ifndef DEDICATED
-	if( SDL_VIDEODRIVER ){
+	if(SDL_VIDEODRIVER){
 		Com_Printf("SDL_VIDEODRIVER is externally set to \"%s\", "
 			   "in_mouse -1 will have no effect\n", SDL_VIDEODRIVER);
 		SDL_VIDEODRIVER_externallySet = qtrue;
@@ -804,14 +804,14 @@ Sys_PIDIsRunning(int pid)
 	DWORD	numBytes, numProcesses;
 	int	i;
 
-	if( !EnumProcesses(processes, sizeof(processes), &numBytes))
+	if(!EnumProcesses(processes, sizeof(processes), &numBytes))
 		return qfalse;	/* Assume it's not running */
 
 	numProcesses = numBytes / sizeof(DWORD);
 
 	/* Search for the pid */
-	for( i = 0; i < numProcesses; i++ )
-		if( processes[ i ] == pid )
+	for(i = 0; i < numProcesses; i++)
+		if(processes[ i ] == pid)
 			return qtrue;
 
 	return qfalse;

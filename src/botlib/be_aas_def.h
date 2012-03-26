@@ -55,16 +55,16 @@ typedef struct aas_stringindex_s {
 
 /* structure to link entities to areas and areas to entities */
 typedef struct aas_link_s {
-	int			entnum;
-	int			areanum;
+	int	entnum;
+	int	areanum;
 	struct aas_link_s	*next_ent, *prev_ent;
 	struct aas_link_s	*next_area, *prev_area;
 } aas_link_t;
 
 /* structure to link entities to leaves and leaves to entities */
 typedef struct bsp_link_s {
-	int			entnum;
-	int			leafnum;
+	int	entnum;
+	int	leafnum;
 	struct bsp_link_s	*next_ent, *prev_ent;
 	struct bsp_link_s	*next_leaf, *prev_leaf;
 } bsp_link_t;
@@ -178,42 +178,42 @@ typedef struct aas_reachabilityareas_s {
 } aas_reachabilityareas_t;
 
 typedef struct aas_s {
-	int				loaded;		/* true when an AAS file is loaded */
-	int				initialized;	/* true when AAS has been initialized */
-	int				savefile;	/* set true when file should be saved */
-	int				bspchecksum;
+	int	loaded;		/* true when an AAS file is loaded */
+	int	initialized;	/* true when AAS has been initialized */
+	int	savefile;	/* set true when file should be saved */
+	int	bspchecksum;
 	/* current time */
-	float				time;
-	int				numframes;
+	float	time;
+	int	numframes;
 	/* name of the aas file */
-	char				filename[MAX_PATH];
-	char				mapname[MAX_PATH];
+	char	filename[MAX_PATH];
+	char	mapname[MAX_PATH];
 	/* bounding boxes */
-	int				numbboxes;
-	aas_bbox_t			*bboxes;
+	int	numbboxes;
+	aas_bbox_t	*bboxes;
 	/* vertexes */
-	int				numvertexes;
-	aas_vertex_t			*vertexes;
+	int		numvertexes;
+	aas_vertex_t	*vertexes;
 	/* planes */
-	int				numplanes;
-	aas_plane_t			*planes;
+	int		numplanes;
+	aas_plane_t	*planes;
 	/* edges */
-	int				numedges;
-	aas_edge_t			*edges;
+	int		numedges;
+	aas_edge_t	*edges;
 	/* edge index */
-	int				edgeindexsize;
-	aas_edgeindex_t			*edgeindex;
+	int		edgeindexsize;
+	aas_edgeindex_t *edgeindex;
 	/* faces */
-	int				numfaces;
-	aas_face_t			*faces;
+	int		numfaces;
+	aas_face_t	*faces;
 	/* face index */
-	int				faceindexsize;
-	aas_faceindex_t			*faceindex;
+	int		faceindexsize;
+	aas_faceindex_t *faceindex;
 	/* convex areas */
-	int				numareas;
-	aas_area_t			*areas;
+	int		numareas;
+	aas_area_t	*areas;
 	/* convex area settings */
-	int				numareasettings;
+	int		numareasettings;
 	aas_areasettings_t		*areasettings;
 	/* reachablity list */
 	int				reachabilitysize;

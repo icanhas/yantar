@@ -67,17 +67,17 @@ ConfirmMenu_Event(void* ptr, int event)
 {
 	qboolean result;
 
-	if( event != QM_ACTIVATED )
+	if(event != QM_ACTIVATED)
 		return;
 
 	UI_PopMenu();
 
-	if(((menucommon_s *) ptr)->id == ID_CONFIRM_NO )
+	if(((menucommon_s*)ptr)->id == ID_CONFIRM_NO)
 		result = qfalse;
 	else
 		result = qtrue;
 
-	if( s_confirm.action )
+	if(s_confirm.action)
 		s_confirm.action(result);
 }
 
@@ -90,7 +90,7 @@ ConfirmMenu_Event(void* ptr, int event)
 static sfxHandle_t
 ConfirmMenu_Key(int key)
 {
-	switch( key ){
+	switch(key){
 	case K_KP_LEFTARROW:
 	case K_LEFTARROW:
 	case K_KP_RIGHTARROW:
@@ -135,7 +135,7 @@ MessageMenu_Draw(void)
 
 	Menu_Draw(&s_confirm.menu);
 
-	if( s_confirm.draw )
+	if(s_confirm.draw)
 		s_confirm.draw();
 }
 
@@ -155,7 +155,7 @@ ConfirmMenu_Draw(void)
 
 	Menu_Draw(&s_confirm.menu);
 
-	if( s_confirm.draw )
+	if(s_confirm.draw)
 		s_confirm.draw();
 }
 
@@ -182,40 +182,40 @@ UI_ConfirmMenu_Style(const char *question, int style, void (*draw)(
 			     void), void (*action)(qboolean result))
 {
 	uiClientState_t cstate;
-	int n1, n2, n3;
-	int l1, l2, l3;
+	int	n1, n2, n3;
+	int	l1, l2, l3;
 
 	/* zero set all our globals */
 	memset(&s_confirm, 0, sizeof(s_confirm));
 
 	ConfirmMenu_Cache();
 
-	n1 = UI_ProportionalStringWidth("YES/NO");
-	n2 = UI_ProportionalStringWidth("YES") + PROP_GAP_WIDTH;
-	n3 = UI_ProportionalStringWidth("/")  + PROP_GAP_WIDTH;
-	l1 = 320 - (n1 / 2);
-	l2 = l1 + n2;
-	l3 = l2 + n3;
+	n1	= UI_ProportionalStringWidth("YES/NO");
+	n2	= UI_ProportionalStringWidth("YES") + PROP_GAP_WIDTH;
+	n3	= UI_ProportionalStringWidth("/")  + PROP_GAP_WIDTH;
+	l1	= 320 - (n1 / 2);
+	l2	= l1 + n2;
+	l3	= l2 + n3;
 	s_confirm.slashX = l2;
 
 	s_confirm.question = question;
-	s_confirm.draw = draw;
-	s_confirm.action = action;
-	s_confirm.style = style;
+	s_confirm.draw		= draw;
+	s_confirm.action	= action;
+	s_confirm.style		= style;
 
-	s_confirm.menu.draw	= ConfirmMenu_Draw;
-	s_confirm.menu.key	= ConfirmMenu_Key;
+	s_confirm.menu.draw = ConfirmMenu_Draw;
+	s_confirm.menu.key = ConfirmMenu_Key;
 	s_confirm.menu.wrapAround = qtrue;
 
 	trap_GetClientState(&cstate);
-	if( cstate.connState >= CA_CONNECTED )
+	if(cstate.connState >= CA_CONNECTED)
 		s_confirm.menu.fullscreen = qfalse;
 	else
 		s_confirm.menu.fullscreen = qtrue;
 
-	s_confirm.yes.generic.type	= MTYPE_PTEXT;
-	s_confirm.yes.generic.flags	= QMF_LEFT_JUSTIFY|QMF_PULSEIFFOCUS;
-	s_confirm.yes.generic.callback = ConfirmMenu_Event;
+	s_confirm.yes.generic.type = MTYPE_PTEXT;
+	s_confirm.yes.generic.flags = QMF_LEFT_JUSTIFY|QMF_PULSEIFFOCUS;
+	s_confirm.yes.generic.callback	= ConfirmMenu_Event;
 	s_confirm.yes.generic.id	= ID_CONFIRM_YES;
 	s_confirm.yes.generic.x = l1;
 	s_confirm.yes.generic.y = 264;
@@ -223,8 +223,8 @@ UI_ConfirmMenu_Style(const char *question, int style, void (*draw)(
 	s_confirm.yes.color	= color_red;
 	s_confirm.yes.style	= UI_LEFT;
 
-	s_confirm.no.generic.type	= MTYPE_PTEXT;
-	s_confirm.no.generic.flags	= QMF_LEFT_JUSTIFY|QMF_PULSEIFFOCUS;
+	s_confirm.no.generic.type = MTYPE_PTEXT;
+	s_confirm.no.generic.flags = QMF_LEFT_JUSTIFY|QMF_PULSEIFFOCUS;
 	s_confirm.no.generic.callback = ConfirmMenu_Event;
 	s_confirm.no.generic.id = ID_CONFIRM_NO;
 	s_confirm.no.generic.x	= l3;
@@ -270,25 +270,25 @@ UI_Message(const char **lines)
 
 	ConfirmMenu_Cache();
 
-	n1 = UI_ProportionalStringWidth("OK");
-	l1 = 320 - (n1 / 2);
+	n1	= UI_ProportionalStringWidth("OK");
+	l1	= 320 - (n1 / 2);
 
 	s_confirm.lines = lines;
 	s_confirm.style = UI_CENTER|UI_INVERSE|UI_SMALLFONT;
 
-	s_confirm.menu.draw	= MessageMenu_Draw;
-	s_confirm.menu.key	= ConfirmMenu_Key;
+	s_confirm.menu.draw = MessageMenu_Draw;
+	s_confirm.menu.key = ConfirmMenu_Key;
 	s_confirm.menu.wrapAround = qtrue;
 
 	trap_GetClientState(&cstate);
-	if( cstate.connState >= CA_CONNECTED )
+	if(cstate.connState >= CA_CONNECTED)
 		s_confirm.menu.fullscreen = qfalse;
 	else
 		s_confirm.menu.fullscreen = qtrue;
 
-	s_confirm.yes.generic.type	= MTYPE_PTEXT;
-	s_confirm.yes.generic.flags	= QMF_LEFT_JUSTIFY|QMF_PULSEIFFOCUS;
-	s_confirm.yes.generic.callback = ConfirmMenu_Event;
+	s_confirm.yes.generic.type = MTYPE_PTEXT;
+	s_confirm.yes.generic.flags = QMF_LEFT_JUSTIFY|QMF_PULSEIFFOCUS;
+	s_confirm.yes.generic.callback	= ConfirmMenu_Event;
 	s_confirm.yes.generic.id	= ID_CONFIRM_YES;
 	s_confirm.yes.generic.x = l1;
 	s_confirm.yes.generic.y = 280;

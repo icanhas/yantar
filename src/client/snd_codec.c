@@ -37,24 +37,24 @@ static snd_codec_t *codecs;
 static void *
 S_CodecGetSound(const char *filename, snd_info_t *info)
 {
-	snd_codec_t *codec;
-	snd_codec_t *orgCodec = NULL;
+	snd_codec_t	*codec;
+	snd_codec_t	*orgCodec = NULL;
 	qboolean	orgNameFailed = qfalse;
 	char	localName[ MAX_QPATH ];
 	const char      *ext;
 	char	altName[ MAX_QPATH ];
-	void	*rtn = NULL;
+	void *rtn = NULL;
 
 	Q_strncpyz(localName, filename, MAX_QPATH);
 
 	ext = Com_GetExtension(localName);
 
-	if( *ext ){
+	if(*ext){
 		/* Look for the correct loader and use it */
-		for( codec = codecs; codec; codec = codec->next )
-			if( !Q_stricmp(ext, codec->ext)){
+		for(codec = codecs; codec; codec = codec->next)
+			if(!Q_stricmp(ext, codec->ext)){
 				/* Load */
-				if( info )
+				if(info)
 					rtn = codec->load(localName, info);
 				else
 					rtn = codec->open(localName);
@@ -62,8 +62,8 @@ S_CodecGetSound(const char *filename, snd_info_t *info)
 			}
 
 		/* A loader was found */
-		if( codec ){
-			if( !rtn ){
+		if(codec){
+			if(!rtn){
 				/* Loader failed, most likely because the file isn't there;
 				 * try again without the extension */
 				orgNameFailed = qtrue;
@@ -78,21 +78,21 @@ S_CodecGetSound(const char *filename, snd_info_t *info)
 
 	/* Try and find a suitable match using all
 	 * the sound codecs supported */
-	for( codec = codecs; codec; codec = codec->next ){
-		if( codec == orgCodec )
+	for(codec = codecs; codec; codec = codec->next){
+		if(codec == orgCodec)
 			continue;
 
 		Com_sprintf(altName, sizeof(altName), "%s.%s", localName,
 			codec->ext);
 
 		/* Load */
-		if( info )
+		if(info)
 			rtn = codec->load(altName, info);
 		else
 			rtn = codec->open(altName);
 
-		if( rtn ){
-			if( orgNameFailed )
+		if(rtn){
+			if(orgNameFailed)
 				Com_DPrintf(
 					S_COLOR_YELLOW
 					"WARNING: %s not present, using %s instead\n",
@@ -195,8 +195,8 @@ S_CodecReadStream(snd_stream_t *stream, int bytes, void *buffer)
 snd_stream_t *
 S_CodecUtilOpen(const char *filename, snd_codec_t *codec)
 {
-	snd_stream_t *stream;
-	fileHandle_t hnd;
+	snd_stream_t	*stream;
+	fileHandle_t	hnd;
 	int length;
 
 	/* Try to open the file */

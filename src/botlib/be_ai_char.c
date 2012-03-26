@@ -66,9 +66,9 @@ typedef struct bot_characteristic_s {
 
 /* a bot character */
 typedef struct bot_character_s {
-	char filename[MAX_QPATH];
-	float skill;
-	bot_characteristic_t c[1];	/* variable sized */
+	char			filename[MAX_QPATH];
+	float			skill;
+	bot_characteristic_t	c[1];	/* variable sized */
 } bot_character_t;
 
 bot_character_t *botcharacters[MAX_CLIENTS + 1];
@@ -86,11 +86,11 @@ BotCharacterFromHandle(int handle)
 		botimport.Print(PRT_FATAL, "character handle %d out of range\n",
 			handle);
 		return NULL;
-	}	
+	}
 	if(!botcharacters[handle]){
 		botimport.Print(PRT_FATAL, "invalid character %d\n", handle);
 		return NULL;
-	}	
+	}
 	return botcharacters[handle];
 }	/* end of the function BotCharacterFromHandle */
 /* ===========================================================================
@@ -116,7 +116,7 @@ BotDumpCharacter(bot_character_t *ch)
 		case CT_STRING: Log_Write(" %4d %s\n", i, ch->c[i].value.string);
 			break;
 		}	/* end case */
-	}		
+	}
 	Log_Write("}\n");
 }	/* end of the function BotDumpCharacter */
 /* ========================================================================
@@ -147,11 +147,11 @@ BotFreeCharacter2(int handle)
 		botimport.Print(PRT_FATAL, "character handle %d out of range\n",
 			handle);
 		return;
-	}	
+	}
 	if(!botcharacters[handle]){
 		botimport.Print(PRT_FATAL, "invalid character %d\n", handle);
 		return;
-	}	
+	}
 	BotFreeCharacterStrings(botcharacters[handle]);
 	FreeMemory(botcharacters[handle]);
 	botcharacters[handle] = NULL;
@@ -185,21 +185,20 @@ BotDefaultCharacteristics(bot_character_t *ch, bot_character_t *defaultch)
 		if(defaultch->c[i].type == CT_FLOAT){
 			ch->c[i].type = CT_FLOAT;
 			ch->c[i].value._float = defaultch->c[i].value._float;
-		}	
-		else if(defaultch->c[i].type == CT_INTEGER){
+		}else if(defaultch->c[i].type == CT_INTEGER){
 			ch->c[i].type = CT_INTEGER;
 			ch->c[i].value.integer = defaultch->c[i].value.integer;
 		}	/* end else if */
 		else if(defaultch->c[i].type == CT_STRING){
 			ch->c[i].type = CT_STRING;
 			ch->c[i].value.string =
-				(char *) GetMemory(strlen(defaultch->c[i].value.
+				(char*)GetMemory(strlen(defaultch->c[i].value.
 						string)+1);
 			strcpy(ch->c[i].value.string,
 				defaultch->c[i].value.string);
 		}	/* end else if */
-	}		
-}			/* end of the function BotDefaultCharacteristics */
+	}
+}	/* end of the function BotDefaultCharacteristics */
 /* ===========================================================================
  *
  * Parameter:			-
@@ -212,7 +211,7 @@ BotLoadCharacterFromFile(char *charfile, int skill)
 	int indent, index, foundcharacter;
 	bot_character_t *ch;
 	source_t	*source;
-	token_t		token;
+	token_t token;
 
 	foundcharacter = qfalse;
 	/* a bot character is parsed in two phases */
@@ -221,8 +220,8 @@ BotLoadCharacterFromFile(char *charfile, int skill)
 	if(!source){
 		botimport.Print(PRT_ERROR, "counldn't load %s\n", charfile);
 		return NULL;
-	}	
-	ch = (bot_character_t *) GetClearedMemory(sizeof(bot_character_t) +
+	}
+	ch = (bot_character_t*)GetClearedMemory(sizeof(bot_character_t) +
 		MAX_CHARACTERISTICS * sizeof(bot_characteristic_t));
 	strcpy(ch->filename, charfile);
 	while(PC_ReadToken(source, &token)){
@@ -232,14 +231,14 @@ BotLoadCharacterFromFile(char *charfile, int skill)
 				BotFreeCharacterStrings(ch);
 				FreeMemory(ch);
 				return NULL;
-			}	
+			}
 			if(!PC_ExpectTokenString(source, "{")){
 				FreeSource(source);
 				BotFreeCharacterStrings(ch);
 				FreeMemory(ch);
 				return NULL;
-			}	
-				/* if it's the correct skill */
+			}
+			/* if it's the correct skill */
 			if(skill < 0 || token.intvalue == skill){
 				foundcharacter = qtrue;
 				ch->skill = token.intvalue;
@@ -255,7 +254,7 @@ BotLoadCharacterFromFile(char *charfile, int skill)
 						BotFreeCharacterStrings(ch);
 						FreeMemory(ch);
 						return NULL;
-					}	
+					}
 					index = token.intvalue;
 					if(index < 0 || index >
 					   MAX_CHARACTERISTICS){
@@ -267,7 +266,7 @@ BotLoadCharacterFromFile(char *charfile, int skill)
 						BotFreeCharacterStrings(ch);
 						FreeMemory(ch);
 						return NULL;
-					}	
+					}
 					if(ch->c[index].type){
 						SourceError(
 							source,
@@ -277,13 +276,13 @@ BotLoadCharacterFromFile(char *charfile, int skill)
 						BotFreeCharacterStrings(ch);
 						FreeMemory(ch);
 						return NULL;
-					}	
+					}
 					if(!PC_ExpectAnyToken(source, &token)){
 						FreeSource(source);
 						BotFreeCharacterStrings(ch);
 						FreeMemory(ch);
 						return NULL;
-					}	
+					}
 					if(token.type == TT_NUMBER){
 						if(token.subtype & TT_FLOAT){
 							ch->c[index].value.
@@ -291,15 +290,13 @@ BotLoadCharacterFromFile(char *charfile, int skill)
 								token.floatvalue;
 							ch->c[index].type =
 								CT_FLOAT;
-						}	
-						else{
+						}else{
 							ch->c[index].value.
 							integer = token.intvalue;
 							ch->c[index].type =
 								CT_INTEGER;
-						}	
-					}		
-					else if(token.type == TT_STRING){
+						}
+					}else if(token.type == TT_STRING){
 						StripDoubleQuotes(token.string);
 						ch->c[index].value.string =
 							GetMemory(strlen(
@@ -319,11 +316,10 @@ BotLoadCharacterFromFile(char *charfile, int skill)
 						BotFreeCharacterStrings(ch);
 						FreeMemory(ch);
 						return NULL;
-					}	
-				}		
+					}
+				}
 				break;
-			}	
-			else{
+			}else{
 				indent = 1;
 				while(indent){
 					if(!PC_ExpectAnyToken(source, &token)){
@@ -331,29 +327,28 @@ BotLoadCharacterFromFile(char *charfile, int skill)
 						BotFreeCharacterStrings(ch);
 						FreeMemory(ch);
 						return NULL;
-					}	
+					}
 					if(!strcmp(token.string, "{")) indent++;
 					else if(!strcmp(token.string,
 							"}")) indent--;
-				}	
-			}		
-		}			
-		else{
+				}
+			}
+		}else{
 			SourceError(source, "unknown definition %s\n",
 				token.string);
 			FreeSource(source);
 			BotFreeCharacterStrings(ch);
 			FreeMemory(ch);
 			return NULL;
-		}	
-	}		
+		}
+	}
 	FreeSource(source);
 	/*  */
 	if(!foundcharacter){
 		BotFreeCharacterStrings(ch);
 		FreeMemory(ch);
 		return NULL;
-	}	
+	}
 	return ch;
 }	/* end of the function BotLoadCharacterFromFile */
 /* ===========================================================================
@@ -368,12 +363,12 @@ BotFindCachedCharacter(char *charfile, float skill)
 	int handle;
 
 	for(handle = 1; handle <= MAX_CLIENTS; handle++){
-		if( !botcharacters[handle] ) continue;
-		if( strcmp(botcharacters[handle]->filename, charfile) == 0 &&
-		    (skill < 0 || fabs(botcharacters[handle]->skill - skill) <
-		     0.01))
+		if(!botcharacters[handle]) continue;
+		if(strcmp(botcharacters[handle]->filename, charfile) == 0 &&
+		   (skill < 0 || fabs(botcharacters[handle]->skill - skill) <
+		    0.01))
 			return handle;
-	}	
+	}
 	return 0;
 }	/* end of the function BotFindCachedCharacter */
 /* ===========================================================================
@@ -405,10 +400,10 @@ BotLoadCachedCharacter(char *charfile, float skill, int reload)
 				"loaded cached skill %f from %s\n", skill,
 				charfile);
 			return cachedhandle;
-		}	
-	}		
-		/*  */
-	intskill = (int) (skill + 0.5);
+		}
+	}
+	/*  */
+	intskill = (int)(skill + 0.5);
 	/* try to load the character with the given skill */
 	ch = BotLoadCharacterFromFile(charfile, intskill);
 	if(ch){
@@ -424,8 +419,8 @@ BotLoadCachedCharacter(char *charfile, float skill, int reload)
 				Sys_MilliSeconds() - starttime, charfile);
 #endif	/* DEBUG */
 		return handle;
-	}	
-		/*  */
+	}
+	/*  */
 	botimport.Print(PRT_WARNING, "couldn't find skill %d in %s\n", intskill,
 		charfile);
 	/*  */
@@ -438,9 +433,9 @@ BotLoadCachedCharacter(char *charfile, float skill, int reload)
 				"loaded cached default skill %d from %s\n",
 				intskill, charfile);
 			return cachedhandle;
-		}	
-	}		
-		/* try to load the default character with the given skill */
+		}
+	}
+	/* try to load the default character with the given skill */
 	ch = BotLoadCharacterFromFile(DEFAULT_CHARACTER, intskill);
 	if(ch){
 		botcharacters[handle] = ch;
@@ -448,8 +443,8 @@ BotLoadCachedCharacter(char *charfile, float skill, int reload)
 			intskill,
 			charfile);
 		return handle;
-	}	
-		/*  */
+	}
+	/*  */
 	if(!reload){
 		/* try to load a cached character with any skill */
 		cachedhandle = BotFindCachedCharacter(charfile, -1);
@@ -459,9 +454,9 @@ BotLoadCachedCharacter(char *charfile, float skill, int reload)
 				botcharacters[cachedhandle]->skill,
 				charfile);
 			return cachedhandle;
-		}	
-	}		
-		/* try to load a character with any skill */
+		}
+	}
+	/* try to load a character with any skill */
 	ch = BotLoadCharacterFromFile(charfile, -1);
 	if(ch){
 		botcharacters[handle] = ch;
@@ -469,8 +464,8 @@ BotLoadCachedCharacter(char *charfile, float skill, int reload)
 			ch->skill,
 			charfile);
 		return handle;
-	}	
-		/*  */
+	}
+	/*  */
 	if(!reload){
 		/* try to load a cached character with any skill */
 		cachedhandle = BotFindCachedCharacter(DEFAULT_CHARACTER, -1);
@@ -480,9 +475,9 @@ BotLoadCachedCharacter(char *charfile, float skill, int reload)
 				"loaded cached default skill %f from %s\n",
 				botcharacters[cachedhandle]->skill, charfile);
 			return cachedhandle;
-		}	
-	}		
-		/* try to load a character with any skill */
+		}
+	}
+	/* try to load a character with any skill */
 	ch = BotLoadCharacterFromFile(DEFAULT_CHARACTER, -1);
 	if(ch){
 		botcharacters[handle] = ch;
@@ -490,8 +485,8 @@ BotLoadCachedCharacter(char *charfile, float skill, int reload)
 			ch->skill,
 			charfile);
 		return handle;
-	}	
-		/*  */
+	}
+	/*  */
 	botimport.Print(PRT_WARNING, "couldn't load any skill from %s\n",
 		charfile);
 	/* couldn't load any character */
@@ -532,21 +527,21 @@ BotInterpolateCharacters(int handle1, int handle2, float desiredskill)
 	int i, handle;
 	float scale;
 
-	ch1 = BotCharacterFromHandle(handle1);
-	ch2 = BotCharacterFromHandle(handle2);
+	ch1	= BotCharacterFromHandle(handle1);
+	ch2	= BotCharacterFromHandle(handle2);
 	if(!ch1 || !ch2)
 		return 0;
 	/* find a free spot for a character */
 	for(handle = 1; handle <= MAX_CLIENTS; handle++)
 		if(!botcharacters[handle]) break;
 	if(handle > MAX_CLIENTS) return 0;
-	out = (bot_character_t *) GetClearedMemory(sizeof(bot_character_t) +
+	out = (bot_character_t*)GetClearedMemory(sizeof(bot_character_t) +
 		MAX_CHARACTERISTICS * sizeof(bot_characteristic_t));
 	out->skill = desiredskill;
 	strcpy(out->filename, ch1->filename);
 	botcharacters[handle] = out;
 
-	scale = (float) (desiredskill - ch1->skill) / (ch2->skill - ch1->skill);
+	scale = (float)(desiredskill - ch1->skill) / (ch2->skill - ch1->skill);
 	for(i = 0; i < MAX_CHARACTERISTICS; i++){
 		/*  */
 		if(ch1->c[i].type == CT_FLOAT && ch2->c[i].type == CT_FLOAT){
@@ -555,19 +550,18 @@ BotInterpolateCharacters(int handle1, int handle2, float desiredskill)
 						 (ch2->c[i].value._float -
 						  ch1->c[i].value._float) *
 						 scale;
-		}	
-		else if(ch1->c[i].type == CT_INTEGER){
+		}else if(ch1->c[i].type == CT_INTEGER){
 			out->c[i].type = CT_INTEGER;
 			out->c[i].value.integer = ch1->c[i].value.integer;
 		}	/* end else if */
 		else if(ch1->c[i].type == CT_STRING){
 			out->c[i].type = CT_STRING;
 			out->c[i].value.string =
-				(char *) GetMemory(strlen(
+				(char*)GetMemory(strlen(
 						ch1->c[i].value.string)+1);
 			strcpy(out->c[i].value.string, ch1->c[i].value.string);
 		}	/* end else if */
-	}		
+	}
 	return handle;
 }	/* end of the function BotInterpolateCharacters */
 /* ===========================================================================
@@ -594,22 +588,21 @@ BotLoadCharacter(char *charfile, float skill)
 			skill,
 			charfile);
 		return handle;
-	}	
+	}
 	if(skill < 4.0){
 		/* load skill 1 and 4 */
 		firstskill = BotLoadCharacterSkill(charfile, 1);
 		if(!firstskill) return 0;
 		secondskill = BotLoadCharacterSkill(charfile, 4);
 		if(!secondskill) return firstskill;
-	}	
-	else{
+	}else{
 		/* load skill 4 and 5 */
 		firstskill = BotLoadCharacterSkill(charfile, 4);
 		if(!firstskill) return 0;
 		secondskill = BotLoadCharacterSkill(charfile, 5);
 		if(!secondskill) return firstskill;
-	}	
-		/* interpolate between the two skills */
+	}
+	/* interpolate between the two skills */
 	handle = BotInterpolateCharacters(firstskill, secondskill, skill);
 	if(!handle) return 0;
 	/* write the character to the log file */
@@ -634,13 +627,13 @@ CheckCharacteristicIndex(int character, int index)
 		botimport.Print(PRT_ERROR, "characteristic %d does not exist\n",
 			index);
 		return qfalse;
-	}	
+	}
 	if(!ch->c[index].type){
 		botimport.Print(PRT_ERROR,
 			"characteristic %d is not initialized\n",
 			index);
 		return qfalse;
-	}	
+	}
 	return qtrue;
 }	/* end of the function CheckCharacteristicIndex */
 /* ===========================================================================
@@ -660,11 +653,11 @@ Characteristic_Float(int character, int index)
 	if(!CheckCharacteristicIndex(character, index)) return 0;
 	/* an integer will be converted to a float */
 	if(ch->c[index].type == CT_INTEGER)
-		return (float) ch->c[index].value.integer;
+		return (float)ch->c[index].value.integer;
 	/* floats are just returned */
 	else if(ch->c[index].type == CT_FLOAT)
 		return ch->c[index].value._float;
-		/* end else if */
+	/* end else if */
 	/* cannot convert a string pointer to a float */
 	else{
 		botimport.Print(PRT_ERROR, "characteristic %d is not a float\n",
@@ -693,7 +686,7 @@ Characteristic_BFloat(int character, int index, float min, float max)
 			"cannot bound characteristic %d between %f and %f\n",
 			index, min, max);
 		return 0;
-	}	
+	}
 	value = Characteristic_Float(character, index);
 	if(value < min) return min;
 	if(value > max) return max;
@@ -719,8 +712,8 @@ Characteristic_Integer(int character, int index)
 		return ch->c[index].value.integer;
 	/* floats are casted to integers */
 	else if(ch->c[index].type == CT_FLOAT)
-		return (int) ch->c[index].value._float;
-		/* end else if */
+		return (int)ch->c[index].value._float;
+	/* end else if */
 	else{
 		botimport.Print(PRT_ERROR,
 			"characteristic %d is not a integer\n",
@@ -749,7 +742,7 @@ Characteristic_BInteger(int character, int index, int min, int max)
 			"cannot bound characteristic %d between %d and %d\n",
 			index, min, max);
 		return 0;
-	}	
+	}
 	value = Characteristic_Integer(character, index);
 	if(value < min) return min;
 	if(value > max) return max;
@@ -775,8 +768,7 @@ Characteristic_String(int character, int index, char *buf, int size)
 		strncpy(buf, ch->c[index].value.string, size-1);
 		buf[size-1] = '\0';
 		return;
-	}	
-	else{
+	}else{
 		botimport.Print(PRT_ERROR, "characteristic %d is not a string\n",
 			index);
 		return;

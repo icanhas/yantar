@@ -37,17 +37,17 @@
 static void
 SV_Netchan_Encode(client_t *client, msg_t *msg, const char *clientCommandString)
 {
-	long i, index;
-	byte key, *string;
-	int srdc, sbit;
+	long	i, index;
+	byte	key, *string;
+	int	srdc, sbit;
 	qboolean soob;
 
-	if( msg->cursize < SV_ENCODE_START )
+	if(msg->cursize < SV_ENCODE_START)
 		return;
 
-	srdc = msg->readcount;
-	sbit = msg->bit;
-	soob = msg->oob;
+	srdc	= msg->readcount;
+	sbit	= msg->bit;
+	soob	= msg->oob;
 
 	msg->bit = 0;
 	msg->readcount = 0;
@@ -55,11 +55,11 @@ SV_Netchan_Encode(client_t *client, msg_t *msg, const char *clientCommandString)
 
 	/* reliableAcknowledge = */ MSG_ReadLong(msg);
 
-	msg->oob = soob;
-	msg->bit = sbit;
+	msg->oob	= soob;
+	msg->bit	= sbit;
 	msg->readcount = srdc;
 
-	string	= (byte *) clientCommandString;
+	string	= (byte*)clientCommandString;
 	index	= 0;
 	/* xor the client challenge with the netchan sequence number */
 	key = client->challenge ^ client->netchan.outgoingSequence;
@@ -91,28 +91,28 @@ SV_Netchan_Encode(client_t *client, msg_t *msg, const char *clientCommandString)
 static void
 SV_Netchan_Decode(client_t *client, msg_t *msg)
 {
-	int serverId, messageAcknowledge, reliableAcknowledge;
-	int i, index, srdc, sbit;
-	qboolean	soob;
-	byte		key, *string;
+	int	serverId, messageAcknowledge, reliableAcknowledge;
+	int	i, index, srdc, sbit;
+	qboolean soob;
+	byte	key, *string;
 
-	srdc = msg->readcount;
-	sbit = msg->bit;
-	soob = msg->oob;
+	srdc	= msg->readcount;
+	sbit	= msg->bit;
+	soob	= msg->oob;
 
 	msg->oob = qfalse;
 
 	serverId = MSG_ReadLong(msg);
-	messageAcknowledge = MSG_ReadLong(msg);
-	reliableAcknowledge = MSG_ReadLong(msg);
+	messageAcknowledge	= MSG_ReadLong(msg);
+	reliableAcknowledge	= MSG_ReadLong(msg);
 
-	msg->oob = soob;
-	msg->bit = sbit;
+	msg->oob	= soob;
+	msg->bit	= sbit;
 	msg->readcount = srdc;
 
 	string =
-		(byte *) client->reliableCommands[ reliableAcknowledge &
-						   (MAX_RELIABLE_COMMANDS-1) ];
+		(byte*)client->reliableCommands[ reliableAcknowledge &
+						 (MAX_RELIABLE_COMMANDS-1) ];
 	index = 0;
 	/*  */
 	key = client->challenge ^ serverId ^ messageAcknowledge;
@@ -148,8 +148,8 @@ SV_Netchan_FreeQueue(client_t *client)
 		Z_Free(netbuf);
 	}
 
-	client->netchan_start_queue = NULL;
-	client->netchan_end_queue = &client->netchan_start_queue;
+	client->netchan_start_queue	= NULL;
+	client->netchan_end_queue	= &client->netchan_start_queue;
 }
 
 /*
@@ -230,7 +230,7 @@ SV_Netchan_Transmit(client_t *client, msg_t *msg)
 		netchan_buffer_t *netbuf;
 		Com_DPrintf(
 			"#462 SV_Netchan_Transmit: unsent fragments, stacked\n");
-		netbuf = (netchan_buffer_t *) Z_Malloc(sizeof(netchan_buffer_t));
+		netbuf = (netchan_buffer_t*)Z_Malloc(sizeof(netchan_buffer_t));
 		/* store the msg, we can't store it encoded, as the encoding depends on stuff we still have to finish sending */
 		MSG_Copy(&netbuf->msg, netbuf->msgBuffer,
 			sizeof(netbuf->msgBuffer), msg);
@@ -243,8 +243,8 @@ SV_Netchan_Transmit(client_t *client, msg_t *msg)
 #endif
 		netbuf->next = NULL;
 		/* insert it in the queue, the message will be encoded and sent later */
-		*client->netchan_end_queue = netbuf;
-		client->netchan_end_queue =
+		*client->netchan_end_queue	= netbuf;
+		client->netchan_end_queue	=
 			&(*client->netchan_end_queue)->next;
 	}else{
 #ifdef LEGACY_PROTOCOL

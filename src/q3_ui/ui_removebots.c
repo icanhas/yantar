@@ -87,13 +87,13 @@ static removeBotsMenuInfo_t removeBotsMenuInfo;
 static void
 UI_RemoveBotsMenu_SetBotNames(void)
 {
-	int n;
-	char info[MAX_INFO_STRING];
+	int	n;
+	char	info[MAX_INFO_STRING];
 
-	for( n = 0;
-	     (n < 7) &&
-	     (removeBotsMenuInfo.baseBotNum + n < removeBotsMenuInfo.numBots);
-	     n++ ){
+	for(n = 0;
+	    (n < 7) &&
+	    (removeBotsMenuInfo.baseBotNum + n < removeBotsMenuInfo.numBots);
+	    n++){
 		trap_GetConfigString(
 			CS_PLAYERS +
 			removeBotsMenuInfo.botClientNums[removeBotsMenuInfo.
@@ -142,7 +142,7 @@ UI_RemoveBotsMenu_BotEvent(void* ptr, int event)
 
 	removeBotsMenuInfo.bots[removeBotsMenuInfo.selectedBotNum].color =
 		color_orange;
-	removeBotsMenuInfo.selectedBotNum = ((menucommon_s *) ptr)->id -
+	removeBotsMenuInfo.selectedBotNum = ((menucommon_s*)ptr)->id -
 					    ID_BOTNAME0;
 	removeBotsMenuInfo.bots[removeBotsMenuInfo.selectedBotNum].color =
 		color_white;
@@ -174,7 +174,7 @@ UI_RemoveBotsMenu_UpEvent(void* ptr, int event)
 	if(event != QM_ACTIVATED)
 		return;
 
-	if( removeBotsMenuInfo.baseBotNum > 0 ){
+	if(removeBotsMenuInfo.baseBotNum > 0){
 		removeBotsMenuInfo.baseBotNum--;
 		UI_RemoveBotsMenu_SetBotNames();
 	}
@@ -192,7 +192,7 @@ UI_RemoveBotsMenu_DownEvent(void* ptr, int event)
 	if(event != QM_ACTIVATED)
 		return;
 
-	if( removeBotsMenuInfo.baseBotNum + 7 < removeBotsMenuInfo.numBots ){
+	if(removeBotsMenuInfo.baseBotNum + 7 < removeBotsMenuInfo.numBots){
 		removeBotsMenuInfo.baseBotNum++;
 		UI_RemoveBotsMenu_SetBotNames();
 	}
@@ -207,20 +207,20 @@ UI_RemoveBotsMenu_DownEvent(void* ptr, int event)
 static void
 UI_RemoveBotsMenu_GetBots(void)
 {
-	int numPlayers;
-	int isBot;
-	int n;
-	char info[MAX_INFO_STRING];
+	int	numPlayers;
+	int	isBot;
+	int	n;
+	char	info[MAX_INFO_STRING];
 
 	trap_GetConfigString(CS_SERVERINFO, info, sizeof(info));
 	numPlayers = atoi(Info_ValueForKey(info, "sv_maxclients"));
 	removeBotsMenuInfo.numBots = 0;
 
-	for( n = 0; n < numPlayers; n++ ){
+	for(n = 0; n < numPlayers; n++){
 		trap_GetConfigString(CS_PLAYERS + n, info, MAX_INFO_STRING);
 
 		isBot = atoi(Info_ValueForKey(info, "skill"));
-		if( !isBot )
+		if(!isBot)
 			continue;
 
 		removeBotsMenuInfo.botClientNums[removeBotsMenuInfo.numBots] = n;
@@ -253,13 +253,13 @@ UI_RemoveBots_Cache(void)
 static void
 UI_RemoveBotsMenu_Init(void)
 {
-	int n;
-	int count;
-	int y;
+	int	n;
+	int	count;
+	int	y;
 
 	memset(&removeBotsMenuInfo, 0,sizeof(removeBotsMenuInfo));
-	removeBotsMenuInfo.menu.fullscreen = qfalse;
-	removeBotsMenuInfo.menu.wrapAround = qtrue;
+	removeBotsMenuInfo.menu.fullscreen	= qfalse;
+	removeBotsMenuInfo.menu.wrapAround	= qtrue;
 
 	UI_RemoveBots_Cache();
 
@@ -274,9 +274,9 @@ UI_RemoveBotsMenu_Init(void)
 	removeBotsMenuInfo.banner.color = color_white;
 	removeBotsMenuInfo.banner.style = UI_CENTER;
 
-	removeBotsMenuInfo.background.generic.type	= MTYPE_BITMAP;
-	removeBotsMenuInfo.background.generic.name	= ART_BACKGROUND;
-	removeBotsMenuInfo.background.generic.flags	= QMF_INACTIVE;
+	removeBotsMenuInfo.background.generic.type = MTYPE_BITMAP;
+	removeBotsMenuInfo.background.generic.name = ART_BACKGROUND;
+	removeBotsMenuInfo.background.generic.flags = QMF_INACTIVE;
 	removeBotsMenuInfo.background.generic.x = 320-233;
 	removeBotsMenuInfo.background.generic.y = 240-166;
 	removeBotsMenuInfo.background.width	= 466;
@@ -290,32 +290,32 @@ UI_RemoveBotsMenu_Init(void)
 	removeBotsMenuInfo.arrows.width		= 64;
 	removeBotsMenuInfo.arrows.height	= 128;
 
-	removeBotsMenuInfo.up.generic.type	= MTYPE_BITMAP;
-	removeBotsMenuInfo.up.generic.flags	= QMF_LEFT_JUSTIFY|
-						  QMF_PULSEIFFOCUS;
-	removeBotsMenuInfo.up.generic.x		= 200;
-	removeBotsMenuInfo.up.generic.y		= 128;
-	removeBotsMenuInfo.up.generic.id	= ID_UP;
+	removeBotsMenuInfo.up.generic.type = MTYPE_BITMAP;
+	removeBotsMenuInfo.up.generic.flags = QMF_LEFT_JUSTIFY|
+					      QMF_PULSEIFFOCUS;
+	removeBotsMenuInfo.up.generic.x = 200;
+	removeBotsMenuInfo.up.generic.y = 128;
+	removeBotsMenuInfo.up.generic.id = ID_UP;
 	removeBotsMenuInfo.up.generic.callback = UI_RemoveBotsMenu_UpEvent;
-	removeBotsMenuInfo.up.width	= 64;
-	removeBotsMenuInfo.up.height	= 64;
-	removeBotsMenuInfo.up.focuspic	= ART_ARROWUP;
+	removeBotsMenuInfo.up.width = 64;
+	removeBotsMenuInfo.up.height = 64;
+	removeBotsMenuInfo.up.focuspic = ART_ARROWUP;
 
-	removeBotsMenuInfo.down.generic.type	= MTYPE_BITMAP;
-	removeBotsMenuInfo.down.generic.flags	= QMF_LEFT_JUSTIFY|
-						  QMF_PULSEIFFOCUS;
-	removeBotsMenuInfo.down.generic.x	= 200;
-	removeBotsMenuInfo.down.generic.y	= 128+64;
-	removeBotsMenuInfo.down.generic.id	= ID_DOWN;
+	removeBotsMenuInfo.down.generic.type = MTYPE_BITMAP;
+	removeBotsMenuInfo.down.generic.flags = QMF_LEFT_JUSTIFY|
+						QMF_PULSEIFFOCUS;
+	removeBotsMenuInfo.down.generic.x = 200;
+	removeBotsMenuInfo.down.generic.y = 128+64;
+	removeBotsMenuInfo.down.generic.id = ID_DOWN;
 	removeBotsMenuInfo.down.generic.callback =
 		UI_RemoveBotsMenu_DownEvent;
-	removeBotsMenuInfo.down.width = 64;
-	removeBotsMenuInfo.down.height = 64;
-	removeBotsMenuInfo.down.focuspic = ART_ARROWDOWN;
+	removeBotsMenuInfo.down.width		= 64;
+	removeBotsMenuInfo.down.height		= 64;
+	removeBotsMenuInfo.down.focuspic	= ART_ARROWDOWN;
 
-	for( n = 0, y = 120; n < count; n++, y += 20 ){
-		removeBotsMenuInfo.bots[n].generic.type		= MTYPE_PTEXT;
-		removeBotsMenuInfo.bots[n].generic.flags	=
+	for(n = 0, y = 120; n < count; n++, y += 20){
+		removeBotsMenuInfo.bots[n].generic.type = MTYPE_PTEXT;
+		removeBotsMenuInfo.bots[n].generic.flags =
 			QMF_LEFT_JUSTIFY|
 			QMF_PULSEIFFOCUS;
 		removeBotsMenuInfo.bots[n].generic.id	= ID_BOTNAME0 + n;
@@ -325,8 +325,8 @@ UI_RemoveBotsMenu_Init(void)
 			UI_RemoveBotsMenu_BotEvent;
 		removeBotsMenuInfo.bots[n].string =
 			removeBotsMenuInfo.botnames[n];
-		removeBotsMenuInfo.bots[n].color	= color_orange;
-		removeBotsMenuInfo.bots[n].style	= UI_LEFT|UI_SMALLFONT;
+		removeBotsMenuInfo.bots[n].color = color_orange;
+		removeBotsMenuInfo.bots[n].style = UI_LEFT|UI_SMALLFONT;
 	}
 
 	removeBotsMenuInfo.delete.generic.type	= MTYPE_BITMAP;
@@ -336,39 +336,39 @@ UI_RemoveBotsMenu_Init(void)
 	removeBotsMenuInfo.delete.generic.id = ID_DELETE;
 	removeBotsMenuInfo.delete.generic.callback =
 		UI_RemoveBotsMenu_DeleteEvent;
-	removeBotsMenuInfo.delete.generic.x	= 320+128-128;
-	removeBotsMenuInfo.delete.generic.y	= 256+128-64;
-	removeBotsMenuInfo.delete.width		= 128;
-	removeBotsMenuInfo.delete.height	= 64;
-	removeBotsMenuInfo.delete.focuspic	= ART_DELETE1;
+	removeBotsMenuInfo.delete.generic.x = 320+128-128;
+	removeBotsMenuInfo.delete.generic.y = 256+128-64;
+	removeBotsMenuInfo.delete.width = 128;
+	removeBotsMenuInfo.delete.height = 64;
+	removeBotsMenuInfo.delete.focuspic = ART_DELETE1;
 
-	removeBotsMenuInfo.back.generic.type	= MTYPE_BITMAP;
-	removeBotsMenuInfo.back.generic.name	= ART_BACK0;
-	removeBotsMenuInfo.back.generic.flags	= QMF_LEFT_JUSTIFY|
-						  QMF_PULSEIFFOCUS;
+	removeBotsMenuInfo.back.generic.type = MTYPE_BITMAP;
+	removeBotsMenuInfo.back.generic.name = ART_BACK0;
+	removeBotsMenuInfo.back.generic.flags = QMF_LEFT_JUSTIFY|
+						QMF_PULSEIFFOCUS;
 	removeBotsMenuInfo.back.generic.id = ID_BACK;
 	removeBotsMenuInfo.back.generic.callback =
 		UI_RemoveBotsMenu_BackEvent;
-	removeBotsMenuInfo.back.generic.x = 320-128;
-	removeBotsMenuInfo.back.generic.y = 256+128-64;
-	removeBotsMenuInfo.back.width = 128;
-	removeBotsMenuInfo.back.height = 64;
-	removeBotsMenuInfo.back.focuspic = ART_BACK1;
+	removeBotsMenuInfo.back.generic.x	= 320-128;
+	removeBotsMenuInfo.back.generic.y	= 256+128-64;
+	removeBotsMenuInfo.back.width		= 128;
+	removeBotsMenuInfo.back.height		= 64;
+	removeBotsMenuInfo.back.focuspic	= ART_BACK1;
 
 	Menu_AddItem(&removeBotsMenuInfo.menu, &removeBotsMenuInfo.background);
 	Menu_AddItem(&removeBotsMenuInfo.menu, &removeBotsMenuInfo.banner);
 	Menu_AddItem(&removeBotsMenuInfo.menu, &removeBotsMenuInfo.arrows);
 	Menu_AddItem(&removeBotsMenuInfo.menu, &removeBotsMenuInfo.up);
 	Menu_AddItem(&removeBotsMenuInfo.menu, &removeBotsMenuInfo.down);
-	for( n = 0; n < count; n++ )
+	for(n = 0; n < count; n++)
 		Menu_AddItem(&removeBotsMenuInfo.menu,
 			&removeBotsMenuInfo.bots[n]);
 	Menu_AddItem(&removeBotsMenuInfo.menu, &removeBotsMenuInfo.delete);
 	Menu_AddItem(&removeBotsMenuInfo.menu, &removeBotsMenuInfo.back);
 
 	removeBotsMenuInfo.baseBotNum = 0;
-	removeBotsMenuInfo.selectedBotNum = 0;
-	removeBotsMenuInfo.bots[0].color = color_white;
+	removeBotsMenuInfo.selectedBotNum	= 0;
+	removeBotsMenuInfo.bots[0].color	= color_white;
 }
 
 

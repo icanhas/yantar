@@ -193,17 +193,17 @@ extern dma_t	dma;
 extern portable_samplepair_t s_rawsamples[MAX_RAW_STREAMS][MAX_RAW_SAMPLES];
 extern int s_rawend[MAX_RAW_STREAMS];
 
-extern cvar_t	*s_volume;
-extern cvar_t	*s_musicVolume;
-extern cvar_t	*s_muted;
-extern cvar_t	*s_doppler;
+extern cvar_t *s_volume;
+extern cvar_t *s_musicVolume;
+extern cvar_t *s_muted;
+extern cvar_t *s_doppler;
 
-extern cvar_t	*s_testsound;
+extern cvar_t *s_testsound;
 
 qboolean S_LoadSound(sfx_t *sfx);
 
 void            SND_free(sndBuffer *v);
-sndBuffer*      SND_malloc(void);
+sndBuffer*SND_malloc(void);
 void            SND_setup(void);
 void            SND_shutdown(void);
 
@@ -232,10 +232,10 @@ void encodeWavelet(sfx_t *sfx, short *packets);
 void decodeWavelet(sndBuffer *stream, short *packets);
 
 void encodeMuLaw(sfx_t *sfx, short *packets);
-extern short	mulawToShort[256];
+extern short mulawToShort[256];
 
 extern short	*sfxScratchBuffer;
-extern sfx_t	*sfxScratchPointer;
+extern sfx_t    *sfxScratchPointer;
 extern int	sfxScratchIndex;
 
 qboolean S_Base_Init(soundInterface_t *si);

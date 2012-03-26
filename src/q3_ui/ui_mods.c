@@ -71,10 +71,10 @@ static mods_t s_mods;
 static void
 UI_Mods_MenuEvent(void *ptr, int event)
 {
-	if( event != QM_ACTIVATED )
+	if(event != QM_ACTIVATED)
 		return;
 
-	switch(((menucommon_s *) ptr)->id ){
+	switch(((menucommon_s*)ptr)->id){
 	case ID_GO:
 		trap_Cvar_Set("fs_game",
 			s_mods.fs_gameList[s_mods.list.curvalue]);
@@ -118,14 +118,14 @@ UI_Mods_ParseInfos(char *modDir, char *modDesc)
 static void
 UI_Mods_LoadMods(void)
 {
-	int numdirs;
-	char dirlist[2048];
-	char *dirptr;
-	char *descptr;
-	int i;
-	int dirlen;
+	int	numdirs;
+	char	dirlist[2048];
+	char	*dirptr;
+	char	*descptr;
+	int	i;
+	int	dirlen;
 
-	s_mods.list.itemnames	= (const char * *) s_mods.descriptionList;
+	s_mods.list.itemnames	= (const char**)s_mods.descriptionList;
 	s_mods.descriptionPtr	= s_mods.description;
 	s_mods.fs_gamePtr = s_mods.fs_game;
 
@@ -136,7 +136,7 @@ UI_Mods_LoadMods(void)
 
 	numdirs = trap_FS_GetFileList("$modlist", "", dirlist, sizeof(dirlist));
 	dirptr	= dirlist;
-	for( i = 0; i < numdirs; i++ ){
+	for(i = 0; i < numdirs; i++){
 		dirlen	= strlen(dirptr) + 1;
 		descptr = dirptr + dirlen;
 		UI_Mods_ParseInfos(dirptr, descptr);
@@ -170,25 +170,25 @@ UI_Mods_MenuInit(void)
 	s_mods.banner.color	= color_white;
 	s_mods.banner.style	= UI_CENTER;
 
-	s_mods.framel.generic.type	= MTYPE_BITMAP;
-	s_mods.framel.generic.name	= ART_FRAMEL;
-	s_mods.framel.generic.flags	= QMF_INACTIVE;
+	s_mods.framel.generic.type = MTYPE_BITMAP;
+	s_mods.framel.generic.name = ART_FRAMEL;
+	s_mods.framel.generic.flags = QMF_INACTIVE;
 	s_mods.framel.generic.x = 0;
 	s_mods.framel.generic.y = 78;
 	s_mods.framel.width	= 256;
 	s_mods.framel.height	= 329;
 
-	s_mods.framer.generic.type	= MTYPE_BITMAP;
-	s_mods.framer.generic.name	= ART_FRAMER;
-	s_mods.framer.generic.flags	= QMF_INACTIVE;
+	s_mods.framer.generic.type = MTYPE_BITMAP;
+	s_mods.framer.generic.name = ART_FRAMER;
+	s_mods.framer.generic.flags = QMF_INACTIVE;
 	s_mods.framer.generic.x = 376;
 	s_mods.framer.generic.y = 76;
 	s_mods.framer.width	= 256;
 	s_mods.framer.height	= 334;
 
-	s_mods.back.generic.type	= MTYPE_BITMAP;
-	s_mods.back.generic.name	= ART_BACK0;
-	s_mods.back.generic.flags	= QMF_LEFT_JUSTIFY|QMF_PULSEIFFOCUS;
+	s_mods.back.generic.type = MTYPE_BITMAP;
+	s_mods.back.generic.name = ART_BACK0;
+	s_mods.back.generic.flags = QMF_LEFT_JUSTIFY|QMF_PULSEIFFOCUS;
 	s_mods.back.generic.id = ID_BACK;
 	s_mods.back.generic.callback = UI_Mods_MenuEvent;
 	s_mods.back.generic.x	= 0;
@@ -202,15 +202,15 @@ UI_Mods_MenuInit(void)
 	s_mods.go.generic.flags = QMF_RIGHT_JUSTIFY|QMF_PULSEIFFOCUS;
 	s_mods.go.generic.id = ID_GO;
 	s_mods.go.generic.callback = UI_Mods_MenuEvent;
-	s_mods.go.generic.x	= 640;
-	s_mods.go.generic.y	= 480-64;
-	s_mods.go.width		= 128;
-	s_mods.go.height	= 64;
-	s_mods.go.focuspic	= ART_FIGHT1;
+	s_mods.go.generic.x = 640;
+	s_mods.go.generic.y = 480-64;
+	s_mods.go.width = 128;
+	s_mods.go.height = 64;
+	s_mods.go.focuspic = ART_FIGHT1;
 
 	/* scan for mods */
-	s_mods.list.generic.type	= MTYPE_SCROLLLIST;
-	s_mods.list.generic.flags	= QMF_PULSEIFFOCUS|QMF_CENTER_JUSTIFY;
+	s_mods.list.generic.type = MTYPE_SCROLLLIST;
+	s_mods.list.generic.flags = QMF_PULSEIFFOCUS|QMF_CENTER_JUSTIFY;
 	s_mods.list.generic.callback = UI_Mods_MenuEvent;
 	s_mods.list.generic.id	= ID_LIST;
 	s_mods.list.generic.x	= 320;

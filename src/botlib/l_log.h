@@ -41,6 +41,6 @@ void QDECL Log_Write(char *fmt, ...) __attribute__ ((format (printf, 1, 2)));
 void QDECL Log_WriteTimeStamped(char *fmt,
 				...) __attribute__ ((format (printf, 1, 2)));
 /* returns a pointer to the log file */
-FILE *Log_FilePointer(void);
+FILE*Log_FilePointer(void);
 /* flush log file */
 void Log_Flush(void);

@@ -34,7 +34,7 @@
 #endif
 
 #ifndef NULL
-#define NULL ((void *) 0)
+#define NULL ((void*)0)
 #endif
 
 typedef unsigned int size_t;
@@ -42,8 +42,8 @@ typedef unsigned int size_t;
 typedef char *  va_list;
 #define _INTSIZEOF(n)	((sizeof(n) + sizeof(int) - 1) & ~(sizeof(int) - 1))
 #define va_start(ap,v)	(ap = (va_list)&v + _INTSIZEOF(v))
-#define va_arg(ap,t)	(*(t *) ((ap += _INTSIZEOF(t)) - _INTSIZEOF(t)))
-#define va_end(ap)	(ap = (va_list) 0)
+#define va_arg(ap,t)	(*(t*)((ap += _INTSIZEOF(t)) - _INTSIZEOF(t)))
+#define va_end(ap)	(ap = (va_list)0)
 
 #define CHAR_BIT	8			/* number of bits in a char */
 #define SCHAR_MAX	0x7f			/* maximum signed char value */
@@ -85,13 +85,13 @@ int             rand(void);
 
 /* String functions */
 size_t strlen(const char *string);
-char *strcat(char *strDestination, const char *strSource);
-char *strcpy(char *strDestination, const char *strSource);
+char*strcat(char *strDestination, const char *strSource);
+char*strcpy(char *strDestination, const char *strSource);
 int strcmp(const char *string1, const char *string2);
-char *strchr(const char *string, int c);
-char *strrchr(const char *string, int c);
-char *strstr(const char *string, const char *strCharSet);
-char *strncpy(char *strDest, const char *strSource, size_t count);
+char*strchr(const char *string, int c);
+char*strrchr(const char *string, int c);
+char*strstr(const char *string, const char *strCharSet);
+char*strncpy(char *strDest, const char *strSource, size_t count);
 int tolower(int c);
 int toupper(int c);
 
@@ -108,9 +108,9 @@ int sscanf(const char *buffer, const char *fmt,
 	   ...) __attribute__ ((format (scanf, 2, 3)));
 
 /* Memory functions */
-void *memmove(void *dest, const void *src, size_t count);
-void *memset(void *dest, int c, size_t count);
-void *memcpy(void *dest, const void *src, size_t count);
+void*memmove(void *dest, const void *src, size_t count);
+void*memset(void *dest, int c, size_t count);
+void*memcpy(void *dest, const void *src, size_t count);
 
 /* Math functions */
 double ceil(double x);

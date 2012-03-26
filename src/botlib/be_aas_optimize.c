@@ -99,7 +99,7 @@ AAS_OptimizeEdge(optimized_t *optimized, int edgenum)
 		/* keep the edge reversed sign */
 		if(edgenum > 0) return optedgenum;
 		else return -optedgenum;
-	}	
+	}
 
 	optedge = &optimized->edges[optimized->numedges];
 
@@ -114,8 +114,8 @@ AAS_OptimizeEdge(optimized_t *optimized, int edgenum)
 			optimized->vertexoptimizeindex[edge->v[i]] =
 				optimized->numvertexes;
 			optimized->numvertexes++;
-		}	
-	}		
+		}
+	}
 	optimized->edgeoptimizeindex[abs(edgenum)] = optimized->numedges;
 	optedgenum = optimized->numedges;
 	optimized->numedges++;
@@ -155,13 +155,13 @@ AAS_OptimizeFace(optimized_t *optimized, int facenum)
 		/* keep the face side sign */
 		if(facenum > 0) return optfacenum;
 		else return -optfacenum;
-	}	
+	}
 
 	optface = &optimized->faces[optimized->numfaces];
 	Com_Memcpy(optface, face, sizeof(aas_face_t));
 
-	optface->numedges	= 0;
-	optface->firstedge	= optimized->edgeindexsize;
+	optface->numedges = 0;
+	optface->firstedge = optimized->edgeindexsize;
 	for(i = 0; i < face->numedges; i++){
 		edgenum = aasworld.edgeindex[face->firstedge + i];
 		optedgenum = AAS_OptimizeEdge(optimized, edgenum);
@@ -170,8 +170,8 @@ AAS_OptimizeFace(optimized_t *optimized, int facenum)
 					     optface->numedges] = optedgenum;
 			optface->numedges++;
 			optimized->edgeindexsize++;
-		}	
-	}		
+		}
+	}
 	optimized->faceoptimizeindex[abs(facenum)] = optimized->numfaces;
 	optfacenum = optimized->numfaces;
 	optimized->numfaces++;
@@ -195,8 +195,8 @@ AAS_OptimizeArea(optimized_t *optimized, int areanum)
 	optarea = &optimized->areas[areanum];
 	Com_Memcpy(optarea, area, sizeof(aas_area_t));
 
-	optarea->numfaces	= 0;
-	optarea->firstface	= optimized->faceindexsize;
+	optarea->numfaces = 0;
+	optarea->firstface = optimized->faceindexsize;
 	for(i = 0; i < area->numfaces; i++){
 		facenum = aasworld.faceindex[area->firstface + i];
 		optfacenum = AAS_OptimizeFace(optimized, facenum);
@@ -205,9 +205,9 @@ AAS_OptimizeArea(optimized_t *optimized, int areanum)
 					     optarea->numfaces] = optfacenum;
 			optarea->numfaces++;
 			optimized->faceindexsize++;
-		}	
-	}		
-}			/* end of the function AAS_OptimizeArea */
+		}
+	}
+}	/* end of the function AAS_OptimizeArea */
 /* ===========================================================================
  *
  * Parameter:				-
@@ -217,30 +217,30 @@ AAS_OptimizeArea(optimized_t *optimized, int areanum)
 void
 AAS_OptimizeAlloc(optimized_t *optimized)
 {
-	optimized->vertexes = (aas_vertex_t *) GetClearedMemory(
+	optimized->vertexes = (aas_vertex_t*)GetClearedMemory(
 		aasworld.numvertexes * sizeof(aas_vertex_t));
 	optimized->numvertexes = 0;
-	optimized->edges = (aas_edge_t *) GetClearedMemory(
+	optimized->edges = (aas_edge_t*)GetClearedMemory(
 		aasworld.numedges * sizeof(aas_edge_t));
-	optimized->numedges	= 1;	/* edge zero is a dummy */
-	optimized->edgeindex	= (aas_edgeindex_t *) GetClearedMemory(
+	optimized->numedges = 1;	/* edge zero is a dummy */
+	optimized->edgeindex = (aas_edgeindex_t*)GetClearedMemory(
 		aasworld.edgeindexsize * sizeof(aas_edgeindex_t));
 	optimized->edgeindexsize = 0;
-	optimized->faces = (aas_face_t *) GetClearedMemory(
+	optimized->faces = (aas_face_t*)GetClearedMemory(
 		aasworld.numfaces * sizeof(aas_face_t));
-	optimized->numfaces	= 1;	/* face zero is a dummy */
-	optimized->faceindex	= (aas_faceindex_t *) GetClearedMemory(
+	optimized->numfaces = 1;	/* face zero is a dummy */
+	optimized->faceindex = (aas_faceindex_t*)GetClearedMemory(
 		aasworld.faceindexsize * sizeof(aas_faceindex_t));
 	optimized->faceindexsize = 0;
-	optimized->areas = (aas_area_t *) GetClearedMemory(
+	optimized->areas = (aas_area_t*)GetClearedMemory(
 		aasworld.numareas * sizeof(aas_area_t));
 	optimized->numareas = aasworld.numareas;
 	/*  */
-	optimized->vertexoptimizeindex	= (int *) GetClearedMemory(
+	optimized->vertexoptimizeindex = (int*)GetClearedMemory(
 		aasworld.numvertexes * sizeof(int));
-	optimized->edgeoptimizeindex	= (int *) GetClearedMemory(
+	optimized->edgeoptimizeindex = (int*)GetClearedMemory(
 		aasworld.numedges * sizeof(int));
-	optimized->faceoptimizeindex	= (int *) GetClearedMemory(
+	optimized->faceoptimizeindex = (int*)GetClearedMemory(
 		aasworld.numfaces * sizeof(int));
 }	/* end of the function AAS_OptimizeAlloc */
 /* ===========================================================================
@@ -323,8 +323,8 @@ AAS_Optimize(void)
 			];
 		if(sign < 0) aasworld.reachability[i].edgenum =
 				-aasworld.reachability[i].edgenum;
-	}	
-		/* store the optimized AAS data into aasworld */
+	}
+	/* store the optimized AAS data into aasworld */
 	AAS_OptimizeStore(&optimized);
 	/* print some nice stuff :) */
 	botimport.Print(PRT_MESSAGE, "AAS data optimized.\n");

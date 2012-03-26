@@ -43,13 +43,13 @@ struct mdfour {
 
 static struct mdfour *m;
 
-#define F(X,Y,Z)		(((X) &(Y)) | ((~(X))&(Z)))
-#define G(X,Y,Z)		(((X) &(Y)) | ((X) &(Z)) | ((Y) &(Z)))
+#define F(X,Y,Z)		(((X)&(Y)) | ((~(X))&(Z)))
+#define G(X,Y,Z)		(((X)&(Y)) | ((X)&(Z)) | ((Y)&(Z)))
 #define H(X,Y,Z)		((X)^(Y)^(Z))
 #define lshift(x,s)		(((x)<<(s)) | ((x)>>(32-(s))))
 
-#define ROUND1(a,b,c,d,k,s)	a = lshift(a + F(b,c,d) + X[k], s)
-#define ROUND2(a,b,c,d,k,s)	a = lshift(a + G(b,c, \
+#define ROUND1(a,b,c,d,k,s)	a	= lshift(a + F(b,c,d) + X[k], s)
+#define ROUND2(a,b,c,d,k,s)	a	= lshift(a + G(b,c, \
 		d) + X[k] + 0x5A827999,s)
 #define ROUND3(a,b,c,d,k,s)	a = lshift(a + H(b,c, \
 		d) + X[k] + 0x6ED9EBA1,s)
@@ -59,15 +59,15 @@ static void
 mdfour64(uint32_t *M)
 {
 	int j;
-	uint32_t AA, BB, CC, DD;
-	uint32_t X[16];
-	uint32_t A,B,C,D;
+	uint32_t	AA, BB, CC, DD;
+	uint32_t	X[16];
+	uint32_t	A,B,C,D;
 
 	for(j=0; j<16; j++)
 		X[j] = M[j];
 
-	A = m->A; B = m->B; C = m->C; D = m->D;
-	AA = A; BB = B; CC = C; DD = D;
+	A	= m->A; B = m->B; C = m->C; D = m->D;
+	AA	= A; BB = B; CC = C; DD = D;
 
 	ROUND1(A,B,C,D,  0,  3);  ROUND1(D,A,B,C,  1,  7);
 	ROUND1(C,D,A,B,  2, 11);  ROUND1(B,C,D,A,  3, 19);
@@ -138,8 +138,8 @@ static void
 mdfour_tail(byte *in, int n)
 {
 	byte buf[128];
-	uint32_t M[16];
-	uint32_t b;
+	uint32_t	M[16];
+	uint32_t	b;
 
 	m->totalN += n;
 
@@ -174,8 +174,8 @@ mdfour_update(struct mdfour *md, byte *in, int n)
 	while(n >= 64){
 		copy64(M, in);
 		mdfour64(M);
-		in += 64;
-		n -= 64;
+		in	+= 64;
+		n	-= 64;
 		m->totalN += 64;
 	}
 
@@ -211,7 +211,7 @@ Com_BlockChecksum(const void *buffer, int length)
 	int digest[4];
 	unsigned val;
 
-	mdfour((byte *) digest, (byte *) buffer, length);
+	mdfour((byte*)digest, (byte*)buffer, length);
 
 	val = digest[0] ^ digest[1] ^ digest[2] ^ digest[3];
 

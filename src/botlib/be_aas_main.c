@@ -79,20 +79,20 @@ AAS_StringFromIndex(char *indexname, char *stringindex[], int numindexes,
 		botimport.Print(PRT_ERROR, "%s: index %d not setup\n", indexname,
 			index);
 		return "";
-	}	
+	}
 	if(index < 0 || index >= numindexes){
 		botimport.Print(PRT_ERROR, "%s: index %d out of range\n",
 			indexname,
 			index);
 		return "";
-	}	
+	}
 	if(!stringindex[index]){
 		if(index)
 			botimport.Print(PRT_ERROR,
 				"%s: reference to unused index %d\n", indexname,
 				index);
 		return "";
-	}	
+	}
 	return stringindex[index];
 }	/* end of the function AAS_StringFromIndex */
 /* ===========================================================================
@@ -111,11 +111,11 @@ AAS_IndexFromString(char *indexname, char *stringindex[], int numindexes,
 			indexname,
 			string);
 		return 0;
-	}	
+	}
 	for(i = 0; i < numindexes; i++){
 		if(!stringindex[i]) continue;
 		if(!Q_stricmp(stringindex[i], string)) return i;
-	}	
+	}
 	return 0;
 }	/* end of the function AAS_IndexFromString */
 /* ===========================================================================
@@ -157,9 +157,9 @@ AAS_UpdateStringIndexes(int numconfigstrings, char *configstrings[])
 		if(configstrings[i]){
 			/* if (aasworld.configstrings[i]) FreeMemory(aasworld.configstrings[i]); */
 			aasworld.configstrings[i] =
-				(char *) GetMemory(strlen(configstrings[i]) + 1);
+				(char*)GetMemory(strlen(configstrings[i]) + 1);
 			strcpy(aasworld.configstrings[i], configstrings[i]);
-		}	
+		}
 	aasworld.indexessetup = qtrue;
 }	/* end of the function AAS_UpdateStringIndexes */
 /* ===========================================================================
@@ -221,9 +221,9 @@ AAS_ContinueInit(float time)
 	AAS_InitClustering();
 	/* if reachability has been calculated and an AAS file should be written
 	 * or there is a forced data optimization */
-	if(aasworld.savefile || ((int) LibVarGetValue("forcewrite"))){
+	if(aasworld.savefile || ((int)LibVarGetValue("forcewrite"))){
 		/* optimize the AAS data */
-		if((int) LibVarValue("aasoptimize", "0")) AAS_Optimize();
+		if((int)LibVarValue("aasoptimize", "0")) AAS_Optimize();
 		/* save the AAS file */
 		if(AAS_WriteAASFile(aasworld.filename))
 			botimport.Print(PRT_MESSAGE, "%s written successfully\n",
@@ -231,8 +231,8 @@ AAS_ContinueInit(float time)
 		else
 			botimport.Print(PRT_ERROR, "couldn't write %s\n",
 				aasworld.filename);
-	}	
-		/* initialize the routing */
+	}
+	/* initialize the routing */
 	AAS_InitRouting();
 	/* at this point AAS is initialized */
 	AAS_SetInitialized();
@@ -261,22 +261,22 @@ AAS_StartFrame(float time)
 		if(LibVarGetValue("showcacheupdates")){
 			AAS_RoutingInfo();
 			LibVarSet("showcacheupdates", "0");
-		}	
+		}
 		if(LibVarGetValue("showmemoryusage")){
 			PrintUsedMemorySize();
 			LibVarSet("showmemoryusage", "0");
-		}	
+		}
 		if(LibVarGetValue("memorydump")){
 			PrintMemoryLabels();
 			LibVarSet("memorydump", "0");
-		}	
-	}		
-		/*  */
+		}
+	}
+	/*  */
 	if(saveroutingcache->value){
 		AAS_WriteRouteCache();
 		LibVarSet("saveroutingcache", "0");
-	}	
-		/*  */
+	}
+	/*  */
 	aasworld.numframes++;
 	return BLERR_NOERROR;
 }	/* end of the function AAS_StartFrame */
@@ -318,8 +318,8 @@ AAS_ProjectPointOntoVector(vec3_t point, vec3_t vStart, vec3_t vEnd,
 int
 AAS_LoadFiles(const char *mapname)
 {
-	int errnum;
-	char aasfile[MAX_PATH];
+	int	errnum;
+	char	aasfile[MAX_PATH];
 /*	char bspfile[MAX_PATH]; */
 
 	strcpy(aasworld.mapname, mapname);
@@ -366,8 +366,8 @@ AAS_LoadMap(const char *mapname)
 	if(errnum != BLERR_NOERROR){
 		aasworld.loaded = qfalse;
 		return errnum;
-	}	
-		/*  */
+	}
+	/*  */
 	AAS_InitSettings();
 	/* initialize the AAS link heap for the new map */
 	AAS_InitAASLinkHeap();
@@ -390,13 +390,13 @@ AAS_LoadMap(const char *mapname)
 int
 AAS_Setup(void)
 {
-	aasworld.maxclients = (int) LibVarValue("maxclients", "128");
-	aasworld.maxentities = (int) LibVarValue("maxentities", "1024");
+	aasworld.maxclients	= (int)LibVarValue("maxclients", "128");
+	aasworld.maxentities	= (int)LibVarValue("maxentities", "1024");
 	/* as soon as it's set to 1 the routing cache will be saved */
 	saveroutingcache = LibVar("saveroutingcache", "0");
 	/* allocate memory for the entities */
 	if(aasworld.entities) FreeMemory(aasworld.entities);
-	aasworld.entities = (aas_entity_t *) GetClearedHunkMemory(
+	aasworld.entities = (aas_entity_t*)GetClearedHunkMemory(
 		aasworld.maxentities * sizeof(aas_entity_t));
 	/* invalidate all the entities */
 	AAS_InvalidateEntities();

@@ -74,10 +74,10 @@ static displayOptionsInfo_t displayOptionsInfo;
 static void
 UI_DisplayOptionsMenu_Event(void* ptr, int event)
 {
-	if( event != QM_ACTIVATED )
+	if(event != QM_ACTIVATED)
 		return;
 
-	switch(((menucommon_s *) ptr)->id ){
+	switch(((menucommon_s*)ptr)->id){
 	case ID_GRAPHICS:
 		UI_PopMenu();
 		UI_GraphicsOptionsMenu();
@@ -127,8 +127,8 @@ UI_DisplayOptionsMenu_Init(void)
 	memset(&displayOptionsInfo, 0, sizeof(displayOptionsInfo));
 
 	UI_DisplayOptionsMenu_Cache();
-	displayOptionsInfo.menu.wrapAround = qtrue;
-	displayOptionsInfo.menu.fullscreen = qtrue;
+	displayOptionsInfo.menu.wrapAround	= qtrue;
+	displayOptionsInfo.menu.fullscreen	= qtrue;
 
 	displayOptionsInfo.banner.generic.type	= MTYPE_BTEXT;
 	displayOptionsInfo.banner.generic.flags = QMF_CENTER_JUSTIFY;
@@ -154,9 +154,9 @@ UI_DisplayOptionsMenu_Init(void)
 	displayOptionsInfo.framer.width		= 256;
 	displayOptionsInfo.framer.height	= 334;
 
-	displayOptionsInfo.graphics.generic.type	= MTYPE_PTEXT;
-	displayOptionsInfo.graphics.generic.flags	= QMF_RIGHT_JUSTIFY|
-							  QMF_PULSEIFFOCUS;
+	displayOptionsInfo.graphics.generic.type = MTYPE_PTEXT;
+	displayOptionsInfo.graphics.generic.flags = QMF_RIGHT_JUSTIFY|
+						    QMF_PULSEIFFOCUS;
 	displayOptionsInfo.graphics.generic.id = ID_GRAPHICS;
 	displayOptionsInfo.graphics.generic.callback =
 		UI_DisplayOptionsMenu_Event;
@@ -166,16 +166,16 @@ UI_DisplayOptionsMenu_Init(void)
 	displayOptionsInfo.graphics.style	= UI_RIGHT;
 	displayOptionsInfo.graphics.color	= color_red;
 
-	displayOptionsInfo.display.generic.type		= MTYPE_PTEXT;
-	displayOptionsInfo.display.generic.flags	= QMF_RIGHT_JUSTIFY;
+	displayOptionsInfo.display.generic.type = MTYPE_PTEXT;
+	displayOptionsInfo.display.generic.flags = QMF_RIGHT_JUSTIFY;
 	displayOptionsInfo.display.generic.id = ID_DISPLAY;
 	displayOptionsInfo.display.generic.callback =
 		UI_DisplayOptionsMenu_Event;
-	displayOptionsInfo.display.generic.x	= 216;
-	displayOptionsInfo.display.generic.y	= 240 - PROP_HEIGHT;
-	displayOptionsInfo.display.string	= "DISPLAY";
-	displayOptionsInfo.display.style	= UI_RIGHT;
-	displayOptionsInfo.display.color	= color_red;
+	displayOptionsInfo.display.generic.x = 216;
+	displayOptionsInfo.display.generic.y = 240 - PROP_HEIGHT;
+	displayOptionsInfo.display.string = "DISPLAY";
+	displayOptionsInfo.display.style = UI_RIGHT;
+	displayOptionsInfo.display.color = color_red;
 
 	displayOptionsInfo.sound.generic.type	= MTYPE_PTEXT;
 	displayOptionsInfo.sound.generic.flags	= QMF_RIGHT_JUSTIFY|
@@ -183,89 +183,89 @@ UI_DisplayOptionsMenu_Init(void)
 	displayOptionsInfo.sound.generic.id = ID_SOUND;
 	displayOptionsInfo.sound.generic.callback =
 		UI_DisplayOptionsMenu_Event;
-	displayOptionsInfo.sound.generic.x = 216;
-	displayOptionsInfo.sound.generic.y = 240;
+	displayOptionsInfo.sound.generic.x	= 216;
+	displayOptionsInfo.sound.generic.y	= 240;
 	displayOptionsInfo.sound.string = "SOUND";
 	displayOptionsInfo.sound.style	= UI_RIGHT;
 	displayOptionsInfo.sound.color	= color_red;
 
-	displayOptionsInfo.network.generic.type		= MTYPE_PTEXT;
-	displayOptionsInfo.network.generic.flags	= QMF_RIGHT_JUSTIFY|
-							  QMF_PULSEIFFOCUS;
+	displayOptionsInfo.network.generic.type = MTYPE_PTEXT;
+	displayOptionsInfo.network.generic.flags = QMF_RIGHT_JUSTIFY|
+						   QMF_PULSEIFFOCUS;
 	displayOptionsInfo.network.generic.id = ID_NETWORK;
 	displayOptionsInfo.network.generic.callback =
 		UI_DisplayOptionsMenu_Event;
-	displayOptionsInfo.network.generic.x	= 216;
-	displayOptionsInfo.network.generic.y	= 240 + PROP_HEIGHT;
-	displayOptionsInfo.network.string	= "NETWORK";
-	displayOptionsInfo.network.style	= UI_RIGHT;
-	displayOptionsInfo.network.color	= color_red;
+	displayOptionsInfo.network.generic.x = 216;
+	displayOptionsInfo.network.generic.y = 240 + PROP_HEIGHT;
+	displayOptionsInfo.network.string = "NETWORK";
+	displayOptionsInfo.network.style = UI_RIGHT;
+	displayOptionsInfo.network.color = color_red;
 
 	y = 240 - 1 * (BIGCHAR_HEIGHT+2);
-	displayOptionsInfo.brightness.generic.type	= MTYPE_SLIDER;
-	displayOptionsInfo.brightness.generic.name	= "Brightness:";
-	displayOptionsInfo.brightness.generic.flags	= QMF_PULSEIFFOCUS|
-							  QMF_SMALLFONT;
+	displayOptionsInfo.brightness.generic.type = MTYPE_SLIDER;
+	displayOptionsInfo.brightness.generic.name = "Brightness:";
+	displayOptionsInfo.brightness.generic.flags = QMF_PULSEIFFOCUS|
+						      QMF_SMALLFONT;
 	displayOptionsInfo.brightness.generic.callback =
 		UI_DisplayOptionsMenu_Event;
 	displayOptionsInfo.brightness.generic.id	= ID_BRIGHTNESS;
-	displayOptionsInfo.brightness.generic.x = 400;
-	displayOptionsInfo.brightness.generic.y = y;
-	displayOptionsInfo.brightness.minvalue	= 5;
-	displayOptionsInfo.brightness.maxvalue	= 20;
-	if( !uis.glconfig.deviceSupportsGamma )
+	displayOptionsInfo.brightness.generic.x		= 400;
+	displayOptionsInfo.brightness.generic.y		= y;
+	displayOptionsInfo.brightness.minvalue		= 5;
+	displayOptionsInfo.brightness.maxvalue		= 20;
+	if(!uis.glconfig.deviceSupportsGamma)
 		displayOptionsInfo.brightness.generic.flags |= QMF_GRAYED;
 
 	y += BIGCHAR_HEIGHT+2;
-	displayOptionsInfo.screensize.generic.type	= MTYPE_SLIDER;
-	displayOptionsInfo.screensize.generic.name	= "Screen Size:";
-	displayOptionsInfo.screensize.generic.flags	= QMF_PULSEIFFOCUS|
-							  QMF_SMALLFONT;
+	displayOptionsInfo.screensize.generic.type = MTYPE_SLIDER;
+	displayOptionsInfo.screensize.generic.name = "Screen Size:";
+	displayOptionsInfo.screensize.generic.flags = QMF_PULSEIFFOCUS|
+						      QMF_SMALLFONT;
 	displayOptionsInfo.screensize.generic.callback =
 		UI_DisplayOptionsMenu_Event;
 	displayOptionsInfo.screensize.generic.id	= ID_SCREENSIZE;
-	displayOptionsInfo.screensize.generic.x = 400;
-	displayOptionsInfo.screensize.generic.y = y;
-	displayOptionsInfo.screensize.minvalue	= 3;
-	displayOptionsInfo.screensize.maxvalue	= 10;
+	displayOptionsInfo.screensize.generic.x		= 400;
+	displayOptionsInfo.screensize.generic.y		= y;
+	displayOptionsInfo.screensize.minvalue		= 3;
+	displayOptionsInfo.screensize.maxvalue		= 10;
 
-	displayOptionsInfo.back.generic.type	= MTYPE_BITMAP;
-	displayOptionsInfo.back.generic.name	= ART_BACK0;
-	displayOptionsInfo.back.generic.flags	= QMF_LEFT_JUSTIFY|
-						  QMF_PULSEIFFOCUS;
+	displayOptionsInfo.back.generic.type = MTYPE_BITMAP;
+	displayOptionsInfo.back.generic.name = ART_BACK0;
+	displayOptionsInfo.back.generic.flags = QMF_LEFT_JUSTIFY|
+						QMF_PULSEIFFOCUS;
 	displayOptionsInfo.back.generic.callback =
 		UI_DisplayOptionsMenu_Event;
-	displayOptionsInfo.back.generic.id = ID_BACK;
-	displayOptionsInfo.back.generic.x = 0;
-	displayOptionsInfo.back.generic.y = 480-64;
-	displayOptionsInfo.back.width = 128;
-	displayOptionsInfo.back.height = 64;
-	displayOptionsInfo.back.focuspic = ART_BACK1;
+	displayOptionsInfo.back.generic.id	= ID_BACK;
+	displayOptionsInfo.back.generic.x	= 0;
+	displayOptionsInfo.back.generic.y	= 480-64;
+	displayOptionsInfo.back.width		= 128;
+	displayOptionsInfo.back.height		= 64;
+	displayOptionsInfo.back.focuspic	= ART_BACK1;
 
 	Menu_AddItem(&displayOptionsInfo.menu,
-		( void * ) &displayOptionsInfo.banner);
+		( void* )&displayOptionsInfo.banner);
 	Menu_AddItem(&displayOptionsInfo.menu,
-		( void * ) &displayOptionsInfo.framel);
+		( void* )&displayOptionsInfo.framel);
 	Menu_AddItem(&displayOptionsInfo.menu,
-		( void * ) &displayOptionsInfo.framer);
+		( void* )&displayOptionsInfo.framer);
 	Menu_AddItem(&displayOptionsInfo.menu,
-		( void * ) &displayOptionsInfo.graphics);
+		( void* )&displayOptionsInfo.graphics);
 	Menu_AddItem(&displayOptionsInfo.menu,
-		( void * ) &displayOptionsInfo.display);
+		( void* )&displayOptionsInfo.display);
 	Menu_AddItem(&displayOptionsInfo.menu,
-		( void * ) &displayOptionsInfo.sound);
+		( void* )&displayOptionsInfo.sound);
 	Menu_AddItem(&displayOptionsInfo.menu,
-		( void * ) &displayOptionsInfo.network);
+		( void* )&displayOptionsInfo.network);
 	Menu_AddItem(&displayOptionsInfo.menu,
-		( void * ) &displayOptionsInfo.brightness);
+		( void* )&displayOptionsInfo.brightness);
 	Menu_AddItem(&displayOptionsInfo.menu,
-		( void * ) &displayOptionsInfo.screensize);
+		( void* )&displayOptionsInfo.screensize);
 	Menu_AddItem(&displayOptionsInfo.menu,
-		( void * ) &displayOptionsInfo.back);
+		( void* )&displayOptionsInfo.back);
 
-	displayOptionsInfo.brightness.curvalue	= trap_Cvar_VariableValue(
+	displayOptionsInfo.brightness.curvalue = trap_Cvar_VariableValue(
 		"r_gamma") * 10;
-	displayOptionsInfo.screensize.curvalue	= trap_Cvar_VariableValue(
+	displayOptionsInfo.screensize.curvalue = trap_Cvar_VariableValue(
 		"cg_viewsize")/10;
 }
 

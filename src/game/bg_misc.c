@@ -935,11 +935,11 @@ BG_FindItemForPowerup(powerup_t pw)
 {
 	int i;
 
-	for( i = 0; i < bg_numItems; i++ )
+	for(i = 0; i < bg_numItems; i++)
 		if((bg_itemlist[i].giType == IT_POWERUP ||
 		    bg_itemlist[i].giType == IT_TEAM ||
 		    bg_itemlist[i].giType == IT_PERSISTANT_POWERUP) &&
-		   bg_itemlist[i].giTag == pw )
+		   bg_itemlist[i].giTag == pw)
 			return &bg_itemlist[i];
 
 	return NULL;
@@ -956,9 +956,9 @@ BG_FindItemForHoldable(holdable_t pw)
 {
 	int i;
 
-	for( i = 0; i < bg_numItems; i++ )
-		if( bg_itemlist[i].giType == IT_HOLDABLE &&
-		    bg_itemlist[i].giTag == pw )
+	for(i = 0; i < bg_numItems; i++)
+		if(bg_itemlist[i].giType == IT_HOLDABLE &&
+		   bg_itemlist[i].giTag == pw)
 			return &bg_itemlist[i];
 
 	Com_Error(ERR_DROP, "HoldableItem not found");
@@ -978,8 +978,8 @@ BG_FindItemForWeapon(weapon_t weapon)
 {
 	gitem_t *it;
 
-	for( it = bg_itemlist + 1; it->classname; it++)
-		if( it->giType == IT_WEAPON && it->giTag == weapon )
+	for(it = bg_itemlist + 1; it->classname; it++)
+		if(it->giType == IT_WEAPON && it->giTag == weapon)
 			return it;
 
 	Com_Error(ERR_DROP, "Couldn't find item for weapon %i", weapon);
@@ -997,8 +997,8 @@ BG_FindItem(const char *pickupName)
 {
 	gitem_t *it;
 
-	for( it = bg_itemlist + 1; it->classname; it++ )
-		if( !Q_stricmp(it->pickup_name, pickupName))
+	for(it = bg_itemlist + 1; it->classname; it++)
+		if(!Q_stricmp(it->pickup_name, pickupName))
 			return it;
 
 	return NULL;
@@ -1020,12 +1020,12 @@ BG_PlayerTouchesItem(playerState_t *ps, entityState_t *item, int atTime)
 	BG_EvaluateTrajectory(&item->pos, atTime, origin);
 
 	/* we are ignoring ducked differences here */
-	if( ps->origin[0] - origin[0] > 44
-	    || ps->origin[0] - origin[0] < -50
-	    || ps->origin[1] - origin[1] > 36
-	    || ps->origin[1] - origin[1] < -36
-	    || ps->origin[2] - origin[2] > 36
-	    || ps->origin[2] - origin[2] < -36 )
+	if(ps->origin[0] - origin[0] > 44
+	   || ps->origin[0] - origin[0] < -50
+	   || ps->origin[1] - origin[1] > 36
+	   || ps->origin[1] - origin[1] < -36
+	   || ps->origin[2] - origin[2] > 36
+	   || ps->origin[2] - origin[2] < -36)
 		return qfalse;
 
 	return qtrue;
@@ -1050,38 +1050,38 @@ BG_CanItemBeGrabbed(int gametype, const entityState_t *ent,
 	int upperBound;
 #endif
 
-	if( ent->modelindex < 1 || ent->modelindex >= bg_numItems )
+	if(ent->modelindex < 1 || ent->modelindex >= bg_numItems)
 		Com_Error(ERR_DROP, "BG_CanItemBeGrabbed: index out of range");
 
 	item = &bg_itemlist[ent->modelindex];
 
-	switch( item->giType ){
+	switch(item->giType){
 	case IT_WEAPON:
 		return qtrue;	/* weapons are always picked up */
 
 	case IT_AMMO:
-		if( ps->ammo[ item->giTag ] >= 200 )
+		if(ps->ammo[ item->giTag ] >= 200)
 			return qfalse;	/* can't hold any more */
 		return qtrue;
 
 	case IT_ARMOR:
 #ifdef MISSIONPACK
-		if( bg_itemlist[ps->stats[STAT_PERSISTANT_POWERUP]].giTag ==
-		    PW_SCOUT )
+		if(bg_itemlist[ps->stats[STAT_PERSISTANT_POWERUP]].giTag ==
+		   PW_SCOUT)
 			return qfalse;
 
 		/* we also clamp armor to the maxhealth for handicapping */
-		if( bg_itemlist[ps->stats[STAT_PERSISTANT_POWERUP]].giTag ==
-		    PW_GUARD )
+		if(bg_itemlist[ps->stats[STAT_PERSISTANT_POWERUP]].giTag ==
+		   PW_GUARD)
 			upperBound = ps->stats[STAT_MAX_HEALTH];
 		else
 			upperBound = ps->stats[STAT_MAX_HEALTH] * 2;
 
-		if( ps->stats[STAT_ARMOR] >= upperBound )
+		if(ps->stats[STAT_ARMOR] >= upperBound)
 			return qfalse;
 
 #else
-		if( ps->stats[STAT_ARMOR] >= ps->stats[STAT_MAX_HEALTH] * 2 )
+		if(ps->stats[STAT_ARMOR] >= ps->stats[STAT_MAX_HEALTH] * 2)
 			return qfalse;
 
 #endif
@@ -1091,19 +1091,19 @@ BG_CanItemBeGrabbed(int gametype, const entityState_t *ent,
 		/* small and mega healths will go over the max, otherwise
 		 * don't pick up if already at max */
 #ifdef MISSIONPACK
-		if( bg_itemlist[ps->stats[STAT_PERSISTANT_POWERUP]].giTag ==
-		    PW_GUARD )
+		if(bg_itemlist[ps->stats[STAT_PERSISTANT_POWERUP]].giTag ==
+		   PW_GUARD)
 			upperBound = ps->stats[STAT_MAX_HEALTH];
 		else
 #endif
-		if( item->quantity == 5 || item->quantity == 100 ){
-			if( ps->stats[STAT_HEALTH] >=
-			    ps->stats[STAT_MAX_HEALTH] * 2 )
+		if(item->quantity == 5 || item->quantity == 100){
+			if(ps->stats[STAT_HEALTH] >=
+			   ps->stats[STAT_MAX_HEALTH] * 2)
 				return qfalse;
 			return qtrue;
 		}
 
-		if( ps->stats[STAT_HEALTH] >= ps->stats[STAT_MAX_HEALTH] )
+		if(ps->stats[STAT_HEALTH] >= ps->stats[STAT_MAX_HEALTH])
 			return qfalse;
 		return qtrue;
 
@@ -1113,7 +1113,7 @@ BG_CanItemBeGrabbed(int gametype, const entityState_t *ent,
 #ifdef MISSIONPACK
 	case IT_PERSISTANT_POWERUP:
 		/* can only hold one item at a time */
-		if( ps->stats[STAT_PERSISTANT_POWERUP] )
+		if(ps->stats[STAT_PERSISTANT_POWERUP])
 			return qfalse;
 
 		/* check team only */
@@ -1128,21 +1128,21 @@ BG_CanItemBeGrabbed(int gametype, const entityState_t *ent,
 
 	case IT_TEAM:	/* team items, such as flags */
 #ifdef MISSIONPACK
-		if( gametype == GT_1FCTF ){
+		if(gametype == GT_1FCTF){
 			/* neutral flag can always be picked up */
-			if( item->giTag == PW_NEUTRALFLAG )
+			if(item->giTag == PW_NEUTRALFLAG)
 				return qtrue;
 			if(ps->persistant[PERS_TEAM] == TEAM_RED){
 				if(item->giTag == PW_BLUEFLAG  &&
-				   ps->powerups[PW_NEUTRALFLAG] )
+				   ps->powerups[PW_NEUTRALFLAG])
 					return qtrue;
 			}else if(ps->persistant[PERS_TEAM] == TEAM_BLUE)
 				if(item->giTag == PW_REDFLAG  &&
-				   ps->powerups[PW_NEUTRALFLAG] )
+				   ps->powerups[PW_NEUTRALFLAG])
 					return qtrue;
 		}
 #endif
-		if( gametype == GT_CTF ){
+		if(gametype == GT_CTF){
 			/* ent->modelindex2 is non-zero on items if they are dropped
 			 * we need to know this because we can pick up our dropped flag (and return it)
 			 * but we can't pick up our flag at base */
@@ -1163,7 +1163,7 @@ BG_CanItemBeGrabbed(int gametype, const entityState_t *ent,
 		}
 
 #ifdef MISSIONPACK
-		if( gametype == GT_HARVESTER )
+		if(gametype == GT_HARVESTER)
 			return qtrue;
 
 #endif
@@ -1171,7 +1171,7 @@ BG_CanItemBeGrabbed(int gametype, const entityState_t *ent,
 
 	case IT_HOLDABLE:
 		/* can only hold one item at a time */
-		if( ps->stats[STAT_HOLDABLE_ITEM] )
+		if(ps->stats[STAT_HOLDABLE_ITEM])
 			return qfalse;
 		return qtrue;
 
@@ -1204,7 +1204,7 @@ BG_EvaluateTrajectory(const trajectory_t *tr, int atTime, vec3_t result)
 	float	deltaTime;
 	float	phase;
 
-	switch( tr->trType ){
+	switch(tr->trType){
 	case TR_STATIONARY:
 	case TR_INTERPOLATE:
 		VectorCopy(tr->trBase, result);
@@ -1214,15 +1214,15 @@ BG_EvaluateTrajectory(const trajectory_t *tr, int atTime, vec3_t result)
 		VectorMA(tr->trBase, deltaTime, tr->trDelta, result);
 		break;
 	case TR_SINE:
-		deltaTime = (atTime - tr->trTime) / (float) tr->trDuration;
+		deltaTime = (atTime - tr->trTime) / (float)tr->trDuration;
 		phase = sin(deltaTime * M_PI * 2);
 		VectorMA(tr->trBase, phase, tr->trDelta, result);
 		break;
 	case TR_LINEAR_STOP:
-		if( atTime > tr->trTime + tr->trDuration )
+		if(atTime > tr->trTime + tr->trDuration)
 			atTime = tr->trTime + tr->trDuration;
 		deltaTime = (atTime - tr->trTime) * 0.001;	/* milliseconds to seconds */
-		if( deltaTime < 0 )
+		if(deltaTime < 0)
 			deltaTime = 0;
 		VectorMA(tr->trBase, deltaTime, tr->trDelta, result);
 		break;
@@ -1251,7 +1251,7 @@ BG_EvaluateTrajectoryDelta(const trajectory_t *tr, int atTime, vec3_t result)
 	float	deltaTime;
 	float	phase;
 
-	switch( tr->trType ){
+	switch(tr->trType){
 	case TR_STATIONARY:
 	case TR_INTERPOLATE:
 		VectorClear(result);
@@ -1260,13 +1260,13 @@ BG_EvaluateTrajectoryDelta(const trajectory_t *tr, int atTime, vec3_t result)
 		VectorCopy(tr->trDelta, result);
 		break;
 	case TR_SINE:
-		deltaTime	= (atTime - tr->trTime) / (float) tr->trDuration;
-		phase	= cos(deltaTime * M_PI * 2);	/* derivative of sin = cos */
-		phase	*= 0.5;
+		deltaTime	= (atTime - tr->trTime) / (float)tr->trDuration;
+		phase		= cos(deltaTime * M_PI * 2);	/* derivative of sin = cos */
+		phase		*= 0.5;
 		VectorScale(tr->trDelta, phase, result);
 		break;
 	case TR_LINEAR_STOP:
-		if( atTime > tr->trTime + tr->trDuration ){
+		if(atTime > tr->trTime + tr->trDuration){
 			VectorClear(result);
 			return;
 		}
@@ -1412,7 +1412,7 @@ BG_AddPredictableEventToPlayerstate(int newEvent, int eventParm,
 	{
 		char buf[256];
 		trap_Cvar_VariableStringBuffer("showevents", buf, sizeof(buf));
-		if( atof(buf) != 0 ){
+		if(atof(buf) != 0){
 #ifdef QAGAME
 			Com_Printf(
 				" game event svt %5d -> %5d: num = %20s parm %d\n",
@@ -1447,28 +1447,28 @@ BG_TouchJumpPad(playerState_t *ps, entityState_t *jumppad)
 	int	effectNum;
 
 	/* spectators don't use jump pads */
-	if( ps->pm_type != PM_NORMAL )
+	if(ps->pm_type != PM_NORMAL)
 		return;
 
 	/* flying characters don't hit bounce pads */
-	if( ps->powerups[PW_FLIGHT] )
+	if(ps->powerups[PW_FLIGHT])
 		return;
 
 	/* if we didn't hit this same jumppad the previous frame
 	 * then don't play the event sound again if we are in a fat trigger */
-	if( ps->jumppad_ent != jumppad->number ){
+	if(ps->jumppad_ent != jumppad->number){
 
 		vectoangles(jumppad->origin2, angles);
 		p = fabs(AngleNormalize180(angles[PITCH]));
-		if( p < 45 )
+		if(p < 45)
 			effectNum = 0;
 		else
 			effectNum = 1;
 		BG_AddPredictableEventToPlayerstate(EV_JUMP_PAD, effectNum, ps);
 	}
 	/* remember hitting this jumppad this frame */
-	ps->jumppad_ent		= jumppad->number;
-	ps->jumppad_frame	= ps->pmove_framecount;
+	ps->jumppad_ent = jumppad->number;
+	ps->jumppad_frame = ps->pmove_framecount;
 	/* give the player the velocity from the jumppad */
 	VectorCopy(jumppad->origin2, ps->velocity);
 }
@@ -1486,9 +1486,9 @@ BG_PlayerStateToEntityState(playerState_t *ps, entityState_t *s, qboolean snap)
 {
 	int i;
 
-	if( ps->pm_type == PM_INTERMISSION || ps->pm_type == PM_SPECTATOR )
+	if(ps->pm_type == PM_INTERMISSION || ps->pm_type == PM_SPECTATOR)
 		s->eType = ET_INVISIBLE;
-	else if( ps->stats[STAT_HEALTH] <= GIB_HEALTH )
+	else if(ps->stats[STAT_HEALTH] <= GIB_HEALTH)
 		s->eType = ET_INVISIBLE;
 	else
 		s->eType = ET_PLAYER;
@@ -1497,14 +1497,14 @@ BG_PlayerStateToEntityState(playerState_t *ps, entityState_t *s, qboolean snap)
 
 	s->pos.trType = TR_INTERPOLATE;
 	VectorCopy(ps->origin, s->pos.trBase);
-	if( snap )
+	if(snap)
 		SnapVector(s->pos.trBase);
 	/* set the trDelta for flag direction */
 	VectorCopy(ps->velocity, s->pos.trDelta);
 
 	s->apos.trType = TR_INTERPOLATE;
 	VectorCopy(ps->viewangles, s->apos.trBase);
-	if( snap )
+	if(snap)
 		SnapVector(s->apos.trBase);
 
 	s->angles2[YAW] = ps->movementDir;
@@ -1513,18 +1513,18 @@ BG_PlayerStateToEntityState(playerState_t *ps, entityState_t *s, qboolean snap)
 	s->clientNum	= ps->clientNum;	/* ET_PLAYER looks here instead of at number */
 	/* so corpses can also reference the proper config */
 	s->eFlags = ps->eFlags;
-	if( ps->stats[STAT_HEALTH] <= 0 )
+	if(ps->stats[STAT_HEALTH] <= 0)
 		s->eFlags |= EF_DEAD;
 	else
 		s->eFlags &= ~EF_DEAD;
 
-	if( ps->externalEvent ){
+	if(ps->externalEvent){
 		s->event = ps->externalEvent;
 		s->eventParm = ps->externalEventParm;
-	}else if( ps->entityEventSequence < ps->eventSequence ){
+	}else if(ps->entityEventSequence < ps->eventSequence){
 		int seq;
 
-		if( ps->entityEventSequence < ps->eventSequence - MAX_PS_EVENTS)
+		if(ps->entityEventSequence < ps->eventSequence - MAX_PS_EVENTS)
 			ps->entityEventSequence = ps->eventSequence -
 						  MAX_PS_EVENTS;
 		seq = ps->entityEventSequence & (MAX_PS_EVENTS-1);
@@ -1538,12 +1538,12 @@ BG_PlayerStateToEntityState(playerState_t *ps, entityState_t *s, qboolean snap)
 	s->groundEntityNum = ps->groundEntityNum;
 
 	s->powerups = 0;
-	for( i = 0; i < MAX_POWERUPS; i++ )
-		if( ps->powerups[ i ] )
+	for(i = 0; i < MAX_POWERUPS; i++)
+		if(ps->powerups[ i ])
 			s->powerups |= 1 << i;
 
-	s->loopSound	= ps->loopSound;
-	s->generic1	= ps->generic1;
+	s->loopSound = ps->loopSound;
+	s->generic1 = ps->generic1;
 }
 
 /*
@@ -1561,9 +1561,9 @@ BG_PlayerStateToEntityStateExtraPolate(playerState_t *ps, entityState_t *s,
 {
 	int i;
 
-	if( ps->pm_type == PM_INTERMISSION || ps->pm_type == PM_SPECTATOR )
+	if(ps->pm_type == PM_INTERMISSION || ps->pm_type == PM_SPECTATOR)
 		s->eType = ET_INVISIBLE;
-	else if( ps->stats[STAT_HEALTH] <= GIB_HEALTH )
+	else if(ps->stats[STAT_HEALTH] <= GIB_HEALTH)
 		s->eType = ET_INVISIBLE;
 	else
 		s->eType = ET_PLAYER;
@@ -1572,7 +1572,7 @@ BG_PlayerStateToEntityStateExtraPolate(playerState_t *ps, entityState_t *s,
 
 	s->pos.trType = TR_LINEAR_STOP;
 	VectorCopy(ps->origin, s->pos.trBase);
-	if( snap )
+	if(snap)
 		SnapVector(s->pos.trBase);
 	/* set the trDelta for flag direction and linear prediction */
 	VectorCopy(ps->velocity, s->pos.trDelta);
@@ -1583,7 +1583,7 @@ BG_PlayerStateToEntityStateExtraPolate(playerState_t *ps, entityState_t *s,
 
 	s->apos.trType = TR_INTERPOLATE;
 	VectorCopy(ps->viewangles, s->apos.trBase);
-	if( snap )
+	if(snap)
 		SnapVector(s->apos.trBase);
 
 	s->angles2[YAW] = ps->movementDir;
@@ -1592,18 +1592,18 @@ BG_PlayerStateToEntityStateExtraPolate(playerState_t *ps, entityState_t *s,
 	s->clientNum	= ps->clientNum;	/* ET_PLAYER looks here instead of at number */
 	/* so corpses can also reference the proper config */
 	s->eFlags = ps->eFlags;
-	if( ps->stats[STAT_HEALTH] <= 0 )
+	if(ps->stats[STAT_HEALTH] <= 0)
 		s->eFlags |= EF_DEAD;
 	else
 		s->eFlags &= ~EF_DEAD;
 
-	if( ps->externalEvent ){
+	if(ps->externalEvent){
 		s->event = ps->externalEvent;
 		s->eventParm = ps->externalEventParm;
-	}else if( ps->entityEventSequence < ps->eventSequence ){
+	}else if(ps->entityEventSequence < ps->eventSequence){
 		int seq;
 
-		if( ps->entityEventSequence < ps->eventSequence - MAX_PS_EVENTS)
+		if(ps->entityEventSequence < ps->eventSequence - MAX_PS_EVENTS)
 			ps->entityEventSequence = ps->eventSequence -
 						  MAX_PS_EVENTS;
 		seq = ps->entityEventSequence & (MAX_PS_EVENTS-1);
@@ -1617,10 +1617,10 @@ BG_PlayerStateToEntityStateExtraPolate(playerState_t *ps, entityState_t *s,
 	s->groundEntityNum = ps->groundEntityNum;
 
 	s->powerups = 0;
-	for( i = 0; i < MAX_POWERUPS; i++ )
-		if( ps->powerups[ i ] )
+	for(i = 0; i < MAX_POWERUPS; i++)
+		if(ps->powerups[ i ])
 			s->powerups |= 1 << i;
 
-	s->loopSound	= ps->loopSound;
-	s->generic1	= ps->generic1;
+	s->loopSound = ps->loopSound;
+	s->generic1 = ps->generic1;
 }

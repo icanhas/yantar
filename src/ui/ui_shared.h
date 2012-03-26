@@ -400,7 +400,7 @@ typedef struct {
 
 } displayContextDef_t;
 
-const char *String_Alloc(const char *p);
+const char*String_Alloc(const char *p);
 void String_Init(void);
 void String_Report(void);
 void Init_Display(displayContextDef_t *dc);
@@ -408,7 +408,7 @@ void Display_ExpandMacros(char * buff);
 void Menu_Init(menuDef_t *menu);
 void Item_Init(itemDef_t *item);
 void Menu_PostParse(menuDef_t *menu);
-menuDef_t *Menu_GetFocused(void);
+menuDef_t*Menu_GetFocused(void);
 void Menu_HandleKey(menuDef_t *menu, int key, qboolean down);
 void Menu_HandleMouseMove(menuDef_t *menu, float x, float y);
 void Menu_ScrollFeeder(menuDef_t *menu, int feeder, qboolean down);
@@ -427,18 +427,18 @@ qboolean PC_Script_Parse(int handle, const char **out);
 int Menu_Count(void);
 void Menu_New(int handle);
 void Menu_PaintAll(void);
-menuDef_t *Menus_ActivateByName(const char *p);
+menuDef_t*Menus_ActivateByName(const char *p);
 void Menu_Reset(void);
 qboolean Menus_AnyFullScreenVisible(void);
 void  Menus_Activate(menuDef_t *menu);
 
-displayContextDef_t *Display_GetContext(void);
-void *Display_CaptureItem(int x, int y);
+displayContextDef_t*Display_GetContext(void);
+void*Display_CaptureItem(int x, int y);
 qboolean Display_MouseMove(void *p, int x, int y);
 int Display_CursorType(int x, int y);
 qboolean Display_KeyBindPending(void);
 void Menus_OpenByName(const char *p);
-menuDef_t *Menus_FindByName(const char *p);
+menuDef_t*Menus_FindByName(const char *p);
 void Menus_ShowByName(const char *p);
 void Menus_CloseByName(const char *p);
 void Display_HandleKey(int key, qboolean down, int x, int y);
@@ -449,7 +449,7 @@ void Menu_SetFeederSelection(menuDef_t *menu, int feeder, int index,
 			     const char *name);
 void Display_CacheAll(void);
 
-void *UI_Alloc(int size);
+void*UI_Alloc(int size);
 void UI_InitMemory(void);
 qboolean UI_OutOfMemory(void);
 

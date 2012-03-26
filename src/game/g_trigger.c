@@ -30,8 +30,8 @@ InitTrigger(gentity_t *self)
 		G_SetMovedir (self->s.angles, self->movedir);
 
 	trap_SetBrushModel(self, self->model);
-	self->r.contents = CONTENTS_TRIGGER;	/* replaces the -1 from trap_SetBrushModel */
-	self->r.svFlags = SVF_NOCLIENT;
+	self->r.contents	= CONTENTS_TRIGGER;	/* replaces the -1 from trap_SetBrushModel */
+	self->r.svFlags		= SVF_NOCLIENT;
 }
 
 
@@ -50,21 +50,21 @@ void
 multi_trigger(gentity_t *ent, gentity_t *activator)
 {
 	ent->activator = activator;
-	if( ent->nextthink )
-		return;	/* can't retrigger until the wait is over */
+	if(ent->nextthink)
+		return;		/* can't retrigger until the wait is over */
 
-	if( activator->client ){
+	if(activator->client){
 		if((ent->spawnflags & 1) &&
-		   activator->client->sess.sessionTeam != TEAM_RED )
+		   activator->client->sess.sessionTeam != TEAM_RED)
 			return;
 		if((ent->spawnflags & 2) &&
-		   activator->client->sess.sessionTeam != TEAM_BLUE )
+		   activator->client->sess.sessionTeam != TEAM_BLUE)
 			return;
 	}
 
 	G_UseTargets (ent, ent->activator);
 
-	if( ent->wait > 0 ){
+	if(ent->wait > 0){
 		ent->think = multi_wait;
 		ent->nextthink = level.time +
 				 (ent->wait + ent->random * crandom()) * 1000;
@@ -86,7 +86,7 @@ Use_Multi(gentity_t *ent, gentity_t *other, gentity_t *activator)
 void
 Touch_Multi(gentity_t *self, gentity_t *other, trace_t *trace)
 {
-	if( !other->client )
+	if(!other->client)
 		return;
 	multi_trigger(self, other);
 }
@@ -104,13 +104,13 @@ SP_trigger_multiple(gentity_t *ent)
 	G_SpawnFloat("wait", "0.5", &ent->wait);
 	G_SpawnFloat("random", "0", &ent->random);
 
-	if( ent->random >= ent->wait && ent->wait >= 0 ){
+	if(ent->random >= ent->wait && ent->wait >= 0){
 		ent->random = ent->wait - FRAMETIME;
 		G_Printf("trigger_multiple has random >= wait\n");
 	}
 
-	ent->touch = Touch_Multi;
-	ent->use = Use_Multi;
+	ent->touch	= Touch_Multi;
+	ent->use	= Use_Multi;
 
 	InitTrigger(ent);
 	trap_LinkEntity (ent);
@@ -157,7 +157,7 @@ void
 trigger_push_touch(gentity_t *self, gentity_t *other, trace_t *trace)
 {
 
-	if( !other->client )
+	if(!other->client)
 		return;
 
 	BG_TouchJumpPad(&other->client->ps, &self->s);
@@ -183,7 +183,7 @@ AimAtTarget(gentity_t *self)
 	VectorScale (origin, 0.5, origin);
 
 	ent = G_PickTarget(self->target);
-	if( !ent ){
+	if(!ent){
 		G_FreeEntity(self);
 		return;
 	}
@@ -191,7 +191,7 @@ AimAtTarget(gentity_t *self)
 	height	= ent->s.origin[2] - origin[2];
 	gravity = g_gravity.value;
 	time = sqrt(height / (.5 * gravity));
-	if( !time ){
+	if(!time){
 		G_FreeEntity(self);
 		return;
 	}
@@ -234,18 +234,18 @@ SP_trigger_push(gentity_t *self)
 void
 Use_target_push(gentity_t *self, gentity_t *other, gentity_t *activator)
 {
-	if( !activator->client )
+	if(!activator->client)
 		return;
 
-	if( activator->client->ps.pm_type != PM_NORMAL )
+	if(activator->client->ps.pm_type != PM_NORMAL)
 		return;
-	if( activator->client->ps.powerups[PW_FLIGHT] )
+	if(activator->client->ps.powerups[PW_FLIGHT])
 		return;
 
 	VectorCopy (self->s.origin2, activator->client->ps.velocity);
 
 	/* play fly sound every 1.5 seconds */
-	if( activator->fly_sound_debounce_time < level.time ){
+	if(activator->fly_sound_debounce_time < level.time){
 		activator->fly_sound_debounce_time = level.time + 1500;
 		G_Sound(activator, CHAN_AUTO, self->noise_index);
 	}
@@ -264,11 +264,11 @@ SP_target_push(gentity_t *self)
 	G_SetMovedir (self->s.angles, self->s.origin2);
 	VectorScale (self->s.origin2, self->speed, self->s.origin2);
 
-	if( self->spawnflags & 1 )
+	if(self->spawnflags & 1)
 		self->noise_index = G_SoundIndex("sound/world/jumppad.wav");
 	else
 		self->noise_index = G_SoundIndex("sound/misc/windfly.wav");
-	if( self->target ){
+	if(self->target){
 		VectorCopy(self->s.origin, self->r.absmin);
 		VectorCopy(self->s.origin, self->r.absmax);
 		self->think = AimAtTarget;
@@ -290,13 +290,13 @@ trigger_teleporter_touch(gentity_t *self, gentity_t *other, trace_t *trace)
 {
 	gentity_t *dest;
 
-	if( !other->client )
+	if(!other->client)
 		return;
-	if( other->client->ps.pm_type == PM_DEAD )
+	if(other->client->ps.pm_type == PM_DEAD)
 		return;
 	/* Spectators only? */
 	if((self->spawnflags & 1) &&
-	   other->client->sess.sessionTeam != TEAM_SPECTATOR )
+	   other->client->sess.sessionTeam != TEAM_SPECTATOR)
 		return;
 
 
@@ -325,7 +325,7 @@ SP_trigger_teleport(gentity_t *self)
 
 	/* unlike other triggers, we need to send this one to the client
 	 * unless is a spectator trigger */
-	if( self->spawnflags & 1 )
+	if(self->spawnflags & 1)
 		self->r.svFlags |= SVF_NOCLIENT;
 	else
 		self->r.svFlags &= ~SVF_NOCLIENT;
@@ -363,7 +363,7 @@ SP_trigger_teleport(gentity_t *self)
 void
 hurt_use(gentity_t *self, gentity_t *other, gentity_t *activator)
 {
-	if( self->r.linked )
+	if(self->r.linked)
 		trap_UnlinkEntity(self);
 	else
 		trap_LinkEntity(self);
@@ -374,19 +374,19 @@ hurt_touch(gentity_t *self, gentity_t *other, trace_t *trace)
 {
 	int dflags;
 
-	if( !other->takedamage )
+	if(!other->takedamage)
 		return;
 
-	if( self->timestamp > level.time )
+	if(self->timestamp > level.time)
 		return;
 
-	if( self->spawnflags & 16 )
+	if(self->spawnflags & 16)
 		self->timestamp = level.time + 1000;
 	else
 		self->timestamp = level.time + FRAMETIME;
 
 	/* play sound */
-	if( !(self->spawnflags & 4))
+	if(!(self->spawnflags & 4))
 		G_Sound(other, CHAN_AUTO, self->noise_index);
 
 	if(self->spawnflags & 8)
@@ -450,7 +450,7 @@ func_timer_use(gentity_t *self, gentity_t *other, gentity_t *activator)
 	self->activator = activator;
 
 	/* if on, turn it off */
-	if( self->nextthink ){
+	if(self->nextthink){
 		self->nextthink = 0;
 		return;
 	}
@@ -465,16 +465,16 @@ SP_func_timer(gentity_t *self)
 	G_SpawnFloat("random", "1", &self->random);
 	G_SpawnFloat("wait", "1", &self->wait);
 
-	self->use = func_timer_use;
-	self->think = func_timer_think;
+	self->use	= func_timer_use;
+	self->think	= func_timer_think;
 
-	if( self->random >= self->wait ){
+	if(self->random >= self->wait){
 		self->random = self->wait - FRAMETIME;
 		G_Printf("func_timer at %s has random >= wait\n",
 			vtos(self->s.origin));
 	}
 
-	if( self->spawnflags & 1 ){
+	if(self->spawnflags & 1){
 		self->nextthink = level.time + FRAMETIME;
 		self->activator = self;
 	}

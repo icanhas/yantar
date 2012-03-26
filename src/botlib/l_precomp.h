@@ -145,9 +145,9 @@ void PC_SetPunctuations(source_t *source, punctuation_t *p);
 /* set the base folder to load files from */
 void PC_SetBaseFolder(char *path);
 /* load a source file */
-source_t *LoadSourceFile(const char *filename);
+source_t*LoadSourceFile(const char *filename);
 /* load a source from memory */
-source_t *LoadSourceMemory(char *ptr, int length, char *name);
+source_t*LoadSourceMemory(char *ptr, int length, char *name);
 /* free the given source */
 void FreeSource(source_t *source);
 /* print a source error */

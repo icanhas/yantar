@@ -161,7 +161,7 @@ Q_rand(int *seed)
 float
 Q_random(int *seed)
 {
-	return (Q_rand(seed) & 0xffff) / (float) 0x10000;
+	return (Q_rand(seed) & 0xffff) / (float)0x10000;
 }
 
 float
@@ -175,9 +175,9 @@ Q_crandom(int *seed)
 signed char
 ClampChar(int i)
 {
-	if( i < -128 )
+	if(i < -128)
 		return -128;
-	if( i > 127 )
+	if(i > 127)
 		return 127;
 	return i;
 }
@@ -185,9 +185,9 @@ ClampChar(int i)
 signed short
 ClampShort(int i)
 {
-	if( i < -32768 )
+	if(i < -32768)
 		return -32768;
-	if( i > 0x7fff )
+	if(i > 0x7fff)
 		return 0x7fff;
 	return i;
 }
@@ -200,7 +200,7 @@ DirToByte(vec3_t dir)
 	int i, best;
 	float d, bestd;
 
-	if( !dir )
+	if(!dir)
 		return 0;
 
 	bestd	= 0;
@@ -219,7 +219,7 @@ DirToByte(vec3_t dir)
 void
 ByteToDir(int b, vec3_t dir)
 {
-	if( b < 0 || b >= NUMVERTEXNORMALS ){
+	if(b < 0 || b >= NUMVERTEXNORMALS){
 		VectorCopy(vec3_origin, dir);
 		return;
 	}
@@ -232,9 +232,9 @@ ColorBytes3(float r, float g, float b)
 {
 	unsigned i;
 
-	((byte *) &i)[0] = r * 255;
-	((byte *) &i)[1] = g * 255;
-	((byte *) &i)[2] = b * 255;
+	((byte*)&i)[0]	= r * 255;
+	((byte*)&i)[1]	= g * 255;
+	((byte*)&i)[2]	= b * 255;
 
 	return i;
 }
@@ -244,10 +244,10 @@ ColorBytes4(float r, float g, float b, float a)
 {
 	unsigned i;
 
-	((byte *) &i)[0] = r * 255;
-	((byte *) &i)[1] = g * 255;
-	((byte *) &i)[2] = b * 255;
-	((byte *) &i)[3] = a * 255;
+	((byte*)&i)[0]	= r * 255;
+	((byte*)&i)[1]	= g * 255;
+	((byte*)&i)[2]	= b * 255;
+	((byte*)&i)[3]	= a * 255;
 
 	return i;
 }
@@ -258,12 +258,12 @@ NormalizeColor(const vec3_t in, vec3_t out)
 	float max;
 
 	max = in[0];
-	if( in[1] > max )
+	if(in[1] > max)
 		max = in[1];
-	if( in[2] > max )
+	if(in[2] > max)
 		max = in[2];
 
-	if( !max )
+	if(!max)
 		VectorClear(out);
 	else{
 		out[0]	= in[0] / max;
@@ -290,7 +290,7 @@ PlaneFromPoints(vec4_t plane, const vec3_t a, const vec3_t b, const vec3_t c)
 	VectorSubtract(b, a, d1);
 	VectorSubtract(c, a, d2);
 	CrossProduct(d2, d1, plane);
-	if( VectorNormalize(plane) == 0 )
+	if(VectorNormalize(plane) == 0)
 		return qfalse;
 
 	plane[3] = DotProduct(a, plane);
@@ -308,12 +308,12 @@ void
 RotatePointAroundVector(vec3_t dst, const vec3_t dir, const vec3_t point,
 			float degrees)
 {
-	float m[3][3];
-	float im[3][3];
-	float zrot[3][3];
-	float tmpmat[3][3];
-	float rot[3][3];
-	int i;
+	float	m[3][3];
+	float	im[3][3];
+	float	zrot[3][3];
+	float	tmpmat[3][3];
+	float	rot[3][3];
+	int	i;
 	vec3_t	vr, vup, vf;
 	float	rad;
 
@@ -338,26 +338,26 @@ RotatePointAroundVector(vec3_t dst, const vec3_t dir, const vec3_t point,
 
 	memcpy(im, m, sizeof(im));
 
-	im[0][1] = m[1][0];
-	im[0][2] = m[2][0];
-	im[1][0] = m[0][1];
-	im[1][2] = m[2][1];
-	im[2][0] = m[0][2];
-	im[2][1] = m[1][2];
+	im[0][1]	= m[1][0];
+	im[0][2]	= m[2][0];
+	im[1][0]	= m[0][1];
+	im[1][2]	= m[2][1];
+	im[2][0]	= m[0][2];
+	im[2][1]	= m[1][2];
 
 	memset(zrot, 0, sizeof(zrot));
 	zrot[0][0] = zrot[1][1] = zrot[2][2] = 1.0F;
 
 	rad = DEG2RAD(degrees);
-	zrot[0][0] = cos(rad);
-	zrot[0][1] = sin(rad);
-	zrot[1][0] = -sin(rad);
-	zrot[1][1] = cos(rad);
+	zrot[0][0]	= cos(rad);
+	zrot[0][1]	= sin(rad);
+	zrot[1][0]	= -sin(rad);
+	zrot[1][1]	= cos(rad);
 
 	MatrixMultiply(m, zrot, tmpmat);
 	MatrixMultiply(tmpmat, im, rot);
 
-	for( i = 0; i < 3; i++ )
+	for(i = 0; i < 3; i++)
 		dst[i] = rot[i][0] * point[0] + rot[i][1] * point[1] +
 			 rot[i][2] * point[2];
 }
@@ -375,7 +375,7 @@ RotateAroundDirection(vec3_t axis[3], float yaw)
 	PerpendicularVector(axis[1], axis[0]);
 
 	/* rotate it around axis[0] by yaw */
-	if( yaw ){
+	if(yaw){
 		vec3_t temp;
 
 		VectorCopy(axis[1], temp);
@@ -391,28 +391,28 @@ RotateAroundDirection(vec3_t axis[3], float yaw)
 void
 vectoangles(const vec3_t value1, vec3_t angles)
 {
-	float forward;
-	float yaw, pitch;
+	float	forward;
+	float	yaw, pitch;
 
-	if( value1[1] == 0 && value1[0] == 0 ){
+	if(value1[1] == 0 && value1[0] == 0){
 		yaw = 0;
-		if( value1[2] > 0 )
+		if(value1[2] > 0)
 			pitch = 90;
 		else
 			pitch = 270;
 	}else{
-		if( value1[0] )
+		if(value1[0])
 			yaw = (atan2 (value1[1], value1[0]) * 180 / M_PI);
-		else if( value1[1] > 0 )
+		else if(value1[1] > 0)
 			yaw = 90;
 		else
 			yaw = 270;
-		if( yaw < 0 )
+		if(yaw < 0)
 			yaw += 360;
 
 		forward = sqrt (value1[0]*value1[0] + value1[1]*value1[1]);
 		pitch	= (atan2(value1[2], forward) * 180 / M_PI);
-		if( pitch < 0 )
+		if(pitch < 0)
 			pitch += 360;
 	}
 
@@ -440,15 +440,15 @@ AnglesToAxis(const vec3_t angles, vec3_t axis[3])
 void
 AxisClear(vec3_t axis[3])
 {
-	axis[0][0] = 1;
-	axis[0][1] = 0;
-	axis[0][2] = 0;
-	axis[1][0] = 0;
-	axis[1][1] = 1;
-	axis[1][2] = 0;
-	axis[2][0] = 0;
-	axis[2][1] = 0;
-	axis[2][2] = 1;
+	axis[0][0]	= 1;
+	axis[0][1]	= 0;
+	axis[0][2]	= 0;
+	axis[1][0]	= 0;
+	axis[1][1]	= 1;
+	axis[1][2]	= 0;
+	axis[2][0]	= 0;
+	axis[2][1]	= 0;
+	axis[2][2]	= 1;
 }
 
 void
@@ -462,7 +462,7 @@ AxisCopy(vec3_t in[3], vec3_t out[3])
 void
 ProjectPointOnPlane(vec3_t dst, const vec3_t p, const vec3_t normal)
 {
-	float d;
+	float	d;
 	vec3_t	n;
 	float	inv_denom;
 
@@ -474,9 +474,9 @@ ProjectPointOnPlane(vec3_t dst, const vec3_t p, const vec3_t normal)
 
 	d = DotProduct(normal, p) * inv_denom;
 
-	n[0] = normal[0] * inv_denom;
-	n[1] = normal[1] * inv_denom;
-	n[2] = normal[2] * inv_denom;
+	n[0]	= normal[0] * inv_denom;
+	n[1]	= normal[1] * inv_denom;
+	n[2]	= normal[2] * inv_denom;
 
 	dst[0]	= p[0] - d * n[0];
 	dst[1]	= p[1] - d * n[1];
@@ -498,9 +498,9 @@ MakeNormalVectors(const vec3_t forward, vec3_t right, vec3_t up)
 
 	/* this rotate and negate guarantees a vector
 	 * not colinear with the original */
-	right[1] = -forward[0];
-	right[2] = forward[1];
-	right[0] = forward[2];
+	right[1]	= -forward[0];
+	right[2]	= forward[1];
+	right[0]	= forward[2];
 
 	d = DotProduct (right, forward);
 	VectorMA (right, -d, forward, right);
@@ -523,16 +523,16 @@ VectorRotate(vec3_t in, vec3_t matrix[3], vec3_t out)
 float
 Q_rsqrt(float number)
 {
-	floatint_t t;
+	floatint_t	t;
 	float x2, y;
-	const float threehalfs = 1.5f;
+	const float	threehalfs = 1.5f;
 
-	x2 = number * 0.5f;
-	t.f = number;
+	x2	= number * 0.5f;
+	t.f	= number;
 /*  t.i = 0x5f3759df - ( t.i >> 1 );               // what the fuck? */
-	t.i = 0x5f375a86 - (t.i >> 1);
-	y = t.f;
-	y = y * (threehalfs - (x2 * y * y));	/* 1st iteration */
+	t.i	= 0x5f375a86 - (t.i >> 1);
+	y	= t.f;
+	y	= y * (threehalfs - (x2 * y * y));	/* 1st iteration */
 /*	y  = y * ( threehalfs - ( x2 * y * y ) );   // 2nd iteration, this can be removed */
 
 	return y;
@@ -542,8 +542,8 @@ float
 Q_fabs(float f)
 {
 	floatint_t fi;
-	fi.f = f;
-	fi.i &= 0x7FFFFFFF;
+	fi.f	= f;
+	fi.i	&= 0x7FFFFFFF;
 	return fi.f;
 }
 #endif
@@ -561,9 +561,9 @@ LerpAngle(float from, float to, float frac)
 {
 	float a;
 
-	if( to - from > 180 )
+	if(to - from > 180)
 		to -= 360;
-	if( to - from < -180 )
+	if(to - from < -180)
 		to += 360;
 	a = from + frac * (to - from);
 
@@ -584,9 +584,9 @@ AngleSubtract(float a1, float a2)
 	float a;
 
 	a = a1 - a2;
-	while( a > 180 )
+	while(a > 180)
 		a -= 360;
-	while( a < -180 )
+	while(a < -180)
 		a += 360;
 	return a;
 }
@@ -604,7 +604,7 @@ AnglesSubtract(vec3_t v1, vec3_t v2, vec3_t v3)
 float
 AngleMod(float a)
 {
-	a = (360.0/65536) * ((int) (a*(65536/360.0)) & 65535);
+	a = (360.0/65536) * ((int)(a*(65536/360.0)) & 65535);
 	return a;
 }
 
@@ -619,7 +619,7 @@ AngleMod(float a)
 float
 AngleNormalize360(float angle)
 {
-	return (360.0 / 65536) * ((int) (angle * (65536 / 360.0)) & 65535);
+	return (360.0 / 65536) * ((int)(angle * (65536 / 360.0)) & 65535);
 }
 
 
@@ -634,7 +634,7 @@ float
 AngleNormalize180(float angle)
 {
 	angle = AngleNormalize360(angle);
-	if( angle > 180.0 )
+	if(angle > 180.0)
 		angle -= 360.0;
 	return angle;
 }
@@ -686,8 +686,8 @@ SetPlaneSignbits(cplane_t *out)
 int
 BoxOnPlaneSide(vec3_t emins, vec3_t emaxs, struct cplane_s *p)
 {
-	float dist[2];
-	int sides;	/* , b, i; */
+	float	dist[2];
+	int	sides;	/* , b, i; */
 
 	/* fast axial cases */
 	if(p->type < 3){
@@ -705,8 +705,8 @@ BoxOnPlaneSide(vec3_t emins, vec3_t emaxs, struct cplane_s *p)
 
 		for(i=0; i<3; i++){
 			b = (p->signbits >> i) & 1;
-			dist[ b] += p->normal[i]*emaxs[i];
-			dist[!b] += p->normal[i]*emins[i];
+			dist[ b]	+= p->normal[i]*emaxs[i];
+			dist[!b]	+= p->normal[i]*emins[i];
 		}
 
 #else
@@ -789,8 +789,8 @@ RadiusFromBounds(const vec3_t mins, const vec3_t maxs)
 	float	a, b;
 
 	for(i=0; i<3; i++){
-		a = fabs(mins[i]);
-		b = fabs(maxs[i]);
+		a	= fabs(mins[i]);
+		b	= fabs(maxs[i]);
 		corner[i] = a > b ? a : b;
 	}
 
@@ -808,19 +808,19 @@ ClearBounds(vec3_t mins, vec3_t maxs)
 void
 AddPointToBounds(const vec3_t v, vec3_t mins, vec3_t maxs)
 {
-	if( v[0] < mins[0] )
+	if(v[0] < mins[0])
 		mins[0] = v[0];
-	if( v[0] > maxs[0])
+	if(v[0] > maxs[0])
 		maxs[0] = v[0];
 
-	if( v[1] < mins[1] )
+	if(v[1] < mins[1])
 		mins[1] = v[1];
-	if( v[1] > maxs[1])
+	if(v[1] > maxs[1])
 		maxs[1] = v[1];
 
-	if( v[2] < mins[2] )
+	if(v[2] < mins[2])
 		mins[2] = v[2];
-	if( v[2] > maxs[2])
+	if(v[2] > maxs[2])
 		maxs[2] = v[2];
 }
 
@@ -828,12 +828,12 @@ qboolean
 BoundsIntersect(const vec3_t mins, const vec3_t maxs,
 		const vec3_t mins2, const vec3_t maxs2)
 {
-	if( maxs[0] < mins2[0] ||
-	    maxs[1] < mins2[1] ||
-	    maxs[2] < mins2[2] ||
-	    mins[0] > maxs2[0] ||
-	    mins[1] > maxs2[1] ||
-	    mins[2] > maxs2[2])
+	if(maxs[0] < mins2[0] ||
+	   maxs[1] < mins2[1] ||
+	   maxs[2] < mins2[2] ||
+	   mins[0] > maxs2[0] ||
+	   mins[1] > maxs2[1] ||
+	   mins[2] > maxs2[2])
 		return qfalse;
 
 	return qtrue;
@@ -843,12 +843,12 @@ qboolean
 BoundsIntersectSphere(const vec3_t mins, const vec3_t maxs,
 		      const vec3_t origin, vec_t radius)
 {
-	if( origin[0] - radius > maxs[0] ||
-	    origin[0] + radius < mins[0] ||
-				 origin[1] - radius > maxs[1] ||
-	    origin[1] + radius < mins[1] ||
-				 origin[2] - radius > maxs[2] ||
-	    origin[2] + radius < mins[2])
+	if(origin[0] - radius > maxs[0] ||
+	   origin[0] + radius < mins[0] ||
+				origin[1] - radius > maxs[1] ||
+	   origin[1] + radius < mins[1] ||
+				origin[2] - radius > maxs[2] ||
+	   origin[2] + radius < mins[2])
 		return qfalse;
 
 	return qtrue;
@@ -858,12 +858,12 @@ qboolean
 BoundsIntersectPoint(const vec3_t mins, const vec3_t maxs,
 		     const vec3_t origin)
 {
-	if( origin[0] > maxs[0] ||
-	    origin[0] < mins[0] ||
-	    origin[1] > maxs[1] ||
-	    origin[1] < mins[1] ||
-	    origin[2] > maxs[2] ||
-	    origin[2] < mins[2])
+	if(origin[0] > maxs[0] ||
+	   origin[0] < mins[0] ||
+	   origin[1] > maxs[1] ||
+	   origin[1] < mins[1] ||
+	   origin[2] > maxs[2] ||
+	   origin[2] < mins[2])
 		return qfalse;
 
 	return qtrue;
@@ -877,9 +877,9 @@ VectorNormalize(vec3_t v)
 
 	length = v[0]*v[0] + v[1]*v[1] + v[2]*v[2];
 
-	if( length ){
+	if(length){
 		/* writing it this way allows gcc to recognize that rsqrt can be used */
-		ilength = 1/(float) sqrt (length);
+		ilength = 1/(float)sqrt (length);
 		/* sqrt(length) = length * (1 / sqrt(length)) */
 		length	*= ilength;
 		v[0]	*= ilength;
@@ -899,7 +899,7 @@ VectorNormalize2(const vec3_t v, vec3_t out)
 
 	if(length){
 		/* writing it this way allows gcc to recognize that rsqrt can be used */
-		ilength = 1/(float) sqrt (length);
+		ilength = 1/(float)sqrt (length);
 		/* sqrt(length) = length * (1 / sqrt(length)) */
 		length	*= ilength;
 		out[0]	= v[0]*ilength;
@@ -975,7 +975,7 @@ Q_log2(int val)
 	int answer;
 
 	answer = 0;
-	while((val>>=1) != 0 )
+	while((val>>=1) != 0)
 		answer++;
 	return answer;
 }
@@ -1048,14 +1048,14 @@ AngleVectors(const vec3_t angles, vec3_t forward, vec3_t right, vec3_t up)
 	cr	= cos(angle);
 
 	if(forward){
-		forward[0] = cp*cy;
-		forward[1] = cp*sy;
-		forward[2] = -sp;
+		forward[0]	= cp*cy;
+		forward[1]	= cp*sy;
+		forward[2]	= -sp;
 	}
 	if(right){
-		right[0] = (-1*sr*sp*cy+ -1*cr* -sy);
-		right[1] = (-1*sr*sp*sy+ -1*cr*cy);
-		right[2] = -1*sr*cp;
+		right[0]	= (-1*sr*sp*cy+ -1*cr* -sy);
+		right[1]	= (-1*sr*sp*sy+ -1*cr*cy);
+		right[2]	= -1*sr*cp;
 	}
 	if(up){
 		up[0]	= (cr*sp*cy+ -sr* -sy);
@@ -1070,21 +1070,21 @@ AngleVectors(const vec3_t angles, vec3_t forward, vec3_t right, vec3_t up)
 void
 PerpendicularVector(vec3_t dst, const vec3_t src)
 {
-	int pos;
-	int i;
-	float minelem = 1.0F;
-	vec3_t tempvec;
+	int	pos;
+	int	i;
+	float	minelem = 1.0F;
+	vec3_t	tempvec;
 
 	/*
 	** find the smallest magnitude axially aligned vector
 	*/
-	for( pos = 0, i = 0; i < 3; i++ )
-		if( fabs(src[i]) < minelem ){
+	for(pos = 0, i = 0; i < 3; i++)
+		if(fabs(src[i]) < minelem){
 			pos = i;
 			minelem = fabs(src[i]);
 		}
-	tempvec[0] = tempvec[1] = tempvec[2] = 0.0F;
-	tempvec[pos] = 1.0F;
+	tempvec[0]	= tempvec[1] = tempvec[2] = 0.0F;
+	tempvec[pos]	= 1.0F;
 
 	/*
 	** project the point onto the plane defined by src
@@ -1113,7 +1113,7 @@ Q_isnan(float x)
 	fi.ui	&= 0x7FFFFFFF;
 	fi.ui	= 0x7F800000 - fi.ui;
 
-	return (int) ((unsigned int) fi.ui >> 31);
+	return (int)((unsigned int)fi.ui >> 31);
 }
 /* ------------------------------------------------------------------------ */
 
@@ -1138,9 +1138,9 @@ Q_acos(float c)
 	angle = acos(c);
 
 	if(angle > M_PI)
-		return (float) M_PI;
+		return (float)M_PI;
 	if(angle < -M_PI)
-		return (float) M_PI;
+		return (float)M_PI;
 	return angle;
 }
 #endif

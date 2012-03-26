@@ -66,8 +66,8 @@ qboolean newUI = qfalse;
 float
 UI_ClampCvar(float min, float max, float value)
 {
-	if( value < min ) return min;
-	if( value > max ) return max;
+	if(value < min) return min;
+	if(value > max) return max;
 	return value;
 }
 
@@ -87,7 +87,7 @@ UI_StartDemoLoop(void)
 static void
 NeedCDAction(qboolean result)
 {
-	if( !result )
+	if(!result)
 		trap_Cmd_ExecuteText(EXEC_APPEND, "quit\n");
 }
 #endif	/* MISSIONPACK */
@@ -96,7 +96,7 @@ NeedCDAction(qboolean result)
 static void
 NeedCDKeyAction(qboolean result)
 {
-	if( !result )
+	if(!result)
 		trap_Cmd_ExecuteText(EXEC_APPEND, "quit\n");
 }
 #endif	/* MISSIONPACK */
@@ -245,7 +245,7 @@ void
 UI_ClearScores(void)
 {
 	char	gameList[4096];
-	char	*gameFile;
+	char    *gameFile;
 	int	i, len, count, size;
 	fileHandle_t f;
 	postGameInfo_t newInfo;
@@ -257,7 +257,7 @@ UI_ClearScores(void)
 
 	if(count > 0){
 		gameFile = gameList;
-		for( i = 0; i < count; i++ ){
+		for(i = 0; i < count; i++){
 			len = strlen(gameFile);
 			if(trap_FS_FOpenFile(va("games/%s",
 					   gameFile), &f, FS_WRITE) >= 0){
@@ -316,15 +316,15 @@ UI_CalcPostGameStats(void)
 	}
 
 	newInfo.accuracy = atoi(UI_Argv(3));
-	newInfo.impressives	= atoi(UI_Argv(4));
-	newInfo.excellents	= atoi(UI_Argv(5));
-	newInfo.defends		= atoi(UI_Argv(6));
-	newInfo.assists		= atoi(UI_Argv(7));
-	newInfo.gauntlets	= atoi(UI_Argv(8));
-	newInfo.baseScore	= atoi(UI_Argv(9));
-	newInfo.perfects	= atoi(UI_Argv(10));
-	newInfo.redScore	= atoi(UI_Argv(11));
-	newInfo.blueScore	= atoi(UI_Argv(12));
+	newInfo.impressives = atoi(UI_Argv(4));
+	newInfo.excellents = atoi(UI_Argv(5));
+	newInfo.defends = atoi(UI_Argv(6));
+	newInfo.assists = atoi(UI_Argv(7));
+	newInfo.gauntlets = atoi(UI_Argv(8));
+	newInfo.baseScore = atoi(UI_Argv(9));
+	newInfo.perfects = atoi(UI_Argv(10));
+	newInfo.redScore = atoi(UI_Argv(11));
+	newInfo.blueScore = atoi(UI_Argv(12));
 	time = atoi(UI_Argv(13));
 	newInfo.captures = atoi(UI_Argv(14));
 
@@ -402,20 +402,20 @@ UI_ConsoleCommand(int realTime)
 	/* ensure minimum menu data is available
 	 * Menu_Cache(); */
 
-	if( Q_stricmp (cmd, "ui_test") == 0 )
+	if(Q_stricmp (cmd, "ui_test") == 0)
 		UI_ShowPostGame(qtrue);
 
-	if( Q_stricmp (cmd, "ui_report") == 0 ){
+	if(Q_stricmp (cmd, "ui_report") == 0){
 		UI_Report();
 		return qtrue;
 	}
 
-	if( Q_stricmp (cmd, "ui_load") == 0 ){
+	if(Q_stricmp (cmd, "ui_load") == 0){
 		UI_Load();
 		return qtrue;
 	}
 
-	if( Q_stricmp (cmd, "remapShader") == 0 )
+	if(Q_stricmp (cmd, "remapShader") == 0)
 		if(trap_Argc() == 4){
 			char	shader1[MAX_QPATH];
 			char	shader2[MAX_QPATH];
@@ -429,22 +429,22 @@ UI_ConsoleCommand(int realTime)
 			return qtrue;
 		}
 
-	if( Q_stricmp (cmd, "postgame") == 0 ){
+	if(Q_stricmp (cmd, "postgame") == 0){
 		UI_CalcPostGameStats();
 		return qtrue;
 	}
 
-	if( Q_stricmp (cmd, "ui_cache") == 0 ){
+	if(Q_stricmp (cmd, "ui_cache") == 0){
 		UI_Cache_f();
 		return qtrue;
 	}
 
-	if( Q_stricmp (cmd, "ui_teamOrders") == 0 )
+	if(Q_stricmp (cmd, "ui_teamOrders") == 0)
 		/* UI_TeamOrdersMenu_f(); */
 		return qtrue;
 
 
-	if( Q_stricmp (cmd, "ui_cdkey") == 0 )
+	if(Q_stricmp (cmd, "ui_cdkey") == 0)
 		/* UI_CDKeyMenu_f(); */
 		return qtrue;
 
@@ -473,16 +473,16 @@ UI_AdjustFrom640(float *x, float *y, float *w, float *h)
 {
 	/* expect valid pointers */
 #if 0
-	*x	= *x * uiInfo.uiDC.scale + uiInfo.uiDC.bias;
-	*y	*= uiInfo.uiDC.scale;
-	*w	*= uiInfo.uiDC.scale;
-	*h	*= uiInfo.uiDC.scale;
+	*x = *x * uiInfo.uiDC.scale + uiInfo.uiDC.bias;
+	*y *= uiInfo.uiDC.scale;
+	*w *= uiInfo.uiDC.scale;
+	*h *= uiInfo.uiDC.scale;
 #endif
 
-	*x	*= uiInfo.uiDC.xscale;
-	*y	*= uiInfo.uiDC.yscale;
-	*w	*= uiInfo.uiDC.xscale;
-	*h	*= uiInfo.uiDC.yscale;
+	*x *= uiInfo.uiDC.xscale;
+	*y *= uiInfo.uiDC.yscale;
+	*w *= uiInfo.uiDC.xscale;
+	*h *= uiInfo.uiDC.yscale;
 
 }
 
@@ -504,22 +504,22 @@ UI_DrawHandlePic(float x, float y, float w, float h, qhandle_t hShader)
 	float	t0;
 	float	t1;
 
-	if( w < 0 ){	/* flip about vertical */
-		w	= -w;
-		s0	= 1;
-		s1	= 0;
+	if(w < 0){	/* flip about vertical */
+		w = -w;
+		s0 = 1;
+		s1 = 0;
 	}else{
-		s0	= 0;
-		s1	= 1;
+		s0 = 0;
+		s1 = 1;
 	}
 
-	if( h < 0 ){	/* flip about horizontal */
-		h	= -h;
-		t0	= 1;
-		t1	= 0;
+	if(h < 0){	/* flip about horizontal */
+		h = -h;
+		t0 = 1;
+		t1 = 0;
 	}else{
-		t0	= 0;
-		t1	= 1;
+		t0 = 0;
+		t1 = 1;
 	}
 
 	UI_AdjustFrom640(&x, &y, &w, &h);

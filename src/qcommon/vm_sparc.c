@@ -274,7 +274,7 @@ static const struct sparc_opcode sparc_opcodes[] = {
 #define DISP22(X)	((((X) >> 2) & 0x3fffff) << 0)
 #define SWTRAP(X)	(((X) & 0x7f) << 0)
 
-#define SIMM13_P(X)	((unsigned int) (X) +0x1000 < 0x2000)
+#define SIMM13_P(X)	((unsigned int)(X)+0x1000 < 0x2000)
 
 static void
 vimm(unsigned int val, int bits, int shift, int sgned, int arg_index)
@@ -283,10 +283,10 @@ vimm(unsigned int val, int bits, int shift, int sgned, int arg_index)
 	int orig_bits = bits;
 
 	if(sgned){
-		int x = (int) val;
+		int x = (int)val;
 		if(x < 0)
 			x = -x;
-		val = (unsigned int) x;
+		val = (unsigned int)x;
 		bits--;
 	}
 	if(val & ~((1U << bits) - 1U)){
@@ -311,15 +311,15 @@ sparc_assemble(enum sparc_iname iname, const int argc, const int *argv)
 		int val = argv[i];
 
 		switch(op->args[i]){
-		case ARG_RS1: insn	|= RS1(val); break;
-		case ARG_RS2: insn	|= RS2(val); break;
-		case ARG_RD:  insn	|= RD(val); break;
+		case ARG_RS1: insn |= RS1(val); break;
+		case ARG_RS2: insn |= RS2(val); break;
+		case ARG_RD:  insn |= RD(val); break;
 		case ARG_SIMM13: insn |= SIMM13(val); vimm(val,13,0,1,i);
 			break;
 		case ARG_DISP30: insn |= DISP30(val); vimm(val,30,0,1,i);
 			break;
-		case ARG_IMM22: insn	|= IMM22(val); vimm(val,22,0,0,i); break;
-		case ARG_DISP22: insn	|= DISP22(val); vimm(val,22,0,1,i);
+		case ARG_IMM22: insn |= IMM22(val); vimm(val,22,0,0,i); break;
+		case ARG_DISP22: insn |= DISP22(val); vimm(val,22,0,1,i);
 			break;
 		case ARG_SWTRAP: insn |= SWTRAP(val); vimm(val,7,0,0,i); break;
 		}
@@ -352,8 +352,8 @@ static void
 pimm(unsigned int val, int bits, int shift, int sgned, int arg_index)
 
 {
-	val	>>= shift;
-	val	&= ((1 << bits) - 1);
+	val >>= shift;
+	val &= ((1 << bits) - 1);
 	if(sgned){
 		int sval = val << (32 - bits);
 		sval >>= (32 - bits);
@@ -425,72 +425,72 @@ sparc_disassemble(unsigned int insn)
 
 static const unsigned char vm_opInfo[256] =
 {
-	[OP_UNDEF] = opImm0,
-	[OP_IGNORE] = opImm0,
-	[OP_BREAK] = opImm0,
-	[OP_ENTER] = opImm4,
+	[OP_UNDEF]	= opImm0,
+	[OP_IGNORE]	= opImm0,
+	[OP_BREAK]	= opImm0,
+	[OP_ENTER]	= opImm4,
 	/* OP_LEAVE has to accept floats, they will be converted to ints */
 	[OP_LEAVE] = opImm4 | opRet0 | opArgIF,
 	/* only STORE4 and POP use values from OP_CALL,
 	 * no need to convert floats back */
-	[OP_CALL] = opImm0 | opRetI | opArgI,
-	[OP_PUSH] = opImm0 | opRetIF,
-	[OP_POP] = opImm0 | opRet0 | opArgIF,
-	[OP_CONST] = opImm4 | opRetIF,
-	[OP_LOCAL] = opImm4 | opRetI,
-	[OP_JUMP] = opImm0 | opRet0 | opArgI,
+	[OP_CALL]	= opImm0 | opRetI | opArgI,
+	[OP_PUSH]	= opImm0 | opRetIF,
+	[OP_POP]	= opImm0 | opRet0 | opArgIF,
+	[OP_CONST]	= opImm4 | opRetIF,
+	[OP_LOCAL]	= opImm4 | opRetI,
+	[OP_JUMP]	= opImm0 | opRet0 | opArgI,
 
-	[OP_EQ] = opImm4 | opRet0 | opArgI | opArg2I,
-	[OP_NE] = opImm4 | opRet0 | opArgI | opArg2I,
-	[OP_LTI] = opImm4 | opRet0 | opArgI | opArg2I,
-	[OP_LEI] = opImm4 | opRet0 | opArgI | opArg2I,
-	[OP_GTI] = opImm4 | opRet0 | opArgI | opArg2I,
-	[OP_GEI] = opImm4 | opRet0 | opArgI | opArg2I,
-	[OP_LTU] = opImm4 | opRet0 | opArgI | opArg2I,
-	[OP_LEU] = opImm4 | opRet0 | opArgI | opArg2I,
-	[OP_GTU] = opImm4 | opRet0 | opArgI | opArg2I,
-	[OP_GEU] = opImm4 | opRet0 | opArgI | opArg2I,
-	[OP_EQF] = opImm4 | opRet0 | opArgF | opArg2F,
-	[OP_NEF] = opImm4 | opRet0 | opArgF | opArg2F,
-	[OP_LTF] = opImm4 | opRet0 | opArgF | opArg2F,
-	[OP_LEF] = opImm4 | opRet0 | opArgF | opArg2F,
-	[OP_GTF] = opImm4 | opRet0 | opArgF | opArg2F,
-	[OP_GEF] = opImm4 | opRet0 | opArgF | opArg2F,
+	[OP_EQ]		= opImm4 | opRet0 | opArgI | opArg2I,
+	[OP_NE]		= opImm4 | opRet0 | opArgI | opArg2I,
+	[OP_LTI]	= opImm4 | opRet0 | opArgI | opArg2I,
+	[OP_LEI]	= opImm4 | opRet0 | opArgI | opArg2I,
+	[OP_GTI]	= opImm4 | opRet0 | opArgI | opArg2I,
+	[OP_GEI]	= opImm4 | opRet0 | opArgI | opArg2I,
+	[OP_LTU]	= opImm4 | opRet0 | opArgI | opArg2I,
+	[OP_LEU]	= opImm4 | opRet0 | opArgI | opArg2I,
+	[OP_GTU]	= opImm4 | opRet0 | opArgI | opArg2I,
+	[OP_GEU]	= opImm4 | opRet0 | opArgI | opArg2I,
+	[OP_EQF]	= opImm4 | opRet0 | opArgF | opArg2F,
+	[OP_NEF]	= opImm4 | opRet0 | opArgF | opArg2F,
+	[OP_LTF]	= opImm4 | opRet0 | opArgF | opArg2F,
+	[OP_LEF]	= opImm4 | opRet0 | opArgF | opArg2F,
+	[OP_GTF]	= opImm4 | opRet0 | opArgF | opArg2F,
+	[OP_GEF]	= opImm4 | opRet0 | opArgF | opArg2F,
 
-	[OP_LOAD1] = opImm0 | opRetI | opArgI,
-	[OP_LOAD2] = opImm0 | opRetI | opArgI,
-	[OP_LOAD4] = opImm0 | opRetIF| opArgI,
-	[OP_STORE1] = opImm0 | opRet0 | opArgI | opArg2I,
-	[OP_STORE2] = opImm0 | opRet0 | opArgI | opArg2I,
-	[OP_STORE4] = opImm0 | opRet0 | opArgIF| opArg2I,
+	[OP_LOAD1]	= opImm0 | opRetI | opArgI,
+	[OP_LOAD2]	= opImm0 | opRetI | opArgI,
+	[OP_LOAD4]	= opImm0 | opRetIF| opArgI,
+	[OP_STORE1]	= opImm0 | opRet0 | opArgI | opArg2I,
+	[OP_STORE2]	= opImm0 | opRet0 | opArgI | opArg2I,
+	[OP_STORE4]	= opImm0 | opRet0 | opArgIF| opArg2I,
 	[OP_ARG] = opImm1 | opRet0 | opArgIF,
 	[OP_BLOCK_COPY] = opImm4 | opRet0 | opArgI | opArg2I,
 
-	[OP_SEX8] = opImm0 | opRetI | opArgI,
-	[OP_SEX16] = opImm0 | opRetI | opArgI,
-	[OP_NEGI] = opImm0 | opRetI | opArgI,
-	[OP_ADD] = opImm0 | opRetI | opArgI | opArg2I,
-	[OP_SUB] = opImm0 | opRetI | opArgI | opArg2I,
-	[OP_DIVI] = opImm0 | opRetI | opArgI | opArg2I,
-	[OP_DIVU] = opImm0 | opRetI | opArgI | opArg2I,
-	[OP_MODI] = opImm0 | opRetI | opArgI | opArg2I,
-	[OP_MODU] = opImm0 | opRetI | opArgI | opArg2I,
-	[OP_MULI] = opImm0 | opRetI | opArgI | opArg2I,
-	[OP_MULU] = opImm0 | opRetI | opArgI | opArg2I,
-	[OP_BAND] = opImm0 | opRetI | opArgI | opArg2I,
-	[OP_BOR] = opImm0 | opRetI | opArgI | opArg2I,
-	[OP_BXOR] = opImm0 | opRetI | opArgI | opArg2I,
-	[OP_BCOM] = opImm0 | opRetI | opArgI,
-	[OP_LSH] = opImm0 | opRetI | opArgI | opArg2I,
-	[OP_RSHI] = opImm0 | opRetI | opArgI | opArg2I,
-	[OP_RSHU] = opImm0 | opRetI | opArgI | opArg2I,
-	[OP_NEGF] = opImm0 | opRetF | opArgF,
-	[OP_ADDF] = opImm0 | opRetF | opArgF | opArg2F,
-	[OP_SUBF] = opImm0 | opRetF | opArgF | opArg2F,
-	[OP_DIVF] = opImm0 | opRetF | opArgF | opArg2F,
-	[OP_MULF] = opImm0 | opRetF | opArgF | opArg2F,
-	[OP_CVIF] = opImm0 | opRetF | opArgI,
-	[OP_CVFI] = opImm0 | opRetI | opArgF,
+	[OP_SEX8]	= opImm0 | opRetI | opArgI,
+	[OP_SEX16]	= opImm0 | opRetI | opArgI,
+	[OP_NEGI]	= opImm0 | opRetI | opArgI,
+	[OP_ADD]	= opImm0 | opRetI | opArgI | opArg2I,
+	[OP_SUB]	= opImm0 | opRetI | opArgI | opArg2I,
+	[OP_DIVI]	= opImm0 | opRetI | opArgI | opArg2I,
+	[OP_DIVU]	= opImm0 | opRetI | opArgI | opArg2I,
+	[OP_MODI]	= opImm0 | opRetI | opArgI | opArg2I,
+	[OP_MODU]	= opImm0 | opRetI | opArgI | opArg2I,
+	[OP_MULI]	= opImm0 | opRetI | opArgI | opArg2I,
+	[OP_MULU]	= opImm0 | opRetI | opArgI | opArg2I,
+	[OP_BAND]	= opImm0 | opRetI | opArgI | opArg2I,
+	[OP_BOR]	= opImm0 | opRetI | opArgI | opArg2I,
+	[OP_BXOR]	= opImm0 | opRetI | opArgI | opArg2I,
+	[OP_BCOM]	= opImm0 | opRetI | opArgI,
+	[OP_LSH]	= opImm0 | opRetI | opArgI | opArg2I,
+	[OP_RSHI]	= opImm0 | opRetI | opArgI | opArg2I,
+	[OP_RSHU]	= opImm0 | opRetI | opArgI | opArg2I,
+	[OP_NEGF]	= opImm0 | opRetF | opArgF,
+	[OP_ADDF]	= opImm0 | opRetF | opArgF | opArg2F,
+	[OP_SUBF]	= opImm0 | opRetF | opArgF | opArg2F,
+	[OP_DIVF]	= opImm0 | opRetF | opArgF | opArg2F,
+	[OP_MULF]	= opImm0 | opRetF | opArgF | opArg2F,
+	[OP_CVIF]	= opImm0 | opRetF | opArgI,
+	[OP_CVFI]	= opImm0 | opRetI | opArgF,
 };
 
 static const char *opnames[256] = {
@@ -535,7 +535,7 @@ typedef struct VM_Data {
 # define VM_Data_Offset(field) offsetof(vm_data_t, field)
 #else
 # define OFFSET(structName, field) \
-	((void *) &(((structName *) NULL)->field) - NULL)
+	((void*)&(((structName*)NULL)->field) - NULL)
 # define VM_Data_Offset(field) OFFSET(vm_data_t, field)
 #endif
 
@@ -643,9 +643,9 @@ sparc_push_data(struct func_info * const fp, unsigned int val)
 				off += i;
 				return VM_Data_Offset(data[off]);
 			}
-		off	+= dp->count;
-		last	= dp;
-		dp	= dp->next;
+		off += dp->count;
+		last = dp;
+		dp = dp->next;
 	}
 
 	dp = last;
@@ -656,8 +656,8 @@ sparc_push_data(struct func_info * const fp, unsigned int val)
 		else
 			dp->next = new;
 		dp = new;
-		dp->count	= 0;
-		dp->next	= NULL;
+		dp->count = 0;
+		dp->next = NULL;
 	}
 	dp->data[dp->count++] = val;
 	fp->data_num = off + 1;
@@ -694,11 +694,11 @@ dst_new(struct func_info * const fp, unsigned int length,
 {
 	struct dst_insn *dp = Z_Malloc(sizeof(struct dst_insn) + insns_size);
 
-	dp->length	= length;
-	dp->jump	= jp;
-	dp->count	= fp->dst_count++;
-	dp->i_count	= fp->saved_icount;
-	dp->next	= NULL;
+	dp->length = length;
+	dp->jump = jp;
+	dp->count = fp->dst_count++;
+	dp->i_count = fp->saved_icount;
+	dp->next = NULL;
 	if(fp->saved_icount != THUNK_ICOUNT)
 		fp->dst_by_i_count[fp->saved_icount] = dp;
 
@@ -730,8 +730,8 @@ static void
 jump_insn_append(vm_t *vm, struct func_info * const fp, enum sparc_iname iname,
 		 int dest)
 {
-	struct jump_insn	*jp = Z_Malloc(sizeof(*jp));
-	struct dst_insn		*dp;
+	struct jump_insn *jp = Z_Malloc(sizeof(*jp));
+	struct dst_insn *dp;
 
 	if(dest < 0 || dest >= vm->instructionCount)
 		ErrJump();
@@ -740,8 +740,8 @@ jump_insn_append(vm_t *vm, struct func_info * const fp, enum sparc_iname iname,
 
 	jp->jump_iname = iname;
 	jp->jump_dest_insn = dest;
-	jp->parent	= dp;
-	jp->next	= NULL;
+	jp->parent = dp;
+	jp->next = NULL;
 
 	jump_insn_insert_tail(fp, jp);
 	dst_insn_insert_tail(fp, dp);
@@ -751,8 +751,8 @@ static void
 start_emit(struct func_info * const fp, int i_count)
 {
 	fp->saved_icount	= i_count;
-	fp->insn_index	= 0;
-	fp->force_emit	= 0;
+	fp->insn_index		= 0;
+	fp->force_emit		= 0;
 }
 
 static void
@@ -782,8 +782,8 @@ static void
 analyze_function(struct func_info * const fp)
 {
 	struct src_insn *value_provider[20] = { NULL };
-	struct src_insn *sp	= fp->first;
-	int opstack_depth	= 0;
+	struct src_insn *sp = fp->first;
+	int opstack_depth = 0;
 
 	while((sp = sp->next) != NULL){
 		unsigned char opi, op = sp->op;
@@ -798,8 +798,8 @@ analyze_function(struct func_info * const fp)
 				/* src1 and dst are integers */
 			}else if((opi & opArgF) && (vpopi & opRetF)){
 				/* src1 and dst are floats */
-				vp->dst_reg_flags	|= REG_FLAGS_FLOAT;
-				sp->src1_reg_flags	= REG_FLAGS_FLOAT;
+				vp->dst_reg_flags |= REG_FLAGS_FLOAT;
+				sp->src1_reg_flags = REG_FLAGS_FLOAT;
 			}else
 				/* illegal combination */
 				DIE("unrecognized instruction combination");
@@ -813,8 +813,8 @@ analyze_function(struct func_info * const fp)
 				/* src2 and dst are integers */
 			}else if((opi & opArg2F) && (vpopi & opRetF)){
 				/* src2 and dst are floats */
-				vp->dst_reg_flags	|= REG_FLAGS_FLOAT;
-				sp->src2_reg_flags	= REG_FLAGS_FLOAT;
+				vp->dst_reg_flags |= REG_FLAGS_FLOAT;
+				sp->src2_reg_flags = REG_FLAGS_FLOAT;
 			}else
 				/* illegal combination */
 				DIE("unrecognized instruction combination");
@@ -835,7 +835,7 @@ asmcall(int call, int pstack)
 	currentVM->programStack = pstack - 4;
 	if(sizeof(intptr_t) == sizeof(int)){
 		intptr_t *argPosition =
-			(intptr_t *) ((byte *) currentVM->dataBase + pstack + 4);
+			(intptr_t*)((byte*)currentVM->dataBase + pstack + 4);
 		argPosition[0] = -1 - call;
 		ret = currentVM->systemCall(argPosition);
 	}else{
@@ -843,8 +843,8 @@ asmcall(int call, int pstack)
 
 		args[0] = -1 - call;
 		int *argPosition =
-			(int *) ((byte *) currentVM->dataBase + pstack + 4);
-		for( i = 1; i < 11; i++ )
+			(int*)((byte*)currentVM->dataBase + pstack + 4);
+		for(i = 1; i < 11; i++)
 			args[i] = argPosition[i];
 
 		ret = currentVM->systemCall(args);
@@ -1168,16 +1168,16 @@ compile_one_insn(vm_t *vm, struct func_info * const fp, struct src_insn *sp)
 			in(SUBCC, rSECOND(fp), rFIRST(fp), G0);
 		}
 		switch(sp->op){
-		case OP_EQ: iname	= BE; break;
-		case OP_NE: iname	= BNE; break;
-		case OP_LTI: iname	= BL; break;
-		case OP_GEI: iname	= BGE; break;
-		case OP_GTI: iname	= BG; break;
-		case OP_LEI: iname	= BLE; break;
-		case OP_LTU: iname	= BCS; break;
-		case OP_GEU: iname	= BCC; break;
-		case OP_GTU: iname	= BGU; break;
-		case OP_LEU: iname	= BLEU; break;
+		case OP_EQ: iname = BE; break;
+		case OP_NE: iname = BNE; break;
+		case OP_LTI: iname = BL; break;
+		case OP_GEI: iname = BGE; break;
+		case OP_GTI: iname = BG; break;
+		case OP_LEI: iname = BLE; break;
+		case OP_LTU: iname = BCS; break;
+		case OP_GEU: iname = BCC; break;
+		case OP_GTU: iname = BGU; break;
+		case OP_LEU: iname = BLEU; break;
 		}
 		emit_jump(vm, fp, iname, sp->arg.i);
 		POP_GPR(fp);
@@ -1350,12 +1350,12 @@ compile_one_insn(vm_t *vm, struct func_info * const fp, struct src_insn *sp)
 		MAYBE_EMIT_CONST(fp);
 		in(FCMP, fSECOND(fp), fFIRST(fp));
 		switch(sp->op){
-		case OP_EQF: iname	= FBE; break;
-		case OP_NEF: iname	= FBNE; break;
-		case OP_LTF: iname	= FBL; break;
-		case OP_GEF: iname	= FBGE; break;
-		case OP_GTF: iname	= FBG; break;
-		case OP_LEF: iname	= FBLE; break;
+		case OP_EQF: iname = FBE; break;
+		case OP_NEF: iname = FBNE; break;
+		case OP_LTF: iname = FBL; break;
+		case OP_GEF: iname = FBGE; break;
+		case OP_GTF: iname = FBG; break;
+		case OP_LEF: iname = FBLE; break;
 		}
 		emit_jump(vm, fp, iname, sp->arg.i);
 		POP_FPR(fp);
@@ -1411,12 +1411,12 @@ compile_function(vm_t *vm, struct func_info * const fp)
 
 	analyze_function(fp);
 
-	fp->gpr_pos	= L0;
-	fp->fpr_pos	= F0;
+	fp->gpr_pos = L0;
+	fp->fpr_pos = F0;
 	fp->insn_index = 0;
 
-	fp->stack_space		= SL(64, 128);
-	fp->cached_const	= NULL;
+	fp->stack_space = SL(64, 128);
+	fp->cached_const = NULL;
 
 	sp = fp->first;
 	while((sp = sp->next) != NULL)
@@ -1475,8 +1475,8 @@ sparc_compute_code(vm_t *vm, struct func_info * const fp)
 	unsigned char	*data_and_code;
 	unsigned int	code_length;
 	int code_insns = 0, off;
-	struct data_hunk	*dhp;
-	struct jump_insn	*jp;
+	struct data_hunk *dhp;
+	struct jump_insn *jp;
 	vm_data_t *data;
 
 	while(dp){
@@ -1493,7 +1493,7 @@ sparc_compute_code(vm_t *vm, struct func_info * const fp)
 	if(data_and_code == MAP_FAILED)
 		DIE("Not enough memory");
 
-	code_now = code_begin = (unsigned int *)
+	code_now = code_begin = (unsigned int*)
 				(data_and_code +
 				 VM_Data_Offset(data[fp->data_num]));
 
@@ -1503,7 +1503,7 @@ sparc_compute_code(vm_t *vm, struct func_info * const fp)
 
 		if(i_count != THUNK_ICOUNT)
 			if(!fp->dst_by_i_count[i_count])
-				fp->dst_by_i_count[i_count] = (void *) code_now;
+				fp->dst_by_i_count[i_count] = (void*)code_now;
 		if(!dp->jump){
 			memcpy(code_now, &dp->code[0], dp->length *
 				sizeof(unsigned int));
@@ -1511,7 +1511,7 @@ sparc_compute_code(vm_t *vm, struct func_info * const fp)
 		}else{
 			int i;
 
-			dp->jump->parent = (void *) code_now;
+			dp->jump->parent = (void*)code_now;
 
 			for(i = 0; i < dp->length; i++)
 				code_now[i] = SPARC_NOP;
@@ -1523,9 +1523,9 @@ sparc_compute_code(vm_t *vm, struct func_info * const fp)
 
 	jp = fp->jump_first;
 	while(jp){
-		unsigned int	*from = (void *) jp->parent;
-		unsigned int	*to =
-			(void *) fp->dst_by_i_count[jp->jump_dest_insn];
+		unsigned int *from	= (void*)jp->parent;
+		unsigned int	*to	=
+			(void*)fp->dst_by_i_count[jp->jump_dest_insn];
 		signed int	disp = (to - from);
 
 		*from = IN(jp->jump_iname, disp << 2);
@@ -1533,17 +1533,17 @@ sparc_compute_code(vm_t *vm, struct func_info * const fp)
 		jp = jp->next;
 	}
 
-	vm->codeBase	= data_and_code;
-	vm->codeLength	= code_length;
+	vm->codeBase = data_and_code;
+	vm->codeLength = code_length;
 
-	data = (vm_data_t *) data_and_code;
-	data->CallThunk		= code_begin + CALL_THUNK_INSN_OFFSET;
-	data->AsmCall		= asmcall;
-	data->BlockCopy		= blockcopy;
-	data->iPointers		= (unsigned int *) vm->instructionPointers;
-	data->dataLength	= VM_Data_Offset(data[fp->data_num]);
-	data->codeLength	= (code_now - code_begin) * sizeof(unsigned int);
-	data->ErrJump		= ErrJump;
+	data = (vm_data_t*)data_and_code;
+	data->CallThunk = code_begin + CALL_THUNK_INSN_OFFSET;
+	data->AsmCall = asmcall;
+	data->BlockCopy = blockcopy;
+	data->iPointers = (unsigned int*)vm->instructionPointers;
+	data->dataLength = VM_Data_Offset(data[fp->data_num]);
+	data->codeLength = (code_now - code_begin) * sizeof(unsigned int);
+	data->ErrJump = ErrJump;
 
 #if 0
 	{
@@ -1561,8 +1561,8 @@ sparc_compute_code(vm_t *vm, struct func_info * const fp)
 	}
 #endif
 
-	dhp	= fp->data_first;
-	off	= 0;
+	dhp = fp->data_first;
+	off = 0;
 	while(dhp){
 		struct data_hunk *next = dhp->next;
 		int i;
@@ -1593,8 +1593,8 @@ sparc_compute_code(vm_t *vm, struct func_info * const fp)
 void
 VM_Compile(vm_t *vm, vmHeader_t *header)
 {
-	struct func_info	fi;
-	unsigned char		*code;
+	struct func_info fi;
+	unsigned char *code;
 	int i_count, pc, i;
 
 	memset(&fi, 0, sizeof(fi));
@@ -1608,15 +1608,15 @@ VM_Compile(vm_t *vm, vmHeader_t *header)
 		sizeof(void *));
 #endif
 
-	fi.dst_by_i_count = (struct dst_insn * *) vm->instructionPointers;
+	fi.dst_by_i_count = (struct dst_insn**)vm->instructionPointers;
 	memset(fi.dst_by_i_count, 0, header->instructionCount * sizeof(void *));
 
 	vm->compiled = qfalse;
 
 	emit_vm_thunk(&fi);
 
-	code	= (unsigned char *) header + header->codeOffset;
-	pc	= 0;
+	code = (unsigned char*)header + header->codeOffset;
+	pc = 0;
 
 	for(i_count = 0; i_count < header->instructionCount; i_count++){
 		unsigned char opi, op = code[pc++];
@@ -1639,8 +1639,8 @@ VM_Compile(vm_t *vm, vmHeader_t *header)
 
 		sp = Z_Malloc(sizeof(*sp));
 		sp->op = op;
-		sp->i_count = i_count;
-		sp->arg.i = 0;
+		sp->i_count	= i_count;
+		sp->arg.i	= 0;
 		sp->next = NULL;
 
 		if(vm_opInfo[op] & opImm4){
@@ -1677,26 +1677,26 @@ VM_Compile(vm_t *vm, vmHeader_t *header)
 		DIE("mprotect failed");
 	}
 
-	vm->destroy	= VM_Destroy_Compiled;
-	vm->compiled	= qtrue;
+	vm->destroy = VM_Destroy_Compiled;
+	vm->compiled = qtrue;
 }
 
 int
 VM_CallCompiled(vm_t *vm, int *args)
 {
-	vm_data_t	*vm_dataAndCode = (void *) vm->codeBase;
-	int	programStack	= vm->programStack;
-	int	stackOnEntry	= programStack;
+	vm_data_t *vm_dataAndCode	= (void*)vm->codeBase;
+	int	programStack		= vm->programStack;
+	int	stackOnEntry		= programStack;
 	byte	*image = vm->dataBase;
-	int	*argPointer;
+	int     *argPointer;
 	int	retVal;
 
 	currentVM = vm;
 
 	vm->currentlyInterpreting = qtrue;
 
-	programStack	-= 48;
-	argPointer	= (int *) &image[ programStack + 8 ];
+	programStack -= 48;
+	argPointer = (int*)&image[ programStack + 8 ];
 	memcpy(argPointer, args, 4 * 9);
 	argPointer[-1]	= 0;
 	argPointer[-2]	= -1;
@@ -1704,7 +1704,7 @@ VM_CallCompiled(vm_t *vm, int *args)
 	/* call generated code */
 	{
 		int (*entry)(void *, int, void *, int);
-		entry	= (void *) (vm->codeBase + vm_dataAndCode->dataLength);
+		entry	= (void*)(vm->codeBase + vm_dataAndCode->dataLength);
 		retVal	= entry(vm->codeBase, programStack, vm->dataBase,
 			vm->dataMask);
 	}

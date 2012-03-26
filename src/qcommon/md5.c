@@ -37,9 +37,9 @@ byteReverse(unsigned char *buf, unsigned longs)
 	uint32_t t;
 	do {
 		t = (uint32_t)
-		    ((unsigned) buf[3] << 8 | buf[2]) << 16 |
-		    ((unsigned) buf[1] << 8 | buf[0]);
-		*(uint32_t *) buf = t;
+		    ((unsigned)buf[3] << 8 | buf[2]) << 16 |
+		    ((unsigned)buf[1] << 8 | buf[0]);
+		*(uint32_t*)buf = t;
 		buf += 4;
 	} while(--longs);
 }
@@ -52,13 +52,13 @@ byteReverse(unsigned char *buf, unsigned longs)
 static void
 MD5Init(struct MD5Context *ctx)
 {
-	ctx->buf[0]	= 0x67452301;
-	ctx->buf[1]	= 0xefcdab89;
-	ctx->buf[2]	= 0x98badcfe;
-	ctx->buf[3]	= 0x10325476;
+	ctx->buf[0] = 0x67452301;
+	ctx->buf[1] = 0xefcdab89;
+	ctx->buf[2] = 0x98badcfe;
+	ctx->buf[3] = 0x10325476;
 
-	ctx->bits[0]	= 0;
-	ctx->bits[1]	= 0;
+	ctx->bits[0] = 0;
+	ctx->bits[1] = 0;
 }
 /* The four core functions - F1 is optimized somewhat */
 
@@ -83,10 +83,10 @@ MD5Transform(uint32_t buf[4],
 {
 	register uint32_t a, b, c, d;
 
-	a	= buf[0];
-	b	= buf[1];
-	c	= buf[2];
-	d	= buf[3];
+	a = buf[0];
+	b = buf[1];
+	c = buf[2];
+	d = buf[3];
 
 	MD5STEP(F1, a, b, c, d, in[0] + 0xd76aa478, 7);
 	MD5STEP(F1, d, a, b, c, in[1] + 0xe8c7b756, 12);
@@ -175,7 +175,7 @@ MD5Update(struct MD5Context *ctx, unsigned char const *buf,
 	/* Update bitcount */
 
 	t = ctx->bits[0];
-	if((ctx->bits[0] = t + ((uint32_t) len << 3)) < t)
+	if((ctx->bits[0] = t + ((uint32_t)len << 3)) < t)
 		ctx->bits[1]++;		/* Carry from low to high */
 	ctx->bits[1] += len >> 29;
 
@@ -184,7 +184,7 @@ MD5Update(struct MD5Context *ctx, unsigned char const *buf,
 	/* Handle any leading odd-sized chunks */
 
 	if(t){
-		unsigned char *p = (unsigned char *) ctx->in + t;
+		unsigned char *p = (unsigned char*)ctx->in + t;
 
 		t = 64 - t;
 		if(len < t){
@@ -193,18 +193,18 @@ MD5Update(struct MD5Context *ctx, unsigned char const *buf,
 		}
 		memcpy(p, buf, t);
 		byteReverse(ctx->in, 16);
-		MD5Transform(ctx->buf, (uint32_t *) ctx->in);
-		buf	+= t;
-		len	-= t;
+		MD5Transform(ctx->buf, (uint32_t*)ctx->in);
+		buf += t;
+		len -= t;
 	}
 	/* Process data in 64-byte chunks */
 
 	while(len >= 64){
 		memcpy(ctx->in, buf, 64);
 		byteReverse(ctx->in, 16);
-		MD5Transform(ctx->buf, (uint32_t *) ctx->in);
-		buf	+= 64;
-		len	-= 64;
+		MD5Transform(ctx->buf, (uint32_t*)ctx->in);
+		buf += 64;
+		len -= 64;
 	}
 
 	/* Handle any remaining bytes of data. */
@@ -239,7 +239,7 @@ MD5Final(struct MD5Context *ctx, unsigned char *digest)
 		/* Two lots of padding:  Pad the first block to 64 bytes */
 		memset(p, 0, count);
 		byteReverse(ctx->in, 16);
-		MD5Transform(ctx->buf, (uint32_t *) ctx->in);
+		MD5Transform(ctx->buf, (uint32_t*)ctx->in);
 
 		/* Now fill the next block with 56 bytes */
 		memset(ctx->in, 0, 56);
@@ -249,11 +249,11 @@ MD5Final(struct MD5Context *ctx, unsigned char *digest)
 	byteReverse(ctx->in, 14);
 
 	/* Append length in bits and transform */
-	((uint32_t *) ctx->in)[14]	= ctx->bits[0];
-	((uint32_t *) ctx->in)[15]	= ctx->bits[1];
+	((uint32_t*)ctx->in)[14] = ctx->bits[0];
+	((uint32_t*)ctx->in)[15] = ctx->bits[1];
 
-	MD5Transform(ctx->buf, (uint32_t *) ctx->in);
-	byteReverse((unsigned char *) ctx->buf, 4);
+	MD5Transform(ctx->buf, (uint32_t*)ctx->in);
+	byteReverse((unsigned char*)ctx->buf, 4);
 
 	if(digest!=NULL)
 		memcpy(digest, ctx->buf, 16);
@@ -264,8 +264,8 @@ MD5Final(struct MD5Context *ctx, unsigned char *digest)
 char *
 Com_MD5File(const char *fn, int length, const char *prefix, int prefix_len)
 {
-	static char	final[33]	= {""};
-	unsigned char	digest[16]	= {""};
+	static char	final[33] = {""};
+	unsigned char	digest[16] = {""};
 	fileHandle_t	f;
 	MD5_CTX md5;
 	byte	buffer[2048];
@@ -278,9 +278,9 @@ Com_MD5File(const char *fn, int length, const char *prefix, int prefix_len)
 
 	filelen = FS_SV_FOpenFileRead(fn, &f);
 
-	if( !f )
+	if(!f)
 		return final;
-	if( filelen < 1 ){
+	if(filelen < 1){
 		FS_FCloseFile(f);
 		return final;
 	}
@@ -289,8 +289,8 @@ Com_MD5File(const char *fn, int length, const char *prefix, int prefix_len)
 
 	MD5Init(&md5);
 
-	if( prefix_len && *prefix )
-		MD5Update(&md5, (unsigned char *) prefix, prefix_len);
+	if(prefix_len && *prefix)
+		MD5Update(&md5, (unsigned char*)prefix, prefix_len);
 
 	for(;; ){
 		r = FS_Read2(buffer, sizeof(buffer), f);

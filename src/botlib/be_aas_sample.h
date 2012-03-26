@@ -34,12 +34,12 @@ void AAS_InitAASLinkHeap(void);
 void AAS_InitAASLinkedEntities(void);
 void AAS_FreeAASLinkHeap(void);
 void AAS_FreeAASLinkedEntities(void);
-aas_face_t *AAS_AreaGroundFace(int areanum, vec3_t point);
-aas_face_t *AAS_TraceEndFace(aas_trace_t *trace);
-aas_plane_t *AAS_PlaneFromNum(int planenum);
-aas_link_t *AAS_AASLinkEntity(vec3_t absmins, vec3_t absmaxs, int entnum);
-aas_link_t *AAS_LinkEntityClientBBox(vec3_t absmins, vec3_t absmaxs, int entnum,
-				     int presencetype);
+aas_face_t*AAS_AreaGroundFace(int areanum, vec3_t point);
+aas_face_t*AAS_TraceEndFace(aas_trace_t *trace);
+aas_plane_t*AAS_PlaneFromNum(int planenum);
+aas_link_t*AAS_AASLinkEntity(vec3_t absmins, vec3_t absmaxs, int entnum);
+aas_link_t*AAS_LinkEntityClientBBox(vec3_t absmins, vec3_t absmaxs, int entnum,
+				    int presencetype);
 qboolean AAS_PointInsideFace(int facenum, vec3_t point, float epsilon);
 qboolean AAS_InsideFace(aas_face_t *face, vec3_t pnormal, vec3_t point,
 			float epsilon);

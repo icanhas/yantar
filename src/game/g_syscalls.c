@@ -29,7 +29,7 @@
 #endif
 
 static intptr_t (QDECL *syscall)(intptr_t arg,
-				 ...) = (intptr_t (QDECL *) (intptr_t, ...))-1;
+				 ...) = (intptr_t (QDECL*)(intptr_t, ...))-1;
 
 
 Q_EXPORT void

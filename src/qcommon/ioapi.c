@@ -95,11 +95,11 @@ int mode;
 uLong ZCALLBACK fread_file_func(opaque, stream, buf, size)
 voidpf opaque;
 voidpf	stream;
-void	* buf;
+void    * buf;
 uLong	size;
 {
 	uLong ret;
-	ret = (uLong) fread(buf, 1, (size_t) size, (FILE *) stream);
+	ret = (uLong)fread(buf, 1, (size_t)size, (FILE*)stream);
 	return ret;
 }
 
@@ -111,7 +111,7 @@ const void* buf;
 uLong	size;
 {
 	uLong ret;
-	ret = (uLong) fwrite(buf, 1, (size_t) size, (FILE *) stream);
+	ret = (uLong)fwrite(buf, 1, (size_t)size, (FILE*)stream);
 	return ret;
 }
 
@@ -120,7 +120,7 @@ voidpf opaque;
 voidpf stream;
 {
 	long ret;
-	ret = ftell((FILE *) stream);
+	ret = ftell((FILE*)stream);
 	return ret;
 }
 
@@ -145,7 +145,7 @@ int	origin;
 	default: return -1;
 	}
 	ret = 0;
-	fseek((FILE *) stream, offset, fseek_origin);
+	fseek((FILE*)stream, offset, fseek_origin);
 	return ret;
 }
 
@@ -154,7 +154,7 @@ voidpf opaque;
 voidpf stream;
 {
 	int ret;
-	ret = fclose((FILE *) stream);
+	ret = fclose((FILE*)stream);
 	return ret;
 }
 
@@ -163,7 +163,7 @@ voidpf opaque;
 voidpf stream;
 {
 	int ret;
-	ret = ferror((FILE *) stream);
+	ret = ferror((FILE*)stream);
 	return ret;
 }
 

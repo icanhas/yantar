@@ -200,7 +200,7 @@ typedef enum {
 } playerTeamStateState_t;
 
 typedef struct {
-	playerTeamStateState_t	state;
+	playerTeamStateState_t state;
 
 	int	location;
 
@@ -218,7 +218,7 @@ typedef struct {
 } playerTeamState_t;
 
 /* the auto following clients don't follow a specific client
- * number, but instead follow the first two active players */
+* number, but instead follow the first two active players */
 #define FOLLOW_ACTIVE1	-1
 #define FOLLOW_ACTIVE2	-2
 
@@ -227,8 +227,8 @@ typedef struct {
  * time and reading them back at connection time.  Anything added here
  * MUST be dealt with in G_InitSessionData() / G_ReadSessionData() / G_WriteSessionData() */
 typedef struct {
-	team_t	sessionTeam;
-	int	spectatorNum;	/* for determining next-in-line to play */
+	team_t			sessionTeam;
+	int			spectatorNum;	/* for determining next-in-line to play */
 	spectatorState_t	spectatorState;
 	int			spectatorClient;	/* for chasecam and follow mode */
 	int			wins, losses;		/* tournament stats */
@@ -387,7 +387,7 @@ typedef struct {
 	int	teamVoteTime[2];	/* level.time vote was called */
 	int	teamVoteYes[2];
 	int	teamVoteNo[2];
-	int	numteamVotingClients[2];		/* set by CalculateRanks */
+	int	numteamVotingClients[2];	/* set by CalculateRanks */
 
 	/* spawn variables */
 	qboolean	spawning;	/* the G_Spawn*() functions are valid */
@@ -431,7 +431,7 @@ qboolean        G_SpawnInt(const char *key, const char *defaultString, int *out)
 qboolean        G_SpawnVector(const char *key, const char *defaultString,
 			      float *out);
 void            G_SpawnEntitiesFromString(void);
-char *G_NewString(const char *string);
+char*G_NewString(const char *string);
 
 /*
  * g_cmds.c
@@ -451,8 +451,8 @@ void RespawnItem(gentity_t *ent);
 
 void UseHoldableItem(gentity_t *ent);
 void PrecacheItem(gitem_t *it);
-gentity_t *Drop_Item(gentity_t *ent, gitem_t *item, float angle);
-gentity_t *LaunchItem(gitem_t *item, vec3_t origin, vec3_t velocity);
+gentity_t*Drop_Item(gentity_t *ent, gitem_t *item, float angle);
+gentity_t*LaunchItem(gitem_t *item, vec3_t origin, vec3_t velocity);
 void SetRespawn(gentity_t *ent, float delay);
 void G_SpawnItem(gentity_t *ent, gitem_t *item);
 void FinishSpawningItem(gentity_t *ent);
@@ -472,14 +472,14 @@ int G_ModelIndex(char *name);
 int             G_SoundIndex(char *name);
 void    G_TeamCommand(team_t team, char *cmd);
 void    G_KillBox(gentity_t *ent);
-gentity_t *G_Find(gentity_t *from, int fieldofs, const char *match);
-gentity_t *G_PickTarget(char *targetname);
+gentity_t*G_Find(gentity_t *from, int fieldofs, const char *match);
+gentity_t*G_PickTarget(char *targetname);
 void    G_UseTargets(gentity_t *ent, gentity_t *activator);
 void    G_SetMovedir(vec3_t angles, vec3_t movedir);
 
 void    G_InitGentity(gentity_t *e);
-gentity_t       *G_Spawn(void);
-gentity_t *G_TempEntity(vec3_t origin, int event);
+gentity_t*G_Spawn(void);
+gentity_t*G_TempEntity(vec3_t origin, int event);
 void    G_Sound(gentity_t *ent, int channel, int soundIndex);
 void    G_FreeEntity(gentity_t *e);
 qboolean        G_EntitiesFree(void);
@@ -487,8 +487,8 @@ qboolean        G_EntitiesFree(void);
 void    G_TouchTriggers(gentity_t *ent);
 void    G_TouchSolids(gentity_t *ent);
 
-float   *tv(float x, float y, float z);
-char    *vtos(const vec3_t v);
+float*tv(float x, float y, float z);
+char*vtos(const vec3_t v);
 
 float vectoyaw(const vec3_t vec);
 
@@ -496,7 +496,7 @@ void G_AddPredictableEvent(gentity_t *ent, int event, int eventParm);
 void G_AddEvent(gentity_t *ent, int event, int eventParm);
 void G_SetOrigin(gentity_t *ent, vec3_t origin);
 void AddRemap(const char *oldShader, const char *newShader, float timeOffset);
-const char *BuildShaderStateConfig(void);
+const char*BuildShaderStateConfig(void);
 
 /*
  * g_combat.c
@@ -534,15 +534,15 @@ void TossClientCubes(gentity_t *self);
  *  */
 void G_RunMissile(gentity_t *ent);
 
-gentity_t *fire_plasma(gentity_t *self, vec3_t start, vec3_t aimdir);
-gentity_t *fire_grenade(gentity_t *self, vec3_t start, vec3_t aimdir);
-gentity_t *fire_rocket(gentity_t *self, vec3_t start, vec3_t dir);
-gentity_t *fire_bfg(gentity_t *self, vec3_t start, vec3_t dir);
-gentity_t *fire_grapple(gentity_t *self, vec3_t start, vec3_t dir);
+gentity_t*fire_plasma(gentity_t *self, vec3_t start, vec3_t aimdir);
+gentity_t*fire_grenade(gentity_t *self, vec3_t start, vec3_t aimdir);
+gentity_t*fire_rocket(gentity_t *self, vec3_t start, vec3_t dir);
+gentity_t*fire_bfg(gentity_t *self, vec3_t start, vec3_t dir);
+gentity_t*fire_grapple(gentity_t *self, vec3_t start, vec3_t dir);
 #ifdef MISSIONPACK
-gentity_t *fire_nail(gentity_t *self, vec3_t start, vec3_t forward, vec3_t right,
-		     vec3_t up);
-gentity_t *fire_prox(gentity_t *self, vec3_t start, vec3_t aimdir);
+gentity_t*fire_nail(gentity_t *self, vec3_t start, vec3_t forward, vec3_t right,
+		    vec3_t up);
+gentity_t*fire_prox(gentity_t *self, vec3_t start, vec3_t aimdir);
 #endif
 
 
@@ -587,8 +587,8 @@ team_t TeamCount(int ignoreClientNum, int team);
 int TeamLeader(int team);
 team_t PickTeam(int ignoreClientNum);
 void SetClientViewAngle(gentity_t *ent, vec3_t angle);
-gentity_t *SelectSpawnPoint(vec3_t avoidPoint, vec3_t origin, vec3_t angles,
-			    qboolean isbot);
+gentity_t*SelectSpawnPoint(vec3_t avoidPoint, vec3_t origin, vec3_t angles,
+			   qboolean isbot);
 void CopyToBodyQue(gentity_t *ent);
 void ClientRespawn(gentity_t *ent);
 void BeginIntermission(void);
@@ -652,7 +652,7 @@ void QDECL G_Error(const char *fmt,
 /*
  * g_client.c
  *  */
-char *ClientConnect(int clientNum, qboolean firstTime, qboolean isBot);
+char*ClientConnect(int clientNum, qboolean firstTime, qboolean isBot);
 void ClientUserinfoChanged(int clientNum);
 void ClientDisconnect(int clientNum);
 void ClientBegin(int clientNum);
@@ -675,7 +675,7 @@ qboolean CheckObeliskAttack(gentity_t *obelisk, gentity_t *attacker);
 /*
  * g_mem.c
  *  */
-void *G_Alloc(int size);
+void*G_Alloc(int size);
 void G_InitMemory(void);
 void Svcmd_GameMem_f(void);
 
@@ -699,8 +699,8 @@ void Svcmd_AbortPodium_f(void);
  * g_bot.c
  *  */
 void G_InitBots(qboolean restart);
-char *G_GetBotInfoByNumber(int num);
-char *G_GetBotInfoByName(const char *name);
+char*G_GetBotInfoByNumber(int num);
+char*G_GetBotInfoByName(const char *name);
 void G_CheckBotSpawn(void);
 void G_RemoveQueuedBotBegin(int clientNum);
 qboolean G_BotConnect(int clientNum, qboolean restart);
@@ -733,7 +733,7 @@ void BotTestAAS(vec3_t origin);
 extern level_locals_t level;
 extern gentity_t g_entities[MAX_GENTITIES];
 
-#define FOFS(x) ((size_t) &(((gentity_t *) 0)->x))
+#define FOFS(x) ((size_t)&(((gentity_t*)0)->x))
 
 extern vmCvar_t g_gametype;
 extern vmCvar_t g_dedicated;
@@ -904,7 +904,7 @@ int             trap_AAS_PredictRoute(void /*struct aas_predictroute_s*/ *route,
 int             trap_AAS_AlternativeRouteGoals(
 	vec3_t start, int startareanum, vec3_t goal, int goalareanum,
 	int travelflags,
-	void /*struct aas_altroutegoal_s*/
+	void	/*struct aas_altroutegoal_s*/
 	*altroutegoals, int maxaltroutegoals,
 	int type);
 int             trap_AAS_Swimming(vec3_t origin);

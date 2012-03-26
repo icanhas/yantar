@@ -33,33 +33,33 @@
 void
 MField_Draw(mfield_t *edit, int x, int y, int style, vec4_t color)
 {
-	int len;
-	int charw;
-	int drawLen;
-	int prestep;
-	int cursorChar;
-	char str[MAX_STRING_CHARS];
+	int	len;
+	int	charw;
+	int	drawLen;
+	int	prestep;
+	int	cursorChar;
+	char	str[MAX_STRING_CHARS];
 
 	drawLen = edit->widthInChars;
 	len	= strlen(edit->buffer) + 1;
 
 	/* guarantee that cursor will be visible */
-	if( len <= drawLen )
+	if(len <= drawLen)
 		prestep = 0;
 	else{
-		if( edit->scroll + drawLen > len ){
+		if(edit->scroll + drawLen > len){
 			edit->scroll = len - drawLen;
-			if( edit->scroll < 0 )
+			if(edit->scroll < 0)
 				edit->scroll = 0;
 		}
 		prestep = edit->scroll;
 	}
 
-	if( prestep + drawLen > len )
+	if(prestep + drawLen > len)
 		drawLen = len - prestep;
 
 	/* extract <drawLen> characters from the field at <prestep> */
-	if( drawLen >= MAX_STRING_CHARS )
+	if(drawLen >= MAX_STRING_CHARS)
 		trap_Error("drawLen >= MAX_STRING_CHARS");
 	memcpy(str, edit->buffer + prestep, drawLen);
 	str[ drawLen ] = 0;
@@ -70,7 +70,7 @@ MField_Draw(mfield_t *edit, int x, int y, int style, vec4_t color)
 	if(!(style & UI_PULSE))
 		return;
 
-	if( trap_Key_GetOverstrikeMode())
+	if(trap_Key_GetOverstrikeMode())
 		cursorChar = 11;
 	else
 		cursorChar = 10;
@@ -86,16 +86,16 @@ MField_Draw(mfield_t *edit, int x, int y, int style, vec4_t color)
 		charw = BIGCHAR_WIDTH;
 
 	if(style & UI_CENTER){
-		len = strlen(str);
-		x = x - len*charw/2;
+		len	= strlen(str);
+		x	= x - len*charw/2;
 	}else if(style & UI_RIGHT){
-		len = strlen(str);
-		x = x - len*charw;
+		len	= strlen(str);
+		x	= x - len*charw;
 	}
 
 	UI_DrawChar(x +
 		(edit->cursor -
-	prestep) * charw, y, cursorChar, style & ~(UI_CENTER|UI_RIGHT),
+		 prestep) * charw, y, cursorChar, style & ~(UI_CENTER|UI_RIGHT),
 		color);
 }
 
@@ -107,14 +107,14 @@ MField_Draw(mfield_t *edit, int x, int y, int style, vec4_t color)
 void
 MField_Paste(mfield_t *edit)
 {
-	char pasteBuffer[64];
-	int pasteLen, i;
+	char	pasteBuffer[64];
+	int	pasteLen, i;
 
 	trap_GetClipboardData(pasteBuffer, 64);
 
 	/* send as if typed, so insert / overstrike works properly */
 	pasteLen = strlen(pasteBuffer);
-	for( i = 0; i < pasteLen; i++ )
+	for(i = 0; i < pasteLen; i++)
 		MField_CharEvent(edit, pasteBuffer[i]);
 }
 
@@ -141,48 +141,48 @@ MField_KeyDownEvent(mfield_t *edit, int key)
 
 	len = strlen(edit->buffer);
 
-	if( key == K_DEL || key == K_KP_DEL ){
-		if( edit->cursor < len )
+	if(key == K_DEL || key == K_KP_DEL){
+		if(edit->cursor < len)
 			memmove(edit->buffer + edit->cursor,
 				edit->buffer + edit->cursor + 1,
 				len - edit->cursor);
 		return;
 	}
 
-	if( key == K_RIGHTARROW || key == K_KP_RIGHTARROW ){
-		if( edit->cursor < len )
+	if(key == K_RIGHTARROW || key == K_KP_RIGHTARROW){
+		if(edit->cursor < len)
 			edit->cursor++;
-		if( edit->cursor >= edit->scroll + edit->widthInChars &&
-		    edit->cursor <= len )
+		if(edit->cursor >= edit->scroll + edit->widthInChars &&
+		   edit->cursor <= len)
 			edit->scroll++;
 		return;
 	}
 
-	if( key == K_LEFTARROW || key == K_KP_LEFTARROW ){
-		if( edit->cursor > 0 )
+	if(key == K_LEFTARROW || key == K_KP_LEFTARROW){
+		if(edit->cursor > 0)
 			edit->cursor--;
-		if( edit->cursor < edit->scroll )
+		if(edit->cursor < edit->scroll)
 			edit->scroll--;
 		return;
 	}
 
-	if( key == K_HOME || key == K_KP_HOME ||
-	    (tolower(key) == 'a' && trap_Key_IsDown(K_CTRL))){
-		edit->cursor = 0;
-		edit->scroll = 0;
+	if(key == K_HOME || key == K_KP_HOME ||
+	   (tolower(key) == 'a' && trap_Key_IsDown(K_CTRL))){
+		edit->cursor	= 0;
+		edit->scroll	= 0;
 		return;
 	}
 
-	if( key == K_END || key == K_KP_END ||
-	    (tolower(key) == 'e' && trap_Key_IsDown(K_CTRL))){
-		edit->cursor = len;
-		edit->scroll = len - edit->widthInChars + 1;
+	if(key == K_END || key == K_KP_END ||
+	   (tolower(key) == 'e' && trap_Key_IsDown(K_CTRL))){
+		edit->cursor	= len;
+		edit->scroll	= len - edit->widthInChars + 1;
 		if(edit->scroll < 0)
 			edit->scroll = 0;
 		return;
 	}
 
-	if( key == K_INS || key == K_KP_INS ){
+	if(key == K_INS || key == K_KP_INS){
 		trap_Key_SetOverstrikeMode(!trap_Key_GetOverstrikeMode());
 		return;
 	}
@@ -198,39 +198,39 @@ MField_CharEvent(mfield_t *edit, int ch)
 {
 	int len;
 
-	if( ch == 'v' - 'a' + 1 ){	/* ctrl-v is paste */
+	if(ch == 'v' - 'a' + 1){	/* ctrl-v is paste */
 		MField_Paste(edit);
 		return;
 	}
 
-	if( ch == 'c' - 'a' + 1 ){	/* ctrl-c clears the field */
+	if(ch == 'c' - 'a' + 1){	/* ctrl-c clears the field */
 		MField_Clear(edit);
 		return;
 	}
 
 	len = strlen(edit->buffer);
 
-	if( ch == 'h' - 'a' + 1 ){	/* ctrl-h is backspace */
-		if( edit->cursor > 0 ){
+	if(ch == 'h' - 'a' + 1){	/* ctrl-h is backspace */
+		if(edit->cursor > 0){
 			memmove(edit->buffer + edit->cursor - 1,
 				edit->buffer + edit->cursor,
 				len + 1 - edit->cursor);
 			edit->cursor--;
-			if( edit->cursor < edit->scroll )
+			if(edit->cursor < edit->scroll)
 				edit->scroll--;
 		}
 		return;
 	}
 
-	if( ch == 'a' - 'a' + 1 ){	/* ctrl-a is home */
-		edit->cursor = 0;
-		edit->scroll = 0;
+	if(ch == 'a' - 'a' + 1){	/* ctrl-a is home */
+		edit->cursor	= 0;
+		edit->scroll	= 0;
 		return;
 	}
 
-	if( ch == 'e' - 'a' + 1 ){	/* ctrl-e is end */
-		edit->cursor = len;
-		edit->scroll = edit->cursor - edit->widthInChars + 1;
+	if(ch == 'e' - 'a' + 1){	/* ctrl-e is end */
+		edit->cursor	= len;
+		edit->scroll	= edit->cursor - edit->widthInChars + 1;
 		if(edit->scroll < 0)
 			edit->scroll = 0;
 		return;
@@ -239,10 +239,10 @@ MField_CharEvent(mfield_t *edit, int ch)
 	/*
 	 * ignore any other non printable chars
 	 *  */
-	if( ch < 32 )
+	if(ch < 32)
 		return;
 
-	if( !trap_Key_GetOverstrikeMode()){
+	if(!trap_Key_GetOverstrikeMode()){
 		if((edit->cursor == MAX_EDIT_LINE - 1) ||
 		   (edit->maxchars && edit->cursor >= edit->maxchars))
 			return;
@@ -260,10 +260,10 @@ MField_CharEvent(mfield_t *edit, int ch)
 	if(!edit->maxchars || edit->cursor < edit->maxchars-1)
 		edit->cursor++;
 
-	if( edit->cursor >= edit->widthInChars )
+	if(edit->cursor >= edit->widthInChars)
 		edit->scroll++;
 
-	if( edit->cursor == len + 1)
+	if(edit->cursor == len + 1)
 		edit->buffer[edit->cursor] = 0;
 }
 
@@ -288,18 +288,18 @@ MField_Clear(mfield_t *edit)
 void
 MenuField_Init(menufield_s* m)
 {
-	int l;
-	int w;
-	int h;
+	int	l;
+	int	w;
+	int	h;
 
 	MField_Clear(&m->field);
 
 	if(m->generic.flags & QMF_SMALLFONT){
-		w = SMALLCHAR_WIDTH;
-		h = SMALLCHAR_HEIGHT;
+		w	= SMALLCHAR_WIDTH;
+		h	= SMALLCHAR_HEIGHT;
 	}else{
-		w = BIGCHAR_WIDTH;
-		h = BIGCHAR_HEIGHT;
+		w	= BIGCHAR_WIDTH;
+		h	= BIGCHAR_HEIGHT;
 	}
 
 	if(m->generic.name)
@@ -307,10 +307,10 @@ MenuField_Init(menufield_s* m)
 	else
 		l = 0;
 
-	m->generic.left = m->generic.x - l;
-	m->generic.top = m->generic.y;
-	m->generic.right = m->generic.x + w + m->field.widthInChars*w;
-	m->generic.bottom = m->generic.y + h;
+	m->generic.left		= m->generic.x - l;
+	m->generic.top		= m->generic.y;
+	m->generic.right	= m->generic.x + w + m->field.widthInChars*w;
+	m->generic.bottom	= m->generic.y + h;
 }
 
 /*
@@ -321,15 +321,15 @@ MenuField_Init(menufield_s* m)
 void
 MenuField_Draw(menufield_s *f)
 {
-	int x;
-	int y;
-	int w;
-	int style;
-	qboolean focus;
-	float *color;
+	int	x;
+	int	y;
+	int	w;
+	int	style;
+	qboolean	focus;
+	float		*color;
 
-	x =     f->generic.x;
-	y =     f->generic.y;
+	x	=     f->generic.x;
+	y	=     f->generic.y;
 
 	if(f->generic.flags & QMF_SMALLFONT){
 		w = SMALLCHAR_WIDTH;
@@ -352,7 +352,7 @@ MenuField_Draw(menufield_s *f)
 	else
 		color = text_color_normal;
 
-	if( focus ){
+	if(focus){
 		/* draw cursor */
 		UI_FillRect(f->generic.left, f->generic.top, f->generic.right-
 			f->generic.left+1, f->generic.bottom-f->generic.top+1,
@@ -360,7 +360,7 @@ MenuField_Draw(menufield_s *f)
 		UI_DrawChar(x, y, 13, UI_CENTER|UI_BLINK|style, color);
 	}
 
-	if( f->generic.name )
+	if(f->generic.name)
 		UI_DrawString(x - w, y, f->generic.name, style|UI_RIGHT, color);
 
 	MField_Draw(&f->field, x + w, y, style, color);
@@ -378,7 +378,7 @@ MenuField_Key(menufield_s* m, int* key)
 
 	keycode = *key;
 
-	switch( keycode ){
+	switch(keycode){
 	case K_KP_ENTER:
 	case K_ENTER:
 	case K_JOY1:
@@ -397,7 +397,7 @@ MenuField_Key(menufield_s* m, int* key)
 		break;
 
 	default:
-		if( keycode & K_CHAR_FLAG ){
+		if(keycode & K_CHAR_FLAG){
 			keycode &= ~K_CHAR_FLAG;
 
 			if((m->generic.flags & QMF_UPPERCASE) &&

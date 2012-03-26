@@ -139,8 +139,8 @@ LAN_AddServer(int source, const char *name, const char *address)
 	int max, *count, i;
 	netadr_t adr;
 	serverInfo_t *servers = NULL;
-	max	= MAX_OTHER_SERVERS;
-	count	= NULL;
+	max = MAX_OTHER_SERVERS;
+	count = NULL;
 
 	switch(source){
 	case AS_LOCAL:
@@ -160,7 +160,7 @@ LAN_AddServer(int source, const char *name, const char *address)
 	}
 	if(servers && *count < max){
 		NET_StringToAdr(address, &adr, NA_IP);
-		for( i = 0; i < *count; i++ )
+		for(i = 0; i < *count; i++)
 			if(NET_CompareAdr(servers[i].adr, adr))
 				break;
 		if(i >= *count){
@@ -329,7 +329,7 @@ LAN_GetServerInfo(int source, int n, char *buf, int buflen)
 		Info_SetValueForKey(info, "g_humanplayers",
 			va("%i", server->g_humanplayers));
 		Q_strncpyz(buf, info, buflen);
-	}else  if(buf)
+	}else if(buf)
 		buf[0] = '\0';
 
 }
@@ -406,7 +406,7 @@ LAN_CompareServers(int source, int sortKey, int sortDir, int s1, int s2)
 		return 0;
 
 	res = 0;
-	switch( sortKey ){
+	switch(sortKey){
 	case SORT_HOST:
 		res = Q_stricmp(server1->hostName, server2->hostName);
 		break;
@@ -613,7 +613,7 @@ CL_GetClipboardData(char *buf, int buflen)
 
 	cbd = Sys_GetClipboardData();
 
-	if( !cbd ){
+	if(!cbd){
 		*buf = 0;
 		return;
 	}
@@ -645,7 +645,7 @@ Key_GetBindingBuf(int keynum, char *buf, int buflen)
 	char *value;
 
 	value = Key_GetBinding(keynum);
-	if( value )
+	if(value)
 		Q_strncpyz(buf, value, buflen);
 	else
 		*buf = 0;
@@ -714,7 +714,7 @@ GetConfigString(int index, char *buf, int size)
 
 	offset = cl.gameState.stringOffsets[index];
 	if(!offset){
-		if( size )
+		if(size)
 			buf[0] = 0;
 		return qfalse;
 	}
@@ -747,13 +747,13 @@ FloatAsInt(float f)
 intptr_t
 CL_UISystemCalls(intptr_t *args)
 {
-	switch( args[0] ){
+	switch(args[0]){
 	case UI_ERROR:
-		Com_Error(ERR_DROP, "%s", (const char *) VMA(1));
+		Com_Error(ERR_DROP, "%s", (const char*)VMA(1));
 		return 0;
 
 	case UI_PRINT:
-		Com_Printf("%s", (const char *) VMA(1));
+		Com_Printf("%s", (const char*)VMA(1));
 		return 0;
 
 	case UI_MILLISECONDS:
@@ -809,7 +809,7 @@ CL_UISystemCalls(intptr_t *args)
 			Com_Printf (
 				S_COLOR_YELLOW
 				"turning EXEC_NOW '%.11s' into EXEC_INSERT\n",
-				(const char *) VMA(2));
+				(const char*)VMA(2));
 			args[1] = EXEC_INSERT;
 		}
 		Cbuf_ExecuteText(args[1], VMA(2));
@@ -1107,7 +1107,7 @@ CL_UISystemCalls(intptr_t *args)
 
 	default:
 		Com_Error(ERR_DROP, "Bad UI system trap: %ld",
-			(long int) args[0]);
+			(long int)args[0]);
 
 	}
 

@@ -84,10 +84,10 @@ static configs_t s_configs;
 static void
 LoadConfig_MenuEvent(void *ptr, int event)
 {
-	if( event != QM_ACTIVATED )
+	if(event != QM_ACTIVATED)
 		return;
 
-	switch(((menucommon_s *) ptr)->id ){
+	switch(((menucommon_s*)ptr)->id){
 	case ID_GO:
 		trap_Cmd_ExecuteText(EXEC_APPEND,
 			va("exec %s\n",
@@ -119,15 +119,15 @@ LoadConfig_MenuEvent(void *ptr, int event)
 static void
 LoadConfig_MenuInit(void)
 {
-	int i;
-	int len;
+	int	i;
+	int	len;
 	char *configname;
 
 	UI_LoadConfig_Cache();
 
 	memset(&s_configs, 0,sizeof(configs_t));
-	s_configs.menu.wrapAround = qtrue;
-	s_configs.menu.fullscreen = qtrue;
+	s_configs.menu.wrapAround	= qtrue;
+	s_configs.menu.fullscreen	= qtrue;
 
 	s_configs.banner.generic.type	= MTYPE_BTEXT;
 	s_configs.banner.generic.x	= 320;
@@ -160,31 +160,31 @@ LoadConfig_MenuInit(void)
 	s_configs.arrows.width	= ARROWS_WIDTH;
 	s_configs.arrows.height = ARROWS_HEIGHT;
 
-	s_configs.left.generic.type	= MTYPE_BITMAP;
-	s_configs.left.generic.flags	= QMF_LEFT_JUSTIFY|QMF_PULSEIFFOCUS|
-					  QMF_MOUSEONLY;
-	s_configs.left.generic.x	= 320-ARROWS_WIDTH/2;
-	s_configs.left.generic.y	= 400;
-	s_configs.left.generic.id	= ID_LEFT;
+	s_configs.left.generic.type = MTYPE_BITMAP;
+	s_configs.left.generic.flags = QMF_LEFT_JUSTIFY|QMF_PULSEIFFOCUS|
+				       QMF_MOUSEONLY;
+	s_configs.left.generic.x = 320-ARROWS_WIDTH/2;
+	s_configs.left.generic.y = 400;
+	s_configs.left.generic.id = ID_LEFT;
 	s_configs.left.generic.callback = LoadConfig_MenuEvent;
 	s_configs.left.width = ARROWS_WIDTH/2;
 	s_configs.left.height	= ARROWS_HEIGHT;
 	s_configs.left.focuspic = ART_ARROWLEFT;
 
-	s_configs.right.generic.type	= MTYPE_BITMAP;
-	s_configs.right.generic.flags	= QMF_LEFT_JUSTIFY|QMF_PULSEIFFOCUS|
-					  QMF_MOUSEONLY;
-	s_configs.right.generic.x	= 320;
-	s_configs.right.generic.y	= 400;
-	s_configs.right.generic.id	= ID_RIGHT;
+	s_configs.right.generic.type = MTYPE_BITMAP;
+	s_configs.right.generic.flags = QMF_LEFT_JUSTIFY|QMF_PULSEIFFOCUS|
+					QMF_MOUSEONLY;
+	s_configs.right.generic.x = 320;
+	s_configs.right.generic.y = 400;
+	s_configs.right.generic.id = ID_RIGHT;
 	s_configs.right.generic.callback	= LoadConfig_MenuEvent;
-	s_configs.right.width		= ARROWS_WIDTH/2;
-	s_configs.right.height		= ARROWS_HEIGHT;
-	s_configs.right.focuspic	= ART_ARROWRIGHT;
+	s_configs.right.width			= ARROWS_WIDTH/2;
+	s_configs.right.height			= ARROWS_HEIGHT;
+	s_configs.right.focuspic		= ART_ARROWRIGHT;
 
-	s_configs.back.generic.type	= MTYPE_BITMAP;
-	s_configs.back.generic.name	= ART_BACK0;
-	s_configs.back.generic.flags	= QMF_LEFT_JUSTIFY|QMF_PULSEIFFOCUS;
+	s_configs.back.generic.type = MTYPE_BITMAP;
+	s_configs.back.generic.name = ART_BACK0;
+	s_configs.back.generic.flags = QMF_LEFT_JUSTIFY|QMF_PULSEIFFOCUS;
 	s_configs.back.generic.id = ID_BACK;
 	s_configs.back.generic.callback = LoadConfig_MenuEvent;
 	s_configs.back.generic.x	= 0;
@@ -193,9 +193,9 @@ LoadConfig_MenuInit(void)
 	s_configs.back.height	= 64;
 	s_configs.back.focuspic = ART_BACK1;
 
-	s_configs.go.generic.type	= MTYPE_BITMAP;
-	s_configs.go.generic.name	= ART_FIGHT0;
-	s_configs.go.generic.flags	= QMF_RIGHT_JUSTIFY|QMF_PULSEIFFOCUS;
+	s_configs.go.generic.type = MTYPE_BITMAP;
+	s_configs.go.generic.name = ART_FIGHT0;
+	s_configs.go.generic.flags = QMF_RIGHT_JUSTIFY|QMF_PULSEIFFOCUS;
 	s_configs.go.generic.id = ID_GO;
 	s_configs.go.generic.callback = LoadConfig_MenuEvent;
 	s_configs.go.generic.x	= 640;
@@ -205,8 +205,8 @@ LoadConfig_MenuInit(void)
 	s_configs.go.focuspic	= ART_FIGHT1;
 
 	/* scan for configs */
-	s_configs.list.generic.type	= MTYPE_SCROLLLIST;
-	s_configs.list.generic.flags	= QMF_PULSEIFFOCUS;
+	s_configs.list.generic.type = MTYPE_SCROLLLIST;
+	s_configs.list.generic.flags = QMF_PULSEIFFOCUS;
 	s_configs.list.generic.callback = LoadConfig_MenuEvent;
 	s_configs.list.generic.id	= ID_LIST;
 	s_configs.list.generic.x	= 118;
@@ -216,8 +216,8 @@ LoadConfig_MenuInit(void)
 	s_configs.list.numitems =
 		trap_FS_GetFileList("", "cfg", s_configs.names,
 			NAMEBUFSIZE);
-	s_configs.list.itemnames	= (const char * *) s_configs.configlist;
-	s_configs.list.columns		= 3;
+	s_configs.list.itemnames = (const char**)s_configs.configlist;
+	s_configs.list.columns = 3;
 
 	if(!s_configs.list.numitems){
 		strcpy(s_configs.names,"No Files Found.");
@@ -229,7 +229,7 @@ LoadConfig_MenuInit(void)
 		s_configs.list.numitems = MAX_CONFIGS;
 
 	configname = s_configs.names;
-	for( i = 0; i < s_configs.list.numitems; i++ ){
+	for(i = 0; i < s_configs.list.numitems; i++){
 		s_configs.list.itemnames[i] = configname;
 
 		/* strip extension */

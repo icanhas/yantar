@@ -60,15 +60,15 @@ typedef unsigned char byte;
 #define MEM_BLOCKSIZE	4096
 
 /* the dec offsetof macro doesnt work very well... */
-#define myoffsetof(type,identifier) ((size_t) &((type *) 0)->identifier)
+#define myoffsetof(type,identifier) ((size_t)&((type*)0)->identifier)
 
 
 /* set these before calling CheckParm */
 extern int myargc;
 extern char **myargv;
 
-char *strupr(char *in);
-char *strlower(char *in);
+char*strupr(char *in);
+char*strlower(char *in);
 int Q_strncasecmp(const char *s1, const char *s2, int n);
 int Q_stricmp(const char *s1, const char *s2);
 void Q_getwd(char *out);
@@ -82,10 +82,10 @@ extern char	qdir[1024];
 extern char	gamedir[1024];
 extern char	writedir[1024];
 void SetQdirFromPath(const char *path);
-char *ExpandArg(const char *path);	/* from cmd line */
-char *ExpandPath(const char *path);	/* from scripts */
-char *ExpandGamePath(const char *path);
-char *ExpandPathAndArchive(const char *path);
+char*ExpandArg(const char *path);	/* from cmd line */
+char*ExpandPath(const char *path);	/* from scripts */
+char*ExpandGamePath(const char *path);
+char*ExpandPathAndArchive(const char *path);
 
 
 double I_FloatTime(void);
@@ -93,8 +93,8 @@ double I_FloatTime(void);
 void    Error(const char *error, ...);
 int             CheckParm(const char *check);
 
-FILE    *SafeOpenWrite(const char *filename);
-FILE    *SafeOpenRead(const char *filename);
+FILE*SafeOpenWrite(const char *filename);
+FILE*SafeOpenRead(const char *filename);
 void    SafeRead(FILE *f, void *buffer, int count);
 void    SafeWrite(FILE *f, const void *buffer, int count);
 
@@ -115,12 +115,12 @@ void    ExtractFileExtension(const char *path, char *dest);
 
 int     ParseNum(const char *str);
 
-char *Com_Parse(char *data);
+char*Com_Parse(char *data);
 
 extern char com_token[1024];
 extern qboolean com_eof;
 
-char *copystring(const char *s);
+char*copystring(const char *s);
 
 
 void CRC_Init(unsigned short *crcvalue);

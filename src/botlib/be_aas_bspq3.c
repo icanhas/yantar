@@ -57,9 +57,9 @@ typedef struct rgb_s {
 
 /* bsp entity epair */
 typedef struct bsp_epair_s {
-	char			*key;
-	char			*value;
-	struct bsp_epair_s	*next;
+	char *key;
+	char *value;
+	struct bsp_epair_s *next;
 } bsp_epair_t;
 
 /* bsp data entity */
@@ -175,7 +175,7 @@ AAS_EntityCollision(int entnum,
 	if(enttrace.fraction < trace->fraction){
 		Com_Memcpy(trace, &enttrace, sizeof(bsp_trace_t));
 		return qtrue;
-	}	
+	}
 	return qfalse;
 }	/* end of the function AAS_EntityCollision */
 /* ===========================================================================
@@ -272,7 +272,7 @@ AAS_BSPEntityInRange(int ent)
 	if(ent <= 0 || ent >= bspworld.numentities){
 		botimport.Print(PRT_MESSAGE, "bsp entity out of range\n");
 		return qfalse;
-	}	
+	}
 	return qtrue;
 }	/* end of the function AAS_BSPEntityInRange */
 /* ===========================================================================
@@ -293,7 +293,7 @@ AAS_ValueForBSPEpairKey(int ent, char *key, char *value, int size)
 			strncpy(value, epair->value, size-1);
 			value[size-1] = '\0';
 			return qtrue;
-		}	
+		}
 	return qfalse;
 }	/* end of the function AAS_FindBSPEpair */
 /* ===========================================================================
@@ -313,9 +313,9 @@ AAS_VectorForBSPEpairKey(int ent, char *key, vec3_t v)
 	/* scanf into doubles, then assign, so it is vec_t size independent */
 	v1 = v2 = v3 = 0;
 	sscanf(buf, "%lf %lf %lf", &v1, &v2, &v3);
-	v[0]	= v1;
-	v[1]	= v2;
-	v[2]	= v3;
+	v[0] = v1;
+	v[1] = v2;
+	v[2] = v3;
 	return qtrue;
 }	/* end of the function AAS_VectorForBSPEpairKey */
 /* ===========================================================================
@@ -360,8 +360,8 @@ void
 AAS_FreeBSPEntities(void)
 {
 	int i;
-	bsp_entity_t	*ent;
-	bsp_epair_t	*epair, *nextepair;
+	bsp_entity_t *ent;
+	bsp_epair_t *epair, *nextepair;
 
 	for(i = 1; i < bspworld.numentities; i++){
 		ent = &bspworld.entities[i];
@@ -371,8 +371,8 @@ AAS_FreeBSPEntities(void)
 			if(epair->key) FreeMemory(epair->key);
 			if(epair->value) FreeMemory(epair->value);
 			FreeMemory(epair);
-		}	
-	}		
+		}
+	}
 	bspworld.numentities = 0;
 }	/* end of the function AAS_FreeBSPEntities */
 /* ===========================================================================
@@ -386,8 +386,8 @@ AAS_ParseBSPEntities(void)
 {
 	script_t	*script;
 	token_t		token;
-	bsp_entity_t	*ent;
-	bsp_epair_t	*epair;
+	bsp_entity_t *ent;
+	bsp_epair_t *epair;
 
 	script = LoadScriptMemory(bspworld.dentdata, bspworld.entdatasize,
 		"entdata");
@@ -401,49 +401,49 @@ AAS_ParseBSPEntities(void)
 			AAS_FreeBSPEntities();
 			FreeScript(script);
 			return;
-		}	
+		}
 		if(bspworld.numentities >= MAX_BSPENTITIES){
 			botimport.Print(PRT_MESSAGE,
 				"too many entities in BSP file\n");
 			break;
-		}	
+		}
 		ent = &bspworld.entities[bspworld.numentities];
 		bspworld.numentities++;
 		ent->epairs = NULL;
 		while(PS_ReadToken(script, &token)){
 			if(!strcmp(token.string, "}")) break;
 			epair =
-				(bsp_epair_t *) GetClearedHunkMemory(sizeof(
+				(bsp_epair_t*)GetClearedHunkMemory(sizeof(
 						bsp_epair_t));
-			epair->next	= ent->epairs;
-			ent->epairs	= epair;
+			epair->next = ent->epairs;
+			ent->epairs = epair;
 			if(token.type != TT_STRING){
 				ScriptError(script, "invalid %s\n", token.string);
 				AAS_FreeBSPEntities();
 				FreeScript(script);
 				return;
-			}	
+			}
 			StripDoubleQuotes(token.string);
-			epair->key = (char *) GetHunkMemory(strlen(
+			epair->key = (char*)GetHunkMemory(strlen(
 					token.string) + 1);
 			strcpy(epair->key, token.string);
 			if(!PS_ExpectTokenType(script, TT_STRING, 0, &token)){
 				AAS_FreeBSPEntities();
 				FreeScript(script);
 				return;
-			}	
+			}
 			StripDoubleQuotes(token.string);
 			epair->value =
-				(char *) GetHunkMemory(strlen(token.string) + 1);
+				(char*)GetHunkMemory(strlen(token.string) + 1);
 			strcpy(epair->value, token.string);
-		}	
+		}
 		if(strcmp(token.string, "}")){
 			ScriptError(script, "missing }\n");
 			AAS_FreeBSPEntities();
 			FreeScript(script);
 			return;
-		}	
-	}		
+		}
+	}
 	FreeScript(script);
 }	/* end of the function AAS_ParseBSPEntities */
 /* ===========================================================================
@@ -488,7 +488,7 @@ AAS_LoadBSPFile(void)
 {
 	AAS_DumpBSPData();
 	bspworld.entdatasize = strlen(botimport.BSPEntityData()) + 1;
-	bspworld.dentdata = (char *) GetClearedHunkMemory(bspworld.entdatasize);
+	bspworld.dentdata = (char*)GetClearedHunkMemory(bspworld.entdatasize);
 	Com_Memcpy(bspworld.dentdata,
 		botimport.BSPEntityData(), bspworld.entdatasize);
 	AAS_ParseBSPEntities();

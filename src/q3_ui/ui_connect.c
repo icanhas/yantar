@@ -31,15 +31,15 @@ static char lastLoadingText[MAX_INFO_VALUE];
 static void
 UI_ReadableSize(char *buf, int bufsize, int value)
 {
-	if(value > 1024*1024*1024 ){	/* gigs */
+	if(value > 1024*1024*1024){	/* gigs */
 		Com_sprintf(buf, bufsize, "%d", value / (1024*1024*1024));
 		Com_sprintf(buf+strlen(buf), bufsize-strlen(buf), ".%02d GB",
 			(value % (1024*1024*1024))*100 / (1024*1024*1024));
-	}else if(value > 1024*1024 ){	/* megs */
+	}else if(value > 1024*1024){	/* megs */
 		Com_sprintf(buf, bufsize, "%d", value / (1024*1024));
 		Com_sprintf(buf+strlen(buf), bufsize-strlen(buf), ".%02d MB",
 			(value % (1024*1024))*100 / (1024*1024));
-	}else if(value > 1024 )	/* kilos */
+	}else if(value > 1024)	/* kilos */
 		Com_sprintf(buf, bufsize, "%d KB", value / 1024);
 	else	/* bytes */
 		Com_sprintf(buf, bufsize, "%d bytes", value);
@@ -63,9 +63,9 @@ UI_PrintTime(char *buf, int bufsize, int time)
 static void
 UI_DisplayDownloadInfo(const char *downloadName)
 {
-	static char	dlText[]	= "Downloading:";
-	static char	etaText[]	= "Estimated time left:";
-	static char	xferText[]	= "Transfer rate:";
+	static char	dlText[] = "Downloading:";
+	static char	etaText[] = "Estimated time left:";
+	static char	xferText[] = "Transfer rate:";
 
 	int	downloadSize, downloadCount, downloadTime;
 	char	dlSizeBuf[64], totalSizeBuf[64], xferRateBuf[64], dlTimeBuf[64];
@@ -95,8 +95,8 @@ UI_DisplayDownloadInfo(const char *downloadName)
 	if(downloadSize > 0)
 		s =
 			va("%s (%d%%)", downloadName,
-				(int) ((float) downloadCount * 100.0f /
-				       downloadSize));
+				(int)((float)downloadCount * 100.0f /
+				      downloadSize));
 	else
 		s = downloadName;
 
@@ -116,7 +116,7 @@ UI_DisplayDownloadInfo(const char *downloadName)
 		if((uis.realtime - downloadTime) / 1000)
 			xferRate = downloadCount /
 				   ((uis.realtime - downloadTime) / 1000);
-			/* xferRate = (int)( ((float)downloadCount) / elapsedTime); */
+		/* xferRate = (int)( ((float)downloadCount) / elapsedTime); */
 		else
 			xferRate = 0;
 
@@ -207,13 +207,13 @@ UI_DrawConnectScreen(qboolean overlay)
 
 #if 0
 	/* display password field */
-	if( passwordNeeded ){
+	if(passwordNeeded){
 		s_ingame_menu.x = SCREEN_WIDTH * 0.50 - 128;
 		s_ingame_menu.nitems = 0;
 		s_ingame_menu.wrapAround = qtrue;
 
-		passwordField.generic.type	= MTYPE_FIELD;
-		passwordField.generic.name	= "Password:";
+		passwordField.generic.type = MTYPE_FIELD;
+		passwordField.generic.name = "Password:";
 		passwordField.generic.callback	= 0;
 		passwordField.generic.x		= 10;
 		passwordField.generic.y		= 180;
@@ -225,7 +225,7 @@ UI_DrawConnectScreen(qboolean overlay)
 			sizeof(passwordField.field.buffer));
 
 		Menu_AddItem(&s_ingame_menu,
-			( void * ) &s_customize_player_action);
+			( void* )&s_customize_player_action);
 
 		MField_Draw(&passwordField);
 	}

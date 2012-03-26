@@ -126,13 +126,13 @@ typedef struct aas_bbox_s {
 
 /* reachability to another area */
 typedef struct aas_reachability_s {
-	int areanum;	/* number of the reachable area */
-	int facenum;	/* number of the face towards the other area */
-	int edgenum;	/* number of the edge towards the other area */
-	vec3_t start;	/* start point of inter area movement */
-	vec3_t end;	/* end point of inter area movement */
-	int traveltype;	/* type of travel required to get to the area */
-	unsigned short int traveltime;	/* travel time of the inter area movement */
+	int			areanum;	/* number of the reachable area */
+	int			facenum;	/* number of the face towards the other area */
+	int			edgenum;	/* number of the edge towards the other area */
+	vec3_t			start;		/* start point of inter area movement */
+	vec3_t			end;		/* end point of inter area movement */
+	int			traveltype;	/* type of travel required to get to the area */
+	unsigned short int	traveltime;	/* travel time of the inter area movement */
 } aas_reachability_t;
 
 /* area settings */

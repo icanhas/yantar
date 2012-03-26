@@ -40,7 +40,7 @@ char *svc_strings[256] = {
 void
 SHOWNET(msg_t *msg, char *s)
 {
-	if( cl_shownet->integer >= 2)
+	if(cl_shownet->integer >= 2)
 		Com_Printf ("%3i:%s\n", msg->readcount-1, s);
 }
 
@@ -71,13 +71,13 @@ CL_DeltaEntity(msg_t *msg, clSnapshot_t *frame, int newnum, entityState_t *old,
 	 * it can be used as the source for a later delta */
 	state = &cl.parseEntities[cl.parseEntitiesNum & (MAX_PARSE_ENTITIES-1)];
 
-	if( unchanged )
+	if(unchanged)
 		*state = *old;
 	else
 		MSG_ReadDeltaEntity(msg, old, state, newnum);
 
-	if( state->number == (MAX_GENTITIES-1))
-		return;	/* entity was delta removed */
+	if(state->number == (MAX_GENTITIES-1))
+		return;		/* entity was delta removed */
 	cl.parseEntitiesNum++;
 	frame->numEntities++;
 }
@@ -100,12 +100,12 @@ CL_ParsePacketEntities(msg_t *msg, clSnapshot_t *oldframe,
 	newframe->numEntities = 0;
 
 	/* delta from the entities present in oldframe */
-	oldindex	= 0;
-	oldstate	= NULL;
+	oldindex = 0;
+	oldstate = NULL;
 	if(!oldframe)
 		oldnum = 99999;
 	else{
-		if( oldindex >= oldframe->numEntities )
+		if(oldindex >= oldframe->numEntities)
 			oldnum = 99999;
 		else{
 			oldstate = &cl.parseEntities[
@@ -115,20 +115,20 @@ CL_ParsePacketEntities(msg_t *msg, clSnapshot_t *oldframe,
 		}
 	}
 
-	while( 1 ){
+	while(1){
 		/* read the entity index number */
 		newnum = MSG_ReadBits(msg, GENTITYNUM_BITS);
 
-		if( newnum == (MAX_GENTITIES-1))
+		if(newnum == (MAX_GENTITIES-1))
 			break;
 
-		if( msg->readcount > msg->cursize )
+		if(msg->readcount > msg->cursize)
 			Com_Error (ERR_DROP,
 				"CL_ParsePacketEntities: end of message");
 
-		while( oldnum < newnum ){
+		while(oldnum < newnum){
 			/* one or more entities from the old packet are unchanged */
-			if( cl_shownet->integer == 3 )
+			if(cl_shownet->integer == 3)
 				Com_Printf ("%3i:  unchanged: %i\n",
 					msg->readcount,
 					oldnum);
@@ -136,7 +136,7 @@ CL_ParsePacketEntities(msg_t *msg, clSnapshot_t *oldframe,
 
 			oldindex++;
 
-			if( oldindex >= oldframe->numEntities )
+			if(oldindex >= oldframe->numEntities)
 				oldnum = 99999;
 			else{
 				oldstate = &cl.parseEntities[
@@ -147,14 +147,14 @@ CL_ParsePacketEntities(msg_t *msg, clSnapshot_t *oldframe,
 		}
 		if(oldnum == newnum){
 			/* delta from previous state */
-			if( cl_shownet->integer == 3 )
+			if(cl_shownet->integer == 3)
 				Com_Printf ("%3i:  delta: %i\n", msg->readcount,
 					newnum);
 			CL_DeltaEntity(msg, newframe, newnum, oldstate, qfalse);
 
 			oldindex++;
 
-			if( oldindex >= oldframe->numEntities )
+			if(oldindex >= oldframe->numEntities)
 				oldnum = 99999;
 			else{
 				oldstate = &cl.parseEntities[
@@ -165,9 +165,9 @@ CL_ParsePacketEntities(msg_t *msg, clSnapshot_t *oldframe,
 			continue;
 		}
 
-		if( oldnum > newnum ){
+		if(oldnum > newnum){
 			/* delta from baseline */
-			if( cl_shownet->integer == 3 )
+			if(cl_shownet->integer == 3)
 				Com_Printf ("%3i:  baseline: %i\n",
 					msg->readcount,
 					newnum);
@@ -180,16 +180,16 @@ CL_ParsePacketEntities(msg_t *msg, clSnapshot_t *oldframe,
 	}
 
 	/* any remaining entities in the old frame are copied over */
-	while( oldnum != 99999 ){
+	while(oldnum != 99999){
 		/* one or more entities from the old packet are unchanged */
-		if( cl_shownet->integer == 3 )
+		if(cl_shownet->integer == 3)
 			Com_Printf ("%3i:  unchanged: %i\n", msg->readcount,
 				oldnum);
 		CL_DeltaEntity(msg, newframe, oldnum, oldstate, qtrue);
 
 		oldindex++;
 
-		if( oldindex >= oldframe->numEntities )
+		if(oldindex >= oldframe->numEntities)
 			oldnum = 99999;
 		else{
 			oldstate = &cl.parseEntities[
@@ -241,7 +241,7 @@ CL_ParseSnapshot(msg_t *msg)
 	newSnap.messageNum = clc.serverMessageSequence;
 
 	deltaNum = MSG_ReadByte(msg);
-	if( !deltaNum )
+	if(!deltaNum)
 		newSnap.deltaNum = -1;
 	else
 		newSnap.deltaNum = newSnap.messageNum - deltaNum;
@@ -251,22 +251,22 @@ CL_ParseSnapshot(msg_t *msg)
 	 * no longer have available, we must suck up the rest of
 	 * the frame, but not use it, then ask for a non-compressed
 	 * message */
-	if( newSnap.deltaNum <= 0 ){
+	if(newSnap.deltaNum <= 0){
 		newSnap.valid = qtrue;	/* uncompressed frame */
 		old = NULL;
 		clc.demowaiting = qfalse;	/* we can start recording now */
 	}else{
 		old = &cl.snapshots[newSnap.deltaNum & PACKET_MASK];
-		if( !old->valid )
+		if(!old->valid)
 			/* should never happen */
 			Com_Printf (
 				"Delta from invalid frame (not supposed to happen!).\n");
-		else if( old->messageNum != newSnap.deltaNum )
+		else if(old->messageNum != newSnap.deltaNum)
 			/* The frame that the server did the delta from
 			 * is too old, so we can't reconstruct it properly. */
 			Com_Printf ("Delta frame too old.\n");
-		else if( cl.parseEntitiesNum - old->parseEntitiesNum >
-			 MAX_PARSE_ENTITIES-128 )
+		else if(cl.parseEntitiesNum - old->parseEntitiesNum >
+			MAX_PARSE_ENTITIES-128)
 			Com_Printf ("Delta parseEntitiesNum too old.\n");
 		else
 			newSnap.valid = qtrue;	/* valid delta parse */
@@ -286,7 +286,7 @@ CL_ParseSnapshot(msg_t *msg)
 
 	/* read playerinfo */
 	SHOWNET(msg, "playerstate");
-	if( old )
+	if(old)
 		MSG_ReadDeltaPlayerstate(msg, &old->ps, &newSnap.ps);
 	else
 		MSG_ReadDeltaPlayerstate(msg, NULL, &newSnap.ps);
@@ -297,7 +297,7 @@ CL_ParseSnapshot(msg_t *msg)
 
 	/* if not valid, dump the entire thing now that it has
 	 * been properly read */
-	if( !newSnap.valid )
+	if(!newSnap.valid)
 		return;
 
 	/* clear the valid flags of any snapshots between the last
@@ -306,19 +306,19 @@ CL_ParseSnapshot(msg_t *msg)
 	 * time we wrap around in the buffer */
 	oldMessageNum = cl.snap.messageNum + 1;
 
-	if( newSnap.messageNum - oldMessageNum >= PACKET_BACKUP )
+	if(newSnap.messageNum - oldMessageNum >= PACKET_BACKUP)
 		oldMessageNum = newSnap.messageNum - (PACKET_BACKUP - 1);
-	for(; oldMessageNum < newSnap.messageNum; oldMessageNum++ )
+	for(; oldMessageNum < newSnap.messageNum; oldMessageNum++)
 		cl.snapshots[oldMessageNum & PACKET_MASK].valid = qfalse;
 
 	/* copy to the current good spot */
 	cl.snap = newSnap;
 	cl.snap.ping = 999;
 	/* calculate ping time */
-	for( i = 0; i < PACKET_BACKUP; i++ ){
+	for(i = 0; i < PACKET_BACKUP; i++){
 		packetNum = (clc.netchan.outgoingSequence - 1 - i) & PACKET_MASK;
-		if( cl.snap.ps.commandTime >=
-		    cl.outPackets[ packetNum ].p_serverTime ){
+		if(cl.snap.ps.commandTime >=
+		   cl.outPackets[ packetNum ].p_serverTime){
 			cl.snap.ping = cls.realtime -
 				       cl.outPackets[ packetNum ].p_realtime;
 			break;
@@ -354,10 +354,10 @@ int	cl_connectedToCheatServer;
 void
 CL_SystemInfoChanged(void)
 {
-	char *systemInfo;
+	char	*systemInfo;
 	const char *s, *t;
-	char key[BIG_INFO_KEY];
-	char value[BIG_INFO_VALUE];
+	char	key[BIG_INFO_KEY];
+	char	value[BIG_INFO_VALUE];
 	qboolean gameSet;
 
 	systemInfo = cl.gameState.stringData +
@@ -369,7 +369,7 @@ CL_SystemInfoChanged(void)
 	cl.serverId = atoi(Info_ValueForKey(systemInfo, "sv_serverid"));
 
 	/* don't set any vars when playing a demo */
-	if( clc.demoplaying )
+	if(clc.demoplaying)
 		return;
 
 #ifdef USE_VOIP
@@ -380,8 +380,8 @@ CL_SystemInfoChanged(void)
 #endif
 	{
 		s = Info_ValueForKey(systemInfo, "sv_voip");
-		if( Cvar_VariableValue("g_gametype") == GT_SINGLE_PLAYER ||
-		    Cvar_VariableValue("ui_singlePlayerActive"))
+		if(Cvar_VariableValue("g_gametype") == GT_SINGLE_PLAYER ||
+		   Cvar_VariableValue("ui_singlePlayerActive"))
 			clc.voipEnabled = qfalse;
 		else
 			clc.voipEnabled = atoi(s);
@@ -390,26 +390,26 @@ CL_SystemInfoChanged(void)
 
 	s = Info_ValueForKey(systemInfo, "sv_cheats");
 	cl_connectedToCheatServer = atoi(s);
-	if( !cl_connectedToCheatServer )
+	if(!cl_connectedToCheatServer)
 		Cvar_SetCheatState();
 
 	/* check pure server string */
-	s	= Info_ValueForKey(systemInfo, "sv_paks");
-	t	= Info_ValueForKey(systemInfo, "sv_pakNames");
+	s = Info_ValueForKey(systemInfo, "sv_paks");
+	t = Info_ValueForKey(systemInfo, "sv_pakNames");
 	FS_PureServerSetLoadedPaks(s, t);
 
-	s	= Info_ValueForKey(systemInfo, "sv_referencedPaks");
-	t	= Info_ValueForKey(systemInfo, "sv_referencedPakNames");
+	s = Info_ValueForKey(systemInfo, "sv_referencedPaks");
+	t = Info_ValueForKey(systemInfo, "sv_referencedPakNames");
 	FS_PureServerSetReferencedPaks(s, t);
 
 	gameSet = qfalse;
 	/* scan through all the variables in the systeminfo and locally set cvars to match */
 	s = systemInfo;
-	while( s ){
+	while(s){
 		int cvar_flags;
 
 		Info_NextPair(&s, key, value);
-		if( !key[0] )
+		if(!key[0])
 			break;
 
 		/* ehw! */
@@ -451,7 +451,7 @@ CL_SystemInfoChanged(void)
 		}
 	}
 	/* if game folder should not be set and it is set at the client side */
-	if( !gameSet && *Cvar_VariableString("fs_game"))
+	if(!gameSet && *Cvar_VariableString("fs_game"))
 		Cvar_Set("fs_game", "");
 	cl_connectedToPureServer = Cvar_VariableValue("sv_pure");
 }
@@ -484,12 +484,12 @@ CL_ParseServerInfo(void)
 void
 CL_ParseGamestate(msg_t *msg)
 {
-	int i;
+	int	i;
 	entityState_t *es;
 	int	newnum;
-	entityState_t	nullstate;
+	entityState_t nullstate;
 	int	cmd;
-	char	*s;
+	char    *s;
 	char	oldGame[MAX_QPATH];
 
 	Con_Close();
@@ -504,24 +504,24 @@ CL_ParseGamestate(msg_t *msg)
 
 	/* parse all the configstrings and baselines */
 	cl.gameState.dataCount = 1;	/* leave a 0 at the beginning for uninitialized configstrings */
-	while( 1 ){
+	while(1){
 		cmd = MSG_ReadByte(msg);
 
-		if( cmd == svc_EOF )
+		if(cmd == svc_EOF)
 			break;
 
-		if( cmd == svc_configstring ){
+		if(cmd == svc_configstring){
 			int len;
 
 			i = MSG_ReadShort(msg);
-			if( i < 0 || i >= MAX_CONFIGSTRINGS )
+			if(i < 0 || i >= MAX_CONFIGSTRINGS)
 				Com_Error(ERR_DROP,
 					"configstring > MAX_CONFIGSTRINGS");
-			s	= MSG_ReadBigString(msg);
-			len	= strlen(s);
+			s = MSG_ReadBigString(msg);
+			len = strlen(s);
 
-			if( len + 1 + cl.gameState.dataCount >
-			    MAX_GAMESTATE_CHARS )
+			if(len + 1 + cl.gameState.dataCount >
+			   MAX_GAMESTATE_CHARS)
 				Com_Error(ERR_DROP,
 					"MAX_GAMESTATE_CHARS exceeded");
 
@@ -532,9 +532,9 @@ CL_ParseGamestate(msg_t *msg)
 				s,
 				len + 1);
 			cl.gameState.dataCount += len + 1;
-		}else if( cmd == svc_baseline ){
+		}else if(cmd == svc_baseline){
 			newnum = MSG_ReadBits(msg, GENTITYNUM_BITS);
-			if( newnum < 0 || newnum >= MAX_GENTITIES )
+			if(newnum < 0 || newnum >= MAX_GENTITIES)
 				Com_Error(ERR_DROP,
 					"Baseline number out of range: %i",
 					newnum);
@@ -734,8 +734,8 @@ CL_ParseVoip(msg_t *msg)
 	static short	decoded[4096];	/* !!! FIXME: don't hardcode. */
 
 	const int	sender = MSG_ReadShort(msg);
-	const int	generation = MSG_ReadByte(msg);
-	const int	sequence = MSG_ReadLong(msg);
+	const int	generation	= MSG_ReadByte(msg);
+	const int	sequence	= MSG_ReadLong(msg);
 	const int	frames = MSG_ReadByte(msg);
 	const int	packetsize = MSG_ReadShort(msg);
 	const int	flags = MSG_ReadBits(msg, VOIP_FLAGCNT);
@@ -834,7 +834,7 @@ CL_ParseVoip(msg_t *msg)
 				"VoIP: playback %d bytes, %d samples, %d frames\n",
 				written * 2, written, i);
 
-			CL_PlayVoip(sender, written, (const byte *) decoded,
+			CL_PlayVoip(sender, written, (const byte*)decoded,
 				flags);
 			written = 0;
 		}
@@ -866,7 +866,7 @@ CL_ParseVoip(msg_t *msg)
 		written * 2, written, i);
 
 	if(written > 0)
-		CL_PlayVoip(sender, written, (const byte *) decoded, flags);
+		CL_PlayVoip(sender, written, (const byte*)decoded, flags);
 
 	clc.voipIncomingSequence[sender] = sequence + frames;
 }
@@ -888,11 +888,11 @@ CL_ParseCommandString(msg_t *msg)
 	int	seq;
 	int	index;
 
-	seq	= MSG_ReadLong(msg);
-	s	= MSG_ReadString(msg);
+	seq = MSG_ReadLong(msg);
+	s = MSG_ReadString(msg);
 
 	/* see if we have already executed stored it off */
-	if( clc.serverCommandSequence >= seq )
+	if(clc.serverCommandSequence >= seq)
 		return;
 	clc.serverCommandSequence = seq;
 
@@ -912,9 +912,9 @@ CL_ParseServerMessage(msg_t *msg)
 {
 	int cmd;
 
-	if( cl_shownet->integer == 1 )
+	if(cl_shownet->integer == 1)
 		Com_Printf ("%i ",msg->cursize);
-	else if( cl_shownet->integer >= 2 )
+	else if(cl_shownet->integer >= 2)
 		Com_Printf ("------------------\n");
 
 	MSG_Bitstream(msg);
@@ -922,15 +922,15 @@ CL_ParseServerMessage(msg_t *msg)
 	/* get the reliable sequence acknowledge number */
 	clc.reliableAcknowledge = MSG_ReadLong(msg);
 	/*  */
-	if( clc.reliableAcknowledge < clc.reliableSequence -
-	    MAX_RELIABLE_COMMANDS )
+	if(clc.reliableAcknowledge < clc.reliableSequence -
+	   MAX_RELIABLE_COMMANDS)
 		clc.reliableAcknowledge = clc.reliableSequence;
 
 	/*
 	 * parse the message
 	 *  */
-	while( 1 ){
-		if( msg->readcount > msg->cursize ){
+	while(1){
+		if(msg->readcount > msg->cursize){
 			Com_Error (
 				ERR_DROP,
 				"CL_ParseServerMessage: read past end of server message");
@@ -944,7 +944,7 @@ CL_ParseServerMessage(msg_t *msg)
 			break;
 		}
 
-		if( cl_shownet->integer >= 2 ){
+		if(cl_shownet->integer >= 2){
 			if((cmd < 0) || (!svc_strings[cmd]))
 				Com_Printf("%3i:BAD CMD %i\n", msg->readcount-1,
 					cmd);
@@ -953,7 +953,7 @@ CL_ParseServerMessage(msg_t *msg)
 		}
 
 		/* other commands */
-		switch( cmd ){
+		switch(cmd){
 		default:
 			Com_Error (
 				ERR_DROP,

@@ -53,13 +53,13 @@ Pickup_Powerup(gentity_t *ent, gentity_t *other)
 	int	i;
 	gclient_t *client;
 
-	if( !other->client->ps.powerups[ent->item->giTag] )
+	if(!other->client->ps.powerups[ent->item->giTag])
 		/* round timing to seconds to make multiple powerup timers
 		 * count in sync */
 		other->client->ps.powerups[ent->item->giTag] =
 			level.time - (level.time % 1000);
 
-	if( ent->count )
+	if(ent->count)
 		quantity = ent->count;
 	else
 		quantity = ent->item->quantity;
@@ -67,42 +67,42 @@ Pickup_Powerup(gentity_t *ent, gentity_t *other)
 	other->client->ps.powerups[ent->item->giTag] += quantity * 1000;
 
 	/* give any nearby players a "denied" anti-reward */
-	for( i = 0; i < level.maxclients; i++ ){
+	for(i = 0; i < level.maxclients; i++){
 		vec3_t	delta;
 		float	len;
 		vec3_t	forward;
 		trace_t tr;
 
 		client = &level.clients[i];
-		if( client == other->client )
+		if(client == other->client)
 			continue;
-		if( client->pers.connected == CON_DISCONNECTED )
+		if(client->pers.connected == CON_DISCONNECTED)
 			continue;
-		if( client->ps.stats[STAT_HEALTH] <= 0 )
+		if(client->ps.stats[STAT_HEALTH] <= 0)
 			continue;
 
 		/* if same team in team game, no sound
 		 * cannot use OnSameTeam as it expects to g_entities, not clients */
-		if( g_gametype.integer >= GT_TEAM &&
-		    other->client->sess.sessionTeam == client->sess.sessionTeam  )
+		if(g_gametype.integer >= GT_TEAM &&
+		   other->client->sess.sessionTeam == client->sess.sessionTeam)
 			continue;
 
 		/* if too far away, no sound */
 		VectorSubtract(ent->s.pos.trBase, client->ps.origin, delta);
 		len = VectorNormalize(delta);
-		if( len > 192 )
+		if(len > 192)
 			continue;
 
 		/* if not facing, no sound */
 		AngleVectors(client->ps.viewangles, forward, NULL, NULL);
-		if( DotProduct(delta, forward) < 0.4 )
+		if(DotProduct(delta, forward) < 0.4)
 			continue;
 
 		/* if not line of sight, no sound */
 		trap_Trace(&tr, client->ps.origin, NULL, NULL, ent->s.pos.trBase,
 			ENTITYNUM_NONE,
 			CONTENTS_SOLID);
-		if( tr.fraction != 1.0 )
+		if(tr.fraction != 1.0)
 			continue;
 
 		/* anti-reward */
@@ -127,14 +127,14 @@ Pickup_PersistantPowerup(gentity_t *ent, gentity_t *other)
 							   bg_itemlist;
 	other->client->persistantPowerup = ent;
 
-	switch( ent->item->giTag ){
+	switch(ent->item->giTag){
 	case PW_GUARD:
 		clientNum = other->client->ps.clientNum;
 		trap_GetUserinfo(clientNum, userinfo, sizeof(userinfo));
 		handicap = atof(Info_ValueForKey(userinfo, "handicap"));
-		if( handicap<=0.0f || handicap>100.0f)
+		if(handicap<=0.0f || handicap>100.0f)
 			handicap = 100.0f;
-		max = (int) (2 *  handicap);
+		max = (int)(2 *  handicap);
 
 		other->health = max;
 		other->client->ps.stats[STAT_HEALTH] = max;
@@ -148,7 +148,7 @@ Pickup_PersistantPowerup(gentity_t *ent, gentity_t *other)
 		clientNum = other->client->ps.clientNum;
 		trap_GetUserinfo(clientNum, userinfo, sizeof(userinfo));
 		handicap = atof(Info_ValueForKey(userinfo, "handicap"));
-		if( handicap<=0.0f || handicap>100.0f)
+		if(handicap<=0.0f || handicap>100.0f)
 			handicap = 100.0f;
 		other->client->pers.maxHealth = handicap;
 		other->client->ps.stats[STAT_ARMOR] = 0;
@@ -158,7 +158,7 @@ Pickup_PersistantPowerup(gentity_t *ent, gentity_t *other)
 		clientNum = other->client->ps.clientNum;
 		trap_GetUserinfo(clientNum, userinfo, sizeof(userinfo));
 		handicap = atof(Info_ValueForKey(userinfo, "handicap"));
-		if( handicap<=0.0f || handicap>100.0f)
+		if(handicap<=0.0f || handicap>100.0f)
 			handicap = 100.0f;
 		other->client->pers.maxHealth = handicap;
 		break;
@@ -166,7 +166,7 @@ Pickup_PersistantPowerup(gentity_t *ent, gentity_t *other)
 		clientNum = other->client->ps.clientNum;
 		trap_GetUserinfo(clientNum, userinfo, sizeof(userinfo));
 		handicap = atof(Info_ValueForKey(userinfo, "handicap"));
-		if( handicap<=0.0f || handicap>100.0f)
+		if(handicap<=0.0f || handicap>100.0f)
 			handicap = 100.0f;
 		other->client->pers.maxHealth = handicap;
 		memset(other->client->ammoTimes, 0,
@@ -176,7 +176,7 @@ Pickup_PersistantPowerup(gentity_t *ent, gentity_t *other)
 		clientNum = other->client->ps.clientNum;
 		trap_GetUserinfo(clientNum, userinfo, sizeof(userinfo));
 		handicap = atof(Info_ValueForKey(userinfo, "handicap"));
-		if( handicap<=0.0f || handicap>100.0f)
+		if(handicap<=0.0f || handicap>100.0f)
 			handicap = 100.0f;
 		other->client->pers.maxHealth = handicap;
 		break;
@@ -194,7 +194,7 @@ Pickup_Holdable(gentity_t *ent, gentity_t *other)
 
 	other->client->ps.stats[STAT_HOLDABLE_ITEM] = ent->item - bg_itemlist;
 
-	if( ent->item->giTag == HI_KAMIKAZE )
+	if(ent->item->giTag == HI_KAMIKAZE)
 		other->client->ps.eFlags |= EF_KAMIKAZE;
 
 	return RESPAWN_HOLDABLE;
@@ -207,7 +207,7 @@ void
 Add_Ammo(gentity_t *ent, int weapon, int count)
 {
 	ent->client->ps.ammo[weapon] += count;
-	if( ent->client->ps.ammo[weapon] > 200 )
+	if(ent->client->ps.ammo[weapon] > 200)
 		ent->client->ps.ammo[weapon] = 200;
 }
 
@@ -216,7 +216,7 @@ Pickup_Ammo(gentity_t *ent, gentity_t *other)
 {
 	int quantity;
 
-	if( ent->count )
+	if(ent->count)
 		quantity = ent->count;
 	else
 		quantity = ent->item->quantity;
@@ -234,21 +234,21 @@ Pickup_Weapon(gentity_t *ent, gentity_t *other)
 {
 	int quantity;
 
-	if( ent->count < 0 )
+	if(ent->count < 0)
 		quantity = 0;	/* None for you, sir! */
 	else{
-		if( ent->count )
+		if(ent->count)
 			quantity = ent->count;
 		else
 			quantity = ent->item->quantity;
 
 		/* dropped items and teamplay weapons always have full ammo */
-		if( !(ent->flags & FL_DROPPED_ITEM) && g_gametype.integer !=
-		    GT_TEAM ){
+		if(!(ent->flags & FL_DROPPED_ITEM) && g_gametype.integer !=
+		   GT_TEAM){
 			/* respawning rules
 			 * drop the quantity if the already have over the minimum */
-			if( other->client->ps.ammo[ ent->item->giTag ] <
-			    quantity )
+			if(other->client->ps.ammo[ ent->item->giTag ] <
+			   quantity)
 				quantity = quantity -
 					   other->client->ps.ammo[ ent->item->
 								   giTag ];
@@ -266,7 +266,7 @@ Pickup_Weapon(gentity_t *ent, gentity_t *other)
 		other->client->ps.ammo[ent->item->giTag] = -1;	/* unlimited ammo */
 
 	/* team deathmatch has slow weapon respawns */
-	if( g_gametype.integer == GT_TEAM )
+	if(g_gametype.integer == GT_TEAM)
 		return g_weaponTeamRespawn.integer;
 
 	return g_weaponRespawn.integer;
@@ -283,28 +283,28 @@ Pickup_Health(gentity_t *ent, gentity_t *other)
 
 	/* small and mega healths will go over the max */
 #ifdef MISSIONPACK
-	if( bg_itemlist[other->client->ps.stats[STAT_PERSISTANT_POWERUP]].giTag
-	    == PW_GUARD )
+	if(bg_itemlist[other->client->ps.stats[STAT_PERSISTANT_POWERUP]].giTag
+	   == PW_GUARD)
 		max = other->client->ps.stats[STAT_MAX_HEALTH];
 	else
 #endif
-	if( ent->item->quantity != 5 && ent->item->quantity != 100 )
+	if(ent->item->quantity != 5 && ent->item->quantity != 100)
 		max = other->client->ps.stats[STAT_MAX_HEALTH];
 	else
 		max = other->client->ps.stats[STAT_MAX_HEALTH] * 2;
 
-	if( ent->count )
+	if(ent->count)
 		quantity = ent->count;
 	else
 		quantity = ent->item->quantity;
 
 	other->health += quantity;
 
-	if(other->health > max )
+	if(other->health > max)
 		other->health = max;
 	other->client->ps.stats[STAT_HEALTH] = other->health;
 
-	if( ent->item->quantity == 100 )	/* mega health respawns slow */
+	if(ent->item->quantity == 100)	/* mega health respawns slow */
 		return RESPAWN_MEGAHEALTH;
 
 	return RESPAWN_HEALTH;
@@ -320,21 +320,21 @@ Pickup_Armor(gentity_t *ent, gentity_t *other)
 
 	other->client->ps.stats[STAT_ARMOR] += ent->item->quantity;
 
-	if( other->client &&
-	    bg_itemlist[other->client->ps.stats[STAT_PERSISTANT_POWERUP]].giTag
-	    ==
-	    PW_GUARD )
+	if(other->client &&
+	   bg_itemlist[other->client->ps.stats[STAT_PERSISTANT_POWERUP]].giTag
+	   ==
+	   PW_GUARD)
 		upperBound = other->client->ps.stats[STAT_MAX_HEALTH];
 	else
 		upperBound = other->client->ps.stats[STAT_MAX_HEALTH] * 2;
 
-	if( other->client->ps.stats[STAT_ARMOR] > upperBound )
+	if(other->client->ps.stats[STAT_ARMOR] > upperBound)
 		other->client->ps.stats[STAT_ARMOR] = upperBound;
 
 #else
 	other->client->ps.stats[STAT_ARMOR] += ent->item->quantity;
-	if( other->client->ps.stats[STAT_ARMOR] >
-	    other->client->ps.stats[STAT_MAX_HEALTH] * 2 )
+	if(other->client->ps.stats[STAT_ARMOR] >
+	   other->client->ps.stats[STAT_MAX_HEALTH] * 2)
 		other->client->ps.stats[STAT_ARMOR] =
 			other->client->ps.stats[STAT_MAX_HEALTH] * 2;
 
@@ -355,11 +355,11 @@ RespawnItem(gentity_t *ent)
 {
 	/* randomly select from teamed entities */
 	if(ent->team){
-		gentity_t	*master;
+		gentity_t *master;
 		int	count;
 		int	choice;
 
-		if( !ent->teammaster )
+		if(!ent->teammaster)
 			G_Error("RespawnItem: bad teammaster");
 		master = ent->teammaster;
 
@@ -378,7 +378,7 @@ RespawnItem(gentity_t *ent)
 	ent->r.svFlags	&= ~SVF_NOCLIENT;
 	trap_LinkEntity (ent);
 
-	if( ent->item->giType == IT_POWERUP ){
+	if(ent->item->giType == IT_POWERUP){
 		/* play powerup spawn sound to all clients */
 		gentity_t *te;
 
@@ -391,8 +391,8 @@ RespawnItem(gentity_t *ent)
 		te->r.svFlags	|= SVF_BROADCAST;
 	}
 
-	if( ent->item->giType == IT_HOLDABLE && ent->item->giTag ==
-	    HI_KAMIKAZE ){
+	if(ent->item->giType == IT_HOLDABLE && ent->item->giTag ==
+	   HI_KAMIKAZE){
 		/* play powerup spawn sound to all clients */
 		gentity_t *te;
 
@@ -429,7 +429,7 @@ Touch_Item(gentity_t *ent, gentity_t *other, trace_t *trace)
 		return;		/* dead people can't pickup */
 
 	/* the same pickup rules are used for client side and server side */
-	if( !BG_CanItemBeGrabbed(g_gametype.integer, &ent->s, &other->client->ps))
+	if(!BG_CanItemBeGrabbed(g_gametype.integer, &ent->s, &other->client->ps))
 		return;
 
 	G_LogPrintf("Item: %i %s\n", other->s.number, ent->item->classname);
@@ -437,7 +437,7 @@ Touch_Item(gentity_t *ent, gentity_t *other, trace_t *trace)
 	predict = other->client->pers.predictItemPickup;
 
 	/* call the item-specific pickup function */
-	switch( ent->item->giType ){
+	switch(ent->item->giType){
 	case IT_WEAPON:
 		respawn = Pickup_Weapon(ent, other);
 /*		predict = qfalse; */
@@ -471,7 +471,7 @@ Touch_Item(gentity_t *ent, gentity_t *other, trace_t *trace)
 		return;
 	}
 
-	if( !respawn )
+	if(!respawn)
 		return;
 
 	/* play the normal pickup sound */
@@ -481,7 +481,7 @@ Touch_Item(gentity_t *ent, gentity_t *other, trace_t *trace)
 		G_AddEvent(other, EV_ITEM_PICKUP, ent->s.modelindex);
 
 	/* powerup pickups are global broadcasts */
-	if( ent->item->giType == IT_POWERUP || ent->item->giType == IT_TEAM){
+	if(ent->item->giType == IT_POWERUP || ent->item->giType == IT_TEAM){
 		/* if we want the global sound to play */
 		if(!ent->speed){
 			gentity_t *te;
@@ -506,7 +506,7 @@ Touch_Item(gentity_t *ent, gentity_t *other, trace_t *trace)
 	G_UseTargets (ent, other);
 
 	/* wait of -1 will not respawn */
-	if( ent->wait == -1 ){
+	if(ent->wait == -1){
 		ent->r.svFlags	|= SVF_NOCLIENT;
 		ent->s.eFlags	|= EF_NODRAW;
 		ent->r.contents = 0;
@@ -515,18 +515,18 @@ Touch_Item(gentity_t *ent, gentity_t *other, trace_t *trace)
 	}
 
 	/* non zero wait overrides respawn time */
-	if( ent->wait )
+	if(ent->wait)
 		respawn = ent->wait;
 
 	/* random can be used to vary the respawn time */
-	if( ent->random ){
+	if(ent->random){
 		respawn += crandom() * ent->random;
-		if( respawn < 1 )
+		if(respawn < 1)
 			respawn = 1;
 	}
 
 	/* dropped items will not respawn */
-	if( ent->flags & FL_DROPPED_ITEM )
+	if(ent->flags & FL_DROPPED_ITEM)
 		ent->freeAfterEvent = qtrue;
 
 	/* picked up items still stay around, they just don't
@@ -540,7 +540,7 @@ Touch_Item(gentity_t *ent, gentity_t *other, trace_t *trace)
 	 * A negative respawn times means to never respawn this item (but don't
 	 * delete it).  This is used by items that are respawned by third party
 	 * events such as ctf flags */
-	if( respawn <= 0 ){
+	if(respawn <= 0){
 		ent->nextthink = 0;
 		ent->think = 0;
 	}else{
@@ -620,8 +620,8 @@ Drop_Item(gentity_t *ent, gitem_t *item, float angle)
 	vec3_t	angles;
 
 	VectorCopy(ent->s.apos.trBase, angles);
-	angles[YAW]	+= angle;
-	angles[PITCH]	= 0;	/* always forward */
+	angles[YAW] += angle;
+	angles[PITCH] = 0;	/* always forward */
 
 	AngleVectors(angles, velocity, NULL, NULL);
 	VectorScale(velocity, 150, velocity);
@@ -664,15 +664,15 @@ FinishSpawningItem(gentity_t *ent)
 	VectorSet(ent->r.maxs, ITEM_RADIUS, ITEM_RADIUS, ITEM_RADIUS);
 
 	ent->s.eType = ET_ITEM;
-	ent->s.modelindex	= ent->item - bg_itemlist;	/* store item number in modelindex */
-	ent->s.modelindex2	= 0;				/* zero indicates this isn't a dropped item */
+	ent->s.modelindex = ent->item - bg_itemlist;	/* store item number in modelindex */
+	ent->s.modelindex2 = 0;				/* zero indicates this isn't a dropped item */
 
 	ent->r.contents = CONTENTS_TRIGGER;
 	ent->touch = Touch_Item;
 	/* useing an item causes it to respawn */
 	ent->use = Use_Item;
 
-	if( ent->spawnflags & 1 )
+	if(ent->spawnflags & 1)
 		/* suspended */
 		G_SetOrigin(ent, ent->s.origin);
 	else{
@@ -682,7 +682,7 @@ FinishSpawningItem(gentity_t *ent)
 		trap_Trace(&tr, ent->s.origin, ent->r.mins, ent->r.maxs, dest,
 			ent->s.number,
 			MASK_SOLID);
-		if( tr.startsolid ){
+		if(tr.startsolid){
 			G_Printf ("FinishSpawningItem: %s startsolid at %s\n",
 				ent->classname, vtos(
 					ent->s.origin));
@@ -697,14 +697,14 @@ FinishSpawningItem(gentity_t *ent)
 	}
 
 	/* team slaves and targeted items aren't present at start */
-	if((ent->flags & FL_TEAMSLAVE) || ent->targetname ){
+	if((ent->flags & FL_TEAMSLAVE) || ent->targetname){
 		ent->s.eFlags	|= EF_NODRAW;
 		ent->r.contents = 0;
 		return;
 	}
 
 	/* powerups don't spawn in for a while */
-	if( ent->item->giType == IT_POWERUP ){
+	if(ent->item->giType == IT_POWERUP){
 		float respawn;
 
 		respawn = 45 + crandom() * 15;
@@ -734,83 +734,83 @@ G_CheckTeamItems(void)
 	/* Set up team stuff */
 	Team_InitGame();
 
-	if( g_gametype.integer == GT_CTF ){
+	if(g_gametype.integer == GT_CTF){
 		gitem_t *item;
 
 		/* check for the two flags */
 		item = BG_FindItem("Red Flag");
-		if( !item || !itemRegistered[ item - bg_itemlist ] )
+		if(!item || !itemRegistered[ item - bg_itemlist ])
 			G_Printf(
 				S_COLOR_YELLOW
 				"WARNING: No team_CTF_redflag in map\n");
 		item = BG_FindItem("Blue Flag");
-		if( !item || !itemRegistered[ item - bg_itemlist ] )
+		if(!item || !itemRegistered[ item - bg_itemlist ])
 			G_Printf(
 				S_COLOR_YELLOW
 				"WARNING: No team_CTF_blueflag in map\n");
 	}
 #ifdef MISSIONPACK
-	if( g_gametype.integer == GT_1FCTF ){
+	if(g_gametype.integer == GT_1FCTF){
 		gitem_t *item;
 
 		/* check for all three flags */
 		item = BG_FindItem("Red Flag");
-		if( !item || !itemRegistered[ item - bg_itemlist ] )
+		if(!item || !itemRegistered[ item - bg_itemlist ])
 			G_Printf(
 				S_COLOR_YELLOW
 				"WARNING: No team_CTF_redflag in map\n");
 		item = BG_FindItem("Blue Flag");
-		if( !item || !itemRegistered[ item - bg_itemlist ] )
+		if(!item || !itemRegistered[ item - bg_itemlist ])
 			G_Printf(
 				S_COLOR_YELLOW
 				"WARNING: No team_CTF_blueflag in map\n");
 		item = BG_FindItem("Neutral Flag");
-		if( !item || !itemRegistered[ item - bg_itemlist ] )
+		if(!item || !itemRegistered[ item - bg_itemlist ])
 			G_Printf(
 				S_COLOR_YELLOW
 				"WARNING: No team_CTF_neutralflag in map\n");
 	}
 
-	if( g_gametype.integer == GT_OBELISK ){
+	if(g_gametype.integer == GT_OBELISK){
 		gentity_t *ent;
 
 		/* check for the two obelisks */
-		ent	= NULL;
-		ent	= G_Find(ent, FOFS(classname), "team_redobelisk");
-		if( !ent )
+		ent = NULL;
+		ent = G_Find(ent, FOFS(classname), "team_redobelisk");
+		if(!ent)
 			G_Printf(
 				S_COLOR_YELLOW
 				"WARNING: No team_redobelisk in map\n");
 
-		ent	= NULL;
-		ent	= G_Find(ent, FOFS(classname), "team_blueobelisk");
-		if( !ent )
+		ent = NULL;
+		ent = G_Find(ent, FOFS(classname), "team_blueobelisk");
+		if(!ent)
 			G_Printf(
 				S_COLOR_YELLOW
 				"WARNING: No team_blueobelisk in map\n");
 	}
 
-	if( g_gametype.integer == GT_HARVESTER ){
+	if(g_gametype.integer == GT_HARVESTER){
 		gentity_t *ent;
 
 		/* check for all three obelisks */
-		ent	= NULL;
-		ent	= G_Find(ent, FOFS(classname), "team_redobelisk");
-		if( !ent )
+		ent = NULL;
+		ent = G_Find(ent, FOFS(classname), "team_redobelisk");
+		if(!ent)
 			G_Printf(
 				S_COLOR_YELLOW
 				"WARNING: No team_redobelisk in map\n");
 
-		ent	= NULL;
-		ent	= G_Find(ent, FOFS(classname), "team_blueobelisk");
-		if( !ent )
+		ent = NULL;
+		ent = G_Find(ent, FOFS(classname), "team_blueobelisk");
+		if(!ent)
 			G_Printf(
 				S_COLOR_YELLOW
 				"WARNING: No team_blueobelisk in map\n");
 
-		ent	= NULL;
-		ent	= G_Find(ent, FOFS(classname), "team_neutralobelisk");
-		if( !ent )
+		ent = NULL;
+		ent = G_Find(ent, FOFS(classname), "team_neutralobelisk");
+		if(!ent)
 			G_Printf(
 				S_COLOR_YELLOW
 				"WARNING: No team_neutralobelisk in map\n");
@@ -832,7 +832,7 @@ ClearRegisteredItems(void)
 	RegisterItem(BG_FindItemForWeapon(WP_MACHINEGUN));
 	RegisterItem(BG_FindItemForWeapon(WP_GAUNTLET));
 #ifdef MISSIONPACK
-	if( g_gametype.integer == GT_HARVESTER ){
+	if(g_gametype.integer == GT_HARVESTER){
 		RegisterItem(BG_FindItem("Red Cube"));
 		RegisterItem(BG_FindItem("Blue Cube"));
 	}
@@ -849,7 +849,7 @@ ClearRegisteredItems(void)
 void
 RegisterItem(gitem_t *item)
 {
-	if( !item )
+	if(!item)
 		G_Error("RegisterItem: NULL");
 	itemRegistered[ item - bg_itemlist ] = qtrue;
 }
@@ -871,8 +871,8 @@ SaveRegisteredItems(void)
 	int	count;
 
 	count = 0;
-	for( i = 0; i < bg_numItems; i++ ){
-		if( itemRegistered[i] ){
+	for(i = 0; i < bg_numItems; i++){
+		if(itemRegistered[i]){
 			count++;
 			string[i] = '1';
 		}else
@@ -916,7 +916,7 @@ G_SpawnItem(gentity_t *ent, gitem_t *item)
 	G_SpawnFloat("wait", "0", &ent->wait);
 
 	RegisterItem(item);
-	if( G_ItemDisabled(item))
+	if(G_ItemDisabled(item))
 		return;
 
 	ent->item = item;
@@ -927,13 +927,13 @@ G_SpawnItem(gentity_t *ent, gitem_t *item)
 
 	ent->physicsBounce = 0.50;	/* items are bouncy */
 
-	if( item->giType == IT_POWERUP ){
+	if(item->giType == IT_POWERUP){
 		G_SoundIndex("sound/items/poweruprespawn.wav");
 		G_SpawnFloat("noglobalsound", "0", &ent->speed);
 	}
 
 #ifdef MISSIONPACK
-	if( item->giType == IT_PERSISTANT_POWERUP )
+	if(item->giType == IT_PERSISTANT_POWERUP)
 		ent->s.generic1 = ent->spawnflags;
 
 #endif
@@ -964,7 +964,7 @@ G_BounceItem(gentity_t *ent, trace_t *trace)
 	VectorScale(ent->s.pos.trDelta, ent->physicsBounce, ent->s.pos.trDelta);
 
 	/* check for stop */
-	if( trace->plane.normal[2] > 0 && ent->s.pos.trDelta[2] < 40 ){
+	if(trace->plane.normal[2] > 0 && ent->s.pos.trDelta[2] < 40){
 		trace->endpos[2] += 1.0;	/* make sure it is off ground */
 		SnapVector(trace->endpos);
 		G_SetOrigin(ent, trace->endpos);
@@ -994,13 +994,13 @@ G_RunItem(gentity_t *ent)
 	int	mask;
 
 	/* if groundentity has been set to -1, it may have been pushed off an edge */
-	if( ent->s.groundEntityNum == -1 )
-		if( ent->s.pos.trType != TR_GRAVITY ){
-			ent->s.pos.trType	= TR_GRAVITY;
-			ent->s.pos.trTime	= level.time;
+	if(ent->s.groundEntityNum == -1)
+		if(ent->s.pos.trType != TR_GRAVITY){
+			ent->s.pos.trType = TR_GRAVITY;
+			ent->s.pos.trTime = level.time;
 		}
 
-	if( ent->s.pos.trType == TR_STATIONARY ){
+	if(ent->s.pos.trType == TR_STATIONARY){
 		/* check think function */
 		G_RunThink(ent);
 		return;
@@ -1010,7 +1010,7 @@ G_RunItem(gentity_t *ent)
 	BG_EvaluateTrajectory(&ent->s.pos, level.time, origin);
 
 	/* trace a line from the previous position to the current position */
-	if( ent->clipmask )
+	if(ent->clipmask)
 		mask = ent->clipmask;
 	else
 		mask = MASK_PLAYERSOLID & ~CONTENTS_BODY;	/* MASK_SOLID; */
@@ -1019,7 +1019,7 @@ G_RunItem(gentity_t *ent)
 
 	VectorCopy(tr.endpos, ent->r.currentOrigin);
 
-	if( tr.startsolid )
+	if(tr.startsolid)
 		tr.fraction = 0;
 
 	trap_LinkEntity(ent);	/* FIXME: avoid this for stationary? */
@@ -1027,12 +1027,12 @@ G_RunItem(gentity_t *ent)
 	/* check think function */
 	G_RunThink(ent);
 
-	if( tr.fraction == 1 )
+	if(tr.fraction == 1)
 		return;
 
 	/* if it is in a nodrop volume, remove it */
 	contents = trap_PointContents(ent->r.currentOrigin, -1);
-	if( contents & CONTENTS_NODROP ){
+	if(contents & CONTENTS_NODROP){
 		if(ent->item && ent->item->giType == IT_TEAM)
 			Team_FreeEntity(ent);
 		else

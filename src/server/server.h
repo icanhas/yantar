@@ -152,7 +152,7 @@ typedef struct client_s {
 	char		name[MAX_NAME_LENGTH];	/* extracted from userinfo, high bits masked */
 
 	/* downloading */
-	char downloadName[MAX_QPATH];					/* if not empty string, we are downloading */
+	char			downloadName[MAX_QPATH];		/* if not empty string, we are downloading */
 	fileHandle_t		download;				/* file being downloaded */
 	int			downloadSize;				/* total bytes (can't use EOF because of paks) */
 	int			downloadCount;				/* bytes sent */
@@ -189,7 +189,7 @@ typedef struct client_s {
 	qboolean	hasVoip;
 	qboolean	muteAllVoip;
 	qboolean	ignoreVoipFromClient[MAX_CLIENTS];
-	voipServerPacket_t	*voipPacket[VOIP_QUEUE_LENGTH];
+	voipServerPacket_t      *voipPacket[VOIP_QUEUE_LENGTH];
 	int		queuedVoipPackets;
 	int		queuedVoipIndex;
 #endif
@@ -208,10 +208,10 @@ typedef struct client_s {
 /* MAX_CHALLENGES is made large to prevent a denial
  * of service attack that could cycle all of them
  * out before legitimate users connected */
-#define MAX_CHALLENGES 2048
+#define MAX_CHALLENGES		2048
 /* Allow a certain amount of challenges to have the same IP address
- * to make it a bit harder to DOS one single IP address from connecting
- * while not allowing a single ip to grab all challenge resources */
+* to make it a bit harder to DOS one single IP address from connecting
+* while not allowing a single ip to grab all challenge resources */
 #define MAX_CHALLENGES_MULTI	(MAX_CHALLENGES / 2)
 
 #define AUTHORIZE_TIMEOUT	5000
@@ -381,10 +381,10 @@ void SV_SendClientSnapshot(client_t *client);
  * sv_game.c
  *  */
 int     SV_NumForGentity(sharedEntity_t *ent);
-sharedEntity_t *SV_GentityNum(int num);
-playerState_t *SV_GameClientNum(int num);
-svEntity_t      *SV_SvEntityForGentity(sharedEntity_t *gEnt);
-sharedEntity_t *SV_GEntityForSvEntity(svEntity_t *svEnt);
+sharedEntity_t*SV_GentityNum(int num);
+playerState_t*SV_GameClientNum(int num);
+svEntity_t*SV_SvEntityForGentity(sharedEntity_t *gEnt);
+sharedEntity_t*SV_GEntityForSvEntity(svEntity_t *svEnt);
 void            SV_InitGameProgs(void);
 void            SV_ShutdownGameProgs(void);
 void            SV_RestartGameProgs(void);

@@ -89,7 +89,7 @@ mumble_link(const char* name)
 	if(hMapObject == NULL)
 		return -1;
 
-	lm = (LinkedMem *) MapViewOfFile(hMapObject, FILE_MAP_ALL_ACCESS, 0, 0,
+	lm = (LinkedMem*)MapViewOfFile(hMapObject, FILE_MAP_ALL_ACCESS, 0, 0,
 		sizeof(LinkedMem));
 	if(lm == NULL){
 		CloseHandle(hMapObject);
@@ -108,10 +108,10 @@ mumble_link(const char* name)
 		return -1;
 
 	lm =
-		(LinkedMem *) (mmap(NULL, sizeof(LinkedMem), PROT_READ |
-				       PROT_WRITE, MAP_SHARED,
-				       shmfd,0));
-	if(lm == (void *) (-1)){
+		(LinkedMem*)(mmap(NULL, sizeof(LinkedMem), PROT_READ |
+				     PROT_WRITE, MAP_SHARED,
+				     shmfd,0));
+	if(lm == (void*)(-1)){
 		lm = NULL;
 		close(shmfd);
 		return -1;

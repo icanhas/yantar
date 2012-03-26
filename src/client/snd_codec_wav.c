@@ -71,7 +71,7 @@ S_ReadChunkInfo(fileHandle_t f, char *name)
 		return -1;
 
 	len = FGetLittleLong(f);
-	if( len < 0 ){
+	if(len < 0){
 		Com_Printf(S_COLOR_YELLOW "WARNING: Negative chunk length\n");
 		return -1;
 	}
@@ -92,9 +92,9 @@ S_FindRIFFChunk(fileHandle_t f, char *chunk)
 	char	name[5];
 	int	len;
 
-	while((len = S_ReadChunkInfo(f, name)) >= 0 ){
+	while((len = S_ReadChunkInfo(f, name)) >= 0){
 		/* If this is the right chunk, return */
-		if( !Q_strncmp(name, chunk, 4))
+		if(!Q_strncmp(name, chunk, 4))
 			return len;
 
 		len = PAD(len, 2);
@@ -116,15 +116,15 @@ S_ByteSwapRawSamples(int samples, int width, int s_channels, const byte *data)
 {
 	int i;
 
-	if( width != 2 )
+	if(width != 2)
 		return;
-	if( LittleShort(256) == 256 )
+	if(LittleShort(256) == 256)
 		return;
 
-	if( s_channels == 2 )
+	if(s_channels == 2)
 		samples <<= 1;
-	for( i = 0; i < samples; i++ )
-		((short *) data)[i] = LittleShort(((short *) data)[i]);
+	for(i = 0; i < samples; i++)
+		((short*)data)[i] = LittleShort(((short*)data)[i]);
 }
 
 /*
@@ -156,15 +156,15 @@ S_ReadRIFFHeader(fileHandle_t file, snd_info_t *info)
 	FGetLittleShort(file);
 	bits = FGetLittleShort(file);
 
-	if( bits < 8 ){
+	if(bits < 8){
 		Com_Printf(
 			S_COLOR_RED
 			"ERROR: Less than 8 bit sound is not supported\n");
 		return qfalse;
 	}
 
-	info->width	= bits / 8;
-	info->dataofs	= 0;
+	info->width = bits / 8;
+	info->dataofs = 0;
 
 	/* Skip the rest of the format chunk if required */
 	if(fmtlen > 16){
@@ -231,7 +231,7 @@ S_WAV_CodecLoad(const char *filename, snd_info_t *info)
 	/* Read, byteswap */
 	FS_Read(buffer, info->size, file);
 	S_ByteSwapRawSamples(info->samples, info->width, info->channels,
-		(byte *) buffer);
+		(byte*)buffer);
 
 	/* Close and return */
 	FS_FCloseFile(file);

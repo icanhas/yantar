@@ -36,10 +36,10 @@
 #define GetClearedMemory(size)	GetClearedMemoryDebug(size, # size, __FILE__, \
 	__LINE__);
 /* allocate a memory block of the given size */
-void *GetMemoryDebug(unsigned long size, char *label, char *file, int line);
+void*GetMemoryDebug(unsigned long size, char *label, char *file, int line);
 /* allocate a memory block of the given size and clear it */
-void *GetClearedMemoryDebug(unsigned long size, char *label, char *file,
-			    int line);
+void*GetClearedMemoryDebug(unsigned long size, char *label, char *file,
+			   int line);
 /*  */
 #define GetHunkMemory(size)		GetHunkMemoryDebug(size, # size, \
 	__FILE__, \
@@ -48,24 +48,24 @@ void *GetClearedMemoryDebug(unsigned long size, char *label, char *file,
 	__FILE__, \
 	__LINE__);
 /* allocate a memory block of the given size */
-void *GetHunkMemoryDebug(unsigned long size, char *label, char *file, int line);
+void*GetHunkMemoryDebug(unsigned long size, char *label, char *file, int line);
 /* allocate a memory block of the given size and clear it */
-void *GetClearedHunkMemoryDebug(unsigned long size, char *label, char *file,
-				int line);
+void*GetClearedHunkMemoryDebug(unsigned long size, char *label, char *file,
+			       int line);
 #else
 /* allocate a memory block of the given size */
-void *GetMemory(unsigned long size);
+void*GetMemory(unsigned long size);
 /* allocate a memory block of the given size and clear it */
-void *GetClearedMemory(unsigned long size);
+void*GetClearedMemory(unsigned long size);
 /*  */
 #ifdef BSPC
 #define GetHunkMemory		GetMemory
 #define GetClearedHunkMemory	GetClearedMemory
 #else
 /* allocate a memory block of the given size */
-void *GetHunkMemory(unsigned long size);
+void*GetHunkMemory(unsigned long size);
 /* allocate a memory block of the given size and clear it */
-void *GetClearedHunkMemory(unsigned long size);
+void*GetClearedHunkMemory(unsigned long size);
 #endif
 #endif
 
