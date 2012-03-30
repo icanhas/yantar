@@ -4,3 +4,7 @@
 #define Pplayersounds	Psound "/player"
 #define Pannounce	Pplayersounds "/announce"
 
+#define Pvis		"vis"
+#define Pgraphics	Pvis "/graphics"
+#define Pmenuart	Pgraphics "/menu"
+
