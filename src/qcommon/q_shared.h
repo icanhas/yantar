@@ -21,8 +21,6 @@
 #ifndef __Q_SHARED_H
 #define __Q_SHARED_H
 
-#include "paths.h"
-
 #ifdef STANDALONE
 #define PRODUCT_NAME		"yantar"
 #define BASEGAME		"base"
@@ -139,6 +137,7 @@ int Q_vsnprintf(char *str, size_t size, const char *format, va_list ap);
 
 #endif
 
+#include "q_paths.h"
 
 #include "q_platform.h"
 
@@ -294,21 +293,23 @@ typedef enum {
 #define Hunk_Alloc(size, preference) Hunk_AllocDebug(size, preference, # size, \
 	__FILE__, \
 	__LINE__)
-void*Hunk_AllocDebug(int size, ha_pref preference, char *label, char *file,
+void*	Hunk_AllocDebug(int size, ha_pref preference, char *label, char *file,
 		     int line);
 #else
-void*Hunk_Alloc(int size, ha_pref preference);
+void*	Hunk_Alloc(int size, ha_pref preference);
 #endif
 
-#define Com_Memset	memset
-#define Com_Memcpy	memcpy
+#define Com_Memset memset
+#define Com_Memcpy memcpy
 
 /* cin */
-#define CIN_system	1
-#define CIN_loop	2
-#define CIN_hold	4
-#define CIN_silent	8
-#define CIN_shader	16
+enum {
+	CIN_system	= 1,
+	CIN_loop	= 2,
+	CIN_hold	= 4,
+	CIN_silent	= 8,
+	CIN_shader	= 16
+};
 
 /* mathlib */
 typedef float vec_t;
@@ -408,6 +409,7 @@ extern void qsnapvectorsse(vec3_t vec);
 #define Q_SnapVector	qsnapvectorsse
 
 extern int (*Q_VMftol)(void);
+
 #elif id386
 extern long QDECL qftolx87(float f);
 extern long QDECL qftolsse(float f);
@@ -419,6 +421,7 @@ extern void QDECL qsnapvectorsse(vec3_t vec);
 extern long	(QDECL *Q_ftol)(float f);
 extern int	(QDECL *Q_VMftol)(void);
 extern void	(QDECL *Q_SnapVector)(vec3_t vec);
+
 #else
 /* Q_ftol must expand to a function name so the pluggable renderer can take
  * its address */
@@ -434,8 +437,9 @@ extern void	(QDECL *Q_SnapVector)(vec3_t vec);
 	} while(0)
 #endif
 /*
- * // if your system does not have lrintf() and round() you can try this block. Please also open a bug report at bugzilla.icculus.org
- * // or write a mail to the ioq3 mailing list.
+ * if your system does not have lrintf() and round() you can try this block.
+ * Please also open a bug report at bugzilla.icculus.org or write a mail to the 
+ * ioq3 mailing list.
  * #else
  * #define Q_ftol(v) ((long) (v))
  * #define Q_round(v) do { if((v) < 0) (v) -= 0.5f; else (v) += 0.5f; (v) = Q_ftol((v)); } while(0)
@@ -521,10 +525,12 @@ void ByteToDir(int b, vec3_t dir);
 #ifdef Q3_VM
 #ifdef VectorCopy
 #undef VectorCopy
+
 /* this is a little hack to get more efficient copies in our interpreter */
 typedef struct {
 	float v[3];
 } vec3struct_t;
+
 #define VectorCopy(a,b) (*(vec3struct_t*)b=*(vec3struct_t*)a)
 #endif
 #endif
@@ -541,12 +547,12 @@ typedef struct {
 #define SnapVector(v)		{v[0]=((int)(v[0])); v[1]=((int)(v[1])); v[2]= \
 					 ((int)(v[2])); }
 /* just in case you do't want to use the macros */
-vec_t _DotProduct(const vec3_t v1, const vec3_t v2);
-void _VectorSubtract(const vec3_t veca, const vec3_t vecb, vec3_t out);
-void _VectorAdd(const vec3_t veca, const vec3_t vecb, vec3_t out);
-void _VectorCopy(const vec3_t in, vec3_t out);
-void _VectorScale(const vec3_t in, float scale, vec3_t out);
-void _VectorMA(const vec3_t veca, float scale, const vec3_t vecb, vec3_t vecc);
+vec_t	_DotProduct(const vec3_t v1, const vec3_t v2);
+void	_VectorSubtract(const vec3_t veca, const vec3_t vecb, vec3_t out);
+void	_VectorAdd(const vec3_t veca, const vec3_t vecb, vec3_t out);
+void	_VectorCopy(const vec3_t in, vec3_t out);
+void	_VectorScale(const vec3_t in, float scale, vec3_t out);
+void	_VectorMA(const vec3_t veca, float scale, const vec3_t vecb, vec3_t vecc);
 
 unsigned ColorBytes3(float r, float g, float b);
 unsigned ColorBytes4(float r, float g, float b, float a);
@@ -709,23 +715,21 @@ void PerpendicularVector(vec3_t dst, const vec3_t src);
 #endif
 
 /* common */
-long    Com_HashString(const char *s, int size);
+long		Com_HashString(const char *s, int size);
+float		Com_Clamp(float min, float max, float value);
+char*		Com_SkipPath(char *pathname);
+const char*	Com_GetExtension(const char *name);
+void		Com_StripExtension(const char *in, char *out, int destsize);
+qboolean	Com_CompareExtension(const char *in, const char *ext);
+void		Com_DefaultExtension(char *path, int maxSize, const char *extension);
 
-float Com_Clamp(float min, float max, float value);
-
-char*Com_SkipPath(char *pathname);
-const char*Com_GetExtension(const char *name);
-void    Com_StripExtension(const char *in, char *out, int destsize);
-qboolean Com_CompareExtension(const char *in, const char *ext);
-void    Com_DefaultExtension(char *path, int maxSize, const char *extension);
-
-void    Com_BeginParseSession(const char *name);
-int             Com_GetCurrentParseLine(void);
-char*Com_Parse(char **data_p);
-char*Com_ParseExt(char **data_p, qboolean allowLineBreak);
+void		Com_BeginParseSession(const char *name);
+int		Com_GetCurrentParseLine(void);
+char*		Com_Parse(char **data_p);
+char*		Com_ParseExt(char **data_p, qboolean allowLineBreak);
 int             Com_Compress(char *data_p);
-void    Com_ParseError(char *format, ...) __attribute__ ((format (printf, 1, 2)));
-void    Com_ParseWarning(char *format, ...) __attribute__ ((format (printf, 1, 2)));
+void		Com_ParseError(char *format, ...) __attribute__ ((format (printf, 1, 2)));
+void		Com_ParseWarning(char *format, ...) __attribute__ ((format (printf, 1, 2)));
 /* int		Com_ParseInfos( char *buf, int max, char infos[][MAX_INFO_STRING] ); */
 
 enum {
@@ -758,8 +762,8 @@ void    Parse2DMatrix(char **buf_p, int y, int x, float *m);
 void    Parse3DMatrix(char **buf_p, int z, int y, int x, float *m);
 int     Com_HexStrToInt(const char *str);
 
-int QDECL       Com_sprintf(char *dest, int size, const char *fmt,
-			    ...) __attribute__ ((format (printf, 3, 4)));
+int QDECL       Com_sprintf(char *dest, int size, 
+	const char *fmt, ...) __attribute__ ((format (printf, 3, 4)));
 
 char*Com_SkipTokens(char *s, int numTokens, char *sep);
 char*Com_SkipCharset(char *s, char *sep);
@@ -792,21 +796,20 @@ qboolean Q_isintegral(float f);
 int             Q_stricmp(const char *s1, const char *s2);
 int             Q_strncmp(const char *s1, const char *s2, int n);
 int             Q_stricmpn(const char *s1, const char *s2, int n);
-char*Q_strlwr(char *s1);
-char*Q_strupr(char *s1);
-const char*Q_stristr(const char *s, const char *find);
+char*		Q_strlwr(char *s1);
+char*		Q_strupr(char *s1);
+const char*	Q_stristr(const char *s, const char *find);
 
 /* buffer size safe library replacements */
-void    Q_strncpyz(char *dest, const char *src, int destsize);
-void    Q_strcat(char *dest, int size, const char *src);
+void		Q_strncpyz(char *dest, const char *src, int destsize);
+void		Q_strcat(char *dest, int size, const char *src);
 
 /* strlen that discounts Quake color sequences */
-int Q_PrintStrlen(const char *string);
+int		Q_PrintStrlen(const char *string);
 /* removes color sequences from string */
-char*Q_CleanStr(char *string);
+char*		Q_CleanStr(char *string);
 /* Count the number of char tocount encountered in string */
-int Q_CountChar(const char *string, char tocount);
-
+int 		Q_CountChar(const char *string, char tocount);
 
 /* 64-bit integers for global rankings interface
  * implemented as a struct for qvm compatibility */
@@ -826,8 +829,8 @@ typedef struct {
  * short	LittleShort(short l);
  * int		BigLong (int l);
  * int		LittleLong (int l);
- * qint64  BigLong64 (qint64 l);
- * qint64  LittleLong64 (qint64 l);
+ * qint64	BigLong64 (qint64 l);
+ * qint64	LittleLong64 (qint64 l);
  * float	BigFloat (const float *l);
  * float	LittleFloat (const float *l);
  *
@@ -960,11 +963,11 @@ enum {
 	PLANE_NON_AXIAL
 };
 
-#define PlaneTypeForNormal(x) (x[0] == \
-			       1.0 ? PLANE_X : (x[1] ==	       \
-						1.0 ? PLANE_Y : (x[2] == \
-								 1.0 ? PLANE_Z : \
-								 PLANE_NON_AXIAL)))
+#define PlaneTypeForNormal(x) \
+	(x[0] == 1.0 ? PLANE_X : \
+	(x[1] == 1.0 ? PLANE_Y : \
+	(x[2] == 1.0 ? PLANE_Z : \
+	PLANE_NON_AXIAL)))
 
 /* plane_t structure
  * !!! if this is changed, it must be changed in asm code too !!! */
@@ -1035,41 +1038,44 @@ typedef enum {
 #define ANGLE2SHORT(x)	((int)((x)*65536/360) & 65535)
 #define SHORT2ANGLE(x)	((x)*(360.0/65536))
 
-#define SNAPFLAG_RATE_DELAYED	1
-#define SNAPFLAG_NOT_ACTIVE	2	/* snapshot used during connection and for zombies */
-#define SNAPFLAG_SERVERCOUNT	4	/* toggled every map_restart so transitions can be detected */
+enum {
+	SNAPFLAG_RATE_DELAYED	= 1,
+	SNAPFLAG_NOT_ACTIVE	= 2,	/* snapshot used during connection and for zombies */
+	SNAPFLAG_SERVERCOUNT	= 4,	/* toggled every map_restart so transitions can be detected */
 
-/* per-level limits */
-#define MAX_CLIENTS	64	/* absolute limit */
-#define MAX_LOCATIONS	64
+	/* per-level limits */
+	MAX_CLIENTS	= 64,	/* absolute limit */
+	MAX_LOCATIONS	= 64,
 
-#define GENTITYNUM_BITS 10	/* don't need to send any more */
-#define MAX_GENTITIES	(1 << GENTITYNUM_BITS)
+	GENTITYNUM_BITS = 10,	/* don't need to send any more */
+	MAX_GENTITIES	= (1 << GENTITYNUM_BITS),
 
-/*
- * entitynums are communicated with GENTITY_BITS, so any reserved
- * values that are going to be communcated over the net need to
- * also be in this range
- */
-#define ENTITYNUM_NONE		(MAX_GENTITIES-1)
-#define ENTITYNUM_WORLD		(MAX_GENTITIES-2)
-#define ENTITYNUM_MAX_NORMAL	(MAX_GENTITIES-2)
+	/*
+	 * entitynums are communicated with GENTITY_BITS, so any reserved
+	 * values that are going to be communcated over the net need to
+	 * also be in this range
+	 */
+	ENTITYNUM_NONE		= (MAX_GENTITIES-1),
+	ENTITYNUM_WORLD		= (MAX_GENTITIES-2),
+	ENTITYNUM_MAX_NORMAL	= (MAX_GENTITIES-2),
 
-#define MAX_MODELS		256	/* these are sent over the net as 8 bits */
-#define MAX_SOUNDS		256	/* so they cannot be blindly increased */
+	MAX_MODELS		= 256,	/* these are sent over the net as 8 bits */
+	MAX_SOUNDS		= 256,	/* so they cannot be blindly increased */
 
-#define MAX_CONFIGSTRINGS	1024
+	/*
+	 * these are the only configstrings that the system reserves, all the
+	 * other ones are strictly for servergame to clientgame communication
+	 */
+	CS_SERVERINFO		= 0,	/* an info string with all the serverinfo cvars */
+	CS_SYSTEMINFO		= 1,	/* an info string for server system to client system configuration (timescale, etc) */
 
-/*
- * these are the only configstrings that the system reserves, all the
- * other ones are strictly for servergame to clientgame communication
- */
-#define CS_SERVERINFO		0	/* an info string with all the serverinfo cvars */
-#define CS_SYSTEMINFO		1	/* an info string for server system to client system configuration (timescale, etc) */
+	RESERVED_CONFIGSTRINGS	= 2,	/* game can't modify below this, only the system can */
 
-#define RESERVED_CONFIGSTRINGS	2	/* game can't modify below this, only the system can */
+	MAX_GAMESTATE_CHARS	= 16000,
+};
 
-#define MAX_GAMESTATE_CHARS	16000
+#define MAX_CONFIGSTRINGS 1024
+
 typedef struct {
 	int	stringOffsets[MAX_CONFIGSTRINGS];
 	char	stringData[MAX_GAMESTATE_CHARS];
@@ -1077,14 +1083,16 @@ typedef struct {
 } gameState_t;
 
 /* bit field limits */
-#define MAX_STATS		16
-#define MAX_PERSISTANT		16
-#define MAX_POWERUPS		16
-#define MAX_WEAPONS		16
+enum {
+	MAX_STATS		= 16,
+	MAX_PERSISTANT		= 16,
+	MAX_POWERUPS		= 16,
+	MAX_WEAPONS		= 16,
 
-#define MAX_PS_EVENTS		2
+	MAX_PS_EVENTS		= 2,
 
-#define PS_PMOVEFRAMECOUNTBITS	6
+	PS_PMOVEFRAMECOUNTBITS	= 6,
+};
 
 /*
  * playerState_t is the information needed by both the client and server
@@ -1173,27 +1181,31 @@ typedef struct playerState_s {
  * usercmd_t->button bits, many of which are generated by the client system,
  * so they aren't game/cgame only definitions
  */
-#define BUTTON_ATTACK		1
-#define BUTTON_TALK		2	/* displays talk balloon and disables actions */
-#define BUTTON_USE_HOLDABLE	4
-#define BUTTON_GESTURE		8
-#define BUTTON_WALKING		16	/* walking can't just be infered from MOVE_RUN */
-/* because a key pressed late in the frame will
- * only generate a small move value for that frame
- * walking will use different animations and
- * won't generate footsteps */
-#define BUTTON_AFFIRMATIVE	32
-#define BUTTON_NEGATIVE		64
+enum {
+	BUTTON_ATTACK		= 1,
+	BUTTON_TALK		= 2,	/* displays talk balloon and disables actions */
+	BUTTON_USE_HOLDABLE	= 4,
+	BUTTON_GESTURE		= 8,
+	BUTTON_WALKING		= 16,	/* walking can't just be inferred from 
+					 * MOVE_RUN, because a key pressed late
+					 * in the frame will only generate a 
+					 * small move value for that frame
+					 * walking will use different 
+					 * animations and won't generate
+					 * footsteps */
+	BUTTON_AFFIRMATIVE	= 32,
+	BUTTON_NEGATIVE		= 64,
 
-#define BUTTON_GETFLAG		128
-#define BUTTON_GUARDBASE	256
-#define BUTTON_PATROL		512
-#define BUTTON_FOLLOWME		1024
+	BUTTON_GETFLAG		= 128,
+	BUTTON_GUARDBASE	= 256,
+	BUTTON_PATROL		= 512,
+	BUTTON_FOLLOWME		= 1024,
 
-#define BUTTON_ANY		2048	/* any key whatsoever */
+	BUTTON_ANY		= 2048,	/* any key whatsoever */
 
-#define MOVE_RUN		120	/* if forwardmove or rightmove are >= MOVE_RUN, */
-/* then BUTTON_WALKING should be set */
+	MOVE_RUN		= 120,	/* if forwardmove or rightmove >= MOVE_RUN,
+					 * then BUTTON_WALKING should be set */
+};
 
 /* usercmd_t is sent to the server each client frame */
 typedef struct usercmd_s {
@@ -1289,11 +1301,14 @@ typedef enum {
 } connstate_t;
 
 /* font support */
-#define GLYPH_START	0
-#define GLYPH_END	255
-#define GLYPH_CHARSTART 32
-#define GLYPH_CHAREND	127
-#define GLYPHS_PER_FONT GLYPH_END - GLYPH_START + 1
+enum {
+
+	GLYPH_START	= 0,
+	GLYPH_END	= 255,
+	GLYPH_CHARSTART = 32,
+	GLYPH_CHAREND	= 127,
+	GLYPHS_PER_FONT = GLYPH_END - GLYPH_START + 1
+};
 
 typedef struct {
 	int		height;		/* number of scan lines */
@@ -1334,10 +1349,12 @@ typedef struct qtime_s {
 
 /* server browser sources
  * TTimo: AS_MPLAYER is no longer used */
-#define AS_LOCAL	0
-#define AS_MPLAYER	1
-#define AS_GLOBAL	2
-#define AS_FAVORITES	3
+enum {
+	AS_LOCAL,
+	AS_MPLAYER,
+	AS_GLOBAL,
+	AS_FAVORITES
+};
 
 /* cinematic states */
 typedef enum {
@@ -1358,20 +1375,23 @@ typedef enum _flag_status {
 	FLAG_DROPPED
 } flagStatus_t;
 
-#define MAX_GLOBAL_SERVERS		4096
-#define MAX_OTHER_SERVERS		128
-#define MAX_PINGREQUESTS		32
-#define MAX_SERVERSTATUSREQUESTS	16
+enum {
+	MAX_GLOBAL_SERVERS		= 4096,
+	MAX_OTHER_SERVERS		= 128,
+	MAX_PINGREQUESTS		= 32,
+	MAX_SERVERSTATUSREQUESTS	= 16,
 
-#define SAY_ALL				0
-#define SAY_TEAM			1
-#define SAY_TELL			2
+	SAY_ALL				= 0,
+	SAY_TEAM			= 1,
+	SAY_TELL			= 2,
 
-#define CDKEY_LEN			16
-#define CDCHKSUM_LEN			2
+	CDKEY_LEN			= 16,
+	CDCHKSUM_LEN			= 2
+};
 
 #define LERP(a, b, w)		((a) * (1.0f - (w)) + (b) * (w))
 #define LUMA(red, green, blue)	(0.2126f * (red) + 0.7152f * (green) + 0.0722f * \
 				 (blue))
 
 #endif	/* __Q_SHARED_H */
+
