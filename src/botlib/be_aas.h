@@ -79,7 +79,7 @@ typedef enum {
 
 /* a trace is returned when a box is swept through the AAS world */
 typedef struct aas_trace_s {
-	qboolean	startsolid;	/* if true, the initial point was in a solid area */
+	qbool		startsolid;	/* if true, the initial point was in a solid area */
 	float		fraction;	/* time completed, 1.0 = didn't hit anything */
 	vec3_t		endpos;		/* final position */
 	int		ent;		/* entity blocking the trace */
@@ -101,8 +101,8 @@ typedef struct aas_trace_s {
  * //a trace is returned when a box is swept through the BSP world
  * typedef struct bsp_trace_s
  * {
- *      qboolean		allsolid;	// if true, plane is not valid
- *      qboolean		startsolid;	// if true, the initial point was in a solid area
+ *      qbool			allsolid;	// if true, plane is not valid
+ *      qbool			startsolid;	// if true, the initial point was in a solid area
  *      float			fraction;	// time completed, 1.0 = didn't hit anything
  *      vec3_t			endpos;		// final position
  *      cplane_t		plane;		// surface normal at impact

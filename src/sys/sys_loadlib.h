@@ -47,4 +47,4 @@
 #       define Sys_LibraryError()	SDL_GetError()
 #endif
 
-void *QDECL Sys_LoadDll(const char *name, qboolean useSystemLib);
+void *QDECL Sys_LoadDll(const char *name, qbool useSystemLib);

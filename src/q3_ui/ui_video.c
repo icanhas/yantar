@@ -284,14 +284,14 @@ typedef struct {
 
 typedef struct {
 	int		mode;
-	qboolean	fullscreen;
+	qbool		fullscreen;
 	int		tq;
 	int		lighting;
 	int		texturebits;
 	int		geometry;
 	int		filter;
 	int		driver;
-	qboolean	extensions;
+	qbool		extensions;
 } InitialVideoOptions_s;
 
 static InitialVideoOptions_s s_ivo;
@@ -361,7 +361,7 @@ static char	resbuf[ MAX_STRING_CHARS ];
 static const char * detectedResolutions[ MAX_RESOLUTIONS ];
 
 static const char	** resolutions = builtinResolutions;
-static qboolean		resolutionsDetected = qfalse;
+static qbool			resolutionsDetected = qfalse;
 
 /*
  * GraphicsOptions_FindBuiltinResolution

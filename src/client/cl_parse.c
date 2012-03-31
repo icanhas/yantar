@@ -57,7 +57,7 @@ SHOWNET(msg_t *msg, char *s)
  */
 void
 CL_DeltaEntity(msg_t *msg, clSnapshot_t *frame, int newnum, entityState_t *old,
-	       qboolean unchanged)
+	       qbool unchanged)
 {
 	entityState_t *state;
 
@@ -346,7 +346,7 @@ CL_SystemInfoChanged(void)
 	const char *s, *t;
 	char	key[BIG_INFO_KEY];
 	char	value[BIG_INFO_VALUE];
-	qboolean gameSet;
+	qbool gameSet;
 
 	systemInfo = cl.gameState.stringData +
 		     cl.gameState.stringOffsets[ CS_SYSTEMINFO ];
@@ -663,7 +663,7 @@ CL_ParseDownload(msg_t *msg)
 
 #ifdef USE_VOIP
 static
-qboolean
+qbool
 CL_ShouldIgnoreVoipSender(int sender)
 {
 	if(!cl_voip->integer)

@@ -28,7 +28,7 @@
  * void CM_ClearLevelPatches( void );
  * struct patchCollide_s	*CM_GeneratePatchCollide( int width, int height, const vec3_t *points );
  * void CM_TraceThroughPatchCollide( traceWork_t *tw, const struct patchCollide_s *pc );
- * qboolean CM_PositionTestInPatchCollide( traceWork_t *tw, const struct patchCollide_s *pc );
+ * qbool CM_PositionTestInPatchCollide( traceWork_t *tw, const struct patchCollide_s *pc );
  * void CM_DrawDebugSurface( void (*drawPoly)(int color, int numPoints, flaot *points) );
  *
  *
@@ -51,7 +51,7 @@
  *      int			numBorders;		// 3 or four + 6 axial bevels + 4 or 3 * 4 edge bevels
  *      int			borderPlanes[4+6+16];
  *      int			borderInward[4+6+16];
- *      qboolean	borderNoAdjust[4+6+16];
+ *      qbool		borderNoAdjust[4+6+16];
  * } facet_t;
  *
  * typedef struct patchCollide_s {
@@ -68,8 +68,8 @@
  * typedef struct {
  *      int			width;
  *      int			height;
- *      qboolean	wrapWidth;
- *      qboolean	wrapHeight;
+ *      qbool		wrapWidth;
+ *      qbool		wrapHeight;
  *      vec3_t	points[MAX_GRID_SIZE][MAX_GRID_SIZE];	// [width][height]
  * } cGrid_t;
  *
@@ -84,7 +84,7 @@ int	c_totalPatchEdges;
 
 static const patchCollide_t *debugPatchCollide;
 static const facet_t *debugFacet;
-static qboolean debugBlock;
+static qbool debugBlock;
 static vec3_t	debugBlockPoints[4];
 
 /*
@@ -118,7 +118,7 @@ CM_SignbitsForNormal(vec3_t normal)
  * Returns false if the triangle is degenrate.
  * The normal will point out of the clock for clockwise ordered points
  */
-static qboolean
+static qbool
 CM_PlaneFromPoints(vec4_t plane, vec3_t a, vec3_t b, vec3_t c)
 {
 	vec3_t d1, d2;
@@ -146,7 +146,7 @@ CM_PlaneFromPoints(vec4_t plane, vec3_t a, vec3_t b, vec3_t c)
  * Returns true if the given quadratic curve is not flat enough for our
  * collision detection purposes
  */
-static qboolean
+static qbool
 CM_NeedsSubdivision(vec3_t a, vec3_t b, vec3_t c)
 {
 	vec3_t	cmid;
@@ -198,7 +198,7 @@ CM_TransposeGrid(cGrid_t *grid)
 {
 	int i, j, l;
 	vec3_t temp;
-	qboolean tempWrap;
+	qbool tempWrap;
 
 	if(grid->width > grid->height){
 		for(i = 0; i < grid->height; i++)
@@ -341,7 +341,7 @@ CM_SubdivideGridColumns(cGrid_t *grid)
  * CM_ComparePoints
  */
 #define POINT_EPSILON 0.1
-static qboolean
+static qbool
 CM_ComparePoints(float *a, float *b)
 {
 	float d;
@@ -724,7 +724,7 @@ CM_SetBorderInward(facet_t *facet, cGrid_t *grid,
  *
  * If the facet isn't bounded by its borders, we screwed up.
  */
-static qboolean
+static qbool
 CM_ValidateFacet(facet_t *facet)
 {
 	float	plane[4];
@@ -1233,7 +1233,7 @@ void
 CM_TracePointThroughPatchCollide(traceWork_t *tw,
 				 const struct patchCollide_s *pc)
 {
-	qboolean	frontFacing[MAX_PATCH_PLANES];
+	qbool		frontFacing[MAX_PATCH_PLANES];
 	float		intersection[MAX_PATCH_PLANES];
 	float		intersect;
 	const patchPlane_t *planes;
@@ -1522,7 +1522,7 @@ CM_TraceThroughPatchCollide(traceWork_t *tw, const struct patchCollide_s *pc)
 /*
  * CM_PositionTestInPatchCollide
  */
-qboolean
+qbool
 CM_PositionTestInPatchCollide(traceWork_t *tw, const struct patchCollide_s *pc)
 {
 	int i, j;

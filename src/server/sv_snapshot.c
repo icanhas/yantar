@@ -294,7 +294,7 @@ SV_AddEntToSnapshot(svEntity_t *svEnt, sharedEntity_t *gEnt,
  */
 static void
 SV_AddEntitiesVisibleFromPoint(vec3_t origin, clientSnapshot_t *frame,
-			       snapshotEntityNumbers_t *eNums, qboolean portal)
+			       snapshotEntityNumbers_t *eNums, qbool portal)
 {
 	int e, i;
 	sharedEntity_t	*ent;

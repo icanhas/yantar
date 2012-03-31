@@ -26,7 +26,7 @@
 #include "ui_local.h"
 
 uiStatic_t	uis;
-qboolean	m_entersound;	/* after a frame, so caching won't disrupt the sound */
+qbool		m_entersound;	/* after a frame, so caching won't disrupt the sound */
 
 void QDECL
 Com_Error(int level, const char *error, ...)
@@ -781,7 +781,7 @@ UI_DrawChar(int x, int y, int ch, int style, vec4_t color)
 	UI_DrawString(x, y, buff, style, color);
 }
 
-qboolean
+qbool
 UI_IsFullscreen(void)
 {
 	if(uis.activemenu && (trap_Key_GetCatcher() & KEYCATCH_UI))
@@ -791,14 +791,14 @@ UI_IsFullscreen(void)
 }
 
 static void
-NeedCDAction(qboolean result)
+NeedCDAction(qbool result)
 {
 	if(!result)
 		trap_Cmd_ExecuteText(EXEC_APPEND, "quit\n");
 }
 
 static void
-NeedCDKeyAction(qboolean result)
+NeedCDKeyAction(qbool result)
 {
 	if(!result)
 		trap_Cmd_ExecuteText(EXEC_APPEND, "quit\n");
@@ -998,7 +998,7 @@ UI_Cache_f(void)
 /*
  * UI_ConsoleCommand
  */
-qboolean
+qbool
 UI_ConsoleCommand(int realTime)
 {
 	char *cmd;
@@ -1270,7 +1270,7 @@ UI_DrawTextBox(int x, int y, int width, int lines)
 		colorWhite);
 }
 
-qboolean
+qbool
 UI_CursorInRect(int x, int y, int width, int height)
 {
 	if(uis.cursorx < x ||

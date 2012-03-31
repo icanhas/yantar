@@ -424,7 +424,7 @@ CG_ScorePlum(int client, vec3_t org, int score)
 localEntity_t *
 CG_MakeExplosion(vec3_t origin, vec3_t dir,
 		 qhandle_t hModel, qhandle_t shader,
-		 int msec, qboolean isSprite)
+		 int msec, qbool isSprite)
 {
 	float	ang;
 	localEntity_t *ex;

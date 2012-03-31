@@ -1000,7 +1000,7 @@ BG_FindItem(const char *pickupName)
  * Items can be picked up without actually touching their physical bounds to make
  * grabbing them easier
  */
-qboolean
+qbool
 BG_PlayerTouchesItem(playerState_t *ps, entityState_t *item, int atTime)
 {
 	vec3_t origin;
@@ -1027,7 +1027,7 @@ BG_PlayerTouchesItem(playerState_t *ps, entityState_t *item, int atTime)
  * Returns false if the item should not be picked up.
  * This needs to be the same for client side prediction and server use.
  */
-qboolean
+qbool
 BG_CanItemBeGrabbed(int gametype, const entityState_t *ent,
 		    const playerState_t *ps)
 {
@@ -1458,7 +1458,7 @@ BG_TouchJumpPad(playerState_t *ps, entityState_t *jumppad)
  * and after local prediction on the client
  */
 void
-BG_PlayerStateToEntityState(playerState_t *ps, entityState_t *s, qboolean snap)
+BG_PlayerStateToEntityState(playerState_t *ps, entityState_t *s, qbool snap)
 {
 	int i;
 
@@ -1531,7 +1531,7 @@ BG_PlayerStateToEntityState(playerState_t *ps, entityState_t *s, qboolean snap)
 void
 BG_PlayerStateToEntityStateExtraPolate(playerState_t *ps, entityState_t *s,
 				       int time,
-				       qboolean snap)
+				       qbool snap)
 {
 	int i;
 

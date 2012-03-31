@@ -253,17 +253,17 @@ typedef union qfile_gus {
 
 typedef struct qfile_us {
 	qfile_gut	file;
-	qboolean	unique;
+	qbool		unique;
 } qfile_ut;
 
 typedef struct {
 	qfile_ut	handleFiles;
-	qboolean	handleSync;
+	qbool		handleSync;
 	int		baseOffset;
 	int		fileSize;
 	int		zipFilePos;
-	qboolean	zipFile;
-	qboolean	streamed;
+	qbool		zipFile;
+	qbool		streamed;
 	char		name[MAX_ZPATH];
 } fileHandleData_t;
 
@@ -271,7 +271,7 @@ static fileHandleData_t fsh[MAX_FILE_HANDLES];
 
 /* TTimo - https://zerowing.idsoftware.com/bugzilla/show_bug.cgi?id=540
  * wether we did a reorder on the current search path when joining the server */
-static qboolean fs_reordered;
+static qbool fs_reordered;
 
 /* never load anything from pk3 files that are not present at the server when pure */
 static int	fs_numServerPaks = 0;
@@ -301,7 +301,7 @@ FILE * missingFiles = NULL;
  * FS_Initialized
  */
 
-qboolean
+qbool
 FS_Initialized(void)
 {
 	return (fs_searchpaths != NULL);
@@ -310,7 +310,7 @@ FS_Initialized(void)
 /*
  * FS_PakIsPure
  */
-qboolean
+qbool
 FS_PakIsPure(pack_t *pack)
 {
 	int i;
@@ -445,7 +445,7 @@ static void
 FS_ReplaceSeparators(char *path)
 {
 	char *s;
-	qboolean lastCharWasSep = qfalse;
+	qbool lastCharWasSep = qfalse;
 
 	for(s = path; *s; s++){
 		if(*s == '/' || *s == '\\'){
@@ -489,7 +489,7 @@ FS_BuildOSPath(const char *base, const char *game, const char *qpath)
  *
  * Creates any directories needed to store the given filename
  */
-qboolean
+qbool
 FS_CreatePath(char *OSPath)
 {
 	char	*ofs;
@@ -572,7 +572,7 @@ FS_HomeRemove(const char *homePath)
  *
  * Tests if path and file exists
  */
-qboolean
+qbool
 FS_FileInPathExists(const char *testpath)
 {
 	FILE *filep;
@@ -595,7 +595,7 @@ FS_FileInPathExists(const char *testpath)
  * (which always goes into the current gamedir) will cause any overwrites.
  * NOTE TTimo: this goes with FS_FOpenFileWrite for opening the file afterwards
  */
-qboolean
+qbool
 FS_FileExists(const char *file)
 {
 	return FS_FileInPathExists(FS_BuildOSPath(fs_homepath->string,
@@ -607,7 +607,7 @@ FS_FileExists(const char *file)
  *
  * Tests if the file exists
  */
-qboolean
+qbool
 FS_SV_FileExists(const char *file)
 {
 	char *testpath;
@@ -938,7 +938,7 @@ FS_FCreateOpenPipeFile(const char *filename)
  *
  * Ignore case and seprator char distinctions
  */
-qboolean
+qbool
 FS_FilenameCompare(const char *s1, const char *s2)
 {
 	int c1, c2;
@@ -970,7 +970,7 @@ FS_FilenameCompare(const char *s1, const char *s2)
  * Return qtrue if ext matches file extension filename
  */
 
-qboolean
+qbool
 FS_IsExt(const char *filename, const char *ext, int namelen)
 {
 	int extlen;
@@ -991,7 +991,7 @@ FS_IsExt(const char *filename, const char *ext, int namelen)
  * Return qtrue if filename has a demo extension
  */
 
-qboolean
+qbool
 FS_IsDemoExt(const char *filename, int namelen)
 {
 	char	*ext_test;
@@ -1024,12 +1024,12 @@ FS_IsDemoExt(const char *filename, int namelen)
  * Tries opening file "filename" in searchpath "search"
  * Returns filesize and an open FILE pointer.
  */
-extern qboolean com_fullyInitialized;
+extern qbool com_fullyInitialized;
 
 long
 FS_FOpenFileReadDir(const char *filename, searchpath_t *search,
-		    fileHandle_t *file, qboolean uniqueFILE,
-		    qboolean unpure)
+		    fileHandle_t *file, qbool uniqueFILE,
+		    qbool unpure)
 {
 	long hash;
 	pack_t *pak;
@@ -1272,7 +1272,7 @@ FS_FOpenFileReadDir(const char *filename, searchpath_t *search,
  * separate file or a ZIP file.
  */
 long
-FS_FOpenFileRead(const char *filename, fileHandle_t *file, qboolean uniqueFILE)
+FS_FOpenFileRead(const char *filename, fileHandle_t *file, qbool uniqueFILE)
 {
 	searchpath_t *search;
 	long len;
@@ -1680,13 +1680,13 @@ FS_FileIsInPAK(const char *filename, int *pChecksum)
  * If searchPath is non-NULL search only in that specific search path
  */
 long
-FS_ReadFileDir(const char *qpath, void *searchPath, qboolean unpure,
+FS_ReadFileDir(const char *qpath, void *searchPath, qbool unpure,
 	       void **buffer)
 {
 	fileHandle_t	h;
 	searchpath_t	*search;
 	byte	* buf;
-	qboolean isConfig;
+	qbool isConfig;
 	long	len;
 
 	if(!fs_searchpaths)
@@ -1994,7 +1994,7 @@ FS_FreePak(pack_t *thepak)
  *
  * Compares whether the given pak file matches a referenced checksum
  */
-qboolean
+qbool
 FS_CompareZipChecksum(const char *zipfile)
 {
 	pack_t	*thepak;
@@ -2075,7 +2075,7 @@ FS_AddFileToList(char *name, char *list[MAX_FOUND_FILES], int nfiles)
 char **
 FS_ListFilteredFiles(const char *path, const char *extension, char *filter,
 		     int *numfiles,
-		     qboolean allowNonPureFilesOnDisk)
+		     qbool allowNonPureFilesOnDisk)
 {
 	int nfiles;
 	char **listCopy;
@@ -2347,7 +2347,7 @@ FS_GetModList(char *listbuf, int bufsize)
 	int dummy;
 	char **pFiles0	= NULL;
 	char **pFiles1	= NULL;
-	qboolean bDrop	= qfalse;
+	qbool bDrop	= qfalse;
 
 	*listbuf = 0;
 	nMods = nTotal = 0;
@@ -2637,7 +2637,7 @@ FS_TouchFile_f(void)
  * FS_Which
  */
 
-qboolean
+qbool
 FS_Which(const char *filename, void *searchPath)
 {
 	searchpath_t *search = searchPath;
@@ -2805,7 +2805,7 @@ FS_AddGameDirectory(const char *path, const char *dir)
 /*
  * FS_idPak
  */
-qboolean
+qbool
 FS_idPak(char *pak, char *base, int numPaks)
 {
 	int i;
@@ -2825,7 +2825,7 @@ FS_idPak(char *pak, char *base, int numPaks)
  * and return qtrue if it does.
  */
 
-qboolean
+qbool
 FS_CheckDirTraversal(const char *checkdir)
 {
 	if(strstr(checkdir, "../") || strstr(checkdir, "..\\"))
@@ -2858,11 +2858,11 @@ FS_CheckDirTraversal(const char *checkdir)
  * (this is used for diagnostics while connecting to a pure server)
  *
  */
-qboolean
-FS_ComparePaks(char *neededpaks, int len, qboolean dlstring)
+qbool
+FS_ComparePaks(char *neededpaks, int len, qbool dlstring)
 {
 	searchpath_t *sp;
-	qboolean	havepak;
+	qbool		havepak;
 	char		*origpos = neededpaks;
 	int i;
 
@@ -2971,7 +2971,7 @@ FS_ComparePaks(char *neededpaks, int len, qboolean dlstring)
  * Frees all resources.
  */
 void
-FS_Shutdown(qboolean closemfp)
+FS_Shutdown(qbool closemfp)
 {
 	searchpath_t *p, *next;
 	int i;
@@ -3176,7 +3176,7 @@ FS_CheckPak0(void)
 {
 	searchpath_t *path;
 	pack_t *curpack;
-	qboolean founddemo = qfalse;
+	qbool founddemo = qfalse;
 	unsigned int foundPak = 0, foundTA = 0;
 
 	for(path = fs_searchpaths; path; path = path->next){
@@ -3769,8 +3769,8 @@ FS_Restart(int checksumFeed)
  * Restart if necessary
  * Return qtrue if restarting due to game directory changed, qfalse otherwise
  */
-qboolean
-FS_ConditionalRestart(int checksumFeed, qboolean disconnect)
+qbool
+FS_ConditionalRestart(int checksumFeed, qbool disconnect)
 {
 	if(fs_gamedirvar->modified){
 		if(FS_FilenameCompare(lastValidGame, fs_gamedirvar->string) &&
@@ -3803,7 +3803,7 @@ int
 FS_FOpenFileByMode(const char *qpath, fileHandle_t *f, fsMode_t mode)
 {
 	int r;
-	qboolean sync;
+	qbool sync;
 
 	sync = qfalse;
 
@@ -3868,8 +3868,8 @@ FS_Flush(fileHandle_t f)
 
 void
 FS_FilenameCompletion(const char *dir, const char *ext,
-		      qboolean stripExt, void (*callback)(
-			      const char *s), qboolean allowNonPureFilesOnDisk)
+		      qbool stripExt, void (*callback)(
+			      const char *s), qbool allowNonPureFilesOnDisk)
 {
 	char	**filenames;
 	int	nfiles;

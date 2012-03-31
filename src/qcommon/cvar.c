@@ -35,7 +35,7 @@ static cvar_t	cvar_indexes[MAX_CVARS];
 static int	cvar_numIndexes;
 static cvar_t *hashTable[HASH_SIZE];
 
-static qboolean
+static qbool
 Cvar_ValidateString(const char *s)
 {
 	if(s == nil)
@@ -138,11 +138,11 @@ Cvar_CommandCompletion(void (*callback)(const char *s))
 }
 
 static const char *
-Cvar_Validate(cvar_t *var, const char *value, qboolean warn)
+Cvar_Validate(cvar_t *var, const char *value, qbool warn)
 {
 	static char	s[MAX_CVAR_VALUE_STRING];
 	float valuef;
-	qboolean	changed = qfalse;
+	qbool		changed = qfalse;
 
 	if(!var->validate)
 		return value;
@@ -411,7 +411,7 @@ Cvar_SetDesc(const char *name, const char *desc)
 }
 
 cvar_t *
-Cvar_Set2(const char *var_name, const char *value, qboolean force)
+Cvar_Set2(const char *var_name, const char *value, qbool force)
 {
 	cvar_t *var;
 
@@ -605,7 +605,7 @@ Cvar_SetCheatState(void)
 /*
  * Cvar_Command: Handles variable inspection and changing from the console
  */
-qboolean
+qbool
 Cvar_Command(void)
 {
 	cvar_t *v;
@@ -936,7 +936,7 @@ Cvar_Unset_f(void)
  * user-defined variables and variables added via the VMs if requested.
  */
 void
-Cvar_Restart(qboolean unsetVM)
+Cvar_Restart(qbool unsetVM)
 {
 	cvar_t *var;
 
@@ -1003,7 +1003,7 @@ Cvar_InfoStringBuffer(int bit, char* buff, int buffsize)
 }
 
 void
-Cvar_CheckRange(cvar_t *var, float min, float max, qboolean integral)
+Cvar_CheckRange(cvar_t *var, float min, float max, qbool integral)
 {
 	var->validate	= qtrue;
 	var->min	= min;

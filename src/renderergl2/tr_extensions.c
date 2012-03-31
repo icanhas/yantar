@@ -187,7 +187,7 @@ void	(APIENTRY * qglGetQueryObjectivARB)(GLuint id, GLenum pname, GLint *params)
 void	(APIENTRY * qglGetQueryObjectuivARB)(GLuint id, GLenum pname, GLuint *params);
 
 
-static qboolean
+static qbool
 GLimp_HaveExtension(const char *ext)
 {
 	const char *ptr = Q_stristr(glConfig.extensions_string, ext);

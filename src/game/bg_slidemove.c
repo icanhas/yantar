@@ -38,8 +38,8 @@
  * Returns qtrue if the velocity was clipped in some way
  */
 #define MAX_CLIP_PLANES 5
-qboolean
-PM_SlideMove(qboolean gravity)
+qbool
+PM_SlideMove(qbool gravity)
 {
 	int bumpcount, numbumps;
 	vec3_t	dir;
@@ -226,7 +226,7 @@ PM_SlideMove(qboolean gravity)
  *
  */
 void
-PM_StepSlideMove(qboolean gravity)
+PM_StepSlideMove(qbool gravity)
 {
 	vec3_t	start_o, start_v;
 /*	vec3_t		down_o, down_v; */

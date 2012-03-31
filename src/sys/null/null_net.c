@@ -33,7 +33,7 @@
  * 192.246.40.70:28000
  * =============
  */
-qboolean
+qbool
 NET_StringToAdr(char *s, netadr_t *a)
 {
 	if(!strcmp (s, "localhost")){

@@ -128,7 +128,7 @@ CL_Netchan_Decode(msg_t *msg)
 /*
  * CL_Netchan_TransmitNextFragment
  */
-qboolean
+qbool
 CL_Netchan_TransmitNextFragment(netchan_t *chan)
 {
 	if(chan->unsentFragments){
@@ -163,7 +163,7 @@ CL_Netchan_Transmit(netchan_t *chan, msg_t* msg)
 /*
  * CL_Netchan_Process
  */
-qboolean
+qbool
 CL_Netchan_Process(netchan_t *chan, msg_t *msg)
 {
 	int ret;

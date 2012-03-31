@@ -274,7 +274,7 @@ ResampleTexture(unsigned *in, int inwidth, int inheight, unsigned *out,
  * lighting range
  */
 void
-R_LightScaleTexture(unsigned *in, int inwidth, int inheight, qboolean only_gamma)
+R_LightScaleTexture(unsigned *in, int inwidth, int inheight, qbool only_gamma)
 {
 	if(only_gamma){
 		if(!glConfig.deviceSupportsGamma){
@@ -508,13 +508,13 @@ byte mipBlendColors[16][4] = {
  * Upload32
  *
  */
-extern qboolean charSet;
+extern qbool charSet;
 static void
 Upload32(unsigned *data,
 	 int width, int height,
-	 qboolean mipmap,
-	 qboolean picmip,
-	 qboolean lightMap,
+	 qbool mipmap,
+	 qbool picmip,
+	 qbool lightMap,
 	 int *format,
 	 int *pUploadWidth, int *pUploadHeight)
 {
@@ -762,10 +762,10 @@ done:
  */
 image_t *
 R_CreateImage(const char *name, const byte *pic, int width, int height,
-	      qboolean mipmap, qboolean allowPicmip, int glWrapClampMode)
+	      qbool mipmap, qbool allowPicmip, int glWrapClampMode)
 {
 	image_t *image;
-	qboolean	isLightmap = qfalse;
+	qbool		isLightmap = qfalse;
 	long	hash;
 
 	if(strlen(name) >= MAX_QPATH){
@@ -859,7 +859,7 @@ static int numImageLoaders = ARRAY_LEN(imageLoaders);
 void
 R_LoadImage(const char *name, byte **pic, int *width, int *height)
 {
-	qboolean	orgNameFailed = qfalse;
+	qbool		orgNameFailed = qfalse;
 	int	orgLoader = -1;
 	int	i;
 	char	localName[ MAX_QPATH ];
@@ -928,7 +928,7 @@ R_LoadImage(const char *name, byte **pic, int *width, int *height)
  * Returns NULL if it fails, not a default image.
  */
 image_t *
-R_FindImageFile(const char *name, qboolean mipmap, qboolean allowPicmip, int glWrapClampMode)
+R_FindImageFile(const char *name, qbool mipmap, qbool allowPicmip, int glWrapClampMode)
 {
 	image_t *image;
 	int width, height;

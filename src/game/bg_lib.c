@@ -1209,7 +1209,7 @@ loop:   SWAPINIT(a, es);
 	strtod(const char *nptr, char **endptr)
 	{
 		double res;
-		qboolean neg = qfalse;
+		qbool neg = qfalse;
 
 		/* skip whitespace */
 		while(isspace(*nptr))
@@ -1503,7 +1503,7 @@ loop:   SWAPINIT(a, es);
 	strtol(const char *nptr, char **endptr, int base)
 	{
 		long res;
-		qboolean pos = qtrue;
+		qbool pos = qtrue;
 
 		if(endptr)
 			*endptr = (char*)nptr;

@@ -68,7 +68,7 @@ typedef struct
 	int		numAwards;
 	int		awardsEarned[6];
 	int		awardsLevels[6];
-	qboolean	playedSound[6];
+	qbool		playedSound[6];
 	int		lastTier;
 	sfxHandle_t	winnerSound;
 } postgame_t;
@@ -356,7 +356,7 @@ void
 UI_SPPostgameMenu_Cache(void)
 {
 	int n;
-	qboolean buildscript;
+	qbool buildscript;
 
 	buildscript = trap_Cvar_VariableValue("com_buildscript");
 

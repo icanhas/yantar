@@ -20,7 +20,7 @@
 
 #include "qfiles.h"
 
-void            CM_LoadMap(const char *name, qboolean clientload,
+void            CM_LoadMap(const char *name, qbool clientload,
 			   int *checksum);
 void            CM_ClearMap(void);
 clipHandle_t    CM_InlineModel(int index);	/* 0 = world, 1 + are bmodels */
@@ -51,8 +51,8 @@ int             CM_BoxLeafnums(const vec3_t mins, const vec3_t maxs, int *list,
 			       int *lastLeaf);
 int             CM_LeafCluster(int leafnum);
 int             CM_LeafArea(int leafnum);
-void            CM_AdjustAreaPortalState(int area1, int area2, qboolean open);
-qboolean        CM_AreasConnected(int area1, int area2);
+void            CM_AdjustAreaPortalState(int area1, int area2, qbool open);
+qbool        CM_AreasConnected(int area1, int area2);
 int             CM_WriteAreaBits(byte *buffer, int area);
 /* cm_tag.c */
 int             CM_LerpTag(orientation_t *tag,  clipHandle_t model,

@@ -54,7 +54,7 @@ channel_t	loop_channels[MAX_CHANNELS];
 int numLoopChannels;
 
 static int s_soundStarted;
-static qboolean s_soundMuted;
+static qbool s_soundMuted;
 
 dma_t dma;
 
@@ -343,7 +343,7 @@ S_Base_DisableSounds(void)
  * Creates a default buzz sound if the file can't be loaded
  */
 sfxHandle_t
-S_Base_RegisterSound(const char *name, qboolean compressed)
+S_Base_RegisterSound(const char *name, qbool compressed)
 {
 	sfx_t *sfx;
 
@@ -683,7 +683,7 @@ S_Base_StopLoopingSound(int entityNum)
  *
  */
 void
-S_Base_ClearLoopingSounds(qboolean killall)
+S_Base_ClearLoopingSounds(qbool killall)
 {
 	int i;
 	for(i = 0; i < MAX_GENTITIES; i++)
@@ -1086,12 +1086,12 @@ S_Base_Respatialize(int entityNum, const vec3_t head, vec3_t axis[3],
  *
  * Returns qtrue if any new sounds were started since the last mix
  */
-qboolean
+qbool
 S_ScanChannelStarts(void)
 {
 	channel_t	*ch;
 	int i;
-	qboolean	newSamples;
+	qbool		newSamples;
 
 	newSamples = qfalse;
 	ch = s_channels;
@@ -1466,10 +1466,10 @@ S_Base_Shutdown(void)
 /*
  * S_Init
  */
-qboolean
+qbool
 S_Base_Init(soundInterface_t *si)
 {
-	qboolean r;
+	qbool r;
 
 	if(!si)
 		return qfalse;

@@ -21,7 +21,7 @@
 
 #include "g_local.h"
 
-qboolean
+qbool
 G_SpawnString(const char *key, const char *defaultString, char **out)
 {
 	int i;
@@ -40,33 +40,33 @@ G_SpawnString(const char *key, const char *defaultString, char **out)
 	return qfalse;
 }
 
-qboolean
+qbool
 G_SpawnFloat(const char *key, const char *defaultString, float *out)
 {
 	char *s;
-	qboolean present;
+	qbool present;
 
 	present = G_SpawnString(key, defaultString, &s);
 	*out = atof(s);
 	return present;
 }
 
-qboolean
+qbool
 G_SpawnInt(const char *key, const char *defaultString, int *out)
 {
 	char *s;
-	qboolean present;
+	qbool present;
 
 	present = G_SpawnString(key, defaultString, &s);
 	*out = atoi(s);
 	return present;
 }
 
-qboolean
+qbool
 G_SpawnVector(const char *key, const char *defaultString, float *out)
 {
 	char *s;
-	qboolean present;
+	qbool present;
 
 	present = G_SpawnString(key, defaultString, &s);
 	sscanf(s, "%f %f %f", &out[0], &out[1], &out[2]);
@@ -269,7 +269,7 @@ spawn_t spawns[] = {
  * Finds the spawn function for the entity and calls it,
  * returning qfalse if not found
  */
-qboolean
+qbool
 G_CallSpawn(gentity_t *ent)
 {
 	spawn_t *s;
@@ -505,7 +505,7 @@ G_AddSpawnVarToken(const char *string)
  *
  * This does not actually spawn an entity.
  */
-qboolean
+qbool
 G_ParseSpawnVars(void)
 {
 	char	keyname[MAX_TOKEN_CHARS];

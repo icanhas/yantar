@@ -25,7 +25,7 @@
 **********************************************************************/
 #include "ui_local.h"
 
-qboolean m_entersound;	/* after a frame, so caching won't disrupt the sound */
+qbool m_entersound;	/* after a frame, so caching won't disrupt the sound */
 
 void QDECL
 Com_Error(int level, const char *error, ...)
@@ -53,7 +53,7 @@ Com_Printf(const char *msg, ...)
 	trap_Print(va("%s", text));
 }
 
-qboolean newUI = qfalse;
+qbool newUI = qfalse;
 
 
 /*
@@ -79,7 +79,7 @@ UI_StartDemoLoop(void)
 
 #ifndef MISSIONPACK
 static void
-NeedCDAction(qboolean result)
+NeedCDAction(qbool result)
 {
 	if(!result)
 		trap_Cmd_ExecuteText(EXEC_APPEND, "quit\n");
@@ -88,7 +88,7 @@ NeedCDAction(qboolean result)
 
 #ifndef MISSIONPACK
 static void
-NeedCDKeyAction(qboolean result)
+NeedCDKeyAction(qbool result)
 {
 	if(!result)
 		trap_Cmd_ExecuteText(EXEC_APPEND, "quit\n");
@@ -119,7 +119,7 @@ UI_Cvar_VariableString(const char *var_name)
 
 
 void
-UI_SetBestScores(postGameInfo_t *newInfo, qboolean postGame)
+UI_SetBestScores(postGameInfo_t *newInfo, qbool postGame)
 {
 	trap_Cvar_Set("ui_scoreAccuracy",     va("%i%%", newInfo->accuracy));
 	trap_Cvar_Set("ui_scoreImpressives",    va("%i", newInfo->impressives));
@@ -286,7 +286,7 @@ UI_CalcPostGameStats(void)
 	int	size, game, time, adjustedTime;
 	postGameInfo_t	oldInfo;
 	postGameInfo_t	newInfo;
-	qboolean newHigh = qfalse;
+	qbool newHigh = qfalse;
 
 	trap_GetConfigString(CS_SERVERINFO, info, sizeof(info));
 	Q_strncpyz(map, Info_ValueForKey(info, "mapname"), sizeof(map));
@@ -377,7 +377,7 @@ UI_CalcPostGameStats(void)
 /*
  * UI_ConsoleCommand
  */
-qboolean
+qbool
 UI_ConsoleCommand(int realTime)
 {
 	char *cmd;
@@ -584,7 +584,7 @@ UI_DrawTextBox(int x, int y, int width, int lines)
 		colorWhite);
 }
 
-qboolean
+qbool
 UI_CursorInRect(int x, int y, int width, int height)
 {
 	if(uiInfo.uiDC.cursorx < x ||

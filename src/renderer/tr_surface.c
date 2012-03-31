@@ -230,7 +230,7 @@ RB_SurfaceTriangles(srfTriangles_t *srf)
 	float		*xyz, *normal, *texCoords;
 	byte            *color;
 	int		dlightBits;
-	qboolean	needsNormal;
+	qbool		needsNormal;
 
 	dlightBits = srf->dlightBits[backEnd.smpFrame];
 	tess.dlightBits |= dlightBits;
@@ -1025,7 +1025,7 @@ RB_SurfaceGrid(srfGridMesh_t *cv)
 	int	numVertexes;
 	int	dlightBits;
 	int	*vDlightBits;
-	qboolean needsNormal;
+	qbool needsNormal;
 
 	dlightBits = cv->dlightBits[backEnd.smpFrame];
 	tess.dlightBits |= dlightBits;

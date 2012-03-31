@@ -68,7 +68,7 @@
  *
  *  wins/losses are drawn on bot icon now */
 
-static qboolean localClient;	/* true if local client has been displayed */
+static qbool localClient;	/* true if local client has been displayed */
 
 
 /*
@@ -76,7 +76,7 @@ static qboolean localClient;	/* true if local client has been displayed */
  */
 static void
 CG_DrawClientScore(int y, score_t *score, float *color, float fade,
-		   qboolean largeFormat)
+		   qbool largeFormat)
 {
 	char string[1024];
 	vec3_t	headAngles;
@@ -274,7 +274,7 @@ CG_TeamScoreboard(int y, team_t team, float fade, int maxClients, int lineHeight
  *
  * Draw the normal in-game scoreboard
  */
-qboolean
+qbool
 CG_DrawOldScoreboard(void)
 {
 	int x, y, w, i, n1, n2;

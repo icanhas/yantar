@@ -104,7 +104,7 @@ static void
 PlayerSettings_DrawName(void *self)
 {
 	menufield_s	*f;
-	qboolean	focus;
+	qbool		focus;
 	int	style;
 	char                    *txt;
 	char	c;
@@ -177,7 +177,7 @@ static void
 PlayerSettings_DrawHandicap(void *self)
 {
 	menulist_s	*item;
-	qboolean	focus;
+	qbool		focus;
 	int style;
 	float *color;
 
@@ -207,7 +207,7 @@ static void
 PlayerSettings_DrawEffects(void *self)
 {
 	menulist_s	*item;
-	qboolean	focus;
+	qbool		focus;
 	int style;
 	float *color;
 

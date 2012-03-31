@@ -414,7 +414,7 @@ ReadWeightConfig(char *filename)
  * Returns:					-
  * Changes Globals:		-
  * =========================================================================== */
-qboolean
+qbool
 WriteFuzzyWeight(FILE *fp, fuzzyseperator_t *fs)
 {
 	if(fs->type == WT_BALANCE){
@@ -438,7 +438,7 @@ WriteFuzzyWeight(FILE *fp, fuzzyseperator_t *fs)
  * Returns:					-
  * Changes Globals:		-
  * =========================================================================== */
-qboolean
+qbool
 WriteFuzzySeperators_r(FILE *fp, fuzzyseperator_t *fs, int indent)
 {
 	if(!WriteIndent(fp, indent)) return qfalse;
@@ -478,7 +478,7 @@ WriteFuzzySeperators_r(FILE *fp, fuzzyseperator_t *fs, int indent)
  * Returns:					-
  * Changes Globals:		-
  * =========================================================================== */
-qboolean
+qbool
 WriteWeightConfig(char *filename, weightconfig_t *config)
 {
 	int i;

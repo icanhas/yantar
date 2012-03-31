@@ -64,7 +64,7 @@ void
 Rankings_DrawText(void* self)
 {
 	menufield_s	*f;
-	qboolean	focus;
+	qbool		focus;
 	int	style;
 	char                    *txt;
 	char	c;

@@ -146,7 +146,7 @@ int
 Sys_Milliseconds(void)
 {
 	int sys_curtime;
-	static qboolean initialized = qfalse;
+	static qbool initialized = qfalse;
 
 	if(!initialized){
 		sys_timeBase = timeGetTime();
@@ -160,7 +160,7 @@ Sys_Milliseconds(void)
 /*
  * Sys_RandomBytes
  */
-qboolean
+qbool
 Sys_RandomBytes(byte *string, int len)
 {
 	HCRYPTPROV prov;
@@ -227,7 +227,7 @@ Sys_GetClipboardData(void)
 /*
  * Sys_LowPhysicalMemory
  */
-qboolean
+qbool
 Sys_LowPhysicalMemory(void)
 {
 	MEMORYSTATUS stat;
@@ -287,7 +287,7 @@ Sys_Dirname(char *path)
 /*
  * Sys_Mkdir
  */
-qboolean
+qbool
 Sys_Mkdir(const char *path)
 {
 	if(!CreateDirectory(path, NULL))
@@ -388,7 +388,7 @@ Sys_ListFilteredFiles(const char *basedir, char *subdirs, char *filter,
 /*
  * strgtr
  */
-static qboolean
+static qbool
 strgtr(const char *s0, const char *s1)
 {
 	int l0, l1, i;
@@ -414,7 +414,7 @@ strgtr(const char *s0, const char *s1)
 char **
 Sys_ListFiles(const char *directory, const char *extension, char *filter,
 	      int *numfiles,
-	      qboolean wantsubs)
+	      qbool wantsubs)
 {
 	char	search[MAX_OSPATH];
 	int	nfiles;
@@ -617,7 +617,7 @@ Sys_Dialog(dialogType_t type, const char *message, const char *title)
 }
 
 #ifndef DEDICATED
-static qboolean SDL_VIDEODRIVER_externallySet = qfalse;
+static qbool SDL_VIDEODRIVER_externallySet = qfalse;
 #endif
 
 /*
@@ -739,7 +739,7 @@ Sys_PID(void)
 /*
  * Sys_PIDIsRunning
  */
-qboolean
+qbool
 Sys_PIDIsRunning(int pid)
 {
 	DWORD	processes[ 1024 ];

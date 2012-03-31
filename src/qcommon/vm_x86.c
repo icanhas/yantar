@@ -723,7 +723,7 @@ EmitBranchConditions(vm_t *vm, int op)
  * instead of opStack operations, which will save expensive operations on memory
  */
 
-qboolean
+qbool
 ConstOptimize(vm_t *vm, int callProcOfsSyscall)
 {
 	int	v;

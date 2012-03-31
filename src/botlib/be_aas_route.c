@@ -2171,7 +2171,7 @@ AAS_NearestHideArea(int srcnum, vec3_t origin, int areanum, int enemynum,
 	aas_reachability_t		*reach;
 	float	dist1, dist2;
 	vec3_t	v1, v2, p;
-	qboolean startVisible;
+	qbool startVisible;
 
 	/*  */
 	if(!hidetraveltimes)

@@ -116,7 +116,7 @@ SND_shutdown(void)
  * resample / decimate to the current source rate
  */
 static void
-ResampleSfx(sfx_t *sfx, int inrate, int inwidth, byte *data, qboolean compressed)
+ResampleSfx(sfx_t *sfx, int inrate, int inwidth, byte *data, qbool compressed)
 {
 	int	outcount;
 	int	srcsample;
@@ -202,7 +202,7 @@ ResampleSfxRaw(short *sfx, int inrate, int inwidth, int samples, byte *data)
  * The filename may be different than sfx->name in the case
  * of a forced fallback of a player specific sound
  */
-qboolean
+qbool
 S_LoadSound(sfx_t *sfx)
 {
 	byte *data;

@@ -93,7 +93,7 @@ P_DamageFeedback(gentity_t *player)
 void
 P_WorldEffects(gentity_t *ent)
 {
-	qboolean envirosuit;
+	qbool envirosuit;
 	int waterlevel;
 
 	if(ent->client->noclip){
@@ -333,7 +333,7 @@ SpectatorThink(gentity_t *ent, usercmd_t *ucmd)
  *
  * Returns qfalse if the client is dropped
  */
-qboolean
+qbool
 ClientInactivityTimer(gclient_t *client)
 {
 	if(!g_inactivity.integer){
@@ -517,7 +517,7 @@ ClientEvents(gentity_t *ent, int oldEventSequence)
 	gclient_t *client;
 	int	damage;
 	vec3_t origin, angles;
-/*	qboolean	fired; */
+/*	qbool		fired; */
 	gitem_t *item;
 	gentity_t *drop;
 

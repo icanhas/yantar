@@ -107,7 +107,7 @@ LPALCCAPTURESAMPLES qalcCaptureSamples;
 
 static void *OpenALLib = NULL;
 
-static qboolean alinit_fail = qfalse;
+static qbool alinit_fail = qfalse;
 
 /*
  * GPA
@@ -131,7 +131,7 @@ GPA(char *str)
 /*
  * QAL_Init
  */
-qboolean
+qbool
 QAL_Init(const char *libname)
 {
 	if(OpenALLib)
@@ -315,7 +315,7 @@ QAL_Shutdown(void)
 	qalcCaptureSamples	= NULL;
 }
 #else
-qboolean
+qbool
 QAL_Init(const char *libname)
 {
 	return qtrue;

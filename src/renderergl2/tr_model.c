@@ -23,10 +23,10 @@
 
 #define LL(x) x=LittleLong(x)
 
-static qboolean R_LoadMD3(model_t *mod, int lod, void *buffer, int bufferSize, const char *modName);
-static qboolean R_LoadMD4(model_t *mod, void *buffer, const char *name);
+static qbool R_LoadMD3(model_t *mod, int lod, void *buffer, int bufferSize, const char *modName);
+static qbool R_LoadMD4(model_t *mod, void *buffer, const char *name);
 #ifdef RAVENMD4
-static qboolean R_LoadMDR(model_t *mod, void *buffer, int filesize, const char *name);
+static qbool R_LoadMDR(model_t *mod, void *buffer, int filesize, const char *name);
 #endif
 
 /*
@@ -42,7 +42,7 @@ R_RegisterMD3(const char *name, model_t *mod)
 	int	size;
 	int	lod;
 	int	ident;
-	qboolean loaded = qfalse;
+	qbool loaded = qfalse;
 	int numLoaded;
 	char filename[MAX_QPATH], namebuf[MAX_QPATH+20];
 	char *fext, defex[] = "md3";
@@ -119,7 +119,7 @@ R_RegisterMDR(const char *name, model_t *mod)
 		void		*v;
 	} buf;
 	int ident;
-	qboolean loaded = qfalse;
+	qbool loaded = qfalse;
 	int filesize;
 
 	filesize = ri.FS_ReadFile(name, (void**)&buf.v);
@@ -154,7 +154,7 @@ R_RegisterIQM(const char *name, model_t *mod)
 		unsigned	*u;
 		void		*v;
 	} buf;
-	qboolean loaded = qfalse;
+	qbool loaded = qfalse;
 	int filesize;
 
 	filesize = ri.FS_ReadFile(name, (void**)&buf.v);
@@ -253,7 +253,7 @@ RE_RegisterModel(const char *name)
 {
 	model_t *mod;
 	qhandle_t	hModel;
-	qboolean	orgNameFailed = qfalse;
+	qbool		orgNameFailed = qfalse;
 	int	orgLoader = -1;
 	int	i;
 	char	localName[ MAX_QPATH ];
@@ -358,7 +358,7 @@ RE_RegisterModel(const char *name)
 /*
  * R_LoadMD3
  */
-static qboolean
+static qbool
 R_LoadMD3(model_t * mod, int lod, void *buffer, int bufferSize, const char *modName)
 {
 	int f, i, j, k;
@@ -735,7 +735,7 @@ R_LoadMD3(model_t * mod, int lod, void *buffer, int bufferSize, const char *modN
 /*
  * R_LoadMDR
  */
-static qboolean
+static qbool
 R_LoadMDR(model_t *mod, void *buffer, int filesize, const char *mod_name)
 {
 	int i, j, k, l;
@@ -1056,7 +1056,7 @@ R_LoadMDR(model_t *mod, void *buffer, int filesize, const char *mod_name)
  * R_LoadMD4
  */
 
-static qboolean
+static qbool
 R_LoadMD4(model_t *mod, void *buffer, const char *mod_name)
 {
 	int i, j, k, lodindex;

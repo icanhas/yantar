@@ -265,7 +265,7 @@ void
 G_MissileImpact(gentity_t *ent, trace_t *trace)
 {
 	gentity_t	*other;
-	qboolean	hitClient = qfalse;
+	qbool		hitClient = qfalse;
 #ifdef MISSIONPACK
 	vec3_t		forward, impactpoint, bouncedir;
 	int eFlags;

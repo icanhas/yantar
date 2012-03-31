@@ -183,7 +183,7 @@ WriteTGA(char *filename, byte *data, int width, int height)
 static glyphInfo_t *
 RE_ConstructGlyphInfo(unsigned char *imageOut, int *xOut, int *yOut, int *maxHeight, FT_Face face,
 		      const unsigned char c,
-		      qboolean calcHeight)
+		      qbool calcHeight)
 {
 	int i;
 	static glyphInfo_t	glyph;

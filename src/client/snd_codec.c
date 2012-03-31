@@ -35,7 +35,7 @@ S_CodecGetSound(const char *filename, snd_info_t *info)
 {
 	snd_codec_t	*codec;
 	snd_codec_t	*orgCodec = NULL;
-	qboolean	orgNameFailed = qfalse;
+	qbool		orgNameFailed = qfalse;
 	char	localName[ MAX_QPATH ];
 	const char      *ext;
 	char	altName[ MAX_QPATH ];

@@ -118,7 +118,7 @@ S_ByteSwapRawSamples(int samples, int width, int s_channels, const byte *data)
 /*
  * S_ReadRIFFHeader
  */
-static qboolean
+static qbool
 S_ReadRIFFHeader(fileHandle_t file, snd_info_t *info)
 {
 	char	dump[16];

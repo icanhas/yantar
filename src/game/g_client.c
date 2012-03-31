@@ -76,7 +76,7 @@ SP_info_player_intermission(gentity_t *ent)
  * SpotWouldTelefrag
  *
  */
-qboolean
+qbool
 SpotWouldTelefrag(gentity_t *spot)
 {
 	int	i, num;
@@ -140,7 +140,7 @@ SelectNearestDeathmatchSpawnPoint(vec3_t from)
  */
 #define MAX_SPAWN_POINTS 128
 gentity_t *
-SelectRandomDeathmatchSpawnPoint(qboolean isbot)
+SelectRandomDeathmatchSpawnPoint(qbool isbot)
 {
 	gentity_t *spot;
 	int	count;
@@ -180,7 +180,7 @@ SelectRandomDeathmatchSpawnPoint(qboolean isbot)
  */
 gentity_t *
 SelectRandomFurthestSpawnPoint(vec3_t avoidPoint, vec3_t origin, vec3_t angles,
-			       qboolean isbot)
+			       qbool isbot)
 {
 	gentity_t	*spot;
 	vec3_t		delta;
@@ -258,7 +258,7 @@ SelectRandomFurthestSpawnPoint(vec3_t avoidPoint, vec3_t origin, vec3_t angles,
  * Chooses a player start, deathmatch start, etc
  */
 gentity_t *
-SelectSpawnPoint(vec3_t avoidPoint, vec3_t origin, vec3_t angles, qboolean isbot)
+SelectSpawnPoint(vec3_t avoidPoint, vec3_t origin, vec3_t angles, qbool isbot)
 {
 	return SelectRandomFurthestSpawnPoint(avoidPoint, origin, angles, isbot);
 
@@ -298,7 +298,7 @@ SelectSpawnPoint(vec3_t avoidPoint, vec3_t origin, vec3_t angles, qboolean isbot
  * use normal spawn selection.
  */
 gentity_t *
-SelectInitialSpawnPoint(vec3_t origin, vec3_t angles, qboolean isbot)
+SelectInitialSpawnPoint(vec3_t origin, vec3_t angles, qbool isbot)
 {
 	gentity_t *spot;
 
@@ -875,7 +875,7 @@ ClientUserinfoChanged(int clientNum)
  * restarts.
  */
 char *
-ClientConnect(int clientNum, qboolean firstTime, qboolean isBot)
+ClientConnect(int clientNum, qbool firstTime, qbool isBot)
 {
 	char *value;
 /*	char		*areabits; */

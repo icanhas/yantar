@@ -75,12 +75,12 @@ struct gentity_s {
 
 	struct gclient_s	*client;	/* NULL if not a client */
 
-	qboolean		inuse;
+	qbool			inuse;
 
 	char			*classname;	/* set in QuakeEd */
 	int			spawnflags;	/* set in QuakeEd */
 
-	qboolean		neverFree;	/* if true, FreeEntity will only unlink */
+	qbool			neverFree;	/* if true, FreeEntity will only unlink */
 	/* bodyque uses this */
 
 	int		flags;	/* FL_* variables */
@@ -90,10 +90,10 @@ struct gentity_s {
 	int		freetime;	/* level.time when the object was freed */
 
 	int		eventTime;	/* events will be cleared EVENT_VALID_MSEC after set */
-	qboolean	freeAfterEvent;
-	qboolean	unlinkAfterEvent;
+	qbool		freeAfterEvent;
+	qbool		unlinkAfterEvent;
 
-	qboolean	physicsObject;	/* if true, it can be pushed by movers and fall off edges */
+	qbool		physicsObject;	/* if true, it can be pushed by movers and fall off edges */
 	/* all game items are physicsObjects, */
 	float		physicsBounce;	/* 1.0 = continuous bounce, 0.0 = no bounce */
 	int		clipmask;	/* brushes with this content value will be collided against */
@@ -145,7 +145,7 @@ struct gentity_s {
 
 	int		health;
 
-	qboolean	takedamage;
+	qbool		takedamage;
 
 	int		damage;
 	int		splashDamage;	/* quad will increase this without increasing radius */
@@ -230,7 +230,7 @@ typedef struct {
 	spectatorState_t	spectatorState;
 	int			spectatorClient;	/* for chasecam and follow mode */
 	int			wins, losses;		/* tournament stats */
-	qboolean		teamLeader;		/* true when this client is a team leader */
+	qbool			teamLeader;		/* true when this client is a team leader */
 } clientSession_t;
 
 /*  */
@@ -242,17 +242,17 @@ typedef struct {
 typedef struct {
 	clientConnected_t	connected;
 	usercmd_t		cmd;			/* we would lose angles if not persistant */
-	qboolean		localClient;		/* true if "ip" info key is "localhost" */
-	qboolean		initialSpawn;		/* the first spawn should be at a cool location */
-	qboolean		predictItemPickup;	/* based on cg_predictItems userinfo */
-	qboolean		pmoveFixed;		/*  */
+	qbool			localClient;		/* true if "ip" info key is "localhost" */
+	qbool			initialSpawn;		/* the first spawn should be at a cool location */
+	qbool			predictItemPickup;	/* based on cg_predictItems userinfo */
+	qbool			pmoveFixed;		/*  */
 	char			netname[MAX_NETNAME];
 	int			maxHealth;	/* for handicapping */
 	int			enterTime;	/* level.time the client entered the game */
 	playerTeamState_t	teamState;	/* status in teamplay games */
 	int			voteCount;	/* to prevent people from constantly calling votes */
 	int			teamVoteCount;	/* to prevent people from constantly calling votes */
-	qboolean		teamInfo;	/* send team overlay updates? */
+	qbool			teamInfo;	/* send team overlay updates? */
 } clientPersistant_t;
 
 
@@ -266,9 +266,9 @@ struct gclient_s {
 	clientPersistant_t	pers;
 	clientSession_t		sess;
 
-	qboolean		readyToExit;	/* wishes to leave the intermission */
+	qbool			readyToExit;	/* wishes to leave the intermission */
 
-	qboolean		noclip;
+	qbool			noclip;
 
 	int			lastCmdTime;	/* level.time of last usercmd_t, for EF_CONNECTION */
 	/* we can't just use pers.lastCommand.time, because
@@ -285,7 +285,7 @@ struct gclient_s {
 	int		damage_blood;		/* damage taken out of health */
 	int		damage_knockback;	/* impact damage */
 	vec3_t		damage_from;		/* origin for vector calculation */
-	qboolean	damage_fromWorld;	/* if true, don't use the damage_from vector */
+	qbool		damage_fromWorld;	/* if true, don't use the damage_from vector */
 
 	int		accurateCount;	/* for "impressive" reward sound */
 
@@ -300,14 +300,14 @@ struct gclient_s {
 	/* timers */
 	int		respawnTime;		/* can respawn when time > this, force after g_forcerespwan */
 	int		inactivityTime;		/* kick players when time > this */
-	qboolean	inactivityWarning;	/* qtrue if the five seoond warning has been given */
+	qbool		inactivityWarning;	/* qtrue if the five seoond warning has been given */
 	int		rewardTime;		/* clear the EF_AWARD_IMPRESSIVE, etc when time > this */
 
 	int		airOutTime;
 
 	int		lastKillTime;	/* for multiple kill rewards */
 
-	qboolean	fireHeld;	/* used for hook */
+	qbool		fireHeld;	/* used for hook */
 	gentity_t	*hook;		/* grapple hook if out */
 
 	int		switchTeamTime;	/* time the player switched teams */
@@ -356,10 +356,10 @@ typedef struct {
 	int		teamScores[TEAM_NUM_TEAMS];
 	int		lastTeamLocationTime;	/* last time of client team location update */
 
-	qboolean	newSession;	/* don't use any old session data, because */
+	qbool		newSession;	/* don't use any old session data, because */
 	/* we changed gametype */
 
-	qboolean	restarted;	/* waiting for a map_restart to fire */
+	qbool		restarted;	/* waiting for a map_restart to fire */
 
 	int		numConnectedClients;
 	int		numNonSpectatorClients;		/* includes connecting clients */
@@ -388,7 +388,7 @@ typedef struct {
 	int	numteamVotingClients[2];	/* set by CalculateRanks */
 
 	/* spawn variables */
-	qboolean	spawning;	/* the G_Spawn*() functions are valid */
+	qbool		spawning;	/* the G_Spawn*() functions are valid */
 	int		numSpawnVars;
 	char		*spawnVars[MAX_SPAWN_VARS][2];	/* key / value pairs */
 	int		numSpawnVarChars;
@@ -402,12 +402,12 @@ typedef struct {
 	 * kills during this delay */
 	int		intermissiontime;	/* time the intermission was started */
 	char		*changemap;
-	qboolean	readyToExit;	/* at least one client wants to exit */
+	qbool		readyToExit;	/* at least one client wants to exit */
 	int		exitTime;
 	vec3_t		intermission_origin;	/* also used for spectator spawns */
 	vec3_t		intermission_angle;
 
-	qboolean	locationLinked;	/* target_locations get linked */
+	qbool		locationLinked;	/* target_locations get linked */
 	gentity_t	*locationHead;	/* head of the location list */
 	int		bodyQueIndex;	/* dead bodies */
 	gentity_t	*bodyQue[BODY_QUEUE_SIZE];
@@ -420,13 +420,13 @@ typedef struct {
 /*
  * g_spawn.c
  *  */
-qboolean        G_SpawnString(const char *key, const char *defaultString,
+qbool        G_SpawnString(const char *key, const char *defaultString,
 			      char **out);
 /* spawn string returns a temporary reference, you must CopyString() if you want to keep it */
-qboolean        G_SpawnFloat(const char *key, const char *defaultString,
+qbool        G_SpawnFloat(const char *key, const char *defaultString,
 			     float *out);
-qboolean        G_SpawnInt(const char *key, const char *defaultString, int *out);
-qboolean        G_SpawnVector(const char *key, const char *defaultString,
+qbool        G_SpawnInt(const char *key, const char *defaultString, int *out);
+qbool        G_SpawnVector(const char *key, const char *defaultString,
 			      float *out);
 void            G_SpawnEntitiesFromString(void);
 char*G_NewString(const char *string);
@@ -480,7 +480,7 @@ gentity_t*G_Spawn(void);
 gentity_t*G_TempEntity(vec3_t origin, int event);
 void    G_Sound(gentity_t *ent, int channel, int soundIndex);
 void    G_FreeEntity(gentity_t *e);
-qboolean        G_EntitiesFree(void);
+qbool        G_EntitiesFree(void);
 
 void    G_TouchTriggers(gentity_t *ent);
 void    G_TouchSolids(gentity_t *ent);
@@ -499,11 +499,11 @@ const char*BuildShaderStateConfig(void);
 /*
  * g_combat.c
  *  */
-qboolean CanDamage(gentity_t *targ, vec3_t origin);
+qbool CanDamage(gentity_t *targ, vec3_t origin);
 void G_Damage(gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
 	      vec3_t dir, vec3_t point, int damage, int dflags,
 	      int mod);
-qboolean G_RadiusDamage(vec3_t origin, gentity_t *attacker, float damage,
+qbool G_RadiusDamage(vec3_t origin, gentity_t *attacker, float damage,
 			float radius, gentity_t *ignore,
 			int mod);
 int G_InvulnerabilityEffect(gentity_t *targ, vec3_t dir, vec3_t point,
@@ -569,11 +569,11 @@ void DropPortalDestination(gentity_t *ent);
 /*
  * g_weapon.c
  *  */
-qboolean LogAccuracyHit(gentity_t *target, gentity_t *attacker);
+qbool LogAccuracyHit(gentity_t *target, gentity_t *attacker);
 void CalcMuzzlePoint(gentity_t *ent, vec3_t forward, vec3_t right, vec3_t up,
 		     vec3_t muzzlePoint);
 void SnapVectorTowards(vec3_t v, vec3_t to);
-qboolean CheckGauntletAttack(gentity_t *ent);
+qbool CheckGauntletAttack(gentity_t *ent);
 void Weapon_HookFree(gentity_t *ent);
 void Weapon_HookThink(gentity_t *ent);
 
@@ -586,7 +586,7 @@ int TeamLeader(int team);
 team_t PickTeam(int ignoreClientNum);
 void SetClientViewAngle(gentity_t *ent, vec3_t angle);
 gentity_t*SelectSpawnPoint(vec3_t avoidPoint, vec3_t origin, vec3_t angles,
-			   qboolean isbot);
+			   qbool isbot);
 void CopyToBodyQue(gentity_t *ent);
 void ClientRespawn(gentity_t *ent);
 void BeginIntermission(void);
@@ -599,14 +599,14 @@ void player_die(gentity_t *self, gentity_t *inflictor, gentity_t *attacker,
 		int mod);
 void AddScore(gentity_t *ent, vec3_t origin, int score);
 void CalculateRanks(void);
-qboolean SpotWouldTelefrag(gentity_t *spot);
+qbool SpotWouldTelefrag(gentity_t *spot);
 
 /*
  * g_svcmds.c
  *  */
-qboolean        ConsoleCommand(void);
+qbool        ConsoleCommand(void);
 void G_ProcessIPBans(void);
-qboolean G_FilterPacket(char *from);
+qbool G_FilterPacket(char *from);
 
 /*
  * g_weapon.c
@@ -650,7 +650,7 @@ void QDECL G_Error(const char *fmt,
 /*
  * g_client.c
  *  */
-char*ClientConnect(int clientNum, qboolean firstTime, qboolean isBot);
+char*ClientConnect(int clientNum, qbool firstTime, qbool isBot);
 void ClientUserinfoChanged(int clientNum);
 void ClientDisconnect(int clientNum);
 void ClientBegin(int clientNum);
@@ -666,9 +666,9 @@ void G_RunClient(gentity_t *ent);
 /*
  * g_team.c
  *  */
-qboolean OnSameTeam(gentity_t *ent1, gentity_t *ent2);
+qbool OnSameTeam(gentity_t *ent1, gentity_t *ent2);
 void Team_CheckDroppedItem(gentity_t *dropped);
-qboolean CheckObeliskAttack(gentity_t *obelisk, gentity_t *attacker);
+qbool CheckObeliskAttack(gentity_t *obelisk, gentity_t *attacker);
 
 /*
  * g_mem.c
@@ -696,12 +696,12 @@ void Svcmd_AbortPodium_f(void);
 /*
  * g_bot.c
  *  */
-void G_InitBots(qboolean restart);
+void G_InitBots(qbool restart);
 char*G_GetBotInfoByNumber(int num);
 char*G_GetBotInfoByName(const char *name);
 void G_CheckBotSpawn(void);
 void G_RemoveQueuedBotBegin(int clientNum);
-qboolean G_BotConnect(int clientNum, qboolean restart);
+qbool G_BotConnect(int clientNum, qbool restart);
 void Svcmd_AddBot_f(void);
 void Svcmd_BotList_f(void);
 void BotInterbreedEndMatch(void);
@@ -720,8 +720,8 @@ int BotAISetup(int restart);
 int BotAIShutdown(int restart);
 int BotAILoadMap(int restart);
 int BotAISetupClient(int client, struct bot_settings_s *settings,
-		     qboolean restart);
-int BotAIShutdownClient(int client, qboolean restart);
+		     qbool restart);
+int BotAIShutdownClient(int client, qbool restart);
 int BotAIStartFrame(int time);
 void BotTestAAS(vec3_t origin);
 
@@ -825,21 +825,21 @@ void    trap_Trace(trace_t *results, const vec3_t start, const vec3_t mins,
 		   const vec3_t maxs, const vec3_t end, int passEntityNum,
 		   int contentmask);
 int             trap_PointContents(const vec3_t point, int passEntityNum);
-qboolean trap_InPVS(const vec3_t p1, const vec3_t p2);
-qboolean trap_InPVSIgnorePortals(const vec3_t p1, const vec3_t p2);
-void    trap_AdjustAreaPortalState(gentity_t *ent, qboolean open);
-qboolean trap_AreasConnected(int area1, int area2);
+qbool trap_InPVS(const vec3_t p1, const vec3_t p2);
+qbool trap_InPVSIgnorePortals(const vec3_t p1, const vec3_t p2);
+void    trap_AdjustAreaPortalState(gentity_t *ent, qbool open);
+qbool trap_AreasConnected(int area1, int area2);
 void    trap_LinkEntity(gentity_t *ent);
 void    trap_UnlinkEntity(gentity_t *ent);
 int             trap_EntitiesInBox(const vec3_t mins, const vec3_t maxs,
 				   int *entityList,
 				   int maxcount);
-qboolean trap_EntityContact(const vec3_t mins, const vec3_t maxs,
+qbool trap_EntityContact(const vec3_t mins, const vec3_t maxs,
 			    const gentity_t *ent);
 int             trap_BotAllocateClient(void);
 void    trap_BotFreeClient(int clientNum);
 void    trap_GetUsercmd(int clientNum, usercmd_t *cmd);
-qboolean        trap_GetEntityToken(char *buffer, int bufferSize);
+qbool        trap_GetEntityToken(char *buffer, int bufferSize);
 
 int             trap_DebugPolygonCreate(int color, int numPoints, vec3_t *points);
 void    trap_DebugPolygonDelete(int id);

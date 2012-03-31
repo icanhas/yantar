@@ -84,7 +84,7 @@ Matrix16Transform(const matrix_t in1, const vec4_t in2, vec4_t out)
 	out[ 3] = in1[ 3] * in2[ 0] + in1[ 7] * in2[ 1] + in1[11] * in2[ 2] + in1[15] * in2[ 3];
 }
 
-qboolean
+qbool
 Matrix16Compare(const matrix_t a, const matrix_t b)
 {
 	return !(a[ 0] != b[ 0] || a[ 4] != b[ 4] || a[ 8] != b[ 8] || a[12] != b[12] ||
@@ -132,7 +132,7 @@ VectorLerp(vec3_t a, vec3_t b, float lerp, vec3_t c)
 	c[2] = a[2] * (1.0f - lerp) + b[2] * lerp;
 }
 
-qboolean
+qbool
 SpheresIntersect(vec3_t origin1, float radius1, vec3_t origin2, float radius2)
 {
 	float radiusSum = radius1 + radius2;

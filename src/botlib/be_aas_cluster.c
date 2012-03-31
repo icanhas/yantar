@@ -504,7 +504,7 @@ AAS_CreatePortals(void)
  * // Returns:					-
  * // Changes Globals:		-
  * //===========================================================================
- * qboolean AAS_CanMergeAreas(int *areanums, int numareas)
+ * qbool AAS_CanMergeAreas(int *areanums, int numareas)
  * {
  *      int i, j, s, face1num, face2num, side1, side2, fn1, fn2;
  *      aas_face_t *face1, *face2;
@@ -558,7 +558,7 @@ AAS_CreatePortals(void)
  * // Returns:					-
  * // Changes Globals:		-
  * //===========================================================================
- * qboolean AAS_NonConvexEdges(aas_edge_t *edge1, aas_edge_t *edge2, int side1, int side2, int planenum)
+ * qbool AAS_NonConvexEdges(aas_edge_t *edge1, aas_edge_t *edge2, int side1, int side2, int planenum)
  * {
  *      int i;
  *      vec3_t edgevec1, edgevec2, normal1, normal2;
@@ -592,7 +592,7 @@ AAS_CreatePortals(void)
  * // Returns:					-
  * // Changes Globals:		-
  * //===========================================================================
- * qboolean AAS_CanMergeFaces(int *facenums, int numfaces, int planenum)
+ * qbool AAS_CanMergeFaces(int *facenums, int numfaces, int planenum)
  * {
  *      int i, j, s, edgenum1, edgenum2, side1, side2, en1, en2, ens;
  *      aas_face_t *face1, *face2, *otherface;
@@ -694,7 +694,7 @@ AAS_ConnectedAreas_r(int *areanums, int numareas, int *connectedareas,
  * Returns:					-
  * Changes Globals:		-
  * =========================================================================== */
-qboolean
+qbool
 AAS_ConnectedAreas(int *areanums, int numareas)
 {
 	int connectedareas[MAX_PORTALAREAS], i;

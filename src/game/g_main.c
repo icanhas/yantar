@@ -29,8 +29,8 @@ typedef struct {
 	char		*defaultString;
 	int		cvarFlags;
 	int		modificationCount;	/* for tracking changes */
-	qboolean	trackChange;		/* track this variable, and announce if changed */
-	qboolean	teamShader;		/* track and if changed, update shader state */
+	qbool		trackChange;		/* track this variable, and announce if changed */
+	qbool		teamShader;		/* track and if changed, update shader state */
 } cvarTable_t;
 
 gentity_t	g_entities[MAX_GENTITIES];
@@ -353,7 +353,7 @@ G_RegisterCvars(void)
 {
 	int i;
 	cvarTable_t	*cv;
-	qboolean	remapped = qfalse;
+	qbool		remapped = qfalse;
 
 	for(i = 0, cv = gameCvarTable; i < gameCvarTableSize; i++, cv++){
 		trap_Cvar_Register(cv->vmCvar, cv->cvarName,
@@ -386,7 +386,7 @@ G_UpdateCvars(void)
 {
 	int i;
 	cvarTable_t	*cv;
-	qboolean	remapped = qfalse;
+	qbool		remapped = qfalse;
 
 	for(i = 0, cv = gameCvarTable; i < gameCvarTableSize; i++, cv++)
 		if(cv->vmCvar){
@@ -1164,7 +1164,7 @@ LogExit(const char *string)
 	int i, numSorted;
 	gclient_t	*cl;
 #ifdef MISSIONPACK
-	qboolean	won = qtrue;
+	qbool		won = qtrue;
 #endif
 	G_LogPrintf("Exit: %s\n", string);
 
@@ -1308,7 +1308,7 @@ CheckIntermissionExit(void)
 /*
  * ScoreIsTied
  */
-qboolean
+qbool
 ScoreIsTied(void)
 {
 	int a, b;
@@ -1510,7 +1510,7 @@ CheckTournament(void)
 	}else if(g_gametype.integer != GT_SINGLE_PLAYER && level.warmupTime !=
 		 0){
 		int counts[TEAM_NUM_TEAMS];
-		qboolean notEnough = qfalse;
+		qbool notEnough = qfalse;
 
 		if(g_gametype.integer > GT_TEAM){
 			counts[TEAM_BLUE] = TeamCount(-1, TEAM_BLUE);

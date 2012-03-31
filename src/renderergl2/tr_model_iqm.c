@@ -23,7 +23,7 @@
 
 #define LL(x) x=LittleLong(x)
 
-static qboolean
+static qbool
 IQM_CheckRange(iqmHeader_t *header, int offset,
 	       int count,int size)
 {
@@ -126,7 +126,7 @@ Matrix34Invert(float *inMat, float *outMat)
  *
  * Load an IQM model and compute the joint matrices for every frame.
  */
-qboolean
+qbool
 R_LoadIQM(model_t *mod, void *buffer, int filesize, const char *mod_name)
 {
 	iqmHeader_t *header;
@@ -754,7 +754,7 @@ R_AddIQMSurfaces(trRefEntity_t *ent)
 	iqmData_t	*data;
 	srfIQModel_t *surface;
 	int		i, j;
-	qboolean	personalModel;
+	qbool		personalModel;
 	int		cull;
 	int		fogNum;
 	shader_t	*shader;

@@ -24,7 +24,7 @@
 /*
  * R_CheckFBO
  */
-qboolean
+qbool
 R_CheckFBO(const FBO_t * fbo)
 {
 	int	code;
@@ -137,7 +137,7 @@ FBO_CreateBuffer(FBO_t *fbo, int format, int index)
 {
 	uint32_t	*pRenderBuffer;
 	GLenum		attachment;
-	qboolean	absent;
+	qbool		absent;
 
 	switch(format){
 	case GL_RGB:

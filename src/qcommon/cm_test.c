@@ -377,7 +377,7 @@ CM_FloodAreaConnections(void)
  *
  */
 void
-CM_AdjustAreaPortalState(int area1, int area2, qboolean open)
+CM_AdjustAreaPortalState(int area1, int area2, qbool open)
 {
 	if(area1 < 0 || area2 < 0)
 		return;
@@ -404,7 +404,7 @@ CM_AdjustAreaPortalState(int area1, int area2, qboolean open)
  * CM_AreasConnected
  *
  */
-qboolean
+qbool
 CM_AreasConnected(int area1, int area2)
 {
 #ifndef BSPC
@@ -466,7 +466,7 @@ CM_WriteAreaBits(byte *buffer, int area)
 /*
  * CM_BoundsIntersect
  */
-qboolean
+qbool
 CM_BoundsIntersect(const vec3_t mins, const vec3_t maxs, const vec3_t mins2,
 		   const vec3_t maxs2)
 {
@@ -484,7 +484,7 @@ CM_BoundsIntersect(const vec3_t mins, const vec3_t maxs, const vec3_t mins2,
 /*
  * CM_BoundsIntersectPoint
  */
-qboolean
+qbool
 CM_BoundsIntersectPoint(const vec3_t mins, const vec3_t maxs, const vec3_t point)
 {
 	if(maxs[0] < point[0] - SURFACE_CLIP_EPSILON ||

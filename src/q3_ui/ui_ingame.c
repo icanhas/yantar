@@ -67,7 +67,7 @@ static ingamemenu_t s_ingame;
  * InGame_RestartAction
  */
 static void
-InGame_RestartAction(qboolean result)
+InGame_RestartAction(qbool result)
 {
 	if(!result)
 		return;
@@ -81,7 +81,7 @@ InGame_RestartAction(qboolean result)
  * InGame_QuitAction
  */
 static void
-InGame_QuitAction(qboolean result)
+InGame_QuitAction(qbool result)
 {
 	if(!result)
 		return;

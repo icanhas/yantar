@@ -40,9 +40,9 @@ int myargc;
 char	**myargv;
 
 char	com_token[1024];
-qboolean	com_eof;
+qbool		com_eof;
 
-qboolean	archive;
+qbool		archive;
 char archivedir[1024];
 
 
@@ -149,7 +149,7 @@ Error(const char *error, ...)
 #endif
 
 /* only printf if in verbose mode */
-qboolean verbose = qfalse;
+qbool verbose = qfalse;
 void
 qprintf(const char *format, ...)
 {
@@ -166,7 +166,7 @@ qprintf(const char *format, ...)
 
 #ifdef WIN32
 HWND	hwndOut = NULL;
-qboolean lookedForServer = qfalse;
+qbool lookedForServer = qfalse;
 UINT	wm_BroadcastCommand = -1;
 #endif
 
@@ -674,7 +674,7 @@ SafeWrite(FILE *f, const void *buffer, int count)
 /*
  * FileExists
  */
-qboolean
+qbool
 FileExists(const char *filename)
 {
 	FILE *f;

@@ -104,7 +104,7 @@ Cmd_Score_f(gentity_t *ent)
 /*
  * CheatsOk
  */
-qboolean
+qbool
 CheatsOk(gentity_t *ent)
 {
 	if(!g_cheats.integer){
@@ -209,7 +209,7 @@ Cmd_Give_f(gentity_t *ent)
 	char	*name;
 	gitem_t *it;
 	int	i;
-	qboolean	give_all;
+	qbool		give_all;
 	gentity_t *it_ent;
 	trace_t		trace;
 
@@ -873,7 +873,7 @@ G_Say(gentity_t *ent, gentity_t *target, int mode, const char *chatText)
  * Cmd_Say_f
  */
 static void
-Cmd_Say_f(gentity_t *ent, int mode, qboolean arg0)
+Cmd_Say_f(gentity_t *ent, int mode, qbool arg0)
 {
 	char *p;
 
@@ -926,7 +926,7 @@ Cmd_Tell_f(gentity_t *ent)
 
 static void
 G_VoiceTo(gentity_t *ent, gentity_t *other, int mode, const char *id,
-	  qboolean voiceonly)
+	  qbool voiceonly)
 {
 	int color;
 	char *cmd;
@@ -960,7 +960,7 @@ G_VoiceTo(gentity_t *ent, gentity_t *other, int mode, const char *id,
 
 void
 G_Voice(gentity_t *ent, gentity_t *target, int mode, const char *id,
-	qboolean voiceonly)
+	qbool voiceonly)
 {
 	int j;
 	gentity_t *other;
@@ -988,7 +988,7 @@ G_Voice(gentity_t *ent, gentity_t *target, int mode, const char *id,
  * Cmd_Voice_f
  */
 static void
-Cmd_Voice_f(gentity_t *ent, int mode, qboolean arg0, qboolean voiceonly)
+Cmd_Voice_f(gentity_t *ent, int mode, qbool arg0, qbool voiceonly)
 {
 	char *p;
 
@@ -1007,7 +1007,7 @@ Cmd_Voice_f(gentity_t *ent, int mode, qboolean arg0, qboolean voiceonly)
  * Cmd_VoiceTell_f
  */
 static void
-Cmd_VoiceTell_f(gentity_t *ent, qboolean voiceonly)
+Cmd_VoiceTell_f(gentity_t *ent, qbool voiceonly)
 {
 	int targetNum;
 	gentity_t	*target;

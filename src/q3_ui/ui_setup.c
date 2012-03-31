@@ -69,7 +69,7 @@ static setupMenuInfo_t setupMenuInfo;
  * Setup_ResetDefaults_Action
  */
 static void
-Setup_ResetDefaults_Action(qboolean result)
+Setup_ResetDefaults_Action(qbool result)
 {
 	if(!result)
 		return;

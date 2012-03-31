@@ -26,7 +26,7 @@
 #include "../qcommon/q_shared.h"
 #include "../qcommon/qcommon.h"
 
-qboolean
+qbool
 SNDDMA_Init(void)
 {
 	return qfalse;
@@ -54,7 +54,7 @@ SNDDMA_Submit(void)
 }
 
 sfxHandle_t
-S_RegisterSound(const char *name, qboolean compressed)
+S_RegisterSound(const char *name, qbool compressed)
 {
 	return 0;
 }

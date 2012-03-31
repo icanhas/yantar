@@ -37,7 +37,7 @@
 #include <fenv.h>
 #include <sys/wait.h>
 
-qboolean stdinIsATTY;
+qbool stdinIsATTY;
 
 /* Used to determine where to store user-specific files */
 static char homePath[ MAX_OSPATH ] = { 0 };
@@ -127,7 +127,7 @@ Sys_Milliseconds(void)
 /*
  * Sys_RandomBytes
  */
-qboolean
+qbool
 Sys_RandomBytes(byte *string, int len)
 {
 	FILE *fp;
@@ -174,7 +174,7 @@ Sys_GetClipboardData(void)
  *
  * TODO
  */
-qboolean
+qbool
 Sys_LowPhysicalMemory(void)
 {
 	return qfalse;
@@ -201,7 +201,7 @@ Sys_Dirname(char *path)
 /*
  * Sys_Mkdir
  */
-qboolean
+qbool
 Sys_Mkdir(const char *path)
 {
 	int result = mkdir(path, 0750);
@@ -331,11 +331,11 @@ Sys_ListFilteredFiles(const char *basedir, char *subdirs, char *filter,
 char **
 Sys_ListFiles(const char *directory, const char *extension, char *filter,
 	      int *numfiles,
-	      qboolean wantsubs)
+	      qbool wantsubs)
 {
 	struct dirent *d;
 	DIR	*fdir;
-	qboolean dironly = wantsubs;
+	qbool dironly = wantsubs;
 	char	search[MAX_OSPATH];
 	int	nfiles;
 	char	**listCopy;
@@ -680,7 +680,7 @@ Sys_Dialog(dialogType_t type, const char *message, const char *title)
 					       const char *);
 
 	const char	*session = getenv("DESKTOP_SESSION");
-	qboolean	tried[ NUM_DIALOG_PROGRAMS ] = { qfalse };
+	qbool		tried[ NUM_DIALOG_PROGRAMS ] = { qfalse };
 	dialogCommandBuilder_t	commands[ NUM_DIALOG_PROGRAMS ] = { NULL };
 	dialogCommandType_t	preferredCommandType = NONE;
 
@@ -826,7 +826,7 @@ Sys_PID(void)
 /*
  * Sys_PIDIsRunning
  */
-qboolean
+qbool
 Sys_PIDIsRunning(int pid)
 {
 	return kill(pid, 0) == 0;

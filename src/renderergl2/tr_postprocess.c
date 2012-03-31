@@ -316,7 +316,7 @@ RB_RadialBlur(FBO_t *srcFbo, FBO_t *dstFbo, int passes, float stretch, float x, 
 }
 
 
-static qboolean
+static qbool
 RB_UpdateSunFlareVis(void)
 {
 	GLuint sampleCount = 0;
@@ -352,7 +352,7 @@ RB_GodRays(void)
 	vec3_t	dir;
 	float	dot;
 	const float cutoff = 0.25f;
-	qboolean	colorize = qtrue;
+	qbool		colorize = qtrue;
 
 	float		w, h, w2, h2;
 	matrix_t	mvp;
@@ -454,7 +454,7 @@ RB_GodRays(void)
 #endif
 
 static void
-RB_BlurAxis(FBO_t *srcFbo, FBO_t *dstFbo, float strength, qboolean horizontal)
+RB_BlurAxis(FBO_t *srcFbo, FBO_t *dstFbo, float strength, qbool horizontal)
 {
 	float dx, dy;
 	float xmul, ymul;

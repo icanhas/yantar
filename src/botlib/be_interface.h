@@ -37,7 +37,7 @@ typedef struct botlib_globals_s {
 	int		maxclients;	/* maximum number of clients */
 	float		time;		/* the global time */
 #ifdef DEBUG
-	qboolean	debug;	/* true if debug is on */
+	qbool		debug;	/* true if debug is on */
 	int		goalareanum;
 	vec3_t		goalorigin;
 	int		runai;

@@ -665,7 +665,7 @@ static const char *fallbackCalcLevels4xShader_fp =
 
 
 static void
-GLSL_PrintInfoLog(GLhandleARB object, qboolean developerOnly)
+GLSL_PrintInfoLog(GLhandleARB object, qbool developerOnly)
 {
 	char	*msg;
 	static char msgPart[1024];
@@ -947,7 +947,7 @@ GLSL_DumpText(const char *shaderText, int size, const char *name, GLenum shaderT
 
 static int
 GLSL_LoadGPUShaderText(const char *name, const char *fallback,
-		       GLenum shaderType, char *dest, int destSize, qboolean dump)
+		       GLenum shaderType, char *dest, int destSize, qbool dump)
 {
 	char filename[MAX_QPATH];
 	GLcharARB	*buffer = NULL;
@@ -1152,7 +1152,7 @@ GLSL_InitGPUShader2(shaderProgram_t * program, const char *name, int attribs, co
 
 static int
 GLSL_InitGPUShader(shaderProgram_t * program, const char *name,
-		   int attribs, qboolean fragmentShader, const GLcharARB *extra, qboolean addHeader,
+		   int attribs, qbool fragmentShader, const GLcharARB *extra, qbool addHeader,
 		   const char *fallback_vp, const char *fallback_fp, int numUniforms)
 {
 	char	vpCode[32000];

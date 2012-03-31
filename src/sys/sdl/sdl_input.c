@@ -50,9 +50,9 @@ static cvar_t *in_keyboardDebug = NULL;
 
 static SDL_Joystick *stick = NULL;
 
-static qboolean mouseAvailable = qfalse;
-static qboolean mouseActive = qfalse;
-static qboolean keyRepeatEnabled = qfalse;
+static qbool mouseAvailable = qfalse;
+static qbool mouseActive = qfalse;
+static qbool keyRepeatEnabled = qfalse;
 
 static cvar_t	*in_mouse = NULL;
 #ifdef MACOS_X_ACCELERATION_HACK
@@ -75,7 +75,7 @@ static int vidRestartTime = 0;
  * IN_PrintKey
  */
 static void
-IN_PrintKey(const SDL_keysym *keysym, keyNum_t key, qboolean down)
+IN_PrintKey(const SDL_keysym *keysym, keyNum_t key, qbool down)
 {
 	if(down)
 		Com_Printf("+ ");
@@ -115,7 +115,7 @@ IN_PrintKey(const SDL_keysym *keysym, keyNum_t key, qboolean down)
 /*
  * IN_IsConsoleKey
  */
-static qboolean
+static qbool
 IN_IsConsoleKey(keyNum_t key, const unsigned char character)
 {
 	typedef struct consoleKey_s {
@@ -197,7 +197,7 @@ IN_IsConsoleKey(keyNum_t key, const unsigned char character)
  */
 static const char *
 IN_TranslateSDLToQ3Key(SDL_keysym *keysym,
-		       keyNum_t *key, qboolean down)
+		       keyNum_t *key, qbool down)
 {
 	static unsigned char buf[ 2 ] = { '\0', '\0' };
 
@@ -522,7 +522,7 @@ static int hat_keys[16] = {
 
 
 struct {
-	qboolean	buttons[16];	/* !!! FIXME: these might be too many. */
+	qbool		buttons[16];	/* !!! FIXME: these might be too many. */
 	unsigned int	oldaxes;
 	int		oldaaxes[16];
 	unsigned int	oldhats;
@@ -615,7 +615,7 @@ IN_ShutdownJoystick(void)
 static void
 IN_JoyMove(void)
 {
-	qboolean joy_pressed[ARRAY_LEN(joy_keys)];
+	qbool joy_pressed[ARRAY_LEN(joy_keys)];
 	unsigned int	axes	= 0;
 	unsigned int	hats	= 0;
 	int	total = 0;
@@ -657,7 +657,7 @@ IN_JoyMove(void)
 		if(total > ARRAY_LEN(stick_state.buttons))
 			total = ARRAY_LEN(stick_state.buttons);
 		for(i = 0; i < total; i++){
-			qboolean pressed = (SDL_JoystickGetButton(stick, i) != 0);
+			qbool pressed = (SDL_JoystickGetButton(stick, i) != 0);
 			if(pressed != stick_state.buttons[i]){
 				Com_QueueEvent(0, SE_KEY, K_JOY1 + i, pressed, 0, NULL);
 				stick_state.buttons[i] = pressed;
@@ -896,7 +896,7 @@ IN_ProcessEvents(void)
 void
 IN_Frame(void)
 {
-	qboolean loading;
+	qbool loading;
 
 	IN_JoyMove( );
 	IN_ProcessEvents( );

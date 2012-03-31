@@ -52,7 +52,7 @@ typedef u_long ioctlarg_t;
 #       define socketError	WSAGetLastError( )
 
 static WSADATA	winsockdata;
-static qboolean winsockInitialized = qfalse;
+static qbool winsockInitialized = qfalse;
 
 #else
 
@@ -89,7 +89,7 @@ typedef int ioctlarg_t;
 
 #endif
 
-static qboolean usingSocks = qfalse;
+static qbool usingSocks = qfalse;
 static int networkingEnabled = 0;
 
 static cvar_t	*net_enabled;
@@ -265,7 +265,7 @@ SearchAddrInfo(struct addrinfo *hints, sa_family_t family)
 /*
  * Sys_StringToSockaddr
  */
-static qboolean
+static qbool
 Sys_StringToSockaddr(const char *s, struct sockaddr *sadr, int sadr_len,
 		     sa_family_t family)
 {
@@ -349,7 +349,7 @@ Sys_SockaddrToString(char *dest, int destlen, struct sockaddr *input)
 /*
  * Sys_StringToAdr
  */
-qboolean
+qbool
 Sys_StringToAdr(const char *s, netadr_t *a, netadrtype_t family)
 {
 	struct sockaddr_storage sadr;
@@ -379,7 +379,7 @@ Sys_StringToAdr(const char *s, netadr_t *a, netadrtype_t family)
  *
  * Compare without port, and up to the bit number given in netmask.
  */
-qboolean
+qbool
 NET_CompareBaseAdrMask(netadr_t a, netadr_t b, int netmask)
 {
 	byte	cmpmask, *addra, *addrb;
@@ -432,7 +432,7 @@ NET_CompareBaseAdrMask(netadr_t a, netadr_t b, int netmask)
  *
  * Compares without the port
  */
-qboolean
+qbool
 NET_CompareBaseAdr(netadr_t a, netadr_t b)
 {
 	return NET_CompareBaseAdrMask(a, b, -1);
@@ -478,7 +478,7 @@ NET_AdrToStringwPort(netadr_t a)
 }
 
 
-qboolean
+qbool
 NET_CompareAdr(netadr_t a, netadr_t b)
 {
 	if(!NET_CompareBaseAdr(a, b))
@@ -494,7 +494,7 @@ NET_CompareAdr(netadr_t a, netadr_t b)
 }
 
 
-qboolean
+qbool
 NET_IsLocalAddress(netadr_t adr)
 {
 	return adr.type == NA_LOOPBACK;
@@ -511,7 +511,7 @@ NET_IsLocalAddress(netadr_t adr)
 int recvfromCount;
 #endif
 
-qboolean
+qbool
 NET_GetPacket(netadr_t *net_from, msg_t *net_message, fd_set *fdr)
 {
 	int ret;
@@ -716,11 +716,11 @@ Sys_SendPacket(int length, const void *data, netadr_t to)
  *
  * LAN clients will have their rate var ignored
  */
-qboolean
+qbool
 Sys_IsLANAddress(netadr_t adr)
 {
 	int index, run, addrsize;
-	qboolean differed;
+	qbool differed;
 	byte *compareadr, *comparemask, *compareip;
 
 	if(adr.type == NA_LOOPBACK)
@@ -1088,7 +1088,7 @@ NET_OpenSocks(int port)
 	struct sockaddr_in	address;
 	struct hostent		*h;
 	int len;
-	qboolean rfc1929;
+	qbool rfc1929;
 	unsigned char buf[64];
 
 	usingSocks = qfalse;
@@ -1430,7 +1430,7 @@ NET_OpenIP(void)
 /*
  * NET_GetCvars
  */
-static qboolean
+static qbool
 NET_GetCvars(void)
 {
 	int modified;
@@ -1514,11 +1514,11 @@ NET_GetCvars(void)
  * NET_Config
  */
 void
-NET_Config(qboolean enableNetworking)
+NET_Config(qbool enableNetworking)
 {
-	qboolean	modified;
-	qboolean	stop;
-	qboolean	start;
+	qbool		modified;
+	qbool		stop;
+	qbool		start;
 
 	/* get any latched changes to cvars */
 	modified = NET_GetCvars();

@@ -123,7 +123,7 @@ static void
 UI_CDKeyMenu_DrawKey(void *self)
 {
 	menufield_s	*f;
-	qboolean	focus;
+	qbool		focus;
 	int	style;
 	char	c;
 	float                   *color;

@@ -1573,7 +1573,7 @@ CG_DrawWeaponSelect(void)
 /*
  * CG_WeaponSelectable
  */
-static qboolean
+static qbool
 CG_WeaponSelectable(int i)
 {
 	if(!cg.snap->ps.ammo[i])
@@ -1770,8 +1770,8 @@ CG_MissileHitWall(int weapon, int clientNum, vec3_t origin, vec3_t dir,
 	vec3_t	lightColor;
 	localEntity_t   *le;
 	int	r;
-	qboolean	alphaFade;
-	qboolean	isSprite;
+	qbool		alphaFade;
+	qbool		isSprite;
 	int duration;
 	vec3_t		sprOrg;
 	vec3_t		sprVel;
@@ -2200,7 +2200,7 @@ CG_Tracer(vec3_t source, vec3_t dest)
 /*
  * CG_CalcMuzzlePoint
  */
-static qboolean
+static qbool
 CG_CalcMuzzlePoint(int entityNum, vec3_t muzzle)
 {
 	vec3_t	forward;
@@ -2240,7 +2240,7 @@ CG_CalcMuzzlePoint(int entityNum, vec3_t muzzle)
  * Renders bullet effects.
  */
 void
-CG_Bullet(vec3_t end, int sourceEntityNum, vec3_t normal, qboolean flesh,
+CG_Bullet(vec3_t end, int sourceEntityNum, vec3_t normal, qbool flesh,
 	  int fleshEntityNum)
 {
 	trace_t trace;

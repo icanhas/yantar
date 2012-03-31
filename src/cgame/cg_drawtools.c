@@ -166,7 +166,7 @@ CG_DrawChar(int x, int y, int width, int height, int ch)
  */
 void
 CG_DrawStringExt(int x, int y, const char *string, const float *setColor,
-		 qboolean forceColor, qboolean shadow, int charWidth,
+		 qbool forceColor, qbool shadow, int charWidth,
 		 int charHeight,
 		 int maxChars)
 {

@@ -22,7 +22,7 @@
 #include "../renderer/tr_local.h"
 
 
-qboolean (* qwglSwapIntervalEXT)(int interval);
+qbool (* qwglSwapIntervalEXT)(int interval);
 void	(* qglMultiTexCoord2fARB)(GLenum texture, float s, float t);
 void	(* qglActiveTextureARB)(GLenum texture);
 void	(* qglClientActiveTextureARB)(GLenum texture);
@@ -48,7 +48,7 @@ GLimp_Shutdown(void)
 }
 
 void
-GLimp_EnableLogging(qboolean enable)
+GLimp_EnableLogging(qbool enable)
 {
 }
 
@@ -57,7 +57,7 @@ GLimp_LogComment(char *comment)
 {
 }
 
-qboolean
+qbool
 QGL_Init(const char *dllname)
 {
 	return qtrue;

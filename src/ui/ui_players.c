@@ -456,7 +456,7 @@ UI_PlayerAnimation(playerInfo_t *pi, int *legsOld, int *legs,
  */
 static void
 UI_SwingAngles(float destination, float swingTolerance, float clampTolerance,
-	       float speed, float *angle, qboolean *swinging)
+	       float speed, float *angle, qbool *swinging)
 {
 	float	swing;
 	float	move;
@@ -880,7 +880,7 @@ UI_DrawPlayer(float x, float y, float w, float h, playerInfo_t *pi, int time)
 /*
  * UI_FileExists
  */
-static qboolean
+static qbool
 UI_FileExists(const char *filename)
 {
 	int len;
@@ -894,7 +894,7 @@ UI_FileExists(const char *filename)
 /*
  * UI_FindClientHeadFile
  */
-static qboolean
+static qbool
 UI_FindClientHeadFile(char *filename, int length, const char *teamName,
 		      const char *headModelName, const char *headSkinName,
 		      const char *base,
@@ -957,7 +957,7 @@ UI_FindClientHeadFile(char *filename, int length, const char *teamName,
 /*
  * UI_RegisterClientSkin
  */
-static qboolean
+static qbool
 UI_RegisterClientSkin(playerInfo_t *pi, const char *modelName,
 		      const char *skinName, const char *headModelName,
 		      const char *headSkinName,
@@ -1027,7 +1027,7 @@ UI_RegisterClientSkin(playerInfo_t *pi, const char *modelName,
 /*
  * UI_ParseAnimationFile
  */
-static qboolean
+static qbool
 UI_ParseAnimationFile(const char *filename, animation_t *animations)
 {
 	char	*text_p, *prev;
@@ -1139,7 +1139,7 @@ UI_ParseAnimationFile(const char *filename, animation_t *animations)
 /*
  * UI_RegisterClientModelname
  */
-qboolean
+qbool
 UI_RegisterClientModelname(playerInfo_t *pi, const char *modelSkinName,
 			   const char *headModelSkinName,
 			   const char *teamName)
@@ -1287,7 +1287,7 @@ void
 UI_PlayerInfo_SetInfo(playerInfo_t *pi, int legsAnim, int torsoAnim,
 		      vec3_t viewAngles, vec3_t moveAngles,
 		      weapon_t weaponNumber,
-		      qboolean chat)
+		      qbool chat)
 {
 	int currentAnim;
 	weapon_t weaponNum;

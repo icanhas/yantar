@@ -351,7 +351,7 @@ VM_DllSyscall(intptr_t arg, ...)
  * Load a .qvm file
  */
 vmHeader_t *
-VM_LoadQVM(vm_t *vm, qboolean alloc, qboolean unpure)
+VM_LoadQVM(vm_t *vm, qbool alloc, qbool unpure)
 {
 	int	dataLength;
 	int	i;
@@ -520,7 +520,7 @@ VM_LoadQVM(vm_t *vm, qboolean alloc, qboolean unpure)
  * even if the client is pure, so take "unpure" as argument.
  */
 vm_t *
-VM_Restart(vm_t *vm, qboolean unpure)
+VM_Restart(vm_t *vm, qbool unpure)
 {
 	vmHeader_t *header;
 

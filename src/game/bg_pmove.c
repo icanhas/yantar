@@ -335,7 +335,7 @@ PM_SetMovementDir(void)
 /*
  * PM_CheckJump
  */
-static qboolean
+static qbool
 PM_CheckJump(void)
 {
 	if(pm->ps->pm_flags & PMF_RESPAWNED)
@@ -374,7 +374,7 @@ PM_CheckJump(void)
 /*
  * PM_CheckWaterJump
  */
-static qboolean
+static qbool
 PM_CheckWaterJump(void)
 {
 	vec3_t	spot;
@@ -1273,7 +1273,7 @@ PM_Footsteps(void)
 {
 	float	bobmove;
 	int	old;
-	qboolean footstep;
+	qbool footstep;
 
 	/*
 	 * calculate speed and cycle to be used for

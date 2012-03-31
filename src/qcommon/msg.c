@@ -22,7 +22,7 @@
 
 static huffman_t	msgHuff;
 
-static qboolean		msgInit = qfalse;
+static qbool			msgInit = qfalse;
 
 int pcount[256];
 
@@ -188,7 +188,7 @@ MSG_ReadBits(msg_t *msg, int bits)
 {
 	int	value;
 	int	get;
-	qboolean sgn;
+	qbool sgn;
 	int	i, nbits;
 /*	FILE*	fp; */
 
@@ -918,7 +918,7 @@ netField_t entityStateFields[] =
 void
 MSG_WriteDeltaEntity(msg_t *msg, struct entityState_s *from,
 		     struct entityState_s *to,
-		     qboolean force)
+		     qbool force)
 {
 	int	i, lc;
 	int	numFields;

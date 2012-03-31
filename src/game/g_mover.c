@@ -110,7 +110,7 @@ G_RotatePoint(vec3_t point, vec3_t matrix[3])
  *
  * Returns qfalse if the move is blocked
  */
-qboolean
+qbool
 G_TryPushingEntity(gentity_t *check, gentity_t *pusher, vec3_t move,
 		   vec3_t amove)
 {
@@ -199,7 +199,7 @@ G_TryPushingEntity(gentity_t *check, gentity_t *pusher, vec3_t move,
 /*
  * G_CheckProxMinePosition
  */
-qboolean
+qbool
 G_CheckProxMinePosition(gentity_t *check)
 {
 	vec3_t	start, end;
@@ -218,7 +218,7 @@ G_CheckProxMinePosition(gentity_t *check)
 /*
  * G_TryPushingProxMine
  */
-qboolean
+qbool
 G_TryPushingProxMine(gentity_t *check, gentity_t *pusher, vec3_t move,
 		     vec3_t amove)
 {
@@ -258,7 +258,7 @@ void G_ExplodeMissile(gentity_t *ent);
  * otherwise riders would continue to slide.
  * If qfalse is returned, *obstacle will be the blocking entity
  */
-qboolean
+qbool
 G_MoverPush(gentity_t *pusher, vec3_t move, vec3_t amove, gentity_t **obstacle)
 {
 	int i, e;
@@ -703,7 +703,7 @@ InitMover(gentity_t *ent)
 	float	distance;
 	float	light;
 	vec3_t	color;
-	qboolean lightSet, colorSet;
+	qbool lightSet, colorSet;
 	char *sound;
 
 	/* if the "model2" key is set, use a seperate model

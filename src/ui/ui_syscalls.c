@@ -275,7 +275,7 @@ trap_S_StartLocalSound(sfxHandle_t sfx, int channelNum)
 }
 
 sfxHandle_t
-trap_S_RegisterSound(const char *sample, qboolean compressed)
+trap_S_RegisterSound(const char *sample, qbool compressed)
 {
 	return syscall(UI_S_REGISTERSOUND, sample, compressed);
 }
@@ -298,20 +298,20 @@ trap_Key_SetBinding(int keynum, const char *binding)
 	syscall(UI_KEY_SETBINDING, keynum, binding);
 }
 
-qboolean
+qbool
 trap_Key_IsDown(int keynum)
 {
 	return syscall(UI_KEY_ISDOWN, keynum);
 }
 
-qboolean
+qbool
 trap_Key_GetOverstrikeMode(void)
 {
 	return syscall(UI_KEY_GETOVERSTRIKEMODE);
 }
 
 void
-trap_Key_SetOverstrikeMode(qboolean state)
+trap_Key_SetOverstrikeMode(qbool state)
 {
 	syscall(UI_KEY_SETOVERSTRIKEMODE, state);
 }
@@ -431,7 +431,7 @@ trap_LAN_GetPingInfo(int n, char *buf, int buflen)
 }
 
 void
-trap_LAN_MarkServerVisible(int source, int n, qboolean visible)
+trap_LAN_MarkServerVisible(int source, int n, qbool visible)
 {
 	syscall(UI_LAN_MARKSERVERVISIBLE, source, n, visible);
 }
@@ -442,7 +442,7 @@ trap_LAN_ServerIsVisible(int source, int n)
 	return syscall(UI_LAN_SERVERISVISIBLE, source, n);
 }
 
-qboolean
+qbool
 trap_LAN_UpdateVisiblePings(int source)
 {
 	return syscall(UI_LAN_UPDATEVISIBLEPINGS, source);
@@ -582,7 +582,7 @@ trap_R_RemapShader(const char *oldShader, const char *newShader,
 	syscall(UI_R_REMAP_SHADER, oldShader, newShader, timeOffset);
 }
 
-qboolean
+qbool
 trap_VerifyCDKey(const char *key, const char *chksum)
 {
 	return syscall(UI_VERIFY_CDKEY, key, chksum);

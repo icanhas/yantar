@@ -54,10 +54,10 @@ typedef struct particle_s {
 	float			end;
 
 	float			startfade;
-	qboolean		rotate;
+	qbool			rotate;
 	int			snum;
 
-	qboolean		link;
+	qbool			link;
 
 	/* Ridah */
 	int	shaderAnim;
@@ -144,7 +144,7 @@ cparticle_t	*active_particles, *free_particles;
 cparticle_t	particles[MAX_PARTICLES];
 int cl_numparticles = MAX_PARTICLES;
 
-qboolean	initparticles = qfalse;
+qbool		initparticles = qfalse;
 vec3_t		vforward, vright, vup;
 vec3_t		rforward, rright, rup;
 
@@ -910,7 +910,7 @@ void
 CG_ParticleSnowFlurry(qhandle_t pshader, centity_t *cent)
 {
 	cparticle_t	*p;
-	qboolean	turb = qtrue;
+	qbool		turb = qtrue;
 
 	if(!pshader)
 		CG_Printf ("CG_ParticleSnowFlurry pshader == ZERO!\n");
@@ -1322,7 +1322,7 @@ CG_NewParticleArea(int num)
 }
 
 void
-CG_SnowLink(centity_t *cent, qboolean particleOn)
+CG_SnowLink(centity_t *cent, qbool particleOn)
 {
 	cparticle_t *p, *next;
 	int id;
@@ -1591,7 +1591,7 @@ CG_OilSlickRemove(centity_t *cent)
 	}
 }
 
-qboolean
+qbool
 ValidBloodPool(vec3_t start)
 {
 #define EXTRUDE_DIST 0.5
@@ -1634,7 +1634,7 @@ void
 CG_BloodPool(localEntity_t *le, qhandle_t pshader, trace_t *tr)
 {
 	cparticle_t	*p;
-	qboolean	legit;
+	qbool		legit;
 	vec3_t	start;
 	float	rndSize;
 

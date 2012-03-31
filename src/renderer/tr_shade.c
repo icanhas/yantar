@@ -62,7 +62,7 @@ R_DrawStripElements(int numIndexes, const glIndex_t *indexes, void (APIENTRY *el
 {
 	int i;
 	int last[3] = { -1, -1, -1 };
-	qboolean even;
+	qbool even;
 
 	c_begins++;
 
@@ -199,7 +199,7 @@ R_DrawElements(int numIndexes, const glIndex_t *indexes)
  */
 
 shaderCommands_t tess;
-static qboolean setArraysOnce;
+static qbool setArraysOnce;
 
 /*
  * R_BindAnimatedImage

@@ -500,8 +500,8 @@ G_RemoveQueuedBotBegin(int clientNum)
 /*
  * G_BotConnect
  */
-qboolean
-G_BotConnect(int clientNum, qboolean restart)
+qbool
+G_BotConnect(int clientNum, qbool restart)
 {
 	bot_settings_t settings;
 	char userinfo[MAX_INFO_STRING];
@@ -904,7 +904,7 @@ G_GetBotInfoByName(const char *name)
  * G_InitBots
  */
 void
-G_InitBots(qboolean restart)
+G_InitBots(qbool restart)
 {
 	int	fragLimit;
 	int	timeLimit;

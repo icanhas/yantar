@@ -37,7 +37,7 @@ static soundInterface_t si;
 /*
  * S_ValidateInterface
  */
-static qboolean
+static qbool
 S_ValidSoundInterface(soundInterface_t *si)
 {
 	if(!si->Shutdown) return qfalse;
@@ -139,7 +139,7 @@ S_StopAllSounds(void)
  * S_ClearLoopingSounds
  */
 void
-S_ClearLoopingSounds(qboolean killall)
+S_ClearLoopingSounds(qbool killall)
 {
 	if(si.ClearLoopingSounds)
 		si.ClearLoopingSounds(killall);
@@ -244,7 +244,7 @@ S_BeginRegistration(void)
  * S_RegisterSound
  */
 sfxHandle_t
-S_RegisterSound(const char *sample, qboolean compressed)
+S_RegisterSound(const char *sample, qbool compressed)
 {
 	if(si.RegisterSound)
 		return si.RegisterSound(sample, compressed);
@@ -408,7 +408,7 @@ void
 S_Init(void)
 {
 	cvar_t *cv;
-	qboolean started = qfalse;
+	qbool started = qfalse;
 
 	Com_Printf("------ Initializing Sound ------\n");
 

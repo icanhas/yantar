@@ -92,7 +92,7 @@ Com_StripExtension(const char *in, char *out, int destsize)
  * Com_CompareExtension: string compare the end of the strings and return
  * qtrue if strings match
  */
-qboolean
+qbool
 Com_CompareExtension(const char *in, const char *ext)
 {
 	int inlen, extlen;
@@ -336,7 +336,7 @@ Com_ParseWarning(char *format, ...)
 }
 
 static char *
-SkipWhitespace(char *data, qboolean *hasNewLines)
+SkipWhitespace(char *data, qbool *hasNewLines)
 {
 	int c;
 
@@ -359,7 +359,7 @@ Com_Compress(char *data_p)
 {
 	char	*in, *out;
 	int	c;
-	qboolean newline = qfalse, whitespace = qfalse;
+	qbool newline = qfalse, whitespace = qfalse;
 
 	in = out = data_p;
 	if(in != nil){
@@ -433,10 +433,10 @@ Com_Compress(char *data_p)
  * returned if the next token is a newline.
  */
 char *
-Com_ParseExt(char **data_p, qboolean allowLineBreaks)
+Com_ParseExt(char **data_p, qbool allowLineBreaks)
 {
 	int c, len;
-	qboolean	hasNewLines = qfalse;
+	qbool		hasNewLines = qfalse;
 	char		*data;
 
 	c = 0;
@@ -665,7 +665,7 @@ Q_isalpha(int c)
 	return (0);
 }
 
-qboolean
+qbool
 Q_isanumber(const char *s)
 {
 	char *p;
@@ -678,7 +678,7 @@ Q_isanumber(const char *s)
 	return *p == '\0';
 }
 
-qboolean
+qbool
 Q_isintegral(float f)
 {
 	return (int)f == f;
@@ -1144,7 +1144,7 @@ Info_RemoveKey_Big(char *s, const char *key)
  * Info_Validate: Some characters are illegal in info strings because they can
  * mess up the server's parsing
  */
-qboolean
+qbool
 Info_Validate(const char *s)
 {
 	if(strchr(s, '\"'))
@@ -1218,7 +1218,7 @@ Info_SetValueForKey_Big(char *s, const char *key, const char *value)
 	strcat (s, newi);
 }
 
-static qboolean
+static qbool
 Com_CharIsOneOfCharset(char c, char *set)
 {
 	int i;

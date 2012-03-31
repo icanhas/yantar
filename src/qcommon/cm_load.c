@@ -550,7 +550,7 @@ CM_Checksum(dheader_t *header)
  * Loads in the map and all submodels
  */
 void
-CM_LoadMap(const char *name, qboolean clientload, int *checksum)
+CM_LoadMap(const char *name, qbool clientload, int *checksum)
 {
 	union {
 		int	*i;

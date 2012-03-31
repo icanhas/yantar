@@ -87,7 +87,7 @@ typedef struct {
 	float		shadowPlane;	/* projection shadows go here, stencils go slightly lower */
 
 	vec3_t		axis[3];		/* rotation vectors */
-	qboolean	nonNormalizedAxes;	/* axis are not normalized, i.e. they have scale */
+	qbool		nonNormalizedAxes;	/* axis are not normalized, i.e. they have scale */
 	float		origin[3];		/* also used as MODEL_BEAM's "from" */
 	int		frame;			/* also used as MODEL_BEAM's diameter */
 
@@ -188,9 +188,9 @@ typedef struct {
 	glDriverType_t		driverType;
 	glHardwareType_t	hardwareType;
 
-	qboolean		deviceSupportsGamma;
+	qbool			deviceSupportsGamma;
 	textureCompression_t	textureCompression;
-	qboolean		textureEnvAddAvailable;
+	qbool			textureEnvAddAvailable;
 
 	int			vidWidth, vidHeight;
 	/* aspect is the screen's physical width / height, which may be different
@@ -203,9 +203,9 @@ typedef struct {
 	/* synonymous with "does rendering consume the entire screen?", therefore
 	 * a Voodoo or Voodoo2 will have this set to TRUE, as will a Win32 ICD that
 	 * used CDS. */
-	qboolean	isFullscreen;
-	qboolean	stereoEnabled;
-	qboolean	smpActive;	/* dual processor */
+	qbool		isFullscreen;
+	qbool		stereoEnabled;
+	qbool		smpActive;	/* dual processor */
 } glconfig_t;
 
 #endif	/* __TR_TYPES_H */

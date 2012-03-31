@@ -77,7 +77,7 @@ CG_CustomSound(int clientNum, const char *soundName)
  * Read a configuration file containing animation coutns and rates
  * models/players/visor/animation.cfg, etc
  */
-static qboolean
+static qbool
 CG_ParseAnimationFile(const char *filename, clientInfo_t *ci)
 {
 	char	*text_p, *prev;
@@ -283,7 +283,7 @@ CG_ParseAnimationFile(const char *filename, clientInfo_t *ci)
 /*
  * CG_FileExists
  */
-static qboolean
+static qbool
 CG_FileExists(const char *filename)
 {
 	int len;
@@ -297,7 +297,7 @@ CG_FileExists(const char *filename)
 /*
  * CG_FindClientModelFile
  */
-static qboolean
+static qbool
 CG_FindClientModelFile(char *filename, int length, clientInfo_t *ci,
 		       const char *teamName, const char *modelName,
 		       const char *skinName,
@@ -392,7 +392,7 @@ CG_FindClientModelFile(char *filename, int length, clientInfo_t *ci,
 /*
  * CG_FindClientHeadFile
  */
-static qboolean
+static qbool
 CG_FindClientHeadFile(char *filename, int length, clientInfo_t *ci,
 		      const char *teamName, const char *headModelName,
 		      const char *headSkinName,
@@ -485,7 +485,7 @@ CG_FindClientHeadFile(char *filename, int length, clientInfo_t *ci,
 /*
  * CG_RegisterClientSkin
  */
-static qboolean
+static qbool
 CG_RegisterClientSkin(clientInfo_t *ci, const char *teamName,
 		      const char *modelName, const char *skinName,
 		      const char *headModelName,
@@ -542,7 +542,7 @@ CG_RegisterClientSkin(clientInfo_t *ci, const char *teamName,
 /*
  * CG_RegisterClientModelname
  */
-static qboolean
+static qbool
 CG_RegisterClientModelname(clientInfo_t *ci, const char *modelName,
 			   const char *skinName, const char *headModelName,
 			   const char *headSkinName,
@@ -820,7 +820,7 @@ CG_CopyClientInfoModel(clientInfo_t *from, clientInfo_t *to)
 /*
  * CG_ScanForExistingClientInfo
  */
-static qboolean
+static qbool
 CG_ScanForExistingClientInfo(clientInfo_t *ci)
 {
 	int i;
@@ -1104,7 +1104,7 @@ CG_NewClientInfo(int clientNum)
 	/* scan for an existing clientinfo that matches this modelname
 	 * so we can avoid loading checks if possible */
 	if(!CG_ScanForExistingClientInfo(&newInfo)){
-		qboolean forceDefer;
+		qbool forceDefer;
 
 		forceDefer = trap_MemoryRemaining() < 4000000;
 
@@ -1344,7 +1344,7 @@ CG_PlayerAnimation(centity_t *cent, int *legsOld, int *legs, float *legsBackLerp
  */
 static void
 CG_SwingAngles(float destination, float swingTolerance, float clampTolerance,
-	       float speed, float *angle, qboolean *swinging)
+	       float speed, float *angle, qbool *swinging)
 {
 	float	swing;
 	float	move;
@@ -2037,7 +2037,7 @@ CG_PlayerSprites(centity_t *cent)
  * should it return a full plane instead of a Z?
  */
 #define SHADOW_DISTANCE 128
-static qboolean
+static qbool
 CG_PlayerShadow(centity_t *cent, float *shadowPlane)
 {
 	vec3_t	end, mins = {-15, -15, 0}, maxs = {15, 15, 2};
@@ -2273,7 +2273,7 @@ CG_Player(centity_t *cent)
 	refEntity_t	head;
 	int	clientNum;
 	int	renderfx;
-	qboolean	shadow;
+	qbool		shadow;
 	float		shadowPlane;
 #ifdef MISSIONPACK
 	refEntity_t	skull;

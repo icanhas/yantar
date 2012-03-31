@@ -82,7 +82,7 @@ Netchan_Init(int port)
 void
 Netchan_Setup(netsrc_t sock, netchan_t *chan, netadr_t adr, int qport,
 	      int challenge,
-	      qboolean compat)
+	      qbool compat)
 {
 	Com_Memset (chan, 0, sizeof(*chan));
 
@@ -237,12 +237,12 @@ Netchan_Transmit(netchan_t *chan, int length, const byte *data)
  * final fragment of a multi-part message, the entire thing will be
  * copied out.
  */
-qboolean
+qbool
 Netchan_Process(netchan_t *chan, msg_t *msg)
 {
 	int	sequence;
 	int	fragmentStart, fragmentLength;
-	qboolean fragmented;
+	qbool fragmented;
 
 	/* XOR unscramble all data in the packet after the header */
 /*	Netchan_UnScramblePacket( msg ); */
@@ -426,7 +426,7 @@ typedef struct {
 loopback_t loopbacks[2];
 
 
-qboolean
+qbool
 NET_GetLoopPacket(netsrc_t sock, netadr_t *net_from, msg_t *net_message)
 {
 	int i;

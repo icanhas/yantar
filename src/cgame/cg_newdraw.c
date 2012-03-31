@@ -182,7 +182,7 @@ CG_SelectPrevPlayer(void)
 
 
 static void
-CG_DrawPlayerArmorIcon(rectDef_t *rect, qboolean draw2D)
+CG_DrawPlayerArmorIcon(rectDef_t *rect, qbool draw2D)
 {
 	vec3_t	angles;
 	vec3_t	origin;
@@ -242,7 +242,7 @@ static float healthColors[4][4] = {
 #endif
 
 static void
-CG_DrawPlayerAmmoIcon(rectDef_t *rect, qboolean draw2D)
+CG_DrawPlayerAmmoIcon(rectDef_t *rect, qbool draw2D)
 {
 	centity_t	*cent;
 	vec3_t		angles;
@@ -308,7 +308,7 @@ CG_DrawPlayerAmmoValue(rectDef_t *rect, float scale, vec4_t color,
 
 
 static void
-CG_DrawPlayerHead(rectDef_t *rect, qboolean draw2D)
+CG_DrawPlayerHead(rectDef_t *rect, qbool draw2D)
 {
 	vec3_t	angles;
 	float	size, stretch;
@@ -483,7 +483,7 @@ CG_DrawPlayerStatus(rectDef_t *rect)
 
 static void
 CG_DrawSelectedPlayerName(rectDef_t *rect, float scale, vec4_t color,
-			  qboolean voice,
+			  qbool voice,
 			  int textStyle)
 {
 	clientInfo_t *ci;
@@ -563,7 +563,7 @@ CG_DrawPlayerScore(rectDef_t *rect, float scale, vec4_t color, qhandle_t shader,
 }
 
 static void
-CG_DrawPlayerItem(rectDef_t *rect, float scale, qboolean draw2D)
+CG_DrawPlayerItem(rectDef_t *rect, float scale, qbool draw2D)
 {
 	int value;
 	vec3_t origin, angles;
@@ -592,7 +592,7 @@ CG_DrawPlayerItem(rectDef_t *rect, float scale, qboolean draw2D)
 
 
 static void
-CG_DrawSelectedPlayerPowerup(rectDef_t *rect, qboolean draw2D)
+CG_DrawSelectedPlayerPowerup(rectDef_t *rect, qbool draw2D)
 {
 	clientInfo_t *ci;
 	int j;
@@ -622,7 +622,7 @@ CG_DrawSelectedPlayerPowerup(rectDef_t *rect, qboolean draw2D)
 
 
 static void
-CG_DrawSelectedPlayerHead(rectDef_t *rect, qboolean draw2D, qboolean voice)
+CG_DrawSelectedPlayerHead(rectDef_t *rect, qbool draw2D, qbool voice)
 {
 	clipHandle_t cm;
 	clientInfo_t *ci;
@@ -876,7 +876,7 @@ CG_DrawRedFlagHead(rectDef_t *rect)
 }
 
 static void
-CG_HarvesterSkulls(rectDef_t *rect, float scale, vec4_t color, qboolean force2D,
+CG_HarvesterSkulls(rectDef_t *rect, float scale, vec4_t color, qbool force2D,
 		   int textStyle)
 {
 	char num[16];
@@ -1106,7 +1106,7 @@ CG_GetValue(int ownerDraw)
 	return -1;
 }
 
-qboolean
+qbool
 CG_OtherTeamHasFlag(void)
 {
 	if(cgs.gametype == GT_CTF || cgs.gametype == GT_1FCTF){
@@ -1131,7 +1131,7 @@ CG_OtherTeamHasFlag(void)
 	return qfalse;
 }
 
-qboolean
+qbool
 CG_YourTeamHasFlag(void)
 {
 	if(cgs.gametype == GT_CTF || cgs.gametype == GT_1FCTF){
@@ -1158,7 +1158,7 @@ CG_YourTeamHasFlag(void)
 
 /* THINKABOUTME: should these be exclusive or inclusive..
  *  */
-qboolean
+qbool
 CG_OwnerDrawVisible(int flags)
 {
 
@@ -1251,7 +1251,7 @@ CG_OwnerDrawVisible(int flags)
 
 
 static void
-CG_DrawPlayerHasFlag(rectDef_t *rect, qboolean force2D)
+CG_DrawPlayerHasFlag(rectDef_t *rect, qbool force2D)
 {
 	int adj = (force2D) ? 0 : 2;
 	if(cg.predictedPlayerState.powerups[PW_REDFLAG])
@@ -2019,7 +2019,7 @@ CG_EventHandling(int type)
 
 
 void
-CG_KeyEvent(int key, qboolean down)
+CG_KeyEvent(int key, qbool down)
 {
 
 	if(!down)

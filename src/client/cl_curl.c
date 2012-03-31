@@ -79,7 +79,7 @@ GPA(char *str)
 /*
  * CL_cURL_Init
  */
-qboolean
+qbool
 CL_cURL_Init()
 {
 #ifdef USE_CURL_DLOPEN

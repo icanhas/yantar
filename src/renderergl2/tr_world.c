@@ -27,7 +27,7 @@
  * Tries to cull surfaces before they are lighted or
  * added to the sorting list.
  */
-static qboolean
+static qbool
 R_CullSurface(msurface_t *surf)
 {
 	if(r_nocull->integer || surf->cullinfo.type == CULLINFO_NONE){
@@ -616,7 +616,7 @@ R_ClusterPVS(int cluster)
 /*
  * R_inPVS
  */
-qboolean
+qbool
 R_inPVS(const vec3_t p1, const vec3_t p2)
 {
 	mnode_t *leaf;

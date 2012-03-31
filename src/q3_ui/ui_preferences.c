@@ -195,7 +195,7 @@ Crosshair_Draw(void *self)
 	float	*color;
 	int	x, y;
 	int	style;
-	qboolean focus;
+	qbool focus;
 
 	s = (menulist_s*)self;
 	x = s->generic.x;

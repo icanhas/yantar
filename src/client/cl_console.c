@@ -29,7 +29,7 @@ int g_console_field_width = 78;
 
 #define         CON_TEXTSIZE	32768
 typedef struct {
-	qboolean	initialized;
+	qbool		initialized;
 
 	short		text[CON_TEXTSIZE];
 	int		current;	/* line where next message will be printed */
@@ -343,7 +343,7 @@ Con_Shutdown(void)
  * Con_Linefeed
  */
 void
-Con_Linefeed(qboolean skipnotify)
+Con_Linefeed(qbool skipnotify)
 {
 	int i;
 
@@ -378,7 +378,7 @@ CL_ConsolePrint(char *txt)
 	int y, l;
 	unsigned char	c;
 	unsigned short	color;
-	qboolean skipnotify = qfalse;	/* NERVE - SMF */
+	qbool skipnotify = qfalse;	/* NERVE - SMF */
 	int prev;			/* NERVE - SMF */
 
 	/* TTimo - prefix for text that shows up in console but not in notify

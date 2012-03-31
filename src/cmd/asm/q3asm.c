@@ -172,9 +172,9 @@ int	numSymbols;
 int	errorCount;
 
 typedef struct options_s {
-	qboolean	verbose;
-	qboolean	writeMapFile;
-	qboolean	vanillaQ3Compatibility;
+	qbool		verbose;
+	qbool		writeMapFile;
+	qbool		vanillaQ3Compatibility;
 } options_t;
 
 options_t options = { 0 };
@@ -671,7 +671,7 @@ ExtractLine(char *data)
  *
  * Parse a token out of linebuffer
  */
-static qboolean
+static qbool
 Parse(void)
 {
 	/* Hand-optimized by PhaethonH */

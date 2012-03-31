@@ -82,7 +82,7 @@ BuildShaderStateConfig(void)
  *
  */
 int
-G_FindConfigstringIndex(char *name, int start, int max, qboolean create)
+G_FindConfigstringIndex(char *name, int start, int max, qbool create)
 {
 	int	i;
 	char	s[MAX_STRING_CHARS];
@@ -423,7 +423,7 @@ G_Spawn(void)
 /*
  * G_EntitiesFree
  */
-qboolean
+qbool
 G_EntitiesFree(void)
 {
 	int i;

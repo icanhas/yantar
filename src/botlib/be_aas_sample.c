@@ -404,7 +404,7 @@ AAS_BoxOriginDistanceFromPlane(vec3_t normal, vec3_t mins, vec3_t maxs, int side
  * Returns:					-
  * Changes Globals:		-
  * =========================================================================== */
-qboolean
+qbool
 AAS_AreaEntityCollision(int areanum, vec3_t start, vec3_t end,
 			int presencetype, int passent, aas_trace_t *trace)
 {
@@ -937,7 +937,7 @@ AAS_TraceAreas(vec3_t start, vec3_t end, int *areas, vec3_t *points,
  * Returns:					qtrue if the point is within the face boundaries
  * Changes Globals:		-
  * =========================================================================== */
-qboolean
+qbool
 AAS_InsideFace(aas_face_t *face, vec3_t pnormal, vec3_t point, float epsilon)
 {
 	int i, firstvertex, edgenum;
@@ -989,7 +989,7 @@ AAS_InsideFace(aas_face_t *face, vec3_t pnormal, vec3_t point, float epsilon)
  * Returns:					-
  * Changes Globals:		-
  * =========================================================================== */
-qboolean
+qbool
 AAS_PointInsideFace(int facenum, vec3_t point, float epsilon)
 {
 	int i, firstvertex, edgenum;

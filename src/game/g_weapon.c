@@ -62,7 +62,7 @@ Weapon_Gauntlet(gentity_t *ent)
 /*
  * CheckGauntletAttack
  */
-qboolean
+qbool
 CheckGauntletAttack(gentity_t *ent)
 {
 	trace_t tr;
@@ -261,7 +261,7 @@ BFG_Fire(gentity_t *ent)
  * client predicts same spreads */
 #define DEFAULT_SHOTGUN_DAMAGE 10
 
-qboolean
+qbool
 ShotgunPellet(vec3_t start, vec3_t end, gentity_t *ent)
 {
 	trace_t tr;
@@ -331,7 +331,7 @@ ShotgunPattern(vec3_t origin, vec3_t origin2, int seed, gentity_t *ent)
 	float r, u;
 	vec3_t end;
 	vec3_t forward, right, up;
-	qboolean hitClient = qfalse;
+	qbool hitClient = qfalse;
 
 	/* derive the right and up vectors from the forward vector, because
 	 * the client won't have any other information */
@@ -762,7 +762,7 @@ weapon_proxlauncher_fire(gentity_t *ent)
 /*
  * LogAccuracyHit
  */
-qboolean
+qbool
 LogAccuracyHit(gentity_t *target, gentity_t *attacker)
 {
 	if(!target->takedamage)

@@ -133,9 +133,9 @@ typedef struct serverStatus_s {
 	char		string[BIG_INFO_STRING];
 	netadr_t	address;
 	int		time, startTime;
-	qboolean	pending;
-	qboolean	print;
-	qboolean	retrieved;
+	qbool		pending;
+	qbool		print;
+	qbool		retrieved;
 } serverStatus_t;
 
 serverStatus_t cl_serverStatusList[MAX_SERVERSTATUSREQUESTS];
@@ -205,7 +205,7 @@ CL_UpdateMumble(void)
 #ifdef USE_VOIP
 static
 void
-CL_UpdateVoipIgnore(const char *idstr, qboolean ignore)
+CL_UpdateVoipIgnore(const char *idstr, qbool ignore)
 {
 	if((*idstr >= '0') && (*idstr <= '9')){
 		const int id = atoi(idstr);
@@ -384,9 +384,9 @@ void
 CL_CaptureVoip(void)
 {
 	const float	audioMult = cl_voipCaptureMult->value;
-	const qboolean useVad = (cl_voipUseVAD->integer != 0);
-	qboolean	initialFrame	= qfalse;
-	qboolean	finalFrame	= qfalse;
+	const qbool useVad = (cl_voipUseVAD->integer != 0);
+	qbool		initialFrame	= qfalse;
+	qbool		finalFrame	= qfalse;
 
 #if USE_MUMBLE
 	/* if we're using Mumble, don't try to handle VoIP transmission ourselves. */
@@ -409,7 +409,7 @@ CL_CaptureVoip(void)
 		Cvar_Set("cl_voipSend", "1");	/* lots of things reset this. */
 
 	if(cl_voipSend->modified){
-		qboolean dontCapture = qfalse;
+		qbool dontCapture = qfalse;
 		if(clc.state != CA_ACTIVE)
 			dontCapture = qtrue;	/* not connected to a server. */
 		else if(!clc.voipEnabled)
@@ -569,7 +569,7 @@ CL_CaptureVoip(void)
  * not have future usercmd_t executed before it is executed
  */
 void
-CL_AddReliableCommand(const char *cmd, qboolean isDisconnectCmd)
+CL_AddReliableCommand(const char *cmd, qbool isDisconnectCmd)
 {
 	int unacknowledged = clc.reliableSequence - clc.reliableAcknowledge;
 
@@ -1197,7 +1197,7 @@ CL_NextDemo(void)
  * CL_ShutdownAll
  */
 void
-CL_ShutdownAll(qboolean shutdownRef)
+CL_ShutdownAll(qbool shutdownRef)
 {
 	if(CL_VideoRecording())
 		CL_CloseAVI();
@@ -1233,7 +1233,7 @@ CL_ShutdownAll(qboolean shutdownRef)
  * Called by Com_GameRestart
  */
 void
-CL_ClearMemory(qboolean shutdownRef)
+CL_ClearMemory(qbool shutdownRef)
 {
 	/* shutdown all the client stuff */
 	CL_ShutdownAll(shutdownRef);
@@ -1365,7 +1365,7 @@ CL_OldGame(void)
  * This is also called on Com_Error and Com_Quit, so it shouldn't cause any errors
  */
 void
-CL_Disconnect(qboolean showMainMenu)
+CL_Disconnect(qbool showMainMenu)
 {
 	if(!com_cl_running || !com_cl_running->integer)
 		return;
@@ -2115,7 +2115,7 @@ CL_NextDownload(void)
 {
 	char	*s;
 	char	*remoteName, *localName;
-	qboolean useCURL = qfalse;
+	qbool useCURL = qfalse;
 
 	/* A download has finished, check whether this matches a referenced checksum */
 	if(*clc.downloadName){
@@ -2417,7 +2417,7 @@ CL_InitServerInfo(serverInfo_t *server, netadr_t *address)
  * CL_ServersResponsePacket
  */
 void
-CL_ServersResponsePacket(const netadr_t* from, msg_t *msg, qboolean extended)
+CL_ServersResponsePacket(const netadr_t* from, msg_t *msg, qbool extended)
 {
 	int	i, j, count, total;
 	netadr_t addresses[MAX_SERVERSPERPACKET];
@@ -2827,7 +2827,7 @@ CL_CheckTimeout(void)
  * CL_CheckPaused
  * Check whether client has been paused.
  */
-qboolean
+qbool
 CL_CheckPaused(void)
 {
 	/* if cl_paused->modified is set, the cvar has only been changed in
@@ -3072,7 +3072,7 @@ CL_InitRenderer(void)
  * This is the only place that any of these functions are called from
  */
 void
-CL_StartHunkUsers(qboolean rendererOnly)
+CL_StartHunkUsers(qbool rendererOnly)
 {
 	if(!com_cl_running)
 		return;
@@ -3604,9 +3604,9 @@ CL_Init(void)
  *
  */
 void
-CL_Shutdown(char *finalmsg, qboolean disconnect, qboolean quit)
+CL_Shutdown(char *finalmsg, qbool disconnect, qbool quit)
 {
-	static qboolean recursive = qfalse;
+	static qbool recursive = qfalse;
 
 	/* check whether the client is running at all. */
 	if(!(com_cl_running && com_cl_running->integer))
@@ -3731,7 +3731,7 @@ CL_ServerInfoPacket(netadr_t from, msg_t *msg)
 	char    *infoString;
 	int	prot;
 	char *gamename;
-	qboolean gameMismatch;
+	qbool gameMismatch;
 
 	infoString = MSG_ReadString(msg);
 
@@ -4047,7 +4047,7 @@ CL_LocalServers_f(void)
 	cls.pingUpdateSource	= AS_LOCAL;
 
 	for(i = 0; i < MAX_OTHER_SERVERS; i++){
-		qboolean b = cls.localServers[i].visible;
+		qbool b = cls.localServers[i].visible;
 		Com_Memset(&cls.localServers[i], 0, sizeof(cls.localServers[i]));
 		cls.localServers[i].visible = b;
 	}
@@ -4330,14 +4330,14 @@ CL_Ping_f(void)
 /*
  * CL_UpdateVisiblePings_f
  */
-qboolean
+qbool
 CL_UpdateVisiblePings_f(int source)
 {
 	int	slots, i;
 	char	buff[MAX_STRING_CHARS];
 	int	pingTime;
 	int	max;
-	qboolean status = qfalse;
+	qbool status = qfalse;
 
 	if(source < 0 || source > AS_FAVORITES)
 		return qfalse;
@@ -4505,7 +4505,7 @@ CL_ShowIP_f(void)
 /*
  * CL_CDKeyValidate
  */
-qboolean
+qbool
 CL_CDKeyValidate(const char *key, const char *checksum)
 {
 #ifdef STANDALONE

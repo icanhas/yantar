@@ -193,7 +193,7 @@ BotTeamFlag(bot_state_t *bs)
 /*
  * EntityIsDead
  */
-qboolean
+qbool
 EntityIsDead(aas_entityinfo_t *entinfo)
 {
 	playerState_t ps;
@@ -209,7 +209,7 @@ EntityIsDead(aas_entityinfo_t *entinfo)
 /*
  * EntityCarriesFlag
  */
-qboolean
+qbool
 EntityCarriesFlag(aas_entityinfo_t *entinfo)
 {
 	if(entinfo->powerups & (1 << PW_REDFLAG))
@@ -226,7 +226,7 @@ EntityCarriesFlag(aas_entityinfo_t *entinfo)
 /*
  * EntityIsInvisible
  */
-qboolean
+qbool
 EntityIsInvisible(aas_entityinfo_t *entinfo)
 {
 	/* the flag is always visible */
@@ -240,7 +240,7 @@ EntityIsInvisible(aas_entityinfo_t *entinfo)
 /*
  * EntityIsShooting
  */
-qboolean
+qbool
 EntityIsShooting(aas_entityinfo_t *entinfo)
 {
 	if(entinfo->flags & EF_FIRING)
@@ -251,7 +251,7 @@ EntityIsShooting(aas_entityinfo_t *entinfo)
 /*
  * EntityIsChatting
  */
-qboolean
+qbool
 EntityIsChatting(aas_entityinfo_t *entinfo)
 {
 	if(entinfo->flags & EF_TALK)
@@ -262,7 +262,7 @@ EntityIsChatting(aas_entityinfo_t *entinfo)
 /*
  * EntityHasQuad
  */
-qboolean
+qbool
 EntityHasQuad(aas_entityinfo_t *entinfo)
 {
 	if(entinfo->powerups & (1 << PW_QUAD))
@@ -274,7 +274,7 @@ EntityHasQuad(aas_entityinfo_t *entinfo)
 /*
  * EntityHasKamikze
  */
-qboolean
+qbool
 EntityHasKamikaze(aas_entityinfo_t *entinfo)
 {
 	if(entinfo->flags & EF_KAMIKAZE)
@@ -285,7 +285,7 @@ EntityHasKamikaze(aas_entityinfo_t *entinfo)
 /*
  * EntityCarriesCubes
  */
-qboolean
+qbool
 EntityCarriesCubes(aas_entityinfo_t *entinfo)
 {
 	entityState_t state;
@@ -2066,7 +2066,7 @@ BotSetTeleportTime(bot_state_t *bs)
 /*
  * BotIsDead
  */
-qboolean
+qbool
 BotIsDead(bot_state_t *bs)
 {
 	return (bs->cur_ps.pm_type == PM_DEAD);
@@ -2075,7 +2075,7 @@ BotIsDead(bot_state_t *bs)
 /*
  * BotIsObserver
  */
-qboolean
+qbool
 BotIsObserver(bot_state_t *bs)
 {
 	char buf[MAX_INFO_STRING];
@@ -2088,7 +2088,7 @@ BotIsObserver(bot_state_t *bs)
 /*
  * BotIntermission
  */
-qboolean
+qbool
 BotIntermission(bot_state_t *bs)
 {
 	/* NOTE: we shouldn't be looking at the game code... */
@@ -2100,7 +2100,7 @@ BotIntermission(bot_state_t *bs)
 /*
  * BotInLavaOrSlime
  */
-qboolean
+qbool
 BotInLavaOrSlime(bot_state_t *bs)
 {
 	vec3_t feet;
@@ -2791,7 +2791,7 @@ BotSameTeam(bot_state_t *bs, int entnum)
 /*
  * InFieldOfVision
  */
-qboolean
+qbool
 InFieldOfVision(vec3_t viewangles, float fov, vec3_t angles)
 {
 	int i;

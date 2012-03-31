@@ -108,9 +108,9 @@ int	time_backend;	/* renderer backend time */
 int	com_frameTime;
 int	com_frameNumber;
 
-qboolean	com_errorEntered = qfalse;
-qboolean	com_fullyInitialized = qfalse;
-qboolean	com_gameRestarting = qfalse;
+qbool		com_errorEntered = qfalse;
+qbool		com_fullyInitialized = qfalse;
+qbool		com_gameRestarting = qfalse;
 
 char com_errorMessage[MAXPRINTMSG];
 
@@ -159,7 +159,7 @@ Com_Printf(const char *fmt, ...)
 {
 	va_list argptr;
 	char	msg[MAXPRINTMSG];
-	static qboolean opening_qconsole = qfalse;
+	static qbool opening_qconsole = qfalse;
 
 
 	va_start (argptr,fmt);
@@ -421,7 +421,7 @@ Com_ParseCommandLine(char *commandLine)
  * Check for "safe" on the command line, which will
  * skip loading of q3config.cfg
  */
-qboolean
+qbool
 Com_SafeMode(void)
 {
 	int i;
@@ -479,11 +479,11 @@ Com_StartupVariable(const char *match)
  * Returns qtrue if any late commands were added, which
  * will keep the demoloop from immediately starting
  */
-qboolean
+qbool
 Com_AddStartupCommands(void)
 {
 	int i;
-	qboolean added;
+	qbool added;
 
 	added = qfalse;
 	/* quote every token, so args with semicolons can work */
@@ -1587,7 +1587,7 @@ Hunk_ClearToMark(void)
 /*
  * Hunk_CheckMark
  */
-qboolean
+qbool
 Hunk_CheckMark(void)
 {
 	if(hunk_low.mark || hunk_high.mark)
@@ -2330,7 +2330,7 @@ Com_ExecuteCfg(void)
  */
 
 void
-Com_GameRestart(int checksumFeed, qboolean disconnect)
+Com_GameRestart(int checksumFeed, qbool disconnect)
 {
 	/* make sure no recursion can be triggered */
 	if(!com_gameRestarting && com_fullyInitialized){
@@ -2406,7 +2406,7 @@ char	cl_cdkey[34] = "123456789";
 /*
  * Com_ReadCDKey
  */
-qboolean CL_CDKeyValidate(const char *key, const char *checksum);
+qbool CL_CDKeyValidate(const char *key, const char *checksum);
 void
 Com_ReadCDKey(const char *filename)
 {
@@ -2518,8 +2518,8 @@ Com_DetectAltivec(void)
 {
 	/* Only detect if user hasn't forcibly disabled it. */
 	if(com_altivec->integer){
-		static qboolean altivec = qfalse;
-		static qboolean detected = qfalse;
+		static qbool altivec = qfalse;
+		static qbool detected = qfalse;
 		if(!detected){
 			altivec =
 				(Sys_GetProcessorFeatures( ) & CF_ALTIVEC);
@@ -3304,7 +3304,7 @@ Field_FindFirstSeparator(char *s)
 /*
  * Field_Complete
  */
-static qboolean
+static qbool
 Field_Complete(void)
 {
 	int completionOffset;
@@ -3354,8 +3354,8 @@ Field_CompleteKeyname(void)
  */
 void
 Field_CompleteFilename(const char *dir,
-		       const char *ext, qboolean stripExt,
-		       qboolean allowNonPureFilesOnDisk)
+		       const char *ext, qbool stripExt,
+		       qbool allowNonPureFilesOnDisk)
 {
 	matchCount = 0;
 	shortestMatch[ 0 ] = 0;
@@ -3373,7 +3373,7 @@ Field_CompleteFilename(const char *dir,
  */
 void
 Field_CompleteCommand(char *cmd,
-		      qboolean doCommands, qboolean doCvars)
+		      qbool doCommands, qbool doCvars)
 {
 	int completionArgument = 0;
 
@@ -3489,7 +3489,7 @@ Com_RandomBytes(byte *string, int len)
  * Returns non-zero if given clientNum is enabled in voipTargets, zero otherwise.
  * If clientNum is negative return if any bit is set.
  */
-qboolean
+qbool
 Com_IsVoipTarget(uint8_t *voipTargets, int voipTargetsSize, int clientNum)
 {
 	int index;

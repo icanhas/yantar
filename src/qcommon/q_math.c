@@ -278,7 +278,7 @@ NormalizeColor(const vec3_t in, vec3_t out)
  * Returns false if the triangle is degenrate.
  * The normal will point out of the clock for clockwise ordered points
  */
-qboolean
+qbool
 PlaneFromPoints(vec4_t plane, const vec3_t a, const vec3_t b, const vec3_t c)
 {
 	vec3_t d1, d2;
@@ -796,7 +796,7 @@ AddPointToBounds(const vec3_t v, vec3_t mins, vec3_t maxs)
 		maxs[2] = v[2];
 }
 
-qboolean
+qbool
 BoundsIntersect(const vec3_t mins, const vec3_t maxs,
 		const vec3_t mins2, const vec3_t maxs2)
 {
@@ -811,7 +811,7 @@ BoundsIntersect(const vec3_t mins, const vec3_t maxs,
 	return qtrue;
 }
 
-qboolean
+qbool
 BoundsIntersectSphere(const vec3_t mins, const vec3_t maxs,
 		      const vec3_t origin, vec_t radius)
 {
@@ -826,7 +826,7 @@ BoundsIntersectSphere(const vec3_t mins, const vec3_t maxs,
 	return qtrue;
 }
 
-qboolean
+qbool
 BoundsIntersectPoint(const vec3_t mins, const vec3_t maxs,
 		     const vec3_t origin)
 {

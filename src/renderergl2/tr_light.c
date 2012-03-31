@@ -171,7 +171,7 @@ R_SetupEntityLightingGrid(trRefEntity_t *ent, world_t *world)
 		byte    *data;
 		int	lat, lng;
 		vec3_t	normal;
-		qboolean	ignore;
+		qbool		ignore;
 		#if idppc
 		float		d0, d1, d2, d3, d4, d5;
 		#endif

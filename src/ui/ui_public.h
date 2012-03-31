@@ -170,16 +170,16 @@ typedef enum {
 /*	void	UI_Refresh( int time ); */
 
 	UI_IS_FULLSCREEN,
-/*	qboolean UI_IsFullscreen( void ); */
+/*	qbool UI_IsFullscreen( void ); */
 
 	UI_SET_ACTIVE_MENU,
 /*	void	UI_SetActiveMenu( uiMenuCommand_t menu ); */
 
 	UI_CONSOLE_COMMAND,
-/*	qboolean UI_ConsoleCommand( int realTime ); */
+/*	qbool UI_ConsoleCommand( int realTime ); */
 
 	UI_DRAW_CONNECT_SCREEN,
-/*	void	UI_DrawConnectScreen( qboolean overlay ); */
+/*	void	UI_DrawConnectScreen( qbool overlay ); */
 	UI_HASUNIQUECDKEY
 /* if !overlay, the background will be drawn, otherwise it will be
  * overlayed over whatever the cgame has drawn.

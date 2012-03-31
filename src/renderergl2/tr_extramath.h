@@ -31,7 +31,7 @@ void Matrix16Identity(matrix_t out);
 void Matrix16Copy(const matrix_t in, matrix_t out);
 void Matrix16Multiply(const matrix_t in1, const matrix_t in2, matrix_t out);
 void Matrix16Transform(const matrix_t in1, const vec4_t in2, vec4_t out);
-qboolean Matrix16Compare(const matrix_t a, const matrix_t b);
+qbool Matrix16Compare(const matrix_t a, const matrix_t b);
 void Matrix16Dump(const matrix_t in);
 void Matrix16Translation(vec3_t vec, matrix_t out);
 void Matrix16Ortho(float left, float right, float bottom, float top, float znear, float zfar, matrix_t out);
@@ -70,7 +70,7 @@ VectorCompare5(const vec5_t v1, const vec5_t v2)
 void VectorLerp(vec3_t a, vec3_t b, float lerp, vec3_t c);
 
 
-qboolean SpheresIntersect(vec3_t origin1, float radius1, vec3_t origin2, float radius2);
+qbool SpheresIntersect(vec3_t origin1, float radius1, vec3_t origin2, float radius2);
 void BoundingSphereOfSpheres(vec3_t origin1, float radius1, vec3_t origin2, float radius2, vec3_t origin3,
 			     float *radius3);
 

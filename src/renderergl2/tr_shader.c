@@ -84,7 +84,7 @@ R_RemapShader(const char *shaderName, const char *newShaderName, const char *tim
 /*
  * ParseVector
  */
-static qboolean
+static qbool
 ParseVector(char **text, int count, float *v)
 {
 	char	*token;
@@ -488,13 +488,13 @@ ParseTexMod(char *_text, shaderStage_t *stage)
 /*
  * ParseStage
  */
-static qboolean
+static qbool
 ParseStage(shaderStage_t *stage, char **text)
 {
 	char	*token;
 	int	depthMaskBits = GLS_DEPTHMASK_TRUE, blendSrcBits = 0, blendDstBits = 0, atestBits = 0,
 		depthFuncBits = 0;
-	qboolean depthMaskExplicit = qfalse;
+	qbool depthMaskExplicit = qfalse;
 
 	stage->active = qtrue;
 
@@ -1379,7 +1379,7 @@ ParseSurfaceParm(char **text)
  * shader.  Parse it into the global shader variable.  Later functions
  * will optimize it.
  */
-static qboolean
+static qbool
 ParseShader(char **text)
 {
 	char	*token;
@@ -1792,7 +1792,7 @@ static collapse_t collapse[] = {
  * Attempt to combine two stages into a single multitexture stage
  * FIXME: I think modulated add + modulated add collapses incorrectly
  */
-static qboolean
+static qbool
 CollapseMultitexture(void)
 {
 	int	abits, bbits;
@@ -1898,8 +1898,8 @@ CollapseMultitexture(void)
 static void
 CollapseStagesToLightall(shaderStage_t *diffuse,
 			 shaderStage_t *normal, shaderStage_t *specular, shaderStage_t *lightmap,
-			 qboolean useLightVector, qboolean useLightVertex, qboolean parallax,
-			 qboolean environment)
+			 qbool useLightVector, qbool useLightVertex, qbool parallax,
+			 qbool environment)
 {
 	int defs = 0;
 
@@ -1965,11 +1965,11 @@ CollapseStagesToLightall(shaderStage_t *diffuse,
 }
 
 
-static qboolean
+static qbool
 CollapseStagesToGLSL(void)
 {
 	int i, j, numStages;
-	qboolean skip = qfalse;
+	qbool skip = qfalse;
 
 	/* skip shaders with deforms */
 	if(shader.numDeforms != 0){
@@ -2047,7 +2047,7 @@ CollapseStagesToGLSL(void)
 		for(i = 0; i < MAX_SHADER_STAGES; i++){
 			shaderStage_t	*pStage = &stages[i];
 			shaderStage_t	*diffuse, *normal, *specular, *lightmap;
-			qboolean parallax, environment, diffuselit, vertexlit;
+			qbool parallax, environment, diffuselit, vertexlit;
 
 			if(!pStage->active)
 				continue;
@@ -2456,8 +2456,8 @@ static shader_t *
 FinishShader(void)
 {
 	int stage;
-	qboolean	hasLightmapStage;
-	qboolean	vertexLightmap;
+	qbool		hasLightmapStage;
+	qbool		vertexLightmap;
 
 	hasLightmapStage	= qfalse;
 	vertexLightmap		= qfalse;
@@ -2762,7 +2762,7 @@ R_FindShaderByName(const char *name)
  *
  */
 shader_t *
-R_FindShader(const char *name, int lightmapIndex, qboolean mipRawImage)
+R_FindShader(const char *name, int lightmapIndex, qbool mipRawImage)
 {
 	char strippedName[MAX_QPATH];
 	int i, hash;
@@ -2904,7 +2904,7 @@ R_FindShader(const char *name, int lightmapIndex, qboolean mipRawImage)
 
 
 qhandle_t
-RE_RegisterShaderFromImage(const char *name, int lightmapIndex, image_t *image, qboolean mipRawImage)
+RE_RegisterShaderFromImage(const char *name, int lightmapIndex, image_t *image, qbool mipRawImage)
 {
 	int i, hash;
 	shader_t *sh;

@@ -138,12 +138,12 @@ Sys_PIDFileName(void)
  *
  * Return qtrue if there is an existing stale PID file
  */
-qboolean
+qbool
 Sys_WritePIDFile(void)
 {
 	char	*pidFile = Sys_PIDFileName( );
 	FILE	*f;
-	qboolean stale = qfalse;
+	qbool stale = qfalse;
 
 	/* First, check if the pid file is already there */
 	if((f = fopen(pidFile, "r")) != NULL){
@@ -384,7 +384,7 @@ Sys_UnloadDll(void *dllHandle)
  */
 
 void *
-Sys_LoadDll(const char *name, qboolean useSystemLib)
+Sys_LoadDll(const char *name, qbool useSystemLib)
 {
 	void *dllhandle;
 
@@ -508,7 +508,7 @@ Sys_ParseArgs(int argc, char **argv)
 void
 Sys_SigHandler(int signal)
 {
-	static qboolean signalcaught = qfalse;
+	static qbool signalcaught = qfalse;
 
 	if(signalcaught)
 		fprintf(stderr,
@@ -581,7 +581,7 @@ main(int argc, char **argv)
 
 	/* Concatenate the command line for passing to Com_Init */
 	for(i = 1; i < argc; i++){
-		const qboolean containsSpaces = strchr(argv[i], ' ') != NULL;
+		const qbool containsSpaces = strchr(argv[i], ' ') != NULL;
 		if(containsSpaces)
 			Q_strcat(commandLine, sizeof(commandLine), "\"");
 

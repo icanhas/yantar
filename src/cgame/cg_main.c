@@ -1474,7 +1474,7 @@ CG_GetMenuBuffer(const char *filename)
 /*
  * new hud stuff ( mission pack )
  *  */
-qboolean
+qbool
 CG_Asset_Parse(int handle)
 {
 	pc_token_t	token;
@@ -1662,7 +1662,7 @@ CG_ParseMenu(const char *menuFile)
 	trap_PC_FreeSource(handle);
 }
 
-qboolean
+qbool
 CG_Load_Menu(char **p)
 {
 	char *token;
@@ -1764,7 +1764,7 @@ CG_LoadMenus(const char *menuFile)
 
 
 
-static qboolean
+static qbool
 CG_OwnerDrawHandleKey(int ownerDraw, int flags, float *special, int key)
 {
 	return qfalse;
@@ -2272,7 +2272,7 @@ CG_EventHandling(int type)
 
 
 void
-CG_KeyEvent(int key, qboolean down)
+CG_KeyEvent(int key, qbool down)
 {
 }
 

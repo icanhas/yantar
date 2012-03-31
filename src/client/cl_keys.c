@@ -33,12 +33,12 @@ int	historyLine;		/* the line being displayed from history buffer */
 
 field_t		g_consoleField;
 field_t		chatField;
-qboolean	chat_team;
+qbool		chat_team;
 
 int chat_playerNum;
 
 
-qboolean key_overstrikeMode;
+qbool key_overstrikeMode;
 
 int anykeydown;
 qkey_t keys[MAX_KEYS];
@@ -306,8 +306,8 @@ keyname_t keynames[] =
 /* FIXME: this is all shit */
 void
 Field_VariableSizeDraw(field_t *edit, int x, int y, int width, int size,
-		       qboolean showCursor,
-		       qboolean noColorEscape)
+		       qbool showCursor,
+		       qbool noColorEscape)
 {
 	int	len;
 	int	drawLen;
@@ -378,16 +378,16 @@ Field_VariableSizeDraw(field_t *edit, int x, int y, int width, int size,
 }
 
 void
-Field_Draw(field_t *edit, int x, int y, int width, qboolean showCursor,
-	   qboolean noColorEscape)
+Field_Draw(field_t *edit, int x, int y, int width, qbool showCursor,
+	   qbool noColorEscape)
 {
 	Field_VariableSizeDraw(edit, x, y, width, SMALLCHAR_WIDTH, showCursor,
 		noColorEscape);
 }
 
 void
-Field_BigDraw(field_t *edit, int x, int y, int width, qboolean showCursor,
-	      qboolean noColorEscape)
+Field_BigDraw(field_t *edit, int x, int y, int width, qbool showCursor,
+	      qbool noColorEscape)
 {
 	Field_VariableSizeDraw(edit, x, y, width, BIGCHAR_WIDTH, showCursor,
 		noColorEscape);
@@ -774,7 +774,7 @@ Message_Key(int key)
 /* ============================================================================ */
 
 
-qboolean
+qbool
 Key_GetOverstrikeMode(void)
 {
 	return key_overstrikeMode;
@@ -782,7 +782,7 @@ Key_GetOverstrikeMode(void)
 
 
 void
-Key_SetOverstrikeMode(qboolean state)
+Key_SetOverstrikeMode(qbool state)
 {
 	key_overstrikeMode = state;
 }
@@ -791,7 +791,7 @@ Key_SetOverstrikeMode(qboolean state)
 /*
  * Key_IsDown
  */
-qboolean
+qbool
 Key_IsDown(int keynum)
 {
 	if(keynum < 0 || keynum >= MAX_KEYS)
@@ -1117,7 +1117,7 @@ CL_InitKeyCommands(void)
  * Execute the commands in the bind string
  */
 void
-CL_ParseBinding(int key, qboolean down, unsigned time)
+CL_ParseBinding(int key, qbool down, unsigned time)
 {
 	char buf[ MAX_STRING_CHARS ], *p = buf, *end;
 
@@ -1278,7 +1278,7 @@ CL_KeyUpEvent(int key, unsigned time)
  * Called by the system for both key up and key down events
  */
 void
-CL_KeyEvent(int key, qboolean down, unsigned time)
+CL_KeyEvent(int key, qbool down, unsigned time)
 {
 	if(down)
 		CL_KeyDownEvent(key, time);

@@ -50,7 +50,7 @@
 
 #ifndef __BYTEBOOL__
 #define __BYTEBOOL__
-typedef enum { qfalse, qtrue } qboolean;
+typedef enum { qfalse, qtrue } qbool;
 typedef unsigned char byte;
 #endif
 
@@ -100,7 +100,7 @@ int             LoadFile(const char *filename, void **bufferptr);
 int   LoadFileBlock(const char *filename, void **bufferptr);
 int             TryLoadFile(const char *filename, void **bufferptr);
 void    SaveFile(const char *filename, const void *buffer, int count);
-qboolean        FileExists(const char *filename);
+qbool        FileExists(const char *filename);
 
 void    DefaultExtension(char *path, const char *extension);
 void    DefaultPath(char *path, const char *basepath);
@@ -116,7 +116,7 @@ int     ParseNum(const char *str);
 char*Com_Parse(char *data);
 
 extern char com_token[1024];
-extern qboolean com_eof;
+extern qbool com_eof;
 
 char*copystring(const char *s);
 
@@ -128,11 +128,11 @@ unsigned short CRC_Value(unsigned short crcvalue);
 void    CreatePath(const char *path);
 void    QCopyFile(const char *from, const char *to);
 
-extern qboolean archive;
+extern qbool archive;
 extern char archivedir[1024];
 
 
-extern qboolean verbose;
+extern qbool verbose;
 void qprintf(const char *format, ...);
 void _printf(const char *format, ...);
 

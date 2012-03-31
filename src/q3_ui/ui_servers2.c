@@ -183,7 +183,7 @@ typedef struct servernode_s {
 	int		nettype;
 	int		minPing;
 	int		maxPing;
-	qboolean	bPB;
+	qbool		bPB;
 
 } servernode_t;
 
@@ -225,7 +225,7 @@ typedef struct {
 	int                                     *numservers;
 	servernode_t		*serverlist;
 	int			currentping;
-	qboolean		refreshservers;
+	qbool			refreshservers;
 	int			nextpingtime;
 	int			maxservers;
 	int			refreshtime;
@@ -763,7 +763,7 @@ ArenaServers_LoadFavorites(void)
 	int	numtempitems;
 	char	adrstr[MAX_ADDRESSLENGTH];
 	servernode_t templist[MAX_FAVORITESERVERS];
-	qboolean found;
+	qbool found;
 
 	found = qfalse;
 
@@ -1174,7 +1174,7 @@ ArenaServers_SetType(int type)
  * PunkBuster_Confirm
  */
 static void
-Punkbuster_ConfirmEnable(qboolean result)
+Punkbuster_ConfirmEnable(qbool result)
 {
 	if(result)
 		trap_SetPbClStatus(1);
@@ -1183,7 +1183,7 @@ Punkbuster_ConfirmEnable(qboolean result)
 }
 
 static void
-Punkbuster_ConfirmDisable(qboolean result)
+Punkbuster_ConfirmDisable(qbool result)
 {
 	if(result){
 		trap_SetPbClStatus(0);

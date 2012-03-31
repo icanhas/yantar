@@ -29,9 +29,9 @@
 
 extern botlib_export_t *botlib_export;
 
-extern qboolean loadCamera(const char *name);
+extern qbool loadCamera(const char *name);
 extern void startCamera(int time);
-extern qboolean getCameraInfo(int time, vec3_t *origin, vec3_t *angles);
+extern qbool getCameraInfo(int time, vec3_t *origin, vec3_t *angles);
 
 /*
  * CL_GetGameState
@@ -55,7 +55,7 @@ CL_GetGlconfig(glconfig_t *glconfig)
 /*
  * CL_GetUserCmd
  */
-qboolean
+qbool
 CL_GetUserCmd(int cmdNumber, usercmd_t *ucmd)
 {
 	/* cmds[cmdNumber] is the last properly generated command */
@@ -85,7 +85,7 @@ CL_GetCurrentCmdNumber(void)
 /*
  * CL_GetParseEntityState
  */
-qboolean
+qbool
 CL_GetParseEntityState(int parseEntityNumber, entityState_t *state)
 {
 	/* can't return anything that hasn't been parsed yet */
@@ -115,7 +115,7 @@ CL_GetCurrentSnapshotNumber(int *snapshotNumber, int *serverTime)
 /*
  * CL_GetSnapshot
  */
-qboolean
+qbool
 CL_GetSnapshot(int snapshotNumber, snapshot_t *snapshot)
 {
 	clSnapshot_t *clSnap;
@@ -257,7 +257,7 @@ CL_ConfigstringModified(void)
  *
  * Set up argc/argv for the given command
  */
-qboolean
+qbool
 CL_GetServerCommand(int serverCommandNumber)
 {
 	char *s;
@@ -800,7 +800,7 @@ CL_InitCGame(void)
  *
  * See if the current console command is claimed by the cgame
  */
-qboolean
+qbool
 CL_GameCommand(void)
 {
 	if(!cgvm)

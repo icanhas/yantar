@@ -194,7 +194,7 @@ typedef struct {
 	menuradiobutton_s	autoswitch;
 	menuaction_s		useitem;
 	playerInfo_t		playerinfo;
-	qboolean		changesmade;
+	qbool			changesmade;
 	menuaction_s		chat;
 	menuaction_s		chat2;
 	menuaction_s		chat3;
@@ -202,14 +202,14 @@ typedef struct {
 	menuradiobutton_s	joyenable;
 	menuslider_s		joythreshold;
 	int			section;
-	qboolean		waitingforkey;
+	qbool			waitingforkey;
 	char			playerModel[64];
 	vec3_t			playerViewangles;
 	vec3_t			playerMoveangles;
 	int			playerLegs;
 	int			playerTorso;
 	int			playerWeapon;
-	qboolean		playerChat;
+	qbool			playerChat;
 
 	menubitmap_s		back;
 	menutext_s		name;
@@ -706,7 +706,7 @@ Controls_DrawKeyBinding(void *self)
 	int	y;
 	int	b1;
 	int	b2;
-	qboolean c;
+	qbool c;
 	char	name[32];
 	char	name2[32];
 
@@ -980,7 +980,7 @@ Controls_MenuKey(int key)
 {
 	int	id;
 	int	i;
-	qboolean	found;
+	qbool		found;
 	bind_t		* bindptr;
 	found = qfalse;
 
@@ -1082,7 +1082,7 @@ ignorekey:
  * Controls_ResetDefaults_Action
  */
 static void
-Controls_ResetDefaults_Action(qboolean result)
+Controls_ResetDefaults_Action(qbool result)
 {
 	if(!result)
 		return;

@@ -154,7 +154,7 @@ GL_Cull(int cullType)
 {
 #ifdef REACTION
 	/* Makro - flip culling if needed */
-	qboolean flip =
+	qbool flip =
 		(backEnd.currentEntity != NULL && backEnd.currentEntity->mirrored != qfalse && cullType !=
 	CT_TWO_SIDED);
 	cullType ^= flip;	/* this assumes CT_BACK_SIDED and CT_FRONT_SIDED are 0 or 1 */
@@ -169,7 +169,7 @@ GL_Cull(int cullType)
 	if(cullType == CT_TWO_SIDED){
 		qglDisable(GL_CULL_FACE);
 	}else{
-		qboolean cullFront;
+		qbool cullFront;
 		qglEnable(GL_CULL_FACE);
 
 		cullFront = (cullType == CT_FRONT_SIDED);
@@ -544,14 +544,14 @@ RB_RenderDrawSurfList(drawSurf_t *drawSurfs, int numDrawSurfs)
 	int		entityNum, oldEntityNum;
 	int		dlighted, oldDlighted;
 	int		pshadowed, oldPshadowed;
-	qboolean	depthRange, oldDepthRange, isCrosshair, wasCrosshair;
+	qbool		depthRange, oldDepthRange, isCrosshair, wasCrosshair;
 	int		i;
 	drawSurf_t              *drawSurf;
 	int		oldSort;
 	float		originalTime;
 	float		depth[2];
 	FBO_t		* fbo	= NULL;
-	qboolean	inQuery = qfalse;
+	qbool		inQuery = qfalse;
 
 	/* save original time for entity shader offsets */
 	originalTime = backEnd.refdef.floatTime;
@@ -608,7 +608,7 @@ RB_RenderDrawSurfList(drawSurf_t *drawSurfs, int numDrawSurfs)
 		 * change the modelview matrix if needed
 		 *  */
 		if(entityNum != oldEntityNum){
-			qboolean sunflare = qfalse;
+			qbool sunflare = qfalse;
 			depthRange = isCrosshair = qfalse;
 
 #ifdef REACTION
@@ -837,7 +837,7 @@ RB_SetGL2D(void)
  * Used for cinematics.
  */
 void
-RE_StretchRaw(int x, int y, int w, int h, int cols, int rows, const byte *data, int client, qboolean dirty)
+RE_StretchRaw(int x, int y, int w, int h, int cols, int rows, const byte *data, int client, qbool dirty)
 {
 	int i, j;
 	int start, end;
@@ -977,7 +977,7 @@ RE_StretchRaw(int x, int y, int w, int h, int cols, int rows, const byte *data, 
 }
 
 void
-RE_UploadCinematic(int w, int h, int cols, int rows, const byte *data, int client, qboolean dirty)
+RE_UploadCinematic(int w, int h, int cols, int rows, const byte *data, int client, qbool dirty)
 {
 
 	GL_Bind(tr.scratchImage[client]);
@@ -1372,7 +1372,7 @@ RB_PostProcess(const void *data)
 	const postProcessCommand_t *cmd = data;
 	vec4_t	white;
 	vec2_t	texScale;
-	qboolean autoExposure;
+	qbool autoExposure;
 
 	texScale[0] =
 		texScale[1] = 1.0f;

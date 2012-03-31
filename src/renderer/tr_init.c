@@ -22,7 +22,7 @@
 #include "tr_local.h"
 
 glconfig_t glConfig;
-qboolean textureFilterAnisotropic = qfalse;
+qbool textureFilterAnisotropic = qfalse;
 int maxAnisotropy	= 0;
 float displayAspect	= 0.0f;
 
@@ -284,7 +284,7 @@ vidmode_t	r_vidModes[] =
 };
 static int	s_numVidModes = ARRAY_LEN(r_vidModes);
 
-qboolean
+qbool
 R_GetModeInfo(int *width, int *height, float *windowAspect, int mode)
 {
 	vidmode_t *vm;
@@ -487,7 +487,7 @@ RB_TakeScreenshotCmd(const void *data)
  * R_TakeScreenshot
  */
 void
-R_TakeScreenshot(int x, int y, int width, int height, char *name, qboolean jpeg)
+R_TakeScreenshot(int x, int y, int width, int height, char *name, qbool jpeg)
 {
 	static char fileName[MAX_OSPATH];	/* bad things if two screenshots per frame? */
 	screenshotCommand_t *cmd;
@@ -638,7 +638,7 @@ R_ScreenShot_f(void)
 {
 	char checkname[MAX_OSPATH];
 	static int	lastNumber = -1;
-	qboolean	silent;
+	qbool		silent;
 
 	if(!strcmp(ri.Cmd_Argv(1), "levelshot")){
 		R_LevelShot();
@@ -692,7 +692,7 @@ R_ScreenShotJPEG_f(void)
 {
 	char checkname[MAX_OSPATH];
 	static int	lastNumber = -1;
-	qboolean	silent;
+	qbool		silent;
 
 	if(!strcmp(ri.Cmd_Argv(1), "levelshot")){
 		R_LevelShot();
@@ -1218,7 +1218,7 @@ R_Init(void)
  * RE_Shutdown
  */
 void
-RE_Shutdown(qboolean destroyWindow)
+RE_Shutdown(qbool destroyWindow)
 {
 
 	ri.Printf(PRINT_ALL, "RE_Shutdown( %i )\n", destroyWindow);

@@ -169,8 +169,8 @@ Cbuf_Execute(void)
 	/* This will keep // style comments all on one line by not breaking on
 	 * a semicolon.  It will keep / * ... * / style comments all on one line by not
 	 * breaking it for semicolon or newline. */
-	qboolean	in_star_comment		= qfalse;
-	qboolean	in_slash_comment	= qfalse;
+	qbool		in_star_comment		= qfalse;
+	qbool		in_slash_comment	= qfalse;
 	while(cmd_text.cursize){
 		if(cmd_wait > 0){
 			/* skip out while text still remains in buffer, leaving it
@@ -471,7 +471,7 @@ Cmd_Args_Sanitize(void)
 /* NOTE TTimo define that to track tokenization issues
  * #define TKN_DBG */
 static void
-Cmd_TokenizeString2(const char *text_in, qboolean ignoreQuotes)
+Cmd_TokenizeString2(const char *text_in, qbool ignoreQuotes)
 {
 	const char *text;
 	char *textOut;

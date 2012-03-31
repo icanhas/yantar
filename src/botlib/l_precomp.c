@@ -47,7 +47,7 @@
 #include "l_script.h"
 #include "l_precomp.h"
 
-typedef enum {qfalse, qtrue}    qboolean;
+typedef enum {qfalse, qtrue}    qbool;
 #endif	/* SCREWUP */
 
 #ifdef BOTLIB

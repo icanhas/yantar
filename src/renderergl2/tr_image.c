@@ -676,7 +676,7 @@ ExpandHalfTextureToGrid(byte *data, int width, int height)
 
 /* assumes that data has already been expanded into a 2x2 grid */
 static void
-FCBIByBlock(byte *data, int width, int height, qboolean clampToEdge)
+FCBIByBlock(byte *data, int width, int height, qbool clampToEdge)
 {
 	byte workdata[WORKBLOCK_REALSIZE * WORKBLOCK_REALSIZE * 4];
 	byte outdata[WORKBLOCK_REALSIZE * WORKBLOCK_REALSIZE * 4];
@@ -748,7 +748,7 @@ FCBIByBlock(byte *data, int width, int height, qboolean clampToEdge)
  * lighting range
  */
 void
-R_LightScaleTexture(byte *in, int inwidth, int inheight, qboolean only_gamma)
+R_LightScaleTexture(byte *in, int inwidth, int inheight, qbool only_gamma)
 {
 	if(only_gamma){
 		if(!glConfig.deviceSupportsGamma){
@@ -931,7 +931,7 @@ R_MipMap(byte *in, int width, int height)
 
 
 static void
-R_MipMapNormalHeight(byte *in, int width, int height, qboolean swizzle)
+R_MipMapNormalHeight(byte *in, int width, int height, qbool swizzle)
 {
 	int i, j;
 	byte *out;
@@ -1060,7 +1060,7 @@ RawImage_SwizzleRA(byte *data, int width, int height)
 
 #if 0
 static void
-RawImage_Normalize(byte *data, int width, int height, qboolean swizzle)
+RawImage_Normalize(byte *data, int width, int height, qbool swizzle)
 {
 	int i;
 	byte *ptr = data;
@@ -1095,9 +1095,9 @@ RawImage_ScaleToPower2(byte **data, int *inout_width, int *inout_height, int *in
 	int height	=        *inout_height;
 	int scaled_width	=  *inout_scaled_width;
 	int scaled_height	= *inout_scaled_height;
-	qboolean picmip = flags & IMGFLAG_PICMIP;
-	qboolean mipmap = flags & IMGFLAG_MIPMAP;
-	qboolean clampToEdge = flags & IMGFLAG_CLAMPTOEDGE;
+	qbool picmip = flags & IMGFLAG_PICMIP;
+	qbool mipmap = flags & IMGFLAG_MIPMAP;
+	qbool clampToEdge = flags & IMGFLAG_CLAMPTOEDGE;
 
 	/*
 	 * convert to exact power of 2 sizes
@@ -1215,7 +1215,7 @@ RawImage_ScaleToPower2(byte **data, int *inout_width, int *inout_height, int *in
 }
 
 
-static qboolean
+static qbool
 RawImage_HasAlpha(const byte *scan, int numPixels)
 {
 	int i;
@@ -1232,12 +1232,12 @@ RawImage_HasAlpha(const byte *scan, int numPixels)
 }
 
 static GLenum
-RawImage_GetFormat(const byte *data, int numPixels, qboolean lightMap, imgFlags_t flags)
+RawImage_GetFormat(const byte *data, int numPixels, qbool lightMap, imgFlags_t flags)
 {
 	int samples = 3;
 	GLenum internalFormat = GL_RGB;
-	qboolean forceNoCompression = (flags & IMGFLAG_NO_COMPRESSION);
-	qboolean normalmap4 = (flags & IMGFLAG_SWIZZLE) && (flags & IMGFLAG_NORMALIZED);
+	qbool forceNoCompression = (flags & IMGFLAG_NO_COMPRESSION);
+	qbool normalmap4 = (flags & IMGFLAG_SWIZZLE) && (flags & IMGFLAG_NORMALIZED);
 
 	if(lightMap){
 		samples = 4;
@@ -1301,7 +1301,7 @@ RawImage_GetFormat(const byte *data, int numPixels, qboolean lightMap, imgFlags_
 static void
 RawImage_UploadTexture(byte *data, int x, int y, int width, int height, GLenum internalFormat,
 		       imgFlags_t flags,
-		       qboolean subtexture)
+		       qbool subtexture)
 {
 	int dataFormat, dataType;
 
@@ -1372,10 +1372,10 @@ RawImage_UploadTexture(byte *data, int x, int y, int width, int height, GLenum i
  * Upload32
  *
  */
-extern qboolean charSet;
+extern qbool charSet;
 static void
 Upload32(byte *data, int width, int height, imgFlags_t flags,
-	 qboolean lightMap, int *format, int *pUploadWidth, int *pUploadHeight)
+	 qbool lightMap, int *format, int *pUploadWidth, int *pUploadHeight)
 {
 	byte *scaledBuffer = NULL;
 	byte *resampledBuffer = NULL;
@@ -1485,7 +1485,7 @@ done:
 
 static void
 EmptyTexture(int width, int height, imgFlags_t flags,
-	     qboolean lightMap, int *format, int *pUploadWidth, int *pUploadHeight)
+	     qbool lightMap, int *format, int *pUploadWidth, int *pUploadHeight)
 {
 	int scaled_width, scaled_height;
 	GLenum internalFormat = *format;
@@ -1529,7 +1529,7 @@ image_t *
 R_CreateImage2(const char *name, byte *pic, int width, int height, imgFlags_t flags, int internalFormat)
 {
 	image_t *image;
-	qboolean	isLightmap = qfalse;
+	qbool		isLightmap = qfalse;
 	long	hash;
 	int	glWrapClampMode;
 
@@ -1632,7 +1632,7 @@ R_CreateImage2(const char *name, byte *pic, int width, int height, imgFlags_t fl
 
 image_t *
 R_CreateImage(const char *name, byte *pic, int width, int height,
-	      qboolean mipmap, qboolean allowPicmip, int glWrapClampMode)
+	      qbool mipmap, qbool allowPicmip, int glWrapClampMode)
 {
 	imgFlags_t flags = IMGFLAG_NONE;
 
@@ -1650,7 +1650,7 @@ R_CreateImage(const char *name, byte *pic, int width, int height,
 
 image_t *
 R_CreateCubeImage(const char *name, byte *pic, int width, int height,
-		  qboolean mipmap, qboolean allowPicmip, int glWrapClampMode)
+		  qbool mipmap, qbool allowPicmip, int glWrapClampMode)
 {
 	imgFlags_t flags = IMGFLAG_CUBEMAP;
 
@@ -1774,7 +1774,7 @@ static int numImageLoaders = ARRAY_LEN(imageLoaders);
 void
 R_LoadImage(const char *name, byte **pic, int *width, int *height)
 {
-	qboolean	orgNameFailed = qfalse;
+	qbool		orgNameFailed = qfalse;
 	int	orgLoader = -1;
 	int	i;
 	char	localName[ MAX_QPATH ];
@@ -1889,7 +1889,7 @@ R_FindImageFile2(const char *name, imgFlags_t flags)
 
 
 image_t *
-R_FindImageFile(const char *name, qboolean mipmap, qboolean allowPicmip, int glWrapClampMode)
+R_FindImageFile(const char *name, qbool mipmap, qbool allowPicmip, int glWrapClampMode)
 {
 	imgFlags_t flags = IMGFLAG_NONE;
 

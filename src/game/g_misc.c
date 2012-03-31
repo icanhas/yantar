@@ -84,7 +84,7 @@ void
 TeleportPlayer(gentity_t *player, vec3_t origin, vec3_t angles)
 {
 	gentity_t	*tent;
-	qboolean	noAngles;
+	qbool		noAngles;
 
 	noAngles = (angles[0] > 999999.0);
 	/* use temp events at source and destination to prevent the effect

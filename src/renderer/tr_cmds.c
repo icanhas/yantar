@@ -21,7 +21,7 @@
 
 volatile renderCommandList_t *renderCommandList;
 
-volatile qboolean renderThreadActive;
+volatile qbool renderThreadActive;
 
 
 /*
@@ -110,7 +110,7 @@ int c_blockedOnRender;
 int c_blockedOnMain;
 
 void
-R_IssueRenderCommands(qboolean runPerformanceCounters)
+R_IssueRenderCommands(qbool runPerformanceCounters)
 {
 	renderCommandList_t *cmdList;
 
@@ -525,7 +525,7 @@ RE_EndFrame(int *frontEndMsec, int *backEndMsec)
  */
 void
 RE_TakeVideoFrame(int width, int height,
-		  byte *captureBuffer, byte *encodeBuffer, qboolean motionJpeg)
+		  byte *captureBuffer, byte *encodeBuffer, qbool motionJpeg)
 {
 	videoFrameCommand_t *cmd;
 

@@ -415,7 +415,7 @@ void
 Touch_Item(gentity_t *ent, gentity_t *other, trace_t *trace)
 {
 	int respawn;
-	qboolean predict;
+	qbool predict;
 
 	if(!other->client)
 		return;
@@ -706,7 +706,7 @@ FinishSpawningItem(gentity_t *ent)
 }
 
 
-qboolean itemRegistered[MAX_ITEMS];
+qbool itemRegistered[MAX_ITEMS];
 
 /*
  * G_CheckTeamItems

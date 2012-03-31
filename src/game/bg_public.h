@@ -162,8 +162,8 @@ typedef struct {
 	usercmd_t	cmd;
 	int		tracemask;	/* collide against these types of surfaces */
 	int		debugLevel;	/* if set, diagnostic output will be printed */
-	qboolean	noFootsteps;	/* if the game is setup for no footsteps by the server */
-	qboolean	gauntletHit;	/* true if a gauntlet attack would actually hit something */
+	qbool		noFootsteps;	/* if the game is setup for no footsteps by the server */
+	qbool		gauntletHit;	/* true if a gauntlet attack would actually hit something */
 
 	int		framecount;
 
@@ -649,7 +649,7 @@ gitem_t*BG_FindItemForPowerup(powerup_t pw);
 gitem_t*BG_FindItemForHoldable(holdable_t pw);
 #define ITEM_INDEX(x) ((x)-bg_itemlist)
 
-qboolean        BG_CanItemBeGrabbed(int gametype, const entityState_t *ent,
+qbool        BG_CanItemBeGrabbed(int gametype, const entityState_t *ent,
 				    const playerState_t *ps);
 
 
@@ -704,12 +704,12 @@ void    BG_AddPredictableEventToPlayerstate(int newEvent, int eventParm,
 void    BG_TouchJumpPad(playerState_t *ps, entityState_t *jumppad);
 
 void    BG_PlayerStateToEntityState(playerState_t *ps, entityState_t *s,
-				    qboolean snap);
+				    qbool snap);
 void    BG_PlayerStateToEntityStateExtraPolate(playerState_t *ps,
 					       entityState_t *s, int time,
-					       qboolean snap);
+					       qbool snap);
 
-qboolean        BG_PlayerTouchesItem(playerState_t *ps, entityState_t *item,
+qbool        BG_PlayerTouchesItem(playerState_t *ps, entityState_t *item,
 				     int atTime);
 
 

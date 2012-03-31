@@ -20,7 +20,7 @@
  */
 #include "ui_local.h"
 
-qboolean passwordNeeded = qtrue;
+qbool passwordNeeded = qtrue;
 menufield_s passwordField;
 
 static connstate_t lastConnState;
@@ -164,7 +164,7 @@ UI_DisplayDownloadInfo(const char *downloadName)
  * games.
  */
 void
-UI_DrawConnectScreen(qboolean overlay)
+UI_DrawConnectScreen(qbool overlay)
 {
 	char	*s;
 	uiClientState_t cstate;

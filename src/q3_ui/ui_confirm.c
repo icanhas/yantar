@@ -43,7 +43,7 @@ typedef struct {
 	int		slashX;
 	const char	* question;
 	void (*draw)(void);
-	void (*action)(qboolean result);
+	void (*action)(qbool result);
 
 	int		style;
 	const char	**lines;
@@ -59,7 +59,7 @@ static confirmMenu_t s_confirm;
 static void
 ConfirmMenu_Event(void* ptr, int event)
 {
-	qboolean result;
+	qbool result;
 
 	if(event != QM_ACTIVATED)
 		return;
@@ -163,7 +163,7 @@ ConfirmMenu_Cache(void)
  */
 void
 UI_ConfirmMenu_Style(const char *question, int style, void (*draw)(
-			     void), void (*action)(qboolean result))
+			     void), void (*action)(qbool result))
 {
 	uiClientState_t cstate;
 	int	n1, n2, n3;
@@ -230,7 +230,7 @@ UI_ConfirmMenu_Style(const char *question, int style, void (*draw)(
  */
 void
 UI_ConfirmMenu(const char *question, void (*draw)(void), void (*action)(
-		       qboolean result))
+		       qbool result))
 {
 	UI_ConfirmMenu_Style(question, UI_CENTER|UI_INVERSE, draw, action);
 }

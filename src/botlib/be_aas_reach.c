@@ -796,7 +796,7 @@ AAS_BarrierJumpTravelTime(void)
  * Returns:					-
  * Changes Globals:		-
  * =========================================================================== */
-qboolean
+qbool
 AAS_ReachabilityExists(int area1num, int area2num)
 {
 	aas_lreachability_t *r;

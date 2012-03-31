@@ -36,13 +36,13 @@ typedef struct {
 } ranked_player_t;
 
 static int s_rankings_contexts = 0;
-static qboolean s_rankings_active = qfalse;
+static qbool s_rankings_active = qfalse;
 static GR_CONTEXT s_server_context = 0;
 static uint64_t s_server_match = 0;
 static char*                    s_rankings_game_key = NULL;
 static uint64_t s_rankings_game_id = 0;
 static ranked_player_t* s_ranked_players = NULL;
-static qboolean s_server_quitting = qfalse;
+static qbool s_server_quitting = qfalse;
 static const char s_ascii_encoding[] =
 	"0123456789abcdef"
 	"ghijklmnopqrstuv"
@@ -243,7 +243,7 @@ SV_RankPoll(void)
 /*
  * SV_RankCheckInit
  */
-qboolean
+qbool
 SV_RankCheckInit(void)
 {
 	return (s_rankings_contexts > 0);
@@ -252,7 +252,7 @@ SV_RankCheckInit(void)
 /*
  * SV_RankActive
  */
-qboolean
+qbool
 SV_RankActive(void)
 {
 	return s_rankings_active;
@@ -460,14 +460,14 @@ SV_RankUserLogin(int index, char* username, char* password)
 /*
  * SV_RankUserValidate
  */
-qboolean
+qbool
 SV_RankUserValidate(int index, const char* player_id, const char* key,
 		    int token_len, int rank,
 		    char* name)
 {
 	GR_INIT		init;
 	GR_STATUS	status;
-	qboolean	rVal;
+	qbool		rVal;
 	ranked_player_t * ranked_player;
 	int i;
 
@@ -624,7 +624,7 @@ SV_RankUserLogout(int index)
  */
 void
 SV_RankReportInt(int index1, int index2, int key, int value,
-		 qboolean accum)
+		 qbool accum)
 {
 	GR_STATUS	status;
 	GR_CONTEXT	context;

@@ -55,9 +55,9 @@ SV_GetChallenge(netadr_t from)
 	int	oldestClientTime;
 	int	clientChallenge;
 	challenge_t	*challenge;
-	qboolean	wasfound = qfalse;
+	qbool		wasfound = qfalse;
 	char            *gameName;
-	qboolean	gameMismatch;
+	qbool		gameMismatch;
 
 	/* ignore if we are in single player */
 	if(Cvar_VariableValue("g_gametype") == GT_SINGLE_PLAYER ||
@@ -278,8 +278,8 @@ SV_AuthorizeIpPacket(netadr_t from)
  * Check whether a certain address is banned
  */
 
-static qboolean
-SV_IsBanned(netadr_t *from, qboolean isexception)
+static qbool
+SV_IsBanned(netadr_t *from, qbool isexception)
 {
 	int index;
 	serverBan_t *curban;
@@ -325,7 +325,7 @@ SV_DirectConnect(netadr_t from)
 	int	count;
 	char *ip;
 #ifdef LEGACY_PROTOCOL
-	qboolean compat = qfalse;
+	qbool compat = qfalse;
 #endif
 
 	Com_DPrintf ("SVC_DirectConnect ()\n");
@@ -629,7 +629,7 @@ SV_DropClient(client_t *drop, const char *reason)
 {
 	int i;
 	challenge_t *challenge;
-	const qboolean isBot = drop->netchan.remoteAddress.type == NA_BOT;
+	const qbool isBot = drop->netchan.remoteAddress.type == NA_BOT;
 
 	if(drop->state == CS_ZOMBIE)
 		return;		/* already dropped */
@@ -924,9 +924,9 @@ SV_WriteDownloadToClient(client_t *cl, msg_t *msg)
 		return 0;	/* Nothing being downloaded */
 
 	if(!cl->download){
-		qboolean	idPack = qfalse;
+		qbool		idPack = qfalse;
 		#ifndef STANDALONE
-		qboolean	missionPack = qfalse;
+		qbool		missionPack = qfalse;
 		#endif
 
 		/* Chop off filename extension. */
@@ -1246,7 +1246,7 @@ SV_VerifyPaks_f(client_t *cl)
 	int	nClientChkSum[1024];
 	int	nServerChkSum[1024];
 	const char	*pPaks, *pArg;
-	qboolean	bGood = qtrue;
+	qbool		bGood = qtrue;
 
 	/* if we are pure, we "expect" the client to load certain things from
 	 * certain pk3 files, namely we want the client to have loaded the
@@ -1510,7 +1510,7 @@ SV_UpdateUserinfo_f(client_t *cl)
 #ifdef USE_VOIP
 static
 void
-SV_UpdateVoipIgnore(client_t *cl, const char *idstr, qboolean ignore)
+SV_UpdateVoipIgnore(client_t *cl, const char *idstr, qbool ignore)
 {
 	if((*idstr >= '0') && (*idstr <= '9')){
 		const int id = atoi(idstr);
@@ -1566,10 +1566,10 @@ static ucmd_t ucmds[] = {
  * Also called by bot code
  */
 void
-SV_ExecuteClientCommand(client_t *cl, const char *s, qboolean clientOK)
+SV_ExecuteClientCommand(client_t *cl, const char *s, qbool clientOK)
 {
 	ucmd_t *u;
-	qboolean bProcessed = qfalse;
+	qbool bProcessed = qfalse;
 
 	Cmd_TokenizeString(s);
 
@@ -1597,12 +1597,12 @@ SV_ExecuteClientCommand(client_t *cl, const char *s, qboolean clientOK)
 /*
  * SV_ClientCommand
  */
-static qboolean
+static qbool
 SV_ClientCommand(client_t *cl, msg_t *msg)
 {
 	int seq;
 	const char	*s;
-	qboolean	clientOk = qtrue;
+	qbool		clientOk = qtrue;
 
 	seq = MSG_ReadLong(msg);
 	s = MSG_ReadString(msg);
@@ -1679,7 +1679,7 @@ SV_ClientThink(client_t *cl, usercmd_t *cmd)
  * each of the backup packets.
  */
 static void
-SV_UserMove(client_t *cl, msg_t *msg, qboolean delta)
+SV_UserMove(client_t *cl, msg_t *msg, qbool delta)
 {
 	int	i, key;
 	int	cmdCount;
@@ -1786,7 +1786,7 @@ SV_UserMove(client_t *cl, msg_t *msg, qboolean delta)
  * Blocking of voip packets based on source client
  */
 
-static qboolean
+static qbool
 SV_ShouldIgnoreVoipSender(const client_t *cl)
 {
 	if(!sv_voip->integer)

@@ -596,7 +596,7 @@ UI_TierCompleted(int levelWon)
 /*
  * UI_ShowTierVideo
  */
-qboolean
+qbool
 UI_ShowTierVideo(int tier)
 {
 	char	key[16];
@@ -621,7 +621,7 @@ UI_ShowTierVideo(int tier)
 /*
  * UI_CanShowTierVideo
  */
-qboolean
+qbool
 UI_CanShowTierVideo(int tier)
 {
 	char	key[16];

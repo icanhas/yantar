@@ -448,10 +448,10 @@ RB_SurfaceHelper(int numVerts, srfVert_t *verts, int numTriangles, srfTriangle_t
 	tess.numVertexes += numVerts;
 }
 
-static qboolean
+static qbool
 RB_SurfaceHelperVBO(VBO_t *vbo, IBO_t *ibo, int numVerts, int numIndexes, int firstIndex, int dlightBits,
 		    int pshadowBits,
-		    qboolean shaderCheck)
+		    qbool shaderCheck)
 {
 	int i, mergeForward, mergeBack;
 	GLvoid *firstIndexOffset, *lastIndexOffset;

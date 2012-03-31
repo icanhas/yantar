@@ -209,7 +209,7 @@ G_RankDamage(int self, int attacker, int damage, int means_of_death)
 	static int	last_attacker = -1;
 	static int	last_means_of_death = MOD_UNKNOWN;
 
-	qboolean	new_hit;
+	qbool		new_hit;
 	int	splash;
 	int	key_hit;
 	int	key_damage;

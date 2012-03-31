@@ -536,7 +536,7 @@ CG_ParseVoiceChats(const char *filename, voiceChatList_t *voiceChatList,
 	char **p, *ptr;
 	char *token;
 	voiceChat_t	*voiceChats;
-	qboolean	compress;
+	qbool		compress;
 	sfxHandle_t	sound;
 
 	compress = qtrue;
@@ -927,7 +927,7 @@ CG_AddBufferedVoiceChat(bufferedVoiceChat_t *vchat)
  * CG_VoiceChatLocal
  */
 void
-CG_VoiceChatLocal(int mode, qboolean voiceOnly, int clientNum, int color,
+CG_VoiceChatLocal(int mode, qbool voiceOnly, int clientNum, int color,
 		  const char *cmd)
 {
 #ifdef MISSIONPACK
@@ -986,7 +986,7 @@ CG_VoiceChat(int mode)
 #ifdef MISSIONPACK
 	const char	*cmd;
 	int clientNum, color;
-	qboolean	voiceOnly;
+	qbool		voiceOnly;
 
 	voiceOnly = atoi(CG_Argv(1));
 	clientNum	= atoi(CG_Argv(2));

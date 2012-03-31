@@ -445,7 +445,7 @@ RadioButton_Draw(menuradiobutton_s *rb)
 	int	y;
 	float *color;
 	int	style;
-	qboolean focus;
+	qbool focus;
 
 	x	= rb->generic.x;
 	y	= rb->generic.y;
@@ -580,7 +580,7 @@ Slider_Draw(menuslider_s *s)
 	int	style;
 	float *color;
 	int	button;
-	qboolean focus;
+	qbool focus;
 
 	x	=     s->generic.x;
 	y	= s->generic.y;
@@ -641,7 +641,7 @@ Slider_Draw(menuslider_s *s)
 	int	i;
 	int	x;
 	int	y;
-	qboolean focus;
+	qbool focus;
 
 	x	=     s->generic.x;
 	y	= s->generic.y;
@@ -773,7 +773,7 @@ SpinControl_Draw(menulist_s *s)
 	float	*color;
 	int	x,y;
 	int	style;
-	qboolean focus;
+	qbool focus;
 
 	x	= s->generic.x;
 	y	=     s->generic.y;
@@ -1099,7 +1099,7 @@ ScrollList_Draw(menulist_s *l)
 	int	base;
 	int	column;
 	float	* color;
-	qboolean hasfocus;
+	qbool hasfocus;
 	int	style;
 
 	hasfocus = (l->generic.parent->cursor == l->generic.menuPosition);
@@ -1287,7 +1287,7 @@ void
 Menu_AdjustCursor(menuframework_s *m, int dir)
 {
 	menucommon_s *item	= NULL;
-	qboolean wrapped	= qfalse;
+	qbool wrapped	= qfalse;
 
 wrap:
 	while(m->cursor >= 0 && m->cursor < m->nitems){

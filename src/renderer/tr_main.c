@@ -126,7 +126,7 @@ R_CullPointAndRadius(vec3_t pt, float radius)
 	int i;
 	float dist;
 	cplane_t *frust;
-	qboolean mightBeClipped = qfalse;
+	qbool mightBeClipped = qfalse;
 
 	if(r_nocull->integer){
 		return CULL_CLIP;
@@ -494,7 +494,7 @@ R_SetupFrustum(viewParms_t *dest, float xmin, float xmax, float ymax, float zPro
  * R_SetupProjection
  */
 void
-R_SetupProjection(viewParms_t *dest, float zProj, qboolean computeFrustum)
+R_SetupProjection(viewParms_t *dest, float zProj, qbool computeFrustum)
 {
 	float xmin, xmax, ymin, ymax;
 	float width, height, stereoSep = r_stereoSeparation->value;
@@ -648,10 +648,10 @@ R_PlaneForSurface(surfaceType_t *surfType, cplane_t *plane)
  *
  * Returns qtrue if it should be mirrored
  */
-qboolean
+qbool
 R_GetPortalOrientations(drawSurf_t *drawSurf, int entityNum,
 			orientation_t *surface, orientation_t *camera,
-			vec3_t pvsOrigin, qboolean *mirror)
+			vec3_t pvsOrigin, qbool *mirror)
 {
 	int i;
 	cplane_t originalPlane, plane;
@@ -768,7 +768,7 @@ R_GetPortalOrientations(drawSurf_t *drawSurf, int entityNum,
 	return qfalse;
 }
 
-static qboolean
+static qbool
 IsMirror(const drawSurf_t *drawSurf, int entityNum)
 {
 	int i;
@@ -829,7 +829,7 @@ IsMirror(const drawSurf_t *drawSurf, int entityNum)
 **
 ** Determines if a surface is completely offscreen.
 */
-static qboolean
+static qbool
 SurfIsOffscreen(const drawSurf_t *drawSurf, vec4_t clipDest[128])
 {
 	float shortest = 100000000;
@@ -922,7 +922,7 @@ SurfIsOffscreen(const drawSurf_t *drawSurf, vec4_t clipDest[128])
  *
  * Returns qtrue if another view has been rendered
  */
-qboolean
+qbool
 R_MirrorViewBySurface(drawSurf_t *drawSurf, int entityNum)
 {
 	vec4_t clipDest[128];

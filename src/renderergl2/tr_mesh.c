@@ -271,7 +271,7 @@ R_AddMD3Surfaces(trRefEntity_t *ent)
 	int cull;
 	int lod;
 	int fogNum;
-	qboolean personalModel;
+	qbool personalModel;
 
 	/* don't add third_person objects if not in a portal */
 	personalModel = (ent->e.renderfx & RF_THIRD_PERSON) &&

@@ -367,7 +367,7 @@ CG_DrawHead(float x, float y, float w, float h, int clientNum, vec3_t headAngles
  * Used for both the status bar and the scoreboard
  */
 void
-CG_DrawFlagModel(float x, float y, float w, float h, int team, qboolean force2D)
+CG_DrawFlagModel(float x, float y, float w, float h, int team, qbool force2D)
 {
 	qhandle_t	cm;
 	float len;
@@ -817,7 +817,7 @@ CG_DrawTimer(float y)
  */
 
 static float
-CG_DrawTeamOverlay(float y, qboolean right, qboolean upper)
+CG_DrawTeamOverlay(float y, qbool right, qbool upper)
 {
 	int	x, w, h, xx;
 	int	i, j, len;
@@ -1116,7 +1116,7 @@ CG_DrawScores(float y)
 		}
 
 	}else{
-		qboolean spectator;
+		qbool spectator;
 
 		x = 640;
 		score = cg.snap->ps.persistant[PERS_SCORE];
@@ -2175,11 +2175,11 @@ CG_DrawTeamVote(void)
 }
 
 
-static qboolean
+static qbool
 CG_DrawScoreboard(void)
 {
 #ifdef MISSIONPACK
-	static qboolean firstTime = qtrue;
+	static qbool firstTime = qtrue;
 
 	if(menuScoreboard)
 		menuScoreboard->window.flags &= ~WINDOW_FORCED;
@@ -2261,7 +2261,7 @@ CG_DrawIntermission(void)
 /*
  * CG_DrawFollow
  */
-static qboolean
+static qbool
 CG_DrawFollow(void)
 {
 	float	x;

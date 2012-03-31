@@ -26,7 +26,7 @@
 cvar_t *cl_shownet;
 
 void
-CL_Shutdown(char *finalmsg, qboolean disconnect, qboolean quit)
+CL_Shutdown(char *finalmsg, qbool disconnect, qbool quit)
 {
 }
 
@@ -62,7 +62,7 @@ CL_CharEvent(int key)
 }
 
 void
-CL_Disconnect(qboolean showMainMenu)
+CL_Disconnect(qbool showMainMenu)
 {
 }
 
@@ -71,18 +71,18 @@ CL_MapLoading(void)
 {
 }
 
-qboolean
+qbool
 CL_GameCommand(void)
 {
 	return qfalse;
 }
 
 void
-CL_KeyEvent(int key, qboolean down, unsigned time)
+CL_KeyEvent(int key, qbool down, unsigned time)
 {
 }
 
-qboolean
+qbool
 UI_GameCommand(void)
 {
 	return qfalse;
@@ -119,12 +119,12 @@ CL_FlushMemory(void)
 }
 
 void
-CL_ShutdownAll(qboolean shutdownRef)
+CL_ShutdownAll(qbool shutdownRef)
 {
 }
 
 void
-CL_StartHunkUsers(qboolean rendererOnly)
+CL_StartHunkUsers(qbool rendererOnly)
 {
 }
 
@@ -138,7 +138,7 @@ CL_Snd_Shutdown(void)
 {
 }
 
-qboolean
+qbool
 CL_CDKeyValidate(const char *key, const char *checksum)
 {
 	return qtrue;

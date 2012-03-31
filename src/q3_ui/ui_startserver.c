@@ -74,7 +74,7 @@ typedef struct {
 	menutext_s	mapname;
 	menubitmap_s	item_null;
 
-	qboolean	multiplayer;
+	qbool		multiplayer;
 	int		currentmap;
 	int		nummaps;
 	int		page;
@@ -98,7 +98,7 @@ static int	gametype_remap2[] = {0, 2, 0, 1, 3};
 /* use ui_servers2.c definition */
 extern const char * punkbuster_items[];
 
-static void UI_ServerOptionsMenu(qboolean multiplayer);
+static void UI_ServerOptionsMenu(qbool multiplayer);
 
 
 /*
@@ -566,7 +566,7 @@ StartServer_Cache(void)
 {
 	int i;
 	const char	*info;
-	qboolean	precache;
+	qbool		precache;
 	char	picname[64];
 	char	mapname[ MAX_NAMELENGTH ];
 
@@ -603,7 +603,7 @@ StartServer_Cache(void)
  * UI_StartServerMenu
  */
 void
-UI_StartServerMenu(qboolean multiplayer)
+UI_StartServerMenu(qbool multiplayer)
 {
 	StartServer_MenuInit();
 	s_startserver.multiplayer = multiplayer;
@@ -653,12 +653,12 @@ typedef struct {
 	menubitmap_s		next;
 	menubitmap_s		back;
 
-	qboolean		multiplayer;
+	qbool			multiplayer;
 	int			gametype;
 	char			mapnamebuffer[32];
 	char			playerNameBuffers[PLAYER_SLOTS][16];
 
-	qboolean		newBot;
+	qbool			newBot;
 	int			newBotIndex;
 	char			newBotName[16];
 
@@ -700,7 +700,7 @@ static const char	*botSkill_list[] = {
 /*
  * BotAlreadySelected
  */
-static qboolean
+static qbool
 BotAlreadySelected(const char *checkName)
 {
 	int n;
@@ -1213,7 +1213,7 @@ PlayerName_Draw(void *item)
 	float		*color;
 	int	x, y;
 	int	style;
-	qboolean focus;
+	qbool focus;
 
 	s = (menutext_s*)item;
 
@@ -1254,7 +1254,7 @@ PlayerName_Draw(void *item)
 #define OPTIONS_X 456
 
 static void
-ServerOptions_MenuInit(qboolean multiplayer)
+ServerOptions_MenuInit(qbool multiplayer)
 {
 	int	y;
 	int	n;
@@ -1554,7 +1554,7 @@ ServerOptions_Cache(void)
  * UI_ServerOptionsMenu
  */
 static void
-UI_ServerOptionsMenu(qboolean multiplayer)
+UI_ServerOptionsMenu(qbool multiplayer)
 {
 	ServerOptions_MenuInit(multiplayer);
 	UI_PushMenu(&s_serveroptions.menu);

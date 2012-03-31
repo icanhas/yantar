@@ -68,7 +68,7 @@ static int numIPFilters;
 /*
  * StringToFilter
  */
-static qboolean
+static qbool
 StringToFilter(char *s, ipFilter_t *f)
 {
 	char	num[128];
@@ -155,7 +155,7 @@ UpdateIPBans(void)
 /*
  * G_FilterPacket
  */
-qboolean
+qbool
 G_FilterPacket(char *from)
 {
 	int	i;
@@ -409,7 +409,7 @@ Svcmd_ForceTeam_f(void)
 
 char*ConcatArgs(int start);
 
-qboolean
+qbool
 ConsoleCommand(void)
 {
 	char cmd[MAX_TOKEN_CHARS];

@@ -201,7 +201,7 @@ CG_PointContents(const vec3_t point, int passEntityNum)
  * cg.snap->player_state and cg.nextFrame->player_state
  */
 static void
-CG_InterpolatePlayerState(qboolean grabAngles)
+CG_InterpolatePlayerState(qbool grabAngles)
 {
 	float	f;
 	int	i;
@@ -331,7 +331,7 @@ CG_TouchTriggerPrediction(void)
 	entityState_t	*ent;
 	clipHandle_t	cmodel;
 	centity_t	*cent;
-	qboolean	spectator;
+	qbool		spectator;
 
 	/* dead clients don't activate triggers */
 	if(cg.predictedPlayerState.stats[STAT_HEALTH] <= 0)
@@ -411,7 +411,7 @@ CG_PredictPlayerState(void)
 {
 	int cmdNum, current;
 	playerState_t oldPlayerState;
-	qboolean	moved;
+	qbool		moved;
 	usercmd_t	oldestCmd;
 	usercmd_t	latestCmd;
 

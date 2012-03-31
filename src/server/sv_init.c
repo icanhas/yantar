@@ -370,11 +370,11 @@ SV_TouchCGame(void)
  * This is NOT called for map_restart
  */
 void
-SV_SpawnServer(char *server, qboolean killBots)
+SV_SpawnServer(char *server, qbool killBots)
 {
 	int	i;
 	int	checksum;
-	qboolean isBot;
+	qbool isBot;
 	char	systemInfo[16384];
 	const char *p;
 

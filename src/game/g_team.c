@@ -167,7 +167,7 @@ AddTeamScore(vec3_t origin, int team, int score)
 /*
  * OnSameTeam
  */
-qboolean
+qbool
 OnSameTeam(gentity_t *ent1, gentity_t *ent2)
 {
 	if(!ent1->client || !ent2->client)
@@ -189,7 +189,7 @@ static char	oneFlagStatusRemap[] = { '0', '1', '2', '3', '4' };
 void
 Team_SetFlagStatus(int team, flagStatus_t status)
 {
-	qboolean modified = qfalse;
+	qbool modified = qfalse;
 
 	switch(team){
 	case TEAM_RED:	/* CTF */
@@ -995,7 +995,7 @@ Team_GetLocation(gentity_t *ent)
  *
  * Report a location for the player. Uses placed nearby target_location entities
  */
-qboolean
+qbool
 Team_GetLocationMsg(gentity_t *ent, char *loc, int loclen)
 {
 	gentity_t *best;
@@ -1078,7 +1078,7 @@ SelectRandomTeamSpawnPoint(int teamstate, team_t team)
  */
 gentity_t *
 SelectCTFSpawnPoint(team_t team, int teamstate, vec3_t origin, vec3_t angles,
-		    qboolean isbot)
+		    qbool isbot)
 {
 	gentity_t *spot;
 
@@ -1524,7 +1524,7 @@ SP_team_neutralobelisk(gentity_t *ent)
 /*
  * CheckObeliskAttack
  */
-qboolean
+qbool
 CheckObeliskAttack(gentity_t *obelisk, gentity_t *attacker)
 {
 	gentity_t *te;

@@ -82,11 +82,11 @@ typedef struct {
 
 	float		axisLength;	/* compensate for non-normalized axis */
 
-	qboolean	needDlights;	/* true for bmodels that touch a dlight */
-	qboolean	lightingCalculated;
+	qbool		needDlights;	/* true for bmodels that touch a dlight */
+	qbool		lightingCalculated;
 #ifdef REACTION
 	/* JBravo: Mirrored models */
-	qboolean	mirrored;	/* mirrored matrix, needs reversed culling */
+	qbool		mirrored;	/* mirrored matrix, needs reversed culling */
 #endif
 	vec3_t		lightDir;		/* normalized direction towards light */
 	vec3_t		ambientLight;		/* color normalized to 0-255 */
@@ -378,9 +378,9 @@ typedef struct {
 	texModInfo_t	*texMods;
 
 	int		videoMapHandle;
-	qboolean	isLightmap;
-	qboolean	vertexLightmap;
-	qboolean	isVideoMap;
+	qbool		isLightmap;
+	qbool		vertexLightmap;
+	qbool		isVideoMap;
 } textureBundle_t;
 
 enum {
@@ -406,7 +406,7 @@ typedef enum {
 } stageType_t;
 
 typedef struct {
-	qboolean		active;
+	qbool			active;
 
 	textureBundle_t		bundle[NUM_TEXTURE_BUNDLES];
 
@@ -422,7 +422,7 @@ typedef struct {
 
 	acff_t			adjustColorsForFog;
 
-	qboolean		isDetail;
+	qbool			isDetail;
 
 	stageType_t		type;
 	struct shaderProgram_s	*glslShaderGroup;
@@ -472,32 +472,32 @@ typedef struct shader_s {
 
 	float		sort;	/* lower numbered shaders draw before higher numbered */
 
-	qboolean	defaultShader;	/* we want to return index 0 if the shader failed to */
+	qbool		defaultShader;	/* we want to return index 0 if the shader failed to */
 	/* load for some reason, but R_FindShader should
 	 * still keep a name allocated for it, so if
 	 * something calls RE_RegisterShader again with
 	 * the same name, we don't try looking for it again */
 
-	qboolean	explicitlyDefined;	/* found in a .shader file */
+	qbool		explicitlyDefined;	/* found in a .shader file */
 
 	int		surfaceFlags;	/* if explicitlyDefined, this will have SURF_* flags */
 	int		contentFlags;
 
-	qboolean	entityMergable;	/* merge across entites optimizable (smoke, blood) */
+	qbool		entityMergable;	/* merge across entites optimizable (smoke, blood) */
 
-	qboolean	isSky;
+	qbool		isSky;
 	skyParms_t	sky;
 	fogParms_t	fogParms;
 
 	float		portalRange;	/* distance to fog out at */
-	qboolean	isPortal;
+	qbool		isPortal;
 
 	int		multitextureEnv;	/* 0, GL_MODULATE, GL_ADD (FIXME: put in stage) */
 
 	cullType_t	cullType;	/* CT_FRONT_SIDED, CT_BACK_SIDED, or CT_TWO_SIDED */
-	qboolean	polygonOffset;	/* set for decals and other items that must be offset */
-	qboolean	noMipMaps;	/* for console fonts, 2D elements, etc. */
-	qboolean	noPicMip;	/* for images that must always be full resolution */
+	qbool		polygonOffset;	/* set for decals and other items that must be offset */
+	qbool		noMipMaps;	/* for console fonts, 2D elements, etc. */
+	qbool		noPicMip;	/* for images that must always be full resolution */
 
 	fogPass_t	fogPass;	/* draw a blended pass, possibly with depth test equals */
 
@@ -527,7 +527,7 @@ typedef struct shader_s {
 	struct  shader_s	*next;
 } shader_t;
 
-static ID_INLINE qboolean
+static ID_INLINE qbool
 ShaderRequiresCPUDeforms(const shader_t * shader)
 {
 	if(shader->numDeforms){
@@ -854,7 +854,7 @@ typedef struct {
 
 	/* 1 bits will prevent the associated area from rendering at all */
 	byte		areamask[MAX_MAP_AREA_BYTES];
-	qboolean	areamaskModified;	/* qtrue if areamask changed since last scene */
+	qbool		areamaskModified;	/* qtrue if areamask changed since last scene */
 
 	float		floatTime;	/* tr.refdef.time / 1000.0 */
 
@@ -907,7 +907,7 @@ typedef struct {
 	fogParms_t	parms;
 
 	/* for clipping distance in fog when outside */
-	qboolean	hasSurface;
+	qbool		hasSurface;
 	float		surface[4];
 } fog_t;
 
@@ -915,9 +915,9 @@ typedef struct {
 	orientationr_t	or;
 	orientationr_t	world;
 	vec3_t		pvsOrigin;	/* may be different than or.origin for portals */
-	qboolean	isPortal;	/* true if this view is through a portal */
-	qboolean	isMirror;	/* the portal is a mirror, invert the face culling */
-	qboolean	isShadowmap;
+	qbool		isPortal;	/* true if this view is through a portal */
+	qbool		isMirror;	/* the portal is a mirror, invert the face culling */
+	qbool		isShadowmap;
 	int		frameSceneNum;	/* copied from tr.frameSceneNum */
 	int		frameCount;	/* copied from tr.frameCount */
 	cplane_t	portalPlane;	/* clip anything behind this if mirroring */
@@ -1018,8 +1018,8 @@ typedef struct {
 	int		indexes[3];
 	int		neighbors[3];
 	vec4_t		plane;
-	qboolean	facingLight;
-	qboolean	degenerated;
+	qbool		facingLight;
+	qbool		degenerated;
 } srfTriangle_t;
 
 
@@ -1517,7 +1517,7 @@ typedef struct {
 typedef struct {
 	int		currenttextures[2];
 	int		currenttmu;
-	qboolean	finishCalled;
+	qbool		finishCalled;
 	int		texEnv[2];
 	int		faceCulling;
 	unsigned long	glStateBits;
@@ -1544,19 +1544,19 @@ typedef enum {
 /* We can't change glConfig_t without breaking DLL/vms compatibility, so
  * store extensions we have here. */
 typedef struct {
-	qboolean	multiDrawArrays;
-	qboolean	occlusionQuery;
+	qbool		multiDrawArrays;
+	qbool		occlusionQuery;
 
 	memInfo_t	memInfo;
 
-	qboolean	framebufferObject;
+	qbool		framebufferObject;
 	int		maxRenderbufferSize;
 	int		maxColorAttachments;
 
-	qboolean	textureNonPowerOfTwo;
-	qboolean	textureFloat;
-	qboolean	halfFloatPixel;
-	qboolean	packedDepthStencil;
+	qbool		textureNonPowerOfTwo;
+	qbool		textureFloat;
+	qbool		halfFloatPixel;
+	qbool		packedDepthStencil;
 } glRefConfig_t;
 
 
@@ -1600,22 +1600,22 @@ typedef struct {
 	viewParms_t		viewParms;
 	orientationr_t		or;
 	backEndCounters_t	pc;
-	qboolean		isHyperspace;
+	qbool			isHyperspace;
 	trRefEntity_t		*currentEntity;
-	qboolean		skyRenderedThisView;	/* flag for drawing sun */
+	qbool			skyRenderedThisView;	/* flag for drawing sun */
 
 #ifdef REACTION
 	vec3_t		sunFlarePos;
-	qboolean	hasSunFlare;
+	qbool		hasSunFlare;
 #endif
 
-	qboolean	projection2D;	/* if qtrue, drawstretchpic doesn't need to change modes */
+	qbool		projection2D;	/* if qtrue, drawstretchpic doesn't need to change modes */
 	byte		color2D[4];
-	qboolean	vertexes2D;	/* shader needs to be finished */
+	qbool		vertexes2D;	/* shader needs to be finished */
 	trRefEntity_t	entity2D;	/* currentEntity will point at this when doing 2D rendering */
 
 	FBO_t		*last2DFBO;
-	qboolean	framePostProcessed;
+	qbool		framePostProcessed;
 } backEndState_t;
 
 /*
@@ -1627,7 +1627,7 @@ typedef struct {
 ** by the frontend.
 */
 typedef struct {
-	qboolean	registered;	/* cleared at shutdown, set at beginRegistration */
+	qbool		registered;	/* cleared at shutdown, set at beginRegistration */
 
 	int		visIndex;
 	int		visClusters[MAX_VISCOUNTS];
@@ -1642,9 +1642,9 @@ typedef struct {
 
 	int		frameSceneNum;	/* zeroed at RE_BeginFrame */
 
-	qboolean	worldMapLoaded;
-	qboolean	worldDeluxeMapping;
-	qboolean	autoExposure;
+	qbool		worldMapLoaded;
+	qbool		worldDeluxeMapping;
+	qbool		autoExposure;
 	vec2_t		autoExposureMinMax;
 	world_t		*world;
 
@@ -1771,7 +1771,7 @@ typedef struct {
 #ifdef REACTION
 	GLuint		sunFlareQuery[2];
 	int		sunFlareQueryIndex;
-	qboolean	sunFlareQueryActive[2];
+	qbool		sunFlareQueryActive[2];
 #endif
 
 	float	sinTable[FUNCTABLE_SIZE];
@@ -1790,7 +1790,7 @@ extern glstate_t glState;	/* outside of TR since it shouldn't be cleared during 
 /* These three variables should live inside glConfig but can't because of compatibility issues to the original ID vms.
  * If you release a stand-alone game and your mod uses tr_types.h from this build you can safely move them to
  * the glconfig_t struct. */
-extern qboolean textureFilterAnisotropic;
+extern qbool textureFilterAnisotropic;
 extern int maxAnisotropy;
 extern glRefConfig_t glRefConfig;
 extern float displayAspect;
@@ -1963,7 +1963,7 @@ void R_RenderPshadowMaps(const refdef_t *fd);
 void R_AddMD3Surfaces(trRefEntity_t *e);
 void R_AddNullModelSurfaces(trRefEntity_t *e);
 void R_AddBeamSurfaces(trRefEntity_t *e);
-void R_AddRailSurfaces(trRefEntity_t *e, qboolean isUnderwater);
+void R_AddRailSurfaces(trRefEntity_t *e, qbool isUnderwater);
 void R_AddLightningBoltSurfaces(trRefEntity_t *e);
 
 void R_AddPolygonSurfaces(void);
@@ -1977,7 +1977,7 @@ void R_AddDrawSurf(surfaceType_t *surface, shader_t *shader,
 void R_CalcTangentSpace(vec3_t tangent, vec3_t bitangent, vec3_t normal,
 			const vec3_t v0, const vec3_t v1, const vec3_t v2, const vec2_t t0, const vec2_t t1,
 			const vec2_t t2);
-qboolean R_CalcTangentVectors(srfVert_t * dv[3]);
+qbool R_CalcTangentVectors(srfVert_t * dv[3]);
 void R_CalcSurfaceTriangleNeighbors(int numTriangles, srfTriangle_t * triangles);
 void R_CalcSurfaceTrianglePlanes(int numTriangles, srfTriangle_t * triangles, srfVert_t * verts);
 
@@ -1992,7 +1992,7 @@ int R_CullPointAndRadiusEx(const vec3_t origin, float radius, const cplane_t* fr
 int R_CullPointAndRadius(const vec3_t origin, float radius);
 int R_CullLocalPointAndRadius(const vec3_t origin, float radius);
 
-void R_SetupProjection(viewParms_t *dest, float zProj, float zFar, qboolean computeFrustum);
+void R_SetupProjection(viewParms_t *dest, float zProj, float zFar, qbool computeFrustum);
 void R_RotateForEntity(const trRefEntity_t *ent, const viewParms_t *viewParms, orientationr_t *or);
 
 /*
@@ -2048,8 +2048,8 @@ void    GL_Cull(int cullType);
 #define GLS_DEFAULT				GLS_DEPTHMASK_TRUE
 
 void    RE_StretchRaw(int x, int y, int w, int h, int cols, int rows, const byte *data, int client,
-		      qboolean dirty);
-void    RE_UploadCinematic(int w, int h, int cols, int rows, const byte *data, int client, qboolean dirty);
+		      qbool dirty);
+void    RE_UploadCinematic(int w, int h, int cols, int rows, const byte *data, int client, qbool dirty);
 
 void            RE_BeginFrame(stereoFrame_t stereoFrame);
 void            RE_BeginRegistration(glconfig_t *glconfig);
@@ -2057,21 +2057,21 @@ void            RE_LoadWorldMap(const char *mapname);
 void            RE_SetWorldVisData(const byte *vis);
 qhandle_t       RE_RegisterModel(const char *name);
 qhandle_t       RE_RegisterSkin(const char *name);
-void            RE_Shutdown(qboolean destroyWindow);
+void            RE_Shutdown(qbool destroyWindow);
 
-qboolean        R_GetEntityToken(char *buffer, int size);
+qbool        R_GetEntityToken(char *buffer, int size);
 
 model_t*R_AllocModel(void);
 
 void            R_Init(void);
-image_t*R_FindImageFile(const char *name, qboolean mipmap, qboolean allowPicmip, int glWrapClampMode);
+image_t*R_FindImageFile(const char *name, qbool mipmap, qbool allowPicmip, int glWrapClampMode);
 image_t*R_FindImageFile2(const char *name, imgFlags_t flags);
-image_t*R_CreateImage(const char *name, byte *pic, int width, int height, qboolean mipmap
-		      , qboolean allowPicmip, int wrapClampMode);
+image_t*R_CreateImage(const char *name, byte *pic, int width, int height, qbool mipmap
+		      , qbool allowPicmip, int wrapClampMode);
 image_t*R_CreateImage2(const char *name, byte *pic, int width, int height, imgFlags_t flags,
 		       int internalFormat);
 void            R_UpdateSubImage(image_t *image, byte *pic, int x, int y, int width, int height);
-qboolean        R_GetModeInfo(int *width, int *height, float *windowAspect, int mode);
+qbool        R_GetModeInfo(int *width, int *height, float *windowAspect, int mode);
 
 void            R_SetColorMappings(void);
 void            R_GammaCorrect(byte *buffer, int bufSize);
@@ -2101,9 +2101,9 @@ qhandle_t                RE_RegisterShaderLightMap(const char *name, int lightma
 qhandle_t                RE_RegisterShader(const char *name);
 qhandle_t                RE_RegisterShaderNoMip(const char *name);
 qhandle_t RE_RegisterShaderFromImage(const char *name, int lightmapIndex, image_t *image,
-				     qboolean mipRawImage);
+				     qbool mipRawImage);
 
-shader_t*R_FindShader(const char *name, int lightmapIndex, qboolean mipRawImage);
+shader_t*R_FindShader(const char *name, int lightmapIndex, qbool mipRawImage);
 shader_t*R_GetShaderByHandle(qhandle_t hShader);
 shader_t*R_GetShaderByState(int index, long *cycleTime);
 shader_t*R_FindShaderByName(const char *name);
@@ -2121,7 +2121,7 @@ void            GLimp_Init(void);
 void            GLimp_Shutdown(void);
 void            GLimp_EndFrame(void);
 
-qboolean        GLimp_SpawnRenderThread(void (*function)(void));
+qbool        GLimp_SpawnRenderThread(void (*function)(void));
 void*GLimp_RendererSleep(void);
 void            GLimp_FrontEndSleep(void);
 void            GLimp_WakeRenderer(void *data);
@@ -2163,7 +2163,7 @@ typedef struct shaderCommands_s {
 
 	VBO_t		*vbo;
 	IBO_t		*ibo;
-	qboolean	useInternalVBO;
+	qbool		useInternalVBO;
 
 	stageVars_t svars QALIGN(16);
 
@@ -2222,7 +2222,7 @@ void RB_ShowImages(void);
 
 void R_AddBrushModelSurfaces(trRefEntity_t *e);
 void R_AddWorldSurfaces(void);
-qboolean R_inPVS(const vec3_t p1, const vec3_t p2);
+qbool R_inPVS(const vec3_t p1, const vec3_t p2);
 
 
 /*
@@ -2393,7 +2393,7 @@ void RB_SurfaceAnim(md4Surface_t *surfType);
 void R_MDRAddAnimSurfaces(trRefEntity_t *ent);
 void RB_MDRSurfaceAnim(md4Surface_t *surface);
 #endif
-qboolean R_LoadIQM(model_t *mod, void *buffer, int filesize, const char *name);
+qbool R_LoadIQM(model_t *mod, void *buffer, int filesize, const char *name);
 void R_AddIQMSurfaces(trRefEntity_t *ent);
 void RB_IQMSurfaceAnim(surfaceType_t *surface);
 int R_IQMLerpTag(orientation_t *tag, iqmData_t *data,
@@ -2523,7 +2523,7 @@ typedef struct {
 	int		width;
 	int		height;
 	char		*fileName;
-	qboolean	jpeg;
+	qbool		jpeg;
 } screenshotCommand_t;
 
 typedef struct {
@@ -2532,7 +2532,7 @@ typedef struct {
 	int		height;
 	byte		*captureBuffer;
 	byte                                    *encodeBuffer;
-	qboolean	motionJpeg;
+	qbool		motionJpeg;
 } videoFrameCommand_t;
 
 typedef struct {
@@ -2600,7 +2600,7 @@ extern backEndData_t *backEndData[SMP_FRAMES];	/* the second one may not be allo
 
 extern volatile renderCommandList_t *renderCommandList;
 
-extern volatile qboolean renderThreadActive;
+extern volatile qbool renderThreadActive;
 
 
 void*R_GetCommandBuffer(int bytes);
@@ -2625,7 +2625,7 @@ void RE_SaveJPG(char * filename, int quality, int image_width, int image_height,
 size_t RE_SaveJPGToBuffer(byte *buffer, size_t bufSize, int quality,
 			  int image_width, int image_height, byte *image_buffer, int padding);
 void RE_TakeVideoFrame(int width, int height,
-		       byte *captureBuffer, byte *encodeBuffer, qboolean motionJpeg);
+		       byte *captureBuffer, byte *encodeBuffer, qbool motionJpeg);
 
 /* font stuff */
 void R_InitFreeType(void);

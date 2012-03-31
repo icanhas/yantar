@@ -500,7 +500,7 @@ SVC_BucketForAddress(netadr_t address, int burst, int period)
 /*
  * SVC_RateLimit
  */
-static qboolean
+static qbool
 SVC_RateLimit(leakyBucket_t *bucket, int burst, int period)
 {
 	if(bucket != NULL){
@@ -532,7 +532,7 @@ SVC_RateLimit(leakyBucket_t *bucket, int burst, int period)
  *
  * Rate limit for a particular address
  */
-static qboolean
+static qbool
 SVC_RateLimitAddress(netadr_t from, int burst, int period)
 {
 	leakyBucket_t *bucket = SVC_BucketForAddress(from, burst, period);
@@ -713,7 +713,7 @@ SV_FlushRedirect(char *outputbuf)
 static void
 SVC_RemoteCommand(netadr_t from, msg_t *msg)
 {
-	qboolean valid;
+	qbool valid;
 	char remaining[1024];
 	/* TTimo - scaled down to accumulate, but not overflow anything network wise, print wise etc.
 	 * (OOB messages are the bottleneck here) */
@@ -995,7 +995,7 @@ SV_CheckTimeouts(void)
 /*
  * SV_CheckPaused
  */
-static qboolean
+static qbool
 SV_CheckPaused(void)
 {
 	int	count;

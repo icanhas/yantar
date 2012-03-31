@@ -82,7 +82,7 @@ typedef struct {
 	menubitmap_s	item_next;
 	menubitmap_s	item_null;
 
-	qboolean	reinit;
+	qbool		reinit;
 
 	const char	* selectedArenaInfo;
 	int		numMaps;
@@ -366,7 +366,7 @@ UI_SPLevelMenu_ResetDraw(void)
 }
 
 static void
-UI_SPLevelMenu_ResetAction(qboolean result)
+UI_SPLevelMenu_ResetAction(qbool result)
 {
 	if(!result)
 		return;

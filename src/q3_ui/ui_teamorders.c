@@ -215,7 +215,7 @@ UI_TeamOrdersMenu_ListDraw(void *self)
 	int	y;
 	int	i;
 	float	*color;
-	qboolean hasfocus;
+	qbool hasfocus;
 	int	style;
 
 	l = (menulist_s*)self;

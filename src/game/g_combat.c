@@ -1040,7 +1040,7 @@ G_Damage(gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
  * Returns qtrue if the inflictor can directly damage the target.  Used for
  * explosions and melee attacks.
  */
-qboolean
+qbool
 CanDamage(gentity_t *targ, vec3_t origin)
 {
 	vec3_t	dest;
@@ -1100,7 +1100,7 @@ CanDamage(gentity_t *targ, vec3_t origin)
 /*
  * G_RadiusDamage
  */
-qboolean
+qbool
 G_RadiusDamage(vec3_t origin, gentity_t *attacker, float damage, float radius,
 	       gentity_t *ignore, int mod)
 {
@@ -1112,7 +1112,7 @@ G_RadiusDamage(vec3_t origin, gentity_t *attacker, float damage, float radius,
 	vec3_t	v;
 	vec3_t	dir;
 	int	i, e;
-	qboolean hitClient = qfalse;
+	qbool hitClient = qfalse;
 
 	if(radius < 1)
 		radius = 1;

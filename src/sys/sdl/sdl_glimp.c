@@ -190,7 +190,7 @@ GLimp_DetectAvailableModes(void)
  * GLimp_SetMode
  */
 static int
-GLimp_SetMode(int mode, qboolean fullscreen, qboolean noborder)
+GLimp_SetMode(int mode, qbool fullscreen, qbool noborder)
 {
 	const char	* glstring;
 	int	sdlcolorbits;
@@ -414,8 +414,8 @@ GLimp_SetMode(int mode, qboolean fullscreen, qboolean noborder)
 /*
  * GLimp_StartDriverAndSetMode
  */
-static qboolean
-GLimp_StartDriverAndSetMode(int mode, qboolean fullscreen, qboolean noborder)
+static qbool
+GLimp_StartDriverAndSetMode(int mode, qbool fullscreen, qbool noborder)
 {
 	rserr_t err;
 
@@ -456,7 +456,7 @@ GLimp_StartDriverAndSetMode(int mode, qboolean fullscreen, qboolean noborder)
 	return qtrue;
 }
 
-static qboolean
+static qbool
 GLimp_HaveExtension(const char *ext)
 {
 	const char *ptr = Q_stristr(glConfig.extensions_string, ext);
@@ -690,9 +690,9 @@ GLimp_EndFrame(void)
 	}
 
 	if(r_fullscreen->modified){
-		qboolean fullscreen;
-		qboolean needToToggle = qtrue;
-		qboolean sdlToggled = qfalse;
+		qbool fullscreen;
+		qbool needToToggle = qtrue;
+		qbool sdlToggled = qfalse;
 		SDL_Surface *s = SDL_GetVideoSurface( );
 
 		if(s){
@@ -790,10 +790,10 @@ GLimp_RenderThreadWrapper(void *arg)
 /*
  * GLimp_SpawnRenderThread
  */
-qboolean
+qbool
 GLimp_SpawnRenderThread(void (*function)(void))
 {
-	static qboolean warned = qfalse;
+	static qbool warned = qfalse;
 	if(!warned){
 		Com_Printf("WARNING: You enable r_smp at your own risk!\n");
 		warned = qtrue;
@@ -851,7 +851,7 @@ GLimp_SpawnRenderThread(void (*function)(void))
 }
 
 static volatile void *smpData = NULL;
-static volatile qboolean smpDataReady;
+static volatile qbool smpDataReady;
 
 /*
  * GLimp_RendererSleep
@@ -927,7 +927,7 @@ GLimp_RenderThreadWrapper(void *arg)
 {
 }
 
-qboolean
+qbool
 GLimp_SpawnRenderThread(void (*function)(void))
 {
 	ri.Printf(PRINT_WARNING, "ERROR: SMP support was disabled at compile time\n");

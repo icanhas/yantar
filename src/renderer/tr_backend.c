@@ -482,7 +482,7 @@ RB_RenderDrawSurfList(drawSurf_t *drawSurfs, int numDrawSurfs)
 	int		fogNum, oldFogNum;
 	int		entityNum, oldEntityNum;
 	int		dlighted, oldDlighted;
-	qboolean	depthRange, oldDepthRange, isCrosshair, wasCrosshair;
+	qbool		depthRange, oldDepthRange, isCrosshair, wasCrosshair;
 	int		i;
 	drawSurf_t              *drawSurf;
 	int		oldSort;
@@ -691,7 +691,7 @@ RB_SetGL2D(void)
  * Used for cinematics.
  */
 void
-RE_StretchRaw(int x, int y, int w, int h, int cols, int rows, const byte *data, int client, qboolean dirty)
+RE_StretchRaw(int x, int y, int w, int h, int cols, int rows, const byte *data, int client, qbool dirty)
 {
 	int i, j;
 	int start, end;
@@ -759,7 +759,7 @@ RE_StretchRaw(int x, int y, int w, int h, int cols, int rows, const byte *data, 
 }
 
 void
-RE_UploadCinematic(int w, int h, int cols, int rows, const byte *data, int client, qboolean dirty)
+RE_UploadCinematic(int w, int h, int cols, int rows, const byte *data, int client, qbool dirty)
 {
 
 	GL_Bind(tr.scratchImage[client]);

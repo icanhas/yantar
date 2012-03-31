@@ -44,8 +44,8 @@ surfaceType_t entitySurface = SF_ENTITY;
 /*
  * R_CompareVert
  */
-qboolean
-R_CompareVert(srfVert_t * v1, srfVert_t * v2, qboolean checkST)
+qbool
+R_CompareVert(srfVert_t * v1, srfVert_t * v2, qbool checkST)
 {
 	int i;
 
@@ -421,7 +421,7 @@ R_CalcTBN2(vec3_t tangent, vec3_t bitangent, vec3_t normal,
 }
 
 
-qboolean
+qbool
 R_CalcTangentVectors(srfVert_t * dv[3])
 {
 	int i;
@@ -684,7 +684,7 @@ R_CullBox(vec3_t worldBounds[2])
 {
 	int i;
 	cplane_t	*frust;
-	qboolean	anyClip;
+	qbool		anyClip;
 	int r;
 
 	/* check against frustum planes */
@@ -734,7 +734,7 @@ R_CullPointAndRadiusEx(const vec3_t pt, float radius, const cplane_t* frustum, i
 	int i;
 	float dist;
 	const cplane_t *frust;
-	qboolean mightBeClipped = qfalse;
+	qbool mightBeClipped = qfalse;
 
 	if(r_nocull->integer){
 		return CULL_CLIP;
@@ -1123,7 +1123,7 @@ R_SetupFrustum(viewParms_t *dest, float xmin, float xmax, float ymax, float zPro
  * R_SetupProjection
  */
 void
-R_SetupProjection(viewParms_t *dest, float zProj, float zFar, qboolean computeFrustum)
+R_SetupProjection(viewParms_t *dest, float zProj, float zFar, qbool computeFrustum)
 {
 	float	xmin, xmax, ymin, ymax;
 	float	width, height, stereoSep = r_stereoSeparation->value;
@@ -1311,10 +1311,10 @@ R_PlaneForSurface(surfaceType_t *surfType, cplane_t *plane)
  *
  * Returns qtrue if it should be mirrored
  */
-qboolean
+qbool
 R_GetPortalOrientations(drawSurf_t *drawSurf, int entityNum,
 			orientation_t *surface, orientation_t *camera,
-			vec3_t pvsOrigin, qboolean *mirror)
+			vec3_t pvsOrigin, qbool *mirror)
 {
 	int i;
 	cplane_t	originalPlane, plane;
@@ -1431,7 +1431,7 @@ R_GetPortalOrientations(drawSurf_t *drawSurf, int entityNum,
 	return qfalse;
 }
 
-static qboolean
+static qbool
 IsMirror(const drawSurf_t *drawSurf, int entityNum)
 {
 	int i;
@@ -1492,7 +1492,7 @@ IsMirror(const drawSurf_t *drawSurf, int entityNum)
 **
 ** Determines if a surface is completely offscreen.
 */
-static qboolean
+static qbool
 SurfIsOffscreen(const drawSurf_t *drawSurf, vec4_t clipDest[128])
 {
 	float	shortest = 100000000;
@@ -1586,7 +1586,7 @@ SurfIsOffscreen(const drawSurf_t *drawSurf, vec4_t clipDest[128])
  *
  * Returns qtrue if another view has been rendered
  */
-qboolean
+qbool
 R_MirrorViewBySurface(drawSurf_t *drawSurf, int entityNum)
 {
 	vec4_t clipDest[128];
@@ -2249,7 +2249,7 @@ R_RenderPshadowMaps(const refdef_t *fd)
 		for(j = i + 1; j < tr.refdef.num_pshadows; j++){
 			pshadow_t	*ps2 = &tr.refdef.pshadows[j];
 			int k;
-			qboolean	touch;
+			qbool		touch;
 
 			if(ps1->numEntities == 8)
 				break;

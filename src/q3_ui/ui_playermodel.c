@@ -383,7 +383,7 @@ PlayerModel_BuildList(void)
 	int	j;
 	int	dirlen;
 	int	filelen;
-	qboolean precache;
+	qbool precache;
 
 	precache = trap_Cvar_VariableValue("com_buildscript");
 

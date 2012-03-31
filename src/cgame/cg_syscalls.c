@@ -281,7 +281,7 @@ trap_S_StartLocalSound(sfxHandle_t sfx, int channelNum)
 }
 
 void
-trap_S_ClearLoopingSounds(qboolean killall)
+trap_S_ClearLoopingSounds(qbool killall)
 {
 	syscall(CG_S_CLEARLOOPINGSOUNDS, killall);
 }
@@ -321,7 +321,7 @@ trap_S_Respatialize(int entityNum, const vec3_t origin, vec3_t axis[3],
 }
 
 sfxHandle_t
-trap_S_RegisterSound(const char *sample, qboolean compressed)
+trap_S_RegisterSound(const char *sample, qbool compressed)
 {
 	return syscall(CG_S_REGISTERSOUND, sample, compressed);
 }
@@ -481,13 +481,13 @@ trap_GetCurrentSnapshotNumber(int *snapshotNumber, int *serverTime)
 	syscall(CG_GETCURRENTSNAPSHOTNUMBER, snapshotNumber, serverTime);
 }
 
-qboolean
+qbool
 trap_GetSnapshot(int snapshotNumber, snapshot_t *snapshot)
 {
 	return syscall(CG_GETSNAPSHOT, snapshotNumber, snapshot);
 }
 
-qboolean
+qbool
 trap_GetServerCommand(int serverCommandNumber)
 {
 	return syscall(CG_GETSERVERCOMMAND, serverCommandNumber);
@@ -499,7 +499,7 @@ trap_GetCurrentCmdNumber(void)
 	return syscall(CG_GETCURRENTCMDNUMBER);
 }
 
-qboolean
+qbool
 trap_GetUserCmd(int cmdNumber, usercmd_t *ucmd)
 {
 	return syscall(CG_GETUSERCMD, cmdNumber, ucmd);
@@ -529,7 +529,7 @@ trap_MemoryRemaining(void)
 	return syscall(CG_MEMORY_REMAINING);
 }
 
-qboolean
+qbool
 trap_Key_IsDown(int keynum)
 {
 	return syscall(CG_KEY_ISDOWN, keynum);
@@ -644,7 +644,7 @@ trap_CIN_SetExtents(int handle, int x, int y, int w, int h)
 }
 
 /*
- * qboolean trap_loadCamera( const char *name ) {
+ * qbool trap_loadCamera( const char *name ) {
  *      return syscall( CG_LOADCAMERA, name );
  * }
  *
@@ -652,18 +652,18 @@ trap_CIN_SetExtents(int handle, int x, int y, int w, int h)
  *      syscall(CG_STARTCAMERA, time);
  * }
  *
- * qboolean trap_getCameraInfo( int time, vec3_t *origin, vec3_t *angles) {
+ * qbool trap_getCameraInfo( int time, vec3_t *origin, vec3_t *angles) {
  *      return syscall( CG_GETCAMERAINFO, time, origin, angles );
  * }
  */
 
-qboolean
+qbool
 trap_GetEntityToken(char *buffer, int bufferSize)
 {
 	return syscall(CG_GET_ENTITY_TOKEN, buffer, bufferSize);
 }
 
-qboolean
+qbool
 trap_R_inPVS(const vec3_t p1, const vec3_t p2)
 {
 	return syscall(CG_R_INPVS, p1, p2);

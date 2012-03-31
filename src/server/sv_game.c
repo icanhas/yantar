@@ -145,7 +145,7 @@ SV_SetBrushModel(sharedEntity_t *ent, const char *name)
  *
  * Also checks portalareas so that doors block sight
  */
-qboolean
+qbool
 SV_inPVS(const vec3_t p1, const vec3_t p2)
 {
 	int	leafnum;
@@ -174,7 +174,7 @@ SV_inPVS(const vec3_t p1, const vec3_t p2)
  *
  * Does NOT check portalareas
  */
-qboolean
+qbool
 SV_inPVSIgnorePortals(const vec3_t p1, const vec3_t p2)
 {
 	int	leafnum;
@@ -199,7 +199,7 @@ SV_inPVSIgnorePortals(const vec3_t p1, const vec3_t p2)
  * SV_AdjustAreaPortalState
  */
 void
-SV_AdjustAreaPortalState(sharedEntity_t *ent, qboolean open)
+SV_AdjustAreaPortalState(sharedEntity_t *ent, qbool open)
 {
 	svEntity_t *svEnt;
 
@@ -213,7 +213,7 @@ SV_AdjustAreaPortalState(sharedEntity_t *ent, qboolean open)
 /*
  * SV_EntityContact
  */
-qboolean
+qbool
 SV_EntityContact(vec3_t mins, vec3_t maxs, const sharedEntity_t *gEnt,
 		 int capsule)
 {
@@ -913,7 +913,7 @@ SV_ShutdownGameProgs(void)
  * Called for both a full init and a restart
  */
 static void
-SV_InitGameVM(qboolean restart)
+SV_InitGameVM(qbool restart)
 {
 	int i;
 
@@ -989,7 +989,7 @@ SV_InitGameProgs(void)
  *
  * See if the current console command is claimed by the game
  */
-qboolean
+qbool
 SV_GameCommand(void)
 {
 	if(sv.state != SS_GAME)

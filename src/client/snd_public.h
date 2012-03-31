@@ -38,7 +38,7 @@ void S_RawSamples(int stream, int samples, int rate, int width, int channels,
 void S_StopAllSounds(void);
 
 /* all continuous looping sounds must be added before calling S_Update */
-void S_ClearLoopingSounds(qboolean killall);
+void S_ClearLoopingSounds(qbool killall);
 void S_AddLoopingSound(int entityNum, const vec3_t origin, const vec3_t velocity,
 		       sfxHandle_t sfx);
 void S_AddRealLoopingSound(int entityNum, const vec3_t origin,
@@ -63,7 +63,7 @@ void S_BeginRegistration(void);
 /* RegisterSound will allways return a valid sample, even if it
  * has to create a placeholder.  This prevents continuous filesystem
  * checks for missing files */
-sfxHandle_t     S_RegisterSound(const char *sample, qboolean compressed);
+sfxHandle_t     S_RegisterSound(const char *sample, qbool compressed);
 
 void S_DisplayFreeMemory(void);
 

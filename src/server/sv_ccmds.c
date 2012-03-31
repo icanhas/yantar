@@ -141,7 +141,7 @@ SV_Map_f(void)
 {
 	char *cmd;
 	char	*map;
-	qboolean killBots, cheat;
+	qbool killBots, cheat;
 	char	expanded[MAX_QPATH];
 	char	mapname[MAX_QPATH];
 
@@ -214,7 +214,7 @@ SV_MapRestart_f(void)
 	int i;
 	client_t	*client;
 	char		*denied;
-	qboolean	isBot;
+	qbool		isBot;
 	int delay;
 
 	/* make sure we aren't restarting twice in the same frame */
@@ -643,7 +643,7 @@ SV_WriteBans(void)
  * Remove a ban or an exception from the list.
  */
 
-static qboolean
+static qbool
 SV_DelBanEntryFromList(int index)
 {
 	if(index == serverBansCount - 1)
@@ -664,7 +664,7 @@ SV_DelBanEntryFromList(int index)
  * Parse a CIDR notation type string and return a netadr_t and suffix by reference
  */
 
-static qboolean
+static qbool
 SV_ParseCIDRNotation(netadr_t *dest, int *mask, char *adrstr)
 {
 	char *suffix;
@@ -701,7 +701,7 @@ SV_ParseCIDRNotation(netadr_t *dest, int *mask, char *adrstr)
  */
 
 static void
-SV_AddBanToList(qboolean isexception)
+SV_AddBanToList(qbool isexception)
 {
 	char	*banstring;
 	char	addy2[NET_ADDRSTRMAXLEN];
@@ -842,7 +842,7 @@ SV_AddBanToList(qboolean isexception)
  */
 
 static void
-SV_DelBanFromList(qboolean isexception)
+SV_DelBanFromList(qbool isexception)
 {
 	int index, count = 0, todel, mask;
 	netadr_t ip;
@@ -1224,7 +1224,7 @@ SV_CompleteMapName(char *args, int argNum)
 void
 SV_AddOperatorCommands(void)
 {
-	static qboolean initialized;
+	static qbool initialized;
 
 	if(initialized)
 		return;

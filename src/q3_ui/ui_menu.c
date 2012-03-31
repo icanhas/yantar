@@ -62,7 +62,7 @@ typedef struct {
 static errorMessage_t s_errorMessage;
 
 static void
-MainMenu_ExitAction(qboolean result)
+MainMenu_ExitAction(qbool result)
 {
 	if(!result)
 		return;
@@ -178,7 +178,7 @@ Main_MenuDraw(void)
 	UI_DrawString(320, 450, "Y A N T A R", UI_CENTER|UI_SMALLFONT, color);
 }
 
-static qboolean
+static qbool
 UI_TeamArenaExists(void)
 {
 	int	numdirs;
@@ -208,7 +208,7 @@ void
 UI_MainMenu(void)
 {
 	int	y;
-	qboolean teamArena = qfalse;
+	qbool teamArena = qfalse;
 	int	style = 0;	/* UI_CENTER | UI_DROPSHADOW; */
 
 	trap_Cvar_Set("sv_killserver", "1");

@@ -208,7 +208,7 @@ RE_AddRefEntityToScene(const refEntity_t *ent)
 		return;
 	}
 	if(Q_isnan(ent->origin[0]) || Q_isnan(ent->origin[1]) || Q_isnan(ent->origin[2])){
-		static qboolean firstTime = qtrue;
+		static qbool firstTime = qtrue;
 		if(firstTime){
 			firstTime = qfalse;
 			ri.Printf(

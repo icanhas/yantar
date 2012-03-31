@@ -20,7 +20,7 @@
  */
 #include "client.h"
 
-qboolean	scr_initialized;	/* ready to draw */
+qbool		scr_initialized;	/* ready to draw */
 
 cvar_t		*cl_timegraph;
 cvar_t		*cl_debuggraph;
@@ -156,7 +156,7 @@ SCR_DrawSmallChar(int x, int y, int ch)
  */
 void
 SCR_DrawStringExt(int x, int y, float size, const char *string, float *setColor,
-		  qboolean forceColor, qboolean noColorEscape)
+		  qbool forceColor, qbool noColorEscape)
 {
 	vec4_t	color;
 	const char      *s;
@@ -206,7 +206,7 @@ SCR_DrawStringExt(int x, int y, float size, const char *string, float *setColor,
 
 void
 SCR_DrawBigString(int x, int y, const char *s, float alpha,
-		  qboolean noColorEscape)
+		  qbool noColorEscape)
 {
 	float color[4];
 
@@ -219,7 +219,7 @@ SCR_DrawBigString(int x, int y, const char *s, float alpha,
 
 void
 SCR_DrawBigStringColor(int x, int y, const char *s, vec4_t color,
-		       qboolean noColorEscape)
+		       qbool noColorEscape)
 {
 	SCR_DrawStringExt(x, y, BIGCHAR_WIDTH, s, color, qtrue, noColorEscape);
 }
@@ -230,7 +230,7 @@ SCR_DrawBigStringColor(int x, int y, const char *s, vec4_t color,
  */
 void
 SCR_DrawSmallStringExt(int x, int y, const char *string, float *setColor,
-		       qboolean forceColor, qboolean noColorEscape)
+		       qbool forceColor, qbool noColorEscape)
 {
 	vec4_t	color;
 	const char      *s;
@@ -400,7 +400,7 @@ SCR_Init(void)
 void
 SCR_DrawScreenField(stereoFrame_t stereoFrame)
 {
-	qboolean uiFullscreen;
+	qbool uiFullscreen;
 
 	re.BeginFrame(stereoFrame);
 
