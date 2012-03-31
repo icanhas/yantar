@@ -32,12 +32,16 @@ enum
 	ID_MENU = 12
 };
 
-#define ART_MENU0	"menu/art/menu_0"
-#define ART_MENU1	"menu/art/menu_1"
-#define ART_REPLAY0	"menu/art/replay_0"
-#define ART_REPLAY1	"menu/art/replay_1"
-#define ART_NEXT0	"menu/art/next_0"
-#define ART_NEXT1	"menu/art/next_1"
+#define ART_MENU0	Pmenuart "/menu_0"
+#define ART_MENU1	Pmenuart "/menu_1"
+#define ART_REPLAY0	Pmenuart "/replay_0"
+#define ART_REPLAY1	Pmenuart "/replay_1"
+#define ART_NEXT0	Pmenuart "/next_0"
+#define ART_NEXT1	Pmenuart "/next_1"
+#define MUSIC_LOSS	Pmusic "/loss"
+#define MUSIC_WIN	Pmusic "/win"
+#define ANNOUNCE_YOUWIN	Pannounce "/announce_youwin"
+#define FMT_WHOWINS	Pannounce "/%s_wins"
 
 typedef struct
 {
@@ -368,9 +372,9 @@ UI_SPPostgameMenu_Cache(void)
 	}
 
 	if(buildscript){
-		trap_S_RegisterSound(Pmusic "/loss", qfalse);
-		trap_S_RegisterSound(Pmusic "/win", qfalse);
-		trap_S_RegisterSound(Pannounce "/youwin", qfalse);
+		trap_S_RegisterSound(MUSIC_LOSS, qfalse);
+		trap_S_RegisterSound(MUSIC_WIN, qfalse);
+		trap_S_RegisterSound(ANNOUNCE_YOUWIN, qfalse);
 	}
 }
 
@@ -576,12 +580,12 @@ UI_SPPostgameMenu_f(void)
 
 	if(playerGameRank != 1){
 		postgame.winnerSound = trap_S_RegisterSound(
-			va(Pannounce "/%s_wins", postgame.placeNames[0]), qfalse);
-		trap_Cmd_ExecuteText(EXEC_APPEND, "music " Pmusic "/loss\n");
+			va(FMT_WHOWINS, postgame.placeNames[0]), qfalse);
+		trap_Cmd_ExecuteText(EXEC_APPEND, "music " MUSIC_LOSS "\n");
 	}else{
 		postgame.winnerSound = trap_S_RegisterSound(
-			Pannounce "/youwin", qfalse);
-		trap_Cmd_ExecuteText(EXEC_APPEND, "music " Pmusic "/win\n");
+			ANNOUNCE_YOUWIN, qfalse);
+		trap_Cmd_ExecuteText(EXEC_APPEND, "music " MUSIC_WIN "\n");
 	}
 
 	postgame.phase = 1;
