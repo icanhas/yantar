@@ -30,8 +30,8 @@ ProjectRadius(float r, vec3_t location)
 	vec3_t	p;
 	float	projected[4];
 
-	c = DotProduct(tr.viewParms.or.axis[0], tr.viewParms.or.origin);
-	dist = DotProduct(tr.viewParms.or.axis[0], location) - c;
+	c = Vec3Dot(tr.viewParms.or.axis[0], tr.viewParms.or.origin);
+	dist = Vec3Dot(tr.viewParms.or.axis[0], location) - c;
 
 	if(dist <= 0)
 		return 0;
@@ -239,7 +239,7 @@ R_ComputeFogNum(md3Header_t *header, trRefEntity_t *ent)
 
 	/* FIXME: non-normalized axis issues */
 	md3Frame = ( md3Frame_t* )(( byte* )header + header->ofsFrames) + ent->e.frame;
-	VectorAdd(ent->e.origin, md3Frame->localOrigin, localOrigin);
+	Vec3Add(ent->e.origin, md3Frame->localOrigin, localOrigin);
 	for(i = 1; i < tr.world->numfogs; i++){
 		fog = &tr.world->fogs[i];
 		for(j = 0; j < 3; j++){

@@ -59,7 +59,7 @@ P_DamageFeedback(gentity_t *player)
 
 		client->damage_fromWorld = qfalse;
 	}else{
-		vectoangles(client->damage_from, angles);
+		Vec3ToAngles(client->damage_from, angles);
 		client->ps.damagePitch	= angles[PITCH]/360.0 * 256;
 		client->ps.damageYaw	= angles[YAW]/360.0 * 256;
 	}
@@ -234,14 +234,14 @@ G_TouchTriggers(gentity_t *ent)
 	if(ent->client->ps.stats[STAT_HEALTH] <= 0)
 		return;
 
-	VectorSubtract(ent->client->ps.origin, range, mins);
-	VectorAdd(ent->client->ps.origin, range, maxs);
+	Vec3Sub(ent->client->ps.origin, range, mins);
+	Vec3Add(ent->client->ps.origin, range, maxs);
 
 	num = trap_EntitiesInBox(mins, maxs, touch, MAX_GENTITIES);
 
 	/* can't use ent->absmin, because that has a one unit pad */
-	VectorAdd(ent->client->ps.origin, ent->r.mins, mins);
-	VectorAdd(ent->client->ps.origin, ent->r.maxs, maxs);
+	Vec3Add(ent->client->ps.origin, ent->r.mins, mins);
+	Vec3Add(ent->client->ps.origin, ent->r.maxs, maxs);
 
 	for(i=0; i<num; i++){
 		hit = &g_entities[touch[i]];
@@ -311,7 +311,7 @@ SpectatorThink(gentity_t *ent, usercmd_t *ucmd)
 		/* perform a pmove */
 		Pmove (&pm);
 		/* save results of pmove */
-		VectorCopy(client->ps.origin, ent->s.origin);
+		Vec3Copy(client->ps.origin, ent->s.origin);
 
 		G_TouchTriggers(ent);
 		trap_UnlinkEntity(ent);
@@ -854,19 +854,19 @@ ClientThink_real(gentity_t *ent)
 			vec3_t	maxs = { 42, 42, 42 };
 			vec3_t	oldmins, oldmaxs;
 
-			VectorCopy (ent->r.mins, oldmins);
-			VectorCopy (ent->r.maxs, oldmaxs);
+			Vec3Copy (ent->r.mins, oldmins);
+			Vec3Copy (ent->r.maxs, oldmaxs);
 			/* expand */
-			VectorCopy (mins, ent->r.mins);
-			VectorCopy (maxs, ent->r.maxs);
+			Vec3Copy (mins, ent->r.mins);
+			Vec3Copy (maxs, ent->r.maxs);
 			trap_LinkEntity(ent);
 			/* check if this would get anyone stuck in this player */
 			if(!StuckInOtherClient(ent))
 				/* set flag so the expanded size will be set in PM_CheckDuck */
 				client->ps.pm_flags |= PMF_INVULEXPAND;
 			/* set back */
-			VectorCopy (oldmins, ent->r.mins);
-			VectorCopy (oldmaxs, ent->r.maxs);
+			Vec3Copy (oldmins, ent->r.mins);
+			Vec3Copy (oldmaxs, ent->r.maxs);
 			trap_LinkEntity(ent);
 		}
 
@@ -888,7 +888,7 @@ ClientThink_real(gentity_t *ent)
 	pm.pmove_fixed	= pmove_fixed.integer | client->pers.pmoveFixed;
 	pm.pmove_msec	= pmove_msec.integer;
 
-	VectorCopy(client->ps.origin, client->oldOrigin);
+	Vec3Copy(client->ps.origin, client->oldOrigin);
 
 #ifdef MISSIONPACK
 	if(level.intermissionQueued != 0 && g_singlePlayer.integer)
@@ -923,10 +923,10 @@ ClientThink_real(gentity_t *ent)
 		client->fireHeld = qfalse;	/* for grapple */
 
 	/* use the snapped origin for linking so it matches client predicted versions */
-	VectorCopy(ent->s.pos.trBase, ent->r.currentOrigin);
+	Vec3Copy(ent->s.pos.trBase, ent->r.currentOrigin);
 
-	VectorCopy (pm.mins, ent->r.mins);
-	VectorCopy (pm.maxs, ent->r.maxs);
+	Vec3Copy (pm.mins, ent->r.mins);
+	Vec3Copy (pm.maxs, ent->r.maxs);
 
 	ent->waterlevel = pm.waterlevel;
 	ent->watertype	= pm.watertype;
@@ -940,7 +940,7 @@ ClientThink_real(gentity_t *ent)
 		G_TouchTriggers(ent);
 
 	/* NOTE: now copy the exact origin over otherwise clients can be snapped into solid */
-	VectorCopy(ent->client->ps.origin, ent->r.currentOrigin);
+	Vec3Copy(ent->client->ps.origin, ent->r.currentOrigin);
 
 	/* test for solid areas in the AAS file */
 	BotTestAAS(ent->r.currentOrigin);

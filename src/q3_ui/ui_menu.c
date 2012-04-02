@@ -157,10 +157,10 @@ Main_MenuDraw(void)
 	 * VectorSet( angles, 0, 180 + adjust, 0 );
 	 * AnglesToAxis( angles, ent.axis );
 	 * ent.hModel = s_main.bannerModel;
-	 * VectorCopy( origin, ent.origin );
-	 * VectorCopy( origin, ent.lightingOrigin );
+	 * Vec3Copy( origin, ent.origin );
+	 * Vec3Copy( origin, ent.lightingOrigin );
 	 * ent.renderfx = RF_LIGHTING_ORIGIN | RF_NOSHADOW;
-	 * VectorCopy( ent.origin, ent.oldorigin );
+	 * Vec3Copy( ent.origin, ent.oldorigin );
 	 *
 	 * trap_R_AddRefEntityToScene( &ent );
 	 * trap_R_RenderScene( &refdef );

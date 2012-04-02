@@ -499,41 +499,41 @@ signed short ClampShort(int i);
 int DirToByte(vec3_t dir);
 void ByteToDir(int b, vec3_t dir);
 
-#if     1
+#if     0
 
-#define DotProduct(x,y)		((x)[0]*(y)[0]+(x)[1]*(y)[1]+(x)[2]*(y)[2])
-#define VectorSubtract(a,b,c)	((c)[0]=(a)[0]-(b)[0],(c)[1]=(a)[1]-(b)[1], \
+#define Vec3Dot(x,y)		((x)[0]*(y)[0]+(x)[1]*(y)[1]+(x)[2]*(y)[2])
+#define Vec3Sub(a,b,c)	((c)[0]=(a)[0]-(b)[0],(c)[1]=(a)[1]-(b)[1], \
 				 (c)[2]=(a)[2]-(b)[2])
-#define VectorAdd(a,b,c)	((c)[0]=(a)[0]+(b)[0],(c)[1]=(a)[1]+(b)[1], \
+#define Vec3Add(a,b,c)	((c)[0]=(a)[0]+(b)[0],(c)[1]=(a)[1]+(b)[1], \
 				 (c)[2]=(a)[2]+(b)[2])
-#define VectorCopy(a,b)		((b)[0]=(a)[0],(b)[1]=(a)[1],(b)[2]=(a)[2])
+#define Vec3Copy(a,b)		((b)[0]=(a)[0],(b)[1]=(a)[1],(b)[2]=(a)[2])
 #define VectorScale(v, s, o)	((o)[0]=(v)[0]*(s),(o)[1]=(v)[1]*(s),(o)[2]= \
 					 (v)[2]*(s))
-#define VectorMA(v, s, b, o)	((o)[0]=(v)[0]+(b)[0]*(s),(o)[1]=(v)[1]+(b)[1]*	\
+#define Vec3MA(v, s, b, o)	((o)[0]=(v)[0]+(b)[0]*(s),(o)[1]=(v)[1]+(b)[1]*	\
 								  (s),(o)[2]= \
 					 (v)[2]+(b)[2]*(s))
 
 #else
 
-#define DotProduct(x,y)		_DotProduct(x,y)
-#define VectorSubtract(a,b,c)	_VectorSubtract(a,b,c)
-#define VectorAdd(a,b,c)	_VectorAdd(a,b,c)
-#define VectorCopy(a,b)		_VectorCopy(a,b)
+#define Vec3Dot(x,y)		_Vec3Dot(x,y)
+#define Vec3Sub(a,b,c)	_Vec3Sub(a,b,c)
+#define Vec3Add(a,b,c)	_Vec3Add(a,b,c)
+#define Vec3Copy(a,b)		_Vec3Copy(a,b)
 #define VectorScale(v, s, o)	_VectorScale(v,s,o)
-#define VectorMA(v, s, b, o)	_VectorMA(v,s,b,o)
+#define Vec3MA(v, s, b, o)	_Vec3MA(v,s,b,o)
 
 #endif
 
 #ifdef Q3_VM
-#ifdef VectorCopy
-#undef VectorCopy
+#ifdef Vec3Copy
+#undef Vec3Copy
 
 /* this is a little hack to get more efficient copies in our interpreter */
 typedef struct {
 	float v[3];
 } vec3struct_t;
 
-#define VectorCopy(a,b) (*(vec3struct_t*)b=*(vec3struct_t*)a)
+#define Vec3Copy(a,b) (*(vec3struct_t*)b=*(vec3struct_t*)a)
 #endif
 #endif
 
@@ -549,12 +549,12 @@ typedef struct {
 #define SnapVector(v)		{v[0]=((int)(v[0])); v[1]=((int)(v[1])); v[2]= \
 					 ((int)(v[2])); }
 /* just in case you do't want to use the macros */
-vec_t	_DotProduct(const vec3_t v1, const vec3_t v2);
-void	_VectorSubtract(const vec3_t veca, const vec3_t vecb, vec3_t out);
-void	_VectorAdd(const vec3_t veca, const vec3_t vecb, vec3_t out);
-void	_VectorCopy(const vec3_t in, vec3_t out);
+vec_t	_Vec3Dot(const vec3_t v1, const vec3_t v2);
+void	_Vec3Sub(const vec3_t veca, const vec3_t vecb, vec3_t out);
+void	_Vec3Add(const vec3_t veca, const vec3_t vecb, vec3_t out);
+void	_Vec3Copy(const vec3_t in, vec3_t out);
 void	_VectorScale(const vec3_t in, float scale, vec3_t out);
-void	_VectorMA(const vec3_t veca, float scale, const vec3_t vecb, vec3_t vecc);
+void	_Vec3MA(const vec3_t veca, float scale, const vec3_t vecb, vec3_t vecc);
 void	Vec3Lerp(const vec3_t a, const vec3_t b, float lerp, vec3_t c);
 
 void	Mat4x4ToZero(mat4x4 out);
@@ -585,43 +585,43 @@ VectorCompare(const vec3_t v1, const vec3_t v2)
 }
 
 static ID_INLINE vec_t
-VectorLength(const vec3_t v)
+Vec3Len(const vec3_t v)
 {
 	return (vec_t)sqrt (v[0]*v[0] + v[1]*v[1] + v[2]*v[2]);
 }
 
 static ID_INLINE vec_t
-VectorLengthSquared(const vec3_t v)
+Vec3LenSquared(const vec3_t v)
 {
 	return (v[0]*v[0] + v[1]*v[1] + v[2]*v[2]);
 }
 
 static ID_INLINE vec_t
-Distance(const vec3_t p1, const vec3_t p2)
+Vec3Distance(const vec3_t p1, const vec3_t p2)
 {
 	vec3_t v;
 
-	VectorSubtract (p2, p1, v);
-	return VectorLength(v);
+	Vec3Sub (p2, p1, v);
+	return Vec3Len(v);
 }
 
 static ID_INLINE vec_t
-DistanceSquared(const vec3_t p1, const vec3_t p2)
+Vec3DistanceSquared(const vec3_t p1, const vec3_t p2)
 {
 	vec3_t v;
 
-	VectorSubtract (p2, p1, v);
+	Vec3Sub (p2, p1, v);
 	return v[0]*v[0] + v[1]*v[1] + v[2]*v[2];
 }
 
 /* fast vector normalize routine that does not check to make sure
  * that length != 0, nor does it return length, uses rsqrt approximation */
 static ID_INLINE void
-VectorNormalizeFast(vec3_t v)
+Vec3NormalizeFast(vec3_t v)
 {
 	float ilength;
 
-	ilength = Q_rsqrt(DotProduct(v, v));
+	ilength = Q_rsqrt(Vec3Dot(v, v));
 
 	v[0]	*= ilength;
 	v[1]	*= ilength;
@@ -629,7 +629,7 @@ VectorNormalizeFast(vec3_t v)
 }
 
 static ID_INLINE void
-VectorInverse(vec3_t v)
+Vec3Inverse(vec3_t v)
 {
 	v[0]	= -v[0];
 	v[1]	= -v[1];
@@ -637,7 +637,7 @@ VectorInverse(vec3_t v)
 }
 
 static ID_INLINE void
-CrossProduct(const vec3_t v1, const vec3_t v2, vec3_t cross)
+Vec3Cross(const vec3_t v1, const vec3_t v2, vec3_t cross)
 {
 	cross[0]	= v1[1]*v2[2] - v1[2]*v2[1];
 	cross[1]	= v1[2]*v2[0] - v1[0]*v2[2];
@@ -647,26 +647,26 @@ CrossProduct(const vec3_t v1, const vec3_t v2, vec3_t cross)
 #else
 int VectorCompare(const vec3_t v1, const vec3_t v2);
 
-vec_t VectorLength(const vec3_t v);
+vec_t Vec3Len(const vec3_t v);
 
-vec_t VectorLengthSquared(const vec3_t v);
+vec_t Vec3LenSquared(const vec3_t v);
 
-vec_t Distance(const vec3_t p1, const vec3_t p2);
+vec_t Vec3Distance(const vec3_t p1, const vec3_t p2);
 
-vec_t DistanceSquared(const vec3_t p1, const vec3_t p2);
+vec_t Vec3DistanceSquared(const vec3_t p1, const vec3_t p2);
 
-void VectorNormalizeFast(vec3_t v);
+void Vec3NormalizeFast(vec3_t v);
 
-void VectorInverse(vec3_t v);
+void Vec3Inverse(vec3_t v);
 
-void CrossProduct(const vec3_t v1, const vec3_t v2, vec3_t cross);
+void Vec3Cross(const vec3_t v1, const vec3_t v2, vec3_t cross);
 
 #endif
 
-vec_t VectorNormalize(vec3_t v);	/* returns vector length */
-vec_t VectorNormalize2(const vec3_t v, vec3_t out);
-void Vector4Scale(const vec4_t in, vec_t scale, vec4_t out);
-void VectorRotate(vec3_t in, vec3_t matrix[3], vec3_t out);
+vec_t Vec3Normalize(vec3_t v);	/* returns vector length */
+vec_t Vec3Normalize2(const vec3_t v, vec3_t out);
+void Vec4Scale(const vec4_t in, vec_t scale, vec4_t out);
+void Vec3Rotate(vec3_t in, vec3_t matrix[3], vec3_t out);
 int Q_log2(int val);
 
 float Q_acos(float c);
@@ -678,14 +678,14 @@ float   Q_crandom(int *seed);
 #define random()	((rand () & 0x7fff) / ((float)0x7fff))
 #define crandom()	(2.0 * (random() - 0.5))
 
-void vectoangles(const vec3_t value1, vec3_t angles);
+void Vec3ToAngles(const vec3_t value1, vec3_t angles);
 void AnglesToAxis(const vec3_t angles, vec3_t axis[3]);
 
 void AxisClear(vec3_t axis[3]);
-void AxisCopy(vec3_t in[3], vec3_t out[3]);
+void AxisCopy(const vec3_t in[3], vec3_t out[3]);
 
 void SetPlaneSignbits(struct cplane_s *out);
-int BoxOnPlaneSide(vec3_t emins, vec3_t emaxs, struct cplane_s *plane);
+int BoxOnPlaneSide(const vec3_t emins, const vec3_t emaxs, const struct cplane_s *plane);
 
 qbool BoundsIntersect(const vec3_t mins, const vec3_t maxs,
 			 const vec3_t mins2, const vec3_t maxs2);

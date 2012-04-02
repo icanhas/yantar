@@ -292,7 +292,7 @@ CG_Draw3DModel(float x, float y, float w, float h, qhandle_t model,
 
 	memset(&ent, 0, sizeof(ent));
 	AnglesToAxis(angles, ent.axis);
-	VectorCopy(origin, ent.origin);
+	Vec3Copy(origin, ent.origin);
 	ent.hModel = model;
 	ent.customSkin	= skin;
 	ent.renderfx	= RF_NOSHADOW;	/* no stencil shadows */
@@ -349,7 +349,7 @@ CG_DrawHead(float x, float y, float w, float h, int clientNum, vec3_t headAngles
 		origin[0] = len / 0.268;	/* len / tan( fov/2 ) */
 
 		/* allow per-model tweaking */
-		VectorAdd(origin, ci->headOffset, origin);
+		Vec3Add(origin, ci->headOffset, origin);
 
 		CG_Draw3DModel(x, y, w, h, ci->headModel, ci->headSkin, origin,
 			headAngles);
@@ -1993,14 +1993,14 @@ CG_DrawCrosshair3D(void)
 
 	/* let the trace run through until a change in stereo separation of the crosshair becomes less than one pixel. */
 	maxdist = cgs.glconfig.vidWidth * stereoSep * zProj / (2 * xmax);
-	VectorMA(cg.refdef.vieworg, maxdist, cg.refdef.viewaxis[0], endpos);
+	Vec3MA(cg.refdef.vieworg, maxdist, cg.refdef.viewaxis[0], endpos);
 	CG_Trace(&trace, cg.refdef.vieworg, NULL, NULL, endpos, 0, MASK_SHOT);
 
 	memset(&ent, 0, sizeof(ent));
 	ent.reType	= RT_SPRITE;
 	ent.renderfx	= RF_DEPTHHACK | RF_CROSSHAIR;
 
-	VectorCopy(trace.endpos, ent.origin);
+	Vec3Copy(trace.endpos, ent.origin);
 
 	/* scale the crosshair so it appears the same size for all distances */
 	ent.radius = w / 640 * xmax * trace.fraction * maxdist / zProj;
@@ -2021,8 +2021,8 @@ CG_ScanForCrosshairEntity(void)
 	vec3_t	start, end;
 	int content;
 
-	VectorCopy(cg.refdef.vieworg, start);
-	VectorMA(start, 131072, cg.refdef.viewaxis[0], end);
+	Vec3Copy(cg.refdef.vieworg, start);
+	Vec3MA(start, 131072, cg.refdef.viewaxis[0], end);
 
 	CG_Trace(&trace, start, vec3_origin, vec3_origin, end,
 		cg.snap->ps.clientNum, CONTENTS_SOLID|CONTENTS_BODY);

@@ -1191,16 +1191,16 @@ BG_EvaluateTrajectory(const trajectory_t *tr, int atTime, vec3_t result)
 	switch(tr->trType){
 	case TR_STATIONARY:
 	case TR_INTERPOLATE:
-		VectorCopy(tr->trBase, result);
+		Vec3Copy(tr->trBase, result);
 		break;
 	case TR_LINEAR:
 		deltaTime = (atTime - tr->trTime) * 0.001;	/* milliseconds to seconds */
-		VectorMA(tr->trBase, deltaTime, tr->trDelta, result);
+		Vec3MA(tr->trBase, deltaTime, tr->trDelta, result);
 		break;
 	case TR_SINE:
 		deltaTime = (atTime - tr->trTime) / (float)tr->trDuration;
 		phase = sin(deltaTime * M_PI * 2);
-		VectorMA(tr->trBase, phase, tr->trDelta, result);
+		Vec3MA(tr->trBase, phase, tr->trDelta, result);
 		break;
 	case TR_LINEAR_STOP:
 		if(atTime > tr->trTime + tr->trDuration)
@@ -1208,11 +1208,11 @@ BG_EvaluateTrajectory(const trajectory_t *tr, int atTime, vec3_t result)
 		deltaTime = (atTime - tr->trTime) * 0.001;	/* milliseconds to seconds */
 		if(deltaTime < 0)
 			deltaTime = 0;
-		VectorMA(tr->trBase, deltaTime, tr->trDelta, result);
+		Vec3MA(tr->trBase, deltaTime, tr->trDelta, result);
 		break;
 	case TR_GRAVITY:
 		deltaTime = (atTime - tr->trTime) * 0.001;	/* milliseconds to seconds */
-		VectorMA(tr->trBase, deltaTime, tr->trDelta, result);
+		Vec3MA(tr->trBase, deltaTime, tr->trDelta, result);
 		result[2] -= 0.5 * DEFAULT_GRAVITY * deltaTime * deltaTime;	/* FIXME: local gravity... */
 		break;
 	default:
@@ -1239,7 +1239,7 @@ BG_EvaluateTrajectoryDelta(const trajectory_t *tr, int atTime, vec3_t result)
 		VectorClear(result);
 		break;
 	case TR_LINEAR:
-		VectorCopy(tr->trDelta, result);
+		Vec3Copy(tr->trDelta, result);
 		break;
 	case TR_SINE:
 		deltaTime	= (atTime - tr->trTime) / (float)tr->trDuration;
@@ -1252,11 +1252,11 @@ BG_EvaluateTrajectoryDelta(const trajectory_t *tr, int atTime, vec3_t result)
 			VectorClear(result);
 			return;
 		}
-		VectorCopy(tr->trDelta, result);
+		Vec3Copy(tr->trDelta, result);
 		break;
 	case TR_GRAVITY:
 		deltaTime = (atTime - tr->trTime) * 0.001;	/* milliseconds to seconds */
-		VectorCopy(tr->trDelta, result);
+		Vec3Copy(tr->trDelta, result);
 		result[2] -= DEFAULT_GRAVITY * deltaTime;	/* FIXME: local gravity... */
 		break;
 	default:
@@ -1436,7 +1436,7 @@ BG_TouchJumpPad(playerState_t *ps, entityState_t *jumppad)
 	 * then don't play the event sound again if we are in a fat trigger */
 	if(ps->jumppad_ent != jumppad->number){
 
-		vectoangles(jumppad->origin2, angles);
+		Vec3ToAngles(jumppad->origin2, angles);
 		p = fabs(AngleNormalize180(angles[PITCH]));
 		if(p < 45)
 			effectNum = 0;
@@ -1448,7 +1448,7 @@ BG_TouchJumpPad(playerState_t *ps, entityState_t *jumppad)
 	ps->jumppad_ent = jumppad->number;
 	ps->jumppad_frame = ps->pmove_framecount;
 	/* give the player the velocity from the jumppad */
-	VectorCopy(jumppad->origin2, ps->velocity);
+	Vec3Copy(jumppad->origin2, ps->velocity);
 }
 
 /*
@@ -1472,14 +1472,14 @@ BG_PlayerStateToEntityState(playerState_t *ps, entityState_t *s, qbool snap)
 	s->number = ps->clientNum;
 
 	s->pos.trType = TR_INTERPOLATE;
-	VectorCopy(ps->origin, s->pos.trBase);
+	Vec3Copy(ps->origin, s->pos.trBase);
 	if(snap)
 		SnapVector(s->pos.trBase);
 	/* set the trDelta for flag direction */
-	VectorCopy(ps->velocity, s->pos.trDelta);
+	Vec3Copy(ps->velocity, s->pos.trDelta);
 
 	s->apos.trType = TR_INTERPOLATE;
-	VectorCopy(ps->viewangles, s->apos.trBase);
+	Vec3Copy(ps->viewangles, s->apos.trBase);
 	if(snap)
 		SnapVector(s->apos.trBase);
 
@@ -1545,18 +1545,18 @@ BG_PlayerStateToEntityStateExtraPolate(playerState_t *ps, entityState_t *s,
 	s->number = ps->clientNum;
 
 	s->pos.trType = TR_LINEAR_STOP;
-	VectorCopy(ps->origin, s->pos.trBase);
+	Vec3Copy(ps->origin, s->pos.trBase);
 	if(snap)
 		SnapVector(s->pos.trBase);
 	/* set the trDelta for flag direction and linear prediction */
-	VectorCopy(ps->velocity, s->pos.trDelta);
+	Vec3Copy(ps->velocity, s->pos.trDelta);
 	/* set the time for linear prediction */
 	s->pos.trTime = time;
 	/* set maximum extra polation time */
 	s->pos.trDuration = 50;	/* 1000 / sv_fps (default = 20) */
 
 	s->apos.trType = TR_INTERPOLATE;
-	VectorCopy(ps->viewangles, s->apos.trBase);
+	Vec3Copy(ps->viewangles, s->apos.trBase);
 	if(snap)
 		SnapVector(s->apos.trBase);
 

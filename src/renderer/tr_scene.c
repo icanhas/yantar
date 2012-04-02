@@ -167,8 +167,8 @@ RE_AddPolyToScene(qhandle_t hShader, int numVerts, const polyVert_t *verts, int 
 			fogIndex = 0;
 		}else{
 			/* find which fog volume the poly is in */
-			VectorCopy(poly->verts[0].xyz, bounds[0]);
-			VectorCopy(poly->verts[0].xyz, bounds[1]);
+			Vec3Copy(poly->verts[0].xyz, bounds[0]);
+			Vec3Copy(poly->verts[0].xyz, bounds[1]);
 			for(i = 1; i < poly->numVerts; i++)
 				AddPointToBounds(poly->verts[i].xyz, bounds[0], bounds[1]);
 			for(fogIndex = 1; fogIndex < tr.world->numfogs; fogIndex++){
@@ -251,7 +251,7 @@ RE_AddDynamicLightToScene(const vec3_t org, float intensity, float r, float g, f
 		return;
 	}
 	dl = &backEndData[tr.smpFrame]->dlights[r_numdlights++];
-	VectorCopy (org, dl->origin);
+	Vec3Copy (org, dl->origin);
 	dl->radius = intensity;
 	dl->color[0] = r;
 	dl->color[1] = g;
@@ -320,10 +320,10 @@ RE_RenderScene(const refdef_t *fd)
 	tr.refdef.fov_x = fd->fov_x;
 	tr.refdef.fov_y = fd->fov_y;
 
-	VectorCopy(fd->vieworg, tr.refdef.vieworg);
-	VectorCopy(fd->viewaxis[0], tr.refdef.viewaxis[0]);
-	VectorCopy(fd->viewaxis[1], tr.refdef.viewaxis[1]);
-	VectorCopy(fd->viewaxis[2], tr.refdef.viewaxis[2]);
+	Vec3Copy(fd->vieworg, tr.refdef.vieworg);
+	Vec3Copy(fd->viewaxis[0], tr.refdef.viewaxis[0]);
+	Vec3Copy(fd->viewaxis[1], tr.refdef.viewaxis[1]);
+	Vec3Copy(fd->viewaxis[2], tr.refdef.viewaxis[2]);
 
 	tr.refdef.time = fd->time;
 	tr.refdef.rdflags = fd->rdflags;
@@ -399,12 +399,12 @@ RE_RenderScene(const refdef_t *fd)
 
 	parms.stereoFrame = tr.refdef.stereoFrame;
 
-	VectorCopy(fd->vieworg, parms.or.origin);
-	VectorCopy(fd->viewaxis[0], parms.or.axis[0]);
-	VectorCopy(fd->viewaxis[1], parms.or.axis[1]);
-	VectorCopy(fd->viewaxis[2], parms.or.axis[2]);
+	Vec3Copy(fd->vieworg, parms.or.origin);
+	Vec3Copy(fd->viewaxis[0], parms.or.axis[0]);
+	Vec3Copy(fd->viewaxis[1], parms.or.axis[1]);
+	Vec3Copy(fd->viewaxis[2], parms.or.axis[2]);
 
-	VectorCopy(fd->vieworg, parms.pvsOrigin);
+	Vec3Copy(fd->vieworg, parms.pvsOrigin);
 
 	R_RenderView(&parms);
 

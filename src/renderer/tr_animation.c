@@ -134,15 +134,15 @@ RB_SurfaceAnim(md4Surface_t *surface)
 			bone = bonePtr + w->boneIndex;
 
 			tempVert[0] += w->boneWeight *
-				       (DotProduct(bone->matrix[0], w->offset) + bone->matrix[0][3]);
+				       (Vec3Dot(bone->matrix[0], w->offset) + bone->matrix[0][3]);
 			tempVert[1] += w->boneWeight *
-				       (DotProduct(bone->matrix[1], w->offset) + bone->matrix[1][3]);
+				       (Vec3Dot(bone->matrix[1], w->offset) + bone->matrix[1][3]);
 			tempVert[2] += w->boneWeight *
-				       (DotProduct(bone->matrix[2], w->offset) + bone->matrix[2][3]);
+				       (Vec3Dot(bone->matrix[2], w->offset) + bone->matrix[2][3]);
 
-			tempNormal[0]	+= w->boneWeight * DotProduct(bone->matrix[0], v->normal);
-			tempNormal[1]	+= w->boneWeight * DotProduct(bone->matrix[1], v->normal);
-			tempNormal[2]	+= w->boneWeight * DotProduct(bone->matrix[2], v->normal);
+			tempNormal[0]	+= w->boneWeight * Vec3Dot(bone->matrix[0], v->normal);
+			tempNormal[1]	+= w->boneWeight * Vec3Dot(bone->matrix[1], v->normal);
+			tempNormal[2]	+= w->boneWeight * Vec3Dot(bone->matrix[2], v->normal);
 		}
 
 		tess.xyz[baseVertex + j][0] = tempVert[0];
@@ -276,7 +276,7 @@ R_MDRComputeFogNum(mdrHeader_t *header, trRefEntity_t *ent)
 
 	/* FIXME: non-normalized axis issues */
 	mdrFrame = ( mdrFrame_t* )(( byte* )header + header->ofsFrames + frameSize * ent->e.frame);
-	VectorAdd(ent->e.origin, mdrFrame->localOrigin, localOrigin);
+	Vec3Add(ent->e.origin, mdrFrame->localOrigin, localOrigin);
 	for(i = 1; i < tr.world->numfogs; i++){
 		fog = &tr.world->fogs[i];
 		for(j = 0; j < 3; j++){
@@ -497,15 +497,15 @@ RB_MDRSurfaceAnim(md4Surface_t *surface)
 			bone = bonePtr + w->boneIndex;
 
 			tempVert[0] += w->boneWeight *
-				       (DotProduct(bone->matrix[0], w->offset) + bone->matrix[0][3]);
+				       (Vec3Dot(bone->matrix[0], w->offset) + bone->matrix[0][3]);
 			tempVert[1] += w->boneWeight *
-				       (DotProduct(bone->matrix[1], w->offset) + bone->matrix[1][3]);
+				       (Vec3Dot(bone->matrix[1], w->offset) + bone->matrix[1][3]);
 			tempVert[2] += w->boneWeight *
-				       (DotProduct(bone->matrix[2], w->offset) + bone->matrix[2][3]);
+				       (Vec3Dot(bone->matrix[2], w->offset) + bone->matrix[2][3]);
 
-			tempNormal[0]	+= w->boneWeight * DotProduct(bone->matrix[0], v->normal);
-			tempNormal[1]	+= w->boneWeight * DotProduct(bone->matrix[1], v->normal);
-			tempNormal[2]	+= w->boneWeight * DotProduct(bone->matrix[2], v->normal);
+			tempNormal[0]	+= w->boneWeight * Vec3Dot(bone->matrix[0], v->normal);
+			tempNormal[1]	+= w->boneWeight * Vec3Dot(bone->matrix[1], v->normal);
+			tempNormal[2]	+= w->boneWeight * Vec3Dot(bone->matrix[2], v->normal);
 		}
 
 		tess.xyz[baseVertex + j][0] = tempVert[0];

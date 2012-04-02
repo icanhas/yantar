@@ -101,7 +101,7 @@ TeleportPlayer(gentity_t *player, vec3_t origin, vec3_t angles)
 	/* unlink to make sure it can't possibly interfere with G_KillBox */
 	trap_UnlinkEntity (player);
 
-	VectorCopy (origin, player->client->ps.origin);
+	Vec3Copy (origin, player->client->ps.origin);
 	player->client->ps.origin[2] += 1;
 	if(!noAngles){
 		/* spit the player out */
@@ -123,7 +123,7 @@ TeleportPlayer(gentity_t *player, vec3_t origin, vec3_t angles)
 	BG_PlayerStateToEntityState(&player->client->ps, &player->s, qtrue);
 
 	/* use the precise origin for linking */
-	VectorCopy(player->client->ps.origin, player->r.currentOrigin);
+	Vec3Copy(player->client->ps.origin, player->r.currentOrigin);
 
 	if(player->client->sess.sessionTeam != TEAM_SPECTATOR)
 		trap_LinkEntity (player);
@@ -157,7 +157,7 @@ SP_misc_model(gentity_t *ent)
 	trap_LinkEntity (ent);
 
 	G_SetOrigin(ent, ent->s.origin);
-	VectorCopy(ent->s.angles, ent->s.apos.trBase);
+	Vec3Copy(ent->s.angles, ent->s.apos.trBase);
 #else
 	G_FreeEntity(ent);
 #endif
@@ -196,13 +196,13 @@ locateCamera(gentity_t *ent)
 	/* clientNum holds the rotate offset */
 	ent->s.clientNum = owner->s.clientNum;
 
-	VectorCopy(owner->s.origin, ent->s.origin2);
+	Vec3Copy(owner->s.origin, ent->s.origin2);
 
 	/* see if the portal_camera has a target */
 	target = G_PickTarget(owner->target);
 	if(target){
-		VectorSubtract(target->s.origin, owner->s.origin, dir);
-		VectorNormalize(dir);
+		Vec3Sub(target->s.origin, owner->s.origin, dir);
+		Vec3Normalize(dir);
 	}else
 		G_SetMovedir(owner->s.angles, dir);
 
@@ -224,7 +224,7 @@ SP_misc_portal_surface(gentity_t *ent)
 	ent->s.eType	= ET_PORTAL;
 
 	if(!ent->target)
-		VectorCopy(ent->s.origin, ent->s.origin2);
+		Vec3Copy(ent->s.origin, ent->s.origin2);
 	else{
 		ent->think = locateCamera;
 		ent->nextthink = level.time + 100;
@@ -264,22 +264,22 @@ Use_Shooter(gentity_t *ent, gentity_t *other, gentity_t *activator)
 
 	/* see if we have a target */
 	if(ent->enemy){
-		VectorSubtract(ent->enemy->r.currentOrigin, ent->s.origin, dir);
-		VectorNormalize(dir);
+		Vec3Sub(ent->enemy->r.currentOrigin, ent->s.origin, dir);
+		Vec3Normalize(dir);
 	}else
-		VectorCopy(ent->movedir, dir);
+		Vec3Copy(ent->movedir, dir);
 
 	/* randomize a bit */
 	PerpendicularVector(up, dir);
-	CrossProduct(up, dir, right);
+	Vec3Cross(up, dir, right);
 
 	deg = crandom() * ent->random;
-	VectorMA(dir, deg, up, dir);
+	Vec3MA(dir, deg, up, dir);
 
 	deg = crandom() * ent->random;
-	VectorMA(dir, deg, right, dir);
+	Vec3MA(dir, deg, right, dir);
 
-	VectorNormalize(dir);
+	Vec3Normalize(dir);
 
 	switch(ent->s.weapon){
 	case WP_GRENADE_LAUNCHER:
@@ -378,11 +378,11 @@ DropPortalDestination(gentity_t *player)
 	ent->s.modelindex = G_ModelIndex(
 		"models/powerups/teleporter/tele_exit.md3");
 
-	VectorCopy(player->s.pos.trBase, snapped);
+	Vec3Copy(player->s.pos.trBase, snapped);
 	SnapVector(snapped);
 	G_SetOrigin(ent, snapped);
-	VectorCopy(player->r.mins, ent->r.mins);
-	VectorCopy(player->r.maxs, ent->r.maxs);
+	Vec3Copy(player->r.mins, ent->r.mins);
+	Vec3Copy(player->r.maxs, ent->r.maxs);
 
 	ent->classname = "hi_portal destination";
 	ent->s.pos.trType = TR_STATIONARY;
@@ -392,7 +392,7 @@ DropPortalDestination(gentity_t *player)
 	ent->health = 200;
 	ent->die = PortalDie;
 
-	VectorCopy(player->s.apos.trBase, ent->s.angles);
+	Vec3Copy(player->s.apos.trBase, ent->s.angles);
 
 	ent->think = G_FreeEntity;
 	ent->nextthink = level.time + 2 * 60 * 1000;
@@ -476,11 +476,11 @@ DropPortalSource(gentity_t *player)
 	ent->s.modelindex = G_ModelIndex(
 		"models/powerups/teleporter/tele_enter.md3");
 
-	VectorCopy(player->s.pos.trBase, snapped);
+	Vec3Copy(player->s.pos.trBase, snapped);
 	SnapVector(snapped);
 	G_SetOrigin(ent, snapped);
-	VectorCopy(player->r.mins, ent->r.mins);
-	VectorCopy(player->r.maxs, ent->r.maxs);
+	Vec3Copy(player->r.mins, ent->r.mins);
+	Vec3Copy(player->r.maxs, ent->r.maxs);
 
 	ent->classname = "hi_portal source";
 	ent->s.pos.trType = TR_STATIONARY;
@@ -506,7 +506,7 @@ DropPortalSource(gentity_t *player)
 		       G_Find(destination, FOFS(classname),
 			       "hi_portal destination")) != NULL)
 		if(destination->count == ent->count){
-			VectorCopy(destination->s.pos.trBase, ent->pos1);
+			Vec3Copy(destination->s.pos.trBase, ent->pos1);
 			break;
 		}
 

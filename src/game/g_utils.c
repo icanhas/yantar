@@ -320,9 +320,9 @@ G_SetMovedir(vec3_t angles, vec3_t movedir)
 	static vec3_t	MOVEDIR_DOWN	= {0, 0, -1};
 
 	if(VectorCompare (angles, VEC_UP))
-		VectorCopy (MOVEDIR_UP, movedir);
+		Vec3Copy (MOVEDIR_UP, movedir);
 	else if(VectorCompare (angles, VEC_DOWN))
-		VectorCopy (MOVEDIR_DOWN, movedir);
+		Vec3Copy (MOVEDIR_DOWN, movedir);
 	else
 		AngleVectors (angles, movedir, NULL, NULL);
 	VectorClear(angles);
@@ -479,7 +479,7 @@ G_TempEntity(vec3_t origin, int event)
 	e->eventTime = level.time;
 	e->freeAfterEvent = qtrue;
 
-	VectorCopy(origin, snapped);
+	Vec3Copy(origin, snapped);
 	SnapVector(snapped);	/* save network bandwidth */
 	G_SetOrigin(e, snapped);
 
@@ -511,8 +511,8 @@ G_KillBox(gentity_t *ent)
 	gentity_t	*hit;
 	vec3_t		mins, maxs;
 
-	VectorAdd(ent->client->ps.origin, ent->r.mins, mins);
-	VectorAdd(ent->client->ps.origin, ent->r.maxs, maxs);
+	Vec3Add(ent->client->ps.origin, ent->r.mins, mins);
+	Vec3Add(ent->client->ps.origin, ent->r.maxs, maxs);
 	num = trap_EntitiesInBox(mins, maxs, touch, MAX_GENTITIES);
 
 	for(i=0; i<num; i++){
@@ -602,13 +602,13 @@ G_Sound(gentity_t *ent, int channel, int soundIndex)
 void
 G_SetOrigin(gentity_t *ent, vec3_t origin)
 {
-	VectorCopy(origin, ent->s.pos.trBase);
+	Vec3Copy(origin, ent->s.pos.trBase);
 	ent->s.pos.trType = TR_STATIONARY;
 	ent->s.pos.trTime = 0;
 	ent->s.pos.trDuration = 0;
 	VectorClear(ent->s.pos.trDelta);
 
-	VectorCopy(origin, ent->r.currentOrigin);
+	Vec3Copy(origin, ent->r.currentOrigin);
 }
 
 /*
@@ -623,26 +623,26 @@ DebugLine(vec3_t start, vec3_t end, int color)
 	vec3_t	points[4], dir, cross, up = {0, 0, 1};
 	float	dot;
 
-	VectorCopy(start, points[0]);
-	VectorCopy(start, points[1]);
+	Vec3Copy(start, points[0]);
+	Vec3Copy(start, points[1]);
 	/* points[1][2] -= 2; */
-	VectorCopy(end, points[2]);
+	Vec3Copy(end, points[2]);
 	/* points[2][2] -= 2; */
-	VectorCopy(end, points[3]);
+	Vec3Copy(end, points[3]);
 
 
-	VectorSubtract(end, start, dir);
-	VectorNormalize(dir);
-	dot = DotProduct(dir, up);
+	Vec3Sub(end, start, dir);
+	Vec3Normalize(dir);
+	dot = Vec3Dot(dir, up);
 	if(dot > 0.99 || dot < -0.99) VectorSet(cross, 1, 0, 0);
-	else CrossProduct(dir, up, cross);
+	else Vec3Cross(dir, up, cross);
 
-	VectorNormalize(cross);
+	Vec3Normalize(cross);
 
-	VectorMA(points[0], 2, cross, points[0]);
-	VectorMA(points[1], -2, cross, points[1]);
-	VectorMA(points[2], -2, cross, points[2]);
-	VectorMA(points[3], 2, cross, points[3]);
+	Vec3MA(points[0], 2, cross, points[0]);
+	Vec3MA(points[1], -2, cross, points[1]);
+	Vec3MA(points[2], -2, cross, points[2]);
+	Vec3MA(points[3], 2, cross, points[3]);
 
 	return trap_DebugPolygonCreate(color, 4, points);
 }

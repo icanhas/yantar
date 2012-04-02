@@ -216,12 +216,12 @@ CG_ReflectVelocity(localEntity_t *le, trace_t *trace)
 	/* reflect the velocity on the trace plane */
 	hitTime = cg.time - cg.frametime + cg.frametime * trace->fraction;
 	BG_EvaluateTrajectoryDelta(&le->pos, hitTime, velocity);
-	dot = DotProduct(velocity, trace->plane.normal);
-	VectorMA(velocity, -2*dot, trace->plane.normal, le->pos.trDelta);
+	dot = Vec3Dot(velocity, trace->plane.normal);
+	Vec3MA(velocity, -2*dot, trace->plane.normal, le->pos.trDelta);
 
 	VectorScale(le->pos.trDelta, le->bounceFactor, le->pos.trDelta);
 
-	VectorCopy(trace->endpos, le->pos.trBase);
+	Vec3Copy(trace->endpos, le->pos.trBase);
 	le->pos.trTime = cg.time;
 
 
@@ -255,7 +255,7 @@ CG_AddFragment(localEntity_t *le)
 			/* we must use an explicit lighting origin, otherwise the
 			 * lighting would be lost as soon as the origin went
 			 * into the ground */
-			VectorCopy(le->refEntity.origin,
+			Vec3Copy(le->refEntity.origin,
 				le->refEntity.lightingOrigin);
 			le->refEntity.renderfx |= RF_LIGHTING_ORIGIN;
 			oldZ = le->refEntity.origin[2];
@@ -277,7 +277,7 @@ CG_AddFragment(localEntity_t *le)
 		CONTENTS_SOLID);
 	if(trace.fraction == 1.0){
 		/* still in free fall */
-		VectorCopy(newOrigin, le->refEntity.origin);
+		Vec3Copy(newOrigin, le->refEntity.origin);
 
 		if(le->leFlags & LEF_TUMBLE){
 			vec3_t angles;
@@ -375,8 +375,8 @@ CG_AddMoveScaleFade(localEntity_t *le)
 
 	/* if the view would be "inside" the sprite, kill the sprite
 	 * so it doesn't add too much overdraw */
-	VectorSubtract(re->origin, cg.refdef.vieworg, delta);
-	len = VectorLength(delta);
+	Vec3Sub(re->origin, cg.refdef.vieworg, delta);
+	len = Vec3Len(delta);
 	if(len < le->radius){
 		CG_FreeLocalEntity(le);
 		return;
@@ -411,8 +411,8 @@ CG_AddScaleFade(localEntity_t *le)
 
 	/* if the view would be "inside" the sprite, kill the sprite
 	 * so it doesn't add too much overdraw */
-	VectorSubtract(re->origin, cg.refdef.vieworg, delta);
-	len = VectorLength(delta);
+	Vec3Sub(re->origin, cg.refdef.vieworg, delta);
+	len = Vec3Len(delta);
 	if(len < le->radius){
 		CG_FreeLocalEntity(le);
 		return;
@@ -451,8 +451,8 @@ CG_AddFallScaleFade(localEntity_t *le)
 
 	/* if the view would be "inside" the sprite, kill the sprite
 	 * so it doesn't add too much overdraw */
-	VectorSubtract(re->origin, cg.refdef.vieworg, delta);
-	len = VectorLength(delta);
+	Vec3Sub(re->origin, cg.refdef.vieworg, delta);
+	len = Vec3Len(delta);
 	if(len < le->radius){
 		CG_FreeLocalEntity(le);
 		return;
@@ -570,7 +570,7 @@ CG_AddKamikaze(localEntity_t *le)
 		shockwave.hModel = cgs.media.kamikazeShockWave;
 		shockwave.reType = RT_MODEL;
 		shockwave.shaderTime = re->shaderTime;
-		VectorCopy(re->origin, shockwave.origin);
+		Vec3Copy(re->origin, shockwave.origin);
 
 		c =
 			(float)(t -
@@ -663,7 +663,7 @@ CG_AddKamikaze(localEntity_t *le)
 		shockwave.hModel = cgs.media.kamikazeShockWave;
 		shockwave.reType = RT_MODEL;
 		shockwave.shaderTime = re->shaderTime;
-		VectorCopy(re->origin, shockwave.origin);
+		Vec3Copy(re->origin, shockwave.origin);
 
 		test[0] = le->angles.trBase[0];
 		test[1] = le->angles.trBase[1];
@@ -794,19 +794,19 @@ CG_AddScorePlum(localEntity_t *le)
 
 	re->radius = NUMBER_SIZE / 2;
 
-	VectorCopy(le->pos.trBase, origin);
+	Vec3Copy(le->pos.trBase, origin);
 	origin[2] += 110 - c * 100;
 
-	VectorSubtract(cg.refdef.vieworg, origin, dir);
-	CrossProduct(dir, up, vec);
-	VectorNormalize(vec);
+	Vec3Sub(cg.refdef.vieworg, origin, dir);
+	Vec3Cross(dir, up, vec);
+	Vec3Normalize(vec);
 
-	VectorMA(origin, -10 + 20 * sin(c * 2 * M_PI), vec, origin);
+	Vec3MA(origin, -10 + 20 * sin(c * 2 * M_PI), vec, origin);
 
 	/* if the view would be "inside" the sprite, kill the sprite
 	 * so it doesn't add too much overdraw */
-	VectorSubtract(origin, cg.refdef.vieworg, delta);
-	len = VectorLength(delta);
+	Vec3Sub(origin, cg.refdef.vieworg, delta);
+	len = Vec3Len(delta);
 	if(len < 20){
 		CG_FreeLocalEntity(le);
 		return;
@@ -829,7 +829,7 @@ CG_AddScorePlum(localEntity_t *le)
 	}
 
 	for(i = 0; i < numdigits; i++){
-		VectorMA(origin,
+		Vec3MA(origin,
 			(float)(((float)numdigits / 2) - i) * NUMBER_SIZE, vec,
 			re->origin);
 		re->customShader =

@@ -466,8 +466,8 @@ G_SpawnGEntityFromSpawnVars(void)
 		}
 
 	/* move editor origin to pos */
-	VectorCopy(ent->s.origin, ent->s.pos.trBase);
-	VectorCopy(ent->s.origin, ent->r.currentOrigin);
+	Vec3Copy(ent->s.origin, ent->s.pos.trBase);
+	Vec3Copy(ent->s.origin, ent->r.currentOrigin);
 
 	/* if we didn't get a classname, don't bother spawning anything */
 	if(!G_CallSpawn(ent))

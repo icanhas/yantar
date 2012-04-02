@@ -145,10 +145,10 @@ CG_ImpactMark(qhandle_t markShader, const vec3_t origin, const vec3_t dir,
 	 * } */
 
 	/* create the texture axis */
-	VectorNormalize2(dir, axis[0]);
+	Vec3Normalize2(dir, axis[0]);
 	PerpendicularVector(axis[1], axis[0]);
 	RotatePointAroundVector(axis[2], axis[0], axis[1], orientation);
-	CrossProduct(axis[0], axis[2], axis[1]);
+	Vec3Cross(axis[0], axis[2], axis[1]);
 
 	texCoordScale = 0.5 * 1.0 / radius;
 
@@ -187,13 +187,13 @@ CG_ImpactMark(qhandle_t markShader, const vec3_t origin, const vec3_t dir,
 		for(j = 0, v = verts; j < mf->numPoints; j++, v++){
 			vec3_t delta;
 
-			VectorCopy(markPoints[mf->firstPoint + j], v->xyz);
+			Vec3Copy(markPoints[mf->firstPoint + j], v->xyz);
 
-			VectorSubtract(v->xyz, origin, delta);
+			Vec3Sub(v->xyz, origin, delta);
 			v->st[0] = 0.5 +
-				   DotProduct(delta, axis[1]) * texCoordScale;
+				   Vec3Dot(delta, axis[1]) * texCoordScale;
 			v->st[1] = 0.5 +
-				   DotProduct(delta, axis[2]) * texCoordScale;
+				   Vec3Dot(delta, axis[2]) * texCoordScale;
 			*(int*)v->modulate = *(int*)colors;
 		}
 

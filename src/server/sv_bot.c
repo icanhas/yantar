@@ -186,9 +186,9 @@ BotImport_Trace(bsp_trace_t *bsptrace, vec3_t start, vec3_t mins, vec3_t maxs,
 	bsptrace->allsolid	= trace.allsolid;
 	bsptrace->startsolid	= trace.startsolid;
 	bsptrace->fraction	= trace.fraction;
-	VectorCopy(trace.endpos, bsptrace->endpos);
+	Vec3Copy(trace.endpos, bsptrace->endpos);
 	bsptrace->plane.dist = trace.plane.dist;
-	VectorCopy(trace.plane.normal, bsptrace->plane.normal);
+	Vec3Copy(trace.plane.normal, bsptrace->plane.normal);
 	bsptrace->plane.signbits = trace.plane.signbits;
 	bsptrace->plane.type = trace.plane.type;
 	bsptrace->surface.value = trace.surfaceFlags;
@@ -214,9 +214,9 @@ BotImport_EntityTrace(bsp_trace_t *bsptrace, vec3_t start, vec3_t mins,
 	bsptrace->allsolid	= trace.allsolid;
 	bsptrace->startsolid	= trace.startsolid;
 	bsptrace->fraction	= trace.fraction;
-	VectorCopy(trace.endpos, bsptrace->endpos);
+	Vec3Copy(trace.endpos, bsptrace->endpos);
 	bsptrace->plane.dist = trace.plane.dist;
-	VectorCopy(trace.plane.normal, bsptrace->plane.normal);
+	Vec3Copy(trace.plane.normal, bsptrace->plane.normal);
 	bsptrace->plane.signbits = trace.plane.signbits;
 	bsptrace->plane.type = trace.plane.type;
 	bsptrace->surface.value = trace.surfaceFlags;
@@ -279,8 +279,8 @@ BotImport_BSPModelMinsMaxsOrigin(int modelnum, vec3_t angles, vec3_t outmins,
 			maxs[i] = max;
 		}
 	}
-	if(outmins) VectorCopy(mins, outmins);
-	if(outmaxs) VectorCopy(maxs, outmaxs);
+	if(outmins) Vec3Copy(mins, outmins);
+	if(outmaxs) Vec3Copy(maxs, outmaxs);
 	if(origin) VectorClear(origin);
 }
 
@@ -397,26 +397,26 @@ BotImport_DebugLineShow(int line, vec3_t start, vec3_t end, int color)
 	vec3_t	points[4], dir, cross, up = {0, 0, 1};
 	float	dot;
 
-	VectorCopy(start, points[0]);
-	VectorCopy(start, points[1]);
+	Vec3Copy(start, points[0]);
+	Vec3Copy(start, points[1]);
 	/* points[1][2] -= 2; */
-	VectorCopy(end, points[2]);
+	Vec3Copy(end, points[2]);
 	/* points[2][2] -= 2; */
-	VectorCopy(end, points[3]);
+	Vec3Copy(end, points[3]);
 
 
-	VectorSubtract(end, start, dir);
-	VectorNormalize(dir);
-	dot = DotProduct(dir, up);
+	Vec3Sub(end, start, dir);
+	Vec3Normalize(dir);
+	dot = Vec3Dot(dir, up);
 	if(dot > 0.99 || dot < -0.99) VectorSet(cross, 1, 0, 0);
-	else CrossProduct(dir, up, cross);
+	else Vec3Cross(dir, up, cross);
 
-	VectorNormalize(cross);
+	Vec3Normalize(cross);
 
-	VectorMA(points[0], 2, cross, points[0]);
-	VectorMA(points[1], -2, cross, points[1]);
-	VectorMA(points[2], -2, cross, points[2]);
-	VectorMA(points[3], 2, cross, points[3]);
+	Vec3MA(points[0], 2, cross, points[0]);
+	Vec3MA(points[1], -2, cross, points[1]);
+	Vec3MA(points[2], -2, cross, points[2]);
+	Vec3MA(points[3], 2, cross, points[3]);
 
 	BotImport_DebugPolygonShow(line, color, 4, points);
 }

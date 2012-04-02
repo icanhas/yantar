@@ -167,11 +167,11 @@ RB_ShadowTessEnd(void)
 		return;
 	}
 
-	VectorCopy(backEnd.currentEntity->lightDir, lightDir);
+	Vec3Copy(backEnd.currentEntity->lightDir, lightDir);
 
 	/* project vertexes away from light direction */
 	for(i = 0; i < tess.numVertexes; i++)
-		VectorMA(tess.xyz[i], -512, lightDir, tess.xyz[i+tess.numVertexes]);
+		Vec3MA(tess.xyz[i], -512, lightDir, tess.xyz[i+tess.numVertexes]);
 
 	/* decide which triangles face the light */
 	Com_Memset(numEdgeDefs, 0, 4 * tess.numVertexes);
@@ -191,11 +191,11 @@ RB_ShadowTessEnd(void)
 		v2	= tess.xyz[ i2 ];
 		v3	= tess.xyz[ i3 ];
 
-		VectorSubtract(v2, v1, d1);
-		VectorSubtract(v3, v1, d2);
-		CrossProduct(d1, d2, normal);
+		Vec3Sub(v2, v1, d1);
+		Vec3Sub(v3, v1, d2);
+		Vec3Cross(d1, d2, normal);
 
-		d = DotProduct(normal, lightDir);
+		d = Vec3Dot(normal, lightDir);
 		if(d > 0){
 			facing[ i ] = 1;
 		}else{
@@ -320,12 +320,12 @@ RB_ProjectionShadowDeform(void)
 
 	groundDist = backEnd.or.origin[2] - backEnd.currentEntity->e.shadowPlane;
 
-	VectorCopy(backEnd.currentEntity->lightDir, lightDir);
-	d = DotProduct(lightDir, ground);
+	Vec3Copy(backEnd.currentEntity->lightDir, lightDir);
+	d = Vec3Dot(lightDir, ground);
 	/* don't let the shadows get too long or go negative */
 	if(d < 0.5){
-		VectorMA(lightDir, (0.5 - d), ground, lightDir);
-		d = DotProduct(lightDir, ground);
+		Vec3MA(lightDir, (0.5 - d), ground, lightDir);
+		d = Vec3Dot(lightDir, ground);
 	}
 	d = 1.0 / d;
 
@@ -334,7 +334,7 @@ RB_ProjectionShadowDeform(void)
 	light[2]	= lightDir[2] * d;
 
 	for(i = 0; i < tess.numVertexes; i++, xyz += 4){
-		h = DotProduct(xyz, ground) + groundDist;
+		h = Vec3Dot(xyz, ground) + groundDist;
 
 		xyz[0]	-= light[0] * h;
 		xyz[1]	-= light[1] * h;

@@ -164,9 +164,9 @@ AAS_DrawPermanentCross(vec3_t origin, float size, int color)
 	vec3_t start, end;
 
 	for(i = 0; i < 3; i++){
-		VectorCopy(origin, start);
+		Vec3Copy(origin, start);
 		start[i] += size;
-		VectorCopy(origin, end);
+		Vec3Copy(origin, end);
 		end[i] -= size;
 		AAS_DebugLine(start, end, color);
 		debugline = botimport.DebugLineCreate();
@@ -186,10 +186,10 @@ AAS_DrawPlaneCross(vec3_t point, vec3_t normal, float dist, int type, int color)
 	vec3_t start1, end1, start2, end2;
 
 	/* make a cross in the hit plane at the hit point */
-	VectorCopy(point, start1);
-	VectorCopy(point, end1);
-	VectorCopy(point, start2);
-	VectorCopy(point, end2);
+	Vec3Copy(point, start1);
+	Vec3Copy(point, end1);
+	Vec3Copy(point, start2);
+	Vec3Copy(point, end2);
 
 	n0 = type % 3;
 	n1 = (type + 1) % 3;
@@ -322,8 +322,8 @@ AAS_ShowFace(int facenum)
 	plane	= &aasworld.planes[face->planenum];
 	edgenum = abs(aasworld.edgeindex[face->firstedge]);
 	edge = &aasworld.edges[edgenum];
-	VectorCopy(aasworld.vertexes[edge->v[0]], start);
-	VectorMA(start, 20, plane->normal, end);
+	Vec3Copy(aasworld.vertexes[edge->v[0]], start);
+	Vec3MA(start, 20, plane->normal, end);
 	AAS_DebugLine(start, end, LINECOLOR_RED);
 }	/* end of the function AAS_ShowFace */
 /* ===========================================================================
@@ -351,7 +351,7 @@ AAS_ShowFacePolygon(int facenum, int color, int flip)
 			/* edge number */
 			edgenum = aasworld.edgeindex[face->firstedge + i];
 			edge = &aasworld.edges[abs(edgenum)];
-			VectorCopy(aasworld.vertexes[edge->v[edgenum < 0]],
+			Vec3Copy(aasworld.vertexes[edge->v[edgenum < 0]],
 				points[numpoints]);
 			numpoints++;
 		}
@@ -360,7 +360,7 @@ AAS_ShowFacePolygon(int facenum, int color, int flip)
 			/* edge number */
 			edgenum = aasworld.edgeindex[face->firstedge + i];
 			edge = &aasworld.edges[abs(edgenum)];
-			VectorCopy(aasworld.vertexes[edge->v[edgenum < 0]],
+			Vec3Copy(aasworld.vertexes[edge->v[edgenum < 0]],
 				points[numpoints]);
 			numpoints++;
 		}
@@ -494,9 +494,9 @@ AAS_DrawCross(vec3_t origin, float size, int color)
 	vec3_t start, end;
 
 	for(i = 0; i < 3; i++){
-		VectorCopy(origin, start);
+		Vec3Copy(origin, start);
 		start[i] += size;
-		VectorCopy(origin, end);
+		Vec3Copy(origin, end);
 		end[i] -= size;
 		AAS_DebugLine(start, end, color);
 	}
@@ -547,16 +547,16 @@ AAS_DrawArrow(vec3_t start, vec3_t end, int linecolor, int arrowcolor)
 	vec3_t	dir, cross, p1, p2, up = {0, 0, 1};
 	float	dot;
 
-	VectorSubtract(end, start, dir);
-	VectorNormalize(dir);
-	dot = DotProduct(dir, up);
+	Vec3Sub(end, start, dir);
+	Vec3Normalize(dir);
+	dot = Vec3Dot(dir, up);
 	if(dot > 0.99 || dot < -0.99) VectorSet(cross, 1, 0, 0);
-	else CrossProduct(dir, up, cross);
+	else Vec3Cross(dir, up, cross);
 
-	VectorMA(end, -6, dir, p1);
-	VectorCopy(p1, p2);
-	VectorMA(p1, 6, cross, p1);
-	VectorMA(p2, -6, cross, p2);
+	Vec3MA(end, -6, dir, p1);
+	Vec3Copy(p1, p2);
+	Vec3MA(p1, 6, cross, p1);
+	Vec3MA(p2, -6, cross, p2);
 
 	AAS_DebugLine(start, end, linecolor);
 	AAS_DebugLine(p1, end, arrowcolor);
@@ -585,9 +585,9 @@ AAS_ShowReachability(aas_reachability_t *reach)
 			reach->start, reach->end,
 			&speed);
 		/*  */
-		VectorSubtract(reach->end, reach->start, dir);
+		Vec3Sub(reach->end, reach->start, dir);
 		dir[2] = 0;
-		VectorNormalize(dir);
+		Vec3Normalize(dir);
 		/* set the velocity */
 		VectorScale(dir, speed, velocity);
 		/* set the command movement */
@@ -609,9 +609,9 @@ AAS_ShowReachability(aas_reachability_t *reach)
 		AAS_HorizontalVelocityForJump(zvel, reach->start, reach->end,
 			&speed);
 		/*  */
-		VectorSubtract(reach->end, reach->start, dir);
+		Vec3Sub(reach->end, reach->start, dir);
 		dir[2] = 0;
-		VectorNormalize(dir);
+		Vec3Normalize(dir);
 		/* get command movement */
 		VectorScale(dir, speed, cmdmove);
 		VectorSet(velocity, 0, 0, zvel);
@@ -626,9 +626,9 @@ AAS_ShowReachability(aas_reachability_t *reach)
 	else if((reach->traveltype & TRAVELTYPE_MASK) == TRAVEL_JUMPPAD){
 		VectorSet(cmdmove, 0, 0, 0);
 		/*  */
-		VectorSubtract(reach->end, reach->start, dir);
+		Vec3Sub(reach->end, reach->start, dir);
 		dir[2] = 0;
-		VectorNormalize(dir);
+		Vec3Normalize(dir);
 		/* set the velocity
 		 * NOTE: the edgenum is the horizontal velocity */
 		VectorScale(dir, reach->edgenum, velocity);

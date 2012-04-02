@@ -521,10 +521,10 @@ RB_BeginDrawingView(void)
 		plane[2] = backEnd.viewParms.portalPlane.normal[2];
 		plane[3] = backEnd.viewParms.portalPlane.dist;
 
-		plane2[0] = DotProduct (backEnd.viewParms.or.axis[0], plane);
-		plane2[1] = DotProduct (backEnd.viewParms.or.axis[1], plane);
-		plane2[2] = DotProduct (backEnd.viewParms.or.axis[2], plane);
-		plane2[3] = DotProduct (plane, backEnd.viewParms.or.origin) - plane[3];
+		plane2[0] = Vec3Dot (backEnd.viewParms.or.axis[0], plane);
+		plane2[1] = Vec3Dot (backEnd.viewParms.or.axis[1], plane);
+		plane2[2] = Vec3Dot (backEnd.viewParms.or.axis[2], plane);
+		plane2[3] = Vec3Dot (plane, backEnd.viewParms.or.origin) - plane[3];
 
 		GL_SetModelviewMatrix(s_flipMatrix);
 	}
@@ -647,7 +647,7 @@ RB_RenderDrawSurfList(drawSurf_t *drawSurfs, int numDrawSurfs)
 				if(backEnd.currentEntity->e.renderfx & RF_SUNFLARE){
 					/* if we're rendering to a fbo */
 					if(fbo){
-						VectorCopy(backEnd.currentEntity->e.origin,
+						Vec3Copy(backEnd.currentEntity->e.origin,
 							backEnd.sunFlarePos);
 						/* switch FBO */
 						FBO_Bind(tr.godRaysFbo);
@@ -1071,10 +1071,10 @@ RB_StretchPic(const void *data)
 
 		VectorScale4(backEnd.color2D, 1.0f / 255.0f, color);
 
-		VectorCopy4(color, tess.vertexColors[ numVerts ]);
-		VectorCopy4(color, tess.vertexColors[ numVerts + 1]);
-		VectorCopy4(color, tess.vertexColors[ numVerts + 2]);
-		VectorCopy4(color, tess.vertexColors[ numVerts + 3 ]);
+		Vec3Copy4(color, tess.vertexColors[ numVerts ]);
+		Vec3Copy4(color, tess.vertexColors[ numVerts + 1]);
+		Vec3Copy4(color, tess.vertexColors[ numVerts + 2]);
+		Vec3Copy4(color, tess.vertexColors[ numVerts + 3 ]);
 	}
 
 	tess.xyz[ numVerts ][0] = cmd->x;

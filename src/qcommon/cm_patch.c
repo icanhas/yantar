@@ -123,13 +123,13 @@ CM_PlaneFromPoints(vec4_t plane, vec3_t a, vec3_t b, vec3_t c)
 {
 	vec3_t d1, d2;
 
-	VectorSubtract(b, a, d1);
-	VectorSubtract(c, a, d2);
-	CrossProduct(d2, d1, plane);
-	if(VectorNormalize(plane) == 0)
+	Vec3Sub(b, a, d1);
+	Vec3Sub(c, a, d2);
+	Vec3Cross(d2, d1, plane);
+	if(Vec3Normalize(plane) == 0)
 		return qfalse;
 
-	plane[3] = DotProduct(a, plane);
+	plane[3] = Vec3Dot(a, plane);
 	return qtrue;
 }
 
@@ -164,8 +164,8 @@ CM_NeedsSubdivision(vec3_t a, vec3_t b, vec3_t c)
 		cmid[i] = 0.5 * (0.5*(a[i] + b[i]) + 0.5*(b[i] + c[i]));
 
 	/* see if the curve is far enough away from the linear mid */
-	VectorSubtract(cmid, lmid, delta);
-	dist = VectorLength(delta);
+	Vec3Sub(cmid, lmid, delta);
+	dist = Vec3Len(delta);
 
 	return dist >= SUBDIVIDE_DISTANCE;
 }
@@ -205,13 +205,13 @@ CM_TransposeGrid(cGrid_t *grid)
 			for(j = i + 1; j < grid->width; j++){
 				if(j < grid->height){
 					/* swap the value */
-					VectorCopy(grid->points[i][j], temp);
-					VectorCopy(grid->points[j][i],
+					Vec3Copy(grid->points[i][j], temp);
+					Vec3Copy(grid->points[j][i],
 						grid->points[i][j]);
-					VectorCopy(temp, grid->points[j][i]);
+					Vec3Copy(temp, grid->points[j][i]);
 				}else
 					/* just copy */
-					VectorCopy(grid->points[j][i],
+					Vec3Copy(grid->points[j][i],
 						grid->points[i][j]);
 			}
 	}else{
@@ -219,13 +219,13 @@ CM_TransposeGrid(cGrid_t *grid)
 			for(j = i + 1; j < grid->height; j++){
 				if(j < grid->width){
 					/* swap the value */
-					VectorCopy(grid->points[j][i], temp);
-					VectorCopy(grid->points[i][j],
+					Vec3Copy(grid->points[j][i], temp);
+					Vec3Copy(grid->points[i][j],
 						grid->points[j][i]);
-					VectorCopy(temp, grid->points[i][j]);
+					Vec3Copy(temp, grid->points[i][j]);
 				}else
 					/* just copy */
-					VectorCopy(grid->points[i][j],
+					Vec3Copy(grid->points[i][j],
 						grid->points[j][i]);
 			}
 	}
@@ -296,7 +296,7 @@ CM_SubdivideGridColumns(cGrid_t *grid)
 			for(j = 0; j < grid->height; j++)
 				/* remove the column */
 				for(k = i + 2; k < grid->width; k++)
-					VectorCopy(grid->points[k][j],
+					Vec3Copy(grid->points[k][j],
 						grid->points[k-1][j]);
 
 			grid->width--;
@@ -313,15 +313,15 @@ CM_SubdivideGridColumns(cGrid_t *grid)
 			vec3_t prev, mid, next;
 
 			/* save the control points now */
-			VectorCopy(grid->points[i][j], prev);
-			VectorCopy(grid->points[i+1][j], mid);
-			VectorCopy(grid->points[i+2][j], next);
+			Vec3Copy(grid->points[i][j], prev);
+			Vec3Copy(grid->points[i+1][j], mid);
+			Vec3Copy(grid->points[i+2][j], next);
 
 			/* make room for two additional columns in the grid
 			 * columns i+1 will be replaced, column i+2 will become i+4
 			 * i+1, i+2, and i+3 will be generated */
 			for(k = grid->width - 1; k > i + 1; k--)
-				VectorCopy(grid->points[k][j],
+				Vec3Copy(grid->points[k][j],
 					grid->points[k+2][j]);
 
 			/* generate the subdivided points */
@@ -380,7 +380,7 @@ CM_RemoveDegenerateColumns(cGrid_t *grid)
 		for(j = 0; j < grid->height; j++)
 			/* remove the column */
 			for(k = i + 2; k < grid->width; k++)
-				VectorCopy(grid->points[k][j],
+				Vec3Copy(grid->points[k][j],
 					grid->points[k-1][j]);
 		grid->width--;
 
@@ -499,18 +499,18 @@ CM_FindPlane(float *p1, float *p2, float *p3)
 
 	/* see if the points are close enough to an existing plane */
 	for(i = 0; i < numPlanes; i++){
-		if(DotProduct(plane, planes[i].plane) < 0)
+		if(Vec3Dot(plane, planes[i].plane) < 0)
 			continue;	/* allow backwards planes? */
 
-		d = DotProduct(p1, planes[i].plane) - planes[i].plane[3];
+		d = Vec3Dot(p1, planes[i].plane) - planes[i].plane[3];
 		if(d < -PLANE_TRI_EPSILON || d > PLANE_TRI_EPSILON)
 			continue;
 
-		d = DotProduct(p2, planes[i].plane) - planes[i].plane[3];
+		d = Vec3Dot(p2, planes[i].plane) - planes[i].plane[3];
 		if(d < -PLANE_TRI_EPSILON || d > PLANE_TRI_EPSILON)
 			continue;
 
-		d = DotProduct(p3, planes[i].plane) - planes[i].plane[3];
+		d = Vec3Dot(p3, planes[i].plane) - planes[i].plane[3];
 		if(d < -PLANE_TRI_EPSILON || d > PLANE_TRI_EPSILON)
 			continue;
 
@@ -543,7 +543,7 @@ CM_PointOnPlaneSide(float *p, int planeNum)
 		return SIDE_ON;
 	plane = planes[ planeNum ].plane;
 
-	d = DotProduct(p, plane) - plane[3];
+	d = Vec3Dot(p, plane) - plane[3];
 
 	if(d > PLANE_TRI_EPSILON)
 		return SIDE_FRONT;
@@ -592,42 +592,42 @@ CM_EdgePlaneNum(cGrid_t *grid, int gridPlanes[MAX_GRID_SIZE][MAX_GRID_SIZE][2],
 		p1	= grid->points[i][j];
 		p2	= grid->points[i+1][j];
 		p	= CM_GridPlane(gridPlanes, i, j, 0);
-		VectorMA(p1, 4, planes[ p ].plane, up);
+		Vec3MA(p1, 4, planes[ p ].plane, up);
 		return CM_FindPlane(p1, p2, up);
 
 	case 2:	/* bottom border */
 		p1	= grid->points[i][j+1];
 		p2	= grid->points[i+1][j+1];
 		p	= CM_GridPlane(gridPlanes, i, j, 1);
-		VectorMA(p1, 4, planes[ p ].plane, up);
+		Vec3MA(p1, 4, planes[ p ].plane, up);
 		return CM_FindPlane(p2, p1, up);
 
 	case 3:	/* left border */
 		p1	= grid->points[i][j];
 		p2	= grid->points[i][j+1];
 		p	= CM_GridPlane(gridPlanes, i, j, 1);
-		VectorMA(p1, 4, planes[ p ].plane, up);
+		Vec3MA(p1, 4, planes[ p ].plane, up);
 		return CM_FindPlane(p2, p1, up);
 
 	case 1:	/* right border */
 		p1	= grid->points[i+1][j];
 		p2	= grid->points[i+1][j+1];
 		p	= CM_GridPlane(gridPlanes, i, j, 0);
-		VectorMA(p1, 4, planes[ p ].plane, up);
+		Vec3MA(p1, 4, planes[ p ].plane, up);
 		return CM_FindPlane(p1, p2, up);
 
 	case 4:	/* diagonal out of triangle 0 */
 		p1	= grid->points[i+1][j+1];
 		p2	= grid->points[i][j];
 		p	= CM_GridPlane(gridPlanes, i, j, 0);
-		VectorMA(p1, 4, planes[ p ].plane, up);
+		Vec3MA(p1, 4, planes[ p ].plane, up);
 		return CM_FindPlane(p1, p2, up);
 
 	case 5:	/* diagonal out of triangle 1 */
 		p1	= grid->points[i][j];
 		p2	= grid->points[i+1][j+1];
 		p	= CM_GridPlane(gridPlanes, i, j, 1);
-		VectorMA(p1, 4, planes[ p ].plane, up);
+		Vec3MA(p1, 4, planes[ p ].plane, up);
 		return CM_FindPlane(p1, p2, up);
 
 	}
@@ -706,13 +706,13 @@ CM_SetBorderInward(facet_t *facet, cGrid_t *grid,
 			facet->borderInward[k] = qfalse;
 			if(!debugBlock){
 				debugBlock = qtrue;
-				VectorCopy(grid->points[i][j],
+				Vec3Copy(grid->points[i][j],
 					debugBlockPoints[0]);
-				VectorCopy(grid->points[i+1][j],
+				Vec3Copy(grid->points[i+1][j],
 					debugBlockPoints[1]);
-				VectorCopy(grid->points[i+1][j+1],
+				Vec3Copy(grid->points[i+1][j+1],
 					debugBlockPoints[2]);
-				VectorCopy(grid->points[i][j+1],
+				Vec3Copy(grid->points[i][j+1],
 					debugBlockPoints[3]);
 			}
 		}
@@ -744,7 +744,7 @@ CM_ValidateFacet(facet_t *facet)
 		}
 		Vector4Copy(planes[ facet->borderPlanes[j] ].plane, plane);
 		if(!facet->borderInward[j]){
-			VectorSubtract(vec3_origin, plane, plane);
+			Vec3Sub(vec3_origin, plane, plane);
 			plane[3] = -plane[3];
 		}
 		ChopWindingInPlace(&w, plane, plane[3], 0.1f);
@@ -789,7 +789,7 @@ CM_AddFacetBevels(facet_t *facet)
 		Vector4Copy(planes[ facet->borderPlanes[j] ].plane, plane);
 
 		if(!facet->borderInward[j]){
-			VectorSubtract(vec3_origin, plane, plane);
+			Vec3Sub(vec3_origin, plane, plane);
 			plane[3] = -plane[3];
 		}
 
@@ -838,9 +838,9 @@ CM_AddFacetBevels(facet_t *facet)
 	 * test the non-axial plane edges */
 	for(j = 0; j < w->numpoints; j++){
 		k = (j+1)%w->numpoints;
-		VectorSubtract (w->p[j], w->p[k], vec);
+		Vec3Sub (w->p[j], w->p[k], vec);
 		/* if it's a degenerate edge */
-		if(VectorNormalize (vec) < 0.5)
+		if(Vec3Normalize (vec) < 0.5)
 			continue;
 		CM_SnapVector(vec);
 		for(k = 0; k < 3; k++)
@@ -855,16 +855,16 @@ CM_AddFacetBevels(facet_t *facet)
 				/* construct a plane */
 				VectorClear (vec2);
 				vec2[axis] = dir;
-				CrossProduct (vec, vec2, plane);
-				if(VectorNormalize (plane) < 0.5)
+				Vec3Cross (vec, vec2, plane);
+				if(Vec3Normalize (plane) < 0.5)
 					continue;
-				plane[3] = DotProduct (w->p[j], plane);
+				plane[3] = Vec3Dot (w->p[j], plane);
 
 				/* if all the points of the facet winding are
 				 * behind this plane, it is a proper edge bevel */
 				for(l = 0; l < w->numpoints; l++){
 					d =
-						DotProduct (w->p[l],
+						Vec3Dot (w->p[l],
 							plane) - plane[3];
 					if(d > 0.1)
 						break;	/* point in front */
@@ -1178,7 +1178,7 @@ CM_GeneratePatchCollide(int width, int height, vec3_t *points)
 	grid.wrapHeight = qfalse;
 	for(i = 0; i < width; i++)
 		for(j = 0; j < height; j++)
-			VectorCopy(points[j*width + i], grid.points[i][j]);
+			Vec3Copy(points[j*width + i], grid.points[i][j]);
 
 	/* subdivide the grid */
 	CM_SetGridWrapWidth(&grid);
@@ -1254,13 +1254,13 @@ CM_TracePointThroughPatchCollide(traceWork_t *tw,
 	/* determine the trace's relationship to all planes */
 	planes = pc->planes;
 	for(i = 0; i < pc->numPlanes; i++, planes++){
-		offset = DotProduct(tw->offsets[ planes->signbits ],
+		offset = Vec3Dot(tw->offsets[ planes->signbits ],
 			planes->plane);
 		d1 =
-			DotProduct(tw->start,
+			Vec3Dot(tw->start,
 				planes->plane) - planes->plane[3] + offset;
 		d2 =
-			DotProduct(tw->end,
+			Vec3Dot(tw->end,
 				planes->plane) - planes->plane[3] + offset;
 		if(d1 <= 0)
 			frontFacing[i] = qfalse;
@@ -1308,14 +1308,14 @@ CM_TracePointThroughPatchCollide(traceWork_t *tw,
 			planes = &pc->planes[facet->surfacePlane];
 
 			/* calculate intersection with a slight pushoff */
-			offset = DotProduct(tw->offsets[ planes->signbits ],
+			offset = Vec3Dot(tw->offsets[ planes->signbits ],
 				planes->plane);
 			d1 =
-				DotProduct(tw->start,
+				Vec3Dot(tw->start,
 					planes->plane) - planes->plane[3] +
 				offset;
 			d2 =
-				DotProduct(tw->end,
+				Vec3Dot(tw->end,
 					planes->plane) - planes->plane[3] +
 				offset;
 			tw->trace.fraction =
@@ -1324,7 +1324,7 @@ CM_TracePointThroughPatchCollide(traceWork_t *tw,
 			if(tw->trace.fraction < 0)
 				tw->trace.fraction = 0;
 
-			VectorCopy(planes->plane,  tw->trace.plane.normal);
+			Vec3Copy(planes->plane,  tw->trace.plane.normal);
 			tw->trace.plane.dist = planes->plane[3];
 		}
 	}
@@ -1342,8 +1342,8 @@ CM_CheckFacetPlane(float *plane, vec3_t start, vec3_t end, float *enterFrac,
 
 	*hit = qfalse;
 
-	d1	= DotProduct(start, plane) - plane[3];
-	d2	= DotProduct(end, plane) - plane[3];
+	d1	= Vec3Dot(start, plane) - plane[3];
+	d2	= Vec3Dot(end, plane) - plane[3];
 
 	/* if completely in front of face, no intersection with the entire facet */
 	if(d1 > 0 && (d2 >= SURFACE_CLIP_EPSILON || d2 >= d1))
@@ -1405,29 +1405,29 @@ CM_TraceThroughPatchCollide(traceWork_t *tw, const struct patchCollide_s *pc)
 		hitnum = -1;
 		/*  */
 		planes = &pc->planes[ facet->surfacePlane ];
-		VectorCopy(planes->plane, plane);
+		Vec3Copy(planes->plane, plane);
 		plane[3] = planes->plane[3];
 		if(tw->sphere.use){
 			/* adjust the plane distance apropriately for radius */
 			plane[3] += tw->sphere.radius;
 
 			/* find the closest point on the capsule to the plane */
-			t = DotProduct(plane, tw->sphere.offset);
+			t = Vec3Dot(plane, tw->sphere.offset);
 			if(t > 0.0f){
-				VectorSubtract(tw->start, tw->sphere.offset,
+				Vec3Sub(tw->start, tw->sphere.offset,
 					startp);
-				VectorSubtract(tw->end, tw->sphere.offset, endp);
+				Vec3Sub(tw->end, tw->sphere.offset, endp);
 			}else{
-				VectorAdd(tw->start, tw->sphere.offset, startp);
-				VectorAdd(tw->end, tw->sphere.offset, endp);
+				Vec3Add(tw->start, tw->sphere.offset, startp);
+				Vec3Add(tw->end, tw->sphere.offset, endp);
 			}
 		}else{
 			offset =
-				DotProduct(tw->offsets[ planes->signbits ],
+				Vec3Dot(tw->offsets[ planes->signbits ],
 					plane);
 			plane[3] -= offset;
-			VectorCopy(tw->start, startp);
-			VectorCopy(tw->end, endp);
+			Vec3Copy(tw->start, startp);
+			Vec3Copy(tw->end, endp);
 		}
 
 		if(!CM_CheckFacetPlane(plane, startp, endp, &enterFrac,
@@ -1442,7 +1442,7 @@ CM_TraceThroughPatchCollide(traceWork_t *tw, const struct patchCollide_s *pc)
 				VectorNegate(planes->plane, plane);
 				plane[3] = -planes->plane[3];
 			}else{
-				VectorCopy(planes->plane, plane);
+				Vec3Copy(planes->plane, plane);
 				plane[3] = planes->plane[3];
 			}
 			if(tw->sphere.use){
@@ -1450,29 +1450,29 @@ CM_TraceThroughPatchCollide(traceWork_t *tw, const struct patchCollide_s *pc)
 				plane[3] += tw->sphere.radius;
 
 				/* find the closest point on the capsule to the plane */
-				t = DotProduct(plane, tw->sphere.offset);
+				t = Vec3Dot(plane, tw->sphere.offset);
 				if(t > 0.0f){
-					VectorSubtract(tw->start,
+					Vec3Sub(tw->start,
 						tw->sphere.offset,
 						startp);
-					VectorSubtract(tw->end,
+					Vec3Sub(tw->end,
 						tw->sphere.offset,
 						endp);
 				}else{
-					VectorAdd(tw->start, tw->sphere.offset,
+					Vec3Add(tw->start, tw->sphere.offset,
 						startp);
-					VectorAdd(tw->end, tw->sphere.offset,
+					Vec3Add(tw->end, tw->sphere.offset,
 						endp);
 				}
 			}else{
 				/* NOTE: this works even though the plane might be flipped because the bbox is centered */
 				offset =
-					DotProduct(
+					Vec3Dot(
 						tw->offsets[ planes->signbits ],
 						plane);
 				plane[3] += fabs(offset);
-				VectorCopy(tw->start, startp);
-				VectorCopy(tw->end, endp);
+				Vec3Copy(tw->start, startp);
+				Vec3Copy(tw->end, endp);
 			}
 
 			if(!CM_CheckFacetPlane(plane, startp, endp, &enterFrac,
@@ -1505,7 +1505,7 @@ CM_TraceThroughPatchCollide(traceWork_t *tw, const struct patchCollide_s *pc)
 #endif	/* BSPC */
 
 				tw->trace.fraction = enterFrac;
-				VectorCopy(bestplane, tw->trace.plane.normal);
+				Vec3Copy(bestplane, tw->trace.plane.normal);
 				tw->trace.plane.dist = bestplane[3];
 			}
 		}
@@ -1538,28 +1538,28 @@ CM_PositionTestInPatchCollide(traceWork_t *tw, const struct patchCollide_s *pc)
 	facet = pc->facets;
 	for(i = 0; i < pc->numFacets; i++, facet++){
 		planes = &pc->planes[ facet->surfacePlane ];
-		VectorCopy(planes->plane, plane);
+		Vec3Copy(planes->plane, plane);
 		plane[3] = planes->plane[3];
 		if(tw->sphere.use){
 			/* adjust the plane distance apropriately for radius */
 			plane[3] += tw->sphere.radius;
 
 			/* find the closest point on the capsule to the plane */
-			t = DotProduct(plane, tw->sphere.offset);
+			t = Vec3Dot(plane, tw->sphere.offset);
 			if(t > 0)
-				VectorSubtract(tw->start, tw->sphere.offset,
+				Vec3Sub(tw->start, tw->sphere.offset,
 					startp);
 			else
-				VectorAdd(tw->start, tw->sphere.offset, startp);
+				Vec3Add(tw->start, tw->sphere.offset, startp);
 		}else{
 			offset =
-				DotProduct(tw->offsets[ planes->signbits ],
+				Vec3Dot(tw->offsets[ planes->signbits ],
 					plane);
 			plane[3] -= offset;
-			VectorCopy(tw->start, startp);
+			Vec3Copy(tw->start, startp);
 		}
 
-		if(DotProduct(plane, startp) - plane[3] > 0.0f)
+		if(Vec3Dot(plane, startp) - plane[3] > 0.0f)
 			continue;
 
 		for(j = 0; j < facet->numBorders; j++){
@@ -1568,7 +1568,7 @@ CM_PositionTestInPatchCollide(traceWork_t *tw, const struct patchCollide_s *pc)
 				VectorNegate(planes->plane, plane);
 				plane[3] = -planes->plane[3];
 			}else{
-				VectorCopy(planes->plane, plane);
+				Vec3Copy(planes->plane, plane);
 				plane[3] = planes->plane[3];
 			}
 			if(tw->sphere.use){
@@ -1576,25 +1576,25 @@ CM_PositionTestInPatchCollide(traceWork_t *tw, const struct patchCollide_s *pc)
 				plane[3] += tw->sphere.radius;
 
 				/* find the closest point on the capsule to the plane */
-				t = DotProduct(plane, tw->sphere.offset);
+				t = Vec3Dot(plane, tw->sphere.offset);
 				if(t > 0.0f)
-					VectorSubtract(tw->start,
+					Vec3Sub(tw->start,
 						tw->sphere.offset,
 						startp);
 				else
-					VectorAdd(tw->start, tw->sphere.offset,
+					Vec3Add(tw->start, tw->sphere.offset,
 						startp);
 			}else{
 				/* NOTE: this works even though the plane might be flipped because the bbox is centered */
 				offset =
-					DotProduct(
+					Vec3Dot(
 						tw->offsets[ planes->signbits ],
 						plane);
 				plane[3] += fabs(offset);
-				VectorCopy(tw->start, startp);
+				Vec3Copy(tw->start, startp);
 			}
 
-			if(DotProduct(plane, startp) - plane[3] > 0.0f)
+			if(Vec3Dot(plane, startp) - plane[3] > 0.0f)
 				break;
 		}
 		if(j < facet->numBorders)
@@ -1676,7 +1676,7 @@ CM_DrawDebugSurface(void (*drawPoly)(int color, int numPoints, float *points))
 
 			/* planenum = facet->surfacePlane; */
 			if(inward){
-				VectorSubtract(vec3_origin, plane, plane);
+				Vec3Sub(vec3_origin, plane, plane);
 				plane[3] = -plane[3];
 			}
 
@@ -1687,7 +1687,7 @@ CM_DrawDebugSurface(void (*drawPoly)(int color, int numPoints, float *points))
 				else v1[n] = mins[n];
 			}
 			VectorNegate(plane, v2);
-			plane[3] += fabs(DotProduct(v1, v2));
+			plane[3] += fabs(Vec3Dot(v1, v2));
 			/* * / */
 
 			w = BaseWindingForPlane(plane,  plane[3]);
@@ -1707,7 +1707,7 @@ CM_DrawDebugSurface(void (*drawPoly)(int color, int numPoints, float *points))
 				Vector4Copy(pc->planes[ curplanenum ].plane,
 					plane);
 				if(!curinward){
-					VectorSubtract(vec3_origin, plane, plane);
+					Vec3Sub(vec3_origin, plane, plane);
 					plane[3] = -plane[3];
 				}
 				/*			if ( !facet->borderNoAdjust[j] ) { */
@@ -1718,7 +1718,7 @@ CM_DrawDebugSurface(void (*drawPoly)(int color, int numPoints, float *points))
 					else v1[n] = mins[n];
 				}
 				VectorNegate(plane, v2);
-				plane[3] -= fabs(DotProduct(v1, v2));
+				plane[3] -= fabs(Vec3Dot(v1, v2));
 
 				ChopWindingInPlace(&w, plane, plane[3], 0.1f);
 			}
@@ -1738,14 +1738,14 @@ CM_DrawDebugSurface(void (*drawPoly)(int color, int numPoints, float *points))
 	{
 		vec3_t v[3];
 
-		VectorCopy(debugBlockPoints[0], v[0]);
-		VectorCopy(debugBlockPoints[1], v[1]);
-		VectorCopy(debugBlockPoints[2], v[2]);
+		Vec3Copy(debugBlockPoints[0], v[0]);
+		Vec3Copy(debugBlockPoints[1], v[1]);
+		Vec3Copy(debugBlockPoints[2], v[2]);
 		drawPoly(2, 3, v[0]);
 
-		VectorCopy(debugBlockPoints[2], v[0]);
-		VectorCopy(debugBlockPoints[3], v[1]);
-		VectorCopy(debugBlockPoints[0], v[2]);
+		Vec3Copy(debugBlockPoints[2], v[0]);
+		Vec3Copy(debugBlockPoints[3], v[1]);
+		Vec3Copy(debugBlockPoints[0], v[2]);
 		drawPoly(2, 3, v[0]);
 	}
 

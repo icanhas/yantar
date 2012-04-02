@@ -457,12 +457,12 @@ Team_FragBonuses(gentity_t *targ, gentity_t *inflictor, gentity_t *attacker)
 	/* ok we have the attackers flag and a pointer to the carrier */
 
 	/* check to see if we are defending the base's flag */
-	VectorSubtract(targ->r.currentOrigin, flag->r.currentOrigin, v1);
-	VectorSubtract(attacker->r.currentOrigin, flag->r.currentOrigin, v2);
+	Vec3Sub(targ->r.currentOrigin, flag->r.currentOrigin, v1);
+	Vec3Sub(attacker->r.currentOrigin, flag->r.currentOrigin, v2);
 
-	if(((VectorLength(v1) < CTF_TARGET_PROTECT_RADIUS &&
+	if(((Vec3Len(v1) < CTF_TARGET_PROTECT_RADIUS &&
 	     trap_InPVS(flag->r.currentOrigin, targ->r.currentOrigin)) ||
-	    (VectorLength(v2) < CTF_TARGET_PROTECT_RADIUS &&
+	    (Vec3Len(v2) < CTF_TARGET_PROTECT_RADIUS &&
 	     trap_InPVS(flag->r.currentOrigin, attacker->r.currentOrigin))) &&
 	   attacker->client->sess.sessionTeam !=
 	   targ->client->sess.sessionTeam){
@@ -485,16 +485,16 @@ Team_FragBonuses(gentity_t *targ, gentity_t *inflictor, gentity_t *attacker)
 	}
 
 	if(carrier && carrier != attacker){
-		VectorSubtract(targ->r.currentOrigin, carrier->r.currentOrigin,
+		Vec3Sub(targ->r.currentOrigin, carrier->r.currentOrigin,
 			v1);
-		VectorSubtract(attacker->r.currentOrigin,
+		Vec3Sub(attacker->r.currentOrigin,
 			carrier->r.currentOrigin,
 			v1);
 
-		if(((VectorLength(v1) < CTF_ATTACKER_PROTECT_RADIUS &&
+		if(((Vec3Len(v1) < CTF_ATTACKER_PROTECT_RADIUS &&
 		     trap_InPVS(carrier->r.currentOrigin,
 			     targ->r.currentOrigin)) ||
-		    (VectorLength(v2) < CTF_ATTACKER_PROTECT_RADIUS &&
+		    (Vec3Len(v2) < CTF_ATTACKER_PROTECT_RADIUS &&
 		     trap_InPVS(carrier->r.currentOrigin,
 			     attacker->r.currentOrigin))) &&
 		   attacker->client->sess.sessionTeam !=
@@ -962,7 +962,7 @@ Team_GetLocation(gentity_t *ent)
 	best = NULL;
 	bestlen = 3*8192.0*8192.0;
 
-	VectorCopy(ent->r.currentOrigin, origin);
+	Vec3Copy(ent->r.currentOrigin, origin);
 
 	for(eloc = level.locationHead; eloc; eloc = eloc->nextTrain){
 		len =
@@ -1087,9 +1087,9 @@ SelectCTFSpawnPoint(team_t team, int teamstate, vec3_t origin, vec3_t angles,
 	if(!spot)
 		return SelectSpawnPoint(vec3_origin, origin, angles, isbot);
 
-	VectorCopy (spot->s.origin, origin);
+	Vec3Copy (spot->s.origin, origin);
 	origin[2] += 9;
-	VectorCopy (spot->s.angles, angles);
+	Vec3Copy (spot->s.angles, angles);
 
 	return spot;
 }
@@ -1385,9 +1385,9 @@ SpawnObelisk(vec3_t origin, int team, int spawnflags)
 
 	ent = G_Spawn();
 
-	VectorCopy(origin, ent->s.origin);
-	VectorCopy(origin, ent->s.pos.trBase);
-	VectorCopy(origin, ent->r.currentOrigin);
+	Vec3Copy(origin, ent->s.origin);
+	Vec3Copy(origin, ent->s.pos.trBase);
+	Vec3Copy(origin, ent->r.currentOrigin);
 
 	VectorSet(ent->r.mins, -15, -15, 0);
 	VectorSet(ent->r.maxs, 15, 15, 87);

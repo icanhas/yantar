@@ -293,9 +293,9 @@ UI_PositionEntityOnTag(refEntity_t *entity, const refEntity_t *parent,
 		1.0 - parent->backlerp, tagName);
 
 	/* FIXME: allow origin offsets along tag? */
-	VectorCopy(parent->origin, entity->origin);
+	Vec3Copy(parent->origin, entity->origin);
 	for(i = 0; i < 3; i++)
-		VectorMA(entity->origin, lerped.origin[i], parent->axis[i],
+		Vec3MA(entity->origin, lerped.origin[i], parent->axis[i],
 			entity->origin);
 
 	/* cast away const because of compiler problems */
@@ -320,9 +320,9 @@ UI_PositionRotatedEntityOnTag(refEntity_t *entity, const refEntity_t *parent,
 		1.0 - parent->backlerp, tagName);
 
 	/* FIXME: allow origin offsets along tag? */
-	VectorCopy(parent->origin, entity->origin);
+	Vec3Copy(parent->origin, entity->origin);
 	for(i = 0; i < 3; i++)
-		VectorMA(entity->origin, lerped.origin[i], parent->axis[i],
+		Vec3MA(entity->origin, lerped.origin[i], parent->axis[i],
 			entity->origin);
 
 	/* cast away const because of compiler problems */
@@ -517,7 +517,7 @@ UI_MovedirAdjustment(playerInfo_t *pi)
 	vec3_t	relativeAngles;
 	vec3_t	moveVector;
 
-	VectorSubtract(pi->viewAngles, pi->moveAngles, relativeAngles);
+	Vec3Sub(pi->viewAngles, pi->moveAngles, relativeAngles);
 	AngleVectors(relativeAngles, moveVector, NULL, NULL);
 	if(Q_fabs(moveVector[0]) < 0.01)
 		moveVector[0] = 0.0;
@@ -554,7 +554,7 @@ UI_PlayerAngles(playerInfo_t *pi, vec3_t legs[3], vec3_t torso[3],
 	float	dest;
 	float	adjust;
 
-	VectorCopy(pi->viewAngles, headAngles);
+	Vec3Copy(pi->viewAngles, headAngles);
 	headAngles[YAW] = AngleMod(headAngles[YAW]);
 	VectorClear(legsAngles);
 	VectorClear(torsoAngles);
@@ -614,7 +614,7 @@ UI_PlayerFloatSprite(playerInfo_t *pi, vec3_t origin, qhandle_t shader)
 	refEntity_t ent;
 
 	memset(&ent, 0, sizeof(ent));
-	VectorCopy(origin, ent.origin);
+	Vec3Copy(origin, ent.origin);
 	ent.origin[2] += 48;
 	ent.reType = RT_SPRITE;
 	ent.customShader	= shader;
@@ -743,11 +743,11 @@ UI_DrawPlayer(float x, float y, float w, float h, playerInfo_t *pi, int time)
 	legs.hModel = pi->legsModel;
 	legs.customSkin = pi->legsSkin;
 
-	VectorCopy(origin, legs.origin);
+	Vec3Copy(origin, legs.origin);
 
-	VectorCopy(origin, legs.lightingOrigin);
+	Vec3Copy(origin, legs.lightingOrigin);
 	legs.renderfx = renderfx;
-	VectorCopy (legs.origin, legs.oldorigin);
+	Vec3Copy (legs.origin, legs.oldorigin);
 
 	trap_R_AddRefEntityToScene(&legs);
 
@@ -763,7 +763,7 @@ UI_DrawPlayer(float x, float y, float w, float h, playerInfo_t *pi, int time)
 
 	torso.customSkin = pi->torsoSkin;
 
-	VectorCopy(origin, torso.lightingOrigin);
+	Vec3Copy(origin, torso.lightingOrigin);
 
 	UI_PositionRotatedEntityOnTag(&torso, &legs, pi->legsModel, "tag_torso");
 
@@ -779,7 +779,7 @@ UI_DrawPlayer(float x, float y, float w, float h, playerInfo_t *pi, int time)
 		return;
 	head.customSkin = pi->headSkin;
 
-	VectorCopy(origin, head.lightingOrigin);
+	Vec3Copy(origin, head.lightingOrigin);
 
 	UI_PositionRotatedEntityOnTag(&head, &torso, pi->torsoModel, "tag_head");
 
@@ -797,7 +797,7 @@ UI_DrawPlayer(float x, float y, float w, float h, playerInfo_t *pi, int time)
 			Byte4Copy(pi->c1RGBA, gun.shaderRGBA);
 		else
 			Byte4Copy(colorWhite, gun.shaderRGBA);
-		VectorCopy(origin, gun.lightingOrigin);
+		Vec3Copy(origin, gun.lightingOrigin);
 		UI_PositionEntityOnTag(&gun, &torso, pi->torsoModel,
 			"tag_weapon");
 		gun.renderfx = renderfx;
@@ -812,7 +812,7 @@ UI_DrawPlayer(float x, float y, float w, float h, playerInfo_t *pi, int time)
 		vec3_t angles;
 
 		memset(&barrel, 0, sizeof(barrel));
-		VectorCopy(origin, barrel.lightingOrigin);
+		Vec3Copy(origin, barrel.lightingOrigin);
 		barrel.renderfx = renderfx;
 
 		barrel.hModel	= pi->barrelModel;
@@ -842,7 +842,7 @@ UI_DrawPlayer(float x, float y, float w, float h, playerInfo_t *pi, int time)
 				Byte4Copy(pi->c1RGBA, flash.shaderRGBA);
 			else
 				Byte4Copy(colorWhite, flash.shaderRGBA);
-			VectorCopy(origin, flash.lightingOrigin);
+			Vec3Copy(origin, flash.lightingOrigin);
 			UI_PositionEntityOnTag(&flash, &gun, pi->weaponModel,
 				"tag_flash");
 			flash.renderfx = renderfx;
@@ -1157,10 +1157,10 @@ UI_PlayerInfo_SetInfo(playerInfo_t *pi, int legsAnim, int torsoAnim,
 	pi->c1RGBA[3]	= 255;
 
 	/* view angles */
-	VectorCopy(viewAngles, pi->viewAngles);
+	Vec3Copy(viewAngles, pi->viewAngles);
 
 	/* move angles */
-	VectorCopy(moveAngles, pi->moveAngles);
+	Vec3Copy(moveAngles, pi->moveAngles);
 
 	if(pi->newModel){
 		pi->newModel = qfalse;

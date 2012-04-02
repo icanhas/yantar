@@ -566,7 +566,7 @@ BotMatch_HelpAccompany(bot_state_t *bs, bot_match_t *match)
 		if(areanum){	/* && trap_AAS_AreaReachability(areanum)) { */
 			bs->teamgoal.entitynum	= client;
 			bs->teamgoal.areanum	= areanum;
-			VectorCopy(entinfo.origin, bs->teamgoal.origin);
+			Vec3Copy(entinfo.origin, bs->teamgoal.origin);
 			VectorSet(bs->teamgoal.mins, -8, -8, -8);
 			VectorSet(bs->teamgoal.maxs, 8, 8, 8);
 		}
@@ -747,7 +747,7 @@ BotMatch_Camp(bot_state_t *bs, bot_match_t *match)
 		/* camp at the spot the bot is currently standing */
 		bs->teamgoal.entitynum	= bs->entitynum;
 		bs->teamgoal.areanum	= bs->areanum;
-		VectorCopy(bs->origin, bs->teamgoal.origin);
+		Vec3Copy(bs->origin, bs->teamgoal.origin);
 		VectorSet(bs->teamgoal.mins, -8, -8, -8);
 		VectorSet(bs->teamgoal.maxs, 8, 8, 8);
 	}else if(match->subtype & ST_HERE){
@@ -764,7 +764,7 @@ BotMatch_Camp(bot_state_t *bs, bot_match_t *match)
 				 * if (BotEntityVisible(bs->entitynum, bs->eye, bs->viewangles, 360, client)) { */
 				bs->teamgoal.entitynum	= client;
 				bs->teamgoal.areanum	= areanum;
-				VectorCopy(entinfo.origin, bs->teamgoal.origin);
+				Vec3Copy(entinfo.origin, bs->teamgoal.origin);
 				VectorSet(bs->teamgoal.mins, -8, -8, -8);
 				VectorSet(bs->teamgoal.maxs, 8, 8, 8);
 				/* } */
@@ -1511,8 +1511,8 @@ BotNearestVisibleItem(bot_state_t *bs, char *itemname, bot_goal_t *goal)
 		trap_BotGoalName(tmpgoal.number, name, sizeof(name));
 		if(Q_stricmp(itemname, name) != 0)
 			continue;
-		VectorSubtract(tmpgoal.origin, bs->origin, dir);
-		dist = VectorLength(dir);
+		Vec3Sub(tmpgoal.origin, bs->origin, dir);
+		dist = Vec3Len(dir);
 		if(dist < bestdist){
 			/* trace from start to end */
 			BotAI_Trace(&trace, bs->eye, NULL, NULL, tmpgoal.origin,
@@ -1689,7 +1689,7 @@ BotMatch_LeadTheWay(bot_state_t *bs, bot_match_t *match)
 		if(areanum){	/* && trap_AAS_AreaReachability(areanum)) { */
 			bs->lead_teamgoal.entitynum = client;
 			bs->lead_teamgoal.areanum = areanum;
-			VectorCopy(entinfo.origin, bs->lead_teamgoal.origin);
+			Vec3Copy(entinfo.origin, bs->lead_teamgoal.origin);
 			VectorSet(bs->lead_teamgoal.mins, -8, -8, -8);
 			VectorSet(bs->lead_teamgoal.maxs, 8, 8, 8);
 		}

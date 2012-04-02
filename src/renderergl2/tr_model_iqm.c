@@ -108,17 +108,17 @@ Matrix34Invert(float *inMat, float *outMat)
 	outMat[ 4] = inMat[ 1]; outMat[ 5] = inMat[ 5]; outMat[ 6] = inMat[ 9];
 	outMat[ 8] = inMat[ 2]; outMat[ 9] = inMat[ 6]; outMat[10] = inMat[10];
 
-	v = outMat + 0; invSqrLen = 1.0f / DotProduct(v, v); VectorScale(v, invSqrLen, v);
-	v = outMat + 4; invSqrLen = 1.0f / DotProduct(v, v); VectorScale(v, invSqrLen, v);
-	v = outMat + 8; invSqrLen = 1.0f / DotProduct(v, v); VectorScale(v, invSqrLen, v);
+	v = outMat + 0; invSqrLen = 1.0f / Vec3Dot(v, v); VectorScale(v, invSqrLen, v);
+	v = outMat + 4; invSqrLen = 1.0f / Vec3Dot(v, v); VectorScale(v, invSqrLen, v);
+	v = outMat + 8; invSqrLen = 1.0f / Vec3Dot(v, v); VectorScale(v, invSqrLen, v);
 
 	trans[0] = inMat[ 3];
 	trans[1] = inMat[ 7];
 	trans[2] = inMat[11];
 
-	outMat[ 3] = -DotProduct(outMat + 0, trans);
-	outMat[ 7] = -DotProduct(outMat + 4, trans);
-	outMat[11] = -DotProduct(outMat + 8, trans);
+	outMat[ 3] = -Vec3Dot(outMat + 0, trans);
+	outMat[ 7] = -Vec3Dot(outMat + 4, trans);
+	outMat[11] = -Vec3Dot(outMat + 8, trans);
 }
 
 /*
@@ -720,10 +720,10 @@ R_ComputeIQMFogNum(iqmData_t *data, trRefEntity_t *ent)
 	}else{
 		bounds = defaultBounds;
 	}
-	VectorSubtract(bounds+3, bounds, diag);
-	VectorMA(bounds, 0.5f, diag, center);
-	VectorAdd(ent->e.origin, center, localOrigin);
-	radius = 0.5f * VectorLength(diag);
+	Vec3Sub(bounds+3, bounds, diag);
+	Vec3MA(bounds, 0.5f, diag, center);
+	Vec3Add(ent->e.origin, center, localOrigin);
+	radius = 0.5f * Vec3Len(diag);
 
 	for(i = 1; i < tr.world->numfogs; i++){
 		fog = &tr.world->fogs[i];

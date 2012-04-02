@@ -3835,10 +3835,10 @@ Item_Model_Paint(itemDef_t *item)
 	AnglesToAxis(angles, ent.axis);
 
 	ent.hModel = item->asset;
-	VectorCopy(origin, ent.origin);
-	VectorCopy(origin, ent.lightingOrigin);
+	Vec3Copy(origin, ent.origin);
+	Vec3Copy(origin, ent.lightingOrigin);
 	ent.renderfx = RF_LIGHTING_ORIGIN | RF_NOSHADOW;
-	VectorCopy(ent.origin, ent.oldorigin);
+	Vec3Copy(ent.origin, ent.oldorigin);
 
 	DC->addRefEntityToScene(&ent);
 	DC->renderScene(&refdef);

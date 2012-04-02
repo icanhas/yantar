@@ -38,7 +38,7 @@ CM_PointLeafnum_r(const vec3_t p, int num)
 		if(plane->type < 3)
 			d = p[plane->type] - plane->dist;
 		else
-			d = DotProduct (plane->normal, p) - plane->dist;
+			d = Vec3Dot (plane->normal, p) - plane->dist;
 		if(d < 0)
 			num = node->children[1];
 		else
@@ -172,8 +172,8 @@ CM_BoxLeafnums(const vec3_t mins, const vec3_t maxs, int *list, int listsize,
 
 	cm.checkcount++;
 
-	VectorCopy(mins, ll.bounds[0]);
-	VectorCopy(maxs, ll.bounds[1]);
+	Vec3Copy(mins, ll.bounds[0]);
+	Vec3Copy(maxs, ll.bounds[1]);
 	ll.count = 0;
 	ll.maxcount = listsize;
 	ll.list = list;
@@ -198,8 +198,8 @@ CM_BoxBrushes(const vec3_t mins, const vec3_t maxs, cbrush_t **list,
 
 	cm.checkcount++;
 
-	VectorCopy(mins, ll.bounds[0]);
-	VectorCopy(maxs, ll.bounds[1]);
+	Vec3Copy(mins, ll.bounds[0]);
+	Vec3Copy(maxs, ll.bounds[1]);
 	ll.count = 0;
 	ll.maxcount = listsize;
 	ll.list = (void*)list;
@@ -253,7 +253,7 @@ CM_PointContents(const vec3_t p, clipHandle_t model)
 
 		/* see if the point is in the brush */
 		for(i = 0; i < b->numsides; i++){
-			d = DotProduct(p, b->sides[i].plane->normal);
+			d = Vec3Dot(p, b->sides[i].plane->normal);
 /* FIXME test for Cash
  *              if ( d >= b->sides[i].plane->dist ) { */
 			if(d > b->sides[i].plane->dist)
@@ -283,17 +283,17 @@ CM_TransformedPointContents(const vec3_t p, clipHandle_t model,
 	vec3_t	forward, right, up;
 
 	/* subtract origin offset */
-	VectorSubtract (p, origin, p_l);
+	Vec3Sub (p, origin, p_l);
 
 	/* rotate start and end into the models frame of reference */
 	if(model != BOX_MODEL_HANDLE &&
 	   (angles[0] || angles[1] || angles[2])){
 		AngleVectors (angles, forward, right, up);
 
-		VectorCopy (p_l, temp);
-		p_l[0]	= DotProduct (temp, forward);
-		p_l[1]	= -DotProduct (temp, right);
-		p_l[2]	= DotProduct (temp, up);
+		Vec3Copy (p_l, temp);
+		p_l[0]	= Vec3Dot (temp, forward);
+		p_l[1]	= -Vec3Dot (temp, right);
+		p_l[2]	= Vec3Dot (temp, up);
 	}
 
 	return CM_PointContents(p_l, model);

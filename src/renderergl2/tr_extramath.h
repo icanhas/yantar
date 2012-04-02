@@ -25,14 +25,14 @@
 typedef int vec2i_t[2];
 typedef int vec3i_t[2];
 
-#define VectorCopy2(a,b)	((b)[0]=(a)[0],(b)[1]=(a)[1])
+#define Vec3Copy2(a,b)	((b)[0]=(a)[0],(b)[1]=(a)[1])
 
-#define VectorCopy4(a,b)	((b)[0]=(a)[0],(b)[1]=(a)[1],(b)[2]=(a)[2],(b)[3]=(a)[3])
+#define Vec3Copy4(a,b)	((b)[0]=(a)[0],(b)[1]=(a)[1],(b)[2]=(a)[2],(b)[3]=(a)[3])
 #define VectorSet4(v,x,y,z,w)	((v)[0]=(x),(v)[1]=(y),(v)[2]=(z),(v)[3]=(w))
-#define DotProduct4(a,b)	((a)[0]*(b)[0] + (a)[1]*(b)[1] + (a)[2]*(b)[2] + (a)[3]*(b)[3])
+#define Vec3Dot4(a,b)	((a)[0]*(b)[0] + (a)[1]*(b)[1] + (a)[2]*(b)[2] + (a)[3]*(b)[3])
 #define VectorScale4(a,b,c)	((c)[0]=(a)[0]*(b),(c)[1]=(a)[1]*(b),(c)[2]=(a)[2]*(b),(c)[3]=(a)[3]*(b))
 
-#define VectorCopy5(a,b)	((b)[0]=(a)[0],(b)[1]=(a)[1],(b)[2]=(a)[2],(b)[3]=(a)[3],(b)[4]=(a)[4])
+#define Vec3Copy5(a,b)	((b)[0]=(a)[0],(b)[1]=(a)[1],(b)[2]=(a)[2],(b)[3]=(a)[3],(b)[4]=(a)[4])
 
 #define OffsetByteToFloat(a)	((float)(a) * 1.0f/127.5f - 1.0f)
 #define ByteToFloat(a)		((float)(a) * 1.0f/255.0f)

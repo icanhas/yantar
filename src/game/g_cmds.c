@@ -281,7 +281,7 @@ Cmd_Give_f(gentity_t *ent)
 			return;
 
 		it_ent = G_Spawn();
-		VectorCopy(ent->r.currentOrigin, it_ent->s.origin);
+		Vec3Copy(ent->r.currentOrigin, it_ent->s.origin);
 		it_ent->classname = it->classname;
 		G_SpawnItem (it_ent, it);
 		FinishSpawningItem(it_ent);

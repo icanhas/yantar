@@ -86,14 +86,14 @@ Pickup_Powerup(gentity_t *ent, gentity_t *other)
 			continue;
 
 		/* if too far away, no sound */
-		VectorSubtract(ent->s.pos.trBase, client->ps.origin, delta);
-		len = VectorNormalize(delta);
+		Vec3Sub(ent->s.pos.trBase, client->ps.origin, delta);
+		len = Vec3Normalize(delta);
 		if(len > 192)
 			continue;
 
 		/* if not facing, no sound */
 		AngleVectors(client->ps.viewangles, forward, NULL, NULL);
-		if(DotProduct(delta, forward) < 0.4)
+		if(Vec3Dot(delta, forward) < 0.4)
 			continue;
 
 		/* if not line of sight, no sound */
@@ -574,7 +574,7 @@ LaunchItem(gitem_t *item, vec3_t origin, vec3_t velocity)
 	G_SetOrigin(dropped, origin);
 	dropped->s.pos.trType	= TR_GRAVITY;
 	dropped->s.pos.trTime	= level.time;
-	VectorCopy(velocity, dropped->s.pos.trDelta);
+	Vec3Copy(velocity, dropped->s.pos.trDelta);
 
 	dropped->s.eFlags |= EF_BOUNCE_HALF;
 #ifdef MISSIONPACK
@@ -609,7 +609,7 @@ Drop_Item(gentity_t *ent, gitem_t *item, float angle)
 	vec3_t	velocity;
 	vec3_t	angles;
 
-	VectorCopy(ent->s.apos.trBase, angles);
+	Vec3Copy(ent->s.apos.trBase, angles);
 	angles[YAW] += angle;
 	angles[PITCH] = 0;	/* always forward */
 
@@ -929,8 +929,8 @@ G_BounceItem(gentity_t *ent, trace_t *trace)
 	hitTime = level.previousTime +
 		  (level.time - level.previousTime) * trace->fraction;
 	BG_EvaluateTrajectoryDelta(&ent->s.pos, hitTime, velocity);
-	dot = DotProduct(velocity, trace->plane.normal);
-	VectorMA(velocity, -2*dot, trace->plane.normal, ent->s.pos.trDelta);
+	dot = Vec3Dot(velocity, trace->plane.normal);
+	Vec3MA(velocity, -2*dot, trace->plane.normal, ent->s.pos.trDelta);
 
 	/* cut the velocity to keep from bouncing forever */
 	VectorScale(ent->s.pos.trDelta, ent->physicsBounce, ent->s.pos.trDelta);
@@ -944,9 +944,9 @@ G_BounceItem(gentity_t *ent, trace_t *trace)
 		return;
 	}
 
-	VectorAdd(ent->r.currentOrigin, trace->plane.normal,
+	Vec3Add(ent->r.currentOrigin, trace->plane.normal,
 		ent->r.currentOrigin);
-	VectorCopy(ent->r.currentOrigin, ent->s.pos.trBase);
+	Vec3Copy(ent->r.currentOrigin, ent->s.pos.trBase);
 	ent->s.pos.trTime = level.time;
 }
 
@@ -987,7 +987,7 @@ G_RunItem(gentity_t *ent)
 	trap_Trace(&tr, ent->r.currentOrigin, ent->r.mins, ent->r.maxs, origin,
 		ent->r.ownerNum, mask);
 
-	VectorCopy(tr.endpos, ent->r.currentOrigin);
+	Vec3Copy(tr.endpos, ent->r.currentOrigin);
 
 	if(tr.startsolid)
 		tr.fraction = 0;

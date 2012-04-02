@@ -37,23 +37,23 @@ G_BounceMissile(gentity_t *ent, trace_t *trace)
 	hitTime = level.previousTime +
 		  (level.time - level.previousTime) * trace->fraction;
 	BG_EvaluateTrajectoryDelta(&ent->s.pos, hitTime, velocity);
-	dot = DotProduct(velocity, trace->plane.normal);
-	VectorMA(velocity, -2*dot, trace->plane.normal, ent->s.pos.trDelta);
+	dot = Vec3Dot(velocity, trace->plane.normal);
+	Vec3MA(velocity, -2*dot, trace->plane.normal, ent->s.pos.trDelta);
 
 	if(ent->s.eFlags & EF_BOUNCE_HALF){
 		VectorScale(ent->s.pos.trDelta, 0.65, ent->s.pos.trDelta);
 		/* check for stop */
 		if(trace->plane.normal[2] > 0.2 &&
-		   VectorLength(ent->s.pos.trDelta) < 40){
+		   Vec3Len(ent->s.pos.trDelta) < 40){
 			G_SetOrigin(ent, trace->endpos);
 			ent->s.time = level.time / 4;
 			return;
 		}
 	}
 
-	VectorAdd(ent->r.currentOrigin, trace->plane.normal,
+	Vec3Add(ent->r.currentOrigin, trace->plane.normal,
 		ent->r.currentOrigin);
-	VectorCopy(ent->r.currentOrigin, ent->s.pos.trBase);
+	Vec3Copy(ent->r.currentOrigin, ent->s.pos.trBase);
 	ent->s.pos.trTime = level.time;
 }
 
@@ -133,8 +133,8 @@ ProximityMine_Trigger(gentity_t *trigger, gentity_t *other, trace_t *trace)
 		return;
 
 	/* trigger is a cube, do a distance test now to act as if it's a sphere */
-	VectorSubtract(trigger->s.pos.trBase, other->s.pos.trBase, v);
-	if(VectorLength(v) > trigger->parent->splashRadius)
+	Vec3Sub(trigger->s.pos.trBase, other->s.pos.trBase, v);
+	if(Vec3Len(v) > trigger->parent->splashRadius)
 		return;
 
 
@@ -286,12 +286,12 @@ G_MissileImpact(gentity_t *ent, trace_t *trace)
 			if(other->client &&
 			   other->client->invulnerabilityTime > level.time){
 				/*  */
-				VectorCopy(ent->s.pos.trDelta, forward);
-				VectorNormalize(forward);
+				Vec3Copy(ent->s.pos.trDelta, forward);
+				Vec3Normalize(forward);
 				if(G_InvulnerabilityEffect(other, forward,
 					   ent->s.pos.trBase, impactpoint,
 					   bouncedir)){
-					VectorCopy(bouncedir,
+					Vec3Copy(bouncedir,
 						trace->plane.normal);
 					eFlags = ent->s.eFlags & EF_BOUNCE_HALF;
 					ent->s.eFlags &= ~EF_BOUNCE_HALF;
@@ -317,7 +317,7 @@ G_MissileImpact(gentity_t *ent, trace_t *trace)
 			}
 			BG_EvaluateTrajectoryDelta(&ent->s.pos, level.time,
 				velocity);
-			if(VectorLength(velocity) == 0)
+			if(Vec3Len(velocity) == 0)
 				velocity[2] = 1;	/* stepped on a grenade */
 			G_Damage (other, ent, &g_entities[ent->r.ownerNum],
 				velocity,
@@ -347,13 +347,13 @@ G_MissileImpact(gentity_t *ent, trace_t *trace)
 		ent->think = ProximityMine_Activate;
 		ent->nextthink = level.time + 2000;
 
-		vectoangles(trace->plane.normal, ent->s.angles);
+		Vec3ToAngles(trace->plane.normal, ent->s.angles);
 		ent->s.angles[0] += 90;
 
 		/* link the prox mine to the other entity */
 		ent->enemy = other;
 		ent->die = ProximityMine_Die;
-		VectorCopy(trace->plane.normal, ent->movedir);
+		Vec3Copy(trace->plane.normal, ent->movedir);
 		VectorSet(ent->r.mins, -4, -4, -4);
 		VectorSet(ent->r.maxs, 4, 4, 4);
 		trap_LinkEntity(ent);
@@ -384,7 +384,7 @@ G_MissileImpact(gentity_t *ent, trace_t *trace)
 
 			SnapVectorTowards(v, ent->s.pos.trBase);	/* save net bandwidth */
 		}else{
-			VectorCopy(trace->endpos, v);
+			Vec3Copy(trace->endpos, v);
 			G_AddEvent(nent, EV_MISSILE_MISS,
 				DirToByte(trace->plane.normal));
 			ent->enemy = NULL;
@@ -404,7 +404,7 @@ G_MissileImpact(gentity_t *ent, trace_t *trace)
 		ent->nextthink = level.time + FRAMETIME;
 
 		ent->parent->client->ps.pm_flags |= PMF_GRAPPLE_PULL;
-		VectorCopy(ent->r.currentOrigin,
+		Vec3Copy(ent->r.currentOrigin,
 			ent->parent->client->ps.grapplePoint);
 
 		trap_LinkEntity(ent);
@@ -484,7 +484,7 @@ G_RunMissile(gentity_t *ent)
 			ent->clipmask);
 		tr.fraction = 0;
 	}else
-		VectorCopy(tr.endpos, ent->r.currentOrigin);
+		Vec3Copy(tr.endpos, ent->r.currentOrigin);
 
 	trap_LinkEntity(ent);
 
@@ -529,7 +529,7 @@ fire_plasma(gentity_t *self, vec3_t start, vec3_t dir)
 {
 	gentity_t *bolt;
 
-	VectorNormalize (dir);
+	Vec3Normalize (dir);
 
 	bolt = G_Spawn();
 	bolt->classname = "plasma";
@@ -550,11 +550,11 @@ fire_plasma(gentity_t *self, vec3_t start, vec3_t dir)
 
 	bolt->s.pos.trType = TR_LINEAR;
 	bolt->s.pos.trTime = level.time - MISSILE_PRESTEP_TIME;	/* move a bit on the very first frame */
-	VectorCopy(start, bolt->s.pos.trBase);
+	Vec3Copy(start, bolt->s.pos.trBase);
 	VectorScale(dir, 2000, bolt->s.pos.trDelta);
 	SnapVector(bolt->s.pos.trDelta);	/* save net bandwidth */
 
-	VectorCopy (start, bolt->r.currentOrigin);
+	Vec3Copy (start, bolt->r.currentOrigin);
 
 	return bolt;
 }
@@ -570,7 +570,7 @@ fire_grenade(gentity_t *self, vec3_t start, vec3_t dir)
 {
 	gentity_t *bolt;
 
-	VectorNormalize (dir);
+	Vec3Normalize (dir);
 
 	bolt = G_Spawn();
 	bolt->classname = "grenade";
@@ -592,11 +592,11 @@ fire_grenade(gentity_t *self, vec3_t start, vec3_t dir)
 
 	bolt->s.pos.trType = TR_GRAVITY;
 	bolt->s.pos.trTime = level.time - MISSILE_PRESTEP_TIME;	/* move a bit on the very first frame */
-	VectorCopy(start, bolt->s.pos.trBase);
+	Vec3Copy(start, bolt->s.pos.trBase);
 	VectorScale(dir, 700, bolt->s.pos.trDelta);
 	SnapVector(bolt->s.pos.trDelta);	/* save net bandwidth */
 
-	VectorCopy (start, bolt->r.currentOrigin);
+	Vec3Copy (start, bolt->r.currentOrigin);
 
 	return bolt;
 }
@@ -612,7 +612,7 @@ fire_bfg(gentity_t *self, vec3_t start, vec3_t dir)
 {
 	gentity_t *bolt;
 
-	VectorNormalize (dir);
+	Vec3Normalize (dir);
 
 	bolt = G_Spawn();
 	bolt->classname = "bfg";
@@ -633,10 +633,10 @@ fire_bfg(gentity_t *self, vec3_t start, vec3_t dir)
 
 	bolt->s.pos.trType = TR_LINEAR;
 	bolt->s.pos.trTime = level.time - MISSILE_PRESTEP_TIME;	/* move a bit on the very first frame */
-	VectorCopy(start, bolt->s.pos.trBase);
+	Vec3Copy(start, bolt->s.pos.trBase);
 	VectorScale(dir, 2000, bolt->s.pos.trDelta);
 	SnapVector(bolt->s.pos.trDelta);	/* save net bandwidth */
-	VectorCopy (start, bolt->r.currentOrigin);
+	Vec3Copy (start, bolt->r.currentOrigin);
 
 	return bolt;
 }
@@ -652,7 +652,7 @@ fire_rocket(gentity_t *self, vec3_t start, vec3_t dir)
 {
 	gentity_t *bolt;
 
-	VectorNormalize (dir);
+	Vec3Normalize (dir);
 
 	bolt = G_Spawn();
 	bolt->classname = "rocket";
@@ -673,10 +673,10 @@ fire_rocket(gentity_t *self, vec3_t start, vec3_t dir)
 
 	bolt->s.pos.trType = TR_LINEAR;
 	bolt->s.pos.trTime = level.time - MISSILE_PRESTEP_TIME;	/* move a bit on the very first frame */
-	VectorCopy(start, bolt->s.pos.trBase);
+	Vec3Copy(start, bolt->s.pos.trBase);
 	VectorScale(dir, 900, bolt->s.pos.trDelta);
 	SnapVector(bolt->s.pos.trDelta);	/* save net bandwidth */
-	VectorCopy (start, bolt->r.currentOrigin);
+	Vec3Copy (start, bolt->r.currentOrigin);
 
 	return bolt;
 }
@@ -689,7 +689,7 @@ fire_grapple(gentity_t *self, vec3_t start, vec3_t dir)
 {
 	gentity_t *hook;
 
-	VectorNormalize (dir);
+	Vec3Normalize (dir);
 
 	hook = G_Spawn();
 	hook->classname = "hook";
@@ -707,10 +707,10 @@ fire_grapple(gentity_t *self, vec3_t start, vec3_t dir)
 	hook->s.pos.trType = TR_LINEAR;
 	hook->s.pos.trTime = level.time - MISSILE_PRESTEP_TIME;	/* move a bit on the very first frame */
 	hook->s.otherEntityNum = self->s.number;		/* use to match beam in client */
-	VectorCopy(start, hook->s.pos.trBase);
+	Vec3Copy(start, hook->s.pos.trBase);
 	VectorScale(dir, 800, hook->s.pos.trDelta);
 	SnapVector(hook->s.pos.trDelta);	/* save net bandwidth */
-	VectorCopy (start, hook->r.currentOrigin);
+	Vec3Copy (start, hook->r.currentOrigin);
 
 	self->client->hook = hook;
 
@@ -748,22 +748,22 @@ fire_nail(gentity_t *self, vec3_t start, vec3_t forward, vec3_t right, vec3_t up
 
 	bolt->s.pos.trType = TR_LINEAR;
 	bolt->s.pos.trTime = level.time;
-	VectorCopy(start, bolt->s.pos.trBase);
+	Vec3Copy(start, bolt->s.pos.trBase);
 
 	r = random() * M_PI * 2.0f;
 	u = sin(r) * crandom() * NAILGUN_SPREAD * 16;
 	r = cos(r) * crandom() * NAILGUN_SPREAD * 16;
-	VectorMA(start, 8192 * 16, forward, end);
-	VectorMA (end, r, right, end);
-	VectorMA (end, u, up, end);
-	VectorSubtract(end, start, dir);
-	VectorNormalize(dir);
+	Vec3MA(start, 8192 * 16, forward, end);
+	Vec3MA (end, r, right, end);
+	Vec3MA (end, u, up, end);
+	Vec3Sub(end, start, dir);
+	Vec3Normalize(dir);
 
 	scale = 555 + random() * 1800;
 	VectorScale(dir, scale, bolt->s.pos.trDelta);
 	SnapVector(bolt->s.pos.trDelta);
 
-	VectorCopy(start, bolt->r.currentOrigin);
+	Vec3Copy(start, bolt->r.currentOrigin);
 
 	return bolt;
 }
@@ -777,7 +777,7 @@ fire_prox(gentity_t *self, vec3_t start, vec3_t dir)
 {
 	gentity_t *bolt;
 
-	VectorNormalize (dir);
+	Vec3Normalize (dir);
 
 	bolt = G_Spawn();
 	bolt->classname = "prox mine";
@@ -805,11 +805,11 @@ fire_prox(gentity_t *self, vec3_t start, vec3_t dir)
 
 	bolt->s.pos.trType = TR_GRAVITY;
 	bolt->s.pos.trTime = level.time - MISSILE_PRESTEP_TIME;	/* move a bit on the very first frame */
-	VectorCopy(start, bolt->s.pos.trBase);
+	Vec3Copy(start, bolt->s.pos.trBase);
 	VectorScale(dir, 700, bolt->s.pos.trDelta);
 	SnapVector(bolt->s.pos.trDelta);	/* save net bandwidth */
 
-	VectorCopy (start, bolt->r.currentOrigin);
+	Vec3Copy (start, bolt->r.currentOrigin);
 
 	return bolt;
 }

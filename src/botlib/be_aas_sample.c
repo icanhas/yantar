@@ -82,8 +82,8 @@ AAS_PresenceTypeBoundingBox(int presencetype, vec3_t mins, vec3_t maxs)
 			"AAS_PresenceTypeBoundingBox: unknown presence type\n");
 		index = 2;
 	}
-	VectorCopy(boxmins[index], mins);
-	VectorCopy(boxmaxs[index], maxs);
+	Vec3Copy(boxmins[index], mins);
+	Vec3Copy(boxmaxs[index], maxs);
 }	/* end of the function AAS_PresenceTypeBoundingBox */
 /* ===========================================================================
  *
@@ -250,7 +250,7 @@ AAS_PointAreaNum(vec3_t point)
 		}
 #endif	/* AAS_SAMPLE_DEBUG */
 		plane	= &aasworld.planes[node->planenum];
-		dist	= DotProduct(point, plane->normal) - plane->dist;
+		dist	= Vec3Dot(point, plane->normal) - plane->dist;
 		if(dist > 0) nodenum = node->children[0];
 		else nodenum = node->children[1];
 	}
@@ -367,7 +367,7 @@ AAS_PointPresenceType(vec3_t point)
  * Changes Globals:		-
  * =========================================================================== */
 vec_t
-AAS_BoxOriginDistanceFromPlane(vec3_t normal, vec3_t mins, vec3_t maxs, int side)
+AAS_BoxOriginVec3Vec3DistanceFromPlane(vec3_t normal, vec3_t mins, vec3_t maxs, int side)
 {
 	vec3_t	v1, v2;
 	int	i;
@@ -393,11 +393,11 @@ AAS_BoxOriginDistanceFromPlane(vec3_t normal, vec3_t mins, vec3_t maxs, int side
 		}
 	/* end else
 	 *  */
-	VectorCopy(normal, v2);
-	VectorInverse(v2);
+	Vec3Copy(normal, v2);
+	Vec3Inverse(v2);
 /*	VectorNegate(normal, v2); */
-	return DotProduct(v1, v2);
-}	/* end of the function AAS_BoxOriginDistanceFromPlane */
+	return Vec3Dot(v1, v2);
+}	/* end of the function AAS_BoxOriginVec3Vec3DistanceFromPlane */
 /* ===========================================================================
  *
  * Parameter:				-
@@ -432,7 +432,7 @@ AAS_AreaEntityCollision(int areanum, vec3_t start, vec3_t end,
 	if(collision){
 		trace->startsolid = bsptrace.startsolid;
 		trace->ent = bsptrace.ent;
-		VectorCopy(bsptrace.endpos, trace->endpos);
+		Vec3Copy(bsptrace.endpos, trace->endpos);
 		trace->area = 0;
 		trace->planenum = 0;
 		return qtrue;
@@ -466,8 +466,8 @@ AAS_TraceClientBBox(vec3_t start, vec3_t end, int presencetype,
 
 	tstack_p = tracestack;
 	/* we start with the whole line on the stack */
-	VectorCopy(start, tstack_p->start);
-	VectorCopy(end, tstack_p->end);
+	Vec3Copy(start, tstack_p->start);
+	Vec3Copy(end, tstack_p->end);
 	tstack_p->planenum = 0;
 	/* start with node 1 because node zero is a dummy for a solid leaf */
 	tstack_p->nodenum = 1;	/* starting at the root of the tree */
@@ -484,7 +484,7 @@ AAS_TraceClientBBox(vec3_t start, vec3_t end, int presencetype,
 			trace.startsolid = qfalse;
 			trace.fraction = 1.0;
 			/* endpos is the end of the line */
-			VectorCopy(end, trace.endpos);
+			Vec3Copy(end, trace.endpos);
 			/* nothing hit */
 			trace.ent = 0;
 			trace.area = 0;
@@ -518,22 +518,22 @@ AAS_TraceClientBBox(vec3_t start, vec3_t end, int presencetype,
 					VectorClear(v1);
 				}else{
 					trace.startsolid = qfalse;
-					VectorSubtract(end, start, v1);
-					VectorSubtract(tstack_p->start, start,
+					Vec3Sub(end, start, v1);
+					Vec3Sub(tstack_p->start, start,
 						v2);
-					trace.fraction = VectorLength(v2) /
-							 VectorNormalize(v1);
-					VectorMA(tstack_p->start, -0.125, v1,
+					trace.fraction = Vec3Len(v2) /
+							 Vec3Normalize(v1);
+					Vec3MA(tstack_p->start, -0.125, v1,
 						tstack_p->start);
 				}
-				VectorCopy(tstack_p->start, trace.endpos);
+				Vec3Copy(tstack_p->start, trace.endpos);
 				trace.ent = 0;
 				trace.area = -nodenum;
-/*				VectorSubtract(end, start, v1); */
+/*				Vec3Sub(end, start, v1); */
 				trace.planenum = tstack_p->planenum;
 				/* always take the plane with normal facing towards the trace start */
 				plane = &aasworld.planes[trace.planenum];
-				if(DotProduct(v1,
+				if(Vec3Dot(v1,
 					   plane->normal) > 0) trace.planenum ^=
 						1;
 				return trace;
@@ -545,16 +545,16 @@ AAS_TraceClientBBox(vec3_t start, vec3_t end, int presencetype,
 						   passent,
 						   &trace)){
 						if(!trace.startsolid){
-							VectorSubtract(end,
+							Vec3Sub(end,
 								start,
 								v1);
-							VectorSubtract(
+							Vec3Sub(
 								trace.endpos,
 								start, v2);
 							trace.fraction =
-								VectorLength(v2)
+								Vec3Len(v2)
 								/
-								VectorLength(v1);
+								Vec3Len(v1);
 						}
 						return trace;
 					}
@@ -575,21 +575,21 @@ AAS_TraceClientBBox(vec3_t start, vec3_t end, int presencetype,
 				VectorClear(v1);
 			}else{
 				trace.startsolid = qfalse;
-				VectorSubtract(end, start, v1);
-				VectorSubtract(tstack_p->start, start, v2);
-				trace.fraction = VectorLength(v2) /
-						 VectorNormalize(v1);
-				VectorMA(tstack_p->start, -0.125, v1,
+				Vec3Sub(end, start, v1);
+				Vec3Sub(tstack_p->start, start, v2);
+				trace.fraction = Vec3Len(v2) /
+						 Vec3Normalize(v1);
+				Vec3MA(tstack_p->start, -0.125, v1,
 					tstack_p->start);
 			}
-			VectorCopy(tstack_p->start, trace.endpos);
+			Vec3Copy(tstack_p->start, trace.endpos);
 			trace.ent = 0;
 			trace.area = 0;	/* hit solid leaf */
-/*			VectorSubtract(end, start, v1); */
+/*			Vec3Sub(end, start, v1); */
 			trace.planenum = tstack_p->planenum;
 			/* always take the plane with normal facing towards the trace start */
 			plane = &aasworld.planes[trace.planenum];
-			if(DotProduct(v1,
+			if(Vec3Dot(v1,
 				   plane->normal) > 0) trace.planenum ^= 1;
 			return trace;
 		}
@@ -604,9 +604,9 @@ AAS_TraceClientBBox(vec3_t start, vec3_t end, int presencetype,
 	 * the node to test against */
 		aasnode = &aasworld.nodes[nodenum];
 		/* start point of current line to test against node */
-		VectorCopy(tstack_p->start, cur_start);
+		Vec3Copy(tstack_p->start, cur_start);
 		/* end point of the current line to test against node */
-		VectorCopy(tstack_p->end, cur_end);
+		Vec3Copy(tstack_p->end, cur_end);
 		/* the current node plane */
 		plane = &aasworld.planes[aasnode->planenum];
 
@@ -633,10 +633,10 @@ AAS_TraceClientBBox(vec3_t start, vec3_t end, int presencetype,
 		default:		/* gee it's not an axial plane */
 		{
 			front =
-				DotProduct(cur_start,
+				Vec3Dot(cur_start,
 					plane->normal) - plane->dist;
 			back =
-				DotProduct(cur_end, plane->normal) - plane->dist;
+				Vec3Dot(cur_end, plane->normal) - plane->dist;
 			break;
 		}	/* end default */
 		}	/* end switch */
@@ -697,9 +697,9 @@ AAS_TraceClientBBox(vec3_t start, vec3_t end, int presencetype,
 			/* side the front part of the line is on */
 			side = front < 0;
 			/* first put the end part of the line on the stack (back side) */
-			VectorCopy(cur_mid, tstack_p->start);
+			Vec3Copy(cur_mid, tstack_p->start);
 			/* not necesary to store because still on stack
-			 * VectorCopy(cur_end, tstack_p->end); */
+			 * Vec3Copy(cur_end, tstack_p->end); */
 			tstack_p->planenum = aasnode->planenum;
 			tstack_p->nodenum = aasnode->children[!side];
 			tstack_p++;
@@ -712,8 +712,8 @@ AAS_TraceClientBBox(vec3_t start, vec3_t end, int presencetype,
 			/* now put the part near the start of the line on the stack so we will */
 			/* continue with thats part first. This way we'll find the first */
 			/* hit of the bbox */
-			VectorCopy(cur_start, tstack_p->start);
-			VectorCopy(cur_mid, tstack_p->end);
+			Vec3Copy(cur_start, tstack_p->start);
+			Vec3Copy(cur_mid, tstack_p->end);
 			tstack_p->planenum = tmpplanenum;
 			tstack_p->nodenum = aasnode->children[side];
 			tstack_p++;
@@ -753,8 +753,8 @@ AAS_TraceAreas(vec3_t start, vec3_t end, int *areas, vec3_t *points,
 
 	tstack_p = tracestack;
 	/* we start with the whole line on the stack */
-	VectorCopy(start, tstack_p->start);
-	VectorCopy(end, tstack_p->end);
+	Vec3Copy(start, tstack_p->start);
+	Vec3Copy(end, tstack_p->end);
 	tstack_p->planenum = 0;
 	/* start with node 1 because node zero is a dummy for a solid leaf */
 	tstack_p->nodenum = 1;	/* starting at the root of the tree */
@@ -782,7 +782,7 @@ AAS_TraceAreas(vec3_t start, vec3_t end, int *areas, vec3_t *points,
 #endif	/* AAS_SAMPLE_DEBUG
 	 * botimport.Print(PRT_MESSAGE, "areanum = %d, must be %d\n", -nodenum, AAS_PointAreaNum(start)); */
 			areas[numareas] = -nodenum;
-			if(points) VectorCopy(tstack_p->start, points[numareas]);
+			if(points) Vec3Copy(tstack_p->start, points[numareas]);
 			numareas++;
 			if(numareas >= maxareas) return numareas;
 			continue;
@@ -800,9 +800,9 @@ AAS_TraceAreas(vec3_t start, vec3_t end, int *areas, vec3_t *points,
 	 * the node to test against */
 		aasnode = &aasworld.nodes[nodenum];
 		/* start point of current line to test against node */
-		VectorCopy(tstack_p->start, cur_start);
+		Vec3Copy(tstack_p->start, cur_start);
 		/* end point of the current line to test against node */
-		VectorCopy(tstack_p->end, cur_end);
+		Vec3Copy(tstack_p->end, cur_end);
 		/* the current node plane */
 		plane = &aasworld.planes[aasnode->planenum];
 
@@ -829,10 +829,10 @@ AAS_TraceAreas(vec3_t start, vec3_t end, int *areas, vec3_t *points,
 		default:		/* gee it's not an axial plane */
 		{
 			front =
-				DotProduct(cur_start,
+				Vec3Dot(cur_start,
 					plane->normal) - plane->dist;
 			back =
-				DotProduct(cur_end, plane->normal) - plane->dist;
+				Vec3Dot(cur_end, plane->normal) - plane->dist;
 			break;
 		}	/* end default */
 		}	/* end switch */
@@ -887,9 +887,9 @@ AAS_TraceAreas(vec3_t start, vec3_t end, int *areas, vec3_t *points,
 			/* side the front part of the line is on */
 			side = front < 0;
 			/* first put the end part of the line on the stack (back side) */
-			VectorCopy(cur_mid, tstack_p->start);
+			Vec3Copy(cur_mid, tstack_p->start);
 			/* not necesary to store because still on stack
-			 * VectorCopy(cur_end, tstack_p->end); */
+			 * Vec3Copy(cur_end, tstack_p->end); */
 			tstack_p->planenum = aasnode->planenum;
 			tstack_p->nodenum = aasnode->children[!side];
 			tstack_p++;
@@ -902,8 +902,8 @@ AAS_TraceAreas(vec3_t start, vec3_t end, int *areas, vec3_t *points,
 			/* now put the part near the start of the line on the stack so we will */
 			/* continue with thats part first. This way we'll find the first */
 			/* hit of the bbox */
-			VectorCopy(cur_start, tstack_p->start);
-			VectorCopy(cur_mid, tstack_p->end);
+			Vec3Copy(cur_start, tstack_p->start);
+			Vec3Copy(cur_mid, tstack_p->end);
 			tstack_p->planenum = tmpplanenum;
 			tstack_p->nodenum = aasnode->children[side];
 			tstack_p++;
@@ -955,9 +955,9 @@ AAS_InsideFace(aas_face_t *face, vec3_t pnormal, vec3_t point, float epsilon)
 		edge = &aasworld.edges[abs(edgenum)];
 		/* get the first vertex of the edge */
 		firstvertex = edgenum < 0;
-		VectorCopy(aasworld.vertexes[edge->v[firstvertex]], v0);
+		Vec3Copy(aasworld.vertexes[edge->v[firstvertex]], v0);
 		/* edge vector */
-		VectorSubtract(aasworld.vertexes[edge->v[!firstvertex]], v0,
+		Vec3Sub(aasworld.vertexes[edge->v[!firstvertex]], v0,
 			edgevec);
 		/*  */
 #ifdef AAS_SAMPLE_DEBUG
@@ -967,7 +967,7 @@ AAS_InsideFace(aas_face_t *face, vec3_t pnormal, vec3_t point, float epsilon)
 		lastvertex = edge->v[!firstvertex];
 #endif	/* AAS_SAMPLE_DEBUG
 	 * vector from first edge point to point possible in face */
-		VectorSubtract(point, v0, pointvec);
+		Vec3Sub(point, v0, pointvec);
 		/* get a vector pointing inside the face orthogonal to both the
 		 * edge vector and the normal vector of the plane the face is in
 		 * this vector defines a plane through the origin (first vertex of
@@ -979,7 +979,7 @@ AAS_InsideFace(aas_face_t *face, vec3_t pnormal, vec3_t point, float epsilon)
 		 * vector orthogonal vector from above and the vector from the
 		 * origin (first vertex of edge) to the point
 		 * if the dotproduct is smaller than zero the point is outside the face */
-		if(DotProduct(pointvec, sepnormal) < -epsilon) return qfalse;
+		if(Vec3Dot(pointvec, sepnormal) < -epsilon) return qfalse;
 	}
 	return qtrue;
 }	/* end of the function AAS_InsideFace */
@@ -1012,13 +1012,13 @@ AAS_PointInsideFace(int facenum, vec3_t point, float epsilon)
 		v1 = aasworld.vertexes[edge->v[firstvertex]];
 		v2 = aasworld.vertexes[edge->v[!firstvertex]];
 		/* edge vector */
-		VectorSubtract(v2, v1, edgevec);
+		Vec3Sub(v2, v1, edgevec);
 		/* vector from first edge point to point possible in face */
-		VectorSubtract(point, v1, pointvec);
+		Vec3Sub(point, v1, pointvec);
 		/*  */
-		CrossProduct(edgevec, plane->normal, sepnormal);
+		Vec3Cross(edgevec, plane->normal, sepnormal);
 		/*  */
-		if(DotProduct(pointvec, sepnormal) < -epsilon) return qfalse;
+		if(Vec3Dot(pointvec, sepnormal) < -epsilon) return qfalse;
 	}
 	return qtrue;
 }	/* end of the function AAS_PointInsideFace */
@@ -1049,7 +1049,7 @@ AAS_AreaGroundFace(int areanum, vec3_t point)
 			/* get the up or down normal */
 			if(aasworld.planes[face->planenum].normal[2] <
 			   0) VectorNegate(up, normal);
-			else VectorCopy(up, normal);
+			else Vec3Copy(up, normal);
 			/* check if the point is in the face */
 			if(AAS_InsideFace(face, normal, point,
 				   0.01f)) return face;
@@ -1070,7 +1070,7 @@ AAS_FacePlane(int facenum, vec3_t normal, float *dist)
 	aas_plane_t *plane;
 
 	plane = &aasworld.planes[aasworld.faces[facenum].planenum];
-	VectorCopy(plane->normal, normal);
+	Vec3Copy(plane->normal, normal);
 	*dist = plane->dist;
 }	/* end of the function AAS_FacePlane */
 /* ===========================================================================
@@ -1155,8 +1155,8 @@ AAS_BoxOnPlaneSide2(vec3_t absmins, vec3_t absmaxs, aas_plane_t *p)
 			corners[0][i]	= absmaxs[i];
 		}
 	}
-	dist1	= DotProduct(p->normal, corners[0]) - p->dist;
-	dist2	= DotProduct(p->normal, corners[1]) - p->dist;
+	dist1	= Vec3Dot(p->normal, corners[0]) - p->dist;
+	dist2	= Vec3Dot(p->normal, corners[1]) - p->dist;
 	sides	= 0;
 	if(dist1 >= 0) sides = 1;
 	if(dist2 < 0) sides |= 2;
@@ -1334,8 +1334,8 @@ AAS_LinkEntityClientBBox(vec3_t absmins, vec3_t absmaxs, int entnum,
 	vec3_t	newabsmins, newabsmaxs;
 
 	AAS_PresenceTypeBoundingBox(presencetype, mins, maxs);
-	VectorSubtract(absmins, maxs, newabsmins);
-	VectorSubtract(absmaxs, mins, newabsmaxs);
+	Vec3Sub(absmins, maxs, newabsmins);
+	Vec3Sub(absmaxs, mins, newabsmaxs);
 	/* relink the entity */
 	return AAS_AASLinkEntity(newabsmins, newabsmaxs, entnum);
 }	/* end of the function AAS_LinkEntityClientBBox */
@@ -1385,9 +1385,9 @@ AAS_AreaInfo(int areanum, aas_areainfo_t *info)
 	info->contents	= settings->contents;
 	info->flags = settings->areaflags;
 	info->presencetype = settings->presencetype;
-	VectorCopy(aasworld.areas[areanum].mins, info->mins);
-	VectorCopy(aasworld.areas[areanum].maxs, info->maxs);
-	VectorCopy(aasworld.areas[areanum].center, info->center);
+	Vec3Copy(aasworld.areas[areanum].mins, info->mins);
+	Vec3Copy(aasworld.areas[areanum].maxs, info->maxs);
+	Vec3Copy(aasworld.areas[areanum].center, info->center);
 	return sizeof(aas_areainfo_t);
 }	/* end of the function AAS_AreaInfo */
 /* ===========================================================================

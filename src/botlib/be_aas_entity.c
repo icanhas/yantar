@@ -88,8 +88,8 @@ AAS_UpdateEntity(int entnum, bot_entitystate_t *state)
 	ent->i.type = state->type;
 	ent->i.flags = state->flags;
 	ent->i.ltime = AAS_Time();
-	VectorCopy(ent->i.origin, ent->i.lastvisorigin);
-	VectorCopy(state->old_origin, ent->i.old_origin);
+	Vec3Copy(ent->i.origin, ent->i.lastvisorigin);
+	Vec3Copy(state->old_origin, ent->i.old_origin);
 	ent->i.solid = state->solid;
 	ent->i.groundent = state->groundent;
 	ent->i.modelindex = state->modelindex;
@@ -112,7 +112,7 @@ AAS_UpdateEntity(int entnum, bot_entitystate_t *state)
 	if(ent->i.solid == SOLID_BSP){
 		/* if the angles of the model changed */
 		if(!VectorCompare(state->angles, ent->i.angles)){
-			VectorCopy(state->angles, ent->i.angles);
+			Vec3Copy(state->angles, ent->i.angles);
 			relink = qtrue;
 		}
 		/* get the mins and maxs of the model */
@@ -124,15 +124,15 @@ AAS_UpdateEntity(int entnum, bot_entitystate_t *state)
 		/* if the bounding box size changed */
 		if(!VectorCompare(state->mins, ent->i.mins) ||
 		   !VectorCompare(state->maxs, ent->i.maxs)){
-			VectorCopy(state->mins, ent->i.mins);
-			VectorCopy(state->maxs, ent->i.maxs);
+			Vec3Copy(state->mins, ent->i.mins);
+			Vec3Copy(state->maxs, ent->i.maxs);
 			relink = qtrue;
 		}
-		VectorCopy(state->angles, ent->i.angles);
+		Vec3Copy(state->angles, ent->i.angles);
 	}
 	/* if the origin changed */
 	if(!VectorCompare(state->origin, ent->i.origin)){
-		VectorCopy(state->origin, ent->i.origin);
+		Vec3Copy(state->origin, ent->i.origin);
 		relink = qtrue;
 	}
 	/* if the entity should be relinked */
@@ -140,8 +140,8 @@ AAS_UpdateEntity(int entnum, bot_entitystate_t *state)
 		/* don't link the world model */
 		if(entnum != ENTITYNUM_WORLD){
 			/* absolute mins and maxs */
-			VectorAdd(ent->i.mins, ent->i.origin, absmins);
-			VectorAdd(ent->i.maxs, ent->i.origin, absmaxs);
+			Vec3Add(ent->i.mins, ent->i.origin, absmins);
+			Vec3Add(ent->i.maxs, ent->i.origin, absmaxs);
 			/* unlink the entity */
 			AAS_UnlinkFromAreas(ent->areas);
 			/* relink the entity to the AAS areas (use the larges bbox) */
@@ -200,7 +200,7 @@ AAS_EntityOrigin(int entnum, vec3_t origin)
 		return;
 	}
 
-	VectorCopy(aasworld.entities[entnum].i.origin, origin);
+	Vec3Copy(aasworld.entities[entnum].i.origin, origin);
 }	/* end of the function AAS_EntityOrigin */
 /* ===========================================================================
  *
@@ -273,7 +273,7 @@ AAS_OriginOfMoverWithModelNum(int modelnum, vec3_t origin)
 		ent = &aasworld.entities[i];
 		if(ent->i.type == ET_MOVER)
 			if(ent->i.modelindex == modelnum){
-				VectorCopy(ent->i.origin, origin);
+				Vec3Copy(ent->i.origin, origin);
 				return qtrue;
 			}
 	}
@@ -300,8 +300,8 @@ AAS_EntitySize(int entnum, vec3_t mins, vec3_t maxs)
 	}
 
 	ent = &aasworld.entities[entnum];
-	VectorCopy(ent->i.mins, mins);
-	VectorCopy(ent->i.maxs, maxs);
+	Vec3Copy(ent->i.mins, mins);
+	Vec3Copy(ent->i.maxs, maxs);
 }	/* end of the function AAS_EntitySize */
 /* ===========================================================================
  *
@@ -315,10 +315,10 @@ AAS_EntityBSPData(int entnum, bsp_entdata_t *entdata)
 	aas_entity_t *ent;
 
 	ent = &aasworld.entities[entnum];
-	VectorCopy(ent->i.origin, entdata->origin);
-	VectorCopy(ent->i.angles, entdata->angles);
-	VectorAdd(ent->i.origin, ent->i.mins, entdata->absmins);
-	VectorAdd(ent->i.origin, ent->i.maxs, entdata->absmaxs);
+	Vec3Copy(ent->i.origin, entdata->origin);
+	Vec3Copy(ent->i.angles, entdata->angles);
+	Vec3Add(ent->i.origin, ent->i.mins, entdata->absmins);
+	Vec3Add(ent->i.origin, ent->i.maxs, entdata->absmaxs);
 	entdata->solid = ent->i.solid;
 	entdata->modelnum = ent->i.modelindex - 1;
 }	/* end of the function AAS_EntityBSPData */
@@ -393,10 +393,10 @@ AAS_NearestEntity(vec3_t origin, int modelindex)
 	for(i = 0; i < aasworld.maxentities; i++){
 		ent = &aasworld.entities[i];
 		if(ent->i.modelindex != modelindex) continue;
-		VectorSubtract(ent->i.origin, origin, dir);
+		Vec3Sub(ent->i.origin, origin, dir);
 		if(abs(dir[0]) < 40)
 			if(abs(dir[1]) < 40){
-				dist = VectorLength(dir);
+				dist = Vec3Len(dir);
 				if(dist < bestdist){
 					bestdist = dist;
 					bestentnum = i;

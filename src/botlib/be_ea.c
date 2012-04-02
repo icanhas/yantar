@@ -403,7 +403,7 @@ EA_Move(int client, vec3_t dir, float speed)
 
 	bi = &botinputs[client];
 
-	VectorCopy(dir, bi->dir);
+	Vec3Copy(dir, bi->dir);
 	/* cap speed */
 	if(speed > MAX_USERMOVE) speed = MAX_USERMOVE;
 	else if(speed < -MAX_USERMOVE) speed = -MAX_USERMOVE;
@@ -422,7 +422,7 @@ EA_View(int client, vec3_t viewangles)
 
 	bi = &botinputs[client];
 
-	VectorCopy(viewangles, bi->viewangles);
+	Vec3Copy(viewangles, bi->viewangles);
 }	/* end of the function EA_View */
 /* ===========================================================================
  *

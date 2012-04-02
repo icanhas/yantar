@@ -102,7 +102,7 @@ CG_ClipMoveToEntities(const vec3_t start, const vec3_t mins, const vec3_t maxs,
 		if(ent->solid == SOLID_BMODEL){
 			/* special value for bmodel */
 			cmodel = trap_CM_InlineModel(ent->modelindex);
-			VectorCopy(cent->lerpAngles, angles);
+			Vec3Copy(cent->lerpAngles, angles);
 			BG_EvaluateTrajectory(&cent->currentState.pos,
 				cg.physicsTime,
 				origin);
@@ -118,8 +118,8 @@ CG_ClipMoveToEntities(const vec3_t start, const vec3_t mins, const vec3_t maxs,
 			bmaxs[2]	= zu;
 
 			cmodel = trap_CM_TempBoxModel(bmins, bmaxs);
-			VectorCopy(vec3_origin, angles);
-			VectorCopy(cent->lerpOrigin, origin);
+			Vec3Copy(vec3_origin, angles);
+			Vec3Copy(cent->lerpOrigin, origin);
 		}
 
 
@@ -535,9 +535,9 @@ CG_PredictPlayerState(void)
 					if(!VectorCompare(oldPlayerState.origin,
 						   adjusted))
 						CG_Printf("prediction error\n");
-				VectorSubtract(oldPlayerState.origin, adjusted,
+				Vec3Sub(oldPlayerState.origin, adjusted,
 					delta);
-				len = VectorLength(delta);
+				len = Vec3Len(delta);
 				if(len > 0.1){
 					if(cg_showmiss.integer)
 						CG_Printf(
@@ -563,7 +563,7 @@ CG_PredictPlayerState(void)
 							cg.predictedError);
 					}else
 						VectorClear(cg.predictedError);
-					VectorAdd(delta, cg.predictedError,
+					Vec3Add(delta, cg.predictedError,
 						cg.predictedError);
 					cg.predictedErrorTime = cg.oldTime;
 				}

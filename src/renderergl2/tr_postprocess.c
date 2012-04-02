@@ -361,17 +361,17 @@ RB_GodRays(void)
 	if(!backEnd.hasSunFlare)
 		return;
 
-	VectorSubtract(backEnd.sunFlarePos, backEnd.viewParms.or.origin, dir);
-	VectorNormalize(dir);
+	Vec3Sub(backEnd.sunFlarePos, backEnd.viewParms.or.origin, dir);
+	Vec3Normalize(dir);
 
-	dot = DotProduct(dir, backEnd.viewParms.or.axis[0]);
+	dot = Vec3Dot(dir, backEnd.viewParms.or.axis[0]);
 	if(dot < cutoff)
 		return;
 
 	if(!RB_UpdateSunFlareVis())
 		return;
 
-	VectorCopy(backEnd.sunFlarePos, pos);
+	Vec3Copy(backEnd.sunFlarePos, pos);
 	pos[3] = 1.f;
 
 	/* project sun point */

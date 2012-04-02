@@ -789,8 +789,8 @@ clipHandle_t
 CM_TempBoxModel(const vec3_t mins, const vec3_t maxs, int capsule)
 {
 
-	VectorCopy(mins, box_model.mins);
-	VectorCopy(maxs, box_model.maxs);
+	Vec3Copy(mins, box_model.mins);
+	Vec3Copy(maxs, box_model.maxs);
 
 	if(capsule)
 		return CAPSULE_MODEL_HANDLE;
@@ -808,8 +808,8 @@ CM_TempBoxModel(const vec3_t mins, const vec3_t maxs, int capsule)
 	box_planes[10].dist = mins[2];
 	box_planes[11].dist = -mins[2];
 
-	VectorCopy(mins, box_brush->bounds[0]);
-	VectorCopy(maxs, box_brush->bounds[1]);
+	Vec3Copy(mins, box_brush->bounds[0]);
+	Vec3Copy(maxs, box_brush->bounds[1]);
 
 	return BOX_MODEL_HANDLE;
 }
@@ -823,6 +823,6 @@ CM_ModelBounds(clipHandle_t model, vec3_t mins, vec3_t maxs)
 	cmodel_t *cmod;
 
 	cmod = CM_ClipHandleToModel(model);
-	VectorCopy(cmod->mins, mins);
-	VectorCopy(cmod->maxs, maxs);
+	Vec3Copy(cmod->mins, mins);
+	Vec3Copy(cmod->maxs, maxs);
 }

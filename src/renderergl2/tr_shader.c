@@ -1437,7 +1437,7 @@ ParseShader(char **text)
 			token = Com_ParseExt(text, qfalse);
 			tr.sunLight[2] = atof(token);
 
-			VectorNormalize(tr.sunLight);
+			Vec3Normalize(tr.sunLight);
 
 			token = Com_ParseExt(text, qfalse);
 			a = atof(token);

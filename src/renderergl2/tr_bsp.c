@@ -147,7 +147,7 @@ ColorToRGBE(const vec3_t color, unsigned char rgbe[4])
 	float	maxComponent;
 	int	e;
 
-	VectorCopy(color, sample);
+	Vec3Copy(color, sample);
 
 	maxComponent = sample[0];
 	if(sample[1] > maxComponent)
@@ -720,7 +720,7 @@ ParseFace(dsurface_t *ds, drawVert_t *verts, float *hdrVertColors, msurface_t *s
 	/* take the plane information from the lightmap vector */
 	for(i = 0; i < 3; i++)
 		cv->plane.normal[i] = LittleFloat(ds->lightmapVecs[2][i]);
-	cv->plane.dist = DotProduct(cv->verts[0].xyz, cv->plane.normal);
+	cv->plane.dist = Vec3Dot(cv->verts[0].xyz, cv->plane.normal);
 	SetPlaneSignbits(&cv->plane);
 	cv->plane.type = PlaneTypeForNormal(cv->plane.normal);
 
@@ -828,10 +828,10 @@ ParseMesh(dsurface_t *ds, drawVert_t *verts, float *hdrVertColors, msurface_t *s
 		bounds[0][i]	= LittleFloat(ds->lightmapVecs[0][i]);
 		bounds[1][i]	= LittleFloat(ds->lightmapVecs[1][i]);
 	}
-	VectorAdd(bounds[0], bounds[1], bounds[1]);
+	Vec3Add(bounds[0], bounds[1], bounds[1]);
 	VectorScale(bounds[1], 0.5f, grid->lodOrigin);
-	VectorSubtract(bounds[0], grid->lodOrigin, tmpVec);
-	grid->lodRadius = VectorLength(tmpVec);
+	Vec3Sub(bounds[0], grid->lodOrigin, tmpVec);
+	grid->lodRadius = Vec3Len(tmpVec);
 }
 
 /*
@@ -2109,9 +2109,9 @@ R_LoadSurfaces(lump_t *surfs, lump_t *verts, lump_t *indexLump)
 				srfGridMesh_t *surface = (srfGridMesh_t*)out->data;
 
 				out->cullinfo.type = CULLINFO_BOX | CULLINFO_SPHERE;
-				VectorCopy(surface->meshBounds[0], out->cullinfo.bounds[0]);
-				VectorCopy(surface->meshBounds[1], out->cullinfo.bounds[1]);
-				VectorCopy(surface->localOrigin, out->cullinfo.localOrigin);
+				Vec3Copy(surface->meshBounds[0], out->cullinfo.bounds[0]);
+				Vec3Copy(surface->meshBounds[1], out->cullinfo.bounds[1]);
+				Vec3Copy(surface->localOrigin, out->cullinfo.localOrigin);
 				out->cullinfo.radius = surface->meshRadius;
 			}
 			numMeshes++;
@@ -2122,8 +2122,8 @@ R_LoadSurfaces(lump_t *surfs, lump_t *verts, lump_t *indexLump)
 				srfTriangles_t *surface = (srfTriangles_t*)out->data;
 
 				out->cullinfo.type = CULLINFO_BOX;
-				VectorCopy(surface->bounds[0], out->cullinfo.bounds[0]);
-				VectorCopy(surface->bounds[1], out->cullinfo.bounds[1]);
+				Vec3Copy(surface->bounds[0], out->cullinfo.bounds[0]);
+				Vec3Copy(surface->bounds[1], out->cullinfo.bounds[1]);
 			}
 			numTriSurfs++;
 			break;
@@ -2133,8 +2133,8 @@ R_LoadSurfaces(lump_t *surfs, lump_t *verts, lump_t *indexLump)
 				srfSurfaceFace_t *surface = (srfSurfaceFace_t*)out->data;
 
 				out->cullinfo.type = CULLINFO_PLANE | CULLINFO_BOX;
-				VectorCopy(surface->bounds[0], out->cullinfo.bounds[0]);
-				VectorCopy(surface->bounds[1], out->cullinfo.bounds[1]);
+				Vec3Copy(surface->bounds[0], out->cullinfo.bounds[0]);
+				Vec3Copy(surface->bounds[1], out->cullinfo.bounds[1]);
 				out->cullinfo.plane = surface->plane;
 			}
 			numFaces++;
@@ -2501,7 +2501,7 @@ R_LoadFogs(lump_t *l, lump_t *brushesLump, lump_t *sidesLump)
 		}else{
 			out->hasSurface = qtrue;
 			planeNum = LittleLong(sides[ firstSide + sideNum ].planeNum);
-			VectorSubtract(vec3_origin, s_worldData.planes[ planeNum ].normal, out->surface);
+			Vec3Sub(vec3_origin, s_worldData.planes[ planeNum ].normal, out->surface);
 			out->surface[3] = -s_worldData.planes[ planeNum ].dist;
 		}
 
@@ -3011,11 +3011,11 @@ R_MergeLeafSurfaces(void)
 		vboSurf->shader		= surf1->shader;
 		vboSurf->fogIndex	= surf1->fogIndex;
 
-		VectorCopy(bounds[0], vboSurf->bounds[0]);
-		VectorCopy(bounds[1], vboSurf->bounds[1]);
+		Vec3Copy(bounds[0], vboSurf->bounds[0]);
+		Vec3Copy(bounds[1], vboSurf->bounds[1]);
 
-		VectorCopy(bounds[0], mergedSurf->cullinfo.bounds[0]);
-		VectorCopy(bounds[1], mergedSurf->cullinfo.bounds[1]);
+		Vec3Copy(bounds[0], mergedSurf->cullinfo.bounds[0]);
+		Vec3Copy(bounds[1], mergedSurf->cullinfo.bounds[1]);
 
 		mergedSurf->cullinfo.type = CULLINFO_BOX;
 		mergedSurf->data = (surfaceType_t*)vboSurf;
@@ -3133,7 +3133,7 @@ RE_LoadWorldMap(const char *name)
 	tr.sunDirection[1]	= 0.3f;
 	tr.sunDirection[2]	= 0.9f;
 
-	VectorNormalize(tr.sunDirection);
+	Vec3Normalize(tr.sunDirection);
 
 	/* set default autoexposure settings */
 	tr.autoExposureMinMax[0]	= -2.0;

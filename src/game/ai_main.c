@@ -144,9 +144,9 @@ BotAI_Trace(bsp_trace_t *bsptrace, vec3_t start, vec3_t mins, vec3_t maxs,
 	bsptrace->allsolid = trace.allsolid;
 	bsptrace->startsolid = trace.startsolid;
 	bsptrace->fraction = trace.fraction;
-	VectorCopy(trace.endpos, bsptrace->endpos);
+	Vec3Copy(trace.endpos, bsptrace->endpos);
 	bsptrace->plane.dist = trace.plane.dist;
-	VectorCopy(trace.plane.normal, bsptrace->plane.normal);
+	Vec3Copy(trace.plane.normal, bsptrace->plane.normal);
 	bsptrace->plane.signbits = trace.plane.signbits;
 	bsptrace->plane.type = trace.plane.type;
 	bsptrace->surface.value = trace.surfaceFlags;
@@ -906,8 +906,8 @@ BotInputToUserCommand(bot_input_t *bi, usercmd_t *ucmd, int delta_angles[3],
 	/* bot input speed is in the range [0, 400] */
 	bi->speed = bi->speed * 127 / 400;
 	/* set the view independent movement */
-	f = DotProduct(forward, bi->dir);
-	r = DotProduct(right, bi->dir);
+	f = Vec3Dot(forward, bi->dir);
+	r = Vec3Dot(right, bi->dir);
 	u = abs(forward[2]) * bi->dir[2];
 	m = fabs(f);
 
@@ -1073,9 +1073,9 @@ BotAI(int client, float thinktime)
 	/*  */
 	bs->thinktime = thinktime;
 	/* origin of the bot */
-	VectorCopy(bs->cur_ps.origin, bs->origin);
+	Vec3Copy(bs->cur_ps.origin, bs->origin);
 	/* eye coordinates of the bot */
-	VectorCopy(bs->cur_ps.origin, bs->eye);
+	Vec3Copy(bs->cur_ps.origin, bs->eye);
 	bs->eye[2] += bs->cur_ps.viewheight;
 	/* get the area the bot is in */
 	bs->areanum = BotPointAreaNum(bs->origin);
@@ -1549,14 +1549,14 @@ BotAIStartFrame(int time)
 			/*  */
 			memset(&state, 0, sizeof(bot_entitystate_t));
 			/*  */
-			VectorCopy(ent->r.currentOrigin, state.origin);
+			Vec3Copy(ent->r.currentOrigin, state.origin);
 			if(i < MAX_CLIENTS)
-				VectorCopy(ent->s.apos.trBase, state.angles);
+				Vec3Copy(ent->s.apos.trBase, state.angles);
 			else
-				VectorCopy(ent->r.currentAngles, state.angles);
-			VectorCopy(ent->s.origin2, state.old_origin);
-			VectorCopy(ent->r.mins, state.mins);
-			VectorCopy(ent->r.maxs, state.maxs);
+				Vec3Copy(ent->r.currentAngles, state.angles);
+			Vec3Copy(ent->s.origin2, state.old_origin);
+			Vec3Copy(ent->r.mins, state.mins);
+			Vec3Copy(ent->r.maxs, state.maxs);
 			state.type = ent->s.eType;
 			state.flags = ent->s.eFlags;
 			if(ent->r.bmodel) state.solid = SOLID_BSP;

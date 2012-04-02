@@ -64,9 +64,9 @@ CG_MachineGunEjectBrass(centity_t *cent)
 		     offset[2] * v[2][1];
 	xoffset[2] = offset[0] * v[0][2] + offset[1] * v[1][2] +
 		     offset[2] * v[2][2];
-	VectorAdd(cent->lerpOrigin, xoffset, re->origin);
+	Vec3Add(cent->lerpOrigin, xoffset, re->origin);
 
-	VectorCopy(re->origin, le->pos.trBase);
+	Vec3Copy(re->origin, le->pos.trBase);
 
 	if(CG_PointContents(re->origin, -1) & CONTENTS_WATER)
 		waterScale = 0.10f;
@@ -147,8 +147,8 @@ CG_ShotgunEjectBrass(centity_t *cent)
 			     offset[2] * v[2][1];
 		xoffset[2] = offset[0] * v[0][2] + offset[1] * v[1][2] +
 			     offset[2] * v[2][2];
-		VectorAdd(cent->lerpOrigin, xoffset, re->origin);
-		VectorCopy(re->origin, le->pos.trBase);
+		Vec3Add(cent->lerpOrigin, xoffset, re->origin);
+		Vec3Copy(re->origin, le->pos.trBase);
 		if(CG_PointContents(re->origin, -1) & CONTENTS_WATER)
 			waterScale = 0.10f;
 
@@ -206,7 +206,7 @@ CG_NailgunEjectBrass(centity_t *cent)
 		     offset[2] * v[2][1];
 	xoffset[2] = offset[0] * v[0][2] + offset[1] * v[1][2] +
 		     offset[2] * v[2][2];
-	VectorAdd(cent->lerpOrigin, xoffset, origin);
+	Vec3Add(cent->lerpOrigin, xoffset, origin);
 
 	VectorSet(up, 0, 0, 64);
 
@@ -249,8 +249,8 @@ CG_RailTrail(clientInfo_t *ci, vec3_t start, vec3_t end)
 	re->reType = RT_RAIL_CORE;
 	re->customShader = cgs.media.railCoreShader;
 
-	VectorCopy(start, re->origin);
-	VectorCopy(end, re->oldorigin);
+	Vec3Copy(start, re->origin);
+	Vec3Copy(end, re->oldorigin);
 
 	re->shaderRGBA[0] = ci->color1[0] * 255;
 	re->shaderRGBA[1] = ci->color1[1] * 255;
@@ -271,14 +271,14 @@ CG_RailTrail(clientInfo_t *ci, vec3_t start, vec3_t end)
 		return;
 	}
 
-	VectorCopy (start, move);
-	VectorSubtract (end, start, vec);
-	len = VectorNormalize (vec);
+	Vec3Copy (start, move);
+	Vec3Sub (end, start, vec);
+	len = Vec3Normalize (vec);
 	PerpendicularVector(temp, vec);
 	for(i = 0; i < 36; i++)
 		RotatePointAroundVector(axis[i], vec, temp, i * 10);	/* banshee 2.4 was 10 */
 
-	VectorMA(move, 20, vec, move);
+	Vec3MA(move, 20, vec, move);
 	VectorScale (vec, SPACING, vec);
 
 	skip = -1;
@@ -313,16 +313,16 @@ CG_RailTrail(clientInfo_t *ci, vec3_t start, vec3_t end)
 			le->pos.trType	= TR_LINEAR;
 			le->pos.trTime	= cg.time;
 
-			VectorCopy(move, move2);
-			VectorMA(move2, RADIUS, axis[j], move2);
-			VectorCopy(move2, le->pos.trBase);
+			Vec3Copy(move, move2);
+			Vec3MA(move2, RADIUS, axis[j], move2);
+			Vec3Copy(move2, le->pos.trBase);
 
 			le->pos.trDelta[0] = axis[j][0]*6;
 			le->pos.trDelta[1] = axis[j][1]*6;
 			le->pos.trDelta[2] = axis[j][2]*6;
 		}
 
-		VectorAdd (move, vec, move);
+		Vec3Add (move, vec, move);
 
 		j = (j + ROTATION) % 36;
 	}
@@ -513,8 +513,8 @@ CG_PlasmaTrail(centity_t *cent, const weaponInfo_t *wi)
 	xoffset[2] = offset[0] * v[0][2] + offset[1] * v[1][2] +
 		     offset[2] * v[2][2];
 
-	VectorAdd(origin, xoffset, re->origin);
-	VectorCopy(re->origin, le->pos.trBase);
+	Vec3Add(origin, xoffset, re->origin);
+	Vec3Copy(re->origin, le->pos.trBase);
 
 	if(CG_PointContents(re->origin, -1) & CONTENTS_WATER)
 		waterScale = 0.10f;
@@ -572,16 +572,16 @@ CG_GrappleTrail(centity_t *ent, const weaponInfo_t *wi)
 
 	memset(&beam, 0, sizeof(beam));
 	/* FIXME adjust for muzzle position */
-	VectorCopy (cg_entities[ ent->currentState.otherEntityNum ].lerpOrigin,
+	Vec3Copy (cg_entities[ ent->currentState.otherEntityNum ].lerpOrigin,
 		beam.origin);
 	beam.origin[2] += 26;
 	AngleVectors(cg_entities[ ent->currentState.otherEntityNum ].lerpAngles,
 		forward, NULL,
 		up);
-	VectorMA(beam.origin, -6, up, beam.origin);
-	VectorCopy(origin, beam.oldorigin);
+	Vec3MA(beam.origin, -6, up, beam.origin);
+	Vec3Copy(origin, beam.oldorigin);
 
-	if(Distance(beam.origin, beam.oldorigin) < 64)
+	if(Vec3Distance(beam.origin, beam.oldorigin) < 64)
 		return;		/* Don't draw if close */
 
 	beam.reType = RT_LIGHTNING;
@@ -962,8 +962,8 @@ CG_CalculateWeaponPosition(vec3_t origin, vec3_t angles)
 	int	delta;
 	float	fracsin;
 
-	VectorCopy(cg.refdef.vieworg, origin);
-	VectorCopy(cg.refdefViewAngles, angles);
+	Vec3Copy(cg.refdef.vieworg, origin);
+	Vec3Copy(cg.refdefViewAngles, angles);
 
 	/* on odd legs, invert some angles */
 	if(cg.bobcycle & 1)
@@ -1050,12 +1050,12 @@ CG_LightningBolt(centity_t *cent, vec3_t origin)
 		}
 
 		AngleVectors(angle, forward, NULL, NULL);
-		VectorCopy(cent->lerpOrigin, muzzlePoint);
-/*		VectorCopy(cg.refdef.vieworg, muzzlePoint ); */
+		Vec3Copy(cent->lerpOrigin, muzzlePoint);
+/*		Vec3Copy(cg.refdef.vieworg, muzzlePoint ); */
 	}else{
 		/* !CPMA */
 		AngleVectors(cent->lerpAngles, forward, NULL, NULL);
-		VectorCopy(cent->lerpOrigin, muzzlePoint);
+		Vec3Copy(cent->lerpOrigin, muzzlePoint);
 	}
 
 	anim = cent->currentState.legsAnim & ~ANIM_TOGGLEBIT;
@@ -1064,21 +1064,21 @@ CG_LightningBolt(centity_t *cent, vec3_t origin)
 	else
 		muzzlePoint[2] += DEFAULT_VIEWHEIGHT;
 
-	VectorMA(muzzlePoint, 14, forward, muzzlePoint);
+	Vec3MA(muzzlePoint, 14, forward, muzzlePoint);
 
 	/* project forward by the lightning range */
-	VectorMA(muzzlePoint, LIGHTNING_RANGE, forward, endPoint);
+	Vec3MA(muzzlePoint, LIGHTNING_RANGE, forward, endPoint);
 
 	/* see if it hit a wall */
 	CG_Trace(&trace, muzzlePoint, vec3_origin, vec3_origin, endPoint,
 		cent->currentState.number, MASK_SHOT);
 
 	/* this is the endpoint */
-	VectorCopy(trace.endpos, beam.oldorigin);
+	Vec3Copy(trace.endpos, beam.oldorigin);
 
 	/* use the provided origin, even though it may be slightly
 	 * different than the muzzle origin */
-	VectorCopy(origin, beam.origin);
+	Vec3Copy(origin, beam.origin);
 
 	beam.reType = RT_LIGHTNING;
 	beam.customShader = cgs.media.lightningShader;
@@ -1089,13 +1089,13 @@ CG_LightningBolt(centity_t *cent, vec3_t origin)
 		vec3_t	angles;
 		vec3_t	dir;
 
-		VectorSubtract(beam.oldorigin, beam.origin, dir);
-		VectorNormalize(dir);
+		Vec3Sub(beam.oldorigin, beam.origin, dir);
+		Vec3Normalize(dir);
 
 		memset(&beam, 0, sizeof(beam));
 		beam.hModel = cgs.media.lightningExplosionModel;
 
-		VectorMA(trace.endpos, -16, dir, beam.origin);
+		Vec3MA(trace.endpos, -16, dir, beam.origin);
 
 		/* make a random orientation */
 		angles[0] = rand() % 360;
@@ -1120,27 +1120,27 @@ CG_LightningBolt(centity_t *cent, vec3_t origin)
  *      memset( &beam, 0, sizeof( beam ) );
  *
  *      // find muzzle point for this frame
- *      VectorCopy( cent->lerpOrigin, muzzlePoint );
+ *      Vec3Copy( cent->lerpOrigin, muzzlePoint );
  *      AngleVectors( cent->lerpAngles, forward, NULL, NULL );
  *
  *      // FIXME: crouch
  *      muzzlePoint[2] += DEFAULT_VIEWHEIGHT;
  *
- *      VectorMA( muzzlePoint, 14, forward, muzzlePoint );
+ *      Vec3MA( muzzlePoint, 14, forward, muzzlePoint );
  *
  *      // project forward by the lightning range
- *      VectorMA( muzzlePoint, LIGHTNING_RANGE, forward, endPoint );
+ *      Vec3MA( muzzlePoint, LIGHTNING_RANGE, forward, endPoint );
  *
  *      // see if it hit a wall
  *      CG_Trace( &trace, muzzlePoint, vec3_origin, vec3_origin, endPoint,
  *              cent->currentState.number, MASK_SHOT );
  *
  *      // this is the endpoint
- *      VectorCopy( trace.endpos, beam.oldorigin );
+ *      Vec3Copy( trace.endpos, beam.oldorigin );
  *
  *      // use the provided origin, even though it may be slightly
  *      // different than the muzzle origin
- *      VectorCopy( origin, beam.origin );
+ *      Vec3Copy( origin, beam.origin );
  *
  *      beam.reType = RT_LIGHTNING;
  *      beam.customShader = cgs.media.lightningShader;
@@ -1151,13 +1151,13 @@ CG_LightningBolt(centity_t *cent, vec3_t origin)
  *              vec3_t	angles;
  *              vec3_t	dir;
  *
- *              VectorSubtract( beam.oldorigin, beam.origin, dir );
- *              VectorNormalize( dir );
+ *              Vec3Sub( beam.oldorigin, beam.origin, dir );
+ *              Vec3Normalize( dir );
  *
  *              memset( &beam, 0, sizeof( beam ) );
  *              beam.hModel = cgs.media.lightningExplosionModel;
  *
- *              VectorMA( trace.endpos, -16, dir, beam.origin );
+ *              Vec3MA( trace.endpos, -16, dir, beam.origin );
  *
  *              // make a random orientation
  *              angles[0] = rand() % 360;
@@ -1268,7 +1268,7 @@ CG_AddPlayerWeapon(refEntity_t *parent, playerState_t *ps, centity_t *cent,
 
 	/* add the weapon */
 	memset(&gun, 0, sizeof(gun));
-	VectorCopy(parent->lightingOrigin, gun.lightingOrigin);
+	Vec3Copy(parent->lightingOrigin, gun.lightingOrigin);
 	gun.shadowPlane = parent->shadowPlane;
 	gun.renderfx = parent->renderfx;
 
@@ -1308,19 +1308,19 @@ CG_AddPlayerWeapon(refEntity_t *parent, playerState_t *ps, centity_t *cent,
 
 	trap_R_LerpTag(&lerped, parent->hModel, parent->oldframe, parent->frame,
 		1.0 - parent->backlerp, "tag_weapon");
-	VectorCopy(parent->origin, gun.origin);
+	Vec3Copy(parent->origin, gun.origin);
 
-	VectorMA(gun.origin, lerped.origin[0], parent->axis[0], gun.origin);
+	Vec3MA(gun.origin, lerped.origin[0], parent->axis[0], gun.origin);
 
 	/* Make weapon appear left-handed for 2 and centered for 3 */
 	if(ps && cg_drawGun.integer == 2)
-		VectorMA(gun.origin, -lerped.origin[1], parent->axis[1],
+		Vec3MA(gun.origin, -lerped.origin[1], parent->axis[1],
 			gun.origin);
 	else if(!ps || cg_drawGun.integer != 3)
-		VectorMA(gun.origin, lerped.origin[1], parent->axis[1],
+		Vec3MA(gun.origin, lerped.origin[1], parent->axis[1],
 			gun.origin);
 
-	VectorMA(gun.origin, lerped.origin[2], parent->axis[2], gun.origin);
+	Vec3MA(gun.origin, lerped.origin[2], parent->axis[2], gun.origin);
 
 	MatrixMultiply(lerped.axis, ((refEntity_t*)parent)->axis, gun.axis);
 	gun.backlerp = parent->backlerp;
@@ -1330,7 +1330,7 @@ CG_AddPlayerWeapon(refEntity_t *parent, playerState_t *ps, centity_t *cent,
 	/* add the spinning barrel */
 	if(weapon->barrelModel){
 		memset(&barrel, 0, sizeof(barrel));
-		VectorCopy(parent->lightingOrigin, barrel.lightingOrigin);
+		Vec3Copy(parent->lightingOrigin, barrel.lightingOrigin);
 		barrel.shadowPlane = parent->shadowPlane;
 		barrel.renderfx = parent->renderfx;
 
@@ -1367,7 +1367,7 @@ CG_AddPlayerWeapon(refEntity_t *parent, playerState_t *ps, centity_t *cent,
 
 
 	memset(&flash, 0, sizeof(flash));
-	VectorCopy(parent->lightingOrigin, flash.lightingOrigin);
+	Vec3Copy(parent->lightingOrigin, flash.lightingOrigin);
 	flash.shadowPlane = parent->shadowPlane;
 	flash.renderfx = parent->renderfx;
 
@@ -1440,8 +1440,8 @@ CG_AddViewWeapon(playerState_t *ps)
 
 		if(cg.predictedPlayerState.eFlags & EF_FIRING){
 			/* special hack for lightning gun... */
-			VectorCopy(cg.refdef.vieworg, origin);
-			VectorMA(origin, -8, cg.refdef.viewaxis[2], origin);
+			Vec3Copy(cg.refdef.vieworg, origin);
+			Vec3MA(origin, -8, cg.refdef.viewaxis[2], origin);
 			CG_LightningBolt(&cg_entities[ps->clientNum], origin);
 		}
 		return;
@@ -1466,9 +1466,9 @@ CG_AddViewWeapon(playerState_t *ps)
 	/* set up gun position */
 	CG_CalculateWeaponPosition(hand.origin, angles);
 
-	VectorMA(hand.origin, cg_gun_x.value, cg.refdef.viewaxis[0], hand.origin);
-	VectorMA(hand.origin, cg_gun_y.value, cg.refdef.viewaxis[1], hand.origin);
-	VectorMA(hand.origin, (cg_gun_z.value+fovOffset), cg.refdef.viewaxis[2],
+	Vec3MA(hand.origin, cg_gun_x.value, cg.refdef.viewaxis[0], hand.origin);
+	Vec3MA(hand.origin, cg_gun_y.value, cg.refdef.viewaxis[1], hand.origin);
+	Vec3MA(hand.origin, (cg_gun_z.value+fovOffset), cg.refdef.viewaxis[2],
 		hand.origin);
 
 	AnglesToAxis(angles, hand.axis);
@@ -1850,7 +1850,7 @@ CG_MissileHitWall(int weapon, int clientNum, vec3_t origin, vec3_t dir,
 		lightColor[2]	= 0.0;
 		if(cg_oldRocket.integer == 0){
 			/* explosion sprite animation */
-			VectorMA(origin, 24, dir, sprOrg);
+			Vec3MA(origin, 24, dir, sprOrg);
 			VectorScale(dir, 64, sprVel);
 
 			CG_ParticleExplosion("explode1", sprOrg, sprVel, 1400,
@@ -1932,10 +1932,10 @@ CG_MissileHitWall(int weapon, int clientNum, vec3_t origin, vec3_t dir,
 			mod, shader,
 			duration, isSprite);
 		le->light = light;
-		VectorCopy(lightColor, le->lightColor);
+		Vec3Copy(lightColor, le->lightColor);
 		if(weapon == WP_RAILGUN){
 			/* colorize with client color */
-			VectorCopy(cgs.clientinfo[clientNum].color1, le->color);
+			Vec3Copy(cgs.clientinfo[clientNum].color1, le->color);
 			le->refEntity.shaderRGBA[0] = le->color[0] * 0xff;
 			le->refEntity.shaderRGBA[1] = le->color[1] * 0xff;
 			le->refEntity.shaderRGBA[2] = le->color[2] * 0xff;
@@ -2066,17 +2066,17 @@ CG_ShotgunPattern(vec3_t origin, vec3_t origin2, int seed, int otherEntNum)
 
 	/* derive the right and up vectors from the forward vector, because
 	 * the client won't have any other information */
-	VectorNormalize2(origin2, forward);
+	Vec3Normalize2(origin2, forward);
 	PerpendicularVector(right, forward);
-	CrossProduct(forward, right, up);
+	Vec3Cross(forward, right, up);
 
 	/* generate the "random" spread pattern */
 	for(i = 0; i < DEFAULT_SHOTGUN_COUNT; i++){
 		r = Q_crandom(&seed) * DEFAULT_SHOTGUN_SPREAD * 16;
 		u = Q_crandom(&seed) * DEFAULT_SHOTGUN_SPREAD * 16;
-		VectorMA(origin, 8192 * 16, forward, end);
-		VectorMA (end, r, right, end);
-		VectorMA (end, u, up, end);
+		Vec3MA(origin, 8192 * 16, forward, end);
+		Vec3MA (end, r, right, end);
+		Vec3MA (end, u, up, end);
 
 		CG_ShotgunPellet(origin, end, otherEntNum);
 	}
@@ -2091,10 +2091,10 @@ CG_ShotgunFire(entityState_t *es)
 	vec3_t	v;
 	int	contents;
 
-	VectorSubtract(es->origin2, es->pos.trBase, v);
-	VectorNormalize(v);
+	Vec3Sub(es->origin2, es->pos.trBase, v);
+	Vec3Normalize(v);
 	VectorScale(v, 32, v);
-	VectorAdd(es->pos.trBase, v, v);
+	Vec3Add(es->pos.trBase, v, v);
 	if(cgs.glconfig.hardwareType != GLHW_RAGEPRO){
 		/* ragepro can't alpha fade, so don't even bother with smoke */
 		vec3_t up;
@@ -2132,8 +2132,8 @@ CG_Tracer(vec3_t source, vec3_t dest)
 	vec3_t	midpoint;
 
 	/* tracer */
-	VectorSubtract(dest, source, forward);
-	len = VectorNormalize(forward);
+	Vec3Sub(dest, source, forward);
+	len = Vec3Normalize(forward);
 
 	/* start at least a little ways from the muzzle */
 	if(len < 100)
@@ -2142,17 +2142,17 @@ CG_Tracer(vec3_t source, vec3_t dest)
 	end	= begin + cg_tracerLength.value;
 	if(end > len)
 		end = len;
-	VectorMA(source, begin, forward, start);
-	VectorMA(source, end, forward, finish);
+	Vec3MA(source, begin, forward, start);
+	Vec3MA(source, end, forward, finish);
 
-	line[0] = DotProduct(forward, cg.refdef.viewaxis[1]);
-	line[1] = DotProduct(forward, cg.refdef.viewaxis[2]);
+	line[0] = Vec3Dot(forward, cg.refdef.viewaxis[1]);
+	line[1] = Vec3Dot(forward, cg.refdef.viewaxis[2]);
 
 	VectorScale(cg.refdef.viewaxis[1], line[1], right);
-	VectorMA(right, -line[0], cg.refdef.viewaxis[2], right);
-	VectorNormalize(right);
+	Vec3MA(right, -line[0], cg.refdef.viewaxis[2], right);
+	Vec3Normalize(right);
 
-	VectorMA(finish, cg_tracerWidth.value, right, verts[0].xyz);
+	Vec3MA(finish, cg_tracerWidth.value, right, verts[0].xyz);
 	verts[0].st[0]	= 0;
 	verts[0].st[1]	= 1;
 	verts[0].modulate[0] = 255;
@@ -2160,7 +2160,7 @@ CG_Tracer(vec3_t source, vec3_t dest)
 	verts[0].modulate[2] = 255;
 	verts[0].modulate[3] = 255;
 
-	VectorMA(finish, -cg_tracerWidth.value, right, verts[1].xyz);
+	Vec3MA(finish, -cg_tracerWidth.value, right, verts[1].xyz);
 	verts[1].st[0]	= 1;
 	verts[1].st[1]	= 0;
 	verts[1].modulate[0] = 255;
@@ -2168,7 +2168,7 @@ CG_Tracer(vec3_t source, vec3_t dest)
 	verts[1].modulate[2] = 255;
 	verts[1].modulate[3] = 255;
 
-	VectorMA(start, -cg_tracerWidth.value, right, verts[2].xyz);
+	Vec3MA(start, -cg_tracerWidth.value, right, verts[2].xyz);
 	verts[2].st[0]	= 1;
 	verts[2].st[1]	= 1;
 	verts[2].modulate[0] = 255;
@@ -2176,7 +2176,7 @@ CG_Tracer(vec3_t source, vec3_t dest)
 	verts[2].modulate[2] = 255;
 	verts[2].modulate[3] = 255;
 
-	VectorMA(start, cg_tracerWidth.value, right, verts[3].xyz);
+	Vec3MA(start, cg_tracerWidth.value, right, verts[3].xyz);
 	verts[3].st[0]	= 0;
 	verts[3].st[1]	= 0;
 	verts[3].modulate[0] = 255;
@@ -2208,10 +2208,10 @@ CG_CalcMuzzlePoint(int entityNum, vec3_t muzzle)
 	int	anim;
 
 	if(entityNum == cg.snap->ps.clientNum){
-		VectorCopy(cg.snap->ps.origin, muzzle);
+		Vec3Copy(cg.snap->ps.origin, muzzle);
 		muzzle[2] += cg.snap->ps.viewheight;
 		AngleVectors(cg.snap->ps.viewangles, forward, NULL, NULL);
-		VectorMA(muzzle, 14, forward, muzzle);
+		Vec3MA(muzzle, 14, forward, muzzle);
 		return qtrue;
 	}
 
@@ -2219,7 +2219,7 @@ CG_CalcMuzzlePoint(int entityNum, vec3_t muzzle)
 	if(!cent->currentValid)
 		return qfalse;
 
-	VectorCopy(cent->currentState.pos.trBase, muzzle);
+	Vec3Copy(cent->currentState.pos.trBase, muzzle);
 
 	AngleVectors(cent->currentState.apos.trBase, forward, NULL, NULL);
 	anim = cent->currentState.legsAnim & ~ANIM_TOGGLEBIT;
@@ -2228,7 +2228,7 @@ CG_CalcMuzzlePoint(int entityNum, vec3_t muzzle)
 	else
 		muzzle[2] += DEFAULT_VIEWHEIGHT;
 
-	VectorMA(muzzle, 14, forward, muzzle);
+	Vec3MA(muzzle, 14, forward, muzzle);
 
 	return qtrue;
 

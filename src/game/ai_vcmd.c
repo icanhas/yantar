@@ -267,7 +267,7 @@ BotVoiceChat_Camp(bot_state_t *bs, int client, int mode)
 			 * if (BotEntityVisible(bs->entitynum, bs->eye, bs->viewangles, 360, client)) { */
 			bs->teamgoal.entitynum	= client;
 			bs->teamgoal.areanum	= areanum;
-			VectorCopy(entinfo.origin, bs->teamgoal.origin);
+			Vec3Copy(entinfo.origin, bs->teamgoal.origin);
 			VectorSet(bs->teamgoal.mins, -8, -8, -8);
 			VectorSet(bs->teamgoal.maxs, 8, 8, 8);
 			/* } */
@@ -321,7 +321,7 @@ BotVoiceChat_FollowMe(bot_state_t *bs, int client, int mode)
 		if(areanum){	/* && trap_AAS_AreaReachability(areanum)) { */
 			bs->teamgoal.entitynum	= client;
 			bs->teamgoal.areanum	= areanum;
-			VectorCopy(entinfo.origin, bs->teamgoal.origin);
+			Vec3Copy(entinfo.origin, bs->teamgoal.origin);
 			VectorSet(bs->teamgoal.mins, -8, -8, -8);
 			VectorSet(bs->teamgoal.maxs, 8, 8, 8);
 		}

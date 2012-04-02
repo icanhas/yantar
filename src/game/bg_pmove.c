@@ -142,7 +142,7 @@ PM_ClipVelocity(vec3_t in, vec3_t normal, vec3_t out, float overbounce)
 	float	change;
 	int	i;
 
-	backoff = DotProduct (in, normal);
+	backoff = Vec3Dot (in, normal);
 
 	if(backoff < 0)
 		backoff *= overbounce;
@@ -171,11 +171,11 @@ PM_Friction(void)
 
 	vel = pm->ps->velocity;
 
-	VectorCopy(vel, vec);
+	Vec3Copy(vel, vec);
 	if(pml.walking)
 		vec[2] = 0;	/* ignore slope movement */
 
-	speed = VectorLength(vec);
+	speed = Vec3Len(vec);
 	if(speed < 1){
 		vel[0]	= 0;
 		vel[1]	= 0;	/* allow sinking underwater */
@@ -232,7 +232,7 @@ PM_Accelerate(vec3_t wishdir, float wishspeed, float accel)
 	int i;
 	float addspeed, accelspeed, currentspeed;
 
-	currentspeed = DotProduct (pm->ps->velocity, wishdir);
+	currentspeed = Vec3Dot (pm->ps->velocity, wishdir);
 	addspeed = wishspeed - currentspeed;
 	if(addspeed <= 0)
 		return;
@@ -251,14 +251,14 @@ PM_Accelerate(vec3_t wishdir, float wishspeed, float accel)
 	float	canPush;
 
 	VectorScale(wishdir, wishspeed, wishVelocity);
-	VectorSubtract(wishVelocity, pm->ps->velocity, pushDir);
-	pushLen = VectorNormalize(pushDir);
+	Vec3Sub(wishVelocity, pm->ps->velocity, pushDir);
+	pushLen = Vec3Normalize(pushDir);
 
 	canPush = accel*pml.frametime*wishspeed;
 	if(canPush > pushLen)
 		canPush = pushLen;
 
-	VectorMA(pm->ps->velocity, canPush, pushDir, pm->ps->velocity);
+	Vec3MA(pm->ps->velocity, canPush, pushDir, pm->ps->velocity);
 #endif
 }
 
@@ -391,9 +391,9 @@ PM_CheckWaterJump(void)
 	flatforward[0]	= pml.forward[0];
 	flatforward[1]	= pml.forward[1];
 	flatforward[2]	= 0;
-	VectorNormalize (flatforward);
+	Vec3Normalize (flatforward);
 
-	VectorMA (pm->ps->origin, 30, flatforward, spot);
+	Vec3MA (pm->ps->origin, 30, flatforward, spot);
 	spot[2] += 4;
 	cont = pm->pointcontents (spot, pm->ps->clientNum);
 	if(!(cont & CONTENTS_SOLID))
@@ -487,8 +487,8 @@ PM_WaterMove(void)
 		wishvel[2] += scale * pm->cmd.upmove;
 	}
 
-	VectorCopy (wishvel, wishdir);
-	wishspeed = VectorNormalize(wishdir);
+	Vec3Copy (wishvel, wishdir);
+	wishspeed = Vec3Normalize(wishdir);
 
 	if(wishspeed > pm->ps->speed * pm_swimScale)
 		wishspeed = pm->ps->speed * pm_swimScale;
@@ -497,13 +497,13 @@ PM_WaterMove(void)
 
 	/* make sure we can go up slopes easily under water */
 	if(pml.groundPlane &&
-	   DotProduct(pm->ps->velocity, pml.groundTrace.plane.normal) < 0){
-		vel = VectorLength(pm->ps->velocity);
+	   Vec3Dot(pm->ps->velocity, pml.groundTrace.plane.normal) < 0){
+		vel = Vec3Len(pm->ps->velocity);
 		/* slide along the ground plane */
 		PM_ClipVelocity (pm->ps->velocity, pml.groundTrace.plane.normal,
 			pm->ps->velocity, OVERCLIP);
 
-		VectorNormalize(pm->ps->velocity);
+		Vec3Normalize(pm->ps->velocity);
 		VectorScale(pm->ps->velocity, vel, pm->ps->velocity);
 	}
 
@@ -560,8 +560,8 @@ PM_FlyMove(void)
 		wishvel[2] += scale * pm->cmd.upmove;
 	}
 
-	VectorCopy (wishvel, wishdir);
-	wishspeed = VectorNormalize(wishdir);
+	Vec3Copy (wishvel, wishdir);
+	wishspeed = Vec3Normalize(wishdir);
 
 	PM_Accelerate (wishdir, wishspeed, pm_flyaccelerate);
 
@@ -598,15 +598,15 @@ PM_AirMove(void)
 	/* project moves down to flat plane */
 	pml.forward[2]	= 0;
 	pml.right[2]	= 0;
-	VectorNormalize (pml.forward);
-	VectorNormalize (pml.right);
+	Vec3Normalize (pml.forward);
+	Vec3Normalize (pml.right);
 
 	for(i = 0; i < 2; i++)
 		wishvel[i] = pml.forward[i]*fmove + pml.right[i]*smove;
 	wishvel[2] = 0;
 
-	VectorCopy (wishvel, wishdir);
-	wishspeed	= VectorNormalize(wishdir);
+	Vec3Copy (wishvel, wishdir);
+	wishspeed	= Vec3Normalize(wishdir);
 	wishspeed	*= scale;
 
 	/* not on ground, so little effect on velocity */
@@ -643,17 +643,17 @@ PM_GrappleMove(void)
 	float	vlen;
 
 	VectorScale(pml.forward, -16, v);
-	VectorAdd(pm->ps->grapplePoint, v, v);
-	VectorSubtract(v, pm->ps->origin, vel);
-	vlen = VectorLength(vel);
-	VectorNormalize(vel);
+	Vec3Add(pm->ps->grapplePoint, v, v);
+	Vec3Sub(v, pm->ps->origin, vel);
+	vlen = Vec3Len(vel);
+	Vec3Normalize(vel);
 
 	if(vlen <= 100)
 		VectorScale(vel, 10 * vlen, vel);
 	else
 		VectorScale(vel, 800, vel);
 
-	VectorCopy(vel, pm->ps->velocity);
+	Vec3Copy(vel, pm->ps->velocity);
 
 	pml.groundPlane = qfalse;
 }
@@ -676,7 +676,7 @@ PM_WalkMove(void)
 	float	vel;
 
 	if(pm->waterlevel > 2 &&
-	   DotProduct(pml.forward, pml.groundTrace.plane.normal) > 0){
+	   Vec3Dot(pml.forward, pml.groundTrace.plane.normal) > 0){
 		/* begin swimming */
 		PM_WaterMove();
 		return;
@@ -713,16 +713,16 @@ PM_WalkMove(void)
 	PM_ClipVelocity (pml.right, pml.groundTrace.plane.normal, pml.right,
 		OVERCLIP);
 	/*  */
-	VectorNormalize (pml.forward);
-	VectorNormalize (pml.right);
+	Vec3Normalize (pml.forward);
+	Vec3Normalize (pml.right);
 
 	for(i = 0; i < 3; i++)
 		wishvel[i] = pml.forward[i]*fmove + pml.right[i]*smove;
 	/* when going up or down slopes the wish velocity should Not be zero */
 /*	wishvel[2] = 0; */
 
-	VectorCopy (wishvel, wishdir);
-	wishspeed	= VectorNormalize(wishdir);
+	Vec3Copy (wishvel, wishdir);
+	wishspeed	= Vec3Normalize(wishdir);
 	wishspeed	*= scale;
 
 	/* clamp the speed lower if ducking */
@@ -751,7 +751,7 @@ PM_WalkMove(void)
 	PM_Accelerate (wishdir, wishspeed, accelerate);
 
 	/* Com_Printf("velocity = %1.1f %1.1f %1.1f\n", pm->ps->velocity[0], pm->ps->velocity[1], pm->ps->velocity[2]);
-	 * Com_Printf("velocity1 = %1.1f\n", VectorLength(pm->ps->velocity)); */
+	 * Com_Printf("velocity1 = %1.1f\n", Vec3Len(pm->ps->velocity)); */
 
 	if((pml.groundTrace.surfaceFlags &
 	    SURF_SLICK) || pm->ps->pm_flags & PMF_TIME_KNOCKBACK)
@@ -761,14 +761,14 @@ PM_WalkMove(void)
 /*		pm->ps->velocity[2] = 0; */
 	}
 
-	vel = VectorLength(pm->ps->velocity);
+	vel = Vec3Len(pm->ps->velocity);
 
 	/* slide along the ground plane */
 	PM_ClipVelocity (pm->ps->velocity, pml.groundTrace.plane.normal,
 		pm->ps->velocity, OVERCLIP);
 
 	/* don't decrease velocity when going up or down a slope */
-	VectorNormalize(pm->ps->velocity);
+	Vec3Normalize(pm->ps->velocity);
 	VectorScale(pm->ps->velocity, vel, pm->ps->velocity);
 
 	/* don't do anything if standing still */
@@ -777,7 +777,7 @@ PM_WalkMove(void)
 
 	PM_StepSlideMove(qfalse);
 
-	/* Com_Printf("velocity2 = %1.1f\n", VectorLength(pm->ps->velocity)); */
+	/* Com_Printf("velocity2 = %1.1f\n", Vec3Len(pm->ps->velocity)); */
 
 }
 
@@ -795,12 +795,12 @@ PM_DeadMove(void)
 
 	/* extra friction */
 
-	forward = VectorLength (pm->ps->velocity);
+	forward = Vec3Len (pm->ps->velocity);
 	forward -= 20;
 	if(forward <= 0)
 		VectorClear (pm->ps->velocity);
 	else{
-		VectorNormalize (pm->ps->velocity);
+		Vec3Normalize (pm->ps->velocity);
 		VectorScale (pm->ps->velocity, forward, pm->ps->velocity);
 	}
 }
@@ -824,9 +824,9 @@ PM_NoclipMove(void)
 
 	/* friction */
 
-	speed = VectorLength (pm->ps->velocity);
+	speed = Vec3Len (pm->ps->velocity);
 	if(speed < 1)
-		VectorCopy (vec3_origin, pm->ps->velocity);
+		Vec3Copy (vec3_origin, pm->ps->velocity);
 	else{
 		drop = 0;
 
@@ -853,14 +853,14 @@ PM_NoclipMove(void)
 		wishvel[i] = pml.forward[i]*fmove + pml.right[i]*smove;
 	wishvel[2] += pm->cmd.upmove;
 
-	VectorCopy (wishvel, wishdir);
-	wishspeed	= VectorNormalize(wishdir);
+	Vec3Copy (wishvel, wishdir);
+	wishspeed	= Vec3Normalize(wishdir);
 	wishspeed	*= scale;
 
 	PM_Accelerate(wishdir, wishspeed, pm_accelerate);
 
 	/* move */
-	VectorMA (pm->ps->origin, pml.frametime, pm->ps->velocity,
+	Vec3MA (pm->ps->origin, pml.frametime, pm->ps->velocity,
 		pm->ps->origin);
 }
 
@@ -989,7 +989,7 @@ PM_CorrectAllSolid(trace_t *trace)
 	for(i = -1; i <= 1; i++){
 		for(j = -1; j <= 1; j++)
 			for(k = -1; k <= 1; k++){
-				VectorCopy(pm->ps->origin, point);
+				Vec3Copy(pm->ps->origin, point);
 				point[0]	+= (float)i;
 				point[1]	+= (float)j;
 				point[2]	+= (float)k;
@@ -1038,7 +1038,7 @@ PM_GroundTraceMissed(void)
 
 		/* if they aren't in a jumping animation and the ground is a ways away, force into it
 		 * if we didn't do the trace, the player would be backflipping down staircases */
-		VectorCopy(pm->ps->origin, point);
+		Vec3Copy(pm->ps->origin, point);
 		point[2] -= 64.0f;
 
 		pm->trace (&trace, pm->ps->origin, pm->mins, pm->maxs, point,
@@ -1094,7 +1094,7 @@ PM_GroundTrace(void)
 
 	/* check if getting thrown off the ground */
 	if(pm->ps->velocity[2] > 0 &&
-	   DotProduct(pm->ps->velocity, trace.plane.normal) > 10){
+	   Vec3Dot(pm->ps->velocity, trace.plane.normal) > 10){
 		if(pm->debugLevel)
 			Com_Printf("%i:kickoff\n", c_pmove);
 		/* go into jump animation */
@@ -1818,10 +1818,10 @@ PmoveSingle(pmove_t *pmove)
 	pm->ps->commandTime = pmove->cmd.serverTime;
 
 	/* save old org in case we get stuck */
-	VectorCopy (pm->ps->origin, pml.previous_origin);
+	Vec3Copy (pm->ps->origin, pml.previous_origin);
 
 	/* save old velocity for crashlanding */
-	VectorCopy (pm->ps->velocity, pml.previous_velocity);
+	Vec3Copy (pm->ps->velocity, pml.previous_velocity);
 
 	pml.frametime = pml.msec * 0.001;
 

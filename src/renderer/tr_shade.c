@@ -287,7 +287,7 @@ DrawNormals(shaderCommands_t *input)
 	qglBegin (GL_LINES);
 	for(i = 0; i < input->numVertexes; i++){
 		qglVertex3fv (input->xyz[i]);
-		VectorMA (input->xyz[i], 2, input->normal[i], temp);
+		Vec3MA (input->xyz[i], 2, input->normal[i], temp);
 		qglVertex3fv (temp);
 	}
 	qglEnd ();
@@ -600,7 +600,7 @@ ProjectDlightTexture_scalar(void)
 		colors = colorArray[0];
 
 		dl = &backEnd.refdef.dlights[l];
-		VectorCopy(dl->transformed, origin);
+		Vec3Copy(dl->transformed, origin);
 		radius	= dl->radius;
 		scale	= 1.0f / radius;
 
@@ -626,7 +626,7 @@ ProjectDlightTexture_scalar(void)
 			int clip = 0;
 			vec3_t dist;
 
-			VectorSubtract(origin, tess.xyz[i], dist);
+			Vec3Sub(origin, tess.xyz[i], dist);
 
 			backEnd.pc.c_dlightVertexes++;
 
@@ -896,8 +896,8 @@ ComputeColors(shaderStage_t *pStage)
 			float len;
 			vec3_t v;
 
-			VectorSubtract(tess.xyz[i], backEnd.viewParms.or.origin, v);
-			len = VectorLength(v);
+			Vec3Sub(tess.xyz[i], backEnd.viewParms.or.origin, v);
+			len = Vec3Len(v);
 
 			len /= tess.shader->portalRange;
 
@@ -988,9 +988,9 @@ ComputeTexCoords(shaderStage_t *pStage)
 			break;
 		case TCGEN_VECTOR:
 			for(i = 0; i < tess.numVertexes; i++){
-				tess.svars.texcoords[b][i][0]	= DotProduct(
+				tess.svars.texcoords[b][i][0]	= Vec3Dot(
 					tess.xyz[i], pStage->bundle[b].tcGenVectors[0]);
-				tess.svars.texcoords[b][i][1]	= DotProduct(
+				tess.svars.texcoords[b][i][1]	= Vec3Dot(
 					tess.xyz[i], pStage->bundle[b].tcGenVectors[1]);
 			}
 			break;

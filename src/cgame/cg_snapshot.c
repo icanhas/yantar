@@ -38,8 +38,8 @@ CG_ResetEntity(centity_t *cent)
 
 	cent->trailTime = cg.snap->serverTime;
 
-	VectorCopy (cent->currentState.origin, cent->lerpOrigin);
-	VectorCopy (cent->currentState.angles, cent->lerpAngles);
+	Vec3Copy (cent->currentState.origin, cent->lerpOrigin);
+	Vec3Copy (cent->currentState.angles, cent->lerpAngles);
 	if(cent->currentState.eType == ET_PLAYER)
 		CG_ResetPlayerEntity(cent);
 }

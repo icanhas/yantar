@@ -432,15 +432,15 @@ S_SpatializeOrigin(vec3_t origin, int master_vol, int *left_vol, int *right_vol)
 	const float dist_mult = SOUND_ATTENUATE;
 
 	/* calculate stereo seperation and distance attenuation */
-	VectorSubtract(origin, listener_origin, source_vec);
+	Vec3Sub(origin, listener_origin, source_vec);
 
-	dist = VectorNormalize(source_vec);
+	dist = Vec3Normalize(source_vec);
 	dist -= SOUND_FULLVOLUME;
 	if(dist < 0)
 		dist = 0;	/* close enough to be at full volume */
 	dist *= dist_mult;	/* different attenuation levels */
 
-	VectorRotate(source_vec, listener_axis, vec);
+	Vec3Rotate(source_vec, listener_axis, vec);
 
 	dot = -vec[1];
 
@@ -578,7 +578,7 @@ S_Base_StartSound(vec3_t origin, int entityNum, int entchannel,
 	}
 
 	if(origin){
-		VectorCopy (origin, ch->origin);
+		Vec3Copy (origin, ch->origin);
 		ch->fixed_origin = qtrue;
 	}else
 		ch->fixed_origin = qfalse;
@@ -726,8 +726,8 @@ S_Base_AddLoopingSound(int entityNum, const vec3_t origin, const vec3_t velocity
 	if(!sfx->soundLength)
 		Com_Error(ERR_DROP, "%s has length 0", sfx->soundName);
 
-	VectorCopy(origin, loopSounds[entityNum].origin);
-	VectorCopy(velocity, loopSounds[entityNum].velocity);
+	Vec3Copy(origin, loopSounds[entityNum].origin);
+	Vec3Copy(velocity, loopSounds[entityNum].velocity);
 	loopSounds[entityNum].active = qtrue;
 	loopSounds[entityNum].kill = qtrue;
 	loopSounds[entityNum].doppler = qfalse;
@@ -735,17 +735,17 @@ S_Base_AddLoopingSound(int entityNum, const vec3_t origin, const vec3_t velocity
 	loopSounds[entityNum].dopplerScale = 1.0;
 	loopSounds[entityNum].sfx = sfx;
 
-	if(s_doppler->integer && VectorLengthSquared(velocity)>0.0){
+	if(s_doppler->integer && Vec3LenSquared(velocity)>0.0){
 		vec3_t	out;
 		float	lena, lenb;
 
 		loopSounds[entityNum].doppler = qtrue;
-		lena = DistanceSquared(loopSounds[listener_number].origin,
+		lena = Vec3DistanceSquared(loopSounds[listener_number].origin,
 			loopSounds[entityNum].origin);
-		VectorAdd(loopSounds[entityNum].origin,
+		Vec3Add(loopSounds[entityNum].origin,
 			loopSounds[entityNum].velocity,
 			out);
-		lenb = DistanceSquared(loopSounds[listener_number].origin, out);
+		lenb = Vec3DistanceSquared(loopSounds[listener_number].origin, out);
 		if((loopSounds[entityNum].framenum+1) != cls.framecount)
 			loopSounds[entityNum].oldDopplerScale = 1.0;
 		else
@@ -792,8 +792,8 @@ S_Base_AddRealLoopingSound(int entityNum, const vec3_t origin,
 
 	if(!sfx->soundLength)
 		Com_Error(ERR_DROP, "%s has length 0", sfx->soundName);
-	VectorCopy(origin, loopSounds[entityNum].origin);
-	VectorCopy(velocity, loopSounds[entityNum].velocity);
+	Vec3Copy(origin, loopSounds[entityNum].origin);
+	Vec3Copy(velocity, loopSounds[entityNum].velocity);
 	loopSounds[entityNum].sfx = sfx;
 	loopSounds[entityNum].active = qtrue;
 	loopSounds[entityNum].kill = qfalse;
@@ -1029,7 +1029,7 @@ S_Base_UpdateEntityPosition(int entityNum, const vec3_t origin)
 	if((entityNum < 0) || (entityNum >= MAX_GENTITIES))
 		Com_Error(ERR_DROP, "S_UpdateEntityPosition: bad entitynum %i",
 			entityNum);
-	VectorCopy(origin, loopSounds[entityNum].origin);
+	Vec3Copy(origin, loopSounds[entityNum].origin);
 }
 
 
@@ -1050,10 +1050,10 @@ S_Base_Respatialize(int entityNum, const vec3_t head, vec3_t axis[3],
 		return;
 
 	listener_number = entityNum;
-	VectorCopy(head, listener_origin);
-	VectorCopy(axis[0], listener_axis[0]);
-	VectorCopy(axis[1], listener_axis[1]);
-	VectorCopy(axis[2], listener_axis[2]);
+	Vec3Copy(head, listener_origin);
+	Vec3Copy(axis[0], listener_axis[0]);
+	Vec3Copy(axis[1], listener_axis[1]);
+	Vec3Copy(axis[2], listener_axis[2]);
 
 	/* update spatialization for dynamic sounds */
 	ch = s_channels;
@@ -1066,9 +1066,9 @@ S_Base_Respatialize(int entityNum, const vec3_t head, vec3_t axis[3],
 			ch->rightvol = ch->master_vol;
 		}else{
 			if(ch->fixed_origin)
-				VectorCopy(ch->origin, origin);
+				Vec3Copy(ch->origin, origin);
 			else
-				VectorCopy(loopSounds[ ch->entnum ].origin,
+				Vec3Copy(loopSounds[ ch->entnum ].origin,
 					origin);
 
 			S_SpatializeOrigin (origin, ch->master_vol, &ch->leftvol,

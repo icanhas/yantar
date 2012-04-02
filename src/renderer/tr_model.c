@@ -1194,9 +1194,9 @@ R_LerpTag(orientation_t *tag, qhandle_t handle, int startFrame, int endFrame,
 		tag->axis[1][i] = start->axis[1][i] * backLerp +  end->axis[1][i] * frontLerp;
 		tag->axis[2][i] = start->axis[2][i] * backLerp +  end->axis[2][i] * frontLerp;
 	}
-	VectorNormalize(tag->axis[0]);
-	VectorNormalize(tag->axis[1]);
-	VectorNormalize(tag->axis[2]);
+	Vec3Normalize(tag->axis[0]);
+	Vec3Normalize(tag->axis[1]);
+	Vec3Normalize(tag->axis[2]);
 	return qtrue;
 }
 
@@ -1212,8 +1212,8 @@ R_ModelBounds(qhandle_t handle, vec3_t mins, vec3_t maxs)
 	model = R_GetModelByHandle(handle);
 
 	if(model->type == MOD_BRUSH){
-		VectorCopy(model->bmodel->bounds[0], mins);
-		VectorCopy(model->bmodel->bounds[1], maxs);
+		Vec3Copy(model->bmodel->bounds[0], mins);
+		Vec3Copy(model->bmodel->bounds[1], maxs);
 
 		return;
 	}else if(model->type == MOD_MESH){
@@ -1223,8 +1223,8 @@ R_ModelBounds(qhandle_t handle, vec3_t mins, vec3_t maxs)
 		header	= model->md3[0];
 		frame	= (md3Frame_t*)((byte*)header + header->ofsFrames);
 
-		VectorCopy(frame->bounds[0], mins);
-		VectorCopy(frame->bounds[1], maxs);
+		Vec3Copy(frame->bounds[0], mins);
+		Vec3Copy(frame->bounds[1], maxs);
 
 		return;
 	}else if(model->type == MOD_MD4){
@@ -1234,8 +1234,8 @@ R_ModelBounds(qhandle_t handle, vec3_t mins, vec3_t maxs)
 		header	= (md4Header_t*)model->modelData;
 		frame	= (md4Frame_t*)((byte*)header + header->ofsFrames);
 
-		VectorCopy(frame->bounds[0], mins);
-		VectorCopy(frame->bounds[1], maxs);
+		Vec3Copy(frame->bounds[0], mins);
+		Vec3Copy(frame->bounds[1], maxs);
 
 		return;
 #ifdef RAVENMD4
@@ -1246,8 +1246,8 @@ R_ModelBounds(qhandle_t handle, vec3_t mins, vec3_t maxs)
 		header	= (mdrHeader_t*)model->modelData;
 		frame	= (mdrFrame_t*)((byte*)header + header->ofsFrames);
 
-		VectorCopy(frame->bounds[0], mins);
-		VectorCopy(frame->bounds[1], maxs);
+		Vec3Copy(frame->bounds[0], mins);
+		Vec3Copy(frame->bounds[1], maxs);
 
 		return;
 #endif
@@ -1257,8 +1257,8 @@ R_ModelBounds(qhandle_t handle, vec3_t mins, vec3_t maxs)
 		iqmData = model->modelData;
 
 		if(iqmData->bounds){
-			VectorCopy(iqmData->bounds, mins);
-			VectorCopy(iqmData->bounds + 3, maxs);
+			Vec3Copy(iqmData->bounds, mins);
+			Vec3Copy(iqmData->bounds + 3, maxs);
 			return;
 		}
 	}

@@ -799,7 +799,7 @@ CG_LoadClientInfo(int clientNum, clientInfo_t *ci)
 static void
 CG_CopyClientInfoModel(clientInfo_t *from, clientInfo_t *to)
 {
-	VectorCopy(from->headOffset, to->headOffset);
+	Vec3Copy(from->headOffset, to->headOffset);
 	to->footsteps = from->footsteps;
 	to->gender = from->gender;
 
@@ -1441,7 +1441,7 @@ CG_PlayerAngles(centity_t *cent, vec3_t legs[3], vec3_t torso[3], vec3_t head[3]
 	int	dir, clientNum;
 	clientInfo_t *ci;
 
-	VectorCopy(cent->lerpAngles, headAngles);
+	Vec3Copy(cent->lerpAngles, headAngles);
 	headAngles[YAW] = AngleMod(headAngles[YAW]);
 	VectorClear(legsAngles);
 	VectorClear(torsoAngles);
@@ -1507,8 +1507,8 @@ CG_PlayerAngles(centity_t *cent, vec3_t legs[3], vec3_t torso[3], vec3_t head[3]
 
 
 	/* lean towards the direction of travel */
-	VectorCopy(cent->currentState.pos.trDelta, velocity);
-	speed = VectorNormalize(velocity);
+	Vec3Copy(cent->currentState.pos.trDelta, velocity);
+	speed = Vec3Normalize(velocity);
 	if(speed){
 		vec3_t	axis[3];
 		float	side;
@@ -1516,10 +1516,10 @@ CG_PlayerAngles(centity_t *cent, vec3_t legs[3], vec3_t torso[3], vec3_t head[3]
 		speed *= 0.05f;
 
 		AnglesToAxis(legsAngles, axis);
-		side = speed * DotProduct(velocity, axis[1]);
+		side = speed * Vec3Dot(velocity, axis[1]);
 		legsAngles[ROLL] -= side;
 
-		side = speed * DotProduct(velocity, axis[0]);
+		side = speed * Vec3Dot(velocity, axis[0]);
 		legsAngles[PITCH] += side;
 	}
 
@@ -1568,7 +1568,7 @@ CG_HasteTrail(centity_t *cent)
 	if(cent->trailTime < cg.time)
 		cent->trailTime = cg.time;
 
-	VectorCopy(cent->lerpOrigin, origin);
+	Vec3Copy(cent->lerpOrigin, origin);
 	origin[2] -= 16;
 
 	smoke = CG_SmokePuff(origin, vec3_origin,
@@ -1611,8 +1611,8 @@ CG_BreathPuffs(centity_t *cent, refEntity_t *head)
 		return;
 
 	VectorSet(up, 0, 0, 8);
-	VectorMA(head->origin, 8, head->axis[0], origin);
-	VectorMA(origin, -4, head->axis[2], origin);
+	Vec3MA(head->origin, 8, head->axis[0], origin);
+	Vec3MA(origin, -4, head->axis[2], origin);
 	CG_SmokePuff(origin, up, 16, 1, 1, 1, 0.66f, 1500, cg.time, cg.time +
 		400, LEF_PUFF_DONT_SCALE,
 		cgs.media.shotgunSmokePuffShader);
@@ -1643,7 +1643,7 @@ CG_DustTrail(centity_t *cent)
 	if(cent->dustTrailTime < cg.time)
 		cent->dustTrailTime = cg.time;
 
-	VectorCopy(cent->currentState.pos.trBase, end);
+	Vec3Copy(cent->currentState.pos.trBase, end);
 	end[2] -= 64;
 	CG_Trace(&tr, cent->currentState.pos.trBase, NULL, NULL, end,
 		cent->currentState.number,
@@ -1652,7 +1652,7 @@ CG_DustTrail(centity_t *cent)
 	if(!(tr.surfaceFlags & SURF_DUST))
 		return;
 
-	VectorCopy(cent->currentState.pos.trBase, end);
+	Vec3Copy(cent->currentState.pos.trBase, end);
 	end[2] -= 16;
 
 	VectorSet(vel, 0, 0, -30);
@@ -1678,13 +1678,13 @@ CG_TrailItem(centity_t *cent, qhandle_t hModel)
 	vec3_t	angles;
 	vec3_t	axis[3];
 
-	VectorCopy(cent->lerpAngles, angles);
+	Vec3Copy(cent->lerpAngles, angles);
 	angles[PITCH]	= 0;
 	angles[ROLL]	= 0;
 	AnglesToAxis(angles, axis);
 
 	memset(&ent, 0, sizeof(ent));
-	VectorMA(cent->lerpOrigin, -16, axis[0], ent.origin);
+	Vec3MA(cent->lerpOrigin, -16, axis[0], ent.origin);
 	ent.origin[2]	+= 16;
 	angles[YAW]	+= 90;
 	AnglesToAxis(angles, ent.axis);
@@ -1710,7 +1710,7 @@ CG_PlayerFlag(centity_t *cent, qhandle_t hSkin, refEntity_t *torso)
 	/* show the flag pole model */
 	memset(&pole, 0, sizeof(pole));
 	pole.hModel = cgs.media.flagPoleModel;
-	VectorCopy(torso->lightingOrigin, pole.lightingOrigin);
+	Vec3Copy(torso->lightingOrigin, pole.lightingOrigin);
 	pole.shadowPlane = torso->shadowPlane;
 	pole.renderfx = torso->renderfx;
 	CG_PositionEntityOnTag(&pole, torso, torso->hModel, "tag_flag");
@@ -1720,7 +1720,7 @@ CG_PlayerFlag(centity_t *cent, qhandle_t hSkin, refEntity_t *torso)
 	memset(&flag, 0, sizeof(flag));
 	flag.hModel = cgs.media.flagFlapModel;
 	flag.customSkin = hSkin;
-	VectorCopy(torso->lightingOrigin, flag.lightingOrigin);
+	Vec3Copy(torso->lightingOrigin, flag.lightingOrigin);
 	flag.shadowPlane = torso->shadowPlane;
 	flag.renderfx = torso->renderfx;
 
@@ -1740,22 +1740,22 @@ CG_PlayerFlag(centity_t *cent, qhandle_t hSkin, refEntity_t *torso)
 
 	if(updateangles){
 
-		VectorCopy(cent->currentState.pos.trDelta, dir);
+		Vec3Copy(cent->currentState.pos.trDelta, dir);
 		/* add gravity */
 		dir[2] += 100;
-		VectorNormalize(dir);
-		d = DotProduct(pole.axis[2], dir);
+		Vec3Normalize(dir);
+		d = Vec3Dot(pole.axis[2], dir);
 		/* if there is anough movement orthogonal to the flag pole */
 		if(fabs(d) < 0.9){
 			/*  */
-			d = DotProduct(pole.axis[0], dir);
+			d = Vec3Dot(pole.axis[0], dir);
 			if(d > 1.0f)
 				d = 1.0f;
 			else if(d < -1.0f)
 				d = -1.0f;
 			angle = acos(d);
 
-			d = DotProduct(pole.axis[1], dir);
+			d = Vec3Dot(pole.axis[1], dir);
 			if(d < 0)
 				angles[YAW] = 360 - angle * 180 / M_PI;
 			else
@@ -1765,7 +1765,7 @@ CG_PlayerFlag(centity_t *cent, qhandle_t hSkin, refEntity_t *torso)
 			if(angles[YAW] > 360)
 				angles[YAW] -= 360;
 
-			/* vectoangles( cent->currentState.pos.trDelta, tmpangles );
+			/* Vec3ToAngles( cent->currentState.pos.trDelta, tmpangles );
 			 * angles[YAW] = tmpangles[YAW] + 45 - cent->pe.torso.yawAngle;
 			 * change the yaw angle */
 			CG_SwingAngles(angles[YAW], 25, 90, 0.15f,
@@ -1774,10 +1774,10 @@ CG_PlayerFlag(centity_t *cent, qhandle_t hSkin, refEntity_t *torso)
 		}
 
 		/*
-		 * d = DotProduct(pole.axis[2], dir);
+		 * d = Vec3Dot(pole.axis[2], dir);
 		 * angle = Q_acos(d);
 		 *
-		 * d = DotProduct(pole.axis[1], dir);
+		 * d = Vec3Dot(pole.axis[1], dir);
 		 * if (d < 0) {
 		 *      angle = 360 - angle * 180 / M_PI;
 		 * }
@@ -1834,18 +1834,18 @@ CG_PlayerTokens(centity_t *cent, int renderfx)
 	/* add skulls if there are more than last time */
 	for(i = 0; i < tokens - trail->numpositions; i++){
 		for(j = trail->numpositions; j > 0; j--)
-			VectorCopy(trail->positions[j-1], trail->positions[j]);
-		VectorCopy(cent->lerpOrigin, trail->positions[0]);
+			Vec3Copy(trail->positions[j-1], trail->positions[j]);
+		Vec3Copy(cent->lerpOrigin, trail->positions[0]);
 	}
 	trail->numpositions = tokens;
 
 	/* move all the skulls along the trail */
-	VectorCopy(cent->lerpOrigin, origin);
+	Vec3Copy(cent->lerpOrigin, origin);
 	for(i = 0; i < trail->numpositions; i++){
-		VectorSubtract(trail->positions[i], origin, dir);
-		if(VectorNormalize(dir) > 30)
-			VectorMA(origin, 30, dir, trail->positions[i]);
-		VectorCopy(trail->positions[i], origin);
+		Vec3Sub(trail->positions[i], origin, dir);
+		if(Vec3Normalize(dir) > 30)
+			Vec3MA(origin, 30, dir, trail->positions[i]);
+		Vec3Copy(trail->positions[i], origin);
 	}
 
 	memset(&ent, 0, sizeof(ent));
@@ -1855,21 +1855,21 @@ CG_PlayerTokens(centity_t *cent, int renderfx)
 		ent.hModel = cgs.media.blueCubeModel;
 	ent.renderfx = renderfx;
 
-	VectorCopy(cent->lerpOrigin, origin);
+	Vec3Copy(cent->lerpOrigin, origin);
 	for(i = 0; i < trail->numpositions; i++){
-		VectorSubtract(origin, trail->positions[i], ent.axis[0]);
+		Vec3Sub(origin, trail->positions[i], ent.axis[0]);
 		ent.axis[0][2] = 0;
-		VectorNormalize(ent.axis[0]);
+		Vec3Normalize(ent.axis[0]);
 		VectorSet(ent.axis[2], 0, 0, 1);
-		CrossProduct(ent.axis[0], ent.axis[2], ent.axis[1]);
+		Vec3Cross(ent.axis[0], ent.axis[2], ent.axis[1]);
 
-		VectorCopy(trail->positions[i], ent.origin);
+		Vec3Copy(trail->positions[i], ent.origin);
 		angle =
 			(((cg.time + 500 * MAX_SKULLTRAIL - 500 *
 			   i) / 16) & 255) * (M_PI * 2) / 255;
 		ent.origin[2] += sin(angle) * 10;
 		trap_R_AddRefEntityToScene(&ent);
-		VectorCopy(trail->positions[i], origin);
+		Vec3Copy(trail->positions[i], origin);
 	}
 }
 #endif
@@ -1954,7 +1954,7 @@ CG_PlayerFloatSprite(centity_t *cent, qhandle_t shader)
 		rf = 0;
 
 	memset(&ent, 0, sizeof(ent));
-	VectorCopy(cent->lerpOrigin, ent.origin);
+	Vec3Copy(cent->lerpOrigin, ent.origin);
 	ent.origin[2] += 48;
 	ent.reType = RT_SPRITE;
 	ent.customShader = shader;
@@ -2054,7 +2054,7 @@ CG_PlayerShadow(centity_t *cent, float *shadowPlane)
 		return qfalse;
 
 	/* send a trace down from the player to the ground */
-	VectorCopy(cent->lerpOrigin, end);
+	Vec3Copy(cent->lerpOrigin, end);
 	end[2] -= SHADOW_DISTANCE;
 
 	trap_CM_BoxTrace(&trace, cent->lerpOrigin, end, mins, maxs, 0,
@@ -2073,7 +2073,7 @@ CG_PlayerShadow(centity_t *cent, float *shadowPlane)
 	alpha = 1.0 - trace.fraction;
 
 	/* hack / FPE - bogus planes?
-	 * assert( DotProduct( trace.plane.normal, trace.plane.normal ) != 0.0f ) */
+	 * assert( Vec3Dot( trace.plane.normal, trace.plane.normal ) != 0.0f ) */
 
 	/* add the mark as a temporary, so it goes directly to the renderer
 	 * without taking a spot in the cg_marks array */
@@ -2102,7 +2102,7 @@ CG_PlayerSplash(centity_t *cent)
 	if(!cg_shadows.integer)
 		return;
 
-	VectorCopy(cent->lerpOrigin, end);
+	Vec3Copy(cent->lerpOrigin, end);
 	end[2] -= 24;
 
 	/* if the feet aren't in liquid, don't make a mark
@@ -2111,7 +2111,7 @@ CG_PlayerSplash(centity_t *cent)
 	if(!(contents & (CONTENTS_WATER | CONTENTS_SLIME | CONTENTS_LAVA)))
 		return;
 
-	VectorCopy(cent->lerpOrigin, start);
+	Vec3Copy(cent->lerpOrigin, start);
 	start[2] += 32;
 
 	/* if the head isn't out of liquid, don't make a mark */
@@ -2128,7 +2128,7 @@ CG_PlayerSplash(centity_t *cent)
 		return;
 
 	/* create a mark polygon */
-	VectorCopy(trace.endpos, verts[0].xyz);
+	Vec3Copy(trace.endpos, verts[0].xyz);
 	verts[0].xyz[0] -= 32;
 	verts[0].xyz[1] -= 32;
 	verts[0].st[0]	= 0;
@@ -2138,7 +2138,7 @@ CG_PlayerSplash(centity_t *cent)
 	verts[0].modulate[2] = 255;
 	verts[0].modulate[3] = 255;
 
-	VectorCopy(trace.endpos, verts[1].xyz);
+	Vec3Copy(trace.endpos, verts[1].xyz);
 	verts[1].xyz[0] -= 32;
 	verts[1].xyz[1] += 32;
 	verts[1].st[0]	= 0;
@@ -2148,7 +2148,7 @@ CG_PlayerSplash(centity_t *cent)
 	verts[1].modulate[2] = 255;
 	verts[1].modulate[3] = 255;
 
-	VectorCopy(trace.endpos, verts[2].xyz);
+	Vec3Copy(trace.endpos, verts[2].xyz);
 	verts[2].xyz[0] += 32;
 	verts[2].xyz[1] += 32;
 	verts[2].st[0]	= 1;
@@ -2158,7 +2158,7 @@ CG_PlayerSplash(centity_t *cent)
 	verts[2].modulate[2] = 255;
 	verts[2].modulate[3] = 255;
 
-	VectorCopy(trace.endpos, verts[3].xyz);
+	Vec3Copy(trace.endpos, verts[3].xyz);
 	verts[3].xyz[0] += 32;
 	verts[3].xyz[1] -= 32;
 	verts[3].st[0]	= 1;
@@ -2233,7 +2233,7 @@ CG_LightVerts(vec3_t normal, int numVerts, polyVert_t *verts)
 	trap_R_LightForPoint(verts[0].xyz, ambientLight, directedLight, lightDir);
 
 	for(i = 0; i < numVerts; i++){
-		incoming = DotProduct (normal, lightDir);
+		incoming = Vec3Dot (normal, lightDir);
 		if(incoming <= 0){
 			verts[i].modulate[0] = ambientLight[0];
 			verts[i].modulate[1] = ambientLight[1];
@@ -2342,12 +2342,12 @@ CG_Player(centity_t *cent)
 	legs.hModel = ci->legsModel;
 	legs.customSkin = ci->legsSkin;
 
-	VectorCopy(cent->lerpOrigin, legs.origin);
+	Vec3Copy(cent->lerpOrigin, legs.origin);
 
-	VectorCopy(cent->lerpOrigin, legs.lightingOrigin);
+	Vec3Copy(cent->lerpOrigin, legs.lightingOrigin);
 	legs.shadowPlane = shadowPlane;
 	legs.renderfx = renderfx;
-	VectorCopy (legs.origin, legs.oldorigin);	/* don't positionally lerp at all */
+	Vec3Copy (legs.origin, legs.oldorigin);	/* don't positionally lerp at all */
 
 	CG_AddRefEntityWithPowerups(&legs, &cent->currentState, ci->team);
 
@@ -2364,7 +2364,7 @@ CG_Player(centity_t *cent)
 
 	torso.customSkin = ci->torsoSkin;
 
-	VectorCopy(cent->lerpOrigin, torso.lightingOrigin);
+	Vec3Copy(cent->lerpOrigin, torso.lightingOrigin);
 
 	CG_PositionRotatedEntityOnTag(&torso, &legs, ci->legsModel, "tag_torso");
 
@@ -2378,7 +2378,7 @@ CG_Player(centity_t *cent)
 
 		memset(&skull, 0, sizeof(skull));
 
-		VectorCopy(cent->lerpOrigin, skull.lightingOrigin);
+		Vec3Copy(cent->lerpOrigin, skull.lightingOrigin);
 		skull.shadowPlane = shadowPlane;
 		skull.renderfx = renderfx;
 
@@ -2391,13 +2391,13 @@ CG_Player(centity_t *cent)
 			dir[1]	= cos(angle) * 20;
 			angle	= ((cg.time / 4) & 255) * (M_PI * 2) / 255;
 			dir[2]	= 15 + sin(angle) * 8;
-			VectorAdd(torso.origin, dir, skull.origin);
+			Vec3Add(torso.origin, dir, skull.origin);
 
 			dir[2] = 0;
-			VectorCopy(dir, skull.axis[1]);
-			VectorNormalize(skull.axis[1]);
+			Vec3Copy(dir, skull.axis[1]);
+			Vec3Normalize(skull.axis[1]);
 			VectorSet(skull.axis[2], 0, 0, 1);
-			CrossProduct(skull.axis[1], skull.axis[2], skull.axis[0]);
+			Vec3Cross(skull.axis[1], skull.axis[2], skull.axis[0]);
 
 			skull.hModel = cgs.media.kamikazeHeadModel;
 			trap_R_AddRefEntityToScene(&skull);
@@ -2409,7 +2409,7 @@ CG_Player(centity_t *cent)
 			dir[0]	= cos(angle) * 20;
 			dir[1]	= sin(angle) * 20;
 			dir[2]	= cos(angle) * 20;
-			VectorAdd(torso.origin, dir, skull.origin);
+			Vec3Add(torso.origin, dir, skull.origin);
 
 			angles[0] = sin(angle) * 30;
 			angles[1] = (angle * 180 / M_PI) + 90;
@@ -2420,17 +2420,17 @@ CG_Player(centity_t *cent)
 
 			/*
 			 * dir[2] = 0;
-			 * VectorInverse(dir);
-			 * VectorCopy(dir, skull.axis[1]);
-			 * VectorNormalize(skull.axis[1]);
+			 * Vec3Inverse(dir);
+			 * Vec3Copy(dir, skull.axis[1]);
+			 * Vec3Normalize(skull.axis[1]);
 			 * VectorSet(skull.axis[2], 0, 0, 1);
-			 * CrossProduct(skull.axis[1], skull.axis[2], skull.axis[0]);
+			 * Vec3Cross(skull.axis[1], skull.axis[2], skull.axis[0]);
 			 */
 
 			skull.hModel = cgs.media.kamikazeHeadModel;
 			trap_R_AddRefEntityToScene(&skull);
 			/* flip the trail because this skull is spinning in the other direction */
-			VectorInverse(skull.axis[1]);
+			Vec3Inverse(skull.axis[1]);
 			skull.hModel = cgs.media.kamikazeHeadTrail;
 			trap_R_AddRefEntityToScene(&skull);
 
@@ -2440,7 +2440,7 @@ CG_Player(centity_t *cent)
 			dir[0]	= sin(angle) * 20;
 			dir[1]	= cos(angle) * 20;
 			dir[2]	= cos(angle) * 20;
-			VectorAdd(torso.origin, dir, skull.origin);
+			Vec3Add(torso.origin, dir, skull.origin);
 
 			angles[0] = cos(angle - 0.5 * M_PI) * 30;
 			angles[1] = 360 - (angle * 180 / M_PI);
@@ -2451,10 +2451,10 @@ CG_Player(centity_t *cent)
 
 			/*
 			 * dir[2] = 0;
-			 * VectorCopy(dir, skull.axis[1]);
-			 * VectorNormalize(skull.axis[1]);
+			 * Vec3Copy(dir, skull.axis[1]);
+			 * Vec3Normalize(skull.axis[1]);
 			 * VectorSet(skull.axis[2], 0, 0, 1);
-			 * CrossProduct(skull.axis[1], skull.axis[2], skull.axis[0]);
+			 * Vec3Cross(skull.axis[1], skull.axis[2], skull.axis[0]);
 			 */
 
 			skull.hModel = cgs.media.kamikazeHeadModel;
@@ -2470,12 +2470,12 @@ CG_Player(centity_t *cent)
 			dir[0]	= sin(angle) * 20;
 			dir[1]	= cos(angle) * 20;
 			dir[2]	= 0;
-			VectorAdd(torso.origin, dir, skull.origin);
+			Vec3Add(torso.origin, dir, skull.origin);
 
-			VectorCopy(dir, skull.axis[1]);
-			VectorNormalize(skull.axis[1]);
+			Vec3Copy(dir, skull.axis[1]);
+			Vec3Normalize(skull.axis[1]);
 			VectorSet(skull.axis[2], 0, 0, 1);
-			CrossProduct(skull.axis[1], skull.axis[2], skull.axis[0]);
+			Vec3Cross(skull.axis[1], skull.axis[2], skull.axis[0]);
 
 			skull.hModel = cgs.media.kamikazeHeadModel;
 			trap_R_AddRefEntityToScene(&skull);
@@ -2530,7 +2530,7 @@ CG_Player(centity_t *cent)
 		powerup.customSkin = 0;
 		/* always draw */
 		powerup.renderfx &= ~RF_THIRD_PERSON;
-		VectorCopy(cent->lerpOrigin, powerup.origin);
+		Vec3Copy(cent->lerpOrigin, powerup.origin);
 
 		if(cg.time - ci->invulnerabilityStartTime < 250)
 			c =
@@ -2558,7 +2558,7 @@ CG_Player(centity_t *cent)
 		powerup.renderfx &= ~RF_THIRD_PERSON;
 		VectorClear(angles);
 		AnglesToAxis(angles, powerup.axis);
-		VectorCopy(cent->lerpOrigin, powerup.origin);
+		Vec3Copy(cent->lerpOrigin, powerup.origin);
 		powerup.origin[2] += -24 + (float)t * 80 / 500;
 		if(t > 400){
 			c = (float)(t - 1000) * 0xff / 100;
@@ -2584,7 +2584,7 @@ CG_Player(centity_t *cent)
 		return;
 	head.customSkin = ci->headSkin;
 
-	VectorCopy(cent->lerpOrigin, head.lightingOrigin);
+	Vec3Copy(cent->lerpOrigin, head.lightingOrigin);
 
 	CG_PositionRotatedEntityOnTag(&head, &torso, ci->torsoModel, "tag_head");
 
@@ -2633,8 +2633,8 @@ CG_ResetPlayerEntity(centity_t *cent)
 	BG_EvaluateTrajectory(&cent->currentState.apos, cg.time,
 		cent->lerpAngles);
 
-	VectorCopy(cent->lerpOrigin, cent->rawOrigin);
-	VectorCopy(cent->lerpAngles, cent->rawAngles);
+	Vec3Copy(cent->lerpOrigin, cent->rawOrigin);
+	Vec3Copy(cent->lerpAngles, cent->rawAngles);
 
 	memset(&cent->pe.legs, 0, sizeof(cent->pe.legs));
 	cent->pe.legs.yawAngle = cent->rawAngles[YAW];

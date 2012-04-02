@@ -653,7 +653,7 @@ CG_DrawSelectedPlayerHead(rectDef_t *rect, qbool draw2D, qbool voice)
 			origin[0] = len / 0.268;	/* len / tan( fov/2 ) */
 
 			/* allow per-model tweaking */
-			VectorAdd(origin, ci->headOffset, origin);
+			Vec3Add(origin, ci->headOffset, origin);
 
 			angles[PITCH]	= 0;
 			angles[YAW]	= 180;

@@ -41,9 +41,9 @@ CG_PositionEntityOnTag(refEntity_t *entity, const refEntity_t *parent,
 		1.0 - parent->backlerp, tagName);
 
 	/* FIXME: allow origin offsets along tag? */
-	VectorCopy(parent->origin, entity->origin);
+	Vec3Copy(parent->origin, entity->origin);
 	for(i = 0; i < 3; i++)
-		VectorMA(entity->origin, lerped.origin[i], parent->axis[i],
+		Vec3MA(entity->origin, lerped.origin[i], parent->axis[i],
 			entity->origin);
 
 	/* had to cast away the const to avoid compiler problems... */
@@ -72,9 +72,9 @@ CG_PositionRotatedEntityOnTag(refEntity_t *entity, const refEntity_t *parent,
 		1.0 - parent->backlerp, tagName);
 
 	/* FIXME: allow origin offsets along tag? */
-	VectorCopy(parent->origin, entity->origin);
+	Vec3Copy(parent->origin, entity->origin);
 	for(i = 0; i < 3; i++)
-		VectorMA(entity->origin, lerped.origin[i], parent->axis[i],
+		Vec3MA(entity->origin, lerped.origin[i], parent->axis[i],
 			entity->origin);
 
 	/* had to cast away the const to avoid compiler problems... */
@@ -103,7 +103,7 @@ CG_SetEntitySoundPosition(centity_t *cent)
 		float	*v;
 
 		v = cgs.inlineModelMidpoints[ cent->currentState.modelindex ];
-		VectorAdd(cent->lerpOrigin, v, origin);
+		Vec3Add(cent->lerpOrigin, v, origin);
 		trap_S_UpdateEntityPosition(cent->currentState.number, origin);
 	}else
 		trap_S_UpdateEntityPosition(cent->currentState.number,
@@ -176,8 +176,8 @@ CG_General(centity_t *cent)
 	ent.oldframe = ent.frame;
 	ent.backlerp = 0;
 
-	VectorCopy(cent->lerpOrigin, ent.origin);
-	VectorCopy(cent->lerpOrigin, ent.oldorigin);
+	Vec3Copy(cent->lerpOrigin, ent.origin);
+	Vec3Copy(cent->lerpOrigin, ent.oldorigin);
 
 	ent.hModel = cgs.gameModels[s1->modelindex];
 
@@ -241,7 +241,7 @@ CG_Item(centity_t *cent)
 	if(cg_simpleItems.integer && item->giType != IT_TEAM){
 		memset(&ent, 0, sizeof(ent));
 		ent.reType = RT_SPRITE;
-		VectorCopy(cent->lerpOrigin, ent.origin);
+		Vec3Copy(cent->lerpOrigin, ent.origin);
 		ent.radius = 14;
 		ent.customShader = cg_items[es->modelindex].icon;
 		ent.shaderRGBA[0] = 255;
@@ -260,10 +260,10 @@ CG_Item(centity_t *cent)
 
 	/* autorotate at one of two speeds */
 	if(item->giType == IT_HEALTH){
-		VectorCopy(cg.autoAnglesFast, cent->lerpAngles);
+		Vec3Copy(cg.autoAnglesFast, cent->lerpAngles);
 		AxisCopy(cg.autoAxisFast, ent.axis);
 	}else{
-		VectorCopy(cg.autoAngles, cent->lerpAngles);
+		Vec3Copy(cg.autoAngles, cent->lerpAngles);
 		AxisCopy(cg.autoAxis, ent.axis);
 	}
 
@@ -296,8 +296,8 @@ CG_Item(centity_t *cent)
 
 	ent.hModel = cg_items[es->modelindex].models[0];
 
-	VectorCopy(cent->lerpOrigin, ent.origin);
-	VectorCopy(cent->lerpOrigin, ent.oldorigin);
+	Vec3Copy(cent->lerpOrigin, ent.origin);
+	Vec3Copy(cent->lerpOrigin, ent.oldorigin);
 
 	ent.nonNormalizedAxes = qfalse;
 
@@ -351,7 +351,7 @@ CG_Item(centity_t *cent)
 
 		barrel.hModel = wi->barrelModel;
 
-		VectorCopy(ent.lightingOrigin, barrel.lightingOrigin);
+		Vec3Copy(ent.lightingOrigin, barrel.lightingOrigin);
 		barrel.shadowPlane = ent.shadowPlane;
 		barrel.renderfx = ent.renderfx;
 
@@ -416,7 +416,7 @@ CG_Missile(centity_t *cent)
 	weapon = &cg_weapons[s1->weapon];
 
 	/* calculate the axis */
-	VectorCopy(s1->angles, cent->lerpAngles);
+	Vec3Copy(s1->angles, cent->lerpAngles);
 
 	/* add trails */
 	if(weapon->missileTrailFunc)
@@ -459,8 +459,8 @@ CG_Missile(centity_t *cent)
 
 	/* create the render entity */
 	memset (&ent, 0, sizeof(ent));
-	VectorCopy(cent->lerpOrigin, ent.origin);
-	VectorCopy(cent->lerpOrigin, ent.oldorigin);
+	Vec3Copy(cent->lerpOrigin, ent.origin);
+	Vec3Copy(cent->lerpOrigin, ent.oldorigin);
 
 	if(cent->currentState.weapon == WP_PLASMAGUN){
 		ent.reType = RT_SPRITE;
@@ -484,7 +484,7 @@ CG_Missile(centity_t *cent)
 #endif
 
 	/* convert direction of travel into axis */
-	if(VectorNormalize2(s1->pos.trDelta, ent.axis[0]) == 0)
+	if(Vec3Normalize2(s1->pos.trDelta, ent.axis[0]) == 0)
 		ent.axis[0][2] = 1;
 
 	/* spin as it moves */
@@ -523,7 +523,7 @@ CG_Grapple(centity_t *cent)
 	weapon = &cg_weapons[s1->weapon];
 
 	/* calculate the axis */
-	VectorCopy(s1->angles, cent->lerpAngles);
+	Vec3Copy(s1->angles, cent->lerpAngles);
 
 #if 0	/* FIXME add grapple pull sound here..? */
 	/* add missile sound */
@@ -539,8 +539,8 @@ CG_Grapple(centity_t *cent)
 
 	/* create the render entity */
 	memset (&ent, 0, sizeof(ent));
-	VectorCopy(cent->lerpOrigin, ent.origin);
-	VectorCopy(cent->lerpOrigin, ent.oldorigin);
+	Vec3Copy(cent->lerpOrigin, ent.origin);
+	Vec3Copy(cent->lerpOrigin, ent.oldorigin);
 
 	/* flicker between two skins */
 	ent.skinNum = cg.clientFrame & 1;
@@ -548,7 +548,7 @@ CG_Grapple(centity_t *cent)
 	ent.renderfx = weapon->missileRenderfx | RF_NOSHADOW;
 
 	/* convert direction of travel into axis */
-	if(VectorNormalize2(s1->pos.trDelta, ent.axis[0]) == 0)
+	if(Vec3Normalize2(s1->pos.trDelta, ent.axis[0]) == 0)
 		ent.axis[0][2] = 1;
 
 	trap_R_AddRefEntityToScene(&ent);
@@ -567,8 +567,8 @@ CG_Mover(centity_t *cent)
 
 	/* create the render entity */
 	memset (&ent, 0, sizeof(ent));
-	VectorCopy(cent->lerpOrigin, ent.origin);
-	VectorCopy(cent->lerpOrigin, ent.oldorigin);
+	Vec3Copy(cent->lerpOrigin, ent.origin);
+	Vec3Copy(cent->lerpOrigin, ent.oldorigin);
 	AnglesToAxis(cent->lerpAngles, ent.axis);
 
 	ent.renderfx = RF_NOSHADOW;
@@ -609,8 +609,8 @@ CG_Beam(centity_t *cent)
 
 	/* create the render entity */
 	memset (&ent, 0, sizeof(ent));
-	VectorCopy(s1->pos.trBase, ent.origin);
-	VectorCopy(s1->origin2, ent.oldorigin);
+	Vec3Copy(s1->pos.trBase, ent.origin);
+	Vec3Copy(s1->origin2, ent.oldorigin);
 	AxisClear(ent.axis);
 	ent.reType = RT_BEAM;
 
@@ -634,16 +634,16 @@ CG_Portal(centity_t *cent)
 
 	/* create the render entity */
 	memset (&ent, 0, sizeof(ent));
-	VectorCopy(cent->lerpOrigin, ent.origin);
-	VectorCopy(s1->origin2, ent.oldorigin);
+	Vec3Copy(cent->lerpOrigin, ent.origin);
+	Vec3Copy(s1->origin2, ent.oldorigin);
 	ByteToDir(s1->eventParm, ent.axis[0]);
 	PerpendicularVector(ent.axis[1], ent.axis[0]);
 
 	/* negating this tends to get the directions like they want
 	 * we really should have a camera roll value */
-	VectorSubtract(vec3_origin, ent.axis[1], ent.axis[1]);
+	Vec3Sub(vec3_origin, ent.axis[1], ent.axis[1]);
 
-	CrossProduct(ent.axis[0], ent.axis[1], ent.axis[2]);
+	Vec3Cross(ent.axis[0], ent.axis[1], ent.axis[2]);
 	ent.reType = RT_PORTALSURFACE;
 	ent.oldframe = s1->powerups;
 	ent.frame = s1->frame;				/* rotation speed */
@@ -670,13 +670,13 @@ CG_AdjustPositionForMover(const vec3_t in, int moverNum, int fromTime,
 	/* vec3_t	deltaAngles; */
 
 	if(moverNum <= 0 || moverNum >= ENTITYNUM_MAX_NORMAL){
-		VectorCopy(in, out);
+		Vec3Copy(in, out);
 		return;
 	}
 
 	cent = &cg_entities[ moverNum ];
 	if(cent->currentState.eType != ET_MOVER){
-		VectorCopy(in, out);
+		Vec3Copy(in, out);
 		return;
 	}
 
@@ -686,10 +686,10 @@ CG_AdjustPositionForMover(const vec3_t in, int moverNum, int fromTime,
 	BG_EvaluateTrajectory(&cent->currentState.pos, toTime, origin);
 	BG_EvaluateTrajectory(&cent->currentState.apos, toTime, angles);
 
-	VectorSubtract(origin, oldOrigin, deltaOrigin);
-	/* VectorSubtract( angles, oldAngles, deltaAngles ); */
+	Vec3Sub(origin, oldOrigin, deltaOrigin);
+	/* Vec3Sub( angles, oldAngles, deltaAngles ); */
 
-	VectorAdd(in, deltaOrigin, out);
+	Vec3Add(in, deltaOrigin, out);
 
 	/* FIXME: origin change when on a rotating object */
 }
@@ -797,8 +797,8 @@ CG_TeamBase(centity_t *cent)
 		/* show the flag base */
 		memset(&model, 0, sizeof(model));
 		model.reType = RT_MODEL;
-		VectorCopy(cent->lerpOrigin, model.lightingOrigin);
-		VectorCopy(cent->lerpOrigin, model.origin);
+		Vec3Copy(cent->lerpOrigin, model.lightingOrigin);
+		Vec3Copy(cent->lerpOrigin, model.origin);
 		AnglesToAxis(cent->currentState.angles, model.axis);
 		if(cent->currentState.modelindex == TEAM_RED)
 			model.hModel = cgs.media.redFlagBaseModel;
@@ -813,8 +813,8 @@ CG_TeamBase(centity_t *cent)
 		/* show the obelisk */
 		memset(&model, 0, sizeof(model));
 		model.reType = RT_MODEL;
-		VectorCopy(cent->lerpOrigin, model.lightingOrigin);
-		VectorCopy(cent->lerpOrigin, model.origin);
+		Vec3Copy(cent->lerpOrigin, model.lightingOrigin);
+		Vec3Copy(cent->lerpOrigin, model.origin);
 		AnglesToAxis(cent->currentState.angles, model.axis);
 
 		model.hModel = cgs.media.overloadBaseModel;
@@ -864,7 +864,7 @@ CG_TeamBase(centity_t *cent)
 						cgs.media.obeliskRespawnSound);
 					cent->muzzleFlashTime = 1;
 				}
-				VectorCopy(cent->currentState.angles, angles);
+				Vec3Copy(cent->currentState.angles, angles);
 				angles[YAW] += (float)16 *
 					       acos(1-c) * 180 / M_PI;
 				AnglesToAxis(angles, model.axis);
@@ -905,8 +905,8 @@ CG_TeamBase(centity_t *cent)
 		/* show harvester model */
 		memset(&model, 0, sizeof(model));
 		model.reType = RT_MODEL;
-		VectorCopy(cent->lerpOrigin, model.lightingOrigin);
-		VectorCopy(cent->lerpOrigin, model.origin);
+		Vec3Copy(cent->lerpOrigin, model.lightingOrigin);
+		Vec3Copy(cent->lerpOrigin, model.origin);
 		AnglesToAxis(cent->currentState.angles, model.axis);
 
 		if(cent->currentState.modelindex == TEAM_RED){

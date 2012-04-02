@@ -169,17 +169,17 @@ AAS_AlternativeRouteGoals(vec3_t start, int startareanum, vec3_t goal,
 		 * get the 'center' of the cluster */
 		VectorClear(mid);
 		for(j = 0; j < numclusterareas; j++)
-			VectorAdd(mid, aasworld.areas[clusterareas[j]].center,
+			Vec3Add(mid, aasworld.areas[clusterareas[j]].center,
 				mid);
 		VectorScale(mid, 1.0 / numclusterareas, mid);
 		/* get the area closest to the center of the cluster */
 		bestdist = 999999;
 		bestareanum = 0;
 		for(j = 0; j < numclusterareas; j++){
-			VectorSubtract(mid,
+			Vec3Sub(mid,
 				aasworld.areas[clusterareas[j]].center,
 				dir);
-			dist = VectorLength(dir);
+			dist = Vec3Len(dir);
 			if(dist < bestdist){
 				bestdist = dist;
 				bestareanum = clusterareas[j];
@@ -187,7 +187,7 @@ AAS_AlternativeRouteGoals(vec3_t start, int startareanum, vec3_t goal,
 		}
 		/* now we've got an area for an alternative route */
 		/* FIXME: add alternative goal origin */
-		VectorCopy(aasworld.areas[bestareanum].center,
+		Vec3Copy(aasworld.areas[bestareanum].center,
 			altroutegoals[numaltroutegoals].origin);
 		altroutegoals[numaltroutegoals].areanum = bestareanum;
 		altroutegoals[numaltroutegoals].starttraveltime =

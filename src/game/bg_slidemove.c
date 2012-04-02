@@ -58,10 +58,10 @@ PM_SlideMove(qbool gravity)
 
 	numbumps = 4;
 
-	VectorCopy (pm->ps->velocity, primal_velocity);
+	Vec3Copy (pm->ps->velocity, primal_velocity);
 
 	if(gravity){
-		VectorCopy(pm->ps->velocity, endVelocity);
+		Vec3Copy(pm->ps->velocity, endVelocity);
 		endVelocity[2] -= pm->ps->gravity * pml.frametime;
 		pm->ps->velocity[2] =
 			(pm->ps->velocity[2] + endVelocity[2]) * 0.5;
@@ -79,18 +79,18 @@ PM_SlideMove(qbool gravity)
 	/* never turn against the ground plane */
 	if(pml.groundPlane){
 		numplanes = 1;
-		VectorCopy(pml.groundTrace.plane.normal, planes[0]);
+		Vec3Copy(pml.groundTrace.plane.normal, planes[0]);
 	}else
 		numplanes = 0;
 
 	/* never turn against original velocity */
-	VectorNormalize2(pm->ps->velocity, planes[numplanes]);
+	Vec3Normalize2(pm->ps->velocity, planes[numplanes]);
 	numplanes++;
 
 	for(bumpcount=0; bumpcount < numbumps; bumpcount++){
 
 		/* calculate position we are trying to move to */
-		VectorMA(pm->ps->origin, time_left, pm->ps->velocity, end);
+		Vec3MA(pm->ps->origin, time_left, pm->ps->velocity, end);
 
 		/* see if we can make it there */
 		pm->trace (&trace, pm->ps->origin, pm->mins, pm->maxs, end,
@@ -105,7 +105,7 @@ PM_SlideMove(qbool gravity)
 
 		if(trace.fraction > 0)
 			/* actually covered some distance */
-			VectorCopy (trace.endpos, pm->ps->origin);
+			Vec3Copy (trace.endpos, pm->ps->origin);
 
 		if(trace.fraction == 1)
 			break;	/* moved the entire distance */
@@ -127,14 +127,14 @@ PM_SlideMove(qbool gravity)
 		 * non-axial planes
 		 *  */
 		for(i = 0; i < numplanes; i++)
-			if(DotProduct(trace.plane.normal, planes[i]) > 0.99){
-				VectorAdd(trace.plane.normal, pm->ps->velocity,
+			if(Vec3Dot(trace.plane.normal, planes[i]) > 0.99){
+				Vec3Add(trace.plane.normal, pm->ps->velocity,
 					pm->ps->velocity);
 				break;
 			}
 		if(i < numplanes)
 			continue;
-		VectorCopy (trace.plane.normal, planes[numplanes]);
+		Vec3Copy (trace.plane.normal, planes[numplanes]);
 		numplanes++;
 
 		/*
@@ -143,7 +143,7 @@ PM_SlideMove(qbool gravity)
 
 		/* find a plane that it enters */
 		for(i = 0; i < numplanes; i++){
-			into = DotProduct(pm->ps->velocity, planes[i]);
+			into = Vec3Dot(pm->ps->velocity, planes[i]);
 			if(into >= 0.1)
 				continue;	/* move doesn't interact with the plane */
 
@@ -164,7 +164,7 @@ PM_SlideMove(qbool gravity)
 			for(j = 0; j < numplanes; j++){
 				if(j == i)
 					continue;
-				if(DotProduct(clipVelocity, planes[j]) >= 0.1)
+				if(Vec3Dot(clipVelocity, planes[j]) >= 0.1)
 					continue;	/* move doesn't interact with the plane */
 
 				/* try clipping the move to the plane */
@@ -176,25 +176,25 @@ PM_SlideMove(qbool gravity)
 					OVERCLIP);
 
 				/* see if it goes back into the first clip plane */
-				if(DotProduct(clipVelocity, planes[i]) >= 0)
+				if(Vec3Dot(clipVelocity, planes[i]) >= 0)
 					continue;
 
 				/* slide the original velocity along the crease */
-				CrossProduct (planes[i], planes[j], dir);
-				VectorNormalize(dir);
-				d = DotProduct(dir, pm->ps->velocity);
+				Vec3Cross (planes[i], planes[j], dir);
+				Vec3Normalize(dir);
+				d = Vec3Dot(dir, pm->ps->velocity);
 				VectorScale(dir, d, clipVelocity);
 
-				CrossProduct (planes[i], planes[j], dir);
-				VectorNormalize(dir);
-				d = DotProduct(dir, endVelocity);
+				Vec3Cross (planes[i], planes[j], dir);
+				Vec3Normalize(dir);
+				d = Vec3Dot(dir, endVelocity);
 				VectorScale(dir, d, endClipVelocity);
 
 				/* see if there is a third plane the the new move enters */
 				for(k = 0; k < numplanes; k++){
 					if(k == i || k == j)
 						continue;
-					if(DotProduct(clipVelocity,
+					if(Vec3Dot(clipVelocity,
 						   planes[k]) >= 0.1)
 						continue;	/* move doesn't interact with the plane */
 
@@ -205,18 +205,18 @@ PM_SlideMove(qbool gravity)
 			}
 
 			/* if we have fixed all interactions, try another move */
-			VectorCopy(clipVelocity, pm->ps->velocity);
-			VectorCopy(endClipVelocity, endVelocity);
+			Vec3Copy(clipVelocity, pm->ps->velocity);
+			Vec3Copy(endClipVelocity, endVelocity);
 			break;
 		}
 	}
 
 	if(gravity)
-		VectorCopy(endVelocity, pm->ps->velocity);
+		Vec3Copy(endVelocity, pm->ps->velocity);
 
 	/* don't change velocity if in a timer (FIXME: is this correct?) */
 	if(pm->ps->pm_time)
-		VectorCopy(primal_velocity, pm->ps->velocity);
+		Vec3Copy(primal_velocity, pm->ps->velocity);
 
 	return (bumpcount != 0);
 }
@@ -236,26 +236,26 @@ PM_StepSlideMove(qbool gravity)
 	vec3_t	up, down;
 	float	stepSize;
 
-	VectorCopy (pm->ps->origin, start_o);
-	VectorCopy (pm->ps->velocity, start_v);
+	Vec3Copy (pm->ps->origin, start_o);
+	Vec3Copy (pm->ps->velocity, start_v);
 
 	if(PM_SlideMove(gravity) == 0)
 		return;		/* we got exactly where we wanted to go first try */
 
-	VectorCopy(start_o, down);
+	Vec3Copy(start_o, down);
 	down[2] -= STEPSIZE;
 	pm->trace (&trace, start_o, pm->mins, pm->maxs, down, pm->ps->clientNum,
 		pm->tracemask);
 	VectorSet(up, 0, 0, 1);
 	/* never step up when you still have up velocity */
 	if(pm->ps->velocity[2] > 0 && (trace.fraction == 1.0 ||
-				       DotProduct(trace.plane.normal, up) < 0.7))
+				       Vec3Dot(trace.plane.normal, up) < 0.7))
 		return;
 
-	/* VectorCopy (pm->ps->origin, down_o);
-	 * VectorCopy (pm->ps->velocity, down_v); */
+	/* Vec3Copy (pm->ps->origin, down_o);
+	 * Vec3Copy (pm->ps->velocity, down_v); */
 
-	VectorCopy (start_o, up);
+	Vec3Copy (start_o, up);
 	up[2] += STEPSIZE;
 
 	/* test the player position if they were a stepheight higher */
@@ -269,19 +269,19 @@ PM_StepSlideMove(qbool gravity)
 
 	stepSize = trace.endpos[2] - start_o[2];
 	/* try slidemove from this position */
-	VectorCopy (trace.endpos, pm->ps->origin);
-	VectorCopy (start_v, pm->ps->velocity);
+	Vec3Copy (trace.endpos, pm->ps->origin);
+	Vec3Copy (start_v, pm->ps->velocity);
 
 	PM_SlideMove(gravity);
 
 	/* push down the final amount */
-	VectorCopy (pm->ps->origin, down);
+	Vec3Copy (pm->ps->origin, down);
 	down[2] -= stepSize;
 	pm->trace (&trace, pm->ps->origin, pm->mins, pm->maxs, down,
 		pm->ps->clientNum,
 		pm->tracemask);
 	if(!trace.allsolid)
-		VectorCopy (trace.endpos, pm->ps->origin);
+		Vec3Copy (trace.endpos, pm->ps->origin);
 	if(trace.fraction < 1.0)
 		PM_ClipVelocity(pm->ps->velocity, trace.plane.normal,
 			pm->ps->velocity,
@@ -294,8 +294,8 @@ PM_StepSlideMove(qbool gravity)
 		pm->tracemask);
 	if(trace.fraction == 1.0){
 		/* use the original move */
-		VectorCopy (down_o, pm->ps->origin);
-		VectorCopy (down_v, pm->ps->velocity);
+		Vec3Copy (down_o, pm->ps->origin);
+		Vec3Copy (down_v, pm->ps->velocity);
 		if(pm->debugLevel)
 			Com_Printf("%i:bend\n", c_pmove);
 	}else

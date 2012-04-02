@@ -84,8 +84,8 @@ SpotWouldTelefrag(gentity_t *spot)
 	gentity_t	*hit;
 	vec3_t		mins, maxs;
 
-	VectorAdd(spot->s.origin, playerMins, mins);
-	VectorAdd(spot->s.origin, playerMaxs, maxs);
+	Vec3Add(spot->s.origin, playerMins, mins);
+	Vec3Add(spot->s.origin, playerMaxs, maxs);
 	num = trap_EntitiesInBox(mins, maxs, touch, MAX_GENTITIES);
 
 	for(i=0; i<num; i++){
@@ -121,8 +121,8 @@ SelectNearestDeathmatchSpawnPoint(vec3_t from)
 		       G_Find (spot, FOFS(classname),
 			       "info_player_deathmatch")) != NULL){
 
-		VectorSubtract(spot->s.origin, from, delta);
-		dist = VectorLength(delta);
+		Vec3Sub(spot->s.origin, from, delta);
+		dist = Vec3Len(delta);
 		if(dist < nearestDist){
 			nearestDist = dist;
 			nearestSpot = spot;
@@ -203,8 +203,8 @@ SelectRandomFurthestSpawnPoint(vec3_t avoidPoint, vec3_t origin, vec3_t angles,
 			/* spot is not for this human/bot player */
 			continue;
 
-		VectorSubtract(spot->s.origin, avoidPoint, delta);
-		dist = VectorLength(delta);
+		Vec3Sub(spot->s.origin, avoidPoint, delta);
+		dist = Vec3Len(delta);
 
 		for(i = 0; i < numSpots; i++)
 			if(dist > list_dist[i]){
@@ -236,18 +236,18 @@ SelectRandomFurthestSpawnPoint(vec3_t avoidPoint, vec3_t origin, vec3_t angles,
 		if(!spot)
 			G_Error("Couldn't find a spawn point");
 
-		VectorCopy (spot->s.origin, origin);
+		Vec3Copy (spot->s.origin, origin);
 		origin[2] += 9;
-		VectorCopy (spot->s.angles, angles);
+		Vec3Copy (spot->s.angles, angles);
 		return spot;
 	}
 
 	/* select a random spot from the spawn points furthest away */
 	rnd = random() * (numSpots / 2);
 
-	VectorCopy (list_spot[rnd]->s.origin, origin);
+	Vec3Copy (list_spot[rnd]->s.origin, origin);
 	origin[2] += 9;
-	VectorCopy (list_spot[rnd]->s.angles, angles);
+	Vec3Copy (list_spot[rnd]->s.angles, angles);
 
 	return list_spot[rnd];
 }
@@ -283,9 +283,9 @@ SelectSpawnPoint(vec3_t avoidPoint, vec3_t origin, vec3_t angles, qbool isbot)
 	 *      G_Error( "Couldn't find a spawn point" );
 	 * }
 	 *
-	 * VectorCopy (spot->s.origin, origin);
+	 * Vec3Copy (spot->s.origin, origin);
 	 * origin[2] += 9;
-	 * VectorCopy (spot->s.angles, angles);
+	 * Vec3Copy (spot->s.angles, angles);
 	 *
 	 * return spot;
 	 */
@@ -318,9 +318,9 @@ SelectInitialSpawnPoint(vec3_t origin, vec3_t angles, qbool isbot)
 	if(!spot || SpotWouldTelefrag(spot))
 		return SelectSpawnPoint(vec3_origin, origin, angles, isbot);
 
-	VectorCopy (spot->s.origin, origin);
+	Vec3Copy (spot->s.origin, origin);
 	origin[2] += 9;
-	VectorCopy (spot->s.angles, angles);
+	Vec3Copy (spot->s.angles, angles);
 
 	return spot;
 }
@@ -334,8 +334,8 @@ SelectSpectatorSpawnPoint(vec3_t origin, vec3_t angles)
 {
 	FindIntermissionPoint();
 
-	VectorCopy(level.intermission_origin, origin);
-	VectorCopy(level.intermission_angle, angles);
+	Vec3Copy(level.intermission_origin, origin);
+	Vec3Copy(level.intermission_angle, angles);
 
 	return NULL;
 }
@@ -438,7 +438,7 @@ CopyToBodyQue(gentity_t *ent)
 	if(body->s.groundEntityNum == ENTITYNUM_NONE){
 		body->s.pos.trType = TR_GRAVITY;
 		body->s.pos.trTime = level.time;
-		VectorCopy(ent->client->ps.velocity, body->s.pos.trDelta);
+		Vec3Copy(ent->client->ps.velocity, body->s.pos.trDelta);
 	}else
 		body->s.pos.trType = TR_STATIONARY;
 	body->s.event = 0;
@@ -462,10 +462,10 @@ CopyToBodyQue(gentity_t *ent)
 	}
 
 	body->r.svFlags = ent->r.svFlags;
-	VectorCopy (ent->r.mins, body->r.mins);
-	VectorCopy (ent->r.maxs, body->r.maxs);
-	VectorCopy (ent->r.absmin, body->r.absmin);
-	VectorCopy (ent->r.absmax, body->r.absmax);
+	Vec3Copy (ent->r.mins, body->r.mins);
+	Vec3Copy (ent->r.maxs, body->r.maxs);
+	Vec3Copy (ent->r.absmin, body->r.absmin);
+	Vec3Copy (ent->r.absmax, body->r.absmax);
 
 	body->clipmask = CONTENTS_SOLID | CONTENTS_PLAYERCLIP;
 	body->r.contents = CONTENTS_CORPSE;
@@ -483,7 +483,7 @@ CopyToBodyQue(gentity_t *ent)
 		body->takedamage = qtrue;
 
 
-	VectorCopy (body->s.pos.trBase, body->r.currentOrigin);
+	Vec3Copy (body->s.pos.trBase, body->r.currentOrigin);
 	trap_LinkEntity (body);
 }
 
@@ -508,8 +508,8 @@ SetClientViewAngle(gentity_t *ent, vec3_t angle)
 						  ent->client->pers.cmd.angles[i
 						  ];
 	}
-	VectorCopy(angle, ent->s.angles);
-	VectorCopy (ent->s.angles, ent->client->ps.viewangles);
+	Vec3Copy(angle, ent->s.angles);
+	Vec3Copy (ent->s.angles, ent->client->ps.viewangles);
 }
 
 /*
@@ -1128,8 +1128,8 @@ ClientSpawn(gentity_t *ent)
 	ent->watertype	= 0;
 	ent->flags = 0;
 
-	VectorCopy (playerMins, ent->r.mins);
-	VectorCopy (playerMaxs, ent->r.maxs);
+	Vec3Copy (playerMins, ent->r.mins);
+	Vec3Copy (playerMaxs, ent->r.maxs);
 
 	client->ps.clientNum = index;
 
@@ -1148,7 +1148,7 @@ ClientSpawn(gentity_t *ent)
 			      client->ps.stats[STAT_MAX_HEALTH] + 25;
 
 	G_SetOrigin(ent, spawn_origin);
-	VectorCopy(spawn_origin, client->ps.origin);
+	Vec3Copy(spawn_origin, client->ps.origin);
 
 	/* the respawned flag will be cleared after the attack and jump keys come up */
 	client->ps.pm_flags |= PMF_RESPAWNED;
@@ -1184,7 +1184,7 @@ ClientSpawn(gentity_t *ent)
 					break;
 				}
 			/* positively link the client, even if the command times are weird */
-			VectorCopy(ent->client->ps.origin, ent->r.currentOrigin);
+			Vec3Copy(ent->client->ps.origin, ent->r.currentOrigin);
 
 			tent = G_TempEntity(ent->client->ps.origin,
 				EV_PLAYER_TELEPORT_IN);

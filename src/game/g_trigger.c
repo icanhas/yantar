@@ -171,7 +171,7 @@ AimAtTarget(gentity_t *self)
 	float	height, gravity, time, forward;
 	float	dist;
 
-	VectorAdd(self->r.absmin, self->r.absmax, origin);
+	Vec3Add(self->r.absmin, self->r.absmax, origin);
 	VectorScale (origin, 0.5, origin);
 
 	ent = G_PickTarget(self->target);
@@ -189,9 +189,9 @@ AimAtTarget(gentity_t *self)
 	}
 
 	/* set s.origin2 to the push velocity */
-	VectorSubtract (ent->s.origin, origin, self->s.origin2);
+	Vec3Sub (ent->s.origin, origin, self->s.origin2);
 	self->s.origin2[2] = 0;
-	dist = VectorNormalize(self->s.origin2);
+	dist = Vec3Normalize(self->s.origin2);
 
 	forward = dist / time;
 	VectorScale(self->s.origin2, forward, self->s.origin2);
@@ -234,7 +234,7 @@ Use_target_push(gentity_t *self, gentity_t *other, gentity_t *activator)
 	if(activator->client->ps.powerups[PW_FLIGHT])
 		return;
 
-	VectorCopy (self->s.origin2, activator->client->ps.velocity);
+	Vec3Copy (self->s.origin2, activator->client->ps.velocity);
 
 	/* play fly sound every 1.5 seconds */
 	if(activator->fly_sound_debounce_time < level.time){
@@ -261,8 +261,8 @@ SP_target_push(gentity_t *self)
 	else
 		self->noise_index = G_SoundIndex("sound/misc/windfly.wav");
 	if(self->target){
-		VectorCopy(self->s.origin, self->r.absmin);
-		VectorCopy(self->s.origin, self->r.absmax);
+		Vec3Copy(self->s.origin, self->r.absmin);
+		Vec3Copy(self->s.origin, self->r.absmax);
 		self->think = AimAtTarget;
 		self->nextthink = level.time + FRAMETIME;
 	}
