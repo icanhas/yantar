@@ -355,7 +355,7 @@ RB_GodRays(void)
 	qbool		colorize = qtrue;
 
 	float		w, h, w2, h2;
-	matrix_t	mvp;
+	mat4x4	mvp;
 	vec4_t		pos, hpos;
 
 	if(!backEnd.hasSunFlare)
@@ -375,8 +375,8 @@ RB_GodRays(void)
 	pos[3] = 1.f;
 
 	/* project sun point */
-	Matrix16Multiply(backEnd.viewParms.projectionMatrix, backEnd.viewParms.world.modelMatrix, mvp);
-	Matrix16Transform(mvp, pos, hpos);
+	Mat4x4Mul(backEnd.viewParms.projectionMatrix, backEnd.viewParms.world.modelMatrix, mvp);
+	Mat4x4Transform(mvp, pos, hpos);
 
 	/* transform to UV coords */
 	hpos[3] = 0.5f / hpos[3];

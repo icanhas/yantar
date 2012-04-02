@@ -432,7 +432,7 @@ RB_RenderFlares(void)
 	flare_t *f;
 	flare_t **prev;
 	qbool draw;
-	matrix_t oldmodelview, oldprojection, matrix;
+	mat4x4 oldmodelview, oldprojection, matrix;
 
 	if(!r_flares->integer){
 		return;
@@ -493,11 +493,11 @@ RB_RenderFlares(void)
 		qglDisable (GL_CLIP_PLANE0);
 	}
 
-	Matrix16Copy(glState.projection, oldprojection);
-	Matrix16Copy(glState.modelview, oldmodelview);
-	Matrix16Identity(matrix);
+	Mat4x4Copy(glState.projection, oldprojection);
+	Mat4x4Copy(glState.modelview, oldmodelview);
+	Mat4x4ToIdentity(matrix);
 	GL_SetModelviewMatrix(matrix);
-	Matrix16Ortho(backEnd.viewParms.viewportX, backEnd.viewParms.viewportX +
+	Mat4x4Ortho(backEnd.viewParms.viewportX, backEnd.viewParms.viewportX +
 		backEnd.viewParms.viewportWidth,
 		backEnd.viewParms.viewportY, backEnd.viewParms.viewportY + backEnd.viewParms.viewportHeight,
 		-99999, 99999,

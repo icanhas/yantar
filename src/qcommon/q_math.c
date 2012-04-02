@@ -940,6 +940,106 @@ Vector4Scale(const vec4_t in, vec_t scale, vec4_t out)
 	out[3]	= in[3]*scale;
 }
 
+void
+Vec3Lerp(const vec3_t a, const vec3_t b, float amount, vec3_t c)
+{
+	c[0] = a[0] * (1.0f-amount) + b[0] * amount;
+	c[1] = a[1] * (1.0f-amount) + b[1] * amount;
+	c[2] = a[2] * (1.0f-amount) + b[2] * amount;
+}
+
+void
+Mat4x4ToZero(mat4x4 m)
+{
+	unsigned int i;
+
+	for(i = 0; i < 16; ++i)
+		m[i] = 0.0f;
+}
+
+void
+Mat4x4ToIdentity(mat4x4 m)
+{
+	m[ 0] = 1.0f; m[ 4] = 0.0f; m[ 8] = 0.0f; m[12] = 0.0f;
+	m[ 1] = 0.0f; m[ 5] = 1.0f; m[ 9] = 0.0f; m[13] = 0.0f;
+	m[ 2] = 0.0f; m[ 6] = 0.0f; m[10] = 1.0f; m[14] = 0.0f;
+	m[ 3] = 0.0f; m[ 7] = 0.0f; m[11] = 0.0f; m[15] = 1.0f;
+}
+
+void
+Mat4x4Copy(const mat4x4 in, mat4x4 out)
+{
+	unsigned int i;
+
+	for(i = 0; i < 16; ++i)
+		out[i] = in[i];
+}
+
+void
+Mat4x4Mul(const mat4x4 a, const mat4x4 b, mat4x4 out)
+{
+	out[ 0] = a[ 0] * b[ 0] + a[ 4] * b[ 1] + a[ 8] * b[ 2] + a[12] * b[ 3];
+	out[ 1] = a[ 1] * b[ 0] + a[ 5] * b[ 1] + a[ 9] * b[ 2] + a[13] * b[ 3];
+	out[ 2] = a[ 2] * b[ 0] + a[ 6] * b[ 1] + a[10] * b[ 2] + a[14] * b[ 3];
+	out[ 3] = a[ 3] * b[ 0] + a[ 7] * b[ 1] + a[11] * b[ 2] + a[15] * b[ 3];
+
+	out[ 4] = a[ 0] * b[ 4] + a[ 4] * b[ 5] + a[ 8] * b[ 6] + a[12] * b[ 7];
+	out[ 5] = a[ 1] * b[ 4] + a[ 5] * b[ 5] + a[ 9] * b[ 6] + a[13] * b[ 7];
+	out[ 6] = a[ 2] * b[ 4] + a[ 6] * b[ 5] + a[10] * b[ 6] + a[14] * b[ 7];
+	out[ 7] = a[ 3] * b[ 4] + a[ 7] * b[ 5] + a[11] * b[ 6] + a[15] * b[ 7];
+
+	out[ 8] = a[ 0] * b[ 8] + a[ 4] * b[ 9] + a[ 8] * b[10] + a[12] * b[11];
+	out[ 9] = a[ 1] * b[ 8] + a[ 5] * b[ 9] + a[ 9] * b[10] + a[13] * b[11];
+	out[10] = a[ 2] * b[ 8] + a[ 6] * b[ 9] + a[10] * b[10] + a[14] * b[11];
+	out[11] = a[ 3] * b[ 8] + a[ 7] * b[ 9] + a[11] * b[10] + a[15] * b[11];
+
+	out[12] = a[ 0] * b[12] + a[ 4] * b[13] + a[ 8] * b[14] + a[12] * b[15];
+	out[13] = a[ 1] * b[12] + a[ 5] * b[13] + a[ 9] * b[14] + a[13] * b[15];
+	out[14] = a[ 2] * b[12] + a[ 6] * b[13] + a[10] * b[14] + a[14] * b[15];
+	out[15] = a[ 3] * b[12] + a[ 7] * b[13] + a[11] * b[14] + a[15] * b[15];
+}
+
+void
+Mat4x4Transform(const mat4x4 in1, const vec4_t in2, vec4_t out)
+{
+	out[ 0] = in1[ 0] * in2[ 0] + in1[ 4] * in2[ 1] + in1[ 8] * in2[ 2] + in1[12] * in2[ 3];
+	out[ 1] = in1[ 1] * in2[ 0] + in1[ 5] * in2[ 1] + in1[ 9] * in2[ 2] + in1[13] * in2[ 3];
+	out[ 2] = in1[ 2] * in2[ 0] + in1[ 6] * in2[ 1] + in1[10] * in2[ 2] + in1[14] * in2[ 3];
+	out[ 3] = in1[ 3] * in2[ 0] + in1[ 7] * in2[ 1] + in1[11] * in2[ 2] + in1[15] * in2[ 3];
+}
+
+qbool
+Mat4x4Compare(const mat4x4 a, const mat4x4 b)
+{
+	unsigned int i;
+
+	for(i = 0; i < 16; ++i)
+		if(a[i] != b[i])
+			return qfalse;
+	return qtrue;
+}
+
+void
+Mat4x4Translation(vec3_t v, mat4x4 out)
+{
+	out[ 0] = 1.0f; out[ 4] = 0.0f; out[ 8] = 0.0f; out[12] = v[0];
+	out[ 1] = 0.0f; out[ 5] = 1.0f; out[ 9] = 0.0f; out[13] = v[1];
+	out[ 2] = 0.0f; out[ 6] = 0.0f; out[10] = 1.0f; out[14] = v[2];
+	out[ 3] = 0.0f; out[ 7] = 0.0f; out[11] = 0.0f; out[15] = 1.0f;
+}
+
+void
+Mat4x4Ortho(float l, float r, float bottom, float top, float znear, float zfar, mat4x4 out)
+{
+	Mat4x4ToZero(out);
+	out[ 0] = 2.0f / (r - l);
+	out[ 5] = 2.0f / (top - bottom);
+	out[10] = 2.0f / (zfar - znear);
+	out[12] = -(r + l) / (r - l);
+	out[13] = -(top + bottom) / (top - bottom);
+	out[14] = -(zfar + znear) / (zfar - znear);
+	out[15] = 1.0f;
+}
 
 int
 Q_log2(int val)
@@ -951,8 +1051,6 @@ Q_log2(int val)
 		answer++;
 	return answer;
 }
-
-
 
 /*
  * PlaneTypeForNormal

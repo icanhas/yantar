@@ -1412,7 +1412,7 @@ GLSL_SetUniformFloat5(shaderProgram_t *program, int uniformNum, const vec5_t v)
 }
 
 void
-GLSL_SetUniformMatrix16(shaderProgram_t *program, int uniformNum, const matrix_t matrix)
+GLSL_SetUniformMatrix16(shaderProgram_t *program, int uniformNum, const mat4x4 matrix)
 {
 	GLint	*uniforms	= program->uniforms;
 	vec_t	*compare	= (float*)(program->uniformBuffer + program->uniformBufferOffsets[uniformNum]);
@@ -1427,11 +1427,11 @@ GLSL_SetUniformMatrix16(shaderProgram_t *program, int uniformNum, const matrix_t
 		return;
 	}
 
-	if(Matrix16Compare(matrix, compare)){
+	if(Mat4x4Compare(matrix, compare)){
 		return;
 	}
 
-	Matrix16Copy(matrix, compare);
+	Mat4x4Copy(matrix, compare);
 
 	qglUniformMatrix4fvARB(uniforms[uniformNum], 1, GL_FALSE, matrix);
 }

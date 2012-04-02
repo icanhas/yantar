@@ -981,7 +981,7 @@ RB_CalcTurbulentTexCoords(const waveForm_t *wf, float *st)
 }
 
 void
-RB_CalcTurbulentTexMatrix(const waveForm_t *wf, matrix_t matrix)
+RB_CalcTurbulentTexMatrix(const waveForm_t *wf, mat4x4 matrix)
 {
 	float now;
 

@@ -1207,8 +1207,8 @@ LerpMeshVertexes_scalar(mdvSurface_t *surf, float backlerp)
 		oldVerts = surf->verts + backEnd.currentEntity->e.oldframe * surf->numVerts;
 
 		for(vertNum=0; vertNum < surf->numVerts; vertNum++){
-			VectorLerp(newVerts->xyz,    oldVerts->xyz,    backlerp, outXyz);
-			VectorLerp(newVerts->normal, oldVerts->normal, backlerp, outNormal);
+			Vec3Lerp(newVerts->xyz,    oldVerts->xyz,    backlerp, outXyz);
+			Vec3Lerp(newVerts->normal, oldVerts->normal, backlerp, outNormal);
 			/* VectorNormalize(outNormal); */
 			newVerts++;
 			oldVerts++;

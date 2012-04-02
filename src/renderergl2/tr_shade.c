@@ -209,8 +209,8 @@ ComputeTexMatrix(shaderStage_t *pStage, int bundleNum, float *outmatrix)
 	float matrix[16], currentmatrix[16];
 	textureBundle_t *bundle = &pStage->bundle[bundleNum];
 
-	Matrix16Identity(outmatrix);
-	Matrix16Identity(currentmatrix);
+	Mat4x4ToIdentity(outmatrix);
+	Mat4x4ToIdentity(currentmatrix);
 
 	for(tm = 0; tm < bundle->numTexMods; tm++){
 		switch(bundle->texMods[tm].type){
@@ -224,49 +224,49 @@ ComputeTexMatrix(shaderStage_t *pStage, int bundleNum, float *outmatrix)
 				matrix);
 			outmatrix[12]	= matrix[12];
 			outmatrix[13]	= matrix[13];
-			Matrix16Copy(outmatrix, currentmatrix);
+			Mat4x4Copy(outmatrix, currentmatrix);
 			break;
 
 		case TMOD_ENTITY_TRANSLATE:
 			RB_CalcScrollTexMatrix(backEnd.currentEntity->e.shaderTexCoord,
 				matrix);
-			Matrix16Multiply(matrix, currentmatrix, outmatrix);
-			Matrix16Copy(outmatrix, currentmatrix);
+			Mat4x4Mul(matrix, currentmatrix, outmatrix);
+			Mat4x4Copy(outmatrix, currentmatrix);
 			break;
 
 		case TMOD_SCROLL:
 			RB_CalcScrollTexMatrix(bundle->texMods[tm].scroll,
 				matrix);
-			Matrix16Multiply(matrix, currentmatrix, outmatrix);
-			Matrix16Copy(outmatrix, currentmatrix);
+			Mat4x4Mul(matrix, currentmatrix, outmatrix);
+			Mat4x4Copy(outmatrix, currentmatrix);
 			break;
 
 		case TMOD_SCALE:
 			RB_CalcScaleTexMatrix(bundle->texMods[tm].scale,
 				matrix);
-			Matrix16Multiply(matrix, currentmatrix, outmatrix);
-			Matrix16Copy(outmatrix, currentmatrix);
+			Mat4x4Mul(matrix, currentmatrix, outmatrix);
+			Mat4x4Copy(outmatrix, currentmatrix);
 			break;
 
 		case TMOD_STRETCH:
 			RB_CalcStretchTexMatrix(&bundle->texMods[tm].wave,
 				matrix);
-			Matrix16Multiply(matrix, currentmatrix, outmatrix);
-			Matrix16Copy(outmatrix, currentmatrix);
+			Mat4x4Mul(matrix, currentmatrix, outmatrix);
+			Mat4x4Copy(outmatrix, currentmatrix);
 			break;
 
 		case TMOD_TRANSFORM:
 			RB_CalcTransformTexMatrix(&bundle->texMods[tm],
 				matrix);
-			Matrix16Multiply(matrix, currentmatrix, outmatrix);
-			Matrix16Copy(outmatrix, currentmatrix);
+			Mat4x4Mul(matrix, currentmatrix, outmatrix);
+			Mat4x4Copy(outmatrix, currentmatrix);
 			break;
 
 		case TMOD_ROTATE:
 			RB_CalcRotateTexMatrix(bundle->texMods[tm].rotateSpeed,
 				matrix);
-			Matrix16Multiply(matrix, currentmatrix, outmatrix);
-			Matrix16Copy(outmatrix, currentmatrix);
+			Mat4x4Mul(matrix, currentmatrix, outmatrix);
+			Mat4x4Copy(outmatrix, currentmatrix);
 			break;
 
 		default:
@@ -715,7 +715,7 @@ ForwardDlight(void)
 		dlight_t *dl;
 		shaderProgram_t *sp;
 		vec4_t		vector;
-		matrix_t	matrix;
+		mat4x4	matrix;
 
 		if(!(tess.dlightBits & (1 << l))){
 			continue;	/* this surface definately doesn't have any of this light */
@@ -799,7 +799,7 @@ ForwardDlight(void)
 		 * where they aren't rendered */
 		GL_State(GLS_SRCBLEND_ONE | GLS_DSTBLEND_ONE | GLS_DEPTHFUNC_EQUAL);
 
-		Matrix16Identity(matrix);
+		Mat4x4ToIdentity(matrix);
 		GLSL_SetUniformMatrix16(sp, GENERIC_UNIFORM_MODELMATRIX, matrix);
 
 		if(pStage->bundle[TB_DIFFUSEMAP].image[0])
@@ -999,7 +999,7 @@ static void
 RB_IterateStagesGeneric(shaderCommands_t *input)
 {
 	int stage;
-	matrix_t	matrix;
+	mat4x4	matrix;
 
 	vec4_t	fogDistanceVector, fogDepthVector = {0, 0, 0, 0};
 	float	eyeT = 0;
@@ -1222,8 +1222,8 @@ RB_RenderShadowmap(shaderCommands_t *input)
 		if(backEnd.currentEntity && backEnd.currentEntity != &tr.worldEntity){
 			GLSL_SetUniformMatrix16(sp, GENERIC_UNIFORM_MODELMATRIX, backEnd.or.transformMatrix);
 		}else{
-			matrix_t matrix;
-			Matrix16Identity(matrix);
+			mat4x4 matrix;
+			Mat4x4ToIdentity(matrix);
 			GLSL_SetUniformMatrix16(sp, GENERIC_UNIFORM_MODELMATRIX, matrix);
 		}
 

@@ -382,18 +382,18 @@ GL_State(unsigned long stateBits)
 
 
 void
-GL_SetProjectionMatrix(matrix_t matrix)
+GL_SetProjectionMatrix(mat4x4 matrix)
 {
-	Matrix16Copy(matrix, glState.projection);
-	Matrix16Multiply(glState.projection, glState.modelview, glState.modelviewProjection);
+	Mat4x4Copy(matrix, glState.projection);
+	Mat4x4Mul(glState.projection, glState.modelview, glState.modelviewProjection);
 }
 
 
 void
-GL_SetModelviewMatrix(matrix_t matrix)
+GL_SetModelviewMatrix(mat4x4 matrix)
 {
-	Matrix16Copy(matrix, glState.modelview);
-	Matrix16Multiply(glState.projection, glState.modelview, glState.modelviewProjection);
+	Mat4x4Copy(matrix, glState.modelview);
+	Mat4x4Mul(glState.projection, glState.modelview, glState.modelviewProjection);
 }
 
 
@@ -790,7 +790,7 @@ RB_RenderDrawSurfList(drawSurf_t *drawSurfs, int numDrawSurfs)
 void
 RB_SetGL2D(void)
 {
-	matrix_t matrix;
+	mat4x4 matrix;
 	int width, height;
 
 	if(backEnd.projection2D && backEnd.last2DFBO == glState.currentFBO)
@@ -811,9 +811,9 @@ RB_SetGL2D(void)
 	qglViewport(0, 0, width, height);
 	qglScissor(0, 0, width, height);
 
-	Matrix16Ortho(0, width, height, 0, 0, 1, matrix);
+	Mat4x4Ortho(0, width, height, 0, 0, 1, matrix);
 	GL_SetProjectionMatrix(matrix);
-	Matrix16Identity(matrix);
+	Mat4x4ToIdentity(matrix);
 	GL_SetModelviewMatrix(matrix);
 
 	GL_State(GLS_DEPTHTEST_DISABLE |

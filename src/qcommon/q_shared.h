@@ -318,6 +318,8 @@ typedef vec_t vec3_t[3];
 typedef vec_t vec4_t[4];
 typedef vec_t vec5_t[5];
 
+typedef vec_t mat4x4[16];
+
 typedef int fixed4_t;
 typedef int fixed8_t;
 typedef int fixed16_t;
@@ -553,6 +555,16 @@ void	_VectorAdd(const vec3_t veca, const vec3_t vecb, vec3_t out);
 void	_VectorCopy(const vec3_t in, vec3_t out);
 void	_VectorScale(const vec3_t in, float scale, vec3_t out);
 void	_VectorMA(const vec3_t veca, float scale, const vec3_t vecb, vec3_t vecc);
+void	Vec3Lerp(const vec3_t a, const vec3_t b, float lerp, vec3_t c);
+
+void	Mat4x4ToZero(mat4x4 out);
+void	Mat4x4ToIdentity(mat4x4 out);
+void	Mat4x4Copy(const mat4x4 in, mat4x4 out);
+void	Mat4x4Mul(const mat4x4 in1, const mat4x4 in2, mat4x4 out);
+void	Mat4x4Transform(const mat4x4 in1, const vec4_t in2, vec4_t out);
+qbool	Mat4x4Compare(const mat4x4 a, const mat4x4 b);
+void	Mat4x4Translation(vec3_t vec, mat4x4 out);
+void	Mat4x4Ortho(float left, float right, float bottom, float top, float znear, float zfar, mat4x4 out);
 
 unsigned ColorBytes3(float r, float g, float b);
 unsigned ColorBytes4(float r, float g, float b, float a);

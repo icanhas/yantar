@@ -1530,9 +1530,9 @@ typedef struct {
 	FBO_t		*currentFBO;
 	VBO_t		*currentVBO;
 	IBO_t		*currentIBO;
-	matrix_t	modelview;
-	matrix_t	projection;
-	matrix_t	modelviewProjection;
+	mat4x4	modelview;
+	mat4x4	projection;
+	mat4x4	modelviewProjection;
 } glstate_t;
 
 typedef enum {
@@ -2007,8 +2007,8 @@ void    GL_TextureMode(const char *string);
 void    GL_CheckErrs(char *file, int line);
 #define GL_CheckErrors(...) GL_CheckErrs(__FILE__, __LINE__)
 void    GL_State(unsigned long stateVector);
-void    GL_SetProjectionMatrix(matrix_t matrix);
-void    GL_SetModelviewMatrix(matrix_t matrix);
+void    GL_SetProjectionMatrix(mat4x4 matrix);
+void    GL_SetModelviewMatrix(mat4x4 matrix);
 void    GL_TexEnv(int env);
 void    GL_Cull(int cullType);
 
@@ -2342,7 +2342,7 @@ void GLSL_SetUniformFloat5(shaderProgram_t *program, int uniformNum, const vec5_
 void GLSL_SetUniformVec2(shaderProgram_t *program, int uniformNum, const vec2_t v);
 void GLSL_SetUniformVec3(shaderProgram_t *program, int uniformNum, const vec3_t v);
 void GLSL_SetUniformVec4(shaderProgram_t *program, int uniformNum, const vec4_t v);
-void GLSL_SetUniformMatrix16(shaderProgram_t *program, int uniformNum, const matrix_t matrix);
+void GLSL_SetUniformMatrix16(shaderProgram_t *program, int uniformNum, const mat4x4 matrix);
 
 shaderProgram_t*GLSL_GetGenericShaderProgram(int stage);
 
@@ -2431,7 +2431,7 @@ void    RB_CalcTransformTexCoords(const texModInfo_t *tmi, float *dstTexCoords);
 void    RB_CalcScaleTexMatrix(const float scale[2], float *matrix);
 void    RB_CalcScrollTexMatrix(const float scrollSpeed[2], float *matrix);
 void    RB_CalcRotateTexMatrix(float degsPerSecond, float *matrix);
-void RB_CalcTurbulentTexMatrix(const waveForm_t *wf, matrix_t matrix);
+void RB_CalcTurbulentTexMatrix(const waveForm_t *wf, mat4x4 matrix);
 void    RB_CalcTransformTexMatrix(const texModInfo_t *tmi, float *matrix);
 void    RB_CalcStretchTexMatrix(const waveForm_t *wf, float *matrix);
 
