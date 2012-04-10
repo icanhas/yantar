@@ -94,7 +94,7 @@ for d in $whitelist; do
 
 	filt="$d/*.c $d/*.h"
 	for f in $filt; do
-		cat $f | uncrustify -q -c .cb > "$f.tmp"
+		<$f uncrustify -q -c .cb >"$f.tmp"
 		mv "$f.tmp" $f
 	done
 	echo -n .
