@@ -21,38 +21,25 @@
 #ifndef __Q_SHARED_H
 #define __Q_SHARED_H
 
-#ifdef STANDALONE
 #define PRODUCT_NAME		"yantar"
 #define BASEGAME		"base"
-#define CLIENT_WINDOW_TITLE	"Yantar"
-#define CLIENT_WINDOW_MIN_TITLE "Yantar"
-#define HOMEPATH_NAME_UNIX	".yantar"
-#define HOMEPATH_NAME_WIN	"yantar"
+#define BASETA			"missionpack"	/* remove this */
+#define CLIENT_WINDOW_TITLE	"Konkrete"
+#define CLIENT_WINDOW_MIN_TITLE "Konkrete"
+#define HOMEPATH_NAME_UNIX	".konkrete"
+#define HOMEPATH_NAME_WIN	"Konkrete"
 #define HOMEPATH_NAME_MACOSX	HOMEPATH_NAME_WIN
 /* must not contain whitespace */
-#define GAMENAME_FOR_MASTER	"foobar"
-#else
-#define PRODUCT_NAME		"ioq3"
-#define BASEGAME		"baseq3"
-#define CLIENT_WINDOW_TITLE	"ioquake3"
-#define CLIENT_WINDOW_MIN_TITLE "ioq3"
-#define HOMEPATH_NAME_UNIX	".q3a"
-#define HOMEPATH_NAME_WIN	"Quake3"
-#define HOMEPATH_NAME_MACOSX	HOMEPATH_NAME_WIN
-#define GAMENAME_FOR_MASTER	"Quake3Arena"
-#define LEGACY_PROTOCOL
-#endif
+#define GAMENAME_FOR_MASTER	"Konkrete"
 
 /*
- * Heartbeat for dpmaster protocol. You shouldn't change this unless you know
- * what you're doing
+ * Heartbeat for dpmaster protocol. You shouldn't change 
+ * this unless you know what you're doing
  */
 #define HEARTBEAT_FOR_MASTER	"DarkPlaces"
 
-#define BASETA			"missionpack"
-
 #ifndef PRODUCT_VERSION
-#define PRODUCT_VERSION "1.36"
+#define PRODUCT_VERSION "???"
 #endif
 
 #define Q3_VERSION		PRODUCT_NAME " " PRODUCT_VERSION
@@ -60,7 +47,7 @@
 #define MAX_TEAMNAME		32
 #define MAX_MASTER_SERVERS	5	/* number of supported master servers */
 
-#define DEMOEXT			"dm_"	/* standard demo extension */
+#define DEMOEXT			"dem_"	/* standard demo extension */
 
 /* Ignore __attribute__ on non-gcc platforms */
 #ifndef __GNUC__
