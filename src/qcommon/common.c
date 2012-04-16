@@ -2650,13 +2650,14 @@ Com_Init(char *commandLine)
 	/* Add some commands here already so users can use them from config files */
 	Cmd_AddCommand ("setenv", Com_Setenv_f);
 	if(com_developer && com_developer->integer){
-		Cmd_AddCommand ("error", Com_Error_f);
-		Cmd_AddCommand ("crash", Com_Crash_f);
-		Cmd_AddCommand ("freeze", Com_Freeze_f);
+		Cmd_AddCommand("error", Com_Error_f);
+		Cmd_AddCommand("crash", Com_Crash_f);
+		Cmd_AddCommand("freeze", Com_Freeze_f);
 	}
-	Cmd_AddCommand ("quit", Com_Quit_f);
-	Cmd_AddCommand ("changeVectors", MSG_ReportChangeVectors_f);
-	Cmd_AddCommand ("writeconfig", Com_WriteConfig_f);
+	Cmd_AddCommand("quit", Com_Quit_f);
+	Cmd_AddCommand("q", Com_Quit_f);
+	Cmd_AddCommand("changeVectors", MSG_ReportChangeVectors_f);
+	Cmd_AddCommand("writeconfig", Com_WriteConfig_f);
 	Cmd_SetCommandCompletionFunc("writeconfig", Cmd_CompleteCfgName);
 	Cmd_AddCommand("game_restart", Com_GameRestart_f);
 
@@ -2667,10 +2668,10 @@ Com_Init(char *commandLine)
 
 	/* get dedicated here for proper hunk megs initialization */
 #ifdef DEDICATED
-	com_dedicated = Cvar_Get ("dedicated", "1", CVAR_INIT);
+	com_dedicated = Cvar_Get("dedicated", "1", CVAR_INIT);
 	Cvar_CheckRange(com_dedicated, 1, 2, qtrue);
 #else
-	com_dedicated = Cvar_Get ("dedicated", "0", CVAR_LATCH);
+	com_dedicated = Cvar_Get("dedicated", "0", CVAR_LATCH);
 	Cvar_CheckRange(com_dedicated, 0, 2, qtrue);
 #endif
 	/* allocate the stack based hunk allocator */
@@ -2683,19 +2684,19 @@ Com_Init(char *commandLine)
 	/*
 	 * init commands and vars
 	 *  */
-	com_altivec = Cvar_Get ("com_altivec", "1", CVAR_ARCHIVE);
-	com_maxfps = Cvar_Get ("com_maxfps", "85", CVAR_ARCHIVE);
-	com_blood = Cvar_Get ("com_blood", "1", CVAR_ARCHIVE);
+	com_altivec = Cvar_Get("com_altivec", "1", CVAR_ARCHIVE);
+	com_maxfps = Cvar_Get("com_maxfps", "85", CVAR_ARCHIVE);
+	com_blood = Cvar_Get("com_blood", "1", CVAR_ARCHIVE);
 
-	com_logfile = Cvar_Get ("logfile", "0", CVAR_TEMP);
+	com_logfile = Cvar_Get("logfile", "0", CVAR_TEMP);
 
 	com_timescale = Cvar_Get ("timescale", "1",
 		CVAR_CHEAT | CVAR_SYSTEMINFO);
-	com_fixedtime	= Cvar_Get ("fixedtime", "0", CVAR_CHEAT);
-	com_showtrace	= Cvar_Get ("com_showtrace", "0", CVAR_CHEAT);
-	com_speeds	= Cvar_Get ("com_speeds", "0", 0);
-	com_timedemo	= Cvar_Get ("timedemo", "0", CVAR_CHEAT);
-	com_cameraMode	= Cvar_Get ("com_cameraMode", "0", CVAR_CHEAT);
+	com_fixedtime	= Cvar_Get("fixedtime", "0", CVAR_CHEAT);
+	com_showtrace	= Cvar_Get("com_showtrace", "0", CVAR_CHEAT);
+	com_speeds	= Cvar_Get("com_speeds", "0", 0);
+	com_timedemo	= Cvar_Get("timedemo", "0", CVAR_CHEAT);
+	com_cameraMode	= Cvar_Get("com_cameraMode", "0", CVAR_CHEAT);
 
 	cl_paused = Cvar_Get ("cl_paused", "0", CVAR_ROM);
 	sv_paused = Cvar_Get ("sv_paused", "0", CVAR_ROM);
@@ -2736,19 +2737,17 @@ Com_Init(char *commandLine)
 
 	Sys_Init();
 
-	if(Sys_WritePIDFile( )){
 #ifndef DEDICATED
+	if(Sys_WritePIDFile()){
 		const char *message =
 			"The last time " CLIENT_WINDOW_TITLE " ran, "
-							     "it didn't exit properly. This may be due to inappropriate video "
-							     "settings. Would you like to start with \"safe\" video settings?";
+			"it didn't exit properly. This may be due to inappropriate video "
+			"settings. Would you like to start with \"safe\" video settings?";
 
 		if(Sys_Dialog(DT_YES_NO, message, "Abnormal Exit") == DR_YES)
 			Cvar_Set("com_abnormalExit", "1");
-
-#endif
 	}
-
+#endif
 	/* Pick a random port value */
 	Com_RandomBytes((byte*)&qport, sizeof(int));
 	Netchan_Init(qport & 0xffff);
@@ -2816,19 +2815,17 @@ Com_ReadFromPipe(void)
 	if(!pipefile)
 		return;
 
-	while((read =
-		       FS_Read(buf + accu, sizeof(buf) - accu - 1,
-			       pipefile)) > 0){
+	while((read = FS_Read(buf+accu, sizeof(buf)-accu-1, pipefile)) > 0){
 		char	*brk = NULL;
 		int	i;
 
 		for(i = accu; i < accu + read; ++i){
-			if(buf[ i ] == '\0')
+			if(buf[i] == '\0')
 				buf[ i ] = '\n';
-			if(buf[ i ] == '\n' || buf[ i ] == '\r')
-				brk = &buf[ i + 1 ];
+			if(buf[i] == '\n' || buf[i] == '\r')
+				brk = &buf[i+1];
 		}
-		buf[ accu + read ] = '\0';
+		buf[accu+read] = '\0';
 
 		accu += read;
 
