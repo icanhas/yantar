@@ -73,8 +73,7 @@
 #define QDECL
 #define QCALL
 
-/* ================================================================= WIN64/32 === */
-
+/* Windows */
 #if defined(_WIN64) || defined(__WIN64__)
 
 #undef idx64
@@ -109,7 +108,6 @@
 
 #undef QDECL
 #define QDECL __cdecl
-
 #undef QCALL
 #define QCALL __stdcall
 
@@ -129,14 +127,11 @@
 #endif
 
 #define Q3_LITTLE_ENDIAN
-
 #define DLL_EXT ".dll"
 
 #endif
 
-
-/* ============================================================== MAC OS X === */
-
+/* Mac OS X */
 #if defined(MACOS_X) || defined(__APPLE_CC__)
 
 /* make sure this is defined, just for sanity's sake... */
@@ -165,8 +160,7 @@
 
 #endif
 
-/* ================================================================= LINUX === */
-
+/* Linux */
 #if defined(__linux__) || defined(__FreeBSD_kernel__)
 
 #include <endian.h>
@@ -227,8 +221,7 @@
 
 #endif
 
-/* =================================================================== BSD === */
-
+/* BSD */
 #if defined(__FreeBSD__) || defined(__OpenBSD__) || defined(__NetBSD__)
 
 #include <sys/types.h>
@@ -269,8 +262,7 @@
 
 #endif
 
-/* ================================================================= SUNOS === */
-
+/* SunOS */
 #ifdef __sun
 
 #include <stdint.h>
@@ -296,37 +288,29 @@
 
 #endif
 
-/* ================================================================== IRIX === */
-
+/* IRIX */
 #ifdef __sgi
 
 #define OS_STRING	"irix"
 #define ID_INLINE	__inline
 #define PATH_SEP	'/'
-
 #define ARCH_STRING	"mips"
-
 #define Q3_BIG_ENDIAN	/* SGI's MIPS are always big endian */
-
 #define DLL_EXT		".so"
 
 #endif
 
-/* ================================================================== Q3VM === */
-
+/* Q3VM */
 #ifdef Q3_VM
 
 #define OS_STRING	"q3vm"
 #define ID_INLINE
 #define PATH_SEP	'/'
-
 #define ARCH_STRING	"bytecode"
-
 #define DLL_EXT		".qvm"
 
 #endif
-
-/* =========================================================================== */
+/* --- */
 
 /* catch missing defines in above blocks */
 #if !defined(OS_STRING)
@@ -348,7 +332,6 @@
 #ifndef DLL_EXT
 #error "DLL_EXT not defined"
 #endif
-
 
 /* endianness */
 void CopyShortSwap(void *dest, void *src);
@@ -394,7 +377,6 @@ float FloatSwap(const float *f);
 #error "Endianness not defined"
 #endif
 
-
 /* platform string */
 #ifdef NDEBUG
 #define PLATFORM_STRING OS_STRING "-" ARCH_STRING
@@ -405,3 +387,4 @@ float FloatSwap(const float *f);
 #endif
 
 #endif
+
