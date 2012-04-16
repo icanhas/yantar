@@ -263,23 +263,6 @@ ifneq ($(BUILD_CLIENT),0)
   endif
 endif
 
-# Add svn version info
-USE_SVN=
-ifeq ($(wildcard .svn),.svn)
-  SVN_REV=$(shell LANG=C svnversion .)
-  ifneq ($(SVN_REV),)
-    VERSION:=$(VERSION)_SVN$(SVN_REV)
-    USE_SVN=1
-  endif
-else
-ifeq ($(wildcard .git/svn/.metadata),.git/svn/.metadata)
-  SVN_REV=$(shell LANG=C git svn info | awk '$$1 == "Revision:" {print $$2; exit 0}')
-  ifneq ($(SVN_REV),)
-    VERSION:=$(VERSION)_SVN$(SVN_REV)
-  endif
-endif
-endif
-
 
 #############################################################################
 # SETUP AND BUILD -- LINUX
@@ -2389,13 +2372,6 @@ $(O)/ded/%.o: $(SYSDIR)/%.rc
 
 $(O)/ded/%.o: $(NDIR)/%.c
 	$(DO_DED_CC)
-
-# Extra dependencies to ensure the SVN version is incorporated
-ifeq ($(USE_SVN),1)
-  $(O)/client/cl_console.o : .svn/entries
-  $(O)/client/common.o : .svn/entries
-  $(O)/ded/common.o : .svn/entries
-endif
 
 
 #############################################################################
