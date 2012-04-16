@@ -863,14 +863,14 @@ endif
 
 ifneq ($(BUILD_GAME_SO),0)
   TARGETS += \
-    $(B)/$(BASEGAME)/cgame$(SHLIBNAME) \
-    $(B)/$(BASEGAME)/qagame$(SHLIBNAME) \
-    $(B)/$(BASEGAME)/ui$(SHLIBNAME)
+    $(B)/$(BASEGAME)/cgame-$(SHLIBNAME) \
+    $(B)/$(BASEGAME)/qagame-$(SHLIBNAME) \
+    $(B)/$(BASEGAME)/ui-$(SHLIBNAME)
   ifneq ($(BUILD_MISSIONPACK),0)
     TARGETS += \
-    $(B)/$(MISSIONPACK)/cgame$(SHLIBNAME) \
-    $(B)/$(MISSIONPACK)/qagame$(SHLIBNAME) \
-    $(B)/$(MISSIONPACK)/ui$(SHLIBNAME)
+    $(B)/$(MISSIONPACK)/cgame-$(SHLIBNAME) \
+    $(B)/$(MISSIONPACK)/qagame-$(SHLIBNAME) \
+    $(B)/$(MISSIONPACK)/ui-$(SHLIBNAME)
   endif
 endif
 
@@ -2031,7 +2031,7 @@ Q3CGOBJ_ = \
 Q3CGOBJ = $(Q3CGOBJ_) $(O)/$(BASEGAME)/cgame/cg_syscalls.o
 Q3CGVMOBJ = $(Q3CGOBJ_:%.o=%.asm)
 
-$(B)/$(BASEGAME)/cgame$(SHLIBNAME): $(Q3CGOBJ)
+$(B)/$(BASEGAME)/cgame-$(SHLIBNAME): $(Q3CGOBJ)
 	$(echo_cmd) "LD $@"
 	$(Q)$(CC) $(CFLAGS) $(SHLIBLDFLAGS) -o $@ $(Q3CGOBJ)
 
@@ -2076,7 +2076,7 @@ MPCGOBJ_ = \
 MPCGOBJ = $(MPCGOBJ_) $(O)/$(MISSIONPACK)/cgame/cg_syscalls.o
 MPCGVMOBJ = $(MPCGOBJ_:%.o=%.asm)
 
-$(B)/$(MISSIONPACK)/cgame$(SHLIBNAME): $(MPCGOBJ)
+$(B)/$(MISSIONPACK)/cgame-$(SHLIBNAME): $(MPCGOBJ)
 	$(echo_cmd) "LD $@"
 	$(Q)$(CC) $(CFLAGS) $(SHLIBLDFLAGS) -o $@ $(MPCGOBJ)
 
@@ -2129,7 +2129,7 @@ Q3GOBJ_ = \
 Q3GOBJ = $(Q3GOBJ_) $(O)/$(BASEGAME)/game/g_syscalls.o
 Q3GVMOBJ = $(Q3GOBJ_:%.o=%.asm)
 
-$(B)/$(BASEGAME)/qagame$(SHLIBNAME): $(Q3GOBJ)
+$(B)/$(BASEGAME)/qagame-$(SHLIBNAME): $(Q3GOBJ)
 	$(echo_cmd) "LD $@"
 	$(Q)$(CC) $(CFLAGS) $(SHLIBLDFLAGS) -o $@ $(Q3GOBJ)
 
@@ -2180,7 +2180,7 @@ MPGOBJ_ = \
 MPGOBJ = $(MPGOBJ_) $(O)/$(MISSIONPACK)/game/g_syscalls.o
 MPGVMOBJ = $(MPGOBJ_:%.o=%.asm)
 
-$(B)/$(MISSIONPACK)/qagame$(SHLIBNAME): $(MPGOBJ)
+$(B)/$(MISSIONPACK)/qagame-$(SHLIBNAME): $(MPGOBJ)
 	$(echo_cmd) "LD $@"
 	$(Q)$(CC) $(CFLAGS) $(SHLIBLDFLAGS) -o $@ $(MPGOBJ)
 
@@ -2243,7 +2243,7 @@ Q3UIOBJ_ = \
 Q3UIOBJ = $(Q3UIOBJ_) $(O)/$(MISSIONPACK)/ui/ui_syscalls.o
 Q3UIVMOBJ = $(Q3UIOBJ_:%.o=%.asm)
 
-$(B)/$(BASEGAME)/ui$(SHLIBNAME): $(Q3UIOBJ)
+$(B)/$(BASEGAME)/ui-$(SHLIBNAME): $(Q3UIOBJ)
 	$(echo_cmd) "LD $@"
 	$(Q)$(CC) $(CFLAGS) $(SHLIBLDFLAGS) -o $@ $(Q3UIOBJ)
 
@@ -2271,7 +2271,7 @@ MPUIOBJ_ = \
 MPUIOBJ = $(MPUIOBJ_) $(O)/$(MISSIONPACK)/ui/ui_syscalls.o
 MPUIVMOBJ = $(MPUIOBJ_:%.o=%.asm)
 
-$(B)/$(MISSIONPACK)/ui$(SHLIBNAME): $(MPUIOBJ)
+$(B)/$(MISSIONPACK)/ui-$(SHLIBNAME): $(MPUIOBJ)
 	$(echo_cmd) "LD $@"
 	$(Q)$(CC) $(CFLAGS) $(SHLIBLDFLAGS) -o $@ $(MPUIOBJ)
 
@@ -2503,19 +2503,19 @@ ifneq ($(BUILD_SERVER),0)
 endif
 
 ifneq ($(BUILD_GAME_SO),0)
-	$(INSTALL) $(STRIP_FLAG) -m 0755 $(BR)/$(BASEGAME)/cgame$(SHLIBNAME) \
+	$(INSTALL) $(STRIP_FLAG) -m 0755 $(BR)/$(BASEGAME)/cgame-$(SHLIBNAME) \
 					$(COPYDIR)/$(BASEGAME)/.
-	$(INSTALL) $(STRIP_FLAG) -m 0755 $(BR)/$(BASEGAME)/qagame$(SHLIBNAME) \
+	$(INSTALL) $(STRIP_FLAG) -m 0755 $(BR)/$(BASEGAME)/qagame-$(SHLIBNAME) \
 					$(COPYDIR)/$(BASEGAME)/.
-	$(INSTALL) $(STRIP_FLAG) -m 0755 $(BR)/$(BASEGAME)/ui$(SHLIBNAME) \
+	$(INSTALL) $(STRIP_FLAG) -m 0755 $(BR)/$(BASEGAME)/ui-$(SHLIBNAME) \
 					$(COPYDIR)/$(BASEGAME)/.
   ifneq ($(BUILD_MISSIONPACK),0)
 	-$(MKDIR) -p -m 0755 $(COPYDIR)/$(MISSIONPACK)
-	$(INSTALL) $(STRIP_FLAG) -m 0755 $(BR)/$(MISSIONPACK)/cgame$(SHLIBNAME) \
+	$(INSTALL) $(STRIP_FLAG) -m 0755 $(BR)/$(MISSIONPACK)/cgame-$(SHLIBNAME) \
 					$(COPYDIR)/$(MISSIONPACK)/.
-	$(INSTALL) $(STRIP_FLAG) -m 0755 $(BR)/$(MISSIONPACK)/qagame$(SHLIBNAME) \
+	$(INSTALL) $(STRIP_FLAG) -m 0755 $(BR)/$(MISSIONPACK)/qagame-$(SHLIBNAME) \
 					$(COPYDIR)/$(MISSIONPACK)/.
-	$(INSTALL) $(STRIP_FLAG) -m 0755 $(BR)/$(MISSIONPACK)/ui$(SHLIBNAME) \
+	$(INSTALL) $(STRIP_FLAG) -m 0755 $(BR)/$(MISSIONPACK)/ui-$(SHLIBNAME) \
 					$(COPYDIR)/$(MISSIONPACK)/.
   endif
 endif
