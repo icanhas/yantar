@@ -1465,37 +1465,37 @@ Q3OBJ = \
   $(O)/client/sys_main.o
 
 Q3R2OBJ = \
+  $(O)/renderer/tr_image_bmp.o \
+  $(O)/renderer/tr_image_jpg.o \
+  $(O)/renderer/tr_image_pcx.o \
+  $(O)/renderer/tr_image_png.o \
+  $(O)/renderer/tr_image_tga.o \
+  $(O)/renderer/tr_noise.o \
   $(O)/renderergl2/tr_animation.o \
   $(O)/renderergl2/tr_backend.o \
   $(O)/renderergl2/tr_bsp.o \
   $(O)/renderergl2/tr_cmds.o \
   $(O)/renderergl2/tr_curve.o \
-  $(O)/renderergl2/tr_extramath.o \
   $(O)/renderergl2/tr_extensions.o \
+  $(O)/renderergl2/tr_extramath.o \
   $(O)/renderergl2/tr_fbo.o \
   $(O)/renderergl2/tr_flares.o \
   $(O)/renderergl2/tr_font.o \
   $(O)/renderergl2/tr_glsl.o \
   $(O)/renderergl2/tr_image.o \
-  $(O)/renderer/tr_image_png.o \
-  $(O)/renderer/tr_image_jpg.o \
-  $(O)/renderer/tr_image_bmp.o \
-  $(O)/renderer/tr_image_tga.o \
-  $(O)/renderer/tr_image_pcx.o \
   $(O)/renderergl2/tr_init.o \
   $(O)/renderergl2/tr_light.o \
   $(O)/renderergl2/tr_main.o \
   $(O)/renderergl2/tr_marks.o \
+  $(O)/renderergl2/tr_material.o \
+  $(O)/renderergl2/tr_material_parse.o \
   $(O)/renderergl2/tr_mesh.o \
   $(O)/renderergl2/tr_model.o \
   $(O)/renderergl2/tr_model_iqm.o \
-  $(O)/renderer/tr_noise.o \
   $(O)/renderergl2/tr_postprocess.o \
   $(O)/renderergl2/tr_scene.o \
   $(O)/renderergl2/tr_shade.o \
   $(O)/renderergl2/tr_shade_calc.o \
-  $(O)/renderergl2/tr_shader.o \
-  $(O)/renderergl2/tr_material_parse.o \
   $(O)/renderergl2/tr_shadows.o \
   $(O)/renderergl2/tr_sky.o \
   $(O)/renderergl2/tr_surface.o \
