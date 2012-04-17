@@ -84,7 +84,7 @@ void    CM_FloodAreaConnections(void);
 void
 CMod_LoadShaders(lump_t *l)
 {
-	dshader_t *in, *out;
+	dmaterial_t *in, *out;
 	int i, count;
 
 	in = (void*)(cmod_base + l->fileofs);

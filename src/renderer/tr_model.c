@@ -469,7 +469,7 @@ R_LoadMD3(model_t *mod, int lod, void *buffer, const char *mod_name)
 		/* register the shaders */
 		shader = (md3Shader_t*)((byte*)surf + surf->ofsShaders);
 		for(j = 0; j < surf->numShaders; j++, shader++){
-			shader_t *sh;
+			material_t *sh;
 
 			sh = R_FindShader(shader->name, LIGHTMAP_NONE, qtrue);
 			if(sh->defaultShader){
@@ -531,7 +531,7 @@ R_LoadMDR(model_t *mod, void *buffer, int filesize, const char *mod_name)
 	mdrWeight_t *weight, *curweight;
 	mdrTag_t *tag, *curtag;
 	int size;
-	shader_t *sh;
+	material_t *sh;
 
 	pinmodel = (mdrHeader_t*)buffer;
 
@@ -851,7 +851,7 @@ R_LoadMD4(model_t *mod, void *buffer, const char *mod_name)
 	md4Vertex_t *v;
 	int	version;
 	int	size;
-	shader_t *sh;
+	material_t *sh;
 	int frameSize;
 
 	pinmodel = (md4Header_t*)buffer;

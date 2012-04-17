@@ -26,11 +26,11 @@ static char *s_shaderText;
 /* the shader is parsed into these global variables, then copied into
  * dynamically allocated memory if it is valid. */
 static shaderStage_t	stages[MAX_SHADER_STAGES];
-static shader_t shader;
+static material_t shader;
 static texModInfo_t	texMods[MAX_SHADER_STAGES][TR_MAX_TEXMODS];
 
 #define FILE_HASH_SIZE 1024
-static shader_t * hashTable[FILE_HASH_SIZE];
+static material_t * hashTable[FILE_HASH_SIZE];
 
 #define MAX_SHADERTEXT_HASH 2048
 static char **shaderTextHashTable[MAX_SHADERTEXT_HASH];
@@ -68,7 +68,7 @@ R_RemapShader(const char *shaderName, const char *newShaderName, const char *tim
 {
 	char	strippedName[MAX_QPATH];
 	int	hash;
-	shader_t	*sh, *sh2;
+	material_t	*sh, *sh2;
 	qhandle_t	h;
 
 	sh = R_FindShaderByName(shaderName);
@@ -1753,7 +1753,7 @@ FixRenderCommandList(int newShader)
 			{
 				int i;
 				drawSurf_t	*drawSurf;
-				shader_t	*shader;
+				material_t	*shader;
 				int	fogNum;
 				int	entityNum;
 				int	dlightMap;
@@ -1811,7 +1811,7 @@ SortNewShader(void)
 {
 	int i;
 	float sort;
-	shader_t *newShader;
+	material_t *newShader;
 
 	newShader = tr.shaders[ tr.numShaders - 1 ];
 	sort = newShader->sort;
@@ -1836,10 +1836,10 @@ SortNewShader(void)
 /*
  * GeneratePermanentShader
  */
-static shader_t *
+static material_t *
 GeneratePermanentShader(void)
 {
-	shader_t	*newShader;
+	material_t	*newShader;
 	int	i, b;
 	int	size, hash;
 
@@ -1848,7 +1848,7 @@ GeneratePermanentShader(void)
 		return tr.defaultShader;
 	}
 
-	newShader = ri.Hunk_Alloc(sizeof(shader_t), h_low);
+	newShader = ri.Hunk_Alloc(sizeof(material_t), h_low);
 
 	*newShader = shader;
 
@@ -1984,7 +1984,7 @@ VertexLightingCollapse(void)
  * Returns a freshly allocated shader with all the needed info
  * from the current global working shader
  */
-static shader_t *
+static material_t *
 FinishShader(void)
 {
 	int stage;
@@ -2233,12 +2233,12 @@ FindShaderInShaderText(const char *shadername)
  * Will always return a valid shader, but it might be the
  * default shader if the real one can't be found.
  */
-shader_t *
+material_t *
 R_FindShaderByName(const char *name)
 {
 	char	strippedName[MAX_QPATH];
 	int	hash;
-	shader_t *sh;
+	material_t *sh;
 
 	if((name==NULL) || (name[0] == 0)){
 		return tr.defaultShader;
@@ -2291,14 +2291,14 @@ R_FindShaderByName(const char *name)
  * most world construction surfaces.
  *
  */
-shader_t *
+material_t *
 R_FindShader(const char *name, int lightmapIndex, qbool mipRawImage)
 {
 	char strippedName[MAX_QPATH];
 	int i, hash;
 	char *shaderText;
 	image_t *image;
-	shader_t *sh;
+	material_t *sh;
 
 	if(name[0] == 0){
 		return tr.defaultShader;
@@ -2443,7 +2443,7 @@ qhandle_t
 RE_RegisterShaderFromImage(const char *name, int lightmapIndex, image_t *image, qbool mipRawImage)
 {
 	int i, hash;
-	shader_t *sh;
+	material_t *sh;
 
 	hash = generateHashValue(name, FILE_HASH_SIZE);
 
@@ -2557,7 +2557,7 @@ RE_RegisterShaderFromImage(const char *name, int lightmapIndex, image_t *image, 
 qhandle_t
 RE_RegisterShaderLightMap(const char *name, int lightmapIndex)
 {
-	shader_t *sh;
+	material_t *sh;
 
 	if(strlen(name) >= MAX_QPATH){
 		ri.Printf(PRINT_ALL, "Shader name exceeds MAX_QPATH\n");
@@ -2591,7 +2591,7 @@ RE_RegisterShaderLightMap(const char *name, int lightmapIndex)
 qhandle_t
 RE_RegisterShader(const char *name)
 {
-	shader_t *sh;
+	material_t *sh;
 
 	if(strlen(name) >= MAX_QPATH){
 		ri.Printf(PRINT_ALL, "Shader name exceeds MAX_QPATH\n");
@@ -2621,7 +2621,7 @@ RE_RegisterShader(const char *name)
 qhandle_t
 RE_RegisterShaderNoMip(const char *name)
 {
-	shader_t *sh;
+	material_t *sh;
 
 	if(strlen(name) >= MAX_QPATH){
 		ri.Printf(PRINT_ALL, "Shader name exceeds MAX_QPATH\n");
@@ -2646,9 +2646,9 @@ RE_RegisterShaderNoMip(const char *name)
  * R_GetShaderByHandle
  *
  * When a handle is passed in by another module, this range checks
- * it and returns a valid (possibly default) shader_t to be used internally.
+ * it and returns a valid (possibly default) material_t to be used internally.
  */
-shader_t *
+material_t *
 R_GetShaderByHandle(qhandle_t hShader)
 {
 	if(hShader < 0){
@@ -2673,7 +2673,7 @@ R_ShaderList_f(void)
 {
 	int	i;
 	int	count;
-	shader_t *shader;
+	material_t *shader;
 
 	ri.Printf (PRINT_ALL, "-----------------------\n");
 

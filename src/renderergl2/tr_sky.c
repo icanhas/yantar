@@ -430,7 +430,7 @@ DrawSkySide(struct image_s *image, const int mins[2], const int maxs[2])
 }
 
 static void
-DrawSkyBox(shader_t *shader)
+DrawSkyBox(material_t *shader)
 {
 	int i;
 
@@ -541,7 +541,7 @@ FillCloudySkySide(const int mins[2], const int maxs[2], qbool addIndexes)
 }
 
 static void
-FillCloudBox(const shader_t *shader, int stage)
+FillCloudBox(const material_t *shader, int stage)
 {
 	int i;
 
@@ -636,7 +636,7 @@ void
 R_BuildCloudData(shaderCommands_t *input)
 {
 	int i;
-	shader_t *shader;
+	material_t *shader;
 
 	shader = input->shader;
 

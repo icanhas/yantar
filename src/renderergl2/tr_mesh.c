@@ -267,7 +267,7 @@ R_AddMD3Surfaces(trRefEntity_t *ent)
 	int i;
 	mdvModel_t *model = NULL;
 	mdvSurface_t *surface = NULL;
-	shader_t *shader = NULL;
+	material_t *shader = NULL;
 	int cull;
 	int lod;
 	int fogNum;

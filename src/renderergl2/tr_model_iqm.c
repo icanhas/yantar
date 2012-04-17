@@ -757,7 +757,7 @@ R_AddIQMSurfaces(trRefEntity_t *ent)
 	qbool		personalModel;
 	int		cull;
 	int		fogNum;
-	shader_t	*shader;
+	material_t	*shader;
 	skin_t		*skin;
 
 	data = tr.currentModel->modelData;

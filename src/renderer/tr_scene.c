@@ -93,7 +93,7 @@ void
 R_AddPolygonSurfaces(void)
 {
 	int i;
-	shader_t *sh;
+	material_t *sh;
 	srfPoly_t *poly;
 
 	tr.currentEntityNum = ENTITYNUM_WORLD;

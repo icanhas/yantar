@@ -40,7 +40,7 @@ R_AddAnimSurfaces(trRefEntity_t *ent)
 	md4Header_t	*header;
 	md4Surface_t *surface;
 	md4LOD_t	*lod;
-	shader_t	*shader;
+	material_t	*shader;
 	int i;
 
 	header = (md4Header_t*)tr.currentModel->modelData;
@@ -308,7 +308,7 @@ R_MDRAddAnimSurfaces(trRefEntity_t *ent)
 	mdrHeader_t	*header;
 	mdrSurface_t *surface;
 	mdrLOD_t	*lod;
-	shader_t	*shader;
+	material_t	*shader;
 	skin_t		*skin;
 	int		i, j;
 	int		lodnum	= 0;

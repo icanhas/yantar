@@ -262,11 +262,11 @@ R_LoadVisibility(lump_t *l)
 /*
  * ShaderForShaderNum
  */
-static shader_t *
+static material_t *
 ShaderForShaderNum(int shaderNum, int lightmapNum)
 {
-	shader_t *shader;
-	dshader_t *dsh;
+	material_t *shader;
+	dmaterial_t *dsh;
 
 	shaderNum = LittleLong(shaderNum);
 	if(shaderNum < 0 || shaderNum >= s_worldData.numShaders){
@@ -1474,7 +1474,7 @@ static void
 R_LoadShaders(lump_t *l)
 {
 	int i, count;
-	dshader_t *in, *out;
+	dmaterial_t *in, *out;
 
 	in = (void*)(fileBase + l->fileofs);
 	if(l->filelen % sizeof(*in))
@@ -1571,7 +1571,7 @@ R_LoadFogs(lump_t *l, lump_t *brushesLump, lump_t *sidesLump)
 	int		count, brushesCount, sidesCount;
 	int		sideNum;
 	int		planeNum;
-	shader_t	*shader;
+	material_t	*shader;
 	float	d;
 	int	firstSide;
 

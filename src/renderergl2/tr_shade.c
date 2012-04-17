@@ -168,10 +168,10 @@ DrawNormals(shaderCommands_t *input)
  * to overflow.
  */
 void
-RB_BeginSurface(shader_t *shader, int fogNum)
+RB_BeginSurface(material_t *shader, int fogNum)
 {
 
-	shader_t *state = (shader->remappedShader) ? shader->remappedShader : shader;
+	material_t *state = (shader->remappedShader) ? shader->remappedShader : shader;
 
 	tess.numIndexes		= 0;
 	tess.firstIndex		= 0;

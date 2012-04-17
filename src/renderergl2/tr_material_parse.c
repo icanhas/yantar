@@ -24,7 +24,7 @@
  * dynamic memory if it is valid.
  */
 extern shaderStage_t	stages[MAX_SHADER_STAGES];
-extern shader_t shader;
+extern material_t shader;
 extern texModInfo_t	texMods[MAX_SHADER_STAGES][TR_MAX_TEXMODS];
 
 static qbool

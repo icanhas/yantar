@@ -98,7 +98,7 @@ R_CullGrid(srfGridMesh_t *cv)
  * This will also allow mirrors on both sides of a model without recursion.
  */
 static qbool
-R_CullSurface(surfaceType_t *surface, shader_t *shader)
+R_CullSurface(surfaceType_t *surface, material_t *shader)
 {
 	srfSurfaceFace_t *sface;
 	float d;

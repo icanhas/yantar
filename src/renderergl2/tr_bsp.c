@@ -595,11 +595,11 @@ R_LoadVisibility(lump_t *l)
 /*
  * ShaderForShaderNum
  */
-static shader_t *
+static material_t *
 ShaderForShaderNum(int shaderNum, int lightmapNum)
 {
-	shader_t *shader;
-	dshader_t *dsh;
+	material_t *shader;
+	dmaterial_t *dsh;
 
 	int _shaderNum = LittleLong(shaderNum);
 	if(_shaderNum < 0 || _shaderNum >= s_worldData.numShaders){
@@ -2314,7 +2314,7 @@ static void
 R_LoadShaders(lump_t *l)
 {
 	int i, count;
-	dshader_t *in, *out;
+	dmaterial_t *in, *out;
 
 	in = (void*)(fileBase + l->fileofs);
 	if(l->filelen % sizeof(*in))
@@ -2411,7 +2411,7 @@ R_LoadFogs(lump_t *l, lump_t *brushesLump, lump_t *sidesLump)
 	int		count, brushesCount, sidesCount;
 	int		sideNum;
 	int		planeNum;
-	shader_t	*shader;
+	material_t	*shader;
 	float	d;
 	int	firstSide;
 
@@ -2756,7 +2756,7 @@ R_MergeLeafSurfaces(void)
 
 		for(j = 0; j < leaf->nummarksurfaces; j++){
 			msurface_t	*surf1;
-			shader_t	*shader1;
+			material_t	*shader1;
 			int	fogIndex1;
 			int	surfNum1;
 
@@ -2788,7 +2788,7 @@ R_MergeLeafSurfaces(void)
 
 			for(k = j + 1; k < leaf->nummarksurfaces; k++){
 				msurface_t	*surf2;
-				shader_t	*shader2;
+				material_t	*shader2;
 				int	fogIndex2;
 				int	surfNum2;
 

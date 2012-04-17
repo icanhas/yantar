@@ -525,10 +525,10 @@ typedef struct shader_s {
 	int			shaderStates[MAX_STATES_PER_SHADER];	/* index to valid shader states */
 
 	struct  shader_s	*next;
-} shader_t;
+} material_t;
 
 static ID_INLINE qbool
-ShaderRequiresCPUDeforms(const shader_t * shader)
+ShaderRequiresCPUDeforms(const material_t * shader)
 {
 	if(shader->numDeforms){
 		const deformStage_t *ds = &shader->deforms[0];
@@ -554,7 +554,7 @@ typedef struct shaderState_s {
 	char		name[MAX_STATE_NAME];	/* name of this state */
 	char		stateShader[MAX_QPATH];	/* shader this name invokes */
 	int		cycleTime;		/* time this cycle lasts, <= 0 is forever */
-	shader_t	*shader;
+	material_t	*shader;
 } shaderState_t;
 
 enum {
@@ -888,7 +888,7 @@ typedef struct {
 /* skins allow models to be retextured without modifying the model file */
 typedef struct {
 	char		name[MAX_QPATH];
-	shader_t	*shader;
+	material_t	*shader;
 } skinSurface_t;
 
 typedef struct skin_s {
@@ -1147,7 +1147,7 @@ typedef struct {
 typedef struct srfIQModel_s {
 	surfaceType_t	surfaceType;
 	char		name[MAX_QPATH];
-	shader_t	*shader;
+	material_t	*shader;
 	iqmData_t	*data;
 	int		first_vertex, num_vertexes;
 	int		first_triangle, num_triangles;
@@ -1288,7 +1288,7 @@ typedef struct {
 	int		dataSize;
 
 	int		numShaders;
-	dshader_t	*shaders;
+	dmaterial_t	*shaders;
 
 	int		numBModels;
 	bmodel_t	*bmodels;
@@ -1682,12 +1682,12 @@ typedef struct {
 	FBO_t		*quarterFbo[2];
 	FBO_t		*calcLevelsFbo;
 
-	shader_t	*defaultShader;
-	shader_t	*shadowShader;
-	shader_t	*projectionShadowShader;
+	material_t	*defaultShader;
+	material_t	*shadowShader;
+	material_t	*projectionShadowShader;
 
-	shader_t	*flareShader;
-	shader_t	*sunShader;
+	material_t	*flareShader;
+	material_t	*sunShader;
 
 	int		numLightmaps;
 	int		lightmapSize;
@@ -1762,8 +1762,8 @@ typedef struct {
 	 * shader indexes from drawsurfs will be looked up in sortedShaders[]
 	 * lower indexed sortedShaders must be rendered first (opaque surfaces before translucent) */
 	int		numShaders;
-	shader_t	*shaders[MAX_SHADERS];
-	shader_t	*sortedShaders[MAX_SHADERS];
+	material_t	*shaders[MAX_SHADERS];
+	material_t	*sortedShaders[MAX_SHADERS];
 
 	int		numSkins;
 	skin_t		*skins[MAX_SKINS];
@@ -1968,10 +1968,10 @@ void R_AddLightningBoltSurfaces(trRefEntity_t *e);
 
 void R_AddPolygonSurfaces(void);
 
-void R_DecomposeSort(unsigned sort, int *entityNum, shader_t **shader,
+void R_DecomposeSort(unsigned sort, int *entityNum, material_t **shader,
 		     int *fogNum, int *dlightMap, int *pshadowMap);
 
-void R_AddDrawSurf(surfaceType_t *surface, shader_t *shader,
+void R_AddDrawSurf(surfaceType_t *surface, material_t *shader,
 		   int fogIndex, int dlightMap, int pshadowMap);
 
 void R_CalcTangentSpace(vec3_t tangent, vec3_t bitangent, vec3_t normal,
@@ -2103,10 +2103,10 @@ qhandle_t                RE_RegisterShaderNoMip(const char *name);
 qhandle_t RE_RegisterShaderFromImage(const char *name, int lightmapIndex, image_t *image,
 				     qbool mipRawImage);
 
-shader_t*R_FindShader(const char *name, int lightmapIndex, qbool mipRawImage);
-shader_t*R_GetShaderByHandle(qhandle_t hShader);
-shader_t*R_GetShaderByState(int index, long *cycleTime);
-shader_t*R_FindShaderByName(const char *name);
+material_t*R_FindShader(const char *name, int lightmapIndex, qbool mipRawImage);
+material_t*R_GetShaderByHandle(qhandle_t hShader);
+material_t*R_GetShaderByState(int index, long *cycleTime);
+material_t*R_FindShaderByName(const char *name);
 void            R_InitShaders(void);
 void            R_ShaderList_f(void);
 void    R_RemapShader(const char *oldShader, const char *newShader, const char *timeOffset);
@@ -2169,7 +2169,7 @@ typedef struct shaderCommands_s {
 
 	/* color4ub_t	constantColor255[SHADER_MAX_VERTEXES] QALIGN(16); */
 
-	shader_t	*shader;
+	material_t	*shader;
 	float		shaderTime;
 	int		fogNum;
 
@@ -2193,7 +2193,7 @@ typedef struct shaderCommands_s {
 
 extern shaderCommands_t tess;
 
-void RB_BeginSurface(shader_t *shader, int fogNum);
+void RB_BeginSurface(material_t *shader, int fogNum);
 void RB_EndSurface(void);
 void RB_CheckOverflow(int verts, int indexes);
 #define RB_CHECKOVERFLOW(v,i) if(tess.numVertexes + (v) >= SHADER_MAX_VERTEXES || tess.numIndexes + (i) >= \
@@ -2501,7 +2501,7 @@ typedef struct {
 
 typedef struct {
 	int		commandId;
-	shader_t	*shader;
+	material_t	*shader;
 	float		x, y;
 	float		w, h;
 	float		s1, t1;

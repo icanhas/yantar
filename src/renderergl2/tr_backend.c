@@ -539,7 +539,7 @@ RB_BeginDrawingView(void)
 void
 RB_RenderDrawSurfList(drawSurf_t *drawSurfs, int numDrawSurfs)
 {
-	shader_t	*shader, *oldShader;
+	material_t	*shader, *oldShader;
 	int		fogNum, oldFogNum;
 	int		entityNum, oldEntityNum;
 	int		dlighted, oldDlighted;
@@ -1027,7 +1027,7 @@ const void *
 RB_StretchPic(const void *data)
 {
 	const stretchPicCommand_t *cmd;
-	shader_t *shader;
+	material_t *shader;
 	int numVerts, numIndexes;
 
 	cmd = (const stretchPicCommand_t*)data;

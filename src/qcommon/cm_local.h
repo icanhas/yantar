@@ -81,7 +81,7 @@ typedef struct {
 	char		name[MAX_QPATH];
 
 	int		numShaders;
-	dshader_t	*shaders;
+	dmaterial_t	*shaders;
 
 	int		numBrushSides;
 	cbrushside_t	*brushsides;

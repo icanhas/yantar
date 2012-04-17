@@ -303,10 +303,10 @@ DrawNormals(shaderCommands_t *input)
  * to overflow.
  */
 void
-RB_BeginSurface(shader_t *shader, int fogNum)
+RB_BeginSurface(material_t *shader, int fogNum)
 {
 
-	shader_t *state = (shader->remappedShader) ? shader->remappedShader : shader;
+	material_t *state = (shader->remappedShader) ? shader->remappedShader : shader;
 
 	tess.numIndexes = 0;
 	tess.numVertexes	= 0;
@@ -1126,7 +1126,7 @@ void
 RB_StageIteratorGeneric(void)
 {
 	shaderCommands_t *input;
-	shader_t *shader;
+	material_t *shader;
 
 	input	= &tess;
 	shader	= input->shader;
@@ -1234,7 +1234,7 @@ void
 RB_StageIteratorVertexLitTexture(void)
 {
 	shaderCommands_t *input;
-	shader_t *shader;
+	material_t *shader;
 
 	input	= &tess;
 	shader	= input->shader;
@@ -1310,7 +1310,7 @@ void
 RB_StageIteratorLightmappedMultitexture(void)
 {
 	shaderCommands_t *input;
-	shader_t *shader;
+	material_t *shader;
 
 	input	= &tess;
 	shader	= input->shader;
