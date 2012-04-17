@@ -1495,6 +1495,7 @@ Q3R2OBJ = \
   $(O)/renderergl2/tr_shade.o \
   $(O)/renderergl2/tr_shade_calc.o \
   $(O)/renderergl2/tr_shader.o \
+  $(O)/renderergl2/tr_material_parse.o \
   $(O)/renderergl2/tr_shadows.o \
   $(O)/renderergl2/tr_sky.o \
   $(O)/renderergl2/tr_surface.o \
