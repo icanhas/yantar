@@ -132,13 +132,13 @@ PlayerIcon(const char *modelAndSkin, char *iconName, int iconNameMaxSize)
 	else
 		skin = "default";
 
-	Com_sprintf(iconName, iconNameMaxSize, "models/players/%s/icon_%s.tga",
+	Q_sprintf(iconName, iconNameMaxSize, "models/players/%s/icon_%s.tga",
 		model,
 		skin);
 
 	if(!trap_R_RegisterShaderNoMip(iconName) &&
 	   Q_stricmp(skin, "default") != 0)
-		Com_sprintf(iconName, iconNameMaxSize,
+		Q_sprintf(iconName, iconNameMaxSize,
 			"models/players/%s/icon_default.tga",
 			model);
 }
@@ -583,13 +583,13 @@ UI_SPLevelMenu_MenuDraw(void)
 				continue;
 
 			if(level >= 1000000)
-				Com_sprintf(string, sizeof(string), "%im",
+				Q_sprintf(string, sizeof(string), "%im",
 					level / 1000000);
 			else if(level >= 1000)
-				Com_sprintf(string, sizeof(string), "%ik",
+				Q_sprintf(string, sizeof(string), "%ik",
 					level / 1000);
 			else
-				Com_sprintf(string, sizeof(string), "%i", level);
+				Q_sprintf(string, sizeof(string), "%i", level);
 
 			UI_DrawString(x + 24, y + 48, string, UI_CENTER,
 				color_yellow);
@@ -652,7 +652,7 @@ UI_SPLevelMenu_MenuDraw(void)
 	Q_strncpyz(buf, Info_ValueForKey(levelMenuInfo.selectedArenaInfo,
 			"map"), 20);
 	Q_strupr(buf);
-	Com_sprintf(string, sizeof(string), "%s: %s", buf,
+	Q_sprintf(string, sizeof(string), "%s: %s", buf,
 		Info_ValueForKey(levelMenuInfo.selectedArenaInfo, "longname"));
 	UI_DrawProportionalString(320, y, string, UI_CENTER|UI_SMALLFONT,
 		color_orange);

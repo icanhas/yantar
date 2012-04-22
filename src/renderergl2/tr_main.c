@@ -954,7 +954,7 @@ R_RotateForViewer(void)
 	float	viewerMatrix[16];
 	vec3_t	origin;
 
-	Com_Memset (&tr.or, 0, sizeof(tr.or));
+	Q_Memset (&tr.or, 0, sizeof(tr.or));
 	tr.or.axis[0][0]	= 1;
 	tr.or.axis[1][1]	= 1;
 	tr.or.axis[2][2]	= 1;
@@ -1273,7 +1273,7 @@ R_PlaneForSurface(surfaceType_t *surfType, cplane_t *plane)
 	vec4_t		plane4;
 
 	if(!surfType){
-		Com_Memset (plane, 0, sizeof(*plane));
+		Q_Memset (plane, 0, sizeof(*plane));
 		plane->normal[0] = 1;
 		return;
 	}
@@ -1297,7 +1297,7 @@ R_PlaneForSurface(surfaceType_t *surfType, cplane_t *plane)
 		plane->dist = plane4[3];
 		return;
 	default:
-		Com_Memset (plane, 0, sizeof(*plane));
+		Q_Memset (plane, 0, sizeof(*plane));
 		plane->normal[0] = 1;
 		return;
 	}
@@ -2060,7 +2060,7 @@ R_RenderDlightCubemaps(const refdef_t *fd)
 		if((1 << i) & tr.refdef.dlightMask)
 			continue;
 
-		Com_Memset(&shadowParms, 0, sizeof(shadowParms));
+		Q_Memset(&shadowParms, 0, sizeof(shadowParms));
 
 		shadowParms.viewportX	= tr.refdef.x;
 		shadowParms.viewportY	= glConfig.vidHeight - (tr.refdef.y + 256);
@@ -2340,7 +2340,7 @@ R_RenderPshadowMaps(const refdef_t *fd)
 		pshadow_t *shadow = &tr.refdef.pshadows[i];
 		int j;
 
-		Com_Memset(&shadowParms, 0, sizeof(shadowParms));
+		Q_Memset(&shadowParms, 0, sizeof(shadowParms));
 
 		if(glRefConfig.framebufferObject){
 			shadowParms.viewportX	= 0;

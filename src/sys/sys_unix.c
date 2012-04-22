@@ -52,7 +52,7 @@ Sys_DefaultHomePath(void)
 
 	if(!*homePath){
 		if((p = getenv("HOME")) != NULL){
-			Com_sprintf(homePath, sizeof(homePath), "%s%c", p,
+			Q_sprintf(homePath, sizeof(homePath), "%s%c", p,
 				PATH_SEP);
 #ifdef MACOS_X
 			Q_strcat(homePath, sizeof(homePath),
@@ -283,15 +283,15 @@ Sys_ListFilteredFiles(const char *basedir, char *subdirs, char *filter,
 		return;
 
 	if(strlen(subdirs))
-		Com_sprintf(search, sizeof(search), "%s/%s", basedir, subdirs);
+		Q_sprintf(search, sizeof(search), "%s/%s", basedir, subdirs);
 	else
-		Com_sprintf(search, sizeof(search), "%s", basedir);
+		Q_sprintf(search, sizeof(search), "%s", basedir);
 
 	if((fdir = opendir(search)) == NULL)
 		return;
 
 	while((d = readdir(fdir)) != NULL){
-		Com_sprintf(filename, sizeof(filename), "%s/%s", search,
+		Q_sprintf(filename, sizeof(filename), "%s/%s", search,
 			d->d_name);
 		if(stat(filename, &st) == -1)
 			continue;
@@ -300,12 +300,12 @@ Sys_ListFilteredFiles(const char *basedir, char *subdirs, char *filter,
 			if(Q_stricmp(d->d_name,
 				   ".") && Q_stricmp(d->d_name, "..")){
 				if(strlen(subdirs))
-					Com_sprintf(newsubdirs,
+					Q_sprintf(newsubdirs,
 						sizeof(newsubdirs), "%s/%s",
 						subdirs,
 						d->d_name);
 				else
-					Com_sprintf(newsubdirs,
+					Q_sprintf(newsubdirs,
 						sizeof(newsubdirs), "%s",
 						d->d_name);
 				Sys_ListFilteredFiles(basedir, newsubdirs,
@@ -314,9 +314,9 @@ Sys_ListFilteredFiles(const char *basedir, char *subdirs, char *filter,
 			}
 		if(*numfiles >= MAX_FOUND_FILES - 1)
 			break;
-		Com_sprintf(filename, sizeof(filename), "%s/%s", subdirs,
+		Q_sprintf(filename, sizeof(filename), "%s/%s", subdirs,
 			d->d_name);
-		if(!Com_FilterPath(filter, filename, qfalse))
+		if(!Q_FilterPath(filter, filename, qfalse))
 			continue;
 		list[ *numfiles ] = CopyString(filename);
 		(*numfiles)++;
@@ -383,7 +383,7 @@ Sys_ListFiles(const char *directory, const char *extension, char *filter,
 	}
 
 	while((d = readdir(fdir)) != NULL){
-		Com_sprintf(search, sizeof(search), "%s/%s", directory,
+		Q_sprintf(search, sizeof(search), "%s/%s", directory,
 			d->d_name);
 		if(stat(search, &st) == -1)
 			continue;
@@ -498,7 +498,7 @@ Sys_ErrorDialog(const char *error)
 
 	/* Make sure the write path for the crashlog exists... */
 	if(FS_CreatePath(ospath)){
-		Com_Printf("ERROR: couldn't create path '%s' for crash log.\n",
+		Q_Printf("ERROR: couldn't create path '%s' for crash log.\n",
 			ospath);
 		return;
 	}
@@ -508,14 +508,14 @@ Sys_ErrorDialog(const char *error)
 	 * calling FS_FOpenFileWrite()...use the Unix system APIs instead. */
 	f = open(ospath, O_CREAT | O_TRUNC | O_WRONLY, 0640);
 	if(f == -1){
-		Com_Printf("ERROR: couldn't open %s\n", fileName);
+		Q_Printf("ERROR: couldn't open %s\n", fileName);
 		return;
 	}
 
 	/* We're crashing, so we don't care much if write() or close() fails. */
 	while((size = CON_LogRead(buffer, sizeof(buffer))) > 0)
 		if(write(f, buffer, size) != size){
-			Com_Printf("ERROR: couldn't fully write to %s\n",
+			Q_Printf("ERROR: couldn't fully write to %s\n",
 				fileName);
 			break;
 		}
@@ -536,7 +536,7 @@ static void
 Sys_ClearExecBuffer(void)
 {
 	execBufferPointer = execBuffer;
-	Com_Memset(execArgv, 0, sizeof(execArgv));
+	Q_Memset(execArgv, 0, sizeof(execArgv));
 	execArgc = 0;
 }
 
@@ -735,7 +735,7 @@ Sys_Dialog(dialogType_t type, const char *message, const char *title)
 		break;
 	}
 
-	Com_DPrintf(S_COLOR_YELLOW "WARNING: failed to show a dialog\n");
+	Q_DPrintf(S_COLOR_YELLOW "WARNING: failed to show a dialog\n");
 	return DR_OK;
 }
 #endif

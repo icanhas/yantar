@@ -285,12 +285,12 @@ PC_CopyToken(token_t *token)
 #ifdef BSPC
 		Error("out of token space\n");
 #else
-		Com_Error(ERR_FATAL, "out of token space");
+		Q_Error(ERR_FATAL, "out of token space");
 #endif
 		return NULL;
 	}
 /*	freetokens = freetokens->next; */
-	Com_Memcpy(t, token, sizeof(token_t));
+	Q_Memcpy(t, token, sizeof(token_t));
 	t->next = NULL;
 	numtokens++;
 	return t;
@@ -345,7 +345,7 @@ PC_ReadSourceToken(source_t *source, token_t *token)
 		FreeScript(script);
 	}
 	/* copy the already available token */
-	Com_Memcpy(token, source->tokens, sizeof(token_t));
+	Q_Memcpy(token, source->tokens, sizeof(token_t));
 	/* free the read token */
 	t = source->tokens;
 	source->tokens = source->tokens->next;
@@ -682,7 +682,7 @@ PC_AddBuiltinDefines(source_t *source)
 
 	for(i = 0; builtin[i].string; i++){
 		define = (define_t*)GetMemory(sizeof(define_t));
-		Com_Memset(define, 0, sizeof(define_t));
+		Q_Memset(define, 0, sizeof(define_t));
 		define->name = (char*)GetMemory(strlen(builtin[i].string) + 1);
 		strcpy(define->name, builtin[i].string);
 		define->flags	|= DEFINE_FIXED;
@@ -1004,7 +1004,7 @@ PC_Directive_include(source_t *source)
 	}
 #ifdef QUAKE
 	if(!script){
-		Com_Memset(&file, 0, sizeof(foundfile_t));
+		Q_Memset(&file, 0, sizeof(foundfile_t));
 		script = LoadScriptFile(path);
 		if(script) strncpy(script->filename, path, MAX_PATH);
 	}
@@ -1180,7 +1180,7 @@ PC_Directive_define(source_t *source)
 	}
 	/* allocate define */
 	define = (define_t*)GetMemory(sizeof(define_t));
-	Com_Memset(define, 0, sizeof(define_t));
+	Q_Memset(define, 0, sizeof(define_t));
 	define->name = (char*)GetMemory(strlen(token.string) + 1);
 	strcpy(define->name, token.string);
 	/* add the define to the source */
@@ -1287,7 +1287,7 @@ PC_DefineFromString(char *string)
 
 	script = LoadScriptMemory(string, strlen(string), "*extern");
 	/* create a new source */
-	Com_Memset(&src, 0, sizeof(source_t));
+	Q_Memset(&src, 0, sizeof(source_t));
 	strncpy(src.filename, "*extern", MAX_PATH);
 	src.scriptstack = script;
 #if DEFINEHASHING
@@ -2704,7 +2704,7 @@ PC_ReadToken(source_t *source, token_t *token)
 			}
 		}
 		/* copy token for unreading */
-		Com_Memcpy(&source->token, token, sizeof(token_t));
+		Q_Memcpy(&source->token, token, sizeof(token_t));
 		/* found a token */
 		return qtrue;
 	}
@@ -2829,7 +2829,7 @@ PC_CheckTokenType(source_t *source, int type, int subtype, token_t *token)
 	/* if the type matches */
 	if(tok.type == type &&
 	   (tok.subtype & subtype) == subtype){
-		Com_Memcpy(token, &tok, sizeof(token_t));
+		Q_Memcpy(token, &tok, sizeof(token_t));
 		return qtrue;
 	}
 	/*  */
@@ -2919,7 +2919,7 @@ LoadSourceFile(const char *filename)
 	script->next = NULL;
 
 	source = (source_t*)GetMemory(sizeof(source_t));
-	Com_Memset(source, 0, sizeof(source_t));
+	Q_Memset(source, 0, sizeof(source_t));
 
 	strncpy(source->filename, filename, MAX_PATH);
 	source->scriptstack = script;
@@ -2953,7 +2953,7 @@ LoadSourceMemory(char *ptr, int length, char *name)
 	script->next = NULL;
 
 	source = (source_t*)GetMemory(sizeof(source_t));
-	Com_Memset(source, 0, sizeof(source_t));
+	Q_Memset(source, 0, sizeof(source_t));
 
 	strncpy(source->filename, name, MAX_PATH);
 	source->scriptstack = script;

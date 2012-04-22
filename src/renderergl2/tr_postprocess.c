@@ -525,7 +525,7 @@ void
 RB_GaussianBlur(float blur)
 {
 	float mul = 1.f;
-	float factor = Com_Clamp(0.f, 1.f, blur);
+	float factor = Q_Clamp(0.f, 1.f, blur);
 
 	if(factor <= 0.f)
 		return;

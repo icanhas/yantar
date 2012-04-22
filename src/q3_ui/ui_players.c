@@ -84,13 +84,13 @@ tryagain:
 	if(weaponNum == WP_MACHINEGUN || weaponNum == WP_GAUNTLET ||
 	   weaponNum == WP_BFG){
 		strcpy(path, item->world_model[0]);
-		Com_StripExtension(path, path, sizeof(path));
+		Q_StripExtension(path, path, sizeof(path));
 		strcat(path, "_barrel.md3");
 		pi->barrelModel = trap_R_RegisterModel(path);
 	}
 
 	strcpy(path, item->world_model[0]);
-	Com_StripExtension(path, path, sizeof(path));
+	Q_StripExtension(path, path, sizeof(path));
 	strcat(path, "_flash.md3");
 	pi->flashModel = trap_R_RegisterModel(path);
 
@@ -890,17 +890,17 @@ UI_RegisterClientSkin(playerInfo_t *pi, const char *modelName,
 {
 	char filename[MAX_QPATH];
 
-	Com_sprintf(filename, sizeof(filename),
+	Q_sprintf(filename, sizeof(filename),
 		"models/players/%s/lower_%s.skin", modelName,
 		skinName);
 	pi->legsSkin = trap_R_RegisterSkin(filename);
 
-	Com_sprintf(filename, sizeof(filename),
+	Q_sprintf(filename, sizeof(filename),
 		"models/players/%s/upper_%s.skin", modelName,
 		skinName);
 	pi->torsoSkin = trap_R_RegisterSkin(filename);
 
-	Com_sprintf(filename, sizeof(filename), "models/players/%s/head_%s.skin",
+	Q_sprintf(filename, sizeof(filename), "models/players/%s/head_%s.skin",
 		modelName,
 		skinName);
 	pi->headSkin = trap_R_RegisterSkin(filename);
@@ -934,7 +934,7 @@ UI_ParseAnimationFile(const char *filename, animation_t *animations)
 	if(len <= 0)
 		return qfalse;
 	if(len >= (sizeof(text) - 1)){
-		Com_Printf("File %s too long\n", filename);
+		Q_Printf("File %s too long\n", filename);
 		trap_FS_FCloseFile(f);
 		return qfalse;
 	}
@@ -949,23 +949,23 @@ UI_ParseAnimationFile(const char *filename, animation_t *animations)
 	/* read optional parameters */
 	while(1){
 		prev = text_p;	/* so we can unget */
-		token = Com_Parse(&text_p);
+		token = Q_Parse(&text_p);
 		if(!token)
 			break;
 		if(!Q_stricmp(token, "footsteps")){
-			token = Com_Parse(&text_p);
+			token = Q_Parse(&text_p);
 			if(!token)
 				break;
 			continue;
 		}else if(!Q_stricmp(token, "headoffset")){
 			for(i = 0; i < 3; i++){
-				token = Com_Parse(&text_p);
+				token = Q_Parse(&text_p);
 				if(!token)
 					break;
 			}
 			continue;
 		}else if(!Q_stricmp(token, "sex")){
-			token = Com_Parse(&text_p);
+			token = Q_Parse(&text_p);
 			if(!token)
 				break;
 			continue;
@@ -977,13 +977,13 @@ UI_ParseAnimationFile(const char *filename, animation_t *animations)
 			break;
 		}
 
-		Com_Printf("unknown token '%s' is %s\n", token, filename);
+		Q_Printf("unknown token '%s' is %s\n", token, filename);
 	}
 
 	/* read information for each frame */
 	for(i = 0; i < MAX_ANIMATIONS; i++){
 
-		token = Com_Parse(&text_p);
+		token = Q_Parse(&text_p);
 		if(!token)
 			break;
 		animations[i].firstFrame = atoi(token);
@@ -994,17 +994,17 @@ UI_ParseAnimationFile(const char *filename, animation_t *animations)
 		if(i >= LEGS_WALKCR)
 			animations[i].firstFrame -= skip;
 
-		token = Com_Parse(&text_p);
+		token = Q_Parse(&text_p);
 		if(!token)
 			break;
 		animations[i].numFrames = atoi(token);
 
-		token = Com_Parse(&text_p);
+		token = Q_Parse(&text_p);
 		if(!token)
 			break;
 		animations[i].loopFrames = atoi(token);
 
-		token = Com_Parse(&text_p);
+		token = Q_Parse(&text_p);
 		if(!token)
 			break;
 		fps = atof(token);
@@ -1015,7 +1015,7 @@ UI_ParseAnimationFile(const char *filename, animation_t *animations)
 	}
 
 	if(i != MAX_ANIMATIONS){
-		Com_Printf("Error parsing animation file: %s\n", filename);
+		Q_Printf("Error parsing animation file: %s\n", filename);
 		return qfalse;
 	}
 
@@ -1054,45 +1054,45 @@ UI_RegisterClientModelname(playerInfo_t *pi, const char *modelSkinName)
 
 	/* load cmodels before models so filecache works */
 
-	Com_sprintf(filename, sizeof(filename), "models/players/%s/lower.md3",
+	Q_sprintf(filename, sizeof(filename), "models/players/%s/lower.md3",
 		modelName);
 	pi->legsModel = trap_R_RegisterModel(filename);
 	if(!pi->legsModel){
-		Com_Printf("Failed to load model file %s\n", filename);
+		Q_Printf("Failed to load model file %s\n", filename);
 		return qfalse;
 	}
 
-	Com_sprintf(filename, sizeof(filename), "models/players/%s/upper.md3",
+	Q_sprintf(filename, sizeof(filename), "models/players/%s/upper.md3",
 		modelName);
 	pi->torsoModel = trap_R_RegisterModel(filename);
 	if(!pi->torsoModel){
-		Com_Printf("Failed to load model file %s\n", filename);
+		Q_Printf("Failed to load model file %s\n", filename);
 		return qfalse;
 	}
 
-	Com_sprintf(filename, sizeof(filename), "models/players/%s/head.md3",
+	Q_sprintf(filename, sizeof(filename), "models/players/%s/head.md3",
 		modelName);
 	pi->headModel = trap_R_RegisterModel(filename);
 	if(!pi->headModel){
-		Com_Printf("Failed to load model file %s\n", filename);
+		Q_Printf("Failed to load model file %s\n", filename);
 		return qfalse;
 	}
 
 	/* if any skins failed to load, fall back to default */
 	if(!UI_RegisterClientSkin(pi, modelName, skinName))
 		if(!UI_RegisterClientSkin(pi, modelName, "default")){
-			Com_Printf("Failed to load skin file: %s : %s\n",
+			Q_Printf("Failed to load skin file: %s : %s\n",
 				modelName,
 				skinName);
 			return qfalse;
 		}
 
 	/* load the animations */
-	Com_sprintf(filename, sizeof(filename),
+	Q_sprintf(filename, sizeof(filename),
 		"models/players/%s/animation.cfg",
 		modelName);
 	if(!UI_ParseAnimationFile(filename, pi->animations)){
-		Com_Printf("Failed to load animation file %s\n", filename);
+		Q_Printf("Failed to load animation file %s\n", filename);
 		return qfalse;
 	}
 

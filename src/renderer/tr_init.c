@@ -250,7 +250,7 @@ GL_CheckErrors(void)
 		strcpy(s, "GL_OUT_OF_MEMORY");
 		break;
 	default:
-		Com_sprintf(s, sizeof(s), "%i", err);
+		Q_sprintf(s, sizeof(s), "%i", err);
 		break;
 	}
 
@@ -402,7 +402,7 @@ RB_TakeScreenshot(int x, int y, int width, int height, char *fileName)
 	allbuf	= RB_ReadPixels(x, y, width, height, &offset, &padlen);
 	buffer	= allbuf + offset - 18;
 
-	Com_Memset (buffer, 0, 18);
+	Q_Memset (buffer, 0, 18);
 	buffer[2]	= 2;	/* uncompressed type */
 	buffer[12]	= width & 255;
 	buffer[13]	= width >> 8;
@@ -516,7 +516,7 @@ R_ScreenshotFilename(int lastNumber, char *fileName)
 	int a,b,c,d;
 
 	if(lastNumber < 0 || lastNumber > 9999){
-		Com_sprintf(fileName, MAX_OSPATH, "screenshots/shot9999.tga");
+		Q_sprintf(fileName, MAX_OSPATH, "screenshots/shot9999.tga");
 		return;
 	}
 
@@ -528,7 +528,7 @@ R_ScreenshotFilename(int lastNumber, char *fileName)
 	lastNumber -= c*10;
 	d = lastNumber;
 
-	Com_sprintf(fileName, MAX_OSPATH, "screenshots/shot%i%i%i%i.tga"
+	Q_sprintf(fileName, MAX_OSPATH, "screenshots/shot%i%i%i%i.tga"
 		, a, b, c, d);
 }
 
@@ -541,7 +541,7 @@ R_ScreenshotFilenameJPEG(int lastNumber, char *fileName)
 	int a,b,c,d;
 
 	if(lastNumber < 0 || lastNumber > 9999){
-		Com_sprintf(fileName, MAX_OSPATH, "screenshots/shot9999.jpg");
+		Q_sprintf(fileName, MAX_OSPATH, "screenshots/shot9999.jpg");
 		return;
 	}
 
@@ -553,7 +553,7 @@ R_ScreenshotFilenameJPEG(int lastNumber, char *fileName)
 	lastNumber -= c*10;
 	d = lastNumber;
 
-	Com_sprintf(fileName, MAX_OSPATH, "screenshots/shot%i%i%i%i.jpg"
+	Q_sprintf(fileName, MAX_OSPATH, "screenshots/shot%i%i%i%i.jpg"
 		, a, b, c, d);
 }
 
@@ -577,13 +577,13 @@ R_LevelShot(void)
 	float	xScale, yScale;
 	int	xx, yy;
 
-	Com_sprintf(checkname, sizeof(checkname), "levelshots/%s.tga", tr.world->baseName);
+	Q_sprintf(checkname, sizeof(checkname), "levelshots/%s.tga", tr.world->baseName);
 
 	allsource = RB_ReadPixels(0, 0, glConfig.vidWidth, glConfig.vidHeight, &offset, &padlen);
 	source = allsource + offset;
 
 	buffer = ri.Hunk_AllocateTempMemory(128 * 128*3 + 18);
-	Com_Memset (buffer, 0, 18);
+	Q_Memset (buffer, 0, 18);
 	buffer[2]	= 2;	/* uncompressed type */
 	buffer[12]	= 128;
 	buffer[14]	= 128;
@@ -653,7 +653,7 @@ R_ScreenShot_f(void)
 
 	if(ri.Cmd_Argc() == 2 && !silent){
 		/* explicit filename */
-		Com_sprintf(checkname, MAX_OSPATH, "screenshots/%s.tga", ri.Cmd_Argv(1));
+		Q_sprintf(checkname, MAX_OSPATH, "screenshots/%s.tga", ri.Cmd_Argv(1));
 	}else{
 		/* scan for a free filename */
 
@@ -707,7 +707,7 @@ R_ScreenShotJPEG_f(void)
 
 	if(ri.Cmd_Argc() == 2 && !silent){
 		/* explicit filename */
-		Com_sprintf(checkname, MAX_OSPATH, "screenshots/%s.jpg", ri.Cmd_Argv(1));
+		Q_sprintf(checkname, MAX_OSPATH, "screenshots/%s.jpg", ri.Cmd_Argv(1));
 	}else{
 		/* scan for a free filename */
 
@@ -802,7 +802,7 @@ RB_TakeVideoFrameCmd(const void *data)
 				srcptr += 3;
 			}
 
-			Com_Memset(destptr, '\0', avipadlen);
+			Q_Memset(destptr, '\0', avipadlen);
 			destptr += avipadlen;
 
 			srcptr += padlen;
@@ -1123,9 +1123,9 @@ R_Init(void)
 	ri.Printf(PRINT_ALL, "----- R_Init -----\n");
 
 	/* clear all our internal state */
-	Com_Memset(&tr, 0, sizeof(tr));
-	Com_Memset(&backEnd, 0, sizeof(backEnd));
-	Com_Memset(&tess, 0, sizeof(tess));
+	Q_Memset(&tr, 0, sizeof(tr));
+	Q_Memset(&backEnd, 0, sizeof(backEnd));
+	Q_Memset(&tess, 0, sizeof(tess));
 
 	if(sizeof(glconfig_t) != 11332)
 		ri.Error(ERR_FATAL, "Mod ABI incompatible: sizeof(glconfig_t) == %u != 11332",
@@ -1136,7 +1136,7 @@ R_Init(void)
 	if((intptr_t)tess.xyz & 15){
 		ri.Printf(PRINT_WARNING, "tess.xyz not 16 byte aligned\n");
 	}
-	Com_Memset(tess.constantColor255, 255, sizeof(tess.constantColor255));
+	Q_Memset(tess.constantColor255, 255, sizeof(tess.constantColor255));
 
 	/*
 	 * init function tables
@@ -1287,7 +1287,7 @@ GetRefAPI(int apiVersion, refimport_t *rimp)
 
 	ri = *rimp;
 
-	Com_Memset(&re, 0, sizeof(re));
+	Q_Memset(&re, 0, sizeof(re));
 
 	if(apiVersion != REF_API_VERSION){
 		ri.Printf(PRINT_ALL, "Mismatched REF_API_VERSION: expected %i, got %i\n",

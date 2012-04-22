@@ -88,31 +88,31 @@ UI_ParseInfos(char *buf, int max, char *infos[])
 	count = 0;
 
 	while(1){
-		token = Com_Parse(&buf);
+		token = Q_Parse(&buf);
 		if(!token[0])
 			break;
 		if(strcmp(token, "{")){
-			Com_Printf("Missing { in info file\n");
+			Q_Printf("Missing { in info file\n");
 			break;
 		}
 
 		if(count == max){
-			Com_Printf("Max infos exceeded\n");
+			Q_Printf("Max infos exceeded\n");
 			break;
 		}
 
 		info[0] = '\0';
 		while(1){
-			token = Com_ParseExt(&buf, qtrue);
+			token = Q_ParseExt(&buf, qtrue);
 			if(!token[0]){
-				Com_Printf("Unexpected end of info file\n");
+				Q_Printf("Unexpected end of info file\n");
 				break;
 			}
 			if(!strcmp(token, "}"))
 				break;
 			Q_strncpyz(key, token, sizeof(key));
 
-			token = Com_ParseExt(&buf, qfalse);
+			token = Q_ParseExt(&buf, qfalse);
 			if(!token[0])
 				strcpy(token, "<NULL>");
 			Info_SetValueForKey(info, key, token);
@@ -458,7 +458,7 @@ UI_GetBestScore(int level, int *score, int *skill)
 		trap_Cvar_VariableStringBuffer(va("g_spScores%i",
 				n), scores, MAX_INFO_VALUE);
 
-		Com_sprintf(arenaKey, sizeof(arenaKey), "l%i", level);
+		Q_sprintf(arenaKey, sizeof(arenaKey), "l%i", level);
 		skillScore = atoi(Info_ValueForKey(scores, arenaKey));
 
 		if(skillScore < 1 || skillScore > 8)
@@ -502,7 +502,7 @@ UI_SetBestScore(int level, int score)
 			skill), scores, MAX_INFO_VALUE);
 
 	/* see if this is better */
-	Com_sprintf(arenaKey, sizeof(arenaKey), "l%i", level);
+	Q_sprintf(arenaKey, sizeof(arenaKey), "l%i", level);
 	oldScore = atoi(Info_ValueForKey(scores, arenaKey));
 	if(oldScore && oldScore <= score)
 		return;
@@ -534,7 +534,7 @@ UI_LogAwardData(int award, int data)
 
 	trap_Cvar_VariableStringBuffer("g_spAwards", awardData, sizeof(awardData));
 
-	Com_sprintf(key, sizeof(key), "a%i", award);
+	Q_sprintf(key, sizeof(key), "a%i", award);
 	oldValue = atoi(Info_ValueForKey(awardData, key));
 
 	Info_SetValueForKey(awardData, key, va("%i", oldValue + data));
@@ -553,7 +553,7 @@ UI_GetAwardLevel(int award)
 
 	trap_Cvar_VariableStringBuffer("g_spAwards", awardData, sizeof(awardData));
 
-	Com_sprintf(key, sizeof(key), "a%i", award);
+	Q_sprintf(key, sizeof(key), "a%i", award);
 	return atoi(Info_ValueForKey(awardData, key));
 }
 
@@ -607,7 +607,7 @@ UI_ShowTierVideo(int tier)
 
 	trap_Cvar_VariableStringBuffer("g_spVideos", videos, sizeof(videos));
 
-	Com_sprintf(key, sizeof(key), "tier%i", tier);
+	Q_sprintf(key, sizeof(key), "tier%i", tier);
 	if(atoi(Info_ValueForKey(videos, key)))
 		return qfalse;
 
@@ -635,7 +635,7 @@ UI_CanShowTierVideo(int tier)
 
 	trap_Cvar_VariableStringBuffer("g_spVideos", videos, sizeof(videos));
 
-	Com_sprintf(key, sizeof(key), "tier%i", tier);
+	Q_sprintf(key, sizeof(key), "tier%i", tier);
 	if(atoi(Info_ValueForKey(videos, key)))
 		return qtrue;
 
@@ -753,7 +753,7 @@ UI_SPUnlock_f(void)
 	for(level = 0;
 	    level < ui_numSinglePlayerArenas + ui_numSpecialSinglePlayerArenas;
 	    level++){
-		Com_sprintf(arenaKey, sizeof(arenaKey), "l%i", level);
+		Q_sprintf(arenaKey, sizeof(arenaKey), "l%i", level);
 		Info_SetValueForKey(scores, arenaKey, "1");
 	}
 	trap_Cvar_Set("g_spScores1", scores);
@@ -781,7 +781,7 @@ UI_SPUnlockMedals_f(void)
 	trap_Cvar_VariableStringBuffer("g_spAwards", awardData, MAX_INFO_VALUE);
 
 	for(n = 0; n < 6; n++){
-		Com_sprintf(key, sizeof(key), "a%i", n);
+		Q_sprintf(key, sizeof(key), "a%i", n);
 		Info_SetValueForKey(awardData, key, "100");
 	}
 

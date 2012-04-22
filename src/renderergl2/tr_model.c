@@ -61,9 +61,9 @@ R_RegisterMD3(const char *name, model_t *mod)
 
 	for(lod = MD3_MAX_LODS - 1; lod >= 0; lod--){
 		if(lod)
-			Com_sprintf(namebuf, sizeof(namebuf), "%s_%d.%s", filename, lod, fext);
+			Q_sprintf(namebuf, sizeof(namebuf), "%s_%d.%s", filename, lod, fext);
 		else
-			Com_sprintf(namebuf, sizeof(namebuf), "%s.%s", filename, fext);
+			Q_sprintf(namebuf, sizeof(namebuf), "%s.%s", filename, fext);
 
 		size = ri.FS_ReadFile(namebuf, &buf.v);
 		if(!buf.u)
@@ -305,7 +305,7 @@ RE_RegisterModel(const char *name)
 	 *  */
 	Q_strncpyz(localName, name, MAX_QPATH);
 
-	ext = Com_GetExtension(localName);
+	ext = Q_GetExtension(localName);
 
 	if(*ext){
 		/* Look for the correct loader and use it */
@@ -323,7 +323,7 @@ RE_RegisterModel(const char *name)
 				 * try again without the extension */
 				orgNameFailed = qtrue;
 				orgLoader = i;
-				Com_StripExtension(name, localName, MAX_QPATH);
+				Q_StripExtension(name, localName, MAX_QPATH);
 			}else{
 				/* Something loaded */
 				return mod->index;
@@ -337,7 +337,7 @@ RE_RegisterModel(const char *name)
 		if(i == orgLoader)
 			continue;
 
-		Com_sprintf(altName, sizeof(altName), "%s.%s", localName, modelLoaders[ i ].ext);
+		Q_sprintf(altName, sizeof(altName), "%s.%s", localName, modelLoaders[ i ].ext);
 
 		/* Load */
 		hModel = modelLoaders[ i ].ModelLoader(altName, mod);
@@ -400,7 +400,7 @@ R_LoadMD3(model_t * mod, int lod, void *buffer, int bufferSize, const char *modN
 	mod->dataSize += size;
 	mdvModel = mod->mdv[lod] = ri.Hunk_Alloc(sizeof(mdvModel_t), h_low);
 
-/*  Com_Memcpy(mod->md3[lod], buffer, LittleLong(md3Model->ofsEnd)); */
+/*  Q_Memcpy(mod->md3[lod], buffer, LittleLong(md3Model->ofsEnd)); */
 
 	LL(md3Model->ident);
 	LL(md3Model->version);
@@ -1085,7 +1085,7 @@ R_LoadMD4(model_t *mod, void *buffer, const char *mod_name)
 	mod->dataSize	+= size;
 	mod->modelData	= md4 = ri.Hunk_Alloc(size, h_low);
 
-	Com_Memcpy(md4, buffer, size);
+	Q_Memcpy(md4, buffer, size);
 
 	LL(md4->ident);
 	LL(md4->version);

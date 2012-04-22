@@ -92,7 +92,7 @@ IN_KeyDown(kbutton_t *b)
 	else if(!b->down[1])
 		b->down[1] = k;
 	else{
-		Com_Printf ("Three keys down for a button!\n");
+		Q_Printf ("Three keys down for a button!\n");
 		return;
 	}
 
@@ -173,7 +173,7 @@ CL_KeyState(kbutton_t *key)
 
 #if 0
 	if(msec)
-		Com_Printf ("%i ", msec);
+		Q_Printf ("%i ", msec);
 
 #endif
 
@@ -604,7 +604,7 @@ void
 CL_JoystickEvent(int axis, int value, int time)
 {
 	if(axis < 0 || axis >= MAX_JOYSTICK_AXIS)
-		Com_Error(ERR_DROP, "CL_JoystickEvent: bad axis %i", axis);
+		Q_Error(ERR_DROP, "CL_JoystickEvent: bad axis %i", axis);
 	cl.joystickAxis[axis] = value;
 }
 
@@ -697,7 +697,7 @@ CL_MouseMove(usercmd_t *cmd)
 			my *= accelSensitivity;
 
 			if(cl_showMouseRate->integer)
-				Com_Printf("rate: %f, accelSensitivity: %f\n",
+				Q_Printf("rate: %f, accelSensitivity: %f\n",
 					rate,
 					accelSensitivity);
 		}else{
@@ -730,7 +730,7 @@ CL_MouseMove(usercmd_t *cmd)
 			      cl_mouseAccelOffset->value);
 
 			if(cl_showMouseRate->integer)
-				Com_Printf(
+				Q_Printf(
 					"ratex: %f, ratey: %f, powx: %f, powy: %f\n",
 					rate[0], rate[1], power[0], power[1]);
 		}
@@ -820,7 +820,7 @@ CL_CreateCmd(void)
 	/* keyboard angle adjustment */
 	CL_AdjustAngles ();
 
-	Com_Memset(&cmd, 0, sizeof(cmd));
+	Q_Memset(&cmd, 0, sizeof(cmd));
 
 	CL_CmdButtons(&cmd);
 
@@ -974,7 +974,7 @@ CL_WritePacket(void)
 	if(clc.demoplaying || clc.state == CA_CINEMATIC)
 		return;
 
-	Com_Memset(&nullcmd, 0, sizeof(nullcmd));
+	Q_Memset(&nullcmd, 0, sizeof(nullcmd));
 	oldcmd = &nullcmd;
 
 	MSG_Init(&buf, data, sizeof(data));
@@ -1013,13 +1013,13 @@ CL_WritePacket(void)
 	count = cl.cmdNumber - cl.outPackets[ oldPacketNum ].p_cmdNumber;
 	if(count > MAX_PACKET_USERCMDS){
 		count = MAX_PACKET_USERCMDS;
-		Com_Printf("MAX_PACKET_USERCMDS\n");
+		Q_Printf("MAX_PACKET_USERCMDS\n");
 	}
 
 #ifdef USE_VOIP
 	if(clc.voipOutgoingDataSize > 0){
 		if((clc.voipFlags & VOIP_SPATIAL) ||
-		   Com_IsVoipTarget(clc.voipTargets, sizeof(clc.voipTargets),
+		   Q_IsVoipTarget(clc.voipTargets, sizeof(clc.voipTargets),
 			   -1)){
 			MSG_WriteByte (&buf, clc_voip);
 			MSG_WriteByte (&buf, clc.voipOutgoingGeneration);
@@ -1074,7 +1074,7 @@ CL_WritePacket(void)
 
 	if(count >= 1){
 		if(cl_showSend->integer)
-			Com_Printf("(%i)", count);
+			Q_Printf("(%i)", count);
 
 		/* begin a client move command */
 		if(cl_nodelta->integer || !cl.snap.valid || clc.demowaiting
@@ -1117,7 +1117,7 @@ CL_WritePacket(void)
 	clc.lastPacketSentTime = cls.realtime;
 
 	if(cl_showSend->integer)
-		Com_Printf("%i ", buf.cursize);
+		Q_Printf("%i ", buf.cursize);
 
 	CL_Netchan_Transmit (&clc.netchan, &buf);
 }
@@ -1144,7 +1144,7 @@ CL_SendCmd(void)
 	/* don't send a packet if the last packet was sent too recently */
 	if(!CL_ReadyToSendPacket()){
 		if(cl_showSend->integer)
-			Com_Printf(". ");
+			Q_Printf(". ");
 		return;
 	}
 

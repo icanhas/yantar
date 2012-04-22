@@ -169,15 +169,15 @@ Con_Dump_f(void)
 	char	buffer[1024];
 
 	if(Cmd_Argc() != 2){
-		Com_Printf ("usage: condump <filename>\n");
+		Q_Printf ("usage: condump <filename>\n");
 		return;
 	}
 
-	Com_Printf ("Dumped console text to %s.\n", Cmd_Argv(1));
+	Q_Printf ("Dumped console text to %s.\n", Cmd_Argv(1));
 
 	f = FS_FOpenFileWrite(Cmd_Argv(1));
 	if(!f){
-		Com_Printf ("ERROR: couldn't open.\n");
+		Q_Printf ("ERROR: couldn't open.\n");
 		return;
 	}
 
@@ -263,7 +263,7 @@ Con_CheckResize(void)
 		if(con.linewidth < numchars)
 			numchars = con.linewidth;
 
-		Com_Memcpy (tbuf, con.text, CON_TEXTSIZE * sizeof(short));
+		Q_Memcpy (tbuf, con.text, CON_TEXTSIZE * sizeof(short));
 		for(i=0; i<CON_TEXTSIZE; i++)
 
 			con.text[i] = (ColorIndex(COLOR_WHITE)<<8) | ' ';

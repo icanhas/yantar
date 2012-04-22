@@ -174,7 +174,7 @@ RB_ShadowTessEnd(void)
 		Vec3MA(tess.xyz[i], -512, lightDir, tess.xyz[i+tess.numVertexes]);
 
 	/* decide which triangles face the light */
-	Com_Memset(numEdgeDefs, 0, 4 * tess.numVertexes);
+	Q_Memset(numEdgeDefs, 0, 4 * tess.numVertexes);
 
 	numTris = tess.numIndexes / 3;
 	for(i = 0; i < numTris; i++){

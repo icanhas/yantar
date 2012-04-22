@@ -32,8 +32,8 @@ R_PerformanceCounters(void)
 {
 	if(!r_speeds->integer){
 		/* clear the counters even if we aren't printing */
-		Com_Memset(&tr.pc, 0, sizeof(tr.pc));
-		Com_Memset(&backEnd.pc, 0, sizeof(backEnd.pc));
+		Q_Memset(&tr.pc, 0, sizeof(tr.pc));
+		Q_Memset(&backEnd.pc, 0, sizeof(backEnd.pc));
 		return;
 	}
 
@@ -77,8 +77,8 @@ R_PerformanceCounters(void)
 			backEnd.pc.c_dlightDraws);
 	}
 
-	Com_Memset(&tr.pc, 0, sizeof(tr.pc));
-	Com_Memset(&backEnd.pc, 0, sizeof(backEnd.pc));
+	Q_Memset(&tr.pc, 0, sizeof(tr.pc));
+	Q_Memset(&backEnd.pc, 0, sizeof(backEnd.pc));
 }
 
 

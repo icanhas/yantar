@@ -256,7 +256,7 @@ AAS_ShowBoundingBox(vec3_t origin, vec3_t mins, vec3_t maxs)
 	bboxcorners[3][1] = origin[1] + mins[1];
 	bboxcorners[3][2] = origin[2] + maxs[2];
 	/* lower corners */
-	Com_Memcpy(bboxcorners[4], bboxcorners[0], sizeof(vec3_t) * 4);
+	Q_Memcpy(bboxcorners[4], bboxcorners[0], sizeof(vec3_t) * 4);
 	for(i = 0; i < 4; i++) bboxcorners[4 + i][2] = origin[2] + mins[2];
 	/* draw bounding box */
 	for(i = 0; i < 4; i++){
@@ -668,7 +668,7 @@ AAS_ShowReachableAreas(int areanum)
 	if(index >= settings->numreachableareas) index = 0;
 	/*  */
 	if(AAS_Time() - lasttime > 1.5){
-		Com_Memcpy(
+		Q_Memcpy(
 			&reach,
 			&aasworld.reachability[settings->firstreachablearea +
 					       index],

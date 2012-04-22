@@ -187,7 +187,7 @@ SCR_DrawStringExt(int x, int y, float size, const char *string, float *setColor,
 	while(*s){
 		if(!noColorEscape && Q_IsColorString(s)){
 			if(!forceColor){
-				Com_Memcpy(color, g_color_table[ColorIndex(
+				Q_Memcpy(color, g_color_table[ColorIndex(
 									*(s+1))],
 					sizeof(color));
 				color[3] = setColor[3];
@@ -243,7 +243,7 @@ SCR_DrawSmallStringExt(int x, int y, const char *string, float *setColor,
 	while(*s){
 		if(Q_IsColorString(s)){
 			if(!forceColor){
-				Com_Memcpy(color,
+				Q_Memcpy(color,
 					g_color_table[ColorIndex(*(s+1))],
 					sizeof(color));
 				color[3] = setColor[3];
@@ -426,7 +426,7 @@ SCR_DrawScreenField(stereoFrame_t stereoFrame)
 	if(uivm && !uiFullscreen){
 		switch(clc.state){
 		default:
-			Com_Error(ERR_FATAL, "SCR_DrawScreenField: bad clc.state");
+			Q_Error(ERR_FATAL, "SCR_DrawScreenField: bad clc.state");
 			break;
 		case CA_CINEMATIC:
 			SCR_DrawCinematic();
@@ -491,7 +491,7 @@ SCR_UpdateScreen(void)
 		return;		/* not initialized yet */
 
 	if(++recursive > 2)
-		Com_Error(ERR_FATAL, "SCR_UpdateScreen: recursively called");
+		Q_Error(ERR_FATAL, "SCR_UpdateScreen: recursively called");
 	recursive = 1;
 
 	/* If there is no VM, there are also no rendering commands issued. Stop the renderer in

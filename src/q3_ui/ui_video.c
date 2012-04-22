@@ -426,7 +426,7 @@ GraphicsOptions_GetAspectRatios(void)
 		Q_strncpyz(str, resolutions[r], x-resolutions[r]);
 		w = atoi(str);
 		h = atoi(x);
-		Com_sprintf(str, sizeof(str), "%.2f:1", (float)w / (float)h);
+		Q_sprintf(str, sizeof(str), "%.2f:1", (float)w / (float)h);
 
 		/* rename common ratios ("1.33:1" -> "4:3") */
 		for(i = 0; knownRatios[i][0]; i++)

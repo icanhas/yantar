@@ -139,10 +139,10 @@ SV_RankBegin(char *gamekey)
 	init = GRankInit(1, SV_RankGameKey, GR_OPT_POLL, GR_OPT_END);
 	s_server_context = init.context;
 	s_rankings_contexts++;
-	Com_DPrintf("SV_RankBegin(); GR_GAMEKEY is %s\n", gamekey);
-	Com_DPrintf("SV_RankBegin(); s_rankings_contexts=%d\n",
+	Q_DPrintf("SV_RankBegin(); GR_GAMEKEY is %s\n", gamekey);
+	Q_DPrintf("SV_RankBegin(); s_rankings_contexts=%d\n",
 		s_rankings_contexts);
-	Com_DPrintf("SV_RankBegin(); s_server_context=%d\n",init.context);
+	Q_DPrintf("SV_RankBegin(); s_server_context=%d\n",init.context);
 
 	/* new game */
 	if(!strlen(Cvar_VariableString("sv_leagueName")))
@@ -190,7 +190,7 @@ SV_RankEnd(void)
 	GR_STATUS status;
 	int i;
 
-	Com_DPrintf("SV_RankEnd();\n");
+	Q_DPrintf("SV_RankEnd();\n");
 
 	if(!s_rankings_active){
 		/* cleanup after error during game */
@@ -208,7 +208,7 @@ SV_RankEnd(void)
 	for(i = 0; i < sv_maxclients->value; i++)
 		if(s_ranked_players[i].grank_status == QGR_STATUS_ACTIVE){
 			SV_RankUserLogout(i);
-			Com_DPrintf("SV_RankEnd: SV_RankUserLogout %d\n",i);
+			Q_DPrintf("SV_RankEnd: SV_RankUserLogout %d\n",i);
 		}
 
 	assert(s_server_context != 0);
@@ -353,17 +353,17 @@ SV_RankUserCreate(int index, char* username, char* password,
 	assert(s_ranked_players);
 	assert(s_ranked_players[index].grank_status != QGR_STATUS_ACTIVE);
 
-	Com_DPrintf("SV_RankUserCreate( %d, %s, \"****\", %s );\n", index,
+	Q_DPrintf("SV_RankUserCreate( %d, %s, \"****\", %s );\n", index,
 		username, email);
 
 	if(!s_rankings_active){
-		Com_DPrintf("SV_RankUserCreate: Not ready to create\n");
+		Q_DPrintf("SV_RankUserCreate: Not ready to create\n");
 		s_ranked_players[index].grank_status = QGR_STATUS_ERROR;
 		return;
 	}
 
 	if(s_ranked_players[index].grank_status == QGR_STATUS_ACTIVE){
-		Com_DPrintf("SV_RankUserCreate: Got Create from active player\n");
+		Q_DPrintf("SV_RankUserCreate: Got Create from active player\n");
 		return;
 	}
 
@@ -371,9 +371,9 @@ SV_RankUserCreate(int index, char* username, char* password,
 	init = GRankInit(0, SV_RankGameKey, GR_OPT_POLL, GR_OPT_END);
 	s_ranked_players[index].context = init.context;
 	s_rankings_contexts++;
-	Com_DPrintf("SV_RankUserCreate(); s_rankings_contexts=%d\n",
+	Q_DPrintf("SV_RankUserCreate(); s_rankings_contexts=%d\n",
 		s_rankings_contexts);
-	Com_DPrintf("SV_RankUserCreate(); s_ranked_players[%d].context=%d\n",
+	Q_DPrintf("SV_RankUserCreate(); s_ranked_players[%d].context=%d\n",
 		index,
 		init.context);
 
@@ -414,16 +414,16 @@ SV_RankUserLogin(int index, char* username, char* password)
 	assert(s_ranked_players);
 	assert(s_ranked_players[index].grank_status != QGR_STATUS_ACTIVE);
 
-	Com_DPrintf("SV_RankUserLogin( %d, %s, \"****\" );\n", index, username);
+	Q_DPrintf("SV_RankUserLogin( %d, %s, \"****\" );\n", index, username);
 
 	if(!s_rankings_active){
-		Com_DPrintf("SV_RankUserLogin: Not ready for login\n");
+		Q_DPrintf("SV_RankUserLogin: Not ready for login\n");
 		s_ranked_players[index].grank_status = QGR_STATUS_ERROR;
 		return;
 	}
 
 	if(s_ranked_players[index].grank_status == QGR_STATUS_ACTIVE){
-		Com_DPrintf("SV_RankUserLogin: Got Login from active player\n");
+		Q_DPrintf("SV_RankUserLogin: Got Login from active player\n");
 		return;
 	}
 
@@ -431,9 +431,9 @@ SV_RankUserLogin(int index, char* username, char* password)
 	init = GRankInit(0, SV_RankGameKey, GR_OPT_POLL, GR_OPT_END);
 	s_ranked_players[index].context = init.context;
 	s_rankings_contexts++;
-	Com_DPrintf("SV_RankUserLogin(); s_rankings_contexts=%d\n",
+	Q_DPrintf("SV_RankUserLogin(); s_rankings_contexts=%d\n",
 		s_rankings_contexts);
-	Com_DPrintf("SV_RankUserLogin(); s_ranked_players[%d].context=%d\n",
+	Q_DPrintf("SV_RankUserLogin(); s_ranked_players[%d].context=%d\n",
 		index,
 		init.context);
 
@@ -477,7 +477,7 @@ SV_RankUserValidate(int index, const char* player_id, const char* key,
 	rVal = qfalse;
 
 	if(!s_rankings_active){
-		Com_DPrintf("SV_RankUserValidate: Not ready to validate\n");
+		Q_DPrintf("SV_RankUserValidate: Not ready to validate\n");
 		s_ranked_players[index].grank_status = QGR_STATUS_ERROR;
 		return rVal;
 	}
@@ -494,16 +494,16 @@ SV_RankUserValidate(int index, const char* player_id, const char* key,
 		init = GRankInit(0, SV_RankGameKey, GR_OPT_POLL, GR_OPT_END);
 		ranked_player->context = init.context;
 		s_rankings_contexts++;
-		Com_DPrintf("SV_RankUserValidate(); s_rankings_contexts=%d\n",
+		Q_DPrintf("SV_RankUserValidate(); s_rankings_contexts=%d\n",
 			s_rankings_contexts);
-		Com_DPrintf(
+		Q_DPrintf(
 			"SV_RankUserValidate(); s_ranked_players[%d].context=%d\n",
 			index,
 			init.context);
 
 		/* uudecode player id and player token */
 		ranked_player->player_id = SV_RankDecodePlayerID(player_id);
-		Com_DPrintf(
+		Q_DPrintf(
 			"SV_RankUserValidate(); ranked_player->player_id =%u\n",
 			(uint32_t)ranked_player->player_id);
 		SV_RankDecodePlayerKey(key, ranked_player->token);
@@ -515,7 +515,7 @@ SV_RankUserValidate(int index, const char* player_id, const char* key,
 			   (s_ranked_players[i].grank_status ==
 			    QGR_STATUS_ACTIVE) &&
 			   (strcmp(s_ranked_players[i].name, name) == 0)){
-				Com_DPrintf(
+				Q_DPrintf(
 					"SV_RankUserValidate: Duplicate login\n");
 				ranked_player->grank_status =
 					QGR_STATUS_NO_USER;
@@ -576,7 +576,7 @@ SV_RankUserLogout(int index)
 	if(s_ranked_players[index].context == 0)
 		return;
 
-	Com_DPrintf("SV_RankUserLogout( %d );\n", index);
+	Q_DPrintf("SV_RankUserLogout( %d );\n", index);
 
 	/* masqueraded player may not be active yet, if they fail validation,
 	 * but still they have a context needs to be cleaned
@@ -642,7 +642,7 @@ SV_RankReportInt(int index1, int index2, int key, int value,
 	assert(index2 < sv_maxclients->value);
 	assert(s_ranked_players);
 
-/* Com_DPrintf( "SV_RankReportInt( %d, %d, %d, %d, %d );\n", index1, index2,
+/* Q_DPrintf( "SV_RankReportInt( %d, %d, %d, %d, %d );\n", index1, index2,
  *      key, value, accum ); */
 
 	/* get context, match, and player_id for player index1 */
@@ -653,7 +653,7 @@ SV_RankReportInt(int index1, int index2, int key, int value,
 	}else{
 		if(s_ranked_players[index1].grank_status !=
 		   QGR_STATUS_ACTIVE){
-			Com_DPrintf(
+			Q_DPrintf(
 				"SV_RankReportInt: Expecting QGR_STATUS_ACTIVE"
 				" Got Unexpected status %d for player %d\n",
 				s_ranked_players[index1].grank_status, index1);
@@ -671,7 +671,7 @@ SV_RankReportInt(int index1, int index2, int key, int value,
 	else{
 		if(s_ranked_players[index2].grank_status !=
 		   QGR_STATUS_ACTIVE){
-			Com_DPrintf(
+			Q_DPrintf(
 				"SV_RankReportInt: Expecting QGR_STATUS_ACTIVE"
 				" Got Unexpected status %d for player %d\n",
 				s_ranked_players[index2].grank_status, index2);
@@ -742,7 +742,7 @@ SV_RankReportStr(int index1, int index2, int key, char* value)
 	assert(index2 < sv_maxclients->value);
 	assert(s_ranked_players);
 
-/* Com_DPrintf( "SV_RankReportStr( %d, %d, %d, \"%s\" );\n", index1, index2,
+/* Q_DPrintf( "SV_RankReportStr( %d, %d, %d, \"%s\" );\n", index1, index2,
  *      key, value ); */
 
 	/* get context, match, and player_id for player index1 */
@@ -753,7 +753,7 @@ SV_RankReportStr(int index1, int index2, int key, char* value)
 	}else{
 		if(s_ranked_players[index1].grank_status !=
 		   QGR_STATUS_ACTIVE){
-			Com_DPrintf("SV_RankReportStr: Unexpected status %d\n",
+			Q_DPrintf("SV_RankReportStr: Unexpected status %d\n",
 				s_ranked_players[index1].grank_status);
 			return;
 		}
@@ -769,7 +769,7 @@ SV_RankReportStr(int index1, int index2, int key, char* value)
 	else{
 		if(s_ranked_players[index2].grank_status !=
 		   QGR_STATUS_ACTIVE){
-			Com_DPrintf("SV_RankReportStr: Unexpected status %d\n",
+			Q_DPrintf("SV_RankReportStr: Unexpected status %d\n",
 				s_ranked_players[index2].grank_status);
 			return;
 		}
@@ -831,7 +831,7 @@ SV_RankQuit(void)
 				if(s_ranked_players[i].grank_status ==
 				   QGR_STATUS_ACTIVE){
 					SV_RankUserLogout(i);
-					Com_DPrintf(
+					Q_DPrintf(
 						"SV_RankQuit: SV_RankUserLogout %d\n",
 						i);
 				}else if(s_ranked_players[i].context){
@@ -878,7 +878,7 @@ SV_RankNewGameCBF(GR_NEWGAME* gr_newgame, void* cbf_arg)
 	assert(gr_newgame != NULL);
 	assert(cbf_arg == NULL);
 
-	Com_DPrintf("SV_RankNewGameCBF( %08X, %08X );\n", gr_newgame, cbf_arg);
+	Q_DPrintf("SV_RankNewGameCBF( %08X, %08X );\n", gr_newgame, cbf_arg);
 
 	if(gr_newgame->status == GR_STATUS_OK){
 		char	info[MAX_INFO_STRING];
@@ -932,7 +932,7 @@ SV_RankUserCBF(GR_LOGIN* gr_login, void* cbf_arg)
 	assert(gr_login != NULL);
 	assert(cbf_arg != NULL);
 
-	Com_DPrintf("SV_RankUserCBF( %08X, %08X );\n", gr_login, cbf_arg);
+	Q_DPrintf("SV_RankUserCBF( %08X, %08X );\n", gr_login, cbf_arg);
 
 	ranked_player = (ranked_player_t*)cbf_arg;
 	assert(ranked_player);
@@ -957,22 +957,22 @@ SV_RankUserCBF(GR_LOGIN* gr_login, void* cbf_arg)
 				SV_RankStatusString(join_status));
 		break;
 	case GR_STATUS_NOUSER:
-		Com_DPrintf("SV_RankUserCBF: Got status %s\n",
+		Q_DPrintf("SV_RankUserCBF: Got status %s\n",
 			SV_RankStatusString(gr_login->status));
 		ranked_player->final_status = QGR_STATUS_NO_USER;
 		break;
 	case GR_STATUS_BADPASSWORD:
-		Com_DPrintf("SV_RankUserCBF: Got status %s\n",
+		Q_DPrintf("SV_RankUserCBF: Got status %s\n",
 			SV_RankStatusString(gr_login->status));
 		ranked_player->final_status = QGR_STATUS_BAD_PASSWORD;
 		break;
 	case GR_STATUS_TIMEOUT:
-		Com_DPrintf("SV_RankUserCBF: Got status %s\n",
+		Q_DPrintf("SV_RankUserCBF: Got status %s\n",
 			SV_RankStatusString(gr_login->status));
 		ranked_player->final_status = QGR_STATUS_TIMEOUT;
 		break;
 	default:
-		Com_DPrintf("SV_RankUserCBF: Unexpected status %s\n",
+		Q_DPrintf("SV_RankUserCBF: Unexpected status %s\n",
 			SV_RankStatusString(gr_login->status));
 		ranked_player->final_status = QGR_STATUS_ERROR;
 		break;
@@ -1012,7 +1012,7 @@ SV_RankJoinGameCBF(GR_JOINGAME* gr_joingame, void* cbf_arg)
 	assert(gr_joingame != NULL);
 	assert(cbf_arg != NULL);
 
-	Com_DPrintf("SV_RankJoinGameCBF( %08X, %08X );\n", gr_joingame, cbf_arg);
+	Q_DPrintf("SV_RankJoinGameCBF( %08X, %08X );\n", gr_joingame, cbf_arg);
 
 	ranked_player = (ranked_player_t*)cbf_arg;
 
@@ -1072,14 +1072,14 @@ SV_RankSendReportsCBF(GR_STATUS* status, void* cbf_arg)
 	assert(status != NULL);
 	/* NULL cbf_arg means server is sending match reports */
 
-	Com_DPrintf("SV_RankSendReportsCBF( %08X, %08X );\n", status, cbf_arg);
+	Q_DPrintf("SV_RankSendReportsCBF( %08X, %08X );\n", status, cbf_arg);
 
 	ranked_player = (ranked_player_t*)cbf_arg;
 	if(ranked_player == NULL){
-		Com_DPrintf("SV_RankSendReportsCBF: server\n");
+		Q_DPrintf("SV_RankSendReportsCBF: server\n");
 		context = s_server_context;
 	}else{
-		Com_DPrintf("SV_RankSendReportsCBF: player\n");
+		Q_DPrintf("SV_RankSendReportsCBF: player\n");
 		context = ranked_player->context;
 	}
 
@@ -1089,7 +1089,7 @@ SV_RankSendReportsCBF(GR_STATUS* status, void* cbf_arg)
 			SV_RankStatusString(*status));
 
 	if(context == 0){
-		Com_DPrintf("SV_RankSendReportsCBF: WARNING: context == 0");
+		Q_DPrintf("SV_RankSendReportsCBF: WARNING: context == 0");
 		SV_RankCloseContext(ranked_player);
 	}else{
 		cleanup_status = GRankCleanupAsync
@@ -1123,7 +1123,7 @@ SV_RankCleanupCBF(GR_STATUS* status, void* cbf_arg)
 	assert(status != NULL);
 	/* NULL cbf_arg means server is cleaning up */
 
-	Com_DPrintf("SV_RankCleanupCBF( %08X, %08X );\n", status, cbf_arg);
+	Q_DPrintf("SV_RankCleanupCBF( %08X, %08X );\n", status, cbf_arg);
 
 	if(*status != GR_STATUS_OK)
 		SV_RankError("SV_RankCleanupCBF: Unexpected status %s",
@@ -1161,7 +1161,7 @@ SV_RankCloseContext(ranked_player_t* ranked_player)
 
 	assert(s_rankings_contexts > 0);
 	s_rankings_contexts--;
-	Com_DPrintf("SV_RankCloseContext: s_rankings_contexts = %d\n",
+	Q_DPrintf("SV_RankCloseContext: s_rankings_contexts = %d\n",
 		s_rankings_contexts);
 
 	if(s_rankings_contexts == 0){
@@ -1293,7 +1293,7 @@ SV_RankEncodeGameID(uint64_t game_id, char* result,
 	assert(result != NULL);
 
 	if(len < ((sizeof(game_id) * 4) / 3 + 2)){
-		Com_DPrintf("SV_RankEncodeGameID: result buffer too small\n");
+		Q_DPrintf("SV_RankEncodeGameID: result buffer too small\n");
 		result[0] = '\0';
 	}else{
 		qint64 gameid = LittleLong64(*(qint64*)&game_id);
@@ -1315,7 +1315,7 @@ SV_RankDecodePlayerID(const char* string)
 	assert(string != NULL);
 
 	len = strlen (string);
-	Com_DPrintf("SV_RankDecodePlayerID: string length %d\n",len);
+	Q_DPrintf("SV_RankDecodePlayerID: string length %d\n",len);
 	SV_RankAsciiDecode(buffer, string, len);
 	player_id = LittleLong64(*(qint64*)buffer);
 	return *(uint64_t*)&player_id;
@@ -1332,7 +1332,7 @@ SV_RankDecodePlayerKey(const char* string, GR_PLAYER_TOKEN key)
 	assert(string != NULL);
 
 	len = strlen (string);
-	Com_DPrintf("SV_RankDecodePlayerKey: string length %d\n",len);
+	Q_DPrintf("SV_RankDecodePlayerKey: string length %d\n",len);
 
 	memset(key,0,sizeof(GR_PLAYER_TOKEN));
 	memset(buffer,0,sizeof(buffer));
@@ -1377,9 +1377,9 @@ SV_RankError(const char* fmt, ...)
 	Q_vsnprintf(text, sizeof(text), fmt, arg_ptr);
 	va_end(arg_ptr);
 
-	Com_DPrintf("****************************************\n");
-	Com_DPrintf("SV_RankError: %s\n", text);
-	Com_DPrintf("****************************************\n");
+	Q_DPrintf("****************************************\n");
+	Q_DPrintf("SV_RankError: %s\n", text);
+	Q_DPrintf("****************************************\n");
 
 	s_rankings_active = qfalse;
 	Cvar_Set("sv_rankingsActive", "0");

@@ -336,9 +336,9 @@ Field_VariableSizeDraw(field_t *edit, int x, int y, int width, int size,
 
 	/* extract <drawLen> characters from the field at <prestep> */
 	if(drawLen >= MAX_STRING_CHARS)
-		Com_Error(ERR_DROP, "drawLen >= MAX_STRING_CHARS");
+		Q_Error(ERR_DROP, "drawLen >= MAX_STRING_CHARS");
 
-	Com_Memcpy(str, edit->buffer + prestep, drawLen);
+	Q_Memcpy(str, edit->buffer + prestep, drawLen);
 	str[ drawLen ] = 0;
 
 	/* draw it */
@@ -583,12 +583,12 @@ Console_Key(int key)
 			char temp[MAX_EDIT_LINE-1];
 
 			Q_strncpyz(temp, g_consoleField.buffer, sizeof(temp));
-			Com_sprintf(g_consoleField.buffer,
+			Q_sprintf(g_consoleField.buffer,
 				sizeof(g_consoleField.buffer), "\\%s", temp);
 			g_consoleField.cursor++;
 		}
 
-		Com_Printf ("]%s\n", g_consoleField.buffer);
+		Q_Printf ("]%s\n", g_consoleField.buffer);
 
 		/* leading slash is an explicit command */
 		if(g_consoleField.buffer[0] == '\\' ||
@@ -745,17 +745,17 @@ Message_Key(int key)
 		if(chatField.buffer[0] && clc.state == CA_ACTIVE){
 			if(chat_playerNum != -1)
 
-				Com_sprintf(buffer, sizeof(buffer),
+				Q_sprintf(buffer, sizeof(buffer),
 					"tell %i \"%s\"\n", chat_playerNum,
 					chatField.buffer);
 
 			else if(chat_team)
 
-				Com_sprintf(buffer, sizeof(buffer),
+				Q_sprintf(buffer, sizeof(buffer),
 					"say_team \"%s\"\n",
 					chatField.buffer);
 			else
-				Com_sprintf(buffer, sizeof(buffer),
+				Q_sprintf(buffer, sizeof(buffer),
 					"say \"%s\"\n",
 					chatField.buffer);
 
@@ -823,7 +823,7 @@ Key_StringToKeynum(char *str)
 
 	/* check for hex code */
 	if(strlen(str) == 4){
-		int n = Com_HexStrToInt(str);
+		int n = Q_HexStrToInt(str);
 
 		if(n >= 0)
 			return n;
@@ -942,13 +942,13 @@ Key_Unbind_f(void)
 	int b;
 
 	if(Cmd_Argc() != 2){
-		Com_Printf ("unbind <key> : remove commands from a key\n");
+		Q_Printf ("unbind <key> : remove commands from a key\n");
 		return;
 	}
 
 	b = Key_StringToKeynum (Cmd_Argv(1));
 	if(b==-1){
-		Com_Printf ("\"%s\" isn't a valid key\n", Cmd_Argv(1));
+		Q_Printf ("\"%s\" isn't a valid key\n", Cmd_Argv(1));
 		return;
 	}
 
@@ -981,21 +981,21 @@ Key_Bind_f(void)
 	c = Cmd_Argc();
 
 	if(c < 2){
-		Com_Printf ("bind <key> [command] : attach a command to a key\n");
+		Q_Printf ("bind <key> [command] : attach a command to a key\n");
 		return;
 	}
 	b = Key_StringToKeynum (Cmd_Argv(1));
 	if(b==-1){
-		Com_Printf ("\"%s\" isn't a valid key\n", Cmd_Argv(1));
+		Q_Printf ("\"%s\" isn't a valid key\n", Cmd_Argv(1));
 		return;
 	}
 
 	if(c == 2){
 		if(keys[b].binding)
-			Com_Printf ("\"%s\" = \"%s\"\n", Cmd_Argv(
+			Q_Printf ("\"%s\" = \"%s\"\n", Cmd_Argv(
 					1), keys[b].binding);
 		else
-			Com_Printf ("\"%s\" is not bound\n", Cmd_Argv(1));
+			Q_Printf ("\"%s\" is not bound\n", Cmd_Argv(1));
 		return;
 	}
 
@@ -1042,7 +1042,7 @@ Key_Bindlist_f(void)
 
 	for(i = 0; i < MAX_KEYS; i++)
 		if(keys[i].binding && keys[i].binding[0])
-			Com_Printf("%s \"%s\"\n", Key_KeynumToString(
+			Q_Printf("%s \"%s\"\n", Key_KeynumToString(
 					i), keys[i].binding);
 }
 
@@ -1066,7 +1066,7 @@ Key_CompleteUnbind(char *args, int argNum)
 {
 	if(argNum == 2){
 		/* Skip "unbind " */
-		char *p = Com_SkipTokens(args, 1, " ");
+		char *p = Q_SkipTokens(args, 1, " ");
 
 		if(p > args)
 			Field_CompleteKeyname( );
@@ -1083,13 +1083,13 @@ Key_CompleteBind(char *args, int argNum)
 
 	if(argNum == 2){
 		/* Skip "bind " */
-		p = Com_SkipTokens(args, 1, " ");
+		p = Q_SkipTokens(args, 1, " ");
 
 		if(p > args)
 			Field_CompleteKeyname( );
 	}else if(argNum >= 3){
 		/* Skip "bind <key> " */
-		p = Com_SkipTokens(args, 2, " ");
+		p = Q_SkipTokens(args, 2, " ");
 
 		if(p > args)
 			Field_CompleteCommand(p, qtrue, qtrue);
@@ -1136,7 +1136,7 @@ CL_ParseBinding(int key, qbool down, unsigned time)
 			 * so that multiple sources can be discriminated and
 			 * subframe corrected */
 			char cmd[1024];
-			Com_sprintf(cmd, sizeof(cmd), "%c%s %d %d\n",
+			Q_sprintf(cmd, sizeof(cmd), "%c%s %d %d\n",
 				(down) ? '+' : '-', p + 1, key, time);
 			Cbuf_AddText(cmd);
 		}else if(down){
@@ -1378,7 +1378,7 @@ CL_LoadConsoleHistory(void)
 	consoleSaveBufferSize = FS_FOpenFileRead(CONSOLE_HISTORY_FILE, &f,
 		qfalse);
 	if(!f){
-		Com_Printf("Couldn't read %s.\n", CONSOLE_HISTORY_FILE);
+		Q_Printf("Couldn't read %s.\n", CONSOLE_HISTORY_FILE);
 		return;
 	}
 
@@ -1388,17 +1388,17 @@ CL_LoadConsoleHistory(void)
 		text_p = consoleSaveBuffer;
 
 		for(i = COMMAND_HISTORY - 1; i >= 0; i--){
-			if(!*(token = Com_Parse(&text_p)))
+			if(!*(token = Q_Parse(&text_p)))
 				break;
 
 			historyEditLines[ i ].cursor = atoi(token);
 
-			if(!*(token = Com_Parse(&text_p)))
+			if(!*(token = Q_Parse(&text_p)))
 				break;
 
 			historyEditLines[ i ].scroll = atoi(token);
 
-			if(!*(token = Com_Parse(&text_p)))
+			if(!*(token = Q_Parse(&text_p)))
 				break;
 
 			numChars = atoi(token);
@@ -1406,12 +1406,12 @@ CL_LoadConsoleHistory(void)
 			if(numChars >
 			   (strlen(consoleSaveBuffer) -
 			    (text_p - consoleSaveBuffer))){
-				Com_DPrintf(
+				Q_DPrintf(
 					S_COLOR_YELLOW
 					"WARNING: probable corrupt history\n");
 				break;
 			}
-			Com_Memcpy(historyEditLines[ i ].buffer,
+			Q_Memcpy(historyEditLines[ i ].buffer,
 				text_p, numChars);
 			historyEditLines[ i ].buffer[ numChars ] = '\0';
 			text_p += numChars;
@@ -1426,7 +1426,7 @@ CL_LoadConsoleHistory(void)
 
 		historyLine = nextHistoryLine = numLines;
 	}else
-		Com_Printf("Couldn't read %s.\n", CONSOLE_HISTORY_FILE);
+		Q_Printf("Couldn't read %s.\n", CONSOLE_HISTORY_FILE);
 
 	FS_FCloseFile(f);
 }
@@ -1474,13 +1474,13 @@ CL_SaveConsoleHistory(void)
 
 	f = FS_FOpenFileWrite(CONSOLE_HISTORY_FILE);
 	if(!f){
-		Com_Printf("Couldn't write %s.\n", CONSOLE_HISTORY_FILE);
+		Q_Printf("Couldn't write %s.\n", CONSOLE_HISTORY_FILE);
 		return;
 	}
 
 	if(FS_Write(consoleSaveBuffer, consoleSaveBufferSize,
 		   f) < consoleSaveBufferSize)
-		Com_Printf("Couldn't write %s.\n", CONSOLE_HISTORY_FILE);
+		Q_Printf("Couldn't write %s.\n", CONSOLE_HISTORY_FILE);
 
 	FS_FCloseFile(f);
 }

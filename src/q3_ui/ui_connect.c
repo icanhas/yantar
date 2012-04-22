@@ -30,17 +30,17 @@ static void
 UI_ReadableSize(char *buf, int bufsize, int value)
 {
 	if(value > 1024*1024*1024){	/* gigs */
-		Com_sprintf(buf, bufsize, "%d", value / (1024*1024*1024));
-		Com_sprintf(buf+strlen(buf), bufsize-strlen(buf), ".%02d GB",
+		Q_sprintf(buf, bufsize, "%d", value / (1024*1024*1024));
+		Q_sprintf(buf+strlen(buf), bufsize-strlen(buf), ".%02d GB",
 			(value % (1024*1024*1024))*100 / (1024*1024*1024));
 	}else if(value > 1024*1024){	/* megs */
-		Com_sprintf(buf, bufsize, "%d", value / (1024*1024));
-		Com_sprintf(buf+strlen(buf), bufsize-strlen(buf), ".%02d MB",
+		Q_sprintf(buf, bufsize, "%d", value / (1024*1024));
+		Q_sprintf(buf+strlen(buf), bufsize-strlen(buf), ".%02d MB",
 			(value % (1024*1024))*100 / (1024*1024));
 	}else if(value > 1024)	/* kilos */
-		Com_sprintf(buf, bufsize, "%d KB", value / 1024);
+		Q_sprintf(buf, bufsize, "%d KB", value / 1024);
 	else	/* bytes */
-		Com_sprintf(buf, bufsize, "%d bytes", value);
+		Q_sprintf(buf, bufsize, "%d bytes", value);
 }
 
 /* Assumes time is in msec */
@@ -50,12 +50,12 @@ UI_PrintTime(char *buf, int bufsize, int time)
 	time /= 1000;	/* change to seconds */
 
 	if(time > 3600)	/* in the hours range */
-		Com_sprintf(buf, bufsize, "%d hr %d min", time / 3600,
+		Q_sprintf(buf, bufsize, "%d hr %d min", time / 3600,
 			(time % 3600) / 60);
 	else if(time > 60)	/* mins */
-		Com_sprintf(buf, bufsize, "%d min %d sec", time / 60, time % 60);
+		Q_sprintf(buf, bufsize, "%d min %d sec", time / 60, time % 60);
 	else	/* secs */
-		Com_sprintf(buf, bufsize, "%d sec", time);
+		Q_sprintf(buf, bufsize, "%d sec", time);
 }
 
 static void

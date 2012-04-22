@@ -4259,7 +4259,7 @@ BotGetActivateGoal(bot_state_t *bs, int entitynum,
 
 	memset(activategoal, 0, sizeof(bot_activategoal_t));
 	BotEntityInfo(entitynum, &entinfo);
-	Com_sprintf(model, sizeof(model), "*%d", entinfo.modelindex);
+	Q_sprintf(model, sizeof(model), "*%d", entinfo.modelindex);
 	for(ent = trap_AAS_NextBSPEntity(0); ent;
 	    ent = trap_AAS_NextBSPEntity(ent)){
 		if(!trap_AAS_ValueForBSPEpairKey(ent, "model", tmpmodel,
@@ -4504,7 +4504,7 @@ BotPrintActivateGoalInfo(bot_state_t *bs, bot_activategoal_t *activategoal,
 	trap_AAS_ValueForBSPEpairKey(bspent, "classname", classname,
 		sizeof(classname));
 	if(activategoal->shoot)
-		Com_sprintf(
+		Q_sprintf(
 			buf, sizeof(buf),
 			"%s: I have to shoot at a %s from %1.1f %1.1f %1.1f in area %d\n",
 			netname, classname,
@@ -4513,7 +4513,7 @@ BotPrintActivateGoalInfo(bot_state_t *bs, bot_activategoal_t *activategoal,
 			activategoal->goal.origin[2],
 			activategoal->goal.areanum);
 	else
-		Com_sprintf(
+		Q_sprintf(
 			buf, sizeof(buf),
 			"%s: I have to activate a %s at %1.1f %1.1f %1.1f in area %d\n",
 			netname, classname,
@@ -5398,7 +5398,7 @@ BotDeathmatchAI(bot_state_t *bs, float thinktime)
 		trap_SetUserinfo(bs->client, userinfo);
 		/* set the team */
 		if(!bs->map_restart && g_gametype.integer != GT_TOURNAMENT){
-			Com_sprintf(buf, sizeof(buf), "team %s",
+			Q_sprintf(buf, sizeof(buf), "team %s",
 				bs->settings.team);
 			trap_EA_Command(bs->client, buf);
 		}

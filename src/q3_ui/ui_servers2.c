@@ -376,7 +376,7 @@ ArenaServers_UpdatePicture(void)
 		servernodeptr =
 			g_arenaservers.table[g_arenaservers.list.curvalue].
 			servernode;
-		Com_sprintf(picname, sizeof(picname), "levelshots/%s.tga",
+		Q_sprintf(picname, sizeof(picname), "levelshots/%s.tga",
 			servernodeptr->mapname);
 		g_arenaservers.mappic.generic.name = picname;
 
@@ -407,7 +407,7 @@ ArenaServers_UpdateMenu(void)
 		   (g_arenaservers.currentping <=
 		    g_arenaservers.numqueriedservers)){
 			/* show progress */
-			Com_sprintf(g_arenaservers.status.string,
+			Q_sprintf(g_arenaservers.status.string,
 				MAX_STATUSLENGTH, "%d of %d Arena Servers.",
 				g_arenaservers.currentping,
 				g_arenaservers.numqueriedservers);
@@ -544,7 +544,7 @@ ArenaServers_UpdateMenu(void)
 		else
 			pingColor = S_COLOR_RED;
 
-		Com_sprintf(
+		Q_sprintf(
 			buff, MAX_LISTBOXWIDTH,
 			"%-20.20s %-12.12s %2d/%2d %-8.8s %4s%s%3d "
 			S_COLOR_YELLOW "%s",
@@ -1115,7 +1115,7 @@ ArenaServers_SetType(int type)
 		char masterstr[2], cvarname[sizeof("sv_master1")];
 
 		while(type <= UIAS_GLOBAL5){
-			Com_sprintf(cvarname, sizeof(cvarname), "sv_master%d",
+			Q_sprintf(cvarname, sizeof(cvarname), "sv_master%d",
 				type);
 			trap_Cvar_VariableStringBuffer(cvarname, masterstr,
 				sizeof(masterstr));
@@ -1178,7 +1178,7 @@ Punkbuster_ConfirmEnable(qbool result)
 {
 	if(result)
 		trap_SetPbClStatus(1);
-	g_arenaservers.punkbuster.curvalue = Com_Clamp(
+	g_arenaservers.punkbuster.curvalue = Q_Clamp(
 		0, 1, trap_Cvar_VariableValue("cl_punkbuster"));
 }
 
@@ -1189,7 +1189,7 @@ Punkbuster_ConfirmDisable(qbool result)
 		trap_SetPbClStatus(0);
 		UI_Message(punkbuster_msg);
 	}
-	g_arenaservers.punkbuster.curvalue = Com_Clamp(
+	g_arenaservers.punkbuster.curvalue = Q_Clamp(
 		0, 1, trap_Cvar_VariableValue("cl_punkbuster"));
 }
 
@@ -1600,22 +1600,22 @@ ArenaServers_MenuInit(void)
 
 	ArenaServers_LoadFavorites();
 
-	g_arenaservers.master.curvalue = g_servertype = Com_Clamp(
+	g_arenaservers.master.curvalue = g_servertype = Q_Clamp(
 		0, 6, ui_browserMaster.integer);
 
-	g_gametype = Com_Clamp(0, 4, ui_browserGameType.integer);
+	g_gametype = Q_Clamp(0, 4, ui_browserGameType.integer);
 	g_arenaservers.gametype.curvalue = g_gametype;
 
-	g_sortkey = Com_Clamp(0, 4, ui_browserSortKey.integer);
+	g_sortkey = Q_Clamp(0, 4, ui_browserSortKey.integer);
 	g_arenaservers.sortkey.curvalue = g_sortkey;
 
-	g_fullservers = Com_Clamp(0, 1, ui_browserShowFull.integer);
+	g_fullservers = Q_Clamp(0, 1, ui_browserShowFull.integer);
 	g_arenaservers.showfull.curvalue = g_fullservers;
 
-	g_emptyservers = Com_Clamp(0, 1, ui_browserShowEmpty.integer);
+	g_emptyservers = Q_Clamp(0, 1, ui_browserShowEmpty.integer);
 	g_arenaservers.showempty.curvalue = g_emptyservers;
 
-	g_arenaservers.punkbuster.curvalue = Com_Clamp(
+	g_arenaservers.punkbuster.curvalue = Q_Clamp(
 		0, 1, trap_Cvar_VariableValue("cl_punkbuster"));
 
 	/* force to initial state and refresh */

@@ -62,7 +62,7 @@ CL_GetUserCmd(int cmdNumber, usercmd_t *ucmd)
 
 	/* can't return anything that we haven't created yet */
 	if(cmdNumber > cl.cmdNumber)
-		Com_Error(ERR_DROP, "CL_GetUserCmd: %i >= %i", cmdNumber,
+		Q_Error(ERR_DROP, "CL_GetUserCmd: %i >= %i", cmdNumber,
 			cl.cmdNumber);
 
 	/* the usercmd has been overwritten in the wrapping
@@ -90,7 +90,7 @@ CL_GetParseEntityState(int parseEntityNumber, entityState_t *state)
 {
 	/* can't return anything that hasn't been parsed yet */
 	if(parseEntityNumber >= cl.parseEntitiesNum)
-		Com_Error(ERR_DROP, "CL_GetParseEntityState: %i >= %i",
+		Q_Error(ERR_DROP, "CL_GetParseEntityState: %i >= %i",
 			parseEntityNumber, cl.parseEntitiesNum);
 
 	/* can't return anything that has been overwritten in the circular buffer */
@@ -122,7 +122,7 @@ CL_GetSnapshot(int snapshotNumber, snapshot_t *snapshot)
 	int i, count;
 
 	if(snapshotNumber > cl.snap.messageNum)
-		Com_Error(
+		Q_Error(
 			ERR_DROP,
 			"CL_GetSnapshot: snapshotNumber > cl.snapshot.messageNum");
 
@@ -145,12 +145,12 @@ CL_GetSnapshot(int snapshotNumber, snapshot_t *snapshot)
 	snapshot->serverCommandSequence = clSnap->serverCommandNum;
 	snapshot->ping = clSnap->ping;
 	snapshot->serverTime = clSnap->serverTime;
-	Com_Memcpy(snapshot->areamask, clSnap->areamask,
+	Q_Memcpy(snapshot->areamask, clSnap->areamask,
 		sizeof(snapshot->areamask));
 	snapshot->ps = clSnap->ps;
 	count = clSnap->numEntities;
 	if(count > MAX_ENTITIES_IN_SNAPSHOT){
-		Com_DPrintf("CL_GetSnapshot: truncated %i entities to %i\n",
+		Q_DPrintf("CL_GetSnapshot: truncated %i entities to %i\n",
 			count,
 			MAX_ENTITIES_IN_SNAPSHOT);
 		count = MAX_ENTITIES_IN_SNAPSHOT;
@@ -191,7 +191,7 @@ CL_AddCgameCommand(const char *cmdName)
 void
 CL_CgameError(const char *string)
 {
-	Com_Error(ERR_DROP, "%s", string);
+	Q_Error(ERR_DROP, "%s", string);
 }
 
 
@@ -209,7 +209,7 @@ CL_ConfigstringModified(void)
 
 	index = atoi(Cmd_Argv(1));
 	if(index < 0 || index >= MAX_CONFIGSTRINGS)
-		Com_Error(ERR_DROP, "configstring > MAX_CONFIGSTRINGS");
+		Q_Error(ERR_DROP, "configstring > MAX_CONFIGSTRINGS");
 	/* get everything after "cs <num>" */
 	s = Cmd_ArgsFrom(2);
 
@@ -220,7 +220,7 @@ CL_ConfigstringModified(void)
 	/* build the new gameState_t */
 	oldGs = cl.gameState;
 
-	Com_Memset(&cl.gameState, 0, sizeof(cl.gameState));
+	Q_Memset(&cl.gameState, 0, sizeof(cl.gameState));
 
 	/* leave the first 0 for uninitialized strings */
 	cl.gameState.dataCount = 1;
@@ -236,11 +236,11 @@ CL_ConfigstringModified(void)
 		len = strlen(dup);
 
 		if(len + 1 + cl.gameState.dataCount > MAX_GAMESTATE_CHARS)
-			Com_Error(ERR_DROP, "MAX_GAMESTATE_CHARS exceeded");
+			Q_Error(ERR_DROP, "MAX_GAMESTATE_CHARS exceeded");
 
 		/* append it to the gameState string buffer */
 		cl.gameState.stringOffsets[ i ] = cl.gameState.dataCount;
-		Com_Memcpy(cl.gameState.stringData + cl.gameState.dataCount, dup,
+		Q_Memcpy(cl.gameState.stringData + cl.gameState.dataCount, dup,
 			len + 1);
 		cl.gameState.dataCount += len + 1;
 	}
@@ -272,14 +272,14 @@ CL_GetServerCommand(int serverCommandNumber)
 		 * reliable commands then the client never got those first reliable commands */
 		if(clc.demoplaying)
 			return qfalse;
-		Com_Error(
+		Q_Error(
 			ERR_DROP,
 			"CL_GetServerCommand: a reliable command was cycled out");
 		return qfalse;
 	}
 
 	if(serverCommandNumber > clc.serverCommandSequence){
-		Com_Error(
+		Q_Error(
 			ERR_DROP,
 			"CL_GetServerCommand: requested a command not received");
 		return qfalse;
@@ -290,7 +290,7 @@ CL_GetServerCommand(int serverCommandNumber)
 				    (MAX_RELIABLE_COMMANDS - 1) ];
 	clc.lastExecutedServerCommand = serverCommandNumber;
 
-	Com_DPrintf("serverCommand: %i : %s\n", serverCommandNumber, s);
+	Q_DPrintf("serverCommand: %i : %s\n", serverCommandNumber, s);
 
 rescan:
 	Cmd_TokenizeString(s);
@@ -301,15 +301,15 @@ rescan:
 		/* https://zerowing.idsoftware.com/bugzilla/show_bug.cgi?id=552
 		 * allow server to indicate why they were disconnected */
 		if(argc >= 2)
-			Com_Error(ERR_SERVERDISCONNECT,
+			Q_Error(ERR_SERVERDISCONNECT,
 				"Server disconnected - %s", Cmd_Argv(
 					1));
 		else
-			Com_Error(ERR_SERVERDISCONNECT, "Server disconnected");
+			Q_Error(ERR_SERVERDISCONNECT, "Server disconnected");
 	}
 
 	if(!strcmp(cmd, "bcs0")){
-		Com_sprintf(bigConfigString, BIG_INFO_STRING, "cs %s \"%s",
+		Q_sprintf(bigConfigString, BIG_INFO_STRING, "cs %s \"%s",
 			Cmd_Argv(
 				1), Cmd_Argv(2));
 		return qfalse;
@@ -318,7 +318,7 @@ rescan:
 	if(!strcmp(cmd, "bcs1")){
 		s = Cmd_Argv(2);
 		if(strlen(bigConfigString) + strlen(s) >= BIG_INFO_STRING)
-			Com_Error(ERR_DROP, "bcs exceeded BIG_INFO_STRING");
+			Q_Error(ERR_DROP, "bcs exceeded BIG_INFO_STRING");
 		strcat(bigConfigString, s);
 		return qfalse;
 	}
@@ -326,7 +326,7 @@ rescan:
 	if(!strcmp(cmd, "bcs2")){
 		s = Cmd_Argv(2);
 		if(strlen(bigConfigString) + strlen(s) + 1 >= BIG_INFO_STRING)
-			Com_Error(ERR_DROP, "bcs exceeded BIG_INFO_STRING");
+			Q_Error(ERR_DROP, "bcs exceeded BIG_INFO_STRING");
 		strcat(bigConfigString, s);
 		strcat(bigConfigString, "\"");
 		s = bigConfigString;
@@ -346,7 +346,7 @@ rescan:
 		Con_ClearNotify();
 		/* reparse the string, because Con_ClearNotify() may have done another Cmd_TokenizeString() */
 		Cmd_TokenizeString(s);
-		Com_Memset(cl.cmds, 0, sizeof(cl.cmds));
+		Q_Memset(cl.cmds, 0, sizeof(cl.cmds));
 		return qtrue;
 	}
 
@@ -423,10 +423,10 @@ CL_CgameSystemCalls(intptr_t *args)
 {
 	switch(args[0]){
 	case CG_PRINT:
-		Com_Printf("%s", (const char*)VMA(1));
+		Q_Printf("%s", (const char*)VMA(1));
 		return 0;
 	case CG_ERROR:
-		Com_Error(ERR_DROP, "%s", (const char*)VMA(1));
+		Q_Error(ERR_DROP, "%s", (const char*)VMA(1));
 		return 0;
 	case CG_MILLISECONDS:
 		return Sys_Milliseconds();
@@ -477,8 +477,8 @@ CL_CgameSystemCalls(intptr_t *args)
 		return 0;
 	case CG_UPDATESCREEN:
 		/* this is used during lengthy level loading, so pump message loop */
-/*      Com_EventLoop();	// FIXME: if a server restarts here, BAD THINGS HAPPEN!
- * We can't call Com_EventLoop here, a restart will crash and this _does_ happen
+/*      Q_EventLoop();	// FIXME: if a server restarts here, BAD THINGS HAPPEN!
+ * We can't call Q_EventLoop here, a restart will crash and this _does_ happen
  * if there is a map change while we are downloading at pk3.
  * ZOID */
 		SCR_UpdateScreen();
@@ -635,10 +635,10 @@ CL_CgameSystemCalls(intptr_t *args)
 
 
 	case CG_MEMSET:
-		Com_Memset(VMA(1), args[2], args[3]);
+		Q_Memset(VMA(1), args[2], args[3]);
 		return 0;
 	case CG_MEMCPY:
-		Com_Memcpy(VMA(1), VMA(2), args[3]);
+		Q_Memcpy(VMA(1), VMA(2), args[3]);
 		return 0;
 	case CG_STRNCPY:
 		strncpy(VMA(1), VMA(2), args[3]);
@@ -675,7 +675,7 @@ CL_CgameSystemCalls(intptr_t *args)
 		return 0;
 
 	case CG_REAL_TIME:
-		return Com_RealTime(VMA(1));
+		return Q_RealTime(VMA(1));
 	case CG_SNAPVECTOR:
 		Q_SnapVector(VMA(1));
 		return 0;
@@ -720,7 +720,7 @@ CL_CgameSystemCalls(intptr_t *args)
 
 	default:
 		assert(0);
-		Com_Error(ERR_DROP, "Bad cgame system trap: %ld",
+		Q_Error(ERR_DROP, "Bad cgame system trap: %ld",
 			(long int)args[0]);
 	}
 	return 0;
@@ -749,7 +749,7 @@ CL_InitCGame(void)
 	info = cl.gameState.stringData +
 	       cl.gameState.stringOffsets[ CS_SERVERINFO ];
 	mapname = Info_ValueForKey(info, "mapname");
-	Com_sprintf(cl.mapname, sizeof(cl.mapname), "maps/%s.bsp", mapname);
+	Q_sprintf(cl.mapname, sizeof(cl.mapname), "maps/%s.bsp", mapname);
 
 	/* load the dll or bytecode */
 	interpret = Cvar_VariableValue("vm_cgame");
@@ -760,7 +760,7 @@ CL_InitCGame(void)
 
 	cgvm = VM_Create("cgame", CL_CgameSystemCalls, interpret);
 	if(!cgvm)
-		Com_Error(ERR_DROP, "VM_Create on cgame failed");
+		Q_Error(ERR_DROP, "VM_Create on cgame failed");
 	clc.state = CA_LOADING;
 
 	/* init for this gamestate
@@ -780,7 +780,7 @@ CL_InitCGame(void)
 
 	t2 = Sys_Milliseconds();
 
-	Com_Printf("CL_InitCGame: %5.2f seconds\n", (t2-t1)/1000.0);
+	Q_Printf("CL_InitCGame: %5.2f seconds\n", (t2-t1)/1000.0);
 
 	/* have the renderer touch all its images, so they are present
 	 * on the card even if the driver does deferred loading */
@@ -788,7 +788,7 @@ CL_InitCGame(void)
 
 	/* make sure everything is paged in */
 	if(!Sys_LowPhysicalMemory())
-		Com_TouchMemory();
+		Q_TouchMemory();
 
 	/* clear anything that got printed */
 	Con_ClearNotify ();
@@ -863,11 +863,11 @@ CL_AdjustTimeDelta(void)
 		cl.oldServerTime = cl.snap.serverTime;	/* FIXME: is this a problem for cgame? */
 		cl.serverTime = cl.snap.serverTime;
 		if(cl_showTimeDelta->integer)
-			Com_Printf("<RESET> ");
+			Q_Printf("<RESET> ");
 	}else if(deltaDelta > 100){
 		/* fast adjust, cut the difference in half */
 		if(cl_showTimeDelta->integer)
-			Com_Printf("<FAST> ");
+			Q_Printf("<FAST> ");
 		cl.serverTimeDelta = (cl.serverTimeDelta + newDelta) >> 1;
 	}else
 	/* slow drift adjust, only move 1 or 2 msec
@@ -884,7 +884,7 @@ CL_AdjustTimeDelta(void)
 	}
 
 	if(cl_showTimeDelta->integer)
-		Com_Printf("%i ", cl.serverTimeDelta);
+		Q_Printf("%i ", cl.serverTimeDelta);
 }
 
 
@@ -917,7 +917,7 @@ CL_FirstSnapshot(void)
 #ifdef USE_MUMBLE
 	if((cl_useMumble->integer) && !mumble_islinked()){
 		int ret = mumble_link(CLIENT_WINDOW_TITLE);
-		Com_Printf("Mumble: Linking to Mumble application %s\n",
+		Q_Printf("Mumble: Linking to Mumble application %s\n",
 			ret==0 ? "ok" : "failed");
 	}
 #endif
@@ -959,7 +959,7 @@ CL_FirstSnapshot(void)
 		clc.voipMuteAll = qfalse;
 		Cmd_AddCommand ("voip", CL_Voip_f);
 		Cvar_Set("cl_voipSendTarget", "spatial");
-		Com_Memset(clc.voipTargets, ~0, sizeof(clc.voipTargets));
+		Q_Memset(clc.voipTargets, ~0, sizeof(clc.voipTargets));
 	}
 #endif
 }
@@ -993,7 +993,7 @@ CL_SetCGameTime(void)
 
 	/* if we have gotten to this point, cl.snap is guaranteed to be valid */
 	if(!cl.snap.valid)
-		Com_Error(ERR_DROP, "CL_SetCGameTime: !cl.snap.valid");
+		Q_Error(ERR_DROP, "CL_SetCGameTime: !cl.snap.valid");
 
 	/* allow pause in single player */
 	if(sv_paused->integer && CL_CheckPaused() && com_sv_running->integer)
@@ -1001,7 +1001,7 @@ CL_SetCGameTime(void)
 		return;
 
 	if(cl.snap.serverTime < cl.oldFrameServerTime)
-		Com_Error(ERR_DROP, "cl.snap.serverTime < cl.oldFrameServerTime");
+		Q_Error(ERR_DROP, "cl.snap.serverTime < cl.oldFrameServerTime");
 	cl.oldFrameServerTime = cl.snap.serverTime;
 
 

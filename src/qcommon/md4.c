@@ -145,8 +145,8 @@ mdfour_tail(byte *in, int n)
 
 	b = m->totalN * 8;
 
-	Com_Memset(buf, 0, 128);
-	if(n) Com_Memcpy(buf, in, n);
+	Q_Memset(buf, 0, 128);
+	if(n) Q_Memcpy(buf, in, n);
 	buf[n] = 0x80;
 
 	if(n <= 55){
@@ -206,7 +206,7 @@ mdfour(byte *out, byte *in, int n)
 /* =================================================================== */
 
 unsigned
-Com_BlockChecksum(const void *buffer, int length)
+Q_BlockChecksum(const void *buffer, int length)
 {
 	int digest[4];
 	unsigned val;

@@ -156,7 +156,7 @@ AAS_OptimizeFace(optimized_t *optimized, int facenum)
 	}
 
 	optface = &optimized->faces[optimized->numfaces];
-	Com_Memcpy(optface, face, sizeof(aas_face_t));
+	Q_Memcpy(optface, face, sizeof(aas_face_t));
 
 	optface->numedges = 0;
 	optface->firstedge = optimized->edgeindexsize;
@@ -191,7 +191,7 @@ AAS_OptimizeArea(optimized_t *optimized, int areanum)
 
 	area = &aasworld.areas[areanum];
 	optarea = &optimized->areas[areanum];
-	Com_Memcpy(optarea, area, sizeof(aas_area_t));
+	Q_Memcpy(optarea, area, sizeof(aas_area_t));
 
 	optarea->numfaces = 0;
 	optarea->firstface = optimized->faceindexsize;

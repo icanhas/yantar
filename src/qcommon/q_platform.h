@@ -355,8 +355,8 @@ float FloatSwap(const float *f);
 
 #elif defined(Q3_LITTLE_ENDIAN)
 
-#define CopyLittleShort(dest, src)	Com_Memcpy(dest, src, 2)
-#define CopyLittleLong(dest, src)	Com_Memcpy(dest, src, 4)
+#define CopyLittleShort(dest, src)	Q_Memcpy(dest, src, 2)
+#define CopyLittleLong(dest, src)	Q_Memcpy(dest, src, 4)
 #define LittleShort
 #define LittleLong
 #define LittleFloat

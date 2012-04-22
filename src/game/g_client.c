@@ -1088,7 +1088,7 @@ ClientSpawn(gentity_t *ent)
 		persistant[i] = client->ps.persistant[i];
 	eventSequence = client->ps.eventSequence;
 
-	Com_Memset (client, 0, sizeof(*client));
+	Q_Memset (client, 0, sizeof(*client));
 
 	client->pers = saved;
 	client->sess = savedSess;

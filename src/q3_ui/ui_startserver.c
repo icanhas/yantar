@@ -114,7 +114,7 @@ GametypeBits(char *string)
 	bits = 0;
 	p = string;
 	while(1){
-		token = Com_ParseExt(&p, qfalse);
+		token = Q_ParseExt(&p, qfalse);
 		if(token[0] == 0)
 			break;
 
@@ -171,7 +171,7 @@ StartServer_Update(void)
 				"map"), MAX_NAMELENGTH);
 		Q_strupr(mapname);
 
-		Com_sprintf(picname[i], sizeof(picname[i]), "levelshots/%s",
+		Q_sprintf(picname[i], sizeof(picname[i]), "levelshots/%s",
 			mapname);
 
 		s_startserver.mappics[i].generic.flags	&= ~QMF_HIGHLIGHT;
@@ -592,7 +592,7 @@ StartServer_Cache(void)
 					"map"), MAX_NAMELENGTH);
 			Q_strupr(mapname);
 
-			Com_sprintf(picname, sizeof(picname), "levelshots/%s",
+			Q_sprintf(picname, sizeof(picname), "levelshots/%s",
 				mapname);
 			trap_R_RegisterShaderNoMip(picname);
 		}
@@ -783,11 +783,11 @@ ServerOptions_Start(void)
 		break;
 	}
 
-	trap_Cvar_SetValue("sv_maxclients", Com_Clamp(0, 12, maxclients));
-	trap_Cvar_SetValue("dedicated", Com_Clamp(0, 2, dedicated));
-	trap_Cvar_SetValue ("timelimit", Com_Clamp(0, timelimit, timelimit));
-	trap_Cvar_SetValue ("fraglimit", Com_Clamp(0, fraglimit, fraglimit));
-	trap_Cvar_SetValue ("capturelimit", Com_Clamp(0, flaglimit, flaglimit));
+	trap_Cvar_SetValue("sv_maxclients", Q_Clamp(0, 12, maxclients));
+	trap_Cvar_SetValue("dedicated", Q_Clamp(0, 2, dedicated));
+	trap_Cvar_SetValue ("timelimit", Q_Clamp(0, timelimit, timelimit));
+	trap_Cvar_SetValue ("fraglimit", Q_Clamp(0, fraglimit, fraglimit));
+	trap_Cvar_SetValue ("capturelimit", Q_Clamp(0, flaglimit, flaglimit));
 	trap_Cvar_SetValue("g_friendlyfire", friendlyfire);
 	trap_Cvar_SetValue("sv_pure", pure);
 	trap_Cvar_Set("sv_hostname", s_serveroptions.hostname.field.buffer);
@@ -811,13 +811,13 @@ ServerOptions_Start(void)
 		if(s_serveroptions.playerNameBuffers[n][0] == '-')
 			continue;
 		if(s_serveroptions.gametype >= GT_TEAM)
-			Com_sprintf(
+			Q_sprintf(
 				buf, sizeof(buf), "addbot %s %i %s\n",
 				s_serveroptions.playerNameBuffers[n], skill,
 				playerTeam_list[s_serveroptions.playerTeam[n].
 						curvalue]);
 		else
-			Com_sprintf(buf, sizeof(buf), "addbot %s %i\n",
+			Q_sprintf(buf, sizeof(buf), "addbot %s %i\n",
 				s_serveroptions.playerNameBuffers[n],
 				skill);
 		trap_Cmd_ExecuteText(EXEC_APPEND, buf);
@@ -1135,42 +1135,42 @@ ServerOptions_SetMenuItems(void)
 	switch(s_serveroptions.gametype){
 	case GT_FFA:
 	default:
-		Com_sprintf(s_serveroptions.fraglimit.field.buffer, 4, "%i",
-			(int)Com_Clamp(0, 999,
+		Q_sprintf(s_serveroptions.fraglimit.field.buffer, 4, "%i",
+			(int)Q_Clamp(0, 999,
 				trap_Cvar_VariableValue("ui_ffa_fraglimit")));
-		Com_sprintf(s_serveroptions.timelimit.field.buffer, 4, "%i",
-			(int)Com_Clamp(0, 999,
+		Q_sprintf(s_serveroptions.timelimit.field.buffer, 4, "%i",
+			(int)Q_Clamp(0, 999,
 				trap_Cvar_VariableValue("ui_ffa_timelimit")));
 		break;
 
 	case GT_TOURNAMENT:
-		Com_sprintf(s_serveroptions.fraglimit.field.buffer, 4, "%i",
-			(int)Com_Clamp(0, 999,
+		Q_sprintf(s_serveroptions.fraglimit.field.buffer, 4, "%i",
+			(int)Q_Clamp(0, 999,
 				trap_Cvar_VariableValue("ui_tourney_fraglimit")));
-		Com_sprintf(s_serveroptions.timelimit.field.buffer, 4, "%i",
-			(int)Com_Clamp(0, 999,
+		Q_sprintf(s_serveroptions.timelimit.field.buffer, 4, "%i",
+			(int)Q_Clamp(0, 999,
 				trap_Cvar_VariableValue("ui_tourney_timelimit")));
 		break;
 
 	case GT_TEAM:
-		Com_sprintf(s_serveroptions.fraglimit.field.buffer, 4, "%i",
-			(int)Com_Clamp(0, 999,
+		Q_sprintf(s_serveroptions.fraglimit.field.buffer, 4, "%i",
+			(int)Q_Clamp(0, 999,
 				trap_Cvar_VariableValue("ui_team_fraglimit")));
-		Com_sprintf(s_serveroptions.timelimit.field.buffer, 4, "%i",
-			(int)Com_Clamp(0, 999,
+		Q_sprintf(s_serveroptions.timelimit.field.buffer, 4, "%i",
+			(int)Q_Clamp(0, 999,
 				trap_Cvar_VariableValue("ui_team_timelimit")));
-		s_serveroptions.friendlyfire.curvalue = (int)Com_Clamp(
+		s_serveroptions.friendlyfire.curvalue = (int)Q_Clamp(
 			0, 1, trap_Cvar_VariableValue("ui_team_friendly"));
 		break;
 
 	case GT_CTF:
-		Com_sprintf(s_serveroptions.flaglimit.field.buffer, 4, "%i",
-			(int)Com_Clamp(0, 100,
+		Q_sprintf(s_serveroptions.flaglimit.field.buffer, 4, "%i",
+			(int)Q_Clamp(0, 100,
 				trap_Cvar_VariableValue("ui_ctf_capturelimit")));
-		Com_sprintf(s_serveroptions.timelimit.field.buffer, 4, "%i",
-			(int)Com_Clamp(0, 999,
+		Q_sprintf(s_serveroptions.timelimit.field.buffer, 4, "%i",
+			(int)Q_Clamp(0, 999,
 				trap_Cvar_VariableValue("ui_ctf_timelimit")));
-		s_serveroptions.friendlyfire.curvalue = (int)Com_Clamp(
+		s_serveroptions.friendlyfire.curvalue = (int)Q_Clamp(
 			0, 1, trap_Cvar_VariableValue("ui_ctf_friendly"));
 		break;
 	}
@@ -1179,7 +1179,7 @@ ServerOptions_SetMenuItems(void)
 		UI_Cvar_VariableString("sv_hostname"),
 		sizeof(s_serveroptions.hostname.field.buffer));
 	s_serveroptions.pure.curvalue =
-		Com_Clamp(0, 1, trap_Cvar_VariableValue("sv_pure"));
+		Q_Clamp(0, 1, trap_Cvar_VariableValue("sv_pure"));
 
 	/* set the map pic */
 	info =
@@ -1187,7 +1187,7 @@ ServerOptions_SetMenuItems(void)
 							       currentmap ]);
 	Q_strncpyz(mapname, Info_ValueForKey(info, "map"), MAX_NAMELENGTH);
 	Q_strupr(mapname);
-	Com_sprintf(picname, 64, "levelshots/%s", mapname);
+	Q_sprintf(picname, 64, "levelshots/%s", mapname);
 	s_serveroptions.mappic.generic.name = picname;
 
 	/* set the map name */
@@ -1261,10 +1261,10 @@ ServerOptions_MenuInit(qbool multiplayer)
 
 	memset(&s_serveroptions, 0,sizeof(serveroptions_t));
 	s_serveroptions.multiplayer = multiplayer;
-	s_serveroptions.gametype = (int)Com_Clamp(0, ARRAY_LEN(
+	s_serveroptions.gametype = (int)Q_Clamp(0, ARRAY_LEN(
 			gametype_remap2) - 1,
 		trap_Cvar_VariableValue("g_gametype"));
-	s_serveroptions.punkbuster.curvalue = Com_Clamp(
+	s_serveroptions.punkbuster.curvalue = Q_Clamp(
 		0, 1, trap_Cvar_VariableValue("sv_punkbuster"));
 
 	ServerOptions_Cache();
@@ -1676,13 +1676,13 @@ ServerPlayerIcon(const char *modelAndSkin, char *iconName, int iconNameMaxSize)
 	else
 		skin = "default";
 
-	Com_sprintf(iconName, iconNameMaxSize, "models/players/%s/icon_%s.tga",
+	Q_sprintf(iconName, iconNameMaxSize, "models/players/%s/icon_%s.tga",
 		model,
 		skin);
 
 	if(!trap_R_RegisterShaderNoMip(iconName) &&
 	   Q_stricmp(skin, "default") != 0)
-		Com_sprintf(iconName, iconNameMaxSize,
+		Q_sprintf(iconName, iconNameMaxSize,
 			"models/players/%s/icon_default.tga",
 			model);
 }

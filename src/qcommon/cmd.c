@@ -87,10 +87,10 @@ Cbuf_AddText(const char *text)
 	l = strlen (text);
 
 	if(cmd_text.cursize + l >= cmd_text.maxsize){
-		Com_Printf ("Cbuf_AddText: overflow\n");
+		Q_Printf ("Cbuf_AddText: overflow\n");
 		return;
 	}
-	Com_Memcpy(&cmd_text.data[cmd_text.cursize], text, l);
+	Q_Memcpy(&cmd_text.data[cmd_text.cursize], text, l);
 	cmd_text.cursize += l;
 }
 
@@ -109,7 +109,7 @@ Cbuf_InsertText(const char *text)
 
 	len = strlen(text) + 1;
 	if(len + cmd_text.cursize > cmd_text.maxsize){
-		Com_Printf("Cbuf_InsertText overflowed\n");
+		Q_Printf("Cbuf_InsertText overflowed\n");
 		return;
 	}
 
@@ -118,7 +118,7 @@ Cbuf_InsertText(const char *text)
 		cmd_text.data[ i + len ] = cmd_text.data[ i ];
 
 	/* copy the new text in */
-	Com_Memcpy(cmd_text.data, text, len - 1);
+	Q_Memcpy(cmd_text.data, text, len - 1);
 
 	/* add a \n */
 	cmd_text.data[ len - 1 ] = '\n';
@@ -136,11 +136,11 @@ Cbuf_ExecuteText(int exec_when, const char *text)
 	switch(exec_when){
 	case EXEC_NOW:
 		if(text && strlen(text) > 0){
-			Com_DPrintf(S_COLOR_YELLOW "EXEC_NOW %s\n", text);
+			Q_DPrintf(S_COLOR_YELLOW "EXEC_NOW %s\n", text);
 			Cmd_ExecuteString (text);
 		}else{
 			Cbuf_Execute();
-			Com_DPrintf(S_COLOR_YELLOW "EXEC_NOW %s\n",
+			Q_DPrintf(S_COLOR_YELLOW "EXEC_NOW %s\n",
 				cmd_text.data);
 		}
 		break;
@@ -151,7 +151,7 @@ Cbuf_ExecuteText(int exec_when, const char *text)
 		Cbuf_AddText (text);
 		break;
 	default:
-		Com_Error (ERR_FATAL, "Cbuf_ExecuteText: bad exec_when");
+		Q_Error (ERR_FATAL, "Cbuf_ExecuteText: bad exec_when");
 	}
 }
 
@@ -219,7 +219,7 @@ Cbuf_Execute(void)
 		if(i >= (MAX_CMD_LINE - 1))
 			i = MAX_CMD_LINE - 1;
 
-		Com_Memcpy (line, text, i);
+		Q_Memcpy (line, text, i);
 		line[i] = 0;
 
 /* delete the text from the command buffer and move remaining commands down
@@ -261,18 +261,18 @@ Cmd_Exec_f(void)
 	char filename[MAX_QPATH];
 
 	if(Cmd_Argc () != 2){
-		Com_Printf ("exec <filename> : execute a script file\n");
+		Q_Printf ("exec <filename> : execute a script file\n");
 		return;
 	}
 
 	Q_strncpyz(filename, Cmd_Argv(1), sizeof(filename));
-	Com_DefaultExtension(filename, sizeof(filename), ".cfg");
+	Q_DefaultExtension(filename, sizeof(filename), ".cfg");
 	FS_ReadFile(filename, &f.v);
 	if(!f.c){
-		Com_Printf ("couldn't exec %s\n",Cmd_Argv(1));
+		Q_Printf ("couldn't exec %s\n",Cmd_Argv(1));
 		return;
 	}
-	Com_Printf ("execing %s\n",Cmd_Argv(1));
+	Q_Printf ("execing %s\n",Cmd_Argv(1));
 
 	Cbuf_InsertText (f.c);
 
@@ -291,7 +291,7 @@ Cmd_Vstr_f(void)
 	char *v;
 
 	if(Cmd_Argc () != 2){
-		Com_Printf ("vstr <variablename> : execute a variable command\n");
+		Q_Printf ("vstr <variablename> : execute a variable command\n");
 		return;
 	}
 
@@ -308,7 +308,7 @@ Cmd_Vstr_f(void)
 void
 Cmd_Echo_f(void)
 {
-	Com_Printf ("%s\n", Cmd_Args());
+	Q_Printf ("%s\n", Cmd_Args());
 }
 
 
@@ -478,7 +478,7 @@ Cmd_TokenizeString2(const char *text_in, qbool ignoreQuotes)
 
 #ifdef TKN_DBG
 	/* FIXME TTimo blunt hook to try to find the tokenization of userinfo */
-	Com_DPrintf("Cmd_TokenizeString: %s\n", text_in);
+	Q_DPrintf("Cmd_TokenizeString: %s\n", text_in);
 #endif
 
 	/* clear previous args */
@@ -604,7 +604,7 @@ Cmd_AddCommand(const char *cmd_name, xcommand_t function)
 	if(Cmd_FindCommand(cmd_name)){
 		/* allow completion-only commands to be silently doubled */
 		if(function != NULL)
-			Com_Printf("Cmd_AddCommand: %s already defined\n",
+			Q_Printf("Cmd_AddCommand: %s already defined\n",
 				cmd_name);
 		return;
 	}
@@ -669,7 +669,7 @@ Cmd_RemoveCommandSafe(const char *cmd_name)
 	if(!cmd)
 		return;
 	if(cmd->function){
-		Com_Error(ERR_DROP, "Restricted source tried to remove "
+		Q_Error(ERR_DROP, "Restricted source tried to remove "
 				    "system command \"%s\"", cmd_name);
 		return;
 	}
@@ -776,12 +776,12 @@ Cmd_List_f(void)
 
 	i = 0;
 	for(cmd=cmd_functions; cmd; cmd=cmd->next){
-		if(match && !Com_Filter(match, cmd->name, qfalse)) continue;
+		if(match && !Q_Filter(match, cmd->name, qfalse)) continue;
 
-		Com_Printf ("%s\n", cmd->name);
+		Q_Printf ("%s\n", cmd->name);
 		i++;
 	}
-	Com_Printf ("%i commands\n", i);
+	Q_Printf ("%i commands\n", i);
 }
 
 /*

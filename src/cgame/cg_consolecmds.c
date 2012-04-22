@@ -203,7 +203,7 @@ CG_TellTarget_f(void)
 		return;
 
 	trap_Args(message, 128);
-	Com_sprintf(command, 128, "tell %i %s", clientNum, message);
+	Q_sprintf(command, 128, "tell %i %s", clientNum, message);
 	trap_SendClientCommand(command);
 }
 
@@ -219,7 +219,7 @@ CG_TellAttacker_f(void)
 		return;
 
 	trap_Args(message, 128);
-	Com_sprintf(command, 128, "tell %i %s", clientNum, message);
+	Q_sprintf(command, 128, "tell %i %s", clientNum, message);
 	trap_SendClientCommand(command);
 }
 
@@ -235,7 +235,7 @@ CG_VoiceTellTarget_f(void)
 		return;
 
 	trap_Args(message, 128);
-	Com_sprintf(command, 128, "vtell %i %s", clientNum, message);
+	Q_sprintf(command, 128, "vtell %i %s", clientNum, message);
 	trap_SendClientCommand(command);
 }
 
@@ -251,7 +251,7 @@ CG_VoiceTellAttacker_f(void)
 		return;
 
 	trap_Args(message, 128);
-	Com_sprintf(command, 128, "vtell %i %s", clientNum, message);
+	Q_sprintf(command, 128, "vtell %i %s", clientNum, message);
 	trap_SendClientCommand(command);
 }
 
@@ -420,7 +420,7 @@ CG_TaskSuicide_f(void)
 	if(clientNum == -1)
 		return;
 
-	Com_sprintf(command, 128, "tell %i suicide", clientNum);
+	Q_sprintf(command, 128, "tell %i suicide", clientNum);
 	trap_SendClientCommand(command);
 }
 

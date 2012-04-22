@@ -101,7 +101,7 @@ SNDDMA_PrintAudiospec(const char *str, const SDL_AudioSpec *spec)
 	int i;
 	char *fmt = NULL;
 
-	Com_Printf("%s:\n", str);
+	Q_Printf("%s:\n", str);
 
 	for(i = 0; i < formatToStringTableSize; i++)
 		if(spec->format == formatToStringTable[ i ].enumFormat){
@@ -109,14 +109,14 @@ SNDDMA_PrintAudiospec(const char *str, const SDL_AudioSpec *spec)
 		}
 
 	if(fmt){
-		Com_Printf("  Format:   %s\n", fmt);
+		Q_Printf("  Format:   %s\n", fmt);
 	}else{
-		Com_Printf("  Format:   " S_COLOR_RED "UNKNOWN\n");
+		Q_Printf("  Format:   " S_COLOR_RED "UNKNOWN\n");
 	}
 
-	Com_Printf("  Freq:     %d\n", (int)spec->freq);
-	Com_Printf("  Samples:  %d\n", (int)spec->samples);
-	Com_Printf("  Channels: %d\n", (int)spec->channels);
+	Q_Printf("  Freq:     %d\n", (int)spec->freq);
+	Q_Printf("  Samples:  %d\n", (int)spec->samples);
+	Q_Printf("  Channels: %d\n", (int)spec->channels);
 }
 
 /*
@@ -141,20 +141,20 @@ SNDDMA_Init(void)
 		s_sdlMixSamps	= Cvar_Get("s_sdlMixSamps", "0", CVAR_ARCHIVE);
 	}
 
-	Com_Printf("SDL_Init( SDL_INIT_AUDIO )... ");
+	Q_Printf("SDL_Init( SDL_INIT_AUDIO )... ");
 
 	if(!SDL_WasInit(SDL_INIT_AUDIO)){
 		if(SDL_Init(SDL_INIT_AUDIO) == -1){
-			Com_Printf("FAILED (%s)\n", SDL_GetError( ));
+			Q_Printf("FAILED (%s)\n", SDL_GetError( ));
 			return qfalse;
 		}
 	}
 
-	Com_Printf("OK\n");
+	Q_Printf("OK\n");
 
 	if(SDL_AudioDriverName(drivername, sizeof(drivername)) == NULL)
 		strcpy(drivername, "(UNKNOWN)");
-	Com_Printf("SDL audio driver is \"%s\".\n", drivername);
+	Q_Printf("SDL audio driver is \"%s\".\n", drivername);
 
 	memset(&desired, '\0', sizeof(desired));
 	memset(&obtained, '\0', sizeof(obtained));
@@ -187,7 +187,7 @@ SNDDMA_Init(void)
 	desired.callback	= SNDDMA_AudioCallback;
 
 	if(SDL_OpenAudio(&desired, &obtained) == -1){
-		Com_Printf("SDL_OpenAudio() failed: %s\n", SDL_GetError());
+		Q_Printf("SDL_OpenAudio() failed: %s\n", SDL_GetError());
 		SDL_QuitSubSystem(SDL_INIT_AUDIO);
 		return qfalse;
 	}
@@ -222,10 +222,10 @@ SNDDMA_Init(void)
 	dmasize		= (dma.samples * (dma.samplebits/8));
 	dma.buffer	= calloc(1, dmasize);
 
-	Com_Printf("Starting SDL audio callback...\n");
+	Q_Printf("Starting SDL audio callback...\n");
 	SDL_PauseAudio(0);	/* start callback. */
 
-	Com_Printf("SDL audio initialized.\n");
+	Q_Printf("SDL audio initialized.\n");
 	snd_inited = qtrue;
 	return qtrue;
 }
@@ -245,7 +245,7 @@ SNDDMA_GetDMAPos(void)
 void
 SNDDMA_Shutdown(void)
 {
-	Com_Printf("Closing SDL audio device...\n");
+	Q_Printf("Closing SDL audio device...\n");
 	SDL_PauseAudio(1);
 	SDL_CloseAudio();
 	SDL_QuitSubSystem(SDL_INIT_AUDIO);
@@ -253,7 +253,7 @@ SNDDMA_Shutdown(void)
 	dma.buffer = NULL;
 	dmapos = dmasize = 0;
 	snd_inited = qfalse;
-	Com_Printf("SDL audio device shut down.\n");
+	Q_Printf("SDL audio device shut down.\n");
 }
 
 /*

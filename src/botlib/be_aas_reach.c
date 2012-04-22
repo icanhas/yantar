@@ -319,7 +319,7 @@ AAS_BestReachableFromJumpPadArea(vec3_t origin, vec3_t mins, vec3_t maxs)
 		/* botimport.Print(PRT_MESSAGE, "found a trigger_push with velocity %f %f %f\n", velocity[0], velocity[1], velocity[2]); */
 		/*  */
 		VectorSet(cmdmove, 0, 0, 0);
-		Com_Memset(&move, 0, sizeof(aas_clientmove_t));
+		Q_Memset(&move, 0, sizeof(aas_clientmove_t));
 		AAS_ClientMovementHitBBox(&move, -1, areastart, PRESENCE_NORMAL,
 			qfalse,
 			velocity, cmdmove, 0, 30, 0.1f, bboxmins, bboxmaxs,
@@ -494,7 +494,7 @@ AAS_AllocReachability(void)
 void
 AAS_FreeReachability(aas_lreachability_t *lreach)
 {
-	Com_Memset(lreach, 0, sizeof(aas_lreachability_t));
+	Q_Memset(lreach, 0, sizeof(aas_lreachability_t));
 
 	lreach->next = nextreachability;
 	nextreachability = lreach;
@@ -956,7 +956,7 @@ AAS_Reachability_EqualFloorHeight(int area1num, int area2num)
 	bestheight = 99999;
 	bestlength = 0;
 	foundreach = qfalse;
-	Com_Memset(&lr, 0, sizeof(aas_lreachability_t));	/* make the compiler happy */
+	Q_Memset(&lr, 0, sizeof(aas_lreachability_t));	/* make the compiler happy */
 	/*
 	 * check if the areas have ground faces with a common edge
 	 * if existing use the lowest common edge for a reachability link */
@@ -3894,7 +3894,7 @@ AAS_Reachability_JumpPad(void)
 			VectorSet(cmdmove, 0, 0, 0);
 			/* Vec3Copy(velocity, cmdmove);
 			 * cmdmove[2] = 0; */
-			Com_Memset(&move, 0, sizeof(aas_clientmove_t));
+			Q_Memset(&move, 0, sizeof(aas_clientmove_t));
 			area2num = 0;
 			for(i = 0; i < 20; i++){
 				AAS_PredictClientMovement(

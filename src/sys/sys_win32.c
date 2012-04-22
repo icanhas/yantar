@@ -88,13 +88,13 @@ Sys_DefaultHomePath(void)
 
 	if(!*homePath){
 		if(shfolder == NULL){
-			Com_Printf("Unable to load SHFolder.dll\n");
+			Q_Printf("Unable to load SHFolder.dll\n");
 			return NULL;
 		}
 
 		qSHGetFolderPath = GetProcAddress(shfolder, "SHGetFolderPathA");
 		if(qSHGetFolderPath == NULL){
-			Com_Printf(
+			Q_Printf(
 				"Unable to find SHGetFolderPath in SHFolder.dll\n");
 			FreeLibrary(shfolder);
 			return NULL;
@@ -102,12 +102,12 @@ Sys_DefaultHomePath(void)
 
 		if(!SUCCEEDED(qSHGetFolderPath(NULL, CSIDL_APPDATA,
 				   NULL, 0, szPath))){
-			Com_Printf("Unable to detect CSIDL_APPDATA\n");
+			Q_Printf("Unable to detect CSIDL_APPDATA\n");
 			FreeLibrary(shfolder);
 			return NULL;
 		}
 
-		Com_sprintf(homePath, sizeof(homePath), "%s%c", szPath, PATH_SEP);
+		Q_sprintf(homePath, sizeof(homePath), "%s%c", szPath, PATH_SEP);
 
 		if(com_homepath->string[0])
 			Q_strcat(homePath, sizeof(homePath),
@@ -346,10 +346,10 @@ Sys_ListFilteredFiles(const char *basedir, char *subdirs, char *filter,
 		return;
 
 	if(strlen(subdirs))
-		Com_sprintf(search, sizeof(search), "%s\\%s\\*", basedir,
+		Q_sprintf(search, sizeof(search), "%s\\%s\\*", basedir,
 			subdirs);
 	else
-		Com_sprintf(search, sizeof(search), "%s\\*", basedir);
+		Q_sprintf(search, sizeof(search), "%s\\*", basedir);
 
 	findhandle = _findfirst (search, &findinfo);
 	if(findhandle == -1)
@@ -360,12 +360,12 @@ Sys_ListFilteredFiles(const char *basedir, char *subdirs, char *filter,
 			if(Q_stricmp(findinfo.name,
 				   ".") && Q_stricmp(findinfo.name, "..")){
 				if(strlen(subdirs))
-					Com_sprintf(newsubdirs,
+					Q_sprintf(newsubdirs,
 						sizeof(newsubdirs), "%s\\%s",
 						subdirs,
 						findinfo.name);
 				else
-					Com_sprintf(newsubdirs,
+					Q_sprintf(newsubdirs,
 						sizeof(newsubdirs), "%s",
 						findinfo.name);
 				Sys_ListFilteredFiles(basedir, newsubdirs,
@@ -374,9 +374,9 @@ Sys_ListFilteredFiles(const char *basedir, char *subdirs, char *filter,
 			}
 		if(*numfiles >= MAX_FOUND_FILES - 1)
 			break;
-		Com_sprintf(filename, sizeof(filename), "%s\\%s", subdirs,
+		Q_sprintf(filename, sizeof(filename), "%s\\%s", subdirs,
 			findinfo.name);
-		if(!Com_FilterPath(filter, filename, qfalse))
+		if(!Q_FilterPath(filter, filename, qfalse))
 			continue;
 		list[ *numfiles ] = CopyString(filename);
 		(*numfiles)++;
@@ -454,7 +454,7 @@ Sys_ListFiles(const char *directory, const char *extension, char *filter,
 	}else
 		flag = _A_SUBDIR;
 
-	Com_sprintf(search, sizeof(search), "%s\\*%s", directory, extension);
+	Q_sprintf(search, sizeof(search), "%s\\*%s", directory, extension);
 
 	/* search */
 	nfiles = 0;
@@ -573,7 +573,7 @@ Sys_ErrorDialog(const char *error)
 			while((size =
 				       CON_LogRead(buffer,
 					       sizeof(buffer))) > 0){
-				Com_Memcpy(p, buffer, size);
+				Q_Memcpy(p, buffer, size);
 				p += size;
 			}
 
@@ -678,7 +678,7 @@ Sys_PlatformInit(void)
 
 #ifndef DEDICATED
 	if(SDL_VIDEODRIVER){
-		Com_Printf("SDL_VIDEODRIVER is externally set to \"%s\", "
+		Q_Printf("SDL_VIDEODRIVER is externally set to \"%s\", "
 			   "in_mouse -1 will have no effect\n", SDL_VIDEODRIVER);
 		SDL_VIDEODRIVER_externallySet = qtrue;
 	}else
@@ -688,7 +688,7 @@ Sys_PlatformInit(void)
 		timerResolution = ptc.wPeriodMin;
 
 		if(timerResolution > 1)
-			Com_Printf(
+			Q_Printf(
 				"Warning: Minimum supported timer resolution is %ums "
 				"on this system, recommended resolution 1ms\n",
 				timerResolution);

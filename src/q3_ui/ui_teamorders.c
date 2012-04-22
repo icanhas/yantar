@@ -265,12 +265,12 @@ UI_TeamOrdersMenu_ListEvent(void *ptr, int event)
 	}
 
 	if(id == ID_LIST_CTF_ORDERS)
-		Com_sprintf(
+		Q_sprintf(
 			message, sizeof(message), ctfMessages[selection],
 			teamOrdersMenuInfo.botNames[teamOrdersMenuInfo.
 						    selectedBot]);
 	else
-		Com_sprintf(
+		Q_sprintf(
 			message, sizeof(message), teamMessages[selection],
 			teamOrdersMenuInfo.botNames[teamOrdersMenuInfo.
 						    selectedBot]);

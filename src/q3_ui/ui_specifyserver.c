@@ -74,7 +74,7 @@ SpecifyServer_Event(void* ptr, int event)
 		if(s_specifyserver.domain.field.buffer[0]){
 			strcpy(buff,s_specifyserver.domain.field.buffer);
 			if(s_specifyserver.port.field.buffer[0])
-				Com_sprintf(buff+strlen(
+				Q_sprintf(buff+strlen(
 						buff), 128, ":%s",
 					s_specifyserver.port.field.buffer);
 
@@ -179,7 +179,7 @@ SpecifyServer_MenuInit(void)
 	Menu_AddItem(&s_specifyserver.menu, &s_specifyserver.go);
 	Menu_AddItem(&s_specifyserver.menu, &s_specifyserver.back);
 
-	Com_sprintf(s_specifyserver.port.field.buffer, 6, "%i", 27960);
+	Q_sprintf(s_specifyserver.port.field.buffer, 6, "%i", 27960);
 }
 
 /*

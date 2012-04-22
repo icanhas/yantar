@@ -99,7 +99,7 @@ SV_SetConfigstring(int index, const char *val)
 	client_t *client;
 
 	if(index < 0 || index >= MAX_CONFIGSTRINGS)
-		Com_Error (ERR_DROP, "SV_SetConfigstring: bad index %i", index);
+		Q_Error (ERR_DROP, "SV_SetConfigstring: bad index %i", index);
 
 	if(!val)
 		val = "";
@@ -141,10 +141,10 @@ void
 SV_GetConfigstring(int index, char *buffer, int bufferSize)
 {
 	if(bufferSize < 1)
-		Com_Error(ERR_DROP, "SV_GetConfigstring: bufferSize == %i",
+		Q_Error(ERR_DROP, "SV_GetConfigstring: bufferSize == %i",
 			bufferSize);
 	if(index < 0 || index >= MAX_CONFIGSTRINGS)
-		Com_Error (ERR_DROP, "SV_GetConfigstring: bad index %i", index);
+		Q_Error (ERR_DROP, "SV_GetConfigstring: bad index %i", index);
 	if(!sv.configstrings[index]){
 		buffer[0] = 0;
 		return;
@@ -162,7 +162,7 @@ void
 SV_SetUserinfo(int index, const char *val)
 {
 	if(index < 0 || index >= sv_maxclients->integer)
-		Com_Error (ERR_DROP, "SV_SetUserinfo: bad index %i", index);
+		Q_Error (ERR_DROP, "SV_SetUserinfo: bad index %i", index);
 
 	if(!val)
 		val = "";
@@ -183,10 +183,10 @@ void
 SV_GetUserinfo(int index, char *buffer, int bufferSize)
 {
 	if(bufferSize < 1)
-		Com_Error(ERR_DROP, "SV_GetUserinfo: bufferSize == %i",
+		Q_Error(ERR_DROP, "SV_GetUserinfo: bufferSize == %i",
 			bufferSize);
 	if(index < 0 || index >= sv_maxclients->integer)
-		Com_Error (ERR_DROP, "SV_GetUserinfo: bad index %i", index);
+		Q_Error (ERR_DROP, "SV_GetUserinfo: bad index %i", index);
 	Q_strncpyz(buffer, svs.clients[ index ].userinfo, bufferSize);
 }
 
@@ -249,7 +249,7 @@ static void
 SV_Startup(void)
 {
 	if(svs.initialized)
-		Com_Error(ERR_FATAL, "SV_Startup: svs.initialized");
+		Q_Error(ERR_FATAL, "SV_Startup: svs.initialized");
 	SV_BoundMaxClients(1);
 
 	svs.clients = Z_Malloc (sizeof(client_t) * sv_maxclients->integer);
@@ -304,7 +304,7 @@ SV_ChangeMaxClients(void)
 		if(svs.clients[i].state >= CS_CONNECTED)
 			oldClients[i] = svs.clients[i];
 		else
-			Com_Memset(&oldClients[i], 0, sizeof(client_t));
+			Q_Memset(&oldClients[i], 0, sizeof(client_t));
 	}
 
 	/* free old clients arrays */
@@ -312,7 +312,7 @@ SV_ChangeMaxClients(void)
 
 	/* allocate new clients */
 	svs.clients = Z_Malloc (sv_maxclients->integer * sizeof(client_t));
-	Com_Memset(svs.clients, 0, sv_maxclients->integer * sizeof(client_t));
+	Q_Memset(svs.clients, 0, sv_maxclients->integer * sizeof(client_t));
 
 	/* copy the clients over */
 	for(i = 0; i < count; i++)
@@ -342,7 +342,7 @@ SV_ClearServer(void)
 	for(i = 0; i < MAX_CONFIGSTRINGS; i++)
 		if(sv.configstrings[i])
 			Z_Free(sv.configstrings[i]);
-	Com_Memset (&sv, 0, sizeof(sv));
+	Q_Memset (&sv, 0, sizeof(sv));
 }
 
 /*
@@ -356,7 +356,7 @@ SV_TouchCGame(void)
 	fileHandle_t f;
 	char filename[MAX_QPATH];
 
-	Com_sprintf(filename, sizeof(filename), "vm/%s.qvm", "cgame");
+	Q_sprintf(filename, sizeof(filename), "vm/%s.qvm", "cgame");
 	FS_FOpenFileRead(filename, &f, qfalse);
 	if(f)
 		FS_FCloseFile(f);
@@ -381,8 +381,8 @@ SV_SpawnServer(char *server, qbool killBots)
 	/* shut down the existing game if it is running */
 	SV_ShutdownGameProgs();
 
-	Com_Printf ("------ Server Initialization ------\n");
-	Com_Printf ("Server: %s\n",server);
+	Q_Printf ("------ Server Initialization ------\n");
+	Q_Printf ("Server: %s\n",server);
 
 	/* if not running a dedicated server CL_MapLoading will connect the client to the server
 	 * also print some status stuff */
@@ -442,7 +442,7 @@ SV_SpawnServer(char *server, qbool killBots)
 	Cvar_Set("cl_paused", "0");
 
 	/* get a new checksum feed and restart the file system */
-	sv.checksumFeed = (((int)rand() << 16) ^ rand()) ^ Com_Milliseconds();
+	sv.checksumFeed = (((int)rand() << 16) ^ rand()) ^ Q_Milliseconds();
 	FS_Restart(sv.checksumFeed);
 
 	CM_LoadMap(va("maps/%s.bsp", server), qfalse, &checksum);
@@ -542,7 +542,7 @@ SV_SpawnServer(char *server, qbool killBots)
 		p = FS_LoadedPakChecksums();
 		Cvar_Set("sv_paks", p);
 		if(strlen(p) == 0)
-			Com_Printf(
+			Q_Printf(
 				"WARNING: sv_pure set but no PK3 files loaded\n");
 		p = FS_LoadedPakNames();
 		Cvar_Set("sv_pakNames", p);
@@ -581,7 +581,7 @@ SV_SpawnServer(char *server, qbool killBots)
 
 	Hunk_SetMark();
 
-	Com_Printf ("-----------------------------------\n");
+	Q_Printf ("-----------------------------------\n");
 }
 
 /*
@@ -722,7 +722,7 @@ SV_Shutdown(char *finalmsg)
 	if(!com_sv_running || !com_sv_running->integer)
 		return;
 
-	Com_Printf("----- Server Shutdown (%s) -----\n", finalmsg);
+	Q_Printf("----- Server Shutdown (%s) -----\n", finalmsg);
 
 	NET_LeaveMulticast6();
 
@@ -745,12 +745,12 @@ SV_Shutdown(char *finalmsg)
 
 		Z_Free(svs.clients);
 	}
-	Com_Memset(&svs, 0, sizeof(svs));
+	Q_Memset(&svs, 0, sizeof(svs));
 
 	Cvar_Set("sv_running", "0");
 	Cvar_Set("ui_singlePlayerActive", "0");
 
-	Com_Printf("---------------------------\n");
+	Q_Printf("---------------------------\n");
 
 	/* disconnect any local clients */
 	if(sv_killserver->integer != 2)

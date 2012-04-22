@@ -79,8 +79,8 @@ CON_LogWrite(const char *in)
 		secondChunk = 0;
 	}
 
-	Com_Memcpy(consoleLog + writePos, in, firstChunk);
-	Com_Memcpy(consoleLog, in + firstChunk, secondChunk);
+	Q_Memcpy(consoleLog + writePos, in, firstChunk);
+	Q_Memcpy(consoleLog, in + firstChunk, secondChunk);
 
 	writePos = (writePos + length) % MAX_LOG;
 
@@ -107,8 +107,8 @@ CON_LogRead(char *out, unsigned int outSize)
 		secondChunk = 0;
 	}
 
-	Com_Memcpy(out, consoleLog + readPos, firstChunk);
-	Com_Memcpy(out + firstChunk, out, secondChunk);
+	Q_Memcpy(out, consoleLog + readPos, firstChunk);
+	Q_Memcpy(out + firstChunk, out, secondChunk);
 
 	readPos = (readPos + outSize) % MAX_LOG;
 

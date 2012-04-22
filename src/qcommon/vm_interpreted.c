@@ -161,7 +161,7 @@ VM_StackTrace(vm_t *vm, int programCounter, int programStack)
 
 	count = 0;
 	do {
-		Com_Printf("%s\n", VM_ValueToSymbol(vm, programCounter));
+		Q_Printf("%s\n", VM_ValueToSymbol(vm, programCounter));
 		programStack =  *(int*)&vm->dataBase[programStack+4];
 		programCounter = *(int*)&vm->dataBase[programStack];
 	} while(programCounter != -1 && ++count < 32);
@@ -200,7 +200,7 @@ VM_PrepareInterpreter(vm_t *vm, vmHeader_t *header)
 		op = (int)code[ byte_pc ];
 		codeBase[int_pc] = op;
 		if(byte_pc > header->codeLength)
-			Com_Error(
+			Q_Error(
 				ERR_DROP,
 				"VM_PrepareInterpreter: pc > header->codeLength");
 
@@ -274,7 +274,7 @@ VM_PrepareInterpreter(vm_t *vm, vmHeader_t *header)
 		case OP_GEF:
 			if(codeBase[int_pc] < 0 || codeBase[int_pc] >
 			   vm->instructionCount)
-				Com_Error(
+				Q_Error(
 					ERR_DROP,
 					"VM_PrepareInterpreter: Jump to invalid instruction number");
 
@@ -402,22 +402,22 @@ nextInstruction:
 nextInstruction2:
 #ifdef DEBUG_VM
 		if((unsigned)programCounter >= vm->codeLength){
-			Com_Error(ERR_DROP, "VM pc out of range");
+			Q_Error(ERR_DROP, "VM pc out of range");
 			return 0;
 		}
 
 		if(programStack <= vm->stackBottom){
-			Com_Error(ERR_DROP, "VM stack overflow");
+			Q_Error(ERR_DROP, "VM stack overflow");
 			return 0;
 		}
 
 		if(programStack & 3){
-			Com_Error(ERR_DROP, "VM program stack misaligned");
+			Q_Error(ERR_DROP, "VM program stack misaligned");
 			return 0;
 		}
 
 		if(vm_debugLevel > 1)
-			Com_Printf("%s %s\n", DEBUGSTR, opnames[opcode]);
+			Q_Printf("%s %s\n", DEBUGSTR, opnames[opcode]);
 		profileSymbol->profileCount++;
 #endif
 		opcode = codeImage[ programCounter++ ];
@@ -425,7 +425,7 @@ nextInstruction2:
 		switch(opcode){
 #ifdef DEBUG_VM
 		default:
-			Com_Error(ERR_DROP, "Bad VM instruction");	/* this should be scanned on load! */
+			Q_Error(ERR_DROP, "Bad VM instruction");	/* this should be scanned on load! */
 			return 0;
 #endif
 		case OP_BREAK:
@@ -449,7 +449,7 @@ nextInstruction2:
 		case OP_LOAD4:
 #ifdef DEBUG_VM
 			if(opStack[opStackOfs] & 3){
-				Com_Error(ERR_DROP, "OP_LOAD4 misaligned");
+				Q_Error(ERR_DROP, "OP_LOAD4 misaligned");
 				return 0;
 			}
 #endif
@@ -507,7 +507,7 @@ nextInstruction2:
 				int stomped;
 
 				if(vm_debugLevel)
-					Com_Printf("%s---> systemcall(%i)\n",
+					Q_Printf("%s---> systemcall(%i)\n",
 						DEBUGSTR,
 						-1 - programCounter);
 
@@ -557,14 +557,14 @@ nextInstruction2:
 /*				vm->callLevel = temp; */
 #ifdef DEBUG_VM
 				if(vm_debugLevel)
-					Com_Printf("%s<--- %s\n", DEBUGSTR,
+					Q_Printf("%s<--- %s\n", DEBUGSTR,
 						VM_ValueToSymbol(vm,
 							programCounter));
 
 #endif
 			}else if((unsigned)programCounter >=
 				 vm->instructionCount){
-				Com_Error(
+				Q_Error(
 					ERR_DROP,
 					"VM program counter out of range in OP_CALL");
 				return 0;
@@ -596,7 +596,7 @@ nextInstruction2:
 			/* save old stack frame for debugging traces */
 			*(int*)&image[programStack+4] = programStack + v1;
 			if(vm_debugLevel){
-				Com_Printf("%s---> %s\n", DEBUGSTR,
+				Q_Printf("%s---> %s\n", DEBUGSTR,
 					VM_ValueToSymbol(vm,
 						programCounter - 5));
 				if(vm->breakFunction && programCounter - 5 ==
@@ -622,7 +622,7 @@ nextInstruction2:
 				programCounter);
 			if(vm_debugLevel)
 /*				vm->callLevel--; */
-				Com_Printf("%s<--- %s\n", DEBUGSTR,
+				Q_Printf("%s<--- %s\n", DEBUGSTR,
 					VM_ValueToSymbol(vm,
 						programCounter));
 
@@ -631,7 +631,7 @@ nextInstruction2:
 			if(programCounter == -1)
 				goto done;
 			else if((unsigned)programCounter >= vm->codeLength){
-				Com_Error(
+				Q_Error(
 					ERR_DROP,
 					"VM program counter out of range in OP_LEAVE");
 				return 0;
@@ -646,7 +646,7 @@ nextInstruction2:
 
 		case OP_JUMP:
 			if((unsigned)r0 >= vm->instructionCount){
-				Com_Error(
+				Q_Error(
 					ERR_DROP,
 					"VM program counter out of range in OP_JUMP");
 				return 0;
@@ -950,7 +950,7 @@ done:
 	vm->currentlyInterpreting = qfalse;
 
 	if(opStackOfs != 1 || *opStack != 0xDEADBEEF)
-		Com_Error(ERR_DROP,
+		Q_Error(ERR_DROP,
 			"Interpreter error: opStack[0] = %X, opStackOfs = %d",
 			opStack[0],
 			opStackOfs);

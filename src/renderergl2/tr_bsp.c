@@ -314,7 +314,7 @@ R_LoadLightmaps(lump_t *l, lump_t *surfs)
 
 			/* look for hdr lightmaps */
 			if(r_hdr->integer){
-				Com_sprintf(filename, sizeof(filename), "maps/%s/lm_%04d.hdr",
+				Q_sprintf(filename, sizeof(filename), "maps/%s/lm_%04d.hdr",
 					s_worldData.baseName,
 					i * (tr.worldDeluxeMapping ? 2 : 1));
 				/* ri.Printf(PRINT_ALL, "looking for %s\n", filename); */
@@ -565,7 +565,7 @@ R_LoadVisibility(lump_t *l)
 
 	len = (s_worldData.numClusters + 63) & ~63;
 	s_worldData.novis = ri.Hunk_Alloc(len, h_low);
-	Com_Memset(s_worldData.novis, 0xff, len);
+	Q_Memset(s_worldData.novis, 0xff, len);
 
 	len = l->filelen;
 	if(!len){
@@ -584,7 +584,7 @@ R_LoadVisibility(lump_t *l)
 		byte *dest;
 
 		dest = ri.Hunk_Alloc(len - 8, h_low);
-		Com_Memcpy(dest, buf + 8, len - 8);
+		Q_Memcpy(dest, buf + 8, len - 8);
 		s_worldData.vis = dest;
 	}
 }
@@ -1709,21 +1709,21 @@ R_MovePatchSurfacesToHunk(void)
 		/*  */
 		size = sizeof(*grid);
 		hunkgrid = ri.Hunk_Alloc(size, h_low);
-		Com_Memcpy(hunkgrid, grid, size);
+		Q_Memcpy(hunkgrid, grid, size);
 
 		hunkgrid->widthLodError = ri.Hunk_Alloc(grid->width * 4, h_low);
-		Com_Memcpy(hunkgrid->widthLodError, grid->widthLodError, grid->width * 4);
+		Q_Memcpy(hunkgrid->widthLodError, grid->widthLodError, grid->width * 4);
 
 		hunkgrid->heightLodError = ri.Hunk_Alloc(grid->height * 4, h_low);
-		Com_Memcpy(hunkgrid->heightLodError, grid->heightLodError, grid->height * 4);
+		Q_Memcpy(hunkgrid->heightLodError, grid->heightLodError, grid->height * 4);
 
 		hunkgrid->numTriangles = grid->numTriangles;
 		hunkgrid->triangles = ri.Hunk_Alloc(grid->numTriangles * sizeof(srfTriangle_t), h_low);
-		Com_Memcpy(hunkgrid->triangles, grid->triangles, grid->numTriangles * sizeof(srfTriangle_t));
+		Q_Memcpy(hunkgrid->triangles, grid->triangles, grid->numTriangles * sizeof(srfTriangle_t));
 
 		hunkgrid->numVerts = grid->numVerts;
 		hunkgrid->verts = ri.Hunk_Alloc(grid->numVerts * sizeof(srfVert_t), h_low);
-		Com_Memcpy(hunkgrid->verts, grid->verts, grid->numVerts * sizeof(srfVert_t));
+		Q_Memcpy(hunkgrid->verts, grid->verts, grid->numVerts * sizeof(srfVert_t));
 
 		R_FreeSurfaceGridMesh(grid);
 
@@ -2061,7 +2061,7 @@ R_LoadSurfaces(lump_t *surfs, lump_t *verts, lump_t *indexLump)
 		char	filename[MAX_QPATH];
 		int	size;
 
-		Com_sprintf(filename, sizeof(filename), "maps/%s/vertlight.raw", s_worldData.baseName);
+		Q_sprintf(filename, sizeof(filename), "maps/%s/vertlight.raw", s_worldData.baseName);
 		/* ri.Printf(PRINT_ALL, "looking for %s\n", filename); */
 
 		size = ri.FS_ReadFile(filename, (void**)&hdrVertColors);
@@ -2201,7 +2201,7 @@ R_LoadSubmodels(lump_t *l)
 
 		model->type	= MOD_BRUSH;
 		model->bmodel	= out;
-		Com_sprintf(model->name, sizeof(model->name), "*%d", i);
+		Q_sprintf(model->name, sizeof(model->name), "*%d", i);
 
 		for(j=0; j<3; j++){
 			out->bounds[0][j]	= LittleFloat (in->mins[j]);
@@ -2325,7 +2325,7 @@ R_LoadShaders(lump_t *l)
 	s_worldData.shaders = out;
 	s_worldData.numShaders = count;
 
-	Com_Memcpy(out, in, count*sizeof(*out));
+	Q_Memcpy(out, in, count*sizeof(*out));
 
 	for(i=0; i<count; i++){
 		out[i].surfaceFlags	= LittleLong(out[i].surfaceFlags);
@@ -2548,7 +2548,7 @@ R_LoadLightGrid(lump_t *l)
 	}
 
 	w->lightGridData = ri.Hunk_Alloc(l->filelen, h_low);
-	Com_Memcpy(w->lightGridData, (void*)(fileBase + l->fileofs), l->filelen);
+	Q_Memcpy(w->lightGridData, (void*)(fileBase + l->fileofs), l->filelen);
 
 	/* deal with overbright bits */
 	for(i = 0; i < numGridPoints; i++){
@@ -2562,7 +2562,7 @@ R_LoadLightGrid(lump_t *l)
 		float *hdrLightGrid;
 		int	size;
 
-		Com_sprintf(filename, sizeof(filename), "maps/%s/lightgrid.raw", s_worldData.baseName);
+		Q_sprintf(filename, sizeof(filename), "maps/%s/lightgrid.raw", s_worldData.baseName);
 		/* ri.Printf(PRINT_ALL, "looking for %s\n", filename); */
 
 		size = ri.FS_ReadFile(filename, (void**)&hdrLightGrid);
@@ -2617,7 +2617,7 @@ R_LoadEntities(lump_t *l)
 	strcpy(w->entityString, p);
 	w->entityParsePoint = w->entityString;
 
-	token = Com_ParseExt(&p, qtrue);
+	token = Q_ParseExt(&p, qtrue);
 	if(!*token || *token != '{'){
 		return;
 	}
@@ -2625,7 +2625,7 @@ R_LoadEntities(lump_t *l)
 	/* only parse the world spawn */
 	while(1){
 		/* parse key */
-		token = Com_ParseExt(&p, qtrue);
+		token = Q_ParseExt(&p, qtrue);
 
 		if(!*token || *token == '}'){
 			break;
@@ -2633,7 +2633,7 @@ R_LoadEntities(lump_t *l)
 		Q_strncpyz(keyname, token, sizeof(keyname));
 
 		/* parse value */
-		token = Com_ParseExt(&p, qtrue);
+		token = Q_ParseExt(&p, qtrue);
 
 		if(!*token || *token == '}'){
 			break;
@@ -2701,7 +2701,7 @@ R_GetEntityToken(char *buffer, int size)
 {
 	const char *s;
 
-	s = Com_Parse(&s_worldData.entityParsePoint);
+	s = Q_Parse(&s_worldData.entityParsePoint);
 	Q_strncpyz(buffer, s, size);
 	if(!s_worldData.entityParsePoint || !s[0]){
 		s_worldData.entityParsePoint = s_worldData.entityString;
@@ -3151,11 +3151,11 @@ RE_LoadWorldMap(const char *name)
 	 * try will not look at the partially loaded version */
 	tr.world = NULL;
 
-	Com_Memset(&s_worldData, 0, sizeof(s_worldData));
+	Q_Memset(&s_worldData, 0, sizeof(s_worldData));
 	Q_strncpyz(s_worldData.name, name, sizeof(s_worldData.name));
 
-	Q_strncpyz(s_worldData.baseName, Com_SkipPath(s_worldData.name), sizeof(s_worldData.name));
-	Com_StripExtension(s_worldData.baseName, s_worldData.baseName, sizeof(s_worldData.baseName));
+	Q_strncpyz(s_worldData.baseName, Q_SkipPath(s_worldData.name), sizeof(s_worldData.name));
+	Q_StripExtension(s_worldData.baseName, s_worldData.baseName, sizeof(s_worldData.baseName));
 
 	startMarker	= ri.Hunk_Alloc(0, h_low);
 	c_gridVerts	= 0;

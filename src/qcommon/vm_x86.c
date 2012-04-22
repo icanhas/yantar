@@ -176,7 +176,7 @@ Hex(int c)
 		return c - '0';
 
 	VMFREE_BUFFERS();
-	Com_Error(ERR_DROP, "Hex: bad char '%c'", c);
+	Q_Error(ERR_DROP, "Hex: bad char '%c'", c);
 
 	return 0;
 }
@@ -363,7 +363,7 @@ EmitMovEDXStack(vm_t *vm, int andit)
 	do { \
 		if(x < 0 || x >= vm->instructionCount){	\
 			VMFREE_BUFFERS(); \
-			Com_Error( \
+			Q_Error( \
 				ERR_DROP, \
 				"VM_CompileX86: jump target out of range at offset %d",	\
 				pc); \
@@ -382,7 +382,7 @@ EmitMovEDXStack(vm_t *vm, int andit)
 static void
 ErrJump(void)
 {
-	Com_Error(ERR_DROP, "program tried to execute code outside VM");
+	Q_Error(ERR_DROP, "program tried to execute code outside VM");
 	exit(1);
 }
 
@@ -468,7 +468,7 @@ DoSyscall(void)
 			break;
 		case VM_BLOCK_COPY:
 			if(opStackOfs < 1)
-				Com_Error(
+				Q_Error(
 					ERR_DROP,
 					"VM_BLOCK_COPY failed due to corrupted opStack");
 
@@ -476,7 +476,7 @@ DoSyscall(void)
 				opStackBase[opStackOfs], arg);
 			break;
 		default:
-			Com_Error(ERR_DROP, "Unknown VM operation %d",
+			Q_Error(ERR_DROP, "Unknown VM operation %d",
 				syscallNum);
 			break;
 		}
@@ -1061,14 +1061,14 @@ VM_Compile(vm_t *vm, vmHeader_t *header)
 	jused		= Z_Malloc(jusedSize);
 	code		= Z_Malloc(header->codeLength+32);
 
-	Com_Memset(jused, 0, jusedSize);
-	Com_Memset(buf, 0, maxLength);
+	Q_Memset(jused, 0, jusedSize);
+	Q_Memset(buf, 0, maxLength);
 
 	/* copy code in larger buffer and put some zeros at the end
 	 * so we can safely look ahead for a few instructions in it
 	 * without a chance to get false-positive because of some garbage bytes */
-	Com_Memset(code, 0, header->codeLength+32);
-	Com_Memcpy(code, (byte*)header + header->codeOffset,
+	Q_Memset(code, 0, header->codeLength+32);
+	Q_Memcpy(code, (byte*)header + header->codeOffset,
 		header->codeLength);
 
 	/* ensure that the optimisation pass knows about all the jump
@@ -1101,7 +1101,7 @@ VM_Compile(vm_t *vm, vmHeader_t *header)
 		while(instruction < header->instructionCount){
 			if(compiledOfs > maxLength - 16){
 				VMFREE_BUFFERS();
-				Com_Error(ERR_DROP,
+				Q_Error(ERR_DROP,
 					"VM_CompileX86: maxLength exceeded");
 			}
 
@@ -1116,7 +1116,7 @@ VM_Compile(vm_t *vm, vmHeader_t *header)
 
 			if(pc > header->codeLength){
 				VMFREE_BUFFERS();
-				Com_Error(
+				Q_Error(
 					ERR_DROP,
 					"VM_CompileX86: pc > header->codeLength");
 			}
@@ -1630,7 +1630,7 @@ VM_Compile(vm_t *vm, vmHeader_t *header)
 				break;
 			default:
 				VMFREE_BUFFERS();
-				Com_Error(
+				Q_Error(
 					ERR_DROP,
 					"VM_CompileX86: bad opcode %i at offset %i",
 					op,
@@ -1648,24 +1648,24 @@ VM_Compile(vm_t *vm, vmHeader_t *header)
 		mmap(NULL, compiledOfs, PROT_WRITE, MAP_SHARED|MAP_ANONYMOUS, -1,
 			0);
 	if(vm->codeBase == MAP_FAILED)
-		Com_Error(ERR_FATAL, "VM_CompileX86: can't mmap memory");
+		Q_Error(ERR_FATAL, "VM_CompileX86: can't mmap memory");
 #elif _WIN32
 	/* allocate memory with EXECUTE permissions under windows. */
 	vm->codeBase = VirtualAlloc(NULL, compiledOfs, MEM_COMMIT,
 		PAGE_EXECUTE_READWRITE);
 	if(!vm->codeBase)
-		Com_Error(ERR_FATAL, "VM_CompileX86: VirtualAlloc failed");
+		Q_Error(ERR_FATAL, "VM_CompileX86: VirtualAlloc failed");
 #else
 	vm->codeBase = malloc(compiledOfs);
 	if(!vm->codeBase)
-		Com_Error(ERR_FATAL, "VM_CompileX86: malloc failed");
+		Q_Error(ERR_FATAL, "VM_CompileX86: malloc failed");
 #endif
 
-	Com_Memcpy(vm->codeBase, buf, compiledOfs);
+	Q_Memcpy(vm->codeBase, buf, compiledOfs);
 
 #ifdef VM_X86_MMAP
 	if(mprotect(vm->codeBase, compiledOfs, PROT_READ|PROT_EXEC))
-		Com_Error(ERR_FATAL, "VM_CompileX86: mprotect failed");
+		Q_Error(ERR_FATAL, "VM_CompileX86: mprotect failed");
 #elif _WIN32
 	{
 		DWORD oldProtect = 0;
@@ -1673,7 +1673,7 @@ VM_Compile(vm_t *vm, vmHeader_t *header)
 		/* remove write permissions. */
 		if(!VirtualProtect(vm->codeBase, compiledOfs, PAGE_EXECUTE_READ,
 			   &oldProtect))
-			Com_Error(ERR_FATAL,
+			Q_Error(ERR_FATAL,
 				"VM_CompileX86: VirtualProtect failed");
 	}
 #endif
@@ -1681,7 +1681,7 @@ VM_Compile(vm_t *vm, vmHeader_t *header)
 	Z_Free(code);
 	Z_Free(buf);
 	Z_Free(jused);
-	Com_Printf("VM file %s compiled to %i bytes of code\n", vm->name,
+	Q_Printf("VM file %s compiled to %i bytes of code\n", vm->name,
 		compiledOfs);
 
 	vm->destroy = VM_Destroy_Compiled;
@@ -1803,9 +1803,9 @@ VM_CallCompiled(vm_t *vm, int *args)
 #endif
 
 	if(opStackOfs != 1 || *opStack != 0xDEADBEEF)
-		Com_Error(ERR_DROP, "opStack corrupted in compiled code");
+		Q_Error(ERR_DROP, "opStack corrupted in compiled code");
 	if(programStack != stackOnEntry - 48)
-		Com_Error(ERR_DROP, "programStack corrupted in compiled code");
+		Q_Error(ERR_DROP, "programStack corrupted in compiled code");
 
 	vm->programStack = stackOnEntry;
 

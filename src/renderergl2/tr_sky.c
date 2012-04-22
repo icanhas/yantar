@@ -437,7 +437,7 @@ DrawSkyBox(material_t *shader)
 	sky_min = 0;
 	sky_max = 1;
 
-	Com_Memset(s_skyTexCoords, 0, sizeof(s_skyTexCoords));
+	Q_Memset(s_skyTexCoords, 0, sizeof(s_skyTexCoords));
 
 	for(i=0; i<6; i++){
 		int sky_mins_subd[2], sky_maxs_subd[2];

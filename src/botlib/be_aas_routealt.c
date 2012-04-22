@@ -123,7 +123,7 @@ AAS_AlternativeRouteGoals(vec3_t start, int startareanum, vec3_t goal,
 		AAS_AreaTravelTimeToGoalArea(startareanum, start, goalareanum,
 			travelflags);
 	/* clear the midrange areas */
-	Com_Memset(midrangeareas, 0, aasworld.numareas * sizeof(midrangearea_t));
+	Q_Memset(midrangeareas, 0, aasworld.numareas * sizeof(midrangearea_t));
 	numaltroutegoals = 0;
 	/*  */
 	nummidrangeareas = 0;

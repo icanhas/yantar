@@ -84,7 +84,7 @@ Netchan_Setup(netsrc_t sock, netchan_t *chan, netadr_t adr, int qport,
 	      int challenge,
 	      qbool compat)
 {
-	Com_Memset (chan, 0, sizeof(*chan));
+	Q_Memset (chan, 0, sizeof(*chan));
 
 	chan->sock = sock;
 	chan->remoteAddress = adr;
@@ -145,7 +145,7 @@ Netchan_TransmitNextFragment(netchan_t *chan)
 	chan->lastSentSize	= send.cursize;
 
 	if(showpackets->integer)
-		Com_Printf ("%s send %4i : s=%i fragment=%i,%i\n"
+		Q_Printf ("%s send %4i : s=%i fragment=%i,%i\n"
 			, netsrcString[ chan->sock ]
 			, send.cursize
 			, chan->outgoingSequence
@@ -178,14 +178,14 @@ Netchan_Transmit(netchan_t *chan, int length, const byte *data)
 	byte	send_buf[MAX_PACKETLEN];
 
 	if(length > MAX_MSGLEN)
-		Com_Error(ERR_DROP, "Netchan_Transmit: length = %i", length);
+		Q_Error(ERR_DROP, "Netchan_Transmit: length = %i", length);
 	chan->unsentFragmentStart = 0;
 
 	/* fragment large reliable messages */
 	if(length >= FRAGMENT_SIZE){
 		chan->unsentFragments = qtrue;
 		chan->unsentLength = length;
-		Com_Memcpy(chan->unsentBuffer, data, length);
+		Q_Memcpy(chan->unsentBuffer, data, length);
 
 		/* only send the first fragment now */
 		Netchan_TransmitNextFragment(chan);
@@ -220,7 +220,7 @@ Netchan_Transmit(netchan_t *chan, int length, const byte *data)
 	chan->lastSentSize	= send.cursize;
 
 	if(showpackets->integer)
-		Com_Printf("%s send %4i : s=%i ack=%i\n"
+		Q_Printf("%s send %4i : s=%i ack=%i\n"
 			, netsrcString[ chan->sock ]
 			, send.cursize
 			, chan->outgoingSequence - 1
@@ -284,13 +284,13 @@ Netchan_Process(netchan_t *chan, msg_t *msg)
 
 	if(showpackets->integer){
 		if(fragmented)
-			Com_Printf("%s recv %4i : s=%i fragment=%i,%i\n"
+			Q_Printf("%s recv %4i : s=%i fragment=%i,%i\n"
 				, netsrcString[ chan->sock ]
 				, msg->cursize
 				, sequence
 				, fragmentStart, fragmentLength);
 		else
-			Com_Printf("%s recv %4i : s=%i\n"
+			Q_Printf("%s recv %4i : s=%i\n"
 				, netsrcString[ chan->sock ]
 				, msg->cursize
 				, sequence);
@@ -301,7 +301,7 @@ Netchan_Process(netchan_t *chan, msg_t *msg)
 	 *  */
 	if(sequence <= chan->incomingSequence){
 		if(showdrop->integer || showpackets->integer)
-			Com_Printf("%s:Out of order packet %i at %i\n"
+			Q_Printf("%s:Out of order packet %i at %i\n"
 				, NET_AdrToString(chan->remoteAddress)
 				,  sequence
 				, chan->incomingSequence);
@@ -314,7 +314,7 @@ Netchan_Process(netchan_t *chan, msg_t *msg)
 	chan->dropped = sequence - (chan->incomingSequence+1);
 	if(chan->dropped > 0)
 		if(showdrop->integer || showpackets->integer)
-			Com_Printf("%s:Dropped %i packets at %i\n"
+			Q_Printf("%s:Dropped %i packets at %i\n"
 				, NET_AdrToString(chan->remoteAddress)
 				, chan->dropped
 				, sequence);
@@ -338,7 +338,7 @@ Netchan_Process(netchan_t *chan, msg_t *msg)
 		/* if we missed a fragment, dump the message */
 		if(fragmentStart != chan->fragmentLength){
 			if(showdrop->integer || showpackets->integer)
-				Com_Printf("%s:Dropped a message fragment\n"
+				Q_Printf("%s:Dropped a message fragment\n"
 					, NET_AdrToString(chan->remoteAddress));
 			/* we can still keep the part that we have so far,
 			 * so we don't need to clear chan->fragmentLength */
@@ -351,12 +351,12 @@ Netchan_Process(netchan_t *chan, msg_t *msg)
 		   chan->fragmentLength + fragmentLength >
 		   sizeof(chan->fragmentBuffer)){
 			if(showdrop->integer || showpackets->integer)
-				Com_Printf ("%s:illegal fragment length\n"
+				Q_Printf ("%s:illegal fragment length\n"
 					, NET_AdrToString (chan->remoteAddress));
 			return qfalse;
 		}
 
-		Com_Memcpy(chan->fragmentBuffer + chan->fragmentLength,
+		Q_Memcpy(chan->fragmentBuffer + chan->fragmentLength,
 			msg->data + msg->readcount, fragmentLength);
 
 		chan->fragmentLength += fragmentLength;
@@ -366,7 +366,7 @@ Netchan_Process(netchan_t *chan, msg_t *msg)
 			return qfalse;
 
 		if(chan->fragmentLength > msg->maxsize){
-			Com_Printf("%s:fragmentLength %i > msg->maxsize\n"
+			Q_Printf("%s:fragmentLength %i > msg->maxsize\n"
 				, NET_AdrToString (chan->remoteAddress),
 				chan->fragmentLength);
 			return qfalse;
@@ -377,7 +377,7 @@ Netchan_Process(netchan_t *chan, msg_t *msg)
 		/* make sure the sequence number is still there */
 		*(int*)msg->data = LittleLong(sequence);
 
-		Com_Memcpy(msg->data + 4, chan->fragmentBuffer,
+		Q_Memcpy(msg->data + 4, chan->fragmentBuffer,
 			chan->fragmentLength);
 		msg->cursize = chan->fragmentLength + 4;
 		chan->fragmentLength = 0;
@@ -443,9 +443,9 @@ NET_GetLoopPacket(netsrc_t sock, netadr_t *net_from, msg_t *net_message)
 	i = loop->get & (MAX_LOOPBACK-1);
 	loop->get++;
 
-	Com_Memcpy (net_message->data, loop->msgs[i].data, loop->msgs[i].datalen);
+	Q_Memcpy (net_message->data, loop->msgs[i].data, loop->msgs[i].datalen);
 	net_message->cursize = loop->msgs[i].datalen;
-	Com_Memset (net_from, 0, sizeof(*net_from));
+	Q_Memset (net_from, 0, sizeof(*net_from));
 	net_from->type = NA_LOOPBACK;
 	return qtrue;
 
@@ -463,7 +463,7 @@ NET_SendLoopPacket(netsrc_t sock, int length, const void *data, netadr_t to)
 	i = loop->send & (MAX_LOOPBACK-1);
 	loop->send++;
 
-	Com_Memcpy (loop->msgs[i].data, data, length);
+	Q_Memcpy (loop->msgs[i].data, data, length);
 	loop->msgs[i].datalen = length;
 }
 
@@ -490,7 +490,7 @@ NET_QueuePacket(int length, const void *data, netadr_t to,
 
 	new = S_Malloc(sizeof(packetQueue_t));
 	new->data = S_Malloc(length);
-	Com_Memcpy(new->data, data, length);
+	Q_Memcpy(new->data, data, length);
 	new->length = length;
 	new->to = to;
 	new->release = Sys_Milliseconds() +
@@ -535,7 +535,7 @@ NET_SendPacket(netsrc_t sock, int length, const void *data, netadr_t to)
 
 	/* sequenced packets are shown in netchan, so just show oob */
 	if(showpackets->integer && *(int*)data == -1)
-		Com_Printf ("send packet %4i\n", length);
+		Q_Printf ("send packet %4i\n", length);
 
 	if(to.type == NA_LOOPBACK){
 		NET_SendLoopPacket (sock, length, data, to);
@@ -621,7 +621,7 @@ NET_StringToAdr(const char *s, netadr_t *a, netadrtype_t family)
 	char *port = NULL;
 
 	if(!strcmp (s, "localhost")){
-		Com_Memset (a, 0, sizeof(*a));
+		Q_Memset (a, 0, sizeof(*a));
 		a->type = NA_LOOPBACK;
 /* as NA_LOOPBACK doesn't require ports report port was given. */
 		return 1;

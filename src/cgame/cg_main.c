@@ -449,7 +449,7 @@ CG_Error(const char *msg, ...)
 }
 
 void QDECL
-Com_Error(int level, const char *error, ...)
+Q_Error(int level, const char *error, ...)
 {
 	va_list argptr;
 	char	text[1024];
@@ -462,7 +462,7 @@ Com_Error(int level, const char *error, ...)
 }
 
 void QDECL
-Com_Printf(const char *msg, ...)
+Q_Printf(const char *msg, ...)
 {
 	va_list argptr;
 	char	text[1024];
@@ -796,43 +796,43 @@ CG_RegisterSounds(void)
 		qfalse);
 
 	for(i=0; i<4; i++){
-		Com_sprintf (name, sizeof(name),
+		Q_sprintf (name, sizeof(name),
 			"sound/player/footsteps/step%i.wav",
 			i+1);
 		cgs.media.footsteps[FOOTSTEP_NORMAL][i] = trap_S_RegisterSound (
 			name, qfalse);
 
-		Com_sprintf (name, sizeof(name),
+		Q_sprintf (name, sizeof(name),
 			"sound/player/footsteps/boot%i.wav",
 			i+1);
 		cgs.media.footsteps[FOOTSTEP_BOOT][i] = trap_S_RegisterSound (
 			name, qfalse);
 
-		Com_sprintf (name, sizeof(name),
+		Q_sprintf (name, sizeof(name),
 			"sound/player/footsteps/flesh%i.wav",
 			i+1);
 		cgs.media.footsteps[FOOTSTEP_FLESH][i] = trap_S_RegisterSound (
 			name, qfalse);
 
-		Com_sprintf (name, sizeof(name),
+		Q_sprintf (name, sizeof(name),
 			"sound/player/footsteps/mech%i.wav",
 			i+1);
 		cgs.media.footsteps[FOOTSTEP_MECH][i] = trap_S_RegisterSound (
 			name, qfalse);
 
-		Com_sprintf (name, sizeof(name),
+		Q_sprintf (name, sizeof(name),
 			"sound/player/footsteps/energy%i.wav",
 			i+1);
 		cgs.media.footsteps[FOOTSTEP_ENERGY][i] = trap_S_RegisterSound (
 			name, qfalse);
 
-		Com_sprintf (name, sizeof(name),
+		Q_sprintf (name, sizeof(name),
 			"sound/player/footsteps/splash%i.wav",
 			i+1);
 		cgs.media.footsteps[FOOTSTEP_SPLASH][i] = trap_S_RegisterSound (
 			name, qfalse);
 
-		Com_sprintf (name, sizeof(name),
+		Q_sprintf (name, sizeof(name),
 			"sound/player/footsteps/clank%i.wav",
 			i+1);
 		cgs.media.footsteps[FOOTSTEP_METAL][i] = trap_S_RegisterSound (
@@ -1286,7 +1286,7 @@ CG_RegisterGraphics(void)
 		vec3_t mins, maxs;
 		int	j;
 
-		Com_sprintf(name, sizeof(name), "*%i", i);
+		Q_sprintf(name, sizeof(name), "*%i", i);
 		cgs.inlineDrawModel[i] = trap_R_RegisterModel(name);
 		trap_R_ModelBounds(cgs.inlineDrawModel[i], mins, maxs);
 		for(j = 0; j < 3; j++)
@@ -1435,8 +1435,8 @@ CG_StartMusic(void)
 
 	/* start the background music */
 	s = (char*)CG_ConfigString(CS_MUSIC);
-	Q_strncpyz(parm1, Com_Parse(&s), sizeof(parm1));
-	Q_strncpyz(parm2, Com_Parse(&s), sizeof(parm2));
+	Q_strncpyz(parm1, Q_Parse(&s), sizeof(parm1));
+	Q_strncpyz(parm2, Q_Parse(&s), sizeof(parm2));
 
 	trap_S_StartBackgroundTrack(parm1, parm2);
 }
@@ -1635,12 +1635,12 @@ CG_ParseMenu(const char *menuFile)
 			break;
 
 		/* if ( Q_stricmp( token, "{" ) ) {
-		 * Com_Printf( "Missing { in menu file\n" );
+		 * Q_Printf( "Missing { in menu file\n" );
 		 * break;
 		 * } */
 
 		/* if ( menuCount == MAX_MENUS ) {
-		 * Com_Printf( "Too many menus!\n" );
+		 * Q_Printf( "Too many menus!\n" );
 		 * break;
 		 * } */
 
@@ -1667,14 +1667,14 @@ CG_Load_Menu(char **p)
 {
 	char *token;
 
-	token = Com_ParseExt(p, qtrue);
+	token = Q_ParseExt(p, qtrue);
 
 	if(token[0] != '{')
 		return qfalse;
 
 	while(1){
 
-		token = Com_ParseExt(p, qtrue);
+		token = Q_ParseExt(p, qtrue);
 
 		if(Q_stricmp(token, "}") == 0)
 			return qtrue;
@@ -1702,7 +1702,7 @@ CG_LoadMenus(const char *menuFile)
 
 	len = trap_FS_FOpenFile(menuFile, &f, FS_READ);
 	if(!f){
-		Com_Printf(
+		Q_Printf(
 			S_COLOR_YELLOW
 			"menu file not found: %s, using default\n",
 			menuFile);
@@ -1725,24 +1725,24 @@ CG_LoadMenus(const char *menuFile)
 	buf[len] = 0;
 	trap_FS_FCloseFile(f);
 
-	Com_Compress(buf);
+	Q_Compress(buf);
 
 	Menu_Reset();
 
 	p = buf;
 
 	while(1){
-		token = Com_ParseExt(&p, qtrue);
+		token = Q_ParseExt(&p, qtrue);
 		if(!token || token[0] == 0 || token[0] == '}')
 			break;
 
 		/* if ( Q_stricmp( token, "{" ) ) {
-		 * Com_Printf( "Missing { in menu file\n" );
+		 * Q_Printf( "Missing { in menu file\n" );
 		 * break;
 		 * } */
 
 		/* if ( menuCount == MAX_MENUS ) {
-		 * Com_Printf( "Too many menus!\n" );
+		 * Q_Printf( "Too many menus!\n" );
 		 * break;
 		 * } */
 
@@ -1757,7 +1757,7 @@ CG_LoadMenus(const char *menuFile)
 		}
 	}
 
-	Com_Printf("UI menu load time = %d milli seconds\n",
+	Q_Printf("UI menu load time = %d milli seconds\n",
 		trap_Milliseconds() - start);
 
 }
@@ -2072,8 +2072,8 @@ CG_LoadHudMenu(void)
 	 * cgDC.getBindingBuf = &trap_Key_GetBindingBuf;
 	 * cgDC.keynumToStringBuf = &trap_Key_KeynumToStringBuf;
 	 * cgDC.executeText = &trap_Cmd_ExecuteText; */
-	cgDC.Error	= &Com_Error;
-	cgDC.Print	= &Com_Printf;
+	cgDC.Error	= &Q_Error;
+	cgDC.Print	= &Q_Printf;
 	cgDC.ownerDrawWidth = &CG_OwnerDrawWidth;
 	/* cgDC.Pause = &CG_Pause; */
 	cgDC.registerSound = &trap_S_RegisterSound;
@@ -2103,7 +2103,7 @@ CG_AssetCache(void)
 	 *  trap_R_RegisterFont("fonts/arial.ttf", 72, &Assets.textFont);
 	 * }
 	 * Assets.background = trap_R_RegisterShaderNoMip( ASSET_BACKGROUND );
-	 * Com_Printf("Menu Size: %i bytes\n", sizeof(Menus)); */
+	 * Q_Printf("Menu Size: %i bytes\n", sizeof(Menus)); */
 	cgDC.Assets.gradientBar = trap_R_RegisterShaderNoMip(ASSET_GRADIENTBAR);
 	cgDC.Assets.fxBasePic	= trap_R_RegisterShaderNoMip(ART_FX_BASE);
 	cgDC.Assets.fxPic[0]	= trap_R_RegisterShaderNoMip(ART_FX_RED);

@@ -472,7 +472,7 @@ CM_FindPlane2(float plane[4], int *flipped)
 
 	/* add a new plane */
 	if(numPlanes == MAX_PATCH_PLANES)
-		Com_Error(ERR_DROP, "MAX_PATCH_PLANES");
+		Q_Error(ERR_DROP, "MAX_PATCH_PLANES");
 
 	Vector4Copy(plane, planes[numPlanes].plane);
 	planes[numPlanes].signbits = CM_SignbitsForNormal(plane);
@@ -520,7 +520,7 @@ CM_FindPlane(float *p1, float *p2, float *p3)
 
 	/* add a new plane */
 	if(numPlanes == MAX_PATCH_PLANES)
-		Com_Error(ERR_DROP, "MAX_PATCH_PLANES");
+		Q_Error(ERR_DROP, "MAX_PATCH_PLANES");
 
 	Vector4Copy(plane, planes[numPlanes].plane);
 	planes[numPlanes].signbits = CM_SignbitsForNormal(plane);
@@ -571,7 +571,7 @@ CM_GridPlane(int gridPlanes[MAX_GRID_SIZE][MAX_GRID_SIZE][2], int i, int j,
 		return p;
 
 	/* should never happen */
-	Com_Printf("WARNING: CM_GridPlane unresolvable\n");
+	Q_Printf("WARNING: CM_GridPlane unresolvable\n");
 	return -1;
 }
 
@@ -632,7 +632,7 @@ CM_EdgePlaneNum(cGrid_t *grid, int gridPlanes[MAX_GRID_SIZE][MAX_GRID_SIZE][2],
 
 	}
 
-	Com_Error(ERR_DROP, "CM_EdgePlaneNum: bad k");
+	Q_Error(ERR_DROP, "CM_EdgePlaneNum: bad k");
 	return -1;
 }
 
@@ -670,7 +670,7 @@ CM_SetBorderInward(facet_t *facet, cGrid_t *grid,
 		numPoints	= 3;
 		break;
 	default:
-		Com_Error(ERR_FATAL, "CM_SetBorderInward: bad parameter");
+		Q_Error(ERR_FATAL, "CM_SetBorderInward: bad parameter");
 		numPoints = 0;
 		break;
 	}
@@ -701,7 +701,7 @@ CM_SetBorderInward(facet_t *facet, cGrid_t *grid,
 			facet->borderPlanes[k] = -1;
 		else{
 			/* bisecting side border */
-			Com_DPrintf(
+			Q_DPrintf(
 				"WARNING: CM_SetBorderInward: mixed plane sides\n");
 			facet->borderInward[k] = qfalse;
 			if(!debugBlock){
@@ -821,7 +821,7 @@ CM_AddFacetBevels(facet_t *facet)
 					break;
 
 			if(i == facet->numBorders){
-				if(facet->numBorders > 4 + 6 + 16) Com_Printf(
+				if(facet->numBorders > 4 + 6 + 16) Q_Printf(
 						"ERROR: too many bevels\n");
 				facet->borderPlanes[facet->numBorders]
 					= CM_FindPlane2(plane, &flipped);
@@ -885,7 +885,7 @@ CM_AddFacetBevels(facet_t *facet)
 
 				if(i == facet->numBorders){
 					if(facet->numBorders > 4 + 6 +
-					   16) Com_Printf(
+					   16) Q_Printf(
 							"ERROR: too many bevels\n");
 					facet->borderPlanes[facet->numBorders] =
 						CM_FindPlane2(plane, &flipped);
@@ -895,7 +895,7 @@ CM_AddFacetBevels(facet_t *facet)
 								       numBorders
 						   ] ==
 						   facet->borderPlanes[k])
-							Com_Printf(
+							Q_Printf(
 								"WARNING: bevel plane already used\n");
 
 					facet->borderNoAdjust[facet->numBorders]
@@ -918,7 +918,7 @@ CM_AddFacetBevels(facet_t *facet)
 						newplane[3],
 						0.1f);
 					if(!w2){
-						Com_DPrintf(
+						Q_DPrintf(
 							"WARNING: CM_AddFacetBevels... invalid bevel\n");
 						continue;
 					}else
@@ -1034,9 +1034,9 @@ CM_PatchCollideFromGrid(cGrid_t *grid, patchCollide_t *pf)
 						1);
 
 			if(numFacets == MAX_FACETS)
-				Com_Error(ERR_DROP, "MAX_FACETS");
+				Q_Error(ERR_DROP, "MAX_FACETS");
 			facet = &facets[numFacets];
-			Com_Memset(facet, 0, sizeof(*facet));
+			Q_Memset(facet, 0, sizeof(*facet));
 
 			if(gridPlanes[i][j][0] == gridPlanes[i][j][1]){
 				if(gridPlanes[i][j][0] == -1)
@@ -1097,9 +1097,9 @@ CM_PatchCollideFromGrid(cGrid_t *grid, patchCollide_t *pf)
 				}
 
 				if(numFacets == MAX_FACETS)
-					Com_Error(ERR_DROP, "MAX_FACETS");
+					Q_Error(ERR_DROP, "MAX_FACETS");
 				facet = &facets[numFacets];
-				Com_Memset(facet, 0, sizeof(*facet));
+				Q_Memset(facet, 0, sizeof(*facet));
 
 				facet->surfacePlane	= gridPlanes[i][j][1];
 				facet->numBorders	= 3;
@@ -1135,9 +1135,9 @@ CM_PatchCollideFromGrid(cGrid_t *grid, patchCollide_t *pf)
 	pf->numPlanes	= numPlanes;
 	pf->numFacets	= numFacets;
 	pf->facets = Hunk_Alloc(numFacets * sizeof(*pf->facets), h_high);
-	Com_Memcpy(pf->facets, facets, numFacets * sizeof(*pf->facets));
+	Q_Memcpy(pf->facets, facets, numFacets * sizeof(*pf->facets));
 	pf->planes = Hunk_Alloc(numPlanes * sizeof(*pf->planes), h_high);
-	Com_Memcpy(pf->planes, planes, numPlanes * sizeof(*pf->planes));
+	Q_Memcpy(pf->planes, planes, numPlanes * sizeof(*pf->planes));
 }
 
 
@@ -1157,18 +1157,18 @@ CM_GeneratePatchCollide(int width, int height, vec3_t *points)
 	int i, j;
 
 	if(width <= 2 || height <= 2 || !points)
-		Com_Error(ERR_DROP,
+		Q_Error(ERR_DROP,
 			"CM_GeneratePatchFacets: bad parameters: (%i, %i, %p)",
 			width, height,
 			(void*)points);
 
 	if(!(width & 1) || !(height & 1))
-		Com_Error(
+		Q_Error(
 			ERR_DROP,
 			"CM_GeneratePatchFacets: even sizes are invalid for quadratic meshes");
 
 	if(width > MAX_GRID_SIZE || height > MAX_GRID_SIZE)
-		Com_Error(ERR_DROP,
+		Q_Error(ERR_DROP,
 			"CM_GeneratePatchFacets: source is > MAX_GRID_SIZE");
 
 	/* build a grid */
@@ -1725,12 +1725,12 @@ CM_DrawDebugSurface(void (*drawPoly)(int color, int numPoints, float *points))
 			if(w){
 				if(facet == debugFacet)
 					drawPoly(4, w->numpoints, w->p[0]);
-				/* Com_Printf("blue facet has %d border planes\n", facet->numBorders); */
+				/* Q_Printf("blue facet has %d border planes\n", facet->numBorders); */
 				else
 					drawPoly(1, w->numpoints, w->p[0]);
 				FreeWinding(w);
 			}else
-				Com_Printf(
+				Q_Printf(
 					"winding chopped away by border planes\n");
 		}
 

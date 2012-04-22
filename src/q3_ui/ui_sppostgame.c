@@ -194,11 +194,11 @@ DrawAwardsMedals(int max)
 		UI_DrawNamedPic(x, y, 48, 48, ui_medalPicNames[medal]);
 
 		if(medal == AWARD_ACCURACY)
-			Com_sprintf(buf, sizeof(buf), "%i%%", amount);
+			Q_sprintf(buf, sizeof(buf), "%i%%", amount);
 		else{
 			if(amount == 1)
 				continue;
-			Com_sprintf(buf, sizeof(buf), "%i", amount);
+			Q_sprintf(buf, sizeof(buf), "%i", amount);
 		}
 		UI_DrawString(x + 24, y + 52, buf, UI_CENTER, color_yellow);
 	}

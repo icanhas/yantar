@@ -218,7 +218,7 @@ Demos_MenuInit(void)
 	if(protocolLegacy == protocol)
 		protocolLegacy = 0;
 
-	Com_sprintf(extension, sizeof(extension), ".%s%d", DEMOEXT, protocol);
+	Q_sprintf(extension, sizeof(extension), ".%s%d", DEMOEXT, protocol);
 	s_demos.numDemos =
 		trap_FS_GetFileList("demos", extension, s_demos.names, ARRAY_LEN(
 				s_demos.names));
@@ -240,7 +240,7 @@ Demos_MenuInit(void)
 
 		if(!j){
 			if(protocolLegacy > 0 && s_demos.numDemos < MAX_DEMOS){
-				Com_sprintf(extension, sizeof(extension),
+				Q_sprintf(extension, sizeof(extension),
 					".%s%d", DEMOEXT,
 					protocolLegacy);
 				s_demos.numDemos += trap_FS_GetFileList(

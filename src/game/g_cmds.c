@@ -61,7 +61,7 @@ DeathmatchScoreboardMessage(gentity_t *ent)
 			(cl->ps.persistant[PERS_RANK] == 0 &&
 			 cl->ps.persistant[PERS_KILLED] == 0) ? 1 : 0;
 
-		Com_sprintf (entry, sizeof(entry),
+		Q_sprintf (entry, sizeof(entry),
 			" %i %i %i %i %i %i %i %i %i %i %i %i %i %i",
 			level.sortedClients[i],
 			cl->ps.persistant[PERS_SCORE], ping,
@@ -809,7 +809,7 @@ G_Say(gentity_t *ent, gentity_t *target, int mode, const char *chatText)
 	default:
 	case SAY_ALL:
 		G_LogPrintf("say: %s: %s\n", ent->client->pers.netname, chatText);
-		Com_sprintf (name, sizeof(name), "%s%c%c"EC ": ",
+		Q_sprintf (name, sizeof(name), "%s%c%c"EC ": ",
 			ent->client->pers.netname, Q_COLOR_ESCAPE,
 			COLOR_WHITE);
 		color = COLOR_GREEN;
@@ -818,13 +818,13 @@ G_Say(gentity_t *ent, gentity_t *target, int mode, const char *chatText)
 		G_LogPrintf("sayteam: %s: %s\n", ent->client->pers.netname,
 			chatText);
 		if(Team_GetLocationMsg(ent, location, sizeof(location)))
-			Com_sprintf (name, sizeof(name),
+			Q_sprintf (name, sizeof(name),
 				EC "(%s%c%c"EC ") (%s)"EC ": ",
 				ent->client->pers.netname, Q_COLOR_ESCAPE,
 				COLOR_WHITE,
 				location);
 		else
-			Com_sprintf (name, sizeof(name),
+			Q_sprintf (name, sizeof(name),
 				EC "(%s%c%c"EC ")"EC ": ",
 				ent->client->pers.netname, Q_COLOR_ESCAPE,
 				COLOR_WHITE);
@@ -835,13 +835,13 @@ G_Say(gentity_t *ent, gentity_t *target, int mode, const char *chatText)
 		   target->client->sess.sessionTeam ==
 		   ent->client->sess.sessionTeam &&
 		   Team_GetLocationMsg(ent, location, sizeof(location)))
-			Com_sprintf (name, sizeof(name),
+			Q_sprintf (name, sizeof(name),
 				EC "[%s%c%c"EC "] (%s)"EC ": ",
 				ent->client->pers.netname,
 				Q_COLOR_ESCAPE, COLOR_WHITE,
 				location);
 		else
-			Com_sprintf (name, sizeof(name),
+			Q_sprintf (name, sizeof(name),
 				EC "[%s%c%c"EC "]"EC ": ",
 				ent->client->pers.netname,
 				Q_COLOR_ESCAPE,
@@ -1259,10 +1259,10 @@ Cmd_CallVote_f(gentity_t *ent)
 			return;
 		}
 
-		Com_sprintf(level.voteString, sizeof(level.voteString), "%s %d",
+		Q_sprintf(level.voteString, sizeof(level.voteString), "%s %d",
 			arg1,
 			i);
-		Com_sprintf(level.voteDisplayString,
+		Q_sprintf(level.voteDisplayString,
 			sizeof(level.voteDisplayString), "%s %s", arg1,
 			gameNames[i]);
 	}else if(!Q_stricmp(arg1, "map")){
@@ -1272,14 +1272,14 @@ Cmd_CallVote_f(gentity_t *ent)
 
 		trap_Cvar_VariableStringBuffer("nextmap", s, sizeof(s));
 		if(*s)
-			Com_sprintf(level.voteString, sizeof(level.voteString),
+			Q_sprintf(level.voteString, sizeof(level.voteString),
 				"%s %s; set nextmap \"%s\"", arg1, arg2,
 				s);
 		else
-			Com_sprintf(level.voteString, sizeof(level.voteString),
+			Q_sprintf(level.voteString, sizeof(level.voteString),
 				"%s %s", arg1,
 				arg2);
-		Com_sprintf(level.voteDisplayString,
+		Q_sprintf(level.voteDisplayString,
 			sizeof(level.voteDisplayString), "%s", level.voteString);
 	}else if(!Q_stricmp(arg1, "nextmap")){
 		char s[MAX_STRING_CHARS];
@@ -1290,15 +1290,15 @@ Cmd_CallVote_f(gentity_t *ent)
 				"print \"nextmap not set.\n\"");
 			return;
 		}
-		Com_sprintf(level.voteString, sizeof(level.voteString),
+		Q_sprintf(level.voteString, sizeof(level.voteString),
 			"vstr nextmap");
-		Com_sprintf(level.voteDisplayString,
+		Q_sprintf(level.voteDisplayString,
 			sizeof(level.voteDisplayString), "%s", level.voteString);
 	}else{
-		Com_sprintf(level.voteString, sizeof(level.voteString),
+		Q_sprintf(level.voteString, sizeof(level.voteString),
 			"%s \"%s\"", arg1,
 			arg2);
-		Com_sprintf(level.voteDisplayString,
+		Q_sprintf(level.voteDisplayString,
 			sizeof(level.voteDisplayString), "%s", level.voteString);
 	}
 
@@ -1477,7 +1477,7 @@ Cmd_CallTeamVote_f(gentity_t *ent)
 				}
 			}
 		}
-		Com_sprintf(arg2, sizeof(arg2), "%d", i);
+		Q_sprintf(arg2, sizeof(arg2), "%d", i);
 	}else{
 		trap_SendServerCommand(ent-g_entities,
 			"print \"Invalid vote string.\n\"");
@@ -1487,7 +1487,7 @@ Cmd_CallTeamVote_f(gentity_t *ent)
 		return;
 	}
 
-	Com_sprintf(level.teamVoteString[cs_offset],
+	Q_sprintf(level.teamVoteString[cs_offset],
 		sizeof(level.teamVoteString[cs_offset]), "%s %s", arg1, arg2);
 
 	for(i = 0; i < level.maxclients; i++){

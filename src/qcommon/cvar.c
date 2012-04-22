@@ -55,7 +55,7 @@ Cvar_FindVar(const char *var_name)
 	cvar_t	*var;
 	long	hash;
 
-	hash = Com_HashString(var_name, HASH_SIZE);
+	hash = Q_HashString(var_name, HASH_SIZE);
 
 	for(var=hashTable[hash]; var != nil; var=var->hashNext)
 		if(!Q_stricmp(var_name, var->name))
@@ -155,7 +155,7 @@ Cvar_Validate(cvar_t *var, const char *value, qbool warn)
 		if(var->integral)
 			if(!Q_isintegral(valuef)){
 				if(warn)
-					Com_Printf("WARNING: cvar '%s' must"
+					Q_Printf("WARNING: cvar '%s' must"
 						   " be integral", var->name);
 
 				valuef	= (int)valuef;
@@ -163,7 +163,7 @@ Cvar_Validate(cvar_t *var, const char *value, qbool warn)
 			}
 	}else{
 		if(warn)
-			Com_Printf("WARNING: cvar '%s' must be numeric",
+			Q_Printf("WARNING: cvar '%s' must be numeric",
 				var->name);
 
 		valuef	= atof(var->resetString);
@@ -173,15 +173,15 @@ Cvar_Validate(cvar_t *var, const char *value, qbool warn)
 	if(valuef < var->min){
 		if(warn){
 			if(changed)
-				Com_Printf(" and is");
+				Q_Printf(" and is");
 			else
-				Com_Printf("WARNING: cvar '%s'", var->name);
+				Q_Printf("WARNING: cvar '%s'", var->name);
 
 			if(Q_isintegral(var->min))
-				Com_Printf(" out of range (min %d)",
+				Q_Printf(" out of range (min %d)",
 					(int)var->min);
 			else
-				Com_Printf(" out of range (min %f)", var->min);
+				Q_Printf(" out of range (min %f)", var->min);
 		}
 
 		valuef	= var->min;
@@ -189,15 +189,15 @@ Cvar_Validate(cvar_t *var, const char *value, qbool warn)
 	}else if(valuef > var->max){
 		if(warn){
 			if(changed)
-				Com_Printf(" and is");
+				Q_Printf(" and is");
 			else
-				Com_Printf("WARNING: cvar '%s'", var->name);
+				Q_Printf("WARNING: cvar '%s'", var->name);
 
 			if(Q_isintegral(var->max))
-				Com_Printf(" out of range (max %d)",
+				Q_Printf(" out of range (max %d)",
 					(int)var->max);
 			else
-				Com_Printf(" out of range (max %f)", var->max);
+				Q_Printf(" out of range (max %f)", var->max);
 		}
 
 		valuef	= var->max;
@@ -206,15 +206,15 @@ Cvar_Validate(cvar_t *var, const char *value, qbool warn)
 
 	if(changed){
 		if(Q_isintegral(valuef)){
-			Com_sprintf(s, sizeof(s), "%d", (int)valuef);
+			Q_sprintf(s, sizeof(s), "%d", (int)valuef);
 
 			if(warn)
-				Com_Printf(", setting to %d\n", (int)valuef);
+				Q_Printf(", setting to %d\n", (int)valuef);
 		}else{
-			Com_sprintf(s, sizeof(s), "%f", valuef);
+			Q_sprintf(s, sizeof(s), "%f", valuef);
 
 			if(warn)
-				Com_Printf(", setting to %f\n", valuef);
+				Q_Printf(", setting to %f\n", valuef);
 		}
 
 		return s;
@@ -269,7 +269,7 @@ setNewVal(cvar_t *var, const char *var_name, const char *var_value, int flags)
 		Z_Free(var->resetString);
 		var->resetString = CopyString(var_value);
 	}else if(var_value[0] && strcmp(var->resetString, var_value))
-		Com_DPrintf("Warning: cvar \"%s\" given initial values: \"%s\""
+		Q_DPrintf("Warning: cvar \"%s\" given initial values: \"%s\""
 			    " and \"%s\"\n", var_name, var->resetString, var_value);
 	/* if we have a latched string, take that value now */
 	if(var->latchedString != nil){
@@ -297,16 +297,16 @@ Cvar_Get(const char *var_name, const char *var_value, int flags)
 	int	index;
 
 	if(var_name == nil || var_value == nil)
-		Com_Error(ERR_FATAL, "Cvar_Get: nil parameter");
+		Q_Error(ERR_FATAL, "Cvar_Get: nil parameter");
 
 	if(!Cvar_ValidateString(var_name)){
-		Com_Printf("invalid cvar name string: %s\n", var_name);
+		Q_Printf("invalid cvar name string: %s\n", var_name);
 		var_name = "BADNAME";
 	}
 
 #if 0	/* FIXME: values with backslash happen */
 	if(!Cvar_ValidateString(var_value)){
-		Com_Printf("invalid cvar value string: %s\n", var_value);
+		Q_Printf("invalid cvar value string: %s\n", var_value);
 		var_value = "BADVALUE";
 	}
 #endif
@@ -325,7 +325,7 @@ Cvar_Get(const char *var_name, const char *var_value, int flags)
 
 	if(index >= MAX_CVARS){
 		if(!com_errorEntered)
-			Com_Error(
+			Q_Error(
 				ERR_FATAL,
 				"Error: Too many cvars, cannot create a new one!");
 		return nil;
@@ -357,7 +357,7 @@ Cvar_Get(const char *var_name, const char *var_value, int flags)
 	/* note what types of cvars have been modified (userinfo, archive, serverinfo, systeminfo) */
 	cvar_modifiedFlags |= var->flags;
 
-	hash = Com_HashString(var_name, HASH_SIZE);
+	hash = Q_HashString(var_name, HASH_SIZE);
 	var->hashIndex = hash;
 
 	var->hashNext = hashTable[hash];
@@ -377,24 +377,24 @@ Cvar_Get(const char *var_name, const char *var_value, int flags)
 void
 Cvar_Print(cvar_t *v)
 {
-	Com_Printf("%s: ", v->name);
+	Q_Printf("%s: ", v->name);
 	if(v->desc != nil)
-		Com_Printf("%s\n", v->desc);
+		Q_Printf("%s\n", v->desc);
 	else
-		Com_Printf("no description\n");
+		Q_Printf("no description\n");
 
-	Com_Printf("%s is \"%s" S_COLOR_WHITE "\"",
+	Q_Printf("%s is \"%s" S_COLOR_WHITE "\"",
 		v->name, v->string);
 	if(!(v->flags & CVAR_ROM)){
 		if(Q_stricmp(v->string, v->resetString) == 0)
-			Com_Printf(", the default");
+			Q_Printf(", the default");
 		else
-			Com_Printf(", default: \"%s" S_COLOR_WHITE "\"",
+			Q_Printf(", default: \"%s" S_COLOR_WHITE "\"",
 				v->resetString);
 	}
-	Com_Printf("\n");
+	Q_Printf("\n");
 	if(v->latchedString != nil)
-		Com_Printf("latched: \"%s\"\n", v->latchedString);
+		Q_Printf("latched: \"%s\"\n", v->latchedString);
 }
 
 void
@@ -415,16 +415,16 @@ Cvar_Set2(const char *var_name, const char *value, qbool force)
 {
 	cvar_t *var;
 
-/*	Com_DPrintf( "Cvar_Set2: %s %s\n", var_name, value ); */
+/*	Q_DPrintf( "Cvar_Set2: %s %s\n", var_name, value ); */
 
 	if(!Cvar_ValidateString(var_name)){
-		Com_Printf("invalid cvar name string: %s\n", var_name);
+		Q_Printf("invalid cvar name string: %s\n", var_name);
 		var_name = "BADNAME";
 	}
 
 #if 0	/* FIXME */
 	if(value && !Cvar_ValidateString(value)){
-		Com_Printf("invalid cvar value string: %s\n", value);
+		Q_Printf("invalid cvar value string: %s\n", value);
 		var_value = "BADVALUE";
 	}
 #endif
@@ -462,12 +462,12 @@ Cvar_Set2(const char *var_name, const char *value, qbool force)
 
 	if(!force){
 		if(var->flags & CVAR_ROM){
-			Com_Printf("%s is read only.\n", var_name);
+			Q_Printf("%s is read only.\n", var_name);
 			return var;
 		}
 
 		if(var->flags & CVAR_INIT){
-			Com_Printf("%s is write protected.\n", var_name);
+			Q_Printf("%s is write protected.\n", var_name);
 			return var;
 		}
 
@@ -479,7 +479,7 @@ Cvar_Set2(const char *var_name, const char *value, qbool force)
 			}else if(strcmp(value, var->string) == 0)
 				return var;
 
-			Com_Printf("%s will be changed upon restarting.\n",
+			Q_Printf("%s will be changed upon restarting.\n",
 				var_name);
 			var->latchedString = CopyString(value);
 			var->modified = qtrue;
@@ -488,7 +488,7 @@ Cvar_Set2(const char *var_name, const char *value, qbool force)
 		}
 
 		if((var->flags & CVAR_CHEAT) && (cvar_cheats->integer <= 0)){
-			Com_Printf ("%s is cheat protected.\n", var_name);
+			Q_Printf ("%s is cheat protected.\n", var_name);
 			return var;
 		}
 
@@ -525,10 +525,10 @@ Cvar_SetSafe(const char *var_name, const char *value)
 
 	if((flags != CVAR_NONEXISTENT) && (flags & CVAR_PROTECTED)){
 		if(value != nil)
-			Com_Error(ERR_DROP, "Restricted source tried to set "
+			Q_Error(ERR_DROP, "Restricted source tried to set "
 					    "\"%s\" to \"%s\"", var_name, value);
 		else
-			Com_Error(ERR_DROP, "Restricted source tried to "
+			Q_Error(ERR_DROP, "Restricted source tried to "
 					    "modify \"%s\"", var_name);
 		return;
 	}
@@ -547,9 +547,9 @@ Cvar_SetValue(const char *var_name, float value)
 	char val[32];
 
 	if(value == (int)value)
-		Com_sprintf(val, sizeof(val), "%i", (int)value);
+		Q_sprintf(val, sizeof(val), "%i", (int)value);
 	else
-		Com_sprintf(val, sizeof(val), "%f", value);
+		Q_sprintf(val, sizeof(val), "%f", value);
 	Cvar_Set(var_name, val);
 }
 
@@ -559,9 +559,9 @@ Cvar_SetValueSafe(const char *var_name, float value)
 	char val[32];
 
 	if(Q_isintegral(value))
-		Com_sprintf(val, sizeof(val), "%i", (int)value);
+		Q_sprintf(val, sizeof(val), "%i", (int)value);
 	else
-		Com_sprintf(val, sizeof(val), "%f", value);
+		Q_sprintf(val, sizeof(val), "%f", value);
 	Cvar_SetSafe(var_name, val);
 }
 
@@ -638,7 +638,7 @@ Cvar_Print_f(void)
 	cvar_t *cv;
 
 	if(Cmd_Argc() != 2){
-		Com_Printf ("usage: print <variable>\n");
+		Q_Printf ("usage: print <variable>\n");
 		return;
 	}
 
@@ -649,7 +649,7 @@ Cvar_Print_f(void)
 	if(cv != nil)
 		Cvar_Print(cv);
 	else
-		Com_Printf("Cvar %s does not exist.\n", name);
+		Q_Printf("Cvar %s does not exist.\n", name);
 }
 
 /*
@@ -663,7 +663,7 @@ Cvar_Toggle_f(void)
 	char *curval;
 
 	if(c < 2){
-		Com_Printf("usage: toggle <variable> [value1, value2, ...]\n");
+		Q_Printf("usage: toggle <variable> [value1, value2, ...]\n");
 		return;
 	}
 
@@ -675,7 +675,7 @@ Cvar_Toggle_f(void)
 	}
 
 	if(c == 3){
-		Com_Printf("toggle: nothing to toggle to\n");
+		Q_Printf("toggle: nothing to toggle to\n");
 		return;
 	}
 
@@ -707,7 +707,7 @@ Cvar_Set_f(void)
 	cmd	= Cmd_Argv(0);
 
 	if(c < 2){
-		Com_Printf("usage: %s <variable> <value>\n", cmd);
+		Q_Printf("usage: %s <variable> <value>\n", cmd);
 		return;
 	}
 	if(c == 2){
@@ -744,7 +744,7 @@ void
 Cvar_Reset_f(void)
 {
 	if(Cmd_Argc() != 2){
-		Com_Printf("usage: reset <variable>\n");
+		Q_Printf("usage: reset <variable>\n");
 		return;
 	}
 	Cvar_Reset(Cmd_Argv(1));
@@ -773,25 +773,25 @@ Cvar_WriteVariables(fileHandle_t f)
 		if(var->latchedString != nil){
 			len = strlen(var->name) + strlen(var->latchedString);
 			if(len+10 > sizeof(buffer)){
-				Com_Printf(S_COLOR_YELLOW
+				Q_Printf(S_COLOR_YELLOW
 					"WARNING: value of variable "
 					"\"%s\" too long to write to file\n",
 					var->name);
 				continue;
 			}
-			Com_sprintf (buffer, sizeof(buffer),
+			Q_sprintf (buffer, sizeof(buffer),
 				"seta %s \"%s\"\n", var->name,
 				var->latchedString);
 		}else{
 			len = strlen(var->name) + strlen(var->string);
 			if(len+10 > sizeof(buffer)){
-				Com_Printf(S_COLOR_YELLOW
+				Q_Printf(S_COLOR_YELLOW
 					"WARNING: value of variable "
 					"\"%s\" too long to write to file\n",
 					var->name);
 				continue;
 			}
-			Com_sprintf (buffer, sizeof(buffer),
+			Q_sprintf (buffer, sizeof(buffer),
 				"seta %s \"%s\"\n", var->name,
 				var->string);
 		}
@@ -813,59 +813,59 @@ Cvar_List_f(void)
 
 	for(var = cvar_vars, i = 0; var != nil; var = var->next, i++){
 		if((var->name == nil) ||
-		   (match && !Com_Filter(match, var->name, qfalse))){
+		   (match && !Q_Filter(match, var->name, qfalse))){
 			continue;
 		}
 
 		if(var->flags & CVAR_SERVERINFO)
-			Com_Printf("S");
+			Q_Printf("S");
 		else
-			Com_Printf(" ");
+			Q_Printf(" ");
 
 		if(var->flags & CVAR_SYSTEMINFO)
-			Com_Printf("s");
+			Q_Printf("s");
 		else
-			Com_Printf(" ");
+			Q_Printf(" ");
 
 		if(var->flags & CVAR_USERINFO)
-			Com_Printf("U");
+			Q_Printf("U");
 		else
-			Com_Printf(" ");
+			Q_Printf(" ");
 
 		if(var->flags & CVAR_ROM)
-			Com_Printf("R");
+			Q_Printf("R");
 		else
-			Com_Printf(" ");
+			Q_Printf(" ");
 
 		if(var->flags & CVAR_INIT)
-			Com_Printf("I");
+			Q_Printf("I");
 		else
-			Com_Printf(" ");
+			Q_Printf(" ");
 
 		if(var->flags & CVAR_ARCHIVE)
-			Com_Printf("A");
+			Q_Printf("A");
 		else
-			Com_Printf(" ");
+			Q_Printf(" ");
 
 		if(var->flags & CVAR_LATCH)
-			Com_Printf("L");
+			Q_Printf("L");
 		else
-			Com_Printf(" ");
+			Q_Printf(" ");
 
 		if(var->flags & CVAR_CHEAT)
-			Com_Printf("C");
+			Q_Printf("C");
 		else
-			Com_Printf(" ");
+			Q_Printf(" ");
 
 		if(var->flags & CVAR_USER_CREATED)
-			Com_Printf("?");
+			Q_Printf("?");
 		else
-			Com_Printf(" ");
+			Q_Printf(" ");
 
-		Com_Printf(" %s \"%s\"\n", var->name, var->string);
+		Q_Printf(" %s \"%s\"\n", var->name, var->string);
 	}
-	Com_Printf("\n%i total cvars\n", i);
-	Com_Printf("%i cvar indexes\n", cvar_numIndexes);
+	Q_Printf("\n%i total cvars\n", i);
+	Q_Printf("%i cvar indexes\n", cvar_numIndexes);
 }
 
 /* Unsets a cvar */
@@ -899,7 +899,7 @@ Cvar_Unset(cvar_t *cv)
 	if(cv->hashNext)
 		cv->hashNext->hashPrev = cv->hashPrev;
 
-	Com_Memset(cv, '\0', sizeof(*cv));
+	Q_Memset(cv, '\0', sizeof(*cv));
 
 	return next;
 }
@@ -913,7 +913,7 @@ Cvar_Unset_f(void)
 	cvar_t *cv;
 
 	if(Cmd_Argc() != 2){
-		Com_Printf("Usage: %s <varname>\n", Cmd_Argv(0));
+		Q_Printf("Usage: %s <varname>\n", Cmd_Argv(0));
 		return;
 	}
 
@@ -925,7 +925,7 @@ Cvar_Unset_f(void)
 	if(cv->flags & CVAR_USER_CREATED)
 		Cvar_Unset(cv);
 	else
-		Com_Printf("Error: %s: Variable %s is not user created.\n",
+		Q_Printf("Error: %s: Variable %s is not user created.\n",
 			Cmd_Argv(0), cv->name);
 }
 
@@ -1028,7 +1028,7 @@ Cvar_Register(vmCvar_t *vmCvar, const char *varName, const char *defaultValue,
 	 * flags. Unfortunately some historical game code (including single player
 	 * baseq3) sets both flags. We unset CVAR_ROM for such cvars. */
 	if((flags & (CVAR_ARCHIVE | CVAR_ROM)) == (CVAR_ARCHIVE | CVAR_ROM)){
-		Com_DPrintf(
+		Q_DPrintf(
 			S_COLOR_YELLOW "WARNING: Unsetting CVAR_ROM cvar '%s', "
 				       "since it is also CVAR_ARCHIVE\n",
 			varName);
@@ -1054,7 +1054,7 @@ Cvar_Update(vmCvar_t *vmCvar)
 	assert(vmCvar != nil);
 
 	if((unsigned)vmCvar->handle >= cvar_numIndexes)
-		Com_Error(ERR_DROP, "Cvar_Update: handle out of range");
+		Q_Error(ERR_DROP, "Cvar_Update: handle out of range");
 
 	cv = cvar_indexes + vmCvar->handle;
 	if(cv->modificationCount == vmCvar->modificationCount)
@@ -1064,7 +1064,7 @@ Cvar_Update(vmCvar_t *vmCvar)
 
 	vmCvar->modificationCount = cv->modificationCount;
 	if(strlen(cv->string)+1 > MAX_CVAR_VALUE_STRING)
-		Com_Error(ERR_DROP,
+		Q_Error(ERR_DROP,
 			"Cvar_Update: src %s length %u exceeds MAX_CVAR_VALUE_STRING",
 			cv->string,
 			(unsigned int)strlen(cv->string));
@@ -1080,7 +1080,7 @@ Cvar_CompleteCvarName(char *args, int argNum)
 		/* Skip "<cmd> " */
 		char *p;
 
-		p = Com_SkipTokens(args, 1, " ");
+		p = Q_SkipTokens(args, 1, " ");
 		if(p > args)
 			Field_CompleteCommand(p, qfalse, qtrue);
 	}
@@ -1090,8 +1090,8 @@ Cvar_CompleteCvarName(char *args, int argNum)
 void
 Cvar_Init(void)
 {
-	Com_Memset(cvar_indexes, '\0', sizeof(cvar_indexes));
-	Com_Memset(hashTable, '\0', sizeof(hashTable));
+	Q_Memset(cvar_indexes, '\0', sizeof(cvar_indexes));
+	Q_Memset(hashTable, '\0', sizeof(hashTable));
 
 	cvar_cheats = Cvar_Get("sv_cheats", "1", CVAR_ROM | CVAR_SYSTEMINFO);
 

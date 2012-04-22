@@ -300,7 +300,7 @@ LoadItemConfig(char *filename)
 				return NULL;
 			}
 			ii = &ic->iteminfo[ic->numiteminfo];
-			Com_Memset(ii, 0, sizeof(iteminfo_t));
+			Q_Memset(ii, 0, sizeof(iteminfo_t));
 			if(!PC_ExpectTokenType(source, TT_STRING, 0, &token)){
 				FreeMemory(ic);
 				FreeMemory(source);
@@ -397,7 +397,7 @@ AllocLevelItem(void)
 	}
 	/*  */
 	freelevelitems = freelevelitems->next;
-	Com_Memset(li, 0, sizeof(levelitem_t));
+	Q_Memset(li, 0, sizeof(levelitem_t));
 	return li;
 }	/* end of the function AllocLevelItem */
 /* ===========================================================================
@@ -706,8 +706,8 @@ BotResetAvoidGoals(int goalstate)
 
 	gs = BotGoalStateFromHandle(goalstate);
 	if(!gs) return;
-	Com_Memset(gs->avoidgoals, 0, MAX_AVOIDGOALS * sizeof(int));
-	Com_Memset(gs->avoidgoaltimes, 0, MAX_AVOIDGOALS * sizeof(float));
+	Q_Memset(gs->avoidgoals, 0, MAX_AVOIDGOALS * sizeof(int));
+	Q_Memset(gs->avoidgoaltimes, 0, MAX_AVOIDGOALS * sizeof(float));
 }	/* end of the function BotResetAvoidGoals */
 /* ===========================================================================
  *
@@ -1186,7 +1186,7 @@ BotPushGoal(int goalstate, bot_goal_t *goal)
 		return;
 	}
 	gs->goalstacktop++;
-	Com_Memcpy(&gs->goalstack[gs->goalstacktop], goal, sizeof(bot_goal_t));
+	Q_Memcpy(&gs->goalstack[gs->goalstacktop], goal, sizeof(bot_goal_t));
 }	/* end of the function BotPushGoal */
 /* ===========================================================================
  *
@@ -1232,7 +1232,7 @@ BotGetTopGoal(int goalstate, bot_goal_t *goal)
 	gs = BotGoalStateFromHandle(goalstate);
 	if(!gs) return qfalse;
 	if(!gs->goalstacktop) return qfalse;
-	Com_Memcpy(goal, &gs->goalstack[gs->goalstacktop], sizeof(bot_goal_t));
+	Q_Memcpy(goal, &gs->goalstack[gs->goalstacktop], sizeof(bot_goal_t));
 	return qtrue;
 }	/* end of the function BotGetTopGoal */
 /* ===========================================================================
@@ -1249,7 +1249,7 @@ BotGetSecondGoal(int goalstate, bot_goal_t *goal)
 	gs = BotGoalStateFromHandle(goalstate);
 	if(!gs) return qfalse;
 	if(gs->goalstacktop <= 1) return qfalse;
-	Com_Memcpy(goal, &gs->goalstack[gs->goalstacktop-1], sizeof(bot_goal_t));
+	Q_Memcpy(goal, &gs->goalstack[gs->goalstacktop-1], sizeof(bot_goal_t));
 	return qtrue;
 }	/* end of the function BotGetSecondGoal */
 /* ===========================================================================
@@ -1293,7 +1293,7 @@ BotChooseLTGItem(int goalstate, vec3_t origin, int *inventory, int travelflags)
 	/* best weight and item so far */
 	bestweight = 0;
 	bestitem = NULL;
-	Com_Memset(&goal, 0, sizeof(bot_goal_t));
+	Q_Memset(&goal, 0, sizeof(bot_goal_t));
 	/* go through the items in the level */
 	for(li = levelitems; li; li = li->next){
 		if(g_gametype == GT_SINGLE_PLAYER){
@@ -1458,7 +1458,7 @@ BotChooseNBGItem(int goalstate, vec3_t origin, int *inventory, int travelflags,
 	/* best weight and item so far */
 	bestweight = 0;
 	bestitem = NULL;
-	Com_Memset(&goal, 0, sizeof(bot_goal_t));
+	Q_Memset(&goal, 0, sizeof(bot_goal_t));
 	/* go through the items in the level */
 	for(li = levelitems; li; li = li->next){
 		if(g_gametype == GT_SINGLE_PLAYER){
@@ -1645,7 +1645,7 @@ BotResetGoalState(int goalstate)
 
 	gs = BotGoalStateFromHandle(goalstate);
 	if(!gs) return;
-	Com_Memset(gs->goalstack, 0, MAX_GOALSTACK * sizeof(bot_goal_t));
+	Q_Memset(gs->goalstack, 0, MAX_GOALSTACK * sizeof(bot_goal_t));
 	gs->goalstacktop = 0;
 	BotResetAvoidGoals(goalstate);
 }	/* end of the function BotResetGoalState */

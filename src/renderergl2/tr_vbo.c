@@ -33,7 +33,7 @@ R_CreateVBO(const char *name, byte * vertexes, int vertexesSize, vboUsage_t usag
 		glUsage = GL_DYNAMIC_DRAW_ARB;
 		break;
 	default:
-		Com_Error(ERR_FATAL, "bad vboUsage_t given: %i", usage);
+		Q_Error(ERR_FATAL, "bad vboUsage_t given: %i", usage);
 		return nil;
 	}
 
@@ -81,7 +81,7 @@ R_CreateVBO2(const char *name, int nverts, srfVert_t *verts,
 		glUsage = GL_DYNAMIC_DRAW_ARB;
 		break;
 	default:
-		Com_Error(ERR_FATAL, "bad vboUsage_t given: %i", usage);
+		Q_Error(ERR_FATAL, "bad vboUsage_t given: %i", usage);
 		return nil;
 	}
 
@@ -334,7 +334,7 @@ R_CreateIBO(const char *name, byte *indexes, int indexesSize, vboUsage_t usage)
 		glUsage = GL_DYNAMIC_DRAW_ARB;
 		break;
 	default:
-		Com_Error(ERR_FATAL, "bad vboUsage_t given: %i", usage);
+		Q_Error(ERR_FATAL, "bad vboUsage_t given: %i", usage);
 		return nil;
 	}
 
@@ -382,7 +382,7 @@ R_CreateIBO2(const char *name, int ntris, srfTriangle_t *triangles, vboUsage_t u
 		glUsage = GL_DYNAMIC_DRAW_ARB;
 		break;
 	default:
-		Com_Error(ERR_FATAL, "bad vboUsage_t given: %i", usage);
+		Q_Error(ERR_FATAL, "bad vboUsage_t given: %i", usage);
 		return nil;
 	}
 

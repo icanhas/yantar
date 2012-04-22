@@ -286,8 +286,8 @@ void*	Hunk_AllocDebug(int size, ha_pref preference, char *label, char *file,
 void*	Hunk_Alloc(int size, ha_pref preference);
 #endif
 
-#define Com_Memset memset
-#define Com_Memcpy memcpy
+#define Q_Memset memset
+#define Q_Memcpy memcpy
 
 /* cin */
 enum {
@@ -714,22 +714,22 @@ void PerpendicularVector(vec3_t dst, const vec3_t src);
 #endif
 
 /* common */
-long		Com_HashString(const char *s, int size);
-float		Com_Clamp(float min, float max, float value);
-char*		Com_SkipPath(char *pathname);
-const char*	Com_GetExtension(const char *name);
-void		Com_StripExtension(const char *in, char *out, int destsize);
-qbool		Com_CompareExtension(const char *in, const char *ext);
-void		Com_DefaultExtension(char *path, int maxSize, const char *extension);
+long		Q_HashString(const char *s, int size);
+float		Q_Clamp(float min, float max, float value);
+char*		Q_SkipPath(char *pathname);
+const char*	Q_GetExtension(const char *name);
+void		Q_StripExtension(const char *in, char *out, int destsize);
+qbool		Q_CompareExtension(const char *in, const char *ext);
+void		Q_DefaultExtension(char *path, int maxSize, const char *extension);
 
-void		Com_BeginParseSession(const char *name);
-int		Com_GetCurrentParseLine(void);
-char*		Com_Parse(char **data_p);
-char*		Com_ParseExt(char **data_p, qbool allowLineBreak);
-int             Com_Compress(char *data_p);
-void		Com_ParseError(char *format, ...) __attribute__ ((format (printf, 1, 2)));
-void		Com_ParseWarning(char *format, ...) __attribute__ ((format (printf, 1, 2)));
-/* int		Com_ParseInfos( char *buf, int max, char infos[][MAX_INFO_STRING] ); */
+void		Q_BeginParseSession(const char *name);
+int		Q_GetCurrentParseLine(void);
+char*		Q_Parse(char **data_p);
+char*		Q_ParseExt(char **data_p, qbool allowLineBreak);
+int             Q_Compress(char *data_p);
+void		Q_ParseError(char *format, ...) __attribute__ ((format (printf, 1, 2)));
+void		Q_ParseWarning(char *format, ...) __attribute__ ((format (printf, 1, 2)));
+/* int		Q_ParseInfos( char *buf, int max, char infos[][MAX_INFO_STRING] ); */
 
 enum {
 	/* token types */
@@ -751,7 +751,7 @@ typedef struct pc_token_s {
 } pc_token_t;
 
 /* data is an in/out parm, returns a parsed out token */
-void    Com_MatchToken(char**buf_p, char *match);
+void    Q_MatchToken(char**buf_p, char *match);
 
 void    SkipBracedSection(char **program);
 void    SkipRestOfLine(char **data);
@@ -759,15 +759,15 @@ void    SkipRestOfLine(char **data);
 void    Parse1DMatrix(char **buf_p, int x, float *m);
 void    Parse2DMatrix(char **buf_p, int y, int x, float *m);
 void    Parse3DMatrix(char **buf_p, int z, int y, int x, float *m);
-int     Com_HexStrToInt(const char *str);
+int     Q_HexStrToInt(const char *str);
 
-int QDECL       Com_sprintf(char *dest, int size, 
+int QDECL       Q_sprintf(char *dest, int size, 
 	const char *fmt, ...) __attribute__ ((format (printf, 3, 4)));
 
-char*Com_SkipTokens(char *s, int numTokens, char *sep);
-char*Com_SkipCharset(char *s, char *sep);
+char*Q_SkipTokens(char *s, int numTokens, char *sep);
+char*Q_SkipCharset(char *s, char *sep);
 
-void    Com_RandomBytes(byte *string, int len);
+void    Q_RandomBytes(byte *string, int len);
 
 /* mode parm for FS_FOpenFile */
 typedef enum {
@@ -841,7 +841,7 @@ enum {
 	TRUNCATE_LENGTH = 64
 };
 
-void Com_TruncateLongString(char *buffer, const char *s);
+void Q_TruncateLongString(char *buffer, const char *s);
 
 /* key / value info strings */
 char*Info_ValueForKey(const char *s, const char *key);
@@ -853,9 +853,9 @@ qbool Info_Validate(const char *s);
 void Info_NextPair(const char **s, char *key, char *value);
 
 /* this is only here so the functions in q_shared.c and bg_*.c can link */
-void QDECL Com_Error(int level, const char *error,
+void QDECL Q_Error(int level, const char *error,
 		     ...) __attribute__ ((noreturn, format(printf, 2, 3)));
-void QDECL Com_Printf(const char *msg, ...) __attribute__ ((format (printf, 1, 2)));
+void QDECL Q_Printf(const char *msg, ...) __attribute__ ((format (printf, 1, 2)));
 
 
 /*

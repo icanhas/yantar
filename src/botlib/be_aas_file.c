@@ -588,7 +588,7 @@ AAS_WriteAASFile(char *filename)
 	/* swap the aas data */
 	AAS_SwapAASData();
 	/* initialize the file header */
-	Com_Memset(&header, 0, sizeof(aas_header_t));
+	Q_Memset(&header, 0, sizeof(aas_header_t));
 	header.ident	= LittleLong(AASID);
 	header.version	= LittleLong(AASVERSION);
 	header.bspchecksum = LittleLong(aasworld.bspchecksum);

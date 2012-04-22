@@ -302,11 +302,11 @@ BotReportStatus(bot_state_t *bs)
 		}
 	}else if(gametype == GT_HARVESTER)
 		if(BotHarvesterCarryingCubes(bs)){
-			if(BotTeam(bs) == TEAM_RED) Com_sprintf(
+			if(BotTeam(bs) == TEAM_RED) Q_sprintf(
 					flagstatus, sizeof(flagstatus),
 					S_COLOR_RED "%2d",
 					bs->inventory[INVENTORY_REDCUBE]);
-			else Com_sprintf(flagstatus, sizeof(flagstatus),
+			else Q_sprintf(flagstatus, sizeof(flagstatus),
 					S_COLOR_BLUE "%2d",
 					bs->inventory[INVENTORY_BLUECUBE]);
 		}
@@ -475,10 +475,10 @@ BotSetInfoConfigString(bot_state_t *bs)
 	}else if(gametype == GT_HARVESTER)
 		if(BotHarvesterCarryingCubes(bs)){
 			if(BotTeam(bs) ==
-			   TEAM_RED) Com_sprintf(
+			   TEAM_RED) Q_sprintf(
 					carrying, sizeof(carrying), "%2d",
 					bs->inventory[INVENTORY_REDCUBE]);
-			else Com_sprintf(carrying, sizeof(carrying), "%2d",
+			else Q_sprintf(carrying, sizeof(carrying), "%2d",
 					bs->inventory[INVENTORY_BLUECUBE]);
 		}
 
@@ -488,74 +488,74 @@ BotSetInfoConfigString(bot_state_t *bs)
 	case LTG_TEAMHELP:
 	{
 		EasyClientName(bs->teammate, goalname, sizeof(goalname));
-		Com_sprintf(action, sizeof(action), "helping %s", goalname);
+		Q_sprintf(action, sizeof(action), "helping %s", goalname);
 		break;
 	}
 	case LTG_TEAMACCOMPANY:
 	{
 		EasyClientName(bs->teammate, goalname, sizeof(goalname));
-		Com_sprintf(action, sizeof(action), "accompanying %s", goalname);
+		Q_sprintf(action, sizeof(action), "accompanying %s", goalname);
 		break;
 	}
 	case LTG_DEFENDKEYAREA:
 	{
 		trap_BotGoalName(bs->teamgoal.number, goalname, sizeof(goalname));
-		Com_sprintf(action, sizeof(action), "defending %s", goalname);
+		Q_sprintf(action, sizeof(action), "defending %s", goalname);
 		break;
 	}
 	case LTG_GETITEM:
 	{
 		trap_BotGoalName(bs->teamgoal.number, goalname, sizeof(goalname));
-		Com_sprintf(action, sizeof(action), "getting item %s", goalname);
+		Q_sprintf(action, sizeof(action), "getting item %s", goalname);
 		break;
 	}
 	case LTG_KILL:
 	{
 		ClientName(bs->teamgoal.entitynum, goalname, sizeof(goalname));
-		Com_sprintf(action, sizeof(action), "killing %s", goalname);
+		Q_sprintf(action, sizeof(action), "killing %s", goalname);
 		break;
 	}
 	case LTG_CAMP:
 	case LTG_CAMPORDER:
 	{
-		Com_sprintf(action, sizeof(action), "camping");
+		Q_sprintf(action, sizeof(action), "camping");
 		break;
 	}
 	case LTG_PATROL:
 	{
-		Com_sprintf(action, sizeof(action), "patrolling");
+		Q_sprintf(action, sizeof(action), "patrolling");
 		break;
 	}
 	case LTG_GETFLAG:
 	{
-		Com_sprintf(action, sizeof(action), "capturing flag");
+		Q_sprintf(action, sizeof(action), "capturing flag");
 		break;
 	}
 	case LTG_RUSHBASE:
 	{
-		Com_sprintf(action, sizeof(action), "rushing base");
+		Q_sprintf(action, sizeof(action), "rushing base");
 		break;
 	}
 	case LTG_RETURNFLAG:
 	{
-		Com_sprintf(action, sizeof(action), "returning flag");
+		Q_sprintf(action, sizeof(action), "returning flag");
 		break;
 	}
 	case LTG_ATTACKENEMYBASE:
 	{
-		Com_sprintf(action, sizeof(action), "attacking the enemy base");
+		Q_sprintf(action, sizeof(action), "attacking the enemy base");
 		break;
 	}
 	case LTG_HARVEST:
 	{
-		Com_sprintf(action, sizeof(action), "harvesting");
+		Q_sprintf(action, sizeof(action), "harvesting");
 		break;
 	}
 	default:
 	{
 		trap_BotGetTopGoal(bs->gs, &goal);
 		trap_BotGoalName(goal.number, goalname, sizeof(goalname));
-		Com_sprintf(action, sizeof(action), "roaming %s", goalname);
+		Q_sprintf(action, sizeof(action), "roaming %s", goalname);
 		break;
 	}
 	}
@@ -1625,7 +1625,7 @@ BotInitLibrary(void)
 	trap_Cvar_VariableStringBuffer("sv_maxclients", buf, sizeof(buf));
 	if(!strlen(buf)) strcpy(buf, "8");
 	trap_BotLibVarSet("maxclients", buf);
-	Com_sprintf(buf, sizeof(buf), "%d", MAX_GENTITIES);
+	Q_sprintf(buf, sizeof(buf), "%d", MAX_GENTITIES);
 	trap_BotLibVarSet("maxentities", buf);
 	/* bsp checksum */
 	trap_Cvar_VariableStringBuffer("sv_mapChecksum", buf, sizeof(buf));

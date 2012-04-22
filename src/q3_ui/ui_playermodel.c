@@ -412,11 +412,11 @@ PlayerModel_BuildList(void)
 		    j++,fileptr+=filelen+1){
 			filelen = strlen(fileptr);
 
-			Com_StripExtension(fileptr,skinname, sizeof(skinname));
+			Q_StripExtension(fileptr,skinname, sizeof(skinname));
 
 			/* look for icon_???? */
 			if(!Q_stricmpn(skinname,"icon_",5))
-				Com_sprintf(s_playermodel.modelnames[
+				Q_sprintf(s_playermodel.modelnames[
 						s_playermodel.nummodels++],
 					sizeof(s_playermodel.modelnames[
 						       s_playermodel.nummodels]),

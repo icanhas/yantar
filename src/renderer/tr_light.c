@@ -377,7 +377,7 @@ R_LightForPoint(vec3_t point, vec3_t ambientLight, vec3_t directedLight, vec3_t 
 	if(tr.world->lightGridData == NULL)
 		return qfalse;
 
-	Com_Memset(&ent, 0, sizeof(ent));
+	Q_Memset(&ent, 0, sizeof(ent));
 	Vec3Copy(point, ent.e.origin);
 	R_SetupEntityLightingGrid(&ent);
 	Vec3Copy(ent.ambientLight, ambientLight);

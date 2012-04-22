@@ -21,11 +21,11 @@
 #include "q_shared.h"
 
 /*
- * Com_HashString: Return the hashed value of string s. Will skip file extension
+ * Q_HashString: Return the hashed value of string s. Will skip file extension
  * if passed a pathname.
  */
 long
-Com_HashString(const char *s, int size)
+Q_HashString(const char *s, int size)
 {
 	int	i, c;
 	long	hash;
@@ -45,7 +45,7 @@ Com_HashString(const char *s, int size)
 }
 
 float
-Com_Clamp(float min, float max, float value)
+Q_Clamp(float min, float max, float value)
 {
 	if(value < min)
 		return min;
@@ -55,7 +55,7 @@ Com_Clamp(float min, float max, float value)
 }
 
 char *
-Com_SkipPath(char *pathname)
+Q_SkipPath(char *pathname)
 {
 	char *last;
 
@@ -69,7 +69,7 @@ Com_SkipPath(char *pathname)
 }
 
 const char *
-Com_GetExtension(const char *name)
+Q_GetExtension(const char *name)
 {
 	const char *dot = strrchr(name, '.'), *slash;
 	if(dot && (!(slash = strrchr(name, '/')) || slash < dot))
@@ -79,7 +79,7 @@ Com_GetExtension(const char *name)
 }
 
 void
-Com_StripExtension(const char *in, char *out, int destsize)
+Q_StripExtension(const char *in, char *out, int destsize)
 {
 	const char *dot = strrchr(in, '.'), *slash;
 	if(dot && (!(slash = strrchr(in, '/')) || slash < dot))
@@ -89,11 +89,11 @@ Com_StripExtension(const char *in, char *out, int destsize)
 }
 
 /*
- * Com_CompareExtension: string compare the end of the strings and return
+ * Q_CompareExtension: string compare the end of the strings and return
  * qtrue if strings match
  */
 qbool
-Com_CompareExtension(const char *in, const char *ext)
+Q_CompareExtension(const char *in, const char *ext)
 {
 	int inlen, extlen;
 
@@ -110,11 +110,11 @@ Com_CompareExtension(const char *in, const char *ext)
 }
 
 /*
- * Com_DefaultExtension: if path doesn't have an extension, then append the
+ * Q_DefaultExtension: if path doesn't have an extension, then append the
  * specified one (which should include the .)
  */
 void
-Com_DefaultExtension(char *path, int maxSize, const char *extension)
+Q_DefaultExtension(char *path, int maxSize, const char *extension)
 {
 	const char *dot = strrchr(path, '.'), *slash;
 	if(dot && (!(slash = strrchr(path, '/')) || slash < dot))
@@ -285,30 +285,30 @@ static char	com_parsename[MAX_TOKEN_CHARS];
 static int	com_lines;
 
 void
-Com_BeginParseSession(const char *name)
+Q_BeginParseSession(const char *name)
 {
 	com_lines = 0;
-	Com_sprintf(com_parsename, sizeof(com_parsename), "%s", name);
+	Q_sprintf(com_parsename, sizeof(com_parsename), "%s", name);
 }
 
 int
-Com_GetCurrentParseLine(void)
+Q_GetCurrentParseLine(void)
 {
 	return com_lines;
 }
 
 /*
- * Com_Parse: Parse a token out of a string. Will never return nil, just empty
+ * Q_Parse: Parse a token out of a string. Will never return nil, just empty
  * strings
  */
 char *
-Com_Parse(char **data_p)
+Q_Parse(char **data_p)
 {
-	return Com_ParseExt(data_p, qtrue);
+	return Q_ParseExt(data_p, qtrue);
 }
 
 void
-Com_ParseError(char *format, ...)
+Q_ParseError(char *format, ...)
 {
 	va_list argptr;
 	static char string[4096];
@@ -317,12 +317,12 @@ Com_ParseError(char *format, ...)
 	Q_vsnprintf(string, sizeof(string), format, argptr);
 	va_end(argptr);
 
-	Com_Printf("ERROR: %s, line %d: %s\n", com_parsename, com_lines,
+	Q_Printf("ERROR: %s, line %d: %s\n", com_parsename, com_lines,
 		string);
 }
 
 void
-Com_ParseWarning(char *format, ...)
+Q_ParseWarning(char *format, ...)
 {
 	va_list argptr;
 	static char string[4096];
@@ -331,7 +331,7 @@ Com_ParseWarning(char *format, ...)
 	Q_vsnprintf(string, sizeof(string), format, argptr);
 	va_end(argptr);
 
-	Com_Printf("WARNING: %s, line %d: %s\n", com_parsename, com_lines,
+	Q_Printf("WARNING: %s, line %d: %s\n", com_parsename, com_lines,
 		string);
 }
 
@@ -355,7 +355,7 @@ SkipWhitespace(char *data, qbool *hasNewLines)
 }
 
 int
-Com_Compress(char *data_p)
+Q_Compress(char *data_p)
 {
 	char	*in, *out;
 	int	c;
@@ -428,12 +428,12 @@ Com_Compress(char *data_p)
 }
 
 /*
- * Com_ParseExt: Parse a token out of a string. Will never return nil, just
+ * Q_ParseExt: Parse a token out of a string. Will never return nil, just
  * empty strings. If "allowLineBreaks" is qtrue then an empty string will be
  * returned if the next token is a newline.
  */
 char *
-Com_ParseExt(char **data_p, qbool allowLineBreaks)
+Q_ParseExt(char **data_p, qbool allowLineBreaks)
 {
 	int c, len;
 	qbool		hasNewLines = qfalse;
@@ -516,13 +516,13 @@ Com_ParseExt(char **data_p, qbool allowLineBreaks)
 }
 
 void
-Com_MatchToken(char **buf_p, char *match)
+Q_MatchToken(char **buf_p, char *match)
 {
 	char *token;
 
-	token = Com_Parse(buf_p);
+	token = Q_Parse(buf_p);
 	if(strcmp(token, match))
-		Com_Error(ERR_DROP, "MatchToken: %s != %s", token, match);
+		Q_Error(ERR_DROP, "MatchToken: %s != %s", token, match);
 }
 
 /*
@@ -537,7 +537,7 @@ SkipBracedSection(char **program)
 
 	depth = 0;
 	do {
-		token = Com_ParseExt(program, qtrue);
+		token = Q_ParseExt(program, qtrue);
 		if(token[1] == 0){
 			if(token[0] == '{')
 				depth++;
@@ -569,12 +569,12 @@ Parse1DMatrix(char **buf_p, int x, float *m)
 	char	*token;
 	int	i;
 
-	Com_MatchToken(buf_p, "(");
+	Q_MatchToken(buf_p, "(");
 	for(i = 0; i < x; i++){
-		token	= Com_Parse(buf_p);
+		token	= Q_Parse(buf_p);
 		m[i]	= atof(token);
 	}
-	Com_MatchToken(buf_p, ")");
+	Q_MatchToken(buf_p, ")");
 }
 
 void
@@ -582,10 +582,10 @@ Parse2DMatrix(char **buf_p, int y, int x, float *m)
 {
 	int i;
 
-	Com_MatchToken(buf_p, "(");
+	Q_MatchToken(buf_p, "(");
 	for(i = 0; i < y; i++)
 		Parse1DMatrix (buf_p, x, m + i * x);
-	Com_MatchToken(buf_p, ")");
+	Q_MatchToken(buf_p, ")");
 }
 
 void
@@ -593,14 +593,14 @@ Parse3DMatrix(char **buf_p, int z, int y, int x, float *m)
 {
 	int i;
 
-	Com_MatchToken(buf_p, "(");
+	Q_MatchToken(buf_p, "(");
 	for(i = 0; i < z; i++)
 		Parse2DMatrix (buf_p, y, x, m + i * x*y);
-	Com_MatchToken(buf_p, ")");
+	Q_MatchToken(buf_p, ")");
 }
 
 int
-Com_HexStrToInt(const char *str)
+Q_HexStrToInt(const char *str)
 {
 	if((str == nil) || (str[0] == '\0'))
 		return -1;
@@ -716,11 +716,11 @@ void
 Q_strncpyz(char *dest, const char *src, int destsize)
 {
 	if(dest == nil)
-		Com_Error(ERR_FATAL, "Q_strncpyz: nil dest");
+		Q_Error(ERR_FATAL, "Q_strncpyz: nil dest");
 	if(src == nil)
-		Com_Error(ERR_FATAL, "Q_strncpyz: nil src");
+		Q_Error(ERR_FATAL, "Q_strncpyz: nil src");
 	if(destsize < 1)
-		Com_Error(ERR_FATAL,"Q_strncpyz: destsize < 1");
+		Q_Error(ERR_FATAL,"Q_strncpyz: destsize < 1");
 	strncpy(dest, src, destsize-1);
 	dest[destsize-1] = 0;
 }
@@ -819,7 +819,7 @@ Q_strcat(char *dest, int size, const char *src)
 
 	l1 = strlen(dest);
 	if(l1 >= size)
-		Com_Error(ERR_FATAL, "Q_strcat: already overflowed");
+		Q_Error(ERR_FATAL, "Q_strcat: already overflowed");
 	Q_strncpyz(dest + l1, src, size - l1);
 }
 
@@ -902,7 +902,7 @@ Q_CountChar(const char *string, char tocount)
 }
 
 int QDECL
-Com_sprintf(char *dest, int size, const char *fmt, ...)
+Q_sprintf(char *dest, int size, const char *fmt, ...)
 {
 	int len;
 	va_list argptr;
@@ -912,7 +912,7 @@ Com_sprintf(char *dest, int size, const char *fmt, ...)
 	va_end(argptr);
 
 	if(len >= size)
-		Com_Printf("Com_sprintf: Output length %d too short, require"
+		Q_Printf("Q_sprintf: Output length %d too short, require"
 			   " %d bytes.\n", size, len + 1);
 
 	return len;
@@ -940,9 +940,9 @@ va(char *format, ...)
 	return buf;
 }
 
-/* Com_TruncateLongString: Assumes buffer is atleast TRUNCATE_LENGTH big */
+/* Q_TruncateLongString: Assumes buffer is atleast TRUNCATE_LENGTH big */
 void
-Com_TruncateLongString(char *buffer, const char *s)
+Q_TruncateLongString(char *buffer, const char *s)
 {
 	int length = strlen(s);
 
@@ -979,7 +979,7 @@ Info_ValueForKey(const char *s, const char *key)
 		return "";
 
 	if(strlen(s) >= BIG_INFO_STRING)
-		Com_Error(ERR_DROP, "Info_ValueForKey: oversize infostring");
+		Q_Error(ERR_DROP, "Info_ValueForKey: oversize infostring");
 
 	valueindex ^= 1;
 	if(*s == '\\')
@@ -1057,7 +1057,7 @@ Info_RemoveKey(char *s, const char *key)
 	char *o;
 
 	if(strlen(s) >= MAX_INFO_STRING)
-		Com_Error(ERR_DROP, "Info_RemoveKey: oversize infostring");
+		Q_Error(ERR_DROP, "Info_RemoveKey: oversize infostring");
 
 	if(strchr (key, '\\'))
 		return;
@@ -1103,7 +1103,7 @@ Info_RemoveKey_Big(char *s, const char *key)
 	char *o;
 
 	if(strlen(s) >= BIG_INFO_STRING)
-		Com_Error(ERR_DROP, "Info_RemoveKey_Big: oversize infostring");
+		Q_Error(ERR_DROP, "Info_RemoveKey_Big: oversize infostring");
 
 	if(strchr(key, '\\'))
 		return;
@@ -1162,11 +1162,11 @@ Info_SetValueForKey(char *s, const char *key, const char *value)
 	const char *blacklist = "\\;\"";
 
 	if(strlen(s) >= MAX_INFO_STRING)
-		Com_Error(ERR_DROP, "Info_SetValueForKey: oversize infostring");
+		Q_Error(ERR_DROP, "Info_SetValueForKey: oversize infostring");
 
 	for(; *blacklist != '\0'; ++blacklist)
 		if(strchr(key, *blacklist) || strchr(value, *blacklist)){
-			Com_Printf(S_COLOR_YELLOW "Can't use keys or values"
+			Q_Printf(S_COLOR_YELLOW "Can't use keys or values"
 						  " with a '%c': %s = %s\n", *blacklist, key, value);
 			return;
 		}
@@ -1175,10 +1175,10 @@ Info_SetValueForKey(char *s, const char *key, const char *value)
 	if(!value || !strlen(value))
 		return;
 
-	Com_sprintf(newi, sizeof(newi), "\\%s\\%s", key, value);
+	Q_sprintf(newi, sizeof(newi), "\\%s\\%s", key, value);
 
 	if(strlen(newi) + strlen(s) >= MAX_INFO_STRING){
-		Com_Printf("Info string length exceeded\n");
+		Q_Printf("Info string length exceeded\n");
 		return;
 	}
 
@@ -1197,11 +1197,11 @@ Info_SetValueForKey_Big(char *s, const char *key, const char *value)
 	const char *blacklist = "\\;\"";
 
 	if(strlen(s) >= BIG_INFO_STRING)
-		Com_Error(ERR_DROP, "Info_SetValueForKey: oversize infostring");
+		Q_Error(ERR_DROP, "Info_SetValueForKey: oversize infostring");
 
 	for(; *blacklist; ++blacklist)
 		if(strchr (key, *blacklist) || strchr(value, *blacklist)){
-			Com_Printf(S_COLOR_YELLOW "Can't use keys or values"
+			Q_Printf(S_COLOR_YELLOW "Can't use keys or values"
 						  " with a '%c': %s = %s\n", *blacklist, key, value);
 			return;
 		}
@@ -1210,16 +1210,16 @@ Info_SetValueForKey_Big(char *s, const char *key, const char *value)
 	if(value == nil)
 		return;
 
-	Com_sprintf(newi, sizeof(newi), "\\%s\\%s", key, value);
+	Q_sprintf(newi, sizeof(newi), "\\%s\\%s", key, value);
 	if(strlen(newi) + strlen(s) >= BIG_INFO_STRING){
-		Com_Printf("BIG Info string length exceeded\n");
+		Q_Printf("BIG Info string length exceeded\n");
 		return;
 	}
 	strcat (s, newi);
 }
 
 static qbool
-Com_CharIsOneOfCharset(char c, char *set)
+Q_CharIsOneOfCharset(char c, char *set)
 {
 	int i;
 
@@ -1230,12 +1230,12 @@ Com_CharIsOneOfCharset(char c, char *set)
 }
 
 char *
-Com_SkipCharset(char *s, char *sep)
+Q_SkipCharset(char *s, char *sep)
 {
 	char *p = s;
 
 	while(p != '\0'){
-		if(Com_CharIsOneOfCharset(*p, sep))
+		if(Q_CharIsOneOfCharset(*p, sep))
 			++p;
 		else
 			break;
@@ -1244,15 +1244,15 @@ Com_SkipCharset(char *s, char *sep)
 }
 
 char *
-Com_SkipTokens(char *s, int numTokens, char *sep)
+Q_SkipTokens(char *s, int numTokens, char *sep)
 {
 	int sepCount = 0;
 	char *p = s;
 
 	while(sepCount < numTokens){
-		if(Com_CharIsOneOfCharset(*p++, sep)){
+		if(Q_CharIsOneOfCharset(*p++, sep)){
 			++sepCount;
-			while(Com_CharIsOneOfCharset(*p, sep))
+			while(Q_CharIsOneOfCharset(*p, sep))
 				++p;
 		}else if(*p == '\0')
 			break;

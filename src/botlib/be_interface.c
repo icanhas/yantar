@@ -158,22 +158,22 @@ Export_BotLibSetup(void)
 
 		if(*homedir){
 			if(*gamedir)
-				Com_sprintf(logfilename, sizeof(logfilename),
+				Q_sprintf(logfilename, sizeof(logfilename),
 					"%s%c%s%cbotlib.log", homedir, PATH_SEP,
 					gamedir,
 					PATH_SEP);
 			else if(*basedir)
-				Com_sprintf(logfilename, sizeof(logfilename),
+				Q_sprintf(logfilename, sizeof(logfilename),
 					"%s%c%s%cbotlib.log", homedir, PATH_SEP,
 					basedir,
 					PATH_SEP);
 			else
-				Com_sprintf(logfilename, sizeof(logfilename),
+				Q_sprintf(logfilename, sizeof(logfilename),
 					"%s%c" BASEGAME "%cbotlib.log", homedir,
 					PATH_SEP,
 					PATH_SEP);
 		}else
-			Com_sprintf(logfilename, sizeof(logfilename),
+			Q_sprintf(logfilename, sizeof(logfilename),
 				"botlib.log");
 
 		Log_Open(logfilename);
@@ -884,7 +884,7 @@ GetBotLibAPI(int apiVersion, botlib_import_t *import)
 	botimport = *import;
 	assert(botimport.Print);
 
-	Com_Memset(&be_botlib_export, 0, sizeof(be_botlib_export));
+	Q_Memset(&be_botlib_export, 0, sizeof(be_botlib_export));
 
 	if(apiVersion != BOTLIB_API_VERSION){
 		botimport.Print(

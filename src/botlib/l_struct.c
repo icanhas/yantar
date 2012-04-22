@@ -327,7 +327,7 @@ WriteFloat(FILE *fp, float value)
 	char	buf[128];
 	int	l;
 
-	Com_sprintf(buf, sizeof(buf), "%f", value);
+	Q_sprintf(buf, sizeof(buf), "%f", value);
 	l = strlen(buf);
 	/* strip any trailing zeros */
 	while(l-- > 1){

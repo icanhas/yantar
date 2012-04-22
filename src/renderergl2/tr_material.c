@@ -337,7 +337,7 @@ CollapseMultitexture(void)
 	 * move down subsequent shaders
 	 *  */
 	memmove(&stages[1], &stages[2], sizeof(stages[0]) * (MAX_SHADER_STAGES - 2));
-	Com_Memset(&stages[MAX_SHADER_STAGES-1], 0, sizeof(stages[0]));
+	Q_Memset(&stages[MAX_SHADER_STAGES-1], 0, sizeof(stages[0]));
 
 	return qtrue;
 }
@@ -791,13 +791,13 @@ GeneratePermanentShader(void)
 		for(b = 0; b < NUM_TEXTURE_BUNDLES; b++){
 			size = newShader->stages[i]->bundle[b].numTexMods * sizeof(texModInfo_t);
 			newShader->stages[i]->bundle[b].texMods = ri.Hunk_Alloc(size, h_low);
-			Com_Memcpy(newShader->stages[i]->bundle[b].texMods, stages[i].bundle[b].texMods, size);
+			Q_Memcpy(newShader->stages[i]->bundle[b].texMods, stages[i].bundle[b].texMods, size);
 		}
 	}
 
 	SortNewShader();
 
-	hash = Com_HashString(newShader->name, FILE_HASH_SIZE);
+	hash = Q_HashString(newShader->name, FILE_HASH_SIZE);
 	newShader->next = hashTable[hash];
 	hashTable[hash] = newShader;
 
@@ -889,7 +889,7 @@ VertexLightingCollapse(void)
 			break;
 		}
 
-		Com_Memset(pStage, 0, sizeof(*pStage));
+		Q_Memset(pStage, 0, sizeof(*pStage));
 	}
 }
 
@@ -957,7 +957,7 @@ FinishShader(void)
 				if(stage + 1 < MAX_SHADER_STAGES)
 					memmove(pStage, pStage + 1, sizeof(*pStage) * (index - stage - 1));
 
-				Com_Memset(&stages[index - 1], 0, sizeof(*stages));
+				Q_Memset(&stages[index - 1], 0, sizeof(*stages));
 			}
 
 			continue;
@@ -1122,8 +1122,8 @@ R_RemapShader(const char *shaderName, const char *newShaderName, const char *tim
 	 * remap all the materials with the given name
 	 * even though they might have different lightmaps 
 	 */
-	Com_StripExtension(shaderName, strippedName, sizeof(strippedName));
-	hash = Com_HashString(strippedName, FILE_HASH_SIZE);
+	Q_StripExtension(shaderName, strippedName, sizeof(strippedName));
+	hash = Q_HashString(strippedName, FILE_HASH_SIZE);
 	for(sh = hashTable[hash]; sh; sh = sh->next)
 		if(Q_stricmp(sh->name, strippedName) == 0){
 			if(sh != sh2){
@@ -1156,12 +1156,12 @@ FindShaderInShaderText(const char *shadername)
 
 	int	i, hash;
 
-	hash = Com_HashString(shadername, MAX_SHADERTEXT_HASH);
+	hash = Q_HashString(shadername, MAX_SHADERTEXT_HASH);
 
 	if(shaderTextHashTable[hash]){
 		for(i = 0; shaderTextHashTable[hash][i]; i++){
 			p = shaderTextHashTable[hash][i];
-			token = Com_ParseExt(&p, qtrue);
+			token = Q_ParseExt(&p, qtrue);
 
 			if(!Q_stricmp(token, shadername))
 				return p;
@@ -1174,7 +1174,7 @@ FindShaderInShaderText(const char *shadername)
 
 	/* look for label */
 	for(;;){
-		token = Com_ParseExt(&p, qtrue);
+		token = Q_ParseExt(&p, qtrue);
 		if(token[0] == 0){
 			break;
 		}
@@ -1207,9 +1207,9 @@ R_FindShaderByName(const char *name)
 		return tr.defaultShader;
 	}
 
-	Com_StripExtension(name, strippedName, sizeof(strippedName));
+	Q_StripExtension(name, strippedName, sizeof(strippedName));
 
-	hash = Com_HashString(strippedName, FILE_HASH_SIZE);
+	hash = Q_HashString(strippedName, FILE_HASH_SIZE);
 
 	/*
 	 * see if the shader is already loaded
@@ -1276,9 +1276,9 @@ R_FindShader(const char *name, int lightmapIndex, qbool mipRawImage)
 		lightmapIndex = LIGHTMAP_BY_VERTEX;
 	}
 
-	Com_StripExtension(name, strippedName, sizeof(strippedName));
+	Q_StripExtension(name, strippedName, sizeof(strippedName));
 
-	hash = Com_HashString(strippedName, FILE_HASH_SIZE);
+	hash = Q_HashString(strippedName, FILE_HASH_SIZE);
 
 	/* see if the shader is already loaded */
 	for(sh = hashTable[hash]; sh; sh = sh->next)
@@ -1298,8 +1298,8 @@ R_FindShader(const char *name, int lightmapIndex, qbool mipRawImage)
 		R_SyncRenderThread();
 
 	/* clear the global shader */
-	Com_Memset(&shader, 0, sizeof(shader));
-	Com_Memset(&stages, 0, sizeof(stages));
+	Q_Memset(&shader, 0, sizeof(shader));
+	Q_Memset(&stages, 0, sizeof(stages));
 	Q_strncpyz(shader.name, strippedName, sizeof(shader.name));
 	shader.lightmapIndex = lightmapIndex;
 	for(i = 0; i < MAX_SHADER_STAGES; i++)
@@ -1396,7 +1396,7 @@ RE_RegisterShaderFromImage(const char *name, int lightmapIndex, image_t *image, 
 
 	(void)mipRawImage; /* shut up 'unused' warning -- remove param? */
 
-	hash = Com_HashString(name, FILE_HASH_SIZE);
+	hash = Q_HashString(name, FILE_HASH_SIZE);
 
 	/* probably not necessary since this function
 	 * only gets called from tr_font.c with lightmapIndex == LIGHTMAP_2D
@@ -1427,8 +1427,8 @@ RE_RegisterShaderFromImage(const char *name, int lightmapIndex, image_t *image, 
 	}
 
 	/* clear the global shader */
-	Com_Memset(&shader, 0, sizeof(shader));
-	Com_Memset(&stages, 0, sizeof(stages));
+	Q_Memset(&shader, 0, sizeof(shader));
+	Q_Memset(&stages, 0, sizeof(stages));
 	Q_strncpyz(shader.name, name, sizeof(shader.name));
 	shader.lightmapIndex = lightmapIndex;
 	for(i = 0; i < MAX_SHADER_STAGES; i++)
@@ -1701,7 +1701,7 @@ ScanAndLoadShaderFiles(void)
 	for(i = 0; i < numShaderFiles; i++){
 		char filename[MAX_QPATH];
 
-		Com_sprintf(filename, sizeof(filename), "scripts/%s", shaderFiles[i]);
+		Q_sprintf(filename, sizeof(filename), "scripts/%s", shaderFiles[i]);
 		ri.Printf(PRINT_DEVELOPER, "...loading '%s'\n", filename);
 		summand = ri.FS_ReadFile(filename, (void**)&buffers[i]);
 
@@ -1711,14 +1711,14 @@ ScanAndLoadShaderFiles(void)
 		/* Do a simple check on the shader structure in that file to make sure one bad shader file cannot fuck up all other shaders. */
 		p = buffers[i];
 		for(;;){
-			token = Com_ParseExt(&p, qtrue);
+			token = Q_ParseExt(&p, qtrue);
 
 			if(!*token)
 				break;
 
 			oldp = p;
 
-			token = Com_ParseExt(&p, qtrue);
+			token = Q_ParseExt(&p, qtrue);
 			if(token[0] != '{' && token[1] != '\0'){
 				ri.Printf(PRINT_WARNING,
 					"WARNING: Bad shader file %s has incorrect syntax.\n",
@@ -1752,22 +1752,22 @@ ScanAndLoadShaderFiles(void)
 		ri.FS_FreeFile(buffers[i]);
 	}
 
-	Com_Compress(s_shaderText);
+	Q_Compress(s_shaderText);
 
 	/* free up memory */
 	ri.FS_FreeFileList(shaderFiles);
 
-	Com_Memset(shaderTextHashTableSizes, 0, sizeof(shaderTextHashTableSizes));
+	Q_Memset(shaderTextHashTableSizes, 0, sizeof(shaderTextHashTableSizes));
 	size = 0;
 
 	p = s_shaderText;
 	/* look for shader names */
 	for(;;){
-		token = Com_ParseExt(&p, qtrue);
+		token = Q_ParseExt(&p, qtrue);
 		if(token[0] == 0)
 			break;
 
-		hash = Com_HashString(token, MAX_SHADERTEXT_HASH);
+		hash = Q_HashString(token, MAX_SHADERTEXT_HASH);
 		shaderTextHashTableSizes[hash]++;
 		size++;
 		SkipBracedSection(&p);
@@ -1782,17 +1782,17 @@ ScanAndLoadShaderFiles(void)
 		hashMem = ((char*)hashMem) + ((shaderTextHashTableSizes[i] + 1) * sizeof(char *));
 	}
 
-	Com_Memset(shaderTextHashTableSizes, 0, sizeof(shaderTextHashTableSizes));
+	Q_Memset(shaderTextHashTableSizes, 0, sizeof(shaderTextHashTableSizes));
 
 	p = s_shaderText;
 	/* look for shader names */
 	for(;;){
 		oldp	= p;
-		token	= Com_ParseExt(&p, qtrue);
+		token	= Q_ParseExt(&p, qtrue);
 		if(token[0] == 0)
 			break;
 
-		hash = Com_HashString(token, MAX_SHADERTEXT_HASH);
+		hash = Q_HashString(token, MAX_SHADERTEXT_HASH);
 		shaderTextHashTable[hash][shaderTextHashTableSizes[hash]++] = oldp;
 
 		SkipBracedSection(&p);
@@ -1806,8 +1806,8 @@ CreateInternalShaders(void)
 	tr.numShaders = 0;
 
 	/* init the default shader */
-	Com_Memset(&shader, 0, sizeof(shader));
-	Com_Memset(&stages, 0, sizeof(stages));
+	Q_Memset(&shader, 0, sizeof(shader));
+	Q_Memset(&stages, 0, sizeof(stages));
 
 	Q_strncpyz(shader.name, "<default>", sizeof(shader.name));
 
@@ -1847,7 +1847,7 @@ void
 R_InitShaders(void)
 {
 	ri.Printf(PRINT_ALL, "Initializing Shaders\n");
-	Com_Memset(hashTable, 0, sizeof(hashTable));
+	Q_Memset(hashTable, 0, sizeof(hashTable));
 	CreateInternalShaders();
 	ScanAndLoadShaderFiles();
 	CreateExternalShaders();

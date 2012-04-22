@@ -352,7 +352,7 @@ InvertErrorTable(float errorTable[2][MAX_GRID_SIZE], int width, int height)
 	int i;
 	float copy[2][MAX_GRID_SIZE];
 
-	Com_Memcpy(copy, errorTable, sizeof(copy));
+	Q_Memcpy(copy, errorTable, sizeof(copy));
 
 	for(i = 0; i < width; i++)
 		errorTable[1][i] = copy[0][i];	/* [width-1-i]; */
@@ -406,33 +406,33 @@ R_CreateSurfaceGridMesh(int width, int height,
 
 #ifdef PATCH_STITCHING
 	grid = /*ri.Hunk_Alloc*/ ri.Malloc(size);
-	Com_Memset(grid, 0, size);
+	Q_Memset(grid, 0, size);
 
 	grid->widthLodError = /*ri.Hunk_Alloc*/ ri.Malloc(width * 4);
-	Com_Memcpy(grid->widthLodError, errorTable[0], width * 4);
+	Q_Memcpy(grid->widthLodError, errorTable[0], width * 4);
 
 	grid->heightLodError = /*ri.Hunk_Alloc*/ ri.Malloc(height * 4);
-	Com_Memcpy(grid->heightLodError, errorTable[1], height * 4);
+	Q_Memcpy(grid->heightLodError, errorTable[1], height * 4);
 
 	grid->numTriangles = numTriangles;
 	grid->triangles = ri.Malloc(grid->numTriangles * sizeof(srfTriangle_t));
-	Com_Memcpy(grid->triangles, triangles, numTriangles * sizeof(srfTriangle_t));
+	Q_Memcpy(grid->triangles, triangles, numTriangles * sizeof(srfTriangle_t));
 
 	grid->numVerts = (width * height);
 	grid->verts = ri.Malloc(grid->numVerts * sizeof(srfVert_t));
 #else
 	grid = ri.Hunk_Alloc(size);
-	Com_Memset(grid, 0, size);
+	Q_Memset(grid, 0, size);
 
 	grid->widthLodError = ri.Hunk_Alloc(width * 4);
-	Com_Memcpy(grid->widthLodError, errorTable[0], width * 4);
+	Q_Memcpy(grid->widthLodError, errorTable[0], width * 4);
 
 	grid->heightLodError = ri.Hunk_Alloc(height * 4);
-	Com_Memcpy(grid->heightLodError, errorTable[1], height * 4);
+	Q_Memcpy(grid->heightLodError, errorTable[1], height * 4);
 
 	grid->numTriangles = numTriangles;
 	grid->triangles = ri.Hunk_Alloc(grid->numTriangles * sizeof(srfTriangle_t), h_low);
-	Com_Memcpy(grid->triangles, triangles, numTriangles * sizeof(srfTriangle_t));
+	Q_Memcpy(grid->triangles, triangles, numTriangles * sizeof(srfTriangle_t));
 
 	grid->numVerts = (width * height);
 	grid->verts = ri.Hunk_Alloc(grid->numVerts * sizeof(srfVert_t), h_low);

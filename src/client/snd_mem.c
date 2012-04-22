@@ -100,7 +100,7 @@ SND_setup(void)
 	*(sndBuffer**)q = NULL;
 	freelist = p + scs - 1;
 
-	Com_Printf("Sound memory manager started\n");
+	Q_Printf("Sound memory manager started\n");
 }
 
 void
@@ -220,17 +220,17 @@ S_LoadSound(sfx_t *sfx)
 		return qfalse;
 
 	if(info.width == 1)
-		Com_DPrintf(S_COLOR_YELLOW "WARNING: %s is a 8 bit wav file\n",
+		Q_DPrintf(S_COLOR_YELLOW "WARNING: %s is a 8 bit wav file\n",
 			sfx->soundName);
 
 	if(info.rate != 22050)
-		Com_DPrintf(
+		Q_DPrintf(
 			S_COLOR_YELLOW "WARNING: %s is not a 22kHz wav file\n",
 			sfx->soundName);
 
 	samples = Hunk_AllocateTempMemory(info.samples * sizeof(short) * 2);
 
-	sfx->lastTimeUsed = Com_Milliseconds()+1;
+	sfx->lastTimeUsed = Q_Milliseconds()+1;
 
 	/* each of these compression schemes works just fine
 	 * but the 16bit quality is much nicer and with a local
@@ -281,6 +281,6 @@ S_LoadSound(sfx_t *sfx)
 void
 S_DisplayFreeMemory(void)
 {
-	Com_Printf("%d bytes free sound buffer memory, %d total used\n", inUse,
+	Q_Printf("%d bytes free sound buffer memory, %d total used\n", inUse,
 		totalInUse);
 }

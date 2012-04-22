@@ -84,7 +84,7 @@ CG_DrawClientScore(int y, score_t *score, float *color, float fade,
 	int	iconx, headx;
 
 	if(score->client < 0 || score->client >= cgs.maxclients){
-		Com_Printf("Bad score->client: %i\n", score->client);
+		Q_Printf("Bad score->client: %i\n", score->client);
 		return;
 	}
 
@@ -136,7 +136,7 @@ CG_DrawClientScore(int y, score_t *score, float *color, float fade,
 									   1 ]);
 			}
 		}else if(ci->handicap < 100){
-			Com_sprintf(string, sizeof(string), "%i", ci->handicap);
+			Q_sprintf(string, sizeof(string), "%i", ci->handicap);
 			if(cgs.gametype == GT_TOURNAMENT)
 				CG_DrawSmallStringColor(iconx, y -
 					SMALLCHAR_HEIGHT/2, string,
@@ -147,7 +147,7 @@ CG_DrawClientScore(int y, score_t *score, float *color, float fade,
 
 		/* draw the wins / losses */
 		if(cgs.gametype == GT_TOURNAMENT){
-			Com_sprintf(string, sizeof(string), "%i/%i", ci->wins,
+			Q_sprintf(string, sizeof(string), "%i/%i", ci->wins,
 				ci->losses);
 			if(ci->handicap < 100 && !ci->botSkill)
 				CG_DrawSmallStringColor(iconx, y +
@@ -181,13 +181,13 @@ CG_DrawClientScore(int y, score_t *score, float *color, float fade,
 #endif
 	/* draw the score line */
 	if(score->ping == -1)
-		Com_sprintf(string, sizeof(string),
+		Q_sprintf(string, sizeof(string),
 			" connecting    %s", ci->name);
 	else if(ci->team == TEAM_SPECTATOR)
-		Com_sprintf(string, sizeof(string),
+		Q_sprintf(string, sizeof(string),
 			" SPECT %3i %4i %s", score->ping, score->time, ci->name);
 	else
-		Com_sprintf(string, sizeof(string),
+		Q_sprintf(string, sizeof(string),
 			"%5i %4i %4i %s", score->score, score->ping, score->time,
 			ci->name);
 

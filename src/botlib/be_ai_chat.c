@@ -538,7 +538,7 @@ StringReplaceWords(char *string, char *synonym, char *replacement)
 			memmove(str + strlen(replacement), str+strlen(
 					synonym), strlen(str+strlen(synonym))+1);
 			/* append the synonum replacement */
-			Com_Memcpy(str, replacement, strlen(replacement));
+			Q_Memcpy(str, replacement, strlen(replacement));
 		}
 		/* find the next synonym in the string */
 		str = StringContainsWord(str+strlen(
@@ -845,7 +845,7 @@ BotReplaceReplySynonyms(char *string, unsigned long int context)
 					strlen(synonym->string),
 					strlen(str1+strlen(synonym->string)) + 1);
 				/* append the synonum replacement */
-				Com_Memcpy(str1, replacement, strlen(replacement));
+				Q_Memcpy(str1, replacement, strlen(replacement));
 				/*  */
 				break;
 			}
@@ -2536,7 +2536,7 @@ BotInitialChat(int chatstate, char *type, int mcontext, char *var0, char *var1,
 		return;
 	}
 	/*  */
-	Com_Memset(&match, 0, sizeof(match));
+	Q_Memset(&match, 0, sizeof(match));
 	index = 0;
 	if(var0){
 		strcat(match.string, var0);
@@ -2654,7 +2654,7 @@ BotReplyChat(int chatstate, char *message, int mcontext, int vcontext,
 
 	cs = BotChatStateFromHandle(chatstate);
 	if(!cs) return qfalse;
-	Com_Memset(&match, 0, sizeof(bot_match_t));
+	Q_Memset(&match, 0, sizeof(bot_match_t));
 	strcpy(match.string, message);
 	bestpriority = -1;
 	bestchatmessage = NULL;
@@ -2715,7 +2715,7 @@ BotReplyChat(int chatstate, char *message, int mcontext, int vcontext,
 				}
 				/* if the reply chat has a message */
 				if(m){
-					Com_Memcpy(&bestmatch, &match,
+					Q_Memcpy(&bestmatch, &match,
 						sizeof(bot_match_t));
 					bestchatmessage = m;
 					bestrchat = rchat;
@@ -2900,7 +2900,7 @@ BotSetChatName(int chatstate, char *name, int client)
 	cs = BotChatStateFromHandle(chatstate);
 	if(!cs) return;
 	cs->client = client;
-	Com_Memset(cs->name, 0, sizeof(cs->name));
+	Q_Memset(cs->name, 0, sizeof(cs->name));
 	strncpy(cs->name, name, sizeof(cs->name));
 	cs->name[sizeof(cs->name)-1] = '\0';
 }	/* end of the function BotSetChatName */

@@ -237,7 +237,7 @@ LoadWeaponConfig(char *filename)
 	/* parse the source file */
 	while(PC_ReadToken(source, &token)){
 		if(!strcmp(token.string, "weaponinfo")){
-			Com_Memset(&weaponinfo, 0, sizeof(weaponinfo_t));
+			Q_Memset(&weaponinfo, 0, sizeof(weaponinfo_t));
 			if(!ReadStructure(source, &weaponinfo_struct,
 				   (char*)&weaponinfo)){
 				FreeMemory(wc);
@@ -254,7 +254,7 @@ LoadWeaponConfig(char *filename)
 				FreeSource(source);
 				return NULL;
 			}
-			Com_Memcpy(&wc->weaponinfo[weaponinfo.number],
+			Q_Memcpy(&wc->weaponinfo[weaponinfo.number],
 				&weaponinfo,
 				sizeof(weaponinfo_t));
 			wc->weaponinfo[weaponinfo.number].valid = qtrue;
@@ -268,7 +268,7 @@ LoadWeaponConfig(char *filename)
 				FreeSource(source);
 				return NULL;
 			}
-			Com_Memset(&wc->projectileinfo[wc->numprojectiles], 0,
+			Q_Memset(&wc->projectileinfo[wc->numprojectiles], 0,
 				sizeof(projectileinfo_t));
 			if(!ReadStructure(source, &projectileinfo_struct,
 				   (char*)&wc->projectileinfo[wc->
@@ -310,7 +310,7 @@ LoadWeaponConfig(char *filename)
 		for(j = 0; j < wc->numprojectiles; j++)
 			if(!strcmp(wc->projectileinfo[j].name,
 				   wc->weaponinfo[i].projectile)){
-				Com_Memcpy(&wc->weaponinfo[i].proj,
+				Q_Memcpy(&wc->weaponinfo[i].proj,
 					&wc->projectileinfo[j],
 					sizeof(projectileinfo_t));
 				break;
@@ -404,7 +404,7 @@ BotGetWeaponInfo(int weaponstate, int weapon, weaponinfo_t *weaponinfo)
 	ws = BotWeaponStateFromHandle(weaponstate);
 	if(!ws) return;
 	if(!weaponconfig) return;
-	Com_Memcpy(weaponinfo, &weaponconfig->weaponinfo[weapon],
+	Q_Memcpy(weaponinfo, &weaponconfig->weaponinfo[weapon],
 		sizeof(weaponinfo_t));
 }	/* end of the function BotGetWeaponInfo */
 /* ===========================================================================
@@ -461,7 +461,7 @@ BotResetWeaponState(int weaponstate)
 	weaponweightconfig	= ws->weaponweightconfig;
 	weaponweightindex	= ws->weaponweightindex;
 
-	/* Com_Memset(ws, 0, sizeof(bot_weaponstate_t)); */
+	/* Q_Memset(ws, 0, sizeof(bot_weaponstate_t)); */
 	ws->weaponweightconfig	= weaponweightconfig;
 	ws->weaponweightindex	= weaponweightindex;
 }	/* end of the function BotResetWeaponState */

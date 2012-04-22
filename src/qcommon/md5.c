@@ -262,7 +262,7 @@ MD5Final(struct MD5Context *ctx, unsigned char *digest)
 
 
 char *
-Com_MD5File(const char *fn, int length, const char *prefix, int prefix_len)
+Q_MD5File(const char *fn, int length, const char *prefix, int prefix_len)
 {
 	static char	final[33] = {""};
 	unsigned char	digest[16] = {""};

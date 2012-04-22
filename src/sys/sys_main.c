@@ -165,7 +165,7 @@ Sys_WritePIDFile(void)
 		fprintf(f, "%d", Sys_PID( ));
 		fclose(f);
 	}else
-		Com_Printf(S_COLOR_YELLOW "Couldn't write %s.\n", pidFile);
+		Q_Printf(S_COLOR_YELLOW "Couldn't write %s.\n", pidFile);
 
 	return stale;
 }
@@ -236,7 +236,7 @@ Sys_Init(void)
 	Cvar_Set("arch", OS_STRING " " ARCH_STRING);
 	Cvar_Set("username", Sys_GetCurrentUser( ));
 
-	Com_sprintf(pidstr, sizeof(pidstr), "%d", Sys_PID());
+	Q_sprintf(pidstr, sizeof(pidstr), "%d", Sys_PID());
 	Cvar_Get("pid", pidstr, CVAR_ROM);
 	Cvar_SetDesc("pid", "This program's process ID, for debugging purposes");
 }
@@ -278,7 +278,7 @@ Sys_AnsiColorPrint(const char *msg)
 				msg++;
 			}else{
 				/* Print the color code */
-				Com_sprintf(buffer, sizeof(buffer), "\033[%dm",
+				Q_sprintf(buffer, sizeof(buffer), "\033[%dm",
 					q3ToAnsi[ ColorIndex(*(msg + 1)) ]);
 				fputs(buffer, stderr);
 				msg += 2;
@@ -369,7 +369,7 @@ void
 Sys_UnloadDll(void *dllHandle)
 {
 	if(!dllHandle){
-		Com_Printf("Sys_UnloadDll(NULL)\n");
+		Q_Printf("Sys_UnloadDll(NULL)\n");
 		return;
 	}
 
@@ -389,7 +389,7 @@ Sys_LoadDll(const char *name, qbool useSystemLib)
 	void *dllhandle;
 
 	if(useSystemLib)
-		Com_Printf("Trying to load \"%s\"...\n", name);
+		Q_Printf("Trying to load \"%s\"...\n", name);
 
 	if(!useSystemLib || !(dllhandle = Sys_LoadLibrary(name))){
 		const char *topDir;
@@ -400,9 +400,9 @@ Sys_LoadDll(const char *name, qbool useSystemLib)
 		if(!*topDir)
 			topDir = ".";
 
-		Com_Printf("Trying to load \"%s\" from \"%s\"...\n", name,
+		Q_Printf("Trying to load \"%s\" from \"%s\"...\n", name,
 			topDir);
-		Com_sprintf(libPath, sizeof(libPath), "%s%c%s", topDir, PATH_SEP,
+		Q_sprintf(libPath, sizeof(libPath), "%s%c%s", topDir, PATH_SEP,
 			name);
 
 		if(!(dllhandle = Sys_LoadLibrary(libPath))){
@@ -412,18 +412,18 @@ Sys_LoadDll(const char *name, qbool useSystemLib)
 				basePath = ".";
 
 			if(FS_FilenameCompare(topDir, basePath)){
-				Com_Printf(
+				Q_Printf(
 					"Trying to load \"%s\" from \"%s\"...\n",
 					name,
 					basePath);
-				Com_sprintf(libPath, sizeof(libPath), "%s%c%s",
+				Q_sprintf(libPath, sizeof(libPath), "%s%c%s",
 					basePath, PATH_SEP,
 					name);
 				dllhandle = Sys_LoadLibrary(libPath);
 			}
 
 			if(!dllhandle)
-				Com_Printf("Loading \"%s\" failed\n", name);
+				Q_Printf("Loading \"%s\" failed\n", name);
 		}
 	}
 
@@ -445,11 +445,11 @@ Sys_LoadGameDll(const char *name,
 
 	assert(name);
 
-	Com_Printf("Loading DLL file: %s\n", name);
+	Q_Printf("Loading DLL file: %s\n", name);
 	libHandle = Sys_LoadLibrary(name);
 
 	if(!libHandle){
-		Com_Printf("Sys_LoadGameDll(%s) failed:\n\"%s\"\n", name,
+		Q_Printf("Sys_LoadGameDll(%s) failed:\n\"%s\"\n", name,
 			Sys_LibraryError());
 		return NULL;
 	}
@@ -458,7 +458,7 @@ Sys_LoadGameDll(const char *name,
 	*entryPoint = Sys_LoadFunction(libHandle, "vmMain");
 
 	if(!*entryPoint || !dllEntry){
-		Com_Printf (
+		Q_Printf (
 			"Sys_LoadGameDll(%s) failed to find vmMain function:\n\"%s\" !\n",
 			name, Sys_LibraryError( ));
 		Sys_UnloadLibrary(libHandle);
@@ -466,7 +466,7 @@ Sys_LoadGameDll(const char *name,
 		return NULL;
 	}
 
-	Com_Printf ("Sys_LoadGameDll(%s) found vmMain function at %p\n", name,
+	Q_Printf ("Sys_LoadGameDll(%s) found vmMain function at %p\n", name,
 		*entryPoint);
 	dllEntry(systemcalls);
 
@@ -579,7 +579,7 @@ main(int argc, char **argv)
 	Sys_SetBinaryPath(Sys_Dirname(argv[ 0 ]));
 	Sys_SetDefaultInstallPath(DEFAULT_BASEDIR);
 
-	/* Concatenate the command line for passing to Com_Init */
+	/* Concatenate the command line for passing to Q_Init */
 	for(i = 1; i < argc; i++){
 		const qbool containsSpaces = strchr(argv[i], ' ') != NULL;
 		if(containsSpaces)
@@ -593,7 +593,7 @@ main(int argc, char **argv)
 		Q_strcat(commandLine, sizeof(commandLine), " ");
 	}
 
-	Com_Init(commandLine);
+	Q_Init(commandLine);
 	NET_Init( );
 
 	CON_Init( );
@@ -606,7 +606,7 @@ main(int argc, char **argv)
 
 	while(1){
 		IN_Frame( );
-		Com_Frame( );
+		Q_Frame( );
 	}
 
 	return 0;

@@ -58,7 +58,7 @@ AllocWinding(int points)
 
 	s	= sizeof(vec_t)*3*points + sizeof(int);
 	w	= Z_Malloc (s);
-	Com_Memset (w, 0, s);
+	Q_Memset (w, 0, s);
 	return w;
 }
 
@@ -66,7 +66,7 @@ void
 FreeWinding(winding_t *w)
 {
 	if(*(unsigned*)w == 0xdeaddead)
-		Com_Error (ERR_FATAL, "FreeWinding: freed a freed winding");
+		Q_Error (ERR_FATAL, "FreeWinding: freed a freed winding");
 	*(unsigned*)w = 0xdeaddead;
 
 	c_active_windings--;
@@ -105,7 +105,7 @@ RemoveColinearPoints(winding_t *w)
 
 	c_removed += w->numpoints - nump;
 	w->numpoints = nump;
-	Com_Memcpy (w->p, p, nump*sizeof(p[0]));
+	Q_Memcpy (w->p, p, nump*sizeof(p[0]));
 }
 
 /*
@@ -206,7 +206,7 @@ BaseWindingForPlane(vec3_t normal, vec_t dist)
 		}
 	}
 	if(x==-1)
-		Com_Error (ERR_DROP, "BaseWindingForPlane: no axis found");
+		Q_Error (ERR_DROP, "BaseWindingForPlane: no axis found");
 
 	Vec3Copy (vec3_origin, vup);
 	switch(x){
@@ -261,7 +261,7 @@ CopyWinding(winding_t *w)
 
 	c = AllocWinding (w->numpoints);
 	size = (intptr_t)((winding_t*)0)->p[w->numpoints];
-	Com_Memcpy (c, w, size);
+	Q_Memcpy (c, w, size);
 	return c;
 }
 
@@ -377,10 +377,10 @@ ClipWindingEpsilon(winding_t *in, vec3_t normal, vec_t dist,
 	}
 
 	if(f->numpoints > maxpts || b->numpoints > maxpts)
-		Com_Error (ERR_DROP, "ClipWinding: points exceeded estimate");
+		Q_Error (ERR_DROP, "ClipWinding: points exceeded estimate");
 	if(f->numpoints > MAX_POINTS_ON_WINDING || b->numpoints >
 	   MAX_POINTS_ON_WINDING)
-		Com_Error (ERR_DROP, "ClipWinding: MAX_POINTS_ON_WINDING");
+		Q_Error (ERR_DROP, "ClipWinding: MAX_POINTS_ON_WINDING");
 }
 
 
@@ -468,9 +468,9 @@ ChopWindingInPlace(winding_t **inout, vec3_t normal, vec_t dist, vec_t epsilon)
 	}
 
 	if(f->numpoints > maxpts)
-		Com_Error (ERR_DROP, "ClipWinding: points exceeded estimate");
+		Q_Error (ERR_DROP, "ClipWinding: points exceeded estimate");
 	if(f->numpoints > MAX_POINTS_ON_WINDING)
-		Com_Error (ERR_DROP, "ClipWinding: MAX_POINTS_ON_WINDING");
+		Q_Error (ERR_DROP, "ClipWinding: MAX_POINTS_ON_WINDING");
 
 	FreeWinding (in);
 	*inout = f;
@@ -511,11 +511,11 @@ CheckWinding(winding_t *w)
 	vec_t	facedist;
 
 	if(w->numpoints < 3)
-		Com_Error (ERR_DROP, "CheckWinding: %i points",w->numpoints);
+		Q_Error (ERR_DROP, "CheckWinding: %i points",w->numpoints);
 
 	area = WindingArea(w);
 	if(area < 1)
-		Com_Error (ERR_DROP, "CheckWinding: %f area", area);
+		Q_Error (ERR_DROP, "CheckWinding: %f area", area);
 
 	WindingPlane (w, facenormal, &facedist);
 
@@ -524,7 +524,7 @@ CheckWinding(winding_t *w)
 
 		for(j=0; j<3; j++)
 			if(p1[j] > MAX_MAP_BOUNDS || p1[j] < -MAX_MAP_BOUNDS)
-				Com_Error (ERR_DROP,
+				Q_Error (ERR_DROP,
 					"CheckFace: BUGUS_RANGE: %f",
 					p1[j]);
 
@@ -533,14 +533,14 @@ CheckWinding(winding_t *w)
 		/* check the point is on the face plane */
 		d = Vec3Dot (p1, facenormal) - facedist;
 		if(d < -ON_EPSILON || d > ON_EPSILON)
-			Com_Error (ERR_DROP, "CheckWinding: point off plane");
+			Q_Error (ERR_DROP, "CheckWinding: point off plane");
 
 		/* check the edge isnt degenerate */
 		p2 = w->p[j];
 		Vec3Sub (p2, p1, dir);
 
 		if(Vec3Len (dir) < ON_EPSILON)
-			Com_Error (ERR_DROP, "CheckWinding: degenerate edge");
+			Q_Error (ERR_DROP, "CheckWinding: degenerate edge");
 
 		Vec3Cross (facenormal, dir, edgenormal);
 		Vec3Normalize2 (edgenormal, edgenormal);
@@ -553,7 +553,7 @@ CheckWinding(winding_t *w)
 				continue;
 			d = Vec3Dot (w->p[j], edgenormal);
 			if(d > edgedist)
-				Com_Error (ERR_DROP, "CheckWinding: non-convex");
+				Q_Error (ERR_DROP, "CheckWinding: non-convex");
 		}
 	}
 }
@@ -621,7 +621,7 @@ AddWindingToConvexHull(winding_t *w, winding_t **hull, vec3_t normal)
 	}
 
 	numHullPoints = (*hull)->numpoints;
-	Com_Memcpy(hullPoints, (*hull)->p, numHullPoints * sizeof(vec3_t));
+	Q_Memcpy(hullPoints, (*hull)->p, numHullPoints * sizeof(vec3_t));
 
 	for(i = 0; i < w->numpoints; i++){
 		p = w->p[i];
@@ -675,7 +675,7 @@ AddWindingToConvexHull(winding_t *w, winding_t **hull, vec3_t normal)
 		}
 
 		numHullPoints = numNew;
-		Com_Memcpy(hullPoints, newHullPoints, numHullPoints *
+		Q_Memcpy(hullPoints, newHullPoints, numHullPoints *
 			sizeof(vec3_t));
 	}
 
@@ -683,5 +683,5 @@ AddWindingToConvexHull(winding_t *w, winding_t **hull, vec3_t normal)
 	w = AllocWinding(numHullPoints);
 	w->numpoints = numHullPoints;
 	*hull = w;
-	Com_Memcpy(w->p, hullPoints, numHullPoints * sizeof(vec3_t));
+	Q_Memcpy(w->p, hullPoints, numHullPoints * sizeof(vec3_t));
 }

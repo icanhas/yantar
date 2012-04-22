@@ -1267,7 +1267,7 @@ CG_NewParticleArea(int num)
 		return (0);
 
 	/* returns type 128 64 or 32 */
-	token	= Com_Parse (&str);
+	token	= Q_Parse (&str);
 	type	= atoi (token);
 
 	if(type == 1)
@@ -1289,22 +1289,22 @@ CG_NewParticleArea(int num)
 
 
 	for(i=0; i<3; i++){
-		token = Com_Parse (&str);
+		token = Q_Parse (&str);
 		origin[i] = atof (token);
 	}
 
 	for(i=0; i<3; i++){
-		token = Com_Parse (&str);
+		token = Q_Parse (&str);
 		origin2[i] = atof (token);
 	}
 
-	token = Com_Parse (&str);
+	token = Q_Parse (&str);
 	numparticles = atoi (token);
 
-	token	= Com_Parse (&str);
+	token	= Q_Parse (&str);
 	turb	= atoi (token);
 
-	token	= Com_Parse (&str);
+	token	= Q_Parse (&str);
 	snum	= atoi (token);
 
 	for(i=0; i<numparticles; i++){

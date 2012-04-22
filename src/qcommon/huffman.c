@@ -276,7 +276,7 @@ Huff_Receive(node_t *node, int *ch, byte *fin)
 	}
 	if(!node)
 		return 0;
-/*		Com_Error(ERR_DROP, "Illegal tree!"); */
+/*		Q_Error(ERR_DROP, "Illegal tree!"); */
 	return (*ch = node->symbol);
 }
 
@@ -294,7 +294,7 @@ Huff_offsetReceive(node_t *node, int *ch, byte *fin, int *offset)
 	if(!node){
 		*ch = 0;
 		return;
-/*		Com_Error(ERR_DROP, "Illegal tree!"); */
+/*		Q_Error(ERR_DROP, "Illegal tree!"); */
 	}
 	*ch = node->symbol;
 	*offset = bloc;
@@ -350,7 +350,7 @@ Huff_Decompress(msg_t *mbuf, int offset)
 	if(size <= 0)
 		return;
 
-	Com_Memset(&huff, 0, sizeof(huff_t));
+	Q_Memset(&huff, 0, sizeof(huff_t));
 	/* Initialize the tree & list with the NYT node */
 	huff.tree = huff.lhead = huff.ltail = huff.loc[NYT] =
 						      &(huff.nodeList[huff.
@@ -387,7 +387,7 @@ Huff_Decompress(msg_t *mbuf, int offset)
 		Huff_addRef(&huff, (byte)ch);	/* Increment node */
 	}
 	mbuf->cursize = cch + offset;
-	Com_Memcpy(mbuf->data + offset, seq, cch);
+	Q_Memcpy(mbuf->data + offset, seq, cch);
 }
 
 extern int oldsize;
@@ -406,7 +406,7 @@ Huff_Compress(msg_t *mbuf, int offset)
 	if(size<=0)
 		return;
 
-	Com_Memset(&huff, 0, sizeof(huff_t));
+	Q_Memset(&huff, 0, sizeof(huff_t));
 	/* Add the NYT (not yet transmitted) node into the tree/list * / */
 	huff.tree = huff.lhead = huff.loc[NYT] =
 					 &(huff.nodeList[huff.blocNode++]);
@@ -430,15 +430,15 @@ Huff_Compress(msg_t *mbuf, int offset)
 	bloc += 8;	/* next byte */
 
 	mbuf->cursize = (bloc>>3) + offset;
-	Com_Memcpy(mbuf->data+offset, seq, (bloc>>3));
+	Q_Memcpy(mbuf->data+offset, seq, (bloc>>3));
 }
 
 void
 Huff_Init(huffman_t *huff)
 {
 
-	Com_Memset(&huff->compressor, 0, sizeof(huff_t));
-	Com_Memset(&huff->decompressor, 0, sizeof(huff_t));
+	Q_Memset(&huff->compressor, 0, sizeof(huff_t));
+	Q_Memset(&huff->decompressor, 0, sizeof(huff_t));
 
 	/* Initialize the tree & list with the NYT node */
 	huff->decompressor.tree =

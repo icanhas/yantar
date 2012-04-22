@@ -119,11 +119,11 @@ GPA(char *str)
 
 	rv = Sys_LoadFunction(OpenALLib, str);
 	if(!rv){
-		Com_Printf(" Can't load symbol %s\n", str);
+		Q_Printf(" Can't load symbol %s\n", str);
 		alinit_fail = qtrue;
 		return NULL;
 	}else{
-		Com_DPrintf(" Loaded symbol %s (%p)\n", str, rv);
+		Q_DPrintf(" Loaded symbol %s (%p)\n", str, rv);
 		return rv;
 	}
 }
@@ -220,7 +220,7 @@ QAL_Init(const char *libname)
 
 	if(alinit_fail){
 		QAL_Shutdown();
-		Com_Printf(" One or more symbols not found\n");
+		Q_Printf(" One or more symbols not found\n");
 		return qfalse;
 	}
 

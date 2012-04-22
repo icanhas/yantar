@@ -171,7 +171,7 @@ CG_ParseServerinfo(void)
 	cgs.timelimit		= atoi(Info_ValueForKey(info, "timelimit"));
 	cgs.maxclients		= atoi(Info_ValueForKey(info, "sv_maxclients"));
 	mapname = Info_ValueForKey(info, "mapname");
-	Com_sprintf(cgs.mapname, sizeof(cgs.mapname), "maps/%s.bsp", mapname);
+	Q_sprintf(cgs.mapname, sizeof(cgs.mapname), "maps/%s.bsp", mapname);
 	Q_strncpyz(cgs.redTeam,
 		Info_ValueForKey(info, "g_redTeam"), sizeof(cgs.redTeam));
 	trap_Cvar_Set("g_redTeam", cgs.redTeam);
@@ -564,12 +564,12 @@ CG_ParseVoiceChats(const char *filename, voiceChatList_t *voiceChatList,
 	ptr = buf;
 	p = &ptr;
 
-	Com_sprintf(voiceChatList->name, sizeof(voiceChatList->name), "%s",
+	Q_sprintf(voiceChatList->name, sizeof(voiceChatList->name), "%s",
 		filename);
 	voiceChats = voiceChatList->voiceChats;
 	for(i = 0; i < maxVoiceChats; i++)
 		voiceChats[i].id[0] = 0;
-	token = Com_ParseExt(p, qtrue);
+	token = Q_ParseExt(p, qtrue);
 	if(!token || token[0] == 0)
 		return qtrue;
 	if(!Q_stricmp(token, "female"))
@@ -587,14 +587,14 @@ CG_ParseVoiceChats(const char *filename, voiceChatList_t *voiceChatList,
 
 	voiceChatList->numVoiceChats = 0;
 	while(1){
-		token = Com_ParseExt(p, qtrue);
+		token = Q_ParseExt(p, qtrue);
 		if(!token || token[0] == 0)
 			return qtrue;
-		Com_sprintf(voiceChats[voiceChatList->numVoiceChats].id,
+		Q_sprintf(voiceChats[voiceChatList->numVoiceChats].id,
 			sizeof(voiceChats[voiceChatList->numVoiceChats].id),
 			"%s",
 			token);
-		token = Com_ParseExt(p, qtrue);
+		token = Q_ParseExt(p, qtrue);
 		if(Q_stricmp(token, "{")){
 			trap_Print(va(S_COLOR_RED
 					"expected { found %s in voice chat file: %s\n",
@@ -604,7 +604,7 @@ CG_ParseVoiceChats(const char *filename, voiceChatList_t *voiceChatList,
 		}
 		voiceChats[voiceChatList->numVoiceChats].numSounds = 0;
 		while(1){
-			token = Com_ParseExt(p, qtrue);
+			token = Q_ParseExt(p, qtrue);
 			if(!token || token[0] == 0)
 				return qtrue;
 			if(!Q_stricmp(token, "}"))
@@ -614,10 +614,10 @@ CG_ParseVoiceChats(const char *filename, voiceChatList_t *voiceChatList,
 				voiceChats[voiceChatList->numVoiceChats].
 				numSounds] =
 				sound;
-			token = Com_ParseExt(p, qtrue);
+			token = Q_ParseExt(p, qtrue);
 			if(!token || token[0] == 0)
 				return qtrue;
-			Com_sprintf(
+			Q_sprintf(
 				voiceChats[voiceChatList->numVoiceChats].chats[
 					voiceChats[voiceChatList->numVoiceChats]
 					.numSounds], MAX_CHATSIZE, "%s", token);
@@ -694,7 +694,7 @@ CG_HeadModelVoiceChats(char *filename)
 	ptr = buf;
 	p = &ptr;
 
-	token = Com_ParseExt(p, qtrue);
+	token = Q_ParseExt(p, qtrue);
 	if(!token || token[0] == 0)
 		return -1;
 
@@ -745,20 +745,20 @@ CG_VoiceChatListForClient(int clientNum)
 	for(k = 0; k < 2; k++){
 		if(k == 0){
 			if(ci->headModelName[0] == '*')
-				Com_sprintf(headModelName, sizeof(headModelName),
+				Q_sprintf(headModelName, sizeof(headModelName),
 					"%s/%s", ci->headModelName+1,
 					ci->headSkinName);
 			else
-				Com_sprintf(headModelName, sizeof(headModelName),
+				Q_sprintf(headModelName, sizeof(headModelName),
 					"%s/%s", ci->headModelName,
 					ci->headSkinName);
 		}else{
 			if(ci->headModelName[0] == '*')
-				Com_sprintf(headModelName, sizeof(headModelName),
+				Q_sprintf(headModelName, sizeof(headModelName),
 					"%s",
 					ci->headModelName+1);
 			else
-				Com_sprintf(headModelName, sizeof(headModelName),
+				Q_sprintf(headModelName, sizeof(headModelName),
 					"%s",
 					ci->headModelName);
 		}
@@ -773,13 +773,13 @@ CG_VoiceChatListForClient(int clientNum)
 		/* find a <headmodelname>.vc file */
 		for(i = 0; i < MAX_HEADMODELS; i++)
 			if(!strlen(headModelVoiceChat[i].headmodel)){
-				Com_sprintf(filename, sizeof(filename),
+				Q_sprintf(filename, sizeof(filename),
 					"scripts/%s.vc",
 					headModelName);
 				voiceChatNum = CG_HeadModelVoiceChats(filename);
 				if(voiceChatNum == -1)
 					break;
-				Com_sprintf(
+				Q_sprintf(
 					headModelVoiceChat[i].headmodel,
 					sizeof(headModelVoiceChat[i].headmodel),
 					"%s", headModelName);
@@ -799,7 +799,7 @@ CG_VoiceChatListForClient(int clientNum)
 					for(j = 0; j < MAX_HEADMODELS; j++)
 						if(!strlen(headModelVoiceChat[j]
 							   .headmodel)){
-							Com_sprintf(
+							Q_sprintf(
 								headModelVoiceChat
 								[j].
 								headmodel,
@@ -824,7 +824,7 @@ CG_VoiceChatListForClient(int clientNum)
 	/* store this head model with voice chat for future reference */
 	for(j = 0; j < MAX_HEADMODELS; j++)
 		if(!strlen(headModelVoiceChat[j].headmodel)){
-			Com_sprintf(headModelVoiceChat[j].headmodel,
+			Q_sprintf(headModelVoiceChat[j].headmodel,
 				sizeof(headModelVoiceChat[j].headmodel),
 				"%s", headModelName);
 			headModelVoiceChat[j].voiceChatNum = 0;
@@ -957,17 +957,17 @@ CG_VoiceChatLocal(int mode, qbool voiceOnly, int clientNum, int color,
 			vchat.voiceOnly = voiceOnly;
 			Q_strncpyz(vchat.cmd, cmd, sizeof(vchat.cmd));
 			if(mode == SAY_TELL)
-				Com_sprintf(vchat.message, sizeof(vchat.message),
+				Q_sprintf(vchat.message, sizeof(vchat.message),
 					"[%s]: %c%c%s", ci->name, Q_COLOR_ESCAPE,
 					color,
 					chat);
 			else if(mode == SAY_TEAM)
-				Com_sprintf(vchat.message, sizeof(vchat.message),
+				Q_sprintf(vchat.message, sizeof(vchat.message),
 					"(%s): %c%c%s", ci->name, Q_COLOR_ESCAPE,
 					color,
 					chat);
 			else
-				Com_sprintf(vchat.message, sizeof(vchat.message),
+				Q_sprintf(vchat.message, sizeof(vchat.message),
 					"%s: %c%c%s", ci->name, Q_COLOR_ESCAPE,
 					color,
 					chat);

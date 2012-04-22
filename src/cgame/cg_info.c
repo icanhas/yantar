@@ -99,20 +99,20 @@ CG_LoadingClient(int clientNum)
 		else
 			skin = "default";
 
-		Com_sprintf(iconName, MAX_QPATH,
+		Q_sprintf(iconName, MAX_QPATH,
 			"models/players/%s/icon_%s." Iconext, model, skin);
 
 		loadingPlayerIcons[loadingPlayerIconCount]
 			= trap_R_RegisterShaderNoMip(iconName);
 		if(!loadingPlayerIcons[loadingPlayerIconCount]){
-			Com_sprintf(iconName, MAX_QPATH,
+			Q_sprintf(iconName, MAX_QPATH,
 				"models/players/characters/%s/icon_%s." Iconext,
 				model, skin);
 			loadingPlayerIcons[loadingPlayerIconCount]
 				= trap_R_RegisterShaderNoMip(iconName);
 		}
 		if(!loadingPlayerIcons[loadingPlayerIconCount]){
-			Com_sprintf(iconName, MAX_QPATH,
+			Q_sprintf(iconName, MAX_QPATH,
 				"models/players/%s/icon_%s." Iconext,
 				DEFAULT_MODEL, "default");
 			loadingPlayerIcons[loadingPlayerIconCount]

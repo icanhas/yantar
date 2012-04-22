@@ -74,31 +74,31 @@ G_ParseInfos(char *buf, int max, char *infos[])
 	count = 0;
 
 	while(1){
-		token = Com_Parse(&buf);
+		token = Q_Parse(&buf);
 		if(!token[0])
 			break;
 		if(strcmp(token, "{")){
-			Com_Printf("Missing { in info file\n");
+			Q_Printf("Missing { in info file\n");
 			break;
 		}
 
 		if(count == max){
-			Com_Printf("Max infos exceeded\n");
+			Q_Printf("Max infos exceeded\n");
 			break;
 		}
 
 		info[0] = '\0';
 		while(1){
-			token = Com_ParseExt(&buf, qtrue);
+			token = Q_ParseExt(&buf, qtrue);
 			if(!token[0]){
-				Com_Printf("Unexpected end of info file\n");
+				Q_Printf("Unexpected end of info file\n");
 				break;
 			}
 			if(!strcmp(token, "}"))
 				break;
 			Q_strncpyz(key, token, sizeof(key));
 
-			token = Com_ParseExt(&buf, qfalse);
+			token = Q_ParseExt(&buf, qfalse);
 			if(!token[0])
 				strcpy(token, "<NULL>");
 			Info_SetValueForKey(info, key, token);

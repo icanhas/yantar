@@ -223,7 +223,7 @@ CG_DrawPlayerArmorValue(rectDef_t *rect, float scale, vec4_t color,
 		CG_DrawPic(rect->x, rect->y, rect->w, rect->h, shader);
 		trap_R_SetColor(NULL);
 	}else{
-		Com_sprintf (num, sizeof(num), "%i", value);
+		Q_sprintf (num, sizeof(num), "%i", value);
 		value = CG_Text_Width(num, scale, 0);
 		CG_Text_Paint(rect->x + (rect->w - value) / 2, rect->y + rect->h,
 			scale, color, num, 0, 0,
@@ -293,7 +293,7 @@ CG_DrawPlayerAmmoValue(rectDef_t *rect, float scale, vec4_t color,
 					shader);
 				trap_R_SetColor(NULL);
 			}else{
-				Com_sprintf (num, sizeof(num), "%i", value);
+				Q_sprintf (num, sizeof(num), "%i", value);
 				value = CG_Text_Width(num, scale, 0);
 				CG_Text_Paint(rect->x + (rect->w - value) / 2,
 					rect->y + rect->h, scale, color, num, 0,
@@ -380,7 +380,7 @@ CG_DrawSelectedPlayerHealth(rectDef_t *rect, float scale, vec4_t color,
 			CG_DrawPic(rect->x, rect->y, rect->w, rect->h, shader);
 			trap_R_SetColor(NULL);
 		}else{
-			Com_sprintf (num, sizeof(num), "%i", ci->health);
+			Q_sprintf (num, sizeof(num), "%i", ci->health);
 			value = CG_Text_Width(num, scale, 0);
 			CG_Text_Paint(rect->x +
 				(rect->w - value) / 2, rect->y + rect->h, scale,
@@ -408,7 +408,7 @@ CG_DrawSelectedPlayerArmor(rectDef_t *rect, float scale, vec4_t color,
 					shader);
 				trap_R_SetColor(NULL);
 			}else{
-				Com_sprintf (num, sizeof(num), "%i", ci->armor);
+				Q_sprintf (num, sizeof(num), "%i", ci->armor);
 				value = CG_Text_Width(num, scale, 0);
 				CG_Text_Paint(rect->x + (rect->w - value) / 2,
 					rect->y + rect->h, scale, color, num, 0,
@@ -554,7 +554,7 @@ CG_DrawPlayerScore(rectDef_t *rect, float scale, vec4_t color, qhandle_t shader,
 		CG_DrawPic(rect->x, rect->y, rect->w, rect->h, shader);
 		trap_R_SetColor(NULL);
 	}else{
-		Com_sprintf (num, sizeof(num), "%i", value);
+		Q_sprintf (num, sizeof(num), "%i", value);
 		value = CG_Text_Width(num, scale, 0);
 		CG_Text_Paint(rect->x + (rect->w - value) / 2, rect->y + rect->h,
 			scale, color, num, 0, 0,
@@ -692,7 +692,7 @@ CG_DrawPlayerHealth(rectDef_t *rect, float scale, vec4_t color, qhandle_t shader
 		CG_DrawPic(rect->x, rect->y, rect->w, rect->h, shader);
 		trap_R_SetColor(NULL);
 	}else{
-		Com_sprintf (num, sizeof(num), "%i", value);
+		Q_sprintf (num, sizeof(num), "%i", value);
 		value = CG_Text_Width(num, scale, 0);
 		CG_Text_Paint(rect->x + (rect->w - value) / 2, rect->y + rect->h,
 			scale, color, num, 0, 0,
@@ -708,9 +708,9 @@ CG_DrawRedScore(rectDef_t *rect, float scale, vec4_t color, qhandle_t shader,
 	int	value;
 	char	num[16];
 	if(cgs.scores1 == SCORE_NOT_PRESENT)
-		Com_sprintf (num, sizeof(num), "-");
+		Q_sprintf (num, sizeof(num), "-");
 	else
-		Com_sprintf (num, sizeof(num), "%i", cgs.scores1);
+		Q_sprintf (num, sizeof(num), "%i", cgs.scores1);
 	value = CG_Text_Width(num, scale, 0);
 	CG_Text_Paint(rect->x + rect->w - value, rect->y + rect->h, scale, color,
 		num, 0, 0,
@@ -725,9 +725,9 @@ CG_DrawBlueScore(rectDef_t *rect, float scale, vec4_t color, qhandle_t shader,
 	char	num[16];
 
 	if(cgs.scores2 == SCORE_NOT_PRESENT)
-		Com_sprintf (num, sizeof(num), "-");
+		Q_sprintf (num, sizeof(num), "-");
 	else
-		Com_sprintf (num, sizeof(num), "%i", cgs.scores2);
+		Q_sprintf (num, sizeof(num), "%i", cgs.scores2);
 	value = CG_Text_Width(num, scale, 0);
 	CG_Text_Paint(rect->x + rect->w - value, rect->y + rect->h, scale, color,
 		num, 0, 0,
@@ -890,7 +890,7 @@ CG_HarvesterSkulls(rectDef_t *rect, float scale, vec4_t color, qbool force2D,
 	if(value > 99)
 		value = 99;
 
-	Com_sprintf (num, sizeof(num), "%i", value);
+	Q_sprintf (num, sizeof(num), "%i", value);
 	value = CG_Text_Width(num, scale, 0);
 	CG_Text_Paint(rect->x + (rect->w - value), rect->y + rect->h, scale,
 		color, num, 0, 0,
@@ -1049,7 +1049,7 @@ CG_DrawAreaPowerUp(rectDef_t *rect, int align, float special, float scale,
 				trap_R_RegisterShader(
 					item->icon));
 
-			Com_sprintf (num, sizeof(num), "%i",
+			Q_sprintf (num, sizeof(num), "%i",
 				sortedTime[i] / 1000);
 			CG_Text_Paint(r2.x + (r2.w * .75) + 3, r2.y + r2.h,
 				scale, color, num, 0, 0,
@@ -1534,7 +1534,7 @@ CG_DrawNewTeamInfo(rectDef_t *rect, float text_x, float text_y, float scale,
 			CG_DrawPic(xx, y + 1, PIC_WIDTH - 2, PIC_WIDTH - 2,
 				cgs.media.heartShader);
 
-			/* Com_sprintf (st, sizeof(st), "%3i %3i", ci->health,	ci->armor);
+			/* Q_sprintf (st, sizeof(st), "%3i %3i", ci->health,	ci->armor);
 			 * CG_Text_Paint(xx, y + text_y, scale, hcolor, st, 0, 0); */
 
 			/* draw weapon icon */

@@ -72,7 +72,7 @@ SV_BotFreeClient(int clientNum)
 	client_t *cl;
 
 	if(clientNum < 0 || clientNum >= sv_maxclients->integer)
-		Com_Error(ERR_DROP, "SV_BotFreeClient: bad clientNum: %i",
+		Q_Error(ERR_DROP, "SV_BotFreeClient: bad clientNum: %i",
 			clientNum);
 	cl = &svs.clients[clientNum];
 	cl->state	= CS_FREE;
@@ -126,7 +126,7 @@ BotDrawDebugPolygons(void (*drawPoly)(int color, int numPoints,
 		poly = &debugpolygons[i];
 		if(!poly->inuse) continue;
 		drawPoly(poly->color, poly->numPoints, (float*)poly->points);
-		/* Com_Printf("poly %i, numpoints = %d\n", i, poly->numPoints); */
+		/* Q_Printf("poly %i, numpoints = %d\n", i, poly->numPoints); */
 	}
 }
 
@@ -145,27 +145,27 @@ BotImport_Print(int type, char *fmt, ...)
 
 	switch(type){
 	case PRT_MESSAGE: {
-		Com_Printf("%s", str);
+		Q_Printf("%s", str);
 		break;
 	}
 	case PRT_WARNING: {
-		Com_Printf(S_COLOR_YELLOW "Warning: %s", str);
+		Q_Printf(S_COLOR_YELLOW "Warning: %s", str);
 		break;
 	}
 	case PRT_ERROR: {
-		Com_Printf(S_COLOR_RED "Error: %s", str);
+		Q_Printf(S_COLOR_RED "Error: %s", str);
 		break;
 	}
 	case PRT_FATAL: {
-		Com_Printf(S_COLOR_RED "Fatal: %s", str);
+		Q_Printf(S_COLOR_RED "Fatal: %s", str);
 		break;
 	}
 	case PRT_EXIT: {
-		Com_Error(ERR_DROP, S_COLOR_RED "Exit: %s", str);
+		Q_Error(ERR_DROP, S_COLOR_RED "Exit: %s", str);
 		break;
 	}
 	default: {
-		Com_Printf("unknown print type\n");
+		Q_Printf("unknown print type\n");
 		break;
 	}
 	}
@@ -312,7 +312,7 @@ static void *
 BotImport_HunkAlloc(int size)
 {
 	if(Hunk_CheckMark())
-		Com_Error(ERR_DROP,
+		Q_Error(ERR_DROP,
 			"SV_Bot_HunkAlloc: Alloc with marks already set");
 	return Hunk_Alloc(size, h_high);
 }
@@ -338,7 +338,7 @@ BotImport_DebugPolygonCreate(int color, int numPoints, vec3_t *points)
 	poly->inuse	= qtrue;
 	poly->color	= color;
 	poly->numPoints = numPoints;
-	Com_Memcpy(poly->points, points, numPoints * sizeof(vec3_t));
+	Q_Memcpy(poly->points, points, numPoints * sizeof(vec3_t));
 	/*  */
 	return i;
 }
@@ -356,7 +356,7 @@ BotImport_DebugPolygonShow(int id, int color, int numPoints, vec3_t *points)
 	poly->inuse	= qtrue;
 	poly->color	= color;
 	poly->numPoints = numPoints;
-	Com_Memcpy(poly->points, points, numPoints * sizeof(vec3_t));
+	Q_Memcpy(poly->points, points, numPoints * sizeof(vec3_t));
 }
 
 /*
@@ -452,7 +452,7 @@ SV_BotLibSetup(void)
 		return 0;
 
 	if(!botlib_export){
-		Com_Printf(
+		Q_Printf(
 			S_COLOR_RED
 			"Error: SV_BotLibSetup without SV_BotInitBotLib\n");
 		return -1;

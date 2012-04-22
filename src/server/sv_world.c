@@ -86,7 +86,7 @@ SV_SectorList_f(void)
 		for(ent = sec->entities; ent;
 		    ent = ent->nextEntityInWorldSector)
 			c++;
-		Com_Printf("sector %i: %i entities\n", i, c);
+		Q_Printf("sector %i: %i entities\n", i, c);
 	}
 }
 
@@ -141,7 +141,7 @@ SV_ClearWorld(void)
 	clipHandle_t h;
 	vec3_t mins, maxs;
 
-	Com_Memset(sv_worldSectors, 0, sizeof(sv_worldSectors));
+	Q_Memset(sv_worldSectors, 0, sizeof(sv_worldSectors));
 	sv_numworldSectors = 0;
 
 	/* get world map bounds */
@@ -183,7 +183,7 @@ SV_UnlinkEntity(sharedEntity_t *gEnt)
 			return;
 		}
 
-	Com_Printf("WARNING: SV_UnlinkEntity: not found in worldSector\n");
+	Q_Printf("WARNING: SV_UnlinkEntity: not found in worldSector\n");
 }
 
 
@@ -293,7 +293,7 @@ SV_LinkEntity(sharedEntity_t *gEnt)
 			if(ent->areanum != -1 && ent->areanum != area){
 				if(ent->areanum2 != -1 && ent->areanum2 !=
 				   area && sv.state == SS_LOADING)
-					Com_DPrintf (
+					Q_DPrintf (
 						"Object %i touching 3 areas at %f %f %f\n",
 						gEnt->s.number,
 						gEnt->r.absmin[0],
@@ -383,7 +383,7 @@ SV_AreaEntities_r(worldSector_t *node, areaParms_t *ap)
 			continue;
 
 		if(ap->count == ap->maxcount){
-			Com_Printf ("SV_AreaEntities: MAXCOUNT\n");
+			Q_Printf ("SV_AreaEntities: MAXCOUNT\n");
 			return;
 		}
 
@@ -455,7 +455,7 @@ SV_ClipToEntity(trace_t *trace, const vec3_t start, const vec3_t mins,
 
 	touch = SV_GentityNum(entityNum);
 
-	Com_Memset(trace, 0, sizeof(trace_t));
+	Q_Memset(trace, 0, sizeof(trace_t));
 
 	/* if it doesn't have any brushes of a type we
 	 * are looking for, ignore it */
@@ -585,7 +585,7 @@ SV_Trace(trace_t *results, const vec3_t start, vec3_t mins, vec3_t maxs,
 	if(!maxs)
 		maxs = vec3_origin;
 
-	Com_Memset (&clip, 0, sizeof(moveclip_t));
+	Q_Memset (&clip, 0, sizeof(moveclip_t));
 
 	/* clip to world */
 	CM_BoxTrace(&clip.trace, start, end, mins, maxs, 0, contentmask, capsule);

@@ -1476,10 +1476,10 @@ ParseOptionFile(const char *filename)
 
 	text_p = text;
 
-	while((text_p = Com_Parse(text_p)) != 0){
+	while((text_p = Q_Parse(text_p)) != 0){
 		if(!strcmp(com_token, "-o")){
 			/* allow output override in option file */
-			text_p = Com_Parse(text_p);
+			text_p = Q_Parse(text_p);
 			if(text_p)
 				strcpy(outputFilename, com_token);
 			continue;

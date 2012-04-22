@@ -65,12 +65,12 @@ UpdateTournamentInfo(void)
 
 	if(level.clients[playerClientNum].sess.sessionTeam == TEAM_SPECTATOR){
 #ifdef MISSIONPACK
-		Com_sprintf(msg, sizeof(msg),
+		Q_sprintf(msg, sizeof(msg),
 			"postgame %i %i 0 0 0 0 0 0 0 0 0 0 0",
 			level.numNonSpectatorClients,
 			playerClientNum);
 #else
-		Com_sprintf(msg, sizeof(msg), "postgame %i %i 0 0 0 0 0 0",
+		Q_sprintf(msg, sizeof(msg), "postgame %i %i 0 0 0 0 0 0",
 			level.numNonSpectatorClients,
 			playerClientNum);
 #endif
@@ -122,7 +122,7 @@ UpdateTournamentInfo(void)
 			perfect = 1;
 		else
 			perfect = 0;
-		Com_sprintf(
+		Q_sprintf(
 			msg, sizeof(msg),
 			"postgame %i %i %i %i %i %i %i %i %i %i %i %i %i %i",
 			level.numNonSpectatorClients, playerClientNum, accuracy,
@@ -141,7 +141,7 @@ UpdateTournamentInfo(void)
 			 == 0 &&
 			 player->client->ps.persistant[PERS_KILLED] ==
 			 0) ? 1 : 0;
-		Com_sprintf(
+		Q_sprintf(
 			msg, sizeof(msg), "postgame %i %i %i %i %i %i %i %i",
 			level.numNonSpectatorClients, playerClientNum, accuracy,
 			player->client->ps.persistant[PERS_IMPRESSIVE_COUNT],
@@ -155,7 +155,7 @@ UpdateTournamentInfo(void)
 	msglen = strlen(msg);
 	for(i = 0; i < level.numNonSpectatorClients; i++){
 		n = level.sortedClients[i];
-		Com_sprintf(buf, sizeof(buf), " %i %i %i", n,
+		Q_sprintf(buf, sizeof(buf), " %i %i %i", n,
 			level.clients[n].ps.persistant[PERS_RANK],
 			level.clients[n].ps.persistant[PERS_SCORE]);
 		msglen += strlen(buf);

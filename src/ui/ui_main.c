@@ -207,7 +207,7 @@ AssetCache(void)
 	/* if (Assets.textFont == NULL) {
 	 * }
 	 * Assets.background = trap_R_RegisterShaderNoMip( ASSET_BACKGROUND );
-	 * Com_Printf("Menu Size: %i bytes\n", sizeof(Menus)); */
+	 * Q_Printf("Menu Size: %i bytes\n", sizeof(Menus)); */
 	uiInfo.uiDC.Assets.gradientBar = trap_R_RegisterShaderNoMip(
 		ASSET_GRADIENTBAR);
 	uiInfo.uiDC.Assets.fxBasePic = trap_R_RegisterShaderNoMip(ART_FX_BASE);
@@ -728,7 +728,7 @@ GetMenuBuffer(const char *filename)
 	trap_FS_Read(buf, len, f);
 	buf[len] = 0;
 	trap_FS_FCloseFile(f);
-	/* Com_Compress(buf); */
+	/* Q_Compress(buf); */
 	return buf;
 
 }
@@ -889,10 +889,10 @@ void
 Font_Report(void)
 {
 	int i;
-	Com_Printf("Font Info\n");
-	Com_Printf("=========\n");
+	Q_Printf("Font Info\n");
+	Q_Printf("=========\n");
 	for(i = 32; i < 96; i++)
-		Com_Printf("Glyph handle %i: %i\n", i,
+		Q_Printf("Glyph handle %i: %i\n", i,
 			uiInfo.uiDC.Assets.textFont.glyphs[i].glyph);
 }
 
@@ -910,7 +910,7 @@ UI_ParseMenu(const char *menuFile)
 	int handle;
 	pc_token_t token;
 
-	Com_Printf("Parsing menu file:%s\n", menuFile);
+	Q_Printf("Parsing menu file:%s\n", menuFile);
 
 	handle = trap_PC_LoadSource(menuFile);
 	if(!handle)
@@ -922,12 +922,12 @@ UI_ParseMenu(const char *menuFile)
 			break;
 
 		/* if ( Q_stricmp( token, "{" ) ) {
-		 * Com_Printf( "Missing { in menu file\n" );
+		 * Q_Printf( "Missing { in menu file\n" );
 		 * break;
 		 * } */
 
 		/* if ( menuCount == MAX_MENUS ) {
-		 * Com_Printf( "Too many menus!\n" );
+		 * Q_Printf( "Too many menus!\n" );
 		 * break;
 		 * } */
 
@@ -985,7 +985,7 @@ UI_LoadMenus(const char *menuFile, qbool reset)
 
 	handle = trap_PC_LoadSource(menuFile);
 	if(!handle){
-		Com_Printf(
+		Q_Printf(
 			S_COLOR_YELLOW
 			"menu file not found: %s, using default\n",
 			menuFile);
@@ -1017,7 +1017,7 @@ UI_LoadMenus(const char *menuFile, qbool reset)
 		}
 	}
 
-	Com_Printf("UI menu load time = %d milli seconds\n",
+	Q_Printf("UI menu load time = %d milli seconds\n",
 		trap_Milliseconds() - start);
 
 	trap_PC_FreeSource(handle);
@@ -1081,7 +1081,7 @@ UI_DrawHandicap(rectDef_t *rect, float scale, vec4_t color, int textStyle)
 {
 	int i, h;
 
-	h = Com_Clamp(5, 100, trap_Cvar_VariableValue("handicap"));
+	h = Q_Clamp(5, 100, trap_Cvar_VariableValue("handicap"));
 	i = 20 - h / 5;
 
 	Text_Paint(rect->x, rect->y, scale, color, handicapValues[i], 0, 0,
@@ -1883,7 +1883,7 @@ UI_OwnerDrawWidth(int ownerDraw, float scale)
 
 	switch(ownerDraw){
 	case UI_HANDICAP:
-		h = Com_Clamp(5, 100, trap_Cvar_VariableValue("handicap"));
+		h = Q_Clamp(5, 100, trap_Cvar_VariableValue("handicap"));
 		i = 20 - h / 5;
 		s = handicapValues[i];
 		break;
@@ -2582,7 +2582,7 @@ UI_Handicap_HandleKey(int flags, float *special, int key)
 	if(key == K_MOUSE1 || key == K_MOUSE2 || key == K_ENTER || key ==
 	   K_KP_ENTER){
 		int h;
-		h = Com_Clamp(5, 100, trap_Cvar_VariableValue("handicap"));
+		h = Q_Clamp(5, 100, trap_Cvar_VariableValue("handicap"));
 		if(key == K_MOUSE2)
 			h -= 5;
 		else
@@ -2846,7 +2846,7 @@ UI_NetSource_HandleKey(int flags, float *special, int key)
 
 			while(ui_netSource.integer >= UIAS_GLOBAL1 &&
 			      ui_netSource.integer <= UIAS_GLOBAL5){
-				Com_sprintf(cvarname, sizeof(cvarname),
+				Q_sprintf(cvarname, sizeof(cvarname),
 					"sv_master%d",
 					ui_netSource.integer);
 				trap_Cvar_VariableStringBuffer(cvarname,
@@ -3155,23 +3155,23 @@ UI_ServersSort(int column, qbool force)
  *      }
  *
  *      trap_Cvar_SetValue( "singleplayer", 1 );
- *      trap_Cvar_SetValue( "g_gametype", Com_Clamp( 0, GT_MAX_GAME_TYPE-1, tierList[i].gameTypes[j] ) );
+ *      trap_Cvar_SetValue( "g_gametype", Q_Clamp( 0, GT_MAX_GAME_TYPE-1, tierList[i].gameTypes[j] ) );
  *      trap_Cmd_ExecuteText( EXEC_APPEND, va( "wait ; wait ; map %s\n", tierList[i].maps[j] ) );
  *      skill = trap_Cvar_VariableValue( "g_spSkill" );
  *
  *      if (j == MAPS_PER_TIER-1) {
  *              k = UI_TeamIndexFromName(UI_Cvar_VariableString("ui_opponentName"));
- *              Com_sprintf( buff, sizeof(buff), "wait ; addbot %s %i %s 250 %s\n", UI_AIFromName(teamList[k].teamMembers[0]), skill, "", teamList[k].teamMembers[0]);
+ *              Q_sprintf( buff, sizeof(buff), "wait ; addbot %s %i %s 250 %s\n", UI_AIFromName(teamList[k].teamMembers[0]), skill, "", teamList[k].teamMembers[0]);
  *      } else {
  *              k = UI_TeamIndexFromName(UI_Cvar_VariableString("ui_opponentName"));
  *              for (i = 0; i < PLAYERS_PER_TEAM; i++) {
- *                      Com_sprintf( buff, sizeof(buff), "wait ; addbot %s %i %s 250 %s\n", UI_AIFromName(teamList[k].teamMembers[i]), skill, "Blue", teamList[k].teamMembers[i]);
+ *                      Q_sprintf( buff, sizeof(buff), "wait ; addbot %s %i %s 250 %s\n", UI_AIFromName(teamList[k].teamMembers[i]), skill, "Blue", teamList[k].teamMembers[i]);
  *                      trap_Cmd_ExecuteText( EXEC_APPEND, buff );
  *              }
  *
  *              k = UI_TeamIndexFromName(UI_Cvar_VariableString("ui_teamName"));
  *              for (i = 1; i < PLAYERS_PER_TEAM; i++) {
- *                      Com_sprintf( buff, sizeof(buff), "wait ; addbot %s %i %s 250 %s\n", UI_AIFromName(teamList[k].teamMembers[i]), skill, "Red", teamList[k].teamMembers[i]);
+ *                      Q_sprintf( buff, sizeof(buff), "wait ; addbot %s %i %s 250 %s\n", UI_AIFromName(teamList[k].teamMembers[i]), skill, "Red", teamList[k].teamMembers[i]);
  *                      trap_Cmd_ExecuteText( EXEC_APPEND, buff );
  *              }
  *              trap_Cmd_ExecuteText( EXEC_APPEND, "wait 5; team Red\n" );
@@ -3287,7 +3287,7 @@ UI_LoadDemos(void)
 	if(protocolLegacy == protocol)
 		protocolLegacy = 0;
 
-	Com_sprintf(demoExt, sizeof(demoExt), ".%s%d", DEMOEXT, protocol);
+	Q_sprintf(demoExt, sizeof(demoExt), ".%s%d", DEMOEXT, protocol);
 	uiInfo.demoCount =
 		trap_FS_GetFileList("demos", demoExt, demolist, ARRAY_LEN(
 				demolist));
@@ -3307,7 +3307,7 @@ UI_LoadDemos(void)
 
 		if(!j){
 			if(protocolLegacy > 0 && uiInfo.demoCount < MAX_DEMOS){
-				Com_sprintf(demoExt, sizeof(demoExt), ".%s%d",
+				Q_sprintf(demoExt, sizeof(demoExt), ".%s%d",
 					DEMOEXT,
 					protocolLegacy);
 				uiInfo.demoCount += trap_FS_GetFileList(
@@ -3401,7 +3401,7 @@ UI_StartSkirmish(qbool next)
 	trap_Cvar_Set("g_blueTeam", UI_Cvar_VariableString("ui_opponentName"));
 
 	if(trap_Cvar_VariableValue("ui_recordSPDemo")){
-		Com_sprintf(buff, MAX_STRING_CHARS, "%s_%i",
+		Q_sprintf(buff, MAX_STRING_CHARS, "%s_%i",
 			uiInfo.mapList[ui_currentMap.integer].mapLoadName, g);
 		trap_Cvar_Set("ui_recordSPDemoName", buff);
 	}
@@ -3410,7 +3410,7 @@ UI_StartSkirmish(qbool next)
 
 	if(g == GT_TOURNAMENT){
 		trap_Cvar_Set("sv_maxClients", "2");
-		Com_sprintf(buff, sizeof(buff), "wait ; addbot %s %f " ", %i \n",
+		Q_sprintf(buff, sizeof(buff), "wait ; addbot %s %f " ", %i \n",
 			uiInfo.mapList[ui_currentMap.integer].opponentName,
 			skill,
 			delay);
@@ -3420,7 +3420,7 @@ UI_StartSkirmish(qbool next)
 		trap_Cvar_Set("sv_maxClients", va("%d", temp));
 		for(i =0; i < uiInfo.mapList[ui_currentMap.integer].teamMembers;
 		    i++){
-			Com_sprintf(
+			Q_sprintf(
 				buff, sizeof(buff), "addbot %s %f %s %i %s\n",
 				UI_AIFromName(
 					uiInfo.teamList[k].teamMembers[i]),
@@ -3434,7 +3434,7 @@ UI_StartSkirmish(qbool next)
 		for(i =0;
 		    i < uiInfo.mapList[ui_currentMap.integer].teamMembers-1;
 		    i++){
-			Com_sprintf(
+			Q_sprintf(
 				buff, sizeof(buff), "addbot %s %f %s %i %s\n",
 				UI_AIFromName(
 					uiInfo.teamList[k].teamMembers[i]),
@@ -3587,9 +3587,9 @@ UI_RunMenuScript(char **args)
 			trap_Cvar_Set("cg_cameraOrbit", "0");
 			trap_Cvar_Set("ui_singlePlayerActive", "0");
 			trap_Cvar_SetValue("dedicated",
-				Com_Clamp(0, 2, ui_dedicated.integer));
+				Q_Clamp(0, 2, ui_dedicated.integer));
 			trap_Cvar_SetValue("g_gametype",
-				Com_Clamp(0, GT_MAX_GAME_TYPE-1,
+				Q_Clamp(0, GT_MAX_GAME_TYPE-1,
 					uiInfo.gameTypes[ui_netGameType.integer]
 					.gtEnum));
 			trap_Cvar_Set("g_redTeam",
@@ -3631,7 +3631,7 @@ UI_RunMenuScript(char **args)
 				if(bot > 1){
 					if(ui_actualNetGameType.integer >=
 					   GT_TEAM)
-						Com_sprintf(
+						Q_sprintf(
 							buff, sizeof(buff),
 							"addbot %s %f %s\n",
 							uiInfo.characterList[bot
@@ -3639,7 +3639,7 @@ UI_RunMenuScript(char **args)
 							.name,
 							skill, "Blue");
 					else
-						Com_sprintf(
+						Q_sprintf(
 							buff, sizeof(buff),
 							"addbot %s %f \n",
 							UI_GetBotNameByNumber(
@@ -3652,7 +3652,7 @@ UI_RunMenuScript(char **args)
 				if(bot > 1){
 					if(ui_actualNetGameType.integer >=
 					   GT_TEAM)
-						Com_sprintf(
+						Q_sprintf(
 							buff, sizeof(buff),
 							"addbot %s %f %s\n",
 							uiInfo.characterList[bot
@@ -3660,7 +3660,7 @@ UI_RunMenuScript(char **args)
 							.name,
 							skill, "Red");
 					else
-						Com_sprintf(
+						Q_sprintf(
 							buff, sizeof(buff),
 							"addbot %s %f \n",
 							UI_GetBotNameByNumber(
@@ -3959,15 +3959,15 @@ UI_RunMenuScript(char **args)
 							addr);
 					if(res == 0)
 						/* server already in the list */
-						Com_Printf(
+						Q_Printf(
 							"Favorite already in list\n");
 					else if(res == -1)
 						/* list full */
-						Com_Printf(
+						Q_Printf(
 							"Favorite list full\n");
 					else
 						/* successfully added */
-						Com_Printf(
+						Q_Printf(
 							"Added favorite server %s\n",
 							addr);
 				}
@@ -4011,15 +4011,15 @@ UI_RunMenuScript(char **args)
 							addr);
 					if(res == 0)
 						/* server already in the list */
-						Com_Printf(
+						Q_Printf(
 							"Favorite already in list\n");
 					else if(res == -1)
 						/* list full */
-						Com_Printf(
+						Q_Printf(
 							"Favorite list full\n");
 					else
 						/* successfully added */
-						Com_Printf(
+						Q_Printf(
 							"Added favorite server %s\n",
 							addr);
 				}
@@ -4105,7 +4105,7 @@ UI_RunMenuScript(char **args)
 			if(Int_Parse(args, &stat))
 				trap_SetPbClStatus(stat);
 		}else
-			Com_Printf("unknown UI script %s\n", name);
+			Q_Printf("unknown UI script %s\n", name);
 	}
 }
 
@@ -4150,13 +4150,13 @@ UI_hasSkinForBase(const char *base, const char *team)
 {
 	char test[MAX_QPATH];
 
-	Com_sprintf(test, sizeof(test),
+	Q_sprintf(test, sizeof(test),
 		"models/players/%s/%s/lower_default.skin", base,
 		team);
 
 	if(trap_FS_FOpenFile(test, NULL, FS_READ))
 		return qtrue;
-	Com_sprintf(test, sizeof(test),
+	Q_sprintf(test, sizeof(test),
 		"models/players/characters/%s/%s/lower_default.skin", base,
 		team);
 
@@ -4576,7 +4576,7 @@ UI_GetServerStatusInfo(const char *serverAddress, serverStatusInfo_t *info)
 					break;
 				*p++ = '\0';
 				name = p;
-				Com_sprintf(&info->pings[len],
+				Q_sprintf(&info->pings[len],
 					sizeof(info->pings)-len, "%d", i);
 				info->lines[info->numLines][0] =
 					&info->pings[len];
@@ -4658,7 +4658,7 @@ UI_BuildFindPlayerList(qbool force)
 		trap_LAN_ServerStatus(NULL, NULL, 0);
 		/*  */
 		uiInfo.numFoundPlayerServers = 1;
-		Com_sprintf(uiInfo.foundPlayerServerNames[uiInfo.
+		Q_sprintf(uiInfo.foundPlayerServerNames[uiInfo.
 							  numFoundPlayerServers-
 							  1],
 			sizeof(uiInfo.foundPlayerServerNames[uiInfo.
@@ -4733,7 +4733,7 @@ UI_BuildFindPlayerList(qbool force)
 									numDisplayServers;
 					}
 				}
-				Com_sprintf(
+				Q_sprintf(
 					uiInfo.foundPlayerServerNames[uiInfo
 								      .
 								      numFoundPlayerServers
@@ -4793,7 +4793,7 @@ UI_BuildFindPlayerList(qbool force)
 				uiInfo.pendingServerStatus.server[i].valid =
 					qtrue;
 				uiInfo.pendingServerStatus.num++;
-				Com_sprintf(
+				Q_sprintf(
 					uiInfo.foundPlayerServerNames[uiInfo
 								      .
 								      numFoundPlayerServers
@@ -4815,14 +4815,14 @@ UI_BuildFindPlayerList(qbool force)
 	else{
 		/* add a line that shows the number of servers found */
 		if(!uiInfo.numFoundPlayerServers)
-			Com_sprintf(
+			Q_sprintf(
 				uiInfo.foundPlayerServerNames[uiInfo.
 							      numFoundPlayerServers
 							      -1],
 				sizeof(uiInfo.foundPlayerServerAddresses[0]),
 				"no servers found");
 		else
-			Com_sprintf(
+			Q_sprintf(
 				uiInfo.foundPlayerServerNames[uiInfo.
 							      numFoundPlayerServers
 							      -1],
@@ -5018,7 +5018,7 @@ UI_FeederItemText(float feederID, int index, int column, qhandle_t *handle)
 						   ARRAY_LEN(netnames))
 							nettype = 0;
 
-						Com_sprintf(
+						Q_sprintf(
 							hostname,
 							sizeof(hostname),
 							"%s [%s]",
@@ -5027,7 +5027,7 @@ UI_FeederItemText(float feederID, int index, int column, qhandle_t *handle)
 							netnames[nettype]);
 						return hostname;
 					}else{
-						Com_sprintf(
+						Q_sprintf(
 							hostname,
 							sizeof(hostname), "%s",
 							Info_ValueForKey(info,
@@ -5037,7 +5037,7 @@ UI_FeederItemText(float feederID, int index, int column, qhandle_t *handle)
 				}
 			case SORT_MAP: return Info_ValueForKey(info, "mapname");
 			case SORT_CLIENTS:
-				Com_sprintf(clientBuff, sizeof(clientBuff),
+				Q_sprintf(clientBuff, sizeof(clientBuff),
 					"%s (%s)", Info_ValueForKey(info,
 						"clients"),
 					Info_ValueForKey(info, "sv_maxclients"));
@@ -5255,14 +5255,14 @@ Team_Parse(char **p)
 	const char      *tempStr;
 	int	i;
 
-	token = Com_ParseExt(p, qtrue);
+	token = Q_ParseExt(p, qtrue);
 
 	if(token[0] != '{')
 		return qfalse;
 
 	while(1){
 
-		token = Com_ParseExt(p, qtrue);
+		token = Q_ParseExt(p, qtrue);
 
 		if(Q_stricmp(token, "}") == 0)
 			return qtrue;
@@ -5307,15 +5307,15 @@ Team_Parse(char **p)
 					return qfalse;
 			}
 
-			Com_Printf("Loaded team %s with team icon %s.\n",
+			Q_Printf("Loaded team %s with team icon %s.\n",
 				uiInfo.teamList[uiInfo.teamCount].teamName,
 				tempStr);
 			if(uiInfo.teamCount < MAX_TEAMS)
 				uiInfo.teamCount++;
 			else
-				Com_Printf(
+				Q_Printf(
 					"Too many teams, last team replaced!\n");
-			token = Com_ParseExt(p, qtrue);
+			token = Q_ParseExt(p, qtrue);
 			if(token[0] != '}')
 				return qfalse;
 		}
@@ -5330,14 +5330,14 @@ Character_Parse(char **p)
 	char *token;
 	const char *tempStr;
 
-	token = Com_ParseExt(p, qtrue);
+	token = Q_ParseExt(p, qtrue);
 
 	if(token[0] != '{')
 		return qfalse;
 
 
 	while(1){
-		token = Com_ParseExt(p, qtrue);
+		token = Q_ParseExt(p, qtrue);
 
 		if(Q_stricmp(token, "}") == 0)
 			return qtrue;
@@ -5372,17 +5372,17 @@ Character_Parse(char **p)
 				uiInfo.characterList[uiInfo.characterCount].base
 					= String_Alloc(va("%s",tempStr));
 
-			Com_Printf(
+			Q_Printf(
 				"Loaded %s character %s.\n",
 				uiInfo.characterList[uiInfo.characterCount].base,
 				uiInfo.characterList[uiInfo.characterCount].name);
 			if(uiInfo.characterCount < MAX_HEADS)
 				uiInfo.characterCount++;
 			else
-				Com_Printf(
+				Q_Printf(
 					"Too many characters, last character replaced!\n");
 
-			token = Com_ParseExt(p, qtrue);
+			token = Q_ParseExt(p, qtrue);
 			if(token[0] != '}')
 				return qfalse;
 		}
@@ -5397,13 +5397,13 @@ Alias_Parse(char **p)
 {
 	char *token;
 
-	token = Com_ParseExt(p, qtrue);
+	token = Q_ParseExt(p, qtrue);
 
 	if(token[0] != '{')
 		return qfalse;
 
 	while(1){
-		token = Com_ParseExt(p, qtrue);
+		token = Q_ParseExt(p, qtrue);
 
 		if(Q_stricmp(token, "}") == 0)
 			return qtrue;
@@ -5421,17 +5421,17 @@ Alias_Parse(char **p)
 				   &uiInfo.aliasList[uiInfo.aliasCount].action))
 				return qfalse;
 
-			Com_Printf(
+			Q_Printf(
 				"Loaded character alias %s using character ai %s.\n",
 				uiInfo.aliasList[uiInfo.aliasCount].name,
 				uiInfo.aliasList[uiInfo.aliasCount].ai);
 			if(uiInfo.aliasCount < MAX_ALIASES)
 				uiInfo.aliasCount++;
 			else
-				Com_Printf(
+				Q_Printf(
 					"Too many aliases, last alias replaced!\n");
 
-			token = Com_ParseExt(p, qtrue);
+			token = Q_ParseExt(p, qtrue);
 			if(token[0] != '}')
 				return qfalse;
 		}
@@ -5461,7 +5461,7 @@ UI_ParseTeamInfo(const char *teamFile)
 	p = buff;
 
 	while(1){
-		token = Com_ParseExt(&p, qtrue);
+		token = Q_ParseExt(&p, qtrue);
 		if(!token || token[0] == 0 || token[0] == '}')
 			break;
 
@@ -5492,7 +5492,7 @@ GameType_Parse(char **p, qbool join)
 {
 	char *token;
 
-	token = Com_ParseExt(p, qtrue);
+	token = Q_ParseExt(p, qtrue);
 
 	if(token[0] != '{')
 		return qfalse;
@@ -5503,7 +5503,7 @@ GameType_Parse(char **p, qbool join)
 		uiInfo.numGameTypes = 0;
 
 	while(1){
-		token = Com_ParseExt(p, qtrue);
+		token = Q_ParseExt(p, qtrue);
 
 		if(Q_stricmp(token, "}") == 0)
 			return qtrue;
@@ -5538,17 +5538,17 @@ GameType_Parse(char **p, qbool join)
 				if(uiInfo.numJoinGameTypes < MAX_GAMETYPES)
 					uiInfo.numJoinGameTypes++;
 				else
-					Com_Printf(
+					Q_Printf(
 						"Too many net game types, last one replace!\n");
 			}else{
 				if(uiInfo.numGameTypes < MAX_GAMETYPES)
 					uiInfo.numGameTypes++;
 				else
-					Com_Printf(
+					Q_Printf(
 						"Too many game types, last one replace!\n");
 			}
 
-			token = Com_ParseExt(p, qtrue);
+			token = Q_ParseExt(p, qtrue);
 			if(token[0] != '}')
 				return qfalse;
 		}
@@ -5561,7 +5561,7 @@ MapList_Parse(char **p)
 {
 	char *token;
 
-	token = Com_ParseExt(p, qtrue);
+	token = Q_ParseExt(p, qtrue);
 
 	if(token[0] != '{')
 		return qfalse;
@@ -5569,7 +5569,7 @@ MapList_Parse(char **p)
 	uiInfo.mapCount = 0;
 
 	while(1){
-		token = Com_ParseExt(p, qtrue);
+		token = Q_ParseExt(p, qtrue);
 
 		if(Q_stricmp(token, "}") == 0)
 			return qtrue;
@@ -5593,7 +5593,7 @@ MapList_Parse(char **p)
 			uiInfo.mapList[uiInfo.mapCount].typeBits = 0;
 
 			while(1){
-				token = Com_ParseExt(p, qtrue);
+				token = Q_ParseExt(p, qtrue);
 				if(token[0] >= '0' && token[0] <= '9'){
 					uiInfo.mapList[uiInfo.mapCount].typeBits
 						|= (1 << (token[0] - 0x030));
@@ -5621,7 +5621,7 @@ MapList_Parse(char **p)
 			if(uiInfo.mapCount < MAX_MAPS)
 				uiInfo.mapCount++;
 			else
-				Com_Printf("Too many maps, last one replaced!\n");
+				Q_Printf("Too many maps, last one replaced!\n");
 		}
 	}
 	return qfalse;
@@ -5642,7 +5642,7 @@ UI_ParseGameInfo(const char *teamFile)
 	p = buff;
 
 	while(1){
-		token = Com_ParseExt(&p, qtrue);
+		token = Q_ParseExt(&p, qtrue);
 		if(!token || token[0] == 0 || token[0] == '}')
 			break;
 
@@ -5794,7 +5794,7 @@ UI_BuildQ3Model_List(void)
 		    j++,fileptr+=filelen+1){
 			filelen = strlen(fileptr);
 
-			Com_StripExtension(fileptr, skinname, sizeof(skinname));
+			Q_StripExtension(fileptr, skinname, sizeof(skinname));
 
 			/* look for icon_???? */
 			if(Q_stricmpn(skinname, "icon_",
@@ -5803,11 +5803,11 @@ UI_BuildQ3Model_List(void)
 				     "icon_blue") == 0 ||
 			     Q_stricmp(skinname,"icon_red") == 0)){
 				if(Q_stricmp(skinname, "icon_default") == 0)
-					Com_sprintf(scratch, sizeof(scratch),
+					Q_sprintf(scratch, sizeof(scratch),
 						"%s",
 						dirptr);
 				else
-					Com_sprintf(scratch, sizeof(scratch),
+					Q_sprintf(scratch, sizeof(scratch),
 						"%s/%s",dirptr,
 						skinname + 5);
 				dirty = 0;
@@ -5820,7 +5820,7 @@ UI_BuildQ3Model_List(void)
 						break;
 					}
 				if(!dirty){
-					Com_sprintf(
+					Q_sprintf(
 						uiInfo.q3HeadNames[uiInfo.
 								   q3HeadCount
 						],
@@ -5913,8 +5913,8 @@ _UI_Init(qbool inGameLoad)
 	uiInfo.uiDC.getBindingBuf = &trap_Key_GetBindingBuf;
 	uiInfo.uiDC.keynumToStringBuf = &trap_Key_KeynumToStringBuf;
 	uiInfo.uiDC.executeText = &trap_Cmd_ExecuteText;
-	uiInfo.uiDC.Error	= &Com_Error;
-	uiInfo.uiDC.Print	= &Com_Printf;
+	uiInfo.uiDC.Error	= &Q_Error;
+	uiInfo.uiDC.Print	= &Q_Printf;
 	uiInfo.uiDC.Pause	= &UI_Pause;
 	uiInfo.uiDC.ownerDrawWidth = &UI_OwnerDrawWidth;
 	uiInfo.uiDC.registerSound = &trap_S_RegisterSound;
@@ -6143,17 +6143,17 @@ static void
 UI_ReadableSize(char *buf, int bufsize, int value)
 {
 	if(value > 1024*1024*1024){	/* gigs */
-		Com_sprintf(buf, bufsize, "%d", value / (1024*1024*1024));
-		Com_sprintf(buf+strlen(buf), bufsize-strlen(buf), ".%02d GB",
+		Q_sprintf(buf, bufsize, "%d", value / (1024*1024*1024));
+		Q_sprintf(buf+strlen(buf), bufsize-strlen(buf), ".%02d GB",
 			(value % (1024*1024*1024))*100 / (1024*1024*1024));
 	}else if(value > 1024*1024){	/* megs */
-		Com_sprintf(buf, bufsize, "%d", value / (1024*1024));
-		Com_sprintf(buf+strlen(buf), bufsize-strlen(buf), ".%02d MB",
+		Q_sprintf(buf, bufsize, "%d", value / (1024*1024));
+		Q_sprintf(buf+strlen(buf), bufsize-strlen(buf), ".%02d MB",
 			(value % (1024*1024))*100 / (1024*1024));
 	}else if(value > 1024)	/* kilos */
-		Com_sprintf(buf, bufsize, "%d KB", value / 1024);
+		Q_sprintf(buf, bufsize, "%d KB", value / 1024);
 	else	/* bytes */
-		Com_sprintf(buf, bufsize, "%d bytes", value);
+		Q_sprintf(buf, bufsize, "%d bytes", value);
 }
 
 /* Assumes time is in msec */
@@ -6163,12 +6163,12 @@ UI_PrintTime(char *buf, int bufsize, int time)
 	time /= 1000;	/* change to seconds */
 
 	if(time > 3600)	/* in the hours range */
-		Com_sprintf(buf, bufsize, "%d hr %d min", time / 3600,
+		Q_sprintf(buf, bufsize, "%d hr %d min", time / 3600,
 			(time % 3600) / 60);
 	else if(time > 60)	/* mins */
-		Com_sprintf(buf, bufsize, "%d min %d sec", time / 60, time % 60);
+		Q_sprintf(buf, bufsize, "%d min %d sec", time / 60, time % 60);
 	else	/* secs */
-		Com_sprintf(buf, bufsize, "%d sec", time);
+		Q_sprintf(buf, bufsize, "%d sec", time);
 }
 
 void
@@ -6723,12 +6723,12 @@ UI_StopServerRefresh(void)
 		/* not currently refreshing */
 		return;
 	uiInfo.serverStatus.refreshActive = qfalse;
-	Com_Printf("%d servers listed in browser with %d players.\n",
+	Q_Printf("%d servers listed in browser with %d players.\n",
 		uiInfo.serverStatus.numDisplayServers,
 		uiInfo.serverStatus.numPlayersOnServers);
 	count = trap_LAN_GetServerCount(UI_SourceForLAN());
 	if(count - uiInfo.serverStatus.numDisplayServers > 0)
-		Com_Printf(
+		Q_Printf(
 			"%d servers not listed due to packet loss or pings higher than %d\n",
 			count - uiInfo.serverStatus.numDisplayServers,
 			(int)trap_Cvar_VariableValue("cl_maxPing"));

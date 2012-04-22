@@ -211,18 +211,18 @@ void
 String_Report(void)
 {
 	float f;
-	Com_Printf("Memory/String Pool Info\n");
-	Com_Printf("----------------\n");
+	Q_Printf("Memory/String Pool Info\n");
+	Q_Printf("----------------\n");
 	f	= strPoolIndex;
 	f	/= STRING_POOL_SIZE;
 	f	*= 100;
-	Com_Printf("String Pool is %.1f%% full, %i bytes out of %i used.\n", f,
+	Q_Printf("String Pool is %.1f%% full, %i bytes out of %i used.\n", f,
 		strPoolIndex,
 		STRING_POOL_SIZE);
 	f	= allocPoint;
 	f	/= MEM_POOL_SIZE;
 	f	*= 100;
-	Com_Printf("Memory Pool is %.1f%% full, %i bytes out of %i used.\n", f,
+	Q_Printf("Memory Pool is %.1f%% full, %i bytes out of %i used.\n", f,
 		allocPoint,
 		MEM_POOL_SIZE);
 }
@@ -267,7 +267,7 @@ PC_SourceWarning(int handle, char *format, ...)
 	line = 0;
 	trap_PC_SourceFileAndLine(handle, filename, &line);
 
-	Com_Printf(S_COLOR_YELLOW "WARNING: %s, line %d: %s\n", filename, line,
+	Q_Printf(S_COLOR_YELLOW "WARNING: %s, line %d: %s\n", filename, line,
 		string);
 }
 #endif
@@ -291,7 +291,7 @@ PC_SourceError(int handle, char *format, ...)
 	line = 0;
 	trap_PC_SourceFileAndLine(handle, filename, &line);
 
-	Com_Printf(S_COLOR_RED "ERROR: %s, line %d: %s\n", filename, line,
+	Q_Printf(S_COLOR_RED "ERROR: %s, line %d: %s\n", filename, line,
 		string);
 }
 
@@ -320,7 +320,7 @@ qbool
 Float_Parse(char **p, float *f)
 {
 	char *token;
-	token = Com_ParseExt(p, qfalse);
+	token = Q_ParseExt(p, qfalse);
 	if(token && token[0] != 0){
 		*f = atof(token);
 		return qtrue;
@@ -397,7 +397,7 @@ qbool
 Int_Parse(char **p, int *i)
 {
 	char *token;
-	token = Com_ParseExt(p, qfalse);
+	token = Q_ParseExt(p, qfalse);
 
 	if(token && token[0] != 0){
 		*i = atoi(token);
@@ -469,7 +469,7 @@ String_Parse(char **p, const char **out)
 {
 	char *token;
 
-	token = Com_ParseExt(p, qfalse);
+	token = Q_ParseExt(p, qfalse);
 	if(token && token[0] != 0){
 		*(out) = String_Alloc(token);
 		return qtrue;
@@ -4125,7 +4125,7 @@ Item_OwnerDraw_Paint(itemDef_t *item)
 
 		if(item->cvarFlags & (CVAR_ENABLE | CVAR_DISABLE) &&
 		   !Item_EnableShowViaCvar(item, CVAR_ENABLE))
-			Com_Memcpy(color, parent->disableColor, sizeof(vec4_t));
+			Q_Memcpy(color, parent->disableColor, sizeof(vec4_t));
 
 		if(item->text){
 			Item_Text_Paint(item);

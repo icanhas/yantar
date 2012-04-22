@@ -480,9 +480,9 @@ R_LoadIQM(model_t *mod, void *buffer, int filesize, const char *mod_name)
 			Matrix34Multiply(invBaseFrame, jointMats + 2 * 12 * joint->parent + 12, mat);
 			mat += 12;
 		}else{
-			Com_Memcpy(mat, baseFrame,    sizeof(baseFrame));
+			Q_Memcpy(mat, baseFrame,    sizeof(baseFrame));
 			mat += 12;
-			Com_Memcpy(mat, invBaseFrame, sizeof(invBaseFrame));
+			Q_Memcpy(mat, invBaseFrame, sizeof(invBaseFrame));
 			mat += 12;
 		}
 	}
@@ -538,7 +538,7 @@ R_LoadIQM(model_t *mod, void *buffer, int filesize, const char *mod_name)
 				Matrix34Multiply(jointMats + 12 * 2 * pose->parent,
 					mat1, mat2);
 			}else{
-				Com_Memcpy(mat2, mat1, sizeof(mat1));
+				Q_Memcpy(mat2, mat1, sizeof(mat1));
 			}
 
 			Matrix34Multiply(mat2, jointMats + 12 * (2 * j + 1), mat);
@@ -575,37 +575,37 @@ R_LoadIQM(model_t *mod, void *buffer, int filesize, const char *mod_name)
 
 		switch(vertexarray->type){
 		case IQM_POSITION:
-			Com_Memcpy(iqmData->positions,
+			Q_Memcpy(iqmData->positions,
 				(byte*)header + vertexarray->offset,
 				n * sizeof(float));
 			break;
 		case IQM_NORMAL:
-			Com_Memcpy(iqmData->normals,
+			Q_Memcpy(iqmData->normals,
 				(byte*)header + vertexarray->offset,
 				n * sizeof(float));
 			break;
 		case IQM_TANGENT:
-			Com_Memcpy(iqmData->tangents,
+			Q_Memcpy(iqmData->tangents,
 				(byte*)header + vertexarray->offset,
 				n * sizeof(float));
 			break;
 		case IQM_TEXCOORD:
-			Com_Memcpy(iqmData->texcoords,
+			Q_Memcpy(iqmData->texcoords,
 				(byte*)header + vertexarray->offset,
 				n * sizeof(float));
 			break;
 		case IQM_BLENDINDEXES:
-			Com_Memcpy(iqmData->blendIndexes,
+			Q_Memcpy(iqmData->blendIndexes,
 				(byte*)header + vertexarray->offset,
 				n * sizeof(byte));
 			break;
 		case IQM_BLENDWEIGHTS:
-			Com_Memcpy(iqmData->blendWeights,
+			Q_Memcpy(iqmData->blendWeights,
 				(byte*)header + vertexarray->offset,
 				n * sizeof(byte));
 			break;
 		case IQM_COLOR:
-			Com_Memcpy(iqmData->colors,
+			Q_Memcpy(iqmData->colors,
 				(byte*)header + vertexarray->offset,
 				n * sizeof(byte));
 			break;
@@ -632,7 +632,7 @@ R_LoadIQM(model_t *mod, void *buffer, int filesize, const char *mod_name)
 		char *name = (char*)header + header->ofs_text +
 			     joint->name;
 		int len = strlen(name) + 1;
-		Com_Memcpy(str, name, len);
+		Q_Memcpy(str, name, len);
 		str += len;
 	}
 
@@ -868,7 +868,7 @@ ComputeJointMats(iqmData_t *data, int frame, int oldframe,
 				Matrix34Multiply(mat + 12 * *joint,
 					mat1 + 12*i, mat + 12*i);
 			}else{
-				Com_Memcpy(mat + 12*i, mat1 + 12*i, 12 * sizeof(float));
+				Q_Memcpy(mat + 12*i, mat1 + 12*i, 12 * sizeof(float));
 			}
 		}
 	}else{

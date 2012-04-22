@@ -113,7 +113,7 @@ void    ExtractFileExtension(const char *path, char *dest);
 
 int     ParseNum(const char *str);
 
-char*Com_Parse(char *data);
+char*Q_Parse(char *data);
 
 extern char com_token[1024];
 extern qbool com_eof;

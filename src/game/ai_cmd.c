@@ -458,7 +458,7 @@ BotAddressedToBot(bot_state_t *bs, bot_match_t *match)
 				break;
 			}
 		}
-		/* Com_sprintf(buf, sizeof(buf), "not addressed to me but %s", addressedto);
+		/* Q_sprintf(buf, sizeof(buf), "not addressed to me but %s", addressedto);
 		 * trap_EA_Say(bs->client, buf); */
 		return qfalse;
 	}else{
@@ -1231,7 +1231,7 @@ BotMatch_CheckPoint(bot_state_t *bs, bot_match_t *match)
 	bs->checkpoints = cp;
 	/*  */
 	if(BotAddressedToBot(bs, match)){
-		Com_sprintf(buf, sizeof(buf), "%1.0f %1.0f %1.0f",
+		Q_sprintf(buf, sizeof(buf), "%1.0f %1.0f %1.0f",
 			cp->goal.origin[0],
 			cp->goal.origin[1],
 			cp->goal.origin[2]);
@@ -1809,7 +1809,7 @@ BotMatch_EnterGame(bot_state_t *bs, bot_match_t *match)
 	if(client >= 0)
 		notleader[client] = qfalse;
 	/* NOTE: eliza chats will catch this
-	 * Com_sprintf(buf, sizeof(buf), "heya %s", netname);
+	 * Q_sprintf(buf, sizeof(buf), "heya %s", netname);
 	 * EA_Say(bs->client, buf); */
 }
 

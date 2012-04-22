@@ -409,7 +409,7 @@ R_MipMap2(unsigned *in, int inWidth, int inHeight)
 			}
 		}
 
-	Com_Memcpy(in, temp, outWidth * outHeight * 4);
+	Q_Memcpy(in, temp, outWidth * outHeight * 4);
 	ri.Hunk_FreeTempMemory(temp);
 }
 
@@ -678,7 +678,7 @@ Upload32(unsigned *data,
 
 			goto done;
 		}
-		Com_Memcpy (scaledBuffer, data, width*height*4);
+		Q_Memcpy (scaledBuffer, data, width*height*4);
 	}else{
 		/* use the normal mip-mapping function to go down from here */
 		while(width > scaled_width || height > scaled_height){
@@ -692,7 +692,7 @@ Upload32(unsigned *data,
 				height = 1;
 			}
 		}
-		Com_Memcpy(scaledBuffer, data, width * height * 4);
+		Q_Memcpy(scaledBuffer, data, width * height * 4);
 	}
 
 	R_LightScaleTexture (scaledBuffer, scaled_width, scaled_height, !mipmap);
@@ -734,7 +734,7 @@ done:
 	if(mipmap){
 		if(textureFilterAnisotropic)
 			qglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT,
-				(GLint)Com_Clamp(1, maxAnisotropy, r_ext_max_anisotropy->integer));
+				(GLint)Q_Clamp(1, maxAnisotropy, r_ext_max_anisotropy->integer));
 
 		qglTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, gl_filter_min);
 		qglTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, gl_filter_max);
@@ -872,7 +872,7 @@ R_LoadImage(const char *name, byte **pic, int *width, int *height)
 
 	Q_strncpyz(localName, name, MAX_QPATH);
 
-	ext = Com_GetExtension(localName);
+	ext = Q_GetExtension(localName);
 
 	if(*ext){
 		/* Look for the correct loader and use it */
@@ -890,7 +890,7 @@ R_LoadImage(const char *name, byte **pic, int *width, int *height)
 				 * try again without the extension */
 				orgNameFailed = qtrue;
 				orgLoader = i;
-				Com_StripExtension(name, localName, MAX_QPATH);
+				Q_StripExtension(name, localName, MAX_QPATH);
 			}else{
 				/* Something loaded */
 				return;
@@ -1120,7 +1120,7 @@ R_CreateDefaultImage(void)
 	byte data[DEFAULT_SIZE][DEFAULT_SIZE][4];
 
 	/* the default image will be a box, to allow you to see the mapping coordinates */
-	Com_Memset(data, 32, sizeof(data));
+	Q_Memset(data, 32, sizeof(data));
 	for(x = 0; x < DEFAULT_SIZE; x++){
 		data[0][x][0] =
 			data[0][x][1] =
@@ -1158,7 +1158,7 @@ R_CreateBuiltinImages(void)
 	R_CreateDefaultImage();
 
 	/* we use a solid white image instead of disabling texturing */
-	Com_Memset(data, 255, sizeof(data));
+	Q_Memset(data, 255, sizeof(data));
 	tr.whiteImage = R_CreateImage("*white", (byte*)data, 8, 8, qfalse, qfalse, GL_REPEAT);
 
 	/* with overbright bits active, we need an image which is some fraction of full color,
@@ -1274,7 +1274,7 @@ R_SetColorMappings(void)
 void
 R_InitImages(void)
 {
-	Com_Memset(hashTable, 0, sizeof(hashTable));
+	Q_Memset(hashTable, 0, sizeof(hashTable));
 	/* build brightness translation tables */
 	R_SetColorMappings();
 
@@ -1292,11 +1292,11 @@ R_DeleteTextures(void)
 
 	for(i=0; i<tr.numImages; i++)
 		qglDeleteTextures(1, &tr.images[i]->texnum);
-	Com_Memset(tr.images, 0, sizeof(tr.images));
+	Q_Memset(tr.images, 0, sizeof(tr.images));
 
 	tr.numImages = 0;
 
-	Com_Memset(glState.currenttextures, 0, sizeof(glState.currenttextures));
+	Q_Memset(glState.currenttextures, 0, sizeof(glState.currenttextures));
 	if(qglActiveTextureARB){
 		GL_SelectTexture(1);
 		qglBindTexture(GL_TEXTURE_2D, 0);

@@ -1010,11 +1010,11 @@ Team_GetLocationMsg(gentity_t *ent, char *loc, int loclen)
 			best->count = 0;
 		if(best->count > 7)
 			best->count = 7;
-		Com_sprintf(loc, loclen, "%c%c%s" S_COLOR_WHITE, Q_COLOR_ESCAPE,
+		Q_sprintf(loc, loclen, "%c%c%s" S_COLOR_WHITE, Q_COLOR_ESCAPE,
 			best->count + '0',
 			best->message);
 	}else
-		Com_sprintf(loc, loclen, "%s", best->message);
+		Q_sprintf(loc, loclen, "%s", best->message);
 
 	return qtrue;
 }
@@ -1154,7 +1154,7 @@ TeamplayInfoMessage(gentity_t *ent)
 			if(h < 0) h = 0;
 			if(a < 0) a = 0;
 
-			Com_sprintf (entry, sizeof(entry),
+			Q_sprintf (entry, sizeof(entry),
 				" %i %i %i %i %i %i",
 /*				level.sortedClients[i], player->client->pers.teamState.location, h, a, */
 				i, player->client->pers.teamState.location, h, a,

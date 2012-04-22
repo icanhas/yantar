@@ -329,7 +329,7 @@ AAS_LoadFiles(const char *mapname)
 	AAS_LoadBSPFile();
 
 	/* load the aas file */
-	Com_sprintf(aasfile, MAX_PATH, "maps/%s.aas", mapname);
+	Q_sprintf(aasfile, MAX_PATH, "maps/%s.aas", mapname);
 	errnum = AAS_LoadAASFile(aasfile);
 	if(errnum != BLERR_NOERROR)
 		return errnum;
@@ -427,7 +427,7 @@ AAS_Shutdown(void)
 	/* free the entities */
 	if(aasworld.entities) FreeMemory(aasworld.entities);
 	/* clear the aasworld structure */
-	Com_Memset(&aasworld, 0, sizeof(aas_t));
+	Q_Memset(&aasworld, 0, sizeof(aas_t));
 	/* aas has not been initialized */
 	aasworld.initialized = qfalse;
 	/* NOTE: as soon as a new .bsp file is loaded the .bsp file memory is

@@ -91,8 +91,8 @@ GLimp_Shutdown(void)
 	SDL_QuitSubSystem(SDL_INIT_VIDEO);
 	screen = NULL;
 
-	Com_Memset(&glConfig, 0, sizeof(glConfig));
-	Com_Memset(&glState, 0, sizeof(glState));
+	Q_Memset(&glConfig, 0, sizeof(glConfig));
+	Q_Memset(&glState, 0, sizeof(glState));
 }
 
 /*
@@ -213,9 +213,9 @@ GLimp_SetMode(int mode, qbool fullscreen, qbool noborder)
 		videoInfo = SDL_GetVideoInfo( );
 
 		/* Take a copy of the videoInfo */
-		Com_Memcpy(&sPixelFormat, videoInfo->vfmt, sizeof(SDL_PixelFormat));
+		Q_Memcpy(&sPixelFormat, videoInfo->vfmt, sizeof(SDL_PixelFormat));
 		sPixelFormat.palette = NULL;	/* Should already be the case */
-		Com_Memcpy(&sVideoInfo, videoInfo, sizeof(SDL_VideoInfo));
+		Q_Memcpy(&sVideoInfo, videoInfo, sizeof(SDL_VideoInfo));
 		sVideoInfo.vfmt = &sPixelFormat;
 		videoInfo = &sVideoInfo;
 
@@ -776,13 +776,13 @@ GLimp_ShutdownRenderThread(void)
 static int
 GLimp_RenderThreadWrapper(void *arg)
 {
-	Com_Printf("Render thread starting\n");
+	Q_Printf("Render thread starting\n");
 
 	glimpRenderThread();
 
 	GLimp_SetCurrentContext(NULL);
 
-	Com_Printf("Render thread terminating\n");
+	Q_Printf("Render thread terminating\n");
 
 	return 0;
 }
@@ -795,7 +795,7 @@ GLimp_SpawnRenderThread(void (*function)(void))
 {
 	static qbool warned = qfalse;
 	if(!warned){
-		Com_Printf("WARNING: You enable r_smp at your own risk!\n");
+		Q_Printf("WARNING: You enable r_smp at your own risk!\n");
 		warned = qtrue;
 	}
 
@@ -804,7 +804,7 @@ GLimp_SpawnRenderThread(void (*function)(void))
 #endif
 
 	if(renderThread != NULL){	/* hopefully just a zombie at this point... */
-		Com_Printf("Already a render thread? Trying to clean it up...\n");
+		Q_Printf("Already a render thread? Trying to clean it up...\n");
 		SDL_WaitThread(renderThread, NULL);
 		renderThread = NULL;
 		GLimp_ShutdownRenderThread();
@@ -812,21 +812,21 @@ GLimp_SpawnRenderThread(void (*function)(void))
 
 	smpMutex = SDL_CreateMutex();
 	if(smpMutex == NULL){
-		Com_Printf("smpMutex creation failed: %s\n", SDL_GetError());
+		Q_Printf("smpMutex creation failed: %s\n", SDL_GetError());
 		GLimp_ShutdownRenderThread();
 		return qfalse;
 	}
 
 	renderCommandsEvent = SDL_CreateCond();
 	if(renderCommandsEvent == NULL){
-		Com_Printf("renderCommandsEvent creation failed: %s\n", SDL_GetError());
+		Q_Printf("renderCommandsEvent creation failed: %s\n", SDL_GetError());
 		GLimp_ShutdownRenderThread();
 		return qfalse;
 	}
 
 	renderCompletedEvent = SDL_CreateCond();
 	if(renderCompletedEvent == NULL){
-		Com_Printf("renderCompletedEvent creation failed: %s\n", SDL_GetError());
+		Q_Printf("renderCompletedEvent creation failed: %s\n", SDL_GetError());
 		GLimp_ShutdownRenderThread();
 		return qfalse;
 	}

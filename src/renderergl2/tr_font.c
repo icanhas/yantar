@@ -123,7 +123,7 @@ R_RenderGlyph(FT_GlyphSlot glyph, glyphInfo_t *glyphOut)
 		bit2->buffer = ri.Malloc(pitch * height);
 		bit2->num_grays = 256;
 
-		Com_Memset(bit2->buffer,0,size);
+		Q_Memset(bit2->buffer,0,size);
 
 		FT_Outline_Translate(&glyph->outline,-left,-bottom);
 
@@ -148,7 +148,7 @@ WriteTGA(char *filename, byte *data, int width, int height)
 	int	i, c;
 
 	buffer = ri.Malloc(width * height * 4 + 18);
-	Com_Memset(buffer,0,18);
+	Q_Memset(buffer,0,18);
 	buffer[2]	= 2;	/* uncompressed type */
 	buffer[12]	= width & 255;
 	buffer[13]	= width >> 8;
@@ -185,7 +185,7 @@ RE_ConstructGlyphInfo(unsigned char *imageOut, int *xOut, int *yOut,
 	FT_Bitmap *bitmap;
 
 	bitmap = NULL;
-	Com_Memset(&glyph,0,sizeof(glyphInfo_t));
+	Q_Memset(&glyph,0,sizeof(glyphInfo_t));
 
 	/* make sure everything is here */
 	if(face != NULL){
@@ -274,7 +274,7 @@ RE_ConstructGlyphInfo(unsigned char *imageOut, int *xOut, int *yOut,
 			}
 		}else{
 			for(i = 0; i < glyph.height; i++){
-				Com_Memcpy(dst,src,glyph.pitch);
+				Q_Memcpy(dst,src,glyph.pitch);
 				src	+= glyph.pitch;
 				dst	+= 256;
 			}
@@ -382,11 +382,11 @@ RE_RegisterFont(const char *fontName, int pointSize, fontInfo_t *font)
 		return;
 	}
 
-	Com_StripExtension(fontName, strippedname, sizeof(strippedname));
-	Com_sprintf(filename, sizeof(filename),"%s_%i.dat", strippedname, pointSize);
+	Q_StripExtension(fontName, strippedname, sizeof(strippedname));
+	Q_sprintf(filename, sizeof(filename),"%s_%i.dat", strippedname, pointSize);
 	for(i = 0; i < registeredFontCount; i++)
 		if(Q_stricmp(filename, registeredFont[i].name) == 0){
-			Com_Memcpy(font, &registeredFont[i], sizeof(fontInfo_t));
+			Q_Memcpy(font, &registeredFont[i], sizeof(fontInfo_t));
 			return;
 		}
 
@@ -408,19 +408,19 @@ RE_RegisterFont(const char *fontName, int pointSize, fontInfo_t *font)
 			font->glyphs[i].s2	= readFloat();
 			font->glyphs[i].t2	= readFloat();
 			font->glyphs[i].glyph = readInt();
-			Com_Memcpy(font->glyphs[i].shaderName,&fdFile[fdOffset],32);
+			Q_Memcpy(font->glyphs[i].shaderName,&fdFile[fdOffset],32);
 			fdOffset += 32;
 		}
 
 		font->glyphScale = readFloat();
-		Com_Memcpy(font->name,&fdFile[fdOffset],MAX_QPATH);
+		Q_Memcpy(font->name,&fdFile[fdOffset],MAX_QPATH);
 
-		/*      Com_Memcpy(font, faceData, sizeof(fontInfo_t)); */
+		/*      Q_Memcpy(font, faceData, sizeof(fontInfo_t)); */
 		Q_strncpyz(font->name, filename, sizeof(font->name));
 		for(i = GLYPH_START; i < GLYPH_END; i++)
 			font->glyphs[i].glyph = RE_RegisterShaderNoMip(font->glyphs[i].shaderName);
 
-		Com_Memcpy(&registeredFont[registeredFontCount++],font,
+		Q_Memcpy(&registeredFont[registeredFontCount++],font,
 			sizeof(fontInfo_t));
 		return;
 	}
@@ -433,7 +433,7 @@ RE_RegisterFont(const char *fontName, int pointSize, fontInfo_t *font)
 		return;
 	}
 
-	Com_sprintf(filename, sizeof(filename), "%s.ttf", strippedname);
+	Q_sprintf(filename, sizeof(filename), "%s.ttf", strippedname);
 	len = ri.FS_ReadFile(fontName,&faceData);
 	if(len <= 0){
 		ri.Printf(PRINT_ALL,"RE_RegisterFont: Unable to read font file\n");
@@ -461,7 +461,7 @@ RE_RegisterFont(const char *fontName, int pointSize, fontInfo_t *font)
 		return;
 	}
 
-	Com_Memset(out,0,1024 * 1024);
+	Q_Memset(out,0,1024 * 1024);
 
 	maxHeight = 0;
 
@@ -505,13 +505,13 @@ RE_RegisterFont(const char *fontName, int pointSize, fontInfo_t *font)
 				imageBuff[left++] = ((float)out[k] * max);
 			}
 
-			Com_sprintf(filename, sizeof(filename),
+			Q_sprintf(filename, sizeof(filename),
 				"%s_%i_%i.tga", strippedname, imageNumber++,
 				pointSize);
 			if(r_saveFontData->integer)
 				WriteTGA(filename,imageBuff,256,256);
 
-			/* Com_sprintf (filename, sizeof(filename), "fonts/fontImage_%i_%i",
+			/* Q_sprintf (filename, sizeof(filename), "fonts/fontImage_%i_%i",
 			 * imageNumber++, pointSize); */
 			image = R_CreateImage(filename,imageBuff,256,256,qfalse,qfalse,
 				GL_CLAMP_TO_EDGE);
@@ -523,22 +523,22 @@ RE_RegisterFont(const char *fontName, int pointSize, fontInfo_t *font)
 			}
 
 			lastStart = i;
-			Com_Memset(out,0,1024 * 1024);
+			Q_Memset(out,0,1024 * 1024);
 			xOut	= 0;
 			yOut	= 0;
 			ri.Free(imageBuff);
 			i++;
 		}else{
-			Com_Memcpy(&font->glyphs[i],glyph,sizeof(glyphInfo_t));
+			Q_Memcpy(&font->glyphs[i],glyph,sizeof(glyphInfo_t));
 			i++;
 		}
 	}
 
 	registeredFont[registeredFontCount].glyphScale = glyphScale;
 	font->glyphScale = glyphScale;
-	Com_Memcpy(&registeredFont[registeredFontCount++],font,sizeof(fontInfo_t));
+	Q_Memcpy(&registeredFont[registeredFontCount++],font,sizeof(fontInfo_t));
 
-	Com_sprintf(filename, sizeof(filename), "%s_%i.dat", strippedname, pointSize);
+	Q_sprintf(filename, sizeof(filename), "%s_%i.dat", strippedname, pointSize);
 	if(r_saveFontData->integer)
 		ri.FS_WriteFile(va("fonts/fontImage_%i.dat", pointSize),font,sizeof(fontInfo_t));
 

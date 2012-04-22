@@ -674,7 +674,7 @@ S_PaintChannels(int endtime)
 	else
 		snd_vol = s_volume->value*255;
 
-/* Com_Printf ("%i to %i\n", s_paintedtime, endtime); */
+/* Q_Printf ("%i to %i\n", s_paintedtime, endtime); */
 	while(s_paintedtime < endtime){
 		/* if paintbuffer is smaller than DMA buffer
 		 * we may need to fill it multiple times */
@@ -683,7 +683,7 @@ S_PaintChannels(int endtime)
 			end = s_paintedtime + PAINTBUFFER_SIZE;
 
 		/* clear the paint buffer and mix any raw samples... */
-		Com_Memset(paintbuffer, 0, sizeof(paintbuffer));
+		Q_Memset(paintbuffer, 0, sizeof(paintbuffer));
 		for(stream = 0; stream < MAX_RAW_STREAMS; stream++)
 			if(s_rawend[stream] >= s_paintedtime){
 				/* copy from the streaming sound source */

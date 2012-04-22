@@ -549,8 +549,8 @@ AAS_ClientMovementPrediction(struct aas_clientmove_s *move,
 	phys_maxsteepness = aassettings.phys_maxsteepness;
 	phys_jumpvel = aassettings.phys_jumpvel * frametime;
 	/*  */
-	Com_Memset(move, 0, sizeof(aas_clientmove_t));
-	Com_Memset(&trace, 0, sizeof(aas_trace_t));
+	Q_Memset(move, 0, sizeof(aas_clientmove_t));
+	Q_Memset(&trace, 0, sizeof(aas_trace_t));
 	/* start at the current origin */
 	Vec3Copy(origin, org);
 	org[2] += 0.25;

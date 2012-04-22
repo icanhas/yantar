@@ -119,7 +119,7 @@ SV_ReplacePendingServerCommands(client_t *client, const char *cmd)
 					sizeof(client->reliableCommands[ index ]));
 				/*
 				 * if ( client->netchan.remoteAddress.type != NA_BOT ) {
-				 *      Com_Printf( "WARNING: client %i removed double pending config string %i: %s\n", client-svs.clients, csnum1, cmd );
+				 *      Q_Printf( "WARNING: client %i removed double pending config string %i: %s\n", client-svs.clients, csnum1, cmd );
 				 * }
 				 */
 				return qtrue;
@@ -158,14 +158,14 @@ SV_AddServerCommand(client_t *client, const char *cmd)
 	 * doesn't cause a recursive drop client */
 	if(client->reliableSequence - client->reliableAcknowledge ==
 	   MAX_RELIABLE_COMMANDS + 1){
-		Com_Printf("===== pending server commands =====\n");
+		Q_Printf("===== pending server commands =====\n");
 		for(i = client->reliableAcknowledge + 1;
 		    i <= client->reliableSequence; i++)
-			Com_Printf("cmd %5d: %s\n", i,
+			Q_Printf("cmd %5d: %s\n", i,
 				client->reliableCommands[ i &
 							  (MAX_RELIABLE_COMMANDS
 							   -1) ]);
-		Com_Printf("cmd %5d: %s\n", i, cmd);
+		Q_Printf("cmd %5d: %s\n", i, cmd);
 		SV_DropClient(client, "Server command overflow");
 		return;
 	}
@@ -208,7 +208,7 @@ SV_SendServerCommand(client_t *cl, const char *fmt, ...)
 
 	/* hack to echo broadcast prints to console */
 	if(com_dedicated->integer && !strncmp((char*)message, "print", 5))
-		Com_Printf ("broadcast: %s\n",
+		Q_Printf ("broadcast: %s\n",
 			SV_ExpandNewlines((char*)message));
 
 	/* send the data to all relevent clients */
@@ -268,7 +268,7 @@ SV_MasterHeartbeat(const char *message)
 			sv_master[i]->modified = qfalse;
 
 			if(netenabled & NET_ENABLEV4){
-				Com_Printf("Resolving %s (IPv4)\n",
+				Q_Printf("Resolving %s (IPv4)\n",
 					sv_master[i]->string);
 				res =
 					NET_StringToAdr(sv_master[i]->string,
@@ -280,17 +280,17 @@ SV_MasterHeartbeat(const char *message)
 					adr[i][0].port = BigShort(PORT_MASTER);
 
 				if(res)
-					Com_Printf(
+					Q_Printf(
 						"%s resolved to %s\n",
 						sv_master[i]->string,
 						NET_AdrToStringwPort(adr[i][0]));
 				else
-					Com_Printf("%s has no IPv4 address.\n",
+					Q_Printf("%s has no IPv4 address.\n",
 						sv_master[i]->string);
 			}
 
 			if(netenabled & NET_ENABLEV6){
-				Com_Printf("Resolving %s (IPv6)\n",
+				Q_Printf("Resolving %s (IPv6)\n",
 					sv_master[i]->string);
 				res =
 					NET_StringToAdr(sv_master[i]->string,
@@ -302,12 +302,12 @@ SV_MasterHeartbeat(const char *message)
 					adr[i][1].port = BigShort(PORT_MASTER);
 
 				if(res)
-					Com_Printf(
+					Q_Printf(
 						"%s resolved to %s\n",
 						sv_master[i]->string,
 						NET_AdrToStringwPort(adr[i][1]));
 				else
-					Com_Printf("%s has no IPv6 address.\n",
+					Q_Printf("%s has no IPv6 address.\n",
 						sv_master[i]->string);
 			}
 
@@ -315,7 +315,7 @@ SV_MasterHeartbeat(const char *message)
 			   NA_BAD){
 				/* if the address failed to resolve, clear it
 				 * so we don't take repeated dns hits */
-				Com_Printf("Couldn't resolve address: %s\n",
+				Q_Printf("Couldn't resolve address: %s\n",
 					sv_master[i]->string);
 				Cvar_Set(sv_master[i]->name, "");
 				sv_master[i]->modified = qfalse;
@@ -324,7 +324,7 @@ SV_MasterHeartbeat(const char *message)
 		}
 
 
-		Com_Printf ("Sending heartbeat to %s\n", sv_master[i]->string);
+		Q_Printf ("Sending heartbeat to %s\n", sv_master[i]->string);
 
 		/* this command should be changed if the server info / status format
 		 * ever incompatably changes */
@@ -464,15 +464,15 @@ SVC_BucketForAddress(netadr_t address, int burst, int period)
 			if(bucket->next != NULL)
 				bucket->next->prev = bucket->prev;
 
-			Com_Memset(bucket, 0, sizeof(leakyBucket_t));
+			Q_Memset(bucket, 0, sizeof(leakyBucket_t));
 		}
 
 		if(bucket->type == NA_BAD){
 			bucket->type = address.type;
 			switch(address.type){
-			case NA_IP:  Com_Memcpy(bucket->ipv._4, address.ip, 4);
+			case NA_IP:  Q_Memcpy(bucket->ipv._4, address.ip, 4);
 				break;
-			case NA_IP6: Com_Memcpy(bucket->ipv._6, address.ip6, 16);
+			case NA_IP6: Q_Memcpy(bucket->ipv._6, address.ip6, 16);
 				break;
 			default: break;
 			}
@@ -566,7 +566,7 @@ SVC_Status(netadr_t from)
 
 	/* Prevent using getstatus as an amplifier */
 	if(SVC_RateLimitAddress(from, 10, 1000)){
-		Com_DPrintf(
+		Q_DPrintf(
 			"SVC_Status: rate limit from %s exceeded, dropping request\n",
 			NET_AdrToString(from));
 		return;
@@ -575,7 +575,7 @@ SVC_Status(netadr_t from)
 	/* Allow getstatus to be DoSed relatively easily, but prevent
 	 * excess outbound bandwidth usage when being flooded inbound */
 	if(SVC_RateLimit(&bucket, 10, 100)){
-		Com_DPrintf(
+		Q_DPrintf(
 			"SVC_Status: rate limit exceeded, dropping request\n");
 		return;
 	}
@@ -593,7 +593,7 @@ SVC_Status(netadr_t from)
 		cl = &svs.clients[i];
 		if(cl->state >= CS_CONNECTED){
 			ps = SV_GameClientNum(i);
-			Com_sprintf (player, sizeof(player), "%i %i \"%s\"\n",
+			Q_sprintf (player, sizeof(player), "%i %i \"%s\"\n",
 				ps->persistant[PERS_SCORE], cl->ping, cl->name);
 			playerLength = strlen(player);
 			if(statusLength + playerLength >= sizeof(status))
@@ -723,7 +723,7 @@ SVC_RemoteCommand(netadr_t from, msg_t *msg)
 
 	/* Prevent using rcon as an amplifier and make dictionary attacks impractical */
 	if(SVC_RateLimitAddress(from, 10, 1000)){
-		Com_DPrintf(
+		Q_DPrintf(
 			"SVC_RemoteCommand: rate limit from %s exceeded, dropping request\n",
 			NET_AdrToString(from));
 		return;
@@ -735,28 +735,28 @@ SVC_RemoteCommand(netadr_t from, msg_t *msg)
 
 		/* Make DoS via rcon impractical */
 		if(SVC_RateLimit(&bucket, 10, 1000)){
-			Com_DPrintf(
+			Q_DPrintf(
 				"SVC_RemoteCommand: rate limit exceeded, dropping request\n");
 			return;
 		}
 
 		valid = qfalse;
-		Com_Printf ("Bad rcon from %s: %s\n", NET_AdrToString (
+		Q_Printf ("Bad rcon from %s: %s\n", NET_AdrToString (
 				from), Cmd_ArgsFrom(2));
 	}else{
 		valid = qtrue;
-		Com_Printf ("Rcon from %s: %s\n", NET_AdrToString (
+		Q_Printf ("Rcon from %s: %s\n", NET_AdrToString (
 				from), Cmd_ArgsFrom(2));
 	}
 
 	/* start redirecting all print outputs to the packet */
 	svs.redirectAddress = from;
-	Com_BeginRedirect (sv_outputbuf, SV_OUTPUTBUF_LENGTH, SV_FlushRedirect);
+	Q_BeginRedirect (sv_outputbuf, SV_OUTPUTBUF_LENGTH, SV_FlushRedirect);
 
 	if(!strlen(sv_rconPassword->string))
-		Com_Printf ("No rconpassword set on the server.\n");
+		Q_Printf ("No rconpassword set on the server.\n");
 	else if(!valid)
-		Com_Printf ("Bad rconpassword.\n");
+		Q_Printf ("Bad rconpassword.\n");
 	else{
 		remaining[0] = 0;
 
@@ -779,7 +779,7 @@ SVC_RemoteCommand(netadr_t from, msg_t *msg)
 
 	}
 
-	Com_EndRedirect ();
+	Q_EndRedirect ();
 }
 
 /*
@@ -806,7 +806,7 @@ SV_ConnectionlessPacket(netadr_t from, msg_t *msg)
 	Cmd_TokenizeString(s);
 
 	c = Cmd_Argv(0);
-	Com_DPrintf ("SV packet %s : %s\n", NET_AdrToString(from), c);
+	Q_DPrintf ("SV packet %s : %s\n", NET_AdrToString(from), c);
 
 	if(!Q_stricmp(c, "getstatus"))
 		SVC_Status(from);
@@ -827,7 +827,7 @@ SV_ConnectionlessPacket(netadr_t from, msg_t *msg)
 		 * server disconnect messages when their new server sees our final
 		 * sequenced messages to the old client */
 	}else
-		Com_DPrintf ("bad connectionless packet from %s:\n%s\n",
+		Q_DPrintf ("bad connectionless packet from %s:\n%s\n",
 			NET_AdrToString (from), s);
 }
 
@@ -870,7 +870,7 @@ SV_PacketEvent(netadr_t from, msg_t *msg)
 		 * some address translating routers periodically change UDP
 		 * port assignments */
 		if(cl->netchan.remoteAddress.port != from.port){
-			Com_Printf(
+			Q_Printf(
 				"SV_PacketEvent: fixing up a translated port\n");
 			cl->netchan.remoteAddress.port = from.port;
 		}
@@ -972,7 +972,7 @@ SV_CheckTimeouts(void)
 		if(cl->state == CS_ZOMBIE
 		   && cl->lastPacketTime < zombiepoint){
 			/* using the client id cause the cl->name is empty at this point */
-			Com_DPrintf(
+			Q_DPrintf(
 				"Going from CS_ZOMBIE to CS_FREE for client %d\n",
 				i);
 			cl->state = CS_FREE;	/* can now be reused */

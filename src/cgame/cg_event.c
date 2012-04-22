@@ -66,7 +66,7 @@ CG_PlaceString(int rank)
 	else
 		s = va("%ith", rank);
 
-	Com_sprintf(str, sizeof(str), "%s%s", t, s);
+	Q_sprintf(str, sizeof(str), "%s%s", t, s);
 	return str;
 }
 

@@ -249,7 +249,7 @@ CG_DrawField(int x, int y, int width, int value)
 		break;
 	}
 
-	Com_sprintf (num, sizeof(num), "%i", value);
+	Q_sprintf (num, sizeof(num), "%i", value);
 	l = strlen(num);
 	if(l > width)
 		l = width;
@@ -938,7 +938,7 @@ CG_DrawTeamOverlay(float y, qbool right, qbool upper)
 
 			CG_GetColorForHealth(ci->health, ci->armor, hcolor);
 
-			Com_sprintf (st, sizeof(st), "%3i %3i", ci->health,
+			Q_sprintf (st, sizeof(st), "%3i %3i", ci->health,
 				ci->armor);
 
 			xx = x + TINYCHAR_WIDTH * 3 +
@@ -1526,7 +1526,7 @@ CG_DrawReward(void)
 		y	= 56;
 		x	= 320 - ICON_SIZE/2;
 		CG_DrawPic(x, y, ICON_SIZE-4, ICON_SIZE-4, cg.rewardShader[0]);
-		Com_sprintf(buf, sizeof(buf), "%d", cg.rewardCount[0]);
+		Q_sprintf(buf, sizeof(buf), "%d", cg.rewardCount[0]);
 		x = (SCREEN_WIDTH - SMALLCHAR_WIDTH * CG_DrawStrlen(buf)) / 2;
 		CG_DrawStringExt(x, y+ICON_SIZE, buf, color, qfalse, qtrue,
 			SMALLCHAR_WIDTH, SMALLCHAR_HEIGHT, 0);
@@ -2345,9 +2345,9 @@ CG_DrawProxWarning(void)
 	}
 
 	if(proxTick != 0)
-		Com_sprintf(s, sizeof(s), "INTERNAL COMBUSTION IN: %i", proxTick);
+		Q_sprintf(s, sizeof(s), "INTERNAL COMBUSTION IN: %i", proxTick);
 	else
-		Com_sprintf(s, sizeof(s), "YOU HAVE BEEN MINED");
+		Q_sprintf(s, sizeof(s), "YOU HAVE BEEN MINED");
 
 	w = CG_DrawStrlen(s) * BIGCHAR_WIDTH;
 	CG_DrawBigStringColor(320 - w / 2, 64 + BIGCHAR_HEIGHT, s,

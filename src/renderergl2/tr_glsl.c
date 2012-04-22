@@ -956,9 +956,9 @@ GLSL_LoadGPUShaderText(const char *name, const char *fallback,
 	int	result;
 
 	if(shaderType == GL_VERTEX_SHADER_ARB){
-		Com_sprintf(filename, sizeof(filename), "glsl/%s_vp.glsl", name);
+		Q_sprintf(filename, sizeof(filename), "glsl/%s_vp.glsl", name);
 	}else{
-		Com_sprintf(filename, sizeof(filename), "glsl/%s_fp.glsl", name);
+		Q_sprintf(filename, sizeof(filename), "glsl/%s_fp.glsl", name);
 	}
 
 	ri.Printf(PRINT_DEVELOPER, "...loading '%s'\n", filename);
@@ -1468,7 +1468,7 @@ GLSL_DeleteGPUShader(shaderProgram_t *program)
 			ri.Free(program->uniformBufferOffsets);
 		}
 
-		Com_Memset(program, 0, sizeof(*program));
+		Q_Memset(program, 0, sizeof(*program));
 	}
 }
 
