@@ -1336,7 +1336,7 @@ ParseShader(char **text)
 		}
 		/* skip stuff that only the QuakeEdRadient needs */
 		else if(!Q_stricmpn(token, "qer", 3)){
-			SkipRestOfLine(text);
+			Q_SkipRestOfLine(text);
 			continue;
 		}
 		/* sun parms */
@@ -1371,7 +1371,7 @@ ParseShader(char **text)
 			ParseDeform(text);
 			continue;
 		}else if(!Q_stricmp(token, "tesssize")){
-			SkipRestOfLine(text);
+			Q_SkipRestOfLine(text);
 			continue;
 		}else if(!Q_stricmp(token, "clampTime")){
 			token = Q_ParseExt(text, qfalse);
@@ -1381,7 +1381,7 @@ ParseShader(char **text)
 		}
 		/* skip stuff that only the q3map needs */
 		else if(!Q_stricmpn(token, "q3map", 5)){
-			SkipRestOfLine(text);
+			Q_SkipRestOfLine(text);
 			continue;
 		}
 		/* skip stuff that only q3map or the server needs */
@@ -1429,7 +1429,7 @@ ParseShader(char **text)
 			shader.fogParms.depthForOpaque = atof(token);
 
 			/* skip any old gradient directions */
-			SkipRestOfLine(text);
+			Q_SkipRestOfLine(text);
 			continue;
 		}
 		/* portal */

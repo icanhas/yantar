@@ -548,7 +548,7 @@ SkipBracedSection(char **program)
 }
 
 void
-SkipRestOfLine(char **data)
+Q_SkipRestOfLine(char **data)
 {
 	char	*p;
 	int	c;
