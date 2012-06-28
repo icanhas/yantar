@@ -61,7 +61,7 @@ ifneq ($(PLATFORM),darwin)
 endif
 
 #########
--include makefile.local
+-include Makefile.local
 
 ifndef PLATFORM
 PLATFORM=$(COMPILE_PLATFORM)
