@@ -281,21 +281,7 @@ FloatNoSwap(const float *f)
  */
 
 static char	com_token[MAX_TOKEN_CHARS];
-static char	com_parsename[MAX_TOKEN_CHARS];
 static int	com_lines;
-
-void
-Q_BeginParseSession(const char *name)
-{
-	com_lines = 0;
-	Q_sprintf(com_parsename, sizeof(com_parsename), "%s", name);
-}
-
-int
-Q_GetCurrentParseLine(void)
-{
-	return com_lines;
-}
 
 /*
  * Q_Parse: Parse a token out of a string. Will never return nil, just empty
@@ -305,34 +291,6 @@ char *
 Q_Parse(char **data_p)
 {
 	return Q_ParseExt(data_p, qtrue);
-}
-
-void
-Q_ParseError(char *format, ...)
-{
-	va_list argptr;
-	static char string[4096];
-
-	va_start(argptr, format);
-	Q_vsnprintf(string, sizeof(string), format, argptr);
-	va_end(argptr);
-
-	Q_Printf("ERROR: %s, line %d: %s\n", com_parsename, com_lines,
-		string);
-}
-
-void
-Q_ParseWarning(char *format, ...)
-{
-	va_list argptr;
-	static char string[4096];
-
-	va_start(argptr, format);
-	Q_vsnprintf(string, sizeof(string), format, argptr);
-	va_end(argptr);
-
-	Q_Printf("WARNING: %s, line %d: %s\n", com_parsename, com_lines,
-		string);
 }
 
 static char *
