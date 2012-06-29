@@ -129,6 +129,9 @@ int Q_vsnprintf(char *str, size_t size, const char *format, va_list ap);
 #include "q_platform.h"
 
 typedef unsigned char byte;
+typedef unsigned short ushort;
+typedef unsigned int uint;
+typedef unsigned long ulong;
 
 typedef enum {
 	qfalse,
