@@ -717,22 +717,17 @@ void PerpendicularVector(vec3_t dst, const vec3_t src);
 #endif
 
 /* common */
-long		Q_HashString(const char *s, int size);
-float		Q_Clamp(float min, float max, float value);
+long			Q_HashString(const char *s, int size);
+float			Q_Clamp(float min, float max, float value);
 char*		Q_SkipPath(char *pathname);
 const char*	Q_GetExtension(const char *name);
-void		Q_StripExtension(const char *in, char *out, int destsize);
+void			Q_StripExtension(const char *in, char *out, int destsize);
 qbool		Q_CompareExtension(const char *in, const char *ext);
-void		Q_DefaultExtension(char *path, int maxSize, const char *extension);
+void			Q_DefaultExtension(char *path, int maxSize, const char *extension);
 
-void		Q_BeginParseSession(const char *name);
-int		Q_GetCurrentParseLine(void);
 char*		Q_ReadToken(char **data_p);
 char*		Q_ReadTokenExt(char **data_p, qbool allowLineBreak);
-int             Q_Compress(char *data_p);
-void		Q_ReadTokenError(char *format, ...) __attribute__ ((format (printf, 1, 2)));
-void		Q_ReadTokenWarning(char *format, ...) __attribute__ ((format (printf, 1, 2)));
-/* int		Q_ReadTokenInfos( char *buf, int max, char infos[][MAX_INFO_STRING] ); */
+int         		Q_Compress(char *data_p);
 
 enum {
 	/* token types */
