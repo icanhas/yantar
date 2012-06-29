@@ -607,7 +607,7 @@ Q_HexStrToInt(const char *str)
 
 	/* check for hex code */
 	if((str[0] == '0') && (str[1] == 'x')){
-		int i, n;
+		uint i, n;
 
 		for(i = 2, n = 0; i < strlen(str); i++){
 			char digit;
@@ -1221,7 +1221,7 @@ Info_SetValueForKey_Big(char *s, const char *key, const char *value)
 static qbool
 Q_CharIsOneOfCharset(char c, char *set)
 {
-	int i;
+	uint i;
 
 	for(i = 0; i < strlen(set); i++)
 		if(set[i] == c)
