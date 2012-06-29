@@ -1435,8 +1435,8 @@ CG_StartMusic(void)
 
 	/* start the background music */
 	s = (char*)CG_ConfigString(CS_MUSIC);
-	Q_strncpyz(parm1, Q_Parse(&s), sizeof(parm1));
-	Q_strncpyz(parm2, Q_Parse(&s), sizeof(parm2));
+	Q_strncpyz(parm1, Q_ReadToken(&s), sizeof(parm1));
+	Q_strncpyz(parm2, Q_ReadToken(&s), sizeof(parm2));
 
 	trap_S_StartBackgroundTrack(parm1, parm2);
 }
@@ -1667,14 +1667,14 @@ CG_Load_Menu(char **p)
 {
 	char *token;
 
-	token = Q_ParseExt(p, qtrue);
+	token = Q_ReadTokenExt(p, qtrue);
 
 	if(token[0] != '{')
 		return qfalse;
 
 	while(1){
 
-		token = Q_ParseExt(p, qtrue);
+		token = Q_ReadTokenExt(p, qtrue);
 
 		if(Q_stricmp(token, "}") == 0)
 			return qtrue;
@@ -1732,7 +1732,7 @@ CG_LoadMenus(const char *menuFile)
 	p = buf;
 
 	while(1){
-		token = Q_ParseExt(&p, qtrue);
+		token = Q_ReadTokenExt(&p, qtrue);
 		if(!token || token[0] == 0 || token[0] == '}')
 			break;
 

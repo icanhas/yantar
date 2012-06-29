@@ -146,7 +146,7 @@ IN_IsConsoleKey(keyNum_t key, const unsigned char character)
 			consoleKey_t *c = &consoleKeys[ numConsoleKeys ];
 			int charCode = 0;
 
-			token = Q_Parse(&text_p);
+			token = Q_ReadToken(&text_p);
 			if(!token[ 0 ])
 				break;
 

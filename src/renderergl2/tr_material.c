@@ -1161,7 +1161,7 @@ FindShaderInShaderText(const char *shadername)
 	if(shaderTextHashTable[hash]){
 		for(i = 0; shaderTextHashTable[hash][i]; i++){
 			p = shaderTextHashTable[hash][i];
-			token = Q_ParseExt(&p, qtrue);
+			token = Q_ReadTokenExt(&p, qtrue);
 
 			if(!Q_stricmp(token, shadername))
 				return p;
@@ -1174,7 +1174,7 @@ FindShaderInShaderText(const char *shadername)
 
 	/* look for label */
 	for(;;){
-		token = Q_ParseExt(&p, qtrue);
+		token = Q_ReadTokenExt(&p, qtrue);
 		if(token[0] == 0){
 			break;
 		}
@@ -1711,14 +1711,14 @@ ScanAndLoadShaderFiles(void)
 		/* Do a simple check on the shader structure in that file to make sure one bad shader file cannot fuck up all other shaders. */
 		p = buffers[i];
 		for(;;){
-			token = Q_ParseExt(&p, qtrue);
+			token = Q_ReadTokenExt(&p, qtrue);
 
 			if(!*token)
 				break;
 
 			oldp = p;
 
-			token = Q_ParseExt(&p, qtrue);
+			token = Q_ReadTokenExt(&p, qtrue);
 			if(token[0] != '{' && token[1] != '\0'){
 				ri.Printf(PRINT_WARNING,
 					"WARNING: Bad shader file %s has incorrect syntax.\n",
@@ -1763,7 +1763,7 @@ ScanAndLoadShaderFiles(void)
 	p = s_shaderText;
 	/* look for shader names */
 	for(;;){
-		token = Q_ParseExt(&p, qtrue);
+		token = Q_ReadTokenExt(&p, qtrue);
 		if(token[0] == 0)
 			break;
 
@@ -1788,7 +1788,7 @@ ScanAndLoadShaderFiles(void)
 	/* look for shader names */
 	for(;;){
 		oldp	= p;
-		token	= Q_ParseExt(&p, qtrue);
+		token	= Q_ReadTokenExt(&p, qtrue);
 		if(token[0] == 0)
 			break;
 

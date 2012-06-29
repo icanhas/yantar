@@ -1388,17 +1388,17 @@ CL_LoadConsoleHistory(void)
 		text_p = consoleSaveBuffer;
 
 		for(i = COMMAND_HISTORY - 1; i >= 0; i--){
-			if(!*(token = Q_Parse(&text_p)))
+			if(!*(token = Q_ReadToken(&text_p)))
 				break;
 
 			historyEditLines[ i ].cursor = atoi(token);
 
-			if(!*(token = Q_Parse(&text_p)))
+			if(!*(token = Q_ReadToken(&text_p)))
 				break;
 
 			historyEditLines[ i ].scroll = atoi(token);
 
-			if(!*(token = Q_Parse(&text_p)))
+			if(!*(token = Q_ReadToken(&text_p)))
 				break;
 
 			numChars = atoi(token);

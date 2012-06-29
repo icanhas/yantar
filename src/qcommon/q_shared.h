@@ -727,12 +727,12 @@ void		Q_DefaultExtension(char *path, int maxSize, const char *extension);
 
 void		Q_BeginParseSession(const char *name);
 int		Q_GetCurrentParseLine(void);
-char*		Q_Parse(char **data_p);
-char*		Q_ParseExt(char **data_p, qbool allowLineBreak);
+char*		Q_ReadToken(char **data_p);
+char*		Q_ReadTokenExt(char **data_p, qbool allowLineBreak);
 int             Q_Compress(char *data_p);
-void		Q_ParseError(char *format, ...) __attribute__ ((format (printf, 1, 2)));
-void		Q_ParseWarning(char *format, ...) __attribute__ ((format (printf, 1, 2)));
-/* int		Q_ParseInfos( char *buf, int max, char infos[][MAX_INFO_STRING] ); */
+void		Q_ReadTokenError(char *format, ...) __attribute__ ((format (printf, 1, 2)));
+void		Q_ReadTokenWarning(char *format, ...) __attribute__ ((format (printf, 1, 2)));
+/* int		Q_ReadTokenInfos( char *buf, int max, char infos[][MAX_INFO_STRING] ); */
 
 enum {
 	/* token types */

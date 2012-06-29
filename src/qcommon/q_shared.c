@@ -284,13 +284,13 @@ static char	com_token[MAX_TOKEN_CHARS];
 static int	com_lines;
 
 /*
- * Q_Parse: Parse a token out of a string. Will never return nil, just empty
- * strings
+ * Q_ReadToken: Lex and return the next token of a string. 
+ * Will never return nil, just empty strings.
  */
 char *
-Q_Parse(char **data_p)
+Q_ReadToken(char **data_p)
 {
-	return Q_ParseExt(data_p, qtrue);
+	return Q_ReadTokenExt(data_p, qtrue);
 }
 
 static char *
@@ -386,30 +386,31 @@ Q_Compress(char *data_p)
 }
 
 /*
- * Q_ParseExt: Parse a token out of a string. Will never return nil, just
- * empty strings. If "allowLineBreaks" is qtrue then an empty string will be
+ * Q_ReadTokenExt: Lex and return the next token of a string.  
+ * Will never return nil, just empty strings.
+ * If "allowLineBreaks" is qtrue then an empty string will be
  * returned if the next token is a newline.
  */
 char *
-Q_ParseExt(char **data_p, qbool allowLineBreaks)
+Q_ReadTokenExt(char **data_p, qbool allowLineBreaks)
 {
 	int c, len;
-	qbool		hasNewLines = qfalse;
-	char		*data;
+	qbool hasNewLines;
+	char *data;
 
 	c = 0;
-	data	= *data_p;
 	len	= 0;
-	com_token[0] = 0;
-
-	/* make sure incoming data is valid */
+	hasNewLines = qfalse;
+	data	= *data_p;
+	com_token[0] = '\0';
+	
+	/* make sure the incoming data is valid */
 	if(data == nil){
 		*data_p = nil;
 		return com_token;
 	}
 
-	for(;; ){
-		/* skip whitespace */
+	for(;;){
 		data = SkipWhitespace(data, &hasNewLines);
 		if(data == nil){
 			*data_p = nil;
@@ -422,13 +423,12 @@ Q_ParseExt(char **data_p, qbool allowLineBreaks)
 
 		c = *data;
 
-		/* skip double slash comments */
+		/* skip comments */
 		if((c == '/') && (data[1] == '/')){
 			data += 2;
 			while((*data != '\0') && (*data != '\n'))
 				++data;
 		}else if((c == '/') && (data[1] == '*')){
-			/* skip '/ * * /' comments */
 			data += 2;
 			while((*data != '\0') && ((*data != '*') || (data[1] != '/')))
 				++data;
@@ -440,17 +440,18 @@ Q_ParseExt(char **data_p, qbool allowLineBreaks)
 
 	/* handle quoted strings */
 	if(c == '\"'){
-		++data;
-		for(;; ){
+		data++;
+		for(;;){
 			c = *data++;
 			if((c == '\"') || (c == '\0')){
-				com_token[len] = 0;
+				/* FIXME: really? */
+				com_token[len] = '\0';
 				*data_p = (char*)data;
 				return com_token;
 			}
 			if(len < MAX_TOKEN_CHARS-1){
 				com_token[len] = c;
-				++len;
+				len++;
 			}
 		}
 	}
@@ -461,10 +462,10 @@ Q_ParseExt(char **data_p, qbool allowLineBreaks)
 			com_token[len] = c;
 			++len;
 		}
-		++data;
+		data++;
 		c = *data;
 		if(c == '\n')
-			++com_lines;
+			com_lines++;
 	} while(c > 32);
 
 	com_token[len] = 0;
@@ -478,7 +479,7 @@ Q_MatchToken(char **buf_p, char *match)
 {
 	char *token;
 
-	token = Q_Parse(buf_p);
+	token = Q_ReadToken(buf_p);
 	if(strcmp(token, match))
 		Q_Error(ERR_DROP, "MatchToken: %s != %s", token, match);
 }
@@ -495,7 +496,7 @@ SkipBracedSection(char **program)
 
 	depth = 0;
 	do {
-		token = Q_ParseExt(program, qtrue);
+		token = Q_ReadTokenExt(program, qtrue);
 		if(token[1] == 0){
 			if(token[0] == '{')
 				depth++;
@@ -529,7 +530,7 @@ Parse1DMatrix(char **buf_p, int x, float *m)
 
 	Q_MatchToken(buf_p, "(");
 	for(i = 0; i < x; i++){
-		token	= Q_Parse(buf_p);
+		token	= Q_ReadToken(buf_p);
 		m[i]	= atof(token);
 	}
 	Q_MatchToken(buf_p, ")");

@@ -949,23 +949,23 @@ UI_ParseAnimationFile(const char *filename, animation_t *animations)
 	/* read optional parameters */
 	while(1){
 		prev = text_p;	/* so we can unget */
-		token = Q_Parse(&text_p);
+		token = Q_ReadToken(&text_p);
 		if(!token)
 			break;
 		if(!Q_stricmp(token, "footsteps")){
-			token = Q_Parse(&text_p);
+			token = Q_ReadToken(&text_p);
 			if(!token)
 				break;
 			continue;
 		}else if(!Q_stricmp(token, "headoffset")){
 			for(i = 0; i < 3; i++){
-				token = Q_Parse(&text_p);
+				token = Q_ReadToken(&text_p);
 				if(!token)
 					break;
 			}
 			continue;
 		}else if(!Q_stricmp(token, "sex")){
-			token = Q_Parse(&text_p);
+			token = Q_ReadToken(&text_p);
 			if(!token)
 				break;
 			continue;
@@ -983,7 +983,7 @@ UI_ParseAnimationFile(const char *filename, animation_t *animations)
 	/* read information for each frame */
 	for(i = 0; i < MAX_ANIMATIONS; i++){
 
-		token = Q_Parse(&text_p);
+		token = Q_ReadToken(&text_p);
 		if(!token)
 			break;
 		animations[i].firstFrame = atoi(token);
@@ -994,17 +994,17 @@ UI_ParseAnimationFile(const char *filename, animation_t *animations)
 		if(i >= LEGS_WALKCR)
 			animations[i].firstFrame -= skip;
 
-		token = Q_Parse(&text_p);
+		token = Q_ReadToken(&text_p);
 		if(!token)
 			break;
 		animations[i].numFrames = atoi(token);
 
-		token = Q_Parse(&text_p);
+		token = Q_ReadToken(&text_p);
 		if(!token)
 			break;
 		animations[i].loopFrames = atoi(token);
 
-		token = Q_Parse(&text_p);
+		token = Q_ReadToken(&text_p);
 		if(!token)
 			break;
 		fps = atof(token);

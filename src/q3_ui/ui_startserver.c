@@ -114,7 +114,7 @@ GametypeBits(char *string)
 	bits = 0;
 	p = string;
 	while(1){
-		token = Q_ParseExt(&p, qfalse);
+		token = Q_ReadTokenExt(&p, qfalse);
 		if(token[0] == 0)
 			break;
 

@@ -5255,14 +5255,14 @@ Team_Parse(char **p)
 	const char      *tempStr;
 	int	i;
 
-	token = Q_ParseExt(p, qtrue);
+	token = Q_ReadTokenExt(p, qtrue);
 
 	if(token[0] != '{')
 		return qfalse;
 
 	while(1){
 
-		token = Q_ParseExt(p, qtrue);
+		token = Q_ReadTokenExt(p, qtrue);
 
 		if(Q_stricmp(token, "}") == 0)
 			return qtrue;
@@ -5315,7 +5315,7 @@ Team_Parse(char **p)
 			else
 				Q_Printf(
 					"Too many teams, last team replaced!\n");
-			token = Q_ParseExt(p, qtrue);
+			token = Q_ReadTokenExt(p, qtrue);
 			if(token[0] != '}')
 				return qfalse;
 		}
@@ -5330,14 +5330,14 @@ Character_Parse(char **p)
 	char *token;
 	const char *tempStr;
 
-	token = Q_ParseExt(p, qtrue);
+	token = Q_ReadTokenExt(p, qtrue);
 
 	if(token[0] != '{')
 		return qfalse;
 
 
 	while(1){
-		token = Q_ParseExt(p, qtrue);
+		token = Q_ReadTokenExt(p, qtrue);
 
 		if(Q_stricmp(token, "}") == 0)
 			return qtrue;
@@ -5382,7 +5382,7 @@ Character_Parse(char **p)
 				Q_Printf(
 					"Too many characters, last character replaced!\n");
 
-			token = Q_ParseExt(p, qtrue);
+			token = Q_ReadTokenExt(p, qtrue);
 			if(token[0] != '}')
 				return qfalse;
 		}
@@ -5397,13 +5397,13 @@ Alias_Parse(char **p)
 {
 	char *token;
 
-	token = Q_ParseExt(p, qtrue);
+	token = Q_ReadTokenExt(p, qtrue);
 
 	if(token[0] != '{')
 		return qfalse;
 
 	while(1){
-		token = Q_ParseExt(p, qtrue);
+		token = Q_ReadTokenExt(p, qtrue);
 
 		if(Q_stricmp(token, "}") == 0)
 			return qtrue;
@@ -5431,7 +5431,7 @@ Alias_Parse(char **p)
 				Q_Printf(
 					"Too many aliases, last alias replaced!\n");
 
-			token = Q_ParseExt(p, qtrue);
+			token = Q_ReadTokenExt(p, qtrue);
 			if(token[0] != '}')
 				return qfalse;
 		}
@@ -5461,7 +5461,7 @@ UI_ParseTeamInfo(const char *teamFile)
 	p = buff;
 
 	while(1){
-		token = Q_ParseExt(&p, qtrue);
+		token = Q_ReadTokenExt(&p, qtrue);
 		if(!token || token[0] == 0 || token[0] == '}')
 			break;
 
@@ -5492,7 +5492,7 @@ GameType_Parse(char **p, qbool join)
 {
 	char *token;
 
-	token = Q_ParseExt(p, qtrue);
+	token = Q_ReadTokenExt(p, qtrue);
 
 	if(token[0] != '{')
 		return qfalse;
@@ -5503,7 +5503,7 @@ GameType_Parse(char **p, qbool join)
 		uiInfo.numGameTypes = 0;
 
 	while(1){
-		token = Q_ParseExt(p, qtrue);
+		token = Q_ReadTokenExt(p, qtrue);
 
 		if(Q_stricmp(token, "}") == 0)
 			return qtrue;
@@ -5548,7 +5548,7 @@ GameType_Parse(char **p, qbool join)
 						"Too many game types, last one replace!\n");
 			}
 
-			token = Q_ParseExt(p, qtrue);
+			token = Q_ReadTokenExt(p, qtrue);
 			if(token[0] != '}')
 				return qfalse;
 		}
@@ -5561,7 +5561,7 @@ MapList_Parse(char **p)
 {
 	char *token;
 
-	token = Q_ParseExt(p, qtrue);
+	token = Q_ReadTokenExt(p, qtrue);
 
 	if(token[0] != '{')
 		return qfalse;
@@ -5569,7 +5569,7 @@ MapList_Parse(char **p)
 	uiInfo.mapCount = 0;
 
 	while(1){
-		token = Q_ParseExt(p, qtrue);
+		token = Q_ReadTokenExt(p, qtrue);
 
 		if(Q_stricmp(token, "}") == 0)
 			return qtrue;
@@ -5593,7 +5593,7 @@ MapList_Parse(char **p)
 			uiInfo.mapList[uiInfo.mapCount].typeBits = 0;
 
 			while(1){
-				token = Q_ParseExt(p, qtrue);
+				token = Q_ReadTokenExt(p, qtrue);
 				if(token[0] >= '0' && token[0] <= '9'){
 					uiInfo.mapList[uiInfo.mapCount].typeBits
 						|= (1 << (token[0] - 0x030));
@@ -5642,7 +5642,7 @@ UI_ParseGameInfo(const char *teamFile)
 	p = buff;
 
 	while(1){
-		token = Q_ParseExt(&p, qtrue);
+		token = Q_ReadTokenExt(&p, qtrue);
 		if(!token || token[0] == 0 || token[0] == '}')
 			break;
 

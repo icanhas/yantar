@@ -88,7 +88,7 @@ UI_ParseInfos(char *buf, int max, char *infos[])
 	count = 0;
 
 	while(1){
-		token = Q_Parse(&buf);
+		token = Q_ReadToken(&buf);
 		if(!token[0])
 			break;
 		if(strcmp(token, "{")){
@@ -103,7 +103,7 @@ UI_ParseInfos(char *buf, int max, char *infos[])
 
 		info[0] = '\0';
 		while(1){
-			token = Q_ParseExt(&buf, qtrue);
+			token = Q_ReadTokenExt(&buf, qtrue);
 			if(!token[0]){
 				Q_Printf("Unexpected end of info file\n");
 				break;
@@ -112,7 +112,7 @@ UI_ParseInfos(char *buf, int max, char *infos[])
 				break;
 			Q_strncpyz(key, token, sizeof(key));
 
-			token = Q_ParseExt(&buf, qfalse);
+			token = Q_ReadTokenExt(&buf, qfalse);
 			if(!token[0])
 				strcpy(token, "<NULL>");
 			Info_SetValueForKey(info, key, token);

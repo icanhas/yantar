@@ -416,7 +416,7 @@ SV_GameSystemCalls(intptr_t *args)
 	{
 		const char *s;
 
-		s = Q_Parse(&sv.entityParsePoint);
+		s = Q_ReadToken(&sv.entityParsePoint);
 		Q_strncpyz(VMA(1), s, args[2]);
 		if(!sv.entityParsePoint && !s[0])
 			return qfalse;

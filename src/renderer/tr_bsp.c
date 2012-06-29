@@ -1740,7 +1740,7 @@ R_LoadEntities(lump_t *l)
 	strcpy(w->entityString, p);
 	w->entityParsePoint = w->entityString;
 
-	token = Q_ParseExt(&p, qtrue);
+	token = Q_ReadTokenExt(&p, qtrue);
 	if(!*token || *token != '{'){
 		return;
 	}
@@ -1748,7 +1748,7 @@ R_LoadEntities(lump_t *l)
 	/* only parse the world spawn */
 	while(1){
 		/* parse key */
-		token = Q_ParseExt(&p, qtrue);
+		token = Q_ReadTokenExt(&p, qtrue);
 
 		if(!*token || *token == '}'){
 			break;
@@ -1756,7 +1756,7 @@ R_LoadEntities(lump_t *l)
 		Q_strncpyz(keyname, token, sizeof(keyname));
 
 		/* parse value */
-		token = Q_ParseExt(&p, qtrue);
+		token = Q_ReadTokenExt(&p, qtrue);
 
 		if(!*token || *token == '}'){
 			break;
@@ -1808,7 +1808,7 @@ R_GetEntityToken(char *buffer, int size)
 {
 	const char *s;
 
-	s = Q_Parse(&s_worldData.entityParsePoint);
+	s = Q_ReadToken(&s_worldData.entityParsePoint);
 	Q_strncpyz(buffer, s, size);
 	if(!s_worldData.entityParsePoint || !s[0]){
 		s_worldData.entityParsePoint = s_worldData.entityString;

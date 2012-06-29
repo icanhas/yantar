@@ -243,24 +243,24 @@ VM_LoadSymbols(vm_t *vm)
 	count	= 0;
 
 	while(1){
-		token = Q_Parse(&text_p);
+		token = Q_ReadToken(&text_p);
 		if(!token[0])
 			break;
 		segment = ParseHex(token);
 		if(segment){
-			Q_Parse(&text_p);
-			Q_Parse(&text_p);
+			Q_ReadToken(&text_p);
+			Q_ReadToken(&text_p);
 			continue;	/* only load code segment values */
 		}
 
-		token = Q_Parse(&text_p);
+		token = Q_ReadToken(&text_p);
 		if(!token[0]){
 			Q_Printf("WARNING: incomplete line at end of file\n");
 			break;
 		}
 		value = ParseHex(token);
 
-		token = Q_Parse(&text_p);
+		token = Q_ReadToken(&text_p);
 		if(!token[0]){
 			Q_Printf("WARNING: incomplete line at end of file\n");
 			break;

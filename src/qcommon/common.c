@@ -386,12 +386,12 @@ int com_numConsoleLines;
 char *com_consoleLines[MAX_CONSOLE_LINES];
 
 /*
- * Q_ParseCommandLine
+ * Q_ReadTokenCommandLine
  *
  * Break it up into multiple console lines
  */
 void
-Q_ParseCommandLine(char *commandLine)
+Q_ReadTokenCommandLine(char *commandLine)
 {
 	int inq = 0;
 	com_consoleLines[0] = commandLine;
@@ -2617,7 +2617,7 @@ Q_Init(char *commandLine)
 
 	/* prepare enough of the subsystems to handle
 	 * cvar and command buffer management */
-	Q_ParseCommandLine(commandLine);
+	Q_ReadTokenCommandLine(commandLine);
 
 /*	Swap_Init (); */
 	Cbuf_Init ();
