@@ -1062,8 +1062,6 @@ void                    trap_R_RemapShader(const char *oldShader,
 					   const char *timeOffset);
 qbool                trap_VerifyCDKey(const char *key, const char *chksum);
 
-void                    trap_SetPbClStatus(int status);
-
 /*
  * ui_addbots.c
  *  */

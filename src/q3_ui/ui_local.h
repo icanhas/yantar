@@ -732,10 +732,7 @@ void                    trap_LAN_GetPingInfo(int n, char *buf, int buflen);
 int                             trap_MemoryRemaining(void);
 void                    trap_GetCDKey(char *buf, int buflen);
 void                    trap_SetCDKey(char *buf);
-
 qbool               trap_VerifyCDKey(const char *key, const char *chksum);
-
-void                    trap_SetPbClStatus(int status);
 
 /*
  * ui_addbots.c

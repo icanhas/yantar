@@ -302,8 +302,6 @@ LAN_GetServerInfo(int source, int n, char *buf, int buflen)
 		Info_SetValueForKey(info, "nettype", va("%i",server->netType));
 		Info_SetValueForKey(info, "addr",
 			NET_AdrToStringwPort(server->adr));
-		Info_SetValueForKey(info, "punkbuster",
-			va("%i", server->punkbuster));
 		Info_SetValueForKey(info, "g_needpass",
 			va("%i", server->g_needpass));
 		Info_SetValueForKey(info, "g_humanplayers",
@@ -958,9 +956,6 @@ CL_UISystemCalls(intptr_t *args)
 #ifndef STANDALONE
 		CLUI_SetCDKey(VMA(1));
 #endif
-		return 0;
-
-	case UI_SET_PBCLSTATUS:
 		return 0;
 
 	case UI_R_REGISTERFONT:

@@ -587,9 +587,3 @@ trap_VerifyCDKey(const char *key, const char *chksum)
 {
 	return syscall(UI_VERIFY_CDKEY, key, chksum);
 }
-
-void
-trap_SetPbClStatus(int status)
-{
-	syscall(UI_SET_PBCLSTATUS, status);
-}

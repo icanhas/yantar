@@ -4100,10 +4100,6 @@ UI_RunMenuScript(char **args)
 		else if(Q_stricmp(name, "update") == 0){
 			if(String_Parse(args, &name2))
 				UI_Update(name2);
-		}else if(Q_stricmp(name, "setPbClStatus") == 0){
-			int stat;
-			if(Int_Parse(args, &stat))
-				trap_SetPbClStatus(stat);
 		}else
 			Q_Printf("unknown UI script %s\n", name);
 	}
@@ -4987,7 +4983,7 @@ UI_FeederItemText(float feederID, int index, int column, qhandle_t *handle)
 		return UI_SelectedMap(index, &actual);
 	}else if(feederID == FEEDER_SERVERS){
 		if(index >= 0 && index < uiInfo.serverStatus.numDisplayServers){
-			int ping, game, punkbuster;
+			int ping, game;
 			if(lastColumn != column || lastTime >
 			   uiInfo.uiDC.realTime + 5000){
 				trap_LAN_GetServerInfo(
@@ -5053,13 +5049,6 @@ UI_FeederItemText(float feederID, int index, int column, qhandle_t *handle)
 					return "...";
 				else
 					return Info_ValueForKey(info, "ping");
-			case SORT_PUNKBUSTER:
-				punkbuster =
-					atoi(Info_ValueForKey(info, "punkbuster"));
-				if(punkbuster)
-					return "Yes";
-				else
-					return "No";
 			}
 		}
 	}else if(feederID == FEEDER_SERVERSTATUS){

@@ -296,7 +296,6 @@ typedef struct {
 	int		maxPing;
 	int		ping;
 	qbool		visible;
-	int		punkbuster;
 	int		g_humanplayers;
 	int		g_needpass;
 } serverInfo_t;
