@@ -55,7 +55,6 @@
 #define ART_UNKNOWNMAP		"menu/art/unknownmap"
 #define ART_REMOVE0		"menu/art/delete_0"
 #define ART_REMOVE1		"menu/art/delete_1"
-#define ART_PUNKBUSTER		"menu/art/pblogo"
 
 #define ID_MASTER		10
 #define ID_GAMETYPE		11
@@ -71,7 +70,6 @@
 #define ID_CREATE		21
 #define ID_CONNECT		22
 #define ID_REMOVE		23
-#define ID_PUNKBUSTER		24
 
 #define GR_LOGO			30
 #define GR_LETTERS		31
@@ -152,20 +150,6 @@ static char		* netnames[] = {
 static char		quake3worldMessage[] =
 	"Visit www.quake3world.com - News, Community, Events, Files";
 
-const char * punkbuster_items[] = {
-	"Disabled",
-	"Enabled",
-	NULL
-};
-
-const char * punkbuster_msg[] = {
-	"PunkBuster will be",
-	"disabled the next time",
-	"Quake III Arena",
-	"is started.",
-	NULL
-};
-
 typedef struct {
 	char	adrstr[MAX_ADDRESSLENGTH];
 	int	start;
@@ -183,8 +167,6 @@ typedef struct servernode_s {
 	int		nettype;
 	int		minPing;
 	int		maxPing;
-	qbool		bPB;
-
 } servernode_t;
 
 typedef struct {
@@ -232,9 +214,6 @@ typedef struct {
 	char			favoriteaddresses[MAX_FAVORITESERVERS][
 		MAX_ADDRESSLENGTH];
 	int			numfavoriteaddresses;
-
-	menulist_s		punkbuster;
-	menubitmap_s		pblogo;
 } arenaservers_t;
 
 static arenaservers_t g_arenaservers;
@@ -425,7 +404,6 @@ ArenaServers_UpdateMenu(void)
 			g_arenaservers.list.generic.flags &= ~QMF_GRAYED;
 			g_arenaservers.refresh.generic.flags &= ~QMF_GRAYED;
 			g_arenaservers.go.generic.flags &= ~QMF_GRAYED;
-			g_arenaservers.punkbuster.generic.flags &= ~QMF_GRAYED;
 
 			/* update status bar */
 			if(g_servertype >= UIAS_GLOBAL1 && g_servertype <=
@@ -452,7 +430,6 @@ ArenaServers_UpdateMenu(void)
 			g_arenaservers.list.generic.flags |= QMF_GRAYED;
 			g_arenaservers.refresh.generic.flags |= QMF_GRAYED;
 			g_arenaservers.go.generic.flags |= QMF_GRAYED;
-			g_arenaservers.punkbuster.generic.flags |= QMF_GRAYED;
 		}else{
 			if(g_arenaservers.numqueriedservers < 0)
 				strcpy(g_arenaservers.status.string,
@@ -478,7 +455,6 @@ ArenaServers_UpdateMenu(void)
 			g_arenaservers.list.generic.flags |= QMF_GRAYED;
 			g_arenaservers.refresh.generic.flags &= ~QMF_GRAYED;
 			g_arenaservers.go.generic.flags |= QMF_GRAYED;
-			g_arenaservers.punkbuster.generic.flags &= ~QMF_GRAYED;
 		}
 
 		/* zero out list box */
@@ -544,16 +520,14 @@ ArenaServers_UpdateMenu(void)
 		else
 			pingColor = S_COLOR_RED;
 
-		Q_sprintf(
-			buff, MAX_LISTBOXWIDTH,
+		Q_sprintf(buff, MAX_LISTBOXWIDTH,
 			"%-20.20s %-12.12s %2d/%2d %-8.8s %4s%s%3d "
 			S_COLOR_YELLOW "%s",
 			servernodeptr->hostname, servernodeptr->mapname,
 			servernodeptr->numclients,
 			servernodeptr->maxclients, servernodeptr->gamename,
 			netnames[servernodeptr->nettype], pingColor,
-			servernodeptr->pingtime,
-			servernodeptr->bPB ? "Yes" : "No");
+			servernodeptr->pingtime);
 		j++;
 	}
 
@@ -678,7 +652,6 @@ ArenaServers_Insert(char* adrstr, char* info, int pingtime)
 	servernodeptr->pingtime = pingtime;
 	servernodeptr->minPing	= atoi(Info_ValueForKey(info, "minPing"));
 	servernodeptr->maxPing	= atoi(Info_ValueForKey(info, "maxPing"));
-	servernodeptr->bPB = atoi(Info_ValueForKey(info, "punkbuster"));
 
 	/*
 	 * s = Info_ValueForKey( info, "nettype" );
@@ -1171,29 +1144,6 @@ ArenaServers_SetType(int type)
 }
 
 /*
- * PunkBuster_Confirm
- */
-static void
-Punkbuster_ConfirmEnable(qbool result)
-{
-	if(result)
-		trap_SetPbClStatus(1);
-	g_arenaservers.punkbuster.curvalue = Q_Clamp(
-		0, 1, trap_Cvar_VariableValue("cl_punkbuster"));
-}
-
-static void
-Punkbuster_ConfirmDisable(qbool result)
-{
-	if(result){
-		trap_SetPbClStatus(0);
-		UI_Message(punkbuster_msg);
-	}
-	g_arenaservers.punkbuster.curvalue = Q_Clamp(
-		0, 1, trap_Cvar_VariableValue("cl_punkbuster"));
-}
-
-/*
  * ArenaServers_Event
  */
 static void
@@ -1280,17 +1230,6 @@ ArenaServers_Event(void* ptr, int event)
 	case ID_REMOVE:
 		ArenaServers_Remove();
 		ArenaServers_UpdateMenu();
-		break;
-
-	case ID_PUNKBUSTER:
-		if(g_arenaservers.punkbuster.curvalue)
-			UI_ConfirmMenu_Style("Enable Punkbuster?",  UI_CENTER|
-				UI_INVERSE|UI_SMALLFONT, 0,
-				Punkbuster_ConfirmEnable);
-		else
-			UI_ConfirmMenu_Style("Disable Punkbuster?", UI_CENTER|
-				UI_INVERSE|UI_SMALLFONT, 0,
-				Punkbuster_ConfirmDisable);
 		break;
 	}
 }
@@ -1554,24 +1493,6 @@ ArenaServers_MenuInit(void)
 	g_arenaservers.go.height = 64;
 	g_arenaservers.go.focuspic = ART_CONNECT1;
 
-	g_arenaservers.punkbuster.generic.type	= MTYPE_SPINCONTROL;
-	g_arenaservers.punkbuster.generic.name	= "Punkbuster:";
-	g_arenaservers.punkbuster.generic.flags = QMF_PULSEIFFOCUS|QMF_SMALLFONT;
-	g_arenaservers.punkbuster.generic.callback = ArenaServers_Event;
-	g_arenaservers.punkbuster.generic.id = ID_PUNKBUSTER;
-	g_arenaservers.punkbuster.generic.x = 480+32;
-	g_arenaservers.punkbuster.generic.y = 144;
-	g_arenaservers.punkbuster.itemnames = punkbuster_items;
-
-	g_arenaservers.pblogo.generic.type = MTYPE_BITMAP;
-	g_arenaservers.pblogo.generic.name = ART_PUNKBUSTER;
-	g_arenaservers.pblogo.generic.flags = QMF_LEFT_JUSTIFY|QMF_INACTIVE;
-	g_arenaservers.pblogo.generic.x = 526;
-	g_arenaservers.pblogo.generic.y = 176;
-	g_arenaservers.pblogo.width	= 32;
-	g_arenaservers.pblogo.height	= 16;
-	g_arenaservers.pblogo.errorpic	= ART_UNKNOWNMAP;
-
 	Menu_AddItem(&g_arenaservers.menu, (void*)&g_arenaservers.banner);
 
 	Menu_AddItem(&g_arenaservers.menu, (void*)&g_arenaservers.master);
@@ -1595,9 +1516,6 @@ ArenaServers_MenuInit(void)
 	Menu_AddItem(&g_arenaservers.menu, (void*)&g_arenaservers.create);
 	Menu_AddItem(&g_arenaservers.menu, (void*)&g_arenaservers.go);
 
-	Menu_AddItem(&g_arenaservers.menu, (void*)&g_arenaservers.punkbuster);
-	Menu_AddItem(&g_arenaservers.menu, (void*)&g_arenaservers.pblogo);
-
 	ArenaServers_LoadFavorites();
 
 	g_arenaservers.master.curvalue = g_servertype = Q_Clamp(
@@ -1614,9 +1532,6 @@ ArenaServers_MenuInit(void)
 
 	g_emptyservers = Q_Clamp(0, 1, ui_browserShowEmpty.integer);
 	g_arenaservers.showempty.curvalue = g_emptyservers;
-
-	g_arenaservers.punkbuster.curvalue = Q_Clamp(
-		0, 1, trap_Cvar_VariableValue("cl_punkbuster"));
 
 	/* force to initial state and refresh */
 	g_arenaservers.master.curvalue = g_servertype = ArenaServers_SetType(
@@ -1646,7 +1561,6 @@ ArenaServers_Cache(void)
 	trap_R_RegisterShaderNoMip(ART_ARROWS_UP);
 	trap_R_RegisterShaderNoMip(ART_ARROWS_DOWN);
 	trap_R_RegisterShaderNoMip(ART_UNKNOWNMAP);
-	trap_R_RegisterShaderNoMip(ART_PUNKBUSTER);
 }
 
 
