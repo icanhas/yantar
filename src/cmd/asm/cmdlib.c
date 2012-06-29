@@ -437,12 +437,12 @@ FileTime(const char *path)
 
 
 /*
- * Q_Parse
+ * Q_ReadToken
  *
  * Parse a token out of a string
  */
 char *
-Q_Parse(char *data)
+Q_ReadToken(char *data)
 {
 	int	c;
 	int	len;
