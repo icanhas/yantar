@@ -1176,15 +1176,11 @@ makedirs:
 	@if [ ! -d $(O)/$(MISSIONPACK)/vm ];then $(MKDIR) $(O)/$(MISSIONPACK)/vm;fi
 	@if [ ! -d $(B)/cmd ];then $(MKDIR) $(B)/cmd;fi
 	@if [ ! -d $(O)/cmd ];then $(MKDIR) $(O)/cmd;fi
-	@if [ ! -d $(B)/cmd/asm ];then $(MKDIR) $(B)/cmd/asm;fi
 	@if [ ! -d $(O)/cmd/asm ];then $(MKDIR) $(O)/cmd/asm;fi
-	@if [ ! -d $(B)/cmd/etc ];then $(MKDIR) $(B)/cmd/etc;fi
 	@if [ ! -d $(O)/cmd/etc ];then $(MKDIR) $(O)/cmd/etc;fi
 	@if [ ! -d $(B)/cmd/rcc ];then $(MKDIR) $(B)/cmd/rcc;fi
 	@if [ ! -d $(O)/cmd/rcc ];then $(MKDIR) $(O)/cmd/rcc;fi
-	@if [ ! -d $(B)/cmd/cpp ];then $(MKDIR) $(B)/cmd/cpp;fi
 	@if [ ! -d $(O)/cmd/cpp ];then $(MKDIR) $(O)/cmd/cpp;fi
-	@if [ ! -d $(B)/cmd/lburg ];then $(MKDIR) $(B)/cmd/lburg;fi
 	@if [ ! -d $(O)/cmd/lburg ];then $(MKDIR) $(O)/cmd/lburg;fi
 
 #############################################################################
@@ -1213,7 +1209,7 @@ $(echo_cmd) "TOOLS_CC_DAGCHECK $<"
 $(Q)$(CC) $(TOOLS_CFLAGS) -Wno-unused -o $@ -c $<
 endef
 
-LBURG       = $(B)/cmd/lburg/lburg$(BINEXT)
+LBURG       = $(B)/cmd/lburg$(BINEXT)
 DAGCHECK_C  = $(B)/cmd/rcc/dagcheck.c
 Q3RCC       = $(B)/cmd/q3rcc$(BINEXT)
 Q3CPP       = $(B)/cmd/q3cpp$(BINEXT)
