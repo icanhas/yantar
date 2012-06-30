@@ -1149,39 +1149,40 @@ ifneq ($(TARGETS),)
 endif
 
 makedirs:
-	$(MKDIR) -p $(BIN_DIR)
-	$(MKDIR) -p $(OBJ_DIR)
-	$(MKDIR) -p $(B)
-	$(MKDIR) -p $(O)
-	$(MKDIR) -p $(O)/client
-	$(MKDIR) -p $(O)/renderer
-	$(MKDIR) -p $(O)/renderergl2
-	$(MKDIR) -p $(O)/renderersmp
-	$(MKDIR) -p $(O)/ded
-	$(MKDIR) -p $(B)/$(BASEGAME)
-	$(MKDIR) -p $(O)/$(BASEGAME)
-	$(MKDIR) -p $(O)/$(BASEGAME)/cgame
-	$(MKDIR) -p $(O)/$(BASEGAME)/game
-	$(MKDIR) -p $(O)/$(BASEGAME)/ui
-	$(MKDIR) -p $(O)/$(BASEGAME)/qcommon
-	$(MKDIR) -p $(B)/$(BASEGAME)/vm
-	$(MKDIR) -p $(O)/$(BASEGAME)/vm
-	$(MKDIR) -p $(B)/$(MISSIONPACK)
-	$(MKDIR) -p $(O)/$(MISSIONPACK)
-	$(MKDIR) -p $(O)/$(MISSIONPACK)/cgame
-	$(MKDIR) -p $(O)/$(MISSIONPACK)/game
-	$(MKDIR) -p $(O)/$(MISSIONPACK)/ui
-	$(MKDIR) -p $(O)/$(MISSIONPACK)/qcommon
-	$(MKDIR) -p $(B)/$(MISSIONPACK)/vm
-	$(MKDIR) -p $(O)/$(MISSIONPACK)/vm
-	$(MKDIR) -p $(B)/cmd
-	$(MKDIR) -p $(O)/cmd
-	$(MKDIR) -p $(O)/cmd/asm
-	$(MKDIR) -p $(O)/cmd/etc
-	$(MKDIR) -p $(B)/cmd/rcc
-	$(MKDIR) -p $(O)/cmd/rcc
-	$(MKDIR) -p $(O)/cmd/cpp
-	$(MKDIR) -p $(O)/cmd/lburg
+	$(MKDIR) -p \
+		$(BIN_DIR) \
+		$(OBJ_DIR) \
+		$(B) \
+		$(O) \
+		$(O)/client \
+		$(O)/renderer \
+		$(O)/renderergl2 \
+		$(O)/renderersmp \
+		$(O)/ded \
+		$(B)/$(BASEGAME) \
+		$(O)/$(BASEGAME) \
+		$(O)/$(BASEGAME)/cgame \
+		$(O)/$(BASEGAME)/game \
+		$(O)/$(BASEGAME)/ui \
+		$(O)/$(BASEGAME)/qcommon \
+		$(B)/$(BASEGAME)/vm \
+		$(O)/$(BASEGAME)/vm \
+		$(B)/$(MISSIONPACK) \
+		$(O)/$(MISSIONPACK) \
+		$(O)/$(MISSIONPACK)/cgame \
+		$(O)/$(MISSIONPACK)/game \
+		$(O)/$(MISSIONPACK)/ui \
+		$(O)/$(MISSIONPACK)/qcommon \
+		$(B)/$(MISSIONPACK)/vm \
+		$(O)/$(MISSIONPACK)/vm \
+		$(B)/cmd \
+		$(O)/cmd \
+		$(O)/cmd/asm \
+		$(O)/cmd/etc \
+		$(B)/cmd/rcc \
+		$(O)/cmd/rcc \
+		$(O)/cmd/cpp \
+		$(O)/cmd/lburg
 
 #############################################################################
 # QVM BUILD TOOLS
