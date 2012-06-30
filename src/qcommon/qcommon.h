@@ -323,10 +323,9 @@ enum {
 	clc_voip,	/* not wrapped in USE_VOIP, so this value is reserved. */
 } clc_ops_e;
 
+
 /*
- *
  * VIRTUAL MACHINE
- *
  */
 
 typedef struct vm_s vm_t;
@@ -394,18 +393,10 @@ _vmf(intptr_t x)
  * files can be execed.
  */
 
-/* allocates an initial text buffer that will grow as needed */
 void Cbuf_Init(void);
-/* Adds command text at the end of the buffer, does NOT add a final \n */
 void Cbuf_AddText(const char *text);
-/* this can be used in place of either Cbuf_AddText or Cbuf_InsertText */
 void Cbuf_ExecuteText(int exec_when, const char *text);
-/* Pulls off \n terminated lines of text from the command buffer and sends
- * them through Cmd_ExecuteString. Stops when the buffer is empty.
- * Normally called once per frame, but may be explicitly invoked.
- * Do not call inside a command function, or current args will be destroyed. */
 void Cbuf_Execute(void);
-
 
 /*
  *
@@ -417,11 +408,6 @@ void Cbuf_Execute(void);
 typedef void (*xcommand_t)(void);
 
 void Cmd_Init(void);
-/* called by the init functions of other parts of the program to
- * register commands and functions to call for them.
- * The cmd_name is referenced later, so it should not be in temp memory
- * if function is NULL, the command will be forwarded to the server
- * as a clc_clientCommand instead of executed locally */
 void Cmd_AddCommand(const char *cmd_name, xcommand_t function);
 void Cmd_RemoveCommand(const char *cmd_name);
 
@@ -430,7 +416,6 @@ typedef void (*completionFunc_t)(char *args, int argNum);
 /* don't allow VMs to remove system commands */
 void Cmd_RemoveCommandSafe(const char *cmd_name);
 void Cmd_CommandCompletion(void (*callback)(const char *s));
-/* callback with each valid string */
 void Cmd_SetCommandCompletionFunc(const char *command,
 				 completionFunc_t complete);
 void Cmd_CompleteArgument(const char *command, char *args, int argNum);
@@ -443,16 +428,9 @@ char* Cmd_Args(void);
 char* Cmd_ArgsFrom(int arg);
 void Cmd_ArgsBuffer(char *buffer, int bufferLength);
 char* Cmd_Cmd(void);
-/* The functions that execute commands get their parameters with these
- * functions. Cmd_Argv () will return an empty string, not a NULL
- * if arg > argc, so string operations are allways safe. */
 void Cmd_Args_Sanitize(void);
-/* Takes a null terminated string. Does not need to be /n terminated.
- * breaks the string up into arg tokens. */
 void Cmd_TokenizeString(const char *text);
 void Cmd_TokenizeStringIgnoreQuotes(const char *text_in);
-/* Parses a single line of text into arguments and tries to execute it
- * as if it was typed at the console */
 void Cmd_ExecuteString(const char *text);
 
 
