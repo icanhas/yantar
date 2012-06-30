@@ -119,7 +119,7 @@ void CIN_CloseAllVideos(void);
 /* ============================================================================ */
 
 static char	*rd_buffer;
-static int	rd_buffersize;
+static uint	rd_buffersize;
 static void	(*rd_flush)(char *buffer);
 
 void
@@ -1123,8 +1123,8 @@ typedef struct hunkUsed_s hunkUsed_t;
 typedef struct hunkblock_s hunkblock_t;
 
 struct hunkHeader_s {
-	int	magic;
-	int	size;
+	uint	magic;
+	uint	size;
 };
 
 struct hunkUsed_s {
@@ -2550,14 +2550,14 @@ void
 Q_ReadFromPipe(void)
 {
 	static char	buf[MAX_STRING_CHARS];
-	static int	accu = 0;
+	static uint	accu = 0;
 	int read;
 
 	if(!pipefile)
 		return;
 	while((read = FS_Read(buf+accu, sizeof(buf)-accu-1, pipefile)) > 0){
-		char	*brk = NULL;
-		int	i;
+		char *brk = NULL;
+		uint i;
 
 		for(i = accu; i < accu + read; ++i){
 			if(buf[i] == '\0')
@@ -2917,7 +2917,7 @@ static field_t *completionField;
 static void
 FindMatches(const char *s)
 {
-	int i;
+	uint i;
 
 	if(Q_stricmpn(s, completionString, strlen(completionString)))
 		return;
@@ -2958,7 +2958,7 @@ PrintCvarMatches(const char *s)
 static char *
 Field_FindFirstSeparator(char *s)
 {
-	int i;
+	uint i;
 
 	for(i = 0; i < strlen(s); i++)
 		if(s[ i ] == ';')
