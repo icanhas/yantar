@@ -17,7 +17,7 @@
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-
+ 
 #include "../../qcommon/q_platform.h"
 #include "cmdlib.h"
 #include "mathlib.h"
@@ -117,13 +117,6 @@ typedef enum {
 	OP_CVFI
 } opcode_t;
 
-typedef struct {
-	int	imageBytes;	/* after decompression */
-	int	entryPoint;
-	int	stackBase;
-	int	stackSize;
-} executableHeader_t;
-
 typedef enum {
 	CODESEG,
 	DATASEG,	/* initialized 32 bit data, will be byte swapped */
@@ -174,10 +167,11 @@ int	errorCount;
 typedef struct options_s {
 	qbool		verbose;
 	qbool		writeMapFile;
-	qbool		vanillaQ3Compatibility;
+	qbool		vq3compat;
 } options_t;
 
 options_t options = { 0 };
+
 
 symbol_t *symbols;
 symbol_t *lastSymbol = 0;	/* Most recent symbol defined. */
@@ -222,8 +216,6 @@ sourceOps_t sourceOps[] = {
 
 int opcodesHash[ NUM_SOURCE_OPS ];
 
-
-
 static int
 vreport(const char* fmt, va_list vp)
 {
@@ -247,32 +239,32 @@ report(const char *fmt, ...)
 /* The chain-and-bucket hash table.  -PH */
 
 static void
-hashtable_init(hashtable_t *H, int buckets)
+hashtable_init(hashtable_t *htab, int buckets)
 {
-	H->buckets	= buckets;
-	H->table	= calloc(H->buckets, sizeof(*(H->table)));
+	htab->buckets	= buckets;
+	htab->table	= calloc(htab->buckets, sizeof(*(htab->table)));
 	return;
 }
 
 static hashtable_t *
 hashtable_new(int buckets)
 {
-	hashtable_t *H;
+	hashtable_t *htab;
 
-	H = malloc(sizeof(hashtable_t));
-	hashtable_init(H, buckets);
-	return H;
+	htab = malloc(sizeof(hashtable_t));
+	hashtable_init(htab, buckets);
+	return htab;
 }
 
 /* No destroy/destructor.  No need. */
 
 static void
-hashtable_add(hashtable_t *H, int hashvalue, void *datum)
+hashtable_add(hashtable_t *htab, int hashvalue, void *datum)
 {
 	hashchain_t *hc, **hb;
 
-	hashvalue = (abs(hashvalue) % H->buckets);
-	hb = &(H->table[hashvalue]);
+	hashvalue = (abs(hashvalue) % htab->buckets);
+	hb = &(htab->table[hashvalue]);
 	if(*hb == 0){
 		/* Empty bucket.  Create new one. */
 		*hb	= calloc(1, sizeof(**hb));
@@ -289,42 +281,42 @@ hashtable_add(hashtable_t *H, int hashvalue, void *datum)
 }
 
 static hashchain_t *
-hashtable_get(hashtable_t *H, int hashvalue)
+hashtable_get(hashtable_t *htab, int hashvalue)
 {
-	hashvalue = (abs(hashvalue) % H->buckets);
-	return (H->table[hashvalue]);
+	hashvalue = (abs(hashvalue) % htab->buckets);
+	return (htab->table[hashvalue]);
 }
 
 static void
-hashtable_stats(hashtable_t *H)
+hashtable_stats(hashtable_t *htab)
 {
 	int len, empties, longest, nodes;
 	int i;
 	float meanlen;
 	hashchain_t *hc;
 
-	report("Stats for hashtable %08X", H);
+	report("Stats for hashtable %08X", htab);
 	empties = 0;
 	longest = 0;
 	nodes	= 0;
-	for(i = 0; i < H->buckets; i++){
-		if(H->table[i] == 0){
+	for(i = 0; i < htab->buckets; i++){
+		if(htab->table[i] == 0){
 			empties++; continue;
 		}
-		for(hc = H->table[i], len = 0; hc; hc = hc->next, len++) ;
+		for(hc = htab->table[i], len = 0; hc; hc = hc->next, len++) ;
 		if(len > longest) longest = len; nodes += len;
 	}
-	meanlen = (float)(nodes) / (H->buckets - empties);
+	meanlen = (float)(nodes) / (htab->buckets - empties);
 #if 0
 /* Long stats display */
-	report(" Total buckets: %d\n", H->buckets);
+	report(" Total buckets: %d\n", htab->buckets);
 	report(" Total stored nodes: %d\n", nodes);
 	report(" Longest chain: %d\n", longest);
 	report(" Empty chains: %d\n", empties);
 	report(" Mean non-empty chain length: %f\n", meanlen);
 #else	/* 0 */
 /* Short stats display */
-	report(", %d buckets, %d nodes", H->buckets, nodes);
+	report(", %d buckets, %d nodes", htab->buckets, nodes);
 	report("\n");
 	report(" Longest chain: %d, empty chains: %d, mean non-empty: %f",
 		longest, empties,
@@ -333,18 +325,17 @@ hashtable_stats(hashtable_t *H)
 	report("\n");
 }
 
-
 /* Kludge. */
 /* Check if symbol already exists. */
 /* Returns 0 if symbol does NOT already exist, non-zero otherwise. */
 static int
-hashtable_symbol_exists(hashtable_t *H, int hash, char *sym)
+hashtable_symbol_exists(hashtable_t *htab, int hash, char *sym)
 {
 	hashchain_t	*hc;
 	symbol_t	*s;
 
-	hash	= (abs(hash) % H->buckets);
-	hc	= H->table[hash];
+	hash	= (abs(hash) % htab->buckets);
+	hc	= htab->table[hash];
 	if(hc == 0)
 		/* Empty chain means this symbol has not yet been defined. */
 		return 0;
@@ -358,9 +349,6 @@ hashtable_symbol_exists(hashtable_t *H, int hash, char *sym)
 	}
 	return 0;	/* Can't find collision. */
 }
-
-
-
 
 /* Comparator function for quicksorting. */
 static int
@@ -449,11 +437,6 @@ atoiNoCap(const char *s)
 	return retval.i;	/* <- union hackage.  I feel dirty with this.  -PH */
 }
 
-
-
-/*
- * HashString
- */
 /* Default hash function of Kazlib 1.19, slightly modified. */
 static unsigned int
 HashString(const char *key)
@@ -479,10 +462,6 @@ HashString(const char *key)
 	return abs(acc);
 }
 
-
-/*
- * CodeError
- */
 static void
 CodeError(char *fmt, ...)
 {
@@ -497,9 +476,6 @@ CodeError(char *fmt, ...)
 	va_end(argptr);
 }
 
-/*
- * EmitByte
- */
 static void
 EmitByte(segment_t *seg, int v)
 {
@@ -509,9 +485,6 @@ EmitByte(segment_t *seg, int v)
 	seg->imageUsed++;
 }
 
-/*
- * EmitInt
- */
 static void
 EmitInt(segment_t *seg, int v)
 {
@@ -525,8 +498,6 @@ EmitInt(segment_t *seg, int v)
 }
 
 /*
- * DefineSymbol
- *
  * Symbols can only be defined on pass 0
  */
 static void
@@ -562,14 +533,14 @@ DefineSymbol(char *sym, int value)
 
 	hashtable_add(symtable, hash, s);
 
-/*
- * Hash table lookup already speeds up symbol lookup enormously.
- * We postpone sorting until end of pass 0.
- * Since we're not doing the insertion sort, lastSymbol should always
- * wind up pointing to the end of list.
- * This allows constant time for adding to the list.
- * -PH
- */
+	/*
+	 * Hash table lookup already speeds up symbol lookup enormously.
+	 * We postpone sorting until end of pass 0.
+	 * Since we're not doing the insertion sort, lastSymbol should always
+	 * wind up pointing to the end of list.
+	 * This allows constant time for adding to the list.
+	 * -PH
+	 */
 	if(symbols == 0)
 		lastSymbol = symbols = s;
 	else{
@@ -578,10 +549,7 @@ DefineSymbol(char *sym, int value)
 	}
 }
 
-
 /*
- * LookupSymbol
- *
  * Symbols can only be evaluated on pass 1
  */
 static int
@@ -622,10 +590,7 @@ LookupSymbol(char *sym)
 	return 0;
 }
 
-
 /*
- * ExtractLine
- *
  * Extracts the next line from the given text block.
  * If a full line isn't parsed, returns NULL
  * Otherwise returns the updated parse pointer
@@ -667,8 +632,6 @@ ExtractLine(char *data)
 
 
 /*
- * Parse
- *
  * Parse a token out of linebuffer
  */
 static qbool
@@ -703,10 +666,6 @@ Parse(void)
 	return qtrue;
 }
 
-
-/*
- * ParseValue
- */
 static int
 ParseValue(void)
 {
@@ -714,10 +673,6 @@ ParseValue(void)
 	return atoiNoCap(token);
 }
 
-
-/*
- * ParseExpression
- */
 static int
 ParseExpression(void)
 {
@@ -772,8 +727,6 @@ ParseExpression(void)
 
 
 /*
- * HackToSegment
- *
  * BIG HACK: I want to put all 32 bit values in the data
  * segment so they can be byte swapped, and all char data in the lit
  * segment, but switch jump tables are emited in the lit segment and
@@ -798,16 +751,9 @@ HackToSegment(segmentName_t seg)
 	}
 }
 
-
-
-
-
-
-
 /* #define STAT(L) report("STAT " L "\n"); */
 #define STAT(L)
 #define ASM(O) int TryAssemble ## O ()
-
 
 /*
  * These clauses were moved out from AssembleLine() to allow reordering of if's.
@@ -1134,12 +1080,6 @@ ASM(LABEL)
 	return 0;
 }
 
-
-
-/*
- * AssembleLine
- *
- */
 static void
 AssembleLine(void)
 {
@@ -1154,12 +1094,11 @@ AssembleLine(void)
 
 	hash = HashString(token);
 
-/*
- * Opcode search using hash table.
- * Since the opcodes stays mostly fixed, this may benefit even more from a tree.
- * Always with the tree :)
- * -PH
- */
+	/*
+	 * Opcode search using hash table.
+	 * Since the opcodes stays mostly fixed, this may benefit even more from a tree.
+	 * Always with the tree :)		 * -PH
+	 */
 	for(hc = hashtable_get(optable, hash); hc; hc = hc->next){
 		op	= (sourceOps_t*)(hc->data);
 		i	= op - sourceOps;
@@ -1270,9 +1209,6 @@ AssembleLine(void)
 	CodeError("Unknown token: %s\n", token);
 }
 
-/*
- * InitTables
- */
 void
 InitTables(void)
 {
@@ -1287,10 +1223,6 @@ InitTables(void)
 	}
 }
 
-
-/*
- * WriteMapFile
- */
 static void
 WriteMapFile(void)
 {
@@ -1317,9 +1249,6 @@ WriteMapFile(void)
 	fclose(f);
 }
 
-/*
- * WriteVmFile
- */
 static void
 WriteVmFile(void)
 {
@@ -1347,7 +1276,7 @@ WriteVmFile(void)
 		return;
 	}
 
-	if(!options.vanillaQ3Compatibility){
+	if(!options.vq3compat){
 		header.vmMagic = VM_MAGIC_VER2;
 		headerSize = sizeof(header);
 	}else{
@@ -1388,15 +1317,12 @@ WriteVmFile(void)
 	SafeWrite(f, &segment[DATASEG].image, segment[DATASEG].imageUsed);
 	SafeWrite(f, &segment[LITSEG].image, segment[LITSEG].imageUsed);
 
-	if(!options.vanillaQ3Compatibility)
+	if(!options.vq3compat)
 		SafeWrite(f, &segment[JTRGSEG].image, segment[JTRGSEG].imageUsed);
 
 	fclose(f);
 }
 
-/*
- * Assemble
- */
 static void
 Assemble(void)
 {
@@ -1457,11 +1383,6 @@ Assemble(void)
 		WriteMapFile();
 }
 
-
-/*
- * ParseOptionFile
- *
- */
 static void
 ParseOptionFile(const char *filename)
 {
@@ -1491,7 +1412,7 @@ ParseOptionFile(const char *filename)
 }
 
 static void
-ShowHelp(char *argv0)
+Usage(char *argv0)
 {
 	Error ("Usage: %s [OPTION]... [FILES]...\n\
 Assemble LCC bytecode assembly to Q3VM bytecode.\n\
@@ -1506,11 +1427,6 @@ Assemble LCC bytecode assembly to Q3VM bytecode.\n\
 ", argv0);
 }
 
-/*
-==============
-main
-==============
-*/
 int
 main(int argc, char **argv)
 {
@@ -1520,7 +1436,7 @@ main(int argc, char **argv)
 //	_chdir("/quake3/jccode/cgame/lccout");	// hack for vc profiler
 
 	if (argc < 2) {
-		ShowHelp( argv[0] );
+		Usage( argv[0] );
 	}
 
 	start = I_FloatTime ();
@@ -1536,7 +1452,7 @@ main(int argc, char **argv)
 		if( !strcmp( argv[ i ], "-h" ) ||
 		    !strcmp( argv[ i ], "--help" ) ||
 		    !strcmp( argv[ i ], "-?") ) {
-			ShowHelp( argv[0] );
+			Usage( argv[0] );
 		}
 
 		if ( !strcmp( argv[i], "-o" ) ) {
@@ -1585,7 +1501,7 @@ main(int argc, char **argv)
 		}
 
 		if( !strcmp( argv[ i ], "-vq3" ) ) {
-			options.vanillaQ3Compatibility = qtrue;
+			options.vq3compat = qtrue;
 			continue;
 		}
 
@@ -1611,7 +1527,6 @@ main(int argc, char **argv)
 		/* nop */
 		for ( i = 0, s = symbols ; s ; s = s->next, i++ )
 			;
-
 		if (options.verbose)
 		{
 			report("%d symbols defined\n", i);
@@ -1623,6 +1538,3 @@ main(int argc, char **argv)
 	report ("%5.0f seconds elapsed\n", end-start);
 	return errorCount;
 }
-
-
-
