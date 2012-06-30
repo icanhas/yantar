@@ -2469,6 +2469,7 @@ Q_InitRand(void)
 		srand(time(NULL));
 }
 
+/* commandLine should not include the executable name (argv[0]) */
 void
 Q_Init(char *commandLine)
 {

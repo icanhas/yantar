@@ -676,9 +676,6 @@ qbool Q_SafeMode(void);
 void 	Q_RunAndTimeServerPacket(netadr_t *evFrom, msg_t *buf);
 qbool Q_IsVoipTarget(uint8_t *voipTargets, int voipTargetsSize,
 			int clientNum);
-/* checks for and removes command line "+set var arg" constructs
- * if match is NULL, all set commands will be executed, otherwise
- * only a set with the exact name.	Only used during startup. */
 void 	Q_StartupVariable(const char *match);
 
 extern cvar_t	*com_developer;
@@ -772,7 +769,6 @@ void 	Hunk_Trash(void);
 
 void 	Q_TouchMemory(void);
 
-/* commandLine should not include the executable name (argv[0]) */
 void Q_Init(char *commandLine);
 void Q_Frame(void);
 void Q_Shutdown(void);
@@ -785,10 +781,9 @@ void Q_Shutdown(void);
 /*
  * client interface
  */
-void CL_InitKeyCommands(void);
 /* the keyboard binding interface must be setup before execing
  * config files, but the rest of client startup will happen later */
-
+void CL_InitKeyCommands(void);
 void CL_Init(void);
 void CL_Disconnect(qbool showMainMenu);
 void CL_Shutdown(char *finalmsg, qbool disconnect, qbool quit);
