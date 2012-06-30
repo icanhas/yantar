@@ -22,6 +22,23 @@
 #include "q_shared.h"
 #include "qcommon.h"
 
+/*
+ * cvar_t variables are used to hold scalar or string variables that can be changed
+ * or displayed at the console or prog code as well as accessed directly
+ * in C code.
+ *
+ * The user can access cvars from the console in three ways:
+ * r_draworder			prints the current value
+ * r_draworder 0		sets the current value to 0
+ * set r_draworder 0	as above, but creates the cvar if not present
+ *
+ * Cvars are restricted from having the same names as commands to keep this
+ * interface from being ambiguous.
+ *
+ * The are also occasionally used to communicated information between different
+ * modules of the program.
+ */
+
 enum {
 	MAX_CVARS = 1024,
 	HASH_SIZE = 256
@@ -64,6 +81,7 @@ Cvar_FindVar(const char *var_name)
 	return nil;
 }
 
+/* returns 0 if not defined or non numeric */
 float
 Cvar_VariableValue(const char *var_name)
 {
@@ -86,7 +104,7 @@ Cvar_VariableIntegerValue(const char *var_name)
 	return var->integer;
 }
 
-
+/* returns an empty string if not defined */
 char *
 Cvar_VariableString(const char *var_name)
 {
@@ -97,7 +115,6 @@ Cvar_VariableString(const char *var_name)
 		return "";
 	return var->string;
 }
-
 
 void
 Cvar_VariableStringBuffer(const char *var_name, char *buffer, int bufsize)
@@ -286,7 +303,7 @@ setNewVal(cvar_t *var, const char *var_name, const char *var_value, int flags)
 }
 
 /*
- * Cvar_Get: If the variable already exists, the value will not be set unless
+ * If the variable already exists, the value will not be set unless
  * CVAR_ROM. The flags will be or'ed in if the variable exists.
  */
 cvar_t *
@@ -371,7 +388,7 @@ Cvar_Get(const char *var_name, const char *var_value, int flags)
 }
 
 /*
- * Cvar_Print: Prints the description, value, default, and latched string of
+ * Prints the description, value, default, and latched string of
  * the given variable
  */
 void
@@ -397,6 +414,7 @@ Cvar_Print(cvar_t *v)
 		Q_Printf("latched: \"%s\"\n", v->latchedString);
 }
 
+/* sets the description string of the named cvar, if it exists */
 void
 Cvar_SetDesc(const char *name, const char *desc)
 {
@@ -410,6 +428,7 @@ Cvar_SetDesc(const char *name, const char *desc)
 	cv->desc = CopyString(desc);
 }
 
+/* same as Cvar_Set, but allows more control over setting of cvar */
 cvar_t *
 Cvar_Set2(const char *var_name, const char *value, qbool force)
 {
@@ -512,12 +531,14 @@ Cvar_Set2(const char *var_name, const char *value, qbool force)
 	return var;
 }
 
+/* will create the variable with no flags if it doesn't exist */
 void
 Cvar_Set(const char *var_name, const char *value)
 {
 	Cvar_Set2(var_name, value, qtrue);
 }
 
+/* sometimes we set variables from an untrusted source: fail if flags & CVAR_PROTECTED */
 void
 Cvar_SetSafe(const char *var_name, const char *value)
 {
@@ -535,6 +556,7 @@ Cvar_SetSafe(const char *var_name, const char *value)
 	Cvar_Set(var_name, value);
 }
 
+/* don't set the cvar immediately */
 void
 Cvar_SetLatched(const char *var_name, const char *value)
 {
@@ -553,6 +575,7 @@ Cvar_SetValue(const char *var_name, float value)
 	Cvar_Set(var_name, val);
 }
 
+/* expands value to a string and calls Cvar_Set/Cvar_SetSafe */
 void
 Cvar_SetValueSafe(const char *var_name, float value)
 {
@@ -577,9 +600,7 @@ Cvar_ForceReset(const char *var_name)
 	Cvar_Set2(var_name, nil, qtrue);
 }
 
-/*
- * Cvar_SetCheatState: Any testing variables will be reset to the safe values
- */
+/* Any testing variables will be reset to the safe values */
 void
 Cvar_SetCheatState(void)
 {
@@ -603,7 +624,11 @@ Cvar_SetCheatState(void)
 }
 
 /*
- * Cvar_Command: Handles variable inspection and changing from the console
+ * Handles variable inspection and changing from the console
+ *
+ * called by Cmd_ExecuteString when Cmd_Argv(0) doesn't match a known
+ * command. Returns true if the command was a variable reference that
+ * was handled. (print or change)
  */
 qbool
 Cvar_Command(void)
@@ -625,7 +650,6 @@ Cvar_Command(void)
 	Cvar_Set2(v->name, Cmd_Args(), qfalse);
 	return qtrue;
 }
-
 
 /*
  * Cvar_Print_f: Prints the contents of a cvar
@@ -653,7 +677,7 @@ Cvar_Print_f(void)
 }
 
 /*
- * Cvar_Toggle_f: Toggles a cvar for easy single key binding, optionally
+ * Toggles a cvar for easy single key binding, optionally
  * through a list of given values.
  */
 void
@@ -693,7 +717,7 @@ Cvar_Toggle_f(void)
 }
 
 /*
- * Cvar_Set_f: Allows setting and defining of arbitrary cvars from console,
+ * Allows setting and defining of arbitrary cvars from console,
  * even if they weren't declared in C code.
  */
 void
@@ -751,7 +775,7 @@ Cvar_Reset_f(void)
 }
 
 /*
- * Cvar_WriteVariables: Appends lines containing "set variable value" for
+ * Appends lines containing "set variable value" for
  * all variables with the archive flag set.
  */
 void
@@ -905,7 +929,7 @@ Cvar_Unset(cvar_t *cv)
 }
 
 /*
- * Cvar_Unset_f: Unsets a user-defined cvar
+ * Unsets a user-defined cvar
  */
 void
 Cvar_Unset_f(void)
@@ -929,10 +953,8 @@ Cvar_Unset_f(void)
 			Cmd_Argv(0), cv->name);
 }
 
-
-
 /*
- * Cvar_Restart: Resets all cvars to their hardcoded values and removes
+ * Resets all cvars to their hardcoded values and removes
  * user-defined variables and variables added via the VMs if requested.
  */
 void
@@ -954,9 +976,8 @@ Cvar_Restart(qbool unsetVM)
 	}
 }
 
-
 /*
- * Cvar_Restart_f: Resets all cvars to their hardcoded values
+ * Resets all cvars to their hardcoded values
  */
 void
 Cvar_Restart_f(void)
@@ -964,6 +985,8 @@ Cvar_Restart_f(void)
 	Cvar_Restart(qfalse);
 }
 
+/* returns an info string containing all the cvars that have the given bit set
+ * in their flags ( CVAR_USERINFO, CVAR_SERVERINFO, CVAR_SYSTEMINFO, etc ) */
 char *
 Cvar_InfoString(int bit)
 {
@@ -975,12 +998,11 @@ Cvar_InfoString(int bit)
 	for(var = cvar_vars; var != nil; var = var->next)
 		if(var->name && (var->flags & bit))
 			Info_SetValueForKey(info, var->name, var->string);
-
 	return info;
 }
 
 /*
- * Cvar_InfoString_Big: handles large info strings ( CS_SYSTEMINFO )
+ * handles large info strings ( CS_SYSTEMINFO )
  */
 char *
 Cvar_InfoString_Big(int bit)
@@ -1014,8 +1036,7 @@ Cvar_CheckRange(cvar_t *var, float min, float max, qbool integral)
 }
 
 /*
- * Cvar_Register: basically a slightly modified Cvar_Get for the interpreted
- * modules
+ * basically a slightly modified Cvar_Get for the interpreted modules
  */
 void
 Cvar_Register(vmCvar_t *vmCvar, const char *varName, const char *defaultValue,
@@ -1045,8 +1066,7 @@ Cvar_Register(vmCvar_t *vmCvar, const char *varName, const char *defaultValue,
 	Cvar_Update(vmCvar);
 }
 
-
-/* Cvar_Update: updates an interpreted modules' version of a cvar */
+/* updates an interpreted modules' version of a cvar */
 void
 Cvar_Update(vmCvar_t *vmCvar)
 {
@@ -1067,7 +1087,7 @@ Cvar_Update(vmCvar_t *vmCvar)
 		Q_Error(ERR_DROP,
 			"Cvar_Update: src %s length %u exceeds MAX_CVAR_VALUE_STRING",
 			cv->string,
-			(unsigned int)strlen(cv->string));
+			(uint)strlen(cv->string));
 	Q_strncpyz(vmCvar->string, cv->string,  MAX_CVAR_VALUE_STRING);
 	vmCvar->value	= cv->value;
 	vmCvar->integer = cv->integer;
@@ -1086,7 +1106,7 @@ Cvar_CompleteCvarName(char *args, int argNum)
 	}
 }
 
-/* Cvar_Init: Reads in all archived cvars */
+/* Reads in all archived cvars */
 void
 Cvar_Init(void)
 {
