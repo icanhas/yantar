@@ -1149,39 +1149,39 @@ ifneq ($(TARGETS),)
 endif
 
 makedirs:
-	@if [ ! -d $(BIN_DIR) ];then $(MKDIR) $(BIN_DIR);fi
-	@if [ ! -d $(OBJ_DIR) ];then $(MKDIR) $(OBJ_DIR);fi
-	@if [ ! -d $(B) ];then $(MKDIR) $(B);fi
-	@if [ ! -d $(O) ];then $(MKDIR) $(O);fi
-	@if [ ! -d $(O)/client ];then $(MKDIR) $(O)/client;fi
-	@if [ ! -d $(O)/renderer ];then $(MKDIR) $(O)/renderer;fi
-	@if [ ! -d $(O)/renderergl2 ];then $(MKDIR) $(O)/renderergl2;fi
-	@if [ ! -d $(O)/renderersmp ];then $(MKDIR) $(O)/renderersmp;fi
-	@if [ ! -d $(O)/ded ];then $(MKDIR) $(O)/ded;fi
-	@if [ ! -d $(B)/$(BASEGAME) ];then $(MKDIR) $(B)/$(BASEGAME);fi
-	@if [ ! -d $(O)/$(BASEGAME) ];then $(MKDIR) $(O)/$(BASEGAME);fi
-	@if [ ! -d $(O)/$(BASEGAME)/cgame ];then $(MKDIR) $(O)/$(BASEGAME)/cgame;fi
-	@if [ ! -d $(O)/$(BASEGAME)/game ];then $(MKDIR) $(O)/$(BASEGAME)/game;fi
-	@if [ ! -d $(O)/$(BASEGAME)/ui ];then $(MKDIR) $(O)/$(BASEGAME)/ui;fi
-	@if [ ! -d $(O)/$(BASEGAME)/qcommon ];then $(MKDIR) $(O)/$(BASEGAME)/qcommon;fi
-	@if [ ! -d $(B)/$(BASEGAME)/vm ];then $(MKDIR) $(B)/$(BASEGAME)/vm;fi
-	@if [ ! -d $(O)/$(BASEGAME)/vm ];then $(MKDIR) $(O)/$(BASEGAME)/vm;fi
-	@if [ ! -d $(B)/$(MISSIONPACK) ];then $(MKDIR) $(B)/$(MISSIONPACK);fi
-	@if [ ! -d $(O)/$(MISSIONPACK) ];then $(MKDIR) $(O)/$(MISSIONPACK);fi
-	@if [ ! -d $(O)/$(MISSIONPACK)/cgame ];then $(MKDIR) $(O)/$(MISSIONPACK)/cgame;fi
-	@if [ ! -d $(O)/$(MISSIONPACK)/game ];then $(MKDIR) $(O)/$(MISSIONPACK)/game;fi
-	@if [ ! -d $(O)/$(MISSIONPACK)/ui ];then $(MKDIR) $(O)/$(MISSIONPACK)/ui;fi
-	@if [ ! -d $(O)/$(MISSIONPACK)/qcommon ];then $(MKDIR) $(O)/$(MISSIONPACK)/qcommon;fi
-	@if [ ! -d $(B)/$(MISSIONPACK)/vm ];then $(MKDIR) $(B)/$(MISSIONPACK)/vm;fi
-	@if [ ! -d $(O)/$(MISSIONPACK)/vm ];then $(MKDIR) $(O)/$(MISSIONPACK)/vm;fi
-	@if [ ! -d $(B)/cmd ];then $(MKDIR) $(B)/cmd;fi
-	@if [ ! -d $(O)/cmd ];then $(MKDIR) $(O)/cmd;fi
-	@if [ ! -d $(O)/cmd/asm ];then $(MKDIR) $(O)/cmd/asm;fi
-	@if [ ! -d $(O)/cmd/etc ];then $(MKDIR) $(O)/cmd/etc;fi
-	@if [ ! -d $(B)/cmd/rcc ];then $(MKDIR) $(B)/cmd/rcc;fi
-	@if [ ! -d $(O)/cmd/rcc ];then $(MKDIR) $(O)/cmd/rcc;fi
-	@if [ ! -d $(O)/cmd/cpp ];then $(MKDIR) $(O)/cmd/cpp;fi
-	@if [ ! -d $(O)/cmd/lburg ];then $(MKDIR) $(O)/cmd/lburg;fi
+	$(MKDIR) -p $(BIN_DIR)
+	$(MKDIR) -p $(OBJ_DIR)
+	$(MKDIR) -p $(B)
+	$(MKDIR) -p $(O)
+	$(MKDIR) -p $(O)/client
+	$(MKDIR) -p $(O)/renderer
+	$(MKDIR) -p $(O)/renderergl2
+	$(MKDIR) -p $(O)/renderersmp
+	$(MKDIR) -p $(O)/ded
+	$(MKDIR) -p $(B)/$(BASEGAME)
+	$(MKDIR) -p $(O)/$(BASEGAME)
+	$(MKDIR) -p $(O)/$(BASEGAME)/cgame
+	$(MKDIR) -p $(O)/$(BASEGAME)/game
+	$(MKDIR) -p $(O)/$(BASEGAME)/ui
+	$(MKDIR) -p $(O)/$(BASEGAME)/qcommon
+	$(MKDIR) -p $(B)/$(BASEGAME)/vm
+	$(MKDIR) -p $(O)/$(BASEGAME)/vm
+	$(MKDIR) -p $(B)/$(MISSIONPACK)
+	$(MKDIR) -p $(O)/$(MISSIONPACK)
+	$(MKDIR) -p $(O)/$(MISSIONPACK)/cgame
+	$(MKDIR) -p $(O)/$(MISSIONPACK)/game
+	$(MKDIR) -p $(O)/$(MISSIONPACK)/ui
+	$(MKDIR) -p $(O)/$(MISSIONPACK)/qcommon
+	$(MKDIR) -p $(B)/$(MISSIONPACK)/vm
+	$(MKDIR) -p $(O)/$(MISSIONPACK)/vm
+	$(MKDIR) -p $(B)/cmd
+	$(MKDIR) -p $(O)/cmd
+	$(MKDIR) -p $(O)/cmd/asm
+	$(MKDIR) -p $(O)/cmd/etc
+	$(MKDIR) -p $(B)/cmd/rcc
+	$(MKDIR) -p $(O)/cmd/rcc
+	$(MKDIR) -p $(O)/cmd/cpp
+	$(MKDIR) -p $(O)/cmd/lburg
 
 #############################################################################
 # QVM BUILD TOOLS
