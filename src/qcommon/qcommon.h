@@ -514,13 +514,9 @@ void FS_InitFilesystem(void);
 void FS_Shutdown(qbool closemfp);
 qbool FS_ConditionalRestart(int checksumFeed, qbool disconnect);
 void FS_Restart(int checksumFeed);
-/* shutdown and restart the filesystem so changes to fs_gamedir can take effect */
 void FS_AddGameDirectory(const char *path, const char *dir);
 char** FS_ListFiles(const char *directory, const char *extension,
 		int *numfiles);
-/* directory should not have either a leading or trailing /
- * if extension is "/", only subdirectories will be returned
- * the returned files will not include any directories or / */
 void FS_FreeFileList(char **list);
 qbool FS_FileExists(const char *file);
 qbool FS_CreatePath(char *OSPath);
@@ -537,74 +533,40 @@ int FS_GetModList(char *listbuf, int bufsize);
 fileHandle_t FS_FOpenFileWrite(const char *qpath);
 fileHandle_t FS_FOpenFileAppend(const char *filename);
 fileHandle_t FS_FCreateOpenPipeFile(const char *filename);
-/* will properly create any needed paths and deal with seperater character issues */
 fileHandle_t FS_SV_FOpenFileWrite(const char *filename);
 long FS_SV_FOpenFileRead(const char *filename, fileHandle_t *fp);
 void FS_SV_Rename(const char *from, const char *to);
-/* if uniqueFILE is true, then a new FILE will be fopened even if the file
-* is found in an already open pak file. If uniqueFILE is false, you must call
-* FS_FCloseFile instead of fclose, otherwise the pak FILE would be improperly closed
-* It is generally safe to always set uniqueFILE to true, because the majority of
-* file IO goes through FS_ReadFile, which Does The Right Thing already. */
 long FS_FOpenFileRead(const char *qpath, fileHandle_t *file,
 		qbool uniqueFILE);
-/* returns 1 if a file is in the PAK file, otherwise -1 */
 int FS_FileIsInPAK(const char *filename, int *pChecksum);
 int FS_Write(const void *buffer, int len, fileHandle_t f);
 int FS_Read2(void *buffer, int len, fileHandle_t f);
-/* properly handles partial reads and reads from other dlls */
 int FS_Read(void *buffer, int len, fileHandle_t f);
-/* note: you can't just fclose from another DLL, due to MS libc issues */
 void FS_FCloseFile(fileHandle_t f);
 long FS_ReadFileDir(const char *qpath, void *searchPath, qbool unpure,
 		void **buffer);
-/* returns the length of the file
- * a null buffer will just return the file length without loading
- * as a quick check for existance. -1 length == not present
- * A 0 byte will always be appended at the end, so string ops are safe.
- * the buffer should be considered read-only, because it may be cached
- * for other uses. */
 long FS_ReadFile(const char *qpath, void **buffer);
-/* forces flush on files we're writing to. */
 void FS_ForceFlush(fileHandle_t f);
-/* frees the memory returned by FS_ReadFile */
 void FS_FreeFile(void *buffer);
-/* writes a complete file, creating any subdirectories needed */
 void FS_WriteFile(const char *qpath, const void *buffer, int size);
-/* doesn't work for files that are opened from a pack file */
 long FS_filelength(fileHandle_t f);
-/* where are we? */
 int FS_FTell(fileHandle_t f);
 void FS_Flush(fileHandle_t f);
-/* like fprintf */
 void QDECL FS_Printf(fileHandle_t f, const char *fmt,
 			...) __attribute__ ((format (printf, 2, 3)));
-/* opens a file for reading, writing, or appending depending on the value of mode */
 int FS_FOpenFileByMode(const char *qpath, fileHandle_t *f,
  			 fsMode_t mode);
-/* seek on a file (doesn't work for zip files!!!!!!!!) */
 int FS_Seek(fileHandle_t f, long offset, int origin);
 qbool FS_FilenameCompare(const char *s1, const char *s2);
-/* Returns the checksum of the pk3 from which the server loaded the qagame.qvm */
 const char* FS_GamePureChecksum(void);
 const char* FS_LoadedPakNames(void);
 const char* FS_LoadedPakChecksums(void);
-/* Returns a space separated string containing the checksums of all loaded pk3 files.
- * Servers with sv_pure set will get this string and pass it to clients. */
 const char* FS_LoadedPakPureChecksums(void);
 const char* FS_ReferencedPakNames(void);
 const char* FS_ReferencedPakChecksums(void);
-/* Returns a space separated string containing the checksums of all loaded
- * AND referenced pk3 files. Servers with sv_pure set will get this string
- * back from clients for pure validation */
 const char* FS_ReferencedPakPureChecksums(void);
-/* clears referenced booleans on loaded pk3s */
 void 	FS_ClearPakReferences(int flags);
 void 	FS_PureServerSetReferencedPaks(const char *pakSums, const char *pakNames);
-/* If the string is empty, all data sources will be allowed.
- * If not empty, only pk3 files that match one of the space
- * separated checksums will be checked for files, with the
- * sole exception of .cfg files. */
 void 	FS_PureServerSetLoadedPaks(const char *pakSums, const char *pakNames);
 qbool FS_CheckDirTraversal(const char *checkdir);
 qbool FS_idPak(char *pak, char *base, int numPaks);
