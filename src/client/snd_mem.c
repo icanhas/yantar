@@ -220,12 +220,11 @@ S_LoadSound(sfx_t *sfx)
 		return qfalse;
 
 	if(info.width == 1)
-		Q_DPrintf(S_COLOR_YELLOW "WARNING: %s is a 8 bit wav file\n",
+		Q_DPrintf(S_COLOR_YELLOW "WARNING: %s is a 8 bit sound file\n",
 			sfx->soundName);
 
 	if(info.rate != 22050)
-		Q_DPrintf(
-			S_COLOR_YELLOW "WARNING: %s is not a 22kHz wav file\n",
+		Q_DPrintf(S_COLOR_YELLOW "WARNING: %s is not a 22kHz sound file\n",
 			sfx->soundName);
 
 	samples = Hunk_AllocateTempMemory(info.samples * sizeof(short) * 2);
