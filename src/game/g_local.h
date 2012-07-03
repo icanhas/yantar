@@ -636,7 +636,7 @@ void DeathmatchScoreboardMessage(gentity_t *client);
  * g_main.c
  *  */
 void FindIntermissionPoint(void);
-void SetLeader(int team, int client);
+void SetLeader(int team, uint client);
 void CheckTeamLeader(int team);
 void G_RunThink(gentity_t *ent);
 void AddTournamentQueue(gclient_t *client);

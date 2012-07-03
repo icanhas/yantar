@@ -1602,7 +1602,7 @@ CheckVote(void)
 void
 PrintTeam(int team, char *message)
 {
-	int i;
+	uint i;
 
 	for(i = 0; i < level.maxclients; i++){
 		if(level.clients[i].sess.sessionTeam != team)
@@ -1615,9 +1615,9 @@ PrintTeam(int team, char *message)
  * SetLeader
  */
 void
-SetLeader(int team, int client)
+SetLeader(int team, uint client)
 {
-	int i;
+	uint i;
 
 	if(level.clients[client].pers.connected == CON_DISCONNECTED){
 		PrintTeam(team,
@@ -1652,7 +1652,7 @@ SetLeader(int team, int client)
 void
 CheckTeamLeader(int team)
 {
-	int i;
+	uint i;
 
 	for(i = 0; i < level.maxclients; i++){
 		if(level.clients[i].sess.sessionTeam != team)
@@ -1669,11 +1669,13 @@ CheckTeamLeader(int team)
 				break;
 			}
 		}
-		for(i = 0; i < level.maxclients; i++){
-			if(level.clients[i].sess.sessionTeam != team)
-				continue;
-			level.clients[i].sess.teamLeader = qtrue;
-			break;
+		if(i >= level.maxclients){
+			for(i = 0 ; i < level.maxclients ; i++ ){
+				if (level.clients[i].sess.sessionTeam != team)
+					continue;
+				level.clients[i].sess.teamLeader = qtrue;
+				break;
+			}
 		}
 	}
 }
