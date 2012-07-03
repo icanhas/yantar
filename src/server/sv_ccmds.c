@@ -1034,14 +1034,11 @@ SV_Status_f(void)
 	const char	*s;
 	int ping;
 
-	/* make sure server is running */
 	if(!com_sv_running->integer){
 		Q_Printf("Server is not running.\n");
 		return;
 	}
-
 	Q_Printf ("map: %s\n", sv_mapname->string);
-
 	Q_Printf (
 		"num score ping name            lastmsg address               qport rate\n");
 	Q_Printf (
@@ -1086,47 +1083,62 @@ SV_Status_f(void)
 			Q_Printf(" ");
 			j++;
 		} while(j < l);
-
 		Q_Printf ("%5i", cl->netchan.qport);
-
 		Q_Printf (" %5i", cl->rate);
-
 		Q_Printf ("\n");
 	}
 	Q_Printf ("\n");
 }
 
-/*
- * SV_ConSay_f
- */
 static void
 SV_ConSay_f(void)
 {
 	char	*p;
 	char	text[1024];
 
-	/* make sure server is running */
 	if(!com_sv_running->integer){
 		Q_Printf("Server is not running.\n");
 		return;
 	}
-
 	if(Cmd_Argc () < 2)
 		return;
-
 	strcpy (text, "console: ");
 	p = Cmd_Args();
-
 	if(*p == '"'){
 		p++;
 		p[strlen(p)-1] = 0;
 	}
-
 	strcat(text, p);
-
 	SV_SendServerCommand(NULL, "chat \"%s\"", text);
 }
 
+static void
+SV_ConTell_f(void)
+{
+	char *p;
+	char text[1024];
+	client_t *cl;
+	
+	if(!com_sv_running->integer){
+		Q_Printf("Server is not running.\n");
+		return;
+	}
+	if(Cmd_Argc() < 3){
+		Q_Printf("Usage: tell <client num> <text>\n");
+		return;
+	}
+	cl = SV_GetPlayerByNum();
+	if(cl == nil)
+		return;
+	strcpy(text, "console tell: ");
+	p = Cmd_ArgsFrom(2);
+	if(*p == '"'){
+		p++;
+		p[strlen(p)-1] = 0;
+	}
+	strcat(text, p);
+	SV_SendServerCommand(cl, "chat \"%s\"", text);
+}
 
 /*
  * SV_Heartbeat_f
@@ -1176,7 +1188,6 @@ SV_DumpUser_f(void)
 {
 	client_t *cl;
 
-	/* make sure server is running */
 	if(!com_sv_running->integer){
 		Q_Printf("Server is not running.\n");
 		return;
@@ -1256,8 +1267,10 @@ SV_AddOperatorCommands(void)
 	Cmd_SetCommandCompletionFunc("spdevmap", SV_CompleteMapName);
 #endif
 	Cmd_AddCommand ("killserver", SV_KillServer_f);
-	if(com_dedicated->integer)
-		Cmd_AddCommand ("say", SV_ConSay_f);
+	if(com_dedicated->integer){
+		Cmd_AddCommand("say", SV_ConSay_f);
+		Cmd_AddCommand("tell", SV_ConTell_f);
+	}
 
 	Cmd_AddCommand("rehashbans", SV_RehashBans_f);
 	Cmd_AddCommand("listbans", SV_ListBans_f);
