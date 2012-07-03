@@ -364,10 +364,6 @@ ifneq (,$(findstring "$(PLATFORM)", "linux" "gnu_kfreebsd" "kfreebsd-gnu"))
     CLIENT_LIBS += -lrt
   endif
 
-  ifeq ($(USE_LOCAL_HEADERS),1)
-    CLIENT_CFLAGS += -I$(SDLHDIR)/include
-  endif
-
   ifeq ($(ARCH),i386)
     # linux32 make ...
     BASE_CFLAGS += -m32
