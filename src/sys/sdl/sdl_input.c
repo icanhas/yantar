@@ -28,7 +28,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "../renderer/tr_local.h"
 #include "../client/client.h"
 #include "../sys/sys_local.h"
 
