@@ -610,7 +610,7 @@ SV_RehashBans_f(void)
 static void
 SV_WriteBans(void)
 {
-	int	index;
+	uint	index;
 	fileHandle_t writeto;
 	char	filepath[MAX_QPATH];
 
@@ -644,7 +644,7 @@ SV_WriteBans(void)
  */
 
 static qbool
-SV_DelBanEntryFromList(int index)
+SV_DelBanEntryFromList(uint index)
 {
 	if(index == serverBansCount - 1)
 		serverBansCount--;
@@ -706,7 +706,9 @@ SV_AddBanToList(qbool isexception)
 	char	*banstring;
 	char	addy2[NET_ADDRSTRMAXLEN];
 	netadr_t ip;
-	int	index, argc, mask;
+	uint index;
+	int argc;
+	int mask;
 	serverBan_t *curban;
 
 	argc = Cmd_Argc();
@@ -844,7 +846,8 @@ SV_AddBanToList(qbool isexception)
 static void
 SV_DelBanFromList(qbool isexception)
 {
-	int index, count = 0, todel, mask;
+	uint index, count = 0, todel;
+	int mask;
 	netadr_t ip;
 	char *banstring;
 
@@ -922,7 +925,7 @@ SV_DelBanFromList(qbool isexception)
 static void
 SV_ListBans_f(void)
 {
-	int index, count;
+	uint index, count;
 	serverBan_t *ban;
 
 	/* List all bans */

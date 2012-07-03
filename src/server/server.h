@@ -293,7 +293,7 @@ extern cvar_t	*sv_strictAuth;
 extern cvar_t	*sv_banFile;
 
 extern serverBan_t serverBans[SERVER_MAXBANS];
-extern int serverBansCount;
+extern uint serverBansCount;
 
 #ifdef USE_VOIP
 extern cvar_t *sv_voip;

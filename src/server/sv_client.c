@@ -281,7 +281,7 @@ SV_AuthorizeIpPacket(netadr_t from)
 static qbool
 SV_IsBanned(netadr_t *from, qbool isexception)
 {
-	int index;
+	uint index;
 	serverBan_t *curban;
 
 	if(!isexception)

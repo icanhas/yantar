@@ -61,7 +61,7 @@ cvar_t		*sv_strictAuth;
 cvar_t		*sv_banFile;
 
 serverBan_t serverBans[SERVER_MAXBANS];
-int serverBansCount = 0;
+uint serverBansCount = 0;
 
 /*
  *
@@ -399,13 +399,20 @@ SVC_HashForAddress(netadr_t address)
 {
 	byte	*ip	= NULL;
 	size_t size	= 0;
-	int	i;
+	size_t i;
 	long	hash = 0;
 
 	switch(address.type){
-	case NA_IP:  ip = address.ip;  size = 4; break;
-	case NA_IP6: ip = address.ip6; size = 16; break;
-	default: break;
+	case NA_IP:
+		ip = address.ip;
+		size = 4;
+		break;
+	case NA_IP6:
+		ip = address.ip6;
+		size = 16;
+		break;
+	default:
+		break;
 	}
 
 	for(i = 0; i < size; i++)
