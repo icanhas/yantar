@@ -45,7 +45,7 @@ PASSFLOAT(float x)
 }
 
 void
-trap_Printf(const char *fmt)
+trap_Print(const char *fmt)
 {
 	syscall(G_PRINT, fmt);
 }
