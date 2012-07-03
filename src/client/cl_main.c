@@ -3479,6 +3479,11 @@ CL_Init(void)
 	j_forward_axis	= Cvar_Get("j_forward_axis", "1", CVAR_ARCHIVE);
 	j_side_axis = Cvar_Get("j_side_axis", "0", CVAR_ARCHIVE);
 	j_up_axis = Cvar_Get("j_up_axis", "2", CVAR_ARCHIVE);
+	Cvar_CheckRange(j_pitch_axis, 0, MAX_JOYSTICK_AXIS-1, qtrue);
+	Cvar_CheckRange(j_yaw_axis, 0, MAX_JOYSTICK_AXIS-1, qtrue);
+	Cvar_CheckRange(j_forward_axis, 0, MAX_JOYSTICK_AXIS-1, qtrue);
+	Cvar_CheckRange(j_side_axis, 0, MAX_JOYSTICK_AXIS-1, qtrue);
+	Cvar_CheckRange(j_up_axis, 0, MAX_JOYSTICK_AXIS-1, qtrue);
 
 	cl_motdString = Cvar_Get("cl_motdString", "", CVAR_ROM);
 
