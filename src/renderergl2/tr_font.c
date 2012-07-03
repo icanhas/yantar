@@ -342,19 +342,15 @@ RE_RegisterFont(const char *fontName, int pointSize, fontInfo_t *font)
 	image_t         *image;
 	qhandle_t	h;
 	float max;
+	float	glyphScale;
+	float	dpi;
 #endif
 	void	*faceData;
 	int	i, len;
 	char	filename[MAX_QPATH];
 	char	strippedname[MAX_QPATH];
-	float	dpi;
-	float	glyphScale;
 
 	dpi = 72;
-	glyphScale = 72.0f / dpi;
-	/* change the scale to be relative to 1
-	 * based on 72 dpi ( so dpi of 144 means a
-	 * scale of .5 ) */
 	if(fontName == NULL){
 		ri.Printf(PRINT_ALL,"RE_RegisterFont: called with empty name\n");
 		return;
@@ -362,10 +358,6 @@ RE_RegisterFont(const char *fontName, int pointSize, fontInfo_t *font)
 
 	if(pointSize <= 0)
 		pointSize = 12;
-
-	/* we also need to adjust the scale based on point size relative to 48
-	 * points as the ui scaling is based on a 48 point font */
-	glyphScale *= 48.0f / pointSize;
 
 	/* make sure the render thread is stopped */
 	R_SyncRenderThread();
@@ -459,8 +451,7 @@ RE_RegisterFont(const char *fontName, int pointSize, fontInfo_t *font)
 	maxHeight = 0;
 
 	for(i = GLYPH_START; i < GLYPH_END; i++)
-		glyph = RE_ConstructGlyphInfo(out,&xOut,&yOut,&maxHeight,face,
-			(byte)i,qtrue);
+		RE_ConstructGlyphInfo(out, &xOut, &yOut, &maxHeight, face, (byte)i, qtrue);
 
 	xOut	= 0;
 	yOut	= 0;
@@ -469,8 +460,7 @@ RE_RegisterFont(const char *fontName, int pointSize, fontInfo_t *font)
 	imageNumber	= 0;
 
 	while(i <= GLYPH_END){
-		glyph = RE_ConstructGlyphInfo(out,&xOut,&yOut,&maxHeight,face,
-			(byte)i,qfalse);
+		glyph = RE_ConstructGlyphInfo(out, &xOut, &yOut, &maxHeight, face, (byte)i, qfalse);
 
 		if(xOut == -1 || yOut == -1 || i == GLYPH_END){
 			/* ran out of room
@@ -526,6 +516,12 @@ RE_RegisterFont(const char *fontName, int pointSize, fontInfo_t *font)
 		}
 	}
 
+	/* change the scale to be relative to 1 based on 72 dpi (so 
+	 * dpi of 144 means a scale of .5 */
+	glyphScale = 72.0f / dpi;
+	/* we also need to adjust the scale based on point size relative to 
+	 * 48 points as the ui scaling is based on a 48 point font */
+	glyphScale *= 48.0f / pointSize;
 	registeredFont[registeredFontCount].glyphScale = glyphScale;
 	font->glyphScale = glyphScale;
 	Q_Memcpy(&registeredFont[registeredFontCount++],font,sizeof(fontInfo_t));
