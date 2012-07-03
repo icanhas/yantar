@@ -495,7 +495,6 @@ enum {
 	FS_GENERAL_REF	= 0x01,
 	FS_UI_REF			= 0x02,
 	FS_CGAME_REF	= 0x04,
-	FS_QAGAME_REF	= 0x08,
 	/* number of id paks that will never be autodownloaded from baseq3/missionpack */
 	NUM_ID_PAKS		= 9,
 	NUM_TA_PAKS		= 4,
@@ -558,7 +557,6 @@ int FS_FOpenFileByMode(const char *qpath, fileHandle_t *f,
  			 fsMode_t mode);
 int FS_Seek(fileHandle_t f, long offset, int origin);
 qbool FS_FilenameCompare(const char *s1, const char *s2);
-const char* FS_GamePureChecksum(void);
 const char* FS_LoadedPakNames(void);
 const char* FS_LoadedPakChecksums(void);
 const char* FS_LoadedPakPureChecksums(void);
