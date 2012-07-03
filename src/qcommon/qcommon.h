@@ -851,15 +851,7 @@ qbool UI_usesUniqueCDKey(void);
  * NON-PORTABLE SYSTEM SERVICES
  */
 
-typedef enum {
-	AXIS_SIDE,
-	AXIS_FORWARD,
-	AXIS_UP,
-	AXIS_ROLL,
-	AXIS_YAW,
-	AXIS_PITCH,
-	MAX_JOYSTICK_AXIS
-} joystickAxis_t;
+enum { MAX_JOYSTICK_AXIS = 16 };
 
 typedef enum {
 	DR_YES	= 0,
