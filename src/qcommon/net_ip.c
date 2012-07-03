@@ -1684,7 +1684,7 @@ NET_Sleep(int msec)
 	if(ip6_socket != INVALID_SOCKET){
 		FD_SET(ip6_socket, &fdr);
 
-		if(ip6_socket > highestfd)
+		if((int)ip6_socket > highestfd)
 			highestfd = ip6_socket;
 	}
 
