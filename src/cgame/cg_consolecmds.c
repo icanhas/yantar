@@ -591,31 +591,35 @@ CG_InitConsoleCommands(void)
 	 * the game server will interpret these commands, which will be automatically
 	 * forwarded to the server after they are not recognized locally
 	 *  */
-	trap_AddCommand ("kill");
-	trap_AddCommand ("say");
-	trap_AddCommand ("say_team");
-	trap_AddCommand ("tell");
-	trap_AddCommand ("vsay");
-	trap_AddCommand ("vsay_team");
-	trap_AddCommand ("vtell");
-	trap_AddCommand ("vtaunt");
-	trap_AddCommand ("vosay");
-	trap_AddCommand ("vosay_team");
-	trap_AddCommand ("votell");
-	trap_AddCommand ("give");
-	trap_AddCommand ("god");
-	trap_AddCommand ("notarget");
-	trap_AddCommand ("noclip");
-	trap_AddCommand ("team");
-	trap_AddCommand ("follow");
-	trap_AddCommand ("levelshot");
-	trap_AddCommand ("addbot");
-	trap_AddCommand ("setviewpos");
-	trap_AddCommand ("callvote");
-	trap_AddCommand ("vote");
-	trap_AddCommand ("callteamvote");
-	trap_AddCommand ("teamvote");
-	trap_AddCommand ("stats");
-	trap_AddCommand ("teamtask");
-	trap_AddCommand ("loaddefered");	/* spelled wrong, but not changing for demo */
+	trap_AddCommand("kill");
+	trap_AddCommand("say");
+	trap_AddCommand("say_team");
+	trap_AddCommand("tell");
+	trap_AddCommand("vsay");
+	trap_AddCommand("vsay_team");
+	trap_AddCommand("vtell");
+	trap_AddCommand("vtaunt");
+	trap_AddCommand("vosay");
+	trap_AddCommand("vosay_team");
+	trap_AddCommand("votell");
+	trap_AddCommand("give");
+	trap_AddCommand("god");
+	trap_AddCommand("notarget");
+	trap_AddCommand("noclip");
+	trap_AddCommand("team");
+	trap_AddCommand("follow");
+	trap_AddCommand("follownext");
+	trap_AddCommand("followprev");
+	trap_AddCommand("levelshot");
+	trap_AddCommand("addbot");
+	trap_AddCommand("setviewpos");
+	trap_AddCommand("callvote");
+	trap_AddCommand("vote");
+	trap_AddCommand("callteamvote");
+	trap_AddCommand("teamvote");
+	trap_AddCommand("stats");
+	trap_AddCommand("teamtask");
+	trap_AddCommand("loaddefered");	/* spelled wrong, but not changing for demo */
+	trap_AddCommand("where");
+
 }
