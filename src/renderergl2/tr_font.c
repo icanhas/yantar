@@ -174,13 +174,13 @@ WriteTGA(char *filename, byte *data, int width, int height)
 }
 
 static glyphInfo_t *
-RE_ConstructGlyphInfo(unsigned char *imageOut, int *xOut, int *yOut,
-		      int *maxHeight, FT_Face face, const unsigned char c,
+RE_ConstructGlyphInfo(byte *imageOut, int *xOut, int *yOut,
+		      int *maxHeight, FT_Face face, const byte c,
 		      qbool calcHeight)
 {
 	int i;
 	static glyphInfo_t glyph;
-	unsigned char *src, *dst;
+	byte *src, *dst;
 	float scaled_width, scaled_height;
 	FT_Bitmap *bitmap;
 
@@ -218,17 +218,10 @@ RE_ConstructGlyphInfo(unsigned char *imageOut, int *xOut, int *yOut,
 
 		/* we need to make sure we fit */
 		if(*xOut + scaled_width + 1 >= 255){
-			if(*yOut +*maxHeight + 1 >= 255){
-				*yOut	= -1;
-				*xOut	= -1;
-				ri.Free(bitmap->buffer);
-				ri.Free(bitmap);
-				return &glyph;
-			}else{
-				*xOut	= 0;
-				*yOut	+= *maxHeight + 1;
-			}
-		}else if(*yOut +*maxHeight + 1 >= 255){
+			*xOut = 0;
+			*yOut += *maxHeight + 1;
+		}
+		if(*yOut +*maxHeight + 1 >= 255){
 			*yOut	= -1;
 			*xOut	= -1;
 			ri.Free(bitmap->buffer);
@@ -242,10 +235,10 @@ RE_ConstructGlyphInfo(unsigned char *imageOut, int *xOut, int *yOut,
 		if(bitmap->pixel_mode == ft_pixel_mode_mono){
 			for(i = 0; i < glyph.height; i++){
 				int j;
-				unsigned char	*_src;
-				unsigned char   *_dst;
-				unsigned char	mask;
-				unsigned char	val;
+				byte	*_src;
+				byte   *_dst;
+				byte	mask;
+				byte	val;
 
 				_src	= src;
 				_dst	= dst;
@@ -344,7 +337,7 @@ RE_RegisterFont(const char *fontName, int pointSize, fontInfo_t *font)
 	FT_Face face;
 	int	j, k, xOut, yOut, lastStart, imageNumber;
 	int	scaledSize, newSize, maxHeight, left, satLevels;
-	unsigned char *out, *imageBuff;
+	byte *out, *imageBuff;
 	glyphInfo_t	*glyph;
 	image_t         *image;
 	qhandle_t	h;
@@ -467,7 +460,7 @@ RE_RegisterFont(const char *fontName, int pointSize, fontInfo_t *font)
 
 	for(i = GLYPH_START; i < GLYPH_END; i++)
 		glyph = RE_ConstructGlyphInfo(out,&xOut,&yOut,&maxHeight,face,
-			(unsigned char)i,qtrue);
+			(byte)i,qtrue);
 
 	xOut	= 0;
 	yOut	= 0;
@@ -477,7 +470,7 @@ RE_RegisterFont(const char *fontName, int pointSize, fontInfo_t *font)
 
 	while(i <= GLYPH_END){
 		glyph = RE_ConstructGlyphInfo(out,&xOut,&yOut,&maxHeight,face,
-			(unsigned char)i,qfalse);
+			(byte)i,qfalse);
 
 		if(xOut == -1 || yOut == -1 || i == GLYPH_END){
 			/* ran out of room
