@@ -1,4 +1,4 @@
-/* Stateless support routines that are included in each code dll */
+/* Stateless support routines that are included in all modules */
 /*
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
