@@ -654,6 +654,11 @@ success:
 	 * again and you get the correct answer. This is a suspected driver bug, see
 	 * http://bugzilla.icculus.org/show_bug.cgi?id=4316 */
 	glConfig.deviceSupportsGamma = SDL_SetGamma(1.0f, 1.0f, 1.0f) >= 0;
+	
+	if(r_ignorehwgamma->integer == -1)
+		glConfig.deviceSupportsGamma = qtrue;	/* force it */
+	else if(r_ignorehwgamma->integer == 1)
+		glConfig.deviceSupportsGamma = qfalse;
 
 	/* get our config strings */
 	Q_strncpyz(glConfig.vendor_string, (char*)qglGetString (GL_VENDOR), sizeof(glConfig.vendor_string));
