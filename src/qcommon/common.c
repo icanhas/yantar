@@ -2082,7 +2082,7 @@ Q_Freeze_f(void)
 static void
 Q_Crash_f(void)
 {
-	*(volatile int*)0 = 0x0000dead;
+	*(volatile int*)0x0000dead = 0xdeaddead;
 }
 
 /* For controlling environment variables */
