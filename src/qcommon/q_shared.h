@@ -797,7 +797,7 @@ int		Q_runetochar(char*, rune_t*);
 int		Q_chartorune(rune_t*, char*);
 int		Q_runelen(ulong);
 int		Q_fullrune(char*, int);
-int		Q_utflen(char*);
+size_t	Q_utflen(char*);
 char*	Q_utfrune(char*, ulong);
 char*	Q_utfutf(char*, char*);
 
@@ -815,6 +815,7 @@ rune_t	Q_tolowerrune(rune_t);
 rune_t	Q_totitlerune(rune_t);
 rune_t	Q_toupperrune(rune_t);
 int		Q_isalpharune(rune_t);
+int		Q_isdigitrune(rune_t);
 int		Q_islowerrune(rune_t);
 int		Q_isspacerune(rune_t);
 int		Q_istitlerune(rune_t);
