@@ -145,6 +145,8 @@ Q_EndRedirect(void)
 /*
  * Both client and server can use this, and it will output
  * to the apropriate place.
+ * 
+ * May be passed UTF-8.
  *
  * A raw string should NEVER be passed as fmt, because of "%f" type crashers.
  */
@@ -2085,6 +2087,59 @@ Q_Crash_f(void)
 	*(volatile int*)0x0000dead = 0xdeaddead;
 }
 
+/* just for Q_TestUTF_f */
+static void
+RuneProps(rune_t r)
+{
+	Q_Printf("rune %#x properties:", r);
+	if(Q_isalpharune(r)) Q_Printf("isalpha ");
+	if(Q_isdigitrune(r)) Q_Printf("isdigit ");
+	if(Q_isupperrune(r)) Q_Printf("isupper ");
+	if(Q_islowerrune(r)) Q_Printf("islower ");
+	if(Q_istitlerune(r)) Q_Printf("istitle ");
+	if(Q_isspacerune(r)) Q_Printf("isspace");
+	Q_Printf("\n");
+}
+
+static void
+Q_TestUTF_f(void)
+{
+	char str[50] = "test тест δοκιμή próf 시험 テスト";
+	rune_t r;
+	rune_t rstr[29];
+	int n;
+	uint i;
+	
+	n = Q_chartorune(&r, &str[5]);
+	Q_Printf("read a utf sequence %i bytes long: %#x\n", n, r);
+	for(i = 0; i < 6; i++){
+		if(Q_fullrune(&str[5], i)){
+			Q_Printf("letter appears to be a full utf sequence at %u bytes long\n", i);
+			break;
+		}
+		Q_Printf("letter doesn't appear to be a proper sequence at %u bytes long\n", i);
+	}
+	Q_Printf("%s\n", str);
+	rstr[0] = r;
+	rstr[1] = 'a'; rstr[2] = 's'; rstr[3] = 'd'; rstr[4] = 'f'; rstr[5] = r;
+	Q_Printf("rstr has runestrlen %u\n", Q_runestrlen(rstr));
+	Q_Printf("str has utflen %u\n", Q_utflen(str));
+	RuneProps(r);
+	RuneProps(Q_toupperrune(r));
+	RuneProps(Q_tolowerrune(r));
+	RuneProps(Q_totitlerune(r));
+	r = '4';
+	RuneProps(r);
+	RuneProps(Q_toupperrune(r));
+	RuneProps(Q_tolowerrune(r));
+	RuneProps(Q_totitlerune(r));
+	r = 0x01C5; /* titlecase 'Dz' */
+	RuneProps(r);
+	RuneProps(Q_toupperrune(r));
+	RuneProps(Q_tolowerrune(r));
+	RuneProps(Q_totitlerune(r));
+}
+	
 /* For controlling environment variables */
 void
 Q_Setenv_f(void)
@@ -2532,6 +2587,7 @@ Q_Init(char *commandLine)
 		Cmd_AddCommand("crash", Q_Crash_f);
 		Cmd_AddCommand("freeze", Q_Freeze_f);
 	}
+	Cmd_AddCommand("testutf", Q_TestUTF_f);
 	Cmd_AddCommand("quit", Q_Quit_f);
 	Cmd_AddCommand("q", Q_Quit_f);
 	Cmd_AddCommand("changeVectors", MSG_ReportChangeVectors_f);
