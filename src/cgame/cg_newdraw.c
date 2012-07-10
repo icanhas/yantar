@@ -19,14 +19,13 @@
  */
 
 #ifndef MISSIONPACK
-#error This file not be used for classic Q3A.
+#error This file must not be used for classic Q3A.
 #endif
 
 #include "cg_local.h"
 #include "../ui/ui_shared.h"
 
 extern displayContextDef_t cgDC;
-
 
 /* set in CG_ParseTeamInfo */
 
@@ -132,26 +131,26 @@ CG_SetSelectedPlayerName(void)
 {
 	if(cg_currentSelectedPlayer.integer >= 0 &&
 	   cg_currentSelectedPlayer.integer < numSortedTeamPlayers){
-		clientInfo_t *ci = cgs.clientinfo +
-				   sortedTeamPlayers[cg_currentSelectedPlayer.
-						     integer];
+	   	int i;
+	   	
+	   	i = cg_currentSelectedPlayer.integer;
+		clientInfo_t *ci = cgs.clientinfo + sortedTeamPlayers[i];
 		if(ci){
 			trap_Cvar_Set("cg_selectedPlayerName", ci->name);
-			trap_Cvar_Set("cg_selectedPlayer",
-				va("%d",
-					sortedTeamPlayers[
-						cg_currentSelectedPlayer.integer
-					]));
+			trap_Cvar_Set("cg_selectedPlayer", va("%d", sortedTeamPlayers[i]));
 			cgs.currentOrder = ci->teamTask;
 		}
 	}else
 		trap_Cvar_Set("cg_selectedPlayerName", "Everyone");
 }
+
 int
 CG_GetSelectedPlayer(void)
 {
-	if(cg_currentSelectedPlayer.integer < 0 ||
-	   cg_currentSelectedPlayer.integer >= numSortedTeamPlayers)
+	int n;
+	
+	n = cg_currentSelectedPlayer.integer;
+	if(n < 0 || n >= numSortedTeamPlayers)
 		cg_currentSelectedPlayer.integer = 0;
 	return cg_currentSelectedPlayer.integer;
 }
@@ -159,9 +158,11 @@ CG_GetSelectedPlayer(void)
 void
 CG_SelectNextPlayer(void)
 {
+	int n;
+	
 	CG_CheckOrderPending();
-	if(cg_currentSelectedPlayer.integer >= 0 &&
-	   cg_currentSelectedPlayer.integer < numSortedTeamPlayers)
+	n = cg_currentSelectedPlayer.integer;
+	if(n >= 0 && n < numSortedTeamPlayers)
 		cg_currentSelectedPlayer.integer++;
 	else
 		cg_currentSelectedPlayer.integer = 0;
@@ -171,15 +172,16 @@ CG_SelectNextPlayer(void)
 void
 CG_SelectPrevPlayer(void)
 {
+	int n;
+	
 	CG_CheckOrderPending();
-	if(cg_currentSelectedPlayer.integer > 0 &&
-	   cg_currentSelectedPlayer.integer < numSortedTeamPlayers)
+	n = cg_currentSelectedPlayer.integer;
+	if(n > 0 && n < numSortedTeamPlayers)
 		cg_currentSelectedPlayer.integer--;
 	else
 		cg_currentSelectedPlayer.integer = numSortedTeamPlayers;
 	CG_SetSelectedPlayerName();
 }
-
 
 static void
 CG_DrawPlayerArmorIcon(rectDef_t *rect, qbool draw2D)
@@ -207,8 +209,7 @@ CG_DrawPlayerArmorIcon(rectDef_t *rect, qbool draw2D)
 
 static void
 CG_DrawPlayerArmorValue(rectDef_t *rect, float scale, vec4_t color,
-			qhandle_t shader,
-			int textStyle)
+			qhandle_t shader, int textStyle)
 {
 	char	num[16];
 	int	value;
@@ -305,8 +306,6 @@ CG_DrawPlayerAmmoValue(rectDef_t *rect, float scale, vec4_t color,
 
 }
 
-
-
 static void
 CG_DrawPlayerHead(rectDef_t *rect, qbool draw2D)
 {
@@ -327,21 +326,20 @@ CG_DrawPlayerHead(rectDef_t *rect, qbool draw2D)
 
 		cg.headStartYaw = 180 + cg.damageX * 45;
 
-		cg.headEndYaw	= 180 + 20 * cos(crandom()*M_PI);
+		cg.headEndYaw = 180 + 20 * cos(crandom()*M_PI);
 		cg.headEndPitch = 5 * cos(crandom()*M_PI);
 
-		cg.headStartTime	= cg.time;
-		cg.headEndTime		= cg.time + 100 + random() * 2000;
+		cg.headStartTime = cg.time;
+		cg.headEndTime = cg.time + 100 + random() * 2000;
 	}else{
 		if(cg.time >= cg.headEndTime){
 			/* select a new head angle */
 			cg.headStartYaw = cg.headEndYaw;
 			cg.headStartPitch = cg.headEndPitch;
-			cg.headStartTime	= cg.headEndTime;
-			cg.headEndTime		= cg.time + 100 + random() *
-						  2000;
+			cg.headStartTime = cg.headEndTime;
+			cg.headEndTime = cg.time + 100 + random()*2000;
 
-			cg.headEndYaw	= 180 + 20 * cos(crandom()*M_PI);
+			cg.headEndYaw = 180 + 20*cos(crandom()*M_PI);
 			cg.headEndPitch = 5 * cos(crandom()*M_PI);
 		}
 
@@ -352,9 +350,7 @@ CG_DrawPlayerHead(rectDef_t *rect, qbool draw2D)
 	if(cg.headStartTime > cg.time)
 		cg.headStartTime = cg.time;
 
-	frac =
-		(cg.time -
-		 cg.headStartTime) / (float)(cg.headEndTime - cg.headStartTime);
+	frac = (cg.time - cg.headStartTime) / (float)(cg.headEndTime - cg.headStartTime);
 	frac = frac * frac * (3 - 2 * frac);
 	angles[YAW] = cg.headStartYaw +
 		      (cg.headEndYaw - cg.headStartYaw) * frac;
@@ -366,8 +362,7 @@ CG_DrawPlayerHead(rectDef_t *rect, qbool draw2D)
 
 static void
 CG_DrawSelectedPlayerHealth(rectDef_t *rect, float scale, vec4_t color,
-			    qhandle_t shader,
-			    int textStyle)
+			    qhandle_t shader, int textStyle)
 {
 	clientInfo_t *ci;
 	int	value;
@@ -393,8 +388,7 @@ CG_DrawSelectedPlayerHealth(rectDef_t *rect, float scale, vec4_t color,
 
 static void
 CG_DrawSelectedPlayerArmor(rectDef_t *rect, float scale, vec4_t color,
-			   qhandle_t shader,
-			   int textStyle)
+			   qhandle_t shader, int textStyle)
 {
 	clientInfo_t *ci;
 	int	value;
@@ -469,7 +463,6 @@ CG_DrawSelectedPlayerStatus(rectDef_t *rect)
 	}
 }
 
-
 static void
 CG_DrawPlayerStatus(rectDef_t *rect)
 {
@@ -480,11 +473,9 @@ CG_DrawPlayerStatus(rectDef_t *rect)
 	}
 }
 
-
 static void
 CG_DrawSelectedPlayerName(rectDef_t *rect, float scale, vec4_t color,
-			  qbool voice,
-			  int textStyle)
+			  qbool voice, int textStyle)
 {
 	clientInfo_t *ci;
 	ci = cgs.clientinfo +
@@ -523,8 +514,6 @@ CG_DrawPlayerLocation(rectDef_t *rect, float scale, vec4_t color, int textStyle)
 			textStyle);
 	}
 }
-
-
 
 static void
 CG_DrawSelectedPlayerWeapon(rectDef_t *rect)
@@ -590,7 +579,6 @@ CG_DrawPlayerItem(rectDef_t *rect, float scale, qbool draw2D)
 
 }
 
-
 static void
 CG_DrawSelectedPlayerPowerup(rectDef_t *rect, qbool draw2D)
 {
@@ -619,7 +607,6 @@ CG_DrawSelectedPlayerPowerup(rectDef_t *rect, qbool draw2D)
 
 	}
 }
-
 
 static void
 CG_DrawSelectedPlayerHead(rectDef_t *rect, qbool draw2D, qbool voice)
@@ -674,7 +661,6 @@ CG_DrawSelectedPlayerHead(rectDef_t *rect, qbool draw2D, qbool voice)
 
 }
 
-
 static void
 CG_DrawPlayerHealth(rectDef_t *rect, float scale, vec4_t color, qhandle_t shader,
 		    int textStyle)
@@ -699,7 +685,6 @@ CG_DrawPlayerHealth(rectDef_t *rect, float scale, vec4_t color, qhandle_t shader
 			textStyle);
 	}
 }
-
 
 static void
 CG_DrawRedScore(rectDef_t *rect, float scale, vec4_t color, qhandle_t shader,
@@ -946,7 +931,6 @@ CG_OneFlagStatus(rectDef_t *rect)
 	}
 }
 
-
 static void
 CG_DrawCTFPowerUp(rectDef_t *rect)
 {
@@ -961,8 +945,6 @@ CG_DrawCTFPowerUp(rectDef_t *rect)
 			cg_items[ value ].icon);
 	}
 }
-
-
 
 static void
 CG_DrawTeamColor(rectDef_t *rect, vec4_t color)
@@ -1156,8 +1138,7 @@ CG_YourTeamHasFlag(void)
 	return qfalse;
 }
 
-/* THINKABOUTME: should these be exclusive or inclusive..
- *  */
+/* THINKABOUTME: should these be exclusive or inclusive.. */
 qbool
 CG_OwnerDrawVisible(int flags)
 {
@@ -1248,8 +1229,6 @@ CG_OwnerDrawVisible(int flags)
 	return qfalse;
 }
 
-
-
 static void
 CG_DrawPlayerHasFlag(rectDef_t *rect, qbool force2D)
 {
@@ -1299,7 +1278,6 @@ CG_GetKillerText(void)
 	return s;
 }
 
-
 static void
 CG_DrawKiller(rectDef_t *rect, float scale, vec4_t color, qhandle_t shader,
 	      int textStyle)
@@ -1314,7 +1292,6 @@ CG_DrawKiller(rectDef_t *rect, float scale, vec4_t color, qhandle_t shader,
 	}
 
 }
-
 
 static void
 CG_DrawCapFragLimit(rectDef_t *rect, float scale, vec4_t color, qhandle_t shader,
@@ -1393,6 +1370,7 @@ CG_GameTypeString(void)
 		return "Harvester";
 	return "";
 }
+
 static void
 CG_DrawGameType(rectDef_t *rect, float scale, vec4_t color, qhandle_t shader,
 		int textStyle)
@@ -1459,8 +1437,6 @@ CG_Text_Paint_Limit(float *maxX, float x, float y, float scale, vec4_t color,
 	}
 
 }
-
-
 
 #define PIC_WIDTH 12
 
@@ -1548,7 +1524,6 @@ CG_DrawNewTeamInfo(rectDef_t *rect, float text_x, float text_y, float scale,
 			else
 				CG_DrawPic(xx, y, PIC_WIDTH, PIC_WIDTH,
 					cgs.media.deferShader);
-
 #endif
 
 			trap_R_SetColor(NULL);
@@ -1570,8 +1545,6 @@ CG_DrawNewTeamInfo(rectDef_t *rect, float text_x, float text_y, float scale,
 			leftOver = rect->w - xx;
 			maxx = xx + leftOver / 3;
 
-
-
 			CG_Text_Paint_Limit(&maxx, xx, y + text_y, scale, color,
 				ci->name, 0,
 				0);
@@ -1589,11 +1562,9 @@ CG_DrawNewTeamInfo(rectDef_t *rect, float text_x, float text_y, float scale,
 			y += text_y + 2;
 			if(y + text_y + 2 > rect->y + rect->h)
 				break;
-
 		}
 	}
 }
-
 
 void
 CG_DrawTeamSpectators(rectDef_t *rect, float scale, vec4_t color,
@@ -1619,19 +1590,15 @@ CG_DrawTeamSpectators(rectDef_t *rect, float scale, vec4_t color,
 			if(cg.spectatorPaintX <= rect->x + 2){
 				if(cg.spectatorOffset < cg.spectatorLen){
 					cg.spectatorPaintX += CG_Text_Width(
-						&cg.spectatorList[cg.
-								  spectatorOffset
-						],
+						&cg.spectatorList[cg.spectatorOffset],
 						scale, 1) - 1;
 					cg.spectatorOffset++;
 				}else{
 					cg.spectatorOffset = 0;
 					if(cg.spectatorPaintX2 >= 0)
-						cg.spectatorPaintX =
-							cg.spectatorPaintX2;
+						cg.spectatorPaintX = cg.spectatorPaintX2;
 					else
-						cg.spectatorPaintX = rect->x +
-								     rect->w - 2;
+						cg.spectatorPaintX = rect->x + rect->w - 2;
 					cg.spectatorPaintX2 = -1;
 				}
 			}else{
@@ -1644,9 +1611,7 @@ CG_DrawTeamSpectators(rectDef_t *rect, float scale, vec4_t color,
 		maxX = rect->x + rect->w - 2;
 		CG_Text_Paint_Limit(&maxX, cg.spectatorPaintX, rect->y +
 			rect->h - 3, scale, color,
-			&cg.spectatorList[cg.spectatorOffset],
-			0,
-			0);
+			&cg.spectatorList[cg.spectatorOffset], 0, 0);
 		if(cg.spectatorPaintX2 >= 0){
 			float maxX2 = rect->x + rect->w - 2;
 			CG_Text_Paint_Limit(&maxX2, cg.spectatorPaintX2,
@@ -1663,8 +1628,6 @@ CG_DrawTeamSpectators(rectDef_t *rect, float scale, vec4_t color,
 
 	}
 }
-
-
 
 void
 CG_DrawMedal(int ownerDraw, rectDef_t *rect, float scale, vec4_t color,
@@ -1732,11 +1695,8 @@ CG_DrawMedal(int ownerDraw, rectDef_t *rect, float scale, vec4_t color,
 			0);
 	}
 	trap_R_SetColor(NULL);
-
 }
 
-
-/*  */
 void
 CG_OwnerDraw(float x, float y, float w, float h, float text_x, float text_y,
 	     int ownerDraw, int ownerDrawFlags, int align, float special,
@@ -1972,10 +1932,6 @@ CG_MouseEvent(int x, int y)
 
 }
 
-/*
- * CG_HideTeamMenus
- *
- */
 void
 CG_HideTeamMenu(void)
 {
@@ -1983,21 +1939,13 @@ CG_HideTeamMenu(void)
 	Menus_CloseByName("getMenu");
 }
 
-/*
- * CG_ShowTeamMenus
- *
- */
 void
 CG_ShowTeamMenu(void)
 {
 	Menus_OpenByName("teamMenu");
 }
 
-
-
-
 /*
- * CG_EventHandling
  * type 0 - no event handling
  *    1 - team menu
  *    2 - hud editor
@@ -2016,15 +1964,11 @@ CG_EventHandling(int type)
 
 }
 
-
-
 void
 CG_KeyEvent(int key, qbool down)
 {
-
 	if(!down)
 		return;
-
 	if(cg.predictedPlayerState.pm_type == PM_NORMAL ||
 	   (cg.predictedPlayerState.pm_type == PM_SPECTATOR && cg.showScores ==
 	    qfalse)){
@@ -2038,9 +1982,7 @@ CG_KeyEvent(int key, qbool down)
 	 *  CG_EventHandling(CGAME_EVENT_NONE);
 	 *  trap_Key_SetCatcher(0);
 	 * } */
-
-
-
+	 
 	Display_HandleKey(key, down, cgs.cursorX, cgs.cursorY);
 
 	if(cgs.capturedItem)
@@ -2073,7 +2015,6 @@ void
 CG_RunMenuScript(char **args)
 {
 }
-
 
 void
 CG_GetTeamColor(vec4_t *color)
