@@ -781,7 +781,48 @@ typedef enum {
 	FS_SEEK_SET
 } fsOrigin_t;
 
-/* strings */
+/*
+ * unicode (q_utf.c)
+ */
+typedef uint rune_t;	/* a unicode code point */
+
+enum {
+	Runemax		= 0x10ffff,	/* max legal code point as defined by Unicode 6.x */
+	Runesync	= 0x80,		/* if <, byte can't be part of a UTF sequence */
+	Runeself		= 0x80,		/* if <, rune and UTF sequence are the same */
+	Runeerror	= 0xfffd,		/* '�' represents a bad UTF sequence */
+};
+
+int		Q_runetochar(char*, rune_t*);
+int		Q_chartorune(rune_t*, char*);
+int		Q_runelen(ulong);
+int		Q_fullrune(char*, int);
+int		Q_utflen(char*);
+char*	Q_utfrune(char*, ulong);
+char*	Q_utfutf(char*, char*);
+
+rune_t*	Q_runestrcat(rune_t*, rune_t*);
+rune_t*	Q_runestrchr(rune_t*, rune_t);
+int		Q_runestrcmp(rune_t*, rune_t*);
+rune_t*	Q_runestrcpy(rune_t*, rune_t*);
+rune_t*	Q_runestrncpy(rune_t*, rune_t*, size_t);
+rune_t*	Q_runestrncat(rune_t*, rune_t*, size_t);
+int		Q_runestrncmp(rune_t*, rune_t*, size_t);
+size_t	Q_runestrlen(rune_t*);
+rune_t*	Q_runestrstr(rune_t*, rune_t*);
+
+rune_t	Q_tolowerrune(rune_t);
+rune_t	Q_totitlerune(rune_t);
+rune_t	Q_toupperrune(rune_t);
+int		Q_isalpharune(rune_t);
+int		Q_islowerrune(rune_t);
+int		Q_isspacerune(rune_t);
+int		Q_istitlerune(rune_t);
+int		Q_isupperrune(rune_t);
+
+/*
+ * strings
+ */
 int Q_isprint(int c);
 int Q_islower(int c);
 int Q_isupper(int c);
@@ -808,8 +849,10 @@ char*		Q_CleanStr(char *string);
 /* Count the number of char tocount encountered in string */
 int 		Q_CountChar(const char *string, char tocount);
 
-/* 64-bit integers for global rankings interface
- * implemented as a struct for qvm compatibility */
+/*
+ * 64-bit integers for global rankings interface
+ * implemented as a struct for qvm compatibility
+ */
 typedef struct {
 	byte	b0;
 	byte	b1;

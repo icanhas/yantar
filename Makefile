@@ -1414,6 +1414,7 @@ Q3OBJ = \
   \
   $(O)/client/q_math.o \
   $(O)/client/q_shared.o \
+  $(O)/client/q_utf.o \
   \
   $(O)/client/unzip.o \
   $(O)/client/ioapi.o \
@@ -1834,6 +1835,7 @@ Q3DOBJ = \
   \
   $(O)/ded/q_math.o \
   $(O)/ded/q_shared.o \
+  $(O)/ded/q_utf.o \
   \
   $(O)/ded/unzip.o \
   $(O)/ded/ioapi.o \
@@ -2020,7 +2022,8 @@ Q3CGOBJ_ = \
   $(O)/$(BASEGAME)/cgame/cg_weapons.o \
   \
   $(O)/$(BASEGAME)/qcommon/q_math.o \
-  $(O)/$(BASEGAME)/qcommon/q_shared.o
+  $(O)/$(BASEGAME)/qcommon/q_shared.o \
+  $(O)/$(BASEGAME)/qcommon/q_utf.o
 
 Q3CGOBJ = $(Q3CGOBJ_) $(O)/$(BASEGAME)/cgame/cg_syscalls.o
 Q3CGVMOBJ = $(Q3CGOBJ_:%.o=%.asm)
@@ -2065,7 +2068,8 @@ MPCGOBJ_ = \
   $(O)/$(MISSIONPACK)/ui/ui_shared.o \
   \
   $(O)/$(MISSIONPACK)/qcommon/q_math.o \
-  $(O)/$(MISSIONPACK)/qcommon/q_shared.o
+  $(O)/$(MISSIONPACK)/qcommon/q_shared.o \
+  $(O)/$(MISSIONPACK)/qcommon/q_utf.o
 
 MPCGOBJ = $(MPCGOBJ_) $(O)/$(MISSIONPACK)/cgame/cg_syscalls.o
 MPCGVMOBJ = $(MPCGOBJ_:%.o=%.asm)
@@ -2118,7 +2122,8 @@ Q3GOBJ_ = \
   $(O)/$(BASEGAME)/game/g_weapon.o \
   \
   $(O)/$(BASEGAME)/qcommon/q_math.o \
-  $(O)/$(BASEGAME)/qcommon/q_shared.o
+  $(O)/$(BASEGAME)/qcommon/q_shared.o \
+  $(O)/$(BASEGAME)/qcommon/q_utf.o
 
 Q3GOBJ = $(Q3GOBJ_) $(O)/$(BASEGAME)/game/g_syscalls.o
 Q3GVMOBJ = $(Q3GOBJ_:%.o=%.asm)
@@ -2169,7 +2174,8 @@ MPGOBJ_ = \
   $(O)/$(MISSIONPACK)/game/g_weapon.o \
   \
   $(O)/$(MISSIONPACK)/qcommon/q_math.o \
-  $(O)/$(MISSIONPACK)/qcommon/q_shared.o
+  $(O)/$(MISSIONPACK)/qcommon/q_shared.o \
+  $(O)/$(MISSIONPACK)/qcommon/q_utf.o
 
 MPGOBJ = $(MPGOBJ_) $(O)/$(MISSIONPACK)/game/g_syscalls.o
 MPGVMOBJ = $(MPGOBJ_:%.o=%.asm)
@@ -2232,7 +2238,8 @@ Q3UIOBJ_ = \
   $(O)/$(BASEGAME)/ui/ui_video.o \
   \
   $(O)/$(BASEGAME)/qcommon/q_math.o \
-  $(O)/$(BASEGAME)/qcommon/q_shared.o
+  $(O)/$(BASEGAME)/qcommon/q_shared.o \
+  $(O)/$(BASEGAME)/qcommon/q_utf.o
 
 Q3UIOBJ = $(Q3UIOBJ_) $(O)/$(MISSIONPACK)/ui/ui_syscalls.o
 Q3UIVMOBJ = $(Q3UIOBJ_:%.o=%.asm)
@@ -2260,7 +2267,8 @@ MPUIOBJ_ = \
   $(O)/$(MISSIONPACK)/ui/bg_lib.o \
   \
   $(O)/$(MISSIONPACK)/qcommon/q_math.o \
-  $(O)/$(MISSIONPACK)/qcommon/q_shared.o
+  $(O)/$(MISSIONPACK)/qcommon/q_shared.o \
+  $(O)/$(MISSIONPACK)/qcommon/q_utf.o
 
 MPUIOBJ = $(MPUIOBJ_) $(O)/$(MISSIONPACK)/ui/ui_syscalls.o
 MPUIVMOBJ = $(MPUIOBJ_:%.o=%.asm)
