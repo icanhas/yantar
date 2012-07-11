@@ -18,15 +18,6 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-/*****************************************************************************
-* name:		l_precomp.h
-*
-* desc:		pre compiler
-*
-* $Archive: /source/code/botlib/l_precomp.h $
-*
-*****************************************************************************/
-
 #ifndef MAX_PATH
 	#define MAX_PATH MAX_QPATH
 #endif
@@ -52,20 +43,21 @@
 #define QDECL
 #endif
 
+enum {
+	DEFINE_FIXED		= 0x0001,
 
-#define DEFINE_FIXED	0x0001
+	BUILTIN_LINE		= 1,
+	BUILTIN_FILE		= 2,
+	BUILTIN_DATE		= 3,
+	BUILTIN_TIME		= 4,
+	BUILTIN_STDC		= 5,
 
-#define BUILTIN_LINE	1
-#define BUILTIN_FILE	2
-#define BUILTIN_DATE	3
-#define BUILTIN_TIME	4
-#define BUILTIN_STDC	5
-
-#define INDENT_IF	0x0001
-#define INDENT_ELSE	0x0002
-#define INDENT_ELIF	0x0004
-#define INDENT_IFDEF	0x0008
-#define INDENT_IFNDEF	0x0010
+	INDENT_IF		= 0x0001,
+	INDENT_ELSE		= 0x0002,
+	INDENT_ELIF		= 0x0004,
+	INDENT_IFDEF		= 0x0008,
+	INDENT_IFNDEF	= 0x0010,
+};
 
 /* macro definitions */
 typedef struct define_s {

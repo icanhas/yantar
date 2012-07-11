@@ -1,3 +1,4 @@
+/* precompiler */
 /*
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
@@ -17,18 +18,8 @@
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-/*  */
 
-/*****************************************************************************
-* name:		l_precomp.c
-*
-* desc:		pre compiler
-*
-* $Archive: /MissionPack/code/botlib/l_precomp.c $
-*
-*****************************************************************************/
-
-/* Notes:			fix: PC_StringizeTokens */
+/* Notes:			fix PC_StringizeTokens */
 
 /* #define SCREWUP
 * #define BOTLIB
@@ -116,12 +107,6 @@ int numtokens;
 /* list with global defines added to every source loaded */
 define_t *globaldefines;
 
-/* ============================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * ============================================================================ */
 void QDECL
 SourceError(source_t *source, char *str, ...)
 {
@@ -146,13 +131,8 @@ SourceError(source_t *source, char *str, ...)
 		source->scriptstack->line,
 		text);
 #endif	/* BSPC */
-}	/* end of the function SourceError */
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+}
+
 void QDECL
 SourceWarning(source_t *source, char *str, ...)
 {
@@ -177,13 +157,8 @@ SourceWarning(source_t *source, char *str, ...)
 		source->scriptstack->filename, source->scriptstack->line,
 		text);
 #endif	/* BSPC */
-}	/* end of the function ScriptWarning */
-/* ============================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * ============================================================================ */
+}
+
 void
 PC_PushIndent(source_t *source, int type, int skip)
 {
@@ -196,13 +171,8 @@ PC_PushIndent(source_t *source, int type, int skip)
 	source->skip	+= indent->skip;
 	indent->next	= source->indentstack;
 	source->indentstack = indent;
-}	/* end of the function PC_PushIndent */
-/* ============================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * ============================================================================ */
+}
+
 void
 PC_PopIndent(source_t *source, int *type, int *skip)
 {
@@ -222,13 +192,8 @@ PC_PopIndent(source_t *source, int *type, int *skip)
 	source->indentstack = source->indentstack->next;
 	source->skip -= indent->skip;
 	FreeMemory(indent);
-}	/* end of the function PC_PopIndent */
-/* ============================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * ============================================================================ */
+}
+
 void
 PC_PushScript(source_t *source, script_t *script)
 {
@@ -244,13 +209,8 @@ PC_PushScript(source_t *source, script_t *script)
 	 * push the script on the script stack */
 	script->next = source->scriptstack;
 	source->scriptstack = script;
-}	/* end of the function PC_PushScript */
-/* ============================================================================
- *
- * Parameter:			-
- * Returns:				-
- * Changes Globals:		-
- * ============================================================================ */
+}
+
 void
 PC_InitTokenHeap(void)
 {
@@ -266,13 +226,8 @@ PC_InitTokenHeap(void)
 	 * }
 	 * tokenheapinitialized = qtrue;
 	 */
-}	/* end of the function PC_InitTokenHeap */
-/* ============================================================================
- *
- * Parameter:			-
- * Returns:				-
- * Changes Globals:		-
- * ============================================================================ */
+}
+
 token_t *
 PC_CopyToken(token_t *token)
 {
@@ -294,13 +249,8 @@ PC_CopyToken(token_t *token)
 	t->next = NULL;
 	numtokens++;
 	return t;
-}	/* end of the function PC_CopyToken */
-/* ============================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * ============================================================================ */
+}
+
 void
 PC_FreeToken(token_t *token)
 {
@@ -309,13 +259,8 @@ PC_FreeToken(token_t *token)
 /* token->next = freetokens;
  * freetokens = token; */
 	numtokens--;
-}	/* end of the function PC_FreeToken */
-/* ============================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * ============================================================================ */
+}
+
 int
 PC_ReadSourceToken(source_t *source, token_t *token)
 {
@@ -351,13 +296,8 @@ PC_ReadSourceToken(source_t *source, token_t *token)
 	source->tokens = source->tokens->next;
 	PC_FreeToken(t);
 	return qtrue;
-}	/* end of the function PC_ReadSourceToken */
-/* ============================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * ============================================================================ */
+}
+
 int
 PC_UnreadSourceToken(source_t *source, token_t *token)
 {
@@ -367,13 +307,8 @@ PC_UnreadSourceToken(source_t *source, token_t *token)
 	t->next = source->tokens;
 	source->tokens = t;
 	return qtrue;
-}	/* end of the function PC_UnreadSourceToken */
-/* ============================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * ============================================================================ */
+}
+
 int
 PC_ReadDefineParms(source_t *source, define_t *define, token_t **parms,
 		   int maxparms)
@@ -385,13 +320,11 @@ PC_ReadDefineParms(source_t *source, define_t *define, token_t **parms,
 		SourceError(source, "define %s missing parms", define->name);
 		return qfalse;
 	}
-	/*  */
 	if(define->numparms > maxparms){
 		SourceError(source, "define with more than %d parameters",
 			maxparms);
 		return qfalse;
 	}
-	/*  */
 	for(i = 0; i < define->numparms; i++) parms[i] = NULL;
 	/* if no leading "(" */
 	if(strcmp(token.string, "(")){
@@ -415,39 +348,30 @@ PC_ReadDefineParms(source_t *source, define_t *define, token_t **parms,
 		lastcomma = 1;
 		last = NULL;
 		while(!done){
-			/*  */
 			if(!PC_ReadSourceToken(source, &token)){
 				SourceError(source, "define %s incomplete",
 					define->name);
 				return qfalse;
 			}
-			/*  */
 			if(!strcmp(token.string, ","))
 				if(indent <= 0){
-					if(lastcomma) SourceWarning(
-							source,
-							"too many comma's");
+					if(lastcomma) SourceWarning(source,
+							"too many commas");
 					lastcomma = 1;
 					break;
 				}
 			lastcomma = 0;
-			/*  */
 			if(!strcmp(token.string, "(")){
 				indent++;
 				continue;
 			}else if(!strcmp(token.string, ")"))
 				if(--indent <= 0){
 					if(!parms[define->numparms-1])
-						SourceWarning(
-							source,
-							"too few define parms");
+						SourceWarning(source, "too few define parms");
 					done = 1;
 					break;
 				}
-			/* end if
-			 *  */
 			if(numparms < define->numparms){
-				/*  */
 				t = PC_CopyToken(&token);
 				t->next = NULL;
 				if(last) last->next = t;
@@ -458,13 +382,8 @@ PC_ReadDefineParms(source_t *source, define_t *define, token_t **parms,
 		numparms++;
 	}
 	return qtrue;
-}	/* end of the function PC_ReadDefineParms */
-/* ============================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * ============================================================================ */
+}
+
 int
 PC_StringizeTokens(token_t *tokens, token_t *token)
 {
@@ -480,13 +399,8 @@ PC_StringizeTokens(token_t *tokens, token_t *token)
 			strlen(token->string) - 1);
 	strncat(token->string, "\"", MAX_TOKEN - strlen(token->string) - 1);
 	return qtrue;
-}	/* end of the function PC_StringizeTokens */
-/* ============================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * ============================================================================ */
+}
+
 int
 PC_MergeTokens(token_t *t1, token_t *t2)
 {
@@ -506,13 +420,8 @@ PC_MergeTokens(token_t *t1, token_t *t2)
 	}
 	/* FIXME: merging of two number of the same sub type */
 	return qfalse;
-}	/* end of the function PC_MergeTokens */
-/* ============================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * ============================================================================ */
+}
+
 /*
  * void PC_PrintDefine(define_t *define)
  * {
@@ -523,14 +432,11 @@ PC_MergeTokens(token_t *t1, token_t *t2)
  * //	token_t *parms;					//define parameters
  * //	token_t *tokens;					//macro tokens (possibly containing parm tokens)
  * //	struct define_s *next;			//next defined macro in a list
- * } //end of the function PC_PrintDefine*/
+ * }
+ */
+ 
 #if DEFINEHASHING
-/* ============================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * ============================================================================ */
+
 void
 PC_PrintDefineHashTable(define_t **definehash)
 {
@@ -543,18 +449,14 @@ PC_PrintDefineHashTable(define_t **definehash)
 			Log_Write(" %s", d->name);
 		Log_Write("\n");
 	}
-}	/* end of the function PC_PrintDefineHashTable */
-/* ============================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * char primes[16] = {1, 3, 5, 7, 11, 13, 17, 19, 23, 27, 29, 31, 37, 41, 43, 47}; */
+}
+
+/* char primes[16] = {1, 3, 5, 7, 11, 13, 17, 19, 23, 27, 29, 31, 37, 41, 43, 47}; */
 
 int
 PC_NameHash(char *name)
 {
-	int register hash, i;
+	register int hash, i;
 
 	hash = 0;
 	for(i = 0; name[i] != '\0'; i++)
@@ -563,13 +465,8 @@ PC_NameHash(char *name)
 	 * hash += (name[i] << (i&15)); */
 	hash = (hash ^ (hash >> 10) ^ (hash >> 20)) & (DEFINEHASHSIZE-1);
 	return hash;
-}	/* end of the function PC_NameHash */
-/* ============================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * ============================================================================ */
+}
+
 void
 PC_AddDefineToHash(define_t *define, define_t **definehash)
 {
@@ -578,13 +475,8 @@ PC_AddDefineToHash(define_t *define, define_t **definehash)
 	hash = PC_NameHash(define->name);
 	define->hashnext = definehash[hash];
 	definehash[hash] = define;
-}	/* end of the function PC_AddDefineToHash */
-/* ============================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * ============================================================================ */
+}
+
 define_t *
 PC_FindHashedDefine(define_t **definehash, char *name)
 {
@@ -595,14 +487,9 @@ PC_FindHashedDefine(define_t **definehash, char *name)
 	for(d = definehash[hash]; d; d = d->hashnext)
 		if(!strcmp(d->name, name)) return d;
 	return NULL;
-}	/* end of the function PC_FindHashedDefine */
+}
 #endif	/* DEFINEHASHING */
-/* ============================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * ============================================================================ */
+
 define_t *
 PC_FindDefine(define_t *defines, char *name)
 {
@@ -611,14 +498,9 @@ PC_FindDefine(define_t *defines, char *name)
 	for(d = defines; d; d = d->next)
 		if(!strcmp(d->name, name)) return d;
 	return NULL;
-}	/* end of the function PC_FindDefine */
-/* ============================================================================
- *
- * Parameter:				-
- * Returns:					number of the parm
- *                                                      if no parm found with the given name -1 is returned
- * Changes Globals:		-
- * ============================================================================ */
+}
+
+/* takes number of the parm, returns -1 if none found with the given name */
 int
 PC_FindDefineParm(define_t *define, char *name)
 {
@@ -631,38 +513,25 @@ PC_FindDefineParm(define_t *define, char *name)
 		i++;
 	}
 	return -1;
-}	/* end of the function PC_FindDefineParm */
-/* ============================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * ============================================================================ */
+}
+
 void
 PC_FreeDefine(define_t *define)
 {
 	token_t *t, *next;
 
-	/* free the define parameters */
 	for(t = define->parms; t; t = next){
 		next = t->next;
 		PC_FreeToken(t);
 	}
-	/* free the define tokens */
 	for(t = define->tokens; t; t = next){
 		next = t->next;
 		PC_FreeToken(t);
 	}
-	/* free the define */
 	FreeMemory(define->name);
 	FreeMemory(define);
-}	/* end of the function PC_FreeDefine */
-/* ============================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * ============================================================================ */
+}
+
 void
 PC_AddBuiltinDefines(source_t *source)
 {
@@ -695,13 +564,8 @@ PC_AddBuiltinDefines(source_t *source)
 		source->defines = define;
 #endif	/* DEFINEHASHING */
 	}
-}	/* end of the function PC_AddBuiltinDefines */
-/* ============================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * ============================================================================ */
+}
+
 int
 PC_ExpandBuiltinDefine(source_t *source, token_t *deftoken, define_t *define,
 		       token_t **firsttoken, token_t **lasttoken)
@@ -773,13 +637,8 @@ PC_ExpandBuiltinDefine(source_t *source, token_t *deftoken, define_t *define,
 	}	/* end case */
 	}	/* end switch */
 	return qtrue;
-}	/* end of the function PC_ExpandBuiltinDefine */
-/* ============================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * ============================================================================ */
+}
+
 int
 PC_ExpandDefine(source_t *source, token_t *deftoken, define_t *define,
 		token_t **firsttoken, token_t **lasttoken)
@@ -893,16 +752,9 @@ PC_ExpandDefine(source_t *source, token_t *deftoken, define_t *define,
 			nextpt = pt->next;
 			PC_FreeToken(pt);
 		}
-	/* end for
-	 *  */
 	return qtrue;
-}	/* end of the function PC_ExpandDefine */
-/* ============================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * ============================================================================ */
+}
+
 int
 PC_ExpandDefineIntoSource(source_t *source, token_t *deftoken, define_t *define)
 {
@@ -917,13 +769,8 @@ PC_ExpandDefineIntoSource(source_t *source, token_t *deftoken, define_t *define)
 		return qtrue;
 	}
 	return qfalse;
-}	/* end of the function PC_ExpandDefineIntoSource */
-/* ============================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * ============================================================================ */
+}
+
 void
 PC_ConvertPath(char *path)
 {
@@ -942,13 +789,8 @@ PC_ConvertPath(char *path)
 		if(*ptr == '/' || *ptr == '\\') *ptr = PATHSEPERATOR_CHAR;
 		ptr++;
 	}
-}	/* end of the function PC_ConvertPath */
-/* ============================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * ============================================================================ */
+}
+
 int
 PC_Directive_include(source_t *source)
 {
@@ -1020,15 +862,12 @@ PC_Directive_include(source_t *source)
 	}
 	PC_PushScript(source, script);
 	return qtrue;
-}	/* end of the function PC_Directive_include */
-/* ============================================================================
- * reads a token from the current line, continues reading on the next
- * line only if a backslash '\' is encountered.
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * ============================================================================ */
+}
+
+/*
+ * reads a token from the current line, continues reading on the next 
+ * line only if a backslash is encountered
+ */
 int
 PC_ReadLine(source_t *source, token_t *token)
 {
@@ -1045,37 +884,22 @@ PC_ReadLine(source_t *source, token_t *token)
 		crossline = 1;
 	} while(!strcmp(token->string, "\\"));
 	return qtrue;
-}	/* end of the function PC_ReadLine */
-/* ============================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * ============================================================================ */
+}
+
 int
 PC_WhiteSpaceBeforeToken(token_t *token)
 {
 	return token->endwhitespace_p - token->whitespace_p > 0;
-}	/* end of the function PC_WhiteSpaceBeforeToken */
-/* ============================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * ============================================================================ */
+}
+
 void
 PC_ClearTokenWhiteSpace(token_t *token)
 {
 	token->whitespace_p = NULL;
 	token->endwhitespace_p = NULL;
 	token->linescrossed = 0;
-}	/* end of the function PC_ClearTokenWhiteSpace */
-/* ============================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * ============================================================================ */
+}
+
 int
 PC_Directive_undef(source_t *source)
 {
@@ -1084,7 +908,6 @@ PC_Directive_undef(source_t *source)
 	int hash;
 
 	if(source->skip > 0) return qtrue;
-	/*  */
 	if(!PC_ReadLine(source, &token)){
 		SourceError(source, "undef without name");
 		return qfalse;
@@ -1131,13 +954,8 @@ PC_Directive_undef(source_t *source)
 	}
 #endif	/* DEFINEHASHING */
 	return qtrue;
-}	/* end of the function PC_Directive_undef */
-/* ============================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * ============================================================================ */
+}
+
 int
 PC_Directive_define(source_t *source)
 {
@@ -1145,7 +963,6 @@ PC_Directive_define(source_t *source)
 	define_t *define;
 
 	if(source->skip > 0) return qtrue;
-	/*  */
 	if(!PC_ReadLine(source, &token)){
 		SourceError(source, "#define without name");
 		return qfalse;
@@ -1267,13 +1084,8 @@ PC_Directive_define(source_t *source)
 			return qfalse;
 		}
 	return qtrue;
-}	/* end of the function PC_Directive_define */
-/* ============================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * ============================================================================ */
+}
+
 define_t *
 PC_DefineFromString(char *string)
 {
@@ -1322,13 +1134,8 @@ PC_DefineFromString(char *string)
 	if(src.defines) PC_FreeDefine(def);
 	/*  */
 	return NULL;
-}	/* end of the function PC_DefineFromString */
-/* ============================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * ============================================================================ */
+}
+
 int
 PC_AddDefine(source_t *source, char *string)
 {
@@ -1343,14 +1150,8 @@ PC_AddDefine(source_t *source, char *string)
 	source->defines = define;
 #endif	/* DEFINEHASHING */
 	return qtrue;
-}	/* end of the function PC_AddDefine */
-/* ============================================================================
- * add a globals define that will be added to all opened sources
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * ============================================================================ */
+}
+
 int
 PC_AddGlobalDefine(char *string)
 {
@@ -1361,14 +1162,8 @@ PC_AddGlobalDefine(char *string)
 	define->next = globaldefines;
 	globaldefines = define;
 	return qtrue;
-}	/* end of the function PC_AddGlobalDefine */
-/* ============================================================================
- * remove the given global define
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * ============================================================================ */
+}
+
 int
 PC_RemoveGlobalDefine(char *name)
 {
@@ -1380,14 +1175,8 @@ PC_RemoveGlobalDefine(char *name)
 		return qtrue;
 	}
 	return qfalse;
-}	/* end of the function PC_RemoveGlobalDefine */
-/* ============================================================================
- * remove all globals defines
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * ============================================================================ */
+}
+
 void
 PC_RemoveAllGlobalDefines(void)
 {
@@ -1397,13 +1186,8 @@ PC_RemoveAllGlobalDefines(void)
 		globaldefines = globaldefines->next;
 		PC_FreeDefine(define);
 	}
-}	/* end of the function PC_RemoveAllGlobalDefines */
-/* ============================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * ============================================================================ */
+}
+
 define_t *
 PC_CopyDefine(source_t *source, define_t *define)
 {
@@ -1441,13 +1225,8 @@ PC_CopyDefine(source_t *source, define_t *define)
 		lasttoken = newtoken;
 	}
 	return newdefine;
-}	/* end of the function PC_CopyDefine */
-/* ============================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * ============================================================================ */
+}
+
 void
 PC_AddGlobalDefinesToSource(source_t *source)
 {
@@ -1462,13 +1241,8 @@ PC_AddGlobalDefinesToSource(source_t *source)
 		source->defines = newdefine;
 #endif	/* DEFINEHASHING */
 	}
-}	/* end of the function PC_AddGlobalDefinesToSource */
-/* ============================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * ============================================================================ */
+}
+
 int
 PC_Directive_if_def(source_t *source, int type)
 {
@@ -1494,35 +1268,20 @@ PC_Directive_if_def(source_t *source, int type)
 	skip = (type == INDENT_IFDEF) == (d == NULL);
 	PC_PushIndent(source, type, skip);
 	return qtrue;
-}	/* end of the function PC_Directiveif_def */
-/* ============================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * ============================================================================ */
+}
+
 int
 PC_Directive_ifdef(source_t *source)
 {
 	return PC_Directive_if_def(source, INDENT_IFDEF);
-}	/* end of the function PC_Directive_ifdef */
-/* ============================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * ============================================================================ */
+}
+
 int
 PC_Directive_ifndef(source_t *source)
 {
 	return PC_Directive_if_def(source, INDENT_IFNDEF);
-}	/* end of the function PC_Directive_ifndef */
-/* ============================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * ============================================================================ */
+}
+
 int
 PC_Directive_else(source_t *source)
 {
@@ -1539,13 +1298,8 @@ PC_Directive_else(source_t *source)
 	}
 	PC_PushIndent(source, INDENT_ELSE, !skip);
 	return qtrue;
-}	/* end of the function PC_Directive_else */
-/* ============================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * ============================================================================ */
+}
+
 int
 PC_Directive_endif(source_t *source)
 {
@@ -1557,13 +1311,8 @@ PC_Directive_endif(source_t *source)
 		return qfalse;
 	}
 	return qtrue;
-}	/* end of the function PC_Directive_endif */
-/* ============================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * ============================================================================ */
+}
+
 typedef struct operator_s {
 	int	operator;
 	int	priority;
@@ -1611,7 +1360,7 @@ PC_OperatorPriority(int op)
 	case P_QUESTIONMARK: return 5;
 	}	/* end switch */
 	return qfalse;
-}	/* end of the function PC_OperatorPriority */
+}
 
 /* #define AllocValue()			GetClearedMemory(sizeof(value_t));
  * #define FreeValue(val)		FreeMemory(val)
@@ -1629,7 +1378,6 @@ PC_OperatorPriority(int op)
 	else												\
 		val = &value_heap[numvalues++];
 #define FreeValue(val)
-/*  */
 #define AllocOperator(op)								\
 	if(numoperators >= MAX_OPERATORS){			      \
 		SourceError(source, "out of operator space\n");	\
@@ -1655,7 +1403,6 @@ PC_EvaluateTokens(source_t *source, token_t *tokens, signed long int *intvalue,
 	int	questmarkintvalue = 0;
 	float questmarkfloatvalue = 0;
 	int	gotquestmarkvalue = qfalse;
-	/*  */
 	operator_t	operator_heap[MAX_OPERATORS];
 	int numoperators = 0;
 	value_t		value_heap[MAX_VALUES];
@@ -1751,7 +1498,6 @@ PC_EvaluateTokens(source_t *source, token_t *tokens, signed long int *intvalue,
 			lastvalue = v;
 			/* last token was a value */
 			lastwasvalue = 1;
-			/*  */
 			negativevalue = 0;
 			break;
 		}	/* end case */
@@ -2073,13 +1819,8 @@ PC_EvaluateTokens(source_t *source, token_t *tokens, signed long int *intvalue,
 	if(intvalue) *intvalue = 0;
 	if(floatvalue) *floatvalue = 0;
 	return qfalse;
-}	/* end of the function PC_EvaluateTokens */
-/* ============================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * ============================================================================ */
+}
+
 int
 PC_Evaluate(source_t *source, signed long int *intvalue,
 	    float *floatvalue, int integer)
@@ -2168,13 +1909,8 @@ PC_Evaluate(source_t *source, signed long int *intvalue,
 #endif	/* DEBUG_EVAL */
 	/*  */
 	return qtrue;
-}	/* end of the function PC_Evaluate */
-/* ============================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * ============================================================================ */
+}
+
 int
 PC_DollarEvaluate(source_t *source, signed long int *intvalue,
 		  float *floatvalue, int integer)
@@ -2271,13 +2007,8 @@ PC_DollarEvaluate(source_t *source, signed long int *intvalue,
 #endif	/* DEBUG_EVAL */
 	/*  */
 	return qtrue;
-}	/* end of the function PC_DollarEvaluate */
-/* ============================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * ============================================================================ */
+}
+
 int
 PC_Directive_elif(source_t *source)
 {
@@ -2293,13 +2024,8 @@ PC_Directive_elif(source_t *source)
 	skip = (value == 0);
 	PC_PushIndent(source, INDENT_ELIF, skip);
 	return qtrue;
-}	/* end of the function PC_Directive_elif */
-/* ============================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * ============================================================================ */
+}
+
 int
 PC_Directive_if(source_t *source)
 {
@@ -2310,25 +2036,15 @@ PC_Directive_if(source_t *source)
 	skip = (value == 0);
 	PC_PushIndent(source, INDENT_IF, skip);
 	return qtrue;
-}	/* end of the function PC_Directive */
-/* ============================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * ============================================================================ */
+}
+
 int
 PC_Directive_line(source_t *source)
 {
 	SourceError(source, "#line directive not supported");
 	return qfalse;
-}	/* end of the function PC_Directive_line */
-/* ============================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * ============================================================================ */
+}
+
 int
 PC_Directive_error(source_t *source)
 {
@@ -2338,13 +2054,8 @@ PC_Directive_error(source_t *source)
 	PC_ReadSourceToken(source, &token);
 	SourceError(source, "#error directive: %s", token.string);
 	return qfalse;
-}	/* end of the function PC_Directive_error */
-/* ============================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * ============================================================================ */
+}
+
 int
 PC_Directive_pragma(source_t *source)
 {
@@ -2353,13 +2064,8 @@ PC_Directive_pragma(source_t *source)
 	SourceWarning(source, "#pragma directive not supported");
 	while(PC_ReadLine(source, &token)) ;
 	return qtrue;
-}	/* end of the function PC_Directive_pragma */
-/* ============================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * ============================================================================ */
+}
+
 void
 UnreadSignToken(source_t *source)
 {
@@ -2373,13 +2079,8 @@ UnreadSignToken(source_t *source)
 	token.type = TT_PUNCTUATION;
 	token.subtype = P_SUB;
 	PC_UnreadSourceToken(source, &token);
-}	/* end of the function UnreadSignToken */
-/* ============================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * ============================================================================ */
+}
+
 int
 PC_Directive_eval(source_t *source)
 {
@@ -2398,13 +2099,8 @@ PC_Directive_eval(source_t *source)
 	PC_UnreadSourceToken(source, &token);
 	if(value < 0) UnreadSignToken(source);
 	return qtrue;
-}	/* end of the function PC_Directive_eval */
-/* ============================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * ============================================================================ */
+}
+
 int
 PC_Directive_evalfloat(source_t *source)
 {
@@ -2422,13 +2118,8 @@ PC_Directive_evalfloat(source_t *source)
 	PC_UnreadSourceToken(source, &token);
 	if(value < 0) UnreadSignToken(source);
 	return qtrue;
-}	/* end of the function PC_Directive_evalfloat */
-/* ============================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * ============================================================================ */
+}
+
 directive_t directives[20] =
 {
 	{"if", PC_Directive_if},
@@ -2473,13 +2164,8 @@ PC_ReadDirective(source_t *source)
 				return directives[i].func(source);
 	SourceError(source, "unknown precompiler directive %s", token.string);
 	return qfalse;
-}	/* end of the function PC_ReadDirective */
-/* ============================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * ============================================================================ */
+}
+
 int
 PC_DollarDirective_evalint(source_t *source)
 {
@@ -2506,13 +2192,8 @@ PC_DollarDirective_evalint(source_t *source)
 		UnreadSignToken(source);
 
 	return qtrue;
-}	/* end of the function PC_DollarDirective_evalint */
-/* ============================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * ============================================================================ */
+}
+
 int
 PC_DollarDirective_evalfloat(source_t *source)
 {
@@ -2538,13 +2219,8 @@ PC_DollarDirective_evalfloat(source_t *source)
 		UnreadSignToken(source);
 
 	return qtrue;
-}	/* end of the function PC_DollarDirective_evalfloat */
-/* ============================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * ============================================================================ */
+}
+
 directive_t dollardirectives[20] =
 {
 	{"evalint", PC_DollarDirective_evalint},
@@ -2578,15 +2254,10 @@ PC_ReadDollarDirective(source_t *source)
 	PC_UnreadSourceToken(source, &token);
 	SourceError(source, "unknown precompiler directive %s", token.string);
 	return qfalse;
-}	/* end of the function PC_ReadDirective */
+}
 
 #ifdef QUAKEC
-/* ============================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * ============================================================================ */
+
 int
 BuiltinFunction(source_t *source)
 {
@@ -2600,13 +2271,8 @@ BuiltinFunction(source_t *source)
 		PC_UnreadSourceToken(source, &token);
 		return qfalse;
 	}
-}	/* end of the function BuiltinFunction */
-/* ============================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * ============================================================================ */
+}
+
 int
 QuakeCMacro(source_t *source)
 {
@@ -2626,14 +2292,9 @@ QuakeCMacro(source_t *source)
 		}
 	PC_UnreadSourceToken(source, &token);
 	return qtrue;
-}	/* end of the function QuakeCMacro */
+}
 #endif	/* QUAKEC */
-/* ============================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * ============================================================================ */
+
 int
 PC_ReadToken(source_t *source, token_t *token)
 {
@@ -2708,13 +2369,8 @@ PC_ReadToken(source_t *source, token_t *token)
 		/* found a token */
 		return qtrue;
 	}
-}	/* end of the function PC_ReadToken */
-/* ============================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * ============================================================================ */
+}
+
 int
 PC_ExpectTokenString(source_t *source, char *string)
 {
@@ -2731,13 +2387,8 @@ PC_ExpectTokenString(source_t *source, char *string)
 		return qfalse;
 	}
 	return qtrue;
-}	/* end of the function PC_ExpectTokenString */
-/* ============================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * ============================================================================ */
+}
+
 int
 PC_ExpectTokenType(source_t *source, int type, int subtype, token_t *token)
 {
@@ -2780,13 +2431,8 @@ PC_ExpectTokenType(source_t *source, int type, int subtype, token_t *token)
 		}
 	/* end else if */
 	return qtrue;
-}	/* end of the function PC_ExpectTokenType */
-/* ============================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * ============================================================================ */
+}
+
 int
 PC_ExpectAnyToken(source_t *source, token_t *token)
 {
@@ -2795,13 +2441,8 @@ PC_ExpectAnyToken(source_t *source, token_t *token)
 		return qfalse;
 	}else
 		return qtrue;
-}	/* end of the function PC_ExpectAnyToken */
-/* ============================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * ============================================================================ */
+}
+
 int
 PC_CheckTokenString(source_t *source, char *string)
 {
@@ -2813,13 +2454,8 @@ PC_CheckTokenString(source_t *source, char *string)
 	/*  */
 	PC_UnreadSourceToken(source, &tok);
 	return qfalse;
-}	/* end of the function PC_CheckTokenString */
-/* ============================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * ============================================================================ */
+}
+
 int
 PC_CheckTokenType(source_t *source, int type, int subtype, token_t *token)
 {
@@ -2835,13 +2471,8 @@ PC_CheckTokenType(source_t *source, int type, int subtype, token_t *token)
 	/*  */
 	PC_UnreadSourceToken(source, &tok);
 	return qfalse;
-}	/* end of the function PC_CheckTokenType */
-/* ============================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * ============================================================================ */
+}
+
 int
 PC_SkipUntilString(source_t *source, char *string)
 {
@@ -2850,35 +2481,20 @@ PC_SkipUntilString(source_t *source, char *string)
 	while(PC_ReadToken(source, &token))
 		if(!strcmp(token.string, string)) return qtrue;
 	return qfalse;
-}	/* end of the function PC_SkipUntilString */
-/* ============================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * ============================================================================ */
+}
+
 void
 PC_UnreadLastToken(source_t *source)
 {
 	PC_UnreadSourceToken(source, &source->token);
-}	/* end of the function PC_UnreadLastToken */
-/* ============================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * ============================================================================ */
+}
+
 void
 PC_UnreadToken(source_t *source, token_t *token)
 {
 	PC_UnreadSourceToken(source, token);
-}	/* end of the function PC_UnreadToken */
-/* ============================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * ============================================================================ */
+}
+
 void
 PC_SetIncludePath(source_t *source, char *path)
 {
@@ -2887,24 +2503,14 @@ PC_SetIncludePath(source_t *source, char *path)
 	if(source->includepath[strlen(source->includepath)-1] != '\\' &&
 	   source->includepath[strlen(source->includepath)-1] != '/')
 		strcat(source->includepath, PATHSEPERATOR_STR);
-}	/* end of the function PC_SetIncludePath */
-/* ============================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * ============================================================================ */
+}
+
 void
 PC_SetPunctuations(source_t *source, punctuation_t *p)
 {
 	source->punctuations = p;
-}	/* end of the function PC_SetPunctuations */
-/* ============================================================================
- *
- * Parameter:			-
- * Returns:				-
- * Changes Globals:		-
- * ============================================================================ */
+}
+
 source_t *
 LoadSourceFile(const char *filename)
 {
@@ -2933,13 +2539,8 @@ LoadSourceFile(const char *filename)
 #endif	/* DEFINEHASHING */
 	PC_AddGlobalDefinesToSource(source);
 	return source;
-}	/* end of the function LoadSourceFile */
-/* ============================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * ============================================================================ */
+}
+
 source_t *
 LoadSourceMemory(char *ptr, int length, char *name)
 {
@@ -2967,13 +2568,8 @@ LoadSourceMemory(char *ptr, int length, char *name)
 #endif	/* DEFINEHASHING */
 	PC_AddGlobalDefinesToSource(source);
 	return source;
-}	/* end of the function LoadSourceMemory */
-/* ============================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * ============================================================================ */
+}
+
 void
 FreeSource(source_t *source)
 {
@@ -3023,13 +2619,8 @@ FreeSource(source_t *source)
 #endif	/* DEFINEHASHING */
 	/* free the source itself */
 	FreeMemory(source);
-}	/* end of the function FreeSource */
-/* ============================================================================
- *
- * Parameter:			-
- * Returns:				-
- * Changes Globals:		-
- * ============================================================================ */
+}
+
 
 #define MAX_SOURCEFILES 64
 
@@ -3052,13 +2643,8 @@ PC_LoadSourceHandle(const char *filename)
 		return 0;
 	sourceFiles[i] = source;
 	return i;
-}	/* end of the function PC_LoadSourceHandle */
-/* ============================================================================
- *
- * Parameter:			-
- * Returns:				-
- * Changes Globals:		-
- * ============================================================================ */
+}
+
 int
 PC_FreeSourceHandle(int handle)
 {
@@ -3070,13 +2656,8 @@ PC_FreeSourceHandle(int handle)
 	FreeSource(sourceFiles[handle]);
 	sourceFiles[handle] = NULL;
 	return qtrue;
-}	/* end of the function PC_FreeSourceHandle */
-/* ============================================================================
- *
- * Parameter:			-
- * Returns:				-
- * Changes Globals:		-
- * ============================================================================ */
+}
+
 int
 PC_ReadTokenHandle(int handle, pc_token_t *pc_token)
 {
@@ -3097,13 +2678,8 @@ PC_ReadTokenHandle(int handle, pc_token_t *pc_token)
 	if(pc_token->type == TT_STRING)
 		StripDoubleQuotes(pc_token->string);
 	return ret;
-}	/* end of the function PC_ReadTokenHandle */
-/* ============================================================================
- *
- * Parameter:			-
- * Returns:				-
- * Changes Globals:		-
- * ============================================================================ */
+}
+
 int
 PC_SourceFileAndLine(int handle, char *filename, int *line)
 {
@@ -3118,24 +2694,14 @@ PC_SourceFileAndLine(int handle, char *filename, int *line)
 	else
 		*line = 0;
 	return qtrue;
-}	/* end of the function PC_SourceFileAndLine */
-/* ============================================================================
- *
- * Parameter:			-
- * Returns:				-
- * Changes Globals:		-
- * ============================================================================ */
+}
+
 void
 PC_SetBaseFolder(char *path)
 {
 	PS_SetBaseFolder(path);
-}	/* end of the function PC_SetBaseFolder */
-/* ============================================================================
- *
- * Parameter:			-
- * Returns:				-
- * Changes Globals:		-
- * ============================================================================ */
+}
+
 void
 PC_CheckOpenSourceHandles(void)
 {
@@ -3150,4 +2716,4 @@ PC_CheckOpenSourceHandles(void)
 #endif	/* BOTLIB */
 		}
 	}
-}	/* end of the function PC_CheckOpenSourceHandles */
+}
