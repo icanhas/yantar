@@ -3140,10 +3140,10 @@ CL_InitRef(void)
 	Q_Printf("----- Initializing Renderer ----\n");
 
 #ifdef USE_RENDERER_DLOPEN
-	cl_renderer = Cvar_Get("cl_renderer", "opengl1",
+	cl_renderer = Cvar_Get("cl_renderer", "gl2",
 		CVAR_ARCHIVE | CVAR_LATCH);
 
-	Q_sprintf(dllName, sizeof(dllName), "renderer_%s_" ARCH_STRING DLL_EXT,
+	Q_sprintf(dllName, sizeof(dllName), "ref-%s-" ARCH_STRING DLL_EXT,
 		cl_renderer->string);
 
 	if(!(rendererLib =
@@ -3153,7 +3153,7 @@ CL_InitRef(void)
 		Cvar_ForceReset("cl_renderer");
 
 		Q_sprintf(dllName, sizeof(dllName),
-			"renderer_opengl1_" ARCH_STRING DLL_EXT);
+			"ref-gl1-" ARCH_STRING DLL_EXT);
 		rendererLib = Sys_LoadLibrary(dllName);
 	}
 
