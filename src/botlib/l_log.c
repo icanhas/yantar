@@ -18,15 +18,6 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-/*****************************************************************************
-* name:		l_log.c
-*
-* desc:		log file
-*
-* $Archive: /MissionPack/CODE/botlib/l_log.c $
-*
-*****************************************************************************/
-
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -39,20 +30,13 @@
 
 #define MAX_LOGFILENAMESIZE 1024
 
-typedef struct logfile_s {
+static struct {
 	char	filename[MAX_LOGFILENAMESIZE];
 	FILE	*fp;
 	int	numwrites;
-} logfile_t;
+} logfile;
 
-static logfile_t logfile;
-
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+/* open a log file */
 void
 Log_Open(char *filename)
 {
@@ -75,12 +59,8 @@ Log_Open(char *filename)
 	strncpy(logfile.filename, filename, MAX_LOGFILENAMESIZE);
 	botimport.Print(PRT_MESSAGE, "Opened log %s\n", logfile.filename);
 }	/* end of the function Log_Create */
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
+/* close the current log file */
 void
 Log_Close(void)
 {
@@ -93,23 +73,15 @@ Log_Close(void)
 	logfile.fp = NULL;
 	botimport.Print(PRT_MESSAGE, "Closed log %s\n", logfile.filename);
 }	/* end of the function Log_Close */
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
+/* close log file if present */
 void
 Log_Shutdown(void)
 {
 	if(logfile.fp) Log_Close();
 }	/* end of the function Log_Shutdown */
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
+/* write to the current opened log file */
 void QDECL
 Log_Write(char *fmt, ...)
 {
@@ -122,12 +94,8 @@ Log_Write(char *fmt, ...)
 	/* fprintf(logfile.fp, "\r\n"); */
 	fflush(logfile.fp);
 }	/* end of the function Log_Write */
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
+/* write to the current opened log file with a time stamp */
 void QDECL
 Log_WriteTimeStamped(char *fmt, ...)
 {
@@ -148,23 +116,15 @@ Log_WriteTimeStamped(char *fmt, ...)
 	logfile.numwrites++;
 	fflush(logfile.fp);
 }	/* end of the function Log_Write */
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
+/* returns a pointer to the log file */
 FILE *
 Log_FilePointer(void)
 {
 	return logfile.fp;
 }	/* end of the function Log_FilePointer */
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
+/* flush log file */
 void
 Log_Flush(void)
 {
