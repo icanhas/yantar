@@ -1,3 +1,4 @@
+/* CRC calculation */
 /*
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
@@ -18,15 +19,6 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-/*****************************************************************************
-* name:		l_crc.c
-*
-* desc:		CRC calculation
-*
-* $Archive: /MissionPack/CODE/botlib/l_crc.c $
-*
-*****************************************************************************/
-
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -46,7 +38,7 @@
 #define CRC_INIT_VALUE	0xffff
 #define CRC_XOR_VALUE	0x0000
 
-unsigned short crctable[257] =
+ushort crctable[257] =
 {
 	0x0000, 0x1021, 0x2042, 0x3063, 0x4084, 0x50a5, 0x60c6, 0x70e7,
 	0x8108, 0x9129, 0xa14a, 0xb16b, 0xc18c, 0xd1ad, 0xe1ce, 0xf1ef,
@@ -82,49 +74,28 @@ unsigned short crctable[257] =
 	0x6e17, 0x7e36, 0x4e55, 0x5e74, 0x2e93, 0x3eb2, 0x0ed1, 0x1ef0
 };
 
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
 void
-CRC_Init(unsigned short *crcvalue)
+CRC_Init(ushort *crcvalue)
 {
 	*crcvalue = CRC_INIT_VALUE;
 }	/* end of the function CRC_Init */
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 void
-CRC_ProcessByte(unsigned short *crcvalue, byte data)
+CRC_ProcessByte(ushort *crcvalue, byte data)
 {
 	*crcvalue = (*crcvalue << 8) ^ crctable[(*crcvalue >> 8) ^ data];
 }	/* end of the function CRC_ProcessByte */
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
-unsigned short
-CRC_Value(unsigned short crcvalue)
+
+ushort
+CRC_Value(ushort crcvalue)
 {
 	return crcvalue ^ CRC_XOR_VALUE;
 }	/* end of the function CRC_Value */
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
-unsigned short
-CRC_ProcessString(unsigned char *data, int length)
+
+ushort
+CRC_ProcessString(byte *data, int length)
 {
-	unsigned short crcvalue;
+	ushort crcvalue;
 	int i, ind;
 
 	CRC_Init(&crcvalue);
@@ -136,14 +107,9 @@ CRC_ProcessString(unsigned char *data, int length)
 	}
 	return CRC_Value(crcvalue);
 }	/* end of the function CRC_ProcessString */
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 void
-CRC_ContinueProcessString(unsigned short *crc, char *data, int length)
+CRC_ContinueProcessString(ushort *crc, char *data, int length)
 {
 	int i;
 
