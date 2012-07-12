@@ -1,6 +1,6 @@
 #!/bin/sh
 
-CMD_PREFIX="amd64-mingw32msvc x86_64-w64-mingw32";
+CMD_PREFIX="amd64-mingw32 x86_64-w64-mingw32 amd64-mingw32msvc";
 
 if [ "X$CC" = "X" ]; then
     for check in $CMD_PREFIX; do
