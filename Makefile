@@ -1146,7 +1146,7 @@ ifneq ($(TARGETS),)
 endif
 
 makedirs:
-	$(MKDIR) -p \
+	@$(MKDIR) -p \
 		$(BIN_DIR) \
 		$(OBJ_DIR) \
 		$(B) \
