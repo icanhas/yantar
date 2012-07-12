@@ -1083,9 +1083,10 @@ release:
 	  OPTIMIZE="-DNDEBUG $(OPTIMIZE)" OPTIMIZEVM="-DNDEBUG $(OPTIMIZEVM)" \
 	  CLIENT_CFLAGS="$(CLIENT_CFLAGS)" SERVER_CFLAGS="$(SERVER_CFLAGS)" V=$(V)
 
-# Create the build directories, check libraries and print out
-# an informational message, then start building
+# Create the build directories, check libraries, print out
+# an informational message (if V=1), then start building
 targets: makedirs
+ifeq ($(V),1)
 	@echo ""
 	@echo "Building $(CLIENTBIN) in $(B):"
 	@echo "  PLATFORM: $(PLATFORM)"
@@ -1141,6 +1142,7 @@ targets: makedirs
 		echo "    $$i"; \
 	done
 	@echo ""
+endif
 ifneq ($(TARGETS),)
 	@$(MAKE) $(TARGETS) V=$(V)
 endif
