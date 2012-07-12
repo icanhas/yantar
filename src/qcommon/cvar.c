@@ -41,7 +41,7 @@
 
 enum {
 	MAX_CVARS = 1024,
-	HASH_SIZE = 256
+	HASH_SIZE = 512
 };
 
 int cvar_modifiedFlags;
