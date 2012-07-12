@@ -28,4 +28,5 @@ fi
 export PLATFORM=mingw32
 export ARCH=x64
 
+echo make $*
 exec make $*
