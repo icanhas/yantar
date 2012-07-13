@@ -33,7 +33,7 @@
 #endif
 
 /* surface geometry should not exceed these limits */
-#define SHADER_MAX_VERTEXES	1000
+#define SHADER_MAX_VERTEXES	1000000
 #define SHADER_MAX_INDEXES	(6*SHADER_MAX_VERTEXES)
 
 
