@@ -313,7 +313,7 @@ R_LoadIQM(model_t *mod, void *buffer, int filesize, const char *mod_name)
 		LL(mesh->first_triangle);
 		LL(mesh->num_triangles);
 
-		/* check ioq3 limits */
+		/* check ioq3 limits */ /* FIXME */
 		if(mesh->num_vertexes > SHADER_MAX_VERTEXES){
 			ri.Printf(PRINT_WARNING, "R_LoadIQM: %s has more than %i verts on a surface (%i).\n",
 				mod_name, SHADER_MAX_VERTEXES, mesh->num_vertexes);
