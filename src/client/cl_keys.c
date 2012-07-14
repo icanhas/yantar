@@ -345,7 +345,7 @@ Field_VariableSizeDraw(field_t *edit, int x, int y, int width, int size,
 	if(size == SMALLCHAR_WIDTH){
 		float color[4];
 
-		color[0] = color[1] = color[2] = 0.0f;
+		color[0] = color[1] = color[2] = 1.0f;
 		color[3] = 1.0;
 		SCR_DrawSmallStringExt(x, y, str, color, qfalse, noColorEscape);
 	}else
