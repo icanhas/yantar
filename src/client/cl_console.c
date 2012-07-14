@@ -393,10 +393,7 @@ CL_ConsolePrint(char *txt)
 		return;
 
 	if(!con.initialized){
-		con.color[0] =
-			con.color[1] =
-				con.color[2] =
-					con.color[3] = 1.0f;
+		con.color[0] = con.color[1] = con.color[2] = con.color[3] = 1.0f;
 		con.linewidth = -1;
 		Con_CheckResize ();
 		con.initialized = qtrue;
@@ -467,7 +464,7 @@ CL_ConsolePrint(char *txt)
 /*
  * Con_DrawInput
  *
- * Draw the editline after a >>> prompt
+ * Draw the editline after a ))) prompt
  */
 void
 Con_DrawInput(void)
@@ -482,8 +479,8 @@ Con_DrawInput(void)
 
 	re.SetColor(con.color);
 
-	SCR_DrawSmallStringExt(con.xadjust + 1 * SMALLCHAR_WIDTH, y, ">>>",
-		colorBlack, qtrue,
+	SCR_DrawSmallStringExt(con.xadjust + 1 * SMALLCHAR_WIDTH, y, ")))",
+		colorWhite, qtrue,
 		qfalse);
 
 	Field_Draw(&g_consoleField, con.xadjust + 5*SMALLCHAR_WIDTH, y,
@@ -593,19 +590,15 @@ Con_DrawSolidConsole(float frac, float opac)
 	if(y < 1)
 		y = 0;
 
-	color[0] =
-		color[1] =
-			color[2] = 1.0f;
+	color[0] = color[1] = color[2] = 0.0f;
 	color[3] = opac;
 	SCR_FillRect(0, 0, SCREEN_WIDTH, y, color);	/* bg */
-	color[0] =
-		color[1] =
-			color[2] = 0.0f;
+	color[0] = color[1] = color[2] = 1.0f;
 	SCR_FillRect(0, y, SCREEN_WIDTH, 1, color);	/* border */
 
 	/* draw the version number */
 
-	re.SetColor(g_color_table[ColorIndex(COLOR_BLACK)]);
+	re.SetColor(g_color_table[ColorIndex(COLOR_WHITE)]);
 
 	i = strlen(Q3_VERSION);
 
@@ -637,7 +630,7 @@ Con_DrawSolidConsole(float frac, float opac)
 	if(con.x == 0)
 		row--;
 
-	currentColor = 8;
+	currentColor = 7;
 	re.SetColor(g_color_table[currentColor]);
 
 	for(i=0; i<rows; i++, y -= SMALLCHAR_HEIGHT, row--){
@@ -653,8 +646,8 @@ Con_DrawSolidConsole(float frac, float opac)
 			if((text[x] & 0xff) == ' ')
 				continue;
 
-			if(((text[x]>>8)&8) != currentColor){
-				currentColor = (text[x]>>8)&8;
+			if(((text[x]>>8)&7) != currentColor){
+				currentColor = (text[x]>>8)&7;
 				re.SetColor(g_color_table[currentColor]);
 			}
 			SCR_DrawSmallChar(con.xadjust + (x+1)*SMALLCHAR_WIDTH, y,
