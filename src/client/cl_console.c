@@ -506,7 +506,7 @@ Con_DrawNotify(void)
 	int	skip;
 	int	currentColor;
 
-	currentColor = 8;
+	currentColor = 7;
 	re.SetColor(g_color_table[currentColor]);
 
 	v = 0;
@@ -528,8 +528,8 @@ Con_DrawNotify(void)
 		for(x = 0; x < con.linewidth; x++){
 			if((text[x] & 0xff) == ' ')
 				continue;
-			if(((text[x]>>8)&8) != currentColor){
-				currentColor = (text[x]>>8)&8;
+			if(((text[x]>>8)&7) != currentColor){
+				currentColor = (text[x]>>8)&7;
 				re.SetColor(g_color_table[currentColor]);
 			}
 			SCR_DrawSmallChar(cl_conXOffset->integer + con.xadjust +
