@@ -1,3 +1,4 @@
+/* virtual machine */
 /*
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
@@ -17,38 +18,27 @@
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-/* vm.c -- virtual machine */
 
 /*
- *
- *
  * intermix code and data
  * symbol table
  *
  * a dll has one imported function: VM_SystemCall
  * and one exported function: Perform
- *
- *
  */
 
 #include "vm_local.h"
 
-
-vm_t	*currentVM = NULL;
-vm_t    *lastVM = NULL;
-int	vm_debugLevel;
-
-/* used by Q_Error to get rid of running vm's before longjmp */
-static int forced_unload;
-
-#define MAX_VM 3
+enum { MAX_VM = 3 };
+vm_t *currentVM = NULL;
+vm_t *lastVM = NULL;
 vm_t vmTable[MAX_VM];
-
+int vm_debugLevel;
+static int forced_unload;	/* used by Q_Error to get rid of running
+					 * vm's before longjmp */
 
 void VM_VmInfo_f(void);
 void VM_VmProfile_f(void);
-
-
 
 #if 0	/* 64bit! */
 /* converts a VM pointer to a C pointer and
@@ -66,15 +56,12 @@ VM_Debug(int level)
 	vm_debugLevel = level;
 }
 
-/*
- * VM_Init
- */
 void
 VM_Init(void)
 {
 	Cvar_Get("vm_cgame", "0", CVAR_ARCHIVE);	/* !@# SHIP WITH SET TO 2 */
 	Cvar_Get("vm_game", "0", CVAR_ARCHIVE);		/* !@# SHIP WITH SET TO 2 */
-	Cvar_Get("vm_ui", "0", CVAR_ARCHIVE);		/* !@# SHIP WITH SET TO 2 */
+	Cvar_Get("vm_ui", "0", CVAR_ARCHIVE);			/* !@# SHIP WITH SET TO 2 */
 
 	Cmd_AddCommand ("vmprofile", VM_VmProfile_f);
 	Cmd_AddCommand ("vminfo", VM_VmInfo_f);
@@ -82,12 +69,7 @@ VM_Init(void)
 	Q_Memset(vmTable, 0, sizeof(vmTable));
 }
 
-
-/*
- * VM_ValueToSymbol
- *
- * Assumes a program counter value
- */
+/* Assumes a program counter value */
 const char *
 VM_ValueToSymbol(vm_t *vm, int value)
 {
@@ -97,25 +79,17 @@ VM_ValueToSymbol(vm_t *vm, int value)
 	sym = vm->symbols;
 	if(!sym)
 		return "NO SYMBOLS";
-
 	/* find the symbol */
 	while(sym->next && sym->next->symValue <= value)
 		sym = sym->next;
-
 	if(value == sym->symValue)
 		return sym->symName;
-
 	Q_sprintf(text, sizeof(text), "%s+%i", sym->symName,
 		value - sym->symValue);
-
 	return text;
 }
 
-/*
- * VM_ValueToFunctionSymbol
- *
- * For profiling, find the symbol behind this value
- */
+/* For profiling, find the symbol behind this value */
 vmSymbol_t *
 VM_ValueToFunctionSymbol(vm_t *vm, int value)
 {
@@ -132,10 +106,6 @@ VM_ValueToFunctionSymbol(vm_t *vm, int value)
 	return sym;
 }
 
-
-/*
- * VM_SymbolToValue
- */
 int
 VM_SymbolToValue(vm_t *vm, const char *symbol)
 {
@@ -147,10 +117,6 @@ VM_SymbolToValue(vm_t *vm, const char *symbol)
 	return 0;
 }
 
-
-/*
- * VM_SymbolForCompiledPointer
- */
 #if 0	/* 64bit! */
 const char *
 VM_SymbolForCompiledPointer(vm_t *vm, void *code)
@@ -173,11 +139,6 @@ VM_SymbolForCompiledPointer(vm_t *vm, void *code)
 }
 #endif
 
-
-
-/*
- * ParseHex
- */
 int
 ParseHex(const char *text)
 {
@@ -203,9 +164,6 @@ ParseHex(const char *text)
 	return value;
 }
 
-/*
- * VM_LoadSymbols
- */
 void
 VM_LoadSymbols(vm_t *vm)
 {
@@ -238,11 +196,11 @@ VM_LoadSymbols(vm_t *vm)
 	numInstructions = vm->instructionCount;
 
 	/* parse the symbols */
-	text_p	= mapfile.c;
+	text_p = mapfile.c;
 	prev	= &vm->symbols;
-	count	= 0;
+	count = 0;
 
-	while(1){
+	for(;;){
 		token = Q_ReadToken(&text_p);
 		if(!token[0])
 			break;
@@ -287,8 +245,6 @@ VM_LoadSymbols(vm_t *vm)
 }
 
 /*
- * VM_DllSyscall
- *
  * Dlls will call this directly
  *
  * rcg010206 The horror; the horror.
@@ -344,12 +300,7 @@ VM_DllSyscall(intptr_t arg, ...)
 #endif
 }
 
-
-/*
- * VM_LoadQVM
- *
- * Load a .qvm file
- */
+/* Load a .qvm file */
 vmHeader_t *
 VM_LoadQVM(vm_t *vm, qbool alloc, qbool unpure)
 {
@@ -370,10 +321,8 @@ VM_LoadQVM(vm_t *vm, qbool alloc, qbool unpure)
 	if(!header.h){
 		Q_Printf("Failed.\n");
 		VM_Free(vm);
-
 		Q_Printf(S_COLOR_YELLOW "Warning: Couldn't open VM file %s\n",
 			filename);
-
 		return NULL;
 	}
 
@@ -434,8 +383,8 @@ VM_LoadQVM(vm_t *vm, qbool alloc, qbool unpure)
 	 * be mask protected */
 	dataLength = header.h->dataLength + header.h->litLength +
 		     header.h->bssLength;
-	for(i = 0; dataLength > (1 << i); i++){
-	}
+	for(i = 0; dataLength > (1 << i); i++)
+		;
 	dataLength = 1 << i;
 
 	if(alloc){
@@ -448,8 +397,7 @@ VM_LoadQVM(vm_t *vm, qbool alloc, qbool unpure)
 			VM_Free(vm);
 			FS_FreeFile(header.v);
 
-			Q_Printf(
-				S_COLOR_YELLOW
+			Q_Printf(S_COLOR_YELLOW
 				"Warning: Data region size of %s not matching after "
 				"VM_Restart()\n", filename);
 			return NULL;
@@ -511,8 +459,6 @@ VM_LoadQVM(vm_t *vm, qbool alloc, qbool unpure)
 }
 
 /*
- * VM_Restart
- *
  * Reload the data, but leave everything else in place
  * This allows a server to do a map_restart without changing memory allocation
  *
@@ -537,10 +483,9 @@ VM_Restart(vm_t *vm, qbool unpure)
 		vm = VM_Create(name, systemCall, VMI_NATIVE);
 		return vm;
 	}
-
+	
 	/* load the image */
 	Q_Printf("VM_Restart()\n");
-
 	if(!(header = VM_LoadQVM(vm, qfalse, unpure))){
 		Q_Error(ERR_DROP, "VM_Restart failed");
 		return NULL;
@@ -548,13 +493,10 @@ VM_Restart(vm_t *vm, qbool unpure)
 
 	/* free the original file */
 	FS_FreeFile(header);
-
 	return vm;
 }
 
 /*
- * VM_Create
- *
  * If image ends in .qvm it will be interpreted, otherwise
  * it will attempt to load as a system dll
  */
@@ -593,8 +535,7 @@ VM_Create(const char *module, intptr_t (*systemCalls)(intptr_t *),
 	Q_strncpyz(vm->name, module, sizeof(vm->name));
 
 	do {
-		retval =
-			FS_FindVM(&startSearch, filename, sizeof(filename),
+		retval = FS_FindVM(&startSearch, filename, sizeof(filename),
 				module,
 				(interpret == VMI_NATIVE));
 
@@ -635,7 +576,6 @@ VM_Create(const char *module, intptr_t (*systemCalls)(intptr_t *),
 
 	/* copy or compile the instructions */
 	vm->codeLength = header->codeLength;
-
 	vm->compiled = qfalse;
 
 #ifdef NO_VM_COMPILED
@@ -656,23 +596,19 @@ VM_Create(const char *module, intptr_t (*systemCalls)(intptr_t *),
 
 	/* free the original file */
 	FS_FreeFile(header);
-
+	
 	/* load the map file */
 	VM_LoadSymbols(vm);
-
+	
 	/* the stack is implicitly at the end of the image */
 	vm->programStack = vm->dataMask + 1;
 	vm->stackBottom = vm->programStack - PROGRAM_STACK_SIZE;
 
 	Q_Printf("%s loaded in %d bytes on the hunk\n", module,
 		remaining - Hunk_MemoryRemaining());
-
 	return vm;
 }
 
-/*
- * VM_Free
- */
 void
 VM_Free(vm_t *vm)
 {
@@ -691,7 +627,6 @@ VM_Free(vm_t *vm)
 
 	if(vm->destroy)
 		vm->destroy(vm);
-
 	if(vm->dllHandle){
 		Sys_UnloadDll(vm->dllHandle);
 		Q_Memset(vm, 0, sizeof(*vm));
@@ -739,7 +674,6 @@ VM_ArgPtr(intptr_t intValue)
 	/* currentVM is missing on reconnect */
 	if(currentVM==NULL)
 		return NULL;
-
 	if(currentVM->entryPoint)
 		return (void*)(currentVM->dataBase + intValue);
 	else
@@ -752,23 +686,16 @@ VM_ExplicitArgPtr(vm_t *vm, intptr_t intValue)
 {
 	if(!intValue)
 		return NULL;
-
 	/* currentVM is missing on reconnect here as well? */
 	if(currentVM==NULL)
 		return NULL;
-
-	/*  */
 	if(vm->entryPoint)
 		return (void*)(vm->dataBase + intValue);
 	else
 		return (void*)(vm->dataBase + (intValue & vm->dataMask));
 }
 
-
 /*
- * VM_Call
- *
- *
  * Upon a system call, the stack will look like:
  *
  * sp+32	parm1
@@ -786,7 +713,6 @@ VM_ExplicitArgPtr(vm_t *vm, intptr_t intValue)
  * an OP_ENTER instruction, which will subtract space for
  * locals from sp
  */
-
 intptr_t QDECL
 VM_Call(vm_t *vm, int callnum, ...)
 {
@@ -796,11 +722,9 @@ VM_Call(vm_t *vm, int callnum, ...)
 
 	if(!vm || !vm->name[0])
 		Q_Error(ERR_FATAL, "VM_Call with NULL vm");
-
 	oldVM = currentVM;
 	currentVM = vm;
 	lastVM = vm;
-
 	if(vm_debugLevel)
 		Q_Printf("VM_Call( %d )\n", callnum);
 
@@ -815,8 +739,7 @@ VM_Call(vm_t *vm, int callnum, ...)
 			args[i] = va_arg(ap, int);
 		va_end(ap);
 
-		r =
-			vm->entryPoint(callnum,  args[0],  args[1],  args[2],
+		r = vm->entryPoint(callnum,  args[0],  args[1],  args[2],
 				args[3],
 				args[4],  args[5],  args[6], args[7],
 				args[8],
@@ -856,8 +779,6 @@ VM_Call(vm_t *vm, int callnum, ...)
 	return r;
 }
 
-/* ================================================================= */
-
 static int QDECL
 VM_ProfileSort(const void *a, const void *b)
 {
@@ -873,26 +794,19 @@ VM_ProfileSort(const void *a, const void *b)
 	return 0;
 }
 
-/*
- * VM_VmProfile_f
- *
- */
 void
 VM_VmProfile_f(void)
 {
 	vm_t	*vm;
 	vmSymbol_t **sorted, *sym;
-	int	i;
+	int i;
 	double total;
 
 	if(!lastVM)
 		return;
-
 	vm = lastVM;
-
 	if(!vm->numSymbols)
 		return;
-
 	sorted = Z_Malloc(vm->numSymbols * sizeof(*sorted));
 	sorted[0] = vm->symbols;
 	total = sorted[0]->profileCount;
@@ -900,34 +814,25 @@ VM_VmProfile_f(void)
 		sorted[i] = sorted[i-1]->next;
 		total += sorted[i]->profileCount;
 	}
-
 	qsort(sorted, vm->numSymbols, sizeof(*sorted), VM_ProfileSort);
-
 	for(i = 0; i < vm->numSymbols; i++){
 		int perc;
 
 		sym = sorted[i];
-
 		perc = 100 * (float)sym->profileCount / total;
 		Q_Printf("%2i%% %9i %s\n", perc, sym->profileCount,
 			sym->symName);
 		sym->profileCount = 0;
 	}
-
 	Q_Printf("    %9.0f total\n", total);
-
 	Z_Free(sorted);
 }
 
-/*
- * VM_VmInfo_f
- *
- */
 void
 VM_VmInfo_f(void)
 {
 	vm_t	*vm;
-	int	i;
+	int i;
 
 	Q_Printf("Registered virtual machines:\n");
 	for(i = 0; i < MAX_VM; i++){
@@ -949,11 +854,7 @@ VM_VmInfo_f(void)
 	}
 }
 
-/*
- * VM_LogSyscalls
- *
- * Insert calls to this while debugging the vm compiler
- */
+/* Insert calls to this while debugging the vm compiler */
 void
 VM_LogSyscalls(int *args)
 {
@@ -968,11 +869,7 @@ VM_LogSyscalls(int *args)
 		args[0], args[1], args[2], args[3], args[4]);
 }
 
-/*
- * VM_BlockCopy
- * Executes a block copy operation within currentVM data space
- */
-
+/* Executes a block copy operation within currentVM data space */
 void
 VM_BlockCopy(unsigned int dest, unsigned int src, size_t n)
 {
