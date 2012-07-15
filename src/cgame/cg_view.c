@@ -68,8 +68,10 @@ CG_TestModel_f(void)
 	vec3_t angles;
 
 	memset(&cg.testModelEntity, 0, sizeof(cg.testModelEntity));
-	if(trap_Argc() < 2)
+	if(trap_Argc() < 2){
+		Q_Printf("Usage: testmodel [path to model]\n");
 		return;
+	}
 
 	Q_strncpyz (cg.testModelName, CG_Argv(1), MAX_QPATH);
 	cg.testModelEntity.hModel = trap_R_RegisterModel(cg.testModelName);
@@ -103,12 +105,15 @@ CG_TestModel_f(void)
 void
 CG_TestGun_f(void)
 {
+	if(trap_Argc() < 2){
+		Q_Printf("Usage: testgun [path to model]\n");
+		return;
+	}
 	CG_TestModel_f();
 	cg.testGun = qtrue;
 	cg.testModelEntity.renderfx = RF_MINLIGHT | RF_DEPTHHACK |
 				      RF_FIRST_PERSON;
 }
-
 
 void
 CG_TestModelNextFrame_f(void)
