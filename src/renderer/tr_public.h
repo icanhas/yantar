@@ -22,12 +22,22 @@
 
 #include "tr_types.h"
 
-#define REF_API_VERSION 8
+enum { REF_API_VERSION = 8 };
 
+typedef struct refimport_t refimport_t;	/* funcs imported by the refresh module */
+typedef struct refexport_t refexport_t;	/* funcs exported by the refresh module */
 /*
- * these are the functions exported by the refresh module
- *  */
-typedef struct {
+ * this is the only function actually exported at the linker level
+ * If the module can't init to a valid rendering state, NULL will be
+ * returned.
+ */
+#ifdef USE_RENDERER_DLOPEN
+typedef refexport_t* (QDECL *GetRefAPI_t)(int apiVersion, refimport_t * rimp);
+#else
+refexport_t* GetRefAPI(int apiVersion, refimport_t *rimp);
+#endif
+
+struct refexport_t {
 	/* called before the library is unloaded
 	 * if the system is just reconfiguring, pass destroyWindow = qfalse,
 	 * which will keep the screen from flashing to the desktop. */
@@ -82,7 +92,6 @@ typedef struct {
 	/* if the pointers are not NULL, timing info will be returned */
 	void (*EndFrame)(int *frontEndMsec, int *backEndMsec);
 
-
 	int (*MarkFragments)(int numPoints, const vec3_t *points, const vec3_t projection,
 			     int maxPoints, vec3_t pointBuffer, int maxFragments,
 			     markFragment_t *fragmentBuffer);
@@ -91,21 +100,18 @@ typedef struct {
 		       float frac, const char *tagName);
 	void (*ModelBounds)(qhandle_t model, vec3_t mins, vec3_t maxs);
 
-#ifdef __USEA3D
+	#ifdef __USEA3D
 	void (*A3D_RenderGeometry)(void *pVoidA3D, void *pVoidGeom, void *pVoidMat, void *pVoidGeomStatus);
-#endif
+	#endif
 	void (*RegisterFont)(const char *fontName, int pointSize, fontInfo_t *font);
 	void (*RemapShader)(const char *oldShader, const char *newShader, const char *offsetTime);
 	qbool (*GetEntityToken)(char *buffer, int size);
 	qbool (*inPVS)(const vec3_t p1, const vec3_t p2);
 
 	void (*TakeVideoFrame)(int h, int w, byte* captureBuffer, byte *encodeBuffer, qbool motionJpeg);
-} refexport_t;
+};
 
-/*
- * these are the functions imported by the refresh module
- *  */
-typedef struct {
+struct refimport_t {
 	/* print message on the local console */
 	void (QDECL *Printf)(int printLevel, const char *fmt, ...) __attribute__ ((format (printf, 2, 3)));
 
@@ -119,11 +125,11 @@ typedef struct {
 
 	/* stack based memory allocation for per-level things that
 	 * won't be freed */
-#ifdef HUNK_DEBUG
+	#ifdef HUNK_DEBUG
 	void    *(*Hunk_AllocDebug)(int size, ha_pref pref, char *label, char *file, int line);
-#else
+	#else
 	void    *(*Hunk_Alloc)(int size, ha_pref pref);
-#endif
+	#endif
 	void    *(*Hunk_AllocateTempMemory)(int size);
 	void (*Hunk_FreeTempMemory)(void *block);
 
@@ -181,16 +187,6 @@ typedef struct {
 	void (*Sys_GLimpSafeInit)(void);
 	void (*Sys_GLimpInit)(void);
 	qbool (*Sys_LowPhysicalMemory)(void);
-} refimport_t;
-
-
-/* this is the only function actually exported at the linker level
- * If the module can't init to a valid rendering state, NULL will be
- * returned. */
-#ifdef USE_RENDERER_DLOPEN
-typedef refexport_t* (QDECL *GetRefAPI_t)(int apiVersion, refimport_t * rimp);
-#else
-refexport_t*GetRefAPI(int apiVersion, refimport_t *rimp);
-#endif
+};
 
 #endif	/* __TR_PUBLIC_H */
