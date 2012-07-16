@@ -354,10 +354,10 @@ R_CalcTBN2(vec3_t tangent, vec3_t bitangent, vec3_t normal,
 	Vec3Sub(v3, v1, v3v1);
 
 	/* The equation presented in the article states that:
-	 * c2c1_T = V2.texcoord.x – V1.texcoord.x
-	 * c2c1_B = V2.texcoord.y – V1.texcoord.y
-	 * c3c1_T = V3.texcoord.x – V1.texcoord.x
-	 * c3c1_B = V3.texcoord.y – V1.texcoord.y */
+	 * c2c1_T = V2.texcoord.x Â€ V1.texcoord.x
+	 * c2c1_B = V2.texcoord.y Â€ V1.texcoord.y
+	 * c3c1_T = V3.texcoord.x Â€ V1.texcoord.x
+	 * c3c1_B = V3.texcoord.y Â€ V1.texcoord.y */
 
 	/* Calculate c2c1_T and c2c1_B */
 	c2c1_T	= t2[0] - t1[0];
@@ -1207,7 +1207,7 @@ R_SetupProjectionZ(viewParms_t *dest)
 		plane2[2]	= -Vec3Dot (dest->or.axis[0], plane);
 		plane2[3]	= Vec3Dot (plane, dest->or.origin) - plane[3];
 
-		/* Lengyel, Eric. “Modifying the Projection Matrix to Perform Oblique Near-plane Clipping”.
+		/* Lengyel, Eric. Â€Modifying the Projection Matrix to Perform Oblique Near-plane ClippingÂ€.
 		 * Terathon Software 3D Graphics Library, 2004. http://www.terathon.com/code/oblique.html */
 		q[0]	= (SGN(plane2[0]) + dest->projectionMatrix[8]) / dest->projectionMatrix[0];
 		q[1]	= (SGN(plane2[1]) + dest->projectionMatrix[9]) / dest->projectionMatrix[5];
@@ -1883,11 +1883,6 @@ R_AddEntitySurface(int entityNum)
 			case MOD_MD4:
 				R_AddAnimSurfaces(ent);
 				break;
-#ifdef RAVENMD4
-			case MOD_MDR:
-				R_MDRAddAnimSurfaces(ent);
-				break;
-#endif
 			case MOD_IQM:
 				R_AddIQMSurfaces(ent);
 				break;
@@ -2170,20 +2165,6 @@ R_RenderPshadowMaps(const refdef_t *fd)
 				radius = r_pshadowDist->value / 2.0f;
 			}
 			break;
-#ifdef RAVENMD4
-			case MOD_MDR:
-			{
-				/* FIXME: never actually tested this */
-				mdrHeader_t	*header = model->modelData;
-				int frameSize = (size_t)(&((mdrFrame_t*)0)->bones[ header->numBones ]);
-				mdrFrame_t	*frame =
-					( mdrFrame_t* )(( byte* )header + header->ofsFrames + frameSize *
-							ent->e.frame);
-
-				radius = frame->radius;
-			}
-			break;
-#endif
 			case MOD_IQM:
 			{
 				/* FIXME: never actually tested this */
