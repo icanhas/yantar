@@ -2035,40 +2035,45 @@ R_CreateFogImage(void)
 	qglTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
 }
 
-/*
- * R_CreateDefaultImage
- */
-#define DEFAULT_SIZE 16
+/* the default image will be a box, to allow you to see the mapping coordinates */
+enum { SzDefimage = 128 };
 static void
 R_CreateDefaultImage(void)
 {
-	int x;
-	byte data[DEFAULT_SIZE][DEFAULT_SIZE][4];
+	int x, y;
+	byte data[SzDefimage][SzDefimage][4];
 
-	/* the default image will be a box, to allow you to see the mapping coordinates */
-	Q_Memset(data, 32, sizeof(data));
-	for(x = 0; x < DEFAULT_SIZE; x++){
-		data[0][x][0] =
-			data[0][x][1] =
-				data[0][x][2] =
-					data[0][x][3] = 255;
+	for(x = 0; x < SzDefimage; x++){
+		for(y = 0; y < SzDefimage; y++){
+			/* fill with pink*/
+			data[x][y][0] = 255;
+			data[x][y][1] = 0;
+			data[x][y][2] = 255;
+			data[x][y][3] = 43;
+		}
+		
+		/* colour the four edges green */
+		data[0][x][0] = 0;
+		data[0][x][1] = 255;
+		data[0][x][2] = 100;
+		data[0][x][3] = 255;
 
-		data[x][0][0] =
-			data[x][0][1] =
-				data[x][0][2] =
-					data[x][0][3] = 255;
+		data[x][0][0] = 0;
+		data[x][0][1] = 255;
+		data[x][0][2] = 100;
+		data[x][0][3] = 255;
 
-		data[DEFAULT_SIZE-1][x][0] =
-			data[DEFAULT_SIZE-1][x][1] =
-				data[DEFAULT_SIZE-1][x][2] =
-					data[DEFAULT_SIZE-1][x][3] = 255;
+		data[SzDefimage-1][x][0] = 0;
+		data[SzDefimage-1][x][1] = 255;
+		data[SzDefimage-1][x][2] = 100;
+		data[SzDefimage-1][x][3] = 255;
 
-		data[x][DEFAULT_SIZE-1][0] =
-			data[x][DEFAULT_SIZE-1][1] =
-				data[x][DEFAULT_SIZE-1][2] =
-					data[x][DEFAULT_SIZE-1][3] = 255;
+		data[x][SzDefimage-1][0] = 0;
+		data[x][SzDefimage-1][1] = 255;
+		data[x][SzDefimage-1][2] = 100;
+		data[x][SzDefimage-1][3] = 255;
 	}
-	tr.defaultImage = R_CreateImage("*default", (byte*)data, DEFAULT_SIZE, DEFAULT_SIZE, qtrue, qfalse,
+	tr.defaultImage = R_CreateImage("*default", (byte*)data, SzDefimage, SzDefimage, qtrue, qfalse,
 		GL_REPEAT);
 }
 
@@ -2079,7 +2084,7 @@ void
 R_CreateBuiltinImages(void)
 {
 	int x,y;
-	byte data[DEFAULT_SIZE][DEFAULT_SIZE][4];
+	byte data[SzDefimage][SzDefimage][4];
 
 	R_CreateDefaultImage();
 
@@ -2090,14 +2095,14 @@ R_CreateBuiltinImages(void)
 	if(r_dlightMode->integer >= 2){
 		for(x = 0; x < MAX_DLIGHTS; x++)
 			tr.shadowCubemaps[x] = R_CreateCubeImage(va("*shadowcubemap%i",
-					x), (byte*)data, DEFAULT_SIZE, DEFAULT_SIZE, qfalse, qfalse,
+					x), (byte*)data, SzDefimage, SzDefimage, qfalse, qfalse,
 				GL_CLAMP_TO_EDGE);
 	}
 
 	/* with overbright bits active, we need an image which is some fraction of full color,
 	 * for default lightmaps, etc */
-	for(x=0; x<DEFAULT_SIZE; x++)
-		for(y=0; y<DEFAULT_SIZE; y++){
+	for(x=0; x<SzDefimage; x++)
+		for(y=0; y<SzDefimage; y++){
 			data[y][x][0] =
 				data[y][x][1] =
 					data[y][x][2] = tr.identityLightByte;
@@ -2110,7 +2115,7 @@ R_CreateBuiltinImages(void)
 	for(x=0; x<32; x++)
 		/* scratchimage is usually used for cinematic drawing */
 		tr.scratchImage[x] =
-			R_CreateImage("*scratch", (byte*)data, DEFAULT_SIZE, DEFAULT_SIZE, qfalse, qtrue,
+			R_CreateImage("*scratch", (byte*)data, SzDefimage, SzDefimage, qfalse, qtrue,
 				GL_CLAMP_TO_EDGE);
 
 	R_CreateDlightImage();
@@ -2199,6 +2204,7 @@ R_CreateBuiltinImages(void)
 		tr.pshadowMaps[x] = R_CreateImage2(va("*shadowmap%i",
 				x), NULL, 256, 256, IMGFLAG_NO_COMPRESSION | IMGFLAG_CLAMPTOEDGE, GL_RGBA8);
 }
+
 
 
 /*
