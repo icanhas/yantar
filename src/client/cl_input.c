@@ -47,6 +47,7 @@ kbutton_t	in_left, in_right, in_forward, in_back;
 kbutton_t	in_lookup, in_lookdown, in_moveleft, in_moveright;
 kbutton_t	in_strafe, in_speed;
 kbutton_t	in_up, in_down;
+kbutton_t	in_rollleft, in_rollright;
 
 #ifdef USE_VOIP
 kbutton_t in_voiprecord;
@@ -488,6 +489,30 @@ IN_Button15Up(void)
 }
 
 void
+IN_RollLeftDown(void)
+{
+	IN_KeyDown(&in_rollleft);
+}
+
+void
+IN_RollLeftUp(void)
+{
+	IN_KeyUp(&in_rollleft);
+}
+
+void
+IN_RollRightDown(void)
+{
+	IN_KeyDown(&in_rollright);
+}
+
+void
+IN_RollRightUp(void)
+{
+	IN_KeyUp(&in_rollright);
+}
+
+void
 IN_CenterView(void)
 {
 	cl.viewangles[PITCH] = -SHORT2ANGLE(cl.snap.ps.delta_angles[PITCH]);
@@ -498,6 +523,7 @@ IN_CenterView(void)
 
 cvar_t	*cl_yawspeed;
 cvar_t	*cl_pitchspeed;
+cvar_t	*cl_rollspeed;
 
 cvar_t	*cl_run;
 
@@ -530,6 +556,11 @@ CL_AdjustAngles(void)
 		&in_lookup);
 	cl.viewangles[PITCH] += speed*cl_pitchspeed->value * CL_KeyState (
 		&in_lookdown);
+		
+	cl.viewangles[ROLL] -= speed*cl_rollspeed->value * CL_KeyState ( //slab
+		&in_rollleft);		
+	cl.viewangles[ROLL] += speed*cl_rollspeed->value * CL_KeyState ( //slab
+		&in_rollright);	
 }
 
 /*
@@ -1217,6 +1248,11 @@ CL_InitInput(void)
 	Cmd_AddCommand ("-button14", IN_Button14Up);
 	Cmd_AddCommand ("+mlook", IN_MLookDown);
 	Cmd_AddCommand ("-mlook", IN_MLookUp);
+	Cmd_AddCommand ("+rollleft", IN_RollLeftDown);
+	Cmd_AddCommand ("-rollleft", IN_RollLeftUp);
+	Cmd_AddCommand ("+rollright", IN_RollRightDown);
+	Cmd_AddCommand ("-rollright", IN_RollRightUp);
+	
 
 #ifdef USE_VOIP
 	Cmd_AddCommand ("+voiprecord", IN_VoipRecordDown);

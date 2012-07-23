@@ -164,13 +164,13 @@ dofriction(void)
 static void
 accelerate(vec3_t wishdir, float wishspeed, float accel)
 {
-#if 0
+#if 1
 	/* q2 style */
 	int i;
 	float addspeed, accelspeed, currentspeed;
 
 	currentspeed = Vec3Dot (pm->ps->velocity, wishdir);
-	addspeed = wishspeed - currentspeed;
+	addspeed = wishspeed;
 	if(addspeed <= 0)
 		return;
 	accelspeed = accel*pml.frametime*wishspeed;
@@ -457,8 +457,6 @@ airmove(void)
 	float	wishspeed;
 	float scale;
 	usercmd_t cmd;
-
-	dofriction();
 	fmove = pm->cmd.forwardmove;
 	smove = pm->cmd.rightmove;
 	umove = pm->cmd.upmove;
@@ -467,9 +465,9 @@ airmove(void)
 	/* set the movementDir so clients can rotate the legs for strafing */
 	setmovedir();
 	/* project moves down to flat plane */
-	Vec3Normalize(pml.forward);
-	Vec3Normalize(pml.right);
-	Vec3Normalize(pml.up);
+//	Vec3Normalize(pml.forward);
+//	Vec3Normalize(pml.right);
+//	Vec3Normalize(pml.up);
 	for(i = 0; i < 3; i++)
 		wishvel[i] = pml.forward[i]*fmove + pml.right[i]*smove + pml.up[i]*umove;
 	Vec3Copy(wishvel, wishdir);
@@ -477,14 +475,6 @@ airmove(void)
 	wishspeed *= scale;
 	/* not on ground, so little effect on velocity */
 	accelerate(wishdir, wishspeed, pm_airaccelerate);
-	/*
-	 * we may have a ground plane that is very steep, even
-	 * though we don't have a groundentity
-	 * slide along the steep plane
-	 */
-	if(pml.groundPlane)
-		PM_ClipVelocity(pm->ps->velocity, pml.groundTrace.plane.normal,
-			pm->ps->velocity, OVERCLIP);
 	PM_StepSlideMove(qtrue);
 }
 

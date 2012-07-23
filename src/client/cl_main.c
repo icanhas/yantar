@@ -3410,6 +3410,7 @@ CL_Init(void)
 
 	cl_yawspeed	= Cvar_Get ("cl_yawspeed", "140", CVAR_ARCHIVE);
 	cl_pitchspeed	= Cvar_Get ("cl_pitchspeed", "140", CVAR_ARCHIVE);
+	cl_rollspeed	= Cvar_Get ("cl_rollspeed", "140", CVAR_ARCHIVE);
 	cl_anglespeedkey = Cvar_Get ("cl_anglespeedkey", "1.5", 0);
 
 	cl_maxpackets	= Cvar_Get ("cl_maxpackets", "30", CVAR_ARCHIVE);
