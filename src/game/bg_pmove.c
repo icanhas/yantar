@@ -753,8 +753,6 @@ crashland(void)
 		else
 			PM_AddEvent(footstepforsurface());
 	}
-	/* start footstep cycle over */
-	pm->ps->bobCycle = 0;
 }
 
 static int
@@ -975,80 +973,6 @@ setplayerbounds(void)
 		pm->maxs[2] = -8;
 		pm->ps->viewheight = DEAD_VIEWHEIGHT;
 		return;
-	}
-}
-
-static void
-dofootsteps(void)
-{
-	float bobmove;
-	int old;
-	qbool footstep;
-
-	/* calculate speed and cycle to be used for all cyclic walking effects */
-	pm->xyspeed = sqrt(pm->ps->velocity[0] * pm->ps->velocity[0]
-		+  pm->ps->velocity[1] * pm->ps->velocity[1]);
-	if(pm->ps->groundEntityNum == ENTITYNUM_NONE){
-		if(pm->ps->powerups[PW_INVULNERABILITY])
-			setlegsanim(LEGS_IDLECR);
-		/* airborne leaves position in cycle intact, but doesn't advance */
-		if(pm->waterlevel > 1)
-			setlegsanim(LEGS_SWIM);
-		return;
-	}
-	/* if not trying to move */
-	if(!pm->cmd.forwardmove && !pm->cmd.rightmove){
-		if(pm->xyspeed < 5){
-			pm->ps->bobCycle = 0;	/* start at beginning of cycle again */
-			if(pm->ps->pm_flags & PMF_DUCKED)
-				setlegsanim(LEGS_IDLECR);
-			else
-				setlegsanim(LEGS_IDLE);
-		}
-		return;
-	}
-	footstep = qfalse;
-	if(pm->ps->pm_flags & PMF_DUCKED){
-		bobmove = 0.5;	/* ducked characters bob much faster */
-		if(pm->ps->pm_flags & PMF_BACKWARDS_RUN)
-			setlegsanim(LEGS_BACKCR);
-		else
-			setlegsanim(LEGS_WALKCR);
-	}else{
-		if(!(pm->cmd.buttons & BUTTON_WALKING)){
-			bobmove = 0.4f;	/* faster speeds bob faster */
-			if(pm->ps->pm_flags & PMF_BACKWARDS_RUN)
-				setlegsanim(LEGS_BACK);
-			else
-				setlegsanim(LEGS_RUN);
-			footstep = qtrue;
-		}else{
-			bobmove = 0.3f;	/* walking bobs slow */
-			if(pm->ps->pm_flags & PMF_BACKWARDS_RUN)
-				setlegsanim(LEGS_BACKWALK);
-			else
-				setlegsanim(LEGS_WALK);
-		}
-	}
-	/* check for footstep / splash sounds */
-	old = pm->ps->bobCycle;
-	pm->ps->bobCycle = (int)(old + bobmove * pml.msec) & 255;
-	/* if we just crossed a cycle boundary, play an apropriate footstep event */
-	if(((old + 64) ^ (pm->ps->bobCycle + 64)) & 128){
-		if(pm->waterlevel == 0){
-			/* on ground will only play sounds if running */
-			if(footstep && !pm->noFootsteps)
-				PM_AddEvent(footstepforsurface());
-		}else if(pm->waterlevel == 1)
-			/* splashing */
-			PM_AddEvent(EV_FOOTSPLASH);
-		else if(pm->waterlevel == 2)
-			/* wading / swimming at surface */
-			PM_AddEvent(EV_SWIM);
-		else if(pm->waterlevel == 3){
-			/* no sound when completely underwater */
-
-		}
 	}
 }
 
@@ -1525,7 +1449,6 @@ PmoveSingle(pmove_t *pmove)
 	animate();
 	doweapevents();
 	dotorsoanim();
-	dofootsteps();
 	dowaterevents();
 	/* snap some parts of playerstate to save network bandwidth */
 	trap_SnapVector(pm->ps->velocity);
