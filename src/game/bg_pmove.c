@@ -950,7 +950,7 @@ setwaterlevel(void)
 
 /* Sets mins, maxs, and pm->ps->viewheight */
 static void
-checkduck(void)
+setplayerbounds(void)
 {
 	trace_t trace;
 
@@ -963,40 +963,18 @@ checkduck(void)
 			VectorSet(pm->mins, -15, -15, MINS_Z);
 			VectorSet(pm->maxs, 15, 15, 16);
 		}
-		pm->ps->pm_flags	|= PMF_DUCKED;
-		pm->ps->viewheight	= CROUCH_VIEWHEIGHT;
 		return;
 	}
 	pm->ps->pm_flags &= ~PMF_INVULEXPAND;
-	pm->mins[0]	= -15;
-	pm->mins[1]	= -15;
-	pm->maxs[0]	= 15;
-	pm->maxs[1]	= 15;
-	pm->mins[2] = MINS_Z;
+	
+	VectorSet(pm->mins, -15, -15, MINS_Z);
+	VectorSet(pm->maxs, 15, 15, 32);
+	pm->ps->viewheight = DEFAULT_VIEWHEIGHT;
 
 	if(pm->ps->pm_type == PM_DEAD){
 		pm->maxs[2] = -8;
 		pm->ps->viewheight = DEAD_VIEWHEIGHT;
 		return;
-	}
-	if(pm->cmd.upmove < 0)	/* duck */
-		pm->ps->pm_flags |= PMF_DUCKED;
-	else
-	/* stand up if possible */
-	if(pm->ps->pm_flags & PMF_DUCKED){
-		pm->maxs[2] = 32;
-		pm->trace (&trace, pm->ps->origin, pm->mins, pm->maxs,
-			pm->ps->origin, pm->ps->clientNum,
-			pm->tracemask);
-		if(!trace.allsolid)
-			pm->ps->pm_flags &= ~PMF_DUCKED;
-	}
-	if(pm->ps->pm_flags & PMF_DUCKED){
-		pm->maxs[2] = 16;
-		pm->ps->viewheight = CROUCH_VIEWHEIGHT;
-	}else{
-		pm->maxs[2] = 32;
-		pm->ps->viewheight = DEFAULT_VIEWHEIGHT;
 	}
 }
 
@@ -1497,7 +1475,7 @@ PmoveSingle(pmove_t *pmove)
 		pm->cmd.upmove = 0;
 	}
 	if(pm->ps->pm_type == PM_SPECTATOR){
-		checkduck ();
+		setplayerbounds ();
 		flymove ();
 		droptimers ();
 		return;
@@ -1515,7 +1493,7 @@ PmoveSingle(pmove_t *pmove)
 	setwaterlevel();
 	pml.previous_waterlevel = pmove->waterlevel;
 
-	checkduck ();
+	setplayerbounds ();
 	groundtrace();	/* set groundentity */
 	if(pm->ps->pm_type == PM_DEAD)
 		deadmove ();
