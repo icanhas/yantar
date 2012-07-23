@@ -465,9 +465,9 @@ airmove(void)
 	/* set the movementDir so clients can rotate the legs for strafing */
 	setmovedir();
 	/* project moves down to flat plane */
-//	Vec3Normalize(pml.forward);
-//	Vec3Normalize(pml.right);
-//	Vec3Normalize(pml.up);
+	Vec3Normalize(pml.forward);
+	Vec3Normalize(pml.right);
+	Vec3Normalize(pml.up);
 	for(i = 0; i < 3; i++)
 		wishvel[i] = pml.forward[i]*fmove + pml.right[i]*smove + pml.up[i]*umove;
 	Vec3Copy(wishvel, wishdir);
@@ -478,23 +478,46 @@ airmove(void)
 	PM_StepSlideMove(qtrue);
 }
 
+/* I basically just copied the airmove code in to here and then made it use accelerate instead of copy vector*/
 static void
 grapplemove(void)
 {
 	vec3_t vel, v;
 	float	vlen;
+	
+	int i;
+	vec3_t wishvel;
+	float fmove, smove, umove;
+	vec3_t wishdir;
+	float wishspeed;
+	float scale;
+	usercmd_t cmd;
+	fmove = pm->cmd.forwardmove;
+	smove = pm->cmd.rightmove;
+	umove = pm->cmd.upmove;
+	cmd	= pm->cmd;
+	scale = calccmdscale(&cmd);
+	/* set the movementDir so clients can rotate the legs for strafing */
+	setmovedir();
+	/* project moves down to flat plane */
+	Vec3Normalize(pml.forward);
+	Vec3Normalize(pml.right);
+	Vec3Normalize(pml.up);
+	for(i = 0; i < 3; i++)
+		wishvel[i] = pml.forward[i]*fmove + pml.right[i]*smove + pml.up[i]*umove;
+	Vec3Copy(wishvel, wishdir);
+	wishspeed = Vec3Normalize(wishdir);
+	wishspeed *= scale;
 
 	VectorScale(pml.forward, -16, v);
 	Vec3Add(pm->ps->grapplePoint, v, v);
 	Vec3Sub(v, pm->ps->origin, vel);
 	vlen = Vec3Len(vel);
 	Vec3Normalize(vel);
-	if(vlen <= 100)
-		VectorScale(vel, 10 * vlen, vel);
-	else
-		VectorScale(vel, 800, vel);
-	Vec3Copy(vel, pm->ps->velocity);
+	accelerate(wishdir, wishspeed, pm_airaccelerate);
+	accelerate(vel, 800, pm_airaccelerate);
 	pml.groundPlane = qfalse;
+	PM_StepSlideMove(qtrue);
 }
 
 static void
@@ -1413,8 +1436,6 @@ PmoveSingle(pmove_t *pmove)
 		flymove();
 	else if(pm->ps->pm_flags & PMF_GRAPPLE_PULL){
 		grapplemove();
-		/* We can wiggle a bit */
-		airmove();
 	}else if(pm->ps->pm_flags & PMF_TIME_WATERJUMP)
 		waterjumpmove();
 	else if(pm->waterlevel > 1)
