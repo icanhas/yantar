@@ -557,9 +557,9 @@ CL_AdjustAngles(void)
 	cl.viewangles[PITCH] += speed*cl_pitchspeed->value * CL_KeyState (
 		&in_lookdown);
 		
-	cl.viewangles[ROLL] -= speed*cl_rollspeed->value * CL_KeyState ( //slab
+	cl.viewangles[ROLL] -= speed*cl_rollspeed->value * CL_KeyState (
 		&in_rollleft);		
-	cl.viewangles[ROLL] += speed*cl_rollspeed->value * CL_KeyState ( //slab
+	cl.viewangles[ROLL] += speed*cl_rollspeed->value * CL_KeyState (
 		&in_rollright);	
 }
 
@@ -1329,7 +1329,11 @@ CL_ShutdownInput(void)
 	Cmd_RemoveCommand("-button14");
 	Cmd_RemoveCommand("+mlook");
 	Cmd_RemoveCommand("-mlook");
-
+	Cmd_RemoveCommand("+rollleft");
+	Cmd_RemoveCommand("-rollleft");
+	Cmd_RemoveCommand("+rollright");
+	Cmd_RemoveCommand("-rollright");
+	
 #ifdef USE_VOIP
 	Cmd_RemoveCommand("+voiprecord");
 	Cmd_RemoveCommand("-voiprecord");
