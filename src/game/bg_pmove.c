@@ -221,8 +221,8 @@ calccmdscale(usercmd_t *cmd)
 }
 
 /*
- * Determine the rotation of the legs reletive
- * to the facing dir
+ * Determine the rotation of the legs relative to the facing dir
+ * so that clients can rotate legs for strafing
  */
 static void
 setmovedir(void)
@@ -547,7 +547,6 @@ walkmove(void)
 	fmove = cmd.forwardmove;
 	smove = cmd.rightmove;
 	scale = calccmdscale(&cmd);
-	/* set the movementDir so clients can rotate the legs for strafing */
 	setmovedir();
 	/* project moves down to flat plane */
 	pml.forward[2]	= 0;
