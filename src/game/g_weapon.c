@@ -382,10 +382,6 @@ weapon_grenadelauncher_fire(gentity_t *ent)
 {
 	gentity_t       *m;
 
-	/* extra vertical velocity */
-	forward[2] += 0.2f;
-	Vec3Normalize(forward);
-
 	m = fire_grenade (ent, muzzle, forward);
 	m->damage *= s_quadFactor;
 	m->splashDamage *= s_quadFactor;

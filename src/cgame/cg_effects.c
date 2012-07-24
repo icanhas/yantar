@@ -531,7 +531,7 @@ CG_LaunchGib(vec3_t origin, vec3_t velocity, qhandle_t hModel)
 	AxisCopy(axisDefault, re->axis);
 	re->hModel = hModel;
 
-	le->pos.trType = TR_GRAVITY;
+	le->pos.trType = TR_LINEAR; //used to be TR_GRAVITY
 	Vec3Copy(origin, le->pos.trBase);
 	Vec3Copy(velocity, le->pos.trDelta);
 	le->pos.trTime = cg.time;

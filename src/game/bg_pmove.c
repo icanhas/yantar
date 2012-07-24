@@ -19,9 +19,14 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
  
+
+ 
 #include "../qcommon/q_shared.h"
 #include "bg_public.h"
 #include "bg_local.h"
+
+#define GrappleElasticityMultiplier	1
+#define GrapplePullSpeed 400
 
 pmove_t *pm;
 pml_t pml;
@@ -32,10 +37,14 @@ float pm_accelerate			= 10.0f;
 float pm_airaccelerate		= 1.0f;
 float pm_wateraccelerate	= 4.0f;
 float pm_flyaccelerate		= 8.0f;
-float pm_friction			= 6.0f;
+float pm_friction				= 6.0f;
 float pm_waterfriction		= 1.0f;
 float pm_flightfriction		= 3.0f;
 float pm_spectatorfriction	= 5.0f;
+
+/*let's Grapplemove know whether or not the last frame used it, is there a better way of doing this?? PROBABLY*/
+int GrappleReInit = 1;
+
 /*
  * this counter lets us debug movement problems with a journal
  * by setting a conditional breakpoint fot the previous frame
@@ -476,14 +485,17 @@ airmove(void)
 	/* not on ground, so little effect on velocity */
 	accelerate(wishdir, wishspeed, pm_airaccelerate);
 	PM_StepSlideMove(qtrue);
+	GrappleReInit = 1; //So Grapplmove knows that lastframe wasn't grapplemove
 }
 
+vec3_t old;
+float oldlen;
 /* I basically just copied the airmove code in to here and then made it use accelerate instead of copy vector*/
 static void
 grapplemove(void)
 {
-	vec3_t vel, v;
-	float	vlen;
+	vec3_t vel, v, cur, temp;
+	float	vlen, PullStrMultiplier, grspd = GrapplePullSpeed;
 	
 	int i;
 	vec3_t wishvel;
@@ -495,7 +507,7 @@ grapplemove(void)
 	fmove = pm->cmd.forwardmove;
 	smove = pm->cmd.rightmove;
 	umove = pm->cmd.upmove;
-	cmd	= pm->cmd;
+	cmd = pm->cmd;
 	scale = calccmdscale(&cmd);
 	/* set the movementDir so clients can rotate the legs for strafing */
 	setmovedir();
@@ -512,12 +524,41 @@ grapplemove(void)
 	VectorScale(pml.forward, -16, v);
 	Vec3Add(pm->ps->grapplePoint, v, v);
 	Vec3Sub(v, pm->ps->origin, vel);
+	
 	vlen = Vec3Len(vel);
+	
+/* If last frame didn't use grapplemove then oldframe values
+*	need to be reinitialized so they don't use values from the last time you grappled*/
+	if (GrappleReInit){
+		oldlen = vlen;
+		Vec3Copy (vel, cur);
+		Vec3Copy (vel, old);
+	}
+	else{
+		Vec3Copy(vel, cur);
+	}
+	
+/* if grapple length is longer than the last frame, then increase
+*	grapple pull strength based on how much longer it is*/
+	if (vlen > oldlen){ 
+		Vec3Sub(cur, old, temp);  //get difference
+		PullStrMultiplier = Vec3Len(temp); //get distance as float
+		PullStrMultiplier *= GrappleElasticityMultiplier;
+		grspd *= PullStrMultiplier;
+	}
+		if (grspd < GrapplePullSpeed){
+			grspd = GrapplePullSpeed;
+	}
+
 	Vec3Normalize(vel);
 	accelerate(wishdir, wishspeed, pm_airaccelerate);
-	accelerate(vel, 800, pm_airaccelerate);
+	accelerate(vel, grspd, pm_airaccelerate);
 	pml.groundPlane = qfalse;
 	PM_StepSlideMove(qtrue);
+	//copy variables used next frame in to Oldvalues
+	oldlen = vlen;
+	Vec3Copy(cur, old);
+	GrappleReInit = 0; //So Grapplmove knows that lastframe was grapplemove
 }
 
 static void
