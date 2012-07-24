@@ -708,9 +708,9 @@ fire_grapple(gentity_t *self, vec3_t start, vec3_t dir)
 	hook->s.pos.trTime = level.time - MISSILE_PRESTEP_TIME;	/* move a bit on the very first frame */
 	hook->s.otherEntityNum = self->s.number;		/* use to match beam in client */
 	Vec3Copy(start, hook->s.pos.trBase);
-	VectorScale(dir, 800, hook->s.pos.trDelta);
+	VectorScale(dir, 3000, hook->s.pos.trDelta);
 	SnapVector(hook->s.pos.trDelta);	/* save net bandwidth */
-	Vec3Copy (start, hook->r.currentOrigin);
+	Vec3Copy(start, hook->r.currentOrigin);
 
 	self->client->hook = hook;
 
