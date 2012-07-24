@@ -1,9 +1,15 @@
 bin/
+.obj/
 Makefile.local
 *.swp
 *~
+*.diff
+*.patch
 *.orig
 *.rej
-*tags
 *.out
 *.stackdump
+*.cfg
+*.tar*
+*.exe
+
