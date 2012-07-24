@@ -201,7 +201,7 @@ accelerate(vec3_t wishdir, float wishspeed, float accel)
  * without getting a sqrt(2) distortion in speed.
  */
 static float
-calccmdscale(usercmd_t *cmd)
+calccmdscale(const usercmd_t *cmd)
 {
 	int max;
 	float	total;
@@ -294,9 +294,9 @@ checkjump(void)
 static qbool
 checkwaterjump(void)
 {
-	vec3_t	spot;
-	int	cont;
-	vec3_t	flatforward;
+	vec3_t spot;
+	int cont;
+	vec3_t flatforward;
 
 	if(pm->ps->pm_time)
 		return qfalse;
@@ -368,7 +368,7 @@ watermove(void)
 				pm->ps->velocity[2] = 50;
 		}
 #endif
-	dofriction ();
+	dofriction();
 	
 	scale = calccmdscale(&pm->cmd);
 	/* user intentions */
@@ -456,13 +456,13 @@ airmove(void)
 	vec3_t wishdir;
 	float	wishspeed;
 	float scale;
-	usercmd_t cmd;
-	fmove = pm->cmd.forwardmove;
-	smove = pm->cmd.rightmove;
-	umove = pm->cmd.upmove;
-	cmd	= pm->cmd;
-	scale = calccmdscale(&cmd);
-	/* set the movementDir so clients can rotate the legs for strafing */
+	const usercmd_t *cmd;
+	
+	cmd	= &pm->cmd;
+	fmove = cmd->forwardmove;
+	smove = cmd->rightmove;
+	umove = cmd->upmove;
+	scale = calccmdscale(cmd);
 	setmovedir();
 	/* project moves down to flat plane */
 	Vec3Normalize(pml.forward);
@@ -478,26 +478,25 @@ airmove(void)
 	PM_StepSlideMove(qtrue);
 }
 
-/* I basically just copied the airmove code in to here and then made it use accelerate instead of copy vector*/
+/* roughly the same as airmove */
 static void
 grapplemove(void)
 {
 	vec3_t vel, v;
 	float	vlen;
-	
 	int i;
 	vec3_t wishvel;
 	float fmove, smove, umove;
 	vec3_t wishdir;
 	float wishspeed;
 	float scale;
-	usercmd_t cmd;
-	fmove = pm->cmd.forwardmove;
-	smove = pm->cmd.rightmove;
-	umove = pm->cmd.upmove;
-	cmd	= pm->cmd;
-	scale = calccmdscale(&cmd);
-	/* set the movementDir so clients can rotate the legs for strafing */
+	const usercmd_t *cmd;
+	
+	cmd	= &pm->cmd;
+	fmove = cmd->forwardmove;
+	smove = cmd->rightmove;
+	umove = cmd->upmove;
+	scale = calccmdscale(cmd);
 	setmovedir();
 	/* project moves down to flat plane */
 	Vec3Normalize(pml.forward);
@@ -531,7 +530,7 @@ walkmove(void)
 	float scale;
 	float	accel;
 	float	vel;
-	usercmd_t cmd;
+	const usercmd_t *cmd;
 
 	if(pm->waterlevel > 2 &&
 	   Vec3Dot(pml.forward, pml.groundTrace.plane.normal) > 0){
@@ -548,15 +547,14 @@ walkmove(void)
 	}
 
 	dofriction();
-	cmd	= pm->cmd;
-	fmove = cmd.forwardmove;
-	smove = cmd.rightmove;
-	scale = calccmdscale(&cmd);
+	cmd	= &pm->cmd;
+	fmove = cmd->forwardmove;
+	smove = cmd->rightmove;
+	scale = calccmdscale(cmd);
 	setmovedir();
 	/* project moves down to flat plane */
 	pml.forward[2]	= 0;
 	pml.right[2] = 0;
-
 	/* project the forward and right directions onto the ground plane */
 	PM_ClipVelocity(pml.forward, pml.groundTrace.plane.normal, pml.forward,
 		OVERCLIP);
@@ -1309,7 +1307,6 @@ PM_AddTouchEnt(int entityNum)
 	pm->touchents[pm->numtouch] = entityNum;
 	pm->numtouch++;
 }
-
 
 void trap_SnapVector(float *v);
 
