@@ -590,7 +590,7 @@ fire_grenade(gentity_t *self, vec3_t start, vec3_t dir)
 	bolt->clipmask			= MASK_SHOT;
 	bolt->target_ent		= NULL;
 
-	bolt->s.pos.trType = TR_LINEAR; //used to be TR_GRAVITY //slab
+	bolt->s.pos.trType = TR_GRAVITY;
 	bolt->s.pos.trTime = level.time - MISSILE_PRESTEP_TIME;	/* move a bit on the very first frame */
 	Vec3Copy(start, bolt->s.pos.trBase);
 	VectorScale(dir, 700, bolt->s.pos.trDelta);
@@ -708,7 +708,7 @@ fire_grapple(gentity_t *self, vec3_t start, vec3_t dir)
 	hook->s.pos.trTime = level.time - MISSILE_PRESTEP_TIME;	/* move a bit on the very first frame */
 	hook->s.otherEntityNum = self->s.number;		/* use to match beam in client */
 	Vec3Copy(start, hook->s.pos.trBase);
-	VectorScale(dir, 6000, hook->s.pos.trDelta);
+	VectorScale(dir, 800, hook->s.pos.trDelta);
 	SnapVector(hook->s.pos.trDelta);	/* save net bandwidth */
 	Vec3Copy (start, hook->r.currentOrigin);
 
