@@ -160,6 +160,10 @@ typedef int clipHandle_t;
 #define QALIGN(x)
 #endif
 
+#ifndef UNUSED
+#	define UNUSED(x) (void)(x)
+#endif
+
 #ifndef NULL
 #define NULL ((void*)0)
 #endif
