@@ -2590,7 +2590,6 @@ Q_Init(char *commandLine)
 	Cmd_AddCommand("testutf", Q_TestUTF_f);
 	Cmd_AddCommand("quit", Q_Quit_f);
 	Cmd_AddCommand("q", Q_Quit_f);
-	Cmd_AddCommand("changeVectors", MSG_ReportChangeVectors_f);
 	Cmd_AddCommand("writeconfig", Q_WriteConfig_f);
 	Cmd_SetCommandCompletionFunc("writeconfig", Cmd_CompleteCfgName);
 	Cmd_AddCommand("game_restart", Q_GameRestart_f);

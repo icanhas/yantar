@@ -26,7 +26,6 @@
 
 static huffman_t msgHuff;
 static qbool msgInit = qfalse;
-int pcount[256];
 int oldsize = 0;
 
 void MSG_initHuffman(void);
@@ -764,16 +763,6 @@ MSG_ReadDeltaUsercmdKey(msg_t *msg, int key, usercmd_t *from, usercmd_t *to)
 /*
  * entityState_t communication
  */
-
-/* Prints out a table from the current statistics for copying to code */
-void
-MSG_ReportChangeVectors_f(void)
-{
-	int i;
-	for(i=0; i<256; i++)
-		if(pcount[i])
-			Q_Printf("%d used %d\n", i, pcount[i]);
-}
 
 typedef struct {
 	char	*name;
