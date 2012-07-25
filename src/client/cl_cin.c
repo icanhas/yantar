@@ -1477,7 +1477,7 @@ CIN_StopCinematic(int handle)
 	   cinTable[handle].status == FMV_EOF) return FMV_EOF;
 	currentHandle = handle;
 
-	Q_DPrintf("trFMV::stop(), closing %s\n",
+	Q_DPrintf("CIN_StopCinematic: closing %s\n",
 		cinTable[currentHandle].fileName);
 
 	if(!cinTable[currentHandle].buf)
@@ -1589,7 +1589,7 @@ CIN_PlayCinematic(const char *arg, int x, int y, int w, int h, int systemBits)
 			if(!strcmp(cinTable[i].fileName, name))
 				return i;
 
-	Q_DPrintf("CIN_PlayCinematic( %s )\n", arg);
+	Q_DPrintf("CIN_PlayCinematic: %s\n", arg);
 
 	Q_Memset(&cin, 0, sizeof(cinematics_t));
 	currentHandle = CIN_HandleForVideo();
@@ -1638,7 +1638,7 @@ CIN_PlayCinematic(const char *arg, int x, int y, int w, int h, int systemBits)
 /*		FS_Read (cin.file, cinTable[currentHandle].RoQFrameSize+8, cinTable[currentHandle].iFile); */
 
 		cinTable[currentHandle].status = FMV_PLAY;
-		Q_DPrintf("trFMV::play(), playing %s\n", arg);
+		Q_DPrintf("CIN_PlayCinematic: playing %s\n", arg);
 
 		if(cinTable[currentHandle].alterGameState)
 			clc.state = CA_CINEMATIC;
@@ -1649,7 +1649,7 @@ CIN_PlayCinematic(const char *arg, int x, int y, int w, int h, int systemBits)
 
 		return currentHandle;
 	}
-	Q_DPrintf("trFMV::play(), invalid RoQ ID\n");
+	Q_DPrintf("CIN_PlayCinematic: invalid RoQ ID\n");
 
 	RoQShutdown();
 	return -1;
