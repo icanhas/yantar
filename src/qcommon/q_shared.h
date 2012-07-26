@@ -311,8 +311,8 @@ typedef vec_t vec2_t[2];
 typedef vec_t vec3_t[3];
 typedef vec_t vec4_t[4];
 typedef vec_t vec5_t[5];
-
 typedef vec_t mat4x4[16];
+typedef vec4_t quat_t;
 
 typedef int fixed4_t;
 typedef int fixed8_t;
@@ -542,7 +542,7 @@ typedef struct {
 
 #define SnapVector(v)		{v[0]=((int)(v[0])); v[1]=((int)(v[1])); v[2]= \
 					 ((int)(v[2])); }
-/* just in case you do't want to use the macros */
+/* just in case you don't want to use the macros */
 vec_t	_Vec3Dot(const vec3_t v1, const vec3_t v2);
 void	_Vec3Sub(const vec3_t veca, const vec3_t vecb, vec3_t out);
 void	_Vec3Add(const vec3_t veca, const vec3_t vecb, vec3_t out);
@@ -559,6 +559,8 @@ void	Mat4x4Transform(const mat4x4 in1, const vec4_t in2, vec4_t out);
 qbool	Mat4x4Compare(const mat4x4 a, const mat4x4 b);
 void	Mat4x4Translation(vec3_t vec, mat4x4 out);
 void	Mat4x4Ortho(float left, float right, float bottom, float top, float znear, float zfar, mat4x4 out);
+
+void QuatMul(const quat_t, const quat_t, quat_t);
 
 unsigned ColorBytes3(float r, float g, float b);
 unsigned ColorBytes4(float r, float g, float b, float a);
@@ -673,10 +675,14 @@ float   Q_crandom(int *seed);
 #define crandom()	(2.0 * (random() - 0.5))
 
 void Vec3ToAngles(const vec3_t value1, vec3_t angles);
+void AnglesToQuat(const vec3_t, quat_t);
 void AnglesToAxis(const vec3_t angles, vec3_t axis[3]);
+void QuatToAxis(quat_t, mat4x4);
 
 void AxisClear(vec3_t axis[3]);
 void AxisCopy(const vec3_t in[3], vec3_t out[3]);
+
+void QuatSet(quat_t, vec_t w, vec_t x, vec_t y, vec_t z);
 
 void SetPlaneSignbits(struct cplane_s *out);
 int BoxOnPlaneSide(const vec3_t emins, const vec3_t emaxs, const struct cplane_s *plane);

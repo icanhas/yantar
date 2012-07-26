@@ -952,6 +952,83 @@ Mat4x4Ortho(float l, float r, float bottom, float top, float znear, float zfar, 
 	out[15] = 1.0f;
 }
 
+void
+QuatSet(quat_t q, vec_t w, vec_t x, vec_t y, vec_t z)
+{
+	q[0] = w;
+	q[1] = x;
+	q[2] = y;
+	q[3] = z;
+}
+
+void
+AnglesToQuat(const vec3_t angles, quat_t out)
+{
+	float cp, cy, cr, sp, sy, sr;
+	vec3_t a;
+	
+	a[PITCH] = (M_PI/360.0f)*angles[PITCH];
+	a[YAW] = (M_PI/360.0f)*angles[YAW];
+	a[ROLL] = (M_PI/360.0f)*angles[ROLL];
+	cp = cos(a[PITCH]);
+	cy = cos(a[YAW]);
+	cr = cos(a[ROLL]);
+	sp = sin(a[PITCH]);
+	sy = sin(a[YAW]);
+	sr = sin(a[ROLL]);
+	/* w, x, y, z */
+	out[0] = cr * cp*cy + sr * sp*sy;
+	out[1] = sr * cp*cy - cr * sp*sy;
+	out[2] = sr * sp * cy + sr * cp * sy;
+	out[3] = cr * sp * sy - sr * sp * cy;
+}
+
+void QuatToAxis(quat_t q, mat4x4 axis)
+{
+	float wx, wy, wz, xx, xy, yy, yz, zy, xz, zz, x2, y2, z2;
+	
+	x2 = q[1] + q[1];
+	y2 = q[2] + q[2];
+	z2 = q[3] + q[3];
+	xx = q[1] * x2;
+	xy = q[2] * y2;
+	xz = q[1] * z2;
+	yy = q[2] * y2;
+	yz = q[2] * z2;
+	zz = q[3] * z2;
+	wx = q[0] * x2;
+	wy = q[0] * y2;
+	wz = q[0] * z2;
+	axis[0*4+0] = 1.0 - (yy + zz);
+	axis[1*4+0] = xy - wz;
+	axis[2*4+0] = xz + wy;
+	axis[0*4+1] = xy + wz;
+	axis[1*4+1] = 1.0 - (xx - zz);
+	axis[2*4+1] = yz -wx;
+	axis[0*4+2] = xz - wy;
+	axis[1*4+2] = yz + wy;
+	axis[2*4+2] = 1.0 - (xx + yy);
+}
+
+void
+QuatMul(const quat_t q1, const quat_t q2, quat_t out)
+{
+	float a, b, c, d, e, f, g, h;
+	
+	a = (q1[0] + q1[1]) * (q2[0] + q2[1]);
+	b = (q1[3] - q1[2]) * (q2[2] - q2[3]);
+	c = (q1[0] - q1[1]) * (q2[2] + q2[3]);
+	d = (q1[2] + q1[3]) * (q2[0] - q2[1]);
+	e = (q1[1] + q1[3]) * (q2[1] + q2[2]);
+	f = (q1[1] - q1[3]) * (q2[1] - q2[2]);
+	g = (q1[0] + q1[2]) * (q2[0] - q2[3]);
+	h = (q1[0] - q1[2]) * (q2[0] + q2[3]);
+	out[0] = b + (h - e - f + g) * 0.5;
+	out[1] = a - (e + f + g + h) * 0.5;
+	out[2] = c + (e - f + g - h) * 0.5;
+	out[3] = d + (e - f - g + h) * 0.5;
+}
+
 int
 Q_log2(int val)
 {
