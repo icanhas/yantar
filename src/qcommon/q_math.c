@@ -983,7 +983,7 @@ AnglesToQuat(const vec3_t angles, quat_t out)
 	out[3] = cr * sp * sy - sr * sp * cy;
 }
 
-void QuatToAxis(quat_t q, mat4x4 axis)
+void QuatToAxis(quat_t q, vec3_t  axis[3])
 {
 	float wx, wy, wz, xx, xy, yy, yz, zy, xz, zz, x2, y2, z2;
 	
@@ -999,15 +999,15 @@ void QuatToAxis(quat_t q, mat4x4 axis)
 	wx = q[0] * x2;
 	wy = q[0] * y2;
 	wz = q[0] * z2;
-	axis[0*4+0] = 1.0 - (yy + zz);
-	axis[1*4+0] = xy - wz;
-	axis[2*4+0] = xz + wy;
-	axis[0*4+1] = xy + wz;
-	axis[1*4+1] = 1.0 - (xx - zz);
-	axis[2*4+1] = yz -wx;
-	axis[0*4+2] = xz - wy;
-	axis[1*4+2] = yz + wy;
-	axis[2*4+2] = 1.0 - (xx + yy);
+	axis[0][0] = 1.0 - (yy + zz);
+	axis[1][0] = xy - wz;
+	axis[2][0] = xz + wy;
+	axis[0][1] = xy + wz;
+	axis[1][1] = 1.0 - (xx - zz);
+	axis[2][1] = yz -wx;
+	axis[0][2] = xz - wy;
+	axis[1][2] = yz + wy;
+	axis[2][2] = 1.0 - (xx + yy);
 }
 
 void
