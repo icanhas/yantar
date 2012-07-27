@@ -23,6 +23,9 @@
 #include "bg_public.h"
 #include "bg_local.h"
 
+#define GrappleElasticityMultiplier	2
+#define GrapplePullSpeed 400
+
 pmove_t *pm;
 pml_t pml;
 float pm_stopspeed			= 100.0f;
@@ -460,18 +463,36 @@ static void
 grapplemove(void)
 {
 	vec3_t wishvel, wishdir, vel, v;
-	float	wishspeed, vlen;
+	float	wishspeed, vlen, oldlen, PullSpeedMultiplier, grspd = GrapplePullSpeed;
+
 	
 	_airmove(&pm->cmd, &wishvel, &wishdir, &wishspeed);
 	VectorScale(pml.forward, -16, v);
 	Vec3Add(pm->ps->grapplePoint, v, v);
 	Vec3Sub(v, pm->ps->origin, vel);
 	vlen = Vec3Len(vel);
+	if (pm->grapplelast == 0){
+		oldlen = vlen;
+	}
+	else{
+		oldlen = pm->oldgrapplelen;
+	}
+	if (vlen > oldlen){
+		PullSpeedMultiplier = vlen - oldlen;
+		PullSpeedMultiplier *= GrappleElasticityMultiplier;
+		grspd *= PullSpeedMultiplier;
+	}
+	if (grspd < GrapplePullSpeed){
+		grspd = GrapplePullSpeed;
+	}
+	
+	
 	Vec3Normalize(vel);
 	accelerate(wishdir, wishspeed, pm_airaccelerate);
-	accelerate(vel, 800, pm_airaccelerate);
+	accelerate(vel, grspd, pm_airaccelerate);
 	pml.groundPlane = qfalse;
 	PM_StepSlideMove(qtrue);
+	pm->oldgrapplelen = vlen;
 }
 
 static void
@@ -1224,14 +1245,19 @@ PmoveSingle(pmove_t *p)
 	
 	if(pm->ps->pm_type == PM_DEAD)
 		deadmove ();
-	else if(pm->ps->pm_flags & PMF_GRAPPLE_PULL)
+	else if(pm->ps->pm_flags & PMF_GRAPPLE_PULL){
+	Q_Printf("%i", pm->grapplelast);
 		grapplemove();
+		pm->grapplelast = 1;
+	}
 	else if(pm->ps->pm_flags & PMF_TIME_WATERJUMP)
 		waterjumpmove();
 	else if(pm->waterlevel > 1)	/* swimming */
 		watermove();
-	else	/* airborne */
+	else{	/* airborne */
 		airmove();
+//		pm->grapplelast = 0;
+	}
 
 	animate();
 	doweapevents();
