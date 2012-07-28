@@ -51,20 +51,6 @@ kbutton_t buttons[16];
 qbool mlooking;
 
 static void
-mlookdown(void)
-{
-	mlooking = qtrue;
-}
-
-static void
-mlookup(void)
-{
-	mlooking = qfalse;
-	if(!cl_freelook->integer)
-		IN_CenterView ();
-}
-
-static void
 keydown(kbutton_t *b)
 {
 	int k;
@@ -84,7 +70,7 @@ keydown(kbutton_t *b)
 	else if(!b->down[1])
 		b->down[1] = k;
 	else{
-		Q_Printf ("Three keys down for a button!\n");
+		Q_Printf("Three keys down for a button!\n");
 		return;
 	}
 
@@ -138,8 +124,8 @@ keyup(kbutton_t *b)
 }
 
 /* Returns the fraction of the frame that the key was down */
-float
-CL_KeyState(kbutton_t *key)
+static float
+keystate(kbutton_t *key)
 {
 	float val;
 	int msec;
@@ -555,10 +541,24 @@ IN_RollRightUp(void)
 	keyup(&rollright);
 }
 
-void
-IN_CenterView(void)
+static void
+centerview(void)
 {
 	cl.viewangles[PITCH] = -SHORT2ANGLE(cl.snap.ps.delta_angles[PITCH]);
+}
+
+static void
+mlookdown(void)
+{
+	mlooking = qtrue;
+}
+
+static void
+mlookup(void)
+{
+	mlooking = qfalse;
+	if(!cl_freelook->integer)
+		centerview();
 }
 
 cvar_t *cl_yawspeed;
@@ -583,16 +583,16 @@ adjustangles(void)
 		spd = 0.001 * cls.frametime;
 
 	if(!strafe.active){
-		cl.viewangles[YAW] -= spd * ys * CL_KeyState(&right);
-		cl.viewangles[YAW] += spd * ys * CL_KeyState(&left);
+		cl.viewangles[YAW] -= spd * ys * keystate(&right);
+		cl.viewangles[YAW] += spd * ys * keystate(&left);
 	}
 
-	cl.viewangles[PITCH] -= spd * ps * CL_KeyState(&lookup);
-	cl.viewangles[PITCH] += spd * ps * CL_KeyState(&lookdown);
+	cl.viewangles[PITCH] -= spd * ps * keystate(&lookup);
+	cl.viewangles[PITCH] += spd * ps * keystate(&lookdown);
 	
 	/* FIXME: roll mustn't be so immediate */
-	cl.viewangles[ROLL] -= spd * rs * CL_KeyState(&rollleft);		
-	cl.viewangles[ROLL] += spd * rs * CL_KeyState(&rollright);	
+	cl.viewangles[ROLL] -= spd * rs * keystate(&rollleft);		
+	cl.viewangles[ROLL] += spd * rs * keystate(&rollright);	
 }
 
 /* Sets the usercmd_t based on key states */
@@ -620,16 +620,16 @@ keymove(usercmd_t *cmd)
 	}
 
 	if(strafe.active){
-		side += mvspeed * CL_KeyState (&right);
-		side -= mvspeed * CL_KeyState (&left);
+		side += mvspeed * keystate (&right);
+		side -= mvspeed * keystate (&left);
 	}
 
-	side += mvspeed * CL_KeyState(&moveright);
-	side -= mvspeed * CL_KeyState(&moveleft);
-	_up += mvspeed * CL_KeyState(&up);
-	_up -= mvspeed * CL_KeyState(&down);
-	fwd += mvspeed * CL_KeyState(&forward);
-	fwd -= mvspeed * CL_KeyState(&back);
+	side += mvspeed * keystate(&moveright);
+	side -= mvspeed * keystate(&moveleft);
+	_up += mvspeed * keystate(&up);
+	_up -= mvspeed * keystate(&down);
+	fwd += mvspeed * keystate(&forward);
+	fwd -= mvspeed * keystate(&back);
 	cmd->forwardmove = ClampChar(fwd);
 	cmd->rightmove = ClampChar(side);
 	cmd->upmove = ClampChar(_up);
@@ -1129,7 +1129,7 @@ CL_SendCmd(void)
 void
 CL_InitInput(void)
 {
-	Cmd_AddCommand ("centerview",IN_CenterView);
+	Cmd_AddCommand ("centerview",centerview);
 	Cmd_AddCommand ("+moveup",IN_UpDown);
 	Cmd_AddCommand ("-moveup",IN_UpUp);
 	Cmd_AddCommand ("+movedown",IN_DownDown);
