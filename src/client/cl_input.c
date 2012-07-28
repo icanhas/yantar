@@ -45,7 +45,7 @@ int old_com_frameTime;
 
 kbutton_t	in_left, in_right, in_forward, in_back;
 kbutton_t	in_lookup, in_lookdown, in_moveleft, in_moveright;
-kbutton_t	in_strafe, in_speed;
+kbutton_t	in_strafe, in_speed, in_brake;
 kbutton_t	in_up, in_down;
 kbutton_t	in_rollleft, in_rollright;
 
@@ -295,16 +295,31 @@ IN_SpeedDown(void)
 {
 	IN_KeyDown(&in_speed);
 }
+
 void
 IN_SpeedUp(void)
 {
 	IN_KeyUp(&in_speed);
 }
+
+void
+IN_BrakeDown(void)
+{
+	IN_KeyDown(&in_brake);
+}
+
+void
+IN_BrakeUp(void)
+{
+	IN_KeyUp(&in_brake);
+}
+
 void
 IN_StrafeDown(void)
 {
 	IN_KeyDown(&in_strafe);
 }
+
 void
 IN_StrafeUp(void)
 {
@@ -616,6 +631,7 @@ CL_KeyMove(usercmd_t *cmd)
 void
 CL_MouseEvent(int dx, int dy, int time)
 {
+	UNUSED(time);
 	if(Key_GetCatcher( ) & KEYCATCH_UI)
 		VM_Call(uivm, UI_MOUSE_EVENT, dx, dy);
 	else if(Key_GetCatcher( ) & KEYCATCH_CGAME)
@@ -634,6 +650,7 @@ CL_MouseEvent(int dx, int dy, int time)
 void
 CL_JoystickEvent(int axis, int value, int time)
 {
+	UNUSED(time);
 	if(axis < 0 || axis >= MAX_JOYSTICK_AXIS)
 		Q_Error(ERR_DROP, "CL_JoystickEvent: bad axis %i", axis);
 	cl.joystickAxis[axis] = value;
@@ -1214,6 +1231,8 @@ CL_InitInput(void)
 	Cmd_AddCommand ("-moveright", IN_MoverightUp);
 	Cmd_AddCommand ("+speed", IN_SpeedDown);
 	Cmd_AddCommand ("-speed", IN_SpeedUp);
+	Cmd_AddCommand("+brake", IN_BrakeDown);
+	Cmd_AddCommand("-brake", IN_BrakeUp);
 	Cmd_AddCommand ("+attack", IN_Button0Down);
 	Cmd_AddCommand ("-attack", IN_Button0Up);
 	Cmd_AddCommand ("+button0", IN_Button0Down);
@@ -1295,6 +1314,8 @@ CL_ShutdownInput(void)
 	Cmd_RemoveCommand("-moveright");
 	Cmd_RemoveCommand("+speed");
 	Cmd_RemoveCommand("-speed");
+	Cmd_RemoveCommand("+brake");
+	Cmd_RemoveCommand("-brake");
 	Cmd_RemoveCommand("+attack");
 	Cmd_RemoveCommand("-attack");
 	Cmd_RemoveCommand("+button0");
