@@ -154,171 +154,171 @@ keystate(kbutton_t *key)
 }
 
 static void
-IN_UpDown(void)
+UpDown(void)
 {
 	keydown(&up);
 }
 
 static void
-IN_UpUp(void)
+UpUp(void)
 {
 	keyup(&up);
 }
 
 static void
-IN_DownDown(void)
+DownDown(void)
 {
 	keydown(&down);
 }
 
 static void
-IN_DownUp(void)
+DownUp(void)
 {
 	keyup(&down);
 }
 
 static void
-IN_LeftDown(void)
+LeftDown(void)
 {
 	keydown(&left);
 }
 
 static void
-IN_LeftUp(void)
+LeftUp(void)
 {
 	keyup(&left);
 }
 
 static void
-IN_RightDown(void)
+RightDown(void)
 {
 	keydown(&right);
 }
 
 static void
-IN_RightUp(void)
+RightUp(void)
 {
 	keyup(&right);
 }
 
 static void
-IN_ForwardDown(void)
+ForwardDown(void)
 {
 	keydown(&forward);
 }
 
 static void
-IN_ForwardUp(void)
+ForwardUp(void)
 {
 	keyup(&forward);
 }
 
 static void
-IN_BackDown(void)
+BackDown(void)
 {
 	keydown(&back);
 }
 
 static void
-IN_BackUp(void)
+BackUp(void)
 {
 	keyup(&back);
 }
 
 static void
-IN_LookupDown(void)
+LookupDown(void)
 {
 	keydown(&lookup);
 }
 
 static void
-IN_LookupUp(void)
+LookupUp(void)
 {
 	keyup(&lookup);
 }
 
 static void
-IN_LookdownDown(void)
+LookdownDown(void)
 {
 	keydown(&lookdown);
 }
 
 static void
-IN_LookdownUp(void)
+LookdownUp(void)
 {
 	keyup(&lookdown);
 }
 
 static void
-IN_MoveleftDown(void)
+MoveleftDown(void)
 {
 	keydown(&moveleft);
 }
 
 static void
-IN_MoveleftUp(void)
+MoveleftUp(void)
 {
 	keyup(&moveleft);
 }
 
 static void
-IN_MoverightDown(void)
+MoverightDown(void)
 {
 	keydown(&moveright);
 }
 
 static void
-IN_MoverightUp(void)
+MoverightUp(void)
 {
 	keyup(&moveright);
 }
 
 static void
-IN_SpeedDown(void)
+SpeedDown(void)
 {
 	keydown(&speed);
 }
 
 static void
-IN_SpeedUp(void)
+SpeedUp(void)
 {
 	keyup(&speed);
 }
 
 static void
-IN_BrakeDown(void)
+BrakeDown(void)
 {
 	keydown(&brake);
 }
 
 static void
-IN_BrakeUp(void)
+BrakeUp(void)
 {
 	keyup(&brake);
 }
 
 static void
-IN_StrafeDown(void)
+StrafeDown(void)
 {
 	keydown(&strafe);
 }
 
 static void
-IN_StrafeUp(void)
+StrafeUp(void)
 {
 	keyup(&strafe);
 }
 
 #ifdef USE_VOIP
 static void
-IN_VoipRecordDown(void)
+VoipRecordDown(void)
 {
 	keydown(&voiprecord);
 	Cvar_Set("cl_voipSend", "1");
 }
 
 static void
-IN_VoipRecordUp(void)
+VoipRecordUp(void)
 {
 	keyup(&voiprecord);
 	Cvar_Set("cl_voipSend", "0");
@@ -326,217 +326,217 @@ IN_VoipRecordUp(void)
 #endif
 
 static void
-IN_Button0Down(void)
+Button0Down(void)
 {
 	keydown(&buttons[0]);
 }
 
 static void
-IN_Button0Up(void)
+Button0Up(void)
 {
 	keyup(&buttons[0]);
 }
 
 static void
-IN_Button1Down(void)
+Button1Down(void)
 {
 	keydown(&buttons[1]);
 }
 
 static void
-IN_Button1Up(void)
+Button1Up(void)
 {
 	keyup(&buttons[1]);
 }
 
 static void
-IN_Button2Down(void)
+Button2Down(void)
 {
 	keydown(&buttons[2]);
 }
 
 static void
-IN_Button2Up(void)
+Button2Up(void)
 {
 	keyup(&buttons[2]);
 }
 
 static void
-IN_Button3Down(void)
+Button3Down(void)
 {
 	keydown(&buttons[3]);
 }
 
 static void
-IN_Button3Up(void)
+Button3Up(void)
 {
 	keyup(&buttons[3]);
 }
 
 static void
-IN_Button4Down(void)
+Button4Down(void)
 {
 	keydown(&buttons[4]);
 }
 
 static void
-IN_Button4Up(void)
+Button4Up(void)
 {
 	keyup(&buttons[4]);
 }
 
 static void
-IN_Button5Down(void)
+Button5Down(void)
 {
 	keydown(&buttons[5]);
 }
 
 static void
-IN_Button5Up(void)
+Button5Up(void)
 {
 	keyup(&buttons[5]);
 }
 
 static void
-IN_Button6Down(void)
+Button6Down(void)
 {
 	keydown(&buttons[6]);
 }
 
 static void
-IN_Button6Up(void)
+Button6Up(void)
 {
 	keyup(&buttons[6]);
 }
 
 static void
-IN_Button7Down(void)
+Button7Down(void)
 {
 	keydown(&buttons[7]);
 }
 
 static void
-IN_Button7Up(void)
+Button7Up(void)
 {
 	keyup(&buttons[7]);
 }
 
 static void
-IN_Button8Down(void)
+Button8Down(void)
 {
 	keydown(&buttons[8]);
 }
 
 static void
-IN_Button8Up(void)
+Button8Up(void)
 {
 	keyup(&buttons[8]);
 }
 
 static void
-IN_Button9Down(void)
+Button9Down(void)
 {
 	keydown(&buttons[9]);
 }
 
 static void
-IN_Button9Up(void)
+Button9Up(void)
 {
 	keyup(&buttons[9]);
 }
 
 static void
-IN_Button10Down(void)
+Button10Down(void)
 {
 	keydown(&buttons[10]);
 }
 
 static void
-IN_Button10Up(void)
+Button10Up(void)
 {
 	keyup(&buttons[10]);
 }
 
 static void
-IN_Button11Down(void)
+Button11Down(void)
 {
 	keydown(&buttons[11]);
 }
 
 static void
-IN_Button11Up(void)
+Button11Up(void)
 {
 	keyup(&buttons[11]);
 }
 
 static void
-IN_Button12Down(void)
+Button12Down(void)
 {
 	keydown(&buttons[12]);
 }
 
 static void
-IN_Button12Up(void)
+Button12Up(void)
 {
 	keyup(&buttons[12]);
 }
 
 static void
-IN_Button13Down(void)
+Button13Down(void)
 {
 	keydown(&buttons[13]);
 }
 
 static void
-IN_Button13Up(void)
+Button13Up(void)
 {
 	keyup(&buttons[13]);
 }
 
 static void
-IN_Button14Down(void)
+Button14Down(void)
 {
 	keydown(&buttons[14]);
 }
 
 static void
-IN_Button14Up(void)
+Button14Up(void)
 {
 	keyup(&buttons[14]);
 }
 
 static void
-IN_Button15Down(void)
+Button15Down(void)
 {
 	keydown(&buttons[15]);
 }
 
 static void
-IN_Button15Up(void)
+Button15Up(void)
 {
 	keyup(&buttons[15]);
 }
 
 static void
-IN_RollLeftDown(void)
+RollLeftDown(void)
 {
 	keydown(&rollleft);
 }
 
 static void
-IN_RollLeftUp(void)
+RollLeftUp(void)
 {
 	keyup(&rollleft);
 }
 
 static void
-IN_RollRightDown(void)
+RollRightDown(void)
 {
 	keydown(&rollright);
 }
 
 static void
-IN_RollRightUp(void)
+RollRightUp(void)
 {
 	keyup(&rollright);
 }
@@ -1129,76 +1129,76 @@ CL_SendCmd(void)
 void
 CL_InitInput(void)
 {
-	Cmd_AddCommand ("centerview",centerview);
-	Cmd_AddCommand ("+moveup",IN_UpDown);
-	Cmd_AddCommand ("-moveup",IN_UpUp);
-	Cmd_AddCommand ("+movedown",IN_DownDown);
-	Cmd_AddCommand ("-movedown",IN_DownUp);
-	Cmd_AddCommand ("+left",IN_LeftDown);
-	Cmd_AddCommand ("-left",IN_LeftUp);
-	Cmd_AddCommand ("+right",IN_RightDown);
-	Cmd_AddCommand ("-right",IN_RightUp);
-	Cmd_AddCommand ("+forward",IN_ForwardDown);
-	Cmd_AddCommand ("-forward",IN_ForwardUp);
-	Cmd_AddCommand ("+back",IN_BackDown);
-	Cmd_AddCommand ("-back",IN_BackUp);
-	Cmd_AddCommand ("+lookup", IN_LookupDown);
-	Cmd_AddCommand ("-lookup", IN_LookupUp);
-	Cmd_AddCommand ("+lookdown", IN_LookdownDown);
-	Cmd_AddCommand ("-lookdown", IN_LookdownUp);
-	Cmd_AddCommand ("+strafe", IN_StrafeDown);
-	Cmd_AddCommand ("-strafe", IN_StrafeUp);
-	Cmd_AddCommand ("+moveleft", IN_MoveleftDown);
-	Cmd_AddCommand ("-moveleft", IN_MoveleftUp);
-	Cmd_AddCommand ("+moveright", IN_MoverightDown);
-	Cmd_AddCommand ("-moveright", IN_MoverightUp);
-	Cmd_AddCommand ("+speed", IN_SpeedDown);
-	Cmd_AddCommand ("-speed", IN_SpeedUp);
-	Cmd_AddCommand("+brake", IN_BrakeDown);
-	Cmd_AddCommand("-brake", IN_BrakeUp);
-	Cmd_AddCommand ("+attack", IN_Button0Down);
-	Cmd_AddCommand ("-attack", IN_Button0Up);
-	Cmd_AddCommand ("+button0", IN_Button0Down);
-	Cmd_AddCommand ("-button0", IN_Button0Up);
-	Cmd_AddCommand ("+button1", IN_Button1Down);
-	Cmd_AddCommand ("-button1", IN_Button1Up);
-	Cmd_AddCommand ("+button2", IN_Button2Down);
-	Cmd_AddCommand ("-button2", IN_Button2Up);
-	Cmd_AddCommand ("+button3", IN_Button3Down);
-	Cmd_AddCommand ("-button3", IN_Button3Up);
-	Cmd_AddCommand ("+button4", IN_Button4Down);
-	Cmd_AddCommand ("-button4", IN_Button4Up);
-	Cmd_AddCommand ("+button5", IN_Button5Down);
-	Cmd_AddCommand ("-button5", IN_Button5Up);
-	Cmd_AddCommand ("+button6", IN_Button6Down);
-	Cmd_AddCommand ("-button6", IN_Button6Up);
-	Cmd_AddCommand ("+button7", IN_Button7Down);
-	Cmd_AddCommand ("-button7", IN_Button7Up);
-	Cmd_AddCommand ("+button8", IN_Button8Down);
-	Cmd_AddCommand ("-button8", IN_Button8Up);
-	Cmd_AddCommand ("+button9", IN_Button9Down);
-	Cmd_AddCommand ("-button9", IN_Button9Up);
-	Cmd_AddCommand ("+button10", IN_Button10Down);
-	Cmd_AddCommand ("-button10", IN_Button10Up);
-	Cmd_AddCommand ("+button11", IN_Button11Down);
-	Cmd_AddCommand ("-button11", IN_Button11Up);
-	Cmd_AddCommand ("+button12", IN_Button12Down);
-	Cmd_AddCommand ("-button12", IN_Button12Up);
-	Cmd_AddCommand ("+button13", IN_Button13Down);
-	Cmd_AddCommand ("-button13", IN_Button13Up);
-	Cmd_AddCommand ("+button14", IN_Button14Down);
-	Cmd_AddCommand ("-button14", IN_Button14Up);
-	Cmd_AddCommand("+button15", IN_Button15Down);
-	Cmd_AddCommand("-button15", IN_Button15Up);
-	Cmd_AddCommand ("+mlook", mlookdown);
-	Cmd_AddCommand ("-mlook", mlookup);
-	Cmd_AddCommand ("+rollleft", IN_RollLeftDown);
-	Cmd_AddCommand ("-rollleft", IN_RollLeftUp);
-	Cmd_AddCommand ("+rollright", IN_RollRightDown);
-	Cmd_AddCommand ("-rollright", IN_RollRightUp);
+	Cmd_AddCommand("centerview", centerview);
+	Cmd_AddCommand("+moveup", UpDown);
+	Cmd_AddCommand("-moveup", UpUp);
+	Cmd_AddCommand("+movedown", DownDown);
+	Cmd_AddCommand("-movedown", DownUp);
+	Cmd_AddCommand("+left", LeftDown);
+	Cmd_AddCommand("-left", LeftUp);
+	Cmd_AddCommand("+right", RightDown);
+	Cmd_AddCommand("-right", RightUp);
+	Cmd_AddCommand("+forward", ForwardDown);
+	Cmd_AddCommand("-forward", ForwardUp);
+	Cmd_AddCommand("+back", BackDown);
+	Cmd_AddCommand("-back", BackUp);
+	Cmd_AddCommand("+lookup", LookupDown);
+	Cmd_AddCommand("-lookup", LookupUp);
+	Cmd_AddCommand("+lookdown", LookdownDown);
+	Cmd_AddCommand("-lookdown", LookdownUp);
+	Cmd_AddCommand("+strafe", StrafeDown);
+	Cmd_AddCommand("-strafe", StrafeUp);
+	Cmd_AddCommand("+moveleft", MoveleftDown);
+	Cmd_AddCommand("-moveleft", MoveleftUp);
+	Cmd_AddCommand("+moveright", MoverightDown);
+	Cmd_AddCommand("-moveright", MoverightUp);
+	Cmd_AddCommand("+speed", SpeedDown);
+	Cmd_AddCommand("-speed", SpeedUp);
+	Cmd_AddCommand("+brake", BrakeDown);
+	Cmd_AddCommand("-brake", BrakeUp);
+	Cmd_AddCommand("+attack", Button0Down);
+	Cmd_AddCommand("-attack", Button0Up);
+	Cmd_AddCommand("+button0", Button0Down);
+	Cmd_AddCommand("-button0", Button0Up);
+	Cmd_AddCommand("+button1", Button1Down);
+	Cmd_AddCommand("-button1", Button1Up);
+	Cmd_AddCommand("+button2", Button2Down);
+	Cmd_AddCommand("-button2", Button2Up);
+	Cmd_AddCommand("+button3", Button3Down);
+	Cmd_AddCommand("-button3", Button3Up);
+	Cmd_AddCommand("+button4", Button4Down);
+	Cmd_AddCommand("-button4", Button4Up);
+	Cmd_AddCommand("+button5", Button5Down);
+	Cmd_AddCommand("-button5", Button5Up);
+	Cmd_AddCommand("+button6", Button6Down);
+	Cmd_AddCommand("-button6", Button6Up);
+	Cmd_AddCommand("+button7", Button7Down);
+	Cmd_AddCommand("-button7", Button7Up);
+	Cmd_AddCommand("+button8", Button8Down);
+	Cmd_AddCommand("-button8", Button8Up);
+	Cmd_AddCommand("+button9", Button9Down);
+	Cmd_AddCommand("-button9", Button9Up);
+	Cmd_AddCommand("+button10", Button10Down);
+	Cmd_AddCommand("-button10", Button10Up);
+	Cmd_AddCommand("+button11", Button11Down);
+	Cmd_AddCommand("-button11", Button11Up);
+	Cmd_AddCommand("+button12", Button12Down);
+	Cmd_AddCommand("-button12", Button12Up);
+	Cmd_AddCommand("+button13", Button13Down);
+	Cmd_AddCommand("-button13", Button13Up);
+	Cmd_AddCommand("+button14", Button14Down);
+	Cmd_AddCommand("-button14", Button14Up);
+	Cmd_AddCommand("+button15",Button15Down);
+	Cmd_AddCommand("-button15",Button15Up);
+	Cmd_AddCommand("+mlook", mlookdown);
+	Cmd_AddCommand("-mlook", mlookup);
+	Cmd_AddCommand("+rollleft", RollLeftDown);
+	Cmd_AddCommand("-rollleft", RollLeftUp);
+	Cmd_AddCommand("+rollright", RollRightDown);
+	Cmd_AddCommand("-rollright", RollRightUp);
 #ifdef USE_VOIP
-	Cmd_AddCommand ("+voiprecord", IN_VoipRecordDown);
-	Cmd_AddCommand ("-voiprecord", IN_VoipRecordUp);
+	Cmd_AddCommand("+voiprecord", VoipRecordDown);
+	Cmd_AddCommand("-voiprecord", VoipRecordUp);
 #endif
 	cl_nodelta = Cvar_Get ("cl_nodelta", "0", 0);
 	cl_debugMove = Cvar_Get ("cl_debugMove", "0", 0);
