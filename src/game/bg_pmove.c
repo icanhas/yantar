@@ -448,6 +448,25 @@ _airmove(const usercmd_t *cmd, vec3_t *wvel, vec3_t *wdir, float *wspeed)
 }
 
 static void
+brakemove(void)
+{
+	vec3_t brakedir;
+	float	scale, shit;
+	const usercmd_t *cmd;
+	cmd = &pm->cmd;
+	scale = calccmdscale(cmd);
+	Vec3Copy (pm->ps->velocity, brakedir);
+	shit = Vec3Len(brakedir);
+	if (shit < 50){
+		VectorScale (brakedir, 0, brakedir);
+		Vec3Copy(brakedir, pm->ps->velocity);
+	}
+	else{
+		accelerate(pm->ps->velocity, 2, -1);
+	}
+}
+
+static void
 airmove(void)
 {
 	vec3_t wishvel, wishdir;
@@ -1131,6 +1150,15 @@ PM_AddTouchEnt(int entityNum)
 
 void trap_SnapVector(float *v);
 
+static void
+checkforbrake(void)
+{
+	if (pm->cmd.buttons & 32)
+		pm->ps->pm_flags |= PMF_IS_BRAKING;
+	else
+		pm->ps->pm_flags &= ~PMF_IS_BRAKING;
+}
+
 void
 PmoveSingle(pmove_t *p)
 {
@@ -1142,6 +1170,8 @@ PmoveSingle(pmove_t *p)
 	pm->watertype	= 0;
 	pm->waterlevel	= 0;
 
+	checkforbrake();
+	
 	if(pm->ps->stats[STAT_HEALTH] <= 0)
 		/* corpses can fly through bodies */
 		pm->tracemask &= ~CONTENTS_BODY;
@@ -1249,6 +1279,9 @@ PmoveSingle(pmove_t *p)
 	Q_Printf("%i", pm->grapplelast);
 		grapplemove();
 		pm->grapplelast = 1;
+		if (pm->ps->pm_flags & PMF_IS_BRAKING){
+			brakemove();
+		}
 	}
 	else if(pm->ps->pm_flags & PMF_TIME_WATERJUMP)
 		waterjumpmove();
@@ -1256,6 +1289,9 @@ PmoveSingle(pmove_t *p)
 		watermove();
 	else{	/* airborne */
 		airmove();
+		if (pm->ps->pm_flags & PMF_IS_BRAKING){
+			brakemove();
+		}
 //		pm->grapplelast = 0;
 	}
 
