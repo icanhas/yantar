@@ -393,12 +393,8 @@ CG_OffsetFirstPersonView(void)
 	speed = cg.xyspeed > 200 ? cg.xyspeed : 200;
 
 	delta = cg.bobfracsin * cg_bobpitch.value * speed;
-	if(cg.predictedPlayerState.pm_flags & PMF_DUCKED)
-		delta *= 3;	/* crouching */
 	angles[PITCH] += delta;
 	delta = cg.bobfracsin * cg_bobroll.value * speed;
-	if(cg.predictedPlayerState.pm_flags & PMF_DUCKED)
-		delta *= 3;	/* crouching accentuates roll */
 	if(cg.bobcycle & 1)
 		delta = -delta;
 	angles[ROLL] += delta;
