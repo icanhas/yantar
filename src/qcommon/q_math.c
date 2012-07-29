@@ -464,9 +464,9 @@ MakeNormalVectors(const vec3_t forward, vec3_t right, vec3_t up)
 	right[0]	= forward[2];
 
 	d = Vec3Dot (right, forward);
-	Vec3MA (right, -d, forward, right);
-	Vec3Normalize (right);
-	Vec3Cross (right, forward, up);
+	Vec3MA(right, -d, forward, right);
+	Vec3Normalize(right);
+	Vec3Cross(right, forward, up);
 }
 
 void
@@ -795,6 +795,10 @@ Vec3Normalize2(const vec3_t v, vec3_t out)
 
 }
 
+/*
+  * combines a vector multiply and a vector addition.
+  * make b s units long, add to v, result in o
+  */
 void
 _Vec3MA(const vec3_t veca, float scale, const vec3_t vecb, vec3_t vecc)
 {
@@ -1085,9 +1089,8 @@ void
 AngleVectors(const vec3_t angles, vec3_t forward, vec3_t right, vec3_t up)
 {
 	float angle;
-	static float sr, sp, sy, cr, cp, cy;
-	/* static to help MS compiler fp bugs */
-
+	static float sr, sp, sy, cr, cp, cy;	/* static to help MS compiler fp bugs */
+	
 	angle	= angles[YAW] * (M_PI*2 / 360);
 	sy	= sin(angle);
 	cy	= cos(angle);
@@ -1115,9 +1118,7 @@ AngleVectors(const vec3_t angles, vec3_t forward, vec3_t right, vec3_t up)
 	}
 }
 
-/*
-** assumes "src" is normalized
-*/
+/* assumes "src" is normalized */
 void
 PerpendicularVector(vec3_t dst, const vec3_t src)
 {
@@ -1148,11 +1149,7 @@ PerpendicularVector(vec3_t dst, const vec3_t src)
 	Vec3Normalize(dst);
 }
 
-/*
- * Q_isnan
- *
- * Don't pass doubles to this
- */
+/* Don't pass doubles to this */
 int
 Q_isnan(float x)
 {
@@ -1161,7 +1158,6 @@ Q_isnan(float x)
 	fi.f = x;
 	fi.ui	&= 0x7FFFFFFF;
 	fi.ui	= 0x7F800000 - fi.ui;
-
 	return (int)((unsigned int)fi.ui >> 31);
 }
 /* ------------------------------------------------------------------------ */
