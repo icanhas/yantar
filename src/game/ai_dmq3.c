@@ -1562,8 +1562,9 @@ BotSetupForMovement(bot_state_t *bs)
 	if((bs->cur_ps.pm_flags & PMF_TIME_WATERJUMP) && (bs->cur_ps.pm_time > 0))
 		initmove.or_moveflags |= MFL_WATERJUMP;
 	/* set presence type */
-	if(bs->cur_ps.pm_flags & PMF_DUCKED) initmove.presencetype =
+	/* if(bs->cur_ps.pm_flags & PMF_DUCKED) initmove.presencetype =
 			PRESENCE_CROUCH;
+	*/
 	else initmove.presencetype = PRESENCE_NORMAL;
 	/*  */
 	if(bs->walker > 0.5) initmove.or_moveflags |= MFL_WALK;
