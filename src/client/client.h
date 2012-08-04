@@ -35,7 +35,6 @@
 #include "speex/speex_preprocess.h"
 #endif
 
-
 #define QKEY_FILE	"qkey"	/* file full of random crap that gets
 						 * used to create cl_guid */
 enum {

@@ -33,7 +33,7 @@ float pm_duckScale			= 0.25f;
 float pm_swimScale			= 0.50f;
 float pm_accelerate			= 10.0f;
 float pm_airaccelerate		= 1.0f;
-float pm_wateraccelerate	= 4.0f;
+float pm_wateraccelerate		= 4.0f;
 float pm_flyaccelerate		= 8.0f;
 float pm_friction			= 6.0f;
 float pm_waterfriction		= 1.0f;
@@ -199,8 +199,9 @@ calccmdscale(const usercmd_t *cmd)
 		max = abs(cmd->upmove);
 	if(!max)
 		return 0;
-	total = sqrt(cmd->forwardmove * cmd->forwardmove
-		+ cmd->rightmove * cmd->rightmove + cmd->upmove * cmd->upmove);
+	total = sqrt(cmd->forwardmove*cmd->forwardmove 
+		+ cmd->rightmove*cmd->rightmove
+		+ cmd->upmove*cmd->upmove);
 	scale = (float)pm->ps->speed * max / (127.0 * total);
 	return scale;
 }
@@ -343,7 +344,7 @@ watermove(void)
 	   Vec3Dot(pm->ps->velocity, pml.groundTrace.plane.normal) < 0){
 		vel = Vec3Len(pm->ps->velocity);
 		/* slide along the ground plane */
-		PM_ClipVelocity (pm->ps->velocity, pml.groundTrace.plane.normal,
+		PM_ClipVelocity(pm->ps->velocity, pml.groundTrace.plane.normal,
 			pm->ps->velocity, OVERCLIP);
 		Vec3Normalize(pm->ps->velocity);
 		VectorScale(pm->ps->velocity, vel, pm->ps->velocity);
@@ -429,11 +430,11 @@ static ID_INLINE void
 _airmove(const usercmd_t *cmd, vec3_t *wvel, vec3_t *wdir, float *wspeed)
 {
 	uint i;
-	float fmove, smove, umove, scale;
+	float fm, sm, um, scale;
 	
-	fmove = cmd->forwardmove;
-	smove = cmd->rightmove;
-	umove = cmd->upmove;
+	fm = cmd->forwardmove;
+	sm = cmd->rightmove;
+	um = cmd->upmove;
 	scale = calccmdscale(cmd);
 	setmovedir();
 	/* project moves down to flat plane */
@@ -441,29 +442,20 @@ _airmove(const usercmd_t *cmd, vec3_t *wvel, vec3_t *wdir, float *wspeed)
 	Vec3Normalize(pml.right);
 	Vec3Normalize(pml.up);
 	for(i = 0; i < 3; i++)
-		(*wvel)[i] = pml.forward[i]*fmove + pml.right[i]*smove + pml.up[i]*umove;
+		(*wvel)[i] = pml.forward[i]*fm + pml.right[i]*sm + pml.up[i]*um;
 	Vec3Copy(*wvel, *wdir);
 	*wspeed = Vec3Normalize(*wdir);
 	*wspeed *= scale;
 }
 
+/* FIXME */
 static void
 brakemove(void)
 {
-	vec3_t brakedir;
-	float	scale, shit;
-	const usercmd_t *cmd;
-	cmd = &pm->cmd;
-	scale = calccmdscale(cmd);
-	Vec3Copy (pm->ps->velocity, brakedir);
-	shit = Vec3Len(brakedir);
-	if (shit < 50){
-		VectorScale (brakedir, 0, brakedir);
-		Vec3Copy(brakedir, pm->ps->velocity);
-	}
-	else{
-		accelerate(pm->ps->velocity, 2, -1);
-	}
+	float	amt;
+
+	amt = 4.0 * (float)pm->cmd.brakefrac / 127.0;
+	accelerate(pm->ps->velocity, amt, -1);
 }
 
 static void
@@ -484,7 +476,6 @@ grapplemove(void)
 	vec3_t wishvel, wishdir, vel, v;
 	float	wishspeed, vlen, oldlen, PullSpeedMultiplier, grspd = GrapplePullSpeed;
 
-	
 	_airmove(&pm->cmd, &wishvel, &wishdir, &wishspeed);
 	VectorScale(pml.forward, -16, v);
 	Vec3Add(pm->ps->grapplePoint, v, v);
@@ -492,8 +483,7 @@ grapplemove(void)
 	vlen = Vec3Len(vel);
 	if (pm->grapplelast == 0){
 		oldlen = vlen;
-	}
-	else{
+	}else{
 		oldlen = pm->oldgrapplelen;
 	}
 	if (vlen > oldlen){
@@ -504,7 +494,6 @@ grapplemove(void)
 	if (grspd < GrapplePullSpeed){
 		grspd = GrapplePullSpeed;
 	}
-	
 	
 	Vec3Normalize(vel);
 	accelerate(wishdir, wishspeed, pm_airaccelerate);
@@ -567,10 +556,6 @@ crashland(void)
 
 	delta	= vel + t * acc;
 	delta	= delta*delta * 0.0001;
-
-	/* ducking while falling doubles damage */
-	if(pm->ps->pm_flags & PMF_DUCKED)
-		delta *= 2;
 	/* never take falling damage if completely underwater */
 	if(pm->waterlevel == 3)
 		return;
@@ -1150,15 +1135,6 @@ PM_AddTouchEnt(int entityNum)
 
 void trap_SnapVector(float *v);
 
-static void
-checkforbrake(void)
-{
-	if (pm->cmd.buttons & 32)
-		pm->ps->pm_flags |= PMF_IS_BRAKING;
-	else
-		pm->ps->pm_flags &= ~PMF_IS_BRAKING;
-}
-
 void
 PmoveSingle(pmove_t *p)
 {
@@ -1167,10 +1143,8 @@ PmoveSingle(pmove_t *p)
 	pm = p;
 	/* clear results */
 	pm->numtouch = 0;
-	pm->watertype	= 0;
-	pm->waterlevel	= 0;
-
-	checkforbrake();
+	pm->watertype = 0;
+	pm->waterlevel = 0;
 	
 	if(pm->ps->stats[STAT_HEALTH] <= 0)
 		/* corpses can fly through bodies */
@@ -1279,28 +1253,26 @@ PmoveSingle(pmove_t *p)
 	Q_Printf("%i", pm->grapplelast);
 		grapplemove();
 		pm->grapplelast = 1;
-		if (pm->ps->pm_flags & PMF_IS_BRAKING){
-			brakemove();
-		}
-	}
-	else if(pm->ps->pm_flags & PMF_TIME_WATERJUMP)
+	}else if(pm->ps->pm_flags & PMF_TIME_WATERJUMP)
 		waterjumpmove();
 	else if(pm->waterlevel > 1)	/* swimming */
 		watermove();
 	else{	/* airborne */
 		airmove();
-		if (pm->ps->pm_flags & PMF_IS_BRAKING){
-			brakemove();
-		}
 //		pm->grapplelast = 0;
 	}
+	
+	if(pm->cmd.brakefrac > 0)
+		brakemove();
 
 	animate();
 	doweapevents();
 	dotorsoanim();
 	dowaterevents();
 	/* snap some parts of playerstate to save network bandwidth */
+	Q_Printf("%f %f %f\n", pm->ps->velocity[0], pm->ps->velocity[1], pm->ps->velocity[2]);
 	trap_SnapVector(pm->ps->velocity);
+	Q_Printf("%f %f %f\n\n", pm->ps->velocity[0], pm->ps->velocity[1], pm->ps->velocity[2]);
 }
 
 /* Can be called by either the server or the client */

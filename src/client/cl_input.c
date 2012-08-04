@@ -600,16 +600,16 @@ static void
 keymove(usercmd_t *cmd)
 {
 	int	mvspeed;
-	int	fwd, side, _up;
+	int	fwd, side, _up, brk;
 
 	fwd = 0;
 	side = 0;
 	_up = 0;
-
+	brk = 0;
 	/*
 	 * adjust for speed key / running
 	 * the walking flag is to keep animations consistant
-	 * even during acceleration and develeration
+	 * even during acceleration and deceleration
 	 */
 	if(speed.active ^ cl_run->integer){
 		mvspeed = 127;
@@ -620,8 +620,8 @@ keymove(usercmd_t *cmd)
 	}
 
 	if(strafe.active){
-		side += mvspeed * keystate (&right);
-		side -= mvspeed * keystate (&left);
+		side += mvspeed * keystate(&right);
+		side -= mvspeed * keystate(&left);
 	}
 
 	side += mvspeed * keystate(&moveright);
@@ -630,9 +630,12 @@ keymove(usercmd_t *cmd)
 	_up -= mvspeed * keystate(&down);
 	fwd += mvspeed * keystate(&forward);
 	fwd -= mvspeed * keystate(&back);
+	brk = mvspeed * keystate(&brake);
+	
 	cmd->forwardmove = ClampChar(fwd);
 	cmd->rightmove = ClampChar(side);
 	cmd->upmove = ClampChar(_up);
+	cmd->brakefrac = ClampChar(brk);
 }
 
 void
