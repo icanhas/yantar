@@ -692,6 +692,7 @@ MSG_ReadDeltaUsercmd(msg_t *msg, usercmd_t *from, usercmd_t *to)
 	to->upmove = MSG_ReadDelta(msg, from->upmove, 8);
 	if(to->upmove == -128)
 		to->upmove = -127;
+	to->brakefrac = MSG_ReadDelta(msg, from->brakefrac, 8);
 	to->buttons = MSG_ReadDelta(msg, from->buttons, 16);
 	to->weapon = MSG_ReadDelta(msg, from->weapon, 8);
 }
@@ -712,6 +713,7 @@ MSG_WriteDeltaUsercmdKey(msg_t *msg, int key, usercmd_t *from, usercmd_t *to)
 	   from->forwardmove == to->forwardmove &&
 	   from->rightmove == to->rightmove &&
 	   from->upmove == to->upmove &&
+	   from->brakefrac == to->brakefrac &&
 	   from->buttons == to->buttons &&
 	   from->weapon == to->weapon){
 		MSG_WriteBits(msg, 0, 1);	/* no change */
@@ -726,6 +728,7 @@ MSG_WriteDeltaUsercmdKey(msg_t *msg, int key, usercmd_t *from, usercmd_t *to)
 	MSG_WriteDeltaKey(msg, key, from->forwardmove, to->forwardmove, 8);
 	MSG_WriteDeltaKey(msg, key, from->rightmove, to->rightmove, 8);
 	MSG_WriteDeltaKey(msg, key, from->upmove, to->upmove, 8);
+	MSG_WriteDeltaKey(msg, key, from->brakefrac, to->brakefrac, 8);
 	MSG_WriteDeltaKey(msg, key, from->buttons, to->buttons, 16);
 	MSG_WriteDeltaKey(msg, key, from->weapon, to->weapon, 8);
 }
@@ -746,6 +749,7 @@ MSG_ReadDeltaUsercmdKey(msg_t *msg, int key, usercmd_t *from, usercmd_t *to)
 			8);
 		to->rightmove	= MSG_ReadDeltaKey(msg, key, from->rightmove, 8);
 		to->upmove	= MSG_ReadDeltaKey(msg, key, from->upmove, 8);
+		to->brakefrac = MSG_ReadDeltaKey(msg, key, from->brakefrac, 8);
 		to->buttons	= MSG_ReadDeltaKey(msg, key, from->buttons, 16);
 		to->weapon	= MSG_ReadDeltaKey(msg, key, from->weapon, 8);
 	}else{

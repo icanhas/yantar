@@ -1264,7 +1264,7 @@ typedef struct usercmd_s {
 	int		angles[3];
 	int		buttons;
 	byte		weapon;	/* weapon */
-	signed char	forwardmove, rightmove, upmove, brakeamount;
+	signed char	forwardmove, rightmove, upmove, brakefrac;
 } usercmd_t;
 
 /* entities */
