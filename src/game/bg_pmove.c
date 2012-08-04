@@ -1270,9 +1270,7 @@ PmoveSingle(pmove_t *p)
 	dotorsoanim();
 	dowaterevents();
 	/* snap some parts of playerstate to save network bandwidth */
-	Q_Printf("%f %f %f\n", pm->ps->velocity[0], pm->ps->velocity[1], pm->ps->velocity[2]);
 	trap_SnapVector(pm->ps->velocity);
-	Q_Printf("%f %f %f\n\n", pm->ps->velocity[0], pm->ps->velocity[1], pm->ps->velocity[2]);
 }
 
 /* Can be called by either the server or the client */
