@@ -343,8 +343,8 @@ RE_RegisterFont(const char *fontName, int pointSize, fontInfo_t *font)
 	qhandle_t	h;
 	float max;
 	float	glyphScale;
-	float	dpi;
 #endif
+	float	dpi;
 	void	*faceData;
 	int	i, len;
 	char	filename[MAX_QPATH];
