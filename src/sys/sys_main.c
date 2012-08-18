@@ -136,13 +136,13 @@ Sys_GetProcessorFeatures(void)
 void
 Sys_Init(void)
 {
-	char pidstr[16];
+	char pidbuf[16];
 
 	Cmd_AddCommand("in_restart", Sys_In_Restart_f);
 	Cvar_Set("arch", OS_STRING " " ARCH_STRING);
 	Cvar_Set("username", Sys_GetCurrentUser( ));
-	Q_sprintf(pidstr, sizeof(pidstr), "%d", Sys_PID());
-	Cvar_Get("pid", pidstr, CVAR_ROM);
+	Q_sprintf(pidbuf, sizeof(pidbuf), "%d", Sys_PID());
+	Cvar_Get("pid", pidbuf, CVAR_ROM);
 	Cvar_SetDesc("pid", "process ID, for debugging purposes");
 }
 
