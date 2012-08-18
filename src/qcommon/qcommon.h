@@ -913,7 +913,6 @@ void 	Sys_SetDefaultHomePath(const char *path);
 char* Sys_DefaultHomePath(void);
 const char* Sys_TempPath(void);
 const char* Sys_Dirname(char *path);
-
 const char* Sys_Basename(char *path);
 char* Sys_ConsoleInput(void);
 char** Sys_ListFiles(const char *directory, const char *extension, char *filter,
@@ -925,8 +924,6 @@ qbool Sys_LowPhysicalMemory(void);
 void 	Sys_SetEnv(const char *name, const char *value);
 dialogResult_t Sys_Dialog(dialogType_t type, const char *message,
 				const char *title);
-qbool Sys_WritePIDFile(void);
-
 
 /*
  * Huffman coding

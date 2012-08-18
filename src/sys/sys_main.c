@@ -45,39 +45,27 @@
 #include "../qcommon/q_shared.h"
 #include "../qcommon/qcommon.h"
 
-static char	binaryPath[ MAX_OSPATH ] = { 0 };
-static char	installPath[ MAX_OSPATH ] = { 0 };
+static char binaryPath[ MAX_OSPATH ] = { 0 };
+static char installPath[ MAX_OSPATH ] = { 0 };
 
-/*
- * Sys_SetBinaryPath
- */
 void
 Sys_SetBinaryPath(const char *path)
 {
 	Q_strncpyz(binaryPath, path, sizeof(binaryPath));
 }
 
-/*
- * Sys_BinaryPath
- */
 char *
 Sys_BinaryPath(void)
 {
 	return binaryPath;
 }
 
-/*
- * Sys_SetDefaultInstallPath
- */
 void
 Sys_SetDefaultInstallPath(const char *path)
 {
 	Q_strncpyz(installPath, path, sizeof(installPath));
 }
 
-/*
- * Sys_DefaultInstallPath
- */
 char *
 Sys_DefaultInstallPath(void)
 {
@@ -87,169 +75,82 @@ Sys_DefaultInstallPath(void)
 		return Sys_Cwd();
 }
 
-/*
- * Sys_DefaultAppPath
- */
 char *
 Sys_DefaultAppPath(void)
 {
 	return Sys_BinaryPath();
 }
 
-/*
- * Sys_In_Restart_f
- *
- * Restart the input subsystem
- */
+/* Restart the input subsystem */
 void
 Sys_In_Restart_f(void)
 {
 	IN_Restart( );
 }
 
-/*
- * Sys_ConsoleInput
- *
- * Handle new console input
- */
+/* Handle new console input */
 char *
 Sys_ConsoleInput(void)
 {
 	return CON_Input( );
 }
 
-#ifdef DEDICATED
-#       define PID_FILENAME	PRODUCT_NAME "_server.pid"
-#else
-#       define PID_FILENAME	PRODUCT_NAME ".pid"
-#endif
-
-/*
- * Sys_PIDFileName
- */
-static char *
-Sys_PIDFileName(void)
-{
-	return va("%s/%s", Sys_TempPath( ), PID_FILENAME);
-}
-
-/*
- * Sys_WritePIDFile
- *
- * Return qtrue if there is an existing stale PID file
- */
-qbool
-Sys_WritePIDFile(void)
-{
-	char	*pidFile = Sys_PIDFileName( );
-	FILE	*f;
-	qbool stale = qfalse;
-
-	/* First, check if the pid file is already there */
-	if((f = fopen(pidFile, "r")) != NULL){
-		char	pidBuffer[ 64 ] = { 0 };
-		int	pid;
-
-		pid = fread(pidBuffer, sizeof(char), sizeof(pidBuffer) - 1, f);
-		fclose(f);
-
-		if(pid > 0){
-			pid = atoi(pidBuffer);
-			if(!Sys_PIDIsRunning(pid))
-				stale = qtrue;
-		}else
-			stale = qtrue;
-	}
-
-	if((f = fopen(pidFile, "w")) != NULL){
-		fprintf(f, "%d", Sys_PID( ));
-		fclose(f);
-	}else
-		Q_Printf(S_COLOR_YELLOW "Couldn't write %s.\n", pidFile);
-
-	return stale;
-}
-
-/*
- * Sys_Exit
- *
- * Single exit point (regular exit or in case of error)
- */
+/* Single exit point (regular exit or in case of error) */
 static __attribute__ ((noreturn)) void
 Sys_Exit(int exitCode)
 {
 	CON_Shutdown( );
-
 #ifndef DEDICATED
 	SDL_Quit( );
 #endif
-
-	if(exitCode < 2)
-		/* Normal exit */
-		remove(Sys_PIDFileName( ));
-
 	Sys_PlatformExit( );
-
 	exit(exitCode);
 }
 
-/*
- * Sys_Quit
- */
 void
 Sys_Quit(void)
 {
 	Sys_Exit(0);
 }
 
-/*
- * Sys_GetProcessorFeatures
- */
 cpuFeatures_t
 Sys_GetProcessorFeatures(void)
 {
-	cpuFeatures_t features = 0;
-
+	cpuFeatures_t f;
+	
+	f = 0;
 #ifndef DEDICATED
-	if(SDL_HasRDTSC( )) features |= CF_RDTSC;
-	if(SDL_HasMMX( )) features |= CF_MMX;
-	if(SDL_HasMMXExt( )) features |= CF_MMX_EXT;
-	if(SDL_Has3DNow( )) features |= CF_3DNOW;
-	if(SDL_Has3DNowExt( )) features |= CF_3DNOW_EXT;
-	if(SDL_HasSSE( )) features |= CF_SSE;
-	if(SDL_HasSSE2( )) features |= CF_SSE2;
-	if(SDL_HasAltiVec( )) features |= CF_ALTIVEC;
+	if(SDL_HasRDTSC()) f |= CF_RDTSC;
+	if(SDL_HasMMX()) f |= CF_MMX;
+	if(SDL_HasMMXExt()) f |= CF_MMX_EXT;
+	if(SDL_Has3DNow()) f |= CF_3DNOW;
+	if(SDL_Has3DNowExt()) f |= CF_3DNOW_EXT;
+	if(SDL_HasSSE()) f |= CF_SSE;
+	if(SDL_HasSSE2()) f |= CF_SSE2;
+	if(SDL_HasAltiVec()) f |= CF_ALTIVEC;
 #endif
+	return f;
 
-	return features;
 }
 
-/*
- * Sys_Init
- */
 void
 Sys_Init(void)
 {
-	char pidstr[64];
+	char pidstr[16];
 
 	Cmd_AddCommand("in_restart", Sys_In_Restart_f);
 	Cvar_Set("arch", OS_STRING " " ARCH_STRING);
 	Cvar_Set("username", Sys_GetCurrentUser( ));
-
 	Q_sprintf(pidstr, sizeof(pidstr), "%d", Sys_PID());
 	Cvar_Get("pid", pidstr, CVAR_ROM);
-	Cvar_SetDesc("pid", "This program's process ID, for debugging purposes");
+	Cvar_SetDesc("pid", "process ID, for debugging purposes");
 }
 
-/*
- * Sys_AnsiColorPrint
- *
- * Transform Q3 colour codes to ANSI escape sequences
- */
+/* Transform Q3 colour codes to ANSI escape sequences */
 void
 Sys_AnsiColorPrint(const char *msg)
 {
-	static char	buffer[ MAXPRINTMSG ];
+	static char buffer[ MAXPRINTMSG ];
 	int length = 0;
 	static int	q3ToAnsi[ 8 ] =
 	{
@@ -292,7 +193,6 @@ Sys_AnsiColorPrint(const char *msg)
 			msg++;
 		}
 	}
-
 	/* Empty anything still left in the buffer */
 	if(length > 0){
 		buffer[ length ] = '\0';
@@ -300,9 +200,6 @@ Sys_AnsiColorPrint(const char *msg)
 	}
 }
 
-/*
- * Sys_Print
- */
 void
 Sys_Print(const char *msg)
 {
@@ -310,9 +207,6 @@ Sys_Print(const char *msg)
 	CON_Print(msg);
 }
 
-/*
- * Sys_Error
- */
 void
 Sys_Error(const char *error, ...)
 {
@@ -324,14 +218,10 @@ Sys_Error(const char *error, ...)
 	va_end (argptr);
 
 	Sys_ErrorDialog(string);
-
 	Sys_Exit(3);
 }
 
 #if 0
-/*
- * Sys_Warn
- */
 static __attribute__ ((format (printf, 1, 2))) void
 Sys_Warn(char *warning, ...)
 {
@@ -346,11 +236,7 @@ Sys_Warn(char *warning, ...)
 }
 #endif
 
-/*
- * Sys_FileTime
- *
- * returns -1 if not present
- */
+/* returns -1 if not present */
 int
 Sys_FileTime(char *path)
 {
@@ -358,13 +244,9 @@ Sys_FileTime(char *path)
 
 	if(stat (path,&buf) == -1)
 		return -1;
-
 	return buf.st_mtime;
 }
 
-/*
- * Sys_UnloadDll
- */
 void
 Sys_UnloadDll(void *dllHandle)
 {
@@ -377,8 +259,6 @@ Sys_UnloadDll(void *dllHandle)
 }
 
 /*
- * Sys_LoadDll
- *
  * First try to load library name from system library path,
  * from executable path, then fs_basepath.
  */
@@ -426,25 +306,19 @@ Sys_LoadDll(const char *name, qbool useSystemLib)
 				Q_Printf("Loading \"%s\" failed\n", name);
 		}
 	}
-
 	return dllhandle;
 }
 
-/*
- * Sys_LoadGameDll
- *
- * Used to load a development dll instead of a virtual machine
- */
+/* Used to load a development dll instead of a virtual machine */
 void *
 Sys_LoadGameDll(const char *name,
-		intptr_t (QDECL **entryPoint) (int, ...),
-		intptr_t (*systemcalls)(intptr_t, ...))
+	intptr_t (QDECL **entryPoint) (int, ...),
+	intptr_t (*systemcalls)(intptr_t, ...))
 {
 	void	*libHandle;
 	void	(*dllEntry)(intptr_t (*syscallptr)(intptr_t, ...));
 
 	assert(name);
-
 	Q_Printf("Loading DLL file: %s\n", name);
 	libHandle = Sys_LoadLibrary(name);
 
@@ -469,13 +343,9 @@ Sys_LoadGameDll(const char *name,
 	Q_Printf ("Sys_LoadGameDll(%s) found vmMain function at %p\n", name,
 		*entryPoint);
 	dllEntry(systemcalls);
-
 	return libHandle;
 }
 
-/*
- * Sys_ParseArgs
- */
 void
 Sys_ParseArgs(int argc, char **argv)
 {
@@ -502,9 +372,6 @@ Sys_ParseArgs(int argc, char **argv)
 #       endif
 #endif
 
-/*
- * Sys_SigHandler
- */
 void
 Sys_SigHandler(int signal)
 {
@@ -530,14 +397,11 @@ Sys_SigHandler(int signal)
 		Sys_Exit(2);
 }
 
-/*
- * main
- */
 int
 main(int argc, char **argv)
 {
-	int	i;
-	char	commandLine[ MAX_STRING_CHARS ] = { 0 };
+	int i;
+	char commandLine[ MAX_STRING_CHARS ] = { 0 };
 
 #ifndef DEDICATED
 	/* SDL version check */
@@ -569,12 +433,9 @@ main(int argc, char **argv)
 		Sys_Exit(1);
 	}
 #endif
-
 	Sys_PlatformInit( );
-
 	/* Set the initial time base */
 	Sys_Milliseconds( );
-
 	Sys_ParseArgs(argc, argv);
 	Sys_SetBinaryPath(Sys_Dirname(argv[ 0 ]));
 	Sys_SetDefaultInstallPath(DEFAULT_BASEDIR);
@@ -595,7 +456,6 @@ main(int argc, char **argv)
 
 	Q_Init(commandLine);
 	NET_Init( );
-
 	CON_Init( );
 
 	signal(SIGILL, Sys_SigHandler);
@@ -604,10 +464,9 @@ main(int argc, char **argv)
 	signal(SIGTERM, Sys_SigHandler);
 	signal(SIGINT, Sys_SigHandler);
 
-	while(1){
+	for(;;){
 		IN_Frame( );
 		Q_Frame( );
 	}
-
 	return 0;
 }
