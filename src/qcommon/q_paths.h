@@ -7,4 +7,4 @@
 #define Pvis		"vis"
 #define Pgraphics	Pvis "/graphics"
 #define Pmenuart	Pgraphics "/menu"
-
+#define Pmodels	Pvis "/models"
