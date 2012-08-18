@@ -417,7 +417,7 @@ AxisClear(vec3_t axis[3])
 }
 
 void
-AxisCopy(const vec3_t in[3], vec3_t out[3])
+AxisCopy(vec3_t in[3], vec3_t out[3])
 {
 	Vec3Copy(in[0], out[0]);
 	Vec3Copy(in[1], out[1]);

@@ -680,7 +680,7 @@ void AnglesToAxis(const vec3_t angles, vec3_t axis[3]);
 void QuatToAxis(quat_t, vec3_t axis[3]);
 
 void AxisClear(vec3_t axis[3]);
-void AxisCopy(const vec3_t in[3], vec3_t out[3]);
+void AxisCopy(vec3_t in[3], vec3_t out[3]);
 
 void QuatSet(quat_t, vec_t w, vec_t x, vec_t y, vec_t z);
 
