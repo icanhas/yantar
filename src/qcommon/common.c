@@ -853,12 +853,12 @@ void* Z_TagMalloc(int size, int tag)
 			Z_LogHeap();
 			Q_Error(
 				ERR_FATAL, "Z_Malloc: failed on allocation of"
-					   "%i bytes from the %s zone: %s, line: %d (%s)",
+					   " %i bytes from the %s zone: %s, line: %d (%s)",
 				size, zone == smallzone ? "small" : "main",
 				file, line, label);
 #else
 			Q_Error(ERR_FATAL, "Z_Malloc: failed on allocation of"
-					     "%i bytes from the %s zone",
+					     " %i bytes from the %s zone",
 				size, zone == smallzone ? "small" : "main");
 #endif
 			return NULL;
