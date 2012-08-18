@@ -556,12 +556,12 @@ CG_RegisterClientModelname(clientInfo_t *ci, const char *modelName,
 		headName = modelName;
 	else
 		headName = headModelName;
-	Q_sprintf(filename, sizeof(filename), "models/players/%s/lower.md3",
+	Q_sprintf(filename, sizeof(filename), "models/players/%s/lower",
 		modelName);
 	ci->legsModel = trap_R_RegisterModel(filename);
 	if(!ci->legsModel){
 		Q_sprintf(filename, sizeof(filename),
-			"models/players/characters/%s/lower.md3",
+			"models/players/characters/%s/lower",
 			modelName);
 		ci->legsModel = trap_R_RegisterModel(filename);
 		if(!ci->legsModel){
@@ -570,12 +570,12 @@ CG_RegisterClientModelname(clientInfo_t *ci, const char *modelName,
 		}
 	}
 
-	Q_sprintf(filename, sizeof(filename), "models/players/%s/upper.md3",
+	Q_sprintf(filename, sizeof(filename), "models/players/%s/upper",
 		modelName);
 	ci->torsoModel = trap_R_RegisterModel(filename);
 	if(!ci->torsoModel){
 		Q_sprintf(filename, sizeof(filename),
-			"models/players/characters/%s/upper.md3",
+			"models/players/characters/%s/upper",
 			modelName);
 		ci->torsoModel = trap_R_RegisterModel(filename);
 		if(!ci->torsoModel){
@@ -586,17 +586,17 @@ CG_RegisterClientModelname(clientInfo_t *ci, const char *modelName,
 
 	if(headName[0] == '*')
 		Q_sprintf(filename, sizeof(filename),
-			"models/players/heads/%s/%s.md3", &headModelName[1],
+			"models/players/heads/%s/%s", &headModelName[1],
 			&headModelName[1]);
 	else
 		Q_sprintf(filename, sizeof(filename),
-			"models/players/%s/head.md3",
+			"models/players/%s/head",
 			headName);
 	ci->headModel = trap_R_RegisterModel(filename);
 	/* if the head model could not be found and we didn't load from the heads folder try to load from there */
 	if(!ci->headModel && headName[0] != '*'){
 		Q_sprintf(filename, sizeof(filename),
-			"models/players/heads/%s/%s.md3", headModelName,
+			"models/players/heads/%s/%s", headModelName,
 			headModelName);
 		ci->headModel = trap_R_RegisterModel(filename);
 	}
