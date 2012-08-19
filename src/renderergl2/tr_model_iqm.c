@@ -28,8 +28,8 @@
 * doesn't fit into the file
 */
 static qbool
-IQM_CheckRange(iqmHeader_t *header, uint offset,
-	       uint count, size_t size)
+checkrange(iqmHeader_t *header, uint offset,
+	uint count, size_t size)
 {
 	return (count <= 0 ||
 		// offset < 0 ||
@@ -343,7 +343,7 @@ R_LoadIQM(model_t *mod, void *buffer, size_t filesize, const char *mod_name)
 	}
 
 	/* check and swap vertex arrays */
-	if(IQM_CheckRange(header, header->ofs_vertexarrays,
+	if(checkrange(header, header->ofs_vertexarrays,
 		   header->num_vertexarrays,
 		   sizeof(iqmVertexArray_t))){
 		return qfalse;
@@ -363,7 +363,7 @@ R_LoadIQM(model_t *mod, void *buffer, size_t filesize, const char *mod_name)
 		case IQM_BYTE:
 		case IQM_UBYTE:
 			/* 1 byte, no swapping necessary */
-			if(IQM_CheckRange(header, vertexarray->offset,
+			if(checkrange(header, vertexarray->offset,
 				   n, sizeof(byte))){
 				return qfalse;
 			}
@@ -372,7 +372,7 @@ R_LoadIQM(model_t *mod, void *buffer, size_t filesize, const char *mod_name)
 		case IQM_UINT:
 		case IQM_FLOAT:
 			/* 4-byte swap */
-			if(IQM_CheckRange(header, vertexarray->offset,
+			if(checkrange(header, vertexarray->offset,
 				   n, sizeof(float))){
 				return qfalse;
 			}
@@ -423,7 +423,7 @@ R_LoadIQM(model_t *mod, void *buffer, size_t filesize, const char *mod_name)
 	}
 
 	/* check and swap triangles */
-	if(IQM_CheckRange(header, header->ofs_triangles,
+	if(checkrange(header, header->ofs_triangles,
 		   header->num_triangles, sizeof(iqmTriangle_t))){
 		return qfalse;
 	}
@@ -435,7 +435,7 @@ R_LoadIQM(model_t *mod, void *buffer, size_t filesize, const char *mod_name)
 	}
 
 	/* check and swap meshes */
-	if(IQM_CheckRange(header, header->ofs_meshes,
+	if(checkrange(header, header->ofs_meshes,
 		   header->num_meshes, sizeof(iqmMesh_t))){
 		return qfalse;
 	}
@@ -461,7 +461,7 @@ R_LoadIQM(model_t *mod, void *buffer, size_t filesize, const char *mod_name)
 	}
 	
 	/* check and swap anims */
-	if(IQM_CheckRange(header, header->ofs_anims, header->num_anims
+	if(checkrange(header, header->ofs_anims, header->num_anims
 	  , sizeof(iqmAnim_t))){
 		return qfalse;
 	}
@@ -473,7 +473,7 @@ R_LoadIQM(model_t *mod, void *buffer, size_t filesize, const char *mod_name)
 	}
 
 	/* check and swap joints */
-	if(IQM_CheckRange(header, header->ofs_joints,
+	if(checkrange(header, header->ofs_joints,
 	  header->num_joints, sizeof(iqmJoint_t))){
 		return qfalse;
 	}
@@ -491,7 +491,7 @@ R_LoadIQM(model_t *mod, void *buffer, size_t filesize, const char *mod_name)
 	if(header->num_poses != header->num_joints){
 		return qfalse;
 	}
-	if(IQM_CheckRange(header, header->ofs_poses,
+	if(checkrange(header, header->ofs_poses,
 		   header->num_poses, sizeof(iqmPose_t))){
 		return qfalse;
 	}
@@ -501,7 +501,7 @@ R_LoadIQM(model_t *mod, void *buffer, size_t filesize, const char *mod_name)
 
 	if(header->ofs_bounds){
 		/* check and swap model bounds */
-		if(IQM_CheckRange(header, header->ofs_bounds,
+		if(checkrange(header, header->ofs_bounds,
 		  header->num_frames, sizeof(*bounds))){
 			return qfalse;
 		}
@@ -750,7 +750,7 @@ R_LoadIQM(model_t *mod, void *buffer, size_t filesize, const char *mod_name)
 }
 
 static int
-R_CullIQM(iqmData_t *data, trRefEntity_t *ent)
+culliqm(iqmData_t *data, trRefEntity_t *ent)
 {
 	vec3_t bounds[2];
 	vec_t *oldBounds, *newBounds;
@@ -874,7 +874,7 @@ R_AddIQMSurfaces(trRefEntity_t *ent)
 	 * cull the entire model if merged bounding box of both frames
 	 * is outside the view frustum.
 	 */
-	cull = R_CullIQM (data, ent);
+	cull = culliqm (data, ent);
 	if(cull == CULL_OUT){
 		return;
 	}
@@ -931,7 +931,7 @@ R_AddIQMSurfaces(trRefEntity_t *ent)
 }
 
 static void
-ComputeJointMats(iqmData_t *data, int frame, int oldframe,
+calcjointmats(iqmData_t *data, int frame, int oldframe,
 		 float backlerp, float *mat)
 {
 	float *mat1, *mat2;
@@ -968,7 +968,6 @@ ComputeJointMats(iqmData_t *data, int frame, int oldframe,
 	}
 }
 
-
 /* Compute vertices for this model surface */
 void
 RB_IQMSurfaceAnim(surfaceType_t *surface)
@@ -991,7 +990,7 @@ RB_IQMSurfaceAnim(surfaceType_t *surface)
 	RB_CHECKOVERFLOW(surf->num_vertexes, surf->num_triangles * 3);
 
 	/* compute interpolated joint matrices */
-	ComputeJointMats(data, frame, oldframe, backlerp, jointMats);
+	calcjointmats(data, frame, oldframe, backlerp, jointMats);
 
 	/* transform vertexes and fill other data */
 	for(i = 0; i < surf->num_vertexes;
@@ -1107,7 +1106,7 @@ R_IQMLerpTag(orientation_t *tag, iqmData_t *data,
 		return qfalse;
 	}
 
-	ComputeJointMats(data, startFrame, endFrame, frac, jointMats);
+	calcjointmats(data, startFrame, endFrame, frac, jointMats);
 
 	tag->axis[0][0] = jointMats[12 * joint + 0];
 	tag->axis[1][0] = jointMats[12 * joint + 1];
