@@ -980,8 +980,7 @@ clearlerpframe(clientInfo_t *ci, lerpFrame_t *lf, int animationNumber)
 }
 
 static void
-playeranim(centity_t *cent, int *legsOld, int *legs, float *legsBackLerp,
-		   int *torsoOld, int *torso, float *torsoBackLerp)
+playeranim(centity_t *cent, int *hullold, int *hull, float *hullbacklerp)
 {
 	clientInfo_t *ci;
 	int cnum;
@@ -990,7 +989,7 @@ playeranim(centity_t *cent, int *legsOld, int *legs, float *legsBackLerp,
 	cnum = cent->currentState.clientNum;
 
 	if(cg_noPlayerAnims.integer){
-		*legsOld = *legs = *torsoOld = *torso = 0;
+		*hullold = *hull = 0;
 		return;
 	}
 
@@ -1001,24 +1000,12 @@ playeranim(centity_t *cent, int *legsOld, int *legs, float *legsBackLerp,
 
 	ci = &cgs.clientinfo[cnum];
 
-	/* do the shuffle turn frames locally */
-	if(cent->pe.legs.yawing &&
-	   (cent->currentState.legsAnim & ~ANIM_TOGGLEBIT) == LEGS_IDLE)
-		runlerpframe(ci, &cent->pe.legs, LEGS_TURN, speedscale);
-	else
-		runlerpframe(ci, &cent->pe.legs, cent->currentState.legsAnim,
-			speedscale);
-
-	*legsOld = cent->pe.legs.oldFrame;
-	*legs = cent->pe.legs.frame;
-	*legsBackLerp = cent->pe.legs.backlerp;
-
 	runlerpframe(ci, &cent->pe.torso, cent->currentState.torsoAnim,
 		speedscale);
 
-	*torsoOld = cent->pe.torso.oldFrame;
-	*torso = cent->pe.torso.frame;
-	*torsoBackLerp = cent->pe.torso.backlerp;
+	*hullold = cent->pe.torso.oldFrame;
+	*hull = cent->pe.torso.frame;
+	*hullbacklerp = cent->pe.torso.backlerp;
 }
 
 /*
@@ -1788,9 +1775,10 @@ CG_Player(centity_t *cent)
 
 	}
 	memset(&hull, 0, sizeof(hull));
-	/* get the rotation information */
+	/* get the rotation and anim lerp info */
 	playerangles(cent, hull.axis);
-	/* add the talk baloon or disconnect icon */
+	playeranim(cent, &hull.oldframe, &hull.frame, &hull.backlerp);
+	/* add the talk balloon or disconnect icon */
 	playersprites(cent);
 	/* add the shadow */
 	shadow = playershadow(cent, &shadowplane);
