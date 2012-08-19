@@ -2364,7 +2364,7 @@ void RE_RenderScene(const refdef_t *fd);
 /* void R_MakeAnimModel( model_t *model );      haven't seen this one really, so not needed I guess. */
 void R_AddAnimSurfaces(trRefEntity_t *ent);
 void RB_SurfaceAnim(md4Surface_t *surfType);
-qbool R_LoadIQM(model_t *mod, void *buffer, int filesize, const char *name);
+qbool R_LoadIQM(model_t *mod, void *buffer, size_t filesize, const char *name);
 void R_AddIQMSurfaces(trRefEntity_t *ent);
 void RB_IQMSurfaceAnim(surfaceType_t *surface);
 int R_IQMLerpTag(orientation_t *tag, iqmData_t *data,

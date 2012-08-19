@@ -23,16 +23,18 @@
 
 #define LL(x) x=LittleLong(x)
 
+/* 
+ * return true if the range specified by offset, count and size
+* doesn't fit into the file
+*/
 static qbool
-IQM_CheckRange(iqmHeader_t *header, int offset,
-	       int count,int size)
+IQM_CheckRange(iqmHeader_t *header, uint offset,
+	       uint count, size_t size)
 {
-	/* return true if the range specified by offset, count and size
-	 * doesn't fit into the file */
 	return (count <= 0 ||
-		offset < 0 ||
+		// offset < 0 ||
 		offset > header->filesize ||
-		offset + count * size < 0 ||
+		// offset + count * size < 0 ||
 		offset + count * size > header->filesize);
 }
 
@@ -269,11 +271,10 @@ sanemesh(const iqmHeader_t *h, const iqmMesh_t *m)
 static qbool
 saneanim(const iqmHeader_t *h, const iqmAnim_t *a)
 {
-	if(a->first_frame >= (int)h->num_frames
-	  || a->num_frames >= (int)h->num_frames
+	if(a->first_frame >= (uint)h->num_frames
+	  || a->num_frames >= (uint)h->num_frames
 	  || a->first_frame > a->num_frames
-	  || a->first_frame + a->num_frames > h->num_frames
-	  || a->name < -1)
+	  || a->first_frame + a->num_frames > h->num_frames)
 		return qfalse;
 	return qtrue;
 }
@@ -283,14 +284,14 @@ sanejoint(const iqmHeader_t *h, const iqmJoint_t *j)
 {
 	if(j->parent < -1 
 	  || j->parent >= (int)h->num_joints
-	  || j->name >= (int)h->num_text)
+	  || j->name >= (uint)h->num_text)
 		return qfalse;
 	return qtrue;
 }
 
 /* Load an IQM model and compute the joint matrices for every frame. */
 qbool
-R_LoadIQM(model_t *mod, void *buffer, int filesize, const char *mod_name)
+R_LoadIQM(model_t *mod, void *buffer, size_t filesize, const char *mod_name)
 {
 	iqmHeader_t *header;
 	iqmVertexArray_t *vertexarray;
@@ -302,7 +303,7 @@ R_LoadIQM(model_t *mod, void *buffer, int filesize, const char *mod_name)
 	iqmBounds_t *bounds;
 	unsigned short *framedata;
 	char *str;
-	int i, j;
+	uint i, j;
 	float jointMats[IQM_MAX_JOINTS * 2 * 12];
 	float *mat;
 	size_t size, joint_names;
@@ -555,8 +556,10 @@ R_LoadIQM(model_t *mod, void *buffer, int filesize, const char *mod_name)
 	iqmData->triangles	= iqmData->jointParents + header->num_joints;
 	iqmData->names		= (char*)(iqmData->triangles + 3 * header->num_triangles);
 
-	/* calculate joint matrices and their inverses
-	 * they are needed only until the pose matrices are calculated */
+	/* 
+	 * calculate joint matrices and their inverses
+	 * they are needed only until the pose matrices are calculated 
+	 */
 	mat = jointMats;
 	joint = (iqmJoint_t*)((byte*)header + header->ofs_joints);
 	for(i = 0; i < header->num_joints; i++, joint++){
