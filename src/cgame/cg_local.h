@@ -345,8 +345,6 @@ typedef struct {
 	 * gameplay */
 	char		modelName[MAX_QPATH];
 	char		skinName[MAX_QPATH];
-	char		headModelName[MAX_QPATH];
-	char		headSkinName[MAX_QPATH];
 	char		redTeam[MAX_TEAMNAME];
 	char		blueTeam[MAX_TEAMNAME];
 	qbool		deferred;
@@ -359,20 +357,24 @@ typedef struct {
 	footstep_t	footsteps;
 	gender_t	gender;	/* from model */
 
-	qhandle_t	legsModel;
-	qhandle_t	legsSkin;
-
-	qhandle_t	torsoModel;
-	qhandle_t	torsoSkin;
-
-	qhandle_t	headModel;
-	qhandle_t	headSkin;
+	qhandle_t hullmodel;	/* craft body */
+	qhandle_t hullskin;
 
 	qhandle_t	modelIcon;
 
 	animation_t	animations[MAX_TOTALANIMATIONS];
 
 	sfxHandle_t	sounds[MAX_CUSTOM_SOUNDS];
+	
+	// remove these
+	char		headModelName[MAX_QPATH];
+	char		headSkinName[MAX_QPATH];
+	qhandle_t	legsModel;
+	qhandle_t	legsSkin;
+	qhandle_t	torsoModel;
+	qhandle_t	torsoSkin;
+	qhandle_t	headModel;
+	qhandle_t	headSkin;
 } clientInfo_t;
 
 
