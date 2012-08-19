@@ -500,17 +500,12 @@ loadclientinfo(int clientNum, clientInfo_t *ci)
 		ci->sounds[i] = 0;
 		/* if the model didn't load use the sounds of the default model */
 		if(modelloaded)
-			ci->sounds[i] =
-				trap_S_RegisterSound(va("sound/player/%s/%s",
-						dir,
-						s + 1), qfalse);
+			ci->sounds[i] = trap_S_RegisterSound(
+				va(Pplayersounds "/%s/%s", dir, s+1), qfalse);
 		if(!ci->sounds[i])
-			ci->sounds[i] =
-				trap_S_RegisterSound(va("sound/player/%s/%s",
-						fallback,
-						s + 1), qfalse);
+			ci->sounds[i] = trap_S_RegisterSound(
+				va(Pplayersounds "/%s/%s", fallback, s+1), qfalse);
 	}
-
 	ci->deferred = qfalse;
 
 	/* 
