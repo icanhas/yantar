@@ -129,10 +129,12 @@ Matrix34Invert(float *inMat, float *outMat)
 	outMat[11] = -Vec3Dot(outMat + 8, trans);
 }
 
-/* endianness */
+/* byte order */
 static void
 swapheader(iqmHeader_t *p)
 {
+	LL(p->version);
+	LL(p->filesize);
 	LL(p->flags);
 	LL(p->num_text);
 	LL(p->ofs_text);
@@ -313,28 +315,20 @@ R_LoadIQM(model_t *mod, void *buffer, size_t filesize, const char *mod_name)
 	if(filesize < sizeof(iqmHeader_t)){
 		return qfalse;
 	}
-
+	
 	header = (iqmHeader_t*)buffer;
-	if(Q_strncmp(header->magic, IQM_MAGIC, sizeof(header->magic))){
+	swapheader(header);
+	if(Q_strncmp(header->magic, IQM_MAGIC, sizeof(header->magic)))
 		return qfalse;
-	}
-
-	LL(header->version);
 	if(header->version != IQM_VERSION){
 		ri.Printf(PRINT_WARNING,
 			"R_LoadIQM: %s is a unsupported IQM version (%d), only version %d is supported.\n",
-			mod_name, header->version,
-			IQM_VERSION);
+			mod_name, header->version, IQM_VERSION);
 		return qfalse;
 	}
-
-	LL(header->filesize);
-	if(header->filesize > filesize || header->filesize > 16<<20){
+	if(header->filesize > filesize || header->filesize > 16<<20)
 		return qfalse;
-	}
-	
-	swapheader(header);
-
+		
 	/* check ioq3 joint limit */
 	if(header->num_joints > IQM_MAX_JOINTS){
 		ri.Printf(PRINT_WARNING, "R_LoadIQM: %s has more than %d joints (%d).\n",
