@@ -271,8 +271,8 @@ sanemesh(const iqmHeader_t *h, const iqmMesh_t *m)
 static qbool
 saneanim(const iqmHeader_t *h, const iqmAnim_t *a)
 {
-	if(a->first_frame >= (uint)h->num_frames
-	  || a->num_frames >= (uint)h->num_frames
+	if(a->first_frame > (uint)h->num_frames
+	  || a->num_frames > (uint)h->num_frames
 	  || a->first_frame > a->num_frames
 	  || a->first_frame + a->num_frames > h->num_frames)
 		return qfalse;
