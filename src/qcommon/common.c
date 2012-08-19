@@ -3093,21 +3093,21 @@ Field_CompleteCommand(char *cmd,
 		completionString = Cmd_Argv(completionArgument - 1);
 		
 #ifndef DEDICATED
-	/* Unconditionally add a '\' to the start of the buffer */
-	if(completionField->buffer[ 0 ] &&
-	   completionField->buffer[ 0 ] != '\\'){
-		if(completionField->buffer[ 0 ] != '/'){
+	/* Unconditionally add a '/' to the start of the buffer */
+	if(completionField->buffer[0] &&
+	   completionField->buffer[0] != '/'){
+		if(completionField->buffer[0] != '\\'){
 			/* Buffer is full, refuse to complete */
 			if(strlen(completionField->buffer) + 1 >=
 			   sizeof(completionField->buffer))
 				return;
 
-			memmove(&completionField->buffer[ 1 ],
-				&completionField->buffer[ 0 ],
+			memmove(&completionField->buffer[1],
+				&completionField->buffer[0],
 				strlen(completionField->buffer) + 1);
 			completionField->cursor++;
 		}
-		completionField->buffer[ 0 ] = '\\';
+		completionField->buffer[0] = '/';
 	}
 #endif
 	if(completionArgument > 1){
@@ -3116,7 +3116,7 @@ Field_CompleteCommand(char *cmd,
 
 #ifndef DEDICATED
 		/* This should always be true */
-		if(baseCmd[ 0 ] == '\\' || baseCmd[ 0 ] == '/')
+		if(baseCmd[0] == '\\' || baseCmd[0] == '/')
 			baseCmd++;
 #endif
 
@@ -3129,7 +3129,7 @@ Field_CompleteCommand(char *cmd,
 			completionString++;
 
 		matchCount = 0;
-		shortestMatch[ 0 ] = 0;
+		shortestMatch[0] = 0;
 
 		if(strlen(completionString) == 0)
 			return;
@@ -3140,7 +3140,7 @@ Field_CompleteCommand(char *cmd,
 		if(doCvars)
 			Cvar_CommandCompletion(FindMatches);
 
-		if(!Field_Complete( )){
+		if(!Field_Complete()){
 			/* run through again, printing matches */
 			if(doCommands)
 				Cmd_CommandCompletion(PrintMatches);
