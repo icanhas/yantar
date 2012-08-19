@@ -554,22 +554,16 @@ Field_CharEvent(field_t *edit, int ch)
 }
 
 /*
- *
- * CONSOLE LINE EDITING
- *
+ * Console line editing
  */
 
-/*
- * Console_Key
- *
- * Handles history and console scrollback
- */
+/* Handles history and console scrollback */
 void
 Console_Key(int key)
 {
 	/* ctrl-L clears screen */
 	if(key == 'l' && keys[K_CTRL].down){
-		Cbuf_AddText ("clear\n");
+		Cbuf_AddText("clear\n");
 		return;
 	}
 
@@ -588,7 +582,7 @@ Console_Key(int key)
 			g_consoleField.cursor++;
 		}
 
-		Q_Printf ("]%s\n", g_consoleField.buffer);
+		Q_Printf("))) %s\n", g_consoleField.buffer);
 
 		/* leading slash is an explicit command */
 		if(g_consoleField.buffer[0] == '\\' ||
@@ -607,8 +601,7 @@ Console_Key(int key)
 		}
 
 		/* copy line to history buffer */
-		historyEditLines[nextHistoryLine %
-				 COMMAND_HISTORY] = g_consoleField;
+		historyEditLines[nextHistoryLine % COMMAND_HISTORY] = g_consoleField;
 		nextHistoryLine++;
 		historyLine = nextHistoryLine;
 
@@ -616,11 +609,11 @@ Console_Key(int key)
 
 		g_consoleField.widthInChars = g_console_field_width;
 
-		CL_SaveConsoleHistory( );
+		CL_SaveConsoleHistory();
 
 		if(clc.state == CA_DISCONNECTED)
 			/* force an update, because the command may take some time */
-			SCR_UpdateScreen ();
+			SCR_UpdateScreen();
 		return;
 	}
 
