@@ -35,8 +35,11 @@ IQM_CheckRange(iqmHeader_t *header, int offset,
 		offset + count * size < 0 ||
 		offset + count * size > header->filesize);
 }
-/* "multiply" 3x4 matrices, these are assumed to be the top 3 rows
- * of a 4x4 matrix with the last row = (0 0 0 1) */
+
+/* 
+ * "multiply" 3x4 matrices, these are assumed to be the top 3 rows
+ * of a 4x4 matrix with the last row = (0 0 0 1) 
+ */
 static void
 Matrix34Multiply(float *a, float *b, float *out)
 {
@@ -53,6 +56,7 @@ Matrix34Multiply(float *a, float *b, float *out)
 	out[10] = a[8] * b[2] + a[9] * b[6] + a[10] * b[10];
 	out[11] = a[8] * b[3] + a[9] * b[7] + a[10] * b[11] + a[11];
 }
+
 static void
 InterpolateMatrix(float *a, float *b, float lerp, float *mat)
 {
@@ -71,6 +75,7 @@ InterpolateMatrix(float *a, float *b, float lerp, float *mat)
 	mat[10] = a[10] * unLerp + b[10] * lerp;
 	mat[11] = a[11] * unLerp + b[11] * lerp;
 }
+
 static void
 JointToMatrix(vec4_t rot, vec3_t scale, vec3_t trans,
 	      float *mat)
@@ -98,6 +103,7 @@ JointToMatrix(vec4_t rot, vec3_t scale, vec3_t trans,
 	mat[10] = scale[2] * (1.0f - (xx + yy));
 	mat[11] = trans[2];
 }
+
 static void
 Matrix34Invert(float *inMat, float *outMat)
 {
@@ -121,28 +127,186 @@ Matrix34Invert(float *inMat, float *outMat)
 	outMat[11] = -Vec3Dot(outMat + 8, trans);
 }
 
-/*
- * R_LoadIQM
- *
- * Load an IQM model and compute the joint matrices for every frame.
- */
+/* endianness */
+static void
+swapheader(iqmHeader_t *p)
+{
+	LL(p->flags);
+	LL(p->num_text);
+	LL(p->ofs_text);
+	LL(p->num_meshes);
+	LL(p->ofs_meshes);
+	LL(p->num_vertexarrays);
+	LL(p->num_vertexes);
+	LL(p->ofs_vertexarrays);
+	LL(p->num_triangles);
+	LL(p->ofs_triangles);
+	LL(p->ofs_adjacency);
+	LL(p->num_joints);
+	LL(p->ofs_joints);
+	LL(p->num_poses);
+	LL(p->ofs_poses);
+	LL(p->num_anims);
+	LL(p->ofs_anims);
+	LL(p->num_frames);
+	LL(p->num_framechannels);
+	LL(p->ofs_frames);
+	LL(p->ofs_bounds);
+	LL(p->num_comment);
+	LL(p->ofs_comment);
+	LL(p->num_extensions);
+	LL(p->ofs_extensions);
+}
+
+static void
+swaptri(iqmTriangle_t *p)
+{
+	LL(p->vertex[0]);
+	LL(p->vertex[1]);
+	LL(p->vertex[2]);
+}
+
+static void
+swapmesh(iqmMesh_t *p)
+{
+	LL(p->name);
+	LL(p->material);
+	LL(p->first_vertex);
+	LL(p->num_vertexes);
+	LL(p->first_triangle);
+	LL(p->num_triangles);
+}
+
+static void
+swapanim(iqmAnim_t *p)
+{
+	LL(p->name);
+	LL(p->first_frame);
+	LL(p->num_frames);
+	LL(p->framerate);
+	LL(p->flags);
+}
+
+static void
+swapjoint(iqmJoint_t *p)
+{
+	LL(p->name);
+	LL(p->parent);
+	LL(p->translate[0]);
+	LL(p->translate[1]);
+	LL(p->translate[2]);
+	LL(p->rotate[0]);
+	LL(p->rotate[1]);
+	LL(p->rotate[2]);
+	LL(p->rotate[3]);
+	LL(p->scale[0]);
+	LL(p->scale[1]);
+	LL(p->scale[2]);
+}
+
+static void
+swappose(iqmPose_t *p)
+{
+	LL(p->parent);
+	LL(p->mask);
+	LL(p->channeloffset[0]);
+	LL(p->channeloffset[1]);
+	LL(p->channeloffset[2]);
+	LL(p->channeloffset[3]);
+	LL(p->channeloffset[4]);
+	LL(p->channeloffset[5]);
+	LL(p->channeloffset[6]);
+	LL(p->channeloffset[7]);
+	LL(p->channeloffset[8]);
+	LL(p->channeloffset[9]);
+	LL(p->channelscale[0]);
+	LL(p->channelscale[1]);
+	LL(p->channelscale[2]);
+	LL(p->channelscale[3]);
+	LL(p->channelscale[4]);
+	LL(p->channelscale[5]);
+	LL(p->channelscale[6]);
+	LL(p->channelscale[7]);
+	LL(p->channelscale[8]);
+	LL(p->channelscale[9]);
+}
+
+static void
+swapbounds(iqmBounds_t *p)
+{
+	LL(p->bbmin[0]);
+	LL(p->bbmin[1]);
+	LL(p->bbmin[2]);
+	LL(p->bbmax[0]);
+	LL(p->bbmax[1]);
+	LL(p->bbmax[2]);
+}
+
+/* sanity checks */
+static qbool
+sanetri(const iqmHeader_t *h, const iqmTriangle_t *t)
+{
+	if(t->vertex[0] > h->num_vertexes
+	  || t->vertex[1] > h->num_vertexes
+	  || t->vertex[2] > h->num_vertexes)
+		return qfalse;
+	return qtrue;
+}
+
+static qbool
+sanemesh(const iqmHeader_t *h, const iqmMesh_t *m)
+{
+	if(m->first_vertex >= h->num_vertexes
+	  || m->first_vertex + m->num_vertexes > h->num_vertexes
+	  || m->first_triangle >= h->num_triangles
+	  || m->first_triangle + m->num_triangles > h->num_triangles
+	  || m->name >= h->num_text
+	  || m->material >= h->num_text)
+		return qfalse;
+	return qtrue;
+}
+
+static qbool
+saneanim(const iqmHeader_t *h, const iqmAnim_t *a)
+{
+	if(a->first_frame >= (int)h->num_frames
+	  || a->num_frames >= (int)h->num_frames
+	  || a->first_frame > a->num_frames
+	  || a->first_frame + a->num_frames > h->num_frames
+	  || a->name < -1)
+		return qfalse;
+	return qtrue;
+}
+
+static qbool
+sanejoint(const iqmHeader_t *h, const iqmJoint_t *j)
+{
+	if(j->parent < -1 
+	  || j->parent >= (int)h->num_joints
+	  || j->name >= (int)h->num_text)
+		return qfalse;
+	return qtrue;
+}
+
+/* Load an IQM model and compute the joint matrices for every frame. */
 qbool
 R_LoadIQM(model_t *mod, void *buffer, int filesize, const char *mod_name)
 {
 	iqmHeader_t *header;
-	iqmVertexArray_t	*vertexarray;
-	iqmTriangle_t		*triangle;
-	iqmMesh_t	*mesh;
+	iqmVertexArray_t *vertexarray;
+	iqmTriangle_t *triangle;
+	iqmMesh_t *mesh;
+	iqmAnim_t *anim;
 	iqmJoint_t *joint;
-	iqmPose_t	*pose;
-	iqmBounds_t	*bounds;
+	iqmPose_t *pose;
+	iqmBounds_t *bounds;
 	unsigned short *framedata;
-	char		*str;
-	int		i, j;
-	float		jointMats[IQM_MAX_JOINTS * 2 * 12];
-	float                   *mat;
-	size_t		size, joint_names;
-	iqmData_t	*iqmData;
+	char *str;
+	int i, j;
+	float jointMats[IQM_MAX_JOINTS * 2 * 12];
+	float *mat;
+	size_t size, joint_names;
+	iqmData_t *iqmData;
 	srfIQModel_t *surface;
 
 	if(filesize < sizeof(iqmHeader_t)){
@@ -167,32 +331,8 @@ R_LoadIQM(model_t *mod, void *buffer, int filesize, const char *mod_name)
 	if(header->filesize > filesize || header->filesize > 16<<20){
 		return qfalse;
 	}
-
-	LL(header->flags);
-	LL(header->num_text);
-	LL(header->ofs_text);
-	LL(header->num_meshes);
-	LL(header->ofs_meshes);
-	LL(header->num_vertexarrays);
-	LL(header->num_vertexes);
-	LL(header->ofs_vertexarrays);
-	LL(header->num_triangles);
-	LL(header->ofs_triangles);
-	LL(header->ofs_adjacency);
-	LL(header->num_joints);
-	LL(header->ofs_joints);
-	LL(header->num_poses);
-	LL(header->ofs_poses);
-	LL(header->num_anims);
-	LL(header->ofs_anims);
-	LL(header->num_frames);
-	LL(header->num_framechannels);
-	LL(header->ofs_frames);
-	LL(header->ofs_bounds);
-	LL(header->num_comment);
-	LL(header->ofs_comment);
-	LL(header->num_extensions);
-	LL(header->ofs_extensions);
+	
+	swapheader(header);
 
 	/* check ioq3 joint limit */
 	if(header->num_joints > IQM_MAX_JOINTS){
@@ -288,15 +428,9 @@ R_LoadIQM(model_t *mod, void *buffer, int filesize, const char *mod_name)
 	}
 	triangle = (iqmTriangle_t*)((byte*)header + header->ofs_triangles);
 	for(i = 0; i < header->num_triangles; i++, triangle++){
-		LL(triangle->vertex[0]);
-		LL(triangle->vertex[1]);
-		LL(triangle->vertex[2]);
-
-		if(triangle->vertex[0] > header->num_vertexes ||
-		   triangle->vertex[1] > header->num_vertexes ||
-		   triangle->vertex[2] > header->num_vertexes){
+		swaptri(triangle);		
+		if(!sanetri(header, triangle))
 			return qfalse;
-		}
 	}
 
 	/* check and swap meshes */
@@ -306,13 +440,7 @@ R_LoadIQM(model_t *mod, void *buffer, int filesize, const char *mod_name)
 	}
 	mesh = (iqmMesh_t*)((byte*)header + header->ofs_meshes);
 	for(i = 0; i < header->num_meshes; i++, mesh++){
-		LL(mesh->name);
-		LL(mesh->material);
-		LL(mesh->first_vertex);
-		LL(mesh->num_vertexes);
-		LL(mesh->first_triangle);
-		LL(mesh->num_triangles);
-
+		swapmesh(mesh);
 		/* check ioq3 limits */ /* FIXME */
 		if(mesh->num_vertexes > SHADER_MAX_VERTEXES){
 			ri.Printf(PRINT_WARNING, "R_LoadIQM: %s has more than %i verts on a surface (%i).\n",
@@ -327,42 +455,33 @@ R_LoadIQM(model_t *mod, void *buffer, int filesize, const char *mod_name)
 			return qfalse;
 		}
 
-		if(mesh->first_vertex >= header->num_vertexes ||
-		   mesh->first_vertex + mesh->num_vertexes > header->num_vertexes ||
-		   mesh->first_triangle >= header->num_triangles ||
-		   mesh->first_triangle + mesh->num_triangles > header->num_triangles ||
-		   mesh->name >= header->num_text ||
-		   mesh->material >= header->num_text){
+		if(!sanemesh(header, mesh))
 			return qfalse;
-		}
+	}
+	
+	/* check and swap anims */
+	if(IQM_CheckRange(header, header->ofs_anims, header->num_anims
+	  , sizeof(iqmAnim_t))){
+		return qfalse;
+	}
+	anim = (iqmAnim_t*)((byte*)header + header->ofs_anims);
+	for(i = 0; i < header->num_anims; i++, anim++){
+		swapanim(anim);
+		if(!saneanim(header, anim))
+			return qfalse;
 	}
 
 	/* check and swap joints */
 	if(IQM_CheckRange(header, header->ofs_joints,
-		   header->num_joints, sizeof(iqmJoint_t))){
+	  header->num_joints, sizeof(iqmJoint_t))){
 		return qfalse;
 	}
 	joint = (iqmJoint_t*)((byte*)header + header->ofs_joints);
 	joint_names = 0;
 	for(i = 0; i < header->num_joints; i++, joint++){
-		LL(joint->name);
-		LL(joint->parent);
-		LL(joint->translate[0]);
-		LL(joint->translate[1]);
-		LL(joint->translate[2]);
-		LL(joint->rotate[0]);
-		LL(joint->rotate[1]);
-		LL(joint->rotate[2]);
-		LL(joint->rotate[3]);
-		LL(joint->scale[0]);
-		LL(joint->scale[1]);
-		LL(joint->scale[2]);
-
-		if(joint->parent < -1 ||
-		   joint->parent >= (int)header->num_joints ||
-		   joint->name >= (int)header->num_text){
+		swapjoint(joint);
+		if(!sanejoint(header, joint))
 			return qfalse;
-		}
 		joint_names += strlen((char*)header + header->ofs_text +
 			joint->name) + 1;
 	}
@@ -376,46 +495,18 @@ R_LoadIQM(model_t *mod, void *buffer, int filesize, const char *mod_name)
 		return qfalse;
 	}
 	pose = (iqmPose_t*)((byte*)header + header->ofs_poses);
-	for(i = 0; i < header->num_poses; i++, pose++){
-		LL(pose->parent);
-		LL(pose->mask);
-		LL(pose->channeloffset[0]);
-		LL(pose->channeloffset[1]);
-		LL(pose->channeloffset[2]);
-		LL(pose->channeloffset[3]);
-		LL(pose->channeloffset[4]);
-		LL(pose->channeloffset[5]);
-		LL(pose->channeloffset[6]);
-		LL(pose->channeloffset[7]);
-		LL(pose->channeloffset[8]);
-		LL(pose->channeloffset[9]);
-		LL(pose->channelscale[0]);
-		LL(pose->channelscale[1]);
-		LL(pose->channelscale[2]);
-		LL(pose->channelscale[3]);
-		LL(pose->channelscale[4]);
-		LL(pose->channelscale[5]);
-		LL(pose->channelscale[6]);
-		LL(pose->channelscale[7]);
-		LL(pose->channelscale[8]);
-		LL(pose->channelscale[9]);
-	}
+	for(i = 0; i < header->num_poses; i++, pose++)
+		swappose(pose);
 
 	if(header->ofs_bounds){
 		/* check and swap model bounds */
 		if(IQM_CheckRange(header, header->ofs_bounds,
-			   header->num_frames, sizeof(*bounds))){
+		  header->num_frames, sizeof(*bounds))){
 			return qfalse;
 		}
 		bounds = (iqmBounds_t*)((byte*)header + header->ofs_bounds);
 		for(i = 0; i < header->num_frames; i++){
-			LL(bounds->bbmin[0]);
-			LL(bounds->bbmin[1]);
-			LL(bounds->bbmin[2]);
-			LL(bounds->bbmax[0]);
-			LL(bounds->bbmax[1]);
-			LL(bounds->bbmax[2]);
-
+			swapbounds(bounds);
 			bounds++;
 		}
 	}
@@ -546,8 +637,8 @@ R_LoadIQM(model_t *mod, void *buffer, int filesize, const char *mod_name)
 		}
 	}
 
-	/* register shaders
-	 * overwrite the material offset with the shader index */
+	/* register shaders */
+	/* overwrite the material offset with the shader index */
 	mesh = (iqmMesh_t*)((byte*)header + header->ofs_meshes);
 	surface = iqmData->surfaces;
 	str = (char*)header + header->ofs_text;
@@ -652,18 +743,14 @@ R_LoadIQM(model_t *mod, void *buffer, int filesize, const char *mod_name)
 			bounds++;
 		}
 	}
-
 	return qtrue;
 }
 
-/*
- * R_CullIQM
- */
 static int
 R_CullIQM(iqmData_t *data, trRefEntity_t *ent)
 {
-	vec3_t	bounds[2];
-	vec_t           *oldBounds, *newBounds;
+	vec3_t bounds[2];
+	vec_t *oldBounds, *newBounds;
 	int	i;
 
 	if(!data->bounds){
@@ -695,10 +782,6 @@ R_CullIQM(iqmData_t *data, trRefEntity_t *ent)
 	}
 }
 
-/*
- * R_ComputeIQMFogNum
- *
- */
 int
 R_ComputeIQMFogNum(iqmData_t *data, trRefEntity_t *ent)
 {
@@ -743,22 +826,18 @@ R_ComputeIQMFogNum(iqmData_t *data, trRefEntity_t *ent)
 	return 0;
 }
 
-/*
- * R_AddIQMSurfaces
- *
- * Add all surfaces of this model
- */
+/* Add all surfaces of this model */
 void
 R_AddIQMSurfaces(trRefEntity_t *ent)
 {
-	iqmData_t	*data;
+	iqmData_t *data;
 	srfIQModel_t *surface;
-	int		i, j;
-	qbool		personalModel;
-	int		cull;
-	int		fogNum;
-	material_t	*shader;
-	skin_t		*skin;
+	int i, j;
+	qbool personalModel;
+	int cull;
+	int fogNum;
+	material_t *shader;
+	skin_t *skin;
 
 	data = tr.currentModel->modelData;
 	surface = data->surfaces;
@@ -791,22 +870,18 @@ R_AddIQMSurfaces(trRefEntity_t *ent)
 	/*
 	 * cull the entire model if merged bounding box of both frames
 	 * is outside the view frustum.
-	 *  */
+	 */
 	cull = R_CullIQM (data, ent);
 	if(cull == CULL_OUT){
 		return;
 	}
 
-	/*
-	 * set up lighting now that we know we aren't culled
-	 *  */
+	/* set up lighting now that we know we aren't culled */
 	if(!personalModel || r_shadows->integer > 1){
 		R_SetupEntityLighting(&tr.refdef, ent);
 	}
 
-	/*
-	 * see if we are in a fog volume
-	 *  */
+	/* see if we are in a fog volume */
 	fogNum = R_ComputeIQMFogNum(data, ent);
 
 	for(i = 0; i < data->num_surfaces; i++){
@@ -852,7 +927,6 @@ R_AddIQMSurfaces(trRefEntity_t *ent)
 	}
 }
 
-
 static void
 ComputeJointMats(iqmData_t *data, int frame, int oldframe,
 		 float backlerp, float *mat)
@@ -892,29 +966,22 @@ ComputeJointMats(iqmData_t *data, int frame, int oldframe,
 }
 
 
-/*
- * RB_AddIQMSurfaces
- *
- * Compute vertices for this model surface
- */
+/* Compute vertices for this model surface */
 void
 RB_IQMSurfaceAnim(surfaceType_t *surface)
 {
-	srfIQModel_t	*surf	= (srfIQModel_t*)surface;
-	iqmData_t	*data	= surf->data;
+	srfIQModel_t *surf = (srfIQModel_t*)surface;
+	iqmData_t *data = surf->data;
 	float jointMats[IQM_MAX_JOINTS * 12];
 	int i;
-
-	vec4_t	*outXYZ = &tess.xyz[tess.numVertexes];
-	vec4_t	*outNormal = &tess.normal[tess.numVertexes];
-	vec2_t          (*outTexCoord)[2] = &tess.texCoords[tess.numVertexes];
-	vec4_t	*outColor = &tess.vertexColors[tess.numVertexes];
-
-	int	frame = backEnd.currentEntity->e.frame % data->num_frames;
-	int	oldframe = backEnd.currentEntity->e.oldframe % data->num_frames;
-	float	backlerp = backEnd.currentEntity->e.backlerp;
-
-	int	*tri;
+	vec4_t *outXYZ = &tess.xyz[tess.numVertexes];
+	vec4_t *outNormal = &tess.normal[tess.numVertexes];
+	vec2_t (*outTexCoord)[2] = &tess.texCoords[tess.numVertexes];
+	vec4_t *outColor = &tess.vertexColors[tess.numVertexes];
+	int frame = backEnd.currentEntity->e.frame % data->num_frames;
+	int oldframe = backEnd.currentEntity->e.oldframe % data->num_frames;
+	float backlerp = backEnd.currentEntity->e.backlerp;
+	int *tri;
 	glIndex_t *ptr;
 	glIndex_t base;
 
@@ -946,8 +1013,10 @@ RB_IQMSurfaceAnim(surfaceType_t *surface)
 		for(k = 0; k < 12; k++)
 			vtxMat[k] *= 1.0f / 255.0f;
 
-		/* compute the normal matrix as transpose of the adjoint
-		 * of the vertex matrix */
+		/* 
+		 * compute the normal matrix as transpose of the adjoint
+		 * of the vertex matrix 
+		 */
 		nrmMat[ 0] = vtxMat[ 5]*vtxMat[10] - vtxMat[ 6]*vtxMat[ 9];
 		nrmMat[ 1] = vtxMat[ 6]*vtxMat[ 8] - vtxMat[ 4]*vtxMat[10];
 		nrmMat[ 2] = vtxMat[ 4]*vtxMat[ 9] - vtxMat[ 5]*vtxMat[ 8];
