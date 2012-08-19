@@ -814,8 +814,7 @@ IN_ProcessEvents(void)
 		SDL_EnableKeyRepeat(0, 0);
 		keyRepeatEnabled = qfalse;
 	}else if(!keyRepeatEnabled){
-		SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY,
-			SDL_DEFAULT_REPEAT_INTERVAL);
+		SDL_EnableKeyRepeat(300, 31);
 		keyRepeatEnabled = qtrue;
 	}
 
