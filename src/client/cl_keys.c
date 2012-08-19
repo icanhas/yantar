@@ -584,7 +584,7 @@ Console_Key(int key)
 
 			Q_strncpyz(temp, g_consoleField.buffer, sizeof(temp));
 			Q_sprintf(g_consoleField.buffer,
-				sizeof(g_consoleField.buffer), "\\%s", temp);
+				sizeof(g_consoleField.buffer), "/%s", temp);
 			g_consoleField.cursor++;
 		}
 
