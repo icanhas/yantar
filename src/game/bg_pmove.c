@@ -23,7 +23,7 @@
 #include "bg_public.h"
 #include "bg_local.h"
 
-#define GrappleElasticityMultiplier	2
+#define GrappleElasticityMultiplier 8
 #define GrapplePullSpeed 400
 
 pmove_t *pm;
@@ -1257,7 +1257,7 @@ PmoveSingle(pmove_t *p)
 		watermove();
 	else{	/* airborne */
 		airmove();
-//		pm->ps->grapplelast = qfalse;
+		pm->ps->grapplelast = qfalse;
 	}
 	
 	if(pm->cmd.brakefrac > 0)
