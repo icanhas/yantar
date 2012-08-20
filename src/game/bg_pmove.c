@@ -484,7 +484,7 @@ grapplemove(void)
 	if (pm->ps->grapplelast == qfalse)
 		oldlen = vlen;
 	else
-		oldlen = pm->oldgrapplelen;
+		oldlen = pm->ps->oldgrapplelen;
 	if (vlen > oldlen){
 		PullSpeedMultiplier = vlen - oldlen;
 		PullSpeedMultiplier *= GrappleElasticityMultiplier;
@@ -498,7 +498,7 @@ grapplemove(void)
 	accelerate(vel, grspd, pm_airaccelerate);
 	pml.groundPlane = qfalse;
 	PM_StepSlideMove(qtrue);
-	pm->oldgrapplelen = vlen;
+	pm->ps->oldgrapplelen = vlen;
 }
 
 static void
@@ -1241,12 +1241,12 @@ PmoveSingle(pmove_t *p)
 	setwaterlevel();
 	pml.previous_waterlevel = p->waterlevel;
 
-	setplayerbounds ();
+	setplayerbounds();
 	droptimers();
 	groundtrace();	/* set groundentity */
 	
 	if(pm->ps->pm_type == PM_DEAD)
-		deadmove ();
+		deadmove();
 	else if(pm->ps->pm_flags & PMF_GRAPPLE_PULL){
 	Q_Printf("%i", pm->ps->grapplelast);
 		grapplemove();

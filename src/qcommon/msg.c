@@ -1123,6 +1123,7 @@ netField_t playerStateFields[] =
 	{ PSF(grapplePoint[1]), 0 },
 	{ PSF(grapplePoint[2]), 0 },
 	{ PSF(grapplelast), 1 },
+	{ PSF(oldgrapplelen), 0 },
 	{ PSF(jumppad_ent), 10 },
 	{ PSF(loopSound), 16 }
 };

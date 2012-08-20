@@ -1189,6 +1189,7 @@ typedef struct playerState_s {
 
 	vec3_t	grapplePoint;	/* location of grapple to pull towards if PMF_GRAPPLE_PULL */
 	qbool	grapplelast;
+	float		oldgrapplelen;
 
 	int	eFlags;	/* copied to entityState_t->eFlags */
 
