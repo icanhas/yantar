@@ -182,7 +182,6 @@ typedef struct {
 	/* for fixed msec Pmove */
 	int	pmove_fixed;
 	int	pmove_msec;
-	int	grapplelast;
 	float	oldgrapplelen;
 
 	/* callbacks to test the world

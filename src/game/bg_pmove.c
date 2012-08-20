@@ -481,19 +481,17 @@ grapplemove(void)
 	Vec3Add(pm->ps->grapplePoint, v, v);
 	Vec3Sub(v, pm->ps->origin, vel);
 	vlen = Vec3Len(vel);
-	if (pm->grapplelast == 0){
+	if (pm->ps->grapplelast == qfalse)
 		oldlen = vlen;
-	}else{
+	else
 		oldlen = pm->oldgrapplelen;
-	}
 	if (vlen > oldlen){
 		PullSpeedMultiplier = vlen - oldlen;
 		PullSpeedMultiplier *= GrappleElasticityMultiplier;
 		grspd *= PullSpeedMultiplier;
 	}
-	if (grspd < GrapplePullSpeed){
+	if (grspd < GrapplePullSpeed)
 		grspd = GrapplePullSpeed;
-	}
 	
 	Vec3Normalize(vel);
 	accelerate(wishdir, wishspeed, pm_airaccelerate);
@@ -1250,16 +1248,16 @@ PmoveSingle(pmove_t *p)
 	if(pm->ps->pm_type == PM_DEAD)
 		deadmove ();
 	else if(pm->ps->pm_flags & PMF_GRAPPLE_PULL){
-	Q_Printf("%i", pm->grapplelast);
+	Q_Printf("%i", pm->ps->grapplelast);
 		grapplemove();
-		pm->grapplelast = 1;
+		pm->ps->grapplelast = qtrue;
 	}else if(pm->ps->pm_flags & PMF_TIME_WATERJUMP)
 		waterjumpmove();
 	else if(pm->waterlevel > 1)	/* swimming */
 		watermove();
 	else{	/* airborne */
 		airmove();
-//		pm->grapplelast = 0;
+//		pm->ps->grapplelast = qfalse;
 	}
 	
 	if(pm->cmd.brakefrac > 0)
