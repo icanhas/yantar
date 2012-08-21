@@ -23,7 +23,7 @@
 #include "bg_public.h"
 #include "bg_local.h"
 
-#define GrappleElasticityMultiplier 8
+#define GrappleElasticityMultiplier 2
 #define GrapplePullSpeed 400
 
 pmove_t *pm;
