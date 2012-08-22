@@ -640,7 +640,8 @@ typedef struct {
 	refEntity_t	testModelEntity;
 	char		testModelName[MAX_QPATH];
 	qbool		testGun;
-
+	uint		ntestlights;
+	vec3_t	testlightorig;
 } cg_t;
 
 
@@ -1215,6 +1216,7 @@ void CG_TestModelNextFrame_f(void);
 void CG_TestModelPrevFrame_f(void);
 void CG_TestModelNextSkin_f(void);
 void CG_TestModelPrevSkin_f(void);
+void CG_TestLight_f(void);
 void CG_ZoomDown_f(void);
 void CG_ZoomUp_f(void);
 void CG_AddBufferedSound(sfxHandle_t sfx);

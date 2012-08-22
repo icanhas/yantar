@@ -180,10 +180,21 @@ CG_AddTestModel(void)
 	trap_R_AddRefEntityToScene(&cg.testModelEntity);
 }
 
+void
+CG_TestLight_f(void)
+{
+	Vec3MA(cg.refdef.vieworg, 100, cg.refdef.viewaxis[0],
+		cg.testlightorig);
+	cg.ntestlights = 1;
+}
 
+static void
+addtestlights(void)
+{
+	trap_R_AddLightToScene(cg.testlightorig, 600.0, 1.0, 1.0, 1.0);
+}
 
 /* ============================================================================ */
-
 
 /*
  * CG_CalcVrect
@@ -825,6 +836,9 @@ CG_DrawActiveFrame(int serverTime, stereoFrame_t stereoView,
 		CG_AddTestModel();
 	cg.refdef.time = cg.time;
 	memcpy(cg.refdef.areamask, cg.snap->areamask, sizeof(cg.refdef.areamask));
+	
+	if(cg.ntestlights > 0)
+		addtestlights();
 
 	/* warning sounds when powerup is wearing off */
 	CG_PowerupTimerSounds();
