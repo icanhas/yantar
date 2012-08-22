@@ -62,6 +62,8 @@
 #define MAX_VERTS_ON_POLY	10
 #define MAX_MARK_POLYS		256
 
+#define Maxtestlights		16
+
 #define STAT_MINUS		10	/* num frame for '-' stats digit */
 
 #define ICON_SIZE		48
@@ -641,7 +643,7 @@ typedef struct {
 	char		testModelName[MAX_QPATH];
 	qbool		testGun;
 	uint		ntestlights;
-	vec3_t	testlightorig;
+	vec3_t	testlightorigs[Maxtestlights];
 } cg_t;
 
 

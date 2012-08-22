@@ -183,15 +183,23 @@ CG_AddTestModel(void)
 void
 CG_TestLight_f(void)
 {
-	Vec3MA(cg.refdef.vieworg, 100, cg.refdef.viewaxis[0],
-		cg.testlightorig);
-	cg.ntestlights = 1;
+	vec_t *v;
+	
+	v = cg.testlightorigs[cg.ntestlights % Maxtestlights];
+	Vec3MA(cg.refdef.vieworg, 100, cg.refdef.viewaxis[0], v);
+	cg.ntestlights++;
 }
 
 static void
 addtestlights(void)
 {
-	trap_R_AddLightToScene(cg.testlightorig, 600.0, 1.0, 1.0, 1.0);
+	uint i;
+	vec_t *v;
+	
+	for(i = 0; i < cg.ntestlights, i < Maxtestlights; i++){
+		v = cg.testlightorigs[i];
+		trap_R_AddLightToScene(v, 200.0, 1.0, 1.0, 1.0);
+	}
 }
 
 /* ============================================================================ */
