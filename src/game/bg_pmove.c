@@ -1245,10 +1245,12 @@ PmoveSingle(pmove_t *p)
 	droptimers();
 	groundtrace();	/* set groundentity */
 	
+	Q_Printf("%i\n", pm->ps->grapplelast);
+	Q_Printf("%f\n\n", pm->ps->oldgrapplelen);
+	
 	if(pm->ps->pm_type == PM_DEAD)
 		deadmove();
 	else if(pm->ps->pm_flags & PMF_GRAPPLE_PULL){
-	Q_Printf("%i", pm->ps->grapplelast);
 		grapplemove();
 		pm->ps->grapplelast = qtrue;
 	}else if(pm->ps->pm_flags & PMF_TIME_WATERJUMP)
@@ -1258,6 +1260,7 @@ PmoveSingle(pmove_t *p)
 	else{	/* airborne */
 		airmove();
 		pm->ps->grapplelast = qfalse;
+		pm->ps->oldgrapplelen = 0.0;
 	}
 	
 	if(pm->cmd.brakefrac > 0)
