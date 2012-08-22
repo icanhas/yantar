@@ -1,4 +1,8 @@
 /*
+ * text commands typed in at the local console, or executed by a key
+ * binding
+ */
+/*
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,17 +21,12 @@
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-/*
- * cg_consolecmds.c -- text commands typed in at the local console, or
- * executed by a key binding */
-
 #include "cg_local.h"
 #include "../ui/ui_shared.h"
+
 #ifdef MISSIONPACK
 extern menuDef_t *menuScoreboard;
 #endif
-
-
 
 void
 CG_TargetCommand_f(void)
@@ -43,37 +42,20 @@ CG_TargetCommand_f(void)
 	trap_SendConsoleCommand(va("gc %i %i", targetNum, atoi(test)));
 }
 
-
-
-/*
- * CG_SizeUp_f
- *
- * Keybinding command
- */
+/* Keybinding command */
 static void
 CG_SizeUp_f(void)
 {
 	trap_Cvar_Set("cg_viewsize", va("%i",(int)(cg_viewsize.integer+10)));
 }
 
-
-/*
- * CG_SizeDown_f
- *
- * Keybinding command
- */
 static void
 CG_SizeDown_f(void)
 {
 	trap_Cvar_Set("cg_viewsize", va("%i",(int)(cg_viewsize.integer-10)));
 }
 
-
-/*
- * CG_Viewpos_f
- *
- * Debugging command to print the current position
- */
+/* Debugging command to print the current position */
 static void
 CG_Viewpos_f(void)
 {
@@ -82,11 +64,9 @@ CG_Viewpos_f(void)
 		(int)cg.refdefViewAngles[YAW]);
 }
 
-
 static void
 CG_ScoresDown_f(void)
 {
-
 #ifdef MISSIONPACK
 	CG_BuildSpectatorString();
 #endif
@@ -126,11 +106,10 @@ CG_LoadHud_f(void)
 {
 	char buff[1024];
 	const char *hudSet;
+	
 	memset(buff, 0, sizeof(buff));
-
 	String_Init();
 	Menu_Reset();
-
 	trap_Cvar_VariableStringBuffer("cg_hudFiles", buff, sizeof(buff));
 	hudSet = buff;
 	if(hudSet[0] == '\0')
@@ -139,7 +118,6 @@ CG_LoadHud_f(void)
 	CG_LoadMenus(hudSet);
 	menuScoreboard = NULL;
 }
-
 
 static void
 CG_scrollScoresDown_f(void)
@@ -151,7 +129,6 @@ CG_scrollScoresDown_f(void)
 	}
 }
 
-
 static void
 CG_scrollScoresUp_f(void)
 {
@@ -161,7 +138,6 @@ CG_scrollScoresUp_f(void)
 		Menu_ScrollFeeder(menuScoreboard, FEEDER_BLUETEAM_LIST, qfalse);
 	}
 }
-
 
 static void
 CG_spWin_f(void)
@@ -268,8 +244,10 @@ CG_PrevTeamMember_f(void)
 	CG_SelectPrevPlayer();
 }
 
-/* ASS U ME's enumeration order as far as task specific orders, OFFENSE is zero, CAMP is last
- *  */
+/* 
+ * ASS U ME's enumeration order as far as task specific orders,
+ * OFFENSE is zero, CAMP is last
+ */
 static void
 CG_NextOrder_f(void)
 {
@@ -295,7 +273,6 @@ CG_NextOrder_f(void)
 	cgs.orderPending = qtrue;
 	cgs.orderTime = cg.time + 3000;
 }
-
 
 static void
 CG_ConfirmOrder_f(void)
@@ -424,38 +401,7 @@ CG_TaskSuicide_f(void)
 	trap_SendClientCommand(command);
 }
 
-
-
-/*
- * CG_TeamMenu_f
- */
-/*
- * static void CG_TeamMenu_f( void ) {
- * if (trap_Key_GetCatcher() & KEYCATCH_CGAME) {
- *  CG_EventHandling(CGAME_EVENT_NONE);
- *  trap_Key_SetCatcher(0);
- * } else {
- *  CG_EventHandling(CGAME_EVENT_TEAMMENU);
- *  //trap_Key_SetCatcher(KEYCATCH_CGAME);
- * }
- * }
- */
-
-/*
- * CG_EditHud_f
- */
-/*
- * static void CG_EditHud_f( void ) {
- * //cls.keyCatchers ^= KEYCATCH_CGAME;
- * //VM_Call (cgvm, CG_EVENT_HANDLING, (cls.keyCatchers & KEYCATCH_CGAME) ? CGAME_EVENT_EDITHUD : CGAME_EVENT_NONE);
- * }
- */
-
 #endif
-
-/*
- * CG_StartOrbit_f
- */
 
 static void
 CG_StartOrbit_f(void)
@@ -476,26 +422,10 @@ CG_StartOrbit_f(void)
 	}
 }
 
-/*
- * static void CG_Camera_f( void ) {
- *      char name[1024];
- *      trap_Argv( 1, name, sizeof(name));
- *      if (trap_loadCamera(name)) {
- *              cg.cameraMode = qtrue;
- *              trap_startCamera(cg.time);
- *      } else {
- *              CG_Printf ("Unable to load camera %s\n",name);
- *      }
- * }
- */
-
-
-typedef struct {
+struct {
 	char *cmd;
 	void (*function)(void);
-} consoleCommand_t;
-
-static consoleCommand_t commands[] = {
+} commands[] = {
 	{ "testgun", CG_TestGun_f },
 	{ "testmodel", CG_TestModel_f },
 	{ "testmodelnextframe", CG_TestModelNextFrame_f },
@@ -549,10 +479,7 @@ static consoleCommand_t commands[] = {
 	{ "loaddeferred", CG_LoadDeferredPlayers }
 };
 
-
 /*
- * CG_ConsoleCommand
- *
  * The string has been tokenized and can be retrieved with
  * Cmd_Argc() / Cmd_Argv()
  */
@@ -560,7 +487,7 @@ qbool
 CG_ConsoleCommand(void)
 {
 	const char *cmd;
-	int i;
+	uint i;
 
 	cmd = CG_Argv(0);
 
@@ -569,29 +496,24 @@ CG_ConsoleCommand(void)
 			commands[i].function();
 			return qtrue;
 		}
-
 	return qfalse;
 }
 
-
 /*
- * CG_InitConsoleCommands
- *
  * Let the client system know about all of our commands
  * so it can perform tab completion
  */
 void
 CG_InitConsoleCommands(void)
 {
-	int i;
+	uint i;
 
 	for(i = 0; i < ARRAY_LEN(commands); i++)
 		trap_AddCommand(commands[i].cmd);
-
 	/*
 	 * the game server will interpret these commands, which will be automatically
 	 * forwarded to the server after they are not recognized locally
-	 *  */
+	 */
 	trap_AddCommand("kill");
 	trap_AddCommand("say");
 	trap_AddCommand("say_team");
