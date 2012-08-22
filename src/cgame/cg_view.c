@@ -1,4 +1,4 @@
-/* view.c -- setup all the parameters (position, angle, etc) for a 3D rendering */
+/* setup all the parameters (position, angle, etc) for a 3D rendering */
 /*
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
