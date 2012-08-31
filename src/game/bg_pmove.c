@@ -23,7 +23,6 @@
 #include "bg_public.h"
 #include "bg_local.h"
 
-#define GrappleElasticityMultiplier 2
 #define GrapplePullSpeed 400
 
 pmove_t *pm;
@@ -474,23 +473,23 @@ static void
 grapplemove(void)
 {
 	vec3_t wishvel, wishdir, vel, v;
-	float	wishspeed, vlen, oldlen, PullSpeedMultiplier, grspd = GrapplePullSpeed;
+	float	wishspeed, vlen, oldlen, pullspeedcoef, grspd = GrapplePullSpeed;
 
 	_airmove(&pm->cmd, &wishvel, &wishdir, &wishspeed);
 	VectorScale(pml.forward, -16, v);
 	Vec3Add(pm->ps->grapplePoint, v, v);
 	Vec3Sub(v, pm->ps->origin, vel);
 	vlen = Vec3Len(vel);
-	if (pm->ps->grapplelast == qfalse)
+	if(pm->ps->grapplelast == qfalse)
 		oldlen = vlen;
 	else
 		oldlen = pm->ps->oldgrapplelen;
-	if (vlen > oldlen){
-		PullSpeedMultiplier = vlen - oldlen;
-		PullSpeedMultiplier *= GrappleElasticityMultiplier;
-		grspd *= PullSpeedMultiplier;
+	if(vlen > oldlen){
+		pullspeedcoef = vlen - oldlen;
+		pullspeedcoef *= pm->ps->swingstrength;
+		grspd *= pullspeedcoef;
 	}
-	if (grspd < GrapplePullSpeed)
+	if(grspd < GrapplePullSpeed)
 		grspd = GrapplePullSpeed;
 	
 	Vec3Normalize(vel);

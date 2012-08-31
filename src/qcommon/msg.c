@@ -1102,6 +1102,7 @@ netField_t playerStateFields[] =
 	{ PSF(externalEvent), 10 },
 	{ PSF(gravity), 16 },
 	{ PSF(speed), 16 },
+	{ PSF(swingstrength), 0 },
 	{ PSF(delta_angles[1]), 16 },
 	{ PSF(externalEventParm), 8 },
 	{ PSF(viewheight), -8 },

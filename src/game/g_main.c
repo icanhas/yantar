@@ -49,6 +49,7 @@ vmCvar_t	g_maxGameClients;
 vmCvar_t	g_dedicated;
 vmCvar_t	g_speed;
 vmCvar_t	g_gravity;
+vmCvar_t g_swingstrength;
 vmCvar_t	g_cheats;
 vmCvar_t	g_knockback;
 vmCvar_t	g_quadfactor;
@@ -143,8 +144,9 @@ static cvarTable_t gameCvarTable[] = {
 
 	{ &g_dedicated, "dedicated", "0", 0, 0, qfalse  },
 
-	{ &g_speed, "g_speed", "320", 0, 0, qtrue  },
-	{ &g_gravity, "g_gravity", "800", 0, 0, qtrue  },
+	{ &g_speed, "g_speed", "320", CVAR_CHEAT, 0, qtrue  },
+	{ &g_gravity, "g_gravity", "800", CVAR_CHEAT, 0, qtrue  },
+	{ &g_swingstrength, "g_swingstrength", "2.04", CVAR_CHEAT, 0, qtrue },
 	{ &g_knockback, "g_knockback", "1000", 0, 0, qtrue  },
 	{ &g_quadfactor, "g_quadfactor", "3", 0, 0, qtrue  },
 	{ &g_weaponRespawn, "g_weaponrespawn", "5", 0, 0, qtrue  },

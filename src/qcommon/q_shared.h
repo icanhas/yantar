@@ -1171,6 +1171,7 @@ typedef struct playerState_s {
 	int	weaponTime;
 	int	gravity;
 	int	speed;
+	float	swingstrength;		/* for grapple */
 	int	delta_angles[3];	/* add to command angles to get view direction */
 	/* changed by spawns, rotating objects, and teleporters */
 
