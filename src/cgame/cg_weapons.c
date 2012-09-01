@@ -771,7 +771,7 @@ CG_RegisterWeapon(int weaponNum)
 			"sound/weapons/rocket/rockfly", qfalse);
 		weaponInfo->missileTrailFunc = CG_RocketTrail;
 		weaponInfo->missileDlight	= 200;
-		weaponInfo->wiTrailTime		= 2000;
+		weaponInfo->wiTrailTime		= 4000;
 		weaponInfo->trailRadius		= 64;
 
 		MAKERGB(weaponInfo->missileDlightColor, 1, 0.75f, 0);
