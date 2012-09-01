@@ -985,7 +985,7 @@ doweapevents(void)
 		addTime = 200;
 		break;
 	case WP_GRAPPLING_HOOK:
-		addTime = 400;
+		addTime = 1;
 		break;
 #ifdef MISSIONPACK
 	case WP_NAILGUN:
