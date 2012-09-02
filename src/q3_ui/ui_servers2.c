@@ -39,22 +39,22 @@
 #define MAX_LEAGUELENGTH	28
 #define MAX_LISTBOXWIDTH	68
 
-#define ART_BACK0		"menu/art/back_0"
-#define ART_BACK1		"menu/art/back_1"
-#define ART_CREATE0		"menu/art/create_0"
-#define ART_CREATE1		"menu/art/create_1"
-#define ART_SPECIFY0		"menu/art/specify_0"
-#define ART_SPECIFY1		"menu/art/specify_1"
-#define ART_REFRESH0		"menu/art/refresh_0"
-#define ART_REFRESH1		"menu/art/refresh_1"
-#define ART_CONNECT0		"menu/art/fight_0"
-#define ART_CONNECT1		"menu/art/fight_1"
-#define ART_ARROWS0		"menu/art/arrows_vert_0"
-#define ART_ARROWS_UP		"menu/art/arrows_vert_top"
-#define ART_ARROWS_DOWN		"menu/art/arrows_vert_bot"
-#define ART_UNKNOWNMAP		"menu/art/unknownmap"
-#define ART_REMOVE0		"menu/art/delete_0"
-#define ART_REMOVE1		"menu/art/delete_1"
+#define ART_BACK0		Pmenuart "/back_0"
+#define ART_BACK1		Pmenuart "/back_1"
+#define ART_CREATE0		Pmenuart "/create_0"
+#define ART_CREATE1		Pmenuart "/create_1"
+#define ART_SPECIFY0		Pmenuart "/specify_0"
+#define ART_SPECIFY1		Pmenuart "/specify_1"
+#define ART_REFRESH0		Pmenuart "/refresh_0"
+#define ART_REFRESH1		Pmenuart "/refresh_1"
+#define ART_CONNECT0		Pmenuart "/fight_0"
+#define ART_CONNECT1		Pmenuart "/fight_1"
+#define ART_ARROWS0		Pmenuart "/arrows_vert_0"
+#define ART_ARROWS_UP		Pmenuart "/arrows_vert_top"
+#define ART_ARROWS_DOWN		Pmenuart "/arrows_vert_bot"
+#define ART_UNKNOWNMAP		Pmenuart "/unknownmap"
+#define ART_REMOVE0		Pmenuart "/delete_0"
+#define ART_REMOVE1		Pmenuart "/delete_1"
 
 #define ID_MASTER		10
 #define ID_GAMETYPE		11

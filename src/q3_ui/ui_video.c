@@ -29,10 +29,10 @@ void GraphicsOptions_MenuInit(void);
  */
 
 
-#define DRIVERINFO_FRAMEL	"menu/art/frame2_l"
-#define DRIVERINFO_FRAMER	"menu/art/frame1_r"
-#define DRIVERINFO_BACK0	"menu/art/back_0"
-#define DRIVERINFO_BACK1	"menu/art/back_1"
+#define DRIVERINFO_FRAMEL	Pmenuart "/frame2_l"
+#define DRIVERINFO_FRAMER	Pmenuart "/frame1_r"
+#define DRIVERINFO_BACK0	Pmenuart "/back_0"
+#define DRIVERINFO_BACK1	Pmenuart "/back_1"
 
 static char * driverinfo_artlist[] =
 {
@@ -235,12 +235,12 @@ UI_DriverInfo_Menu(void)
  *
  */
 
-#define GRAPHICSOPTIONS_FRAMEL	"menu/art/frame2_l"
-#define GRAPHICSOPTIONS_FRAMER	"menu/art/frame1_r"
-#define GRAPHICSOPTIONS_BACK0	"menu/art/back_0"
-#define GRAPHICSOPTIONS_BACK1	"menu/art/back_1"
-#define GRAPHICSOPTIONS_ACCEPT0 "menu/art/accept_0"
-#define GRAPHICSOPTIONS_ACCEPT1 "menu/art/accept_1"
+#define GRAPHICSOPTIONS_FRAMEL	Pmenuart "/frame2_l"
+#define GRAPHICSOPTIONS_FRAMER	Pmenuart "/frame1_r"
+#define GRAPHICSOPTIONS_BACK0	Pmenuart "/back_0"
+#define GRAPHICSOPTIONS_BACK1	Pmenuart "/back_1"
+#define GRAPHICSOPTIONS_ACCEPT0 Pmenuart "/accept_0"
+#define GRAPHICSOPTIONS_ACCEPT1 Pmenuart "/accept_1"
 
 #define ID_BACK2		101
 #define ID_FULLSCREEN		102

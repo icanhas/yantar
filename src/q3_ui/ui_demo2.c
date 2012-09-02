@@ -24,19 +24,17 @@
  *
  */
 
-
 #include "ui_local.h"
 
-
-#define ART_BACK0	"menu/art/back_0"
-#define ART_BACK1	"menu/art/back_1"
-#define ART_GO0		"menu/art/play_0"
-#define ART_GO1		"menu/art/play_1"
-#define ART_FRAMEL	"menu/art/frame2_l"
-#define ART_FRAMER	"menu/art/frame1_r"
-#define ART_ARROWS	"menu/art/arrows_horz_0"
-#define ART_ARROWLEFT	"menu/art/arrows_horz_left"
-#define ART_ARROWRIGHT	"menu/art/arrows_horz_right"
+#define ART_BACK0	Pmenuart "/back_0"
+#define ART_BACK1	Pmenuart "/back_1"
+#define ART_GO0		Pmenuart "/play_0"
+#define ART_GO1		Pmenuart "/play_1"
+#define ART_FRAMEL	Pmenuart "/frame2_l"
+#define ART_FRAMER	Pmenuart "/frame1_r"
+#define ART_ARROWS	Pmenuart "/arrows_horz_0"
+#define ART_ARROWLEFT	Pmenuart "/arrows_horz_left"
+#define ART_ARROWRIGHT	Pmenuart "/arrows_horz_right"
 
 #define MAX_DEMOS	1024
 #define NAMEBUFSIZE	(MAX_DEMOS * 32)

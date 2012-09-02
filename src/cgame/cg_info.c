@@ -133,7 +133,7 @@ CG_DrawInformation(void)
 	s = Info_ValueForKey(info, "mapname");
 	levelshot = trap_R_RegisterShaderNoMip(va("levelshots/%s", s));
 	if(!levelshot)
-		levelshot = trap_R_RegisterShaderNoMip("menu/art/unknownmap");
+		levelshot = trap_R_RegisterShaderNoMip(Pmenuart "/unknownmap");
 	trap_R_SetColor(NULL);
 	CG_DrawPic(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, levelshot);
 

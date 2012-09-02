@@ -27,12 +27,12 @@
 #include "ui_local.h"
 
 
-#define ART_FRAMEL		"menu/art/frame2_l"
-#define ART_FRAMER		"menu/art/frame1_r"
-#define ART_BACK0		"menu/art/back_0"
-#define ART_BACK1		"menu/art/back_1"
-#define ART_ACCEPT0		"menu/art/accept_0"
-#define ART_ACCEPT1		"menu/art/accept_1"
+#define ART_FRAMEL		Pmenuart "/frame2_l"
+#define ART_FRAMER		Pmenuart "/frame1_r"
+#define ART_BACK0		Pmenuart "/back_0"
+#define ART_BACK1		Pmenuart "/back_1"
+#define ART_ACCEPT0		Pmenuart "/accept_0"
+#define ART_ACCEPT1		Pmenuart "/accept_1"
 
 #define ID_GRAPHICS		10
 #define ID_DISPLAY		11

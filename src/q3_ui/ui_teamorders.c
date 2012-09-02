@@ -28,9 +28,9 @@
 #include "ui_local.h"
 
 
-#define ART_FRAME		"menu/art/addbotframe"
-#define ART_BACK0		"menu/art/back_0"
-#define ART_BACK1		"menu/art/back_1"
+#define ART_FRAME		Pmenuart "/addbotframe"
+#define ART_BACK0		Pmenuart "/back_0"
+#define ART_BACK1		Pmenuart "/back_1"
 
 #define ID_LIST_BOTS		10
 #define ID_LIST_CTF_ORDERS	11

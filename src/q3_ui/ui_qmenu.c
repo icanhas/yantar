@@ -1578,15 +1578,15 @@ Menu_DefaultKey(menuframework_s *m, int key)
 void
 Menu_Cache(void)
 {
-	/* uis.charset			= trap_R_RegisterShaderNoMip( "gfx/2d/bigchars" ); */
-	uis.charsetProp = trap_R_RegisterShaderNoMip("menu/art/font1_prop.tga");
+	/* uis.charset			= trap_R_RegisterShaderNoMip( P2dart "/bigchars" ); */
+	uis.charsetProp = trap_R_RegisterShaderNoMip(Pmenuart "/font1_prop.tga");
 	uis.charsetPropGlow = trap_R_RegisterShaderNoMip(
-		"menu/art/font1_prop_glo.tga");
+		Pmenuart "/font1_prop_glo.tga");
 	uis.charsetPropB = trap_R_RegisterShaderNoMip(
-		"menu/art/font2_prop.tga");
-	uis.cursor = trap_R_RegisterShaderNoMip("menu/art/cursor");
-	uis.rb_on = trap_R_RegisterShaderNoMip("menu/art/switch_on");
-	uis.rb_off = trap_R_RegisterShaderNoMip("menu/art/switch_off");
+		Pmenuart "/font2_prop.tga");
+	uis.cursor = trap_R_RegisterShaderNoMip(Pmenuart "/cursor");
+	uis.rb_on = trap_R_RegisterShaderNoMip(Pmenuart "/switch_on");
+	uis.rb_off = trap_R_RegisterShaderNoMip(Pmenuart "/switch_off");
 
 	uis.whiteShader = trap_R_RegisterShaderNoMip("white");
 	if(uis.glconfig.hardwareType == GLHW_RAGEPRO)
@@ -1597,22 +1597,22 @@ Menu_Cache(void)
 		uis.menuBackShader = trap_R_RegisterShaderNoMip("menuback");
 	uis.menuBackNoLogoShader = trap_R_RegisterShaderNoMip("menubacknologo");
 
-	menu_in_sound = trap_S_RegisterSound("sound/misc/menu1.wav",
+	menu_in_sound = trap_S_RegisterSound(Pmiscsounds "/menu1.wav",
 		qfalse);
-	menu_move_sound = trap_S_RegisterSound("sound/misc/menu2.wav",
+	menu_move_sound = trap_S_RegisterSound(Pmiscsounds "/menu2.wav",
 		qfalse);
-	menu_out_sound = trap_S_RegisterSound("sound/misc/menu3.wav",
+	menu_out_sound = trap_S_RegisterSound(Pmiscsounds "/menu3.wav",
 		qfalse);
-	menu_buzz_sound = trap_S_RegisterSound("sound/misc/menu4.wav",
+	menu_buzz_sound = trap_S_RegisterSound(Pmiscsounds "/menu4.wav",
 		qfalse);
 	weaponChangeSound = trap_S_RegisterSound(
-		"sound/weapons/change.wav",
+		Pweapsounds "/change.wav",
 		qfalse);
 
 	/* need a nonzero sound, make an empty sound for this */
 	menu_null_sound = -1;
 
-	sliderBar = trap_R_RegisterShaderNoMip("menu/art/slider");
-	sliderButton_0	= trap_R_RegisterShaderNoMip("menu/art/sliderbutton0");
-	sliderButton_1	= trap_R_RegisterShaderNoMip("menu/art/sliderbutton1");
+	sliderBar = trap_R_RegisterShaderNoMip(Pmenuart "/slider");
+	sliderButton_0	= trap_R_RegisterShaderNoMip(Pmenuart "/sliderbutton0");
+	sliderButton_1	= trap_R_RegisterShaderNoMip(Pmenuart "/sliderbutton1");
 }

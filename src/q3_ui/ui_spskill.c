@@ -27,16 +27,16 @@
 #include "ui_local.h"
 
 
-#define ART_FRAME		"menu/art/cut_frame"
-#define ART_BACK		"menu/art/back_0.tga"
-#define ART_BACK_FOCUS		"menu/art/back_1.tga"
-#define ART_FIGHT		"menu/art/fight_0"
-#define ART_FIGHT_FOCUS		"menu/art/fight_1"
-#define ART_MAP_COMPLETE1	"menu/art/level_complete1"
-#define ART_MAP_COMPLETE2	"menu/art/level_complete2"
-#define ART_MAP_COMPLETE3	"menu/art/level_complete3"
-#define ART_MAP_COMPLETE4	"menu/art/level_complete4"
-#define ART_MAP_COMPLETE5	"menu/art/level_complete5"
+#define ART_FRAME		Pmenuart "/cut_frame"
+#define ART_BACK		Pmenuart "/back_0.tga"
+#define ART_BACK_FOCUS		Pmenuart "/back_1.tga"
+#define ART_FIGHT		Pmenuart "/fight_0"
+#define ART_FIGHT_FOCUS		Pmenuart "/fight_1"
+#define ART_MAP_COMPLETE1	Pmenuart "/level_complete1"
+#define ART_MAP_COMPLETE2	Pmenuart "/level_complete2"
+#define ART_MAP_COMPLETE3	Pmenuart "/level_complete3"
+#define ART_MAP_COMPLETE4	Pmenuart "/level_complete4"
+#define ART_MAP_COMPLETE5	Pmenuart "/level_complete5"
 
 #define ID_BABY			10
 #define ID_EASY			11

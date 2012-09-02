@@ -1343,7 +1343,7 @@ UI_DrawMapPreview(rectDef_t *rect, float scale, vec4_t color, qbool net)
 	else
 		UI_DrawHandlePic(
 			rect->x, rect->y, rect->w, rect->h,
-			trap_R_RegisterShaderNoMip("menu/art/unknownmap"));
+			trap_R_RegisterShaderNoMip(Pmenuart "/unknownmap"));
 }
 
 
@@ -1481,7 +1481,7 @@ UI_DrawNetMapPreview(rectDef_t *rect, float scale, vec4_t color)
 	else
 		UI_DrawHandlePic(
 			rect->x, rect->y, rect->w, rect->h,
-			trap_R_RegisterShaderNoMip("menu/art/unknownmap"));
+			trap_R_RegisterShaderNoMip(Pmenuart "/unknownmap"));
 }
 
 static void
@@ -5918,7 +5918,7 @@ _UI_Init(qbool inGameLoad)
 
 	String_Init();
 
-	uiInfo.uiDC.cursor = trap_R_RegisterShaderNoMip("menu/art/3_cursor2");
+	uiInfo.uiDC.cursor = trap_R_RegisterShaderNoMip(Pmenuart "/3_cursor2");
 	uiInfo.uiDC.whiteShader = trap_R_RegisterShaderNoMip("white");
 
 	AssetCache();

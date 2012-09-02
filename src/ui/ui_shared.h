@@ -78,14 +78,14 @@
 #define MAX_SCRIPT_ARGS			12
 #define MAX_EDITFIELD			256
 
-#define ART_FX_BASE			"menu/art/fx_base"
-#define ART_FX_BLUE			"menu/art/fx_blue"
-#define ART_FX_CYAN			"menu/art/fx_cyan"
-#define ART_FX_GREEN			"menu/art/fx_grn"
-#define ART_FX_RED			"menu/art/fx_red"
-#define ART_FX_TEAL			"menu/art/fx_teal"
-#define ART_FX_WHITE			"menu/art/fx_white"
-#define ART_FX_YELLOW			"menu/art/fx_yel"
+#define ART_FX_BASE			Pmenuart "/fx_base"
+#define ART_FX_BLUE			Pmenuart "/fx_blue"
+#define ART_FX_CYAN			Pmenuart "/fx_cyan"
+#define ART_FX_GREEN			Pmenuart "/fx_grn"
+#define ART_FX_RED			Pmenuart "/fx_red"
+#define ART_FX_TEAL			Pmenuart "/fx_teal"
+#define ART_FX_WHITE			Pmenuart "/fx_white"
+#define ART_FX_YELLOW			Pmenuart "/fx_yel"
 
 #define ASSET_GRADIENTBAR		"ui/assets/gradientbar2.tga"
 #define ASSET_SCROLLBAR			"ui/assets/scrollbar.tga"
