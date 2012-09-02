@@ -1,3 +1,4 @@
+/* 'start server' menu, etc. */
 /*
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
@@ -17,31 +18,27 @@
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-/*  */
-/*
- *
- * START SERVER MENU *****
- *
- */
-
 
 #include "ui_local.h"
 
+/* 
+ * Start server menu
+ */
 
-#define GAMESERVER_BACK0	"menu/art/back_0"
-#define GAMESERVER_BACK1	"menu/art/back_1"
-#define GAMESERVER_NEXT0	"menu/art/next_0"
-#define GAMESERVER_NEXT1	"menu/art/next_1"
-#define GAMESERVER_FRAMEL	"menu/art/frame2_l"
-#define GAMESERVER_FRAMER	"menu/art/frame1_r"
-#define GAMESERVER_SELECT	"menu/art/maps_select"
-#define GAMESERVER_SELECTED	"menu/art/maps_selected"
-#define GAMESERVER_FIGHT0	"menu/art/fight_0"
-#define GAMESERVER_FIGHT1	"menu/art/fight_1"
-#define GAMESERVER_UNKNOWNMAP	"menu/art/unknownmap"
-#define GAMESERVER_ARROWS	"menu/art/gs_arrows_0"
-#define GAMESERVER_ARROWSL	"menu/art/gs_arrows_l"
-#define GAMESERVER_ARROWSR	"menu/art/gs_arrows_r"
+#define GAMESERVER_BACK0	Pmenuart "/back_0"
+#define GAMESERVER_BACK1	Pmenuart "/back_1"
+#define GAMESERVER_NEXT0	Pmenuart "/next_0"
+#define GAMESERVER_NEXT1	Pmenuart "/next_1"
+#define GAMESERVER_FRAMEL	Pmenuart "/frame2_l"
+#define GAMESERVER_FRAMER	Pmenuart "/frame1_r"
+#define GAMESERVER_SELECT	Pmenuart "/maps_select"
+#define GAMESERVER_SELECTED	Pmenuart "/maps_selected"
+#define GAMESERVER_FIGHT0	Pmenuart "/fight_0"
+#define GAMESERVER_FIGHT1	Pmenuart "/fight_1"
+#define GAMESERVER_UNKNOWNMAP	Pmenuart "/unknownmap"
+#define GAMESERVER_ARROWS	Pmenuart "/gs_arrows_0"
+#define GAMESERVER_ARROWSL	Pmenuart "/gs_arrows_l"
+#define GAMESERVER_ARROWSR	Pmenuart "/gs_arrows_r"
 
 #define MAX_MAPROWS		2
 #define MAX_MAPCOLS		2
@@ -607,12 +604,8 @@ UI_StartServerMenu(qbool multiplayer)
 	UI_PushMenu(&s_startserver.menu);
 }
 
-
-
 /*
- *
- * SERVER OPTIONS MENU *****
- *
+ * Server options menu
  */
 
 #define ID_PLAYER_TYPE	20
@@ -1539,24 +1532,19 @@ UI_ServerOptionsMenu(qbool multiplayer)
 	UI_PushMenu(&s_serveroptions.menu);
 }
 
-
-
 /*
- *
- * BOT SELECT MENU *****
- *
+ * Bot select menu
  */
 
-
-#define BOTSELECT_BACK0		"menu/art/back_0"
-#define BOTSELECT_BACK1		"menu/art/back_1"
-#define BOTSELECT_ACCEPT0	"menu/art/accept_0"
-#define BOTSELECT_ACCEPT1	"menu/art/accept_1"
-#define BOTSELECT_SELECT	"menu/art/opponents_select"
-#define BOTSELECT_SELECTED	"menu/art/opponents_selected"
-#define BOTSELECT_ARROWS	"menu/art/gs_arrows_0"
-#define BOTSELECT_ARROWSL	"menu/art/gs_arrows_l"
-#define BOTSELECT_ARROWSR	"menu/art/gs_arrows_r"
+#define BOTSELECT_BACK0		Pmenuart "/back_0"
+#define BOTSELECT_BACK1		Pmenuart "/back_1"
+#define BOTSELECT_ACCEPT0	Pmenuart "/accept_0"
+#define BOTSELECT_ACCEPT1	Pmenuart "/accept_1"
+#define BOTSELECT_SELECT	Pmenuart "/opponents_select"
+#define BOTSELECT_SELECTED	Pmenuart "/opponents_selected"
+#define BOTSELECT_ARROWS	Pmenuart "/gs_arrows_0"
+#define BOTSELECT_ARROWSL	Pmenuart "/gs_arrows_l"
+#define BOTSELECT_ARROWSR	Pmenuart "/gs_arrows_r"
 
 #define PLAYERGRID_COLS		4
 #define PLAYERGRID_ROWS		4
