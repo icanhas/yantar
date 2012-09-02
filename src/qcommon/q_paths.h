@@ -12,6 +12,8 @@
 #define Pfeedback	Psound "/feedback"
 #define Pplayersounds	Psound "/player"
 #define Pweapsounds	Psound "/weapons"
+#define Pmiscsounds	Psound "/misc"
+#define Pitemsounds	Psound "/items"
 
 #define Pannounce	Pplayersounds "/announce"
 
@@ -56,11 +58,15 @@
 #define Plgmodels	Pweapmodels "/lightning"
 #define Pmgmodels	Pweapmodels "/machinegun"
 #define Pmeleemodels	Pweapmodels "/melee"
-#define Pnademodels	Pweapmodels "/grenade"
+#define Pgrenademodels	Pweapmodels "/grenade"
 #define Pproxmodels	Pweapmodels "/proxmine"
 #define Prlmodels	Pweapmodels "/rocket"
 #define Pshotgunmodels	Pweapmodels "/shotgun"
 #define Pshellmodels	Pweapmodels "/shells"
+#define Phookmodels	Pweapmodels "/hook"
+#define Pplasmamodels	Pweapmodels "/plasma"
+#define Prailmodels		Pweapmodels "/rail"
+#define Pbfgmodels		Pweapmodels "/bfg"
 
 #define Pflagbasemodels	Pobjectmodels "/flagbase"
 
@@ -70,3 +76,6 @@
 #define Pobeliskmodels		Ppowerupmodels "/obelisk"
 #define Parmormodels		Ppowerupmodels "/armor"
 #define Pshieldmodels		Ppowerupmodels "/shield"
+#define Phealthmodels		Ppowerupmodels "/health"
+#define Pholdablemodels		Ppowerupmodels "/holdable"
+#define Pinstantmodels		Ppowerupmodels "/instant"
