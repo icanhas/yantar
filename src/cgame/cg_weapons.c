@@ -654,7 +654,7 @@ CG_RegisterWeapon(int weaponNum)
 		weaponInfo->readySound = trap_S_RegisterSound(
 			Pmeleesounds "/fsthum", qfalse);
 		weaponInfo->firingSound = trap_S_RegisterSound(
-			Pmeleesounds "/lg_hum", qfalse);
+			Plgsounds "/lg_hum", qfalse);
 		weaponInfo->flashSound[0] = trap_S_RegisterSound(
 			Plgsounds "/lg_fire", qfalse);
 		cgs.media.lightningShader = trap_R_RegisterShader(
@@ -724,7 +724,7 @@ CG_RegisterWeapon(int weaponNum)
 		weaponInfo->missileModel = trap_R_RegisterModel(
 			Prlmodels "/rocket");
 		weaponInfo->missileSound = trap_S_RegisterSound(
-			Prlmodels "/rockfly", qfalse);
+			Prlsounds "/rockfly", qfalse);
 		weaponInfo->missileTrailFunc = CG_RocketTrail;
 		weaponInfo->missileDlight	= 200;
 		weaponInfo->wiTrailTime		= 4000;

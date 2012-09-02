@@ -859,7 +859,7 @@ CG_RegisterSounds(void)
 		qfalse);
 	cgs.media.medkitSound = trap_S_RegisterSound (
 		"sound/items/use_medkit.wav", qfalse);
-	cgs.media.quadSound = trap_S_RegisterSound("sound/items/damage3.wav",
+	cgs.media.quadSound = trap_S_RegisterSound(Pitemsounds "/damage3",
 		qfalse);
 	cgs.media.sfx_ric1 = trap_S_RegisterSound (
 		"sound/weapons/machinegun/ric1.wav", qfalse);
