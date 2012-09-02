@@ -17,11 +17,8 @@
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-/*
- * ui_players.c */
 
 #include "ui_local.h"
-
 
 #define UI_TIMER_GESTURE	2300
 #define UI_TIMER_JUMP		1000
@@ -38,10 +35,8 @@
 #define SPIN_SPEED		0.9f
 #define COAST_TIME		1000
 
-
 static int dp_realtime;
 static float jumpHeight;
-
 
 /*
  * UI_PlayerInfo_SetWeapon
@@ -85,13 +80,13 @@ tryagain:
 	   weaponNum == WP_BFG){
 		strcpy(path, item->world_model[0]);
 		Q_StripExtension(path, path, sizeof(path));
-		strcat(path, "_barrel.md3");
+		strcat(path, "_barrel");
 		pi->barrelModel = trap_R_RegisterModel(path);
 	}
 
 	strcpy(path, item->world_model[0]);
 	Q_StripExtension(path, path, sizeof(path));
-	strcat(path, "_flash.md3");
+	strcat(path, "_flash");
 	pi->flashModel = trap_R_RegisterModel(path);
 
 	switch(weaponNum){
@@ -613,6 +608,7 @@ UI_PlayerFloatSprite(playerInfo_t *pi, vec3_t origin, qhandle_t shader)
 {
 	refEntity_t ent;
 
+	UNUSED(pi);
 	memset(&ent, 0, sizeof(ent));
 	Vec3Copy(origin, ent.origin);
 	ent.origin[2] += 48;
@@ -1054,7 +1050,7 @@ UI_RegisterClientModelname(playerInfo_t *pi, const char *modelSkinName)
 
 	/* load cmodels before models so filecache works */
 
-	Q_sprintf(filename, sizeof(filename), Pplayermodels "/%s/lower.md3",
+	Q_sprintf(filename, sizeof(filename), Pplayermodels "/%s/lower",
 		modelName);
 	pi->legsModel = trap_R_RegisterModel(filename);
 	if(!pi->legsModel){
@@ -1062,7 +1058,7 @@ UI_RegisterClientModelname(playerInfo_t *pi, const char *modelSkinName)
 		return qfalse;
 	}
 
-	Q_sprintf(filename, sizeof(filename), Pplayermodels "/%s/upper.md3",
+	Q_sprintf(filename, sizeof(filename), Pplayermodels "/%s/upper",
 		modelName);
 	pi->torsoModel = trap_R_RegisterModel(filename);
 	if(!pi->torsoModel){
@@ -1070,7 +1066,7 @@ UI_RegisterClientModelname(playerInfo_t *pi, const char *modelSkinName)
 		return qfalse;
 	}
 
-	Q_sprintf(filename, sizeof(filename), Pplayermodels "/%s/head.md3",
+	Q_sprintf(filename, sizeof(filename), Pplayermodels "/%s/head",
 		modelName);
 	pi->headModel = trap_R_RegisterModel(filename);
 	if(!pi->headModel){
