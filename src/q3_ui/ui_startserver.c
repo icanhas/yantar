@@ -1643,14 +1643,14 @@ ServerPlayerIcon(const char *modelAndSkin, char *iconName, int iconNameMaxSize)
 	else
 		skin = "default";
 
-	Q_sprintf(iconName, iconNameMaxSize, Pplayermodels "/%s/icon_%s.tga",
+	Q_sprintf(iconName, iconNameMaxSize, Pplayermodels "/%s/icon_%s",
 		model,
 		skin);
 
 	if(!trap_R_RegisterShaderNoMip(iconName) &&
 	   Q_stricmp(skin, "default") != 0)
 		Q_sprintf(iconName, iconNameMaxSize,
-			Pplayermodels "/%s/icon_default.tga",
+			Pplayermodels "/%s/icon_default",
 			model);
 }
 
