@@ -93,3 +93,4 @@
  */
 #define Pvmfiles			"vm"
 #define Pmaps				"maps"
+#define Pvids				Pvis "/video"

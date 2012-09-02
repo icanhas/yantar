@@ -1269,7 +1269,7 @@ CIN_PlayCinematic(const char *arg, int x, int y, int w, int h, int systemBits)
 	int i;
 
 	if(strstr(arg, "/") == NULL && strstr(arg, "\\") == NULL)
-		Q_sprintf (name, sizeof(name), "video/%s", arg);
+		Q_sprintf (name, sizeof(name), Pvids "/%s", arg);
 	else
 		Q_sprintf (name, sizeof(name), "%s", arg);
 
