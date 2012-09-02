@@ -58,7 +58,7 @@ typedef enum {
 	MOVER_2TO1
 } moverState_t;
 
-#define SP_PODIUM_MODEL "models/mapobjects/podium/podium4.md3"
+#define SP_PODIUM_MODEL Pobjectmodels "/podium/podium4.md3"
 
 /* ============================================================================ */
 
