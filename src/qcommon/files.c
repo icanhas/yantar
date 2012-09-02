@@ -1228,7 +1228,7 @@ FS_FindVM(void **startSearch, char *found, int foundlen, const char *name,
 		Q_sprintf(dllName, sizeof(dllName), "%s-" ARCH_STRING DLL_EXT,
 			name);
 
-	Q_sprintf(qvmName, sizeof(qvmName), "vm/%s.qvm", name);
+	Q_sprintf(qvmName, sizeof(qvmName), Pvmfiles "/%s.qvm", name);
 
 	lastSearch = *startSearch;
 	if(*startSearch == NULL)

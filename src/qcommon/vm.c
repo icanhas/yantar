@@ -186,7 +186,7 @@ VM_LoadSymbols(vm_t *vm)
 		return;
 
 	Q_StripExtension(vm->name, name, sizeof(name));
-	Q_sprintf(symbols, sizeof(symbols), "vm/%s.map", name);
+	Q_sprintf(symbols, sizeof(symbols), Pvmfiles "/%s.map", name);
 	FS_ReadFile(symbols, &mapfile.v);
 	if(!mapfile.c){
 		Q_Printf("Couldn't load symbol file: %s\n", symbols);
@@ -313,7 +313,7 @@ VM_LoadQVM(vm_t *vm, qbool alloc, qbool unpure)
 	} header;
 
 	/* load the image */
-	Q_sprintf(filename, sizeof(filename), "vm/%s.qvm", vm->name);
+	Q_sprintf(filename, sizeof(filename), Pvmfiles "/%s.qvm", vm->name);
 	Q_Printf("Loading vm file %s...\n", filename);
 
 	FS_ReadFileDir(filename, vm->searchPath, unpure, &header.v);

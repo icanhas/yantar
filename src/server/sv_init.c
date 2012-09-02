@@ -356,7 +356,7 @@ SV_TouchCGame(void)
 	fileHandle_t f;
 	char filename[MAX_QPATH];
 
-	Q_sprintf(filename, sizeof(filename), "vm/%s.qvm", "cgame");
+	Q_sprintf(filename, sizeof(filename), Pvmfiles "/%s.qvm", "cgame");
 	FS_FOpenFileRead(filename, &f, qfalse);
 	if(f)
 		FS_FCloseFile(f);

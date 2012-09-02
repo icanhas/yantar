@@ -87,3 +87,9 @@
 #define Phealthmodels		Ppowerupmodels "/health"
 #define Pholdablemodels		Ppowerupmodels "/holdable"
 #define Pinstantmodels		Ppowerupmodels "/instant"
+
+/*
+ * bytecode
+ */
+#define Pvmfiles			"vm"
+
