@@ -891,16 +891,16 @@ UI_RegisterClientSkin(playerInfo_t *pi, const char *modelName,
 	char filename[MAX_QPATH];
 
 	Q_sprintf(filename, sizeof(filename),
-		"models/players/%s/lower_%s.skin", modelName,
+		Pplayermodels "/%s/lower_%s.skin", modelName,
 		skinName);
 	pi->legsSkin = trap_R_RegisterSkin(filename);
 
 	Q_sprintf(filename, sizeof(filename),
-		"models/players/%s/upper_%s.skin", modelName,
+		Pplayermodels "/%s/upper_%s.skin", modelName,
 		skinName);
 	pi->torsoSkin = trap_R_RegisterSkin(filename);
 
-	Q_sprintf(filename, sizeof(filename), "models/players/%s/head_%s.skin",
+	Q_sprintf(filename, sizeof(filename), Pplayermodels "/%s/head_%s.skin",
 		modelName,
 		skinName);
 	pi->headSkin = trap_R_RegisterSkin(filename);
@@ -1054,7 +1054,7 @@ UI_RegisterClientModelname(playerInfo_t *pi, const char *modelSkinName)
 
 	/* load cmodels before models so filecache works */
 
-	Q_sprintf(filename, sizeof(filename), "models/players/%s/lower.md3",
+	Q_sprintf(filename, sizeof(filename), Pplayermodels "/%s/lower.md3",
 		modelName);
 	pi->legsModel = trap_R_RegisterModel(filename);
 	if(!pi->legsModel){
@@ -1062,7 +1062,7 @@ UI_RegisterClientModelname(playerInfo_t *pi, const char *modelSkinName)
 		return qfalse;
 	}
 
-	Q_sprintf(filename, sizeof(filename), "models/players/%s/upper.md3",
+	Q_sprintf(filename, sizeof(filename), Pplayermodels "/%s/upper.md3",
 		modelName);
 	pi->torsoModel = trap_R_RegisterModel(filename);
 	if(!pi->torsoModel){
@@ -1070,7 +1070,7 @@ UI_RegisterClientModelname(playerInfo_t *pi, const char *modelSkinName)
 		return qfalse;
 	}
 
-	Q_sprintf(filename, sizeof(filename), "models/players/%s/head.md3",
+	Q_sprintf(filename, sizeof(filename), Pplayermodels "/%s/head.md3",
 		modelName);
 	pi->headModel = trap_R_RegisterModel(filename);
 	if(!pi->headModel){
@@ -1089,7 +1089,7 @@ UI_RegisterClientModelname(playerInfo_t *pi, const char *modelSkinName)
 
 	/* load the animations */
 	Q_sprintf(filename, sizeof(filename),
-		"models/players/%s/animation.cfg",
+		Pplayermodels "/%s/animation.cfg",
 		modelName);
 	if(!UI_ParseAnimationFile(filename, pi->animations)){
 		Q_Printf("Failed to load animation file %s\n", filename);
