@@ -403,7 +403,7 @@ S_AL_BufferInit(void)
 	numSfx = 0;
 
 	/* Load the default sound, and lock it */
-	default_sfx = S_AL_BufferFind("sound/feedback/hit.wav");
+	default_sfx = S_AL_BufferFind(Psound "/default");
 	S_AL_BufferUse(default_sfx);
 	knownSfx[default_sfx].isLocked = qtrue;
 

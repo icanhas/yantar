@@ -15,8 +15,14 @@
 #define Pmiscsounds	Psound "/misc"
 #define Pitemsounds	Psound "/items"
 #define Pteamsounds	Psound "/teamplay"
+#define Pmoversounds	Psound "/movers"
+#define Pworldsounds	Psound "/world"
 
 #define Pannounce	Pplayersounds "/announce"
+
+#define Pdoorsounds	Pmoversounds "/doors"
+#define Pswitchsounds	Pmoversounds "/switches"
+#define Pplatformsounds	Pmoversounds "/plats"
 
 #define Pbfgsounds	Pweapsounds "/bfg"
 #define Pgattlingsounds	Pweapsounds "/vulcan"

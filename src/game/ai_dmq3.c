@@ -5001,24 +5001,24 @@ BotCheckEvents(bot_state_t *bs, entityState_t *state)
 		trap_GetConfigstring(CS_SOUNDS + state->eventParm, buf,
 			sizeof(buf));
 		/*
-		 * if (!strcmp(buf, "sound/teamplay/flagret_red.wav")) {
+		 * if (!strcmp(buf, Pteamsounds "/flagret_red.wav")) {
 		 *      //red flag is returned
 		 *      bs->redflagstatus = 0;
 		 *      bs->flagstatuschanged = qtrue;
 		 * }
-		 * else if (!strcmp(buf, "sound/teamplay/flagret_blu.wav")) {
+		 * else if (!strcmp(buf, Pteamsounds "/flagret_blu.wav")) {
 		 *      //blue flag is returned
 		 *      bs->blueflagstatus = 0;
 		 *      bs->flagstatuschanged = qtrue;
 		 * }
 		 * else*/
 #ifdef MISSIONPACK
-		if(!strcmp(buf, "sound/items/kamikazerespawn.wav"))
+		if(!strcmp(buf, Pitemsounds "/kamikazerespawn.wav"))
 			/* the kamikaze respawned so dont avoid it */
 			BotDontAvoid(bs, "Kamikaze");
 		else
 #endif
-		if(!strcmp(buf, "sound/items/poweruprespawn.wav"))
+		if(!strcmp(buf, Pitemsounds "/poweruprespawn.wav"))
 			/* powerup respawned... go get it */
 			BotGoForPowerups(bs);
 		break;

@@ -168,7 +168,7 @@ G_SetClientSound(gentity_t *ent)
 #ifdef MISSIONPACK
 	if(ent->s.eFlags & EF_TICKING)
 		ent->client->ps.loopSound = G_SoundIndex(
-			"sound/weapons/proxmine/wstbtick.wav");
+			Pproxsounds "/wstbtick.wav");
 	else
 #endif
 	if(ent->waterlevel && (ent->watertype&(CONTENTS_LAVA|CONTENTS_SLIME)))

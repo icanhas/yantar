@@ -213,7 +213,7 @@ SP_trigger_push(gentity_t *self)
 	self->r.svFlags &= ~SVF_NOCLIENT;
 
 	/* make sure the client precaches this sound */
-	G_SoundIndex("sound/world/jumppad.wav");
+	G_SoundIndex(Pworldsounds "/jumppad");
 
 	self->s.eType	= ET_PUSH_TRIGGER;
 	self->touch	= trigger_push_touch;
@@ -257,9 +257,9 @@ SP_target_push(gentity_t *self)
 	VectorScale (self->s.origin2, self->speed, self->s.origin2);
 
 	if(self->spawnflags & 1)
-		self->noise_index = G_SoundIndex("sound/world/jumppad.wav");
+		self->noise_index = G_SoundIndex(Pworldsounds "/jumppad");
 	else
-		self->noise_index = G_SoundIndex("sound/misc/windfly.wav");
+		self->noise_index = G_SoundIndex(Pmiscsounds "/windfly");
 	if(self->target){
 		Vec3Copy(self->s.origin, self->r.absmin);
 		Vec3Copy(self->s.origin, self->r.absmax);
@@ -321,7 +321,7 @@ SP_trigger_teleport(gentity_t *self)
 		self->r.svFlags &= ~SVF_NOCLIENT;
 
 	/* make sure the client precaches this sound */
-	G_SoundIndex("sound/world/jumppad.wav");
+	G_SoundIndex(Pworldsounds "/jumppad");
 
 	self->s.eType	= ET_TELEPORT_TRIGGER;
 	self->touch	= trigger_teleporter_touch;
@@ -390,7 +390,7 @@ SP_trigger_hurt(gentity_t *self)
 {
 	InitTrigger(self);
 
-	self->noise_index = G_SoundIndex("sound/world/electro.wav");
+	self->noise_index = G_SoundIndex(Pworldsounds "/electro");
 	self->touch = hurt_touch;
 
 	if(!self->damage)

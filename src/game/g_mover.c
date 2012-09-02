@@ -921,9 +921,9 @@ SP_func_door(gentity_t *ent)
 	float	lip;
 
 	ent->sound1to2 = ent->sound2to1 = G_SoundIndex(
-		"sound/movers/doors/dr1_strt.wav");
+		Pdoorsounds "/dr1_strt.wav");
 	ent->soundPos1 = ent->soundPos2 = G_SoundIndex(
-		"sound/movers/doors/dr1_end.wav");
+		Pdoorsounds "/dr1_end.wav");
 
 	ent->blocked = Blocked_Door;
 
@@ -1084,9 +1084,9 @@ SP_func_plat(gentity_t *ent)
 	float lip, height;
 
 	ent->sound1to2 = ent->sound2to1 = G_SoundIndex(
-		"sound/movers/plats/pt1_strt.wav");
+		Pplatformsounds "/pt1_strt.wav");
 	ent->soundPos1 = ent->soundPos2 = G_SoundIndex(
-		"sound/movers/plats/pt1_end.wav");
+		Pplatformsounds "/pt1_end.wav");
 
 	VectorClear (ent->s.angles);
 
@@ -1166,7 +1166,7 @@ SP_func_button(gentity_t *ent)
 	vec3_t	size;
 	float	lip;
 
-	ent->sound1to2 = G_SoundIndex("sound/movers/switches/butn2.wav");
+	ent->sound1to2 = G_SoundIndex(Pswitchsounds "/butn2.wav");
 
 	if(!ent->speed)
 		ent->speed = 40;

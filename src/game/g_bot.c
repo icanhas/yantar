@@ -222,7 +222,7 @@ PlayerIntroSound(const char *modelAndSkin)
 		skin = model;
 
 	trap_SendConsoleCommand(EXEC_APPEND,
-		va("play sound/player/announce/%s.wav\n", skin));
+		va("play %s/%s.wav\n", Pannounce, skin));
 }
 
 /*

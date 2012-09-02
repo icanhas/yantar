@@ -146,7 +146,7 @@ ProximityMine_Activate(gentity_t *ent)
 	ent->takedamage = qtrue;
 	ent->health = 1;
 	ent->die = ProximityMine_Die;
-	ent->s.loopSound = G_SoundIndex("sound/weapons/proxmine/wstbtick.wav");
+	ent->s.loopSound = G_SoundIndex(Pproxsounds "/wstbtick.wav");
 
 	/* build the proximity trigger */
 	trigger = G_Spawn ();

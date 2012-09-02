@@ -190,9 +190,9 @@ UI_SPSkillMenu_Cache(void)
 		ART_MAP_COMPLETE5);
 
 	skillMenuInfo.nightmareSound = trap_S_RegisterSound(
-		"sound/misc/nightmare.wav", qfalse);
+		Pmiscsounds "/nightmare.wav", qfalse);
 	skillMenuInfo.silenceSound = trap_S_RegisterSound(
-		"sound/misc/silence.wav", qfalse);
+		Pmiscsounds "/silence.wav", qfalse);
 }
 
 

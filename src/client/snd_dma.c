@@ -399,7 +399,7 @@ S_Base_BeginRegistration(void)
 		Q_Memset(s_knownSfx, '\0', sizeof(s_knownSfx));
 		Q_Memset(sfxHash, '\0', sizeof(sfx_t *) * LOOP_HASH);
 
-		S_Base_RegisterSound("sound/feedback/hit.wav", qfalse);	/* changed to a sound in baseq3 */
+		S_Base_RegisterSound(Psound "/default", qfalse);
 	}
 }
 
