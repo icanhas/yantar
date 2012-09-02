@@ -3055,7 +3055,7 @@ CL_InitRenderer(void)
 	re.BeginRegistration(&cls.glconfig);
 
 	/* load character sets */
-	cls.charSetShader	= re.RegisterShader("gfx/2d/bigchars");
+	cls.charSetShader	= re.RegisterShader(P2dart "/bigchars");
 	cls.whiteShader		= re.RegisterShader("white");
 	re.RegisterFont("fonts/DejaVuSans.ttf", 24, &cls.consolefont);
 	cls.consoleShader = re.RegisterShader("console");
