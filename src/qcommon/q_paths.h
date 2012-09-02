@@ -14,6 +14,7 @@
 #define Pweapsounds	Psound "/weapons"
 #define Pmiscsounds	Psound "/misc"
 #define Pitemsounds	Psound "/items"
+#define Pteamsounds	Psound "/teamplay"
 
 #define Pannounce	Pplayersounds "/announce"
 
