@@ -1,5 +1,5 @@
 /* 
- * Direct folder paths should not appear in modules' code; they should 
+ * Folder paths should not appear directly in modules' code; they should 
  * appear here instead. 
  */
 
@@ -15,16 +15,16 @@
 
 #define Pannounce	Pplayersounds "/announce"
 
-#define Pbfgsounds		Pweapsounds "/bfg"
+#define Pbfgsounds	Pweapsounds "/bfg"
 #define Pgattlingsounds	Pweapsounds "/vulcan"
 #define Pgrenadesounds	Pweapsounds "/grenade"
-#define Plgsounds		Pweapsounds "/lightning"
-#define Pmgsounds		Pweapsounds "/machinegun"
+#define Plgsounds	Pweapsounds "/lightning"
+#define Pmgsounds	Pweapsounds "/machinegun"
 #define Pmeleesounds	Pweapsounds "/melee"
 #define Pplasmasounds	Pweapsounds "/plasma"
 #define Pproxsounds	Pweapsounds "/proxmine"
-#define Prailsounds		Pweapsounds "/rail"
-#define Prlsounds		Pweapsounds "/rocket"
+#define Prailsounds	Pweapsounds "/rail"
+#define Prlsounds	Pweapsounds "/rocket"
 #define Pshotgunsounds	Pweapsounds "/shotgun"
 
 /* 
@@ -33,7 +33,7 @@
 #define Pvis		"vis"
 
 #define Pgraphics	Pvis "/graphics"
-#define Pmodels	Pvis "/models"
+#define Pmodels		Pvis "/models"
 
 #define Pmenuart	Pgraphics "/menu"
 
@@ -43,10 +43,11 @@
 #define Pweaphitmodels	Pmodels "/weaphits"
 
 #define Pgattlingmodels	Pweapmodels "/vulcan"
-#define Plgmodels		Pweapmodels "/lightning"
-#define Pmgmodels		Pweapmodels "/machinegun"
+#define Plgmodels	Pweapmodels "/lightning"
+#define Pmgmodels	Pweapmodels "/machinegun"
 #define Pmeleemodels	Pweapmodels "/melee"
 #define Pnademodels	Pweapmodels "/grenade"
 #define Pproxmodels	Pweapmodels "/proxmine"
-#define Prlmodels		Pweapmodels "/rocket"
+#define Prlmodels	Pweapmodels "/rocket"
 #define Pshotgunmodels	Pweapmodels "/shotgun"
+
