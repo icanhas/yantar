@@ -81,12 +81,12 @@ char *ui_medalNames[] = {"Accuracy", "Impressive", "Excellent", "Gauntlet",
 
 char *ui_medalPicNames[] = 
 {
-	"menu/medals/medal_accuracy",
-	"menu/medals/medal_impressive",
-	"menu/medals/medal_excellent",
-	"menu/medals/medal_gauntlet",
-	"menu/medals/medal_frags",
-	"menu/medals/medal_victory"
+	Pmedalart "/medal_accuracy",
+	Pmedalart "/medal_impressive",
+	Pmedalart "/medal_excellent",
+	Pmedalart "/medal_gauntlet",
+	Pmedalart "/medal_frags",
+	Pmedalart "/medal_victory"
 };
 
 char *ui_medalSounds[] = 

@@ -43,6 +43,7 @@
 #define P2dart		Pgraphics "/2d"
 #define Pdmgart	Pgraphics "/dmg"
 #define Pmiscart	Pgraphics "/misc"
+#define Pmedalart	Pgraphics	"/medals"
 
 #define Pplayermodels	Pmodels "/players"
 #define Pammomodels	Pmodels "/ammo"
