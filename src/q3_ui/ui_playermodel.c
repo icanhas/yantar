@@ -17,7 +17,7 @@
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-/*  */
+ 
 #include "ui_local.h"
 
 #define MODEL_BACK0	"menu/art/back_0"
@@ -401,7 +401,7 @@ PlayerModel_BuildList(void)
 		if(!strcmp(dirptr,".") || !strcmp(dirptr,".."))
 			continue;
 
-		/* iterate all skin files in directory */
+		/* FIXME iterate all skin files in directory */
 		numfiles = trap_FS_GetFileList(va(Pplayermodels "/%s",
 					dirptr), "tga", filelist, 2048);
 		fileptr = filelist;
@@ -424,7 +424,7 @@ PlayerModel_BuildList(void)
 
 			if(precache)
 				trap_S_RegisterSound(va(
-						Pannounce "/%s_wins.wav",
+						Pannounce "/%s_wins",
 						skinname), qfalse);
 		}
 	}
