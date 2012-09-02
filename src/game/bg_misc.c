@@ -63,9 +63,9 @@ gitem_t bg_itemlist[] =
  */
 	{
 		"item_armor_shard",
-		Pmiscsounds "/ar1_pkup.wav",
-		{ Parmormodels "/shard.md3",
-		  Parmormodels "/shard_sphere.md3",
+		Pmiscsounds "/ar1_pkup",
+		{ Parmormodels "/shard",
+		  Parmormodels "/shard_sphere",
 		  NULL, NULL},
 /* icon */ Picons "/iconr_shard",
 /* pickup */ "Armor Shard",
@@ -80,8 +80,8 @@ gitem_t bg_itemlist[] =
  */
 	{
 		"item_armor_combat",
-		Pmiscsounds "/ar2_pkup.wav",
-		{ Parmormodels "/armor_yel.md3",
+		Pmiscsounds "/ar2_pkup",
+		{ Parmormodels "/armor_yel",
 		  NULL, NULL, NULL},
 /* icon */ Picons "/iconr_yellow",
 /* pickup */ "Armor",
@@ -96,8 +96,8 @@ gitem_t bg_itemlist[] =
  */
 	{
 		"item_armor_body",
-		Pmiscsounds "/ar2_pkup.wav",
-		{ Parmormodels "/armor_red.md3",
+		Pmiscsounds "/ar2_pkup",
+		{ Parmormodels "/armor_red",
 		  NULL, NULL, NULL},
 /* icon */ Picons "/iconr_red",
 /* pickup */ "Heavy Armor",
@@ -115,9 +115,9 @@ gitem_t bg_itemlist[] =
  */
 	{
 		"item_health_small",
-		Pitemsounds "/s_health.wav",
-		{ Phealthmodels "/small_cross.md3",
-		  Phealthmodels "/small_sphere.md3",
+		Pitemsounds "/s_health",
+		{ Phealthmodels "/small_cross",
+		  Phealthmodels "/small_sphere",
 		  NULL, NULL },
 /* icon */ Picons "/iconh_green",
 /* pickup */ "5 Health",
@@ -132,9 +132,9 @@ gitem_t bg_itemlist[] =
  */
 	{
 		"item_health",
-		Pitemsounds "/n_health.wav",
-		{ Phealthmodels "/medium_cross.md3",
-		  Phealthmodels "/medium_sphere.md3",
+		Pitemsounds "/n_health",
+		{ Phealthmodels "/medium_cross",
+		  Phealthmodels "/medium_sphere",
 		  NULL, NULL },
 /* icon */ Picons "/iconh_yellow",
 /* pickup */ "25 Health",
@@ -149,9 +149,9 @@ gitem_t bg_itemlist[] =
  */
 	{
 		"item_health_large",
-		Pitemsounds "/l_health.wav",
-		{ Phealthmodels "/large_cross.md3",
-		  Phealthmodels "/large_sphere.md3",
+		Pitemsounds "/l_health",
+		{ Phealthmodels "/large_cross",
+		  Phealthmodels "/large_sphere",
 		  NULL, NULL },
 /* icon */ Picons "/iconh_red",
 /* pickup */ "50 Health",
@@ -166,9 +166,9 @@ gitem_t bg_itemlist[] =
  */
 	{
 		"item_health_mega",
-		Pitemsounds "/m_health.wav",
-		{ Phealthmodels "/mega_cross.md3",
-		  Phealthmodels "/mega_sphere.md3",
+		Pitemsounds "/m_health",
+		{ Phealthmodels "/mega_cross",
+		  Phealthmodels "/mega_sphere",
 		  NULL, NULL },
 /* icon */ Picons "/iconh_mega",
 /* pickup */ "Mega Health",
@@ -188,8 +188,8 @@ gitem_t bg_itemlist[] =
  */
 	{
 		"weapon_gauntlet",
-		Pmiscsounds "/w_pkup.wav",
-		{ Pmeleemodels "/gauntlet.md3",
+		Pmiscsounds "/w_pkup",
+		{ Pmeleemodels "/gauntlet",
 		  NULL, NULL, NULL},
 /* icon */ Picons "/iconw_gauntlet",
 /* pickup */ "Gauntlet",
@@ -204,8 +204,8 @@ gitem_t bg_itemlist[] =
  */
 	{
 		"weapon_shotgun",
-		Pmiscsounds "/w_pkup.wav",
-		{ Pshotgunmodels "/shotgun.md3",
+		Pmiscsounds "/w_pkup",
+		{ Pshotgunmodels "/shotgun",
 		  NULL, NULL, NULL},
 /* icon */ Picons "/iconw_shotgun",
 /* pickup */ "Shotgun",
@@ -220,8 +220,8 @@ gitem_t bg_itemlist[] =
  */
 	{
 		"weapon_machinegun",
-		Pmiscsounds "/w_pkup.wav",
-		{ Pmgmodels "/machinegun.md3",
+		Pmiscsounds "/w_pkup",
+		{ Pmgmodels "/machinegun",
 		  NULL, NULL, NULL},
 /* icon */ Picons "/iconw_machinegun",
 /* pickup */ "Machinegun",
@@ -236,8 +236,8 @@ gitem_t bg_itemlist[] =
  */
 	{
 		"weapon_grenadelauncher",
-		Pmiscsounds "/w_pkup.wav",
-		{ Pgrenademodels "/grenadel.md3",
+		Pmiscsounds "/w_pkup",
+		{ Pgrenademodels "/grenadel",
 		  NULL, NULL, NULL},
 /* icon */ Picons "/iconw_grenade",
 /* pickup */ "Grenade Launcher",
@@ -246,15 +246,15 @@ gitem_t bg_itemlist[] =
 		WP_GRENADE_LAUNCHER,
 /* precache */ "",
 /* sounds */
-		(Pgrenadesounds "/hgrenb1a.wav " Pgrenadesounds "/hgrenb2a.wav")
+		(Pgrenadesounds "/hgrenb1a " Pgrenadesounds "/hgrenb2a")
 	},
 
 /*QUAKED weapon_rocketlauncher (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
  */
 	{
 		"weapon_rocketlauncher",
-		Pmiscsounds "/w_pkup.wav",
-		{ Prlmodels "/rocketl.md3",
+		Pmiscsounds "/w_pkup",
+		{ Prlmodels "/rocketl",
 		  NULL, NULL, NULL},
 /* icon */ Picons "/iconw_rocket",
 /* pickup */ "Rocket Launcher",
@@ -269,8 +269,8 @@ gitem_t bg_itemlist[] =
  */
 	{
 		"weapon_lightning",
-		Pmiscsounds "/w_pkup.wav",
-		{ Plgmodels "/lightning.md3",
+		Pmiscsounds "/w_pkup",
+		{ Plgmodels "/lightning",
 		  NULL, NULL, NULL},
 /* icon */ Picons "/iconw_lightning",
 /* pickup */ "Lightning Gun",
@@ -285,8 +285,8 @@ gitem_t bg_itemlist[] =
  */
 	{
 		"weapon_railgun",
-		Pmiscsounds "/w_pkup.wav",
-		{ Prailmodels "/railgun.md3",
+		Pmiscsounds "/w_pkup",
+		{ Prailmodels "/railgun",
 		  NULL, NULL, NULL},
 /* icon */ Picons "/iconw_railgun",
 /* pickup */ "Railgun",
@@ -301,8 +301,8 @@ gitem_t bg_itemlist[] =
  */
 	{
 		"weapon_plasmagun",
-		Pmiscsounds "/w_pkup.wav",
-		{ Pplasmamodels "/plasma.md3",
+		Pmiscsounds "/w_pkup",
+		{ Pplasmamodels "/plasma",
 		  NULL, NULL, NULL},
 /* icon */ Picons "/iconw_plasma",
 /* pickup */ "Plasma Gun",
@@ -317,8 +317,8 @@ gitem_t bg_itemlist[] =
  */
 	{
 		"weapon_bfg",
-		Pmiscsounds "/w_pkup.wav",
-		{ Pbfgmodels "/bfg.md3",
+		Pmiscsounds "/w_pkup",
+		{ Pbfgmodels "/bfg",
 		  NULL, NULL, NULL},
 /* icon */ Picons "/iconw_bfg",
 /* pickup */ "BFG10K",
@@ -333,8 +333,8 @@ gitem_t bg_itemlist[] =
  */
 	{
 		"weapon_grapplinghook",
-		Pmiscsounds "/w_pkup.wav",
-		{ Phookmodels "/grapple.md3",
+		Pmiscsounds "/w_pkup",
+		{ Phookmodels "/grapple",
 		  NULL, NULL, NULL},
 /* icon */ Picons "/iconw_grapple",
 /* pickup */ "Grappling Hook",
@@ -353,8 +353,8 @@ gitem_t bg_itemlist[] =
  */
 	{
 		"ammo_shells",
-		Pmiscsounds "/am_pkup.wav",
-		{ Pammomodels "/shotgunam.md3",
+		Pmiscsounds "/am_pkup",
+		{ Pammomodels "/shotgunam",
 		  NULL, NULL, NULL},
 /* icon */ Picons "/icona_shotgun",
 /* pickup */ "Shells",
@@ -369,8 +369,8 @@ gitem_t bg_itemlist[] =
  */
 	{
 		"ammo_bullets",
-		Pmiscsounds "/am_pkup.wav",
-		{ Pammomodels "/machinegunam.md3",
+		Pmiscsounds "/am_pkup",
+		{ Pammomodels "/machinegunam",
 		  NULL, NULL, NULL},
 /* icon */ Picons "/icona_machinegun",
 /* pickup */ "Bullets",
@@ -385,8 +385,8 @@ gitem_t bg_itemlist[] =
  */
 	{
 		"ammo_grenades",
-		Pmiscsounds "/am_pkup.wav",
-		{ Pammomodels "/grenadeam.md3",
+		Pmiscsounds "/am_pkup",
+		{ Pammomodels "/grenadeam",
 		  NULL, NULL, NULL},
 /* icon */ Picons "/icona_grenade",
 /* pickup */ "Grenades",
@@ -401,8 +401,8 @@ gitem_t bg_itemlist[] =
  */
 	{
 		"ammo_cells",
-		Pmiscsounds "/am_pkup.wav",
-		{ Pammomodels "/plasmaam.md3",
+		Pmiscsounds "/am_pkup",
+		{ Pammomodels "/plasmaam",
 		  NULL, NULL, NULL},
 /* icon */ Picons "/icona_plasma",
 /* pickup */ "Cells",
@@ -417,8 +417,8 @@ gitem_t bg_itemlist[] =
  */
 	{
 		"ammo_lightning",
-		Pmiscsounds "/am_pkup.wav",
-		{ Pammomodels "/lightningam.md3",
+		Pmiscsounds "/am_pkup",
+		{ Pammomodels "/lightningam",
 		  NULL, NULL, NULL},
 /* icon */ Picons "/icona_lightning",
 /* pickup */ "Lightning",
@@ -433,8 +433,8 @@ gitem_t bg_itemlist[] =
  */
 	{
 		"ammo_rockets",
-		Pmiscsounds "/am_pkup.wav",
-		{ Pammomodels "/rocketam.md3",
+		Pmiscsounds "/am_pkup",
+		{ Pammomodels "/rocketam",
 		  NULL, NULL, NULL},
 /* icon */ Picons "/icona_rocket",
 /* pickup */ "Rockets",
@@ -449,8 +449,8 @@ gitem_t bg_itemlist[] =
  */
 	{
 		"ammo_slugs",
-		Pmiscsounds "/am_pkup.wav",
-		{ Pammomodels "/railgunam.md3",
+		Pmiscsounds "/am_pkup",
+		{ Pammomodels "/railgunam",
 		  NULL, NULL, NULL},
 /* icon */ Picons "/icona_railgun",
 /* pickup */ "Slugs",
@@ -465,8 +465,8 @@ gitem_t bg_itemlist[] =
  */
 	{
 		"ammo_bfg",
-		Pmiscsounds "/am_pkup.wav",
-		{ Pammomodels "/bfgam.md3",
+		Pmiscsounds "/am_pkup",
+		{ Pammomodels "/bfgam",
 		  NULL, NULL, NULL},
 /* icon */ Picons "/icona_bfg",
 /* pickup */ "Bfg Ammo",
@@ -484,8 +484,8 @@ gitem_t bg_itemlist[] =
  */
 	{
 		"holdable_teleporter",
-		Pitemsounds "/holdable.wav",
-		{ Pholdablemodels "/teleporter.md3",
+		Pitemsounds "/holdable",
+		{ Pholdablemodels "/teleporter",
 		  NULL, NULL, NULL},
 /* icon */ Picons "/teleporter",
 /* pickup */ "Personal Teleporter",
@@ -499,10 +499,10 @@ gitem_t bg_itemlist[] =
  */
 	{
 		"holdable_medkit",
-		Pitemsounds "/holdable.wav",
+		Pitemsounds "/holdable",
 		{
-			Pholdablemodels "/medkit.md3",
-			Pholdablemodels "/medkit_sphere.md3",
+			Pholdablemodels "/medkit",
+			Pholdablemodels "/medkit_sphere",
 			NULL, NULL
 		},
 /* icon */ Picons "/medkit",
@@ -511,7 +511,7 @@ gitem_t bg_itemlist[] =
 		IT_HOLDABLE,
 		HI_MEDKIT,
 /* precache */ "",
-/* sounds */ Pitemsounds "/use_medkit.wav"
+/* sounds */ Pitemsounds "/use_medkit"
 	},
 
 	/*
@@ -521,9 +521,9 @@ gitem_t bg_itemlist[] =
  */
 	{
 		"item_quad",
-		Pitemsounds "/quaddamage.wav",
-		{ Pinstantmodels "/quad.md3",
-		  Pinstantmodels "/quad_ring.md3",
+		Pitemsounds "/quaddamage",
+		{ Pinstantmodels "/quad",
+		  Pinstantmodels "/quad_ring",
 		  NULL, NULL },
 /* icon */ Picons "/quad",
 /* pickup */ "Quad Damage",
@@ -531,16 +531,16 @@ gitem_t bg_itemlist[] =
 		IT_POWERUP,
 		PW_QUAD,
 /* precache */ "",
-/* sounds */ (Pitemsounds "/damage2.wav " Pitemsounds "/damage3.wav")
+/* sounds */ (Pitemsounds "/damage2 " Pitemsounds "/damage3")
 	},
 
 /*QUAKED item_enviro (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
  */
 	{
 		"item_enviro",
-		Pitemsounds "/protect.wav",
-		{ Pinstantmodels "/enviro.md3",
-		  Pinstantmodels "/enviro_ring.md3",
+		Pitemsounds "/protect",
+		{ Pinstantmodels "/enviro",
+		  Pinstantmodels "/enviro_ring",
 		  NULL, NULL },
 /* icon */ Picons "/envirosuit",
 /* pickup */ "Battle Suit",
@@ -548,16 +548,16 @@ gitem_t bg_itemlist[] =
 		IT_POWERUP,
 		PW_BATTLESUIT,
 /* precache */ "",
-/* sounds */ (Pitemsounds "/airout.wav " Pitemsounds "/protect3.wav")
+/* sounds */ (Pitemsounds "/airout " Pitemsounds "/protect3")
 	},
 
 /*QUAKED item_haste (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
  */
 	{
 		"item_haste",
-		Pitemsounds "/haste.wav",
-		{ Pinstantmodels "/haste.md3",
-		  Pinstantmodels "/haste_ring.md3",
+		Pitemsounds "/haste",
+		{ Pinstantmodels "/haste",
+		  Pinstantmodels "/haste_ring",
 		  NULL, NULL },
 /* icon */ Picons "/haste",
 /* pickup */ "Speed",
@@ -572,9 +572,9 @@ gitem_t bg_itemlist[] =
  */
 	{
 		"item_invis",
-		Pitemsounds "/invisibility.wav",
-		{ Pinstantmodels "/invis.md3",
-		  Pinstantmodels "/invis_ring.md3",
+		Pitemsounds "/invisibility",
+		{ Pinstantmodels "/invis",
+		  Pinstantmodels "/invis_ring",
 		  NULL, NULL },
 /* icon */ Picons "/invis",
 /* pickup */ "Invisibility",
@@ -589,9 +589,9 @@ gitem_t bg_itemlist[] =
  */
 	{
 		"item_regen",
-		Pitemsounds "/regeneration.wav",
-		{ Pinstantmodels "/regen.md3",
-		  Pinstantmodels "/regen_ring.md3",
+		Pitemsounds "/regeneration",
+		{ Pinstantmodels "/regen",
+		  Pinstantmodels "/regen_ring",
 		  NULL, NULL },
 /* icon */ Picons "/regen",
 /* pickup */ "Regeneration",
@@ -599,16 +599,16 @@ gitem_t bg_itemlist[] =
 		IT_POWERUP,
 		PW_REGEN,
 /* precache */ "",
-/* sounds */ Pitemsounds "/regen.wav"
+/* sounds */ Pitemsounds "/regen"
 	},
 
 /*QUAKED item_flight (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
  */
 	{
 		"item_flight",
-		Pitemsounds "/flight.wav",
-		{ Pinstantmodels "/flight.md3",
-		  Pinstantmodels "/flight_ring.md3",
+		Pitemsounds "/flight",
+		{ Pinstantmodels "/flight",
+		  Pinstantmodels "/flight_ring",
 		  NULL, NULL },
 /* icon */ Picons "/flight",
 /* pickup */ "Flight",
@@ -616,7 +616,7 @@ gitem_t bg_itemlist[] =
 		IT_POWERUP,
 		PW_FLIGHT,
 /* precache */ "",
-/* sounds */ Pitemsounds "/flight.wav"
+/* sounds */ Pitemsounds "/flight"
 	},
 
 /*QUAKED team_CTF_redflag (1 0 0) (-16 -16 -16) (16 16 16)
@@ -625,7 +625,7 @@ gitem_t bg_itemlist[] =
 	{
 		"team_CTF_redflag",
 		NULL,
-		{ Pflagmodels "/r_flag.md3",
+		{ Pflagmodels "/r_flag",
 		  NULL, NULL, NULL },
 /* icon */ Picons "/iconf_red1",
 /* pickup */ "Red Flag",
@@ -642,7 +642,7 @@ gitem_t bg_itemlist[] =
 	{
 		"team_CTF_blueflag",
 		NULL,
-		{ Pflagmodels "/b_flag.md3",
+		{ Pflagmodels "/b_flag",
 		  NULL, NULL, NULL },
 /* icon */ Picons "/iconf_blu1",
 /* pickup */ "Blue Flag",
@@ -658,8 +658,8 @@ gitem_t bg_itemlist[] =
  */
 	{
 		"holdable_kamikaze",
-		Pitemsounds "/holdable.wav",
-		{ Pholdablemodels "/kamikazi.md3",
+		Pitemsounds "/holdable",
+		{ Pholdablemodels "/kamikazi",
 		  NULL, NULL, NULL},
 /* icon */ Picons "/kamikaze",
 /* pickup */ "Kamikaze",
@@ -667,15 +667,15 @@ gitem_t bg_itemlist[] =
 		IT_HOLDABLE,
 		HI_KAMIKAZE,
 /* precache */ "",
-/* sounds */ Pitemsounds "/kamikazerespawn.wav"
+/* sounds */ Pitemsounds "/kamikazerespawn"
 	},
 
 /*QUAKED holdable_portal (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
  */
 	{
 		"holdable_portal",
-		Pitemsounds "/holdable.wav",
-		{ Pholdablemodels "/porter.md3",
+		Pitemsounds "/holdable",
+		{ Pholdablemodels "/porter",
 		  NULL, NULL, NULL},
 /* icon */ Picons "/portal",
 /* pickup */ "Portal",
@@ -690,8 +690,8 @@ gitem_t bg_itemlist[] =
  */
 	{
 		"holdable_invulnerability",
-		Pitemsounds "/holdable.wav",
-		{ Pholdablemodels "/invulnerability.md3",
+		Pitemsounds "/holdable",
+		{ Pholdablemodels "/invulnerability",
 		  NULL, NULL, NULL},
 /* icon */ Picons "/invulnerability",
 /* pickup */ "Invulnerability",
@@ -706,8 +706,8 @@ gitem_t bg_itemlist[] =
  */
 	{
 		"ammo_nails",
-		Pmiscsounds "/am_pkup.wav",
-		{ Pammomodels "/nailgunam.md3",
+		Pmiscsounds "/am_pkup",
+		{ Pammomodels "/nailgunam",
 		  NULL, NULL, NULL},
 /* icon */ Picons "/icona_nailgun",
 /* pickup */ "Nails",
@@ -722,8 +722,8 @@ gitem_t bg_itemlist[] =
  */
 	{
 		"ammo_mines",
-		Pmiscsounds "/am_pkup.wav",
-		{ Pammomodels "/proxmineam.md3",
+		Pmiscsounds "/am_pkup",
+		{ Pammomodels "/proxmineam",
 		  NULL, NULL, NULL},
 /* icon */ Picons "/icona_proxlauncher",
 /* pickup */ "Proximity Mines",
@@ -738,8 +738,8 @@ gitem_t bg_itemlist[] =
  */
 	{
 		"ammo_belt",
-		Pmiscsounds "/am_pkup.wav",
-		{ Pammomodels "/chaingunam.md3",
+		Pmiscsounds "/am_pkup",
+		{ Pammomodels "/chaingunam",
 		  NULL, NULL, NULL},
 /* icon */ Picons "/icona_chaingun",
 /* pickup */ "Chaingun Belt",
@@ -757,8 +757,8 @@ gitem_t bg_itemlist[] =
  */
 	{
 		"item_scout",
-		Pitemsounds "/scout.wav",
-		{ Pinstantmodels "/scout.md3",
+		Pitemsounds "/scout",
+		{ Pinstantmodels "/scout",
 		  NULL, NULL, NULL },
 /* icon */ Picons "/scout",
 /* pickup */ "Scout",
@@ -773,8 +773,8 @@ gitem_t bg_itemlist[] =
  */
 	{
 		"item_guard",
-		Pitemsounds "/guard.wav",
-		{ Pinstantmodels "/guard.md3",
+		Pitemsounds "/guard",
+		{ Pinstantmodels "/guard",
 		  NULL, NULL, NULL },
 /* icon */ Picons "/guard",
 /* pickup */ "Guard",
@@ -789,8 +789,8 @@ gitem_t bg_itemlist[] =
  */
 	{
 		"item_doubler",
-		Pitemsounds "/doubler.wav",
-		{ Pinstantmodels "/doubler.md3",
+		Pitemsounds "/doubler",
+		{ Pinstantmodels "/doubler",
 		  NULL, NULL, NULL },
 /* icon */ Picons "/doubler",
 /* pickup */ "Doubler",
@@ -805,8 +805,8 @@ gitem_t bg_itemlist[] =
  */
 	{
 		"item_ammoregen",
-		Pitemsounds "/ammoregen.wav",
-		{ Pinstantmodels "/ammo.md3",
+		Pitemsounds "/ammoregen",
+		{ Pinstantmodels "/ammo",
 		  NULL, NULL, NULL },
 /* icon */ Picons "/ammo_regen",
 /* pickup */ "Ammo Regen",
@@ -823,7 +823,7 @@ gitem_t bg_itemlist[] =
 	{
 		"team_CTF_neutralflag",
 		NULL,
-		{ Pflagmodels "/n_flag.md3",
+		{ Pflagmodels "/n_flag",
 		  NULL, NULL, NULL },
 /* icon */ Picons "/iconf_neutral1",
 /* pickup */ "Neutral Flag",
@@ -836,8 +836,8 @@ gitem_t bg_itemlist[] =
 
 	{
 		"item_redcube",
-		Pmiscsounds "/am_pkup.wav",
-		{ Ppowerupmodels "s/orb/r_orb.md3",
+		Pmiscsounds "/am_pkup",
+		{ Ppowerupmodels "s/orb/r_orb",
 		  NULL, NULL, NULL },
 /* icon */ Picons "/iconh_rorb",
 /* pickup */ "Red Cube",
@@ -850,8 +850,8 @@ gitem_t bg_itemlist[] =
 
 	{
 		"item_bluecube",
-		Pmiscsounds "/am_pkup.wav",
-		{ Ppowerupmodels "/orb/b_orb.md3",
+		Pmiscsounds "/am_pkup",
+		{ Ppowerupmodels "/orb/b_orb",
 		  NULL, NULL, NULL },
 /* icon */ Picons "/iconh_borb",
 /* pickup */ "Blue Cube",
@@ -865,8 +865,8 @@ gitem_t bg_itemlist[] =
  */
 	{
 		"weapon_nailgun",
-		Pmiscsounds "/w_pkup.wav",
-		{ "models/weapons/nailgun/nailgun.md3",
+		Pmiscsounds "/w_pkup",
+		{ "models/weapons/nailgun/nailgun",
 		  NULL, NULL, NULL},
 /* icon */ Picons "/iconw_nailgun",
 /* pickup */ "Nailgun",
@@ -881,8 +881,8 @@ gitem_t bg_itemlist[] =
  */
 	{
 		"weapon_prox_launcher",
-		Pmiscsounds "/w_pkup.wav",
-		{ Pproxmodels "/proxmine.md3",
+		Pmiscsounds "/w_pkup",
+		{ Pproxmodels "/proxmine",
 		  NULL, NULL, NULL},
 /* icon */ Picons "/iconw_proxlauncher",
 /* pickup */ "Prox Launcher",
@@ -890,20 +890,20 @@ gitem_t bg_itemlist[] =
 		IT_WEAPON,
 		WP_PROX_LAUNCHER,
 /* precache */ "",
-/* sounds */ Pproxsounds "/wstbtick.wav "
-	     Pproxsounds "/wstbactv.wav "
-	     Pproxsounds "/wstbimpl.wav "
-	     Pproxsounds "/wstbimpm.wav "
-	     Pproxsounds "/wstbimpd.wav "
-	     Pproxsounds "/wstbactv.wav"
+/* sounds */ Pproxsounds "/wstbtick "
+	     Pproxsounds "/wstbactv "
+	     Pproxsounds "/wstbimpl "
+	     Pproxsounds "/wstbimpm "
+	     Pproxsounds "/wstbimpd "
+	     Pproxsounds "/wstbactv"
 	},
 
 /*QUAKED weapon_chaingun (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
  */
 	{
 		"weapon_chaingun",
-		Pmiscsounds "/w_pkup.wav",
-		{ Pgattlingmodels "/vulcan.md3",
+		Pmiscsounds "/w_pkup",
+		{ Pgattlingmodels "/vulcan",
 		  NULL, NULL, NULL},
 /* icon */ Picons "/iconw_chaingun",
 /* pickup */ "Chaingun",
@@ -911,7 +911,7 @@ gitem_t bg_itemlist[] =
 		IT_WEAPON,
 		WP_CHAINGUN,
 /* precache */ "",
-/* sounds */ Pgattlingsounds "/wvulwind.wav"
+/* sounds */ Pgattlingsounds "/wvulwind"
 	},
 #endif
 
