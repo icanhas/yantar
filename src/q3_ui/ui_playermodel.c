@@ -20,16 +20,16 @@
  
 #include "ui_local.h"
 
-#define MODEL_BACK0	"menu/art/back_0"
-#define MODEL_BACK1	"menu/art/back_1"
-#define MODEL_SELECT	"menu/art/opponents_select"
-#define MODEL_SELECTED	"menu/art/opponents_selected"
-#define MODEL_FRAMEL	"menu/art/frame1_l"
-#define MODEL_FRAMER	"menu/art/frame1_r"
-#define MODEL_PORTS	"menu/art/player_models_ports"
-#define MODEL_ARROWS	"menu/art/gs_arrows_0"
-#define MODEL_ARROWSL	"menu/art/gs_arrows_l"
-#define MODEL_ARROWSR	"menu/art/gs_arrows_r"
+#define MODEL_BACK0	Pmenuart "/back_0"
+#define MODEL_BACK1	Pmenuart "/back_1"
+#define MODEL_SELECT	Pmenuart "/opponents_select"
+#define MODEL_SELECTED	Pmenuart "/opponents_selected"
+#define MODEL_FRAMEL	Pmenuart "/frame1_l"
+#define MODEL_FRAMER	Pmenuart "/frame1_r"
+#define MODEL_PORTS	Pmenuart "/player_models_ports"
+#define MODEL_ARROWS	Pmenuart "/gs_arrows_0"
+#define MODEL_ARROWSL	Pmenuart "/gs_arrows_l"
+#define MODEL_ARROWSR	Pmenuart "/gs_arrows_r"
 
 #define LOW_MEMORY	(5 * 1024 * 1024)
 
