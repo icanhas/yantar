@@ -89,7 +89,7 @@
 #define Pinstantmodels		Ppowerupmodels "/instant"
 
 /*
- * bytecode
+ * etc.
  */
 #define Pvmfiles			"vm"
-
+#define Pmaps				"maps"

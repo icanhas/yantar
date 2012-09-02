@@ -445,7 +445,7 @@ SV_SpawnServer(char *server, qbool killBots)
 	sv.checksumFeed = (((int)rand() << 16) ^ rand()) ^ Q_Milliseconds();
 	FS_Restart(sv.checksumFeed);
 
-	CM_LoadMap(va("maps/%s.bsp", server), qfalse, &checksum);
+	CM_LoadMap(va(Pmaps "/%s.bsp", server), qfalse, &checksum);
 
 	/* set serverinfo visible name */
 	Cvar_Set("mapname", server);

@@ -749,7 +749,7 @@ CL_InitCGame(void)
 	info = cl.gameState.stringData +
 	       cl.gameState.stringOffsets[ CS_SERVERINFO ];
 	mapname = Info_ValueForKey(info, "mapname");
-	Q_sprintf(cl.mapname, sizeof(cl.mapname), "maps/%s.bsp", mapname);
+	Q_sprintf(cl.mapname, sizeof(cl.mapname), Pmaps "/%s.bsp", mapname);
 
 	/* load the dll or bytecode */
 	interpret = Cvar_VariableValue("vm_cgame");

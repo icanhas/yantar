@@ -171,7 +171,7 @@ CG_ParseServerinfo(void)
 	cgs.timelimit		= atoi(Info_ValueForKey(info, "timelimit"));
 	cgs.maxclients		= atoi(Info_ValueForKey(info, "sv_maxclients"));
 	mapname = Info_ValueForKey(info, "mapname");
-	Q_sprintf(cgs.mapname, sizeof(cgs.mapname), "maps/%s.bsp", mapname);
+	Q_sprintf(cgs.mapname, sizeof(cgs.mapname), Pmaps "/%s.bsp", mapname);
 	Q_strncpyz(cgs.redTeam,
 		Info_ValueForKey(info, "g_redTeam"), sizeof(cgs.redTeam));
 	trap_Cvar_Set("g_redTeam", cgs.redTeam);

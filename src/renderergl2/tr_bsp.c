@@ -314,7 +314,7 @@ R_LoadLightmaps(lump_t *l, lump_t *surfs)
 
 			/* look for hdr lightmaps */
 			if(r_hdr->integer){
-				Q_sprintf(filename, sizeof(filename), "maps/%s/lm_%04d.hdr",
+				Q_sprintf(filename, sizeof(filename), Pmaps "/%s/lm_%04d.hdr",
 					s_worldData.baseName,
 					i * (tr.worldDeluxeMapping ? 2 : 1));
 				/* ri.Printf(PRINT_ALL, "looking for %s\n", filename); */
@@ -2061,7 +2061,7 @@ R_LoadSurfaces(lump_t *surfs, lump_t *verts, lump_t *indexLump)
 		char	filename[MAX_QPATH];
 		int	size;
 
-		Q_sprintf(filename, sizeof(filename), "maps/%s/vertlight.raw", s_worldData.baseName);
+		Q_sprintf(filename, sizeof(filename), Pmaps "/%s/vertlight.raw", s_worldData.baseName);
 		/* ri.Printf(PRINT_ALL, "looking for %s\n", filename); */
 
 		size = ri.FS_ReadFile(filename, (void**)&hdrVertColors);
@@ -2562,7 +2562,7 @@ R_LoadLightGrid(lump_t *l)
 		float *hdrLightGrid;
 		int	size;
 
-		Q_sprintf(filename, sizeof(filename), "maps/%s/lightgrid.raw", s_worldData.baseName);
+		Q_sprintf(filename, sizeof(filename), Pmaps "/%s/lightgrid.raw", s_worldData.baseName);
 		/* ri.Printf(PRINT_ALL, "looking for %s\n", filename); */
 
 		size = ri.FS_ReadFile(filename, (void**)&hdrLightGrid);

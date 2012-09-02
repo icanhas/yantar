@@ -987,7 +987,7 @@ AAS_WriteRouteCache(void)
 				numareacache++;
 	}
 	/* open the file for writing */
-	Q_sprintf(filename, MAX_QPATH, "maps/%s.rcd", aasworld.mapname);
+	Q_sprintf(filename, MAX_QPATH, Pmaps "/%s.rcd", aasworld.mapname);
 	botimport.FS_FOpenFile(filename, &fp, FS_WRITE);
 	if(!fp){
 		AAS_Error("Unable to open file: %s\n", filename);
@@ -1086,7 +1086,7 @@ AAS_ReadRouteCache(void)
 	routecacheheader_t	routecacheheader;
 	aas_routingcache_t	*cache;
 
-	Q_sprintf(filename, MAX_QPATH, "maps/%s.rcd", aasworld.mapname);
+	Q_sprintf(filename, MAX_QPATH, Pmaps "/%s.rcd", aasworld.mapname);
 	botimport.FS_FOpenFile(filename, &fp, FS_READ);
 	if(!fp)
 		return qfalse;

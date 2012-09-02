@@ -329,7 +329,7 @@ AAS_LoadFiles(const char *mapname)
 	AAS_LoadBSPFile();
 
 	/* load the aas file */
-	Q_sprintf(aasfile, MAX_PATH, "maps/%s.aas", mapname);
+	Q_sprintf(aasfile, MAX_PATH, Pmaps "/%s.aas", mapname);
 	errnum = AAS_LoadAASFile(aasfile);
 	if(errnum != BLERR_NOERROR)
 		return errnum;
