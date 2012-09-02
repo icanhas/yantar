@@ -1,3 +1,4 @@
+/* display information while data is being loaded */
 /*
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
@@ -17,20 +18,12 @@
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-/*
- * cg_info.c -- display information while data is being loading */
-
 #include "cg_local.h"
 
 enum {
 	MAX_LOADING_PLAYER_ICONS = 16,
 	MAX_LOADING_ITEM_ICONS = 26
 };
-
-/* file extensions to expect */
-#define Iconext "tga"	/* player icons */
-#define Annext	"wav"	/* announce */
-#define Lsext	"tga"	/* levelshot */
 
 static int	loadingPlayerIconCount;
 static int	loadingItemIconCount;
@@ -40,15 +33,13 @@ static qhandle_t	loadingItemIcons[MAX_LOADING_ITEM_ICONS];
 static void
 CG_DrawLoadingIcons(void)
 {
-	int	n;
-	int	x, y;
+	int	n, x, y;
 
 	for(n = 0; n < loadingPlayerIconCount; n++){
 		x	= 16 + n * 78;
 		y	= 324-40;
 		CG_DrawPic(x, y, 64, 64, loadingPlayerIcons[n]);
 	}
-
 	for(n = 0; n < loadingItemIconCount; n++){
 		y = 400-40;
 		if(n >= 13)
@@ -62,7 +53,6 @@ void
 CG_LoadingString(const char *s)
 {
 	Q_strncpyz(cg.infoScreenText, s, sizeof(cg.infoScreenText));
-
 	trap_UpdateScreen();
 }
 
@@ -72,11 +62,9 @@ CG_LoadingItem(int itemNum)
 	gitem_t *item;
 
 	item = &bg_itemlist[itemNum];
-
 	if(item->icon && loadingItemIconCount < MAX_LOADING_ITEM_ICONS)
 		loadingItemIcons[loadingItemIconCount++] =
 			trap_R_RegisterShaderNoMip(item->icon);
-
 	CG_LoadingString(item->pickup_name);
 }
 
@@ -100,20 +88,20 @@ CG_LoadingClient(int clientNum)
 			skin = "default";
 
 		Q_sprintf(iconName, MAX_QPATH,
-			"models/players/%s/icon_%s." Iconext, model, skin);
+			Pplayermodels "/%s/icon_%s", model, skin);
 
 		loadingPlayerIcons[loadingPlayerIconCount]
 			= trap_R_RegisterShaderNoMip(iconName);
 		if(!loadingPlayerIcons[loadingPlayerIconCount]){
 			Q_sprintf(iconName, MAX_QPATH,
-				"models/players/characters/%s/icon_%s." Iconext,
+				Pplayermodels "/characters/%s/icon_%s",
 				model, skin);
 			loadingPlayerIcons[loadingPlayerIconCount]
 				= trap_R_RegisterShaderNoMip(iconName);
 		}
 		if(!loadingPlayerIcons[loadingPlayerIconCount]){
 			Q_sprintf(iconName, MAX_QPATH,
-				"models/players/%s/icon_%s." Iconext,
+				Pplayermodels "/%s/icon_%s",
 				DEFAULT_MODEL, "default");
 			loadingPlayerIcons[loadingPlayerIconCount]
 				= trap_R_RegisterShaderNoMip(iconName);
@@ -127,29 +115,23 @@ CG_LoadingClient(int clientNum)
 	Q_CleanStr(personality);
 
 	if(cgs.gametype == GT_SINGLE_PLAYER)
-		trap_S_RegisterSound(va("sound/player/announce/%s." Annext,
-				personality), qtrue);
-
+		trap_S_RegisterSound(va(Pannounce "/%s", personality), qtrue);
 	CG_LoadingString(personality);
 }
 
 void
 CG_DrawInformation(void)
 {
-	const char *s;
-	const char *info;
-	const char *sysInfo;
-	int	y;
-	int	value;
-	qhandle_t	levelshot;
-	qhandle_t	detail;
+	const char *s, *info, *sysInfo;
+	int y, value;
+	qhandle_t levelshot, detail;
 	char buf[1024];
 
 	info = CG_ConfigString(CS_SERVERINFO);
 	sysInfo = CG_ConfigString(CS_SYSTEMINFO);
 
 	s = Info_ValueForKey(info, "mapname");
-	levelshot = trap_R_RegisterShaderNoMip(va("levelshots/%s." Lsext, s));
+	levelshot = trap_R_RegisterShaderNoMip(va("levelshots/%s", s));
 	if(!levelshot)
 		levelshot = trap_R_RegisterShaderNoMip("menu/art/unknownmap");
 	trap_R_SetColor(NULL);
@@ -163,8 +145,10 @@ CG_DrawInformation(void)
 	/* draw the icons of things as they are loaded */
 	CG_DrawLoadingIcons();
 
-	/* the first 150 rows are reserved for the client connection
-	 * screen to write into */
+	/*
+	 * the first 150 rows are reserved for the client connection
+	 * screen to write into 
+	 */
 	if(cg.infoScreenText[0])
 		UI_DrawProportionalString(320, 128-32, va("Loading... %s",
 				cg.infoScreenText),
