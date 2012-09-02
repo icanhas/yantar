@@ -315,8 +315,7 @@ PlayerModel_PicEvent(void* ptr, int event)
 
 	/* get model and strip icon_ */
 	modelnum = s_playermodel.modelpage*MAX_MODELSPERPAGE + i;
-	buffptr = s_playermodel.modelnames[modelnum] + strlen(
-		"models/players/");
+	buffptr = s_playermodel.modelnames[modelnum] + strlen(Pplayermodels "/");
 	pdest = strstr(buffptr,"icon_");
 	if(pdest){
 		/* track the whole model/skin name */
@@ -391,7 +390,7 @@ PlayerModel_BuildList(void)
 	s_playermodel.nummodels = 0;
 
 	/* iterate directory of all player models */
-	numdirs = trap_FS_GetFileList("models/players", "/", dirlist, 2048);
+	numdirs = trap_FS_GetFileList(Pplayermodels, "/", dirlist, 2048);
 	dirptr	= dirlist;
 	for(i=0; i<numdirs && s_playermodel.nummodels < MAX_PLAYERMODELS;
 	    i++,dirptr+=dirlen+1){
@@ -403,8 +402,7 @@ PlayerModel_BuildList(void)
 			continue;
 
 		/* iterate all skin files in directory */
-		numfiles =
-			trap_FS_GetFileList(va("models/players/%s",
+		numfiles = trap_FS_GetFileList(va(Pplayermodels "/%s",
 					dirptr), "tga", filelist, 2048);
 		fileptr = filelist;
 		for(j=0;
@@ -420,13 +418,13 @@ PlayerModel_BuildList(void)
 						s_playermodel.nummodels++],
 					sizeof(s_playermodel.modelnames[
 						       s_playermodel.nummodels]),
-					"models/players/%s/%s", dirptr, skinname);
+					Pplayermodels "/%s/%s", dirptr, skinname);
 			/* if (s_playermodel.nummodels >= MAX_PLAYERMODELS)
 			 * return; */
 
 			if(precache)
 				trap_S_RegisterSound(va(
-						"sound/player/announce/%s_wins.wav",
+						Pannounce "/%s_wins.wav",
 						skinname), qfalse);
 		}
 	}
@@ -465,7 +463,7 @@ PlayerModel_SetMenuItems(void)
 	/* find model in our list */
 	for(i=0; i<s_playermodel.nummodels; i++){
 		/* strip icon_ */
-		buffptr = s_playermodel.modelnames[i] + strlen("models/players/");
+		buffptr = s_playermodel.modelnames[i] + strlen(Pplayermodels "/");
 		pdest	= strstr(buffptr,"icon_");
 		if(pdest){
 			Q_strncpyz(modelskin,buffptr,pdest-buffptr+1);
