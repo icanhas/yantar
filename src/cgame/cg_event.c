@@ -490,12 +490,12 @@ CG_PainEvent(centity_t *cent, int health)
 			trap_S_StartSound(
 				NULL, cent->currentState.number, CHAN_VOICE,
 				CG_CustomSound(cent->currentState.number,
-					"sound/player/gurp1.wav"));
+					Pplayersounds "/gurp1.wav"));
 		else
 			trap_S_StartSound(
 				NULL, cent->currentState.number, CHAN_VOICE,
 				CG_CustomSound(cent->currentState.number,
-					"sound/player/gurp2.wav"));
+					Pplayersounds "/gurp2.wav"));
 	}else
 		trap_S_StartSound(NULL, cent->currentState.number, CHAN_VOICE,
 			CG_CustomSound(cent->currentState.number,
