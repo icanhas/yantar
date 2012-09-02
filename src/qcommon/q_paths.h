@@ -32,15 +32,25 @@
  */
 #define Pvis		"vis"
 
-#define Pgraphics	Pvis "/graphics"
+#define Pgraphics	Pvis ""
 #define Pmodels		Pvis "/models"
+#define Picons		Pvis "/icons"
+#define Psprites	Pvis "/sprites"
 
 #define Pmenuart	Pgraphics "/menu"
+#define P2dart		Pgraphics "/2d"
+#define Pdmgart	Pgraphics "/dmg"
+#define Pmiscart	Pgraphics "/misc"
 
 #define Pplayermodels	Pmodels "/players"
 #define Pammomodels	Pmodels "/ammo"
 #define Pweapmodels	Pmodels "/weaps"
 #define Pweaphitmodels	Pmodels "/weaphits"
+#define Ppowerupmodels	Pmodels "/powerups"
+#define Pflagmodels		Pmodels "/flags"
+#define Pobjectmodels	Pmodels "/mapobjects"
+#define Pgibmodels		Pmodels "/gibs"
+#define Pmiscmodels	Pmodels "/misc"
 
 #define Pgattlingmodels	Pweapmodels "/vulcan"
 #define Plgmodels	Pweapmodels "/lightning"
@@ -50,4 +60,13 @@
 #define Pproxmodels	Pweapmodels "/proxmine"
 #define Prlmodels	Pweapmodels "/rocket"
 #define Pshotgunmodels	Pweapmodels "/shotgun"
+#define Pshellmodels	Pweapmodels "/shells"
 
+#define Pflagbasemodels	Pobjectmodels "/flagbase"
+
+#define Ptelemodels		Pmiscmodels ""
+
+#define Pharvestermodels	Ppowerupmodels "/harvester"
+#define Pobeliskmodels		Ppowerupmodels "/obelisk"
+#define Parmormodels		Ppowerupmodels "/armor"
+#define Pshieldmodels		Ppowerupmodels "/shield"
