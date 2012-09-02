@@ -24,12 +24,12 @@
 *       SPECIFY SERVER
 *********************************************************************************/
 
-#define SPECIFYSERVER_FRAMEL	"menu/art/frame2_l"
-#define SPECIFYSERVER_FRAMER	"menu/art/frame1_r"
-#define SPECIFYSERVER_BACK0	"menu/art/back_0"
-#define SPECIFYSERVER_BACK1	"menu/art/back_1"
-#define SPECIFYSERVER_FIGHT0	"menu/art/fight_0"
-#define SPECIFYSERVER_FIGHT1	"menu/art/fight_1"
+#define SPECIFYSERVER_FRAMEL	Pmenuart "/frame2_l"
+#define SPECIFYSERVER_FRAMER	Pmenuart "/frame1_r"
+#define SPECIFYSERVER_BACK0	Pmenuart "/back_0"
+#define SPECIFYSERVER_BACK1	Pmenuart "/back_1"
+#define SPECIFYSERVER_FIGHT0	Pmenuart "/fight_0"
+#define SPECIFYSERVER_FIGHT1	Pmenuart "/fight_1"
 
 #define ID_SPECIFYSERVERBACK	102
 #define ID_SPECIFYSERVERGO	103

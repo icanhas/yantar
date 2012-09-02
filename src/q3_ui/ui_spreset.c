@@ -26,7 +26,7 @@
 #include "ui_local.h"
 
 
-#define ART_FRAME	"menu/art/cut_frame"
+#define ART_FRAME	Pmenuart "/cut_frame"
 
 #define ID_NO		100
 #define ID_YES		101
