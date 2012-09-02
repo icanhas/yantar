@@ -477,25 +477,25 @@ CG_PainEvent(centity_t *cent, int health)
 		return;
 
 	if(health < 25)
-		snd = "*pain25_1.wav";
+		snd = "*pain25_1";
 	else if(health < 50)
-		snd = "*pain50_1.wav";
+		snd = "*pain50_1";
 	else if(health < 75)
-		snd = "*pain75_1.wav";
+		snd = "*pain75_1";
 	else
-		snd = "*pain100_1.wav";
+		snd = "*pain100_1";
 	/* play a gurp sound instead of a normal pain sound */
 	if(CG_WaterLevel(cent) >= 1){
 		if(rand()&1)
 			trap_S_StartSound(
 				NULL, cent->currentState.number, CHAN_VOICE,
 				CG_CustomSound(cent->currentState.number,
-					Pplayersounds "/gurp1.wav"));
+					Pplayersounds "/gurp1"));
 		else
 			trap_S_StartSound(
 				NULL, cent->currentState.number, CHAN_VOICE,
 				CG_CustomSound(cent->currentState.number,
-					Pplayersounds "/gurp2.wav"));
+					Pplayersounds "/gurp2"));
 	}else
 		trap_S_StartSound(NULL, cent->currentState.number, CHAN_VOICE,
 			CG_CustomSound(cent->currentState.number,
@@ -590,7 +590,7 @@ CG_EntityEvent(centity_t *cent, vec3_t position)
 		DEBUGNAME("EV_FALL_MEDIUM");
 		/* use normal pain sound */
 		trap_S_StartSound(NULL, es->number, CHAN_VOICE,
-			CG_CustomSound(es->number, "*pain100_1.wav"));
+			CG_CustomSound(es->number, "*pain100_1"));
 		if(clientNum == cg.predictedPlayerState.clientNum){
 			/* smooth landing z changes */
 			cg.landChange	= -16;
@@ -600,7 +600,7 @@ CG_EntityEvent(centity_t *cent, vec3_t position)
 	case EV_FALL_FAR:
 		DEBUGNAME("EV_FALL_FAR");
 		trap_S_StartSound (NULL, es->number, CHAN_AUTO,
-			CG_CustomSound(es->number, "*fall1.wav"));
+			CG_CustomSound(es->number, "*fall1"));
 		cent->pe.painTime = cg.time;	/* don't play a pain sound right after this */
 		if(clientNum == cg.predictedPlayerState.clientNum){
 			/* smooth landing z changes */
@@ -664,18 +664,18 @@ CG_EntityEvent(centity_t *cent, vec3_t position)
 		trap_S_StartSound (cent->lerpOrigin, -1, CHAN_VOICE,
 			cgs.media.jumpPadSound);
 		trap_S_StartSound (NULL, es->number, CHAN_VOICE,
-			CG_CustomSound(es->number, "*jump1.wav"));
+			CG_CustomSound(es->number, "*jump1"));
 		break;
 
 	case EV_JUMP:
 		DEBUGNAME("EV_JUMP");
 		trap_S_StartSound (NULL, es->number, CHAN_VOICE,
-			CG_CustomSound(es->number, "*jump1.wav"));
+			CG_CustomSound(es->number, "*jump1"));
 		break;
 	case EV_TAUNT:
 		DEBUGNAME("EV_TAUNT");
 		trap_S_StartSound (NULL, es->number, CHAN_VOICE,
-			CG_CustomSound(es->number, "*taunt.wav"));
+			CG_CustomSound(es->number, "*taunt"));
 		break;
 #ifdef MISSIONPACK
 	case EV_TAUNT_YES:
@@ -727,7 +727,7 @@ CG_EntityEvent(centity_t *cent, vec3_t position)
 	case EV_WATER_CLEAR:
 		DEBUGNAME("EV_WATER_CLEAR");
 		trap_S_StartSound (NULL, es->number, CHAN_AUTO,
-			CG_CustomSound(es->number, "*gasp.wav"));
+			CG_CustomSound(es->number, "*gasp"));
 		break;
 
 	case EV_ITEM_PICKUP:
@@ -1232,10 +1232,10 @@ CG_EntityEvent(centity_t *cent, vec3_t position)
 		if(CG_WaterLevel(cent) >= 1)
 			trap_S_StartSound(NULL, es->number, CHAN_VOICE,
 				CG_CustomSound(es->number,
-					"*drown.wav"));
+					"*drown"));
 		else
 			trap_S_StartSound(NULL, es->number, CHAN_VOICE,
-				CG_CustomSound(es->number, va("*death%i.wav",
+				CG_CustomSound(es->number, va("*death%i",
 						event - EV_DEATH1 + 1)));
 
 		break;
