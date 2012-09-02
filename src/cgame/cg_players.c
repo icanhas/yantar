@@ -21,41 +21,42 @@
 #include "cg_local.h"
 
 char *cg_customSoundNames[] = {
-	"*death1.wav",
-	"*death2.wav",
-	"*death3.wav",
-	"*jump1.wav",
-	"*pain25_1.wav",
-	"*pain50_1.wav",
-	"*pain75_1.wav",
-	"*pain100_1.wav",
-	"*falling1.wav",
-	"*gasp.wav",
-	"*drown.wav",
-	"*fall1.wav",
-	"*taunt.wav",
+	"*death1",
+	"*death2",
+	"*death3",
+	"*jump1",
+	"*pain25_1",
+	"*pain50_1",
+	"*pain75_1",
+	"*pain100_1",
+	"*falling1",
+	"*gasp",
+	"*drown",
+	"*fall1",
+	"*taunt",
 	nil
 };
 
 sfxHandle_t
-CG_CustomSound(int clientNum, const char *soundName)
+CG_CustomSound(int cnum, const char *soundname)
 {
 	clientInfo_t *ci;
 	char **p;
 	int i;
 
-	if(soundName[0] != '*')
-		return trap_S_RegisterSound(soundName, qfalse);
+	if(soundname[0] != '*')
+		return trap_S_RegisterSound(soundname, qfalse);
 
-	if(clientNum < 0 || clientNum >= MAX_CLIENTS)
-		clientNum = 0;
-	ci = &cgs.clientinfo[clientNum];
+	if(cnum < 0 || cnum >= MAX_CLIENTS)
+		cnum = 0;
+	ci = &cgs.clientinfo[cnum];
 
 	p = cg_customSoundNames;
+	/* N.B.: extensions will need to be stripped if using full filenames */
 	for(i = 0; (i < MAX_CUSTOM_SOUNDS) && (*p != nil); i++, p++)
-		if(!strcmp(soundName, *p))
+		if(!strcmp(soundname, *p))
 			return ci->sounds[i];
-	CG_Error("Unknown custom sound: %s", soundName);
+	CG_Error("Unknown custom sound: %s", soundname);
 	return 0;
 }
 
