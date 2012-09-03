@@ -1464,7 +1464,6 @@ Q3OBJ = \
 Q3R2OBJ = \
   $(O)/renderer/tr_image_bmp.o \
   $(O)/renderer/tr_image_jpg.o \
-  $(O)/renderer/tr_image_pcx.o \
   $(O)/renderer/tr_image_png.o \
   $(O)/renderer/tr_image_tga.o \
   $(O)/renderer/tr_noise.o \
@@ -1515,7 +1514,6 @@ Q3ROBJ = \
   $(O)/renderer/tr_image_jpg.o \
   $(O)/renderer/tr_image_bmp.o \
   $(O)/renderer/tr_image_tga.o \
-  $(O)/renderer/tr_image_pcx.o \
   $(O)/renderer/tr_init.o \
   $(O)/renderer/tr_light.o \
   $(O)/renderer/tr_main.o \
