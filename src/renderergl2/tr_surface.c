@@ -1564,6 +1564,7 @@ RB_SurfaceAxis(void)
 static void
 RB_SurfaceEntity(surfaceType_t *surfType)
 {
+	UNUSED(surfType);
 	switch(backEnd.currentEntity->e.reType){
 	case RT_SPRITE:
 		RB_SurfaceSprite();
@@ -1590,6 +1591,7 @@ RB_SurfaceEntity(surfaceType_t *surfType)
 static void
 RB_SurfaceBad(surfaceType_t *surfType)
 {
+	UNUSED(surfType);
 	ri.Printf(PRINT_ALL, "Bad surface tesselated.\n");
 }
 
@@ -1663,6 +1665,7 @@ RB_SurfaceDisplayList(srfDisplayList_t *surf)
 static void
 RB_SurfaceSkip(void *surf)
 {
+	UNUSED(surf);
 }
 
 

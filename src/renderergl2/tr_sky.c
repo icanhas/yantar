@@ -544,7 +544,8 @@ static void
 FillCloudBox(const material_t *shader, int stage)
 {
 	int i;
-
+	
+	UNUSED(shader);
 	for(i =0; i < 6; i++){
 		int sky_mins_subd[2], sky_maxs_subd[2];
 		int s, t;

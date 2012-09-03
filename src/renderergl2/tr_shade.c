@@ -158,6 +158,7 @@ static void
 DrawNormals(shaderCommands_t *input)
 {
 	/* FIXME: implement this */
+	UNUSED(input);
 }
 
 /*

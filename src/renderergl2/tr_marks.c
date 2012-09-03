@@ -202,6 +202,9 @@ R_AddMarkFragments(int numClipPoints, vec3_t clipPoints[2][MAX_VERTS_ON_POLY],
 	int pingPong, i;
 	markFragment_t *mf;
 
+	UNUSED(maxFragments);
+	UNUSED(mins);
+	UNUSED(maxs);
 	/* chop the surface by all the bounding planes of the to be projected polygon */
 	pingPong = 0;
 

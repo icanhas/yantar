@@ -1507,6 +1507,7 @@ SurfIsOffscreen(const drawSurf_t *drawSurf, vec4_t clipDest[128])
 	unsigned int	pointOr		= 0;
 	unsigned int	pointAnd	= (unsigned int)~0;
 
+	UNUSED(clipDest);
 	if(glConfig.smpActive){	/* FIXME!  we can't do RB_BeginSurface/RB_EndSurface stuff with smp! */
 		return qfalse;
 	}
@@ -1957,9 +1958,9 @@ void
 R_DebugPolygon(int color, int numPoints, float *points)
 {
 	/* FIXME: implement this */
-#if 0
 	int i;
 
+if(0){
 	GL_State(GLS_DEPTHMASK_TRUE | GLS_SRCBLEND_ONE | GLS_DSTBLEND_ONE);
 
 	/* draw solid shade */
@@ -1979,7 +1980,7 @@ R_DebugPolygon(int color, int numPoints, float *points)
 		qglVertex3fv(points + i * 3);
 	qglEnd();
 	qglDepthRange(0, 1);
-#endif
+}
 }
 
 /*
@@ -2047,6 +2048,7 @@ R_RenderDlightCubemaps(const refdef_t *fd)
 {
 	int i;
 
+	UNUSED(fd);
 	for(i = 0; i < tr.refdef.num_dlights; i++){
 		viewParms_t shadowParms;
 		int j;

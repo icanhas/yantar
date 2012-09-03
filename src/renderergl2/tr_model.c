@@ -342,6 +342,7 @@ R_LoadMD3(model_t * mod, int lod, void *buffer, int bufferSize, const char *modN
 	int	version;
 	int	size;
 
+	UNUSED(bufferSize);
 	md3Model = (md3Header_t*)buffer;
 
 	version = LittleLong(md3Model->version);
