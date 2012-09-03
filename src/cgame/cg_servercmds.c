@@ -569,7 +569,7 @@ CG_ParseVoiceChats(const char *filename, voiceChatList_t *voiceChatList,
 	voiceChats = voiceChatList->voiceChats;
 	for(i = 0; i < maxVoiceChats; i++)
 		voiceChats[i].id[0] = 0;
-	token = Q_ReadTokenExt(p, qtrue);
+	token = Q_readtok2(p, qtrue);
 	if(!token || token[0] == 0)
 		return qtrue;
 	if(!Q_stricmp(token, "female"))
@@ -587,14 +587,14 @@ CG_ParseVoiceChats(const char *filename, voiceChatList_t *voiceChatList,
 
 	voiceChatList->numVoiceChats = 0;
 	while(1){
-		token = Q_ReadTokenExt(p, qtrue);
+		token = Q_readtok2(p, qtrue);
 		if(!token || token[0] == 0)
 			return qtrue;
 		Q_sprintf(voiceChats[voiceChatList->numVoiceChats].id,
 			sizeof(voiceChats[voiceChatList->numVoiceChats].id),
 			"%s",
 			token);
-		token = Q_ReadTokenExt(p, qtrue);
+		token = Q_readtok2(p, qtrue);
 		if(Q_stricmp(token, "{")){
 			trap_Print(va(S_COLOR_RED
 					"expected { found %s in voice chat file: %s\n",
@@ -604,7 +604,7 @@ CG_ParseVoiceChats(const char *filename, voiceChatList_t *voiceChatList,
 		}
 		voiceChats[voiceChatList->numVoiceChats].numSounds = 0;
 		while(1){
-			token = Q_ReadTokenExt(p, qtrue);
+			token = Q_readtok2(p, qtrue);
 			if(!token || token[0] == 0)
 				return qtrue;
 			if(!Q_stricmp(token, "}"))
@@ -614,7 +614,7 @@ CG_ParseVoiceChats(const char *filename, voiceChatList_t *voiceChatList,
 				voiceChats[voiceChatList->numVoiceChats].
 				numSounds] =
 				sound;
-			token = Q_ReadTokenExt(p, qtrue);
+			token = Q_readtok2(p, qtrue);
 			if(!token || token[0] == 0)
 				return qtrue;
 			Q_sprintf(
@@ -694,7 +694,7 @@ CG_HeadModelVoiceChats(char *filename)
 	ptr = buf;
 	p = &ptr;
 
-	token = Q_ReadTokenExt(p, qtrue);
+	token = Q_readtok2(p, qtrue);
 	if(!token || token[0] == 0)
 		return -1;
 

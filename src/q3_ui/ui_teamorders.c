@@ -326,7 +326,7 @@ UI_TeamOrdersMenu_BuildBotList(void)
 			teamOrdersMenuInfo.botNames[teamOrdersMenuInfo.
 						    numBots],
 			Info_ValueForKey(info, "n"), 16);
-		Q_CleanStr(teamOrdersMenuInfo.botNames[teamOrdersMenuInfo.
+		Q_cleanstr(teamOrdersMenuInfo.botNames[teamOrdersMenuInfo.
 						       numBots]);
 		teamOrdersMenuInfo.numBots++;
 	}

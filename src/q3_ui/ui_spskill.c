@@ -327,7 +327,7 @@ UI_SPSkillMenu_Init(void)
 	Menu_AddItem(&skillMenuInfo.menu, ( void* )&skillMenuInfo.item_back);
 	Menu_AddItem(&skillMenuInfo.menu, ( void* )&skillMenuInfo.item_fight);
 
-	skill = (int)Q_Clamp(1, 5, trap_Cvar_VariableValue("g_spSkill"));
+	skill = (int)Q_clamp(1, 5, trap_Cvar_VariableValue("g_spSkill"));
 	SetSkillColor(skill, color_white);
 	skillMenuInfo.art_skillPic.shader = skillMenuInfo.skillpics[skill - 1];
 	if(skill == 5)

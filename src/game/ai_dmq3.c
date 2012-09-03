@@ -1358,7 +1358,7 @@ ClientName(int client, char *name, int size)
 	trap_GetConfigstring(CS_PLAYERS+client, buf, sizeof(buf));
 	strncpy(name, Info_ValueForKey(buf, "n"), size-1);
 	name[size-1] = '\0';
-	Q_CleanStr(name);
+	Q_cleanstr(name);
 	return name;
 }
 
@@ -1394,7 +1394,7 @@ ClientFromName(char *name)
 		maxclients = trap_Cvar_VariableIntegerValue("sv_maxclients");
 	for(i = 0; i < maxclients && i < MAX_CLIENTS; i++){
 		trap_GetConfigstring(CS_PLAYERS+i, buf, sizeof(buf));
-		Q_CleanStr(buf);
+		Q_cleanstr(buf);
 		if(!Q_stricmp(Info_ValueForKey(buf, "n"), name)) return i;
 	}
 	return -1;
@@ -1416,7 +1416,7 @@ ClientOnSameTeamFromName(bot_state_t *bs, char *name)
 		if(!BotSameTeam(bs, i))
 			continue;
 		trap_GetConfigstring(CS_PLAYERS+i, buf, sizeof(buf));
-		Q_CleanStr(buf);
+		Q_cleanstr(buf);
 		if(!Q_stricmp(Info_ValueForKey(buf, "n"), name)) return i;
 	}
 	return -1;

@@ -108,7 +108,7 @@ GametypeBits(char *string)
 	bits = 0;
 	p = string;
 	while(1){
-		token = Q_ReadTokenExt(&p, qfalse);
+		token = Q_readtok2(&p, qfalse);
 		if(token[0] == 0)
 			break;
 
@@ -771,11 +771,11 @@ ServerOptions_Start(void)
 		break;
 	}
 
-	trap_Cvar_SetValue("sv_maxclients", Q_Clamp(0, 12, maxclients));
-	trap_Cvar_SetValue("dedicated", Q_Clamp(0, 2, dedicated));
-	trap_Cvar_SetValue ("timelimit", Q_Clamp(0, timelimit, timelimit));
-	trap_Cvar_SetValue ("fraglimit", Q_Clamp(0, fraglimit, fraglimit));
-	trap_Cvar_SetValue ("capturelimit", Q_Clamp(0, flaglimit, flaglimit));
+	trap_Cvar_SetValue("sv_maxclients", Q_clamp(0, 12, maxclients));
+	trap_Cvar_SetValue("dedicated", Q_clamp(0, 2, dedicated));
+	trap_Cvar_SetValue ("timelimit", Q_clamp(0, timelimit, timelimit));
+	trap_Cvar_SetValue ("fraglimit", Q_clamp(0, fraglimit, fraglimit));
+	trap_Cvar_SetValue ("capturelimit", Q_clamp(0, flaglimit, flaglimit));
 	trap_Cvar_SetValue("g_friendlyfire", friendlyfire);
 	trap_Cvar_SetValue("sv_pure", pure);
 	trap_Cvar_Set("sv_hostname", s_serveroptions.hostname.field.buffer);
@@ -848,7 +848,7 @@ ServerOptions_InitPlayerItems(void)
 		trap_Cvar_VariableStringBuffer(
 			"name", s_serveroptions.playerNameBuffers[0],
 			sizeof(s_serveroptions.playerNameBuffers[0]));
-		Q_CleanStr(s_serveroptions.playerNameBuffers[0]);
+		Q_cleanstr(s_serveroptions.playerNameBuffers[0]);
 	}
 
 	/* init teams */
@@ -1122,41 +1122,41 @@ ServerOptions_SetMenuItems(void)
 	case GT_FFA:
 	default:
 		Q_sprintf(s_serveroptions.fraglimit.field.buffer, 4, "%i",
-			(int)Q_Clamp(0, 999,
+			(int)Q_clamp(0, 999,
 				trap_Cvar_VariableValue("ui_ffa_fraglimit")));
 		Q_sprintf(s_serveroptions.timelimit.field.buffer, 4, "%i",
-			(int)Q_Clamp(0, 999,
+			(int)Q_clamp(0, 999,
 				trap_Cvar_VariableValue("ui_ffa_timelimit")));
 		break;
 
 	case GT_TOURNAMENT:
 		Q_sprintf(s_serveroptions.fraglimit.field.buffer, 4, "%i",
-			(int)Q_Clamp(0, 999,
+			(int)Q_clamp(0, 999,
 				trap_Cvar_VariableValue("ui_tourney_fraglimit")));
 		Q_sprintf(s_serveroptions.timelimit.field.buffer, 4, "%i",
-			(int)Q_Clamp(0, 999,
+			(int)Q_clamp(0, 999,
 				trap_Cvar_VariableValue("ui_tourney_timelimit")));
 		break;
 
 	case GT_TEAM:
 		Q_sprintf(s_serveroptions.fraglimit.field.buffer, 4, "%i",
-			(int)Q_Clamp(0, 999,
+			(int)Q_clamp(0, 999,
 				trap_Cvar_VariableValue("ui_team_fraglimit")));
 		Q_sprintf(s_serveroptions.timelimit.field.buffer, 4, "%i",
-			(int)Q_Clamp(0, 999,
+			(int)Q_clamp(0, 999,
 				trap_Cvar_VariableValue("ui_team_timelimit")));
-		s_serveroptions.friendlyfire.curvalue = (int)Q_Clamp(
+		s_serveroptions.friendlyfire.curvalue = (int)Q_clamp(
 			0, 1, trap_Cvar_VariableValue("ui_team_friendly"));
 		break;
 
 	case GT_CTF:
 		Q_sprintf(s_serveroptions.flaglimit.field.buffer, 4, "%i",
-			(int)Q_Clamp(0, 100,
+			(int)Q_clamp(0, 100,
 				trap_Cvar_VariableValue("ui_ctf_capturelimit")));
 		Q_sprintf(s_serveroptions.timelimit.field.buffer, 4, "%i",
-			(int)Q_Clamp(0, 999,
+			(int)Q_clamp(0, 999,
 				trap_Cvar_VariableValue("ui_ctf_timelimit")));
-		s_serveroptions.friendlyfire.curvalue = (int)Q_Clamp(
+		s_serveroptions.friendlyfire.curvalue = (int)Q_clamp(
 			0, 1, trap_Cvar_VariableValue("ui_ctf_friendly"));
 		break;
 	}
@@ -1165,7 +1165,7 @@ ServerOptions_SetMenuItems(void)
 		UI_Cvar_VariableString("sv_hostname"),
 		sizeof(s_serveroptions.hostname.field.buffer));
 	s_serveroptions.pure.curvalue =
-		Q_Clamp(0, 1, trap_Cvar_VariableValue("sv_pure"));
+		Q_clamp(0, 1, trap_Cvar_VariableValue("sv_pure"));
 
 	/* set the map pic */
 	info =
@@ -1247,7 +1247,7 @@ ServerOptions_MenuInit(qbool multiplayer)
 
 	memset(&s_serveroptions, 0,sizeof(serveroptions_t));
 	s_serveroptions.multiplayer = multiplayer;
-	s_serveroptions.gametype = (int)Q_Clamp(0, ARRAY_LEN(
+	s_serveroptions.gametype = (int)Q_clamp(0, ARRAY_LEN(
 			gametype_remap2) - 1,
 		trap_Cvar_VariableValue("g_gametype"));
 
@@ -1675,7 +1675,7 @@ UI_BotSelectMenu_UpdateGrid(void)
 				MAX_QPATH);
 			Q_strncpyz(botSelectInfo.botnames[i],
 				Info_ValueForKey(info, "name"), 16);
-			Q_CleanStr(botSelectInfo.botnames[i]);
+			Q_cleanstr(botSelectInfo.botnames[i]);
 			botSelectInfo.pics[i].generic.name =
 				botSelectInfo.boticons[i];
 			if(BotAlreadySelected(botSelectInfo.botnames[i]))

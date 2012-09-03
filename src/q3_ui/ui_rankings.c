@@ -128,7 +128,7 @@ Rankings_DrawName(void* self)
 			*p = '\0';
 
 	/* strip color codes */
-	Q_CleanStr(f->field.buffer);
+	Q_cleanstr(f->field.buffer);
 	length = strlen(f->field.buffer);
 	if(f->field.cursor > length)
 		f->field.cursor = length;
@@ -149,7 +149,7 @@ Rankings_DrawName(void* self)
 	f = (menufield_s*)self;
 
 	/* strip color codes */
-	Q_CleanStr(f->field.buffer);
+	Q_cleanstr(f->field.buffer);
 	length = strlen(f->field.buffer);
 	if(f->field.cursor > length)
 		f->field.cursor = length;

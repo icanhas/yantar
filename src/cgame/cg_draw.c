@@ -718,7 +718,7 @@ CG_DrawAttacker(float y)
 	info	= CG_ConfigString(CS_PLAYERS + clientNum);
 	name	= Info_ValueForKey(info, "n");
 	y += size;
-	CG_DrawBigString(640 - (Q_PrintStrlen(
+	CG_DrawBigString(640 - (Q_printablelen(
 					name) * BIGCHAR_WIDTH), y, name, 0.5);
 
 	return y + BIGCHAR_HEIGHT + 2;

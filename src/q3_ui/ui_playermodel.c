@@ -410,7 +410,7 @@ PlayerModel_BuildList(void)
 		    j++,fileptr+=filelen+1){
 			filelen = strlen(fileptr);
 
-			Q_StripExtension(fileptr,skinname, sizeof(skinname));
+			Q_stripext(fileptr,skinname, sizeof(skinname));
 
 			/* look for icon_???? */
 			if(!Q_stricmpn(skinname,"icon_",5))
@@ -451,7 +451,7 @@ PlayerModel_SetMenuItems(void)
 	/* name */
 	trap_Cvar_VariableStringBuffer("name", s_playermodel.playername.string,
 		16);
-	Q_CleanStr(s_playermodel.playername.string);
+	Q_cleanstr(s_playermodel.playername.string);
 
 	/* model */
 	trap_Cvar_VariableStringBuffer("model", s_playermodel.modelskin, 64);

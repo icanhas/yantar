@@ -164,7 +164,7 @@ PlayerSettings_DrawName(void *self)
 
 	/* draw at bottom also using proportional font */
 	Q_strncpyz(name, f->field.buffer, sizeof(name));
-	Q_CleanStr(name);
+	Q_cleanstr(name);
 	UI_DrawProportionalString(320, 440, name, UI_CENTER|UI_BIGFONT,
 		text_color_normal);
 }
@@ -331,7 +331,7 @@ PlayerSettings_SetMenuItems(void)
 		qfalse);
 
 	/* handicap */
-	h = Q_Clamp(5, 100, trap_Cvar_VariableValue("handicap"));
+	h = Q_clamp(5, 100, trap_Cvar_VariableValue("handicap"));
 	s_playersettings.handicap.curvalue = 20 - h / 5;
 }
 

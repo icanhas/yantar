@@ -262,7 +262,7 @@ RE_RegisterModel(const char *name)
 	 *  */
 	Q_strncpyz(localName, name, MAX_QPATH);
 
-	ext = Q_GetExtension(localName);
+	ext = Q_getext(localName);
 
 	if(*ext){
 		/* Look for the correct loader and use it */
@@ -280,7 +280,7 @@ RE_RegisterModel(const char *name)
 				 * try again without the extension */
 				orgNameFailed = qtrue;
 				orgLoader = i;
-				Q_StripExtension(name, localName, MAX_QPATH);
+				Q_stripext(name, localName, MAX_QPATH);
 			}else{
 				/* Something loaded */
 				return mod->index;

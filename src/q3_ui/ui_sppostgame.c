@@ -250,7 +250,7 @@ MenuDrawScoreLine(int n, int y)
 	trap_GetConfigString(CS_PLAYERS + postgame.clientNums[n], info,
 		MAX_INFO_STRING);
 	Q_strncpyz(name, Info_ValueForKey(info, "n"), sizeof(name));
-	Q_CleanStr(name);
+	Q_cleanstr(name);
 
 	UI_DrawString(640 - 25 * SMALLCHAR_WIDTH, y,
 		va("#%i: %-16s %2i", rank + 1, name, postgame.scores[n]),
@@ -438,7 +438,7 @@ Prepname(int i)
 	trap_GetConfigString(CS_PLAYERS + postgame.clientNums[i], info,
 		MAX_INFO_STRING);
 	Q_strncpyz(name, Info_ValueForKey(info, "n"), sizeof(name));
-	Q_CleanStr(name);
+	Q_cleanstr(name);
 	len = strlen(name);
 
 	while(len && UI_ProportionalStringWidth(name) > 256){

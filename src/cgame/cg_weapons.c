@@ -623,17 +623,17 @@ CG_RegisterWeapon(int weaponNum)
 			ammo->world_model[0]);
 
 	strcpy(path, item->world_model[0]);
-	Q_StripExtension(path, path, sizeof(path));
+	Q_stripext(path, path, sizeof(path));
 	strcat(path, "_flash");
 	weaponInfo->flashModel = trap_R_RegisterModel(path);
 
 	strcpy(path, item->world_model[0]);
-	Q_StripExtension(path, path, sizeof(path));
+	Q_stripext(path, path, sizeof(path));
 	strcat(path, "_barrel");
 	weaponInfo->barrelModel = trap_R_RegisterModel(path);
 
 	strcpy(path, item->world_model[0]);
-	Q_StripExtension(path, path, sizeof(path));
+	Q_stripext(path, path, sizeof(path));
 	strcat(path, "_hand");
 	weaponInfo->handsModel = trap_R_RegisterModel(path);
 

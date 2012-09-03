@@ -901,7 +901,7 @@ NET_IP6Socket(char *net_interface, int port, struct sockaddr_in6 *bindto,
 
 	if(net_interface){
 		/* Print the name in brackets if there is a colon: */
-		if(Q_CountChar(net_interface, ':'))
+		if(Q_countchar(net_interface, ':'))
 			Com_Printf("Opening IP6 socket: [%s]:%i\n",
 				net_interface,
 				port);

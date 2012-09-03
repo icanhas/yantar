@@ -728,7 +728,7 @@ GetMenuBuffer(const char *filename)
 	trap_FS_Read(buf, len, f);
 	buf[len] = 0;
 	trap_FS_FCloseFile(f);
-	/* Q_Compress(buf); */
+	/* Q_compresstr(buf); */
 	return buf;
 
 }
@@ -1081,7 +1081,7 @@ UI_DrawHandicap(rectDef_t *rect, float scale, vec4_t color, int textStyle)
 {
 	int i, h;
 
-	h = Q_Clamp(5, 100, trap_Cvar_VariableValue("handicap"));
+	h = Q_clamp(5, 100, trap_Cvar_VariableValue("handicap"));
 	i = 20 - h / 5;
 
 	Text_Paint(rect->x, rect->y, scale, color, handicapValues[i], 0, 0,
@@ -1883,7 +1883,7 @@ UI_OwnerDrawWidth(int ownerDraw, float scale)
 
 	switch(ownerDraw){
 	case UI_HANDICAP:
-		h = Q_Clamp(5, 100, trap_Cvar_VariableValue("handicap"));
+		h = Q_clamp(5, 100, trap_Cvar_VariableValue("handicap"));
 		i = 20 - h / 5;
 		s = handicapValues[i];
 		break;
@@ -2067,14 +2067,14 @@ UI_BuildPlayerList(void)
 			Q_strncpyz(uiInfo.playerNames[uiInfo.playerCount],
 				Info_ValueForKey(info,
 					"n"), MAX_NAME_LENGTH);
-			Q_CleanStr(uiInfo.playerNames[uiInfo.playerCount]);
+			Q_cleanstr(uiInfo.playerNames[uiInfo.playerCount]);
 			uiInfo.playerCount++;
 			team2 = atoi(Info_ValueForKey(info, "t"));
 			if(team2 == team){
 				Q_strncpyz(uiInfo.teamNames[uiInfo.myTeamCount],
 					Info_ValueForKey(info,
 						"n"), MAX_NAME_LENGTH);
-				Q_CleanStr(uiInfo.teamNames[uiInfo.myTeamCount]);
+				Q_cleanstr(uiInfo.teamNames[uiInfo.myTeamCount]);
 				uiInfo.teamClientNums[uiInfo.myTeamCount] = n;
 				if(uiInfo.playerNumber == n)
 					playerTeamNumber = uiInfo.myTeamCount;
@@ -2582,7 +2582,7 @@ UI_Handicap_HandleKey(int flags, float *special, int key)
 	if(key == K_MOUSE1 || key == K_MOUSE2 || key == K_ENTER || key ==
 	   K_KP_ENTER){
 		int h;
-		h = Q_Clamp(5, 100, trap_Cvar_VariableValue("handicap"));
+		h = Q_clamp(5, 100, trap_Cvar_VariableValue("handicap"));
 		if(key == K_MOUSE2)
 			h -= 5;
 		else
@@ -3155,7 +3155,7 @@ UI_ServersSort(int column, qbool force)
  *      }
  *
  *      trap_Cvar_SetValue( "singleplayer", 1 );
- *      trap_Cvar_SetValue( "g_gametype", Q_Clamp( 0, GT_MAX_GAME_TYPE-1, tierList[i].gameTypes[j] ) );
+ *      trap_Cvar_SetValue( "g_gametype", Q_clamp( 0, GT_MAX_GAME_TYPE-1, tierList[i].gameTypes[j] ) );
  *      trap_Cmd_ExecuteText( EXEC_APPEND, va( "wait ; wait ; map %s\n", tierList[i].maps[j] ) );
  *      skill = trap_Cvar_VariableValue( "g_spSkill" );
  *
@@ -3587,9 +3587,9 @@ UI_RunMenuScript(char **args)
 			trap_Cvar_Set("cg_cameraOrbit", "0");
 			trap_Cvar_Set("ui_singlePlayerActive", "0");
 			trap_Cvar_SetValue("dedicated",
-				Q_Clamp(0, 2, ui_dedicated.integer));
+				Q_clamp(0, 2, ui_dedicated.integer));
 			trap_Cvar_SetValue("g_gametype",
-				Q_Clamp(0, GT_MAX_GAME_TYPE-1,
+				Q_clamp(0, GT_MAX_GAME_TYPE-1,
 					uiInfo.gameTypes[ui_netGameType.integer]
 					.gtEnum));
 			trap_Cvar_Set("g_redTeam",
@@ -4639,7 +4639,7 @@ UI_BuildFindPlayerList(qbool force)
 		trap_Cvar_VariableStringBuffer("ui_findPlayer",
 			uiInfo.findPlayerName,
 			sizeof(uiInfo.findPlayerName));
-		Q_CleanStr(uiInfo.findPlayerName);
+		Q_cleanstr(uiInfo.findPlayerName);
 		/* should have a string of some length */
 		if(!strlen(uiInfo.findPlayerName)){
 			uiInfo.nextFindPlayerRefresh = 0;
@@ -4681,7 +4681,7 @@ UI_BuildFindPlayerList(qbool force)
 					/* clean string first */
 					Q_strncpyz(name, info.lines[j][3],
 						sizeof(name));
-					Q_CleanStr(name);
+					Q_cleanstr(name);
 					/* if the player name is a substring */
 					if(stristr(name,
 						   uiInfo.findPlayerName)){
@@ -5244,14 +5244,14 @@ Team_Parse(char **p)
 	const char      *tempStr;
 	int	i;
 
-	token = Q_ReadTokenExt(p, qtrue);
+	token = Q_readtok2(p, qtrue);
 
 	if(token[0] != '{')
 		return qfalse;
 
 	while(1){
 
-		token = Q_ReadTokenExt(p, qtrue);
+		token = Q_readtok2(p, qtrue);
 
 		if(Q_stricmp(token, "}") == 0)
 			return qtrue;
@@ -5304,7 +5304,7 @@ Team_Parse(char **p)
 			else
 				Com_Printf(
 					"Too many teams, last team replaced!\n");
-			token = Q_ReadTokenExt(p, qtrue);
+			token = Q_readtok2(p, qtrue);
 			if(token[0] != '}')
 				return qfalse;
 		}
@@ -5319,14 +5319,14 @@ Character_Parse(char **p)
 	char *token;
 	const char *tempStr;
 
-	token = Q_ReadTokenExt(p, qtrue);
+	token = Q_readtok2(p, qtrue);
 
 	if(token[0] != '{')
 		return qfalse;
 
 
 	while(1){
-		token = Q_ReadTokenExt(p, qtrue);
+		token = Q_readtok2(p, qtrue);
 
 		if(Q_stricmp(token, "}") == 0)
 			return qtrue;
@@ -5371,7 +5371,7 @@ Character_Parse(char **p)
 				Com_Printf(
 					"Too many characters, last character replaced!\n");
 
-			token = Q_ReadTokenExt(p, qtrue);
+			token = Q_readtok2(p, qtrue);
 			if(token[0] != '}')
 				return qfalse;
 		}
@@ -5386,13 +5386,13 @@ Alias_Parse(char **p)
 {
 	char *token;
 
-	token = Q_ReadTokenExt(p, qtrue);
+	token = Q_readtok2(p, qtrue);
 
 	if(token[0] != '{')
 		return qfalse;
 
 	while(1){
-		token = Q_ReadTokenExt(p, qtrue);
+		token = Q_readtok2(p, qtrue);
 
 		if(Q_stricmp(token, "}") == 0)
 			return qtrue;
@@ -5420,7 +5420,7 @@ Alias_Parse(char **p)
 				Com_Printf(
 					"Too many aliases, last alias replaced!\n");
 
-			token = Q_ReadTokenExt(p, qtrue);
+			token = Q_readtok2(p, qtrue);
 			if(token[0] != '}')
 				return qfalse;
 		}
@@ -5450,7 +5450,7 @@ UI_ParseTeamInfo(const char *teamFile)
 	p = buff;
 
 	while(1){
-		token = Q_ReadTokenExt(&p, qtrue);
+		token = Q_readtok2(&p, qtrue);
 		if(!token || token[0] == 0 || token[0] == '}')
 			break;
 
@@ -5481,7 +5481,7 @@ GameType_Parse(char **p, qbool join)
 {
 	char *token;
 
-	token = Q_ReadTokenExt(p, qtrue);
+	token = Q_readtok2(p, qtrue);
 
 	if(token[0] != '{')
 		return qfalse;
@@ -5492,7 +5492,7 @@ GameType_Parse(char **p, qbool join)
 		uiInfo.numGameTypes = 0;
 
 	while(1){
-		token = Q_ReadTokenExt(p, qtrue);
+		token = Q_readtok2(p, qtrue);
 
 		if(Q_stricmp(token, "}") == 0)
 			return qtrue;
@@ -5537,7 +5537,7 @@ GameType_Parse(char **p, qbool join)
 						"Too many game types, last one replace!\n");
 			}
 
-			token = Q_ReadTokenExt(p, qtrue);
+			token = Q_readtok2(p, qtrue);
 			if(token[0] != '}')
 				return qfalse;
 		}
@@ -5550,7 +5550,7 @@ MapList_Parse(char **p)
 {
 	char *token;
 
-	token = Q_ReadTokenExt(p, qtrue);
+	token = Q_readtok2(p, qtrue);
 
 	if(token[0] != '{')
 		return qfalse;
@@ -5558,7 +5558,7 @@ MapList_Parse(char **p)
 	uiInfo.mapCount = 0;
 
 	while(1){
-		token = Q_ReadTokenExt(p, qtrue);
+		token = Q_readtok2(p, qtrue);
 
 		if(Q_stricmp(token, "}") == 0)
 			return qtrue;
@@ -5582,7 +5582,7 @@ MapList_Parse(char **p)
 			uiInfo.mapList[uiInfo.mapCount].typeBits = 0;
 
 			while(1){
-				token = Q_ReadTokenExt(p, qtrue);
+				token = Q_readtok2(p, qtrue);
 				if(token[0] >= '0' && token[0] <= '9'){
 					uiInfo.mapList[uiInfo.mapCount].typeBits
 						|= (1 << (token[0] - 0x030));
@@ -5631,7 +5631,7 @@ UI_ParseGameInfo(const char *teamFile)
 	p = buff;
 
 	while(1){
-		token = Q_ReadTokenExt(&p, qtrue);
+		token = Q_readtok2(&p, qtrue);
 		if(!token || token[0] == 0 || token[0] == '}')
 			break;
 
@@ -5783,7 +5783,7 @@ UI_BuildQ3Model_List(void)
 		    j++,fileptr+=filelen+1){
 			filelen = strlen(fileptr);
 
-			Q_StripExtension(fileptr, skinname, sizeof(skinname));
+			Q_stripext(fileptr, skinname, sizeof(skinname));
 
 			/* look for icon_???? */
 			if(Q_stricmpn(skinname, "icon_",

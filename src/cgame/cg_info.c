@@ -112,7 +112,7 @@ CG_LoadingClient(int clientNum)
 
 	Q_strncpyz(personality, Info_ValueForKey(info, "n"),
 		sizeof(personality));
-	Q_CleanStr(personality);
+	Q_cleanstr(personality);
 
 	if(cgs.gametype == GT_SINGLE_PLAYER)
 		trap_S_RegisterSound(va(Pannounce "/%s", personality), qtrue);
@@ -166,7 +166,7 @@ CG_DrawInformation(void)
 	if(!atoi(buf)){
 		/* server hostname */
 		Q_strncpyz(buf, Info_ValueForKey(info, "sv_hostname"), 1024);
-		Q_CleanStr(buf);
+		Q_cleanstr(buf);
 		UI_DrawProportionalString(320, y, buf,
 			UI_CENTER|UI_SMALLFONT|UI_DROPSHADOW, colorWhite);
 		y += PROP_HEIGHT;

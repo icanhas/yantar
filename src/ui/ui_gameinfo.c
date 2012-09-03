@@ -55,7 +55,7 @@ UI_ParseInfos(char *buf, int max, char *infos[])
 	count = 0;
 
 	while(1){
-		token = Q_ReadToken(&buf);
+		token = Q_readtok(&buf);
 		if(!token[0])
 			break;
 		if(strcmp(token, "{")){
@@ -70,7 +70,7 @@ UI_ParseInfos(char *buf, int max, char *infos[])
 
 		info[0] = '\0';
 		while(1){
-			token = Q_ReadTokenExt(&buf, qtrue);
+			token = Q_readtok2(&buf, qtrue);
 			if(!token[0]){
 				Com_Printf("Unexpected end of info file\n");
 				break;
@@ -79,7 +79,7 @@ UI_ParseInfos(char *buf, int max, char *infos[])
 				break;
 			Q_strncpyz(key, token, sizeof(key));
 
-			token = Q_ReadTokenExt(&buf, qfalse);
+			token = Q_readtok2(&buf, qfalse);
 			if(!token[0])
 				strcpy(token, "<NULL>");
 			Info_SetValueForKey(info, key, token);
@@ -239,7 +239,7 @@ UI_LoadBotsFromFile(char *filename)
 	buf[len] = 0;
 	trap_FS_FCloseFile(f);
 
-	Q_Compress(buf);
+	Q_compresstr(buf);
 
 	ui_numBots +=
 		UI_ParseInfos(buf, MAX_BOTS - ui_numBots,

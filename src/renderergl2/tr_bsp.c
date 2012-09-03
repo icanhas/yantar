@@ -2617,7 +2617,7 @@ R_LoadEntities(lump_t *l)
 	strcpy(w->entityString, p);
 	w->entityParsePoint = w->entityString;
 
-	token = Q_ReadTokenExt(&p, qtrue);
+	token = Q_readtok2(&p, qtrue);
 	if(!*token || *token != '{'){
 		return;
 	}
@@ -2625,7 +2625,7 @@ R_LoadEntities(lump_t *l)
 	/* only parse the world spawn */
 	while(1){
 		/* parse key */
-		token = Q_ReadTokenExt(&p, qtrue);
+		token = Q_readtok2(&p, qtrue);
 
 		if(!*token || *token == '}'){
 			break;
@@ -2633,7 +2633,7 @@ R_LoadEntities(lump_t *l)
 		Q_strncpyz(keyname, token, sizeof(keyname));
 
 		/* parse value */
-		token = Q_ReadTokenExt(&p, qtrue);
+		token = Q_readtok2(&p, qtrue);
 
 		if(!*token || *token == '}'){
 			break;
@@ -2701,7 +2701,7 @@ R_GetEntityToken(char *buffer, int size)
 {
 	const char *s;
 
-	s = Q_ReadToken(&s_worldData.entityParsePoint);
+	s = Q_readtok(&s_worldData.entityParsePoint);
 	Q_strncpyz(buffer, s, size);
 	if(!s_worldData.entityParsePoint || !s[0]){
 		s_worldData.entityParsePoint = s_worldData.entityString;
@@ -3154,8 +3154,8 @@ RE_LoadWorldMap(const char *name)
 	Q_Memset(&s_worldData, 0, sizeof(s_worldData));
 	Q_strncpyz(s_worldData.name, name, sizeof(s_worldData.name));
 
-	Q_strncpyz(s_worldData.baseName, Q_SkipPath(s_worldData.name), sizeof(s_worldData.name));
-	Q_StripExtension(s_worldData.baseName, s_worldData.baseName, sizeof(s_worldData.baseName));
+	Q_strncpyz(s_worldData.baseName, Q_skippath(s_worldData.name), sizeof(s_worldData.name));
+	Q_stripext(s_worldData.baseName, s_worldData.baseName, sizeof(s_worldData.baseName));
 
 	startMarker	= ri.Hunk_Alloc(0, h_low);
 	c_gridVerts	= 0;

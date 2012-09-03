@@ -21,11 +21,11 @@
 #include "q_shared.h"
 
 /*
- * Q_HashString: Return the hashed value of string s. Will skip file extension
+ * Q_hashstr: Return the hashed value of string s. Will skip file extension
  * if passed a pathname.
  */
 long
-Q_HashString(const char *s, int size)
+Q_hashstr(const char *s, int size)
 {
 	int	i, c;
 	long	hash;
@@ -45,7 +45,7 @@ Q_HashString(const char *s, int size)
 }
 
 float
-Q_Clamp(float min, float max, float value)
+Q_clamp(float min, float max, float value)
 {
 	if(value < min)
 		return min;
@@ -55,7 +55,7 @@ Q_Clamp(float min, float max, float value)
 }
 
 char *
-Q_SkipPath(char *pathname)
+Q_skippath(char *pathname)
 {
 	char *last;
 
@@ -69,7 +69,7 @@ Q_SkipPath(char *pathname)
 }
 
 const char *
-Q_GetExtension(const char *name)
+Q_getext(const char *name)
 {
 	const char *dot = strrchr(name, '.'), *slash;
 	if(dot && (!(slash = strrchr(name, '/')) || slash < dot))
@@ -79,7 +79,7 @@ Q_GetExtension(const char *name)
 }
 
 void
-Q_StripExtension(const char *in, char *out, int destsize)
+Q_stripext(const char *in, char *out, int destsize)
 {
 	const char *dot = strrchr(in, '.'), *slash;
 	if(dot && (!(slash = strrchr(in, '/')) || slash < dot))
@@ -89,11 +89,11 @@ Q_StripExtension(const char *in, char *out, int destsize)
 }
 
 /*
- * Q_CompareExtension: string compare the end of the strings and return
+ * Q_cmpext: string compare the end of the strings and return
  * qtrue if strings match
  */
 qbool
-Q_CompareExtension(const char *in, const char *ext)
+Q_cmpext(const char *in, const char *ext)
 {
 	int inlen, extlen;
 
@@ -110,11 +110,11 @@ Q_CompareExtension(const char *in, const char *ext)
 }
 
 /*
- * Q_DefaultExtension: if path doesn't have an extension, then append the
+ * Q_defaultext: if path doesn't have an extension, then append the
  * specified one (which should include the .)
  */
 void
-Q_DefaultExtension(char *path, int maxSize, const char *extension)
+Q_defaultext(char *path, int maxSize, const char *extension)
 {
 	const char *dot = strrchr(path, '.'), *slash;
 	if(dot && (!(slash = strrchr(path, '/')) || slash < dot))
@@ -149,7 +149,7 @@ Q_DefaultExtension(char *path, int maxSize, const char *extension)
  */
 
 void
-CopyShortSwap(void *dest, void *src)
+Q_cpshortswap(void *dest, void *src)
 {
 	byte *to = dest, *from = src;
 
@@ -158,7 +158,7 @@ CopyShortSwap(void *dest, void *src)
 }
 
 void
-CopyLongSwap(void *dest, void *src)
+Q_cplongswap(void *dest, void *src)
 {
 	byte *to = dest, *from = src;
 
@@ -169,7 +169,7 @@ CopyLongSwap(void *dest, void *src)
 }
 
 short
-ShortSwap(short l)
+Q_shortswap(short l)
 {
 	byte b1,b2;
 
@@ -180,13 +180,13 @@ ShortSwap(short l)
 }
 
 short
-ShortNoSwap(short l)
+Q_shortnoswap(short l)
 {
 	return l;
 }
 
 int
-LongSwap(int l)
+Q_longswap(int l)
 {
 	byte b1,b2,b3,b4;
 
@@ -199,13 +199,13 @@ LongSwap(int l)
 }
 
 int
-LongNoSwap(int l)
+Q_longnoswap(int l)
 {
 	return l;
 }
 
 qint64
-Long64Swap(qint64 ll)
+Q_long64swap(qint64 ll)
 {
 	qint64 result;
 
@@ -222,24 +222,24 @@ Long64Swap(qint64 ll)
 }
 
 qint64
-Long64NoSwap(qint64 ll)
+Q_long64noswap(qint64 ll)
 {
 	return ll;
 }
 
 float
-FloatSwap(const float *f)
+Q_floatswap(const float *f)
 {
 	floatint_t out;
 
 	out.f	= *f;
-	out.ui	= LongSwap(out.ui);
+	out.ui	= Q_longswap(out.ui);
 
 	return out.f;
 }
 
 float
-FloatNoSwap(const float *f)
+Q_floatnoswap(const float *f)
 {
 	return *f;
 }
@@ -252,25 +252,25 @@ FloatNoSwap(const float *f)
  * // set the byte swapping variables in a portable manner
  *      if ( *(short *)swaptest == 1)
  *      {
- *              _BigShort = ShortSwap;
- *              _LittleShort = ShortNoSwap;
- *              _BigLong = LongSwap;
- *              _LittleLong = LongNoSwap;
- *              _BigLong64 = Long64Swap;
- *              _LittleLong64 = Long64NoSwap;
- *              _BigFloat = FloatSwap;
- *              _LittleFloat = FloatNoSwap;
+ *              _BigShort = Q_shortswap;
+ *              _LittleShort = Q_shortnoswap;
+ *              _BigLong = Q_longswap;
+ *              _LittleLong = Q_longnoswap;
+ *              _BigLong64 = Q_long64swap;
+ *              _LittleLong64 = Q_long64noswap;
+ *              _BigFloat = Q_floatswap;
+ *              _LittleFloat = Q_floatnoswap;
  *      }
  *      else
  *      {
- *              _BigShort = ShortNoSwap;
- *              _LittleShort = ShortSwap;
- *              _BigLong = LongNoSwap;
- *              _LittleLong = LongSwap;
- *              _BigLong64 = Long64NoSwap;
- *              _LittleLong64 = Long64Swap;
- *              _BigFloat = FloatNoSwap;
- *              _LittleFloat = FloatSwap;
+ *              _BigShort = Q_shortnoswap;
+ *              _LittleShort = Q_shortswap;
+ *              _BigLong = Q_longnoswap;
+ *              _LittleLong = Q_longswap;
+ *              _BigLong64 = Q_long64noswap;
+ *              _LittleLong64 = Q_long64swap;
+ *              _BigFloat = Q_floatnoswap;
+ *              _LittleFloat = Q_floatswap;
  *      }
  *
  * }
@@ -284,17 +284,17 @@ static char	com_token[MAX_TOKEN_CHARS];
 static int	com_lines;
 
 /*
- * Q_ReadToken: Lex and return the next token of a string. 
+ * Q_readtok: Lex and return the next token of a string. 
  * Will never return nil, just empty strings.
  */
 char *
-Q_ReadToken(char **data_p)
+Q_readtok(char **data_p)
 {
-	return Q_ReadTokenExt(data_p, qtrue);
+	return Q_readtok2(data_p, qtrue);
 }
 
 static char *
-SkipWhitespace(char *data, qbool *hasNewLines)
+Q_skipwhitespace(char *data, qbool *hasNewLines)
 {
 	int c;
 
@@ -313,7 +313,7 @@ SkipWhitespace(char *data, qbool *hasNewLines)
 }
 
 int
-Q_Compress(char *data_p)
+Q_compresstr(char *data_p)
 {
 	char	*in, *out;
 	int	c;
@@ -386,13 +386,13 @@ Q_Compress(char *data_p)
 }
 
 /*
- * Q_ReadTokenExt: Lex and return the next token of a string.  
+ * Q_readtok2: Lex and return the next token of a string.  
  * Will never return nil, just empty strings.
  * If "allowLineBreaks" is qtrue then an empty string will be
  * returned if the next token is a newline.
  */
 char *
-Q_ReadTokenExt(char **data_p, qbool allowLineBreaks)
+Q_readtok2(char **data_p, qbool allowLineBreaks)
 {
 	int c, len;
 	qbool hasNewLines;
@@ -411,7 +411,7 @@ Q_ReadTokenExt(char **data_p, qbool allowLineBreaks)
 	}
 
 	for(;;){
-		data = SkipWhitespace(data, &hasNewLines);
+		data = Q_skipwhitespace(data, &hasNewLines);
 		if(data == nil){
 			*data_p = nil;
 			return com_token;
@@ -475,28 +475,28 @@ Q_ReadTokenExt(char **data_p, qbool allowLineBreaks)
 }
 
 void
-Q_MatchToken(char **buf_p, char *match)
+Q_matchtok(char **buf_p, char *match)
 {
 	char *token;
 
-	token = Q_ReadToken(buf_p);
+	token = Q_readtok(buf_p);
 	if(strcmp(token, match))
 		Com_Errorf(ERR_DROP, "MatchToken: %s != %s", token, match);
 }
 
 /*
- * SkipBracedSection: The next token should be an open brace. Skips until a
+ * Q_skipblock: The next token should be an open brace. Skips until a
  * matching close brace is found. Internal brace depths are properly skipped.
  */
 void
-SkipBracedSection(char **program)
+Q_skipblock(char **program)
 {
 	char	*token;
 	int	depth;
 
 	depth = 0;
 	do {
-		token = Q_ReadTokenExt(program, qtrue);
+		token = Q_readtok2(program, qtrue);
 		if(token[1] == 0){
 			if(token[0] == '{')
 				depth++;
@@ -507,7 +507,7 @@ SkipBracedSection(char **program)
 }
 
 void
-Q_SkipRestOfLine(char **data)
+Q_skipline(char **data)
 {
 	char	*p;
 	int	c;
@@ -528,12 +528,12 @@ Parse1DMatrix(char **buf_p, int x, float *m)
 	char	*token;
 	int	i;
 
-	Q_MatchToken(buf_p, "(");
+	Q_matchtok(buf_p, "(");
 	for(i = 0; i < x; i++){
-		token	= Q_ReadToken(buf_p);
+		token	= Q_readtok(buf_p);
 		m[i]	= atof(token);
 	}
-	Q_MatchToken(buf_p, ")");
+	Q_matchtok(buf_p, ")");
 }
 
 void
@@ -541,10 +541,10 @@ Parse2DMatrix(char **buf_p, int y, int x, float *m)
 {
 	int i;
 
-	Q_MatchToken(buf_p, "(");
+	Q_matchtok(buf_p, "(");
 	for(i = 0; i < y; i++)
 		Parse1DMatrix (buf_p, x, m + i * x);
-	Q_MatchToken(buf_p, ")");
+	Q_matchtok(buf_p, ")");
 }
 
 void
@@ -552,14 +552,14 @@ Parse3DMatrix(char **buf_p, int z, int y, int x, float *m)
 {
 	int i;
 
-	Q_MatchToken(buf_p, "(");
+	Q_matchtok(buf_p, "(");
 	for(i = 0; i < z; i++)
 		Parse2DMatrix (buf_p, y, x, m + i * x*y);
-	Q_MatchToken(buf_p, ")");
+	Q_matchtok(buf_p, ")");
 }
 
 int
-Q_HexStrToInt(const char *str)
+Q_hexstr2int(const char *str)
 {
 	if((str == nil) || (str[0] == '\0'))
 		return -1;
@@ -807,7 +807,7 @@ Q_stristr(const char *s, const char *find)
 }
 
 int
-Q_PrintStrlen(const char *string)
+Q_printablelen(const char *string)
 {
 	int len;
 	const char *p;
@@ -829,7 +829,7 @@ Q_PrintStrlen(const char *string)
 }
 
 char *
-Q_CleanStr(char *string)
+Q_cleanstr(char *string)
 {
 	char	* d;
 	char * s;
@@ -849,7 +849,7 @@ Q_CleanStr(char *string)
 }
 
 int
-Q_CountChar(const char *string, char tocount)
+Q_countchar(const char *string, char tocount)
 {
 	int count;
 
@@ -899,9 +899,9 @@ va(char *format, ...)
 	return buf;
 }
 
-/* Q_TruncateLongString: Assumes buffer is atleast TRUNCATE_LENGTH big */
+/* Q_truncstr: Assumes buffer is atleast TRUNCATE_LENGTH big */
 void
-Q_TruncateLongString(char *buffer, const char *s)
+Q_truncstr(char *buffer, const char *s)
 {
 	int length = strlen(s);
 
@@ -1178,7 +1178,7 @@ Info_SetValueForKey_Big(char *s, const char *key, const char *value)
 }
 
 static qbool
-Q_CharIsOneOfCharset(char c, char *set)
+Q_incharset(char c, char *set)
 {
 	uint i;
 
@@ -1189,12 +1189,12 @@ Q_CharIsOneOfCharset(char c, char *set)
 }
 
 char *
-Q_SkipCharset(char *s, char *sep)
+Q_skipcharset(char *s, char *sep)
 {
 	char *p = s;
 
 	while(p != '\0'){
-		if(Q_CharIsOneOfCharset(*p, sep))
+		if(Q_incharset(*p, sep))
 			++p;
 		else
 			break;
@@ -1203,15 +1203,15 @@ Q_SkipCharset(char *s, char *sep)
 }
 
 char *
-Q_SkipTokens(char *s, int numTokens, char *sep)
+Q_skiptoks(char *s, int numTokens, char *sep)
 {
 	int sepCount = 0;
 	char *p = s;
 
 	while(sepCount < numTokens){
-		if(Q_CharIsOneOfCharset(*p++, sep)){
+		if(Q_incharset(*p++, sep)){
 			++sepCount;
-			while(Q_CharIsOneOfCharset(*p, sep))
+			while(Q_incharset(*p, sep))
 				++p;
 		}else if(*p == '\0')
 			break;

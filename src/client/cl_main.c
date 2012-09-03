@@ -435,7 +435,7 @@ CL_CaptureVoip(void)
 	/* try to get more audio data from the sound card... */
 
 	if(initialFrame){
-		S_MasterGain(Q_Clamp(0.0f, 1.0f,
+		S_MasterGain(Q_clamp(0.0f, 1.0f,
 				cl_voipGainDuringCapture->value));
 		S_StartCapture();
 		CL_VoipNewGeneration();
@@ -1767,7 +1767,7 @@ CL_CompleteRcon(char *args, int argNum)
 {
 	if(argNum == 2){
 		/* Skip "rcon " */
-		char *p = Q_SkipTokens(args, 1, " ");
+		char *p = Q_skiptoks(args, 1, " ");
 
 		if(p > args)
 			Field_CompleteCommand(p, qtrue, qtrue);
@@ -2944,9 +2944,9 @@ CL_Frame(int msec)
 			if(p)
 				*p = '.';
 
-			Q_strncpyz(mapName, Q_SkipPath(cl.mapname),
+			Q_strncpyz(mapName, Q_skippath(cl.mapname),
 				sizeof(cl.mapname));
-			Q_StripExtension(mapName, mapName, sizeof(mapName));
+			Q_stripext(mapName, mapName, sizeof(mapName));
 
 			Cbuf_ExecuteText(EXEC_NOW,
 				va("record %s-%s-%s", nowString, serverName,

@@ -103,11 +103,11 @@ parseanimfile(const char *filename, clientInfo_t *ci)
 	/* read optional parameters */
 	for(;;){
 		prev = txtp;	/* so we can unget */
-		tok = Q_ReadToken(&txtp);
+		tok = Q_readtok(&txtp);
 		if(!tok)
 			break;
 		if(!Q_stricmp(tok, "footsteps")){
-			tok = Q_ReadToken(&txtp);
+			tok = Q_readtok(&txtp);
 			if(!tok)
 				break;
 			if(!Q_stricmp(tok, "default") || !Q_stricmp(tok, "normal"))
@@ -127,14 +127,14 @@ parseanimfile(const char *filename, clientInfo_t *ci)
 			continue;
 		}else if(!Q_stricmp(tok, "headoffset")){
 			for(i = 0; i < 3; i++){
-				tok = Q_ReadToken(&txtp);
+				tok = Q_readtok(&txtp);
 				if(!tok)
 					break;
 				ci->headOffset[i] = atof(tok);
 			}
 			continue;
 		}else if(!Q_stricmp(tok, "sex")){
-			tok = Q_ReadToken(&txtp);
+			tok = Q_readtok(&txtp);
 			if(!tok)
 				break;
 			if(tok[0] == 'f' || tok[0] == 'F')
@@ -165,7 +165,7 @@ parseanimfile(const char *filename, clientInfo_t *ci)
 	for(i = 0, p = anims; i < MAX_ANIMATIONS; i++, p++){
 		animation_t *p2;
 		
-		tok = Q_ReadToken(&txtp);
+		tok = Q_readtok(&txtp);
 		if(!*tok){
 			if(i >= TORSO_GETFLAG && i <= TORSO_NEGATIVE){
 				p2 = &anims[TORSO_GESTURE];
@@ -188,7 +188,7 @@ parseanimfile(const char *filename, clientInfo_t *ci)
 		if(i >= LEGS_WALKCR && i<TORSO_GETFLAG)
 			p->firstFrame -= skip;
 
-		tok = Q_ReadToken(&txtp);
+		tok = Q_readtok(&txtp);
 		if(!*tok)
 			break;
 		p->numFrames = atoi(tok);
@@ -201,12 +201,12 @@ parseanimfile(const char *filename, clientInfo_t *ci)
 			p->reversed = qtrue;
 		}
 
-		tok = Q_ReadToken(&txtp);
+		tok = Q_readtok(&txtp);
 		if(!*tok)
 			break;
 		p->loopFrames = atoi(tok);
 
-		tok = Q_ReadToken(&txtp);
+		tok = Q_readtok(&txtp);
 		if(!*tok)
 			break;
 		fps = atof(tok);

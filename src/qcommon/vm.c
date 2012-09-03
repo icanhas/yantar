@@ -185,7 +185,7 @@ VM_LoadSymbols(vm_t *vm)
 	if(!com_developer->integer)
 		return;
 
-	Q_StripExtension(vm->name, name, sizeof(name));
+	Q_stripext(vm->name, name, sizeof(name));
 	Q_sprintf(symbols, sizeof(symbols), Pvmfiles "/%s.map", name);
 	FS_ReadFile(symbols, &mapfile.v);
 	if(!mapfile.c){
@@ -201,24 +201,24 @@ VM_LoadSymbols(vm_t *vm)
 	count = 0;
 
 	for(;;){
-		token = Q_ReadToken(&text_p);
+		token = Q_readtok(&text_p);
 		if(!token[0])
 			break;
 		segment = ParseHex(token);
 		if(segment){
-			Q_ReadToken(&text_p);
-			Q_ReadToken(&text_p);
+			Q_readtok(&text_p);
+			Q_readtok(&text_p);
 			continue;	/* only load code segment values */
 		}
 
-		token = Q_ReadToken(&text_p);
+		token = Q_readtok(&text_p);
 		if(!token[0]){
 			Com_Printf("WARNING: incomplete line at end of file\n");
 			break;
 		}
 		value = ParseHex(token);
 
-		token = Q_ReadToken(&text_p);
+		token = Q_readtok(&text_p);
 		if(!token[0]){
 			Com_Printf("WARNING: incomplete line at end of file\n");
 			break;

@@ -1731,7 +1731,7 @@ Controls_MenuInit(void)
 	Menu_AddItem(&s_controls.menu, &s_controls.back);
 
 	trap_Cvar_VariableStringBuffer("name", s_controls.name.string, 16);
-	Q_CleanStr(s_controls.name.string);
+	Q_cleanstr(s_controls.name.string);
 
 	/* initialize the configurable cvars */
 	Controls_InitCvars();

@@ -188,7 +188,7 @@ ClientNumberFromString(gentity_t *to, char *s)
 		if(cl->pers.connected != CON_CONNECTED)
 			continue;
 		Q_strncpyz(cleanName, cl->pers.netname, sizeof(cleanName));
-		Q_CleanStr(cleanName);
+		Q_cleanstr(cleanName);
 		if(!Q_stricmp(cleanName, s))
 			return idnum;
 	}
@@ -1452,7 +1452,7 @@ Cmd_CallTeamVote_f(gentity_t *ent)
 				}
 			}else{
 				Q_strncpyz(leader, arg2, sizeof(leader));
-				Q_CleanStr(leader);
+				Q_cleanstr(leader);
 				for(i = 0; i < level.maxclients; i++){
 					if(level.clients[i].pers.connected ==
 					   CON_DISCONNECTED)
@@ -1463,7 +1463,7 @@ Cmd_CallTeamVote_f(gentity_t *ent)
 					Q_strncpyz(netname,
 						level.clients[i].pers.netname,
 						sizeof(netname));
-					Q_CleanStr(netname);
+					Q_cleanstr(netname);
 					if(!Q_stricmp(netname, leader))
 						break;
 				}

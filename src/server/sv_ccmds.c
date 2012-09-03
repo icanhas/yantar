@@ -75,7 +75,7 @@ SV_GetPlayerByHandle(void)
 			return cl;
 
 		Q_strncpyz(cleanName, cl->name, sizeof(cleanName));
-		Q_CleanStr(cleanName);
+		Q_cleanstr(cleanName);
 		if(!Q_stricmp(cleanName, s))
 			return cl;
 	}

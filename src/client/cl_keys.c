@@ -816,7 +816,7 @@ Key_StringToKeynum(char *str)
 
 	/* check for hex code */
 	if(strlen(str) == 4){
-		int n = Q_HexStrToInt(str);
+		int n = Q_hexstr2int(str);
 
 		if(n >= 0)
 			return n;
@@ -1059,7 +1059,7 @@ Key_CompleteUnbind(char *args, int argNum)
 {
 	if(argNum == 2){
 		/* Skip "unbind " */
-		char *p = Q_SkipTokens(args, 1, " ");
+		char *p = Q_skiptoks(args, 1, " ");
 
 		if(p > args)
 			Field_CompleteKeyname( );
@@ -1076,13 +1076,13 @@ Key_CompleteBind(char *args, int argNum)
 
 	if(argNum == 2){
 		/* Skip "bind " */
-		p = Q_SkipTokens(args, 1, " ");
+		p = Q_skiptoks(args, 1, " ");
 
 		if(p > args)
 			Field_CompleteKeyname( );
 	}else if(argNum >= 3){
 		/* Skip "bind <key> " */
-		p = Q_SkipTokens(args, 2, " ");
+		p = Q_skiptoks(args, 2, " ");
 
 		if(p > args)
 			Field_CompleteCommand(p, qtrue, qtrue);
@@ -1381,17 +1381,17 @@ CL_LoadConsoleHistory(void)
 		text_p = consoleSaveBuffer;
 
 		for(i = COMMAND_HISTORY - 1; i >= 0; i--){
-			if(!*(token = Q_ReadToken(&text_p)))
+			if(!*(token = Q_readtok(&text_p)))
 				break;
 
 			historyEditLines[ i ].cursor = atoi(token);
 
-			if(!*(token = Q_ReadToken(&text_p)))
+			if(!*(token = Q_readtok(&text_p)))
 				break;
 
 			historyEditLines[ i ].scroll = atoi(token);
 
-			if(!*(token = Q_ReadToken(&text_p)))
+			if(!*(token = Q_readtok(&text_p)))
 				break;
 
 			numChars = atoi(token);

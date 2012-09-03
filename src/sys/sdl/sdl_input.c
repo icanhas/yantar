@@ -145,12 +145,12 @@ IN_IsConsoleKey(keyNum_t key, const unsigned char character)
 			consoleKey_t *c = &consoleKeys[ numConsoleKeys ];
 			int charCode = 0;
 
-			token = Q_ReadToken(&text_p);
+			token = Q_readtok(&text_p);
 			if(!token[ 0 ])
 				break;
 
 			if(strlen(token) == 4)
-				charCode = Q_HexStrToInt(token);
+				charCode = Q_hexstr2int(token);
 
 			if(charCode > 0){
 				c->type = CHARACTER;

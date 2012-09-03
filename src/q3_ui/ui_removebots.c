@@ -97,7 +97,7 @@ UI_RemoveBotsMenu_SetBotNames(void)
 		Q_strncpyz(removeBotsMenuInfo.botnames[n],
 			Info_ValueForKey(info,
 				"n"), sizeof(removeBotsMenuInfo.botnames[n]));
-		Q_CleanStr(removeBotsMenuInfo.botnames[n]);
+		Q_cleanstr(removeBotsMenuInfo.botnames[n]);
 	}
 
 }

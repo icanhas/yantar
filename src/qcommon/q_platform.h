@@ -334,21 +334,21 @@
 #endif
 
 /* endianness */
-void CopyShortSwap(void *dest, void *src);
-void CopyLongSwap(void *dest, void *src);
-short ShortSwap(short l);
-int LongSwap(int l);
-float FloatSwap(const float *f);
+void Q_cpshortswap(void *dest, void *src);
+void Q_cplongswap(void *dest, void *src);
+short Q_shortswap(short l);
+int Q_longswap(int l);
+float Q_floatswap(const float *f);
 
 #if defined(Q3_BIG_ENDIAN) && defined(Q3_LITTLE_ENDIAN)
 #error "Endianness defined as both big and little"
 #elif defined(Q3_BIG_ENDIAN)
 
-#define CopyLittleShort(dest, src)	CopyShortSwap(dest, src)
-#define CopyLittleLong(dest, src)	CopyLongSwap(dest, src)
-#define LittleShort(x)			ShortSwap(x)
-#define LittleLong(x)			LongSwap(x)
-#define LittleFloat(x)			FloatSwap(&x)
+#define CopyLittleShort(dest, src)	Q_cpshortswap(dest, src)
+#define CopyLittleLong(dest, src)	Q_cplongswap(dest, src)
+#define LittleShort(x)			Q_shortswap(x)
+#define LittleLong(x)			Q_longswap(x)
+#define LittleFloat(x)			Q_floatswap(&x)
 #define BigShort
 #define BigLong
 #define BigFloat
@@ -360,9 +360,9 @@ float FloatSwap(const float *f);
 #define LittleShort
 #define LittleLong
 #define LittleFloat
-#define BigShort(x)	ShortSwap(x)
-#define BigLong(x)	LongSwap(x)
-#define BigFloat(x)	FloatSwap(&x)
+#define BigShort(x)	Q_shortswap(x)
+#define BigLong(x)	Q_longswap(x)
+#define BigFloat(x)	Q_floatswap(&x)
 
 #elif defined(Q3_VM)
 

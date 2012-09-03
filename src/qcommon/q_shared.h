@@ -727,17 +727,17 @@ void PerpendicularVector(vec3_t dst, const vec3_t src);
 #endif
 
 /* common */
-long			Q_HashString(const char *s, int size);
-float			Q_Clamp(float min, float max, float value);
-char*		Q_SkipPath(char *pathname);
-const char*	Q_GetExtension(const char *name);
-void			Q_StripExtension(const char *in, char *out, int destsize);
-qbool		Q_CompareExtension(const char *in, const char *ext);
-void			Q_DefaultExtension(char *path, int maxSize, const char *extension);
+long			Q_hashstr(const char *s, int size);
+float			Q_clamp(float min, float max, float value);
+char*		Q_skippath(char *pathname);
+const char*	Q_getext(const char *name);
+void			Q_stripext(const char *in, char *out, int destsize);
+qbool		Q_cmpext(const char *in, const char *ext);
+void			Q_defaultext(char *path, int maxSize, const char *extension);
 
-char*		Q_ReadToken(char **data_p);
-char*		Q_ReadTokenExt(char **data_p, qbool allowLineBreak);
-int         		Q_Compress(char *data_p);
+char*		Q_readtok(char **data_p);
+char*		Q_readtok2(char **data_p, qbool allowLineBreak);
+int         		Q_compresstr(char *data_p);
 
 enum {
 	/* token types */
@@ -759,21 +759,21 @@ typedef struct pc_token_s {
 } pc_token_t;
 
 /* data is an in/out parm, returns a parsed out token */
-void    Q_MatchToken(char**buf_p, char *match);
+void    Q_matchtok(char**buf_p, char *match);
 
-void    SkipBracedSection(char **program);
-void    Q_SkipRestOfLine(char **data);
+void    Q_skipblock(char **program);
+void    Q_skipline(char **data);
 
 void    Parse1DMatrix(char **buf_p, int x, float *m);
 void    Parse2DMatrix(char **buf_p, int y, int x, float *m);
 void    Parse3DMatrix(char **buf_p, int z, int y, int x, float *m);
-int     Q_HexStrToInt(const char *str);
+int     Q_hexstr2int(const char *str);
 
 int QDECL       Q_sprintf(char *dest, int size, 
 	const char *fmt, ...) __attribute__ ((format (printf, 3, 4)));
 
-char*Q_SkipTokens(char *s, int numTokens, char *sep);
-char*Q_SkipCharset(char *s, char *sep);
+char*Q_skiptoks(char *s, int numTokens, char *sep);
+char*Q_skipcharset(char *s, char *sep);
 
 void    Com_Randombytes(byte *string, int len);
 
@@ -854,11 +854,11 @@ void		Q_strncpyz(char *dest, const char *src, int destsize);
 void		Q_strcat(char *dest, int size, const char *src);
 
 /* strlen that discounts Quake color sequences */
-int		Q_PrintStrlen(const char *string);
+int		Q_printablelen(const char *string);
 /* removes color sequences from string */
-char*		Q_CleanStr(char *string);
+char*		Q_cleanstr(char *string);
 /* Count the number of char tocount encountered in string */
-int 		Q_CountChar(const char *string, char tocount);
+int 		Q_countchar(const char *string, char tocount);
 
 /*
  * 64-bit integers for global rankings interface
@@ -893,7 +893,7 @@ enum {
 	TRUNCATE_LENGTH = 64
 };
 
-void Q_TruncateLongString(char *buffer, const char *s);
+void Q_truncstr(char *buffer, const char *s);
 
 /* key / value info strings */
 char*Info_ValueForKey(const char *s, const char *key);

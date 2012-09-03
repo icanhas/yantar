@@ -638,12 +638,12 @@ ArenaServers_Insert(char* adrstr, char* info, int pingtime)
 
 	Q_strncpyz(servernodeptr->hostname, Info_ValueForKey(info,
 			"hostname"), MAX_HOSTNAMELENGTH);
-	Q_CleanStr(servernodeptr->hostname);
+	Q_cleanstr(servernodeptr->hostname);
 	Q_strupr(servernodeptr->hostname);
 
 	Q_strncpyz(servernodeptr->mapname, Info_ValueForKey(info,
 			"mapname"), MAX_MAPNAMELENGTH);
-	Q_CleanStr(servernodeptr->mapname);
+	Q_cleanstr(servernodeptr->mapname);
 	Q_strupr(servernodeptr->mapname);
 
 	servernodeptr->numclients	= atoi(Info_ValueForKey(info, "clients"));
@@ -1518,19 +1518,19 @@ ArenaServers_MenuInit(void)
 
 	ArenaServers_LoadFavorites();
 
-	g_arenaservers.master.curvalue = g_servertype = Q_Clamp(
+	g_arenaservers.master.curvalue = g_servertype = Q_clamp(
 		0, 6, ui_browserMaster.integer);
 
-	g_gametype = Q_Clamp(0, 4, ui_browserGameType.integer);
+	g_gametype = Q_clamp(0, 4, ui_browserGameType.integer);
 	g_arenaservers.gametype.curvalue = g_gametype;
 
-	g_sortkey = Q_Clamp(0, 4, ui_browserSortKey.integer);
+	g_sortkey = Q_clamp(0, 4, ui_browserSortKey.integer);
 	g_arenaservers.sortkey.curvalue = g_sortkey;
 
-	g_fullservers = Q_Clamp(0, 1, ui_browserShowFull.integer);
+	g_fullservers = Q_clamp(0, 1, ui_browserShowFull.integer);
 	g_arenaservers.showfull.curvalue = g_fullservers;
 
-	g_emptyservers = Q_Clamp(0, 1, ui_browserShowEmpty.integer);
+	g_emptyservers = Q_clamp(0, 1, ui_browserShowEmpty.integer);
 	g_arenaservers.showempty.curvalue = g_emptyservers;
 
 	/* force to initial state and refresh */

@@ -797,7 +797,7 @@ GeneratePermanentShader(void)
 
 	SortNewShader();
 
-	hash = Q_HashString(newShader->name, FILE_HASH_SIZE);
+	hash = Q_hashstr(newShader->name, FILE_HASH_SIZE);
 	newShader->next = hashTable[hash];
 	hashTable[hash] = newShader;
 
@@ -1122,8 +1122,8 @@ R_RemapShader(const char *shaderName, const char *newShaderName, const char *tim
 	 * remap all the materials with the given name
 	 * even though they might have different lightmaps 
 	 */
-	Q_StripExtension(shaderName, strippedName, sizeof(strippedName));
-	hash = Q_HashString(strippedName, FILE_HASH_SIZE);
+	Q_stripext(shaderName, strippedName, sizeof(strippedName));
+	hash = Q_hashstr(strippedName, FILE_HASH_SIZE);
 	for(sh = hashTable[hash]; sh; sh = sh->next)
 		if(Q_stricmp(sh->name, strippedName) == 0){
 			if(sh != sh2){
@@ -1156,12 +1156,12 @@ FindShaderInShaderText(const char *shadername)
 
 	int	i, hash;
 
-	hash = Q_HashString(shadername, MAX_SHADERTEXT_HASH);
+	hash = Q_hashstr(shadername, MAX_SHADERTEXT_HASH);
 
 	if(shaderTextHashTable[hash]){
 		for(i = 0; shaderTextHashTable[hash][i]; i++){
 			p = shaderTextHashTable[hash][i];
-			token = Q_ReadTokenExt(&p, qtrue);
+			token = Q_readtok2(&p, qtrue);
 
 			if(!Q_stricmp(token, shadername))
 				return p;
@@ -1174,7 +1174,7 @@ FindShaderInShaderText(const char *shadername)
 
 	/* look for label */
 	for(;;){
-		token = Q_ReadTokenExt(&p, qtrue);
+		token = Q_readtok2(&p, qtrue);
 		if(token[0] == 0){
 			break;
 		}
@@ -1183,7 +1183,7 @@ FindShaderInShaderText(const char *shadername)
 			return p;
 		}else{
 			/* skip the definition */
-			SkipBracedSection(&p);
+			Q_skipblock(&p);
 		}
 	}
 
@@ -1207,9 +1207,9 @@ R_FindShaderByName(const char *name)
 		return tr.defaultShader;
 	}
 
-	Q_StripExtension(name, strippedName, sizeof(strippedName));
+	Q_stripext(name, strippedName, sizeof(strippedName));
 
-	hash = Q_HashString(strippedName, FILE_HASH_SIZE);
+	hash = Q_hashstr(strippedName, FILE_HASH_SIZE);
 
 	/*
 	 * see if the shader is already loaded
@@ -1276,9 +1276,9 @@ R_FindShader(const char *name, int lightmapIndex, qbool mipRawImage)
 		lightmapIndex = LIGHTMAP_BY_VERTEX;
 	}
 
-	Q_StripExtension(name, strippedName, sizeof(strippedName));
+	Q_stripext(name, strippedName, sizeof(strippedName));
 
-	hash = Q_HashString(strippedName, FILE_HASH_SIZE);
+	hash = Q_hashstr(strippedName, FILE_HASH_SIZE);
 
 	/* see if the shader is already loaded */
 	for(sh = hashTable[hash]; sh; sh = sh->next)
@@ -1396,7 +1396,7 @@ RE_RegisterShaderFromImage(const char *name, int lightmapIndex, image_t *image, 
 
 	(void)mipRawImage; /* shut up 'unused' warning -- remove param? */
 
-	hash = Q_HashString(name, FILE_HASH_SIZE);
+	hash = Q_hashstr(name, FILE_HASH_SIZE);
 
 	/* probably not necessary since this function
 	 * only gets called from tr_font.c with lightmapIndex == LIGHTMAP_2D
@@ -1711,14 +1711,14 @@ ScanAndLoadShaderFiles(void)
 		/* Do a simple check on the shader structure in that file to make sure one bad shader file cannot fuck up all other shaders. */
 		p = buffers[i];
 		for(;;){
-			token = Q_ReadTokenExt(&p, qtrue);
+			token = Q_readtok2(&p, qtrue);
 
 			if(!*token)
 				break;
 
 			oldp = p;
 
-			token = Q_ReadTokenExt(&p, qtrue);
+			token = Q_readtok2(&p, qtrue);
 			if(token[0] != '{' && token[1] != '\0'){
 				ri.Printf(PRINT_WARNING,
 					"WARNING: Bad shader file %s has incorrect syntax.\n",
@@ -1728,7 +1728,7 @@ ScanAndLoadShaderFiles(void)
 				break;
 			}
 
-			SkipBracedSection(&oldp);
+			Q_skipblock(&oldp);
 			p = oldp;
 		}
 
@@ -1752,7 +1752,7 @@ ScanAndLoadShaderFiles(void)
 		ri.FS_FreeFile(buffers[i]);
 	}
 
-	Q_Compress(s_shaderText);
+	Q_compresstr(s_shaderText);
 
 	/* free up memory */
 	ri.FS_FreeFileList(shaderFiles);
@@ -1763,14 +1763,14 @@ ScanAndLoadShaderFiles(void)
 	p = s_shaderText;
 	/* look for shader names */
 	for(;;){
-		token = Q_ReadTokenExt(&p, qtrue);
+		token = Q_readtok2(&p, qtrue);
 		if(token[0] == 0)
 			break;
 
-		hash = Q_HashString(token, MAX_SHADERTEXT_HASH);
+		hash = Q_hashstr(token, MAX_SHADERTEXT_HASH);
 		shaderTextHashTableSizes[hash]++;
 		size++;
-		SkipBracedSection(&p);
+		Q_skipblock(&p);
 	}
 
 	size += MAX_SHADERTEXT_HASH;
@@ -1788,14 +1788,14 @@ ScanAndLoadShaderFiles(void)
 	/* look for shader names */
 	for(;;){
 		oldp	= p;
-		token	= Q_ReadTokenExt(&p, qtrue);
+		token	= Q_readtok2(&p, qtrue);
 		if(token[0] == 0)
 			break;
 
-		hash = Q_HashString(token, MAX_SHADERTEXT_HASH);
+		hash = Q_hashstr(token, MAX_SHADERTEXT_HASH);
 		shaderTextHashTable[hash][shaderTextHashTableSizes[hash]++] = oldp;
 
-		SkipBracedSection(&p);
+		Q_skipblock(&p);
 	}
 	return;
 }

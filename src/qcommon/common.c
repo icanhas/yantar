@@ -2399,7 +2399,7 @@ Com_Writeconfig_f(void)
 		return;
 	}
 	Q_strncpyz(filename, Cmd_Argv(1), sizeof(filename));
-	Q_DefaultExtension(filename, sizeof(filename), ".cfg");
+	Q_defaultext(filename, sizeof(filename), ".cfg");
 	Com_Printf("Writing %s.\n", filename);
 	Com_Writeconfigtofile(filename);
 }
@@ -3005,7 +3005,7 @@ printcvarmatches(const char *s)
 	char value[ TRUNCATE_LENGTH ];
 
 	if(!Q_stricmpn(s, shortestMatch, strlen(shortestMatch))){
-		Q_TruncateLongString(value, Cvar_VariableString(s));
+		Q_truncstr(value, Cvar_VariableString(s));
 		Com_Printf("    %s = \"%s\"\n", s, value);
 	}
 }
@@ -3080,7 +3080,7 @@ Field_CompleteCommand(char *cmd,
 	int completionArgument = 0;
 
 	/* Skip leading whitespace and quotes */
-	cmd = Q_SkipCharset(cmd, " \"");
+	cmd = Q_skipcharset(cmd, " \"");
 
 	Cmd_TokenizeStringIgnoreQuotes(cmd);
 	completionArgument = Cmd_Argc( );

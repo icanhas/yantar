@@ -106,7 +106,7 @@ Preferences_SetMenuItems(void)
 		"r_finish") != 0;
 	s_preferences.forcemodel.curvalue = trap_Cvar_VariableValue(
 		"cg_forcemodel") != 0;
-	s_preferences.drawteamoverlay.curvalue = Q_Clamp(
+	s_preferences.drawteamoverlay.curvalue = Q_clamp(
 		0, 3, trap_Cvar_VariableValue("cg_drawTeamOverlay"));
 	s_preferences.allowdownload.curvalue = trap_Cvar_VariableValue(
 		"cl_allowDownload") != 0;

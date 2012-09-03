@@ -43,7 +43,7 @@ S_CodecGetSound(const char *filename, snd_info_t *info)
 
 	Q_strncpyz(localName, filename, MAX_QPATH);
 
-	ext = Q_GetExtension(localName);
+	ext = Q_getext(localName);
 
 	if(*ext){
 		/* Look for the correct loader and use it */
@@ -64,7 +64,7 @@ S_CodecGetSound(const char *filename, snd_info_t *info)
 				 * try again without the extension */
 				orgNameFailed = qtrue;
 				orgCodec = codec;
-				Q_StripExtension(filename, localName,
+				Q_stripext(filename, localName,
 					MAX_QPATH);
 			}else
 				/* Something loaded */

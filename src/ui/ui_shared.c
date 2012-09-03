@@ -320,7 +320,7 @@ qbool
 Float_Parse(char **p, float *f)
 {
 	char *token;
-	token = Q_ReadTokenExt(p, qfalse);
+	token = Q_readtok2(p, qfalse);
 	if(token && token[0] != 0){
 		*f = atof(token);
 		return qtrue;
@@ -397,7 +397,7 @@ qbool
 Int_Parse(char **p, int *i)
 {
 	char *token;
-	token = Q_ReadTokenExt(p, qfalse);
+	token = Q_readtok2(p, qfalse);
 
 	if(token && token[0] != 0){
 		*i = atoi(token);
@@ -469,7 +469,7 @@ String_Parse(char **p, const char **out)
 {
 	char *token;
 
-	token = Q_ReadTokenExt(p, qfalse);
+	token = Q_readtok2(p, qfalse);
 	if(token && token[0] != 0){
 		*(out) = String_Alloc(token);
 		return qtrue;

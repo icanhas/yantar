@@ -74,7 +74,7 @@ G_ParseInfos(char *buf, int max, char *infos[])
 	count = 0;
 
 	while(1){
-		token = Q_ReadToken(&buf);
+		token = Q_readtok(&buf);
 		if(!token[0])
 			break;
 		if(strcmp(token, "{")){
@@ -89,7 +89,7 @@ G_ParseInfos(char *buf, int max, char *infos[])
 
 		info[0] = '\0';
 		while(1){
-			token = Q_ReadTokenExt(&buf, qtrue);
+			token = Q_readtok2(&buf, qtrue);
 			if(!token[0]){
 				Com_Printf("Unexpected end of info file\n");
 				break;
@@ -98,7 +98,7 @@ G_ParseInfos(char *buf, int max, char *infos[])
 				break;
 			Q_strncpyz(key, token, sizeof(key));
 
-			token = Q_ReadTokenExt(&buf, qfalse);
+			token = Q_readtok2(&buf, qfalse);
 			if(!token[0])
 				strcpy(token, "<NULL>");
 			Info_SetValueForKey(info, key, token);
@@ -278,7 +278,7 @@ G_AddRandomBot(int team)
 				else teamstr = "";
 				strncpy(netname, value, sizeof(netname)-1);
 				netname[sizeof(netname)-1] = '\0';
-				Q_CleanStr(netname);
+				Q_cleanstr(netname);
 				trap_SendConsoleCommand(EXEC_INSERT,
 					va("addbot %s %f %s %i\n", netname,
 						skill,

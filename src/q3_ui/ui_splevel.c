@@ -210,7 +210,7 @@ UI_SPLevelMenu_SetBots(void)
 				bot,
 				10);
 		}
-		Q_CleanStr(levelMenuInfo.botNames[levelMenuInfo.numBots]);
+		Q_cleanstr(levelMenuInfo.botNames[levelMenuInfo.numBots]);
 		levelMenuInfo.numBots++;
 	}
 }
@@ -549,7 +549,7 @@ UI_SPLevelMenu_MenuDraw(void)
 
 	/* draw player name */
 	trap_Cvar_VariableStringBuffer("name", string, 32);
-	Q_CleanStr(string);
+	Q_cleanstr(string);
 	UI_DrawProportionalString(320, PLAYER_Y, string, UI_CENTER|UI_SMALLFONT,
 		color_orange);
 

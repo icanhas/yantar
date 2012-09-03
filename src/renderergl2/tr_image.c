@@ -1462,7 +1462,7 @@ done:
 	if(flags & IMGFLAG_MIPMAP){
 		if(textureFilterAnisotropic)
 			qglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT,
-				(GLint)Q_Clamp(1, maxAnisotropy, r_ext_max_anisotropy->integer));
+				(GLint)Q_clamp(1, maxAnisotropy, r_ext_max_anisotropy->integer));
 
 		qglTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, gl_filter_min);
 		qglTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, gl_filter_max);
@@ -1504,7 +1504,7 @@ EmptyTexture(int width, int height, imgFlags_t flags,
 	if(flags & IMGFLAG_MIPMAP){
 		if(textureFilterAnisotropic)
 			qglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT,
-				(GLint)Q_Clamp(1, maxAnisotropy, r_ext_max_anisotropy->integer));
+				(GLint)Q_clamp(1, maxAnisotropy, r_ext_max_anisotropy->integer));
 
 		qglTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, gl_filter_min);
 		qglTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, gl_filter_max);
@@ -1623,7 +1623,7 @@ R_CreateImage2(const char *name, byte *pic, int width, int height, imgFlags_t fl
 
 	GL_SelectTexture(0);
 
-	hash = Q_HashString(name, FILE_HASH_SIZE);
+	hash = Q_hashstr(name, FILE_HASH_SIZE);
 	image->next = hashTable[hash];
 	hashTable[hash] = image;
 
@@ -1786,7 +1786,7 @@ R_LoadImage(const char *name, byte **pic, int *width, int *height)
 
 	Q_strncpyz(localName, name, MAX_QPATH);
 
-	ext = Q_GetExtension(localName);
+	ext = Q_getext(localName);
 
 	if(*ext){
 		/* Look for the correct loader and use it */
@@ -1804,7 +1804,7 @@ R_LoadImage(const char *name, byte **pic, int *width, int *height)
 				 * try again without the extension */
 				orgNameFailed = qtrue;
 				orgLoader = i;
-				Q_StripExtension(name, localName, MAX_QPATH);
+				Q_stripext(name, localName, MAX_QPATH);
 			}else{
 				/* Something loaded */
 				return;
@@ -1853,7 +1853,7 @@ R_FindImageFile2(const char *name, imgFlags_t flags)
 		return NULL;
 	}
 
-	hash = Q_HashString(name, FILE_HASH_SIZE);
+	hash = Q_hashstr(name, FILE_HASH_SIZE);
 
 	/*
 	 * see if the image is already loaded

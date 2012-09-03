@@ -72,7 +72,7 @@ Cvar_FindVar(const char *var_name)
 	cvar_t	*var;
 	long	hash;
 
-	hash = Q_HashString(var_name, HASH_SIZE);
+	hash = Q_hashstr(var_name, HASH_SIZE);
 
 	for(var=hashTable[hash]; var != nil; var=var->hashNext)
 		if(!Q_stricmp(var_name, var->name))
@@ -374,7 +374,7 @@ Cvar_Get(const char *var_name, const char *var_value, int flags)
 	/* note what types of cvars have been modified (userinfo, archive, serverinfo, systeminfo) */
 	cvar_modifiedFlags |= var->flags;
 
-	hash = Q_HashString(var_name, HASH_SIZE);
+	hash = Q_hashstr(var_name, HASH_SIZE);
 	var->hashIndex = hash;
 
 	var->hashNext = hashTable[hash];
@@ -1100,7 +1100,7 @@ Cvar_CompleteCvarName(char *args, int argNum)
 		/* Skip "<cmd> " */
 		char *p;
 
-		p = Q_SkipTokens(args, 1, " ");
+		p = Q_skiptoks(args, 1, " ");
 		if(p > args)
 			Field_CompleteCommand(p, qfalse, qtrue);
 	}

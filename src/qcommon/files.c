@@ -502,7 +502,7 @@ FS_CheckFilenameIsNotExecutable(const char *filename,
 				const char *function)
 {
 	/* Check if the filename ends with the library extension */
-	if(Q_CompareExtension(filename, DLL_EXT))
+	if(Q_cmpext(filename, DLL_EXT))
 		Com_Errorf(
 			ERR_FATAL, "%s: Not allowed to manipulate '%s' due "
 				   "to %s extension", function, filename,
@@ -3629,7 +3629,7 @@ FS_FilenameCompletion(const char *dir, const char *ext,
 		Q_strncpyz(filename, filenames[ i ], MAX_STRING_CHARS);
 
 		if(stripExt)
-			Q_StripExtension(filename, filename, sizeof(filename));
+			Q_stripext(filename, filename, sizeof(filename));
 
 		callback(filename);
 	}
