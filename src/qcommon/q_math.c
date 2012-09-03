@@ -989,13 +989,13 @@ AnglesToQuat(const vec3_t angles, quat_t out)
 
 void QuatToAxis(quat_t q, vec3_t  axis[3])
 {
-	float wx, wy, wz, xx, xy, yy, yz, zy, xz, zz, x2, y2, z2;
+	float wx, wy, wz, xx, xy, yy, yz, xz, zz, x2, y2, z2;
 	
 	x2 = q[1] + q[1];
 	y2 = q[2] + q[2];
 	z2 = q[3] + q[3];
 	xx = q[1] * x2;
-	xy = q[2] * y2;
+	xy = q[1] * y2;
 	xz = q[1] * z2;
 	yy = q[2] * y2;
 	yz = q[2] * z2;
@@ -1007,10 +1007,10 @@ void QuatToAxis(quat_t q, vec3_t  axis[3])
 	axis[1][0] = xy - wz;
 	axis[2][0] = xz + wy;
 	axis[0][1] = xy + wz;
-	axis[1][1] = 1.0 - (xx - zz);
-	axis[2][1] = yz -wx;
+	axis[1][1] = 1.0 - (xx + zz);
+	axis[2][1] = yz - wx;
 	axis[0][2] = xz - wy;
-	axis[1][2] = yz + wy;
+	axis[1][2] = yz + wx;
 	axis[2][2] = 1.0 - (xx + yy);
 }
 
