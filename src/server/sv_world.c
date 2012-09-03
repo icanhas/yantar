@@ -86,7 +86,7 @@ SV_SectorList_f(void)
 		for(ent = sec->entities; ent;
 		    ent = ent->nextEntityInWorldSector)
 			c++;
-		Q_Printf("sector %i: %i entities\n", i, c);
+		Com_Printf("sector %i: %i entities\n", i, c);
 	}
 }
 
@@ -183,7 +183,7 @@ SV_UnlinkEntity(sharedEntity_t *gEnt)
 			return;
 		}
 
-	Q_Printf("WARNING: SV_UnlinkEntity: not found in worldSector\n");
+	Com_Printf("WARNING: SV_UnlinkEntity: not found in worldSector\n");
 }
 
 
@@ -293,7 +293,7 @@ SV_LinkEntity(sharedEntity_t *gEnt)
 			if(ent->areanum != -1 && ent->areanum != area){
 				if(ent->areanum2 != -1 && ent->areanum2 !=
 				   area && sv.state == SS_LOADING)
-					Q_DPrintf (
+					Com_DPrintf (
 						"Object %i touching 3 areas at %f %f %f\n",
 						gEnt->s.number,
 						gEnt->r.absmin[0],
@@ -383,7 +383,7 @@ SV_AreaEntities_r(worldSector_t *node, areaParms_t *ap)
 			continue;
 
 		if(ap->count == ap->maxcount){
-			Q_Printf ("SV_AreaEntities: MAXCOUNT\n");
+			Com_Printf ("SV_AreaEntities: MAXCOUNT\n");
 			return;
 		}
 

@@ -447,7 +447,7 @@ CG_Error(const char *msg, ...)
 }
 
 void QDECL
-Q_Error(int level, const char *error, ...)
+Com_Errorf(int level, const char *error, ...)
 {
 	va_list argptr;
 	char	text[1024];
@@ -460,7 +460,7 @@ Q_Error(int level, const char *error, ...)
 }
 
 void QDECL
-Q_Printf(const char *msg, ...)
+Com_Printf(const char *msg, ...)
 {
 	va_list argptr;
 	char	text[1024];
@@ -1624,12 +1624,12 @@ CG_ParseMenu(const char *menuFile)
 			break;
 
 		/* if ( Q_stricmp( token, "{" ) ) {
-		 * Q_Printf( "Missing { in menu file\n" );
+		 * Com_Printf( "Missing { in menu file\n" );
 		 * break;
 		 * } */
 
 		/* if ( menuCount == MAX_MENUS ) {
-		 * Q_Printf( "Too many menus!\n" );
+		 * Com_Printf( "Too many menus!\n" );
 		 * break;
 		 * } */
 
@@ -1691,7 +1691,7 @@ CG_LoadMenus(const char *menuFile)
 
 	len = trap_FS_FOpenFile(menuFile, &f, FS_READ);
 	if(!f){
-		Q_Printf(
+		Com_Printf(
 			S_COLOR_YELLOW
 			"menu file not found: %s, using default\n",
 			menuFile);
@@ -1726,12 +1726,12 @@ CG_LoadMenus(const char *menuFile)
 			break;
 
 		/* if ( Q_stricmp( token, "{" ) ) {
-		 * Q_Printf( "Missing { in menu file\n" );
+		 * Com_Printf( "Missing { in menu file\n" );
 		 * break;
 		 * } */
 
 		/* if ( menuCount == MAX_MENUS ) {
-		 * Q_Printf( "Too many menus!\n" );
+		 * Com_Printf( "Too many menus!\n" );
 		 * break;
 		 * } */
 
@@ -1746,7 +1746,7 @@ CG_LoadMenus(const char *menuFile)
 		}
 	}
 
-	Q_Printf("UI menu load time = %d milli seconds\n",
+	Com_Printf("UI menu load time = %d milli seconds\n",
 		trap_Milliseconds() - start);
 
 }
@@ -2061,8 +2061,8 @@ CG_LoadHudMenu(void)
 	 * cgDC.getBindingBuf = &trap_Key_GetBindingBuf;
 	 * cgDC.keynumToStringBuf = &trap_Key_KeynumToStringBuf;
 	 * cgDC.executeText = &trap_Cmd_ExecuteText; */
-	cgDC.Error	= &Q_Error;
-	cgDC.Print	= &Q_Printf;
+	cgDC.Error	= &Com_Errorf;
+	cgDC.Print	= &Com_Printf;
 	cgDC.ownerDrawWidth = &CG_OwnerDrawWidth;
 	/* cgDC.Pause = &CG_Pause; */
 	cgDC.registerSound = &trap_S_RegisterSound;
@@ -2092,7 +2092,7 @@ CG_AssetCache(void)
 	 *  trap_R_RegisterFont("fonts/arial.ttf", 72, &Assets.textFont);
 	 * }
 	 * Assets.background = trap_R_RegisterShaderNoMip( ASSET_BACKGROUND );
-	 * Q_Printf("Menu Size: %i bytes\n", sizeof(Menus)); */
+	 * Com_Printf("Menu Size: %i bytes\n", sizeof(Menus)); */
 	cgDC.Assets.gradientBar = trap_R_RegisterShaderNoMip(ASSET_GRADIENTBAR);
 	cgDC.Assets.fxBasePic	= trap_R_RegisterShaderNoMip(ART_FX_BASE);
 	cgDC.Assets.fxPic[0]	= trap_R_RegisterShaderNoMip(ART_FX_RED);

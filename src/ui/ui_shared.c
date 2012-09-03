@@ -211,18 +211,18 @@ void
 String_Report(void)
 {
 	float f;
-	Q_Printf("Memory/String Pool Info\n");
-	Q_Printf("----------------\n");
+	Com_Printf("Memory/String Pool Info\n");
+	Com_Printf("----------------\n");
 	f	= strPoolIndex;
 	f	/= STRING_POOL_SIZE;
 	f	*= 100;
-	Q_Printf("String Pool is %.1f%% full, %i bytes out of %i used.\n", f,
+	Com_Printf("String Pool is %.1f%% full, %i bytes out of %i used.\n", f,
 		strPoolIndex,
 		STRING_POOL_SIZE);
 	f	= allocPoint;
 	f	/= MEM_POOL_SIZE;
 	f	*= 100;
-	Q_Printf("Memory Pool is %.1f%% full, %i bytes out of %i used.\n", f,
+	Com_Printf("Memory Pool is %.1f%% full, %i bytes out of %i used.\n", f,
 		allocPoint,
 		MEM_POOL_SIZE);
 }
@@ -267,7 +267,7 @@ PC_SourceWarning(int handle, char *format, ...)
 	line = 0;
 	trap_PC_SourceFileAndLine(handle, filename, &line);
 
-	Q_Printf(S_COLOR_YELLOW "WARNING: %s, line %d: %s\n", filename, line,
+	Com_Printf(S_COLOR_YELLOW "WARNING: %s, line %d: %s\n", filename, line,
 		string);
 }
 #endif
@@ -291,7 +291,7 @@ PC_SourceError(int handle, char *format, ...)
 	line = 0;
 	trap_PC_SourceFileAndLine(handle, filename, &line);
 
-	Q_Printf(S_COLOR_RED "ERROR: %s, line %d: %s\n", filename, line,
+	Com_Printf(S_COLOR_RED "ERROR: %s, line %d: %s\n", filename, line,
 		string);
 }
 

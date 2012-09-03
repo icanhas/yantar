@@ -263,7 +263,7 @@ PM_StepSlideMove(qbool gravity)
 		pm->tracemask);
 	if(trace.allsolid){
 		if(pm->debugLevel)
-			Q_Printf("%u:bend can't step\n", cnt);
+			Com_Printf("%u:bend can't step\n", cnt);
 		return;	/* can't step up */
 	}
 
@@ -297,7 +297,7 @@ PM_StepSlideMove(qbool gravity)
 		Vec3Copy (down_o, pm->ps->origin);
 		Vec3Copy (down_v, pm->ps->velocity);
 		if(pm->debugLevel)
-			Q_Printf("%u:bend\n", cnt);
+			Com_Printf("%u:bend\n", cnt);
 	}else
 #endif
 	{
@@ -316,6 +316,6 @@ PM_StepSlideMove(qbool gravity)
 				PM_AddEvent(EV_STEP_16);
 		}
 		if(pm->debugLevel)
-			Q_Printf("%u:stepped\n", cnt);
+			Com_Printf("%u:stepped\n", cnt);
 	}
 }

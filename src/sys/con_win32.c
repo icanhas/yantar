@@ -304,12 +304,12 @@ CON_Input(void)
 
 	if(!qconsole_linelen){
 		CON_Show();
-		Q_Printf("\n");
+		Com_Printf("\n");
 		return NULL;
 	}
 
 	CON_HistAdd();
-	Q_Printf("%s\n", qconsole_line);
+	Com_Printf("%s\n", qconsole_line);
 
 	qconsole_linelen = 0;
 	CON_Show();

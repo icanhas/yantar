@@ -61,7 +61,7 @@ svEntity_t      *
 SV_SvEntityForGentity(sharedEntity_t *gEnt)
 {
 	if(!gEnt || gEnt->s.number < 0 || gEnt->s.number >= MAX_GENTITIES)
-		Q_Error(ERR_DROP, "SV_SvEntityForGentity: bad gEnt");
+		Com_Errorf(ERR_DROP, "SV_SvEntityForGentity: bad gEnt");
 	return &sv.svEntities[ gEnt->s.number ];
 }
 
@@ -118,10 +118,10 @@ SV_SetBrushModel(sharedEntity_t *ent, const char *name)
 	vec3_t mins, maxs;
 
 	if(!name)
-		Q_Error(ERR_DROP, "SV_SetBrushModel: NULL");
+		Com_Errorf(ERR_DROP, "SV_SetBrushModel: NULL");
 
 	if(name[0] != '*')
-		Q_Error(ERR_DROP, "SV_SetBrushModel: %s isn't a brush model",
+		Com_Errorf(ERR_DROP, "SV_SetBrushModel: %s isn't a brush model",
 			name);
 
 
@@ -241,7 +241,7 @@ void
 SV_GetServerinfo(char *buffer, int bufferSize)
 {
 	if(bufferSize < 1)
-		Q_Error(ERR_DROP, "SV_GetServerinfo: bufferSize == %i",
+		Com_Errorf(ERR_DROP, "SV_GetServerinfo: bufferSize == %i",
 			bufferSize);
 	Q_strncpyz(buffer, Cvar_InfoString(CVAR_SERVERINFO), bufferSize);
 }
@@ -271,7 +271,7 @@ void
 SV_GetUsercmd(int clientNum, usercmd_t *cmd)
 {
 	if(clientNum < 0 || clientNum >= sv_maxclients->integer)
-		Q_Error(ERR_DROP, "SV_GetUsercmd: bad clientNum:%i", clientNum);
+		Com_Errorf(ERR_DROP, "SV_GetUsercmd: bad clientNum:%i", clientNum);
 	*cmd = svs.clients[clientNum].lastUsercmd;
 }
 
@@ -295,10 +295,10 @@ SV_GameSystemCalls(intptr_t *args)
 {
 	switch(args[0]){
 	case G_PRINT:
-		Q_Printf("%s", (const char*)VMA(1));
+		Com_Printf("%s", (const char*)VMA(1));
 		return 0;
 	case G_ERROR:
-		Q_Error(ERR_DROP, "%s", (const char*)VMA(1));
+		Com_Errorf(ERR_DROP, "%s", (const char*)VMA(1));
 		return 0;
 	case G_MILLISECONDS:
 		return Sys_Milliseconds();
@@ -430,7 +430,7 @@ SV_GameSystemCalls(intptr_t *args)
 		BotImport_DebugPolygonDelete(args[1]);
 		return 0;
 	case G_REAL_TIME:
-		return Q_RealTime(VMA(1));
+		return Com_RealTime(VMA(1));
 	case G_SNAPVECTOR:
 		Q_SnapVector(VMA(1));
 		return 0;
@@ -886,7 +886,7 @@ SV_GameSystemCalls(intptr_t *args)
 
 
 	default:
-		Q_Error(ERR_DROP, "Bad game system trap: %ld",
+		Com_Errorf(ERR_DROP, "Bad game system trap: %ld",
 			(long int)args[0]);
 	}
 	return 0;
@@ -929,7 +929,7 @@ SV_InitGameVM(qbool restart)
 
 	/* use the current msec count for a random seed
 	 * init for this gamestate */
-	VM_Call (gvm, GAME_INIT, sv.time, Q_Milliseconds(), restart);
+	VM_Call (gvm, GAME_INIT, sv.time, Com_Millisecs(), restart);
 }
 
 
@@ -949,7 +949,7 @@ SV_RestartGameProgs(void)
 	/* do a restart instead of a free */
 	gvm = VM_Restart(gvm, qtrue);
 	if(!gvm)
-		Q_Error(ERR_FATAL, "VM_Restart on game failed");
+		Com_Errorf(ERR_FATAL, "VM_Restart on game failed");
 
 	SV_InitGameVM(qtrue);
 }
@@ -978,7 +978,7 @@ SV_InitGameProgs(void)
 		VM_Create("qagame", SV_GameSystemCalls,
 			Cvar_VariableValue("vm_game"));
 	if(!gvm)
-		Q_Error(ERR_FATAL, "VM_Create on game failed");
+		Com_Errorf(ERR_FATAL, "VM_Create on game failed");
 
 	SV_InitGameVM(qfalse);
 }

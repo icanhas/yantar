@@ -687,11 +687,11 @@ CL_UISystemCalls(intptr_t *args)
 {
 	switch(args[0]){
 	case UI_ERROR:
-		Q_Error(ERR_DROP, "%s", (const char*)VMA(1));
+		Com_Errorf(ERR_DROP, "%s", (const char*)VMA(1));
 		return 0;
 
 	case UI_PRINT:
-		Q_Printf("%s", (const char*)VMA(1));
+		Com_Printf("%s", (const char*)VMA(1));
 		return 0;
 
 	case UI_MILLISECONDS:
@@ -744,7 +744,7 @@ CL_UISystemCalls(intptr_t *args)
 		   && (!strncmp(VMA(2), "snd_restart", 11)
 		       || !strncmp(VMA(2), "vid_restart", 11)
 		       || !strncmp(VMA(2), "quit", 5))){
-			Q_Printf (
+			Com_Printf (
 				S_COLOR_YELLOW
 				"turning EXEC_NOW '%.11s' into EXEC_INSERT\n",
 				(const char*)VMA(2));
@@ -1012,10 +1012,10 @@ CL_UISystemCalls(intptr_t *args)
 		return 0;
 
 	case UI_REAL_TIME:
-		return Q_RealTime(VMA(1));
+		return Com_RealTime(VMA(1));
 
 	case UI_CIN_PLAYCINEMATIC:
-		Q_DPrintf("UI_CIN_PlayCinematic\n");
+		Com_DPrintf("UI_CIN_PlayCinematic\n");
 		return CIN_PlayCinematic(VMA(
 				1), args[2], args[3], args[4], args[5], args[6]);
 
@@ -1041,7 +1041,7 @@ CL_UISystemCalls(intptr_t *args)
 		return CL_CDKeyValidate(VMA(1), VMA(2));
 
 	default:
-		Q_Error(ERR_DROP, "Bad UI system trap: %ld",
+		Com_Errorf(ERR_DROP, "Bad UI system trap: %ld",
 			(long int)args[0]);
 
 	}
@@ -1080,19 +1080,19 @@ CL_InitUI(void)
 
 	uivm = VM_Create("ui", CL_UISystemCalls, interpret);
 	if(uivm == NULL)
-		Q_Error(ERR_FATAL, "VM_Create on UI failed");
+		Com_Errorf(ERR_FATAL, "VM_Create on UI failed");
 
 	/* sanity check */
 	v = VM_Call(uivm, UI_GETAPIVERSION);
 	if(v == UI_OLD_API_VERSION)
-		/* Q_Printf(S_COLOR_YELLOW "WARNING: loading old Quake III Arena User Interface version %d\n", v ); */
+		/* Com_Printf(S_COLOR_YELLOW "WARNING: loading old Quake III Arena User Interface version %d\n", v ); */
 		/* init for this gamestate */
 		VM_Call(uivm, UI_INIT,
 			(clc.state >= CA_AUTHORIZING && clc.state < CA_ACTIVE));
 	else if(v != UI_API_VERSION){
 		VM_Free(uivm);
 		uivm = NULL;
-		Q_Error(ERR_DROP, "User Interface is version %d, expected %d",
+		Com_Errorf(ERR_DROP, "User Interface is version %d, expected %d",
 			v,
 			UI_API_VERSION);
 		cls.uiStarted = qfalse;

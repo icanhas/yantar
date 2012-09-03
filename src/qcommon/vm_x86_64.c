@@ -91,7 +91,7 @@ callAsmCall(intptr_t callProgramStack, int64_t callSyscallNum)
 	int i;
 
 /* Dfprintf(stderr, "callAsmCall(%ld, %ld)\n", callProgramStack, callSyscallNum);
- * Q_Printf("-> callAsmCall %s, level %d, num %ld\n", currentVM->name, currentVM->callLevel, callSyscallNum); */
+ * Com_Printf("-> callAsmCall %s, level %d, num %ld\n", currentVM->name, currentVM->callLevel, callSyscallNum); */
 
 	savedVM = currentVM;
 
@@ -110,7 +110,7 @@ callAsmCall(intptr_t callProgramStack, int64_t callSyscallNum)
 	ret = currentVM->systemCall(args);
 
 	currentVM = savedVM;
-/*	Q_Printf("<- callAsmCall %s, level %d, num %ld\n", currentVM->name, currentVM->callLevel, callSyscallNum); */
+/*	Com_Printf("<- callAsmCall %s, level %d, num %ld\n", currentVM->name, currentVM->callLevel, callSyscallNum); */
 
 	return ret;
 }
@@ -281,7 +281,7 @@ emit(const char* fmt, ...)
 #define CHECK_INSTR(nr)	\
 	do { if(nr < 0 || nr >= header->instructionCount){ \
 		     VM_FREEBUFFERS(vm); \
-		     Q_Error(ERR_DROP, \
+		     Com_Errorf(ERR_DROP, \
 			     "%s: jump target 0x%x out of range at offset %d", \
 			     __func__, nr, \
 			     pc); \
@@ -376,11 +376,11 @@ emit(const char* fmt, ...)
 
 #ifdef DEBUG_VM
 #define NOTIMPL(x) \
-	do { Q_Error(ERR_DROP, "instruction not implemented: %s", opnames[x]); \
+	do { Com_Errorf(ERR_DROP, "instruction not implemented: %s", opnames[x]); \
 	} while(0)
 #else
 #define NOTIMPL(x) \
-	do { Q_Printf(S_COLOR_RED "instruction not implemented: %x\n", x); \
+	do { Com_Printf(S_COLOR_RED "instruction not implemented: %x\n", x); \
 	     vm->compiled = qfalse; return; } while(0)
 #endif
 
@@ -393,14 +393,14 @@ getentrypoint(vm_t* vm)
 static __attribute__ ((noreturn)) void CROSSCALL
 eop(void)
 {
-	Q_Error(ERR_DROP, "End of program reached without return!");
+	Com_Errorf(ERR_DROP, "End of program reached without return!");
 	exit(1);
 }
 
 static __attribute__ ((noreturn)) void CROSSCALL
 jmpviolation(void)
 {
-	Q_Error(ERR_DROP, "Program tried to execute code outside VM");
+	Com_Errorf(ERR_DROP, "Program tried to execute code outside VM");
 	exit(1);
 }
 
@@ -408,7 +408,7 @@ jmpviolation(void)
 static __attribute__ ((noreturn)) void CROSSCALL
 memviolation(void)
 {
-	Q_Error(
+	Com_Errorf(
 		ERR_DROP,
 		"Program tried to access memory outside VM, or unaligned memory access");
 	exit(1);
@@ -417,7 +417,7 @@ memviolation(void)
 static __attribute__ ((noreturn)) void CROSSCALL
 opstackviolation(void)
 {
-	Q_Error(ERR_DROP, "Program corrupted the VM opStack");
+	Com_Errorf(ERR_DROP, "Program corrupted the VM opStack");
 	exit(1);
 }
 #endif
@@ -462,7 +462,7 @@ VM_Compile(vm_t *vm, vmHeader_t *header)
 					MAP_ANONYMOUS, -1,
 					0);
 			if(vm->codeBase == MAP_FAILED)
-				Q_Error(ERR_FATAL,
+				Com_Errorf(ERR_FATAL,
 					"VM_CompileX86_64: can't mmap memory");
 		#elif __WIN64__
 			/* allocate memory with write permissions under windows. */
@@ -471,13 +471,13 @@ VM_Compile(vm_t *vm, vmHeader_t *header)
 					MEM_COMMIT,
 					PAGE_READWRITE);
 			if(!vm->codeBase)
-				Q_Error(
+				Com_Errorf(
 					ERR_FATAL,
 					"VM_CompileX86_64: VirtualAlloc failed");
 		#else
 			vm->codeBase = malloc(compiledOfs);
 			if(!vm_codeBase)
-				Q_Error(
+				Com_Errorf(
 					ERR_FATAL,
 					"VM_CompileX86_64: Failed to allocate memory");
 		#endif
@@ -955,7 +955,7 @@ VM_Compile(vm_t *vm, vmHeader_t *header)
 
 		if(got_const){
 			VM_FREEBUFFERS(vm);
-			Q_Error(ERR_DROP, "leftover const");
+			Com_Errorf(ERR_DROP, "leftover const");
 		}
 
 		emit("movq $%" PRIu64 ", %%rax", (intptr_t)eop);
@@ -967,7 +967,7 @@ VM_Compile(vm_t *vm, vmHeader_t *header)
 
 	#ifdef VM_X86_64_MMAP
 	if(mprotect(vm->codeBase, compiledOfs, PROT_READ|PROT_EXEC))
-		Q_Error(ERR_FATAL, "VM_CompileX86_64: mprotect failed");
+		Com_Errorf(ERR_FATAL, "VM_CompileX86_64: mprotect failed");
 	#elif __WIN64__
 	{
 		DWORD oldProtect = 0;
@@ -975,7 +975,7 @@ VM_Compile(vm_t *vm, vmHeader_t *header)
 		/* remove write permissions; give exec permision */
 		if(!VirtualProtect(vm->codeBase, compiledOfs, PAGE_EXECUTE_READ,
 			   &oldProtect))
-			Q_Error(ERR_FATAL,
+			Com_Errorf(ERR_FATAL,
 				"VM_CompileX86_64: VirtualProtect failed");
 	}
 	#endif
@@ -1000,13 +1000,13 @@ VM_Compile(vm_t *vm, vmHeader_t *header)
 	if(vm->compiled){
 		struct timeval	tvdone =  {0, 0};
 		struct timeval	dur =  {0, 0};
-		Q_Printf("VM file %s compiled to %i bytes of code (%p - %p)\n",
+		Com_Printf("VM file %s compiled to %i bytes of code (%p - %p)\n",
 			vm->name, vm->codeLength, vm->codeBase,
 			vm->codeBase+vm->codeLength);
 
 		gettimeofday(&tvdone, NULL);
 		timersub(&tvdone, &tvstart, &dur);
-		Q_Printf(
+		Com_Printf(
 			"compilation took %" PRIu64 ".%06" PRIu64 " seconds\n",
 			dur.tv_sec, dur.tv_usec);
 	}
@@ -1052,7 +1052,7 @@ VM_CallCompiled(vm_t *vm, int *args)
 
 	currentVM = vm;
 
-/*	Q_Printf("entering %s level %d, call %d, arg1 = 0x%x\n", vm->name, vm->callLevel, args[0], args[1]); */
+/*	Com_Printf("entering %s level %d, call %d, arg1 = 0x%x\n", vm->name, vm->callLevel, args[0], args[1]); */
 
 	/* interpret the code */
 	vm->currentlyInterpreting = qtrue;
@@ -1116,14 +1116,14 @@ VM_CallCompiled(vm_t *vm, int *args)
 		);
 
 	if(opStackRet != 1 || *opStack != 0xDEADBEEF)
-		Q_Error(ERR_DROP,
+		Com_Errorf(ERR_DROP,
 			"opStack corrupted in compiled code (offset %ld)",
 			opStackRet);
 
 	if(programStack != stackOnEntry - 48)
-		Q_Error(ERR_DROP, "programStack corrupted in compiled code");
+		Com_Errorf(ERR_DROP, "programStack corrupted in compiled code");
 
-/*	Q_Printf("exiting %s level %d\n", vm->name, vm->callLevel); */
+/*	Com_Printf("exiting %s level %d\n", vm->name, vm->callLevel); */
 	vm->programStack = stackOnEntry;
 
 	return stack[1];

@@ -22,7 +22,7 @@
 #include "tr_local.h"
 
 void QDECL
-Q_Printf(const char *msg, ...)
+Com_Printf(const char *msg, ...)
 {
 	va_list argptr;
 	char	text[1024];
@@ -35,7 +35,7 @@ Q_Printf(const char *msg, ...)
 }
 
 void QDECL
-Q_Error(int level, const char *error, ...)
+Com_Errorf(int level, const char *error, ...)
 {
 	va_list argptr;
 	char	text[1024];

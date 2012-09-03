@@ -251,7 +251,7 @@ void
 Sys_UnloadDll(void *dllHandle)
 {
 	if(!dllHandle){
-		Q_Printf("Sys_UnloadDll(NULL)\n");
+		Com_Printf("Sys_UnloadDll(NULL)\n");
 		return;
 	}
 
@@ -269,7 +269,7 @@ Sys_LoadDll(const char *name, qbool useSystemLib)
 	void *dllhandle;
 
 	if(useSystemLib)
-		Q_Printf("Trying to load \"%s\"...\n", name);
+		Com_Printf("Trying to load \"%s\"...\n", name);
 
 	if(!useSystemLib || !(dllhandle = Sys_LoadLibrary(name))){
 		const char *topDir;
@@ -280,7 +280,7 @@ Sys_LoadDll(const char *name, qbool useSystemLib)
 		if(!*topDir)
 			topDir = ".";
 
-		Q_Printf("Trying to load \"%s\" from \"%s\"...\n", name,
+		Com_Printf("Trying to load \"%s\" from \"%s\"...\n", name,
 			topDir);
 		Q_sprintf(libPath, sizeof(libPath), "%s%c%s", topDir, PATH_SEP,
 			name);
@@ -292,7 +292,7 @@ Sys_LoadDll(const char *name, qbool useSystemLib)
 				basePath = ".";
 
 			if(FS_FilenameCompare(topDir, basePath)){
-				Q_Printf(
+				Com_Printf(
 					"Trying to load \"%s\" from \"%s\"...\n",
 					name,
 					basePath);
@@ -303,7 +303,7 @@ Sys_LoadDll(const char *name, qbool useSystemLib)
 			}
 
 			if(!dllhandle)
-				Q_Printf("Loading \"%s\" failed\n", name);
+				Com_Printf("Loading \"%s\" failed\n", name);
 		}
 	}
 	return dllhandle;
@@ -319,11 +319,11 @@ Sys_LoadGameDll(const char *name,
 	void	(*dllEntry)(intptr_t (*syscallptr)(intptr_t, ...));
 
 	assert(name);
-	Q_Printf("Loading DLL file: %s\n", name);
+	Com_Printf("Loading DLL file: %s\n", name);
 	libHandle = Sys_LoadLibrary(name);
 
 	if(!libHandle){
-		Q_Printf("Sys_LoadGameDll(%s) failed:\n\"%s\"\n", name,
+		Com_Printf("Sys_LoadGameDll(%s) failed:\n\"%s\"\n", name,
 			Sys_LibraryError());
 		return NULL;
 	}
@@ -332,7 +332,7 @@ Sys_LoadGameDll(const char *name,
 	*entryPoint = Sys_LoadFunction(libHandle, "vmMain");
 
 	if(!*entryPoint || !dllEntry){
-		Q_Printf (
+		Com_Printf (
 			"Sys_LoadGameDll(%s) failed to find vmMain function:\n\"%s\" !\n",
 			name, Sys_LibraryError( ));
 		Sys_UnloadLibrary(libHandle);
@@ -340,7 +340,7 @@ Sys_LoadGameDll(const char *name,
 		return NULL;
 	}
 
-	Q_Printf ("Sys_LoadGameDll(%s) found vmMain function at %p\n", name,
+	Com_Printf ("Sys_LoadGameDll(%s) found vmMain function at %p\n", name,
 		*entryPoint);
 	dllEntry(systemcalls);
 	return libHandle;
@@ -440,7 +440,7 @@ main(int argc, char **argv)
 	Sys_SetBinaryPath(Sys_Dirname(argv[ 0 ]));
 	Sys_SetDefaultInstallPath(DEFAULT_BASEDIR);
 
-	/* Concatenate the command line for passing to Q_Init */
+	/* Concatenate the command line for passing to Com_Init */
 	for(i = 1; i < argc; i++){
 		const qbool containsSpaces = strchr(argv[i], ' ') != NULL;
 		if(containsSpaces)
@@ -454,7 +454,7 @@ main(int argc, char **argv)
 		Q_strcat(commandLine, sizeof(commandLine), " ");
 	}
 
-	Q_Init(commandLine);
+	Com_Init(commandLine);
 	NET_Init( );
 	CON_Init( );
 
@@ -466,7 +466,7 @@ main(int argc, char **argv)
 
 	for(;;){
 		IN_Frame( );
-		Q_Frame( );
+		Com_Frame( );
 	}
 	return 0;
 }

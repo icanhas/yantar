@@ -416,7 +416,7 @@ typedef struct {
  *  */
 qbool        G_SpawnString(const char *key, const char *defaultString,
 			      char **out);
-/* spawn string returns a temporary reference, you must CopyString() if you want to keep it */
+/* spawn string returns a temporary reference, you must Copystr() if you want to keep it */
 qbool        G_SpawnFloat(const char *key, const char *defaultString,
 			     float *out);
 qbool        G_SpawnInt(const char *key, const char *defaultString, int *out);

@@ -84,7 +84,7 @@ CG_DrawClientScore(int y, score_t *score, float *color, float fade,
 	int	iconx, headx;
 
 	if(score->client < 0 || score->client >= cgs.maxclients){
-		Q_Printf("Bad score->client: %i\n", score->client);
+		Com_Printf("Bad score->client: %i\n", score->client);
 		return;
 	}
 

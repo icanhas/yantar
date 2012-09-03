@@ -79,7 +79,7 @@ Cbuf_AddText(const char *text)
 	l = strlen (text);
 
 	if(cmd_text.cursize + l >= cmd_text.maxsize){
-		Q_Printf ("Cbuf_AddText: overflow\n");
+		Com_Printf ("Cbuf_AddText: overflow\n");
 		return;
 	}
 	Q_Memcpy(&cmd_text.data[cmd_text.cursize], text, l);
@@ -99,7 +99,7 @@ Cbuf_InsertText(const char *text)
 
 	len = strlen(text) + 1;
 	if(len + cmd_text.cursize > cmd_text.maxsize){
-		Q_Printf("Cbuf_InsertText overflowed\n");
+		Com_Printf("Cbuf_InsertText overflowed\n");
 		return;
 	}
 
@@ -123,11 +123,11 @@ Cbuf_ExecuteText(int exec_when, const char *text)
 	switch(exec_when){
 	case EXEC_NOW:
 		if(text && strlen(text) > 0){
-			Q_DPrintf(S_COLOR_YELLOW "EXEC_NOW %s\n", text);
+			Com_DPrintf(S_COLOR_YELLOW "EXEC_NOW %s\n", text);
 			Cmd_ExecuteString (text);
 		}else{
 			Cbuf_Execute();
-			Q_DPrintf(S_COLOR_YELLOW "EXEC_NOW %s\n",
+			Com_DPrintf(S_COLOR_YELLOW "EXEC_NOW %s\n",
 				cmd_text.data);
 		}
 		break;
@@ -138,7 +138,7 @@ Cbuf_ExecuteText(int exec_when, const char *text)
 		Cbuf_AddText (text);
 		break;
 	default:
-		Q_Error (ERR_FATAL, "Cbuf_ExecuteText: bad exec_when");
+		Com_Errorf (ERR_FATAL, "Cbuf_ExecuteText: bad exec_when");
 	}
 }
 
@@ -246,7 +246,7 @@ Cmd_Exec_f(void)
 	char filename[MAX_QPATH];
 
 	if(Cmd_Argc () != 2){
-		Q_Printf ("exec <filename> : execute a script file\n");
+		Com_Printf ("exec <filename> : execute a script file\n");
 		return;
 	}
 
@@ -254,10 +254,10 @@ Cmd_Exec_f(void)
 	Q_DefaultExtension(filename, sizeof(filename), ".cfg");
 	FS_ReadFile(filename, &f.v);
 	if(!f.c){
-		Q_Printf ("couldn't exec %s\n",Cmd_Argv(1));
+		Com_Printf ("couldn't exec %s\n",Cmd_Argv(1));
 		return;
 	}
-	Q_Printf ("execing %s\n",Cmd_Argv(1));
+	Com_Printf ("execing %s\n",Cmd_Argv(1));
 
 	Cbuf_InsertText (f.c);
 
@@ -273,7 +273,7 @@ Cmd_Vstr_f(void)
 	char *v;
 
 	if(Cmd_Argc () != 2){
-		Q_Printf ("vstr <variablename> : execute a variable command\n");
+		Com_Printf ("vstr <variablename> : execute a variable command\n");
 		return;
 	}
 
@@ -287,7 +287,7 @@ Cmd_Vstr_f(void)
 void
 Cmd_Echo_f(void)
 {
-	Q_Printf ("%s\n", Cmd_Args());
+	Com_Printf ("%s\n", Cmd_Args());
 }
 
 
@@ -442,7 +442,7 @@ Cmd_TokenizeString2(const char *text_in, qbool ignoreQuotes)
 
 #ifdef TKN_DBG
 	/* FIXME TTimo blunt hook to try to find the tokenization of userinfo */
-	Q_DPrintf("Cmd_TokenizeString: %s\n", text_in);
+	Com_DPrintf("Cmd_TokenizeString: %s\n", text_in);
 #endif
 
 	/* clear previous args */
@@ -561,14 +561,14 @@ Cmd_AddCommand(const char *cmd_name, xcommand_t function)
 	if(Cmd_FindCommand(cmd_name)){
 		/* allow completion-only commands to be silently doubled */
 		if(function != NULL)
-			Q_Printf("Cmd_AddCommand: %s already defined\n",
+			Com_Printf("Cmd_AddCommand: %s already defined\n",
 				cmd_name);
 		return;
 	}
 
 	/* use a small malloc to avoid zone fragmentation */
 	cmd = S_Malloc (sizeof(cmd_function_t));
-	cmd->name = CopyString(cmd_name);
+	cmd->name = Copystr(cmd_name);
 	cmd->function	= function;
 	cmd->complete	= NULL;
 	cmd->next = cmd_functions;
@@ -620,7 +620,7 @@ Cmd_RemoveCommandSafe(const char *cmd_name)
 	if(!cmd)
 		return;
 	if(cmd->function){
-		Q_Error(ERR_DROP, "Restricted source tried to remove "
+		Com_Errorf(ERR_DROP, "Restricted source tried to remove "
 				    "system command \"%s\"", cmd_name);
 		return;
 	}
@@ -717,10 +717,10 @@ Cmd_List_f(void)
 	for(cmd=cmd_functions; cmd; cmd=cmd->next){
 		if(match && !Q_Filter(match, cmd->name, qfalse)) continue;
 
-		Q_Printf ("%s\n", cmd->name);
+		Com_Printf ("%s\n", cmd->name);
 		i++;
 	}
-	Q_Printf ("%i commands\n", i);
+	Com_Printf ("%i commands\n", i);
 }
 
 void

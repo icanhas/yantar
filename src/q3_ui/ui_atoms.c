@@ -29,7 +29,7 @@ uiStatic_t	uis;
 qbool		m_entersound;	/* after a frame, so caching won't disrupt the sound */
 
 void QDECL
-Q_Error(int level, const char *error, ...)
+Com_Errorf(int level, const char *error, ...)
 {
 	va_list argptr;
 	char	text[1024];
@@ -42,7 +42,7 @@ Q_Error(int level, const char *error, ...)
 }
 
 void QDECL
-Q_Printf(const char *msg, ...)
+Com_Printf(const char *msg, ...)
 {
 	va_list argptr;
 	char	text[1024];
@@ -838,7 +838,7 @@ UI_SetActiveMenu(uiMenuCommand_t menu)
 	case UIMENU_POSTGAME:
 	default:
 #ifndef NDEBUG
-		Q_Printf("UI_SetActiveMenu: bad enum %d\n", menu);
+		Com_Printf("UI_SetActiveMenu: bad enum %d\n", menu);
 #endif
 		break;
 	}

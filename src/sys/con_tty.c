@@ -199,7 +199,7 @@ CON_Init(void)
 			0) | O_NONBLOCK);
 
 	if(!stdinIsATTY){
-		Q_Printf("tty console mode disabled\n");
+		Com_Printf("tty console mode disabled\n");
 		ttycon_on = qfalse;
 		stdin_active = qtrue;
 		return;
@@ -324,7 +324,7 @@ CON_Input(void)
 						}
 					}
 				}
-				Q_DPrintf("dropping ISCTL sequence: %d, TTY_erase: %d\n",
+				Com_DPrintf("dropping ISCTL sequence: %d, TTY_erase: %d\n",
 					key, TTY_erase);
 				FlushIn();
 				return NULL;

@@ -775,7 +775,7 @@ int QDECL       Q_sprintf(char *dest, int size,
 char*Q_SkipTokens(char *s, int numTokens, char *sep);
 char*Q_SkipCharset(char *s, char *sep);
 
-void    Q_RandomBytes(byte *string, int len);
+void    Com_Randombytes(byte *string, int len);
 
 /* mode parm for FS_FOpenFile */
 typedef enum {
@@ -905,9 +905,9 @@ qbool Info_Validate(const char *s);
 void Info_NextPair(const char **s, char *key, char *value);
 
 /* this is only here so the functions in q_shared.c and bg_*.c can link */
-void QDECL Q_Error(int level, const char *error,
+void QDECL Com_Errorf(int level, const char *error,
 		     ...) __attribute__ ((noreturn, format(printf, 2, 3)));
-void QDECL Q_Printf(const char *msg, ...) __attribute__ ((format (printf, 1, 2)));
+void QDECL Com_Printf(const char *msg, ...) __attribute__ ((format (printf, 1, 2)));
 
 
 /*

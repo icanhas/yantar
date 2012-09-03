@@ -156,7 +156,7 @@ CL_Netchan_Transmit(netchan_t *chan, msg_t* msg)
 
 	/* Transmit all fragments without delay */
 	while(CL_Netchan_TransmitNextFragment(chan))
-		Q_DPrintf(
+		Com_DPrintf(
 			"WARNING: #462 unsent fragments (not supposed to happen!)\n");
 }
 

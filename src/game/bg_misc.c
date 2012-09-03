@@ -954,7 +954,7 @@ BG_FindItemForHoldable(holdable_t pw)
 		   bg_itemlist[i].giTag == pw)
 			return &bg_itemlist[i];
 
-	Q_Error(ERR_DROP, "HoldableItem not found");
+	Com_Errorf(ERR_DROP, "HoldableItem not found");
 
 	return NULL;
 }
@@ -973,7 +973,7 @@ BG_FindItemForWeapon(weapon_t weapon)
 		if(it->giType == IT_WEAPON && it->giTag == weapon)
 			return it;
 
-	Q_Error(ERR_DROP, "Couldn't find item for weapon %i", weapon);
+	Com_Errorf(ERR_DROP, "Couldn't find item for weapon %i", weapon);
 	return NULL;
 }
 
@@ -1036,7 +1036,7 @@ BG_CanItemBeGrabbed(int gametype, const entityState_t *ent,
 #endif
 
 	if(ent->modelindex < 1 || ent->modelindex >= bg_numItems)
-		Q_Error(ERR_DROP, "BG_CanItemBeGrabbed: index out of range");
+		Com_Errorf(ERR_DROP, "BG_CanItemBeGrabbed: index out of range");
 
 	item = &bg_itemlist[ent->modelindex];
 
@@ -1161,11 +1161,11 @@ BG_CanItemBeGrabbed(int gametype, const entityState_t *ent,
 		return qtrue;
 
 	case IT_BAD:
-		Q_Error(ERR_DROP, "BG_CanItemBeGrabbed: IT_BAD");
+		Com_Errorf(ERR_DROP, "BG_CanItemBeGrabbed: IT_BAD");
 	default:
 #ifndef Q3_VM
 #ifndef NDEBUG
-		Q_Printf("BG_CanItemBeGrabbed: unknown enum %d\n",
+		Com_Printf("BG_CanItemBeGrabbed: unknown enum %d\n",
 			item->giType);
 #endif
 #endif
@@ -1215,7 +1215,7 @@ BG_EvaluateTrajectory(const trajectory_t *tr, int atTime, vec3_t result)
 		result[2] -= 0.5 * DEFAULT_GRAVITY * deltaTime * deltaTime;	/* FIXME: local gravity... */
 		break;
 	default:
-		Q_Error(ERR_DROP, "BG_EvaluateTrajectory: unknown trType: %i",
+		Com_Errorf(ERR_DROP, "BG_EvaluateTrajectory: unknown trType: %i",
 			tr->trTime);
 		break;
 	}
@@ -1259,7 +1259,7 @@ BG_EvaluateTrajectoryDelta(const trajectory_t *tr, int atTime, vec3_t result)
 		result[2] -= DEFAULT_GRAVITY * deltaTime;	/* FIXME: local gravity... */
 		break;
 	default:
-		Q_Error(ERR_DROP,
+		Com_Errorf(ERR_DROP,
 			"BG_EvaluateTrajectoryDelta: unknown trType: %i",
 			tr->trTime);
 		break;
@@ -1393,13 +1393,13 @@ BG_AddPredictableEventToPlayerstate(int newEvent, int eventParm,
 		trap_Cvar_VariableStringBuffer("showevents", buf, sizeof(buf));
 		if(atof(buf) != 0){
 #ifdef QAGAME
-			Q_Printf(
+			Com_Printf(
 				" game event svt %5d -> %5d: num = %20s parm %d\n",
 				ps->pmove_framecount /*ps->commandTime*/,
 				ps->eventSequence, eventnames[newEvent],
 				eventParm);
 #else
-			Q_Printf(
+			Com_Printf(
 				"Cgame event svt %5d -> %5d: num = %20s parm %d\n",
 				ps->pmove_framecount /*ps->commandTime*/,
 				ps->eventSequence, eventnames[newEvent],

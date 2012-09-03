@@ -318,7 +318,7 @@ Sys_ListFilteredFiles(const char *basedir, char *subdirs, char *filter,
 			d->d_name);
 		if(!Q_FilterPath(filter, filename, qfalse))
 			continue;
-		list[ *numfiles ] = CopyString(filename);
+		list[ *numfiles ] = Copystr(filename);
 		(*numfiles)++;
 	}
 
@@ -400,7 +400,7 @@ Sys_ListFiles(const char *directory, const char *extension, char *filter,
 
 		if(nfiles == MAX_FOUND_FILES - 1)
 			break;
-		list[ nfiles ] = CopyString(d->d_name);
+		list[ nfiles ] = Copystr(d->d_name);
 		nfiles++;
 	}
 
@@ -498,7 +498,7 @@ Sys_ErrorDialog(const char *error)
 
 	/* Make sure the write path for the crashlog exists... */
 	if(FS_CreatePath(ospath)){
-		Q_Printf("ERROR: couldn't create path '%s' for crash log.\n",
+		Com_Printf("ERROR: couldn't create path '%s' for crash log.\n",
 			ospath);
 		return;
 	}
@@ -508,14 +508,14 @@ Sys_ErrorDialog(const char *error)
 	 * calling FS_FOpenFileWrite()...use the Unix system APIs instead. */
 	f = open(ospath, O_CREAT | O_TRUNC | O_WRONLY, 0640);
 	if(f == -1){
-		Q_Printf("ERROR: couldn't open %s\n", fileName);
+		Com_Printf("ERROR: couldn't open %s\n", fileName);
 		return;
 	}
 
 	/* We're crashing, so we don't care much if write() or close() fails. */
 	while((size = CON_LogRead(buffer, sizeof(buffer))) > 0)
 		if(write(f, buffer, size) != size){
-			Q_Printf("ERROR: couldn't fully write to %s\n",
+			Com_Printf("ERROR: couldn't fully write to %s\n",
 				fileName);
 			break;
 		}
@@ -735,7 +735,7 @@ Sys_Dialog(dialogType_t type, const char *message, const char *title)
 		break;
 	}
 
-	Q_DPrintf(S_COLOR_YELLOW "WARNING: failed to show a dialog\n");
+	Com_DPrintf(S_COLOR_YELLOW "WARNING: failed to show a dialog\n");
 	return DR_OK;
 }
 #endif

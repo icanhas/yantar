@@ -40,7 +40,7 @@ struct entityState_s;
 struct playerState_s;
 
 struct msg_s {
-	qbool		allowoverflow;	/* if false, do a Q_Error */
+	qbool		allowoverflow;	/* if false, do a Com_Errorf */
 	qbool		overflowed;	/* set to true if the buffer size failed (with allowoverflow set) */
 	qbool		oob;		/* set to true if the buffer size failed (with allowoverflow set) */
 	byte		*data;
@@ -620,7 +620,7 @@ typedef enum {
 	CF_ALTIVEC		= 1 << 7
 } cpuFeatures_t;
 
-/* centralized and cleaned, that's the max string you can send to a Q_Printf / Q_DPrintf (above gets truncated) */
+/* centralized and cleaned, that's the max string you can send to a Com_Printf / Com_DPrintf (above gets truncated) */
 #define MAXPRINTMSG 4096
 
 
@@ -642,24 +642,24 @@ typedef struct {
 	void		*evPtr;		/* this must be manually freed if not NULL */
 } sysEvent_t;
 
-void 	Q_QueueEvent(int time, sysEventType_t type, int value,
+void 	Com_Queueevent(int time, sysEventType_t type, int value,
 		int value2, int ptrLength,
 		void *ptr);
-int 	Q_EventLoop(void);
-sysEvent_t Q_GetSystemEvent(void);
-char* CopyString(const char *in);
+int 	Com_Eventloop(void);
+sysEvent_t Com_Getsysevent(void);
+char* Copystr(const char *in);
 void 	Info_Print(const char *s);
 
-void 	Q_BeginRedirect(char *buffer, int buffersize, void (*flush)(char *));
-void 	Q_EndRedirect(void);
-void QDECL Q_Printf(const char *fmt, ...) __attribute__ ((format (printf, 1, 2)));
-void QDECL Q_DPrintf(const char *fmt,
+void 	Com_Beginredirect(char *buffer, int buffersize, void (*flush)(char *));
+void 	Com_Endredirect(void);
+void QDECL Com_Printf(const char *fmt, ...) __attribute__ ((format (printf, 1, 2)));
+void QDECL Com_DPrintf(const char *fmt,
 			...) __attribute__ ((format (printf, 1, 2)));
-void QDECL Q_Error(int code, const char *fmt,
+void QDECL Com_Errorf(int code, const char *fmt,
 			...) __attribute__ ((noreturn, format(printf, 2, 3)));
-void 	Q_Quit_f(void) __attribute__ ((noreturn));
-void 	Q_GameRestart(int checksumFeed, qbool disconnect);
-int 	Q_Milliseconds(void);	/* will be journaled properly */
+void 	Com_Quit_f(void) __attribute__ ((noreturn));
+void 	Com_Gamerestart(int checksumFeed, qbool disconnect);
+int 	Com_Millisecs(void);	/* will be journaled properly */
 unsigned Q_BlockChecksum(const void *buffer, int length);
 char* Q_MD5File(const char *filename, int length,
 		 const char *prefix,
@@ -667,12 +667,12 @@ char* Q_MD5File(const char *filename, int length,
 int 	Q_Filter(char *filter, char *name, int casesensitive);
 int 	Q_FilterPath(char *filter, char *name,
 					int casesensitive);
-int 	Q_RealTime(qtime_t *qtime);
-qbool Q_SafeMode(void);
-void 	Q_RunAndTimeServerPacket(netadr_t *evFrom, msg_t *buf);
-qbool Q_IsVoipTarget(uint8_t *voipTargets, int voipTargetsSize,
+int 	Com_RealTime(qtime_t *qtime);
+qbool Com_Insafemode(void);
+void 	Com_Runserverpacket(netadr_t *evFrom, msg_t *buf);
+qbool Com_Isvoiptarget(uint8_t *voipTargets, int voipTargetsSize,
 			int clientNum);
-void 	Q_StartupVariable(const char *match);
+void 	Com_Startupvar(const char *match);
 
 extern cvar_t	*com_developer;
 extern cvar_t	*com_dedicated;
@@ -763,11 +763,11 @@ int 	Hunk_MemoryRemaining(void);
 void 	Hunk_Log(void);
 void 	Hunk_Trash(void);
 
-void 	Q_TouchMemory(void);
+void 	Com_Touchmem(void);
 
-void Q_Init(char *commandLine);
-void Q_Frame(void);
-void Q_Shutdown(void);
+void Com_Init(char *commandLine);
+void Com_Frame(void);
+void Com_Shutdown(void);
 
 
 /*

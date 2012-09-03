@@ -207,7 +207,7 @@ AssetCache(void)
 	/* if (Assets.textFont == NULL) {
 	 * }
 	 * Assets.background = trap_R_RegisterShaderNoMip( ASSET_BACKGROUND );
-	 * Q_Printf("Menu Size: %i bytes\n", sizeof(Menus)); */
+	 * Com_Printf("Menu Size: %i bytes\n", sizeof(Menus)); */
 	uiInfo.uiDC.Assets.gradientBar = trap_R_RegisterShaderNoMip(
 		ASSET_GRADIENTBAR);
 	uiInfo.uiDC.Assets.fxBasePic = trap_R_RegisterShaderNoMip(ART_FX_BASE);
@@ -889,10 +889,10 @@ void
 Font_Report(void)
 {
 	int i;
-	Q_Printf("Font Info\n");
-	Q_Printf("=========\n");
+	Com_Printf("Font Info\n");
+	Com_Printf("=========\n");
 	for(i = 32; i < 96; i++)
-		Q_Printf("Glyph handle %i: %i\n", i,
+		Com_Printf("Glyph handle %i: %i\n", i,
 			uiInfo.uiDC.Assets.textFont.glyphs[i].glyph);
 }
 
@@ -910,7 +910,7 @@ UI_ParseMenu(const char *menuFile)
 	int handle;
 	pc_token_t token;
 
-	Q_Printf("Parsing menu file:%s\n", menuFile);
+	Com_Printf("Parsing menu file:%s\n", menuFile);
 
 	handle = trap_PC_LoadSource(menuFile);
 	if(!handle)
@@ -922,12 +922,12 @@ UI_ParseMenu(const char *menuFile)
 			break;
 
 		/* if ( Q_stricmp( token, "{" ) ) {
-		 * Q_Printf( "Missing { in menu file\n" );
+		 * Com_Printf( "Missing { in menu file\n" );
 		 * break;
 		 * } */
 
 		/* if ( menuCount == MAX_MENUS ) {
-		 * Q_Printf( "Too many menus!\n" );
+		 * Com_Printf( "Too many menus!\n" );
 		 * break;
 		 * } */
 
@@ -985,7 +985,7 @@ UI_LoadMenus(const char *menuFile, qbool reset)
 
 	handle = trap_PC_LoadSource(menuFile);
 	if(!handle){
-		Q_Printf(
+		Com_Printf(
 			S_COLOR_YELLOW
 			"menu file not found: %s, using default\n",
 			menuFile);
@@ -1017,7 +1017,7 @@ UI_LoadMenus(const char *menuFile, qbool reset)
 		}
 	}
 
-	Q_Printf("UI menu load time = %d milli seconds\n",
+	Com_Printf("UI menu load time = %d milli seconds\n",
 		trap_Milliseconds() - start);
 
 	trap_PC_FreeSource(handle);
@@ -3959,15 +3959,15 @@ UI_RunMenuScript(char **args)
 							addr);
 					if(res == 0)
 						/* server already in the list */
-						Q_Printf(
+						Com_Printf(
 							"Favorite already in list\n");
 					else if(res == -1)
 						/* list full */
-						Q_Printf(
+						Com_Printf(
 							"Favorite list full\n");
 					else
 						/* successfully added */
-						Q_Printf(
+						Com_Printf(
 							"Added favorite server %s\n",
 							addr);
 				}
@@ -4011,15 +4011,15 @@ UI_RunMenuScript(char **args)
 							addr);
 					if(res == 0)
 						/* server already in the list */
-						Q_Printf(
+						Com_Printf(
 							"Favorite already in list\n");
 					else if(res == -1)
 						/* list full */
-						Q_Printf(
+						Com_Printf(
 							"Favorite list full\n");
 					else
 						/* successfully added */
-						Q_Printf(
+						Com_Printf(
 							"Added favorite server %s\n",
 							addr);
 				}
@@ -4101,7 +4101,7 @@ UI_RunMenuScript(char **args)
 			if(String_Parse(args, &name2))
 				UI_Update(name2);
 		}else
-			Q_Printf("unknown UI script %s\n", name);
+			Com_Printf("unknown UI script %s\n", name);
 	}
 }
 
@@ -5296,13 +5296,13 @@ Team_Parse(char **p)
 					return qfalse;
 			}
 
-			Q_Printf("Loaded team %s with team icon %s.\n",
+			Com_Printf("Loaded team %s with team icon %s.\n",
 				uiInfo.teamList[uiInfo.teamCount].teamName,
 				tempStr);
 			if(uiInfo.teamCount < MAX_TEAMS)
 				uiInfo.teamCount++;
 			else
-				Q_Printf(
+				Com_Printf(
 					"Too many teams, last team replaced!\n");
 			token = Q_ReadTokenExt(p, qtrue);
 			if(token[0] != '}')
@@ -5361,14 +5361,14 @@ Character_Parse(char **p)
 				uiInfo.characterList[uiInfo.characterCount].base
 					= String_Alloc(va("%s",tempStr));
 
-			Q_Printf(
+			Com_Printf(
 				"Loaded %s character %s.\n",
 				uiInfo.characterList[uiInfo.characterCount].base,
 				uiInfo.characterList[uiInfo.characterCount].name);
 			if(uiInfo.characterCount < MAX_HEADS)
 				uiInfo.characterCount++;
 			else
-				Q_Printf(
+				Com_Printf(
 					"Too many characters, last character replaced!\n");
 
 			token = Q_ReadTokenExt(p, qtrue);
@@ -5410,14 +5410,14 @@ Alias_Parse(char **p)
 				   &uiInfo.aliasList[uiInfo.aliasCount].action))
 				return qfalse;
 
-			Q_Printf(
+			Com_Printf(
 				"Loaded character alias %s using character ai %s.\n",
 				uiInfo.aliasList[uiInfo.aliasCount].name,
 				uiInfo.aliasList[uiInfo.aliasCount].ai);
 			if(uiInfo.aliasCount < MAX_ALIASES)
 				uiInfo.aliasCount++;
 			else
-				Q_Printf(
+				Com_Printf(
 					"Too many aliases, last alias replaced!\n");
 
 			token = Q_ReadTokenExt(p, qtrue);
@@ -5527,13 +5527,13 @@ GameType_Parse(char **p, qbool join)
 				if(uiInfo.numJoinGameTypes < MAX_GAMETYPES)
 					uiInfo.numJoinGameTypes++;
 				else
-					Q_Printf(
+					Com_Printf(
 						"Too many net game types, last one replace!\n");
 			}else{
 				if(uiInfo.numGameTypes < MAX_GAMETYPES)
 					uiInfo.numGameTypes++;
 				else
-					Q_Printf(
+					Com_Printf(
 						"Too many game types, last one replace!\n");
 			}
 
@@ -5610,7 +5610,7 @@ MapList_Parse(char **p)
 			if(uiInfo.mapCount < MAX_MAPS)
 				uiInfo.mapCount++;
 			else
-				Q_Printf("Too many maps, last one replaced!\n");
+				Com_Printf("Too many maps, last one replaced!\n");
 		}
 	}
 	return qfalse;
@@ -5902,8 +5902,8 @@ _UI_Init(qbool inGameLoad)
 	uiInfo.uiDC.getBindingBuf = &trap_Key_GetBindingBuf;
 	uiInfo.uiDC.keynumToStringBuf = &trap_Key_KeynumToStringBuf;
 	uiInfo.uiDC.executeText = &trap_Cmd_ExecuteText;
-	uiInfo.uiDC.Error	= &Q_Error;
-	uiInfo.uiDC.Print	= &Q_Printf;
+	uiInfo.uiDC.Error	= &Com_Errorf;
+	uiInfo.uiDC.Print	= &Com_Printf;
 	uiInfo.uiDC.Pause	= &UI_Pause;
 	uiInfo.uiDC.ownerDrawWidth = &UI_OwnerDrawWidth;
 	uiInfo.uiDC.registerSound = &trap_S_RegisterSound;
@@ -6712,12 +6712,12 @@ UI_StopServerRefresh(void)
 		/* not currently refreshing */
 		return;
 	uiInfo.serverStatus.refreshActive = qfalse;
-	Q_Printf("%d servers listed in browser with %d players.\n",
+	Com_Printf("%d servers listed in browser with %d players.\n",
 		uiInfo.serverStatus.numDisplayServers,
 		uiInfo.serverStatus.numPlayersOnServers);
 	count = trap_LAN_GetServerCount(UI_SourceForLAN());
 	if(count - uiInfo.serverStatus.numDisplayServers > 0)
-		Q_Printf(
+		Com_Printf(
 			"%d servers not listed due to packet loss or pings higher than %d\n",
 			count - uiInfo.serverStatus.numDisplayServers,
 			(int)trap_Cvar_VariableValue("cl_maxPing"));

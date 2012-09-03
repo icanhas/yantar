@@ -64,7 +64,7 @@ CG_TestModel_f(void)
 
 	memset(&cg.testModelEntity, 0, sizeof(cg.testModelEntity));
 	if(trap_Argc() < 2){
-		Q_Printf("Usage: testmodel [path to model]\n");
+		Com_Printf("Usage: testmodel [path to model]\n");
 		return;
 	}
 
@@ -97,7 +97,7 @@ void
 CG_TestGun_f(void)
 {
 	if(trap_Argc() < 2){
-		Q_Printf("Usage: testgun [path to model]\n");
+		Com_Printf("Usage: testgun [path to model]\n");
 		return;
 	}
 	CG_TestModel_f();

@@ -143,7 +143,7 @@ UpdateIPBans(void)
 		if(strlen(iplist_final)+strlen(ip) < MAX_CVAR_VALUE_STRING)
 			Q_strcat(iplist_final, sizeof(iplist_final), ip);
 		else{
-			Q_Printf(
+			Com_Printf(
 				"g_banIPs overflowed at MAX_CVAR_VALUE_STRING\n");
 			break;
 		}
@@ -359,7 +359,7 @@ ClientForString(const char *s)
 	if(s[0] >= '0' && s[0] <= '9'){
 		idnum = atoi(s);
 		if(idnum < 0 || idnum >= level.maxclients){
-			Q_Printf("Bad client slot: %i\n", idnum);
+			Com_Printf("Bad client slot: %i\n", idnum);
 			return NULL;
 		}
 

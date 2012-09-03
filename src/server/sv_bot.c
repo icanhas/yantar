@@ -72,7 +72,7 @@ SV_BotFreeClient(int clientNum)
 	client_t *cl;
 
 	if(clientNum < 0 || clientNum >= sv_maxclients->integer)
-		Q_Error(ERR_DROP, "SV_BotFreeClient: bad clientNum: %i",
+		Com_Errorf(ERR_DROP, "SV_BotFreeClient: bad clientNum: %i",
 			clientNum);
 	cl = &svs.clients[clientNum];
 	cl->state	= CS_FREE;
@@ -126,7 +126,7 @@ BotDrawDebugPolygons(void (*drawPoly)(int color, int numPoints,
 		poly = &debugpolygons[i];
 		if(!poly->inuse) continue;
 		drawPoly(poly->color, poly->numPoints, (float*)poly->points);
-		/* Q_Printf("poly %i, numpoints = %d\n", i, poly->numPoints); */
+		/* Com_Printf("poly %i, numpoints = %d\n", i, poly->numPoints); */
 	}
 }
 
@@ -145,27 +145,27 @@ BotImport_Print(int type, char *fmt, ...)
 
 	switch(type){
 	case PRT_MESSAGE: {
-		Q_Printf("%s", str);
+		Com_Printf("%s", str);
 		break;
 	}
 	case PRT_WARNING: {
-		Q_Printf(S_COLOR_YELLOW "Warning: %s", str);
+		Com_Printf(S_COLOR_YELLOW "Warning: %s", str);
 		break;
 	}
 	case PRT_ERROR: {
-		Q_Printf(S_COLOR_RED "Error: %s", str);
+		Com_Printf(S_COLOR_RED "Error: %s", str);
 		break;
 	}
 	case PRT_FATAL: {
-		Q_Printf(S_COLOR_RED "Fatal: %s", str);
+		Com_Printf(S_COLOR_RED "Fatal: %s", str);
 		break;
 	}
 	case PRT_EXIT: {
-		Q_Error(ERR_DROP, S_COLOR_RED "Exit: %s", str);
+		Com_Errorf(ERR_DROP, S_COLOR_RED "Exit: %s", str);
 		break;
 	}
 	default: {
-		Q_Printf("unknown print type\n");
+		Com_Printf("unknown print type\n");
 		break;
 	}
 	}
@@ -312,7 +312,7 @@ static void *
 BotImport_HunkAlloc(int size)
 {
 	if(Hunk_CheckMark())
-		Q_Error(ERR_DROP,
+		Com_Errorf(ERR_DROP,
 			"SV_Bot_HunkAlloc: Alloc with marks already set");
 	return Hunk_Alloc(size, h_high);
 }
@@ -452,7 +452,7 @@ SV_BotLibSetup(void)
 		return 0;
 
 	if(!botlib_export){
-		Q_Printf(
+		Com_Printf(
 			S_COLOR_RED
 			"Error: SV_BotLibSetup without SV_BotInitBotLib\n");
 		return -1;

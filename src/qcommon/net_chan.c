@@ -145,7 +145,7 @@ Netchan_TransmitNextFragment(netchan_t *chan)
 	chan->lastSentSize	= send.cursize;
 
 	if(showpackets->integer)
-		Q_Printf ("%s send %4i : s=%i fragment=%i,%i\n"
+		Com_Printf ("%s send %4i : s=%i fragment=%i,%i\n"
 			, netsrcString[ chan->sock ]
 			, send.cursize
 			, chan->outgoingSequence
@@ -178,7 +178,7 @@ Netchan_Transmit(netchan_t *chan, int length, const byte *data)
 	byte	send_buf[MAX_PACKETLEN];
 
 	if(length > MAX_MSGLEN)
-		Q_Error(ERR_DROP, "Netchan_Transmit: length = %i", length);
+		Com_Errorf(ERR_DROP, "Netchan_Transmit: length = %i", length);
 	chan->unsentFragmentStart = 0;
 
 	/* fragment large reliable messages */
@@ -220,7 +220,7 @@ Netchan_Transmit(netchan_t *chan, int length, const byte *data)
 	chan->lastSentSize	= send.cursize;
 
 	if(showpackets->integer)
-		Q_Printf("%s send %4i : s=%i ack=%i\n"
+		Com_Printf("%s send %4i : s=%i ack=%i\n"
 			, netsrcString[ chan->sock ]
 			, send.cursize
 			, chan->outgoingSequence - 1
@@ -284,13 +284,13 @@ Netchan_Process(netchan_t *chan, msg_t *msg)
 
 	if(showpackets->integer){
 		if(fragmented)
-			Q_Printf("%s recv %4i : s=%i fragment=%i,%i\n"
+			Com_Printf("%s recv %4i : s=%i fragment=%i,%i\n"
 				, netsrcString[ chan->sock ]
 				, msg->cursize
 				, sequence
 				, fragmentStart, fragmentLength);
 		else
-			Q_Printf("%s recv %4i : s=%i\n"
+			Com_Printf("%s recv %4i : s=%i\n"
 				, netsrcString[ chan->sock ]
 				, msg->cursize
 				, sequence);
@@ -301,7 +301,7 @@ Netchan_Process(netchan_t *chan, msg_t *msg)
 	 *  */
 	if(sequence <= chan->incomingSequence){
 		if(showdrop->integer || showpackets->integer)
-			Q_Printf("%s:Out of order packet %i at %i\n"
+			Com_Printf("%s:Out of order packet %i at %i\n"
 				, NET_AdrToString(chan->remoteAddress)
 				,  sequence
 				, chan->incomingSequence);
@@ -314,7 +314,7 @@ Netchan_Process(netchan_t *chan, msg_t *msg)
 	chan->dropped = sequence - (chan->incomingSequence+1);
 	if(chan->dropped > 0)
 		if(showdrop->integer || showpackets->integer)
-			Q_Printf("%s:Dropped %i packets at %i\n"
+			Com_Printf("%s:Dropped %i packets at %i\n"
 				, NET_AdrToString(chan->remoteAddress)
 				, chan->dropped
 				, sequence);
@@ -338,7 +338,7 @@ Netchan_Process(netchan_t *chan, msg_t *msg)
 		/* if we missed a fragment, dump the message */
 		if(fragmentStart != chan->fragmentLength){
 			if(showdrop->integer || showpackets->integer)
-				Q_Printf("%s:Dropped a message fragment\n"
+				Com_Printf("%s:Dropped a message fragment\n"
 					, NET_AdrToString(chan->remoteAddress));
 			/* we can still keep the part that we have so far,
 			 * so we don't need to clear chan->fragmentLength */
@@ -351,7 +351,7 @@ Netchan_Process(netchan_t *chan, msg_t *msg)
 		   chan->fragmentLength + fragmentLength >
 		   sizeof(chan->fragmentBuffer)){
 			if(showdrop->integer || showpackets->integer)
-				Q_Printf ("%s:illegal fragment length\n"
+				Com_Printf ("%s:illegal fragment length\n"
 					, NET_AdrToString (chan->remoteAddress));
 			return qfalse;
 		}
@@ -366,7 +366,7 @@ Netchan_Process(netchan_t *chan, msg_t *msg)
 			return qfalse;
 
 		if(chan->fragmentLength > msg->maxsize){
-			Q_Printf("%s:fragmentLength %i > msg->maxsize\n"
+			Com_Printf("%s:fragmentLength %i > msg->maxsize\n"
 				, NET_AdrToString (chan->remoteAddress),
 				chan->fragmentLength);
 			return qfalse;
@@ -535,7 +535,7 @@ NET_SendPacket(netsrc_t sock, int length, const void *data, netadr_t to)
 
 	/* sequenced packets are shown in netchan, so just show oob */
 	if(showpackets->integer && *(int*)data == -1)
-		Q_Printf ("send packet %4i\n", length);
+		Com_Printf ("send packet %4i\n", length);
 
 	if(to.type == NA_LOOPBACK){
 		NET_SendLoopPacket (sock, length, data, to);

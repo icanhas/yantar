@@ -34,7 +34,7 @@
 /* exit() won't be called but use it because it is marked with noreturn */
 #define DIE(reason) \
 	do { \
-		Q_Error(ERR_DROP, "vm_sparc compiler error: " reason); \
+		Com_Errorf(ERR_DROP, "vm_sparc compiler error: " reason); \
 		exit(1); \
 	} while(0)
 
@@ -288,7 +288,7 @@ vimm(unsigned int val, int bits, int shift, int sgned, int arg_index)
 		bits--;
 	}
 	if(val & ~((1U << bits) - 1U)){
-		Q_Printf(
+		Com_Printf(
 			"VM ERROR: immediate value 0x%08x out of %d bit range\n",
 			orig_val, orig_bits);
 		DIE("sparc VM bug");
@@ -339,11 +339,11 @@ pgreg(int reg_num, int arg_index, int flt)
 	if(!flt){
 		const char *fmt[] = { "%g", "%o", "%l", "%i" };
 
-		Q_Printf("%s%s%d",
+		Com_Printf("%s%s%d",
 			(arg_index ? ", " : ""),
 			fmt[reg_num >> 3], reg_num & 7);
 	}else
-		Q_Printf("%s%%f%d", (arg_index ? ", " : ""), reg_num);
+		Com_Printf("%s%%f%d", (arg_index ? ", " : ""), reg_num);
 }
 
 static void
@@ -355,10 +355,10 @@ pimm(unsigned int val, int bits, int shift, int sgned, int arg_index)
 	if(sgned){
 		int sval = val << (32 - bits);
 		sval >>= (32 - bits);
-		Q_Printf("%s%d",
+		Com_Printf("%s%d",
 			(arg_index ? ", " : ""), sval);
 	}else
-		Q_Printf("%s0x%08x",
+		Com_Printf("%s0x%08x",
 			(arg_index ? ", " : ""), val);
 }
 
@@ -377,7 +377,7 @@ sparc_disassemble(unsigned int insn)
 		flt = (op->name[0] == 'f');
 		rd_flt = flt || (op->name[2] == 'f');
 
-		Q_Printf("ASM: %7s\t", op->name);
+		Com_Printf("ASM: %7s\t", op->name);
 		for(i = 0; op->args[i] != ARG_NONE; i++){
 			switch(op->args[i]){
 			case ARG_RS1: pgreg((insn >> 14) & 0x1f, i, flt); break;
@@ -391,7 +391,7 @@ sparc_disassemble(unsigned int insn)
 			case ARG_SWTRAP: pimm(insn, 7, 0, 0, i); break;
 			}
 		}
-		Q_Printf("\n");
+		Com_Printf("\n");
 		return;
 	}
 }
@@ -512,7 +512,7 @@ VM_Destroy_Compiled(vm_t *vm)
 {
 	if(vm->codeBase)
 		if(munmap(vm->codeBase, vm->codeLength))
-			Q_Printf(
+			Com_Printf(
 				S_COLOR_RED
 				"Memory unmap failed, possible memory leak\n");
 	vm->codeBase = NULL;
@@ -720,7 +720,7 @@ dst_insn_append(struct func_info * const fp)
 static void
 ErrJump(void)
 {
-	Q_Error(ERR_DROP, "program tried to execute code outside VM\n");
+	Com_Errorf(ERR_DROP, "program tried to execute code outside VM\n");
 	exit(1);
 }
 
@@ -908,7 +908,7 @@ compile_one_insn(vm_t *vm, struct func_info * const fp, struct src_insn *sp)
 
 	switch(sp->op){
 	default:
-		Q_Printf("VM: Unhandled opcode 0x%02x[%s]\n",
+		Com_Printf("VM: Unhandled opcode 0x%02x[%s]\n",
 			sp->op,
 			opnames[sp->op] ? opnames[sp->op] : "UNKNOWN");
 		DIE("Unsupported opcode");
@@ -1548,9 +1548,9 @@ sparc_compute_code(vm_t *vm, struct func_info * const fp)
 		unsigned int *insn = code_begin;
 		int i;
 
-		Q_Printf("INSN DUMP\n");
+		Com_Printf("INSN DUMP\n");
 		for(i = 0; i < data->codeLength / 4; i+= 8)
-			Q_Printf(
+			Com_Printf(
 				"\t.word\t0x%08x, 0x%08x, 0x%08x, 0x%08x, 0x%08x, 0x%08x, 0x%08x, 0x%08x\n",
 				insn[i + 0], insn[i + 1],
 				insn[i + 2], insn[i + 3],
@@ -1665,7 +1665,7 @@ VM_Compile(vm_t *vm, vmHeader_t *header)
 
 	for(i = 0; i < header->instructionCount; i++)
 		if(!fi.dst_by_i_count[i]){
-			Q_Printf(S_COLOR_RED "Pointer %d not initialized !\n",
+			Com_Printf(S_COLOR_RED "Pointer %d not initialized !\n",
 				i);
 			DIE("sparc JIT bug");
 		}

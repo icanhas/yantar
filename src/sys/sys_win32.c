@@ -88,13 +88,13 @@ Sys_DefaultHomePath(void)
 
 	if(!*homePath){
 		if(shfolder == NULL){
-			Q_Printf("Unable to load SHFolder.dll\n");
+			Com_Printf("Unable to load SHFolder.dll\n");
 			return NULL;
 		}
 
 		qSHGetFolderPath = GetProcAddress(shfolder, "SHGetFolderPathA");
 		if(qSHGetFolderPath == NULL){
-			Q_Printf(
+			Com_Printf(
 				"Unable to find SHGetFolderPath in SHFolder.dll\n");
 			FreeLibrary(shfolder);
 			return NULL;
@@ -102,7 +102,7 @@ Sys_DefaultHomePath(void)
 
 		if(!SUCCEEDED(qSHGetFolderPath(NULL, CSIDL_APPDATA,
 				   NULL, 0, szPath))){
-			Q_Printf("Unable to detect CSIDL_APPDATA\n");
+			Com_Printf("Unable to detect CSIDL_APPDATA\n");
 			FreeLibrary(shfolder);
 			return NULL;
 		}
@@ -378,7 +378,7 @@ Sys_ListFilteredFiles(const char *basedir, char *subdirs, char *filter,
 			findinfo.name);
 		if(!Q_FilterPath(filter, filename, qfalse))
 			continue;
-		list[ *numfiles ] = CopyString(filename);
+		list[ *numfiles ] = Copystr(filename);
 		(*numfiles)++;
 	} while(_findnext (findhandle, &findinfo) != -1);
 
@@ -471,7 +471,7 @@ Sys_ListFiles(const char *directory, const char *extension, char *filter,
 		   (wantsubs && findinfo.attrib & _A_SUBDIR)){
 			if(nfiles == MAX_FOUND_FILES - 1)
 				break;
-			list[ nfiles ] = CopyString(findinfo.name);
+			list[ nfiles ] = Copystr(findinfo.name);
 			nfiles++;
 		}
 	} while(_findnext (findhandle, &findinfo) != -1);
@@ -678,7 +678,7 @@ Sys_PlatformInit(void)
 
 #ifndef DEDICATED
 	if(SDL_VIDEODRIVER){
-		Q_Printf("SDL_VIDEODRIVER is externally set to \"%s\", "
+		Com_Printf("SDL_VIDEODRIVER is externally set to \"%s\", "
 			   "in_mouse -1 will have no effect\n", SDL_VIDEODRIVER);
 		SDL_VIDEODRIVER_externallySet = qtrue;
 	}else
@@ -688,7 +688,7 @@ Sys_PlatformInit(void)
 		timerResolution = ptc.wPeriodMin;
 
 		if(timerResolution > 1)
-			Q_Printf(
+			Com_Printf(
 				"Warning: Minimum supported timer resolution is %ums "
 				"on this system, recommended resolution 1ms\n",
 				timerResolution);
