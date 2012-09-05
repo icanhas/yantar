@@ -753,9 +753,6 @@ mousemove(usercmd_t *cmd)
 	cl.mouseDx[cl.mouseIndex] = 0;
 	cl.mouseDy[cl.mouseIndex] = 0;
 
-	if(mx == 0.0f && my == 0.0f)
-		return;
-
 	if(cl_mouseAccel->value != 0.0f){
 		if(cl_mouseAccelStyle->integer == 0){
 			float	accelSensitivity;
