@@ -987,7 +987,28 @@ AnglesToQuat(const vec3_t angles, quat_t out)
 	out[3] = cr * sp * sy - sr * sp * cy;
 }
 
-void QuatToAxis(quat_t q, vec3_t  axis[3])
+void
+quat2euler(const quat_t q, vec3_t a)
+{
+	quat_t q2;
+	
+	q2[0] = q[0]*q[0];
+	q2[1] = q[1]*q[1];
+	q2[2] = q[2]*q[2];
+	q2[3] = q[3]*q[3];
+	if(0){
+		a[ROLL] = (180.0/M_PI)*atan2(2*(q[0]*q[1] + q[2]*q[3]), (-q2[1] - q2[2] + q2[3] + q2[0]));
+		a[PITCH] = (180.0/M_PI)*asin(-2*(q[0]*q[2] - q[3]*q[1]));
+		a[YAW] = (180.0/M_PI)*atan2(2*(q[0]*q[3] + q[1]*q[2]), (q2[1] - q2[2] - q2[3] + q2[0]));
+	}else{
+		a[ROLL] = (180.0/M_PI)*atan2(2*(q[0]*q[1] + q[2]*q[3]), 1 - 2*(q2[1] + q2[2]));
+		a[PITCH] = (180.0/M_PI)*asin(2*(q[0]*q[2] - q[3]*q[1]));
+		a[YAW] = (180.0/M_PI)*atan2(2*(q[0]*q[3] + q[1]*q[2]), 1 - 2*(q2[2] + q2[3]));
+	}
+}
+
+void
+QuatToAxis(quat_t q, vec3_t  axis[3])
 {
 	float wx, wy, wz, xx, xy, yy, yz, xz, zz, x2, y2, z2;
 	
