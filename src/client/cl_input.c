@@ -567,12 +567,14 @@ cvar_t *cl_rollspeed;
 cvar_t *cl_run;
 cvar_t *cl_anglespeedkey;
 
+static const Scalar Maxrolldelta = 3.0;
+
 /* Moves the local angle positions */
 static void
 adjustangles(void)
 {
-	float spd, roll, rolldelta;
-	float ys, ps, rs;	/* yaw, pitch, roll speeds */
+	Scalar spd, roll, rolldelta;
+	Scalar ys, ps, rs;	/* yaw, pitch, roll speeds */
 	
 	ys = cl_yawspeed->value;
 	ps = cl_pitchspeed->value;
@@ -592,15 +594,15 @@ adjustangles(void)
 	rolldelta = 0.05*(keystate(&rollright) - keystate(&rollleft));
 	if(rolldelta == 0.0){
 		if(roll < 0.0)
-			roll += spd * rs * 0.4;
+			roll += spd * rs * 0.3;
 		else if(roll > 0.0)
-			roll -= spd * rs * 0.4;
+			roll -= spd * rs * 0.3;
 	}else{
 		roll += spd * rs * rolldelta;
-		if(roll >= 200.0)
-			roll = 200.0;
-		if(roll <= -200.0)
-			roll = -200.0;
+		if(roll > Maxrolldelta)
+			roll = Maxrolldelta;
+		if(roll < -Maxrolldelta)
+			roll = -Maxrolldelta;
 	}
 	cl.viewangles[ROLL] = roll;
 }
