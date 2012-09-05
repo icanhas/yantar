@@ -980,11 +980,10 @@ euler2quat(const Vec3 angles, Quat out)
 	sp = sin(a[PITCH]);
 	sy = sin(a[YAW]);
 	sr = sin(a[ROLL]);
-	/* w, x, y, z */
-	out[0] = cr * (cp*cy) + sr * (sp*sy);
-	out[1] = sr * (cp*cy) - cr * (sp*sy);
-	out[2] = cr * sp * cy + sr * cp * sy;
-	out[3] = cr * cp * sy - sr * sp * cy;
+	out[0] = cr*cp*cy + sr*sp*sy;	/* r */
+	out[1] = sr*cp*cy - cr*sp*sy;	/* v1 */
+	out[2] = cr*sp*cy + sr*cp*sy;	/* v2 */
+	out[3] = cr*cp*sy - sr*sp*cy;	/* v3 */
 }
 
 void
