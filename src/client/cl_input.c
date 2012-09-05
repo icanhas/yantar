@@ -583,16 +583,13 @@ adjustangles(void)
 		spd = 0.001 * cls.frametime;
 
 	if(!strafe.active){
-		cl.viewangles[YAW] -= spd * ys * keystate(&right);
-		cl.viewangles[YAW] += spd * ys * keystate(&left);
+		cl.viewangles[YAW] += spd * ys * (keystate(&left) - keystate(&right));
 	}
 
-	cl.viewangles[PITCH] -= spd * ps * keystate(&lookup);
-	cl.viewangles[PITCH] += spd * ps * keystate(&lookdown);
+	cl.viewangles[PITCH] += spd * ps * (keystate(&lookdown) - keystate(&lookup));
 	
 	/* FIXME: roll mustn't be so immediate */
-	cl.viewangles[ROLL] -= spd * rs * keystate(&rollleft);		
-	cl.viewangles[ROLL] += spd * rs * keystate(&rollright);	
+	cl.viewangles[ROLL] += spd * rs * (keystate(&rollleft) - keystate(&rollright));
 }
 
 /* Sets the usercmd_t based on key states */
@@ -794,10 +791,10 @@ mousemove(usercmd_t *cmd)
 	if(strafe.active)
 		cmd->rightmove = clampchar(cmd->rightmove + m_side->value * mx);
 	else
-		cl.viewangles[YAW] -= m_yaw->value * mx;
+		cl.viewangles[YAW] = m_yaw->value * mx;
 
 	if((mlooking || cl_freelook->integer) && !strafe.active)
-		cl.viewangles[PITCH] += m_pitch->value * my;
+		cl.viewangles[PITCH] = m_pitch->value * my;
 	else
 		cmd->forwardmove = clampchar(
 			cmd->forwardmove - m_forward->value * my);

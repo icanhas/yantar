@@ -154,7 +154,7 @@ accelerate(Vec3 wishdir, float wishspeed, float accel)
 	int i;
 	float addspeed, accelspeed, currentspeed;
 
-	currentspeed = vec3dot (pm->ps->velocity, wishdir);
+	currentspeed = vec3dot(pm->ps->velocity, wishdir);
 	addspeed = wishspeed;
 	if(addspeed <= 0)
 		return;
@@ -258,19 +258,19 @@ checkwaterjump(void)
 	flatforward[2]	= 0;
 	vec3normalize (flatforward);
 
-	vec3ma (pm->ps->origin, 30, flatforward, spot);
+	vec3ma(pm->ps->origin, 30, flatforward, spot);
 	spot[2] += 4;
-	cont = pm->pointcontents (spot, pm->ps->clientNum);
+	cont = pm->pointcontents(spot, pm->ps->clientNum);
 	if(!(cont & CONTENTS_SOLID))
 		return qfalse;
 
 	spot[2] += 16;
-	cont = pm->pointcontents (spot, pm->ps->clientNum);
+	cont = pm->pointcontents(spot, pm->ps->clientNum);
 	if(cont & (CONTENTS_SOLID|CONTENTS_PLAYERCLIP|CONTENTS_BODY))
 		return qfalse;
 
 	/* jump out of water */
-	vec3scale (pml.forward, 200, pm->ps->velocity);
+	vec3scale(pml.forward, 200, pm->ps->velocity);
 	pm->ps->velocity[2] = 350;
 
 	pm->ps->pm_flags	|= PMF_TIME_WATERJUMP;
@@ -1090,17 +1090,21 @@ PM_UpdateViewAngles(playerState_t *ps, const usercmd_t *cmd)
 {
 	short temp;
 	int i;
+	Vec3 d;	/* yaw, pitch, roll deltas */
+	Quat orient, delta, neworient;
 
 	if(ps->pm_type == PM_INTERMISSION || ps->pm_type == PM_SPINTERMISSION)
 		return;		/* no view changes at all */
 	if(ps->pm_type != PM_SPECTATOR && ps->stats[STAT_HEALTH] <= 0)
 		return;		/* no view changes at all */
-	/* circularly clamp the angles with deltas */
-	for(i=0; i<3; i++){
+	for(i = 0; i < 3; i++){
 		temp = cmd->angles[i] + ps->delta_angles[i];
-		ps->viewangles[i] = SHORT2ANGLE(temp);
+		d[i] = SHORT2ANGLE(temp);
 	}
-
+	euler2quat(d, delta);
+	euler2quat(ps->viewangles, orient);
+	quatmul(orient, delta, neworient);
+	quat2euler(neworient, ps->viewangles);
 }
 
 /* convenience function also used by slidemove */
