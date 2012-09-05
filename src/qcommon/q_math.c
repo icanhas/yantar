@@ -505,6 +505,12 @@ Q_fabs(float f)
 }
 #endif
 
+qbool
+closeenough(float x, float y, float thresh)
+{
+	return (Q_fabs(y - x) < thresh);
+}
+
 float
 lerpangle(float from, float to, float frac)
 {

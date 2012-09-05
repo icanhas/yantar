@@ -593,7 +593,9 @@ adjustangles(void)
 	roll = cl.viewangles[ROLL];
 	rolldelta = 0.05*(keystate(&rollright) - keystate(&rollleft));
 	if(rolldelta == 0.0){
-		if(roll < 0.0)
+		if(closeenough(roll, 0.0, 0.3))
+			roll = 0.0;
+		else if(roll < 0.0)
 			roll += spd * rs * 0.3;
 		else if(roll > 0.0)
 			roll -= spd * rs * 0.3;
