@@ -571,7 +571,7 @@ cvar_t *cl_anglespeedkey;
 static void
 adjustangles(void)
 {
-	float spd;
+	float spd, roll, rolldelta;
 	float ys, ps, rs;	/* yaw, pitch, roll speeds */
 	
 	ys = cl_yawspeed->value;
@@ -588,8 +588,21 @@ adjustangles(void)
 
 	cl.viewangles[PITCH] += spd * ps * (keystate(&lookdown) - keystate(&lookup));
 	
-	/* FIXME: roll mustn't be so immediate */
-	cl.viewangles[ROLL] += spd * rs * (keystate(&rollleft) - keystate(&rollright));
+	roll = cl.viewangles[ROLL];
+	rolldelta = 0.05*(keystate(&rollright) - keystate(&rollleft));
+	if(rolldelta == 0.0){
+		if(roll < 0.0)
+			roll += spd * rs * 0.4;
+		else if(roll > 0.0)
+			roll -= spd * rs * 0.4;
+	}else{
+		roll += spd * rs * rolldelta;
+		if(roll >= 200.0)
+			roll = 200.0;
+		if(roll <= -200.0)
+			roll = -200.0;
+	}
+	cl.viewangles[ROLL] = roll;
 }
 
 /* Sets the usercmd_t based on key states */
