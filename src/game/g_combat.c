@@ -27,7 +27,7 @@
  * ScorePlum
  */
 void
-ScorePlum(gentity_t *ent, vec3_t origin, int score)
+ScorePlum(gentity_t *ent, Vec3 origin, int score)
 {
 	gentity_t *plum;
 
@@ -46,7 +46,7 @@ ScorePlum(gentity_t *ent, vec3_t origin, int score)
  * Adds score to both the client and his team
  */
 void
-AddScore(gentity_t *ent, vec3_t origin, int score)
+AddScore(gentity_t *ent, Vec3 origin, int score)
 {
 	if(!ent->client)
 		return;
@@ -132,9 +132,9 @@ TossClientCubes(gentity_t *self)
 {
 	gitem_t *item;
 	gentity_t       *drop;
-	vec3_t	velocity;
-	vec3_t	angles;
-	vec3_t	origin;
+	Vec3	velocity;
+	Vec3	angles;
+	Vec3	origin;
 
 	self->client->ps.generic1 = 0;
 
@@ -152,15 +152,15 @@ TossClientCubes(gentity_t *self)
 	angles[PITCH]	= 0;	/* always forward */
 	angles[ROLL]	= 0;
 
-	AngleVectors(angles, velocity, NULL, NULL);
-	VectorScale(velocity, 150, velocity);
+	anglevec3s(angles, velocity, NULL, NULL);
+	vec3scale(velocity, 150, velocity);
 	velocity[2] += 200 + crandom() * 50;
 
 	if(neutralObelisk){
-		Vec3Copy(neutralObelisk->s.pos.trBase, origin);
+		vec3copy(neutralObelisk->s.pos.trBase, origin);
 		origin[2] += 44;
 	}else
-		VectorClear(origin);
+		vec3clear(origin);
 
 	drop = LaunchItem(item, origin, velocity);
 
@@ -203,12 +203,12 @@ TossClientPersistantPowerups(gentity_t *ent)
 void
 LookAtKiller(gentity_t *self, gentity_t *inflictor, gentity_t *attacker)
 {
-	vec3_t dir;
+	Vec3 dir;
 
 	if(attacker && attacker != self)
-		Vec3Sub (attacker->s.pos.trBase, self->s.pos.trBase, dir);
+		vec3sub (attacker->s.pos.trBase, self->s.pos.trBase, dir);
 	else if(inflictor && inflictor != self)
-		Vec3Sub (inflictor->s.pos.trBase, self->s.pos.trBase, dir);
+		vec3sub (inflictor->s.pos.trBase, self->s.pos.trBase, dir);
 	else{
 		self->client->ps.stats[STAT_DEAD_YAW] = self->s.angles[YAW];
 		return;
@@ -320,7 +320,7 @@ Kamikaze_DeathTimer(gentity_t *self)
 
 	ent = G_Spawn();
 	ent->classname = "kamikaze timer";
-	Vec3Copy(self->s.pos.trBase, ent->s.pos.trBase);
+	vec3copy(self->s.pos.trBase, ent->s.pos.trBase);
 	ent->r.svFlags |= SVF_NOCLIENT;
 	ent->think = Kamikaze_DeathActivate;
 	ent->nextthink = level.time + 5 * 1000;
@@ -337,7 +337,7 @@ void
 CheckAlmostCapture(gentity_t *self, gentity_t *attacker)
 {
 	gentity_t	*ent;
-	vec3_t		dir;
+	Vec3		dir;
 	char		*classname;
 
 	/* if this player was carrying a flag */
@@ -363,9 +363,9 @@ CheckAlmostCapture(gentity_t *self, gentity_t *attacker)
 		/* if we found the destination flag and it's not picked up */
 		if(ent && !(ent->r.svFlags & SVF_NOCLIENT)){
 			/* if the player was *very* close */
-			Vec3Sub(self->client->ps.origin, ent->s.origin,
+			vec3sub(self->client->ps.origin, ent->s.origin,
 				dir);
-			if(Vec3Len(dir) < 200){
+			if(vec3len(dir) < 200){
 				self->client->ps.persistant[PERS_PLAYEREVENTS]
 					^= PLAYEREVENT_HOLYSHIT;
 				if(attacker->client)
@@ -384,7 +384,7 @@ void
 CheckAlmostScored(gentity_t *self, gentity_t *attacker)
 {
 	gentity_t	*ent;
-	vec3_t		dir;
+	Vec3		dir;
 	char		*classname;
 
 	/* if the player was carrying cubes */
@@ -397,9 +397,9 @@ CheckAlmostScored(gentity_t *self, gentity_t *attacker)
 		/* if we found the destination obelisk */
 		if(ent){
 			/* if the player was *very* close */
-			Vec3Sub(self->client->ps.origin, ent->s.origin,
+			vec3sub(self->client->ps.origin, ent->s.origin,
 				dir);
-			if(Vec3Len(dir) < 200){
+			if(vec3len(dir) < 200){
 				self->client->ps.persistant[PERS_PLAYEREVENTS]
 					^= PLAYEREVENT_HOLYSHIT;
 				if(attacker->client)
@@ -590,7 +590,7 @@ player_die(gentity_t *self, gentity_t *inflictor, gentity_t *attacker,
 	self->s.angles[2] = 0;
 	LookAtKiller (self, inflictor, attacker);
 
-	Vec3Copy(self->s.angles, self->client->ps.viewangles);
+	vec3copy(self->s.angles, self->client->ps.viewangles);
 
 	self->s.loopSound = 0;
 
@@ -698,8 +698,8 @@ CheckArmor(gentity_t *ent, int damage, int dflags)
  * RaySphereIntersections
  */
 int
-RaySphereIntersections(vec3_t origin, float radius, vec3_t point, vec3_t dir,
-		       vec3_t intersections[2])
+RaySphereIntersections(Vec3 origin, float radius, Vec3 point, Vec3 dir,
+		       Vec3 intersections[2])
 {
 	float b, c, d, t;
 
@@ -709,7 +709,7 @@ RaySphereIntersections(vec3_t origin, float radius, vec3_t point, vec3_t dir,
 	 * c = (point[0] - origin[0])^2 + (point[1] - origin[1])^2 + (point[2] - origin[2])^2 - radius^2; */
 
 	/* normalize dir so a = 1 */
-	Vec3Normalize(dir);
+	vec3normalize(dir);
 	b = 2 *
 	    (dir[0] *
 	     (point[0] -
@@ -723,13 +723,13 @@ RaySphereIntersections(vec3_t origin, float radius, vec3_t point, vec3_t dir,
 	d = b * b - 4 * c;
 	if(d > 0){
 		t = (-b + sqrt(d)) / 2;
-		Vec3MA(point, t, dir, intersections[0]);
+		vec3ma(point, t, dir, intersections[0]);
 		t = (-b - sqrt(d)) / 2;
-		Vec3MA(point, t, dir, intersections[1]);
+		vec3ma(point, t, dir, intersections[1]);
 		return 2;
 	}else if(d == 0){
 		t = (-b) / 2;
-		Vec3MA(point, t, dir, intersections[0]);
+		vec3ma(point, t, dir, intersections[0]);
 		return 1;
 	}
 	return 0;
@@ -740,33 +740,33 @@ RaySphereIntersections(vec3_t origin, float radius, vec3_t point, vec3_t dir,
  * G_InvulnerabilityEffect
  */
 int
-G_InvulnerabilityEffect(gentity_t *targ, vec3_t dir, vec3_t point,
-			vec3_t impactpoint,
-			vec3_t bouncedir)
+G_InvulnerabilityEffect(gentity_t *targ, Vec3 dir, Vec3 point,
+			Vec3 impactpoint,
+			Vec3 bouncedir)
 {
 	gentity_t	*impact;
-	vec3_t		intersections[2], vec;
+	Vec3		intersections[2], vec;
 	int n;
 
 	if(!targ->client)
 		return qfalse;
-	Vec3Copy(dir, vec);
-	Vec3Inverse(vec);
+	vec3copy(dir, vec);
+	vec3inv(vec);
 	/* sphere model radius = 42 units */
 	n = RaySphereIntersections(targ->client->ps.origin, 42, point, vec,
 		intersections);
 	if(n > 0){
 		impact = G_TempEntity(targ->client->ps.origin, EV_INVUL_IMPACT);
-		Vec3Sub(intersections[0], targ->client->ps.origin, vec);
-		Vec3ToAngles(vec, impact->s.angles);
+		vec3sub(intersections[0], targ->client->ps.origin, vec);
+		vec3toeuler(vec, impact->s.angles);
 		impact->s.angles[0] += 90;
 		if(impact->s.angles[0] > 360)
 			impact->s.angles[0] -= 360;
 		if(impactpoint)
-			Vec3Copy(intersections[0], impactpoint);
+			vec3copy(intersections[0], impactpoint);
 		if(bouncedir){
-			Vec3Copy(vec, bouncedir);
-			Vec3Normalize(bouncedir);
+			vec3copy(vec, bouncedir);
+			vec3normalize(bouncedir);
 		}
 		return qtrue;
 	}else
@@ -797,7 +797,7 @@ G_InvulnerabilityEffect(gentity_t *targ, vec3_t dir, vec3_t point,
 
 void
 G_Damage(gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
-	 vec3_t dir, vec3_t point, int damage, int dflags, int mod)
+	 Vec3 dir, Vec3 point, int damage, int dflags, int mod)
 {
 	gclient_t *client;
 	int	take;
@@ -805,7 +805,7 @@ G_Damage(gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
 	int	knockback;
 	int	max;
 #ifdef MISSIONPACK
-	vec3_t bouncedir, impactpoint;
+	Vec3 bouncedir, impactpoint;
 #endif
 
 	if(!targ->takedamage)
@@ -867,7 +867,7 @@ G_Damage(gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
 	if(!dir)
 		dflags |= DAMAGE_NO_KNOCKBACK;
 	else
-		Vec3Normalize(dir);
+		vec3normalize(dir);
 
 	knockback = damage;
 	if(knockback > 200)
@@ -879,14 +879,14 @@ G_Damage(gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
 
 	/* figure momentum add, even if the damage won't be taken */
 	if(knockback && targ->client){
-		vec3_t	kvel;
+		Vec3	kvel;
 		float	mass;
 
 		mass = 200;
 
-		VectorScale (dir, g_knockback.value * (float)knockback / mass,
+		vec3scale (dir, g_knockback.value * (float)knockback / mass,
 			kvel);
-		Vec3Add (targ->client->ps.velocity, kvel,
+		vec3add (targ->client->ps.velocity, kvel,
 			targ->client->ps.velocity);
 
 		/* set the timer so that the other client can't cancel
@@ -988,10 +988,10 @@ G_Damage(gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
 		client->damage_blood += take;
 		client->damage_knockback += knockback;
 		if(dir){
-			Vec3Copy (dir, client->damage_from);
+			vec3copy (dir, client->damage_from);
 			client->damage_fromWorld = qfalse;
 		}else{
-			Vec3Copy (targ->r.currentOrigin, client->damage_from);
+			vec3copy (targ->r.currentOrigin, client->damage_from);
 			client->damage_fromWorld = qtrue;
 		}
 	}
@@ -1041,18 +1041,18 @@ G_Damage(gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
  * explosions and melee attacks.
  */
 qbool
-CanDamage(gentity_t *targ, vec3_t origin)
+CanDamage(gentity_t *targ, Vec3 origin)
 {
-	vec3_t	dest;
+	Vec3	dest;
 	trace_t tr;
-	vec3_t	midpoint;
+	Vec3	midpoint;
 
 	/* use the midpoint of the bounds instead of the origin, because
 	 * bmodels may have their origin is 0,0,0 */
-	Vec3Add (targ->r.absmin, targ->r.absmax, midpoint);
-	VectorScale (midpoint, 0.5, midpoint);
+	vec3add (targ->r.absmin, targ->r.absmax, midpoint);
+	vec3scale (midpoint, 0.5, midpoint);
 
-	Vec3Copy (midpoint, dest);
+	vec3copy (midpoint, dest);
 	trap_Trace (&tr, origin, vec3_origin, vec3_origin, dest, ENTITYNUM_NONE,
 		MASK_SOLID);
 	if(tr.fraction == 1.0 || tr.entityNum == targ->s.number)
@@ -1060,7 +1060,7 @@ CanDamage(gentity_t *targ, vec3_t origin)
 
 	/* this should probably check in the plane of projection,
 	 * rather than in world coordinate, and also include Z */
-	Vec3Copy (midpoint, dest);
+	vec3copy (midpoint, dest);
 	dest[0] += 15.0;
 	dest[1] += 15.0;
 	trap_Trace (&tr, origin, vec3_origin, vec3_origin, dest, ENTITYNUM_NONE,
@@ -1068,7 +1068,7 @@ CanDamage(gentity_t *targ, vec3_t origin)
 	if(tr.fraction == 1.0)
 		return qtrue;
 
-	Vec3Copy (midpoint, dest);
+	vec3copy (midpoint, dest);
 	dest[0] += 15.0;
 	dest[1] -= 15.0;
 	trap_Trace (&tr, origin, vec3_origin, vec3_origin, dest, ENTITYNUM_NONE,
@@ -1076,7 +1076,7 @@ CanDamage(gentity_t *targ, vec3_t origin)
 	if(tr.fraction == 1.0)
 		return qtrue;
 
-	Vec3Copy (midpoint, dest);
+	vec3copy (midpoint, dest);
 	dest[0] -= 15.0;
 	dest[1] += 15.0;
 	trap_Trace (&tr, origin, vec3_origin, vec3_origin, dest, ENTITYNUM_NONE,
@@ -1084,7 +1084,7 @@ CanDamage(gentity_t *targ, vec3_t origin)
 	if(tr.fraction == 1.0)
 		return qtrue;
 
-	Vec3Copy (midpoint, dest);
+	vec3copy (midpoint, dest);
 	dest[0] -= 15.0;
 	dest[1] -= 15.0;
 	trap_Trace (&tr, origin, vec3_origin, vec3_origin, dest, ENTITYNUM_NONE,
@@ -1101,16 +1101,16 @@ CanDamage(gentity_t *targ, vec3_t origin)
  * G_RadiusDamage
  */
 qbool
-G_RadiusDamage(vec3_t origin, gentity_t *attacker, float damage, float radius,
+G_RadiusDamage(Vec3 origin, gentity_t *attacker, float damage, float radius,
 	       gentity_t *ignore, int mod)
 {
 	float	points, dist;
 	gentity_t *ent;
 	int	entityList[MAX_GENTITIES];
 	int	numListedEntities;
-	vec3_t	mins, maxs;
-	vec3_t	v;
-	vec3_t	dir;
+	Vec3	mins, maxs;
+	Vec3	v;
+	Vec3	dir;
 	int	i, e;
 	qbool hitClient = qfalse;
 
@@ -1143,7 +1143,7 @@ G_RadiusDamage(vec3_t origin, gentity_t *attacker, float damage, float radius,
 				v[i] = 0;
 		}
 
-		dist = Vec3Len(v);
+		dist = vec3len(v);
 		if(dist >= radius)
 			continue;
 
@@ -1152,7 +1152,7 @@ G_RadiusDamage(vec3_t origin, gentity_t *attacker, float damage, float radius,
 		if(CanDamage (ent, origin)){
 			if(LogAccuracyHit(ent, attacker))
 				hitClient = qtrue;
-			Vec3Sub (ent->r.currentOrigin, origin, dir);
+			vec3sub (ent->r.currentOrigin, origin, dir);
 			/* push the center of mass higher than the origin so players
 			 * get knocked into the air more */
 			dir[2] += 24;

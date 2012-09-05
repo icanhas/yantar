@@ -125,7 +125,7 @@ PrintMsg(gentity_t *ent, const char *fmt, ...)
  * for gametype GT_TEAM the level.teamScores is updated in AddScore in g_combat.c
  */
 void
-AddTeamScore(vec3_t origin, int team, int score)
+AddTeamScore(Vec3 origin, int team, int score)
 {
 	gentity_t *te;
 
@@ -280,7 +280,7 @@ Team_FragBonuses(gentity_t *targ, gentity_t *inflictor, gentity_t *attacker)
 	int	tokens;
 	gentity_t	*flag, *carrier = NULL;
 	char *c;
-	vec3_t		v1, v2;
+	Vec3		v1, v2;
 	int team;
 
 	/* no bonus for fragging yourself or team mates */
@@ -457,12 +457,12 @@ Team_FragBonuses(gentity_t *targ, gentity_t *inflictor, gentity_t *attacker)
 	/* ok we have the attackers flag and a pointer to the carrier */
 
 	/* check to see if we are defending the base's flag */
-	Vec3Sub(targ->r.currentOrigin, flag->r.currentOrigin, v1);
-	Vec3Sub(attacker->r.currentOrigin, flag->r.currentOrigin, v2);
+	vec3sub(targ->r.currentOrigin, flag->r.currentOrigin, v1);
+	vec3sub(attacker->r.currentOrigin, flag->r.currentOrigin, v2);
 
-	if(((Vec3Len(v1) < CTF_TARGET_PROTECT_RADIUS &&
+	if(((vec3len(v1) < CTF_TARGET_PROTECT_RADIUS &&
 	     trap_InPVS(flag->r.currentOrigin, targ->r.currentOrigin)) ||
-	    (Vec3Len(v2) < CTF_TARGET_PROTECT_RADIUS &&
+	    (vec3len(v2) < CTF_TARGET_PROTECT_RADIUS &&
 	     trap_InPVS(flag->r.currentOrigin, attacker->r.currentOrigin))) &&
 	   attacker->client->sess.sessionTeam !=
 	   targ->client->sess.sessionTeam){
@@ -485,16 +485,16 @@ Team_FragBonuses(gentity_t *targ, gentity_t *inflictor, gentity_t *attacker)
 	}
 
 	if(carrier && carrier != attacker){
-		Vec3Sub(targ->r.currentOrigin, carrier->r.currentOrigin,
+		vec3sub(targ->r.currentOrigin, carrier->r.currentOrigin,
 			v1);
-		Vec3Sub(attacker->r.currentOrigin,
+		vec3sub(attacker->r.currentOrigin,
 			carrier->r.currentOrigin,
 			v1);
 
-		if(((Vec3Len(v1) < CTF_ATTACKER_PROTECT_RADIUS &&
+		if(((vec3len(v1) < CTF_ATTACKER_PROTECT_RADIUS &&
 		     trap_InPVS(carrier->r.currentOrigin,
 			     targ->r.currentOrigin)) ||
-		    (Vec3Len(v2) < CTF_ATTACKER_PROTECT_RADIUS &&
+		    (vec3len(v2) < CTF_ATTACKER_PROTECT_RADIUS &&
 		     trap_InPVS(carrier->r.currentOrigin,
 			     attacker->r.currentOrigin))) &&
 		   attacker->client->sess.sessionTeam !=
@@ -957,12 +957,12 @@ Team_GetLocation(gentity_t *ent)
 {
 	gentity_t	*eloc, *best;
 	float bestlen, len;
-	vec3_t		origin;
+	Vec3		origin;
 
 	best = NULL;
 	bestlen = 3*8192.0*8192.0;
 
-	Vec3Copy(ent->r.currentOrigin, origin);
+	vec3copy(ent->r.currentOrigin, origin);
 
 	for(eloc = level.locationHead; eloc; eloc = eloc->nextTrain){
 		len =
@@ -1077,7 +1077,7 @@ SelectRandomTeamSpawnPoint(int teamstate, team_t team)
  *
  */
 gentity_t *
-SelectCTFSpawnPoint(team_t team, int teamstate, vec3_t origin, vec3_t angles,
+SelectCTFSpawnPoint(team_t team, int teamstate, Vec3 origin, Vec3 angles,
 		    qbool isbot)
 {
 	gentity_t *spot;
@@ -1087,9 +1087,9 @@ SelectCTFSpawnPoint(team_t team, int teamstate, vec3_t origin, vec3_t angles,
 	if(!spot)
 		return SelectSpawnPoint(vec3_origin, origin, angles, isbot);
 
-	Vec3Copy (spot->s.origin, origin);
+	vec3copy (spot->s.origin, origin);
 	origin[2] += 9;
-	Vec3Copy (spot->s.angles, angles);
+	vec3copy (spot->s.angles, angles);
 
 	return spot;
 }
@@ -1377,20 +1377,20 @@ ObeliskPain(gentity_t *self, gentity_t *attacker, int damage)
 }
 
 gentity_t *
-SpawnObelisk(vec3_t origin, int team, int spawnflags)
+SpawnObelisk(Vec3 origin, int team, int spawnflags)
 {
 	trace_t tr;
-	vec3_t	dest;
+	Vec3	dest;
 	gentity_t *ent;
 
 	ent = G_Spawn();
 
-	Vec3Copy(origin, ent->s.origin);
-	Vec3Copy(origin, ent->s.pos.trBase);
-	Vec3Copy(origin, ent->r.currentOrigin);
+	vec3copy(origin, ent->s.origin);
+	vec3copy(origin, ent->s.pos.trBase);
+	vec3copy(origin, ent->r.currentOrigin);
 
-	VectorSet(ent->r.mins, -15, -15, 0);
-	VectorSet(ent->r.maxs, 15, 15, 87);
+	vec3set(ent->r.mins, -15, -15, 0);
+	vec3set(ent->r.maxs, 15, 15, 87);
 
 	ent->s.eType = ET_GENERAL;
 	ent->flags = FL_NO_KNOCKBACK;
@@ -1419,7 +1419,7 @@ SpawnObelisk(vec3_t origin, int team, int spawnflags)
 		ent->s.origin[2] += 1;
 
 		/* drop to floor */
-		VectorSet(dest, ent->s.origin[0], ent->s.origin[1],
+		vec3set(dest, ent->s.origin[0], ent->s.origin[1],
 			ent->s.origin[2] - 4096);
 		trap_Trace(&tr, ent->s.origin, ent->r.mins, ent->r.maxs, dest,
 			ent->s.number,

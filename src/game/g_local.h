@@ -110,7 +110,7 @@ struct gentity_s {
 	gentity_t	*parent;
 	gentity_t	*nextTrain;
 	gentity_t	*prevTrain;
-	vec3_t		pos1, pos2;
+	Vec3		pos1, pos2;
 
 	char		*message;
 
@@ -124,7 +124,7 @@ struct gentity_s {
 	gentity_t	*target_ent;
 
 	float		speed;
-	vec3_t		movedir;
+	Vec3		movedir;
 
 	int		nextthink;
 	void		(*think)(gentity_t *self);
@@ -271,14 +271,14 @@ struct gclient_s {
 	int	oldbuttons;
 	int	latched_buttons;
 
-	vec3_t	oldOrigin;
+	Vec3	oldOrigin;
 
 	/* sum up damage over an entire frame, so
 	 * shotgun blasts give a single big kick */
 	int		damage_armor;		/* damage absorbed by armor */
 	int		damage_blood;		/* damage taken out of health */
 	int		damage_knockback;	/* impact damage */
-	vec3_t		damage_from;		/* origin for vector calculation */
+	Vec3		damage_from;		/* origin for vector calculation */
 	qbool		damage_fromWorld;	/* if true, don't use the damage_from vector */
 
 	int		accurateCount;	/* for "impressive" reward sound */
@@ -398,8 +398,8 @@ typedef struct {
 	char		*changemap;
 	qbool		readyToExit;	/* at least one client wants to exit */
 	int		exitTime;
-	vec3_t		intermission_origin;	/* also used for spectator spawns */
-	vec3_t		intermission_angle;
+	Vec3		intermission_origin;	/* also used for spectator spawns */
+	Vec3		intermission_angle;
 
 	qbool		locationLinked;	/* target_locations get linked */
 	gentity_t	*locationHead;	/* head of the location list */
@@ -444,7 +444,7 @@ void RespawnItem(gentity_t *ent);
 void UseHoldableItem(gentity_t *ent);
 void PrecacheItem(gitem_t *it);
 gentity_t*Drop_Item(gentity_t *ent, gitem_t *item, float angle);
-gentity_t*LaunchItem(gitem_t *item, vec3_t origin, vec3_t velocity);
+gentity_t*LaunchItem(gitem_t *item, Vec3 origin, Vec3 velocity);
 void SetRespawn(gentity_t *ent, float delay);
 void G_SpawnItem(gentity_t *ent, gitem_t *item);
 void FinishSpawningItem(gentity_t *ent);
@@ -467,11 +467,11 @@ void    G_KillBox(gentity_t *ent);
 gentity_t*G_Find(gentity_t *from, int fieldofs, const char *match);
 gentity_t*G_PickTarget(char *targetname);
 void    G_UseTargets(gentity_t *ent, gentity_t *activator);
-void    G_SetMovedir(vec3_t angles, vec3_t movedir);
+void    G_SetMovedir(Vec3 angles, Vec3 movedir);
 
 void    G_InitGentity(gentity_t *e);
 gentity_t*G_Spawn(void);
-gentity_t*G_TempEntity(vec3_t origin, int event);
+gentity_t*G_TempEntity(Vec3 origin, int event);
 void    G_Sound(gentity_t *ent, int channel, int soundIndex);
 void    G_FreeEntity(gentity_t *e);
 qbool        G_EntitiesFree(void);
@@ -479,29 +479,29 @@ qbool        G_EntitiesFree(void);
 void    G_TouchTriggers(gentity_t *ent);
 
 float*tv(float x, float y, float z);
-char*vtos(const vec3_t v);
+char*vtos(const Vec3 v);
 
-float vectoyaw(const vec3_t vec);
+float vectoyaw(const Vec3 vec);
 
 void G_AddPredictableEvent(gentity_t *ent, int event, int eventParm);
 void G_AddEvent(gentity_t *ent, int event, int eventParm);
-void G_SetOrigin(gentity_t *ent, vec3_t origin);
+void G_SetOrigin(gentity_t *ent, Vec3 origin);
 void AddRemap(const char *oldShader, const char *newShader, float timeOffset);
 const char*BuildShaderStateConfig(void);
 
 /*
  * g_combat.c
  *  */
-qbool CanDamage(gentity_t *targ, vec3_t origin);
+qbool CanDamage(gentity_t *targ, Vec3 origin);
 void G_Damage(gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
-	      vec3_t dir, vec3_t point, int damage, int dflags,
+	      Vec3 dir, Vec3 point, int damage, int dflags,
 	      int mod);
-qbool G_RadiusDamage(vec3_t origin, gentity_t *attacker, float damage,
+qbool G_RadiusDamage(Vec3 origin, gentity_t *attacker, float damage,
 			float radius, gentity_t *ignore,
 			int mod);
-int G_InvulnerabilityEffect(gentity_t *targ, vec3_t dir, vec3_t point,
-			    vec3_t impactpoint,
-			    vec3_t bouncedir);
+int G_InvulnerabilityEffect(gentity_t *targ, Vec3 dir, Vec3 point,
+			    Vec3 impactpoint,
+			    Vec3 bouncedir);
 void body_die(gentity_t *self, gentity_t *inflictor, gentity_t *attacker,
 	      int damage,
 	      int meansOfDeath);
@@ -525,15 +525,15 @@ void TossClientCubes(gentity_t *self);
  *  */
 void G_RunMissile(gentity_t *ent);
 
-gentity_t*fire_plasma(gentity_t *self, vec3_t start, vec3_t aimdir);
-gentity_t*fire_grenade(gentity_t *self, vec3_t start, vec3_t aimdir);
-gentity_t*fire_rocket(gentity_t *self, vec3_t start, vec3_t dir);
-gentity_t*fire_bfg(gentity_t *self, vec3_t start, vec3_t dir);
-gentity_t*fire_grapple(gentity_t *self, vec3_t start, vec3_t dir);
+gentity_t*fire_plasma(gentity_t *self, Vec3 start, Vec3 aimdir);
+gentity_t*fire_grenade(gentity_t *self, Vec3 start, Vec3 aimdir);
+gentity_t*fire_rocket(gentity_t *self, Vec3 start, Vec3 dir);
+gentity_t*fire_bfg(gentity_t *self, Vec3 start, Vec3 dir);
+gentity_t*fire_grapple(gentity_t *self, Vec3 start, Vec3 dir);
 #ifdef MISSIONPACK
-gentity_t*fire_nail(gentity_t *self, vec3_t start, vec3_t forward, vec3_t right,
-		    vec3_t up);
-gentity_t*fire_prox(gentity_t *self, vec3_t start, vec3_t aimdir);
+gentity_t*fire_nail(gentity_t *self, Vec3 start, Vec3 forward, Vec3 right,
+		    Vec3 up);
+gentity_t*fire_prox(gentity_t *self, Vec3 start, Vec3 aimdir);
 #endif
 
 
@@ -552,7 +552,7 @@ void trigger_teleporter_touch(gentity_t *self, gentity_t *other, trace_t *trace)
 /*
  * g_misc.c
  *  */
-void TeleportPlayer(gentity_t *player, vec3_t origin, vec3_t angles);
+void TeleportPlayer(gentity_t *player, Vec3 origin, Vec3 angles);
 #ifdef MISSIONPACK
 void DropPortalSource(gentity_t *ent);
 void DropPortalDestination(gentity_t *ent);
@@ -563,9 +563,9 @@ void DropPortalDestination(gentity_t *ent);
  * g_weapon.c
  *  */
 qbool LogAccuracyHit(gentity_t *target, gentity_t *attacker);
-void CalcMuzzlePoint(gentity_t *ent, vec3_t forward, vec3_t right, vec3_t up,
-		     vec3_t muzzlePoint);
-void SnapVectorTowards(vec3_t v, vec3_t to);
+void CalcMuzzlePoint(gentity_t *ent, Vec3 forward, Vec3 right, Vec3 up,
+		     Vec3 muzzlePoint);
+void SnapVectorTowards(Vec3 v, Vec3 to);
 qbool CheckGauntletAttack(gentity_t *ent);
 void Weapon_HookFree(gentity_t *ent);
 void Weapon_HookThink(gentity_t *ent);
@@ -577,8 +577,8 @@ void Weapon_HookThink(gentity_t *ent);
 team_t TeamCount(int ignoreClientNum, int team);
 int TeamLeader(int team);
 team_t PickTeam(int ignoreClientNum);
-void SetClientViewAngle(gentity_t *ent, vec3_t angle);
-gentity_t*SelectSpawnPoint(vec3_t avoidPoint, vec3_t origin, vec3_t angles,
+void SetClientViewAngle(gentity_t *ent, Vec3 angle);
+gentity_t*SelectSpawnPoint(Vec3 avoidPoint, Vec3 origin, Vec3 angles,
 			   qbool isbot);
 void CopyToBodyQue(gentity_t *ent);
 void ClientRespawn(gentity_t *ent);
@@ -588,7 +588,7 @@ void ClientSpawn(gentity_t *ent);
 void player_die(gentity_t *self, gentity_t *inflictor, gentity_t *attacker,
 		int damage,
 		int mod);
-void AddScore(gentity_t *ent, vec3_t origin, int score);
+void AddScore(gentity_t *ent, Vec3 origin, int score);
 void CalculateRanks(void);
 qbool SpotWouldTelefrag(gentity_t *spot);
 
@@ -709,7 +709,7 @@ int BotAISetupClient(int client, struct bot_settings_s *settings,
 		     qbool restart);
 int BotAIShutdownClient(int client, qbool restart);
 int BotAIStartFrame(int time);
-void BotTestAAS(vec3_t origin);
+void BotTestAAS(Vec3 origin);
 
 #include "g_team.h"	/* teamplay specific stuff */
 
@@ -808,27 +808,27 @@ void    trap_GetUserinfo(int num, char *buffer, int bufferSize);
 void    trap_SetUserinfo(int num, const char *buffer);
 void    trap_GetServerinfo(char *buffer, int bufferSize);
 void    trap_SetBrushModel(gentity_t *ent, const char *name);
-void    trap_Trace(trace_t *results, const vec3_t start, const vec3_t mins,
-		   const vec3_t maxs, const vec3_t end, int passEntityNum,
+void    trap_Trace(trace_t *results, const Vec3 start, const Vec3 mins,
+		   const Vec3 maxs, const Vec3 end, int passEntityNum,
 		   int contentmask);
-int             trap_PointContents(const vec3_t point, int passEntityNum);
-qbool trap_InPVS(const vec3_t p1, const vec3_t p2);
-qbool trap_InPVSIgnorePortals(const vec3_t p1, const vec3_t p2);
+int             trap_PointContents(const Vec3 point, int passEntityNum);
+qbool trap_InPVS(const Vec3 p1, const Vec3 p2);
+qbool trap_InPVSIgnorePortals(const Vec3 p1, const Vec3 p2);
 void    trap_AdjustAreaPortalState(gentity_t *ent, qbool open);
 qbool trap_AreasConnected(int area1, int area2);
 void    trap_LinkEntity(gentity_t *ent);
 void    trap_UnlinkEntity(gentity_t *ent);
-int             trap_EntitiesInBox(const vec3_t mins, const vec3_t maxs,
+int             trap_EntitiesInBox(const Vec3 mins, const Vec3 maxs,
 				   int *entityList,
 				   int maxcount);
-qbool trap_EntityContact(const vec3_t mins, const vec3_t maxs,
+qbool trap_EntityContact(const Vec3 mins, const Vec3 maxs,
 			    const gentity_t *ent);
 int             trap_BotAllocateClient(void);
 void    trap_BotFreeClient(int clientNum);
 void    trap_GetUsercmd(int clientNum, usercmd_t *cmd);
 qbool        trap_GetEntityToken(char *buffer, int bufferSize);
 
-int             trap_DebugPolygonCreate(int color, int numPoints, vec3_t *points);
+int             trap_DebugPolygonCreate(int color, int numPoints, Vec3 *points);
 void    trap_DebugPolygonDelete(int id);
 
 int             trap_BotLibSetup(void);
@@ -840,46 +840,46 @@ int             trap_BotLibStartFrame(float time);
 int             trap_BotLibLoadMap(const char *mapname);
 int             trap_BotLibUpdateEntity(
 	int ent, void /* struct bot_updateentity_s */ *bue);
-int             trap_BotLibTest(int parm0, char *parm1, vec3_t parm2,
-				vec3_t parm3);
+int             trap_BotLibTest(int parm0, char *parm1, Vec3 parm2,
+				Vec3 parm3);
 
 int             trap_BotGetSnapshotEntity(int clientNum, int sequence);
 int             trap_BotGetServerCommand(int clientNum, char *message, int size);
 void    trap_BotUserCommand(int client, usercmd_t *ucmd);
 
-int             trap_AAS_BBoxAreas(vec3_t absmins, vec3_t absmaxs, int *areas,
+int             trap_AAS_BBoxAreas(Vec3 absmins, Vec3 absmaxs, int *areas,
 				   int maxareas);
 int             trap_AAS_AreaInfo(int areanum,
 				  void /* struct aas_areainfo_s */ *info);
 void    trap_AAS_EntityInfo(int entnum, void /* struct aas_entityinfo_s */ *info);
 
 int             trap_AAS_Initialized(void);
-void    trap_AAS_PresenceTypeBoundingBox(int presencetype, vec3_t mins,
-					 vec3_t maxs);
+void    trap_AAS_PresenceTypeBoundingBox(int presencetype, Vec3 mins,
+					 Vec3 maxs);
 float   trap_AAS_Time(void);
 
-int             trap_AAS_PointAreaNum(vec3_t point);
-int             trap_AAS_PointReachabilityAreaIndex(vec3_t point);
-int             trap_AAS_TraceAreas(vec3_t start, vec3_t end, int *areas,
-				    vec3_t *points,
+int             trap_AAS_PointAreaNum(Vec3 point);
+int             trap_AAS_PointReachabilityAreaIndex(Vec3 point);
+int             trap_AAS_TraceAreas(Vec3 start, Vec3 end, int *areas,
+				    Vec3 *points,
 				    int maxareas);
 
-int             trap_AAS_PointContents(vec3_t point);
+int             trap_AAS_PointContents(Vec3 point);
 int             trap_AAS_NextBSPEntity(int ent);
 int             trap_AAS_ValueForBSPEpairKey(int ent, char *key, char *value,
 					     int size);
-int             trap_AAS_VectorForBSPEpairKey(int ent, char *key, vec3_t v);
+int             trap_AAS_VectorForBSPEpairKey(int ent, char *key, Vec3 v);
 int             trap_AAS_FloatForBSPEpairKey(int ent, char *key, float *value);
 int             trap_AAS_IntForBSPEpairKey(int ent, char *key, int *value);
 
 int             trap_AAS_AreaReachability(int areanum);
 
-int             trap_AAS_AreaTravelTimeToGoalArea(int areanum, vec3_t origin,
+int             trap_AAS_AreaTravelTimeToGoalArea(int areanum, Vec3 origin,
 						  int goalareanum,
 						  int travelflags);
 int             trap_AAS_EnableRoutingArea(int areanum, int enable);
 int             trap_AAS_PredictRoute(void /*struct aas_predictroute_s*/ *route,
-				      int areanum, vec3_t origin,
+				      int areanum, Vec3 origin,
 				      int goalareanum, int travelflags,
 				      int maxareas, int maxtime,
 				      int stopevent, int stopcontents,
@@ -887,17 +887,17 @@ int             trap_AAS_PredictRoute(void /*struct aas_predictroute_s*/ *route,
 				      int stopareanum);
 
 int             trap_AAS_AlternativeRouteGoals(
-	vec3_t start, int startareanum, vec3_t goal, int goalareanum,
+	Vec3 start, int startareanum, Vec3 goal, int goalareanum,
 	int travelflags,
 	void	/*struct aas_altroutegoal_s*/
 	*altroutegoals, int maxaltroutegoals,
 	int type);
-int             trap_AAS_Swimming(vec3_t origin);
+int             trap_AAS_Swimming(Vec3 origin);
 int             trap_AAS_PredictClientMovement(void /* aas_clientmove_s */ *move,
-					       int entnum, vec3_t origin,
+					       int entnum, Vec3 origin,
 					       int presencetype, int onground,
-					       vec3_t velocity,
-					       vec3_t cmdmove, int cmdframes,
+					       Vec3 velocity,
+					       Vec3 cmdmove, int cmdframes,
 					       int maxframes, float frametime,
 					       int stopevent,
 					       int stopareanum,
@@ -924,8 +924,8 @@ void    trap_EA_MoveRight(int client);
 void    trap_EA_SelectWeapon(int client, int weapon);
 void    trap_EA_Jump(int client);
 void    trap_EA_DelayedJump(int client);
-void    trap_EA_Move(int client, vec3_t dir, float speed);
-void    trap_EA_View(int client, vec3_t viewangles);
+void    trap_EA_Move(int client, Vec3 dir, float speed);
+void    trap_EA_View(int client, Vec3 viewangles);
 
 void    trap_EA_EndRegular(int client, float thinktime);
 void    trap_EA_GetInput(int client, float thinktime,
@@ -989,17 +989,17 @@ int             trap_BotGetTopGoal(int goalstate,
 				   void	/* struct bot_goal_s */ *goal);
 int             trap_BotGetSecondGoal(int goalstate,
 				      void /* struct bot_goal_s */ *goal);
-int             trap_BotChooseLTGItem(int goalstate, vec3_t origin,
+int             trap_BotChooseLTGItem(int goalstate, Vec3 origin,
 				      int *inventory,
 				      int travelflags);
-int             trap_BotChooseNBGItem(int goalstate, vec3_t origin,
+int             trap_BotChooseNBGItem(int goalstate, Vec3 origin,
 				      int *inventory, int travelflags,
 				      void /* struct bot_goal_s */ *ltg,
 				      float maxtime);
-int             trap_BotTouchingGoal(vec3_t origin,
+int             trap_BotTouchingGoal(Vec3 origin,
 				     void /* struct bot_goal_s */ *goal);
 int             trap_BotItemGoalInVisButNotVisible(
-	int viewer, vec3_t eye, vec3_t viewangles,
+	int viewer, Vec3 eye, Vec3 viewangles,
 	void /* struct bot_goal_s */ *goal);
 int             trap_BotGetNextCampSpotGoal(int num,
 					    void /* struct bot_goal_s */ *goal);
@@ -1023,24 +1023,24 @@ void    trap_BotResetMoveState(int movestate);
 void    trap_BotMoveToGoal(void	/* struct bot_moveresult_s */ *result,
 			   int movestate, void /* struct bot_goal_s */ *goal,
 			   int travelflags);
-int             trap_BotMoveInDirection(int movestate, vec3_t dir, float speed,
+int             trap_BotMoveInDirection(int movestate, Vec3 dir, float speed,
 					int type);
 void    trap_BotResetAvoidReach(int movestate);
 void    trap_BotResetLastAvoidReach(int movestate);
-int             trap_BotReachabilityArea(vec3_t origin, int testground);
+int             trap_BotReachabilityArea(Vec3 origin, int testground);
 int             trap_BotMovementViewTarget(int movestate,
 					   void	/* struct bot_goal_s */ *goal,
 					   int travelflags, float lookahead,
-					   vec3_t target);
+					   Vec3 target);
 int             trap_BotPredictVisiblePosition(
-	vec3_t origin, int areanum, void /* struct bot_goal_s */ *goal,
+	Vec3 origin, int areanum, void /* struct bot_goal_s */ *goal,
 	int travelflags,
-	vec3_t target);
+	Vec3 target);
 int             trap_BotAllocMoveState(void);
 void    trap_BotFreeMoveState(int handle);
 void    trap_BotInitMoveState(int handle,
 			      void /* struct bot_initmove_s */ *initmove);
-void    trap_BotAddAvoidSpot(int movestate, vec3_t origin, float radius,
+void    trap_BotAddAvoidSpot(int movestate, Vec3 origin, float radius,
 			     int type);
 
 int             trap_BotChooseBestFightWeapon(int weaponstate, int *inventory);

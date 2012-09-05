@@ -299,7 +299,7 @@ PC_SourceError(int handle, char *format, ...)
  * LerpColor
  */
 void
-LerpColor(vec4_t a, vec4_t b, vec4_t c, float t)
+LerpColor(Vec4 a, Vec4 b, Vec4 c, float t)
 {
 	int i;
 
@@ -360,7 +360,7 @@ PC_Float_Parse(int handle, float *f)
  * Color_Parse
  */
 qbool
-Color_Parse(char **p, vec4_t *c)
+Color_Parse(char **p, Vec4 *c)
 {
 	int i;
 	float f;
@@ -377,7 +377,7 @@ Color_Parse(char **p, vec4_t *c)
  * PC_Color_Parse
  */
 qbool
-PC_Color_Parse(int handle, vec4_t *c)
+PC_Color_Parse(int handle, Vec4 *c)
 {
 	int i;
 	float f;
@@ -547,7 +547,7 @@ Init_Display(displayContextDef_t *dc)
 /* type and style painting */
 
 void
-GradientBar_Paint(rectDef_t *rect, vec4_t color)
+GradientBar_Paint(rectDef_t *rect, Vec4 color)
 {
 	/* gradient bar takes two paints */
 	DC->setColor(color);
@@ -604,7 +604,7 @@ void
 Window_Paint(Window *w, float fadeAmount, float fadeClamp, float fadeCycle)
 {
 	/* float bordersize = 0; */
-	vec4_t color;
+	Vec4 color;
 	rectDef_t fillRect = w->rect;
 
 
@@ -874,7 +874,7 @@ Script_SetColor(itemDef_t *item, char **args)
 	const char *name;
 	int i;
 	float f;
-	vec4_t *out;
+	Vec4 *out;
 	/* expecting type of color to set and 4 args for the color */
 	if(String_Parse(args, &name)){
 		out = NULL;
@@ -938,7 +938,7 @@ Script_SetTeamColor(itemDef_t *item, char **args)
 {
 	if(DC->getTeamColor){
 		int i;
-		vec4_t color;
+		Vec4 color;
 		DC->getTeamColor(&color);
 		for(i = 0; i < 4; i++)
 			item->window.backColor[i] = color[i];
@@ -950,9 +950,9 @@ Script_SetItemColor(itemDef_t *item, char **args)
 {
 	const char *itemname;
 	const char *name;
-	vec4_t	color;
+	Vec4	color;
 	int	i;
-	vec4_t *out;
+	Vec4 *out;
 	/* expecting type of color to set and 4 args for the color */
 	if(String_Parse(args, &itemname) && String_Parse(args, &name)){
 		itemDef_t *item2;
@@ -2949,9 +2949,9 @@ Item_SetTextExtents(itemDef_t *item, int *width, int *height, const char *text)
 }
 
 void
-Item_TextColor(itemDef_t *item, vec4_t *newColor)
+Item_TextColor(itemDef_t *item, Vec4 *newColor)
 {
-	vec4_t lowLight;
+	Vec4 lowLight;
 	menuDef_t *parent = (menuDef_t*)item->parent;
 
 	Fade(&item->window.flags, &item->window.foreColor[3], parent->fadeClamp,
@@ -2974,14 +2974,14 @@ Item_TextColor(itemDef_t *item, vec4_t *newColor)
 		LerpColor(item->window.foreColor,lowLight,*newColor,0.5+0.5*
 			sin(DC->realTime / PULSE_DIVISOR));
 	}else
-		memcpy(newColor, &item->window.foreColor, sizeof(vec4_t));
+		memcpy(newColor, &item->window.foreColor, sizeof(Vec4));
 	/* items can be enabled and disabled based on cvars */
 
 	if(item->enableCvar && *item->enableCvar && item->cvarTest &&
 	   *item->cvarTest)
 		if(item->cvarFlags & (CVAR_ENABLE | CVAR_DISABLE) &&
 		   !Item_EnableShowViaCvar(item, CVAR_ENABLE))
-			memcpy(newColor, &parent->disableColor, sizeof(vec4_t));
+			memcpy(newColor, &parent->disableColor, sizeof(Vec4));
 }
 
 void
@@ -2992,7 +2992,7 @@ Item_Text_AutoWrapped_Paint(itemDef_t *item)
 	char	buff[1024];
 	int	width, height, len, textWidth, newLine, newLineWidth;
 	float	y;
-	vec4_t	color;
+	Vec4	color;
 
 	textWidth	= 0;
 	newLinePtr	= NULL;
@@ -3069,7 +3069,7 @@ Item_Text_Wrapped_Paint(itemDef_t *item)
 	char	buff[1024];
 	int	width, height;
 	float	x, y;
-	vec4_t	color;
+	Vec4	color;
 
 	/* now paint the text and/or any optional images
 	 * default to left */
@@ -3111,7 +3111,7 @@ Item_Text_Paint(itemDef_t *item)
 	char	text[1024];
 	const char *textPtr;
 	int	height, width;
-	vec4_t color;
+	Vec4 color;
 
 	if(item->window.flags & WINDOW_WRAPPED){
 		Item_Text_Wrapped_Paint(item);
@@ -3184,7 +3184,7 @@ void
 Item_TextField_Paint(itemDef_t *item)
 {
 	char	buff[1024];
-	vec4_t newColor, lowLight;
+	Vec4 newColor, lowLight;
 	int	offset;
 	menuDef_t *parent = (menuDef_t*)item->parent;
 	editFieldDef_t *editPtr = (editFieldDef_t*)item->typeData;
@@ -3204,7 +3204,7 @@ Item_TextField_Paint(itemDef_t *item)
 		LerpColor(parent->focusColor,lowLight,newColor,0.5+0.5*
 			sin(DC->realTime / PULSE_DIVISOR));
 	}else
-		memcpy(&newColor, &item->window.foreColor, sizeof(vec4_t));
+		memcpy(&newColor, &item->window.foreColor, sizeof(Vec4));
 
 	offset = (item->text && *item->text) ? 8 : 0;
 	if(item->window.flags & WINDOW_HASFOCUS && g_editingField){
@@ -3226,7 +3226,7 @@ Item_TextField_Paint(itemDef_t *item)
 void
 Item_YesNo_Paint(itemDef_t *item)
 {
-	vec4_t	newColor, lowLight;
+	Vec4	newColor, lowLight;
 	float	value;
 	menuDef_t *parent = (menuDef_t*)item->parent;
 
@@ -3240,7 +3240,7 @@ Item_YesNo_Paint(itemDef_t *item)
 		LerpColor(parent->focusColor,lowLight,newColor,0.5+0.5*
 			sin(DC->realTime / PULSE_DIVISOR));
 	}else
-		memcpy(&newColor, &item->window.foreColor, sizeof(vec4_t));
+		memcpy(&newColor, &item->window.foreColor, sizeof(Vec4));
 
 	if(item->text){
 		Item_Text_Paint(item);
@@ -3257,7 +3257,7 @@ Item_YesNo_Paint(itemDef_t *item)
 void
 Item_Multi_Paint(itemDef_t *item)
 {
-	vec4_t newColor, lowLight;
+	Vec4 newColor, lowLight;
 	const char	*text = "";
 	menuDef_t	*parent = (menuDef_t*)item->parent;
 
@@ -3269,7 +3269,7 @@ Item_Multi_Paint(itemDef_t *item)
 		LerpColor(parent->focusColor,lowLight,newColor,0.5+0.5*
 			sin(DC->realTime / PULSE_DIVISOR));
 	}else
-		memcpy(&newColor, &item->window.foreColor, sizeof(vec4_t));
+		memcpy(&newColor, &item->window.foreColor, sizeof(Vec4));
 
 	text = Item_Multi_Setting(item);
 
@@ -3588,7 +3588,7 @@ BindingFromName(const char *cvar)
 void
 Item_Slider_Paint(itemDef_t *item)
 {
-	vec4_t	newColor, lowLight;
+	Vec4	newColor, lowLight;
 	float	x, y;
 	menuDef_t *parent = (menuDef_t*)item->parent;
 
@@ -3600,7 +3600,7 @@ Item_Slider_Paint(itemDef_t *item)
 		LerpColor(parent->focusColor,lowLight,newColor,0.5+0.5*
 			sin(DC->realTime / PULSE_DIVISOR));
 	}else
-		memcpy(&newColor, &item->window.foreColor, sizeof(vec4_t));
+		memcpy(&newColor, &item->window.foreColor, sizeof(Vec4));
 
 	y = item->window.rect.y;
 	if(item->text){
@@ -3621,7 +3621,7 @@ Item_Slider_Paint(itemDef_t *item)
 void
 Item_Bind_Paint(itemDef_t *item)
 {
-	vec4_t	newColor, lowLight;
+	Vec4	newColor, lowLight;
 	int	maxChars	= 0;
 	menuDef_t *parent	= (menuDef_t*)item->parent;
 	editFieldDef_t *editPtr = (editFieldDef_t*)item->typeData;
@@ -3643,7 +3643,7 @@ Item_Bind_Paint(itemDef_t *item)
 		LerpColor(parent->focusColor,lowLight,newColor,0.5+0.5*
 			sin(DC->realTime / PULSE_DIVISOR));
 	}else
-		memcpy(&newColor, &item->window.foreColor, sizeof(vec4_t));
+		memcpy(&newColor, &item->window.foreColor, sizeof(Vec4));
 
 	if(item->text){
 		Item_Text_Paint(item);
@@ -3769,8 +3769,8 @@ Item_Model_Paint(itemDef_t *item)
 	float x, y, w, h;
 	refdef_t	refdef;
 	refEntity_t ent;
-	vec3_t		mins, maxs, origin;
-	vec3_t		angles;
+	Vec3		mins, maxs, origin;
+	Vec3		angles;
 	modelDef_t *modelPtr = (modelDef_t*)item->typeData;
 
 	if(modelPtr == NULL)
@@ -3779,7 +3779,7 @@ Item_Model_Paint(itemDef_t *item)
 	/* setup the refdef */
 	memset(&refdef, 0, sizeof(refdef));
 	refdef.rdflags = RDF_NOWORLDMODEL;
-	AxisClear(refdef.viewaxis);
+	axisclear(refdef.viewaxis);
 	x	= item->window.rect.x+1;
 	y	= item->window.rect.y+1;
 	w	= item->window.rect.w-2;
@@ -3822,7 +3822,7 @@ Item_Model_Paint(itemDef_t *item)
 
 	/* adjust = 5.0 * sin( (float)uis.realtime / 500 );
 	 * adjust = 360 % (int)((float)uis.realtime / 1000);
-	 * VectorSet( angles, 0, 0, 1 ); */
+	 * vec3set( angles, 0, 0, 1 ); */
 
 	/* use item storage to track */
 	if(modelPtr->rotationSpeed)
@@ -3831,14 +3831,14 @@ Item_Model_Paint(itemDef_t *item)
 						modelPtr->rotationSpeed;
 			modelPtr->angle = (int)(modelPtr->angle + 1) % 360;
 		}
-	VectorSet(angles, 0, modelPtr->angle, 0);
-	AnglesToAxis(angles, ent.axis);
+	vec3set(angles, 0, modelPtr->angle, 0);
+	euler2axis(angles, ent.axis);
 
 	ent.hModel = item->asset;
-	Vec3Copy(origin, ent.origin);
-	Vec3Copy(origin, ent.lightingOrigin);
+	vec3copy(origin, ent.origin);
+	vec3copy(origin, ent.lightingOrigin);
 	ent.renderfx = RF_LIGHTING_ORIGIN | RF_NOSHADOW;
-	Vec3Copy(ent.origin, ent.oldorigin);
+	vec3copy(ent.origin, ent.oldorigin);
 
 	DC->addRefEntityToScene(&ent);
 	DC->renderScene(&refdef);
@@ -4083,7 +4083,7 @@ Item_OwnerDraw_Paint(itemDef_t *item)
 		return;
 
 	if(DC->ownerDrawItem){
-		vec4_t color, lowLight;
+		Vec4 color, lowLight;
 		menuDef_t *parent = (menuDef_t*)item->parent;
 		Fade(&item->window.flags, &item->window.foreColor[3],
 			parent->fadeClamp, &item->window.nextTime,
@@ -4125,7 +4125,7 @@ Item_OwnerDraw_Paint(itemDef_t *item)
 
 		if(item->cvarFlags & (CVAR_ENABLE | CVAR_DISABLE) &&
 		   !Item_EnableShowViaCvar(item, CVAR_ENABLE))
-			Q_Memcpy(color, parent->disableColor, sizeof(vec4_t));
+			Q_Memcpy(color, parent->disableColor, sizeof(Vec4));
 
 		if(item->text){
 			Item_Text_Paint(item);
@@ -4168,7 +4168,7 @@ Item_OwnerDraw_Paint(itemDef_t *item)
 void
 Item_Paint(itemDef_t *item)
 {
-	vec4_t red;
+	Vec4 red;
 	menuDef_t *parent = (menuDef_t*)item->parent;
 	red[0]	= red[3] = 1;
 	red[1]	= red[2] = 0;
@@ -4348,7 +4348,7 @@ Item_Paint(itemDef_t *item)
 		parent->fadeCycle);
 
 	if(debugMode){
-		vec4_t color;
+		Vec4 color;
 		rectDef_t *r = Item_CorrectedTextRect(item);
 		color[1]	= color[3] = 1;
 		color[0]	= color[2] = 0;
@@ -4633,7 +4633,7 @@ Menu_Paint(menuDef_t *menu, qbool forcePaint)
 		Item_Paint(menu->items[i]);
 
 	if(debugMode){
-		vec4_t color;
+		Vec4 color;
 		color[0]	= color[2] = color[3] = 1;
 		color[1]	= 0;
 		DC->drawRect(menu->window.rect.x, menu->window.rect.y,
@@ -6090,7 +6090,7 @@ Menu_PaintAll(void)
 		Menu_Paint(&Menus[i], qfalse);
 
 	if(debugMode){
-		vec4_t v = {1, 1, 1, 1};
+		Vec4 v = {1, 1, 1, 1};
 		DC->drawText(5, 25, .5, v, va("fps: %f", DC->FPS), 0, 0, 0);
 	}
 }

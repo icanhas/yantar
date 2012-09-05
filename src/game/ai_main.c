@@ -133,8 +133,8 @@ BotAI_Print(int type, char *fmt, ...)
  * BotAI_Trace
  */
 void
-BotAI_Trace(bsp_trace_t *bsptrace, vec3_t start, vec3_t mins, vec3_t maxs,
-	    vec3_t end, int passent,
+BotAI_Trace(bsp_trace_t *bsptrace, Vec3 start, Vec3 mins, Vec3 maxs,
+	    Vec3 end, int passent,
 	    int contentmask)
 {
 	trace_t trace;
@@ -144,9 +144,9 @@ BotAI_Trace(bsp_trace_t *bsptrace, vec3_t start, vec3_t mins, vec3_t maxs,
 	bsptrace->allsolid = trace.allsolid;
 	bsptrace->startsolid = trace.startsolid;
 	bsptrace->fraction = trace.fraction;
-	Vec3Copy(trace.endpos, bsptrace->endpos);
+	vec3copy(trace.endpos, bsptrace->endpos);
 	bsptrace->plane.dist = trace.plane.dist;
-	Vec3Copy(trace.plane.normal, bsptrace->plane.normal);
+	vec3copy(trace.plane.normal, bsptrace->plane.normal);
 	bsptrace->plane.signbits = trace.plane.signbits;
 	bsptrace->plane.type = trace.plane.type;
 	bsptrace->surface.value = trace.surfaceFlags;
@@ -244,7 +244,7 @@ BotAI_BotInitialChat(bot_state_t *bs, char *type, ...)
  * BotTestAAS
  */
 void
-BotTestAAS(vec3_t origin)
+BotTestAAS(Vec3 origin)
 {
 	int areanum;
 	aas_areainfo_t info;
@@ -761,8 +761,8 @@ BotChangeViewAngle(float angle, float ideal_angle, float speed)
 {
 	float move;
 
-	angle = AngleMod(angle);
-	ideal_angle = AngleMod(ideal_angle);
+	angle = anglemod(angle);
+	ideal_angle = anglemod(ideal_angle);
 	if(angle == ideal_angle) return angle;
 	move = ideal_angle - angle;
 	if(ideal_angle > angle){
@@ -771,7 +771,7 @@ BotChangeViewAngle(float angle, float ideal_angle, float speed)
 	if(move > 0){
 		if(move > speed) move = speed;
 	}else if(move < -speed) move = -speed;
-	return AngleMod(angle + move);
+	return anglemod(angle + move);
 }
 
 /*
@@ -812,9 +812,9 @@ BotChangeViewAngles(bot_state_t *bs, float thinktime)
 				bs->ideal_viewangles[i], anglespeed);
 		}else{
 			/* over reaction view model */
-			bs->viewangles[i] = AngleMod(bs->viewangles[i]);
+			bs->viewangles[i] = anglemod(bs->viewangles[i]);
 			bs->ideal_viewangles[i] =
-				AngleMod(bs->ideal_viewangles[i]);
+				anglemod(bs->ideal_viewangles[i]);
 			diff = AngleDifference(bs->viewangles[i],
 				bs->ideal_viewangles[i]);
 			disired_speed = diff * factor;
@@ -828,7 +828,7 @@ BotChangeViewAngles(bot_state_t *bs, float thinktime)
 			if(anglespeed > maxchange) anglespeed = maxchange;
 			if(anglespeed < -maxchange) anglespeed = -maxchange;
 			bs->viewangles[i] += anglespeed;
-			bs->viewangles[i] = AngleMod(bs->viewangles[i]);
+			bs->viewangles[i] = anglemod(bs->viewangles[i]);
 			/* demping */
 			bs->viewanglespeed[i] *= 0.45 * (1 - factor);
 		}
@@ -848,7 +848,7 @@ void
 BotInputToUserCommand(bot_input_t *bi, usercmd_t *ucmd, int delta_angles[3],
 		      int time)
 {
-	vec3_t	angles, forward, right;
+	Vec3	angles, forward, right;
 	short	temp;
 	int	j;
 	float	f, r, u, m;
@@ -902,12 +902,12 @@ BotInputToUserCommand(bot_input_t *bi, usercmd_t *ucmd, int delta_angles[3],
 	else angles[PITCH] = 0;
 	angles[YAW] = bi->viewangles[YAW];
 	angles[ROLL] = 0;
-	AngleVectors(angles, forward, right, NULL);
+	anglevec3s(angles, forward, right, NULL);
 	/* bot input speed is in the range [0, 400] */
 	bi->speed = bi->speed * 127 / 400;
 	/* set the view independent movement */
-	f = Vec3Dot(forward, bi->dir);
-	r = Vec3Dot(right, bi->dir);
+	f = vec3dot(forward, bi->dir);
+	r = vec3dot(right, bi->dir);
 	u = abs(forward[2]) * bi->dir[2];
 	m = fabs(f);
 
@@ -949,7 +949,7 @@ BotUpdateInput(bot_state_t *bs, int time, int elapsed_time)
 	/* add the delta angles to the bot's current view angles */
 	for(j = 0; j < 3; j++)
 		bs->viewangles[j] =
-			AngleMod(bs->viewangles[j] +
+			anglemod(bs->viewangles[j] +
 				SHORT2ANGLE(bs->cur_ps.delta_angles[j]));
 	/* change the bot view angles */
 	BotChangeViewAngles(bs, (float)elapsed_time / 1000);
@@ -964,7 +964,7 @@ BotUpdateInput(bot_state_t *bs, int time, int elapsed_time)
 	/* subtract the delta angles */
 	for(j = 0; j < 3; j++)
 		bs->viewangles[j] =
-			AngleMod(bs->viewangles[j] -
+			anglemod(bs->viewangles[j] -
 				SHORT2ANGLE(bs->cur_ps.delta_angles[j]));
 }
 
@@ -1066,16 +1066,16 @@ BotAI(int client, float thinktime)
 	/* add the delta angles to the bot's current view angles */
 	for(j = 0; j < 3; j++)
 		bs->viewangles[j] =
-			AngleMod(bs->viewangles[j] +
+			anglemod(bs->viewangles[j] +
 				SHORT2ANGLE(bs->cur_ps.delta_angles[j]));
 	/* increase the local time of the bot */
 	bs->ltime += thinktime;
 	/*  */
 	bs->thinktime = thinktime;
 	/* origin of the bot */
-	Vec3Copy(bs->cur_ps.origin, bs->origin);
+	vec3copy(bs->cur_ps.origin, bs->origin);
 	/* eye coordinates of the bot */
-	Vec3Copy(bs->cur_ps.origin, bs->eye);
+	vec3copy(bs->cur_ps.origin, bs->eye);
 	bs->eye[2] += bs->cur_ps.viewheight;
 	/* get the area the bot is in */
 	bs->areanum = BotPointAreaNum(bs->origin);
@@ -1086,7 +1086,7 @@ BotAI(int client, float thinktime)
 	/* subtract the delta angles */
 	for(j = 0; j < 3; j++)
 		bs->viewangles[j] =
-			AngleMod(bs->viewangles[j] -
+			anglemod(bs->viewangles[j] -
 				SHORT2ANGLE(bs->cur_ps.delta_angles[j]));
 	/* everything was ok */
 	return qtrue;
@@ -1549,14 +1549,14 @@ BotAIStartFrame(int time)
 			/*  */
 			memset(&state, 0, sizeof(bot_entitystate_t));
 			/*  */
-			Vec3Copy(ent->r.currentOrigin, state.origin);
+			vec3copy(ent->r.currentOrigin, state.origin);
 			if(i < MAX_CLIENTS)
-				Vec3Copy(ent->s.apos.trBase, state.angles);
+				vec3copy(ent->s.apos.trBase, state.angles);
 			else
-				Vec3Copy(ent->r.currentAngles, state.angles);
-			Vec3Copy(ent->s.origin2, state.old_origin);
-			Vec3Copy(ent->r.mins, state.mins);
-			Vec3Copy(ent->r.maxs, state.maxs);
+				vec3copy(ent->r.currentAngles, state.angles);
+			vec3copy(ent->s.origin2, state.old_origin);
+			vec3copy(ent->r.mins, state.mins);
+			vec3copy(ent->r.maxs, state.maxs);
 			state.type = ent->s.eType;
 			state.flags = ent->s.eFlags;
 			if(ent->r.bmodel) state.solid = SOLID_BSP;

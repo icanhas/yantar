@@ -241,7 +241,7 @@ static void
 PlayerSettings_DrawPlayer(void *self)
 {
 	menubitmap_s *b;
-	vec3_t	viewangles;
+	Vec3	viewangles;
 	char	buf[MAX_QPATH];
 
 	trap_Cvar_VariableStringBuffer("model", buf, sizeof(buf));
@@ -301,7 +301,7 @@ PlayerSettings_MenuKey(int key)
 static void
 PlayerSettings_SetMenuItems(void)
 {
-	vec3_t	viewangles;
+	Vec3	viewangles;
 	int	c;
 	int	h;
 

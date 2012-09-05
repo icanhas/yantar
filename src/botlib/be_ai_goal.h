@@ -37,9 +37,9 @@
 
 /* a bot goal */
 typedef struct bot_goal_s {
-	vec3_t	origin;		/* origin of the goal */
+	Vec3	origin;		/* origin of the goal */
 	int	areanum;	/* area number of the goal */
-	vec3_t	mins, maxs;	/* mins and maxs of the goal */
+	Vec3	mins, maxs;	/* mins and maxs of the goal */
 	int	entitynum;	/* number of the goal entity */
 	int	number;		/* goal number */
 	int	flags;		/* goal flags */
@@ -69,20 +69,20 @@ int BotGetTopGoal(int goalstate, bot_goal_t *goal);
 /* get the second goal on the stack */
 int BotGetSecondGoal(int goalstate, bot_goal_t *goal);
 /* choose the best long term goal item for the bot */
-int BotChooseLTGItem(int goalstate, vec3_t origin, int *inventory,
+int BotChooseLTGItem(int goalstate, Vec3 origin, int *inventory,
 		     int travelflags);
 /* choose the best nearby goal item for the bot
  * the item may not be further away from the current bot position than maxtime
  * also the travel time from the nearby goal towards the long term goal may not
  * be larger than the travel time towards the long term goal from the current bot position */
-int BotChooseNBGItem(int goalstate, vec3_t origin, int *inventory,
+int BotChooseNBGItem(int goalstate, Vec3 origin, int *inventory,
 		     int travelflags,
 		     bot_goal_t *ltg,
 		     float maxtime);
 /* returns true if the bot touches the goal */
-int BotTouchingGoal(vec3_t origin, bot_goal_t *goal);
+int BotTouchingGoal(Vec3 origin, bot_goal_t *goal);
 /* returns true if the goal should be visible but isn't */
-int BotItemGoalInVisButNotVisible(int viewer, vec3_t eye, vec3_t viewangles,
+int BotItemGoalInVisButNotVisible(int viewer, Vec3 eye, Vec3 viewangles,
 				  bot_goal_t *goal);
 /* search for a goal for the given classname, the index can be used
  * as a start point for the search when multiple goals are available with that same classname */

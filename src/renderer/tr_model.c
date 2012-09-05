@@ -751,8 +751,8 @@ R_LerpTag(orientation_t *tag, qhandle_t handle, int startFrame, int endFrame,
 				frac, tagName);
 		}else{
 
-			AxisClear(tag->axis);
-			VectorClear(tag->origin);
+			axisclear(tag->axis);
+			vec3clear(tag->origin);
 			return qfalse;
 
 		}
@@ -760,8 +760,8 @@ R_LerpTag(orientation_t *tag, qhandle_t handle, int startFrame, int endFrame,
 		start	= R_GetTag(model->md3[0], startFrame, tagName);
 		end	= R_GetTag(model->md3[0], endFrame, tagName);
 		if(!start || !end){
-			AxisClear(tag->axis);
-			VectorClear(tag->origin);
+			axisclear(tag->axis);
+			vec3clear(tag->origin);
 			return qfalse;
 		}
 	}
@@ -775,9 +775,9 @@ R_LerpTag(orientation_t *tag, qhandle_t handle, int startFrame, int endFrame,
 		tag->axis[1][i] = start->axis[1][i] * backLerp +  end->axis[1][i] * frontLerp;
 		tag->axis[2][i] = start->axis[2][i] * backLerp +  end->axis[2][i] * frontLerp;
 	}
-	Vec3Normalize(tag->axis[0]);
-	Vec3Normalize(tag->axis[1]);
-	Vec3Normalize(tag->axis[2]);
+	vec3normalize(tag->axis[0]);
+	vec3normalize(tag->axis[1]);
+	vec3normalize(tag->axis[2]);
 	return qtrue;
 }
 
@@ -786,15 +786,15 @@ R_LerpTag(orientation_t *tag, qhandle_t handle, int startFrame, int endFrame,
  * R_ModelBounds
  */
 void
-R_ModelBounds(qhandle_t handle, vec3_t mins, vec3_t maxs)
+R_ModelBounds(qhandle_t handle, Vec3 mins, Vec3 maxs)
 {
 	model_t *model;
 
 	model = R_GetModelByHandle(handle);
 
 	if(model->type == MOD_BRUSH){
-		Vec3Copy(model->bmodel->bounds[0], mins);
-		Vec3Copy(model->bmodel->bounds[1], maxs);
+		vec3copy(model->bmodel->bounds[0], mins);
+		vec3copy(model->bmodel->bounds[1], maxs);
 
 		return;
 	}else if(model->type == MOD_MESH){
@@ -804,8 +804,8 @@ R_ModelBounds(qhandle_t handle, vec3_t mins, vec3_t maxs)
 		header	= model->md3[0];
 		frame	= (md3Frame_t*)((byte*)header + header->ofsFrames);
 
-		Vec3Copy(frame->bounds[0], mins);
-		Vec3Copy(frame->bounds[1], maxs);
+		vec3copy(frame->bounds[0], mins);
+		vec3copy(frame->bounds[1], maxs);
 
 		return;
 	}else if(model->type == MOD_MD4){
@@ -815,8 +815,8 @@ R_ModelBounds(qhandle_t handle, vec3_t mins, vec3_t maxs)
 		header	= (md4Header_t*)model->modelData;
 		frame	= (md4Frame_t*)((byte*)header + header->ofsFrames);
 
-		Vec3Copy(frame->bounds[0], mins);
-		Vec3Copy(frame->bounds[1], maxs);
+		vec3copy(frame->bounds[0], mins);
+		vec3copy(frame->bounds[1], maxs);
 
 		return;
 	}else if(model->type == MOD_IQM){
@@ -825,12 +825,12 @@ R_ModelBounds(qhandle_t handle, vec3_t mins, vec3_t maxs)
 		iqmData = model->modelData;
 
 		if(iqmData->bounds){
-			Vec3Copy(iqmData->bounds, mins);
-			Vec3Copy(iqmData->bounds + 3, maxs);
+			vec3copy(iqmData->bounds, mins);
+			vec3copy(iqmData->bounds + 3, maxs);
 			return;
 		}
 	}
 
-	VectorClear(mins);
-	VectorClear(maxs);
+	vec3clear(mins);
+	vec3clear(maxs);
 }

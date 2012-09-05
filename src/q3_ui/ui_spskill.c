@@ -73,7 +73,7 @@ static skillMenuInfo_t skillMenuInfo;
 
 
 static void
-SetSkillColor(int skill, vec4_t color)
+SetSkillColor(int skill, Vec4 color)
 {
 	switch(skill){
 	case 1:

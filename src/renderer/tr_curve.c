@@ -107,14 +107,14 @@ static void
 MakeMeshNormals(int width, int height, drawVert_t ctrl[MAX_GRID_SIZE][MAX_GRID_SIZE])
 {
 	int i, j, k, dist;
-	vec3_t	normal;
-	vec3_t	sum;
+	Vec3	normal;
+	Vec3	sum;
 	int	count = 0;
-	vec3_t	base;
-	vec3_t	delta;
+	Vec3	base;
+	Vec3	delta;
 	int	x, y;
 	drawVert_t      *dv;
-	vec3_t	around[8], temp;
+	Vec3	around[8], temp;
 	qbool good[8];
 	qbool wrapWidth, wrapHeight;
 	float len;
@@ -124,8 +124,8 @@ MakeMeshNormals(int width, int height, drawVert_t ctrl[MAX_GRID_SIZE][MAX_GRID_S
 
 	wrapWidth = qfalse;
 	for(i = 0; i < height; i++){
-		Vec3Sub(ctrl[i][0].xyz, ctrl[i][width-1].xyz, delta);
-		len = Vec3LenSquared(delta);
+		vec3sub(ctrl[i][0].xyz, ctrl[i][width-1].xyz, delta);
+		len = vec3lensquared(delta);
 		if(len > 1.0){
 			break;
 		}
@@ -136,8 +136,8 @@ MakeMeshNormals(int width, int height, drawVert_t ctrl[MAX_GRID_SIZE][MAX_GRID_S
 
 	wrapHeight = qfalse;
 	for(i = 0; i < width; i++){
-		Vec3Sub(ctrl[0][i].xyz, ctrl[height-1][i].xyz, delta);
-		len = Vec3LenSquared(delta);
+		vec3sub(ctrl[0][i].xyz, ctrl[height-1][i].xyz, delta);
+		len = vec3lensquared(delta);
 		if(len > 1.0){
 			break;
 		}
@@ -151,9 +151,9 @@ MakeMeshNormals(int width, int height, drawVert_t ctrl[MAX_GRID_SIZE][MAX_GRID_S
 		for(j = 0; j < height; j++){
 			count = 0;
 			dv = &ctrl[j][i];
-			Vec3Copy(dv->xyz, base);
+			vec3copy(dv->xyz, base);
 			for(k = 0; k < 8; k++){
-				VectorClear(around[k]);
+				vec3clear(around[k]);
 				good[k] = qfalse;
 
 				for(dist = 1; dist <= 3; dist++){
@@ -177,33 +177,33 @@ MakeMeshNormals(int width, int height, drawVert_t ctrl[MAX_GRID_SIZE][MAX_GRID_S
 					if(x < 0 || x >= width || y < 0 || y >= height){
 						break;	/* edge of patch */
 					}
-					Vec3Sub(ctrl[y][x].xyz, base, temp);
-					if(Vec3Normalize2(temp, temp) == 0){
+					vec3sub(ctrl[y][x].xyz, base, temp);
+					if(vec3normalize2(temp, temp) == 0){
 						continue;	/* degenerate edge, get more dist */
 					}else{
 						good[k] = qtrue;
-						Vec3Copy(temp, around[k]);
+						vec3copy(temp, around[k]);
 						break;	/* good edge */
 					}
 				}
 			}
 
-			VectorClear(sum);
+			vec3clear(sum);
 			for(k = 0; k < 8; k++){
 				if(!good[k] || !good[(k+1)&7]){
 					continue;	/* didn't get two points */
 				}
-				Vec3Cross(around[(k+1)&7], around[k], normal);
-				if(Vec3Normalize2(normal, normal) == 0){
+				vec3cross(around[(k+1)&7], around[k], normal);
+				if(vec3normalize2(normal, normal) == 0){
 					continue;
 				}
-				Vec3Add(normal, sum, sum);
+				vec3add(normal, sum, sum);
 				count++;
 			}
 			/* if ( count == 0 ) {
 			 * printf("bad normal\n");
 			 * } */
-			Vec3Normalize2(sum, dv->normal);
+			vec3normalize2(sum, dv->normal);
 		}
 }
 
@@ -280,7 +280,7 @@ R_CreateSurfaceGridMesh(int width, int height,
 {
 	int i, j, size;
 	drawVert_t *vert;
-	vec3_t tmpVec;
+	Vec3 tmpVec;
 	srfGridMesh_t *grid;
 
 	/* copy the results out to a grid */
@@ -318,12 +318,12 @@ R_CreateSurfaceGridMesh(int width, int height,
 		}
 
 	/* compute local origin and bounds */
-	Vec3Add(grid->meshBounds[0], grid->meshBounds[1], grid->localOrigin);
-	VectorScale(grid->localOrigin, 0.5f, grid->localOrigin);
-	Vec3Sub(grid->meshBounds[0], grid->localOrigin, tmpVec);
-	grid->meshRadius = Vec3Len(tmpVec);
+	vec3add(grid->meshBounds[0], grid->meshBounds[1], grid->localOrigin);
+	vec3scale(grid->localOrigin, 0.5f, grid->localOrigin);
+	vec3sub(grid->meshBounds[0], grid->localOrigin, tmpVec);
+	grid->meshRadius = vec3len(tmpVec);
 
-	Vec3Copy(grid->localOrigin, grid->lodOrigin);
+	vec3copy(grid->localOrigin, grid->lodOrigin);
 	grid->lodRadius = grid->meshRadius;
 	/*  */
 	return grid;
@@ -375,10 +375,10 @@ R_SubdividePatchToGrid(int width, int height,
 
 			maxLen = 0;
 			for(i = 0; i < height; i++){
-				vec3_t	midxyz;
-				vec3_t	midxyz2;
-				vec3_t	dir;
-				vec3_t	projected;
+				Vec3	midxyz;
+				Vec3	midxyz2;
+				Vec3	dir;
+				Vec3	projected;
 				float	d;
 
 				/* calculate the point on the curve */
@@ -390,14 +390,14 @@ R_SubdividePatchToGrid(int width, int height,
 				 * using dist-from-line will not account for internal
 				 * texture warping, but it gives a lot less polygons than
 				 * dist-from-midpoint */
-				Vec3Sub(midxyz, ctrl[i][j].xyz, midxyz);
-				Vec3Sub(ctrl[i][j+2].xyz, ctrl[i][j].xyz, dir);
-				Vec3Normalize(dir);
+				vec3sub(midxyz, ctrl[i][j].xyz, midxyz);
+				vec3sub(ctrl[i][j+2].xyz, ctrl[i][j].xyz, dir);
+				vec3normalize(dir);
 
-				d = Vec3Dot(midxyz, dir);
-				VectorScale(dir, d, projected);
-				Vec3Sub(midxyz, projected, midxyz2);
-				len = Vec3LenSquared(midxyz2);	/* we will do the sqrt later */
+				d = vec3dot(midxyz, dir);
+				vec3scale(dir, d, projected);
+				vec3sub(midxyz, projected, midxyz2);
+				len = vec3lensquared(midxyz2);	/* we will do the sqrt later */
 				if(len > maxLen){
 					maxLen = len;
 				}
@@ -502,14 +502,14 @@ R_SubdividePatchToGrid(int width, int height,
  * R_GridInsertColumn
  */
 srfGridMesh_t *
-R_GridInsertColumn(srfGridMesh_t *grid, int column, int row, vec3_t point, float loderror)
+R_GridInsertColumn(srfGridMesh_t *grid, int column, int row, Vec3 point, float loderror)
 {
 	int i, j;
 	int width, height, oldwidth;
 	drawVert_t	ctrl[MAX_GRID_SIZE][MAX_GRID_SIZE];
 	float	errorTable[2][MAX_GRID_SIZE];
 	float	lodRadius;
-	vec3_t	lodOrigin;
+	Vec3	lodOrigin;
 
 	oldwidth = 0;
 	width = grid->width + 1;
@@ -523,7 +523,7 @@ R_GridInsertColumn(srfGridMesh_t *grid, int column, int row, vec3_t point, float
 				LerpDrawVert(&grid->verts[j * grid->width + i-1],
 					&grid->verts[j * grid->width + i], &ctrl[j][i]);
 				if(j == row)
-					Vec3Copy(point, ctrl[j][i].xyz);
+					vec3copy(point, ctrl[j][i].xyz);
 			}
 			errorTable[0][i] = loderror;
 			continue;
@@ -540,14 +540,14 @@ R_GridInsertColumn(srfGridMesh_t *grid, int column, int row, vec3_t point, float
 	 * calculate normals */
 	MakeMeshNormals(width, height, ctrl);
 
-	Vec3Copy(grid->lodOrigin, lodOrigin);
+	vec3copy(grid->lodOrigin, lodOrigin);
 	lodRadius = grid->lodRadius;
 	/* free the old grid */
 	R_FreeSurfaceGridMesh(grid);
 	/* create a new grid */
 	grid = R_CreateSurfaceGridMesh(width, height, ctrl, errorTable);
 	grid->lodRadius = lodRadius;
-	Vec3Copy(lodOrigin, grid->lodOrigin);
+	vec3copy(lodOrigin, grid->lodOrigin);
 	return grid;
 }
 
@@ -555,14 +555,14 @@ R_GridInsertColumn(srfGridMesh_t *grid, int column, int row, vec3_t point, float
  * R_GridInsertRow
  */
 srfGridMesh_t *
-R_GridInsertRow(srfGridMesh_t *grid, int row, int column, vec3_t point, float loderror)
+R_GridInsertRow(srfGridMesh_t *grid, int row, int column, Vec3 point, float loderror)
 {
 	int i, j;
 	int width, height, oldheight;
 	drawVert_t	ctrl[MAX_GRID_SIZE][MAX_GRID_SIZE];
 	float	errorTable[2][MAX_GRID_SIZE];
 	float	lodRadius;
-	vec3_t	lodOrigin;
+	Vec3	lodOrigin;
 
 	oldheight	= 0;
 	width	= grid->width;
@@ -576,7 +576,7 @@ R_GridInsertRow(srfGridMesh_t *grid, int row, int column, vec3_t point, float lo
 				LerpDrawVert(&grid->verts[(i-1) * grid->width + j],
 					&grid->verts[i * grid->width + j], &ctrl[i][j]);
 				if(j == column)
-					Vec3Copy(point, ctrl[i][j].xyz);
+					vec3copy(point, ctrl[i][j].xyz);
 			}
 			errorTable[1][i] = loderror;
 			continue;
@@ -593,13 +593,13 @@ R_GridInsertRow(srfGridMesh_t *grid, int row, int column, vec3_t point, float lo
 	 * calculate normals */
 	MakeMeshNormals(width, height, ctrl);
 
-	Vec3Copy(grid->lodOrigin, lodOrigin);
+	vec3copy(grid->lodOrigin, lodOrigin);
 	lodRadius = grid->lodRadius;
 	/* free the old grid */
 	R_FreeSurfaceGridMesh(grid);
 	/* create a new grid */
 	grid = R_CreateSurfaceGridMesh(width, height, ctrl, errorTable);
 	grid->lodRadius = lodRadius;
-	Vec3Copy(lodOrigin, grid->lodOrigin);
+	vec3copy(lodOrigin, grid->lodOrigin);
 	return grid;
 }

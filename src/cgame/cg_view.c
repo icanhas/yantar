@@ -60,7 +60,7 @@ enum { Focusdistance = 512 };
 void
 CG_TestModel_f(void)
 {
-	vec3_t angles;
+	Vec3 angles;
 
 	memset(&cg.testModelEntity, 0, sizeof(cg.testModelEntity));
 	if(trap_Argc() < 2){
@@ -81,14 +81,14 @@ CG_TestModel_f(void)
 		return;
 	}
 
-	Vec3MA(cg.refdef.vieworg, 100, cg.refdef.viewaxis[0],
+	vec3ma(cg.refdef.vieworg, 100, cg.refdef.viewaxis[0],
 		cg.testModelEntity.origin);
 
 	angles[PITCH]	= 0;
 	angles[YAW]	= 180 + cg.refdefViewAngles[1];
 	angles[ROLL]	= 0;
 
-	AnglesToAxis(angles, cg.testModelEntity.axis);
+	euler2axis(angles, cg.testModelEntity.axis);
 	cg.testGun = qfalse;
 }
 
@@ -151,10 +151,10 @@ addtestmodel(void)
 	}
 	/* if testing a gun, set the origin relative to the view origin */
 	if(cg.testGun){
-		Vec3Copy(cg.refdef.vieworg, cg.testModelEntity.origin);
-		Vec3Copy(cg.refdef.viewaxis[0], cg.testModelEntity.axis[0]);
-		Vec3Copy(cg.refdef.viewaxis[1], cg.testModelEntity.axis[1]);
-		Vec3Copy(cg.refdef.viewaxis[2], cg.testModelEntity.axis[2]);
+		vec3copy(cg.refdef.vieworg, cg.testModelEntity.origin);
+		vec3copy(cg.refdef.viewaxis[0], cg.testModelEntity.axis[0]);
+		vec3copy(cg.refdef.viewaxis[1], cg.testModelEntity.axis[1]);
+		vec3copy(cg.refdef.viewaxis[2], cg.testModelEntity.axis[2]);
 
 		/* allow the position to be adjusted */
 		for(i=0; i<3; i++){
@@ -172,10 +172,10 @@ addtestmodel(void)
 void
 CG_TestLight_f(void)
 {
-	vec_t *v;
+	Scalar *v;
 	
 	v = cg.testlightorigs[cg.ntestlights % Maxtestlights];
-	Vec3MA(cg.refdef.vieworg, 100, cg.refdef.viewaxis[0], v);
+	vec3ma(cg.refdef.vieworg, 100, cg.refdef.viewaxis[0], v);
 	cg.ntestlights++;
 }
 
@@ -183,7 +183,7 @@ static void
 addtestlights(void)
 {
 	uint i;
-	vec_t *v;
+	Scalar *v;
 	
 	for(i = 0; i < cg.ntestlights && i < Maxtestlights; i++){
 		v = cg.testlightorigs[i];
@@ -243,7 +243,7 @@ offset1stpersonview(void)
 {
 	float	*origin, *angles;
 	float bob, ratio, delta, speed, f;
-	vec3_t predictedVelocity;
+	Vec3 predictedVelocity;
 	int timeDelta;
 
 	if(cg.snap->ps.pm_type == PM_INTERMISSION)
@@ -287,12 +287,12 @@ offset1stpersonview(void)
 #endif
 
 	/* add angles based on velocity */
-	Vec3Copy(cg.predictedPlayerState.velocity, predictedVelocity);
+	vec3copy(cg.predictedPlayerState.velocity, predictedVelocity);
 
-	delta = Vec3Dot (predictedVelocity, cg.refdef.viewaxis[0]);
+	delta = vec3dot (predictedVelocity, cg.refdef.viewaxis[0]);
 	angles[PITCH] += delta * cg_runpitch.value;
 
-	delta = Vec3Dot (predictedVelocity, cg.refdef.viewaxis[1]);
+	delta = vec3dot (predictedVelocity, cg.refdef.viewaxis[1]);
 	angles[ROLL] -= delta * cg_runroll.value;
 
 	/* add angles based on bob */
@@ -341,12 +341,12 @@ offset1stpersonview(void)
 #if 0
 	{
 #define NECK_LENGTH 8
-		vec3_t forward, up;
+		Vec3 forward, up;
 
 		cg.refdef.vieworg[2] -= NECK_LENGTH;
-		AngleVectors(cg.refdefViewAngles, forward, NULL, up);
-		Vec3MA(cg.refdef.vieworg, 3, forward, cg.refdef.vieworg);
-		Vec3MA(cg.refdef.vieworg, NECK_LENGTH, up, cg.refdef.vieworg);
+		anglevec3s(cg.refdefViewAngles, forward, NULL, up);
+		vec3ma(cg.refdef.vieworg, 3, forward, cg.refdef.vieworg);
+		vec3ma(cg.refdef.vieworg, NECK_LENGTH, up, cg.refdef.vieworg);
 	}
 #endif
 }
@@ -354,18 +354,18 @@ offset1stpersonview(void)
 static void
 offset3rdpersonview(void)
 {
-	vec3_t forward, right, up;
-	vec3_t view;
-	vec3_t focusAngles;
+	Vec3 forward, right, up;
+	Vec3 view;
+	Vec3 focusAngles;
 	trace_t trace;
-	static vec3_t mins = { -4, -4, -4 };
-	static vec3_t maxs = { 4, 4, 4 };
-	vec3_t focusPoint;
+	static Vec3 mins = { -4, -4, -4 };
+	static Vec3 maxs = { 4, 4, 4 };
+	Vec3 focusPoint;
 	float focusDist;
 	float forwardScale, sideScale;
 
 	cg.refdef.vieworg[2] += cg.predictedPlayerState.viewheight;
-	Vec3Copy(cg.refdefViewAngles, focusAngles);
+	vec3copy(cg.refdefViewAngles, focusAngles);
 	/* if dead, look at killer */
 	if(cg.predictedPlayerState.stats[STAT_HEALTH] <= 0){
 		focusAngles[YAW] = cg.predictedPlayerState.stats[STAT_DEAD_YAW];
@@ -375,16 +375,16 @@ offset3rdpersonview(void)
 
 	if(focusAngles[PITCH] > 45)
 		focusAngles[PITCH] = 45;	/* don't go too far overhead */
-	AngleVectors(focusAngles, forward, NULL, NULL);
-	Vec3MA(cg.refdef.vieworg, Focusdistance, forward, focusPoint);
-	Vec3Copy(cg.refdef.vieworg, view);
+	anglevec3s(focusAngles, forward, NULL, NULL);
+	vec3ma(cg.refdef.vieworg, Focusdistance, forward, focusPoint);
+	vec3copy(cg.refdef.vieworg, view);
 	view[2] += 8;
 	cg.refdefViewAngles[PITCH] *= 0.5;
-	AngleVectors(cg.refdefViewAngles, forward, right, up);
+	anglevec3s(cg.refdefViewAngles, forward, right, up);
 	forwardScale = cos(cg_thirdPersonAngle.value / 180 * M_PI);
 	sideScale = sin(cg_thirdPersonAngle.value / 180 * M_PI);
-	Vec3MA(view, -cg_thirdPersonRange.value * forwardScale, forward, view);
-	Vec3MA(view, -cg_thirdPersonRange.value * sideScale, right, view);
+	vec3ma(view, -cg_thirdPersonRange.value * forwardScale, forward, view);
+	vec3ma(view, -cg_thirdPersonRange.value * sideScale, right, view);
 	/* 
 	 * trace a ray from the origin to the viewpoint to make sure
 	 * the view isn't in a solid block.  Use an 8 by 8 block to
@@ -395,7 +395,7 @@ offset3rdpersonview(void)
 			cg.predictedPlayerState.clientNum,
 			MASK_SOLID);
 		if(trace.fraction != 1.0){
-			Vec3Copy(trace.endpos, view);
+			vec3copy(trace.endpos, view);
 			view[2] += (1.0 - trace.fraction) * 32;
 			/* 
 			 * try another trace to this position, because
@@ -405,13 +405,13 @@ offset3rdpersonview(void)
 			CG_Trace(&trace, cg.refdef.vieworg, mins, maxs, view,
 				cg.predictedPlayerState.clientNum,
 				MASK_SOLID);
-			Vec3Copy(trace.endpos, view);
+			vec3copy(trace.endpos, view);
 		}
 	}
-	Vec3Copy(view, cg.refdef.vieworg);
+	vec3copy(view, cg.refdef.vieworg);
 
 	/* select pitch to look at focus point from vieword */
-	Vec3Sub(focusPoint, cg.refdef.vieworg, focusPoint);
+	vec3sub(focusPoint, cg.refdef.vieworg, focusPoint);
 	focusDist = sqrt(focusPoint[0] * focusPoint[0] + focusPoint[1] * focusPoint[1]);
 	if(focusDist < 1)
 		focusDist = 1;	/* should never happen */
@@ -533,9 +533,9 @@ dmgblendblob(void)
 	ent.reType = RT_SPRITE;
 	ent.renderfx = RF_FIRST_PERSON;
 
-	Vec3MA(cg.refdef.vieworg, 8, cg.refdef.viewaxis[0], ent.origin);
-	Vec3MA(ent.origin, cg.damageX * -8, cg.refdef.viewaxis[1], ent.origin);
-	Vec3MA(ent.origin, cg.damageY * 8, cg.refdef.viewaxis[2], ent.origin);
+	vec3ma(cg.refdef.vieworg, 8, cg.refdef.viewaxis[0], ent.origin);
+	vec3ma(ent.origin, cg.damageX * -8, cg.refdef.viewaxis[1], ent.origin);
+	vec3ma(ent.origin, cg.damageY * 8, cg.refdef.viewaxis[2], ent.origin);
 
 	ent.radius = cg.damageValue * 3;
 	ent.customShader = cgs.media.viewBloodShader;
@@ -558,12 +558,12 @@ calcviewvals(void)
 	calcvrect();
 /*
  *      if (cg.cameraMode) {
- *              vec3_t origin, angles;
+ *              Vec3 origin, angles;
  *              if (trap_getCameraInfo(cg.time, &origin, &angles)) {
- *                      Vec3Copy(origin, cg.refdef.vieworg);
+ *                      vec3copy(origin, cg.refdef.vieworg);
  *                      angles[ROLL] = 0;
- *                      Vec3Copy(angles, cg.refdefViewAngles);
- *                      AnglesToAxis( cg.refdefViewAngles, cg.refdef.viewaxis );
+ *                      vec3copy(angles, cg.refdefViewAngles);
+ *                      euler2axis( cg.refdefViewAngles, cg.refdef.viewaxis );
  *                      return calcfov();
  *              } else {
  *                      cg.cameraMode = qfalse;
@@ -572,9 +572,9 @@ calcviewvals(void)
  */
 	/* intermission view */
 	if(ps->pm_type == PM_INTERMISSION){
-		Vec3Copy(ps->origin, cg.refdef.vieworg);
-		Vec3Copy(ps->viewangles, cg.refdefViewAngles);
-		AnglesToAxis(cg.refdefViewAngles, cg.refdef.viewaxis);
+		vec3copy(ps->origin, cg.refdef.vieworg);
+		vec3copy(ps->viewangles, cg.refdefViewAngles);
+		euler2axis(cg.refdefViewAngles, cg.refdef.viewaxis);
 		return calcfov();
 	}
 
@@ -583,8 +583,8 @@ calcviewvals(void)
 	cg.xyspeed = sqrt(ps->velocity[0] * ps->velocity[0] +
 		ps->velocity[1] * ps->velocity[1]);
 
-	Vec3Copy(ps->origin, cg.refdef.vieworg);
-	Vec3Copy(ps->viewangles, cg.refdefViewAngles);
+	vec3copy(ps->origin, cg.refdef.vieworg);
+	vec3copy(ps->viewangles, cg.refdefViewAngles);
 
 	if(cg_cameraOrbit.integer)
 		if(cg.time > cg.nextOrbitTime){
@@ -599,7 +599,7 @@ calcviewvals(void)
 		t = cg.time - cg.predictedErrorTime;
 		f = (cg_errorDecay.value - t) / cg_errorDecay.value;
 		if(f > 0 && f < 1)
-			Vec3MA(cg.refdef.vieworg, f, cg.predictedError,
+			vec3ma(cg.refdef.vieworg, f, cg.predictedError,
 				cg.refdef.vieworg);
 		else
 			cg.predictedErrorTime = 0;
@@ -613,7 +613,7 @@ calcviewvals(void)
 		offset1stpersonview();
 
 	/* position eye reletive to origin */
-	AnglesToAxis(cg.refdefViewAngles, cg.refdef.viewaxis);
+	euler2axis(cg.refdefViewAngles, cg.refdef.viewaxis);
 
 	if(cg.hyperspace)
 		cg.refdef.rdflags |= RDF_NOWORLDMODEL | RDF_HYPERSPACE;

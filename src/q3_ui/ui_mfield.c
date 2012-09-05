@@ -27,7 +27,7 @@
  * x, y, are in pixels
  */
 void
-MField_Draw(mfield_t *edit, int x, int y, int style, vec4_t color)
+MField_Draw(mfield_t *edit, int x, int y, int style, Vec4 color)
 {
 	int	len;
 	int	charw;

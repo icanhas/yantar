@@ -66,9 +66,9 @@ Pickup_Powerup(gentity_t *ent, gentity_t *other)
 
 	/* give any nearby players a "denied" anti-reward */
 	for(i = 0; i < level.maxclients; i++){
-		vec3_t	delta;
+		Vec3	delta;
 		float	len;
-		vec3_t	forward;
+		Vec3	forward;
 		trace_t tr;
 
 		client = &level.clients[i];
@@ -86,14 +86,14 @@ Pickup_Powerup(gentity_t *ent, gentity_t *other)
 			continue;
 
 		/* if too far away, no sound */
-		Vec3Sub(ent->s.pos.trBase, client->ps.origin, delta);
-		len = Vec3Normalize(delta);
+		vec3sub(ent->s.pos.trBase, client->ps.origin, delta);
+		len = vec3normalize(delta);
 		if(len > 192)
 			continue;
 
 		/* if not facing, no sound */
-		AngleVectors(client->ps.viewangles, forward, NULL, NULL);
-		if(Vec3Dot(delta, forward) < 0.4)
+		anglevec3s(client->ps.viewangles, forward, NULL, NULL);
+		if(vec3dot(delta, forward) < 0.4)
 			continue;
 
 		/* if not line of sight, no sound */
@@ -553,7 +553,7 @@ Touch_Item(gentity_t *ent, gentity_t *other, trace_t *trace)
  * Spawns an item and tosses it forward
  */
 gentity_t *
-LaunchItem(gitem_t *item, vec3_t origin, vec3_t velocity)
+LaunchItem(gitem_t *item, Vec3 origin, Vec3 velocity)
 {
 	gentity_t *dropped;
 
@@ -565,8 +565,8 @@ LaunchItem(gitem_t *item, vec3_t origin, vec3_t velocity)
 
 	dropped->classname = item->classname;
 	dropped->item = item;
-	VectorSet (dropped->r.mins, -ITEM_RADIUS, -ITEM_RADIUS, -ITEM_RADIUS);
-	VectorSet (dropped->r.maxs, ITEM_RADIUS, ITEM_RADIUS, ITEM_RADIUS);
+	vec3set (dropped->r.mins, -ITEM_RADIUS, -ITEM_RADIUS, -ITEM_RADIUS);
+	vec3set (dropped->r.maxs, ITEM_RADIUS, ITEM_RADIUS, ITEM_RADIUS);
 	dropped->r.contents = CONTENTS_TRIGGER;
 
 	dropped->touch = Touch_Item;
@@ -574,7 +574,7 @@ LaunchItem(gitem_t *item, vec3_t origin, vec3_t velocity)
 	G_SetOrigin(dropped, origin);
 	dropped->s.pos.trType	= TR_GRAVITY;
 	dropped->s.pos.trTime	= level.time;
-	Vec3Copy(velocity, dropped->s.pos.trDelta);
+	vec3copy(velocity, dropped->s.pos.trDelta);
 
 	dropped->s.eFlags |= EF_BOUNCE_HALF;
 #ifdef MISSIONPACK
@@ -606,15 +606,15 @@ LaunchItem(gitem_t *item, vec3_t origin, vec3_t velocity)
 gentity_t *
 Drop_Item(gentity_t *ent, gitem_t *item, float angle)
 {
-	vec3_t	velocity;
-	vec3_t	angles;
+	Vec3	velocity;
+	Vec3	angles;
 
-	Vec3Copy(ent->s.apos.trBase, angles);
+	vec3copy(ent->s.apos.trBase, angles);
 	angles[YAW] += angle;
 	angles[PITCH] = 0;	/* always forward */
 
-	AngleVectors(angles, velocity, NULL, NULL);
-	VectorScale(velocity, 150, velocity);
+	anglevec3s(angles, velocity, NULL, NULL);
+	vec3scale(velocity, 150, velocity);
 	velocity[2] += 200 + crandom() * 50;
 
 	return LaunchItem(item, ent->s.pos.trBase, velocity);
@@ -644,10 +644,10 @@ void
 FinishSpawningItem(gentity_t *ent)
 {
 	trace_t tr;
-	vec3_t	dest;
+	Vec3	dest;
 
-	VectorSet(ent->r.mins, -ITEM_RADIUS, -ITEM_RADIUS, -ITEM_RADIUS);
-	VectorSet(ent->r.maxs, ITEM_RADIUS, ITEM_RADIUS, ITEM_RADIUS);
+	vec3set(ent->r.mins, -ITEM_RADIUS, -ITEM_RADIUS, -ITEM_RADIUS);
+	vec3set(ent->r.maxs, ITEM_RADIUS, ITEM_RADIUS, ITEM_RADIUS);
 
 	ent->s.eType = ET_ITEM;
 	ent->s.modelindex = ent->item - bg_itemlist;	/* store item number in modelindex */
@@ -663,7 +663,7 @@ FinishSpawningItem(gentity_t *ent)
 		G_SetOrigin(ent, ent->s.origin);
 	else{
 		/* drop to floor */
-		VectorSet(dest, ent->s.origin[0], ent->s.origin[1],
+		vec3set(dest, ent->s.origin[0], ent->s.origin[1],
 			ent->s.origin[2] - 4096);
 		trap_Trace(&tr, ent->s.origin, ent->r.mins, ent->r.maxs, dest,
 			ent->s.number,
@@ -921,7 +921,7 @@ G_SpawnItem(gentity_t *ent, gitem_t *item)
 void
 G_BounceItem(gentity_t *ent, trace_t *trace)
 {
-	vec3_t	velocity;
+	Vec3	velocity;
 	float	dot;
 	int	hitTime;
 
@@ -929,11 +929,11 @@ G_BounceItem(gentity_t *ent, trace_t *trace)
 	hitTime = level.previousTime +
 		  (level.time - level.previousTime) * trace->fraction;
 	BG_EvaluateTrajectoryDelta(&ent->s.pos, hitTime, velocity);
-	dot = Vec3Dot(velocity, trace->plane.normal);
-	Vec3MA(velocity, -2*dot, trace->plane.normal, ent->s.pos.trDelta);
+	dot = vec3dot(velocity, trace->plane.normal);
+	vec3ma(velocity, -2*dot, trace->plane.normal, ent->s.pos.trDelta);
 
 	/* cut the velocity to keep from bouncing forever */
-	VectorScale(ent->s.pos.trDelta, ent->physicsBounce, ent->s.pos.trDelta);
+	vec3scale(ent->s.pos.trDelta, ent->physicsBounce, ent->s.pos.trDelta);
 
 	/* check for stop */
 	if(trace->plane.normal[2] > 0 && ent->s.pos.trDelta[2] < 40){
@@ -944,9 +944,9 @@ G_BounceItem(gentity_t *ent, trace_t *trace)
 		return;
 	}
 
-	Vec3Add(ent->r.currentOrigin, trace->plane.normal,
+	vec3add(ent->r.currentOrigin, trace->plane.normal,
 		ent->r.currentOrigin);
-	Vec3Copy(ent->r.currentOrigin, ent->s.pos.trBase);
+	vec3copy(ent->r.currentOrigin, ent->s.pos.trBase);
 	ent->s.pos.trTime = level.time;
 }
 
@@ -958,7 +958,7 @@ G_BounceItem(gentity_t *ent, trace_t *trace)
 void
 G_RunItem(gentity_t *ent)
 {
-	vec3_t	origin;
+	Vec3	origin;
 	trace_t tr;
 	int	contents;
 	int	mask;
@@ -987,7 +987,7 @@ G_RunItem(gentity_t *ent)
 	trap_Trace(&tr, ent->r.currentOrigin, ent->r.mins, ent->r.maxs, origin,
 		ent->r.ownerNum, mask);
 
-	Vec3Copy(tr.endpos, ent->r.currentOrigin);
+	vec3copy(tr.endpos, ent->r.currentOrigin);
 
 	if(tr.startsolid)
 		tr.fraction = 0;

@@ -24,8 +24,8 @@
 #include "g_local.h"
 
 static float	s_quadFactor;
-static vec3_t	forward, right, up;
-static vec3_t	muzzle;
+static Vec3	forward, right, up;
+static Vec3	muzzle;
 
 #define NUM_NAILSHOTS 15
 
@@ -33,17 +33,17 @@ static vec3_t	muzzle;
  * G_BounceProjectile
  */
 void
-G_BounceProjectile(vec3_t start, vec3_t impact, vec3_t dir, vec3_t endout)
+G_BounceProjectile(Vec3 start, Vec3 impact, Vec3 dir, Vec3 endout)
 {
-	vec3_t	v, newv;
+	Vec3	v, newv;
 	float	dot;
 
-	Vec3Sub(impact, start, v);
-	dot = Vec3Dot(v, dir);
-	Vec3MA(v, -2*dot, dir, newv);
+	vec3sub(impact, start, v);
+	dot = vec3dot(v, dir);
+	vec3ma(v, -2*dot, dir, newv);
 
-	Vec3Normalize(newv);
-	Vec3MA(impact, 8192, newv, endout);
+	vec3normalize(newv);
+	vec3ma(impact, 8192, newv, endout);
 }
 
 
@@ -66,17 +66,17 @@ qbool
 CheckGauntletAttack(gentity_t *ent)
 {
 	trace_t tr;
-	vec3_t	end;
+	Vec3	end;
 	gentity_t	*tent;
 	gentity_t	*traceEnt;
 	int damage;
 
 	/* set aiming directions */
-	AngleVectors (ent->client->ps.viewangles, forward, right, up);
+	anglevec3s (ent->client->ps.viewangles, forward, right, up);
 
 	CalcMuzzlePoint (ent, forward, right, up, muzzle);
 
-	Vec3MA (muzzle, 32, forward, end);
+	vec3ma (muzzle, 32, forward, end);
 
 	trap_Trace (&tr, muzzle, NULL, NULL, end, ent->s.number, MASK_SHOT);
 	if(tr.surfaceFlags & SURF_NOIMPACT)
@@ -135,7 +135,7 @@ CheckGauntletAttack(gentity_t *ent)
  * into a wall.
  */
 void
-SnapVectorTowards(vec3_t v, vec3_t to)
+SnapVectorTowards(Vec3 v, Vec3 to)
 {
 	int i;
 
@@ -158,9 +158,9 @@ void
 Bullet_Fire(gentity_t *ent, float spread, int damage)
 {
 	trace_t tr;
-	vec3_t	end;
+	Vec3	end;
 #ifdef MISSIONPACK
-	vec3_t	impactpoint, bouncedir;
+	Vec3	impactpoint, bouncedir;
 #endif
 	float	r;
 	float	u;
@@ -173,9 +173,9 @@ Bullet_Fire(gentity_t *ent, float spread, int damage)
 	r = random() * M_PI * 2.0f;
 	u = sin(r) * crandom() * spread * 16;
 	r = cos(r) * crandom() * spread * 16;
-	Vec3MA (muzzle, 8192*16, forward, end);
-	Vec3MA (end, r, right, end);
-	Vec3MA (end, u, up, end);
+	vec3ma (muzzle, 8192*16, forward, end);
+	vec3ma (end, r, right, end);
+	vec3ma (end, u, up, end);
 
 	passent = ent->s.number;
 	for(i = 0; i < 10; i++){
@@ -211,11 +211,11 @@ Bullet_Fire(gentity_t *ent, float spread, int damage)
 					G_BounceProjectile(muzzle, impactpoint,
 						bouncedir,
 						end);
-					Vec3Copy(impactpoint, muzzle);
+					vec3copy(impactpoint, muzzle);
 					/* the player can hit him/herself with the bounced rail */
 					passent = ENTITYNUM_NONE;
 				}else{
-					Vec3Copy(tr.endpos, muzzle);
+					vec3copy(tr.endpos, muzzle);
 					passent = traceEnt->s.number;
 				}
 				continue;
@@ -247,7 +247,7 @@ BFG_Fire(gentity_t *ent)
 	m->damage *= s_quadFactor;
 	m->splashDamage *= s_quadFactor;
 
-/*	Vec3Add( m->s.pos.trDelta, ent->client->ps.velocity, m->s.pos.trDelta );	// "real" physics */
+/*	vec3add( m->s.pos.trDelta, ent->client->ps.velocity, m->s.pos.trDelta );	// "real" physics */
 }
 
 
@@ -262,19 +262,19 @@ BFG_Fire(gentity_t *ent)
 #define DEFAULT_SHOTGUN_DAMAGE 10
 
 qbool
-ShotgunPellet(vec3_t start, vec3_t end, gentity_t *ent)
+ShotgunPellet(Vec3 start, Vec3 end, gentity_t *ent)
 {
 	trace_t tr;
 	int damage, i, passent;
 	gentity_t       *traceEnt;
 #ifdef MISSIONPACK
-	vec3_t impactpoint, bouncedir;
+	Vec3 impactpoint, bouncedir;
 #endif
-	vec3_t tr_start, tr_end;
+	Vec3 tr_start, tr_end;
 
 	passent = ent->s.number;
-	Vec3Copy(start, tr_start);
-	Vec3Copy(end, tr_end);
+	vec3copy(start, tr_start);
+	vec3copy(end, tr_end);
 	for(i = 0; i < 10; i++){
 		trap_Trace (&tr, tr_start, NULL, NULL, tr_end, passent,
 			MASK_SHOT);
@@ -295,11 +295,11 @@ ShotgunPellet(vec3_t start, vec3_t end, gentity_t *ent)
 					G_BounceProjectile(tr_start, impactpoint,
 						bouncedir,
 						tr_end);
-					Vec3Copy(impactpoint, tr_start);
+					vec3copy(impactpoint, tr_start);
 					/* the player can hit him/herself with the bounced rail */
 					passent = ENTITYNUM_NONE;
 				}else{
-					Vec3Copy(tr.endpos, tr_start);
+					vec3copy(tr.endpos, tr_start);
 					passent = traceEnt->s.number;
 				}
 				continue;
@@ -325,27 +325,27 @@ ShotgunPellet(vec3_t start, vec3_t end, gentity_t *ent)
 
 /* this should match CG_ShotgunPattern */
 void
-ShotgunPattern(vec3_t origin, vec3_t origin2, int seed, gentity_t *ent)
+ShotgunPattern(Vec3 origin, Vec3 origin2, int seed, gentity_t *ent)
 {
 	int i;
 	float r, u;
-	vec3_t end;
-	vec3_t forward, right, up;
+	Vec3 end;
+	Vec3 forward, right, up;
 	qbool hitClient = qfalse;
 
 	/* derive the right and up vectors from the forward vector, because
 	 * the client won't have any other information */
-	Vec3Normalize2(origin2, forward);
+	vec3normalize2(origin2, forward);
 	PerpendicularVector(right, forward);
-	Vec3Cross(forward, right, up);
+	vec3cross(forward, right, up);
 
 	/* generate the "random" spread pattern */
 	for(i = 0; i < DEFAULT_SHOTGUN_COUNT; i++){
 		r = Q_crandom(&seed) * DEFAULT_SHOTGUN_SPREAD * 16;
 		u = Q_crandom(&seed) * DEFAULT_SHOTGUN_SPREAD * 16;
-		Vec3MA(origin, 8192 * 16, forward, end);
-		Vec3MA (end, r, right, end);
-		Vec3MA (end, u, up, end);
+		vec3ma(origin, 8192 * 16, forward, end);
+		vec3ma (end, r, right, end);
+		vec3ma (end, u, up, end);
 		if(ShotgunPellet(origin, end, ent) && !hitClient){
 			hitClient = qtrue;
 			ent->client->accuracy_hits++;
@@ -361,7 +361,7 @@ weapon_supershotgun_fire(gentity_t *ent)
 
 	/* send shotgun blast */
 	tent = G_TempEntity(muzzle, EV_SHOTGUN);
-	VectorScale(forward, 4096, tent->s.origin2);
+	vec3scale(forward, 4096, tent->s.origin2);
 	SnapVector(tent->s.origin2);
 	tent->s.eventParm = rand() & 255;	/* seed for spread pattern */
 	tent->s.otherEntityNum = ent->s.number;
@@ -384,13 +384,13 @@ weapon_grenadelauncher_fire(gentity_t *ent)
 
 	/* extra vertical velocity */
 	forward[2] += 0.2f;
-	Vec3Normalize(forward);
+	vec3normalize(forward);
 
 	m = fire_grenade (ent, muzzle, forward);
 	m->damage *= s_quadFactor;
 	m->splashDamage *= s_quadFactor;
 
-/*	Vec3Add( m->s.pos.trDelta, ent->client->ps.velocity, m->s.pos.trDelta );	// "real" physics */
+/*	vec3add( m->s.pos.trDelta, ent->client->ps.velocity, m->s.pos.trDelta );	// "real" physics */
 }
 
 /*
@@ -408,7 +408,7 @@ Weapon_RocketLauncher_Fire(gentity_t *ent)
 	m->damage *= s_quadFactor;
 	m->splashDamage *= s_quadFactor;
 
-/*	Vec3Add( m->s.pos.trDelta, ent->client->ps.velocity, m->s.pos.trDelta );	// "real" physics */
+/*	vec3add( m->s.pos.trDelta, ent->client->ps.velocity, m->s.pos.trDelta );	// "real" physics */
 }
 
 
@@ -427,7 +427,7 @@ Weapon_Plasmagun_Fire(gentity_t *ent)
 	m->damage *= s_quadFactor;
 	m->splashDamage *= s_quadFactor;
 
-/*	Vec3Add( m->s.pos.trDelta, ent->client->ps.velocity, m->s.pos.trDelta );	// "real" physics */
+/*	vec3add( m->s.pos.trDelta, ent->client->ps.velocity, m->s.pos.trDelta );	// "real" physics */
 }
 
 /*
@@ -444,9 +444,9 @@ Weapon_Plasmagun_Fire(gentity_t *ent)
 void
 weapon_railgun_fire(gentity_t *ent)
 {
-	vec3_t end;
+	Vec3 end;
 #ifdef MISSIONPACK
-	vec3_t impactpoint, bouncedir;
+	Vec3 impactpoint, bouncedir;
 #endif
 	trace_t trace;
 	gentity_t       *tent;
@@ -460,7 +460,7 @@ weapon_railgun_fire(gentity_t *ent)
 
 	damage = 100 * s_quadFactor;
 
-	Vec3MA (muzzle, 8192, forward, end);
+	vec3ma (muzzle, 8192, forward, end);
 
 	/* trace only against the solids, so the railgun will go through people */
 	unlinked = 0;
@@ -489,15 +489,15 @@ weapon_railgun_fire(gentity_t *ent)
 						EV_RAILTRAIL);
 					/* set player number for custom colors on the railtrail */
 					tent->s.clientNum = ent->s.clientNum;
-					Vec3Copy(muzzle, tent->s.origin2);
+					vec3copy(muzzle, tent->s.origin2);
 					/* move origin a bit to come closer to the drawn gun muzzle */
-					Vec3MA(tent->s.origin2, 4, right,
+					vec3ma(tent->s.origin2, 4, right,
 						tent->s.origin2);
-					Vec3MA(tent->s.origin2, -1, up,
+					vec3ma(tent->s.origin2, -1, up,
 						tent->s.origin2);
 					tent->s.eventParm = 255;	/* don't make the explosion at the end */
 					/*  */
-					Vec3Copy(impactpoint, muzzle);
+					vec3copy(impactpoint, muzzle);
 					/* the player can hit him/herself with the bounced rail */
 					passent = ENTITYNUM_NONE;
 				}
@@ -539,10 +539,10 @@ weapon_railgun_fire(gentity_t *ent)
 	/* set player number for custom colors on the railtrail */
 	tent->s.clientNum = ent->s.clientNum;
 
-	Vec3Copy(muzzle, tent->s.origin2);
+	vec3copy(muzzle, tent->s.origin2);
 	/* move origin a bit to come closer to the drawn gun muzzle */
-	Vec3MA(tent->s.origin2, 4, right, tent->s.origin2);
-	Vec3MA(tent->s.origin2, -1, up, tent->s.origin2);
+	vec3ma(tent->s.origin2, 4, right, tent->s.origin2);
+	vec3ma(tent->s.origin2, -1, up, tent->s.origin2);
 
 	/* no explosion at end if SURF_NOIMPACT, but still make the trail */
 	if(trace.surfaceFlags & SURF_NOIMPACT)
@@ -604,9 +604,9 @@ void
 Weapon_HookThink(gentity_t *ent)
 {
 	if(ent->enemy){
-		vec3_t v, oldorigin;
+		Vec3 v, oldorigin;
 
-		Vec3Copy(ent->r.currentOrigin, oldorigin);
+		vec3copy(ent->r.currentOrigin, oldorigin);
 		v[0] = ent->enemy->r.currentOrigin[0] +
 		       (ent->enemy->r.mins[0] + ent->enemy->r.maxs[0]) * 0.5;
 		v[1] = ent->enemy->r.currentOrigin[1] +
@@ -618,7 +618,7 @@ Weapon_HookThink(gentity_t *ent)
 		G_SetOrigin(ent, v);
 	}
 
-	Vec3Copy(ent->r.currentOrigin, ent->parent->client->ps.grapplePoint);
+	vec3copy(ent->r.currentOrigin, ent->parent->client->ps.grapplePoint);
 }
 
 /*
@@ -631,9 +631,9 @@ void
 Weapon_LightningFire(gentity_t *ent)
 {
 	trace_t tr;
-	vec3_t end;
+	Vec3 end;
 #ifdef MISSIONPACK
-	vec3_t impactpoint, bouncedir;
+	Vec3 impactpoint, bouncedir;
 #endif
 	gentity_t       *traceEnt, *tent;
 	int damage, i, passent;
@@ -642,7 +642,7 @@ Weapon_LightningFire(gentity_t *ent)
 
 	passent = ent->s.number;
 	for(i = 0; i < 10; i++){
-		Vec3MA(muzzle, LIGHTNING_RANGE, forward, end);
+		vec3ma(muzzle, LIGHTNING_RANGE, forward, end);
 
 		trap_Trace(&tr, muzzle, NULL, NULL, end, passent, MASK_SHOT);
 
@@ -653,9 +653,9 @@ Weapon_LightningFire(gentity_t *ent)
 			 * the first lightning bolt is a cgame only visual
 			 *  */
 			tent = G_TempEntity(muzzle, EV_LIGHTNINGBOLT);
-			Vec3Copy(tr.endpos, end);
+			vec3copy(tr.endpos, end);
 			SnapVector(end);
-			Vec3Copy(end, tent->s.origin2);
+			vec3copy(end, tent->s.origin2);
 		}
 #endif
 		if(tr.entityNum == ENTITYNUM_NONE)
@@ -673,13 +673,13 @@ Weapon_LightningFire(gentity_t *ent)
 					G_BounceProjectile(muzzle, impactpoint,
 						bouncedir,
 						end);
-					Vec3Copy(impactpoint, muzzle);
-					Vec3Sub(end, impactpoint, forward);
-					Vec3Normalize(forward);
+					vec3copy(impactpoint, muzzle);
+					vec3sub(end, impactpoint, forward);
+					vec3normalize(forward);
 					/* the player can hit him/herself with the bounced lightning */
 					passent = ENTITYNUM_NONE;
 				}else{
-					Vec3Copy(tr.endpos, muzzle);
+					vec3copy(tr.endpos, muzzle);
 					passent = traceEnt->s.number;
 				}
 				continue;
@@ -728,7 +728,7 @@ Weapon_Nailgun_Fire(gentity_t *ent)
 		m->splashDamage *= s_quadFactor;
 	}
 
-/*	Vec3Add( m->s.pos.trDelta, ent->client->ps.velocity, m->s.pos.trDelta );	// "real" physics */
+/*	vec3add( m->s.pos.trDelta, ent->client->ps.velocity, m->s.pos.trDelta );	// "real" physics */
 }
 
 
@@ -745,13 +745,13 @@ weapon_proxlauncher_fire(gentity_t *ent)
 
 	/* extra vertical velocity */
 	forward[2] += 0.2f;
-	Vec3Normalize(forward);
+	vec3normalize(forward);
 
 	m = fire_prox (ent, muzzle, forward);
 	m->damage *= s_quadFactor;
 	m->splashDamage *= s_quadFactor;
 
-/*	Vec3Add( m->s.pos.trDelta, ent->client->ps.velocity, m->s.pos.trDelta );	// "real" physics */
+/*	vec3add( m->s.pos.trDelta, ent->client->ps.velocity, m->s.pos.trDelta );	// "real" physics */
 }
 
 #endif
@@ -793,12 +793,12 @@ LogAccuracyHit(gentity_t *target, gentity_t *attacker)
  * set muzzle location relative to pivoting eye
  */
 void
-CalcMuzzlePoint(gentity_t *ent, vec3_t forward, vec3_t right, vec3_t up,
-		vec3_t muzzlePoint)
+CalcMuzzlePoint(gentity_t *ent, Vec3 forward, Vec3 right, Vec3 up,
+		Vec3 muzzlePoint)
 {
-	Vec3Copy(ent->s.pos.trBase, muzzlePoint);
+	vec3copy(ent->s.pos.trBase, muzzlePoint);
 	muzzlePoint[2] += ent->client->ps.viewheight;
-	Vec3MA(muzzlePoint, 14, forward, muzzlePoint);
+	vec3ma(muzzlePoint, 14, forward, muzzlePoint);
 	/* snap to integer coordinates for more efficient network bandwidth usage */
 	SnapVector(muzzlePoint);
 }
@@ -809,13 +809,13 @@ CalcMuzzlePoint(gentity_t *ent, vec3_t forward, vec3_t right, vec3_t up,
  * set muzzle location relative to pivoting eye
  */
 void
-CalcMuzzlePointOrigin(gentity_t *ent, vec3_t origin, vec3_t forward,
-		      vec3_t right, vec3_t up,
-		      vec3_t muzzlePoint)
+CalcMuzzlePointOrigin(gentity_t *ent, Vec3 origin, Vec3 forward,
+		      Vec3 right, Vec3 up,
+		      Vec3 muzzlePoint)
 {
-	Vec3Copy(ent->s.pos.trBase, muzzlePoint);
+	vec3copy(ent->s.pos.trBase, muzzlePoint);
 	muzzlePoint[2] += ent->client->ps.viewheight;
-	Vec3MA(muzzlePoint, 14, forward, muzzlePoint);
+	vec3ma(muzzlePoint, 14, forward, muzzlePoint);
 	/* snap to integer coordinates for more efficient network bandwidth usage */
 	SnapVector(muzzlePoint);
 }
@@ -856,7 +856,7 @@ FireWeapon(gentity_t *ent)
 	}
 
 	/* set aiming directions */
-	AngleVectors (ent->client->ps.viewangles, forward, right, up);
+	anglevec3s (ent->client->ps.viewangles, forward, right, up);
 
 	CalcMuzzlePointOrigin (ent, ent->client->oldOrigin, forward, right, up,
 		muzzle);
@@ -921,16 +921,16 @@ FireWeapon(gentity_t *ent)
  * KamikazeRadiusDamage
  */
 static void
-KamikazeRadiusDamage(vec3_t origin, gentity_t *attacker, float damage,
+KamikazeRadiusDamage(Vec3 origin, gentity_t *attacker, float damage,
 		     float radius)
 {
 	float dist;
 	gentity_t       *ent;
 	int entityList[MAX_GENTITIES];
 	int numListedEntities;
-	vec3_t mins, maxs;
-	vec3_t v;
-	vec3_t dir;
+	Vec3 mins, maxs;
+	Vec3 v;
+	Vec3 dir;
 	int i, e;
 
 	if(radius < 1)
@@ -964,12 +964,12 @@ KamikazeRadiusDamage(vec3_t origin, gentity_t *attacker, float damage,
 				v[i] = 0;
 		}
 
-		dist = Vec3Len(v);
+		dist = vec3len(v);
 		if(dist >= radius)
 			continue;
 
 /*		if( CanDamage (ent, origin) ) { */
-		Vec3Sub (ent->r.currentOrigin, origin, dir);
+		vec3sub (ent->r.currentOrigin, origin, dir);
 		/* push the center of mass higher than the origin so players
 		 * get knocked into the air more */
 		dir[2] += 24;
@@ -985,16 +985,16 @@ KamikazeRadiusDamage(vec3_t origin, gentity_t *attacker, float damage,
  * KamikazeShockWave
  */
 static void
-KamikazeShockWave(vec3_t origin, gentity_t *attacker, float damage, float push,
+KamikazeShockWave(Vec3 origin, gentity_t *attacker, float damage, float push,
 		  float radius)
 {
 	float dist;
 	gentity_t       *ent;
 	int entityList[MAX_GENTITIES];
 	int numListedEntities;
-	vec3_t mins, maxs;
-	vec3_t v;
-	vec3_t dir;
+	Vec3 mins, maxs;
+	Vec3 v;
+	Vec3 dir;
 	int i, e;
 
 	if(radius < 1)
@@ -1025,19 +1025,19 @@ KamikazeShockWave(vec3_t origin, gentity_t *attacker, float damage, float push,
 				v[i] = 0;
 		}
 
-		dist = Vec3Len(v);
+		dist = vec3len(v);
 		if(dist >= radius)
 			continue;
 
 /*		if( CanDamage (ent, origin) ) { */
-		Vec3Sub (ent->r.currentOrigin, origin, dir);
+		vec3sub (ent->r.currentOrigin, origin, dir);
 		dir[2] += 24;
 		G_Damage(ent, NULL, attacker, dir, origin, damage,
 			DAMAGE_RADIUS|DAMAGE_NO_TEAM_PROTECTION,
 			MOD_KAMIKAZE);
 		/*  */
 		dir[2] = 0;
-		Vec3Normalize(dir);
+		vec3normalize(dir);
 		if(ent->client){
 			ent->client->ps.velocity[0] = dir[0] * push;
 			ent->client->ps.velocity[1] = dir[1] * push;
@@ -1057,7 +1057,7 @@ KamikazeDamage(gentity_t *self)
 	int i;
 	float t;
 	gentity_t *ent;
-	vec3_t newangles;
+	Vec3 newangles;
 
 	self->count += 100;
 
@@ -1108,7 +1108,7 @@ KamikazeDamage(gentity_t *self)
 		ent->client->ps.delta_angles[2] += ANGLE2SHORT(
 			newangles[2] - self->movedir[2]);
 	}
-	Vec3Copy(newangles, self->movedir);
+	vec3copy(newangles, self->movedir);
 }
 
 /*
@@ -1119,7 +1119,7 @@ G_StartKamikaze(gentity_t *ent)
 {
 	gentity_t       *explosion;
 	gentity_t       *te;
-	vec3_t snapped;
+	Vec3 snapped;
 
 	/* start up the explosion logic */
 	explosion = G_Spawn();
@@ -1128,9 +1128,9 @@ G_StartKamikaze(gentity_t *ent)
 	explosion->eventTime = level.time;
 
 	if(ent->client)
-		Vec3Copy(ent->s.pos.trBase, snapped);
+		vec3copy(ent->s.pos.trBase, snapped);
 	else
-		Vec3Copy(ent->activator->s.pos.trBase, snapped);
+		vec3copy(ent->activator->s.pos.trBase, snapped);
 	SnapVector(snapped);	/* save network bandwidth */
 	G_SetOrigin(explosion, snapped);
 
@@ -1142,7 +1142,7 @@ G_StartKamikaze(gentity_t *ent)
 	explosion->think = KamikazeDamage;
 	explosion->nextthink = level.time + 100;
 	explosion->count = 0;
-	VectorClear(explosion->movedir);
+	vec3clear(explosion->movedir);
 
 	trap_LinkEntity(explosion);
 

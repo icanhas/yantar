@@ -51,7 +51,7 @@ static menuframework_s	s_login_menu;
 static menuaction_s	s_login_login;
 static menuaction_s	s_login_cancel;
 
-static vec4_t s_login_color_prompt = {1.00, 0.43, 0.00, 1.00};
+static Vec4 s_login_color_prompt = {1.00, 0.43, 0.00, 1.00};
 
 /*
  * Login_MenuEvent

@@ -353,7 +353,7 @@ ParseFace(dsurface_t *ds, drawVert_t *verts, msurface_t *surf, int *indexes)
 	/* take the plane information from the lightmap vector */
 	for(i = 0; i < 3; i++)
 		cv->plane.normal[i] = LittleFloat(ds->lightmapVecs[2][i]);
-	cv->plane.dist = Vec3Dot(cv->points[0], cv->plane.normal);
+	cv->plane.dist = vec3dot(cv->points[0], cv->plane.normal);
 	SetPlaneSignbits(&cv->plane);
 	cv->plane.type = PlaneTypeForNormal(cv->plane.normal);
 
@@ -372,8 +372,8 @@ ParseMesh(dsurface_t *ds, drawVert_t *verts, msurface_t *surf)
 	int	width, height, numPoints;
 	drawVert_t	points[MAX_PATCH_SIZE*MAX_PATCH_SIZE];
 	int		lightmapNum;
-	vec3_t	bounds[2];
-	vec3_t	tmpVec;
+	Vec3	bounds[2];
+	Vec3	tmpVec;
 	static surfaceType_t skipData = SF_SKIP;
 
 	lightmapNum = LittleLong(ds->lightmapNum);
@@ -422,10 +422,10 @@ ParseMesh(dsurface_t *ds, drawVert_t *verts, msurface_t *surf)
 		bounds[0][i]	= LittleFloat(ds->lightmapVecs[0][i]);
 		bounds[1][i]	= LittleFloat(ds->lightmapVecs[1][i]);
 	}
-	Vec3Add(bounds[0], bounds[1], bounds[1]);
-	VectorScale(bounds[1], 0.5f, grid->lodOrigin);
-	Vec3Sub(bounds[0], grid->lodOrigin, tmpVec);
-	grid->lodRadius = Vec3Len(tmpVec);
+	vec3add(bounds[0], bounds[1], bounds[1]);
+	vec3scale(bounds[1], 0.5f, grid->lodOrigin);
+	vec3sub(bounds[0], grid->lodOrigin, tmpVec);
+	grid->lodRadius = vec3len(tmpVec);
 }
 
 /*
@@ -1646,7 +1646,7 @@ R_LoadFogs(lump_t *l, lump_t *brushesLump, lump_t *sidesLump)
 
 		out->parms = shader->fogParms;
 
-		out->colorInt = ColorBytes4 (shader->fogParms.color[0] * tr.identityLight,
+		out->colorInt = colourbytes4 (shader->fogParms.color[0] * tr.identityLight,
 			shader->fogParms.color[1] * tr.identityLight,
 			shader->fogParms.color[2] * tr.identityLight, 1.0);
 
@@ -1661,7 +1661,7 @@ R_LoadFogs(lump_t *l, lump_t *brushesLump, lump_t *sidesLump)
 		}else{
 			out->hasSurface = qtrue;
 			planeNum = LittleLong(sides[ firstSide + sideNum ].planeNum);
-			Vec3Sub(vec3_origin, s_worldData.planes[ planeNum ].normal, out->surface);
+			vec3sub(vec3_origin, s_worldData.planes[ planeNum ].normal, out->surface);
 			out->surface[3] = -s_worldData.planes[ planeNum ].dist;
 		}
 
@@ -1679,7 +1679,7 @@ void
 R_LoadLightGrid(lump_t *l)
 {
 	int i;
-	vec3_t	maxs;
+	Vec3	maxs;
 	int	numGridPoints;
 	world_t *w;
 	float	*wMins, *wMaxs;
@@ -1844,7 +1844,7 @@ RE_LoadWorldMap(const char *name)
 	tr.sunDirection[1]	= 0.3f;
 	tr.sunDirection[2]	= 0.9f;
 
-	Vec3Normalize(tr.sunDirection);
+	vec3normalize(tr.sunDirection);
 
 	tr.worldMapLoaded = qtrue;
 

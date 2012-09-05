@@ -44,7 +44,7 @@ typedef struct {
 } cLeaf_t;
 
 typedef struct cmodel_s {
-	vec3_t	mins, maxs;
+	Vec3	mins, maxs;
 	cLeaf_t leaf;	/* submodels don't reference the main tree */
 } cmodel_t;
 
@@ -57,7 +57,7 @@ typedef struct {
 typedef struct {
 	int		shaderNum;	/* the shader that determined the contents */
 	int		contents;
-	vec3_t		bounds[2];
+	Vec3		bounds[2];
 	int		numsides;
 	cbrushside_t	*sides;
 	int		checkcount;	/* to avoid repeated testings */
@@ -145,18 +145,18 @@ typedef struct {
 	qbool		use;
 	float		radius;
 	float		halfheight;
-	vec3_t		offset;
+	Vec3		offset;
 } sphere_t;
 
 typedef struct {
-	vec3_t		start;
-	vec3_t		end;
-	vec3_t		size[2];	/* size of the box being swept through the model */
-	vec3_t		offsets[8];	/* [signbits][x] = either size[0][x] or size[1][x] */
+	Vec3		start;
+	Vec3		end;
+	Vec3		size[2];	/* size of the box being swept through the model */
+	Vec3		offsets[8];	/* [signbits][x] = either size[0][x] or size[1][x] */
 	float		maxOffset;	/* longest corner length from origin */
-	vec3_t		extents;	/* greatest of abs(size[0]) and abs(size[1]) */
-	vec3_t		bounds[2];	/* enclosing box of start and end surrounding by size */
-	vec3_t		modelOrigin;	/* origin of the model tracing through */
+	Vec3		extents;	/* greatest of abs(size[0]) and abs(size[1]) */
+	Vec3		bounds[2];	/* enclosing box of start and end surrounding by size */
+	Vec3		modelOrigin;	/* origin of the model tracing through */
 	int		contents;	/* ored contents of the model tracing through */
 	qbool		isPoint;	/* optimized case */
 	trace_t		trace;		/* returned from trace call */
@@ -168,13 +168,13 @@ typedef struct leafList_s {
 	int		maxcount;
 	qbool		overflowed;
 	int		*list;
-	vec3_t		bounds[2];
+	Vec3		bounds[2];
 	int		lastLeaf;	/* for overflows where each leaf can't be stored individually */
 	void (*storeLeafs)(struct leafList_s *ll, int nodenum);
 } leafList_t;
 
 
-int CM_BoxBrushes(const vec3_t mins, const vec3_t maxs, cbrush_t **list,
+int CM_BoxBrushes(const Vec3 mins, const Vec3 maxs, cbrush_t **list,
 		  int listsize);
 
 void CM_StoreLeafs(leafList_t *ll, int nodenum);
@@ -183,16 +183,16 @@ void CM_StoreBrushes(leafList_t *ll, int nodenum);
 void CM_BoxLeafnums_r(leafList_t *ll, int nodenum);
 
 cmodel_t*CM_ClipHandleToModel(clipHandle_t handle);
-qbool CM_BoundsIntersect(const vec3_t mins, const vec3_t maxs,
-			    const vec3_t mins2,
-			    const vec3_t maxs2);
-qbool CM_BoundsIntersectPoint(const vec3_t mins, const vec3_t maxs,
-				 const vec3_t point);
+qbool CM_BoundsIntersect(const Vec3 mins, const Vec3 maxs,
+			    const Vec3 mins2,
+			    const Vec3 maxs2);
+qbool CM_BoundsIntersectPoint(const Vec3 mins, const Vec3 maxs,
+				 const Vec3 point);
 
 /* cm_patch.c */
 
 struct patchCollide_s *CM_GeneratePatchCollide(int width, int height,
-					       vec3_t *points);
+					       Vec3 *points);
 void CM_TraceThroughPatchCollide(traceWork_t *tw,
 				 const struct patchCollide_s *pc);
 qbool CM_PositionTestInPatchCollide(traceWork_t *tw,

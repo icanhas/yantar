@@ -951,7 +951,7 @@ R_MipMapNormalHeight(byte *in, int width, int height, qbool swizzle)
 	if(width == 0 || height == 0){
 		width += height;	/* get largest */
 		for(i=0; i<width; i++, out+=4, in+=8){
-			vec3_t v;
+			Vec3 v;
 
 			v[0] =  OffsetByteToFloat(in[sx  ]);
 			v[1] =  OffsetByteToFloat(in[1   ]);
@@ -961,7 +961,7 @@ R_MipMapNormalHeight(byte *in, int width, int height, qbool swizzle)
 			v[1] += OffsetByteToFloat(in[   5]);
 			v[2] += OffsetByteToFloat(in[   6]);
 
-			Vec3NormalizeFast(v);
+			vec3normalizefast(v);
 
 			out[sx] = FloatToOffsetByte(v[0]);
 			out[1 ] = FloatToOffsetByte(v[1]);
@@ -973,7 +973,7 @@ R_MipMapNormalHeight(byte *in, int width, int height, qbool swizzle)
 
 	for(i=0; i<height; i++, in+=row)
 		for(j=0; j<width; j++, out+=4, in+=8){
-			vec3_t v;
+			Vec3 v;
 
 			v[0] =  OffsetByteToFloat(in[sx      ]);
 			v[1] =  OffsetByteToFloat(in[       1]);
@@ -991,7 +991,7 @@ R_MipMapNormalHeight(byte *in, int width, int height, qbool swizzle)
 			v[1] += OffsetByteToFloat(in[   row+5]);
 			v[2] += OffsetByteToFloat(in[   row+6]);
 
-			Vec3NormalizeFast(v);
+			vec3normalizefast(v);
 
 			out[sx] = FloatToOffsetByte(v[0]);
 			out[1 ] = FloatToOffsetByte(v[1]);
@@ -1067,13 +1067,13 @@ RawImage_Normalize(byte *data, int width, int height, qbool swizzle)
 	int s = swizzle ? 3 : 0;
 
 	for(i=0; i<width*height; i++, ptr+=4){
-		vec3_t v;
+		Vec3 v;
 
 		v[0] = (float)ptr[s] * 1.0f/127.5f - 1.0f;
 		v[1] = (float)ptr[1] * 1.0f/127.5f - 1.0f;
 		v[2] = (float)ptr[2] * 1.0f/127.5f - 1.0f;
 
-		Vec3NormalizeFast(v);
+		vec3normalizefast(v);
 
 		ptr[s]	= (byte)(v[0] * 127.5f + 127.5f);
 		ptr[1]	= (byte)(v[1] * 127.5f + 127.5f);

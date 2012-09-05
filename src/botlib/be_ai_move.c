@@ -54,20 +54,20 @@
  *      MFL_GRAPPLEPULL must be set outside the movement code */
 typedef struct bot_movestate_s {
 	/* input vars (all set outside the movement code) */
-	vec3_t		origin;		/* origin of the bot */
-	vec3_t		velocity;	/* velocity of the bot */
-	vec3_t		viewoffset;	/* view offset */
+	Vec3		origin;		/* origin of the bot */
+	Vec3		velocity;	/* velocity of the bot */
+	Vec3		viewoffset;	/* view offset */
 	int		entitynum;	/* entity number of the bot */
 	int		client;		/* client number of the bot */
 	float		thinktime;	/* time the bot thinks */
 	int		presencetype;	/* presencetype of the bot */
-	vec3_t		viewangles;	/* view angles of the bot */
+	Vec3		viewangles;	/* view angles of the bot */
 	/* state vars */
 	int		areanum;				/* area the bot is in */
 	int		lastareanum;				/* last area the bot was in */
 	int		lastgoalareanum;			/* last goal area number */
 	int		lastreachnum;				/* last reachability number */
-	vec3_t		lastorigin;				/* origin previous cycle */
+	Vec3		lastorigin;				/* origin previous cycle */
 	int		reachareanum;				/* area number of the reachabilty */
 	int		moveflags;				/* movement flags */
 	int		jumpreach;				/* set when jumped */
@@ -186,14 +186,14 @@ BotInitMoveState(int handle, bot_initmove_t *initmove)
 
 	ms = BotMoveStateFromHandle(handle);
 	if(!ms) return;
-	Vec3Copy(initmove->origin, ms->origin);
-	Vec3Copy(initmove->velocity, ms->velocity);
-	Vec3Copy(initmove->viewoffset, ms->viewoffset);
+	vec3copy(initmove->origin, ms->origin);
+	vec3copy(initmove->velocity, ms->velocity);
+	vec3copy(initmove->viewoffset, ms->viewoffset);
 	ms->entitynum = initmove->entitynum;
 	ms->client = initmove->client;
 	ms->thinktime = initmove->thinktime;
 	ms->presencetype = initmove->presencetype;
-	Vec3Copy(initmove->viewangles, ms->viewangles);
+	vec3copy(initmove->viewangles, ms->viewangles);
 	/*  */
 	ms->moveflags &= ~MFL_ONGROUND;
 	if(initmove->or_moveflags & MFL_ONGROUND) ms->moveflags |= MFL_ONGROUND;
@@ -233,12 +233,12 @@ AngleDiff(float ang1, float ang2)
  * Changes Globals:		-
  * =========================================================================== */
 int
-BotFuzzyPointReachabilityArea(vec3_t origin)
+BotFuzzyPointReachabilityArea(Vec3 origin)
 {
 	int	firstareanum, j, x, y, z;
 	int	areas[10], numareas, areanum, bestareanum;
 	float	dist, bestdist;
-	vec3_t	points[10], v, end;
+	Vec3	points[10], v, end;
 
 	firstareanum = 0;
 	areanum = AAS_PointAreaNum(origin);
@@ -246,7 +246,7 @@ BotFuzzyPointReachabilityArea(vec3_t origin)
 		firstareanum = areanum;
 		if(AAS_AreaReachability(areanum)) return areanum;
 	}
-	Vec3Copy(origin, end);
+	vec3copy(origin, end);
 	end[2] += 4;
 	numareas = AAS_TraceAreas(origin, end, areas, points, 10);
 	for(j = 0; j < numareas; j++)
@@ -256,7 +256,7 @@ BotFuzzyPointReachabilityArea(vec3_t origin)
 	for(z = 1; z >= -1; z -= 1){
 		for(x = 1; x >= -1; x -= 1)
 			for(y = 1; y >= -1; y -= 1){
-				Vec3Copy(origin, end);
+				vec3copy(origin, end);
 				end[0] += x * 8;
 				end[1] += y * 8;
 				end[2] += z * 12;
@@ -266,9 +266,9 @@ BotFuzzyPointReachabilityArea(vec3_t origin)
 						10);
 				for(j = 0; j < numareas; j++){
 					if(AAS_AreaReachability(areas[j])){
-						Vec3Sub(points[j], origin,
+						vec3sub(points[j], origin,
 							v);
-						dist = Vec3Len(v);
+						dist = vec3len(v);
 						if(dist < bestdist){
 							bestareanum = areas[j];
 							bestdist = dist;
@@ -289,17 +289,17 @@ BotFuzzyPointReachabilityArea(vec3_t origin)
  * Changes Globals:		-
  * =========================================================================== */
 int
-BotReachabilityArea(vec3_t origin, int client)
+BotReachabilityArea(Vec3 origin, int client)
 {
 	int modelnum, modeltype, reachnum, areanum;
 	aas_reachability_t reach;
-	vec3_t org, end, mins, maxs, up = {0, 0, 1};
+	Vec3 org, end, mins, maxs, up = {0, 0, 1};
 	bsp_trace_t	bsptrace;
 	aas_trace_t	trace;
 
 	/* check if the bot is standing on something */
 	AAS_PresenceTypeBoundingBox(PRESENCE_CROUCH, mins, maxs);
-	Vec3MA(origin, -3, up, end);
+	vec3ma(origin, -3, up, end);
 	bsptrace = AAS_Trace(origin, mins, maxs, end, client,
 		CONTENTS_SOLID|CONTENTS_PLAYERCLIP);
 	if(!bsptrace.startsolid && bsptrace.fraction < 1 && bsptrace.ent !=
@@ -330,12 +330,12 @@ BotReachabilityArea(vec3_t origin, int client)
 		/* if the bot is in an area with reachabilities */
 		if(areanum && AAS_AreaReachability(areanum)) return areanum;
 		/* trace down till the ground is hit because the bot is standing on some other entity */
-		Vec3Copy(origin, org);
-		Vec3Copy(org, end);
+		vec3copy(origin, org);
+		vec3copy(org, end);
 		end[2]	-= 800;
 		trace	= AAS_TraceClientBBox(org, end, PRESENCE_CROUCH, -1);
 		if(!trace.startsolid)
-			Vec3Copy(trace.endpos, org);
+			vec3copy(trace.endpos, org);
 		/*  */
 		return BotFuzzyPointReachabilityArea(org);
 	}
@@ -350,27 +350,27 @@ BotReachabilityArea(vec3_t origin, int client)
  * Changes Globals:		-
  * =========================================================================== */
 /*
- * int BotReachabilityArea(vec3_t origin, int testground)
+ * int BotReachabilityArea(Vec3 origin, int testground)
  * {
  *      int firstareanum, i, j, x, y, z;
  *      int areas[10], numareas, areanum, bestareanum;
  *      float dist, bestdist;
- *      vec3_t org, end, points[10], v;
+ *      Vec3 org, end, points[10], v;
  *      aas_trace_t trace;
  *
  *      firstareanum = 0;
  *      for (i = 0; i < 2; i++)
  *      {
- *              Vec3Copy(origin, org);
+ *              vec3copy(origin, org);
  *              //if test at the ground (used when bot is standing on an entity)
  *              if (i > 0)
  *              {
- *                      Vec3Copy(origin, end);
+ *                      vec3copy(origin, end);
  *                      end[2] -= 800;
  *                      trace = AAS_TraceClientBBox(origin, end, PRESENCE_CROUCH, -1);
  *                      if (!trace.startsolid)
  *                      {
- *                              Vec3Copy(trace.endpos, org);
+ *                              vec3copy(trace.endpos, org);
  *                      }
  *              }
  *
@@ -389,7 +389,7 @@ BotReachabilityArea(vec3_t origin, int client)
  *                      {
  *                              for (y = 1; y >= -1; y -= 1)
  *                              {
- *                                      Vec3Copy(org, end);
+ *                                      vec3copy(org, end);
  *                                      end[0] += x * 8;
  *                                      end[1] += y * 8;
  *                                      end[2] += z * 12;
@@ -398,8 +398,8 @@ BotReachabilityArea(vec3_t origin, int client)
  *                                      {
  *                                              if (AAS_AreaReachability(areas[j]))
  *                                              {
- *                                                      Vec3Sub(points[j], org, v);
- *                                                      dist = Vec3Len(v);
+ *                                                      vec3sub(points[j], org, v);
+ *                                                      dist = vec3len(v);
  *                                                      if (dist < bestdist)
  *                                                      {
  *                                                              bestareanum = areas[j];
@@ -425,12 +425,12 @@ BotReachabilityArea(vec3_t origin, int client)
  * Changes Globals:		-
  * =========================================================================== */
 int
-BotOnMover(vec3_t origin, int entnum, aas_reachability_t *reach)
+BotOnMover(Vec3 origin, int entnum, aas_reachability_t *reach)
 {
 	int i, modelnum;
-	vec3_t	mins, maxs, modelorigin, org, end;
-	vec3_t	angles	= {0, 0, 0};
-	vec3_t	boxmins = {-16, -16, -8}, boxmaxs = {16, 16, 8};
+	Vec3	mins, maxs, modelorigin, org, end;
+	Vec3	angles	= {0, 0, 0};
+	Vec3	boxmins = {-16, -16, -8}, boxmaxs = {16, 16, 8};
 	bsp_trace_t trace;
 
 	modelnum = reach->facenum & 0x0000FFFF;
@@ -448,9 +448,9 @@ BotOnMover(vec3_t origin, int entnum, aas_reachability_t *reach)
 		if(origin[i] < modelorigin[i] + mins[i] - 16) return qfalse;
 	}
 	/*  */
-	Vec3Copy(origin, org);
+	vec3copy(origin, org);
 	org[2] += 24;
-	Vec3Copy(origin, end);
+	vec3copy(origin, end);
 	end[2] -= 48;
 	/*  */
 	trace = AAS_Trace(org, boxmins, boxmaxs, end, entnum,
@@ -472,8 +472,8 @@ int
 MoverDown(aas_reachability_t *reach)
 {
 	int modelnum;
-	vec3_t	mins, maxs, origin;
-	vec3_t	angles = {0, 0, 0};
+	Vec3	mins, maxs, origin;
+	Vec3	angles = {0, 0, 0};
 
 	modelnum = reach->facenum & 0x0000FFFF;
 	/* get some bsp model info */
@@ -536,11 +536,11 @@ BotSetBrushModelTypes(void)
 int
 BotOnTopOfEntity(bot_movestate_t *ms)
 {
-	vec3_t mins, maxs, end, up = {0, 0, 1};
+	Vec3 mins, maxs, end, up = {0, 0, 1};
 	bsp_trace_t trace;
 
 	AAS_PresenceTypeBoundingBox(ms->presencetype, mins, maxs);
-	Vec3MA(ms->origin, -3, up, end);
+	vec3ma(ms->origin, -3, up, end);
 	trace = AAS_Trace(ms->origin, mins, maxs, end, ms->entitynum,
 		CONTENTS_SOLID|CONTENTS_PLAYERCLIP);
 	if(!trace.startsolid &&
@@ -555,7 +555,7 @@ BotOnTopOfEntity(bot_movestate_t *ms)
  * Changes Globals:		-
  * =========================================================================== */
 int
-BotValidTravel(vec3_t origin, aas_reachability_t *reach, int travelflags)
+BotValidTravel(Vec3 origin, aas_reachability_t *reach, int travelflags)
 {
 	/* if the reachability uses an unwanted travel type */
 	if(AAS_TravelFlagForType(reach->traveltype) &
@@ -601,9 +601,9 @@ BotAddToAvoidReach(bot_movestate_t *ms, int number, float avoidtime)
  * Changes Globals:		-
  * =========================================================================== */
 float
-Vec3Vec3DistanceFromLineSquared(vec3_t p, vec3_t lp1, vec3_t lp2)
+Vec3vec3distFromLineSquared(Vec3 p, Vec3 lp1, Vec3 lp2)
 {
-	vec3_t	proj, dir;
+	Vec3	proj, dir;
 	int	j;
 
 	AAS_ProjectPointOntoVector(p, lp1, lp2, proj);
@@ -613,14 +613,14 @@ Vec3Vec3DistanceFromLineSquared(vec3_t p, vec3_t lp1, vec3_t lp2)
 			break;
 	if(j < 3){
 		if(fabs(proj[j] - lp1[j]) < fabs(proj[j] - lp2[j]))
-			Vec3Sub(p, lp1, dir);
+			vec3sub(p, lp1, dir);
 		else
-			Vec3Sub(p, lp2, dir);
-		return Vec3LenSquared(dir);
+			vec3sub(p, lp2, dir);
+		return vec3lensquared(dir);
 	}
-	Vec3Sub(p, proj, dir);
-	return Vec3LenSquared(dir);
-}	/* end of the function Vec3Vec3DistanceFromLineSquared */
+	vec3sub(p, proj, dir);
+	return vec3lensquared(dir);
+}	/* end of the function Vec3vec3distFromLineSquared */
 /* ===========================================================================
  *
  * Parameter:			-
@@ -628,12 +628,12 @@ Vec3Vec3DistanceFromLineSquared(vec3_t p, vec3_t lp1, vec3_t lp2)
  * Changes Globals:		-
  * =========================================================================== */
 float
-VectorVec3Vec3DistanceSquared(vec3_t p1, vec3_t p2)
+VectorVec3vec3distsquared(Vec3 p1, Vec3 p2)
 {
-	vec3_t dir;
-	Vec3Sub(p2, p1, dir);
-	return Vec3LenSquared(dir);
-}	/* end of the function VectorVec3Vec3DistanceSquared */
+	Vec3 dir;
+	vec3sub(p2, p1, dir);
+	return vec3lensquared(dir);
+}	/* end of the function VectorVec3vec3distsquared */
 /* ===========================================================================
  *
  * Parameter:			-
@@ -641,7 +641,7 @@ VectorVec3Vec3DistanceSquared(vec3_t p1, vec3_t p2)
  * Changes Globals:		-
  * =========================================================================== */
 int
-BotAvoidSpots(vec3_t origin, aas_reachability_t *reach,
+BotAvoidSpots(Vec3 origin, aas_reachability_t *reach,
 	      bot_avoidspot_t *avoidspots,
 	      int numavoidspots)
 {
@@ -671,26 +671,26 @@ BotAvoidSpots(vec3_t origin, aas_reachability_t *reach,
 	for(i = 0; i < numavoidspots; i++){
 		squaredradius	= Square(avoidspots[i].radius);
 		squareddist	=
-			Vec3Vec3DistanceFromLineSquared(avoidspots[i].origin, origin,
+			Vec3vec3distFromLineSquared(avoidspots[i].origin, origin,
 				reach->start);
 		/* if moving towards the avoid spot */
 		if(squareddist < squaredradius &&
-		   VectorVec3Vec3DistanceSquared(avoidspots[i].origin,
+		   VectorVec3vec3distsquared(avoidspots[i].origin,
 			   origin) > squareddist)
 			type = avoidspots[i].type;
 		else if(checkbetween){
-			squareddist = Vec3Vec3DistanceFromLineSquared(
+			squareddist = Vec3vec3distFromLineSquared(
 				avoidspots[i].origin, reach->start, reach->end);
 			/* if moving towards the avoid spot */
 			if(squareddist < squaredradius &&
-			   VectorVec3Vec3DistanceSquared(avoidspots[i].origin,
+			   VectorVec3vec3distsquared(avoidspots[i].origin,
 				   reach->start) > squareddist)
 				type = avoidspots[i].type;
 		}else{
-			VectorVec3Vec3DistanceSquared(avoidspots[i].origin, reach->end);
+			VectorVec3vec3distsquared(avoidspots[i].origin, reach->end);
 			/* if the reachability leads closer to the avoid spot */
 			if(squareddist < squaredradius &&
-			   VectorVec3Vec3DistanceSquared(avoidspots[i].origin,
+			   VectorVec3vec3distsquared(avoidspots[i].origin,
 				   reach->start) > squareddist)
 				type = avoidspots[i].type;
 		}
@@ -706,7 +706,7 @@ BotAvoidSpots(vec3_t origin, aas_reachability_t *reach,
  * Changes Globals:		-
  * =========================================================================== */
 void
-BotAddAvoidSpot(int movestate, vec3_t origin, float radius, int type)
+BotAddAvoidSpot(int movestate, Vec3 origin, float radius, int type)
 {
 	bot_movestate_t *ms;
 
@@ -719,7 +719,7 @@ BotAddAvoidSpot(int movestate, vec3_t origin, float radius, int type)
 
 	if(ms->numavoidspots >= MAX_AVOIDSPOTS)
 		return;
-	Vec3Copy(origin, ms->avoidspots[ms->numavoidspots].origin);
+	vec3copy(origin, ms->avoidspots[ms->numavoidspots].origin);
 	ms->avoidspots[ms->numavoidspots].radius = radius;
 	ms->avoidspots[ms->numavoidspots].type = type;
 	ms->numavoidspots++;
@@ -731,7 +731,7 @@ BotAddAvoidSpot(int movestate, vec3_t origin, float radius, int type)
  * Changes Globals:		-
  * =========================================================================== */
 int
-BotGetReachabilityToGoal(vec3_t origin, int areanum,
+BotGetReachabilityToGoal(Vec3 origin, int areanum,
 			 int lastgoalareanum, int lastareanum,
 			 int *avoidreach, float *avoidreachtimes,
 			 int *avoidreachtries,
@@ -811,20 +811,20 @@ BotGetReachabilityToGoal(vec3_t origin, int areanum,
  * Changes Globals:		-
  * =========================================================================== */
 int
-BotAddToTarget(vec3_t start, vec3_t end, float maxdist, float *dist,
-	       vec3_t target)
+BotAddToTarget(Vec3 start, Vec3 end, float maxdist, float *dist,
+	       Vec3 target)
 {
-	vec3_t	dir;
+	Vec3	dir;
 	float	curdist;
 
-	Vec3Sub(end, start, dir);
-	curdist = Vec3Normalize(dir);
+	vec3sub(end, start, dir);
+	curdist = vec3normalize(dir);
 	if(*dist + curdist < maxdist){
-		Vec3Copy(end, target);
+		vec3copy(end, target);
 		*dist += curdist;
 		return qfalse;
 	}else{
-		Vec3MA(start, maxdist - *dist, dir, target);
+		vec3ma(start, maxdist - *dist, dir, target);
 		*dist = maxdist;
 		return qtrue;
 	}
@@ -833,12 +833,12 @@ BotAddToTarget(vec3_t start, vec3_t end, float maxdist, float *dist,
 int
 BotMovementViewTarget(int movestate, bot_goal_t *goal, int travelflags,
 		      float lookahead,
-		      vec3_t target)
+		      Vec3 target)
 {
 	aas_reachability_t reach;
 	int reachnum, lastareanum;
 	bot_movestate_t *ms;
-	vec3_t	end;
+	Vec3	end;
 	float	dist;
 
 	ms = BotMoveStateFromHandle(movestate);
@@ -847,7 +847,7 @@ BotMovementViewTarget(int movestate, bot_goal_t *goal, int travelflags,
 	if(!ms->lastreachnum || !goal) return qfalse;
 
 	reachnum = ms->lastreachnum;
-	Vec3Copy(ms->origin, end);
+	vec3copy(ms->origin, end);
 	lastareanum = ms->lastareanum;
 	dist = 0;
 	while(reachnum && dist < lookahead){
@@ -872,7 +872,7 @@ BotMovementViewTarget(int movestate, bot_goal_t *goal, int travelflags,
 			ms->lastgoalareanum, lastareanum,
 			ms->avoidreach, ms->avoidreachtimes, ms->avoidreachtries,
 			goal, travelflags, travelflags, NULL, 0, NULL);
-		Vec3Copy(reach.end, end);
+		vec3copy(reach.end, end);
 		lastareanum = reach.areanum;
 		if(lastareanum == goal->areanum){
 			BotAddToTarget(reach.end, goal->origin, lookahead, &dist,
@@ -890,7 +890,7 @@ BotMovementViewTarget(int movestate, bot_goal_t *goal, int travelflags,
  * Changes Globals:		-
  * =========================================================================== */
 int
-BotVisible(int ent, vec3_t eye, vec3_t target)
+BotVisible(int ent, Vec3 eye, Vec3 target)
 {
 	bsp_trace_t trace;
 
@@ -906,16 +906,16 @@ BotVisible(int ent, vec3_t eye, vec3_t target)
  * Changes Globals:		-
  * =========================================================================== */
 int
-BotPredictVisiblePosition(vec3_t origin, int areanum, bot_goal_t *goal,
+BotPredictVisiblePosition(Vec3 origin, int areanum, bot_goal_t *goal,
 			  int travelflags,
-			  vec3_t target)
+			  Vec3 target)
 {
 	aas_reachability_t reach;
 	int	reachnum, lastgoalareanum, lastareanum, i;
 	int	avoidreach[MAX_AVOIDREACH];
 	float avoidreachtimes[MAX_AVOIDREACH];
 	int	avoidreachtries[MAX_AVOIDREACH];
-	vec3_t end;
+	Vec3 end;
 
 	/* if the bot has no goal or no last reachability */
 	if(!goal) return qfalse;
@@ -927,7 +927,7 @@ BotPredictVisiblePosition(vec3_t origin, int areanum, bot_goal_t *goal,
 	Q_Memset(avoidreach, 0, MAX_AVOIDREACH * sizeof(int));
 	lastgoalareanum = goal->areanum;
 	lastareanum = areanum;
-	Vec3Copy(origin, end);
+	vec3copy(origin, end);
 	/* only do 20 hops */
 	for(i = 0; i < 20 && (areanum != goal->areanum); i++){
 		/*  */
@@ -939,23 +939,23 @@ BotPredictVisiblePosition(vec3_t origin, int areanum, bot_goal_t *goal,
 		AAS_ReachabilityFromNum(reachnum, &reach);
 		/*  */
 		if(BotVisible(goal->entitynum, goal->origin, reach.start)){
-			Vec3Copy(reach.start, target);
+			vec3copy(reach.start, target);
 			return qtrue;
 		}
 		/*  */
 		if(BotVisible(goal->entitynum, goal->origin, reach.end)){
-			Vec3Copy(reach.end, target);
+			vec3copy(reach.end, target);
 			return qtrue;
 		}
 		/*  */
 		if(reach.areanum == goal->areanum){
-			Vec3Copy(reach.end, target);
+			vec3copy(reach.end, target);
 			return qtrue;
 		}
 		/*  */
 		lastareanum = areanum;
 		areanum = reach.areanum;
-		Vec3Copy(reach.end, end);
+		vec3copy(reach.end, end);
 		/*  */
 	}
 	/*  */
@@ -968,11 +968,11 @@ BotPredictVisiblePosition(vec3_t origin, int areanum, bot_goal_t *goal,
  * Changes Globals:		-
  * =========================================================================== */
 void
-MoverBottomCenter(aas_reachability_t *reach, vec3_t bottomcenter)
+MoverBottomCenter(aas_reachability_t *reach, Vec3 bottomcenter)
 {
 	int modelnum;
-	vec3_t	mins, maxs, origin, mids;
-	vec3_t	angles = {0, 0, 0};
+	Vec3	mins, maxs, origin, mids;
+	Vec3	angles = {0, 0, 0};
 
 	modelnum = reach->facenum & 0x0000FFFF;
 	/* get some bsp model info */
@@ -982,8 +982,8 @@ MoverBottomCenter(aas_reachability_t *reach, vec3_t bottomcenter)
 		botimport.Print(PRT_MESSAGE, "no entity with model %d\n",
 			modelnum);
 	/* get a point just above the plat in the bottom position */
-	Vec3Add(mins, maxs, mids);
-	Vec3MA(origin, 0.5, mids, bottomcenter);
+	vec3add(mins, maxs, mids);
+	vec3ma(origin, 0.5, mids, bottomcenter);
 	bottomcenter[2] = reach->start[2];
 }	/* end of the function MoverBottomCenter */
 /* ===========================================================================
@@ -993,19 +993,19 @@ MoverBottomCenter(aas_reachability_t *reach, vec3_t bottomcenter)
  * Changes Globals:		-
  * =========================================================================== */
 float
-BotGapVec3Vec3Distance(vec3_t origin, vec3_t hordir, int entnum)
+BotGapVec3vec3dist(Vec3 origin, Vec3 hordir, int entnum)
 {
 	int dist;
 	float	startz;
-	vec3_t	start, end;
+	Vec3	start, end;
 	aas_trace_t trace;
 
 	/* do gap checking
 	 * startz = origin[2];
 	 * this enables walking down stairs more fluidly */
 	{
-		Vec3Copy(origin, start);
-		Vec3Copy(origin, end);
+		vec3copy(origin, start);
+		vec3copy(origin, end);
 		end[2]	-= 60;
 		trace	= AAS_TraceClientBBox(start, end, PRESENCE_CROUCH,
 			entnum);
@@ -1014,9 +1014,9 @@ BotGapVec3Vec3Distance(vec3_t origin, vec3_t hordir, int entnum)
 	}
 	/*  */
 	for(dist = 8; dist <= 100; dist += 8){
-		Vec3MA(origin, dist, hordir, start);
+		vec3ma(origin, dist, hordir, start);
 		start[2] = startz + 24;
-		Vec3Copy(start, end);
+		vec3copy(start, end);
 		end[2]	-= 48 + sv_maxbarrier->value;
 		trace	= AAS_TraceClientBBox(start, end, PRESENCE_CROUCH,
 			entnum);
@@ -1024,7 +1024,7 @@ BotGapVec3Vec3Distance(vec3_t origin, vec3_t hordir, int entnum)
 		if(!trace.startsolid){
 			/* if it is a gap */
 			if(trace.endpos[2] < startz - sv_maxstep->value - 8){
-				Vec3Copy(trace.endpos, end);
+				vec3copy(trace.endpos, end);
 				end[2] -= 20;
 				if(AAS_PointContents(end) &
 				   CONTENTS_WATER) break;
@@ -1036,7 +1036,7 @@ BotGapVec3Vec3Distance(vec3_t origin, vec3_t hordir, int entnum)
 		}
 	}
 	return 0;
-}	/* end of the function BotGapVec3Vec3Distance */
+}	/* end of the function BotGapVec3vec3dist */
 /* ===========================================================================
  *
  * Parameter:			-
@@ -1044,12 +1044,12 @@ BotGapVec3Vec3Distance(vec3_t origin, vec3_t hordir, int entnum)
  * Changes Globals:		-
  * =========================================================================== */
 int
-BotCheckBarrierJump(bot_movestate_t *ms, vec3_t dir, float speed)
+BotCheckBarrierJump(bot_movestate_t *ms, Vec3 dir, float speed)
 {
-	vec3_t start, hordir, end;
+	Vec3 start, hordir, end;
 	aas_trace_t trace;
 
-	Vec3Copy(ms->origin, end);
+	vec3copy(ms->origin, end);
 	end[2] += sv_maxbarrier->value;
 	/* trace right up */
 	trace = AAS_TraceClientBBox(ms->origin, end, PRESENCE_NORMAL,
@@ -1062,17 +1062,17 @@ BotCheckBarrierJump(bot_movestate_t *ms, vec3_t dir, float speed)
 	hordir[0] = dir[0];
 	hordir[1] = dir[1];
 	hordir[2] = 0;
-	Vec3Normalize(hordir);
-	Vec3MA(ms->origin, ms->thinktime * speed * 0.5, hordir, end);
-	Vec3Copy(trace.endpos, start);
+	vec3normalize(hordir);
+	vec3ma(ms->origin, ms->thinktime * speed * 0.5, hordir, end);
+	vec3copy(trace.endpos, start);
 	end[2] = trace.endpos[2];
 	/* trace from previous trace end pos horizontally in the move direction */
 	trace = AAS_TraceClientBBox(start, end, PRESENCE_NORMAL, ms->entitynum);
 	/* again this shouldn't happen */
 	if(trace.startsolid) return qfalse;
 	/*  */
-	Vec3Copy(trace.endpos, start);
-	Vec3Copy(trace.endpos, end);
+	vec3copy(trace.endpos, start);
+	vec3copy(trace.endpos, end);
 	end[2] = ms->origin[2];
 	/* trace down from the previous trace end pos */
 	trace = AAS_TraceClientBBox(start, end, PRESENCE_NORMAL, ms->entitynum);
@@ -1096,12 +1096,12 @@ BotCheckBarrierJump(bot_movestate_t *ms, vec3_t dir, float speed)
  * Changes Globals:		-
  * =========================================================================== */
 int
-BotSwimInDirection(bot_movestate_t *ms, vec3_t dir, float speed, int type)
+BotSwimInDirection(bot_movestate_t *ms, Vec3 dir, float speed, int type)
 {
-	vec3_t normdir;
+	Vec3 normdir;
 
-	Vec3Copy(dir, normdir);
-	Vec3Normalize(normdir);
+	vec3copy(dir, normdir);
+	vec3normalize(normdir);
 	EA_Move(ms->client, normdir, speed);
 	return qtrue;
 }	/* end of the function BotSwimInDirection */
@@ -1112,9 +1112,9 @@ BotSwimInDirection(bot_movestate_t *ms, vec3_t dir, float speed, int type)
  * Changes Globals:		-
  * =========================================================================== */
 int
-BotWalkInDirection(bot_movestate_t *ms, vec3_t dir, float speed, int type)
+BotWalkInDirection(bot_movestate_t *ms, Vec3 dir, float speed, int type)
 {
-	vec3_t	hordir, cmdmove, velocity, tmpdir, origin;
+	Vec3	hordir, cmdmove, velocity, tmpdir, origin;
 	int	presencetype, maxframes, cmdframes, stopevent;
 	aas_clientmove_t move;
 	float	dist;
@@ -1135,15 +1135,15 @@ BotWalkInDirection(bot_movestate_t *ms, vec3_t dir, float speed, int type)
 		hordir[0] = dir[0];
 		hordir[1] = dir[1];
 		hordir[2] = 0;
-		Vec3Normalize(hordir);
+		vec3normalize(hordir);
 		/* if the bot is not supposed to jump */
 		if(!(type & MOVE_JUMP))
 			/* if there is a gap, try to jump over it */
-			if(BotGapVec3Vec3Distance(ms->origin, hordir,
+			if(BotGapVec3vec3dist(ms->origin, hordir,
 				   ms->entitynum) > 0) type |= MOVE_JUMP;
 		/* get command movement */
-		VectorScale(hordir, speed, cmdmove);
-		Vec3Copy(ms->velocity, velocity);
+		vec3scale(hordir, speed, cmdmove);
+		vec3copy(ms->velocity, velocity);
 		/*  */
 		if(type & MOVE_JUMP){
 			/* botimport.Print(PRT_MESSAGE, "trying jump\n"); */
@@ -1162,7 +1162,7 @@ BotWalkInDirection(bot_movestate_t *ms, vec3_t dir, float speed, int type)
 		}
 		/* AAS_ClearShownDebugLines(); */
 		/*  */
-		Vec3Copy(ms->origin, origin);
+		vec3copy(ms->origin, origin);
 		origin[2] += 0.5;
 		AAS_PredictClientMovement(&move, ms->entitynum, origin,
 			presencetype, qtrue,
@@ -1184,11 +1184,11 @@ BotWalkInDirection(bot_movestate_t *ms, vec3_t dir, float speed, int type)
 		/* if ground was hit */
 		if(move.stopevent & SE_HITGROUND){
 			/* check for nearby gap */
-			Vec3Normalize2(move.velocity, tmpdir);
-			dist = BotGapVec3Vec3Distance(move.endpos, tmpdir, ms->entitynum);
+			vec3normalize2(move.velocity, tmpdir);
+			dist = BotGapVec3vec3dist(move.endpos, tmpdir, ms->entitynum);
 			if(dist > 0) return qfalse;
 			/*  */
-			dist = BotGapVec3Vec3Distance(move.endpos, hordir, ms->entitynum);
+			dist = BotGapVec3vec3dist(move.endpos, hordir, ms->entitynum);
 			if(dist > 0) return qfalse;
 		}
 		/* get horizontal movement */
@@ -1198,7 +1198,7 @@ BotWalkInDirection(bot_movestate_t *ms, vec3_t dir, float speed, int type)
 		/*
 		 * AAS_DrawCross(move.endpos, 4, LINECOLOR_BLUE);
 		 * the bot is blocked by something */
-		if(Vec3Len(tmpdir) < speed * ms->thinktime *
+		if(vec3len(tmpdir) < speed * ms->thinktime *
 		   0.5) return qfalse;
 		/* perform the movement */
 		if(type & MOVE_JUMP) EA_Jump(ms->client);
@@ -1222,7 +1222,7 @@ BotWalkInDirection(bot_movestate_t *ms, vec3_t dir, float speed, int type)
  * Changes Globals:		-
  * =========================================================================== */
 int
-BotMoveInDirection(int movestate, vec3_t dir, float speed, int type)
+BotMoveInDirection(int movestate, Vec3 dir, float speed, int type)
 {
 	bot_movestate_t *ms;
 
@@ -1241,7 +1241,7 @@ BotMoveInDirection(int movestate, vec3_t dir, float speed, int type)
  * Changes Globals:		-
  * =========================================================================== */
 int
-Intersection(vec2_t p1, vec2_t p2, vec2_t p3, vec2_t p4, vec2_t out)
+Intersection(Vec2 p1, Vec2 p2, Vec2 p3, Vec2 p4, Vec2 out)
 {
 	float x1, dx1, dy1, x2, dx2, dy2, d;
 
@@ -1267,20 +1267,20 @@ Intersection(vec2_t p1, vec2_t p2, vec2_t p3, vec2_t p4, vec2_t out)
  * Changes Globals:		-
  * =========================================================================== */
 void
-BotCheckBlocked(bot_movestate_t *ms, vec3_t dir, int checkbottom,
+BotCheckBlocked(bot_movestate_t *ms, Vec3 dir, int checkbottom,
 		bot_moveresult_t *result)
 {
-	vec3_t mins, maxs, end, up = {0, 0, 1};
+	Vec3 mins, maxs, end, up = {0, 0, 1};
 	bsp_trace_t trace;
 
 	/* test for entities obstructing the bot's path */
 	AAS_PresenceTypeBoundingBox(ms->presencetype, mins, maxs);
 	/*  */
-	if(fabs(Vec3Dot(dir, up)) < 0.7){
+	if(fabs(vec3dot(dir, up)) < 0.7){
 		mins[2] += sv_maxstep->value;	/* if the bot can step on */
 		maxs[2] -= 10;			/* a little lower to avoid low ceiling */
 	}
-	Vec3MA(ms->origin, 3, dir, end);
+	vec3ma(ms->origin, 3, dir, end);
 	trace = AAS_Trace(ms->origin, mins, maxs, end, ms->entitynum,
 		CONTENTS_SOLID|CONTENTS_PLAYERCLIP|CONTENTS_BODY);
 	/* if not started in solid and not hitting the world entity */
@@ -1296,7 +1296,7 @@ BotCheckBlocked(bot_movestate_t *ms, vec3_t dir, int checkbottom,
 	else if(checkbottom && !AAS_AreaReachability(ms->areanum)){
 		/* check if the bot is standing on something */
 		AAS_PresenceTypeBoundingBox(ms->presencetype, mins, maxs);
-		Vec3MA(ms->origin, -3, up, end);
+		vec3ma(ms->origin, -3, up, end);
 		trace = AAS_Trace(ms->origin, mins, maxs, end, ms->entitynum,
 			CONTENTS_SOLID|CONTENTS_PLAYERCLIP);
 		if(!trace.startsolid &&
@@ -1321,14 +1321,14 @@ bot_moveresult_t
 BotTravel_Walk(bot_movestate_t *ms, aas_reachability_t *reach)
 {
 	float	dist, speed;
-	vec3_t	hordir;
+	Vec3	hordir;
 	bot_moveresult_t_cleared(result);
 
 	/* first walk straight to the reachability start */
 	hordir[0] = reach->start[0] - ms->origin[0];
 	hordir[1] = reach->start[1] - ms->origin[1];
 	hordir[2] = 0;
-	dist = Vec3Normalize(hordir);
+	dist = vec3normalize(hordir);
 	/*  */
 	BotCheckBlocked(ms, hordir, qtrue, &result);
 	/*  */
@@ -1337,14 +1337,14 @@ BotTravel_Walk(bot_movestate_t *ms, aas_reachability_t *reach)
 		hordir[0] = reach->end[0] - ms->origin[0];
 		hordir[1] = reach->end[1] - ms->origin[1];
 		hordir[2] = 0;
-		dist = Vec3Normalize(hordir);
+		dist = vec3normalize(hordir);
 	}
 	/* if going towards a crouch area */
 	if(!(AAS_AreaPresenceType(reach->areanum) & PRESENCE_NORMAL))
 		/* if pretty close to the reachable area */
 		if(dist < 20) EA_Crouch(ms->client);
 	/*  */
-	dist = BotGapVec3Vec3Distance(ms->origin, hordir, ms->entitynum);
+	dist = BotGapVec3vec3dist(ms->origin, hordir, ms->entitynum);
 	/*  */
 	if(ms->moveflags & MFL_WALK){
 		if(dist > 0) speed = 200 - (180 - 1 * dist);
@@ -1356,7 +1356,7 @@ BotTravel_Walk(bot_movestate_t *ms, aas_reachability_t *reach)
 	}
 	/* elemantary action move in direction */
 	EA_Move(ms->client, hordir, speed);
-	Vec3Copy(hordir, result.movedir);
+	vec3copy(hordir, result.movedir);
 	/*  */
 	return result;
 }	/* end of the function BotTravel_Walk */
@@ -1369,7 +1369,7 @@ BotTravel_Walk(bot_movestate_t *ms, aas_reachability_t *reach)
 bot_moveresult_t
 BotFinishTravel_Walk(bot_movestate_t *ms, aas_reachability_t *reach)
 {
-	vec3_t	hordir;
+	Vec3	hordir;
 	float	dist, speed;
 	bot_moveresult_t_cleared(result);
 	/* if not on the ground and changed areas... don't walk back!!
@@ -1387,13 +1387,13 @@ BotFinishTravel_Walk(bot_movestate_t *ms, aas_reachability_t *reach)
 	hordir[0] = reach->end[0] - ms->origin[0];
 	hordir[1] = reach->end[1] - ms->origin[1];
 	hordir[2] = 0;
-	dist = Vec3Normalize(hordir);
+	dist = vec3normalize(hordir);
 	/*  */
 	if(dist > 100) dist = 100;
 	speed = 400 - (400 - 3 * dist);
 	/*  */
 	EA_Move(ms->client, hordir, speed);
-	Vec3Copy(hordir, result.movedir);
+	vec3copy(hordir, result.movedir);
 	/*  */
 	return result;
 }	/* end of the function BotFinishTravel_Walk */
@@ -1407,7 +1407,7 @@ bot_moveresult_t
 BotTravel_Crouch(bot_movestate_t *ms, aas_reachability_t *reach)
 {
 	float	speed;
-	vec3_t	hordir;
+	Vec3	hordir;
 	bot_moveresult_t_cleared(result);
 
 	/*  */
@@ -1416,14 +1416,14 @@ BotTravel_Crouch(bot_movestate_t *ms, aas_reachability_t *reach)
 	hordir[0] = reach->end[0] - ms->origin[0];
 	hordir[1] = reach->end[1] - ms->origin[1];
 	hordir[2] = 0;
-	Vec3Normalize(hordir);
+	vec3normalize(hordir);
 	/*  */
 	BotCheckBlocked(ms, hordir, qtrue, &result);
 	/* elemantary actions */
 	EA_Crouch(ms->client);
 	EA_Move(ms->client, hordir, speed);
 	/*  */
-	Vec3Copy(hordir, result.movedir);
+	vec3copy(hordir, result.movedir);
 	/*  */
 	return result;
 }	/* end of the function BotTravel_Crouch */
@@ -1437,14 +1437,14 @@ bot_moveresult_t
 BotTravel_BarrierJump(bot_movestate_t *ms, aas_reachability_t *reach)
 {
 	float	dist, speed;
-	vec3_t	hordir;
+	Vec3	hordir;
 	bot_moveresult_t_cleared(result);
 
 	/* walk straight to reachability start */
 	hordir[0] = reach->start[0] - ms->origin[0];
 	hordir[1] = reach->start[1] - ms->origin[1];
 	hordir[2] = 0;
-	dist = Vec3Normalize(hordir);
+	dist = vec3normalize(hordir);
 	/*  */
 	BotCheckBlocked(ms, hordir, qtrue, &result);
 	/* if pretty close to the barrier */
@@ -1455,7 +1455,7 @@ BotTravel_BarrierJump(bot_movestate_t *ms, aas_reachability_t *reach)
 		speed = 360 - (360 - 6 * dist);
 		EA_Move(ms->client, hordir, speed);
 	}
-	Vec3Copy(hordir, result.movedir);
+	vec3copy(hordir, result.movedir);
 	/*  */
 	return result;
 }	/* end of the function BotTravel_BarrierJump */
@@ -1468,7 +1468,7 @@ BotTravel_BarrierJump(bot_movestate_t *ms, aas_reachability_t *reach)
 bot_moveresult_t
 BotFinishTravel_BarrierJump(bot_movestate_t *ms, aas_reachability_t *reach)
 {
-	vec3_t hordir;
+	Vec3 hordir;
 	bot_moveresult_t_cleared(result);
 
 	/* if near the top or going down */
@@ -1480,7 +1480,7 @@ BotFinishTravel_BarrierJump(bot_movestate_t *ms, aas_reachability_t *reach)
 		BotCheckBlocked(ms, hordir, qtrue, &result);
 		/*  */
 		EA_Move(ms->client, hordir, 400);
-		Vec3Copy(hordir, result.movedir);
+		vec3copy(hordir, result.movedir);
 	}
 	/*  */
 	return result;
@@ -1494,18 +1494,18 @@ BotFinishTravel_BarrierJump(bot_movestate_t *ms, aas_reachability_t *reach)
 bot_moveresult_t
 BotTravel_Swim(bot_movestate_t *ms, aas_reachability_t *reach)
 {
-	vec3_t dir;
+	Vec3 dir;
 	bot_moveresult_t_cleared(result);
 
 	/* swim straight to reachability end */
-	Vec3Sub(reach->start, ms->origin, dir);
-	Vec3Normalize(dir);
+	vec3sub(reach->start, ms->origin, dir);
+	vec3normalize(dir);
 	/*  */
 	BotCheckBlocked(ms, dir, qtrue, &result);
 	/* elemantary actions */
 	EA_Move(ms->client, dir, 400);
 	/*  */
-	Vec3Copy(dir, result.movedir);
+	vec3copy(dir, result.movedir);
 	Vector2Angles(dir, result.ideal_viewangles);
 	result.flags |= MOVERESULT_SWIMVIEW;
 	/*  */
@@ -1520,18 +1520,18 @@ BotTravel_Swim(bot_movestate_t *ms, aas_reachability_t *reach)
 bot_moveresult_t
 BotTravel_WaterJump(bot_movestate_t *ms, aas_reachability_t *reach)
 {
-	vec3_t	dir, hordir;
+	Vec3	dir, hordir;
 	float	dist;
 	bot_moveresult_t_cleared(result);
 
 	/* swim straight to reachability end */
-	Vec3Sub(reach->end, ms->origin, dir);
-	Vec3Copy(dir, hordir);
+	vec3sub(reach->end, ms->origin, dir);
+	vec3copy(dir, hordir);
 	hordir[2] = 0;
 	dir[2] += 15 + crandom() * 40;
 	/* botimport.Print(PRT_MESSAGE, "BotTravel_WaterJump: dir[2] = %f\n", dir[2]); */
-	Vec3Normalize(dir);
-	dist = Vec3Normalize(hordir);
+	vec3normalize(dir);
+	dist = vec3normalize(hordir);
 	/* elemantary actions
 	 * EA_Move(ms->client, dir, 400); */
 	EA_MoveForward(ms->client);
@@ -1541,7 +1541,7 @@ BotTravel_WaterJump(bot_movestate_t *ms, aas_reachability_t *reach)
 	Vector2Angles(dir, result.ideal_viewangles);
 	result.flags |= MOVERESULT_MOVEMENTVIEW;
 	/*  */
-	Vec3Copy(dir, result.movedir);
+	vec3copy(dir, result.movedir);
 	/*  */
 	return result;
 }	/* end of the function BotTravel_WaterJump */
@@ -1554,7 +1554,7 @@ BotTravel_WaterJump(bot_movestate_t *ms, aas_reachability_t *reach)
 bot_moveresult_t
 BotFinishTravel_WaterJump(bot_movestate_t *ms, aas_reachability_t *reach)
 {
-	vec3_t dir, pnt;
+	Vec3 dir, pnt;
 	bot_moveresult_t_cleared(result);
 
 	/* botimport.Print(PRT_MESSAGE, "BotFinishTravel_WaterJump\n");
@@ -1562,12 +1562,12 @@ BotFinishTravel_WaterJump(bot_movestate_t *ms, aas_reachability_t *reach)
 	if(ms->moveflags & MFL_WATERJUMP) return result;
 	/* if not touching any water anymore don't do anything
 	 * otherwise the bot sometimes keeps jumping? */
-	Vec3Copy(ms->origin, pnt);
+	vec3copy(ms->origin, pnt);
 	pnt[2] -= 32;	/* extra for q2dm4 near red armor/mega health */
 	if(!(AAS_PointContents(pnt) &
 	     (CONTENTS_LAVA|CONTENTS_SLIME|CONTENTS_WATER))) return result;
 	/* swim straight to reachability end */
-	Vec3Sub(reach->end, ms->origin, dir);
+	vec3sub(reach->end, ms->origin, dir);
 	dir[0]	+= crandom() * 10;
 	dir[1]	+= crandom() * 10;
 	dir[2]	+= 70 + crandom() * 10;
@@ -1577,7 +1577,7 @@ BotFinishTravel_WaterJump(bot_movestate_t *ms, aas_reachability_t *reach)
 	Vector2Angles(dir, result.ideal_viewangles);
 	result.flags |= MOVERESULT_MOVEMENTVIEW;
 	/*  */
-	Vec3Copy(dir, result.movedir);
+	vec3copy(dir, result.movedir);
 	/*  */
 	return result;
 }	/* end of the function BotFinishTravel_WaterJump */
@@ -1590,29 +1590,29 @@ BotFinishTravel_WaterJump(bot_movestate_t *ms, aas_reachability_t *reach)
 bot_moveresult_t
 BotTravel_WalkOffLedge(bot_movestate_t *ms, aas_reachability_t *reach)
 {
-	vec3_t	hordir, dir;
+	Vec3	hordir, dir;
 	float	dist, speed, reachhordist;
 	bot_moveresult_t_cleared(result);
 
 	/* check if the bot is blocked by anything */
-	Vec3Sub(reach->start, ms->origin, dir);
-	Vec3Normalize(dir);
+	vec3sub(reach->start, ms->origin, dir);
+	vec3normalize(dir);
 	BotCheckBlocked(ms, dir, qtrue, &result);
 	/* if the reachability start and end are practially above each other */
-	Vec3Sub(reach->end, reach->start, dir);
+	vec3sub(reach->end, reach->start, dir);
 	dir[2] = 0;
-	reachhordist = Vec3Len(dir);
+	reachhordist = vec3len(dir);
 	/* walk straight to the reachability start */
 	hordir[0] = reach->start[0] - ms->origin[0];
 	hordir[1] = reach->start[1] - ms->origin[1];
 	hordir[2] = 0;
-	dist = Vec3Normalize(hordir);
+	dist = vec3normalize(hordir);
 	/* if pretty close to the start focus on the reachability end */
 	if(dist < 48){
 		hordir[0] = reach->end[0] - ms->origin[0];
 		hordir[1] = reach->end[1] - ms->origin[1];
 		hordir[2] = 0;
-		Vec3Normalize(hordir);
+		vec3normalize(hordir);
 		/*  */
 		if(reachhordist < 20)
 			speed = 100;
@@ -1630,7 +1630,7 @@ BotTravel_WalkOffLedge(bot_movestate_t *ms, aas_reachability_t *reach)
 	BotCheckBlocked(ms, hordir, qtrue, &result);
 	/* elemantary action */
 	EA_Move(ms->client, hordir, speed);
-	Vec3Copy(hordir, result.movedir);
+	vec3copy(hordir, result.movedir);
 	/*  */
 	return result;
 }	/* end of the function BotTravel_WalkOffLedge */
@@ -1641,30 +1641,30 @@ BotTravel_WalkOffLedge(bot_movestate_t *ms, aas_reachability_t *reach)
  * Changes Globals:		-
  * =========================================================================== */
 int
-BotAirControl(vec3_t origin, vec3_t velocity, vec3_t goal, vec3_t dir,
+BotAirControl(Vec3 origin, Vec3 velocity, Vec3 goal, Vec3 dir,
 	      float *speed)
 {
-	vec3_t	org, vel;
+	Vec3	org, vel;
 	float	dist;
 	int	i;
 
-	Vec3Copy(origin, org);
-	VectorScale(velocity, 0.1, vel);
+	vec3copy(origin, org);
+	vec3scale(velocity, 0.1, vel);
 	for(i = 0; i < 50; i++){
 		vel[2] -= sv_gravity->value * 0.01;
 		/* if going down and next position would be below the goal */
 		if(vel[2] < 0 && org[2] + vel[2] < goal[2]){
-			VectorScale(vel, (goal[2] - org[2]) / vel[2], vel);
-			Vec3Add(org, vel, org);
-			Vec3Sub(goal, org, dir);
-			dist = Vec3Normalize(dir);
+			vec3scale(vel, (goal[2] - org[2]) / vel[2], vel);
+			vec3add(org, vel, org);
+			vec3sub(goal, org, dir);
+			dist = vec3normalize(dir);
 			if(dist > 32) dist = 32;
 			*speed = 400 - (400 - 13 * dist);
 			return qtrue;
 		}else
-			Vec3Add(org, vel, org);
+			vec3add(org, vel, org);
 	}
-	VectorSet(dir, 0, 0, 0);
+	vec3set(dir, 0, 0, 0);
 	*speed = 400;
 	return qfalse;
 }	/* end of the function BotAirControl */
@@ -1677,30 +1677,30 @@ BotAirControl(vec3_t origin, vec3_t velocity, vec3_t goal, vec3_t dir,
 bot_moveresult_t
 BotFinishTravel_WalkOffLedge(bot_movestate_t *ms, aas_reachability_t *reach)
 {
-	vec3_t	dir, hordir, end, v;
+	Vec3	dir, hordir, end, v;
 	float	dist, speed;
 	bot_moveresult_t_cleared(result);
 
 	/*  */
-	Vec3Sub(reach->end, ms->origin, dir);
+	vec3sub(reach->end, ms->origin, dir);
 	BotCheckBlocked(ms, dir, qtrue, &result);
 	/*  */
-	Vec3Sub(reach->end, ms->origin, v);
+	vec3sub(reach->end, ms->origin, v);
 	v[2] = 0;
-	dist = Vec3Normalize(v);
-	if(dist > 16) Vec3MA(reach->end, 16, v, end);
-	else Vec3Copy(reach->end, end);
+	dist = vec3normalize(v);
+	if(dist > 16) vec3ma(reach->end, 16, v, end);
+	else vec3copy(reach->end, end);
 	/*  */
 	if(!BotAirControl(ms->origin, ms->velocity, end, hordir, &speed)){
 		/* go straight to the reachability end */
-		Vec3Copy(dir, hordir);
+		vec3copy(dir, hordir);
 		hordir[2] = 0;
 		/*  */
 		speed = 400;
 	}
 	/*  */
 	EA_Move(ms->client, hordir, speed);
-	Vec3Copy(hordir, result.movedir);
+	vec3copy(hordir, result.movedir);
 	/*  */
 	return result;
 }	/* end of the function BotFinishTravel_WalkOffLedge */
@@ -1713,7 +1713,7 @@ BotFinishTravel_WalkOffLedge(bot_movestate_t *ms, aas_reachability_t *reach)
 /*
  * bot_moveresult_t BotTravel_Jump(bot_movestate_t *ms, aas_reachability_t *reach)
  * {
- *      vec3_t hordir;
+ *      Vec3 hordir;
  *      float dist, gapdist, speed, horspeed, sv_jumpvel;
  *      bot_moveresult_t_cleared( result );
  *
@@ -1723,11 +1723,11 @@ BotFinishTravel_WalkOffLedge(bot_movestate_t *ms, aas_reachability_t *reach)
  *      hordir[0] = reach->start[0] - ms->origin[0];
  *      hordir[1] = reach->start[1] - ms->origin[1];
  *      hordir[2] = 0;
- *      dist = Vec3Normalize(hordir);
+ *      dist = vec3normalize(hordir);
  *      //
  *      speed = 350;
  *      //
- *      gapdist = BotGapVec3Vec3Distance(ms, hordir, ms->entitynum);
+ *      gapdist = BotGapVec3vec3dist(ms, hordir, ms->entitynum);
  *      //if pretty close to the start focus on the reachability end
  *      if (dist < 50 || (gapdist && gapdist < 50))
  *      {
@@ -1738,7 +1738,7 @@ BotFinishTravel_WalkOffLedge(bot_movestate_t *ms, aas_reachability_t *reach)
  *              //}
  *              hordir[0] = reach->end[0] - ms->origin[0];
  *              hordir[1] = reach->end[1] - ms->origin[1];
- *              Vec3Normalize(hordir);
+ *              vec3normalize(hordir);
  *              //elemantary action jump
  *              EA_Jump(ms->client);
  *              //
@@ -1754,14 +1754,14 @@ BotFinishTravel_WalkOffLedge(bot_movestate_t *ms, aas_reachability_t *reach)
  *      }
  *      //elemantary action
  *      EA_Move(ms->client, hordir, speed);
- *      Vec3Copy(hordir, result.movedir);
+ *      vec3copy(hordir, result.movedir);
  *      //
  *      return result;
  * } //end of the function BotTravel_Jump*/
 /*
  * bot_moveresult_t BotTravel_Jump(bot_movestate_t *ms, aas_reachability_t *reach)
  * {
- *      vec3_t hordir, dir1, dir2, mins, maxs, start, end;
+ *      Vec3 hordir, dir1, dir2, mins, maxs, start, end;
  *      int gapdist;
  *      float dist1, dist2, speed;
  *      bot_moveresult_t_cleared( result );
@@ -1771,42 +1771,42 @@ BotFinishTravel_WalkOffLedge(bot_movestate_t *ms, aas_reachability_t *reach)
  *      hordir[0] = reach->start[0] - reach->end[0];
  *      hordir[1] = reach->start[1] - reach->end[1];
  *      hordir[2] = 0;
- *      Vec3Normalize(hordir);
+ *      vec3normalize(hordir);
  *      //
- *      Vec3Copy(reach->start, start);
+ *      vec3copy(reach->start, start);
  *      start[2] += 1;
  *      //minus back the bouding box size plus 16
- *      Vec3MA(reach->start, 80, hordir, end);
+ *      vec3ma(reach->start, 80, hordir, end);
  *      //
  *      AAS_PresenceTypeBoundingBox(PRESENCE_NORMAL, mins, maxs);
  *      //check for solids
  *      trace = AAS_Trace(start, mins, maxs, end, ms->entitynum, MASK_PLAYERSOLID);
- *      if (trace.startsolid) Vec3Copy(start, trace.endpos);
+ *      if (trace.startsolid) vec3copy(start, trace.endpos);
  *      //check for a gap
  *      for (gapdist = 0; gapdist < 80; gapdist += 10)
  *      {
- *              Vec3MA(start, gapdist+10, hordir, end);
+ *              vec3ma(start, gapdist+10, hordir, end);
  *              end[2] += 1;
  *              if (AAS_PointAreaNum(end) != ms->reachareanum) break;
  *      }
- *      if (gapdist < 80) Vec3MA(reach->start, gapdist, hordir, trace.endpos);
- * //	dist1 = BotGapVec3Vec3Distance(start, hordir, ms->entitynum);
- * //	if (dist1 && dist1 <= trace.fraction * 80) Vec3MA(reach->start, dist1-20, hordir, trace.endpos);
+ *      if (gapdist < 80) vec3ma(reach->start, gapdist, hordir, trace.endpos);
+ * //	dist1 = BotGapVec3vec3dist(start, hordir, ms->entitynum);
+ * //	if (dist1 && dist1 <= trace.fraction * 80) vec3ma(reach->start, dist1-20, hordir, trace.endpos);
  *      //
- *      Vec3Sub(ms->origin, reach->start, dir1);
+ *      vec3sub(ms->origin, reach->start, dir1);
  *      dir1[2] = 0;
- *      dist1 = Vec3Normalize(dir1);
- *      Vec3Sub(ms->origin, trace.endpos, dir2);
+ *      dist1 = vec3normalize(dir1);
+ *      vec3sub(ms->origin, trace.endpos, dir2);
  *      dir2[2] = 0;
- *      dist2 = Vec3Normalize(dir2);
+ *      dist2 = vec3normalize(dir2);
  *      //if just before the reachability start
- *      if (Vec3Dot(dir1, dir2) < -0.8 || dist2 < 5)
+ *      if (vec3dot(dir1, dir2) < -0.8 || dist2 < 5)
  *      {
  *              //botimport.Print(PRT_MESSAGE, "between jump start and run to point\n");
  *              hordir[0] = reach->end[0] - ms->origin[0];
  *              hordir[1] = reach->end[1] - ms->origin[1];
  *              hordir[2] = 0;
- *              Vec3Normalize(hordir);
+ *              vec3normalize(hordir);
  *              //elemantary action jump
  *              if (dist1 < 24) EA_Jump(ms->client);
  *              else if (dist1 < 32) EA_DelayedJump(ms->client);
@@ -1820,13 +1820,13 @@ BotFinishTravel_WalkOffLedge(bot_movestate_t *ms, aas_reachability_t *reach)
  *              hordir[0] = trace.endpos[0] - ms->origin[0];
  *              hordir[1] = trace.endpos[1] - ms->origin[1];
  *              hordir[2] = 0;
- *              Vec3Normalize(hordir);
+ *              vec3normalize(hordir);
  *              //
  *              if (dist2 > 80) dist2 = 80;
  *              speed = 400 - (400 - 5 * dist2);
  *              EA_Move(ms->client, hordir, speed);
  *      }
- *      Vec3Copy(hordir, result.movedir);
+ *      vec3copy(hordir, result.movedir);
  *      //
  *      return result;
  * } //end of the function BotTravel_Jump*/
@@ -1834,8 +1834,8 @@ BotFinishTravel_WalkOffLedge(bot_movestate_t *ms, aas_reachability_t *reach)
 bot_moveresult_t
 BotTravel_Jump(bot_movestate_t *ms, aas_reachability_t *reach)
 {
-	vec3_t	hordir, dir1, dir2, start, end, runstart;
-/*	vec3_t runstart, dir1, dir2, hordir; */
+	Vec3	hordir, dir1, dir2, start, end, runstart;
+/*	Vec3 runstart, dir1, dir2, hordir; */
 	int	gapdist;
 	float	dist1, dist2, speed;
 	bot_moveresult_t_cleared(result);
@@ -1846,32 +1846,32 @@ BotTravel_Jump(bot_movestate_t *ms, aas_reachability_t *reach)
 	hordir[0] = runstart[0] - reach->start[0];
 	hordir[1] = runstart[1] - reach->start[1];
 	hordir[2] = 0;
-	Vec3Normalize(hordir);
+	vec3normalize(hordir);
 	/*  */
-	Vec3Copy(reach->start, start);
+	vec3copy(reach->start, start);
 	start[2] += 1;
-	Vec3MA(reach->start, 80, hordir, runstart);
+	vec3ma(reach->start, 80, hordir, runstart);
 	/* check for a gap */
 	for(gapdist = 0; gapdist < 80; gapdist += 10){
-		Vec3MA(start, gapdist+10, hordir, end);
+		vec3ma(start, gapdist+10, hordir, end);
 		end[2] += 1;
 		if(AAS_PointAreaNum(end) != ms->reachareanum) break;
 	}
-	if(gapdist < 80) Vec3MA(reach->start, gapdist, hordir, runstart);
+	if(gapdist < 80) vec3ma(reach->start, gapdist, hordir, runstart);
 	/*  */
-	Vec3Sub(ms->origin, reach->start, dir1);
+	vec3sub(ms->origin, reach->start, dir1);
 	dir1[2] = 0;
-	dist1	= Vec3Normalize(dir1);
-	Vec3Sub(ms->origin, runstart, dir2);
+	dist1	= vec3normalize(dir1);
+	vec3sub(ms->origin, runstart, dir2);
 	dir2[2] = 0;
-	dist2	= Vec3Normalize(dir2);
+	dist2	= vec3normalize(dir2);
 	/* if just before the reachability start */
-	if(Vec3Dot(dir1, dir2) < -0.8 || dist2 < 5){
+	if(vec3dot(dir1, dir2) < -0.8 || dist2 < 5){
 /*		botimport.Print(PRT_MESSAGE, "between jump start and run start point\n"); */
 		hordir[0] = reach->end[0] - ms->origin[0];
 		hordir[1] = reach->end[1] - ms->origin[1];
 		hordir[2] = 0;
-		Vec3Normalize(hordir);
+		vec3normalize(hordir);
 		/* elemantary action jump */
 		if(dist1 < 24) EA_Jump(ms->client);
 		else if(dist1 < 32) EA_DelayedJump(ms->client);
@@ -1883,13 +1883,13 @@ BotTravel_Jump(bot_movestate_t *ms, aas_reachability_t *reach)
 		hordir[0] = runstart[0] - ms->origin[0];
 		hordir[1] = runstart[1] - ms->origin[1];
 		hordir[2] = 0;
-		Vec3Normalize(hordir);
+		vec3normalize(hordir);
 		/*  */
 		if(dist2 > 80) dist2 = 80;
 		speed = 400 - (400 - 5 * dist2);
 		EA_Move(ms->client, hordir, speed);
 	}
-	Vec3Copy(hordir, result.movedir);
+	vec3copy(hordir, result.movedir);
 	/*  */
 	return result;
 }	/* end of the function BotTravel_Jump* / */
@@ -1902,7 +1902,7 @@ BotTravel_Jump(bot_movestate_t *ms, aas_reachability_t *reach)
 bot_moveresult_t
 BotFinishTravel_Jump(bot_movestate_t *ms, aas_reachability_t *reach)
 {
-	vec3_t	hordir, hordir2;
+	Vec3	hordir, hordir2;
 	float	speed, dist;
 	bot_moveresult_t_cleared(result);
 
@@ -1912,19 +1912,19 @@ BotFinishTravel_Jump(bot_movestate_t *ms, aas_reachability_t *reach)
 	hordir[0] = reach->end[0] - ms->origin[0];
 	hordir[1] = reach->end[1] - ms->origin[1];
 	hordir[2] = 0;
-	dist = Vec3Normalize(hordir);
+	dist = vec3normalize(hordir);
 	/*  */
 	hordir2[0] = reach->end[0] - reach->start[0];
 	hordir2[1] = reach->end[1] - reach->start[1];
 	hordir2[2] = 0;
-	Vec3Normalize(hordir2);
+	vec3normalize(hordir2);
 	/*  */
-	if(Vec3Dot(hordir, hordir2) < -0.5 && dist < 24) return result;
+	if(vec3dot(hordir, hordir2) < -0.5 && dist < 24) return result;
 	/* always use max speed when traveling through the air */
 	speed = 800;
 	/*  */
 	EA_Move(ms->client, hordir, speed);
-	Vec3Copy(hordir, result.movedir);
+	vec3copy(hordir, result.movedir);
 	/*  */
 	return result;
 }	/* end of the function BotFinishTravel_Jump */
@@ -1938,9 +1938,9 @@ bot_moveresult_t
 BotTravel_Ladder(bot_movestate_t *ms, aas_reachability_t *reach)
 {
 	/* float dist, speed; */
-	vec3_t	dir, viewdir;	/* , hordir; */
-	vec3_t	origin = {0, 0, 0};
-/*	vec3_t up = {0, 0, 1}; */
+	Vec3	dir, viewdir;	/* , hordir; */
+	Vec3	origin = {0, 0, 0};
+/*	Vec3 up = {0, 0, 1}; */
 	bot_moveresult_t_cleared(result);
 
 	/*  */
@@ -1949,8 +1949,8 @@ BotTravel_Ladder(bot_movestate_t *ms, aas_reachability_t *reach)
 	 * || !(ms->moveflags & MFL_ONGROUND)) */
 	{
 		/* botimport.Print(PRT_MESSAGE, "against ladder or not on ground\n"); */
-		Vec3Sub(reach->end, ms->origin, dir);
-		Vec3Normalize(dir);
+		vec3sub(reach->end, ms->origin, dir);
+		vec3normalize(dir);
 		/* set the ideal view angles, facing the ladder up or down */
 		viewdir[0] = dir[0];
 		viewdir[1] = dir[1];
@@ -1965,11 +1965,11 @@ BotTravel_Ladder(bot_movestate_t *ms, aas_reachability_t *reach)
 /*	else
  *      {
  *              //botimport.Print(PRT_MESSAGE, "moving towards ladder\n");
- *              Vec3Sub(reach->end, ms->origin, dir);
+ *              vec3sub(reach->end, ms->origin, dir);
  *              //make sure the horizontal movement is large anough
- *              Vec3Copy(dir, hordir);
+ *              vec3copy(dir, hordir);
  *              hordir[2] = 0;
- *              dist = Vec3Normalize(hordir);
+ *              dist = vec3normalize(hordir);
  *              //
  *              dir[0] = hordir[0];
  *              dir[1] = hordir[1];
@@ -1980,7 +1980,7 @@ BotTravel_Ladder(bot_movestate_t *ms, aas_reachability_t *reach)
  *              EA_Move(ms->client, dir, speed);
  *      } */
 	/* save the movement direction */
-	Vec3Copy(dir, result.movedir);
+	vec3copy(dir, result.movedir);
 	/*  */
 	return result;
 }	/* end of the function BotTravel_Ladder */
@@ -1993,7 +1993,7 @@ BotTravel_Ladder(bot_movestate_t *ms, aas_reachability_t *reach)
 bot_moveresult_t
 BotTravel_Teleport(bot_movestate_t *ms, aas_reachability_t *reach)
 {
-	vec3_t	hordir;
+	Vec3	hordir;
 	float	dist;
 	bot_moveresult_t_cleared(result);
 
@@ -2001,9 +2001,9 @@ BotTravel_Teleport(bot_movestate_t *ms, aas_reachability_t *reach)
 	if(ms->moveflags & MFL_TELEPORTED) return result;
 
 	/* walk straight to center of the teleporter */
-	Vec3Sub(reach->start, ms->origin, hordir);
+	vec3sub(reach->start, ms->origin, hordir);
 	if(!(ms->moveflags & MFL_SWIMMING)) hordir[2] = 0;
-	dist = Vec3Normalize(hordir);
+	dist = vec3normalize(hordir);
 	/*  */
 	BotCheckBlocked(ms, hordir, qtrue, &result);
 
@@ -2012,7 +2012,7 @@ BotTravel_Teleport(bot_movestate_t *ms, aas_reachability_t *reach)
 
 	if(ms->moveflags & MFL_SWIMMING) result.flags |= MOVERESULT_SWIMVIEW;
 
-	Vec3Copy(hordir, result.movedir);
+	vec3copy(hordir, result.movedir);
 	return result;
 }	/* end of the function BotTravel_Teleport */
 /* ===========================================================================
@@ -2024,7 +2024,7 @@ BotTravel_Teleport(bot_movestate_t *ms, aas_reachability_t *reach)
 bot_moveresult_t
 BotTravel_Elevator(bot_movestate_t *ms, aas_reachability_t *reach)
 {
-	vec3_t	dir, dir1, dir2, hordir, bottomcenter;
+	Vec3	dir, dir1, dir2, hordir, bottomcenter;
 	float	dist, dist1, dist2, speed;
 	bot_moveresult_t_cleared(result);
 
@@ -2039,19 +2039,19 @@ BotTravel_Elevator(bot_movestate_t *ms, aas_reachability_t *reach)
 			botimport.Print(PRT_MESSAGE, "bot moving to end\n");
 #endif	/* DEBUG_ELEVATOR
 	 * move to the end point */
-			Vec3Sub(reach->end, ms->origin, hordir);
+			vec3sub(reach->end, ms->origin, hordir);
 			hordir[2] = 0;
-			Vec3Normalize(hordir);
+			vec3normalize(hordir);
 			if(!BotCheckBarrierJump(ms, hordir, 100))
 				EA_Move(ms->client, hordir, 400);
-			Vec3Copy(hordir, result.movedir);
+			vec3copy(hordir, result.movedir);
 		}
 		/* if not really close to the center of the elevator */
 		else{
 			MoverBottomCenter(reach, bottomcenter);
-			Vec3Sub(bottomcenter, ms->origin, hordir);
+			vec3sub(bottomcenter, ms->origin, hordir);
 			hordir[2] = 0;
-			dist = Vec3Normalize(hordir);
+			dist = vec3normalize(hordir);
 			/*  */
 			if(dist > 10){
 #ifdef DEBUG_ELEVATOR
@@ -2063,7 +2063,7 @@ BotTravel_Elevator(bot_movestate_t *ms, aas_reachability_t *reach)
 				speed = 400 - (400 - 4 * dist);
 				/*  */
 				EA_Move(ms->client, hordir, speed);
-				Vec3Copy(hordir, result.movedir);
+				vec3copy(hordir, result.movedir);
 			}
 		}
 	}else{
@@ -2071,8 +2071,8 @@ BotTravel_Elevator(bot_movestate_t *ms, aas_reachability_t *reach)
 		botimport.Print(PRT_MESSAGE, "bot not on elevator\n");
 #endif	/* DEBUG_ELEVATOR
 	 * if very near the reachability end */
-		Vec3Sub(reach->end, ms->origin, dir);
-		dist = Vec3Len(dir);
+		vec3sub(reach->end, ms->origin, dir);
+		dist = vec3len(dir);
 		if(dist < 64){
 			if(dist > 60) dist = 60;
 			speed = 360 - (360 - 6 * dist);
@@ -2080,7 +2080,7 @@ BotTravel_Elevator(bot_movestate_t *ms, aas_reachability_t *reach)
 			if((ms->moveflags & MFL_SWIMMING) ||
 			   !BotCheckBarrierJump(ms, dir, 50))
 				if(speed > 5) EA_Move(ms->client, dir, speed);
-			Vec3Copy(dir, result.movedir);
+			vec3copy(dir, result.movedir);
 			/*  */
 			if(ms->moveflags & MFL_SWIMMING) result.flags |=
 					MOVERESULT_SWIMVIEW;
@@ -2089,16 +2089,16 @@ BotTravel_Elevator(bot_movestate_t *ms, aas_reachability_t *reach)
 			return result;
 		}
 		/* get direction and distance to reachability start */
-		Vec3Sub(reach->start, ms->origin, dir1);
+		vec3sub(reach->start, ms->origin, dir1);
 		if(!(ms->moveflags & MFL_SWIMMING)) dir1[2] = 0;
-		dist1 = Vec3Normalize(dir1);
+		dist1 = vec3normalize(dir1);
 		/* if the elevator isn't down */
 		if(!MoverDown(reach)){
 #ifdef DEBUG_ELEVATOR
 			botimport.Print(PRT_MESSAGE, "elevator not down\n");
 #endif	/* DEBUG_ELEVATOR */
 			dist = dist1;
-			Vec3Copy(dir1, dir);
+			vec3copy(dir1, dir);
 			/*  */
 			BotCheckBlocked(ms, dir, qfalse, &result);
 			/*  */
@@ -2108,7 +2108,7 @@ BotTravel_Elevator(bot_movestate_t *ms, aas_reachability_t *reach)
 			if(!(ms->moveflags & MFL_SWIMMING) &&
 			   !BotCheckBarrierJump(ms, dir, 50))
 				if(speed > 5) EA_Move(ms->client, dir, speed);
-			Vec3Copy(dir, result.movedir);
+			vec3copy(dir, result.movedir);
 			/*  */
 			if(ms->moveflags & MFL_SWIMMING) result.flags |=
 					MOVERESULT_SWIMVIEW;
@@ -2119,24 +2119,24 @@ BotTravel_Elevator(bot_movestate_t *ms, aas_reachability_t *reach)
 		}
 		/* get direction and distance to elevator bottom center */
 		MoverBottomCenter(reach, bottomcenter);
-		Vec3Sub(bottomcenter, ms->origin, dir2);
+		vec3sub(bottomcenter, ms->origin, dir2);
 		if(!(ms->moveflags & MFL_SWIMMING)) dir2[2] = 0;
-		dist2 = Vec3Normalize(dir2);
+		dist2 = vec3normalize(dir2);
 		/* if very close to the reachability start or
 		 * closer to the elevator center or
 		 * between reachability start and elevator center */
-		if(dist1 < 20 || dist2 < dist1 || Vec3Dot(dir1, dir2) < 0){
+		if(dist1 < 20 || dist2 < dist1 || vec3dot(dir1, dir2) < 0){
 #ifdef DEBUG_ELEVATOR
 			botimport.Print(PRT_MESSAGE, "bot moving to center\n");
 #endif	/* DEBUG_ELEVATOR */
 			dist = dist2;
-			Vec3Copy(dir2, dir);
+			vec3copy(dir2, dir);
 		}else{	/* closer to the reachability start */
 #ifdef DEBUG_ELEVATOR
 			botimport.Print(PRT_MESSAGE, "bot moving to start\n");
 #endif	/* DEBUG_ELEVATOR */
 			dist = dist1;
-			Vec3Copy(dir1, dir);
+			vec3copy(dir1, dir);
 		}
 		/*  */
 		BotCheckBlocked(ms, dir, qfalse, &result);
@@ -2147,7 +2147,7 @@ BotTravel_Elevator(bot_movestate_t *ms, aas_reachability_t *reach)
 		if(!(ms->moveflags & MFL_SWIMMING) &&
 		   !BotCheckBarrierJump(ms, dir, 50))
 			EA_Move(ms->client, dir, speed);
-		Vec3Copy(dir, result.movedir);
+		vec3copy(dir, result.movedir);
 		/*  */
 		if(ms->moveflags & MFL_SWIMMING) result.flags |=
 				MOVERESULT_SWIMVIEW;
@@ -2163,20 +2163,20 @@ BotTravel_Elevator(bot_movestate_t *ms, aas_reachability_t *reach)
 bot_moveresult_t
 BotFinishTravel_Elevator(bot_movestate_t *ms, aas_reachability_t *reach)
 {
-	vec3_t bottomcenter, bottomdir, topdir;
+	Vec3 bottomcenter, bottomdir, topdir;
 	bot_moveresult_t_cleared(result);
 
 	/*  */
 	MoverBottomCenter(reach, bottomcenter);
-	Vec3Sub(bottomcenter, ms->origin, bottomdir);
+	vec3sub(bottomcenter, ms->origin, bottomdir);
 	/*  */
-	Vec3Sub(reach->end, ms->origin, topdir);
+	vec3sub(reach->end, ms->origin, topdir);
 	/*  */
 	if(fabs(bottomdir[2]) < fabs(topdir[2])){
-		Vec3Normalize(bottomdir);
+		vec3normalize(bottomdir);
 		EA_Move(ms->client, bottomdir, 300);
 	}else{
-		Vec3Normalize(topdir);
+		vec3normalize(topdir);
 		EA_Move(ms->client, topdir, 300);
 	}
 	return result;
@@ -2188,11 +2188,11 @@ BotFinishTravel_Elevator(bot_movestate_t *ms, aas_reachability_t *reach)
  * Changes Globals:		-
  * =========================================================================== */
 void
-BotFuncBobStartEnd(aas_reachability_t *reach, vec3_t start, vec3_t end,
-		   vec3_t origin)
+BotFuncBobStartEnd(aas_reachability_t *reach, Vec3 start, Vec3 end,
+		   Vec3 origin)
 {
 	int	spawnflags, modelnum;
-	vec3_t mins, maxs, mid, angles = {0, 0, 0};
+	Vec3 mins, maxs, mid, angles = {0, 0, 0};
 	int	num0, num1;
 
 	modelnum = reach->facenum & 0x0000FFFF;
@@ -2200,15 +2200,15 @@ BotFuncBobStartEnd(aas_reachability_t *reach, vec3_t start, vec3_t end,
 		botimport.Print(PRT_MESSAGE,
 			"BotFuncBobStartEnd: no entity with model %d\n",
 			modelnum);
-		VectorSet(start, 0, 0, 0);
-		VectorSet(end, 0, 0, 0);
+		vec3set(start, 0, 0, 0);
+		vec3set(end, 0, 0, 0);
 		return;
 	}
 	AAS_BSPModelMinsMaxsOrigin(modelnum, angles, mins, maxs, NULL);
-	Vec3Add(mins, maxs, mid);
-	VectorScale(mid, 0.5, mid);
-	Vec3Copy(mid, start);
-	Vec3Copy(mid, end);
+	vec3add(mins, maxs, mid);
+	vec3scale(mid, 0.5, mid);
+	vec3copy(mid, start);
+	vec3copy(mid, end);
 	spawnflags = reach->facenum >> 16;
 	num0 = reach->edgenum >> 16;
 	if(num0 > 0x00007FFF) num0 |= 0xFFFF0000;
@@ -2247,7 +2247,7 @@ BotFuncBobStartEnd(aas_reachability_t *reach, vec3_t start, vec3_t end,
 bot_moveresult_t
 BotTravel_FuncBobbing(bot_movestate_t *ms, aas_reachability_t *reach)
 {
-	vec3_t	dir, dir1, dir2, hordir, bottomcenter, bob_start, bob_end,
+	Vec3	dir, dir1, dir2, hordir, bottomcenter, bob_start, bob_end,
 		bob_origin;
 	float	dist, dist1, dist2, speed;
 	bot_moveresult_t_cleared(result);
@@ -2260,26 +2260,26 @@ BotTravel_FuncBobbing(bot_movestate_t *ms, aas_reachability_t *reach)
 		botimport.Print(PRT_MESSAGE, "bot on func_bobbing\n");
 #endif
 		/* if near end point of reachability */
-		Vec3Sub(bob_origin, bob_end, dir);
-		if(Vec3Len(dir) < 24){
+		vec3sub(bob_origin, bob_end, dir);
+		if(vec3len(dir) < 24){
 #ifdef DEBUG_FUNCBOB
 			botimport.Print(PRT_MESSAGE,
 				"bot moving to reachability end\n");
 #endif
 			/* move to the end point */
-			Vec3Sub(reach->end, ms->origin, hordir);
+			vec3sub(reach->end, ms->origin, hordir);
 			hordir[2] = 0;
-			Vec3Normalize(hordir);
+			vec3normalize(hordir);
 			if(!BotCheckBarrierJump(ms, hordir, 100))
 				EA_Move(ms->client, hordir, 400);
-			Vec3Copy(hordir, result.movedir);
+			vec3copy(hordir, result.movedir);
 		}
 		/* if not really close to the center of the elevator */
 		else{
 			MoverBottomCenter(reach, bottomcenter);
-			Vec3Sub(bottomcenter, ms->origin, hordir);
+			vec3sub(bottomcenter, ms->origin, hordir);
 			hordir[2] = 0;
-			dist = Vec3Normalize(hordir);
+			dist = vec3normalize(hordir);
 			/*  */
 			if(dist > 10){
 #ifdef DEBUG_FUNCBOB
@@ -2292,7 +2292,7 @@ BotTravel_FuncBobbing(bot_movestate_t *ms, aas_reachability_t *reach)
 				speed = 400 - (400 - 4 * dist);
 				/*  */
 				EA_Move(ms->client, hordir, speed);
-				Vec3Copy(hordir, result.movedir);
+				vec3copy(hordir, result.movedir);
 			}
 		}
 	}else{
@@ -2300,8 +2300,8 @@ BotTravel_FuncBobbing(bot_movestate_t *ms, aas_reachability_t *reach)
 		botimport.Print(PRT_MESSAGE, "bot not ontop of func_bobbing\n");
 #endif
 		/* if very near the reachability end */
-		Vec3Sub(reach->end, ms->origin, dir);
-		dist = Vec3Len(dir);
+		vec3sub(reach->end, ms->origin, dir);
+		dist = vec3len(dir);
 		if(dist < 64){
 #ifdef DEBUG_FUNCBOB
 			botimport.Print(PRT_MESSAGE, "bot moving to end\n");
@@ -2312,7 +2312,7 @@ BotTravel_FuncBobbing(bot_movestate_t *ms, aas_reachability_t *reach)
 			if((ms->moveflags & MFL_SWIMMING) ||
 			   !BotCheckBarrierJump(ms, dir, 50))
 				if(speed > 5) EA_Move(ms->client, dir, speed);
-			Vec3Copy(dir, result.movedir);
+			vec3copy(dir, result.movedir);
 			/*  */
 			if(ms->moveflags & MFL_SWIMMING) result.flags |=
 					MOVERESULT_SWIMVIEW;
@@ -2321,18 +2321,18 @@ BotTravel_FuncBobbing(bot_movestate_t *ms, aas_reachability_t *reach)
 			return result;
 		}
 		/* get direction and distance to reachability start */
-		Vec3Sub(reach->start, ms->origin, dir1);
+		vec3sub(reach->start, ms->origin, dir1);
 		if(!(ms->moveflags & MFL_SWIMMING)) dir1[2] = 0;
-		dist1 = Vec3Normalize(dir1);
+		dist1 = vec3normalize(dir1);
 		/* if func_bobbing is Not its start position */
-		Vec3Sub(bob_origin, bob_start, dir);
-		if(Vec3Len(dir) > 16){
+		vec3sub(bob_origin, bob_start, dir);
+		if(vec3len(dir) > 16){
 #ifdef DEBUG_FUNCBOB
 			botimport.Print(PRT_MESSAGE,
 				"func_bobbing not at start\n");
 #endif
 			dist = dist1;
-			Vec3Copy(dir1, dir);
+			vec3copy(dir1, dir);
 			/*  */
 			BotCheckBlocked(ms, dir, qfalse, &result);
 			/*  */
@@ -2342,7 +2342,7 @@ BotTravel_FuncBobbing(bot_movestate_t *ms, aas_reachability_t *reach)
 			if(!(ms->moveflags & MFL_SWIMMING) &&
 			   !BotCheckBarrierJump(ms, dir, 50))
 				if(speed > 5) EA_Move(ms->client, dir, speed);
-			Vec3Copy(dir, result.movedir);
+			vec3copy(dir, result.movedir);
 			/*  */
 			if(ms->moveflags & MFL_SWIMMING) result.flags |=
 					MOVERESULT_SWIMVIEW;
@@ -2353,26 +2353,26 @@ BotTravel_FuncBobbing(bot_movestate_t *ms, aas_reachability_t *reach)
 		}
 		/* get direction and distance to func_bob bottom center */
 		MoverBottomCenter(reach, bottomcenter);
-		Vec3Sub(bottomcenter, ms->origin, dir2);
+		vec3sub(bottomcenter, ms->origin, dir2);
 		if(!(ms->moveflags & MFL_SWIMMING)) dir2[2] = 0;
-		dist2 = Vec3Normalize(dir2);
+		dist2 = vec3normalize(dir2);
 		/* if very close to the reachability start or
 		 * closer to the elevator center or
 		 * between reachability start and func_bobbing center */
-		if(dist1 < 20 || dist2 < dist1 || Vec3Dot(dir1, dir2) < 0){
+		if(dist1 < 20 || dist2 < dist1 || vec3dot(dir1, dir2) < 0){
 #ifdef DEBUG_FUNCBOB
 			botimport.Print(PRT_MESSAGE,
 				"bot moving to func_bobbing center\n");
 #endif
 			dist = dist2;
-			Vec3Copy(dir2, dir);
+			vec3copy(dir2, dir);
 		}else{	/* closer to the reachability start */
 #ifdef DEBUG_FUNCBOB
 			botimport.Print(PRT_MESSAGE,
 				"bot moving to reachability start\n");
 #endif
 			dist = dist1;
-			Vec3Copy(dir1, dir);
+			vec3copy(dir1, dir);
 		}
 		/*  */
 		BotCheckBlocked(ms, dir, qfalse, &result);
@@ -2383,7 +2383,7 @@ BotTravel_FuncBobbing(bot_movestate_t *ms, aas_reachability_t *reach)
 		if(!(ms->moveflags & MFL_SWIMMING) &&
 		   !BotCheckBarrierJump(ms, dir, 50))
 			EA_Move(ms->client, dir, speed);
-		Vec3Copy(dir, result.movedir);
+		vec3copy(dir, result.movedir);
 		/*  */
 		if(ms->moveflags & MFL_SWIMMING) result.flags |=
 				MOVERESULT_SWIMVIEW;
@@ -2399,34 +2399,34 @@ BotTravel_FuncBobbing(bot_movestate_t *ms, aas_reachability_t *reach)
 bot_moveresult_t
 BotFinishTravel_FuncBobbing(bot_movestate_t *ms, aas_reachability_t *reach)
 {
-	vec3_t	bob_origin, bob_start, bob_end, dir, hordir, bottomcenter;
+	Vec3	bob_origin, bob_start, bob_end, dir, hordir, bottomcenter;
 	bot_moveresult_t_cleared(result);
 	float	dist, speed;
 
 	/*  */
 	BotFuncBobStartEnd(reach, bob_start, bob_end, bob_origin);
 	/*  */
-	Vec3Sub(bob_origin, bob_end, dir);
-	dist = Vec3Len(dir);
+	vec3sub(bob_origin, bob_end, dir);
+	dist = vec3len(dir);
 	/* if the func_bobbing is near the end */
 	if(dist < 16){
-		Vec3Sub(reach->end, ms->origin, hordir);
+		vec3sub(reach->end, ms->origin, hordir);
 		if(!(ms->moveflags & MFL_SWIMMING)) hordir[2] = 0;
-		dist = Vec3Normalize(hordir);
+		dist = vec3normalize(hordir);
 		/*  */
 		if(dist > 60) dist = 60;
 		speed = 360 - (360 - 6 * dist);
 		/*  */
 		if(speed > 5) EA_Move(ms->client, dir, speed);
-		Vec3Copy(dir, result.movedir);
+		vec3copy(dir, result.movedir);
 		/*  */
 		if(ms->moveflags & MFL_SWIMMING) result.flags |=
 				MOVERESULT_SWIMVIEW;
 	}else{
 		MoverBottomCenter(reach, bottomcenter);
-		Vec3Sub(bottomcenter, ms->origin, hordir);
+		vec3sub(bottomcenter, ms->origin, hordir);
 		if(!(ms->moveflags & MFL_SWIMMING)) hordir[2] = 0;
-		dist = Vec3Normalize(hordir);
+		dist = vec3normalize(hordir);
 		/*  */
 		if(dist > 5){
 			/* move to the center of the plat */
@@ -2434,7 +2434,7 @@ BotFinishTravel_FuncBobbing(bot_movestate_t *ms, aas_reachability_t *reach)
 			speed = 400 - (400 - 4 * dist);
 			/*  */
 			EA_Move(ms->client, hordir, speed);
-			Vec3Copy(hordir, result.movedir);
+			vec3copy(hordir, result.movedir);
 		}
 	}
 	return result;
@@ -2505,7 +2505,7 @@ BotTravel_Grapple(bot_movestate_t *ms, aas_reachability_t *reach)
 {
 	bot_moveresult_t_cleared(result);
 	float	dist, speed;
-	vec3_t	dir, viewdir, org;
+	Vec3	dir, viewdir, org;
 	int	state, areanum;
 	bsp_trace_t trace;
 
@@ -2537,9 +2537,9 @@ BotTravel_Grapple(bot_movestate_t *ms, aas_reachability_t *reach)
 	 *  */
 		state = GrappleState(ms, reach);
 		/*  */
-		Vec3Sub(reach->end, ms->origin, dir);
+		vec3sub(reach->end, ms->origin, dir);
 		dir[2]	= 0;
-		dist	= Vec3Len(dir);
+		dist	= vec3len(dir);
 		/* if very close to the grapple end or the grappled is hooked and
 		 * the bot doesn't get any closer */
 		if(state && dist < 48){
@@ -2589,12 +2589,12 @@ BotTravel_Grapple(bot_movestate_t *ms, aas_reachability_t *reach)
 	 *  */
 		ms->grapplevisible_time = AAS_Time();
 		/*  */
-		Vec3Sub(reach->start, ms->origin, dir);
+		vec3sub(reach->start, ms->origin, dir);
 		if(!(ms->moveflags & MFL_SWIMMING)) dir[2] = 0;
-		Vec3Add(ms->origin, ms->viewoffset, org);
-		Vec3Sub(reach->end, org, viewdir);
+		vec3add(ms->origin, ms->viewoffset, org);
+		vec3sub(reach->end, org, viewdir);
 		/*  */
-		dist = Vec3Normalize(dir);
+		dist = vec3normalize(dir);
 		Vector2Angles(viewdir, result.ideal_viewangles);
 		result.flags |= MOVERESULT_MOVEMENTVIEW;
 		/*  */
@@ -2609,13 +2609,13 @@ BotTravel_Grapple(bot_movestate_t *ms, aas_reachability_t *reach)
 				"BotTravel_Grapple: activating grapple\n");
 #endif	/* DEBUG_GRAPPLE
 	 * check if the grapple missile path is clear */
-			Vec3Add(ms->origin, ms->viewoffset, org);
+			vec3add(ms->origin, ms->viewoffset, org);
 			trace =
 				AAS_Trace(org, NULL, NULL, reach->end,
 					ms->entitynum,
 					CONTENTS_SOLID);
-			Vec3Sub(reach->end, trace.endpos, dir);
-			if(Vec3Len(dir) > 16){
+			vec3sub(reach->end, trace.endpos, dir);
+			if(vec3len(dir) > 16){
 				result.failure = qtrue;
 				return result;
 			}
@@ -2633,7 +2633,7 @@ BotTravel_Grapple(bot_movestate_t *ms, aas_reachability_t *reach)
 			BotCheckBlocked(ms, dir, qtrue, &result);
 			/* elemantary action move in direction */
 			EA_Move(ms->client, dir, speed);
-			Vec3Copy(dir, result.movedir);
+			vec3copy(dir, result.movedir);
 		}
 		/* if in another area before actually grappling */
 		areanum = AAS_PointAreaNum(ms->origin);
@@ -2651,7 +2651,7 @@ BotTravel_Grapple(bot_movestate_t *ms, aas_reachability_t *reach)
 bot_moveresult_t
 BotTravel_RocketJump(bot_movestate_t *ms, aas_reachability_t *reach)
 {
-	vec3_t	hordir;
+	Vec3	hordir;
 	float	dist, speed;
 	bot_moveresult_t_cleared(result);
 
@@ -2661,7 +2661,7 @@ BotTravel_RocketJump(bot_movestate_t *ms, aas_reachability_t *reach)
 	hordir[1] = reach->start[1] - ms->origin[1];
 	hordir[2] = 0;
 	/*  */
-	dist = Vec3Normalize(hordir);
+	dist = vec3normalize(hordir);
 	/* look in the movement direction */
 	Vector2Angles(hordir, result.ideal_viewangles);
 	/* look straight down */
@@ -2674,7 +2674,7 @@ BotTravel_RocketJump(bot_movestate_t *ms, aas_reachability_t *reach)
 		hordir[0] = reach->end[0] - ms->origin[0];
 		hordir[1] = reach->end[1] - ms->origin[1];
 		hordir[2] = 0;
-		Vec3Normalize(hordir);
+		vec3normalize(hordir);
 		/* elemantary action jump */
 		EA_Jump(ms->client);
 		EA_Attack(ms->client);
@@ -2700,7 +2700,7 @@ BotTravel_RocketJump(bot_movestate_t *ms, aas_reachability_t *reach)
 	result.weapon	= (int)weapindex_rocketlauncher->value;
 	result.flags	|= MOVERESULT_MOVEMENTWEAPON;
 	/*  */
-	Vec3Copy(hordir, result.movedir);
+	vec3copy(hordir, result.movedir);
 	/*  */
 	return result;
 }	/* end of the function BotTravel_RocketJump */
@@ -2713,7 +2713,7 @@ BotTravel_RocketJump(bot_movestate_t *ms, aas_reachability_t *reach)
 bot_moveresult_t
 BotTravel_BFGJump(bot_movestate_t *ms, aas_reachability_t *reach)
 {
-	vec3_t	hordir;
+	Vec3	hordir;
 	float	dist, speed;
 	bot_moveresult_t_cleared(result);
 
@@ -2723,7 +2723,7 @@ BotTravel_BFGJump(bot_movestate_t *ms, aas_reachability_t *reach)
 	hordir[1] = reach->start[1] - ms->origin[1];
 	hordir[2] = 0;
 	/*  */
-	dist = Vec3Normalize(hordir);
+	dist = vec3normalize(hordir);
 	/*  */
 	if(dist < 5 &&
 	   fabs(AngleDiff(result.ideal_viewangles[0], ms->viewangles[0])) < 5 &&
@@ -2732,7 +2732,7 @@ BotTravel_BFGJump(bot_movestate_t *ms, aas_reachability_t *reach)
 		hordir[0] = reach->end[0] - ms->origin[0];
 		hordir[1] = reach->end[1] - ms->origin[1];
 		hordir[2] = 0;
-		Vec3Normalize(hordir);
+		vec3normalize(hordir);
 		/* elemantary action jump */
 		EA_Jump(ms->client);
 		EA_Attack(ms->client);
@@ -2758,7 +2758,7 @@ BotTravel_BFGJump(bot_movestate_t *ms, aas_reachability_t *reach)
 	result.weapon	= (int)weapindex_bfg10k->value;
 	result.flags	|= MOVERESULT_MOVEMENTWEAPON;
 	/*  */
-	Vec3Copy(hordir, result.movedir);
+	vec3copy(hordir, result.movedir);
 	/*  */
 	return result;
 }	/* end of the function BotTravel_BFGJump */
@@ -2771,7 +2771,7 @@ BotTravel_BFGJump(bot_movestate_t *ms, aas_reachability_t *reach)
 bot_moveresult_t
 BotFinishTravel_WeaponJump(bot_movestate_t *ms, aas_reachability_t *reach)
 {
-	vec3_t	hordir;
+	Vec3	hordir;
 	float	speed;
 	bot_moveresult_t_cleared(result);
 
@@ -2782,23 +2782,23 @@ BotFinishTravel_WeaponJump(bot_movestate_t *ms, aas_reachability_t *reach)
 	 * hordir[0] = reach->end[0] - ms->origin[0];
 	 * hordir[1] = reach->end[1] - ms->origin[1];
 	 * hordir[2] = 0;
-	 * Vec3Normalize(hordir);
+	 * vec3normalize(hordir);
 	 * //always use max speed when traveling through the air
 	 * EA_Move(ms->client, hordir, 800);
-	 * Vec3Copy(hordir, result.movedir);
+	 * vec3copy(hordir, result.movedir);
 	 */
 	/*  */
 	if(!BotAirControl(ms->origin, ms->velocity, reach->end, hordir,
 		   &speed)){
 		/* go straight to the reachability end */
-		Vec3Sub(reach->end, ms->origin, hordir);
+		vec3sub(reach->end, ms->origin, hordir);
 		hordir[2] = 0;
-		Vec3Normalize(hordir);
+		vec3normalize(hordir);
 		speed = 400;
 	}
 	/*  */
 	EA_Move(ms->client, hordir, speed);
-	Vec3Copy(hordir, result.movedir);
+	vec3copy(hordir, result.movedir);
 	/*  */
 	return result;
 }	/* end of the function BotFinishTravel_WeaponJump */
@@ -2811,7 +2811,7 @@ BotFinishTravel_WeaponJump(bot_movestate_t *ms, aas_reachability_t *reach)
 bot_moveresult_t
 BotTravel_JumpPad(bot_movestate_t *ms, aas_reachability_t *reach)
 {
-	vec3_t hordir;
+	Vec3 hordir;
 	bot_moveresult_t_cleared(result);
 
 	/* first walk straight to the reachability start */
@@ -2822,7 +2822,7 @@ BotTravel_JumpPad(bot_movestate_t *ms, aas_reachability_t *reach)
 	BotCheckBlocked(ms, hordir, qtrue, &result);
 	/* elemantary action move in direction */
 	EA_Move(ms->client, hordir, 400);
-	Vec3Copy(hordir, result.movedir);
+	vec3copy(hordir, result.movedir);
 	/*  */
 	return result;
 }	/* end of the function BotTravel_JumpPad */
@@ -2836,7 +2836,7 @@ bot_moveresult_t
 BotFinishTravel_JumpPad(bot_movestate_t *ms, aas_reachability_t *reach)
 {
 	float	speed;
-	vec3_t	hordir;
+	Vec3	hordir;
 	bot_moveresult_t_cleared(result);
 
 	if(!BotAirControl(ms->origin, ms->velocity, reach->end, hordir,
@@ -2844,13 +2844,13 @@ BotFinishTravel_JumpPad(bot_movestate_t *ms, aas_reachability_t *reach)
 		hordir[0] = reach->end[0] - ms->origin[0];
 		hordir[1] = reach->end[1] - ms->origin[1];
 		hordir[2] = 0;
-		Vec3Normalize(hordir);
+		vec3normalize(hordir);
 		speed = 400;
 	}
 	BotCheckBlocked(ms, hordir, qtrue, &result);
 	/* elemantary action move in direction */
 	EA_Move(ms->client, hordir, speed);
-	Vec3Copy(hordir, result.movedir);
+	vec3copy(hordir, result.movedir);
 	/*  */
 	return result;
 }	/* end of the function BotFinishTravel_JumpPad */
@@ -2899,7 +2899,7 @@ bot_moveresult_t
 BotMoveInGoalArea(bot_movestate_t *ms, bot_goal_t *goal)
 {
 	bot_moveresult_t_cleared(result);
-	vec3_t	dir;
+	Vec3	dir;
 	float	dist, speed;
 
 #ifdef DEBUG
@@ -2918,7 +2918,7 @@ BotMoveInGoalArea(bot_movestate_t *ms, bot_goal_t *goal)
 		result.traveltype = TRAVEL_WALK;
 	}	/* endif */
 		/*  */
-	dist = Vec3Normalize(dir);
+	dist = vec3normalize(dir);
 	if(dist > 100) dist = 100;
 	speed = 400 - (400 - 4 * dist);
 	if(speed < 10) speed = 0;
@@ -2926,7 +2926,7 @@ BotMoveInGoalArea(bot_movestate_t *ms, bot_goal_t *goal)
 	BotCheckBlocked(ms, dir, qtrue, &result);
 	/* elemantary action move in direction */
 	EA_Move(ms->client, dir, speed);
-	Vec3Copy(dir, result.movedir);
+	vec3copy(dir, result.movedir);
 	/*  */
 	if(ms->moveflags & MFL_SWIMMING){
 		Vector2Angles(dir, result.ideal_viewangles);
@@ -2938,7 +2938,7 @@ BotMoveInGoalArea(bot_movestate_t *ms, bot_goal_t *goal)
 	ms->lastreachnum = 0;
 	ms->lastareanum = 0;
 	ms->lastgoalareanum = goal->areanum;
-	Vec3Copy(ms->origin, ms->lastorigin);
+	vec3copy(ms->origin, ms->lastorigin);
 	/*  */
 	return result;
 }	/* end of the function BotMoveInGoalArea */
@@ -2955,7 +2955,7 @@ BotMoveToGoal(bot_moveresult_t *result, int movestate, bot_goal_t *goal,
 	int reachnum, lastreachnum, foundjumppad, ent, resultflags;
 	aas_reachability_t reach, lastreach;
 	bot_movestate_t *ms;
-	/* vec3_t mins, maxs, up = {0, 0, 1};
+	/* Vec3 mins, maxs, up = {0, 0, 1};
 	 * bsp_trace_t trace;
 	 * static int debugline; */
 
@@ -3327,11 +3327,11 @@ BotMoveToGoal(bot_moveresult_t *result, int movestate, bot_goal_t *goal,
 #endif	/* DEBUG */
 	}else{
 		int i, numareas, areas[16];
-		vec3_t end;
+		Vec3 end;
 
 		/* special handling of jump pads when the bot uses a jump pad without knowing it */
 		foundjumppad = qfalse;
-		Vec3MA(ms->origin, -2 * ms->thinktime, ms->velocity, end);
+		vec3ma(ms->origin, -2 * ms->thinktime, ms->velocity, end);
 		numareas = AAS_TraceAreas(ms->origin, end, areas, NULL, 16);
 		for(i = numareas-1; i >= 0; i--)
 			if(AAS_AreaJumpPad(areas[i])){
@@ -3449,7 +3449,7 @@ BotMoveToGoal(bot_moveresult_t *result, int movestate, bot_goal_t *goal,
 	/* FIXME: is it right to do this here? */
 	if(result->blocked) ms->reachability_time -= 10 * ms->thinktime;
 	/* copy the last origin */
-	Vec3Copy(ms->origin, ms->lastorigin);
+	vec3copy(ms->origin, ms->lastorigin);
 	/* return the movement result */
 	return;
 }	/* end of the function BotMoveToGoal */

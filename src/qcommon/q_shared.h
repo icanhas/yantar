@@ -306,13 +306,13 @@ enum {
 };
 
 /* mathlib */
-typedef float vec_t;
-typedef vec_t vec2_t[2];
-typedef vec_t vec3_t[3];
-typedef vec_t vec4_t[4];
-typedef vec_t vec5_t[5];
-typedef vec_t mat4x4[16];
-typedef vec4_t quat_t;
+typedef float Scalar;
+typedef Scalar Vec2[2];
+typedef Scalar Vec3[3];
+typedef Scalar Vec4[4];
+typedef Scalar Vec5[5];
+typedef Scalar Mat44[16];
+typedef Vec4 Quat;
 
 typedef int fixed4_t;
 typedef int fixed8_t;
@@ -323,7 +323,7 @@ typedef int fixed16_t;
 #endif
 
 #define NUMVERTEXNORMALS 162
-extern vec3_t bytedirs[NUMVERTEXNORMALS];
+extern Vec3 bytedirs[NUMVERTEXNORMALS];
 
 /*
  * all drawing is done to a 640*480 virtual screen size and will be
@@ -342,17 +342,17 @@ enum {
 	GIANTCHAR_HEIGHT = 48
 };
 
-extern vec4_t	colorBlack;
-extern vec4_t	colorRed;
-extern vec4_t	colorGreen;
-extern vec4_t	colorBlue;
-extern vec4_t	colorYellow;
-extern vec4_t	colorMagenta;
-extern vec4_t	colorCyan;
-extern vec4_t	colorWhite;
-extern vec4_t	colorLtGrey;
-extern vec4_t	colorMdGrey;
-extern vec4_t	colorDkGrey;
+extern Vec4	colorBlack;
+extern Vec4	colorRed;
+extern Vec4	colorGreen;
+extern Vec4	colorBlue;
+extern Vec4	colorYellow;
+extern Vec4	colorMagenta;
+extern Vec4	colorCyan;
+extern Vec4	colorWhite;
+extern Vec4	colorLtGrey;
+extern Vec4	colorMdGrey;
+extern Vec4	colorDkGrey;
 
 #define Q_COLOR_ESCAPE '^'
 #define Q_IsColorString(p) ((p) && *(p) == Q_COLOR_ESCAPE && *((p)+1) && \
@@ -377,7 +377,7 @@ extern vec4_t	colorDkGrey;
 #define S_COLOR_MAGENTA "^6"
 #define S_COLOR_WHITE	"^7"
 
-extern vec4_t g_color_table[8];
+extern Vec4 g_color_table[8];
 
 #define MAKERGB(v, r, g, b)	v[0]	=r; v[1]=g; v[2]=b
 #define MAKERGBA(v, r, g, b, a) v[0]	=r; v[1]=g; v[2]=b; v[3]=a
@@ -387,8 +387,8 @@ extern vec4_t g_color_table[8];
 
 struct cplane_s;
 
-extern vec3_t	vec3_origin;
-extern vec3_t	axisDefault[3];
+extern Vec3	vec3_origin;
+extern Vec3	axisDefault[3];
 
 #define nanmask (255 << 23)
 
@@ -399,7 +399,7 @@ int Q_isnan(float x);
 #if idx64
 extern long qftolsse(float f);
 extern int qvmftolsse(void);
-extern void qsnapvectorsse(vec3_t vec);
+extern void qsnapvectorsse(Vec3 vec);
 
 #define Q_ftol		qftolsse
 #define Q_SnapVector	qsnapvectorsse
@@ -411,12 +411,12 @@ extern long QDECL qftolx87(float f);
 extern long QDECL qftolsse(float f);
 extern int QDECL qvmftolx87(void);
 extern int QDECL qvmftolsse(void);
-extern void QDECL qsnapvectorx87(vec3_t vec);
-extern void QDECL qsnapvectorsse(vec3_t vec);
+extern void QDECL qsnapvectorx87(Vec3 vec);
+extern void QDECL qsnapvectorsse(Vec3 vec);
 
 extern long	(QDECL *Q_ftol)(float f);
 extern int	(QDECL *Q_VMftol)(void);
-extern void	(QDECL *Q_SnapVector)(vec3_t vec);
+extern void	(QDECL *Q_SnapVector)(Vec3 vec);
 
 #else
 /* Q_ftol must expand to a function name so the pluggable renderer can take
@@ -425,7 +425,7 @@ extern void	(QDECL *Q_SnapVector)(vec3_t vec);
   #define Q_SnapVector(vec) \
 	do \
 	{ \
-		vec3_t *temp = (vec); \
+		Vec3 *temp = (vec); \
 		\
 		(*temp)[0]	= round((*temp)[0]); \
 		(*temp)[1]	= round((*temp)[1]); \
@@ -442,7 +442,7 @@ extern void	(QDECL *Q_SnapVector)(vec3_t vec);
  * #define Q_SnapVector(vec) \
  *      do\
  *      {\
- *              vec3_t *temp = (vec);\
+ *              Vec3 *temp = (vec);\
  \
  \              Q_round((*temp)[0]);\
  \              Q_round((*temp)[1]);\
@@ -486,138 +486,138 @@ float Q_rsqrt(float f);	/* reciprocal square root */
 
 #define SQRTFAST(x) ((x) * Q_rsqrt(x))
 
-signed char ClampChar(int i);
-signed short ClampShort(int i);
+signed char clampchar(int i);
+signed short clampshort(int i);
 
 /* this isn't a real cheap function to call! */
-int DirToByte(vec3_t dir);
-void ByteToDir(int b, vec3_t dir);
+int DirToByte(Vec3 dir);
+void ByteToDir(int b, Vec3 dir);
 
 #if     0
 
-#define Vec3Dot(x,y)		((x)[0]*(y)[0]+(x)[1]*(y)[1]+(x)[2]*(y)[2])
-#define Vec3Sub(a,b,c)	((c)[0]=(a)[0]-(b)[0],(c)[1]=(a)[1]-(b)[1], \
+#define vec3dot(x,y)		((x)[0]*(y)[0]+(x)[1]*(y)[1]+(x)[2]*(y)[2])
+#define vec3sub(a,b,c)	((c)[0]=(a)[0]-(b)[0],(c)[1]=(a)[1]-(b)[1], \
 				 (c)[2]=(a)[2]-(b)[2])
-#define Vec3Add(a,b,c)	((c)[0]=(a)[0]+(b)[0],(c)[1]=(a)[1]+(b)[1], \
+#define vec3add(a,b,c)	((c)[0]=(a)[0]+(b)[0],(c)[1]=(a)[1]+(b)[1], \
 				 (c)[2]=(a)[2]+(b)[2])
-#define Vec3Copy(a,b)		((b)[0]=(a)[0],(b)[1]=(a)[1],(b)[2]=(a)[2])
-#define VectorScale(v, s, o)	((o)[0]=(v)[0]*(s),(o)[1]=(v)[1]*(s),(o)[2]= \
+#define vec3copy(a,b)		((b)[0]=(a)[0],(b)[1]=(a)[1],(b)[2]=(a)[2])
+#define vec3scale(v, s, o)	((o)[0]=(v)[0]*(s),(o)[1]=(v)[1]*(s),(o)[2]= \
 					 (v)[2]*(s))
-#define Vec3MA(v, s, b, o)	((o)[0]=(v)[0]+(b)[0]*(s),(o)[1]=(v)[1]+(b)[1]*	\
+#define vec3ma(v, s, b, o)	((o)[0]=(v)[0]+(b)[0]*(s),(o)[1]=(v)[1]+(b)[1]*	\
 								  (s),(o)[2]= \
 					 (v)[2]+(b)[2]*(s))
 
 #else
 
-#define Vec3Dot(x,y)		_Vec3Dot(x,y)
-#define Vec3Sub(a,b,c)	_Vec3Sub(a,b,c)
-#define Vec3Add(a,b,c)	_Vec3Add(a,b,c)
-#define Vec3Copy(a,b)		_Vec3Copy(a,b)
-#define VectorScale(v, s, o)	_VectorScale(v,s,o)
-#define Vec3MA(v, s, b, o)	_Vec3MA(v,s,b,o)
+#define vec3dot(x,y)		_vec3dot(x,y)
+#define vec3sub(a,b,c)	_vec3sub(a,b,c)
+#define vec3add(a,b,c)	_vec3add(a,b,c)
+#define vec3copy(a,b)		_vec3copy(a,b)
+#define vec3scale(v, s, o)	_vec3scale(v,s,o)
+#define vec3ma(v, s, b, o)	_vec3ma(v,s,b,o)
 
 #endif
 
 #ifdef Q3_VM
-#ifdef Vec3Copy
-#undef Vec3Copy
+#ifdef vec3copy
+#undef vec3copy
 
 /* this is a little hack to get more efficient copies in our interpreter */
 typedef struct {
 	float v[3];
 } vec3struct_t;
 
-#define Vec3Copy(a,b) (*(vec3struct_t*)b=*(vec3struct_t*)a)
+#define vec3copy(a,b) (*(vec3struct_t*)b=*(vec3struct_t*)a)
 #endif
 #endif
 
-#define VectorClear(a)		((a)[0]=(a)[1]=(a)[2]=0)
-#define VectorNegate(a,b)	((b)[0]=-(a)[0],(b)[1]=-(a)[1],(b)[2]=-(a)[2])
-#define VectorSet(v, x, y, z)	((v)[0]=(x), (v)[1]=(y), (v)[2]=(z))
-#define Vector4Copy(a,b)	((b)[0]=(a)[0],(b)[1]=(a)[1],(b)[2]=(a)[2], \
+#define vec3clear(a)		((a)[0]=(a)[1]=(a)[2]=0)
+#define vec3negate(a,b)	((b)[0]=-(a)[0],(b)[1]=-(a)[1],(b)[2]=-(a)[2])
+#define vec3set(v, x, y, z)	((v)[0]=(x), (v)[1]=(y), (v)[2]=(z))
+#define vec4copy(a,b)	((b)[0]=(a)[0],(b)[1]=(a)[1],(b)[2]=(a)[2], \
 				 (b)[3]=(a)[3])
 
-#define Byte4Copy(a,b)		((b)[0]=(a)[0],(b)[1]=(a)[1],(b)[2]=(a)[2], \
+#define byte4copy(a,b)		((b)[0]=(a)[0],(b)[1]=(a)[1],(b)[2]=(a)[2], \
 				 (b)[3]=(a)[3])
 
 #define SnapVector(v)		{v[0]=((int)(v[0])); v[1]=((int)(v[1])); v[2]= \
 					 ((int)(v[2])); }
 /* just in case you don't want to use the macros */
-vec_t	_Vec3Dot(const vec3_t v1, const vec3_t v2);
-void	_Vec3Sub(const vec3_t veca, const vec3_t vecb, vec3_t out);
-void	_Vec3Add(const vec3_t veca, const vec3_t vecb, vec3_t out);
-void	_Vec3Copy(const vec3_t in, vec3_t out);
-void	_VectorScale(const vec3_t in, float scale, vec3_t out);
-void	_Vec3MA(const vec3_t veca, float scale, const vec3_t vecb, vec3_t vecc);
-void	Vec3Lerp(const vec3_t a, const vec3_t b, float lerp, vec3_t c);
+Scalar	_vec3dot(const Vec3 v1, const Vec3 v2);
+void	_vec3sub(const Vec3 veca, const Vec3 vecb, Vec3 out);
+void	_vec3add(const Vec3 veca, const Vec3 vecb, Vec3 out);
+void	_vec3copy(const Vec3 in, Vec3 out);
+void	_vec3scale(const Vec3 in, float scale, Vec3 out);
+void	_vec3ma(const Vec3 veca, float scale, const Vec3 vecb, Vec3 vecc);
+void	vec3lerp(const Vec3 a, const Vec3 b, float lerp, Vec3 c);
 
-void	Mat4x4ToZero(mat4x4 out);
-void	Mat4x4ToIdentity(mat4x4 out);
-void	Mat4x4Copy(const mat4x4 in, mat4x4 out);
-void	Mat4x4Mul(const mat4x4 in1, const mat4x4 in2, mat4x4 out);
-void	Mat4x4Transform(const mat4x4 in1, const vec4_t in2, vec4_t out);
-qbool	Mat4x4Compare(const mat4x4 a, const mat4x4 b);
-void	Mat4x4Translation(vec3_t vec, mat4x4 out);
-void	Mat4x4Ortho(float left, float right, float bottom, float top, float znear, float zfar, mat4x4 out);
+void	mat44clear(Mat44 out);
+void	mat44ident(Mat44 out);
+void	mat44copy(const Mat44 in, Mat44 out);
+void	mat44mul(const Mat44 in1, const Mat44 in2, Mat44 out);
+void	mat44transform(const Mat44 in1, const Vec4 in2, Vec4 out);
+qbool	mat44cmp(const Mat44 a, const Mat44 b);
+void	mat44translation(Vec3 vec, Mat44 out);
+void	mat44ortho(float left, float right, float bottom, float top, float znear, float zfar, Mat44 out);
 
-void QuatMul(const quat_t, const quat_t, quat_t);
+void quatmul(const Quat, const Quat, Quat);
 
-unsigned ColorBytes3(float r, float g, float b);
-unsigned ColorBytes4(float r, float g, float b, float a);
+unsigned colourbytes3(float r, float g, float b);
+unsigned colourbytes4(float r, float g, float b, float a);
 
-float NormalizeColor(const vec3_t in, vec3_t out);
+float normalizecolour(const Vec3 in, Vec3 out);
 
-float RadiusFromBounds(const vec3_t mins, const vec3_t maxs);
-void ClearBounds(vec3_t mins, vec3_t maxs);
-void AddPointToBounds(const vec3_t v, vec3_t mins, vec3_t maxs);
+float RadiusFromBounds(const Vec3 mins, const Vec3 maxs);
+void ClearBounds(Vec3 mins, Vec3 maxs);
+void AddPointToBounds(const Vec3 v, Vec3 mins, Vec3 maxs);
 
 #if !defined(Q3_VM) || (defined(Q3_VM) && defined(__Q3_VM_MATH))
 static ID_INLINE int
-VectorCompare(const vec3_t v1, const vec3_t v2)
+vec3cmp(const Vec3 v1, const Vec3 v2)
 {
 	if(v1[0] != v2[0] || v1[1] != v2[1] || v1[2] != v2[2])
 		return 0;
 	return 1;
 }
 
-static ID_INLINE vec_t
-Vec3Len(const vec3_t v)
+static ID_INLINE Scalar
+vec3len(const Vec3 v)
 {
-	return (vec_t)sqrt (v[0]*v[0] + v[1]*v[1] + v[2]*v[2]);
+	return (Scalar)sqrt (v[0]*v[0] + v[1]*v[1] + v[2]*v[2]);
 }
 
-static ID_INLINE vec_t
-Vec3LenSquared(const vec3_t v)
+static ID_INLINE Scalar
+vec3lensquared(const Vec3 v)
 {
 	return (v[0]*v[0] + v[1]*v[1] + v[2]*v[2]);
 }
 
-static ID_INLINE vec_t
-Vec3Distance(const vec3_t p1, const vec3_t p2)
+static ID_INLINE Scalar
+vec3dist(const Vec3 p1, const Vec3 p2)
 {
-	vec3_t v;
+	Vec3 v;
 
-	Vec3Sub (p2, p1, v);
-	return Vec3Len(v);
+	vec3sub (p2, p1, v);
+	return vec3len(v);
 }
 
-static ID_INLINE vec_t
-Vec3DistanceSquared(const vec3_t p1, const vec3_t p2)
+static ID_INLINE Scalar
+vec3distsquared(const Vec3 p1, const Vec3 p2)
 {
-	vec3_t v;
+	Vec3 v;
 
-	Vec3Sub (p2, p1, v);
+	vec3sub (p2, p1, v);
 	return v[0]*v[0] + v[1]*v[1] + v[2]*v[2];
 }
 
 /* fast vector normalize routine that does not check to make sure
  * that length != 0, nor does it return length, uses rsqrt approximation */
 static ID_INLINE void
-Vec3NormalizeFast(vec3_t v)
+vec3normalizefast(Vec3 v)
 {
 	float ilength;
 
-	ilength = Q_rsqrt(Vec3Dot(v, v));
+	ilength = Q_rsqrt(vec3dot(v, v));
 
 	v[0]	*= ilength;
 	v[1]	*= ilength;
@@ -625,7 +625,7 @@ Vec3NormalizeFast(vec3_t v)
 }
 
 static ID_INLINE void
-Vec3Inverse(vec3_t v)
+vec3inv(Vec3 v)
 {
 	v[0]	= -v[0];
 	v[1]	= -v[1];
@@ -633,7 +633,7 @@ Vec3Inverse(vec3_t v)
 }
 
 static ID_INLINE void
-Vec3Cross(const vec3_t v1, const vec3_t v2, vec3_t cross)
+vec3cross(const Vec3 v1, const Vec3 v2, Vec3 cross)
 {
 	cross[0]	= v1[1]*v2[2] - v1[2]*v2[1];
 	cross[1]	= v1[2]*v2[0] - v1[0]*v2[2];
@@ -641,28 +641,21 @@ Vec3Cross(const vec3_t v1, const vec3_t v2, vec3_t cross)
 }
 
 #else
-int VectorCompare(const vec3_t v1, const vec3_t v2);
-
-vec_t Vec3Len(const vec3_t v);
-
-vec_t Vec3LenSquared(const vec3_t v);
-
-vec_t Vec3Distance(const vec3_t p1, const vec3_t p2);
-
-vec_t Vec3DistanceSquared(const vec3_t p1, const vec3_t p2);
-
-void Vec3NormalizeFast(vec3_t v);
-
-void Vec3Inverse(vec3_t v);
-
-void Vec3Cross(const vec3_t v1, const vec3_t v2, vec3_t cross);
+int vec3cmp(const Vec3 v1, const Vec3 v2);
+Scalar vec3len(const Vec3 v);
+Scalar vec3lensquared(const Vec3 v);
+Scalar vec3dist(const Vec3 p1, const Vec3 p2);
+Scalar vec3distsquared(const Vec3 p1, const Vec3 p2);
+void vec3normalizefast(Vec3 v);
+void vec3inv(Vec3 v);
+void vec3cross(const Vec3 v1, const Vec3 v2, Vec3 cross);
 
 #endif
 
-vec_t Vec3Normalize(vec3_t v);	/* returns vector length */
-vec_t Vec3Normalize2(const vec3_t v, vec3_t out);
-void Vec4Scale(const vec4_t in, vec_t scale, vec4_t out);
-void Vec3Rotate(vec3_t in, vec3_t matrix[3], vec3_t out);
+Scalar vec3normalize(Vec3 v);	/* returns vector length */
+Scalar vec3normalize2(const Vec3 v, Vec3 out);
+void vec4scale(const Vec4 in, Scalar scale, Vec4 out);
+void vec3rotate(Vec3 in, Vec3 matrix[3], Vec3 out);
 int Q_log2(int val);
 
 float Q_acos(float c);
@@ -674,50 +667,50 @@ float   Q_crandom(int *seed);
 #define random()	((rand () & 0x7fff) / ((float)0x7fff))
 #define crandom()	(2.0 * (random() - 0.5))
 
-void Vec3ToAngles(const vec3_t value1, vec3_t angles);
-void AnglesToQuat(const vec3_t, quat_t);
-void quat2euler(const quat_t, vec3_t);
-void AnglesToAxis(const vec3_t angles, vec3_t axis[3]);
-void QuatToAxis(quat_t, vec3_t axis[3]);
+void vec3toeuler(const Vec3 value1, Vec3 angles);
+void euler2quat(const Vec3, Quat);
+void quat2euler(const Quat, Vec3);
+void euler2axis(const Vec3 angles, Vec3 axis[3]);
+void quat2axis(Quat, Vec3 axis[3]);
 
-void AxisClear(vec3_t axis[3]);
-void AxisCopy(vec3_t in[3], vec3_t out[3]);
+void axisclear(Vec3 axis[3]);
+void axiscopy(Vec3 in[3], Vec3 out[3]);
 
-void QuatSet(quat_t, vec_t w, vec_t x, vec_t y, vec_t z);
+void quatset(Quat, Scalar w, Scalar x, Scalar y, Scalar z);
 
 void SetPlaneSignbits(struct cplane_s *out);
-int BoxOnPlaneSide(const vec3_t emins, const vec3_t emaxs, const struct cplane_s *plane);
+int BoxOnPlaneSide(const Vec3 emins, const Vec3 emaxs, const struct cplane_s *plane);
 
-qbool BoundsIntersect(const vec3_t mins, const vec3_t maxs,
-			 const vec3_t mins2, const vec3_t maxs2);
-qbool BoundsIntersectSphere(const vec3_t mins, const vec3_t maxs,
-			       const vec3_t origin, vec_t radius);
-qbool BoundsIntersectPoint(const vec3_t mins, const vec3_t maxs,
-			      const vec3_t origin);
+qbool BoundsIntersect(const Vec3 mins, const Vec3 maxs,
+			 const Vec3 mins2, const Vec3 maxs2);
+qbool BoundsIntersectSphere(const Vec3 mins, const Vec3 maxs,
+			       const Vec3 origin, Scalar radius);
+qbool BoundsIntersectPoint(const Vec3 mins, const Vec3 maxs,
+			      const Vec3 origin);
 
-float   AngleMod(float a);
-float   LerpAngle(float from, float to, float frac);
-float   AngleSubtract(float a1, float a2);
-void    AnglesSubtract(vec3_t v1, vec3_t v2, vec3_t v3);
+float   anglemod(float a);
+float   lerpangle(float from, float to, float frac);
+float   anglesub(float a1, float a2);
+void    anglessub(Vec3 v1, Vec3 v2, Vec3 v3);
 
 float AngleNormalize360(float angle);
 float AngleNormalize180(float angle);
 float AngleDelta(float angle1, float angle2);
 
-qbool PlaneFromPoints(vec4_t plane, const vec3_t a, const vec3_t b,
-			 const vec3_t c);
-void ProjectPointOnPlane(vec3_t dst, const vec3_t p, const vec3_t normal);
-void RotatePointAroundVector(vec3_t dst, const vec3_t dir, const vec3_t point,
+qbool PlaneFromPoints(Vec4 plane, const Vec3 a, const Vec3 b,
+			 const Vec3 c);
+void ProjectPointOnPlane(Vec3 dst, const Vec3 p, const Vec3 normal);
+void RotatePointAroundVector(Vec3 dst, const Vec3 dir, const Vec3 point,
 			     float degrees);
-void RotateAroundDirection(vec3_t axis[3], float yaw);
-void MakeNormalVectors(const vec3_t forward, vec3_t right, vec3_t up);
+void RotateAroundDirection(Vec3 axis[3], float yaw);
+void MakeNormalVectors(const Vec3 forward, Vec3 right, Vec3 up);
 /* perpendicular vector could be replaced by this */
 
-/* int	PlaneTypeForNormal (vec3_t normal); */
+/* int	PlaneTypeForNormal (Vec3 normal); */
 
 void MatrixMultiply(float in1[3][3], float in2[3][3], float out[3][3]);
-void AngleVectors(const vec3_t angles, vec3_t forward, vec3_t right, vec3_t up);
-void PerpendicularVector(vec3_t dst, const vec3_t src);
+void anglevec3s(const Vec3 angles, Vec3 forward, Vec3 right, Vec3 up);
+void PerpendicularVector(Vec3 dst, const Vec3 src);
 
 #ifndef MAX
 #define MAX(x,y) ((x)>(y) ? (x) : (y))
@@ -1024,7 +1017,7 @@ enum {
 /* plane_t structure
  * !!! if this is changed, it must be changed in asm code too !!! */
 typedef struct cplane_s {
-	vec3_t	normal;
+	Vec3	normal;
 	float	dist;
 	byte	type;		/* for fast side tests: 0,1,2 = axial, 3 = nonaxial */
 	byte	signbits;	/* signx + (signy<<1) + (signz<<2), used as lookup during collision */
@@ -1037,7 +1030,7 @@ typedef struct {
 	qbool		allsolid;	/* if true, plane is not valid */
 	qbool		startsolid;	/* if true, the initial point was in a solid area */
 	float		fraction;	/* time completed, 1.0 = didn't hit anything */
-	vec3_t		endpos;		/* final position */
+	Vec3		endpos;		/* final position */
 	cplane_t	plane;		/* surface normal at impact, transformed to world space */
 	int		surfaceFlags;	/* surface hit */
 	int		contents;	/* contents on other side of surface hit */
@@ -1054,8 +1047,8 @@ typedef struct {
 } markFragment_t;
 
 typedef struct {
-	vec3_t	origin;
-	vec3_t	axis[3];
+	Vec3	origin;
+	Vec3	axis[3];
 } orientation_t;
 
 /* keys/console */
@@ -1167,8 +1160,8 @@ typedef struct playerState_s {
 	int	pm_flags;	/* ducked, jump_held, etc */
 	int	pm_time;
 
-	vec3_t	origin;
-	vec3_t	velocity;
+	Vec3	origin;
+	Vec3	velocity;
 	int	weaponTime;
 	int	gravity;
 	int	speed;
@@ -1189,7 +1182,7 @@ typedef struct playerState_s {
 	 * when at rest, the value will remain unchanged
 	 * used to twist the legs during strafing */
 
-	vec3_t	grapplePoint;	/* location of grapple to pull towards if PMF_GRAPPLE_PULL */
+	Vec3	grapplePoint;	/* location of grapple to pull towards if PMF_GRAPPLE_PULL */
 	qbool	grapplelast;
 	float		oldgrapplelen;
 
@@ -1207,7 +1200,7 @@ typedef struct playerState_s {
 	int	weapon;		/* copied to entityState_t->weapon */
 	int	weaponstate;
 
-	vec3_t	viewangles;	/* for fixed views */
+	Vec3	viewangles;	/* for fixed views */
 	int	viewheight;
 
 	/* damage feedback */
@@ -1288,8 +1281,8 @@ typedef struct {
 	trType_t	trType;
 	int		trTime;
 	int		trDuration;	/* if non 0, trTime + trDuration = stop time */
-	vec3_t		trBase;
-	vec3_t		trDelta;	/* velocity, etc */
+	Vec3		trBase;
+	Vec3		trDelta;	/* velocity, etc */
 } trajectory_t;
 
 /* entityState_t is the information conveyed from the server
@@ -1309,11 +1302,11 @@ typedef struct entityState_s {
 	int		time;
 	int		time2;
 
-	vec3_t		origin;
-	vec3_t		origin2;
+	Vec3		origin;
+	Vec3		origin2;
 
-	vec3_t		angles;
-	vec3_t		angles2;
+	Vec3		angles;
+	Vec3		angles2;
 
 	int		otherEntityNum;	/* shotgun sources, etc */
 	int		otherEntityNum2;

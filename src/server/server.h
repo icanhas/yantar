@@ -386,7 +386,7 @@ sharedEntity_t*SV_GEntityForSvEntity(svEntity_t *svEnt);
 void            SV_InitGameProgs(void);
 void            SV_ShutdownGameProgs(void);
 void            SV_RestartGameProgs(void);
-qbool        SV_inPVS(const vec3_t p1, const vec3_t p2);
+qbool        SV_inPVS(const Vec3 p1, const Vec3 p2);
 
 /*
  * sv_bot.c
@@ -401,7 +401,7 @@ int                     SV_BotLibShutdown(void);
 int                     SV_BotGetSnapshotEntity(int client, int ent);
 int                     SV_BotGetConsoleMessage(int client, char *buf, int size);
 
-int BotImport_DebugPolygonCreate(int color, int numPoints, vec3_t *points);
+int BotImport_DebugPolygonCreate(int color, int numPoints, Vec3 *points);
 void BotImport_DebugPolygonDelete(int id);
 
 void SV_BotInitBotLib(void);
@@ -432,7 +432,7 @@ clipHandle_t SV_ClipHandleForEntity(const sharedEntity_t *ent);
 void SV_SectorList_f(void);
 
 
-int SV_AreaEntities(const vec3_t mins, const vec3_t maxs, int *entityList,
+int SV_AreaEntities(const Vec3 mins, const Vec3 maxs, int *entityList,
 		    int maxcount);
 /* fills in a table of entity numbers with entities that have bounding boxes
  * that intersect the given area.  It is possible for a non-axial bmodel
@@ -442,12 +442,12 @@ int SV_AreaEntities(const vec3_t mins, const vec3_t maxs, int *entityList,
  * The world entity is never returned in this list. */
 
 
-int SV_PointContents(const vec3_t p, int passEntityNum);
+int SV_PointContents(const Vec3 p, int passEntityNum);
 /* returns the CONTENTS_* value from the world and all entities at the given point. */
 
 
-void SV_Trace(trace_t *results, const vec3_t start, vec3_t mins, vec3_t maxs,
-	      const vec3_t end, int passEntityNum, int contentmask,
+void SV_Trace(trace_t *results, const Vec3 start, Vec3 mins, Vec3 maxs,
+	      const Vec3 end, int passEntityNum, int contentmask,
 	      int capsule);
 /* mins and maxs are relative */
 
@@ -460,8 +460,8 @@ void SV_Trace(trace_t *results, const vec3_t start, vec3_t mins, vec3_t maxs,
 /* passEntityNum is explicitly excluded from clipping checks (normally ENTITYNUM_NONE) */
 
 
-void SV_ClipToEntity(trace_t *trace, const vec3_t start, const vec3_t mins,
-		     const vec3_t maxs, const vec3_t end, int entityNum,
+void SV_ClipToEntity(trace_t *trace, const Vec3 start, const Vec3 mins,
+		     const Vec3 maxs, const Vec3 end, int entityNum,
 		     int contentmask,
 		     int capsule);
 /* clip to a specific entity */

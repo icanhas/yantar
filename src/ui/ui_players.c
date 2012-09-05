@@ -294,9 +294,9 @@ UI_PositionEntityOnTag(refEntity_t *entity, const refEntity_t *parent,
 		1.0 - parent->backlerp, tagName);
 
 	/* FIXME: allow origin offsets along tag? */
-	Vec3Copy(parent->origin, entity->origin);
+	vec3copy(parent->origin, entity->origin);
 	for(i = 0; i < 3; i++)
-		Vec3MA(entity->origin, lerped.origin[i], parent->axis[i],
+		vec3ma(entity->origin, lerped.origin[i], parent->axis[i],
 			entity->origin);
 
 	/* cast away const because of compiler problems */
@@ -314,16 +314,16 @@ UI_PositionRotatedEntityOnTag(refEntity_t *entity, const refEntity_t *parent,
 {
 	int i;
 	orientation_t lerped;
-	vec3_t tempAxis[3];
+	Vec3 tempAxis[3];
 
 	/* lerp the tag */
 	trap_CM_LerpTag(&lerped, parentModel, parent->oldframe, parent->frame,
 		1.0 - parent->backlerp, tagName);
 
 	/* FIXME: allow origin offsets along tag? */
-	Vec3Copy(parent->origin, entity->origin);
+	vec3copy(parent->origin, entity->origin);
 	for(i = 0; i < 3; i++)
-		Vec3MA(entity->origin, lerped.origin[i], parent->axis[i],
+		vec3ma(entity->origin, lerped.origin[i], parent->axis[i],
 			entity->origin);
 
 	/* cast away const because of compiler problems */
@@ -464,7 +464,7 @@ UI_SwingAngles(float destination, float swingTolerance, float clampTolerance,
 
 	if(!*swinging){
 		/* see if a swing should be started */
-		swing = AngleSubtract(*angle, destination);
+		swing = anglesub(*angle, destination);
 		if(swing > swingTolerance || swing < -swingTolerance)
 			*swinging = qtrue;
 	}
@@ -474,7 +474,7 @@ UI_SwingAngles(float destination, float swingTolerance, float clampTolerance,
 
 	/* modify the speed depending on the delta
 	 * so it doesn't seem so linear */
-	swing	= AngleSubtract(destination, *angle);
+	swing	= anglesub(destination, *angle);
 	scale	= fabs(swing);
 	if(scale < swingTolerance * 0.5)
 		scale = 0.5;
@@ -490,22 +490,22 @@ UI_SwingAngles(float destination, float swingTolerance, float clampTolerance,
 			move = swing;
 			*swinging = qfalse;
 		}
-		*angle = AngleMod(*angle + move);
+		*angle = anglemod(*angle + move);
 	}else if(swing < 0){
 		move = uiInfo.uiDC.frameTime * scale * -speed;
 		if(move <= swing){
 			move = swing;
 			*swinging = qfalse;
 		}
-		*angle = AngleMod(*angle + move);
+		*angle = anglemod(*angle + move);
 	}
 
 	/* clamp to no more than tolerance */
-	swing = AngleSubtract(destination, *angle);
+	swing = anglesub(destination, *angle);
 	if(swing > clampTolerance)
-		*angle = AngleMod(destination - (clampTolerance - 1));
+		*angle = anglemod(destination - (clampTolerance - 1));
 	else if(swing < -clampTolerance)
-		*angle = AngleMod(destination + (clampTolerance - 1));
+		*angle = anglemod(destination + (clampTolerance - 1));
 }
 
 
@@ -515,11 +515,11 @@ UI_SwingAngles(float destination, float swingTolerance, float clampTolerance,
 static float
 UI_MovedirAdjustment(playerInfo_t *pi)
 {
-	vec3_t	relativeAngles;
-	vec3_t	moveVector;
+	Vec3	relativeAngles;
+	Vec3	moveVector;
 
-	Vec3Sub(pi->viewAngles, pi->moveAngles, relativeAngles);
-	AngleVectors(relativeAngles, moveVector, NULL, NULL);
+	vec3sub(pi->viewAngles, pi->moveAngles, relativeAngles);
+	anglevec3s(relativeAngles, moveVector, NULL, NULL);
 	if(Q_fabs(moveVector[0]) < 0.01)
 		moveVector[0] = 0.0;
 	if(Q_fabs(moveVector[1]) < 0.01)
@@ -548,17 +548,17 @@ UI_MovedirAdjustment(playerInfo_t *pi)
  * UI_PlayerAngles
  */
 static void
-UI_PlayerAngles(playerInfo_t *pi, vec3_t legs[3], vec3_t torso[3],
-		vec3_t head[3])
+UI_PlayerAngles(playerInfo_t *pi, Vec3 legs[3], Vec3 torso[3],
+		Vec3 head[3])
 {
-	vec3_t	legsAngles, torsoAngles, headAngles;
+	Vec3	legsAngles, torsoAngles, headAngles;
 	float	dest;
 	float	adjust;
 
-	Vec3Copy(pi->viewAngles, headAngles);
-	headAngles[YAW] = AngleMod(headAngles[YAW]);
-	VectorClear(legsAngles);
-	VectorClear(torsoAngles);
+	vec3copy(pi->viewAngles, headAngles);
+	headAngles[YAW] = anglemod(headAngles[YAW]);
+	vec3clear(legsAngles);
+	vec3clear(torsoAngles);
 
 	/* --------- yaw ------------- */
 
@@ -598,11 +598,11 @@ UI_PlayerAngles(playerInfo_t *pi, vec3_t legs[3], vec3_t torso[3],
 	torsoAngles[PITCH] = pi->torso.pitchAngle;
 
 	/* pull the angles back out of the hierarchial chain */
-	AnglesSubtract(headAngles, torsoAngles, headAngles);
-	AnglesSubtract(torsoAngles, legsAngles, torsoAngles);
-	AnglesToAxis(legsAngles, legs);
-	AnglesToAxis(torsoAngles, torso);
-	AnglesToAxis(headAngles, head);
+	anglessub(headAngles, torsoAngles, headAngles);
+	anglessub(torsoAngles, legsAngles, torsoAngles);
+	euler2axis(legsAngles, legs);
+	euler2axis(torsoAngles, torso);
+	euler2axis(headAngles, head);
 }
 
 
@@ -610,12 +610,12 @@ UI_PlayerAngles(playerInfo_t *pi, vec3_t legs[3], vec3_t torso[3],
  * UI_PlayerFloatSprite
  */
 static void
-UI_PlayerFloatSprite(playerInfo_t *pi, vec3_t origin, qhandle_t shader)
+UI_PlayerFloatSprite(playerInfo_t *pi, Vec3 origin, qhandle_t shader)
 {
 	refEntity_t ent;
 
 	memset(&ent, 0, sizeof(ent));
-	Vec3Copy(origin, ent.origin);
+	vec3copy(origin, ent.origin);
 	ent.origin[2] += 48;
 	ent.reType = RT_SPRITE;
 	ent.customShader	= shader;
@@ -653,7 +653,7 @@ UI_MachinegunSpinAngle(playerInfo_t *pi)
 		torsoAnim = TORSO_ATTACK;
 	if(pi->barrelSpinning == !(torsoAnim == TORSO_ATTACK)){
 		pi->barrelTime	= dp_realtime;
-		pi->barrelAngle = AngleMod(angle);
+		pi->barrelAngle = anglemod(angle);
 		pi->barrelSpinning = !!(torsoAnim == TORSO_ATTACK);
 	}
 
@@ -674,10 +674,10 @@ UI_DrawPlayer(float x, float y, float w, float h, playerInfo_t *pi, int time)
 	refEntity_t	gun;
 	refEntity_t	barrel;
 	refEntity_t	flash;
-	vec3_t	origin;
+	Vec3	origin;
 	int	renderfx;
-	vec3_t	mins = {-16, -16, -24};
-	vec3_t	maxs = {16, 16, 32};
+	Vec3	mins = {-16, -16, -24};
+	Vec3	maxs = {16, 16, 32};
 	float	len;
 	float	xx;
 
@@ -711,7 +711,7 @@ UI_DrawPlayer(float x, float y, float w, float h, playerInfo_t *pi, int time)
 
 	refdef.rdflags = RDF_NOWORLDMODEL;
 
-	AxisClear(refdef.viewaxis);
+	axisclear(refdef.viewaxis);
 
 	refdef.x = x;
 	refdef.y = y;
@@ -748,11 +748,11 @@ UI_DrawPlayer(float x, float y, float w, float h, playerInfo_t *pi, int time)
 	legs.hModel = pi->legsModel;
 	legs.customSkin = pi->legsSkin;
 
-	Vec3Copy(origin, legs.origin);
+	vec3copy(origin, legs.origin);
 
-	Vec3Copy(origin, legs.lightingOrigin);
+	vec3copy(origin, legs.lightingOrigin);
 	legs.renderfx = renderfx;
-	Vec3Copy (legs.origin, legs.oldorigin);
+	vec3copy (legs.origin, legs.oldorigin);
 
 	trap_R_AddRefEntityToScene(&legs);
 
@@ -768,7 +768,7 @@ UI_DrawPlayer(float x, float y, float w, float h, playerInfo_t *pi, int time)
 
 	torso.customSkin = pi->torsoSkin;
 
-	Vec3Copy(origin, torso.lightingOrigin);
+	vec3copy(origin, torso.lightingOrigin);
 
 	UI_PositionRotatedEntityOnTag(&torso, &legs, pi->legsModel, "tag_torso");
 
@@ -784,7 +784,7 @@ UI_DrawPlayer(float x, float y, float w, float h, playerInfo_t *pi, int time)
 		return;
 	head.customSkin = pi->headSkin;
 
-	Vec3Copy(origin, head.lightingOrigin);
+	vec3copy(origin, head.lightingOrigin);
 
 	UI_PositionRotatedEntityOnTag(&head, &torso, pi->torsoModel, "tag_head");
 
@@ -798,7 +798,7 @@ UI_DrawPlayer(float x, float y, float w, float h, playerInfo_t *pi, int time)
 	if(pi->currentWeapon != WP_NONE){
 		memset(&gun, 0, sizeof(gun));
 		gun.hModel = pi->weaponModel;
-		Vec3Copy(origin, gun.lightingOrigin);
+		vec3copy(origin, gun.lightingOrigin);
 		UI_PositionEntityOnTag(&gun, &torso, pi->torsoModel,
 			"tag_weapon");
 		gun.renderfx = renderfx;
@@ -810,10 +810,10 @@ UI_DrawPlayer(float x, float y, float w, float h, playerInfo_t *pi, int time)
 	 *  */
 	if(pi->realWeapon == WP_MACHINEGUN || pi->realWeapon == WP_GAUNTLET ||
 	   pi->realWeapon == WP_BFG){
-		vec3_t angles;
+		Vec3 angles;
 
 		memset(&barrel, 0, sizeof(barrel));
-		Vec3Copy(origin, barrel.lightingOrigin);
+		vec3copy(origin, barrel.lightingOrigin);
 		barrel.renderfx = renderfx;
 
 		barrel.hModel	= pi->barrelModel;
@@ -824,7 +824,7 @@ UI_DrawPlayer(float x, float y, float w, float h, playerInfo_t *pi, int time)
 			angles[PITCH]	= angles[ROLL];
 			angles[ROLL]	= 0;
 		}
-		AnglesToAxis(angles, barrel.axis);
+		euler2axis(angles, barrel.axis);
 
 		UI_PositionRotatedEntityOnTag(&barrel, &gun, pi->weaponModel,
 			"tag_barrel");
@@ -839,7 +839,7 @@ UI_DrawPlayer(float x, float y, float w, float h, playerInfo_t *pi, int time)
 		if(pi->flashModel){
 			memset(&flash, 0, sizeof(flash));
 			flash.hModel = pi->flashModel;
-			Vec3Copy(origin, flash.lightingOrigin);
+			vec3copy(origin, flash.lightingOrigin);
 			UI_PositionEntityOnTag(&flash, &gun, pi->weaponModel,
 				"tag_flash");
 			flash.renderfx = renderfx;
@@ -1285,7 +1285,7 @@ UI_PlayerInfo_SetModel(playerInfo_t *pi, const char *model,
  */
 void
 UI_PlayerInfo_SetInfo(playerInfo_t *pi, int legsAnim, int torsoAnim,
-		      vec3_t viewAngles, vec3_t moveAngles,
+		      Vec3 viewAngles, Vec3 moveAngles,
 		      weapon_t weaponNumber,
 		      qbool chat)
 {
@@ -1295,10 +1295,10 @@ UI_PlayerInfo_SetInfo(playerInfo_t *pi, int legsAnim, int torsoAnim,
 	pi->chat = chat;
 
 	/* view angles */
-	Vec3Copy(viewAngles, pi->viewAngles);
+	vec3copy(viewAngles, pi->viewAngles);
 
 	/* move angles */
-	Vec3Copy(moveAngles, pi->moveAngles);
+	vec3copy(moveAngles, pi->moveAngles);
 
 	if(pi->newModel){
 		pi->newModel = qfalse;

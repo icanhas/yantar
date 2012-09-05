@@ -1274,7 +1274,7 @@ CG_RegisterGraphics(void)
 	cgs.numInlineModels = trap_CM_NumInlineModels();
 	for(i = 1; i < cgs.numInlineModels; i++){
 		char	name[10];
-		vec3_t mins, maxs;
+		Vec3 mins, maxs;
 		int	j;
 
 		Q_sprintf(name, sizeof(name), "*%i", i);
@@ -1957,7 +1957,7 @@ CG_Cvar_Get(const char *cvar)
 
 #ifdef MISSIONPACK
 void
-CG_Text_PaintWithCursor(float x, float y, float scale, vec4_t color,
+CG_Text_PaintWithCursor(float x, float y, float scale, Vec4 color,
 			const char *text, int cursorPos, char cursor, int limit,
 			int style)
 {

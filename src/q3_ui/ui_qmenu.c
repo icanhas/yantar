@@ -36,24 +36,24 @@ static qhandle_t	sliderBar;
 static qhandle_t	sliderButton_0;
 static qhandle_t	sliderButton_1;
 
-vec4_t	menu_text_color = {0.0f, 0.0f, 0.0f, 1.0f};
-vec4_t	menu_dim_color = {0.0f, 0.0f, 0.0f, 0.75f};
-vec4_t	color_black = {0.00f, 0.00f, 0.00f, 1.00f};
-vec4_t	color_white = {1.00f, 1.00f, 1.00f, 1.00f};
-vec4_t	color_yellow = {1.00f, 1.00f, 0.00f, 1.00f};
-vec4_t	color_blue = {0.00f, 0.00f, 1.00f, 1.00f};
-vec4_t	color_lightOrange = {1.00f, 0.68f, 0.00f, 1.00f };
-vec4_t	color_orange = {1.00f, 0.43f, 0.00f, 1.00f};
-vec4_t	color_red = {1.00f, 0.00f, 0.00f, 1.00f};
-vec4_t	color_dim = {0.00f, 0.00f, 0.00f, 0.25f};
+Vec4	menu_text_color = {0.0f, 0.0f, 0.0f, 1.0f};
+Vec4	menu_dim_color = {0.0f, 0.0f, 0.0f, 0.75f};
+Vec4	color_black = {0.00f, 0.00f, 0.00f, 1.00f};
+Vec4	color_white = {1.00f, 1.00f, 1.00f, 1.00f};
+Vec4	color_yellow = {1.00f, 1.00f, 0.00f, 1.00f};
+Vec4	color_blue = {0.00f, 0.00f, 1.00f, 1.00f};
+Vec4	color_lightOrange = {1.00f, 0.68f, 0.00f, 1.00f };
+Vec4	color_orange = {1.00f, 0.43f, 0.00f, 1.00f};
+Vec4	color_red = {1.00f, 0.00f, 0.00f, 1.00f};
+Vec4	color_dim = {0.00f, 0.00f, 0.00f, 0.25f};
 
 /* current color scheme */
-vec4_t	pulse_color = {0.00f, 0.00f, 0.00f, 0.00f};
-vec4_t	text_color_disabled = {0.50f, 0.50f, 0.50f, 1.00f};	/* light gray */
-vec4_t	text_color_normal = {1.00f, 0.43f, 0.00f, 1.00f};	/* light orange */
-vec4_t	text_color_highlight = {1.00f, 1.00f, 0.00f, 1.00f};	/* bright yellow */
-vec4_t	listbar_color = {1.00f, 0.43f, 0.00f, 0.30f};		/* transluscent orange */
-vec4_t	text_color_status = {1.00f, 1.00f, 1.00f, 1.00f};	/* bright white */
+Vec4	pulse_color = {0.00f, 0.00f, 0.00f, 0.00f};
+Vec4	text_color_disabled = {0.50f, 0.50f, 0.50f, 1.00f};	/* light gray */
+Vec4	text_color_normal = {1.00f, 0.43f, 0.00f, 1.00f};	/* light orange */
+Vec4	text_color_highlight = {1.00f, 1.00f, 0.00f, 1.00f};	/* bright yellow */
+Vec4	listbar_color = {1.00f, 0.43f, 0.00f, 0.30f};		/* transluscent orange */
+Vec4	text_color_status = {1.00f, 1.00f, 1.00f, 1.00f};	/* bright white */
 
 /* action widget */
 static void     Action_Init(menuaction_s *a);
@@ -265,7 +265,7 @@ Bitmap_Draw(menubitmap_s *b)
 	float	y;
 	float	w;
 	float	h;
-	vec4_t	tempcolor;
+	Vec4	tempcolor;
 	float	* color;
 
 	x	= b->generic.x;

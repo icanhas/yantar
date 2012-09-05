@@ -162,15 +162,15 @@ PlayerModel_UpdateGrid(void)
 static void
 PlayerModel_UpdateModel(void)
 {
-	vec3_t	viewangles;
-	vec3_t	moveangles;
+	Vec3	viewangles;
+	Vec3	moveangles;
 
 	memset(&s_playermodel.playerinfo, 0, sizeof(playerInfo_t));
 
 	viewangles[YAW] = 180 - 30;
 	viewangles[PITCH] = 0;
 	viewangles[ROLL] = 0;
-	VectorClear(moveangles);
+	vec3clear(moveangles);
 
 	UI_PlayerInfo_SetModel(&s_playermodel.playerinfo,
 		s_playermodel.modelskin);

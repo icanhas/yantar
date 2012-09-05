@@ -66,11 +66,11 @@ typedef unsigned int glIndex_t;
 #define MAX_DRAWN_PSHADOWS	16	/* do not increase past 32, because bit flags are used on surfaces */
 
 typedef struct dlight_s {
-	vec3_t	origin;
-	vec3_t	color;	/* range from 0.0 to 1.0, should be color normalized */
+	Vec3	origin;
+	Vec3	color;	/* range from 0.0 to 1.0, should be color normalized */
 	float	radius;
 
-	vec3_t	transformed;	/* origin in local coordinate system */
+	Vec3	transformed;	/* origin in local coordinate system */
 	int	additive;	/* texture detail is lost tho when the lightmap is dark */
 } dlight_t;
 
@@ -88,17 +88,17 @@ typedef struct {
 	/* JBravo: Mirrored models */
 	qbool		mirrored;	/* mirrored matrix, needs reversed culling */
 #endif
-	vec3_t		lightDir;		/* normalized direction towards light */
-	vec3_t		ambientLight;		/* color normalized to 0-255 */
+	Vec3		lightDir;		/* normalized direction towards light */
+	Vec3		ambientLight;		/* color normalized to 0-255 */
 	int		ambientLightInt;	/* 32 bit rgba packed */
-	vec3_t		directedLight;
+	Vec3		directedLight;
 } trRefEntity_t;
 
 
 typedef struct {
-	vec3_t	origin;		/* in world coordinates */
-	vec3_t	axis[3];	/* orientation in world */
-	vec3_t	viewOrigin;	/* viewParms->or.origin in local coordinates */
+	Vec3	origin;		/* in world coordinates */
+	Vec3	axis[3];	/* orientation in world */
+	Vec3	viewOrigin;	/* viewParms->or.origin in local coordinates */
 	float	modelMatrix[16];
 	float	transformMatrix[16];
 } orientationr_t;
@@ -329,7 +329,7 @@ typedef enum {
 typedef struct {
 	deform_t	deformation;	/* vertex coordinate modification type */
 
-	vec3_t		moveVector;
+	Vec3		moveVector;
 	waveForm_t	deformationWave;
 	float		deformationSpread;
 
@@ -372,7 +372,7 @@ typedef struct {
 	float		imageAnimationSpeed;
 
 	texCoordGen_t	tcGen;
-	vec3_t		tcGenVectors[2];
+	Vec3		tcGenVectors[2];
 
 	int		numTexMods;
 	texModInfo_t	*texMods;
@@ -458,7 +458,7 @@ typedef struct {
 } skyParms_t;
 
 typedef struct {
-	vec3_t	color;
+	Vec3	color;
 	float	depthForOpaque;
 } fogParms_t;
 
@@ -844,8 +844,8 @@ enum {
 typedef struct {
 	int		x, y, width, height;
 	float		fov_x, fov_y;
-	vec3_t		vieworg;
-	vec3_t		viewaxis[3];	/* transformation matrix */
+	Vec3		vieworg;
+	Vec3		viewaxis[3];	/* transformation matrix */
 
 	stereoFrame_t	stereoFrame;
 
@@ -900,7 +900,7 @@ typedef struct skin_s {
 
 typedef struct {
 	int		originalBrushNumber;
-	vec3_t		bounds[2];
+	Vec3		bounds[2];
 
 	unsigned	colorInt;	/* in packed byte format */
 	float		tcScale;	/* texture coordinate vector scales */
@@ -914,7 +914,7 @@ typedef struct {
 typedef struct {
 	orientationr_t	or;
 	orientationr_t	world;
-	vec3_t		pvsOrigin;	/* may be different than or.origin for portals */
+	Vec3		pvsOrigin;	/* may be different than or.origin for portals */
 	qbool		isPortal;	/* true if this view is through a portal */
 	qbool		isMirror;	/* the portal is a mirror, invert the face culling */
 	qbool		isShadowmap;
@@ -926,7 +926,7 @@ typedef struct {
 	float		fovX, fovY;
 	float		projectionMatrix[16];
 	cplane_t	frustum[5];
-	vec3_t		visBounds[2];
+	Vec3		visBounds[2];
 	float		zFar;
 	stereoFrame_t	stereoFrame;
 } viewParms_t;
@@ -988,20 +988,20 @@ typedef struct srfDisplayList_s {
 
 typedef struct srfFlare_s {
 	surfaceType_t	surfaceType;
-	vec3_t		origin;
-	vec3_t		normal;
-	vec3_t		color;
+	Vec3		origin;
+	Vec3		normal;
+	Vec3		color;
 } srfFlare_t;
 
 typedef struct {
-	vec3_t	xyz;
-	vec2_t	st;
-	vec2_t	lightmap;
-	vec3_t	normal;
-	vec3_t	tangent;
-	vec3_t	bitangent;
-	vec3_t	lightdir;
-	vec4_t	vertexColors;
+	Vec3	xyz;
+	Vec2	st;
+	Vec2	lightmap;
+	Vec3	normal;
+	Vec3	tangent;
+	Vec3	bitangent;
+	Vec3	lightdir;
+	Vec4	vertexColors;
 
 #if DEBUG_OPTIMIZEVERTICES
 	unsigned int id;
@@ -1014,7 +1014,7 @@ typedef struct {
 typedef struct {
 	int		indexes[3];
 	int		neighbors[3];
-	vec4_t		plane;
+	Vec4		plane;
 	qbool		facingLight;
 	qbool		degenerated;
 } srfTriangle_t;
@@ -1028,14 +1028,14 @@ typedef struct srfGridMesh_s {
 	int	pshadowBits[SMP_FRAMES];
 
 	/* culling information */
-	vec3_t	meshBounds[2];
-	vec3_t	localOrigin;
+	Vec3	meshBounds[2];
+	Vec3	localOrigin;
 	float	meshRadius;
 
 	/* lod information, which may be different
 	 * than the culling information to allow for
 	 * groups of curves that LOD as a unit */
-	vec3_t	lodOrigin;
+	Vec3	lodOrigin;
 	float	lodRadius;
 	int	lodFixed;
 	int	lodStitched;
@@ -1070,7 +1070,7 @@ typedef struct {
 
 	/* culling information */
 	cplane_t	plane;
-	vec3_t		bounds[2];
+	Vec3		bounds[2];
 
 	/* triangle definitions */
 	int		numTriangles;
@@ -1098,7 +1098,7 @@ typedef struct {
 	int	pshadowBits[SMP_FRAMES];
 
 	/* culling information */
-	vec3_t bounds[2];
+	Vec3 bounds[2];
 
 	/* triangle definitions */
 	int		numTriangles;
@@ -1161,7 +1161,7 @@ typedef struct srfVBOMesh_s {
 	int	pshadowBits[SMP_FRAMES];
 
 	/* culling information */
-	vec3_t bounds[2];
+	Vec3 bounds[2];
 
 	/* backEnd stats */
 	int	numIndexes;
@@ -1201,14 +1201,14 @@ typedef struct pshadow_s {
 
 	int		numEntities;
 	int		entityNums[8];
-	vec3_t		entityOrigins[8];
+	Vec3		entityOrigins[8];
 	float		entityRadiuses[8];
 
 	float		viewRadius;
-	vec3_t		viewOrigin;
+	Vec3		viewOrigin;
 
-	vec3_t		lightViewAxis[3];
-	vec3_t		lightOrigin;
+	Vec3		lightViewAxis[3];
+	Vec3		lightOrigin;
 	float		lightRadius;
 	cplane_t	cullPlane;
 } pshadow_t;
@@ -1236,8 +1236,8 @@ typedef struct pshadow_s {
 
 typedef struct cullinfo_s {
 	int		type;
-	vec3_t		bounds[2];
-	vec3_t		localOrigin;
+	Vec3		bounds[2];
+	Vec3		localOrigin;
 	float		radius;
 	cplane_t	plane;
 } cullinfo_t;
@@ -1257,7 +1257,7 @@ typedef struct mnode_s {
 	/* common with leaf and node */
 	int		contents;			/* -1 for nodes, to differentiate from leafs */
 	int		visCounts[MAX_VISCOUNTS];	/* node needs to be traversed if current */
-	vec3_t		mins, maxs;			/* for bounding box culling */
+	Vec3		mins, maxs;			/* for bounding box culling */
 	struct mnode_s	*parent;
 
 	/* node specific */
@@ -1273,7 +1273,7 @@ typedef struct mnode_s {
 } mnode_t;
 
 typedef struct {
-	vec3_t	bounds[2];	/* for culling */
+	Vec3	bounds[2];	/* for culling */
 	int	firstSurface;
 	int	numSurfaces;
 } bmodel_t;
@@ -1321,9 +1321,9 @@ typedef struct {
 	int		numfogs;
 	fog_t		*fogs;
 
-	vec3_t		lightGridOrigin;
-	vec3_t		lightGridSize;
-	vec3_t		lightGridInverseSize;
+	Vec3		lightGridOrigin;
+	Vec3		lightGridSize;
+	Vec3		lightGridInverseSize;
 	int		lightGridBounds[3];
 	byte		*lightGridData;
 	float		*hdrLightGrid;
@@ -1359,10 +1359,10 @@ typedef struct {
 } mdvTagName_t;
 
 typedef struct {
-	vec3_t	xyz;
-	vec3_t	normal;
-	vec3_t	tangent;
-	vec3_t	bitangent;
+	Vec3	xyz;
+	Vec3	normal;
+	Vec3	tangent;
+	Vec3	bitangent;
 } mdvVertex_t;
 
 typedef struct {
@@ -1435,7 +1435,7 @@ void            R_ModelInit(void);
 model_t*R_GetModelByHandle(qhandle_t hModel);
 int                     R_LerpTag(orientation_t *tag, qhandle_t handle, int startFrame, int endFrame,
 				  float frac, const char *tagName);
-void            R_ModelBounds(qhandle_t handle, vec3_t mins, vec3_t maxs);
+void            R_ModelBounds(qhandle_t handle, Vec3 mins, Vec3 maxs);
 
 void            R_Modellist_f(void);
 
@@ -1524,9 +1524,9 @@ typedef struct {
 	FBO_t		*currentFBO;
 	VBO_t		*currentVBO;
 	IBO_t		*currentIBO;
-	mat4x4	modelview;
-	mat4x4	projection;
-	mat4x4	modelviewProjection;
+	Mat44	modelview;
+	Mat44	projection;
+	Mat44	modelviewProjection;
 } glstate_t;
 
 typedef enum {
@@ -1599,7 +1599,7 @@ typedef struct {
 	qbool			skyRenderedThisView;	/* flag for drawing sun */
 
 #ifdef REACTION
-	vec3_t		sunFlarePos;
+	Vec3		sunFlarePos;
 	qbool		hasSunFlare;
 #endif
 
@@ -1639,7 +1639,7 @@ typedef struct {
 	qbool		worldMapLoaded;
 	qbool		worldDeluxeMapping;
 	qbool		autoExposure;
-	vec2_t		autoExposureMinMax;
+	Vec2		autoExposureMinMax;
 	world_t		*world;
 
 	const byte	*externalVisData;	/* from RE_SetWorldVisData, shared with CM_Load */
@@ -1727,8 +1727,8 @@ typedef struct {
 
 	int			viewCluster;
 
-	vec3_t			sunLight;	/* from the sky shader for this level */
-	vec3_t			sunDirection;
+	Vec3			sunLight;	/* from the sky shader for this level */
+	Vec3			sunDirection;
 
 	frontEndCounters_t	pc;
 	int			frontEndMsec;	/* not in pc due to clearing issue */
@@ -1968,9 +1968,9 @@ void R_DecomposeSort(unsigned sort, int *entityNum, material_t **shader,
 void R_AddDrawSurf(surfaceType_t *surface, material_t *shader,
 		   int fogIndex, int dlightMap, int pshadowMap);
 
-void R_CalcTangentSpace(vec3_t tangent, vec3_t bitangent, vec3_t normal,
-			const vec3_t v0, const vec3_t v1, const vec3_t v2, const vec2_t t0, const vec2_t t1,
-			const vec2_t t2);
+void R_CalcTangentSpace(Vec3 tangent, Vec3 bitangent, Vec3 normal,
+			const Vec3 v0, const Vec3 v1, const Vec3 v2, const Vec2 t0, const Vec2 t1,
+			const Vec2 t2);
 qbool R_CalcTangentVectors(srfVert_t * dv[3]);
 void R_CalcSurfaceTriangleNeighbors(int numTriangles, srfTriangle_t * triangles);
 void R_CalcSurfaceTrianglePlanes(int numTriangles, srfTriangle_t * triangles, srfVert_t * verts);
@@ -1978,13 +1978,13 @@ void R_CalcSurfaceTrianglePlanes(int numTriangles, srfTriangle_t * triangles, sr
 #define CULL_IN		0	/* completely unclipped */
 #define CULL_CLIP	1	/* clipped by one or more planes */
 #define CULL_OUT	2	/* completely outside the clipping planes */
-void R_LocalNormalToWorld(const vec3_t local, vec3_t world);
-void R_LocalPointToWorld(const vec3_t local, vec3_t world);
-int R_CullBox(vec3_t bounds[2]);
-int R_CullLocalBox(vec3_t bounds[2]);
-int R_CullPointAndRadiusEx(const vec3_t origin, float radius, const cplane_t* frustum, int numPlanes);
-int R_CullPointAndRadius(const vec3_t origin, float radius);
-int R_CullLocalPointAndRadius(const vec3_t origin, float radius);
+void R_LocalNormalToWorld(const Vec3 local, Vec3 world);
+void R_LocalPointToWorld(const Vec3 local, Vec3 world);
+int R_CullBox(Vec3 bounds[2]);
+int R_CullLocalBox(Vec3 bounds[2]);
+int R_CullPointAndRadiusEx(const Vec3 origin, float radius, const cplane_t* frustum, int numPlanes);
+int R_CullPointAndRadius(const Vec3 origin, float radius);
+int R_CullLocalPointAndRadius(const Vec3 origin, float radius);
 
 void R_SetupProjection(viewParms_t *dest, float zProj, float zFar, qbool computeFrustum);
 void R_RotateForEntity(const trRefEntity_t *ent, const viewParms_t *viewParms, orientationr_t *or);
@@ -2001,8 +2001,8 @@ void    GL_TextureMode(const char *string);
 void    GL_CheckErrs(char *file, int line);
 #define GL_CheckErrors(...) GL_CheckErrs(__FILE__, __LINE__)
 void    GL_State(unsigned long stateVector);
-void    GL_SetProjectionMatrix(mat4x4 matrix);
-void    GL_SetModelviewMatrix(mat4x4 matrix);
+void    GL_SetProjectionMatrix(Mat44 matrix);
+void    GL_SetModelviewMatrix(Mat44 matrix);
 void    GL_TexEnv(int env);
 void    GL_Cull(int cullType);
 
@@ -2139,20 +2139,20 @@ void            GLimp_InitExtraExtensions(void);
 
 typedef struct stageVars {
 	color4ub_t	colors[SHADER_MAX_VERTEXES];
-	vec2_t		texcoords[NUM_TEXTURE_BUNDLES][SHADER_MAX_VERTEXES];
+	Vec2		texcoords[NUM_TEXTURE_BUNDLES][SHADER_MAX_VERTEXES];
 } stageVars_t;
 
 #define MAX_MULTIDRAW_PRIMITIVES 16384
 
 typedef struct shaderCommands_s {
 	glIndex_t	indexes[SHADER_MAX_INDEXES] QALIGN(16);
-	vec4_t		xyz[SHADER_MAX_VERTEXES] QALIGN(16);
-	vec4_t		normal[SHADER_MAX_VERTEXES] QALIGN(16);
-	vec4_t		tangent[SHADER_MAX_VERTEXES] QALIGN(16);
-	vec4_t		bitangent[SHADER_MAX_VERTEXES] QALIGN(16);
-	vec2_t		texCoords[SHADER_MAX_VERTEXES][2] QALIGN(16);
-	vec4_t		vertexColors[SHADER_MAX_VERTEXES] QALIGN(16);
-	vec4_t		lightdir[SHADER_MAX_VERTEXES] QALIGN(16);
+	Vec4		xyz[SHADER_MAX_VERTEXES] QALIGN(16);
+	Vec4		normal[SHADER_MAX_VERTEXES] QALIGN(16);
+	Vec4		tangent[SHADER_MAX_VERTEXES] QALIGN(16);
+	Vec4		bitangent[SHADER_MAX_VERTEXES] QALIGN(16);
+	Vec2		texCoords[SHADER_MAX_VERTEXES][2] QALIGN(16);
+	Vec4		vertexColors[SHADER_MAX_VERTEXES] QALIGN(16);
+	Vec4		lightdir[SHADER_MAX_VERTEXES] QALIGN(16);
 	/* int			vertexDlightBits[SHADER_MAX_VERTEXES] QALIGN(16); */
 
 	VBO_t		*vbo;
@@ -2198,12 +2198,12 @@ void RB_StageIteratorSky(void);
 void RB_StageIteratorVertexLitTexture(void);
 void RB_StageIteratorLightmappedMultitexture(void);
 
-void RB_AddQuadStamp(vec3_t origin, vec3_t left, vec3_t up, float color[4]);
-void RB_AddQuadStampExt(vec3_t origin, vec3_t left, vec3_t up, float color[4], float s1, float t1, float s2,
+void RB_AddQuadStamp(Vec3 origin, Vec3 left, Vec3 up, float color[4]);
+void RB_AddQuadStampExt(Vec3 origin, Vec3 left, Vec3 up, float color[4], float s1, float t1, float s2,
 			float t2);
-void RB_InstantQuad(vec4_t quadVerts[4]);
-void RB_InstantQuad2(vec4_t quadVerts[4], vec2_t texCoords[4], vec4_t color, shaderProgram_t *sp,
-		     vec2_t invTexRes);
+void RB_InstantQuad(Vec4 quadVerts[4]);
+void RB_InstantQuad2(Vec4 quadVerts[4], Vec2 texCoords[4], Vec4 color, shaderProgram_t *sp,
+		     Vec2 invTexRes);
 
 void RB_ShowImages(void);
 
@@ -2216,7 +2216,7 @@ void RB_ShowImages(void);
 
 void R_AddBrushModelSurfaces(trRefEntity_t *e);
 void R_AddWorldSurfaces(void);
-qbool R_inPVS(const vec3_t p1, const vec3_t p2);
+qbool R_inPVS(const Vec3 p1, const Vec3 p2);
 
 
 /*
@@ -2227,7 +2227,7 @@ qbool R_inPVS(const vec3_t p1, const vec3_t p2);
 
 void R_ClearFlares(void);
 
-void RB_AddFlare(void *surface, int fogNum, vec3_t point, vec3_t color, vec3_t normal);
+void RB_AddFlare(void *surface, int fogNum, Vec3 point, Vec3 color, Vec3 normal);
 void RB_AddDlightFlares(void);
 void RB_RenderFlares(void);
 
@@ -2240,8 +2240,8 @@ void RB_RenderFlares(void);
 void R_DlightBmodel(bmodel_t *bmodel);
 void R_SetupEntityLighting(const trRefdef_t *refdef, trRefEntity_t *ent);
 void R_TransformDlights(int count, dlight_t *dl, orientationr_t *or);
-int R_LightForPoint(vec3_t point, vec3_t ambientLight, vec3_t directedLight, vec3_t lightDir);
-int R_LightDirForPoint(vec3_t point, vec3_t lightDir, vec3_t normal, world_t *world);
+int R_LightForPoint(Vec3 point, Vec3 ambientLight, Vec3 directedLight, Vec3 lightDir);
+int R_LightDirForPoint(Vec3 point, Vec3 lightDir, Vec3 normal, world_t *world);
 
 
 /*
@@ -2276,8 +2276,8 @@ void RB_ClipSkyPolygons(shaderCommands_t *shader);
 
 srfGridMesh_t*R_SubdividePatchToGrid(int width, int height,
 				     srfVert_t points[MAX_PATCH_SIZE*MAX_PATCH_SIZE]);
-srfGridMesh_t*R_GridInsertColumn(srfGridMesh_t *grid, int column, int row, vec3_t point, float loderror);
-srfGridMesh_t*R_GridInsertRow(srfGridMesh_t *grid, int row, int column, vec3_t point, float loderror);
+srfGridMesh_t*R_GridInsertColumn(srfGridMesh_t *grid, int column, int row, Vec3 point, float loderror);
+srfGridMesh_t*R_GridInsertRow(srfGridMesh_t *grid, int row, int column, Vec3 point, float loderror);
 void R_FreeSurfaceGridMesh(srfGridMesh_t *grid);
 
 /*
@@ -2286,8 +2286,8 @@ void R_FreeSurfaceGridMesh(srfGridMesh_t *grid);
  *
  */
 
-int R_MarkFragments(int numPoints, const vec3_t *points, const vec3_t projection,
-		    int maxPoints, vec3_t pointBuffer, int maxFragments, markFragment_t *fragmentBuffer);
+int R_MarkFragments(int numPoints, const Vec3 *points, const Vec3 projection,
+		    int maxPoints, Vec3 pointBuffer, int maxFragments, markFragment_t *fragmentBuffer);
 
 
 /*
@@ -2332,11 +2332,11 @@ void GLSL_SetNumUniforms(shaderProgram_t *program, int numUniforms);
 void GLSL_SetUniformName(shaderProgram_t *program, int uniformNum, const char *name);
 void GLSL_SetUniformInt(shaderProgram_t *program, int uniformNum, GLint value);
 void GLSL_SetUniformFloat(shaderProgram_t *program, int uniformNum, GLfloat value);
-void GLSL_SetUniformFloat5(shaderProgram_t *program, int uniformNum, const vec5_t v);
-void GLSL_SetUniformVec2(shaderProgram_t *program, int uniformNum, const vec2_t v);
-void GLSL_SetUniformVec3(shaderProgram_t *program, int uniformNum, const vec3_t v);
-void GLSL_SetUniformVec4(shaderProgram_t *program, int uniformNum, const vec4_t v);
-void GLSL_SetUniformMatrix16(shaderProgram_t *program, int uniformNum, const mat4x4 matrix);
+void GLSL_SetUniformFloat5(shaderProgram_t *program, int uniformNum, const Vec5 v);
+void GLSL_SetUniformVec2(shaderProgram_t *program, int uniformNum, const Vec2 v);
+void GLSL_SetUniformVec3(shaderProgram_t *program, int uniformNum, const Vec3 v);
+void GLSL_SetUniformVec4(shaderProgram_t *program, int uniformNum, const Vec4 v);
+void GLSL_SetUniformMatrix16(shaderProgram_t *program, int uniformNum, const Mat44 matrix);
 
 shaderProgram_t*GLSL_GetGenericShaderProgram(int stage);
 
@@ -2351,8 +2351,8 @@ void R_ToggleSmpFrame(void);
 void RE_ClearScene(void);
 void RE_AddRefEntityToScene(const refEntity_t *ent);
 void RE_AddPolyToScene(qhandle_t hShader, int numVerts, const polyVert_t *verts, int num);
-void RE_AddLightToScene(const vec3_t org, float intensity, float r, float g, float b);
-void RE_AddAdditiveLightToScene(const vec3_t org, float intensity, float r, float g, float b);
+void RE_AddLightToScene(const Vec3 org, float intensity, float r, float g, float b);
+void RE_AddAdditiveLightToScene(const Vec3 org, float intensity, float r, float g, float b);
 void RE_RenderScene(const refdef_t *fd);
 
 /*
@@ -2384,9 +2384,9 @@ void R_LoadTGA(const char *name, byte **pic, int *width, int *height);
 
 /*
  */
-void    R_TransformModelToClip(const vec3_t src, const float *modelMatrix, const float *projectionMatrix,
-			       vec4_t eye, vec4_t dst);
-void    R_TransformClipToWindow(const vec4_t clip, const viewParms_t *view, vec4_t normalized, vec4_t window);
+void    R_TransformModelToClip(const Vec3 src, const float *modelMatrix, const float *projectionMatrix,
+			       Vec4 eye, Vec4 dst);
+void    R_TransformClipToWindow(const Vec4 clip, const viewParms_t *view, Vec4 normalized, Vec4 window);
 
 void    RB_DeformTessGeometry(void);
 
@@ -2401,7 +2401,7 @@ void    RB_CalcTransformTexCoords(const texModInfo_t *tmi, float *dstTexCoords);
 void    RB_CalcScaleTexMatrix(const float scale[2], float *matrix);
 void    RB_CalcScrollTexMatrix(const float scrollSpeed[2], float *matrix);
 void    RB_CalcRotateTexMatrix(float degsPerSecond, float *matrix);
-void RB_CalcTurbulentTexMatrix(const waveForm_t *wf, mat4x4 matrix);
+void RB_CalcTurbulentTexMatrix(const waveForm_t *wf, Mat44 matrix);
 void    RB_CalcTransformTexMatrix(const texModInfo_t *tmi, float *matrix);
 void    RB_CalcStretchTexMatrix(const waveForm_t *wf, float *matrix);
 

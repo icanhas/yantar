@@ -34,9 +34,9 @@ typedef struct particle_s {
 	float			time;
 	float			endtime;
 
-	vec3_t			org;
-	vec3_t			vel;
-	vec3_t			accel;
+	Vec3			org;
+	Vec3			vel;
+	Vec3			accel;
 	int			color;
 	float			colorvel;
 	float			alpha;
@@ -145,8 +145,8 @@ cparticle_t	particles[MAX_PARTICLES];
 int cl_numparticles = MAX_PARTICLES;
 
 qbool		initparticles = qfalse;
-vec3_t		vforward, vright, vup;
-vec3_t		rforward, rright, rup;
+Vec3		vforward, vright, vup;
+Vec3		rforward, rright, rup;
 
 float		oldtime;
 
@@ -191,19 +191,19 @@ CG_ClearParticles(void)
  * CG_AddParticleToScene
  */
 void
-CG_AddParticleToScene(cparticle_t *p, vec3_t org, float alpha)
+CG_AddParticleToScene(cparticle_t *p, Vec3 org, float alpha)
 {
 
-	vec3_t	point;
+	Vec3	point;
 	polyVert_t verts[4];
 	float	width;
 	float	height;
 	float	time, time2;
 	float	ratio;
 	float	invratio;
-	vec3_t	color;
+	Vec3	color;
 	polyVert_t TRIverts[3];
-	vec3_t	rright2, rup2;
+	Vec3	rright2, rup2;
 
 	if(p->type == P_WEATHER || p->type == P_WEATHER_TURBULENT || p->type ==
 	   P_WEATHER_FLURRY
@@ -214,7 +214,7 @@ CG_AddParticleToScene(cparticle_t *p, vec3_t org, float alpha)
 			   P_BUBBLE_TURBULENT){
 				if(org[2] > p->end){
 					p->time = cg.time;
-					Vec3Copy (org, p->org);	/* Ridah, fixes rare snow flakes that flicker on the ground */
+					vec3copy (org, p->org);	/* Ridah, fixes rare snow flakes that flicker on the ground */
 
 					p->org[2] = (p->start + crandom () * 4);
 
@@ -227,7 +227,7 @@ CG_AddParticleToScene(cparticle_t *p, vec3_t org, float alpha)
 				}
 			}else if(org[2] < p->end){
 				p->time = cg.time;
-				Vec3Copy (org, p->org);	/* Ridah, fixes rare snow flakes that flicker on the ground */
+				vec3copy (org, p->org);	/* Ridah, fixes rare snow flakes that flicker on the ground */
 
 				while(p->org[2] < p->end)
 					p->org[2] += (p->start - p->end);
@@ -249,14 +249,14 @@ CG_AddParticleToScene(cparticle_t *p, vec3_t org, float alpha)
 		}
 
 		/* Ridah, had to do this or MAX_POLYS is being exceeded in village1.bsp */
-		if(Vec3Distance(cg.snap->ps.origin, org) > 1024)
+		if(vec3dist(cg.snap->ps.origin, org) > 1024)
 			return;
 		/* done. */
 
 		if(p->type == P_BUBBLE || p->type == P_BUBBLE_TURBULENT){
-			Vec3MA (org, -p->height, vup, point);
-			Vec3MA (point, -p->width, vright, point);
-			Vec3Copy (point, verts[0].xyz);
+			vec3ma (org, -p->height, vup, point);
+			vec3ma (point, -p->width, vright, point);
+			vec3copy (point, verts[0].xyz);
 			verts[0].st[0]	= 0;
 			verts[0].st[1]	= 0;
 			verts[0].modulate[0] = 255;
@@ -264,9 +264,9 @@ CG_AddParticleToScene(cparticle_t *p, vec3_t org, float alpha)
 			verts[0].modulate[2] = 255;
 			verts[0].modulate[3] = 255 * p->alpha;
 
-			Vec3MA (org, -p->height, vup, point);
-			Vec3MA (point, p->width, vright, point);
-			Vec3Copy (point, verts[1].xyz);
+			vec3ma (org, -p->height, vup, point);
+			vec3ma (point, p->width, vright, point);
+			vec3copy (point, verts[1].xyz);
 			verts[1].st[0]	= 0;
 			verts[1].st[1]	= 1;
 			verts[1].modulate[0] = 255;
@@ -274,9 +274,9 @@ CG_AddParticleToScene(cparticle_t *p, vec3_t org, float alpha)
 			verts[1].modulate[2] = 255;
 			verts[1].modulate[3] = 255 * p->alpha;
 
-			Vec3MA (org, p->height, vup, point);
-			Vec3MA (point, p->width, vright, point);
-			Vec3Copy (point, verts[2].xyz);
+			vec3ma (org, p->height, vup, point);
+			vec3ma (point, p->width, vright, point);
+			vec3copy (point, verts[2].xyz);
 			verts[2].st[0]	= 1;
 			verts[2].st[1]	= 1;
 			verts[2].modulate[0] = 255;
@@ -284,9 +284,9 @@ CG_AddParticleToScene(cparticle_t *p, vec3_t org, float alpha)
 			verts[2].modulate[2] = 255;
 			verts[2].modulate[3] = 255 * p->alpha;
 
-			Vec3MA (org, p->height, vup, point);
-			Vec3MA (point, -p->width, vright, point);
-			Vec3Copy (point, verts[3].xyz);
+			vec3ma (org, p->height, vup, point);
+			vec3ma (point, -p->width, vright, point);
+			vec3copy (point, verts[3].xyz);
 			verts[3].st[0]	= 1;
 			verts[3].st[1]	= 0;
 			verts[3].modulate[0] = 255;
@@ -294,9 +294,9 @@ CG_AddParticleToScene(cparticle_t *p, vec3_t org, float alpha)
 			verts[3].modulate[2] = 255;
 			verts[3].modulate[3] = 255 * p->alpha;
 		}else{
-			Vec3MA (org, -p->height, vup, point);
-			Vec3MA (point, -p->width, vright, point);
-			Vec3Copy(point, TRIverts[0].xyz);
+			vec3ma (org, -p->height, vup, point);
+			vec3ma (point, -p->width, vright, point);
+			vec3copy(point, TRIverts[0].xyz);
 			TRIverts[0].st[0] = 1;
 			TRIverts[0].st[1] = 0;
 			TRIverts[0].modulate[0] = 255;
@@ -304,9 +304,9 @@ CG_AddParticleToScene(cparticle_t *p, vec3_t org, float alpha)
 			TRIverts[0].modulate[2] = 255;
 			TRIverts[0].modulate[3] = 255 * p->alpha;
 
-			Vec3MA (org, p->height, vup, point);
-			Vec3MA (point, -p->width, vright, point);
-			Vec3Copy (point, TRIverts[1].xyz);
+			vec3ma (org, p->height, vup, point);
+			vec3ma (point, -p->width, vright, point);
+			vec3copy (point, TRIverts[1].xyz);
 			TRIverts[1].st[0] = 0;
 			TRIverts[1].st[1] = 0;
 			TRIverts[1].modulate[0] = 255;
@@ -314,9 +314,9 @@ CG_AddParticleToScene(cparticle_t *p, vec3_t org, float alpha)
 			TRIverts[1].modulate[2] = 255;
 			TRIverts[1].modulate[3] = 255 * p->alpha;
 
-			Vec3MA (org, p->height, vup, point);
-			Vec3MA (point, p->width, vright, point);
-			Vec3Copy (point, TRIverts[2].xyz);
+			vec3ma (org, p->height, vup, point);
+			vec3ma (point, p->width, vright, point);
+			vec3copy (point, TRIverts[2].xyz);
 			TRIverts[2].st[0] = 0;
 			TRIverts[2].st[1] = 1;
 			TRIverts[2].modulate[0] = 255;
@@ -326,13 +326,13 @@ CG_AddParticleToScene(cparticle_t *p, vec3_t org, float alpha)
 		}
 
 	}else if(p->type == P_SPRITE){
-		vec3_t	rr, ru;
-		vec3_t	rotate_ang;
+		Vec3	rr, ru;
+		Vec3	rotate_ang;
 
 #ifdef WOLF_PARTICLES
-		VectorSet (color, 1.0, 1.0, 1.0);
+		vec3set (color, 1.0, 1.0, 1.0);
 #else
-		VectorSet (color, 1.0, 1.0, 0.5);
+		vec3set (color, 1.0, 1.0, 0.5);
 #endif
 		time = cg.time - p->time;
 		time2	= p->endtime - p->time;
@@ -342,19 +342,19 @@ CG_AddParticleToScene(cparticle_t *p, vec3_t org, float alpha)
 		height	= p->height + (ratio * (p->endheight - p->height));
 
 		if(p->roll){
-			Vec3ToAngles(cg.refdef.viewaxis[0], rotate_ang);
+			vec3toeuler(cg.refdef.viewaxis[0], rotate_ang);
 			rotate_ang[ROLL] += p->roll;
-			AngleVectors (rotate_ang, NULL, rr, ru);
+			anglevec3s (rotate_ang, NULL, rr, ru);
 		}
 
 		if(p->roll){
-			Vec3MA (org, -height, ru, point);
-			Vec3MA (point, -width, rr, point);
+			vec3ma (org, -height, ru, point);
+			vec3ma (point, -width, rr, point);
 		}else{
-			Vec3MA (org, -height, vup, point);
-			Vec3MA (point, -width, vright, point);
+			vec3ma (org, -height, vup, point);
+			vec3ma (point, -width, vright, point);
 		}
-		Vec3Copy (point, verts[0].xyz);
+		vec3copy (point, verts[0].xyz);
 		verts[0].st[0]	= 0;
 		verts[0].st[1]	= 0;
 		verts[0].modulate[0] = 255;
@@ -363,10 +363,10 @@ CG_AddParticleToScene(cparticle_t *p, vec3_t org, float alpha)
 		verts[0].modulate[3] = 255;
 
 		if(p->roll)
-			Vec3MA (point, 2*height, ru, point);
+			vec3ma (point, 2*height, ru, point);
 		else
-			Vec3MA (point, 2*height, vup, point);
-		Vec3Copy (point, verts[1].xyz);
+			vec3ma (point, 2*height, vup, point);
+		vec3copy (point, verts[1].xyz);
 		verts[1].st[0]	= 0;
 		verts[1].st[1]	= 1;
 		verts[1].modulate[0] = 255;
@@ -375,10 +375,10 @@ CG_AddParticleToScene(cparticle_t *p, vec3_t org, float alpha)
 		verts[1].modulate[3] = 255;
 
 		if(p->roll)
-			Vec3MA (point, 2*width, rr, point);
+			vec3ma (point, 2*width, rr, point);
 		else
-			Vec3MA (point, 2*width, vright, point);
-		Vec3Copy (point, verts[2].xyz);
+			vec3ma (point, 2*width, vright, point);
+		vec3copy (point, verts[2].xyz);
 		verts[2].st[0]	= 1;
 		verts[2].st[1]	= 1;
 		verts[2].modulate[0] = 255;
@@ -387,10 +387,10 @@ CG_AddParticleToScene(cparticle_t *p, vec3_t org, float alpha)
 		verts[2].modulate[3] = 255;
 
 		if(p->roll)
-			Vec3MA (point, -2*height, ru, point);
+			vec3ma (point, -2*height, ru, point);
 		else
-			Vec3MA (point, -2*height, vup, point);
-		Vec3Copy (point, verts[3].xyz);
+			vec3ma (point, -2*height, vup, point);
+		vec3copy (point, verts[3].xyz);
 		verts[3].st[0]	= 1;
 		verts[3].st[1]	= 0;
 		verts[3].modulate[0] = 255;
@@ -400,16 +400,16 @@ CG_AddParticleToScene(cparticle_t *p, vec3_t org, float alpha)
 	}else if(p->type == P_SMOKE || p->type == P_SMOKE_IMPACT){	/* create a front rotating facing polygon */
 
 		if(p->type == P_SMOKE_IMPACT &&
-		   Vec3Distance(cg.snap->ps.origin, org) > 1024)
+		   vec3dist(cg.snap->ps.origin, org) > 1024)
 			return;
 
 		if(p->color == BLOODRED)
-			VectorSet (color, 0.22f, 0.0f, 0.0f);
+			vec3set (color, 0.22f, 0.0f, 0.0f);
 		else if(p->color == GREY75){
 			float	len;
 			float	greyit;
 			float	val;
-			len = Vec3Distance (cg.snap->ps.origin, org);
+			len = vec3dist (cg.snap->ps.origin, org);
 			if(!len)
 				len = 1;
 
@@ -418,9 +418,9 @@ CG_AddParticleToScene(cparticle_t *p, vec3_t org, float alpha)
 			if(greyit > 0.5)
 				greyit = 0.5;
 
-			VectorSet (color, greyit, greyit, greyit);
+			vec3set (color, greyit, greyit, greyit);
 		}else
-			VectorSet (color, 1.0, 1.0, 1.0);
+			vec3set (color, 1.0, 1.0, 1.0);
 
 		time = cg.time - p->time;
 		time2	= p->endtime - p->time;
@@ -436,7 +436,7 @@ CG_AddParticleToScene(cparticle_t *p, vec3_t org, float alpha)
 				fval = (invratio * invratio);
 				if(fval < 0)
 					fval = 0;
-				VectorSet (color, fval, fval, fval);
+				vec3set (color, fval, fval, fval);
 			}
 			invratio *= p->alpha;
 		}else
@@ -452,25 +452,25 @@ CG_AddParticleToScene(cparticle_t *p, vec3_t org, float alpha)
 		height	= p->height + (ratio * (p->endheight - p->height));
 
 		if(p->type != P_SMOKE_IMPACT){
-			vec3_t temp;
+			Vec3 temp;
 
-			Vec3ToAngles (rforward, temp);
+			vec3toeuler (rforward, temp);
 			p->accumroll += p->roll;
 			temp[ROLL] += p->accumroll * 0.1;
-			AngleVectors (temp, NULL, rright2, rup2);
+			anglevec3s (temp, NULL, rright2, rup2);
 		}else{
-			Vec3Copy (rright, rright2);
-			Vec3Copy (rup, rup2);
+			vec3copy (rright, rright2);
+			vec3copy (rup, rup2);
 		}
 
 		if(p->rotate){
-			Vec3MA (org, -height, rup2, point);
-			Vec3MA (point, -width, rright2, point);
+			vec3ma (org, -height, rup2, point);
+			vec3ma (point, -width, rright2, point);
 		}else{
-			Vec3MA (org, -p->height, vup, point);
-			Vec3MA (point, -p->width, vright, point);
+			vec3ma (org, -p->height, vup, point);
+			vec3ma (point, -p->width, vright, point);
 		}
-		Vec3Copy (point, verts[0].xyz);
+		vec3copy (point, verts[0].xyz);
 		verts[0].st[0]	= 0;
 		verts[0].st[1]	= 0;
 		verts[0].modulate[0] = 255 * color[0];
@@ -479,13 +479,13 @@ CG_AddParticleToScene(cparticle_t *p, vec3_t org, float alpha)
 		verts[0].modulate[3] = 255 * invratio;
 
 		if(p->rotate){
-			Vec3MA (org, -height, rup2, point);
-			Vec3MA (point, width, rright2, point);
+			vec3ma (org, -height, rup2, point);
+			vec3ma (point, width, rright2, point);
 		}else{
-			Vec3MA (org, -p->height, vup, point);
-			Vec3MA (point, p->width, vright, point);
+			vec3ma (org, -p->height, vup, point);
+			vec3ma (point, p->width, vright, point);
 		}
-		Vec3Copy (point, verts[1].xyz);
+		vec3copy (point, verts[1].xyz);
 		verts[1].st[0]	= 0;
 		verts[1].st[1]	= 1;
 		verts[1].modulate[0] = 255 * color[0];
@@ -494,13 +494,13 @@ CG_AddParticleToScene(cparticle_t *p, vec3_t org, float alpha)
 		verts[1].modulate[3] = 255 * invratio;
 
 		if(p->rotate){
-			Vec3MA (org, height, rup2, point);
-			Vec3MA (point, width, rright2, point);
+			vec3ma (org, height, rup2, point);
+			vec3ma (point, width, rright2, point);
 		}else{
-			Vec3MA (org, p->height, vup, point);
-			Vec3MA (point, p->width, vright, point);
+			vec3ma (org, p->height, vup, point);
+			vec3ma (point, p->width, vright, point);
 		}
-		Vec3Copy (point, verts[2].xyz);
+		vec3copy (point, verts[2].xyz);
 		verts[2].st[0]	= 1;
 		verts[2].st[1]	= 1;
 		verts[2].modulate[0] = 255 * color[0];
@@ -509,13 +509,13 @@ CG_AddParticleToScene(cparticle_t *p, vec3_t org, float alpha)
 		verts[2].modulate[3] = 255 * invratio;
 
 		if(p->rotate){
-			Vec3MA (org, height, rup2, point);
-			Vec3MA (point, -width, rright2, point);
+			vec3ma (org, height, rup2, point);
+			vec3ma (point, -width, rright2, point);
 		}else{
-			Vec3MA (org, p->height, vup, point);
-			Vec3MA (point, -p->width, vright, point);
+			vec3ma (org, p->height, vup, point);
+			vec3ma (point, -p->width, vright, point);
 		}
-		Vec3Copy (point, verts[3].xyz);
+		vec3copy (point, verts[3].xyz);
 		verts[3].st[0]	= 1;
 		verts[3].st[1]	= 0;
 		verts[3].modulate[0] = 255 * color[0];
@@ -524,8 +524,8 @@ CG_AddParticleToScene(cparticle_t *p, vec3_t org, float alpha)
 		verts[3].modulate[3] = 255  * invratio;
 
 	}else if(p->type == P_BLEED){
-		vec3_t	rr, ru;
-		vec3_t	rotate_ang;
+		Vec3	rr, ru;
+		Vec3	rotate_ang;
 		float	alpha;
 
 		alpha = p->alpha;
@@ -534,17 +534,17 @@ CG_AddParticleToScene(cparticle_t *p, vec3_t org, float alpha)
 			alpha = 1;
 
 		if(p->roll){
-			Vec3ToAngles(cg.refdef.viewaxis[0], rotate_ang);
+			vec3toeuler(cg.refdef.viewaxis[0], rotate_ang);
 			rotate_ang[ROLL] += p->roll;
-			AngleVectors (rotate_ang, NULL, rr, ru);
+			anglevec3s (rotate_ang, NULL, rr, ru);
 		}else{
-			Vec3Copy (vup, ru);
-			Vec3Copy (vright, rr);
+			vec3copy (vup, ru);
+			vec3copy (vright, rr);
 		}
 
-		Vec3MA (org, -p->height, ru, point);
-		Vec3MA (point, -p->width, rr, point);
-		Vec3Copy (point, verts[0].xyz);
+		vec3ma (org, -p->height, ru, point);
+		vec3ma (point, -p->width, rr, point);
+		vec3copy (point, verts[0].xyz);
 		verts[0].st[0]	= 0;
 		verts[0].st[1]	= 0;
 		verts[0].modulate[0] = 111;
@@ -552,9 +552,9 @@ CG_AddParticleToScene(cparticle_t *p, vec3_t org, float alpha)
 		verts[0].modulate[2] = 9;
 		verts[0].modulate[3] = 255 * alpha;
 
-		Vec3MA (org, -p->height, ru, point);
-		Vec3MA (point, p->width, rr, point);
-		Vec3Copy (point, verts[1].xyz);
+		vec3ma (org, -p->height, ru, point);
+		vec3ma (point, p->width, rr, point);
+		vec3copy (point, verts[1].xyz);
 		verts[1].st[0]	= 0;
 		verts[1].st[1]	= 1;
 		verts[1].modulate[0] = 111;
@@ -562,9 +562,9 @@ CG_AddParticleToScene(cparticle_t *p, vec3_t org, float alpha)
 		verts[1].modulate[2] = 9;
 		verts[1].modulate[3] = 255 * alpha;
 
-		Vec3MA (org, p->height, ru, point);
-		Vec3MA (point, p->width, rr, point);
-		Vec3Copy (point, verts[2].xyz);
+		vec3ma (org, p->height, ru, point);
+		vec3ma (point, p->width, rr, point);
+		vec3copy (point, verts[2].xyz);
 		verts[2].st[0]	= 1;
 		verts[2].st[1]	= 1;
 		verts[2].modulate[0] = 111;
@@ -572,9 +572,9 @@ CG_AddParticleToScene(cparticle_t *p, vec3_t org, float alpha)
 		verts[2].modulate[2] = 9;
 		verts[2].modulate[3] = 255 * alpha;
 
-		Vec3MA (org, p->height, ru, point);
-		Vec3MA (point, -p->width, rr, point);
-		Vec3Copy (point, verts[3].xyz);
+		vec3ma (org, p->height, ru, point);
+		vec3ma (point, -p->width, rr, point);
+		vec3copy (point, verts[3].xyz);
 		verts[3].st[0]	= 1;
 		verts[3].st[1]	= 0;
 		verts[3].modulate[0] = 111;
@@ -587,9 +587,9 @@ CG_AddParticleToScene(cparticle_t *p, vec3_t org, float alpha)
 		float	sinR, cosR;
 
 		if(p->color == BLOODRED)
-			VectorSet (color, 1, 1, 1);
+			vec3set (color, 1, 1, 1);
 		else
-			VectorSet (color, 0.5, 0.5, 0.5);
+			vec3set (color, 0.5, 0.5, 0.5);
 
 		time = cg.time - p->time;
 		time2	= p->endtime - p->time;
@@ -607,7 +607,7 @@ CG_AddParticleToScene(cparticle_t *p, vec3_t org, float alpha)
 		sinR = height * sin(DEG2RAD(p->roll)) * sqrt(2);
 		cosR = width * cos(DEG2RAD(p->roll)) * sqrt(2);
 
-		Vec3Copy (org, verts[0].xyz);
+		vec3copy (org, verts[0].xyz);
 		verts[0].xyz[0] -= sinR;
 		verts[0].xyz[1] -= cosR;
 		verts[0].st[0]	= 0;
@@ -617,7 +617,7 @@ CG_AddParticleToScene(cparticle_t *p, vec3_t org, float alpha)
 		verts[0].modulate[2] = 255 * color[2];
 		verts[0].modulate[3] = 255;
 
-		Vec3Copy (org, verts[1].xyz);
+		vec3copy (org, verts[1].xyz);
 		verts[1].xyz[0] -= cosR;
 		verts[1].xyz[1] += sinR;
 		verts[1].st[0]	= 0;
@@ -627,7 +627,7 @@ CG_AddParticleToScene(cparticle_t *p, vec3_t org, float alpha)
 		verts[1].modulate[2] = 255 * color[2];
 		verts[1].modulate[3] = 255;
 
-		Vec3Copy (org, verts[2].xyz);
+		vec3copy (org, verts[2].xyz);
 		verts[2].xyz[0] += sinR;
 		verts[2].xyz[1] += cosR;
 		verts[2].st[0]	= 1;
@@ -637,7 +637,7 @@ CG_AddParticleToScene(cparticle_t *p, vec3_t org, float alpha)
 		verts[2].modulate[2] = 255 * color[2];
 		verts[2].modulate[3] = 255;
 
-		Vec3Copy (org, verts[3].xyz);
+		vec3copy (org, verts[3].xyz);
 		verts[3].xyz[0] += cosR;
 		verts[3].xyz[1] -= sinR;
 		verts[3].st[0]	= 1;
@@ -648,7 +648,7 @@ CG_AddParticleToScene(cparticle_t *p, vec3_t org, float alpha)
 		verts[3].modulate[3] = 255;
 	}else if(p->type == P_FLAT){
 
-		Vec3Copy (org, verts[0].xyz);
+		vec3copy (org, verts[0].xyz);
 		verts[0].xyz[0] -= p->height;
 		verts[0].xyz[1] -= p->width;
 		verts[0].st[0]	= 0;
@@ -658,7 +658,7 @@ CG_AddParticleToScene(cparticle_t *p, vec3_t org, float alpha)
 		verts[0].modulate[2] = 255;
 		verts[0].modulate[3] = 255;
 
-		Vec3Copy (org, verts[1].xyz);
+		vec3copy (org, verts[1].xyz);
 		verts[1].xyz[0] -= p->height;
 		verts[1].xyz[1] += p->width;
 		verts[1].st[0]	= 0;
@@ -668,7 +668,7 @@ CG_AddParticleToScene(cparticle_t *p, vec3_t org, float alpha)
 		verts[1].modulate[2] = 255;
 		verts[1].modulate[3] = 255;
 
-		Vec3Copy (org, verts[2].xyz);
+		vec3copy (org, verts[2].xyz);
 		verts[2].xyz[0] += p->height;
 		verts[2].xyz[1] += p->width;
 		verts[2].st[0]	= 1;
@@ -678,7 +678,7 @@ CG_AddParticleToScene(cparticle_t *p, vec3_t org, float alpha)
 		verts[2].modulate[2] = 255;
 		verts[2].modulate[3] = 255;
 
-		Vec3Copy (org, verts[3].xyz);
+		vec3copy (org, verts[3].xyz);
 		verts[3].xyz[0] += p->height;
 		verts[3].xyz[1] -= p->width;
 		verts[3].st[0]	= 1;
@@ -691,8 +691,8 @@ CG_AddParticleToScene(cparticle_t *p, vec3_t org, float alpha)
 	}
 	/* Ridah */
 	else if(p->type == P_ANIM){
-		vec3_t	rr, ru;
-		vec3_t	rotate_ang;
+		Vec3	rr, ru;
+		Vec3	rotate_ang;
 		int	i, j;
 
 		time = cg.time - p->time;
@@ -705,7 +705,7 @@ CG_AddParticleToScene(cparticle_t *p, vec3_t org, float alpha)
 		height	= p->height + (ratio * (p->endheight - p->height));
 
 		/* if we are "inside" this sprite, don't draw */
-		if(Vec3Distance(cg.snap->ps.origin, org) < width/1.5)
+		if(vec3dist(cg.snap->ps.origin, org) < width/1.5)
 			return;
 
 		i = p->shaderAnim;
@@ -713,19 +713,19 @@ CG_AddParticleToScene(cparticle_t *p, vec3_t org, float alpha)
 		p->pshader = shaderAnims[i][j];
 
 		if(p->roll){
-			Vec3ToAngles(cg.refdef.viewaxis[0], rotate_ang);
+			vec3toeuler(cg.refdef.viewaxis[0], rotate_ang);
 			rotate_ang[ROLL] += p->roll;
-			AngleVectors (rotate_ang, NULL, rr, ru);
+			anglevec3s (rotate_ang, NULL, rr, ru);
 		}
 
 		if(p->roll){
-			Vec3MA (org, -height, ru, point);
-			Vec3MA (point, -width, rr, point);
+			vec3ma (org, -height, ru, point);
+			vec3ma (point, -width, rr, point);
 		}else{
-			Vec3MA (org, -height, vup, point);
-			Vec3MA (point, -width, vright, point);
+			vec3ma (org, -height, vup, point);
+			vec3ma (point, -width, vright, point);
 		}
-		Vec3Copy (point, verts[0].xyz);
+		vec3copy (point, verts[0].xyz);
 		verts[0].st[0]	= 0;
 		verts[0].st[1]	= 0;
 		verts[0].modulate[0] = 255;
@@ -734,10 +734,10 @@ CG_AddParticleToScene(cparticle_t *p, vec3_t org, float alpha)
 		verts[0].modulate[3] = 255;
 
 		if(p->roll)
-			Vec3MA (point, 2*height, ru, point);
+			vec3ma (point, 2*height, ru, point);
 		else
-			Vec3MA (point, 2*height, vup, point);
-		Vec3Copy (point, verts[1].xyz);
+			vec3ma (point, 2*height, vup, point);
+		vec3copy (point, verts[1].xyz);
 		verts[1].st[0]	= 0;
 		verts[1].st[1]	= 1;
 		verts[1].modulate[0] = 255;
@@ -746,10 +746,10 @@ CG_AddParticleToScene(cparticle_t *p, vec3_t org, float alpha)
 		verts[1].modulate[3] = 255;
 
 		if(p->roll)
-			Vec3MA (point, 2*width, rr, point);
+			vec3ma (point, 2*width, rr, point);
 		else
-			Vec3MA (point, 2*width, vright, point);
-		Vec3Copy (point, verts[2].xyz);
+			vec3ma (point, 2*width, vright, point);
+		vec3copy (point, verts[2].xyz);
 		verts[2].st[0]	= 1;
 		verts[2].st[1]	= 1;
 		verts[2].modulate[0] = 255;
@@ -758,10 +758,10 @@ CG_AddParticleToScene(cparticle_t *p, vec3_t org, float alpha)
 		verts[2].modulate[3] = 255;
 
 		if(p->roll)
-			Vec3MA (point, -2*height, ru, point);
+			vec3ma (point, -2*height, ru, point);
 		else
-			Vec3MA (point, -2*height, vup, point);
-		Vec3Copy (point, verts[3].xyz);
+			vec3ma (point, -2*height, vup, point);
+		vec3copy (point, verts[3].xyz);
 		verts[3].st[0]	= 1;
 		verts[3].st[1]	= 0;
 		verts[3].modulate[0] = 255;
@@ -796,21 +796,21 @@ CG_AddParticles(void)
 	cparticle_t *p, *next;
 	float	alpha;
 	float	time, time2;
-	vec3_t	org;
+	Vec3	org;
 	cparticle_t             *active, *tail;
-	vec3_t	rotate_ang;
+	Vec3	rotate_ang;
 
 	if(!initparticles)
 		CG_ClearParticles ();
 
-	Vec3Copy(cg.refdef.viewaxis[0], vforward);
-	Vec3Copy(cg.refdef.viewaxis[1], vright);
-	Vec3Copy(cg.refdef.viewaxis[2], vup);
+	vec3copy(cg.refdef.viewaxis[0], vforward);
+	vec3copy(cg.refdef.viewaxis[1], vright);
+	vec3copy(cg.refdef.viewaxis[2], vup);
 
-	Vec3ToAngles(cg.refdef.viewaxis[0], rotate_ang);
+	vec3toeuler(cg.refdef.viewaxis[0], rotate_ang);
 	roll += ((cg.time - oldtime) * 0.1);
 	rotate_ang[ROLL] += (roll*0.9);
-	AngleVectors (rotate_ang, rforward, rright, rup);
+	anglevec3s (rotate_ang, rforward, rright, rup);
 
 	oldtime = cg.time;
 
@@ -950,7 +950,7 @@ CG_ParticleSnowFlurry(qhandle_t pshader, centity_t *cent)
 	if(turb)
 		p->vel[2] = -10;
 
-	Vec3Copy(cent->currentState.origin, p->org);
+	vec3copy(cent->currentState.origin, p->org);
 
 	p->org[0] = p->org[0];
 	p->org[1] = p->org[1];
@@ -972,7 +972,7 @@ CG_ParticleSnowFlurry(qhandle_t pshader, centity_t *cent)
 }
 
 void
-CG_ParticleSnow(qhandle_t pshader, vec3_t origin, vec3_t origin2, int turb,
+CG_ParticleSnow(qhandle_t pshader, Vec3 origin, Vec3 origin2, int turb,
 		float range,
 		int snum)
 {
@@ -1005,7 +1005,7 @@ CG_ParticleSnow(qhandle_t pshader, vec3_t origin, vec3_t origin2, int turb,
 	}else
 		p->type = P_WEATHER;
 
-	Vec3Copy(origin, p->org);
+	vec3copy(origin, p->org);
 
 	p->org[0] = p->org[0] + (crandom() * range);
 	p->org[1] = p->org[1] + (crandom() * range);
@@ -1027,7 +1027,7 @@ CG_ParticleSnow(qhandle_t pshader, vec3_t origin, vec3_t origin2, int turb,
 }
 
 void
-CG_ParticleBubble(qhandle_t pshader, vec3_t origin, vec3_t origin2, int turb,
+CG_ParticleBubble(qhandle_t pshader, Vec3 origin, Vec3 origin2, int turb,
 		  float range,
 		  int snum)
 {
@@ -1064,7 +1064,7 @@ CG_ParticleBubble(qhandle_t pshader, vec3_t origin, vec3_t origin2, int turb,
 	}else
 		p->type = P_BUBBLE;
 
-	Vec3Copy(origin, p->org);
+	vec3copy(origin, p->org);
 
 	p->org[0] = p->org[0] + (crandom() * range);
 	p->org[1] = p->org[1] + (crandom() * range);
@@ -1120,7 +1120,7 @@ CG_ParticleSmoke(qhandle_t pshader, centity_t *cent)
 	p->endwidth = 32;
 	p->type = P_SMOKE;
 
-	Vec3Copy(cent->currentState.origin, p->org);
+	vec3copy(cent->currentState.origin, p->org);
 
 	p->vel[0] = p->vel[1] = 0;
 	p->accel[0] = p->accel[1] = p->accel[2] = 0;
@@ -1135,7 +1135,7 @@ CG_ParticleSmoke(qhandle_t pshader, centity_t *cent)
 
 
 void
-CG_ParticleBulletDebris(vec3_t org, vec3_t vel, int duration)
+CG_ParticleBulletDebris(Vec3 org, Vec3 vel, int duration)
 {
 
 	cparticle_t *p;
@@ -1164,7 +1164,7 @@ CG_ParticleBulletDebris(vec3_t org, vec3_t vel, int duration)
 
 	p->type = P_SMOKE;
 
-	Vec3Copy(org, p->org);
+	vec3copy(org, p->org);
 
 	p->vel[0] = vel[0];
 	p->vel[1] = vel[1];
@@ -1181,7 +1181,7 @@ CG_ParticleBulletDebris(vec3_t org, vec3_t vel, int duration)
  */
 
 void
-CG_ParticleExplosion(char *animStr, vec3_t origin, vec3_t vel, int duration,
+CG_ParticleExplosion(char *animStr, Vec3 origin, Vec3 vel, int duration,
 		     int sizeStart,
 		     int sizeEnd)
 {
@@ -1234,9 +1234,9 @@ CG_ParticleExplosion(char *animStr, vec3_t origin, vec3_t vel, int duration,
 
 	p->type = P_ANIM;
 
-	Vec3Copy(origin, p->org);
-	Vec3Copy(vel, p->vel);
-	VectorClear(p->accel);
+	vec3copy(origin, p->org);
+	vec3copy(vel, p->vel);
+	vec3clear(p->accel);
 
 }
 
@@ -1255,7 +1255,7 @@ CG_NewParticleArea(int num)
 	char	*str;
 	char    *token;
 	int	type;
-	vec3_t	origin, origin2;
+	Vec3	origin, origin2;
 	int	i;
 	float	range = 0;
 	int	turb;
@@ -1344,7 +1344,7 @@ CG_SnowLink(centity_t *cent, qbool particleOn)
 }
 
 void
-CG_ParticleImpactSmokePuff(qhandle_t pshader, vec3_t origin)
+CG_ParticleImpactSmokePuff(qhandle_t pshader, Vec3 origin)
 {
 	cparticle_t *p;
 
@@ -1377,15 +1377,15 @@ CG_ParticleImpactSmokePuff(qhandle_t pshader, vec3_t origin)
 
 	p->type = P_SMOKE_IMPACT;
 
-	Vec3Copy(origin, p->org);
-	VectorSet(p->vel, 0, 0, 20);
-	VectorSet(p->accel, 0, 0, 20);
+	vec3copy(origin, p->org);
+	vec3set(p->vel, 0, 0, 20);
+	vec3set(p->accel, 0, 0, 20);
 
 	p->rotate = qtrue;
 }
 
 void
-CG_Particle_Bleed(qhandle_t pshader, vec3_t start, vec3_t dir,
+CG_Particle_Bleed(qhandle_t pshader, Vec3 start, Vec3 dir,
 		  int fleshEntityNum,
 		  int duration)
 {
@@ -1422,11 +1422,11 @@ CG_Particle_Bleed(qhandle_t pshader, vec3_t start, vec3_t dir,
 
 	p->type = P_SMOKE;
 
-	Vec3Copy(start, p->org);
+	vec3copy(start, p->org);
 	p->vel[0] = 0;
 	p->vel[1] = 0;
 	p->vel[2] = -20;
-	VectorClear(p->accel);
+	vec3clear(p->accel);
 
 	p->rotate = qfalse;
 
@@ -1481,7 +1481,7 @@ CG_Particle_OilParticle(qhandle_t pshader, centity_t *cent)
 
 	p->type = P_SMOKE;
 
-	Vec3Copy(cent->currentState.origin, p->org);
+	vec3copy(cent->currentState.origin, p->org);
 
 	p->vel[0] = (cent->currentState.origin2[0] * (16 * ratio));
 	p->vel[1] = (cent->currentState.origin2[1] * (16 * ratio));
@@ -1489,7 +1489,7 @@ CG_Particle_OilParticle(qhandle_t pshader, centity_t *cent)
 
 	p->snum = 1.0f;
 
-	VectorClear(p->accel);
+	vec3clear(p->accel);
 
 	p->accel[2] = -20;
 
@@ -1549,14 +1549,14 @@ CG_Particle_OilSlick(qhandle_t pshader, centity_t *cent)
 
 	p->snum = 1.0;
 
-	Vec3Copy(cent->currentState.origin, p->org);
+	vec3copy(cent->currentState.origin, p->org);
 
 	p->org[2]+= 0.55 + (crandom() * 0.5);
 
 	p->vel[0] = 0;
 	p->vel[1] = 0;
 	p->vel[2] = 0;
-	VectorClear(p->accel);
+	vec3clear(p->accel);
 
 	p->rotate = qfalse;
 
@@ -1592,31 +1592,31 @@ CG_OilSlickRemove(centity_t *cent)
 }
 
 qbool
-ValidBloodPool(vec3_t start)
+ValidBloodPool(Vec3 start)
 {
 #define EXTRUDE_DIST 0.5
-	vec3_t	angles;
-	vec3_t	right, up;
-	vec3_t	thispos, xpos, center, endpos;
+	Vec3	angles;
+	Vec3	right, up;
+	Vec3	thispos, xpos, center, endpos;
 	int	x, y;
 	int	fwidth, fheight;
 	trace_t trace;
-	vec3_t	normal;
+	Vec3	normal;
 
 	fwidth	= 16;
 	fheight = 16;
 
-	VectorSet(normal, 0, 0, 1);
-	Vec3ToAngles(normal, angles);
-	AngleVectors(angles, NULL, right, up);
-	Vec3MA(start, EXTRUDE_DIST, normal, center);
+	vec3set(normal, 0, 0, 1);
+	vec3toeuler(normal, angles);
+	anglevec3s(angles, NULL, right, up);
+	vec3ma(start, EXTRUDE_DIST, normal, center);
 
 	for(x = -fwidth / 2; x < fwidth; x += fwidth){
-		Vec3MA(center, x, right, xpos);
+		vec3ma(center, x, right, xpos);
 
 		for(y = -fheight / 2; y < fheight; y += fheight){
-			Vec3MA(xpos, y, up, thispos);
-			Vec3MA(thispos, -EXTRUDE_DIST * 2, normal, endpos);
+			vec3ma(xpos, y, up, thispos);
+			vec3ma(thispos, -EXTRUDE_DIST * 2, normal, endpos);
 
 			CG_Trace(&trace, thispos, NULL, NULL, endpos, -1,
 				CONTENTS_SOLID);
@@ -1635,7 +1635,7 @@ CG_BloodPool(localEntity_t *le, qhandle_t pshader, trace_t *tr)
 {
 	cparticle_t	*p;
 	qbool		legit;
-	vec3_t	start;
+	Vec3	start;
 	float	rndSize;
 
 	if(!pshader)
@@ -1644,7 +1644,7 @@ CG_BloodPool(localEntity_t *le, qhandle_t pshader, trace_t *tr)
 	if(!free_particles)
 		return;
 
-	Vec3Copy (tr->endpos, start);
+	vec3copy (tr->endpos, start);
 	legit = ValidBloodPool (start);
 
 	if(!legit)
@@ -1675,12 +1675,12 @@ CG_BloodPool(localEntity_t *le, qhandle_t pshader, trace_t *tr)
 
 	p->type = P_FLAT_SCALEUP;
 
-	Vec3Copy(start, p->org);
+	vec3copy(start, p->org);
 
 	p->vel[0] = 0;
 	p->vel[1] = 0;
 	p->vel[2] = 0;
-	VectorClear(p->accel);
+	vec3clear(p->accel);
 
 	p->rotate = qfalse;
 
@@ -1695,21 +1695,21 @@ CG_BloodPool(localEntity_t *le, qhandle_t pshader, trace_t *tr)
 #define LARGESIZE	32
 
 void
-CG_ParticleBloodCloud(centity_t *cent, vec3_t origin, vec3_t dir)
+CG_ParticleBloodCloud(centity_t *cent, Vec3 origin, Vec3 dir)
 {
 	float	length;
 	float	dist;
 	float	crittersize;
-	vec3_t	angles, forward;
-	vec3_t	point;
+	Vec3	angles, forward;
+	Vec3	point;
 	cparticle_t     *p;
 	int	i;
 
 	dist = 0;
 
-	length = Vec3Len (dir);
-	Vec3ToAngles (dir, angles);
-	AngleVectors (angles, forward, NULL, NULL);
+	length = vec3len (dir);
+	vec3toeuler (dir, angles);
+	anglevec3s (angles, forward, NULL, NULL);
 
 	crittersize = LARGESIZE;
 
@@ -1719,10 +1719,10 @@ CG_ParticleBloodCloud(centity_t *cent, vec3_t origin, vec3_t dir)
 	if(dist < 1)
 		dist = 1;
 
-	Vec3Copy (origin, point);
+	vec3copy (origin, point);
 
 	for(i=0; i<dist; i++){
-		Vec3MA (point, crittersize, forward, point);
+		vec3ma (point, crittersize, forward, point);
 
 		if(!free_particles)
 			return;
@@ -1750,13 +1750,13 @@ CG_ParticleBloodCloud(centity_t *cent, vec3_t origin, vec3_t dir)
 
 		p->type = P_SMOKE;
 
-		Vec3Copy(origin, p->org);
+		vec3copy(origin, p->org);
 
 		p->vel[0] = 0;
 		p->vel[1] = 0;
 		p->vel[2] = -1;
 
-		VectorClear(p->accel);
+		vec3clear(p->accel);
 
 		p->rotate = qfalse;
 
@@ -1772,7 +1772,7 @@ CG_ParticleBloodCloud(centity_t *cent, vec3_t origin, vec3_t dir)
 }
 
 void
-CG_ParticleSparks(vec3_t org, vec3_t vel, int duration, float x, float y,
+CG_ParticleSparks(Vec3 org, Vec3 vel, int duration, float x, float y,
 		  float speed)
 {
 	cparticle_t *p;
@@ -1801,7 +1801,7 @@ CG_ParticleSparks(vec3_t org, vec3_t vel, int duration, float x, float y,
 
 	p->type = P_SMOKE;
 
-	Vec3Copy(org, p->org);
+	vec3copy(org, p->org);
 
 	p->org[0] += (crandom() * x);
 	p->org[1] += (crandom() * y);
@@ -1822,22 +1822,22 @@ CG_ParticleSparks(vec3_t org, vec3_t vel, int duration, float x, float y,
 }
 
 void
-CG_ParticleDust(centity_t *cent, vec3_t origin, vec3_t dir)
+CG_ParticleDust(centity_t *cent, Vec3 origin, Vec3 dir)
 {
 	float	length;
 	float	dist;
 	float	crittersize;
-	vec3_t	angles, forward;
-	vec3_t	point;
+	Vec3	angles, forward;
+	Vec3	point;
 	cparticle_t     *p;
 	int	i;
 
 	dist = 0;
 
-	VectorNegate (dir, dir);
-	length = Vec3Len (dir);
-	Vec3ToAngles (dir, angles);
-	AngleVectors (angles, forward, NULL, NULL);
+	vec3negate (dir, dir);
+	length = vec3len (dir);
+	vec3toeuler (dir, angles);
+	anglevec3s (angles, forward, NULL, NULL);
 
 	crittersize = LARGESIZE;
 
@@ -1847,10 +1847,10 @@ CG_ParticleDust(centity_t *cent, vec3_t origin, vec3_t dir)
 	if(dist < 1)
 		dist = 1;
 
-	Vec3Copy (origin, point);
+	vec3copy (origin, point);
 
 	for(i=0; i<dist; i++){
-		Vec3MA (point, crittersize, forward, point);
+		vec3ma (point, crittersize, forward, point);
 
 		if(!free_particles)
 			return;
@@ -1892,7 +1892,7 @@ CG_ParticleDust(centity_t *cent, vec3_t origin, vec3_t dir)
 
 		p->type = P_SMOKE;
 
-		Vec3Copy(point, p->org);
+		vec3copy(point, p->org);
 
 		p->vel[0] = crandom()*6;
 		p->vel[1] = crandom()*6;
@@ -1903,7 +1903,7 @@ CG_ParticleDust(centity_t *cent, vec3_t origin, vec3_t dir)
 		p->accel[1] = crandom()*3;
 		p->accel[2] = -PARTICLE_GRAVITY*0.4;
 
-		VectorClear(p->accel);
+		vec3clear(p->accel);
 
 		p->rotate = qfalse;
 
@@ -1917,7 +1917,7 @@ CG_ParticleDust(centity_t *cent, vec3_t origin, vec3_t dir)
 }
 
 void
-CG_ParticleMisc(qhandle_t pshader, vec3_t origin, int size, int duration,
+CG_ParticleMisc(qhandle_t pshader, Vec3 origin, int size, int duration,
 		float alpha)
 {
 	cparticle_t *p;
@@ -1954,7 +1954,7 @@ CG_ParticleMisc(qhandle_t pshader, vec3_t origin, int size, int duration,
 
 	p->type = P_SPRITE;
 
-	Vec3Copy(origin, p->org);
+	vec3copy(origin, p->org);
 
 	p->rotate = qfalse;
 }

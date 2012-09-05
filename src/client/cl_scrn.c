@@ -158,7 +158,7 @@ void
 SCR_DrawStringExt(int x, int y, float size, const char *string, float *setColor,
 		  qbool forceColor, qbool noColorEscape)
 {
-	vec4_t	color;
+	Vec4	color;
 	const char      *s;
 	int	xx;
 
@@ -218,7 +218,7 @@ SCR_DrawBigString(int x, int y, const char *s, float alpha,
 }
 
 void
-SCR_DrawBigStringColor(int x, int y, const char *s, vec4_t color,
+SCR_DrawBigStringColor(int x, int y, const char *s, Vec4 color,
 		       qbool noColorEscape)
 {
 	SCR_DrawStringExt(x, y, BIGCHAR_WIDTH, s, color, qtrue, noColorEscape);
@@ -232,7 +232,7 @@ void
 SCR_DrawSmallStringExt(int x, int y, const char *string, float *setColor,
 		       qbool forceColor, qbool noColorEscape)
 {
-	vec4_t	color;
+	Vec4	color;
 	const char      *s;
 	int	xx;
 

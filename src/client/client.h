@@ -144,7 +144,7 @@ struct clientActive_t {
 	 * the server sends a delta each frame which is added to the locally
 	 * tracked view angles to account for standing on rotating objects,
 	 * and teleport direction changes */
-	vec3_t	viewangles;
+	Vec3	viewangles;
 
 	int	serverId;	/* included in each client message so the server */
 	/* can tell if it is for a prior map_restart
@@ -526,7 +526,7 @@ void	SCR_DrawNamedPic(float x, float y, float width, float height,
 			const char *picname);
 void	SCR_DrawBigString(int x, int y, const char *s, float alpha,
 			qbool noColorEscape);	/* draws a string with embedded color control characters with fade */
-void	SCR_DrawBigStringColor(int x, int y, const char *s, vec4_t color,
+void	SCR_DrawBigStringColor(int x, int y, const char *s, Vec4 color,
 			qbool noColorEscape);	/* ignores embedded color control characters */
 void	SCR_DrawSmallStringExt(int x, int y, const char *string, float *setColor,
 			qbool forceColor, qbool noColorEscape);

@@ -141,7 +141,7 @@ void
 RB_CalcDeformVertexes(deformStage_t *ds)
 {
 	int i;
-	vec3_t	offset;
+	Vec3	offset;
 	float	scale;
 	float	*xyz = ( float* )tess.xyz;
 	float	*normal = ( float* )tess.normal;
@@ -151,7 +151,7 @@ RB_CalcDeformVertexes(deformStage_t *ds)
 		scale = EvalWaveForm(&ds->deformationWave);
 
 		for(i = 0; i < tess.numVertexes; i++, xyz += 4, normal += 4){
-			VectorScale(normal, scale, offset);
+			vec3scale(normal, scale, offset);
 
 			xyz[0]	+= offset[0];
 			xyz[1]	+= offset[1];
@@ -168,7 +168,7 @@ RB_CalcDeformVertexes(deformStage_t *ds)
 				ds->deformationWave.phase + off,
 				ds->deformationWave.frequency);
 
-			VectorScale(normal, scale, offset);
+			vec3scale(normal, scale, offset);
 
 			xyz[0]	+= offset[0];
 			xyz[1]	+= offset[1];
@@ -206,7 +206,7 @@ RB_CalcDeformNormals(deformStage_t *ds)
 			tess.shaderTime * ds->deformationWave.frequency);
 		normal[ 2 ] += ds->deformationWave.amplitude * scale;
 
-		Vec3NormalizeFast(normal);
+		vec3normalizefast(normal);
 	}
 }
 
@@ -252,7 +252,7 @@ RB_CalcMoveVertexes(deformStage_t *ds)
 	float *xyz;
 	float *table;
 	float scale;
-	vec3_t offset;
+	Vec3 offset;
 
 	table = TableForFunc(ds->deformationWave.func);
 
@@ -261,11 +261,11 @@ RB_CalcMoveVertexes(deformStage_t *ds)
 		ds->deformationWave.phase,
 		ds->deformationWave.frequency);
 
-	VectorScale(ds->moveVector, scale, offset);
+	vec3scale(ds->moveVector, scale, offset);
 
 	xyz = ( float* )tess.xyz;
 	for(i = 0; i < tess.numVertexes; i++, xyz += 4)
-		Vec3Add(xyz, offset, xyz);
+		vec3add(xyz, offset, xyz);
 }
 
 
@@ -278,24 +278,24 @@ void
 DeformText(const char *text)
 {
 	int i;
-	vec3_t	origin, width, height;
+	Vec3	origin, width, height;
 	int	len;
 	int	ch;
 	float	color[4];
 	float	bottom, top;
-	vec3_t	mid;
+	Vec3	mid;
 
 	height[0] = 0;
 	height[1] = 0;
 	height[2] = -1;
-	Vec3Cross(tess.normal[0], height, width);
+	vec3cross(tess.normal[0], height, width);
 
 	/* find the midpoint of the box */
-	VectorClear(mid);
+	vec3clear(mid);
 	bottom = 999999;
 	top = -999999;
 	for(i = 0; i < 4; i++){
-		Vec3Add(tess.xyz[i], mid, mid);
+		vec3add(tess.xyz[i], mid, mid);
 		if(tess.xyz[i][2] < bottom){
 			bottom = tess.xyz[i][2];
 		}
@@ -303,18 +303,18 @@ DeformText(const char *text)
 			top = tess.xyz[i][2];
 		}
 	}
-	VectorScale(mid, 0.25f, origin);
+	vec3scale(mid, 0.25f, origin);
 
 	/* determine the individual character size */
 	height[0] = 0;
 	height[1] = 0;
 	height[2] = (top - bottom) * 0.5f;
 
-	VectorScale(width, height[2] * -0.75f, width);
+	vec3scale(width, height[2] * -0.75f, width);
 
 	/* determine the starting position */
 	len = strlen(text);
-	Vec3MA(origin, (len-1), width, origin);
+	vec3ma(origin, (len-1), width, origin);
 
 	/* clear the shader indexes */
 	tess.numIndexes = 0;
@@ -341,7 +341,7 @@ DeformText(const char *text)
 
 			RB_AddQuadStampExt(origin, width, height, color, fcol, frow, fcol + size, frow + size);
 		}
-		Vec3MA(origin, -2, width, origin);
+		vec3ma(origin, -2, width, origin);
 	}
 }
 
@@ -349,11 +349,11 @@ DeformText(const char *text)
  * GlobalVectorToLocal
  */
 static void
-GlobalVectorToLocal(const vec3_t in, vec3_t out)
+GlobalVectorToLocal(const Vec3 in, Vec3 out)
 {
-	out[0]	= Vec3Dot(in, backEnd.or.axis[0]);
-	out[1]	= Vec3Dot(in, backEnd.or.axis[1]);
-	out[2]	= Vec3Dot(in, backEnd.or.axis[2]);
+	out[0]	= vec3dot(in, backEnd.or.axis[0]);
+	out[1]	= vec3dot(in, backEnd.or.axis[1]);
+	out[2]	= vec3dot(in, backEnd.or.axis[2]);
 }
 
 /*
@@ -368,10 +368,10 @@ AutospriteDeform(void)
 	int i;
 	int oldVerts;
 	float *xyz;
-	vec3_t	mid, delta;
+	Vec3	mid, delta;
 	float	radius;
-	vec3_t	left, up;
-	vec3_t	leftDir, upDir;
+	Vec3	left, up;
+	Vec3	leftDir, upDir;
 
 	if(tess.numVertexes & 3){
 		ri.Printf(PRINT_WARNING, "Autosprite shader %s had odd vertex count\n", tess.shader->name);
@@ -389,8 +389,8 @@ AutospriteDeform(void)
 		GlobalVectorToLocal(backEnd.viewParms.or.axis[1], leftDir);
 		GlobalVectorToLocal(backEnd.viewParms.or.axis[2], upDir);
 	}else{
-		Vec3Copy(backEnd.viewParms.or.axis[1], leftDir);
-		Vec3Copy(backEnd.viewParms.or.axis[2], upDir);
+		vec3copy(backEnd.viewParms.or.axis[1], leftDir);
+		vec3copy(backEnd.viewParms.or.axis[2], upDir);
 	}
 
 	for(i = 0; i < oldVerts; i+=4){
@@ -401,27 +401,27 @@ AutospriteDeform(void)
 		mid[1]	= 0.25f * (xyz[1] + xyz[5] + xyz[9] + xyz[13]);
 		mid[2]	= 0.25f * (xyz[2] + xyz[6] + xyz[10] + xyz[14]);
 
-		Vec3Sub(xyz, mid, delta);
-		radius = Vec3Len(delta) * 0.707f;	/* / sqrt(2) */
+		vec3sub(xyz, mid, delta);
+		radius = vec3len(delta) * 0.707f;	/* / sqrt(2) */
 
-		VectorScale(leftDir, radius, left);
-		VectorScale(upDir, radius, up);
+		vec3scale(leftDir, radius, left);
+		vec3scale(upDir, radius, up);
 
 		if(backEnd.viewParms.isMirror){
-			Vec3Sub(vec3_origin, left, left);
+			vec3sub(vec3_origin, left, left);
 		}
 
 		/* compensate for scale in the axes if necessary */
 		if(backEnd.currentEntity->e.nonNormalizedAxes){
 			float axisLength;
-			axisLength = Vec3Len(backEnd.currentEntity->e.axis[0]);
+			axisLength = vec3len(backEnd.currentEntity->e.axis[0]);
 			if(!axisLength){
 				axisLength = 0;
 			}else{
 				axisLength = 1.0f / axisLength;
 			}
-			VectorScale(left, axisLength, left);
-			VectorScale(up, axisLength, up);
+			vec3scale(left, axisLength, left);
+			vec3scale(up, axisLength, up);
 		}
 
 		RB_AddQuadStamp(mid, left, up, tess.vertexColors[i]);
@@ -449,7 +449,7 @@ Autosprite2Deform(void)
 	int i, j, k;
 	int indexes;
 	float *xyz;
-	vec3_t forward;
+	Vec3 forward;
 
 	if(tess.numVertexes & 3){
 		ri.Printf(PRINT_WARNING, "Autosprite2 shader %s had odd vertex count", tess.shader->name);
@@ -461,7 +461,7 @@ Autosprite2Deform(void)
 	if(backEnd.currentEntity != &tr.worldEntity){
 		GlobalVectorToLocal(backEnd.viewParms.or.axis[0], forward);
 	}else{
-		Vec3Copy(backEnd.viewParms.or.axis[0], forward);
+		vec3copy(backEnd.viewParms.or.axis[0], forward);
 	}
 
 	/* this is a lot of work for two triangles...
@@ -470,8 +470,8 @@ Autosprite2Deform(void)
 	for(i = 0, indexes = 0; i < tess.numVertexes; i+=4, indexes+=6){
 		float lengths[2];
 		int nums[2];
-		vec3_t	mid[2];
-		vec3_t	major, minor;
+		Vec3	mid[2];
+		Vec3	major, minor;
 		float	*v1, *v2;
 
 		/* find the midpoint */
@@ -483,14 +483,14 @@ Autosprite2Deform(void)
 
 		for(j = 0; j < 6; j++){
 			float l;
-			vec3_t temp;
+			Vec3 temp;
 
 			v1 = xyz + 4 * edgeVerts[j][0];
 			v2 = xyz + 4 * edgeVerts[j][1];
 
-			Vec3Sub(v1, v2, temp);
+			vec3sub(v1, v2, temp);
 
-			l = Vec3Dot(temp, temp);
+			l = vec3dot(temp, temp);
 			if(l < lengths[0]){
 				nums[1] = nums[0];
 				lengths[1] = lengths[0];
@@ -512,11 +512,11 @@ Autosprite2Deform(void)
 		}
 
 		/* find the vector of the major axis */
-		Vec3Sub(mid[1], mid[0], major);
+		vec3sub(mid[1], mid[0], major);
 
 		/* cross this with the view direction to get minor axis */
-		Vec3Cross(major, forward, minor);
-		Vec3Normalize(minor);
+		vec3cross(major, forward, minor);
+		vec3normalize(minor);
 
 		/* re-project the points */
 		for(j = 0; j < 2; j++){
@@ -536,11 +536,11 @@ Autosprite2Deform(void)
 				}
 
 			if(k == 5){
-				Vec3MA(mid[j], l, minor, v1);
-				Vec3MA(mid[j], -l, minor, v2);
+				vec3ma(mid[j], l, minor, v1);
+				vec3ma(mid[j], -l, minor, v2);
 			}else{
-				Vec3MA(mid[j], -l, minor, v1);
-				Vec3MA(mid[j], l, minor, v2);
+				vec3ma(mid[j], -l, minor, v1);
+				vec3ma(mid[j], l, minor, v2);
 			}
 		}
 	}
@@ -850,23 +850,23 @@ RB_CalcFogTexCoords(float *st)
 	float eyeT;
 	qbool		eyeOutside;
 	fog_t	*fog;
-	vec3_t	local;
-	vec4_t	fogVec3DistanceVector, fogDepthVector = {0, 0, 0, 0};
+	Vec3	local;
+	Vec4	fogvec3distVector, fogDepthVector = {0, 0, 0, 0};
 
 	fog = tr.world->fogs + tess.fogNum;
 
 	/* all fogging distance is based on world Z units */
-	Vec3Sub(backEnd.or.origin, backEnd.viewParms.or.origin, local);
-	fogVec3DistanceVector[0] = -backEnd.or.modelMatrix[2];
-	fogVec3DistanceVector[1] = -backEnd.or.modelMatrix[6];
-	fogVec3DistanceVector[2] = -backEnd.or.modelMatrix[10];
-	fogVec3DistanceVector[3] = Vec3Dot(local, backEnd.viewParms.or.axis[0]);
+	vec3sub(backEnd.or.origin, backEnd.viewParms.or.origin, local);
+	fogvec3distVector[0] = -backEnd.or.modelMatrix[2];
+	fogvec3distVector[1] = -backEnd.or.modelMatrix[6];
+	fogvec3distVector[2] = -backEnd.or.modelMatrix[10];
+	fogvec3distVector[3] = vec3dot(local, backEnd.viewParms.or.axis[0]);
 
 	/* scale the fog vectors based on the fog's thickness */
-	fogVec3DistanceVector[0] *= fog->tcScale;
-	fogVec3DistanceVector[1] *= fog->tcScale;
-	fogVec3DistanceVector[2] *= fog->tcScale;
-	fogVec3DistanceVector[3] *= fog->tcScale;
+	fogvec3distVector[0] *= fog->tcScale;
+	fogvec3distVector[1] *= fog->tcScale;
+	fogvec3distVector[2] *= fog->tcScale;
+	fogvec3distVector[3] *= fog->tcScale;
 
 	/* rotate the gradient vector for this orientation */
 	if(fog->hasSurface){
@@ -879,9 +879,9 @@ RB_CalcFogTexCoords(float *st)
 		fogDepthVector[2] = fog->surface[0] * backEnd.or.axis[2][0] +
 				    fog->surface[1] * backEnd.or.axis[2][1] + fog->surface[2] *
 				    backEnd.or.axis[2][2];
-		fogDepthVector[3] = -fog->surface[3] + Vec3Dot(backEnd.or.origin, fog->surface);
+		fogDepthVector[3] = -fog->surface[3] + vec3dot(backEnd.or.origin, fog->surface);
 
-		eyeT = Vec3Dot(backEnd.or.viewOrigin, fogDepthVector) + fogDepthVector[3];
+		eyeT = vec3dot(backEnd.or.viewOrigin, fogDepthVector) + fogDepthVector[3];
 	}else{
 		eyeT = 1;	/* non-surface fog always has eye inside */
 	}
@@ -895,13 +895,13 @@ RB_CalcFogTexCoords(float *st)
 		eyeOutside = qfalse;
 	}
 
-	fogVec3DistanceVector[3] += 1.0/512;
+	fogvec3distVector[3] += 1.0/512;
 
 	/* calculate density for each point */
 	for(i = 0, v = tess.xyz[0]; i < tess.numVertexes; i++, v += 4){
 		/* calculate the length in fog */
-		s = Vec3Dot(v, fogVec3DistanceVector) + fogVec3DistanceVector[3];
-		t = Vec3Dot(v, fogDepthVector) + fogDepthVector[3];
+		s = vec3dot(v, fogvec3distVector) + fogvec3distVector[3];
+		t = vec3dot(v, fogDepthVector) + fogDepthVector[3];
 
 		/* partially clipped fogs use the T axis */
 		if(eyeOutside){
@@ -934,17 +934,17 @@ RB_CalcEnvironmentTexCoords(float *st)
 {
 	int i;
 	float *v, *normal;
-	vec3_t	viewer, reflected;
+	Vec3	viewer, reflected;
 	float	d;
 
 	v = tess.xyz[0];
 	normal = tess.normal[0];
 
 	for(i = 0; i < tess.numVertexes; i++, v += 4, normal += 4, st += 2){
-		Vec3Sub (backEnd.or.viewOrigin, v, viewer);
-		Vec3NormalizeFast (viewer);
+		vec3sub (backEnd.or.viewOrigin, v, viewer);
+		vec3normalizefast (viewer);
 
-		d = Vec3Dot (normal, viewer);
+		d = vec3dot (normal, viewer);
 
 		reflected[0] = normal[0]*2*d - viewer[0];
 		reflected[1] = normal[1]*2*d - viewer[1];
@@ -981,7 +981,7 @@ RB_CalcTurbulentTexCoords(const waveForm_t *wf, float *st)
 }
 
 void
-RB_CalcTurbulentTexMatrix(const waveForm_t *wf, mat4x4 matrix)
+RB_CalcTurbulentTexMatrix(const waveForm_t *wf, Mat44 matrix)
 {
 	float now;
 
@@ -1153,17 +1153,17 @@ RB_CalcRotateTexMatrix(float degsPerSecond, float *matrix)
 **
 ** Calculates specular coefficient and places it in the alpha channel
 */
-vec3_t lightOrigin = { -960, 1980, 96 };	/* FIXME: track dynamically */
+Vec3 lightOrigin = { -960, 1980, 96 };	/* FIXME: track dynamically */
 
 void
 RB_CalcSpecularAlpha(unsigned char *alphas)
 {
 	int i;
 	float *v, *normal;
-	vec3_t	viewer,  reflected;
+	Vec3	viewer,  reflected;
 	float	l, d;
 	int	b;
-	vec3_t	lightDir;
+	Vec3	lightDir;
 	int	numVertexes;
 
 	v = tess.xyz[0];
@@ -1175,12 +1175,12 @@ RB_CalcSpecularAlpha(unsigned char *alphas)
 	for(i = 0; i < numVertexes; i++, v += 4, normal += 4, alphas += 4){
 		float ilength;
 
-		Vec3Sub(lightOrigin, v, lightDir);
-/*		ilength = Q_rsqrt( Vec3Dot( lightDir, lightDir ) ); */
-		Vec3NormalizeFast(lightDir);
+		vec3sub(lightOrigin, v, lightDir);
+/*		ilength = Q_rsqrt( vec3dot( lightDir, lightDir ) ); */
+		vec3normalizefast(lightDir);
 
 		/* calculate the specular color */
-		d = Vec3Dot (normal, lightDir);
+		d = vec3dot (normal, lightDir);
 /*		d *= ilength; */
 
 		/* we don't optimize for the d < 0 case since this tends to
@@ -1189,9 +1189,9 @@ RB_CalcSpecularAlpha(unsigned char *alphas)
 		reflected[1] = normal[1]*2*d - lightDir[1];
 		reflected[2] = normal[2]*2*d - lightDir[2];
 
-		Vec3Sub (backEnd.or.viewOrigin, v, viewer);
-		ilength = Q_rsqrt(Vec3Dot(viewer, viewer));
-		l	= Vec3Dot (reflected, viewer);
+		vec3sub (backEnd.or.viewOrigin, v, viewer);
+		ilength = Q_rsqrt(vec3dot(viewer, viewer));
+		l	= vec3dot (reflected, viewer);
 		l	*= ilength;
 
 		if(l < 0){
@@ -1222,7 +1222,7 @@ RB_CalcDiffuseColor_altivec(unsigned char *colors)
 	float *v, *normal;
 	trRefEntity_t *ent;
 	int ambientLightInt;
-	vec3_t	lightDir;
+	Vec3	lightDir;
 	int	numVertexes;
 	vector unsigned char vSel = VECCONST_UINT8(0x00, 0x00, 0x00, 0xff,
 		0x00, 0x00, 0x00, 0xff,
@@ -1257,7 +1257,7 @@ RB_CalcDiffuseColor_altivec(unsigned char *colors)
 	lightDirVec = vec_perm(lightDirVec,jVec,jVecChar);
 
 	zero = (vector float)vec_splat_s8(0);
-	Vec3Copy(ent->lightDir, lightDir);
+	vec3copy(ent->lightDir, lightDir);
 
 	v = tess.xyz[0];
 	normal = tess.normal[0];
@@ -1294,22 +1294,22 @@ RB_CalcDiffuseColor_scalar(unsigned char *colors)
 	float incoming;
 	trRefEntity_t *ent;
 	int ambientLightInt;
-	vec3_t	ambientLight;
-	vec3_t	lightDir;
-	vec3_t	directedLight;
+	Vec3	ambientLight;
+	Vec3	lightDir;
+	Vec3	directedLight;
 	int	numVertexes;
 	ent = backEnd.currentEntity;
 	ambientLightInt = ent->ambientLightInt;
-	Vec3Copy(ent->ambientLight, ambientLight);
-	Vec3Copy(ent->directedLight, directedLight);
-	Vec3Copy(ent->lightDir, lightDir);
+	vec3copy(ent->ambientLight, ambientLight);
+	vec3copy(ent->directedLight, directedLight);
+	vec3copy(ent->lightDir, lightDir);
 
 	v = tess.xyz[0];
 	normal = tess.normal[0];
 
 	numVertexes = tess.numVertexes;
 	for(i = 0; i < numVertexes; i++, v += 4, normal += 4){
-		incoming = Vec3Dot (normal, lightDir);
+		incoming = vec3dot (normal, lightDir);
 		if(incoming <= 0){
 			*(int*)&colors[i*4] = ambientLightInt;
 			continue;

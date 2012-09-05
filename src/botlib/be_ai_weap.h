@@ -69,9 +69,9 @@ typedef struct weaponinfo_s {
 	float			vspread;
 	float			speed;
 	float			acceleration;
-	vec3_t			recoil;
-	vec3_t			offset;
-	vec3_t			angleoffset;
+	Vec3			recoil;
+	Vec3			offset;
+	Vec3			angleoffset;
 	float			extrazvelocity;
 	int			ammoamount;
 	int			ammoindex;

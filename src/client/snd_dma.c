@@ -59,8 +59,8 @@ static qbool s_soundMuted;
 dma_t dma;
 
 static int listener_number;
-static vec3_t	listener_origin;
-static vec3_t	listener_axis[3];
+static Vec3	listener_origin;
+static Vec3	listener_axis[3];
 
 int	s_soundtime;	/* sample PAIRS */
 int	s_paintedtime;	/* sample PAIRS */
@@ -421,26 +421,26 @@ S_memoryLoad(sfx_t *sfx)
  * Used for spatializing s_channels
  */
 void
-S_SpatializeOrigin(vec3_t origin, int master_vol, int *left_vol, int *right_vol)
+S_SpatializeOrigin(Vec3 origin, int master_vol, int *left_vol, int *right_vol)
 {
-	vec_t	dot;
-	vec_t	dist;
-	vec_t	lscale, rscale, scale;
-	vec3_t	source_vec;
-	vec3_t	vec;
+	Scalar	dot;
+	Scalar	dist;
+	Scalar	lscale, rscale, scale;
+	Vec3	source_vec;
+	Vec3	vec;
 
 	const float dist_mult = SOUND_ATTENUATE;
 
 	/* calculate stereo seperation and distance attenuation */
-	Vec3Sub(origin, listener_origin, source_vec);
+	vec3sub(origin, listener_origin, source_vec);
 
-	dist = Vec3Normalize(source_vec);
+	dist = vec3normalize(source_vec);
 	dist -= SOUND_FULLVOLUME;
 	if(dist < 0)
 		dist = 0;	/* close enough to be at full volume */
 	dist *= dist_mult;	/* different attenuation levels */
 
-	Vec3Rotate(source_vec, listener_axis, vec);
+	vec3rotate(source_vec, listener_axis, vec);
 
 	dot = -vec[1];
 
@@ -480,7 +480,7 @@ S_SpatializeOrigin(vec3_t origin, int master_vol, int *left_vol, int *right_vol)
  * Entchannel 0 will never override a playing sound
  */
 void
-S_Base_StartSound(vec3_t origin, int entityNum, int entchannel,
+S_Base_StartSound(Vec3 origin, int entityNum, int entchannel,
 		  sfxHandle_t sfxHandle)
 {
 	channel_t	*ch;
@@ -578,7 +578,7 @@ S_Base_StartSound(vec3_t origin, int entityNum, int entchannel,
 	}
 
 	if(origin){
-		Vec3Copy (origin, ch->origin);
+		vec3copy (origin, ch->origin);
 		ch->fixed_origin = qtrue;
 	}else
 		ch->fixed_origin = qfalse;
@@ -702,7 +702,7 @@ S_Base_ClearLoopingSounds(qbool killall)
  * Include velocity in case I get around to doing doppler...
  */
 void
-S_Base_AddLoopingSound(int entityNum, const vec3_t origin, const vec3_t velocity,
+S_Base_AddLoopingSound(int entityNum, const Vec3 origin, const Vec3 velocity,
 		       sfxHandle_t sfxHandle)
 {
 	sfx_t *sfx;
@@ -726,8 +726,8 @@ S_Base_AddLoopingSound(int entityNum, const vec3_t origin, const vec3_t velocity
 	if(!sfx->soundLength)
 		Com_Errorf(ERR_DROP, "%s has length 0", sfx->soundName);
 
-	Vec3Copy(origin, loopSounds[entityNum].origin);
-	Vec3Copy(velocity, loopSounds[entityNum].velocity);
+	vec3copy(origin, loopSounds[entityNum].origin);
+	vec3copy(velocity, loopSounds[entityNum].velocity);
 	loopSounds[entityNum].active = qtrue;
 	loopSounds[entityNum].kill = qtrue;
 	loopSounds[entityNum].doppler = qfalse;
@@ -735,17 +735,17 @@ S_Base_AddLoopingSound(int entityNum, const vec3_t origin, const vec3_t velocity
 	loopSounds[entityNum].dopplerScale = 1.0;
 	loopSounds[entityNum].sfx = sfx;
 
-	if(s_doppler->integer && Vec3LenSquared(velocity)>0.0){
-		vec3_t	out;
+	if(s_doppler->integer && vec3lensquared(velocity)>0.0){
+		Vec3	out;
 		float	lena, lenb;
 
 		loopSounds[entityNum].doppler = qtrue;
-		lena = Vec3DistanceSquared(loopSounds[listener_number].origin,
+		lena = vec3distsquared(loopSounds[listener_number].origin,
 			loopSounds[entityNum].origin);
-		Vec3Add(loopSounds[entityNum].origin,
+		vec3add(loopSounds[entityNum].origin,
 			loopSounds[entityNum].velocity,
 			out);
-		lenb = Vec3DistanceSquared(loopSounds[listener_number].origin, out);
+		lenb = vec3distsquared(loopSounds[listener_number].origin, out);
 		if((loopSounds[entityNum].framenum+1) != cls.framecount)
 			loopSounds[entityNum].oldDopplerScale = 1.0;
 		else
@@ -768,8 +768,8 @@ S_Base_AddLoopingSound(int entityNum, const vec3_t origin, const vec3_t velocity
  * Include velocity in case I get around to doing doppler...
  */
 void
-S_Base_AddRealLoopingSound(int entityNum, const vec3_t origin,
-			   const vec3_t velocity,
+S_Base_AddRealLoopingSound(int entityNum, const Vec3 origin,
+			   const Vec3 velocity,
 			   sfxHandle_t sfxHandle)
 {
 	sfx_t *sfx;
@@ -792,8 +792,8 @@ S_Base_AddRealLoopingSound(int entityNum, const vec3_t origin,
 
 	if(!sfx->soundLength)
 		Com_Errorf(ERR_DROP, "%s has length 0", sfx->soundName);
-	Vec3Copy(origin, loopSounds[entityNum].origin);
-	Vec3Copy(velocity, loopSounds[entityNum].velocity);
+	vec3copy(origin, loopSounds[entityNum].origin);
+	vec3copy(velocity, loopSounds[entityNum].velocity);
 	loopSounds[entityNum].sfx = sfx;
 	loopSounds[entityNum].active = qtrue;
 	loopSounds[entityNum].kill = qfalse;
@@ -1024,12 +1024,12 @@ S_Base_RawSamples(int stream, int samples, int rate, int width, int s_channels,
  * let the sound system know where an entity currently is
  */
 void
-S_Base_UpdateEntityPosition(int entityNum, const vec3_t origin)
+S_Base_UpdateEntityPosition(int entityNum, const Vec3 origin)
 {
 	if((entityNum < 0) || (entityNum >= MAX_GENTITIES))
 		Com_Errorf(ERR_DROP, "S_UpdateEntityPosition: bad entitynum %i",
 			entityNum);
-	Vec3Copy(origin, loopSounds[entityNum].origin);
+	vec3copy(origin, loopSounds[entityNum].origin);
 }
 
 
@@ -1039,21 +1039,21 @@ S_Base_UpdateEntityPosition(int entityNum, const vec3_t origin)
  * Change the volumes of all the playing sounds for changes in their positions
  */
 void
-S_Base_Respatialize(int entityNum, const vec3_t head, vec3_t axis[3],
+S_Base_Respatialize(int entityNum, const Vec3 head, Vec3 axis[3],
 		    int inwater)
 {
 	int i;
 	channel_t	*ch;
-	vec3_t		origin;
+	Vec3		origin;
 
 	if(!s_soundStarted || s_soundMuted)
 		return;
 
 	listener_number = entityNum;
-	Vec3Copy(head, listener_origin);
-	Vec3Copy(axis[0], listener_axis[0]);
-	Vec3Copy(axis[1], listener_axis[1]);
-	Vec3Copy(axis[2], listener_axis[2]);
+	vec3copy(head, listener_origin);
+	vec3copy(axis[0], listener_axis[0]);
+	vec3copy(axis[1], listener_axis[1]);
+	vec3copy(axis[2], listener_axis[2]);
 
 	/* update spatialization for dynamic sounds */
 	ch = s_channels;
@@ -1066,9 +1066,9 @@ S_Base_Respatialize(int entityNum, const vec3_t head, vec3_t axis[3],
 			ch->rightvol = ch->master_vol;
 		}else{
 			if(ch->fixed_origin)
-				Vec3Copy(ch->origin, origin);
+				vec3copy(ch->origin, origin);
 			else
-				Vec3Copy(loopSounds[ ch->entnum ].origin,
+				vec3copy(loopSounds[ ch->entnum ].origin,
 					origin);
 
 			S_SpatializeOrigin (origin, ch->master_vol, &ch->leftvol,

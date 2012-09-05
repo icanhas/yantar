@@ -72,8 +72,8 @@ typedef struct {
 #define MAX_DOPPLER_SCALE	50.0f	/* arbitrary */
 
 typedef struct loopSound_s {
-	vec3_t		origin;
-	vec3_t		velocity;
+	Vec3		origin;
+	Vec3		velocity;
 	sfx_t		*sfx;
 	int		mergeFrame;
 	qbool		active;
@@ -94,7 +94,7 @@ typedef struct {
 	int		master_vol;	/* 0-255 volume before spatialization */
 	float		dopplerScale;
 	float		oldDopplerScale;
-	vec3_t		origin;		/* only use if fixed_origin is set */
+	Vec3		origin;		/* only use if fixed_origin is set */
 	qbool		fixed_origin;	/* use origin instead of fetching entnum's origin */
 	sfx_t		*thesfx;	/* sfx structure */
 	qbool		doppler;
@@ -116,7 +116,7 @@ typedef struct {
 /* Interface between Q3 sound "api" and the sound backend */
 typedef struct {
 	void (*Shutdown)(void);
-	void (*StartSound)(vec3_t origin, int entnum, int entchannel,
+	void (*StartSound)(Vec3 origin, int entnum, int entchannel,
 			   sfxHandle_t sfx);
 	void (*StartLocalSound)(sfxHandle_t sfx, int channelNum);
 	void (*StartBackgroundTrack)(const char *intro, const char *loop);
@@ -126,14 +126,14 @@ typedef struct {
 			   int entityNum);
 	void (*StopAllSounds)(void);
 	void (*ClearLoopingSounds)(qbool killall);
-	void (*AddLoopingSound)(int entityNum, const vec3_t origin,
-				const vec3_t velocity, sfxHandle_t sfx);
-	void (*AddRealLoopingSound)(int entityNum, const vec3_t origin,
-				    const vec3_t velocity, sfxHandle_t sfx);
+	void (*AddLoopingSound)(int entityNum, const Vec3 origin,
+				const Vec3 velocity, sfxHandle_t sfx);
+	void (*AddRealLoopingSound)(int entityNum, const Vec3 origin,
+				    const Vec3 velocity, sfxHandle_t sfx);
 	void (*StopLoopingSound)(int entityNum);
-	void (*Respatialize)(int entityNum, const vec3_t origin, vec3_t axis[3],
+	void (*Respatialize)(int entityNum, const Vec3 origin, Vec3 axis[3],
 			     int inwater);
-	void (*UpdateEntityPosition)(int entityNum, const vec3_t origin);
+	void (*UpdateEntityPosition)(int entityNum, const Vec3 origin);
 	void (*Update)(void);
 	void (*DisableSounds)(void);
 	void (*BeginRegistration)(void);
@@ -179,9 +179,9 @@ extern channel_t	loop_channels[MAX_CHANNELS];
 extern int	numLoopChannels;
 
 extern int	s_paintedtime;
-extern vec3_t	listener_forward;
-extern vec3_t	listener_right;
-extern vec3_t	listener_up;
+extern Vec3	listener_forward;
+extern Vec3	listener_right;
+extern Vec3	listener_up;
 extern dma_t	dma;
 
 #define MAX_RAW_SAMPLES 16384

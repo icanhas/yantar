@@ -186,8 +186,8 @@ CG_SelectPrevPlayer(void)
 static void
 CG_DrawPlayerArmorIcon(rectDef_t *rect, qbool draw2D)
 {
-	vec3_t	angles;
-	vec3_t	origin;
+	Vec3	angles;
+	Vec3	origin;
 
 	if(cg_drawStatus.integer == 0)
 		return;
@@ -196,7 +196,7 @@ CG_DrawPlayerArmorIcon(rectDef_t *rect, qbool draw2D)
 		CG_DrawPic(rect->x, rect->y + rect->h/2 + 1, rect->w, rect->h,
 			cgs.media.armorIcon);
 	else if(cg_draw3dIcons.integer){
-		VectorClear(angles);
+		vec3clear(angles);
 		origin[0]	= 90;
 		origin[1]	= 0;
 		origin[2]	= -10;
@@ -208,7 +208,7 @@ CG_DrawPlayerArmorIcon(rectDef_t *rect, qbool draw2D)
 }
 
 static void
-CG_DrawPlayerArmorValue(rectDef_t *rect, float scale, vec4_t color,
+CG_DrawPlayerArmorValue(rectDef_t *rect, float scale, Vec4 color,
 			qhandle_t shader, int textStyle)
 {
 	char	num[16];
@@ -246,8 +246,8 @@ static void
 CG_DrawPlayerAmmoIcon(rectDef_t *rect, qbool draw2D)
 {
 	centity_t	*cent;
-	vec3_t		angles;
-	vec3_t		origin;
+	Vec3		angles;
+	Vec3		origin;
 
 	cent = &cg_entities[cg.snap->ps.clientNum];
 
@@ -259,7 +259,7 @@ CG_DrawPlayerAmmoIcon(rectDef_t *rect, qbool draw2D)
 	}else if(cg_draw3dIcons.integer)
 		if(cent->currentState.weapon &&
 		   cg_weapons[ cent->currentState.weapon ].ammoModel){
-			VectorClear(angles);
+			vec3clear(angles);
 			origin[0]	= 70;
 			origin[1]	= 0;
 			origin[2]	= 0;
@@ -273,7 +273,7 @@ CG_DrawPlayerAmmoIcon(rectDef_t *rect, qbool draw2D)
 }
 
 static void
-CG_DrawPlayerAmmoValue(rectDef_t *rect, float scale, vec4_t color,
+CG_DrawPlayerAmmoValue(rectDef_t *rect, float scale, Vec4 color,
 		       qhandle_t shader,
 		       int textStyle)
 {
@@ -309,12 +309,12 @@ CG_DrawPlayerAmmoValue(rectDef_t *rect, float scale, vec4_t color,
 static void
 CG_DrawPlayerHead(rectDef_t *rect, qbool draw2D)
 {
-	vec3_t	angles;
+	Vec3	angles;
 	float	size, stretch;
 	float	frac;
 	float	x = rect->x;
 
-	VectorClear(angles);
+	vec3clear(angles);
 
 	if(cg.damageTime && cg.time - cg.damageTime < DAMAGE_TIME){
 		frac	= (float)(cg.time - cg.damageTime) / DAMAGE_TIME;
@@ -361,7 +361,7 @@ CG_DrawPlayerHead(rectDef_t *rect, qbool draw2D)
 }
 
 static void
-CG_DrawSelectedPlayerHealth(rectDef_t *rect, float scale, vec4_t color,
+CG_DrawSelectedPlayerHealth(rectDef_t *rect, float scale, Vec4 color,
 			    qhandle_t shader, int textStyle)
 {
 	clientInfo_t *ci;
@@ -387,7 +387,7 @@ CG_DrawSelectedPlayerHealth(rectDef_t *rect, float scale, vec4_t color,
 }
 
 static void
-CG_DrawSelectedPlayerArmor(rectDef_t *rect, float scale, vec4_t color,
+CG_DrawSelectedPlayerArmor(rectDef_t *rect, float scale, Vec4 color,
 			   qhandle_t shader, int textStyle)
 {
 	clientInfo_t *ci;
@@ -474,7 +474,7 @@ CG_DrawPlayerStatus(rectDef_t *rect)
 }
 
 static void
-CG_DrawSelectedPlayerName(rectDef_t *rect, float scale, vec4_t color,
+CG_DrawSelectedPlayerName(rectDef_t *rect, float scale, Vec4 color,
 			  qbool voice, int textStyle)
 {
 	clientInfo_t *ci;
@@ -488,7 +488,7 @@ CG_DrawSelectedPlayerName(rectDef_t *rect, float scale, vec4_t color,
 }
 
 static void
-CG_DrawSelectedPlayerLocation(rectDef_t *rect, float scale, vec4_t color,
+CG_DrawSelectedPlayerLocation(rectDef_t *rect, float scale, Vec4 color,
 			      int textStyle)
 {
 	clientInfo_t *ci;
@@ -503,7 +503,7 @@ CG_DrawSelectedPlayerLocation(rectDef_t *rect, float scale, vec4_t color,
 }
 
 static void
-CG_DrawPlayerLocation(rectDef_t *rect, float scale, vec4_t color, int textStyle)
+CG_DrawPlayerLocation(rectDef_t *rect, float scale, Vec4 color, int textStyle)
 {
 	clientInfo_t *ci = &cgs.clientinfo[cg.snap->ps.clientNum];
 	if(ci){
@@ -532,7 +532,7 @@ CG_DrawSelectedPlayerWeapon(rectDef_t *rect)
 }
 
 static void
-CG_DrawPlayerScore(rectDef_t *rect, float scale, vec4_t color, qhandle_t shader,
+CG_DrawPlayerScore(rectDef_t *rect, float scale, Vec4 color, qhandle_t shader,
 		   int textStyle)
 {
 	char	num[16];
@@ -555,7 +555,7 @@ static void
 CG_DrawPlayerItem(rectDef_t *rect, float scale, qbool draw2D)
 {
 	int value;
-	vec3_t origin, angles;
+	Vec3 origin, angles;
 
 	value = cg.snap->ps.stats[STAT_HOLDABLE_ITEM];
 	if(value){
@@ -566,7 +566,7 @@ CG_DrawPlayerItem(rectDef_t *rect, float scale, qbool draw2D)
 			CG_DrawPic(rect->x, rect->y, rect->w, rect->h,
 				cg_items[ value ].icon);
 		}else{
-			VectorClear(angles);
+			vec3clear(angles);
 			origin[0]	= 90;
 			origin[1]	= 0;
 			origin[2]	= -10;
@@ -614,8 +614,8 @@ CG_DrawSelectedPlayerHead(rectDef_t *rect, qbool draw2D, qbool voice)
 	clipHandle_t cm;
 	clientInfo_t *ci;
 	float	len;
-	vec3_t	origin;
-	vec3_t	mins, maxs, angles;
+	Vec3	origin;
+	Vec3	mins, maxs, angles;
 
 
 	ci = cgs.clientinfo +
@@ -640,7 +640,7 @@ CG_DrawSelectedPlayerHead(rectDef_t *rect, qbool draw2D, qbool voice)
 			origin[0] = len / 0.268;	/* len / tan( fov/2 ) */
 
 			/* allow per-model tweaking */
-			Vec3Add(origin, ci->headOffset, origin);
+			vec3add(origin, ci->headOffset, origin);
 
 			angles[PITCH]	= 0;
 			angles[YAW]	= 180;
@@ -662,7 +662,7 @@ CG_DrawSelectedPlayerHead(rectDef_t *rect, qbool draw2D, qbool voice)
 }
 
 static void
-CG_DrawPlayerHealth(rectDef_t *rect, float scale, vec4_t color, qhandle_t shader,
+CG_DrawPlayerHealth(rectDef_t *rect, float scale, Vec4 color, qhandle_t shader,
 		    int textStyle)
 {
 	playerState_t *ps;
@@ -687,7 +687,7 @@ CG_DrawPlayerHealth(rectDef_t *rect, float scale, vec4_t color, qhandle_t shader
 }
 
 static void
-CG_DrawRedScore(rectDef_t *rect, float scale, vec4_t color, qhandle_t shader,
+CG_DrawRedScore(rectDef_t *rect, float scale, Vec4 color, qhandle_t shader,
 		int textStyle)
 {
 	int	value;
@@ -703,7 +703,7 @@ CG_DrawRedScore(rectDef_t *rect, float scale, vec4_t color, qhandle_t shader,
 }
 
 static void
-CG_DrawBlueScore(rectDef_t *rect, float scale, vec4_t color, qhandle_t shader,
+CG_DrawBlueScore(rectDef_t *rect, float scale, Vec4 color, qhandle_t shader,
 		 int textStyle)
 {
 	int	value;
@@ -721,7 +721,7 @@ CG_DrawBlueScore(rectDef_t *rect, float scale, vec4_t color, qhandle_t shader,
 
 /* FIXME: team name support */
 static void
-CG_DrawRedName(rectDef_t *rect, float scale, vec4_t color, int textStyle)
+CG_DrawRedName(rectDef_t *rect, float scale, Vec4 color, int textStyle)
 {
 	CG_Text_Paint(rect->x, rect->y + rect->h, scale, color,
 		cg_redTeamName.string, 0, 0,
@@ -729,7 +729,7 @@ CG_DrawRedName(rectDef_t *rect, float scale, vec4_t color, int textStyle)
 }
 
 static void
-CG_DrawBlueName(rectDef_t *rect, float scale, vec4_t color, int textStyle)
+CG_DrawBlueName(rectDef_t *rect, float scale, Vec4 color, int textStyle)
 {
 	CG_Text_Paint(rect->x, rect->y + rect->h, scale, color,
 		cg_blueTeamName.string, 0, 0,
@@ -737,7 +737,7 @@ CG_DrawBlueName(rectDef_t *rect, float scale, vec4_t color, int textStyle)
 }
 
 static void
-CG_DrawBlueFlagName(rectDef_t *rect, float scale, vec4_t color, int textStyle)
+CG_DrawBlueFlagName(rectDef_t *rect, float scale, Vec4 color, int textStyle)
 {
 	int i;
 	for(i = 0; i < cgs.maxclients; i++)
@@ -756,7 +756,7 @@ CG_DrawBlueFlagStatus(rectDef_t *rect, qhandle_t shader)
 {
 	if(cgs.gametype != GT_CTF && cgs.gametype != GT_1FCTF){
 		if(cgs.gametype == GT_HARVESTER){
-			vec4_t color = {0, 0, 1, 1};
+			Vec4 color = {0, 0, 1, 1};
 			trap_R_SetColor(color);
 			CG_DrawPic(rect->x, rect->y, rect->w, rect->h,
 				cgs.media.blueCubeIcon);
@@ -769,7 +769,7 @@ CG_DrawBlueFlagStatus(rectDef_t *rect, qhandle_t shader)
 	else{
 		gitem_t *item = BG_FindItemForPowerup(PW_BLUEFLAG);
 		if(item){
-			vec4_t color = {0, 0, 1, 1};
+			Vec4 color = {0, 0, 1, 1};
 			trap_R_SetColor(color);
 			if(cgs.blueflag >= 0 && cgs.blueflag <= 2)
 				CG_DrawPic(rect->x, rect->y, rect->w, rect->h,
@@ -790,8 +790,8 @@ CG_DrawBlueFlagHead(rectDef_t *rect)
 		if(cgs.clientinfo[i].infoValid && cgs.clientinfo[i].team ==
 		   TEAM_RED  && cgs.clientinfo[i].powerups &
 		   (1<< PW_BLUEFLAG)){
-			vec3_t angles;
-			VectorClear(angles);
+			Vec3 angles;
+			vec3clear(angles);
 			angles[YAW] = 180 + 20 * sin(cg.time / 650.0);;
 			CG_DrawHead(rect->x, rect->y, rect->w, rect->h, 0,angles);
 			return;
@@ -799,7 +799,7 @@ CG_DrawBlueFlagHead(rectDef_t *rect)
 }
 
 static void
-CG_DrawRedFlagName(rectDef_t *rect, float scale, vec4_t color, int textStyle)
+CG_DrawRedFlagName(rectDef_t *rect, float scale, Vec4 color, int textStyle)
 {
 	int i;
 	for(i = 0; i < cgs.maxclients; i++)
@@ -818,7 +818,7 @@ CG_DrawRedFlagStatus(rectDef_t *rect, qhandle_t shader)
 {
 	if(cgs.gametype != GT_CTF && cgs.gametype != GT_1FCTF){
 		if(cgs.gametype == GT_HARVESTER){
-			vec4_t color = {1, 0, 0, 1};
+			Vec4 color = {1, 0, 0, 1};
 			trap_R_SetColor(color);
 			CG_DrawPic(rect->x, rect->y, rect->w, rect->h,
 				cgs.media.redCubeIcon);
@@ -831,7 +831,7 @@ CG_DrawRedFlagStatus(rectDef_t *rect, qhandle_t shader)
 	else{
 		gitem_t *item = BG_FindItemForPowerup(PW_REDFLAG);
 		if(item){
-			vec4_t color = {1, 0, 0, 1};
+			Vec4 color = {1, 0, 0, 1};
 			trap_R_SetColor(color);
 			if(cgs.redflag >= 0 && cgs.redflag <= 2)
 				CG_DrawPic(rect->x, rect->y, rect->w, rect->h,
@@ -852,8 +852,8 @@ CG_DrawRedFlagHead(rectDef_t *rect)
 		if(cgs.clientinfo[i].infoValid && cgs.clientinfo[i].team ==
 		   TEAM_BLUE  && cgs.clientinfo[i].powerups &
 		   (1<< PW_REDFLAG)){
-			vec3_t angles;
-			VectorClear(angles);
+			Vec3 angles;
+			vec3clear(angles);
 			angles[YAW] = 180 + 20 * sin(cg.time / 650.0);;
 			CG_DrawHead(rect->x, rect->y, rect->w, rect->h, 0,angles);
 			return;
@@ -861,11 +861,11 @@ CG_DrawRedFlagHead(rectDef_t *rect)
 }
 
 static void
-CG_HarvesterSkulls(rectDef_t *rect, float scale, vec4_t color, qbool force2D,
+CG_HarvesterSkulls(rectDef_t *rect, float scale, Vec4 color, qbool force2D,
 		   int textStyle)
 {
 	char num[16];
-	vec3_t	origin, angles;
+	Vec3	origin, angles;
 	qhandle_t handle;
 	int	value = cg.snap->ps.generic1;
 
@@ -883,7 +883,7 @@ CG_HarvesterSkulls(rectDef_t *rect, float scale, vec4_t color, qbool force2D,
 
 	if(cg_drawIcons.integer){
 		if(!force2D && cg_draw3dIcons.integer){
-			VectorClear(angles);
+			vec3clear(angles);
 			origin[0]	= 90;
 			origin[1]	= 0;
 			origin[2]	= -10;
@@ -914,7 +914,7 @@ CG_OneFlagStatus(rectDef_t *rect)
 		gitem_t *item = BG_FindItemForPowerup(PW_NEUTRALFLAG);
 		if(item)
 			if(cgs.flagStatus >= 0 && cgs.flagStatus <= 4){
-				vec4_t	color	= {1, 1, 1, 1};
+				Vec4	color	= {1, 1, 1, 1};
 				int	index	= 0;
 				if(cgs.flagStatus == FLAG_TAKEN_RED){
 					color[1] = color[2] = 0;
@@ -947,7 +947,7 @@ CG_DrawCTFPowerUp(rectDef_t *rect)
 }
 
 static void
-CG_DrawTeamColor(rectDef_t *rect, vec4_t color)
+CG_DrawTeamColor(rectDef_t *rect, Vec4 color)
 {
 	CG_DrawTeamBackground(rect->x, rect->y, rect->w, rect->h, color[3],
 		cg.snap->ps.persistant[PERS_TEAM]);
@@ -955,7 +955,7 @@ CG_DrawTeamColor(rectDef_t *rect, vec4_t color)
 
 static void
 CG_DrawAreaPowerUp(rectDef_t *rect, int align, float special, float scale,
-		   vec4_t color)
+		   Vec4 color)
 {
 	char	num[16];
 	int	sorted[MAX_POWERUPS];
@@ -1014,7 +1014,7 @@ CG_DrawAreaPowerUp(rectDef_t *rect, int align, float special, float scale,
 			if(t - cg.time >= POWERUP_BLINKS * POWERUP_BLINK_TIME)
 				trap_R_SetColor(NULL);
 			else{
-				vec4_t modulate;
+				Vec4 modulate;
 
 				f =
 					(float)(t -
@@ -1248,7 +1248,7 @@ CG_DrawPlayerHasFlag(rectDef_t *rect, qbool force2D)
 }
 
 static void
-CG_DrawAreaSystemChat(rectDef_t *rect, float scale, vec4_t color,
+CG_DrawAreaSystemChat(rectDef_t *rect, float scale, Vec4 color,
 		      qhandle_t shader)
 {
 	CG_Text_Paint(rect->x, rect->y + rect->h, scale, color, systemChat, 0, 0,
@@ -1256,14 +1256,14 @@ CG_DrawAreaSystemChat(rectDef_t *rect, float scale, vec4_t color,
 }
 
 static void
-CG_DrawAreaTeamChat(rectDef_t *rect, float scale, vec4_t color, qhandle_t shader)
+CG_DrawAreaTeamChat(rectDef_t *rect, float scale, Vec4 color, qhandle_t shader)
 {
 	CG_Text_Paint(rect->x, rect->y + rect->h, scale, color,teamChat1, 0, 0,
 		0);
 }
 
 static void
-CG_DrawAreaChat(rectDef_t *rect, float scale, vec4_t color, qhandle_t shader)
+CG_DrawAreaChat(rectDef_t *rect, float scale, Vec4 color, qhandle_t shader)
 {
 	CG_Text_Paint(rect->x, rect->y + rect->h, scale, color, teamChat2, 0, 0,
 		0);
@@ -1279,7 +1279,7 @@ CG_GetKillerText(void)
 }
 
 static void
-CG_DrawKiller(rectDef_t *rect, float scale, vec4_t color, qhandle_t shader,
+CG_DrawKiller(rectDef_t *rect, float scale, Vec4 color, qhandle_t shader,
 	      int textStyle)
 {
 	/* fragged by ... line */
@@ -1294,7 +1294,7 @@ CG_DrawKiller(rectDef_t *rect, float scale, vec4_t color, qhandle_t shader,
 }
 
 static void
-CG_DrawCapFragLimit(rectDef_t *rect, float scale, vec4_t color, qhandle_t shader,
+CG_DrawCapFragLimit(rectDef_t *rect, float scale, Vec4 color, qhandle_t shader,
 		    int textStyle)
 {
 	int limit = (cgs.gametype >= GT_CTF) ? cgs.capturelimit : cgs.fraglimit;
@@ -1303,7 +1303,7 @@ CG_DrawCapFragLimit(rectDef_t *rect, float scale, vec4_t color, qhandle_t shader
 }
 
 static void
-CG_Draw1stPlace(rectDef_t *rect, float scale, vec4_t color, qhandle_t shader,
+CG_Draw1stPlace(rectDef_t *rect, float scale, Vec4 color, qhandle_t shader,
 		int textStyle)
 {
 	if(cgs.scores1 != SCORE_NOT_PRESENT)
@@ -1312,7 +1312,7 @@ CG_Draw1stPlace(rectDef_t *rect, float scale, vec4_t color, qhandle_t shader,
 }
 
 static void
-CG_Draw2ndPlace(rectDef_t *rect, float scale, vec4_t color, qhandle_t shader,
+CG_Draw2ndPlace(rectDef_t *rect, float scale, Vec4 color, qhandle_t shader,
 		int textStyle)
 {
 	if(cgs.scores2 != SCORE_NOT_PRESENT)
@@ -1346,7 +1346,7 @@ CG_GetGameStatusText(void)
 }
 
 static void
-CG_DrawGameStatus(rectDef_t *rect, float scale, vec4_t color, qhandle_t shader,
+CG_DrawGameStatus(rectDef_t *rect, float scale, Vec4 color, qhandle_t shader,
 		  int textStyle)
 {
 	CG_Text_Paint(rect->x, rect->y + rect->h, scale, color,
@@ -1372,7 +1372,7 @@ CG_GameTypeString(void)
 }
 
 static void
-CG_DrawGameType(rectDef_t *rect, float scale, vec4_t color, qhandle_t shader,
+CG_DrawGameType(rectDef_t *rect, float scale, Vec4 color, qhandle_t shader,
 		int textStyle)
 {
 	CG_Text_Paint(rect->x, rect->y + rect->h, scale, color,
@@ -1380,12 +1380,12 @@ CG_DrawGameType(rectDef_t *rect, float scale, vec4_t color, qhandle_t shader,
 }
 
 static void
-CG_Text_Paint_Limit(float *maxX, float x, float y, float scale, vec4_t color,
+CG_Text_Paint_Limit(float *maxX, float x, float y, float scale, Vec4 color,
 		    const char* text, float adjust,
 		    int limit)
 {
 	int len, count;
-	vec4_t newColor;
+	Vec4 newColor;
 	glyphInfo_t *glyph;
 	if(text){
 		const char *s	= text;
@@ -1442,14 +1442,14 @@ CG_Text_Paint_Limit(float *maxX, float x, float y, float scale, vec4_t color,
 
 void
 CG_DrawNewTeamInfo(rectDef_t *rect, float text_x, float text_y, float scale,
-		   vec4_t color,
+		   Vec4 color,
 		   qhandle_t shader)
 {
 	int	xx;
 	float y;
 	int	i, j, len, count;
 	const char *p;
-	vec4_t	hcolor;
+	Vec4	hcolor;
 	float	pwidth, lwidth, maxx, leftOver;
 	clientInfo_t	*ci;
 	gitem_t *item;
@@ -1567,7 +1567,7 @@ CG_DrawNewTeamInfo(rectDef_t *rect, float text_x, float text_y, float scale,
 }
 
 void
-CG_DrawTeamSpectators(rectDef_t *rect, float scale, vec4_t color,
+CG_DrawTeamSpectators(rectDef_t *rect, float scale, Vec4 color,
 		      qhandle_t shader)
 {
 	if(cg.spectatorLen){
@@ -1630,7 +1630,7 @@ CG_DrawTeamSpectators(rectDef_t *rect, float scale, vec4_t color,
 }
 
 void
-CG_DrawMedal(int ownerDraw, rectDef_t *rect, float scale, vec4_t color,
+CG_DrawMedal(int ownerDraw, rectDef_t *rect, float scale, Vec4 color,
 	     qhandle_t shader)
 {
 	score_t *score	= &cg.scores[cg.selectedScore];
@@ -1701,7 +1701,7 @@ void
 CG_OwnerDraw(float x, float y, float w, float h, float text_x, float text_y,
 	     int ownerDraw, int ownerDrawFlags, int align, float special,
 	     float scale,
-	     vec4_t color, qhandle_t shader,
+	     Vec4 color, qhandle_t shader,
 	     int textStyle)
 {
 	rectDef_t rect;
@@ -2017,7 +2017,7 @@ CG_RunMenuScript(char **args)
 }
 
 void
-CG_GetTeamColor(vec4_t *color)
+CG_GetTeamColor(Vec4 *color)
 {
 	if(cg.snap->ps.persistant[PERS_TEAM] == TEAM_RED){
 		(*color)[0]	= 1.0f;

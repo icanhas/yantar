@@ -277,7 +277,7 @@ static void
 DrawNormals(shaderCommands_t *input)
 {
 	int i;
-	vec3_t temp;
+	Vec3 temp;
 
 	GL_Bind(tr.whiteImage);
 	qglColor3f (1,1,1);
@@ -287,7 +287,7 @@ DrawNormals(shaderCommands_t *input)
 	qglBegin (GL_LINES);
 	for(i = 0; i < input->numVertexes; i++){
 		qglVertex3fv (input->xyz[i]);
-		Vec3MA (input->xyz[i], 2, input->normal[i], temp);
+		vec3ma (input->xyz[i], 2, input->normal[i], temp);
 		qglVertex3fv (temp);
 	}
 	qglEnd ();
@@ -395,7 +395,7 @@ static void
 ProjectDlightTexture_altivec(void)
 {
 	int i, l;
-	vec_t origin0, origin1, origin2;
+	Scalar origin0, origin1, origin2;
 	float texCoords0, texCoords1;
 	vector float floatColorVec0, floatColorVec1;
 	vector float modulateVec, colorVec, zero;
@@ -415,7 +415,7 @@ ProjectDlightTexture_altivec(void)
 	int		numIndexes;
 	float		scale;
 	float		radius;
-	vec3_t		floatColor;
+	Vec3		floatColor;
 	float		modulate = 0.0f;
 
 	if(!backEnd.refdef.num_dlights){
@@ -467,7 +467,7 @@ ProjectDlightTexture_altivec(void)
 		floatColorVec0	= vec_perm(floatColorVec0,floatColorVec0,floatColorVecPerm);
 		for(i = 0; i < tess.numVertexes; i++, texCoords += 2, colors += 4){
 			int clip = 0;
-			vec_t dist0, dist1, dist2;
+			Scalar dist0, dist1, dist2;
 
 			dist0	= origin0 - tess.xyz[i][0];
 			dist1	= origin1 - tess.xyz[i][1];
@@ -573,7 +573,7 @@ static void
 ProjectDlightTexture_scalar(void)
 {
 	int i, l;
-	vec3_t origin;
+	Vec3 origin;
 	float *texCoords;
 	byte *colors;
 	byte clipBits[SHADER_MAX_VERTEXES];
@@ -583,7 +583,7 @@ ProjectDlightTexture_scalar(void)
 	int		numIndexes;
 	float		scale;
 	float		radius;
-	vec3_t		floatColor;
+	Vec3		floatColor;
 	float		modulate = 0.0f;
 
 	if(!backEnd.refdef.num_dlights){
@@ -600,7 +600,7 @@ ProjectDlightTexture_scalar(void)
 		colors = colorArray[0];
 
 		dl = &backEnd.refdef.dlights[l];
-		Vec3Copy(dl->transformed, origin);
+		vec3copy(dl->transformed, origin);
 		radius	= dl->radius;
 		scale	= 1.0f / radius;
 
@@ -624,9 +624,9 @@ ProjectDlightTexture_scalar(void)
 
 		for(i = 0; i < tess.numVertexes; i++, texCoords += 2, colors += 4){
 			int clip = 0;
-			vec3_t dist;
+			Vec3 dist;
 
-			Vec3Sub(origin, tess.xyz[i], dist);
+			vec3sub(origin, tess.xyz[i], dist);
 
 			backEnd.pc.c_dlightVertexes++;
 
@@ -894,10 +894,10 @@ ComputeColors(shaderStage_t *pStage)
 
 		for(i = 0; i < tess.numVertexes; i++){
 			float len;
-			vec3_t v;
+			Vec3 v;
 
-			Vec3Sub(tess.xyz[i], backEnd.viewParms.or.origin, v);
-			len = Vec3Len(v);
+			vec3sub(tess.xyz[i], backEnd.viewParms.or.origin, v);
+			len = vec3len(v);
 
 			len /= tess.shader->portalRange;
 
@@ -988,9 +988,9 @@ ComputeTexCoords(shaderStage_t *pStage)
 			break;
 		case TCGEN_VECTOR:
 			for(i = 0; i < tess.numVertexes; i++){
-				tess.svars.texcoords[b][i][0]	= Vec3Dot(
+				tess.svars.texcoords[b][i][0]	= vec3dot(
 					tess.xyz[i], pStage->bundle[b].tcGenVectors[0]);
-				tess.svars.texcoords[b][i][1]	= Vec3Dot(
+				tess.svars.texcoords[b][i][1]	= vec3dot(
 					tess.xyz[i], pStage->bundle[b].tcGenVectors[1]);
 			}
 			break;

@@ -130,12 +130,12 @@ CG_Text_PaintChar(float x, float y, float width, float height, float scale,
 }
 
 void
-CG_Text_Paint(float x, float y, float scale, vec4_t color, const char *text,
+CG_Text_Paint(float x, float y, float scale, Vec4 color, const char *text,
 	      float adjust, int limit,
 	      int style)
 {
 	int len, count;
-	vec4_t	newColor;
+	Vec4	newColor;
 	glyphInfo_t *glyph;
 	float	useScale;
 	fontInfo_t *font = &cgDC.Assets.textFont;
@@ -149,7 +149,7 @@ CG_Text_Paint(float x, float y, float scale, vec4_t color, const char *text,
  *      const unsigned char *s = text; */
 		const char *s = text;
 		trap_R_SetColor(color);
-		memcpy(&newColor[0], &color[0], sizeof(vec4_t));
+		memcpy(&newColor[0], &color[0], sizeof(Vec4));
 		len = strlen(text);
 		if(limit > 0 && len > limit)
 			len = limit;
@@ -277,8 +277,8 @@ CG_DrawField(int x, int y, int width, int value)
  */
 void
 CG_Draw3DModel(float x, float y, float w, float h, qhandle_t model,
-	       qhandle_t skin, vec3_t origin,
-	       vec3_t angles)
+	       qhandle_t skin, Vec3 origin,
+	       Vec3 angles)
 {
 	refdef_t refdef;
 	refEntity_t ent;
@@ -291,15 +291,15 @@ CG_Draw3DModel(float x, float y, float w, float h, qhandle_t model,
 	memset(&refdef, 0, sizeof(refdef));
 
 	memset(&ent, 0, sizeof(ent));
-	AnglesToAxis(angles, ent.axis);
-	Vec3Copy(origin, ent.origin);
+	euler2axis(angles, ent.axis);
+	vec3copy(origin, ent.origin);
 	ent.hModel = model;
 	ent.customSkin	= skin;
 	ent.renderfx	= RF_NOSHADOW;	/* no stencil shadows */
 
 	refdef.rdflags = RDF_NOWORLDMODEL;
 
-	AxisClear(refdef.viewaxis);
+	axisclear(refdef.viewaxis);
 
 	refdef.fov_x	= 30;
 	refdef.fov_y	= 30;
@@ -322,13 +322,13 @@ CG_Draw3DModel(float x, float y, float w, float h, qhandle_t model,
  * Used for both the status bar and the scoreboard
  */
 void
-CG_DrawHead(float x, float y, float w, float h, int clientNum, vec3_t headAngles)
+CG_DrawHead(float x, float y, float w, float h, int clientNum, Vec3 headAngles)
 {
 	clipHandle_t cm;
 	clientInfo_t *ci;
 	float	len;
-	vec3_t	origin;
-	vec3_t	mins, maxs;
+	Vec3	origin;
+	Vec3	mins, maxs;
 
 	ci = &cgs.clientinfo[ clientNum ];
 
@@ -349,7 +349,7 @@ CG_DrawHead(float x, float y, float w, float h, int clientNum, vec3_t headAngles
 		origin[0] = len / 0.268;	/* len / tan( fov/2 ) */
 
 		/* allow per-model tweaking */
-		Vec3Add(origin, ci->headOffset, origin);
+		vec3add(origin, ci->headOffset, origin);
 
 		CG_Draw3DModel(x, y, w, h, ci->headModel, ci->headSkin, origin,
 			headAngles);
@@ -371,13 +371,13 @@ CG_DrawFlagModel(float x, float y, float w, float h, int team, qbool force2D)
 {
 	qhandle_t	cm;
 	float len;
-	vec3_t		origin, angles;
-	vec3_t		mins, maxs;
+	Vec3		origin, angles;
+	Vec3		mins, maxs;
 	qhandle_t	handle;
 
 	if(!force2D && cg_draw3dIcons.integer){
 
-		VectorClear(angles);
+		vec3clear(angles);
 
 		cm = cgs.media.redFlagModel;
 
@@ -428,11 +428,11 @@ CG_DrawFlagModel(float x, float y, float w, float h, int team, qbool force2D)
 static void
 CG_DrawStatusBarHead(float x)
 {
-	vec3_t	angles;
+	Vec3	angles;
 	float	size, stretch;
 	float	frac;
 
-	VectorClear(angles);
+	vec3clear(angles);
 
 	if(cg.damageTime && cg.time - cg.damageTime < DAMAGE_TIME){
 		frac	= (float)(cg.time - cg.damageTime) / DAMAGE_TIME;
@@ -502,7 +502,7 @@ CG_DrawStatusBarFlag(float x, int team)
 void
 CG_DrawTeamBackground(int x, int y, int w, int h, float alpha, int team)
 {
-	vec4_t hcolor;
+	Vec4 hcolor;
 
 	hcolor[3] = alpha;
 	if(team == TEAM_RED){
@@ -532,9 +532,9 @@ CG_DrawStatusBar(void)
 	centity_t *cent;
 	playerState_t *ps;
 	int value;
-	vec4_t	hcolor;
-	vec3_t	angles;
-	vec3_t	origin;
+	Vec4	hcolor;
+	Vec3	angles;
+	Vec3	origin;
 
 	static float colors[4][4] = {
 /*		{ 0.2, 1.0, 0.2, 1.0 } , { 1.0, 0.2, 0.2, 1.0 }, {0.5, 0.5, 0.5, 1} }; */
@@ -554,7 +554,7 @@ CG_DrawStatusBar(void)
 	cent	= &cg_entities[cg.snap->ps.clientNum];
 	ps	= &cg.snap->ps;
 
-	VectorClear(angles);
+	vec3clear(angles);
 
 	/* draw any 3D icons first, so the changes back to 2D are minimized */
 	if(cent->currentState.weapon &&
@@ -686,7 +686,7 @@ CG_DrawAttacker(float y)
 {
 	int t;
 	float	size;
-	vec3_t	angles;
+	Vec3	angles;
 	const char *info;
 	const char *name;
 	int clientNum;
@@ -822,7 +822,7 @@ CG_DrawTeamOverlay(float y, qbool right, qbool upper)
 	int	x, w, h, xx;
 	int	i, j, len;
 	const char *p;
-	vec4_t	hcolor;
+	Vec4	hcolor;
 	int	pwidth, lwidth;
 	int	plyrs;
 	char	st[16];
@@ -1036,7 +1036,7 @@ CG_DrawScores(float y)
 	int	s1, s2, score;
 	int	x, w;
 	int	v;
-	vec4_t	color;
+	Vec4	color;
 	float	y1;
 	gitem_t *item;
 
@@ -1254,7 +1254,7 @@ CG_DrawPowerups(float y)
 			if(t - cg.time >= POWERUP_BLINKS * POWERUP_BLINK_TIME)
 				trap_R_SetColor(NULL);
 			else{
-				vec4_t modulate;
+				Vec4 modulate;
 
 				f =
 					(float)(t -
@@ -1374,7 +1374,7 @@ CG_DrawTeamInfo(void)
 {
 	int	h;
 	int	i;
-	vec4_t hcolor;
+	Vec4 hcolor;
 	int	chatHeight;
 
 #define CHATLOC_Y	420	/* bottom end */
@@ -1906,7 +1906,7 @@ CG_DrawCrosshair(void)
 
 	/* set color based on health */
 	if(cg_crosshairHealth.integer){
-		vec4_t hcolor;
+		Vec4 hcolor;
 
 		CG_ColorForHealth(hcolor);
 		trap_R_SetColor(hcolor);
@@ -1949,7 +1949,7 @@ CG_DrawCrosshair3D(void)
 	int	ca;
 
 	trace_t trace;
-	vec3_t	endpos;
+	Vec3	endpos;
 	float	stereoSep, zProj, maxdist, xmax;
 	char	rendererinfos[128];
 	refEntity_t ent;
@@ -1993,14 +1993,14 @@ CG_DrawCrosshair3D(void)
 
 	/* let the trace run through until a change in stereo separation of the crosshair becomes less than one pixel. */
 	maxdist = cgs.glconfig.vidWidth * stereoSep * zProj / (2 * xmax);
-	Vec3MA(cg.refdef.vieworg, maxdist, cg.refdef.viewaxis[0], endpos);
+	vec3ma(cg.refdef.vieworg, maxdist, cg.refdef.viewaxis[0], endpos);
 	CG_Trace(&trace, cg.refdef.vieworg, NULL, NULL, endpos, 0, MASK_SHOT);
 
 	memset(&ent, 0, sizeof(ent));
 	ent.reType	= RT_SPRITE;
 	ent.renderfx	= RF_DEPTHHACK | RF_CROSSHAIR;
 
-	Vec3Copy(trace.endpos, ent.origin);
+	vec3copy(trace.endpos, ent.origin);
 
 	/* scale the crosshair so it appears the same size for all distances */
 	ent.radius = w / 640 * xmax * trace.fraction * maxdist / zProj;
@@ -2018,11 +2018,11 @@ static void
 CG_ScanForCrosshairEntity(void)
 {
 	trace_t trace;
-	vec3_t	start, end;
+	Vec3	start, end;
 	int content;
 
-	Vec3Copy(cg.refdef.vieworg, start);
-	Vec3MA(start, 131072, cg.refdef.viewaxis[0], end);
+	vec3copy(cg.refdef.vieworg, start);
+	vec3ma(start, 131072, cg.refdef.viewaxis[0], end);
 
 	CG_Trace(&trace, start, vec3_origin, vec3_origin, end,
 		cg.snap->ps.clientNum, CONTENTS_SOLID|CONTENTS_BODY);
@@ -2265,7 +2265,7 @@ static qbool
 CG_DrawFollow(void)
 {
 	float	x;
-	vec4_t	color;
+	Vec4	color;
 	const char *name;
 
 	if(!(cg.snap->ps.pm_flags & PMF_FOLLOW))

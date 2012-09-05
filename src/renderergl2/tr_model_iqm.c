@@ -79,7 +79,7 @@ InterpolateMatrix(float *a, float *b, float lerp, float *mat)
 }
 
 static void
-JointToMatrix(vec4_t rot, vec3_t scale, vec3_t trans,
+JointToMatrix(Vec4 rot, Vec3 scale, Vec3 trans,
 	      float *mat)
 {
 	float xx = 2.0f * rot[0] * rot[0];
@@ -109,24 +109,24 @@ JointToMatrix(vec4_t rot, vec3_t scale, vec3_t trans,
 static void
 Matrix34Invert(float *inMat, float *outMat)
 {
-	vec3_t	trans;
+	Vec3	trans;
 	float	invSqrLen, *v;
 
 	outMat[ 0] = inMat[ 0]; outMat[ 1] = inMat[ 4]; outMat[ 2] = inMat[ 8];
 	outMat[ 4] = inMat[ 1]; outMat[ 5] = inMat[ 5]; outMat[ 6] = inMat[ 9];
 	outMat[ 8] = inMat[ 2]; outMat[ 9] = inMat[ 6]; outMat[10] = inMat[10];
 
-	v = outMat + 0; invSqrLen = 1.0f / Vec3Dot(v, v); VectorScale(v, invSqrLen, v);
-	v = outMat + 4; invSqrLen = 1.0f / Vec3Dot(v, v); VectorScale(v, invSqrLen, v);
-	v = outMat + 8; invSqrLen = 1.0f / Vec3Dot(v, v); VectorScale(v, invSqrLen, v);
+	v = outMat + 0; invSqrLen = 1.0f / vec3dot(v, v); vec3scale(v, invSqrLen, v);
+	v = outMat + 4; invSqrLen = 1.0f / vec3dot(v, v); vec3scale(v, invSqrLen, v);
+	v = outMat + 8; invSqrLen = 1.0f / vec3dot(v, v); vec3scale(v, invSqrLen, v);
 
 	trans[0] = inMat[ 3];
 	trans[1] = inMat[ 7];
 	trans[2] = inMat[11];
 
-	outMat[ 3] = -Vec3Dot(outMat + 0, trans);
-	outMat[ 7] = -Vec3Dot(outMat + 4, trans);
-	outMat[11] = -Vec3Dot(outMat + 8, trans);
+	outMat[ 3] = -vec3dot(outMat + 0, trans);
+	outMat[ 7] = -vec3dot(outMat + 4, trans);
+	outMat[11] = -vec3dot(outMat + 8, trans);
 }
 
 /* byte order */
@@ -581,9 +581,9 @@ R_LoadIQM(model_t *mod, void *buffer, size_t filesize, const char *mod_name)
 	for(i = 0; i < header->num_frames; i++){
 		pose = (iqmPose_t*)((byte*)header + header->ofs_poses);
 		for(j = 0; j < header->num_poses; j++, pose++){
-			vec3_t	translate;
-			vec4_t	rotate;
-			vec3_t	scale;
+			Vec3	translate;
+			Vec4	rotate;
+			Vec3	scale;
 			float	mat1[12], mat2[12];
 
 			translate[0] = pose->channeloffset[0];
@@ -746,8 +746,8 @@ R_LoadIQM(model_t *mod, void *buffer, size_t filesize, const char *mod_name)
 static int
 culliqm(iqmData_t *data, trRefEntity_t *ent)
 {
-	vec3_t bounds[2];
-	vec_t *oldBounds, *newBounds;
+	Vec3 bounds[2];
+	Scalar *oldBounds, *newBounds;
 	int	i;
 
 	if(!data->bounds){
@@ -784,11 +784,11 @@ R_ComputeIQMFogNum(iqmData_t *data, trRefEntity_t *ent)
 {
 	int i, j;
 	fog_t *fog;
-	const vec_t *bounds;
-	const vec_t defaultBounds[6] = { -8, -8, -8, 8, 8, 8 };
-	vec3_t	diag, center;
-	vec3_t	localOrigin;
-	vec_t	radius;
+	const Scalar *bounds;
+	const Scalar defaultBounds[6] = { -8, -8, -8, 8, 8, 8 };
+	Vec3	diag, center;
+	Vec3	localOrigin;
+	Scalar	radius;
 
 	if(tr.refdef.rdflags & RDF_NOWORLDMODEL){
 		return 0;
@@ -800,10 +800,10 @@ R_ComputeIQMFogNum(iqmData_t *data, trRefEntity_t *ent)
 	}else{
 		bounds = defaultBounds;
 	}
-	Vec3Sub(bounds+3, bounds, diag);
-	Vec3MA(bounds, 0.5f, diag, center);
-	Vec3Add(ent->e.origin, center, localOrigin);
-	radius = 0.5f * Vec3Len(diag);
+	vec3sub(bounds+3, bounds, diag);
+	vec3ma(bounds, 0.5f, diag, center);
+	vec3add(ent->e.origin, center, localOrigin);
+	radius = 0.5f * vec3len(diag);
 
 	for(i = 1; i < tr.world->numfogs; i++){
 		fog = &tr.world->fogs[i];
@@ -970,10 +970,10 @@ RB_IQMSurfaceAnim(surfaceType_t *surface)
 	iqmData_t *data = surf->data;
 	float jointMats[IQM_MAX_JOINTS * 12];
 	int i;
-	vec4_t *outXYZ = &tess.xyz[tess.numVertexes];
-	vec4_t *outNormal = &tess.normal[tess.numVertexes];
-	vec2_t (*outTexCoord)[2] = &tess.texCoords[tess.numVertexes];
-	vec4_t *outColor = &tess.vertexColors[tess.numVertexes];
+	Vec4 *outXYZ = &tess.xyz[tess.numVertexes];
+	Vec4 *outNormal = &tess.normal[tess.numVertexes];
+	Vec2 (*outTexCoord)[2] = &tess.texCoords[tess.numVertexes];
+	Vec4 *outColor = &tess.vertexColors[tess.numVertexes];
 	int frame = backEnd.currentEntity->e.frame % data->num_frames;
 	int oldframe = backEnd.currentEntity->e.oldframe % data->num_frames;
 	float backlerp = backEnd.currentEntity->e.backlerp;
@@ -1095,8 +1095,8 @@ R_IQMLerpTag(orientation_t *tag, iqmData_t *data,
 		names += strlen(names) + 1;
 	}
 	if(joint >= data->num_joints){
-		AxisClear(tag->axis);
-		VectorClear(tag->origin);
+		axisclear(tag->axis);
+		vec3clear(tag->origin);
 		return qfalse;
 	}
 

@@ -53,11 +53,11 @@ void FBO_Bind(FBO_t *fbo);
 void FBO_Init(void);
 void FBO_Shutdown(void);
 
-void FBO_BlitFromTexture(struct image_s *src, vec4_t srcBox, vec2_t srcTexScale, FBO_t *dst, vec4_t dstBox,
-			 struct shaderProgram_s *shaderProgram, vec4_t color,
+void FBO_BlitFromTexture(struct image_s *src, Vec4 srcBox, Vec2 srcTexScale, FBO_t *dst, Vec4 dstBox,
+			 struct shaderProgram_s *shaderProgram, Vec4 color,
 			 int blend);
-void FBO_Blit(FBO_t *src, vec4_t srcBox, vec2_t srcTexScale, FBO_t *dst, vec4_t dstBox,
-	      struct shaderProgram_s *shaderProgram, vec4_t color,
+void FBO_Blit(FBO_t *src, Vec4 srcBox, Vec2 srcTexScale, FBO_t *dst, Vec4 dstBox,
+	      struct shaderProgram_s *shaderProgram, Vec4 color,
 	      int blend);
 
 

@@ -346,7 +346,7 @@ G_ParseField(const char *key, const char *value, gentity_t *ent)
 	field_t *f;
 	byte	*b;
 	float	v;
-	vec3_t	vec;
+	Vec3	vec;
 
 	for(f=fields; f->name; f++)
 		if(!Q_stricmp(f->name, key)){
@@ -466,8 +466,8 @@ G_SpawnGEntityFromSpawnVars(void)
 		}
 
 	/* move editor origin to pos */
-	Vec3Copy(ent->s.origin, ent->s.pos.trBase);
-	Vec3Copy(ent->s.origin, ent->r.currentOrigin);
+	vec3copy(ent->s.origin, ent->s.pos.trBase);
+	vec3copy(ent->s.origin, ent->r.currentOrigin);
 
 	/* if we didn't get a classname, don't bother spawning anything */
 	if(!G_CallSpawn(ent))

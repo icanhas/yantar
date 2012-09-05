@@ -167,7 +167,7 @@ static
 void
 CL_UpdateMumble(void)
 {
-	vec3_t	pos, forward, up;
+	Vec3	pos, forward, up;
 	float	scale = cl_mumbleScale->value;
 	float	tmp;
 
@@ -175,7 +175,7 @@ CL_UpdateMumble(void)
 		return;
 
 	/* !!! FIXME: not sure if this is even close to correct. */
-	AngleVectors(cl.snap.ps.viewangles, forward, NULL, up);
+	anglevec3s(cl.snap.ps.viewangles, forward, NULL, up);
 
 	pos[0]	= cl.snap.ps.origin[0] * scale;
 	pos[1]	= cl.snap.ps.origin[2] * scale;

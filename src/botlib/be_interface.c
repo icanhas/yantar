@@ -340,9 +340,9 @@ Export_BotLibUpdateEntity(int ent, bot_entitystate_t *state)
  * Returns:					-
  * Changes Globals:		-
  * =========================================================================== */
-void AAS_TestMovementPrediction(int entnum, vec3_t origin, vec3_t dir);
-void ElevatorBottomCenter(aas_reachability_t *reach, vec3_t bottomcenter);
-int BotGetReachabilityToGoal(vec3_t origin, int areanum,
+void AAS_TestMovementPrediction(int entnum, Vec3 origin, Vec3 dir);
+void ElevatorBottomCenter(aas_reachability_t *reach, Vec3 bottomcenter);
+int BotGetReachabilityToGoal(Vec3 origin, int areanum,
 			     int lastgoalareanum, int lastareanum,
 			     int *avoidreach, float *avoidreachtimes,
 			     int *avoidreachtries,
@@ -352,21 +352,21 @@ int BotGetReachabilityToGoal(vec3_t origin, int areanum,
 			     int numavoidspots,
 			     int *flags);
 
-int AAS_PointLight(vec3_t origin, int *red, int *green, int *blue);
+int AAS_PointLight(Vec3 origin, int *red, int *green, int *blue);
 
-int AAS_TraceAreas(vec3_t start, vec3_t end, int *areas, vec3_t *points,
+int AAS_TraceAreas(Vec3 start, Vec3 end, int *areas, Vec3 *points,
 		   int maxareas);
 
 int AAS_Reachability_WeaponJump(int area1num, int area2num);
 
-int BotFuzzyPointReachabilityArea(vec3_t origin);
+int BotFuzzyPointReachabilityArea(Vec3 origin);
 
-float BotGapVec3Vec3Distance(vec3_t origin, vec3_t hordir, int entnum);
+float BotGapVec3vec3dist(Vec3 origin, Vec3 hordir, int entnum);
 
-void AAS_FloodAreas(vec3_t origin);
+void AAS_FloodAreas(Vec3 origin);
 
 int
-BotExportTest(int parm0, char *parm1, vec3_t parm2, vec3_t parm3)
+BotExportTest(int parm0, char *parm1, Vec3 parm2, Vec3 parm3)
 {
 
 /*	return AAS_PointLight(parm2, NULL, NULL, NULL); */
@@ -376,8 +376,8 @@ BotExportTest(int parm0, char *parm1, vec3_t parm2, vec3_t parm3)
 	static int	line[2];
 	int newarea, i, highlightarea, flood;
 /*	int reachnum; */
-	vec3_t eye, forward, right, end, origin;
-/* vec3_t bottomcenter;
+	Vec3 eye, forward, right, end, origin;
+/* Vec3 bottomcenter;
  * aas_trace_t trace;
  * aas_face_t *face;
  * aas_entity_t *ent;
@@ -386,8 +386,8 @@ BotExportTest(int parm0, char *parm1, vec3_t parm2, vec3_t parm3)
  * bot_goal_t goal; */
 
 	/* clock_t start_time, end_time; */
-	vec3_t	mins = {-16, -16, -24};
-	vec3_t	maxs = {16, 16, 32};
+	Vec3	mins = {-16, -16, -24};
+	Vec3	maxs = {16, 16, 32};
 
 /*	int areas[10], numareas; */
 
@@ -416,7 +416,7 @@ BotExportTest(int parm0, char *parm1, vec3_t parm2, vec3_t parm3)
 	if(highlightarea > 0)
 		newarea = highlightarea;
 	else{
-		Vec3Copy(parm2, origin);
+		vec3copy(parm2, origin);
 		origin[2] += 0.5;
 		/* newarea = AAS_PointAreaNum(origin); */
 		newarea = BotFuzzyPointReachabilityArea(origin);
@@ -466,7 +466,7 @@ BotExportTest(int parm0, char *parm1, vec3_t parm2, vec3_t parm3)
 				botlibglobals.goalareanum,
 				TFL_DEFAULT|TFL_ROCKETJUMP));
 		/*
-		 * Vec3Copy(origin, end);
+		 * vec3copy(origin, end);
 		 * end[2] += 5;
 		 * numareas = AAS_TraceAreas(origin, end, areas, NULL, 10);
 		 * AAS_TraceClientBBox(origin, end, PRESENCE_CROUCH, -1);
@@ -474,7 +474,7 @@ BotExportTest(int parm0, char *parm1, vec3_t parm2, vec3_t parm3)
 		 */
 		/*
 		 * botlibglobals.goalareanum = newarea;
-		 * Vec3Copy(parm2, botlibglobals.goalorigin);
+		 * vec3copy(parm2, botlibglobals.goalorigin);
 		 * botimport.Print(PRT_MESSAGE, "new goal %2.1f %2.1f %2.1f area %d\n",
 		 *                                              origin[0], origin[1], origin[2], newarea);
 		 */
@@ -488,7 +488,7 @@ BotExportTest(int parm0, char *parm1, vec3_t parm2, vec3_t parm3)
 			AAS_FloodAreas(parm2);
 		}else{
 			botlibglobals.goalareanum = newarea;
-			Vec3Copy(parm2, botlibglobals.goalorigin);
+			vec3copy(parm2, botlibglobals.goalorigin);
 			botimport.Print(PRT_MESSAGE,
 				"new goal %2.1f %2.1f %2.1f area %d\n",
 				origin[0], origin[1], origin[2],
@@ -558,7 +558,7 @@ BotExportTest(int parm0, char *parm1, vec3_t parm2, vec3_t parm3)
 
 		/*
 		 * goal.areanum = botlibglobals.goalareanum;
-		 * Vec3Copy(botlibglobals.goalorigin, goal.origin);
+		 * vec3copy(botlibglobals.goalorigin, goal.origin);
 		 * reachnum = BotGetReachabilityToGoal(origin, newarea,
 		 *                                                        lastgoalareanum, lastareanum,
 		 *                                                        avoidreach, avoidreachtimes, avoidreachtries,
@@ -568,11 +568,11 @@ BotExportTest(int parm0, char *parm1, vec3_t parm2, vec3_t parm3)
 		 * AAS_ShowReachability(&reach);
 		 */
 		int curarea;
-		vec3_t curorigin;
+		Vec3 curorigin;
 
 		goal.areanum = botlibglobals.goalareanum;
-		Vec3Copy(botlibglobals.goalorigin, goal.origin);
-		Vec3Copy(origin, curorigin);
+		vec3copy(botlibglobals.goalorigin, goal.origin);
+		vec3copy(origin, curorigin);
 		curarea = newarea;
 		for(i = 0; i < 100; i++){
 			if(curarea == goal.areanum)
@@ -586,13 +586,13 @@ BotExportTest(int parm0, char *parm1, vec3_t parm2, vec3_t parm3)
 				NULL, 0, &resultFlags);
 			AAS_ReachabilityFromNum(reachnum, &reach);
 			AAS_ShowReachability(&reach);
-			Vec3Copy(reach.end, origin);
+			vec3copy(reach.end, origin);
 			lastareanum = curarea;
 			curarea = reach.areanum;
 		}
 	}
-	VectorClear(forward);
-	/* BotGapVec3Vec3Distance(origin, forward, 0); */
+	vec3clear(forward);
+	/* BotGapVec3vec3dist(origin, forward, 0); */
 	/*
 	 * if (parm0 & BUTTON_USE)
 	 * {
@@ -600,13 +600,13 @@ BotExportTest(int parm0, char *parm1, vec3_t parm2, vec3_t parm3)
 	 *      AAS_Reachability_WeaponJump(703, 716);
 	 * } */
 
-	AngleVectors(parm3, forward, right, NULL);
+	anglevec3s(parm3, forward, right, NULL);
 	/* get the eye 16 units to the right of the origin */
-	Vec3MA(parm2, 8, right, eye);
+	vec3ma(parm2, 8, right, eye);
 	/* get the eye 24 units up */
 	eye[2] += 24;
 	/* get the end point for the line to be traced */
-	Vec3MA(eye, 800, forward, end);
+	vec3ma(eye, 800, forward, end);
 
 /*	AAS_TestMovementPrediction(1, parm2, forward); */
 /*

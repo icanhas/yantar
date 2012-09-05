@@ -36,21 +36,21 @@
  * RotatePoint
  */
 void
-RotatePoint(vec3_t point, /*const*/ vec3_t matrix[3])	/* FIXME */
+RotatePoint(Vec3 point, /*const*/ Vec3 matrix[3])	/* FIXME */
 {
-	vec3_t tvec;
+	Vec3 tvec;
 
-	Vec3Copy(point, tvec);
-	point[0] = Vec3Dot(matrix[0], tvec);
-	point[1] = Vec3Dot(matrix[1], tvec);
-	point[2] = Vec3Dot(matrix[2], tvec);
+	vec3copy(point, tvec);
+	point[0] = vec3dot(matrix[0], tvec);
+	point[1] = vec3dot(matrix[1], tvec);
+	point[2] = vec3dot(matrix[2], tvec);
 }
 
 /*
  * TransposeMatrix
  */
 void
-TransposeMatrix(/*const*/ vec3_t matrix[3], vec3_t transpose[3])	/* FIXME */
+TransposeMatrix(/*const*/ Vec3 matrix[3], Vec3 transpose[3])	/* FIXME */
 {
 	int i, j;
 	for(i = 0; i < 3; i++)
@@ -62,32 +62,32 @@ TransposeMatrix(/*const*/ vec3_t matrix[3], vec3_t transpose[3])	/* FIXME */
  * CreateRotationMatrix
  */
 void
-CreateRotationMatrix(const vec3_t angles, vec3_t matrix[3])
+CreateRotationMatrix(const Vec3 angles, Vec3 matrix[3])
 {
-	AngleVectors(angles, matrix[0], matrix[1], matrix[2]);
-	Vec3Inverse(matrix[1]);
+	anglevec3s(angles, matrix[0], matrix[1], matrix[2]);
+	vec3inv(matrix[1]);
 }
 
 /*
  * CM_ProjectPointOntoVector
  */
 void
-CM_ProjectPointOntoVector(vec3_t point, vec3_t vStart, vec3_t vDir, vec3_t vProj)
+CM_ProjectPointOntoVector(Vec3 point, Vec3 vStart, Vec3 vDir, Vec3 vProj)
 {
-	vec3_t pVec;
+	Vec3 pVec;
 
-	Vec3Sub(point, vStart, pVec);
+	vec3sub(point, vStart, pVec);
 	/* project onto the directional vector for this segment */
-	Vec3MA(vStart, Vec3Dot(pVec, vDir), vDir, vProj);
+	vec3ma(vStart, vec3dot(pVec, vDir), vDir, vProj);
 }
 
 /*
- * CM_Vec3DistanceFromLineSquared
+ * CM_vec3distFromLineSquared
  */
 float
-CM_Vec3DistanceFromLineSquared(vec3_t p, vec3_t lp1, vec3_t lp2, vec3_t dir)
+CM_vec3distFromLineSquared(Vec3 p, Vec3 lp1, Vec3 lp2, Vec3 dir)
 {
-	vec3_t	proj, t;
+	Vec3	proj, t;
 	int	j;
 
 	CM_ProjectPointOntoVector(p, lp1, dir, proj);
@@ -97,25 +97,25 @@ CM_Vec3DistanceFromLineSquared(vec3_t p, vec3_t lp1, vec3_t lp2, vec3_t dir)
 			break;
 	if(j < 3){
 		if(fabs(proj[j] - lp1[j]) < fabs(proj[j] - lp2[j]))
-			Vec3Sub(p, lp1, t);
+			vec3sub(p, lp1, t);
 		else
-			Vec3Sub(p, lp2, t);
-		return Vec3LenSquared(t);
+			vec3sub(p, lp2, t);
+		return vec3lensquared(t);
 	}
-	Vec3Sub(p, proj, t);
-	return Vec3LenSquared(t);
+	vec3sub(p, proj, t);
+	return vec3lensquared(t);
 }
 
 /*
- * CM_VectorVec3DistanceSquared
+ * CM_Vectorvec3distsquared
  */
 float
-CM_VectorVec3DistanceSquared(vec3_t p1, vec3_t p2)
+CM_Vectorvec3distsquared(Vec3 p1, Vec3 p2)
 {
-	vec3_t dir;
+	Vec3 dir;
 
-	Vec3Sub(p2, p1, dir);
-	return Vec3LenSquared(dir);
+	vec3sub(p2, p1, dir);
+	return vec3lensquared(dir);
 }
 
 /*
@@ -156,7 +156,7 @@ CM_TestBoxInBrush(traceWork_t *tw, cbrush_t *brush)
 	float		d1;
 	cbrushside_t *side;
 	float		t;
-	vec3_t		startp;
+	Vec3		startp;
 
 	if(!brush->numsides)
 		return;
@@ -181,13 +181,13 @@ CM_TestBoxInBrush(traceWork_t *tw, cbrush_t *brush)
 			/* adjust the plane distance apropriately for radius */
 			dist = plane->dist + tw->sphere.radius;
 			/* find the closest point on the capsule to the plane */
-			t = Vec3Dot(plane->normal, tw->sphere.offset);
+			t = vec3dot(plane->normal, tw->sphere.offset);
 			if(t > 0)
-				Vec3Sub(tw->start, tw->sphere.offset,
+				vec3sub(tw->start, tw->sphere.offset,
 					startp);
 			else
-				Vec3Add(tw->start, tw->sphere.offset, startp);
-			d1 = Vec3Dot(startp, plane->normal) - dist;
+				vec3add(tw->start, tw->sphere.offset, startp);
+			d1 = vec3dot(startp, plane->normal) - dist;
 			/* if completely in front of face, no intersection */
 			if(d1 > 0)
 				return;
@@ -201,10 +201,10 @@ CM_TestBoxInBrush(traceWork_t *tw, cbrush_t *brush)
 
 			/* adjust the plane distance apropriately for mins/maxs */
 			dist = plane->dist -
-			       Vec3Dot(tw->offsets[ plane->signbits ],
+			       vec3dot(tw->offsets[ plane->signbits ],
 				plane->normal);
 
-			d1 = Vec3Dot(tw->start, plane->normal) - dist;
+			d1 = vec3dot(tw->start, plane->normal) - dist;
 
 			/* if completely in front of face, no intersection */
 			if(d1 > 0)
@@ -286,16 +286,16 @@ void
 CM_TestCapsuleInCapsule(traceWork_t *tw, clipHandle_t model)
 {
 	int i;
-	vec3_t	mins, maxs;
-	vec3_t	top, bottom;
-	vec3_t	p1, p2, tmp;
-	vec3_t	offset, symetricSize[2];
+	Vec3	mins, maxs;
+	Vec3	top, bottom;
+	Vec3	p1, p2, tmp;
+	Vec3	offset, symetricSize[2];
 	float	radius, halfwidth, halfheight, offs, r;
 
 	CM_ModelBounds(model, mins, maxs);
 
-	Vec3Add(tw->start, tw->sphere.offset, top);
-	Vec3Sub(tw->start, tw->sphere.offset, bottom);
+	vec3add(tw->start, tw->sphere.offset, top);
+	vec3sub(tw->start, tw->sphere.offset, bottom);
 	for(i = 0; i < 3; i++){
 		offset[i] = (mins[i] + maxs[i]) * 0.5;
 		symetricSize[0][i] = mins[i] - offset[i];
@@ -308,27 +308,27 @@ CM_TestCapsuleInCapsule(traceWork_t *tw, clipHandle_t model)
 
 	r = Square(tw->sphere.radius + radius);
 	/* check if any of the spheres overlap */
-	Vec3Copy(offset, p1);
+	vec3copy(offset, p1);
 	p1[2] += offs;
-	Vec3Sub(p1, top, tmp);
-	if(Vec3LenSquared(tmp) < r){
+	vec3sub(p1, top, tmp);
+	if(vec3lensquared(tmp) < r){
 		tw->trace.startsolid = tw->trace.allsolid = qtrue;
 		tw->trace.fraction = 0;
 	}
-	Vec3Sub(p1, bottom, tmp);
-	if(Vec3LenSquared(tmp) < r){
+	vec3sub(p1, bottom, tmp);
+	if(vec3lensquared(tmp) < r){
 		tw->trace.startsolid = tw->trace.allsolid = qtrue;
 		tw->trace.fraction = 0;
 	}
-	Vec3Copy(offset, p2);
+	vec3copy(offset, p2);
 	p2[2] -= offs;
-	Vec3Sub(p2, top, tmp);
-	if(Vec3LenSquared(tmp) < r){
+	vec3sub(p2, top, tmp);
+	if(vec3lensquared(tmp) < r){
 		tw->trace.startsolid = tw->trace.allsolid = qtrue;
 		tw->trace.fraction = 0;
 	}
-	Vec3Sub(p2, bottom, tmp);
-	if(Vec3LenSquared(tmp) < r){
+	vec3sub(p2, bottom, tmp);
+	if(vec3lensquared(tmp) < r){
 		tw->trace.startsolid = tw->trace.allsolid = qtrue;
 		tw->trace.fraction = 0;
 	}
@@ -338,8 +338,8 @@ CM_TestCapsuleInCapsule(traceWork_t *tw, clipHandle_t model)
 		/* 2d coordinates */
 		top[2] = p1[2] = 0;
 		/* if the cylinders overlap */
-		Vec3Sub(top, p1, tmp);
-		if(Vec3LenSquared(tmp) < r){
+		vec3sub(top, p1, tmp);
+		if(vec3lensquared(tmp) < r){
 			tw->trace.startsolid = tw->trace.allsolid = qtrue;
 			tw->trace.fraction = 0;
 		}
@@ -354,7 +354,7 @@ CM_TestCapsuleInCapsule(traceWork_t *tw, clipHandle_t model)
 void
 CM_TestBoundingBoxInCapsule(traceWork_t *tw, clipHandle_t model)
 {
-	vec3_t mins, maxs, offset, size[2];
+	Vec3 mins, maxs, offset, size[2];
 	clipHandle_t h;
 	cmodel_t *cmod;
 	int i;
@@ -375,7 +375,7 @@ CM_TestBoundingBoxInCapsule(traceWork_t *tw, clipHandle_t model)
 	tw->sphere.use = qtrue;
 	tw->sphere.radius = (size[1][0] > size[1][2]) ? size[1][2] : size[1][0];
 	tw->sphere.halfheight = size[1][2];
-	VectorSet(tw->sphere.offset, 0, 0, size[1][2] - tw->sphere.radius);
+	vec3set(tw->sphere.offset, 0, 0, size[1][2] - tw->sphere.radius);
 
 	/* replace the capsule with the bounding box */
 	h = CM_TempBoxModel(tw->size[0], tw->size[1], qfalse);
@@ -396,8 +396,8 @@ CM_PositionTest(traceWork_t *tw)
 	leafList_t ll;
 
 	/* identify the leafs we are touching */
-	Vec3Add(tw->start, tw->size[0], ll.bounds[0]);
-	Vec3Add(tw->start, tw->size[1], ll.bounds[1]);
+	vec3add(tw->start, tw->size[0], ll.bounds[0]);
+	vec3add(tw->start, tw->size[1], ll.bounds[1]);
 
 	for(i=0; i<3; i++){
 		ll.bounds[0][i] -= 1;
@@ -469,8 +469,8 @@ CM_TraceThroughBrush(traceWork_t *tw, cbrush_t *brush)
 	float		f;
 	cbrushside_t *side, *leadside;
 	float		t;
-	vec3_t		startp;
-	vec3_t		endp;
+	Vec3		startp;
+	Vec3		endp;
 
 	enterFrac = -1.0;
 	leaveFrac = 1.0;
@@ -500,18 +500,18 @@ CM_TraceThroughBrush(traceWork_t *tw, cbrush_t *brush)
 			dist = plane->dist + tw->sphere.radius;
 
 			/* find the closest point on the capsule to the plane */
-			t = Vec3Dot(plane->normal, tw->sphere.offset);
+			t = vec3dot(plane->normal, tw->sphere.offset);
 			if(t > 0){
-				Vec3Sub(tw->start, tw->sphere.offset,
+				vec3sub(tw->start, tw->sphere.offset,
 					startp);
-				Vec3Sub(tw->end, tw->sphere.offset, endp);
+				vec3sub(tw->end, tw->sphere.offset, endp);
 			}else{
-				Vec3Add(tw->start, tw->sphere.offset, startp);
-				Vec3Add(tw->end, tw->sphere.offset, endp);
+				vec3add(tw->start, tw->sphere.offset, startp);
+				vec3add(tw->end, tw->sphere.offset, endp);
 			}
 
-			d1 = Vec3Dot(startp, plane->normal) - dist;
-			d2 = Vec3Dot(endp, plane->normal) - dist;
+			d1 = vec3dot(startp, plane->normal) - dist;
+			d2 = vec3dot(endp, plane->normal) - dist;
 
 			if(d2 > 0)
 				getout = qtrue;		/* endpoint is not in solid */
@@ -556,11 +556,11 @@ CM_TraceThroughBrush(traceWork_t *tw, cbrush_t *brush)
 
 			/* adjust the plane distance apropriately for mins/maxs */
 			dist = plane->dist -
-			       Vec3Dot(tw->offsets[ plane->signbits ],
+			       vec3dot(tw->offsets[ plane->signbits ],
 				plane->normal);
 
-			d1 = Vec3Dot(tw->start, plane->normal) - dist;
-			d2 = Vec3Dot(tw->end, plane->normal) - dist;
+			d1 = vec3dot(tw->start, plane->normal) - dist;
+			d2 = vec3dot(tw->end, plane->normal) - dist;
 
 			if(d2 > 0)
 				getout = qtrue;		/* endpoint is not in solid */
@@ -686,34 +686,34 @@ CM_TraceThroughLeaf(traceWork_t *tw, cLeaf_t *leaf)
  * get the first intersection of the ray with the sphere
  */
 void
-CM_TraceThroughSphere(traceWork_t *tw, vec3_t origin, float radius, vec3_t start,
-		      vec3_t end)
+CM_TraceThroughSphere(traceWork_t *tw, Vec3 origin, float radius, Vec3 start,
+		      Vec3 end)
 {
 	float	l1, l2, length, scale, fraction;
 	/* float a; */
 	float	b, c, d, sqrtd;
-	vec3_t	v1, dir, intersection;
+	Vec3	v1, dir, intersection;
 
 	/* if inside the sphere */
-	Vec3Sub(start, origin, dir);
-	l1 = Vec3LenSquared(dir);
+	vec3sub(start, origin, dir);
+	l1 = vec3lensquared(dir);
 	if(l1 < Square(radius)){
 		tw->trace.fraction = 0;
 		tw->trace.startsolid = qtrue;
 		/* test for allsolid */
-		Vec3Sub(end, origin, dir);
-		l1 = Vec3LenSquared(dir);
+		vec3sub(end, origin, dir);
+		l1 = vec3lensquared(dir);
 		if(l1 < Square(radius))
 			tw->trace.allsolid = qtrue;
 		return;
 	}
 	/*  */
-	Vec3Sub(end, start, dir);
-	length = Vec3Normalize(dir);
+	vec3sub(end, start, dir);
+	length = vec3normalize(dir);
 	/*  */
-	l1 = CM_Vec3DistanceFromLineSquared(origin, start, end, dir);
-	Vec3Sub(end, origin, v1);
-	l2 = Vec3LenSquared(v1);
+	l1 = CM_vec3distFromLineSquared(origin, start, end, dir);
+	vec3sub(end, origin, v1);
+	l2 = vec3lensquared(v1);
 	/* if no intersection with the sphere and the end point is at least an epsilon away */
 	if(l1 >= Square(radius) && l2 > Square(radius+SURFACE_CLIP_EPSILON))
 		return;
@@ -723,7 +723,7 @@ CM_TraceThroughSphere(traceWork_t *tw, vec3_t origin, float radius, vec3_t start
 	 * b = 2 * (dir[0] * (start[0] - origin[0]) + dir[1] * (start[1] - origin[1]) + dir[2] * (start[2] - origin[2]));
 	 * c = (start[0] - origin[0])^2 + (start[1] - origin[1])^2 + (start[2] - origin[2])^2 - radius^2;
 	 *  */
-	Vec3Sub(start, origin, v1);
+	vec3sub(start, origin, v1);
 	/* dir is normalized so a = 1
 	 * a = 1.0f;//dir[0] * dir[0] + dir[1] * dir[1] + dir[2] * dir[2]; */
 	b = 2.0f * (dir[0] * v1[0] + dir[1] * v1[1] + dir[2] * v1[2]);
@@ -742,20 +742,20 @@ CM_TraceThroughSphere(traceWork_t *tw, vec3_t origin, float radius, vec3_t start
 			fraction /= length;
 		if(fraction < tw->trace.fraction){
 			tw->trace.fraction = fraction;
-			Vec3Sub(end, start, dir);
-			Vec3MA(start, fraction, dir, intersection);
-			Vec3Sub(intersection, origin, dir);
+			vec3sub(end, start, dir);
+			vec3ma(start, fraction, dir, intersection);
+			vec3sub(intersection, origin, dir);
 			#ifdef CAPSULE_DEBUG
-			l2 = Vec3Len(dir);
+			l2 = vec3len(dir);
 			if(l2 < radius)
 				int bah = 1;
 
 			#endif
 			scale = 1 / (radius+RADIUS_EPSILON);
-			VectorScale(dir, scale, dir);
-			Vec3Copy(dir, tw->trace.plane.normal);
-			Vec3Add(tw->modelOrigin, intersection, intersection);
-			tw->trace.plane.dist = Vec3Dot(
+			vec3scale(dir, scale, dir);
+			vec3copy(dir, tw->trace.plane.normal);
+			vec3add(tw->modelOrigin, intersection, intersection);
+			tw->trace.plane.dist = vec3dot(
 				tw->trace.plane.normal, intersection);
 			tw->trace.contents = CONTENTS_BODY;
 		}
@@ -773,42 +773,42 @@ CM_TraceThroughSphere(traceWork_t *tw, vec3_t origin, float radius, vec3_t start
  * the cylinder extends halfheight above and below the origin
  */
 void
-CM_TraceThroughVerticalCylinder(traceWork_t *tw, vec3_t origin, float radius,
-				float halfheight, vec3_t start,
-				vec3_t end)
+CM_TraceThroughVerticalCylinder(traceWork_t *tw, Vec3 origin, float radius,
+				float halfheight, Vec3 start,
+				Vec3 end)
 {
 	float	length, scale, fraction, l1, l2;
 	/* float a; */
 	float	b, c, d, sqrtd;
-	vec3_t	v1, dir, start2d, end2d, org2d, intersection;
+	Vec3	v1, dir, start2d, end2d, org2d, intersection;
 
 	/* 2d coordinates */
-	VectorSet(start2d, start[0], start[1], 0);
-	VectorSet(end2d, end[0], end[1], 0);
-	VectorSet(org2d, origin[0], origin[1], 0);
+	vec3set(start2d, start[0], start[1], 0);
+	vec3set(end2d, end[0], end[1], 0);
+	vec3set(org2d, origin[0], origin[1], 0);
 	/* if between lower and upper cylinder bounds */
 	if(start[2] <= origin[2] + halfheight &&
 	   start[2] >= origin[2] - halfheight){
 		/* if inside the cylinder */
-		Vec3Sub(start2d, org2d, dir);
-		l1 = Vec3LenSquared(dir);
+		vec3sub(start2d, org2d, dir);
+		l1 = vec3lensquared(dir);
 		if(l1 < Square(radius)){
 			tw->trace.fraction = 0;
 			tw->trace.startsolid = qtrue;
-			Vec3Sub(end2d, org2d, dir);
-			l1 = Vec3LenSquared(dir);
+			vec3sub(end2d, org2d, dir);
+			l1 = vec3lensquared(dir);
 			if(l1 < Square(radius))
 				tw->trace.allsolid = qtrue;
 			return;
 		}
 	}
 	/*  */
-	Vec3Sub(end2d, start2d, dir);
-	length = Vec3Normalize(dir);
+	vec3sub(end2d, start2d, dir);
+	length = vec3normalize(dir);
 	/*  */
-	l1 = CM_Vec3DistanceFromLineSquared(org2d, start2d, end2d, dir);
-	Vec3Sub(end2d, org2d, v1);
-	l2 = Vec3LenSquared(v1);
+	l1 = CM_vec3distFromLineSquared(org2d, start2d, end2d, dir);
+	vec3sub(end2d, org2d, v1);
+	l2 = vec3lensquared(v1);
 	/* if no intersection with the cylinder and the end point is at least an epsilon away */
 	if(l1 >= Square(radius) && l2 > Square(radius+SURFACE_CLIP_EPSILON))
 		return;
@@ -821,7 +821,7 @@ CM_TraceThroughVerticalCylinder(traceWork_t *tw, vec3_t origin, float radius,
 	 * t ^ 2 * (dir[0] ^ 2 + dir[1] ^ 2) + t * (2 * v1[0] * dir[0] + 2 * v1[1] * dir[1]) +
 	 *                                      v1[0] ^ 2 + v1[1] ^ 2 - radius ^ 2 = 0
 	 *  */
-	Vec3Sub(start, origin, v1);
+	vec3sub(start, origin, v1);
 	/* dir is normalized so we can use a = 1
 	 * a = 1.0f;// * (dir[0] * dir[0] + dir[1] * dir[1]); */
 	b = 2.0f * (v1[0] * dir[0] + v1[1] * dir[1]);
@@ -839,27 +839,27 @@ CM_TraceThroughVerticalCylinder(traceWork_t *tw, vec3_t origin, float radius,
 		else
 			fraction /= length;
 		if(fraction < tw->trace.fraction){
-			Vec3Sub(end, start, dir);
-			Vec3MA(start, fraction, dir, intersection);
+			vec3sub(end, start, dir);
+			vec3ma(start, fraction, dir, intersection);
 			/* if the intersection is between the cylinder lower and upper bound */
 			if(intersection[2] <= origin[2] + halfheight &&
 			   intersection[2] >= origin[2] - halfheight){
 				/*  */
 				tw->trace.fraction = fraction;
-				Vec3Sub(intersection, origin, dir);
+				vec3sub(intersection, origin, dir);
 				dir[2] = 0;
 				#ifdef CAPSULE_DEBUG
-				l2 = Vec3Len(dir);
+				l2 = vec3len(dir);
 				if(l2 <= radius)
 					int bah = 1;
 
 				#endif
 				scale = 1 / (radius+RADIUS_EPSILON);
-				VectorScale(dir, scale, dir);
-				Vec3Copy(dir, tw->trace.plane.normal);
-				Vec3Add(tw->modelOrigin, intersection,
+				vec3scale(dir, scale, dir);
+				vec3copy(dir, tw->trace.plane.normal);
+				vec3add(tw->modelOrigin, intersection,
 					intersection);
-				tw->trace.plane.dist = Vec3Dot(
+				tw->trace.plane.dist = vec3dot(
 					tw->trace.plane.normal, intersection);
 				tw->trace.contents = CONTENTS_BODY;
 			}
@@ -880,9 +880,9 @@ void
 CM_TraceCapsuleThroughCapsule(traceWork_t *tw, clipHandle_t model)
 {
 	int i;
-	vec3_t	mins, maxs;
-	vec3_t	top, bottom, starttop, startbottom, endtop, endbottom;
-	vec3_t	offset, symetricSize[2];
+	Vec3	mins, maxs;
+	Vec3	top, bottom, starttop, startbottom, endtop, endbottom;
+	Vec3	offset, symetricSize[2];
 	float	radius, halfwidth, halfheight, offs, h;
 
 	CM_ModelBounds(model, mins, maxs);
@@ -896,10 +896,10 @@ CM_TraceCapsuleThroughCapsule(traceWork_t *tw, clipHandle_t model)
 	   )
 		return;
 	/* top origin and bottom origin of each sphere at start and end of trace */
-	Vec3Add(tw->start, tw->sphere.offset, starttop);
-	Vec3Sub(tw->start, tw->sphere.offset, startbottom);
-	Vec3Add(tw->end, tw->sphere.offset, endtop);
-	Vec3Sub(tw->end, tw->sphere.offset, endbottom);
+	vec3add(tw->start, tw->sphere.offset, starttop);
+	vec3sub(tw->start, tw->sphere.offset, startbottom);
+	vec3add(tw->end, tw->sphere.offset, endtop);
+	vec3sub(tw->end, tw->sphere.offset, endbottom);
 
 	/* calculate top and bottom of the capsule spheres to collide with */
 	for(i = 0; i < 3; i++){
@@ -911,9 +911,9 @@ CM_TraceCapsuleThroughCapsule(traceWork_t *tw, clipHandle_t model)
 	halfheight = symetricSize[ 1 ][ 2 ];
 	radius	= (halfwidth > halfheight) ? halfheight : halfwidth;
 	offs	= halfheight - radius;
-	Vec3Copy(offset, top);
+	vec3copy(offset, top);
 	top[2] += offs;
-	Vec3Copy(offset, bottom);
+	vec3copy(offset, bottom);
 	bottom[2] -= offs;
 	/* expand radius of spheres */
 	radius += tw->sphere.radius;
@@ -941,7 +941,7 @@ CM_TraceCapsuleThroughCapsule(traceWork_t *tw, clipHandle_t model)
 void
 CM_TraceBoundingBoxThroughCapsule(traceWork_t *tw, clipHandle_t model)
 {
-	vec3_t mins, maxs, offset, size[2];
+	Vec3 mins, maxs, offset, size[2];
 	clipHandle_t h;
 	cmodel_t *cmod;
 	int i;
@@ -962,7 +962,7 @@ CM_TraceBoundingBoxThroughCapsule(traceWork_t *tw, clipHandle_t model)
 	tw->sphere.use = qtrue;
 	tw->sphere.radius = (size[1][0] > size[1][2]) ? size[1][2] : size[1][0];
 	tw->sphere.halfheight = size[1][2];
-	VectorSet(tw->sphere.offset, 0, 0, size[1][2] - tw->sphere.radius);
+	vec3set(tw->sphere.offset, 0, 0, size[1][2] - tw->sphere.radius);
 
 	/* replace the capsule with the bounding box */
 	h = CM_TempBoxModel(tw->size[0], tw->size[1], qfalse);
@@ -982,15 +982,15 @@ CM_TraceBoundingBoxThroughCapsule(traceWork_t *tw, clipHandle_t model)
  * a smaller intercept fraction.
  */
 void
-CM_TraceThroughTree(traceWork_t *tw, int num, float p1f, float p2f, vec3_t p1,
-		    vec3_t p2)
+CM_TraceThroughTree(traceWork_t *tw, int num, float p1f, float p2f, Vec3 p1,
+		    Vec3 p2)
 {
 	cNode_t *node;
 	cplane_t        *plane;
 	float	t1, t2, offset;
 	float	frac, frac2;
 	float	idist;
-	vec3_t	mid;
+	Vec3	mid;
 	int side;
 	float	midf;
 
@@ -1016,8 +1016,8 @@ CM_TraceThroughTree(traceWork_t *tw, int num, float p1f, float p2f, vec3_t p1,
 		t2 = p2[plane->type] - plane->dist;
 		offset = tw->extents[plane->type];
 	}else{
-		t1 = Vec3Dot (plane->normal, p1) - plane->dist;
-		t2 = Vec3Dot (plane->normal, p2) - plane->dist;
+		t1 = vec3dot (plane->normal, p1) - plane->dist;
+		t2 = vec3dot (plane->normal, p2) - plane->dist;
 		if(tw->isPoint)
 			offset = 0;
 		else
@@ -1090,14 +1090,14 @@ CM_TraceThroughTree(traceWork_t *tw, int num, float p1f, float p2f, vec3_t p1,
  * CM_Trace
  */
 void
-CM_Trace(trace_t *results, const vec3_t start, const vec3_t end, vec3_t mins,
-	 vec3_t maxs,
-	 clipHandle_t model, const vec3_t origin, int brushmask, int capsule,
+CM_Trace(trace_t *results, const Vec3 start, const Vec3 end, Vec3 mins,
+	 Vec3 maxs,
+	 clipHandle_t model, const Vec3 origin, int brushmask, int capsule,
 	 sphere_t *sphere)
 {
 	int i;
 	traceWork_t	tw;
-	vec3_t offset;
+	Vec3 offset;
 	cmodel_t	*cmod;
 
 	cmod = CM_ClipHandleToModel(model);
@@ -1109,7 +1109,7 @@ CM_Trace(trace_t *results, const vec3_t start, const vec3_t end, vec3_t mins,
 	/* fill in a default trace */
 	Q_Memset(&tw, 0, sizeof(tw));
 	tw.trace.fraction = 1;	/* assume it goes the entire distance until shown otherwise */
-	Vec3Copy(origin, tw.modelOrigin);
+	vec3copy(origin, tw.modelOrigin);
 
 	if(!cm.numNodes){
 		*results = tw.trace;
@@ -1146,7 +1146,7 @@ CM_Trace(trace_t *results, const vec3_t start, const vec3_t end, vec3_t mins,
 			(tw.size[1][0] >
 			 tw.size[1][2]) ? tw.size[1][2] : tw.size[1][0];
 		tw.sphere.halfheight = tw.size[1][2];
-		VectorSet(tw.sphere.offset, 0, 0,
+		vec3set(tw.sphere.offset, 0, 0,
 			tw.size[1][2] - tw.sphere.radius);
 	}
 
@@ -1246,7 +1246,7 @@ CM_Trace(trace_t *results, const vec3_t start, const vec3_t end, vec3_t mins,
 		if(tw.size[0][0] == 0 && tw.size[0][1] == 0 && tw.size[0][2] ==
 		   0){
 			tw.isPoint = qtrue;
-			VectorClear(tw.extents);
+			vec3clear(tw.extents);
 		}else{
 			tw.isPoint = qfalse;
 			tw.extents[0]	= tw.size[1][0];
@@ -1284,7 +1284,7 @@ CM_Trace(trace_t *results, const vec3_t start, const vec3_t end, vec3_t mins,
 
 	/* generate endpos from the original, unmodified start/end */
 	if(tw.trace.fraction == 1)
-		Vec3Copy (end, tw.trace.endpos);
+		vec3copy (end, tw.trace.endpos);
 	else
 		for(i=0; i<3; i++)
 			tw.trace.endpos[i] = start[i] + tw.trace.fraction *
@@ -1295,7 +1295,7 @@ CM_Trace(trace_t *results, const vec3_t start, const vec3_t end, vec3_t mins,
 	 * Otherwise, the normal on the plane should have unit length */
 	assert(tw.trace.allsolid ||
 		tw.trace.fraction == 1.0 ||
-		Vec3LenSquared(tw.trace.plane.normal) > 0.9999);
+		vec3lensquared(tw.trace.plane.normal) > 0.9999);
 	*results = tw.trace;
 }
 
@@ -1303,8 +1303,8 @@ CM_Trace(trace_t *results, const vec3_t start, const vec3_t end, vec3_t mins,
  * CM_BoxTrace
  */
 void
-CM_BoxTrace(trace_t *results, const vec3_t start, const vec3_t end,
-	    vec3_t mins, vec3_t maxs,
+CM_BoxTrace(trace_t *results, const Vec3 start, const Vec3 end,
+	    Vec3 mins, Vec3 maxs,
 	    clipHandle_t model, int brushmask, int capsule)
 {
 	CM_Trace(results, start, end, mins, maxs, model, vec3_origin, brushmask,
@@ -1319,17 +1319,17 @@ CM_BoxTrace(trace_t *results, const vec3_t start, const vec3_t end,
  * rotating entities
  */
 void
-CM_TransformedBoxTrace(trace_t *results, const vec3_t start, const vec3_t end,
-		       vec3_t mins, vec3_t maxs,
+CM_TransformedBoxTrace(trace_t *results, const Vec3 start, const Vec3 end,
+		       Vec3 mins, Vec3 maxs,
 		       clipHandle_t model, int brushmask,
-		       const vec3_t origin, const vec3_t angles, int capsule)
+		       const Vec3 origin, const Vec3 angles, int capsule)
 {
 	trace_t		trace;
-	vec3_t		start_l, end_l;
+	Vec3		start_l, end_l;
 	qbool		rotated;
-	vec3_t		offset;
-	vec3_t		symetricSize[2];
-	vec3_t		matrix[3], transpose[3];
+	Vec3		offset;
+	Vec3		symetricSize[2];
+	Vec3		matrix[3], transpose[3];
 	int i;
 	float		halfwidth;
 	float		halfheight;
@@ -1353,8 +1353,8 @@ CM_TransformedBoxTrace(trace_t *results, const vec3_t start, const vec3_t end,
 	}
 
 	/* subtract origin offset */
-	Vec3Sub(start_l, origin, start_l);
-	Vec3Sub(end_l, origin, end_l);
+	vec3sub(start_l, origin, start_l);
+	vec3sub(end_l, origin, end_l);
 
 	/* rotate start and end into the models frame of reference */
 	if(model != BOX_MODEL_HANDLE &&
@@ -1386,7 +1386,7 @@ CM_TransformedBoxTrace(trace_t *results, const vec3_t start, const vec3_t end,
 		sphere.offset[1] = -matrix[1][ 2 ] * t;
 		sphere.offset[2] = matrix[2][ 2 ] * t;
 	}else
-		VectorSet(sphere.offset, 0, 0, t);
+		vec3set(sphere.offset, 0, 0, t);
 
 	/* sweep the box through the model */
 	CM_Trace(&trace, start_l, end_l, symetricSize[0], symetricSize[1], model,

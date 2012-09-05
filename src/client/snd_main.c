@@ -76,7 +76,7 @@ S_ValidSoundInterface(soundInterface_t *si)
  * S_StartSound
  */
 void
-S_StartSound(vec3_t origin, int entnum, int entchannel, sfxHandle_t sfx)
+S_StartSound(Vec3 origin, int entnum, int entchannel, sfxHandle_t sfx)
 {
 	if(si.StartSound)
 		si.StartSound(origin, entnum, entchannel, sfx);
@@ -149,8 +149,8 @@ S_ClearLoopingSounds(qbool killall)
  * S_AddLoopingSound
  */
 void
-S_AddLoopingSound(int entityNum, const vec3_t origin,
-		  const vec3_t velocity, sfxHandle_t sfx)
+S_AddLoopingSound(int entityNum, const Vec3 origin,
+		  const Vec3 velocity, sfxHandle_t sfx)
 {
 	if(si.AddLoopingSound)
 		si.AddLoopingSound(entityNum, origin, velocity, sfx);
@@ -160,8 +160,8 @@ S_AddLoopingSound(int entityNum, const vec3_t origin,
  * S_AddRealLoopingSound
  */
 void
-S_AddRealLoopingSound(int entityNum, const vec3_t origin,
-		      const vec3_t velocity, sfxHandle_t sfx)
+S_AddRealLoopingSound(int entityNum, const Vec3 origin,
+		      const Vec3 velocity, sfxHandle_t sfx)
 {
 	if(si.AddRealLoopingSound)
 		si.AddRealLoopingSound(entityNum, origin, velocity, sfx);
@@ -181,8 +181,8 @@ S_StopLoopingSound(int entityNum)
  * S_Respatialize
  */
 void
-S_Respatialize(int entityNum, const vec3_t origin,
-	       vec3_t axis[3], int inwater)
+S_Respatialize(int entityNum, const Vec3 origin,
+	       Vec3 axis[3], int inwater)
 {
 	if(si.Respatialize)
 		si.Respatialize(entityNum, origin, axis, inwater);
@@ -192,7 +192,7 @@ S_Respatialize(int entityNum, const vec3_t origin,
  * S_UpdateEntityPosition
  */
 void
-S_UpdateEntityPosition(int entityNum, const vec3_t origin)
+S_UpdateEntityPosition(int entityNum, const Vec3 origin)
 {
 	if(si.UpdateEntityPosition)
 		si.UpdateEntityPosition(entityNum, origin);

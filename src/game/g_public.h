@@ -66,18 +66,18 @@ typedef struct {
 
 	qbool		bmodel;	/* if false, assume an explicit mins / maxs bounding box */
 	/* only set by trap_SetBrushModel */
-	vec3_t		mins, maxs;
+	Vec3		mins, maxs;
 	int		contents;	/* CONTENTS_TRIGGER, CONTENTS_SOLID, CONTENTS_BODY, etc */
 	/* a non-solid entity should set to 0 */
 
-	vec3_t absmin, absmax;	/* derived from mins/maxs and origin + rotation */
+	Vec3 absmin, absmax;	/* derived from mins/maxs and origin + rotation */
 
 	/* currentOrigin will be used for all collision detection and world linking.
 	 * it will not necessarily be the same as the trajectory evaluation for the current
 	 * time, because each entity must be moved one at a time after time is advanced
 	 * to avoid simultanious collision issues */
-	vec3_t	currentOrigin;
-	vec3_t	currentAngles;
+	Vec3	currentOrigin;
+	Vec3	currentAngles;
 
 	/* when a trace call is made and passEntityNum != ENTITYNUM_NONE,
 	 * an ent will be excluded from testing if:
@@ -175,15 +175,15 @@ typedef enum {
 	G_SET_BRUSH_MODEL,	/* ( gentity_t *ent, const char *name ); */
 	/* sets mins and maxs based on the brushmodel name */
 
-	G_TRACE,	/* ( trace_t *results, const vec3_t start, const vec3_t mins, const vec3_t maxs, const vec3_t end, int passEntityNum, int contentmask ); */
+	G_TRACE,	/* ( trace_t *results, const Vec3 start, const Vec3 mins, const Vec3 maxs, const Vec3 end, int passEntityNum, int contentmask ); */
 	/* collision detection against all linked entities */
 
-	G_POINT_CONTENTS,	/* ( const vec3_t point, int passEntityNum ); */
+	G_POINT_CONTENTS,	/* ( const Vec3 point, int passEntityNum ); */
 	/* point contents against all linked entities */
 
-	G_IN_PVS,	/* ( const vec3_t p1, const vec3_t p2 ); */
+	G_IN_PVS,	/* ( const Vec3 p1, const Vec3 p2 ); */
 
-	G_IN_PVS_IGNORE_PORTALS,	/* ( const vec3_t p1, const vec3_t p2 ); */
+	G_IN_PVS_IGNORE_PORTALS,	/* ( const Vec3 p1, const Vec3 p2 ); */
 
 	G_ADJUST_AREA_PORTAL_STATE,	/* ( gentity_t *ent, qbool open ); */
 
@@ -197,11 +197,11 @@ typedef enum {
 	G_UNLINKENTITY,	/* ( gentity_t *ent ); */
 	/* call before removing an interactive entity */
 
-	G_ENTITIES_IN_BOX,	/* ( const vec3_t mins, const vec3_t maxs, gentity_t **list, int maxcount ); */
+	G_ENTITIES_IN_BOX,	/* ( const Vec3 mins, const Vec3 maxs, gentity_t **list, int maxcount ); */
 	/* EntitiesInBox will return brush models based on their bounding box,
 	 * so exact determination must still be done with EntityContact */
 
-	G_ENTITY_CONTACT,	/* ( const vec3_t mins, const vec3_t maxs, const gentity_t *ent ); */
+	G_ENTITY_CONTACT,	/* ( const Vec3 mins, const Vec3 maxs, const gentity_t *ent ); */
 	/* perform an exact check against inline brush models of non-square shape */
 
 	/* access for bots to get and free a server client (FIXME?) */
@@ -222,8 +222,8 @@ typedef enum {
 	G_REAL_TIME,
 	G_SNAPVECTOR,
 
-	G_TRACECAPSULE,			/* ( trace_t *results, const vec3_t start, const vec3_t mins, const vec3_t maxs, const vec3_t end, int passEntityNum, int contentmask ); */
-	G_ENTITY_CONTACTCAPSULE,	/* ( const vec3_t mins, const vec3_t maxs, const gentity_t *ent ); */
+	G_TRACECAPSULE,			/* ( trace_t *results, const Vec3 start, const Vec3 mins, const Vec3 maxs, const Vec3 end, int passEntityNum, int contentmask ); */
+	G_ENTITY_CONTACTCAPSULE,	/* ( const Vec3 mins, const Vec3 maxs, const gentity_t *ent ); */
 
 	/* 1.32 */
 	G_FS_SEEK,

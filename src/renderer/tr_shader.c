@@ -755,7 +755,7 @@ ParseStage(shaderStage_t *stage, char **text)
 				ParseWaveForm(text, &stage->rgbWave);
 				stage->rgbGen = CGEN_WAVEFORM;
 			}else if(!Q_stricmp(token, "const")){
-				vec3_t color;
+				Vec3 color;
 
 				ParseVector(text, 3, color);
 				stage->constantColor[0] = 255 * color[0];
@@ -1350,11 +1350,11 @@ ParseShader(char **text)
 			token = Q_readtok2(text, qfalse);
 			tr.sunLight[2] = atof(token);
 
-			Vec3Normalize(tr.sunLight);
+			vec3normalize(tr.sunLight);
 
 			token = Q_readtok2(text, qfalse);
 			a = atof(token);
-			VectorScale(tr.sunLight, a, tr.sunLight);
+			vec3scale(tr.sunLight, a, tr.sunLight);
 
 			token	= Q_readtok2(text, qfalse);
 			a	= atof(token);

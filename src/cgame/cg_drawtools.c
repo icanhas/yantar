@@ -170,7 +170,7 @@ CG_DrawStringExt(int x, int y, const char *string, const float *setColor,
 		 int charHeight,
 		 int maxChars)
 {
-	vec4_t	color;
+	Vec4	color;
 	const char      *s;
 	int	xx;
 	int	cnt;
@@ -236,7 +236,7 @@ CG_DrawBigString(int x, int y, const char *s, float alpha)
 }
 
 void
-CG_DrawBigStringColor(int x, int y, const char *s, vec4_t color)
+CG_DrawBigStringColor(int x, int y, const char *s, Vec4 color)
 {
 	CG_DrawStringExt(x, y, s, color, qtrue, qtrue, BIGCHAR_WIDTH,
 		BIGCHAR_HEIGHT,
@@ -256,7 +256,7 @@ CG_DrawSmallString(int x, int y, const char *s, float alpha)
 }
 
 void
-CG_DrawSmallStringColor(int x, int y, const char *s, vec4_t color)
+CG_DrawSmallStringColor(int x, int y, const char *s, Vec4 color)
 {
 	CG_DrawStringExt(x, y, s, color, qtrue, qfalse, SMALLCHAR_WIDTH,
 		SMALLCHAR_HEIGHT,
@@ -351,7 +351,7 @@ CG_TileClear(void)
 float *
 CG_FadeColor(int startMsec, int totalMsec)
 {
-	static vec4_t color;
+	static Vec4 color;
 	int t;
 
 	if(startMsec == 0)
@@ -379,10 +379,10 @@ CG_FadeColor(int startMsec, int totalMsec)
 float *
 CG_TeamColor(int team)
 {
-	static vec4_t	red = {1, 0.2f, 0.2f, 1};
-	static vec4_t	blue = {0.2f, 0.2f, 1, 1};
-	static vec4_t	other = {1, 1, 1, 1};
-	static vec4_t	spectator = {0.7f, 0.7f, 0.7f, 1};
+	static Vec4	red = {1, 0.2f, 0.2f, 1};
+	static Vec4	blue = {0.2f, 0.2f, 1, 1};
+	static Vec4	other = {1, 1, 1, 1};
+	static Vec4	spectator = {0.7f, 0.7f, 0.7f, 1};
 
 	switch(team){
 	case TEAM_RED:
@@ -402,7 +402,7 @@ CG_TeamColor(int team)
  * CG_GetColorForHealth
  */
 void
-CG_GetColorForHealth(int health, int armor, vec4_t hcolor)
+CG_GetColorForHealth(int health, int armor, Vec4 hcolor)
 {
 	int	count;
 	int	max;
@@ -410,7 +410,7 @@ CG_GetColorForHealth(int health, int armor, vec4_t hcolor)
 	/* calculate the total points of damage that can
 	 * be sustained at the current health / armor level */
 	if(health <= 0){
-		VectorClear(hcolor);	/* black */
+		vec3clear(hcolor);	/* black */
 		hcolor[3] = 1;
 		return;
 	}
@@ -442,7 +442,7 @@ CG_GetColorForHealth(int health, int armor, vec4_t hcolor)
  * CG_ColorForHealth
  */
 void
-CG_ColorForHealth(vec4_t hcolor)
+CG_ColorForHealth(Vec4 hcolor)
 {
 
 	CG_GetColorForHealth(cg.snap->ps.stats[STAT_HEALTH],
@@ -619,7 +619,7 @@ static int	propMapB[26][3] = {
  * UI_DrawBannerString
  */
 static void
-UI_DrawBannerString2(int x, int y, const char* str, vec4_t color)
+UI_DrawBannerString2(int x, int y, const char* str, Vec4 color)
 {
 	const char * s;
 	unsigned char ch;
@@ -665,12 +665,12 @@ UI_DrawBannerString2(int x, int y, const char* str, vec4_t color)
 }
 
 void
-UI_DrawBannerString(int x, int y, const char* str, int style, vec4_t color)
+UI_DrawBannerString(int x, int y, const char* str, int style, Vec4 color)
 {
 	const char * s;
 	int	ch;
 	int	width;
-	vec4_t drawcolor;
+	Vec4 drawcolor;
 
 	/* find the width of the drawn text */
 	s = str;
@@ -734,7 +734,7 @@ UI_ProportionalStringWidth(const char* str)
 }
 
 static void
-UI_DrawProportionalString2(int x, int y, const char* str, vec4_t color,
+UI_DrawProportionalString2(int x, int y, const char* str, Vec4 color,
 			   float sizeScale,
 			   qhandle_t charset)
 {
@@ -802,9 +802,9 @@ UI_ProportionalSizeScale(int style)
  * UI_DrawProportionalString
  */
 void
-UI_DrawProportionalString(int x, int y, const char* str, int style, vec4_t color)
+UI_DrawProportionalString(int x, int y, const char* str, int style, Vec4 color)
 {
-	vec4_t	drawcolor;
+	Vec4	drawcolor;
 	int	width;
 	float	sizeScale;
 

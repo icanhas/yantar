@@ -82,7 +82,7 @@ LPALGETBUFFERF	qalGetBufferf;
 LPALGETBUFFERI	qalGetBufferi;
 LPALDOPPLERFACTOR	qalDopplerFactor;
 LPALDOPPLERVELOCITY	qalDopplerVelocity;
-LPALDISTANCEMODEL	qalVec3DistanceModel;
+LPALDISTANCEMODEL	qalvec3distModel;
 
 LPALCCREATECONTEXT	qalcCreateContext;
 LPALCMAKECONTEXTCURRENT qalcMakeContextCurrent;
@@ -195,7 +195,7 @@ QAL_Init(const char *libname)
 	qalGetBufferi		= GPA("alGetBufferi");
 	qalDopplerFactor	= GPA("alDopplerFactor");
 	qalDopplerVelocity	= GPA("alDopplerVelocity");
-	qalVec3DistanceModel	= GPA("alVec3DistanceModel");
+	qalvec3distModel	= GPA("alvec3distModel");
 
 	qalcCreateContext = GPA("alcCreateContext");
 	qalcMakeContextCurrent	= GPA("alcMakeContextCurrent");
@@ -291,7 +291,7 @@ QAL_Shutdown(void)
 	qalGetBufferi		= NULL;
 	qalDopplerFactor	= NULL;
 	qalDopplerVelocity	= NULL;
-	qalVec3DistanceModel	= NULL;
+	qalvec3distModel	= NULL;
 
 	qalcCreateContext = NULL;
 	qalcMakeContextCurrent	= NULL;

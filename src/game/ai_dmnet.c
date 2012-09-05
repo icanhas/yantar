@@ -116,23 +116,23 @@ int
 BotGetAirGoal(bot_state_t *bs, bot_goal_t *goal)
 {
 	bsp_trace_t bsptrace;
-	vec3_t	end, mins = {-15, -15, -2}, maxs = {15, 15, 2};
+	Vec3	end, mins = {-15, -15, -2}, maxs = {15, 15, 2};
 	int	areanum;
 
 	/* trace up until we hit solid */
-	Vec3Copy(bs->origin, end);
+	vec3copy(bs->origin, end);
 	end[2] += 1000;
 	BotAI_Trace(&bsptrace, bs->origin, mins, maxs, end, bs->entitynum,
 		CONTENTS_SOLID|CONTENTS_PLAYERCLIP);
 	/* trace down until we hit water */
-	Vec3Copy(bsptrace.endpos, end);
+	vec3copy(bsptrace.endpos, end);
 	BotAI_Trace(&bsptrace, end, mins, maxs, bs->origin, bs->entitynum,
 		CONTENTS_WATER|CONTENTS_SLIME|CONTENTS_LAVA);
 	/* if we found the water surface */
 	if(bsptrace.fraction > 0){
 		areanum = BotPointAreaNum(bsptrace.endpos);
 		if(areanum){
-			Vec3Copy(bsptrace.endpos, goal->origin);
+			vec3copy(bsptrace.endpos, goal->origin);
 			goal->origin[2] -= 2;
 			goal->areanum	= areanum;
 			goal->mins[0]	= -15;
@@ -334,7 +334,7 @@ BotGetItemLongTermGoal(bot_state_t *bs, int tfl, bot_goal_t *goal)
 int
 BotGetLongTermGoal(bot_state_t *bs, int tfl, int retreat, bot_goal_t *goal)
 {
-	vec3_t	target, dir, dir2;
+	Vec3	target, dir, dir2;
 	char	netname[MAX_NETNAME];
 	char	buf[MAX_MESSAGE_SIZE];
 	int	areanum;
@@ -364,8 +364,8 @@ BotGetLongTermGoal(bot_state_t *bs, int tfl, int retreat, bot_goal_t *goal)
 		if(BotEntityVisible(bs->entitynum, bs->eye, bs->viewangles, 360,
 			   bs->teammate)){
 			/* if close just stand still there */
-			Vec3Sub(entinfo.origin, bs->origin, dir);
-			if(Vec3LenSquared(dir) < Square(100)){
+			vec3sub(entinfo.origin, bs->origin, dir);
+			if(vec3lensquared(dir) < Square(100)){
 				trap_BotResetAvoidReach(bs->ms);
 				return qfalse;
 			}
@@ -379,9 +379,9 @@ BotGetLongTermGoal(bot_state_t *bs, int tfl, int retreat, bot_goal_t *goal)
 				/* update team goal */
 				bs->teamgoal.entitynum	= bs->teammate;
 				bs->teamgoal.areanum	= areanum;
-				Vec3Copy(entinfo.origin, bs->teamgoal.origin);
-				VectorSet(bs->teamgoal.mins, -8, -8, -8);
-				VectorSet(bs->teamgoal.maxs, 8, 8, 8);
+				vec3copy(entinfo.origin, bs->teamgoal.origin);
+				vec3set(bs->teamgoal.mins, -8, -8, -8);
+				vec3set(bs->teamgoal.maxs, 8, 8, 8);
 			}
 		}
 		memcpy(goal, &bs->teamgoal, sizeof(bot_goal_t));
@@ -414,8 +414,8 @@ BotGetLongTermGoal(bot_state_t *bs, int tfl, int retreat, bot_goal_t *goal)
 			   bs->teammate)){
 			/* update visible time */
 			bs->teammatevisible_time = FloatTime();
-			Vec3Sub(entinfo.origin, bs->origin, dir);
-			if(Vec3LenSquared(dir) <
+			vec3sub(entinfo.origin, bs->origin, dir);
+			if(vec3lensquared(dir) <
 			   Square(bs->formation_dist)){
 				/*
 				 * if the client being followed bumps into this bot then
@@ -449,25 +449,25 @@ BotGetLongTermGoal(bot_state_t *bs, int tfl, int retreat, bot_goal_t *goal)
 							   entinfo.origin[2] +
 							   entinfo.maxs[2] + 4){
 								/* if the followed client looks in the direction of this bot */
-								AngleVectors(
+								anglevec3s(
 									entinfo.
 									angles,
 									dir,
 									NULL,
 									NULL);
 								dir[2] = 0;
-								Vec3Normalize(
+								vec3normalize(
 									dir);
-								/* Vec3Sub(entinfo.origin, entinfo.lastvisorigin, dir); */
-								Vec3Sub(
+								/* vec3sub(entinfo.origin, entinfo.lastvisorigin, dir); */
+								vec3sub(
 									bs->
 									origin,
 									entinfo.
 									origin,
 									dir2);
-								Vec3Normalize(
+								vec3normalize(
 									dir2);
-								if(Vec3Dot(
+								if(vec3dot(
 									   dir,
 									   dir2)
 								   > 0.7){
@@ -528,17 +528,17 @@ BotGetLongTermGoal(bot_state_t *bs, int tfl, int retreat, bot_goal_t *goal)
 				}
 				/* if just arrived look at the companion */
 				if(bs->arrive_time > FloatTime() - 2){
-					Vec3Sub(entinfo.origin,
+					vec3sub(entinfo.origin,
 						bs->origin,
 						dir);
-					Vec3ToAngles(dir, bs->ideal_viewangles);
+					vec3toeuler(dir, bs->ideal_viewangles);
 					bs->ideal_viewangles[2] *= 0.5;
 				}
 				/* else look strategically around for enemies */
 				else if(random() < bs->thinktime * 0.8){
 					BotRoamGoal(bs, target);
-					Vec3Sub(target, bs->origin, dir);
-					Vec3ToAngles(dir, bs->ideal_viewangles);
+					vec3sub(target, bs->origin, dir);
+					vec3toeuler(dir, bs->ideal_viewangles);
 					bs->ideal_viewangles[2] *= 0.5;
 				}
 				/* check if the bot wants to go for air */
@@ -568,9 +568,9 @@ BotGetLongTermGoal(bot_state_t *bs, int tfl, int retreat, bot_goal_t *goal)
 				/* update team goal */
 				bs->teamgoal.entitynum	= bs->teammate;
 				bs->teamgoal.areanum	= areanum;
-				Vec3Copy(entinfo.origin, bs->teamgoal.origin);
-				VectorSet(bs->teamgoal.mins, -8, -8, -8);
-				VectorSet(bs->teamgoal.maxs, 8, 8, 8);
+				vec3copy(entinfo.origin, bs->teamgoal.origin);
+				vec3set(bs->teamgoal.mins, -8, -8, -8);
+				vec3set(bs->teamgoal.maxs, 8, 8, 8);
 			}
 		}
 		/* the goal the bot should go for */
@@ -614,8 +614,8 @@ BotGetLongTermGoal(bot_state_t *bs, int tfl, int retreat, bot_goal_t *goal)
 			bs->ltgtype = 0;
 		}
 		/* if very close... go away for some time */
-		Vec3Sub(goal->origin, bs->origin, dir);
-		if(Vec3LenSquared(dir) < Square(70)){
+		vec3sub(goal->origin, bs->origin, dir);
+		if(vec3lensquared(dir) < Square(70)){
 			trap_BotResetAvoidReach(bs->ms);
 			bs->defendaway_time = FloatTime() + 3 + 3 * random();
 			if(BotHasPersistantPowerupAndWeapon(bs))
@@ -708,8 +708,8 @@ BotGetLongTermGoal(bot_state_t *bs, int tfl, int retreat, bot_goal_t *goal)
 			bs->ltgtype = 0;
 		}
 		/* if really near the camp spot */
-		Vec3Sub(goal->origin, bs->origin, dir);
-		if(Vec3LenSquared(dir) < Square(60)){
+		vec3sub(goal->origin, bs->origin, dir);
+		if(vec3lensquared(dir) < Square(60)){
 			/* if not arrived yet */
 			if(!bs->arrive_time){
 				if(bs->ltgtype == LTG_CAMPORDER){
@@ -729,8 +729,8 @@ BotGetLongTermGoal(bot_state_t *bs, int tfl, int retreat, bot_goal_t *goal)
 			/* look strategically around for enemies */
 			if(random() < bs->thinktime * 0.8){
 				BotRoamGoal(bs, target);
-				Vec3Sub(target, bs->origin, dir);
-				Vec3ToAngles(dir, bs->ideal_viewangles);
+				vec3sub(target, bs->origin, dir);
+				vec3toeuler(dir, bs->ideal_viewangles);
 				bs->ideal_viewangles[2] *= 0.5;
 			}
 			/* check if the bot wants to crouch
@@ -1041,8 +1041,8 @@ BotGetLongTermGoal(bot_state_t *bs, int tfl, int retreat, bot_goal_t *goal)
 				bs->attackaway_time = FloatTime() + 3 + 5 *
 						      random();
 			/* or very close to the obelisk */
-			Vec3Sub(bs->origin, goal->origin, dir);
-			if(Vec3LenSquared(dir) < Square(60))
+			vec3sub(bs->origin, goal->origin, dir);
+			if(vec3lensquared(dir) < Square(60))
 				bs->attackaway_time = FloatTime() + 3 + 5 *
 						      random();
 			/* quit rushing after 2 minutes */
@@ -1145,7 +1145,7 @@ BotLongTermGoal(bot_state_t *bs, int tfl, int retreat, bot_goal_t *goal)
 	char	teammate[MAX_MESSAGE_SIZE];
 	float	squaredist;
 	int	areanum;
-	vec3_t	dir;
+	Vec3	dir;
 
 	/* FIXME: also have air long term goals?
 	 *
@@ -1178,10 +1178,10 @@ BotLongTermGoal(bot_state_t *bs, int tfl, int retreat, bot_goal_t *goal)
 				bs->lead_teamgoal.entitynum =
 					bs->lead_teammate;
 				bs->lead_teamgoal.areanum = areanum;
-				Vec3Copy(entinfo.origin,
+				vec3copy(entinfo.origin,
 					bs->lead_teamgoal.origin);
-				VectorSet(bs->lead_teamgoal.mins, -8, -8, -8);
-				VectorSet(bs->lead_teamgoal.maxs, 8, 8, 8);
+				vec3set(bs->lead_teamgoal.mins, -8, -8, -8);
+				vec3set(bs->lead_teamgoal.maxs, 8, 8, 8);
 			}
 		}
 		/* if the team mate is visible */
@@ -1192,8 +1192,8 @@ BotLongTermGoal(bot_state_t *bs, int tfl, int retreat, bot_goal_t *goal)
 		if(bs->leadvisible_time < FloatTime() - 1)
 			bs->leadbackup_time = FloatTime() + 2;
 		/* distance towards the team mate */
-		Vec3Sub(bs->origin, bs->lead_teamgoal.origin, dir);
-		squaredist = Vec3LenSquared(dir);
+		vec3sub(bs->origin, bs->lead_teamgoal.origin, dir);
+		squaredist = vec3lensquared(dir);
 		/* if backing up towards the team mate */
 		if(bs->leadbackup_time > FloatTime()){
 			if(bs->leadmessage_time < FloatTime() - 20){
@@ -1226,8 +1226,8 @@ BotLongTermGoal(bot_state_t *bs, int tfl, int retreat, bot_goal_t *goal)
 				bs->leadmessage_time = FloatTime();
 			}
 			/* look at the team mate */
-			Vec3Sub(entinfo.origin, bs->origin, dir);
-			Vec3ToAngles(dir, bs->ideal_viewangles);
+			vec3sub(entinfo.origin, bs->origin, dir);
+			vec3toeuler(dir, bs->ideal_viewangles);
 			bs->ideal_viewangles[2] *= 0.5;
 			/* just wait for the team mate */
 			return qfalse;
@@ -1446,7 +1446,7 @@ BotClearPath(bot_state_t *bs, bot_moveresult_t *moveresult)
 {
 	int i, bestmine;
 	float	dist, bestdist;
-	vec3_t	target, dir;
+	Vec3	target, dir;
 	bsp_trace_t bsptrace;
 	entityState_t state;
 
@@ -1457,10 +1457,10 @@ BotClearPath(bot_state_t *bs, bot_moveresult_t *moveresult)
 		     (MOVERESULT_MOVEMENTVIEW | MOVERESULT_MOVEMENTWEAPON))){
 			/*  */
 			BotAI_GetEntityState(bs->kamikazebody, &state);
-			Vec3Copy(state.pos.trBase, target);
+			vec3copy(state.pos.trBase, target);
 			target[2] += 8;
-			Vec3Sub(target, bs->eye, dir);
-			Vec3ToAngles(dir, moveresult->ideal_viewangles);
+			vec3sub(target, bs->eye, dir);
+			vec3toeuler(dir, moveresult->ideal_viewangles);
 			/*  */
 			moveresult->weapon = BotSelectActivateWeapon(bs);
 			if(moveresult->weapon == -1)
@@ -1499,8 +1499,8 @@ BotClearPath(bot_state_t *bs, bot_moveresult_t *moveresult)
 		bestmine	= -1;
 		for(i = 0; i < bs->numproxmines; i++){
 			BotAI_GetEntityState(bs->proxmines[i], &state);
-			Vec3Sub(state.pos.trBase, bs->origin, dir);
-			dist = Vec3Len(dir);
+			vec3sub(state.pos.trBase, bs->origin, dir);
+			dist = vec3len(dir);
 			if(dist < bestdist){
 				bestdist	= dist;
 				bestmine	= i;
@@ -1513,10 +1513,10 @@ BotClearPath(bot_state_t *bs, bot_moveresult_t *moveresult)
 			 * deactivate prox mines in the bot's path by shooting
 			 * rockets or plasma cells etc. at them */
 			BotAI_GetEntityState(bs->proxmines[bestmine], &state);
-			Vec3Copy(state.pos.trBase, target);
+			vec3copy(state.pos.trBase, target);
 			target[2] += 2;
-			Vec3Sub(target, bs->eye, dir);
-			Vec3ToAngles(dir, moveresult->ideal_viewangles);
+			vec3sub(target, bs->eye, dir);
+			vec3toeuler(dir, moveresult->ideal_viewangles);
 			/* if the bot has a weapon that does splash damage */
 			if(bs->inventory[INVENTORY_PLASMAGUN] > 0 &&
 			   bs->inventory[INVENTORY_CELLS] > 0)
@@ -1572,7 +1572,7 @@ int
 AINode_Seek_ActivateEntity(bot_state_t *bs)
 {
 	bot_goal_t *goal;
-	vec3_t	target, dir, ideal_viewangles;
+	Vec3	target, dir, ideal_viewangles;
 	bot_moveresult_t moveresult;
 	int	targetvisible;
 	bsp_trace_t bsptrace;
@@ -1625,10 +1625,10 @@ AINode_Seek_ActivateEntity(bot_state_t *bs)
 			targetvisible = qtrue;
 			/* if holding the right weapon */
 			if(bs->cur_ps.weapon == bs->activatestack->weapon){
-				Vec3Sub(bs->activatestack->target,
+				vec3sub(bs->activatestack->target,
 					bs->eye,
 					dir);
-				Vec3ToAngles(dir, ideal_viewangles);
+				vec3toeuler(dir, ideal_viewangles);
 				/* if the bot is pretty close with its aim */
 				if(InFieldOfVision(bs->viewangles, 20,
 					   ideal_viewangles))
@@ -1641,7 +1641,7 @@ AINode_Seek_ActivateEntity(bot_state_t *bs)
 		/* get the entity info of the entity the bot is shooting at */
 		BotEntityInfo(goal->entitynum, &entinfo);
 		/* if the entity the bot shoots at moved */
-		if(!VectorCompare(bs->activatestack->origin, entinfo.origin)){
+		if(!vec3cmp(bs->activatestack->origin, entinfo.origin)){
 #ifdef DEBUG
 			BotAI_Print(PRT_MESSAGE,
 				"hit shootable button or trigger\n");
@@ -1709,8 +1709,8 @@ AINode_Seek_ActivateEntity(bot_state_t *bs)
 	if(bs->activatestack->shoot){
 		/* if the view angles aren't yet used for the movement */
 		if(!(moveresult.flags & MOVERESULT_MOVEMENTVIEW)){
-			Vec3Sub(bs->activatestack->target, bs->eye, dir);
-			Vec3ToAngles(dir, moveresult.ideal_viewangles);
+			vec3sub(bs->activatestack->target, bs->eye, dir);
+			vec3toeuler(dir, moveresult.ideal_viewangles);
 			moveresult.flags |= MOVERESULT_MOVEMENTVIEW;
 		}
 		/* if there's no weapon yet used for the movement */
@@ -1728,22 +1728,22 @@ AINode_Seek_ActivateEntity(bot_state_t *bs)
 	if(moveresult.flags &
 	   (MOVERESULT_MOVEMENTVIEWSET|MOVERESULT_MOVEMENTVIEW|
 	    MOVERESULT_SWIMVIEW))
-		Vec3Copy(moveresult.ideal_viewangles, bs->ideal_viewangles);
+		vec3copy(moveresult.ideal_viewangles, bs->ideal_viewangles);
 	/* if waiting for something */
 	else if(moveresult.flags & MOVERESULT_WAITING){
 		if(random() < bs->thinktime * 0.8){
 			BotRoamGoal(bs, target);
-			Vec3Sub(target, bs->origin, dir);
-			Vec3ToAngles(dir, bs->ideal_viewangles);
+			vec3sub(target, bs->origin, dir);
+			vec3toeuler(dir, bs->ideal_viewangles);
 			bs->ideal_viewangles[2] *= 0.5;
 		}
 	}else if(!(bs->flags & BFL_IDEALVIEWSET)){
 		if(trap_BotMovementViewTarget(bs->ms, goal, bs->tfl, 300,
 			   target)){
-			Vec3Sub(target, bs->origin, dir);
-			Vec3ToAngles(dir, bs->ideal_viewangles);
+			vec3sub(target, bs->origin, dir);
+			vec3toeuler(dir, bs->ideal_viewangles);
 		}else
-			Vec3ToAngles(moveresult.movedir, bs->ideal_viewangles);
+			vec3toeuler(moveresult.movedir, bs->ideal_viewangles);
 		bs->ideal_viewangles[2] *= 0.5;
 	}
 	/* if the weapon is used for the bot movement */
@@ -1790,7 +1790,7 @@ int
 AINode_Seek_NBG(bot_state_t *bs)
 {
 	bot_goal_t goal;
-	vec3_t target, dir;
+	Vec3 target, dir;
 	bot_moveresult_t moveresult;
 
 	if(BotIsObserver(bs)){
@@ -1858,13 +1858,13 @@ AINode_Seek_NBG(bot_state_t *bs)
 	if(moveresult.flags &
 	   (MOVERESULT_MOVEMENTVIEWSET|MOVERESULT_MOVEMENTVIEW|
 	    MOVERESULT_SWIMVIEW))
-		Vec3Copy(moveresult.ideal_viewangles, bs->ideal_viewangles);
+		vec3copy(moveresult.ideal_viewangles, bs->ideal_viewangles);
 	/* if waiting for something */
 	else if(moveresult.flags & MOVERESULT_WAITING){
 		if(random() < bs->thinktime * 0.8){
 			BotRoamGoal(bs, target);
-			Vec3Sub(target, bs->origin, dir);
-			Vec3ToAngles(dir, bs->ideal_viewangles);
+			vec3sub(target, bs->origin, dir);
+			vec3toeuler(dir, bs->ideal_viewangles);
 			bs->ideal_viewangles[2] *= 0.5;
 		}
 	}else if(!(bs->flags & BFL_IDEALVIEWSET)){
@@ -1872,11 +1872,11 @@ AINode_Seek_NBG(bot_state_t *bs)
 				bs->gs, &goal);
 		if(trap_BotMovementViewTarget(bs->ms, &goal, bs->tfl, 300,
 			   target)){
-			Vec3Sub(target, bs->origin, dir);
-			Vec3ToAngles(dir, bs->ideal_viewangles);
+			vec3sub(target, bs->origin, dir);
+			vec3toeuler(dir, bs->ideal_viewangles);
 		}
 		/* FIXME: look at cluster portals? */
-		else Vec3ToAngles(moveresult.movedir, bs->ideal_viewangles);
+		else vec3toeuler(moveresult.movedir, bs->ideal_viewangles);
 		bs->ideal_viewangles[2] *= 0.5;
 	}
 	/* if the weapon is used for the bot movement */
@@ -1922,7 +1922,7 @@ int
 AINode_Seek_LTG(bot_state_t *bs)
 {
 	bot_goal_t goal;
-	vec3_t	target, dir;
+	Vec3	target, dir;
 	bot_moveresult_t moveresult;
 	int	range;
 	/* char buf[128];
@@ -2044,28 +2044,28 @@ AINode_Seek_LTG(bot_state_t *bs)
 	if(moveresult.flags &
 	   (MOVERESULT_MOVEMENTVIEWSET|MOVERESULT_MOVEMENTVIEW|
 	    MOVERESULT_SWIMVIEW))
-		Vec3Copy(moveresult.ideal_viewangles, bs->ideal_viewangles);
+		vec3copy(moveresult.ideal_viewangles, bs->ideal_viewangles);
 	/* if waiting for something */
 	else if(moveresult.flags & MOVERESULT_WAITING){
 		if(random() < bs->thinktime * 0.8){
 			BotRoamGoal(bs, target);
-			Vec3Sub(target, bs->origin, dir);
-			Vec3ToAngles(dir, bs->ideal_viewangles);
+			vec3sub(target, bs->origin, dir);
+			vec3toeuler(dir, bs->ideal_viewangles);
 			bs->ideal_viewangles[2] *= 0.5;
 		}
 	}else if(!(bs->flags & BFL_IDEALVIEWSET)){
 		if(trap_BotMovementViewTarget(bs->ms, &goal, bs->tfl, 300,
 			   target)){
-			Vec3Sub(target, bs->origin, dir);
-			Vec3ToAngles(dir, bs->ideal_viewangles);
+			vec3sub(target, bs->origin, dir);
+			vec3toeuler(dir, bs->ideal_viewangles);
 		}
 		/* FIXME: look at cluster portals? */
-		else if(Vec3LenSquared(moveresult.movedir))
-			Vec3ToAngles(moveresult.movedir, bs->ideal_viewangles);
+		else if(vec3lensquared(moveresult.movedir))
+			vec3toeuler(moveresult.movedir, bs->ideal_viewangles);
 		else if(random() < bs->thinktime * 0.8){
 			BotRoamGoal(bs, target);
-			Vec3Sub(target, bs->origin, dir);
-			Vec3ToAngles(dir, bs->ideal_viewangles);
+			vec3sub(target, bs->origin, dir);
+			vec3toeuler(dir, bs->ideal_viewangles);
 			bs->ideal_viewangles[2] *= 0.5;
 		}
 		bs->ideal_viewangles[2] *= 0.5;
@@ -2108,7 +2108,7 @@ int
 AINode_Battle_Fight(bot_state_t *bs)
 {
 	int areanum;
-	vec3_t target;
+	Vec3 target;
 	aas_entityinfo_t	entinfo;
 	bot_moveresult_t	moveresult;
 
@@ -2166,7 +2166,7 @@ AINode_Battle_Fight(bot_state_t *bs)
 			return qfalse;
 		}
 	/*  */
-	Vec3Copy(entinfo.origin, target);
+	vec3copy(entinfo.origin, target);
 	/* if not a player enemy */
 	if(bs->enemy >= MAX_CLIENTS){
 #ifdef MISSIONPACK
@@ -2180,7 +2180,7 @@ AINode_Battle_Fight(bot_state_t *bs)
 	/* update the reachability area and origin if possible */
 	areanum = BotPointAreaNum(target);
 	if(areanum && trap_AAS_AreaReachability(areanum)){
-		Vec3Copy(target, bs->lastenemyorigin);
+		vec3copy(target, bs->lastenemyorigin);
 		bs->lastenemyareanum = areanum;
 	}
 	/* update the attack inventory values */
@@ -2274,7 +2274,7 @@ int
 AINode_Battle_Chase(bot_state_t *bs)
 {
 	bot_goal_t goal;
-	vec3_t	target, dir;
+	Vec3	target, dir;
 	bot_moveresult_t moveresult;
 	float	range;
 
@@ -2326,9 +2326,9 @@ AINode_Battle_Chase(bot_state_t *bs)
 	/* create the chase goal */
 	goal.entitynum	= bs->enemy;
 	goal.areanum	= bs->lastenemyareanum;
-	Vec3Copy(bs->lastenemyorigin, goal.origin);
-	VectorSet(goal.mins, -8, -8, -8);
-	VectorSet(goal.maxs, 8, 8, 8);
+	vec3copy(bs->lastenemyorigin, goal.origin);
+	vec3set(goal.mins, -8, -8, -8);
+	vec3set(goal.maxs, 8, 8, 8);
 	/* if the last seen enemy spot is reached the enemy could not be found */
 	if(trap_BotTouchingGoal(bs->origin, &goal)) bs->chase_time = 0;
 	/* if there's no chase time left */
@@ -2368,17 +2368,17 @@ AINode_Battle_Chase(bot_state_t *bs)
 	if(moveresult.flags &
 	   (MOVERESULT_MOVEMENTVIEWSET|MOVERESULT_MOVEMENTVIEW|
 	    MOVERESULT_SWIMVIEW))
-		Vec3Copy(moveresult.ideal_viewangles, bs->ideal_viewangles);
+		vec3copy(moveresult.ideal_viewangles, bs->ideal_viewangles);
 	else if(!(bs->flags & BFL_IDEALVIEWSET)){
 		if(bs->chase_time > FloatTime() - 2)
 			BotAimAtEnemy(bs);
 		else{
 			if(trap_BotMovementViewTarget(bs->ms, &goal, bs->tfl,
 				   300, target)){
-				Vec3Sub(target, bs->origin, dir);
-				Vec3ToAngles(dir, bs->ideal_viewangles);
+				vec3sub(target, bs->origin, dir);
+				vec3toeuler(dir, bs->ideal_viewangles);
 			}else
-				Vec3ToAngles(moveresult.movedir,
+				vec3toeuler(moveresult.movedir,
 					bs->ideal_viewangles);
 		}
 		bs->ideal_viewangles[2] *= 0.5;
@@ -2415,7 +2415,7 @@ AINode_Battle_Retreat(bot_state_t *bs)
 	bot_goal_t goal;
 	aas_entityinfo_t	entinfo;
 	bot_moveresult_t	moveresult;
-	vec3_t	target, dir;
+	Vec3	target, dir;
 	float	attack_skill, range;
 	int	areanum;
 
@@ -2471,7 +2471,7 @@ AINode_Battle_Retreat(bot_state_t *bs)
 	if(BotEntityVisible(bs->entitynum, bs->eye, bs->viewangles, 360,
 		   bs->enemy)){
 		bs->enemyvisible_time = FloatTime();
-		Vec3Copy(entinfo.origin, target);
+		vec3copy(entinfo.origin, target);
 		/* if not a player enemy */
 		if(bs->enemy >= MAX_CLIENTS){
 #ifdef MISSIONPACK
@@ -2485,7 +2485,7 @@ AINode_Battle_Retreat(bot_state_t *bs)
 		/* update the reachability area and origin if possible */
 		areanum = BotPointAreaNum(target);
 		if(areanum && trap_AAS_AreaReachability(areanum)){
-			Vec3Copy(target, bs->lastenemyorigin);
+			vec3copy(target, bs->lastenemyorigin);
 			bs->lastenemyareanum = areanum;
 		}
 	}
@@ -2556,7 +2556,7 @@ AINode_Battle_Retreat(bot_state_t *bs)
 	BotChooseWeapon(bs);
 	/* if the view is fixed for the movement */
 	if(moveresult.flags & (MOVERESULT_MOVEMENTVIEW|MOVERESULT_SWIMVIEW))
-		Vec3Copy(moveresult.ideal_viewangles, bs->ideal_viewangles);
+		vec3copy(moveresult.ideal_viewangles, bs->ideal_viewangles);
 	else if(!(moveresult.flags & MOVERESULT_MOVEMENTVIEWSET)
 		&& !(bs->flags & BFL_IDEALVIEWSET)){
 		attack_skill = trap_Characteristic_BFloat(
@@ -2567,10 +2567,10 @@ AINode_Battle_Retreat(bot_state_t *bs)
 		else{
 			if(trap_BotMovementViewTarget(bs->ms, &goal, bs->tfl,
 				   300, target)){
-				Vec3Sub(target, bs->origin, dir);
-				Vec3ToAngles(dir, bs->ideal_viewangles);
+				vec3sub(target, bs->origin, dir);
+				vec3toeuler(dir, bs->ideal_viewangles);
 			}else
-				Vec3ToAngles(moveresult.movedir,
+				vec3toeuler(moveresult.movedir,
 					bs->ideal_viewangles);
 			bs->ideal_viewangles[2] *= 0.5;
 		}
@@ -2605,7 +2605,7 @@ AINode_Battle_NBG(bot_state_t *bs)
 	aas_entityinfo_t	entinfo;
 	bot_moveresult_t	moveresult;
 	float	attack_skill;
-	vec3_t	target, dir;
+	Vec3	target, dir;
 
 	if(BotIsObserver(bs)){
 		AIEnter_Observer(bs, "battle nbg: observer");
@@ -2646,7 +2646,7 @@ AINode_Battle_NBG(bot_state_t *bs)
 	if(BotEntityVisible(bs->entitynum, bs->eye, bs->viewangles, 360,
 		   bs->enemy)){
 		bs->enemyvisible_time = FloatTime();
-		Vec3Copy(entinfo.origin, target);
+		vec3copy(entinfo.origin, target);
 		/* if not a player enemy */
 		if(bs->enemy >= MAX_CLIENTS){
 #ifdef MISSIONPACK
@@ -2660,7 +2660,7 @@ AINode_Battle_NBG(bot_state_t *bs)
 		/* update the reachability area and origin if possible */
 		areanum = BotPointAreaNum(target);
 		if(areanum && trap_AAS_AreaReachability(areanum)){
-			Vec3Copy(target, bs->lastenemyorigin);
+			vec3copy(target, bs->lastenemyorigin);
 			bs->lastenemyareanum = areanum;
 		}
 	}
@@ -2700,7 +2700,7 @@ AINode_Battle_NBG(bot_state_t *bs)
 	BotChooseWeapon(bs);
 	/* if the view is fixed for the movement */
 	if(moveresult.flags & (MOVERESULT_MOVEMENTVIEW|MOVERESULT_SWIMVIEW))
-		Vec3Copy(moveresult.ideal_viewangles, bs->ideal_viewangles);
+		vec3copy(moveresult.ideal_viewangles, bs->ideal_viewangles);
 	else if(!(moveresult.flags & MOVERESULT_MOVEMENTVIEWSET)
 		&& !(bs->flags & BFL_IDEALVIEWSET)){
 		attack_skill = trap_Characteristic_BFloat(
@@ -2712,10 +2712,10 @@ AINode_Battle_NBG(bot_state_t *bs)
 		else{
 			if(trap_BotMovementViewTarget(bs->ms, &goal, bs->tfl,
 				   300, target)){
-				Vec3Sub(target, bs->origin, dir);
-				Vec3ToAngles(dir, bs->ideal_viewangles);
+				vec3sub(target, bs->origin, dir);
+				vec3toeuler(dir, bs->ideal_viewangles);
 			}else
-				Vec3ToAngles(moveresult.movedir,
+				vec3toeuler(moveresult.movedir,
 					bs->ideal_viewangles);
 			bs->ideal_viewangles[2] *= 0.5;
 		}

@@ -48,7 +48,7 @@ typedef struct {
 
 	int		times[NUM_CON_TIMES];	/* cls.realtime time the line was generated */
 	/* for transparent notify lines */
-	vec4_t		color;
+	Vec4		color;
 } console_t;
 
 extern console_t con;
@@ -572,7 +572,7 @@ Con_DrawSolidConsole(float frac, float opac)
 	int	row;
 	int	lines;
 	int	currentColor;
-	vec4_t color;
+	Vec4 color;
 
 	lines = cls.glconfig.vidHeight * frac;
 	if(lines <= 0)

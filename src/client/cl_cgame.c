@@ -31,7 +31,7 @@ extern botlib_export_t *botlib_export;
 
 extern qbool loadCamera(const char *name);
 extern void startCamera(int time);
-extern qbool getCameraInfo(int time, vec3_t *origin, vec3_t *angles);
+extern qbool getCameraInfo(int time, Vec3 *origin, Vec3 *angles);
 
 /*
  * CL_GetGameState

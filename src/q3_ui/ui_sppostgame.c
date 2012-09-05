@@ -208,7 +208,7 @@ static void
 DrawAwardsPresentation(int timer)
 {
 	int	awardNum, atimer, a;
-	vec4_t	color;
+	Vec4	color;
 	const int t = AWARD_PRESENTATION_TIME;
 	
 	awardNum = timer / t;

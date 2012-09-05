@@ -50,11 +50,11 @@ typedef unsigned int glIndex_t;
 
 
 typedef struct dlight_s {
-	vec3_t	origin;
-	vec3_t	color;	/* range from 0.0 to 1.0, should be color normalized */
+	Vec3	origin;
+	Vec3	color;	/* range from 0.0 to 1.0, should be color normalized */
 	float	radius;
 
-	vec3_t	transformed;	/* origin in local coordinate system */
+	Vec3	transformed;	/* origin in local coordinate system */
 	int	additive;	/* texture detail is lost tho when the lightmap is dark */
 } dlight_t;
 
@@ -68,17 +68,17 @@ typedef struct {
 
 	qbool		needDlights;	/* true for bmodels that touch a dlight */
 	qbool		lightingCalculated;
-	vec3_t		lightDir;		/* normalized direction towards light */
-	vec3_t		ambientLight;		/* color normalized to 0-255 */
+	Vec3		lightDir;		/* normalized direction towards light */
+	Vec3		ambientLight;		/* color normalized to 0-255 */
 	int		ambientLightInt;	/* 32 bit rgba packed */
-	vec3_t		directedLight;
+	Vec3		directedLight;
 } trRefEntity_t;
 
 
 typedef struct {
-	vec3_t	origin;		/* in world coordinates */
-	vec3_t	axis[3];	/* orientation in world */
-	vec3_t	viewOrigin;	/* viewParms->or.origin in local coordinates */
+	Vec3	origin;		/* in world coordinates */
+	Vec3	axis[3];	/* orientation in world */
+	Vec3	viewOrigin;	/* viewParms->or.origin in local coordinates */
 	float	modelMatrix[16];
 } orientationr_t;
 
@@ -236,7 +236,7 @@ typedef enum {
 typedef struct {
 	deform_t	deformation;	/* vertex coordinate modification type */
 
-	vec3_t		moveVector;
+	Vec3		moveVector;
 	waveForm_t	deformationWave;
 	float		deformationSpread;
 
@@ -279,7 +279,7 @@ typedef struct {
 	float		imageAnimationSpeed;
 
 	texCoordGen_t	tcGen;
-	vec3_t		tcGenVectors[2];
+	Vec3		tcGenVectors[2];
 
 	int		numTexMods;
 	texModInfo_t	*texMods;
@@ -339,7 +339,7 @@ typedef struct {
 } skyParms_t;
 
 typedef struct {
-	vec3_t	color;
+	Vec3	color;
 	float	depthForOpaque;
 } fogParms_t;
 
@@ -424,8 +424,8 @@ typedef struct shaderState_s {
 typedef struct {
 	int		x, y, width, height;
 	float		fov_x, fov_y;
-	vec3_t		vieworg;
-	vec3_t		viewaxis[3];	/* transformation matrix */
+	Vec3		vieworg;
+	Vec3		viewaxis[3];	/* transformation matrix */
 
 	stereoFrame_t	stereoFrame;
 
@@ -474,7 +474,7 @@ typedef struct skin_s {
 
 typedef struct {
 	int		originalBrushNumber;
-	vec3_t		bounds[2];
+	Vec3		bounds[2];
 
 	unsigned	colorInt;	/* in packed byte format */
 	float		tcScale;	/* texture coordinate vector scales */
@@ -488,7 +488,7 @@ typedef struct {
 typedef struct {
 	orientationr_t	or;
 	orientationr_t	world;
-	vec3_t		pvsOrigin;	/* may be different than or.origin for portals */
+	Vec3		pvsOrigin;	/* may be different than or.origin for portals */
 	qbool		isPortal;	/* true if this view is through a portal */
 	qbool		isMirror;	/* the portal is a mirror, invert the face culling */
 	int		frameSceneNum;	/* copied from tr.frameSceneNum */
@@ -498,7 +498,7 @@ typedef struct {
 	float		fovX, fovY;
 	float		projectionMatrix[16];
 	cplane_t	frustum[4];
-	vec3_t		visBounds[2];
+	Vec3		visBounds[2];
 	float		zFar;
 	stereoFrame_t	stereoFrame;
 } viewParms_t;
@@ -557,9 +557,9 @@ typedef struct srfDisplayList_s {
 
 typedef struct srfFlare_s {
 	surfaceType_t	surfaceType;
-	vec3_t		origin;
-	vec3_t		normal;
-	vec3_t		color;
+	Vec3		origin;
+	Vec3		normal;
+	Vec3		color;
 } srfFlare_t;
 
 typedef struct srfGridMesh_s {
@@ -569,14 +569,14 @@ typedef struct srfGridMesh_s {
 	int dlightBits[SMP_FRAMES];
 
 	/* culling information */
-	vec3_t	meshBounds[2];
-	vec3_t	localOrigin;
+	Vec3	meshBounds[2];
+	Vec3	localOrigin;
 	float	meshRadius;
 
 	/* lod information, which may be different
 	 * than the culling information to allow for
 	 * groups of curves that LOD as a unit */
-	vec3_t	lodOrigin;
+	Vec3	lodOrigin;
 	float	lodRadius;
 	int	lodFixed;
 	int	lodStitched;
@@ -615,8 +615,8 @@ typedef struct {
 	int dlightBits[SMP_FRAMES];
 
 	/* culling information (FIXME: use this!) */
-	vec3_t	bounds[2];
-	vec3_t	localOrigin;
+	Vec3	bounds[2];
+	Vec3	localOrigin;
 	float	radius;
 
 	/* triangle definitions */
@@ -694,7 +694,7 @@ typedef struct mnode_s {
 	/* common with leaf and node */
 	int		contents;	/* -1 for nodes, to differentiate from leafs */
 	int		visframe;	/* node needs to be traversed if current */
-	vec3_t		mins, maxs;	/* for bounding box culling */
+	Vec3		mins, maxs;	/* for bounding box culling */
 	struct mnode_s	*parent;
 
 	/* node specific */
@@ -710,7 +710,7 @@ typedef struct mnode_s {
 } mnode_t;
 
 typedef struct {
-	vec3_t		bounds[2];	/* for culling */
+	Vec3		bounds[2];	/* for culling */
 	msurface_t	*firstSurface;
 	int		numSurfaces;
 } bmodel_t;
@@ -742,9 +742,9 @@ typedef struct {
 	int		numfogs;
 	fog_t		*fogs;
 
-	vec3_t		lightGridOrigin;
-	vec3_t		lightGridSize;
-	vec3_t		lightGridInverseSize;
+	Vec3		lightGridOrigin;
+	Vec3		lightGridSize;
+	Vec3		lightGridInverseSize;
 	int		lightGridBounds[3];
 	byte		*lightGridData;
 
@@ -789,7 +789,7 @@ void            R_ModelInit(void);
 model_t*R_GetModelByHandle(qhandle_t hModel);
 int                     R_LerpTag(orientation_t *tag, qhandle_t handle, int startFrame, int endFrame,
 				  float frac, const char *tagName);
-void            R_ModelBounds(qhandle_t handle, vec3_t mins, vec3_t maxs);
+void            R_ModelBounds(qhandle_t handle, Vec3 mins, Vec3 maxs);
 
 void            R_Modellist_f(void);
 
@@ -956,8 +956,8 @@ typedef struct {
 
 	int			viewCluster;
 
-	vec3_t			sunLight;	/* from the sky shader for this level */
-	vec3_t			sunDirection;
+	Vec3			sunLight;	/* from the sky shader for this level */
+	Vec3			sunDirection;
 
 	frontEndCounters_t	pc;
 	int			frontEndMsec;	/* not in pc due to clearing issue */
@@ -1161,11 +1161,11 @@ void R_AddDrawSurf(surfaceType_t *surface, material_t *shader, int fogIndex, int
 #define CULL_IN		0	/* completely unclipped */
 #define CULL_CLIP	1	/* clipped by one or more planes */
 #define CULL_OUT	2	/* completely outside the clipping planes */
-void R_LocalNormalToWorld(vec3_t local, vec3_t world);
-void R_LocalPointToWorld(vec3_t local, vec3_t world);
-int R_CullLocalBox(vec3_t bounds[2]);
-int R_CullPointAndRadius(vec3_t origin, float radius);
-int R_CullLocalPointAndRadius(vec3_t origin, float radius);
+void R_LocalNormalToWorld(Vec3 local, Vec3 world);
+void R_LocalPointToWorld(Vec3 local, Vec3 world);
+int R_CullLocalBox(Vec3 bounds[2]);
+int R_CullPointAndRadius(Vec3 origin, float radius);
+int R_CullLocalPointAndRadius(Vec3 origin, float radius);
 
 void R_SetupProjection(viewParms_t *dest, float zProj, qbool computeFrustum);
 void R_RotateForEntity(const trRefEntity_t *ent, const viewParms_t *viewParms, orientationr_t *or);
@@ -1312,15 +1312,15 @@ typedef byte color4ub_t[4];
 
 typedef struct stageVars {
 	color4ub_t	colors[SHADER_MAX_VERTEXES];
-	vec2_t		texcoords[NUM_TEXTURE_BUNDLES][SHADER_MAX_VERTEXES];
+	Vec2		texcoords[NUM_TEXTURE_BUNDLES][SHADER_MAX_VERTEXES];
 } stageVars_t;
 
 
 typedef struct shaderCommands_s {
 	glIndex_t	indexes[SHADER_MAX_INDEXES] QALIGN(16);
-	vec4_t		xyz[SHADER_MAX_VERTEXES] QALIGN(16);
-	vec4_t		normal[SHADER_MAX_VERTEXES] QALIGN(16);
-	vec2_t		texCoords[SHADER_MAX_VERTEXES][2] QALIGN(16);
+	Vec4		xyz[SHADER_MAX_VERTEXES] QALIGN(16);
+	Vec4		normal[SHADER_MAX_VERTEXES] QALIGN(16);
+	Vec2		texCoords[SHADER_MAX_VERTEXES][2] QALIGN(16);
 	color4ub_t	vertexColors[SHADER_MAX_VERTEXES] QALIGN(16);
 	int		vertexDlightBits[SHADER_MAX_VERTEXES] QALIGN(16);
 
@@ -1356,8 +1356,8 @@ void RB_StageIteratorSky(void);
 void RB_StageIteratorVertexLitTexture(void);
 void RB_StageIteratorLightmappedMultitexture(void);
 
-void RB_AddQuadStamp(vec3_t origin, vec3_t left, vec3_t up, byte *color);
-void RB_AddQuadStampExt(vec3_t origin, vec3_t left, vec3_t up, byte *color, float s1, float t1, float s2,
+void RB_AddQuadStamp(Vec3 origin, Vec3 left, Vec3 up, byte *color);
+void RB_AddQuadStampExt(Vec3 origin, Vec3 left, Vec3 up, byte *color, float s1, float t1, float s2,
 			float t2);
 
 void RB_ShowImages(void);
@@ -1371,7 +1371,7 @@ void RB_ShowImages(void);
 
 void R_AddBrushModelSurfaces(trRefEntity_t *e);
 void R_AddWorldSurfaces(void);
-qbool R_inPVS(const vec3_t p1, const vec3_t p2);
+qbool R_inPVS(const Vec3 p1, const Vec3 p2);
 
 
 /*
@@ -1382,7 +1382,7 @@ qbool R_inPVS(const vec3_t p1, const vec3_t p2);
 
 void R_ClearFlares(void);
 
-void RB_AddFlare(void *surface, int fogNum, vec3_t point, vec3_t color, vec3_t normal);
+void RB_AddFlare(void *surface, int fogNum, Vec3 point, Vec3 color, Vec3 normal);
 void RB_AddDlightFlares(void);
 void RB_RenderFlares(void);
 
@@ -1395,7 +1395,7 @@ void RB_RenderFlares(void);
 void R_DlightBmodel(bmodel_t *bmodel);
 void R_SetupEntityLighting(const trRefdef_t *refdef, trRefEntity_t *ent);
 void R_TransformDlights(int count, dlight_t *dl, orientationr_t *or);
-int R_LightForPoint(vec3_t point, vec3_t ambientLight, vec3_t directedLight, vec3_t lightDir);
+int R_LightForPoint(Vec3 point, Vec3 ambientLight, Vec3 directedLight, Vec3 lightDir);
 
 
 /*
@@ -1430,8 +1430,8 @@ void RB_ClipSkyPolygons(shaderCommands_t *shader);
 
 srfGridMesh_t*R_SubdividePatchToGrid(int width, int height,
 				     drawVert_t points[MAX_PATCH_SIZE*MAX_PATCH_SIZE]);
-srfGridMesh_t*R_GridInsertColumn(srfGridMesh_t *grid, int column, int row, vec3_t point, float loderror);
-srfGridMesh_t*R_GridInsertRow(srfGridMesh_t *grid, int row, int column, vec3_t point, float loderror);
+srfGridMesh_t*R_GridInsertColumn(srfGridMesh_t *grid, int column, int row, Vec3 point, float loderror);
+srfGridMesh_t*R_GridInsertRow(srfGridMesh_t *grid, int row, int column, Vec3 point, float loderror);
 void R_FreeSurfaceGridMesh(srfGridMesh_t *grid);
 
 /*
@@ -1440,8 +1440,8 @@ void R_FreeSurfaceGridMesh(srfGridMesh_t *grid);
  *
  */
 
-int R_MarkFragments(int numPoints, const vec3_t *points, const vec3_t projection,
-		    int maxPoints, vec3_t pointBuffer, int maxFragments, markFragment_t *fragmentBuffer);
+int R_MarkFragments(int numPoints, const Vec3 *points, const Vec3 projection,
+		    int maxPoints, Vec3 pointBuffer, int maxFragments, markFragment_t *fragmentBuffer);
 
 
 /*
@@ -1455,8 +1455,8 @@ void R_ToggleSmpFrame(void);
 void RE_ClearScene(void);
 void RE_AddRefEntityToScene(const refEntity_t *ent);
 void RE_AddPolyToScene(qhandle_t hShader, int numVerts, const polyVert_t *verts, int num);
-void RE_AddLightToScene(const vec3_t org, float intensity, float r, float g, float b);
-void RE_AddAdditiveLightToScene(const vec3_t org, float intensity, float r, float g, float b);
+void RE_AddLightToScene(const Vec3 org, float intensity, float r, float g, float b);
+void RE_AddAdditiveLightToScene(const Vec3 org, float intensity, float r, float g, float b);
 void RE_RenderScene(const refdef_t *fd);
 
 /*
@@ -1488,9 +1488,9 @@ void R_LoadTGA(const char *name, byte **pic, int *width, int *height);
 
 /*
  */
-void    R_TransformModelToClip(const vec3_t src, const float *modelMatrix, const float *projectionMatrix,
-			       vec4_t eye, vec4_t dst);
-void    R_TransformClipToWindow(const vec4_t clip, const viewParms_t *view, vec4_t normalized, vec4_t window);
+void    R_TransformModelToClip(const Vec3 src, const float *modelMatrix, const float *projectionMatrix,
+			       Vec4 eye, Vec4 dst);
+void    R_TransformClipToWindow(const Vec4 clip, const viewParms_t *view, Vec4 normalized, Vec4 window);
 
 void    RB_DeformTessGeometry(void);
 

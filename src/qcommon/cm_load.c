@@ -470,7 +470,7 @@ CMod_LoadPatches(lump_t *surfs, lump_t *verts)
 	int	i, j;
 	int	c;
 	cPatch_t	*patch;
-	vec3_t		points[MAX_PATCH_VERTS];
+	Vec3		points[MAX_PATCH_VERTS];
 	int	width, height;
 	int	shaderNum;
 
@@ -765,13 +765,13 @@ CM_InitBoxHull(void)
 		p = &box_planes[i*2];
 		p->type = i>>1;
 		p->signbits = 0;
-		VectorClear (p->normal);
+		vec3clear (p->normal);
 		p->normal[i>>1] = 1;
 
 		p = &box_planes[i*2+1];
 		p->type = 3 + (i>>1);
 		p->signbits = 0;
-		VectorClear (p->normal);
+		vec3clear (p->normal);
 		p->normal[i>>1] = -1;
 
 		SetPlaneSignbits(p);
@@ -786,11 +786,11 @@ CM_InitBoxHull(void)
  * Capsules are handled differently though.
  */
 clipHandle_t
-CM_TempBoxModel(const vec3_t mins, const vec3_t maxs, int capsule)
+CM_TempBoxModel(const Vec3 mins, const Vec3 maxs, int capsule)
 {
 
-	Vec3Copy(mins, box_model.mins);
-	Vec3Copy(maxs, box_model.maxs);
+	vec3copy(mins, box_model.mins);
+	vec3copy(maxs, box_model.maxs);
 
 	if(capsule)
 		return CAPSULE_MODEL_HANDLE;
@@ -808,8 +808,8 @@ CM_TempBoxModel(const vec3_t mins, const vec3_t maxs, int capsule)
 	box_planes[10].dist = mins[2];
 	box_planes[11].dist = -mins[2];
 
-	Vec3Copy(mins, box_brush->bounds[0]);
-	Vec3Copy(maxs, box_brush->bounds[1]);
+	vec3copy(mins, box_brush->bounds[0]);
+	vec3copy(maxs, box_brush->bounds[1]);
 
 	return BOX_MODEL_HANDLE;
 }
@@ -818,11 +818,11 @@ CM_TempBoxModel(const vec3_t mins, const vec3_t maxs, int capsule)
  * CM_ModelBounds
  */
 void
-CM_ModelBounds(clipHandle_t model, vec3_t mins, vec3_t maxs)
+CM_ModelBounds(clipHandle_t model, Vec3 mins, Vec3 maxs)
 {
 	cmodel_t *cmod;
 
 	cmod = CM_ClipHandleToModel(model);
-	Vec3Copy(cmod->mins, mins);
-	Vec3Copy(cmod->maxs, maxs);
+	vec3copy(cmod->mins, mins);
+	vec3copy(cmod->maxs, maxs);
 }

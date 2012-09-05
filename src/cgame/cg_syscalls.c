@@ -188,34 +188,34 @@ trap_CM_InlineModel(int index)
 }
 
 clipHandle_t
-trap_CM_TempBoxModel(const vec3_t mins, const vec3_t maxs)
+trap_CM_TempBoxModel(const Vec3 mins, const Vec3 maxs)
 {
 	return syscall(CG_CM_TEMPBOXMODEL, mins, maxs);
 }
 
 clipHandle_t
-trap_CM_TempCapsuleModel(const vec3_t mins, const vec3_t maxs)
+trap_CM_TempCapsuleModel(const Vec3 mins, const Vec3 maxs)
 {
 	return syscall(CG_CM_TEMPCAPSULEMODEL, mins, maxs);
 }
 
 int
-trap_CM_PointContents(const vec3_t p, clipHandle_t model)
+trap_CM_PointContents(const Vec3 p, clipHandle_t model)
 {
 	return syscall(CG_CM_POINTCONTENTS, p, model);
 }
 
 int
-trap_CM_TransformedPointContents(const vec3_t p, clipHandle_t model,
-				 const vec3_t origin,
-				 const vec3_t angles)
+trap_CM_TransformedPointContents(const Vec3 p, clipHandle_t model,
+				 const Vec3 origin,
+				 const Vec3 angles)
 {
 	return syscall(CG_CM_TRANSFORMEDPOINTCONTENTS, p, model, origin, angles);
 }
 
 void
-trap_CM_BoxTrace(trace_t *results, const vec3_t start, const vec3_t end,
-		 const vec3_t mins, const vec3_t maxs,
+trap_CM_BoxTrace(trace_t *results, const Vec3 start, const Vec3 end,
+		 const Vec3 mins, const Vec3 maxs,
 		 clipHandle_t model, int brushmask)
 {
 	syscall(CG_CM_BOXTRACE, results, start, end, mins, maxs, model,
@@ -223,8 +223,8 @@ trap_CM_BoxTrace(trace_t *results, const vec3_t start, const vec3_t end,
 }
 
 void
-trap_CM_CapsuleTrace(trace_t *results, const vec3_t start, const vec3_t end,
-		     const vec3_t mins, const vec3_t maxs,
+trap_CM_CapsuleTrace(trace_t *results, const Vec3 start, const Vec3 end,
+		     const Vec3 mins, const Vec3 maxs,
 		     clipHandle_t model, int brushmask)
 {
 	syscall(CG_CM_CAPSULETRACE, results, start, end, mins, maxs, model,
@@ -232,12 +232,12 @@ trap_CM_CapsuleTrace(trace_t *results, const vec3_t start, const vec3_t end,
 }
 
 void
-trap_CM_TransformedBoxTrace(trace_t *results, const vec3_t start,
-			    const vec3_t end,
-			    const vec3_t mins, const vec3_t maxs,
+trap_CM_TransformedBoxTrace(trace_t *results, const Vec3 start,
+			    const Vec3 end,
+			    const Vec3 mins, const Vec3 maxs,
 			    clipHandle_t model, int brushmask,
-			    const vec3_t origin,
-			    const vec3_t angles)
+			    const Vec3 origin,
+			    const Vec3 angles)
 {
 	syscall(CG_CM_TRANSFORMEDBOXTRACE, results, start, end, mins, maxs,
 		model, brushmask, origin,
@@ -245,12 +245,12 @@ trap_CM_TransformedBoxTrace(trace_t *results, const vec3_t start,
 }
 
 void
-trap_CM_TransformedCapsuleTrace(trace_t *results, const vec3_t start,
-				const vec3_t end,
-				const vec3_t mins, const vec3_t maxs,
+trap_CM_TransformedCapsuleTrace(trace_t *results, const Vec3 start,
+				const Vec3 end,
+				const Vec3 mins, const Vec3 maxs,
 				clipHandle_t model, int brushmask,
-				const vec3_t origin,
-				const vec3_t angles)
+				const Vec3 origin,
+				const Vec3 angles)
 {
 	syscall(CG_CM_TRANSFORMEDCAPSULETRACE, results, start, end, mins, maxs,
 		model, brushmask, origin,
@@ -258,9 +258,9 @@ trap_CM_TransformedCapsuleTrace(trace_t *results, const vec3_t start,
 }
 
 int
-trap_CM_MarkFragments(int numPoints, const vec3_t *points,
-		      const vec3_t projection,
-		      int maxPoints, vec3_t pointBuffer,
+trap_CM_MarkFragments(int numPoints, const Vec3 *points,
+		      const Vec3 projection,
+		      int maxPoints, Vec3 pointBuffer,
 		      int maxFragments, markFragment_t *fragmentBuffer)
 {
 	return syscall(CG_CM_MARKFRAGMENTS, numPoints, points, projection,
@@ -269,7 +269,7 @@ trap_CM_MarkFragments(int numPoints, const vec3_t *points,
 }
 
 void
-trap_S_StartSound(vec3_t origin, int entityNum, int entchannel, sfxHandle_t sfx)
+trap_S_StartSound(Vec3 origin, int entityNum, int entchannel, sfxHandle_t sfx)
 {
 	syscall(CG_S_STARTSOUND, origin, entityNum, entchannel, sfx);
 }
@@ -287,15 +287,15 @@ trap_S_ClearLoopingSounds(qbool killall)
 }
 
 void
-trap_S_AddLoopingSound(int entityNum, const vec3_t origin, const vec3_t velocity,
+trap_S_AddLoopingSound(int entityNum, const Vec3 origin, const Vec3 velocity,
 		       sfxHandle_t sfx)
 {
 	syscall(CG_S_ADDLOOPINGSOUND, entityNum, origin, velocity, sfx);
 }
 
 void
-trap_S_AddRealLoopingSound(int entityNum, const vec3_t origin,
-			   const vec3_t velocity,
+trap_S_AddRealLoopingSound(int entityNum, const Vec3 origin,
+			   const Vec3 velocity,
 			   sfxHandle_t sfx)
 {
 	syscall(CG_S_ADDREALLOOPINGSOUND, entityNum, origin, velocity, sfx);
@@ -308,13 +308,13 @@ trap_S_StopLoopingSound(int entityNum)
 }
 
 void
-trap_S_UpdateEntityPosition(int entityNum, const vec3_t origin)
+trap_S_UpdateEntityPosition(int entityNum, const Vec3 origin)
 {
 	syscall(CG_S_UPDATEENTITYPOSITION, entityNum, origin);
 }
 
 void
-trap_S_Respatialize(int entityNum, const vec3_t origin, vec3_t axis[3],
+trap_S_Respatialize(int entityNum, const Vec3 origin, Vec3 axis[3],
 		    int inwater)
 {
 	syscall(CG_S_RESPATIALIZE, entityNum, origin, axis, inwater);
@@ -394,15 +394,15 @@ trap_R_AddPolysToScene(qhandle_t hShader, int numVerts, const polyVert_t *verts,
 }
 
 int
-trap_R_LightForPoint(vec3_t point, vec3_t ambientLight, vec3_t directedLight,
-		     vec3_t lightDir)
+trap_R_LightForPoint(Vec3 point, Vec3 ambientLight, Vec3 directedLight,
+		     Vec3 lightDir)
 {
 	return syscall(CG_R_LIGHTFORPOINT, point, ambientLight, directedLight,
 		lightDir);
 }
 
 void
-trap_R_AddLightToScene(const vec3_t org, float intensity, float r, float g,
+trap_R_AddLightToScene(const Vec3 org, float intensity, float r, float g,
 		       float b)
 {
 	syscall(CG_R_ADDLIGHTTOSCENE, org, PASSFLOAT(intensity), PASSFLOAT(
@@ -410,7 +410,7 @@ trap_R_AddLightToScene(const vec3_t org, float intensity, float r, float g,
 }
 
 void
-trap_R_AddAdditiveLightToScene(const vec3_t org, float intensity, float r,
+trap_R_AddAdditiveLightToScene(const Vec3 org, float intensity, float r,
 			       float g,
 			       float b)
 {
@@ -441,7 +441,7 @@ trap_R_DrawStretchPic(float x, float y, float w, float h,
 }
 
 void
-trap_R_ModelBounds(clipHandle_t model, vec3_t mins, vec3_t maxs)
+trap_R_ModelBounds(clipHandle_t model, Vec3 mins, Vec3 maxs)
 {
 	syscall(CG_R_MODELBOUNDS, model, mins, maxs);
 }
@@ -652,7 +652,7 @@ trap_CIN_SetExtents(int handle, int x, int y, int w, int h)
  *      syscall(CG_STARTCAMERA, time);
  * }
  *
- * qbool trap_getCameraInfo( int time, vec3_t *origin, vec3_t *angles) {
+ * qbool trap_getCameraInfo( int time, Vec3 *origin, Vec3 *angles) {
  *      return syscall( CG_GETCAMERAINFO, time, origin, angles );
  * }
  */
@@ -664,7 +664,7 @@ trap_GetEntityToken(char *buffer, int bufferSize)
 }
 
 qbool
-trap_R_inPVS(const vec3_t p1, const vec3_t p2)
+trap_R_inPVS(const Vec3 p1, const Vec3 p2)
 {
 	return syscall(CG_R_INPVS, p1, p2);
 }

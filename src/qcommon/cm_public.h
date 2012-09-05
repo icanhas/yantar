@@ -24,29 +24,29 @@ void            CM_LoadMap(const char *name, qbool clientload,
 			   int *checksum);
 void            CM_ClearMap(void);
 clipHandle_t    CM_InlineModel(int index);	/* 0 = world, 1 + are bmodels */
-clipHandle_t    CM_TempBoxModel(const vec3_t mins, const vec3_t maxs,
+clipHandle_t    CM_TempBoxModel(const Vec3 mins, const Vec3 maxs,
 				int capsule);
-void            CM_ModelBounds(clipHandle_t model, vec3_t mins, vec3_t maxs);
+void            CM_ModelBounds(clipHandle_t model, Vec3 mins, Vec3 maxs);
 int             CM_NumClusters(void);
 int             CM_NumInlineModels(void);
 char*CM_EntityString(void);
 /* returns an ORed contents mask */
-int             CM_PointContents(const vec3_t p, clipHandle_t model);
-int             CM_TransformedPointContents(const vec3_t p, clipHandle_t model,
-					    const vec3_t origin, const vec3_t angles);
-void            CM_BoxTrace(trace_t *results, const vec3_t start,
-			    const vec3_t end, vec3_t mins, vec3_t maxs,
+int             CM_PointContents(const Vec3 p, clipHandle_t model);
+int             CM_TransformedPointContents(const Vec3 p, clipHandle_t model,
+					    const Vec3 origin, const Vec3 angles);
+void            CM_BoxTrace(trace_t *results, const Vec3 start,
+			    const Vec3 end, Vec3 mins, Vec3 maxs,
 			    clipHandle_t model, int brushmask, int capsule);
-void            CM_TransformedBoxTrace(trace_t *results, const vec3_t start,
-				       const vec3_t end, vec3_t mins, vec3_t maxs,
+void            CM_TransformedBoxTrace(trace_t *results, const Vec3 start,
+				       const Vec3 end, Vec3 mins, Vec3 maxs,
 				       clipHandle_t model, int brushmask,
-				       const vec3_t origin, const vec3_t angles,
+				       const Vec3 origin, const Vec3 angles,
 				       int capsule);
 byte*CM_ClusterPVS(int cluster);
-int             CM_PointLeafnum(const vec3_t p);
+int             CM_PointLeafnum(const Vec3 p);
 /* only returns non-solid leafs
  * overflow if return listsize and if *lastLeaf != list[listsize-1] */
-int             CM_BoxLeafnums(const vec3_t mins, const vec3_t maxs, int *list,
+int             CM_BoxLeafnums(const Vec3 mins, const Vec3 maxs, int *list,
 			       int listsize,
 			       int *lastLeaf);
 int             CM_LeafCluster(int leafnum);
@@ -59,9 +59,9 @@ int             CM_LerpTag(orientation_t *tag,  clipHandle_t model,
 			   int startFrame, int endFrame, float frac,
 			   const char *tagName);
 /* cm_marks.c */
-int             CM_MarkFragments(int numPoints, const vec3_t *points,
-				 const vec3_t projection, int maxPoints,
-				 vec3_t pointBuffer, int maxFragments,
+int             CM_MarkFragments(int numPoints, const Vec3 *points,
+				 const Vec3 projection, int maxPoints,
+				 Vec3 pointBuffer, int maxFragments,
 				 markFragment_t *fragmentBuffer);
 /* cm_patch.c */
 void            CM_DrawDebugSurface(void (*drawPoly)(int color, int numPoints,

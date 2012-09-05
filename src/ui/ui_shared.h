@@ -136,17 +136,17 @@ typedef struct {
 	Rectangle	rectEffects2;	/* for various effects */
 	int		offsetTime;	/* time based value for various effects */
 	int		nextTime;	/* time next effect should cycle */
-	vec4_t		foreColor;	/* text color */
-	vec4_t		backColor;	/* border color */
-	vec4_t		borderColor;	/* border color */
-	vec4_t		outlineColor;	/* border color */
+	Vec4		foreColor;	/* text color */
+	Vec4		backColor;	/* border color */
+	Vec4		borderColor;	/* border color */
+	Vec4		outlineColor;	/* border color */
 	qhandle_t	background;	/* background asset */
 } windowDef_t;
 
 typedef windowDef_t Window;
 
 typedef struct {
-	vec4_t	color;
+	Vec4	color;
 	float	low;
 	float	high;
 } colorRangeDef_t;
@@ -205,7 +205,7 @@ typedef struct multiDef_s {
 
 typedef struct modelDef_s {
 	int	angle;
-	vec3_t	origin;
+	Vec3	origin;
 	float	fov_x;
 	float	fov_y;
 	int	rotationSpeed;
@@ -263,8 +263,8 @@ typedef struct {
 	const char	*onESC;		/* run when the menu is closed */
 	const char	*soundName;	/* background loop sound for menu */
 
-	vec4_t		focusColor;		/* focus color for items */
-	vec4_t		disableColor;		/* focus color for items */
+	Vec4		focusColor;		/* focus color for items */
+	Vec4		disableColor;		/* focus color for items */
 	itemDef_t	*items[MAX_MENUITEMS];	/* items this menu contains */
 } menuDef_t;
 
@@ -297,7 +297,7 @@ typedef struct {
 	float		fadeAmount;
 	float		shadowX;
 	float		shadowY;
-	vec4_t		shadowColor;
+	Vec4		shadowColor;
 	float		shadowFadeClamp;
 	qbool		fontRegistered;
 
@@ -315,20 +315,20 @@ typedef struct {
 
 typedef struct {
 	qhandle_t (*registerShaderNoMip)(const char *p);
-	void (*setColor)(const vec4_t v);
+	void (*setColor)(const Vec4 v);
 	void (*drawHandlePic)(float x, float y, float w, float h,
 			      qhandle_t asset);
 	void (*drawStretchPic)(float x, float y, float w, float h, float s1,
 			       float t1, float s2, float t2, qhandle_t hShader);
-	void (*drawText)(float x, float y, float scale, vec4_t color,
+	void (*drawText)(float x, float y, float scale, Vec4 color,
 			 const char *text, float adjust, int limit, int style);
 	int (*textWidth)(const char *text, float scale, int limit);
 	int (*textHeight)(const char *text, float scale, int limit);
 	qhandle_t (*registerModel)(const char *p);
-	void (*modelBounds)(qhandle_t model, vec3_t min, vec3_t max);
-	void (*fillRect)(float x, float y, float w, float h, const vec4_t color);
+	void (*modelBounds)(qhandle_t model, Vec3 min, Vec3 max);
+	void (*fillRect)(float x, float y, float w, float h, const Vec4 color);
 	void (*drawRect)(float x, float y, float w, float h, float size,
-			 const vec4_t color);
+			 const Vec4 color);
 	void (*drawSides)(float x, float y, float w, float h, float size);
 	void (*drawTopBottom)(float x, float y, float w, float h, float size);
 	void (*clearScene)(void);
@@ -339,16 +339,16 @@ typedef struct {
 	void (*ownerDrawItem)(float x, float y, float w, float h, float text_x,
 			      float text_y, int ownerDraw, int ownerDrawFlags,
 			      int align, float special,
-			      float scale, vec4_t color, qhandle_t shader,
+			      float scale, Vec4 color, qhandle_t shader,
 			      int textStyle);
 	float (*getValue)(int ownerDraw);
 	qbool (*ownerDrawVisible)(int flags);
 	void (*runScript)(char **p);
-	void (*getTeamColor)(vec4_t *color);
+	void (*getTeamColor)(Vec4 *color);
 	void (*getCVarString)(const char *cvar, char *buffer, int bufsize);
 	float (*getCVarValue)(const char *cvar);
 	void (*setCVar)(const char *cvar, const char *value);
-	void (*drawTextWithCursor)(float x, float y, float scale, vec4_t color,
+	void (*drawTextWithCursor)(float x, float y, float scale, Vec4 color,
 				   const char *text, int cursorPos, char cursor,
 				   int limit, int style);
 	void (*setOverstrikeMode)(qbool b);
@@ -411,13 +411,13 @@ void Menu_HandleKey(menuDef_t *menu, int key, qbool down);
 void Menu_HandleMouseMove(menuDef_t *menu, float x, float y);
 void Menu_ScrollFeeder(menuDef_t *menu, int feeder, qbool down);
 qbool Float_Parse(char **p, float *f);
-qbool Color_Parse(char **p, vec4_t *c);
+qbool Color_Parse(char **p, Vec4 *c);
 qbool Int_Parse(char **p, int *i);
 qbool Rect_Parse(char **p, rectDef_t *r);
 qbool String_Parse(char **p, const char **out);
 qbool Script_Parse(char **p, const char **out);
 qbool PC_Float_Parse(int handle, float *f);
-qbool PC_Color_Parse(int handle, vec4_t *c);
+qbool PC_Color_Parse(int handle, Vec4 *c);
 qbool PC_Int_Parse(int handle, int *i);
 qbool PC_Rect_Parse(int handle, rectDef_t *r);
 qbool PC_String_Parse(int handle, const char **out);
@@ -440,7 +440,7 @@ menuDef_t*Menus_FindByName(const char *p);
 void Menus_ShowByName(const char *p);
 void Menus_CloseByName(const char *p);
 void Display_HandleKey(int key, qbool down, int x, int y);
-void LerpColor(vec4_t a, vec4_t b, vec4_t c, float t);
+void LerpColor(Vec4 a, Vec4 b, Vec4 c, float t);
 void Menus_CloseAll(void);
 void Menu_Paint(menuDef_t *menu, qbool forcePaint);
 void Menu_SetFeederSelection(menuDef_t *menu, int feeder, int index,

@@ -217,7 +217,7 @@ trap_R_AddPolyToScene(qhandle_t hShader, int numVerts, const polyVert_t *verts)
 }
 
 void
-trap_R_AddLightToScene(const vec3_t org, float intensity, float r, float g,
+trap_R_AddLightToScene(const Vec3 org, float intensity, float r, float g,
 		       float b)
 {
 	syscall(UI_R_ADDLIGHTTOSCENE, org, PASSFLOAT(intensity), PASSFLOAT(
@@ -248,7 +248,7 @@ trap_R_DrawStretchPic(float x, float y, float w, float h, float s1, float t1,
 }
 
 void
-trap_R_ModelBounds(clipHandle_t model, vec3_t mins, vec3_t maxs)
+trap_R_ModelBounds(clipHandle_t model, Vec3 mins, Vec3 maxs)
 {
 	syscall(UI_R_MODELBOUNDS, model, mins, maxs);
 }

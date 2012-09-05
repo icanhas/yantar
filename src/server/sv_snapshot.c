@@ -293,7 +293,7 @@ SV_AddEntToSnapshot(svEntity_t *svEnt, sharedEntity_t *gEnt,
  * SV_AddEntitiesVisibleFromPoint
  */
 static void
-SV_AddEntitiesVisibleFromPoint(vec3_t origin, clientSnapshot_t *frame,
+SV_AddEntitiesVisibleFromPoint(Vec3 origin, clientSnapshot_t *frame,
 			       snapshotEntityNumbers_t *eNums, qbool portal)
 {
 	int e, i;
@@ -404,9 +404,9 @@ SV_AddEntitiesVisibleFromPoint(vec3_t origin, clientSnapshot_t *frame,
 		/* if it's a portal entity, add everything visible from its camera position */
 		if(ent->r.svFlags & SVF_PORTAL){
 			if(ent->s.generic1){
-				vec3_t dir;
-				Vec3Sub(ent->s.origin, origin, dir);
-				if(Vec3LenSquared(dir) >
+				Vec3 dir;
+				vec3sub(ent->s.origin, origin, dir);
+				if(vec3lensquared(dir) >
 				   (float)ent->s.generic1 * ent->s.generic1)
 					continue;
 			}
@@ -432,7 +432,7 @@ SV_AddEntitiesVisibleFromPoint(vec3_t origin, clientSnapshot_t *frame,
 static void
 SV_BuildClientSnapshot(client_t *client)
 {
-	vec3_t org;
+	Vec3 org;
 	clientSnapshot_t *frame;
 	snapshotEntityNumbers_t entityNumbers;
 	int i;
@@ -476,7 +476,7 @@ SV_BuildClientSnapshot(client_t *client)
 	svEnt->snapshotCounter = sv.snapshotCounter;
 
 	/* find the client's viewpoint */
-	Vec3Copy(ps->origin, org);
+	vec3copy(ps->origin, org);
 	org[2] += ps->viewheight;
 
 	/* add all the entities directly visible to the eye, which

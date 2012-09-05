@@ -527,13 +527,13 @@ R_FBOList_f(void)
 extern void RB_SetGL2D(void);
 
 void
-FBO_BlitFromTexture(struct image_s *src, vec4_t srcBox, vec2_t srcTexScale, FBO_t *dst, vec4_t dstBox,
-		    struct shaderProgram_s *shaderProgram, vec4_t color,
+FBO_BlitFromTexture(struct image_s *src, Vec4 srcBox, Vec2 srcTexScale, FBO_t *dst, Vec4 dstBox,
+		    struct shaderProgram_s *shaderProgram, Vec4 color,
 		    int blend)
 {
-	vec4_t	quadVerts[4];
-	vec2_t	texCoords[4];
-	vec2_t	invTexRes;
+	Vec4	quadVerts[4];
+	Vec2	texCoords[4];
+	Vec2	invTexRes;
 
 	FBO_Bind(dst);
 
@@ -543,10 +543,10 @@ FBO_BlitFromTexture(struct image_s *src, vec4_t srcBox, vec2_t srcTexScale, FBO_
 
 	GL_Bind(src);
 
-	VectorSet4(quadVerts[0], dstBox[0],             dstBox[1],             0, 1);
-	VectorSet4(quadVerts[1], dstBox[0] + dstBox[2], dstBox[1],             0, 1);
-	VectorSet4(quadVerts[2], dstBox[0] + dstBox[2], dstBox[1] + dstBox[3], 0, 1);
-	VectorSet4(quadVerts[3], dstBox[0],             dstBox[1] + dstBox[3], 0, 1);
+	vec3set4(quadVerts[0], dstBox[0],             dstBox[1],             0, 1);
+	vec3set4(quadVerts[1], dstBox[0] + dstBox[2], dstBox[1],             0, 1);
+	vec3set4(quadVerts[2], dstBox[0] + dstBox[2], dstBox[1] + dstBox[3], 0, 1);
+	vec3set4(quadVerts[3], dstBox[0],             dstBox[1] + dstBox[3], 0, 1);
 
 	texCoords[0][0] = (srcBox[0]) / (float)src->width; texCoords[0][1] = 1.0f - (srcBox[1]) /
 									     (float)src->height;
@@ -571,8 +571,8 @@ FBO_BlitFromTexture(struct image_s *src, vec4_t srcBox, vec2_t srcTexScale, FBO_
 }
 
 void
-FBO_Blit(FBO_t *src, vec4_t srcBox, vec2_t srcTexScale, FBO_t *dst, vec4_t dstBox,
-	 struct shaderProgram_s *shaderProgram, vec4_t color,
+FBO_Blit(FBO_t *src, Vec4 srcBox, Vec2 srcTexScale, FBO_t *dst, Vec4 dstBox,
+	 struct shaderProgram_s *shaderProgram, Vec4 color,
 	 int blend)
 {
 	if(1){	/* (glRefConfig.extFramebufferBlit && (sp == NULL || sp == &tr.textureColorShader)) */

@@ -60,7 +60,7 @@ static menuframework_s	s_signup_menu;
 static menuaction_s	s_signup_signup;
 static menuaction_s	s_signup_cancel;
 
-static vec4_t s_signup_color_prompt = {1.00, 0.43, 0.00, 1.00};
+static Vec4 s_signup_color_prompt = {1.00, 0.43, 0.00, 1.00};
 
 /*
  * Signup_MenuEvent

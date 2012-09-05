@@ -126,12 +126,12 @@ Main_MenuDraw(void)
 {
 	refdef_t	refdef;
 	float		x, y, w, h;
-	vec4_t		color = {0.5, 0, 0.5, 0.8};
+	Vec4		color = {0.5, 0, 0.5, 0.8};
 
 	/* setup the refdef */
 	memset(&refdef, 0, sizeof(refdef));
 	refdef.rdflags = RDF_NOWORLDMODEL;
-	AxisClear(refdef.viewaxis);
+	axisclear(refdef.viewaxis);
 
 	x = 0;
 	y = 0;
@@ -154,13 +154,13 @@ Main_MenuDraw(void)
 	 * // add the model
 	 * memset( &ent, 0, sizeof(ent) );
 	 * adjust = 5.0 * sin( (float)uis.realtime / 5000 );
-	 * VectorSet( angles, 0, 180 + adjust, 0 );
-	 * AnglesToAxis( angles, ent.axis );
+	 * vec3set( angles, 0, 180 + adjust, 0 );
+	 * euler2axis( angles, ent.axis );
 	 * ent.hModel = s_main.bannerModel;
-	 * Vec3Copy( origin, ent.origin );
-	 * Vec3Copy( origin, ent.lightingOrigin );
+	 * vec3copy( origin, ent.origin );
+	 * vec3copy( origin, ent.lightingOrigin );
 	 * ent.renderfx = RF_LIGHTING_ORIGIN | RF_NOSHADOW;
-	 * Vec3Copy( ent.origin, ent.oldorigin );
+	 * vec3copy( ent.origin, ent.oldorigin );
 	 *
 	 * trap_R_AddRefEntityToScene( &ent );
 	 * trap_R_RenderScene( &refdef );

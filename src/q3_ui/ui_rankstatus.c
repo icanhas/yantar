@@ -46,7 +46,7 @@ static menuaction_s	s_rankstatus_ok;
 static grank_status_t	s_status = 0;
 static char * s_rankstatus_message = NULL;
 
-static vec4_t s_rankingstatus_color_prompt = {1.00, 0.43, 0.00, 1.00};
+static Vec4 s_rankingstatus_color_prompt = {1.00, 0.43, 0.00, 1.00};
 
 /*
  * RankStatus_MenuEvent

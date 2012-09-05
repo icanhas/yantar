@@ -71,8 +71,8 @@ typedef struct flare_s {
 	int		windowX, windowY;
 	float		eyeZ;
 
-	vec3_t		origin;
-	vec3_t		color;
+	Vec3		origin;
+	Vec3		color;
 } flare_t;
 
 #define         MAX_FLARES 128
@@ -107,20 +107,20 @@ R_ClearFlares(void)
  * This is called at surface tesselation time
  */
 void
-RB_AddFlare(void *surface, int fogNum, vec3_t point, vec3_t color, vec3_t normal)
+RB_AddFlare(void *surface, int fogNum, Vec3 point, Vec3 color, Vec3 normal)
 {
 	int i;
 	flare_t *f;
-	vec3_t	local;
+	Vec3	local;
 	float	d = 1;
-	vec4_t	eye, clip, normalized, window;
+	Vec4	eye, clip, normalized, window;
 
 	backEnd.pc.c_flareAdds++;
 
 	if(normal && (normal[0] || normal[1] || normal[2])){
-		Vec3Sub(backEnd.viewParms.or.origin, point, local);
-		Vec3NormalizeFast(local);
-		d = Vec3Dot(local, normal);
+		vec3sub(backEnd.viewParms.or.origin, point, local);
+		vec3normalizefast(local);
+		d = vec3dot(local, normal);
 
 		/* If the viewer is behind the flare don't add it. */
 		if(d < 0)
@@ -177,12 +177,12 @@ RB_AddFlare(void *surface, int fogNum, vec3_t point, vec3_t color, vec3_t normal
 	f->addedFrame = backEnd.viewParms.frameCount;
 	f->fogNum = fogNum;
 
-	Vec3Copy(point, f->origin);
-	Vec3Copy(color, f->color);
+	vec3copy(point, f->origin);
+	vec3copy(color, f->color);
 
 	/* fade the intensity of the flare down as the
 	 * light surface turns away from the viewer */
-	VectorScale(f->color, d, f->color);
+	vec3scale(f->color, d, f->color);
 
 	/* save info needed to test */
 	f->windowX = backEnd.viewParms.viewportX + window[0];
@@ -299,7 +299,7 @@ void
 RB_RenderFlare(flare_t *f)
 {
 	float size;
-	vec3_t	color;
+	Vec3	color;
 	int	iColor[3];
 	float	distance, intensity, factor;
 	byte	fogFactors[3] = {255, 255, 255};
@@ -340,12 +340,12 @@ RB_RenderFlare(flare_t *f)
 
 	intensity = flareCoeff * size * size / (factor * factor);
 
-	VectorScale(f->color, f->drawIntensity * intensity, color);
+	vec3scale(f->color, f->drawIntensity * intensity, color);
 
 /* Calculations for fogging */
 	if(tr.world && f->fogNum < tr.world->numfogs){
 		tess.numVertexes = 1;
-		Vec3Copy(f->origin, tess.xyz[0]);
+		vec3copy(f->origin, tess.xyz[0]);
 		tess.fogNum = f->fogNum;
 
 		RB_CalcModulateColorsByFog(fogFactors);

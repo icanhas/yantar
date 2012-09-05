@@ -492,14 +492,14 @@ AAS_CreateReversedReachability(void)
  * Changes Globals:		-
  * =========================================================================== */
 unsigned short int
-AAS_AreaTravelTime(int areanum, vec3_t start, vec3_t end)
+AAS_AreaTravelTime(int areanum, Vec3 start, Vec3 end)
 {
 	int intdist;
 	float	dist;
-	vec3_t	dir;
+	Vec3	dir;
 
-	Vec3Sub(start, end, dir);
-	dist = Vec3Len(dir);
+	vec3sub(start, end, dir);
+	dist = vec3len(dir);
 	/* if crouch only area */
 	if(AAS_AreaCrouch(areanum)) dist *= DISTANCEFACTOR_CROUCH;
 	/* if swim area */
@@ -523,7 +523,7 @@ AAS_CalculateAreaTravelTimes(void)
 {
 	int i, l, n, size;
 	char *ptr;
-	vec3_t end;
+	Vec3 end;
 	aas_reversedreachability_t	*revreach;
 	aas_reversedlink_t		*revlink;
 	aas_reachability_t		*reach;
@@ -574,7 +574,7 @@ AAS_CalculateAreaTravelTimes(void)
 			/*  */
 			for(n = 0, revlink = revreach->first; revlink;
 			    revlink = revlink->next, n++){
-				Vec3Copy(
+				vec3copy(
 					aasworld.reachability[revlink->
 							      linknum].end,
 					end);
@@ -1172,7 +1172,7 @@ AAS_InitReachabilityAreas(void)
 	int	i, j, numareas, areas[MAX_REACHABILITYPASSAREAS];
 	int	numreachareas;
 	aas_reachability_t *reach;
-	vec3_t start, end;
+	Vec3 start, end;
 
 	if(aasworld.reachabilityareas)
 		FreeMemory(aasworld.reachabilityareas);
@@ -1194,14 +1194,14 @@ AAS_InitReachabilityAreas(void)
 		/* trace areas from start to end */
 		case TRAVEL_BARRIERJUMP:
 		case TRAVEL_WATERJUMP:
-			Vec3Copy(reach->start, end);
+			vec3copy(reach->start, end);
 			end[2]		= reach->end[2];
 			numareas	= AAS_TraceAreas(
 				reach->start, end, areas, NULL,
 				MAX_REACHABILITYPASSAREAS);
 			break;
 		case TRAVEL_WALKOFFLEDGE:
-			Vec3Copy(reach->end, start);
+			vec3copy(reach->end, start);
 			start[2]	= reach->start[2];
 			numareas	= AAS_TraceAreas(
 				start, reach->end, areas, NULL,
@@ -1359,7 +1359,7 @@ AAS_UpdateAreaRoutingCache(aas_routingcache_t *areacache)
 	/*  */
 	curupdate = &aasworld.areaupdate[clusterareanum];
 	curupdate->areanum = areacache->areanum;
-	/* Vec3Copy(areacache->origin, curupdate->start); */
+	/* vec3copy(areacache->origin, curupdate->start); */
 	curupdate->areatraveltimes	= startareatraveltimes;
 	curupdate->tmptraveltime	= areacache->starttraveltime;
 	/*  */
@@ -1423,7 +1423,7 @@ AAS_UpdateAreaRoutingCache(aas_routingcache_t *areacache)
 					&aasworld.areaupdate[clusterareanum];
 				nextupdate->areanum = nextareanum;
 				nextupdate->tmptraveltime = t;
-				/* Vec3Copy(reach->start, nextupdate->start); */
+				/* vec3copy(reach->start, nextupdate->start); */
 				nextupdate->areatraveltimes =
 					aasworld.areatraveltimes[nextareanum][
 						linknum -
@@ -1473,7 +1473,7 @@ AAS_GetAreaRoutingCache(int clusternum, int areanum, int travelflags)
 			aasworld.clusters[clusternum].numreachabilityareas);
 		cache->cluster	= clusternum;
 		cache->areanum	= areanum;
-		Vec3Copy(aasworld.areas[areanum].center, cache->origin);
+		vec3copy(aasworld.areas[areanum].center, cache->origin);
 		cache->starttraveltime = 1;
 		cache->travelflags = travelflags;
 		cache->prev	= NULL;
@@ -1608,7 +1608,7 @@ AAS_GetPortalRoutingCache(int clusternum, int areanum, int travelflags)
 		cache = AAS_AllocRoutingCache(aasworld.numportals);
 		cache->cluster	= clusternum;
 		cache->areanum	= areanum;
-		Vec3Copy(aasworld.areas[areanum].center, cache->origin);
+		vec3copy(aasworld.areas[areanum].center, cache->origin);
 		cache->starttraveltime = 1;
 		cache->travelflags = travelflags;
 		/* add the cache to the cache list */
@@ -1634,7 +1634,7 @@ AAS_GetPortalRoutingCache(int clusternum, int areanum, int travelflags)
  * Changes Globals:		-
  * =========================================================================== */
 int
-AAS_AreaRouteToGoalArea(int areanum, vec3_t origin, int goalareanum,
+AAS_AreaRouteToGoalArea(int areanum, Vec3 origin, int goalareanum,
 			int travelflags, int *traveltime,
 			int *reachnum)
 {
@@ -1814,7 +1814,7 @@ AAS_AreaRouteToGoalArea(int areanum, vec3_t origin, int goalareanum,
  * Changes Globals:		-
  * =========================================================================== */
 int
-AAS_AreaTravelTimeToGoalArea(int areanum, vec3_t origin, int goalareanum,
+AAS_AreaTravelTimeToGoalArea(int areanum, Vec3 origin, int goalareanum,
 			     int travelflags)
 {
 	int traveltime, reachnum;
@@ -1831,7 +1831,7 @@ AAS_AreaTravelTimeToGoalArea(int areanum, vec3_t origin, int goalareanum,
  * Changes Globals:		-
  * =========================================================================== */
 int
-AAS_AreaReachabilityToGoalArea(int areanum, vec3_t origin, int goalareanum,
+AAS_AreaReachabilityToGoalArea(int areanum, Vec3 origin, int goalareanum,
 			       int travelflags)
 {
 	int traveltime, reachnum;
@@ -1849,12 +1849,12 @@ AAS_AreaReachabilityToGoalArea(int areanum, vec3_t origin, int goalareanum,
  * Changes Globals:		-
  * =========================================================================== */
 int
-AAS_PredictRoute(struct aas_predictroute_s *route, int areanum, vec3_t origin,
+AAS_PredictRoute(struct aas_predictroute_s *route, int areanum, Vec3 origin,
 		 int goalareanum, int travelflags, int maxareas, int maxtime,
 		 int stopevent, int stopcontents, int stoptfl, int stopareanum)
 {
 	int curareanum, reachnum, i, j, testareanum;
-	vec3_t curorigin;
+	Vec3 curorigin;
 	aas_reachability_t *reach;
 	aas_reachabilityareas_t *reachareas;
 
@@ -1863,11 +1863,11 @@ AAS_PredictRoute(struct aas_predictroute_s *route, int areanum, vec3_t origin,
 	route->endarea		= goalareanum;
 	route->endcontents	= 0;
 	route->endtravelflags = 0;
-	Vec3Copy(origin, route->endpos);
+	vec3copy(origin, route->endpos);
 	route->time = 0;
 
 	curareanum = areanum;
-	Vec3Copy(origin, curorigin);
+	vec3copy(origin, curorigin);
 
 	for(i = 0;
 	    curareanum != goalareanum &&
@@ -1893,7 +1893,7 @@ AAS_PredictRoute(struct aas_predictroute_s *route, int areanum, vec3_t origin,
 				route->endtravelflags =
 					AAS_TravelFlagForType_inline(
 						reach->traveltype);
-				Vec3Copy(reach->start, route->endpos);
+				vec3copy(reach->start, route->endpos);
 				return qtrue;
 			}
 			if(AAS_AreaContentsTravelFlags_inline(reach->areanum) &
@@ -1906,7 +1906,7 @@ AAS_PredictRoute(struct aas_predictroute_s *route, int areanum, vec3_t origin,
 				route->endtravelflags =
 					AAS_AreaContentsTravelFlags_inline(
 						reach->areanum);
-				Vec3Copy(reach->end, route->endpos);
+				vec3copy(reach->end, route->endpos);
 				route->time += AAS_AreaTravelTime(
 					areanum, origin, reach->start);
 				route->time += reach->traveltime;
@@ -1933,7 +1933,7 @@ AAS_PredictRoute(struct aas_predictroute_s *route, int areanum, vec3_t origin,
 						aasworld.areasettings[
 							testareanum].
 						contents;
-					Vec3Copy(reach->end, route->endpos);
+					vec3copy(reach->end, route->endpos);
 					route->time += AAS_AreaTravelTime(
 						areanum, origin, reach->start);
 					route->time += reach->traveltime;
@@ -1947,7 +1947,7 @@ AAS_PredictRoute(struct aas_predictroute_s *route, int areanum, vec3_t origin,
 						aasworld.areasettings[
 							testareanum].
 						contents;
-					Vec3Copy(reach->start, route->endpos);
+					vec3copy(reach->start, route->endpos);
 					return qtrue;
 				}
 		}
@@ -1960,10 +1960,10 @@ AAS_PredictRoute(struct aas_predictroute_s *route, int areanum, vec3_t origin,
 			aasworld.areasettings[reach->areanum].contents;
 		route->endtravelflags = AAS_TravelFlagForType_inline(
 			reach->traveltype);
-		Vec3Copy(reach->end, route->endpos);
+		vec3copy(reach->end, route->endpos);
 		/*  */
 		curareanum = reach->areanum;
-		Vec3Copy(reach->end, curorigin);
+		vec3copy(reach->end, curorigin);
 		/*  */
 		if(maxtime && route->time > maxtime)
 			break;
@@ -2073,10 +2073,10 @@ AAS_NextModelReachability(int num, int modelnum)
  * =========================================================================== */
 int
 AAS_RandomGoalArea(int areanum, int travelflags, int *goalareanum,
-		   vec3_t goalorigin)
+		   Vec3 goalorigin)
 {
 	int i, n, t;
-	vec3_t start, end;
+	Vec3 start, end;
 	aas_trace_t trace;
 
 	/* if the area has no reachabilities */
@@ -2094,18 +2094,18 @@ AAS_RandomGoalArea(int areanum, int travelflags, int *goalareanum,
 			if(t > 0){
 				if(AAS_AreaSwim(n)){
 					*goalareanum = n;
-					Vec3Copy(aasworld.areas[n].center,
+					vec3copy(aasworld.areas[n].center,
 						goalorigin);
 					/* botimport.Print(PRT_MESSAGE, "found random goal area %d\n", *goalareanum); */
 					return qtrue;
 				}
-				Vec3Copy(aasworld.areas[n].center, start);
+				vec3copy(aasworld.areas[n].center, start);
 				if(!AAS_PointAreaNum(start))
 					Log_Write(
 						"area %d center %f %f %f in solid?",
 						n,
 						start[0], start[1], start[2]);
-				Vec3Copy(start, end);
+				vec3copy(start, end);
 				end[2]	-= 300;
 				trace	=
 					AAS_TraceClientBBox(start, end,
@@ -2115,7 +2115,7 @@ AAS_RandomGoalArea(int areanum, int travelflags, int *goalareanum,
 				   AAS_PointAreaNum(trace.endpos) == n)
 					if(AAS_AreaGroundFaceArea(n) > 300){
 						*goalareanum = n;
-						Vec3Copy(trace.endpos,
+						vec3copy(trace.endpos,
 							goalorigin);
 						/* botimport.Print(PRT_MESSAGE, "found random goal area %d\n", *goalareanum); */
 						return qtrue;
@@ -2144,14 +2144,14 @@ AAS_AreaVisible(int srcarea, int destarea)
  * Changes Globals:		-
  * =========================================================================== */
 float
-Vec3Vec3DistancePointToLine(vec3_t v1, vec3_t v2, vec3_t point)
+Vec3vec3distPointToLine(Vec3 v1, Vec3 v2, Vec3 point)
 {
-	vec3_t vec, p2;
+	Vec3 vec, p2;
 
 	AAS_ProjectPointOntoVector(point, v1, v2, p2);
-	Vec3Sub(point, p2, vec);
-	return Vec3Len(vec);
-}	/* end of the function Vec3Vec3DistancePointToLine */
+	vec3sub(point, p2, vec);
+	return vec3len(vec);
+}	/* end of the function Vec3vec3distPointToLine */
 /* ===========================================================================
  *
  * Parameter:			-
@@ -2159,8 +2159,8 @@ Vec3Vec3DistancePointToLine(vec3_t v1, vec3_t v2, vec3_t point)
  * Changes Globals:		-
  * =========================================================================== */
 int
-AAS_NearestHideArea(int srcnum, vec3_t origin, int areanum, int enemynum,
-		    vec3_t enemyorigin, int enemyareanum,
+AAS_NearestHideArea(int srcnum, Vec3 origin, int areanum, int enemynum,
+		    Vec3 enemyorigin, int enemyareanum,
 		    int travelflags)
 {
 	int i, j, nextareanum, badtravelflags, numreach, bestarea;
@@ -2170,7 +2170,7 @@ AAS_NearestHideArea(int srcnum, vec3_t origin, int areanum, int enemynum,
 	*nextupdate;
 	aas_reachability_t		*reach;
 	float	dist1, dist2;
-	vec3_t	v1, v2, p;
+	Vec3	v1, v2, p;
 	qbool startVisible;
 
 	/*  */
@@ -2189,7 +2189,7 @@ AAS_NearestHideArea(int srcnum, vec3_t origin, int areanum, int enemynum,
 	/*  */
 	curupdate = &aasworld.areaupdate[areanum];
 	curupdate->areanum = areanum;
-	Vec3Copy(origin, curupdate->start);
+	vec3copy(origin, curupdate->start);
 	curupdate->areatraveltimes	= aasworld.areatraveltimes[areanum][0];
 	curupdate->tmptraveltime	= 0;
 	/* put the area to start with in the current read list */
@@ -2245,15 +2245,15 @@ AAS_NearestHideArea(int srcnum, vec3_t origin, int areanum, int enemynum,
 				    reach->end[j]))
 					break;
 			if(j < 3)
-				Vec3Sub(enemyorigin, reach->end, v2);
+				vec3sub(enemyorigin, reach->end, v2);
 			else
-				Vec3Sub(enemyorigin, p, v2);
-			dist2 = Vec3Len(v2);
+				vec3sub(enemyorigin, p, v2);
+			dist2 = vec3len(v2);
 			/* never go through the enemy */
 			if(dist2 < 40) continue;
 			/*  */
-			Vec3Sub(enemyorigin, curupdate->start, v1);
-			dist1 = Vec3Len(v1);
+			vec3sub(enemyorigin, curupdate->start, v1);
+			dist1 = vec3len(v1);
 			/*  */
 			if(dist2 < dist1)
 				t += (dist1 - dist2) * 10;
@@ -2276,7 +2276,7 @@ AAS_NearestHideArea(int srcnum, vec3_t origin, int areanum, int enemynum,
 				nextupdate->areanum = nextareanum;
 				nextupdate->tmptraveltime = t;
 				/* remember where we entered this area */
-				Vec3Copy(reach->end, nextupdate->start);
+				vec3copy(reach->end, nextupdate->start);
 				/* if this update is not in the list yet */
 				if(!nextupdate->inlist){
 					/* add the new update to the end of the list */

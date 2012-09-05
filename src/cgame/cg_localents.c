@@ -115,7 +115,7 @@ CG_BloodTrail(localEntity_t *le)
 	int	t;
 	int	t2;
 	int	step;
-	vec3_t newOrigin;
+	Vec3 newOrigin;
 	localEntity_t *blood;
 
 	step = 150;
@@ -209,19 +209,19 @@ CG_FragmentBounceSound(localEntity_t *le, trace_t *trace)
 void
 CG_ReflectVelocity(localEntity_t *le, trace_t *trace)
 {
-	vec3_t	velocity;
+	Vec3	velocity;
 	float	dot;
 	int	hitTime;
 
 	/* reflect the velocity on the trace plane */
 	hitTime = cg.time - cg.frametime + cg.frametime * trace->fraction;
 	BG_EvaluateTrajectoryDelta(&le->pos, hitTime, velocity);
-	dot = Vec3Dot(velocity, trace->plane.normal);
-	Vec3MA(velocity, -2*dot, trace->plane.normal, le->pos.trDelta);
+	dot = vec3dot(velocity, trace->plane.normal);
+	vec3ma(velocity, -2*dot, trace->plane.normal, le->pos.trDelta);
 
-	VectorScale(le->pos.trDelta, le->bounceFactor, le->pos.trDelta);
+	vec3scale(le->pos.trDelta, le->bounceFactor, le->pos.trDelta);
 
-	Vec3Copy(trace->endpos, le->pos.trBase);
+	vec3copy(trace->endpos, le->pos.trBase);
 	le->pos.trTime = cg.time;
 
 
@@ -242,7 +242,7 @@ CG_ReflectVelocity(localEntity_t *le, trace_t *trace)
 void
 CG_AddFragment(localEntity_t *le)
 {
-	vec3_t	newOrigin;
+	Vec3	newOrigin;
 	trace_t trace;
 
 	if(le->pos.trType == TR_STATIONARY){
@@ -255,7 +255,7 @@ CG_AddFragment(localEntity_t *le)
 			/* we must use an explicit lighting origin, otherwise the
 			 * lighting would be lost as soon as the origin went
 			 * into the ground */
-			Vec3Copy(le->refEntity.origin,
+			vec3copy(le->refEntity.origin,
 				le->refEntity.lightingOrigin);
 			le->refEntity.renderfx |= RF_LIGHTING_ORIGIN;
 			oldZ = le->refEntity.origin[2];
@@ -277,13 +277,13 @@ CG_AddFragment(localEntity_t *le)
 		CONTENTS_SOLID);
 	if(trace.fraction == 1.0){
 		/* still in free fall */
-		Vec3Copy(newOrigin, le->refEntity.origin);
+		vec3copy(newOrigin, le->refEntity.origin);
 
 		if(le->leFlags & LEF_TUMBLE){
-			vec3_t angles;
+			Vec3 angles;
 
 			BG_EvaluateTrajectory(&le->angles, cg.time, angles);
-			AnglesToAxis(angles, le->refEntity.axis);
+			euler2axis(angles, le->refEntity.axis);
 		}
 
 		trap_R_AddRefEntityToScene(&le->refEntity);
@@ -352,7 +352,7 @@ CG_AddMoveScaleFade(localEntity_t *le)
 {
 	refEntity_t *re;
 	float	c;
-	vec3_t	delta;
+	Vec3	delta;
 	float	len;
 
 	re = &le->refEntity;
@@ -375,8 +375,8 @@ CG_AddMoveScaleFade(localEntity_t *le)
 
 	/* if the view would be "inside" the sprite, kill the sprite
 	 * so it doesn't add too much overdraw */
-	Vec3Sub(re->origin, cg.refdef.vieworg, delta);
-	len = Vec3Len(delta);
+	vec3sub(re->origin, cg.refdef.vieworg, delta);
+	len = vec3len(delta);
 	if(len < le->radius){
 		CG_FreeLocalEntity(le);
 		return;
@@ -398,7 +398,7 @@ CG_AddScaleFade(localEntity_t *le)
 {
 	refEntity_t *re;
 	float	c;
-	vec3_t	delta;
+	Vec3	delta;
 	float	len;
 
 	re = &le->refEntity;
@@ -411,8 +411,8 @@ CG_AddScaleFade(localEntity_t *le)
 
 	/* if the view would be "inside" the sprite, kill the sprite
 	 * so it doesn't add too much overdraw */
-	Vec3Sub(re->origin, cg.refdef.vieworg, delta);
-	len = Vec3Len(delta);
+	vec3sub(re->origin, cg.refdef.vieworg, delta);
+	len = vec3len(delta);
 	if(len < le->radius){
 		CG_FreeLocalEntity(le);
 		return;
@@ -435,7 +435,7 @@ CG_AddFallScaleFade(localEntity_t *le)
 {
 	refEntity_t *re;
 	float	c;
-	vec3_t	delta;
+	Vec3	delta;
 	float	len;
 
 	re = &le->refEntity;
@@ -451,8 +451,8 @@ CG_AddFallScaleFade(localEntity_t *le)
 
 	/* if the view would be "inside" the sprite, kill the sprite
 	 * so it doesn't add too much overdraw */
-	Vec3Sub(re->origin, cg.refdef.vieworg, delta);
-	len = Vec3Len(delta);
+	vec3sub(re->origin, cg.refdef.vieworg, delta);
+	len = vec3len(delta);
 	if(len < le->radius){
 		CG_FreeLocalEntity(le);
 		return;
@@ -548,14 +548,14 @@ CG_AddKamikaze(localEntity_t *le)
 	refEntity_t	*re;
 	refEntity_t	shockwave;
 	float	c;
-	vec3_t	test, axis[3];
+	Vec3	test, axis[3];
 	int	t;
 
 	re = &le->refEntity;
 
 	t = cg.time - le->startTime;
-	VectorClear(test);
-	AnglesToAxis(test, axis);
+	vec3clear(test);
+	euler2axis(test, axis);
 
 	if(t > KAMI_SHOCKWAVE_STARTTIME && t < KAMI_SHOCKWAVE_ENDTIME){
 
@@ -570,20 +570,20 @@ CG_AddKamikaze(localEntity_t *le)
 		shockwave.hModel = cgs.media.kamikazeShockWave;
 		shockwave.reType = RT_MODEL;
 		shockwave.shaderTime = re->shaderTime;
-		Vec3Copy(re->origin, shockwave.origin);
+		vec3copy(re->origin, shockwave.origin);
 
 		c =
 			(float)(t -
 				KAMI_SHOCKWAVE_STARTTIME) /
 			(float)(KAMI_SHOCKWAVE_ENDTIME -
 				KAMI_SHOCKWAVE_STARTTIME);
-		VectorScale(
+		vec3scale(
 			axis[0], c * KAMI_SHOCKWAVE_MAXRADIUS /
 			KAMI_SHOCKWAVEMODEL_RADIUS, shockwave.axis[0]);
-		VectorScale(
+		vec3scale(
 			axis[1], c * KAMI_SHOCKWAVE_MAXRADIUS /
 			KAMI_SHOCKWAVEMODEL_RADIUS, shockwave.axis[1]);
-		VectorScale(
+		vec3scale(
 			axis[2], c * KAMI_SHOCKWAVE_MAXRADIUS /
 			KAMI_SHOCKWAVEMODEL_RADIUS, shockwave.axis[2]);
 		shockwave.nonNormalizedAxes = qtrue;
@@ -634,13 +634,13 @@ CG_AddKamikaze(localEntity_t *le)
 				(float)(KAMI_IMPLODE_ENDTIME -
 					KAMI_IMPLODE_STARTTIME);
 		}
-		VectorScale(
+		vec3scale(
 			axis[0], c * KAMI_BOOMSPHERE_MAXRADIUS /
 			KAMI_BOOMSPHEREMODEL_RADIUS, re->axis[0]);
-		VectorScale(
+		vec3scale(
 			axis[1], c * KAMI_BOOMSPHERE_MAXRADIUS /
 			KAMI_BOOMSPHEREMODEL_RADIUS, re->axis[1]);
-		VectorScale(
+		vec3scale(
 			axis[2], c * KAMI_BOOMSPHERE_MAXRADIUS /
 			KAMI_BOOMSPHEREMODEL_RADIUS, re->axis[2]);
 		re->nonNormalizedAxes = qtrue;
@@ -663,25 +663,25 @@ CG_AddKamikaze(localEntity_t *le)
 		shockwave.hModel = cgs.media.kamikazeShockWave;
 		shockwave.reType = RT_MODEL;
 		shockwave.shaderTime = re->shaderTime;
-		Vec3Copy(re->origin, shockwave.origin);
+		vec3copy(re->origin, shockwave.origin);
 
 		test[0] = le->angles.trBase[0];
 		test[1] = le->angles.trBase[1];
 		test[2] = le->angles.trBase[2];
-		AnglesToAxis(test, axis);
+		euler2axis(test, axis);
 
 		c =
 			(float)(t -
 				KAMI_SHOCKWAVE2_STARTTIME) /
 			(float)(KAMI_SHOCKWAVE2_ENDTIME -
 				KAMI_SHOCKWAVE2_STARTTIME);
-		VectorScale(
+		vec3scale(
 			axis[0], c * KAMI_SHOCKWAVE2_MAXRADIUS /
 			KAMI_SHOCKWAVEMODEL_RADIUS, shockwave.axis[0]);
-		VectorScale(
+		vec3scale(
 			axis[1], c * KAMI_SHOCKWAVE2_MAXRADIUS /
 			KAMI_SHOCKWAVEMODEL_RADIUS, shockwave.axis[1]);
-		VectorScale(
+		vec3scale(
 			axis[2], c * KAMI_SHOCKWAVE2_MAXRADIUS /
 			KAMI_SHOCKWAVEMODEL_RADIUS, shockwave.axis[2]);
 		shockwave.nonNormalizedAxes = qtrue;
@@ -760,7 +760,7 @@ void
 CG_AddScorePlum(localEntity_t *le)
 {
 	refEntity_t *re;
-	vec3_t	origin, delta, dir, vec, up = {0, 0, 1};
+	Vec3	origin, delta, dir, vec, up = {0, 0, 1};
 	float	c, len;
 	int	i, score, digits[10], numdigits, negative;
 
@@ -794,19 +794,19 @@ CG_AddScorePlum(localEntity_t *le)
 
 	re->radius = NUMBER_SIZE / 2;
 
-	Vec3Copy(le->pos.trBase, origin);
+	vec3copy(le->pos.trBase, origin);
 	origin[2] += 110 - c * 100;
 
-	Vec3Sub(cg.refdef.vieworg, origin, dir);
-	Vec3Cross(dir, up, vec);
-	Vec3Normalize(vec);
+	vec3sub(cg.refdef.vieworg, origin, dir);
+	vec3cross(dir, up, vec);
+	vec3normalize(vec);
 
-	Vec3MA(origin, -10 + 20 * sin(c * 2 * M_PI), vec, origin);
+	vec3ma(origin, -10 + 20 * sin(c * 2 * M_PI), vec, origin);
 
 	/* if the view would be "inside" the sprite, kill the sprite
 	 * so it doesn't add too much overdraw */
-	Vec3Sub(origin, cg.refdef.vieworg, delta);
-	len = Vec3Len(delta);
+	vec3sub(origin, cg.refdef.vieworg, delta);
+	len = vec3len(delta);
 	if(len < 20){
 		CG_FreeLocalEntity(le);
 		return;
@@ -829,7 +829,7 @@ CG_AddScorePlum(localEntity_t *le)
 	}
 
 	for(i = 0; i < numdigits; i++){
-		Vec3MA(origin,
+		vec3ma(origin,
 			(float)(((float)numdigits / 2) - i) * NUMBER_SIZE, vec,
 			re->origin);
 		re->customShader =

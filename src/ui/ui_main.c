@@ -367,12 +367,12 @@ Text_PaintChar(float x, float y, float width, float height, float scale, float s
 }
 
 void
-Text_Paint(float x, float y, float scale, vec4_t color, const char *text,
+Text_Paint(float x, float y, float scale, Vec4 color, const char *text,
 	   float adjust, int limit,
 	   int style)
 {
 	int len, count;
-	vec4_t	newColor;
+	Vec4	newColor;
 	glyphInfo_t *glyph;
 	float	useScale;
 	fontInfo_t *font = &uiInfo.uiDC.Assets.textFont;
@@ -384,7 +384,7 @@ Text_Paint(float x, float y, float scale, vec4_t color, const char *text,
 	if(text){
 		const char *s = text;
 		trap_R_SetColor(color);
-		memcpy(&newColor[0], &color[0], sizeof(vec4_t));
+		memcpy(&newColor[0], &color[0], sizeof(Vec4));
 		len = strlen(text);
 		if(limit > 0 && len > limit)
 			len = limit;
@@ -442,12 +442,12 @@ Text_Paint(float x, float y, float scale, vec4_t color, const char *text,
 }
 
 void
-Text_PaintWithCursor(float x, float y, float scale, vec4_t color,
+Text_PaintWithCursor(float x, float y, float scale, Vec4 color,
 		     const char *text, int cursorPos, char cursor, int limit,
 		     int style)
 {
 	int len, count;
-	vec4_t	newColor;
+	Vec4	newColor;
 	glyphInfo_t *glyph, *glyph2;
 	float	yadj;
 	float	useScale;
@@ -460,7 +460,7 @@ Text_PaintWithCursor(float x, float y, float scale, vec4_t color,
 	if(text){
 		const char *s = text;
 		trap_R_SetColor(color);
-		memcpy(&newColor[0], &color[0], sizeof(vec4_t));
+		memcpy(&newColor[0], &color[0], sizeof(Vec4));
 		len = strlen(text);
 		if(limit > 0 && len > limit)
 			len = limit;
@@ -549,12 +549,12 @@ Text_PaintWithCursor(float x, float y, float scale, vec4_t color,
 
 
 static void
-Text_Paint_Limit(float *maxX, float x, float y, float scale, vec4_t color,
+Text_Paint_Limit(float *maxX, float x, float y, float scale, Vec4 color,
 		 const char* text, float adjust,
 		 int limit)
 {
 	int len, count;
-	vec4_t newColor;
+	Vec4 newColor;
 	glyphInfo_t *glyph;
 	if(text){
 		const char *s	= text;
@@ -1077,7 +1077,7 @@ static int numHandicaps = ARRAY_LEN(handicapValues);
 #endif
 
 static void
-UI_DrawHandicap(rectDef_t *rect, float scale, vec4_t color, int textStyle)
+UI_DrawHandicap(rectDef_t *rect, float scale, Vec4 color, int textStyle)
 {
 	int i, h;
 
@@ -1089,7 +1089,7 @@ UI_DrawHandicap(rectDef_t *rect, float scale, vec4_t color, int textStyle)
 }
 
 static void
-UI_DrawClanName(rectDef_t *rect, float scale, vec4_t color, int textStyle)
+UI_DrawClanName(rectDef_t *rect, float scale, Vec4 color, int textStyle)
 {
 	Text_Paint(rect->x, rect->y, scale, color,
 		UI_Cvar_VariableString("ui_teamName"), 0, 0, textStyle);
@@ -1115,14 +1115,14 @@ UI_SetCapFragLimits(qbool uiVars)
 }
 /* ui_gameType assumes gametype 0 is -1 ALL and will not show */
 static void
-UI_DrawGameType(rectDef_t *rect, float scale, vec4_t color, int textStyle)
+UI_DrawGameType(rectDef_t *rect, float scale, Vec4 color, int textStyle)
 {
 	Text_Paint(rect->x, rect->y, scale, color,
 		uiInfo.gameTypes[ui_gameType.integer].gameType, 0, 0, textStyle);
 }
 
 static void
-UI_DrawNetGameType(rectDef_t *rect, float scale, vec4_t color, int textStyle)
+UI_DrawNetGameType(rectDef_t *rect, float scale, Vec4 color, int textStyle)
 {
 	if(ui_netGameType.integer < 0 || ui_netGameType.integer >
 	   uiInfo.numGameTypes){
@@ -1135,7 +1135,7 @@ UI_DrawNetGameType(rectDef_t *rect, float scale, vec4_t color, int textStyle)
 }
 
 static void
-UI_DrawJoinGameType(rectDef_t *rect, float scale, vec4_t color, int textStyle)
+UI_DrawJoinGameType(rectDef_t *rect, float scale, Vec4 color, int textStyle)
 {
 	if(ui_joinGameType.integer < 0 || ui_joinGameType.integer >
 	   uiInfo.numJoinGameTypes)
@@ -1162,7 +1162,7 @@ UI_TeamIndexFromName(const char *name)
 }
 
 static void
-UI_DrawClanLogo(rectDef_t *rect, float scale, vec4_t color)
+UI_DrawClanLogo(rectDef_t *rect, float scale, Vec4 color)
 {
 	int i;
 	i = UI_TeamIndexFromName(UI_Cvar_VariableString("ui_teamName"));
@@ -1187,7 +1187,7 @@ UI_DrawClanLogo(rectDef_t *rect, float scale, vec4_t color)
 }
 
 static void
-UI_DrawClanCinematic(rectDef_t *rect, float scale, vec4_t color)
+UI_DrawClanCinematic(rectDef_t *rect, float scale, Vec4 color)
 {
 	int i;
 	i = UI_TeamIndexFromName(UI_Cvar_VariableString("ui_teamName"));
@@ -1227,7 +1227,7 @@ UI_DrawClanCinematic(rectDef_t *rect, float scale, vec4_t color)
 }
 
 static void
-UI_DrawPreviewCinematic(rectDef_t *rect, float scale, vec4_t color)
+UI_DrawPreviewCinematic(rectDef_t *rect, float scale, Vec4 color)
 {
 	if(uiInfo.previewMovie > -2){
 		uiInfo.previewMovie =
@@ -1251,7 +1251,7 @@ UI_DrawPreviewCinematic(rectDef_t *rect, float scale, vec4_t color)
 
 
 static void
-UI_DrawSkill(rectDef_t *rect, float scale, vec4_t color, int textStyle)
+UI_DrawSkill(rectDef_t *rect, float scale, Vec4 color, int textStyle)
 {
 	int i;
 	i = trap_Cvar_VariableValue("g_spSkill");
@@ -1263,7 +1263,7 @@ UI_DrawSkill(rectDef_t *rect, float scale, vec4_t color, int textStyle)
 
 
 static void
-UI_DrawTeamName(rectDef_t *rect, float scale, vec4_t color, qbool blue,
+UI_DrawTeamName(rectDef_t *rect, float scale, Vec4 color, qbool blue,
 		int textStyle)
 {
 	int i;
@@ -1277,7 +1277,7 @@ UI_DrawTeamName(rectDef_t *rect, float scale, vec4_t color, qbool blue,
 }
 
 static void
-UI_DrawTeamMember(rectDef_t *rect, float scale, vec4_t color, qbool blue,
+UI_DrawTeamMember(rectDef_t *rect, float scale, Vec4 color, qbool blue,
 		  int num,
 		  int textStyle)
 {
@@ -1309,7 +1309,7 @@ UI_DrawTeamMember(rectDef_t *rect, float scale, vec4_t color, qbool blue,
 }
 
 static void
-UI_DrawEffects(rectDef_t *rect, float scale, vec4_t color)
+UI_DrawEffects(rectDef_t *rect, float scale, Vec4 color)
 {
 	UI_DrawHandlePic(rect->x, rect->y - 14, 128, 8,
 		uiInfo.uiDC.Assets.fxBasePic);
@@ -1319,7 +1319,7 @@ UI_DrawEffects(rectDef_t *rect, float scale, vec4_t color)
 }
 
 static void
-UI_DrawMapPreview(rectDef_t *rect, float scale, vec4_t color, qbool net)
+UI_DrawMapPreview(rectDef_t *rect, float scale, Vec4 color, qbool net)
 {
 	int map = (net) ? ui_currentNetMap.integer : ui_currentMap.integer;
 	if(map < 0 || map > uiInfo.mapCount){
@@ -1348,7 +1348,7 @@ UI_DrawMapPreview(rectDef_t *rect, float scale, vec4_t color, qbool net)
 
 
 static void
-UI_DrawMapTimeToBeat(rectDef_t *rect, float scale, vec4_t color, int textStyle)
+UI_DrawMapTimeToBeat(rectDef_t *rect, float scale, Vec4 color, int textStyle)
 {
 	int minutes, seconds, time;
 	if(ui_currentMap.integer < 0 || ui_currentMap.integer >
@@ -1375,7 +1375,7 @@ UI_DrawMapTimeToBeat(rectDef_t *rect, float scale, vec4_t color, int textStyle)
 
 
 static void
-UI_DrawMapCinematic(rectDef_t *rect, float scale, vec4_t color, qbool net)
+UI_DrawMapCinematic(rectDef_t *rect, float scale, Vec4 color, qbool net)
 {
 
 	int map = (net) ? ui_currentNetMap.integer : ui_currentMap.integer;
@@ -1421,8 +1421,8 @@ UI_DrawPlayerModel(rectDef_t *rect)
 	char	model[MAX_QPATH];
 	char	team[256];
 	char	head[256];
-	vec3_t	viewangles;
-	vec3_t	moveangles;
+	Vec3	viewangles;
+	Vec3	moveangles;
 
 	if(trap_Cvar_VariableValue("ui_Q3Model")){
 		strcpy(model, UI_Cvar_VariableString("model"));
@@ -1447,7 +1447,7 @@ UI_DrawPlayerModel(rectDef_t *rect)
 		viewangles[YAW] = 180 - 10;
 		viewangles[PITCH] = 0;
 		viewangles[ROLL] = 0;
-		VectorClear(moveangles);
+		vec3clear(moveangles);
 		UI_PlayerInfo_SetModel(&info, model, head, team);
 		UI_PlayerInfo_SetInfo(&info, LEGS_IDLE, TORSO_STAND, viewangles,
 			vec3_origin, WP_MACHINEGUN,
@@ -1462,7 +1462,7 @@ UI_DrawPlayerModel(rectDef_t *rect)
 }
 
 static void
-UI_DrawNetSource(rectDef_t *rect, float scale, vec4_t color, int textStyle)
+UI_DrawNetSource(rectDef_t *rect, float scale, Vec4 color, int textStyle)
 {
 	if(ui_netSource.integer < 0 || ui_netSource.integer > numNetSources)
 		ui_netSource.integer = 0;
@@ -1472,7 +1472,7 @@ UI_DrawNetSource(rectDef_t *rect, float scale, vec4_t color, int textStyle)
 }
 
 static void
-UI_DrawNetMapPreview(rectDef_t *rect, float scale, vec4_t color)
+UI_DrawNetMapPreview(rectDef_t *rect, float scale, Vec4 color)
 {
 
 	if(uiInfo.serverStatus.currentServerPreview > 0)
@@ -1485,7 +1485,7 @@ UI_DrawNetMapPreview(rectDef_t *rect, float scale, vec4_t color)
 }
 
 static void
-UI_DrawNetMapCinematic(rectDef_t *rect, float scale, vec4_t color)
+UI_DrawNetMapCinematic(rectDef_t *rect, float scale, Vec4 color)
 {
 	if(ui_currentNetMap.integer < 0 || ui_currentNetMap.integer >
 	   uiInfo.mapCount){
@@ -1507,7 +1507,7 @@ UI_DrawNetMapCinematic(rectDef_t *rect, float scale, vec4_t color)
 
 
 static void
-UI_DrawNetFilter(rectDef_t *rect, float scale, vec4_t color, int textStyle)
+UI_DrawNetFilter(rectDef_t *rect, float scale, Vec4 color, int textStyle)
 {
 	if(ui_serverFilterType.integer < 0 || ui_serverFilterType.integer >
 	   numServerFilters)
@@ -1520,7 +1520,7 @@ UI_DrawNetFilter(rectDef_t *rect, float scale, vec4_t color, int textStyle)
 
 
 static void
-UI_DrawTier(rectDef_t *rect, float scale, vec4_t color, int textStyle)
+UI_DrawTier(rectDef_t *rect, float scale, Vec4 color, int textStyle)
 {
 	int i;
 	i = trap_Cvar_VariableValue("ui_currentTier");
@@ -1558,7 +1558,7 @@ UI_EnglishMapName(const char *map)
 }
 
 static void
-UI_DrawTierMapName(rectDef_t *rect, float scale, vec4_t color, int textStyle)
+UI_DrawTierMapName(rectDef_t *rect, float scale, Vec4 color, int textStyle)
 {
 	int i, j;
 	i = trap_Cvar_VariableValue("ui_currentTier");
@@ -1573,7 +1573,7 @@ UI_DrawTierMapName(rectDef_t *rect, float scale, vec4_t color, int textStyle)
 }
 
 static void
-UI_DrawTierGameType(rectDef_t *rect, float scale, vec4_t color, int textStyle)
+UI_DrawTierGameType(rectDef_t *rect, float scale, Vec4 color, int textStyle)
 {
 	int i, j;
 	i = trap_Cvar_VariableValue("ui_currentTier");
@@ -1664,8 +1664,8 @@ UI_DrawOpponent(rectDef_t *rect)
 	char	model[MAX_QPATH];
 	char	headmodel[MAX_QPATH];
 	char	team[256];
-	vec3_t	viewangles;
-	vec3_t	moveangles;
+	Vec3	viewangles;
+	Vec3	moveangles;
 
 	if(updateOpponentModel){
 
@@ -1677,7 +1677,7 @@ UI_DrawOpponent(rectDef_t *rect)
 		viewangles[YAW] = 180 - 10;
 		viewangles[PITCH] = 0;
 		viewangles[ROLL] = 0;
-		VectorClear(moveangles);
+		vec3clear(moveangles);
 		UI_PlayerInfo_SetModel(&info2, model, headmodel, "");
 		UI_PlayerInfo_SetInfo(&info2, LEGS_IDLE, TORSO_STAND, viewangles,
 			vec3_origin, WP_MACHINEGUN,
@@ -1728,7 +1728,7 @@ UI_PriorOpponent(void)
 }
 
 static void
-UI_DrawPlayerLogo(rectDef_t *rect, vec3_t color)
+UI_DrawPlayerLogo(rectDef_t *rect, Vec3 color)
 {
 	int i = UI_TeamIndexFromName(UI_Cvar_VariableString("ui_teamName"));
 
@@ -1750,7 +1750,7 @@ UI_DrawPlayerLogo(rectDef_t *rect, vec3_t color)
 }
 
 static void
-UI_DrawPlayerLogoMetal(rectDef_t *rect, vec3_t color)
+UI_DrawPlayerLogoMetal(rectDef_t *rect, Vec3 color)
 {
 	int i = UI_TeamIndexFromName(UI_Cvar_VariableString("ui_teamName"));
 	if(uiInfo.teamList[i].teamIcon == -1){
@@ -1771,7 +1771,7 @@ UI_DrawPlayerLogoMetal(rectDef_t *rect, vec3_t color)
 }
 
 static void
-UI_DrawPlayerLogoName(rectDef_t *rect, vec3_t color)
+UI_DrawPlayerLogoName(rectDef_t *rect, Vec3 color)
 {
 	int i = UI_TeamIndexFromName(UI_Cvar_VariableString("ui_teamName"));
 	if(uiInfo.teamList[i].teamIcon == -1){
@@ -1792,7 +1792,7 @@ UI_DrawPlayerLogoName(rectDef_t *rect, vec3_t color)
 }
 
 static void
-UI_DrawOpponentLogo(rectDef_t *rect, vec3_t color)
+UI_DrawOpponentLogo(rectDef_t *rect, Vec3 color)
 {
 	int i = UI_TeamIndexFromName(UI_Cvar_VariableString("ui_opponentName"));
 	if(uiInfo.teamList[i].teamIcon == -1){
@@ -1813,7 +1813,7 @@ UI_DrawOpponentLogo(rectDef_t *rect, vec3_t color)
 }
 
 static void
-UI_DrawOpponentLogoMetal(rectDef_t *rect, vec3_t color)
+UI_DrawOpponentLogoMetal(rectDef_t *rect, Vec3 color)
 {
 	int i = UI_TeamIndexFromName(UI_Cvar_VariableString("ui_opponentName"));
 	if(uiInfo.teamList[i].teamIcon == -1){
@@ -1834,7 +1834,7 @@ UI_DrawOpponentLogoMetal(rectDef_t *rect, vec3_t color)
 }
 
 static void
-UI_DrawOpponentLogoName(rectDef_t *rect, vec3_t color)
+UI_DrawOpponentLogoName(rectDef_t *rect, Vec3 color)
 {
 	int i = UI_TeamIndexFromName(UI_Cvar_VariableString("ui_opponentName"));
 	if(uiInfo.teamList[i].teamIcon == -1){
@@ -1855,7 +1855,7 @@ UI_DrawOpponentLogoName(rectDef_t *rect, vec3_t color)
 }
 
 static void
-UI_DrawAllMapsSelection(rectDef_t *rect, float scale, vec4_t color,
+UI_DrawAllMapsSelection(rectDef_t *rect, float scale, Vec4 color,
 			int textStyle,
 			qbool net)
 {
@@ -1867,7 +1867,7 @@ UI_DrawAllMapsSelection(rectDef_t *rect, float scale, vec4_t color,
 }
 
 static void
-UI_DrawOpponentName(rectDef_t *rect, float scale, vec4_t color, int textStyle)
+UI_DrawOpponentName(rectDef_t *rect, float scale, Vec4 color, int textStyle)
 {
 	Text_Paint(rect->x, rect->y, scale, color,
 		UI_Cvar_VariableString("ui_opponentName"), 0, 0, textStyle);
@@ -1994,7 +1994,7 @@ UI_OwnerDrawWidth(int ownerDraw, float scale)
 }
 
 static void
-UI_DrawBotName(rectDef_t *rect, float scale, vec4_t color, int textStyle)
+UI_DrawBotName(rectDef_t *rect, float scale, Vec4 color, int textStyle)
 {
 	int	value	= uiInfo.botIndex;
 	int	game	= trap_Cvar_VariableValue("g_gametype");
@@ -2012,7 +2012,7 @@ UI_DrawBotName(rectDef_t *rect, float scale, vec4_t color, int textStyle)
 }
 
 static void
-UI_DrawBotSkill(rectDef_t *rect, float scale, vec4_t color, int textStyle)
+UI_DrawBotSkill(rectDef_t *rect, float scale, Vec4 color, int textStyle)
 {
 	if(uiInfo.skillIndex >= 0 && uiInfo.skillIndex < numSkillLevels)
 		Text_Paint(rect->x, rect->y, scale, color,
@@ -2020,7 +2020,7 @@ UI_DrawBotSkill(rectDef_t *rect, float scale, vec4_t color, int textStyle)
 }
 
 static void
-UI_DrawRedBlue(rectDef_t *rect, float scale, vec4_t color, int textStyle)
+UI_DrawRedBlue(rectDef_t *rect, float scale, Vec4 color, int textStyle)
 {
 	Text_Paint(rect->x, rect->y, scale, color,
 		(uiInfo.redBlue == 0) ? "Red" : "Blue", 0, 0,
@@ -2028,7 +2028,7 @@ UI_DrawRedBlue(rectDef_t *rect, float scale, vec4_t color, int textStyle)
 }
 
 static void
-UI_DrawCrosshair(rectDef_t *rect, float scale, vec4_t color)
+UI_DrawCrosshair(rectDef_t *rect, float scale, Vec4 color)
 {
 	trap_R_SetColor(color);
 	if(uiInfo.currentCrosshair < 0 || uiInfo.currentCrosshair >=
@@ -2095,7 +2095,7 @@ UI_BuildPlayerList(void)
 
 
 static void
-UI_DrawSelectedPlayer(rectDef_t *rect, float scale, vec4_t color, int textStyle)
+UI_DrawSelectedPlayer(rectDef_t *rect, float scale, Vec4 color, int textStyle)
 {
 	if(uiInfo.uiDC.realTime > uiInfo.playerRefresh){
 		uiInfo.playerRefresh = uiInfo.uiDC.realTime + 3000;
@@ -2109,11 +2109,11 @@ UI_DrawSelectedPlayer(rectDef_t *rect, float scale, vec4_t color, int textStyle)
 }
 
 static void
-UI_DrawServerRefreshDate(rectDef_t *rect, float scale, vec4_t color,
+UI_DrawServerRefreshDate(rectDef_t *rect, float scale, Vec4 color,
 			 int textStyle)
 {
 	if(uiInfo.serverStatus.refreshActive){
-		vec4_t lowLight, newColor;
+		Vec4 lowLight, newColor;
 		lowLight[0] = 0.8 * color[0];
 		lowLight[1] = 0.8 * color[1];
 		lowLight[2] = 0.8 * color[2];
@@ -2135,7 +2135,7 @@ UI_DrawServerRefreshDate(rectDef_t *rect, float scale, vec4_t color,
 }
 
 static void
-UI_DrawServerMOTD(rectDef_t *rect, float scale, vec4_t color)
+UI_DrawServerMOTD(rectDef_t *rect, float scale, Vec4 color)
 {
 	if(uiInfo.serverStatus.motdLen){
 		float maxX;
@@ -2214,7 +2214,7 @@ UI_DrawServerMOTD(rectDef_t *rect, float scale, vec4_t color)
 }
 
 static void
-UI_DrawKeyBindStatus(rectDef_t *rect, float scale, vec4_t color, int textStyle)
+UI_DrawKeyBindStatus(rectDef_t *rect, float scale, Vec4 color, int textStyle)
 {
 /*	int ofs = 0; TTimo: unused */
 	if(Display_KeyBindPending())
@@ -2230,7 +2230,7 @@ UI_DrawKeyBindStatus(rectDef_t *rect, float scale, vec4_t color, int textStyle)
 }
 
 static void
-UI_DrawGLInfo(rectDef_t *rect, float scale, vec4_t color, int textStyle)
+UI_DrawGLInfo(rectDef_t *rect, float scale, Vec4 color, int textStyle)
 {
 	char	* eptr;
 	char	buff[1024];
@@ -2291,7 +2291,7 @@ static void
 UI_OwnerDraw(float x, float y, float w, float h, float text_x, float text_y,
 	     int ownerDraw, int ownerDrawFlags, int align, float special,
 	     float scale,
-	     vec4_t color, qhandle_t shader,
+	     Vec4 color, qhandle_t shader,
 	     int textStyle)
 {
 	rectDef_t rect;
@@ -4106,7 +4106,7 @@ UI_RunMenuScript(char **args)
 }
 
 static void
-UI_GetTeamColor(vec4_t *color)
+UI_GetTeamColor(Vec4 *color)
 {
 }
 
@@ -6053,7 +6053,7 @@ _UI_SetActiveMenu(uiMenuCommand_t menu)
 	/* this should be the ONLY way the menu system is brought up
 	 * enusure minumum menu data is cached */
 	if(Menu_Count() > 0){
-		vec3_t v;
+		Vec3 v;
 		v[0] = v[1] = v[2] = 0;
 		switch(menu){
 		case UIMENU_NONE:
@@ -6161,7 +6161,7 @@ UI_PrintTime(char *buf, int bufsize, int time)
 }
 
 void
-Text_PaintCenter(float x, float y, float scale, vec4_t color, const char *text,
+Text_PaintCenter(float x, float y, float scale, Vec4 color, const char *text,
 		 float adjust)
 {
 	int len = Text_Width(text, scale, 0);
@@ -6171,7 +6171,7 @@ Text_PaintCenter(float x, float y, float scale, vec4_t color, const char *text,
 
 void
 Text_PaintCenter_AutoWrapped(float x, float y, float xmax, float ystep,
-			     float scale, vec4_t color, const char *str,
+			     float scale, Vec4 color, const char *str,
 			     float adjust)
 {
 	int	width;

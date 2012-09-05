@@ -81,7 +81,7 @@ AAS_ClearShownPolygons(void)
  * Changes Globals:		-
  * =========================================================================== */
 void
-AAS_ShowPolygon(int color, int numpoints, vec3_t *points)
+AAS_ShowPolygon(int color, int numpoints, Vec3 *points)
 {
 	int i;
 
@@ -119,7 +119,7 @@ AAS_ClearShownDebugLines(void)
  * Changes Globals:		-
  * =========================================================================== */
 void
-AAS_DebugLine(vec3_t start, vec3_t end, int color)
+AAS_DebugLine(Vec3 start, Vec3 end, int color)
 {
 	int line;
 
@@ -144,7 +144,7 @@ AAS_DebugLine(vec3_t start, vec3_t end, int color)
  * Changes Globals:		-
  * =========================================================================== */
 void
-AAS_PermanentLine(vec3_t start, vec3_t end, int color)
+AAS_PermanentLine(Vec3 start, Vec3 end, int color)
 {
 	int line;
 
@@ -158,15 +158,15 @@ AAS_PermanentLine(vec3_t start, vec3_t end, int color)
  * Changes Globals:		-
  * =========================================================================== */
 void
-AAS_DrawPermanentCross(vec3_t origin, float size, int color)
+AAS_DrawPermanentCross(Vec3 origin, float size, int color)
 {
 	int i, debugline;
-	vec3_t start, end;
+	Vec3 start, end;
 
 	for(i = 0; i < 3; i++){
-		Vec3Copy(origin, start);
+		vec3copy(origin, start);
 		start[i] += size;
-		Vec3Copy(origin, end);
+		vec3copy(origin, end);
 		end[i] -= size;
 		AAS_DebugLine(start, end, color);
 		debugline = botimport.DebugLineCreate();
@@ -180,16 +180,16 @@ AAS_DrawPermanentCross(vec3_t origin, float size, int color)
  * Changes Globals:		-
  * =========================================================================== */
 void
-AAS_DrawPlaneCross(vec3_t point, vec3_t normal, float dist, int type, int color)
+AAS_DrawPlaneCross(Vec3 point, Vec3 normal, float dist, int type, int color)
 {
 	int n0, n1, n2, j, line, lines[2];
-	vec3_t start1, end1, start2, end2;
+	Vec3 start1, end1, start2, end2;
 
 	/* make a cross in the hit plane at the hit point */
-	Vec3Copy(point, start1);
-	Vec3Copy(point, end1);
-	Vec3Copy(point, start2);
-	Vec3Copy(point, end2);
+	vec3copy(point, start1);
+	vec3copy(point, end1);
+	vec3copy(point, start2);
+	vec3copy(point, end2);
 
 	n0 = type % 3;
 	n1 = (type + 1) % 3;
@@ -233,9 +233,9 @@ AAS_DrawPlaneCross(vec3_t point, vec3_t normal, float dist, int type, int color)
  * Changes Globals:		-
  * =========================================================================== */
 void
-AAS_ShowBoundingBox(vec3_t origin, vec3_t mins, vec3_t maxs)
+AAS_ShowBoundingBox(Vec3 origin, Vec3 mins, Vec3 maxs)
 {
-	vec3_t	bboxcorners[8];
+	Vec3	bboxcorners[8];
 	int	lines[3];
 	int	i, j, line;
 
@@ -256,7 +256,7 @@ AAS_ShowBoundingBox(vec3_t origin, vec3_t mins, vec3_t maxs)
 	bboxcorners[3][1] = origin[1] + mins[1];
 	bboxcorners[3][2] = origin[2] + maxs[2];
 	/* lower corners */
-	Q_Memcpy(bboxcorners[4], bboxcorners[0], sizeof(vec3_t) * 4);
+	Q_Memcpy(bboxcorners[4], bboxcorners[0], sizeof(Vec3) * 4);
 	for(i = 0; i < 4; i++) bboxcorners[4 + i][2] = origin[2] + mins[2];
 	/* draw bounding box */
 	for(i = 0; i < 4; i++){
@@ -295,7 +295,7 @@ AAS_ShowFace(int facenum)
 	aas_edge_t *edge;
 	aas_face_t *face;
 	aas_plane_t *plane;
-	vec3_t start, end;
+	Vec3 start, end;
 
 	color = LINECOLOR_YELLOW;
 	/* check if face number is in range */
@@ -322,8 +322,8 @@ AAS_ShowFace(int facenum)
 	plane	= &aasworld.planes[face->planenum];
 	edgenum = abs(aasworld.edgeindex[face->firstedge]);
 	edge = &aasworld.edges[edgenum];
-	Vec3Copy(aasworld.vertexes[edge->v[0]], start);
-	Vec3MA(start, 20, plane->normal, end);
+	vec3copy(aasworld.vertexes[edge->v[0]], start);
+	vec3ma(start, 20, plane->normal, end);
 	AAS_DebugLine(start, end, LINECOLOR_RED);
 }	/* end of the function AAS_ShowFace */
 /* ===========================================================================
@@ -336,7 +336,7 @@ void
 AAS_ShowFacePolygon(int facenum, int color, int flip)
 {
 	int i, edgenum, numpoints;
-	vec3_t points[128];
+	Vec3 points[128];
 	aas_edge_t *edge;
 	aas_face_t *face;
 
@@ -351,7 +351,7 @@ AAS_ShowFacePolygon(int facenum, int color, int flip)
 			/* edge number */
 			edgenum = aasworld.edgeindex[face->firstedge + i];
 			edge = &aasworld.edges[abs(edgenum)];
-			Vec3Copy(aasworld.vertexes[edge->v[edgenum < 0]],
+			vec3copy(aasworld.vertexes[edge->v[edgenum < 0]],
 				points[numpoints]);
 			numpoints++;
 		}
@@ -360,7 +360,7 @@ AAS_ShowFacePolygon(int facenum, int color, int flip)
 			/* edge number */
 			edgenum = aasworld.edgeindex[face->firstedge + i];
 			edge = &aasworld.edges[abs(edgenum)];
-			Vec3Copy(aasworld.vertexes[edge->v[edgenum < 0]],
+			vec3copy(aasworld.vertexes[edge->v[edgenum < 0]],
 				points[numpoints]);
 			numpoints++;
 		}
@@ -488,15 +488,15 @@ AAS_ShowAreaPolygons(int areanum, int color, int groundfacesonly)
  * Changes Globals:		-
  * =========================================================================== */
 void
-AAS_DrawCross(vec3_t origin, float size, int color)
+AAS_DrawCross(Vec3 origin, float size, int color)
 {
 	int i;
-	vec3_t start, end;
+	Vec3 start, end;
 
 	for(i = 0; i < 3; i++){
-		Vec3Copy(origin, start);
+		vec3copy(origin, start);
 		start[i] += size;
-		Vec3Copy(origin, end);
+		vec3copy(origin, end);
 		end[i] -= size;
 		AAS_DebugLine(start, end, color);
 	}
@@ -542,21 +542,21 @@ AAS_PrintTravelType(int traveltype)
  * Changes Globals:		-
  * =========================================================================== */
 void
-AAS_DrawArrow(vec3_t start, vec3_t end, int linecolor, int arrowcolor)
+AAS_DrawArrow(Vec3 start, Vec3 end, int linecolor, int arrowcolor)
 {
-	vec3_t	dir, cross, p1, p2, up = {0, 0, 1};
+	Vec3	dir, cross, p1, p2, up = {0, 0, 1};
 	float	dot;
 
-	Vec3Sub(end, start, dir);
-	Vec3Normalize(dir);
-	dot = Vec3Dot(dir, up);
-	if(dot > 0.99 || dot < -0.99) VectorSet(cross, 1, 0, 0);
-	else Vec3Cross(dir, up, cross);
+	vec3sub(end, start, dir);
+	vec3normalize(dir);
+	dot = vec3dot(dir, up);
+	if(dot > 0.99 || dot < -0.99) vec3set(cross, 1, 0, 0);
+	else vec3cross(dir, up, cross);
 
-	Vec3MA(end, -6, dir, p1);
-	Vec3Copy(p1, p2);
-	Vec3MA(p1, 6, cross, p1);
-	Vec3MA(p2, -6, cross, p2);
+	vec3ma(end, -6, dir, p1);
+	vec3copy(p1, p2);
+	vec3ma(p1, 6, cross, p1);
+	vec3ma(p2, -6, cross, p2);
 
 	AAS_DebugLine(start, end, linecolor);
 	AAS_DebugLine(p1, end, arrowcolor);
@@ -571,7 +571,7 @@ AAS_DrawArrow(vec3_t start, vec3_t end, int linecolor, int arrowcolor)
 void
 AAS_ShowReachability(aas_reachability_t *reach)
 {
-	vec3_t	dir, cmdmove, velocity;
+	Vec3	dir, cmdmove, velocity;
 	float	speed, zvel;
 	aas_clientmove_t move;
 
@@ -585,13 +585,13 @@ AAS_ShowReachability(aas_reachability_t *reach)
 			reach->start, reach->end,
 			&speed);
 		/*  */
-		Vec3Sub(reach->end, reach->start, dir);
+		vec3sub(reach->end, reach->start, dir);
 		dir[2] = 0;
-		Vec3Normalize(dir);
+		vec3normalize(dir);
 		/* set the velocity */
-		VectorScale(dir, speed, velocity);
+		vec3scale(dir, speed, velocity);
 		/* set the command movement */
-		VectorClear(cmdmove);
+		vec3clear(cmdmove);
 		cmdmove[2] = aassettings.phys_jumpvel;
 		/*  */
 		AAS_PredictClientMovement(
@@ -609,12 +609,12 @@ AAS_ShowReachability(aas_reachability_t *reach)
 		AAS_HorizontalVelocityForJump(zvel, reach->start, reach->end,
 			&speed);
 		/*  */
-		Vec3Sub(reach->end, reach->start, dir);
+		vec3sub(reach->end, reach->start, dir);
 		dir[2] = 0;
-		Vec3Normalize(dir);
+		vec3normalize(dir);
 		/* get command movement */
-		VectorScale(dir, speed, cmdmove);
-		VectorSet(velocity, 0, 0, zvel);
+		vec3scale(dir, speed, cmdmove);
+		vec3set(velocity, 0, 0, zvel);
 		/*  */
 		AAS_PredictClientMovement(
 			&move, -1, reach->start, PRESENCE_NORMAL, qtrue,
@@ -624,14 +624,14 @@ AAS_ShowReachability(aas_reachability_t *reach)
 			SE_TOUCHJUMPPAD|SE_HITGROUNDAREA, reach->areanum, qtrue);
 	}	/* end else if */
 	else if((reach->traveltype & TRAVELTYPE_MASK) == TRAVEL_JUMPPAD){
-		VectorSet(cmdmove, 0, 0, 0);
+		vec3set(cmdmove, 0, 0, 0);
 		/*  */
-		Vec3Sub(reach->end, reach->start, dir);
+		vec3sub(reach->end, reach->start, dir);
 		dir[2] = 0;
-		Vec3Normalize(dir);
+		vec3normalize(dir);
 		/* set the velocity
 		 * NOTE: the edgenum is the horizontal velocity */
-		VectorScale(dir, reach->edgenum, velocity);
+		vec3scale(dir, reach->edgenum, velocity);
 		/* NOTE: the facenum is the Z velocity */
 		velocity[2] = reach->facenum;
 		/*  */
@@ -739,7 +739,7 @@ AAS_FloodAreas_r(int areanum, int cluster, int *done)
 }
 
 void
-AAS_FloodAreas(vec3_t origin)
+AAS_FloodAreas(Vec3 origin)
 {
 	int areanum, cluster, *done;
 

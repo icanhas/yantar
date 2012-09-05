@@ -204,8 +204,8 @@ typedef struct {
 	int			section;
 	qbool			waitingforkey;
 	char			playerModel[64];
-	vec3_t			playerViewangles;
-	vec3_t			playerMoveangles;
+	Vec3			playerViewangles;
+	Vec3			playerMoveangles;
 	int			playerLegs;
 	int			playerTorso;
 	int			playerWeapon;
@@ -217,7 +217,7 @@ typedef struct {
 
 static controls_t s_controls;
 
-static vec4_t	controls_binding_color = {1.00f, 0.43f, 0.00f, 1.00f};
+static Vec4	controls_binding_color = {1.00f, 0.43f, 0.00f, 1.00f};
 
 static bind_t	g_bindings[] =
 {
@@ -466,8 +466,8 @@ Controls_GetCvarValue(char* name)
 static void
 Controls_UpdateModel(int anim)
 {
-	VectorClear(s_controls.playerViewangles);
-	VectorClear(s_controls.playerMoveangles);
+	vec3clear(s_controls.playerViewangles);
+	vec3clear(s_controls.playerMoveangles);
 	s_controls.playerViewangles[YAW] = 180 - 30;
 	s_controls.playerMoveangles[YAW] =
 		s_controls.playerViewangles[YAW];

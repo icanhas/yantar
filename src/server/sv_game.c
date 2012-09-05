@@ -115,7 +115,7 @@ void
 SV_SetBrushModel(sharedEntity_t *ent, const char *name)
 {
 	clipHandle_t h;
-	vec3_t mins, maxs;
+	Vec3 mins, maxs;
 
 	if(!name)
 		Com_Errorf(ERR_DROP, "SV_SetBrushModel: NULL");
@@ -129,8 +129,8 @@ SV_SetBrushModel(sharedEntity_t *ent, const char *name)
 
 	h = CM_InlineModel(ent->s.modelindex);
 	CM_ModelBounds(h, mins, maxs);
-	Vec3Copy (mins, ent->r.mins);
-	Vec3Copy (maxs, ent->r.maxs);
+	vec3copy (mins, ent->r.mins);
+	vec3copy (maxs, ent->r.maxs);
 	ent->r.bmodel = qtrue;
 
 	ent->r.contents = -1;	/* we don't know exactly what is in the brushes */
@@ -146,7 +146,7 @@ SV_SetBrushModel(sharedEntity_t *ent, const char *name)
  * Also checks portalareas so that doors block sight
  */
 qbool
-SV_inPVS(const vec3_t p1, const vec3_t p2)
+SV_inPVS(const Vec3 p1, const Vec3 p2)
 {
 	int	leafnum;
 	int	cluster;
@@ -175,7 +175,7 @@ SV_inPVS(const vec3_t p1, const vec3_t p2)
  * Does NOT check portalareas
  */
 qbool
-SV_inPVSIgnorePortals(const vec3_t p1, const vec3_t p2)
+SV_inPVSIgnorePortals(const Vec3 p1, const Vec3 p2)
 {
 	int	leafnum;
 	int	cluster;
@@ -214,7 +214,7 @@ SV_AdjustAreaPortalState(sharedEntity_t *ent, qbool open)
  * SV_EntityContact
  */
 qbool
-SV_EntityContact(vec3_t mins, vec3_t maxs, const sharedEntity_t *gEnt,
+SV_EntityContact(Vec3 mins, Vec3 maxs, const sharedEntity_t *gEnt,
 		 int capsule)
 {
 	const float	*origin, *angles;
@@ -871,7 +871,7 @@ SV_GameSystemCalls(intptr_t *args)
 		return 0;
 
 	case TRAP_ANGLEVECTORS:
-		AngleVectors(VMA(1), VMA(2), VMA(3), VMA(4));
+		anglevec3s(VMA(1), VMA(2), VMA(3), VMA(4));
 		return 0;
 
 	case TRAP_PERPENDICULARVECTOR:

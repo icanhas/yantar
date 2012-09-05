@@ -136,7 +136,7 @@ PrintContents(int contents)
  * Changes Globals:		-
  * =========================================================================== */
 bsp_trace_t
-AAS_Trace(vec3_t start, vec3_t mins, vec3_t maxs, vec3_t end, int passent,
+AAS_Trace(Vec3 start, Vec3 mins, Vec3 maxs, Vec3 end, int passent,
 	  int contentmask)
 {
 	bsp_trace_t bsptrace;
@@ -151,7 +151,7 @@ AAS_Trace(vec3_t start, vec3_t mins, vec3_t maxs, vec3_t end, int passent,
  * Changes Globals:		-
  * =========================================================================== */
 int
-AAS_PointContents(vec3_t point)
+AAS_PointContents(Vec3 point)
 {
 	return botimport.PointContents(point);
 }	/* end of the function AAS_PointContents */
@@ -163,7 +163,7 @@ AAS_PointContents(vec3_t point)
  * =========================================================================== */
 qbool
 AAS_EntityCollision(int entnum,
-		    vec3_t start, vec3_t boxmins, vec3_t boxmaxs, vec3_t end,
+		    Vec3 start, Vec3 boxmins, Vec3 boxmaxs, Vec3 end,
 		    int contentmask, bsp_trace_t *trace)
 {
 	bsp_trace_t enttrace;
@@ -184,7 +184,7 @@ AAS_EntityCollision(int entnum,
  * Changes Globals:		-
  * =========================================================================== */
 qbool
-AAS_inPVS(vec3_t p1, vec3_t p2)
+AAS_inPVS(Vec3 p1, Vec3 p2)
 {
 	return botimport.inPVS(p1, p2);
 }	/* end of the function AAS_InPVS */
@@ -196,7 +196,7 @@ AAS_inPVS(vec3_t p1, vec3_t p2)
  * Changes Globals:		-
  * =========================================================================== */
 qbool
-AAS_inPHS(vec3_t p1, vec3_t p2)
+AAS_inPHS(Vec3 p1, Vec3 p2)
 {
 	return qtrue;
 }	/* end of the function AAS_inPHS */
@@ -207,8 +207,8 @@ AAS_inPHS(vec3_t p1, vec3_t p2)
  * Changes Globals:		-
  * =========================================================================== */
 void
-AAS_BSPModelMinsMaxsOrigin(int modelnum, vec3_t angles, vec3_t mins, vec3_t maxs,
-			   vec3_t origin)
+AAS_BSPModelMinsMaxsOrigin(int modelnum, Vec3 angles, Vec3 mins, Vec3 maxs,
+			   Vec3 origin)
 {
 	botimport.BSPModelMinsMaxsOrigin(modelnum, angles, mins, maxs, origin);
 }	/* end of the function AAS_BSPModelMinsMaxs */
@@ -230,7 +230,7 @@ AAS_UnlinkFromBSPLeaves(bsp_link_t *leaves)
  * Changes Globals:		-
  * =========================================================================== */
 bsp_link_t *
-AAS_BSPLinkEntity(vec3_t absmins, vec3_t absmaxs, int entnum, int modelnum)
+AAS_BSPLinkEntity(Vec3 absmins, Vec3 absmaxs, int entnum, int modelnum)
 {
 	return NULL;
 }	/* end of the function AAS_BSPLinkEntity */
@@ -241,7 +241,7 @@ AAS_BSPLinkEntity(vec3_t absmins, vec3_t absmaxs, int entnum, int modelnum)
  * Changes Globals:		-
  * =========================================================================== */
 int
-AAS_BoxEntities(vec3_t absmins, vec3_t absmaxs, int *list, int maxcount)
+AAS_BoxEntities(Vec3 absmins, Vec3 absmaxs, int *list, int maxcount)
 {
 	return 0;
 }	/* end of the function AAS_BoxEntities */
@@ -301,14 +301,14 @@ AAS_ValueForBSPEpairKey(int ent, char *key, char *value, int size)
  * Changes Globals:		-
  * =========================================================================== */
 int
-AAS_VectorForBSPEpairKey(int ent, char *key, vec3_t v)
+AAS_VectorForBSPEpairKey(int ent, char *key, Vec3 v)
 {
 	char buf[MAX_EPAIRKEY];
 	double v1, v2, v3;
 
-	VectorClear(v);
+	vec3clear(v);
 	if(!AAS_ValueForBSPEpairKey(ent, key, buf, MAX_EPAIRKEY)) return qfalse;
-	/* scanf into doubles, then assign, so it is vec_t size independent */
+	/* scanf into doubles, then assign, so it is Scalar size independent */
 	v1 = v2 = v3 = 0;
 	sscanf(buf, "%lf %lf %lf", &v1, &v2, &v3);
 	v[0] = v1;
@@ -451,7 +451,7 @@ AAS_ParseBSPEntities(void)
  * Changes Globals:		-
  * =========================================================================== */
 int
-AAS_BSPTraceLight(vec3_t start, vec3_t end, vec3_t endpos, int *red, int *green,
+AAS_BSPTraceLight(Vec3 start, Vec3 end, Vec3 endpos, int *red, int *green,
 		  int *blue)
 {
 	return 0;

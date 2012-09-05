@@ -426,12 +426,12 @@ CG_ItemPickup(int itemNum)
 int
 CG_WaterLevel(centity_t *cent)
 {
-	vec3_t	point;
+	Vec3	point;
 	int	contents, sample1, sample2, anim, waterlevel;
 
 	/* get waterlevel, accounting for ducking */
 	waterlevel = 0;
-	Vec3Copy(cent->lerpOrigin, point);
+	vec3copy(cent->lerpOrigin, point);
 	point[2] += MINS_Z + 1;
 	anim = cent->currentState.legsAnim & ~ANIM_TOGGLEBIT;
 
@@ -515,11 +515,11 @@ CG_PainEvent(centity_t *cent, int health)
  */
 #define DEBUGNAME(x) if(cg_debugEvents.integer){CG_Printf(x "\n"); }
 void
-CG_EntityEvent(centity_t *cent, vec3_t position)
+CG_EntityEvent(centity_t *cent, Vec3 position)
 {
 	entityState_t *es;
 	int event;
-	vec3_t	dir;
+	Vec3	dir;
 	const char              *s;
 	int	clientNum;
 	clientInfo_t *ci;
@@ -648,7 +648,7 @@ CG_EntityEvent(centity_t *cent, vec3_t position)
 		DEBUGNAME("EV_JUMP_PAD");
 /*		CG_Printf( "EV_JUMP_PAD w/effect #%i\n", es->eventParm ); */
 		{
-			vec3_t up = {0, 0, 1};
+			Vec3 up = {0, 0, 1};
 
 
 			CG_SmokePuff(cent->lerpOrigin, up,
@@ -1012,10 +1012,10 @@ CG_EntityEvent(centity_t *cent, vec3_t position)
 		if(es->clientNum == cg.snap->ps.clientNum &&
 		   !cg.renderingThirdPerson){
 			if(cg_drawGun.integer == 2)
-				Vec3MA(es->origin2, 8, cg.refdef.viewaxis[1],
+				vec3ma(es->origin2, 8, cg.refdef.viewaxis[1],
 					es->origin2);
 			else if(cg_drawGun.integer == 3)
-				Vec3MA(es->origin2, 4, cg.refdef.viewaxis[1],
+				vec3ma(es->origin2, 4, cg.refdef.viewaxis[1],
 					es->origin2);
 		}
 

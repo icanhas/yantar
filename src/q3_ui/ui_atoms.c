@@ -155,7 +155,7 @@ UI_ForceMenuOff(void)
  * UI_LerpColor
  */
 void
-UI_LerpColor(vec4_t a, vec4_t b, vec4_t c, float t)
+UI_LerpColor(Vec4 a, Vec4 b, Vec4 c, float t)
 {
 	int i;
 
@@ -338,7 +338,7 @@ static int	propMapB[26][3] = {
  * UI_DrawBannerString
  */
 static void
-UI_DrawBannerString2(int x, int y, const char* str, vec4_t color)
+UI_DrawBannerString2(int x, int y, const char* str, Vec4 color)
 {
 	const char * s;
 	unsigned char ch;
@@ -384,12 +384,12 @@ UI_DrawBannerString2(int x, int y, const char* str, vec4_t color)
 }
 
 void
-UI_DrawBannerString(int x, int y, const char* str, int style, vec4_t color)
+UI_DrawBannerString(int x, int y, const char* str, int style, Vec4 color)
 {
 	const char * s;
 	int	ch;
 	int	width;
-	vec4_t drawcolor;
+	Vec4 drawcolor;
 
 	/* find the width of the drawn text */
 	s = str;
@@ -453,7 +453,7 @@ UI_ProportionalStringWidth(const char* str)
 }
 
 static void
-UI_DrawProportionalString2(int x, int y, const char* str, vec4_t color,
+UI_DrawProportionalString2(int x, int y, const char* str, Vec4 color,
 			   float sizeScale,
 			   qhandle_t charset)
 {
@@ -516,9 +516,9 @@ UI_ProportionalSizeScale(int style)
  * UI_DrawProportionalString
  */
 void
-UI_DrawProportionalString(int x, int y, const char* str, int style, vec4_t color)
+UI_DrawProportionalString(int x, int y, const char* str, int style, Vec4 color)
 {
-	vec4_t	drawcolor;
+	Vec4	drawcolor;
 	int	width;
 	float	sizeScale;
 
@@ -583,7 +583,7 @@ UI_DrawProportionalString(int x, int y, const char* str, int style, vec4_t color
 void
 UI_DrawProportionalString_AutoWrapped(int x, int y, int xmax, int ystep,
 				      const char* str, int style,
-				      vec4_t color)
+				      Vec4 color)
 {
 	int	width;
 	char	*s1,*s2,*s3;
@@ -643,12 +643,12 @@ UI_DrawProportionalString_AutoWrapped(int x, int y, int xmax, int ystep,
  * UI_DrawString2
  */
 static void
-UI_DrawString2(int x, int y, const char* str, vec4_t color, int charw, int charh)
+UI_DrawString2(int x, int y, const char* str, Vec4 color, int charw, int charh)
 {
 	const char * s;
 	char	ch;
 	int	forceColor = qfalse;	/* APSFIXME; */
-	vec4_t	tempcolor;
+	Vec4	tempcolor;
 	float	ax;
 	float	ay;
 	float	aw;
@@ -702,15 +702,15 @@ UI_DrawString2(int x, int y, const char* str, vec4_t color, int charw, int charh
  * UI_DrawString
  */
 void
-UI_DrawString(int x, int y, const char* str, int style, vec4_t color)
+UI_DrawString(int x, int y, const char* str, int style, Vec4 color)
 {
 	int	len;
 	int	charw;
 	int	charh;
-	vec4_t	newcolor;
-	vec4_t	lowlight;
+	Vec4	newcolor;
+	Vec4	lowlight;
 	float   *drawcolor;
-	vec4_t	dropcolor;
+	Vec4	dropcolor;
 
 	if(!str)
 		return;
@@ -771,7 +771,7 @@ UI_DrawString(int x, int y, const char* str, int style, vec4_t color)
  * UI_DrawChar
  */
 void
-UI_DrawChar(int x, int y, int ch, int style, vec4_t color)
+UI_DrawChar(int x, int y, int ch, int style, Vec4 color)
 {
 	char buff[2];
 

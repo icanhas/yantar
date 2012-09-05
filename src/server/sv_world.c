@@ -96,11 +96,11 @@ SV_SectorList_f(void)
  * Builds a uniformly subdivided tree for the given world size
  */
 static worldSector_t *
-SV_CreateworldSector(int depth, vec3_t mins, vec3_t maxs)
+SV_CreateworldSector(int depth, Vec3 mins, Vec3 maxs)
 {
 	worldSector_t *anode;
-	vec3_t	size;
-	vec3_t	mins1, maxs1, mins2, maxs2;
+	Vec3	size;
+	Vec3	mins1, maxs1, mins2, maxs2;
 
 	anode = &sv_worldSectors[sv_numworldSectors];
 	sv_numworldSectors++;
@@ -111,17 +111,17 @@ SV_CreateworldSector(int depth, vec3_t mins, vec3_t maxs)
 		return anode;
 	}
 
-	Vec3Sub (maxs, mins, size);
+	vec3sub (maxs, mins, size);
 	if(size[0] > size[1])
 		anode->axis = 0;
 	else
 		anode->axis = 1;
 
 	anode->dist = 0.5 * (maxs[anode->axis] + mins[anode->axis]);
-	Vec3Copy (mins, mins1);
-	Vec3Copy (mins, mins2);
-	Vec3Copy (maxs, maxs1);
-	Vec3Copy (maxs, maxs2);
+	vec3copy (mins, mins1);
+	vec3copy (mins, mins2);
+	vec3copy (maxs, maxs1);
+	vec3copy (maxs, maxs2);
 
 	maxs1[anode->axis] = mins2[anode->axis] = anode->dist;
 
@@ -139,7 +139,7 @@ void
 SV_ClearWorld(void)
 {
 	clipHandle_t h;
-	vec3_t mins, maxs;
+	Vec3 mins, maxs;
 
 	Q_Memset(sv_worldSectors, 0, sizeof(sv_worldSectors));
 	sv_numworldSectors = 0;
@@ -256,8 +256,8 @@ SV_LinkEntity(sharedEntity_t *gEnt)
 		}
 	}else{
 		/* normal */
-		Vec3Add (origin, gEnt->r.mins, gEnt->r.absmin);
-		Vec3Add (origin, gEnt->r.maxs, gEnt->r.absmax);
+		vec3add (origin, gEnt->r.mins, gEnt->r.absmin);
+		vec3add (origin, gEnt->r.maxs, gEnt->r.absmax);
 	}
 
 	/* because movement is clipped an epsilon away from an actual edge,
@@ -405,7 +405,7 @@ SV_AreaEntities_r(worldSector_t *node, areaParms_t *ap)
  * SV_AreaEntities
  */
 int
-SV_AreaEntities(const vec3_t mins, const vec3_t maxs, int *entityList,
+SV_AreaEntities(const Vec3 mins, const Vec3 maxs, int *entityList,
 		int maxcount)
 {
 	areaParms_t ap;
@@ -427,11 +427,11 @@ SV_AreaEntities(const vec3_t mins, const vec3_t maxs, int *entityList,
 
 
 typedef struct {
-	vec3_t		boxmins, boxmaxs;	/* enclose the test object along entire move */
+	Vec3		boxmins, boxmaxs;	/* enclose the test object along entire move */
 	const float	*mins;
 	const float	*maxs;	/* size of the moving object */
 	const float	*start;
-	vec3_t		end;
+	Vec3		end;
 	trace_t		trace;
 	int		passEntityNum;
 	int		contentmask;
@@ -444,8 +444,8 @@ typedef struct {
  *
  */
 void
-SV_ClipToEntity(trace_t *trace, const vec3_t start, const vec3_t mins,
-		const vec3_t maxs, const vec3_t end, int entityNum,
+SV_ClipToEntity(trace_t *trace, const Vec3 start, const Vec3 mins,
+		const Vec3 maxs, const Vec3 end, int entityNum,
 		int contentmask,
 		int capsule)
 {
@@ -573,8 +573,8 @@ SV_ClipMoveToEntities(moveclip_t *clip)
  * passEntityNum and entities owned by passEntityNum are explicitly not checked.
  */
 void
-SV_Trace(trace_t *results, const vec3_t start, vec3_t mins, vec3_t maxs,
-	 const vec3_t end, int passEntityNum, int contentmask,
+SV_Trace(trace_t *results, const Vec3 start, Vec3 mins, Vec3 maxs,
+	 const Vec3 end, int passEntityNum, int contentmask,
 	 int capsule)
 {
 	moveclip_t clip;
@@ -598,8 +598,8 @@ SV_Trace(trace_t *results, const vec3_t start, vec3_t mins, vec3_t maxs,
 
 	clip.contentmask = contentmask;
 	clip.start = start;
-/*	Vec3Copy( clip.trace.endpos, clip.end ); */
-	Vec3Copy(end, clip.end);
+/*	vec3copy( clip.trace.endpos, clip.end ); */
+	vec3copy(end, clip.end);
 	clip.mins = mins;
 	clip.maxs = maxs;
 	clip.passEntityNum = passEntityNum;
@@ -631,7 +631,7 @@ SV_Trace(trace_t *results, const vec3_t start, vec3_t mins, vec3_t maxs,
  * SV_PointContents
  */
 int
-SV_PointContents(const vec3_t p, int passEntityNum)
+SV_PointContents(const Vec3 p, int passEntityNum)
 {
 	int	touch[MAX_GENTITIES];
 	sharedEntity_t *hit;

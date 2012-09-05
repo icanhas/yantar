@@ -96,7 +96,7 @@ AAS_AltRoutingFloodCluster_r(int areanum)
  * Changes Globals:		-
  * =========================================================================== */
 int
-AAS_AlternativeRouteGoals(vec3_t start, int startareanum, vec3_t goal,
+AAS_AlternativeRouteGoals(Vec3 start, int startareanum, Vec3 goal,
 			  int goalareanum, int travelflags,
 			  aas_altroutegoal_t *altroutegoals,
 			  int maxaltroutegoals,
@@ -109,7 +109,7 @@ AAS_AlternativeRouteGoals(vec3_t start, int startareanum, vec3_t goal,
 	int	numaltroutegoals, nummidrangeareas;
 	int	starttime, goaltime, goaltraveltime;
 	float	dist, bestdist;
-	vec3_t	mid, dir;
+	Vec3	mid, dir;
 #ifdef ALTROUTE_DEBUG
 	int	startmillisecs;
 
@@ -167,19 +167,19 @@ AAS_AlternativeRouteGoals(vec3_t start, int startareanum, vec3_t goal,
 		AAS_AltRoutingFloodCluster_r(i);
 		/* now we've got a cluster with areas through which an alternative route could go
 		 * get the 'center' of the cluster */
-		VectorClear(mid);
+		vec3clear(mid);
 		for(j = 0; j < numclusterareas; j++)
-			Vec3Add(mid, aasworld.areas[clusterareas[j]].center,
+			vec3add(mid, aasworld.areas[clusterareas[j]].center,
 				mid);
-		VectorScale(mid, 1.0 / numclusterareas, mid);
+		vec3scale(mid, 1.0 / numclusterareas, mid);
 		/* get the area closest to the center of the cluster */
 		bestdist = 999999;
 		bestareanum = 0;
 		for(j = 0; j < numclusterareas; j++){
-			Vec3Sub(mid,
+			vec3sub(mid,
 				aasworld.areas[clusterareas[j]].center,
 				dir);
-			dist = Vec3Len(dir);
+			dist = vec3len(dir);
 			if(dist < bestdist){
 				bestdist = dist;
 				bestareanum = clusterareas[j];
@@ -187,7 +187,7 @@ AAS_AlternativeRouteGoals(vec3_t start, int startareanum, vec3_t goal,
 		}
 		/* now we've got an area for an alternative route */
 		/* FIXME: add alternative goal origin */
-		Vec3Copy(aasworld.areas[bestareanum].center,
+		vec3copy(aasworld.areas[bestareanum].center,
 			altroutegoals[numaltroutegoals].origin);
 		altroutegoals[numaltroutegoals].areanum = bestareanum;
 		altroutegoals[numaltroutegoals].starttraveltime =

@@ -23,21 +23,21 @@
 void
 RB_ToneMap(int autoExposure)
 {
-	vec4_t	white;
-	vec2_t	texScale;
+	Vec4	white;
+	Vec2	texScale;
 
 	texScale[0] =
 		texScale[1] = 1.0f;
 
-	VectorSet4(white, 1, 1, 1, 1);
+	vec3set4(white, 1, 1, 1, 1);
 
 	if(glRefConfig.framebufferObject && autoExposure){
 		/* determine average log luminance */
-		vec4_t	srcBox, dstBox, color;
+		Vec4	srcBox, dstBox, color;
 		int	size = 256, currentScratch, nextScratch, tmp;
 
-		VectorSet4(srcBox, 0, 0, tr.renderFbo->width, tr.renderFbo->height);
-		VectorSet4(dstBox, 0, 0, 256, 256);
+		vec3set4(srcBox, 0, 0, tr.renderFbo->width, tr.renderFbo->height);
+		vec3set4(dstBox, 0, 0, 256, 256);
 
 		FBO_Blit(tr.renderFbo, srcBox, texScale, tr.textureScratchFbo[0], dstBox,
 			&tr.calclevels4xShader[0], white,
@@ -48,9 +48,9 @@ RB_ToneMap(int autoExposure)
 
 		/* downscale to 1x1 texture */
 		while(size > 1){
-			VectorSet4(srcBox, 0, 0, size, size);
+			vec3set4(srcBox, 0, 0, size, size);
 			size >>= 2;
-			VectorSet4(dstBox, 0, 0, size, size);
+			vec3set4(dstBox, 0, 0, size, size);
 			FBO_Blit(tr.textureScratchFbo[currentScratch], srcBox, texScale,
 				tr.textureScratchFbo[nextScratch], dstBox, &tr.calclevels4xShader[1], white,
 				0);
@@ -61,8 +61,8 @@ RB_ToneMap(int autoExposure)
 		}
 
 		/* blend with old log luminance for gradual change */
-		VectorSet4(srcBox, 0, 0, 0, 0);
-		VectorSet4(dstBox, 0, 0, 1, 1);
+		vec3set4(srcBox, 0, 0, 0, 0);
+		vec3set4(dstBox, 0, 0, 1, 1);
 
 		color[0] =
 			color[1] =
@@ -79,10 +79,10 @@ RB_ToneMap(int autoExposure)
 
 	if(glRefConfig.framebufferObject){
 		/* tonemap */
-		vec4_t srcBox, dstBox, color;
+		Vec4 srcBox, dstBox, color;
 
-		VectorSet4(srcBox, 0, 0, tr.renderFbo->width, tr.renderFbo->height);
-		VectorSet4(dstBox, 0, 0, tr.screenScratchFbo->width, tr.screenScratchFbo->height);
+		vec3set4(srcBox, 0, 0, tr.renderFbo->width, tr.renderFbo->height);
+		vec3set4(dstBox, 0, 0, tr.screenScratchFbo->width, tr.screenScratchFbo->height);
 
 		color[0] =
 			color[1] =
@@ -109,13 +109,13 @@ RB_ToneMap(int autoExposure)
 void
 RB_BokehBlur(float blur)
 {
-	vec4_t	white;
-	vec2_t	texScale;
+	Vec4	white;
+	Vec2	texScale;
 
 	texScale[0] =
 		texScale[1] = 1.0f;
 
-	VectorSet4(white, 1, 1, 1, 1);
+	vec3set4(white, 1, 1, 1, 1);
 
 	blur *= 10.0f;
 
@@ -124,12 +124,12 @@ RB_BokehBlur(float blur)
 
 	if(glRefConfig.framebufferObject){
 		/* bokeh blur */
-		vec4_t srcBox, dstBox, color;
+		Vec4 srcBox, dstBox, color;
 
 		if(blur > 0.0f){
 			/* create a quarter texture */
-			VectorSet4(srcBox, 0, 0, tr.screenScratchFbo->width, tr.screenScratchFbo->height);
-			VectorSet4(dstBox, 0, 0, tr.quarterFbo[0]->width, tr.quarterFbo[0]->height);
+			vec3set4(srcBox, 0, 0, tr.screenScratchFbo->width, tr.screenScratchFbo->height);
+			vec3set4(dstBox, 0, 0, tr.quarterFbo[0]->width, tr.quarterFbo[0]->height);
 
 			FBO_Blit(tr.screenScratchFbo, srcBox, texScale, tr.quarterFbo[0], dstBox,
 				&tr.textureColorShader, white,
@@ -139,8 +139,8 @@ RB_BokehBlur(float blur)
 #ifndef HQ_BLUR
 		if(blur > 1.0f){
 			/* create a 1/16th texture */
-			VectorSet4(srcBox, 0, 0, tr.quarterFbo[0]->width, tr.quarterFbo[0]->height);
-			VectorSet4(dstBox, 0, 0, tr.textureScratchFbo[0]->width,
+			vec3set4(srcBox, 0, 0, tr.quarterFbo[0]->width, tr.quarterFbo[0]->height);
+			vec3set4(dstBox, 0, 0, tr.textureScratchFbo[0]->width,
 				tr.textureScratchFbo[0]->height);
 
 			FBO_Blit(tr.quarterFbo[0], srcBox, texScale, tr.textureScratchFbo[0], dstBox,
@@ -151,10 +151,10 @@ RB_BokehBlur(float blur)
 
 		if(blur > 0.0f && blur <= 1.0f){
 			/* Crossfade original with quarter texture */
-			VectorSet4(srcBox, 0, 0, tr.quarterFbo[0]->width, tr.quarterFbo[0]->height);
-			VectorSet4(dstBox, 0, 0, tr.screenScratchFbo->width, tr.screenScratchFbo->height);
+			vec3set4(srcBox, 0, 0, tr.quarterFbo[0]->width, tr.quarterFbo[0]->height);
+			vec3set4(dstBox, 0, 0, tr.screenScratchFbo->width, tr.screenScratchFbo->height);
 
-			VectorSet4(color, 1, 1, 1, blur);
+			vec3set4(color, 1, 1, 1, blur);
 
 			FBO_Blit(tr.quarterFbo[0], srcBox, texScale, tr.screenScratchFbo, dstBox,
 				&tr.textureColorShader, color,
@@ -164,18 +164,18 @@ RB_BokehBlur(float blur)
 		/* ok blur, but can see some pixelization */
 		else if(blur > 1.0f && blur <= 2.0f){
 			/* crossfade quarter texture with 1/16th texture */
-			VectorSet4(srcBox, 0, 0, tr.quarterFbo[0]->width, tr.quarterFbo[0]->height);
-			VectorSet4(dstBox, 0, 0, tr.screenScratchFbo->width, tr.screenScratchFbo->height);
+			vec3set4(srcBox, 0, 0, tr.quarterFbo[0]->width, tr.quarterFbo[0]->height);
+			vec3set4(dstBox, 0, 0, tr.screenScratchFbo->width, tr.screenScratchFbo->height);
 
 			FBO_Blit(tr.quarterFbo[0], srcBox, texScale, tr.screenScratchFbo, dstBox,
 				&tr.textureColorShader, white,
 				0);
 
-			VectorSet4(srcBox, 0, 0, tr.textureScratchFbo[0]->width,
+			vec3set4(srcBox, 0, 0, tr.textureScratchFbo[0]->width,
 				tr.textureScratchFbo[0]->height);
-			VectorSet4(dstBox, 0, 0, tr.screenScratchFbo->width, tr.screenScratchFbo->height);
+			vec3set4(dstBox, 0, 0, tr.screenScratchFbo->width, tr.screenScratchFbo->height);
 
-			VectorSet4(color, 1, 1, 1, blur - 1.0f);
+			vec3set4(color, 1, 1, 1, blur - 1.0f);
 
 			FBO_Blit(tr.textureScratchFbo[0], srcBox, texScale, tr.screenScratchFbo, dstBox,
 				&tr.textureColorShader, color,
@@ -184,13 +184,13 @@ RB_BokehBlur(float blur)
 			/* blur 1/16th texture then replace */
 			int i;
 
-			VectorSet4(srcBox, 0, 0, tr.textureScratchFbo[0]->width,
+			vec3set4(srcBox, 0, 0, tr.textureScratchFbo[0]->width,
 				tr.textureScratchFbo[0]->height);
-			VectorSet4(dstBox, 0, 0, tr.textureScratchFbo[1]->width,
+			vec3set4(dstBox, 0, 0, tr.textureScratchFbo[1]->width,
 				tr.textureScratchFbo[1]->height);
 
 			for(i = 0; i < 2; i++){
-				vec2_t	blurTexScale;
+				Vec2	blurTexScale;
 				float	subblur;
 
 				subblur = ((blur - 2.0f) / 2.0f) / 3.0f * (float)(i + 1);
@@ -213,9 +213,9 @@ RB_BokehBlur(float blur)
 						0);
 			}
 
-			VectorSet4(srcBox, 0, 0, tr.textureScratchFbo[1]->width,
+			vec3set4(srcBox, 0, 0, tr.textureScratchFbo[1]->width,
 				tr.textureScratchFbo[1]->height);
-			VectorSet4(dstBox, 0, 0, tr.screenScratchFbo->width, tr.screenScratchFbo->height);
+			vec3set4(dstBox, 0, 0, tr.screenScratchFbo->width, tr.screenScratchFbo->height);
 
 			FBO_Blit(tr.textureScratchFbo[1], srcBox, texScale, tr.screenScratchFbo, dstBox,
 				&tr.textureColorShader, white,
@@ -226,16 +226,16 @@ RB_BokehBlur(float blur)
 			/* blur quarter texture then replace */
 			int i;
 
-			VectorSet4(srcBox, 0, 0, tr.quarterFbo[0]->width, tr.quarterFbo[0]->height);
-			VectorSet4(dstBox, 0, 0, tr.quarterFbo[1]->width, tr.quarterFbo[1]->height);
+			vec3set4(srcBox, 0, 0, tr.quarterFbo[0]->width, tr.quarterFbo[0]->height);
+			vec3set4(dstBox, 0, 0, tr.quarterFbo[1]->width, tr.quarterFbo[1]->height);
 
 			src = tr.quarterFbo[0];
 			dst = tr.quarterFbo[1];
 
-			VectorSet4(color, 0.5f, 0.5f, 0.5f, 1);
+			vec3set4(color, 0.5f, 0.5f, 0.5f, 1);
 
 			for(i = 0; i < 2; i++){
-				vec2_t	blurTexScale;
+				Vec2	blurTexScale;
 				float	subblur;
 
 				subblur = (blur - 1.0f) / 2.0f * (float)(i + 1);
@@ -256,8 +256,8 @@ RB_BokehBlur(float blur)
 					GLS_SRCBLEND_SRC_ALPHA | GLS_DSTBLEND_ONE_MINUS_SRC_ALPHA);
 			}
 
-			VectorSet4(srcBox, 0, 0, 512, 512);
-			VectorSet4(dstBox, 0, 0, tr.screenScratchFbo->width, tr.screenScratchFbo->height);
+			vec3set4(srcBox, 0, 0, 512, 512);
+			vec3set4(dstBox, 0, 0, tr.screenScratchFbo->width, tr.screenScratchFbo->height);
 
 			FBO_Blit(tr.quarterFbo[1], srcBox, texScale, tr.screenScratchFbo, dstBox,
 				&tr.textureColorShader, white,
@@ -279,17 +279,17 @@ RB_RadialBlur(FBO_t *srcFbo, FBO_t *dstFbo, int passes, float stretch, float x, 
 	float scale;
 
 	{
-		vec4_t	srcBox, dstBox, color;
-		vec2_t	texScale;
+		Vec4	srcBox, dstBox, color;
+		Vec2	texScale;
 
 		texScale[0] =
 			texScale[1] = 1.0f;
 
 		alpha *= inc;
-		VectorSet4(color, alpha, alpha, alpha, 1.0f);
+		vec3set4(color, alpha, alpha, alpha, 1.0f);
 
-		VectorSet4(srcBox, 0, 0, srcFbo->width, srcFbo->height);
-		VectorSet4(dstBox, x, y, w, h);
+		vec3set4(srcBox, 0, 0, srcFbo->width, srcFbo->height);
+		vec3set4(dstBox, x, y, w, h);
 		FBO_Blit(srcFbo, srcBox, texScale, dstFbo, dstBox, &tr.textureColorShader, color, 0);
 
 		--passes;
@@ -349,34 +349,34 @@ RB_UpdateSunFlareVis(void)
 void
 RB_GodRays(void)
 {
-	vec3_t	dir;
+	Vec3	dir;
 	float	dot;
 	const float cutoff = 0.25f;
 	qbool		colorize = qtrue;
 
 	float		w, h, w2, h2;
-	mat4x4	mvp;
-	vec4_t		pos, hpos;
+	Mat44	mvp;
+	Vec4		pos, hpos;
 
 	if(!backEnd.hasSunFlare)
 		return;
 
-	Vec3Sub(backEnd.sunFlarePos, backEnd.viewParms.or.origin, dir);
-	Vec3Normalize(dir);
+	vec3sub(backEnd.sunFlarePos, backEnd.viewParms.or.origin, dir);
+	vec3normalize(dir);
 
-	dot = Vec3Dot(dir, backEnd.viewParms.or.axis[0]);
+	dot = vec3dot(dir, backEnd.viewParms.or.axis[0]);
 	if(dot < cutoff)
 		return;
 
 	if(!RB_UpdateSunFlareVis())
 		return;
 
-	Vec3Copy(backEnd.sunFlarePos, pos);
+	vec3copy(backEnd.sunFlarePos, pos);
 	pos[3] = 1.f;
 
 	/* project sun point */
-	Mat4x4Mul(backEnd.viewParms.projectionMatrix, backEnd.viewParms.world.modelMatrix, mvp);
-	Mat4x4Transform(mvp, pos, hpos);
+	mat44mul(backEnd.viewParms.projectionMatrix, backEnd.viewParms.world.modelMatrix, mvp);
+	mat44transform(mvp, pos, hpos);
 
 	/* transform to UV coords */
 	hpos[3] = 0.5f / hpos[3];
@@ -394,24 +394,24 @@ RB_GodRays(void)
 	{
 		float mul = 1.f;
 
-		vec4_t	srcBox, dstBox;
-		vec4_t	color;
-		vec2_t	texScale;
+		Vec4	srcBox, dstBox;
+		Vec4	color;
+		Vec2	texScale;
 
 		texScale[0] =
 			texScale[1] = 1.0f;
 
-		VectorSet4(color, mul, mul, mul, 1);
+		vec3set4(color, mul, mul, mul, 1);
 
 		/* first, downsample the framebuffer */
-		VectorSet4(srcBox, 0, 0, tr.godRaysFbo->width, tr.godRaysFbo->height);
-		VectorSet4(dstBox, 0, 0, tr.quarterFbo[0]->width, tr.quarterFbo[0]->height);
+		vec3set4(srcBox, 0, 0, tr.godRaysFbo->width, tr.godRaysFbo->height);
+		vec3set4(dstBox, 0, 0, tr.quarterFbo[0]->width, tr.quarterFbo[0]->height);
 		FBO_Blit(tr.godRaysFbo, srcBox, texScale, tr.quarterFbo[0], dstBox, &tr.textureColorShader,
 			color,
 			0);
 
 		if(colorize){
-			VectorSet4(srcBox, 0, 0, tr.screenScratchFbo->width, tr.screenScratchFbo->height);
+			vec3set4(srcBox, 0, 0, tr.screenScratchFbo->width, tr.screenScratchFbo->height);
 			FBO_Blit(tr.screenScratchFbo, srcBox, texScale, tr.quarterFbo[0], dstBox,
 				&tr.textureColorShader, color,
 				GLS_SRCBLEND_DST_COLOR | GLS_DSTBLEND_ZERO);
@@ -435,17 +435,17 @@ RB_GodRays(void)
 	{
 		float mul = 1.f;
 
-		vec4_t	srcBox, dstBox;
-		vec4_t	color;
-		vec2_t	texScale;
+		Vec4	srcBox, dstBox;
+		Vec4	color;
+		Vec2	texScale;
 
 		texScale[0] =
 			texScale[1] = 1.0f;
 
-		VectorSet4(color, mul, mul, mul, 1);
+		vec3set4(color, mul, mul, mul, 1);
 
-		VectorSet4(srcBox, 0, 0, tr.quarterFbo[0]->width, tr.quarterFbo[0]->height);
-		VectorSet4(dstBox, 0, 0, tr.screenScratchFbo->width, tr.screenScratchFbo->height);
+		vec3set4(srcBox, 0, 0, tr.quarterFbo[0]->width, tr.quarterFbo[0]->height);
+		vec3set4(dstBox, 0, 0, tr.screenScratchFbo->width, tr.screenScratchFbo->height);
 		FBO_Blit(tr.quarterFbo[0], srcBox, texScale, tr.screenScratchFbo, dstBox,
 			&tr.textureColorShader, color,
 			GLS_SRCBLEND_ONE | GLS_DSTBLEND_ONE);
@@ -476,34 +476,34 @@ RB_BlurAxis(FBO_t *srcFbo, FBO_t *dstFbo, float strength, qbool horizontal)
 	ymul *= strength;
 
 	{
-		vec4_t	srcBox, dstBox, color;
-		vec2_t	texScale;
+		Vec4	srcBox, dstBox, color;
+		Vec2	texScale;
 
 		texScale[0] =
 			texScale[1] = 1.0f;
 
-		VectorSet4(color, weights[0], weights[0], weights[0], 1.0f);
-		VectorSet4(srcBox, 0, 0, srcFbo->width, srcFbo->height);
-		VectorSet4(dstBox, 0, 0, dstFbo->width, dstFbo->height);
+		vec3set4(color, weights[0], weights[0], weights[0], 1.0f);
+		vec3set4(srcBox, 0, 0, srcFbo->width, srcFbo->height);
+		vec3set4(dstBox, 0, 0, dstFbo->width, dstFbo->height);
 		FBO_Blit(srcFbo, srcBox, texScale, dstFbo, dstBox, &tr.textureColorShader, color, 0);
 
-		VectorSet4(color, weights[1], weights[1], weights[1], 1.0f);
+		vec3set4(color, weights[1], weights[1], weights[1], 1.0f);
 		dx = offsets[1] * xmul;
 		dy = offsets[1] * ymul;
-		VectorSet4(srcBox, dx, dy, srcFbo->width, srcFbo->height);
+		vec3set4(srcBox, dx, dy, srcFbo->width, srcFbo->height);
 		FBO_Blit(srcFbo, srcBox, texScale, dstFbo, dstBox, &tr.textureColorShader, color,
 			GLS_SRCBLEND_ONE | GLS_DSTBLEND_ONE);
-		VectorSet4(srcBox, -dx, -dy, srcFbo->width, srcFbo->height);
+		vec3set4(srcBox, -dx, -dy, srcFbo->width, srcFbo->height);
 		FBO_Blit(srcFbo, srcBox, texScale, dstFbo, dstBox, &tr.textureColorShader, color,
 			GLS_SRCBLEND_ONE | GLS_DSTBLEND_ONE);
 
-		VectorSet4(color, weights[2], weights[2], weights[2], 1.0f);
+		vec3set4(color, weights[2], weights[2], weights[2], 1.0f);
 		dx = offsets[2] * xmul;
 		dy = offsets[2] * ymul;
-		VectorSet4(srcBox, dx, dy, srcFbo->width, srcFbo->height);
+		vec3set4(srcBox, dx, dy, srcFbo->width, srcFbo->height);
 		FBO_Blit(srcFbo, srcBox, texScale, dstFbo, dstBox, &tr.textureColorShader, color,
 			GLS_SRCBLEND_ONE | GLS_DSTBLEND_ONE);
-		VectorSet4(srcBox, -dx, -dy, srcFbo->width, srcFbo->height);
+		vec3set4(srcBox, -dx, -dy, srcFbo->width, srcFbo->height);
 		FBO_Blit(srcFbo, srcBox, texScale, dstFbo, dstBox, &tr.textureColorShader, color,
 			GLS_SRCBLEND_ONE | GLS_DSTBLEND_ONE);
 	}
@@ -530,31 +530,31 @@ RB_GaussianBlur(float blur)
 		return;
 
 	{
-		vec4_t	srcBox, dstBox;
-		vec4_t	color;
-		vec2_t	texScale;
+		Vec4	srcBox, dstBox;
+		Vec4	color;
+		Vec2	texScale;
 
 		texScale[0] =
 			texScale[1] = 1.0f;
 
-		VectorSet4(color, 1, 1, 1, 1);
+		vec3set4(color, 1, 1, 1, 1);
 
 		/* first, downsample the framebuffer */
-		VectorSet4(srcBox, 0, 0, tr.screenScratchFbo->width, tr.screenScratchFbo->height);
-		VectorSet4(dstBox, 0, 0, tr.quarterFbo[0]->width, tr.quarterFbo[0]->height);
+		vec3set4(srcBox, 0, 0, tr.screenScratchFbo->width, tr.screenScratchFbo->height);
+		vec3set4(dstBox, 0, 0, tr.quarterFbo[0]->width, tr.quarterFbo[0]->height);
 		FBO_Blit(tr.screenScratchFbo, srcBox, texScale, tr.quarterFbo[0], dstBox,
 			&tr.textureColorShader, color,
 			0);
 
-		VectorSet4(srcBox, 0, 0, tr.quarterFbo[0]->width, tr.quarterFbo[0]->height);
-		VectorSet4(dstBox, 0, 0, tr.textureScratchFbo[0]->width, tr.textureScratchFbo[0]->height);
+		vec3set4(srcBox, 0, 0, tr.quarterFbo[0]->width, tr.quarterFbo[0]->height);
+		vec3set4(dstBox, 0, 0, tr.textureScratchFbo[0]->width, tr.textureScratchFbo[0]->height);
 		FBO_Blit(tr.quarterFbo[0], srcBox, texScale, tr.textureScratchFbo[0], dstBox,
 			&tr.textureColorShader, color,
 			0);
 
 		/* set the alpha channel */
-		VectorSet4(srcBox, 0, 0, tr.whiteImage->width, tr.whiteImage->height);
-		VectorSet4(dstBox, 0, 0, tr.textureScratchFbo[0]->width, tr.textureScratchFbo[0]->height);
+		vec3set4(srcBox, 0, 0, tr.whiteImage->width, tr.whiteImage->height);
+		vec3set4(dstBox, 0, 0, tr.textureScratchFbo[0]->width, tr.textureScratchFbo[0]->height);
 		qglColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_TRUE);
 		FBO_BlitFromTexture(tr.whiteImage, srcBox, texScale, tr.textureScratchFbo[0], dstBox,
 			&tr.textureColorShader, color,
@@ -566,8 +566,8 @@ RB_GaussianBlur(float blur)
 		RB_VBlur(tr.textureScratchFbo[1], tr.textureScratchFbo[0], factor);
 
 		/* finally, merge back to framebuffer */
-		VectorSet4(srcBox, 0, 0, tr.textureScratchFbo[0]->width, tr.textureScratchFbo[0]->height);
-		VectorSet4(dstBox, 0, 0, tr.screenScratchFbo->width,     tr.screenScratchFbo->height);
+		vec3set4(srcBox, 0, 0, tr.textureScratchFbo[0]->width, tr.textureScratchFbo[0]->height);
+		vec3set4(dstBox, 0, 0, tr.screenScratchFbo->width,     tr.screenScratchFbo->height);
 		color[3] = factor;
 		FBO_Blit(tr.textureScratchFbo[0], srcBox, texScale, tr.screenScratchFbo, dstBox,
 			&tr.textureColorShader, color,

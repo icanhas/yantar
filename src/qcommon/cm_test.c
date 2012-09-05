@@ -25,7 +25,7 @@
  *
  */
 int
-CM_PointLeafnum_r(const vec3_t p, int num)
+CM_PointLeafnum_r(const Vec3 p, int num)
 {
 	float d;
 	cNode_t *node;
@@ -38,7 +38,7 @@ CM_PointLeafnum_r(const vec3_t p, int num)
 		if(plane->type < 3)
 			d = p[plane->type] - plane->dist;
 		else
-			d = Vec3Dot (plane->normal, p) - plane->dist;
+			d = vec3dot (plane->normal, p) - plane->dist;
 		if(d < 0)
 			num = node->children[1];
 		else
@@ -51,7 +51,7 @@ CM_PointLeafnum_r(const vec3_t p, int num)
 }
 
 int
-CM_PointLeafnum(const vec3_t p)
+CM_PointLeafnum(const Vec3 p)
 {
 	if(!cm.numNodes)	/* map not loaded */
 		return 0;
@@ -165,15 +165,15 @@ CM_BoxLeafnums_r(leafList_t *ll, int nodenum)
  * CM_BoxLeafnums
  */
 int
-CM_BoxLeafnums(const vec3_t mins, const vec3_t maxs, int *list, int listsize,
+CM_BoxLeafnums(const Vec3 mins, const Vec3 maxs, int *list, int listsize,
 	       int *lastLeaf)
 {
 	leafList_t ll;
 
 	cm.checkcount++;
 
-	Vec3Copy(mins, ll.bounds[0]);
-	Vec3Copy(maxs, ll.bounds[1]);
+	vec3copy(mins, ll.bounds[0]);
+	vec3copy(maxs, ll.bounds[1]);
 	ll.count = 0;
 	ll.maxcount = listsize;
 	ll.list = list;
@@ -191,15 +191,15 @@ CM_BoxLeafnums(const vec3_t mins, const vec3_t maxs, int *list, int listsize,
  * CM_BoxBrushes
  */
 int
-CM_BoxBrushes(const vec3_t mins, const vec3_t maxs, cbrush_t **list,
+CM_BoxBrushes(const Vec3 mins, const Vec3 maxs, cbrush_t **list,
 	      int listsize)
 {
 	leafList_t ll;
 
 	cm.checkcount++;
 
-	Vec3Copy(mins, ll.bounds[0]);
-	Vec3Copy(maxs, ll.bounds[1]);
+	vec3copy(mins, ll.bounds[0]);
+	vec3copy(maxs, ll.bounds[1]);
 	ll.count = 0;
 	ll.maxcount = listsize;
 	ll.list = (void*)list;
@@ -221,7 +221,7 @@ CM_BoxBrushes(const vec3_t mins, const vec3_t maxs, cbrush_t **list,
  *
  */
 int
-CM_PointContents(const vec3_t p, clipHandle_t model)
+CM_PointContents(const Vec3 p, clipHandle_t model)
 {
 	int	leafnum;
 	int	i, k;
@@ -253,7 +253,7 @@ CM_PointContents(const vec3_t p, clipHandle_t model)
 
 		/* see if the point is in the brush */
 		for(i = 0; i < b->numsides; i++){
-			d = Vec3Dot(p, b->sides[i].plane->normal);
+			d = vec3dot(p, b->sides[i].plane->normal);
 /* FIXME test for Cash
  *              if ( d >= b->sides[i].plane->dist ) { */
 			if(d > b->sides[i].plane->dist)
@@ -274,26 +274,26 @@ CM_PointContents(const vec3_t p, clipHandle_t model)
  * rotating entities
  */
 int
-CM_TransformedPointContents(const vec3_t p, clipHandle_t model,
-			    const vec3_t origin,
-			    const vec3_t angles)
+CM_TransformedPointContents(const Vec3 p, clipHandle_t model,
+			    const Vec3 origin,
+			    const Vec3 angles)
 {
-	vec3_t	p_l;
-	vec3_t	temp;
-	vec3_t	forward, right, up;
+	Vec3	p_l;
+	Vec3	temp;
+	Vec3	forward, right, up;
 
 	/* subtract origin offset */
-	Vec3Sub (p, origin, p_l);
+	vec3sub (p, origin, p_l);
 
 	/* rotate start and end into the models frame of reference */
 	if(model != BOX_MODEL_HANDLE &&
 	   (angles[0] || angles[1] || angles[2])){
-		AngleVectors (angles, forward, right, up);
+		anglevec3s (angles, forward, right, up);
 
-		Vec3Copy (p_l, temp);
-		p_l[0]	= Vec3Dot (temp, forward);
-		p_l[1]	= -Vec3Dot (temp, right);
-		p_l[2]	= Vec3Dot (temp, up);
+		vec3copy (p_l, temp);
+		p_l[0]	= vec3dot (temp, forward);
+		p_l[1]	= -vec3dot (temp, right);
+		p_l[2]	= vec3dot (temp, up);
 	}
 
 	return CM_PointContents(p_l, model);
@@ -467,8 +467,8 @@ CM_WriteAreaBits(byte *buffer, int area)
  * CM_BoundsIntersect
  */
 qbool
-CM_BoundsIntersect(const vec3_t mins, const vec3_t maxs, const vec3_t mins2,
-		   const vec3_t maxs2)
+CM_BoundsIntersect(const Vec3 mins, const Vec3 maxs, const Vec3 mins2,
+		   const Vec3 maxs2)
 {
 	if(maxs[0] < mins2[0] - SURFACE_CLIP_EPSILON ||
 	   maxs[1] < mins2[1] - SURFACE_CLIP_EPSILON ||
@@ -485,7 +485,7 @@ CM_BoundsIntersect(const vec3_t mins, const vec3_t maxs, const vec3_t mins2,
  * CM_BoundsIntersectPoint
  */
 qbool
-CM_BoundsIntersectPoint(const vec3_t mins, const vec3_t maxs, const vec3_t point)
+CM_BoundsIntersectPoint(const Vec3 mins, const Vec3 maxs, const Vec3 point)
 {
 	if(maxs[0] < point[0] - SURFACE_CLIP_EPSILON ||
 	   maxs[1] < point[1] - SURFACE_CLIP_EPSILON ||

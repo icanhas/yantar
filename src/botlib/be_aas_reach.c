@@ -86,8 +86,8 @@ typedef struct aas_lreachability_s {
 	int				areanum;	/* number of the reachable area */
 	int				facenum;	/* number of the face towards the other area */
 	int				edgenum;	/* number of the edge towards the other area */
-	vec3_t				start;		/* start point of inter area movement */
-	vec3_t				end;		/* end point of inter area movement */
+	Vec3				start;		/* start point of inter area movement */
+	Vec3				end;		/* end point of inter area movement */
 	int				traveltype;	/* type of travel required to get to the area */
 	unsigned short int		traveltime;	/* travel time of the inter area movement */
 	/*  */
@@ -111,8 +111,8 @@ AAS_FaceArea(aas_face_t *face)
 {
 	int i, edgenum, side;
 	float	total;
-	vec_t   *v;
-	vec3_t	d1, d2, cross;
+	Scalar   *v;
+	Vec3	d1, d2, cross;
 	aas_edge_t *edge;
 
 	edgenum = aasworld.edgeindex[face->firstedge];
@@ -125,10 +125,10 @@ AAS_FaceArea(aas_face_t *face)
 		edgenum = aasworld.edgeindex[face->firstedge + i];
 		side	= edgenum < 0;
 		edge	= &aasworld.edges[abs(edgenum)];
-		Vec3Sub(aasworld.vertexes[edge->v[side]], v, d1);
-		Vec3Sub(aasworld.vertexes[edge->v[!side]], v, d2);
-		Vec3Cross(d1, d2, cross);
-		total += 0.5 * Vec3Len(cross);
+		vec3sub(aasworld.vertexes[edge->v[side]], v, d1);
+		vec3sub(aasworld.vertexes[edge->v[!side]], v, d2);
+		vec3cross(d1, d2, cross);
+		total += 0.5 * vec3len(cross);
 	}
 	return total;
 }	/* end of the function AAS_FaceArea */
@@ -143,8 +143,8 @@ float
 AAS_AreaVolume(int areanum)
 {
 	int i, edgenum, facenum, side;
-	vec_t	d, a, volume;
-	vec3_t	corner;
+	Scalar	d, a, volume;
+	Vec3	corner;
 	aas_plane_t *plane;
 	aas_edge_t *edge;
 	aas_face_t *face;
@@ -156,7 +156,7 @@ AAS_AreaVolume(int areanum)
 	edgenum = aasworld.edgeindex[face->firstedge];
 	edge = &aasworld.edges[abs(edgenum)];
 	/*  */
-	Vec3Copy(aasworld.vertexes[edge->v[0]], corner);
+	vec3copy(aasworld.vertexes[edge->v[0]], corner);
 
 	/* make tetrahedrons to all other faces */
 	volume = 0;
@@ -165,7 +165,7 @@ AAS_AreaVolume(int areanum)
 		face	= &aasworld.faces[facenum];
 		side	= face->backarea != areanum;
 		plane	= &aasworld.planes[face->planenum ^ side];
-		d	= -(Vec3Dot (corner, plane->normal) - plane->dist);
+		d	= -(vec3dot (corner, plane->normal) - plane->dist);
 		a	= AAS_FaceArea(face);
 		volume	+= d * a;
 	}
@@ -204,12 +204,12 @@ AAS_BestReachableLinkArea(aas_link_t *areas)
  * Changes Globals:		-
  * =========================================================================== */
 int
-AAS_GetJumpPadInfo(int ent, vec3_t areastart, vec3_t absmins, vec3_t absmaxs,
-		   vec3_t velocity)
+AAS_GetJumpPadInfo(int ent, Vec3 areastart, Vec3 absmins, Vec3 absmaxs,
+		   Vec3 velocity)
 {
 	int modelnum, ent2;
 	float	speed, height, gravity, time, dist, forward;
-	vec3_t	origin, angles, teststart, ent2origin;
+	Vec3	origin, angles, teststart, ent2origin;
 	aas_trace_t trace;
 	char	model[MAX_EPAIRKEY];
 	char	target[MAX_EPAIRKEY], targetname[MAX_EPAIRKEY];
@@ -217,26 +217,26 @@ AAS_GetJumpPadInfo(int ent, vec3_t areastart, vec3_t absmins, vec3_t absmaxs,
 	/*  */
 	AAS_FloatForBSPEpairKey(ent, "speed", &speed);
 	if(!speed) speed = 1000;
-	VectorClear(angles);
+	vec3clear(angles);
 	/* get the mins, maxs and origin of the model */
 	AAS_ValueForBSPEpairKey(ent, "model", model, MAX_EPAIRKEY);
 	if(model[0]) modelnum = atoi(model+1);
 	else modelnum = 0;
 	AAS_BSPModelMinsMaxsOrigin(modelnum, angles, absmins, absmaxs, origin);
-	Vec3Add(origin, absmins, absmins);
-	Vec3Add(origin, absmaxs, absmaxs);
-	Vec3Add(absmins, absmaxs, origin);
-	VectorScale (origin, 0.5, origin);
+	vec3add(origin, absmins, absmins);
+	vec3add(origin, absmaxs, absmaxs);
+	vec3add(absmins, absmaxs, origin);
+	vec3scale (origin, 0.5, origin);
 
 	/* get the start areas */
-	Vec3Copy(origin, teststart);
+	vec3copy(origin, teststart);
 	teststart[2] += 64;
 	trace = AAS_TraceClientBBox(teststart, origin, PRESENCE_CROUCH, -1);
 	if(trace.startsolid){
 		botimport.Print(PRT_MESSAGE, "trigger_push start solid\n");
-		Vec3Copy(origin, areastart);
+		vec3copy(origin, areastart);
 	}else
-		Vec3Copy(trace.endpos, areastart);
+		vec3copy(trace.endpos, areastart);
 	areastart[2] += 0.125;
 	/*
 	 * AAS_DrawPermanentCross(origin, 4, 4);
@@ -263,12 +263,12 @@ AAS_GetJumpPadInfo(int ent, vec3_t areastart, vec3_t absmins, vec3_t absmaxs,
 		return qfalse;
 	}
 	/* set s.origin2 to the push velocity */
-	Vec3Sub (ent2origin, origin, velocity);
-	dist = Vec3Normalize(velocity);
+	vec3sub (ent2origin, origin, velocity);
+	dist = vec3normalize(velocity);
 	forward = dist / time;
 	/* FIXME: why multiply by 1.1 */
 	forward *= 1.1f;
-	VectorScale(velocity, forward, velocity);
+	vec3scale(velocity, forward, velocity);
 	velocity[2] = time * gravity;
 	return qtrue;
 }	/* end of the function AAS_GetJumpPadInfo */
@@ -279,12 +279,12 @@ AAS_GetJumpPadInfo(int ent, vec3_t areastart, vec3_t absmins, vec3_t absmaxs,
  * Changes Globals:		-
  * =========================================================================== */
 int
-AAS_BestReachableFromJumpPadArea(vec3_t origin, vec3_t mins, vec3_t maxs)
+AAS_BestReachableFromJumpPadArea(Vec3 origin, Vec3 mins, Vec3 maxs)
 {
 	int ent, bot_visualizejumppads, bestareanum;
 	float	volume, bestareavolume;
-	vec3_t	areastart, cmdmove, bboxmins, bboxmaxs;
-	vec3_t	absmins, absmaxs, velocity;
+	Vec3	areastart, cmdmove, bboxmins, bboxmaxs;
+	Vec3	absmins, absmaxs, velocity;
 	aas_clientmove_t move;
 	aas_link_t *areas, *link;
 	char classname[MAX_EPAIRKEY];
@@ -294,8 +294,8 @@ AAS_BestReachableFromJumpPadArea(vec3_t origin, vec3_t mins, vec3_t maxs)
 #else
 	bot_visualizejumppads = LibVarValue("bot_visualizejumppads", "0");
 #endif
-	Vec3Add(origin, mins, bboxmins);
-	Vec3Add(origin, maxs, bboxmaxs);
+	vec3add(origin, mins, bboxmins);
+	vec3add(origin, maxs, bboxmaxs);
 	for(ent = AAS_NextBSPEntity(0); ent; ent = AAS_NextBSPEntity(ent)){
 		if(!AAS_ValueForBSPEpairKey(ent, "classname", classname,
 			   MAX_EPAIRKEY)) continue;
@@ -318,7 +318,7 @@ AAS_BestReachableFromJumpPadArea(vec3_t origin, vec3_t mins, vec3_t maxs)
 		/*  */
 		/* botimport.Print(PRT_MESSAGE, "found a trigger_push with velocity %f %f %f\n", velocity[0], velocity[1], velocity[2]); */
 		/*  */
-		VectorSet(cmdmove, 0, 0, 0);
+		vec3set(cmdmove, 0, 0, 0);
 		Q_Memset(&move, 0, sizeof(aas_clientmove_t));
 		AAS_ClientMovementHitBBox(&move, -1, areastart, PRESENCE_NORMAL,
 			qfalse,
@@ -349,13 +349,13 @@ AAS_BestReachableFromJumpPadArea(vec3_t origin, vec3_t mins, vec3_t maxs)
  * Changes Globals:		-
  * =========================================================================== */
 int
-AAS_BestReachableArea(vec3_t origin, vec3_t mins, vec3_t maxs, vec3_t goalorigin)
+AAS_BestReachableArea(Vec3 origin, Vec3 mins, Vec3 maxs, Vec3 goalorigin)
 {
 	int areanum, i, j, k, l;
 	aas_link_t *areas;
-	vec3_t	absmins, absmaxs;
-	/* vec3_t bbmins, bbmaxs; */
-	vec3_t	start, end;
+	Vec3	absmins, absmaxs;
+	/* Vec3 bbmins, bbmaxs; */
+	Vec3	start, end;
 	aas_trace_t trace;
 
 	if(!aasworld.loaded){
@@ -364,14 +364,14 @@ AAS_BestReachableArea(vec3_t origin, vec3_t mins, vec3_t maxs, vec3_t goalorigin
 		return 0;
 	}
 	/* find a point in an area */
-	Vec3Copy(origin, start);
+	vec3copy(origin, start);
 	areanum = AAS_PointAreaNum(start);
 	/* while no area found fudge around a little */
 	for(i = 0; i < 5 && !areanum; i++)
 		for(j = 0; j < 5 && !areanum; j++){
 			for(k = -1; k <= 1 && !areanum; k++)
 				for(l = -1; l <= 1 && !areanum; l++){
-					Vec3Copy(origin, start);
+					vec3copy(origin, start);
 					start[0] += (float)j * 4 * k;
 					start[1] += (float)j * 4 * l;
 					start[2] += (float)i * 4;
@@ -382,13 +382,13 @@ AAS_BestReachableArea(vec3_t origin, vec3_t mins, vec3_t maxs, vec3_t goalorigin
 	 * if an area was found */
 	if(areanum){
 		/* drop client bbox down and try again */
-		Vec3Copy(start, end);
+		vec3copy(start, end);
 		start[2]	+= 0.25;
 		end[2]		-= 50;
 		trace		= AAS_TraceClientBBox(start, end, PRESENCE_CROUCH, -1);
 		if(!trace.startsolid){
 			areanum = AAS_PointAreaNum(trace.endpos);
-			Vec3Copy(trace.endpos, goalorigin);
+			vec3copy(trace.endpos, goalorigin);
 			/* FIXME: cannot enable next line right now because the reachability
 			 * does not have to be calculated when the level items are loaded
 			 * if the origin is in an area with reachability
@@ -408,7 +408,7 @@ AAS_BestReachableArea(vec3_t origin, vec3_t mins, vec3_t maxs, vec3_t goalorigin
 			botimport.Print(PRT_MESSAGE,
 				"AAS_BestReachableArea: start solid\n");
 #endif
-			Vec3Copy(start, goalorigin);
+			vec3copy(start, goalorigin);
 			return areanum;
 		}
 	}
@@ -416,13 +416,13 @@ AAS_BestReachableArea(vec3_t origin, vec3_t mins, vec3_t maxs, vec3_t goalorigin
 	/* AAS_PresenceTypeBoundingBox(PRESENCE_CROUCH, bbmins, bbmaxs); */
 	/* NOTE: the goal origin does not have to be in the goal area */
 	/* because the bot will have to move towards the item origin anyway */
-	Vec3Copy(origin, goalorigin);
+	vec3copy(origin, goalorigin);
 	/*  */
-	Vec3Add(origin, mins, absmins);
-	Vec3Add(origin, maxs, absmaxs);
+	vec3add(origin, mins, absmins);
+	vec3add(origin, maxs, absmaxs);
 	/* add bounding box size
-	 * Vec3Sub(absmins, bbmaxs, absmins);
-	 * Vec3Sub(absmaxs, bbmins, absmaxs);
+	 * vec3sub(absmins, bbmaxs, absmins);
+	 * vec3sub(absmaxs, bbmins, absmaxs);
 	 * link an invalid (-1) entity */
 	areas = AAS_LinkEntityClientBBox(absmins, absmaxs, -1, PRESENCE_CROUCH);
 	/* get the reachable link arae */
@@ -552,7 +552,7 @@ AAS_AreaGroundFaceArea(int areanum)
  * Changes Globals:		-
  * =========================================================================== */
 void
-AAS_FaceCenter(int facenum, vec3_t center)
+AAS_FaceCenter(int facenum, Vec3 center)
 {
 	int i;
 	float scale;
@@ -561,16 +561,16 @@ AAS_FaceCenter(int facenum, vec3_t center)
 
 	face = &aasworld.faces[facenum];
 
-	VectorClear(center);
+	vec3clear(center);
 	for(i = 0; i < face->numedges; i++){
 		edge =
 			&aasworld.edges[abs(aasworld.edgeindex[face->firstedge +
 							       i])];
-		Vec3Add(center, aasworld.vertexes[edge->v[0]], center);
-		Vec3Add(center, aasworld.vertexes[edge->v[1]], center);
+		vec3add(center, aasworld.vertexes[edge->v[0]], center);
+		vec3add(center, aasworld.vertexes[edge->v[1]], center);
 	}
 	scale = 0.5 / face->numedges;
-	VectorScale(center, scale, center);
+	vec3scale(center, scale, center);
 }	/* end of the function AAS_FaceCenter */
 /* ===========================================================================
  * returns the maximum distance a player can fall before being damaged
@@ -581,7 +581,7 @@ AAS_FaceCenter(int facenum, vec3_t center)
  * Changes Globals:		-
  * =========================================================================== */
 int
-AAS_FallDamageVec3Vec3Distance(void)
+AAS_FallDamageVec3vec3dist(void)
 {
 	float maxzvelocity, gravity, t;
 
@@ -589,7 +589,7 @@ AAS_FallDamageVec3Vec3Distance(void)
 	gravity = aassettings.phys_gravity;
 	t = maxzvelocity / gravity;
 	return 0.5 * gravity * t * t;
-}	/* end of the function AAS_FallDamageVec3Vec3Distance */
+}	/* end of the function AAS_FallDamageVec3vec3dist */
 /* ===========================================================================
  * distance = 0.5 * gravity * t * t
  * vel = t * gravity
@@ -633,7 +633,7 @@ AAS_MaxJumpHeight(float phys_jumpvel)
  * Changes Globals:		-
  * =========================================================================== */
 float
-AAS_MaxJumpVec3Vec3Distance(float phys_jumpvel)
+AAS_MaxJumpVec3vec3dist(float phys_jumpvel)
 {
 	float phys_gravity, phys_maxvelocity, t;
 
@@ -643,7 +643,7 @@ AAS_MaxJumpVec3Vec3Distance(float phys_jumpvel)
 	t = sqrt(aassettings.rs_maxjumpfallheight / (0.5 * phys_gravity));
 	/* maximum distance */
 	return phys_maxvelocity * (t + phys_jumpvel / phys_gravity);
-}	/* end of the function AAS_MaxJumpVec3Vec3Distance */
+}	/* end of the function AAS_MaxJumpVec3vec3dist */
 /* ===========================================================================
  * returns true if a player can only crouch in the area
  *
@@ -814,15 +814,15 @@ AAS_ReachabilityExists(int area1num, int area2num)
  * Changes Globals:		-
  * =========================================================================== */
 int
-AAS_NearbySolidOrGap(vec3_t start, vec3_t end)
+AAS_NearbySolidOrGap(Vec3 start, Vec3 end)
 {
-	vec3_t	dir, testpoint;
+	Vec3	dir, testpoint;
 	int	areanum;
 
-	Vec3Sub(end, start, dir);
+	vec3sub(end, start, dir);
 	dir[2] = 0;
-	Vec3Normalize(dir);
-	Vec3MA(end, 48, dir, testpoint);
+	vec3normalize(dir);
+	vec3ma(end, 48, dir, testpoint);
 
 	areanum = AAS_PointAreaNum(testpoint);
 	if(!areanum){
@@ -830,7 +830,7 @@ AAS_NearbySolidOrGap(vec3_t start, vec3_t end)
 		areanum = AAS_PointAreaNum(testpoint);
 		if(!areanum) return qtrue;
 	}
-	Vec3MA(end, 64, dir, testpoint);
+	vec3ma(end, 64, dir, testpoint);
 	areanum = AAS_PointAreaNum(testpoint);
 	if(areanum)
 		if(!AAS_AreaSwim(areanum) &&
@@ -852,7 +852,7 @@ AAS_Reachability_Swim(int area1num, int area2num)
 	aas_lreachability_t	*lreach;
 	aas_face_t		*face1;
 	aas_plane_t		*plane;
-	vec3_t start;
+	Vec3 start;
 
 	if(!AAS_AreaSwim(area1num) || !AAS_AreaSwim(area2num)) return qfalse;
 	/* if the second area is crouch only */
@@ -890,11 +890,11 @@ AAS_Reachability_Swim(int area1num, int area2num)
 					lreach->areanum = area2num;
 					lreach->facenum = face1num;
 					lreach->edgenum = 0;
-					Vec3Copy(start, lreach->start);
+					vec3copy(start, lreach->start);
 					plane =
 						&aasworld.planes[face1->planenum
 								 ^ side1];
-					Vec3MA(lreach->start, -INSIDEUNITS,
+					vec3ma(lreach->start, -INSIDEUNITS,
 						plane->normal,
 						lreach->end);
 					lreach->traveltype = TRAVEL_SWIM;
@@ -928,9 +928,9 @@ AAS_Reachability_EqualFloorHeight(int area1num, int area2num)
 {
 	int i, j, edgenum, edgenum1, edgenum2, foundreach, side;
 	float	height, bestheight, length, bestlength;
-	vec3_t	dir, start, end, normal, invgravity, gravitydirection =
+	Vec3	dir, start, end, normal, invgravity, gravitydirection =
 	{0, 0, -1};
-	vec3_t	edgevec;
+	Vec3	edgevec;
 	aas_area_t *area1, *area2;
 	aas_face_t *face1, *face2;
 	aas_edge_t *edge;
@@ -950,8 +950,8 @@ AAS_Reachability_EqualFloorHeight(int area1num, int area2num)
 	/* if area 2 is too high above area 1 */
 	if(area2->mins[2] > area1->maxs[2]) return qfalse;
 	/*  */
-	Vec3Copy(gravitydirection, invgravity);
-	Vec3Inverse(invgravity);
+	vec3copy(gravitydirection, invgravity);
+	vec3inv(invgravity);
 	/*  */
 	bestheight = 99999;
 	bestlength = 0;
@@ -991,23 +991,23 @@ AAS_Reachability_EqualFloorHeight(int area1num, int area2num)
 					side = edgenum < 0;
 					edge = &aasworld.edges[abs(edgenum)];
 					/* get the length of the edge */
-					Vec3Sub(
+					vec3sub(
 						aasworld.vertexes[edge->v
 								  [1]],
 						aasworld.vertexes[edge->v[0]],
 						dir);
-					length = Vec3Len(dir);
+					length = vec3len(dir);
 					/* get the start point */
-					Vec3Add(aasworld.vertexes[edge->v[0]],
+					vec3add(aasworld.vertexes[edge->v[0]],
 						aasworld.vertexes[edge->v[1]],
 						start);
-					VectorScale(start, 0.5, start);
-					Vec3Copy(start, end);
+					vec3scale(start, 0.5, start);
+					vec3copy(start, end);
 					/* get the end point several units inside area2
 					 * and the start point several units inside area1
 					 * NOTE: normal is pointing into area2 because the
 					 * face edges are stored counter clockwise */
-					Vec3Sub(
+					vec3sub(
 						aasworld.vertexes[edge->v
 								  [side]],
 						aasworld.vertexes[edge->v[!side]
@@ -1015,20 +1015,20 @@ AAS_Reachability_EqualFloorHeight(int area1num, int area2num)
 					plane2 =
 						&aasworld.planes[face2->planenum
 						];
-					Vec3Cross(edgevec, plane2->normal,
+					vec3cross(edgevec, plane2->normal,
 						normal);
-					Vec3Normalize(normal);
+					vec3normalize(normal);
 					/*
-					 * Vec3MA(start, -1, normal, start); */
-					Vec3MA(end, INSIDEUNITS_WALKEND,
+					 * vec3ma(start, -1, normal, start); */
+					vec3ma(end, INSIDEUNITS_WALKEND,
 						normal,
 						end);
-					Vec3MA(start, INSIDEUNITS_WALKSTART,
+					vec3ma(start, INSIDEUNITS_WALKSTART,
 						normal,
 						start);
 					end[2] += 0.125;
 					/*  */
-					height = Vec3Dot(invgravity, start);
+					height = vec3dot(invgravity, start);
 					/* NOTE: if there's nearby solid or a gap area after this area
 					 * disabled this crap
 					 * if (AAS_NearbySolidOrGap(start, end)) height += 200;
@@ -1044,8 +1044,8 @@ AAS_Reachability_EqualFloorHeight(int area1num, int area2num)
 						lr.areanum = area2num;
 						lr.facenum = 0;
 						lr.edgenum = edgenum;
-						Vec3Copy(start, lr.start);
-						Vec3Copy(end, lr.end);
+						vec3copy(start, lr.start);
+						vec3copy(end, lr.end);
 						lr.traveltype	= TRAVEL_WALK;
 						lr.traveltime	= 1;
 						foundreach = qtrue;
@@ -1060,8 +1060,8 @@ AAS_Reachability_EqualFloorHeight(int area1num, int area2num)
 		lreach->areanum = lr.areanum;
 		lreach->facenum = lr.facenum;
 		lreach->edgenum = lr.edgenum;
-		Vec3Copy(lr.start, lreach->start);
-		Vec3Copy(lr.end, lreach->end);
+		vec3copy(lr.start, lreach->start);
+		vec3copy(lr.end, lreach->end);
 		lreach->traveltype = lr.traveltype;
 		lreach->traveltime = lr.traveltime;
 		lreach->next = areareachability[area1num];
@@ -1103,15 +1103,15 @@ AAS_Reachability_Step_Barrier_WaterJump_WalkOffLedge(int area1num, int area2num)
 	float	x1, x2, x3, x4, y1, y2, y3, y4, tmp, y;
 	float	length, ground_bestlength, water_bestlength, ground_bestdist,
 		water_bestdist;
-	vec3_t	v1, v2, v3, v4, tmpv, p1area1, p1area2, p2area1, p2area2;
-	vec3_t	normal, ort, edgevec, start, end, dir;
-	vec3_t	ground_beststart =
+	Vec3	v1, v2, v3, v4, tmpv, p1area1, p1area2, p2area1, p2area2;
+	Vec3	normal, ort, edgevec, start, end, dir;
+	Vec3	ground_beststart =
 	{0, 0,
 	 0}, ground_bestend = {0, 0, 0}, ground_bestnormal = {0, 0, 0};
-	vec3_t	water_beststart		=
+	Vec3	water_beststart		=
 	{0, 0, 0}, water_bestend	= {0, 0, 0}, water_bestnormal = {0, 0, 0};
-	vec3_t	invgravity = {0, 0, 1};
-	vec3_t	testpoint;
+	Vec3	invgravity = {0, 0, 1};
+	Vec3	testpoint;
 	aas_plane_t *plane;
 	aas_area_t *area1, *area2;
 	aas_face_t *groundface1, *groundface2;
@@ -1156,7 +1156,7 @@ AAS_Reachability_Step_Barrier_WaterJump_WalkOffLedge(int area1num, int area2num)
 				plane =
 					&aasworld.planes[groundface1->planenum ^
 							 (!faceside1)];
-				if(Vec3Dot(plane->normal,
+				if(vec3dot(plane->normal,
 					   invgravity) < 0.7) continue;
 			}else
 				/* if we can't swim in the area it must be a ground face */
@@ -1175,15 +1175,15 @@ AAS_Reachability_Step_Barrier_WaterJump_WalkOffLedge(int area1num, int area2num)
 			edge1num = abs(edge1num);
 			edge1 = &aasworld.edges[edge1num];
 			/* vertexes of the edge */
-			Vec3Copy(aasworld.vertexes[edge1->v[!side1]], v1);
-			Vec3Copy(aasworld.vertexes[edge1->v[side1]], v2);
+			vec3copy(aasworld.vertexes[edge1->v[!side1]], v1);
+			vec3copy(aasworld.vertexes[edge1->v[side1]], v2);
 			/* get a vertical plane through the edge
 			 * NOTE: normal is pointing into area 2 because the
 			 * face edges are stored counter clockwise */
-			Vec3Sub(v2, v1, edgevec);
-			Vec3Cross(edgevec, invgravity, normal);
-			Vec3Normalize(normal);
-			dist = Vec3Dot(normal, v1);
+			vec3sub(v2, v1, edgevec);
+			vec3cross(edgevec, invgravity, normal);
+			vec3normalize(normal);
+			dist = vec3dot(normal, v1);
 			/* check the faces from the second area */
 			for(j = 0; j < area2->numfaces; j++){
 				groundface2 =
@@ -1203,50 +1203,50 @@ AAS_Reachability_Step_Barrier_WaterJump_WalkOffLedge(int area1num, int area2num)
 								+ l]);
 					edge2 = &aasworld.edges[edge2num];
 					/* vertexes of the edge */
-					Vec3Copy(
+					vec3copy(
 						aasworld.vertexes[edge2->v[0]],
 						v3);
-					Vec3Copy(
+					vec3copy(
 						aasworld.vertexes[edge2->v[1]],
 						v4);
 					/* check the distance between the two points and the vertical plane
 					 * through the edge of area1 */
-					diff = Vec3Dot(normal, v3) - dist;
+					diff = vec3dot(normal, v3) - dist;
 					if(diff < -0.1 || diff > 0.1) continue;
-					diff = Vec3Dot(normal, v4) - dist;
+					diff = vec3dot(normal, v4) - dist;
 					if(diff < -0.1 || diff > 0.1) continue;
 					/*
 					 * project the two ground edges into the step side plane
 					 * and calculate the shortest distance between the two
 					 * edges if they overlap in the direction orthogonal to
 					 * the gravity direction */
-					Vec3Cross(invgravity, normal, ort);
-					/* invgravitydot = Vec3Dot(invgravity, invgravity); */
-					ortdot = Vec3Dot(ort, ort);
+					vec3cross(invgravity, normal, ort);
+					/* invgravitydot = vec3dot(invgravity, invgravity); */
+					ortdot = vec3dot(ort, ort);
 					/* projection into the step plane
 					 * NOTE: since gravity is vertical this is just the z coordinate */
-					y1 = v1[2];	/* Vec3Dot(v1, invgravity) / invgravitydot; */
-					y2 = v2[2];	/* Vec3Dot(v2, invgravity) / invgravitydot; */
-					y3 = v3[2];	/* Vec3Dot(v3, invgravity) / invgravitydot; */
-					y4 = v4[2];	/* Vec3Dot(v4, invgravity) / invgravitydot; */
+					y1 = v1[2];	/* vec3dot(v1, invgravity) / invgravitydot; */
+					y2 = v2[2];	/* vec3dot(v2, invgravity) / invgravitydot; */
+					y3 = v3[2];	/* vec3dot(v3, invgravity) / invgravitydot; */
+					y4 = v4[2];	/* vec3dot(v4, invgravity) / invgravitydot; */
 					/*  */
-					x1 = Vec3Dot(v1, ort) / ortdot;
-					x2 = Vec3Dot(v2, ort) / ortdot;
-					x3 = Vec3Dot(v3, ort) / ortdot;
-					x4 = Vec3Dot(v4, ort) / ortdot;
+					x1 = vec3dot(v1, ort) / ortdot;
+					x2 = vec3dot(v2, ort) / ortdot;
+					x3 = vec3dot(v3, ort) / ortdot;
+					x4 = vec3dot(v4, ort) / ortdot;
 					/*  */
 					if(x1 > x2){
 						tmp = x1; x1 = x2; x2 = tmp;
 						tmp = y1; y1 = y2; y2 = tmp;
-						Vec3Copy(v1, tmpv); Vec3Copy(
-							v2, v1); Vec3Copy(tmpv,
+						vec3copy(v1, tmpv); vec3copy(
+							v2, v1); vec3copy(tmpv,
 							v2);
 					}
 					if(x3 > x4){
 						tmp = x3; x3 = x4; x4 = tmp;
 						tmp = y3; y3 = y4; y4 = tmp;
-						Vec3Copy(v3, tmpv); Vec3Copy(
-							v4, v3); Vec3Copy(tmpv,
+						vec3copy(v3, tmpv); vec3copy(
+							v4, v3); vec3copy(tmpv,
 							v4);
 					}
 					/* if the two projected edge lines have no overlap */
@@ -1258,50 +1258,50 @@ AAS_Reachability_Step_Barrier_WaterJump_WalkOffLedge(int area1num, int area2num)
 					   (x3 - 0.5 < x1 && x2 < x4 + 0.5)){
 						dist1	= y3 - y1;
 						dist2	= y4 - y2;
-						Vec3Copy(v1, p1area1);
-						Vec3Copy(v2, p2area1);
-						Vec3Copy(v3, p1area2);
-						Vec3Copy(v4, p2area2);
+						vec3copy(v1, p1area1);
+						vec3copy(v2, p2area1);
+						vec3copy(v3, p1area2);
+						vec3copy(v4, p2area2);
 					}else{
 						/* if the points are equal */
 						if(x1 > x3 - 0.1 && x1 < x3 +
 						   0.1){
 							dist1 = y3 - y1;
-							Vec3Copy(v1, p1area1);
-							Vec3Copy(v3, p1area2);
+							vec3copy(v1, p1area1);
+							vec3copy(v3, p1area2);
 						}else if(x1 < x3){
 							y = y1 +
 							    (x3 -
 							     x1) *
 							    (y2 - y1) / (x2 - x1);
 							dist1 = y3 - y;
-							Vec3Copy(v3, p1area1);
+							vec3copy(v3, p1area1);
 							p1area1[2] = y;
-							Vec3Copy(v3, p1area2);
+							vec3copy(v3, p1area2);
 						}else{
 							y = y3 +
 							    (x1 -
 							     x3) *
 							    (y4 - y3) / (x4 - x3);
 							dist1 = y - y1;
-							Vec3Copy(v1, p1area1);
-							Vec3Copy(v1, p1area2);
+							vec3copy(v1, p1area1);
+							vec3copy(v1, p1area2);
 							p1area2[2] = y;
 						}
 						/* if the points are equal */
 						if(x2 > x4 - 0.1 && x2 < x4 +
 						   0.1){
 							dist2 = y4 - y2;
-							Vec3Copy(v2, p2area1);
-							Vec3Copy(v4, p2area2);
+							vec3copy(v2, p2area1);
+							vec3copy(v4, p2area2);
 						}else if(x2 < x4){
 							y = y3 +
 							    (x2 -
 							     x3) *
 							    (y4 - y3) / (x4 - x3);
 							dist2 = y - y2;
-							Vec3Copy(v2, p2area1);
-							Vec3Copy(v2, p2area2);
+							vec3copy(v2, p2area1);
+							vec3copy(v2, p2area2);
 							p2area2[2] = y;
 						}else{
 							y = y1 +
@@ -1309,9 +1309,9 @@ AAS_Reachability_Step_Barrier_WaterJump_WalkOffLedge(int area1num, int area2num)
 							     x1) *
 							    (y2 - y1) / (x2 - x1);
 							dist2 = y4 - y;
-							Vec3Copy(v4, p2area1);
+							vec3copy(v4, p2area1);
 							p2area1[2] = y;
-							Vec3Copy(v4, p2area2);
+							vec3copy(v4, p2area2);
 						}
 					}
 					/* if both distances are pretty much equal */
@@ -1319,24 +1319,24 @@ AAS_Reachability_Step_Barrier_WaterJump_WalkOffLedge(int area1num, int area2num)
 					if(dist1 > dist2 - 1 && dist1 < dist2 +
 					   1){
 						dist = dist1;
-						Vec3Add(p1area1, p2area1,
+						vec3add(p1area1, p2area1,
 							start);
-						VectorScale(start, 0.5, start);
-						Vec3Add(p1area2, p2area2, end);
-						VectorScale(end, 0.5, end);
+						vec3scale(start, 0.5, start);
+						vec3add(p1area2, p2area2, end);
+						vec3scale(end, 0.5, end);
 					}else if(dist1 < dist2){
 						dist = dist1;
-						Vec3Copy(p1area1, start);
-						Vec3Copy(p1area2, end);
+						vec3copy(p1area1, start);
+						vec3copy(p1area2, end);
 					}	/* end else if */
 					else{
 						dist = dist2;
-						Vec3Copy(p2area1, start);
-						Vec3Copy(p2area2, end);
+						vec3copy(p2area1, start);
+						vec3copy(p2area2, end);
 					}
 					/* get the length of the overlapping part of the edges of the two areas */
-					Vec3Sub(p2area2, p1area2, dir);
-					length = Vec3Len(dir);
+					vec3sub(p2area2, p1area2, dir);
+					length = vec3len(dir);
 					/*  */
 					if(groundface1->faceflags &
 					   FACE_GROUND){
@@ -1356,15 +1356,15 @@ AAS_Reachability_Step_Barrier_WaterJump_WalkOffLedge(int area1num, int area2num)
 							ground_bestarea2groundedgenum
 								= edge1num;
 							/* best point towards area1 */
-							Vec3Copy(
+							vec3copy(
 								start,
 								ground_beststart);
 							/* normal is pointing into area2 */
-							Vec3Copy(
+							vec3copy(
 								normal,
 								ground_bestnormal);
 							/* best point towards area2 */
-							Vec3Copy(
+							vec3copy(
 								end,
 								ground_bestend);
 						}
@@ -1381,13 +1381,13 @@ AAS_Reachability_Step_Barrier_WaterJump_WalkOffLedge(int area1num, int area2num)
 						water_bestarea2groundedgenum =
 							edge1num;
 						/* best point towards area1 */
-						Vec3Copy(start,
+						vec3copy(start,
 							water_beststart);
 						/* normal is pointing into area2 */
-						Vec3Copy(normal,
+						vec3copy(normal,
 							water_bestnormal);
 						/* best point towards area2 */
-						Vec3Copy(end, water_bestend);
+						vec3copy(end, water_bestend);
 					}
 				}
 			}
@@ -1423,10 +1423,10 @@ AAS_Reachability_Step_Barrier_WaterJump_WalkOffLedge(int area1num, int area2num)
 			lreach->areanum = area2num;
 			lreach->facenum = 0;
 			lreach->edgenum = ground_bestarea2groundedgenum;
-			Vec3MA(ground_beststart, INSIDEUNITS_WALKSTART,
+			vec3ma(ground_beststart, INSIDEUNITS_WALKSTART,
 				ground_bestnormal,
 				lreach->start);
-			Vec3MA(ground_bestend, INSIDEUNITS_WALKEND,
+			vec3ma(ground_bestend, INSIDEUNITS_WALKEND,
 				ground_bestnormal,
 				lreach->end);
 			lreach->traveltype = TRAVEL_WALK;
@@ -1471,7 +1471,7 @@ AAS_Reachability_Step_Barrier_WaterJump_WalkOffLedge(int area1num, int area2num)
 	 * check for a waterjump reachability */
 	if(water_foundreach){
 		/* get a test point a little bit towards area1 */
-		Vec3MA(water_bestend, -INSIDEUNITS, water_bestnormal,
+		vec3ma(water_bestend, -INSIDEUNITS, water_bestnormal,
 			testpoint);
 		/* go down the maximum waterjump height */
 		testpoint[2] -= aassettings.phys_maxwaterjump;
@@ -1493,9 +1493,9 @@ AAS_Reachability_Step_Barrier_WaterJump_WalkOffLedge(int area1num, int area2num)
 					lreach->facenum = 0;
 					lreach->edgenum =
 						water_bestarea2groundedgenum;
-					Vec3Copy(water_beststart,
+					vec3copy(water_beststart,
 						lreach->start);
-					Vec3MA(water_bestend,
+					vec3ma(water_bestend,
 						INSIDEUNITS_WATERJUMP,
 						water_bestnormal,
 						lreach->end);
@@ -1547,11 +1547,11 @@ AAS_Reachability_Step_Barrier_WaterJump_WalkOffLedge(int area1num, int area2num)
 					lreach->facenum = 0;
 					lreach->edgenum =
 						ground_bestarea2groundedgenum;
-					Vec3MA(ground_beststart,
+					vec3ma(ground_beststart,
 						INSIDEUNITS_WALKSTART,
 						ground_bestnormal,
 						lreach->start);
-					Vec3MA(ground_bestend,
+					vec3ma(ground_bestend,
 						INSIDEUNITS_WALKEND,
 						ground_bestnormal,
 						lreach->end);
@@ -1599,10 +1599,10 @@ AAS_Reachability_Step_Barrier_WaterJump_WalkOffLedge(int area1num, int area2num)
 				lreach->areanum = area2num;
 				lreach->facenum = 0;
 				lreach->edgenum = ground_bestarea2groundedgenum;
-				Vec3MA(ground_beststart, INSIDEUNITS_WALKSTART,
+				vec3ma(ground_beststart, INSIDEUNITS_WALKSTART,
 					ground_bestnormal,
 					lreach->start);
-				Vec3MA(ground_bestend, INSIDEUNITS_WALKEND,
+				vec3ma(ground_bestend, INSIDEUNITS_WALKEND,
 					ground_bestnormal,
 					lreach->end);
 				lreach->traveltype = TRAVEL_WALK;
@@ -1618,12 +1618,12 @@ AAS_Reachability_Step_Barrier_WaterJump_WalkOffLedge(int area1num, int area2num)
 			   fabs(ground_bestdist) <
 			   aassettings.rs_maxfallheight){
 				/* trace a bounding box vertically to check for solids */
-				Vec3MA(ground_bestend, INSIDEUNITS,
+				vec3ma(ground_bestend, INSIDEUNITS,
 					ground_bestnormal,
 					ground_bestend);
-				Vec3Copy(ground_bestend, start);
+				vec3copy(ground_bestend, start);
 				start[2] = ground_beststart[2];
-				Vec3Copy(ground_bestend, end);
+				vec3copy(ground_bestend, end);
 				end[2]	+= 4;
 				trace	=
 					AAS_TraceClientBBox(start, end,
@@ -1654,10 +1654,10 @@ AAS_Reachability_Step_Barrier_WaterJump_WalkOffLedge(int area1num, int area2num)
 							lreach->facenum = 0;
 							lreach->edgenum =
 								ground_bestarea2groundedgenum;
-							Vec3Copy(
+							vec3copy(
 								ground_beststart,
 								lreach->start);
-							Vec3Copy(
+							vec3copy(
 								ground_bestend,
 								lreach->end);
 							lreach->traveltype
@@ -1729,13 +1729,13 @@ AAS_Reachability_Step_Barrier_WaterJump_WalkOffLedge(int area1num, int area2num)
  * Changes Globals:		-
  * =========================================================================== */
 float
-VectorVec3Vec3Distance(vec3_t v1, vec3_t v2)
+VectorVec3vec3dist(Vec3 v1, Vec3 v2)
 {
-	vec3_t dir;
+	Vec3 dir;
 
-	Vec3Sub(v2, v1, dir);
-	return Vec3Len(dir);
-}	/* end of the function VectorVec3Vec3Distance */
+	vec3sub(v2, v1, dir);
+	return vec3len(dir);
+}	/* end of the function VectorVec3vec3dist */
 /* ===========================================================================
  * returns true if the first vector is between the last two vectors
  *
@@ -1744,13 +1744,13 @@ VectorVec3Vec3Distance(vec3_t v1, vec3_t v2)
  * Changes Globals:		-
  * =========================================================================== */
 int
-VectorBetweenVectors(vec3_t v, vec3_t v1, vec3_t v2)
+VectorBetweenVectors(Vec3 v, Vec3 v1, Vec3 v2)
 {
-	vec3_t dir1, dir2;
+	Vec3 dir1, dir2;
 
-	Vec3Sub(v, v1, dir1);
-	Vec3Sub(v, v2, dir2);
-	return (Vec3Dot(dir1, dir2) <= 0);
+	vec3sub(v, v1, dir1);
+	vec3sub(v, v2, dir2);
+	return (vec3dot(dir1, dir2) <= 0);
 }	/* end of the function VectorBetweenVectors */
 /* ===========================================================================
  * returns the mid point between the two vectors
@@ -1760,10 +1760,10 @@ VectorBetweenVectors(vec3_t v, vec3_t v1, vec3_t v2)
  * Changes Globals:		-
  * =========================================================================== */
 void
-VectorMiddle(vec3_t v1, vec3_t v2, vec3_t middle)
+VectorMiddle(Vec3 v1, Vec3 v2, Vec3 middle)
 {
-	Vec3Add(v1, v2, middle);
-	VectorScale(middle, 0.5, middle);
+	vec3add(v1, v2, middle);
+	vec3scale(middle, 0.5, middle);
 }	/* end of the function VectorMiddle */
 /* ===========================================================================
  * calculate a range of points closest to each other on both edges
@@ -1777,17 +1777,17 @@ VectorMiddle(vec3_t v1, vec3_t v2, vec3_t middle)
  * Changes Globals:		-
  * =========================================================================== */
 /*
- * float AAS_ClosestEdgePoints(vec3_t v1, vec3_t v2, vec3_t v3, vec3_t v4,
+ * float AAS_ClosestEdgePoints(Vec3 v1, Vec3 v2, Vec3 v3, Vec3 v4,
  *                                                      aas_plane_t *plane1, aas_plane_t *plane2,
- *                                                      vec3_t beststart, vec3_t bestend, float bestdist)
+ *                                                      Vec3 beststart, Vec3 bestend, float bestdist)
  * {
- *      vec3_t dir1, dir2, p1, p2, p3, p4;
+ *      Vec3 dir1, dir2, p1, p2, p3, p4;
  *      float a1, a2, b1, b2, dist;
  *      int founddist;
  *
  *      //edge vectors
- *      Vec3Sub(v2, v1, dir1);
- *      Vec3Sub(v4, v3, dir2);
+ *      vec3sub(v2, v1, dir1);
+ *      vec3sub(v4, v3, dir2);
  *      //get the horizontal directions
  *      dir1[2] = 0;
  *      dir2[2] = 0;
@@ -1802,10 +1802,10 @@ VectorMiddle(vec3_t v1, vec3_t v2, vec3_t middle)
  *              a2 = dir2[1] / dir2[0];
  *              b2 = v3[1] - a2 * v3[0];
  *              //point on the edge vector of area2 closest to v1
- *              p1[0] = (Vec3Dot(v1, dir2) - (a2 * dir2[0] + b2 * dir2[1])) / dir2[0];
+ *              p1[0] = (vec3dot(v1, dir2) - (a2 * dir2[0] + b2 * dir2[1])) / dir2[0];
  *              p1[1] = a2 * p1[0] + b2;
  *              //point on the edge vector of area2 closest to v2
- *              p2[0] = (Vec3Dot(v2, dir2) - (a2 * dir2[0] + b2 * dir2[1])) / dir2[0];
+ *              p2[0] = (vec3dot(v2, dir2) - (a2 * dir2[0] + b2 * dir2[1])) / dir2[0];
  *              p2[1] = a2 * p2[0] + b2;
  *      }
  *      else
@@ -1824,10 +1824,10 @@ VectorMiddle(vec3_t v1, vec3_t v2, vec3_t middle)
  *              a1 = dir1[1] / dir1[0];
  *              b1 = v1[1] - a1 * v1[0];
  *              //point on the edge vector of area1 closest to v3
- *              p3[0] = (Vec3Dot(v3, dir1) - (a1 * dir1[0] + b1 * dir1[1])) / dir1[0];
+ *              p3[0] = (vec3dot(v3, dir1) - (a1 * dir1[0] + b1 * dir1[1])) / dir1[0];
  *              p3[1] = a1 * p3[0] + b1;
  *              //point on the edge vector of area1 closest to v4
- *              p4[0] = (Vec3Dot(v4, dir1) - (a1 * dir1[0] + b1 * dir1[1])) / dir1[0];
+ *              p4[0] = (vec3dot(v4, dir1) - (a1 * dir1[0] + b1 * dir1[1])) / dir1[0];
  *              p4[1] = a1 * p4[0] + b1;
  *      }
  *      else
@@ -1845,16 +1845,16 @@ VectorMiddle(vec3_t v1, vec3_t v2, vec3_t middle)
  *      p3[2] = 0;
  *      p4[2] = 0;
  *      //calculate the z-coordinates from the ground planes
- *      p1[2] = (plane2->dist - Vec3Dot(plane2->normal, p1)) / plane2->normal[2];
- *      p2[2] = (plane2->dist - Vec3Dot(plane2->normal, p2)) / plane2->normal[2];
- *      p3[2] = (plane1->dist - Vec3Dot(plane1->normal, p3)) / plane1->normal[2];
- *      p4[2] = (plane1->dist - Vec3Dot(plane1->normal, p4)) / plane1->normal[2];
+ *      p1[2] = (plane2->dist - vec3dot(plane2->normal, p1)) / plane2->normal[2];
+ *      p2[2] = (plane2->dist - vec3dot(plane2->normal, p2)) / plane2->normal[2];
+ *      p3[2] = (plane1->dist - vec3dot(plane1->normal, p3)) / plane1->normal[2];
+ *      p4[2] = (plane1->dist - vec3dot(plane1->normal, p4)) / plane1->normal[2];
  *      //
  *      founddist = qfalse;
  *      //
  *      if (VectorBetweenVectors(p1, v3, v4))
  *      {
- *              dist = VectorVec3Vec3Distance(v1, p1);
+ *              dist = VectorVec3vec3dist(v1, p1);
  *              if (dist > bestdist - 0.5 && dist < bestdist + 0.5)
  *              {
  *                      VectorMiddle(beststart, v1, beststart);
@@ -1863,14 +1863,14 @@ VectorMiddle(vec3_t v1, vec3_t v2, vec3_t middle)
  *              else if (dist < bestdist)
  *              {
  *                      bestdist = dist;
- *                      Vec3Copy(v1, beststart);
- *                      Vec3Copy(p1, bestend);
+ *                      vec3copy(v1, beststart);
+ *                      vec3copy(p1, bestend);
  *              }
  *              founddist = qtrue;
  *      }
  *      if (VectorBetweenVectors(p2, v3, v4))
  *      {
- *              dist = VectorVec3Vec3Distance(v2, p2);
+ *              dist = VectorVec3vec3dist(v2, p2);
  *              if (dist > bestdist - 0.5 && dist < bestdist + 0.5)
  *              {
  *                      VectorMiddle(beststart, v2, beststart);
@@ -1879,14 +1879,14 @@ VectorMiddle(vec3_t v1, vec3_t v2, vec3_t middle)
  *              else if (dist < bestdist)
  *              {
  *                      bestdist = dist;
- *                      Vec3Copy(v2, beststart);
- *                      Vec3Copy(p2, bestend);
+ *                      vec3copy(v2, beststart);
+ *                      vec3copy(p2, bestend);
  *              }
  *              founddist = qtrue;
  *      }  if
  *      if (VectorBetweenVectors(p3, v1, v2))
  *      {
- *              dist = VectorVec3Vec3Distance(v3, p3);
+ *              dist = VectorVec3vec3dist(v3, p3);
  *              if (dist > bestdist - 0.5 && dist < bestdist + 0.5)
  *              {
  *                      VectorMiddle(beststart, p3, beststart);
@@ -1895,14 +1895,14 @@ VectorMiddle(vec3_t v1, vec3_t v2, vec3_t middle)
  *              else if (dist < bestdist)
  *              {
  *                      bestdist = dist;
- *                      Vec3Copy(p3, beststart);
- *                      Vec3Copy(v3, bestend);
+ *                      vec3copy(p3, beststart);
+ *                      vec3copy(v3, bestend);
  *              }
  *              founddist = qtrue;
  *      }  if
  *      if (VectorBetweenVectors(p4, v1, v2))
  *      {
- *              dist = VectorVec3Vec3Distance(v4, p4);
+ *              dist = VectorVec3vec3dist(v4, p4);
  *              if (dist > bestdist - 0.5 && dist < bestdist + 0.5)
  *              {
  *                      VectorMiddle(beststart, p4, beststart);
@@ -1911,8 +1911,8 @@ VectorMiddle(vec3_t v1, vec3_t v2, vec3_t middle)
  *              else if (dist < bestdist)
  *              {
  *                      bestdist = dist;
- *                      Vec3Copy(p4, beststart);
- *                      Vec3Copy(v4, bestend);
+ *                      vec3copy(p4, beststart);
+ *                      vec3copy(v4, bestend);
  *              }
  *              founddist = qtrue;
  *      }  if
@@ -1920,51 +1920,51 @@ VectorMiddle(vec3_t v1, vec3_t v2, vec3_t middle)
  *      //is between one of the vertexes of edge1 and one of edge2
  *      if (!founddist)
  *      {
- *              dist = VectorVec3Vec3Distance(v1, v3);
+ *              dist = VectorVec3vec3dist(v1, v3);
  *              if (dist < bestdist)
  *              {
  *                      bestdist = dist;
- *                      Vec3Copy(v1, beststart);
- *                      Vec3Copy(v3, bestend);
+ *                      vec3copy(v1, beststart);
+ *                      vec3copy(v3, bestend);
  *              }
- *              dist = VectorVec3Vec3Distance(v1, v4);
+ *              dist = VectorVec3vec3dist(v1, v4);
  *              if (dist < bestdist)
  *              {
  *                      bestdist = dist;
- *                      Vec3Copy(v1, beststart);
- *                      Vec3Copy(v4, bestend);
+ *                      vec3copy(v1, beststart);
+ *                      vec3copy(v4, bestend);
  *              }
- *              dist = VectorVec3Vec3Distance(v2, v3);
+ *              dist = VectorVec3vec3dist(v2, v3);
  *              if (dist < bestdist)
  *              {
  *                      bestdist = dist;
- *                      Vec3Copy(v2, beststart);
- *                      Vec3Copy(v3, bestend);
+ *                      vec3copy(v2, beststart);
+ *                      vec3copy(v3, bestend);
  *              }
- *              dist = VectorVec3Vec3Distance(v2, v4);
+ *              dist = VectorVec3vec3dist(v2, v4);
  *              if (dist < bestdist)
  *              {
  *                      bestdist = dist;
- *                      Vec3Copy(v2, beststart);
- *                      Vec3Copy(v4, bestend);
+ *                      vec3copy(v2, beststart);
+ *                      vec3copy(v4, bestend);
  *              }
  *      }
  *      return bestdist;
  * } //end of the function AAS_ClosestEdgePoints*/
 
 float
-AAS_ClosestEdgePoints(vec3_t v1, vec3_t v2, vec3_t v3, vec3_t v4,
+AAS_ClosestEdgePoints(Vec3 v1, Vec3 v2, Vec3 v3, Vec3 v4,
 		      aas_plane_t *plane1, aas_plane_t *plane2,
-		      vec3_t beststart1, vec3_t bestend1,
-		      vec3_t beststart2, vec3_t bestend2, float bestdist)
+		      Vec3 beststart1, Vec3 bestend1,
+		      Vec3 beststart2, Vec3 bestend2, float bestdist)
 {
-	vec3_t	dir1, dir2, p1, p2, p3, p4;
+	Vec3	dir1, dir2, p1, p2, p3, p4;
 	float	a1, a2, b1, b2, dist, dist1, dist2;
 	int	founddist;
 
 	/* edge vectors */
-	Vec3Sub(v2, v1, dir1);
-	Vec3Sub(v4, v3, dir2);
+	vec3sub(v2, v1, dir1);
+	vec3sub(v4, v3, dir2);
 	/* get the horizontal directions */
 	dir1[2] = 0;
 	dir2[2] = 0;
@@ -1979,13 +1979,13 @@ AAS_ClosestEdgePoints(vec3_t v1, vec3_t v2, vec3_t v3, vec3_t v4,
 		b2 = v3[1] - a2 * v3[0];
 		/* point on the edge vector of area2 closest to v1 */
 		p1[0] =
-			(Vec3Dot(v1,
+			(vec3dot(v1,
 				 dir2) -
 			 (a2 * dir2[0] + b2 * dir2[1])) / dir2[0];
 		p1[1] = a2 * p1[0] + b2;
 		/* point on the edge vector of area2 closest to v2 */
 		p2[0] =
-			(Vec3Dot(v2,
+			(vec3dot(v2,
 				 dir2) -
 			 (a2 * dir2[0] + b2 * dir2[1])) / dir2[0];
 		p2[1] = a2 * p2[0] + b2;
@@ -2004,13 +2004,13 @@ AAS_ClosestEdgePoints(vec3_t v1, vec3_t v2, vec3_t v3, vec3_t v4,
 		b1 = v1[1] - a1 * v1[0];
 		/* point on the edge vector of area1 closest to v3 */
 		p3[0] =
-			(Vec3Dot(v3,
+			(vec3dot(v3,
 				 dir1) -
 			 (a1 * dir1[0] + b1 * dir1[1])) / dir1[0];
 		p3[1] = a1 * p3[0] + b1;
 		/* point on the edge vector of area1 closest to v4 */
 		p4[0] =
-			(Vec3Dot(v4,
+			(vec3dot(v4,
 				 dir1) -
 			 (a1 * dir1[0] + b1 * dir1[1])) / dir1[0];
 		p4[1] = a1 * p4[0] + b1;
@@ -2030,189 +2030,189 @@ AAS_ClosestEdgePoints(vec3_t v1, vec3_t v2, vec3_t v3, vec3_t v4,
 	/* calculate the z-coordinates from the ground planes */
 	p1[2] =
 		(plane2->dist -
-		 Vec3Dot(plane2->normal, p1)) / plane2->normal[2];
+		 vec3dot(plane2->normal, p1)) / plane2->normal[2];
 	p2[2] =
 		(plane2->dist -
-		 Vec3Dot(plane2->normal, p2)) / plane2->normal[2];
+		 vec3dot(plane2->normal, p2)) / plane2->normal[2];
 	p3[2] =
 		(plane1->dist -
-		 Vec3Dot(plane1->normal, p3)) / plane1->normal[2];
+		 vec3dot(plane1->normal, p3)) / plane1->normal[2];
 	p4[2] =
 		(plane1->dist -
-		 Vec3Dot(plane1->normal, p4)) / plane1->normal[2];
+		 vec3dot(plane1->normal, p4)) / plane1->normal[2];
 	/*  */
 	founddist = qfalse;
 	/*  */
 	if(VectorBetweenVectors(p1, v3, v4)){
-		dist = VectorVec3Vec3Distance(v1, p1);
+		dist = VectorVec3vec3dist(v1, p1);
 		if(dist > bestdist - 0.5 && dist < bestdist + 0.5){
-			dist1	= VectorVec3Vec3Distance(beststart1, v1);
-			dist2	= VectorVec3Vec3Distance(beststart2, v1);
+			dist1	= VectorVec3vec3dist(beststart1, v1);
+			dist2	= VectorVec3vec3dist(beststart2, v1);
 			if(dist1 > dist2){
 				if(dist1 >
-				   VectorVec3Vec3Distance(beststart1,
-					   beststart2)) Vec3Copy(
+				   VectorVec3vec3dist(beststart1,
+					   beststart2)) vec3copy(
 						v1, beststart2);
 			}else if(dist2 >
-				 VectorVec3Vec3Distance(beststart1,
-					 beststart2)) Vec3Copy(
+				 VectorVec3vec3dist(beststart1,
+					 beststart2)) vec3copy(
 					v1, beststart1);
-			dist1	= VectorVec3Vec3Distance(bestend1, p1);
-			dist2	= VectorVec3Vec3Distance(bestend2, p1);
+			dist1	= VectorVec3vec3dist(bestend1, p1);
+			dist2	= VectorVec3vec3dist(bestend2, p1);
 			if(dist1 > dist2){
 				if(dist1 >
-				   VectorVec3Vec3Distance(bestend1,
-					   bestend2)) Vec3Copy(
+				   VectorVec3vec3dist(bestend1,
+					   bestend2)) vec3copy(
 						p1, bestend2);
 			}else if(dist2 >
-				 VectorVec3Vec3Distance(bestend1,
-					 bestend2)) Vec3Copy(
+				 VectorVec3vec3dist(bestend1,
+					 bestend2)) vec3copy(
 					p1, bestend1);
 		}else if(dist < bestdist){
 			bestdist = dist;
-			Vec3Copy(v1, beststart1);
-			Vec3Copy(v1, beststart2);
-			Vec3Copy(p1, bestend1);
-			Vec3Copy(p1, bestend2);
+			vec3copy(v1, beststart1);
+			vec3copy(v1, beststart2);
+			vec3copy(p1, bestend1);
+			vec3copy(p1, bestend2);
 		}
 		founddist = qtrue;
 	}
 	if(VectorBetweenVectors(p2, v3, v4)){
-		dist = VectorVec3Vec3Distance(v2, p2);
+		dist = VectorVec3vec3dist(v2, p2);
 		if(dist > bestdist - 0.5 && dist < bestdist + 0.5){
-			dist1	= VectorVec3Vec3Distance(beststart1, v2);
-			dist2	= VectorVec3Vec3Distance(beststart2, v2);
+			dist1	= VectorVec3vec3dist(beststart1, v2);
+			dist2	= VectorVec3vec3dist(beststart2, v2);
 			if(dist1 > dist2){
 				if(dist1 >
-				   VectorVec3Vec3Distance(beststart1,
-					   beststart2)) Vec3Copy(
+				   VectorVec3vec3dist(beststart1,
+					   beststart2)) vec3copy(
 						v2, beststart2);
 			}else if(dist2 >
-				 VectorVec3Vec3Distance(beststart1,
-					 beststart2)) Vec3Copy(
+				 VectorVec3vec3dist(beststart1,
+					 beststart2)) vec3copy(
 					v2, beststart1);
-			dist1	= VectorVec3Vec3Distance(bestend1, p2);
-			dist2	= VectorVec3Vec3Distance(bestend2, p2);
+			dist1	= VectorVec3vec3dist(bestend1, p2);
+			dist2	= VectorVec3vec3dist(bestend2, p2);
 			if(dist1 > dist2){
 				if(dist1 >
-				   VectorVec3Vec3Distance(bestend1,
-					   bestend2)) Vec3Copy(
+				   VectorVec3vec3dist(bestend1,
+					   bestend2)) vec3copy(
 						p2, bestend2);
 			}else if(dist2 >
-				 VectorVec3Vec3Distance(bestend1,
-					 bestend2)) Vec3Copy(
+				 VectorVec3vec3dist(bestend1,
+					 bestend2)) vec3copy(
 					p2, bestend1);
 		}else if(dist < bestdist){
 			bestdist = dist;
-			Vec3Copy(v2, beststart1);
-			Vec3Copy(v2, beststart2);
-			Vec3Copy(p2, bestend1);
-			Vec3Copy(p2, bestend2);
+			vec3copy(v2, beststart1);
+			vec3copy(v2, beststart2);
+			vec3copy(p2, bestend1);
+			vec3copy(p2, bestend2);
 		}
 		founddist = qtrue;
 	}	/* end else if */
 	if(VectorBetweenVectors(p3, v1, v2)){
-		dist = VectorVec3Vec3Distance(v3, p3);
+		dist = VectorVec3vec3dist(v3, p3);
 		if(dist > bestdist - 0.5 && dist < bestdist + 0.5){
-			dist1	= VectorVec3Vec3Distance(beststart1, p3);
-			dist2	= VectorVec3Vec3Distance(beststart2, p3);
+			dist1	= VectorVec3vec3dist(beststart1, p3);
+			dist2	= VectorVec3vec3dist(beststart2, p3);
 			if(dist1 > dist2){
 				if(dist1 >
-				   VectorVec3Vec3Distance(beststart1,
-					   beststart2)) Vec3Copy(
+				   VectorVec3vec3dist(beststart1,
+					   beststart2)) vec3copy(
 						p3, beststart2);
 			}else if(dist2 >
-				 VectorVec3Vec3Distance(beststart1,
-					 beststart2)) Vec3Copy(
+				 VectorVec3vec3dist(beststart1,
+					 beststart2)) vec3copy(
 					p3, beststart1);
-			dist1	= VectorVec3Vec3Distance(bestend1, v3);
-			dist2	= VectorVec3Vec3Distance(bestend2, v3);
+			dist1	= VectorVec3vec3dist(bestend1, v3);
+			dist2	= VectorVec3vec3dist(bestend2, v3);
 			if(dist1 > dist2){
 				if(dist1 >
-				   VectorVec3Vec3Distance(bestend1,
-					   bestend2)) Vec3Copy(
+				   VectorVec3vec3dist(bestend1,
+					   bestend2)) vec3copy(
 						v3, bestend2);
 			}else if(dist2 >
-				 VectorVec3Vec3Distance(bestend1,
-					 bestend2)) Vec3Copy(
+				 VectorVec3vec3dist(bestend1,
+					 bestend2)) vec3copy(
 					v3, bestend1);
 		}else if(dist < bestdist){
 			bestdist = dist;
-			Vec3Copy(p3, beststart1);
-			Vec3Copy(p3, beststart2);
-			Vec3Copy(v3, bestend1);
-			Vec3Copy(v3, bestend2);
+			vec3copy(p3, beststart1);
+			vec3copy(p3, beststart2);
+			vec3copy(v3, bestend1);
+			vec3copy(v3, bestend2);
 		}
 		founddist = qtrue;
 	}	/* end else if */
 	if(VectorBetweenVectors(p4, v1, v2)){
-		dist = VectorVec3Vec3Distance(v4, p4);
+		dist = VectorVec3vec3dist(v4, p4);
 		if(dist > bestdist - 0.5 && dist < bestdist + 0.5){
-			dist1	= VectorVec3Vec3Distance(beststart1, p4);
-			dist2	= VectorVec3Vec3Distance(beststart2, p4);
+			dist1	= VectorVec3vec3dist(beststart1, p4);
+			dist2	= VectorVec3vec3dist(beststart2, p4);
 			if(dist1 > dist2){
 				if(dist1 >
-				   VectorVec3Vec3Distance(beststart1,
-					   beststart2)) Vec3Copy(
+				   VectorVec3vec3dist(beststart1,
+					   beststart2)) vec3copy(
 						p4, beststart2);
 			}else if(dist2 >
-				 VectorVec3Vec3Distance(beststart1,
-					 beststart2)) Vec3Copy(
+				 VectorVec3vec3dist(beststart1,
+					 beststart2)) vec3copy(
 					p4, beststart1);
-			dist1	= VectorVec3Vec3Distance(bestend1, v4);
-			dist2	= VectorVec3Vec3Distance(bestend2, v4);
+			dist1	= VectorVec3vec3dist(bestend1, v4);
+			dist2	= VectorVec3vec3dist(bestend2, v4);
 			if(dist1 > dist2){
 				if(dist1 >
-				   VectorVec3Vec3Distance(bestend1,
-					   bestend2)) Vec3Copy(
+				   VectorVec3vec3dist(bestend1,
+					   bestend2)) vec3copy(
 						v4, bestend2);
 			}else if(dist2 >
-				 VectorVec3Vec3Distance(bestend1,
-					 bestend2)) Vec3Copy(
+				 VectorVec3vec3dist(bestend1,
+					 bestend2)) vec3copy(
 					v4, bestend1);
 		}else if(dist < bestdist){
 			bestdist = dist;
-			Vec3Copy(p4, beststart1);
-			Vec3Copy(p4, beststart2);
-			Vec3Copy(v4, bestend1);
-			Vec3Copy(v4, bestend2);
+			vec3copy(p4, beststart1);
+			vec3copy(p4, beststart2);
+			vec3copy(v4, bestend1);
+			vec3copy(v4, bestend2);
 		}
 		founddist = qtrue;
 	}	/* end else if */
 		/* if no shortest distance was found the shortest distance */
 		/* is between one of the vertexes of edge1 and one of edge2 */
 	if(!founddist){
-		dist = VectorVec3Vec3Distance(v1, v3);
+		dist = VectorVec3vec3dist(v1, v3);
 		if(dist < bestdist){
 			bestdist = dist;
-			Vec3Copy(v1, beststart1);
-			Vec3Copy(v1, beststart2);
-			Vec3Copy(v3, bestend1);
-			Vec3Copy(v3, bestend2);
+			vec3copy(v1, beststart1);
+			vec3copy(v1, beststart2);
+			vec3copy(v3, bestend1);
+			vec3copy(v3, bestend2);
 		}
-		dist = VectorVec3Vec3Distance(v1, v4);
+		dist = VectorVec3vec3dist(v1, v4);
 		if(dist < bestdist){
 			bestdist = dist;
-			Vec3Copy(v1, beststart1);
-			Vec3Copy(v1, beststart2);
-			Vec3Copy(v4, bestend1);
-			Vec3Copy(v4, bestend2);
+			vec3copy(v1, beststart1);
+			vec3copy(v1, beststart2);
+			vec3copy(v4, bestend1);
+			vec3copy(v4, bestend2);
 		}
-		dist = VectorVec3Vec3Distance(v2, v3);
+		dist = VectorVec3vec3dist(v2, v3);
 		if(dist < bestdist){
 			bestdist = dist;
-			Vec3Copy(v2, beststart1);
-			Vec3Copy(v2, beststart2);
-			Vec3Copy(v3, bestend1);
-			Vec3Copy(v3, bestend2);
+			vec3copy(v2, beststart1);
+			vec3copy(v2, beststart2);
+			vec3copy(v3, bestend1);
+			vec3copy(v3, bestend2);
 		}
-		dist = VectorVec3Vec3Distance(v2, v4);
+		dist = VectorVec3vec3dist(v2, v4);
 		if(dist < bestdist){
 			bestdist = dist;
-			Vec3Copy(v2, beststart1);
-			Vec3Copy(v2, beststart2);
-			Vec3Copy(v4, bestend1);
-			Vec3Copy(v4, bestend2);
+			vec3copy(v2, beststart1);
+			vec3copy(v2, beststart2);
+			vec3copy(v4, bestend1);
+			vec3copy(v4, bestend2);
 		}
 	}
 	return bestdist;
@@ -2239,9 +2239,9 @@ AAS_Reachability_Jump(int area1num, int area2num)
 	int	stopevent, areas[10], numareas;
 	float phys_jumpvel, maxjumpdistance, maxjumpheight, height, bestdist,
 	      speed;
-	vec_t	*v1, *v2, *v3, *v4;
-	vec3_t	beststart, beststart2, bestend, bestend2;
-	vec3_t	teststart, testend, dir, velocity, cmdmove, up =
+	Scalar	*v1, *v2, *v3, *v4;
+	Vec3	beststart, beststart2, bestend, bestend2;
+	Vec3	teststart, testend, dir, velocity, cmdmove, up =
 	{0, 0, 1}, sidewards;
 	aas_area_t *area1, *area2;
 	aas_face_t *face1, *face2;
@@ -2261,7 +2261,7 @@ AAS_Reachability_Jump(int area1num, int area2num)
 	/*  */
 	phys_jumpvel = aassettings.phys_jumpvel;
 	/* maximum distance a player can jump */
-	maxjumpdistance = 2 * AAS_MaxJumpVec3Vec3Distance(phys_jumpvel);
+	maxjumpdistance = 2 * AAS_MaxJumpVec3vec3dist(phys_jumpvel);
 	/* maximum height a player can jump with the given initial z velocity */
 	maxjumpheight = AAS_MaxJumpHeight(phys_jumpvel);
 
@@ -2346,17 +2346,17 @@ AAS_Reachability_Jump(int area1num, int area2num)
 			traveltype = TRAVEL_JUMP;
 			/*
 			 * NOTE: test if the horizontal distance isn't too small */
-			Vec3Sub(bestend, beststart, dir);
+			vec3sub(bestend, beststart, dir);
 			dir[2] = 0;
-			if(Vec3Len(dir) < 10)
+			if(vec3len(dir) < 10)
 				return qfalse;
 		}
 		/*  */
-		Vec3Sub(bestend, beststart, dir);
-		Vec3Normalize(dir);
-		Vec3MA(beststart, 1, dir, teststart);
+		vec3sub(bestend, beststart, dir);
+		vec3normalize(dir);
+		vec3ma(beststart, 1, dir, teststart);
 		/*  */
-		Vec3Copy(teststart, testend);
+		vec3copy(teststart, testend);
 		testend[2] -= 100;
 		trace = AAS_TraceClientBBox(teststart, testend, PRESENCE_NORMAL,
 			-1);
@@ -2366,7 +2366,7 @@ AAS_Reachability_Jump(int area1num, int area2num)
 		if(trace.fraction < 1){
 			plane = &aasworld.planes[trace.planenum];
 			/* if the bot can stand on the surface */
-			if(Vec3Dot(plane->normal, up) >= 0.7)
+			if(vec3dot(plane->normal, up) >= 0.7)
 				/* if no lava or slime below */
 				if(!(AAS_PointContents(trace.endpos) &
 				     (CONTENTS_LAVA|CONTENTS_SLIME)))
@@ -2375,9 +2375,9 @@ AAS_Reachability_Jump(int area1num, int area2num)
 						return qfalse;
 		}
 		/*  */
-		Vec3MA(bestend, -1, dir, teststart);
+		vec3ma(bestend, -1, dir, teststart);
 		/*  */
-		Vec3Copy(teststart, testend);
+		vec3copy(teststart, testend);
 		testend[2] -= 100;
 		trace = AAS_TraceClientBBox(teststart, testend, PRESENCE_NORMAL,
 			-1);
@@ -2387,7 +2387,7 @@ AAS_Reachability_Jump(int area1num, int area2num)
 		if(trace.fraction < 1){
 			plane = &aasworld.planes[trace.planenum];
 			/* if the bot can stand on the surface */
-			if(Vec3Dot(plane->normal, up) >= 0.7)
+			if(vec3dot(plane->normal, up) >= 0.7)
 				/* if no lava or slime below */
 				if(!(AAS_PointContents(trace.endpos) &
 				     (CONTENTS_LAVA|CONTENTS_SLIME)))
@@ -2397,16 +2397,16 @@ AAS_Reachability_Jump(int area1num, int area2num)
 		}
 		/*  */
 		/* get command movement */
-		VectorClear(cmdmove);
+		vec3clear(cmdmove);
 		if((traveltype & TRAVELTYPE_MASK) == TRAVEL_JUMP)
 			cmdmove[2] = aassettings.phys_jumpvel;
 		else
 			cmdmove[2] = 0;
 		/*  */
-		Vec3Sub(bestend, beststart, dir);
+		vec3sub(bestend, beststart, dir);
 		dir[2] = 0;
-		Vec3Normalize(dir);
-		Vec3Cross(dir, up, sidewards);
+		vec3normalize(dir);
+		vec3cross(dir, up, sidewards);
 		/*  */
 		stopevent = SE_HITGROUND|SE_ENTERWATER|SE_ENTERSLIME|
 			    SE_ENTERLAVA|SE_HITGROUNDDAMAGE;
@@ -2417,15 +2417,15 @@ AAS_Reachability_Jump(int area1num, int area2num)
 		for(i = 0; i < 3; i++){
 			/*  */
 			if(i == 1)
-				Vec3Add(testend, sidewards, testend);
+				vec3add(testend, sidewards, testend);
 			else if(i == 2)
-				Vec3Sub(bestend, sidewards, testend);
+				vec3sub(bestend, sidewards, testend);
 			else
-				Vec3Copy(bestend, testend);
-			Vec3Sub(testend, beststart, dir);
+				vec3copy(bestend, testend);
+			vec3sub(testend, beststart, dir);
 			dir[2] = 0;
-			Vec3Normalize(dir);
-			VectorScale(dir, speed, velocity);
+			vec3normalize(dir);
+			vec3scale(dir, speed, velocity);
 			/*  */
 			AAS_PredictClientMovement(&move, -1, beststart,
 				PRESENCE_NORMAL, qtrue,
@@ -2443,7 +2443,7 @@ AAS_Reachability_Jump(int area1num, int area2num)
 				return qfalse;
 			/* the end position should be in area2, also test a little bit back
 			 * because the predicted jump could have rushed through the area */
-			Vec3MA(move.endpos, -64, dir, teststart);
+			vec3ma(move.endpos, -64, dir, teststart);
 			teststart[2] += 1;
 			numareas =
 				AAS_TraceAreas(move.endpos, teststart, areas,
@@ -2470,21 +2470,21 @@ AAS_Reachability_Jump(int area1num, int area2num)
 		lreach->areanum = area2num;
 		lreach->facenum = 0;
 		lreach->edgenum = 0;
-		Vec3Copy(beststart, lreach->start);
-		Vec3Copy(bestend, lreach->end);
+		vec3copy(beststart, lreach->start);
+		vec3copy(bestend, lreach->end);
 		lreach->traveltype = traveltype;
 
-		Vec3Sub(bestend, beststart, dir);
+		vec3sub(bestend, beststart, dir);
 		height	= dir[2];
 		dir[2]	= 0;
 		if((traveltype & TRAVELTYPE_MASK) == TRAVEL_WALKOFFLEDGE &&
-		   height > Vec3Len(dir))
+		   height > vec3len(dir))
 			lreach->traveltime = aassettings.rs_startwalkoffledge +
 					     height * 50 /
 					     aassettings.phys_gravity;
 		else
 			lreach->traveltime = aassettings.rs_startjump +
-					     VectorVec3Vec3Distance(bestend,
+					     VectorVec3vec3dist(bestend,
 				beststart) * 240 /
 					     aassettings.phys_maxwalkvelocity;
 		/*  */
@@ -2524,8 +2524,8 @@ AAS_Reachability_Ladder(int area1num, int area2num)
 	float	face1area, face2area, bestface1area = -9999, bestface2area =
 		-9999;
 	float	phys_jumpvel, maxjumpheight;
-	vec3_t	area1point, area2point, v1, v2, up = {0, 0, 1};
-	vec3_t	mid, lowestpoint = {0, 0}, start, end, sharededgevec, dir;
+	Vec3	area1point, area2point, v1, v2, up = {0, 0, 1};
+	Vec3	mid, lowestpoint = {0, 0}, start, end, sharededgevec, dir;
 	aas_area_t *area1, *area2;
 	aas_face_t *face1, *face2, *ladderface1 = NULL, *ladderface2 = NULL;
 	aas_plane_t *plane1, *plane2;
@@ -2596,11 +2596,11 @@ AAS_Reachability_Ladder(int area1num, int area2num)
 		sharededge = &aasworld.edges[abs(sharededgenum)];
 		firstv = sharededgenum < 0;
 		/*  */
-		Vec3Copy(aasworld.vertexes[sharededge->v[firstv]], v1);
-		Vec3Copy(aasworld.vertexes[sharededge->v[!firstv]], v2);
-		Vec3Add(v1, v2, area1point);
-		VectorScale(area1point, 0.5, area1point);
-		Vec3Copy(area1point, area2point);
+		vec3copy(aasworld.vertexes[sharededge->v[firstv]], v1);
+		vec3copy(aasworld.vertexes[sharededge->v[!firstv]], v2);
+		vec3add(v1, v2, area1point);
+		vec3scale(area1point, 0.5, area1point);
+		vec3copy(area1point, area2point);
 		/*
 		 * if the face plane in area 1 is pretty much vertical */
 		plane1 =
@@ -2611,34 +2611,34 @@ AAS_Reachability_Ladder(int area1num, int area2num)
 					 (ladderface2num < 0)];
 		/*
 		 * get the points really into the areas */
-		Vec3Sub(v2, v1, sharededgevec);
-		Vec3Cross(plane1->normal, sharededgevec, dir);
-		Vec3Normalize(dir);
+		vec3sub(v2, v1, sharededgevec);
+		vec3cross(plane1->normal, sharededgevec, dir);
+		vec3normalize(dir);
 		/* NOTE: 32 because that's larger than 16 (bot bbox x,y) */
-		Vec3MA(area1point, -32, dir, area1point);
-		Vec3MA(area2point, 32, dir, area2point);
+		vec3ma(area1point, -32, dir, area1point);
+		vec3ma(area2point, 32, dir, area2point);
 		/*  */
 		ladderface1vertical =
-			abs(Vec3Dot(plane1->normal, up)) < 0.1;
+			abs(vec3dot(plane1->normal, up)) < 0.1;
 		ladderface2vertical =
-			abs(Vec3Dot(plane2->normal, up)) < 0.1;
+			abs(vec3dot(plane2->normal, up)) < 0.1;
 		/* there's only reachability between vertical ladder faces */
 		if(!ladderface1vertical && !ladderface2vertical) return qfalse;
 		/* if both vertical ladder faces */
 		if(ladderface1vertical && ladderface2vertical
 			/* and the ladder faces do not make a sharp corner */
-		   && Vec3Dot(plane1->normal, plane2->normal) > 0.7
+		   && vec3dot(plane1->normal, plane2->normal) > 0.7
 			/* and the shared edge is not too vertical */
-		   && abs(Vec3Dot(sharededgevec, up)) < 0.7){
+		   && abs(vec3dot(sharededgevec, up)) < 0.7){
 			/* create a new reachability link */
 			lreach = AAS_AllocReachability();
 			if(!lreach) return qfalse;
 			lreach->areanum = area2num;
 			lreach->facenum = ladderface1num;
 			lreach->edgenum = abs(sharededgenum);
-			Vec3Copy(area1point, lreach->start);
-			/* Vec3Copy(area2point, lreach->end); */
-			Vec3MA(area2point, -3, plane1->normal, lreach->end);
+			vec3copy(area1point, lreach->start);
+			/* vec3copy(area2point, lreach->end); */
+			vec3ma(area2point, -3, plane1->normal, lreach->end);
 			lreach->traveltype = TRAVEL_LADDER;
 			lreach->traveltime = 10;
 			lreach->next = areareachability[area1num];
@@ -2651,9 +2651,9 @@ AAS_Reachability_Ladder(int area1num, int area2num)
 			lreach->areanum = area1num;
 			lreach->facenum = ladderface2num;
 			lreach->edgenum = abs(sharededgenum);
-			Vec3Copy(area2point, lreach->start);
-			/* Vec3Copy(area1point, lreach->end); */
-			Vec3MA(area1point, -3, plane1->normal, lreach->end);
+			vec3copy(area2point, lreach->start);
+			/* vec3copy(area1point, lreach->end); */
+			vec3ma(area1point, -3, plane1->normal, lreach->end);
 			lreach->traveltype = TRAVEL_LADDER;
 			lreach->traveltime = 10;
 			lreach->next = areareachability[area2num];
@@ -2674,10 +2674,10 @@ AAS_Reachability_Ladder(int area1num, int area2num)
 			lreach->areanum = area2num;
 			lreach->facenum = ladderface1num;
 			lreach->edgenum = abs(sharededgenum);
-			Vec3Copy(area1point, lreach->start);
-			Vec3Copy(area2point, lreach->end);
+			vec3copy(area1point, lreach->start);
+			vec3copy(area2point, lreach->end);
 			lreach->end[2] += 16;
-			Vec3MA(lreach->end, -15, plane1->normal, lreach->end);
+			vec3ma(lreach->end, -15, plane1->normal, lreach->end);
 			lreach->traveltype = TRAVEL_LADDER;
 			lreach->traveltime = 10;
 			lreach->next = areareachability[area1num];
@@ -2690,8 +2690,8 @@ AAS_Reachability_Ladder(int area1num, int area2num)
 			lreach->areanum = area1num;
 			lreach->facenum = ladderface2num;
 			lreach->edgenum = abs(sharededgenum);
-			Vec3Copy(area2point, lreach->start);
-			Vec3Copy(area1point, lreach->end);
+			vec3copy(area2point, lreach->start);
+			vec3copy(area1point, lreach->end);
 			lreach->traveltype = TRAVEL_WALKOFFLEDGE;
 			lreach->traveltime = 10;
 			lreach->next = areareachability[area2num];
@@ -2713,22 +2713,22 @@ AAS_Reachability_Ladder(int area1num, int area2num)
 								   i]);
 				edge1 = &aasworld.edges[edge1num];
 				/*  */
-				Vec3Copy(aasworld.vertexes[edge1->v[0]], v1);
-				Vec3Copy(aasworld.vertexes[edge1->v[1]], v2);
+				vec3copy(aasworld.vertexes[edge1->v[0]], v1);
+				vec3copy(aasworld.vertexes[edge1->v[1]], v2);
 				/*  */
-				Vec3Add(v1, v2, mid);
-				VectorScale(mid, 0.5, mid);
+				vec3add(v1, v2, mid);
+				vec3scale(mid, 0.5, mid);
 				/*  */
 				if(mid[2] < lowestpoint[2]){
-					Vec3Copy(mid, lowestpoint);
+					vec3copy(mid, lowestpoint);
 					lowestedgenum = edge1num;
 				}
 			}
 			/*  */
 			plane1 = &aasworld.planes[ladderface1->planenum];
 			/* trace down in the middle of this edge */
-			Vec3MA(lowestpoint, 5, plane1->normal, start);
-			Vec3Copy(start, end);
+			vec3ma(lowestpoint, 5, plane1->normal, start);
+			vec3copy(start, end);
 			start[2] += 5;
 			end[2] -= 100;
 			/* trace without entity collision */
@@ -2756,7 +2756,7 @@ AAS_Reachability_Ladder(int area1num, int area2num)
 					plane2 =
 						&aasworld.planes[face2->planenum
 						];
-					if(abs(Vec3Dot(plane2->normal,
+					if(abs(vec3dot(plane2->normal,
 							   up)) < 0.1) break;
 				}
 			}
@@ -2773,8 +2773,8 @@ AAS_Reachability_Ladder(int area1num, int area2num)
 					lreach->areanum = area2num;
 					lreach->facenum = ladderface1num;
 					lreach->edgenum = lowestedgenum;
-					Vec3Copy(lowestpoint, lreach->start);
-					Vec3Copy(trace.endpos, lreach->end);
+					vec3copy(lowestpoint, lreach->start);
+					vec3copy(trace.endpos, lreach->end);
 					lreach->traveltype = TRAVEL_LADDER;
 					lreach->traveltime = 10;
 					lreach->next =
@@ -2788,9 +2788,9 @@ AAS_Reachability_Ladder(int area1num, int area2num)
 					lreach->areanum = area1num;
 					lreach->facenum = ladderface1num;
 					lreach->edgenum = lowestedgenum;
-					Vec3Copy(trace.endpos, lreach->start);
+					vec3copy(trace.endpos, lreach->start);
 					/* get the end point a little bit into the ladder */
-					Vec3MA(lowestpoint, -5, plane1->normal,
+					vec3ma(lowestpoint, -5, plane1->normal,
 						lreach->end);
 					/* get the end point a little higher */
 					lreach->end[2] += 10;
@@ -2823,9 +2823,9 @@ AAS_Reachability_Ladder(int area1num, int area2num)
 			    AREACONTENTS_LAVA))
 				for(i = 20; i <= 120; i += 20){
 					/* trace down in the middle of this edge */
-					Vec3MA(lowestpoint, i, plane1->normal,
+					vec3ma(lowestpoint, i, plane1->normal,
 						start);
-					Vec3Copy(start, end);
+					vec3copy(start, end);
 					start[2] += 5;
 					end[2] -= 100;
 					/* trace without entity collision */
@@ -2851,8 +2851,8 @@ AAS_Reachability_Ladder(int area1num, int area2num)
 					lreach->areanum = area1num;
 					lreach->facenum = ladderface1num;
 					lreach->edgenum = lowestedgenum;
-					Vec3Copy(trace.endpos, lreach->start);
-					Vec3Copy(lowestpoint, lreach->end);
+					vec3copy(trace.endpos, lreach->start);
+					vec3copy(lowestpoint, lreach->end);
 					lreach->end[2] += 5;
 					lreach->traveltype = TRAVEL_JUMP;
 					lreach->traveltime = 10;
@@ -2918,8 +2918,8 @@ AAS_Reachability_Teleport(void)
 	char	classname[MAX_EPAIRKEY], model[MAX_EPAIRKEY];
 	int	ent, dest;
 	float	angle;
-	vec3_t	origin, destorigin, mins, maxs, end, angles;
-	vec3_t	mid, velocity, cmdmove;
+	Vec3	origin, destorigin, mins, maxs, end, angles;
+	Vec3	mid, velocity, cmdmove;
 	aas_lreachability_t	*lreach;
 	aas_clientmove_t	move;
 	aas_trace_t trace;
@@ -2936,7 +2936,7 @@ AAS_Reachability_Teleport(void)
 				"trigger_multiple model = \"%s\"\n",
 				model);
 /* #endif REACH_DEBUG */
-			VectorClear(angles);
+			vec3clear(angles);
 			AAS_BSPModelMinsMaxsOrigin(atoi(
 					model+1), angles, mins, maxs, origin);
 			/*  */
@@ -2977,7 +2977,7 @@ AAS_Reachability_Teleport(void)
 				"trigger_teleport model = \"%s\"\n",
 				model);
 /* #endif REACH_DEBUG */
-			VectorClear(angles);
+			vec3clear(angles);
 			AAS_BSPModelMinsMaxsOrigin(atoi(
 					model+1), angles, mins, maxs, origin);
 			/*  */
@@ -3019,7 +3019,7 @@ AAS_Reachability_Teleport(void)
 		area2num = AAS_PointAreaNum(destorigin);
 		/* if not teleported into a teleporter or into a jumppad */
 		if(!AAS_AreaTeleporter(area2num) && !AAS_AreaJumpPad(area2num)){
-			Vec3Copy(destorigin, end);
+			vec3copy(destorigin, end);
 			end[2]	-= 64;
 			trace	=
 				AAS_TraceClientBBox(destorigin, end,
@@ -3039,20 +3039,20 @@ AAS_Reachability_Teleport(void)
 			 *      !AAS_AreaJumpPad(area2num) &&
 			 *      !AAS_AreaGrounded(area2num))
 			 * {
-			 *      Vec3Copy(trace.endpos, destorigin);
+			 *      vec3copy(trace.endpos, destorigin);
 			 * }
 			 * else*/
 			{
 				/* predict where you'll end up */
 				AAS_FloatForBSPEpairKey(dest, "angle", &angle);
 				if(angle){
-					VectorSet(angles, 0, angle, 0);
-					AngleVectors(angles, velocity, NULL,
+					vec3set(angles, 0, angle, 0);
+					anglevec3s(angles, velocity, NULL,
 						NULL);
-					VectorScale(velocity, 400, velocity);
+					vec3scale(velocity, 400, velocity);
 				}else
-					VectorClear(velocity);
-				VectorClear(cmdmove);
+					vec3clear(velocity);
+				vec3clear(cmdmove);
 				AAS_PredictClientMovement(
 					&move, -1, destorigin, PRESENCE_NORMAL,
 					qfalse,
@@ -3068,18 +3068,18 @@ AAS_Reachability_Teleport(void)
 						PRT_WARNING,
 						"teleported into slime or lava at dest %s\n",
 						target);
-				Vec3Copy(move.endpos, destorigin);
+				vec3copy(move.endpos, destorigin);
 			}
 		}
 		/*  */
 		/* botimport.Print(PRT_MESSAGE, "teleporter brush origin at %f %f %f\n", origin[0], origin[1], origin[2]); */
 		/* botimport.Print(PRT_MESSAGE, "teleporter brush mins = %f %f %f\n", mins[0], mins[1], mins[2]); */
 		/* botimport.Print(PRT_MESSAGE, "teleporter brush maxs = %f %f %f\n", maxs[0], maxs[1], maxs[2]); */
-		Vec3Add(origin, mins, mins);
-		Vec3Add(origin, maxs, maxs);
+		vec3add(origin, mins, mins);
+		vec3add(origin, maxs, maxs);
 		/*  */
-		Vec3Add(mins, maxs, mid);
-		VectorScale(mid, 0.5, mid);
+		vec3add(mins, maxs, mid);
+		vec3scale(mid, 0.5, mid);
 		/* link an invalid (-1) entity */
 		areas = AAS_LinkEntityClientBBox(mins, maxs, -1, PRESENCE_CROUCH);
 		if(!areas) botimport.Print(PRT_MESSAGE,
@@ -3096,8 +3096,8 @@ AAS_Reachability_Teleport(void)
 			lreach->areanum = area2num;
 			lreach->facenum = 0;
 			lreach->edgenum = 0;
-			Vec3Copy(mid, lreach->start);
-			Vec3Copy(destorigin, lreach->end);
+			vec3copy(mid, lreach->start);
+			vec3copy(destorigin, lreach->end);
 			lreach->traveltype = TRAVEL_TELEPORT;
 			lreach->traveltype |= AAS_TravelFlagsForTeam(ent);
 			lreach->traveltime = aassettings.rs_teleport;
@@ -3125,10 +3125,10 @@ AAS_Reachability_Elevator(void)
 	float	lip, height, speed;
 	char	model[MAX_EPAIRKEY], classname[MAX_EPAIRKEY];
 	int	ent;
-	vec3_t	mins, maxs, origin, angles = {0, 0, 0};
-	vec3_t	pos1, pos2, mids, platbottom, plattop;
-	vec3_t	bottomorg, toporg, start, end, dir;
-	vec_t	xvals[8], yvals[8], xvals_top[8], yvals_top[8];
+	Vec3	mins, maxs, origin, angles = {0, 0, 0};
+	Vec3	pos1, pos2, mids, platbottom, plattop;
+	Vec3	bottomorg, toporg, start, end, dir;
+	Scalar	xvals[8], yvals[8], xvals_top[8], yvals_top[8];
 	aas_lreachability_t *lreach;
 	aas_trace_t trace;
 
@@ -3164,8 +3164,8 @@ AAS_Reachability_Elevator(void)
 			/*  */
 			AAS_VectorForBSPEpairKey(ent, "origin", origin);
 			/* pos1 is the top position, pos2 is the bottom */
-			Vec3Copy(origin, pos1);
-			Vec3Copy(origin, pos2);
+			vec3copy(origin, pos1);
+			vec3copy(origin, pos2);
 			/* get the lip of the plat */
 			AAS_FloatForBSPEpairKey(ent, "lip", &lip);
 			if(!lip) lip = 8;
@@ -3179,12 +3179,12 @@ AAS_Reachability_Elevator(void)
 			pos2[2] -= height;
 			/*
 			 * get a point just above the plat in the bottom position */
-			Vec3Add(mins, maxs, mids);
-			Vec3MA(pos2, 0.5, mids, platbottom);
+			vec3add(mins, maxs, mids);
+			vec3ma(pos2, 0.5, mids, platbottom);
 			platbottom[2] = maxs[2] - (pos1[2] - pos2[2]) + 2;
 			/* get a point just above the plat in the top position */
-			Vec3Add(mins, maxs, mids);
-			Vec3MA(pos2, 0.5, mids, plattop);
+			vec3add(mins, maxs, mids);
+			vec3ma(pos2, 0.5, mids, plattop);
 			plattop[2] = maxs[2] + 2;
 			/*  */
 			/*if (!area1num)
@@ -3200,8 +3200,8 @@ AAS_Reachability_Elevator(void)
 			/*  */
 			/* botimport.Print(PRT_MESSAGE, "platbottom[2] = %1.1f plattop[2] = %1.1f\n", platbottom[2], plattop[2]); */
 			/*  */
-			Vec3Add(mins, maxs, mids);
-			VectorScale(mids, 0.5, mids);
+			vec3add(mins, maxs, mids);
+			vec3scale(mids, 0.5, mids);
 			/*  */
 			xvals[0]	= mins[0]; xvals[1] = mids[0];
 			xvals[2]	= maxs[0]; xvals[3] = mids[0];
@@ -3234,11 +3234,11 @@ AAS_Reachability_Elevator(void)
 					if(k >= 16)
 						continue;
 				}else{	/* at the middle of the plat */
-					Vec3Copy(plattop, bottomorg);
+					vec3copy(plattop, bottomorg);
 					bottomorg[2] += 24;
 					area1num = AAS_PointAreaNum(bottomorg);
 					if(!area1num) continue;
-					Vec3Copy(platbottom, bottomorg);
+					vec3copy(platbottom, bottomorg);
 					bottomorg[2] += 24;
 				}
 				/* look at adjacent areas around the top of the plat */
@@ -3284,13 +3284,13 @@ AAS_Reachability_Elevator(void)
 									||
 									AAS_AreaSwim(
 										area2num)){
-									Vec3Copy(
+									vec3copy(
 										plattop,
 										start);
 									start[2]
 										+=
 											32;
-									Vec3Copy(
+									vec3copy(
 										toporg,
 										end);
 									end[2]
@@ -3328,10 +3328,10 @@ AAS_Reachability_Elevator(void)
 							   area1num,
 							   area2num)) continue;
 						/* if the reachability start is within the elevator bounding box */
-						Vec3Sub(bottomorg,
+						vec3sub(bottomorg,
 							platbottom,
 							dir);
-						Vec3Normalize(dir);
+						vec3normalize(dir);
 						dir[0] = bottomorg[0] + 24 *
 							 dir[0];
 						dir[1] = bottomorg[1] + 24 *
@@ -3353,8 +3353,8 @@ AAS_Reachability_Elevator(void)
 						/* the edgenum is the height */
 						lreach->edgenum = (int)height;
 						/*  */
-						Vec3Copy(dir, lreach->start);
-						Vec3Copy(toporg, lreach->end);
+						vec3copy(dir, lreach->start);
+						vec3copy(toporg, lreach->end);
 						lreach->traveltype =
 							TRAVEL_ELEVATOR;
 						lreach->traveltype |=
@@ -3392,14 +3392,14 @@ AAS_Reachability_Elevator(void)
  * Changes Globals:		-
  * =========================================================================== */
 aas_lreachability_t *
-AAS_FindFaceReachabilities(vec3_t *facepoints, int numpoints, aas_plane_t *plane,
+AAS_FindFaceReachabilities(Vec3 *facepoints, int numpoints, aas_plane_t *plane,
 			   int towardsface)
 {
 	int	i, j, k, l;
 	int	facenum, edgenum, bestfacenum;
 	float	*v1, *v2, *v3, *v4;
 	float	bestdist, speed, hordist, dist;
-	vec3_t	beststart, beststart2, bestend, bestend2, tmp, hordir, testpoint;
+	Vec3	beststart, beststart2, bestend, bestend2, tmp, hordir, testpoint;
 	aas_lreachability_t	*lreach, *lreachabilities;
 	aas_area_t		*area;
 	aas_face_t		*face;
@@ -3455,17 +3455,17 @@ AAS_FindFaceReachabilities(vec3_t *facepoints, int numpoints, aas_plane_t *plane
 		VectorMiddle(bestend, bestend2, bestend);
 		/*  */
 		if(!towardsface){
-			Vec3Copy(beststart, tmp);
-			Vec3Copy(bestend, beststart);
-			Vec3Copy(tmp, bestend);
+			vec3copy(beststart, tmp);
+			vec3copy(bestend, beststart);
+			vec3copy(tmp, bestend);
 		}
 		/*  */
-		Vec3Sub(bestend, beststart, hordir);
+		vec3sub(bestend, beststart, hordir);
 		hordir[2] = 0;
-		hordist = Vec3Len(hordir);
+		hordist = vec3len(hordir);
 		/*  */
 		if(hordist > 2 *
-		   AAS_MaxJumpVec3Vec3Distance(aassettings.phys_jumpvel)) continue;
+		   AAS_MaxJumpVec3vec3dist(aassettings.phys_jumpvel)) continue;
 		/* the end point should not be significantly higher than the start point */
 		if(bestend[2] - 32 > beststart[2]) continue;
 		/* don't fall down too far */
@@ -3479,12 +3479,12 @@ AAS_FindFaceReachabilities(vec3_t *facepoints, int numpoints, aas_plane_t *plane
 		beststart[2] += 1;
 		bestend[2] += 1;
 		/*  */
-		if(towardsface) Vec3Copy(bestend, testpoint);
-		else Vec3Copy(beststart, testpoint);
+		if(towardsface) vec3copy(bestend, testpoint);
+		else vec3copy(beststart, testpoint);
 		testpoint[2] = 0;
 		testpoint[2] =
 			(bestfaceplane->dist -
-			 Vec3Dot(bestfaceplane->normal,
+			 vec3dot(bestfaceplane->normal,
 				 testpoint)) / bestfaceplane->normal[2];
 		/*  */
 		if(!AAS_PointInsideFace(bestfacenum, testpoint, 0.1f))
@@ -3495,8 +3495,8 @@ AAS_FindFaceReachabilities(vec3_t *facepoints, int numpoints, aas_plane_t *plane
 		lreach->areanum = i;
 		lreach->facenum = 0;
 		lreach->edgenum = 0;
-		Vec3Copy(beststart, lreach->start);
-		Vec3Copy(bestend, lreach->end);
+		vec3copy(beststart, lreach->start);
+		vec3copy(bestend, lreach->end);
 		lreach->traveltype = 0;
 		lreach->traveltime = 0;
 		lreach->next = lreachabilities;
@@ -3520,10 +3520,10 @@ AAS_Reachability_FuncBobbing(void)
 	int	ent, spawnflags, modelnum, axis;
 	int	i, numareas, areas[10];
 	char	classname[MAX_EPAIRKEY], model[MAX_EPAIRKEY];
-	vec3_t	origin, move_end, move_start, move_start_top, move_end_top;
-	vec3_t	mins, maxs, angles = {0, 0, 0};
-	vec3_t	start_edgeverts[4], end_edgeverts[4], mid;
-	vec3_t	org, start, end, dir, points[10];
+	Vec3	origin, move_end, move_start, move_start_top, move_end_top;
+	Vec3	mins, maxs, angles = {0, 0, 0};
+	Vec3	start_edgeverts[4], end_edgeverts[4], mid;
+	Vec3	org, start, end, dir, points[10];
 	float	height;
 	aas_plane_t start_plane, end_plane;
 	aas_lreachability_t *startreach, *endreach, *nextstartreach,
@@ -3552,19 +3552,19 @@ AAS_Reachability_FuncBobbing(void)
 		}
 		/* if the entity has an origin set then use it */
 		if(!AAS_VectorForBSPEpairKey(ent, "origin", origin))
-			VectorSet(origin, 0, 0, 0);
+			vec3set(origin, 0, 0, 0);
 		/*  */
 		AAS_BSPModelMinsMaxsOrigin(modelnum, angles, mins, maxs, NULL);
 		/*  */
-		Vec3Add(mins, origin, mins);
-		Vec3Add(maxs, origin, maxs);
+		vec3add(mins, origin, mins);
+		vec3add(maxs, origin, maxs);
 		/*  */
-		Vec3Add(mins, maxs, mid);
-		VectorScale(mid, 0.5, mid);
-		Vec3Copy(mid, origin);
+		vec3add(mins, maxs, mid);
+		vec3scale(mid, 0.5, mid);
+		vec3copy(mid, origin);
 		/*  */
-		Vec3Copy(origin, move_end);
-		Vec3Copy(origin, move_start);
+		vec3copy(origin, move_end);
+		vec3copy(origin, move_start);
 		/*  */
 		AAS_IntForBSPEpairKey(ent, "spawnflags", &spawnflags);
 		/* set the axis of bobbing */
@@ -3588,7 +3588,7 @@ AAS_Reachability_FuncBobbing(void)
 #endif
 		/*  */
 		for(i = 0; i < 4; i++){
-			Vec3Copy(move_start, start_edgeverts[i]);
+			vec3copy(move_start, start_edgeverts[i]);
 			start_edgeverts[i][2]	+= maxs[2] - mid[2];	/* + bbox maxs z */
 			start_edgeverts[i][2]	+= 24;			/* + player origin to ground dist */
 		}
@@ -3602,10 +3602,10 @@ AAS_Reachability_FuncBobbing(void)
 		start_edgeverts[3][1]	+= maxs[1] - mid[1];
 		/*  */
 		start_plane.dist = start_edgeverts[0][2];
-		VectorSet(start_plane.normal, 0, 0, 1);
+		vec3set(start_plane.normal, 0, 0, 1);
 		/*  */
 		for(i = 0; i < 4; i++){
-			Vec3Copy(move_end, end_edgeverts[i]);
+			vec3copy(move_end, end_edgeverts[i]);
 			end_edgeverts[i][2] += maxs[2] - mid[2];	/* + bbox maxs z */
 			end_edgeverts[i][2] += 24;			/* + player origin to ground dist */
 		}
@@ -3619,7 +3619,7 @@ AAS_Reachability_FuncBobbing(void)
 		end_edgeverts[3][1] += maxs[1] - mid[1];
 		/*  */
 		end_plane.dist = end_edgeverts[0][2];
-		VectorSet(end_plane.normal, 0, 0, 1);
+		vec3set(end_plane.normal, 0, 0, 1);
 		/*  */
 #ifndef BSPC
 #if 0
@@ -3631,9 +3631,9 @@ AAS_Reachability_FuncBobbing(void)
 		}
 #endif
 #endif
-		Vec3Copy(move_start, move_start_top);
+		vec3copy(move_start, move_start_top);
 		move_start_top[2] += maxs[2] - mid[2] + 24;	/* + bbox maxs z */
-		Vec3Copy(move_end, move_end_top);
+		vec3copy(move_end, move_end_top);
 		move_end_top[2] += maxs[2] - mid[2] + 24;	/* + bbox maxs z */
 		/*  */
 		if(!AAS_PointAreaNum(move_start_top)) continue;
@@ -3674,18 +3674,18 @@ AAS_Reachability_FuncBobbing(void)
 						endreach->areanum);
 					/*
 					 *  */
-					if(i == 0) Vec3Copy(move_start_top,
+					if(i == 0) vec3copy(move_start_top,
 							org);
-					else Vec3Copy(move_end_top, org);
-					Vec3Sub(startreach->start, org,
+					else vec3copy(move_end_top, org);
+					vec3sub(startreach->start, org,
 						dir);
 					dir[2] = 0;
-					Vec3Normalize(dir);
-					Vec3Copy(startreach->start, start);
-					Vec3MA(startreach->start, 1, dir,
+					vec3normalize(dir);
+					vec3copy(startreach->start, start);
+					vec3ma(startreach->start, 1, dir,
 						start);
 					start[2] += 1;
-					Vec3MA(startreach->start, 16, dir, end);
+					vec3ma(startreach->start, 16, dir, end);
 					end[2] += 1;
 					/*  */
 					numareas =
@@ -3693,10 +3693,10 @@ AAS_Reachability_FuncBobbing(void)
 							points,
 							10);
 					if(numareas <= 0) continue;
-					if(numareas > 1) Vec3Copy(
+					if(numareas > 1) vec3copy(
 							points[1],
 							startreach->start);
-					else Vec3Copy(end, startreach->start);
+					else vec3copy(end, startreach->start);
 					/*  */
 					if(!AAS_PointAreaNum(startreach->start))
 						continue;
@@ -3718,9 +3718,9 @@ AAS_Reachability_FuncBobbing(void)
 							 & 0x0000ffff);
 					lreach->facenum =
 						(spawnflags << 16) | modelnum;
-					Vec3Copy(startreach->start,
+					vec3copy(startreach->start,
 						lreach->start);
-					Vec3Copy(endreach->end, lreach->end);
+					vec3copy(endreach->end, lreach->end);
 #ifndef BSPC
 /*                              AAS_DrawArrow(lreach->start, lreach->end, LINECOLOR_BLUE, LINECOLOR_YELLOW);
  *                              AAS_PermanentLine(lreach->start, lreach->end, 1); */
@@ -3771,9 +3771,9 @@ AAS_Reachability_JumpPad(void)
 	aas_face_t *face2;
 	aas_area_t *area2;
 	aas_lreachability_t *lreach;
-	vec3_t	areastart, facecenter, dir, cmdmove;
-	vec3_t	velocity, absmins, absmaxs;
-	/* vec3_t origin, ent2origin, angles, teststart; */
+	Vec3	areastart, facecenter, dir, cmdmove;
+	Vec3	velocity, absmins, absmaxs;
+	/* Vec3 origin, ent2origin, angles, teststart; */
 	aas_clientmove_t move;
 	/* aas_trace_t trace; */
 	aas_link_t *areas, *link;
@@ -3798,35 +3798,35 @@ AAS_Reachability_JumpPad(void)
 		 * if (!speed) speed = 1000;
 		 * //		AAS_VectorForBSPEpairKey(ent, "angles", angles);
 		 * //		AAS_SetMovedir(angles, velocity);
-		 * //		VectorScale(velocity, speed, velocity);
-		 * VectorClear(angles);
+		 * //		vec3scale(velocity, speed, velocity);
+		 * vec3clear(angles);
 		 * //get the mins, maxs and origin of the model
 		 * AAS_ValueForBSPEpairKey(ent, "model", model, MAX_EPAIRKEY);
 		 * if (model[0]) modelnum = atoi(model+1);
 		 * else modelnum = 0;
 		 * AAS_BSPModelMinsMaxsOrigin(modelnum, angles, absmins, absmaxs, origin);
-		 * Vec3Add(origin, absmins, absmins);
-		 * Vec3Add(origin, absmaxs, absmaxs);
+		 * vec3add(origin, absmins, absmins);
+		 * vec3add(origin, absmaxs, absmaxs);
 		 * //
 		 * #ifdef REACH_DEBUG
 		 * botimport.Print(PRT_MESSAGE, "absmins = %f %f %f\n", absmins[0], absmins[1], absmins[2]);
 		 * botimport.Print(PRT_MESSAGE, "absmaxs = %f %f %f\n", absmaxs[0], absmaxs[1], absmaxs[2]);
 		 * #endif REACH_DEBUG
-		 * Vec3Add(absmins, absmaxs, origin);
-		 * VectorScale (origin, 0.5, origin);
+		 * vec3add(absmins, absmaxs, origin);
+		 * vec3scale (origin, 0.5, origin);
 		 *
 		 * //get the start areas
-		 * Vec3Copy(origin, teststart);
+		 * vec3copy(origin, teststart);
 		 * teststart[2] += 64;
 		 * trace = AAS_TraceClientBBox(teststart, origin, PRESENCE_CROUCH, -1);
 		 * if (trace.startsolid)
 		 * {
 		 *      botimport.Print(PRT_MESSAGE, "trigger_push start solid\n");
-		 *      Vec3Copy(origin, areastart);
+		 *      vec3copy(origin, areastart);
 		 * }
 		 * else
 		 * {
-		 *      Vec3Copy(trace.endpos, areastart);
+		 *      vec3copy(trace.endpos, areastart);
 		 * }
 		 * areastart[2] += 0.125;
 		 * //
@@ -3854,12 +3854,12 @@ AAS_Reachability_JumpPad(void)
 		 *      continue;
 		 * }
 		 * // set s.origin2 to the push velocity
-		 * Vec3Sub ( ent2origin, origin, velocity);
-		 * dist = Vec3Normalize( velocity);
+		 * vec3sub ( ent2origin, origin, velocity);
+		 * dist = vec3normalize( velocity);
 		 * forward = dist / time;
 		 * //FIXME: why multiply by 1.1
 		 * forward *= 1.1;
-		 * VectorScale(velocity, forward, velocity);
+		 * vec3scale(velocity, forward, velocity);
 		 * velocity[2] = time * gravity;
 		 */
 		/* get the areas the jump pad brush is in */
@@ -3891,8 +3891,8 @@ AAS_Reachability_JumpPad(void)
 			velocity[2]);
 		/* if there is a horizontal velocity check for a reachability without air control */
 		if(velocity[0] || velocity[1]){
-			VectorSet(cmdmove, 0, 0, 0);
-			/* Vec3Copy(velocity, cmdmove);
+			vec3set(cmdmove, 0, 0, 0);
+			/* vec3copy(velocity, cmdmove);
 			 * cmdmove[2] = 0; */
 			Q_Memset(&move, 0, sizeof(aas_clientmove_t));
 			area2num = 0;
@@ -3913,8 +3913,8 @@ AAS_Reachability_JumpPad(void)
 					if(link->areanum == area2num) break;
 				}
 				if(!link) break;
-				Vec3Copy(move.endpos, areastart);
-				Vec3Copy(move.velocity, velocity);
+				vec3copy(move.endpos, areastart);
+				vec3copy(move.velocity, velocity);
 			}
 			if(area2num && i < 20)
 				for(link = areas; link; link = link->next_area){
@@ -3936,8 +3936,8 @@ AAS_Reachability_JumpPad(void)
 						velocity[0] * velocity[0] +
 						velocity[1] *
 						velocity[1]);
-					Vec3Copy(areastart, lreach->start);
-					Vec3Copy(move.endpos, lreach->end);
+					vec3copy(areastart, lreach->start);
+					vec3copy(move.endpos, lreach->end);
 					lreach->traveltype = TRAVEL_JUMPPAD;
 					lreach->traveltype |=
 						AAS_TravelFlagsForTeam(ent);
@@ -3999,14 +3999,14 @@ AAS_Reachability_JumpPad(void)
 						&speed);
 				if(ret && speed < 150){
 					/* direction towards the face center */
-					Vec3Sub(facecenter, areastart,
+					vec3sub(facecenter, areastart,
 						dir);
 					dir[2] = 0;
-					/* hordist = Vec3Normalize(dir);
+					/* hordist = vec3normalize(dir);
 					 * if (hordist < 1.6 * facecenter[2] - areastart[2]) */
 					{
 						/* get command movement */
-						VectorScale(dir, speed, cmdmove);
+						vec3scale(dir, speed, cmdmove);
 						/*  */
 						AAS_PredictClientMovement(
 							&move, -1, areastart,
@@ -4109,12 +4109,12 @@ AAS_Reachability_JumpPad(void)
 												[
 													1
 												]);
-									Vec3Copy(
+									vec3copy(
 										areastart,
 										lreach
 										->
 										start);
-									Vec3Copy(
+									vec3copy(
 										facecenter,
 										lreach
 										->
@@ -4178,8 +4178,8 @@ AAS_Reachability_Grapple(int area1num, int area2num)
 	aas_face_t *face2;
 	aas_area_t *area1, *area2;
 	aas_lreachability_t *lreach;
-	vec3_t areastart, facecenter, start, end, dir, down = {0, 0, -1};
-	vec_t *v;
+	Vec3 areastart, facecenter, start, end, dir, down = {0, 0, -1};
+	Scalar *v;
 
 	/* only grapple when on the ground or swimming */
 	if(!AAS_AreaGrounded(area1num) && !AAS_AreaSwim(area1num)) return qfalse;
@@ -4193,18 +4193,18 @@ AAS_Reachability_Grapple(int area1num, int area2num)
 	/* don't grapple towards way lower areas */
 	if(area2->maxs[2] < area1->mins[2]) return qfalse;
 	/*  */
-	Vec3Copy(aasworld.areas[area1num].center, start);
+	vec3copy(aasworld.areas[area1num].center, start);
 	/* if not a swim area */
 	if(!AAS_AreaSwim(area1num)){
 		if(!AAS_PointAreaNum(start)) Log_Write(
 				"area %d center %f %f %f in solid?\r\n",
 				area1num,
 				start[0], start[1], start[2]);
-		Vec3Copy(start, end);
+		vec3copy(start, end);
 		end[2]	-= 1000;
 		trace	= AAS_TraceClientBBox(start, end, PRESENCE_CROUCH, -1);
 		if(trace.startsolid) return qfalse;
-		Vec3Copy(trace.endpos, areastart);
+		vec3copy(trace.endpos, areastart);
 	}else if(!(AAS_PointContents(start) &
 		   (CONTENTS_LAVA|CONTENTS_SLIME|
 		    CONTENTS_WATER))) return qfalse;
@@ -4223,23 +4223,23 @@ AAS_Reachability_Grapple(int area1num, int area2num)
 									 face2->
 									 firstedge
 								 ])].v[0]];
-		Vec3Sub(v, areastart, dir);
+		vec3sub(v, areastart, dir);
 		/* if the face plane is facing away */
-		if(Vec3Dot(aasworld.planes[face2->planenum].normal,
+		if(vec3dot(aasworld.planes[face2->planenum].normal,
 			   dir) > 0) continue;
 		/* get the center of the face */
 		AAS_FaceCenter(face2num, facecenter);
 		/* only go higher up with the grapple */
 		if(facecenter[2] < areastart[2] + 64) continue;
 		/* only use vertical faces or downward facing faces */
-		if(Vec3Dot(aasworld.planes[face2->planenum].normal,
+		if(vec3dot(aasworld.planes[face2->planenum].normal,
 			   down) < 0) continue;
 		/* direction towards the face center */
-		Vec3Sub(facecenter, areastart, dir);
+		vec3sub(facecenter, areastart, dir);
 		/*  */
 		z = dir[2];
 		dir[2]	= 0;
-		hordist = Vec3Len(dir);
+		hordist = vec3len(dir);
 		if(!hordist) continue;
 		/* if too far */
 		if(hordist > 2000) continue;
@@ -4247,8 +4247,8 @@ AAS_Reachability_Grapple(int area1num, int area2num)
 		mingrappleangle = 15;	/* 15 degrees */
 		if(z / hordist < tan(2 * M_PI * mingrappleangle / 360)) continue;
 		/*  */
-		Vec3Copy(facecenter, start);
-		Vec3MA(facecenter, -500,
+		vec3copy(facecenter, start);
+		vec3ma(facecenter, -500,
 			aasworld.planes[face2->planenum].normal,
 			end);
 		/*  */
@@ -4258,17 +4258,17 @@ AAS_Reachability_Grapple(int area1num, int area2num)
 		   (bsptrace.fraction * 500 > 32)) continue;
 		/* trace a full bounding box from the area center on the ground to
 		 * the center of the face */
-		Vec3Sub(facecenter, areastart, dir);
-		Vec3Normalize(dir);
-		Vec3MA(areastart, 4, dir, start);
-		Vec3Copy(bsptrace.endpos, end);
+		vec3sub(facecenter, areastart, dir);
+		vec3normalize(dir);
+		vec3ma(areastart, 4, dir, start);
+		vec3copy(bsptrace.endpos, end);
 		trace = AAS_TraceClientBBox(start, end, PRESENCE_NORMAL, -1);
-		Vec3Sub(trace.endpos, facecenter, dir);
-		if(Vec3Len(dir) > 24) continue;
+		vec3sub(trace.endpos, facecenter, dir);
+		if(vec3len(dir) > 24) continue;
 		/*  */
-		Vec3Copy(trace.endpos, start);
-		Vec3Copy(trace.endpos, end);
-		end[2]	-= AAS_FallDamageVec3Vec3Distance();
+		vec3copy(trace.endpos, start);
+		vec3copy(trace.endpos, end);
+		end[2]	-= AAS_FallDamageVec3vec3dist();
 		trace	= AAS_TraceClientBBox(start, end, PRESENCE_NORMAL, -1);
 		if(trace.fraction >= 1) continue;
 		/* area to end in */
@@ -4298,12 +4298,12 @@ AAS_Reachability_Grapple(int area1num, int area2num)
 		lreach->areanum = areanum;
 		lreach->facenum = face2num;
 		lreach->edgenum = 0;
-		Vec3Copy(areastart, lreach->start);
-		/* Vec3Copy(facecenter, lreach->end); */
-		Vec3Copy(bsptrace.endpos, lreach->end);
+		vec3copy(areastart, lreach->start);
+		/* vec3copy(facecenter, lreach->end); */
+		vec3copy(bsptrace.endpos, lreach->end);
 		lreach->traveltype = TRAVEL_GRAPPLEHOOK;
-		Vec3Sub(lreach->end, lreach->start, dir);
-		lreach->traveltime = aassettings.rs_startgrapple + Vec3Len(
+		vec3sub(lreach->end, lreach->start, dir);
+		lreach->traveltime = aassettings.rs_startgrapple + vec3len(
 			dir) * 0.25;
 		lreach->next = areareachability[area1num];
 		areareachability[area1num] = lreach;
@@ -4323,8 +4323,8 @@ void
 AAS_SetWeaponJumpAreaFlags(void)
 {
 	int ent, i;
-	vec3_t	mins = {-15, -15, -15}, maxs = {15, 15, 15};
-	vec3_t	origin;
+	Vec3	mins = {-15, -15, -15}, maxs = {15, 15, 15};
+	Vec3	origin;
 	int	areanum, weaponjumpareas, spawnflags;
 	char	classname[MAX_EPAIRKEY];
 
@@ -4398,8 +4398,8 @@ AAS_Reachability_WeaponJump(int area1num, int area2num)
 	aas_face_t *face2;
 	aas_area_t *area1, *area2;
 	aas_lreachability_t *lreach;
-	vec3_t	areastart, facecenter, start, end, dir, cmdmove;	/* teststart; */
-	vec3_t	velocity;
+	Vec3	areastart, facecenter, start, end, dir, cmdmove;	/* teststart; */
+	Vec3	velocity;
 	aas_clientmove_t move;
 	aas_trace_t trace;
 
@@ -4419,16 +4419,16 @@ AAS_Reachability_WeaponJump(int area1num, int area2num)
 	/* don't weapon jump towards way lower areas */
 	if(area2->maxs[2] < area1->mins[2]) return qfalse;
 	/*  */
-	Vec3Copy(aasworld.areas[area1num].center, start);
+	vec3copy(aasworld.areas[area1num].center, start);
 	/* if not a swim area */
 	if(!AAS_PointAreaNum(start)) Log_Write(
 			"area %d center %f %f %f in solid?\r\n", area1num,
 			start[0], start[1], start[2]);
-	Vec3Copy(start, end);
+	vec3copy(start, end);
 	end[2]	-= 1000;
 	trace	= AAS_TraceClientBBox(start, end, PRESENCE_CROUCH, -1);
 	if(trace.startsolid) return qfalse;
-	Vec3Copy(trace.endpos, areastart);
+	vec3copy(trace.endpos, areastart);
 	/*
 	 * areastart is now the start point
 	 *  */
@@ -4454,19 +4454,19 @@ AAS_Reachability_WeaponJump(int area1num, int area2num)
 					&speed);
 			if(ret && speed < 300){
 				/* direction towards the face center */
-				Vec3Sub(facecenter, areastart, dir);
+				vec3sub(facecenter, areastart, dir);
 				dir[2] = 0;
-				/* hordist = Vec3Normalize(dir);
+				/* hordist = vec3normalize(dir);
 				 * if (hordist < 1.6 * (facecenter[2] - areastart[2])) */
 				{
 					/* get command movement */
-					VectorScale(dir, speed, cmdmove);
-					VectorSet(velocity, 0, 0, zvel);
+					vec3scale(dir, speed, cmdmove);
+					vec3set(velocity, 0, 0, zvel);
 					/*
 					 * //get command movement
-					 * VectorScale(dir, speed, velocity);
+					 * vec3scale(dir, speed, velocity);
 					 * velocity[2] = zvel;
-					 * VectorSet(cmdmove, 0, 0, 0);
+					 * vec3set(cmdmove, 0, 0, 0);
 					 */
 					/*  */
 					AAS_PredictClientMovement(
@@ -4494,9 +4494,9 @@ AAS_Reachability_WeaponJump(int area1num, int area2num)
 						lreach->areanum = area2num;
 						lreach->facenum = 0;
 						lreach->edgenum = 0;
-						Vec3Copy(areastart,
+						vec3copy(areastart,
 							lreach->start);
-						Vec3Copy(facecenter,
+						vec3copy(facecenter,
 							lreach->end);
 						if(n){
 							lreach->traveltype
@@ -4545,8 +4545,8 @@ AAS_Reachability_WalkOffLedge(int areanum)
 	aas_face_t	*face1, *face2, *face3;
 	aas_edge_t *edge;
 	aas_plane_t *plane;
-	vec_t	*v1, *v2;
-	vec3_t	sharededgevec, mid, dir, testend;
+	Scalar	*v1, *v2;
+	Vec3	sharededgevec, mid, dir, testend;
 	aas_lreachability_t *lreach;
 	aas_trace_t trace;
 
@@ -4700,18 +4700,18 @@ AAS_Reachability_WalkOffLedge(int areanum)
 									 planenum
 							];
 						/* get the points really into the areas */
-						Vec3Sub(v2, v1,
+						vec3sub(v2, v1,
 							sharededgevec);
-						Vec3Cross(plane->normal,
+						vec3cross(plane->normal,
 							sharededgevec,
 							dir);
-						Vec3Normalize(dir);
+						vec3normalize(dir);
 						/*  */
-						Vec3Add(v1, v2, mid);
-						VectorScale(mid, 0.5, mid);
-						Vec3MA(mid, 8, dir, mid);
+						vec3add(v1, v2, mid);
+						vec3scale(mid, 0.5, mid);
+						vec3ma(mid, 8, dir, mid);
 						/*  */
-						Vec3Copy(mid, testend);
+						vec3copy(mid, testend);
 						testend[2] -= 1000;
 						trace = AAS_TraceClientBBox(
 							mid, testend,
@@ -4766,8 +4766,8 @@ AAS_Reachability_WalkOffLedge(int areanum)
 						lreach->areanum = reachareanum;
 						lreach->facenum = 0;
 						lreach->edgenum = edge1num;
-						Vec3Copy(mid, lreach->start);
-						Vec3Copy(trace.endpos,
+						vec3copy(mid, lreach->start);
+						vec3copy(trace.endpos,
 							lreach->end);
 						lreach->traveltype =
 							TRAVEL_WALKOFFLEDGE;
@@ -4851,8 +4851,8 @@ AAS_StoreReachability(void)
 			reach->areanum	= lreach->areanum;
 			reach->facenum	= lreach->facenum;
 			reach->edgenum	= lreach->edgenum;
-			Vec3Copy(lreach->start, reach->start);
-			Vec3Copy(lreach->end, reach->end);
+			vec3copy(lreach->start, reach->start);
+			vec3copy(lreach->end, reach->end);
 			reach->traveltype = lreach->traveltype;
 			reach->traveltime = lreach->traveltime;
 			/*  */

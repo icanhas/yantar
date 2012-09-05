@@ -25,21 +25,21 @@
 typedef int vec2i_t[2];
 typedef int vec3i_t[2];
 
-#define Vec3Copy2(a,b)	((b)[0]=(a)[0],(b)[1]=(a)[1])
+#define vec3copy2(a,b)	((b)[0]=(a)[0],(b)[1]=(a)[1])
 
-#define Vec3Copy4(a,b)	((b)[0]=(a)[0],(b)[1]=(a)[1],(b)[2]=(a)[2],(b)[3]=(a)[3])
-#define VectorSet4(v,x,y,z,w)	((v)[0]=(x),(v)[1]=(y),(v)[2]=(z),(v)[3]=(w))
-#define Vec3Dot4(a,b)	((a)[0]*(b)[0] + (a)[1]*(b)[1] + (a)[2]*(b)[2] + (a)[3]*(b)[3])
-#define VectorScale4(a,b,c)	((c)[0]=(a)[0]*(b),(c)[1]=(a)[1]*(b),(c)[2]=(a)[2]*(b),(c)[3]=(a)[3]*(b))
+#define vec3copy4(a,b)	((b)[0]=(a)[0],(b)[1]=(a)[1],(b)[2]=(a)[2],(b)[3]=(a)[3])
+#define vec3set4(v,x,y,z,w)	((v)[0]=(x),(v)[1]=(y),(v)[2]=(z),(v)[3]=(w))
+#define vec3dot4(a,b)	((a)[0]*(b)[0] + (a)[1]*(b)[1] + (a)[2]*(b)[2] + (a)[3]*(b)[3])
+#define vec3scale4(a,b,c)	((c)[0]=(a)[0]*(b),(c)[1]=(a)[1]*(b),(c)[2]=(a)[2]*(b),(c)[3]=(a)[3]*(b))
 
-#define Vec3Copy5(a,b)	((b)[0]=(a)[0],(b)[1]=(a)[1],(b)[2]=(a)[2],(b)[3]=(a)[3],(b)[4]=(a)[4])
+#define vec3copy5(a,b)	((b)[0]=(a)[0],(b)[1]=(a)[1],(b)[2]=(a)[2],(b)[3]=(a)[3],(b)[4]=(a)[4])
 
 #define OffsetByteToFloat(a)	((float)(a) * 1.0f/127.5f - 1.0f)
 #define ByteToFloat(a)		((float)(a) * 1.0f/255.0f)
 #define FloatToOffsetByte(a)	(byte)(((a) + 1.0f) * 127.5f)
 
 static ID_INLINE int
-VectorCompare4(const vec4_t v1, const vec4_t v2)
+vec3cmp4(const Vec4 v1, const Vec4 v2)
 {
 	if(v1[0] != v2[0] || v1[1] != v2[1] || v1[2] != v2[2] || v1[3] != v2[3]){
 		return 0;
@@ -48,7 +48,7 @@ VectorCompare4(const vec4_t v1, const vec4_t v2)
 }
 
 static ID_INLINE int
-VectorCompare5(const vec5_t v1, const vec5_t v2)
+vec3cmp5(const Vec5 v1, const Vec5 v2)
 {
 	if(v1[0] != v2[0] || v1[1] != v2[1] || v1[2] != v2[2] || v1[3] != v2[3] || v1[4] != v2[4]){
 		return 0;
@@ -56,8 +56,8 @@ VectorCompare5(const vec5_t v1, const vec5_t v2)
 	return 1;
 }
 
-qbool SpheresIntersect(vec3_t origin1, float radius1, vec3_t origin2, float radius2);
-void BoundingSphereOfSpheres(vec3_t origin1, float radius1, vec3_t origin2, float radius2, vec3_t origin3,
+qbool SpheresIntersect(Vec3 origin1, float radius1, Vec3 origin2, float radius2);
+void BoundingSphereOfSpheres(Vec3 origin1, float radius1, Vec3 origin2, float radius2, Vec3 origin3,
 			     float *radius3);
 
 #ifndef SGN

@@ -84,7 +84,7 @@ vmCvar_t	g_spSkill;
 
 extern vmCvar_t bot_developer;
 
-vec3_t	lastteleport_origin;	/* last teleport event origin */
+Vec3	lastteleport_origin;	/* last teleport event origin */
 float	lastteleport_time;	/* last teleport event time */
 int	max_bspmodelindex;	/* maximum BSP model index */
 
@@ -477,7 +477,7 @@ BotCTFSeekGoals(bot_state_t *bs)
 {
 	float	rnd, l1, l2;
 	int	flagstatus, c;
-	vec3_t	dir;
+	Vec3	dir;
 	aas_entityinfo_t entinfo;
 
 	/* when carrying a flag in ctf the bot should rush to the base */
@@ -492,16 +492,16 @@ BotCTFSeekGoals(bot_state_t *bs)
 			bs->ordered = qfalse;
 			/*  */
 			switch(BotTeam(bs)){
-			case TEAM_RED: Vec3Sub(bs->origin,
+			case TEAM_RED: vec3sub(bs->origin,
 					ctf_blueflag.origin,
 					dir); break;
-			case TEAM_BLUE: Vec3Sub(bs->origin,
+			case TEAM_BLUE: vec3sub(bs->origin,
 					ctf_redflag.origin,
 					dir); break;
-			default: VectorSet(dir, 999, 999, 999); break;
+			default: vec3set(dir, 999, 999, 999); break;
 			}
 			/* if the bot picked up the flag very close to the enemy base */
-			if(Vec3Len(dir) < 128)
+			if(vec3len(dir) < 128)
 				/* get an alternative route goal through the enemy base */
 				BotGetAlternateRouteGoal(bs, BotOppositeTeam(bs));
 			else
@@ -1329,14 +1329,14 @@ BotTeamGoals(bot_state_t *bs, int retreat)
  * BotPointAreaNum
  */
 int
-BotPointAreaNum(vec3_t origin)
+BotPointAreaNum(Vec3 origin)
 {
 	int areanum, numareas, areas[10];
-	vec3_t end;
+	Vec3 end;
 
 	areanum = trap_AAS_PointAreaNum(origin);
 	if(areanum) return areanum;
-	Vec3Copy(origin, end);
+	vec3copy(origin, end);
 	end[2]		+= 10;
 	numareas	= trap_AAS_TraceAreas(origin, end, areas, NULL, 10);
 	if(numareas > 0) return areas[0];
@@ -1545,9 +1545,9 @@ BotSetupForMovement(bot_state_t *bs)
 	bot_initmove_t initmove;
 
 	memset(&initmove, 0, sizeof(bot_initmove_t));
-	Vec3Copy(bs->cur_ps.origin, initmove.origin);
-	Vec3Copy(bs->cur_ps.velocity, initmove.velocity);
-	VectorClear(initmove.viewoffset);
+	vec3copy(bs->cur_ps.origin, initmove.origin);
+	vec3copy(bs->cur_ps.velocity, initmove.velocity);
+	vec3clear(initmove.viewoffset);
 	initmove.viewoffset[2] += bs->cur_ps.viewheight;
 	initmove.entitynum = bs->entitynum;
 	initmove.client = bs->client;
@@ -1569,7 +1569,7 @@ BotSetupForMovement(bot_state_t *bs)
 	/*  */
 	if(bs->walker > 0.5) initmove.or_moveflags |= MFL_WALK;
 	/*  */
-	Vec3Copy(bs->viewangles, initmove.viewangles);
+	vec3copy(bs->viewangles, initmove.viewangles);
 	/*  */
 	trap_BotInitMoveState(bs->ms, &initmove);
 }
@@ -1791,14 +1791,14 @@ BotUpdateInventory(bot_state_t *bs)
 void
 BotUpdateBattleInventory(bot_state_t *bs, int enemy)
 {
-	vec3_t dir;
+	Vec3 dir;
 	aas_entityinfo_t entinfo;
 
 	BotEntityInfo(enemy, &entinfo);
-	Vec3Sub(entinfo.origin, bs->origin, dir);
+	vec3sub(entinfo.origin, bs->origin, dir);
 	bs->inventory[ENEMY_HEIGHT] = (int)dir[2];
 	dir[2] = 0;
-	bs->inventory[ENEMY_HORIZONTAL_DIST] = (int)Vec3Len(dir);
+	bs->inventory[ENEMY_HORIZONTAL_DIST] = (int)vec3len(dir);
 	/* FIXME: add num visible enemies and num visible team mates to the inventory */
 }
 
@@ -1813,7 +1813,7 @@ BotUseKamikaze(bot_state_t *bs)
 {
 	int c, teammates, enemies;
 	aas_entityinfo_t	entinfo;
-	vec3_t dir, target;
+	Vec3 dir, target;
 	bot_goal_t		*goal;
 	bsp_trace_t		trace;
 
@@ -1830,15 +1830,15 @@ BotUseKamikaze(bot_state_t *bs)
 		c = BotTeamFlagCarrierVisible(bs);
 		if(c >= 0){
 			BotEntityInfo(c, &entinfo);
-			Vec3Sub(entinfo.origin, bs->origin, dir);
-			if(Vec3LenSquared(dir) < Square(KAMIKAZE_DIST))
+			vec3sub(entinfo.origin, bs->origin, dir);
+			if(vec3lensquared(dir) < Square(KAMIKAZE_DIST))
 				return;
 		}
 		c = BotEnemyFlagCarrierVisible(bs);
 		if(c >= 0){
 			BotEntityInfo(c, &entinfo);
-			Vec3Sub(entinfo.origin, bs->origin, dir);
-			if(Vec3LenSquared(dir) < Square(KAMIKAZE_DIST)){
+			vec3sub(entinfo.origin, bs->origin, dir);
+			if(vec3lensquared(dir) < Square(KAMIKAZE_DIST)){
 				trap_EA_Use(bs->client);
 				return;
 			}
@@ -1850,15 +1850,15 @@ BotUseKamikaze(bot_state_t *bs)
 		c = BotTeamFlagCarrierVisible(bs);
 		if(c >= 0){
 			BotEntityInfo(c, &entinfo);
-			Vec3Sub(entinfo.origin, bs->origin, dir);
-			if(Vec3LenSquared(dir) < Square(KAMIKAZE_DIST))
+			vec3sub(entinfo.origin, bs->origin, dir);
+			if(vec3lensquared(dir) < Square(KAMIKAZE_DIST))
 				return;
 		}
 		c = BotEnemyFlagCarrierVisible(bs);
 		if(c >= 0){
 			BotEntityInfo(c, &entinfo);
-			Vec3Sub(entinfo.origin, bs->origin, dir);
-			if(Vec3LenSquared(dir) < Square(KAMIKAZE_DIST)){
+			vec3sub(entinfo.origin, bs->origin, dir);
+			if(vec3lensquared(dir) < Square(KAMIKAZE_DIST)){
 				trap_EA_Use(bs->client);
 				return;
 			}
@@ -1869,10 +1869,10 @@ BotUseKamikaze(bot_state_t *bs)
 		default: goal = &redobelisk; break;
 		}
 		/* if the obelisk is visible */
-		Vec3Copy(goal->origin, target);
+		vec3copy(goal->origin, target);
 		target[2] += 1;
-		Vec3Sub(bs->origin, target, dir);
-		if(Vec3LenSquared(dir) < Square(KAMIKAZE_DIST * 0.9)){
+		vec3sub(bs->origin, target, dir);
+		if(vec3lensquared(dir) < Square(KAMIKAZE_DIST * 0.9)){
 			BotAI_Trace(&trace, bs->eye, NULL, NULL, target,
 				bs->client,
 				CONTENTS_SOLID);
@@ -1889,15 +1889,15 @@ BotUseKamikaze(bot_state_t *bs)
 		c = BotTeamCubeCarrierVisible(bs);
 		if(c >= 0){
 			BotEntityInfo(c, &entinfo);
-			Vec3Sub(entinfo.origin, bs->origin, dir);
-			if(Vec3LenSquared(dir) < Square(KAMIKAZE_DIST))
+			vec3sub(entinfo.origin, bs->origin, dir);
+			if(vec3lensquared(dir) < Square(KAMIKAZE_DIST))
 				return;
 		}
 		c = BotEnemyCubeCarrierVisible(bs);
 		if(c >= 0){
 			BotEntityInfo(c, &entinfo);
-			Vec3Sub(entinfo.origin, bs->origin, dir);
-			if(Vec3LenSquared(dir) < Square(KAMIKAZE_DIST)){
+			vec3sub(entinfo.origin, bs->origin, dir);
+			if(vec3lensquared(dir) < Square(KAMIKAZE_DIST)){
 				trap_EA_Use(bs->client);
 				return;
 			}
@@ -1919,7 +1919,7 @@ void
 BotUseInvulnerability(bot_state_t *bs)
 {
 	int c;
-	vec3_t dir, target;
+	Vec3 dir, target;
 	bot_goal_t	*goal;
 	bsp_trace_t	trace;
 
@@ -1942,10 +1942,10 @@ BotUseInvulnerability(bot_state_t *bs)
 		default: goal = &ctf_redflag; break;
 		}
 		/* if the obelisk is visible */
-		Vec3Copy(goal->origin, target);
+		vec3copy(goal->origin, target);
 		target[2] += 1;
-		Vec3Sub(bs->origin, target, dir);
-		if(Vec3LenSquared(dir) < Square(200)){
+		vec3sub(bs->origin, target, dir);
+		if(vec3lensquared(dir) < Square(200)){
 			BotAI_Trace(&trace, bs->eye, NULL, NULL, target,
 				bs->client,
 				CONTENTS_SOLID);
@@ -1967,10 +1967,10 @@ BotUseInvulnerability(bot_state_t *bs)
 		default: goal = &ctf_redflag; break;
 		}
 		/* if the obelisk is visible */
-		Vec3Copy(goal->origin, target);
+		vec3copy(goal->origin, target);
 		target[2] += 1;
-		Vec3Sub(bs->origin, target, dir);
-		if(Vec3LenSquared(dir) < Square(200)){
+		vec3sub(bs->origin, target, dir);
+		if(vec3lensquared(dir) < Square(200)){
 			BotAI_Trace(&trace, bs->eye, NULL, NULL, target,
 				bs->client,
 				CONTENTS_SOLID);
@@ -1985,10 +1985,10 @@ BotUseInvulnerability(bot_state_t *bs)
 		default: goal = &redobelisk; break;
 		}
 		/* if the obelisk is visible */
-		Vec3Copy(goal->origin, target);
+		vec3copy(goal->origin, target);
 		target[2] += 1;
-		Vec3Sub(bs->origin, target, dir);
-		if(Vec3LenSquared(dir) < Square(300)){
+		vec3sub(bs->origin, target, dir);
+		if(vec3lensquared(dir) < Square(300)){
 			BotAI_Trace(&trace, bs->eye, NULL, NULL, target,
 				bs->client,
 				CONTENTS_SOLID);
@@ -2010,10 +2010,10 @@ BotUseInvulnerability(bot_state_t *bs)
 		default: goal = &redobelisk; break;
 		}
 		/* if the obelisk is visible */
-		Vec3Copy(goal->origin, target);
+		vec3copy(goal->origin, target);
 		target[2] += 1;
-		Vec3Sub(bs->origin, target, dir);
-		if(Vec3LenSquared(dir) < Square(200)){
+		vec3sub(bs->origin, target, dir);
+		if(vec3lensquared(dir) < Square(200)){
 			BotAI_Trace(&trace, bs->eye, NULL, NULL, target,
 				bs->client,
 				CONTENTS_SOLID);
@@ -2104,9 +2104,9 @@ BotIntermission(bot_state_t *bs)
 qbool
 BotInLavaOrSlime(bot_state_t *bs)
 {
-	vec3_t feet;
+	Vec3 feet;
 
-	Vec3Copy(bs->origin, feet);
+	vec3copy(bs->origin, feet);
 	feet[2] -= 23;
 	return (trap_AAS_PointContents(feet) & (CONTENTS_LAVA|CONTENTS_SLIME));
 }
@@ -2115,10 +2115,10 @@ BotInLavaOrSlime(bot_state_t *bs)
  * BotCreateWayPoint
  */
 bot_waypoint_t *
-BotCreateWayPoint(char *name, vec3_t origin, int areanum)
+BotCreateWayPoint(char *name, Vec3 origin, int areanum)
 {
 	bot_waypoint_t *wp;
-	vec3_t waypointmins = {-8, -8, -8}, waypointmaxs = {8, 8, 8};
+	Vec3 waypointmins = {-8, -8, -8}, waypointmaxs = {8, 8, 8};
 
 	wp = botai_freewaypoints;
 	if(!wp){
@@ -2128,9 +2128,9 @@ BotCreateWayPoint(char *name, vec3_t origin, int areanum)
 	botai_freewaypoints = botai_freewaypoints->next;
 
 	Q_strncpyz(wp->name, name, sizeof(wp->name));
-	Vec3Copy(origin, wp->goal.origin);
-	Vec3Copy(waypointmins, wp->goal.mins);
-	Vec3Copy(waypointmaxs, wp->goal.maxs);
+	vec3copy(origin, wp->goal.origin);
+	vec3copy(waypointmins, wp->goal.mins);
+	vec3copy(waypointmaxs, wp->goal.maxs);
 	wp->goal.areanum	= areanum;
 	wp->next		= NULL;
 	wp->prev		= NULL;
@@ -2574,16 +2574,16 @@ BotGoForPowerups(bot_state_t *bs)
  * BotRoamGoal
  */
 void
-BotRoamGoal(bot_state_t *bs, vec3_t goal)
+BotRoamGoal(bot_state_t *bs, Vec3 goal)
 {
 	int pc, i;
 	float	len, rnd;
-	vec3_t	dir, bestorg, belowbestorg;
+	Vec3	dir, bestorg, belowbestorg;
 	bsp_trace_t trace;
 
 	for(i = 0; i < 10; i++){
 		/* start at the bot origin */
-		Vec3Copy(bs->origin, bestorg);
+		vec3copy(bs->origin, bestorg);
 		rnd = random();
 		if(rnd > 0.25){
 			/* add a random value to the x-coordinate */
@@ -2602,13 +2602,13 @@ BotRoamGoal(bot_state_t *bs, vec3_t goal)
 			bs->entitynum,
 			MASK_SOLID);
 		/* direction and length towards the roam target */
-		Vec3Sub(trace.endpos, bs->origin, dir);
-		len = Vec3Normalize(dir);
+		vec3sub(trace.endpos, bs->origin, dir);
+		len = vec3normalize(dir);
 		/* if the roam target is far away anough */
 		if(len > 200){
 			/* the roam target is in the given direction before walls */
-			VectorScale(dir, len * trace.fraction - 40, dir);
-			Vec3Add(bs->origin, dir, bestorg);
+			vec3scale(dir, len * trace.fraction - 40, dir);
+			vec3add(bs->origin, dir, bestorg);
 			/* get the coordinates of the floor below the roam target */
 			belowbestorg[0] = bestorg[0];
 			belowbestorg[1] = bestorg[1];
@@ -2622,13 +2622,13 @@ BotRoamGoal(bot_state_t *bs, vec3_t goal)
 				pc = trap_PointContents(trace.endpos,
 					bs->entitynum);
 				if(!(pc & (CONTENTS_LAVA | CONTENTS_SLIME))){
-					Vec3Copy(bestorg, goal);
+					vec3copy(bestorg, goal);
 					return;
 				}
 			}
 		}
 	}
-	Vec3Copy(bestorg, goal);
+	vec3copy(bestorg, goal);
 }
 
 /*
@@ -2640,7 +2640,7 @@ BotAttackMove(bot_state_t *bs, int tfl)
 	int movetype, i, attackentity;
 	float	attack_skill, jumper, croucher, dist, strafechange_time;
 	float	attack_dist, attack_range;
-	vec3_t	forward, backward, sideward, hordir, up = {0, 0, 1};
+	Vec3	forward, backward, sideward, hordir, up = {0, 0, 1};
 	aas_entityinfo_t	entinfo;
 	bot_moveresult_t	moveresult;
 	bot_goal_t goal;
@@ -2651,9 +2651,9 @@ BotAttackMove(bot_state_t *bs, int tfl)
 		/* create the chase goal */
 		goal.entitynum	= attackentity;
 		goal.areanum	= bs->lastenemyareanum;
-		Vec3Copy(bs->lastenemyorigin, goal.origin);
-		VectorSet(goal.mins, -8, -8, -8);
-		VectorSet(goal.maxs, 8, 8, 8);
+		vec3copy(bs->lastenemyorigin, goal.origin);
+		vec3set(goal.mins, -8, -8, -8);
+		vec3set(goal.maxs, 8, 8, 8);
 		/* initialize the movement state */
 		BotSetupForMovement(bs);
 		/* move towards the goal */
@@ -2682,10 +2682,10 @@ BotAttackMove(bot_state_t *bs, int tfl)
 	/* get the enemy entity info */
 	BotEntityInfo(attackentity, &entinfo);
 	/* direction towards the enemy */
-	Vec3Sub(entinfo.origin, bs->origin, forward);
+	vec3sub(entinfo.origin, bs->origin, forward);
 	/* the distance towards the enemy */
-	dist = Vec3Normalize(forward);
-	VectorNegate(forward, backward);
+	dist = vec3normalize(forward);
+	vec3negate(forward, backward);
 	/* walk, crouch or jump */
 	movetype = MOVE_WALK;
 	/*  */
@@ -2742,20 +2742,20 @@ BotAttackMove(bot_state_t *bs, int tfl)
 		hordir[0]	= forward[0];
 		hordir[1]	= forward[1];
 		hordir[2]	= 0;
-		Vec3Normalize(hordir);
+		vec3normalize(hordir);
 		/* get the sideward vector */
-		Vec3Cross(hordir, up, sideward);
+		vec3cross(hordir, up, sideward);
 		/* reverse the vector depending on the strafe direction */
-		if(bs->flags & BFL_STRAFERIGHT) VectorNegate(sideward, sideward);
+		if(bs->flags & BFL_STRAFERIGHT) vec3negate(sideward, sideward);
 		/* randomly go back a little */
 		if(random() > 0.9)
-			Vec3Add(sideward, backward, sideward);
+			vec3add(sideward, backward, sideward);
 		else{
 			/* walk forward or backward to get at the ideal attack distance */
 			if(dist > attack_dist + attack_range)
-				Vec3Add(sideward, forward, sideward);
+				vec3add(sideward, forward, sideward);
 			else if(dist < attack_dist - attack_range)
-				Vec3Add(sideward, backward, sideward);
+				vec3add(sideward, backward, sideward);
 		}
 		/* perform the movement */
 		if(trap_BotMoveInDirection(bs->ms, sideward, 400, movetype))
@@ -2793,14 +2793,14 @@ BotSameTeam(bot_state_t *bs, int entnum)
  * InFieldOfVision
  */
 qbool
-InFieldOfVision(vec3_t viewangles, float fov, vec3_t angles)
+InFieldOfVision(Vec3 viewangles, float fov, Vec3 angles)
 {
 	int i;
 	float diff, angle;
 
 	for(i = 0; i < 2; i++){
-		angle = AngleMod(viewangles[i]);
-		angles[i] = AngleMod(angles[i]);
+		angle = anglemod(viewangles[i]);
+		angles[i] = anglemod(angles[i]);
 		diff = angles[i] - angle;
 		if(angles[i] > angle){
 			if(diff > 180.0) diff -= 360.0;
@@ -2818,22 +2818,22 @@ InFieldOfVision(vec3_t viewangles, float fov, vec3_t angles)
  * returns visibility in the range [0, 1] taking fog and water surfaces into account
  */
 float
-BotEntityVisible(int viewer, vec3_t eye, vec3_t viewangles, float fov, int ent)
+BotEntityVisible(int viewer, Vec3 eye, Vec3 viewangles, float fov, int ent)
 {
 	int i, contents_mask, passent, hitent, infog, inwater, otherinfog, pc;
 	float squaredfogdist, waterfactor, vis, bestvis;
 	bsp_trace_t trace;
 	aas_entityinfo_t entinfo;
-	vec3_t dir, entangles, start, end, middle;
+	Vec3 dir, entangles, start, end, middle;
 
 	/* calculate middle of bounding box */
 	BotEntityInfo(ent, &entinfo);
-	Vec3Add(entinfo.mins, entinfo.maxs, middle);
-	VectorScale(middle, 0.5, middle);
-	Vec3Add(entinfo.origin, middle, middle);
+	vec3add(entinfo.mins, entinfo.maxs, middle);
+	vec3scale(middle, 0.5, middle);
+	vec3add(entinfo.origin, middle, middle);
 	/* check if entity is within field of vision */
-	Vec3Sub(middle, eye, dir);
-	Vec3ToAngles(dir, entangles);
+	vec3sub(middle, eye, dir);
+	vec3toeuler(dir, entangles);
 	if(!InFieldOfVision(viewangles, fov, entangles)) return 0;
 	/*  */
 	pc = trap_AAS_PointContents(eye);
@@ -2848,8 +2848,8 @@ BotEntityVisible(int viewer, vec3_t eye, vec3_t viewangles, float fov, int ent)
 		contents_mask = CONTENTS_SOLID|CONTENTS_PLAYERCLIP;
 		passent = viewer;
 		hitent	= ent;
-		Vec3Copy(eye, start);
-		Vec3Copy(middle, end);
+		vec3copy(eye, start);
+		vec3copy(middle, end);
 		/* if the entity is in water, lava or slime */
 		if(trap_AAS_PointContents(middle) &
 		   (CONTENTS_LAVA|CONTENTS_SLIME|CONTENTS_WATER))
@@ -2861,8 +2861,8 @@ BotEntityVisible(int viewer, vec3_t eye, vec3_t viewangles, float fov, int ent)
 			     (CONTENTS_LAVA|CONTENTS_SLIME|CONTENTS_WATER))){
 				passent = ent;
 				hitent	= viewer;
-				Vec3Copy(middle, start);
-				Vec3Copy(eye, end);
+				vec3copy(middle, start);
+				vec3copy(eye, end);
 			}
 			contents_mask ^=
 				(CONTENTS_LAVA|CONTENTS_SLIME|CONTENTS_WATER);
@@ -2891,21 +2891,21 @@ BotEntityVisible(int viewer, vec3_t eye, vec3_t viewangles, float fov, int ent)
 			otherinfog =
 				(trap_AAS_PointContents(middle) & CONTENTS_FOG);
 			if(infog && otherinfog){
-				Vec3Sub(trace.endpos, eye, dir);
-				squaredfogdist = Vec3LenSquared(dir);
+				vec3sub(trace.endpos, eye, dir);
+				squaredfogdist = vec3lensquared(dir);
 			}else if(infog){
-				Vec3Copy(trace.endpos, start);
+				vec3copy(trace.endpos, start);
 				BotAI_Trace(&trace, start, NULL, NULL, eye,
 					viewer,
 					CONTENTS_FOG);
-				Vec3Sub(eye, trace.endpos, dir);
-				squaredfogdist = Vec3LenSquared(dir);
+				vec3sub(eye, trace.endpos, dir);
+				squaredfogdist = vec3lensquared(dir);
 			}else if(otherinfog){
-				Vec3Copy(trace.endpos, end);
+				vec3copy(trace.endpos, end);
 				BotAI_Trace(&trace, eye, NULL, NULL, end, viewer,
 					CONTENTS_FOG);
-				Vec3Sub(end, trace.endpos, dir);
-				squaredfogdist = Vec3LenSquared(dir);
+				vec3sub(end, trace.endpos, dir);
+				squaredfogdist = vec3lensquared(dir);
 			}else
 				/* if the entity and the viewer are not in fog assume there's no fog in between */
 				squaredfogdist = 0;
@@ -2937,7 +2937,7 @@ BotFindEnemy(bot_state_t *bs, int curenemy)
 	float	f, alertness, easyfragger, vis;
 	float	squaredist, cursquaredist;
 	aas_entityinfo_t entinfo, curenemyinfo;
-	vec3_t	dir, angles;
+	Vec3	dir, angles;
 
 	alertness =
 		trap_Characteristic_BFloat(bs->character,
@@ -2955,14 +2955,14 @@ BotFindEnemy(bot_state_t *bs, int curenemy)
 	if(curenemy >= 0){
 		BotEntityInfo(curenemy, &curenemyinfo);
 		if(EntityCarriesFlag(&curenemyinfo)) return qfalse;
-		Vec3Sub(curenemyinfo.origin, bs->origin, dir);
-		cursquaredist = Vec3LenSquared(dir);
+		vec3sub(curenemyinfo.origin, bs->origin, dir);
+		cursquaredist = vec3lensquared(dir);
 	}else
 		cursquaredist = 0;
 
 #ifdef MISSIONPACK
 	if(gametype == GT_OBELISK){
-		vec3_t target;
+		Vec3 target;
 		bot_goal_t	*goal;
 		bsp_trace_t	trace;
 
@@ -2971,7 +2971,7 @@ BotFindEnemy(bot_state_t *bs, int curenemy)
 		else
 			goal = &redobelisk;
 		/* if the obelisk is visible */
-		Vec3Copy(goal->origin, target);
+		vec3copy(goal->origin, target);
 		target[2] += 1;
 		BotAI_Trace(&trace, bs->eye, NULL, NULL, target, bs->client,
 			CONTENTS_SOLID);
@@ -3007,12 +3007,12 @@ BotFindEnemy(bot_state_t *bs, int curenemy)
 		if(easyfragger < 0.5 && EntityIsChatting(&entinfo)) continue;
 		/*  */
 		if(lastteleport_time > FloatTime() - 3){
-			Vec3Sub(entinfo.origin, lastteleport_origin, dir);
-			if(Vec3LenSquared(dir) < Square(70)) continue;
+			vec3sub(entinfo.origin, lastteleport_origin, dir);
+			if(vec3lensquared(dir) < Square(70)) continue;
 		}
 		/* calculate the distance towards the enemy */
-		Vec3Sub(entinfo.origin, bs->origin, dir);
-		squaredist = Vec3LenSquared(dir);
+		vec3sub(entinfo.origin, bs->origin, dir);
+		squaredist = vec3lensquared(dir);
 		/* if this entity is not carrying a flag */
 		if(!EntityCarriesFlag(&entinfo))
 			/* if this enemy is further away than the current one */
@@ -3037,8 +3037,8 @@ BotFindEnemy(bot_state_t *bs, int curenemy)
 		if(curenemy < 0 && squaredist > Square(100) &&
 		   !healthdecrease && !EntityIsShooting(&entinfo)){
 			/* check if we can avoid this enemy */
-			Vec3Sub(bs->origin, entinfo.origin, dir);
-			Vec3ToAngles(dir, angles);
+			vec3sub(bs->origin, entinfo.origin, dir);
+			vec3toeuler(dir, angles);
 			/* if the bot isn't in the fov of the enemy */
 			if(!InFieldOfVision(entinfo.angles, 90, angles)){
 				/* update some stuff for this enemy */
@@ -3172,7 +3172,7 @@ BotVisibleTeamMatesAndEnemies(bot_state_t *bs, int *teammates, int *enemies,
 	int i;
 	float	vis;
 	aas_entityinfo_t entinfo;
-	vec3_t	dir;
+	Vec3	dir;
 
 	if(teammates)
 		*teammates = 0;
@@ -3190,8 +3190,8 @@ BotVisibleTeamMatesAndEnemies(bot_state_t *bs, int *teammates, int *enemies,
 		if(!EntityCarriesFlag(&entinfo))
 			continue;
 		/* if not within range */
-		Vec3Sub(entinfo.origin, bs->origin, dir);
-		if(Vec3LenSquared(dir) > Square(range))
+		vec3sub(entinfo.origin, bs->origin, dir);
+		if(vec3lensquared(dir) > Square(range))
 			continue;
 		/* if the flag carrier is not visible */
 		vis =
@@ -3287,14 +3287,14 @@ BotAimAtEnemy(bot_state_t *bs)
 {
 	int i, enemyvisible;
 	float	dist, f, aim_skill, aim_accuracy, speed, reactiontime;
-	vec3_t	dir, bestorigin, end, start, groundtarget, cmdmove,
+	Vec3	dir, bestorigin, end, start, groundtarget, cmdmove,
 		enemyvelocity;
-	vec3_t	mins = {-4,-4,-4}, maxs = {4, 4, 4};
+	Vec3	mins = {-4,-4,-4}, maxs = {4, 4, 4};
 	weaponinfo_t	wi;
 	aas_entityinfo_t entinfo;
 	bot_goal_t	goal;
 	bsp_trace_t	trace;
-	vec3_t target;
+	Vec3 target;
 
 	/* if the bot has no enemy */
 	if(bs->enemy < 0)
@@ -3304,7 +3304,7 @@ BotAimAtEnemy(bot_state_t *bs)
 	/* if this is not a player (should be an obelisk) */
 	if(bs->enemy >= MAX_CLIENTS){
 		/* if the obelisk is visible */
-		Vec3Copy(entinfo.origin, target);
+		vec3copy(entinfo.origin, target);
 #ifdef MISSIONPACK
 		/* if attacking an obelisk */
 		if(bs->enemy == redobelisk.entitynum ||
@@ -3313,10 +3313,10 @@ BotAimAtEnemy(bot_state_t *bs)
 
 #endif
 		/* aim at the obelisk */
-		Vec3Sub(target, bs->eye, dir);
-		Vec3ToAngles(dir, bs->ideal_viewangles);
+		vec3sub(target, bs->eye, dir);
+		vec3toeuler(dir, bs->ideal_viewangles);
 		/* set the aim target before trying to attack */
-		Vec3Copy(target, bs->aimtarget);
+		vec3copy(target, bs->aimtarget);
 		return;
 	}
 	/*
@@ -3390,22 +3390,22 @@ BotAimAtEnemy(bot_state_t *bs)
 	if(EntityIsInvisible(&entinfo))
 		if(random() > 0.1) aim_accuracy *= 0.4f;
 	/*  */
-	Vec3Sub(entinfo.origin, entinfo.lastvisorigin, enemyvelocity);
-	VectorScale(enemyvelocity, 1 / entinfo.update_time, enemyvelocity);
+	vec3sub(entinfo.origin, entinfo.lastvisorigin, enemyvelocity);
+	vec3scale(enemyvelocity, 1 / entinfo.update_time, enemyvelocity);
 	/* enemy origin and velocity is remembered every 0.5 seconds */
 	if(bs->enemyposition_time < FloatTime()){
 		/*  */
 		bs->enemyposition_time = FloatTime() + 0.5;
-		Vec3Copy(enemyvelocity, bs->enemyvelocity);
-		Vec3Copy(entinfo.origin, bs->enemyorigin);
+		vec3copy(enemyvelocity, bs->enemyvelocity);
+		vec3copy(entinfo.origin, bs->enemyorigin);
 	}
 	/* if not extremely skilled */
 	if(aim_skill < 0.9){
-		Vec3Sub(entinfo.origin, bs->enemyorigin, dir);
+		vec3sub(entinfo.origin, bs->enemyorigin, dir);
 		/* if the enemy moved a bit */
-		if(Vec3LenSquared(dir) > Square(48))
+		if(vec3lensquared(dir) > Square(48))
 			/* if the enemy changed direction */
-			if(Vec3Dot(bs->enemyvelocity, enemyvelocity) < 0)
+			if(vec3dot(bs->enemyvelocity, enemyvelocity) < 0)
 				/* aim accuracy should be worse now */
 				aim_accuracy *= 0.7f;
 	}
@@ -3416,11 +3416,11 @@ BotAimAtEnemy(bot_state_t *bs)
 	/* if the enemy is visible */
 	if(enemyvisible){
 		/*  */
-		Vec3Copy(entinfo.origin, bestorigin);
+		vec3copy(entinfo.origin, bestorigin);
 		bestorigin[2] += 8;
 		/* get the start point shooting from
 		 * NOTE: the x and y projectile start offsets are ignored */
-		Vec3Copy(bs->origin, start);
+		vec3copy(bs->origin, start);
 		start[2]	+= bs->cur_ps.viewheight;
 		start[2]	+= wi.offset[2];
 		/*  */
@@ -3432,36 +3432,36 @@ BotAimAtEnemy(bot_state_t *bs)
 		/* if it is not an instant hit weapon the bot might want to predict the enemy */
 		if(wi.speed){
 			/*  */
-			Vec3Sub(bestorigin, bs->origin, dir);
-			dist = Vec3Len(dir);
-			Vec3Sub(entinfo.origin, bs->enemyorigin, dir);
+			vec3sub(bestorigin, bs->origin, dir);
+			dist = vec3len(dir);
+			vec3sub(entinfo.origin, bs->enemyorigin, dir);
 			/* if the enemy is NOT pretty far away and strafing just small steps left and right */
-			if(!(dist > 100 && Vec3LenSquared(dir) <
+			if(!(dist > 100 && vec3lensquared(dir) <
 			     Square(32))){
 				/* if skilled anough do exact prediction */
 				if(aim_skill > 0.8 &&
 					/* if the weapon is ready to fire */
 				   bs->cur_ps.weaponstate == WEAPON_READY){
 					aas_clientmove_t move;
-					vec3_t origin;
+					Vec3 origin;
 
-					Vec3Sub(entinfo.origin,
+					vec3sub(entinfo.origin,
 						bs->origin,
 						dir);
 					/* distance towards the enemy */
-					dist = Vec3Len(dir);
+					dist = vec3len(dir);
 					/* direction the enemy is moving in */
-					Vec3Sub(entinfo.origin,
+					vec3sub(entinfo.origin,
 						entinfo.lastvisorigin,
 						dir);
 					/*  */
-					VectorScale(dir, 1 / entinfo.update_time,
+					vec3scale(dir, 1 / entinfo.update_time,
 						dir);
 					/*  */
-					Vec3Copy(entinfo.origin, origin);
+					vec3copy(entinfo.origin, origin);
 					origin[2] += 1;
 					/*  */
-					VectorClear(cmdmove);
+					vec3clear(cmdmove);
 					/* AAS_ClearShownDebugLines(); */
 					trap_AAS_PredictClientMovement(
 						&move, bs->enemy, origin,
@@ -3469,27 +3469,27 @@ BotAimAtEnemy(bot_state_t *bs)
 						dir, cmdmove, 0,
 						dist * 10 / wi.speed, 0.1f, 0, 0,
 						qfalse);
-					Vec3Copy(move.endpos, bestorigin);
-					/* BotAI_Print(PRT_MESSAGE, "%1.1f predicted speed = %f, frames = %f\n", FloatTime(), Vec3Len(dir), dist * 10 / wi.speed); */
+					vec3copy(move.endpos, bestorigin);
+					/* BotAI_Print(PRT_MESSAGE, "%1.1f predicted speed = %f, frames = %f\n", FloatTime(), vec3len(dir), dist * 10 / wi.speed); */
 				}
 				/* if not that skilled do linear prediction */
 				else if(aim_skill > 0.4){
-					Vec3Sub(entinfo.origin,
+					vec3sub(entinfo.origin,
 						bs->origin,
 						dir);
 					/* distance towards the enemy */
-					dist = Vec3Len(dir);
+					dist = vec3len(dir);
 					/* direction the enemy is moving in */
-					Vec3Sub(entinfo.origin,
+					vec3sub(entinfo.origin,
 						entinfo.lastvisorigin,
 						dir);
 					dir[2] = 0;
 					/*  */
-					speed = Vec3Normalize(dir) /
+					speed = vec3normalize(dir) /
 						entinfo.update_time;
 					/* botimport.Print(PRT_MESSAGE, "speed = %f, wi->speed = %f\n", speed, wi->speed);
 					 * best spot to aim at */
-					Vec3MA(entinfo.origin,
+					vec3ma(entinfo.origin,
 						(dist / wi.speed) * speed, dir,
 						bestorigin);
 				}
@@ -3500,13 +3500,13 @@ BotAimAtEnemy(bot_state_t *bs)
 			/* if the enemy isn't standing significantly higher than the bot */
 			if(entinfo.origin[2] < bs->origin[2] + 16){
 				/* try to aim at the ground in front of the enemy */
-				Vec3Copy(entinfo.origin, end);
+				vec3copy(entinfo.origin, end);
 				end[2] -= 64;
 				BotAI_Trace(&trace, entinfo.origin, NULL, NULL,
 					end, entinfo.number,
 					MASK_SHOT);
 				/*  */
-				Vec3Copy(bestorigin, groundtarget);
+				vec3copy(bestorigin, groundtarget);
 				if(trace.startsolid) groundtarget[2] =
 						entinfo.origin[2] - 16;
 				else groundtarget[2] = trace.endpos[2] - 8;
@@ -3517,17 +3517,17 @@ BotAimAtEnemy(bot_state_t *bs)
 				/* if hitpoint is not vertically too far from the ground target */
 				if(fabs(trace.endpos[2] - groundtarget[2]) <
 				   50){
-					Vec3Sub(trace.endpos,
+					vec3sub(trace.endpos,
 						groundtarget,
 						dir);
 					/* if the hitpoint is near anough the ground target */
-					if(Vec3LenSquared(dir) <
+					if(vec3lensquared(dir) <
 					   Square(60)){
-						Vec3Sub(trace.endpos,
+						vec3sub(trace.endpos,
 							start,
 							dir);
 						/* if the hitpoint is far anough from the bot */
-						if(Vec3LenSquared(dir) >
+						if(vec3lensquared(dir) >
 						   Square(100)){
 							/* check if the bot is visible from the ground target */
 							trace.endpos[2] += 1;
@@ -3540,7 +3540,7 @@ BotAimAtEnemy(bot_state_t *bs)
 								MASK_SHOT);
 							if(trace.fraction >= 1)
 								/* botimport.Print(PRT_MESSAGE, "%1.1f aiming at ground\n", AAS_Time()); */
-								Vec3Copy(
+								vec3copy(
 									groundtarget,
 									bestorigin);
 						}
@@ -3552,7 +3552,7 @@ BotAimAtEnemy(bot_state_t *bs)
 		bestorigin[2]	+= 10 * crandom() * (1 - aim_accuracy);
 	}else{
 		/*  */
-		Vec3Copy(bs->lastenemyorigin, bestorigin);
+		vec3copy(bs->lastenemyorigin, bestorigin);
 		bestorigin[2] += 8;
 		/* if the bot is skilled anough */
 		if(aim_skill > 0.5)
@@ -3563,18 +3563,18 @@ BotAimAtEnemy(bot_state_t *bs)
 				/* create the chase goal */
 				goal.entitynum	= bs->client;
 				goal.areanum	= bs->areanum;
-				Vec3Copy(bs->eye, goal.origin);
-				VectorSet(goal.mins, -8, -8, -8);
-				VectorSet(goal.maxs, 8, 8, 8);
+				vec3copy(bs->eye, goal.origin);
+				vec3set(goal.mins, -8, -8, -8);
+				vec3set(goal.maxs, 8, 8, 8);
 				/*  */
 				if(trap_BotPredictVisiblePosition(bs->
 					   lastenemyorigin, bs->lastenemyareanum,
 					   &goal,
 					   TFL_DEFAULT, target)){
-					Vec3Sub(target, bs->eye, dir);
-					if(Vec3LenSquared(dir) >
+					vec3sub(target, bs->eye, dir);
+					if(vec3lensquared(dir) >
 					   Square(80)){
-						Vec3Copy(target, bestorigin);
+						vec3copy(target, bestorigin);
 						bestorigin[2] -= 20;
 					}
 				}
@@ -3586,37 +3586,37 @@ BotAimAtEnemy(bot_state_t *bs)
 		BotAI_Trace(&trace, bs->eye, NULL, NULL, bestorigin,
 			bs->entitynum,
 			MASK_SHOT);
-		Vec3Copy(trace.endpos, bs->aimtarget);
+		vec3copy(trace.endpos, bs->aimtarget);
 	}else
-		Vec3Copy(bestorigin, bs->aimtarget);
+		vec3copy(bestorigin, bs->aimtarget);
 	/* get aim direction */
-	Vec3Sub(bestorigin, bs->eye, dir);
+	vec3sub(bestorigin, bs->eye, dir);
 	/*  */
 	if(wi.number == WP_MACHINEGUN ||
 	   wi.number == WP_SHOTGUN ||
 	   wi.number == WP_LIGHTNING ||
 	   wi.number == WP_RAILGUN){
 		/* distance towards the enemy */
-		dist = Vec3Len(dir);
+		dist = vec3len(dir);
 		if(dist > 150) dist = 150;
 		f = 0.6 + dist / 150 * 0.4;
 		aim_accuracy *= f;
 	}
 	/* add some random stuff to the aim direction depending on the aim accuracy */
 	if(aim_accuracy < 0.8){
-		Vec3Normalize(dir);
+		vec3normalize(dir);
 		for(i = 0; i < 3; i++) dir[i] += 0.3 * crandom() *
 						 (1 - aim_accuracy);
 	}
 	/* set the ideal view angles */
-	Vec3ToAngles(dir, bs->ideal_viewangles);
+	vec3toeuler(dir, bs->ideal_viewangles);
 	/* take the weapon spread into account for lower skilled bots */
 	bs->ideal_viewangles[PITCH] += 6 * wi.vspread*crandom() *
 				       (1 - aim_accuracy);
-	bs->ideal_viewangles[PITCH]	= AngleMod(bs->ideal_viewangles[PITCH]);
+	bs->ideal_viewangles[PITCH]	= anglemod(bs->ideal_viewangles[PITCH]);
 	bs->ideal_viewangles[YAW]	+= 6 * wi.hspread*crandom() *
 					   (1 - aim_accuracy);
-	bs->ideal_viewangles[YAW] = AngleMod(bs->ideal_viewangles[YAW]);
+	bs->ideal_viewangles[YAW] = anglemod(bs->ideal_viewangles[YAW]);
 	/* if the bots should be really challenging */
 	if(bot_challenge.integer)
 		/* if the bot is really accurate and has the enemy in view for some time */
@@ -3624,7 +3624,7 @@ BotAimAtEnemy(bot_state_t *bs)
 			/* set the view angles directly */
 			if(bs->ideal_viewangles[PITCH] >
 			   180) bs->ideal_viewangles[PITCH] -= 360;
-			Vec3Copy(bs->ideal_viewangles, bs->viewangles);
+			vec3copy(bs->ideal_viewangles, bs->viewangles);
 			trap_EA_View(bs->client, bs->viewangles);
 		}
 }
@@ -3639,11 +3639,11 @@ BotCheckAttack(bot_state_t *bs)
 	int	attackentity;
 	bsp_trace_t bsptrace;
 	/* float selfpreservation; */
-	vec3_t forward, right, start, end, dir, angles;
+	Vec3 forward, right, start, end, dir, angles;
 	weaponinfo_t	wi;
 	bsp_trace_t	trace;
 	aas_entityinfo_t entinfo;
-	vec3_t mins = {-8, -8, -8}, maxs = {8, 8, 8};
+	Vec3 mins = {-8, -8, -8}, maxs = {8, 8, 8};
 
 	attackentity = bs->enemy;
 	/*  */
@@ -3689,17 +3689,17 @@ BotCheckAttack(bot_state_t *bs)
 	}
 	/*
 	 *  */
-	Vec3Sub(bs->aimtarget, bs->eye, dir);
+	vec3sub(bs->aimtarget, bs->eye, dir);
 	/*  */
 	if(bs->weaponnum == WP_GAUNTLET)
-		if(Vec3LenSquared(dir) > Square(60))
+		if(vec3lensquared(dir) > Square(60))
 			return;
-	if(Vec3LenSquared(dir) < Square(100))
+	if(vec3lensquared(dir) < Square(100))
 		fov = 120;
 	else
 		fov = 50;
 	/*  */
-	Vec3ToAngles(dir, angles);
+	vec3toeuler(dir, angles);
 	if(!InFieldOfVision(bs->viewangles, fov, angles))
 		return;
 	BotAI_Trace(&bsptrace, bs->eye, NULL, NULL, bs->aimtarget, bs->client,
@@ -3710,17 +3710,17 @@ BotCheckAttack(bot_state_t *bs)
 	/* get the weapon info */
 	trap_BotGetWeaponInfo(bs->ws, bs->weaponnum, &wi);
 	/* get the start point shooting from */
-	Vec3Copy(bs->origin, start);
+	vec3copy(bs->origin, start);
 	start[2] += bs->cur_ps.viewheight;
-	AngleVectors(bs->viewangles, forward, right, NULL);
+	anglevec3s(bs->viewangles, forward, right, NULL);
 	start[0]	+= forward[0] * wi.offset[0] + right[0] * wi.offset[1];
 	start[1]	+= forward[1] * wi.offset[0] + right[1] * wi.offset[1];
 	start[2]	+= forward[2] * wi.offset[0] + right[2] * wi.offset[1] +
 			   wi.offset[2];
 	/* end point aiming at */
-	Vec3MA(start, 1000, forward, end);
+	vec3ma(start, 1000, forward, end);
 	/* a little back to make sure not inside a very close enemy */
-	Vec3MA(start, -12, forward, start);
+	vec3ma(start, -12, forward, start);
 	BotAI_Trace(&trace, start, mins, maxs, end, bs->entitynum, MASK_SHOT);
 	/* if the entity is a client */
 	if(trace.ent >= 0 && trace.ent < MAX_CLIENTS)
@@ -3761,7 +3761,7 @@ BotMapScripts(bot_state_t *bs)
 	int	i, shootbutton;
 	float	aim_accuracy;
 	aas_entityinfo_t entinfo;
-	vec3_t	dir;
+	Vec3	dir;
 
 	trap_GetServerinfo(info, sizeof(info));
 
@@ -3769,8 +3769,8 @@ BotMapScripts(bot_state_t *bs)
 	mapname[sizeof(mapname)-1] = '\0';
 
 	if(!Q_stricmp(mapname, "q3tourney6")){
-		vec3_t	mins = {700, 204, 672}, maxs = {964, 468, 680};
-		vec3_t	buttonorg = {304, 352, 920};
+		Vec3	mins = {700, 204, 672}, maxs = {964, 468, 680};
+		Vec3	buttonorg = {304, 352, 920};
 		/* NOTE: NEVER use the func_bobbing in q3tourney6 */
 		bs->tfl &= ~TFL_FUNCBOB;
 		/* if the bot is below the bounding box */
@@ -3807,17 +3807,17 @@ BotMapScripts(bot_state_t *bs)
 		}
 		if(shootbutton){
 			bs->flags |= BFL_IDEALVIEWSET;
-			Vec3Sub(buttonorg, bs->eye, dir);
-			Vec3ToAngles(dir, bs->ideal_viewangles);
+			vec3sub(buttonorg, bs->eye, dir);
+			vec3toeuler(dir, bs->ideal_viewangles);
 			aim_accuracy = trap_Characteristic_BFloat(
 				bs->character, CHARACTERISTIC_AIM_ACCURACY, 0, 1);
 			bs->ideal_viewangles[PITCH] += 8 * crandom() *
 						       (1 - aim_accuracy);
-			bs->ideal_viewangles[PITCH] = AngleMod(
+			bs->ideal_viewangles[PITCH] = anglemod(
 				bs->ideal_viewangles[PITCH]);
 			bs->ideal_viewangles[YAW] += 8 * crandom() *
 						     (1 - aim_accuracy);
-			bs->ideal_viewangles[YAW] = AngleMod(
+			bs->ideal_viewangles[YAW] = anglemod(
 				bs->ideal_viewangles[YAW]);
 			/*  */
 			if(InFieldOfVision(bs->viewangles, 20,
@@ -3832,20 +3832,20 @@ BotMapScripts(bot_state_t *bs)
 /*
  * BotSetMovedir
  */
-static vec3_t	VEC_UP = {0, -1,  0};
-static vec3_t	MOVEDIR_UP = {0,  0,  1};
-static vec3_t	VEC_DOWN = {0, -2,  0};
-static vec3_t	MOVEDIR_DOWN = {0,  0, -1};
+static Vec3	VEC_UP = {0, -1,  0};
+static Vec3	MOVEDIR_UP = {0,  0,  1};
+static Vec3	VEC_DOWN = {0, -2,  0};
+static Vec3	MOVEDIR_DOWN = {0,  0, -1};
 
 void
-BotSetMovedir(vec3_t angles, vec3_t movedir)
+BotSetMovedir(Vec3 angles, Vec3 movedir)
 {
-	if(VectorCompare(angles, VEC_UP))
-		Vec3Copy(MOVEDIR_UP, movedir);
-	else if(VectorCompare(angles, VEC_DOWN))
-		Vec3Copy(MOVEDIR_DOWN, movedir);
+	if(vec3cmp(angles, VEC_UP))
+		vec3copy(MOVEDIR_UP, movedir);
+	else if(vec3cmp(angles, VEC_DOWN))
+		vec3copy(MOVEDIR_DOWN, movedir);
 	else
-		AngleVectors(angles, movedir, NULL, NULL);
+		anglevec3s(angles, movedir, NULL, NULL);
 }
 
 /*
@@ -3854,8 +3854,8 @@ BotSetMovedir(vec3_t angles, vec3_t movedir)
  * this is ugly
  */
 int
-BotModelMinsMaxs(int modelindex, int eType, int contents, vec3_t mins,
-		 vec3_t maxs)
+BotModelMinsMaxs(int modelindex, int eType, int contents, Vec3 mins,
+		 Vec3 maxs)
 {
 	gentity_t *ent;
 	int i;
@@ -3870,18 +3870,18 @@ BotModelMinsMaxs(int modelindex, int eType, int contents, vec3_t mins,
 			continue;
 		if(ent->s.modelindex == modelindex){
 			if(mins)
-				Vec3Add(ent->r.currentOrigin, ent->r.mins,
+				vec3add(ent->r.currentOrigin, ent->r.mins,
 					mins);
 			if(maxs)
-				Vec3Add(ent->r.currentOrigin, ent->r.maxs,
+				vec3add(ent->r.currentOrigin, ent->r.maxs,
 					maxs);
 			return i;
 		}
 	}
 	if(mins)
-		VectorClear(mins);
+		vec3clear(mins);
 	if(maxs)
-		VectorClear(maxs);
+		vec3clear(maxs);
 	return 0;
 }
 
@@ -3895,13 +3895,13 @@ BotFuncButtonActivateGoal(bot_state_t *bs, int bspent,
 	int	i, areas[10], numareas, modelindex, entitynum;
 	char	model[128];
 	float	lip, dist, health, angle;
-	vec3_t	size, start, end, mins, maxs, angles, points[10];
-	vec3_t	movedir, origin, goalorigin, bboxmins, bboxmaxs;
-	vec3_t	extramins = {1, 1, 1}, extramaxs = {-1, -1, -1};
+	Vec3	size, start, end, mins, maxs, angles, points[10];
+	Vec3	movedir, origin, goalorigin, bboxmins, bboxmaxs;
+	Vec3	extramins = {1, 1, 1}, extramaxs = {-1, -1, -1};
 	bsp_trace_t bsptrace;
 
 	activategoal->shoot = qfalse;
-	VectorClear(activategoal->target);
+	vec3clear(activategoal->target);
 	/* create a bot goal towards the button */
 	trap_AAS_ValueForBSPEpairKey(bspent, "model", model, sizeof(model));
 	if(!*model)
@@ -3909,20 +3909,20 @@ BotFuncButtonActivateGoal(bot_state_t *bs, int bspent,
 	modelindex = atoi(model+1);
 	if(!modelindex)
 		return qfalse;
-	VectorClear(angles);
+	vec3clear(angles);
 	entitynum = BotModelMinsMaxs(modelindex, ET_MOVER, 0, mins, maxs);
 	/* get the lip of the button */
 	trap_AAS_FloatForBSPEpairKey(bspent, "lip", &lip);
 	if(!lip) lip = 4;
 	/* get the move direction from the angle */
 	trap_AAS_FloatForBSPEpairKey(bspent, "angle", &angle);
-	VectorSet(angles, 0, angle, 0);
+	vec3set(angles, 0, angle, 0);
 	BotSetMovedir(angles, movedir);
 	/* button size */
-	Vec3Sub(maxs, mins, size);
+	vec3sub(maxs, mins, size);
 	/* button origin */
-	Vec3Add(mins, maxs, origin);
-	VectorScale(origin, 0.5, origin);
+	vec3add(mins, maxs, origin);
+	vec3scale(origin, 0.5, origin);
 	/* touch distance of the button */
 	dist = fabs(movedir[0]) * size[0] + fabs(movedir[1]) * size[1] + fabs(
 		movedir[2]) * size[2];
@@ -3932,9 +3932,9 @@ BotFuncButtonActivateGoal(bot_state_t *bs, int bspent,
 	/* if the button is shootable */
 	if(health){
 		/* calculate the shoot target */
-		Vec3MA(origin, -dist, movedir, goalorigin);
+		vec3ma(origin, -dist, movedir, goalorigin);
 		/*  */
-		Vec3Copy(goalorigin, activategoal->target);
+		vec3copy(goalorigin, activategoal->target);
 		activategoal->shoot = qtrue;
 		/*  */
 		BotAI_Trace(&bsptrace, bs->eye, NULL, NULL, goalorigin,
@@ -3946,10 +3946,10 @@ BotFuncButtonActivateGoal(bot_state_t *bs, int bspent,
 			activategoal->goal.entitynum = entitynum;	/* NOTE: this is the entity number of the shootable button */
 			activategoal->goal.number	= 0;
 			activategoal->goal.flags	= 0;
-			Vec3Copy(bs->origin, activategoal->goal.origin);
+			vec3copy(bs->origin, activategoal->goal.origin);
 			activategoal->goal.areanum = bs->areanum;
-			VectorSet(activategoal->goal.mins, -8, -8, -8);
-			VectorSet(activategoal->goal.maxs, 8, 8, 8);
+			vec3set(activategoal->goal.mins, -8, -8, -8);
+			vec3set(activategoal->goal.maxs, 8, 8, 8);
 			/*  */
 			return qtrue;
 		}else{
@@ -3964,11 +3964,11 @@ BotFuncButtonActivateGoal(bot_state_t *bs, int bspent,
 				else dist += fabs(movedir[i]) * fabs(bboxmins[i]);
 			}
 			/* calculate the goal origin */
-			Vec3MA(origin, -dist, movedir, goalorigin);
+			vec3ma(origin, -dist, movedir, goalorigin);
 			/*  */
-			Vec3Copy(goalorigin, start);
+			vec3copy(goalorigin, start);
 			start[2] += 24;
-			Vec3Copy(start, end);
+			vec3copy(start, end);
 			end[2]		-= 512;
 			numareas	=
 				trap_AAS_TraceAreas(start, end, areas, points,
@@ -3982,10 +3982,10 @@ BotFuncButtonActivateGoal(bot_state_t *bs, int bspent,
 			}
 			if(i >= 0){
 				/*  */
-				Vec3Copy(points[i], activategoal->goal.origin);
+				vec3copy(points[i], activategoal->goal.origin);
 				activategoal->goal.areanum = areas[i];
-				VectorSet(activategoal->goal.mins, 8, 8, 8);
-				VectorSet(activategoal->goal.maxs, -8, -8, -8);
+				vec3set(activategoal->goal.mins, 8, 8, 8);
+				vec3set(activategoal->goal.maxs, -8, -8, -8);
 				/*  */
 				for(i = 0; i < 3; i++){
 					if(movedir[i] <
@@ -4014,11 +4014,11 @@ BotFuncButtonActivateGoal(bot_state_t *bs, int bspent,
 			else dist += fabs(movedir[i]) * fabs(bboxmins[i]);
 		}
 		/* calculate the goal origin */
-		Vec3MA(origin, -dist, movedir, goalorigin);
+		vec3ma(origin, -dist, movedir, goalorigin);
 		/*  */
-		Vec3Copy(goalorigin, start);
+		vec3copy(goalorigin, start);
 		start[2] += 24;
-		Vec3Copy(start, end);
+		vec3copy(start, end);
 		end[2]		-= 100;
 		numareas	= trap_AAS_TraceAreas(start, end, areas, NULL,
 			10);
@@ -4028,10 +4028,10 @@ BotFuncButtonActivateGoal(bot_state_t *bs, int bspent,
 				break;
 		if(i < numareas){
 			/*  */
-			Vec3Copy(origin, activategoal->goal.origin);
+			vec3copy(origin, activategoal->goal.origin);
 			activategoal->goal.areanum = areas[i];
-			Vec3Sub(mins, origin, activategoal->goal.mins);
-			Vec3Sub(maxs, origin, activategoal->goal.maxs);
+			vec3sub(mins, origin, activategoal->goal.mins);
+			vec3sub(maxs, origin, activategoal->goal.maxs);
 			/*  */
 			for(i = 0; i < 3; i++){
 				if(movedir[i] < 0) activategoal->goal.maxs[i] +=
@@ -4060,7 +4060,7 @@ BotFuncDoorActivateGoal(bot_state_t *bs, int bspent,
 {
 	int	modelindex, entitynum;
 	char	model[MAX_INFO_STRING];
-	vec3_t mins, maxs, origin, angles;
+	Vec3 mins, maxs, origin, angles;
 
 	/* shoot at the shootable door */
 	trap_AAS_ValueForBSPEpairKey(bspent, "model", model, sizeof(model));
@@ -4069,21 +4069,21 @@ BotFuncDoorActivateGoal(bot_state_t *bs, int bspent,
 	modelindex = atoi(model+1);
 	if(!modelindex)
 		return qfalse;
-	VectorClear(angles);
+	vec3clear(angles);
 	entitynum = BotModelMinsMaxs(modelindex, ET_MOVER, 0, mins, maxs);
 	/* door origin */
-	Vec3Add(mins, maxs, origin);
-	VectorScale(origin, 0.5, origin);
-	Vec3Copy(origin, activategoal->target);
+	vec3add(mins, maxs, origin);
+	vec3scale(origin, 0.5, origin);
+	vec3copy(origin, activategoal->target);
 	activategoal->shoot = qtrue;
 	/*  */
 	activategoal->goal.entitynum = entitynum;	/* NOTE: this is the entity number of the shootable door */
 	activategoal->goal.number	= 0;
 	activategoal->goal.flags	= 0;
-	Vec3Copy(bs->origin, activategoal->goal.origin);
+	vec3copy(bs->origin, activategoal->goal.origin);
 	activategoal->goal.areanum = bs->areanum;
-	VectorSet(activategoal->goal.mins, -8, -8, -8);
-	VectorSet(activategoal->goal.maxs, 8, 8, 8);
+	vec3set(activategoal->goal.mins, -8, -8, -8);
+	vec3set(activategoal->goal.maxs, 8, 8, 8);
 	return qtrue;
 }
 
@@ -4096,11 +4096,11 @@ BotTriggerMultipleActivateGoal(bot_state_t *bs, int bspent,
 {
 	int	i, areas[10], numareas, modelindex, entitynum;
 	char	model[128];
-	vec3_t	start, end, mins, maxs, angles;
-	vec3_t	origin, goalorigin;
+	Vec3	start, end, mins, maxs, angles;
+	Vec3	origin, goalorigin;
 
 	activategoal->shoot = qfalse;
-	VectorClear(activategoal->target);
+	vec3clear(activategoal->target);
 	/* create a bot goal towards the trigger */
 	trap_AAS_ValueForBSPEpairKey(bspent, "model", model, sizeof(model));
 	if(!*model)
@@ -4108,16 +4108,16 @@ BotTriggerMultipleActivateGoal(bot_state_t *bs, int bspent,
 	modelindex = atoi(model+1);
 	if(!modelindex)
 		return qfalse;
-	VectorClear(angles);
+	vec3clear(angles);
 	entitynum = BotModelMinsMaxs(modelindex, 0, CONTENTS_TRIGGER, mins, maxs);
 	/* trigger origin */
-	Vec3Add(mins, maxs, origin);
-	VectorScale(origin, 0.5, origin);
-	Vec3Copy(origin, goalorigin);
+	vec3add(mins, maxs, origin);
+	vec3scale(origin, 0.5, origin);
+	vec3copy(origin, goalorigin);
 	/*  */
-	Vec3Copy(goalorigin, start);
+	vec3copy(goalorigin, start);
 	start[2] += 24;
-	Vec3Copy(start, end);
+	vec3copy(start, end);
 	end[2]		-= 100;
 	numareas	= trap_AAS_TraceAreas(start, end, areas, NULL, 10);
 	/*  */
@@ -4125,10 +4125,10 @@ BotTriggerMultipleActivateGoal(bot_state_t *bs, int bspent,
 		if(trap_AAS_AreaReachability(areas[i]))
 			break;
 	if(i < numareas){
-		Vec3Copy(origin, activategoal->goal.origin);
+		vec3copy(origin, activategoal->goal.origin);
 		activategoal->goal.areanum = areas[i];
-		Vec3Sub(mins, origin, activategoal->goal.mins);
-		Vec3Sub(maxs, origin, activategoal->goal.maxs);
+		vec3sub(mins, origin, activategoal->goal.mins);
+		vec3sub(maxs, origin, activategoal->goal.maxs);
 		/*  */
 		activategoal->goal.entitynum = entitynum;
 		activategoal->goal.number	= 0;
@@ -4256,7 +4256,7 @@ BotGetActivateGoal(bot_state_t *bs, int entitynum,
 	char	targetname[10][128];
 	aas_entityinfo_t	entinfo;
 	aas_areainfo_t		areainfo;
-	vec3_t origin, angles, absmins, absmaxs;
+	Vec3 origin, angles, absmins, absmaxs;
 
 	memset(activategoal, 0, sizeof(bot_activategoal_t));
 	BotEntityInfo(entitynum, &entinfo);
@@ -4298,16 +4298,16 @@ BotGetActivateGoal(bot_state_t *bs, int entitynum,
 			return 0;
 		/* get the door origin */
 		if(!trap_AAS_VectorForBSPEpairKey(ent, "origin", origin))
-			VectorClear(origin);
+			vec3clear(origin);
 		/* if the door is open or opening already */
-		if(!VectorCompare(origin, entinfo.origin))
+		if(!vec3cmp(origin, entinfo.origin))
 			return 0;
 		/* store all the areas the door is in */
 		trap_AAS_ValueForBSPEpairKey(ent, "model", model, sizeof(model));
 		if(*model){
 			modelindex = atoi(model+1);
 			if(modelindex){
-				VectorClear(angles);
+				vec3clear(angles);
 				BotModelMinsMaxs(modelindex, ET_MOVER, 0,
 					absmins,
 					absmaxs);
@@ -4477,7 +4477,7 @@ BotGoForActivateGoal(bot_state_t *bs, bot_activategoal_t *activategoal)
 		activategoal->time = FloatTime() + 10;
 	activategoal->start_time = FloatTime();
 	BotEntityInfo(activategoal->goal.entitynum, &activateinfo);
-	Vec3Copy(activateinfo.origin, activategoal->origin);
+	vec3copy(activateinfo.origin, activategoal->origin);
 	/*  */
 	if(BotPushOntoActivateGoalStack(bs, activategoal)){
 		/* enter the activate entity AI node */
@@ -4531,17 +4531,17 @@ BotPrintActivateGoalInfo(bot_state_t *bs, bot_activategoal_t *activategoal,
 void
 BotRandomMove(bot_state_t *bs, bot_moveresult_t *moveresult)
 {
-	vec3_t dir, angles;
+	Vec3 dir, angles;
 
 	angles[0]	= 0;
 	angles[1]	= random() * 360;
 	angles[2]	= 0;
-	AngleVectors(angles, dir, NULL, NULL);
+	anglevec3s(angles, dir, NULL, NULL);
 
 	trap_BotMoveInDirection(bs->ms, dir, 400, MOVE_WALK);
 
 	moveresult->failure = qfalse;
-	Vec3Copy(dir, moveresult->movedir);
+	vec3copy(dir, moveresult->movedir);
 }
 
 /*
@@ -4557,8 +4557,8 @@ void
 BotAIBlocked(bot_state_t *bs, bot_moveresult_t *moveresult, int activate)
 {
 	int movetype, bspent;
-	vec3_t hordir, sideward, angles, up = {0, 0, 1};
-	/* vec3_t start, end, mins, maxs; */
+	Vec3 hordir, sideward, angles, up = {0, 0, 1};
+	/* Vec3 start, end, mins, maxs; */
 	aas_entityinfo_t entinfo;
 	bot_activategoal_t activategoal;
 
@@ -4610,9 +4610,9 @@ BotAIBlocked(bot_state_t *bs, bot_moveresult_t *moveresult, int activate)
 	hordir[1]	= moveresult->movedir[1];
 	hordir[2]	= 0;
 	/* if no direction just take a random direction */
-	if(Vec3Normalize(hordir) < 0.1){
-		VectorSet(angles, 0, 360 * random(), 0);
-		AngleVectors(angles, hordir, NULL, NULL);
+	if(vec3normalize(hordir) < 0.1){
+		vec3set(angles, 0, 360 * random(), 0);
+		anglevec3s(angles, hordir, NULL, NULL);
 	}
 	/*
 	 * if (moveresult->flags & MOVERESULT_ONTOPOFOBSTACLE) movetype = MOVE_JUMP;
@@ -4620,18 +4620,18 @@ BotAIBlocked(bot_state_t *bs, bot_moveresult_t *moveresult, int activate)
 	movetype = MOVE_WALK;
 	/* if there's an obstacle at the bot's feet and head then
 	 * the bot might be able to crouch through
-	 * Vec3Copy(bs->origin, start);
+	 * vec3copy(bs->origin, start);
 	 * start[2] += 18;
-	 * Vec3MA(start, 5, hordir, end);
-	 * VectorSet(mins, -16, -16, -24);
-	 * VectorSet(maxs, 16, 16, 4);
+	 * vec3ma(start, 5, hordir, end);
+	 * vec3set(mins, -16, -16, -24);
+	 * vec3set(maxs, 16, 16, 4);
 	 *
 	 * bsptrace = AAS_Trace(start, mins, maxs, end, bs->entitynum, MASK_PLAYERSOLID);
 	 * if (bsptrace.fraction >= 1) movetype = MOVE_CROUCH;
 	 * get the sideward vector */
-	Vec3Cross(hordir, up, sideward);
+	vec3cross(hordir, up, sideward);
 	/*  */
-	if(bs->flags & BFL_AVOIDRIGHT) VectorNegate(sideward, sideward);
+	if(bs->flags & BFL_AVOIDRIGHT) vec3negate(sideward, sideward);
 	/* try to crouch straight forward? */
 	if(movetype != MOVE_CROUCH ||
 	   !trap_BotMoveInDirection(bs->ms, hordir, 400, movetype))
@@ -4640,8 +4640,8 @@ BotAIBlocked(bot_state_t *bs, bot_moveresult_t *moveresult, int activate)
 			/* flip the avoid direction flag */
 			bs->flags ^= BFL_AVOIDRIGHT;
 			/* flip the direction
-			 * VectorNegate(sideward, sideward); */
-			Vec3MA(sideward, -1, hordir, sideward);
+			 * vec3negate(sideward, sideward); */
+			vec3ma(sideward, -1, hordir, sideward);
 			/* move in the other direction */
 			trap_BotMoveInDirection(bs->ms, sideward, 400, movetype);
 		}
@@ -5097,7 +5097,7 @@ BotCheckEvents(bot_state_t *bs, entityState_t *state)
 	}
 	case EV_PLAYER_TELEPORT_IN:
 	{
-		Vec3Copy(state->origin, lastteleport_origin);
+		vec3copy(state->origin, lastteleport_origin);
 		lastteleport_time = FloatTime();
 		break;
 	}
@@ -5274,9 +5274,9 @@ BotGetAlternateRouteGoal(bot_state_t *bs, int base)
 		rnd = numaltroutegoals-1;
 	goal = &bs->altroutegoal;
 	goal->areanum = altroutegoals[rnd].areanum;
-	Vec3Copy(altroutegoals[rnd].origin, goal->origin);
-	VectorSet(goal->mins, -8, -8, -8);
-	VectorSet(goal->maxs, 8, 8, 8);
+	vec3copy(altroutegoals[rnd].origin, goal->origin);
+	vec3set(goal->mins, -8, -8, -8);
+	vec3set(goal->maxs, 8, 8, 8);
 	goal->entitynum = 0;
 	goal->iteminfo	= 0;
 	goal->number	= 0;
@@ -5480,7 +5480,7 @@ BotSetEntityNumForGoalWithModel(bot_goal_t *goal, int eType, char *modelname)
 {
 	gentity_t	*ent;
 	int i, modelindex;
-	vec3_t		dir;
+	Vec3		dir;
 
 	modelindex = G_ModelIndex(modelname);
 	ent = &g_entities[0];
@@ -5491,8 +5491,8 @@ BotSetEntityNumForGoalWithModel(bot_goal_t *goal, int eType, char *modelname)
 			continue;
 		if(ent->s.modelindex != modelindex)
 			continue;
-		Vec3Sub(goal->origin, ent->s.origin, dir);
-		if(Vec3LenSquared(dir) < Square(10)){
+		vec3sub(goal->origin, ent->s.origin, dir);
+		if(vec3lensquared(dir) < Square(10)){
 			goal->entitynum = i;
 			return;
 		}
@@ -5507,7 +5507,7 @@ BotSetEntityNumForGoal(bot_goal_t *goal, char *classname)
 {
 	gentity_t	*ent;
 	int i;
-	vec3_t		dir;
+	Vec3		dir;
 
 	ent = &g_entities[0];
 	for(i = 0; i < level.num_entities; i++, ent++){
@@ -5515,8 +5515,8 @@ BotSetEntityNumForGoal(bot_goal_t *goal, char *classname)
 			continue;
 		if(!Q_stricmp(ent->classname, classname))
 			continue;
-		Vec3Sub(goal->origin, ent->s.origin, dir);
-		if(Vec3LenSquared(dir) < Square(10)){
+		vec3sub(goal->origin, ent->s.origin, dir);
+		if(vec3lensquared(dir) < Square(10)){
 			goal->entitynum = i;
 			return;
 		}
@@ -5530,7 +5530,7 @@ int
 BotGoalForBSPEntity(char *classname, bot_goal_t *goal)
 {
 	char	value[MAX_INFO_STRING];
-	vec3_t origin, start, end;
+	Vec3 origin, start, end;
 	int	ent, numareas, areas[10];
 
 	memset(goal, 0, sizeof(bot_goal_t));
@@ -5542,10 +5542,10 @@ BotGoalForBSPEntity(char *classname, bot_goal_t *goal)
 		if(!strcmp(value, classname)){
 			if(!trap_AAS_VectorForBSPEpairKey(ent, "origin", origin))
 				return qfalse;
-			Vec3Copy(origin, goal->origin);
-			Vec3Copy(origin, start);
+			vec3copy(origin, goal->origin);
+			vec3copy(origin, start);
 			start[2] -= 32;
-			Vec3Copy(origin, end);
+			vec3copy(origin, end);
 			end[2]		+= 32;
 			numareas	=
 				trap_AAS_TraceAreas(start, end, areas, NULL,

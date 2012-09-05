@@ -183,18 +183,18 @@ typedef struct centity_s {
 	playerEntity_t	pe;
 
 	int		errorTime;	/* decay the error from this time */
-	vec3_t		errorOrigin;
-	vec3_t		errorAngles;
+	Vec3		errorOrigin;
+	Vec3		errorAngles;
 
 	qbool		extrapolated;	/* false if origin / angles is an interpolation */
-	vec3_t		rawOrigin;
-	vec3_t		rawAngles;
+	Vec3		rawOrigin;
+	Vec3		rawAngles;
 
-	vec3_t		beamEnd;
+	Vec3		beamEnd;
 
 	/* exact interpolated position of entity on this frame */
-	vec3_t	lerpOrigin;
-	vec3_t	lerpAngles;
+	Vec3	lerpOrigin;
+	Vec3	lerpAngles;
 } centity_t;
 
 
@@ -272,7 +272,7 @@ typedef struct localEntity_s {
 	float			radius;
 
 	float			light;
-	vec3_t			lightColor;
+	Vec3			lightColor;
 
 	leMarkType_t		leMarkType;	/* mark to leave on fragment impact */
 	leBounceSoundType_t	leBounceSoundType;
@@ -316,8 +316,8 @@ typedef struct {
 
 	int		botSkill;	/* 0 = not bot, 1-5 = bot */
 
-	vec3_t		color1;
-	vec3_t		color2;
+	Vec3		color1;
+	Vec3		color2;
 
 	byte		c1RGBA[4];
 	byte		c2RGBA[4];
@@ -355,7 +355,7 @@ typedef struct {
 	qbool		fixedlegs;	/* true if legs yaw is always the same as torso yaw */
 	qbool		fixedtorso;	/* true if torso never changes yaw */
 
-	vec3_t		headOffset;	/* move head in icon views */
+	Vec3		headOffset;	/* move head in icon views */
 	footstep_t	footsteps;
 	gender_t	gender;	/* from model */
 
@@ -392,10 +392,10 @@ typedef struct weaponInfo_s {
 	qhandle_t	barrelModel;
 	qhandle_t	flashModel;
 
-	vec3_t		weaponMidpoint;	/* so it will rotate centered instead of by tag */
+	Vec3		weaponMidpoint;	/* so it will rotate centered instead of by tag */
 
 	float		flashDlight;
-	vec3_t		flashDlightColor;
+	Vec3		flashDlightColor;
 	sfxHandle_t	flashSound[4];	/* fast firing weapons randomly choose */
 
 	qhandle_t	weaponIcon;
@@ -407,7 +407,7 @@ typedef struct weaponInfo_s {
 	sfxHandle_t	missileSound;
 	void (*missileTrailFunc)(centity_t *, const struct weaponInfo_s *wi);
 	float		missileDlight;
-	vec3_t		missileDlightColor;
+	Vec3		missileDlightColor;
 	int		missileRenderfx;
 
 	void (*ejectBrassFunc)(centity_t *);
@@ -438,7 +438,7 @@ typedef struct {
 #define MAX_SKULLTRAIL 10
 
 typedef struct {
-	vec3_t	positions[MAX_SKULLTRAIL];
+	Vec3	positions[MAX_SKULLTRAIL];
 	int	numpositions;
 } skulltrail_t;
 
@@ -498,7 +498,7 @@ typedef struct {
 	centity_t	predictedPlayerEntity;
 	qbool		validPPS;	/* clear until the first call to CG_PredictPlayerState */
 	int		predictedErrorTime;
-	vec3_t		predictedError;
+	Vec3		predictedError;
 
 	int		eventSequence;
 	int		predictableEvents[MAX_PREDICTED_EVENTS];
@@ -516,14 +516,14 @@ typedef struct {
 	int weaponSelect;
 
 	/* auto rotating items */
-	vec3_t	autoAngles;
-	vec3_t	autoAxis[3];
-	vec3_t	autoAnglesFast;
-	vec3_t	autoAxisFast[3];
+	Vec3	autoAngles;
+	Vec3	autoAxis[3];
+	Vec3	autoAnglesFast;
+	Vec3	autoAxisFast[3];
 
 	/* view rendering */
 	refdef_t	refdef;
-	vec3_t		refdefViewAngles;	/* will be converted to refdef.viewaxis */
+	Vec3		refdefViewAngles;	/* will be converted to refdef.viewaxis */
 
 	/* zoom key */
 	qbool		zoomed;
@@ -643,7 +643,7 @@ typedef struct {
 	char		testModelName[MAX_QPATH];
 	qbool		testGun;
 	uint		ntestlights;
-	vec3_t	testlightorigs[Maxtestlights];
+	Vec3	testlightorigs[Maxtestlights];
 } cg_t;
 
 
@@ -1037,7 +1037,7 @@ typedef struct {
 
 	int		numInlineModels;
 	qhandle_t	inlineDrawModel[MAX_MODELS];
-	vec3_t		inlineModelMidpoints[MAX_MODELS];
+	Vec3		inlineModelMidpoints[MAX_MODELS];
 
 	clientInfo_t	clientinfo[MAX_CLIENTS];
 
@@ -1242,20 +1242,20 @@ void CG_DrawStringExt(int x, int y, const char *string, const float *setColor,
 		      int charHeight,
 		      int maxChars);
 void CG_DrawBigString(int x, int y, const char *s, float alpha);
-void CG_DrawBigStringColor(int x, int y, const char *s, vec4_t color);
+void CG_DrawBigStringColor(int x, int y, const char *s, Vec4 color);
 void CG_DrawSmallString(int x, int y, const char *s, float alpha);
-void CG_DrawSmallStringColor(int x, int y, const char *s, vec4_t color);
+void CG_DrawSmallStringColor(int x, int y, const char *s, Vec4 color);
 
 int CG_DrawStrlen(const char *str);
 
 float*CG_FadeColor(int startMsec, int totalMsec);
 float*CG_TeamColor(int team);
 void CG_TileClear(void);
-void CG_ColorForHealth(vec4_t hcolor);
-void CG_GetColorForHealth(int health, int armor, vec4_t hcolor);
+void CG_ColorForHealth(Vec4 hcolor);
+void CG_GetColorForHealth(int health, int armor, Vec4 hcolor);
 
 void UI_DrawProportionalString(int x, int y, const char* str, int style,
-			       vec4_t color);
+			       Vec4 color);
 void CG_DrawRect(float x, float y, float width, float height, float size,
 		 const float *color);
 void CG_DrawSides(float x, float y, float w, float h, float size);
@@ -1276,7 +1276,7 @@ void CG_AddLagometerFrameInfo(void);
 void CG_AddLagometerSnapshotInfo(snapshot_t *snap);
 void CG_CenterPrint(const char *str, int y, int charWidth);
 void CG_DrawHead(float x, float y, float w, float h, int clientNum,
-		 vec3_t headAngles);
+		 Vec3 headAngles);
 void CG_DrawActive(stereoFrame_t stereoView);
 void CG_DrawFlagModel(float x, float y, float w, float h, int team,
 		      qbool force2D);
@@ -1284,9 +1284,9 @@ void CG_DrawTeamBackground(int x, int y, int w, int h, float alpha, int team);
 void CG_OwnerDraw(float x, float y, float w, float h, float text_x, float text_y,
 		  int ownerDraw, int ownerDrawFlags, int align, float special,
 		  float scale,
-		  vec4_t color, qhandle_t shader,
+		  Vec4 color, qhandle_t shader,
 		  int textStyle);
-void CG_Text_Paint(float x, float y, float scale, vec4_t color, const char *text,
+void CG_Text_Paint(float x, float y, float scale, Vec4 color, const char *text,
 		   float adjust, int limit,
 		   int style);
 int CG_Text_Width(const char *text, float scale, int limit);
@@ -1299,12 +1299,12 @@ void CG_RunMenuScript(char **args);
 void CG_ShowResponseHead(void);
 void CG_SetPrintString(int type, const char *p);
 void CG_InitTeamChat(void);
-void CG_GetTeamColor(vec4_t *color);
+void CG_GetTeamColor(Vec4 *color);
 const char*CG_GetGameStatusText(void);
 const char*CG_GetKillerText(void);
 void CG_Draw3DModel(float x, float y, float w, float h, qhandle_t model,
-		    qhandle_t skin, vec3_t origin,
-		    vec3_t angles);
+		    qhandle_t skin, Vec3 origin,
+		    Vec3 angles);
 void CG_Text_PaintChar(float x, float y, float width, float height, float scale,
 		       float s, float t, float s2, float t2,
 		       qhandle_t hShader);
@@ -1330,9 +1330,9 @@ sfxHandle_t     CG_CustomSound(int clientNum, const char *soundName);
  * cg_predict.c
  *  */
 void CG_BuildSolidList(void);
-int     CG_PointContents(const vec3_t point, int passEntityNum);
-void CG_Trace(trace_t *result, const vec3_t start, const vec3_t mins,
-	      const vec3_t maxs, const vec3_t end,
+int     CG_PointContents(const Vec3 point, int passEntityNum);
+void CG_Trace(trace_t *result, const Vec3 start, const Vec3 mins,
+	      const Vec3 maxs, const Vec3 end,
 	      int skipNumber,
 	      int mask);
 void CG_PredictPlayerState(void);
@@ -1344,7 +1344,7 @@ void CG_LoadDeferredPlayers(void);
  *  */
 void CG_CheckEvents(centity_t *cent);
 const char*CG_PlaceString(int rank);
-void CG_EntityEvent(centity_t *cent, vec3_t position);
+void CG_EntityEvent(centity_t *cent, Vec3 position);
 void CG_PainEvent(centity_t *cent, int health);
 
 
@@ -1354,9 +1354,9 @@ void CG_PainEvent(centity_t *cent, int health);
 void CG_SetEntitySoundPosition(centity_t *cent);
 void CG_AddPacketEntities(void);
 void CG_Beam(centity_t *cent);
-void CG_AdjustPositionForMover(const vec3_t in, int moverNum, int fromTime,
+void CG_AdjustPositionForMover(const Vec3 in, int moverNum, int fromTime,
 			       int toTime,
-			       vec3_t out);
+			       Vec3 out);
 
 void CG_PositionEntityOnTag(refEntity_t *entity, const refEntity_t *parent,
 			    qhandle_t parentModel, char *tagName);
@@ -1378,14 +1378,14 @@ void CG_RegisterWeapon(int weaponNum);
 void CG_RegisterItemVisuals(int itemNum);
 
 void CG_FireWeapon(centity_t *cent);
-void CG_MissileHitWall(int weapon, int clientNum, vec3_t origin, vec3_t dir,
+void CG_MissileHitWall(int weapon, int clientNum, Vec3 origin, Vec3 dir,
 		       impactSound_t soundType);
-void CG_MissileHitPlayer(int weapon, vec3_t origin, vec3_t dir, int entityNum);
+void CG_MissileHitPlayer(int weapon, Vec3 origin, Vec3 dir, int entityNum);
 void CG_ShotgunFire(entityState_t *es);
-void CG_Bullet(vec3_t origin, int sourceEntityNum, vec3_t normal, qbool flesh,
+void CG_Bullet(Vec3 origin, int sourceEntityNum, Vec3 normal, qbool flesh,
 	       int fleshEntityNum);
 
-void CG_RailTrail(clientInfo_t *ci, vec3_t start, vec3_t end);
+void CG_RailTrail(clientInfo_t *ci, Vec3 start, Vec3 end);
 void CG_GrappleTrail(centity_t *ent, const weaponInfo_t *wi);
 void CG_AddViewWeapon(playerState_t *ps);
 void CG_AddPlayerWeapon(refEntity_t *parent, playerState_t *ps, centity_t *cent,
@@ -1400,7 +1400,7 @@ void CG_OutOfAmmoChange(void);	/* should this be in pmove? */
 void    CG_InitMarkPolys(void);
 void    CG_AddMarks(void);
 void    CG_ImpactMark(qhandle_t markShader,
-		      const vec3_t origin, const vec3_t dir,
+		      const Vec3 origin, const Vec3 dir,
 		      float orientation,
 		      float r, float g, float b, float a,
 		      qbool alphaFade,
@@ -1416,8 +1416,8 @@ void    CG_AddLocalEntities(void);
 /*
  * cg_effects.c
  *  */
-localEntity_t*CG_SmokePuff(const vec3_t p,
-			   const vec3_t vel,
+localEntity_t*CG_SmokePuff(const Vec3 p,
+			   const Vec3 vel,
 			   float radius,
 			   float r, float g, float b, float a,
 			   float duration,
@@ -1425,24 +1425,24 @@ localEntity_t*CG_SmokePuff(const vec3_t p,
 			   int fadeInTime,
 			   int leFlags,
 			   qhandle_t hShader);
-void CG_BubbleTrail(vec3_t start, vec3_t end, float spacing);
-void CG_SpawnEffect(vec3_t org);
+void CG_BubbleTrail(Vec3 start, Vec3 end, float spacing);
+void CG_SpawnEffect(Vec3 org);
 #ifdef MISSIONPACK
-void CG_KamikazeEffect(vec3_t org);
-void CG_ObeliskExplode(vec3_t org, int entityNum);
-void CG_ObeliskPain(vec3_t org);
-void CG_InvulnerabilityImpact(vec3_t org, vec3_t angles);
-void CG_InvulnerabilityJuiced(vec3_t org);
-void CG_LightningBoltBeam(vec3_t start, vec3_t end);
+void CG_KamikazeEffect(Vec3 org);
+void CG_ObeliskExplode(Vec3 org, int entityNum);
+void CG_ObeliskPain(Vec3 org);
+void CG_InvulnerabilityImpact(Vec3 org, Vec3 angles);
+void CG_InvulnerabilityJuiced(Vec3 org);
+void CG_LightningBoltBeam(Vec3 start, Vec3 end);
 #endif
-void CG_ScorePlum(int client, vec3_t org, int score);
+void CG_ScorePlum(int client, Vec3 org, int score);
 
-void CG_GibPlayer(vec3_t playerOrigin);
-void CG_BigExplode(vec3_t playerOrigin);
+void CG_GibPlayer(Vec3 playerOrigin);
+void CG_BigExplode(Vec3 playerOrigin);
 
-void CG_Bleed(vec3_t origin, int entityNum);
+void CG_Bleed(Vec3 origin, int entityNum);
 
-localEntity_t*CG_MakeExplosion(vec3_t origin, vec3_t dir,
+localEntity_t*CG_MakeExplosion(Vec3 origin, Vec3 dir,
 			       qhandle_t hModel, qhandle_t shader, int msec,
 			       qbool isSprite);
 
@@ -1552,52 +1552,52 @@ void            trap_UpdateScreen(void);
 void            trap_CM_LoadMap(const char *mapname);
 int                     trap_CM_NumInlineModels(void);
 clipHandle_t trap_CM_InlineModel(int index);	/* 0 = world, 1+ = bmodels */
-clipHandle_t trap_CM_TempBoxModel(const vec3_t mins, const vec3_t maxs);
-int                     trap_CM_PointContents(const vec3_t p, clipHandle_t model);
-int                     trap_CM_TransformedPointContents(const vec3_t p,
+clipHandle_t trap_CM_TempBoxModel(const Vec3 mins, const Vec3 maxs);
+int                     trap_CM_PointContents(const Vec3 p, clipHandle_t model);
+int                     trap_CM_TransformedPointContents(const Vec3 p,
 							 clipHandle_t model,
-							 const vec3_t origin,
-							 const vec3_t angles);
-void            trap_CM_BoxTrace(trace_t *results, const vec3_t start,
-				 const vec3_t end,
-				 const vec3_t mins, const vec3_t maxs,
+							 const Vec3 origin,
+							 const Vec3 angles);
+void            trap_CM_BoxTrace(trace_t *results, const Vec3 start,
+				 const Vec3 end,
+				 const Vec3 mins, const Vec3 maxs,
 				 clipHandle_t model,
 				 int brushmask);
-void            trap_CM_TransformedBoxTrace(trace_t *results, const vec3_t start,
-					    const vec3_t end,
-					    const vec3_t mins, const vec3_t maxs,
+void            trap_CM_TransformedBoxTrace(trace_t *results, const Vec3 start,
+					    const Vec3 end,
+					    const Vec3 mins, const Vec3 maxs,
 					    clipHandle_t model, int brushmask,
-					    const vec3_t origin,
-					    const vec3_t angles);
+					    const Vec3 origin,
+					    const Vec3 angles);
 
 /* Returns the projection of a polygon onto the solid brushes in the world */
 int                     trap_CM_MarkFragments(int numPoints,
-					      const vec3_t *points,
-					      const vec3_t projection,
-					      int maxPoints, vec3_t pointBuffer,
+					      const Vec3 *points,
+					      const Vec3 projection,
+					      int maxPoints, Vec3 pointBuffer,
 					      int maxFragments,
 					      markFragment_t *fragmentBuffer);
 
 /* normal sounds will have their volume dynamically changed as their entity
  * moves and the listener moves */
-void            trap_S_StartSound(vec3_t origin, int entityNum, int entchannel,
+void            trap_S_StartSound(Vec3 origin, int entityNum, int entchannel,
 				  sfxHandle_t sfx);
 void            trap_S_StopLoopingSound(int entnum);
 
 /* a local sound is always played full volume */
 void            trap_S_StartLocalSound(sfxHandle_t sfx, int channelNum);
 void            trap_S_ClearLoopingSounds(qbool killall);
-void            trap_S_AddLoopingSound(int entityNum, const vec3_t origin,
-				       const vec3_t velocity,
+void            trap_S_AddLoopingSound(int entityNum, const Vec3 origin,
+				       const Vec3 velocity,
 				       sfxHandle_t sfx);
-void            trap_S_AddRealLoopingSound(int entityNum, const vec3_t origin,
-					   const vec3_t velocity,
+void            trap_S_AddRealLoopingSound(int entityNum, const Vec3 origin,
+					   const Vec3 velocity,
 					   sfxHandle_t sfx);
-void            trap_S_UpdateEntityPosition(int entityNum, const vec3_t origin);
+void            trap_S_UpdateEntityPosition(int entityNum, const Vec3 origin);
 
 /* respatialize recalculates the volumes of sound as they should be heard by the
  * given entityNum and position */
-void trap_S_Respatialize(int entityNum, const vec3_t origin, vec3_t axis[3],
+void trap_S_Respatialize(int entityNum, const Vec3 origin, Vec3 axis[3],
 			 int inwater);
 sfxHandle_t     trap_S_RegisterSound(const char *sample, qbool compressed);		/* returns buzz if not found */
 void            trap_S_StartBackgroundTrack(const char *intro, const char *loop);	/* empty name stops music */
@@ -1625,18 +1625,18 @@ void            trap_R_AddPolyToScene(qhandle_t hShader, int numVerts,
 void            trap_R_AddPolysToScene(qhandle_t hShader, int numVerts,
 				       const polyVert_t *verts,
 				       int numPolys);
-void            trap_R_AddLightToScene(const vec3_t org, float intensity,
+void            trap_R_AddLightToScene(const Vec3 org, float intensity,
 				       float r, float g,
 				       float b);
-int                     trap_R_LightForPoint(vec3_t point, vec3_t ambientLight,
-					     vec3_t directedLight,
-					     vec3_t lightDir);
+int                     trap_R_LightForPoint(Vec3 point, Vec3 ambientLight,
+					     Vec3 directedLight,
+					     Vec3 lightDir);
 void            trap_R_RenderScene(const refdef_t *fd);
 void            trap_R_SetColor(const float *rgba);	/* NULL = 1,1,1,1 */
 void            trap_R_DrawStretchPic(float x, float y, float w, float h,
 				      float s1, float t1, float s2, float t2,
 				      qhandle_t hShader);
-void            trap_R_ModelBounds(clipHandle_t model, vec3_t mins, vec3_t maxs);
+void            trap_R_ModelBounds(clipHandle_t model, Vec3 mins, Vec3 maxs);
 int                     trap_R_LerpTag(orientation_t *tag, clipHandle_t mod,
 				       int startFrame, int endFrame,
 				       float frac,
@@ -1712,25 +1712,25 @@ void trap_SnapVector(float *v);
 
 qbool        trap_loadCamera(const char *name);
 void            trap_startCamera(int time);
-qbool        trap_getCameraInfo(int time, vec3_t *origin, vec3_t *angles);
+qbool        trap_getCameraInfo(int time, Vec3 *origin, Vec3 *angles);
 
 qbool        trap_GetEntityToken(char *buffer, int bufferSize);
 
 void    CG_ClearParticles(void);
 void    CG_AddParticles(void);
-void    CG_ParticleSnow(qhandle_t pshader, vec3_t origin, vec3_t origin2,
+void    CG_ParticleSnow(qhandle_t pshader, Vec3 origin, Vec3 origin2,
 			int turb, float range,
 			int snum);
 void    CG_ParticleSmoke(qhandle_t pshader, centity_t *cent);
 void    CG_AddParticleShrapnel(localEntity_t *le);
 void    CG_ParticleSnowFlurry(qhandle_t pshader, centity_t *cent);
-void    CG_ParticleBulletDebris(vec3_t org, vec3_t vel, int duration);
-void    CG_ParticleSparks(vec3_t org, vec3_t vel, int duration, float x, float y,
+void    CG_ParticleBulletDebris(Vec3 org, Vec3 vel, int duration);
+void    CG_ParticleSparks(Vec3 org, Vec3 vel, int duration, float x, float y,
 			  float speed);
-void    CG_ParticleDust(centity_t *cent, vec3_t origin, vec3_t dir);
-void    CG_ParticleMisc(qhandle_t pshader, vec3_t origin, int size, int duration,
+void    CG_ParticleDust(centity_t *cent, Vec3 origin, Vec3 dir);
+void    CG_ParticleMisc(qhandle_t pshader, Vec3 origin, int size, int duration,
 			float alpha);
-void    CG_ParticleExplosion(char *animStr, vec3_t origin, vec3_t vel,
+void    CG_ParticleExplosion(char *animStr, Vec3 origin, Vec3 vel,
 			     int duration, int sizeStart,
 			     int sizeEnd);
 extern qbool initparticles;

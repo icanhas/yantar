@@ -376,7 +376,7 @@ construct(struct huffman *h, int16_t *length, int32_t n)
  *   copy is from distance bytes back in the output stream, copying for length
  *   bytes.
  *
- * - Vec3Distances pointing before the beginning of the output data are not
+ * - vec3dists pointing before the beginning of the output data are not
  *   permitted.
  *
  * - Overlapped copies, where the length is greater than the distance, are

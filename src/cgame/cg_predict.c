@@ -79,8 +79,8 @@ CG_BuildSolidList(void)
  *
  */
 static void
-CG_ClipMoveToEntities(const vec3_t start, const vec3_t mins, const vec3_t maxs,
-		      const vec3_t end,
+CG_ClipMoveToEntities(const Vec3 start, const Vec3 mins, const Vec3 maxs,
+		      const Vec3 end,
 		      int skipNumber, int mask,
 		      trace_t *tr)
 {
@@ -88,8 +88,8 @@ CG_ClipMoveToEntities(const vec3_t start, const vec3_t mins, const vec3_t maxs,
 	trace_t trace;
 	entityState_t	*ent;
 	clipHandle_t	cmodel;
-	vec3_t	bmins, bmaxs;
-	vec3_t	origin, angles;
+	Vec3	bmins, bmaxs;
+	Vec3	origin, angles;
 	centity_t *cent;
 
 	for(i = 0; i < cg_numSolidEntities; i++){
@@ -102,7 +102,7 @@ CG_ClipMoveToEntities(const vec3_t start, const vec3_t mins, const vec3_t maxs,
 		if(ent->solid == SOLID_BMODEL){
 			/* special value for bmodel */
 			cmodel = trap_CM_InlineModel(ent->modelindex);
-			Vec3Copy(cent->lerpAngles, angles);
+			vec3copy(cent->lerpAngles, angles);
 			BG_EvaluateTrajectory(&cent->currentState.pos,
 				cg.physicsTime,
 				origin);
@@ -118,8 +118,8 @@ CG_ClipMoveToEntities(const vec3_t start, const vec3_t mins, const vec3_t maxs,
 			bmaxs[2]	= zu;
 
 			cmodel = trap_CM_TempBoxModel(bmins, bmaxs);
-			Vec3Copy(vec3_origin, angles);
-			Vec3Copy(cent->lerpOrigin, origin);
+			vec3copy(vec3_origin, angles);
+			vec3copy(cent->lerpOrigin, origin);
 		}
 
 
@@ -140,8 +140,8 @@ CG_ClipMoveToEntities(const vec3_t start, const vec3_t mins, const vec3_t maxs,
  * CG_Trace
  */
 void
-CG_Trace(trace_t *result, const vec3_t start, const vec3_t mins,
-	 const vec3_t maxs, const vec3_t end,
+CG_Trace(trace_t *result, const Vec3 start, const Vec3 mins,
+	 const Vec3 maxs, const Vec3 end,
 	 int skipNumber,
 	 int mask)
 {
@@ -159,7 +159,7 @@ CG_Trace(trace_t *result, const vec3_t start, const vec3_t mins,
  * CG_PointContents
  */
 int
-CG_PointContents(const vec3_t point, int passEntityNum)
+CG_PointContents(const Vec3 point, int passEntityNum)
 {
 	int i;
 	entityState_t	*ent;
@@ -246,7 +246,7 @@ CG_InterpolatePlayerState(qbool grabAngles)
 		out->origin[i] = prev->ps.origin[i] + f *
 				 (next->ps.origin[i] - prev->ps.origin[i]);
 		if(!grabAngles)
-			out->viewangles[i] = LerpAngle(
+			out->viewangles[i] = lerpangle(
 				prev->ps.viewangles[i], next->ps.viewangles[i],
 				f);
 		out->velocity[i] = prev->ps.velocity[i] +
@@ -515,29 +515,29 @@ CG_PredictPlayerState(void)
 		 * we want to compare */
 		if(cg.predictedPlayerState.commandTime ==
 		   oldPlayerState.commandTime){
-			vec3_t	delta;
+			Vec3	delta;
 			float	len;
 
 			if(cg.thisFrameTeleport){
 				/* a teleport will not cause an error decay */
-				VectorClear(cg.predictedError);
+				vec3clear(cg.predictedError);
 				if(cg_showmiss.integer)
 					CG_Printf("PredictionTeleport\n");
 				cg.thisFrameTeleport = qfalse;
 			}else{
-				vec3_t adjusted;
+				Vec3 adjusted;
 				CG_AdjustPositionForMover(
 					cg.predictedPlayerState.origin,
 					cg.predictedPlayerState.groundEntityNum,
 					cg.physicsTime, cg.oldTime, adjusted);
 
 				if(cg_showmiss.integer)
-					if(!VectorCompare(oldPlayerState.origin,
+					if(!vec3cmp(oldPlayerState.origin,
 						   adjusted))
 						CG_Printf("prediction error\n");
-				Vec3Sub(oldPlayerState.origin, adjusted,
+				vec3sub(oldPlayerState.origin, adjusted,
 					delta);
-				len = Vec3Len(delta);
+				len = vec3len(delta);
 				if(len > 0.1){
 					if(cg_showmiss.integer)
 						CG_Printf(
@@ -559,11 +559,11 @@ CG_PredictPlayerState(void)
 							CG_Printf(
 								"Double prediction decay: %f\n",
 								f);
-						VectorScale(cg.predictedError, f,
+						vec3scale(cg.predictedError, f,
 							cg.predictedError);
 					}else
-						VectorClear(cg.predictedError);
-					Vec3Add(delta, cg.predictedError,
+						vec3clear(cg.predictedError);
+					vec3add(delta, cg.predictedError,
 						cg.predictedError);
 					cg.predictedErrorTime = cg.oldTime;
 				}

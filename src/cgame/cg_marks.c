@@ -120,19 +120,19 @@ CG_AllocMark(void)
 #define MAX_MARK_POINTS		384
 
 void
-CG_ImpactMark(qhandle_t markShader, const vec3_t origin, const vec3_t dir,
+CG_ImpactMark(qhandle_t markShader, const Vec3 origin, const Vec3 dir,
 	      float orientation, float red, float green, float blue, float alpha,
 	      qbool alphaFade, float radius, qbool temporary)
 {
-	vec3_t	axis[3];
+	Vec3	axis[3];
 	float	texCoordScale;
-	vec3_t	originalPoints[4];
+	Vec3	originalPoints[4];
 	byte	colors[4];
 	int	i, j;
 	int	numFragments;
 	markFragment_t markFragments[MAX_MARK_FRAGMENTS], *mf;
-	vec3_t	markPoints[MAX_MARK_POINTS];
-	vec3_t	projection;
+	Vec3	markPoints[MAX_MARK_POINTS];
+	Vec3	projection;
 
 	if(!cg_addMarks.integer)
 		return;
@@ -145,10 +145,10 @@ CG_ImpactMark(qhandle_t markShader, const vec3_t origin, const vec3_t dir,
 	 * } */
 
 	/* create the texture axis */
-	Vec3Normalize2(dir, axis[0]);
+	vec3normalize2(dir, axis[0]);
 	PerpendicularVector(axis[1], axis[0]);
 	RotatePointAroundVector(axis[2], axis[0], axis[1], orientation);
-	Vec3Cross(axis[0], axis[2], axis[1]);
+	vec3cross(axis[0], axis[2], axis[1]);
 
 	texCoordScale = 0.5 * 1.0 / radius;
 
@@ -165,7 +165,7 @@ CG_ImpactMark(qhandle_t markShader, const vec3_t origin, const vec3_t dir,
 	}
 
 	/* get the fragments */
-	VectorScale(dir, -20, projection);
+	vec3scale(dir, -20, projection);
 	numFragments = trap_CM_MarkFragments(4, (void*)originalPoints,
 		projection, MAX_MARK_POINTS, markPoints[0],
 		MAX_MARK_FRAGMENTS, markFragments);
@@ -185,15 +185,15 @@ CG_ImpactMark(qhandle_t markShader, const vec3_t origin, const vec3_t dir,
 		if(mf->numPoints > MAX_VERTS_ON_POLY)
 			mf->numPoints = MAX_VERTS_ON_POLY;
 		for(j = 0, v = verts; j < mf->numPoints; j++, v++){
-			vec3_t delta;
+			Vec3 delta;
 
-			Vec3Copy(markPoints[mf->firstPoint + j], v->xyz);
+			vec3copy(markPoints[mf->firstPoint + j], v->xyz);
 
-			Vec3Sub(v->xyz, origin, delta);
+			vec3sub(v->xyz, origin, delta);
 			v->st[0] = 0.5 +
-				   Vec3Dot(delta, axis[1]) * texCoordScale;
+				   vec3dot(delta, axis[1]) * texCoordScale;
 			v->st[1] = 0.5 +
-				   Vec3Dot(delta, axis[2]) * texCoordScale;
+				   vec3dot(delta, axis[2]) * texCoordScale;
 			*(int*)v->modulate = *(int*)colors;
 		}
 

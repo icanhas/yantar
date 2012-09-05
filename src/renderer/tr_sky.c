@@ -32,7 +32,7 @@ static float s_cloudTexP[6][SKY_SUBDIVISIONS+1][SKY_SUBDIVISIONS+1];
  *
  */
 
-static vec3_t sky_clip[6] =
+static Vec3 sky_clip[6] =
 {
 	{1,1,0},
 	{1,-1,0},
@@ -49,15 +49,15 @@ static float sky_min, sky_max;
  * AddSkyPolygon
  */
 static void
-AddSkyPolygon(int nump, vec3_t vecs)
+AddSkyPolygon(int nump, Vec3 vecs)
 {
 	int i,j;
-	vec3_t	v, av;
+	Vec3	v, av;
 	float	s, t, dv;
 	int	axis;
 	float	*vp;
 	/* s = [0]/[2], t = [1]/[2] */
-	static int vec_to_st[6][3] =
+	static int Scalaro_st[6][3] =
 	{
 		{-2,3,1},
 		{2,3,-1},
@@ -73,9 +73,9 @@ AddSkyPolygon(int nump, vec3_t vecs)
 	};
 
 	/* decide which face it maps to */
-	Vec3Copy (vec3_origin, v);
+	vec3copy (vec3_origin, v);
 	for(i=0, vp=vecs; i<nump; i++, vp+=3)
-		Vec3Add (vp, v, v);
+		vec3add (vp, v, v);
 	av[0]	= fabs(v[0]);
 	av[1]	= fabs(v[1]);
 	av[2]	= fabs(v[2]);
@@ -98,19 +98,19 @@ AddSkyPolygon(int nump, vec3_t vecs)
 
 	/* project new texture coords */
 	for(i=0; i<nump; i++, vecs+=3){
-		j = vec_to_st[axis][2];
+		j = Scalaro_st[axis][2];
 		if(j > 0)
 			dv = vecs[j - 1];
 		else
 			dv = -vecs[-j - 1];
 		if(dv < 0.001)
 			continue;	/* don't divide by zero */
-		j = vec_to_st[axis][0];
+		j = Scalaro_st[axis][0];
 		if(j < 0)
 			s = -vecs[-j -1] / dv;
 		else
 			s = vecs[j-1] / dv;
-		j = vec_to_st[axis][1];
+		j = Scalaro_st[axis][1];
 		if(j < 0)
 			t = -vecs[-j -1] / dv;
 		else
@@ -133,7 +133,7 @@ AddSkyPolygon(int nump, vec3_t vecs)
  * ClipSkyPolygon
  */
 static void
-ClipSkyPolygon(int nump, vec3_t vecs, int stage)
+ClipSkyPolygon(int nump, Vec3 vecs, int stage)
 {
 	float *norm;
 	float *v;
@@ -141,7 +141,7 @@ ClipSkyPolygon(int nump, vec3_t vecs, int stage)
 	float		d, e;
 	float		dists[MAX_CLIP_VERTS];
 	int		sides[MAX_CLIP_VERTS];
-	vec3_t		newv[2][MAX_CLIP_VERTS];
+	Vec3		newv[2][MAX_CLIP_VERTS];
 	int		newc[2];
 	int		i, j;
 
@@ -155,7 +155,7 @@ ClipSkyPolygon(int nump, vec3_t vecs, int stage)
 	front	= back = qfalse;
 	norm	= sky_clip[stage];
 	for(i=0, v = vecs; i<nump; i++, v+=3){
-		d = Vec3Dot (v, norm);
+		d = vec3dot (v, norm);
 		if(d > ON_EPSILON){
 			front = qtrue;
 			sides[i] = SIDE_FRONT;
@@ -175,23 +175,23 @@ ClipSkyPolygon(int nump, vec3_t vecs, int stage)
 	/* clip it */
 	sides[i] = sides[0];
 	dists[i] = dists[0];
-	Vec3Copy (vecs, (vecs+(i*3)));
+	vec3copy (vecs, (vecs+(i*3)));
 	newc[0] = newc[1] = 0;
 
 	for(i=0, v = vecs; i<nump; i++, v+=3){
 		switch(sides[i]){
 		case SIDE_FRONT:
-			Vec3Copy (v, newv[0][newc[0]]);
+			vec3copy (v, newv[0][newc[0]]);
 			newc[0]++;
 			break;
 		case SIDE_BACK:
-			Vec3Copy (v, newv[1][newc[1]]);
+			vec3copy (v, newv[1][newc[1]]);
 			newc[1]++;
 			break;
 		case SIDE_ON:
-			Vec3Copy (v, newv[0][newc[0]]);
+			vec3copy (v, newv[0][newc[0]]);
 			newc[0]++;
-			Vec3Copy (v, newv[1][newc[1]]);
+			vec3copy (v, newv[1][newc[1]]);
 			newc[1]++;
 			break;
 		}
@@ -234,14 +234,14 @@ ClearSkyBox(void)
 void
 RB_ClipSkyPolygons(shaderCommands_t *input)
 {
-	vec3_t	p[5];	/* need one extra point for clipping */
+	Vec3	p[5];	/* need one extra point for clipping */
 	int	i, j;
 
 	ClearSkyBox();
 
 	for(i = 0; i < input->numIndexes; i += 3){
 		for(j = 0; j < 3; j++)
-			Vec3Sub(input->xyz[input->indexes[i+j]],
+			vec3sub(input->xyz[input->indexes[i+j]],
 				backEnd.viewParms.or.origin,
 				p[j]);
 		ClipSkyPolygon(3, p[0], 0);
@@ -260,7 +260,7 @@ RB_ClipSkyPolygons(shaderCommands_t *input)
 ** Parms: s, t range from -1 to 1
 */
 static void
-MakeSkyVec(float s, float t, int axis, float outSt[2], vec3_t outXYZ)
+MakeSkyVec(float s, float t, int axis, float outSt[2], Vec3 outXYZ)
 {
 	/* 1 = s, 2 = t, 3 = 2048 */
 	static int st_to_vec[6][3] =
@@ -275,7 +275,7 @@ MakeSkyVec(float s, float t, int axis, float outSt[2], vec3_t outXYZ)
 		{2,-1,-3}	/* look straight down */
 	};
 
-	vec3_t	b;
+	Vec3	b;
 	int	j, k;
 	float	boxSize;
 
@@ -318,7 +318,7 @@ MakeSkyVec(float s, float t, int axis, float outSt[2], vec3_t outXYZ)
 }
 
 static int sky_texorder[6] = {0,2,1,3,4,5};
-static vec3_t s_skyPoints[SKY_SUBDIVISIONS+1][SKY_SUBDIVISIONS+1];
+static Vec3 s_skyPoints[SKY_SUBDIVISIONS+1][SKY_SUBDIVISIONS+1];
 static float s_skyTexCoords[SKY_SUBDIVISIONS+1][SKY_SUBDIVISIONS+1][2];
 
 static void
@@ -422,7 +422,7 @@ FillCloudySkySide(const int mins[2], const int maxs[2], qbool addIndexes)
 
 	for(t = mins[1]+HALF_SKY_SUBDIVISIONS; t <= maxs[1]+HALF_SKY_SUBDIVISIONS; t++)
 		for(s = mins[0]+HALF_SKY_SUBDIVISIONS; s <= maxs[0]+HALF_SKY_SUBDIVISIONS; s++){
-			Vec3Add(s_skyPoints[t][s], backEnd.viewParms.or.origin, tess.xyz[tess.numVertexes]);
+			vec3add(s_skyPoints[t][s], backEnd.viewParms.or.origin, tess.xyz[tess.numVertexes]);
 			tess.texCoords[tess.numVertexes][0][0]	= s_skyTexCoords[t][s][0];
 			tess.texCoords[tess.numVertexes][0][1]	= s_skyTexCoords[t][s][1];
 
@@ -585,8 +585,8 @@ R_InitSkyTexCoords(float heightCloud)
 	float radiusWorld = 4096;
 	float p;
 	float sRad, tRad;
-	vec3_t	skyVec;
-	vec3_t	v;
+	Vec3	skyVec;
+	Vec3	v;
 
 	/* init zfar so MakeSkyVec works even though
 	 * a world hasn't been bounded */
@@ -603,7 +603,7 @@ R_InitSkyTexCoords(float heightCloud)
 					skyVec);
 
 				/* compute parametric value 'p' that intersects with cloud layer */
-				p = (1.0f / (2 * Vec3Dot(skyVec, skyVec))) *
+				p = (1.0f / (2 * vec3dot(skyVec, skyVec))) *
 				    (-2 * skyVec[2] * radiusWorld +
 				     2 * sqrt(SQR(skyVec[2]) * SQR(radiusWorld) +
 					     2 * SQR(skyVec[0]) * radiusWorld * heightCloud +
@@ -616,11 +616,11 @@ R_InitSkyTexCoords(float heightCloud)
 				s_cloudTexP[i][t][s] = p;
 
 				/* compute intersection point based on p */
-				VectorScale(skyVec, p, v);
+				vec3scale(skyVec, p, v);
 				v[2] += radiusWorld;
 
 				/* compute vector from world origin to intersection point 'v' */
-				Vec3Normalize(v);
+				vec3normalize(v);
 
 				sRad = Q_acos(v[0]);
 				tRad = Q_acos(v[1]);
@@ -641,8 +641,8 @@ RB_DrawSun(void)
 {
 	float size;
 	float dist;
-	vec3_t	origin, vec1, vec2;
-	vec3_t	temp;
+	Vec3	origin, vec1, vec2;
+	Vec3	temp;
 
 	if(!backEnd.skyRenderedThisView){
 		return;
@@ -657,22 +657,22 @@ RB_DrawSun(void)
 	dist =  backEnd.viewParms.zFar / 1.75;	/* div sqrt(3) */
 	size = dist * 0.4;
 
-	VectorScale(tr.sunDirection, dist, origin);
+	vec3scale(tr.sunDirection, dist, origin);
 	PerpendicularVector(vec1, tr.sunDirection);
-	Vec3Cross(tr.sunDirection, vec1, vec2);
+	vec3cross(tr.sunDirection, vec1, vec2);
 
-	VectorScale(vec1, size, vec1);
-	VectorScale(vec2, size, vec2);
+	vec3scale(vec1, size, vec1);
+	vec3scale(vec2, size, vec2);
 
 	/* farthest depth range */
 	qglDepthRange(1.0, 1.0);
 
 	/* FIXME: use quad stamp */
 	RB_BeginSurface(tr.sunShader, tess.fogNum);
-	Vec3Copy(origin, temp);
-	Vec3Sub(temp, vec1, temp);
-	Vec3Sub(temp, vec2, temp);
-	Vec3Copy(temp, tess.xyz[tess.numVertexes]);
+	vec3copy(origin, temp);
+	vec3sub(temp, vec1, temp);
+	vec3sub(temp, vec2, temp);
+	vec3copy(temp, tess.xyz[tess.numVertexes]);
 	tess.texCoords[tess.numVertexes][0][0]	= 0;
 	tess.texCoords[tess.numVertexes][0][1]	= 0;
 	tess.vertexColors[tess.numVertexes][0]	= 255;
@@ -680,10 +680,10 @@ RB_DrawSun(void)
 	tess.vertexColors[tess.numVertexes][2]	= 255;
 	tess.numVertexes++;
 
-	Vec3Copy(origin, temp);
-	Vec3Add(temp, vec1, temp);
-	Vec3Sub(temp, vec2, temp);
-	Vec3Copy(temp, tess.xyz[tess.numVertexes]);
+	vec3copy(origin, temp);
+	vec3add(temp, vec1, temp);
+	vec3sub(temp, vec2, temp);
+	vec3copy(temp, tess.xyz[tess.numVertexes]);
 	tess.texCoords[tess.numVertexes][0][0]	= 0;
 	tess.texCoords[tess.numVertexes][0][1]	= 1;
 	tess.vertexColors[tess.numVertexes][0]	= 255;
@@ -691,10 +691,10 @@ RB_DrawSun(void)
 	tess.vertexColors[tess.numVertexes][2]	= 255;
 	tess.numVertexes++;
 
-	Vec3Copy(origin, temp);
-	Vec3Add(temp, vec1, temp);
-	Vec3Add(temp, vec2, temp);
-	Vec3Copy(temp, tess.xyz[tess.numVertexes]);
+	vec3copy(origin, temp);
+	vec3add(temp, vec1, temp);
+	vec3add(temp, vec2, temp);
+	vec3copy(temp, tess.xyz[tess.numVertexes]);
 	tess.texCoords[tess.numVertexes][0][0]	= 1;
 	tess.texCoords[tess.numVertexes][0][1]	= 1;
 	tess.vertexColors[tess.numVertexes][0]	= 255;
@@ -702,10 +702,10 @@ RB_DrawSun(void)
 	tess.vertexColors[tess.numVertexes][2]	= 255;
 	tess.numVertexes++;
 
-	Vec3Copy(origin, temp);
-	Vec3Sub(temp, vec1, temp);
-	Vec3Add(temp, vec2, temp);
-	Vec3Copy(temp, tess.xyz[tess.numVertexes]);
+	vec3copy(origin, temp);
+	vec3sub(temp, vec1, temp);
+	vec3add(temp, vec2, temp);
+	vec3copy(temp, tess.xyz[tess.numVertexes]);
 	tess.texCoords[tess.numVertexes][0][0]	= 1;
 	tess.texCoords[tess.numVertexes][0][1]	= 0;
 	tess.vertexColors[tess.numVertexes][0]	= 255;

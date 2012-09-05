@@ -172,7 +172,7 @@ typedef struct {
 	int	numtouch;
 	int	touchents[MAXTOUCH];
 
-	vec3_t	mins, maxs;	/* bounding box size */
+	Vec3	mins, maxs;	/* bounding box size */
 
 	int	watertype;
 	int	waterlevel;
@@ -185,10 +185,10 @@ typedef struct {
 
 	/* callbacks to test the world
 	 * these will be different functions during game and cgame */
-	void (*trace)(trace_t *results, const vec3_t start, const vec3_t mins,
-		      const vec3_t maxs, const vec3_t end, int passEntityNum,
+	void (*trace)(trace_t *results, const Vec3 start, const Vec3 mins,
+		      const Vec3 maxs, const Vec3 end, int passEntityNum,
 		      int contentMask);
-	int (*pointcontents)(const vec3_t point, int passEntityNum);
+	int (*pointcontents)(const Vec3 point, int passEntityNum);
 } pmove_t;
 
 /* if a full pmove isn't done on the client, you can just update the angles */
@@ -695,9 +695,9 @@ typedef enum {
 
 
 
-void    BG_EvaluateTrajectory(const trajectory_t *tr, int atTime, vec3_t result);
+void    BG_EvaluateTrajectory(const trajectory_t *tr, int atTime, Vec3 result);
 void    BG_EvaluateTrajectoryDelta(const trajectory_t *tr, int atTime,
-				   vec3_t result);
+				   Vec3 result);
 
 void    BG_AddPredictableEventToPlayerstate(int newEvent, int eventParm,
 					    playerState_t *ps);

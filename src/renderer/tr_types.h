@@ -52,7 +52,7 @@
 #define RDF_HYPERSPACE		0x0004	/* teleportation effect */
 
 typedef struct {
-	vec3_t	xyz;
+	Vec3	xyz;
 	float	st[2];
 	byte	modulate[4];
 } polyVert_t;
@@ -83,10 +83,10 @@ typedef struct {
 	qhandle_t	hModel;	/* opaque type outside refresh */
 
 	/* most recent data */
-	vec3_t		lightingOrigin;	/* so multi-part models can be lit identically (RF_LIGHTING_ORIGIN) */
+	Vec3		lightingOrigin;	/* so multi-part models can be lit identically (RF_LIGHTING_ORIGIN) */
 	float		shadowPlane;	/* projection shadows go here, stencils go slightly lower */
 
-	vec3_t		axis[3];		/* rotation vectors */
+	Vec3		axis[3];		/* rotation vectors */
 	qbool		nonNormalizedAxes;	/* axis are not normalized, i.e. they have scale */
 	float		origin[3];		/* also used as MODEL_BEAM's "from" */
 	int		frame;			/* also used as MODEL_BEAM's diameter */
@@ -118,8 +118,8 @@ typedef struct {
 typedef struct {
 	int	x, y, width, height;
 	float	fov_x, fov_y;
-	vec3_t	vieworg;
-	vec3_t	viewaxis[3];	/* transformation matrix */
+	Vec3	vieworg;
+	Vec3	viewaxis[3];	/* transformation matrix */
 
 	/* time in milliseconds for shader effects and other time dependent rendering issues */
 	int	time;

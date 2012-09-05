@@ -25,14 +25,14 @@
  * FIXME: do these already exist in ioq3 and I don't know about them? */
 
 qbool
-SpheresIntersect(vec3_t origin1, float radius1, vec3_t origin2, float radius2)
+SpheresIntersect(Vec3 origin1, float radius1, Vec3 origin2, float radius2)
 {
 	float radiusSum = radius1 + radius2;
-	vec3_t diff;
+	Vec3 diff;
 
-	Vec3Sub(origin1, origin2, diff);
+	vec3sub(origin1, origin2, diff);
 
-	if(Vec3Dot(diff, diff) <= radiusSum * radiusSum){
+	if(vec3dot(diff, diff) <= radiusSum * radiusSum){
 		return qtrue;
 	}
 
@@ -40,16 +40,16 @@ SpheresIntersect(vec3_t origin1, float radius1, vec3_t origin2, float radius2)
 }
 
 void
-BoundingSphereOfSpheres(vec3_t origin1, float radius1, vec3_t origin2, float radius2, vec3_t origin3,
+BoundingSphereOfSpheres(Vec3 origin1, float radius1, Vec3 origin2, float radius2, Vec3 origin3,
 			float *radius3)
 {
-	vec3_t diff;
+	Vec3 diff;
 
-	VectorScale(origin1, 0.5f, origin3);
-	Vec3MA(origin3, 0.5f, origin2, origin3);
+	vec3scale(origin1, 0.5f, origin3);
+	vec3ma(origin3, 0.5f, origin2, origin3);
 
-	Vec3Sub(origin1, origin2, diff);
-	*radius3 = Vec3Len(diff) * 0.5f + MAX(radius1, radius2);
+	vec3sub(origin1, origin2, diff);
+	*radius3 = vec3len(diff) * 0.5f + MAX(radius1, radius2);
 }
 
 int

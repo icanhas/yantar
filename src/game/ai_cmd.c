@@ -480,7 +480,7 @@ BotAddressedToBot(bot_state_t *bs, bot_match_t *match)
  * BotGPSToPosition
  */
 int
-BotGPSToPosition(char *buf, vec3_t position)
+BotGPSToPosition(char *buf, Vec3 position)
 {
 	int	i, j = 0;
 	int	num, sign;
@@ -566,9 +566,9 @@ BotMatch_HelpAccompany(bot_state_t *bs, bot_match_t *match)
 		if(areanum){	/* && trap_AAS_AreaReachability(areanum)) { */
 			bs->teamgoal.entitynum	= client;
 			bs->teamgoal.areanum	= areanum;
-			Vec3Copy(entinfo.origin, bs->teamgoal.origin);
-			VectorSet(bs->teamgoal.mins, -8, -8, -8);
-			VectorSet(bs->teamgoal.maxs, 8, 8, 8);
+			vec3copy(entinfo.origin, bs->teamgoal.origin);
+			vec3set(bs->teamgoal.mins, -8, -8, -8);
+			vec3set(bs->teamgoal.maxs, 8, 8, 8);
 		}
 	}
 	/* if no teamgoal yet */
@@ -747,9 +747,9 @@ BotMatch_Camp(bot_state_t *bs, bot_match_t *match)
 		/* camp at the spot the bot is currently standing */
 		bs->teamgoal.entitynum	= bs->entitynum;
 		bs->teamgoal.areanum	= bs->areanum;
-		Vec3Copy(bs->origin, bs->teamgoal.origin);
-		VectorSet(bs->teamgoal.mins, -8, -8, -8);
-		VectorSet(bs->teamgoal.maxs, 8, 8, 8);
+		vec3copy(bs->origin, bs->teamgoal.origin);
+		vec3set(bs->teamgoal.mins, -8, -8, -8);
+		vec3set(bs->teamgoal.maxs, 8, 8, 8);
 	}else if(match->subtype & ST_HERE){
 		/* if this is the bot self */
 		if(client == bs->client) return;
@@ -764,9 +764,9 @@ BotMatch_Camp(bot_state_t *bs, bot_match_t *match)
 				 * if (BotEntityVisible(bs->entitynum, bs->eye, bs->viewangles, 360, client)) { */
 				bs->teamgoal.entitynum	= client;
 				bs->teamgoal.areanum	= areanum;
-				Vec3Copy(entinfo.origin, bs->teamgoal.origin);
-				VectorSet(bs->teamgoal.mins, -8, -8, -8);
-				VectorSet(bs->teamgoal.maxs, 8, 8, 8);
+				vec3copy(entinfo.origin, bs->teamgoal.origin);
+				vec3set(bs->teamgoal.mins, -8, -8, -8);
+				vec3set(bs->teamgoal.maxs, 8, 8, 8);
 				/* } */
 			}
 		}
@@ -1192,13 +1192,13 @@ BotMatch_CheckPoint(bot_state_t *bs, bot_match_t *match)
 	int	areanum, client;
 	char	buf[MAX_MESSAGE_SIZE];
 	char	netname[MAX_MESSAGE_SIZE];
-	vec3_t position;
+	Vec3 position;
 	bot_waypoint_t *cp;
 
 	if(!TeamPlayIsOn()) return;
 	/*  */
 	trap_BotMatchVariable(match, POSITION, buf, MAX_MESSAGE_SIZE);
-	VectorClear(position);
+	vec3clear(position);
 	/*  */
 	trap_BotMatchVariable(match, NETNAME, netname, sizeof(netname));
 	client = ClientFromName(netname);
@@ -1501,7 +1501,7 @@ BotNearestVisibleItem(bot_state_t *bs, char *itemname, bot_goal_t *goal)
 	char	name[64];
 	bot_goal_t tmpgoal;
 	float	dist, bestdist;
-	vec3_t	dir;
+	Vec3	dir;
 	bsp_trace_t trace;
 
 	bestdist = 999999;
@@ -1511,8 +1511,8 @@ BotNearestVisibleItem(bot_state_t *bs, char *itemname, bot_goal_t *goal)
 		trap_BotGoalName(tmpgoal.number, name, sizeof(name));
 		if(Q_stricmp(itemname, name) != 0)
 			continue;
-		Vec3Sub(tmpgoal.origin, bs->origin, dir);
-		dist = Vec3Len(dir);
+		vec3sub(tmpgoal.origin, bs->origin, dir);
+		dist = vec3len(dir);
 		if(dist < bestdist){
 			/* trace from start to end */
 			BotAI_Trace(&trace, bs->eye, NULL, NULL, tmpgoal.origin,
@@ -1689,9 +1689,9 @@ BotMatch_LeadTheWay(bot_state_t *bs, bot_match_t *match)
 		if(areanum){	/* && trap_AAS_AreaReachability(areanum)) { */
 			bs->lead_teamgoal.entitynum = client;
 			bs->lead_teamgoal.areanum = areanum;
-			Vec3Copy(entinfo.origin, bs->lead_teamgoal.origin);
-			VectorSet(bs->lead_teamgoal.mins, -8, -8, -8);
-			VectorSet(bs->lead_teamgoal.maxs, 8, 8, 8);
+			vec3copy(entinfo.origin, bs->lead_teamgoal.origin);
+			vec3set(bs->lead_teamgoal.mins, -8, -8, -8);
+			vec3set(bs->lead_teamgoal.maxs, 8, 8, 8);
 		}
 	}
 

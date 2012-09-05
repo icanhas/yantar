@@ -39,13 +39,13 @@ void
 R_TransformDlights(int count, dlight_t *dl, orientationr_t *or)
 {
 	int i;
-	vec3_t temp;
+	Vec3 temp;
 
 	for(i = 0; i < count; i++, dl++){
-		Vec3Sub(dl->origin, or->origin, temp);
-		dl->transformed[0]	= Vec3Dot(temp, or->axis[0]);
-		dl->transformed[1]	= Vec3Dot(temp, or->axis[1]);
-		dl->transformed[2]	= Vec3Dot(temp, or->axis[2]);
+		vec3sub(dl->origin, or->origin, temp);
+		dl->transformed[0]	= vec3dot(temp, or->axis[0]);
+		dl->transformed[1]	= vec3dot(temp, or->axis[1]);
+		dl->transformed[2]	= vec3dot(temp, or->axis[2]);
 	}
 }
 
@@ -120,25 +120,25 @@ extern cvar_t *r_debugLight;
 static void
 R_SetupEntityLightingGrid(trRefEntity_t *ent)
 {
-	vec3_t	lightOrigin;
+	Vec3	lightOrigin;
 	int	pos[3];
 	int	i, j;
 	byte    *gridData;
 	float	frac[3];
 	int	gridStep[3];
-	vec3_t	direction;
+	Vec3	direction;
 	float	totalFactor;
 
 	if(ent->e.renderfx & RF_LIGHTING_ORIGIN){
 		/* seperate lightOrigins are needed so an object that is
 		 * sinking into the ground can still be lit, and so
 		 * multi-part models can be lit identically */
-		Vec3Copy(ent->e.lightingOrigin, lightOrigin);
+		vec3copy(ent->e.lightingOrigin, lightOrigin);
 	}else{
-		Vec3Copy(ent->e.origin, lightOrigin);
+		vec3copy(ent->e.origin, lightOrigin);
 	}
 
-	Vec3Sub(lightOrigin, tr.world->lightGridOrigin, lightOrigin);
+	vec3sub(lightOrigin, tr.world->lightGridOrigin, lightOrigin);
 	for(i = 0; i < 3; i++){
 		float v;
 
@@ -152,9 +152,9 @@ R_SetupEntityLightingGrid(trRefEntity_t *ent)
 		}
 	}
 
-	VectorClear(ent->ambientLight);
-	VectorClear(ent->directedLight);
-	VectorClear(direction);
+	vec3clear(ent->ambientLight);
+	vec3clear(ent->directedLight);
+	vec3clear(direction);
 
 	assert(tr.world->lightGridData);	/* NULL with -nolight maps */
 
@@ -170,7 +170,7 @@ R_SetupEntityLightingGrid(trRefEntity_t *ent)
 		float	factor;
 		byte    *data;
 		int	lat, lng;
-		vec3_t	normal;
+		Vec3	normal;
 		#if idppc
 		float	d0, d1, d2, d3, d4, d5;
 		#endif
@@ -222,19 +222,19 @@ R_SetupEntityLightingGrid(trRefEntity_t *ent)
 		normal[1]	= tr.sinTable[lat] * tr.sinTable[lng];
 		normal[2]	= tr.sinTable[(lng+(FUNCTABLE_SIZE/4))&FUNCTABLE_MASK];
 
-		Vec3MA(direction, factor, normal, direction);
+		vec3ma(direction, factor, normal, direction);
 	}
 
 	if(totalFactor > 0 && totalFactor < 0.99){
 		totalFactor = 1.0f / totalFactor;
-		VectorScale(ent->ambientLight, totalFactor, ent->ambientLight);
-		VectorScale(ent->directedLight, totalFactor, ent->directedLight);
+		vec3scale(ent->ambientLight, totalFactor, ent->ambientLight);
+		vec3scale(ent->directedLight, totalFactor, ent->directedLight);
 	}
 
-	VectorScale(ent->ambientLight, r_ambientScale->value, ent->ambientLight);
-	VectorScale(ent->directedLight, r_directedScale->value, ent->directedLight);
+	vec3scale(ent->ambientLight, r_ambientScale->value, ent->ambientLight);
+	vec3scale(ent->directedLight, r_directedScale->value, ent->directedLight);
 
-	Vec3Normalize2(direction, ent->lightDir);
+	vec3normalize2(direction, ent->lightDir);
 }
 
 
@@ -279,10 +279,10 @@ R_SetupEntityLighting(const trRefdef_t *refdef, trRefEntity_t *ent)
 	int i;
 	dlight_t	*dl;
 	float		power;
-	vec3_t		dir;
+	Vec3		dir;
 	float		d;
-	vec3_t		lightDir;
-	vec3_t		lightOrigin;
+	Vec3		lightDir;
+	Vec3		lightOrigin;
 
 	/* lighting calculations */
 	if(ent->lightingCalculated){
@@ -297,9 +297,9 @@ R_SetupEntityLighting(const trRefdef_t *refdef, trRefEntity_t *ent)
 		/* seperate lightOrigins are needed so an object that is
 		 * sinking into the ground can still be lit, and so
 		 * multi-part models can be lit identically */
-		Vec3Copy(ent->e.lightingOrigin, lightOrigin);
+		vec3copy(ent->e.lightingOrigin, lightOrigin);
 	}else{
-		Vec3Copy(ent->e.origin, lightOrigin);
+		vec3copy(ent->e.origin, lightOrigin);
 	}
 
 	/* if NOWORLDMODEL, only use dynamic lights (menu system, etc) */
@@ -311,7 +311,7 @@ R_SetupEntityLighting(const trRefdef_t *refdef, trRefEntity_t *ent)
 					       ent->ambientLight[2] = tr.identityLight * 150;
 		ent->directedLight[0] = ent->directedLight[1] =
 						ent->directedLight[2] = tr.identityLight * 150;
-		Vec3Copy(tr.sunDirection, ent->lightDir);
+		vec3copy(tr.sunDirection, ent->lightDir);
 	}
 
 	/* bonus items and view weapons have a fixed minimum add */
@@ -325,13 +325,13 @@ R_SetupEntityLighting(const trRefdef_t *refdef, trRefEntity_t *ent)
 	/*
 	 * modify the light by dynamic lights
 	 *  */
-	d = Vec3Len(ent->directedLight);
-	VectorScale(ent->lightDir, d, lightDir);
+	d = vec3len(ent->directedLight);
+	vec3scale(ent->lightDir, d, lightDir);
 
 	for(i = 0; i < refdef->num_dlights; i++){
 		dl = &refdef->dlights[i];
-		Vec3Sub(dl->origin, lightOrigin, dir);
-		d = Vec3Normalize(dir);
+		vec3sub(dl->origin, lightOrigin, dir);
+		d = vec3normalize(dir);
 
 		power = DLIGHT_AT_RADIUS * (dl->radius * dl->radius);
 		if(d < DLIGHT_MINIMUM_RADIUS){
@@ -339,8 +339,8 @@ R_SetupEntityLighting(const trRefdef_t *refdef, trRefEntity_t *ent)
 		}
 		d = power / (d * d);
 
-		Vec3MA(ent->directedLight, d, dl->color, ent->directedLight);
-		Vec3MA(lightDir, d, dir, lightDir);
+		vec3ma(ent->directedLight, d, dl->color, ent->directedLight);
+		vec3ma(lightDir, d, dir, lightDir);
 	}
 
 	/* clamp ambient */
@@ -360,17 +360,17 @@ R_SetupEntityLighting(const trRefdef_t *refdef, trRefEntity_t *ent)
 	((byte*)&ent->ambientLightInt)[3]	= 0xff;
 
 	/* transform the direction to local space */
-	Vec3Normalize(lightDir);
-	ent->lightDir[0]	= Vec3Dot(lightDir, ent->e.axis[0]);
-	ent->lightDir[1]	= Vec3Dot(lightDir, ent->e.axis[1]);
-	ent->lightDir[2]	= Vec3Dot(lightDir, ent->e.axis[2]);
+	vec3normalize(lightDir);
+	ent->lightDir[0]	= vec3dot(lightDir, ent->e.axis[0]);
+	ent->lightDir[1]	= vec3dot(lightDir, ent->e.axis[1]);
+	ent->lightDir[2]	= vec3dot(lightDir, ent->e.axis[2]);
 }
 
 /*
  * R_LightForPoint
  */
 int
-R_LightForPoint(vec3_t point, vec3_t ambientLight, vec3_t directedLight, vec3_t lightDir)
+R_LightForPoint(Vec3 point, Vec3 ambientLight, Vec3 directedLight, Vec3 lightDir)
 {
 	trRefEntity_t ent;
 
@@ -378,11 +378,11 @@ R_LightForPoint(vec3_t point, vec3_t ambientLight, vec3_t directedLight, vec3_t 
 		return qfalse;
 
 	Q_Memset(&ent, 0, sizeof(ent));
-	Vec3Copy(point, ent.e.origin);
+	vec3copy(point, ent.e.origin);
 	R_SetupEntityLightingGrid(&ent);
-	Vec3Copy(ent.ambientLight, ambientLight);
-	Vec3Copy(ent.directedLight, directedLight);
-	Vec3Copy(ent.lightDir, lightDir);
+	vec3copy(ent.ambientLight, ambientLight);
+	vec3copy(ent.directedLight, directedLight);
+	vec3copy(ent.lightDir, lightDir);
 
 	return qtrue;
 }

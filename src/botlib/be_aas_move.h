@@ -33,38 +33,38 @@ extern aas_settings_t aassettings;
 
 /* movement prediction */
 int AAS_PredictClientMovement(struct aas_clientmove_s *move,
-			      int entnum, vec3_t origin,
+			      int entnum, Vec3 origin,
 			      int presencetype, int onground,
-			      vec3_t velocity, vec3_t cmdmove,
+			      Vec3 velocity, Vec3 cmdmove,
 			      int cmdframes,
 			      int maxframes, float frametime,
 			      int stopevent, int stopareanum, int visualize);
 /* predict movement until bounding box is hit */
 int AAS_ClientMovementHitBBox(struct aas_clientmove_s *move,
-			      int entnum, vec3_t origin,
+			      int entnum, Vec3 origin,
 			      int presencetype, int onground,
-			      vec3_t velocity, vec3_t cmdmove,
+			      Vec3 velocity, Vec3 cmdmove,
 			      int cmdframes,
 			      int maxframes, float frametime,
-			      vec3_t mins, vec3_t maxs, int visualize);
+			      Vec3 mins, Vec3 maxs, int visualize);
 /* returns true if on the ground at the given origin */
-int AAS_OnGround(vec3_t origin, int presencetype, int passent);
+int AAS_OnGround(Vec3 origin, int presencetype, int passent);
 /* returns true if swimming at the given origin */
-int AAS_Swimming(vec3_t origin);
+int AAS_Swimming(Vec3 origin);
 /* returns the jump reachability run start point */
-void AAS_JumpReachRunStart(struct aas_reachability_s *reach, vec3_t runstart);
+void AAS_JumpReachRunStart(struct aas_reachability_s *reach, Vec3 runstart);
 /* returns true if against a ladder at the given origin */
-int AAS_AgainstLadder(vec3_t origin);
+int AAS_AgainstLadder(Vec3 origin);
 /* rocket jump Z velocity when rocket-jumping at origin */
-float AAS_RocketJumpZVelocity(vec3_t origin);
+float AAS_RocketJumpZVelocity(Vec3 origin);
 /* bfg jump Z velocity when bfg-jumping at origin */
-float AAS_BFGJumpZVelocity(vec3_t origin);
+float AAS_BFGJumpZVelocity(Vec3 origin);
 /* calculates the horizontal velocity needed for a jump and returns true this velocity could be calculated */
-int AAS_HorizontalVelocityForJump(float zvel, vec3_t start, vec3_t end,
+int AAS_HorizontalVelocityForJump(float zvel, Vec3 start, Vec3 end,
 				  float *velocity);
 /*  */
-void AAS_SetMovedir(vec3_t angles, vec3_t movedir);
+void AAS_SetMovedir(Vec3 angles, Vec3 movedir);
 /*  */
-int AAS_DropToFloor(vec3_t origin, vec3_t mins, vec3_t maxs);
+int AAS_DropToFloor(Vec3 origin, Vec3 mins, Vec3 maxs);
 /*  */
 void AAS_InitSettings(void);

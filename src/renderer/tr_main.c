@@ -47,12 +47,12 @@ surfaceType_t entitySurface = SF_ENTITY;
  * Returns CULL_IN, CULL_CLIP, or CULL_OUT
  */
 int
-R_CullLocalBox(vec3_t bounds[2])
+R_CullLocalBox(Vec3 bounds[2])
 {
 	int i, j;
-	vec3_t	transformed[8];
+	Vec3	transformed[8];
 	float	dists[8];
-	vec3_t	v;
+	Vec3	v;
 	cplane_t        *frust;
 	int	anyBack;
 	int	front, back;
@@ -67,10 +67,10 @@ R_CullLocalBox(vec3_t bounds[2])
 		v[1] = bounds[(i>>1)&1][1];
 		v[2] = bounds[(i>>2)&1][2];
 
-		Vec3Copy(tr.or.origin, transformed[i]);
-		Vec3MA(transformed[i], v[0], tr.or.axis[0], transformed[i]);
-		Vec3MA(transformed[i], v[1], tr.or.axis[1], transformed[i]);
-		Vec3MA(transformed[i], v[2], tr.or.axis[2], transformed[i]);
+		vec3copy(tr.or.origin, transformed[i]);
+		vec3ma(transformed[i], v[0], tr.or.axis[0], transformed[i]);
+		vec3ma(transformed[i], v[1], tr.or.axis[1], transformed[i]);
+		vec3ma(transformed[i], v[2], tr.or.axis[2], transformed[i]);
 	}
 
 	/* check against frustum planes */
@@ -80,7 +80,7 @@ R_CullLocalBox(vec3_t bounds[2])
 
 		front = back = 0;
 		for(j = 0; j < 8; j++){
-			dists[j] = Vec3Dot(transformed[j], frust->normal);
+			dists[j] = vec3dot(transformed[j], frust->normal);
 			if(dists[j] > frust->dist){
 				front = 1;
 				if(back){
@@ -108,9 +108,9 @@ R_CullLocalBox(vec3_t bounds[2])
 ** R_CullLocalPointAndRadius
 */
 int
-R_CullLocalPointAndRadius(vec3_t pt, float radius)
+R_CullLocalPointAndRadius(Vec3 pt, float radius)
 {
-	vec3_t transformed;
+	Vec3 transformed;
 
 	R_LocalPointToWorld(pt, transformed);
 
@@ -121,7 +121,7 @@ R_CullLocalPointAndRadius(vec3_t pt, float radius)
 ** R_CullPointAndRadius
 */
 int
-R_CullPointAndRadius(vec3_t pt, float radius)
+R_CullPointAndRadius(Vec3 pt, float radius)
 {
 	int i;
 	float dist;
@@ -136,7 +136,7 @@ R_CullPointAndRadius(vec3_t pt, float radius)
 	for(i = 0; i < 4; i++){
 		frust = &tr.viewParms.frustum[i];
 
-		dist = Vec3Dot(pt, frust->normal) - frust->dist;
+		dist = vec3dot(pt, frust->normal) - frust->dist;
 		if(dist < -radius){
 			return CULL_OUT;
 		}else if(dist <= radius){
@@ -157,7 +157,7 @@ R_CullPointAndRadius(vec3_t pt, float radius)
  *
  */
 void
-R_LocalNormalToWorld(vec3_t local, vec3_t world)
+R_LocalNormalToWorld(Vec3 local, Vec3 world)
 {
 	world[0] = local[0] * tr.or.axis[0][0] + local[1] * tr.or.axis[1][0] + local[2] *
 		   tr.or.axis[2][0];
@@ -172,7 +172,7 @@ R_LocalNormalToWorld(vec3_t local, vec3_t world)
  *
  */
 void
-R_LocalPointToWorld(vec3_t local, vec3_t world)
+R_LocalPointToWorld(Vec3 local, Vec3 world)
 {
 	world[0] = local[0] * tr.or.axis[0][0] + local[1] * tr.or.axis[1][0] + local[2] *
 		   tr.or.axis[2][0] + tr.or.origin[0];
@@ -187,11 +187,11 @@ R_LocalPointToWorld(vec3_t local, vec3_t world)
  *
  */
 void
-R_WorldToLocal(vec3_t world, vec3_t local)
+R_WorldToLocal(Vec3 world, Vec3 local)
 {
-	local[0] = Vec3Dot(world, tr.or.axis[0]);
-	local[1] = Vec3Dot(world, tr.or.axis[1]);
-	local[2] = Vec3Dot(world, tr.or.axis[2]);
+	local[0] = vec3dot(world, tr.or.axis[0]);
+	local[1] = vec3dot(world, tr.or.axis[1]);
+	local[2] = vec3dot(world, tr.or.axis[2]);
 }
 
 /*
@@ -199,8 +199,8 @@ R_WorldToLocal(vec3_t world, vec3_t local)
  *
  */
 void
-R_TransformModelToClip(const vec3_t src, const float *modelMatrix, const float *projectionMatrix,
-		       vec4_t eye, vec4_t dst)
+R_TransformModelToClip(const Vec3 src, const float *modelMatrix, const float *projectionMatrix,
+		       Vec4 eye, Vec4 dst)
 {
 	int i;
 
@@ -224,7 +224,7 @@ R_TransformModelToClip(const vec3_t src, const float *modelMatrix, const float *
  *
  */
 void
-R_TransformClipToWindow(const vec4_t clip, const viewParms_t *view, vec4_t normalized, vec4_t window)
+R_TransformClipToWindow(const Vec4 clip, const viewParms_t *view, Vec4 normalized, Vec4 window)
 {
 	normalized[0]	= clip[0] / clip[3];
 	normalized[1]	= clip[1] / clip[3];
@@ -269,7 +269,7 @@ R_RotateForEntity(const trRefEntity_t *ent, const viewParms_t *viewParms,
 		  orientationr_t *or)
 {
 	float glMatrix[16];
-	vec3_t	delta;
+	Vec3	delta;
 	float	axisLength;
 
 	if(ent->e.reType != RT_MODEL){
@@ -277,11 +277,11 @@ R_RotateForEntity(const trRefEntity_t *ent, const viewParms_t *viewParms,
 		return;
 	}
 
-	Vec3Copy(ent->e.origin, or->origin);
+	vec3copy(ent->e.origin, or->origin);
 
-	Vec3Copy(ent->e.axis[0], or->axis[0]);
-	Vec3Copy(ent->e.axis[1], or->axis[1]);
-	Vec3Copy(ent->e.axis[2], or->axis[2]);
+	vec3copy(ent->e.axis[0], or->axis[0]);
+	vec3copy(ent->e.axis[1], or->axis[1]);
+	vec3copy(ent->e.axis[2], or->axis[2]);
 
 	glMatrix[0] = or->axis[0][0];
 	glMatrix[4] = or->axis[1][0];
@@ -307,11 +307,11 @@ R_RotateForEntity(const trRefEntity_t *ent, const viewParms_t *viewParms,
 
 	/* calculate the viewer origin in the model's space
 	 * needed for fog, specular, and environment mapping */
-	Vec3Sub(viewParms->or.origin, or->origin, delta);
+	vec3sub(viewParms->or.origin, or->origin, delta);
 
 	/* compensate for scale in the axes if necessary */
 	if(ent->e.nonNormalizedAxes){
-		axisLength = Vec3Len(ent->e.axis[0]);
+		axisLength = vec3len(ent->e.axis[0]);
 		if(!axisLength){
 			axisLength = 0;
 		}else{
@@ -321,9 +321,9 @@ R_RotateForEntity(const trRefEntity_t *ent, const viewParms_t *viewParms,
 		axisLength = 1.0f;
 	}
 
-	or->viewOrigin[0] = Vec3Dot(delta, or->axis[0]) * axisLength;
-	or->viewOrigin[1] = Vec3Dot(delta, or->axis[1]) * axisLength;
-	or->viewOrigin[2] = Vec3Dot(delta, or->axis[2]) * axisLength;
+	or->viewOrigin[0] = vec3dot(delta, or->axis[0]) * axisLength;
+	or->viewOrigin[1] = vec3dot(delta, or->axis[1]) * axisLength;
+	or->viewOrigin[2] = vec3dot(delta, or->axis[2]) * axisLength;
 }
 
 /*
@@ -335,16 +335,16 @@ void
 R_RotateForViewer(void)
 {
 	float viewerMatrix[16];
-	vec3_t origin;
+	Vec3 origin;
 
 	Q_Memset (&tr.or, 0, sizeof(tr.or));
 	tr.or.axis[0][0] = 1;
 	tr.or.axis[1][1] = 1;
 	tr.or.axis[2][2] = 1;
-	Vec3Copy (tr.viewParms.or.origin, tr.or.viewOrigin);
+	vec3copy (tr.viewParms.or.origin, tr.or.viewOrigin);
 
 	/* transform by the camera placement */
-	Vec3Copy(tr.viewParms.or.origin, origin);
+	vec3copy(tr.viewParms.or.origin, origin);
 
 	viewerMatrix[0] = tr.viewParms.or.axis[0][0];
 	viewerMatrix[4] = tr.viewParms.or.axis[0][1];
@@ -383,7 +383,7 @@ R_RotateForViewer(void)
 static void
 R_SetFarClip(void)
 {
-	float farthestCornerVec3Distance = 0;
+	float farthestCornervec3dist = 0;
 	int i;
 
 	/* if not rendering the world (icons, menus, etc)
@@ -396,10 +396,10 @@ R_SetFarClip(void)
 	/*
 	 * set far clipping planes dynamically
 	 *  */
-	farthestCornerVec3Distance = 0;
+	farthestCornervec3dist = 0;
 	for(i = 0; i < 8; i++){
-		vec3_t	v;
-		vec3_t	vecTo;
+		Vec3	v;
+		Vec3	vecTo;
 		float	distance;
 
 		if(i & 1){
@@ -420,15 +420,15 @@ R_SetFarClip(void)
 			v[2] = tr.viewParms.visBounds[1][2];
 		}
 
-		Vec3Sub(v, tr.viewParms.or.origin, vecTo);
+		vec3sub(v, tr.viewParms.or.origin, vecTo);
 
 		distance = vecTo[0] * vecTo[0] + vecTo[1] * vecTo[1] + vecTo[2] * vecTo[2];
 
-		if(distance > farthestCornerVec3Distance){
-			farthestCornerVec3Distance = distance;
+		if(distance > farthestCornervec3dist){
+			farthestCornervec3dist = distance;
 		}
 	}
-	tr.viewParms.zFar = sqrt(farthestCornerVec3Distance);
+	tr.viewParms.zFar = sqrt(farthestCornervec3dist);
 }
 
 /*
@@ -440,52 +440,52 @@ R_SetFarClip(void)
 void
 R_SetupFrustum(viewParms_t *dest, float xmin, float xmax, float ymax, float zProj, float stereoSep)
 {
-	vec3_t	ofsorigin;
+	Vec3	ofsorigin;
 	float	oppleg, adjleg, length;
 	int	i;
 
 	if(stereoSep == 0 && xmin == -xmax){
 		/* symmetric case can be simplified */
-		Vec3Copy(dest->or.origin, ofsorigin);
+		vec3copy(dest->or.origin, ofsorigin);
 
 		length	= sqrt(xmax * xmax + zProj * zProj);
 		oppleg	= xmax / length;
 		adjleg	= zProj / length;
 
-		VectorScale(dest->or.axis[0], oppleg, dest->frustum[0].normal);
-		Vec3MA(dest->frustum[0].normal, adjleg, dest->or.axis[1], dest->frustum[0].normal);
+		vec3scale(dest->or.axis[0], oppleg, dest->frustum[0].normal);
+		vec3ma(dest->frustum[0].normal, adjleg, dest->or.axis[1], dest->frustum[0].normal);
 
-		VectorScale(dest->or.axis[0], oppleg, dest->frustum[1].normal);
-		Vec3MA(dest->frustum[1].normal, -adjleg, dest->or.axis[1], dest->frustum[1].normal);
+		vec3scale(dest->or.axis[0], oppleg, dest->frustum[1].normal);
+		vec3ma(dest->frustum[1].normal, -adjleg, dest->or.axis[1], dest->frustum[1].normal);
 	}else{
 		/* In stereo rendering, due to the modification of the projection matrix, dest->or.origin is not the
 		 * actual origin that we're rendering so offset the tip of the view pyramid. */
-		Vec3MA(dest->or.origin, stereoSep, dest->or.axis[1], ofsorigin);
+		vec3ma(dest->or.origin, stereoSep, dest->or.axis[1], ofsorigin);
 
 		oppleg	= xmax + stereoSep;
 		length	= sqrt(oppleg * oppleg + zProj * zProj);
-		VectorScale(dest->or.axis[0], oppleg / length, dest->frustum[0].normal);
-		Vec3MA(dest->frustum[0].normal, zProj / length, dest->or.axis[1], dest->frustum[0].normal);
+		vec3scale(dest->or.axis[0], oppleg / length, dest->frustum[0].normal);
+		vec3ma(dest->frustum[0].normal, zProj / length, dest->or.axis[1], dest->frustum[0].normal);
 
 		oppleg	= xmin + stereoSep;
 		length	= sqrt(oppleg * oppleg + zProj * zProj);
-		VectorScale(dest->or.axis[0], -oppleg / length, dest->frustum[1].normal);
-		Vec3MA(dest->frustum[1].normal, -zProj / length, dest->or.axis[1], dest->frustum[1].normal);
+		vec3scale(dest->or.axis[0], -oppleg / length, dest->frustum[1].normal);
+		vec3ma(dest->frustum[1].normal, -zProj / length, dest->or.axis[1], dest->frustum[1].normal);
 	}
 
 	length	= sqrt(ymax * ymax + zProj * zProj);
 	oppleg	= ymax / length;
 	adjleg	= zProj / length;
 
-	VectorScale(dest->or.axis[0], oppleg, dest->frustum[2].normal);
-	Vec3MA(dest->frustum[2].normal, adjleg, dest->or.axis[2], dest->frustum[2].normal);
+	vec3scale(dest->or.axis[0], oppleg, dest->frustum[2].normal);
+	vec3ma(dest->frustum[2].normal, adjleg, dest->or.axis[2], dest->frustum[2].normal);
 
-	VectorScale(dest->or.axis[0], oppleg, dest->frustum[3].normal);
-	Vec3MA(dest->frustum[3].normal, -adjleg, dest->or.axis[2], dest->frustum[3].normal);
+	vec3scale(dest->or.axis[0], oppleg, dest->frustum[3].normal);
+	vec3ma(dest->frustum[3].normal, -adjleg, dest->or.axis[2], dest->frustum[3].normal);
 
 	for(i=0; i<4; i++){
 		dest->frustum[i].type	= PLANE_NON_AXIAL;
-		dest->frustum[i].dist	= Vec3Dot (ofsorigin, dest->frustum[i].normal);
+		dest->frustum[i].dist	= vec3dot (ofsorigin, dest->frustum[i].normal);
 		SetPlaneSignbits(&dest->frustum[i]);
 	}
 }
@@ -566,34 +566,34 @@ R_SetupProjectionZ(viewParms_t *dest)
  * R_MirrorPoint
  */
 void
-R_MirrorPoint(vec3_t in, orientation_t *surface, orientation_t *camera, vec3_t out)
+R_MirrorPoint(Vec3 in, orientation_t *surface, orientation_t *camera, Vec3 out)
 {
 	int i;
-	vec3_t	local;
-	vec3_t	transformed;
+	Vec3	local;
+	Vec3	transformed;
 	float	d;
 
-	Vec3Sub(in, surface->origin, local);
+	vec3sub(in, surface->origin, local);
 
-	VectorClear(transformed);
+	vec3clear(transformed);
 	for(i = 0; i < 3; i++){
-		d = Vec3Dot(local, surface->axis[i]);
-		Vec3MA(transformed, d, camera->axis[i], transformed);
+		d = vec3dot(local, surface->axis[i]);
+		vec3ma(transformed, d, camera->axis[i], transformed);
 	}
 
-	Vec3Add(transformed, camera->origin, out);
+	vec3add(transformed, camera->origin, out);
 }
 
 void
-R_MirrorVector(vec3_t in, orientation_t *surface, orientation_t *camera, vec3_t out)
+R_MirrorVector(Vec3 in, orientation_t *surface, orientation_t *camera, Vec3 out)
 {
 	int i;
 	float d;
 
-	VectorClear(out);
+	vec3clear(out);
 	for(i = 0; i < 3; i++){
-		d = Vec3Dot(in, surface->axis[i]);
-		Vec3MA(out, d, camera->axis[i], out);
+		d = vec3dot(in, surface->axis[i]);
+		vec3ma(out, d, camera->axis[i], out);
 	}
 }
 
@@ -607,7 +607,7 @@ R_PlaneForSurface(surfaceType_t *surfType, cplane_t *plane)
 	srfTriangles_t *tri;
 	srfPoly_t *poly;
 	drawVert_t *v1, *v2, *v3;
-	vec4_t plane4;
+	Vec4 plane4;
 
 	if(!surfType){
 		Q_Memset (plane, 0, sizeof(*plane));
@@ -624,13 +624,13 @@ R_PlaneForSurface(surfaceType_t *surfType, cplane_t *plane)
 		v2 = tri->verts + tri->indexes[1];
 		v3 = tri->verts + tri->indexes[2];
 		PlaneFromPoints(plane4, v1->xyz, v2->xyz, v3->xyz);
-		Vec3Copy(plane4, plane->normal);
+		vec3copy(plane4, plane->normal);
 		plane->dist = plane4[3];
 		return;
 	case SF_POLY:
 		poly = (srfPoly_t*)surfType;
 		PlaneFromPoints(plane4, poly->verts[0].xyz, poly->verts[1].xyz, poly->verts[2].xyz);
-		Vec3Copy(plane4, plane->normal);
+		vec3copy(plane4, plane->normal);
 		plane->dist = plane4[3];
 		return;
 	default:
@@ -651,13 +651,13 @@ R_PlaneForSurface(surfaceType_t *surfType, cplane_t *plane)
 qbool
 R_GetPortalOrientations(drawSurf_t *drawSurf, int entityNum,
 			orientation_t *surface, orientation_t *camera,
-			vec3_t pvsOrigin, qbool *mirror)
+			Vec3 pvsOrigin, qbool *mirror)
 {
 	int i;
 	cplane_t originalPlane, plane;
 	trRefEntity_t *e;
 	float d;
-	vec3_t transformed;
+	Vec3 transformed;
 
 	/* create plane axis for the portal we are seeing */
 	R_PlaneForSurface(drawSurf->surface, &originalPlane);
@@ -673,17 +673,17 @@ R_GetPortalOrientations(drawSurf_t *drawSurf, int entityNum,
 		/* rotate the plane, but keep the non-rotated version for matching
 		 * against the portalSurface entities */
 		R_LocalNormalToWorld(originalPlane.normal, plane.normal);
-		plane.dist = originalPlane.dist + Vec3Dot(plane.normal, tr.or.origin);
+		plane.dist = originalPlane.dist + vec3dot(plane.normal, tr.or.origin);
 
 		/* translate the original plane */
-		originalPlane.dist = originalPlane.dist + Vec3Dot(originalPlane.normal, tr.or.origin);
+		originalPlane.dist = originalPlane.dist + vec3dot(originalPlane.normal, tr.or.origin);
 	}else{
 		plane = originalPlane;
 	}
 
-	Vec3Copy(plane.normal, surface->axis[0]);
+	vec3copy(plane.normal, surface->axis[0]);
 	PerpendicularVector(surface->axis[1], surface->axis[0]);
-	Vec3Cross(surface->axis[0], surface->axis[1], surface->axis[2]);
+	vec3cross(surface->axis[0], surface->axis[1], surface->axis[2]);
 
 	/* locate the portal entity closest to this plane.
 	 * origin will be the origin of the portal, origin2 will be
@@ -694,23 +694,23 @@ R_GetPortalOrientations(drawSurf_t *drawSurf, int entityNum,
 			continue;
 		}
 
-		d = Vec3Dot(e->e.origin, originalPlane.normal) - originalPlane.dist;
+		d = vec3dot(e->e.origin, originalPlane.normal) - originalPlane.dist;
 		if(d > 64 || d < -64){
 			continue;
 		}
 
 		/* get the pvsOrigin from the entity */
-		Vec3Copy(e->e.oldorigin, pvsOrigin);
+		vec3copy(e->e.oldorigin, pvsOrigin);
 
 		/* if the entity is just a mirror, don't use as a camera point */
 		if(e->e.oldorigin[0] == e->e.origin[0] &&
 		   e->e.oldorigin[1] == e->e.origin[1] &&
 		   e->e.oldorigin[2] == e->e.origin[2]){
-			VectorScale(plane.normal, plane.dist, surface->origin);
-			Vec3Copy(surface->origin, camera->origin);
-			Vec3Sub(vec3_origin, surface->axis[0], camera->axis[0]);
-			Vec3Copy(surface->axis[1], camera->axis[1]);
-			Vec3Copy(surface->axis[2], camera->axis[2]);
+			vec3scale(plane.normal, plane.dist, surface->origin);
+			vec3copy(surface->origin, camera->origin);
+			vec3sub(vec3_origin, surface->axis[0], camera->axis[0]);
+			vec3copy(surface->axis[1], camera->axis[1]);
+			vec3copy(surface->axis[2], camera->axis[2]);
 
 			*mirror = qtrue;
 			return qtrue;
@@ -718,14 +718,14 @@ R_GetPortalOrientations(drawSurf_t *drawSurf, int entityNum,
 
 		/* project the origin onto the surface plane to get
 		 * an origin point we can rotate around */
-		d = Vec3Dot(e->e.origin, plane.normal) - plane.dist;
-		Vec3MA(e->e.origin, -d, surface->axis[0], surface->origin);
+		d = vec3dot(e->e.origin, plane.normal) - plane.dist;
+		vec3ma(e->e.origin, -d, surface->axis[0], surface->origin);
 
 		/* now get the camera origin and orientation */
-		Vec3Copy(e->e.oldorigin, camera->origin);
-		AxisCopy(e->e.axis, camera->axis);
-		Vec3Sub(vec3_origin, camera->axis[0], camera->axis[0]);
-		Vec3Sub(vec3_origin, camera->axis[1], camera->axis[1]);
+		vec3copy(e->e.oldorigin, camera->origin);
+		axiscopy(e->e.axis, camera->axis);
+		vec3sub(vec3_origin, camera->axis[0], camera->axis[0]);
+		vec3sub(vec3_origin, camera->axis[1], camera->axis[1]);
 
 		/* optionally rotate */
 		if(e->e.oldframe){
@@ -733,22 +733,22 @@ R_GetPortalOrientations(drawSurf_t *drawSurf, int entityNum,
 			if(e->e.frame){
 				/* continuous rotate */
 				d = (tr.refdef.time/1000.0f) * e->e.frame;
-				Vec3Copy(camera->axis[1], transformed);
+				vec3copy(camera->axis[1], transformed);
 				RotatePointAroundVector(camera->axis[1], camera->axis[0], transformed, d);
-				Vec3Cross(camera->axis[0], camera->axis[1], camera->axis[2]);
+				vec3cross(camera->axis[0], camera->axis[1], camera->axis[2]);
 			}else{
 				/* bobbing rotate, with skinNum being the rotation offset */
 				d = sin(tr.refdef.time * 0.003f);
 				d = e->e.skinNum + d * 4;
-				Vec3Copy(camera->axis[1], transformed);
+				vec3copy(camera->axis[1], transformed);
 				RotatePointAroundVector(camera->axis[1], camera->axis[0], transformed, d);
-				Vec3Cross(camera->axis[0], camera->axis[1], camera->axis[2]);
+				vec3cross(camera->axis[0], camera->axis[1], camera->axis[2]);
 			}
 		}else if(e->e.skinNum){
 			d = e->e.skinNum;
-			Vec3Copy(camera->axis[1], transformed);
+			vec3copy(camera->axis[1], transformed);
 			RotatePointAroundVector(camera->axis[1], camera->axis[0], transformed, d);
-			Vec3Cross(camera->axis[0], camera->axis[1], camera->axis[2]);
+			vec3cross(camera->axis[0], camera->axis[1], camera->axis[2]);
 		}
 		*mirror = qfalse;
 		return qtrue;
@@ -790,10 +790,10 @@ IsMirror(const drawSurf_t *drawSurf, int entityNum)
 		/* rotate the plane, but keep the non-rotated version for matching
 		 * against the portalSurface entities */
 		R_LocalNormalToWorld(originalPlane.normal, plane.normal);
-		plane.dist = originalPlane.dist + Vec3Dot(plane.normal, tr.or.origin);
+		plane.dist = originalPlane.dist + vec3dot(plane.normal, tr.or.origin);
 
 		/* translate the original plane */
-		originalPlane.dist = originalPlane.dist + Vec3Dot(originalPlane.normal, tr.or.origin);
+		originalPlane.dist = originalPlane.dist + vec3dot(originalPlane.normal, tr.or.origin);
 	}else{
 		plane = originalPlane;
 	}
@@ -807,7 +807,7 @@ IsMirror(const drawSurf_t *drawSurf, int entityNum)
 			continue;
 		}
 
-		d = Vec3Dot(e->e.origin, originalPlane.normal) - originalPlane.dist;
+		d = vec3dot(e->e.origin, originalPlane.normal) - originalPlane.dist;
 		if(d > 64 || d < -64){
 			continue;
 		}
@@ -830,7 +830,7 @@ IsMirror(const drawSurf_t *drawSurf, int entityNum)
 ** Determines if a surface is completely offscreen.
 */
 static qbool
-SurfIsOffscreen(const drawSurf_t *drawSurf, vec4_t clipDest[128])
+SurfIsOffscreen(const drawSurf_t *drawSurf, Vec4 clipDest[128])
 {
 	float shortest = 100000000;
 	int entityNum;
@@ -838,7 +838,7 @@ SurfIsOffscreen(const drawSurf_t *drawSurf, vec4_t clipDest[128])
 	material_t	*shader;
 	int		fogNum;
 	int		dlighted;
-	vec4_t		clip, eye;
+	Vec4		clip, eye;
 	int		i;
 	unsigned int pointOr = 0;
 	unsigned int pointAnd = (unsigned int)~0;
@@ -886,17 +886,17 @@ SurfIsOffscreen(const drawSurf_t *drawSurf, vec4_t clipDest[128])
 	numTriangles = tess.numIndexes / 3;
 
 	for(i = 0; i < tess.numIndexes; i += 3){
-		vec3_t	normal;
+		Vec3	normal;
 		float	len;
 
-		Vec3Sub(tess.xyz[tess.indexes[i]], tr.viewParms.or.origin, normal);
+		vec3sub(tess.xyz[tess.indexes[i]], tr.viewParms.or.origin, normal);
 
-		len = Vec3LenSquared(normal);	/* lose the sqrt */
+		len = vec3lensquared(normal);	/* lose the sqrt */
 		if(len < shortest){
 			shortest = len;
 		}
 
-		if(Vec3Dot(normal, tess.normal[tess.indexes[i]]) >= 0){
+		if(vec3dot(normal, tess.normal[tess.indexes[i]]) >= 0){
 			numTriangles--;
 		}
 	}
@@ -925,7 +925,7 @@ SurfIsOffscreen(const drawSurf_t *drawSurf, vec4_t clipDest[128])
 qbool
 R_MirrorViewBySurface(drawSurf_t *drawSurf, int entityNum)
 {
-	vec4_t clipDest[128];
+	Vec4 clipDest[128];
 	viewParms_t newParms;
 	viewParms_t oldParms;
 	orientation_t surface, camera;
@@ -957,8 +957,8 @@ R_MirrorViewBySurface(drawSurf_t *drawSurf, int entityNum)
 
 	R_MirrorPoint (oldParms.or.origin, &surface, &camera, newParms.or.origin);
 
-	Vec3Sub(vec3_origin, camera.axis[0], newParms.portalPlane.normal);
-	newParms.portalPlane.dist = Vec3Dot(camera.origin, newParms.portalPlane.normal);
+	vec3sub(vec3_origin, camera.axis[0], newParms.portalPlane.normal);
+	newParms.portalPlane.dist = vec3dot(camera.origin, newParms.portalPlane.normal);
 
 	R_MirrorVector (oldParms.or.axis[0], &surface, &camera, newParms.or.axis[0]);
 	R_MirrorVector (oldParms.or.axis[1], &surface, &camera, newParms.or.axis[1]);

@@ -63,7 +63,7 @@ AAS_UpdateEntity(int entnum, bot_entitystate_t *state)
 {
 	int relink;
 	aas_entity_t *ent;
-	vec3_t absmins, absmaxs;
+	Vec3 absmins, absmaxs;
 
 	if(!aasworld.loaded){
 		botimport.Print(PRT_MESSAGE, "AAS_UpdateEntity: not loaded\n");
@@ -88,8 +88,8 @@ AAS_UpdateEntity(int entnum, bot_entitystate_t *state)
 	ent->i.type = state->type;
 	ent->i.flags = state->flags;
 	ent->i.ltime = AAS_Time();
-	Vec3Copy(ent->i.origin, ent->i.lastvisorigin);
-	Vec3Copy(state->old_origin, ent->i.old_origin);
+	vec3copy(ent->i.origin, ent->i.lastvisorigin);
+	vec3copy(state->old_origin, ent->i.old_origin);
 	ent->i.solid = state->solid;
 	ent->i.groundent = state->groundent;
 	ent->i.modelindex = state->modelindex;
@@ -111,8 +111,8 @@ AAS_UpdateEntity(int entnum, bot_entitystate_t *state)
 	/*  */
 	if(ent->i.solid == SOLID_BSP){
 		/* if the angles of the model changed */
-		if(!VectorCompare(state->angles, ent->i.angles)){
-			Vec3Copy(state->angles, ent->i.angles);
+		if(!vec3cmp(state->angles, ent->i.angles)){
+			vec3copy(state->angles, ent->i.angles);
 			relink = qtrue;
 		}
 		/* get the mins and maxs of the model */
@@ -122,17 +122,17 @@ AAS_UpdateEntity(int entnum, bot_entitystate_t *state)
 			NULL);
 	}else if(ent->i.solid == SOLID_BBOX){
 		/* if the bounding box size changed */
-		if(!VectorCompare(state->mins, ent->i.mins) ||
-		   !VectorCompare(state->maxs, ent->i.maxs)){
-			Vec3Copy(state->mins, ent->i.mins);
-			Vec3Copy(state->maxs, ent->i.maxs);
+		if(!vec3cmp(state->mins, ent->i.mins) ||
+		   !vec3cmp(state->maxs, ent->i.maxs)){
+			vec3copy(state->mins, ent->i.mins);
+			vec3copy(state->maxs, ent->i.maxs);
 			relink = qtrue;
 		}
-		Vec3Copy(state->angles, ent->i.angles);
+		vec3copy(state->angles, ent->i.angles);
 	}
 	/* if the origin changed */
-	if(!VectorCompare(state->origin, ent->i.origin)){
-		Vec3Copy(state->origin, ent->i.origin);
+	if(!vec3cmp(state->origin, ent->i.origin)){
+		vec3copy(state->origin, ent->i.origin);
 		relink = qtrue;
 	}
 	/* if the entity should be relinked */
@@ -140,8 +140,8 @@ AAS_UpdateEntity(int entnum, bot_entitystate_t *state)
 		/* don't link the world model */
 		if(entnum != ENTITYNUM_WORLD){
 			/* absolute mins and maxs */
-			Vec3Add(ent->i.mins, ent->i.origin, absmins);
-			Vec3Add(ent->i.maxs, ent->i.origin, absmaxs);
+			vec3add(ent->i.mins, ent->i.origin, absmins);
+			vec3add(ent->i.maxs, ent->i.origin, absmaxs);
 			/* unlink the entity */
 			AAS_UnlinkFromAreas(ent->areas);
 			/* relink the entity to the AAS areas (use the larges bbox) */
@@ -190,17 +190,17 @@ AAS_EntityInfo(int entnum, aas_entityinfo_t *info)
  * Changes Globals:		-
  * =========================================================================== */
 void
-AAS_EntityOrigin(int entnum, vec3_t origin)
+AAS_EntityOrigin(int entnum, Vec3 origin)
 {
 	if(entnum < 0 || entnum >= aasworld.maxentities){
 		botimport.Print(PRT_FATAL,
 			"AAS_EntityOrigin: entnum %d out of range\n",
 			entnum);
-		VectorClear(origin);
+		vec3clear(origin);
 		return;
 	}
 
-	Vec3Copy(aasworld.entities[entnum].i.origin, origin);
+	vec3copy(aasworld.entities[entnum].i.origin, origin);
 }	/* end of the function AAS_EntityOrigin */
 /* ===========================================================================
  *
@@ -264,7 +264,7 @@ AAS_EntityModelNum(int entnum)
  * Changes Globals:		-
  * =========================================================================== */
 int
-AAS_OriginOfMoverWithModelNum(int modelnum, vec3_t origin)
+AAS_OriginOfMoverWithModelNum(int modelnum, Vec3 origin)
 {
 	int i;
 	aas_entity_t *ent;
@@ -273,7 +273,7 @@ AAS_OriginOfMoverWithModelNum(int modelnum, vec3_t origin)
 		ent = &aasworld.entities[i];
 		if(ent->i.type == ET_MOVER)
 			if(ent->i.modelindex == modelnum){
-				Vec3Copy(ent->i.origin, origin);
+				vec3copy(ent->i.origin, origin);
 				return qtrue;
 			}
 	}
@@ -286,7 +286,7 @@ AAS_OriginOfMoverWithModelNum(int modelnum, vec3_t origin)
  * Changes Globals:		-
  * =========================================================================== */
 void
-AAS_EntitySize(int entnum, vec3_t mins, vec3_t maxs)
+AAS_EntitySize(int entnum, Vec3 mins, Vec3 maxs)
 {
 	aas_entity_t *ent;
 
@@ -300,8 +300,8 @@ AAS_EntitySize(int entnum, vec3_t mins, vec3_t maxs)
 	}
 
 	ent = &aasworld.entities[entnum];
-	Vec3Copy(ent->i.mins, mins);
-	Vec3Copy(ent->i.maxs, maxs);
+	vec3copy(ent->i.mins, mins);
+	vec3copy(ent->i.maxs, maxs);
 }	/* end of the function AAS_EntitySize */
 /* ===========================================================================
  *
@@ -315,10 +315,10 @@ AAS_EntityBSPData(int entnum, bsp_entdata_t *entdata)
 	aas_entity_t *ent;
 
 	ent = &aasworld.entities[entnum];
-	Vec3Copy(ent->i.origin, entdata->origin);
-	Vec3Copy(ent->i.angles, entdata->angles);
-	Vec3Add(ent->i.origin, ent->i.mins, entdata->absmins);
-	Vec3Add(ent->i.origin, ent->i.maxs, entdata->absmaxs);
+	vec3copy(ent->i.origin, entdata->origin);
+	vec3copy(ent->i.angles, entdata->angles);
+	vec3add(ent->i.origin, ent->i.mins, entdata->absmins);
+	vec3add(ent->i.origin, ent->i.maxs, entdata->absmaxs);
 	entdata->solid = ent->i.solid;
 	entdata->modelnum = ent->i.modelindex - 1;
 }	/* end of the function AAS_EntityBSPData */
@@ -381,22 +381,22 @@ AAS_UnlinkInvalidEntities(void)
  * Changes Globals:		-
  * =========================================================================== */
 int
-AAS_NearestEntity(vec3_t origin, int modelindex)
+AAS_NearestEntity(Vec3 origin, int modelindex)
 {
 	int i, bestentnum;
 	float	dist, bestdist;
 	aas_entity_t *ent;
-	vec3_t	dir;
+	Vec3	dir;
 
 	bestentnum = 0;
 	bestdist = 99999;
 	for(i = 0; i < aasworld.maxentities; i++){
 		ent = &aasworld.entities[i];
 		if(ent->i.modelindex != modelindex) continue;
-		Vec3Sub(ent->i.origin, origin, dir);
+		vec3sub(ent->i.origin, origin, dir);
 		if(abs(dir[0]) < 40)
 			if(abs(dir[1]) < 40){
-				dist = Vec3Len(dir);
+				dist = vec3len(dir);
 				if(dist < bestdist){
 					bestdist = dist;
 					bestentnum = i;

@@ -66,7 +66,7 @@
 
 /* location in the map "target_location" */
 typedef struct maplocation_s {
-	vec3_t	origin;
+	Vec3	origin;
 	int	areanum;
 	char	name[MAX_EPAIRKEY];
 	struct maplocation_s *next;
@@ -74,7 +74,7 @@ typedef struct maplocation_s {
 
 /* camp spots "info_camp" */
 typedef struct campspot_s {
-	vec3_t	origin;
+	Vec3	origin;
 	int	areanum;
 	char	name[MAX_EPAIRKEY];
 	float	range;
@@ -107,9 +107,9 @@ typedef struct levelitem_s {
 	int	iteminfo;	/* index into the item info */
 	int	flags;		/* item flags */
 	float	weight;		/* fixed roam weight */
-	vec3_t	origin;		/* origin of the item */
+	Vec3	origin;		/* origin of the item */
 	int	goalareanum;	/* area the item is in */
-	vec3_t	goalorigin;	/* goal origin within the area */
+	Vec3	goalorigin;	/* goal origin within the area */
 	int	entitynum;	/* entity number */
 	float	timeout;	/* item is removed after this time */
 	struct levelitem_s *prev, *next;
@@ -123,8 +123,8 @@ typedef struct iteminfo_s {
 	int	type;			/* item type */
 	int	index;			/* index in the inventory */
 	float	respawntime;		/* respawn time */
-	vec3_t	mins;			/* mins of the item */
-	vec3_t	maxs;			/* maxs of the item */
+	Vec3	mins;			/* mins of the item */
+	Vec3	maxs;			/* maxs of the item */
 	int	number;			/* number of the item info */
 } iteminfo_t;
 
@@ -540,7 +540,7 @@ BotInitLevelItems(void)
 {
 	int	i, spawnflags, value;
 	char	classname[MAX_EPAIRKEY];
-	vec3_t origin, end;
+	Vec3 origin, end;
 	int	ent, goalareanum;
 	itemconfig_t	*ic;
 	levelitem_t     *li;
@@ -592,7 +592,7 @@ BotInitLevelItems(void)
 		if(spawnflags & 1)
 			/* if the item is not floating in water */
 			if(!(AAS_PointContents(origin) & CONTENTS_WATER)){
-				Vec3Copy(origin, end);
+				vec3copy(origin, end);
 				end[2]	-= 32;
 				trace	= AAS_Trace(
 					origin, ic->iteminfo[i].mins,
@@ -648,11 +648,11 @@ BotInitLevelItems(void)
 		/* item info of the level item */
 		li->iteminfo = i;
 		/* origin of the item */
-		Vec3Copy(origin, li->origin);
+		vec3copy(origin, li->origin);
 		/*  */
 		if(goalareanum){
 			li->goalareanum = goalareanum;
-			Vec3Copy(origin, li->goalorigin);
+			vec3copy(origin, li->goalorigin);
 		}else{
 			/* get the item goal area and goal origin */
 			li->goalareanum = AAS_BestReachableArea(origin,
@@ -869,11 +869,11 @@ BotGetLevelItemGoal(int index, char *name, bot_goal_t *goal)
 		/*  */
 		if(!Q_stricmp(name, itemconfig->iteminfo[li->iteminfo].name)){
 			goal->areanum = li->goalareanum;
-			Vec3Copy(li->goalorigin, goal->origin);
+			vec3copy(li->goalorigin, goal->origin);
 			goal->entitynum = li->entitynum;
-			Vec3Copy(itemconfig->iteminfo[li->iteminfo].mins,
+			vec3copy(itemconfig->iteminfo[li->iteminfo].mins,
 				goal->mins);
-			Vec3Copy(itemconfig->iteminfo[li->iteminfo].maxs,
+			vec3copy(itemconfig->iteminfo[li->iteminfo].maxs,
 				goal->maxs);
 			goal->number = li->number;
 			goal->flags = GFL_ITEM;
@@ -894,15 +894,15 @@ int
 BotGetMapLocationGoal(char *name, bot_goal_t *goal)
 {
 	maplocation_t *ml;
-	vec3_t mins = {-8, -8, -8}, maxs = {8, 8, 8};
+	Vec3 mins = {-8, -8, -8}, maxs = {8, 8, 8};
 
 	for(ml = maplocations; ml; ml = ml->next)
 		if(!Q_stricmp(ml->name, name)){
 			goal->areanum = ml->areanum;
-			Vec3Copy(ml->origin, goal->origin);
+			vec3copy(ml->origin, goal->origin);
 			goal->entitynum = 0;
-			Vec3Copy(mins, goal->mins);
-			Vec3Copy(maxs, goal->maxs);
+			vec3copy(mins, goal->mins);
+			vec3copy(maxs, goal->maxs);
 			return qtrue;
 		}
 	return qfalse;
@@ -918,17 +918,17 @@ BotGetNextCampSpotGoal(int num, bot_goal_t *goal)
 {
 	int i;
 	campspot_t *cs;
-	vec3_t mins = {-8, -8, -8}, maxs = {8, 8, 8};
+	Vec3 mins = {-8, -8, -8}, maxs = {8, 8, 8};
 
 	if(num < 0) num = 0;
 	i = num;
 	for(cs = campspots; cs; cs = cs->next)
 		if(--i < 0){
 			goal->areanum = cs->areanum;
-			Vec3Copy(cs->origin, goal->origin);
+			vec3copy(cs->origin, goal->origin);
 			goal->entitynum = 0;
-			Vec3Copy(mins, goal->mins);
-			Vec3Copy(maxs, goal->maxs);
+			vec3copy(mins, goal->mins);
+			vec3copy(maxs, goal->maxs);
 			return num+1;
 		}
 	return 0;
@@ -945,7 +945,7 @@ BotFindEntityForLevelItem(levelitem_t *li)
 	int ent, modelindex;
 	itemconfig_t *ic;
 	aas_entityinfo_t entinfo;
-	vec3_t dir;
+	Vec3 dir;
 
 	ic = itemconfig;
 	if(!itemconfig) return;
@@ -963,8 +963,8 @@ BotFindEntityForLevelItem(levelitem_t *li)
 		/*  */
 		if(ic->iteminfo[li->iteminfo].modelindex == modelindex){
 			/* check if the entity is very close */
-			Vec3Sub(li->origin, entinfo.origin, dir);
-			if(Vec3Len(dir) < 30)
+			vec3sub(li->origin, entinfo.origin, dir);
+			if(vec3len(dir) < 30)
 				/* found an entity for this level item */
 				li->entitynum = ent;
 		}
@@ -984,7 +984,7 @@ void
 BotUpdateEntityItems(void)
 {
 	int ent, i, modelindex;
-	vec3_t dir;
+	Vec3 dir;
 	levelitem_t *li, *nextli;
 	aas_entityinfo_t entinfo;
 	itemconfig_t *ic;
@@ -1035,7 +1035,7 @@ BotUpdateEntityItems(void)
 					if(entinfo.origin[0] != li->origin[0] ||
 					   entinfo.origin[1] != li->origin[1] ||
 					   entinfo.origin[2] != li->origin[2]){
-						Vec3Copy(entinfo.origin,
+						vec3copy(entinfo.origin,
 							li->origin);
 						/* also update the goal area number */
 						li->goalareanum =
@@ -1068,8 +1068,8 @@ BotUpdateEntityItems(void)
 			/* if the model of the level item and the entity are the same */
 			if(ic->iteminfo[li->iteminfo].modelindex == modelindex){
 				/* check if the entity is very close */
-				Vec3Sub(li->origin, entinfo.origin, dir);
-				if(Vec3Len(dir) < 30){
+				vec3sub(li->origin, entinfo.origin, dir);
+				if(vec3len(dir) < 30){
 					/* found an entity for this level item */
 					li->entitynum = ent;
 					/* if the origin is different */
@@ -1077,7 +1077,7 @@ BotUpdateEntityItems(void)
 					   entinfo.origin[1] != li->origin[1] ||
 					   entinfo.origin[2] != li->origin[2]){
 						/* update the level item origin */
-						Vec3Copy(entinfo.origin,
+						vec3copy(entinfo.origin,
 							li->origin);
 						/* also update the goal area number */
 						li->goalareanum =
@@ -1121,7 +1121,7 @@ BotUpdateEntityItems(void)
 		/* set the item info index for the level item */
 		li->iteminfo = i;
 		/* origin of the item */
-		Vec3Copy(entinfo.origin, li->origin);
+		vec3copy(entinfo.origin, li->origin);
 		/* get the item goal area and goal origin */
 		li->goalareanum = AAS_BestReachableArea(li->origin,
 			ic->iteminfo[i].mins, ic->iteminfo[i].maxs,
@@ -1260,7 +1260,7 @@ BotGetSecondGoal(int goalstate, bot_goal_t *goal)
  * Changes Globals:		-
  * =========================================================================== */
 int
-BotChooseLTGItem(int goalstate, vec3_t origin, int *inventory, int travelflags)
+BotChooseLTGItem(int goalstate, Vec3 origin, int *inventory, int travelflags)
 {
 	int areanum, t, weightnum;
 	float weight, bestweight, avoidtime;
@@ -1363,8 +1363,8 @@ BotChooseLTGItem(int goalstate, vec3_t origin, int *inventory, int travelflags)
 		 * {
 		 *      if (AAS_RandomGoalArea(areanum, travelflags, &goal.areanum, goal.origin))
 		 *      {
-		 *              VectorSet(goal.mins, -15, -15, -15);
-		 *              VectorSet(goal.maxs, 15, 15, 15);
+		 *              vec3set(goal.mins, -15, -15, -15);
+		 *              vec3set(goal.maxs, 15, 15, 15);
 		 *              goal.entitynum = 0;
 		 *              goal.number = 0;
 		 *              goal.flags = GFL_ROAM;
@@ -1382,9 +1382,9 @@ BotChooseLTGItem(int goalstate, vec3_t origin, int *inventory, int travelflags)
 		return qfalse;
 	/* create a bot goal for this item */
 	iteminfo = &ic->iteminfo[bestitem->iteminfo];
-	Vec3Copy(bestitem->goalorigin, goal.origin);
-	Vec3Copy(iteminfo->mins, goal.mins);
-	Vec3Copy(iteminfo->maxs, goal.maxs);
+	vec3copy(bestitem->goalorigin, goal.origin);
+	vec3copy(iteminfo->mins, goal.mins);
+	vec3copy(iteminfo->maxs, goal.maxs);
 	goal.areanum = bestitem->goalareanum;
 	goal.entitynum	= bestitem->entitynum;
 	goal.number	= bestitem->number;
@@ -1418,7 +1418,7 @@ BotChooseLTGItem(int goalstate, vec3_t origin, int *inventory, int travelflags)
  * Changes Globals:		-
  * =========================================================================== */
 int
-BotChooseNBGItem(int goalstate, vec3_t origin, int *inventory, int travelflags,
+BotChooseNBGItem(int goalstate, Vec3 origin, int *inventory, int travelflags,
 		 bot_goal_t *ltg, float maxtime)
 {
 	int areanum, t, weightnum, ltg_time;
@@ -1536,9 +1536,9 @@ BotChooseNBGItem(int goalstate, vec3_t origin, int *inventory, int travelflags,
 		return qfalse;
 	/* create a bot goal for this item */
 	iteminfo = &ic->iteminfo[bestitem->iteminfo];
-	Vec3Copy(bestitem->goalorigin, goal.origin);
-	Vec3Copy(iteminfo->mins, goal.mins);
-	Vec3Copy(iteminfo->maxs, goal.maxs);
+	vec3copy(bestitem->goalorigin, goal.origin);
+	vec3copy(iteminfo->mins, goal.mins);
+	vec3copy(iteminfo->maxs, goal.maxs);
 	goal.areanum = bestitem->goalareanum;
 	goal.entitynum	= bestitem->entitynum;
 	goal.number	= bestitem->number;
@@ -1572,22 +1572,22 @@ BotChooseNBGItem(int goalstate, vec3_t origin, int *inventory, int travelflags,
  * Changes Globals:		-
  * =========================================================================== */
 int
-BotTouchingGoal(vec3_t origin, bot_goal_t *goal)
+BotTouchingGoal(Vec3 origin, bot_goal_t *goal)
 {
 	int i;
-	vec3_t	boxmins, boxmaxs;
-	vec3_t	absmins, absmaxs;
-	vec3_t	safety_maxs = {0, 0, 0};	/* {4, 4, 10}; */
-	vec3_t	safety_mins = {0, 0, 0};	/* {-4, -4, 0}; */
+	Vec3	boxmins, boxmaxs;
+	Vec3	absmins, absmaxs;
+	Vec3	safety_maxs = {0, 0, 0};	/* {4, 4, 10}; */
+	Vec3	safety_mins = {0, 0, 0};	/* {-4, -4, 0}; */
 
 	AAS_PresenceTypeBoundingBox(PRESENCE_NORMAL, boxmins, boxmaxs);
-	Vec3Sub(goal->mins, boxmaxs, absmins);
-	Vec3Sub(goal->maxs, boxmins, absmaxs);
-	Vec3Add(absmins, goal->origin, absmins);
-	Vec3Add(absmaxs, goal->origin, absmaxs);
+	vec3sub(goal->mins, boxmaxs, absmins);
+	vec3sub(goal->maxs, boxmins, absmaxs);
+	vec3add(absmins, goal->origin, absmins);
+	vec3add(absmaxs, goal->origin, absmaxs);
 	/* make the box a little smaller for safety */
-	Vec3Sub(absmaxs, safety_maxs, absmaxs);
-	Vec3Sub(absmins, safety_mins, absmins);
+	vec3sub(absmaxs, safety_maxs, absmaxs);
+	vec3sub(absmins, safety_mins, absmins);
 
 	for(i = 0; i < 3; i++)
 		if(origin[i] < absmins[i] || origin[i] >
@@ -1601,18 +1601,18 @@ BotTouchingGoal(vec3_t origin, bot_goal_t *goal)
  * Changes Globals:		-
  * =========================================================================== */
 int
-BotItemGoalInVisButNotVisible(int viewer, vec3_t eye, vec3_t viewangles,
+BotItemGoalInVisButNotVisible(int viewer, Vec3 eye, Vec3 viewangles,
 			      bot_goal_t *goal)
 {
 	aas_entityinfo_t entinfo;
 	bsp_trace_t trace;
-	vec3_t middle;
+	Vec3 middle;
 
 	if(!(goal->flags & GFL_ITEM)) return qfalse;
 	/*  */
-	Vec3Add(goal->mins, goal->mins, middle);
-	VectorScale(middle, 0.5, middle);
-	Vec3Add(goal->origin, middle, middle);
+	vec3add(goal->mins, goal->mins, middle);
+	vec3scale(middle, 0.5, middle);
+	vec3add(goal->origin, middle, middle);
 	/*  */
 	trace = AAS_Trace(eye, NULL, NULL, middle, viewer, CONTENTS_SOLID);
 	/* if the goal middle point is visible */

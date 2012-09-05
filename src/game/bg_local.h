@@ -35,7 +35,7 @@
  * pmove, just to make damn sure we don't have
  * any differences when running on client or server */
 typedef struct {
-	vec3_t		forward, right, up;
+	Vec3		forward, right, up;
 	float		frametime;
 
 	int		msec;
@@ -46,8 +46,8 @@ typedef struct {
 
 	float		impactSpeed;
 
-	vec3_t		previous_origin;
-	vec3_t		previous_velocity;
+	Vec3		previous_origin;
+	Vec3		previous_velocity;
 	int		previous_waterlevel;
 } pml_t;
 
@@ -70,7 +70,7 @@ extern float	pm_flightfriction;
 
 extern uint	cnt;
 
-void PM_ClipVelocity(vec3_t in, vec3_t normal, vec3_t out, float overbounce);
+void PM_ClipVelocity(Vec3 in, Vec3 normal, Vec3 out, float overbounce);
 void PM_AddTouchEnt(int entityNum);
 void PM_AddEvent(int newEvent);
 

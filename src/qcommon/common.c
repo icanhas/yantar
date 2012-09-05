@@ -94,7 +94,7 @@ int	(*Q_VMftol)(void);
 #elif id386
 long	(QDECL *Q_ftol)(float f);
 int	(QDECL *Q_VMftol)(void);
-void	(QDECL *Q_SnapVector)(vec3_t vec);
+void	(QDECL *Q_SnapVector)(Vec3 vec);
 #endif
 
 /* com_speeds times */

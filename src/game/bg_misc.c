@@ -1002,7 +1002,7 @@ BG_FindItem(const char *pickupName)
 qbool
 BG_PlayerTouchesItem(playerState_t *ps, entityState_t *item, int atTime)
 {
-	vec3_t origin;
+	Vec3 origin;
 
 	BG_EvaluateTrajectory(&item->pos, atTime, origin);
 
@@ -1182,7 +1182,7 @@ BG_CanItemBeGrabbed(int gametype, const entityState_t *ent,
  *
  */
 void
-BG_EvaluateTrajectory(const trajectory_t *tr, int atTime, vec3_t result)
+BG_EvaluateTrajectory(const trajectory_t *tr, int atTime, Vec3 result)
 {
 	float	deltaTime;
 	float	phase;
@@ -1190,16 +1190,16 @@ BG_EvaluateTrajectory(const trajectory_t *tr, int atTime, vec3_t result)
 	switch(tr->trType){
 	case TR_STATIONARY:
 	case TR_INTERPOLATE:
-		Vec3Copy(tr->trBase, result);
+		vec3copy(tr->trBase, result);
 		break;
 	case TR_LINEAR:
 		deltaTime = (atTime - tr->trTime) * 0.001;	/* milliseconds to seconds */
-		Vec3MA(tr->trBase, deltaTime, tr->trDelta, result);
+		vec3ma(tr->trBase, deltaTime, tr->trDelta, result);
 		break;
 	case TR_SINE:
 		deltaTime = (atTime - tr->trTime) / (float)tr->trDuration;
 		phase = sin(deltaTime * M_PI * 2);
-		Vec3MA(tr->trBase, phase, tr->trDelta, result);
+		vec3ma(tr->trBase, phase, tr->trDelta, result);
 		break;
 	case TR_LINEAR_STOP:
 		if(atTime > tr->trTime + tr->trDuration)
@@ -1207,11 +1207,11 @@ BG_EvaluateTrajectory(const trajectory_t *tr, int atTime, vec3_t result)
 		deltaTime = (atTime - tr->trTime) * 0.001;	/* milliseconds to seconds */
 		if(deltaTime < 0)
 			deltaTime = 0;
-		Vec3MA(tr->trBase, deltaTime, tr->trDelta, result);
+		vec3ma(tr->trBase, deltaTime, tr->trDelta, result);
 		break;
 	case TR_GRAVITY:
 		deltaTime = (atTime - tr->trTime) * 0.001;	/* milliseconds to seconds */
-		Vec3MA(tr->trBase, deltaTime, tr->trDelta, result);
+		vec3ma(tr->trBase, deltaTime, tr->trDelta, result);
 		result[2] -= 0.5 * DEFAULT_GRAVITY * deltaTime * deltaTime;	/* FIXME: local gravity... */
 		break;
 	default:
@@ -1227,7 +1227,7 @@ BG_EvaluateTrajectory(const trajectory_t *tr, int atTime, vec3_t result)
  * For determining velocity at a given time
  */
 void
-BG_EvaluateTrajectoryDelta(const trajectory_t *tr, int atTime, vec3_t result)
+BG_EvaluateTrajectoryDelta(const trajectory_t *tr, int atTime, Vec3 result)
 {
 	float	deltaTime;
 	float	phase;
@@ -1235,27 +1235,27 @@ BG_EvaluateTrajectoryDelta(const trajectory_t *tr, int atTime, vec3_t result)
 	switch(tr->trType){
 	case TR_STATIONARY:
 	case TR_INTERPOLATE:
-		VectorClear(result);
+		vec3clear(result);
 		break;
 	case TR_LINEAR:
-		Vec3Copy(tr->trDelta, result);
+		vec3copy(tr->trDelta, result);
 		break;
 	case TR_SINE:
 		deltaTime	= (atTime - tr->trTime) / (float)tr->trDuration;
 		phase		= cos(deltaTime * M_PI * 2);	/* derivative of sin = cos */
 		phase		*= 0.5;
-		VectorScale(tr->trDelta, phase, result);
+		vec3scale(tr->trDelta, phase, result);
 		break;
 	case TR_LINEAR_STOP:
 		if(atTime > tr->trTime + tr->trDuration){
-			VectorClear(result);
+			vec3clear(result);
 			return;
 		}
-		Vec3Copy(tr->trDelta, result);
+		vec3copy(tr->trDelta, result);
 		break;
 	case TR_GRAVITY:
 		deltaTime = (atTime - tr->trTime) * 0.001;	/* milliseconds to seconds */
-		Vec3Copy(tr->trDelta, result);
+		vec3copy(tr->trDelta, result);
 		result[2] -= DEFAULT_GRAVITY * deltaTime;	/* FIXME: local gravity... */
 		break;
 	default:
@@ -1419,7 +1419,7 @@ BG_AddPredictableEventToPlayerstate(int newEvent, int eventParm,
 void
 BG_TouchJumpPad(playerState_t *ps, entityState_t *jumppad)
 {
-	vec3_t	angles;
+	Vec3	angles;
 	float	p;
 	int	effectNum;
 
@@ -1435,7 +1435,7 @@ BG_TouchJumpPad(playerState_t *ps, entityState_t *jumppad)
 	 * then don't play the event sound again if we are in a fat trigger */
 	if(ps->jumppad_ent != jumppad->number){
 
-		Vec3ToAngles(jumppad->origin2, angles);
+		vec3toeuler(jumppad->origin2, angles);
 		p = fabs(AngleNormalize180(angles[PITCH]));
 		if(p < 45)
 			effectNum = 0;
@@ -1447,7 +1447,7 @@ BG_TouchJumpPad(playerState_t *ps, entityState_t *jumppad)
 	ps->jumppad_ent = jumppad->number;
 	ps->jumppad_frame = ps->pmove_framecount;
 	/* give the player the velocity from the jumppad */
-	Vec3Copy(jumppad->origin2, ps->velocity);
+	vec3copy(jumppad->origin2, ps->velocity);
 }
 
 /*
@@ -1471,14 +1471,14 @@ BG_PlayerStateToEntityState(playerState_t *ps, entityState_t *s, qbool snap)
 	s->number = ps->clientNum;
 
 	s->pos.trType = TR_INTERPOLATE;
-	Vec3Copy(ps->origin, s->pos.trBase);
+	vec3copy(ps->origin, s->pos.trBase);
 	if(snap)
 		SnapVector(s->pos.trBase);
 	/* set the trDelta for flag direction */
-	Vec3Copy(ps->velocity, s->pos.trDelta);
+	vec3copy(ps->velocity, s->pos.trDelta);
 
 	s->apos.trType = TR_INTERPOLATE;
-	Vec3Copy(ps->viewangles, s->apos.trBase);
+	vec3copy(ps->viewangles, s->apos.trBase);
 	if(snap)
 		SnapVector(s->apos.trBase);
 
@@ -1544,18 +1544,18 @@ BG_PlayerStateToEntityStateExtraPolate(playerState_t *ps, entityState_t *s,
 	s->number = ps->clientNum;
 
 	s->pos.trType = TR_LINEAR_STOP;
-	Vec3Copy(ps->origin, s->pos.trBase);
+	vec3copy(ps->origin, s->pos.trBase);
 	if(snap)
 		SnapVector(s->pos.trBase);
 	/* set the trDelta for flag direction and linear prediction */
-	Vec3Copy(ps->velocity, s->pos.trDelta);
+	vec3copy(ps->velocity, s->pos.trDelta);
 	/* set the time for linear prediction */
 	s->pos.trTime = time;
 	/* set maximum extra polation time */
 	s->pos.trDuration = 50;	/* 1000 / sv_fps (default = 20) */
 
 	s->apos.trType = TR_INTERPOLATE;
-	Vec3Copy(ps->viewangles, s->apos.trBase);
+	vec3copy(ps->viewangles, s->apos.trBase);
 	if(snap)
 		SnapVector(s->apos.trBase);
 

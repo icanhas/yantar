@@ -481,7 +481,7 @@ AAS_CreatePortals(void)
  *              edge = &aasworld.edges[edgenum];
  *              for (j = 0; j < 2; j++)
  *              {
- *                      if (Vec3Dot(plane2->normal, aasworld.vertexes[edge->v[j]]) -
+ *                      if (vec3dot(plane2->normal, aasworld.vertexes[edge->v[j]]) -
  *                                                      plane2->dist < -0.01) return qtrue;
  *              }
  *      }
@@ -491,7 +491,7 @@ AAS_CreatePortals(void)
  *              edge = &aasworld.edges[edgenum];
  *              for (j = 0; j < 2; j++)
  *              {
- *                      if (Vec3Dot(plane1->normal, aasworld.vertexes[edge->v[j]]) -
+ *                      if (vec3dot(plane1->normal, aasworld.vertexes[edge->v[j]]) -
  *                                                      plane1->dist < -0.01) return qtrue;
  *              }
  *      }
@@ -561,28 +561,28 @@ AAS_CreatePortals(void)
  * qbool AAS_NonConvexEdges(aas_edge_t *edge1, aas_edge_t *edge2, int side1, int side2, int planenum)
  * {
  *      int i;
- *      vec3_t edgevec1, edgevec2, normal1, normal2;
+ *      Vec3 edgevec1, edgevec2, normal1, normal2;
  *      float dist1, dist2;
  *      aas_plane_t *plane;
  *
  *      plane = &aasworld.planes[planenum];
- *      Vec3Sub(aasworld.vertexes[edge1->v[1]], aasworld.vertexes[edge1->v[0]], edgevec1);
- *      Vec3Sub(aasworld.vertexes[edge2->v[1]], aasworld.vertexes[edge2->v[0]], edgevec2);
- *      if (side1) Vec3Inverse(edgevec1);
- *      if (side2) Vec3Inverse(edgevec2);
+ *      vec3sub(aasworld.vertexes[edge1->v[1]], aasworld.vertexes[edge1->v[0]], edgevec1);
+ *      vec3sub(aasworld.vertexes[edge2->v[1]], aasworld.vertexes[edge2->v[0]], edgevec2);
+ *      if (side1) vec3inv(edgevec1);
+ *      if (side2) vec3inv(edgevec2);
  *      //
- *      Vec3Cross(edgevec1, plane->normal, normal1);
- *      dist1 = Vec3Dot(normal1, aasworld.vertexes[edge1->v[0]]);
- *      Vec3Cross(edgevec2, plane->normal, normal2);
- *      dist2 = Vec3Dot(normal2, aasworld.vertexes[edge2->v[0]]);
+ *      vec3cross(edgevec1, plane->normal, normal1);
+ *      dist1 = vec3dot(normal1, aasworld.vertexes[edge1->v[0]]);
+ *      vec3cross(edgevec2, plane->normal, normal2);
+ *      dist2 = vec3dot(normal2, aasworld.vertexes[edge2->v[0]]);
  *
  *      for (i = 0; i < 2; i++)
  *      {
- *              if (Vec3Dot(aasworld.vertexes[edge1->v[i]], normal2) - dist2 < -0.01) return qfalse;
+ *              if (vec3dot(aasworld.vertexes[edge1->v[i]], normal2) - dist2 < -0.01) return qfalse;
  *      }
  *      for (i = 0; i < 2; i++)
  *      {
- *              if (Vec3Dot(aasworld.vertexes[edge2->v[i]], normal1) - dist1 < -0.01) return qfalse;
+ *              if (vec3dot(aasworld.vertexes[edge2->v[i]], normal1) - dist1 < -0.01) return qfalse;
  *      }
  *      return qtrue;
  * } //end of the function AAS_NonConvexEdges
@@ -1209,8 +1209,8 @@ AAS_AddTeleporterPortals(void)
 	int j, area2num, facenum, otherareanum;
 	char *target, *targetname, *classname;
 	bsp_entity_t *entities, *ent, *dest;
-	vec3_t	origin, destorigin, mins, maxs, end;
-	vec3_t	bbmins, bbmaxs;
+	Vec3	origin, destorigin, mins, maxs, end;
+	Vec3	bbmins, bbmaxs;
 	aas_area_t	*area;
 	aas_face_t	*face;
 	aas_trace_t	trace;
@@ -1265,7 +1265,7 @@ AAS_AddTeleporterPortals(void)
 				continue;
 			}
 			destorigin[2] += 24;	/* just for q2e1m2, the dork has put the telepads in the ground */
-			Vec3Copy(destorigin, end);
+			vec3copy(destorigin, end);
 			end[2]	-= 100;
 			trace	=
 				AAS_TraceClientBBox(destorigin, end,
@@ -1278,23 +1278,23 @@ AAS_AddTeleporterPortals(void)
 					target);
 				continue;
 			}
-			Vec3Copy(trace.endpos, destorigin);
+			vec3copy(trace.endpos, destorigin);
 			area2num = AAS_PointAreaNum(destorigin);
 			/* reset all cluster fields */
 			for(j = 0; j < aasworld.numareas; j++)
 				aasworld.areasettings[j].cluster = 0;
 			/*  */
-			VectorSet(mins, -8, -8, 8);
-			VectorSet(maxs, 8, 8, 24);
+			vec3set(mins, -8, -8, 8);
+			vec3set(maxs, 8, 8, 24);
 			/*  */
 			AAS_PresenceTypeBoundingBox(PRESENCE_CROUCH, bbmins,
 				bbmaxs);
 			/*  */
-			Vec3Add(origin, mins, mins);
-			Vec3Add(origin, maxs, maxs);
+			vec3add(origin, mins, mins);
+			vec3add(origin, maxs, maxs);
 			/* add bounding box size */
-			Vec3Sub(mins, bbmaxs, mins);
-			Vec3Sub(maxs, bbmins, maxs);
+			vec3sub(mins, bbmaxs, mins);
+			vec3sub(maxs, bbmins, maxs);
 			/* link an invalid (-1) entity */
 			areas = AAS_AASLinkEntity(mins, maxs, -1);
 			/*  */

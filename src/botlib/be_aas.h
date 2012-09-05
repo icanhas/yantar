@@ -81,7 +81,7 @@ typedef enum {
 typedef struct aas_trace_s {
 	qbool		startsolid;	/* if true, the initial point was in a solid area */
 	float		fraction;	/* time completed, 1.0 = didn't hit anything */
-	vec3_t		endpos;		/* final position */
+	Vec3		endpos;		/* final position */
 	int		ent;		/* entity blocking the trace */
 	int		lastarea;	/* last area the trace was in (zero if none) */
 	int		area;		/* area blocking the trace (zero if none) */
@@ -104,7 +104,7 @@ typedef struct aas_trace_s {
  *      qbool			allsolid;	// if true, plane is not valid
  *      qbool			startsolid;	// if true, the initial point was in a solid area
  *      float			fraction;	// time completed, 1.0 = didn't hit anything
- *      vec3_t			endpos;		// final position
+ *      Vec3			endpos;		// final position
  *      cplane_t		plane;		// surface normal at impact
  *      float			exp_dist;	// expanded plane distance
  *      int				sidenum;	// number of the brush side hit
@@ -123,12 +123,12 @@ typedef struct aas_entityinfo_s {
 	float	ltime;		/* local time */
 	float	update_time;	/* time between last and current update */
 	int	number;		/* number of the entity */
-	vec3_t	origin;		/* origin of the entity */
-	vec3_t	angles;		/* angles of the model */
-	vec3_t	old_origin;	/* for lerping */
-	vec3_t	lastvisorigin;	/* last visible origin */
-	vec3_t	mins;		/* bounding box minimums */
-	vec3_t	maxs;		/* bounding box maximums */
+	Vec3	origin;		/* origin of the entity */
+	Vec3	angles;		/* angles of the model */
+	Vec3	old_origin;	/* for lerping */
+	Vec3	lastvisorigin;	/* last visible origin */
+	Vec3	mins;		/* bounding box minimums */
+	Vec3	maxs;		/* bounding box maximums */
 	int	groundent;	/* ground entity */
 	int	solid;		/* solid type */
 	int	modelindex;	/* model used */
@@ -148,9 +148,9 @@ typedef struct aas_areainfo_s {
 	int	flags;
 	int	presencetype;
 	int	cluster;
-	vec3_t	mins;
-	vec3_t	maxs;
-	vec3_t	center;
+	Vec3	mins;
+	Vec3	maxs;
+	Vec3	center;
 } aas_areainfo_t;
 
 /* client movement prediction stop events, stop as soon as: */
@@ -170,9 +170,9 @@ typedef struct aas_areainfo_s {
 #define SE_TOUCHCLUSTERPORTAL	4096	/* touching a cluster portal */
 
 typedef struct aas_clientmove_s {
-	vec3_t		endpos;		/* position at the end of movement prediction */
+	Vec3		endpos;		/* position at the end of movement prediction */
 	int		endarea;	/* area at end of movement prediction */
-	vec3_t		velocity;	/* velocity at the end of movement prediction */
+	Vec3		velocity;	/* velocity at the end of movement prediction */
 	aas_trace_t	trace;		/* last trace */
 	int		presencetype;	/* presence type at end of movement prediction */
 	int		stopevent;	/* event that made the prediction stop */
@@ -187,7 +187,7 @@ typedef struct aas_clientmove_s {
 #define ALTROUTEGOAL_VIEWPORTALS	4
 
 typedef struct aas_altroutegoal_s {
-	vec3_t		origin;
+	Vec3		origin;
 	int		areanum;
 	unsigned short	starttraveltime;
 	unsigned short	goaltraveltime;
@@ -202,7 +202,7 @@ typedef struct aas_altroutegoal_s {
 #define RSE_ENTERAREA		8	/* stop when entering the given area */
 
 typedef struct aas_predictroute_s {
-	vec3_t	endpos;		/* position at the end of movement prediction */
+	Vec3	endpos;		/* position at the end of movement prediction */
 	int	endarea;	/* area at end of movement prediction */
 	int	stopevent;	/* event that made the prediction stop */
 	int	endcontents;	/* contents at the end of movement prediction */

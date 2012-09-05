@@ -382,18 +382,18 @@ GL_State(unsigned long stateBits)
 
 
 void
-GL_SetProjectionMatrix(mat4x4 matrix)
+GL_SetProjectionMatrix(Mat44 matrix)
 {
-	Mat4x4Copy(matrix, glState.projection);
-	Mat4x4Mul(glState.projection, glState.modelview, glState.modelviewProjection);
+	mat44copy(matrix, glState.projection);
+	mat44mul(glState.projection, glState.modelview, glState.modelviewProjection);
 }
 
 
 void
-GL_SetModelviewMatrix(mat4x4 matrix)
+GL_SetModelviewMatrix(Mat44 matrix)
 {
-	Mat4x4Copy(matrix, glState.modelview);
-	Mat4x4Mul(glState.projection, glState.modelview, glState.modelviewProjection);
+	mat44copy(matrix, glState.modelview);
+	mat44mul(glState.projection, glState.modelview, glState.modelviewProjection);
 }
 
 
@@ -521,10 +521,10 @@ RB_BeginDrawingView(void)
 		plane[2] = backEnd.viewParms.portalPlane.normal[2];
 		plane[3] = backEnd.viewParms.portalPlane.dist;
 
-		plane2[0] = Vec3Dot (backEnd.viewParms.or.axis[0], plane);
-		plane2[1] = Vec3Dot (backEnd.viewParms.or.axis[1], plane);
-		plane2[2] = Vec3Dot (backEnd.viewParms.or.axis[2], plane);
-		plane2[3] = Vec3Dot (plane, backEnd.viewParms.or.origin) - plane[3];
+		plane2[0] = vec3dot (backEnd.viewParms.or.axis[0], plane);
+		plane2[1] = vec3dot (backEnd.viewParms.or.axis[1], plane);
+		plane2[2] = vec3dot (backEnd.viewParms.or.axis[2], plane);
+		plane2[3] = vec3dot (plane, backEnd.viewParms.or.origin) - plane[3];
 
 		GL_SetModelviewMatrix(s_flipMatrix);
 	}
@@ -647,7 +647,7 @@ RB_RenderDrawSurfList(drawSurf_t *drawSurfs, int numDrawSurfs)
 				if(backEnd.currentEntity->e.renderfx & RF_SUNFLARE){
 					/* if we're rendering to a fbo */
 					if(fbo){
-						Vec3Copy(backEnd.currentEntity->e.origin,
+						vec3copy(backEnd.currentEntity->e.origin,
 							backEnd.sunFlarePos);
 						/* switch FBO */
 						FBO_Bind(tr.godRaysFbo);
@@ -790,7 +790,7 @@ RB_RenderDrawSurfList(drawSurf_t *drawSurfs, int numDrawSurfs)
 void
 RB_SetGL2D(void)
 {
-	mat4x4 matrix;
+	Mat44 matrix;
 	int width, height;
 
 	if(backEnd.projection2D && backEnd.last2DFBO == glState.currentFBO)
@@ -811,9 +811,9 @@ RB_SetGL2D(void)
 	qglViewport(0, 0, width, height);
 	qglScissor(0, 0, width, height);
 
-	Mat4x4Ortho(0, width, height, 0, 0, 1, matrix);
+	mat44ortho(0, width, height, 0, 0, 1, matrix);
 	GL_SetProjectionMatrix(matrix);
-	Mat4x4ToIdentity(matrix);
+	mat44ident(matrix);
 	GL_SetModelviewMatrix(matrix);
 
 	GL_State(GLS_DEPTHTEST_DISABLE |
@@ -842,7 +842,7 @@ RE_StretchRaw(int x, int y, int w, int h, int cols, int rows, const byte *data, 
 	int i, j;
 	int start, end;
 	shaderProgram_t *sp = &tr.textureColorShader;
-	vec4_t color;
+	Vec4 color;
 
 	if(!tr.registered){
 		return;
@@ -963,7 +963,7 @@ RE_StretchRaw(int x, int y, int w, int h, int cols, int rows, const byte *data, 
 
 	GLSL_SetUniformMatrix16(sp, TEXTURECOLOR_UNIFORM_MODELVIEWPROJECTIONMATRIX,
 		glState.modelviewProjection);
-	VectorSet4(color, 1, 1, 1, 1);
+	vec3set4(color, 1, 1, 1, 1);
 	GLSL_SetUniformVec4(sp, TEXTURECOLOR_UNIFORM_COLOR, color);
 
 	qglDrawElements(GL_TRIANGLES, tess.numIndexes, GL_INDEX_TYPE, BUFFER_OFFSET(0));
@@ -1067,14 +1067,14 @@ RB_StretchPic(const void *data)
 	tess.indexes[ numIndexes + 5 ]	= numVerts + 1;
 
 	{
-		vec4_t color;
+		Vec4 color;
 
-		VectorScale4(backEnd.color2D, 1.0f / 255.0f, color);
+		vec3scale4(backEnd.color2D, 1.0f / 255.0f, color);
 
-		Vec3Copy4(color, tess.vertexColors[ numVerts ]);
-		Vec3Copy4(color, tess.vertexColors[ numVerts + 1]);
-		Vec3Copy4(color, tess.vertexColors[ numVerts + 2]);
-		Vec3Copy4(color, tess.vertexColors[ numVerts + 3 ]);
+		vec3copy4(color, tess.vertexColors[ numVerts ]);
+		vec3copy4(color, tess.vertexColors[ numVerts + 1]);
+		vec3copy4(color, tess.vertexColors[ numVerts + 2]);
+		vec3copy4(color, tess.vertexColors[ numVerts + 3 ]);
 	}
 
 	tess.xyz[ numVerts ][0] = cmd->x;
@@ -1195,14 +1195,14 @@ RB_ShowImages(void)
 		}
 
 		{
-			vec4_t quadVerts[4];
+			Vec4 quadVerts[4];
 
 			GL_Bind(image);
 
-			VectorSet4(quadVerts[0], x, y, 0, 1);
-			VectorSet4(quadVerts[1], x + w, y, 0, 1);
-			VectorSet4(quadVerts[2], x + w, y + h, 0, 1);
-			VectorSet4(quadVerts[3], x, y + h, 0, 1);
+			vec3set4(quadVerts[0], x, y, 0, 1);
+			vec3set4(quadVerts[1], x + w, y, 0, 1);
+			vec3set4(quadVerts[2], x + w, y + h, 0, 1);
+			vec3set4(quadVerts[3], x, y + h, 0, 1);
 
 			RB_InstantQuad(quadVerts);
 		}
@@ -1291,8 +1291,8 @@ RB_SwapBuffers(const void *data)
 
 	if(glRefConfig.framebufferObject){
 		/* copy final image to screen */
-		vec2_t	texScale;
-		vec4_t	srcBox, dstBox, white;
+		Vec2	texScale;
+		Vec4	srcBox, dstBox, white;
 
 		texScale[0] =
 			texScale[1] = 1.0f;
@@ -1302,18 +1302,18 @@ RB_SwapBuffers(const void *data)
 				white[2] = pow(2, tr.overbrightBits);	/* exp2(tr.overbrightBits); */
 		white[3] = 1.0f;
 
-		VectorSet4(dstBox, 0, 0, glConfig.vidWidth, glConfig.vidHeight);
+		vec3set4(dstBox, 0, 0, glConfig.vidWidth, glConfig.vidHeight);
 
 		if(backEnd.framePostProcessed){
 			/* frame was postprocessed into screen fbo, copy from there */
-			VectorSet4(srcBox, 0, 0, tr.screenScratchFbo->width, tr.screenScratchFbo->height);
+			vec3set4(srcBox, 0, 0, tr.screenScratchFbo->width, tr.screenScratchFbo->height);
 
 			FBO_Blit(tr.screenScratchFbo, srcBox, texScale, NULL, dstBox, &tr.textureColorShader,
 				white,
 				0);
 		}else{
 			/* frame still in render fbo, copy from there */
-			VectorSet4(srcBox, 0, 0, tr.renderFbo->width, tr.renderFbo->height);
+			vec3set4(srcBox, 0, 0, tr.renderFbo->width, tr.renderFbo->height);
 
 			FBO_Blit(tr.renderFbo, srcBox, texScale, NULL, dstBox, &tr.textureColorShader, white,
 				0);
@@ -1370,23 +1370,23 @@ const void *
 RB_PostProcess(const void *data)
 {
 	const postProcessCommand_t *cmd = data;
-	vec4_t	white;
-	vec2_t	texScale;
+	Vec4	white;
+	Vec2	texScale;
 	qbool autoExposure;
 
 	texScale[0] =
 		texScale[1] = 1.0f;
 
-	VectorSet4(white, 1, 1, 1, 1);
+	vec3set4(white, 1, 1, 1, 1);
 
 	if(!r_postProcess->integer){
 		/* if we have an FBO, just copy it out, otherwise, do nothing. */
 		if(glRefConfig.framebufferObject){
-			vec4_t srcBox, dstBox, color;
+			Vec4 srcBox, dstBox, color;
 
-			VectorSet4(srcBox, 0, 0, tr.renderFbo->width, tr.renderFbo->height);
-			/* VectorSet4(dstBox, 0, 0, glConfig.vidWidth, glConfig.vidHeight); */
-			VectorSet4(dstBox, 0, 0, tr.screenScratchFbo->width, tr.screenScratchFbo->height);
+			vec3set4(srcBox, 0, 0, tr.renderFbo->width, tr.renderFbo->height);
+			/* vec3set4(dstBox, 0, 0, glConfig.vidWidth, glConfig.vidHeight); */
+			vec3set4(dstBox, 0, 0, tr.screenScratchFbo->width, tr.screenScratchFbo->height);
 
 			color[0] =
 				color[1] =
@@ -1417,10 +1417,10 @@ RB_PostProcess(const void *data)
 			(r_autoExposure->integer == 1 && tr.autoExposure) || (r_autoExposure->integer == 2);
 		RB_ToneMap(autoExposure);
 	}else{
-		vec4_t srcBox, dstBox, color;
+		Vec4 srcBox, dstBox, color;
 
-		VectorSet4(srcBox, 0, 0, tr.renderFbo->width, tr.renderFbo->height);
-		VectorSet4(dstBox, 0, 0, tr.screenScratchFbo->width, tr.screenScratchFbo->height);
+		vec3set4(srcBox, 0, 0, tr.renderFbo->width, tr.renderFbo->height);
+		vec3set4(dstBox, 0, 0, tr.screenScratchFbo->width, tr.screenScratchFbo->height);
 
 		color[0] =
 			color[1] =
@@ -1444,10 +1444,10 @@ RB_PostProcess(const void *data)
  *      if (glRefConfig.framebufferObject)
  *      {
  *              // copy final image to screen
- *              vec4_t srcBox, dstBox;
+ *              Vec4 srcBox, dstBox;
  *
- *              VectorSet4(srcBox, 0, 0, tr.screenScratchFbo->width, tr.screenScratchFbo->height);
- *              VectorSet4(dstBox, 0, 0, glConfig.vidWidth, glConfig.vidHeight);
+ *              vec3set4(srcBox, 0, 0, tr.screenScratchFbo->width, tr.screenScratchFbo->height);
+ *              vec3set4(dstBox, 0, 0, glConfig.vidWidth, glConfig.vidHeight);
  *
  *              FBO_Blit(tr.screenScratchFbo, srcBox, texScale, NULL, dstBox, &tr.textureColorShader, white, 0);
  *      }

@@ -72,9 +72,9 @@ struct refexport_t {
 	void (*ClearScene)(void);
 	void (*AddRefEntityToScene)(const refEntity_t *re);
 	void (*AddPolyToScene)(qhandle_t hShader, int numVerts, const polyVert_t *verts, int num);
-	int (*LightForPoint)(vec3_t point, vec3_t ambientLight, vec3_t directedLight, vec3_t lightDir);
-	void (*AddLightToScene)(const vec3_t org, float intensity, float r, float g, float b);
-	void (*AddAdditiveLightToScene)(const vec3_t org, float intensity, float r, float g, float b);
+	int (*LightForPoint)(Vec3 point, Vec3 ambientLight, Vec3 directedLight, Vec3 lightDir);
+	void (*AddLightToScene)(const Vec3 org, float intensity, float r, float g, float b);
+	void (*AddAdditiveLightToScene)(const Vec3 org, float intensity, float r, float g, float b);
 	void (*RenderScene)(const refdef_t *fd);
 
 	void (*SetColor)(const float *rgba);	/* NULL = 1,1,1,1 */
@@ -92,18 +92,18 @@ struct refexport_t {
 	/* if the pointers are not NULL, timing info will be returned */
 	void (*EndFrame)(int *frontEndMsec, int *backEndMsec);
 
-	int (*MarkFragments)(int numPoints, const vec3_t *points, const vec3_t projection,
-			     int maxPoints, vec3_t pointBuffer, int maxFragments,
+	int (*MarkFragments)(int numPoints, const Vec3 *points, const Vec3 projection,
+			     int maxPoints, Vec3 pointBuffer, int maxFragments,
 			     markFragment_t *fragmentBuffer);
 
 	int (*LerpTag)(orientation_t *tag,  qhandle_t model, int startFrame, int endFrame,
 		       float frac, const char *tagName);
-	void (*ModelBounds)(qhandle_t model, vec3_t mins, vec3_t maxs);
+	void (*ModelBounds)(qhandle_t model, Vec3 mins, Vec3 maxs);
 	
 	void (*RegisterFont)(const char *fontName, int pointSize, fontInfo_t *font);
 	void (*RemapShader)(const char *oldShader, const char *newShader, const char *offsetTime);
 	qbool (*GetEntityToken)(char *buffer, int size);
-	qbool (*inPVS)(const vec3_t p1, const vec3_t p2);
+	qbool (*inPVS)(const Vec3 p1, const Vec3 p2);
 
 	void (*TakeVideoFrame)(int h, int w, byte* captureBuffer, byte *encodeBuffer, qbool motionJpeg);
 };

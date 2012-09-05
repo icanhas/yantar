@@ -302,26 +302,26 @@ extern sfxHandle_t	menu_out_sound;
 extern sfxHandle_t	menu_buzz_sound;
 extern sfxHandle_t	menu_null_sound;
 extern sfxHandle_t	weaponChangeSound;
-extern vec4_t	menu_text_color;
-extern vec4_t	menu_grayed_color;
-extern vec4_t	menu_dark_color;
-extern vec4_t	menu_highlight_color;
-extern vec4_t	menu_red_color;
-extern vec4_t	menu_black_color;
-extern vec4_t	menu_dim_color;
-extern vec4_t	color_black;
-extern vec4_t	color_white;
-extern vec4_t	color_yellow;
-extern vec4_t	color_blue;
-extern vec4_t	color_orange;
-extern vec4_t	color_red;
-extern vec4_t	color_dim;
-extern vec4_t	name_color;
-extern vec4_t	list_color;
-extern vec4_t	listbar_color;
-extern vec4_t	text_color_disabled;
-extern vec4_t	text_color_normal;
-extern vec4_t	text_color_highlight;
+extern Vec4	menu_text_color;
+extern Vec4	menu_grayed_color;
+extern Vec4	menu_dark_color;
+extern Vec4	menu_highlight_color;
+extern Vec4	menu_red_color;
+extern Vec4	menu_black_color;
+extern Vec4	menu_dim_color;
+extern Vec4	color_black;
+extern Vec4	color_white;
+extern Vec4	color_yellow;
+extern Vec4	color_blue;
+extern Vec4	color_orange;
+extern Vec4	color_red;
+extern Vec4	color_dim;
+extern Vec4	name_color;
+extern Vec4	list_color;
+extern Vec4	listbar_color;
+extern Vec4	text_color_disabled;
+extern Vec4	text_color_normal;
+extern Vec4	text_color_highlight;
 
 extern char *ui_medalNames[];
 extern char *ui_medalPicNames[];
@@ -335,7 +335,7 @@ extern void                     MField_KeyDownEvent(mfield_t *edit, int key);
 extern void                     MField_CharEvent(mfield_t *edit, int ch);
 extern void                     MField_Draw(mfield_t *edit, int x, int y,
 					    int style,
-					    vec4_t color);
+					    Vec4 color);
 extern void                     MenuField_Init(menufield_s* m);
 extern void                     MenuField_Draw(menufield_s *f);
 extern sfxHandle_t      MenuField_Key(menufield_s* m, int* key);
@@ -529,12 +529,12 @@ typedef struct {
 	qhandle_t	weaponModel;
 	qhandle_t	barrelModel;
 	qhandle_t	flashModel;
-	vec3_t		flashDlightColor;
+	Vec3		flashDlightColor;
 	int		muzzleFlashTime;
 
 	/* currently in use drawing parms */
-	vec3_t		viewAngles;
-	vec3_t		moveAngles;
+	Vec3		viewAngles;
+	Vec3		moveAngles;
 	weapon_t	currentWeapon;
 	int		legsAnim;
 	int		torsoAnim;
@@ -566,7 +566,7 @@ void UI_PlayerInfo_SetModel(playerInfo_t *pi, const char *model,
 			    const char *headmodel,
 			    char *teamName);
 void UI_PlayerInfo_SetInfo(playerInfo_t *pi, int legsAnim, int torsoAnim,
-			   vec3_t viewAngles, vec3_t moveAngles,
+			   Vec3 viewAngles, Vec3 moveAngles,
 			   weapon_t weaponNum,
 			   qbool chat);
 qbool UI_RegisterClientModelname(playerInfo_t *pi, const char *modelSkinName,
@@ -872,22 +872,22 @@ extern void     UI_DrawTopBottom(float x, float y, float w, float h);
 extern void     UI_DrawSides(float x, float y, float w, float h);
 extern void                     UI_UpdateScreen(void);
 extern void                     UI_SetColor(const float *rgba);
-extern void                     UI_LerpColor(vec4_t a, vec4_t b, vec4_t c,
+extern void                     UI_LerpColor(Vec4 a, Vec4 b, Vec4 c,
 					     float t);
 extern void                     UI_DrawBannerString(int x, int y,
 						    const char* str, int style,
-						    vec4_t color);
+						    Vec4 color);
 extern float            UI_ProportionalSizeScale(int style);
 extern void                     UI_DrawProportionalString(int x, int y,
 							  const char* str,
 							  int style,
-							  vec4_t color);
+							  Vec4 color);
 extern int                      UI_ProportionalStringWidth(const char* str);
 extern void                     UI_DrawString(int x, int y, const char* str,
 					      int style,
-					      vec4_t color);
+					      Vec4 color);
 extern void                     UI_DrawChar(int x, int y, int ch, int style,
-					    vec4_t color);
+					    Vec4 color);
 extern qbool         UI_CursorInRect(int x, int y, int width, int height);
 extern void                     UI_AdjustFrom640(float *x, float *y, float *w,
 						 float *h);
@@ -977,7 +977,7 @@ void                    trap_R_ClearScene(void);
 void                    trap_R_AddRefEntityToScene(const refEntity_t *re);
 void                    trap_R_AddPolyToScene(qhandle_t hShader, int numVerts,
 					      const polyVert_t *verts);
-void                    trap_R_AddLightToScene(const vec3_t org, float intensity,
+void                    trap_R_AddLightToScene(const Vec3 org, float intensity,
 					       float r, float g,
 					       float b);
 void                    trap_R_RenderScene(const refdef_t *fd);
@@ -986,8 +986,8 @@ void                    trap_R_DrawStretchPic(float x, float y, float w, float h
 					      float s1, float t1, float s2,
 					      float t2,
 					      qhandle_t hShader);
-void                    trap_R_ModelBounds(clipHandle_t model, vec3_t mins,
-					   vec3_t maxs);
+void                    trap_R_ModelBounds(clipHandle_t model, Vec3 mins,
+					   Vec3 maxs);
 void                    trap_UpdateScreen(void);
 int                             trap_CM_LerpTag(orientation_t *tag,
 						clipHandle_t mod, int startFrame,

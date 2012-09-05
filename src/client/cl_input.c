@@ -632,10 +632,10 @@ keymove(usercmd_t *cmd)
 	fwd -= mvspeed * keystate(&back);
 	brk = mvspeed * keystate(&brake);
 	
-	cmd->forwardmove = ClampChar(fwd);
-	cmd->rightmove = ClampChar(side);
-	cmd->upmove = ClampChar(_up);
-	cmd->brakefrac = ClampChar(brk);
+	cmd->forwardmove = clampchar(fwd);
+	cmd->rightmove = clampchar(side);
+	cmd->upmove = clampchar(_up);
+	cmd->brakefrac = clampchar(brk);
 }
 
 void
@@ -679,14 +679,14 @@ joystickmove(usercmd_t *cmd)
 		cl.viewangles[YAW] += anglespeed * j_yaw->value *
 				      cl.joystickAxis[j_yaw_axis->integer];
 		cmd->rightmove =
-			ClampChar(cmd->rightmove +
+			clampchar(cmd->rightmove +
 				(int)(j_side->value *
 				      cl.joystickAxis[j_side_axis->integer]));
 	}else{
 		cl.viewangles[YAW] += anglespeed * j_side->value *
 				      cl.joystickAxis[j_side_axis->integer];
 		cmd->rightmove =
-			ClampChar(cmd->rightmove +
+			clampchar(cmd->rightmove +
 				(int)(j_yaw->value *
 				      cl.joystickAxis[j_yaw_axis->integer]));
 	}
@@ -695,18 +695,18 @@ joystickmove(usercmd_t *cmd)
 		cl.viewangles[PITCH] += anglespeed * j_forward->value *
 					cl.joystickAxis[j_forward_axis->integer];
 		cmd->forwardmove =
-			ClampChar(cmd->forwardmove +
+			clampchar(cmd->forwardmove +
 				(int)(j_pitch->value *
 				      cl.joystickAxis[j_pitch_axis->integer]));
 	}else{
 		cl.viewangles[PITCH] += anglespeed * j_pitch->value *
 					cl.joystickAxis[j_pitch_axis->integer];
 		cmd->forwardmove =
-			ClampChar(cmd->forwardmove +
+			clampchar(cmd->forwardmove +
 				(int)(j_forward->value *
 				      cl.joystickAxis[j_forward_axis->integer]));
 	}
-	cmd->upmove = ClampChar(cmd->upmove + (int)(j_up->value * 
+	cmd->upmove = clampchar(cmd->upmove + (int)(j_up->value * 
 		cl.joystickAxis[j_up_axis->integer]));
 }
 
@@ -792,14 +792,14 @@ mousemove(usercmd_t *cmd)
 
 	/* add mouse X/Y movement to cmd */
 	if(strafe.active)
-		cmd->rightmove = ClampChar(cmd->rightmove + m_side->value * mx);
+		cmd->rightmove = clampchar(cmd->rightmove + m_side->value * mx);
 	else
 		cl.viewangles[YAW] -= m_yaw->value * mx;
 
 	if((mlooking || cl_freelook->integer) && !strafe.active)
 		cl.viewangles[PITCH] += m_pitch->value * my;
 	else
-		cmd->forwardmove = ClampChar(
+		cmd->forwardmove = clampchar(
 			cmd->forwardmove - m_forward->value * my);
 }
 
@@ -849,9 +849,9 @@ static usercmd_t
 createcmd(void)
 {
 	usercmd_t cmd;
-	vec3_t oldangles;
+	Vec3 oldangles;
 
-	Vec3Copy(cl.viewangles, oldangles);
+	vec3copy(cl.viewangles, oldangles);
 	adjustangles();	/* keyboard angle adjustment */
 	Q_Memset(&cmd, 0, sizeof(cmd));
 	cmdbuttons(&cmd);

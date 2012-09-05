@@ -296,16 +296,16 @@ AAS_Time(void)
  * Changes Globals:		-
  * =========================================================================== */
 void
-AAS_ProjectPointOntoVector(vec3_t point, vec3_t vStart, vec3_t vEnd,
-			   vec3_t vProj)
+AAS_ProjectPointOntoVector(Vec3 point, Vec3 vStart, Vec3 vEnd,
+			   Vec3 vProj)
 {
-	vec3_t pVec, vec;
+	Vec3 pVec, vec;
 
-	Vec3Sub(point, vStart, pVec);
-	Vec3Sub(vEnd, vStart, vec);
-	Vec3Normalize(vec);
+	vec3sub(point, vStart, pVec);
+	vec3sub(vEnd, vStart, vec);
+	vec3normalize(vec);
 	/* project onto the directional vector for this segment */
-	Vec3MA(vStart, Vec3Dot(pVec, vec), vec, vProj);
+	vec3ma(vStart, vec3dot(pVec, vec), vec, vProj);
 }	/* end of the function AAS_ProjectPointOntoVector */
 /* ===========================================================================
  *

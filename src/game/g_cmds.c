@@ -281,7 +281,7 @@ Cmd_Give_f(gentity_t *ent)
 			return;
 
 		it_ent = G_Spawn();
-		Vec3Copy(ent->r.currentOrigin, it_ent->s.origin);
+		vec3copy(ent->r.currentOrigin, it_ent->s.origin);
 		it_ent->classname = it->classname;
 		G_SpawnItem (it_ent, it);
 		FinishSpawningItem(it_ent);
@@ -1580,7 +1580,7 @@ Cmd_TeamVote_f(gentity_t *ent)
 void
 Cmd_SetViewpos_f(gentity_t *ent)
 {
-	vec3_t	origin, angles;
+	Vec3	origin, angles;
 	char	buffer[MAX_TOKEN_CHARS];
 	int	i;
 
@@ -1595,7 +1595,7 @@ Cmd_SetViewpos_f(gentity_t *ent)
 		return;
 	}
 
-	VectorClear(angles);
+	vec3clear(angles);
 	for(i = 0; i < 3; i++){
 		trap_Argv(i + 1, buffer, sizeof(buffer));
 		origin[i] = atof(buffer);

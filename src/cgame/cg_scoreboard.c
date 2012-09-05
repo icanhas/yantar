@@ -79,7 +79,7 @@ CG_DrawClientScore(int y, score_t *score, float *color, float fade,
 		   qbool largeFormat)
 {
 	char string[1024];
-	vec3_t	headAngles;
+	Vec3	headAngles;
 	clientInfo_t    *ci;
 	int	iconx, headx;
 
@@ -159,7 +159,7 @@ CG_DrawClientScore(int y, score_t *score, float *color, float fade,
 	}
 
 	/* draw the face */
-	VectorClear(headAngles);
+	vec3clear(headAngles);
 	headAngles[YAW] = 180;
 	if(largeFormat)
 		CG_DrawHead(headx, y - (ICON_SIZE - BIGCHAR_HEIGHT) / 2,
@@ -467,7 +467,7 @@ static void
 CG_CenterGiantLine(float y, const char *string)
 {
 	float	x;
-	vec4_t	color;
+	Vec4	color;
 
 	color[0]	= 1;
 	color[1]	= 1;
@@ -490,7 +490,7 @@ void
 CG_DrawOldTourneyScoreboard(void)
 {
 	const char *s;
-	vec4_t	color;
+	Vec4	color;
 	int	min, tens, ones;
 	clientInfo_t    *ci;
 	int	y;

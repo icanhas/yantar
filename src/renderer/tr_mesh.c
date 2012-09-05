@@ -22,16 +22,16 @@
 #include "tr_local.h"
 
 static float
-ProjectRadius(float r, vec3_t location)
+ProjectRadius(float r, Vec3 location)
 {
 	float pr;
 	float dist;
 	float c;
-	vec3_t	p;
+	Vec3	p;
 	float	projected[4];
 
-	c = Vec3Dot(tr.viewParms.or.axis[0], tr.viewParms.or.origin);
-	dist = Vec3Dot(tr.viewParms.or.axis[0], location) - c;
+	c = vec3dot(tr.viewParms.or.axis[0], tr.viewParms.or.origin);
+	dist = vec3dot(tr.viewParms.or.axis[0], location) - c;
 
 	if(dist <= 0)
 		return 0;
@@ -75,7 +75,7 @@ ProjectRadius(float r, vec3_t location)
 static int
 R_CullModel(md3Header_t *header, trRefEntity_t *ent)
 {
-	vec3_t	bounds[2];
+	Vec3	bounds[2];
 	md3Frame_t      *oldFrame, *newFrame;
 	int	i;
 
@@ -210,7 +210,7 @@ R_ComputeFogNum(md3Header_t *header, trRefEntity_t *ent)
 	int i, j;
 	fog_t *fog;
 	md3Frame_t	*md3Frame;
-	vec3_t		localOrigin;
+	Vec3		localOrigin;
 
 	if(tr.refdef.rdflags & RDF_NOWORLDMODEL){
 		return 0;
@@ -218,7 +218,7 @@ R_ComputeFogNum(md3Header_t *header, trRefEntity_t *ent)
 
 	/* FIXME: non-normalized axis issues */
 	md3Frame = ( md3Frame_t* )(( byte* )header + header->ofsFrames) + ent->e.frame;
-	Vec3Add(ent->e.origin, md3Frame->localOrigin, localOrigin);
+	vec3add(ent->e.origin, md3Frame->localOrigin, localOrigin);
 	for(i = 1; i < tr.world->numfogs; i++){
 		fog = &tr.world->fogs[i];
 		for(j = 0; j < 3; j++){

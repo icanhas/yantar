@@ -207,8 +207,8 @@ trap_SetBrushModel(gentity_t *ent, const char *name)
 }
 
 void
-trap_Trace(trace_t *results, const vec3_t start, const vec3_t mins,
-	   const vec3_t maxs, const vec3_t end, int passEntityNum,
+trap_Trace(trace_t *results, const Vec3 start, const Vec3 mins,
+	   const Vec3 maxs, const Vec3 end, int passEntityNum,
 	   int contentmask)
 {
 	syscall(G_TRACE, results, start, mins, maxs, end, passEntityNum,
@@ -216,8 +216,8 @@ trap_Trace(trace_t *results, const vec3_t start, const vec3_t mins,
 }
 
 void
-trap_TraceCapsule(trace_t *results, const vec3_t start, const vec3_t mins,
-		  const vec3_t maxs, const vec3_t end, int passEntityNum,
+trap_TraceCapsule(trace_t *results, const Vec3 start, const Vec3 mins,
+		  const Vec3 maxs, const Vec3 end, int passEntityNum,
 		  int contentmask)
 {
 	syscall(G_TRACECAPSULE, results, start, mins, maxs, end, passEntityNum,
@@ -225,20 +225,20 @@ trap_TraceCapsule(trace_t *results, const vec3_t start, const vec3_t mins,
 }
 
 int
-trap_PointContents(const vec3_t point, int passEntityNum)
+trap_PointContents(const Vec3 point, int passEntityNum)
 {
 	return syscall(G_POINT_CONTENTS, point, passEntityNum);
 }
 
 
 qbool
-trap_InPVS(const vec3_t p1, const vec3_t p2)
+trap_InPVS(const Vec3 p1, const Vec3 p2)
 {
 	return syscall(G_IN_PVS, p1, p2);
 }
 
 qbool
-trap_InPVSIgnorePortals(const vec3_t p1, const vec3_t p2)
+trap_InPVSIgnorePortals(const Vec3 p1, const Vec3 p2)
 {
 	return syscall(G_IN_PVS_IGNORE_PORTALS, p1, p2);
 }
@@ -268,19 +268,19 @@ trap_UnlinkEntity(gentity_t *ent)
 }
 
 int
-trap_EntitiesInBox(const vec3_t mins, const vec3_t maxs, int *list, int maxcount)
+trap_EntitiesInBox(const Vec3 mins, const Vec3 maxs, int *list, int maxcount)
 {
 	return syscall(G_ENTITIES_IN_BOX, mins, maxs, list, maxcount);
 }
 
 qbool
-trap_EntityContact(const vec3_t mins, const vec3_t maxs, const gentity_t *ent)
+trap_EntityContact(const Vec3 mins, const Vec3 maxs, const gentity_t *ent)
 {
 	return syscall(G_ENTITY_CONTACT, mins, maxs, ent);
 }
 
 qbool
-trap_EntityContactCapsule(const vec3_t mins, const vec3_t maxs,
+trap_EntityContactCapsule(const Vec3 mins, const Vec3 maxs,
 			  const gentity_t *ent)
 {
 	return syscall(G_ENTITY_CONTACTCAPSULE, mins, maxs, ent);
@@ -311,7 +311,7 @@ trap_GetEntityToken(char *buffer, int bufferSize)
 }
 
 int
-trap_DebugPolygonCreate(int color, int numPoints, vec3_t *points)
+trap_DebugPolygonCreate(int color, int numPoints, Vec3 *points)
 {
 	return syscall(G_DEBUG_POLYGON_CREATE, color, numPoints, points);
 }
@@ -385,7 +385,7 @@ trap_BotLibUpdateEntity(int ent, void /* struct bot_updateentity_s */ *bue)
 }
 
 int
-trap_BotLibTest(int parm0, char *parm1, vec3_t parm2, vec3_t parm3)
+trap_BotLibTest(int parm0, char *parm1, Vec3 parm2, Vec3 parm3)
 {
 	return syscall(BOTLIB_TEST, parm0, parm1, parm2, parm3);
 }
@@ -421,7 +421,7 @@ trap_AAS_Initialized(void)
 }
 
 void
-trap_AAS_PresenceTypeBoundingBox(int presencetype, vec3_t mins, vec3_t maxs)
+trap_AAS_PresenceTypeBoundingBox(int presencetype, Vec3 mins, Vec3 maxs)
 {
 	syscall(BOTLIB_AAS_PRESENCE_TYPE_BOUNDING_BOX, presencetype, mins, maxs);
 }
@@ -435,19 +435,19 @@ trap_AAS_Time(void)
 }
 
 int
-trap_AAS_PointAreaNum(vec3_t point)
+trap_AAS_PointAreaNum(Vec3 point)
 {
 	return syscall(BOTLIB_AAS_POINT_AREA_NUM, point);
 }
 
 int
-trap_AAS_PointReachabilityAreaIndex(vec3_t point)
+trap_AAS_PointReachabilityAreaIndex(Vec3 point)
 {
 	return syscall(BOTLIB_AAS_POINT_REACHABILITY_AREA_INDEX, point);
 }
 
 int
-trap_AAS_TraceAreas(vec3_t start, vec3_t end, int *areas, vec3_t *points,
+trap_AAS_TraceAreas(Vec3 start, Vec3 end, int *areas, Vec3 *points,
 		    int maxareas)
 {
 	return syscall(BOTLIB_AAS_TRACE_AREAS, start, end, areas, points,
@@ -455,7 +455,7 @@ trap_AAS_TraceAreas(vec3_t start, vec3_t end, int *areas, vec3_t *points,
 }
 
 int
-trap_AAS_BBoxAreas(vec3_t absmins, vec3_t absmaxs, int *areas, int maxareas)
+trap_AAS_BBoxAreas(Vec3 absmins, Vec3 absmaxs, int *areas, int maxareas)
 {
 	return syscall(BOTLIB_AAS_BBOX_AREAS, absmins, absmaxs, areas, maxareas);
 }
@@ -467,7 +467,7 @@ trap_AAS_AreaInfo(int areanum, void /* struct aas_areainfo_s */ *info)
 }
 
 int
-trap_AAS_PointContents(vec3_t point)
+trap_AAS_PointContents(Vec3 point)
 {
 	return syscall(BOTLIB_AAS_POINT_CONTENTS, point);
 }
@@ -485,7 +485,7 @@ trap_AAS_ValueForBSPEpairKey(int ent, char *key, char *value, int size)
 }
 
 int
-trap_AAS_VectorForBSPEpairKey(int ent, char *key, vec3_t v)
+trap_AAS_VectorForBSPEpairKey(int ent, char *key, Vec3 v)
 {
 	return syscall(BOTLIB_AAS_VECTOR_FOR_BSP_EPAIR_KEY, ent, key, v);
 }
@@ -509,7 +509,7 @@ trap_AAS_AreaReachability(int areanum)
 }
 
 int
-trap_AAS_AreaTravelTimeToGoalArea(int areanum, vec3_t origin, int goalareanum,
+trap_AAS_AreaTravelTimeToGoalArea(int areanum, Vec3 origin, int goalareanum,
 				  int travelflags)
 {
 	return syscall(BOTLIB_AAS_AREA_TRAVEL_TIME_TO_GOAL_AREA, areanum, origin,
@@ -525,7 +525,7 @@ trap_AAS_EnableRoutingArea(int areanum, int enable)
 
 int
 trap_AAS_PredictRoute(void /*struct aas_predictroute_s*/ *route, int areanum,
-		      vec3_t origin,
+		      Vec3 origin,
 		      int goalareanum, int travelflags, int maxareas,
 		      int maxtime,
 		      int stopevent, int stopcontents, int stoptfl,
@@ -539,7 +539,7 @@ trap_AAS_PredictRoute(void /*struct aas_predictroute_s*/ *route, int areanum,
 }
 
 int
-trap_AAS_AlternativeRouteGoals(vec3_t start, int startareanum, vec3_t goal,
+trap_AAS_AlternativeRouteGoals(Vec3 start, int startareanum, Vec3 goal,
 			       int goalareanum, int travelflags,
 			       void /*struct aas_altroutegoal_s*/ *altroutegoals,
 			       int maxaltroutegoals,
@@ -551,16 +551,16 @@ trap_AAS_AlternativeRouteGoals(vec3_t start, int startareanum, vec3_t goal,
 }
 
 int
-trap_AAS_Swimming(vec3_t origin)
+trap_AAS_Swimming(Vec3 origin)
 {
 	return syscall(BOTLIB_AAS_SWIMMING, origin);
 }
 
 int
 trap_AAS_PredictClientMovement(void /* struct aas_clientmove_s */ *move,
-			       int entnum, vec3_t origin, int presencetype,
-			       int onground, vec3_t velocity,
-			       vec3_t cmdmove, int cmdframes, int maxframes,
+			       int entnum, Vec3 origin, int presencetype,
+			       int onground, Vec3 velocity,
+			       Vec3 cmdmove, int cmdframes, int maxframes,
 			       float frametime, int stopevent,
 			       int stopareanum,
 			       int visualize)
@@ -686,13 +686,13 @@ trap_EA_DelayedJump(int client)
 }
 
 void
-trap_EA_Move(int client, vec3_t dir, float speed)
+trap_EA_Move(int client, Vec3 dir, float speed)
 {
 	syscall(BOTLIB_EA_MOVE, client, dir, PASSFLOAT(speed));
 }
 
 void
-trap_EA_View(int client, vec3_t viewangles)
+trap_EA_View(int client, Vec3 viewangles)
 {
 	syscall(BOTLIB_EA_VIEW, client, viewangles);
 }
@@ -968,7 +968,7 @@ trap_BotGetSecondGoal(int goalstate, void /* struct bot_goal_s */ *goal)
 }
 
 int
-trap_BotChooseLTGItem(int goalstate, vec3_t origin, int *inventory,
+trap_BotChooseLTGItem(int goalstate, Vec3 origin, int *inventory,
 		      int travelflags)
 {
 	return syscall(BOTLIB_AI_CHOOSE_LTG_ITEM, goalstate, origin, inventory,
@@ -976,7 +976,7 @@ trap_BotChooseLTGItem(int goalstate, vec3_t origin, int *inventory,
 }
 
 int
-trap_BotChooseNBGItem(int goalstate, vec3_t origin, int *inventory,
+trap_BotChooseNBGItem(int goalstate, Vec3 origin, int *inventory,
 		      int travelflags, void /* struct bot_goal_s */ *ltg,
 		      float maxtime)
 {
@@ -986,13 +986,13 @@ trap_BotChooseNBGItem(int goalstate, vec3_t origin, int *inventory,
 }
 
 int
-trap_BotTouchingGoal(vec3_t origin, void /* struct bot_goal_s */ *goal)
+trap_BotTouchingGoal(Vec3 origin, void /* struct bot_goal_s */ *goal)
 {
 	return syscall(BOTLIB_AI_TOUCHING_GOAL, origin, goal);
 }
 
 int
-trap_BotItemGoalInVisButNotVisible(int viewer, vec3_t eye, vec3_t viewangles,
+trap_BotItemGoalInVisButNotVisible(int viewer, Vec3 eye, Vec3 viewangles,
 				   void	/* struct bot_goal_s */ *goal)
 {
 	return syscall(BOTLIB_AI_ITEM_GOAL_IN_VIS_BUT_NOT_VISIBLE, viewer, eye,
@@ -1095,7 +1095,7 @@ trap_BotResetMoveState(int movestate)
 }
 
 void
-trap_BotAddAvoidSpot(int movestate, vec3_t origin, float radius, int type)
+trap_BotAddAvoidSpot(int movestate, Vec3 origin, float radius, int type)
 {
 	syscall(BOTLIB_AI_ADD_AVOID_SPOT, movestate, origin, PASSFLOAT(
 			radius), type);
@@ -1110,7 +1110,7 @@ trap_BotMoveToGoal(void	/* struct bot_moveresult_s */ *result, int movestate,
 }
 
 int
-trap_BotMoveInDirection(int movestate, vec3_t dir, float speed, int type)
+trap_BotMoveInDirection(int movestate, Vec3 dir, float speed, int type)
 {
 	return syscall(BOTLIB_AI_MOVE_IN_DIRECTION, movestate, dir,
 		PASSFLOAT(speed), type);
@@ -1129,7 +1129,7 @@ trap_BotResetLastAvoidReach(int movestate)
 }
 
 int
-trap_BotReachabilityArea(vec3_t origin, int testground)
+trap_BotReachabilityArea(Vec3 origin, int testground)
 {
 	return syscall(BOTLIB_AI_REACHABILITY_AREA, origin, testground);
 }
@@ -1137,7 +1137,7 @@ trap_BotReachabilityArea(vec3_t origin, int testground)
 int
 trap_BotMovementViewTarget(int movestate, void /* struct bot_goal_s */ *goal,
 			   int travelflags, float lookahead,
-			   vec3_t target)
+			   Vec3 target)
 {
 	return syscall(BOTLIB_AI_MOVEMENT_VIEW_TARGET, movestate, goal,
 		travelflags, PASSFLOAT(
@@ -1145,10 +1145,10 @@ trap_BotMovementViewTarget(int movestate, void /* struct bot_goal_s */ *goal,
 }
 
 int
-trap_BotPredictVisiblePosition(vec3_t origin, int areanum,
+trap_BotPredictVisiblePosition(Vec3 origin, int areanum,
 			       void /* struct bot_goal_s */ *goal,
 			       int travelflags,
-			       vec3_t target)
+			       Vec3 target)
 {
 	return syscall(BOTLIB_AI_PREDICT_VISIBLE_POSITION, origin, areanum, goal,
 		travelflags,
