@@ -987,9 +987,9 @@ euler2quat(const Vec3 angles, Quat out)
 	sy = sin(a[YAW]);
 	sr = sin(a[ROLL]);
 	out[0] = cr*cp*cy + sr*sp*sy;	/* r */
-	out[1] = sr*cp*cy - cr*sp*sy;	/* v1 */
-	out[2] = cr*sp*cy + sr*cp*sy;	/* v2 */
-	out[3] = cr*cp*sy - sr*sp*cy;	/* v3 */
+	out[1] = sr*cp*cy - cr*sp*sy;	/* v0 */
+	out[2] = cr*sp*cy + sr*cp*sy;	/* v1 */
+	out[3] = cr*cp*sy - sr*sp*cy;	/* v2 */
 }
 
 void
@@ -1001,9 +1001,9 @@ quat2euler(const Quat q, Vec3 a)
 	q2[1] = q[1]*q[1];
 	q2[2] = q[2]*q[2];
 	q2[3] = q[3]*q[3];
-	a[ROLL] = (180.0/M_PI)*atan2(2*(q[0]*q[1] + q[2]*q[3]), 1 - 2*(q2[1] + q2[2]));
-	a[PITCH] = (180.0/M_PI)*asin(2*(q[0]*q[2] - q[3]*q[1]));
-	a[YAW] = (180.0/M_PI)*atan2(2*(q[0]*q[3] + q[1]*q[2]), 1 - 2*(q2[2] + q2[3]));
+	a[ROLL] = (180.0/M_PI)*atan2(2*(q[0]*q[1] + q[2]*q[3]), 1 - 2*(q2[1] + q2[2]));	/* φ */
+	a[PITCH] = (180.0/M_PI)*asin(2*(q[0]*q[2] - q[3]*q[1]));			/* θ */
+	a[YAW] = (180.0/M_PI)*atan2(2*(q[0]*q[3] + q[1]*q[2]), 1 - 2*(q2[2] + q2[3]));	/* ψ */
 }
 
 void
@@ -1039,18 +1039,18 @@ quatmul(const Quat q1, const Quat q2, Quat out)
 {
 	float a, b, c, d, e, f, g, h;
 	
-	a = (q1[0] + q1[1]) * (q2[0] + q2[1]);
-	b = (q1[3] - q1[2]) * (q2[2] - q2[3]);
-	c = (q1[0] - q1[1]) * (q2[2] + q2[3]);
-	d = (q1[2] + q1[3]) * (q2[0] - q2[1]);
-	e = (q1[1] + q1[3]) * (q2[1] + q2[2]);
-	f = (q1[1] - q1[3]) * (q2[1] - q2[2]);
-	g = (q1[0] + q1[2]) * (q2[0] - q2[3]);
-	h = (q1[0] - q1[2]) * (q2[0] + q2[3]);
-	out[0] = b + (h - e - f + g) * 0.5;
-	out[1] = a - (e + f + g + h) * 0.5;
-	out[2] = c + (e - f + g - h) * 0.5;
-	out[3] = d + (e - f - g + h) * 0.5;
+	a = (q1[0] + q1[1])*(q2[0] + q2[1]);
+	b = (q1[3] - q1[2])*(q2[2] - q2[3]);
+	c = (q1[0] - q1[1])*(q2[2] + q2[3]);
+	d = (q1[2] + q1[3])*(q2[0] - q2[1]);
+	e = (q1[1] + q1[3])*(q2[1] + q2[2]);
+	f = (q1[1] - q1[3])*(q2[1] - q2[2]);
+	g = (q1[0] + q1[2])*(q2[0] - q2[3]);
+	h = (q1[0] - q1[2])*(q2[0] + q2[3]);
+	out[0] = b + (h - e - f + g)*0.5;	/* r */
+	out[1] = a - (e + f + g + h)*0.5;	/* v0 */
+	out[2] = c + (e - f + g - h)*0.5;	/* v1 */
+	out[3] = d + (e - f - g + h)*0.5;	/* v2 */
 }
 
 int

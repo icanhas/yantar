@@ -312,7 +312,7 @@ typedef Scalar Vec3[3];
 typedef Scalar Vec4[4];
 typedef Scalar Vec5[5];
 typedef Scalar Mat44[16];
-typedef Vec4 Quat;
+typedef Vec4 Quat;	/* r, v0, v1, v2 */
 
 typedef int fixed4_t;
 typedef int fixed8_t;
