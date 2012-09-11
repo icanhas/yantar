@@ -1,6 +1,6 @@
 bin/
 .obj/
-Makefile.local
+Makeconfig
 *.swp
 *~
 *.diff

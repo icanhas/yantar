@@ -1,5 +1,5 @@
 # If you require a different configuration from the defaults below, create a
-# new file named "Makefile.local" in the same directory as this file and define
+# new file named "Makeconfig" in the same directory as this file and define
 # your parameters there. This allows you to change configuration without
 # causing problems with keeping up to date with the repository.
 
@@ -62,7 +62,7 @@ endif
 
 #########
 
--include Makefile.local
+-include Makeconfig
 
 ifndef PLATFORM
 PLATFORM=$(COMPILE_PLATFORM)
