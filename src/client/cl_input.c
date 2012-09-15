@@ -567,7 +567,7 @@ cvar_t *cl_rollspeed;
 cvar_t *cl_run;
 cvar_t *cl_anglespeedkey;
 
-static const Scalar Maxrolldelta = 3.0;
+static const Scalar Maxrolldelta = 300.0;
 
 /* Moves the local angle positions */
 static void
@@ -585,26 +585,26 @@ adjustangles(void)
 		spd = 0.001 * cls.frametime;
 
 	if(!strafe.active){
-		cl.viewangles[YAW] += spd * ys * (keystate(&left) - keystate(&right));
+		cl.viewangles[YAW] += spd * ys * (keystate(&right) - keystate(&left));
 	}
 
-	cl.viewangles[PITCH] += spd * ps * (keystate(&lookdown) - keystate(&lookup));
+	cl.viewangles[PITCH] += spd * ps * (keystate(&lookup) - keystate(&lookdown));
 	
 	roll = cl.viewangles[ROLL];
-	rolldelta = 0.05*(keystate(&rollright) - keystate(&rollleft));
+	rolldelta = (keystate(&rollright) - keystate(&rollleft));
 	if(rolldelta == 0.0){
-		if(closeenough(roll, 0.0, 0.3))
+		if(closeenough(roll*spd, 0.0, 0.1))
 			roll = 0.0;
 		else if(roll < 0.0)
-			roll += spd * rs * 0.3;
+			roll += spd * (rs * 0.2);
 		else if(roll > 0.0)
-			roll -= spd * rs * 0.3;
+			roll -=  spd * (rs * 0.2);
 	}else{
 		roll += spd * rs * rolldelta;
-		if(roll > Maxrolldelta)
-			roll = Maxrolldelta;
-		if(roll < -Maxrolldelta)
-			roll = -Maxrolldelta;
+		if(roll > spd * rs)
+			roll = spd * rs;
+		if(roll < -spd * rs)
+			roll = -spd * rs;
 	}
 	cl.viewangles[ROLL] = roll;
 }
