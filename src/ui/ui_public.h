@@ -120,17 +120,7 @@ typedef enum {
 	UI_LAN_SERVERISVISIBLE,
 	UI_LAN_COMPARESERVERS,
 	/* 1.32 */
-	UI_FS_SEEK,
-	
-	UI_MEMSET = 100,
-	UI_MEMCPY,
-	UI_STRNCPY,
-	UI_SIN,
-	UI_COS,
-	UI_ATAN2,
-	UI_SQRT,
-	UI_FLOOR,
-	UI_CEIL
+	UI_FS_SEEK
 } uiImport_t;
 
 typedef enum {

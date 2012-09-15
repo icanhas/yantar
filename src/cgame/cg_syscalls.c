@@ -514,13 +514,13 @@ trap_SetUserCmdValue(int stateValue, float sensitivityScale)
 void
 testPrintInt(char *string, int i)
 {
-	syscall(CG_TESTPRINTINT, string, i);
+	syscall(TRAP_TESTPRINTINT, string, i);
 }
 
 void
 testPrintFloat(char *string, float f)
 {
-	syscall(CG_TESTPRINTFLOAT, string, PASSFLOAT(f));
+	syscall(TRAP_TESTPRINTFLOAT, string, PASSFLOAT(f));
 }
 
 int

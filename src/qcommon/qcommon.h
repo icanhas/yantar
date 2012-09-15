@@ -336,24 +336,6 @@ enum vmInterpret_e {
 	VMI_COMPILED
 };
 
-enum sharedTraps_e {
-	TRAP_MEMSET = 100,
-	TRAP_MEMCPY,
-	TRAP_STRNCPY,
-	TRAP_SIN,
-	TRAP_COS,
-	TRAP_ATAN2,
-	TRAP_SQRT,
-	TRAP_MATRIXMULTIPLY,
-	TRAP_ANGLEVECTORS,
-	TRAP_PERPENDICULARVECTOR,
-	TRAP_FLOOR,
-	TRAP_CEIL,
-
-	TRAP_TESTPRINTINT,
-	TRAP_TESTPRINTFLOAT
-};
-
 void VM_Init(void);
 /* module should be bare: "cgame", not "cgame.dll" or "vm/cgame.qvm" */
 vm_t* VM_Create(const char *module, intptr_t (*systemCalls)(intptr_t *),

@@ -100,7 +100,9 @@ equ	atan2						-106
 equ	sqrt						-107
 equ floor						-108
 equ	ceil						-109
-equ	testPrintInt				-110
-equ	testPrintFloat				-111
-equ acos						-112
+equ	acos						-110
+equ	asin						-111
+equ	atan						-112
 
+equ	testPrintInt				-113
+equ	testPrintFloat				-114
