@@ -1034,9 +1034,34 @@ loop:   SWAPINIT(a, es);
 
 		return base + dir * i * (M_PI/2048);
 	}
+	
+	double
+	atan(double x)
+	{
+		return atan2(x, 1.0);
+	}
 
+	double
+	asin(double x)
+	{
+		double sign, tmp;
+		
+		sign = 1.0;
+		if(x < 0.0){
+			x = -x;
+			sign = -1.0;
+		}
+		if(x > 1.0)
+			return 0.0;
+		
+		tmp = sqrt(1.0 - x*x);
+		if(x > 0.7)
+			return sign * (M_PI/2 - atan(tmp/x));
+		else
+			return sign * atan(x/tmp);
+	}
 
-#endif
+#endif /* 0 */
 
 	double
 	tan(double x)
