@@ -5,7 +5,7 @@
 
 #ifdef Q3_VM
 
-#include "../qcommon/q_shared.h"
+#include "../q_shared.h"
 
 /*-
  * Copyright (c) 1992, 1993
@@ -36,7 +36,7 @@
  * SUCH DAMAGE.
  */
 
-#include "bg_lib.h"
+#include "vmlibc.h"
 
 #if defined(LIBC_SCCS) && !defined(lint)
 #if 0

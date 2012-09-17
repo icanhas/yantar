@@ -83,7 +83,8 @@
  */
 #ifdef Q3_VM
 
-#include "../game/bg_lib.h"
+/* FIXME: include this in modules themselves, not in shared */
+#include "vmlibc/vmlibc.h"
 
 typedef int intptr_t;
 

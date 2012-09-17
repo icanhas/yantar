@@ -1151,31 +1151,23 @@ makedirs:
 	@$(MKDIR) -p \
 		$(BIN_DIR) \
 		$(OBJ_DIR) \
-		$(B) \
-		$(O) \
 		$(O)/client \
 		$(O)/renderer \
 		$(O)/renderergl2 \
 		$(O)/renderersmp \
 		$(O)/ded \
-		$(B)/$(BASEGAME) \
-		$(O)/$(BASEGAME) \
 		$(O)/$(BASEGAME)/cgame \
 		$(O)/$(BASEGAME)/game \
 		$(O)/$(BASEGAME)/ui \
-		$(O)/$(BASEGAME)/qcommon \
+		$(O)/$(BASEGAME)/qcommon/vmlibc \
 		$(B)/$(BASEGAME)/vm \
 		$(O)/$(BASEGAME)/vm \
-		$(B)/$(MISSIONPACK) \
-		$(O)/$(MISSIONPACK) \
 		$(O)/$(MISSIONPACK)/cgame \
 		$(O)/$(MISSIONPACK)/game \
 		$(O)/$(MISSIONPACK)/ui \
-		$(O)/$(MISSIONPACK)/qcommon \
+		$(O)/$(MISSIONPACK)/qcommon/vmlibc \
 		$(B)/$(MISSIONPACK)/vm \
 		$(O)/$(MISSIONPACK)/vm \
-		$(B)/cmd \
-		$(O)/cmd \
 		$(O)/cmd/asm \
 		$(O)/cmd/etc \
 		$(B)/cmd/rcc \
@@ -2002,7 +1994,6 @@ Q3CGOBJ_ = \
   $(O)/$(BASEGAME)/cgame/bg_misc.o \
   $(O)/$(BASEGAME)/cgame/bg_pmove.o \
   $(O)/$(BASEGAME)/cgame/bg_slidemove.o \
-  $(O)/$(BASEGAME)/cgame/bg_lib.o \
   $(O)/$(BASEGAME)/cgame/cg_consolecmds.o \
   $(O)/$(BASEGAME)/cgame/cg_draw.o \
   $(O)/$(BASEGAME)/cgame/cg_drawtools.o \
@@ -2024,7 +2015,8 @@ Q3CGOBJ_ = \
   \
   $(O)/$(BASEGAME)/qcommon/q_math.o \
   $(O)/$(BASEGAME)/qcommon/q_shared.o \
-  $(O)/$(BASEGAME)/qcommon/q_utf.o
+  $(O)/$(BASEGAME)/qcommon/q_utf.o \
+  $(O)/$(BASEGAME)/qcommon/vmlibc/vmlibc.o
 
 Q3CGOBJ = $(Q3CGOBJ_) $(O)/$(BASEGAME)/cgame/cg_syscalls.o
 Q3CGVMOBJ = $(Q3CGOBJ_:%.o=%.asm)
@@ -2046,7 +2038,6 @@ MPCGOBJ_ = \
   $(O)/$(MISSIONPACK)/cgame/bg_misc.o \
   $(O)/$(MISSIONPACK)/cgame/bg_pmove.o \
   $(O)/$(MISSIONPACK)/cgame/bg_slidemove.o \
-  $(O)/$(MISSIONPACK)/cgame/bg_lib.o \
   $(O)/$(MISSIONPACK)/cgame/cg_consolecmds.o \
   $(O)/$(MISSIONPACK)/cgame/cg_newdraw.o \
   $(O)/$(MISSIONPACK)/cgame/cg_draw.o \
@@ -2070,7 +2061,8 @@ MPCGOBJ_ = \
   \
   $(O)/$(MISSIONPACK)/qcommon/q_math.o \
   $(O)/$(MISSIONPACK)/qcommon/q_shared.o \
-  $(O)/$(MISSIONPACK)/qcommon/q_utf.o
+  $(O)/$(MISSIONPACK)/qcommon/q_utf.o \
+  $(O)/$(MISSIONPACK)/qcommon/vmlibc/vmlibc.o
 
 MPCGOBJ = $(MPCGOBJ_) $(O)/$(MISSIONPACK)/cgame/cg_syscalls.o
 MPCGVMOBJ = $(MPCGOBJ_:%.o=%.asm)
@@ -2101,7 +2093,6 @@ Q3GOBJ_ = \
   $(O)/$(BASEGAME)/game/bg_misc.o \
   $(O)/$(BASEGAME)/game/bg_pmove.o \
   $(O)/$(BASEGAME)/game/bg_slidemove.o \
-  $(O)/$(BASEGAME)/game/bg_lib.o \
   $(O)/$(BASEGAME)/game/g_active.o \
   $(O)/$(BASEGAME)/game/g_arenas.o \
   $(O)/$(BASEGAME)/game/g_bot.o \
@@ -2124,7 +2115,8 @@ Q3GOBJ_ = \
   \
   $(O)/$(BASEGAME)/qcommon/q_math.o \
   $(O)/$(BASEGAME)/qcommon/q_shared.o \
-  $(O)/$(BASEGAME)/qcommon/q_utf.o
+  $(O)/$(BASEGAME)/qcommon/q_utf.o \
+  $(O)/$(BASEGAME)/qcommon/vmlibc/vmlibc.o
 
 Q3GOBJ = $(Q3GOBJ_) $(O)/$(BASEGAME)/game/g_syscalls.o
 Q3GVMOBJ = $(Q3GOBJ_:%.o=%.asm)
@@ -2153,7 +2145,6 @@ MPGOBJ_ = \
   $(O)/$(MISSIONPACK)/game/bg_misc.o \
   $(O)/$(MISSIONPACK)/game/bg_pmove.o \
   $(O)/$(MISSIONPACK)/game/bg_slidemove.o \
-  $(O)/$(MISSIONPACK)/game/bg_lib.o \
   $(O)/$(MISSIONPACK)/game/g_active.o \
   $(O)/$(MISSIONPACK)/game/g_arenas.o \
   $(O)/$(MISSIONPACK)/game/g_bot.o \
@@ -2176,7 +2167,8 @@ MPGOBJ_ = \
   \
   $(O)/$(MISSIONPACK)/qcommon/q_math.o \
   $(O)/$(MISSIONPACK)/qcommon/q_shared.o \
-  $(O)/$(MISSIONPACK)/qcommon/q_utf.o
+  $(O)/$(MISSIONPACK)/qcommon/q_utf.o \
+  $(O)/$(MISSIONPACK)/qcommon/vmlibc/vmlibc.o
 
 MPGOBJ = $(MPGOBJ_) $(O)/$(MISSIONPACK)/game/g_syscalls.o
 MPGVMOBJ = $(MPGOBJ_:%.o=%.asm)
@@ -2198,7 +2190,6 @@ $(B)/$(MISSIONPACK)/vm/qagame.qvm: $(MPGVMOBJ) $(GDIR)/g_syscalls.asm $(Q3ASM)
 Q3UIOBJ_ = \
   $(O)/$(BASEGAME)/ui/ui_main.o \
   $(O)/$(BASEGAME)/ui/bg_misc.o \
-  $(O)/$(BASEGAME)/ui/bg_lib.o \
   $(O)/$(BASEGAME)/ui/ui_addbots.o \
   $(O)/$(BASEGAME)/ui/ui_atoms.o \
   $(O)/$(BASEGAME)/ui/ui_cdkey.o \
@@ -2240,7 +2231,8 @@ Q3UIOBJ_ = \
   \
   $(O)/$(BASEGAME)/qcommon/q_math.o \
   $(O)/$(BASEGAME)/qcommon/q_shared.o \
-  $(O)/$(BASEGAME)/qcommon/q_utf.o
+  $(O)/$(BASEGAME)/qcommon/q_utf.o \
+  $(O)/$(BASEGAME)/qcommon/vmlibc/vmlibc.o
 
 Q3UIOBJ = $(Q3UIOBJ_) $(O)/$(MISSIONPACK)/ui/ui_syscalls.o
 Q3UIVMOBJ = $(Q3UIOBJ_:%.o=%.asm)
@@ -2265,11 +2257,11 @@ MPUIOBJ_ = \
   $(O)/$(MISSIONPACK)/ui/ui_shared.o \
   \
   $(O)/$(MISSIONPACK)/ui/bg_misc.o \
-  $(O)/$(MISSIONPACK)/ui/bg_lib.o \
   \
   $(O)/$(MISSIONPACK)/qcommon/q_math.o \
   $(O)/$(MISSIONPACK)/qcommon/q_shared.o \
-  $(O)/$(MISSIONPACK)/qcommon/q_utf.o
+  $(O)/$(MISSIONPACK)/qcommon/q_utf.o \
+  $(O)/$(MISSIONPACK)/qcommon/vmlibc/vmlibc.o
 
 MPUIOBJ = $(MPUIOBJ_) $(O)/$(MISSIONPACK)/ui/ui_syscalls.o
 MPUIVMOBJ = $(MPUIOBJ_:%.o=%.asm)
