@@ -585,15 +585,19 @@ static void help(void) {
 #define xx(v) if ((s = getenv(#v))) fprintf(stderr, #v "=%s\n", s)
 	xx(LCCINPUTS);
 	xx(LCCDIR);
+#ifdef WIN32
+	xx(include);
+	xx(lib);
+#endif
 #undef xx
 }
 
 /* initinputs - if LCCINPUTS or include is defined, use them to initialize various lists */
 static void initinputs(void) {
 	char *s = getenv("LCCINPUTS");
-	List b;
+	List list, b;
 
-	if (s == 0 || (s = inputs)[0] == 0)
+	if (s == 0 && (s = inputs)[0] == 0)
 		s = ".";
 	if (s) {
 		lccinputs = path2list(s);
@@ -608,6 +612,13 @@ static void initinputs(void) {
 					b->str = "";
 			} while (b != lccinputs);
 	}
+#ifdef WIN32
+	if (list = b = path2list(getenv("include")))
+		do {
+			b = b->link;
+			ilist = append(stringf("-I\"%s\"", b->str), plist);
+		} while (b != list);
+#endif
 }
 
 /* interrupt - catch interrupt signals */
