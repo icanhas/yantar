@@ -1105,6 +1105,7 @@ PM_UpdateViewAngles(playerState_t *ps, const usercmd_t *cmd)
 	euler2quat(ps->viewangles, orient);
 	quatmul(orient, delta, neworient);
 	quat2euler(neworient, ps->viewangles);
+	memset(ps->delta_angles, 0, sizeof ps->delta_angles);
 }
 
 /* convenience function also used by slidemove */
