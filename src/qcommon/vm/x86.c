@@ -17,9 +17,9 @@
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-/* vm_x86.c -- load time compiler and execution environment for x86 */
+/* load time compiler and execution environment for x86 */
 
-#include "vm_local.h"
+#include "local.h"
 
 #ifdef _WIN32
   #include <windows.h>

@@ -27,7 +27,7 @@
  * and one exported function: Perform
  */
 
-#include "vm_local.h"
+#include "local.h"
 
 enum { MAX_VM = 3 };
 vm_t *currentVM = NULL;

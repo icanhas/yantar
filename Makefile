@@ -1151,11 +1151,11 @@ makedirs:
 	@$(MKDIR) -p \
 		$(BIN_DIR) \
 		$(OBJ_DIR) \
-		$(O)/client \
+		$(O)/client/vm \
 		$(O)/renderer \
 		$(O)/renderergl2 \
 		$(O)/renderersmp \
-		$(O)/ded \
+		$(O)/ded/vm \
 		$(O)/$(BASEGAME)/cgame \
 		$(O)/$(BASEGAME)/game \
 		$(O)/$(BASEGAME)/ui \
@@ -1414,8 +1414,8 @@ Q3OBJ = \
   $(O)/client/unzip.o \
   $(O)/client/ioapi.o \
   $(O)/client/puff.o \
-  $(O)/client/vm.o \
-  $(O)/client/vm_interpreted.o \
+  $(O)/client/vm/vm.o \
+  $(O)/client/vm/interpreted.o \
   \
   $(O)/client/be_aas_bspq3.o \
   $(O)/client/be_aas_cluster.o \
@@ -1679,50 +1679,50 @@ endif
 ifeq ($(HAVE_VM_COMPILED),true)
   ifeq ($(ARCH),i386)
     Q3OBJ += \
-      $(O)/client/vm_x86.o
+      $(O)/client/vm/x86.o
   endif
   ifeq ($(ARCH),x86)
     Q3OBJ += \
-      $(O)/client/vm_x86.o
+      $(O)/client/vm/x86.o
   endif
   ifeq ($(ARCH),x86_64)
     ifeq ($(USE_OLD_VM64),1)
       Q3OBJ += \
-        $(O)/client/vm_x86_64.o \
-        $(O)/client/vm_x86_64_assembler.o
+        $(O)/client/vm/amd64.o \
+        $(O)/client/vm/amd64_asm.o
     else
       Q3OBJ += \
-        $(O)/client/vm_x86.o
+        $(O)/client/vm/x86.o
     endif
   endif
   ifeq ($(ARCH),amd64)
     ifeq ($(USE_OLD_VM64),1)
       Q3OBJ += \
-        $(O)/client/vm_x86_64.o \
-        $(O)/client/vm_x86_64_assembler.o
+        $(O)/client/vm/amd64.o \
+        $(O)/client/vm/amd64_asm.o
     else
       Q3OBJ += \
-        $(O)/client/vm_x86.o
+        $(O)/client/vm/x86.o
     endif
   endif
   ifeq ($(ARCH),x64)
     ifeq ($(USE_OLD_VM64),1)
       Q3OBJ += \
-        $(O)/client/vm_x86_64.o \
-        $(O)/client/vm_x86_64_assembler.o
+        $(O)/client/vm/amd64.o \
+        $(O)/client/vm/amd64_asm.o
     else
       Q3OBJ += \
-        $(O)/client/vm_x86.o
+        $(O)/client/vm/x86.o
     endif
   endif
   ifeq ($(ARCH),ppc)
-    Q3OBJ += $(O)/client/vm_powerpc.o $(B)/client/vm_powerpc_asm.o
+    Q3OBJ += $(O)/client/vm/powerpc.o $(B)/client/vm_powerpc_asm.o
   endif
   ifeq ($(ARCH),ppc64)
-    Q3OBJ += $(O)/client/vm_powerpc.o $(B)/client/vm_powerpc_asm.o
+    Q3OBJ += $(O)/client/vm/powerpc.o $(B)/client/vm_powerpc_asm.o
   endif
   ifeq ($(ARCH),sparc)
-    Q3OBJ += $(O)/client/vm_sparc.o
+    Q3OBJ += $(O)/client/vm/sparc.o
   endif
 endif
 
@@ -1832,8 +1832,8 @@ Q3DOBJ = \
   \
   $(O)/ded/unzip.o \
   $(O)/ded/ioapi.o \
-  $(O)/ded/vm.o \
-  $(O)/ded/vm_interpreted.o \
+  $(O)/ded/vm/vm.o \
+  $(O)/ded/vm/interpreted.o \
   \
   $(O)/ded/be_aas_bspq3.o \
   $(O)/ded/be_aas_cluster.o \
@@ -1912,54 +1912,54 @@ endif
 ifeq ($(HAVE_VM_COMPILED),true)
   ifeq ($(ARCH),i386)
     Q3DOBJ += \
-      $(O)/ded/vm_x86.o
+      $(O)/ded/vm/x86.o
   endif
   ifeq ($(ARCH),x86)
     Q3DOBJ += \
-      $(O)/ded/vm_x86.o
+      $(O)/ded/vm/x86.o
   endif
   ifeq ($(ARCH),x86_64)
     ifeq ($(USE_OLD_VM64),1)
       Q3DOBJ += \
-        $(O)/ded/vm_x86_64.o \
-        $(O)/ded/vm_x86_64_assembler.o
+        $(O)/ded/vm/amd64.o \
+        $(O)/ded/vm/amd64_asm.o
     else
       Q3DOBJ += \
-        $(O)/ded/vm_x86.o
+        $(O)/ded/vm/x86.o
     endif
   endif
   ifeq ($(ARCH),amd64)
     ifeq ($(USE_OLD_VM64),1)
       Q3DOBJ += \
-        $(O)/ded/vm_x86_64.o \
-        $(O)/ded/vm_x86_64_assembler.o
+        $(O)/ded/vm/amd64.o \
+        $(O)/ded/vm/amd64_asm.o
     else
       Q3DOBJ += \
-        $(O)/ded/vm_x86.o
+        $(O)/ded/vm/x86.o
     endif
   endif
   ifeq ($(ARCH),x64)
     ifeq ($(USE_OLD_VM64),1)
       Q3DOBJ += \
-        $(O)/ded/vm_x86_64.o \
-        $(O)/ded/vm_x86_64_assembler.o
+        $(O)/ded/vm/amd64.o \
+        $(O)/ded/vm/amd64_asm.o
     else
       Q3DOBJ += \
-        $(O)/ded/vm_x86.o
+        $(O)/ded/vm/x86.o
     endif
   endif
   ifeq ($(ARCH),ppc)
     Q3DOBJ += \
-      $(O)/ded/vm_powerpc.o \
-      $(O)/ded/vm_powerpc_asm.o
+      $(O)/ded/vm/powerpc.o \
+      $(O)/ded/vm/powerpc_asm.o
   endif
   ifeq ($(ARCH),ppc64)
     Q3DOBJ += \
-      $(O)/ded/vm_powerpc.o \
-      $(O)/ded/vm_powerpc_asm.o
+      $(O)/ded/vm/powerpc.o \
+      $(O)/ded/vm/powerpc_asm.o
   endif
   ifeq ($(ARCH),sparc)
-    Q3DOBJ += $(O)/ded/vm_sparc.o
+    Q3DOBJ += $(O)/ded/vm/sparc.o
   endif
 endif
 
