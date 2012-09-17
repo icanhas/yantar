@@ -1621,14 +1621,14 @@ endif
 
 ifeq ($(ARCH),i386)
   Q3OBJ += \
-    $(O)/client/snd/mixa.o \
+    $(O)/client/snd/snd_mixa.o \
     $(O)/client/matha.o \
     $(O)/client/snapvector.o \
     $(O)/client/ftola.o
 endif
 ifeq ($(ARCH),x86)
   Q3OBJ += \
-    $(O)/client/snd/mixa.o \
+    $(O)/client/snd/snd_mixa.o \
     $(O)/client/matha.o \
     $(O)/client/snapvector.o \
     $(O)/client/ftola.o
