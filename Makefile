@@ -1152,11 +1152,13 @@ makedirs:
 		$(BIN_DIR) \
 		$(OBJ_DIR) \
 		$(O)/client/cm \
+		$(O)/client/server \
 		$(O)/client/vm \
 		$(O)/renderer \
 		$(O)/renderergl2 \
 		$(O)/renderersmp \
 		$(O)/ded/cm \
+		$(O)/ded/server \
 		$(O)/ded/vm \
 		$(O)/$(BASEGAME)/cgame \
 		$(O)/$(BASEGAME)/game \
@@ -1399,15 +1401,15 @@ Q3OBJ = \
   \
   $(O)/client/cl_curl.o \
   \
-  $(O)/client/sv_bot.o \
-  $(O)/client/sv_ccmds.o \
-  $(O)/client/sv_client.o \
-  $(O)/client/sv_game.o \
-  $(O)/client/sv_init.o \
-  $(O)/client/sv_main.o \
-  $(O)/client/sv_net_chan.o \
-  $(O)/client/sv_snapshot.o \
-  $(O)/client/sv_world.o \
+  $(O)/client/server/bot.o \
+  $(O)/client/server/ccmds.o \
+  $(O)/client/server/client.o \
+  $(O)/client/server/game.o \
+  $(O)/client/server/init.o \
+  $(O)/client/server/main.o \
+  $(O)/client/server/netchan.o \
+  $(O)/client/server/snapshot.o \
+  $(O)/client/server/world.o \
   \
   $(O)/client/q_math.o \
   $(O)/client/q_shared.o \
@@ -1803,15 +1805,15 @@ endif
 #############################################################################
 
 Q3DOBJ = \
-  $(O)/ded/sv_bot.o \
-  $(O)/ded/sv_client.o \
-  $(O)/ded/sv_ccmds.o \
-  $(O)/ded/sv_game.o \
-  $(O)/ded/sv_init.o \
-  $(O)/ded/sv_main.o \
-  $(O)/ded/sv_net_chan.o \
-  $(O)/ded/sv_snapshot.o \
-  $(O)/ded/sv_world.o \
+  $(O)/ded/server/bot.o \
+  $(O)/ded/server/client.o \
+  $(O)/ded/server/ccmds.o \
+  $(O)/ded/server/game.o \
+  $(O)/ded/server/init.o \
+  $(O)/ded/server/main.o \
+  $(O)/ded/server/netchan.o \
+  $(O)/ded/server/snapshot.o \
+  $(O)/ded/server/world.o \
   \
   $(O)/ded/cm/load.o \
   $(O)/ded/cm/patch.o \
@@ -2292,7 +2294,7 @@ $(O)/client/%.o: $(ASMDIR)/%.c
 $(O)/client/%.o: $(CDIR)/%.c
 	$(DO_CC)
 
-$(O)/client/%.o: $(SDIR)/%.c
+$(O)/client/server/%.o: $(SDIR)/%.c
 	$(DO_CC)
 
 $(O)/client/%.o: $(CMDIR)/%.c
@@ -2346,7 +2348,7 @@ $(O)/ded/%.o: $(ASMDIR)/%.s
 $(O)/ded/%.o: $(ASMDIR)/%.c
 	$(DO_CC) -march=k8
 
-$(O)/ded/%.o: $(SDIR)/%.c
+$(O)/ded/server/%.o: $(SDIR)/%.c
 	$(DO_DED_CC)
 
 $(O)/ded/%.o: $(CMDIR)/%.c
