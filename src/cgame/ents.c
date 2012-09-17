@@ -20,7 +20,7 @@
 /*
  * cg_ents.c -- present snapshot entities, happens every single frame */
 
-#include "cg_local.h"
+#include "local.h"
 
 
 /*

@@ -19,7 +19,7 @@
  */
 /*
  * cg_main.c -- initialization and primary entry point for cgame */
-#include "cg_local.h"
+#include "local.h"
 
 #ifdef MISSIONPACK
 #include "../ui/ui_shared.h"

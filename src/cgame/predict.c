@@ -23,7 +23,7 @@
  * ahead the client's movement.
  * It also handles local physics interaction, like fragments bouncing off walls */
 
-#include "cg_local.h"
+#include "local.h"
 
 static pmove_t cg_pmove;
 

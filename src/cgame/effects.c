@@ -21,7 +21,7 @@
  * cg_effects.c -- these functions generate localentities, usually as a result
  * of event processing */
 
-#include "cg_local.h"
+#include "local.h"
 
 
 /*

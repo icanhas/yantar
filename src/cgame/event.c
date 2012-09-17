@@ -20,7 +20,7 @@
 /*
  * cg_event.c -- handle entity events at snapshot or playerstate transitions */
 
-#include "cg_local.h"
+#include "local.h"
 
 /* for the voice chats */
 #ifdef MISSIONPACK

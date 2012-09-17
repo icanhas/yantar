@@ -2019,73 +2019,73 @@ $(B)/$(SERVERBIN)$(FULLBINEXT): $(Q3DOBJ)
 #############################################################################
 
 Q3CGOBJ_ = \
-  $(O)/$(BASEGAME)/cgame/cg_main.o \
+  $(O)/$(BASEGAME)/cgame/main.o \
   $(O)/$(BASEGAME)/cgame/bg_misc.o \
   $(O)/$(BASEGAME)/cgame/bg_pmove.o \
   $(O)/$(BASEGAME)/cgame/bg_slidemove.o \
-  $(O)/$(BASEGAME)/cgame/cg_consolecmds.o \
-  $(O)/$(BASEGAME)/cgame/cg_draw.o \
-  $(O)/$(BASEGAME)/cgame/cg_drawtools.o \
-  $(O)/$(BASEGAME)/cgame/cg_effects.o \
-  $(O)/$(BASEGAME)/cgame/cg_ents.o \
-  $(O)/$(BASEGAME)/cgame/cg_event.o \
-  $(O)/$(BASEGAME)/cgame/cg_info.o \
-  $(O)/$(BASEGAME)/cgame/cg_localents.o \
-  $(O)/$(BASEGAME)/cgame/cg_marks.o \
-  $(O)/$(BASEGAME)/cgame/cg_particles.o \
-  $(O)/$(BASEGAME)/cgame/cg_players.o \
-  $(O)/$(BASEGAME)/cgame/cg_playerstate.o \
-  $(O)/$(BASEGAME)/cgame/cg_predict.o \
-  $(O)/$(BASEGAME)/cgame/cg_scoreboard.o \
-  $(O)/$(BASEGAME)/cgame/cg_servercmds.o \
-  $(O)/$(BASEGAME)/cgame/cg_snapshot.o \
-  $(O)/$(BASEGAME)/cgame/cg_view.o \
-  $(O)/$(BASEGAME)/cgame/cg_weapons.o \
+  $(O)/$(BASEGAME)/cgame/consolecmds.o \
+  $(O)/$(BASEGAME)/cgame/draw.o \
+  $(O)/$(BASEGAME)/cgame/drawtools.o \
+  $(O)/$(BASEGAME)/cgame/effects.o \
+  $(O)/$(BASEGAME)/cgame/ents.o \
+  $(O)/$(BASEGAME)/cgame/event.o \
+  $(O)/$(BASEGAME)/cgame/info.o \
+  $(O)/$(BASEGAME)/cgame/localents.o \
+  $(O)/$(BASEGAME)/cgame/marks.o \
+  $(O)/$(BASEGAME)/cgame/particles.o \
+  $(O)/$(BASEGAME)/cgame/players.o \
+  $(O)/$(BASEGAME)/cgame/playerstate.o \
+  $(O)/$(BASEGAME)/cgame/predict.o \
+  $(O)/$(BASEGAME)/cgame/scoreboard.o \
+  $(O)/$(BASEGAME)/cgame/servercmds.o \
+  $(O)/$(BASEGAME)/cgame/snapshot.o \
+  $(O)/$(BASEGAME)/cgame/view.o \
+  $(O)/$(BASEGAME)/cgame/weapons.o \
   \
   $(O)/$(BASEGAME)/qcommon/q_math.o \
   $(O)/$(BASEGAME)/qcommon/q_shared.o \
   $(O)/$(BASEGAME)/qcommon/q_utf.o \
   $(O)/$(BASEGAME)/qcommon/vmlibc/vmlibc.o
 
-Q3CGOBJ = $(Q3CGOBJ_) $(O)/$(BASEGAME)/cgame/cg_syscalls.o
+Q3CGOBJ = $(Q3CGOBJ_) $(O)/$(BASEGAME)/cgame/syscalls.o
 Q3CGVMOBJ = $(Q3CGOBJ_:%.o=%.asm)
 
 $(B)/$(BASEGAME)/cgame-$(SHLIBNAME): $(Q3CGOBJ)
 	$(echo_cmd) "LD $@"
 	$(Q)$(CC) $(CFLAGS) $(SHLIBLDFLAGS) -o $@ $(Q3CGOBJ)
 
-$(B)/$(BASEGAME)/vm/cgame.qvm: $(Q3CGVMOBJ) $(CGDIR)/cg_syscalls.asm $(Q3ASM)
+$(B)/$(BASEGAME)/vm/cgame.qvm: $(Q3CGVMOBJ) $(CGDIR)/syscalls.asm $(Q3ASM)
 	$(echo_cmd) "Q3ASM $@"
-	$(Q)$(Q3ASM) -o $@ $(Q3CGVMOBJ) $(CGDIR)/cg_syscalls.asm
+	$(Q)$(Q3ASM) -o $@ $(Q3CGVMOBJ) $(CGDIR)/syscalls.asm
 
 #############################################################################
 ## MISSIONPACK CGAME
 #############################################################################
 
 MPCGOBJ_ = \
-  $(O)/$(MISSIONPACK)/cgame/cg_main.o \
+  $(O)/$(MISSIONPACK)/cgame/main.o \
   $(O)/$(MISSIONPACK)/cgame/bg_misc.o \
   $(O)/$(MISSIONPACK)/cgame/bg_pmove.o \
   $(O)/$(MISSIONPACK)/cgame/bg_slidemove.o \
-  $(O)/$(MISSIONPACK)/cgame/cg_consolecmds.o \
-  $(O)/$(MISSIONPACK)/cgame/cg_newdraw.o \
-  $(O)/$(MISSIONPACK)/cgame/cg_draw.o \
-  $(O)/$(MISSIONPACK)/cgame/cg_drawtools.o \
-  $(O)/$(MISSIONPACK)/cgame/cg_effects.o \
-  $(O)/$(MISSIONPACK)/cgame/cg_ents.o \
-  $(O)/$(MISSIONPACK)/cgame/cg_event.o \
-  $(O)/$(MISSIONPACK)/cgame/cg_info.o \
-  $(O)/$(MISSIONPACK)/cgame/cg_localents.o \
-  $(O)/$(MISSIONPACK)/cgame/cg_marks.o \
-  $(O)/$(MISSIONPACK)/cgame/cg_particles.o \
-  $(O)/$(MISSIONPACK)/cgame/cg_players.o \
-  $(O)/$(MISSIONPACK)/cgame/cg_playerstate.o \
-  $(O)/$(MISSIONPACK)/cgame/cg_predict.o \
-  $(O)/$(MISSIONPACK)/cgame/cg_scoreboard.o \
-  $(O)/$(MISSIONPACK)/cgame/cg_servercmds.o \
-  $(O)/$(MISSIONPACK)/cgame/cg_snapshot.o \
-  $(O)/$(MISSIONPACK)/cgame/cg_view.o \
-  $(O)/$(MISSIONPACK)/cgame/cg_weapons.o \
+  $(O)/$(MISSIONPACK)/cgame/consolecmds.o \
+  $(O)/$(MISSIONPACK)/cgame/newdraw.o \
+  $(O)/$(MISSIONPACK)/cgame/draw.o \
+  $(O)/$(MISSIONPACK)/cgame/drawtools.o \
+  $(O)/$(MISSIONPACK)/cgame/effects.o \
+  $(O)/$(MISSIONPACK)/cgame/ents.o \
+  $(O)/$(MISSIONPACK)/cgame/event.o \
+  $(O)/$(MISSIONPACK)/cgame/info.o \
+  $(O)/$(MISSIONPACK)/cgame/localents.o \
+  $(O)/$(MISSIONPACK)/cgame/marks.o \
+  $(O)/$(MISSIONPACK)/cgame/particles.o \
+  $(O)/$(MISSIONPACK)/cgame/players.o \
+  $(O)/$(MISSIONPACK)/cgame/playerstate.o \
+  $(O)/$(MISSIONPACK)/cgame/predict.o \
+  $(O)/$(MISSIONPACK)/cgame/scoreboard.o \
+  $(O)/$(MISSIONPACK)/cgame/servercmds.o \
+  $(O)/$(MISSIONPACK)/cgame/snapshot.o \
+  $(O)/$(MISSIONPACK)/cgame/view.o \
+  $(O)/$(MISSIONPACK)/cgame/weapons.o \
   $(O)/$(MISSIONPACK)/ui/ui_shared.o \
   \
   $(O)/$(MISSIONPACK)/qcommon/q_math.o \
@@ -2093,16 +2093,16 @@ MPCGOBJ_ = \
   $(O)/$(MISSIONPACK)/qcommon/q_utf.o \
   $(O)/$(MISSIONPACK)/qcommon/vmlibc/vmlibc.o
 
-MPCGOBJ = $(MPCGOBJ_) $(O)/$(MISSIONPACK)/cgame/cg_syscalls.o
+MPCGOBJ = $(MPCGOBJ_) $(O)/$(MISSIONPACK)/cgame/syscalls.o
 MPCGVMOBJ = $(MPCGOBJ_:%.o=%.asm)
 
 $(B)/$(MISSIONPACK)/cgame-$(SHLIBNAME): $(MPCGOBJ)
 	$(echo_cmd) "LD $@"
 	$(Q)$(CC) $(CFLAGS) $(SHLIBLDFLAGS) -o $@ $(MPCGOBJ)
 
-$(B)/$(MISSIONPACK)/vm/cgame.qvm: $(MPCGVMOBJ) $(CGDIR)/cg_syscalls.asm $(Q3ASM)
+$(B)/$(MISSIONPACK)/vm/cgame.qvm: $(MPCGVMOBJ) $(CGDIR)/syscalls.asm $(Q3ASM)
 	$(echo_cmd) "Q3ASM $@"
-	$(Q)$(Q3ASM) -o $@ $(MPCGVMOBJ) $(CGDIR)/cg_syscalls.asm
+	$(Q)$(Q3ASM) -o $@ $(MPCGVMOBJ) $(CGDIR)/syscalls.asm
 
 
 

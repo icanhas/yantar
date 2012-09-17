@@ -19,7 +19,7 @@
  */
 /*
  * cg_drawtools.c -- helper functions called by cg_draw, cg_scoreboard, cg_info, etc */
-#include "cg_local.h"
+#include "local.h"
 
 /*
  * CG_AdjustFrom640

@@ -22,7 +22,7 @@
 /* cg_localents.c -- every frame, generate renderer commands for locally
  * processed entities, like smoke puffs, gibs, shells, etc. */
 
-#include "cg_local.h"
+#include "local.h"
 
 #define MAX_LOCAL_ENTITIES 512
 localEntity_t	cg_localEntities[MAX_LOCAL_ENTITIES];

@@ -22,7 +22,7 @@
  * these are processed at snapshot transition time, so there will definately
  * be a valid snapshot this frame */
 
-#include "cg_local.h"
+#include "local.h"
 #include "../../ui/menudef.h"
 
 typedef struct {

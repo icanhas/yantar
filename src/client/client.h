@@ -23,7 +23,7 @@
 #include "../ui/ui_public.h"
 #include "keys.h"
 #include "snd/public.h"
-#include "../cgame/cg_public.h"
+#include "../cgame/public.h"
 #include "../game/bg_public.h"
 
 #ifdef USE_CURL

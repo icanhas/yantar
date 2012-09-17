@@ -19,7 +19,7 @@
  */
 /*
  * cg_scoreboard -- draw the scoreboard on top of the game screen */
-#include "cg_local.h"
+#include "local.h"
 
 
 #define SCOREBOARD_X	(0)

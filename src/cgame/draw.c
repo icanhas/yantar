@@ -21,7 +21,7 @@
  * cg_draw.c -- draw all of the graphical elements during
  * active (after loading) gameplay */
 
-#include "cg_local.h"
+#include "local.h"
 
 #ifdef MISSIONPACK
 #include "../ui/ui_shared.h"

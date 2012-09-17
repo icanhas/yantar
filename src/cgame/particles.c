@@ -20,7 +20,7 @@
 /* Rafael particles
 * cg_particles.c */
 
-#include "cg_local.h"
+#include "local.h"
 
 /* #define WOLF_PARTICLES */
 

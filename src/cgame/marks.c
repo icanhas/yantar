@@ -20,7 +20,7 @@
 /*
  * cg_marks.c -- wall marks */
 
-#include "cg_local.h"
+#include "local.h"
 
 /*
  *

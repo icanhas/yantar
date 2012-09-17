@@ -21,7 +21,7 @@
  * cg_snapshot.c -- things that happen on snapshot transition,
  * not necessarily every single rendered frame */
 
-#include "cg_local.h"
+#include "local.h"
 
 
 

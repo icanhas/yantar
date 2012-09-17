@@ -446,7 +446,7 @@ extern void DriverInfo_Cache(void);
  * ui_players.c
  *  */
 
-/* FIXME ripped from cg_local.h */
+/* FIXME ripped from local.h */
 typedef struct {
 	int		oldFrame;
 	int		oldFrameTime;	/* time when ->oldFrame was exactly on */

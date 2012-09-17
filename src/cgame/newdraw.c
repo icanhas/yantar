@@ -22,7 +22,7 @@
 #error This file must not be used for classic Q3A.
 #endif
 
-#include "cg_local.h"
+#include "local.h"
 #include "../ui/ui_shared.h"
 
 extern displayContextDef_t cgDC;

@@ -24,7 +24,7 @@
 #error "Do not use in VM build"
 #endif
 
-#include "cg_local.h"
+#include "local.h"
 
 static intptr_t (QDECL *syscall)(intptr_t arg,
 				 ...) = (intptr_t (QDECL*)(intptr_t, ...))-1;
