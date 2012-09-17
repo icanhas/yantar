@@ -219,6 +219,7 @@ SDIR=$(MOUNT_DIR)/server
 RDIR=$(MOUNT_DIR)/renderer
 R2DIR=$(MOUNT_DIR)/renderergl2
 CMDIR=$(MOUNT_DIR)/qcommon
+NETDIR=$(CMDIR)/net
 ASMDIR=$(MOUNT_DIR)/asm
 SYSDIR=$(MOUNT_DIR)/sys
 SDLDIR=$(SYSDIR)/sdl
@@ -1152,12 +1153,14 @@ makedirs:
 		$(BIN_DIR) \
 		$(OBJ_DIR) \
 		$(O)/client/cm \
+		$(O)/client/net \
 		$(O)/client/server \
 		$(O)/client/vm \
 		$(O)/renderer \
 		$(O)/renderergl2 \
 		$(O)/renderersmp \
 		$(O)/ded/cm \
+		$(O)/ded/net \
 		$(O)/ded/server \
 		$(O)/ded/vm \
 		$(O)/$(BASEGAME)/cgame \
@@ -1381,8 +1384,8 @@ Q3OBJ = \
   $(O)/client/md4.o \
   $(O)/client/md5.o \
   $(O)/client/msg.o \
-  $(O)/client/net_chan.o \
-  $(O)/client/net_ip.o \
+  $(O)/client/net/chan.o \
+  $(O)/client/net/ip.o \
   $(O)/client/huffman.o \
   \
   $(O)/client/snd_adpcm.o \
@@ -1826,8 +1829,8 @@ Q3DOBJ = \
   $(O)/ded/files.o \
   $(O)/ded/md4.o \
   $(O)/ded/msg.o \
-  $(O)/ded/net_chan.o \
-  $(O)/ded/net_ip.o \
+  $(O)/ded/net/chan.o \
+  $(O)/ded/net/ip.o \
   $(O)/ded/huffman.o \
   \
   $(O)/ded/q_math.o \
@@ -2293,6 +2296,9 @@ $(O)/client/%.o: $(ASMDIR)/%.c
 
 $(O)/client/%.o: $(CDIR)/%.c
 	$(DO_CC)
+	
+$(O)/client/net/%.o: $(NETDIR)%.c
+	$(DO_CC)
 
 $(O)/client/server/%.o: $(SDIR)/%.c
 	$(DO_CC)
@@ -2347,6 +2353,9 @@ $(O)/ded/%.o: $(ASMDIR)/%.s
 # k8 so inline assembler knows about SSE
 $(O)/ded/%.o: $(ASMDIR)/%.c
 	$(DO_CC) -march=k8
+
+$(O)/ded/net/%.o: $(NETDIR)/%.c
+	$(DO_DED_CC)
 
 $(O)/ded/server/%.o: $(SDIR)/%.c
 	$(DO_DED_CC)
