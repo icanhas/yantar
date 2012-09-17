@@ -479,7 +479,7 @@ ifeq ($(PLATFORM),mingw32)
   endif
 
   BASE_CFLAGS = -Wall -fno-strict-aliasing -Wimplicit -Wstrict-prototypes \
-    -DUSE_ICON
+    -DUSE_ICON -I$(MOUNT_DIR)/qcommon
 
   # In the absence of wspiapi.h, require Windows XP or later
   ifeq ($(shell test -e $(CMDIR)/wspiapi.h; echo $$?),1)
