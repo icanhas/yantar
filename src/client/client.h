@@ -27,7 +27,7 @@
 #include "../game/bg_public.h"
 
 #ifdef USE_CURL
-#include "cl_curl.h"
+#include "curl.h"
 #endif	/* USE_CURL */
 
 #ifdef USE_VOIP

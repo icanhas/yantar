@@ -1361,17 +1361,17 @@ $(Q3ASM): $(Q3ASMOBJ)
 #############################################################################
 
 Q3OBJ = \
-  $(O)/client/cl_cgame.o \
-  $(O)/client/cl_cin.o \
-  $(O)/client/cl_console.o \
-  $(O)/client/cl_input.o \
-  $(O)/client/cl_keys.o \
-  $(O)/client/cl_main.o \
-  $(O)/client/cl_net_chan.o \
-  $(O)/client/cl_parse.o \
-  $(O)/client/cl_scrn.o \
-  $(O)/client/cl_ui.o \
-  $(O)/client/cl_avi.o \
+  $(O)/client/cgame.o \
+  $(O)/client/cin.o \
+  $(O)/client/console.o \
+  $(O)/client/input.o \
+  $(O)/client/keys.o \
+  $(O)/client/main.o \
+  $(O)/client/netchan.o \
+  $(O)/client/parse.o \
+  $(O)/client/scrn.o \
+  $(O)/client/ui.o \
+  $(O)/client/avi.o \
   \
   $(O)/client/cm/load.o \
   $(O)/client/cm/patch.o \
@@ -1404,7 +1404,7 @@ Q3OBJ = \
   $(O)/client/snd/qal.o \
   $(O)/client/snd/openal.o \
   \
-  $(O)/client/cl_curl.o \
+  $(O)/client/curl.o \
   \
   $(O)/client/server/bot.o \
   $(O)/client/server/ccmds.o \
