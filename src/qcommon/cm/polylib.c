@@ -21,7 +21,7 @@
 /* this is only used for visualization tools in cm_ debug functions */
 
 
-#include "cm_local.h"
+#include "local.h"
 
 
 /* counters are only bumped when running single threaded,

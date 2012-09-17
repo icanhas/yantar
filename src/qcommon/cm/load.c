@@ -19,7 +19,7 @@
  */
 /* cmodel.c -- model loading */
 
-#include "cm_local.h"
+#include "local.h"
 
 #ifdef BSPC
 

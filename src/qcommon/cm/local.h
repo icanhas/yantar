@@ -20,7 +20,7 @@
 
 #include "q_shared.h"
 #include "qcommon.h"
-#include "cm_polylib.h"
+#include "polylib.h"
 
 #define MAX_SUBMODELS		256
 #define BOX_MODEL_HANDLE	255

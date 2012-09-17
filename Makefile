@@ -1151,10 +1151,12 @@ makedirs:
 	@$(MKDIR) -p \
 		$(BIN_DIR) \
 		$(OBJ_DIR) \
+		$(O)/client/cm \
 		$(O)/client/vm \
 		$(O)/renderer \
 		$(O)/renderergl2 \
 		$(O)/renderersmp \
+		$(O)/ded/cm \
 		$(O)/ded/vm \
 		$(O)/$(BASEGAME)/cgame \
 		$(O)/$(BASEGAME)/game \
@@ -1364,11 +1366,11 @@ Q3OBJ = \
   $(O)/client/cl_ui.o \
   $(O)/client/cl_avi.o \
   \
-  $(O)/client/cm_load.o \
-  $(O)/client/cm_patch.o \
-  $(O)/client/cm_polylib.o \
-  $(O)/client/cm_test.o \
-  $(O)/client/cm_trace.o \
+  $(O)/client/cm/load.o \
+  $(O)/client/cm/patch.o \
+  $(O)/client/cm/polylib.o \
+  $(O)/client/cm/test.o \
+  $(O)/client/cm/trace.o \
   \
   $(O)/client/cmd.o \
   $(O)/client/common.o \
@@ -1811,11 +1813,11 @@ Q3DOBJ = \
   $(O)/ded/sv_snapshot.o \
   $(O)/ded/sv_world.o \
   \
-  $(O)/ded/cm_load.o \
-  $(O)/ded/cm_patch.o \
-  $(O)/ded/cm_polylib.o \
-  $(O)/ded/cm_test.o \
-  $(O)/ded/cm_trace.o \
+  $(O)/ded/cm/load.o \
+  $(O)/ded/cm/patch.o \
+  $(O)/ded/cm/polylib.o \
+  $(O)/ded/cm/test.o \
+  $(O)/ded/cm/trace.o \
   $(O)/ded/cmd.o \
   $(O)/ded/common.o \
   $(O)/ded/cvar.o \
