@@ -150,9 +150,12 @@ int main(int argc, char *argv[]) {
 	}
 	ilist = 0;
 	for (i = 1; argv[i]; i++)
-		if (*argv[i] == '-')
+		if (strcmp(argv[i], "-l") == 0 && argv[i+1] && *argv[i+1] != '-') {	/* -l file */
+			llist[1] = append(argv[i++], llist[1]);
+			llist[1] = append(argv[i], llist[1]);
+		} else if (*argv[i] == '-') {
 			opt(argv[i]);
-		else {
+		} else {
 			char *name = exists(argv[i]);
 			if (name) {
 				if (strcmp(name, argv[i]) != 0
