@@ -27,7 +27,7 @@
 
 #ifdef USE_OPENAL_DLOPEN
 
-#include "../sys/sys_loadlib.h"
+#include "../../sys/loadlib.h"
 
 LPALENABLE	qalEnable;
 LPALDISABLE	qalDisable;

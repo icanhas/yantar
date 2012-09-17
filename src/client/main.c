@@ -22,8 +22,8 @@
 #include "client.h"
 #include <limits.h>
 
-#include "../sys/sys_local.h"
-#include "../sys/sys_loadlib.h"
+#include "../sys/local.h"
+#include "../sys/loadlib.h"
 
 #ifdef USE_MUMBLE
 #include "libmumblelink.h"

@@ -39,11 +39,10 @@
 #endif
 #endif
 
-#include "sys_local.h"
-#include "sys_loadlib.h"
-
-#include "../qcommon/q_shared.h"
-#include "../qcommon/qcommon.h"
+#include "local.h"
+#include "loadlib.h"
+#include "q_shared.h"
+#include "qcommon.h"
 
 static char binaryPath[ MAX_OSPATH ] = { 0 };
 static char installPath[ MAX_OSPATH ] = { 0 };

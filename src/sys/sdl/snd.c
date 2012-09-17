@@ -28,7 +28,7 @@
 #endif
 
 #include "q_shared.h"
-#include "../client/snd/local.h"	/* FIXME: leaking internals from client/snd */
+#include "../../client/snd/local.h"	/* FIXME: leaking internals from client/snd */
 
 qbool		snd_inited = qfalse;
 

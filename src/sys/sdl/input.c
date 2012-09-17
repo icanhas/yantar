@@ -28,8 +28,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "../client/client.h"
-#include "../sys/sys_local.h"
+#include "../../client/client.h"
+#include "../local.h"
 
 #ifdef MACOS_X
 /* Mouse acceleration needs to be disabled */

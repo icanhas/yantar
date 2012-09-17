@@ -37,10 +37,10 @@
 #include <stdlib.h>
 #include <math.h>
 
-#include "../renderer/tr_local.h"
-#include "../client/client.h"
-#include "../sys/sys_local.h"
-#include "sdl_icon.h"
+#include "../../renderer/tr_local.h"
+#include "../../client/client.h"
+#include "../local.h"
+#include "icon.h"
 
 /* Just hack it for now. */
 #ifdef MACOS_X

@@ -1,5 +1,4 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -17,54 +16,47 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * ===========================================================================
  */
 
-/* snddma_null.c
- * all other sound mixing is portable */
+#include "q_shared.h"
+#include "qcommon.h"
+#include "local.h"
 
-#include "../qcommon/q_shared.h"
-#include "../qcommon/qcommon.h"
+#include <stdio.h>
 
-qbool
-SNDDMA_Init(void)
-{
-	return qfalse;
-}
-
-int
-SNDDMA_GetDMAPos(void)
-{
-	return 0;
-}
-
+/*
+ * CON_Shutdown
+ */
 void
-SNDDMA_Shutdown(void)
+CON_Shutdown(void)
 {
 }
 
+/*
+ * CON_Init
+ */
 void
-SNDDMA_BeginPainting(void)
+CON_Init(void)
 {
 }
 
+/*
+ * CON_Input
+ */
+char *
+CON_Input(void)
+{
+	return NULL;
+}
+
+/*
+ * CON_Print
+ */
 void
-SNDDMA_Submit(void)
+CON_Print(const char *msg)
 {
-}
-
-sfxHandle_t
-S_RegisterSound(const char *name, qbool compressed)
-{
-	return 0;
-}
-
-void
-S_StartLocalSound(sfxHandle_t sfxHandle, int channelNum)
-{
-}
-
-void
-S_ClearSoundBuffer(void)
-{
+	if(com_ansiColor && com_ansiColor->integer)
+		Sys_AnsiColorPrint(msg);
+	else
+		fputs(msg, stderr);
 }

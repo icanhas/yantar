@@ -23,7 +23,7 @@
 
 #include <errno.h>
 #include <stdio.h>
-#include "../qcommon/qcommon.h"
+#include "qcommon.h"
 
 int sys_curtime;
 

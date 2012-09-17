@@ -1,4 +1,5 @@
 /*
+ * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This file is part of Quake III Arena source code.
@@ -16,47 +17,40 @@
  * You should have received a copy of the GNU General Public License
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ * ===========================================================================
  */
 
-#include "../qcommon/q_shared.h"
-#include "../qcommon/qcommon.h"
-#include "sys_local.h"
-
-#include <stdio.h>
+#include "qcommon.h"
 
 /*
- * CON_Shutdown
+ * =============
+ * NET_StringToAdr
+ *
+ * localhost
+ * idnewt
+ * idnewt:28000
+ * 192.246.40.70
+ * 192.246.40.70:28000
+ * =============
  */
-void
-CON_Shutdown(void)
+qbool
+NET_StringToAdr(char *s, netadr_t *a)
 {
+	if(!strcmp (s, "localhost")){
+		memset (a, 0, sizeof(*a));
+		a->type = NA_LOOPBACK;
+		return true;
+	}
+
+	return false;
 }
 
 /*
- * CON_Init
+ * ==================
+ * Sys_SendPacket
+ * ==================
  */
 void
-CON_Init(void)
+Sys_SendPacket(int length, void *data, netadr_t to)
 {
-}
-
-/*
- * CON_Input
- */
-char *
-CON_Input(void)
-{
-	return NULL;
-}
-
-/*
- * CON_Print
- */
-void
-CON_Print(const char *msg)
-{
-	if(com_ansiColor && com_ansiColor->integer)
-		Sys_AnsiColorPrint(msg);
-	else
-		fputs(msg, stderr);
 }

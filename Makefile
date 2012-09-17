@@ -225,6 +225,9 @@ ASMDIR=$(MOUNT_DIR)/asm
 SYSDIR=$(MOUNT_DIR)/sys
 SDLDIR=$(SYSDIR)/sdl
 NDIR=$(SYSDIR)/null
+UNIXDIR=$(SYSDIR)/unix
+OSXDIR=$(SYSDIR)/osx
+WINDIR=$(SYSDIR)/win
 GDIR=$(MOUNT_DIR)/game
 CGDIR=$(MOUNT_DIR)/cgame
 BLIBDIR=$(MOUNT_DIR)/botlib
@@ -1157,32 +1160,49 @@ makedirs:
 		$(O)/client/net \
 		$(O)/client/server \
 		$(O)/client/snd \
+		$(O)/client/sys/null \
+		$(O)/client/sys/sdl \
 		$(O)/client/vm \
-		$(O)/renderer \
-		$(O)/renderergl2 \
-		$(O)/renderersmp \
+		$(O)/renderer/sys/sdl \
+		$(O)/renderergl2/sys/sdl \
+		$(O)/renderersmp/sys/sdl \
 		$(O)/ded/cm \
 		$(O)/ded/net \
 		$(O)/ded/server \
+		$(O)/ded/sys/null \
+		$(O)/ded/sys/sdl \
 		$(O)/ded/vm \
 		$(O)/$(BASEGAME)/cgame \
 		$(O)/$(BASEGAME)/game \
 		$(O)/$(BASEGAME)/ui \
 		$(O)/$(BASEGAME)/qcommon/vmlibc \
-		$(B)/$(BASEGAME)/vm \
 		$(O)/$(BASEGAME)/vm \
 		$(O)/$(MISSIONPACK)/cgame \
 		$(O)/$(MISSIONPACK)/game \
 		$(O)/$(MISSIONPACK)/ui \
 		$(O)/$(MISSIONPACK)/qcommon/vmlibc \
-		$(B)/$(MISSIONPACK)/vm \
 		$(O)/$(MISSIONPACK)/vm \
 		$(O)/cmd/asm \
 		$(O)/cmd/etc \
-		$(B)/cmd/rcc \
 		$(O)/cmd/rcc \
 		$(O)/cmd/cpp \
-		$(O)/cmd/lburg
+		$(O)/cmd/lburg \
+		$(B)/$(BASEGAME)/vm \
+		$(B)/$(MISSIONPACK)/vm \
+		$(B)/cmd/rcc
+		
+ifeq ($(PLATFORM),mingw32)
+	@$(MKDIR) -p $(O)/client/sys/win
+	@$(MKDIR) -p $(O)/ded/sys/win
+else
+	@$(MKDIR) -p $(O)/client/sys/unix
+	@$(MKDIR) -p $(O)/ded/sys/unix
+endif
+
+ifeq ($(PLATFORM),darwin)
+	@$(MKDIR) -p $(O)/client/sys/osx
+	@$(MKDIR) -p $(O)/ded/sys/osx
+endif
 
 #############################################################################
 # QVM BUILD TOOLS
@@ -1455,12 +1475,12 @@ Q3OBJ = \
   $(O)/client/l_script.o \
   $(O)/client/l_struct.o \
   \
-  $(O)/client/sdl_input.o \
-  $(O)/client/sdl_snd.o \
+  $(O)/client/sys/sdl/input.o \
+  $(O)/client/sys/sdl/snd.o \
   \
-  $(O)/client/con_passive.o \
-  $(O)/client/con_log.o \
-  $(O)/client/sys_main.o
+  $(O)/client/sys/conspassive.o \
+  $(O)/client/sys/conslog.o \
+  $(O)/client/sys/main.o
 
 Q3R2OBJ = \
   $(O)/renderer/tr_image_bmp.o \
@@ -1499,8 +1519,8 @@ Q3R2OBJ = \
   $(O)/renderergl2/tr_vbo.o \
   $(O)/renderergl2/tr_world.o \
   \
-  $(O)/renderer/sdl_gamma.o \
-  $(O)/renderer/sdl_glimp.o
+  $(O)/renderer/sys/sdl/gamma.o \
+  $(O)/renderer/sys/sdl/glimp.o
 
 Q3ROBJ = \
   $(O)/renderer/tr_animation.o \
@@ -1532,8 +1552,8 @@ Q3ROBJ = \
   $(O)/renderer/tr_surface.o \
   $(O)/renderer/tr_world.o \
   \
-  $(O)/renderer/sdl_gamma.o \
-  $(O)/renderer/sdl_glimp.o
+  $(O)/renderer/sdl/gamma.o \
+  $(O)/renderer/sdl/glimp.o
 
 ifneq ($(USE_RENDERER_DLOPEN), 0)
   Q3ROBJ += \
@@ -1737,16 +1757,16 @@ endif
 
 ifeq ($(PLATFORM),mingw32)
   Q3OBJ += \
-    $(O)/client/win_resource.o \
-    $(O)/client/sys_win32.o
+    $(O)/client/sys/win/res.o \
+    $(O)/client/sys/win/sys.o
 else
   Q3OBJ += \
-    $(O)/client/sys_unix.o
+    $(O)/client/unix/sys.o
 endif
 
 ifeq ($(PLATFORM),darwin)
   Q3OBJ += \
-    $(O)/client/sys_osx.o
+    $(O)/client/osx/sys.o
 endif
 
 ifeq ($(USE_MUMBLE),1)
@@ -1873,12 +1893,12 @@ Q3DOBJ = \
   $(O)/ded/l_script.o \
   $(O)/ded/l_struct.o \
   \
-  $(O)/ded/null_client.o \
-  $(O)/ded/null_input.o \
-  $(O)/ded/null_snddma.o \
+  $(O)/ded/sys/null/client.o \
+  $(O)/ded/sys/null/input.o \
+  $(O)/ded/sys/null/snddma.o \
   \
-  $(O)/ded/con_log.o \
-  $(O)/ded/sys_main.o
+  $(O)/ded/sys/conslog.o \
+  $(O)/ded/sys/main.o
 
 ifeq ($(ARCH),i386)
   Q3DOBJ += \
@@ -1974,18 +1994,18 @@ endif
 
 ifeq ($(PLATFORM),mingw32)
   Q3DOBJ += \
-    $(O)/ded/win_resource.o \
-    $(O)/ded/sys_win32.o \
-    $(O)/ded/con_win32.o
+    $(O)/ded/sys/win/res.o \
+    $(O)/ded/sys/win/sys.o \
+    $(O)/ded/sys/win/cons.o
 else
   Q3DOBJ += \
-    $(O)/ded/sys_unix.o \
-    $(O)/ded/con_tty.o
+    $(O)/ded/sys/unix/sys.o \
+    $(O)/ded/sys/unix/cons.o
 endif
 
 ifeq ($(PLATFORM),darwin)
   Q3DOBJ += \
-    $(O)/ded/sys_osx.o
+    $(O)/ded/sys/osx/sys.o
 endif
 
 $(B)/$(SERVERBIN)$(FULLBINEXT): $(Q3DOBJ)
@@ -2296,18 +2316,6 @@ $(O)/client/%.o: $(ASMDIR)/%.s
 $(O)/client/%.o: $(ASMDIR)/%.c
 	$(DO_CC) -march=k8
 
-$(O)/client/%.o: $(CDIR)/%.c
-	$(DO_CC)
-
-$(O)/client/net/%.o: $(NETDIR)%.c
-	$(DO_CC)
-
-$(O)/client/server/%.o: $(SDIR)/%.c
-	$(DO_CC)
-
-$(O)/client/snd/%.o: $(SNDDIR)%.c
-	$(DO_CC)
-
 $(O)/client/%.o: $(COMDIR)/%.c
 	$(DO_CC)
 
@@ -2320,26 +2328,50 @@ $(O)/client/%.o: $(SPEEXDIR)/%.c
 $(O)/client/%.o: $(ZDIR)/%.c
 	$(DO_CC)
 
-$(O)/client/%.o: $(SDLDIR)/%.c
+$(O)/client/%.o: $(CDIR)/%.c
+	$(DO_CC)
+
+$(O)/client/net/%.o: $(NETDIR)/%.c
+	$(DO_CC)
+
+$(O)/client/server/%.o: $(SDIR)/%.c
+	$(DO_CC)
+
+$(O)/client/snd/%.o: $(SNDDIR)/%.c
+	$(DO_CC)
+	
+$(O)/client/sys/null/%.o: $(NDIR)/%.c
+	$(DO_CC)
+	
+$(O)/client/sys/osx/%.o: $(OSXDIR)/%.c
+	$(DO_CC)
+	
+$(O)/client/sys/osx/%.o: $(OSXDIR)/%.m
+	$(DO_CC)
+
+$(O)/client/sys/unix/%.o: $(UNIXDIR)/%.c
+	$(DO_CC)
+	
+$(O)/client/sys/win/%.o: $(WINDIR)/%.c
+	$(DO_CC)
+	
+$(O)/client/sys/win/%.o: $(WINDIR)/%.rc
+	$(DO_WINDRES)
+	
+$(O)/client/sys/%.o: $(SYSDIR)/%.c
+	$(DO_CC)
+
+$(O)/client/sys/sdl/%.o: $(SDLDIR)/%.c
 	$(DO_CC)
 
 $(O)/renderersmp/%.o: $(SDLDIR)/%.c
 	$(DO_SMP_CC)
 
-$(O)/client/%.o: $(SYSDIR)/%.c
-	$(DO_CC)
-
-$(O)/client/%.o: $(SYSDIR)/%.m
-	$(DO_CC)
-
-$(O)/client/%.o: $(SYSDIR)/%.rc
-	$(DO_WINDRES)
-
 
 $(O)/renderer/%.o: $(COMDIR)/%.c
 	$(DO_REF_CC)
 
-$(O)/renderer/%.o: $(SDLDIR)/%.c
+$(O)/renderer/sys/sdl/%.o: $(SDLDIR)/%.c
 	$(DO_REF_CC)
 
 $(O)/renderer/%.o: $(JPDIR)/%.c
@@ -2359,12 +2391,6 @@ $(O)/ded/%.o: $(ASMDIR)/%.s
 $(O)/ded/%.o: $(ASMDIR)/%.c
 	$(DO_CC) -march=k8
 
-$(O)/ded/net/%.o: $(NETDIR)/%.c
-	$(DO_DED_CC)
-
-$(O)/ded/server/%.o: $(SDIR)/%.c
-	$(DO_DED_CC)
-
 $(O)/ded/%.o: $(COMDIR)/%.c
 	$(DO_DED_CC)
 
@@ -2374,16 +2400,34 @@ $(O)/ded/%.o: $(ZDIR)/%.c
 $(O)/ded/%.o: $(BLIBDIR)/%.c
 	$(DO_BOT_CC)
 
-$(O)/ded/%.o: $(SYSDIR)/%.c
+$(O)/ded/net/%.o: $(NETDIR)/%.c
 	$(DO_DED_CC)
 
-$(O)/ded/%.o: $(SYSDIR)/%.m
+$(O)/ded/server/%.o: $(SDIR)/%.c
+	$(DO_DED_CC)
+	
+$(O)/ded/sys/null/%.o: $(NDIR)/%.c
+	$(DO_DED_CC)
+	
+$(O)/ded/sys/osx/%.o: $(OSXDIR)/%.c
 	$(DO_DED_CC)
 
-$(O)/ded/%.o: $(SYSDIR)/%.rc
+$(O)/ded/sys/unix/%.o: $(UNIXDIR)/%.c
+	$(DO_DED_CC)
+	
+$(O)/ded/sys/win/%.o: $(WINDIR)/%.c
+	$(DO_DED_CC)
+	
+$(O)/ded/sys/win/%.o: $(WINDIR)/%.rc
 	$(DO_WINDRES)
-
-$(O)/ded/%.o: $(NDIR)/%.c
+	
+$(O)/ded/sys/%.o: $(SYSDIR)/%.c
+	$(DO_DED_CC)
+	
+$(O)/ded/sys/sdl/%.o: $(SDLDIR)/%.c
+	$(DO_DED_CC)
+	
+$(O)/ded/sys/osx/%.o: $(OSXDIR)/%.m
 	$(DO_DED_CC)
 
 
