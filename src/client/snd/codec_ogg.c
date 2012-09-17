@@ -24,8 +24,8 @@
 #ifdef USE_CODEC_VORBIS
 
 /* includes for the Q3 sound system */
-#include "client.h"
-#include "snd_codec.h"
+#include "../client.h"
+#include "codec.h"
 
 /* includes for the OGG codec */
 #include <errno.h>

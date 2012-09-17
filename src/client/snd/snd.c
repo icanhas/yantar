@@ -19,10 +19,10 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#include "client.h"
-#include "snd_codec.h"
-#include "snd_local.h"
-#include "snd_public.h"
+#include "../client.h"
+#include "codec.h"
+#include "local.h"
+#include "public.h"
 
 cvar_t	*s_volume;
 cvar_t	*s_muted;

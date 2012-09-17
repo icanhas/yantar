@@ -19,8 +19,8 @@
  */
 /* snd_mix.c -- portable code to mix sounds for snd_dma.c */
 
-#include "client.h"
-#include "snd_local.h"
+#include "../client.h"
+#include "local.h"
 #if idppc_altivec && !defined(MACOS_X)
 #include <altivec.h>
 #endif

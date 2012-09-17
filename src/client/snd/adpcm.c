@@ -31,7 +31,7 @@
 ** Version 1.2, 18-Dec-92.
 */
 
-#include "snd_local.h"
+#include "local.h"
 
 
 /* Intel ADPCM step variation table */

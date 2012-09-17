@@ -19,9 +19,9 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#include "snd_local.h"
-#include "snd_codec.h"
-#include "client.h"
+#include "local.h"
+#include "codec.h"
+#include "../client.h"
 
 #ifdef USE_OPENAL
 

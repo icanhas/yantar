@@ -27,9 +27,9 @@
 *
 *****************************************************************************/
 
-#include "snd_local.h"
-#include "snd_codec.h"
-#include "client.h"
+#include "local.h"
+#include "codec.h"
+#include "../client.h"
 
 void S_Update_(void);
 void S_Base_StopAllSounds(void);

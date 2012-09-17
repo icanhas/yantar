@@ -215,6 +215,7 @@ RP=release-$(PLATFORM)-$(ARCH)
 BD=$(BIN_DIR)
 BR=$(BIN_DIR)
 CDIR=$(MOUNT_DIR)/client
+SNDDIR=$(CDIR)/snd
 SDIR=$(MOUNT_DIR)/server
 RDIR=$(MOUNT_DIR)/renderer
 R2DIR=$(MOUNT_DIR)/renderergl2
@@ -1155,6 +1156,7 @@ makedirs:
 		$(O)/client/cm \
 		$(O)/client/net \
 		$(O)/client/server \
+		$(O)/client/snd \
 		$(O)/client/vm \
 		$(O)/renderer \
 		$(O)/renderergl2 \
@@ -1388,19 +1390,19 @@ Q3OBJ = \
   $(O)/client/net/ip.o \
   $(O)/client/huffman.o \
   \
-  $(O)/client/snd_adpcm.o \
-  $(O)/client/snd_dma.o \
-  $(O)/client/snd_mem.o \
-  $(O)/client/snd_mix.o \
-  $(O)/client/snd_wavelet.o \
+  $(O)/client/snd/adpcm.o \
+  $(O)/client/snd/dma.o \
+  $(O)/client/snd/mem.o \
+  $(O)/client/snd/mix.o \
+  $(O)/client/snd/wavelet.o \
   \
-  $(O)/client/snd_main.o \
-  $(O)/client/snd_codec.o \
-  $(O)/client/snd_codec_wav.o \
-  $(O)/client/snd_codec_ogg.o \
+  $(O)/client/snd/snd.o \
+  $(O)/client/snd/codec.o \
+  $(O)/client/snd/codec_wav.o \
+  $(O)/client/snd/codec_ogg.o \
   \
-  $(O)/client/qal.o \
-  $(O)/client/snd_openal.o \
+  $(O)/client/snd/qal.o \
+  $(O)/client/snd/openal.o \
   \
   $(O)/client/cl_curl.o \
   \
@@ -1599,14 +1601,14 @@ endif
 
 ifeq ($(ARCH),i386)
   Q3OBJ += \
-    $(O)/client/snd_mixa.o \
+    $(O)/client/snd/mixa.o \
     $(O)/client/matha.o \
     $(O)/client/snapvector.o \
     $(O)/client/ftola.o
 endif
 ifeq ($(ARCH),x86)
   Q3OBJ += \
-    $(O)/client/snd_mixa.o \
+    $(O)/client/snd/mixa.o \
     $(O)/client/matha.o \
     $(O)/client/snapvector.o \
     $(O)/client/ftola.o
@@ -2296,11 +2298,14 @@ $(O)/client/%.o: $(ASMDIR)/%.c
 
 $(O)/client/%.o: $(CDIR)/%.c
 	$(DO_CC)
-	
+
 $(O)/client/net/%.o: $(NETDIR)%.c
 	$(DO_CC)
 
 $(O)/client/server/%.o: $(SDIR)/%.c
+	$(DO_CC)
+
+$(O)/client/snd/%.o: $(SNDDIR)%.c
 	$(DO_CC)
 
 $(O)/client/%.o: $(COMDIR)/%.c

@@ -19,7 +19,7 @@
  */
 
 #include "client.h"
-#include "snd_local.h"
+#include "snd/local.h"
 
 #define INDEX_FILE_EXTENSION	".index.dat"
 

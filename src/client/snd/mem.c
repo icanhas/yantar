@@ -27,8 +27,8 @@
 *
 *****************************************************************************/
 
-#include "snd_local.h"
-#include "snd_codec.h"
+#include "local.h"
+#include "codec.h"
 
 #define DEF_COMSOUNDMEGS "8"
 
