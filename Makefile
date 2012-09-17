@@ -218,8 +218,8 @@ CDIR=$(MOUNT_DIR)/client
 SDIR=$(MOUNT_DIR)/server
 RDIR=$(MOUNT_DIR)/renderer
 R2DIR=$(MOUNT_DIR)/renderergl2
-CMDIR=$(MOUNT_DIR)/qcommon
-NETDIR=$(CMDIR)/net
+COMDIR=$(MOUNT_DIR)/qcommon
+NETDIR=$(COMDIR)/net
 ASMDIR=$(MOUNT_DIR)/asm
 SYSDIR=$(MOUNT_DIR)/sys
 SDLDIR=$(SYSDIR)/sdl
@@ -483,7 +483,7 @@ ifeq ($(PLATFORM),mingw32)
     -DUSE_ICON -I$(MOUNT_DIR)/qcommon
 
   # In the absence of wspiapi.h, require Windows XP or later
-  ifeq ($(shell test -e $(CMDIR)/wspiapi.h; echo $$?),1)
+  ifeq ($(shell test -e $(COMDIR)/wspiapi.h; echo $$?),1)
     BASE_CFLAGS += -DWINVER=0x501
   endif
 
@@ -2303,7 +2303,7 @@ $(O)/client/net/%.o: $(NETDIR)%.c
 $(O)/client/server/%.o: $(SDIR)/%.c
 	$(DO_CC)
 
-$(O)/client/%.o: $(CMDIR)/%.c
+$(O)/client/%.o: $(COMDIR)/%.c
 	$(DO_CC)
 
 $(O)/client/%.o: $(BLIBDIR)/%.c
@@ -2331,7 +2331,7 @@ $(O)/client/%.o: $(SYSDIR)/%.rc
 	$(DO_WINDRES)
 
 
-$(O)/renderer/%.o: $(CMDIR)/%.c
+$(O)/renderer/%.o: $(COMDIR)/%.c
 	$(DO_REF_CC)
 
 $(O)/renderer/%.o: $(SDLDIR)/%.c
@@ -2360,7 +2360,7 @@ $(O)/ded/net/%.o: $(NETDIR)/%.c
 $(O)/ded/server/%.o: $(SDIR)/%.c
 	$(DO_DED_CC)
 
-$(O)/ded/%.o: $(CMDIR)/%.c
+$(O)/ded/%.o: $(COMDIR)/%.c
 	$(DO_DED_CC)
 
 $(O)/ded/%.o: $(ZDIR)/%.c
@@ -2449,16 +2449,16 @@ $(O)/$(MISSIONPACK)/ui/%.asm: $(UIDIR)/%.c $(Q3LCC)
 	$(DO_UI_Q3LCC_MISSIONPACK)
 
 
-$(O)/$(BASEGAME)/qcommon/%.o: $(CMDIR)/%.c
+$(O)/$(BASEGAME)/qcommon/%.o: $(COMDIR)/%.c
 	$(DO_SHLIB_CC)
 
-$(O)/$(BASEGAME)/qcommon/%.asm: $(CMDIR)/%.c $(Q3LCC)
+$(O)/$(BASEGAME)/qcommon/%.asm: $(COMDIR)/%.c $(Q3LCC)
 	$(DO_Q3LCC)
 
-$(O)/$(MISSIONPACK)/qcommon/%.o: $(CMDIR)/%.c
+$(O)/$(MISSIONPACK)/qcommon/%.o: $(COMDIR)/%.c
 	$(DO_SHLIB_CC_MISSIONPACK)
 
-$(O)/$(MISSIONPACK)/qcommon/%.asm: $(CMDIR)/%.c $(Q3LCC)
+$(O)/$(MISSIONPACK)/qcommon/%.asm: $(COMDIR)/%.c $(Q3LCC)
 	$(DO_Q3LCC_MISSIONPACK)
 
 
