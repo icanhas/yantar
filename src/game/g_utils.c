@@ -53,7 +53,7 @@ AddRemap(const char *oldShader, const char *newShader, float timeOffset)
 	}
 }
 
-const char *
+char *
 BuildShaderStateConfig(void)
 {
 	static char buff[MAX_STRING_CHARS*4];
