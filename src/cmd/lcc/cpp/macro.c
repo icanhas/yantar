@@ -190,7 +190,7 @@ expand(Tokenrow *trp, Nlist *np)
 	else {
 		ntokc = gatherargs(trp, atr, &narg);
 		if (narg<0) {			/* not actually a call (no '(') */
-			/* gatherargs has already pushed trp->tr to the next token */
+			trp->tp++;
 			return;
 		}
 		if (narg != rowlen(np->ap)) {
