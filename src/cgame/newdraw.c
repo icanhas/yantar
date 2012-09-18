@@ -132,9 +132,10 @@ CG_SetSelectedPlayerName(void)
 	if(cg_currentSelectedPlayer.integer >= 0 &&
 	   cg_currentSelectedPlayer.integer < numSortedTeamPlayers){
 	   	int i;
+		clientInfo_t *ci;
 	   	
 	   	i = cg_currentSelectedPlayer.integer;
-		clientInfo_t *ci = cgs.clientinfo + sortedTeamPlayers[i];
+		ci = cgs.clientinfo + sortedTeamPlayers[i];
 		if(ci){
 			trap_Cvar_Set("cg_selectedPlayerName", ci->name);
 			trap_Cvar_Set("cg_selectedPlayer", va("%d", sortedTeamPlayers[i]));
