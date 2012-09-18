@@ -18,25 +18,10 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-/*****************************************************************************
-* name:		snd_mem.c
-*
-* desc:		sound caching
-*
-* $Archive: /MissionPack/code/client/snd_mem.c $
-*
-*****************************************************************************/
-
 #include "local.h"
 #include "codec.h"
 
 #define DEF_COMSOUNDMEGS "8"
-
-/*
- *
- * memory management
- *
- */
 
 static sndBuffer *buffer = NULL;
 static sndBuffer *freelist = NULL;
@@ -59,15 +44,11 @@ sndBuffer*
 SND_malloc(void)
 {
 	sndBuffer *v;
-redo:
-	if(freelist == NULL){
+	
+	while(freelist == nil)
 		S_FreeOldestSound();
-		goto redo;
-	}
-
 	inUse -= sizeof(sndBuffer);
 	totalInUse += sizeof(sndBuffer);
-
 	v = freelist;
 	freelist = *(sndBuffer**)freelist;
 	v->next = NULL;
@@ -96,10 +77,8 @@ SND_setup(void)
 	q	= p + scs;
 	while(--q > p)
 		*(sndBuffer**)q = q-1;
-
 	*(sndBuffer**)q = NULL;
 	freelist = p + scs - 1;
-
 	Com_Printf("Sound memory manager started\n");
 }
 
@@ -110,11 +89,7 @@ SND_shutdown(void)
 	free(buffer);
 }
 
-/*
- * ResampleSfx
- *
- * resample / decimate to the current source rate
- */
+/* resample / decimate to the current source rate */
 static void
 ResampleSfx(sfx_t *sfx, int inrate, int inwidth, byte *data, qbool compressed)
 {
@@ -159,11 +134,7 @@ ResampleSfx(sfx_t *sfx, int inrate, int inwidth, byte *data, qbool compressed)
 	}
 }
 
-/*
- * ResampleSfx
- *
- * resample / decimate to the current source rate
- */
+/* resample / decimate to the current source rate */
 static int
 ResampleSfxRaw(short *sfx, int inrate, int inwidth, int samples, byte *data)
 {
@@ -194,11 +165,7 @@ ResampleSfxRaw(short *sfx, int inrate, int inwidth, int samples, byte *data)
 	return outcount;
 }
 
-/* ============================================================================= */
-
 /*
- * S_LoadSound
- *
  * The filename may be different than sfx->name in the case
  * of a forced fallback of a player specific sound
  */

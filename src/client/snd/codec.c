@@ -25,8 +25,6 @@
 static snd_codec_t *codecs;
 
 /*
- * S_CodecGetSound
- *
  * Opens/loads a sound, tries codec based on the sound's file extension
  * then tries all supported codecs.
  */
@@ -105,9 +103,6 @@ S_CodecGetSound(const char *filename, snd_info_t *info)
 	return NULL;
 }
 
-/*
- * S_CodecInit
- */
 void
 S_CodecInit()
 {
@@ -121,18 +116,12 @@ S_CodecInit()
 	S_CodecRegister(&wav_codec);
 }
 
-/*
- * S_CodecShutdown
- */
 void
 S_CodecShutdown()
 {
 	codecs = NULL;
 }
 
-/*
- * S_CodecRegister
- */
 void
 S_CodecRegister(snd_codec_t *codec)
 {
@@ -140,18 +129,12 @@ S_CodecRegister(snd_codec_t *codec)
 	codecs = codec;
 }
 
-/*
- * S_CodecLoad
- */
 void *
 S_CodecLoad(const char *filename, snd_info_t *info)
 {
 	return S_CodecGetSound(filename, info);
 }
 
-/*
- * S_CodecOpenStream
- */
 snd_stream_t *
 S_CodecOpenStream(const char *filename)
 {
@@ -170,12 +153,8 @@ S_CodecReadStream(snd_stream_t *stream, int bytes, void *buffer)
 	return stream->codec->read(stream, bytes, buffer);
 }
 
-/* =======================================================================
- * Util functions (used by codecs) */
+/* Util functions (used by codecs) */
 
-/*
- * S_CodecUtilOpen
- */
 snd_stream_t *
 S_CodecUtilOpen(const char *filename, snd_codec_t *codec)
 {
@@ -204,9 +183,6 @@ S_CodecUtilOpen(const char *filename, snd_codec_t *codec)
 	return stream;
 }
 
-/*
- * S_CodecUtilClose
- */
 void
 S_CodecUtilClose(snd_stream_t **stream)
 {

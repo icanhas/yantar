@@ -23,14 +23,12 @@
 /* OGG support is enabled by this define */
 #ifdef USE_CODEC_VORBIS
 
-/* includes for the Q3 sound system */
+#define OV_EXCLUDE_STATIC_CALLBACKS
+
+#include <errno.h>
+#include <vorbis/vorbisfile.h>
 #include "../client.h"
 #include "codec.h"
-
-/* includes for the OGG codec */
-#include <errno.h>
-#define OV_EXCLUDE_STATIC_CALLBACKS
-#include <vorbis/vorbisfile.h>
 
 /* The OGG codec can return the samples in a number of different formats,
  * we use the standard signed short format. */
@@ -47,7 +45,7 @@ snd_codec_t ogg_codec =
 	NULL
 };
 
-/* callbacks for vobisfile */
+/* callbacks for vorbisfile */
 
 /* fread() replacement */
 size_t
@@ -215,9 +213,6 @@ const ov_callbacks S_OGG_Callbacks =
 	&S_OGG_Callback_tell
 };
 
-/*
- * S_OGG_CodecOpenStream
- */
 snd_stream_t *
 S_OGG_CodecOpenStream(const char *filename)
 {
@@ -311,9 +306,6 @@ S_OGG_CodecOpenStream(const char *filename)
 	return stream;
 }
 
-/*
- * S_OGG_CodecCloseStream
- */
 void
 S_OGG_CodecCloseStream(snd_stream_t *stream)
 {
@@ -331,9 +323,6 @@ S_OGG_CodecCloseStream(snd_stream_t *stream)
 	S_CodecUtilClose(&stream);
 }
 
-/*
- * S_OGG_CodecReadStream
- */
 int
 S_OGG_CodecReadStream(snd_stream_t *stream, int bytes, void *buffer)
 {
@@ -347,9 +336,9 @@ S_OGG_CodecReadStream(snd_stream_t *stream, int bytes, void *buffer)
 	/* big endian machines want their samples in big endian order */
 	int IsBigEndian = 0;
 
-#       ifdef Q3_BIG_ENDIAN
+#ifdef Q3_BIG_ENDIAN
 	IsBigEndian = 1;
-#       endif	/* Q3_BIG_ENDIAN */
+#endif	/* Q3_BIG_ENDIAN */
 
 	/* check if input is valid */
 	if(!(stream && buffer))
@@ -388,8 +377,6 @@ S_OGG_CodecReadStream(snd_stream_t *stream, int bytes, void *buffer)
 }
 
 /*
- * S_OGG_CodecLoad
- *
  * We handle S_OGG_CodecLoad as a special case of the streaming functions
  * where we read the whole stream at once.
  */

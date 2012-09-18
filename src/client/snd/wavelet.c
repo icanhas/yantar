@@ -25,6 +25,10 @@
 #define C2	0.2241438680420134
 #define C3	-0.1294095225512604
 
+short mulawToShort[256];
+static qbool madeTable = qfalse;
+static int NXStreamCount;
+
 void
 daub4(float b[], unsigned long n, int isign)
 {
@@ -112,17 +116,11 @@ MuLawDecode(byte uLaw)
 	return (uLaw & 0x80) ? adjusted : -adjusted;
 }
 
-short mulawToShort[256];
-static qbool madeTable = qfalse;
-
-static int NXStreamCount;
-
 void
 NXPutc(NXStream *stream, char out)
 {
 	stream[NXStreamCount++] = out;
 }
-
 
 void
 encodeWavelet(sfx_t *sfx, short *packets)
@@ -180,7 +178,6 @@ decodeWavelet(sndBuffer *chunk, short *to)
 	float	wksp[4097];
 	int	i;
 	byte	*out;
-
 	int	size = chunk->size;
 
 	out = (byte*)chunk->sndChunk;
@@ -245,7 +242,6 @@ decodeMuLaw(sndBuffer *chunk, short *to)
 {
 	int i;
 	byte	*out;
-
 	int	size = chunk->size;
 
 	out = (byte*)chunk->sndChunk;

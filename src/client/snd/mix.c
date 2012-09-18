@@ -1,3 +1,4 @@
+/* portable code to mix sounds for dma.c */
 /*
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
@@ -17,7 +18,6 @@
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-/* snd_mix.c -- portable code to mix sounds for snd_dma.c */
 
 #include "../client.h"
 #include "local.h"
@@ -25,12 +25,11 @@
 #include <altivec.h>
 #endif
 
-static portable_samplepair_t paintbuffer[PAINTBUFFER_SIZE];
+static	portable_samplepair_t paintbuffer[PAINTBUFFER_SIZE];
 static int	snd_vol;
-
-int		* snd_p;
+int		*snd_p;
 int		snd_linear_count;
-short		* snd_out;
+short	*snd_out;
 
 #if     !id386	/* if configured not to use asm */
 
@@ -143,10 +142,6 @@ S_TransferStereo16(unsigned long *pbuf, int endtime)
 	}
 }
 
-/*
- * S_TransferPaintBuffer
- *
- */
 void
 S_TransferPaintBuffer(int endtime)
 {
@@ -159,8 +154,6 @@ S_TransferPaintBuffer(int endtime)
 	unsigned long *pbuf;
 
 	pbuf = (unsigned long*)dma.buffer;
-
-
 	if(s_testsound->integer){
 		int	i;
 		int	count;
@@ -172,8 +165,6 @@ S_TransferPaintBuffer(int endtime)
 						      sin((s_paintedtime+
 							   i)*0.1)*20000*256;
 	}
-
-
 	if(dma.samplebits == 16 && dma.channels == 2)	/* optimized case */
 		S_TransferStereo16 (pbuf, endtime);
 	else{	/* general case */
@@ -211,12 +202,7 @@ S_TransferPaintBuffer(int endtime)
 	}
 }
 
-
-/*
- *
- * CHANNEL MIXING
- *
- */
+/* Channel mixing */
 
 #if idppc_altivec
 static void
@@ -324,17 +310,10 @@ S_PaintChannelFrom16_altivec(channel_t *ch, const sfx_t *sc, int count,
 							7];
 
 					/* Load up destination sample data */
-					d0 =
-						*(vector signed int*)&samp[i];
-					d1 =
-						*(vector signed int*)&samp[i+
-									   2];
-					d2 =
-						*(vector signed int*)&samp[i+
-									   4];
-					d3 =
-						*(vector signed int*)&samp[i+
-									   6];
+					d0 = *(vector signed int*)&samp[i];
+					d1 = *(vector signed int*)&samp[i+2];
+					d2 = *(vector signed int*)&samp[i+4];
+					d3 = *(vector signed int*)&samp[i+6];
 
 					sampleData0 = vec_perm(s0,s1,
 						loadPermute0);
@@ -364,14 +343,10 @@ S_PaintChannelFrom16_altivec(channel_t *ch, const sfx_t *sc, int count,
 					d3	= vec_add(merge1,d3);
 
 					/* Store destination sample data */
-					*(vector signed int*)&samp[i]
-						= d0;
-					*(vector signed int*)&samp[i+
-								   2] = d1;
-					*(vector signed int*)&samp[i+
-								   4] = d2;
-					*(vector signed int*)&samp[i+
-								   6] = d3;
+					*(vector signed int*)&samp[i] = d0;
+					*(vector signed int*)&samp[i+2] = d1;
+					*(vector signed int*)&samp[i+4] = d2;
+					*(vector signed int*)&samp[i+6] = d3;
 
 					i += 8;
 					vectorCount--;
@@ -655,9 +630,6 @@ S_PaintChannelFromMuLaw(channel_t *ch, sfx_t *sc, int count, int sampleOffset,
 	}
 }
 
-/*
- * S_PaintChannels
- */
 void
 S_PaintChannels(int endtime)
 {
