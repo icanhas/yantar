@@ -159,9 +159,11 @@ void statement(int loop, Swtch swp, int lev) {
 		       		} else
 		       			retcode(expr(0));
 		       	else {
-		       		if (rty != voidtype)
+		       		if (rty != voidtype) {
 		       			warning("missing return value\n");
-		       		retcode(NULL);
+		       			retcode(cnsttree(inttype, 0L));
+		       		} else
+		       			retcode(NULL);
 		       	}
 		       	branch(cfunc->u.f.label);
 		       } expect(';');
@@ -496,13 +498,21 @@ void retcode(Tree p) {
 	p = cast(p, ty);
 	if (retv)
 		{
-			if (iscallb(p))
+			if (iscallb(p)) {
 				p = tree(RIGHT, p->type,
 					tree(CALL+B, p->type,
 						p->kids[0]->kids[0], idtree(retv)),
 					rvalue(idtree(retv)));
-			else
-				p = asgntree(ASGN, rvalue(idtree(retv)), p);
+			} else {
+				Type ty = retv->type->type;
+				assert(isstruct(ty));
+				if (ty->u.sym->u.s.cfields) {
+					ty->u.sym->u.s.cfields = 0;
+					p = asgntree(ASGN, rvalue(idtree(retv)), p);
+					ty->u.sym->u.s.cfields = 1;
+				} else
+					p = asgntree(ASGN, rvalue(idtree(retv)), p);
+			}
 			walk(p, 0, 0);
 			if (events.returns)
 				apply(events.returns, cfunc, rvalue(idtree(retv)));
