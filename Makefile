@@ -2116,7 +2116,7 @@ $(B)/$(MISSIONPACK)/vm/cgame.qvm: $(MPCGVMOBJ) $(CGDIR)/syscalls.asm $(Q3ASM)
 #############################################################################
 
 Q3GOBJ_ = \
-  $(O)/$(BASEGAME)/game/g_main.o \
+  $(O)/$(BASEGAME)/game/main.o \
   $(O)/$(BASEGAME)/game/ai/chat.o \
   $(O)/$(BASEGAME)/game/ai/cmd.o \
   $(O)/$(BASEGAME)/game/ai/dmnet.o \
@@ -2127,48 +2127,48 @@ Q3GOBJ_ = \
   $(O)/$(BASEGAME)/game/bg/misc.o \
   $(O)/$(BASEGAME)/game/bg/pmove.o \
   $(O)/$(BASEGAME)/game/bg/slidemove.o \
-  $(O)/$(BASEGAME)/game/g_active.o \
-  $(O)/$(BASEGAME)/game/g_arenas.o \
-  $(O)/$(BASEGAME)/game/g_bot.o \
-  $(O)/$(BASEGAME)/game/g_client.o \
-  $(O)/$(BASEGAME)/game/g_cmds.o \
-  $(O)/$(BASEGAME)/game/g_combat.o \
-  $(O)/$(BASEGAME)/game/g_items.o \
-  $(O)/$(BASEGAME)/game/g_mem.o \
-  $(O)/$(BASEGAME)/game/g_misc.o \
-  $(O)/$(BASEGAME)/game/g_missile.o \
-  $(O)/$(BASEGAME)/game/g_mover.o \
-  $(O)/$(BASEGAME)/game/g_session.o \
-  $(O)/$(BASEGAME)/game/g_spawn.o \
-  $(O)/$(BASEGAME)/game/g_svcmds.o \
-  $(O)/$(BASEGAME)/game/g_target.o \
-  $(O)/$(BASEGAME)/game/g_team.o \
-  $(O)/$(BASEGAME)/game/g_trigger.o \
-  $(O)/$(BASEGAME)/game/g_utils.o \
-  $(O)/$(BASEGAME)/game/g_weapon.o \
+  $(O)/$(BASEGAME)/game/active.o \
+  $(O)/$(BASEGAME)/game/arenas.o \
+  $(O)/$(BASEGAME)/game/bot.o \
+  $(O)/$(BASEGAME)/game/client.o \
+  $(O)/$(BASEGAME)/game/cmds.o \
+  $(O)/$(BASEGAME)/game/combat.o \
+  $(O)/$(BASEGAME)/game/items.o \
+  $(O)/$(BASEGAME)/game/mem.o \
+  $(O)/$(BASEGAME)/game/misc.o \
+  $(O)/$(BASEGAME)/game/missile.o \
+  $(O)/$(BASEGAME)/game/mover.o \
+  $(O)/$(BASEGAME)/game/session.o \
+  $(O)/$(BASEGAME)/game/spawn.o \
+  $(O)/$(BASEGAME)/game/svcmds.o \
+  $(O)/$(BASEGAME)/game/target.o \
+  $(O)/$(BASEGAME)/game/team.o \
+  $(O)/$(BASEGAME)/game/trigger.o \
+  $(O)/$(BASEGAME)/game/utils.o \
+  $(O)/$(BASEGAME)/game/weapon.o \
   \
   $(O)/$(BASEGAME)/qcommon/q_math.o \
   $(O)/$(BASEGAME)/qcommon/q_shared.o \
   $(O)/$(BASEGAME)/qcommon/q_utf.o \
   $(O)/$(BASEGAME)/qcommon/vmlibc/vmlibc.o
 
-Q3GOBJ = $(Q3GOBJ_) $(O)/$(BASEGAME)/game/g_syscalls.o
+Q3GOBJ = $(Q3GOBJ_) $(O)/$(BASEGAME)/game/syscalls.o
 Q3GVMOBJ = $(Q3GOBJ_:%.o=%.asm)
 
 $(B)/$(BASEGAME)/qagame-$(SHLIBNAME): $(Q3GOBJ)
 	$(echo_cmd) "LD $@"
 	$(Q)$(CC) $(CFLAGS) $(SHLIBLDFLAGS) -o $@ $(Q3GOBJ)
 
-$(B)/$(BASEGAME)/vm/qagame.qvm: $(Q3GVMOBJ) $(GDIR)/g_syscalls.asm $(Q3ASM)
+$(B)/$(BASEGAME)/vm/qagame.qvm: $(Q3GVMOBJ) $(GDIR)/syscalls.asm $(Q3ASM)
 	$(echo_cmd) "Q3ASM $@"
-	$(Q)$(Q3ASM) -o $@ $(Q3GVMOBJ) $(GDIR)/g_syscalls.asm
+	$(Q)$(Q3ASM) -o $@ $(Q3GVMOBJ) $(GDIR)/syscalls.asm
 
 #############################################################################
 ## MISSIONPACK GAME
 #############################################################################
 
 MPGOBJ_ = \
-  $(O)/$(MISSIONPACK)/game/g_main.o \
+  $(O)/$(MISSIONPACK)/game/main.o \
   $(O)/$(MISSIONPACK)/game/ai/chat.o \
   $(O)/$(MISSIONPACK)/game/ai/cmd.o \
   $(O)/$(MISSIONPACK)/game/ai/dmnet.o \
@@ -2179,41 +2179,41 @@ MPGOBJ_ = \
   $(O)/$(MISSIONPACK)/game/bg/misc.o \
   $(O)/$(MISSIONPACK)/game/bg/pmove.o \
   $(O)/$(MISSIONPACK)/game/bg/slidemove.o \
-  $(O)/$(MISSIONPACK)/game/g_active.o \
-  $(O)/$(MISSIONPACK)/game/g_arenas.o \
-  $(O)/$(MISSIONPACK)/game/g_bot.o \
-  $(O)/$(MISSIONPACK)/game/g_client.o \
-  $(O)/$(MISSIONPACK)/game/g_cmds.o \
-  $(O)/$(MISSIONPACK)/game/g_combat.o \
-  $(O)/$(MISSIONPACK)/game/g_items.o \
-  $(O)/$(MISSIONPACK)/game/g_mem.o \
-  $(O)/$(MISSIONPACK)/game/g_misc.o \
-  $(O)/$(MISSIONPACK)/game/g_missile.o \
-  $(O)/$(MISSIONPACK)/game/g_mover.o \
-  $(O)/$(MISSIONPACK)/game/g_session.o \
-  $(O)/$(MISSIONPACK)/game/g_spawn.o \
-  $(O)/$(MISSIONPACK)/game/g_svcmds.o \
-  $(O)/$(MISSIONPACK)/game/g_target.o \
-  $(O)/$(MISSIONPACK)/game/g_team.o \
-  $(O)/$(MISSIONPACK)/game/g_trigger.o \
-  $(O)/$(MISSIONPACK)/game/g_utils.o \
-  $(O)/$(MISSIONPACK)/game/g_weapon.o \
+  $(O)/$(MISSIONPACK)/game/active.o \
+  $(O)/$(MISSIONPACK)/game/arenas.o \
+  $(O)/$(MISSIONPACK)/game/bot.o \
+  $(O)/$(MISSIONPACK)/game/client.o \
+  $(O)/$(MISSIONPACK)/game/cmds.o \
+  $(O)/$(MISSIONPACK)/game/combat.o \
+  $(O)/$(MISSIONPACK)/game/items.o \
+  $(O)/$(MISSIONPACK)/game/mem.o \
+  $(O)/$(MISSIONPACK)/game/misc.o \
+  $(O)/$(MISSIONPACK)/game/missile.o \
+  $(O)/$(MISSIONPACK)/game/mover.o \
+  $(O)/$(MISSIONPACK)/game/session.o \
+  $(O)/$(MISSIONPACK)/game/spawn.o \
+  $(O)/$(MISSIONPACK)/game/svcmds.o \
+  $(O)/$(MISSIONPACK)/game/target.o \
+  $(O)/$(MISSIONPACK)/game/team.o \
+  $(O)/$(MISSIONPACK)/game/trigger.o \
+  $(O)/$(MISSIONPACK)/game/utils.o \
+  $(O)/$(MISSIONPACK)/game/weapon.o \
   \
   $(O)/$(MISSIONPACK)/qcommon/q_math.o \
   $(O)/$(MISSIONPACK)/qcommon/q_shared.o \
   $(O)/$(MISSIONPACK)/qcommon/q_utf.o \
   $(O)/$(MISSIONPACK)/qcommon/vmlibc/vmlibc.o
 
-MPGOBJ = $(MPGOBJ_) $(O)/$(MISSIONPACK)/game/g_syscalls.o
+MPGOBJ = $(MPGOBJ_) $(O)/$(MISSIONPACK)/game/syscalls.o
 MPGVMOBJ = $(MPGOBJ_:%.o=%.asm)
 
 $(B)/$(MISSIONPACK)/qagame-$(SHLIBNAME): $(MPGOBJ)
 	$(echo_cmd) "LD $@"
 	$(Q)$(CC) $(CFLAGS) $(SHLIBLDFLAGS) -o $@ $(MPGOBJ)
 
-$(B)/$(MISSIONPACK)/vm/qagame.qvm: $(MPGVMOBJ) $(GDIR)/g_syscalls.asm $(Q3ASM)
+$(B)/$(MISSIONPACK)/vm/qagame.qvm: $(MPGVMOBJ) $(GDIR)/syscalls.asm $(Q3ASM)
 	$(echo_cmd) "Q3ASM $@"
-	$(Q)$(Q3ASM) -o $@ $(MPGVMOBJ) $(GDIR)/g_syscalls.asm
+	$(Q)$(Q3ASM) -o $@ $(MPGVMOBJ) $(GDIR)/syscalls.asm
 
 
 

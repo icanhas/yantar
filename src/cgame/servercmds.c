@@ -379,12 +379,12 @@ CG_AddToTeamChat(const char *str)
 	int	lastcolor;
 	int	chatHeight;
 
-	if(cg_teamChatHeight.integer < TEAMCHAT_HEIGHT)
-		chatHeight = cg_teamChatHeight.integer;
+	if(cg_ChatHeight.integer < TEAMCHAT_HEIGHT)
+		chatHeight = cg_ChatHeight.integer;
 	else
 		chatHeight = TEAMCHAT_HEIGHT;
 
-	if(chatHeight <= 0 || cg_teamChatTime.integer <= 0){
+	if(chatHeight <= 0 || cg_ChatTime.integer <= 0){
 		/* team chat disabled, dump into normal chat */
 		cgs.teamChatPos = cgs.teamLastChatPos = 0;
 		return;
@@ -951,7 +951,7 @@ CG_VoiceChatLocal(int mode, qbool voiceOnly, int clientNum, int color,
 
 	if(CG_GetVoiceChat(voiceChatList, cmd, &snd, &chat))
 		/*  */
-		if(mode == SAY_TEAM || !cg_teamChatsOnly.integer){
+		if(mode == SAY_TEAM || !cg_ChatsOnly.integer){
 			vchat.clientNum = clientNum;
 			vchat.snd = snd;
 			vchat.voiceOnly = voiceOnly;
@@ -1071,7 +1071,7 @@ CG_ServerCommand(void)
 	}
 
 	if(!strcmp(cmd, "chat")){
-		if(!cg_teamChatsOnly.integer){
+		if(!cg_ChatsOnly.integer){
 			trap_S_StartLocalSound(cgs.media.talkSound,
 				CHAN_LOCAL_SOUND);
 			Q_strncpyz(text, CG_Argv(1), MAX_SAY_TEXT);

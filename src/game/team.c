@@ -21,9 +21,9 @@
 
 #include "q_shared.h"
 #include "bg/public.h"
-#include "g_public.h"
-#include "g_local.h"
-#include "g_team.h"
+#include "public.h"
+#include "local.h"
+#include "team.h"
 
 typedef struct teamgame_s {
 	float		last_flag_capture;

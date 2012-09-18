@@ -1380,8 +1380,8 @@ CG_DrawTeamInfo(void)
 #define CHATLOC_Y	420	/* bottom end */
 #define CHATLOC_X	0
 
-	if(cg_teamChatHeight.integer < TEAMCHAT_HEIGHT)
-		chatHeight = cg_teamChatHeight.integer;
+	if(cg_ChatHeight.integer < TEAMCHAT_HEIGHT)
+		chatHeight = cg_ChatHeight.integer;
 	else
 		chatHeight = TEAMCHAT_HEIGHT;
 	if(chatHeight <= 0)
@@ -1390,7 +1390,7 @@ CG_DrawTeamInfo(void)
 	if(cgs.teamLastChatPos != cgs.teamChatPos){
 		if(cg.time -
 		   cgs.teamChatMsgTimes[cgs.teamLastChatPos % chatHeight] >
-		   cg_teamChatTime.integer)
+		   cg_ChatTime.integer)
 			cgs.teamLastChatPos++;
 
 		h = (cgs.teamChatPos - cgs.teamLastChatPos) * TINYCHAR_HEIGHT;

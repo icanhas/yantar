@@ -23,8 +23,8 @@
 
 #include "q_shared.h"
 #include "bg/public.h"
-#include "g_public.h"
-#include "g_local.h"
+#include "public.h"
+#include "local.h"
 
 static float	s_quadFactor;
 static Vec3	forward, right, up;

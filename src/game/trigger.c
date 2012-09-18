@@ -21,8 +21,8 @@
 
 #include "q_shared.h"
 #include "bg/public.h"
-#include "g_public.h"
-#include "g_local.h"
+#include "public.h"
+#include "local.h"
 
 void
 InitTrigger(gentity_t *self)

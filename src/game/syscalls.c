@@ -21,8 +21,8 @@
 
 #include "q_shared.h"
 #include "bg/public.h"
-#include "g_public.h"
-#include "g_local.h"
+#include "public.h"
+#include "local.h"
 
 /* this file is only included when building a dll
  * g_syscalls.asm is included instead when building a qvm */

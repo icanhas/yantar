@@ -19,7 +19,7 @@
  */
 /*  */
 
-/* g_public.h -- game module information visible to server */
+/* public.h -- game module information visible to server */
 
 #define GAME_API_VERSION 8
 

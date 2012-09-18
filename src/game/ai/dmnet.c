@@ -30,8 +30,8 @@
 
 #include "q_shared.h"
 #include "../bg/public.h"
-#include "../g_public.h"
-#include "../g_local.h"
+#include "../public.h"
+#include "../local.h"
 #include "../../botlib/botlib.h"
 #include "../../botlib/be_aas.h"
 #include "../../botlib/be_ea.h"

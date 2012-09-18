@@ -1,6 +1,6 @@
 /* 
  * local definitions for game module 
- * "bg/public.h" and "g_public.h" must be included before me
+ * "bg/public.h" and "public.h" must be included before me
  */
 /*
  * Copyright (C) 1999-2005 Id Software, Inc.

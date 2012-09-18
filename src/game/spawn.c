@@ -21,8 +21,8 @@
 
 #include "q_shared.h"
 #include "bg/public.h"
-#include "g_public.h"
-#include "g_local.h"
+#include "public.h"
+#include "local.h"
 
 qbool
 G_SpawnString(const char *key, const char *defaultString, char **out)
