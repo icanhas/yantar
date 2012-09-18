@@ -140,8 +140,6 @@ void	iniths(void);
 void	setobjname(char *);
 #define	rowlen(tokrow)	((tokrow)->lp - (tokrow)->bp)
 
-char *basepath( char *fname );
-
 extern	char *outp;
 extern	Token	nltoken;
 extern	Source *cursource;

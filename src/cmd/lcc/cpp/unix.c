@@ -67,7 +67,11 @@ setup(int argc, char **argv)
 	fp = "<stdin>";
 	fd = stdin;
 	if (optind<argc) {
-		dp = basepath( argv[optind] );
+		if ((fp = strrchr(argv[optind], '/')) != NULL) {
+			int len = fp - argv[optind];
+			dp = (char*)newstring((uchar*)argv[optind], len+1, 0);
+			dp[len] = '\0';
+		}
 		fp = (char*)newstring((uchar*)argv[optind], strlen(argv[optind]), 0);
 		if ((fd = fopen(fp, "rb")) == NULL)
 			error(FATAL, "Can't open input file %s", fp);
@@ -82,20 +86,6 @@ setup(int argc, char **argv)
 	includelist[NINCLUDE-1].always = 0;
 	includelist[NINCLUDE-1].file = dp;
 	setsource(fp, fd, NULL);
-}
-
-
-char *basepath( char *fname )
-{
-	char *dp = ".";
-	char *p;
-	if ((p = strrchr(fname, '/')) != NULL) {
-		int dlen = p - fname;
-		dp = (char*)newstring((uchar*)fname, dlen+1, 0);
-		dp[dlen] = '\0';
-	}
-
-	return dp;
 }
 
 /* memmove is defined here because some vendors don't provide it at
