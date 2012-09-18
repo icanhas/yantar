@@ -230,6 +230,7 @@ OSXDIR=$(SYSDIR)/osx
 WINDIR=$(SYSDIR)/win
 GDIR=$(MOUNT_DIR)/game
 AIDIR=$(GDIR)/ai
+BGDIR=$(GDIR)/bg
 CGDIR=$(MOUNT_DIR)/cgame
 BLIBDIR=$(MOUNT_DIR)/botlib
 UIDIR=$(MOUNT_DIR)/ui
@@ -1174,14 +1175,16 @@ makedirs:
 		$(O)/ded/sys/null \
 		$(O)/ded/sys/sdl \
 		$(O)/ded/vm \
-		$(O)/$(BASEGAME)/cgame \
+		$(O)/$(BASEGAME)/cgame/bg \
 		$(O)/$(BASEGAME)/game/ai \
-		$(O)/$(BASEGAME)/ui \
+		$(O)/$(BASEGAME)/game/bg \
+		$(O)/$(BASEGAME)/ui/bg \
 		$(O)/$(BASEGAME)/qcommon/vmlibc \
 		$(O)/$(BASEGAME)/vm \
-		$(O)/$(MISSIONPACK)/cgame \
+		$(O)/$(MISSIONPACK)/cgame/bg \
 		$(O)/$(MISSIONPACK)/game/ai \
-		$(O)/$(MISSIONPACK)/ui \
+		$(O)/$(MISSIONPACK)/game/bg \
+		$(O)/$(MISSIONPACK)/ui/bg \
 		$(O)/$(MISSIONPACK)/qcommon/vmlibc \
 		$(O)/$(MISSIONPACK)/vm \
 		$(O)/cmd/asm \
@@ -2022,9 +2025,9 @@ $(B)/$(SERVERBIN)$(FULLBINEXT): $(Q3DOBJ)
 
 Q3CGOBJ_ = \
   $(O)/$(BASEGAME)/cgame/main.o \
-  $(O)/$(BASEGAME)/cgame/bg_misc.o \
-  $(O)/$(BASEGAME)/cgame/bg_pmove.o \
-  $(O)/$(BASEGAME)/cgame/bg_slidemove.o \
+  $(O)/$(BASEGAME)/cgame/bg/misc.o \
+  $(O)/$(BASEGAME)/cgame/bg/pmove.o \
+  $(O)/$(BASEGAME)/cgame/bg/slidemove.o \
   $(O)/$(BASEGAME)/cgame/consolecmds.o \
   $(O)/$(BASEGAME)/cgame/draw.o \
   $(O)/$(BASEGAME)/cgame/drawtools.o \
@@ -2066,9 +2069,9 @@ $(B)/$(BASEGAME)/vm/cgame.qvm: $(Q3CGVMOBJ) $(CGDIR)/syscalls.asm $(Q3ASM)
 
 MPCGOBJ_ = \
   $(O)/$(MISSIONPACK)/cgame/main.o \
-  $(O)/$(MISSIONPACK)/cgame/bg_misc.o \
-  $(O)/$(MISSIONPACK)/cgame/bg_pmove.o \
-  $(O)/$(MISSIONPACK)/cgame/bg_slidemove.o \
+  $(O)/$(MISSIONPACK)/cgame/bg/misc.o \
+  $(O)/$(MISSIONPACK)/cgame/bg/pmove.o \
+  $(O)/$(MISSIONPACK)/cgame/bg/slidemove.o \
   $(O)/$(MISSIONPACK)/cgame/consolecmds.o \
   $(O)/$(MISSIONPACK)/cgame/newdraw.o \
   $(O)/$(MISSIONPACK)/cgame/draw.o \
@@ -2121,9 +2124,9 @@ Q3GOBJ_ = \
   $(O)/$(BASEGAME)/game/ai/main.o \
   $(O)/$(BASEGAME)/game/ai/team.o \
   $(O)/$(BASEGAME)/game/ai/vcmd.o \
-  $(O)/$(BASEGAME)/game/bg_misc.o \
-  $(O)/$(BASEGAME)/game/bg_pmove.o \
-  $(O)/$(BASEGAME)/game/bg_slidemove.o \
+  $(O)/$(BASEGAME)/game/bg/misc.o \
+  $(O)/$(BASEGAME)/game/bg/pmove.o \
+  $(O)/$(BASEGAME)/game/bg/slidemove.o \
   $(O)/$(BASEGAME)/game/g_active.o \
   $(O)/$(BASEGAME)/game/g_arenas.o \
   $(O)/$(BASEGAME)/game/g_bot.o \
@@ -2173,9 +2176,9 @@ MPGOBJ_ = \
   $(O)/$(MISSIONPACK)/game/ai/main.o \
   $(O)/$(MISSIONPACK)/game/ai/team.o \
   $(O)/$(MISSIONPACK)/game/ai/vcmd.o \
-  $(O)/$(MISSIONPACK)/game/bg_misc.o \
-  $(O)/$(MISSIONPACK)/game/bg_pmove.o \
-  $(O)/$(MISSIONPACK)/game/bg_slidemove.o \
+  $(O)/$(MISSIONPACK)/game/bg/misc.o \
+  $(O)/$(MISSIONPACK)/game/bg/pmove.o \
+  $(O)/$(MISSIONPACK)/game/bg/slidemove.o \
   $(O)/$(MISSIONPACK)/game/g_active.o \
   $(O)/$(MISSIONPACK)/game/g_arenas.o \
   $(O)/$(MISSIONPACK)/game/g_bot.o \
@@ -2220,7 +2223,7 @@ $(B)/$(MISSIONPACK)/vm/qagame.qvm: $(MPGVMOBJ) $(GDIR)/g_syscalls.asm $(Q3ASM)
 
 Q3UIOBJ_ = \
   $(O)/$(BASEGAME)/ui/ui_main.o \
-  $(O)/$(BASEGAME)/ui/bg_misc.o \
+  $(O)/$(BASEGAME)/ui/bg/misc.o \
   $(O)/$(BASEGAME)/ui/ui_addbots.o \
   $(O)/$(BASEGAME)/ui/ui_atoms.o \
   $(O)/$(BASEGAME)/ui/ui_cdkey.o \
@@ -2287,7 +2290,7 @@ MPUIOBJ_ = \
   $(O)/$(MISSIONPACK)/ui/ui_players.o \
   $(O)/$(MISSIONPACK)/ui/ui_shared.o \
   \
-  $(O)/$(MISSIONPACK)/ui/bg_misc.o \
+  $(O)/$(MISSIONPACK)/ui/bg/misc.o \
   \
   $(O)/$(MISSIONPACK)/qcommon/q_math.o \
   $(O)/$(MISSIONPACK)/qcommon/q_shared.o \
@@ -2437,25 +2440,25 @@ $(O)/ded/sys/osx/%.o: $(OSXDIR)/%.m
 ## GAME MODULE RULES
 #############################################################################
 
-$(O)/$(BASEGAME)/cgame/bg_%.o: $(GDIR)/bg_%.c
+$(O)/$(BASEGAME)/cgame/bg/%.o: $(BGDIR)/%.c
 	$(DO_CGAME_CC)
 
 $(O)/$(BASEGAME)/cgame/%.o: $(CGDIR)/%.c
 	$(DO_CGAME_CC)
 
-$(O)/$(BASEGAME)/cgame/bg_%.asm: $(GDIR)/bg_%.c $(Q3LCC)
+$(O)/$(BASEGAME)/cgame/bg/%.asm: $(BGDIR)/%.c $(Q3LCC)
 	$(DO_CGAME_Q3LCC)
 
 $(O)/$(BASEGAME)/cgame/%.asm: $(CGDIR)/%.c $(Q3LCC)
 	$(DO_CGAME_Q3LCC)
 
-$(O)/$(MISSIONPACK)/cgame/bg_%.o: $(GDIR)/bg_%.c
+$(O)/$(MISSIONPACK)/cgame/bg/%.o: $(BGDIR)/%.c
 	$(DO_CGAME_CC_MISSIONPACK)
 
 $(O)/$(MISSIONPACK)/cgame/%.o: $(CGDIR)/%.c
 	$(DO_CGAME_CC_MISSIONPACK)
 
-$(O)/$(MISSIONPACK)/cgame/bg_%.asm: $(GDIR)/bg_%.c $(Q3LCC)
+$(O)/$(MISSIONPACK)/cgame/bg/%.asm: $(BGDIR)/%.c $(Q3LCC)
 	$(DO_CGAME_Q3LCC_MISSIONPACK)
 
 $(O)/$(MISSIONPACK)/cgame/%.asm: $(CGDIR)/%.c $(Q3LCC)
@@ -2468,10 +2471,16 @@ $(O)/$(BASEGAME)/game/%.o: $(GDIR)/%.c
 $(O)/$(BASEGAME)/game/ai/%.o: $(AIDIR)/%.c
 	$(DO_GAME_CC)
 
+$(O)/$(BASEGAME)/game/bg/%.o: $(BGDIR)/%.c
+	$(DO_GAME_CC)
+
 $(O)/$(BASEGAME)/game/%.asm: $(GDIR)/%.c $(Q3LCC)
 	$(DO_GAME_Q3LCC)
 
 $(O)/$(BASEGAME)/game/ai/%.asm: $(AIDIR)/%.c $(Q3LCC)
+	$(DO_GAME_Q3LCC)
+
+$(O)/$(BASEGAME)/game/bg/%.asm: $(BGDIR)/%.c $(Q3LCC)
 	$(DO_GAME_Q3LCC)
 
 $(O)/$(MISSIONPACK)/game/%.o: $(GDIR)/%.c
@@ -2479,33 +2488,39 @@ $(O)/$(MISSIONPACK)/game/%.o: $(GDIR)/%.c
 	
 $(O)/$(MISSIONPACK)/game/ai/%.o: $(AIDIR)/%.c
 	$(DO_GAME_CC_MISSIONPACK)
+	
+$(O)/$(MISSIONPACK)/game/bg/%.o: $(BGDIR)/%.c
+	$(DO_GAME_CC_MISSIONPACK)
 
 $(O)/$(MISSIONPACK)/game/%.asm: $(GDIR)/%.c $(Q3LCC)
 	$(DO_GAME_Q3LCC_MISSIONPACK)
 	
 $(O)/$(MISSIONPACK)/game/ai/%.asm: $(AIDIR)/%.c $(Q3LCC)
 	$(DO_GAME_Q3LCC_MISSIONPACK)
+	
+$(O)/$(MISSIONPACK)/game/bg/%.asm: $(BGDIR)/%.c $(Q3LCC)
+	$(DO_GAME_Q3LCC_MISSIONPACK)
 
 
-$(O)/$(BASEGAME)/ui/bg_%.o: $(GDIR)/bg_%.c
+$(O)/$(BASEGAME)/ui/bg/%.o: $(BGDIR)/%.c
 	$(DO_UI_CC)
 
 $(O)/$(BASEGAME)/ui/%.o: $(Q3UIDIR)/%.c
 	$(DO_UI_CC)
 
-$(O)/$(BASEGAME)/ui/bg_%.asm: $(GDIR)/bg_%.c $(Q3LCC)
+$(O)/$(BASEGAME)/ui/bg/%.asm: $(BGDIR)/%.c $(Q3LCC)
 	$(DO_UI_Q3LCC)
 
 $(O)/$(BASEGAME)/ui/%.asm: $(Q3UIDIR)/%.c $(Q3LCC)
 	$(DO_UI_Q3LCC)
 
-$(O)/$(MISSIONPACK)/ui/bg_%.o: $(GDIR)/bg_%.c
+$(O)/$(MISSIONPACK)/ui/bg/%.o: $(BGDIR)/%.c
 	$(DO_UI_CC_MISSIONPACK)
 
 $(O)/$(MISSIONPACK)/ui/%.o: $(UIDIR)/%.c
 	$(DO_UI_CC_MISSIONPACK)
 
-$(O)/$(MISSIONPACK)/ui/bg_%.asm: $(GDIR)/bg_%.c $(Q3LCC)
+$(O)/$(MISSIONPACK)/ui/bg/%.asm: $(BGDIR)/%.c $(Q3LCC)
 	$(DO_UI_Q3LCC_MISSIONPACK)
 
 $(O)/$(MISSIONPACK)/ui/%.asm: $(UIDIR)/%.c $(Q3LCC)

@@ -20,8 +20,8 @@
  */
  
 #include "q_shared.h"
-#include "bg_public.h"
-#include "bg_local.h"
+#include "public.h"
+#include "local.h"
 
 #define GrapplePullSpeed 400
 

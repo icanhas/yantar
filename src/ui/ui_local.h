@@ -25,7 +25,7 @@
 #include "../renderer/tr_types.h"
 #include "ui_public.h"
 #include "../client/keycodes.h"
-#include "../game/bg_public.h"
+#include "../game/bg/public.h"
 #include "ui_shared.h"
 
 /* global display context */

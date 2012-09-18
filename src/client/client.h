@@ -24,7 +24,7 @@
 #include "keys.h"
 #include "snd/public.h"
 #include "../cgame/public.h"
-#include "../game/bg_public.h"
+#include "../game/bg/public.h"
 
 #ifdef USE_CURL
 #include "curl.h"

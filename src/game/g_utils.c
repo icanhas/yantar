@@ -21,7 +21,7 @@
  * g_utils.c -- misc utility functions for game module */
 
 #include "q_shared.h"
-#include "bg_public.h"
+#include "bg/public.h"
 #include "g_public.h"
 #include "g_local.h"
 

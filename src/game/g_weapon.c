@@ -22,7 +22,7 @@
  * perform the server side effects of a weapon firing */
 
 #include "q_shared.h"
-#include "bg_public.h"
+#include "bg/public.h"
 #include "g_public.h"
 #include "g_local.h"
 
@@ -260,7 +260,7 @@ BFG_Fire(gentity_t *ent)
  *
  */
 
-/* DEFAULT_SHOTGUN_SPREAD and DEFAULT_SHOTGUN_COUNT	are in bg_public.h, because
+/* DEFAULT_SHOTGUN_SPREAD and DEFAULT_SHOTGUN_COUNT	are in bg/public.h, because
  * client predicts same spreads */
 #define DEFAULT_SHOTGUN_DAMAGE 10
 

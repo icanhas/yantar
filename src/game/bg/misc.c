@@ -20,7 +20,7 @@
  */
 
 #include "q_shared.h"
-#include "bg_public.h"
+#include "public.h"
 
 /*QUAKED item_***** ( 0 0 0 ) (-16 -16 -16) (16 16 16) suspended
  * DO NOT USE THIS CLASS, IT JUST HOLDS GENERAL INFORMATION.

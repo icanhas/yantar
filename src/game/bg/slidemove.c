@@ -21,8 +21,8 @@
  * bg_slidemove.c -- part of bg_pmove functionality */
 
 #include "q_shared.h"
-#include "bg_public.h"
-#include "bg_local.h"
+#include "public.h"
+#include "local.h"
 
 /*
  *

@@ -977,7 +977,7 @@ BotFindEntityForLevelItem(levelitem_t *li)
  * Changes Globals:		-
  * =========================================================================== */
 
-/* NOTE: enum entityType_t in bg_public.h */
+/* NOTE: enum entityType_t in bg/public.h */
 #define ET_ITEM 2
 
 void

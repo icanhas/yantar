@@ -29,7 +29,7 @@
 #undef UI_API_VERSION
 #define UI_API_VERSION 4
 #include "../client/keycodes.h"
-#include "../game/bg_public.h"
+#include "../game/bg/public.h"
 
 typedef void (*voidfunc_f)(void);
 
