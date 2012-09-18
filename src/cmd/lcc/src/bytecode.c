@@ -229,69 +229,65 @@ static void I(space)(int n) {
 	print("skip %d\n", n);
 }
 
-//========================================================
+/* ---- */
 
-// JDC: hacked up to get interleaved source lines in asm code
-static char	*sourceFile;
-static char *sourcePtr;
-static int sourceLine;
+/* JDC: hacked up to get interleaved source lines in asm code */
+static char *srcfile;
+static char *srcp;
+static int srcline;
 
-static int filelength( FILE *f ) {
-	int		pos;
-	int		end;
+static int flen(FILE *f) {
+	int pos, end;
 
-	pos = ftell (f);
+	pos = ftell(f);
 	fseek (f, 0, SEEK_END);
-	end = ftell (f);
+	end = ftell(f);
 	fseek (f, pos, SEEK_SET);
-
 	return end;
 }
 
-static void LoadSourceFile( const char *filename ) {
-	FILE	*f;
-	int		length;
+static void loadsrcfile(const char *filename) {
+	FILE *f;
+	int len;
 
-	f = fopen( filename, "r" );
-	if ( !f ) {
-		print( ";couldn't open %s\n", filename );
-		sourceFile = NULL;
+	f = fopen(filename, "r");
+	if (!f) {
+		print(";couldn't open %s\n", filename);
+		srcfile = NULL;
 		return;
 	}
-	length = filelength( f );
-	sourceFile = malloc( length + 1 );
-	if ( sourceFile ) {
-		fread( sourceFile, length, 1, f );
-		sourceFile[length] = 0;
+	len = flen(f);
+	srcfile = malloc(len + 1);
+	if (srcfile) {
+		fread(srcfile, len, 1, f);
+		srcfile[len] = 0;
 	}
 
-	fclose( f );
-	sourceLine = 1;
-	sourcePtr = sourceFile;
+	fclose(f);
+	srcline = 1;
+	srcp = srcfile;
 }
 
-static void PrintToSourceLine( int line ) {
-	int		c;
+/* print to source line */
+static void printtoline(int line) {
+	int c;
 
-	if ( !sourceFile ) {
+	if (!srcfile)
 		return;
-	}
-	while ( sourceLine <= line ) {
-		int		i;
+	while (srcline <= line) {
+		int i;
 
-		for ( i = 0 ; sourcePtr[i] && sourcePtr[i] != '\n' ; i++ ) {
-		}
-		c = sourcePtr[i];
-		if ( c == '\n' ) {
-			sourcePtr[i] = 0;
-		}
-		print( ";%d:%s\n", sourceLine, sourcePtr );
-		if ( c == 0 ) {
-			sourcePtr += i;	// end of file
-		} else {
-			sourcePtr += i+1;
-		}
-		sourceLine++;
+		for (i = 0; srcp[i] && srcp[i] != '\n'; i++)
+			;
+		c = srcp[i];
+		if (c == '\n')
+			srcp[i] = 0;
+		print(";%d:%s\n", srcline, srcp);
+		if (c == 0)
+			srcp += i;	/* eof */
+		else
+			srcp += i+1;
+		srcline++;
 	}
 }
 
@@ -302,20 +298,19 @@ static void I(stabline)(Coordinate *cp) {
 	if (cp->file && (prevfile == NULL || strcmp(prevfile, cp->file) != 0)) {
 		print("file \"%s\"\n", prevfile = cp->file);
 		prevline = 0;
-		if ( sourceFile ) {
-			free( sourceFile );
-			sourceFile = NULL;
+		if (srcfile) {
+			free(srcfile);
+			srcfile = NULL;
 		}
-		// load the new source file
-		LoadSourceFile( cp->file );
+		loadsrcfile(cp->file);	/* load the new source file */
 	}
 	if (cp->y != prevline) {
 		print("line %d\n", prevline = cp->y);
-		PrintToSourceLine( cp->y );
+		printtoline(cp->y);
 	}
 }
 
-//========================================================
+/* ---- */
 
 #define b_blockbeg blockbeg
 #define b_blockend blockend
