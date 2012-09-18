@@ -2316,122 +2316,84 @@ $(B)/$(MISSIONPACK)/vm/ui.qvm: $(MPUIVMOBJ) $(UIDIR)/ui_syscalls.asm $(Q3ASM)
 
 $(O)/client/%.o: $(ASMDIR)/%.s
 	$(DO_AS)
-
 # k8 so inline assembler knows about SSE
 $(O)/client/%.o: $(ASMDIR)/%.c
 	$(DO_CC) -march=k8
-
 $(O)/client/%.o: $(COMDIR)/%.c
 	$(DO_CC)
-
 $(O)/client/%.o: $(BLIBDIR)/%.c
 	$(DO_BOT_CC)
-
 $(O)/client/%.o: $(SPEEXDIR)/%.c
 	$(DO_CC)
-
 $(O)/client/%.o: $(ZDIR)/%.c
 	$(DO_CC)
-
 $(O)/client/%.o: $(CDIR)/%.c
 	$(DO_CC)
-
 $(O)/client/net/%.o: $(NETDIR)/%.c
 	$(DO_CC)
-
 $(O)/client/server/%.o: $(SDIR)/%.c
 	$(DO_CC)
-
 $(O)/client/snd/%.o: $(SNDDIR)/%.c
 	$(DO_CC)
-	
 $(O)/client/sys/null/%.o: $(NDIR)/%.c
 	$(DO_CC)
-	
 $(O)/client/sys/osx/%.o: $(OSXDIR)/%.c
 	$(DO_CC)
-	
 $(O)/client/sys/osx/%.o: $(OSXDIR)/%.m
 	$(DO_CC)
-
 $(O)/client/sys/unix/%.o: $(UNIXDIR)/%.c
 	$(DO_CC)
-	
 $(O)/client/sys/win/%.o: $(WINDIR)/%.c
 	$(DO_CC)
-	
 $(O)/client/sys/win/%.o: $(WINDIR)/%.rc
 	$(DO_WINDRES)
-	
 $(O)/client/sys/%.o: $(SYSDIR)/%.c
 	$(DO_CC)
-
 $(O)/client/sys/sdl/%.o: $(SDLDIR)/%.c
 	$(DO_CC)
-
 $(O)/renderersmp/%.o: $(SDLDIR)/%.c
 	$(DO_SMP_CC)
 
-
 $(O)/renderer/%.o: $(COMDIR)/%.c
 	$(DO_REF_CC)
-
 $(O)/renderer/sys/sdl/%.o: $(SDLDIR)/%.c
 	$(DO_REF_CC)
-
 $(O)/renderer/%.o: $(JPDIR)/%.c
 	$(DO_REF_CC)
-
 $(O)/renderer/%.o: $(RDIR)/%.c
 	$(DO_REF_CC)
-	
 $(O)/renderergl2/%.o: $(R2DIR)/%.c
 	$(DO_REF_CC)
 
-
 $(O)/ded/%.o: $(ASMDIR)/%.s
 	$(DO_AS)
-
 # k8 so inline assembler knows about SSE
 $(O)/ded/%.o: $(ASMDIR)/%.c
 	$(DO_CC) -march=k8
-
 $(O)/ded/%.o: $(COMDIR)/%.c
 	$(DO_DED_CC)
-
 $(O)/ded/%.o: $(ZDIR)/%.c
 	$(DO_DED_CC)
-
 $(O)/ded/%.o: $(BLIBDIR)/%.c
 	$(DO_BOT_CC)
-
 $(O)/ded/net/%.o: $(NETDIR)/%.c
 	$(DO_DED_CC)
-
 $(O)/ded/server/%.o: $(SDIR)/%.c
 	$(DO_DED_CC)
-	
 $(O)/ded/sys/null/%.o: $(NDIR)/%.c
 	$(DO_DED_CC)
-	
 $(O)/ded/sys/osx/%.o: $(OSXDIR)/%.c
 	$(DO_DED_CC)
-
 $(O)/ded/sys/unix/%.o: $(UNIXDIR)/%.c
 	$(DO_DED_CC)
-	
 $(O)/ded/sys/win/%.o: $(WINDIR)/%.c
 	$(DO_DED_CC)
-	
 $(O)/ded/sys/win/%.o: $(WINDIR)/%.rc
 	$(DO_WINDRES)
-	
 $(O)/ded/sys/%.o: $(SYSDIR)/%.c
 	$(DO_DED_CC)
-	
 $(O)/ded/sys/sdl/%.o: $(SDLDIR)/%.c
 	$(DO_DED_CC)
-	
 $(O)/ded/sys/osx/%.o: $(OSXDIR)/%.m
 	$(DO_DED_CC)
 
@@ -2442,100 +2404,69 @@ $(O)/ded/sys/osx/%.o: $(OSXDIR)/%.m
 
 $(O)/$(BASEGAME)/cgame/bg/%.o: $(BGDIR)/%.c
 	$(DO_CGAME_CC)
-
 $(O)/$(BASEGAME)/cgame/%.o: $(CGDIR)/%.c
 	$(DO_CGAME_CC)
-
 $(O)/$(BASEGAME)/cgame/bg/%.asm: $(BGDIR)/%.c $(Q3LCC)
 	$(DO_CGAME_Q3LCC)
-
 $(O)/$(BASEGAME)/cgame/%.asm: $(CGDIR)/%.c $(Q3LCC)
 	$(DO_CGAME_Q3LCC)
-
 $(O)/$(MISSIONPACK)/cgame/bg/%.o: $(BGDIR)/%.c
 	$(DO_CGAME_CC_MISSIONPACK)
-
 $(O)/$(MISSIONPACK)/cgame/%.o: $(CGDIR)/%.c
 	$(DO_CGAME_CC_MISSIONPACK)
-
 $(O)/$(MISSIONPACK)/cgame/bg/%.asm: $(BGDIR)/%.c $(Q3LCC)
 	$(DO_CGAME_Q3LCC_MISSIONPACK)
-
 $(O)/$(MISSIONPACK)/cgame/%.asm: $(CGDIR)/%.c $(Q3LCC)
 	$(DO_CGAME_Q3LCC_MISSIONPACK)
 
-
 $(O)/$(BASEGAME)/game/%.o: $(GDIR)/%.c
 	$(DO_GAME_CC)
-
 $(O)/$(BASEGAME)/game/ai/%.o: $(AIDIR)/%.c
 	$(DO_GAME_CC)
-
 $(O)/$(BASEGAME)/game/bg/%.o: $(BGDIR)/%.c
 	$(DO_GAME_CC)
-
 $(O)/$(BASEGAME)/game/%.asm: $(GDIR)/%.c $(Q3LCC)
 	$(DO_GAME_Q3LCC)
-
 $(O)/$(BASEGAME)/game/ai/%.asm: $(AIDIR)/%.c $(Q3LCC)
 	$(DO_GAME_Q3LCC)
-
 $(O)/$(BASEGAME)/game/bg/%.asm: $(BGDIR)/%.c $(Q3LCC)
 	$(DO_GAME_Q3LCC)
-
 $(O)/$(MISSIONPACK)/game/%.o: $(GDIR)/%.c
 	$(DO_GAME_CC_MISSIONPACK)
-	
 $(O)/$(MISSIONPACK)/game/ai/%.o: $(AIDIR)/%.c
 	$(DO_GAME_CC_MISSIONPACK)
-	
 $(O)/$(MISSIONPACK)/game/bg/%.o: $(BGDIR)/%.c
 	$(DO_GAME_CC_MISSIONPACK)
-
 $(O)/$(MISSIONPACK)/game/%.asm: $(GDIR)/%.c $(Q3LCC)
 	$(DO_GAME_Q3LCC_MISSIONPACK)
-	
 $(O)/$(MISSIONPACK)/game/ai/%.asm: $(AIDIR)/%.c $(Q3LCC)
 	$(DO_GAME_Q3LCC_MISSIONPACK)
-	
 $(O)/$(MISSIONPACK)/game/bg/%.asm: $(BGDIR)/%.c $(Q3LCC)
 	$(DO_GAME_Q3LCC_MISSIONPACK)
 
-
 $(O)/$(BASEGAME)/ui/bg/%.o: $(BGDIR)/%.c
 	$(DO_UI_CC)
-
 $(O)/$(BASEGAME)/ui/%.o: $(Q3UIDIR)/%.c
 	$(DO_UI_CC)
-
 $(O)/$(BASEGAME)/ui/bg/%.asm: $(BGDIR)/%.c $(Q3LCC)
 	$(DO_UI_Q3LCC)
-
 $(O)/$(BASEGAME)/ui/%.asm: $(Q3UIDIR)/%.c $(Q3LCC)
 	$(DO_UI_Q3LCC)
-
 $(O)/$(MISSIONPACK)/ui/bg/%.o: $(BGDIR)/%.c
 	$(DO_UI_CC_MISSIONPACK)
-
 $(O)/$(MISSIONPACK)/ui/%.o: $(UIDIR)/%.c
 	$(DO_UI_CC_MISSIONPACK)
-
 $(O)/$(MISSIONPACK)/ui/bg/%.asm: $(BGDIR)/%.c $(Q3LCC)
 	$(DO_UI_Q3LCC_MISSIONPACK)
-
 $(O)/$(MISSIONPACK)/ui/%.asm: $(UIDIR)/%.c $(Q3LCC)
 	$(DO_UI_Q3LCC_MISSIONPACK)
 
-
 $(O)/$(BASEGAME)/qcommon/%.o: $(COMDIR)/%.c
 	$(DO_SHLIB_CC)
-
 $(O)/$(BASEGAME)/qcommon/%.asm: $(COMDIR)/%.c $(Q3LCC)
 	$(DO_Q3LCC)
-
 $(O)/$(MISSIONPACK)/qcommon/%.o: $(COMDIR)/%.c
 	$(DO_SHLIB_CC_MISSIONPACK)
-
 $(O)/$(MISSIONPACK)/qcommon/%.asm: $(COMDIR)/%.c $(Q3LCC)
 	$(DO_Q3LCC_MISSIONPACK)
 
