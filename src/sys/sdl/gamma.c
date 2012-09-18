@@ -24,7 +24,7 @@
 #       include <SDL.h>
 #endif
 
-#include "../../renderer/tr_local.h"
+#include "../../renderer/local.h"
 #include "qcommon.h"
 
 /*

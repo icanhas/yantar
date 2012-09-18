@@ -22,7 +22,7 @@
 #define __UI_LOCAL_H__
 
 #include "../qcommon/q_shared.h"
-#include "../renderer/tr_types.h"
+#include "../renderer/types.h"
 #include "ui_public.h"
 #include "../client/keycodes.h"
 #include "../game/bg/public.h"

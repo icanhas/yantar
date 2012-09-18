@@ -19,7 +19,7 @@
  */
 /*  */
 #include "../qcommon/q_shared.h"
-#include "../renderer/tr_types.h"
+#include "../renderer/types.h"
 #include "../game/bg/public.h"
 #include "public.h"
 

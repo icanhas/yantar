@@ -37,7 +37,7 @@
 #include <stdlib.h>
 #include <math.h>
 
-#include "../../renderer/tr_local.h"
+#include "../../renderer/local.h"
 #include "../../client/client.h"
 #include "../local.h"
 #include "icon.h"

@@ -1488,74 +1488,74 @@ Q3OBJ = \
   $(O)/client/sys/main.o
 
 Q3R2OBJ = \
-  $(O)/renderer/tr_image_bmp.o \
-  $(O)/renderer/tr_image_jpg.o \
-  $(O)/renderer/tr_image_png.o \
-  $(O)/renderer/tr_image_tga.o \
-  $(O)/renderer/tr_noise.o \
-  $(O)/renderergl2/tr_animation.o \
-  $(O)/renderergl2/tr_backend.o \
-  $(O)/renderergl2/tr_bsp.o \
-  $(O)/renderergl2/tr_cmds.o \
-  $(O)/renderergl2/tr_curve.o \
-  $(O)/renderergl2/tr_extensions.o \
-  $(O)/renderergl2/tr_extramath.o \
-  $(O)/renderergl2/tr_fbo.o \
-  $(O)/renderergl2/tr_flares.o \
-  $(O)/renderergl2/tr_font.o \
-  $(O)/renderergl2/tr_glsl.o \
-  $(O)/renderergl2/tr_image.o \
-  $(O)/renderergl2/tr_init.o \
-  $(O)/renderergl2/tr_light.o \
-  $(O)/renderergl2/tr_main.o \
-  $(O)/renderergl2/tr_marks.o \
-  $(O)/renderergl2/tr_material.o \
-  $(O)/renderergl2/tr_material_parse.o \
-  $(O)/renderergl2/tr_mesh.o \
-  $(O)/renderergl2/tr_model.o \
-  $(O)/renderergl2/tr_model_iqm.o \
-  $(O)/renderergl2/tr_postprocess.o \
-  $(O)/renderergl2/tr_scene.o \
-  $(O)/renderergl2/tr_shade.o \
-  $(O)/renderergl2/tr_shade_calc.o \
-  $(O)/renderergl2/tr_shadows.o \
-  $(O)/renderergl2/tr_sky.o \
-  $(O)/renderergl2/tr_surface.o \
-  $(O)/renderergl2/tr_vbo.o \
-  $(O)/renderergl2/tr_world.o \
+  $(O)/renderer/image_bmp.o \
+  $(O)/renderer/image_jpg.o \
+  $(O)/renderer/image_png.o \
+  $(O)/renderer/image_tga.o \
+  $(O)/renderer/noise.o \
+  $(O)/renderergl2/animation.o \
+  $(O)/renderergl2/backend.o \
+  $(O)/renderergl2/bsp.o \
+  $(O)/renderergl2/cmds.o \
+  $(O)/renderergl2/curve.o \
+  $(O)/renderergl2/extensions.o \
+  $(O)/renderergl2/extramath.o \
+  $(O)/renderergl2/fbo.o \
+  $(O)/renderergl2/flares.o \
+  $(O)/renderergl2/font.o \
+  $(O)/renderergl2/glsl.o \
+  $(O)/renderergl2/image.o \
+  $(O)/renderergl2/init.o \
+  $(O)/renderergl2/light.o \
+  $(O)/renderergl2/main.o \
+  $(O)/renderergl2/marks.o \
+  $(O)/renderergl2/material.o \
+  $(O)/renderergl2/material_parse.o \
+  $(O)/renderergl2/mesh.o \
+  $(O)/renderergl2/model.o \
+  $(O)/renderergl2/model_iqm.o \
+  $(O)/renderergl2/postprocess.o \
+  $(O)/renderergl2/scene.o \
+  $(O)/renderergl2/shade.o \
+  $(O)/renderergl2/shade_calc.o \
+  $(O)/renderergl2/shadows.o \
+  $(O)/renderergl2/sky.o \
+  $(O)/renderergl2/surface.o \
+  $(O)/renderergl2/vbo.o \
+  $(O)/renderergl2/world.o \
   \
   $(O)/renderer/sys/sdl/gamma.o \
   $(O)/renderer/sys/sdl/glimp.o
 
 Q3ROBJ = \
-  $(O)/renderer/tr_animation.o \
-  $(O)/renderer/tr_backend.o \
-  $(O)/renderer/tr_bsp.o \
-  $(O)/renderer/tr_cmds.o \
-  $(O)/renderer/tr_curve.o \
-  $(O)/renderer/tr_flares.o \
-  $(O)/renderer/tr_font.o \
-  $(O)/renderer/tr_image.o \
-  $(O)/renderer/tr_image_bmp.o \
-  $(O)/renderer/tr_image_jpg.o \
-  $(O)/renderer/tr_image_png.o \
-  $(O)/renderer/tr_image_tga.o \
-  $(O)/renderer/tr_init.o \
-  $(O)/renderer/tr_light.o \
-  $(O)/renderer/tr_main.o \
-  $(O)/renderer/tr_marks.o \
-  $(O)/renderer/tr_mesh.o \
-  $(O)/renderer/tr_model.o \
-  $(O)/renderer/tr_model_iqm.o \
-  $(O)/renderer/tr_noise.o \
-  $(O)/renderer/tr_scene.o \
-  $(O)/renderer/tr_shade.o \
-  $(O)/renderer/tr_shade_calc.o \
-  $(O)/renderer/tr_shader.o \
-  $(O)/renderer/tr_shadows.o \
-  $(O)/renderer/tr_sky.o \
-  $(O)/renderer/tr_surface.o \
-  $(O)/renderer/tr_world.o \
+  $(O)/renderer/animation.o \
+  $(O)/renderer/backend.o \
+  $(O)/renderer/bsp.o \
+  $(O)/renderer/cmds.o \
+  $(O)/renderer/curve.o \
+  $(O)/renderer/flares.o \
+  $(O)/renderer/font.o \
+  $(O)/renderer/image.o \
+  $(O)/renderer/image_bmp.o \
+  $(O)/renderer/image_jpg.o \
+  $(O)/renderer/image_png.o \
+  $(O)/renderer/image_tga.o \
+  $(O)/renderer/init.o \
+  $(O)/renderer/light.o \
+  $(O)/renderer/main.o \
+  $(O)/renderer/marks.o \
+  $(O)/renderer/mesh.o \
+  $(O)/renderer/model.o \
+  $(O)/renderer/model_iqm.o \
+  $(O)/renderer/noise.o \
+  $(O)/renderer/scene.o \
+  $(O)/renderer/shade.o \
+  $(O)/renderer/shade_calc.o \
+  $(O)/renderer/shader.o \
+  $(O)/renderer/shadows.o \
+  $(O)/renderer/sky.o \
+  $(O)/renderer/surface.o \
+  $(O)/renderer/world.o \
   \
   $(O)/renderer/sdl/gamma.o \
   $(O)/renderer/sdl/glimp.o
@@ -1565,13 +1565,13 @@ ifneq ($(USE_RENDERER_DLOPEN), 0)
     $(O)/renderer/q_shared.o \
     $(O)/renderer/puff.o \
     $(O)/renderer/q_math.o \
-    $(O)/renderer/tr_subs.o
+    $(O)/renderer/subs.o
 
   Q3R2OBJ += \
     $(O)/renderer/q_shared.o \
     $(O)/renderer/puff.o \
     $(O)/renderer/q_math.o \
-    $(O)/renderer/tr_subs.o
+    $(O)/renderer/subs.o
 endif
 
 ifneq ($(USE_INTERNAL_JPEG),0)

@@ -22,7 +22,7 @@
 
 
 #include "../qcommon/q_shared.h"
-#include "../renderer/tr_types.h"
+#include "../renderer/types.h"
 #include "../client/keycodes.h"
 
 #include "../../ui/menudef.h"

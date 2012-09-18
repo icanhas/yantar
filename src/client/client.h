@@ -19,7 +19,7 @@
  */
 #include "../qcommon/q_shared.h"
 #include "../qcommon/qcommon.h"
-#include "../renderer/tr_public.h"
+#include "../renderer/public.h"
 #include "../ui/ui_public.h"
 #include "keys.h"
 #include "snd/public.h"
