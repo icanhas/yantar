@@ -7,34 +7,6 @@ Includelist	includelist[NINCLUDE];
 
 extern char	*objname;
 
-void appendDirToIncludeList( char *dir )
-{
-	int i;
-	char *fqdir;
-
-	fqdir = (char *)newstring( (uchar *)includelist[NINCLUDE-1].file, 256, 0 );
-	strcat( fqdir, "/" );
-	strcat( fqdir, dir );
-
-	//avoid adding it more than once
-	for (i=NINCLUDE-2; i>=0; i--) {
-		if (includelist[i].file &&
-				!strcmp (includelist[i].file, fqdir)) {
-			return;
-		}
-	}
-
-	for (i=NINCLUDE-2; i>=0; i--) {
-		if (includelist[i].file==NULL) {
-			includelist[i].always = 1;
-			includelist[i].file = fqdir;
-			break;
-		}
-	}
-	if (i<0)
-		error(FATAL, "Too many -I directives");
-}
-
 void
 doinclude(Tokenrow *trp)
 {
@@ -73,8 +45,6 @@ doinclude(Tokenrow *trp)
 	if (trp->tp < trp->lp || len==0)
 		goto syntax;
 	fname[len] = '\0';
-
-	appendDirToIncludeList( basepath( fname ) );
 
 	if (fname[0]=='/') {
 		fd = open(fname, 0);
