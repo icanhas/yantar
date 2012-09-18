@@ -1300,14 +1300,14 @@ $(Q3RCC): $(Q3RCCOBJ)
 
 Q3CPPOBJ = \
 	$(O)/cmd/cpp/cpp.o \
+	$(O)/cmd/cpp/eval.o \
+	$(O)/cmd/cpp/getopt.o \
+	$(O)/cmd/cpp/hideset.o \
+	$(O)/cmd/cpp/include.o \
 	$(O)/cmd/cpp/lex.o \
+	$(O)/cmd/cpp/macro.o \
 	$(O)/cmd/cpp/nlist.o \
 	$(O)/cmd/cpp/tokens.o \
-	$(O)/cmd/cpp/macro.o \
-	$(O)/cmd/cpp/eval.o \
-	$(O)/cmd/cpp/include.o \
-	$(O)/cmd/cpp/hideset.o \
-	$(O)/cmd/cpp/getopt.o \
 	$(O)/cmd/cpp/unix.o
 
 $(O)/cmd/cpp/%.o: $(Q3CPPDIR)/%.c
@@ -1386,6 +1386,7 @@ $(Q3ASM): $(Q3ASMOBJ)
 #############################################################################
 
 Q3OBJ = \
+  $(O)/client/avi.o \
   $(O)/client/cgame.o \
   $(O)/client/cin.o \
   $(O)/client/console.o \
@@ -1396,7 +1397,6 @@ Q3OBJ = \
   $(O)/client/parse.o \
   $(O)/client/scrn.o \
   $(O)/client/ui.o \
-  $(O)/client/avi.o \
   \
   $(O)/client/cm/load.o \
   $(O)/client/cm/patch.o \
@@ -1408,12 +1408,12 @@ Q3OBJ = \
   $(O)/client/common.o \
   $(O)/client/cvar.o \
   $(O)/client/files.o \
+  $(O)/client/huffman.o \
   $(O)/client/md4.o \
   $(O)/client/md5.o \
   $(O)/client/msg.o \
   $(O)/client/net/chan.o \
   $(O)/client/net/ip.o \
-  $(O)/client/huffman.o \
   \
   $(O)/client/snd/adpcm.o \
   $(O)/client/snd/dma.o \
@@ -1421,10 +1421,10 @@ Q3OBJ = \
   $(O)/client/snd/mix.o \
   $(O)/client/snd/wavelet.o \
   \
-  $(O)/client/snd/snd.o \
   $(O)/client/snd/codec.o \
-  $(O)/client/snd/codec_wav.o \
   $(O)/client/snd/codec_ogg.o \
+  $(O)/client/snd/codec_wav.o \
+  $(O)/client/snd/snd.o \
   \
   $(O)/client/snd/qal.o \
   $(O)/client/snd/openal.o \
@@ -1536,9 +1536,9 @@ Q3ROBJ = \
   $(O)/renderer/tr_flares.o \
   $(O)/renderer/tr_font.o \
   $(O)/renderer/tr_image.o \
-  $(O)/renderer/tr_image_png.o \
-  $(O)/renderer/tr_image_jpg.o \
   $(O)/renderer/tr_image_bmp.o \
+  $(O)/renderer/tr_image_jpg.o \
+  $(O)/renderer/tr_image_png.o \
   $(O)/renderer/tr_image_tga.o \
   $(O)/renderer/tr_init.o \
   $(O)/renderer/tr_light.o \
@@ -1854,11 +1854,11 @@ Q3DOBJ = \
   $(O)/ded/common.o \
   $(O)/ded/cvar.o \
   $(O)/ded/files.o \
+  $(O)/ded/huffman.o \
   $(O)/ded/md4.o \
   $(O)/ded/msg.o \
   $(O)/ded/net/chan.o \
   $(O)/ded/net/ip.o \
-  $(O)/ded/huffman.o \
   \
   $(O)/ded/q_math.o \
   $(O)/ded/q_shared.o \
@@ -1866,8 +1866,8 @@ Q3DOBJ = \
   \
   $(O)/ded/unzip.o \
   $(O)/ded/ioapi.o \
-  $(O)/ded/vm/vm.o \
   $(O)/ded/vm/interpreted.o \
+  $(O)/ded/vm/vm.o \
   \
   $(O)/ded/be_aas_bspq3.o \
   $(O)/ded/be_aas_cluster.o \
@@ -2024,7 +2024,6 @@ $(B)/$(SERVERBIN)$(FULLBINEXT): $(Q3DOBJ)
 #############################################################################
 
 Q3CGOBJ_ = \
-  $(O)/$(BASEGAME)/cgame/main.o \
   $(O)/$(BASEGAME)/cgame/bg/misc.o \
   $(O)/$(BASEGAME)/cgame/bg/pmove.o \
   $(O)/$(BASEGAME)/cgame/bg/slidemove.o \
@@ -2036,6 +2035,7 @@ Q3CGOBJ_ = \
   $(O)/$(BASEGAME)/cgame/event.o \
   $(O)/$(BASEGAME)/cgame/info.o \
   $(O)/$(BASEGAME)/cgame/localents.o \
+  $(O)/$(BASEGAME)/cgame/main.o \
   $(O)/$(BASEGAME)/cgame/marks.o \
   $(O)/$(BASEGAME)/cgame/particles.o \
   $(O)/$(BASEGAME)/cgame/players.o \
@@ -2068,12 +2068,10 @@ $(B)/$(BASEGAME)/vm/cgame.qvm: $(Q3CGVMOBJ) $(CGDIR)/syscalls.asm $(Q3ASM)
 #############################################################################
 
 MPCGOBJ_ = \
-  $(O)/$(MISSIONPACK)/cgame/main.o \
   $(O)/$(MISSIONPACK)/cgame/bg/misc.o \
   $(O)/$(MISSIONPACK)/cgame/bg/pmove.o \
   $(O)/$(MISSIONPACK)/cgame/bg/slidemove.o \
   $(O)/$(MISSIONPACK)/cgame/consolecmds.o \
-  $(O)/$(MISSIONPACK)/cgame/newdraw.o \
   $(O)/$(MISSIONPACK)/cgame/draw.o \
   $(O)/$(MISSIONPACK)/cgame/drawtools.o \
   $(O)/$(MISSIONPACK)/cgame/effects.o \
@@ -2081,7 +2079,9 @@ MPCGOBJ_ = \
   $(O)/$(MISSIONPACK)/cgame/event.o \
   $(O)/$(MISSIONPACK)/cgame/info.o \
   $(O)/$(MISSIONPACK)/cgame/localents.o \
+  $(O)/$(MISSIONPACK)/cgame/main.o \
   $(O)/$(MISSIONPACK)/cgame/marks.o \
+  $(O)/$(MISSIONPACK)/cgame/newdraw.o \
   $(O)/$(MISSIONPACK)/cgame/particles.o \
   $(O)/$(MISSIONPACK)/cgame/players.o \
   $(O)/$(MISSIONPACK)/cgame/playerstate.o \
@@ -2116,7 +2116,7 @@ $(B)/$(MISSIONPACK)/vm/cgame.qvm: $(MPCGVMOBJ) $(CGDIR)/syscalls.asm $(Q3ASM)
 #############################################################################
 
 Q3GOBJ_ = \
-  $(O)/$(BASEGAME)/game/main.o \
+  $(O)/$(BASEGAME)/game/active.o \
   $(O)/$(BASEGAME)/game/ai/chat.o \
   $(O)/$(BASEGAME)/game/ai/cmd.o \
   $(O)/$(BASEGAME)/game/ai/dmnet.o \
@@ -2124,16 +2124,16 @@ Q3GOBJ_ = \
   $(O)/$(BASEGAME)/game/ai/main.o \
   $(O)/$(BASEGAME)/game/ai/team.o \
   $(O)/$(BASEGAME)/game/ai/vcmd.o \
+  $(O)/$(BASEGAME)/game/arenas.o \
   $(O)/$(BASEGAME)/game/bg/misc.o \
   $(O)/$(BASEGAME)/game/bg/pmove.o \
   $(O)/$(BASEGAME)/game/bg/slidemove.o \
-  $(O)/$(BASEGAME)/game/active.o \
-  $(O)/$(BASEGAME)/game/arenas.o \
   $(O)/$(BASEGAME)/game/bot.o \
   $(O)/$(BASEGAME)/game/client.o \
   $(O)/$(BASEGAME)/game/cmds.o \
   $(O)/$(BASEGAME)/game/combat.o \
   $(O)/$(BASEGAME)/game/items.o \
+  $(O)/$(BASEGAME)/game/main.o \
   $(O)/$(BASEGAME)/game/mem.o \
   $(O)/$(BASEGAME)/game/misc.o \
   $(O)/$(BASEGAME)/game/missile.o \
@@ -2168,7 +2168,7 @@ $(B)/$(BASEGAME)/vm/qagame.qvm: $(Q3GVMOBJ) $(GDIR)/syscalls.asm $(Q3ASM)
 #############################################################################
 
 MPGOBJ_ = \
-  $(O)/$(MISSIONPACK)/game/main.o \
+  $(O)/$(MISSIONPACK)/game/active.o \
   $(O)/$(MISSIONPACK)/game/ai/chat.o \
   $(O)/$(MISSIONPACK)/game/ai/cmd.o \
   $(O)/$(MISSIONPACK)/game/ai/dmnet.o \
@@ -2176,16 +2176,16 @@ MPGOBJ_ = \
   $(O)/$(MISSIONPACK)/game/ai/main.o \
   $(O)/$(MISSIONPACK)/game/ai/team.o \
   $(O)/$(MISSIONPACK)/game/ai/vcmd.o \
+  $(O)/$(MISSIONPACK)/game/arenas.o \
   $(O)/$(MISSIONPACK)/game/bg/misc.o \
   $(O)/$(MISSIONPACK)/game/bg/pmove.o \
   $(O)/$(MISSIONPACK)/game/bg/slidemove.o \
-  $(O)/$(MISSIONPACK)/game/active.o \
-  $(O)/$(MISSIONPACK)/game/arenas.o \
   $(O)/$(MISSIONPACK)/game/bot.o \
   $(O)/$(MISSIONPACK)/game/client.o \
   $(O)/$(MISSIONPACK)/game/cmds.o \
   $(O)/$(MISSIONPACK)/game/combat.o \
   $(O)/$(MISSIONPACK)/game/items.o \
+  $(O)/$(MISSIONPACK)/game/main.o \
   $(O)/$(MISSIONPACK)/game/mem.o \
   $(O)/$(MISSIONPACK)/game/misc.o \
   $(O)/$(MISSIONPACK)/game/missile.o \
@@ -2222,7 +2222,6 @@ $(B)/$(MISSIONPACK)/vm/qagame.qvm: $(MPGVMOBJ) $(GDIR)/syscalls.asm $(Q3ASM)
 #############################################################################
 
 Q3UIOBJ_ = \
-  $(O)/$(BASEGAME)/ui/ui_main.o \
   $(O)/$(BASEGAME)/ui/bg/misc.o \
   $(O)/$(BASEGAME)/ui/ui_addbots.o \
   $(O)/$(BASEGAME)/ui/ui_atoms.o \
@@ -2237,6 +2236,7 @@ Q3UIOBJ_ = \
   $(O)/$(BASEGAME)/ui/ui_gameinfo.o \
   $(O)/$(BASEGAME)/ui/ui_ingame.o \
   $(O)/$(BASEGAME)/ui/ui_loadconfig.o \
+  $(O)/$(BASEGAME)/ui/ui_main.o \
   $(O)/$(BASEGAME)/ui/ui_menu.o \
   $(O)/$(BASEGAME)/ui/ui_mfield.o \
   $(O)/$(BASEGAME)/ui/ui_mods.o \
@@ -2284,9 +2284,9 @@ $(B)/$(BASEGAME)/vm/ui.qvm: $(Q3UIVMOBJ) $(UIDIR)/ui_syscalls.asm $(Q3ASM)
 #############################################################################
 
 MPUIOBJ_ = \
-  $(O)/$(MISSIONPACK)/ui/ui_main.o \
   $(O)/$(MISSIONPACK)/ui/ui_atoms.o \
   $(O)/$(MISSIONPACK)/ui/ui_gameinfo.o \
+  $(O)/$(MISSIONPACK)/ui/ui_main.o \
   $(O)/$(MISSIONPACK)/ui/ui_players.o \
   $(O)/$(MISSIONPACK)/ui/ui_shared.o \
   \
