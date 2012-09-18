@@ -91,7 +91,7 @@ static Tree expr2(void) {
 		l = pointer(expr(':'));
 		pts[1] = src;
 		r = pointer(expr2());
-		if (events.points)
+		if ((generic(p->op) != CNST) && events.points)
 			{
 				apply(events.points, &pts[0], &l);
 				apply(events.points, &pts[1], &r);
