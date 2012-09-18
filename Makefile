@@ -2091,7 +2091,7 @@ MPCGOBJ_ = \
   $(O)/$(MISSIONPACK)/cgame/snapshot.o \
   $(O)/$(MISSIONPACK)/cgame/view.o \
   $(O)/$(MISSIONPACK)/cgame/weapons.o \
-  $(O)/$(MISSIONPACK)/ui/ui_shared.o \
+  $(O)/$(MISSIONPACK)/ui/shared.o \
   \
   $(O)/$(MISSIONPACK)/qcommon/q_math.o \
   $(O)/$(MISSIONPACK)/qcommon/q_shared.o \
@@ -2223,72 +2223,72 @@ $(B)/$(MISSIONPACK)/vm/qagame.qvm: $(MPGVMOBJ) $(GDIR)/syscalls.asm $(Q3ASM)
 
 Q3UIOBJ_ = \
   $(O)/$(BASEGAME)/ui/bg/misc.o \
-  $(O)/$(BASEGAME)/ui/ui_addbots.o \
-  $(O)/$(BASEGAME)/ui/ui_atoms.o \
-  $(O)/$(BASEGAME)/ui/ui_cdkey.o \
-  $(O)/$(BASEGAME)/ui/ui_cinematics.o \
-  $(O)/$(BASEGAME)/ui/ui_confirm.o \
-  $(O)/$(BASEGAME)/ui/ui_connect.o \
-  $(O)/$(BASEGAME)/ui/ui_controls2.o \
-  $(O)/$(BASEGAME)/ui/ui_credits.o \
-  $(O)/$(BASEGAME)/ui/ui_demo2.o \
-  $(O)/$(BASEGAME)/ui/ui_display.o \
-  $(O)/$(BASEGAME)/ui/ui_gameinfo.o \
-  $(O)/$(BASEGAME)/ui/ui_ingame.o \
-  $(O)/$(BASEGAME)/ui/ui_loadconfig.o \
-  $(O)/$(BASEGAME)/ui/ui_main.o \
-  $(O)/$(BASEGAME)/ui/ui_menu.o \
-  $(O)/$(BASEGAME)/ui/ui_mfield.o \
-  $(O)/$(BASEGAME)/ui/ui_mods.o \
-  $(O)/$(BASEGAME)/ui/ui_network.o \
-  $(O)/$(BASEGAME)/ui/ui_options.o \
-  $(O)/$(BASEGAME)/ui/ui_playermodel.o \
-  $(O)/$(BASEGAME)/ui/ui_players.o \
-  $(O)/$(BASEGAME)/ui/ui_playersettings.o \
-  $(O)/$(BASEGAME)/ui/ui_preferences.o \
-  $(O)/$(BASEGAME)/ui/ui_qmenu.o \
-  $(O)/$(BASEGAME)/ui/ui_removebots.o \
-  $(O)/$(BASEGAME)/ui/ui_saveconfig.o \
-  $(O)/$(BASEGAME)/ui/ui_serverinfo.o \
-  $(O)/$(BASEGAME)/ui/ui_servers2.o \
-  $(O)/$(BASEGAME)/ui/ui_setup.o \
-  $(O)/$(BASEGAME)/ui/ui_sound.o \
-  $(O)/$(BASEGAME)/ui/ui_sparena.o \
-  $(O)/$(BASEGAME)/ui/ui_specifyserver.o \
-  $(O)/$(BASEGAME)/ui/ui_splevel.o \
-  $(O)/$(BASEGAME)/ui/ui_sppostgame.o \
-  $(O)/$(BASEGAME)/ui/ui_spskill.o \
-  $(O)/$(BASEGAME)/ui/ui_startserver.o \
-  $(O)/$(BASEGAME)/ui/ui_team.o \
-  $(O)/$(BASEGAME)/ui/ui_teamorders.o \
-  $(O)/$(BASEGAME)/ui/ui_video.o \
+  $(O)/$(BASEGAME)/ui/addbots.o \
+  $(O)/$(BASEGAME)/ui/atoms.o \
+  $(O)/$(BASEGAME)/ui/cdkey.o \
+  $(O)/$(BASEGAME)/ui/cinematics.o \
+  $(O)/$(BASEGAME)/ui/confirm.o \
+  $(O)/$(BASEGAME)/ui/connect.o \
+  $(O)/$(BASEGAME)/ui/controls2.o \
+  $(O)/$(BASEGAME)/ui/credits.o \
+  $(O)/$(BASEGAME)/ui/demo2.o \
+  $(O)/$(BASEGAME)/ui/display.o \
+  $(O)/$(BASEGAME)/ui/gameinfo.o \
+  $(O)/$(BASEGAME)/ui/ingame.o \
+  $(O)/$(BASEGAME)/ui/loadconfig.o \
+  $(O)/$(BASEGAME)/ui/main.o \
+  $(O)/$(BASEGAME)/ui/menu.o \
+  $(O)/$(BASEGAME)/ui/mfield.o \
+  $(O)/$(BASEGAME)/ui/mods.o \
+  $(O)/$(BASEGAME)/ui/network.o \
+  $(O)/$(BASEGAME)/ui/options.o \
+  $(O)/$(BASEGAME)/ui/playermodel.o \
+  $(O)/$(BASEGAME)/ui/players.o \
+  $(O)/$(BASEGAME)/ui/playersettings.o \
+  $(O)/$(BASEGAME)/ui/preferences.o \
+  $(O)/$(BASEGAME)/ui/qmenu.o \
+  $(O)/$(BASEGAME)/ui/removebots.o \
+  $(O)/$(BASEGAME)/ui/saveconfig.o \
+  $(O)/$(BASEGAME)/ui/serverinfo.o \
+  $(O)/$(BASEGAME)/ui/servers2.o \
+  $(O)/$(BASEGAME)/ui/setup.o \
+  $(O)/$(BASEGAME)/ui/sound.o \
+  $(O)/$(BASEGAME)/ui/sparena.o \
+  $(O)/$(BASEGAME)/ui/specifyserver.o \
+  $(O)/$(BASEGAME)/ui/splevel.o \
+  $(O)/$(BASEGAME)/ui/sppostgame.o \
+  $(O)/$(BASEGAME)/ui/spskill.o \
+  $(O)/$(BASEGAME)/ui/startserver.o \
+  $(O)/$(BASEGAME)/ui/team.o \
+  $(O)/$(BASEGAME)/ui/teamorders.o \
+  $(O)/$(BASEGAME)/ui/video.o \
   \
   $(O)/$(BASEGAME)/qcommon/q_math.o \
   $(O)/$(BASEGAME)/qcommon/q_shared.o \
   $(O)/$(BASEGAME)/qcommon/q_utf.o \
   $(O)/$(BASEGAME)/qcommon/vmlibc/vmlibc.o
 
-Q3UIOBJ = $(Q3UIOBJ_) $(O)/$(MISSIONPACK)/ui/ui_syscalls.o
+Q3UIOBJ = $(Q3UIOBJ_) $(O)/$(MISSIONPACK)/ui/syscalls.o
 Q3UIVMOBJ = $(Q3UIOBJ_:%.o=%.asm)
 
 $(B)/$(BASEGAME)/ui-$(SHLIBNAME): $(Q3UIOBJ)
 	$(echo_cmd) "LD $@"
 	$(Q)$(CC) $(CFLAGS) $(SHLIBLDFLAGS) -o $@ $(Q3UIOBJ)
 
-$(B)/$(BASEGAME)/vm/ui.qvm: $(Q3UIVMOBJ) $(UIDIR)/ui_syscalls.asm $(Q3ASM)
+$(B)/$(BASEGAME)/vm/ui.qvm: $(Q3UIVMOBJ) $(UIDIR)/syscalls.asm $(Q3ASM)
 	$(echo_cmd) "Q3ASM $@"
-	$(Q)$(Q3ASM) -o $@ $(Q3UIVMOBJ) $(UIDIR)/ui_syscalls.asm
+	$(Q)$(Q3ASM) -o $@ $(Q3UIVMOBJ) $(UIDIR)/syscalls.asm
 
 #############################################################################
 ## MISSIONPACK UI
 #############################################################################
 
 MPUIOBJ_ = \
-  $(O)/$(MISSIONPACK)/ui/ui_atoms.o \
-  $(O)/$(MISSIONPACK)/ui/ui_gameinfo.o \
-  $(O)/$(MISSIONPACK)/ui/ui_main.o \
-  $(O)/$(MISSIONPACK)/ui/ui_players.o \
-  $(O)/$(MISSIONPACK)/ui/ui_shared.o \
+  $(O)/$(MISSIONPACK)/ui/atoms.o \
+  $(O)/$(MISSIONPACK)/ui/gameinfo.o \
+  $(O)/$(MISSIONPACK)/ui/main.o \
+  $(O)/$(MISSIONPACK)/ui/players.o \
+  $(O)/$(MISSIONPACK)/ui/shared.o \
   \
   $(O)/$(MISSIONPACK)/ui/bg/misc.o \
   \
@@ -2297,16 +2297,16 @@ MPUIOBJ_ = \
   $(O)/$(MISSIONPACK)/qcommon/q_utf.o \
   $(O)/$(MISSIONPACK)/qcommon/vmlibc/vmlibc.o
 
-MPUIOBJ = $(MPUIOBJ_) $(O)/$(MISSIONPACK)/ui/ui_syscalls.o
+MPUIOBJ = $(MPUIOBJ_) $(O)/$(MISSIONPACK)/ui/syscalls.o
 MPUIVMOBJ = $(MPUIOBJ_:%.o=%.asm)
 
 $(B)/$(MISSIONPACK)/ui-$(SHLIBNAME): $(MPUIOBJ)
 	$(echo_cmd) "LD $@"
 	$(Q)$(CC) $(CFLAGS) $(SHLIBLDFLAGS) -o $@ $(MPUIOBJ)
 
-$(B)/$(MISSIONPACK)/vm/ui.qvm: $(MPUIVMOBJ) $(UIDIR)/ui_syscalls.asm $(Q3ASM)
+$(B)/$(MISSIONPACK)/vm/ui.qvm: $(MPUIVMOBJ) $(UIDIR)/syscalls.asm $(Q3ASM)
 	$(echo_cmd) "Q3ASM $@"
-	$(Q)$(Q3ASM) -o $@ $(MPUIVMOBJ) $(UIDIR)/ui_syscalls.asm
+	$(Q)$(Q3ASM) -o $@ $(MPUIVMOBJ) $(UIDIR)/syscalls.asm
 
 
 

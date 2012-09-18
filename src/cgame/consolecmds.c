@@ -22,7 +22,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 #include "local.h"
-#include "../ui/ui_shared.h"
+#include "../ui/shared.h"
 
 #ifdef MISSIONPACK
 extern menuDef_t *menuScoreboard;

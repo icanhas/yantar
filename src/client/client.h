@@ -20,7 +20,7 @@
 #include "../qcommon/q_shared.h"
 #include "../qcommon/qcommon.h"
 #include "../renderer/public.h"
-#include "../ui/ui_public.h"
+#include "../ui/public.h"
 #include "keys.h"
 #include "snd/public.h"
 #include "../cgame/public.h"

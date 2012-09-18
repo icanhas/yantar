@@ -23,7 +23,7 @@
 #endif
 
 #include "local.h"
-#include "../ui/ui_shared.h"
+#include "../ui/shared.h"
 
 extern displayContextDef_t cgDC;
 

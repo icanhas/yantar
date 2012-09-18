@@ -22,7 +22,7 @@
 #include "local.h"
 
 #ifdef MISSIONPACK
-#include "../ui/ui_shared.h"
+#include "../ui/shared.h"
 /* display context for new ui stuff */
 displayContextDef_t cgDC;
 #endif
