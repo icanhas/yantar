@@ -789,7 +789,7 @@ Init_AI_Export(ai_export_t *ai)
 	ai->Characteristic_BInteger = Characteristic_BInteger;
 	ai->Characteristic_String = Characteristic_String;
 	/* -----------------------------------
-	 * be_ai_chat.h
+	 * be_chat.h
 	 * ----------------------------------- */
 	ai->BotAllocChatState	= BotAllocChatState;
 	ai->BotFreeChatState	= BotFreeChatState;

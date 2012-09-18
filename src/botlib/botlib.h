@@ -318,7 +318,7 @@ typedef struct ai_export_s {
 	void (*Characteristic_String)(int character, int index, char *buf,
 				      int size);
 	/* -----------------------------------
-	 * be_ai_chat.h
+	 * be_chat.h
 	 * ----------------------------------- */
 	int (*BotAllocChatState)(void);
 	void (*BotFreeChatState)(int handle);

@@ -20,8 +20,12 @@
 /*
  * g_combat.c */
 
-#include "g_local.h"
 
+#include "q_shared.h"
+#include "bg_public.h"
+#include "g_public.h"
+#include "g_local.h"
+#include "g_team.h"
 
 /*
  * ScorePlum

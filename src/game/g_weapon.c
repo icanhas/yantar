@@ -21,6 +21,9 @@
  * g_weapon.c
  * perform the server side effects of a weapon firing */
 
+#include "q_shared.h"
+#include "bg_public.h"
+#include "g_public.h"
 #include "g_local.h"
 
 static float	s_quadFactor;

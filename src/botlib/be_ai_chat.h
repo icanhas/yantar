@@ -19,11 +19,11 @@
  */
 /*  */
 /*****************************************************************************
-* name:		be_ai_chat.h
+* name:		be_chat.h
 *
 * desc:		char AI
 *
-* $Archive: /source/code/botlib/be_ai_chat.h $
+* $Archive: /source/code/botlib/be_chat.h $
 *
 *****************************************************************************/
 

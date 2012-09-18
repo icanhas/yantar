@@ -229,6 +229,7 @@ UNIXDIR=$(SYSDIR)/unix
 OSXDIR=$(SYSDIR)/osx
 WINDIR=$(SYSDIR)/win
 GDIR=$(MOUNT_DIR)/game
+AIDIR=$(GDIR)/ai
 CGDIR=$(MOUNT_DIR)/cgame
 BLIBDIR=$(MOUNT_DIR)/botlib
 UIDIR=$(MOUNT_DIR)/ui
@@ -245,6 +246,7 @@ LOKISETUPDIR=misc/setup
 NSISDIR=misc/nsis
 SDLHDIR=$(MOUNT_DIR)/SDL12
 LIBSDIR=$(MOUNT_DIR)/libs
+INCLUDES=-I$(COMDIR)
 
 bin_path=$(shell which $(1) 2> /dev/null)
 
@@ -484,7 +486,7 @@ ifeq ($(PLATFORM),mingw32)
   endif
 
   BASE_CFLAGS = -Wall -fno-strict-aliasing -Wimplicit -Wstrict-prototypes \
-    -DUSE_ICON -I$(MOUNT_DIR)/qcommon
+    -DUSE_ICON
 
   # In the absence of wspiapi.h, require Windows XP or later
   ifeq ($(shell test -e $(COMDIR)/wspiapi.h; echo $$?),1)
@@ -985,22 +987,22 @@ endif
 
 define DO_CC
 $(echo_cmd) "CC $<"
-$(Q)$(CC) $(NOTSHLIBCFLAGS) $(CFLAGS) $(CLIENT_CFLAGS) $(OPTIMIZE) -o $@ -c $<
+$(Q)$(CC) $(NOTSHLIBCFLAGS) $(CFLAGS) $(CLIENT_CFLAGS) $(INCLUDES) $(OPTIMIZE) -o $@ -c $<
 endef
 
 define DO_REF_CC
 $(echo_cmd) "REF_CC $<"
-$(Q)$(CC) $(SHLIBCFLAGS) $(CFLAGS) $(CLIENT_CFLAGS) $(OPTIMIZE) -o $@ -c $<
+$(Q)$(CC) $(SHLIBCFLAGS) $(CFLAGS) $(CLIENT_CFLAGS) $(INCLUDES) $(OPTIMIZE) -o $@ -c $<
 endef
 
 define DO_SMP_CC
 $(echo_cmd) "SMP_CC $<"
-$(Q)$(CC) $(SHLIBCFLAGS) $(CFLAGS) $(CLIENT_CFLAGS) $(OPTIMIZE) -DSMP -o $@ -c $<
+$(Q)$(CC) $(SHLIBCFLAGS) $(CFLAGS) $(CLIENT_CFLAGS) $(INCLUDES) $(OPTIMIZE) -DSMP -o $@ -c $<
 endef
 
 define DO_BOT_CC
 $(echo_cmd) "BOT_CC $<"
-$(Q)$(CC) $(NOTSHLIBCFLAGS) $(CFLAGS) $(BOTCFLAGS) $(OPTIMIZE) -DBOTLIB -o $@ -c $<
+$(Q)$(CC) $(NOTSHLIBCFLAGS) $(CFLAGS) $(BOTCFLAGS) $(INCLUDES) $(OPTIMIZE) -DBOTLIB -o $@ -c $<
 endef
 
 ifeq ($(GENERATE_DEPENDENCIES),1)
@@ -1009,49 +1011,49 @@ endif
 
 define DO_SHLIB_CC
 $(echo_cmd) "SHLIB_CC $<"
-$(Q)$(CC) $(BASEGAME_CFLAGS) $(SHLIBCFLAGS) $(CFLAGS) $(OPTIMIZEVM) -o $@ -c $<
+$(Q)$(CC) $(BASEGAME_CFLAGS) $(SHLIBCFLAGS) $(CFLAGS) $(INCLUDES) $(OPTIMIZEVM) -o $@ -c $<
 $(Q)$(DO_QVM_DEP)
 endef
 
 define DO_GAME_CC
 $(echo_cmd) "GAME_CC $<"
-$(Q)$(CC) $(BASEGAME_CFLAGS) -DQAGAME $(SHLIBCFLAGS) $(CFLAGS) $(OPTIMIZEVM) -o $@ -c $<
+$(Q)$(CC) $(BASEGAME_CFLAGS) -DQAGAME $(SHLIBCFLAGS) $(CFLAGS) $(INCLUDES) $(OPTIMIZEVM) -o $@ -c $<
 $(Q)$(DO_QVM_DEP)
 endef
 
 define DO_CGAME_CC
 $(echo_cmd) "CGAME_CC $<"
-$(Q)$(CC) $(BASEGAME_CFLAGS) -DCGAME $(SHLIBCFLAGS) $(CFLAGS) $(OPTIMIZEVM) -o $@ -c $<
+$(Q)$(CC) $(BASEGAME_CFLAGS) -DCGAME $(SHLIBCFLAGS) $(CFLAGS) $(INCLUDES) $(OPTIMIZEVM) -o $@ -c $<
 $(Q)$(DO_QVM_DEP)
 endef
 
 define DO_UI_CC
 $(echo_cmd) "UI_CC $<"
-$(Q)$(CC) $(BASEGAME_CFLAGS) -DUI $(SHLIBCFLAGS) $(CFLAGS) $(OPTIMIZEVM) -o $@ -c $<
+$(Q)$(CC) $(BASEGAME_CFLAGS) -DUI $(SHLIBCFLAGS) $(CFLAGS) $(INCLUDES) $(OPTIMIZEVM) -o $@ -c $<
 $(Q)$(DO_QVM_DEP)
 endef
 
 define DO_SHLIB_CC_MISSIONPACK
 $(echo_cmd) "SHLIB_CC_MISSIONPACK $<"
-$(Q)$(CC) $(MISSIONPACK_CFLAGS) $(SHLIBCFLAGS) $(CFLAGS) $(OPTIMIZEVM) -o $@ -c $<
+$(Q)$(CC) $(MISSIONPACK_CFLAGS) $(SHLIBCFLAGS) $(CFLAGS) $(INCLUDES) $(OPTIMIZEVM) -o $@ -c $<
 $(Q)$(DO_QVM_DEP)
 endef
 
 define DO_GAME_CC_MISSIONPACK
 $(echo_cmd) "GAME_CC_MISSIONPACK $<"
-$(Q)$(CC) $(MISSIONPACK_CFLAGS) -DQAGAME $(SHLIBCFLAGS) $(CFLAGS) $(OPTIMIZEVM) -o $@ -c $<
+$(Q)$(CC) $(MISSIONPACK_CFLAGS) -DQAGAME $(SHLIBCFLAGS) $(CFLAGS) $(INCLUDES) $(OPTIMIZEVM) -o $@ -c $<
 $(Q)$(DO_QVM_DEP)
 endef
 
 define DO_CGAME_CC_MISSIONPACK
 $(echo_cmd) "CGAME_CC_MISSIONPACK $<"
-$(Q)$(CC) $(MISSIONPACK_CFLAGS) -DCGAME $(SHLIBCFLAGS) $(CFLAGS) $(OPTIMIZEVM) -o $@ -c $<
+$(Q)$(CC) $(MISSIONPACK_CFLAGS) -DCGAME $(SHLIBCFLAGS) $(CFLAGS) $(INCLUDES) $(OPTIMIZEVM) -o $@ -c $<
 $(Q)$(DO_QVM_DEP)
 endef
 
 define DO_UI_CC_MISSIONPACK
 $(echo_cmd) "UI_CC_MISSIONPACK $<"
-$(Q)$(CC) $(MISSIONPACK_CFLAGS) -DUI $(SHLIBCFLAGS) $(CFLAGS) $(OPTIMIZEVM) -o $@ -c $<
+$(Q)$(CC) $(MISSIONPACK_CFLAGS) -DUI $(SHLIBCFLAGS) $(CFLAGS) $(INCLUDES) $(OPTIMIZEVM) -o $@ -c $<
 $(Q)$(DO_QVM_DEP)
 endef
 
@@ -1062,7 +1064,7 @@ endef
 
 define DO_DED_CC
 $(echo_cmd) "DED_CC $<"
-$(Q)$(CC) $(NOTSHLIBCFLAGS) -DDEDICATED $(CFLAGS) $(SERVER_CFLAGS) $(OPTIMIZE) -o $@ -c $<
+$(Q)$(CC) $(NOTSHLIBCFLAGS) -DDEDICATED $(CFLAGS) $(SERVER_CFLAGS) $(INCLUDES) $(OPTIMIZE) -o $@ -c $<
 endef
 
 define DO_WINDRES
@@ -1173,12 +1175,12 @@ makedirs:
 		$(O)/ded/sys/sdl \
 		$(O)/ded/vm \
 		$(O)/$(BASEGAME)/cgame \
-		$(O)/$(BASEGAME)/game \
+		$(O)/$(BASEGAME)/game/ai \
 		$(O)/$(BASEGAME)/ui \
 		$(O)/$(BASEGAME)/qcommon/vmlibc \
 		$(O)/$(BASEGAME)/vm \
 		$(O)/$(MISSIONPACK)/cgame \
-		$(O)/$(MISSIONPACK)/game \
+		$(O)/$(MISSIONPACK)/game/ai \
 		$(O)/$(MISSIONPACK)/ui \
 		$(O)/$(MISSIONPACK)/qcommon/vmlibc \
 		$(O)/$(MISSIONPACK)/vm \
@@ -1325,42 +1327,42 @@ $(Q3LCC): $(Q3LCCOBJ) $(Q3RCC) $(Q3CPP)
 
 define DO_Q3LCC
 $(echo_cmd) "Q3LCC $<"
-$(Q)$(Q3LCC) $(BASEGAME_CFLAGS) -o $@ $<
+$(Q)$(Q3LCC) $(BASEGAME_CFLAGS) $(INCLUDES) -o $@ $<
 endef
 
 define DO_CGAME_Q3LCC
 $(echo_cmd) "CGAME_Q3LCC $<"
-$(Q)$(Q3LCC) $(BASEGAME_CFLAGS) -DCGAME -o $@ $<
+$(Q)$(Q3LCC) $(BASEGAME_CFLAGS) -DCGAME $(INCLUDES) -o $@ $<
 endef
 
 define DO_GAME_Q3LCC
 $(echo_cmd) "GAME_Q3LCC $<"
-$(Q)$(Q3LCC) $(BASEGAME_CFLAGS) -DQAGAME -o $@ $<
+$(Q)$(Q3LCC) $(BASEGAME_CFLAGS) -DQAGAME $(INCLUDES) -o $@ $<
 endef
 
 define DO_UI_Q3LCC
 $(echo_cmd) "UI_Q3LCC $<"
-$(Q)$(Q3LCC) $(BASEGAME_CFLAGS) -DUI -o $@ $<
+$(Q)$(Q3LCC) $(BASEGAME_CFLAGS) -DUI $(INCLUDES) -o $@ $<
 endef
 
 define DO_Q3LCC_MISSIONPACK
 $(echo_cmd) "Q3LCC_MISSIONPACK $<"
-$(Q)$(Q3LCC) $(MISSIONPACK_CFLAGS) -o $@ $<
+$(Q)$(Q3LCC) $(MISSIONPACK_CFLAGS) $(INCLUDES) -o $@ $<
 endef
 
 define DO_CGAME_Q3LCC_MISSIONPACK
 $(echo_cmd) "CGAME_Q3LCC_MISSIONPACK $<"
-$(Q)$(Q3LCC) $(MISSIONPACK_CFLAGS) -DCGAME -o $@ $<
+$(Q)$(Q3LCC) $(MISSIONPACK_CFLAGS) -DCGAME $(INCLUDES) -o $@ $<
 endef
 
 define DO_GAME_Q3LCC_MISSIONPACK
 $(echo_cmd) "GAME_Q3LCC_MISSIONPACK $<"
-$(Q)$(Q3LCC) $(MISSIONPACK_CFLAGS) -DQAGAME -o $@ $<
+$(Q)$(Q3LCC) $(MISSIONPACK_CFLAGS) -DQAGAME $(INCLUDES) -o $@ $<
 endef
 
 define DO_UI_Q3LCC_MISSIONPACK
 $(echo_cmd) "UI_Q3LCC_MISSIONPACK $<"
-$(Q)$(Q3LCC) $(MISSIONPACK_CFLAGS) -DUI -o $@ $<
+$(Q)$(Q3LCC) $(MISSIONPACK_CFLAGS) -DUI $(INCLUDES) -o $@ $<
 endef
 
 
@@ -2112,13 +2114,13 @@ $(B)/$(MISSIONPACK)/vm/cgame.qvm: $(MPCGVMOBJ) $(CGDIR)/syscalls.asm $(Q3ASM)
 
 Q3GOBJ_ = \
   $(O)/$(BASEGAME)/game/g_main.o \
-  $(O)/$(BASEGAME)/game/ai_chat.o \
-  $(O)/$(BASEGAME)/game/ai_cmd.o \
-  $(O)/$(BASEGAME)/game/ai_dmnet.o \
-  $(O)/$(BASEGAME)/game/ai_dmq3.o \
-  $(O)/$(BASEGAME)/game/ai_main.o \
-  $(O)/$(BASEGAME)/game/ai_team.o \
-  $(O)/$(BASEGAME)/game/ai_vcmd.o \
+  $(O)/$(BASEGAME)/game/ai/chat.o \
+  $(O)/$(BASEGAME)/game/ai/cmd.o \
+  $(O)/$(BASEGAME)/game/ai/dmnet.o \
+  $(O)/$(BASEGAME)/game/ai/dmq3.o \
+  $(O)/$(BASEGAME)/game/ai/main.o \
+  $(O)/$(BASEGAME)/game/ai/team.o \
+  $(O)/$(BASEGAME)/game/ai/vcmd.o \
   $(O)/$(BASEGAME)/game/bg_misc.o \
   $(O)/$(BASEGAME)/game/bg_pmove.o \
   $(O)/$(BASEGAME)/game/bg_slidemove.o \
@@ -2164,13 +2166,13 @@ $(B)/$(BASEGAME)/vm/qagame.qvm: $(Q3GVMOBJ) $(GDIR)/g_syscalls.asm $(Q3ASM)
 
 MPGOBJ_ = \
   $(O)/$(MISSIONPACK)/game/g_main.o \
-  $(O)/$(MISSIONPACK)/game/ai_chat.o \
-  $(O)/$(MISSIONPACK)/game/ai_cmd.o \
-  $(O)/$(MISSIONPACK)/game/ai_dmnet.o \
-  $(O)/$(MISSIONPACK)/game/ai_dmq3.o \
-  $(O)/$(MISSIONPACK)/game/ai_main.o \
-  $(O)/$(MISSIONPACK)/game/ai_team.o \
-  $(O)/$(MISSIONPACK)/game/ai_vcmd.o \
+  $(O)/$(MISSIONPACK)/game/ai/chat.o \
+  $(O)/$(MISSIONPACK)/game/ai/cmd.o \
+  $(O)/$(MISSIONPACK)/game/ai/dmnet.o \
+  $(O)/$(MISSIONPACK)/game/ai/dmq3.o \
+  $(O)/$(MISSIONPACK)/game/ai/main.o \
+  $(O)/$(MISSIONPACK)/game/ai/team.o \
+  $(O)/$(MISSIONPACK)/game/ai/vcmd.o \
   $(O)/$(MISSIONPACK)/game/bg_misc.o \
   $(O)/$(MISSIONPACK)/game/bg_pmove.o \
   $(O)/$(MISSIONPACK)/game/bg_slidemove.o \
@@ -2463,13 +2465,25 @@ $(O)/$(MISSIONPACK)/cgame/%.asm: $(CGDIR)/%.c $(Q3LCC)
 $(O)/$(BASEGAME)/game/%.o: $(GDIR)/%.c
 	$(DO_GAME_CC)
 
+$(O)/$(BASEGAME)/game/ai/%.o: $(AIDIR)/%.c
+	$(DO_GAME_CC)
+
 $(O)/$(BASEGAME)/game/%.asm: $(GDIR)/%.c $(Q3LCC)
+	$(DO_GAME_Q3LCC)
+
+$(O)/$(BASEGAME)/game/ai/%.asm: $(AIDIR)/%.c $(Q3LCC)
 	$(DO_GAME_Q3LCC)
 
 $(O)/$(MISSIONPACK)/game/%.o: $(GDIR)/%.c
 	$(DO_GAME_CC_MISSIONPACK)
+	
+$(O)/$(MISSIONPACK)/game/ai/%.o: $(AIDIR)/%.c
+	$(DO_GAME_CC_MISSIONPACK)
 
 $(O)/$(MISSIONPACK)/game/%.asm: $(GDIR)/%.c $(Q3LCC)
+	$(DO_GAME_Q3LCC_MISSIONPACK)
+	
+$(O)/$(MISSIONPACK)/game/ai/%.asm: $(AIDIR)/%.c $(Q3LCC)
 	$(DO_GAME_Q3LCC_MISSIONPACK)
 
 

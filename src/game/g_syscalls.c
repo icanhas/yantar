@@ -18,6 +18,10 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 /*  */
+
+#include "q_shared.h"
+#include "bg_public.h"
+#include "g_public.h"
 #include "g_local.h"
 
 /* this file is only included when building a dll

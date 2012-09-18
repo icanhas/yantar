@@ -20,15 +20,13 @@
 /*  */
 
 /*****************************************************************************
-* name:		ai_cmd.h
+* name:		vcmd.h
 *
 * desc:		Quake3 bot AI
 *
-* $Archive: /source/code/botai/ai_chat.c $
+* $Archive: /source/code/botai/ai_vcmd.c $
 *
 *****************************************************************************/
 
-extern int notleader[MAX_CLIENTS];
-
-int BotMatchMessage(bot_state_t *bs, char *message);
-void BotPrintTeamGoal(bot_state_t *bs);
+int BotVoiceChatCommand(bot_state_t *bs, int mode, char *voicechat);
+void BotVoiceChat_Defend(bot_state_t *bs, int client, int mode);

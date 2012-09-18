@@ -1,4 +1,7 @@
-/* local definitions for game module */
+/* 
+ * local definitions for game module 
+ * "bg_public.h" and "g_public.h" must be included before me
+ */
 /*
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
@@ -18,10 +21,6 @@
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-
-#include "../qcommon/q_shared.h"
-#include "bg_public.h"
-#include "g_public.h"
 
 /* the "gameversion" client command will print this plus compile date */
 #define GAMEVERSION			BASEGAME
@@ -404,8 +403,6 @@ typedef struct {
 	int		portalSequence;
 #endif
 } level_locals_t;
-
-#include "g_team.h"	/* teamplay specific stuff */
 
 /*
  * g_spawn.c
