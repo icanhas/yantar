@@ -8,7 +8,6 @@ extern	int	optind;
 extern	int	verbose;
 extern	int	Cplusplus;
 Nlist	*kwdefined;
-char	wd[128];
 
 #define	NLSIZE	128
 
