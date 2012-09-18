@@ -303,15 +303,8 @@ puttokens(Tokenrow *trp)
 			tp++;
 			len += tp->wslen+tp->len;
 		}
-		if (len>OBS/2) {		/* handle giant token */
-			if (wbp > wbuf)
-				write(1, wbuf, wbp-wbuf);
-			write(1, (char *)p, len);
-			wbp = wbuf;
-		} else {	
-			memcpy(wbp, p, len);
-			wbp += len;
-		}
+		memcpy(wbp, p, len);
+		wbp += len;
 		if (wbp >= &wbuf[OBS]) {
 			write(1, wbuf, OBS);
 			if (wbp > &wbuf[OBS])

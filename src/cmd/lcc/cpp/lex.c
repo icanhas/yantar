@@ -406,7 +406,7 @@ gettokens(Tokenrow *trp, int reset)
 				tp->type = END;
 				tp->len = 0;
 				s->inp = ip;
-				if (tp!=trp->bp && (tp-1)->type!=NL && cursource->fd!=-1)
+				if (tp!=trp->bp && (tp-1)->type!=NL && cursource->fd!=NULL)
 					error(WARNING,"No newline at end of file");
 				trp->lp = tp+1;
 				return nmac;
@@ -519,7 +519,7 @@ fillbuf(Source *s)
 	nr = INS/8;
 	if ((char *)s->inl+nr > (char *)s->inb+INS)
 		error(FATAL, "Input buffer overflow");
-	if (s->fd<0 || (n=read(s->fd, (char *)s->inl, INS/8)) <= 0)
+	if (s->fd==NULL || (n=fread((char *)s->inl, 1, INS/8, s->fd)) <= 0)
 		n = 0;
 	if ((*s->inp&0xff) == EOB) /* sentinel character appears in input */
 		*s->inp = EOFC;
@@ -534,11 +534,11 @@ fillbuf(Source *s)
 
 /*
  * Push down to new source of characters.
- * If fd>0 and str==NULL, then from a file `name';
- * if fd==-1 and str, then from the string.
+ * If fd!=NULL and str==NULL, then from a file `name';
+ * if fd==NULL and str, then from the string.
  */
 Source *
-setsource(char *name, int fd, char *str)
+setsource(char *name, FILE *fd, char *str)
 {
 	Source *s = new(Source);
 	int len;
@@ -571,8 +571,8 @@ unsetsource(void)
 {
 	Source *s = cursource;
 
-	if (s->fd>=0) {
-		close(s->fd);
+	if (s->fd != NULL) {
+		fclose(s->fd);
 		dofree(s->inb);
 	}
 	cursource = s->next;

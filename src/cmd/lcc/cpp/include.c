@@ -12,7 +12,8 @@ doinclude(Tokenrow *trp)
 {
 	char fname[256], iname[256];
 	Includelist *ip;
-	int angled, len, fd, i;
+	int angled, len, i;
+	FILE *fd;
 
 	trp->tp += 1;
 	if (trp->tp>=trp->lp)
@@ -47,9 +48,9 @@ doinclude(Tokenrow *trp)
 	fname[len] = '\0';
 
 	if (fname[0]=='/') {
-		fd = open(fname, 0);
+		fd = fopen(fname, "rb");
 		strcpy(iname, fname);
-	} else for (fd = -1,i=NINCLUDE-1; i>=0; i--) {
+	} else for (fd = NULL,i=NINCLUDE-1; i>=0; i--) {
 		ip = &includelist[i];
 		if (ip->file==NULL || ip->deleted || (angled && ip->always==0))
 			continue;
@@ -58,7 +59,7 @@ doinclude(Tokenrow *trp)
 		strcpy(iname, ip->file);
 		strcat(iname, "/");
 		strcat(iname, fname);
-		if ((fd = open(iname, 0)) >= 0)
+		if ((fd = fopen(iname, "rb")) != NULL)
 			break;
 	}
 	if ( Mflag>1 || (!angled&&Mflag==1) ) {
@@ -66,7 +67,7 @@ doinclude(Tokenrow *trp)
 		write(1,iname,strlen(iname));
 		write(1,"\n",1);
 	}
-	if (fd >= 0) {
+	if (fd != NULL) {
 		if (++incdepth > 10)
 			error(FATAL, "#include too deeply nested");
 		setsource((char*)newstring((uchar*)iname, strlen(iname), 0), fd, NULL);

@@ -59,7 +59,7 @@ typedef struct source {
 	uchar	*inb;		/* input buffer */
 	uchar	*inp;		/* input pointer */
 	uchar	*inl;		/* end of input */
-	int	fd;		/* input source */
+	FILE*	fd;		/* input source */
 	int	ifdepth;	/* conditional nesting in include */
 	struct	source *next;	/* stack for #include */
 } Source;
@@ -92,7 +92,7 @@ void	fixlex(void);
 void	setup(int, char **);
 int	gettokens(Tokenrow *, int);
 int	comparetokens(Tokenrow *, Tokenrow *);
-Source	*setsource(char *, int, char *);
+Source	*setsource(char *, FILE*, char *);
 void	unsetsource(void);
 void	puttokens(Tokenrow *);
 void	process(Tokenrow *);
