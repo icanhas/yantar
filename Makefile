@@ -137,7 +137,7 @@ BIN_DIR=bin
 endif
 
 ifndef OBJ_DIR
-OBJ_DIR=.obj
+OBJ_DIR=.ofiles
 endif
 
 ifndef TEMPDIR
