@@ -65,7 +65,7 @@ setup(int argc, char **argv)
 		}
 	dp = ".";
 	fp = "<stdin>";
-	fd = 0;
+	fd = stdin;
 	if (optind<argc) {
 		dp = basepath( argv[optind] );
 		fp = (char*)newstring((uchar*)argv[optind], strlen(argv[optind]), 0);
