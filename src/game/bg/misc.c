@@ -225,7 +225,7 @@ gitem_t bg_itemlist[] =
 		  NULL, NULL, NULL},
 /* icon */ Picons "/iconw_machinegun",
 /* pickup */ "Machinegun",
-		40,
+		200,
 		IT_WEAPON,
 		WP_MACHINEGUN,
 /* precache */ "",
