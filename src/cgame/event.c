@@ -432,7 +432,7 @@ CG_WaterLevel(centity_t *cent)
 	/* get waterlevel, accounting for ducking */
 	waterlevel = 0;
 	vec3copy(cent->lerpOrigin, point);
-	point[2] += MINS_Z + 1;
+	point[2] += MinsZ + 1;
 	anim = cent->currentState.legsAnim & ~ANIM_TOGGLEBIT;
 
 	if(anim == LEGS_WALKCR || anim == LEGS_IDLECR)
@@ -443,15 +443,15 @@ CG_WaterLevel(centity_t *cent)
 	contents = CG_PointContents(point, -1);
 
 	if(contents & MASK_WATER){
-		sample2 = point[2] - MINS_Z;
+		sample2 = point[2] - MinsZ;
 		sample1 = sample2 / 2;
 		waterlevel = 1;
-		point[2] = cent->lerpOrigin[2] + MINS_Z + sample1;
+		point[2] = cent->lerpOrigin[2] + MinsZ + sample1;
 		contents = CG_PointContents(point, -1);
 
 		if(contents & MASK_WATER){
 			waterlevel = 2;
-			point[2] = cent->lerpOrigin[2] + MINS_Z + sample2;
+			point[2] = cent->lerpOrigin[2] + MinsZ + sample2;
 			contents = CG_PointContents(point, -1);
 
 			if(contents & MASK_WATER)

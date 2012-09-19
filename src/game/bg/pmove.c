@@ -752,18 +752,18 @@ setwaterlevel(void)
 	pm->watertype = 0;
 	point[0] = pm->ps->origin[0];
 	point[1] = pm->ps->origin[1];
-	point[2] = pm->ps->origin[2] + MINS_Z + 1;
+	point[2] = pm->ps->origin[2] + MinsZ + 1;
 	cont = pm->pointcontents(point, pm->ps->clientNum);
 	if(cont & MASK_WATER){
-		samp2 = pm->ps->viewheight - MINS_Z;
+		samp2 = pm->ps->viewheight - MinsZ;
 		samp1 = samp2 / 2;
 		pm->watertype = cont;
 		pm->waterlevel = 1;
-		point[2] = pm->ps->origin[2] + MINS_Z + samp1;
+		point[2] = pm->ps->origin[2] + MinsZ + samp1;
 		cont = pm->pointcontents(point, pm->ps->clientNum);
 		if(cont & MASK_WATER){
 			pm->waterlevel = 2;
-			point[2] = pm->ps->origin[2] + MINS_Z + samp2;
+			point[2] = pm->ps->origin[2] + MinsZ + samp2;
 			cont = pm->pointcontents(point, pm->ps->clientNum);
 			if(cont & MASK_WATER)
 				pm->waterlevel = 3;
@@ -782,15 +782,15 @@ setplayerbounds(void)
 			vec3set(pm->mins, -42, -42, -42);
 			vec3set(pm->maxs, 42, 42, 42);
 		}else{
-			vec3set(pm->mins, -15, -15, MINS_Z);
-			vec3set(pm->maxs, 15, 15, 16);
+			vec3set(pm->mins, MinsX, MinsY, MinsZ);
+			vec3set(pm->maxs, MaxsX, MaxsY, MaxsZ);
 		}
 		return;
 	}
 	pm->ps->pm_flags &= ~PMF_INVULEXPAND;
 	
-	vec3set(pm->mins, -15, -15, MINS_Z);
-	vec3set(pm->maxs, 15, 15, 32);
+	vec3set(pm->mins, MinsX, MinsY, MinsZ);
+	vec3set(pm->maxs, MaxsX, MaxsY, MaxsZ);
 	pm->ps->viewheight = DEFAULT_VIEWHEIGHT;
 
 	if(pm->ps->pm_type == PM_DEAD){

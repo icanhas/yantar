@@ -44,9 +44,15 @@
 
 #define VOTE_TIME		30000	/* 30 seconds before vote times out */
 
-#define MINS_Z			-24
-#define DEFAULT_VIEWHEIGHT	26
-#define CROUCH_VIEWHEIGHT	12
+/* default player bounds when alive and well */
+#define MaxsX			30
+#define MaxsY			40
+#define MaxsZ			30
+#define MinsX			-MaxsX
+#define MinsY			-MaxsY
+#define MinsZ			-MaxsZ
+#define DEFAULT_VIEWHEIGHT	15
+#define CROUCH_VIEWHEIGHT	4
 #define DEAD_VIEWHEIGHT		-16
 
 /*
