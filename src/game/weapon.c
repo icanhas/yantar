@@ -393,7 +393,7 @@ weapon_grenadelauncher_fire(gentity_t *ent)
 	m->damage *= s_quadFactor;
 	m->splashDamage *= s_quadFactor;
 
-/*	vec3add( m->s.pos.trDelta, ent->client->ps.velocity, m->s.pos.trDelta );	// "real" physics */
+	vec3add(m->s.pos.trDelta, ent->client->ps.velocity, m->s.pos.trDelta);	// "real" physics
 }
 
 /*
@@ -401,19 +401,19 @@ weapon_grenadelauncher_fire(gentity_t *ent)
  * ROCKET
  *
  */
-
 void
 Weapon_RocketLauncher_Fire(gentity_t *ent)
 {
 	gentity_t       *m;
-
+	Vec3 fw;
+	Scalar s;
+	
 	m = fire_rocket (ent, muzzle, forward);
 	m->damage *= s_quadFactor;
 	m->splashDamage *= s_quadFactor;
 
-/*	vec3add( m->s.pos.trDelta, ent->client->ps.velocity, m->s.pos.trDelta );	// "real" physics */
+	vec3add(m->s.pos.trDelta, ent->client->ps.velocity, m->s.pos.trDelta);	// "real" physics
 }
-
 
 /*
  *
@@ -430,7 +430,7 @@ Weapon_Plasmagun_Fire(gentity_t *ent)
 	m->damage *= s_quadFactor;
 	m->splashDamage *= s_quadFactor;
 
-/*	vec3add( m->s.pos.trDelta, ent->client->ps.velocity, m->s.pos.trDelta );	// "real" physics */
+	vec3add(m->s.pos.trDelta, ent->client->ps.velocity, m->s.pos.trDelta);	// "real" physics
 }
 
 /*
