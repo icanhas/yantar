@@ -17,13 +17,12 @@
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-/* console.c */
 
 #include "client.h"
-
+#include "keycodes.h"
+#include "keys.h"
 
 int g_console_field_width = 78;
-
 
 #define NUM_CON_TIMES		4
 

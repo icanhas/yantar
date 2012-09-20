@@ -21,7 +21,6 @@
 #include "../qcommon/qcommon.h"
 #include "../renderer/public.h"
 #include "../ui/public.h"
-#include "keys.h"
 #include "snd/public.h"
 #include "../cgame/public.h"
 #include "../game/bg/public.h"

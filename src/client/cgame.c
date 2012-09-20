@@ -20,9 +20,9 @@
 /* cl_cgame.c  -- client system interaction with client game */
 
 #include "client.h"
-
+#include "keycodes.h"
+#include "keys.h"
 #include "../botlib/botlib.h"
-
 #ifdef USE_MUMBLE
 #include "libmumblelink.h"
 #endif

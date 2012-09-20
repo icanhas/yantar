@@ -17,38 +17,41 @@
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
+ 
 #include "client.h"
+#include "keycodes.h"
+#include "keys.h"
 
 /*
- *
  * key up events are sent even if in console mode
- *
  */
+ 
+typedef struct keyname_t keyname_t;
 
-field_t historyEditLines[COMMAND_HISTORY];
-
-int	nextHistoryLine;	/* the last line in the history buffer, not masked */
-int	historyLine;		/* the line being displayed from history buffer */
-/* will be <= nextHistoryLine */
-
-field_t		g_consoleField;
-field_t		chatField;
-qbool		chat_team;
-
-int chat_playerNum;
-
-
-qbool key_overstrikeMode;
-
-int anykeydown;
-qkey_t keys[MAX_KEYS];
-
-
-typedef struct {
+struct keyname_t {
 	char	*name;
 	int	keynum;
-} keyname_t;
+};
+ 
+/* This must not exceed MAX_CMD_LINE */
+#define	MAX_CONSOLE_SAVE_BUFFER 1024
+#define	CONSOLE_HISTORY_FILE	"consolehistory"
 
+field_t	g_consoleField;
+field_t	chatField;
+qbool	chat_team;
+int		chat_playerNum;
+qbool	key_overstrikeMode;
+int		anykeydown;
+qkey_t	keys[MAX_KEYS];
+field_t	historyEditLines[COMMAND_HISTORY];
+
+static int	nextHistoryLine;	/* the last line in the history buffer, not masked */
+static int	historyLine;		/* the line being displayed from history buffer
+						 * will be <= nextHistoryLine */
+static int	keyCatchers = 0;
+static char	consoleSaveBuffer[MAX_CONSOLE_SAVE_BUFFER];
+static int	consoleSaveBufferSize = 0;
 
 /* names not in this list can either be lowercase ascii, or '0xnn' hex sequences */
 keyname_t keynames[] =
@@ -291,15 +294,10 @@ keyname_t keynames[] =
 };
 
 /*
- *
- * EDIT FIELDS
- *
+ * Edit fields
  */
 
-
 /*
- * Field_Draw
- *
  * Handles horizontal scrolling and cursor blinking
  * x, y, and width are in pixels
  */
@@ -309,10 +307,7 @@ Field_VariableSizeDraw(field_t *edit, int x, int y, int width, int size,
 		       qbool showCursor,
 		       qbool noColorEscape)
 {
-	int	len;
-	int	drawLen;
-	int	prestep;
-	int	cursorChar;
+	int	len, drawLen, prestep, cursorChar;
 	char	str[MAX_STRING_CHARS];
 	int	i;
 
@@ -393,9 +388,6 @@ Field_BigDraw(field_t *edit, int x, int y, int width, qbool showCursor,
 		noColorEscape);
 }
 
-/*
- * Field_Paste
- */
 void
 Field_Paste(field_t *edit)
 {
@@ -416,8 +408,6 @@ Field_Paste(field_t *edit)
 }
 
 /*
- * Field_KeyDownEvent
- *
  * Performs the basic line editing functions for the console,
  * in-game talk, and menu fields
  *
@@ -479,9 +469,6 @@ Field_KeyDownEvent(field_t *edit, int key)
 		edit->scroll = edit->cursor - edit->widthInChars + 1;
 }
 
-/*
- * Field_CharEvent
- */
 void
 Field_CharEvent(field_t *edit, int ch)
 {
@@ -717,12 +704,7 @@ Console_Key(int key)
 	Field_KeyDownEvent(&g_consoleField, key);
 }
 
-/* ============================================================================ */
-
-
 /*
- * Message_Key
- *
  * In game talk message
  */
 void
@@ -768,9 +750,6 @@ Message_Key(int key)
 	Field_KeyDownEvent(&chatField, key);
 }
 
-/* ============================================================================ */
-
-
 qbool
 Key_GetOverstrikeMode(void)
 {
@@ -784,10 +763,6 @@ Key_SetOverstrikeMode(qbool state)
 	key_overstrikeMode = state;
 }
 
-
-/*
- * Key_IsDown
- */
 qbool
 Key_IsDown(int keynum)
 {
@@ -798,13 +773,11 @@ Key_IsDown(int keynum)
 }
 
 /*
- * Key_StringToKeynum
- *
  * Returns a key number to be used to index keys[] by looking at
  * the given string.  Single ascii characters return themselves, while
  * the K_* names are matched up.
  *
- * 0x11 will be interpreted as raw hex, which will allow new controlers
+ * 0x11 will be interpreted as raw hex, which will allow new controllers
  *
  * to be configured even if they don't have defined names.
  */
@@ -830,13 +803,10 @@ Key_StringToKeynum(char *str)
 	for(kn=keynames; kn->name; kn++)
 		if(!Q_stricmp(str,kn->name))
 			return kn->keynum;
-
 	return -1;
 }
 
 /*
- * Key_KeynumToString
- *
  * Returns a string (either a single ascii char, a K_* name, or a 0x11 hex string) for the
  * given keynum.
  */
@@ -874,14 +844,9 @@ Key_KeynumToString(int keynum)
 	tinystr[2] = i > 9 ? i - 10 + 'a' : i + '0';
 	tinystr[3] = j > 9 ? j - 10 + 'a' : j + '0';
 	tinystr[4] = 0;
-
 	return tinystr;
 }
 
-
-/*
- * Key_SetBinding
- */
 void
 Key_SetBinding(int keynum, const char *binding)
 {
@@ -900,10 +865,6 @@ Key_SetBinding(int keynum, const char *binding)
 	cvar_modifiedFlags |= CVAR_ARCHIVE;
 }
 
-
-/*
- * Key_GetBinding
- */
 char *
 Key_GetBinding(int keynum)
 {
@@ -912,10 +873,6 @@ Key_GetBinding(int keynum)
 
 	return keys[ keynum ].binding;
 }
-
-/*
- * Key_GetKey
- */
 
 int
 Key_GetKey(const char *binding)
@@ -930,9 +887,6 @@ Key_GetKey(const char *binding)
 	return -1;
 }
 
-/*
- * Key_Unbind_f
- */
 void
 Key_Unbind_f(void)
 {
@@ -942,19 +896,14 @@ Key_Unbind_f(void)
 		Com_Printf ("unbind <key> : remove commands from a key\n");
 		return;
 	}
-
 	b = Key_StringToKeynum (Cmd_Argv(1));
 	if(b==-1){
 		Com_Printf ("\"%s\" isn't a valid key\n", Cmd_Argv(1));
 		return;
 	}
-
 	Key_SetBinding (b, "");
 }
 
-/*
- * Key_Unbindall_f
- */
 void
 Key_Unbindall_f(void)
 {
@@ -965,10 +914,6 @@ Key_Unbindall_f(void)
 			Key_SetBinding (i, "");
 }
 
-
-/*
- * Key_Bind_f
- */
 void
 Key_Bind_f(void)
 {
@@ -1003,13 +948,10 @@ Key_Bind_f(void)
 		if(i != (c-1))
 			strcat (cmd, " ");
 	}
-
 	Key_SetBinding (b, cmd);
 }
 
 /*
- * Key_WriteBindings
- *
  * Writes lines containing "bind key value"
  */
 void
@@ -1023,15 +965,8 @@ Key_WriteBindings(fileHandle_t f)
 		if(keys[i].binding && keys[i].binding[0])
 			FS_Printf (f, "bind %s \"%s\"\n", Key_KeynumToString(
 					i), keys[i].binding);
-
-
 }
 
-
-/*
- * Key_Bindlist_f
- *
- */
 void
 Key_Bindlist_f(void)
 {
@@ -1043,9 +978,6 @@ Key_Bindlist_f(void)
 					i), keys[i].binding);
 }
 
-/*
- * Key_KeynameCompletion
- */
 void
 Key_KeynameCompletion(void (*callback)(const char *s))
 {
@@ -1055,9 +987,6 @@ Key_KeynameCompletion(void (*callback)(const char *s))
 		callback(keynames[ i ].name);
 }
 
-/*
- * Key_CompleteUnbind
- */
 static void
 Key_CompleteUnbind(char *args, int argNum)
 {
@@ -1070,9 +999,6 @@ Key_CompleteUnbind(char *args, int argNum)
 	}
 }
 
-/*
- * Key_CompleteBind
- */
 static void
 Key_CompleteBind(char *args, int argNum)
 {
@@ -1093,9 +1019,6 @@ Key_CompleteBind(char *args, int argNum)
 	}
 }
 
-/*
- * CL_InitKeyCommands
- */
 void
 CL_InitKeyCommands(void)
 {
@@ -1109,8 +1032,6 @@ CL_InitKeyCommands(void)
 }
 
 /*
- * CL_ParseBinding
- *
  * Execute the commands in the bind string
  */
 void
@@ -1148,8 +1069,6 @@ CL_ParseBinding(int key, qbool down, unsigned time)
 }
 
 /*
- * CL_KeyDownEvent
- *
  * Called by CL_KeyEvent to handle a keypress
  */
 void
@@ -1235,8 +1154,6 @@ CL_KeyDownEvent(int key, unsigned time)
 }
 
 /*
- * CL_KeyUpEvent
- *
  * Called by CL_KeyEvent to handle a keyrelease
  */
 void
@@ -1270,8 +1187,6 @@ CL_KeyUpEvent(int key, unsigned time)
 }
 
 /*
- * CL_KeyEvent
- *
  * Called by the system for both key up and key down events
  */
 void
@@ -1284,8 +1199,6 @@ CL_KeyEvent(int key, qbool down, unsigned time)
 }
 
 /*
- * CL_CharEvent
- *
  * Normal keyboard characters, already shifted / capslocked / etc
  */
 void
@@ -1307,10 +1220,6 @@ CL_CharEvent(int key)
 		Field_CharEvent(&g_consoleField, key);
 }
 
-
-/*
- * Key_ClearStates
- */
 void
 Key_ClearStates(void)
 {
@@ -1330,20 +1239,12 @@ Key_ClearStates(void)
 	}
 }
 
-static int keyCatchers = 0;
-
-/*
- * Key_GetCatcher
- */
 int
 Key_GetCatcher(void)
 {
 	return keyCatchers;
 }
 
-/*
- * Key_SetCatcher
- */
 void
 Key_SetCatcher(int catcher)
 {
@@ -1354,15 +1255,7 @@ Key_SetCatcher(int catcher)
 	keyCatchers = catcher;
 }
 
-/* This must not exceed MAX_CMD_LINE */
-#define                 MAX_CONSOLE_SAVE_BUFFER 1024
-#define                 CONSOLE_HISTORY_FILE	"q3history"
-static char	consoleSaveBuffer[ MAX_CONSOLE_SAVE_BUFFER ];
-static int	consoleSaveBufferSize = 0;
-
 /*
- * CL_LoadConsoleHistory
- *
  * Load the console history from cl_consoleHistory
  */
 void
@@ -1429,8 +1322,6 @@ CL_LoadConsoleHistory(void)
 }
 
 /*
- * CL_SaveConsoleHistory
- *
  * Save the console history into the cvar cl_consoleHistory
  * so that it persists across invocations of q3
  */
@@ -1456,7 +1347,7 @@ CL_SaveConsoleHistory(void)
 			   MAX_CONSOLE_SAVE_BUFFER)
 				Q_strcat(consoleSaveBuffer,
 					MAX_CONSOLE_SAVE_BUFFER,
-					va("%d %d %d %s ",
+					va("%d %d %d %s\n",
 						historyEditLines[ i ].cursor,
 						historyEditLines[ i ].scroll,
 						lineLength,
@@ -1478,6 +1369,5 @@ CL_SaveConsoleHistory(void)
 	if(FS_Write(consoleSaveBuffer, consoleSaveBufferSize,
 		   f) < consoleSaveBufferSize)
 		Com_Printf("Couldn't write %s.\n", CONSOLE_HISTORY_FILE);
-
 	FS_FCloseFile(f);
 }

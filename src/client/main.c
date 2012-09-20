@@ -19,9 +19,10 @@
  */
 /* cl_main.c  -- client main loop */
 
-#include "client.h"
 #include <limits.h>
-
+#include "client.h"
+#include "keycodes.h"
+#include "keys.h"
 #include "../sys/local.h"
 #include "../sys/loadlib.h"
 

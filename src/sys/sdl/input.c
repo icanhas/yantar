@@ -23,12 +23,12 @@
 #else
 #       include <SDL.h>
 #endif
-
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
-
 #include "../../client/client.h"
+#include "../../client/keycodes.h"
+#include "../../client/keys.h"
 #include "../local.h"
 
 #ifdef MACOS_X
