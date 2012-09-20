@@ -545,7 +545,6 @@ Field_CharEvent(field_t *edit, int ch)
 		edit->cursor++;
 	}
 
-
 	if(edit->cursor >= edit->widthInChars)
 		edit->scroll++;
 
@@ -561,6 +560,8 @@ Field_CharEvent(field_t *edit, int ch)
 void
 Console_Key(int key)
 {
+	char *prevline;
+	
 	/* ctrl-L clears screen */
 	if(key == 'l' && keys[K_CTRL].down){
 		Cbuf_AddText("clear\n");
@@ -600,15 +601,18 @@ Console_Key(int key)
 			}
 		}
 
-		/* copy line to history buffer */
-		historyEditLines[nextHistoryLine % COMMAND_HISTORY] = g_consoleField;
-		nextHistoryLine++;
+		/* 
+		 * copy line to history buffer if it is different 
+		 * to the previous line 
+		 */
+		prevline = historyEditLines[(nextHistoryLine-1) % COMMAND_HISTORY].buffer;
+		if(strcmp(prevline, g_consoleField.buffer) != 0){
+			historyEditLines[nextHistoryLine % COMMAND_HISTORY] = g_consoleField;
+			nextHistoryLine++;
+		}
 		historyLine = nextHistoryLine;
-
 		Field_Clear(&g_consoleField);
-
 		g_consoleField.widthInChars = g_console_field_width;
-
 		CL_SaveConsoleHistory();
 
 		if(clc.state == CA_DISCONNECTED)
