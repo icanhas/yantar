@@ -17,7 +17,6 @@
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-/*  */
 
 #include "q_shared.h"
 #include "bg/public.h"
@@ -198,12 +197,10 @@ static cvarTable_t gameCvarTable[] = {
 
 static int gameCvarTableSize = ARRAY_LEN(gameCvarTable);
 
-
 void G_InitGame(int levelTime, int randomSeed, int restart);
 void G_RunFrame(int levelTime);
 void G_ShutdownGame(int restart);
 void CheckExitRules(void);
-
 
 /*
  * vmMain
@@ -1493,12 +1490,9 @@ CheckTournament(void)
 			if(level.numPlayingClients == 2){
 				/* fudge by -1 to account for extra delays */
 				if(g_warmup.integer > 1)
-					level.warmupTime = level.time +
-							   (g_warmup.integer -
-							    1) * 1000;
+					level.warmupTime = level.time + (g_warmup.integer-1)*1000;
 				else
 					level.warmupTime = 0;
-
 				trap_SetConfigstring(CS_WARMUP,
 					va("%i", level.warmupTime));
 			}
@@ -1551,8 +1545,10 @@ CheckTournament(void)
 		/* if all players have arrived, start the countdown */
 		if(level.warmupTime < 0){
 			/* fudge by -1 to account for extra delays */
-			level.warmupTime = level.time +
-					   (g_warmup.integer - 1) * 1000;
+			if(g_warmup.integer > 1)
+				level.warmupTime = level.time + (g_warmup.integer-1)*1000;
+			else
+				level.warmupTime = 0;
 			trap_SetConfigstring(CS_WARMUP,
 				va("%i", level.warmupTime));
 			return;
