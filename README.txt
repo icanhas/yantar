@@ -1,24 +1,13 @@
-Quake III Arena GPL source release
-==================================
+License
+-------
 
-This file contains the following sections:
-
-LICENSE
-GENERAL NOTES
-
-LICENSE
-=======
-
-See COPYING.txt for the GNU GENERAL PUBLIC LICENSE
+See COPYING.txt for the GNU General Public License.
 
 Some source code in this release is not covered by the GPL:
 
-IO on .zip files using portions of zlib
------------------------------------------------------------------------------
-lines	file(s)
-4299	code/qcommon/unzip.c
-4546	libs/pak/unzip.cpp
-Copyright (C) 1998 Gilles Vollant
+
+I/O on .pk3 files using portions of zlib:
+
 zlib is Copyright (C) 1995-1998 Jean-loup Gailly and Mark Adler
 
   This software is provided 'as-is', without any express or implied
@@ -37,10 +26,9 @@ zlib is Copyright (C) 1995-1998 Jean-loup Gailly and Mark Adler
      misrepresented as being the original software.
   3. This notice may not be removed or altered from any source distribution.
 
-standard C library replacement routines
------------------------------------------------------------------------------
-lines	file(s)
-1324	code/game/bg_lib.c
+
+Standard C library replacement routines:
+
 Copyright (c) 1992, 1993
 The Regents of the University of California. All rights reserved.
 
@@ -68,10 +56,9 @@ LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
 OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 SUCH DAMAGE.
 
-ADPCM coder/decoder
------------------------------------------------------------------------------
-lines	file(s)
-330		code/client/snd_adpcm.c
+
+ADPCM coder/decoder:
+
 Copyright 1992 by Stichting Mathematisch Centrum, Amsterdam, The
 Netherlands.
 
@@ -93,10 +80,9 @@ WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
 ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT
 OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-JPEG library
------------------------------------------------------------------------------
-code/jpeg-6
-libs/jpeg6
+
+JPEG library:
+
 Copyright (C) 1991-1995, Thomas G. Lane
 
 Permission is hereby granted to use, copy, modify, and distribute this
@@ -123,8 +109,9 @@ been lost, so the one from release 6b is included instead. There are a few
 the engine, but otherwise the dependency can be easily cleaned up to a
 better release of the library.
 
-Parts from Inferno
------------------------------------------------------------------------------
+
+Parts from Inferno:
+
 Copyright © 1994-1999 Lucent Technologies Inc.  All rights reserved.
 Revisions Copyright © 2000-2007 Vita Nuova Holdings Limited (www.vitanuova.com).  All rights reserved.
 
@@ -147,22 +134,10 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-GENERAL NOTES
-=============
+Console variables
+-----------------
 
-A short summary of the file layout:
+r_mode			-2: use desktop resolution.
+			-1: use resolution specified by the user in
+			r_customWidth/Height variables.
 
-code/			   		Quake III Arena source code ( renderer, game code, OS layer etc. )
-code/bspc				bot routes compiler source code
-lcc/					the retargetable C compiler ( produces assembly to be turned into qvm bytecode by q3asm )
-q3asm/					assembly to qvm bytecode compiler
-q3map/					map compiler ( .map -> .bsp ) - this is the version that comes with Q3Radiant 200f
-q3radiant/				Q3Radiant map editor build 200f ( common/ and libs/ are support dirs for radiant )
-
-While we made sure we were still able to compile the game on Windows, GNU/Linux
-and Mac, this build didn't get any kind of extensive testing so it may not work
-completely right. Whenever an id game is released under GPL, several projects
-start making the source code more friendly to nowaday's compilers and
-environements. If you are picking up this release weeks/months/years after we
-uploaded it, you probably want to look around on the net for cleaned up
-versions of this codebase as well.
