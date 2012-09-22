@@ -36,7 +36,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-
 #include "../../renderer/local.h"
 #include "../../client/client.h"
 #include "../local.h"
@@ -233,8 +232,21 @@ GLimp_SetMode(int mode, qbool fullscreen, qbool noborder)
 	}
 
 	ri.Printf (PRINT_ALL, "...setting mode %d:", mode);
-
-	if(!R_GetModeInfo(&glConfig.vidWidth, &glConfig.vidHeight, &glConfig.windowAspect, mode)){
+	
+	if(mode == -2){
+		if(videoInfo->current_h > 0){
+			glConfig.vidWidth = videoInfo->current_w;
+			glConfig.vidHeight = videoInfo->current_h;
+		}else{
+			ri.Printf(PRINT_ALL, "Cannot determine display resolution,"
+				" falling back to 800x600\n");
+			glConfig.vidWidth = 800;
+			glConfig.vidHeight = 600;
+		}
+		glConfig.windowAspect = (float)glConfig.vidWidth 
+			/ (float)glConfig.vidHeight;
+	}else if(!R_GetModeInfo(&glConfig.vidWidth, &glConfig.vidHeight, 
+		  &glConfig.windowAspect, mode)){
 		ri.Printf(PRINT_ALL, " invalid mode\n");
 		return RSERR_INVALID_MODE;
 	}
