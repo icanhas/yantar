@@ -1,3 +1,4 @@
+/* client functions that don't happen every frame */
 /*
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
@@ -17,15 +18,12 @@
  * along with Quake III Arena source code; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-/*  */
 
 #include "q_shared.h"
 #include "bg/public.h"
 #include "public.h"
 #include "local.h"
 #include "team.h"
-
-/* g_client.c -- client functions that don't happen every frame */
 
 static Vec3	playerMins = {-15, -15, -24};
 static Vec3	playerMaxs = {15, 15, 32};
