@@ -103,12 +103,12 @@ TeleportPlayer(gentity_t *player, Vec3 origin, Vec3 angles)
 	/* unlink to make sure it can't possibly interfere with G_KillBox */
 	trap_UnlinkEntity (player);
 
-	vec3copy (origin, player->client->ps.origin);
+	copyv3 (origin, player->client->ps.origin);
 	player->client->ps.origin[2] += 1;
 	if(!noAngles){
 		/* spit the player out */
-		anglevec3s(angles, player->client->ps.velocity, NULL, NULL);
-		vec3scale(player->client->ps.velocity, 400,
+		anglev3s(angles, player->client->ps.velocity, NULL, NULL);
+		scalev3(player->client->ps.velocity, 400,
 			player->client->ps.velocity);
 		player->client->ps.pm_time = 160;	/* hold time */
 		player->client->ps.pm_flags |= PMF_TIME_KNOCKBACK;
@@ -125,7 +125,7 @@ TeleportPlayer(gentity_t *player, Vec3 origin, Vec3 angles)
 	BG_PlayerStateToEntityState(&player->client->ps, &player->s, qtrue);
 
 	/* use the precise origin for linking */
-	vec3copy(player->client->ps.origin, player->r.currentOrigin);
+	copyv3(player->client->ps.origin, player->r.currentOrigin);
 
 	if(player->client->sess.sessionTeam != TEAM_SPECTATOR)
 		trap_LinkEntity (player);
@@ -154,12 +154,12 @@ SP_misc_model(gentity_t *ent)
 
 #if 0
 	ent->s.modelindex = G_ModelIndex(ent->model);
-	vec3set (ent->mins, -16, -16, -16);
-	vec3set (ent->maxs, 16, 16, 16);
+	setv3 (ent->mins, -16, -16, -16);
+	setv3 (ent->maxs, 16, 16, 16);
 	trap_LinkEntity (ent);
 
 	G_SetOrigin(ent, ent->s.origin);
-	vec3copy(ent->s.angles, ent->s.apos.trBase);
+	copyv3(ent->s.angles, ent->s.apos.trBase);
 #else
 	G_FreeEntity(ent);
 #endif
@@ -198,13 +198,13 @@ locateCamera(gentity_t *ent)
 	/* clientNum holds the rotate offset */
 	ent->s.clientNum = owner->s.clientNum;
 
-	vec3copy(owner->s.origin, ent->s.origin2);
+	copyv3(owner->s.origin, ent->s.origin2);
 
 	/* see if the portal_camera has a target */
 	target = G_PickTarget(owner->target);
 	if(target){
-		vec3sub(target->s.origin, owner->s.origin, dir);
-		vec3normalize(dir);
+		subv3(target->s.origin, owner->s.origin, dir);
+		normv3(dir);
 	}else
 		G_SetMovedir(owner->s.angles, dir);
 
@@ -218,15 +218,15 @@ locateCamera(gentity_t *ent)
 void
 SP_misc_portal_surface(gentity_t *ent)
 {
-	vec3clear(ent->r.mins);
-	vec3clear(ent->r.maxs);
+	clearv3(ent->r.mins);
+	clearv3(ent->r.maxs);
 	trap_LinkEntity (ent);
 
 	ent->r.svFlags	= SVF_PORTAL;
 	ent->s.eType	= ET_PORTAL;
 
 	if(!ent->target)
-		vec3copy(ent->s.origin, ent->s.origin2);
+		copyv3(ent->s.origin, ent->s.origin2);
 	else{
 		ent->think = locateCamera;
 		ent->nextthink = level.time + 100;
@@ -242,8 +242,8 @@ SP_misc_portal_camera(gentity_t *ent)
 {
 	float roll;
 
-	vec3clear(ent->r.mins);
-	vec3clear(ent->r.maxs);
+	clearv3(ent->r.mins);
+	clearv3(ent->r.maxs);
 	trap_LinkEntity (ent);
 
 	G_SpawnFloat("roll", "0", &roll);
@@ -266,22 +266,22 @@ Use_Shooter(gentity_t *ent, gentity_t *other, gentity_t *activator)
 
 	/* see if we have a target */
 	if(ent->enemy){
-		vec3sub(ent->enemy->r.currentOrigin, ent->s.origin, dir);
-		vec3normalize(dir);
+		subv3(ent->enemy->r.currentOrigin, ent->s.origin, dir);
+		normv3(dir);
 	}else
-		vec3copy(ent->movedir, dir);
+		copyv3(ent->movedir, dir);
 
 	/* randomize a bit */
-	PerpendicularVector(up, dir);
-	vec3cross(up, dir, right);
+	perpv3(up, dir);
+	crossv3(up, dir, right);
 
 	deg = crandom() * ent->random;
-	vec3ma(dir, deg, up, dir);
+	maddv3(dir, deg, up, dir);
 
 	deg = crandom() * ent->random;
-	vec3ma(dir, deg, right, dir);
+	maddv3(dir, deg, right, dir);
 
-	vec3normalize(dir);
+	normv3(dir);
 
 	switch(ent->s.weapon){
 	case WP_GRENADE_LAUNCHER:
@@ -380,11 +380,11 @@ DropPortalDestination(gentity_t *player)
 	ent->s.modelindex = G_ModelIndex(
 		"models/powerups/teleporter/tele_exit.md3");
 
-	vec3copy(player->s.pos.trBase, snapped);
-	SnapVector(snapped);
+	copyv3(player->s.pos.trBase, snapped);
+	snapv3(snapped);
 	G_SetOrigin(ent, snapped);
-	vec3copy(player->r.mins, ent->r.mins);
-	vec3copy(player->r.maxs, ent->r.maxs);
+	copyv3(player->r.mins, ent->r.mins);
+	copyv3(player->r.maxs, ent->r.maxs);
 
 	ent->classname = "hi_portal destination";
 	ent->s.pos.trType = TR_STATIONARY;
@@ -394,7 +394,7 @@ DropPortalDestination(gentity_t *player)
 	ent->health = 200;
 	ent->die = PortalDie;
 
-	vec3copy(player->s.apos.trBase, ent->s.angles);
+	copyv3(player->s.apos.trBase, ent->s.angles);
 
 	ent->think = G_FreeEntity;
 	ent->nextthink = level.time + 2 * 60 * 1000;
@@ -478,11 +478,11 @@ DropPortalSource(gentity_t *player)
 	ent->s.modelindex = G_ModelIndex(
 		"models/powerups/teleporter/tele_enter.md3");
 
-	vec3copy(player->s.pos.trBase, snapped);
-	SnapVector(snapped);
+	copyv3(player->s.pos.trBase, snapped);
+	snapv3(snapped);
 	G_SetOrigin(ent, snapped);
-	vec3copy(player->r.mins, ent->r.mins);
-	vec3copy(player->r.maxs, ent->r.maxs);
+	copyv3(player->r.mins, ent->r.mins);
+	copyv3(player->r.maxs, ent->r.maxs);
 
 	ent->classname = "hi_portal source";
 	ent->s.pos.trType = TR_STATIONARY;
@@ -508,7 +508,7 @@ DropPortalSource(gentity_t *player)
 		       G_Find(destination, FOFS(classname),
 			       "hi_portal destination")) != NULL)
 		if(destination->count == ent->count){
-			vec3copy(destination->s.pos.trBase, ent->pos1);
+			copyv3(destination->s.pos.trBase, ent->pos1);
 			break;
 		}
 

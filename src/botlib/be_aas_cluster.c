@@ -481,7 +481,7 @@ AAS_CreatePortals(void)
  *              edge = &aasworld.edges[edgenum];
  *              for (j = 0; j < 2; j++)
  *              {
- *                      if (vec3dot(plane2->normal, aasworld.vertexes[edge->v[j]]) -
+ *                      if (dotv3(plane2->normal, aasworld.vertexes[edge->v[j]]) -
  *                                                      plane2->dist < -0.01) return qtrue;
  *              }
  *      }
@@ -491,7 +491,7 @@ AAS_CreatePortals(void)
  *              edge = &aasworld.edges[edgenum];
  *              for (j = 0; j < 2; j++)
  *              {
- *                      if (vec3dot(plane1->normal, aasworld.vertexes[edge->v[j]]) -
+ *                      if (dotv3(plane1->normal, aasworld.vertexes[edge->v[j]]) -
  *                                                      plane1->dist < -0.01) return qtrue;
  *              }
  *      }
@@ -566,23 +566,23 @@ AAS_CreatePortals(void)
  *      aas_plane_t *plane;
  *
  *      plane = &aasworld.planes[planenum];
- *      vec3sub(aasworld.vertexes[edge1->v[1]], aasworld.vertexes[edge1->v[0]], edgevec1);
- *      vec3sub(aasworld.vertexes[edge2->v[1]], aasworld.vertexes[edge2->v[0]], edgevec2);
- *      if (side1) vec3inv(edgevec1);
- *      if (side2) vec3inv(edgevec2);
+ *      subv3(aasworld.vertexes[edge1->v[1]], aasworld.vertexes[edge1->v[0]], edgevec1);
+ *      subv3(aasworld.vertexes[edge2->v[1]], aasworld.vertexes[edge2->v[0]], edgevec2);
+ *      if (side1) invv3(edgevec1);
+ *      if (side2) invv3(edgevec2);
  *      //
- *      vec3cross(edgevec1, plane->normal, normal1);
- *      dist1 = vec3dot(normal1, aasworld.vertexes[edge1->v[0]]);
- *      vec3cross(edgevec2, plane->normal, normal2);
- *      dist2 = vec3dot(normal2, aasworld.vertexes[edge2->v[0]]);
+ *      crossv3(edgevec1, plane->normal, normal1);
+ *      dist1 = dotv3(normal1, aasworld.vertexes[edge1->v[0]]);
+ *      crossv3(edgevec2, plane->normal, normal2);
+ *      dist2 = dotv3(normal2, aasworld.vertexes[edge2->v[0]]);
  *
  *      for (i = 0; i < 2; i++)
  *      {
- *              if (vec3dot(aasworld.vertexes[edge1->v[i]], normal2) - dist2 < -0.01) return qfalse;
+ *              if (dotv3(aasworld.vertexes[edge1->v[i]], normal2) - dist2 < -0.01) return qfalse;
  *      }
  *      for (i = 0; i < 2; i++)
  *      {
- *              if (vec3dot(aasworld.vertexes[edge2->v[i]], normal1) - dist1 < -0.01) return qfalse;
+ *              if (dotv3(aasworld.vertexes[edge2->v[i]], normal1) - dist1 < -0.01) return qfalse;
  *      }
  *      return qtrue;
  * } //end of the function AAS_NonConvexEdges
@@ -1265,7 +1265,7 @@ AAS_AddTeleporterPortals(void)
 				continue;
 			}
 			destorigin[2] += 24;	/* just for q2e1m2, the dork has put the telepads in the ground */
-			vec3copy(destorigin, end);
+			copyv3(destorigin, end);
 			end[2]	-= 100;
 			trace	=
 				AAS_TraceClientBBox(destorigin, end,
@@ -1278,23 +1278,23 @@ AAS_AddTeleporterPortals(void)
 					target);
 				continue;
 			}
-			vec3copy(trace.endpos, destorigin);
+			copyv3(trace.endpos, destorigin);
 			area2num = AAS_PointAreaNum(destorigin);
 			/* reset all cluster fields */
 			for(j = 0; j < aasworld.numareas; j++)
 				aasworld.areasettings[j].cluster = 0;
 			/*  */
-			vec3set(mins, -8, -8, 8);
-			vec3set(maxs, 8, 8, 24);
+			setv3(mins, -8, -8, 8);
+			setv3(maxs, 8, 8, 24);
 			/*  */
 			AAS_PresenceTypeBoundingBox(PRESENCE_CROUCH, bbmins,
 				bbmaxs);
 			/*  */
-			vec3add(origin, mins, mins);
-			vec3add(origin, maxs, maxs);
+			addv3(origin, mins, mins);
+			addv3(origin, maxs, maxs);
 			/* add bounding box size */
-			vec3sub(mins, bbmaxs, mins);
-			vec3sub(maxs, bbmins, maxs);
+			subv3(mins, bbmaxs, mins);
+			subv3(maxs, bbmins, maxs);
 			/* link an invalid (-1) entity */
 			areas = AAS_AASLinkEntity(mins, maxs, -1);
 			/*  */

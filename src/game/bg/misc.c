@@ -1190,16 +1190,16 @@ BG_EvaluateTrajectory(const trajectory_t *tr, int atTime, Vec3 result)
 	switch(tr->trType){
 	case TR_STATIONARY:
 	case TR_INTERPOLATE:
-		vec3copy(tr->trBase, result);
+		copyv3(tr->trBase, result);
 		break;
 	case TR_LINEAR:
 		deltaTime = (atTime - tr->trTime) * 0.001;	/* milliseconds to seconds */
-		vec3ma(tr->trBase, deltaTime, tr->trDelta, result);
+		maddv3(tr->trBase, deltaTime, tr->trDelta, result);
 		break;
 	case TR_SINE:
 		deltaTime = (atTime - tr->trTime) / (float)tr->trDuration;
 		phase = sin(deltaTime * M_PI * 2);
-		vec3ma(tr->trBase, phase, tr->trDelta, result);
+		maddv3(tr->trBase, phase, tr->trDelta, result);
 		break;
 	case TR_LINEAR_STOP:
 		if(atTime > tr->trTime + tr->trDuration)
@@ -1207,11 +1207,11 @@ BG_EvaluateTrajectory(const trajectory_t *tr, int atTime, Vec3 result)
 		deltaTime = (atTime - tr->trTime) * 0.001;	/* milliseconds to seconds */
 		if(deltaTime < 0)
 			deltaTime = 0;
-		vec3ma(tr->trBase, deltaTime, tr->trDelta, result);
+		maddv3(tr->trBase, deltaTime, tr->trDelta, result);
 		break;
 	case TR_GRAVITY:
 		deltaTime = (atTime - tr->trTime) * 0.001;	/* milliseconds to seconds */
-		vec3ma(tr->trBase, deltaTime, tr->trDelta, result);
+		maddv3(tr->trBase, deltaTime, tr->trDelta, result);
 		result[2] -= 0.5 * DEFAULT_GRAVITY * deltaTime * deltaTime;	/* FIXME: local gravity... */
 		break;
 	default:
@@ -1235,27 +1235,27 @@ BG_EvaluateTrajectoryDelta(const trajectory_t *tr, int atTime, Vec3 result)
 	switch(tr->trType){
 	case TR_STATIONARY:
 	case TR_INTERPOLATE:
-		vec3clear(result);
+		clearv3(result);
 		break;
 	case TR_LINEAR:
-		vec3copy(tr->trDelta, result);
+		copyv3(tr->trDelta, result);
 		break;
 	case TR_SINE:
 		deltaTime	= (atTime - tr->trTime) / (float)tr->trDuration;
 		phase		= cos(deltaTime * M_PI * 2);	/* derivative of sin = cos */
 		phase		*= 0.5;
-		vec3scale(tr->trDelta, phase, result);
+		scalev3(tr->trDelta, phase, result);
 		break;
 	case TR_LINEAR_STOP:
 		if(atTime > tr->trTime + tr->trDuration){
-			vec3clear(result);
+			clearv3(result);
 			return;
 		}
-		vec3copy(tr->trDelta, result);
+		copyv3(tr->trDelta, result);
 		break;
 	case TR_GRAVITY:
 		deltaTime = (atTime - tr->trTime) * 0.001;	/* milliseconds to seconds */
-		vec3copy(tr->trDelta, result);
+		copyv3(tr->trDelta, result);
 		result[2] -= DEFAULT_GRAVITY * deltaTime;	/* FIXME: local gravity... */
 		break;
 	default:
@@ -1435,8 +1435,8 @@ BG_TouchJumpPad(playerState_t *ps, entityState_t *jumppad)
 	 * then don't play the event sound again if we are in a fat trigger */
 	if(ps->jumppad_ent != jumppad->number){
 
-		vec3toeuler(jumppad->origin2, angles);
-		p = fabs(AngleNormalize180(angles[PITCH]));
+		v3toeuler(jumppad->origin2, angles);
+		p = fabs(norm180euler(angles[PITCH]));
 		if(p < 45)
 			effectNum = 0;
 		else
@@ -1447,7 +1447,7 @@ BG_TouchJumpPad(playerState_t *ps, entityState_t *jumppad)
 	ps->jumppad_ent = jumppad->number;
 	ps->jumppad_frame = ps->pmove_framecount;
 	/* give the player the velocity from the jumppad */
-	vec3copy(jumppad->origin2, ps->velocity);
+	copyv3(jumppad->origin2, ps->velocity);
 }
 
 /*
@@ -1471,16 +1471,16 @@ BG_PlayerStateToEntityState(playerState_t *ps, entityState_t *s, qbool snap)
 	s->number = ps->clientNum;
 
 	s->pos.trType = TR_INTERPOLATE;
-	vec3copy(ps->origin, s->pos.trBase);
+	copyv3(ps->origin, s->pos.trBase);
 	if(snap)
-		SnapVector(s->pos.trBase);
+		snapv3(s->pos.trBase);
 	/* set the trDelta for flag direction */
-	vec3copy(ps->velocity, s->pos.trDelta);
+	copyv3(ps->velocity, s->pos.trDelta);
 
 	s->apos.trType = TR_INTERPOLATE;
-	vec3copy(ps->viewangles, s->apos.trBase);
+	copyv3(ps->viewangles, s->apos.trBase);
 	if(snap)
-		SnapVector(s->apos.trBase);
+		snapv3(s->apos.trBase);
 
 	s->angles2[YAW] = ps->movementDir;
 	s->legsAnim	= ps->legsAnim;
@@ -1544,20 +1544,20 @@ BG_PlayerStateToEntityStateExtraPolate(playerState_t *ps, entityState_t *s,
 	s->number = ps->clientNum;
 
 	s->pos.trType = TR_LINEAR_STOP;
-	vec3copy(ps->origin, s->pos.trBase);
+	copyv3(ps->origin, s->pos.trBase);
 	if(snap)
-		SnapVector(s->pos.trBase);
+		snapv3(s->pos.trBase);
 	/* set the trDelta for flag direction and linear prediction */
-	vec3copy(ps->velocity, s->pos.trDelta);
+	copyv3(ps->velocity, s->pos.trDelta);
 	/* set the time for linear prediction */
 	s->pos.trTime = time;
 	/* set maximum extra polation time */
 	s->pos.trDuration = 50;	/* 1000 / sv_fps (default = 20) */
 
 	s->apos.trType = TR_INTERPOLATE;
-	vec3copy(ps->viewangles, s->apos.trBase);
+	copyv3(ps->viewangles, s->apos.trBase);
 	if(snap)
-		SnapVector(s->apos.trBase);
+		snapv3(s->apos.trBase);
 
 	s->angles2[YAW] = ps->movementDir;
 	s->legsAnim	= ps->legsAnim;

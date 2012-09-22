@@ -111,17 +111,17 @@ SV_CreateworldSector(int depth, Vec3 mins, Vec3 maxs)
 		return anode;
 	}
 
-	vec3sub (maxs, mins, size);
+	subv3 (maxs, mins, size);
 	if(size[0] > size[1])
 		anode->axis = 0;
 	else
 		anode->axis = 1;
 
 	anode->dist = 0.5 * (maxs[anode->axis] + mins[anode->axis]);
-	vec3copy (mins, mins1);
-	vec3copy (mins, mins2);
-	vec3copy (maxs, maxs1);
-	vec3copy (maxs, maxs2);
+	copyv3 (mins, mins1);
+	copyv3 (mins, mins2);
+	copyv3 (maxs, maxs1);
+	copyv3 (maxs, maxs2);
 
 	maxs1[anode->axis] = mins2[anode->axis] = anode->dist;
 
@@ -256,8 +256,8 @@ SV_LinkEntity(sharedEntity_t *gEnt)
 		}
 	}else{
 		/* normal */
-		vec3add (origin, gEnt->r.mins, gEnt->r.absmin);
-		vec3add (origin, gEnt->r.maxs, gEnt->r.absmax);
+		addv3 (origin, gEnt->r.mins, gEnt->r.absmin);
+		addv3 (origin, gEnt->r.maxs, gEnt->r.absmax);
 	}
 
 	/* because movement is clipped an epsilon away from an actual edge,
@@ -598,8 +598,8 @@ SV_Trace(trace_t *results, const Vec3 start, Vec3 mins, Vec3 maxs,
 
 	clip.contentmask = contentmask;
 	clip.start = start;
-/*	vec3copy( clip.trace.endpos, clip.end ); */
-	vec3copy(end, clip.end);
+/*	copyv3( clip.trace.endpos, clip.end ); */
+	copyv3(end, clip.end);
 	clip.mins = mins;
 	clip.maxs = maxs;
 	clip.passEntityNum = passEntityNum;

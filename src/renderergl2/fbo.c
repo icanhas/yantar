@@ -543,10 +543,10 @@ FBO_BlitFromTexture(struct image_s *src, Vec4 srcBox, Vec2 srcTexScale, FBO_t *d
 
 	GL_Bind(src);
 
-	vec3set4(quadVerts[0], dstBox[0],             dstBox[1],             0, 1);
-	vec3set4(quadVerts[1], dstBox[0] + dstBox[2], dstBox[1],             0, 1);
-	vec3set4(quadVerts[2], dstBox[0] + dstBox[2], dstBox[1] + dstBox[3], 0, 1);
-	vec3set4(quadVerts[3], dstBox[0],             dstBox[1] + dstBox[3], 0, 1);
+	setv34(quadVerts[0], dstBox[0],             dstBox[1],             0, 1);
+	setv34(quadVerts[1], dstBox[0] + dstBox[2], dstBox[1],             0, 1);
+	setv34(quadVerts[2], dstBox[0] + dstBox[2], dstBox[1] + dstBox[3], 0, 1);
+	setv34(quadVerts[3], dstBox[0],             dstBox[1] + dstBox[3], 0, 1);
 
 	texCoords[0][0] = (srcBox[0]) / (float)src->width; texCoords[0][1] = 1.0f - (srcBox[1]) /
 									     (float)src->height;

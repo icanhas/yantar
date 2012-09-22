@@ -965,9 +965,9 @@ MoveClientToIntermission(gentity_t *ent)
 
 	FindIntermissionPoint();
 	/* move to the spot */
-	vec3copy(level.intermission_origin, ent->s.origin);
-	vec3copy(level.intermission_origin, ent->client->ps.origin);
-	vec3copy (level.intermission_angle, ent->client->ps.viewangles);
+	copyv3(level.intermission_origin, ent->s.origin);
+	copyv3(level.intermission_origin, ent->client->ps.origin);
+	copyv3 (level.intermission_angle, ent->client->ps.viewangles);
 	ent->client->ps.pm_type = PM_INTERMISSION;
 
 	/* clean up powerup info */
@@ -1000,16 +1000,16 @@ FindIntermissionPoint(void)
 			level.intermission_angle,
 			qfalse);
 	else{
-		vec3copy (ent->s.origin, level.intermission_origin);
-		vec3copy (ent->s.angles, level.intermission_angle);
+		copyv3 (ent->s.origin, level.intermission_origin);
+		copyv3 (ent->s.angles, level.intermission_angle);
 		/* if it has a target, look towards it */
 		if(ent->target){
 			target = G_PickTarget(ent->target);
 			if(target){
-				vec3sub(target->s.origin,
+				subv3(target->s.origin,
 					level.intermission_origin,
 					dir);
-				vec3toeuler(dir, level.intermission_angle);
+				v3toeuler(dir, level.intermission_angle);
 			}
 		}
 	}

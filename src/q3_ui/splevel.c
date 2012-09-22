@@ -614,7 +614,7 @@ UI_SPLevelMenu_MenuDraw(void)
 	}
 
 	/* show levelshots for levels of current tier */
-	vec4copy(color_white, color);
+	copyv4(color_white, color);
 	color[3] = 0.5+0.5*sin(uis.realtime/PULSE_DIVISOR);
 	for(n = 0; n < levelMenuInfo.numMaps; n++){
 		x = levelMenuInfo.item_maps[n].generic.x;

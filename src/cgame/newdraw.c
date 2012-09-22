@@ -197,7 +197,7 @@ CG_DrawPlayerArmorIcon(rectDef_t *rect, qbool draw2D)
 		CG_DrawPic(rect->x, rect->y + rect->h/2 + 1, rect->w, rect->h,
 			cgs.media.armorIcon);
 	else if(cg_draw3dIcons.integer){
-		vec3clear(angles);
+		clearv3(angles);
 		origin[0]	= 90;
 		origin[1]	= 0;
 		origin[2]	= -10;
@@ -260,7 +260,7 @@ CG_DrawPlayerAmmoIcon(rectDef_t *rect, qbool draw2D)
 	}else if(cg_draw3dIcons.integer)
 		if(cent->currentState.weapon &&
 		   cg_weapons[ cent->currentState.weapon ].ammoModel){
-			vec3clear(angles);
+			clearv3(angles);
 			origin[0]	= 70;
 			origin[1]	= 0;
 			origin[2]	= 0;
@@ -315,7 +315,7 @@ CG_DrawPlayerHead(rectDef_t *rect, qbool draw2D)
 	float	frac;
 	float	x = rect->x;
 
-	vec3clear(angles);
+	clearv3(angles);
 
 	if(cg.damageTime && cg.time - cg.damageTime < DAMAGE_TIME){
 		frac	= (float)(cg.time - cg.damageTime) / DAMAGE_TIME;
@@ -567,7 +567,7 @@ CG_DrawPlayerItem(rectDef_t *rect, float scale, qbool draw2D)
 			CG_DrawPic(rect->x, rect->y, rect->w, rect->h,
 				cg_items[ value ].icon);
 		}else{
-			vec3clear(angles);
+			clearv3(angles);
 			origin[0]	= 90;
 			origin[1]	= 0;
 			origin[2]	= -10;
@@ -641,7 +641,7 @@ CG_DrawSelectedPlayerHead(rectDef_t *rect, qbool draw2D, qbool voice)
 			origin[0] = len / 0.268;	/* len / tan( fov/2 ) */
 
 			/* allow per-model tweaking */
-			vec3add(origin, ci->headOffset, origin);
+			addv3(origin, ci->headOffset, origin);
 
 			angles[PITCH]	= 0;
 			angles[YAW]	= 180;
@@ -792,7 +792,7 @@ CG_DrawBlueFlagHead(rectDef_t *rect)
 		   TEAM_RED  && cgs.clientinfo[i].powerups &
 		   (1<< PW_BLUEFLAG)){
 			Vec3 angles;
-			vec3clear(angles);
+			clearv3(angles);
 			angles[YAW] = 180 + 20 * sin(cg.time / 650.0);;
 			CG_DrawHead(rect->x, rect->y, rect->w, rect->h, 0,angles);
 			return;
@@ -854,7 +854,7 @@ CG_DrawRedFlagHead(rectDef_t *rect)
 		   TEAM_BLUE  && cgs.clientinfo[i].powerups &
 		   (1<< PW_REDFLAG)){
 			Vec3 angles;
-			vec3clear(angles);
+			clearv3(angles);
 			angles[YAW] = 180 + 20 * sin(cg.time / 650.0);;
 			CG_DrawHead(rect->x, rect->y, rect->w, rect->h, 0,angles);
 			return;
@@ -884,7 +884,7 @@ CG_HarvesterSkulls(rectDef_t *rect, float scale, Vec4 color, qbool force2D,
 
 	if(cg_drawIcons.integer){
 		if(!force2D && cg_draw3dIcons.integer){
-			vec3clear(angles);
+			clearv3(angles);
 			origin[0]	= 90;
 			origin[1]	= 0;
 			origin[2]	= -10;

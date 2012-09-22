@@ -1350,11 +1350,11 @@ ParseShader(char **text)
 			token = Q_readtok2(text, qfalse);
 			tr.sunLight[2] = atof(token);
 
-			vec3normalize(tr.sunLight);
+			normv3(tr.sunLight);
 
 			token = Q_readtok2(text, qfalse);
 			a = atof(token);
-			vec3scale(tr.sunLight, a, tr.sunLight);
+			scalev3(tr.sunLight, a, tr.sunLight);
 
 			token	= Q_readtok2(text, qfalse);
 			a	= atof(token);

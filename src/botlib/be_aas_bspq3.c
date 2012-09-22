@@ -306,7 +306,7 @@ AAS_VectorForBSPEpairKey(int ent, char *key, Vec3 v)
 	char buf[MAX_EPAIRKEY];
 	double v1, v2, v3;
 
-	vec3clear(v);
+	clearv3(v);
 	if(!AAS_ValueForBSPEpairKey(ent, key, buf, MAX_EPAIRKEY)) return qfalse;
 	/* scanf into doubles, then assign, so it is Scalar size independent */
 	v1 = v2 = v3 = 0;

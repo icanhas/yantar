@@ -19,9 +19,11 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-/* Some of the vector functions are static inline in q_shared.h. q3asm
+/* 
+ * Some of the vector functions are static inline in q_shared.h. q3asm
  * doesn't understand static functions though, so we only want them in
- * one file. That's what this is about. */
+ * one file. That's what this is about. 
+ */
 #ifdef Q3_VM
 #define __Q3_VM_MATH
 #endif
@@ -30,7 +32,6 @@
 
 Vec3	vec3_origin = {0,0,0};
 Vec3	axisDefault[3] = { { 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 } };
-
 Vec4	colorBlack = {0, 0, 0, 1};
 Vec4	colorRed = {1, 0, 0, 1};
 Vec4	colorGreen = {0, 1, 0, 1};
@@ -196,7 +197,7 @@ DirToByte(Vec3 dir)
 	bestd	= 0;
 	best	= 0;
 	for(i=0; i<NUMVERTEXNORMALS; i++){
-		d = vec3dot (dir, bytedirs[i]);
+		d = dotv3 (dir, bytedirs[i]);
 		if(d > bestd){
 			bestd	= d;
 			best	= i;
@@ -210,10 +211,10 @@ void
 ByteToDir(int b, Vec3 dir)
 {
 	if(b < 0 || b >= NUMVERTEXNORMALS){
-		vec3copy(vec3_origin, dir);
+		copyv3(vec3_origin, dir);
 		return;
 	}
-	vec3copy (bytedirs[b], dir);
+	copyv3 (bytedirs[b], dir);
 }
 
 unsigned
@@ -253,7 +254,7 @@ normalizecolour(const Vec3 in, Vec3 out)
 		max = in[2];
 
 	if(!max)
-		vec3clear(out);
+		clearv3(out);
 	else{
 		out[0]	= in[0] / max;
 		out[1]	= in[1] / max;
@@ -271,36 +272,32 @@ PlaneFromPoints(Vec4 plane, const Vec3 a, const Vec3 b, const Vec3 c)
 {
 	Vec3 d1, d2;
 
-	vec3sub(b, a, d1);
-	vec3sub(c, a, d2);
-	vec3cross(d2, d1, plane);
-	if(vec3normalize(plane) == 0)
+	subv3(b, a, d1);
+	subv3(c, a, d2);
+	crossv3(d2, d1, plane);
+	if(normv3(plane) == 0)
 		return qfalse;
 
-	plane[3] = vec3dot(a, plane);
+	plane[3] = dotv3(a, plane);
 	return qtrue;
 }
 
-/* RotatePointAroundVector: This is not implemented very well... */
+/* FIXME:This is not implemented very well... */
 void
 RotatePointAroundVector(Vec3 dst, const Vec3 dir, const Vec3 point,
-			float degrees)
+	float degrees)
 {
-	float	m[3][3];
-	float	im[3][3];
-	float	zrot[3][3];
-	float	tmpmat[3][3];
-	float	rot[3][3];
-	int	i;
-	Vec3	vr, vup, vf;
-	float	rad;
+	float m[3][3], im[3][3], zrot[3][3], tmpmat[3][3], rot[3][3];
+	int i;
+	Vec3 vr, vup, vf;
+	float rad;
 
 	vf[0]	= dir[0];
 	vf[1]	= dir[1];
 	vf[2]	= dir[2];
 
-	PerpendicularVector(vr, dir);
-	vec3cross(vr, vf, vup);
+	perpv3(vr, dir);
+	crossv3(vr, vf, vup);
 
 	m[0][0] = vr[0];
 	m[1][0] = vr[1];
@@ -343,27 +340,25 @@ RotatePointAroundVector(Vec3 dst, const Vec3 dir, const Vec3 point,
 void
 RotateAroundDirection(Vec3 axis[3], float yaw)
 {
-
 	/* create an arbitrary axis[1] */
-	PerpendicularVector(axis[1], axis[0]);
+	perpv3(axis[1], axis[0]);
 
 	/* rotate it around axis[0] by yaw */
 	if(yaw){
 		Vec3 temp;
 
-		vec3copy(axis[1], temp);
+		copyv3(axis[1], temp);
 		RotatePointAroundVector(axis[1], axis[0], temp, yaw);
 	}
 
 	/* cross to get axis[2] */
-	vec3cross(axis[0], axis[1], axis[2]);
+	crossv3(axis[0], axis[1], axis[2]);
 }
 
 void
-vec3toeuler(const Vec3 value1, Vec3 angles)
+v3toeuler(const Vec3 value1, Vec3 angles)
 {
-	float	forward;
-	float	yaw, pitch;
+	float	forward, yaw, pitch;
 
 	if(value1[1] == 0 && value1[0] == 0){
 		yaw = 0;
@@ -386,24 +381,23 @@ vec3toeuler(const Vec3 value1, Vec3 angles)
 		if(pitch < 0)
 			pitch += 360;
 	}
-
 	angles[PITCH]	= -pitch;
 	angles[YAW]	= yaw;
 	angles[ROLL]	= 0;
 }
 
 void
-euler2axis(const Vec3 angles, Vec3 axis[3])
+eulertoaxis(const Vec3 angles, Vec3 axis[3])
 {
 	Vec3 right;
 
 	/* angle vectors returns "right" instead of "y axis" */
-	anglevec3s(angles, axis[0], right, axis[2]);
-	vec3sub(vec3_origin, right, axis[1]);
+	anglev3s(angles, axis[0], right, axis[2]);
+	subv3(vec3_origin, right, axis[1]);
 }
 
 void
-axisclear(Vec3 axis[3])
+clearaxis(Vec3 axis[3])
 {
 	axis[0][0]	= 1;
 	axis[0][1]	= 0;
@@ -417,11 +411,11 @@ axisclear(Vec3 axis[3])
 }
 
 void
-axiscopy(Vec3 in[3], Vec3 out[3])
+copyaxis(Vec3 in[3], Vec3 out[3])
 {
-	vec3copy(in[0], out[0]);
-	vec3copy(in[1], out[1]);
-	vec3copy(in[2], out[2]);
+	copyv3(in[0], out[0]);
+	copyv3(in[1], out[1]);
+	copyv3(in[2], out[2]);
 }
 
 void
@@ -431,13 +425,13 @@ ProjectPointOnPlane(Vec3 dst, const Vec3 p, const Vec3 normal)
 	Vec3	n;
 	float	inv_denom;
 
-	inv_denom =  vec3dot(normal, normal);
+	inv_denom =  dotv3(normal, normal);
 #ifndef Q3_VM
 	assert(Q_fabs(inv_denom) != 0.0f);	/* zero vectors get here */
 #endif
 	inv_denom = 1.0f / inv_denom;
 
-	d = vec3dot(normal, p) * inv_denom;
+	d = dotv3(normal, p) * inv_denom;
 
 	n[0]	= normal[0] * inv_denom;
 	n[1]	= normal[1] * inv_denom;
@@ -459,22 +453,22 @@ MakeNormalVectors(const Vec3 forward, Vec3 right, Vec3 up)
 
 	/* this rotate and negate guarantees a vector
 	 * not colinear with the original */
-	right[1]	= -forward[0];
-	right[2]	= forward[1];
-	right[0]	= forward[2];
+	right[1] = -forward[0];
+	right[2] = forward[1];
+	right[0] = forward[2];
 
-	d = vec3dot (right, forward);
-	vec3ma(right, -d, forward, right);
-	vec3normalize(right);
-	vec3cross(right, forward, up);
+	d = dotv3 (right, forward);
+	maddv3(right, -d, forward, right);
+	normv3(right);
+	crossv3(right, forward, up);
 }
 
 void
-vec3rotate(Vec3 in, Vec3 matrix[3], Vec3 out)
+rotv3(Vec3 in, Vec3 matrix[3], Vec3 out)
 {
-	out[0]	= vec3dot(in, matrix[0]);
-	out[1]	= vec3dot(in, matrix[1]);
-	out[2]	= vec3dot(in, matrix[2]);
+	out[0] = dotv3(in, matrix[0]);
+	out[1] = dotv3(in, matrix[1]);
+	out[2] = dotv3(in, matrix[2]);
 }
 
 #if !idppc
@@ -482,16 +476,17 @@ float
 Q_rsqrt(float number)
 {
 	float x2, y;
-	const float	threehalfs = 1.5f;
-	floatint_t	t;
+	const float threehalfs = 1.5f;
+	floatint_t t;
 
-	x2	= number * 0.5f;
-	t.f	= number;
-	t.i	= 0x5f375a86 - (t.i >> 1);
-	y	= t.f;
-	y	= y * (threehalfs - (x2 * y * y));	/* 1st iteration */
-	y  	= y * ( threehalfs - ( x2 * y * y ) );   // 2nd iteration, this can be removed 
-
+	x2 = number * 0.5f;
+	t.f = number;
+	t.i = 0x5f375a86 - (t.i >> 1);
+	y = t.f;
+	/* first iteration */
+	y = y * (threehalfs - (x2 * y * y));
+	/* second iteration, this can be removed */
+	y = y * (threehalfs - (x2 * y * y));
 	return y;
 }
 
@@ -499,11 +494,11 @@ float
 Q_fabs(float f)
 {
 	floatint_t fi;
-	fi.f	= f;
-	fi.i	&= 0x7FFFFFFF;
+	fi.f = f;
+	fi.i &= 0x7FFFFFFF;
 	return fi.f;
 }
-#endif
+#endif	/* !idppc */
 
 qbool
 closeenough(float x, float y, float thresh)
@@ -512,7 +507,7 @@ closeenough(float x, float y, float thresh)
 }
 
 float
-lerpangle(float from, float to, float frac)
+lerpeuler(float from, float to, float frac)
 {
 	float a;
 
@@ -525,9 +520,9 @@ lerpangle(float from, float to, float frac)
 	return a;
 }
 
-/* anglesub: Always returns a value from -180 to 180 */
+/* subeuler: Always returns a value from -180 to 180 */
 float
-anglesub(float a1, float a2)
+subeuler(float a1, float a2)
 {
 	float a;
 
@@ -540,42 +535,42 @@ anglesub(float a1, float a2)
 }
 
 void
-anglessub(Vec3 v1, Vec3 v2, Vec3 v3)
+subeulers(Vec3 v1, Vec3 v2, Vec3 v3)
 {
-	v3[0]	= anglesub(v1[0], v2[0]);
-	v3[1]	= anglesub(v1[1], v2[1]);
-	v3[2]	= anglesub(v1[2], v2[2]);
+	v3[0] = subeuler(v1[0], v2[0]);
+	v3[1] = subeuler(v1[1], v2[1]);
+	v3[2] = subeuler(v1[2], v2[2]);
 }
 
 float
-anglemod(float a)
+modeuler(float a)
 {
 	a = (360.0/65536) * ((int)(a*(65536/360.0)) & 65535);
 	return a;
 }
 
-/* AngleNormalize360: returns angle normalized to the range [0 <= angle < 360] */
+/* returns angle normalized to the range [0 <= angle < 360] */
 float
-AngleNormalize360(float angle)
+norm360euler(float angle)
 {
 	return (360.0 / 65536) * ((int)(angle * (65536 / 360.0)) & 65535);
 }
 
-/* AngleNormalize180: returns angle normalized to the range [-180 < angle <= 180] */
+/* returns angle normalized to the range [-180 < angle <= 180] */
 float
-AngleNormalize180(float angle)
+norm180euler(float angle)
 {
-	angle = AngleNormalize360(angle);
+	angle = norm360euler(angle);
 	if(angle > 180.0)
 		angle -= 360.0;
 	return angle;
 }
 
-/* AngleDelta: returns the normalized delta from angle1 to angle2 */
+/* returns the normalized delta from angle1 to angle2 */
 float
-AngleDelta(float angle1, float angle2)
+deltaeuler(float angle1, float angle2)
 {
-	return AngleNormalize180(angle1 - angle2);
+	return norm180euler(angle1 - angle2);
 }
 
 void
@@ -591,7 +586,7 @@ SetPlaneSignbits(cplane_t *out)
 	out->signbits = bits;
 }
 
-/* BoxOnPlaneSide: returns 1, 2, or 1 + 2 */
+/* returns 1, 2, or 1 + 2 */
 int
 BoxOnPlaneSide(const Vec3 emins, const Vec3 emaxs, const struct cplane_s *p)
 {
@@ -678,14 +673,12 @@ RadiusFromBounds(const Vec3 mins, const Vec3 maxs)
 	float	a, b;
 
 	for(i=0; i<3; i++){
-		a	= fabs(mins[i]);
-		b	= fabs(maxs[i]);
+		a = fabs(mins[i]);
+		b = fabs(maxs[i]);
 		corner[i] = a > b ? a : b;
 	}
-
-	return vec3len (corner);
+	return lenv3(corner);
 }
-
 
 void
 ClearBounds(Vec3 mins, Vec3 maxs)
@@ -715,7 +708,7 @@ AddPointToBounds(const Vec3 v, Vec3 mins, Vec3 maxs)
 
 qbool
 BoundsIntersect(const Vec3 mins, const Vec3 maxs,
-		const Vec3 mins2, const Vec3 maxs2)
+	const Vec3 mins2, const Vec3 maxs2)
 {
 	if(maxs[0] < mins2[0] ||
 	   maxs[1] < mins2[1] ||
@@ -724,13 +717,12 @@ BoundsIntersect(const Vec3 mins, const Vec3 maxs,
 	   mins[1] > maxs2[1] ||
 	   mins[2] > maxs2[2])
 		return qfalse;
-
 	return qtrue;
 }
 
 qbool
 BoundsIntersectSphere(const Vec3 mins, const Vec3 maxs,
-		      const Vec3 origin, Scalar radius)
+	const Vec3 origin, Scalar radius)
 {
 	if(origin[0] - radius > maxs[0] ||
 	   origin[0] + radius < mins[0] ||
@@ -739,13 +731,12 @@ BoundsIntersectSphere(const Vec3 mins, const Vec3 maxs,
 				origin[2] - radius > maxs[2] ||
 	   origin[2] + radius < mins[2])
 		return qfalse;
-
 	return qtrue;
 }
 
 qbool
 BoundsIntersectPoint(const Vec3 mins, const Vec3 maxs,
-		     const Vec3 origin)
+	 const Vec3 origin)
 {
 	if(origin[0] > maxs[0] ||
 	   origin[0] < mins[0] ||
@@ -754,12 +745,12 @@ BoundsIntersectPoint(const Vec3 mins, const Vec3 maxs,
 	   origin[2] > maxs[2] ||
 	   origin[2] < mins[2])
 		return qfalse;
-
 	return qtrue;
 }
 
+/* Normalize v. Returns vector length. */
 Scalar
-vec3normalize(Vec3 v)
+normv3(Vec3 v)
 {
 	/* NOTE: TTimo - Apple G4 altivec source uses double? */
 	float length, ilength;
@@ -780,7 +771,7 @@ vec3normalize(Vec3 v)
 }
 
 Scalar
-vec3normalize2(const Vec3 v, Vec3 out)
+norm2v3(const Vec3 v, Vec3 out)
 {
 	float length, ilength;
 
@@ -790,15 +781,13 @@ vec3normalize2(const Vec3 v, Vec3 out)
 		/* writing it this way allows gcc to recognize that rsqrt can be used */
 		ilength = 1/(float)sqrt(length);
 		/* sqrt(length) = length * (1 / sqrt(length)) */
-		length	*= ilength;
-		out[0]	= v[0]*ilength;
-		out[1]	= v[1]*ilength;
-		out[2]	= v[2]*ilength;
+		length *= ilength;
+		out[0] = v[0]*ilength;
+		out[1] = v[1]*ilength;
+		out[2] = v[2]*ilength;
 	}else
-		vec3clear(out);
-
+		clearv3(out);
 	return length;
-
 }
 
 /*
@@ -806,63 +795,62 @@ vec3normalize2(const Vec3 v, Vec3 out)
   * make b s units long, add to v, result in o
   */
 void
-_vec3ma(const Vec3 veca, float scale, const Vec3 vecb, Vec3 vecc)
+_maddv3(const Vec3 veca, float scale, const Vec3 vecb, Vec3 vecc)
 {
 	vecc[0] = veca[0] + scale*vecb[0];
 	vecc[1] = veca[1] + scale*vecb[1];
 	vecc[2] = veca[2] + scale*vecb[2];
 }
 
-
 Scalar
-_vec3dot(const Vec3 v1, const Vec3 v2)
+_dotv3(const Vec3 v1, const Vec3 v2)
 {
 	return v1[0]*v2[0] + v1[1]*v2[1] + v1[2]*v2[2];
 }
 
 void
-_vec3sub(const Vec3 veca, const Vec3 vecb, Vec3 out)
+_subv3(const Vec3 veca, const Vec3 vecb, Vec3 out)
 {
-	out[0]	= veca[0]-vecb[0];
-	out[1]	= veca[1]-vecb[1];
-	out[2]	= veca[2]-vecb[2];
+	out[0] = veca[0]-vecb[0];
+	out[1] = veca[1]-vecb[1];
+	out[2] = veca[2]-vecb[2];
 }
 
 void
-_vec3add(const Vec3 veca, const Vec3 vecb, Vec3 out)
+_addv3(const Vec3 veca, const Vec3 vecb, Vec3 out)
 {
-	out[0]	= veca[0]+vecb[0];
-	out[1]	= veca[1]+vecb[1];
-	out[2]	= veca[2]+vecb[2];
+	out[0] = veca[0]+vecb[0];
+	out[1] = veca[1]+vecb[1];
+	out[2] = veca[2]+vecb[2];
 }
 
 void
-_vec3copy(const Vec3 in, Vec3 out)
+_copyv3(const Vec3 in, Vec3 out)
 {
-	out[0]	= in[0];
-	out[1]	= in[1];
-	out[2]	= in[2];
+	out[0] = in[0];
+	out[1] = in[1];
+	out[2] = in[2];
 }
 
 void
-_vec3scale(const Vec3 in, Scalar scale, Vec3 out)
+_scalev3(const Vec3 in, Scalar scale, Vec3 out)
 {
-	out[0]	= in[0]*scale;
-	out[1]	= in[1]*scale;
-	out[2]	= in[2]*scale;
+	out[0] = in[0]*scale;
+	out[1] = in[1]*scale;
+	out[2] = in[2]*scale;
 }
 
 void
-vec4scale(const Vec4 in, Scalar scale, Vec4 out)
+scalev4(const Vec4 in, Scalar scale, Vec4 out)
 {
-	out[0]	= in[0]*scale;
-	out[1]	= in[1]*scale;
-	out[2]	= in[2]*scale;
-	out[3]	= in[3]*scale;
+	out[0] = in[0]*scale;
+	out[1] = in[1]*scale;
+	out[2] = in[2]*scale;
+	out[3] = in[3]*scale;
 }
 
 void
-vec3lerp(const Vec3 a, const Vec3 b, float amount, Vec3 c)
+lerpv3(const Vec3 a, const Vec3 b, float amount, Vec3 c)
 {
 	c[0] = a[0] * (1.0f-amount) + b[0] * amount;
 	c[1] = a[1] * (1.0f-amount) + b[1] * amount;
@@ -870,7 +858,7 @@ vec3lerp(const Vec3 a, const Vec3 b, float amount, Vec3 c)
 }
 
 void
-mat44clear(Mat44 m)
+clearm4(Mat4 m)
 {
 	unsigned int i;
 
@@ -879,7 +867,7 @@ mat44clear(Mat44 m)
 }
 
 void
-mat44ident(Mat44 m)
+identm4(Mat4 m)
 {
 	m[ 0] = 1.0f; m[ 4] = 0.0f; m[ 8] = 0.0f; m[12] = 0.0f;
 	m[ 1] = 0.0f; m[ 5] = 1.0f; m[ 9] = 0.0f; m[13] = 0.0f;
@@ -888,7 +876,7 @@ mat44ident(Mat44 m)
 }
 
 void
-mat44copy(const Mat44 in, Mat44 out)
+copym4(const Mat4 in, Mat4 out)
 {
 	unsigned int i;
 
@@ -897,7 +885,7 @@ mat44copy(const Mat44 in, Mat44 out)
 }
 
 void
-mat44mul(const Mat44 a, const Mat44 b, Mat44 out)
+mulm4(const Mat4 a, const Mat4 b, Mat4 out)
 {
 	out[ 0] = a[ 0] * b[ 0] + a[ 4] * b[ 1] + a[ 8] * b[ 2] + a[12] * b[ 3];
 	out[ 1] = a[ 1] * b[ 0] + a[ 5] * b[ 1] + a[ 9] * b[ 2] + a[13] * b[ 3];
@@ -921,7 +909,7 @@ mat44mul(const Mat44 a, const Mat44 b, Mat44 out)
 }
 
 void
-mat44transform(const Mat44 in1, const Vec4 in2, Vec4 out)
+transformm4(const Mat4 in1, const Vec4 in2, Vec4 out)
 {
 	out[ 0] = in1[ 0] * in2[ 0] + in1[ 4] * in2[ 1] + in1[ 8] * in2[ 2] + in1[12] * in2[ 3];
 	out[ 1] = in1[ 1] * in2[ 0] + in1[ 5] * in2[ 1] + in1[ 9] * in2[ 2] + in1[13] * in2[ 3];
@@ -930,7 +918,7 @@ mat44transform(const Mat44 in1, const Vec4 in2, Vec4 out)
 }
 
 qbool
-mat44cmp(const Mat44 a, const Mat44 b)
+cmpm4(const Mat4 a, const Mat4 b)
 {
 	unsigned int i;
 
@@ -941,7 +929,7 @@ mat44cmp(const Mat44 a, const Mat44 b)
 }
 
 void
-mat44translation(Vec3 v, Mat44 out)
+translationm4(Vec3 v, Mat4 out)
 {
 	out[ 0] = 1.0f; out[ 4] = 0.0f; out[ 8] = 0.0f; out[12] = v[0];
 	out[ 1] = 0.0f; out[ 5] = 1.0f; out[ 9] = 0.0f; out[13] = v[1];
@@ -950,9 +938,9 @@ mat44translation(Vec3 v, Mat44 out)
 }
 
 void
-mat44ortho(float l, float r, float bottom, float top, float znear, float zfar, Mat44 out)
+orthom4(float l, float r, float bottom, float top, float znear, float zfar, Mat4 out)
 {
-	mat44clear(out);
+	clearm4(out);
 	out[ 0] = 2.0f / (r - l);
 	out[ 5] = 2.0f / (top - bottom);
 	out[10] = 2.0f / (zfar - znear);
@@ -963,7 +951,7 @@ mat44ortho(float l, float r, float bottom, float top, float znear, float zfar, M
 }
 
 void
-quatset(Quat q, Scalar w, Scalar x, Scalar y, Scalar z)
+setq(Quat q, Scalar w, Scalar x, Scalar y, Scalar z)
 {
 	q[0] = w;
 	q[1] = x;
@@ -971,8 +959,9 @@ quatset(Quat q, Scalar w, Scalar x, Scalar y, Scalar z)
 	q[3] = z;
 }
 
+/* Euler angles to quaternion */
 void
-euler2quat(const Vec3 angles, Quat out)
+eulertoq(const Vec3 angles, Quat out)
 {
 	float cp, cy, cr, sp, sy, sr;
 	Vec3 a;
@@ -992,8 +981,9 @@ euler2quat(const Vec3 angles, Quat out)
 	out[3] = cr*cp*sy - sr*sp*cy;	/* v2 */
 }
 
+/* Quaternion to Euler angles */
 void
-quat2euler(const Quat q, Vec3 a)
+qtoeuler(const Quat q, Vec3 a)
 {
 	Quat q2;
 	
@@ -1006,8 +996,9 @@ quat2euler(const Quat q, Vec3 a)
 	a[YAW] = (180.0/M_PI)*atan2(2*(q[0]*q[3] + q[1]*q[2]), 1 - 2*(q2[2] + q2[3]));	/* ψ */
 }
 
+/* Quaternion  to axis representation */
 void
-quat2axis(Quat q, Vec3  axis[3])
+qtoaxis(Quat q, Vec3  axis[3])
 {
 	float wx, wy, wz, xx, xy, yy, yz, xz, zz, x2, y2, z2;
 	
@@ -1035,7 +1026,7 @@ quat2axis(Quat q, Vec3  axis[3])
 }
 
 void
-quatmul(const Quat q1, const Quat q2, Quat out)
+mulq(const Quat q1, const Quat q2, Quat out)
 {
 	float a, b, c, d, e, f, g, h;
 	
@@ -1104,69 +1095,68 @@ MatrixMultiply(float in1[3][3], float in2[3][3], float out[3][3])
 		    in1[2][2] * in2[2][2];
 }
 
-
+/* Rotate each 'axis' vector as specified by angles */
 void
-anglevec3s(const Vec3 angles, Vec3 forward, Vec3 right, Vec3 up)
+anglev3s(const Vec3 angles, Vec3 forward, Vec3 right, Vec3 up)
 {
 	float angle;
 	static float sr, sp, sy, cr, cp, cy;	/* static to help MS compiler fp bugs */
 	
-	angle	= angles[YAW] * (M_PI*2 / 360);
-	sy	= sin(angle);
-	cy	= cos(angle);
-	angle	= angles[PITCH] * (M_PI*2 / 360);
-	sp	= sin(angle);
-	cp	= cos(angle);
-	angle	= angles[ROLL] * (M_PI*2 / 360);
-	sr	= sin(angle);
-	cr	= cos(angle);
+	angle = angles[YAW] * (M_PI*2 / 360);
+	sy = sin(angle);
+	cy = cos(angle);
+	angle = angles[PITCH] * (M_PI*2 / 360);
+	sp = sin(angle);
+	cp = cos(angle);
+	angle = angles[ROLL] * (M_PI*2 / 360);
+	sr = sin(angle);
+	cr = cos(angle);
 
 	if(forward){
-		forward[0]	= cp*cy;
-		forward[1]	= cp*sy;
-		forward[2]	= -sp;
+		forward[0] = cp*cy;
+		forward[1] = cp*sy;
+		forward[2] = -sp;
 	}
 	if(right){
-		right[0]	= (-1*sr*sp*cy+ -1*cr* -sy);
-		right[1]	= (-1*sr*sp*sy+ -1*cr*cy);
-		right[2]	= -1*sr*cp;
+		right[0] = (-1*sr*sp*cy+ -1*cr* -sy);
+		right[1] = (-1*sr*sp*sy+ -1*cr*cy);
+		right[2] = -1*sr*cp;
 	}
 	if(up){
-		up[0]	= (cr*sp*cy+ -sr* -sy);
-		up[1]	= (cr*sp*sy+ -sr*cy);
-		up[2]	= cr*cp;
+		up[0] = (cr*sp*cy+ -sr* -sy);
+		up[1] = (cr*sp*sy+ -sr*cy);
+		up[2] = cr*cp;
 	}
 }
 
-/* assumes "src" is normalized */
+/* 
+ * Generate perpendicular vector. Assumes src 
+ * is normalized.
+ */
 void
-PerpendicularVector(Vec3 dst, const Vec3 src)
+perpv3(Vec3 dst, const Vec3 src)
 {
-	int	pos;
-	int	i;
-	float	minelem = 1.0F;
-	Vec3	tempvec;
+	int pos, i;
+	float	minelem = 1.0f;
+	Vec3	tmp;
 
 	/*
-	** find the smallest magnitude axially aligned vector
-	*/
+	 * find the smallest magnitude axially aligned vector
+	 */
 	for(pos = 0, i = 0; i < 3; i++)
 		if(fabs(src[i]) < minelem){
 			pos = i;
 			minelem = fabs(src[i]);
 		}
-	tempvec[0]	= tempvec[1] = tempvec[2] = 0.0F;
-	tempvec[pos]	= 1.0F;
+	tmp[0] = tmp[1] = tmp[2] = 0.0f;
+	setv3(tmp, 0.0, 0.0, 0.0);
+	tmp[pos] = 1.0f;
 
-	/*
-	** project the point onto the plane defined by src
-	*/
-	ProjectPointOnPlane(dst, tempvec, src);
+	/* project the point onto the plane defined by src */
+	ProjectPointOnPlane(dst, tmp, src);
 
-	/*
-	** normalize the result
-	*/
-	vec3normalize(dst);
+	/* normalize the result */
+	normv3(dst);
 }
 
 /* Don't pass doubles to this */
@@ -1180,12 +1170,9 @@ Q_isnan(float x)
 	fi.ui	= 0x7F800000 - fi.ui;
 	return (int)((unsigned int)fi.ui >> 31);
 }
-/* ------------------------------------------------------------------------ */
 
 #ifndef Q3_VM
 /*
- * Q_acos
- *
  * the msvc acos doesn't always return a value between -PI and PI:
  *
  * int i;

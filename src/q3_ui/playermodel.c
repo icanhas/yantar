@@ -170,7 +170,7 @@ PlayerModel_UpdateModel(void)
 	viewangles[YAW] = 180 - 30;
 	viewangles[PITCH] = 0;
 	viewangles[ROLL] = 0;
-	vec3clear(moveangles);
+	clearv3(moveangles);
 
 	UI_PlayerInfo_SetModel(&s_playermodel.playerinfo,
 		s_playermodel.modelskin);

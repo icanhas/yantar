@@ -91,14 +91,14 @@ Pickup_Powerup(gentity_t *ent, gentity_t *other)
 			continue;
 
 		/* if too far away, no sound */
-		vec3sub(ent->s.pos.trBase, client->ps.origin, delta);
-		len = vec3normalize(delta);
+		subv3(ent->s.pos.trBase, client->ps.origin, delta);
+		len = normv3(delta);
 		if(len > 192)
 			continue;
 
 		/* if not facing, no sound */
-		anglevec3s(client->ps.viewangles, forward, NULL, NULL);
-		if(vec3dot(delta, forward) < 0.4)
+		anglev3s(client->ps.viewangles, forward, NULL, NULL);
+		if(dotv3(delta, forward) < 0.4)
 			continue;
 
 		/* if not line of sight, no sound */
@@ -570,8 +570,8 @@ LaunchItem(gitem_t *item, Vec3 origin, Vec3 velocity)
 
 	dropped->classname = item->classname;
 	dropped->item = item;
-	vec3set (dropped->r.mins, -ITEM_RADIUS, -ITEM_RADIUS, -ITEM_RADIUS);
-	vec3set (dropped->r.maxs, ITEM_RADIUS, ITEM_RADIUS, ITEM_RADIUS);
+	setv3 (dropped->r.mins, -ITEM_RADIUS, -ITEM_RADIUS, -ITEM_RADIUS);
+	setv3 (dropped->r.maxs, ITEM_RADIUS, ITEM_RADIUS, ITEM_RADIUS);
 	dropped->r.contents = CONTENTS_TRIGGER;
 
 	dropped->touch = Touch_Item;
@@ -579,7 +579,7 @@ LaunchItem(gitem_t *item, Vec3 origin, Vec3 velocity)
 	G_SetOrigin(dropped, origin);
 	dropped->s.pos.trType	= TR_GRAVITY;
 	dropped->s.pos.trTime	= level.time;
-	vec3copy(velocity, dropped->s.pos.trDelta);
+	copyv3(velocity, dropped->s.pos.trDelta);
 
 	dropped->s.eFlags |= EF_BOUNCE_HALF;
 #ifdef MISSIONPACK
@@ -614,12 +614,12 @@ Drop_Item(gentity_t *ent, gitem_t *item, float angle)
 	Vec3	velocity;
 	Vec3	angles;
 
-	vec3copy(ent->s.apos.trBase, angles);
+	copyv3(ent->s.apos.trBase, angles);
 	angles[YAW] += angle;
 	angles[PITCH] = 0;	/* always forward */
 
-	anglevec3s(angles, velocity, NULL, NULL);
-	vec3scale(velocity, 150, velocity);
+	anglev3s(angles, velocity, NULL, NULL);
+	scalev3(velocity, 150, velocity);
 	velocity[2] += 200 + crandom() * 50;
 
 	return LaunchItem(item, ent->s.pos.trBase, velocity);
@@ -651,8 +651,8 @@ FinishSpawningItem(gentity_t *ent)
 	trace_t tr;
 	Vec3	dest;
 
-	vec3set(ent->r.mins, -ITEM_RADIUS, -ITEM_RADIUS, -ITEM_RADIUS);
-	vec3set(ent->r.maxs, ITEM_RADIUS, ITEM_RADIUS, ITEM_RADIUS);
+	setv3(ent->r.mins, -ITEM_RADIUS, -ITEM_RADIUS, -ITEM_RADIUS);
+	setv3(ent->r.maxs, ITEM_RADIUS, ITEM_RADIUS, ITEM_RADIUS);
 
 	ent->s.eType = ET_ITEM;
 	ent->s.modelindex = ent->item - bg_itemlist;	/* store item number in modelindex */
@@ -668,7 +668,7 @@ FinishSpawningItem(gentity_t *ent)
 		G_SetOrigin(ent, ent->s.origin);
 	else{
 		/* drop to floor */
-		vec3set(dest, ent->s.origin[0], ent->s.origin[1],
+		setv3(dest, ent->s.origin[0], ent->s.origin[1],
 			ent->s.origin[2] - 4096);
 		trap_Trace(&tr, ent->s.origin, ent->r.mins, ent->r.maxs, dest,
 			ent->s.number,
@@ -934,24 +934,24 @@ G_BounceItem(gentity_t *ent, trace_t *trace)
 	hitTime = level.previousTime +
 		  (level.time - level.previousTime) * trace->fraction;
 	BG_EvaluateTrajectoryDelta(&ent->s.pos, hitTime, velocity);
-	dot = vec3dot(velocity, trace->plane.normal);
-	vec3ma(velocity, -2*dot, trace->plane.normal, ent->s.pos.trDelta);
+	dot = dotv3(velocity, trace->plane.normal);
+	maddv3(velocity, -2*dot, trace->plane.normal, ent->s.pos.trDelta);
 
 	/* cut the velocity to keep from bouncing forever */
-	vec3scale(ent->s.pos.trDelta, ent->physicsBounce, ent->s.pos.trDelta);
+	scalev3(ent->s.pos.trDelta, ent->physicsBounce, ent->s.pos.trDelta);
 
 	/* check for stop */
 	if(trace->plane.normal[2] > 0 && ent->s.pos.trDelta[2] < 40){
 		trace->endpos[2] += 1.0;	/* make sure it is off ground */
-		SnapVector(trace->endpos);
+		snapv3(trace->endpos);
 		G_SetOrigin(ent, trace->endpos);
 		ent->s.groundEntityNum = trace->entityNum;
 		return;
 	}
 
-	vec3add(ent->r.currentOrigin, trace->plane.normal,
+	addv3(ent->r.currentOrigin, trace->plane.normal,
 		ent->r.currentOrigin);
-	vec3copy(ent->r.currentOrigin, ent->s.pos.trBase);
+	copyv3(ent->r.currentOrigin, ent->s.pos.trBase);
 	ent->s.pos.trTime = level.time;
 }
 
@@ -992,7 +992,7 @@ G_RunItem(gentity_t *ent)
 	trap_Trace(&tr, ent->r.currentOrigin, ent->r.mins, ent->r.maxs, origin,
 		ent->r.ownerNum, mask);
 
-	vec3copy(tr.endpos, ent->r.currentOrigin);
+	copyv3(tr.endpos, ent->r.currentOrigin);
 
 	if(tr.startsolid)
 		tr.fraction = 0;

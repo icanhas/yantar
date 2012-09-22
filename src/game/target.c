@@ -255,7 +255,7 @@ SP_target_speaker(gentity_t *ent)
 	if(ent->spawnflags & 4)
 		ent->r.svFlags |= SVF_BROADCAST;
 
-	vec3copy(ent->s.origin, ent->s.pos.trBase);
+	copyv3(ent->s.origin, ent->s.pos.trBase);
 
 	/* must link the entity so we get areas and clusters so
 	 * the server can determine who to send updates to */
@@ -278,14 +278,14 @@ target_laser_think(gentity_t *self)
 
 	/* if pointed at another entity, set movedir to point at it */
 	if(self->enemy){
-		vec3ma (self->enemy->s.origin, 0.5, self->enemy->r.mins, point);
-		vec3ma (point, 0.5, self->enemy->r.maxs, point);
-		vec3sub (point, self->s.origin, self->movedir);
-		vec3normalize (self->movedir);
+		maddv3 (self->enemy->s.origin, 0.5, self->enemy->r.mins, point);
+		maddv3 (point, 0.5, self->enemy->r.maxs, point);
+		subv3 (point, self->s.origin, self->movedir);
+		normv3 (self->movedir);
 	}
 
 	/* fire forward and see what we hit */
-	vec3ma (self->s.origin, 2048, self->movedir, end);
+	maddv3 (self->s.origin, 2048, self->movedir, end);
 
 	trap_Trace(&tr, self->s.origin, NULL, NULL, end, self->s.number,
 		CONTENTS_SOLID|CONTENTS_BODY|CONTENTS_CORPSE);
@@ -297,7 +297,7 @@ target_laser_think(gentity_t *self)
 			tr.endpos, self->damage, DAMAGE_NO_KNOCKBACK,
 			MOD_TARGET_LASER);
 
-	vec3copy (tr.endpos, self->s.origin2);
+	copyv3 (tr.endpos, self->s.origin2);
 
 	trap_LinkEntity(self);
 	self->nextthink = level.time + FRAMETIME;

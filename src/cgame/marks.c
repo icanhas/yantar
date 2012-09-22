@@ -145,10 +145,10 @@ CG_ImpactMark(qhandle_t markShader, const Vec3 origin, const Vec3 dir,
 	 * } */
 
 	/* create the texture axis */
-	vec3normalize2(dir, axis[0]);
-	PerpendicularVector(axis[1], axis[0]);
+	norm2v3(dir, axis[0]);
+	perpv3(axis[1], axis[0]);
 	RotatePointAroundVector(axis[2], axis[0], axis[1], orientation);
-	vec3cross(axis[0], axis[2], axis[1]);
+	crossv3(axis[0], axis[2], axis[1]);
 
 	texCoordScale = 0.5 * 1.0 / radius;
 
@@ -165,7 +165,7 @@ CG_ImpactMark(qhandle_t markShader, const Vec3 origin, const Vec3 dir,
 	}
 
 	/* get the fragments */
-	vec3scale(dir, -20, projection);
+	scalev3(dir, -20, projection);
 	numFragments = trap_CM_MarkFragments(4, (void*)originalPoints,
 		projection, MAX_MARK_POINTS, markPoints[0],
 		MAX_MARK_FRAGMENTS, markFragments);
@@ -187,13 +187,13 @@ CG_ImpactMark(qhandle_t markShader, const Vec3 origin, const Vec3 dir,
 		for(j = 0, v = verts; j < mf->numPoints; j++, v++){
 			Vec3 delta;
 
-			vec3copy(markPoints[mf->firstPoint + j], v->xyz);
+			copyv3(markPoints[mf->firstPoint + j], v->xyz);
 
-			vec3sub(v->xyz, origin, delta);
+			subv3(v->xyz, origin, delta);
 			v->st[0] = 0.5 +
-				   vec3dot(delta, axis[1]) * texCoordScale;
+				   dotv3(delta, axis[1]) * texCoordScale;
 			v->st[1] = 0.5 +
-				   vec3dot(delta, axis[2]) * texCoordScale;
+				   dotv3(delta, axis[2]) * texCoordScale;
 			*(int*)v->modulate = *(int*)colors;
 		}
 

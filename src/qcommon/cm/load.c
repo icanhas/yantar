@@ -765,13 +765,13 @@ CM_InitBoxHull(void)
 		p = &box_planes[i*2];
 		p->type = i>>1;
 		p->signbits = 0;
-		vec3clear (p->normal);
+		clearv3 (p->normal);
 		p->normal[i>>1] = 1;
 
 		p = &box_planes[i*2+1];
 		p->type = 3 + (i>>1);
 		p->signbits = 0;
-		vec3clear (p->normal);
+		clearv3 (p->normal);
 		p->normal[i>>1] = -1;
 
 		SetPlaneSignbits(p);
@@ -789,8 +789,8 @@ clipHandle_t
 CM_TempBoxModel(const Vec3 mins, const Vec3 maxs, int capsule)
 {
 
-	vec3copy(mins, box_model.mins);
-	vec3copy(maxs, box_model.maxs);
+	copyv3(mins, box_model.mins);
+	copyv3(maxs, box_model.maxs);
 
 	if(capsule)
 		return CAPSULE_MODEL_HANDLE;
@@ -808,8 +808,8 @@ CM_TempBoxModel(const Vec3 mins, const Vec3 maxs, int capsule)
 	box_planes[10].dist = mins[2];
 	box_planes[11].dist = -mins[2];
 
-	vec3copy(mins, box_brush->bounds[0]);
-	vec3copy(maxs, box_brush->bounds[1]);
+	copyv3(mins, box_brush->bounds[0]);
+	copyv3(maxs, box_brush->bounds[1]);
 
 	return BOX_MODEL_HANDLE;
 }
@@ -823,6 +823,6 @@ CM_ModelBounds(clipHandle_t model, Vec3 mins, Vec3 maxs)
 	cmodel_t *cmod;
 
 	cmod = CM_ClipHandleToModel(model);
-	vec3copy(cmod->mins, mins);
-	vec3copy(cmod->maxs, maxs);
+	copyv3(cmod->mins, mins);
+	copyv3(cmod->maxs, maxs);
 }

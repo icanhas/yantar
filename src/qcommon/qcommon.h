@@ -872,7 +872,7 @@ void 	Sys_Print(const char *msg);
 /* Sys_Milliseconds should only be used for profiling purposes,
  * any game related timing information should come from event timestamps */
 int 	Sys_Milliseconds(void);
-void 	Sys_SnapVector(float *v);
+void 	Sys_snapv3(float *v);
 qbool Sys_RandomBytes(byte *string, int len);
 /* the system console is shown when a dedicated server is running */
 void 	Sys_DisplaySystemConsole(qbool show);

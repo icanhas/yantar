@@ -129,7 +129,7 @@ R_CullSurface(surfaceType_t *surface, material_t *shader)
 	}
 
 	sface = ( srfSurfaceFace_t* )surface;
-	d = vec3dot (tr.or.viewOrigin, sface->plane.normal);
+	d = dotv3 (tr.or.viewOrigin, sface->plane.normal);
 
 	/* don't cull exactly on the plane, because there are levels of rounding
 	 * through the BSP, ICD, and hardware that may cause pixel gaps if an
@@ -160,7 +160,7 @@ R_DlightFace(srfSurfaceFace_t *face, int dlightBits)
 			continue;
 		}
 		dl	= &tr.refdef.dlights[i];
-		d	= vec3dot(dl->origin, face->plane.normal) - face->plane.dist;
+		d	= dotv3(dl->origin, face->plane.normal) - face->plane.dist;
 		if(d < -dl->radius || d > dl->radius){
 			/* dlight doesn't reach the plane */
 			dlightBits &= ~(1 << i);
@@ -421,7 +421,7 @@ R_RecursiveWorldNode(mnode_t *node, int planeBits, int dlightBits)
 				if(dlightBits & (1 << i)){
 					dl	= &tr.refdef.dlights[i];
 					dist	=
-						vec3dot(dl->origin,
+						dotv3(dl->origin,
 							node->plane->normal) - node->plane->dist;
 
 					if(dist > -dl->radius){
@@ -505,7 +505,7 @@ R_PointInLeaf(const Vec3 p)
 			break;
 		}
 		plane = node->plane;
-		d = vec3dot (p,plane->normal) - plane->dist;
+		d = dotv3 (p,plane->normal) - plane->dist;
 		if(d > 0){
 			node = node->children[0];
 		}else{

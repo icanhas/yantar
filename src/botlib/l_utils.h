@@ -27,7 +27,7 @@
 *
 *****************************************************************************/
 
-#define Vector2Angles(v,a) vec3toeuler(v,a)
+#define Vector2Angles(v,a) v3toeuler(v,a)
 #ifndef MAX_PATH
 #define MAX_PATH MAX_QPATH
 #endif

@@ -30,9 +30,9 @@ SpheresIntersect(Vec3 origin1, float radius1, Vec3 origin2, float radius2)
 	float radiusSum = radius1 + radius2;
 	Vec3 diff;
 
-	vec3sub(origin1, origin2, diff);
+	subv3(origin1, origin2, diff);
 
-	if(vec3dot(diff, diff) <= radiusSum * radiusSum){
+	if(dotv3(diff, diff) <= radiusSum * radiusSum){
 		return qtrue;
 	}
 
@@ -45,11 +45,11 @@ BoundingSphereOfSpheres(Vec3 origin1, float radius1, Vec3 origin2, float radius2
 {
 	Vec3 diff;
 
-	vec3scale(origin1, 0.5f, origin3);
-	vec3ma(origin3, 0.5f, origin2, origin3);
+	scalev3(origin1, 0.5f, origin3);
+	maddv3(origin3, 0.5f, origin2, origin3);
 
-	vec3sub(origin1, origin2, diff);
-	*radius3 = vec3len(diff) * 0.5f + MAX(radius1, radius2);
+	subv3(origin1, origin2, diff);
+	*radius3 = lenv3(diff) * 0.5f + MAX(radius1, radius2);
 }
 
 int

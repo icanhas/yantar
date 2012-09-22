@@ -159,7 +159,7 @@ CG_DrawClientScore(int y, score_t *score, float *color, float fade,
 	}
 
 	/* draw the face */
-	vec3clear(headAngles);
+	clearv3(headAngles);
 	headAngles[YAW] = 180;
 	if(largeFormat)
 		CG_DrawHead(headx, y - (ICON_SIZE - BIGCHAR_HEIGHT) / 2,

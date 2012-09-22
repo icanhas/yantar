@@ -176,7 +176,7 @@ CL_UpdateMumble(void)
 		return;
 
 	/* !!! FIXME: not sure if this is even close to correct. */
-	anglevec3s(cl.snap.ps.viewangles, forward, NULL, up);
+	anglev3s(cl.snap.ps.viewangles, forward, NULL, up);
 
 	pos[0]	= cl.snap.ps.origin[0] * scale;
 	pos[1]	= cl.snap.ps.origin[2] * scale;

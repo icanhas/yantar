@@ -73,9 +73,9 @@ AddSkyPolygon(int nump, Vec3 vecs)
 	};
 
 	/* decide which face it maps to */
-	vec3copy (vec3_origin, v);
+	copyv3 (vec3_origin, v);
 	for(i=0, vp=vecs; i<nump; i++, vp+=3)
-		vec3add (vp, v, v);
+		addv3 (vp, v, v);
 	av[0]	= fabs(v[0]);
 	av[1]	= fabs(v[1]);
 	av[2]	= fabs(v[2]);
@@ -155,7 +155,7 @@ ClipSkyPolygon(int nump, Vec3 vecs, int stage)
 	front	= back = qfalse;
 	norm	= sky_clip[stage];
 	for(i=0, v = vecs; i<nump; i++, v+=3){
-		d = vec3dot (v, norm);
+		d = dotv3 (v, norm);
 		if(d > ON_EPSILON){
 			front = qtrue;
 			sides[i] = SIDE_FRONT;
@@ -175,23 +175,23 @@ ClipSkyPolygon(int nump, Vec3 vecs, int stage)
 	/* clip it */
 	sides[i] = sides[0];
 	dists[i] = dists[0];
-	vec3copy (vecs, (vecs+(i*3)));
+	copyv3 (vecs, (vecs+(i*3)));
 	newc[0] = newc[1] = 0;
 
 	for(i=0, v = vecs; i<nump; i++, v+=3){
 		switch(sides[i]){
 		case SIDE_FRONT:
-			vec3copy (v, newv[0][newc[0]]);
+			copyv3 (v, newv[0][newc[0]]);
 			newc[0]++;
 			break;
 		case SIDE_BACK:
-			vec3copy (v, newv[1][newc[1]]);
+			copyv3 (v, newv[1][newc[1]]);
 			newc[1]++;
 			break;
 		case SIDE_ON:
-			vec3copy (v, newv[0][newc[0]]);
+			copyv3 (v, newv[0][newc[0]]);
 			newc[0]++;
-			vec3copy (v, newv[1][newc[1]]);
+			copyv3 (v, newv[1][newc[1]]);
 			newc[1]++;
 			break;
 		}
@@ -241,7 +241,7 @@ RB_ClipSkyPolygons(shaderCommands_t *input)
 
 	for(i = 0; i < input->numIndexes; i += 3){
 		for(j = 0; j < 3; j++)
-			vec3sub(input->xyz[input->indexes[i+j]],
+			subv3(input->xyz[input->indexes[i+j]],
 				backEnd.viewParms.or.origin,
 				p[j]);
 		ClipSkyPolygon(3, p[0], 0);
@@ -422,7 +422,7 @@ FillCloudySkySide(const int mins[2], const int maxs[2], qbool addIndexes)
 
 	for(t = mins[1]+HALF_SKY_SUBDIVISIONS; t <= maxs[1]+HALF_SKY_SUBDIVISIONS; t++)
 		for(s = mins[0]+HALF_SKY_SUBDIVISIONS; s <= maxs[0]+HALF_SKY_SUBDIVISIONS; s++){
-			vec3add(s_skyPoints[t][s], backEnd.viewParms.or.origin, tess.xyz[tess.numVertexes]);
+			addv3(s_skyPoints[t][s], backEnd.viewParms.or.origin, tess.xyz[tess.numVertexes]);
 			tess.texCoords[tess.numVertexes][0][0]	= s_skyTexCoords[t][s][0];
 			tess.texCoords[tess.numVertexes][0][1]	= s_skyTexCoords[t][s][1];
 
@@ -603,7 +603,7 @@ R_InitSkyTexCoords(float heightCloud)
 					skyVec);
 
 				/* compute parametric value 'p' that intersects with cloud layer */
-				p = (1.0f / (2 * vec3dot(skyVec, skyVec))) *
+				p = (1.0f / (2 * dotv3(skyVec, skyVec))) *
 				    (-2 * skyVec[2] * radiusWorld +
 				     2 * sqrt(SQR(skyVec[2]) * SQR(radiusWorld) +
 					     2 * SQR(skyVec[0]) * radiusWorld * heightCloud +
@@ -616,11 +616,11 @@ R_InitSkyTexCoords(float heightCloud)
 				s_cloudTexP[i][t][s] = p;
 
 				/* compute intersection point based on p */
-				vec3scale(skyVec, p, v);
+				scalev3(skyVec, p, v);
 				v[2] += radiusWorld;
 
 				/* compute vector from world origin to intersection point 'v' */
-				vec3normalize(v);
+				normv3(v);
 
 				sRad = Q_acos(v[0]);
 				tRad = Q_acos(v[1]);
@@ -657,22 +657,22 @@ RB_DrawSun(void)
 	dist =  backEnd.viewParms.zFar / 1.75;	/* div sqrt(3) */
 	size = dist * 0.4;
 
-	vec3scale(tr.sunDirection, dist, origin);
-	PerpendicularVector(vec1, tr.sunDirection);
-	vec3cross(tr.sunDirection, vec1, vec2);
+	scalev3(tr.sunDirection, dist, origin);
+	perpv3(vec1, tr.sunDirection);
+	crossv3(tr.sunDirection, vec1, vec2);
 
-	vec3scale(vec1, size, vec1);
-	vec3scale(vec2, size, vec2);
+	scalev3(vec1, size, vec1);
+	scalev3(vec2, size, vec2);
 
 	/* farthest depth range */
 	qglDepthRange(1.0, 1.0);
 
 	/* FIXME: use quad stamp */
 	RB_BeginSurface(tr.sunShader, tess.fogNum);
-	vec3copy(origin, temp);
-	vec3sub(temp, vec1, temp);
-	vec3sub(temp, vec2, temp);
-	vec3copy(temp, tess.xyz[tess.numVertexes]);
+	copyv3(origin, temp);
+	subv3(temp, vec1, temp);
+	subv3(temp, vec2, temp);
+	copyv3(temp, tess.xyz[tess.numVertexes]);
 	tess.texCoords[tess.numVertexes][0][0]	= 0;
 	tess.texCoords[tess.numVertexes][0][1]	= 0;
 	tess.vertexColors[tess.numVertexes][0]	= 255;
@@ -680,10 +680,10 @@ RB_DrawSun(void)
 	tess.vertexColors[tess.numVertexes][2]	= 255;
 	tess.numVertexes++;
 
-	vec3copy(origin, temp);
-	vec3add(temp, vec1, temp);
-	vec3sub(temp, vec2, temp);
-	vec3copy(temp, tess.xyz[tess.numVertexes]);
+	copyv3(origin, temp);
+	addv3(temp, vec1, temp);
+	subv3(temp, vec2, temp);
+	copyv3(temp, tess.xyz[tess.numVertexes]);
 	tess.texCoords[tess.numVertexes][0][0]	= 0;
 	tess.texCoords[tess.numVertexes][0][1]	= 1;
 	tess.vertexColors[tess.numVertexes][0]	= 255;
@@ -691,10 +691,10 @@ RB_DrawSun(void)
 	tess.vertexColors[tess.numVertexes][2]	= 255;
 	tess.numVertexes++;
 
-	vec3copy(origin, temp);
-	vec3add(temp, vec1, temp);
-	vec3add(temp, vec2, temp);
-	vec3copy(temp, tess.xyz[tess.numVertexes]);
+	copyv3(origin, temp);
+	addv3(temp, vec1, temp);
+	addv3(temp, vec2, temp);
+	copyv3(temp, tess.xyz[tess.numVertexes]);
 	tess.texCoords[tess.numVertexes][0][0]	= 1;
 	tess.texCoords[tess.numVertexes][0][1]	= 1;
 	tess.vertexColors[tess.numVertexes][0]	= 255;
@@ -702,10 +702,10 @@ RB_DrawSun(void)
 	tess.vertexColors[tess.numVertexes][2]	= 255;
 	tess.numVertexes++;
 
-	vec3copy(origin, temp);
-	vec3sub(temp, vec1, temp);
-	vec3add(temp, vec2, temp);
-	vec3copy(temp, tess.xyz[tess.numVertexes]);
+	copyv3(origin, temp);
+	subv3(temp, vec1, temp);
+	addv3(temp, vec2, temp);
+	copyv3(temp, tess.xyz[tess.numVertexes]);
 	tess.texCoords[tess.numVertexes][0][0]	= 1;
 	tess.texCoords[tess.numVertexes][0][1]	= 0;
 	tess.vertexColors[tess.numVertexes][0]	= 255;

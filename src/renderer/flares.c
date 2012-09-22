@@ -118,9 +118,9 @@ RB_AddFlare(void *surface, int fogNum, Vec3 point, Vec3 color, Vec3 normal)
 	backEnd.pc.c_flareAdds++;
 
 	if(normal && (normal[0] || normal[1] || normal[2])){
-		vec3sub(backEnd.viewParms.or.origin, point, local);
-		vec3normalizefast(local);
-		d = vec3dot(local, normal);
+		subv3(backEnd.viewParms.or.origin, point, local);
+		fastnormv3(local);
+		d = dotv3(local, normal);
 
 		/* If the viewer is behind the flare don't add it. */
 		if(d < 0)
@@ -177,12 +177,12 @@ RB_AddFlare(void *surface, int fogNum, Vec3 point, Vec3 color, Vec3 normal)
 	f->addedFrame = backEnd.viewParms.frameCount;
 	f->fogNum = fogNum;
 
-	vec3copy(point, f->origin);
-	vec3copy(color, f->color);
+	copyv3(point, f->origin);
+	copyv3(color, f->color);
 
 	/* fade the intensity of the flare down as the
 	 * light surface turns away from the viewer */
-	vec3scale(f->color, d, f->color);
+	scalev3(f->color, d, f->color);
 
 	/* save info needed to test */
 	f->windowX = backEnd.viewParms.viewportX + window[0];
@@ -340,12 +340,12 @@ RB_RenderFlare(flare_t *f)
 
 	intensity = flareCoeff * size * size / (factor * factor);
 
-	vec3scale(f->color, f->drawIntensity * intensity, color);
+	scalev3(f->color, f->drawIntensity * intensity, color);
 
 /* Calculations for fogging */
 	if(tr.world && f->fogNum < tr.world->numfogs){
 		tess.numVertexes = 1;
-		vec3copy(f->origin, tess.xyz[0]);
+		copyv3(f->origin, tess.xyz[0]);
 		tess.fogNum = f->fogNum;
 
 		RB_CalcModulateColorsByFog(fogFactors);

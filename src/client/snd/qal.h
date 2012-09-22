@@ -125,7 +125,7 @@ extern LPALGETBUFFERIV	qalGetBufferiv;
 extern LPALDOPPLERFACTOR	qalDopplerFactor;
 extern LPALDOPPLERVELOCITY	qalDopplerVelocity;
 extern LPALSPEEDOFSOUND		qalSpeedOfSound;
-extern LPALDISTANCEMODEL	qalvec3distModel;
+extern LPALDISTANCEMODEL	qaldistv3Model;
 
 extern LPALCCREATECONTEXT	qalcCreateContext;
 extern LPALCMAKECONTEXTCURRENT qalcMakeContextCurrent;
@@ -220,7 +220,7 @@ extern LPALCCAPTURESAMPLES qalcCaptureSamples;
 #define qalDopplerFactor	alDopplerFactor
 #define qalDopplerVelocity	alDopplerVelocity
 #define qalSpeedOfSound		alSpeedOfSound
-#define qalvec3distModel	alvec3distModel
+#define qaldistv3Model	aldistv3Model
 
 #define qalcCreateContext	alcCreateContext
 #define qalcMakeContextCurrent	alcMakeContextCurrent

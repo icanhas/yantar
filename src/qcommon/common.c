@@ -94,7 +94,7 @@ int	(*Q_VMftol)(void);
 #elif id386
 long	(QDECL *Q_ftol)(float f);
 int	(QDECL *Q_VMftol)(void);
-void	(QDECL *Q_SnapVector)(Vec3 vec);
+void	(QDECL *Q_snapv3)(Vec3 vec);
 #endif
 
 /* com_speeds times */
@@ -2486,9 +2486,9 @@ Com_Detectsse(void)
 	feat = Sys_GetProcessorFeatures();
 	if(feat & CF_SSE){
 		if(feat & CF_SSE2)
-			Q_SnapVector = qsnapvectorsse;
+			Q_snapv3 = qsnapv3sse;
 		else
-			Q_SnapVector = qsnapvectorx87;
+			Q_snapv3 = qsnapv3x87;
 		Q_ftol = qftolsse;
 #endif
 		Q_VMftol = qvmftolsse;
@@ -2497,7 +2497,7 @@ Com_Detectsse(void)
 	}else{
 		Q_ftol = qftolx87;
 		Q_VMftol = qvmftolx87;
-		Q_SnapVector = qsnapvectorx87;
+		Q_snapv3 = qsnapv3x87;
 		Com_Printf("No SSE support on this machine\n");
 	}
 #endif

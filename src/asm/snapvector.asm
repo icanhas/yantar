@@ -1,4 +1,3 @@
-; ===========================================================================
 ; Copyright (C) 2011 Thilo Schulz <thilo@tjps.eu>
 ; 
 ; This file is part of Quake III Arena source code.
@@ -16,13 +15,14 @@
 ; You should have received a copy of the GNU General Public License
 ; along with Quake III Arena source code; if not, write to the Free Software
 ; Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-; ===========================================================================
+
+; FIXME: this just appears to be pointless masturbation
 
 ; MASM version of snapvector conversion function using SSE or FPU
 ; assume __cdecl calling convention is being used for x86, __fastcall for x64
 ;
 ; function prototype:
-; void qsnapvector(vec3_t vec)
+; void qsnapv3sse(vec3_t vec)
 
 IFNDEF idx64
 .model flat, c
@@ -43,7 +43,7 @@ ENDIF
 IFDEF idx64
 ; qsnapvector using SSE
 
-  qsnapvectorsse PROC
+  qsnapv3sse PROC
     sub rsp, 8
 	movaps xmm1, ssemask		; initialize the mask register
 	movups xmm0, [rcx]			; here is stored our vector. Read 4 values in one go
@@ -55,11 +55,11 @@ IFDEF idx64
 	orps xmm0, xmm1				; combine all 4 values again
 	movups [rcx], xmm0			; write 3 rounded and 1 unchanged values back to memory
 	ret
-  qsnapvectorsse ENDP
+  qsnapv3sse ENDP
 
 ELSE
 
-  qsnapvectorsse PROC
+  qsnapv3sse PROC
 	mov eax, dword ptr 4[esp]		; store address of vector in eax
 	movaps xmm1, ssemask			; initialize the mask register for maskmovdqu
 	movups xmm0, [eax]			; here is stored our vector. Read 4 values in one go
@@ -71,7 +71,7 @@ ELSE
 	orps xmm0, xmm1				; combine all 4 values again
 	movups [eax], xmm0			; write 3 rounded and 1 unchanged values back to memory
 	ret
-  qsnapvectorsse ENDP
+  qsnapv3sse ENDP
 
   qroundx87 macro src
 	fld dword ptr src
@@ -80,13 +80,13 @@ ELSE
 	fstp dword ptr src
   endm    
 
-  qsnapvectorx87 PROC
+  qsnapv3x87 PROC
 	mov eax, dword ptr 4[esp]
 	qroundx87 [eax]
 	qroundx87 4[eax]
 	qroundx87 8[eax]
 	ret
-  qsnapvectorx87 ENDP
+  qsnapv3x87 ENDP
 
 ENDIF
 

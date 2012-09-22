@@ -27,7 +27,7 @@
 void
 InitTrigger(gentity_t *self)
 {
-	if(!vec3cmp (self->s.angles, vec3_origin))
+	if(!cmpv3 (self->s.angles, vec3_origin))
 		G_SetMovedir (self->s.angles, self->movedir);
 
 	trap_SetBrushModel(self, self->model);
@@ -174,8 +174,8 @@ AimAtTarget(gentity_t *self)
 	float	height, gravity, time, forward;
 	float	dist;
 
-	vec3add(self->r.absmin, self->r.absmax, origin);
-	vec3scale (origin, 0.5, origin);
+	addv3(self->r.absmin, self->r.absmax, origin);
+	scalev3 (origin, 0.5, origin);
 
 	ent = G_PickTarget(self->target);
 	if(!ent){
@@ -192,12 +192,12 @@ AimAtTarget(gentity_t *self)
 	}
 
 	/* set s.origin2 to the push velocity */
-	vec3sub (ent->s.origin, origin, self->s.origin2);
+	subv3 (ent->s.origin, origin, self->s.origin2);
 	self->s.origin2[2] = 0;
-	dist = vec3normalize(self->s.origin2);
+	dist = normv3(self->s.origin2);
 
 	forward = dist / time;
-	vec3scale(self->s.origin2, forward, self->s.origin2);
+	scalev3(self->s.origin2, forward, self->s.origin2);
 
 	self->s.origin2[2] = time * gravity;
 }
@@ -237,7 +237,7 @@ Use_target_push(gentity_t *self, gentity_t *other, gentity_t *activator)
 	if(activator->client->ps.powerups[PW_FLIGHT])
 		return;
 
-	vec3copy (self->s.origin2, activator->client->ps.velocity);
+	copyv3 (self->s.origin2, activator->client->ps.velocity);
 
 	/* play fly sound every 1.5 seconds */
 	if(activator->fly_sound_debounce_time < level.time){
@@ -257,15 +257,15 @@ SP_target_push(gentity_t *self)
 	if(!self->speed)
 		self->speed = 1000;
 	G_SetMovedir (self->s.angles, self->s.origin2);
-	vec3scale (self->s.origin2, self->speed, self->s.origin2);
+	scalev3 (self->s.origin2, self->speed, self->s.origin2);
 
 	if(self->spawnflags & 1)
 		self->noise_index = G_SoundIndex(Pworldsounds "/jumppad");
 	else
 		self->noise_index = G_SoundIndex(Pmiscsounds "/windfly");
 	if(self->target){
-		vec3copy(self->s.origin, self->r.absmin);
-		vec3copy(self->s.origin, self->r.absmax);
+		copyv3(self->s.origin, self->r.absmin);
+		copyv3(self->s.origin, self->r.absmax);
 		self->think = AimAtTarget;
 		self->nextthink = level.time + FRAMETIME;
 	}

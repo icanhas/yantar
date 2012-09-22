@@ -498,8 +498,8 @@ AAS_AreaTravelTime(int areanum, Vec3 start, Vec3 end)
 	float	dist;
 	Vec3	dir;
 
-	vec3sub(start, end, dir);
-	dist = vec3len(dir);
+	subv3(start, end, dir);
+	dist = lenv3(dir);
 	/* if crouch only area */
 	if(AAS_AreaCrouch(areanum)) dist *= DISTANCEFACTOR_CROUCH;
 	/* if swim area */
@@ -574,7 +574,7 @@ AAS_CalculateAreaTravelTimes(void)
 			/*  */
 			for(n = 0, revlink = revreach->first; revlink;
 			    revlink = revlink->next, n++){
-				vec3copy(
+				copyv3(
 					aasworld.reachability[revlink->
 							      linknum].end,
 					end);
@@ -1194,14 +1194,14 @@ AAS_InitReachabilityAreas(void)
 		/* trace areas from start to end */
 		case TRAVEL_BARRIERJUMP:
 		case TRAVEL_WATERJUMP:
-			vec3copy(reach->start, end);
+			copyv3(reach->start, end);
 			end[2]		= reach->end[2];
 			numareas	= AAS_TraceAreas(
 				reach->start, end, areas, NULL,
 				MAX_REACHABILITYPASSAREAS);
 			break;
 		case TRAVEL_WALKOFFLEDGE:
-			vec3copy(reach->end, start);
+			copyv3(reach->end, start);
 			start[2]	= reach->start[2];
 			numareas	= AAS_TraceAreas(
 				start, reach->end, areas, NULL,
@@ -1359,7 +1359,7 @@ AAS_UpdateAreaRoutingCache(aas_routingcache_t *areacache)
 	/*  */
 	curupdate = &aasworld.areaupdate[clusterareanum];
 	curupdate->areanum = areacache->areanum;
-	/* vec3copy(areacache->origin, curupdate->start); */
+	/* copyv3(areacache->origin, curupdate->start); */
 	curupdate->areatraveltimes	= startareatraveltimes;
 	curupdate->tmptraveltime	= areacache->starttraveltime;
 	/*  */
@@ -1423,7 +1423,7 @@ AAS_UpdateAreaRoutingCache(aas_routingcache_t *areacache)
 					&aasworld.areaupdate[clusterareanum];
 				nextupdate->areanum = nextareanum;
 				nextupdate->tmptraveltime = t;
-				/* vec3copy(reach->start, nextupdate->start); */
+				/* copyv3(reach->start, nextupdate->start); */
 				nextupdate->areatraveltimes =
 					aasworld.areatraveltimes[nextareanum][
 						linknum -
@@ -1473,7 +1473,7 @@ AAS_GetAreaRoutingCache(int clusternum, int areanum, int travelflags)
 			aasworld.clusters[clusternum].numreachabilityareas);
 		cache->cluster	= clusternum;
 		cache->areanum	= areanum;
-		vec3copy(aasworld.areas[areanum].center, cache->origin);
+		copyv3(aasworld.areas[areanum].center, cache->origin);
 		cache->starttraveltime = 1;
 		cache->travelflags = travelflags;
 		cache->prev	= NULL;
@@ -1608,7 +1608,7 @@ AAS_GetPortalRoutingCache(int clusternum, int areanum, int travelflags)
 		cache = AAS_AllocRoutingCache(aasworld.numportals);
 		cache->cluster	= clusternum;
 		cache->areanum	= areanum;
-		vec3copy(aasworld.areas[areanum].center, cache->origin);
+		copyv3(aasworld.areas[areanum].center, cache->origin);
 		cache->starttraveltime = 1;
 		cache->travelflags = travelflags;
 		/* add the cache to the cache list */
@@ -1863,11 +1863,11 @@ AAS_PredictRoute(struct aas_predictroute_s *route, int areanum, Vec3 origin,
 	route->endarea		= goalareanum;
 	route->endcontents	= 0;
 	route->endtravelflags = 0;
-	vec3copy(origin, route->endpos);
+	copyv3(origin, route->endpos);
 	route->time = 0;
 
 	curareanum = areanum;
-	vec3copy(origin, curorigin);
+	copyv3(origin, curorigin);
 
 	for(i = 0;
 	    curareanum != goalareanum &&
@@ -1893,7 +1893,7 @@ AAS_PredictRoute(struct aas_predictroute_s *route, int areanum, Vec3 origin,
 				route->endtravelflags =
 					AAS_TravelFlagForType_inline(
 						reach->traveltype);
-				vec3copy(reach->start, route->endpos);
+				copyv3(reach->start, route->endpos);
 				return qtrue;
 			}
 			if(AAS_AreaContentsTravelFlags_inline(reach->areanum) &
@@ -1906,7 +1906,7 @@ AAS_PredictRoute(struct aas_predictroute_s *route, int areanum, Vec3 origin,
 				route->endtravelflags =
 					AAS_AreaContentsTravelFlags_inline(
 						reach->areanum);
-				vec3copy(reach->end, route->endpos);
+				copyv3(reach->end, route->endpos);
 				route->time += AAS_AreaTravelTime(
 					areanum, origin, reach->start);
 				route->time += reach->traveltime;
@@ -1933,7 +1933,7 @@ AAS_PredictRoute(struct aas_predictroute_s *route, int areanum, Vec3 origin,
 						aasworld.areasettings[
 							testareanum].
 						contents;
-					vec3copy(reach->end, route->endpos);
+					copyv3(reach->end, route->endpos);
 					route->time += AAS_AreaTravelTime(
 						areanum, origin, reach->start);
 					route->time += reach->traveltime;
@@ -1947,7 +1947,7 @@ AAS_PredictRoute(struct aas_predictroute_s *route, int areanum, Vec3 origin,
 						aasworld.areasettings[
 							testareanum].
 						contents;
-					vec3copy(reach->start, route->endpos);
+					copyv3(reach->start, route->endpos);
 					return qtrue;
 				}
 		}
@@ -1960,10 +1960,10 @@ AAS_PredictRoute(struct aas_predictroute_s *route, int areanum, Vec3 origin,
 			aasworld.areasettings[reach->areanum].contents;
 		route->endtravelflags = AAS_TravelFlagForType_inline(
 			reach->traveltype);
-		vec3copy(reach->end, route->endpos);
+		copyv3(reach->end, route->endpos);
 		/*  */
 		curareanum = reach->areanum;
-		vec3copy(reach->end, curorigin);
+		copyv3(reach->end, curorigin);
 		/*  */
 		if(maxtime && route->time > maxtime)
 			break;
@@ -2094,18 +2094,18 @@ AAS_RandomGoalArea(int areanum, int travelflags, int *goalareanum,
 			if(t > 0){
 				if(AAS_AreaSwim(n)){
 					*goalareanum = n;
-					vec3copy(aasworld.areas[n].center,
+					copyv3(aasworld.areas[n].center,
 						goalorigin);
 					/* botimport.Print(PRT_MESSAGE, "found random goal area %d\n", *goalareanum); */
 					return qtrue;
 				}
-				vec3copy(aasworld.areas[n].center, start);
+				copyv3(aasworld.areas[n].center, start);
 				if(!AAS_PointAreaNum(start))
 					Log_Write(
 						"area %d center %f %f %f in solid?",
 						n,
 						start[0], start[1], start[2]);
-				vec3copy(start, end);
+				copyv3(start, end);
 				end[2]	-= 300;
 				trace	=
 					AAS_TraceClientBBox(start, end,
@@ -2115,7 +2115,7 @@ AAS_RandomGoalArea(int areanum, int travelflags, int *goalareanum,
 				   AAS_PointAreaNum(trace.endpos) == n)
 					if(AAS_AreaGroundFaceArea(n) > 300){
 						*goalareanum = n;
-						vec3copy(trace.endpos,
+						copyv3(trace.endpos,
 							goalorigin);
 						/* botimport.Print(PRT_MESSAGE, "found random goal area %d\n", *goalareanum); */
 						return qtrue;
@@ -2144,14 +2144,14 @@ AAS_AreaVisible(int srcarea, int destarea)
  * Changes Globals:		-
  * =========================================================================== */
 float
-Vec3vec3distPointToLine(Vec3 v1, Vec3 v2, Vec3 point)
+Vec3distv3PointToLine(Vec3 v1, Vec3 v2, Vec3 point)
 {
 	Vec3 vec, p2;
 
 	AAS_ProjectPointOntoVector(point, v1, v2, p2);
-	vec3sub(point, p2, vec);
-	return vec3len(vec);
-}	/* end of the function Vec3vec3distPointToLine */
+	subv3(point, p2, vec);
+	return lenv3(vec);
+}	/* end of the function Vec3distv3PointToLine */
 /* ===========================================================================
  *
  * Parameter:			-
@@ -2189,7 +2189,7 @@ AAS_NearestHideArea(int srcnum, Vec3 origin, int areanum, int enemynum,
 	/*  */
 	curupdate = &aasworld.areaupdate[areanum];
 	curupdate->areanum = areanum;
-	vec3copy(origin, curupdate->start);
+	copyv3(origin, curupdate->start);
 	curupdate->areatraveltimes	= aasworld.areatraveltimes[areanum][0];
 	curupdate->tmptraveltime	= 0;
 	/* put the area to start with in the current read list */
@@ -2245,15 +2245,15 @@ AAS_NearestHideArea(int srcnum, Vec3 origin, int areanum, int enemynum,
 				    reach->end[j]))
 					break;
 			if(j < 3)
-				vec3sub(enemyorigin, reach->end, v2);
+				subv3(enemyorigin, reach->end, v2);
 			else
-				vec3sub(enemyorigin, p, v2);
-			dist2 = vec3len(v2);
+				subv3(enemyorigin, p, v2);
+			dist2 = lenv3(v2);
 			/* never go through the enemy */
 			if(dist2 < 40) continue;
 			/*  */
-			vec3sub(enemyorigin, curupdate->start, v1);
-			dist1 = vec3len(v1);
+			subv3(enemyorigin, curupdate->start, v1);
+			dist1 = lenv3(v1);
 			/*  */
 			if(dist2 < dist1)
 				t += (dist1 - dist2) * 10;
@@ -2276,7 +2276,7 @@ AAS_NearestHideArea(int srcnum, Vec3 origin, int areanum, int enemynum,
 				nextupdate->areanum = nextareanum;
 				nextupdate->tmptraveltime = t;
 				/* remember where we entered this area */
-				vec3copy(reach->end, nextupdate->start);
+				copyv3(reach->end, nextupdate->start);
 				/* if this update is not in the list yet */
 				if(!nextupdate->inlist){
 					/* add the new update to the end of the list */

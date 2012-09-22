@@ -102,7 +102,7 @@ CG_ClipMoveToEntities(const Vec3 start, const Vec3 mins, const Vec3 maxs,
 		if(ent->solid == SOLID_BMODEL){
 			/* special value for bmodel */
 			cmodel = trap_CM_InlineModel(ent->modelindex);
-			vec3copy(cent->lerpAngles, angles);
+			copyv3(cent->lerpAngles, angles);
 			BG_EvaluateTrajectory(&cent->currentState.pos,
 				cg.physicsTime,
 				origin);
@@ -118,8 +118,8 @@ CG_ClipMoveToEntities(const Vec3 start, const Vec3 mins, const Vec3 maxs,
 			bmaxs[2]	= zu;
 
 			cmodel = trap_CM_TempBoxModel(bmins, bmaxs);
-			vec3copy(vec3_origin, angles);
-			vec3copy(cent->lerpOrigin, origin);
+			copyv3(vec3_origin, angles);
+			copyv3(cent->lerpOrigin, origin);
 		}
 
 
@@ -246,7 +246,7 @@ CG_InterpolatePlayerState(qbool grabAngles)
 		out->origin[i] = prev->ps.origin[i] + f *
 				 (next->ps.origin[i] - prev->ps.origin[i]);
 		if(!grabAngles)
-			out->viewangles[i] = lerpangle(
+			out->viewangles[i] = lerpeuler(
 				prev->ps.viewangles[i], next->ps.viewangles[i],
 				f);
 		out->velocity[i] = prev->ps.velocity[i] +
@@ -520,7 +520,7 @@ CG_PredictPlayerState(void)
 
 			if(cg.thisFrameTeleport){
 				/* a teleport will not cause an error decay */
-				vec3clear(cg.predictedError);
+				clearv3(cg.predictedError);
 				if(cg_showmiss.integer)
 					CG_Printf("PredictionTeleport\n");
 				cg.thisFrameTeleport = qfalse;
@@ -532,12 +532,12 @@ CG_PredictPlayerState(void)
 					cg.physicsTime, cg.oldTime, adjusted);
 
 				if(cg_showmiss.integer)
-					if(!vec3cmp(oldPlayerState.origin,
+					if(!cmpv3(oldPlayerState.origin,
 						   adjusted))
 						CG_Printf("prediction error\n");
-				vec3sub(oldPlayerState.origin, adjusted,
+				subv3(oldPlayerState.origin, adjusted,
 					delta);
-				len = vec3len(delta);
+				len = lenv3(delta);
 				if(len > 0.1){
 					if(cg_showmiss.integer)
 						CG_Printf(
@@ -559,11 +559,11 @@ CG_PredictPlayerState(void)
 							CG_Printf(
 								"Double prediction decay: %f\n",
 								f);
-						vec3scale(cg.predictedError, f,
+						scalev3(cg.predictedError, f,
 							cg.predictedError);
 					}else
-						vec3clear(cg.predictedError);
-					vec3add(delta, cg.predictedError,
+						clearv3(cg.predictedError);
+					addv3(delta, cg.predictedError,
 						cg.predictedError);
 					cg.predictedErrorTime = cg.oldTime;
 				}

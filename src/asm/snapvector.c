@@ -32,7 +32,7 @@ static unsigned char ssemask[16] __attribute__((aligned(16))) =
 };
 
 void
-qsnapvectorsse(Vec3 vec)
+qsnapv3sse(Vec3 vec)
 {
 	__asm__ volatile
 	(
@@ -59,7 +59,7 @@ qsnapvectorsse(Vec3 vec)
 					       "fstps " src "\n"
 
 void
-qsnapvectorx87(Vec3 vec)
+qsnapv3x87(Vec3 vec)
 {
 	__asm__ volatile
 	(

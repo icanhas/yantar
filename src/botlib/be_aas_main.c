@@ -301,11 +301,11 @@ AAS_ProjectPointOntoVector(Vec3 point, Vec3 vStart, Vec3 vEnd,
 {
 	Vec3 pVec, vec;
 
-	vec3sub(point, vStart, pVec);
-	vec3sub(vEnd, vStart, vec);
-	vec3normalize(vec);
+	subv3(point, vStart, pVec);
+	subv3(vEnd, vStart, vec);
+	normv3(vec);
 	/* project onto the directional vector for this segment */
-	vec3ma(vStart, vec3dot(pVec, vec), vec, vProj);
+	maddv3(vStart, dotv3(pVec, vec), vec, vProj);
 }	/* end of the function AAS_ProjectPointOntoVector */
 /* ===========================================================================
  *

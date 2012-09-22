@@ -466,8 +466,8 @@ Controls_GetCvarValue(char* name)
 static void
 Controls_UpdateModel(int anim)
 {
-	vec3clear(s_controls.playerViewangles);
-	vec3clear(s_controls.playerMoveangles);
+	clearv3(s_controls.playerViewangles);
+	clearv3(s_controls.playerMoveangles);
 	s_controls.playerViewangles[YAW] = 180 - 30;
 	s_controls.playerMoveangles[YAW] =
 		s_controls.playerViewangles[YAW];

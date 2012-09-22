@@ -40,15 +40,15 @@ CG_BubbleTrail(Vec3 start, Vec3 end, float spacing)
 	if(cg_noProjectileTrail.integer)
 		return;
 
-	vec3copy (start, move);
-	vec3sub (end, start, vec);
-	len = vec3normalize (vec);
+	copyv3 (start, move);
+	subv3 (end, start, vec);
+	len = normv3 (vec);
 
 	/* advance a random amount first */
 	i = rand() % (int)spacing;
-	vec3ma(move, i, vec, move);
+	maddv3(move, i, vec, move);
 
-	vec3scale (vec, spacing, vec);
+	scalev3 (vec, spacing, vec);
 
 	for(; i < len; i += spacing){
 		localEntity_t *le;
@@ -77,12 +77,12 @@ CG_BubbleTrail(Vec3 start, Vec3 end, float spacing)
 
 		le->pos.trType	= TR_LINEAR;
 		le->pos.trTime	= cg.time;
-		vec3copy(move, le->pos.trBase);
+		copyv3(move, le->pos.trBase);
 		le->pos.trDelta[0]	= crandom()*5;
 		le->pos.trDelta[1]	= crandom()*5;
 		le->pos.trDelta[2]	= crandom()*5 + 6;
 
-		vec3add (move, vec, move);
+		addv3 (move, vec, move);
 	}
 }
 
@@ -131,10 +131,10 @@ CG_SmokePuff(const Vec3 p, const Vec3 vel,
 
 	le->pos.trType	= TR_LINEAR;
 	le->pos.trTime	= startTime;
-	vec3copy(vel, le->pos.trDelta);
-	vec3copy(p, le->pos.trBase);
+	copyv3(vel, le->pos.trDelta);
+	copyv3(p, le->pos.trBase);
 
-	vec3copy(p, re->origin);
+	copyv3(p, re->origin);
 	re->customShader = hShader;
 
 	/* rage pro can't alpha fade, so use a different shader */
@@ -186,9 +186,9 @@ CG_SpawnEffect(Vec3 org)
 	re->customShader = cgs.media.teleportEffectShader;
 #endif
 	re->hModel = cgs.media.teleportEffectModel;
-	axisclear(re->axis);
+	clearaxis(re->axis);
 
-	vec3copy(org, re->origin);
+	copyv3(org, re->origin);
 #ifdef MISSIONPACK
 	re->origin[2] += 16;
 #else
@@ -215,9 +215,9 @@ CG_LightningBoltBeam(Vec3 start, Vec3 end)
 
 	beam = &le->refEntity;
 
-	vec3copy(start, beam->origin);
+	copyv3(start, beam->origin);
 	/* this is the end point */
-	vec3copy(end, beam->oldorigin);
+	copyv3(end, beam->oldorigin);
 
 	beam->reType = RT_LIGHTNING;
 	beam->customShader = cgs.media.lightningShader;
@@ -241,7 +241,7 @@ CG_KamikazeEffect(Vec3 org)
 
 	le->color[0] = le->color[1] = le->color[2] = le->color[3] = 1.0;
 
-	vec3clear(le->angles.trBase);
+	clearv3(le->angles.trBase);
 
 	re = &le->refEntity;
 
@@ -250,7 +250,7 @@ CG_KamikazeEffect(Vec3 org)
 
 	re->hModel = cgs.media.kamikazeEffectModel;
 
-	vec3copy(org, re->origin);
+	copyv3(org, re->origin);
 
 }
 
@@ -264,7 +264,7 @@ CG_ObeliskExplode(Vec3 org, int entityNum)
 	Vec3 origin;
 
 	/* create an explosion */
-	vec3copy(org, origin);
+	copyv3(org, origin);
 	origin[2] += 64;
 	le = CG_MakeExplosion(origin, vec3_origin,
 		cgs.media.dishFlashModel,
@@ -324,8 +324,8 @@ CG_InvulnerabilityImpact(Vec3 org, Vec3 angles)
 
 	re->hModel = cgs.media.invulnerabilityImpactModel;
 
-	vec3copy(org, re->origin);
-	euler2axis(angles, re->axis);
+	copyv3(org, re->origin);
+	eulertoaxis(angles, re->axis);
 
 	r = rand() & 3;
 	if(r < 2)
@@ -363,9 +363,9 @@ CG_InvulnerabilityJuiced(Vec3 org)
 
 	re->hModel = cgs.media.invulnerabilityJuicedModel;
 
-	vec3copy(org, re->origin);
-	vec3clear(angles);
-	euler2axis(angles, re->axis);
+	copyv3(org, re->origin);
+	clearv3(angles);
+	eulertoaxis(angles, re->axis);
 
 	trap_S_StartSound (org, ENTITYNUM_NONE, CHAN_BODY,
 		cgs.media.invulnerabilityJuicedSound);
@@ -400,12 +400,12 @@ CG_ScorePlum(int client, Vec3 org, int score)
 	le->color[0]	= le->color[1] = le->color[2] = le->color[3] = 1.0;
 	le->radius	= score;
 
-	vec3copy(org, le->pos.trBase);
+	copyv3(org, le->pos.trBase);
 	if(org[2] >= lastPos[2] - 20 && org[2] <= lastPos[2] + 20)
 		le->pos.trBase[2] -= 20;
 
-	/* CG_Printf( "Plum origin %i %i %i -- %i\n", (int)org[0], (int)org[1], (int)org[2], (int)vec3dist(org, lastPos)); */
-	vec3copy(org, lastPos);
+	/* CG_Printf( "Plum origin %i %i %i -- %i\n", (int)org[0], (int)org[1], (int)org[2], (int)distv3(org, lastPos)); */
+	copyv3(org, lastPos);
 
 
 	re = &le->refEntity;
@@ -413,8 +413,8 @@ CG_ScorePlum(int client, Vec3 org, int score)
 	re->reType	= RT_SPRITE;
 	re->radius	= 16;
 
-	vec3clear(angles);
-	euler2axis(angles, re->axis);
+	clearv3(angles);
+	eulertoaxis(angles, re->axis);
 }
 
 
@@ -443,18 +443,18 @@ CG_MakeExplosion(Vec3 origin, Vec3 dir,
 
 		/* randomly rotate sprite orientation */
 		ex->refEntity.rotation = rand() % 360;
-		vec3scale(dir, 16, tmpVec);
-		vec3add(tmpVec, origin, newOrigin);
+		scalev3(dir, 16, tmpVec);
+		addv3(tmpVec, origin, newOrigin);
 	}else{
 		ex->leType = LE_EXPLOSION;
-		vec3copy(origin, newOrigin);
+		copyv3(origin, newOrigin);
 
 		/* set axis with random rotate */
 		if(!dir)
-			axisclear(ex->refEntity.axis);
+			clearaxis(ex->refEntity.axis);
 		else{
 			ang = rand() % 360;
-			vec3copy(dir, ex->refEntity.axis[0]);
+			copyv3(dir, ex->refEntity.axis[0]);
 			RotateAroundDirection(ex->refEntity.axis, ang);
 		}
 	}
@@ -469,8 +469,8 @@ CG_MakeExplosion(Vec3 origin, Vec3 dir,
 	ex->refEntity.customShader = shader;
 
 	/* set origin */
-	vec3copy(newOrigin, ex->refEntity.origin);
-	vec3copy(newOrigin, ex->refEntity.oldorigin);
+	copyv3(newOrigin, ex->refEntity.origin);
+	copyv3(newOrigin, ex->refEntity.oldorigin);
 
 	ex->color[0] = ex->color[1] = ex->color[2] = 1.0;
 
@@ -497,7 +497,7 @@ CG_Bleed(Vec3 origin, int entityNum)
 	ex->startTime	= cg.time;
 	ex->endTime	= ex->startTime + 500;
 
-	vec3copy (origin, ex->refEntity.origin);
+	copyv3 (origin, ex->refEntity.origin);
 	ex->refEntity.reType = RT_SPRITE;
 	ex->refEntity.rotation	= rand() % 360;
 	ex->refEntity.radius	= 24;
@@ -527,13 +527,13 @@ CG_LaunchGib(Vec3 origin, Vec3 velocity, qhandle_t hModel)
 	le->startTime	= cg.time;
 	le->endTime	= le->startTime + 5000 + random() * 3000;
 
-	vec3copy(origin, re->origin);
-	axiscopy(axisDefault, re->axis);
+	copyv3(origin, re->origin);
+	copyaxis(axisDefault, re->axis);
 	re->hModel = hModel;
 
 	le->pos.trType = TR_GRAVITY;
-	vec3copy(origin, le->pos.trBase);
-	vec3copy(velocity, le->pos.trDelta);
+	copyv3(origin, le->pos.trBase);
+	copyv3(velocity, le->pos.trDelta);
 	le->pos.trTime = cg.time;
 
 	le->bounceFactor = 0.6f;
@@ -557,7 +557,7 @@ CG_GibPlayer(Vec3 playerOrigin)
 	if(!cg_blood.integer)
 		return;
 
-	vec3copy(playerOrigin, origin);
+	copyv3(playerOrigin, origin);
 	velocity[0]	= crandom()*GIB_VELOCITY;
 	velocity[1]	= crandom()*GIB_VELOCITY;
 	velocity[2]	= GIB_JUMP + crandom()*GIB_VELOCITY;
@@ -570,55 +570,55 @@ CG_GibPlayer(Vec3 playerOrigin)
 	if(!cg_gibs.integer)
 		return;
 
-	vec3copy(playerOrigin, origin);
+	copyv3(playerOrigin, origin);
 	velocity[0]	= crandom()*GIB_VELOCITY;
 	velocity[1]	= crandom()*GIB_VELOCITY;
 	velocity[2]	= GIB_JUMP + crandom()*GIB_VELOCITY;
 	CG_LaunchGib(origin, velocity, cgs.media.gibAbdomen);
 
-	vec3copy(playerOrigin, origin);
+	copyv3(playerOrigin, origin);
 	velocity[0]	= crandom()*GIB_VELOCITY;
 	velocity[1]	= crandom()*GIB_VELOCITY;
 	velocity[2]	= GIB_JUMP + crandom()*GIB_VELOCITY;
 	CG_LaunchGib(origin, velocity, cgs.media.gibArm);
 
-	vec3copy(playerOrigin, origin);
+	copyv3(playerOrigin, origin);
 	velocity[0]	= crandom()*GIB_VELOCITY;
 	velocity[1]	= crandom()*GIB_VELOCITY;
 	velocity[2]	= GIB_JUMP + crandom()*GIB_VELOCITY;
 	CG_LaunchGib(origin, velocity, cgs.media.gibChest);
 
-	vec3copy(playerOrigin, origin);
+	copyv3(playerOrigin, origin);
 	velocity[0]	= crandom()*GIB_VELOCITY;
 	velocity[1]	= crandom()*GIB_VELOCITY;
 	velocity[2]	= GIB_JUMP + crandom()*GIB_VELOCITY;
 	CG_LaunchGib(origin, velocity, cgs.media.gibFist);
 
-	vec3copy(playerOrigin, origin);
+	copyv3(playerOrigin, origin);
 	velocity[0]	= crandom()*GIB_VELOCITY;
 	velocity[1]	= crandom()*GIB_VELOCITY;
 	velocity[2]	= GIB_JUMP + crandom()*GIB_VELOCITY;
 	CG_LaunchGib(origin, velocity, cgs.media.gibFoot);
 
-	vec3copy(playerOrigin, origin);
+	copyv3(playerOrigin, origin);
 	velocity[0]	= crandom()*GIB_VELOCITY;
 	velocity[1]	= crandom()*GIB_VELOCITY;
 	velocity[2]	= GIB_JUMP + crandom()*GIB_VELOCITY;
 	CG_LaunchGib(origin, velocity, cgs.media.gibForearm);
 
-	vec3copy(playerOrigin, origin);
+	copyv3(playerOrigin, origin);
 	velocity[0]	= crandom()*GIB_VELOCITY;
 	velocity[1]	= crandom()*GIB_VELOCITY;
 	velocity[2]	= GIB_JUMP + crandom()*GIB_VELOCITY;
 	CG_LaunchGib(origin, velocity, cgs.media.gibIntestine);
 
-	vec3copy(playerOrigin, origin);
+	copyv3(playerOrigin, origin);
 	velocity[0]	= crandom()*GIB_VELOCITY;
 	velocity[1]	= crandom()*GIB_VELOCITY;
 	velocity[2]	= GIB_JUMP + crandom()*GIB_VELOCITY;
 	CG_LaunchGib(origin, velocity, cgs.media.gibLeg);
 
-	vec3copy(playerOrigin, origin);
+	copyv3(playerOrigin, origin);
 	velocity[0]	= crandom()*GIB_VELOCITY;
 	velocity[1]	= crandom()*GIB_VELOCITY;
 	velocity[2]	= GIB_JUMP + crandom()*GIB_VELOCITY;
@@ -641,13 +641,13 @@ CG_LaunchExplode(Vec3 origin, Vec3 velocity, qhandle_t hModel)
 	le->startTime	= cg.time;
 	le->endTime	= le->startTime + 10000 + random() * 6000;
 
-	vec3copy(origin, re->origin);
-	axiscopy(axisDefault, re->axis);
+	copyv3(origin, re->origin);
+	copyaxis(axisDefault, re->axis);
 	re->hModel = hModel;
 
 	le->pos.trType = TR_GRAVITY;
-	vec3copy(origin, le->pos.trBase);
-	vec3copy(velocity, le->pos.trDelta);
+	copyv3(origin, le->pos.trBase);
+	copyv3(velocity, le->pos.trDelta);
 	le->pos.trTime = cg.time;
 
 	le->bounceFactor = 0.1f;
@@ -671,31 +671,31 @@ CG_BigExplode(Vec3 playerOrigin)
 	if(!cg_blood.integer)
 		return;
 
-	vec3copy(playerOrigin, origin);
+	copyv3(playerOrigin, origin);
 	velocity[0]	= crandom()*EXP_VELOCITY;
 	velocity[1]	= crandom()*EXP_VELOCITY;
 	velocity[2]	= EXP_JUMP + crandom()*EXP_VELOCITY;
 	CG_LaunchExplode(origin, velocity, cgs.media.smoke2);
 
-	vec3copy(playerOrigin, origin);
+	copyv3(playerOrigin, origin);
 	velocity[0]	= crandom()*EXP_VELOCITY;
 	velocity[1]	= crandom()*EXP_VELOCITY;
 	velocity[2]	= EXP_JUMP + crandom()*EXP_VELOCITY;
 	CG_LaunchExplode(origin, velocity, cgs.media.smoke2);
 
-	vec3copy(playerOrigin, origin);
+	copyv3(playerOrigin, origin);
 	velocity[0]	= crandom()*EXP_VELOCITY*1.5;
 	velocity[1]	= crandom()*EXP_VELOCITY*1.5;
 	velocity[2]	= EXP_JUMP + crandom()*EXP_VELOCITY;
 	CG_LaunchExplode(origin, velocity, cgs.media.smoke2);
 
-	vec3copy(playerOrigin, origin);
+	copyv3(playerOrigin, origin);
 	velocity[0]	= crandom()*EXP_VELOCITY*2.0;
 	velocity[1]	= crandom()*EXP_VELOCITY*2.0;
 	velocity[2]	= EXP_JUMP + crandom()*EXP_VELOCITY;
 	CG_LaunchExplode(origin, velocity, cgs.media.smoke2);
 
-	vec3copy(playerOrigin, origin);
+	copyv3(playerOrigin, origin);
 	velocity[0]	= crandom()*EXP_VELOCITY*2.5;
 	velocity[1]	= crandom()*EXP_VELOCITY*2.5;
 	velocity[2]	= EXP_JUMP + crandom()*EXP_VELOCITY;

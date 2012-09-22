@@ -382,18 +382,18 @@ GL_State(unsigned long stateBits)
 
 
 void
-GL_SetProjectionMatrix(Mat44 matrix)
+GL_SetProjectionMatrix(Mat4 matrix)
 {
-	mat44copy(matrix, glState.projection);
-	mat44mul(glState.projection, glState.modelview, glState.modelviewProjection);
+	copym4(matrix, glState.projection);
+	mulm4(glState.projection, glState.modelview, glState.modelviewProjection);
 }
 
 
 void
-GL_SetModelviewMatrix(Mat44 matrix)
+GL_SetModelviewMatrix(Mat4 matrix)
 {
-	mat44copy(matrix, glState.modelview);
-	mat44mul(glState.projection, glState.modelview, glState.modelviewProjection);
+	copym4(matrix, glState.modelview);
+	mulm4(glState.projection, glState.modelview, glState.modelviewProjection);
 }
 
 
@@ -521,10 +521,10 @@ RB_BeginDrawingView(void)
 		plane[2] = backEnd.viewParms.portalPlane.normal[2];
 		plane[3] = backEnd.viewParms.portalPlane.dist;
 
-		plane2[0] = vec3dot (backEnd.viewParms.or.axis[0], plane);
-		plane2[1] = vec3dot (backEnd.viewParms.or.axis[1], plane);
-		plane2[2] = vec3dot (backEnd.viewParms.or.axis[2], plane);
-		plane2[3] = vec3dot (plane, backEnd.viewParms.or.origin) - plane[3];
+		plane2[0] = dotv3 (backEnd.viewParms.or.axis[0], plane);
+		plane2[1] = dotv3 (backEnd.viewParms.or.axis[1], plane);
+		plane2[2] = dotv3 (backEnd.viewParms.or.axis[2], plane);
+		plane2[3] = dotv3 (plane, backEnd.viewParms.or.origin) - plane[3];
 
 		GL_SetModelviewMatrix(s_flipMatrix);
 	}
@@ -647,7 +647,7 @@ RB_RenderDrawSurfList(drawSurf_t *drawSurfs, int numDrawSurfs)
 				if(backEnd.currentEntity->e.renderfx & RF_SUNFLARE){
 					/* if we're rendering to a fbo */
 					if(fbo){
-						vec3copy(backEnd.currentEntity->e.origin,
+						copyv3(backEnd.currentEntity->e.origin,
 							backEnd.sunFlarePos);
 						/* switch FBO */
 						FBO_Bind(tr.godRaysFbo);
@@ -790,7 +790,7 @@ RB_RenderDrawSurfList(drawSurf_t *drawSurfs, int numDrawSurfs)
 void
 RB_SetGL2D(void)
 {
-	Mat44 matrix;
+	Mat4 matrix;
 	int width, height;
 
 	if(backEnd.projection2D && backEnd.last2DFBO == glState.currentFBO)
@@ -811,9 +811,9 @@ RB_SetGL2D(void)
 	qglViewport(0, 0, width, height);
 	qglScissor(0, 0, width, height);
 
-	mat44ortho(0, width, height, 0, 0, 1, matrix);
+	orthom4(0, width, height, 0, 0, 1, matrix);
 	GL_SetProjectionMatrix(matrix);
-	mat44ident(matrix);
+	identm4(matrix);
 	GL_SetModelviewMatrix(matrix);
 
 	GL_State(GLS_DEPTHTEST_DISABLE |
@@ -963,7 +963,7 @@ RE_StretchRaw(int x, int y, int w, int h, int cols, int rows, const byte *data, 
 
 	GLSL_SetUniformMatrix16(sp, TEXTURECOLOR_UNIFORM_MODELVIEWPROJECTIONMATRIX,
 		glState.modelviewProjection);
-	vec3set4(color, 1, 1, 1, 1);
+	setv34(color, 1, 1, 1, 1);
 	GLSL_SetUniformVec4(sp, TEXTURECOLOR_UNIFORM_COLOR, color);
 
 	qglDrawElements(GL_TRIANGLES, tess.numIndexes, GL_INDEX_TYPE, BUFFER_OFFSET(0));
@@ -1069,12 +1069,12 @@ RB_StretchPic(const void *data)
 	{
 		Vec4 color;
 
-		vec3scale4(backEnd.color2D, 1.0f / 255.0f, color);
+		scalev34(backEnd.color2D, 1.0f / 255.0f, color);
 
-		vec3copy4(color, tess.vertexColors[ numVerts ]);
-		vec3copy4(color, tess.vertexColors[ numVerts + 1]);
-		vec3copy4(color, tess.vertexColors[ numVerts + 2]);
-		vec3copy4(color, tess.vertexColors[ numVerts + 3 ]);
+		copyv34(color, tess.vertexColors[ numVerts ]);
+		copyv34(color, tess.vertexColors[ numVerts + 1]);
+		copyv34(color, tess.vertexColors[ numVerts + 2]);
+		copyv34(color, tess.vertexColors[ numVerts + 3 ]);
 	}
 
 	tess.xyz[ numVerts ][0] = cmd->x;
@@ -1199,10 +1199,10 @@ RB_ShowImages(void)
 
 			GL_Bind(image);
 
-			vec3set4(quadVerts[0], x, y, 0, 1);
-			vec3set4(quadVerts[1], x + w, y, 0, 1);
-			vec3set4(quadVerts[2], x + w, y + h, 0, 1);
-			vec3set4(quadVerts[3], x, y + h, 0, 1);
+			setv34(quadVerts[0], x, y, 0, 1);
+			setv34(quadVerts[1], x + w, y, 0, 1);
+			setv34(quadVerts[2], x + w, y + h, 0, 1);
+			setv34(quadVerts[3], x, y + h, 0, 1);
 
 			RB_InstantQuad(quadVerts);
 		}
@@ -1302,18 +1302,18 @@ RB_SwapBuffers(const void *data)
 				white[2] = pow(2, tr.overbrightBits);	/* exp2(tr.overbrightBits); */
 		white[3] = 1.0f;
 
-		vec3set4(dstBox, 0, 0, glConfig.vidWidth, glConfig.vidHeight);
+		setv34(dstBox, 0, 0, glConfig.vidWidth, glConfig.vidHeight);
 
 		if(backEnd.framePostProcessed){
 			/* frame was postprocessed into screen fbo, copy from there */
-			vec3set4(srcBox, 0, 0, tr.screenScratchFbo->width, tr.screenScratchFbo->height);
+			setv34(srcBox, 0, 0, tr.screenScratchFbo->width, tr.screenScratchFbo->height);
 
 			FBO_Blit(tr.screenScratchFbo, srcBox, texScale, NULL, dstBox, &tr.textureColorShader,
 				white,
 				0);
 		}else{
 			/* frame still in render fbo, copy from there */
-			vec3set4(srcBox, 0, 0, tr.renderFbo->width, tr.renderFbo->height);
+			setv34(srcBox, 0, 0, tr.renderFbo->width, tr.renderFbo->height);
 
 			FBO_Blit(tr.renderFbo, srcBox, texScale, NULL, dstBox, &tr.textureColorShader, white,
 				0);
@@ -1377,16 +1377,16 @@ RB_PostProcess(const void *data)
 	texScale[0] =
 		texScale[1] = 1.0f;
 
-	vec3set4(white, 1, 1, 1, 1);
+	setv34(white, 1, 1, 1, 1);
 
 	if(!r_postProcess->integer){
 		/* if we have an FBO, just copy it out, otherwise, do nothing. */
 		if(glRefConfig.framebufferObject){
 			Vec4 srcBox, dstBox, color;
 
-			vec3set4(srcBox, 0, 0, tr.renderFbo->width, tr.renderFbo->height);
-			/* vec3set4(dstBox, 0, 0, glConfig.vidWidth, glConfig.vidHeight); */
-			vec3set4(dstBox, 0, 0, tr.screenScratchFbo->width, tr.screenScratchFbo->height);
+			setv34(srcBox, 0, 0, tr.renderFbo->width, tr.renderFbo->height);
+			/* setv34(dstBox, 0, 0, glConfig.vidWidth, glConfig.vidHeight); */
+			setv34(dstBox, 0, 0, tr.screenScratchFbo->width, tr.screenScratchFbo->height);
 
 			color[0] =
 				color[1] =
@@ -1419,8 +1419,8 @@ RB_PostProcess(const void *data)
 	}else{
 		Vec4 srcBox, dstBox, color;
 
-		vec3set4(srcBox, 0, 0, tr.renderFbo->width, tr.renderFbo->height);
-		vec3set4(dstBox, 0, 0, tr.screenScratchFbo->width, tr.screenScratchFbo->height);
+		setv34(srcBox, 0, 0, tr.renderFbo->width, tr.renderFbo->height);
+		setv34(dstBox, 0, 0, tr.screenScratchFbo->width, tr.screenScratchFbo->height);
 
 		color[0] =
 			color[1] =
@@ -1446,8 +1446,8 @@ RB_PostProcess(const void *data)
  *              // copy final image to screen
  *              Vec4 srcBox, dstBox;
  *
- *              vec3set4(srcBox, 0, 0, tr.screenScratchFbo->width, tr.screenScratchFbo->height);
- *              vec3set4(dstBox, 0, 0, glConfig.vidWidth, glConfig.vidHeight);
+ *              setv34(srcBox, 0, 0, tr.screenScratchFbo->width, tr.screenScratchFbo->height);
+ *              setv34(dstBox, 0, 0, glConfig.vidWidth, glConfig.vidHeight);
  *
  *              FBO_Blit(tr.screenScratchFbo, srcBox, texScale, NULL, dstBox, &tr.textureColorShader, white, 0);
  *      }

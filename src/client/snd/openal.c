@@ -33,10 +33,10 @@ cvar_t *s_alGain;
 cvar_t *s_alSources;
 cvar_t *s_alDopplerFactor;
 cvar_t *s_alDopplerSpeed;
-cvar_t *s_alMinvec3dist;
-cvar_t *s_alMaxvec3dist;
+cvar_t *s_alMindistv3;
+cvar_t *s_alMaxdistv3;
 cvar_t *s_alRolloff;
-cvar_t *s_alGracevec3dist;
+cvar_t *s_alGracedistv3;
 cvar_t *s_alDriver;
 cvar_t *s_alDevice;
 cvar_t *s_alInputDevice;
@@ -537,7 +537,7 @@ _S_AL_SanitiseVector(Vec3 v, int line)
 			"WARNING: vector with one or more NaN components "
 			"being passed to OpenAL at %s:%d -- zeroing\n",
 			__FILE__, line);
-		vec3clear(v);
+		clearv3(v);
 	}
 }
 
@@ -569,17 +569,17 @@ S_AL_ScaleGain(src_t *chksrc, Vec3 origin)
 	float distance;
 
 	if(!chksrc->local)
-		distance = vec3dist(origin, lastListenerOrigin);
+		distance = distv3(origin, lastListenerOrigin);
 
 	/* If we exceed a certain distance, scale the gain linearly until the sound
 	 * vanishes into nothingness. */
-	if(!chksrc->local && (distance -= s_alMaxvec3dist->value) > 0){
+	if(!chksrc->local && (distance -= s_alMaxdistv3->value) > 0){
 		float scaleFactor;
 
-		if(distance >= s_alGracevec3dist->value)
+		if(distance >= s_alGracedistv3->value)
 			scaleFactor = 0.0f;
 		else
-			scaleFactor = 1.0f - distance / s_alGracevec3dist->value;
+			scaleFactor = 1.0f - distance / s_alGracedistv3->value;
 
 		scaleFactor *= chksrc->curGain;
 
@@ -608,7 +608,7 @@ S_AL_HearingThroughEntity(int entityNum)
 		 * can't ask cgame since that would involve changing the API and hence mod
 		 * compatibility. I don't think there is any way around this, but I'll leave
 		 * the FIXME just in case anyone has a bright idea. */
-		distanceSq = vec3distsquared(
+		distanceSq = distsqrv3(
 			entityList[ entityNum ].origin,
 			lastListenerOrigin);
 
@@ -730,7 +730,7 @@ S_AL_SrcSetup(srcHandle_t src, sfxHandle_t sfx, alSrcPriority_t priority,
 	qalSourcefv(curSource->alSource, AL_VELOCITY, vec3_origin);
 	qalSourcei(curSource->alSource, AL_LOOPING, AL_FALSE);
 	qalSourcef(curSource->alSource, AL_REFERENCE_DISTANCE,
-		s_alMinvec3dist->value);
+		s_alMindistv3->value);
 
 	if(local){
 		qalSourcei(curSource->alSource, AL_SOURCE_RELATIVE, AL_TRUE);
@@ -1043,12 +1043,12 @@ S_AL_UpdateEntityPosition(int entityNum, const Vec3 origin)
 {
 	Vec3 sanOrigin;
 
-	vec3copy(origin, sanOrigin);
+	copyv3(origin, sanOrigin);
 	S_AL_SanitiseVector(sanOrigin);
 	if(entityNum < 0 || entityNum > MAX_GENTITIES)
 		Com_Errorf(ERR_DROP, "S_UpdateEntityPosition: bad entitynum %i",
 			entityNum);
-	vec3copy(sanOrigin, entityList[entityNum].origin);
+	copyv3(sanOrigin, entityList[entityNum].origin);
 }
 
 /*
@@ -1118,7 +1118,7 @@ S_AL_StartSound(Vec3 origin, int entnum, int entchannel, sfxHandle_t sfx)
 		if(S_AL_CheckInput(0, sfx))
 			return;
 
-		vec3copy(origin, sorigin);
+		copyv3(origin, sorigin);
 	}else{
 		if(S_AL_CheckInput(entnum, sfx))
 			return;
@@ -1128,16 +1128,16 @@ S_AL_StartSound(Vec3 origin, int entnum, int entchannel, sfxHandle_t sfx)
 			return;
 		}
 
-		vec3copy(entityList[entnum].origin, sorigin);
+		copyv3(entityList[entnum].origin, sorigin);
 	}
 
 	S_AL_SanitiseVector(sorigin);
 
 	if((srcActiveCnt > 5 * srcCount / 3) &&
-	   (vec3distsquared(sorigin, lastListenerOrigin) >=
-	    (s_alMaxvec3dist->value +
-	     s_alGracevec3dist->value) *
-	    (s_alMaxvec3dist->value + s_alGracevec3dist->value)))
+	   (distsqrv3(sorigin, lastListenerOrigin) >=
+	    (s_alMaxdistv3->value +
+	     s_alGracedistv3->value) *
+	    (s_alMaxdistv3->value + s_alGracedistv3->value)))
 		/* We're getting tight on sources and source is not within hearing distance so don't add it */
 		return;
 
@@ -1233,7 +1233,7 @@ S_AL_SrcLoop(alSrcPriority_t priority, sfxHandle_t sfx,
 	if(S_AL_HearingThroughEntity(entityNum)){
 		curSource->local = qtrue;
 
-		vec3clear(sorigin);
+		clearv3(sorigin);
 
 		qalSourcefv(curSource->alSource, AL_POSITION, sorigin);
 		qalSourcefv(curSource->alSource, AL_VELOCITY, vec3_origin);
@@ -1241,19 +1241,19 @@ S_AL_SrcLoop(alSrcPriority_t priority, sfxHandle_t sfx,
 		curSource->local = qfalse;
 
 		if(origin)
-			vec3copy(origin, sorigin);
+			copyv3(origin, sorigin);
 		else
-			vec3copy(sent->origin, sorigin);
+			copyv3(sent->origin, sorigin);
 
 		S_AL_SanitiseVector(sorigin);
 
-		vec3copy(sorigin, curSource->loopSpeakerPos);
+		copyv3(sorigin, curSource->loopSpeakerPos);
 
 		if(velocity){
-			vec3copy(velocity, svelocity);
+			copyv3(velocity, svelocity);
 			S_AL_SanitiseVector(svelocity);
 		}else
-			vec3clear(svelocity);
+			clearv3(svelocity);
 
 		qalSourcefv(curSource->alSource, AL_POSITION,
 			(ALfloat*)sorigin);
@@ -1324,9 +1324,9 @@ S_AL_SrcUpdate(void)
 		if((s_alRolloff->modified) && (!curSource->local))
 			qalSourcef(curSource->alSource, AL_ROLLOFF_FACTOR,
 				s_alRolloff->value);
-		if(s_alMinvec3dist->modified)
+		if(s_alMindistv3->modified)
 			qalSourcef(curSource->alSource, AL_REFERENCE_DISTANCE,
-				s_alMinvec3dist->value);
+				s_alMindistv3->value);
 
 		if(curSource->isLooping){
 			sentity_t *sent = &entityList[ entityNum ];
@@ -2081,7 +2081,7 @@ S_AL_Respatialize(int entityNum, const Vec3 origin, Vec3 axis[3],
 	float	orientation[6];
 	Vec3	sorigin;
 
-	vec3copy(origin, sorigin);
+	copyv3(origin, sorigin);
 	S_AL_SanitiseVector(sorigin);
 
 	S_AL_SanitiseVector(axis[ 0 ]);
@@ -2093,7 +2093,7 @@ S_AL_Respatialize(int entityNum, const Vec3 origin, Vec3 axis[3],
 	orientation[3]	= axis[2][0]; orientation[4] = axis[2][1];
 	orientation[5]	= axis[2][2];
 
-	vec3copy(sorigin, lastListenerOrigin);
+	copyv3(sorigin, lastListenerOrigin);
 
 	/* Set OpenAL listener paramaters */
 	qalListenerfv(AL_POSITION, (ALfloat*)sorigin);
@@ -2151,7 +2151,7 @@ S_AL_Update(void)
 	s_alGain->modified = qfalse;
 	s_volume->modified = qfalse;
 	s_musicVolume->modified = qfalse;
-	s_alMinvec3dist->modified = qfalse;
+	s_alMindistv3->modified = qfalse;
 	s_alRolloff->modified = qfalse;
 }
 
@@ -2344,10 +2344,10 @@ S_AL_Init(soundInterface_t *si)
 		CVAR_ARCHIVE);
 	s_alDopplerSpeed = Cvar_Get("s_alDopplerSpeed", "2200",
 		CVAR_ARCHIVE);
-	s_alMinvec3dist = Cvar_Get("s_alMinvec3dist", "120", CVAR_CHEAT);
-	s_alMaxvec3dist = Cvar_Get("s_alMaxvec3dist", "1024", CVAR_CHEAT);
+	s_alMindistv3 = Cvar_Get("s_alMindistv3", "120", CVAR_CHEAT);
+	s_alMaxdistv3 = Cvar_Get("s_alMaxdistv3", "1024", CVAR_CHEAT);
 	s_alRolloff = Cvar_Get("s_alRolloff", "2", CVAR_CHEAT);
-	s_alGracevec3dist = Cvar_Get("s_alGracevec3dist", "512", CVAR_CHEAT);
+	s_alGracedistv3 = Cvar_Get("s_alGracedistv3", "512", CVAR_CHEAT);
 
 	s_alDriver = Cvar_Get("s_alDriver", ALDRIVER_DEFAULT,
 		CVAR_ARCHIVE | CVAR_LATCH);
@@ -2460,7 +2460,7 @@ S_AL_Init(soundInterface_t *si)
 	S_AL_SrcInit( );
 
 	/* Set up OpenAL parameters (doppler, etc) */
-	qalvec3distModel(AL_INVERSE_DISTANCE_CLAMPED);
+	qaldistv3Model(AL_INVERSE_DISTANCE_CLAMPED);
 	qalDopplerFactor(s_alDopplerFactor->value);
 	qalDopplerVelocity(s_alDopplerSpeed->value);
 

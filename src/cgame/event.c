@@ -431,7 +431,7 @@ CG_WaterLevel(centity_t *cent)
 
 	/* get waterlevel, accounting for ducking */
 	waterlevel = 0;
-	vec3copy(cent->lerpOrigin, point);
+	copyv3(cent->lerpOrigin, point);
 	point[2] += MinsZ + 1;
 	anim = cent->currentState.legsAnim & ~ANIM_TOGGLEBIT;
 
@@ -1012,10 +1012,10 @@ CG_EntityEvent(centity_t *cent, Vec3 position)
 		if(es->clientNum == cg.snap->ps.clientNum &&
 		   !cg.renderingThirdPerson){
 			if(cg_drawGun.integer == 2)
-				vec3ma(es->origin2, 8, cg.refdef.viewaxis[1],
+				maddv3(es->origin2, 8, cg.refdef.viewaxis[1],
 					es->origin2);
 			else if(cg_drawGun.integer == 3)
-				vec3ma(es->origin2, 4, cg.refdef.viewaxis[1],
+				maddv3(es->origin2, 4, cg.refdef.viewaxis[1],
 					es->origin2);
 		}
 

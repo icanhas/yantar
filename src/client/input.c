@@ -865,7 +865,7 @@ createcmd(void)
 	usercmd_t cmd;
 	Vec3 oldangles;
 
-	vec3copy(cl.viewangles, oldangles);
+	copyv3(cl.viewangles, oldangles);
 	adjustangles();	/* keyboard angle adjustment */
 	Q_Memset(&cmd, 0, sizeof(cmd));
 	cmdbuttons(&cmd);

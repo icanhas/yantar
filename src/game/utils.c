@@ -322,13 +322,13 @@ G_SetMovedir(Vec3 angles, Vec3 movedir)
 	static Vec3	VEC_DOWN	= {0, -2, 0};
 	static Vec3	MOVEDIR_DOWN	= {0, 0, -1};
 
-	if(vec3cmp (angles, VEC_UP))
-		vec3copy (MOVEDIR_UP, movedir);
-	else if(vec3cmp (angles, VEC_DOWN))
-		vec3copy (MOVEDIR_DOWN, movedir);
+	if(cmpv3 (angles, VEC_UP))
+		copyv3 (MOVEDIR_UP, movedir);
+	else if(cmpv3 (angles, VEC_DOWN))
+		copyv3 (MOVEDIR_DOWN, movedir);
 	else
-		anglevec3s (angles, movedir, NULL, NULL);
-	vec3clear(angles);
+		anglev3s (angles, movedir, NULL, NULL);
+	clearv3(angles);
 }
 
 
@@ -482,8 +482,8 @@ G_TempEntity(Vec3 origin, int event)
 	e->eventTime = level.time;
 	e->freeAfterEvent = qtrue;
 
-	vec3copy(origin, snapped);
-	SnapVector(snapped);	/* save network bandwidth */
+	copyv3(origin, snapped);
+	snapv3(snapped);	/* save network bandwidth */
 	G_SetOrigin(e, snapped);
 
 	/* find cluster for PVS */
@@ -514,8 +514,8 @@ G_KillBox(gentity_t *ent)
 	gentity_t	*hit;
 	Vec3		mins, maxs;
 
-	vec3add(ent->client->ps.origin, ent->r.mins, mins);
-	vec3add(ent->client->ps.origin, ent->r.maxs, maxs);
+	addv3(ent->client->ps.origin, ent->r.mins, mins);
+	addv3(ent->client->ps.origin, ent->r.maxs, maxs);
 	num = trap_EntitiesInBox(mins, maxs, touch, MAX_GENTITIES);
 
 	for(i=0; i<num; i++){
@@ -605,13 +605,13 @@ G_Sound(gentity_t *ent, int channel, int soundIndex)
 void
 G_SetOrigin(gentity_t *ent, Vec3 origin)
 {
-	vec3copy(origin, ent->s.pos.trBase);
+	copyv3(origin, ent->s.pos.trBase);
 	ent->s.pos.trType = TR_STATIONARY;
 	ent->s.pos.trTime = 0;
 	ent->s.pos.trDuration = 0;
-	vec3clear(ent->s.pos.trDelta);
+	clearv3(ent->s.pos.trDelta);
 
-	vec3copy(origin, ent->r.currentOrigin);
+	copyv3(origin, ent->r.currentOrigin);
 }
 
 /*
@@ -626,26 +626,26 @@ DebugLine(Vec3 start, Vec3 end, int color)
 	Vec3	points[4], dir, cross, up = {0, 0, 1};
 	float	dot;
 
-	vec3copy(start, points[0]);
-	vec3copy(start, points[1]);
+	copyv3(start, points[0]);
+	copyv3(start, points[1]);
 	/* points[1][2] -= 2; */
-	vec3copy(end, points[2]);
+	copyv3(end, points[2]);
 	/* points[2][2] -= 2; */
-	vec3copy(end, points[3]);
+	copyv3(end, points[3]);
 
 
-	vec3sub(end, start, dir);
-	vec3normalize(dir);
-	dot = vec3dot(dir, up);
-	if(dot > 0.99 || dot < -0.99) vec3set(cross, 1, 0, 0);
-	else vec3cross(dir, up, cross);
+	subv3(end, start, dir);
+	normv3(dir);
+	dot = dotv3(dir, up);
+	if(dot > 0.99 || dot < -0.99) setv3(cross, 1, 0, 0);
+	else crossv3(dir, up, cross);
 
-	vec3normalize(cross);
+	normv3(cross);
 
-	vec3ma(points[0], 2, cross, points[0]);
-	vec3ma(points[1], -2, cross, points[1]);
-	vec3ma(points[2], -2, cross, points[2]);
-	vec3ma(points[3], 2, cross, points[3]);
+	maddv3(points[0], 2, cross, points[0]);
+	maddv3(points[1], -2, cross, points[1]);
+	maddv3(points[2], -2, cross, points[2]);
+	maddv3(points[3], 2, cross, points[3]);
 
 	return trap_DebugPolygonCreate(color, 4, points);
 }

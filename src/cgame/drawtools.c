@@ -410,7 +410,7 @@ CG_GetColorForHealth(int health, int armor, Vec4 hcolor)
 	/* calculate the total points of damage that can
 	 * be sustained at the current health / armor level */
 	if(health <= 0){
-		vec3clear(hcolor);	/* black */
+		clearv3(hcolor);	/* black */
 		hcolor[3] = 1;
 		return;
 	}

@@ -106,7 +106,7 @@ AAS_OptimizeEdge(optimized_t *optimized, int edgenum)
 			optedge->v[i] =
 				optimized->vertexoptimizeindex[edge->v[i]];
 		else{
-			vec3copy(aasworld.vertexes[edge->v[i]],
+			copyv3(aasworld.vertexes[edge->v[i]],
 				optimized->vertexes[optimized->numvertexes]);
 			optedge->v[i] = optimized->numvertexes;
 			optimized->vertexoptimizeindex[edge->v[i]] =

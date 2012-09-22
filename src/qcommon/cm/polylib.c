@@ -90,12 +90,12 @@ RemoveColinearPoints(winding_t *w)
 	for(i=0; i<w->numpoints; i++){
 		j	= (i+1)%w->numpoints;
 		k	= (i+w->numpoints-1)%w->numpoints;
-		vec3sub (w->p[j], w->p[i], v1);
-		vec3sub (w->p[i], w->p[k], v2);
-		vec3normalize2(v1,v1);
-		vec3normalize2(v2,v2);
-		if(vec3dot(v1, v2) < 0.999){
-			vec3copy (w->p[i], p[nump]);
+		subv3 (w->p[j], w->p[i], v1);
+		subv3 (w->p[i], w->p[k], v2);
+		norm2v3(v1,v1);
+		norm2v3(v2,v2);
+		if(dotv3(v1, v2) < 0.999){
+			copyv3 (w->p[i], p[nump]);
 			nump++;
 		}
 	}
@@ -116,11 +116,11 @@ WindingPlane(winding_t *w, Vec3 normal, Scalar *dist)
 {
 	Vec3 v1, v2;
 
-	vec3sub (w->p[1], w->p[0], v1);
-	vec3sub (w->p[2], w->p[0], v2);
-	vec3cross (v2, v1, normal);
-	vec3normalize2(normal, normal);
-	*dist = vec3dot (w->p[0], normal);
+	subv3 (w->p[1], w->p[0], v1);
+	subv3 (w->p[2], w->p[0], v2);
+	crossv3 (v2, v1, normal);
+	norm2v3(normal, normal);
+	*dist = dotv3 (w->p[0], normal);
 
 }
 
@@ -136,10 +136,10 @@ WindingArea(winding_t *w)
 
 	total = 0;
 	for(i=2; i<w->numpoints; i++){
-		vec3sub (w->p[i-1], w->p[0], d1);
-		vec3sub (w->p[i], w->p[0], d2);
-		vec3cross (d1, d2, cross);
-		total += 0.5 * vec3len (cross);
+		subv3 (w->p[i-1], w->p[0], d1);
+		subv3 (w->p[i], w->p[0], d2);
+		crossv3 (d1, d2, cross);
+		total += 0.5 * lenv3 (cross);
 	}
 	return total;
 }
@@ -175,12 +175,12 @@ WindingCenter(winding_t *w, Vec3 center)
 	int i;
 	float scale;
 
-	vec3copy (vec3_origin, center);
+	copyv3 (vec3_origin, center);
 	for(i=0; i<w->numpoints; i++)
-		vec3add (w->p[i], center, center);
+		addv3 (w->p[i], center, center);
 
 	scale = 1.0/w->numpoints;
-	vec3scale (center, scale, center);
+	scalev3 (center, scale, center);
 }
 
 /*
@@ -208,7 +208,7 @@ BaseWindingForPlane(Vec3 normal, Scalar dist)
 	if(x==-1)
 		Com_Errorf (ERR_DROP, "BaseWindingForPlane: no axis found");
 
-	vec3copy (vec3_origin, vup);
+	copyv3 (vec3_origin, vup);
 	switch(x){
 	case 0:
 	case 1:
@@ -219,31 +219,31 @@ BaseWindingForPlane(Vec3 normal, Scalar dist)
 		break;
 	}
 
-	v = vec3dot (vup, normal);
-	vec3ma (vup, -v, normal, vup);
-	vec3normalize2(vup, vup);
+	v = dotv3 (vup, normal);
+	maddv3 (vup, -v, normal, vup);
+	norm2v3(vup, vup);
 
-	vec3scale (normal, dist, org);
+	scalev3 (normal, dist, org);
 
-	vec3cross (vup, normal, vright);
+	crossv3 (vup, normal, vright);
 
-	vec3scale (vup, MAX_MAP_BOUNDS, vup);
-	vec3scale (vright, MAX_MAP_BOUNDS, vright);
+	scalev3 (vup, MAX_MAP_BOUNDS, vup);
+	scalev3 (vright, MAX_MAP_BOUNDS, vright);
 
 /* project a really big	axis aligned box onto the plane */
 	w = AllocWinding (4);
 
-	vec3sub (org, vright, w->p[0]);
-	vec3add (w->p[0], vup, w->p[0]);
+	subv3 (org, vright, w->p[0]);
+	addv3 (w->p[0], vup, w->p[0]);
 
-	vec3add (org, vright, w->p[1]);
-	vec3add (w->p[1], vup, w->p[1]);
+	addv3 (org, vright, w->p[1]);
+	addv3 (w->p[1], vup, w->p[1]);
 
-	vec3add (org, vright, w->p[2]);
-	vec3sub (w->p[2], vup, w->p[2]);
+	addv3 (org, vright, w->p[2]);
+	subv3 (w->p[2], vup, w->p[2]);
 
-	vec3sub (org, vright, w->p[3]);
-	vec3sub (w->p[3], vup, w->p[3]);
+	subv3 (org, vright, w->p[3]);
+	subv3 (w->p[3], vup, w->p[3]);
 
 	w->numpoints = 4;
 
@@ -276,7 +276,7 @@ ReverseWinding(winding_t *w)
 
 	c = AllocWinding (w->numpoints);
 	for(i=0; i<w->numpoints; i++)
-		vec3copy (w->p[w->numpoints-1-i], c->p[i]);
+		copyv3 (w->p[w->numpoints-1-i], c->p[i]);
 	c->numpoints = w->numpoints;
 	return c;
 }
@@ -303,7 +303,7 @@ ClipWindingEpsilon(winding_t *in, Vec3 normal, Scalar dist,
 
 /* determine sides for each point */
 	for(i=0; i<in->numpoints; i++){
-		dot	= vec3dot (in->p[i], normal);
+		dot	= dotv3 (in->p[i], normal);
 		dot	-= dist;
 		dists[i] = dot;
 		if(dot > epsilon)
@@ -338,19 +338,19 @@ ClipWindingEpsilon(winding_t *in, Vec3 normal, Scalar dist,
 		p1 = in->p[i];
 
 		if(sides[i] == SIDE_ON){
-			vec3copy (p1, f->p[f->numpoints]);
+			copyv3 (p1, f->p[f->numpoints]);
 			f->numpoints++;
-			vec3copy (p1, b->p[b->numpoints]);
+			copyv3 (p1, b->p[b->numpoints]);
 			b->numpoints++;
 			continue;
 		}
 
 		if(sides[i] == SIDE_FRONT){
-			vec3copy (p1, f->p[f->numpoints]);
+			copyv3 (p1, f->p[f->numpoints]);
 			f->numpoints++;
 		}
 		if(sides[i] == SIDE_BACK){
-			vec3copy (p1, b->p[b->numpoints]);
+			copyv3 (p1, b->p[b->numpoints]);
 			b->numpoints++;
 		}
 
@@ -370,9 +370,9 @@ ClipWindingEpsilon(winding_t *in, Vec3 normal, Scalar dist,
 				mid[j] = p1[j] + dot*(p2[j]-p1[j]);
 		}
 
-		vec3copy (mid, f->p[f->numpoints]);
+		copyv3 (mid, f->p[f->numpoints]);
 		f->numpoints++;
-		vec3copy (mid, b->p[b->numpoints]);
+		copyv3 (mid, b->p[b->numpoints]);
 		b->numpoints++;
 	}
 
@@ -406,7 +406,7 @@ ChopWindingInPlace(winding_t **inout, Vec3 normal, Scalar dist, Scalar epsilon)
 
 /* determine sides for each point */
 	for(i=0; i<in->numpoints; i++){
-		dot	= vec3dot (in->p[i], normal);
+		dot	= dotv3 (in->p[i], normal);
 		dot	-= dist;
 		dists[i] = dot;
 		if(dot > epsilon)
@@ -437,13 +437,13 @@ ChopWindingInPlace(winding_t **inout, Vec3 normal, Scalar dist, Scalar epsilon)
 		p1 = in->p[i];
 
 		if(sides[i] == SIDE_ON){
-			vec3copy (p1, f->p[f->numpoints]);
+			copyv3 (p1, f->p[f->numpoints]);
 			f->numpoints++;
 			continue;
 		}
 
 		if(sides[i] == SIDE_FRONT){
-			vec3copy (p1, f->p[f->numpoints]);
+			copyv3 (p1, f->p[f->numpoints]);
 			f->numpoints++;
 		}
 
@@ -463,7 +463,7 @@ ChopWindingInPlace(winding_t **inout, Vec3 normal, Scalar dist, Scalar epsilon)
 				mid[j] = p1[j] + dot*(p2[j]-p1[j]);
 		}
 
-		vec3copy (mid, f->p[f->numpoints]);
+		copyv3 (mid, f->p[f->numpoints]);
 		f->numpoints++;
 	}
 
@@ -531,27 +531,27 @@ CheckWinding(winding_t *w)
 		j = i+1 == w->numpoints ? 0 : i+1;
 
 		/* check the point is on the face plane */
-		d = vec3dot (p1, facenormal) - facedist;
+		d = dotv3 (p1, facenormal) - facedist;
 		if(d < -ON_EPSILON || d > ON_EPSILON)
 			Com_Errorf (ERR_DROP, "CheckWinding: point off plane");
 
 		/* check the edge isnt degenerate */
 		p2 = w->p[j];
-		vec3sub (p2, p1, dir);
+		subv3 (p2, p1, dir);
 
-		if(vec3len (dir) < ON_EPSILON)
+		if(lenv3 (dir) < ON_EPSILON)
 			Com_Errorf (ERR_DROP, "CheckWinding: degenerate edge");
 
-		vec3cross (facenormal, dir, edgenormal);
-		vec3normalize2 (edgenormal, edgenormal);
-		edgedist	= vec3dot (p1, edgenormal);
+		crossv3 (facenormal, dir, edgenormal);
+		norm2v3 (edgenormal, edgenormal);
+		edgedist	= dotv3 (p1, edgenormal);
 		edgedist	+= ON_EPSILON;
 
 		/* all other points must be on front side */
 		for(j=0; j<w->numpoints; j++){
 			if(j == i)
 				continue;
-			d = vec3dot (w->p[j], edgenormal);
+			d = dotv3 (w->p[j], edgenormal);
 			if(d > edgedist)
 				Com_Errorf (ERR_DROP, "CheckWinding: non-convex");
 		}
@@ -572,7 +572,7 @@ WindingOnPlaneSide(winding_t *w, Vec3 normal, Scalar dist)
 	front	= qfalse;
 	back	= qfalse;
 	for(i=0; i<w->numpoints; i++){
-		d = vec3dot (w->p[i], normal) - dist;
+		d = dotv3 (w->p[i], normal) - dist;
 		if(d < -ON_EPSILON){
 			if(front)
 				return SIDE_CROSS;
@@ -630,15 +630,15 @@ AddWindingToConvexHull(winding_t *w, winding_t **hull, Vec3 normal)
 		for(j = 0; j < numHullPoints; j++){
 			k = (j + 1) % numHullPoints;
 
-			vec3sub(hullPoints[k], hullPoints[j], dir);
-			vec3normalize2(dir, dir);
-			vec3cross(normal, dir, hullDirs[j]);
+			subv3(hullPoints[k], hullPoints[j], dir);
+			norm2v3(dir, dir);
+			crossv3(normal, dir, hullDirs[j]);
 		}
 
 		outside = qfalse;
 		for(j = 0; j < numHullPoints; j++){
-			vec3sub(p, hullPoints[j], dir);
-			d = vec3dot(dir, hullDirs[j]);
+			subv3(p, hullPoints[j], dir);
+			d = dotv3(dir, hullDirs[j]);
 			if(d >= ON_EPSILON)
 				outside = qtrue;
 			if(d >= -ON_EPSILON)
@@ -660,7 +660,7 @@ AddWindingToConvexHull(winding_t *w, winding_t **hull, Vec3 normal)
 			continue;
 
 		/* insert the point here */
-		vec3copy(p, newHullPoints[0]);
+		copyv3(p, newHullPoints[0]);
 		numNew = 1;
 
 		/* copy over all points that aren't double fronts */
@@ -670,7 +670,7 @@ AddWindingToConvexHull(winding_t *w, winding_t **hull, Vec3 normal)
 			   hullSide[ (j+k+1) % numHullPoints ])
 				continue;
 			copy = hullPoints[ (j+k+1) % numHullPoints ];
-			vec3copy(copy, newHullPoints[numNew]);
+			copyv3(copy, newHullPoints[numNew]);
 			numNew++;
 		}
 

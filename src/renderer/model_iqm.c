@@ -108,17 +108,17 @@ Matrix34Invert(float *inMat, float *outMat)
 	outMat[ 4] = inMat[ 1]; outMat[ 5] = inMat[ 5]; outMat[ 6] = inMat[ 9];
 	outMat[ 8] = inMat[ 2]; outMat[ 9] = inMat[ 6]; outMat[10] = inMat[10];
 
-	v = outMat + 0; invSqrLen = 1.0f / vec3dot(v, v); vec3scale(v, invSqrLen, v);
-	v = outMat + 4; invSqrLen = 1.0f / vec3dot(v, v); vec3scale(v, invSqrLen, v);
-	v = outMat + 8; invSqrLen = 1.0f / vec3dot(v, v); vec3scale(v, invSqrLen, v);
+	v = outMat + 0; invSqrLen = 1.0f / dotv3(v, v); scalev3(v, invSqrLen, v);
+	v = outMat + 4; invSqrLen = 1.0f / dotv3(v, v); scalev3(v, invSqrLen, v);
+	v = outMat + 8; invSqrLen = 1.0f / dotv3(v, v); scalev3(v, invSqrLen, v);
 
 	trans[0] = inMat[ 3];
 	trans[1] = inMat[ 7];
 	trans[2] = inMat[11];
 
-	outMat[ 3] = -vec3dot(outMat + 0, trans);
-	outMat[ 7] = -vec3dot(outMat + 4, trans);
-	outMat[11] = -vec3dot(outMat + 8, trans);
+	outMat[ 3] = -dotv3(outMat + 0, trans);
+	outMat[ 7] = -dotv3(outMat + 4, trans);
+	outMat[11] = -dotv3(outMat + 8, trans);
 }
 
 /*
@@ -721,10 +721,10 @@ R_ComputeIQMFogNum(iqmData_t *data, trRefEntity_t *ent)
 	}else{
 		bounds = defaultBounds;
 	}
-	vec3sub(bounds+3, bounds, diag);
-	vec3ma(bounds, 0.5f, diag, center);
-	vec3add(ent->e.origin, center, localOrigin);
-	radius = 0.5f * vec3len(diag);
+	subv3(bounds+3, bounds, diag);
+	maddv3(bounds, 0.5f, diag, center);
+	addv3(ent->e.origin, center, localOrigin);
+	radius = 0.5f * lenv3(diag);
 
 	for(i = 1; i < tr.world->numfogs; i++){
 		fog = &tr.world->fogs[i];
@@ -1031,8 +1031,8 @@ R_IQMLerpTag(orientation_t *tag, iqmData_t *data,
 		names += strlen(names) + 1;
 	}
 	if(joint >= data->num_joints){
-		axisclear(tag->axis);
-		vec3clear(tag->origin);
+		clearaxis(tag->axis);
+		clearv3(tag->origin);
 		return qfalse;
 	}
 

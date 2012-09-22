@@ -204,24 +204,24 @@ SpawnModelOnVictoryPad(gentity_t *pad, Vec3 offset, gentity_t *ent, int place)
 		body->s.torsoAnim = TORSO_STAND2;
 	body->s.event	= 0;
 	body->r.svFlags = ent->r.svFlags;
-	vec3copy (ent->r.mins, body->r.mins);
-	vec3copy (ent->r.maxs, body->r.maxs);
-	vec3copy (ent->r.absmin, body->r.absmin);
-	vec3copy (ent->r.absmax, body->r.absmax);
+	copyv3 (ent->r.mins, body->r.mins);
+	copyv3 (ent->r.maxs, body->r.maxs);
+	copyv3 (ent->r.absmin, body->r.absmin);
+	copyv3 (ent->r.absmax, body->r.absmax);
 	body->clipmask		= CONTENTS_SOLID | CONTENTS_PLAYERCLIP;
 	body->r.contents	= CONTENTS_BODY;
 	body->r.ownerNum	= ent->r.ownerNum;
 	body->takedamage	= qfalse;
 
-	vec3sub(level.intermission_origin, pad->r.currentOrigin, vec);
-	vec3toeuler(vec, body->s.apos.trBase);
+	subv3(level.intermission_origin, pad->r.currentOrigin, vec);
+	v3toeuler(vec, body->s.apos.trBase);
 	body->s.apos.trBase[PITCH]	= 0;
 	body->s.apos.trBase[ROLL]	= 0;
 
-	anglevec3s(body->s.apos.trBase, f, r, u);
-	vec3ma(pad->r.currentOrigin, offset[0], f, vec);
-	vec3ma(vec, offset[1], r, vec);
-	vec3ma(vec, offset[2], u, vec);
+	anglev3s(body->s.apos.trBase, f, r, u);
+	maddv3(pad->r.currentOrigin, offset[0], f, vec);
+	maddv3(vec, offset[1], r, vec);
+	maddv3(vec, offset[2], u, vec);
 
 	G_SetOrigin(body, vec);
 
@@ -279,56 +279,56 @@ PodiumPlacementThink(gentity_t *podium)
 
 	podium->nextthink = level.time + 100;
 
-	anglevec3s(level.intermission_angle, vec, NULL, NULL);
-	vec3ma(level.intermission_origin,
+	anglev3s(level.intermission_angle, vec, NULL, NULL);
+	maddv3(level.intermission_origin,
 		trap_Cvar_VariableIntegerValue("g_podiumDist"), vec, origin);
 	origin[2] -= trap_Cvar_VariableIntegerValue("g_podiumDrop");
 	G_SetOrigin(podium, origin);
 
 	if(podium1){
-		vec3sub(level.intermission_origin,
+		subv3(level.intermission_origin,
 			podium->r.currentOrigin,
 			vec);
-		vec3toeuler(vec, podium1->s.apos.trBase);
+		v3toeuler(vec, podium1->s.apos.trBase);
 		podium1->s.apos.trBase[PITCH]	= 0;
 		podium1->s.apos.trBase[ROLL]	= 0;
 
-		anglevec3s(podium1->s.apos.trBase, f, r, u);
-		vec3ma(podium->r.currentOrigin, offsetFirst[0], f, vec);
-		vec3ma(vec, offsetFirst[1], r, vec);
-		vec3ma(vec, offsetFirst[2], u, vec);
+		anglev3s(podium1->s.apos.trBase, f, r, u);
+		maddv3(podium->r.currentOrigin, offsetFirst[0], f, vec);
+		maddv3(vec, offsetFirst[1], r, vec);
+		maddv3(vec, offsetFirst[2], u, vec);
 
 		G_SetOrigin(podium1, vec);
 	}
 
 	if(podium2){
-		vec3sub(level.intermission_origin,
+		subv3(level.intermission_origin,
 			podium->r.currentOrigin,
 			vec);
-		vec3toeuler(vec, podium2->s.apos.trBase);
+		v3toeuler(vec, podium2->s.apos.trBase);
 		podium2->s.apos.trBase[PITCH]	= 0;
 		podium2->s.apos.trBase[ROLL]	= 0;
 
-		anglevec3s(podium2->s.apos.trBase, f, r, u);
-		vec3ma(podium->r.currentOrigin, offsetSecond[0], f, vec);
-		vec3ma(vec, offsetSecond[1], r, vec);
-		vec3ma(vec, offsetSecond[2], u, vec);
+		anglev3s(podium2->s.apos.trBase, f, r, u);
+		maddv3(podium->r.currentOrigin, offsetSecond[0], f, vec);
+		maddv3(vec, offsetSecond[1], r, vec);
+		maddv3(vec, offsetSecond[2], u, vec);
 
 		G_SetOrigin(podium2, vec);
 	}
 
 	if(podium3){
-		vec3sub(level.intermission_origin,
+		subv3(level.intermission_origin,
 			podium->r.currentOrigin,
 			vec);
-		vec3toeuler(vec, podium3->s.apos.trBase);
+		v3toeuler(vec, podium3->s.apos.trBase);
 		podium3->s.apos.trBase[PITCH]	= 0;
 		podium3->s.apos.trBase[ROLL]	= 0;
 
-		anglevec3s(podium3->s.apos.trBase, f, r, u);
-		vec3ma(podium->r.currentOrigin, offsetThird[0], f, vec);
-		vec3ma(vec, offsetThird[1], r, vec);
-		vec3ma(vec, offsetThird[2], u, vec);
+		anglev3s(podium3->s.apos.trBase, f, r, u);
+		maddv3(podium->r.currentOrigin, offsetThird[0], f, vec);
+		maddv3(vec, offsetThird[1], r, vec);
+		maddv3(vec, offsetThird[2], u, vec);
 
 		G_SetOrigin(podium3, vec);
 	}
@@ -353,13 +353,13 @@ SpawnPodium(void)
 	podium->r.contents	= CONTENTS_SOLID;
 	podium->s.modelindex	= G_ModelIndex(SP_PODIUM_MODEL);
 
-	anglevec3s(level.intermission_angle, vec, NULL, NULL);
-	vec3ma(level.intermission_origin,
+	anglev3s(level.intermission_angle, vec, NULL, NULL);
+	maddv3(level.intermission_origin,
 		trap_Cvar_VariableIntegerValue("g_podiumDist"), vec, origin);
 	origin[2] -= trap_Cvar_VariableIntegerValue("g_podiumDrop");
 	G_SetOrigin(podium, origin);
 
-	vec3sub(level.intermission_origin, podium->r.currentOrigin, vec);
+	subv3(level.intermission_origin, podium->r.currentOrigin, vec);
 	podium->s.apos.trBase[YAW] = vectoyaw(vec);
 	trap_LinkEntity (podium);
 

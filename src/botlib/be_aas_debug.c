@@ -164,9 +164,9 @@ AAS_DrawPermanentCross(Vec3 origin, float size, int color)
 	Vec3 start, end;
 
 	for(i = 0; i < 3; i++){
-		vec3copy(origin, start);
+		copyv3(origin, start);
 		start[i] += size;
-		vec3copy(origin, end);
+		copyv3(origin, end);
 		end[i] -= size;
 		AAS_DebugLine(start, end, color);
 		debugline = botimport.DebugLineCreate();
@@ -186,10 +186,10 @@ AAS_DrawPlaneCross(Vec3 point, Vec3 normal, float dist, int type, int color)
 	Vec3 start1, end1, start2, end2;
 
 	/* make a cross in the hit plane at the hit point */
-	vec3copy(point, start1);
-	vec3copy(point, end1);
-	vec3copy(point, start2);
-	vec3copy(point, end2);
+	copyv3(point, start1);
+	copyv3(point, end1);
+	copyv3(point, start2);
+	copyv3(point, end2);
 
 	n0 = type % 3;
 	n1 = (type + 1) % 3;
@@ -322,8 +322,8 @@ AAS_ShowFace(int facenum)
 	plane	= &aasworld.planes[face->planenum];
 	edgenum = abs(aasworld.edgeindex[face->firstedge]);
 	edge = &aasworld.edges[edgenum];
-	vec3copy(aasworld.vertexes[edge->v[0]], start);
-	vec3ma(start, 20, plane->normal, end);
+	copyv3(aasworld.vertexes[edge->v[0]], start);
+	maddv3(start, 20, plane->normal, end);
 	AAS_DebugLine(start, end, LINECOLOR_RED);
 }	/* end of the function AAS_ShowFace */
 /* ===========================================================================
@@ -351,7 +351,7 @@ AAS_ShowFacePolygon(int facenum, int color, int flip)
 			/* edge number */
 			edgenum = aasworld.edgeindex[face->firstedge + i];
 			edge = &aasworld.edges[abs(edgenum)];
-			vec3copy(aasworld.vertexes[edge->v[edgenum < 0]],
+			copyv3(aasworld.vertexes[edge->v[edgenum < 0]],
 				points[numpoints]);
 			numpoints++;
 		}
@@ -360,7 +360,7 @@ AAS_ShowFacePolygon(int facenum, int color, int flip)
 			/* edge number */
 			edgenum = aasworld.edgeindex[face->firstedge + i];
 			edge = &aasworld.edges[abs(edgenum)];
-			vec3copy(aasworld.vertexes[edge->v[edgenum < 0]],
+			copyv3(aasworld.vertexes[edge->v[edgenum < 0]],
 				points[numpoints]);
 			numpoints++;
 		}
@@ -494,9 +494,9 @@ AAS_DrawCross(Vec3 origin, float size, int color)
 	Vec3 start, end;
 
 	for(i = 0; i < 3; i++){
-		vec3copy(origin, start);
+		copyv3(origin, start);
 		start[i] += size;
-		vec3copy(origin, end);
+		copyv3(origin, end);
 		end[i] -= size;
 		AAS_DebugLine(start, end, color);
 	}
@@ -547,16 +547,16 @@ AAS_DrawArrow(Vec3 start, Vec3 end, int linecolor, int arrowcolor)
 	Vec3	dir, cross, p1, p2, up = {0, 0, 1};
 	float	dot;
 
-	vec3sub(end, start, dir);
-	vec3normalize(dir);
-	dot = vec3dot(dir, up);
-	if(dot > 0.99 || dot < -0.99) vec3set(cross, 1, 0, 0);
-	else vec3cross(dir, up, cross);
+	subv3(end, start, dir);
+	normv3(dir);
+	dot = dotv3(dir, up);
+	if(dot > 0.99 || dot < -0.99) setv3(cross, 1, 0, 0);
+	else crossv3(dir, up, cross);
 
-	vec3ma(end, -6, dir, p1);
-	vec3copy(p1, p2);
-	vec3ma(p1, 6, cross, p1);
-	vec3ma(p2, -6, cross, p2);
+	maddv3(end, -6, dir, p1);
+	copyv3(p1, p2);
+	maddv3(p1, 6, cross, p1);
+	maddv3(p2, -6, cross, p2);
 
 	AAS_DebugLine(start, end, linecolor);
 	AAS_DebugLine(p1, end, arrowcolor);
@@ -585,13 +585,13 @@ AAS_ShowReachability(aas_reachability_t *reach)
 			reach->start, reach->end,
 			&speed);
 		/*  */
-		vec3sub(reach->end, reach->start, dir);
+		subv3(reach->end, reach->start, dir);
 		dir[2] = 0;
-		vec3normalize(dir);
+		normv3(dir);
 		/* set the velocity */
-		vec3scale(dir, speed, velocity);
+		scalev3(dir, speed, velocity);
 		/* set the command movement */
-		vec3clear(cmdmove);
+		clearv3(cmdmove);
 		cmdmove[2] = aassettings.phys_jumpvel;
 		/*  */
 		AAS_PredictClientMovement(
@@ -609,12 +609,12 @@ AAS_ShowReachability(aas_reachability_t *reach)
 		AAS_HorizontalVelocityForJump(zvel, reach->start, reach->end,
 			&speed);
 		/*  */
-		vec3sub(reach->end, reach->start, dir);
+		subv3(reach->end, reach->start, dir);
 		dir[2] = 0;
-		vec3normalize(dir);
+		normv3(dir);
 		/* get command movement */
-		vec3scale(dir, speed, cmdmove);
-		vec3set(velocity, 0, 0, zvel);
+		scalev3(dir, speed, cmdmove);
+		setv3(velocity, 0, 0, zvel);
 		/*  */
 		AAS_PredictClientMovement(
 			&move, -1, reach->start, PRESENCE_NORMAL, qtrue,
@@ -624,14 +624,14 @@ AAS_ShowReachability(aas_reachability_t *reach)
 			SE_TOUCHJUMPPAD|SE_HITGROUNDAREA, reach->areanum, qtrue);
 	}	/* end else if */
 	else if((reach->traveltype & TRAVELTYPE_MASK) == TRAVEL_JUMPPAD){
-		vec3set(cmdmove, 0, 0, 0);
+		setv3(cmdmove, 0, 0, 0);
 		/*  */
-		vec3sub(reach->end, reach->start, dir);
+		subv3(reach->end, reach->start, dir);
 		dir[2] = 0;
-		vec3normalize(dir);
+		normv3(dir);
 		/* set the velocity
 		 * NOTE: the edgenum is the horizontal velocity */
-		vec3scale(dir, reach->edgenum, velocity);
+		scalev3(dir, reach->edgenum, velocity);
 		/* NOTE: the facenum is the Z velocity */
 		velocity[2] = reach->facenum;
 		/*  */

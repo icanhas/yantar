@@ -456,10 +456,10 @@ RB_BeginDrawingView(void)
 		plane[2] = backEnd.viewParms.portalPlane.normal[2];
 		plane[3] = backEnd.viewParms.portalPlane.dist;
 
-		plane2[0] = vec3dot (backEnd.viewParms.or.axis[0], plane);
-		plane2[1] = vec3dot (backEnd.viewParms.or.axis[1], plane);
-		plane2[2] = vec3dot (backEnd.viewParms.or.axis[2], plane);
-		plane2[3] = vec3dot (plane, backEnd.viewParms.or.origin) - plane[3];
+		plane2[0] = dotv3 (backEnd.viewParms.or.axis[0], plane);
+		plane2[1] = dotv3 (backEnd.viewParms.or.axis[1], plane);
+		plane2[2] = dotv3 (backEnd.viewParms.or.axis[2], plane);
+		plane2[3] = dotv3 (plane, backEnd.viewParms.or.origin) - plane[3];
 
 		qglLoadMatrixf(s_flipMatrix);
 		qglClipPlane (GL_CLIP_PLANE0, plane2);

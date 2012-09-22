@@ -405,8 +405,8 @@ SV_AddEntitiesVisibleFromPoint(Vec3 origin, clientSnapshot_t *frame,
 		if(ent->r.svFlags & SVF_PORTAL){
 			if(ent->s.generic1){
 				Vec3 dir;
-				vec3sub(ent->s.origin, origin, dir);
-				if(vec3lensquared(dir) >
+				subv3(ent->s.origin, origin, dir);
+				if(lensqrv3(dir) >
 				   (float)ent->s.generic1 * ent->s.generic1)
 					continue;
 			}
@@ -476,7 +476,7 @@ SV_BuildClientSnapshot(client_t *client)
 	svEnt->snapshotCounter = sv.snapshotCounter;
 
 	/* find the client's viewpoint */
-	vec3copy(ps->origin, org);
+	copyv3(ps->origin, org);
 	org[2] += ps->viewheight;
 
 	/* add all the entities directly visible to the eye, which

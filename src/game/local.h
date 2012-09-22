@@ -550,7 +550,7 @@ void	DropPortalDestination(gentity_t *ent);
 qbool	LogAccuracyHit(gentity_t *target, gentity_t *attacker);
 void	CalcMuzzlePoint(gentity_t *ent, Vec3 forward, Vec3 right, Vec3 up,
 		Vec3 muzzlePoint);
-void	SnapVectorTowards(Vec3 v, Vec3 to);
+void	snapv3Towards(Vec3 v, Vec3 to);
 qbool	CheckGauntletAttack(gentity_t *ent);
 void	Weapon_HookFree(gentity_t *ent);
 void	Weapon_HookThink(gentity_t *ent);
@@ -1014,4 +1014,4 @@ void	trap_BotResetWeaponState(int weaponstate);
 int	trap_GeneticParentsAndChildSelection(int numranks, float *ranks,
 		int *parent1, int *parent2, int *child);
 
-void	trap_SnapVector(float *v);
+void	trap_snapv3(float *v);

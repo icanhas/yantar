@@ -105,7 +105,7 @@ RB_AddQuadStampExt(Vec3 origin, Vec3 left, Vec3 up, byte *color, float s1, float
 
 
 	/* constant normal all the way around */
-	vec3sub(vec3_origin, backEnd.viewParms.or.axis[0], normal);
+	subv3(vec3_origin, backEnd.viewParms.or.axis[0], normal);
 
 	tess.normal[ndx][0]		=
 		tess.normal[ndx+1][0]	= tess.normal[ndx+2][0] = tess.normal[ndx+3][0] = normal[0];
@@ -161,8 +161,8 @@ RB_SurfaceSprite(void)
 	/* calculate the xyz locations for the four corners */
 	radius = backEnd.currentEntity->e.radius;
 	if(backEnd.currentEntity->e.rotation == 0){
-		vec3scale(backEnd.viewParms.or.axis[1], radius, left);
-		vec3scale(backEnd.viewParms.or.axis[2], radius, up);
+		scalev3(backEnd.viewParms.or.axis[1], radius, left);
+		scalev3(backEnd.viewParms.or.axis[2], radius, up);
 	}else{
 		float s, c;
 		float ang;
@@ -171,14 +171,14 @@ RB_SurfaceSprite(void)
 		s = sin(ang);
 		c = cos(ang);
 
-		vec3scale(backEnd.viewParms.or.axis[1], c * radius, left);
-		vec3ma(left, -s * radius, backEnd.viewParms.or.axis[2], left);
+		scalev3(backEnd.viewParms.or.axis[1], c * radius, left);
+		maddv3(left, -s * radius, backEnd.viewParms.or.axis[2], left);
 
-		vec3scale(backEnd.viewParms.or.axis[2], c * radius, up);
-		vec3ma(up, s * radius, backEnd.viewParms.or.axis[1], up);
+		scalev3(backEnd.viewParms.or.axis[2], c * radius, up);
+		maddv3(up, s * radius, backEnd.viewParms.or.axis[1], up);
 	}
 	if(backEnd.viewParms.isMirror){
-		vec3sub(vec3_origin, left, left);
+		subv3(vec3_origin, left, left);
 	}
 
 	RB_AddQuadStamp(backEnd.currentEntity->e.origin, left, up, backEnd.currentEntity->e.shaderRGBA);
@@ -199,7 +199,7 @@ RB_SurfacePolychain(srfPoly_t *p)
 	/* fan triangles into the tess array */
 	numv = tess.numVertexes;
 	for(i = 0; i < p->numVerts; i++){
-		vec3copy(p->verts[i].xyz, tess.xyz[numv]);
+		copyv3(p->verts[i].xyz, tess.xyz[numv]);
 		tess.texCoords[numv][0][0] = p->verts[i].st[0];
 		tess.texCoords[numv][0][1] = p->verts[i].st[1];
 		*(int*)&tess.vertexColors[numv] = *(int*)p->verts[ i ].modulate;
@@ -307,18 +307,18 @@ RB_SurfaceBeam(void)
 	normalized_direction[1] = direction[1] = oldorigin[1] - origin[1];
 	normalized_direction[2] = direction[2] = oldorigin[2] - origin[2];
 
-	if(vec3normalize(normalized_direction) == 0)
+	if(normv3(normalized_direction) == 0)
 		return;
 
-	PerpendicularVector(perpvec, normalized_direction);
+	perpv3(perpvec, normalized_direction);
 
-	vec3scale(perpvec, 4, perpvec);
+	scalev3(perpvec, 4, perpvec);
 
 	for(i = 0; i < NUM_BEAM_SEGS; i++){
 		RotatePointAroundVector(start_points[i], normalized_direction, perpvec,
 			(360.0/NUM_BEAM_SEGS)*i);
-/*		vec3add( start_points[i], origin, start_points[i] ); */
-		vec3add(start_points[i], direction, end_points[i]);
+/*		addv3( start_points[i], origin, start_points[i] ); */
+		addv3(start_points[i], direction, end_points[i]);
 	}
 
 	GL_Bind(tr.whiteImage);
@@ -349,7 +349,7 @@ DoRailCore(const Vec3 start, const Vec3 end, const Vec3 up, float len, float spa
 	spanWidth2 = -spanWidth;
 
 	/* FIXME: use quad stamp? */
-	vec3ma(start, spanWidth, up, tess.xyz[tess.numVertexes]);
+	maddv3(start, spanWidth, up, tess.xyz[tess.numVertexes]);
 	tess.texCoords[tess.numVertexes][0][0]	= 0;
 	tess.texCoords[tess.numVertexes][0][1]	= 0;
 	tess.vertexColors[tess.numVertexes][0]	= backEnd.currentEntity->e.shaderRGBA[0] * 0.25;
@@ -357,7 +357,7 @@ DoRailCore(const Vec3 start, const Vec3 end, const Vec3 up, float len, float spa
 	tess.vertexColors[tess.numVertexes][2]	= backEnd.currentEntity->e.shaderRGBA[2] * 0.25;
 	tess.numVertexes++;
 
-	vec3ma(start, spanWidth2, up, tess.xyz[tess.numVertexes]);
+	maddv3(start, spanWidth2, up, tess.xyz[tess.numVertexes]);
 	tess.texCoords[tess.numVertexes][0][0]	= 0;
 	tess.texCoords[tess.numVertexes][0][1]	= 1;
 	tess.vertexColors[tess.numVertexes][0]	= backEnd.currentEntity->e.shaderRGBA[0];
@@ -365,7 +365,7 @@ DoRailCore(const Vec3 start, const Vec3 end, const Vec3 up, float len, float spa
 	tess.vertexColors[tess.numVertexes][2]	= backEnd.currentEntity->e.shaderRGBA[2];
 	tess.numVertexes++;
 
-	vec3ma(end, spanWidth, up, tess.xyz[tess.numVertexes]);
+	maddv3(end, spanWidth, up, tess.xyz[tess.numVertexes]);
 
 	tess.texCoords[tess.numVertexes][0][0]	= t;
 	tess.texCoords[tess.numVertexes][0][1]	= 0;
@@ -374,7 +374,7 @@ DoRailCore(const Vec3 start, const Vec3 end, const Vec3 up, float len, float spa
 	tess.vertexColors[tess.numVertexes][2]	= backEnd.currentEntity->e.shaderRGBA[2];
 	tess.numVertexes++;
 
-	vec3ma(end, spanWidth2, up, tess.xyz[tess.numVertexes]);
+	maddv3(end, spanWidth2, up, tess.xyz[tess.numVertexes]);
 	tess.texCoords[tess.numVertexes][0][0]	= t;
 	tess.texCoords[tess.numVertexes][0][1]	= 1;
 	tess.vertexColors[tess.numVertexes][0]	= backEnd.currentEntity->e.shaderRGBA[0];
@@ -414,11 +414,11 @@ DoRailDiscs(int numSegs, const Vec3 start, const Vec3 dir, const Vec3 right, con
 		v[0] = (right[0] * c + up[0] * s) * scale * spanWidth;
 		v[1] = (right[1] * c + up[1] * s) * scale * spanWidth;
 		v[2] = (right[2] * c + up[2] * s) * scale * spanWidth;
-		vec3add(start, v, pos[i]);
+		addv3(start, v, pos[i]);
 
 		if(numSegs > 1){
 			/* offset by 1 segment if we're doing a long distance shot */
-			vec3add(pos[i], dir, pos[i]);
+			addv3(pos[i], dir, pos[i]);
 		}
 	}
 
@@ -428,7 +428,7 @@ DoRailDiscs(int numSegs, const Vec3 start, const Vec3 dir, const Vec3 right, con
 		RB_CHECKOVERFLOW(4, 6);
 
 		for(j = 0; j < 4; j++){
-			vec3copy(pos[j], tess.xyz[tess.numVertexes]);
+			copyv3(pos[j], tess.xyz[tess.numVertexes]);
 			tess.texCoords[tess.numVertexes][0][0]	= (j < 2);
 			tess.texCoords[tess.numVertexes][0][1]	= (j && j != 3);
 			tess.vertexColors[tess.numVertexes][0]	= backEnd.currentEntity->e.shaderRGBA[0];
@@ -436,7 +436,7 @@ DoRailDiscs(int numSegs, const Vec3 start, const Vec3 dir, const Vec3 right, con
 			tess.vertexColors[tess.numVertexes][2]	= backEnd.currentEntity->e.shaderRGBA[2];
 			tess.numVertexes++;
 
-			vec3add(pos[j], dir, pos[j]);
+			addv3(pos[j], dir, pos[j]);
 		}
 
 		tess.indexes[tess.numIndexes++] = tess.numVertexes - 4 + 0;
@@ -463,19 +463,19 @@ RB_SurfaceRailRings(void)
 
 	e = &backEnd.currentEntity->e;
 
-	vec3copy(e->oldorigin, start);
-	vec3copy(e->origin, end);
+	copyv3(e->oldorigin, start);
+	copyv3(e->origin, end);
 
 	/* compute variables */
-	vec3sub(end, start, vec);
-	len = vec3normalize(vec);
+	subv3(end, start, vec);
+	len = normv3(vec);
 	MakeNormalVectors(vec, right, up);
 	numSegs = (len) / r_railSegmentLength->value;
 	if(numSegs <= 0){
 		numSegs = 1;
 	}
 
-	vec3scale(vec, r_railSegmentLength->value, vec);
+	scalev3(vec, r_railSegmentLength->value, vec);
 
 	DoRailDiscs(numSegs, start, vec, right, up);
 }
@@ -495,19 +495,19 @@ RB_SurfaceRailCore(void)
 
 	e = &backEnd.currentEntity->e;
 
-	vec3copy(e->oldorigin, start);
-	vec3copy(e->origin, end);
+	copyv3(e->oldorigin, start);
+	copyv3(e->origin, end);
 
-	vec3sub(end, start, vec);
-	len = vec3normalize(vec);
+	subv3(end, start, vec);
+	len = normv3(vec);
 
 	/* compute side vector */
-	vec3sub(start, backEnd.viewParms.or.origin, v1);
-	vec3normalize(v1);
-	vec3sub(end, backEnd.viewParms.or.origin, v2);
-	vec3normalize(v2);
-	vec3cross(v1, v2, right);
-	vec3normalize(right);
+	subv3(start, backEnd.viewParms.or.origin, v1);
+	normv3(v1);
+	subv3(end, backEnd.viewParms.or.origin, v2);
+	normv3(v2);
+	crossv3(v1, v2, right);
+	normv3(right);
 
 	DoRailCore(start, end, right, len, r_railCoreWidth->integer);
 }
@@ -528,27 +528,27 @@ RB_SurfaceLightningBolt(void)
 
 	e = &backEnd.currentEntity->e;
 
-	vec3copy(e->oldorigin, end);
-	vec3copy(e->origin, start);
+	copyv3(e->oldorigin, end);
+	copyv3(e->origin, start);
 
 	/* compute variables */
-	vec3sub(end, start, vec);
-	len = vec3normalize(vec);
+	subv3(end, start, vec);
+	len = normv3(vec);
 
 	/* compute side vector */
-	vec3sub(start, backEnd.viewParms.or.origin, v1);
-	vec3normalize(v1);
-	vec3sub(end, backEnd.viewParms.or.origin, v2);
-	vec3normalize(v2);
-	vec3cross(v1, v2, right);
-	vec3normalize(right);
+	subv3(start, backEnd.viewParms.or.origin, v1);
+	normv3(v1);
+	subv3(end, backEnd.viewParms.or.origin, v2);
+	normv3(v2);
+	crossv3(v1, v2, right);
+	normv3(right);
 
 	for(i = 0; i < 4; i++){
 		Vec3 temp;
 
 		DoRailCore(start, end, right, len, 8);
 		RotatePointAroundVector(temp, vec, right, 45);
-		vec3copy(temp, right);
+		copyv3(temp, right);
 	}
 }
 
@@ -600,9 +600,9 @@ VectorArrayNormalize(Vec4 *normals, unsigned int count)
 		} while(count--);
 	}
 #else	/* No assembly version for this architecture, or C_ONLY defined */
-	/* given the input, it's safe to call vec3normalizefast */
+	/* given the input, it's safe to call fastnormv3 */
 	while(count--){
-		vec3normalizefast(normals[0]);
+		fastnormv3(normals[0]);
 		normals++;
 	}
 #endif
@@ -746,7 +746,7 @@ LerpMeshVertexes_altivec(md3Surface_t *surf, float backlerp)
 			outNormal[2] = uncompressedOldNormal[2] * oldNormalScale +
 				       uncompressedNewNormal[2] * newNormalScale;
 
-/*			vec3normalize (outNormal); */
+/*			normv3 (outNormal); */
 		}
 		VectorArrayNormalize((Vec4*)tess.normal[tess.numVertexes], numVerts);
 	}
@@ -852,7 +852,7 @@ LerpMeshVertexes_scalar(md3Surface_t *surf, float backlerp)
 			outNormal[2] = uncompressedOldNormal[2] * oldNormalScale +
 				       uncompressedNewNormal[2] * newNormalScale;
 
-/*			vec3normalize (outNormal); */
+/*			normv3 (outNormal); */
 		}
 		VectorArrayNormalize((Vec4*)tess.normal[tess.numVertexes], numVerts);
 	}
@@ -952,11 +952,11 @@ RB_SurfaceFace(srfSurfaceFace_t *surf)
 	if(tess.shader->needsNormal){
 		normal = surf->plane.normal;
 		for(i = 0, ndx = tess.numVertexes; i < numPoints; i++, ndx++)
-			vec3copy(normal, tess.normal[ndx]);
+			copyv3(normal, tess.normal[ndx]);
 	}
 
 	for(i = 0, v = surf->points[0], ndx = tess.numVertexes; i < numPoints; i++, v += VERTEXSIZE, ndx++){
-		vec3copy(v, tess.xyz[ndx]);
+		copyv3(v, tess.xyz[ndx]);
 		tess.texCoords[ndx][0][0] = v[3];
 		tess.texCoords[ndx][0][1] = v[4];
 		tess.texCoords[ndx][1][0] = v[5];
@@ -988,8 +988,8 @@ LodErrorForVolume(Vec3 local, float radius)
 	world[2] = local[0] * backEnd.or.axis[0][2] + local[1] * backEnd.or.axis[1][2] +
 		   local[2] * backEnd.or.axis[2][2] + backEnd.or.origin[2];
 
-	vec3sub(world, backEnd.viewParms.or.origin, world);
-	d = vec3dot(world, backEnd.viewParms.or.axis[0]);
+	subv3(world, backEnd.viewParms.or.origin, world);
+	d = dotv3(world, backEnd.viewParms.or.axis[0]);
 
 	if(d < 0){
 		d = -d;

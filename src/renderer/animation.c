@@ -127,22 +127,22 @@ RB_SurfaceAnim(md4Surface_t *surface)
 		Vec3 tempVert, tempNormal;
 		md4Weight_t *w;
 
-		vec3clear(tempVert);
-		vec3clear(tempNormal);
+		clearv3(tempVert);
+		clearv3(tempNormal);
 		w = v->weights;
 		for(k = 0; k < v->numWeights; k++, w++){
 			bone = bonePtr + w->boneIndex;
 
 			tempVert[0] += w->boneWeight *
-				       (vec3dot(bone->matrix[0], w->offset) + bone->matrix[0][3]);
+				       (dotv3(bone->matrix[0], w->offset) + bone->matrix[0][3]);
 			tempVert[1] += w->boneWeight *
-				       (vec3dot(bone->matrix[1], w->offset) + bone->matrix[1][3]);
+				       (dotv3(bone->matrix[1], w->offset) + bone->matrix[1][3]);
 			tempVert[2] += w->boneWeight *
-				       (vec3dot(bone->matrix[2], w->offset) + bone->matrix[2][3]);
+				       (dotv3(bone->matrix[2], w->offset) + bone->matrix[2][3]);
 
-			tempNormal[0]	+= w->boneWeight * vec3dot(bone->matrix[0], v->normal);
-			tempNormal[1]	+= w->boneWeight * vec3dot(bone->matrix[1], v->normal);
-			tempNormal[2]	+= w->boneWeight * vec3dot(bone->matrix[2], v->normal);
+			tempNormal[0]	+= w->boneWeight * dotv3(bone->matrix[0], v->normal);
+			tempNormal[1]	+= w->boneWeight * dotv3(bone->matrix[1], v->normal);
+			tempNormal[2]	+= w->boneWeight * dotv3(bone->matrix[2], v->normal);
 		}
 
 		tess.xyz[baseVertex + j][0] = tempVert[0];

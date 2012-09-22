@@ -167,19 +167,19 @@ AAS_AlternativeRouteGoals(Vec3 start, int startareanum, Vec3 goal,
 		AAS_AltRoutingFloodCluster_r(i);
 		/* now we've got a cluster with areas through which an alternative route could go
 		 * get the 'center' of the cluster */
-		vec3clear(mid);
+		clearv3(mid);
 		for(j = 0; j < numclusterareas; j++)
-			vec3add(mid, aasworld.areas[clusterareas[j]].center,
+			addv3(mid, aasworld.areas[clusterareas[j]].center,
 				mid);
-		vec3scale(mid, 1.0 / numclusterareas, mid);
+		scalev3(mid, 1.0 / numclusterareas, mid);
 		/* get the area closest to the center of the cluster */
 		bestdist = 999999;
 		bestareanum = 0;
 		for(j = 0; j < numclusterareas; j++){
-			vec3sub(mid,
+			subv3(mid,
 				aasworld.areas[clusterareas[j]].center,
 				dir);
-			dist = vec3len(dir);
+			dist = lenv3(dir);
 			if(dist < bestdist){
 				bestdist = dist;
 				bestareanum = clusterareas[j];
@@ -187,7 +187,7 @@ AAS_AlternativeRouteGoals(Vec3 start, int startareanum, Vec3 goal,
 		}
 		/* now we've got an area for an alternative route */
 		/* FIXME: add alternative goal origin */
-		vec3copy(aasworld.areas[bestareanum].center,
+		copyv3(aasworld.areas[bestareanum].center,
 			altroutegoals[numaltroutegoals].origin);
 		altroutegoals[numaltroutegoals].areanum = bestareanum;
 		altroutegoals[numaltroutegoals].starttraveltime =

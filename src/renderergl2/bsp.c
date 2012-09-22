@@ -147,7 +147,7 @@ ColorToRGBE(const Vec3 color, unsigned char rgbe[4])
 	float	maxComponent;
 	int	e;
 
-	vec3copy(color, sample);
+	copyv3(color, sample);
 
 	maxComponent = sample[0];
 	if(sample[1] > maxComponent)
@@ -169,7 +169,7 @@ ColorToRGBE(const Vec3 color, unsigned char rgbe[4])
 		rgbe[3] = (unsigned char)(e + 128);
 #else
 		e = ceil(log(maxComponent) / log(2.0f));/* ceil(log2(maxComponent)); */
-		vec3scale(sample, 1.0 / pow(2.0f, e) /*exp2(e)*/, sample);
+		scalev3(sample, 1.0 / pow(2.0f, e) /*exp2(e)*/, sample);
 
 		rgbe[0] = (unsigned char)(sample[0] * 255);
 		rgbe[1] = (unsigned char)(sample[1] * 255);
@@ -389,7 +389,7 @@ R_LoadLightmaps(lump_t *l, lump_t *surfs)
 						color[2]	= (buf_p[j*3+2] + 1.0f);
 					}
 
-					vec3scale(color, lightScale, color);
+					scalev3(color, lightScale, color);
 
 					if(glRefConfig.textureFloat && glRefConfig.halfFloatPixel)
 						ColorToRGBA16F(color, (unsigned short*)(&image[j*8]));
@@ -720,7 +720,7 @@ ParseFace(dsurface_t *ds, drawVert_t *verts, float *hdrVertColors, msurface_t *s
 	/* take the plane information from the lightmap vector */
 	for(i = 0; i < 3; i++)
 		cv->plane.normal[i] = LittleFloat(ds->lightmapVecs[2][i]);
-	cv->plane.dist = vec3dot(cv->verts[0].xyz, cv->plane.normal);
+	cv->plane.dist = dotv3(cv->verts[0].xyz, cv->plane.normal);
 	SetPlaneSignbits(&cv->plane);
 	cv->plane.type = PlaneTypeForNormal(cv->plane.normal);
 
@@ -828,10 +828,10 @@ ParseMesh(dsurface_t *ds, drawVert_t *verts, float *hdrVertColors, msurface_t *s
 		bounds[0][i]	= LittleFloat(ds->lightmapVecs[0][i]);
 		bounds[1][i]	= LittleFloat(ds->lightmapVecs[1][i]);
 	}
-	vec3add(bounds[0], bounds[1], bounds[1]);
-	vec3scale(bounds[1], 0.5f, grid->lodOrigin);
-	vec3sub(bounds[0], grid->lodOrigin, tmpVec);
-	grid->lodRadius = vec3len(tmpVec);
+	addv3(bounds[0], bounds[1], bounds[1]);
+	scalev3(bounds[1], 0.5f, grid->lodOrigin);
+	subv3(bounds[0], grid->lodOrigin, tmpVec);
+	grid->lodRadius = lenv3(tmpVec);
 }
 
 /*
@@ -2109,9 +2109,9 @@ R_LoadSurfaces(lump_t *surfs, lump_t *verts, lump_t *indexLump)
 				srfGridMesh_t *surface = (srfGridMesh_t*)out->data;
 
 				out->cullinfo.type = CULLINFO_BOX | CULLINFO_SPHERE;
-				vec3copy(surface->meshBounds[0], out->cullinfo.bounds[0]);
-				vec3copy(surface->meshBounds[1], out->cullinfo.bounds[1]);
-				vec3copy(surface->localOrigin, out->cullinfo.localOrigin);
+				copyv3(surface->meshBounds[0], out->cullinfo.bounds[0]);
+				copyv3(surface->meshBounds[1], out->cullinfo.bounds[1]);
+				copyv3(surface->localOrigin, out->cullinfo.localOrigin);
 				out->cullinfo.radius = surface->meshRadius;
 			}
 			numMeshes++;
@@ -2122,8 +2122,8 @@ R_LoadSurfaces(lump_t *surfs, lump_t *verts, lump_t *indexLump)
 				srfTriangles_t *surface = (srfTriangles_t*)out->data;
 
 				out->cullinfo.type = CULLINFO_BOX;
-				vec3copy(surface->bounds[0], out->cullinfo.bounds[0]);
-				vec3copy(surface->bounds[1], out->cullinfo.bounds[1]);
+				copyv3(surface->bounds[0], out->cullinfo.bounds[0]);
+				copyv3(surface->bounds[1], out->cullinfo.bounds[1]);
 			}
 			numTriSurfs++;
 			break;
@@ -2133,8 +2133,8 @@ R_LoadSurfaces(lump_t *surfs, lump_t *verts, lump_t *indexLump)
 				srfSurfaceFace_t *surface = (srfSurfaceFace_t*)out->data;
 
 				out->cullinfo.type = CULLINFO_PLANE | CULLINFO_BOX;
-				vec3copy(surface->bounds[0], out->cullinfo.bounds[0]);
-				vec3copy(surface->bounds[1], out->cullinfo.bounds[1]);
+				copyv3(surface->bounds[0], out->cullinfo.bounds[0]);
+				copyv3(surface->bounds[1], out->cullinfo.bounds[1]);
 				out->cullinfo.plane = surface->plane;
 			}
 			numFaces++;
@@ -2501,7 +2501,7 @@ R_LoadFogs(lump_t *l, lump_t *brushesLump, lump_t *sidesLump)
 		}else{
 			out->hasSurface = qtrue;
 			planeNum = LittleLong(sides[ firstSide + sideNum ].planeNum);
-			vec3sub(vec3_origin, s_worldData.planes[ planeNum ].normal, out->surface);
+			subv3(vec3_origin, s_worldData.planes[ planeNum ].normal, out->surface);
 			out->surface[3] = -s_worldData.planes[ planeNum ].dist;
 		}
 
@@ -3011,11 +3011,11 @@ R_MergeLeafSurfaces(void)
 		vboSurf->shader		= surf1->shader;
 		vboSurf->fogIndex	= surf1->fogIndex;
 
-		vec3copy(bounds[0], vboSurf->bounds[0]);
-		vec3copy(bounds[1], vboSurf->bounds[1]);
+		copyv3(bounds[0], vboSurf->bounds[0]);
+		copyv3(bounds[1], vboSurf->bounds[1]);
 
-		vec3copy(bounds[0], mergedSurf->cullinfo.bounds[0]);
-		vec3copy(bounds[1], mergedSurf->cullinfo.bounds[1]);
+		copyv3(bounds[0], mergedSurf->cullinfo.bounds[0]);
+		copyv3(bounds[1], mergedSurf->cullinfo.bounds[1]);
 
 		mergedSurf->cullinfo.type = CULLINFO_BOX;
 		mergedSurf->data = (surfaceType_t*)vboSurf;
@@ -3133,7 +3133,7 @@ RE_LoadWorldMap(const char *name)
 	tr.sunDirection[1]	= 0.3f;
 	tr.sunDirection[2]	= 0.9f;
 
-	vec3normalize(tr.sunDirection);
+	normv3(tr.sunDirection);
 
 	/* set default autoexposure settings */
 	tr.autoExposureMinMax[0]	= -2.0;

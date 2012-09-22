@@ -535,10 +535,10 @@ R_LoadMD3(model_t * mod, int lod, void *buffer, int bufferSize, const char *modN
 			Vec3	normal;
 
 			for(j = 0, v = surf->verts; j < (surf->numVerts * mdvModel->numFrames); j++, v++){
-				vec3clear(v->tangent);
-				vec3clear(v->bitangent);
+				clearv3(v->tangent);
+				clearv3(v->bitangent);
 				if(r_recalcMD3Normals->integer)
-					vec3clear(v->normal);
+					clearv3(v->normal);
 			}
 
 			for(f = 0; f < mdvModel->numFrames; f++){
@@ -552,7 +552,7 @@ R_LoadMD3(model_t * mod, int lod, void *buffer, int bufferSize, const char *modN
 					t2	= surf->st[tri->indexes[2]].st;
 
 					if(!r_recalcMD3Normals->integer)
-						vec3copy(v->normal, normal);
+						copyv3(v->normal, normal);
 
 					#if 1
 					R_CalcTangentSpace(tangent, bitangent, normal, v0, v1, v2, t0, t1, t2);
@@ -565,27 +565,27 @@ R_LoadMD3(model_t * mod, int lod, void *buffer, int bufferSize, const char *modN
 						float *v;
 
 						v = surf->verts[surf->numVerts * f + tri->indexes[k]].tangent;
-						vec3add(v, tangent, v);
+						addv3(v, tangent, v);
 
 						v =
 							surf->verts[surf->numVerts * f +
 								    tri->indexes[k]].bitangent;
-						vec3add(v, bitangent, v);
+						addv3(v, bitangent, v);
 
 						if(r_recalcMD3Normals->integer){
 							v =
 								surf->verts[surf->numVerts * f +
 									    tri->indexes[k]].normal;
-							vec3add(v, normal, v);
+							addv3(v, normal, v);
 						}
 					}
 				}
 			}
 
 			for(j = 0, v = surf->verts; j < (surf->numVerts * mdvModel->numFrames); j++, v++){
-				vec3normalize(v->tangent);
-				vec3normalize(v->bitangent);
-				vec3normalize(v->normal);
+				normv3(v->tangent);
+				normv3(v->bitangent);
+				normv3(v->normal);
 			}
 		}
 
@@ -642,10 +642,10 @@ R_LoadMD3(model_t * mod, int lod, void *buffer, int bufferSize, const char *modN
 
 			v = surf->verts;
 			for(j = 0; j < surf->numVerts * mdvModel->numFrames; j++, v++){
-				vec3copy(v->xyz,       verts[j]);
-				vec3copy(v->normal,    normals[j]);
-				vec3copy(v->tangent,   tangents[j]);
-				vec3copy(v->bitangent, bitangents[j]);
+				copyv3(v->xyz,       verts[j]);
+				copyv3(v->normal,    normals[j]);
+				copyv3(v->tangent,   tangents[j]);
+				copyv3(v->bitangent, bitangents[j]);
 			}
 
 			st = surf->st;
@@ -972,16 +972,16 @@ R_LerpTag(orientation_t *tag, qhandle_t handle, int startFrame, int endFrame,
 				startFrame, endFrame,
 				frac, tagName);
 		}else{
-			axisclear(tag->axis);
-			vec3clear(tag->origin);
+			clearaxis(tag->axis);
+			clearv3(tag->origin);
 			return qfalse;
 		}
 	}else{
 		start	= R_GetTag(model->mdv[0], startFrame, tagName);
 		end	= R_GetTag(model->mdv[0], endFrame, tagName);
 		if(!start || !end){
-			axisclear(tag->axis);
-			vec3clear(tag->origin);
+			clearaxis(tag->axis);
+			clearv3(tag->origin);
 			return qfalse;
 		}
 	}
@@ -995,9 +995,9 @@ R_LerpTag(orientation_t *tag, qhandle_t handle, int startFrame, int endFrame,
 		tag->axis[1][i] = start->axis[1][i] * backLerp +  end->axis[1][i] * frontLerp;
 		tag->axis[2][i] = start->axis[2][i] * backLerp +  end->axis[2][i] * frontLerp;
 	}
-	vec3normalize(tag->axis[0]);
-	vec3normalize(tag->axis[1]);
-	vec3normalize(tag->axis[2]);
+	normv3(tag->axis[0]);
+	normv3(tag->axis[1]);
+	normv3(tag->axis[2]);
 	return qtrue;
 }
 
@@ -1012,8 +1012,8 @@ R_ModelBounds(qhandle_t handle, Vec3 mins, Vec3 maxs)
 	model = R_GetModelByHandle(handle);
 
 	if(model->type == MOD_BRUSH){
-		vec3copy(model->bmodel->bounds[0], mins);
-		vec3copy(model->bmodel->bounds[1], maxs);
+		copyv3(model->bmodel->bounds[0], mins);
+		copyv3(model->bmodel->bounds[1], maxs);
 
 		return;
 	}else if(model->type == MOD_MESH){
@@ -1023,8 +1023,8 @@ R_ModelBounds(qhandle_t handle, Vec3 mins, Vec3 maxs)
 		header	= model->mdv[0];
 		frame	= header->frames;
 
-		vec3copy(frame->bounds[0], mins);
-		vec3copy(frame->bounds[1], maxs);
+		copyv3(frame->bounds[0], mins);
+		copyv3(frame->bounds[1], maxs);
 
 		return;
 	}else if(model->type == MOD_MD4){
@@ -1034,8 +1034,8 @@ R_ModelBounds(qhandle_t handle, Vec3 mins, Vec3 maxs)
 		header	= (md4Header_t*)model->modelData;
 		frame	= (md4Frame_t*)((byte*)header + header->ofsFrames);
 
-		vec3copy(frame->bounds[0], mins);
-		vec3copy(frame->bounds[1], maxs);
+		copyv3(frame->bounds[0], mins);
+		copyv3(frame->bounds[1], maxs);
 
 		return;
 	}else if(model->type == MOD_IQM){
@@ -1044,12 +1044,12 @@ R_ModelBounds(qhandle_t handle, Vec3 mins, Vec3 maxs)
 		iqmData = model->modelData;
 
 		if(iqmData->bounds){
-			vec3copy(iqmData->bounds, mins);
-			vec3copy(iqmData->bounds + 3, maxs);
+			copyv3(iqmData->bounds, mins);
+			copyv3(iqmData->bounds + 3, maxs);
 			return;
 		}
 	}
 
-	vec3clear(mins);
-	vec3clear(maxs);
+	clearv3(mins);
+	clearv3(maxs);
 }

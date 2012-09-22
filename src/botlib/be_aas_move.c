@@ -57,11 +57,11 @@ AAS_DropToFloor(Vec3 origin, Vec3 mins, Vec3 maxs)
 	Vec3 end;
 	bsp_trace_t trace;
 
-	vec3copy(origin, end);
+	copyv3(origin, end);
 	end[2]	-= 100;
 	trace	= AAS_Trace(origin, mins, maxs, end, 0, CONTENTS_SOLID);
 	if(trace.startsolid) return qfalse;
-	vec3copy(trace.endpos, origin);
+	copyv3(trace.endpos, origin);
 	return qtrue;
 }	/* end of the function AAS_DropToFloor */
 /* ===========================================================================
@@ -142,7 +142,7 @@ AAS_AgainstLadder(Vec3 origin)
 	aas_face_t *face;
 	aas_area_t *area;
 
-	vec3copy(origin, org);
+	copyv3(origin, org);
 	areanum = AAS_PointAreaNum(org);
 	if(!areanum){
 		org[0]	+= 1;
@@ -179,7 +179,7 @@ AAS_AgainstLadder(Vec3 origin)
 		/* get the plane the face is in */
 		plane = &aasworld.planes[face->planenum ^ side];
 		/* if the origin is pretty close to the plane */
-		if(abs(vec3dot(plane->normal, origin) - plane->dist) < 3)
+		if(abs(dotv3(plane->normal, origin) - plane->dist) < 3)
 			if(AAS_PointInsideFace(abs(facenum), origin,
 				   0.1f)) return qtrue;
 	}
@@ -199,7 +199,7 @@ AAS_OnGround(Vec3 origin, int presencetype, int passent)
 	Vec3 end, up = {0, 0, 1};
 	aas_plane_t *plane;
 
-	vec3copy(origin, end);
+	copyv3(origin, end);
 	end[2] -= 10;
 
 	trace = AAS_TraceClientBBox(origin, end, presencetype, passent);
@@ -212,7 +212,7 @@ AAS_OnGround(Vec3 origin, int presencetype, int passent)
 	if(origin[2] - trace.endpos[2] > 10) return qfalse;
 	/* check if the plane isn't too steep */
 	plane = AAS_PlaneFromNum(trace.planenum);
-	if(vec3dot(plane->normal,
+	if(dotv3(plane->normal,
 		   up) < aassettings.phys_maxsteepness) return qfalse;
 	/* the bot is on the ground */
 	return qtrue;
@@ -229,7 +229,7 @@ AAS_Swimming(Vec3 origin)
 {
 	Vec3 testorg;
 
-	vec3copy(origin, testorg);
+	copyv3(origin, testorg);
 	testorg[2] -= 2;
 	if(AAS_PointContents(testorg) &
 	   (CONTENTS_LAVA|CONTENTS_SLIME|CONTENTS_WATER)) return qtrue;
@@ -249,13 +249,13 @@ static Vec3	MOVEDIR_DOWN = {0,  0, -1};
 void
 AAS_SetMovedir(Vec3 angles, Vec3 movedir)
 {
-	if(vec3cmp(angles, VEC_UP))
-		vec3copy(MOVEDIR_UP, movedir);
-	else if(vec3cmp(angles, VEC_DOWN))
-		vec3copy(MOVEDIR_DOWN, movedir);
+	if(cmpv3(angles, VEC_UP))
+		copyv3(MOVEDIR_UP, movedir);
+	else if(cmpv3(angles, VEC_DOWN))
+		copyv3(MOVEDIR_DOWN, movedir);
 	/* end else if */
 	else
-		anglevec3s(angles, movedir, NULL, NULL);
+		anglev3s(angles, movedir, NULL, NULL);
 }	/* end of the function AAS_SetMovedir */
 /* ===========================================================================
  *
@@ -273,21 +273,21 @@ AAS_JumpReachRunStart(aas_reachability_t *reach, Vec3 runstart)
 	hordir[0] = reach->start[0] - reach->end[0];
 	hordir[1] = reach->start[1] - reach->end[1];
 	hordir[2] = 0;
-	vec3normalize(hordir);
+	normv3(hordir);
 	/* start point */
-	vec3copy(reach->start, start);
+	copyv3(reach->start, start);
 	start[2] += 1;
 	/* get command movement */
-	vec3scale(hordir, 400, cmdmove);
+	scalev3(hordir, 400, cmdmove);
 	/*  */
 	AAS_PredictClientMovement(&move, -1, start, PRESENCE_NORMAL, qtrue,
 		vec3_origin, cmdmove, 1, 2, 0.1f,
 		SE_ENTERWATER|SE_ENTERSLIME|SE_ENTERLAVA|
 		SE_HITGROUNDDAMAGE|SE_GAP, 0, qfalse);
-	vec3copy(move.endpos, runstart);
+	copyv3(move.endpos, runstart);
 	/* don't enter slime or lava and don't fall from too high */
 	if(move.stopevent & (SE_ENTERSLIME|SE_ENTERLAVA|SE_HITGROUNDDAMAGE))
-		vec3copy(start, runstart);
+		copyv3(start, runstart);
 }	/* end of the function AAS_JumpReachRunStart */
 /* ===========================================================================
  * returns the Z velocity when rocket jumping at the origin
@@ -311,9 +311,9 @@ AAS_WeaponJumpZVelocity(Vec3 origin, float radiusdamage)
 	viewangles[YAW] = 0;
 	viewangles[ROLL] = 0;
 	/* get the start point shooting from */
-	vec3copy(origin, start);
+	copyv3(origin, start);
 	start[2] += 8;	/* view offset Z */
-	anglevec3s(viewangles, forward, right, NULL);
+	anglev3s(viewangles, forward, right, NULL);
 	start[0] += forward[0] * rocketoffset[0] + right[0] *
 		    rocketoffset[1];
 	start[1] += forward[1] * rocketoffset[0] + right[1] *
@@ -321,15 +321,15 @@ AAS_WeaponJumpZVelocity(Vec3 origin, float radiusdamage)
 	start[2] += forward[2] * rocketoffset[0] + right[2] *
 		    rocketoffset[1] + rocketoffset[2];
 	/* end point of the trace */
-	vec3ma(start, 500, forward, end);
+	maddv3(start, 500, forward, end);
 	/* trace a line to get the impact point */
 	bsptrace = AAS_Trace(start, NULL, NULL, end, 1, CONTENTS_SOLID);
 	/* calculate the damage the bot will get from the rocket impact */
-	vec3add(botmins, botmaxs, v);
-	vec3ma(origin, 0.5, v, v);
-	vec3sub(bsptrace.endpos, v, v);
+	addv3(botmins, botmaxs, v);
+	maddv3(origin, 0.5, v, v);
+	subv3(bsptrace.endpos, v, v);
 	/*  */
-	points = radiusdamage - 0.5 * vec3len(v);
+	points = radiusdamage - 0.5 * lenv3(v);
 	if(points < 0) points = 0;
 	/* the owner of the rocket gets half the damage */
 	points *= 0.5;
@@ -338,10 +338,10 @@ AAS_WeaponJumpZVelocity(Vec3 origin, float radiusdamage)
 	/* knockback is the same as the damage points */
 	knockback = points;
 	/* direction of the damage (from trace.endpos to bot origin) */
-	vec3sub(origin, bsptrace.endpos, dir);
-	vec3normalize(dir);
+	subv3(origin, bsptrace.endpos, dir);
+	normv3(dir);
 	/* damage velocity */
-	vec3scale(dir, 1600.0 * (float)knockback / mass, kvel);	/* the rocket jump hack... */
+	scalev3(dir, 1600.0 * (float)knockback / mass, kvel);	/* the rocket jump hack... */
 	/* rocket impact velocity + jump velocity */
 	return kvel[2] + aassettings.phys_jumpvel;
 }	/* end of the function AAS_WeaponJumpZVelocity */
@@ -384,7 +384,7 @@ AAS_Accelerate(Vec3 velocity, float frametime, Vec3 wishdir, float wishspeed,
 	int i;
 	float addspeed, accelspeed, currentspeed;
 
-	currentspeed = vec3dot(velocity, wishdir);
+	currentspeed = dotv3(velocity, wishdir);
 	addspeed = wishspeed - currentspeed;
 	if(addspeed <= 0)
 		return;
@@ -435,17 +435,17 @@ AAS_ClipToBBox(aas_trace_t *trace, Vec3 start, Vec3 end, int presencetype,
 	Vec3	bboxmins, bboxmaxs, absmins, absmaxs, dir, mid;
 
 	AAS_PresenceTypeBoundingBox(presencetype, bboxmins, bboxmaxs);
-	vec3sub(mins, bboxmaxs, absmins);
-	vec3sub(maxs, bboxmins, absmaxs);
+	subv3(mins, bboxmaxs, absmins);
+	subv3(maxs, bboxmins, absmaxs);
 	/*  */
-	vec3copy(end, trace->endpos);
+	copyv3(end, trace->endpos);
 	trace->fraction = 1;
 	for(i = 0; i < 3; i++){
 		if(start[i] < absmins[i] && end[i] < absmins[i]) return qfalse;
 		if(start[i] > absmaxs[i] && end[i] > absmaxs[i]) return qfalse;
 	}
 	/* check bounding box collision */
-	vec3sub(end, start, dir);
+	subv3(end, start, dir);
 	frac = 1;
 	for(i = 0; i < 3; i++){
 		/* get plane to test collision with for the current axis direction */
@@ -552,10 +552,10 @@ AAS_ClientMovementPrediction(struct aas_clientmove_s *move,
 	Q_Memset(move, 0, sizeof(aas_clientmove_t));
 	Q_Memset(&trace, 0, sizeof(aas_trace_t));
 	/* start at the current origin */
-	vec3copy(origin, org);
+	copyv3(origin, org);
 	org[2] += 0.25;
 	/* velocity to test for the first frame */
-	vec3scale(velocity, frametime, frame_test_vel);
+	scalev3(velocity, frametime, frame_test_vel);
 	/*  */
 	jump_frame = -1;
 	/* predict a maximum of 'maxframes' ahead */
@@ -570,11 +570,11 @@ AAS_ClientMovementPrediction(struct aas_clientmove_s *move,
 		if(onground || swimming){
 			friction = swimming ? phys_friction : phys_waterfriction;
 			/* apply friction */
-			vec3scale(frame_test_vel, 1/frametime, frame_test_vel);
+			scalev3(frame_test_vel, 1/frametime, frame_test_vel);
 			AAS_ApplyFriction(frame_test_vel, friction,
 				phys_stopspeed,
 				frametime);
-			vec3scale(frame_test_vel, frametime, frame_test_vel);
+			scalev3(frame_test_vel, frametime, frame_test_vel);
 		}
 		crouch = qfalse;
 		/* apply command movement */
@@ -582,7 +582,7 @@ AAS_ClientMovementPrediction(struct aas_clientmove_s *move,
 			/* ax = 0; */
 			maxvel = phys_maxwalkvelocity;
 			accelerate = phys_airaccelerate;
-			vec3copy(cmdmove, wishdir);
+			copyv3(cmdmove, wishdir);
 			if(onground){
 				if(cmdmove[2] < -300){
 					crouch	= qtrue;
@@ -608,13 +608,13 @@ AAS_ClientMovementPrediction(struct aas_clientmove_s *move,
 			}else
 				wishdir[2] = 0;
 			/*  */
-			wishspeed = vec3normalize(wishdir);
+			wishspeed = normv3(wishdir);
 			if(wishspeed > maxvel) wishspeed = maxvel;
-			vec3scale(frame_test_vel, 1/frametime, frame_test_vel);
+			scalev3(frame_test_vel, 1/frametime, frame_test_vel);
 			AAS_Accelerate(frame_test_vel, frametime, wishdir,
 				wishspeed,
 				accelerate);
-			vec3scale(frame_test_vel, frametime, frame_test_vel);
+			scalev3(frame_test_vel, frametime, frame_test_vel);
 			/*
 			 * for (i = 0; i < ax; i++)
 			 * {
@@ -635,12 +635,12 @@ AAS_ClientMovementPrediction(struct aas_clientmove_s *move,
 			if(AAS_PointPresenceType(org) & PRESENCE_NORMAL)
 				presencetype = PRESENCE_NORMAL;
 		/* save the current origin */
-		vec3copy(org, lastorg);
+		copyv3(org, lastorg);
 		/* move linear during one frame */
-		vec3copy(frame_test_vel, left_test_vel);
+		copyv3(frame_test_vel, left_test_vel);
 		j = 0;
 		do {
-			vec3add(org, left_test_vel, end);
+			addv3(org, left_test_vel, end);
 			/* trace a bounding box */
 			trace = AAS_TraceClientBBox(org, end, presencetype,
 				entnum);
@@ -664,9 +664,9 @@ AAS_ClientMovementPrediction(struct aas_clientmove_s *move,
 				for(i = 0; i < numareas; i++){
 					if(stopevent & SE_ENTERAREA)
 						if(areas[i] == stopareanum){
-							vec3copy(points[i],
+							copyv3(points[i],
 								move->endpos);
-							vec3scale(
+							scalev3(
 								frame_test_vel,
 								1/
 								frametime,
@@ -692,9 +692,9 @@ AAS_ClientMovementPrediction(struct aas_clientmove_s *move,
 									 ]].
 						   contents &
 						   AREACONTENTS_JUMPPAD){
-							vec3copy(points[i],
+							copyv3(points[i],
 								move->endpos);
-							vec3scale(
+							scalev3(
 								frame_test_vel,
 								1/
 								frametime,
@@ -718,10 +718,10 @@ AAS_ClientMovementPrediction(struct aas_clientmove_s *move,
 									 ]].
 						   contents &
 						   AREACONTENTS_TELEPORTER){
-							vec3copy(points[i],
+							copyv3(points[i],
 								move->endpos);
 							move->endarea = areas[i];
-							vec3scale(
+							scalev3(
 								frame_test_vel,
 								1/
 								frametime,
@@ -743,10 +743,10 @@ AAS_ClientMovementPrediction(struct aas_clientmove_s *move,
 									 ]].
 						   contents &
 						   AREACONTENTS_CLUSTERPORTAL){
-							vec3copy(points[i],
+							copyv3(points[i],
 								move->endpos);
 							move->endarea = areas[i];
-							vec3scale(
+							scalev3(
 								frame_test_vel,
 								1/
 								frametime,
@@ -769,10 +769,10 @@ AAS_ClientMovementPrediction(struct aas_clientmove_s *move,
 			if(stopevent & SE_HITBOUNDINGBOX)
 				if(AAS_ClipToBBox(&trace, org, trace.endpos,
 					   presencetype, mins, maxs)){
-					vec3copy(trace.endpos, move->endpos);
+					copyv3(trace.endpos, move->endpos);
 					move->endarea = AAS_PointAreaNum(
 						move->endpos);
-					vec3scale(frame_test_vel, 1/frametime,
+					scalev3(frame_test_vel, 1/frametime,
 						move->velocity);
 					move->trace = trace;
 					move->stopevent = SE_HITBOUNDINGBOX;
@@ -784,24 +784,24 @@ AAS_ClientMovementPrediction(struct aas_clientmove_s *move,
 				}
 			/* end if
 			 * move the entity to the trace end point */
-			vec3copy(trace.endpos, org);
+			copyv3(trace.endpos, org);
 			/* if there was a collision */
 			if(trace.fraction < 1.0){
 				/* get the plane the bounding box collided with */
 				plane = AAS_PlaneFromNum(trace.planenum);
 				/*  */
 				if(stopevent & SE_HITGROUNDAREA)
-					if(vec3dot(plane->normal,
+					if(dotv3(plane->normal,
 						   up) > phys_maxsteepness){
-						vec3copy(org, start);
+						copyv3(org, start);
 						start[2] += 0.5;
 						if(AAS_PointAreaNum(start) ==
 						   stopareanum){
-							vec3copy(start,
+							copyv3(start,
 								move->endpos);
 							move->endarea =
 								stopareanum;
-							vec3scale(
+							scalev3(
 								frame_test_vel,
 								1/
 								frametime,
@@ -826,9 +826,9 @@ AAS_ClientMovementPrediction(struct aas_clientmove_s *move,
 				if(plane->normal[2] == 0 &&
 				   (jump_frame < 0 || n - jump_frame > 2)){
 					/* check for a step */
-					vec3ma(org, -0.25, plane->normal,
+					maddv3(org, -0.25, plane->normal,
 						start);
-					vec3copy(start, stepend);
+					copyv3(start, stepend);
 					start[2] += phys_maxstep;
 					steptrace = AAS_TraceClientBBox(
 						start, stepend, presencetype,
@@ -837,10 +837,10 @@ AAS_ClientMovementPrediction(struct aas_clientmove_s *move,
 					if(!steptrace.startsolid){
 						plane2 = AAS_PlaneFromNum(
 							steptrace.planenum);
-						if(vec3dot(plane2->normal,
+						if(dotv3(plane2->normal,
 							   up) >
 						   phys_maxsteepness){
-							vec3sub(
+							subv3(
 								end,
 								steptrace.endpos,
 								left_test_vel);
@@ -854,7 +854,7 @@ AAS_ClientMovementPrediction(struct aas_clientmove_s *move,
 								   endpos[2] -
 								   org[2] >
 								   0.125){
-									vec3copy(
+									copyv3(
 										org,
 										start);
 									start[2]
@@ -882,21 +882,21 @@ AAS_ClientMovementPrediction(struct aas_clientmove_s *move,
 				if(!step){
 					/* velocity left to test for this frame is the projection
 					 * of the current test velocity into the hit plane */
-					vec3ma(left_test_vel,
-						-vec3dot(left_test_vel,
+					maddv3(left_test_vel,
+						-dotv3(left_test_vel,
 							plane->normal),
 						plane->normal, left_test_vel);
 					/* store the old velocity for landing check */
-					vec3copy(frame_test_vel,
+					copyv3(frame_test_vel,
 						old_frame_test_vel);
 					/* test velocity for the next frame is the projection
 					 * of the velocity of the current frame into the hit plane */
-					vec3ma(frame_test_vel,
-						-vec3dot(frame_test_vel,
+					maddv3(frame_test_vel,
+						-dotv3(frame_test_vel,
 							plane->normal),
 						plane->normal, frame_test_vel);
 					/* check for a landing on an almost horizontal floor */
-					if(vec3dot(plane->normal,
+					if(dotv3(plane->normal,
 						   up) > phys_maxsteepness)
 						onground = qtrue;
 					if(stopevent & SE_HITGROUNDDAMAGE){
@@ -926,14 +926,14 @@ AAS_ClientMovementPrediction(struct aas_clientmove_s *move,
 							 * if (ent->waterlevel == 1) delta *= 0.5;
 							 */
 							if(delta > 40){
-								vec3copy(
+								copyv3(
 									org,
 									move->
 									endpos);
 								move->endarea =
 									AAS_PointAreaNum(
 										org);
-								vec3copy(
+								copyv3(
 									frame_test_vel,
 									move->
 									velocity);
@@ -967,7 +967,7 @@ AAS_ClientMovementPrediction(struct aas_clientmove_s *move,
 		/* if going down */
 		if(frame_test_vel[2] <= 10){
 			/* check for a liquid at the feet of the bot */
-			vec3copy(org, feet);
+			copyv3(org, feet);
 			feet[2] -= 22;
 			pc = AAS_PointContents(feet);
 			/* get event from pc */
@@ -988,9 +988,9 @@ AAS_ClientMovementPrediction(struct aas_clientmove_s *move,
 				event |= SE_ENTERWATER;
 			/* if in lava or slime */
 			if(event & stopevent){
-				vec3copy(org, move->endpos);
+				copyv3(org, move->endpos);
 				move->endarea = areanum;
-				vec3scale(frame_test_vel, 1/frametime,
+				scalev3(frame_test_vel, 1/frametime,
 					move->velocity);
 				move->stopevent = event & stopevent;
 				move->presencetype = presencetype;
@@ -1005,9 +1005,9 @@ AAS_ClientMovementPrediction(struct aas_clientmove_s *move,
 		/* if onground and on the ground for at least one whole frame */
 		if(onground){
 			if(stopevent & SE_HITGROUND){
-				vec3copy(org, move->endpos);
+				copyv3(org, move->endpos);
 				move->endarea = AAS_PointAreaNum(org);
-				vec3scale(frame_test_vel, 1/frametime,
+				scalev3(frame_test_vel, 1/frametime,
 					move->velocity);
 				move->trace = trace;
 				move->stopevent = SE_HITGROUND;
@@ -1018,9 +1018,9 @@ AAS_ClientMovementPrediction(struct aas_clientmove_s *move,
 				return qtrue;
 			}
 		}else if(stopevent & SE_LEAVEGROUND){
-			vec3copy(org, move->endpos);
+			copyv3(org, move->endpos);
 			move->endarea = AAS_PointAreaNum(org);
-			vec3scale(frame_test_vel, 1/frametime, move->velocity);
+			scalev3(frame_test_vel, 1/frametime, move->velocity);
 			move->trace = trace;
 			move->stopevent = SE_LEAVEGROUND;
 			move->presencetype = presencetype;
@@ -1032,8 +1032,8 @@ AAS_ClientMovementPrediction(struct aas_clientmove_s *move,
 		else if(stopevent & SE_GAP){
 			aas_trace_t gaptrace;
 
-			vec3copy(org, start);
-			vec3copy(start, end);
+			copyv3(org, start);
+			copyv3(start, end);
 			end[2] -= 48 + aassettings.phys_maxbarrier;
 			gaptrace =
 				AAS_TraceClientBBox(start, end, PRESENCE_CROUCH,
@@ -1045,10 +1045,10 @@ AAS_ClientMovementPrediction(struct aas_clientmove_s *move,
 				   aassettings.phys_maxstep - 1)
 					if(!(AAS_PointContents(end) &
 					     CONTENTS_WATER)){
-						vec3copy(lastorg, move->endpos);
+						copyv3(lastorg, move->endpos);
 						move->endarea = AAS_PointAreaNum(
 							lastorg);
-						vec3scale(frame_test_vel, 1/
+						scalev3(frame_test_vel, 1/
 							frametime,
 							move->velocity);
 						move->trace = trace;
@@ -1064,9 +1064,9 @@ AAS_ClientMovementPrediction(struct aas_clientmove_s *move,
 		}	/* end else if */
 	}
 	/*  */
-	vec3copy(org, move->endpos);
+	copyv3(org, move->endpos);
 	move->endarea = AAS_PointAreaNum(org);
-	vec3scale(frame_test_vel, 1/frametime, move->velocity);
+	scalev3(frame_test_vel, 1/frametime, move->velocity);
 	move->stopevent = SE_NONE;
 	move->presencetype = presencetype;
 	move->endcontents	= 0;
@@ -1132,10 +1132,10 @@ AAS_TestMovementPrediction(int entnum, Vec3 origin, Vec3 dir)
 	Vec3 velocity, cmdmove;
 	aas_clientmove_t move;
 
-	vec3clear(velocity);
+	clearv3(velocity);
 	if(!AAS_Swimming(origin)) dir[2] = 0;
-	vec3normalize(dir);
-	vec3scale(dir, 400, cmdmove);
+	normv3(dir);
+	scalev3(dir, 400, cmdmove);
 	cmdmove[2] = 224;
 	AAS_ClearShownDebugLines();
 	AAS_PredictClientMovement(&move, entnum, origin, PRESENCE_NORMAL, qtrue,
@@ -1180,7 +1180,7 @@ AAS_HorizontalVelocityForJump(float zvel, Vec3 start, Vec3 end,
 	/* time a player takes to fall the height */
 	t = sqrt(height2fall / (0.5 * phys_gravity));
 	/* direction from start to end */
-	vec3sub(end, start, dir);
+	subv3(end, start, dir);
 	/*  */
 	if((t + zvel / phys_gravity) == 0.0f){
 		*velocity = phys_maxvelocity;

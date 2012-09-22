@@ -961,7 +961,7 @@ R_MipMapNormalHeight(byte *in, int width, int height, qbool swizzle)
 			v[1] += OffsetByteToFloat(in[   5]);
 			v[2] += OffsetByteToFloat(in[   6]);
 
-			vec3normalizefast(v);
+			fastnormv3(v);
 
 			out[sx] = FloatToOffsetByte(v[0]);
 			out[1 ] = FloatToOffsetByte(v[1]);
@@ -991,7 +991,7 @@ R_MipMapNormalHeight(byte *in, int width, int height, qbool swizzle)
 			v[1] += OffsetByteToFloat(in[   row+5]);
 			v[2] += OffsetByteToFloat(in[   row+6]);
 
-			vec3normalizefast(v);
+			fastnormv3(v);
 
 			out[sx] = FloatToOffsetByte(v[0]);
 			out[1 ] = FloatToOffsetByte(v[1]);
@@ -1073,7 +1073,7 @@ RawImage_Normalize(byte *data, int width, int height, qbool swizzle)
 		v[1] = (float)ptr[1] * 1.0f/127.5f - 1.0f;
 		v[2] = (float)ptr[2] * 1.0f/127.5f - 1.0f;
 
-		vec3normalizefast(v);
+		fastnormv3(v);
 
 		ptr[s]	= (byte)(v[0] * 127.5f + 127.5f);
 		ptr[1]	= (byte)(v[1] * 127.5f + 127.5f);

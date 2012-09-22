@@ -58,7 +58,7 @@ R_CullSurface(msurface_t *surf)
 			}
 		}
 
-		d = vec3dot (tr.or.viewOrigin, surf->cullinfo.plane.normal);
+		d = dotv3 (tr.or.viewOrigin, surf->cullinfo.plane.normal);
 
 		/* don't cull exactly on the plane, because there are levels of rounding
 		 * through the BSP, ICD, and hardware that may cause pixel gaps if an
@@ -139,7 +139,7 @@ R_DlightSurface(msurface_t *surf, int dlightBits)
 			}
 			dl	= &tr.refdef.dlights[i];
 			d	=
-				vec3dot(dl->origin,
+				dotv3(dl->origin,
 					surf->cullinfo.plane.normal) - surf->cullinfo.plane.dist;
 			if(d < -dl->radius || d > dl->radius){
 				/* dlight doesn't reach the plane */
@@ -221,7 +221,7 @@ R_PshadowSurface(msurface_t *surf, int pshadowBits)
 			}
 			ps	= &tr.refdef.pshadows[i];
 			d	=
-				vec3dot(ps->lightOrigin,
+				dotv3(ps->lightOrigin,
 					surf->cullinfo.plane.normal) - surf->cullinfo.plane.dist;
 			if(d < -ps->lightRadius || d > ps->lightRadius){
 				/* pshadow doesn't reach the plane */
@@ -262,7 +262,7 @@ R_PshadowSurface(msurface_t *surf, int pshadowBits)
 			ps = &tr.refdef.pshadows[i];
 			if(!SpheresIntersect(ps->viewOrigin, ps->viewRadius, surf->cullinfo.localOrigin,
 				   surf->cullinfo.radius)
-			   || vec3dot(surf->cullinfo.localOrigin,
+			   || dotv3(surf->cullinfo.localOrigin,
 				   ps->cullPlane.normal) - ps->cullPlane.dist < -surf->cullinfo.radius){
 				/* pshadow doesn't reach the bounds */
 				pshadowBits &= ~(1 << i);
@@ -458,7 +458,7 @@ R_RecursiveWorldNode(mnode_t *node, int planeBits, int dlightBits, int pshadowBi
 				if(dlightBits & (1 << i)){
 					dl	= &tr.refdef.dlights[i];
 					dist	=
-						vec3dot(dl->origin,
+						dotv3(dl->origin,
 							node->plane->normal) - node->plane->dist;
 
 					if(dist > -dl->radius){
@@ -483,7 +483,7 @@ R_RecursiveWorldNode(mnode_t *node, int planeBits, int dlightBits, int pshadowBi
 				if(pshadowBits & (1 << i)){
 					shadow	= &tr.refdef.pshadows[i];
 					dist	=
-						vec3dot(shadow->lightOrigin,
+						dotv3(shadow->lightOrigin,
 							node->plane->normal) - node->plane->dist;
 
 					if(dist > -shadow->lightRadius){
@@ -589,7 +589,7 @@ R_PointInLeaf(const Vec3 p)
 			break;
 		}
 		plane = node->plane;
-		d = vec3dot (p,plane->normal) - plane->dist;
+		d = dotv3 (p,plane->normal) - plane->dist;
 		if(d > 0){
 			node = node->children[0];
 		}else{

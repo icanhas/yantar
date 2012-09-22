@@ -334,7 +334,7 @@ typedef Scalar Vec2[2];
 typedef Scalar Vec3[3];
 typedef Scalar Vec4[4];
 typedef Scalar Vec5[5];
-typedef Scalar Mat44[16];
+typedef Scalar Mat4[16];
 typedef Vec4 Quat;	/* r, v0, v1, v2 */
 
 typedef int fixed4_t;
@@ -422,10 +422,10 @@ int Q_isnan(float x);
 #if idx64
 extern long qftolsse(float f);
 extern int qvmftolsse(void);
-extern void qsnapvectorsse(Vec3 vec);
+extern void qsnapv3sse(Vec3 vec);
 
 #define Q_ftol		qftolsse
-#define Q_SnapVector	qsnapvectorsse
+#define Q_snapv3	qsnapv3sse
 
 extern int (*Q_VMftol)(void);
 
@@ -434,18 +434,18 @@ extern long QDECL qftolx87(float f);
 extern long QDECL qftolsse(float f);
 extern int QDECL qvmftolx87(void);
 extern int QDECL qvmftolsse(void);
-extern void QDECL qsnapvectorx87(Vec3 vec);
-extern void QDECL qsnapvectorsse(Vec3 vec);
+extern void QDECL qsnapv3x87(Vec3 vec);
+extern void QDECL qsnapv3sse(Vec3 vec);
 
 extern long	(QDECL *Q_ftol)(float f);
 extern int	(QDECL *Q_VMftol)(void);
-extern void	(QDECL *Q_SnapVector)(Vec3 vec);
+extern void	(QDECL *Q_snapv3)(Vec3 vec);
 
 #else
 /* Q_ftol must expand to a function name so the pluggable renderer can take
  * its address */
   #define Q_ftol lrintf
-  #define Q_SnapVector(vec) \
+  #define Q_snapv3(vec) \
 	do \
 	{ \
 		Vec3 *temp = (vec); \
@@ -462,7 +462,7 @@ extern void	(QDECL *Q_SnapVector)(Vec3 vec);
  * #else
  * #define Q_ftol(v) ((long) (v))
  * #define Q_round(v) do { if((v) < 0) (v) -= 0.5f; else (v) += 0.5f; (v) = Q_ftol((v)); } while(0)
- * #define Q_SnapVector(vec) \
+ * #define Q_snapv3(vec) \
  *      do\
  *      {\
  *              Vec3 *temp = (vec);\
@@ -518,74 +518,73 @@ signed short clampshort(int i);
 int DirToByte(Vec3 dir);
 void ByteToDir(int b, Vec3 dir);
 
-#if     0
+#if 0
 
-#define vec3dot(x,y)		((x)[0]*(y)[0]+(x)[1]*(y)[1]+(x)[2]*(y)[2])
-#define vec3sub(a,b,c)	((c)[0]=(a)[0]-(b)[0],(c)[1]=(a)[1]-(b)[1], \
-				 (c)[2]=(a)[2]-(b)[2])
-#define vec3add(a,b,c)	((c)[0]=(a)[0]+(b)[0],(c)[1]=(a)[1]+(b)[1], \
+#define dotv3(x,y)		((x)[0]*(y)[0]+(x)[1]*(y)[1]+(x)[2]*(y)[2])
+#define subv3(a,b,c)	((c)[0]=(a)[0]-(b)[0],(c)[1]=(a)[1]-(b)[1], \
+					(c)[2]=(a)[2]-(b)[2])
+#define addv3(a,b,c)	((c)[0]=(a)[0]+(b)[0],(c)[1]=(a)[1]+(b)[1], \
 				 (c)[2]=(a)[2]+(b)[2])
-#define vec3copy(a,b)		((b)[0]=(a)[0],(b)[1]=(a)[1],(b)[2]=(a)[2])
-#define vec3scale(v, s, o)	((o)[0]=(v)[0]*(s),(o)[1]=(v)[1]*(s),(o)[2]= \
-					 (v)[2]*(s))
-#define vec3ma(v, s, b, o)	((o)[0]=(v)[0]+(b)[0]*(s),(o)[1]=(v)[1]+(b)[1]*	\
-								  (s),(o)[2]= \
-					 (v)[2]+(b)[2]*(s))
+#define copyv3(a,b)		((b)[0]=(a)[0],(b)[1]=(a)[1],(b)[2]=(a)[2])
+#define scalev3(v, s, o)	((o)[0]=(v)[0]*(s),(o)[1]=(v)[1]*(s),(o)[2]= \
+						(v)[2]*(s))
+#define maddv3(v, s, b, o)	((o)[0]=(v)[0]+(b)[0]*(s),(o)[1]=(v)[1]+(b)[1]*	\
+							(s),(o)[2]=(v)[2]+(b)[2]*(s))
 
 #else
 
-#define vec3dot(x,y)		_vec3dot(x,y)
-#define vec3sub(a,b,c)	_vec3sub(a,b,c)
-#define vec3add(a,b,c)	_vec3add(a,b,c)
-#define vec3copy(a,b)		_vec3copy(a,b)
-#define vec3scale(v, s, o)	_vec3scale(v,s,o)
-#define vec3ma(v, s, b, o)	_vec3ma(v,s,b,o)
+#define dotv3(x,y)		_dotv3(x,y)
+#define subv3(a,b,c)	_subv3(a,b,c)
+#define addv3(a,b,c)	_addv3(a,b,c)
+#define copyv3(a,b)		_copyv3(a,b)
+#define scalev3(v, s, o)	_scalev3(v,s,o)
+#define maddv3(v, s, b, o)	_maddv3(v,s,b,o)
 
 #endif
 
 #ifdef Q3_VM
-#ifdef vec3copy
-#undef vec3copy
+#ifdef copyv3
+#undef copyv3
 
 /* this is a little hack to get more efficient copies in our interpreter */
 typedef struct {
 	float v[3];
 } vec3struct_t;
 
-#define vec3copy(a,b) (*(vec3struct_t*)b=*(vec3struct_t*)a)
+#define copyv3(a,b) (*(vec3struct_t*)b=*(vec3struct_t*)a)
 #endif
 #endif
 
-#define vec3clear(a)		((a)[0]=(a)[1]=(a)[2]=0)
-#define vec3negate(a,b)	((b)[0]=-(a)[0],(b)[1]=-(a)[1],(b)[2]=-(a)[2])
-#define vec3set(v, x, y, z)	((v)[0]=(x), (v)[1]=(y), (v)[2]=(z))
-#define vec4copy(a,b)	((b)[0]=(a)[0],(b)[1]=(a)[1],(b)[2]=(a)[2], \
+#define clearv3(a)		((a)[0]=(a)[1]=(a)[2]=0)
+#define negv3(a,b)	((b)[0]=-(a)[0],(b)[1]=-(a)[1],(b)[2]=-(a)[2])
+#define setv3(v, x, y, z)	((v)[0]=(x), (v)[1]=(y), (v)[2]=(z))
+#define copyv4(a,b)	((b)[0]=(a)[0],(b)[1]=(a)[1],(b)[2]=(a)[2], \
 				 (b)[3]=(a)[3])
 
 #define byte4copy(a,b)		((b)[0]=(a)[0],(b)[1]=(a)[1],(b)[2]=(a)[2], \
 				 (b)[3]=(a)[3])
 
-#define SnapVector(v)		{v[0]=((int)(v[0])); v[1]=((int)(v[1])); v[2]= \
+#define snapv3(v)		{v[0]=((int)(v[0])); v[1]=((int)(v[1])); v[2]= \
 					 ((int)(v[2])); }
 /* just in case you don't want to use the macros */
-Scalar	_vec3dot(const Vec3 v1, const Vec3 v2);
-void	_vec3sub(const Vec3 veca, const Vec3 vecb, Vec3 out);
-void	_vec3add(const Vec3 veca, const Vec3 vecb, Vec3 out);
-void	_vec3copy(const Vec3 in, Vec3 out);
-void	_vec3scale(const Vec3 in, float scale, Vec3 out);
-void	_vec3ma(const Vec3 veca, float scale, const Vec3 vecb, Vec3 vecc);
-void	vec3lerp(const Vec3 a, const Vec3 b, float lerp, Vec3 c);
+Scalar	_dotv3(const Vec3 v1, const Vec3 v2);
+void	_subv3(const Vec3 veca, const Vec3 vecb, Vec3 out);
+void	_addv3(const Vec3 veca, const Vec3 vecb, Vec3 out);
+void	_copyv3(const Vec3 in, Vec3 out);
+void	_scalev3(const Vec3 in, float scale, Vec3 out);
+void	_maddv3(const Vec3 veca, float scale, const Vec3 vecb, Vec3 vecc);
+void	lerpv3(const Vec3 a, const Vec3 b, float lerp, Vec3 c);
 
-void	mat44clear(Mat44 out);
-void	mat44ident(Mat44 out);
-void	mat44copy(const Mat44 in, Mat44 out);
-void	mat44mul(const Mat44 in1, const Mat44 in2, Mat44 out);
-void	mat44transform(const Mat44 in1, const Vec4 in2, Vec4 out);
-qbool	mat44cmp(const Mat44 a, const Mat44 b);
-void	mat44translation(Vec3 vec, Mat44 out);
-void	mat44ortho(float left, float right, float bottom, float top, float znear, float zfar, Mat44 out);
+void	clearm4(Mat4 out);
+void	identm4(Mat4 out);
+void	copym4(const Mat4 in, Mat4 out);
+void	mulm4(const Mat4 in1, const Mat4 in2, Mat4 out);
+void	transformm4(const Mat4 in1, const Vec4 in2, Vec4 out);
+qbool	cmpm4(const Mat4 a, const Mat4 b);
+void	translationm4(Vec3 vec, Mat4 out);
+void	orthom4(float left, float right, float bottom, float top, float znear, float zfar, Mat4 out);
 
-void quatmul(const Quat, const Quat, Quat);
+void mulq(const Quat, const Quat, Quat);
 
 unsigned colourbytes3(float r, float g, float b);
 unsigned colourbytes4(float r, float g, float b, float a);
@@ -598,7 +597,7 @@ void AddPointToBounds(const Vec3 v, Vec3 mins, Vec3 maxs);
 
 #if !defined(Q3_VM) || (defined(Q3_VM) && defined(__Q3_VM_MATH))
 static ID_INLINE int
-vec3cmp(const Vec3 v1, const Vec3 v2)
+cmpv3(const Vec3 v1, const Vec3 v2)
 {
 	if(v1[0] != v2[0] || v1[1] != v2[1] || v1[2] != v2[2])
 		return 0;
@@ -606,136 +605,136 @@ vec3cmp(const Vec3 v1, const Vec3 v2)
 }
 
 static ID_INLINE Scalar
-vec3len(const Vec3 v)
+lenv3(const Vec3 v)
 {
 	return (Scalar)sqrt (v[0]*v[0] + v[1]*v[1] + v[2]*v[2]);
 }
 
 static ID_INLINE Scalar
-vec3lensquared(const Vec3 v)
+lensqrv3(const Vec3 v)
 {
 	return (v[0]*v[0] + v[1]*v[1] + v[2]*v[2]);
 }
 
 static ID_INLINE Scalar
-vec3dist(const Vec3 p1, const Vec3 p2)
+distv3(const Vec3 p1, const Vec3 p2)
 {
 	Vec3 v;
 
-	vec3sub (p2, p1, v);
-	return vec3len(v);
+	subv3 (p2, p1, v);
+	return lenv3(v);
 }
 
 static ID_INLINE Scalar
-vec3distsquared(const Vec3 p1, const Vec3 p2)
+distsqrv3(const Vec3 p1, const Vec3 p2)
 {
 	Vec3 v;
 
-	vec3sub (p2, p1, v);
+	subv3 (p2, p1, v);
 	return v[0]*v[0] + v[1]*v[1] + v[2]*v[2];
 }
 
 /* fast vector normalize routine that does not check to make sure
  * that length != 0, nor does it return length, uses rsqrt approximation */
 static ID_INLINE void
-vec3normalizefast(Vec3 v)
+fastnormv3(Vec3 v)
 {
 	float ilength;
 
-	ilength = Q_rsqrt(vec3dot(v, v));
+	ilength = Q_rsqrt(dotv3(v, v));
 
-	v[0]	*= ilength;
-	v[1]	*= ilength;
-	v[2]	*= ilength;
+	v[0] *= ilength;
+	v[1] *= ilength;
+	v[2] *= ilength;
 }
 
 static ID_INLINE void
-vec3inv(Vec3 v)
+invv3(Vec3 v)
 {
-	v[0]	= -v[0];
-	v[1]	= -v[1];
-	v[2]	= -v[2];
+	v[0] = -v[0];
+	v[1] = -v[1];
+	v[2] = -v[2];
 }
 
 static ID_INLINE void
-vec3cross(const Vec3 v1, const Vec3 v2, Vec3 cross)
+crossv3(const Vec3 v1, const Vec3 v2, Vec3 cross)
 {
-	cross[0]	= v1[1]*v2[2] - v1[2]*v2[1];
-	cross[1]	= v1[2]*v2[0] - v1[0]*v2[2];
-	cross[2]	= v1[0]*v2[1] - v1[1]*v2[0];
+	cross[0] = v1[1]*v2[2] - v1[2]*v2[1];
+	cross[1] = v1[2]*v2[0] - v1[0]*v2[2];
+	cross[2] = v1[0]*v2[1] - v1[1]*v2[0];
 }
 
 #else
-int vec3cmp(const Vec3 v1, const Vec3 v2);
-Scalar vec3len(const Vec3 v);
-Scalar vec3lensquared(const Vec3 v);
-Scalar vec3dist(const Vec3 p1, const Vec3 p2);
-Scalar vec3distsquared(const Vec3 p1, const Vec3 p2);
-void vec3normalizefast(Vec3 v);
-void vec3inv(Vec3 v);
-void vec3cross(const Vec3 v1, const Vec3 v2, Vec3 cross);
+int cmpv3(const Vec3 v1, const Vec3 v2);
+Scalar lenv3(const Vec3 v);
+Scalar lensqrv3(const Vec3 v);
+Scalar distv3(const Vec3 p1, const Vec3 p2);
+Scalar distsqrv3(const Vec3 p1, const Vec3 p2);
+void fastnormv3(Vec3 v);
+void invv3(Vec3 v);
+void crossv3(const Vec3 v1, const Vec3 v2, Vec3 cross);
 
 #endif
 
-Scalar vec3normalize(Vec3 v);	/* returns vector length */
-Scalar vec3normalize2(const Vec3 v, Vec3 out);
-void vec4scale(const Vec4 in, Scalar scale, Vec4 out);
-void vec3rotate(Vec3 in, Vec3 matrix[3], Vec3 out);
-int Q_log2(int val);
+Scalar	normv3(Vec3 v);	/* returns vector length */
+Scalar	norm2v3(const Vec3 v, Vec3 out);
+void	scalev4(const Vec4 in, Scalar scale, Vec4 out);
+void	rotv3(Vec3 in, Vec3 matrix[3], Vec3 out);
+int	Q_log2(int val);
 
-float Q_acos(float c);
+float	Q_acos(float c);
 
-int             Q_rand(int *seed);
-float   Q_random(int *seed);
-float   Q_crandom(int *seed);
+int	Q_rand(int *seed);
+float	Q_random(int *seed);
+float	Q_crandom(int *seed);
 
 #define random()	((rand () & 0x7fff) / ((float)0x7fff))
 #define crandom()	(2.0 * (random() - 0.5))
 
-void vec3toeuler(const Vec3 value1, Vec3 angles);
-void euler2quat(const Vec3, Quat);
-void quat2euler(const Quat, Vec3);
-void euler2axis(const Vec3 angles, Vec3 axis[3]);
-void quat2axis(Quat, Vec3 axis[3]);
+void	v3toeuler(const Vec3 value1, Vec3 angles);
+void	eulertoq(const Vec3, Quat);
+void	qtoeuler(const Quat, Vec3);
+void	eulertoaxis(const Vec3 angles, Vec3 axis[3]);
+void	qtoaxis(Quat, Vec3 axis[3]);
 
-void axisclear(Vec3 axis[3]);
-void axiscopy(Vec3 in[3], Vec3 out[3]);
+void	clearaxis(Vec3 axis[3]);
+void	copyaxis(Vec3 in[3], Vec3 out[3]);
 
-void quatset(Quat, Scalar w, Scalar x, Scalar y, Scalar z);
+void	setq(Quat, Scalar w, Scalar x, Scalar y, Scalar z);
 
-void SetPlaneSignbits(struct cplane_s *out);
-int BoxOnPlaneSide(const Vec3 emins, const Vec3 emaxs, const struct cplane_s *plane);
+void	SetPlaneSignbits(struct cplane_s *out);
+int	BoxOnPlaneSide(const Vec3 emins, const Vec3 emaxs, const struct cplane_s *plane);
 
-qbool BoundsIntersect(const Vec3 mins, const Vec3 maxs,
+qbool	BoundsIntersect(const Vec3 mins, const Vec3 maxs,
 			 const Vec3 mins2, const Vec3 maxs2);
-qbool BoundsIntersectSphere(const Vec3 mins, const Vec3 maxs,
+qbool	BoundsIntersectSphere(const Vec3 mins, const Vec3 maxs,
 			       const Vec3 origin, Scalar radius);
-qbool BoundsIntersectPoint(const Vec3 mins, const Vec3 maxs,
+qbool	BoundsIntersectPoint(const Vec3 mins, const Vec3 maxs,
 			      const Vec3 origin);
 
-float   anglemod(float a);
-float   lerpangle(float from, float to, float frac);
-float   anglesub(float a1, float a2);
-void    anglessub(Vec3 v1, Vec3 v2, Vec3 v3);
+float	modeuler(float a);
+float	lerpeuler(float from, float to, float frac);
+float	subeuler(float a1, float a2);
+void	subeulers(Vec3 v1, Vec3 v2, Vec3 v3);
 
-float AngleNormalize360(float angle);
-float AngleNormalize180(float angle);
-float AngleDelta(float angle1, float angle2);
+float	norm360euler(float angle);
+float	norm180euler(float angle);
+float	deltaeuler(float angle1, float angle2);
 
-qbool PlaneFromPoints(Vec4 plane, const Vec3 a, const Vec3 b,
+qbool	PlaneFromPoints(Vec4 plane, const Vec3 a, const Vec3 b,
 			 const Vec3 c);
-void ProjectPointOnPlane(Vec3 dst, const Vec3 p, const Vec3 normal);
-void RotatePointAroundVector(Vec3 dst, const Vec3 dir, const Vec3 point,
+void	ProjectPointOnPlane(Vec3 dst, const Vec3 p, const Vec3 normal);
+void	RotatePointAroundVector(Vec3 dst, const Vec3 dir, const Vec3 point,
 			     float degrees);
-void RotateAroundDirection(Vec3 axis[3], float yaw);
-void MakeNormalVectors(const Vec3 forward, Vec3 right, Vec3 up);
+void	RotateAroundDirection(Vec3 axis[3], float yaw);
+void	MakeNormalVectors(const Vec3 forward, Vec3 right, Vec3 up);
 /* perpendicular vector could be replaced by this */
 
 /* int	PlaneTypeForNormal (Vec3 normal); */
 
-void MatrixMultiply(float in1[3][3], float in2[3][3], float out[3][3]);
-void anglevec3s(const Vec3 angles, Vec3 forward, Vec3 right, Vec3 up);
-void PerpendicularVector(Vec3 dst, const Vec3 src);
+void	MatrixMultiply(float in1[3][3], float in2[3][3], float out[3][3]);
+void	anglev3s(const Vec3 angles, Vec3 forward, Vec3 right, Vec3 up);
+void	perpv3(Vec3 dst, const Vec3 src);
 
 #ifndef MAX
 #define MAX(x,y) ((x)>(y) ? (x) : (y))
@@ -746,17 +745,17 @@ void PerpendicularVector(Vec3 dst, const Vec3 src);
 #endif
 
 /* common */
-long			Q_hashstr(const char *s, int size);
-float			Q_clamp(float min, float max, float value);
-char*		Q_skippath(char *pathname);
-const char*	Q_getext(const char *name);
-void			Q_stripext(const char *in, char *out, int destsize);
-qbool		Q_cmpext(const char *in, const char *ext);
-void			Q_defaultext(char *path, int maxSize, const char *extension);
+long		Q_hashstr(const char *s, int size);
+float		Q_clamp(float min, float max, float value);
+char*	Q_skippath(char *pathname);
+char*	Q_getext(const char *name);
+void		Q_stripext(const char *in, char *out, int destsize);
+qbool	Q_cmpext(const char *in, const char *ext);
+void		Q_defaultext(char *path, int maxSize, const char *extension);
 
-char*		Q_readtok(char **data_p);
-char*		Q_readtok2(char **data_p, qbool allowLineBreak);
-int         		Q_compresstr(char *data_p);
+char*	Q_readtok(char **data_p);
+char*	Q_readtok2(char **data_p, qbool allowLineBreak);
+int         	Q_compresstr(char *data_p);
 
 enum {
 	/* token types */
@@ -778,23 +777,23 @@ typedef struct pc_token_s {
 } pc_token_t;
 
 /* data is an in/out parm, returns a parsed out token */
-void    Q_matchtok(char**buf_p, char *match);
+void	Q_matchtok(char**buf_p, char *match);
 
-void    Q_skipblock(char **program);
-void    Q_skipline(char **data);
+void	Q_skipblock(char **program);
+void	Q_skipline(char **data);
 
-void    Parse1DMatrix(char **buf_p, int x, float *m);
-void    Parse2DMatrix(char **buf_p, int y, int x, float *m);
-void    Parse3DMatrix(char **buf_p, int z, int y, int x, float *m);
-int     Q_hexstr2int(const char *str);
+void	Parse1DMatrix(char **buf_p, int x, float *m);
+void	Parse2DMatrix(char **buf_p, int y, int x, float *m);
+void	Parse3DMatrix(char **buf_p, int z, int y, int x, float *m);
+int	Q_hexstr2int(const char *str);
 
-int QDECL       Q_sprintf(char *dest, int size, 
+int QDECL	Q_sprintf(char *dest, int size, 
 	const char *fmt, ...) __attribute__ ((format (printf, 3, 4)));
 
-char*Q_skiptoks(char *s, int numTokens, char *sep);
-char*Q_skipcharset(char *s, char *sep);
+char*	Q_skiptoks(char *s, int numTokens, char *sep);
+char*	Q_skipcharset(char *s, char *sep);
 
-void    Com_Randombytes(byte *string, int len);
+void		Com_Randombytes(byte *string, int len);
 
 /* mode parm for FS_FOpenFile */
 typedef enum {

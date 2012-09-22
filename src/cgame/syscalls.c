@@ -596,7 +596,7 @@ trap_RealTime(qtime_t *qtime)
 }
 
 void
-trap_SnapVector(float *v)
+trap_snapv3(float *v)
 {
 	syscall(CG_SNAPVECTOR, v);
 }

@@ -31,7 +31,7 @@ static const char *fallbackGenericShader_vp =
 	"DiffuseTexMatrix;\r\nuniform vec3   u_ViewOrigin;\r\n\r\n#if defined(USE_TC"
 	"GEN)\r\nuniform int    u_TCGen0;\r\nuniform vec3   u_TCGen0Vector0;\r\nunif"
 	"orm vec3   u_TCGen0Vector1;\r\n#endif\r\n\r\n#if defined(USE_FOG)\r\nunifor"
-	"m vec4   u_Fogvec3dist;\r\nuniform vec4   u_FogDepth;\r\nuniform float  u_F"
+	"m vec4   u_Fogdistv3;\r\nuniform vec4   u_FogDepth;\r\nuniform float  u_F"
 	"ogEyeT;\r\nuniform vec4   u_FogColorMask;\r\n#endif\r\n\r\n#if defined(USE_"
 	"DEFORM_VERTEXES)\r\nuniform int    u_DeformGen;\r\nuniform float  u_DeformP"
 	"arams[5];\r\n#endif\r\n\r\nuniform float  u_Time;\r\n\r\nuniform mat4   u_M"
@@ -101,7 +101,7 @@ static const char *fallbackGenericShader_vp =
 	"\r\n\telse if (u_AlphaGen == AGEN_FRESNEL)\r\n\t{\r\n\t\tvec3 viewer = norm"
 	"alize(toView);\r\n\t\t\r\n\t\tvar_Color.a = 0.10 + 0.90 * pow(1.0 - dot(nor"
 	"mal, viewer), 5);\r\n\t}\r\n#endif\r\n\r\n#if defined (USE_FOG)\r\n\tfloat "
-	"s = dot(position, u_Fogvec3dist);\r\n\tfloat t = dot(position, u_FogDepth);"
+	"s = dot(position, u_Fogdistv3);\r\n\tfloat t = dot(position, u_FogDepth);"
 	"\r\n\t\r\n\tif (t >= 1.0)\r\n\t{\r\n\t\ts *= t / (t - min(u_FogEyeT, 0.0));"
 	"\r\n\t}\r\n\telse\r\n\t{\r\n\t\ts *= max(t + sign(u_FogEyeT), 0.0);\r\n\t}"
 	"\r\n\t\r\n\ts = 1.0 - sqrt(clamp(s * 8.0, 0.0, 1.0));\r\n\t\r\n\tvar_Color "
@@ -139,7 +139,7 @@ static const char *fallbackFogPassShader_vp =
 	"attribute vec4  attr_Position;\r\nattribute vec3  attr_Normal;\r\nattribute"
 	" vec4  attr_TexCoord0;\r\n\r\n//#if defined(USE_VERTEX_ANIMATION)\r\nattrib"
 	"ute vec4  attr_Position2;\r\nattribute vec3  attr_Normal2;\r\n//#endif\r\n"
-	"\r\nuniform vec4    u_Fogvec3dist;\r\nuniform vec4    u_FogDepth;\r\nunifor"
+	"\r\nuniform vec4    u_Fogdistv3;\r\nuniform vec4    u_FogDepth;\r\nunifor"
 	"m float   u_FogEyeT;\r\n\r\n//#if defined(USE_DEFORM_VERTEXES)\r\nuniform i"
 	"nt     u_DeformGen;\r\nuniform float   u_DeformParams[5];\r\n//#endif\r\n\r"
 	"\nuniform float   u_Time;\r\nuniform mat4    u_ModelViewProjectionMatrix;\r"
@@ -169,7 +169,7 @@ static const char *fallbackFogPassShader_vp =
 	"= normalize(mix(attr_Normal, attr_Normal2, u_VertexLerp));\r\n\r\n\tpositio"
 	"n = DeformPosition(position, normal, attr_TexCoord0.st);\r\n\r\n\tgl_Positi"
 	"on = u_ModelViewProjectionMatrix * position;\r\n\r\n\tfloat s = dot(positio"
-	"n, u_Fogvec3dist);\r\n\tfloat t = dot(position, u_FogDepth);\r\n\r\n\tif (t"
+	"n, u_Fogdistv3);\r\n\tfloat t = dot(position, u_FogDepth);\r\n\r\n\tif (t"
 	" >= 1.0)\r\n\t{\r\n\t\ts *= t / (t - min(u_FogEyeT, 0.0));\r\n\t}\r\n\telse"
 	"\r\n\t{\r\n\t\ts *= max(t + sign(u_FogEyeT), 0.0);\r\n\t}\r\n\r\n\tvar_Scal"
 	"e = clamp(s * 8.0, 0.0, 1.0);\r\n}\r\n";
@@ -1350,11 +1350,11 @@ GLSL_SetUniformVec3(shaderProgram_t *program, int uniformNum, const Vec3 v)
 		return;
 	}
 
-	if(vec3cmp(v, compare)){
+	if(cmpv3(v, compare)){
 		return;
 	}
 
-	vec3copy(v, compare);
+	copyv3(v, compare);
 
 	qglUniform3fARB(uniforms[uniformNum], v[0], v[1], v[2]);
 }
@@ -1375,11 +1375,11 @@ GLSL_SetUniformVec4(shaderProgram_t *program, int uniformNum, const Vec4 v)
 		return;
 	}
 
-	if(vec3cmp4(v, compare)){
+	if(cmpv34(v, compare)){
 		return;
 	}
 
-	vec3copy4(v, compare);
+	copyv34(v, compare);
 
 	qglUniform4fARB(uniforms[uniformNum], v[0], v[1], v[2], v[3]);
 }
@@ -1402,17 +1402,17 @@ GLSL_SetUniformFloat5(shaderProgram_t *program, int uniformNum, const Vec5 v)
 		return;
 	}
 
-	if(vec3cmp5(v, compare)){
+	if(cmpv35(v, compare)){
 		return;
 	}
 
-	vec3copy5(v, compare);
+	copyv35(v, compare);
 
 	qglUniform1fvARB(uniforms[uniformNum], 5, v);
 }
 
 void
-GLSL_SetUniformMatrix16(shaderProgram_t *program, int uniformNum, const Mat44 matrix)
+GLSL_SetUniformMatrix16(shaderProgram_t *program, int uniformNum, const Mat4 matrix)
 {
 	GLint	*uniforms	= program->uniforms;
 	Scalar	*compare	= (float*)(program->uniformBuffer + program->uniformBufferOffsets[uniformNum]);
@@ -1427,11 +1427,11 @@ GLSL_SetUniformMatrix16(shaderProgram_t *program, int uniformNum, const Mat44 ma
 		return;
 	}
 
-	if(mat44cmp(matrix, compare)){
+	if(cmpm4(matrix, compare)){
 		return;
 	}
 
-	mat44copy(matrix, compare);
+	copym4(matrix, compare);
 
 	qglUniformMatrix4fvARB(uniforms[uniformNum], 1, GL_FALSE, matrix);
 }
@@ -1560,7 +1560,7 @@ GLSL_InitGPUShaders(void)
 		if(i & GENERICDEF_USE_FOG){
 			GLSL_AddUniform(&tr.genericShader[i], GENERIC_UNIFORM_FOGCOLORMASK, "u_FogColorMask",
 				GLSL_VEC4);
-			GLSL_AddUniform(&tr.genericShader[i], GENERIC_UNIFORM_FOGDISTANCE,  "u_Fogvec3dist",
+			GLSL_AddUniform(&tr.genericShader[i], GENERIC_UNIFORM_FOGDISTANCE,  "u_Fogdistv3",
 				GLSL_VEC4);
 			GLSL_AddUniform(&tr.genericShader[i], GENERIC_UNIFORM_FOGDEPTH,     "u_FogDepth",
 				GLSL_VEC4);
@@ -1643,7 +1643,7 @@ GLSL_InitGPUShaders(void)
 		ri.Error(ERR_FATAL, "Could not load fogpass shader!\n");
 	}
 
-	GLSL_AddUniform(&tr.fogShader, FOGPASS_UNIFORM_FOGDISTANCE,               "u_Fogvec3dist",
+	GLSL_AddUniform(&tr.fogShader, FOGPASS_UNIFORM_FOGDISTANCE,               "u_Fogdistv3",
 		GLSL_VEC4);
 	GLSL_AddUniform(&tr.fogShader, FOGPASS_UNIFORM_FOGDEPTH,                  "u_FogDepth",
 		GLSL_VEC4);

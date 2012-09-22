@@ -3779,7 +3779,7 @@ Item_Model_Paint(itemDef_t *item)
 	/* setup the refdef */
 	memset(&refdef, 0, sizeof(refdef));
 	refdef.rdflags = RDF_NOWORLDMODEL;
-	axisclear(refdef.viewaxis);
+	clearaxis(refdef.viewaxis);
 	x	= item->window.rect.x+1;
 	y	= item->window.rect.y+1;
 	w	= item->window.rect.w-2;
@@ -3822,7 +3822,7 @@ Item_Model_Paint(itemDef_t *item)
 
 	/* adjust = 5.0 * sin( (float)uis.realtime / 500 );
 	 * adjust = 360 % (int)((float)uis.realtime / 1000);
-	 * vec3set( angles, 0, 0, 1 ); */
+	 * setv3( angles, 0, 0, 1 ); */
 
 	/* use item storage to track */
 	if(modelPtr->rotationSpeed)
@@ -3831,14 +3831,14 @@ Item_Model_Paint(itemDef_t *item)
 						modelPtr->rotationSpeed;
 			modelPtr->angle = (int)(modelPtr->angle + 1) % 360;
 		}
-	vec3set(angles, 0, modelPtr->angle, 0);
-	euler2axis(angles, ent.axis);
+	setv3(angles, 0, modelPtr->angle, 0);
+	eulertoaxis(angles, ent.axis);
 
 	ent.hModel = item->asset;
-	vec3copy(origin, ent.origin);
-	vec3copy(origin, ent.lightingOrigin);
+	copyv3(origin, ent.origin);
+	copyv3(origin, ent.lightingOrigin);
 	ent.renderfx = RF_LIGHTING_ORIGIN | RF_NOSHADOW;
-	vec3copy(ent.origin, ent.oldorigin);
+	copyv3(ent.origin, ent.oldorigin);
 
 	DC->addRefEntityToScene(&ent);
 	DC->renderScene(&refdef);

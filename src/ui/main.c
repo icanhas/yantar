@@ -1447,7 +1447,7 @@ UI_DrawPlayerModel(rectDef_t *rect)
 		viewangles[YAW] = 180 - 10;
 		viewangles[PITCH] = 0;
 		viewangles[ROLL] = 0;
-		vec3clear(moveangles);
+		clearv3(moveangles);
 		UI_PlayerInfo_SetModel(&info, model, head, team);
 		UI_PlayerInfo_SetInfo(&info, LEGS_IDLE, TORSO_STAND, viewangles,
 			vec3_origin, WP_MACHINEGUN,
@@ -1677,7 +1677,7 @@ UI_DrawOpponent(rectDef_t *rect)
 		viewangles[YAW] = 180 - 10;
 		viewangles[PITCH] = 0;
 		viewangles[ROLL] = 0;
-		vec3clear(moveangles);
+		clearv3(moveangles);
 		UI_PlayerInfo_SetModel(&info2, model, headmodel, "");
 		UI_PlayerInfo_SetInfo(&info2, LEGS_IDLE, TORSO_STAND, viewangles,
 			vec3_origin, WP_MACHINEGUN,

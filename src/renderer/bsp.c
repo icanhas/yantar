@@ -353,7 +353,7 @@ ParseFace(dsurface_t *ds, drawVert_t *verts, msurface_t *surf, int *indexes)
 	/* take the plane information from the lightmap vector */
 	for(i = 0; i < 3; i++)
 		cv->plane.normal[i] = LittleFloat(ds->lightmapVecs[2][i]);
-	cv->plane.dist = vec3dot(cv->points[0], cv->plane.normal);
+	cv->plane.dist = dotv3(cv->points[0], cv->plane.normal);
 	SetPlaneSignbits(&cv->plane);
 	cv->plane.type = PlaneTypeForNormal(cv->plane.normal);
 
@@ -422,10 +422,10 @@ ParseMesh(dsurface_t *ds, drawVert_t *verts, msurface_t *surf)
 		bounds[0][i]	= LittleFloat(ds->lightmapVecs[0][i]);
 		bounds[1][i]	= LittleFloat(ds->lightmapVecs[1][i]);
 	}
-	vec3add(bounds[0], bounds[1], bounds[1]);
-	vec3scale(bounds[1], 0.5f, grid->lodOrigin);
-	vec3sub(bounds[0], grid->lodOrigin, tmpVec);
-	grid->lodRadius = vec3len(tmpVec);
+	addv3(bounds[0], bounds[1], bounds[1]);
+	scalev3(bounds[1], 0.5f, grid->lodOrigin);
+	subv3(bounds[0], grid->lodOrigin, tmpVec);
+	grid->lodRadius = lenv3(tmpVec);
 }
 
 /*
@@ -1661,7 +1661,7 @@ R_LoadFogs(lump_t *l, lump_t *brushesLump, lump_t *sidesLump)
 		}else{
 			out->hasSurface = qtrue;
 			planeNum = LittleLong(sides[ firstSide + sideNum ].planeNum);
-			vec3sub(vec3_origin, s_worldData.planes[ planeNum ].normal, out->surface);
+			subv3(vec3_origin, s_worldData.planes[ planeNum ].normal, out->surface);
 			out->surface[3] = -s_worldData.planes[ planeNum ].dist;
 		}
 
@@ -1844,7 +1844,7 @@ RE_LoadWorldMap(const char *name)
 	tr.sunDirection[1]	= 0.3f;
 	tr.sunDirection[2]	= 0.9f;
 
-	vec3normalize(tr.sunDirection);
+	normv3(tr.sunDirection);
 
 	tr.worldMapLoaded = qtrue;
 

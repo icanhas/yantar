@@ -68,10 +68,10 @@ Q_skippath(char *pathname)
 	return last;
 }
 
-const char *
+char *
 Q_getext(const char *name)
 {
-	const char *dot = strrchr(name, '.'), *slash;
+	char *dot = strrchr(name, '.'), *slash;
 	if(dot && (!(slash = strrchr(name, '/')) || slash < dot))
 		return dot + 1;
 	else

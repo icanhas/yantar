@@ -133,7 +133,7 @@ DrawTris(shaderCommands_t *input)
 
 		GLSL_SetUniformMatrix16(sp, TEXTURECOLOR_UNIFORM_MODELVIEWPROJECTIONMATRIX,
 			glState.modelviewProjection);
-		vec3set4(color, 1, 1, 1, 1);
+		setv34(color, 1, 1, 1, 1);
 		GLSL_SetUniformVec4(sp, TEXTURECOLOR_UNIFORM_COLOR, color);
 
 		if(input->multiDrawPrimitives){
@@ -210,8 +210,8 @@ ComputeTexMatrix(shaderStage_t *pStage, int bundleNum, float *outmatrix)
 	float matrix[16], currentmatrix[16];
 	textureBundle_t *bundle = &pStage->bundle[bundleNum];
 
-	mat44ident(outmatrix);
-	mat44ident(currentmatrix);
+	identm4(outmatrix);
+	identm4(currentmatrix);
 
 	for(tm = 0; tm < bundle->numTexMods; tm++){
 		switch(bundle->texMods[tm].type){
@@ -225,49 +225,49 @@ ComputeTexMatrix(shaderStage_t *pStage, int bundleNum, float *outmatrix)
 				matrix);
 			outmatrix[12]	= matrix[12];
 			outmatrix[13]	= matrix[13];
-			mat44copy(outmatrix, currentmatrix);
+			copym4(outmatrix, currentmatrix);
 			break;
 
 		case TMOD_ENTITY_TRANSLATE:
 			RB_CalcScrollTexMatrix(backEnd.currentEntity->e.shaderTexCoord,
 				matrix);
-			mat44mul(matrix, currentmatrix, outmatrix);
-			mat44copy(outmatrix, currentmatrix);
+			mulm4(matrix, currentmatrix, outmatrix);
+			copym4(outmatrix, currentmatrix);
 			break;
 
 		case TMOD_SCROLL:
 			RB_CalcScrollTexMatrix(bundle->texMods[tm].scroll,
 				matrix);
-			mat44mul(matrix, currentmatrix, outmatrix);
-			mat44copy(outmatrix, currentmatrix);
+			mulm4(matrix, currentmatrix, outmatrix);
+			copym4(outmatrix, currentmatrix);
 			break;
 
 		case TMOD_SCALE:
 			RB_CalcScaleTexMatrix(bundle->texMods[tm].scale,
 				matrix);
-			mat44mul(matrix, currentmatrix, outmatrix);
-			mat44copy(outmatrix, currentmatrix);
+			mulm4(matrix, currentmatrix, outmatrix);
+			copym4(outmatrix, currentmatrix);
 			break;
 
 		case TMOD_STRETCH:
 			RB_CalcStretchTexMatrix(&bundle->texMods[tm].wave,
 				matrix);
-			mat44mul(matrix, currentmatrix, outmatrix);
-			mat44copy(outmatrix, currentmatrix);
+			mulm4(matrix, currentmatrix, outmatrix);
+			copym4(outmatrix, currentmatrix);
 			break;
 
 		case TMOD_TRANSFORM:
 			RB_CalcTransformTexMatrix(&bundle->texMods[tm],
 				matrix);
-			mat44mul(matrix, currentmatrix, outmatrix);
-			mat44copy(outmatrix, currentmatrix);
+			mulm4(matrix, currentmatrix, outmatrix);
+			copym4(outmatrix, currentmatrix);
 			break;
 
 		case TMOD_ROTATE:
 			RB_CalcRotateTexMatrix(bundle->texMods[tm].rotateSpeed,
 				matrix);
-			mat44mul(matrix, currentmatrix, outmatrix);
-			mat44copy(outmatrix, currentmatrix);
+			mulm4(matrix, currentmatrix, outmatrix);
+			copym4(outmatrix, currentmatrix);
 			break;
 
 		default:
@@ -345,7 +345,7 @@ ProjectDlightTexture(void)
 		}
 
 		dl = &backEnd.refdef.dlights[l];
-		vec3copy(dl->transformed, origin);
+		copyv3(dl->transformed, origin);
 		radius	= dl->radius;
 		scale	= 1.0f / radius;
 
@@ -615,7 +615,7 @@ ComputeShaderColors(shaderStage_t *pStage, Vec4 baseColor, Vec4 vertColor)
 
 
 static void
-ComputeFogValues(Vec4 fogvec3distVector, Vec4 fogDepthVector, float *eyeT)
+ComputeFogValues(Vec4 fogdistv3Vector, Vec4 fogDepthVector, float *eyeT)
 {
 	/* from RB_CalcFogTexCoords() */
 	fog_t	*fog;
@@ -626,14 +626,14 @@ ComputeFogValues(Vec4 fogvec3distVector, Vec4 fogDepthVector, float *eyeT)
 
 	fog = tr.world->fogs + tess.fogNum;
 
-	vec3sub(backEnd.or.origin, backEnd.viewParms.or.origin, local);
-	fogvec3distVector[0]	= -backEnd.or.modelMatrix[2];
-	fogvec3distVector[1]	= -backEnd.or.modelMatrix[6];
-	fogvec3distVector[2]	= -backEnd.or.modelMatrix[10];
-	fogvec3distVector[3]	= vec3dot(local, backEnd.viewParms.or.axis[0]);
+	subv3(backEnd.or.origin, backEnd.viewParms.or.origin, local);
+	fogdistv3Vector[0]	= -backEnd.or.modelMatrix[2];
+	fogdistv3Vector[1]	= -backEnd.or.modelMatrix[6];
+	fogdistv3Vector[2]	= -backEnd.or.modelMatrix[10];
+	fogdistv3Vector[3]	= dotv3(local, backEnd.viewParms.or.axis[0]);
 
 	/* scale the fog vectors based on the fog's thickness */
-	vec3scale4(fogvec3distVector, fog->tcScale, fogvec3distVector);
+	scalev34(fogdistv3Vector, fog->tcScale, fogdistv3Vector);
 
 	/* rotate the gradient vector for this orientation */
 	if(fog->hasSurface){
@@ -646,9 +646,9 @@ ComputeFogValues(Vec4 fogvec3distVector, Vec4 fogDepthVector, float *eyeT)
 		fogDepthVector[2] = fog->surface[0] * backEnd.or.axis[2][0] +
 				    fog->surface[1] * backEnd.or.axis[2][1] + fog->surface[2] *
 				    backEnd.or.axis[2][2];
-		fogDepthVector[3] = -fog->surface[3] + vec3dot(backEnd.or.origin, fog->surface);
+		fogDepthVector[3] = -fog->surface[3] + dotv3(backEnd.or.origin, fog->surface);
 
-		*eyeT = vec3dot(backEnd.or.viewOrigin, fogDepthVector) + fogDepthVector[3];
+		*eyeT = dotv3(backEnd.or.viewOrigin, fogDepthVector) + fogDepthVector[3];
 	}else{
 		*eyeT = 1;	/* non-surface fog always has eye inside */
 	}
@@ -698,7 +698,7 @@ ForwardDlight(void)
 	int	deformGen;
 	Vec5	deformParams;
 
-	Vec4	fogvec3distVector, fogDepthVector = {0, 0, 0, 0};
+	Vec4	fogdistv3Vector, fogDepthVector = {0, 0, 0, 0};
 	float	eyeT = 0;
 
 	shaderCommands_t	*input = &tess;
@@ -710,20 +710,20 @@ ForwardDlight(void)
 
 	ComputeDeformValues(&deformGen, deformParams);
 
-	ComputeFogValues(fogvec3distVector, fogDepthVector, &eyeT);
+	ComputeFogValues(fogdistv3Vector, fogDepthVector, &eyeT);
 
 	for(l = 0; l < backEnd.refdef.num_dlights; l++){
 		dlight_t *dl;
 		shaderProgram_t *sp;
 		Vec4		vector;
-		Mat44	matrix;
+		Mat4	matrix;
 
 		if(!(tess.dlightBits & (1 << l))){
 			continue;	/* this surface definately doesn't have any of this light */
 		}
 
 		dl = &backEnd.refdef.dlights[l];
-		vec3copy(dl->transformed, origin);
+		copyv3(dl->transformed, origin);
 		radius	= dl->radius;
 		scale	= 1.0f / radius;
 
@@ -756,7 +756,7 @@ ForwardDlight(void)
 		if(input->fogNum){
 			Vec4 fogColorMask;
 
-			GLSL_SetUniformVec4(sp, GENERIC_UNIFORM_FOGDISTANCE, fogvec3distVector);
+			GLSL_SetUniformVec4(sp, GENERIC_UNIFORM_FOGDISTANCE, fogdistv3Vector);
 			GLSL_SetUniformVec4(sp, GENERIC_UNIFORM_FOGDEPTH, fogDepthVector);
 			GLSL_SetUniformFloat(sp, GENERIC_UNIFORM_FOGEYET, eyeT);
 
@@ -784,10 +784,10 @@ ForwardDlight(void)
 
 		GLSL_SetUniformVec3(sp, GENERIC_UNIFORM_DIRECTEDLIGHT, dl->color);
 
-		vec3set(vector, 0, 0, 0);
+		setv3(vector, 0, 0, 0);
 		GLSL_SetUniformVec3(sp, GENERIC_UNIFORM_AMBIENTLIGHT, vector);
 
-		vec3copy(dl->origin, vector);
+		copyv3(dl->origin, vector);
 		vector[3] = 1.0f;
 		GLSL_SetUniformVec4(sp, GENERIC_UNIFORM_LIGHTORIGIN, vector);
 
@@ -800,7 +800,7 @@ ForwardDlight(void)
 		 * where they aren't rendered */
 		GL_State(GLS_SRCBLEND_ONE | GLS_DSTBLEND_ONE | GLS_DEPTHFUNC_EQUAL);
 
-		mat44ident(matrix);
+		identm4(matrix);
 		GLSL_SetUniformMatrix16(sp, GENERIC_UNIFORM_MODELMATRIX, matrix);
 
 		if(pStage->bundle[TB_DIFFUSEMAP].image[0])
@@ -867,7 +867,7 @@ ProjectPshadowVBOGLSL(void)
 		}
 
 		ps = &backEnd.refdef.pshadows[l];
-		vec3copy(ps->lightOrigin, origin);
+		copyv3(ps->lightOrigin, origin);
 		radius = ps->lightRadius;
 
 		sp = &tr.pshadowShader;
@@ -877,17 +877,17 @@ ProjectPshadowVBOGLSL(void)
 		GLSL_SetUniformMatrix16(sp, PSHADOW_UNIFORM_MODELVIEWPROJECTIONMATRIX,
 			glState.modelviewProjection);
 
-		vec3copy(origin, vector);
+		copyv3(origin, vector);
 		vector[3] = 1.0f;
 		GLSL_SetUniformVec4(sp, PSHADOW_UNIFORM_LIGHTORIGIN, vector);
 
-		vec3scale(ps->lightViewAxis[0], 1.0f / ps->viewRadius, vector);
+		scalev3(ps->lightViewAxis[0], 1.0f / ps->viewRadius, vector);
 		GLSL_SetUniformVec3(sp, PSHADOW_UNIFORM_LIGHTFORWARD, vector);
 
-		vec3scale(ps->lightViewAxis[1], 1.0f / ps->viewRadius, vector);
+		scalev3(ps->lightViewAxis[1], 1.0f / ps->viewRadius, vector);
 		GLSL_SetUniformVec3(sp, PSHADOW_UNIFORM_LIGHTRIGHT, vector);
 
-		vec3scale(ps->lightViewAxis[2], 1.0f / ps->viewRadius, vector);
+		scalev3(ps->lightViewAxis[2], 1.0f / ps->viewRadius, vector);
 		GLSL_SetUniformVec3(sp, PSHADOW_UNIFORM_LIGHTUP, vector);
 
 		GLSL_SetUniformFloat(sp, PSHADOW_UNIFORM_LIGHTRADIUS, radius);
@@ -927,7 +927,7 @@ RB_FogPass(void)
 {
 	fog_t *fog;
 	Vec4	color;
-	Vec4	fogvec3distVector, fogDepthVector = {0, 0, 0, 0};
+	Vec4	fogdistv3Vector, fogDepthVector = {0, 0, 0, 0};
 	float	eyeT = 0;
 	shaderProgram_t *sp = &tr.fogShader;
 
@@ -958,9 +958,9 @@ RB_FogPass(void)
 	color[3]	= ((unsigned char*)(&fog->colorInt))[3] / 255.0f;
 	GLSL_SetUniformVec4(sp, FOGPASS_UNIFORM_COLOR, color);
 
-	ComputeFogValues(fogvec3distVector, fogDepthVector, &eyeT);
+	ComputeFogValues(fogdistv3Vector, fogDepthVector, &eyeT);
 
-	GLSL_SetUniformVec4(sp, FOGPASS_UNIFORM_FOGDISTANCE, fogvec3distVector);
+	GLSL_SetUniformVec4(sp, FOGPASS_UNIFORM_FOGDISTANCE, fogdistv3Vector);
 	GLSL_SetUniformVec4(sp, FOGPASS_UNIFORM_FOGDEPTH, fogDepthVector);
 	GLSL_SetUniformFloat(sp, FOGPASS_UNIFORM_FOGEYET, eyeT);
 
@@ -1000,9 +1000,9 @@ static void
 RB_IterateStagesGeneric(shaderCommands_t *input)
 {
 	int stage;
-	Mat44	matrix;
+	Mat4	matrix;
 
-	Vec4	fogvec3distVector, fogDepthVector = {0, 0, 0, 0};
+	Vec4	fogdistv3Vector, fogDepthVector = {0, 0, 0, 0};
 	float	eyeT = 0;
 
 	int	deformGen;
@@ -1010,7 +1010,7 @@ RB_IterateStagesGeneric(shaderCommands_t *input)
 
 	ComputeDeformValues(&deformGen, deformParams);
 
-	ComputeFogValues(fogvec3distVector, fogDepthVector, &eyeT);
+	ComputeFogValues(fogdistv3Vector, fogDepthVector, &eyeT);
 
 	for(stage = 0; stage < MAX_SHADER_STAGES; stage++){
 		shaderStage_t *pStage = input->xstages[stage];
@@ -1057,7 +1057,7 @@ RB_IterateStagesGeneric(shaderCommands_t *input)
 		}
 
 		if(input->fogNum){
-			GLSL_SetUniformVec4(sp, GENERIC_UNIFORM_FOGDISTANCE, fogvec3distVector);
+			GLSL_SetUniformVec4(sp, GENERIC_UNIFORM_FOGDISTANCE, fogdistv3Vector);
 			GLSL_SetUniformVec4(sp, GENERIC_UNIFORM_FOGDEPTH, fogDepthVector);
 			GLSL_SetUniformFloat(sp, GENERIC_UNIFORM_FOGEYET, eyeT);
 		}
@@ -1077,13 +1077,13 @@ RB_IterateStagesGeneric(shaderCommands_t *input)
 		if(pStage->rgbGen == CGEN_LIGHTING_DIFFUSE){
 			Vec4 vec;
 
-			vec3scale(backEnd.currentEntity->ambientLight, 1.0f / 255.0f, vec);
+			scalev3(backEnd.currentEntity->ambientLight, 1.0f / 255.0f, vec);
 			GLSL_SetUniformVec3(sp, GENERIC_UNIFORM_AMBIENTLIGHT, vec);
 
-			vec3scale(backEnd.currentEntity->directedLight, 1.0f / 255.0f, vec);
+			scalev3(backEnd.currentEntity->directedLight, 1.0f / 255.0f, vec);
 			GLSL_SetUniformVec3(sp, GENERIC_UNIFORM_DIRECTEDLIGHT, vec);
 
-			vec3copy(backEnd.currentEntity->lightDir, vec);
+			copyv3(backEnd.currentEntity->lightDir, vec);
 			vec[3] = 0.0f;
 			GLSL_SetUniformVec4(sp, GENERIC_UNIFORM_LIGHTORIGIN, vec);
 
@@ -1112,9 +1112,9 @@ RB_IterateStagesGeneric(shaderCommands_t *input)
 		if(pStage->bundle[0].tcGen == TCGEN_VECTOR){
 			Vec3 vec;
 
-			vec3copy(pStage->bundle[0].tcGenVectors[0], vec);
+			copyv3(pStage->bundle[0].tcGenVectors[0], vec);
 			GLSL_SetUniformVec3(sp, GENERIC_UNIFORM_TCGEN0VECTOR0, vec);
-			vec3copy(pStage->bundle[0].tcGenVectors[1], vec);
+			copyv3(pStage->bundle[0].tcGenVectors[1], vec);
 			GLSL_SetUniformVec3(sp, GENERIC_UNIFORM_TCGEN0VECTOR1, vec);
 		}
 
@@ -1223,8 +1223,8 @@ RB_RenderShadowmap(shaderCommands_t *input)
 		if(backEnd.currentEntity && backEnd.currentEntity != &tr.worldEntity){
 			GLSL_SetUniformMatrix16(sp, GENERIC_UNIFORM_MODELMATRIX, backEnd.or.transformMatrix);
 		}else{
-			Mat44 matrix;
-			mat44ident(matrix);
+			Mat4 matrix;
+			identm4(matrix);
 			GLSL_SetUniformMatrix16(sp, GENERIC_UNIFORM_MODELMATRIX, matrix);
 		}
 
@@ -1236,7 +1236,7 @@ RB_RenderShadowmap(shaderCommands_t *input)
 			GLSL_SetUniformFloat(sp, GENERIC_UNIFORM_TIME, tess.shaderTime);
 		}
 
-		vec3copy(backEnd.viewParms.or.origin, vector);
+		copyv3(backEnd.viewParms.or.origin, vector);
 		vector[3] = 1.0f;
 		GLSL_SetUniformVec4(sp, GENERIC_UNIFORM_LIGHTORIGIN, vector);
 		GLSL_SetUniformFloat(sp, GENERIC_UNIFORM_LIGHTRADIUS, backEnd.viewParms.zFar);

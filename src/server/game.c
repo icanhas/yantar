@@ -129,8 +129,8 @@ SV_SetBrushModel(sharedEntity_t *ent, const char *name)
 
 	h = CM_InlineModel(ent->s.modelindex);
 	CM_ModelBounds(h, mins, maxs);
-	vec3copy (mins, ent->r.mins);
-	vec3copy (maxs, ent->r.maxs);
+	copyv3 (mins, ent->r.mins);
+	copyv3 (maxs, ent->r.maxs);
 	ent->r.bmodel = qtrue;
 
 	ent->r.contents = -1;	/* we don't know exactly what is in the brushes */
@@ -432,7 +432,7 @@ SV_GameSystemCalls(intptr_t *args)
 	case G_REAL_TIME:
 		return Com_RealTime(VMA(1));
 	case G_SNAPVECTOR:
-		Q_SnapVector(VMA(1));
+		Q_snapv3(VMA(1));
 		return 0;
 
 	/* ==================================== */
@@ -862,10 +862,10 @@ SV_GameSystemCalls(intptr_t *args)
 		MatrixMultiply(VMA(1), VMA(2), VMA(3));
 		return 0;
 	case TRAP_ANGLEVECTORS:
-		anglevec3s(VMA(1), VMA(2), VMA(3), VMA(4));
+		anglev3s(VMA(1), VMA(2), VMA(3), VMA(4));
 		return 0;
 	case TRAP_PERPENDICULARVECTOR:
-		PerpendicularVector(VMA(1), VMA(2));
+		perpv3(VMA(1), VMA(2));
 		return 0;
 	case TRAP_FLOOR:
 		return FloatAsInt(floor(VMF(1)));
