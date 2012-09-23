@@ -16,13 +16,14 @@ ifeq ($(COMPILE_PLATFORM),darwin)
   COMPILE_ARCH=$(shell uname -p | sed -e s/i.86/i386/)
 endif
 
-ifeq ($(COMPILE_PLATFORM),mingw32)
-  ifeq ($(COMPILE_ARCH),i386)
-    COMPILE_ARCH=x86
-  endif
-  ifeq ($(COMPILE_ARCH),x86_64)
-    COMPILE_ARCH=x64
-  endif
+ifeq ($(COMPILE_ARCH),i386)
+  COMPILE_ARCH=x86
+endif
+ifeq ($(COMPILE_ARCH),x86_64)
+  COMPILE_ARCH=amd64
+endif
+ifeq ($(COMPILE_ARCH),x64)
+  COMPILE_ARCH=amd64
 endif
 
 ifndef BUILD_STANDALONE
@@ -288,7 +289,7 @@ ifneq (,$(findstring "$(PLATFORM)", "linux" "gnu_kfreebsd" "kfreebsd-gnu"))
   ifeq ($(ARCH),axp)
     ARCH=alpha
   else
-  ifeq ($(ARCH),x86_64)
+  ifeq ($(ARCH),amd64)
     LIB=lib64
   else
   ifeq ($(ARCH),ppc64)
@@ -308,14 +309,14 @@ ifneq (,$(findstring "$(PLATFORM)", "linux" "gnu_kfreebsd" "kfreebsd-gnu"))
   OPTIMIZEVM = -O3 -funroll-loops -fomit-frame-pointer
   OPTIMIZE = $(OPTIMIZEVM) -ffast-math
 
-  ifeq ($(ARCH),x86_64)
+  ifeq ($(ARCH),amd64)
     OPTIMIZEVM = -O3 -fomit-frame-pointer -funroll-loops \
       -falign-loops=2 -falign-jumps=2 -falign-functions=2 \
       -fstrength-reduce
     OPTIMIZE = $(OPTIMIZEVM) -ffast-math
     HAVE_VM_COMPILED = true
   else
-  ifeq ($(ARCH),i386)
+  ifeq ($(ARCH),x86)
     OPTIMIZEVM = -O3 -march=i586 -fomit-frame-pointer \
       -funroll-loops -falign-loops=2 -falign-jumps=2 \
       -falign-functions=2 -fstrength-reduce
@@ -373,7 +374,7 @@ ifneq (,$(findstring "$(PLATFORM)", "linux" "gnu_kfreebsd" "kfreebsd-gnu"))
     CLIENT_LIBS += -lrt
   endif
 
-  ifeq ($(ARCH),i386)
+  ifeq ($(ARCH),x86)
     # linux32 make ...
     BASE_CFLAGS += -m32
   else
@@ -403,13 +404,13 @@ ifeq ($(PLATFORM),darwin)
   ifeq ($(ARCH),ppc64)
     BASE_CFLAGS += -arch ppc64 -faltivec -mmacosx-version-min=10.2
   endif
-  ifeq ($(ARCH),i386)
+  ifeq ($(ARCH),x86)
     OPTIMIZEVM += -march=prescott -mfpmath=sse
     # x86 vm will crash without -mstackrealign since MMX instructions will be
     # used no matter what and they corrupt the frame pointer in VM calls
     BASE_CFLAGS += -arch i386 -m32 -mstackrealign
   endif
-  ifeq ($(ARCH),x86_64)
+  ifeq ($(ARCH),amd64)
     OPTIMIZEVM += -arch x86_64 -mfpmath=sse
   endif
 
@@ -479,7 +480,7 @@ ifeq ($(PLATFORM),mingw32)
   ifeq ($(COMPILE_ARCH),x86)
     WINDRES_FLAGS=-Fpe-i386
   else
-    ifeq ($(COMPILE_ARCH),x64)
+    ifeq ($(COMPILE_ARCH),amd64)
       WINDRES_FLAGS=-Fpe-x86-64
     else
       WINDRES_FLAGS=
@@ -501,7 +502,7 @@ ifeq ($(PLATFORM),mingw32)
     endif
   endif
   
-  ifeq ($(ARCH),x64)
+  ifeq ($(ARCH),amd64)
     OPTIMIZEVM = -O3 -fno-omit-frame-pointer \
       -falign-loops=2 -funroll-loops -falign-jumps=2 -falign-functions=2 \
       -fstrength-reduce
@@ -532,7 +533,7 @@ ifeq ($(PLATFORM),mingw32)
     ifneq ($(USE_CURL_DLOPEN),1)
       ifeq ($(USE_LOCAL_HEADERS),1)
         CLIENT_CFLAGS += -DCURL_STATICLIB
-        ifeq ($(ARCH),x64)
+        ifeq ($(ARCH),amd64)
           CLIENT_LIBS += $(LIBSDIR)/win64/libcurl.a
         else
           CLIENT_LIBS += $(LIBSDIR)/win32/libcurl.a
@@ -628,7 +629,7 @@ ifeq ($(PLATFORM),freebsd)
   endif
 
   # cross-compiling tweaks
-  ifeq ($(ARCH),i386)
+  ifeq ($(ARCH),x86)
     ifeq ($(CROSS_COMPILING),1)
       BASE_CFLAGS += -m32
     endif
@@ -696,7 +697,7 @@ else # ifeq openbsd
 ifeq ($(PLATFORM),netbsd)
 
   ifeq ($(shell uname -m),i386)
-    ARCH=i386
+    ARCH=x86
   endif
 
   LIBS=-lm
@@ -707,7 +708,7 @@ ifeq ($(PLATFORM),netbsd)
 
   BASE_CFLAGS = -Wall -fno-strict-aliasing -Wimplicit -Wstrict-prototypes
 
-  ifeq ($(ARCH),i386)
+  ifeq ($(ARCH),x86)
     HAVE_VM_COMPILED=true
   endif
 
@@ -755,12 +756,12 @@ ifeq ($(PLATFORM),sunos)
   COPYDIR="/usr/local/share/games/quake3"
 
   ifneq (,$(findstring i86pc,$(shell uname -m)))
-    ARCH=i386
+    ARCH=x86
   else #default to sparc
     ARCH=sparc
   endif
 
-  ifneq ($(ARCH),i386)
+  ifneq ($(ARCH),x86)
     ifneq ($(ARCH),sparc)
       $(error arch $(ARCH) is currently not supported)
     endif
@@ -778,7 +779,7 @@ ifeq ($(PLATFORM),sunos)
       -mtune=ultrasparc3 -mv8plus -mno-faster-structs
     HAVE_VM_COMPILED=true
   else
-  ifeq ($(ARCH),i386)
+  ifeq ($(ARCH),x86)
     OPTIMIZEVM += -march=i586 -fomit-frame-pointer \
       -falign-loops=2 -falign-jumps=2 \
       -falign-functions=2 -fstrength-reduce
@@ -1624,13 +1625,6 @@ ifneq ($(USE_INTERNAL_JPEG),0)
     $(O)/renderer/jutils.o
 endif
 
-ifeq ($(ARCH),i386)
-  Q3OBJ += \
-    $(O)/client/snd_mixa.o \
-    $(O)/client/matha.o \
-    $(O)/client/snapvector.o \
-    $(O)/client/ftola.o
-endif
 ifeq ($(ARCH),x86)
   Q3OBJ += \
     $(O)/client/snd_mixa.o \
@@ -1638,17 +1632,7 @@ ifeq ($(ARCH),x86)
     $(O)/client/snapvector.o \
     $(O)/client/ftola.o
 endif
-ifeq ($(ARCH),x86_64)
-  Q3OBJ += \
-    $(O)/client/snapvector.o \
-    $(O)/client/ftola.o
-endif
 ifeq ($(ARCH),amd64)
-  Q3OBJ += \
-    $(O)/client/snapvector.o \
-    $(O)/client/ftola.o
-endif
-ifeq ($(ARCH),x64)
   Q3OBJ += \
     $(O)/client/snapvector.o \
     $(O)/client/ftola.o
@@ -1711,35 +1695,11 @@ Q3OBJ += \
 endif
 
 ifeq ($(HAVE_VM_COMPILED),true)
-  ifeq ($(ARCH),i386)
-    Q3OBJ += \
-      $(O)/client/vm/x86.o
-  endif
   ifeq ($(ARCH),x86)
     Q3OBJ += \
       $(O)/client/vm/x86.o
   endif
-  ifeq ($(ARCH),x86_64)
-    ifeq ($(USE_OLD_VM64),1)
-      Q3OBJ += \
-        $(O)/client/vm/amd64.o \
-        $(O)/client/vm/amd64_asm.o
-    else
-      Q3OBJ += \
-        $(O)/client/vm/x86.o
-    endif
-  endif
   ifeq ($(ARCH),amd64)
-    ifeq ($(USE_OLD_VM64),1)
-      Q3OBJ += \
-        $(O)/client/vm/amd64.o \
-        $(O)/client/vm/amd64_asm.o
-    else
-      Q3OBJ += \
-        $(O)/client/vm/x86.o
-    endif
-  endif
-  ifeq ($(ARCH),x64)
     ifeq ($(USE_OLD_VM64),1)
       Q3OBJ += \
         $(O)/client/vm/amd64.o \
@@ -1905,29 +1865,13 @@ Q3DOBJ = \
   $(O)/ded/sys/conslog.o \
   $(O)/ded/sys/main.o
 
-ifeq ($(ARCH),i386)
-  Q3DOBJ += \
-      $(O)/ded/matha.o \
-      $(O)/ded/snapvector.o \
-      $(O)/ded/ftola.o
-endif
 ifeq ($(ARCH),x86)
   Q3DOBJ += \
       $(O)/ded/matha.o \
       $(O)/ded/snapvector.o \
       $(O)/ded/ftola.o 
 endif
-ifeq ($(ARCH),x86_64)
-  Q3DOBJ += \
-      $(O)/ded/snapvector.o \
-      $(O)/ded/ftola.o 
-endif
 ifeq ($(ARCH),amd64)
-  Q3DOBJ += \
-      $(O)/ded/snapvector.o \
-      $(O)/ded/ftola.o 
-endif
-ifeq ($(ARCH),x64)
   Q3DOBJ += \
       $(O)/ded/snapvector.o \
       $(O)/ded/ftola.o 
@@ -1944,35 +1888,11 @@ Q3DOBJ += \
 endif
 
 ifeq ($(HAVE_VM_COMPILED),true)
-  ifeq ($(ARCH),i386)
-    Q3DOBJ += \
-      $(O)/ded/vm/x86.o
-  endif
   ifeq ($(ARCH),x86)
     Q3DOBJ += \
       $(O)/ded/vm/x86.o
   endif
-  ifeq ($(ARCH),x86_64)
-    ifeq ($(USE_OLD_VM64),1)
-      Q3DOBJ += \
-        $(O)/ded/vm/amd64.o \
-        $(O)/ded/vm/amd64_asm.o
-    else
-      Q3DOBJ += \
-        $(O)/ded/vm/x86.o
-    endif
-  endif
   ifeq ($(ARCH),amd64)
-    ifeq ($(USE_OLD_VM64),1)
-      Q3DOBJ += \
-        $(O)/ded/vm/amd64.o \
-        $(O)/ded/vm/amd64_asm.o
-    else
-      Q3DOBJ += \
-        $(O)/ded/vm/x86.o
-    endif
-  endif
-  ifeq ($(ARCH),x64)
     ifeq ($(USE_OLD_VM64),1)
       Q3DOBJ += \
         $(O)/ded/vm/amd64.o \
