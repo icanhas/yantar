@@ -73,16 +73,16 @@
 #define QCALL __stdcall
 
 #if defined(_MSC_VER)
-#define OS_STRING	"win_msvc64"
+#define OS_STRING	"win-msvc64"
 #elif defined __MINGW64__
-#define OS_STRING	"win_mingw64"
+#define OS_STRING	"win-mingw64"
 #endif
 
 #define ID_INLINE	__inline
 #define PATH_SEP	'\\'
 
 #if defined(__WIN64__)
-#define ARCH_STRING	"x64"
+#define ARCH_STRING	"amd64"
 #elif defined _M_ALPHA
 #define ARCH_STRING	"AXP"
 #endif
@@ -99,16 +99,16 @@
 #define QCALL __stdcall
 
 #if defined(_MSC_VER)
-#define OS_STRING	"win_msvc"
+#define OS_STRING	"win-msvc"
 #elif defined __MINGW32__
-#define OS_STRING	"win_mingw"
+#define OS_STRING	"win-mingw"
 #endif
 
 #define ID_INLINE	__inline
 #define PATH_SEP	'\\'
 
 #if defined(_M_IX86) || defined(__i386__)
-#define ARCH_STRING	"x86"
+#define ARCH_STRING	"i386"
 #elif defined _M_ALPHA
 #define ARCH_STRING	"AXP"
 #endif
@@ -139,7 +139,7 @@
 #elif defined __x86_64__
 #undef idx64
 #define idx64		1
-#define ARCH_STRING	"x86_64"
+#define ARCH_STRING	"amd64"
 #define Q3_LITTLE_ENDIAN
 #endif
 
@@ -171,7 +171,7 @@
 #elif defined __x86_64__
 #undef idx64
 #define idx64		1
-#define ARCH_STRING	"x86_64"
+#define ARCH_STRING	"amd64"
 #elif defined __powerpc64__
 #define ARCH_STRING	"ppc64"
 #elif defined __powerpc__
