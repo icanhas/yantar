@@ -66,9 +66,6 @@ void	(APIENTRYP qglMultiTexCoord2fARB)(GLenum target, GLfloat s, GLfloat t);
 void	(APIENTRYP qglLockArraysEXT)(GLint first, GLsizei count);
 void	(APIENTRYP qglUnlockArraysEXT)(void);
 
-/*
- * GLimp_Shutdown
- */
 void
 GLimp_Shutdown(void)
 {
@@ -82,8 +79,6 @@ GLimp_Shutdown(void)
 }
 
 /*
- * GLimp_Minimize
- *
  * Minimize the game so that user is back at the desktop
  */
 void
@@ -92,28 +87,21 @@ GLimp_Minimize(void)
 	SDL_WM_IconifyWindow();
 }
 
-
-/*
- * GLimp_LogComment
- */
 void
 GLimp_LogComment(char *comment)
 {
 }
 
-/*
- * GLimp_CompareModes
- */
 static int
 GLimp_CompareModes(const void *a, const void *b)
 {
 	const float ASPECT_EPSILON = 0.001f;
-	SDL_Rect	*modeA	= *(SDL_Rect**)a;
-	SDL_Rect	*modeB	= *(SDL_Rect**)b;
+	SDL_Rect	*modeA = *(SDL_Rect**)a;
+	SDL_Rect	*modeB = *(SDL_Rect**)b;
 	float	aspectA = (float)modeA->w / (float)modeA->h;
 	float	aspectB = (float)modeB->w / (float)modeB->h;
-	int	areaA	= modeA->w * modeA->h;
-	int	areaB	= modeB->w * modeB->h;
+	int	areaA = modeA->w * modeA->h;
+	int	areaB = modeB->w * modeB->h;
 	float	aspectDiffA = fabs(aspectA - displayAspect);
 	float	aspectDiffB = fabs(aspectB - displayAspect);
 	float	aspectDiffsDiff = aspectDiffA - aspectDiffB;
@@ -126,10 +114,6 @@ GLimp_CompareModes(const void *a, const void *b)
 		return areaA - areaB;
 }
 
-
-/*
- * GLimp_DetectAvailableModes
- */
 static void
 GLimp_DetectAvailableModes(void)
 {
@@ -172,9 +156,6 @@ GLimp_DetectAvailableModes(void)
 	}
 }
 
-/*
- * GLimp_SetMode
- */
 static int
 GLimp_SetMode(int mode, qbool fullscreen, qbool noborder)
 {
@@ -410,16 +391,13 @@ GLimp_SetMode(int mode, qbool fullscreen, qbool noborder)
 	return RSERR_OK;
 }
 
-/*
- * GLimp_StartDriverAndSetMode
- */
 static qbool
 GLimp_StartDriverAndSetMode(int mode, qbool fullscreen, qbool noborder)
 {
 	rserr_t err;
 
 	if(!SDL_WasInit(SDL_INIT_VIDEO)){
-		char driverName[ 64 ];
+		char driverName[64];
 
 		if(SDL_Init(SDL_INIT_VIDEO) == -1){
 			ri.Printf(PRINT_ALL, "SDL_Init( SDL_INIT_VIDEO ) FAILED (%s)\n",
@@ -465,10 +443,6 @@ GLimp_HaveExtension(const char *ext)
 	return ((*ptr == ' ') || (*ptr == '\0'));	/* verify it's complete string. */
 }
 
-
-/*
- * GLimp_InitExtensions
- */
 static void
 GLimp_InitExtensions(void)
 {
@@ -596,8 +570,6 @@ GLimp_InitExtensions(void)
 #define R_MODE_FALLBACK 3	/* 640 * 480 */
 
 /*
- * GLimp_Init
- *
  * This routine is responsible for initializing the OS specific portions
  * of OpenGL
  */
@@ -648,10 +620,12 @@ success:
 	glConfig.hardwareType = GLHW_GENERIC;
 	glConfig.deviceSupportsGamma = SDL_SetGamma(1.0f, 1.0f, 1.0f) >= 0;
 
-	/* Mysteriously, if you use an NVidia graphics card and multiple monitors,
+	/* 
+	 * Mysteriously, if you use an NVidia graphics card and multiple monitors,
 	 * SDL_SetGamma will incorrectly return false... the first time; ask
 	 * again and you get the correct answer. This is a suspected driver bug, see
-	 * http://bugzilla.icculus.org/show_bug.cgi?id=4316 */
+	 * http://bugzilla.icculus.org/show_bug.cgi?id=4316 
+	 */
 	glConfig.deviceSupportsGamma = SDL_SetGamma(1.0f, 1.0f, 1.0f) >= 0;
 	
 	if(r_ignorehwgamma->integer == -1)
@@ -679,10 +653,7 @@ success:
 	ri.IN_Init( );
 }
 
-
 /*
- * GLimp_EndFrame
- *
  * Responsible for doing a swapbuffers
  */
 void
@@ -728,13 +699,9 @@ GLimp_EndFrame(void)
 	}
 }
 
-
-
 #ifdef SMP
 /*
- *
- * SMP acceleration
- *
+ * TODO: SMP
  */
 
 /*
@@ -750,9 +717,6 @@ static SDL_cond *renderCompletedEvent = NULL;
 static void (*glimpRenderThread)(void) = NULL;
 static SDL_Thread *renderThread = NULL;
 
-/*
- * GLimp_ShutdownRenderThread
- */
 static void
 GLimp_ShutdownRenderThread(void)
 {
@@ -760,40 +724,27 @@ GLimp_ShutdownRenderThread(void)
 		SDL_DestroyMutex(smpMutex);
 		smpMutex = NULL;
 	}
-
 	if(renderCommandsEvent != NULL){
 		SDL_DestroyCond(renderCommandsEvent);
 		renderCommandsEvent = NULL;
 	}
-
 	if(renderCompletedEvent != NULL){
 		SDL_DestroyCond(renderCompletedEvent);
 		renderCompletedEvent = NULL;
 	}
-
 	glimpRenderThread = NULL;
 }
 
-/*
- * GLimp_RenderThreadWrapper
- */
 static int
 GLimp_RenderThreadWrapper(void *arg)
 {
 	Com_Printf("Render thread starting\n");
-
 	glimpRenderThread();
-
 	GLimp_SetCurrentContext(NULL);
-
 	Com_Printf("Render thread terminating\n");
-
 	return 0;
 }
 
-/*
- * GLimp_SpawnRenderThread
- */
 qbool
 GLimp_SpawnRenderThread(void (*function)(void))
 {
@@ -857,9 +808,6 @@ GLimp_SpawnRenderThread(void (*function)(void))
 static volatile void *smpData = NULL;
 static volatile qbool smpDataReady;
 
-/*
- * GLimp_RendererSleep
- */
 void *
 GLimp_RendererSleep(void)
 {
@@ -887,9 +835,6 @@ GLimp_RendererSleep(void)
 	return data;
 }
 
-/*
- * GLimp_FrontEndSleep
- */
 void
 GLimp_FrontEndSleep(void)
 {
@@ -903,9 +848,6 @@ GLimp_FrontEndSleep(void)
 	GLimp_SetCurrentContext(opengl_context);
 }
 
-/*
- * GLimp_WakeRenderer
- */
 void
 GLimp_WakeRenderer(void *data)
 {
