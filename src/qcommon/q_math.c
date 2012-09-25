@@ -453,9 +453,12 @@ MakeNormalVectors(const Vec3 forward, Vec3 right, Vec3 up)
 void
 rotv3(Vec3 in, Vec3 matrix[3], Vec3 out)
 {
-	out[0] = dotv3(in, matrix[0]);
-	out[1] = dotv3(in, matrix[1]);
-	out[2] = dotv3(in, matrix[2]);
+	Vec3 tmp;
+
+	copyv3(in, tmp);
+	out[0] = dotv3(tmp, matrix[0]);
+	out[1] = dotv3(tmp, matrix[1]);
+	out[2] = dotv3(tmp, matrix[2]);
 }
 
 #if !idppc
@@ -474,7 +477,7 @@ Q_rsqrt(float number)
 	y = y * (threehalfs - (x2 * y * y));
 	/* second iteration, this can be removed */
 	y = y * (threehalfs - (x2 * y * y));
-	return y;
+	return y; /* or number*y for just sqrt */
 }
 
 float

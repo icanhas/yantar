@@ -13,29 +13,6 @@
 
 /* #define CAPSULE_DEBUG */
 
-/*
- *
- * BASIC MATH
- *
- */
-
-/*
- * RotatePoint
- */
-void
-RotatePoint(Vec3 point, /*const*/ Vec3 matrix[3])	/* FIXME */
-{
-	Vec3 tvec;
-
-	copyv3(point, tvec);
-	point[0] = dotv3(matrix[0], tvec);
-	point[1] = dotv3(matrix[1], tvec);
-	point[2] = dotv3(matrix[2], tvec);
-}
-
-/*
- * TransposeMatrix
- */
 void
 TransposeMatrix(/*const*/ Vec3 matrix[3], Vec3 transpose[3])	/* FIXME */
 {
@@ -45,9 +22,6 @@ TransposeMatrix(/*const*/ Vec3 matrix[3], Vec3 transpose[3])	/* FIXME */
 			transpose[i][j] = matrix[j][i];
 }
 
-/*
- * CreateRotationMatrix
- */
 void
 CreateRotationMatrix(const Vec3 angles, Vec3 matrix[3])
 {
@@ -55,9 +29,6 @@ CreateRotationMatrix(const Vec3 angles, Vec3 matrix[3])
 	invv3(matrix[1]);
 }
 
-/*
- * CM_ProjectPointOntoVector
- */
 void
 CM_ProjectPointOntoVector(Vec3 point, Vec3 vStart, Vec3 vDir, Vec3 vProj)
 {
@@ -68,9 +39,6 @@ CM_ProjectPointOntoVector(Vec3 point, Vec3 vStart, Vec3 vDir, Vec3 vProj)
 	maddv3(vStart, dotv3(pVec, vDir), vDir, vProj);
 }
 
-/*
- * CM_distv3FromLineSquared
- */
 float
 CM_distv3FromLineSquared(Vec3 p, Vec3 lp1, Vec3 lp2, Vec3 dir)
 {
@@ -94,46 +62,9 @@ CM_distv3FromLineSquared(Vec3 p, Vec3 lp1, Vec3 lp2, Vec3 dir)
 }
 
 /*
- * CM_Vectordistsqrv3
- */
-float
-CM_Vectordistsqrv3(Vec3 p1, Vec3 p2)
-{
-	Vec3 dir;
-
-	subv3(p2, p1, dir);
-	return lensqrv3(dir);
-}
-
-/*
- * SquareRootFloat
- */
-float
-SquareRootFloat(float number)
-{
-	floatint_t	t;
-	float x, y;
-	const float	f = 1.5F;
-
-	x = number * 0.5F;
-	t.f = number;
-	t.i = 0x5f3759df - (t.i >> 1);
-	y = t.f;
-	y = y * (f - (x * y * y));
-	y = y * (f - (x * y * y));
-	return number * y;
-}
-
-
-/*
- *
- * POSITION TESTING
- *
+ *	Position testing
  */
 
-/*
- * CM_TestBoxInBrush
- */
 void
 CM_TestBoxInBrush(traceWork_t *tw, cbrush_t *brush)
 {
@@ -204,11 +135,6 @@ CM_TestBoxInBrush(traceWork_t *tw, cbrush_t *brush)
 	tw->trace.contents = brush->contents;
 }
 
-
-
-/*
- * CM_TestInLeaf
- */
 void
 CM_TestInLeaf(traceWork_t *tw, cLeaf_t *leaf)
 {
@@ -265,8 +191,6 @@ CM_TestInLeaf(traceWork_t *tw, cLeaf_t *leaf)
 }
 
 /*
- * CM_TestCapsuleInCapsule
- *
  * capsule inside capsule check
  */
 void
@@ -334,8 +258,6 @@ CM_TestCapsuleInCapsule(traceWork_t *tw, clipHandle_t model)
 }
 
 /*
- * CM_TestBoundingBoxInCapsule
- *
  * bounding box inside capsule check
  */
 void
@@ -371,9 +293,6 @@ CM_TestBoundingBoxInCapsule(traceWork_t *tw, clipHandle_t model)
 	CM_TestInLeaf(tw, &cmod->leaf);
 }
 
-/*
- * CM_PositionTest
- */
 #define MAX_POSITION_LEAFS 1024
 void
 CM_PositionTest(traceWork_t *tw)
@@ -414,14 +333,7 @@ CM_PositionTest(traceWork_t *tw)
 }
 
 /*
- *
- * TRACING
- *
- */
-
-
-/*
- * CM_TraceThroughPatch
+ *	Tracing
  */
 
 void
@@ -441,9 +353,6 @@ CM_TraceThroughPatch(traceWork_t *tw, cPatch_t *patch)
 	}
 }
 
-/*
- * CM_TraceThroughBrush
- */
 void
 CM_TraceThroughBrush(traceWork_t *tw, cbrush_t *brush)
 {
@@ -606,9 +515,6 @@ CM_TraceThroughBrush(traceWork_t *tw, cbrush_t *brush)
 		}
 }
 
-/*
- * CM_TraceThroughLeaf
- */
 void
 CM_TraceThroughLeaf(traceWork_t *tw, cLeaf_t *leaf)
 {
@@ -668,8 +574,6 @@ CM_TraceThroughLeaf(traceWork_t *tw, cLeaf_t *leaf)
 #define RADIUS_EPSILON 1.0f
 
 /*
- * CM_TraceThroughSphere
- *
  * get the first intersection of the ray with the sphere
  */
 void
@@ -719,7 +623,7 @@ CM_TraceThroughSphere(traceWork_t *tw, Vec3 origin, float radius, Vec3 start,
 
 	d = b * b - 4.0f * c;	/* * a; */
 	if(d > 0){
-		sqrtd = SquareRootFloat(d);
+		sqrtd = sqrt(d);
 		/* = (- b + sqrtd) * 0.5f; // / (2.0f * a); */
 		fraction = (-b - sqrtd) * 0.5f;	/* / (2.0f * a); */
 		/*  */
@@ -754,8 +658,6 @@ CM_TraceThroughSphere(traceWork_t *tw, Vec3 origin, float radius, Vec3 start,
 }
 
 /*
- * CM_TraceThroughVerticalCylinder
- *
  * get the first intersection of the ray with the cylinder
  * the cylinder extends halfheight above and below the origin
  */
@@ -817,7 +719,7 @@ CM_TraceThroughVerticalCylinder(traceWork_t *tw, Vec3 origin, float radius,
 
 	d = b * b - 4.0f * c;	/* * a; */
 	if(d > 0){
-		sqrtd = SquareRootFloat(d);
+		sqrtd = sqrt(d);
 		/* = (- b + sqrtd) * 0.5f;// / (2.0f * a); */
 		fraction = (-b - sqrtd) * 0.5f;	/* / (2.0f * a); */
 		/*  */
@@ -859,8 +761,6 @@ CM_TraceThroughVerticalCylinder(traceWork_t *tw, Vec3 origin, float radius,
 }
 
 /*
- * CM_TraceCapsuleThroughCapsule
- *
  * capsule vs. capsule collision (not rotated)
  */
 void
@@ -921,8 +821,6 @@ CM_TraceCapsuleThroughCapsule(traceWork_t *tw, clipHandle_t model)
 }
 
 /*
- * CM_TraceBoundingBoxThroughCapsule
- *
  * bounding box vs. capsule collision
  */
 void
@@ -958,11 +856,7 @@ CM_TraceBoundingBoxThroughCapsule(traceWork_t *tw, clipHandle_t model)
 	CM_TraceThroughLeaf(tw, &cmod->leaf);
 }
 
-/* ========================================================================================= */
-
 /*
- * CM_TraceThroughTree
- *
  * Traverse all the contacted leafs from the start to the end position.
  * If the trace is a point, they will be exactly in order, but for larger
  * trace volumes it is possible to hit something in a later leaf with
@@ -1069,13 +963,6 @@ CM_TraceThroughTree(traceWork_t *tw, int num, float p1f, float p2f, Vec3 p1,
 	CM_TraceThroughTree(tw, node->children[side^1], midf, p2f, mid, p2);
 }
 
-
-/* ====================================================================== */
-
-
-/*
- * CM_Trace
- */
 void
 CM_Trace(trace_t *results, const Vec3 start, const Vec3 end, Vec3 mins,
 	 Vec3 maxs,
@@ -1174,7 +1061,7 @@ CM_Trace(trace_t *results, const Vec3 start, const Vec3 end, Vec3 mins,
 
 	/*
 	 * calculate bounds
-	 *  */
+	 */
 	if(tw.sphere.use)
 		for(i = 0; i < 3; i++){
 			if(tw.start[i] < tw.end[i]){
@@ -1202,7 +1089,7 @@ CM_Trace(trace_t *results, const Vec3 start, const Vec3 end, Vec3 mins,
 
 	/*
 	 * check for position test special case
-	 *  */
+	 */
 	if(start[0] == end[0] && start[1] == end[1] && start[2] == end[2]){
 		if(model){
 #ifdef ALWAYS_BBOX_VS_BBOX	/* FIXME - compile time flag? */
@@ -1229,7 +1116,7 @@ CM_Trace(trace_t *results, const Vec3 start, const Vec3 end, Vec3 mins,
 	}else{
 		/*
 		 * check for point special case
-		 *  */
+		 */
 		if(tw.size[0][0] == 0 && tw.size[0][1] == 0 && tw.size[0][2] ==
 		   0){
 			tw.isPoint = qtrue;
@@ -1243,7 +1130,7 @@ CM_Trace(trace_t *results, const Vec3 start, const Vec3 end, Vec3 mins,
 
 		/*
 		 * general sweeping through world
-		 *  */
+		 */
 		if(model){
 #ifdef ALWAYS_BBOX_VS_BBOX
 			if(model == BOX_MODEL_HANDLE || model ==
@@ -1286,9 +1173,6 @@ CM_Trace(trace_t *results, const Vec3 start, const Vec3 end, Vec3 mins,
 	*results = tw.trace;
 }
 
-/*
- * CM_BoxTrace
- */
 void
 CM_BoxTrace(trace_t *results, const Vec3 start, const Vec3 end,
 	    Vec3 mins, Vec3 maxs,
@@ -1300,8 +1184,6 @@ CM_BoxTrace(trace_t *results, const Vec3 start, const Vec3 end,
 }
 
 /*
- * CM_TransformedBoxTrace
- *
  * Handles offseting and rotation of the end points for moving and
  * rotating entities
  */
@@ -1366,8 +1248,8 @@ CM_TransformedBoxTrace(trace_t *results, const Vec3 start, const Vec3 end,
 		 *       bevels invalid.
 		 *       However this is correct for capsules since a capsule itself is rotated too. */
 		CreateRotationMatrix(angles, matrix);
-		RotatePoint(start_l, matrix);
-		RotatePoint(end_l, matrix);
+		rotv3(start_l, matrix, start_l);
+		rotv3(end_l, matrix, start_l);
 		/* rotated sphere offset for capsule */
 		sphere.offset[0] = matrix[0][ 2 ] * t;
 		sphere.offset[1] = -matrix[1][ 2 ] * t;
@@ -1384,7 +1266,7 @@ CM_TransformedBoxTrace(trace_t *results, const Vec3 start, const Vec3 end,
 	if(rotated && trace.fraction != 1.0){
 		/* rotation of bmodel collision plane */
 		TransposeMatrix(matrix, transpose);
-		RotatePoint(trace.plane.normal, transpose);
+		rotv3(trace.plane.normal, transpose, trace.plane.normal);
 	}
 
 	/* re-calculate the end position of the trace because the trace.endpos
@@ -1395,3 +1277,4 @@ CM_TransformedBoxTrace(trace_t *results, const Vec3 start, const Vec3 end,
 
 	*results = trace;
 }
+
