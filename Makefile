@@ -1558,8 +1558,8 @@ Q3ROBJ = \
   $(O)/renderer/surface.o \
   $(O)/renderer/world.o \
   \
-  $(O)/renderer/sdl/gamma.o \
-  $(O)/renderer/sdl/glimp.o
+  $(O)/renderer/sys/sdl/gamma.o \
+  $(O)/renderer/sys/sdl/glimp.o
 
 ifneq ($(USE_RENDERER_DLOPEN), 0)
   Q3ROBJ += \
