@@ -7,9 +7,11 @@
 /* cl_main.c  -- client main loop */
 
 #include <limits.h>
+#include "shared.h"
 #include "client.h"
 #include "keycodes.h"
 #include "keys.h"
+#include "ui.h"
 #include "../sys/local.h"
 #include "../sys/loadlib.h"
 

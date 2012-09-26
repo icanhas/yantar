@@ -7,7 +7,7 @@
 #ifndef __ASM_I386__
 #define __ASM_I386__
 
-#include "../qcommon/q_platform.h"
+#include "platform.h"
 
 #ifdef __ELF__
 .section.note.GNU-stack,"",@progbits

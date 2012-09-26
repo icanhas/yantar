@@ -5,10 +5,10 @@
  * it under the terms of the GNU General Public License.
  */
  
-#include "../../qcommon/q_platform.h"
+#include "platform.h"
 #include "cmdlib.h"
 #include "mathlib.h"
-#include "../../qcommon/qfiles.h"
+#include "qfiles.h"
 
 /* 19079 total symbols in FI, 2002 Jan 23 */
 #define DEFAULT_HASHTABLE_SIZE 2048

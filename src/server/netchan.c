@@ -5,8 +5,8 @@
  * it under the terms of the GNU General Public License.
  */
 
-#include "../qcommon/q_shared.h"
-#include "../qcommon/qcommon.h"
+#include "shared.h"
+#include "common.h"
 #include "server.h"
 
 #ifdef LEGACY_PROTOCOL

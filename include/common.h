@@ -22,7 +22,7 @@
 #ifndef _QCOMMON_H_
 #define _QCOMMON_H_
 
-#include "../qcommon/cm/public.h"
+#include "cm.h"
 
 /* Ignore __attribute__ on non-gcc platforms */
 #ifndef __GNUC__

@@ -10,6 +10,9 @@
 *
 *       User interface building blocks and support functions.
 **********************************************************************/
+
+#include "shared.h"
+#include "ui.h"
 #include "local.h"
 
 uiStatic_t	uis;

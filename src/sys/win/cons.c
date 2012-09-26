@@ -6,8 +6,8 @@
  */
 
 #include <windows.h>
-#include "q_shared.h"
-#include "qcommon.h"
+#include "shared.h"
+#include "common.h"
 #include "../local.h"
 
 #define QCONSOLE_HISTORY 32

@@ -9,7 +9,7 @@
 #include "local.h"
 
 #ifdef MISSIONPACK
-#include "../ui/shared.h"
+#include "../ui/uishared.h"
 /* display context for new ui stuff */
 displayContextDef_t cgDC;
 #endif

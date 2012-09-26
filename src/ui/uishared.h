@@ -8,7 +8,7 @@
 #define __UI_SHARED_H
 
 
-#include "../qcommon/q_shared.h"
+#include "shared.h"
 #include "../renderer/types.h"
 #include "../client/keycodes.h"
 

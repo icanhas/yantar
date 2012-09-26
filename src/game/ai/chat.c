@@ -15,11 +15,11 @@
 *
 *****************************************************************************/
 
-#include "q_shared.h"
-#include "../bg/public.h"
-#include "../public.h"
+#include "shared.h"
+#include "bg.h"
+#include "game.h"
 #include "../local.h"
-#include "../../botlib/botlib.h"
+#include "botlib.h"
 #include "../../botlib/be_aas.h"
 #include "../../botlib/be_ea.h"
 #include "../../botlib/be_ai_char.h"
@@ -43,7 +43,7 @@
 
 /* for the voice chats */
 #ifdef MISSIONPACK
-#include "../../ui/menudef.h"
+#include "../../../ui/menudef.h"
 #endif
 
 #define TIME_BETWEENCHATTING 25

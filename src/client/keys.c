@@ -5,9 +5,11 @@
  * it under the terms of the GNU General Public License.
  */
  
+#include "shared.h"
 #include "client.h"
 #include "keycodes.h"
 #include "keys.h"
+#include "ui.h"
 
 /*
  * key up events are sent even if in console mode

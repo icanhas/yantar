@@ -14,8 +14,8 @@
  * needed on buffers full of bytes, and then call MD5Final, which
  * will fill a supplied 16-byte array with the digest.
  */
-#include "q_shared.h"
-#include "qcommon.h"
+#include "shared.h"
+#include "common.h"
 
 typedef struct MD5Context {
 	uint32_t	buf[4];

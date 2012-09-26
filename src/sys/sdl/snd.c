@@ -14,7 +14,7 @@
 #       include <SDL.h>
 #endif
 
-#include "q_shared.h"
+#include "shared.h"
 #include "../../client/snd/local.h"	/* FIXME: leaking internals from client/snd */
 
 qbool		snd_inited = qfalse;

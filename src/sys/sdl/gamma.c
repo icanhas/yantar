@@ -12,7 +12,7 @@
 #endif
 
 #include "../../renderer/local.h"
-#include "qcommon.h"
+#include "common.h"
 
 void
 GLimp_SetGamma(unsigned char red[256], unsigned char green[256], unsigned char blue[256])

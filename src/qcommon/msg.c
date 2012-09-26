@@ -8,8 +8,8 @@
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License.
  */
-#include "q_shared.h"
-#include "qcommon.h"
+#include "shared.h"
+#include "common.h"
 
 static huffman_t msgHuff;
 static qbool msgInit = qfalse;

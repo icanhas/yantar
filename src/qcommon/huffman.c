@@ -9,8 +9,8 @@
  * Compression book.  The ranks are not actually stored, but implicitly defined
  * by the location of a node within a doubly-linked list */
 
-#include "q_shared.h"
-#include "qcommon.h"
+#include "shared.h"
+#include "common.h"
 
 static int bloc = 0;
 

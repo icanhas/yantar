@@ -5,7 +5,7 @@
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License.
  */
-#include "q_shared.h"
+#include "shared.h"
 
 /*
  * Q_hashstr: Return the hashed value of string s. Will skip file extension

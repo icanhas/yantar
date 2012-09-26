@@ -4,14 +4,14 @@
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License.
  */
-/* tr_main.c -- main control flow for each frame */
+/* main control flow for each frame */
 
+#include <string.h>
+#include "shared.h"
 #include "local.h"
 
-#include <string.h>	/* memcpy */
-
+refimport_t	ri;
 trGlobals_t	tr;
-
 static float	s_flipMatrix[16] = {
 	/* convert from our coordinate system (looking down X)
 	 * to OpenGL's coordinate system (looking down -Z) */
@@ -20,9 +20,6 @@ static float	s_flipMatrix[16] = {
 	0, 1, 0, 0,
 	0, 0, 0, 1
 };
-
-
-refimport_t ri;
 
 /* entities that will have procedurally generated surfaces will just
  * point at this for their sorting surface */

@@ -9,7 +9,7 @@
  * it under the terms of the GNU General Public License.
  */
 #include "local.h"
-#include "../ui/shared.h"
+#include "../ui/uishared.h"
 
 #ifdef MISSIONPACK
 extern menuDef_t *menuScoreboard;

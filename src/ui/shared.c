@@ -4,10 +4,12 @@
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License.
  */
-/*
- * string allocation/managment */
+/* string allocation/managment */
 
 #include "shared.h"
+#include "ref.h"
+#include "local.h"
+#include "uishared.h"
 
 #define SCROLL_TIME_START		500
 #define SCROLL_TIME_ADJUST		150

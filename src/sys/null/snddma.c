@@ -10,8 +10,8 @@
 /* snddma_null.c
  * all other sound mixing is portable */
 
-#include "q_shared.h"
-#include "qcommon.h"
+#include "shared.h"
+#include "common.h"
 
 qbool
 SNDDMA_Init(void)

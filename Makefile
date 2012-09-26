@@ -248,7 +248,7 @@ LOKISETUPDIR=misc/setup
 NSISDIR=misc/nsis
 SDLHDIR=$(MOUNT_DIR)/SDL12
 LIBSDIR=$(MOUNT_DIR)/libs
-INCLUDES=-I$(COMDIR)
+INCLUDES=-Iinclude
 
 bin_path=$(shell which $(1) 2> /dev/null)
 
@@ -903,7 +903,7 @@ ifeq ($(USE_OPENAL),1)
 endif
 
 ifeq ($(USE_CURL),1)
-  CLIENT_CFLAGS += -DUSE_CURL
+  CLIENT_CFLAGS += -DUSE_CURL -Iinclude/libcurl
   ifeq ($(USE_CURL_DLOPEN),1)
     CLIENT_CFLAGS += -DUSE_CURL_DLOPEN
   endif
@@ -1228,7 +1228,7 @@ endif
 
 define DO_TOOLS_CC
 $(echo_cmd) "TOOLS_CC $<"
-$(Q)$(CC) $(TOOLS_CFLAGS) -o $@ -c $<
+$(Q)$(CC) $(TOOLS_CFLAGS)  $(INCLUDES) -o $@ -c $<
 endef
 
 define DO_TOOLS_CC_DAGCHECK

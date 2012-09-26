@@ -4,7 +4,9 @@
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License.
  */
-/*  */
+
+#include "shared.h"
+#include "ui.h"
 #include "local.h"
 
 #define ART_BACK0		Pmenuart "/back_0"

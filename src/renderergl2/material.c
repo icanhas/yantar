@@ -4,9 +4,10 @@
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License.
  */
+ 
 #include "local.h"
 
-extern qbool ParseShader(char**); /* tr_material_parse.c */
+extern qbool ParseShader(char**);
 
 /* 
  * the shader is parsed into these global variables, then copied into

@@ -5,7 +5,7 @@
  * it under the terms of the GNU General Public License.
  */
  
-#include "q_shared.h"
+#include "shared.h"
 #include "local.h"
 #include "codec.h"
 #include "../client.h"

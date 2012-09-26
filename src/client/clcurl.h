@@ -9,11 +9,11 @@
 #ifndef __QCURL_H__
 #define __QCURL_H__
 
-#include "../qcommon/q_shared.h"
-#include "../qcommon/qcommon.h"
+#include "shared.h"
+#include "common.h"
 
 #ifdef USE_LOCAL_HEADERS
-  #include "../libcurl/curl/curl.h"
+  #include "curl.h"
 #else
   #include <curl/curl.h>
 #endif

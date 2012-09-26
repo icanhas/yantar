@@ -10,7 +10,7 @@
 #endif
 
 #include "local.h"
-#include "../ui/shared.h"
+#include "../ui/uishared.h"
 
 extern displayContextDef_t cgDC;
 

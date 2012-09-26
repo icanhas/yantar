@@ -11,6 +11,8 @@
  *
  */
 
+#include "shared.h"
+#include "ui.h"
 #include "local.h"
 
 #define ART_FRAMEL	Pmenuart "/frame2_l"

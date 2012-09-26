@@ -9,6 +9,8 @@
  * ui_login.c
  *  */
 
+#include "shared.h"
+#include "ui.h"
 #include "local.h"
 
 #define LOGIN_FRAME	Pmenuart "/cut_frame"

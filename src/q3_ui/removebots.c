@@ -12,6 +12,8 @@
  */
 
 
+#include "shared.h"
+#include "ui.h"
 #include "local.h"
 
 

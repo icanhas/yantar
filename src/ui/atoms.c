@@ -10,6 +10,9 @@
 *
 *       User interface building blocks and support functions.
 **********************************************************************/
+
+#include "shared.h"
+#include "ref.h"
 #include "local.h"
 
 qbool m_entersound;	/* after a frame, so caching won't disrupt the sound */

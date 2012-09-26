@@ -10,6 +10,9 @@
 *
 *       Quake's menu framework system.
 **********************************************************************/
+
+#include "shared.h"
+#include "ui.h"
 #include "local.h"
 
 sfxHandle_t	menu_in_sound;

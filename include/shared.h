@@ -71,7 +71,7 @@
 #ifdef Q3_VM
 
 /* FIXME: include this in modules themselves, not in shared */
-#include "vmlibc/vmlibc.h"
+#include "vmlibc.h"
 
 typedef int intptr_t;
 
@@ -134,9 +134,9 @@ enum {
 	TRAP_TESTPRINTFLOAT
 };
 
-#include "q_paths.h"
+#include "paths.h"
 
-#include "q_platform.h"
+#include "platform.h"
 
 typedef unsigned char byte;
 typedef unsigned short ushort;

@@ -8,7 +8,7 @@
 
 #include "server.h"
 
-#include "../botlib/botlib.h"
+#include "botlib.h"
 
 botlib_export_t *botlib_export;
 

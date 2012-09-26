@@ -6,7 +6,7 @@
  * it under the terms of the GNU General Public License.
  */
 
-#include "q_shared.h"
+#include "shared.h"
 #include "public.h"
 
 /*QUAKED item_***** ( 0 0 0 ) (-16 -16 -16) (16 16 16) suspended

@@ -4,16 +4,14 @@
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License.
  */
-/* tr_extensions.c - extensions needed by the renderer not in sdl_glimp.c */
+/* extensions needed by the renderer not in sdl_glimp.c */
 
 #ifdef USE_LOCAL_HEADERS
 #       include "SDL.h"
 #else
 #       include <SDL.h>
 #endif
-
 #include "local.h"
-
 
 /* GL_EXT_multi_draw_arrays */
 void (APIENTRY * qglMultiDrawArraysEXT)(GLenum mode, GLint *first, GLsizei *count, GLsizei primcount);

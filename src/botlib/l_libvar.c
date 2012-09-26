@@ -6,7 +6,7 @@
  * it under the terms of the GNU General Public License.
  */
 
-#include "../qcommon/q_shared.h"
+#include "shared.h"
 #include "l_memory.h"
 #include "l_libvar.h"
 

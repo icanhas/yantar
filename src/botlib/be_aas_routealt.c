@@ -14,7 +14,7 @@
 *
 *****************************************************************************/
 
-#include "../qcommon/q_shared.h"
+#include "shared.h"
 #include "l_utils.h"
 #include "l_memory.h"
 #include "l_log.h"

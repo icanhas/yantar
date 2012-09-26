@@ -6,10 +6,11 @@
  * it under the terms of the GNU General Public License.
  */
 
+#include "shared.h"
 #include "../client.h"
 #include "codec.h"
 #include "local.h"
-#include "public.h"
+#include "snd.h"
 
 cvar_t	*s_volume;
 cvar_t	*s_muted;

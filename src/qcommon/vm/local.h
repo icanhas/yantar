@@ -4,8 +4,8 @@
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License.
  */
-#include "../q_shared.h"
-#include "../qcommon.h"
+#include "shared.h"
+#include "common.h"
 
 /* don't change, this is hardcoded into x86 VMs, opStack protection relies
  * on this */

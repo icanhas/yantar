@@ -6,9 +6,9 @@
  * it under the terms of the GNU General Public License.
  */
 
-#include "q_shared.h"
-#include "qcommon.h"
-#include "public.h"
+#include "shared.h"
+#include "common.h"
+#include "snd.h"
 
 #define PAINTBUFFER_SIZE	4096	/* this is in samples */
 

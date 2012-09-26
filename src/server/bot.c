@@ -7,7 +7,7 @@
 /* sv_bot.c */
 
 #include "server.h"
-#include "../botlib/botlib.h"
+#include "botlib.h"
 
 typedef struct bot_debugpoly_s {
 	int	inuse;

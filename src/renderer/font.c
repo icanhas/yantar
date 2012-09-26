@@ -54,8 +54,8 @@
  * defined out. To pre-render new fonts you need enable the define ( BUILD_FREETYPE ) and
  * uncheck the exclude from build check box in the FreeType2 area of the Renderer project. */
 
-#include "q_shared.h"
-#include "qcommon.h"
+#include "shared.h"
+#include "common.h"
 #include "local.h"
 
 #ifdef BUILD_FREETYPE

@@ -9,8 +9,8 @@
 #ifndef _SND_CODEC_H_
 #define _SND_CODEC_H_
 
-#include "../qcommon/q_shared.h"
-#include "../qcommon/qcommon.h"
+#include "shared.h"
+#include "common.h"
 
 typedef struct snd_info_s {
 	int	rate;

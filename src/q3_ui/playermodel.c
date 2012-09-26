@@ -5,6 +5,8 @@
  * it under the terms of the GNU General Public License.
  */
  
+#include "shared.h"
+#include "ui.h"
 #include "local.h"
 
 #define MODEL_BACK0	Pmenuart "/back_0"

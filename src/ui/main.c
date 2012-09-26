@@ -14,6 +14,8 @@
 /* use this to get a demo build without an explicit demo build, i.e. to get the demo ui files to build
  * #define PRE_RELEASE_TADEMO */
 
+#include "shared.h"
+#include "ref.h"
 #include "local.h"
 
 uiInfo_t uiInfo;

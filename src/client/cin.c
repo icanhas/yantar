@@ -6,8 +6,10 @@
  * it under the terms of the GNU General Public License.
  */
  
+#include "shared.h"
 #include "client.h"
 #include "snd/local.h"	/* FIXME: leaking internals of snd */
+#include "ui.h"
 
 enum {
 	MAXSIZE					= 8,

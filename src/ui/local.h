@@ -8,12 +8,12 @@
 #ifndef __UI_LOCAL_H__
 #define __UI_LOCAL_H__
 
-#include "../qcommon/q_shared.h"
-#include "../renderer/types.h"
-#include "public.h"
-#include "../client/keycodes.h"
-#include "../game/bg/public.h"
 #include "shared.h"
+#include "../renderer/types.h"
+#include "ui.h"
+#include "../client/keycodes.h"
+#include "bg.h"
+#include "uishared.h"
 
 /* global display context */
 

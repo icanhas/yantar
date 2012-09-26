@@ -4,15 +4,12 @@
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License.
  */
-/*  */
 
-#include "q_shared.h"
-#include "bg/public.h"
-#include "public.h"
+#include "shared.h"
+#include "bg.h"
+#include "game.h"
 #include "local.h"
 #include "team.h"
-
-/* ========================================================== */
 
 /*QUAKED target_give (1 0 0) (-8 -8 -8) (8 8 8)
  * Gives the activator all the items pointed to.

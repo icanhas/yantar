@@ -8,15 +8,15 @@
 #ifndef __UI_LOCAL_H__
 #define __UI_LOCAL_H__
 
-#include "../qcommon/q_shared.h"
-#include "../renderer/types.h"
+#include "shared.h"
+#include "ref.h"
 /* NOTE: include the public.h from the new UI */
-#include "../ui/public.h"
+#include "paths.h"
 /* redefine to old API version */
 #undef UI_API_VERSION
 #define UI_API_VERSION 4
 #include "../client/keycodes.h"
-#include "../game/bg/public.h"
+#include "bg.h"
 
 typedef void (*voidfunc_f)(void);
 

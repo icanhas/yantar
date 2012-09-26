@@ -5,6 +5,9 @@
  * it under the terms of the GNU General Public License.
  */
 /*  */
+
+#include "shared.h"
+#include "ui.h"
 #include "local.h"
 
 /*

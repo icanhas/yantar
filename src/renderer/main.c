@@ -1,17 +1,16 @@
+/* main control flow for each frame */
 /*
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License.
  */
-/* tr_main.c -- main control flow for each frame */
-
-#include "local.h"
 
 #include <string.h>	/* memcpy */
+#include "local.h"
 
+refimport_t ri;
 trGlobals_t tr;
-
 static float s_flipMatrix[16] = {
 	/* convert from our coordinate system (looking down X)
 	 * to OpenGL's coordinate system (looking down -Z) */
@@ -20,9 +19,6 @@ static float s_flipMatrix[16] = {
 	0, 1, 0, 0,
 	0, 0, 0, 1
 };
-
-
-refimport_t ri;
 
 /* entities that will have procedurally generated surfaces will just
  * point at this for their sorting surface */

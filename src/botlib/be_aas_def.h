@@ -14,7 +14,7 @@
 *
 *****************************************************************************/
 
-#include "../qcommon/q_shared.h"
+#include "shared.h"
 
 /* debugging on */
 #define AAS_DEBUG

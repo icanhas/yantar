@@ -10,7 +10,7 @@
 
 #include <errno.h>
 #include <stdio.h>
-#include "qcommon.h"
+#include "common.h"
 
 int sys_curtime;
 

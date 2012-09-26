@@ -6,10 +6,10 @@
  */
 /* server.h */
 
-#include "../qcommon/q_shared.h"
-#include "../qcommon/qcommon.h"
-#include "../game/public.h"
-#include "../game/bg/public.h"
+#include "shared.h"
+#include "common.h"
+#include "game.h"
+#include "bg.h"
 
 /* ============================================================================= */
 

@@ -7,7 +7,7 @@
  * it under the terms of the GNU General Public License.
  */
  
-#include "q_shared.h"
+#include "shared.h"
 
 enum {
 	Bit1		= 7,

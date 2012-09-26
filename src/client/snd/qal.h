@@ -10,8 +10,8 @@
 #ifndef __QAL_H__
 #define __QAL_H__
 
-#include "../qcommon/q_shared.h"
-#include "../qcommon/qcommon.h"
+#include "shared.h"
+#include "common.h"
 
 #ifdef USE_OPENAL_DLOPEN
 #define AL_NO_PROTOTYPES

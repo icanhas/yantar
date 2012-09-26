@@ -7,6 +7,8 @@
 /*
  * ui_players.c */
 
+#include "shared.h"
+#include "ref.h"
 #include "local.h"
 
 

@@ -4,11 +4,10 @@
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License.
  */
-/*  */
 
-#include "q_shared.h"
-#include "bg/public.h"
-#include "public.h"
+#include "shared.h"
+#include "bg.h"
+#include "game.h"
 #include "local.h"
 
 void

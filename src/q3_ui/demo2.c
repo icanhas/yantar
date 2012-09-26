@@ -11,6 +11,8 @@
  *
  */
 
+#include "shared.h"
+#include "ui.h"
 #include "local.h"
 
 #define ART_BACK0	Pmenuart "/back_0"

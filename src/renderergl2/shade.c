@@ -4,12 +4,11 @@
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License.
  */
-/* tr_shade.c */
 
-#include "local.h"
 #if idppc_altivec && !defined(MACOS_X)
 #include <altivec.h>
 #endif
+#include "local.h"
 
 /*
  *

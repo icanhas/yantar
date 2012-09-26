@@ -5,10 +5,12 @@
  * it under the terms of the GNU General Public License.
  */
 
+#include "shared.h"
 #include "client.h"
 #include "keycodes.h"
 #include "keys.h"
-#include "../botlib/botlib.h"
+#include "botlib.h"
+#include "ui.h"
 
 extern botlib_export_t *botlib_export;
 

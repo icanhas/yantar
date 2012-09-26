@@ -11,7 +11,7 @@
 #include "local.h"
 
 #ifdef MISSIONPACK
-#include "../ui/shared.h"
+#include "../ui/uishared.h"
 
 /* used for scoreboard */
 extern displayContextDef_t cgDC;

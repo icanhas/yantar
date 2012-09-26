@@ -6,7 +6,7 @@
  */
 
 #include "qasm-inline.h"
-#include "../qcommon/q_shared.h"
+#include "shared.h"
 
 /*
  * GNU inline asm version of qsnapvector

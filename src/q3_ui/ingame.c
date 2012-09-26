@@ -12,6 +12,8 @@
  */
 
 
+#include "shared.h"
+#include "ui.h"
 #include "local.h"
 
 #define INGAME_FRAME			Pmenuart "/addbotframe"

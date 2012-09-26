@@ -4,7 +4,7 @@
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License.
  */
-/* tr_sky.c */
+
 #include "local.h"
 
 #define SKY_SUBDIVISIONS	8

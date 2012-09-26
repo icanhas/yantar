@@ -9,7 +9,7 @@
 #include "client.h"
 #include "keycodes.h"
 #include "keys.h"
-#include "../botlib/botlib.h"
+#include "botlib.h"
 #ifdef USE_MUMBLE
 #include "libmumblelink.h"
 #endif

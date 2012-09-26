@@ -5,8 +5,8 @@
  * it under the terms of the GNU General Public License.
  */
 
-#include "q_shared.h"
-#include "qcommon.h"
+#include "shared.h"
+#include "common.h"
 
 /* Require a minimum version of SDL */
 #define MINSDL_MAJOR	1

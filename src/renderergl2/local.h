@@ -9,10 +9,10 @@
 #ifndef TR_LOCAL_H
 #define TR_LOCAL_H
 
-#include "../qcommon/q_shared.h"
-#include "../qcommon/qfiles.h"
-#include "../qcommon/qcommon.h"
-#include "../renderer/public.h"
+#include "shared.h"
+#include "qfiles.h"
+#include "common.h"
+#include "ref.h"
 #include "extratypes.h"
 #include "extramath.h"
 #include "fbo.h"

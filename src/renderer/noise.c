@@ -4,10 +4,10 @@
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License.
  */
-/* tr_noise.c */
-#include "../qcommon/q_shared.h"
-#include "../qcommon/qfiles.h"
-#include "../qcommon/qcommon.h"
+
+#include "shared.h"
+#include "qfiles.h"
+#include "common.h"
 
 #define NOISE_SIZE	256
 #define NOISE_MASK	(NOISE_SIZE - 1)

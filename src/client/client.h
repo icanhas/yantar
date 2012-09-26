@@ -4,16 +4,16 @@
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License.
  */
-#include "../qcommon/q_shared.h"
-#include "../qcommon/qcommon.h"
-#include "../renderer/public.h"
-#include "../ui/public.h"
-#include "snd/public.h"
-#include "../cgame/public.h"
-#include "../game/bg/public.h"
+#include "shared.h"
+#include "common.h"
+#include "ref.h"
+#include "paths.h"
+#include "snd.h"
+#include "cgame.h"
+#include "bg.h"
 
 #ifdef USE_CURL
-#include "curl.h"
+#include "clcurl.h"
 #endif	/* USE_CURL */
 
 #ifdef USE_VOIP

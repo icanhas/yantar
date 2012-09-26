@@ -7,7 +7,7 @@
 #ifndef __ASM_INLINE_I386__
 #define __ASM_INLINE_I386__
 
-#include "../qcommon/q_platform.h"
+#include "platform.h"
 
 #if idx64
   #define EAX	"%%rax"

@@ -15,7 +15,7 @@
 #define __Q3_VM_MATH
 #endif
 
-#include "q_shared.h"
+#include "shared.h"
 
 Vec3	vec3_origin = {0,0,0};
 Vec3	axisDefault[3] = { { 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 } };

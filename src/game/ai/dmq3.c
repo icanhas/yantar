@@ -15,11 +15,11 @@
 *
 *****************************************************************************/
 
-#include "q_shared.h"
-#include "../bg/public.h"
-#include "../public.h"
+#include "shared.h"
+#include "bg.h"
+#include "game.h"
 #include "../local.h"
-#include "../../botlib/botlib.h"
+#include "botlib.h"
 #include "../../botlib/be_aas.h"
 #include "../../botlib/be_ea.h"
 #include "../../botlib/be_ai_char.h"
@@ -42,7 +42,7 @@
 #include "match.h"	/* string matching types and vars */
 
 /* for the voice chats */
-#include "../../ui/menudef.h"	/* sos001205 - for q3_ui also */
+#include "../../../ui/menudef.h"	/* sos001205 - for q3_ui also */
 
 /* from aasfile.h */
 #define AREACONTENTS_MOVER		1024

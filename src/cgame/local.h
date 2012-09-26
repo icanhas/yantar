@@ -4,15 +4,14 @@
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License.
  */
-/*  */
-#include "../qcommon/q_shared.h"
-#include "../renderer/types.h"
-#include "../game/bg/public.h"
-#include "public.h"
 
+#include "shared.h"
+#include "ref.h"
+#include "bg.h"
+#include "cgame.h"
 
 /* The entire cgame module is unloaded and reloaded on each level change,
- * so there is NO persistant data between levels on the client side.
+ * so there is NO persistent data between levels on the client side.
  * If you absolutely need something stored, it can either be kept
  * by the server in the server stored userinfos, or stashed in a cvar. */
 

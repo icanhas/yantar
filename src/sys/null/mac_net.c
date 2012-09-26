@@ -7,8 +7,8 @@
  * ===========================================================================
  */
 
-#include "q_shared.h"
-#include "qcommon.h"
+#include "shared.h"
+#include "common.h"
 
 /*
  * =============

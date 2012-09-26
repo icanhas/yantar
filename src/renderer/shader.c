@@ -1,12 +1,12 @@
+/* this file deals with the parsing and definition of shaders */
 /*
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License.
  */
+ 
 #include "local.h"
-
-/* tr_shader.c -- this file deals with the parsing and definition of shaders */
 
 static char *s_shaderText;
 

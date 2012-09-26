@@ -4,7 +4,7 @@
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License.
  */
-/* tr_extramath.c - extra math needed by the renderer not in qmath.c */
+/* extra math needed by the renderer not in qmath.c */
 
 #include "local.h"
 

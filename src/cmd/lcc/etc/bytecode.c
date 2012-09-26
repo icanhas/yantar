@@ -2,7 +2,6 @@
 
 #include <string.h>
 #include <stdio.h>
-#include "../../../qcommon/q_platform.h"
 
 #ifdef _WIN32
 #define BINEXT ".exe"
@@ -23,12 +22,8 @@ char *as[] = { 0 };
 extern char *concat(char *, char *);
 
 /*
-===============
-UpdatePaths
-
 Updates the paths to q3cpp and q3rcc based on
 the directory that contains q3lcc
-===============
 */
 void UpdatePaths( const char *lccBinary )
 {
@@ -36,7 +31,9 @@ void UpdatePaths( const char *lccBinary )
 	char *p;
 
 	strncpy( basepath, lccBinary, 1024 );
-	p = strrchr( basepath, PATH_SEP );
+	p = strrchr( basepath, '/' );
+	if(!p)
+		p = strrchr( basepath, '\\' );
 
 	if( p )
 	{

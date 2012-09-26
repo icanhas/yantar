@@ -5,10 +5,10 @@
  * it under the terms of the GNU General Public License.
  */
 
-#include "../qcommon/q_shared.h"
-#include "../qcommon/qfiles.h"
-#include "../qcommon/qcommon.h"
-#include "public.h"
+#include "shared.h"
+#include "qfiles.h"
+#include "common.h"
+#include "ref.h"
 extern refimport_t ri;
 
 #ifdef USE_INTERNAL_JPEG

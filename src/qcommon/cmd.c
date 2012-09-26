@@ -6,8 +6,8 @@
  * it under the terms of the GNU General Public License.
  */
 
-#include "q_shared.h"
-#include "qcommon.h"
+#include "shared.h"
+#include "common.h"
 
 #define MAX_CMD_BUFFER	16384
 #define MAX_CMD_LINE	1024

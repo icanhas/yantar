@@ -17,13 +17,13 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#include "../qcommon/q_shared.h"
-#include "../qcommon/qfiles.h"
-#include "../qcommon/qcommon.h"
-#include "public.h"
-extern refimport_t ri;
-
+#include "shared.h"
+#include "qfiles.h"
+#include "common.h"
+#include "ref.h"
 #include "../qcommon/puff.h"
+
+extern refimport_t ri;
 
 /* we could limit the png size to a lower value here */
 #ifndef INT_MAX

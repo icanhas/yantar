@@ -5,7 +5,7 @@
 
 #ifdef Q3_VM
 
-#include "../q_shared.h"
+#include "shared.h"
 
 /*-
  * Copyright (c) 1992, 1993

@@ -5,8 +5,8 @@
  * it under the terms of the GNU General Public License.
  */
 
-#include "../qcommon/q_shared.h"
-#include "../qcommon/qcommon.h"
+#include "shared.h"
+#include "common.h"
 
 #ifdef _WIN32
 #       include <winsock2.h>
