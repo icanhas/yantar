@@ -108,7 +108,7 @@
 #define PATH_SEP	'\\'
 
 #if defined(_M_IX86) || defined(__i386__)
-#define ARCH_STRING	"i386"
+#define ARCH_STRING	"x86"
 #elif defined _M_ALPHA
 #define ARCH_STRING	"AXP"
 #endif
@@ -134,7 +134,7 @@
 #define ARCH_STRING "ppc"
 #define Q3_BIG_ENDIAN
 #elif defined __i386__
-#define ARCH_STRING "i386"
+#define ARCH_STRING "x86"
 #define Q3_LITTLE_ENDIAN
 #elif defined __x86_64__
 #undef idx64
@@ -167,7 +167,7 @@
 #define PATH_SEP '/'
 
 #if defined __i386__
-#define ARCH_STRING "i386"
+#define ARCH_STRING "x86"
 #elif defined __x86_64__
 #undef idx64
 #define idx64		1
@@ -230,7 +230,7 @@
 #define PATH_SEP	'/'
 
 #ifdef __i386__
-#define ARCH_STRING "i386"
+#define ARCH_STRING "x86"
 #elif defined __amd64__
 #undef idx64
 #define idx64		1
@@ -260,7 +260,7 @@
 #define PATH_SEP	'/'
 
 #ifdef __i386__
-#define ARCH_STRING	"i386"
+#define ARCH_STRING	"x86"
 #elif defined __sparc
 #define ARCH_STRING	"sparc"
 #endif
