@@ -1,4 +1,4 @@
-/* included first by ALL program modules. */
+/* included first by ALL compilation units, module or not */
 /*
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
