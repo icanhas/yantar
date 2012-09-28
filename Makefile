@@ -122,7 +122,7 @@ ifndef MISSIONPACK_CFLAGS
 endif
 
 ifndef COPYDIR
-COPYDIR="/usr/local/games/quake3"
+COPYDIR="/usr/local/games/yantar"
 endif
 
 ifndef COPYBINDIR
