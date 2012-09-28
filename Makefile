@@ -149,14 +149,6 @@ ifndef GENERATE_DEPENDENCIES
 GENERATE_DEPENDENCIES=1
 endif
 
-ifndef USE_OPENAL
-USE_OPENAL=1
-endif
-
-ifndef USE_OPENAL_DLOPEN
-USE_OPENAL_DLOPEN=1
-endif
-
 ifndef USE_CURL
 USE_CURL=1
 endif
@@ -259,8 +251,6 @@ ifneq ($(BUILD_CLIENT),0)
   ifneq ($(call bin_path, pkg-config),)
     CURL_CFLAGS=$(shell pkg-config --silence-errors --cflags libcurl)
     CURL_LIBS=$(shell pkg-config --silence-errors --libs libcurl)
-    OPENAL_CFLAGS=$(shell pkg-config --silence-errors --cflags openal)
-    OPENAL_LIBS=$(shell pkg-config --silence-errors --libs openal)
     SDL_CFLAGS=$(shell pkg-config --silence-errors --cflags sdl|sed 's/-Dmain=SDL_main//')
     SDL_LIBS=$(shell pkg-config --silence-errors --libs sdl)
   endif
@@ -354,12 +344,6 @@ ifneq (,$(findstring "$(PLATFORM)", "linux" "gnu_kfreebsd" "kfreebsd-gnu"))
   CLIENT_LIBS=$(SDL_LIBS)
   RENDERER_LIBS = $(SDL_LIBS) -lGL
 
-  ifeq ($(USE_OPENAL),1)
-    ifneq ($(USE_OPENAL_DLOPEN),1)
-      CLIENT_LIBS += -lopenal
-    endif
-  endif
-
   ifeq ($(USE_CURL),1)
     ifneq ($(USE_CURL_DLOPEN),1)
       CLIENT_LIBS += -lcurl
@@ -415,12 +399,6 @@ ifeq ($(PLATFORM),darwin)
   endif
 
   BASE_CFLAGS += -fno-strict-aliasing -DMACOS_X -fno-common -pipe
-
-  ifeq ($(USE_OPENAL),1)
-    ifneq ($(USE_OPENAL_DLOPEN),1)
-      CLIENT_LIBS += -framework OpenAL
-    endif
-  endif
 
   ifeq ($(USE_CURL),1)
     ifneq ($(USE_CURL_DLOPEN),1)
@@ -493,13 +471,6 @@ ifeq ($(PLATFORM),mingw32)
   # In the absence of wspiapi.h, require Windows XP or later
   ifeq ($(shell test -e $(COMDIR)/wspiapi.h; echo $$?),1)
     BASE_CFLAGS += -DWINVER=0x501
-  endif
-
-  ifeq ($(USE_OPENAL),1)
-    CLIENT_CFLAGS += $(OPENAL_CFLAGS)
-    ifneq ($(USE_OPENAL_DLOPEN),1)
-      CLIENT_LDFLAGS += $(OPENAL_LDFLAGS)
-    endif
   endif
   
   ifeq ($(ARCH),amd64)
@@ -611,13 +582,6 @@ ifeq ($(PLATFORM),freebsd)
   CLIENT_LIBS += $(SDL_LIBS)
   RENDERER_LIBS = $(SDL_LIBS) -lGL
 
-  # optional features/libraries
-  ifeq ($(USE_OPENAL),1)
-    ifeq ($(USE_OPENAL_DLOPEN),1)
-      CLIENT_LIBS += $(THREAD_LIBS) -lopenal
-    endif
-  endif
-
   ifeq ($(USE_CURL),1)
     ifeq ($(USE_CURL_DLOPEN),1)
       CLIENT_LIBS += -lcurl
@@ -671,12 +635,6 @@ ifeq ($(PLATFORM),openbsd)
 
   CLIENT_LIBS += $(SDL_LIBS)
   RENDERER_LIBS = $(SDL_LIBS) -lGL
-
-  ifeq ($(USE_OPENAL),1)
-    ifneq ($(USE_OPENAL_DLOPEN),1)
-      CLIENT_LIBS += $(THREAD_LIBS) -lossaudio -lopenal
-    endif
-  endif
 
   ifeq ($(USE_CODEC_VORBIS),1)
     CLIENT_LIBS += -lvorbisfile -lvorbis -logg
@@ -892,13 +850,6 @@ ifneq ($(BUILD_GAME_QVM),0)
       $(B)/$(MISSIONPACK)/vm/cgame.qvm \
       $(B)/$(MISSIONPACK)/vm/ui.qvm
     endif
-  endif
-endif
-
-ifeq ($(USE_OPENAL),1)
-  CLIENT_CFLAGS += -DUSE_OPENAL
-  ifeq ($(USE_OPENAL_DLOPEN),1)
-    CLIENT_CFLAGS += -DUSE_OPENAL_DLOPEN
   endif
 endif
 
@@ -1426,9 +1377,6 @@ Q3OBJ = \
   $(O)/client/snd/codec_ogg.o \
   $(O)/client/snd/codec_wav.o \
   $(O)/client/snd/snd.o \
-  \
-  $(O)/client/snd/qal.o \
-  $(O)/client/snd/openal.o \
   \
   $(O)/client/curl.o \
   \
@@ -2497,7 +2445,6 @@ installer: release
 ifeq ($(PLATFORM),mingw32)
 	@$(MAKE) VERSION=$(VERSION) -C $(NSISDIR) V=$(V) \
 		USE_RENDERER_DLOPEN=$(USE_RENDERER_DLOPEN) \
-		USE_OPENAL_DLOPEN=$(USE_OPENAL_DLOPEN) \
 		USE_CURL_DLOPEN=$(USE_CURL_DLOPEN) \
 		USE_INTERNAL_SPEEX=$(USE_INTERNAL_SPEEX) \
 		USE_INTERNAL_ZLIB=$(USE_INTERNAL_ZLIB) \

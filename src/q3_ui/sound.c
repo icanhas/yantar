@@ -41,10 +41,9 @@ static const char *quality_items[] = {
 };
 
 #define UISND_SDL	0
-#define UISND_OPENAL	1
 
 static const char *soundSystem_items[] = {
-	"SDL", "OpenAL", NULL
+	"SDL", NULL
 };
 
 typedef struct {
@@ -146,9 +145,6 @@ UI_SoundOptionsMenu_Event(void* ptr, int event)
 			soundOptionsInfo.quality_original =
 				soundOptionsInfo.quality.curvalue;
 
-			trap_Cvar_SetValue("s_useOpenAL",
-				(soundOptionsInfo.soundSystem.curvalue ==
-				 UISND_OPENAL));
 			soundOptionsInfo.soundSystem_original =
 				soundOptionsInfo.soundSystem.curvalue;
 
@@ -389,13 +385,12 @@ UI_SoundOptionsMenu_Init(void)
 			trap_Cvar_VariableValue(
 				"s_musicvolume") * 10;
 
-	if(trap_Cvar_VariableValue("s_useOpenAL"))
-		soundOptionsInfo.soundSystem_original = UISND_OPENAL;
-	else
-		soundOptionsInfo.soundSystem_original = UISND_SDL;
-
-	soundOptionsInfo.soundSystem.curvalue =
-		soundOptionsInfo.soundSystem_original;
+	/* 
+	 * we use no other sound output libraries at the moment, so 
+	 * it's always UISND_SDL 
+	 */
+	soundOptionsInfo.soundSystem_original = UISND_SDL;
+	soundOptionsInfo.soundSystem.curvalue = soundOptionsInfo.soundSystem_original;
 
 	speed = trap_Cvar_VariableValue("s_sdlSpeed");
 	if(!speed)	/* Check for default */
