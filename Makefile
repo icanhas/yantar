@@ -455,14 +455,12 @@ ifeq ($(PLATFORM),mingw32)
   endif
 
   # Give windres a target flag
-  ifeq ($(COMPILE_ARCH),x86)
+  WINDRES_FLAGS=
+  ifeq ($(ARCH),x86)
     WINDRES_FLAGS=-Fpe-i386
-  else
-    ifeq ($(COMPILE_ARCH),amd64)
+  endif
+  ifeq ($(ARCH),amd64)
       WINDRES_FLAGS=-Fpe-x86-64
-    else
-      WINDRES_FLAGS=
-    endif
   endif
 
   BASE_CFLAGS = -Wall -fno-strict-aliasing -Wimplicit -Wstrict-prototypes \
