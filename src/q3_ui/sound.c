@@ -34,7 +34,7 @@
 #define ID_BACK			19
 #define ID_APPLY		20
 
-#define DEFAULT_SDL_SND_SPEED	22050
+#define DEFAULT_SDL_SND_SPEED	44100
 
 static const char *quality_items[] = {
 	"Low", "Medium", "High", NULL
