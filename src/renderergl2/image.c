@@ -7,14 +7,20 @@
 
 #include "local.h"
 
+enum { 
+	Defimgsz	= 256,	/* size of *default image */
+	Gridsz	= 8,
+	Wimgsz	= 8		/* size of *white image (and shadow cube map) */
+};
+
 static byte s_intensitytable[256];
 static unsigned char s_gammatable[256];
 
 int gl_filter_min	= GL_LINEAR_MIPMAP_NEAREST;
 int gl_filter_max	= GL_LINEAR;
-
 #define FILE_HASH_SIZE 1024
 static image_t * hashTable[FILE_HASH_SIZE];
+
 
 /*
 ** R_GammaCorrect
@@ -2021,45 +2027,31 @@ R_CreateFogImage(void)
 	qglTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
 }
 
-/* the default image will be a box, to allow you to see the mapping coordinates */
-enum { SzDefimage = 128 };
+/* the default image will be a grid, to allow you to see the mapping coordinates */
 static void
 R_CreateDefaultImage(void)
 {
 	int x, y;
-	byte data[SzDefimage][SzDefimage][4];
+	byte data[Defimgsz][Defimgsz][4];
 
-	for(x = 0; x < SzDefimage; x++){
-		for(y = 0; y < SzDefimage; y++){
-			/* fill with pink*/
-			data[x][y][0] = 255;
-			data[x][y][1] = 0;
-			data[x][y][2] = 255;
-			data[x][y][3] = 43;
+	for(x = 0; x < Defimgsz; x++){
+		for(y = 0; y < Defimgsz; y++){
+			if(((x%Gridsz)*2 < Gridsz) && ((y%Gridsz)*2 < Gridsz)){
+				/* cyan */
+				data[x][y][0] = 0;
+				data[x][y][1] = 255;
+				data[x][y][2] = 255;
+				data[x][y][3] = 255;
+			}else{
+				/* pink */
+				data[x][y][0] = 255;
+				data[x][y][1] = 0;
+				data[x][y][2] = 255;
+				data[x][y][3] = 255;
+			}
 		}
-		
-		/* colour the four edges green */
-		data[0][x][0] = 0;
-		data[0][x][1] = 255;
-		data[0][x][2] = 100;
-		data[0][x][3] = 255;
-
-		data[x][0][0] = 0;
-		data[x][0][1] = 255;
-		data[x][0][2] = 100;
-		data[x][0][3] = 255;
-
-		data[SzDefimage-1][x][0] = 0;
-		data[SzDefimage-1][x][1] = 255;
-		data[SzDefimage-1][x][2] = 100;
-		data[SzDefimage-1][x][3] = 255;
-
-		data[x][SzDefimage-1][0] = 0;
-		data[x][SzDefimage-1][1] = 255;
-		data[x][SzDefimage-1][2] = 100;
-		data[x][SzDefimage-1][3] = 255;
 	}
-	tr.defaultImage = R_CreateImage("*default", (byte*)data, SzDefimage, SzDefimage, qtrue, qfalse,
+	tr.defaultImage = R_CreateImage("*default", (byte*)data, Defimgsz, Defimgsz, qtrue, qfalse,
 		GL_REPEAT);
 }
 
@@ -2070,7 +2062,7 @@ void
 R_CreateBuiltinImages(void)
 {
 	int x,y;
-	byte data[SzDefimage][SzDefimage][4];
+	byte data[Wimgsz][Wimgsz][4];
 
 	R_CreateDefaultImage();
 
@@ -2081,14 +2073,14 @@ R_CreateBuiltinImages(void)
 	if(r_dlightMode->integer >= 2){
 		for(x = 0; x < MAX_DLIGHTS; x++)
 			tr.shadowCubemaps[x] = R_CreateCubeImage(va("*shadowcubemap%i",
-					x), (byte*)data, SzDefimage, SzDefimage, qfalse, qfalse,
+					x), (byte*)data, Wimgsz, Wimgsz, qfalse, qfalse,
 				GL_CLAMP_TO_EDGE);
 	}
 
 	/* with overbright bits active, we need an image which is some fraction of full color,
 	 * for default lightmaps, etc */
-	for(x=0; x<SzDefimage; x++)
-		for(y=0; y<SzDefimage; y++){
+	for(x=0; x<Wimgsz; x++)
+		for(y=0; y<Wimgsz; y++){
 			data[y][x][0] =
 				data[y][x][1] =
 					data[y][x][2] = tr.identityLightByte;
@@ -2101,7 +2093,7 @@ R_CreateBuiltinImages(void)
 	for(x=0; x<32; x++)
 		/* scratchimage is usually used for cinematic drawing */
 		tr.scratchImage[x] =
-			R_CreateImage("*scratch", (byte*)data, SzDefimage, SzDefimage, qfalse, qtrue,
+			R_CreateImage("*scratch", (byte*)data, Wimgsz, Wimgsz, qfalse, qtrue,
 				GL_CLAMP_TO_EDGE);
 
 	R_CreateDlightImage();
@@ -2190,8 +2182,6 @@ R_CreateBuiltinImages(void)
 		tr.pshadowMaps[x] = R_CreateImage2(va("*shadowmap%i",
 				x), NULL, 256, 256, IMGFLAG_NO_COMPRESSION | IMGFLAG_CLAMPTOEDGE, GL_RGBA8);
 }
-
-
 
 /*
  * R_SetColorMappings
