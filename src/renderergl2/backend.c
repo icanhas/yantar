@@ -818,14 +818,14 @@ RB_SetGL2D(void)
 
 
 /*
- * RE2_StretchRaw
+ * RE_StretchRaw
  *
  * FIXME: not exactly backend
  * Stretches a raw 32 bit power of 2 bitmap image over the given screen rectangle.
  * Used for cinematics.
  */
 void
-RE2_StretchRaw(int x, int y, int w, int h, int cols, int rows, const byte *data, int client, qbool dirty)
+RE_StretchRaw(int x, int y, int w, int h, int cols, int rows, const byte *data, int client, qbool dirty)
 {
 	int i, j;
 	int start, end;
@@ -1150,7 +1150,7 @@ RB_DrawBuffer(const void *data)
  * Draw all the images to the screen, on top of whatever
  * was there.  This is used to test for texture thrashing.
  *
- * Also called by RE2_EndRegistration
+ * Also called by RE_EndRegistration
  */
 void
 RB_ShowImages(void)

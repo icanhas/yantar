@@ -236,11 +236,11 @@ R_AddMarkFragments(int numClipPoints, Vec3 clipPoints[2][MAX_VERTS_ON_POLY],
 }
 
 /*
- * R2_MarkFragments
+ * R_MarkFragments
  *
  */
 int
-R2_MarkFragments(int numPoints, const Vec3 *points, const Vec3 projection,
+R_MarkFragments(int numPoints, const Vec3 *points, const Vec3 projection,
 		int maxPoints, Vec3 pointBuffer, int maxFragments, markFragment_t *fragmentBuffer)
 {
 	int numsurfaces, numPlanes;

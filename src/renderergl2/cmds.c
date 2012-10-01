@@ -268,12 +268,12 @@ R_AddPostProcessCmd( )
 }
 
 /*
- * RE2_SetColor
+ * RE_SetColor
  *
  * Passing NULL will set the color to white
  */
 void
-RE2_SetColor(const float *rgba)
+RE_SetColor(const float *rgba)
 {
 	setColorCommand_t *cmd;
 
@@ -299,10 +299,10 @@ RE2_SetColor(const float *rgba)
 
 
 /*
- * RE2_StretchPic
+ * RE_StretchPic
  */
 void
-RE2_StretchPic(float x, float y, float w, float h,
+RE_StretchPic(float x, float y, float w, float h,
 	      float s1, float t1, float s2, float t2, qhandle_t hShader)
 {
 	stretchPicCommand_t *cmd;
@@ -359,13 +359,13 @@ R_SetColorMode(GLboolean *rgba, stereoFrame_t stereoFrame, int colormode)
 
 
 /*
- * RE2_BeginFrame
+ * RE_BeginFrame
  *
- * If running in stereo, RE2_BeginFrame will be called twice
- * for each RE2_EndFrame
+ * If running in stereo, RE_BeginFrame will be called twice
+ * for each RE_EndFrame
  */
 void
-RE2_BeginFrame(stereoFrame_t stereoFrame)
+RE_BeginFrame(stereoFrame_t stereoFrame)
 {
 	drawBufferCommand_t *cmd	= NULL;
 	colorMaskCommand_t *colcmd	= NULL;
@@ -436,7 +436,7 @@ RE2_BeginFrame(stereoFrame_t stereoFrame)
 
 		R_SyncRenderThread();
 		if((err = qglGetError()) != GL_NO_ERROR)
-			ri.Error(ERR_FATAL, "RE2_BeginFrame() - glGetError() failed (0x%x)!", err);
+			ri.Error(ERR_FATAL, "RE_BeginFrame() - glGetError() failed (0x%x)!", err);
 	}
 
 	if(glConfig.stereoEnabled){
@@ -450,7 +450,7 @@ RE2_BeginFrame(stereoFrame_t stereoFrame)
 		}else if(stereoFrame == STEREO_RIGHT){
 			cmd->buffer = (int)GL_BACK_RIGHT;
 		}else{
-			ri.Error(ERR_FATAL, "RE2_BeginFrame: Stereo is enabled, but stereoFrame was %i",
+			ri.Error(ERR_FATAL, "RE_BeginFrame: Stereo is enabled, but stereoFrame was %i",
 				stereoFrame);
 		}
 	}else{
@@ -486,7 +486,7 @@ RE2_BeginFrame(stereoFrame_t stereoFrame)
 					return;
 			}else
 				ri.Error(ERR_FATAL,
-					"RE2_BeginFrame: Stereo is enabled, but stereoFrame was %i",
+					"RE_BeginFrame: Stereo is enabled, but stereoFrame was %i",
 					stereoFrame);
 
 			R_SetColorMode(colcmd->rgba, stereoFrame, r_anaglyphMode->integer);
@@ -494,7 +494,7 @@ RE2_BeginFrame(stereoFrame_t stereoFrame)
 		}else{
 			if(stereoFrame != STEREO_CENTER)
 				ri.Error(ERR_FATAL,
-					"RE2_BeginFrame: Stereo is disabled, but stereoFrame was %i",
+					"RE_BeginFrame: Stereo is disabled, but stereoFrame was %i",
 					stereoFrame);
 
 			if(!(cmd = R_GetCommandBuffer(sizeof(*cmd))))
@@ -521,12 +521,12 @@ RE2_BeginFrame(stereoFrame_t stereoFrame)
 
 
 /*
- * RE2_EndFrame
+ * RE_EndFrame
  *
  * Returns the number of msec spent in the back end
  */
 void
-RE2_EndFrame(int *frontEndMsec, int *backEndMsec)
+RE_EndFrame(int *frontEndMsec, int *backEndMsec)
 {
 	swapBuffersCommand_t *cmd;
 
@@ -556,10 +556,10 @@ RE2_EndFrame(int *frontEndMsec, int *backEndMsec)
 }
 
 /*
- * RE2_TakeVideoFrame
+ * RE_TakeVideoFrame
  */
 void
-RE2_TakeVideoFrame(int width, int height,
+RE_TakeVideoFrame(int width, int height,
 		  byte *captureBuffer, byte *encodeBuffer, qbool motionJpeg)
 {
 	videoFrameCommand_t *cmd;

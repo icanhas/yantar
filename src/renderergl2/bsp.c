@@ -13,7 +13,7 @@
  *
  * A single entry point:
  *
- * void RE2_LoadWorldMap( const char *name );
+ * void RE_LoadWorldMap( const char *name );
  *
  */
 
@@ -528,13 +528,13 @@ FatLightmap(int lightmapnum)
 }
 
 /*
- * RE2_SetWorldVisData
+ * RE_SetWorldVisData
  *
  * This is called by the clipmodel subsystem so we can share the 1.8 megs of
  * space in big maps...
  */
 void
-RE2_SetWorldVisData(const byte *vis)
+RE_SetWorldVisData(const byte *vis)
 {
 	tr.externalVisData = vis;
 }
@@ -2680,10 +2680,10 @@ R_LoadEntities(lump_t *l)
 }
 
 /*
- * R2_GetEntityToken
+ * R_GetEntityToken
  */
 qbool
-R2_GetEntityToken(char *buffer, int size)
+R_GetEntityToken(char *buffer, int size)
 {
 	const char *s;
 
@@ -3094,12 +3094,12 @@ R_CalcVertexLightDirs(void)
 
 
 /*
- * RE2_LoadWorldMap
+ * RE_LoadWorldMap
  *
  * Called directly from cgame
  */
 void
-RE2_LoadWorldMap(const char *name)
+RE_LoadWorldMap(const char *name)
 {
 	int i;
 	dheader_t *header;
@@ -3130,7 +3130,7 @@ RE2_LoadWorldMap(const char *name)
 	/* load it */
 	ri.FS_ReadFile(name, &buffer.v);
 	if(!buffer.b){
-		ri.Error (ERR_DROP, "RE2_LoadWorldMap: %s not found", name);
+		ri.Error (ERR_DROP, "RE_LoadWorldMap: %s not found", name);
 	}
 
 	/* clear tr.world so if the level fails to load, the next
@@ -3151,7 +3151,7 @@ RE2_LoadWorldMap(const char *name)
 
 	i = LittleLong (header->version);
 	if(i != BSP_VERSION){
-		ri.Error (ERR_DROP, "RE2_LoadWorldMap: %s has wrong version number (%i should be %i)",
+		ri.Error (ERR_DROP, "RE_LoadWorldMap: %s has wrong version number (%i should be %i)",
 			name, i, BSP_VERSION);
 	}
 

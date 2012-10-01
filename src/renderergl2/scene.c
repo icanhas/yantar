@@ -54,11 +54,11 @@ R_ToggleSmpFrame(void)
 
 
 /*
- * RE2_ClearScene
+ * RE_ClearScene
  *
  */
 void
-RE2_ClearScene(void)
+RE_ClearScene(void)
 {
 	r_firstSceneDlight = r_numdlights;
 	r_firstSceneEntity = r_numentities;
@@ -96,11 +96,11 @@ R_AddPolygonSurfaces(void)
 }
 
 /*
- * RE2_AddPolyToScene
+ * RE_AddPolyToScene
  *
  */
 void
-RE2_AddPolyToScene(qhandle_t hShader, int numVerts, const polyVert_t *verts, int numPolys)
+RE_AddPolyToScene(qhandle_t hShader, int numVerts, const polyVert_t *verts, int numPolys)
 {
 	srfPoly_t	*poly;
 	int	i, j;
@@ -115,7 +115,7 @@ RE2_AddPolyToScene(qhandle_t hShader, int numVerts, const polyVert_t *verts, int
 	if(!hShader){
 		/* This isn't a useful warning, and an hShader of zero isn't a null shader, it's
 		 * the default shader.
-		 * ri.Printf( PRINT_WARNING, "WARNING: RE2_AddPolyToScene: NULL poly shader\n");
+		 * ri.Printf( PRINT_WARNING, "WARNING: RE_AddPolyToScene: NULL poly shader\n");
 		 * return; */
 	}
 
@@ -128,7 +128,7 @@ RE2_AddPolyToScene(qhandle_t hShader, int numVerts, const polyVert_t *verts, int
 			 * simply cut this message to developer only
 			 */
 			ri.Printf(PRINT_DEVELOPER,
-				"WARNING: RE2_AddPolyToScene: r_max_polys or r_max_polyverts reached\n");
+				"WARNING: RE_AddPolyToScene: r_max_polys or r_max_polyverts reached\n");
 			return;
 		}
 
@@ -187,11 +187,11 @@ RE2_AddPolyToScene(qhandle_t hShader, int numVerts, const polyVert_t *verts, int
 
 
 /*
- * RE2_AddRefEntityToScene
+ * RE_AddRefEntityToScene
  *
  */
 void
-RE2_AddRefEntityToScene(const refEntity_t *ent)
+RE_AddRefEntityToScene(const refEntity_t *ent)
 {
 #ifdef REACTION
 	/* JBravo: Mirrored models */
@@ -203,7 +203,7 @@ RE2_AddRefEntityToScene(const refEntity_t *ent)
 	}
 	if(r_numentities >= MAX_ENTITIES){
 		ri.Printf(PRINT_DEVELOPER,
-			"RE2_AddRefEntityToScene: Dropping refEntity, reached MAX_ENTITIES\n");
+			"RE_AddRefEntityToScene: Dropping refEntity, reached MAX_ENTITIES\n");
 		return;
 	}
 	if(Q_isnan(ent->origin[0]) || Q_isnan(ent->origin[1]) || Q_isnan(ent->origin[2])){
@@ -212,12 +212,12 @@ RE2_AddRefEntityToScene(const refEntity_t *ent)
 			firstTime = qfalse;
 			ri.Printf(
 				PRINT_WARNING,
-				"RE2_AddRefEntityToScene passed a refEntity which has an origin with a NaN component\n");
+				"RE_AddRefEntityToScene passed a refEntity which has an origin with a NaN component\n");
 		}
 		return;
 	}
 	if((int)ent->reType < 0 || ent->reType >= RT_MAX_REF_ENTITY_TYPE){
-		ri.Error(ERR_DROP, "RE2_AddRefEntityToScene: bad reType %i", ent->reType);
+		ri.Error(ERR_DROP, "RE_AddRefEntityToScene: bad reType %i", ent->reType);
 	}
 
 	backEndData[tr.smpFrame]->entities[r_numentities].e = *ent;
@@ -234,11 +234,11 @@ RE2_AddRefEntityToScene(const refEntity_t *ent)
 
 
 /*
- * RE2_AddDynamicLightToScene
+ * RE_AddDynamicLightToScene
  *
  */
 void
-RE2_AddDynamicLightToScene(const Vec3 org, float intensity, float r, float g, float b, int additive)
+RE_AddDynamicLightToScene(const Vec3 org, float intensity, float r, float g, float b, int additive)
 {
 	dlight_t *dl;
 
@@ -265,28 +265,28 @@ RE2_AddDynamicLightToScene(const Vec3 org, float intensity, float r, float g, fl
 }
 
 /*
- * RE2_AddLightToScene
+ * RE_AddLightToScene
  *
  */
 void
-RE2_AddLightToScene(const Vec3 org, float intensity, float r, float g, float b)
+RE_AddLightToScene(const Vec3 org, float intensity, float r, float g, float b)
 {
-	RE2_AddDynamicLightToScene(org, intensity, r, g, b, qfalse);
+	RE_AddDynamicLightToScene(org, intensity, r, g, b, qfalse);
 }
 
 /*
- * RE2_AddAdditiveLightToScene
+ * RE_AddAdditiveLightToScene
  *
  */
 void
-RE2_AddAdditiveLightToScene(const Vec3 org, float intensity, float r, float g, float b)
+RE_AddAdditiveLightToScene(const Vec3 org, float intensity, float r, float g, float b)
 {
-	RE2_AddDynamicLightToScene(org, intensity, r, g, b, qtrue);
+	RE_AddDynamicLightToScene(org, intensity, r, g, b, qtrue);
 }
 
 /*
  * @@@@@@@@@@@@@@@@@@@@@
- * RE2_RenderScene
+ * RE_RenderScene
  *
  * Draw a 3D view into a part of the window, then return
  * to 2D drawing.
@@ -296,7 +296,7 @@ RE2_AddAdditiveLightToScene(const Vec3 org, float intensity, float r, float g, f
  * @@@@@@@@@@@@@@@@@@@@@
  */
 void
-RE2_RenderScene(const refdef_t *fd)
+RE_RenderScene(const refdef_t *fd)
 {
 	viewParms_t parms;
 	int startTime;
@@ -304,7 +304,7 @@ RE2_RenderScene(const refdef_t *fd)
 	if(!tr.registered){
 		return;
 	}
-	GLimp_LogComment("====== RE2_RenderScene =====\n");
+	GLimp_LogComment("====== RE_RenderScene =====\n");
 
 	if(r_norefresh->integer){
 		return;

@@ -1199,7 +1199,7 @@ R_Register(void)
 	ri.Cmd_AddCommand("imagelist", R_ImageList_f);
 	ri.Cmd_AddCommand("shaderlist", R_ShaderList_f);
 	ri.Cmd_AddCommand("skinlist", R_SkinList_f);
-	ri.Cmd_AddCommand("modellist", R2_Modellist_f);
+	ri.Cmd_AddCommand("modellist", R_Modellist_f);
 	ri.Cmd_AddCommand("modelist", R_ModeList_f);
 	ri.Cmd_AddCommand("screenshot", R_ScreenShot_f);
 	ri.Cmd_AddCommand("screenshotJPEG", R_ScreenShotJPEG_f);
@@ -1328,7 +1328,7 @@ R_Init(void)
 
 	R_InitSkins();
 
-	R2_ModelInit();
+	R_ModelInit();
 
 	R_InitFreeType();
 
@@ -1388,12 +1388,12 @@ RE_Shutdown(qbool destroyWindow)
 
 
 /*
- * RE2_EndRegistration
+ * RE_EndRegistration
  *
  * Touch all images to make sure they are resident
  */
 void
-RE2_EndRegistration(void)
+RE_EndRegistration(void)
 {
 	R_SyncRenderThread();
 	if(!ri.Sys_LowPhysicalMemory()){
@@ -1410,11 +1410,11 @@ RE2_EndRegistration(void)
  */
 #ifdef USE_RENDERER_DLOPEN
 Q_EXPORT refexport_t QDECL *
-GetRef2API(int apiVersion, refimport_t *rimp)
+GetRefAPI(int apiVersion, refimport_t *rimp)
 {
 #else
 refexport_t *
-GetRef2API(int apiVersion, refimport_t *rimp)
+GetRefAPI(int apiVersion, refimport_t *rimp)
 {
 #endif
 
@@ -1434,42 +1434,41 @@ GetRef2API(int apiVersion, refimport_t *rimp)
 
 	re.Shutdown = RE_Shutdown;
 
-	re.BeginRegistration = RE2_BeginRegistration;
-	re.RegisterModel	= RE2_RegisterModel;
-	re.RegisterSkin		= RE2_RegisterSkin;
-	re.RegisterShader	= RE2_RegisterShader;
-	re.RegisterShaderNoMip = RE2_RegisterShaderNoMip;
-	re.LoadWorld = RE2_LoadWorldMap;
-	re.SetWorldVisData	= RE2_SetWorldVisData;
-	re.EndRegistration	= RE2_EndRegistration;
+	re.BeginRegistration = RE_BeginRegistration;
+	re.RegisterModel	= RE_RegisterModel;
+	re.RegisterSkin		= RE_RegisterSkin;
+	re.RegisterShader	= RE_RegisterShader;
+	re.RegisterShaderNoMip = RE_RegisterShaderNoMip;
+	re.LoadWorld = RE_LoadWorldMap;
+	re.SetWorldVisData	= RE_SetWorldVisData;
+	re.EndRegistration	= RE_EndRegistration;
 
-	re.BeginFrame	= RE2_BeginFrame;
-	re.EndFrame	= RE2_EndFrame;
+	re.BeginFrame	= RE_BeginFrame;
+	re.EndFrame	= RE_EndFrame;
 
-	re.MarkFragments = R2_MarkFragments;
-	re.LerpTag = R2_LerpTag;
-	re.ModelBounds = R2_ModelBounds;
+	re.MarkFragments = R_MarkFragments;
+	re.LerpTag = R_LerpTag;
+	re.ModelBounds = R_ModelBounds;
 
-	re.ClearScene = RE2_ClearScene;
-	re.AddRefEntityToScene	= RE2_AddRefEntityToScene;
-	re.AddPolyToScene	= RE2_AddPolyToScene;
+	re.ClearScene = RE_ClearScene;
+	re.AddRefEntityToScene	= RE_AddRefEntityToScene;
+	re.AddPolyToScene	= RE_AddPolyToScene;
 	re.LightForPoint	= R_LightForPoint;
-	re.AddLightToScene	= RE2_AddLightToScene;
-	re.AddAdditiveLightToScene = RE2_AddAdditiveLightToScene;
-	re.RenderScene = RE2_RenderScene;
+	re.AddLightToScene	= RE_AddLightToScene;
+	re.AddAdditiveLightToScene = RE_AddAdditiveLightToScene;
+	re.RenderScene = RE_RenderScene;
 
-	re.SetColor = RE2_SetColor;
-	re.DrawStretchPic	= RE2_StretchPic;
-	re.DrawStretchRaw	= RE2_StretchRaw;
+	re.SetColor = RE_SetColor;
+	re.DrawStretchPic	= RE_StretchPic;
+	re.DrawStretchRaw	= RE_StretchRaw;
 	re.UploadCinematic	= RE_UploadCinematic;
 
-	re.RegisterFont		= RE2_RegisterFont;
+	re.RegisterFont		= RE_RegisterFont;
 	re.RemapShader		= R_RemapShader;
-	re.GetEntityToken	= R2_GetEntityToken;
-	re.inPVS = R2_inPVS;
+	re.GetEntityToken	= R_GetEntityToken;
+	re.inPVS = R_inPVS;
 
-	re.TakeVideoFrame = RE2_TakeVideoFrame;
-
+	re.TakeVideoFrame = RE_TakeVideoFrame;
 
 	return &re;
 }
