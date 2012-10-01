@@ -35,9 +35,7 @@ cvar_t *cl_voipShowMeter;
 cvar_t *cl_voip;
 #endif
 
-#ifdef USE_RENDERER_DLOPEN
 cvar_t *cl_renderer;
-#endif
 
 cvar_t *cl_nodelta;
 cvar_t *cl_debugMove;
@@ -3110,36 +3108,28 @@ CL_ScaledMilliseconds(void)
 	return Sys_Milliseconds()*com_timescale->value;
 }
 
-/*
- * CL_InitRef
- */
 void
 CL_InitRef(void)
 {
 	refimport_t	ri;
 	refexport_t	*ret;
 #ifdef USE_RENDERER_DLOPEN
-	GetRefAPI_t	GetRefAPI;
+	GetRefAPI_t	GetRefAPI, GetRef2API;
 	char dllName[MAX_OSPATH];
 #endif
 
-	Com_Printf("----- Initializing Renderer ----\n");
+	Com_Printf("----- Initializing renderer -----\n");
 
 #ifdef USE_RENDERER_DLOPEN
-	cl_renderer = Cvar_Get("cl_renderer", "gl2",
-		CVAR_ARCHIVE | CVAR_LATCH);
+	cl_renderer = Cvar_Get("cl_renderer", "2", CVAR_ARCHIVE | CVAR_LATCH);
 
-	Q_sprintf(dllName, sizeof(dllName), "ref-%s-" ARCH_STRING DLL_EXT,
+	Q_sprintf(dllName, sizeof(dllName), "ref%s-" ARCH_STRING DLL_EXT,
 		cl_renderer->string);
 
-	if(!(rendererLib =
-		     Sys_LoadDll(dllName,
-			     qfalse)) &&
-	   strcmp(cl_renderer->string, cl_renderer->resetString)){
+	if(!(rendererLib = Sys_LoadDll(dllName, qfalse)) 
+		&& (strcmp(cl_renderer->string, cl_renderer->resetString) != 0)){
 		Cvar_ForceReset("cl_renderer");
-
-		Q_sprintf(dllName, sizeof(dllName),
-			"ref-gl1-" ARCH_STRING DLL_EXT);
+		Q_sprintf(dllName, sizeof(dllName), "ref1-" ARCH_STRING DLL_EXT);
 		rendererLib = Sys_LoadLibrary(dllName);
 	}
 
@@ -3148,11 +3138,20 @@ CL_InitRef(void)
 		Com_Errorf(ERR_FATAL, "Failed to load renderer");
 	}
 
-	GetRefAPI = Sys_LoadFunction(rendererLib, "GetRefAPI");
-	if(!GetRefAPI)
-		Com_Errorf(ERR_FATAL, "Can't load symbol GetRefAPI: '%s'",
-			Sys_LibraryError());
-
+	if(cl_renderer->integer == 1){
+		GetRefAPI = Sys_LoadFunction(rendererLib, "GetRefAPI");
+		if(!GetRefAPI)
+			Com_Errorf(ERR_FATAL, "Can't load symbol GetRefAPI: '%s'",
+				Sys_LibraryError());
+	}else if(cl_renderer->integer == 2){
+		GetRef2API = Sys_LoadFunction(rendererLib, "GetRef2API");
+		if(!GetRefAPI)
+			Com_Errorf(ERR_FATAL, "Can't load symbol GetRef2API: '%s'",
+				Sys_LibraryError());
+	}else{
+		Com_Errorf(ERR_FATAL, "cl_renderer set to invalid value;"
+			" must be '1' or '2'");
+	}
 #endif
 
 	ri.Cmd_AddCommand = Cmd_AddCommand;
@@ -3190,14 +3189,14 @@ CL_InitRef(void)
 	ri.Cvar_VariableIntegerValue = Cvar_VariableIntegerValue;
 
 	/* cinematic stuff */
-
 	ri.CIN_UploadCinematic	= CIN_UploadCinematic;
 	ri.CIN_PlayCinematic	= CIN_PlayCinematic;
 	ri.CIN_RunCinematic = CIN_RunCinematic;
 
 	ri.CL_WriteAVIVideoFrame = CL_WriteAVIVideoFrame;
 
-	ri.IN_Init = IN_Init;
+	/* FIXME: nice separation of concerns there...*/
+	ri.IN_Init	= IN_Init;
 	ri.IN_Shutdown	= IN_Shutdown;
 	ri.IN_Restart	= IN_Restart;
 
@@ -3208,16 +3207,20 @@ CL_InitRef(void)
 	ri.Sys_GLimpInit = Sys_GLimpInit;
 	ri.Sys_LowPhysicalMemory = Sys_LowPhysicalMemory;
 
-	ret = GetRefAPI(REF_API_VERSION, &ri);
-
+	if(cl_renderer->integer == 1)
+		ret = GetRefAPI(REF_API_VERSION, &ri);
+	else if(cl_renderer->integer == 2)
+		ret = GetRef2API(REF_API_VERSION, &ri);
+	else
+		Com_Errorf(ERR_FATAL, "cl_renderer set to invalid value;"
+			" must be '1' or '2'");
+	if(!ret)
+		Com_Errorf (ERR_FATAL, "Couldn't initialize refresh module");
+	re = *ret;
+	
 	Com_Printf("-------------------------------\n");
 
-	if(!ret)
-		Com_Errorf (ERR_FATAL, "Couldn't initialize refresh");
-
-	re = *ret;
-
-	/* unpause so the cgame definately gets a snapshot and renders a frame */
+	/* unpause so the cgame definitely gets a snapshot and renders a frame */
 	Cvar_Set("cl_paused", "0");
 }
 

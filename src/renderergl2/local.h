@@ -462,7 +462,7 @@ typedef struct shader_s {
 	qbool		defaultShader;	/* we want to return index 0 if the shader failed to */
 	/* load for some reason, but R_FindShader should
 	 * still keep a name allocated for it, so if
-	 * something calls RE_RegisterShader again with
+	 * something calls RE2_RegisterShader again with
 	 * the same name, we don't try looking for it again */
 
 	qbool		explicitlyDefined;	/* found in a .shader file */
@@ -1418,13 +1418,13 @@ typedef struct model_s {
 
 #define MAX_MOD_KNOWN 1024
 
-void            R_ModelInit(void);
+void            R2_ModelInit(void);
 model_t*R_GetModelByHandle(qhandle_t hModel);
-int                     R_LerpTag(orientation_t *tag, qhandle_t handle, int startFrame, int endFrame,
+int                     R2_LerpTag(orientation_t *tag, qhandle_t handle, int startFrame, int endFrame,
 				  float frac, const char *tagName);
-void            R_ModelBounds(qhandle_t handle, Vec3 mins, Vec3 maxs);
+void            R2_ModelBounds(qhandle_t handle, Vec3 mins, Vec3 maxs);
 
-void            R_Modellist_f(void);
+void            R2_Modellist_f(void);
 
 /* ==================================================== */
 extern refimport_t ri;
@@ -1617,11 +1617,11 @@ typedef struct {
 	int		frameCount;	/* incremented every frame */
 	int		sceneCount;	/* incremented every scene */
 	int		viewCount;	/* incremented every view (twice a scene if portaled) */
-	/* and every R_MarkFragments call */
+	/* and every R2_MarkFragments call */
 
 	int		smpFrame;	/* toggles from 0 to 1 every endFrame */
 
-	int		frameSceneNum;	/* zeroed at RE_BeginFrame */
+	int		frameSceneNum;	/* zeroed at RE2_BeginFrame */
 
 	qbool		worldMapLoaded;
 	qbool		worldDeluxeMapping;
@@ -1629,7 +1629,7 @@ typedef struct {
 	Vec2		autoExposureMinMax;
 	world_t		*world;
 
-	const byte	*externalVisData;	/* from RE_SetWorldVisData, shared with CM_Load */
+	const byte	*externalVisData;	/* from RE2_SetWorldVisData, shared with CM_Load */
 
 	image_t *defaultImage;
 	image_t *scratchImage[32];
@@ -2028,19 +2028,19 @@ void    GL_Cull(int cullType);
 
 #define GLS_DEFAULT				GLS_DEPTHMASK_TRUE
 
-void    RE_StretchRaw(int x, int y, int w, int h, int cols, int rows, const byte *data, int client,
+void    RE2_StretchRaw(int x, int y, int w, int h, int cols, int rows, const byte *data, int client,
 		      qbool dirty);
 void    RE_UploadCinematic(int w, int h, int cols, int rows, const byte *data, int client, qbool dirty);
 
-void            RE_BeginFrame(stereoFrame_t stereoFrame);
-void            RE_BeginRegistration(glconfig_t *glconfig);
-void            RE_LoadWorldMap(const char *mapname);
-void            RE_SetWorldVisData(const byte *vis);
-qhandle_t       RE_RegisterModel(const char *name);
-qhandle_t       RE_RegisterSkin(const char *name);
+void            RE2_BeginFrame(stereoFrame_t stereoFrame);
+void            RE2_BeginRegistration(glconfig_t *glconfig);
+void            RE2_LoadWorldMap(const char *mapname);
+void            RE2_SetWorldVisData(const byte *vis);
+qhandle_t       RE2_RegisterModel(const char *name);
+qhandle_t       RE2_RegisterSkin(const char *name);
 void            RE_Shutdown(qbool destroyWindow);
 
-qbool        R_GetEntityToken(char *buffer, int size);
+qbool        R2_GetEntityToken(char *buffer, int size);
 
 model_t*R_AllocModel(void);
 
@@ -2078,10 +2078,10 @@ const void*RB_TakeVideoFrameCmd(const void *data);
 /*
  * tr_shader.c
  *  */
-qhandle_t                RE_RegisterShaderLightMap(const char *name, int lightmapIndex);
-qhandle_t                RE_RegisterShader(const char *name);
-qhandle_t                RE_RegisterShaderNoMip(const char *name);
-qhandle_t RE_RegisterShaderFromImage(const char *name, int lightmapIndex, image_t *image,
+qhandle_t                RE2_RegisterShaderLightMap(const char *name, int lightmapIndex);
+qhandle_t                RE2_RegisterShader(const char *name);
+qhandle_t                RE2_RegisterShaderNoMip(const char *name);
+qhandle_t RE2_RegisterShaderFromImage(const char *name, int lightmapIndex, image_t *image,
 				     qbool mipRawImage);
 
 material_t*R_FindShader(const char *name, int lightmapIndex, qbool mipRawImage);
@@ -2203,7 +2203,7 @@ void RB_ShowImages(void);
 
 void R_AddBrushModelSurfaces(trRefEntity_t *e);
 void R_AddWorldSurfaces(void);
-qbool R_inPVS(const Vec3 p1, const Vec3 p2);
+qbool R2_inPVS(const Vec3 p1, const Vec3 p2);
 
 
 /*
@@ -2273,7 +2273,7 @@ void R_FreeSurfaceGridMesh(srfGridMesh_t *grid);
  *
  */
 
-int R_MarkFragments(int numPoints, const Vec3 *points, const Vec3 projection,
+int R2_MarkFragments(int numPoints, const Vec3 *points, const Vec3 projection,
 		    int maxPoints, Vec3 pointBuffer, int maxFragments, markFragment_t *fragmentBuffer);
 
 
@@ -2335,12 +2335,12 @@ shaderProgram_t*GLSL_GetGenericShaderProgram(int stage);
 
 void R_ToggleSmpFrame(void);
 
-void RE_ClearScene(void);
-void RE_AddRefEntityToScene(const refEntity_t *ent);
-void RE_AddPolyToScene(qhandle_t hShader, int numVerts, const polyVert_t *verts, int num);
-void RE_AddLightToScene(const Vec3 org, float intensity, float r, float g, float b);
-void RE_AddAdditiveLightToScene(const Vec3 org, float intensity, float r, float g, float b);
-void RE_RenderScene(const refdef_t *fd);
+void RE2_ClearScene(void);
+void RE2_AddRefEntityToScene(const refEntity_t *ent);
+void RE2_AddPolyToScene(qhandle_t hShader, int numVerts, const polyVert_t *verts, int num);
+void RE2_AddLightToScene(const Vec3 org, float intensity, float r, float g, float b);
+void RE2_AddAdditiveLightToScene(const Vec3 org, float intensity, float r, float g, float b);
+void RE2_RenderScene(const refdef_t *fd);
 
 /*
  *
@@ -2572,22 +2572,22 @@ void R_AddDrawSurfCmd(drawSurf_t *drawSurfs, int numDrawSurfs);
 void R_AddCapShadowmapCmd(int dlight, int cubeSide);
 void R_AddPostProcessCmd(void);
 
-void RE_SetColor(const float *rgba);
-void RE_StretchPic(float x, float y, float w, float h,
+void RE2_SetColor(const float *rgba);
+void RE2_StretchPic(float x, float y, float w, float h,
 		   float s1, float t1, float s2, float t2, qhandle_t hShader);
-void RE_BeginFrame(stereoFrame_t stereoFrame);
-void RE_EndFrame(int *frontEndMsec, int *backEndMsec);
+void RE2_BeginFrame(stereoFrame_t stereoFrame);
+void RE2_EndFrame(int *frontEndMsec, int *backEndMsec);
 void RE_SaveJPG(char * filename, int quality, int image_width, int image_height,
 		unsigned char *image_buffer, int padding);
 size_t RE_SaveJPGToBuffer(byte *buffer, size_t bufSize, int quality,
 			  int image_width, int image_height, byte *image_buffer, int padding);
-void RE_TakeVideoFrame(int width, int height,
+void RE2_TakeVideoFrame(int width, int height,
 		       byte *captureBuffer, byte *encodeBuffer, qbool motionJpeg);
 
 /* font stuff */
 void R_InitFreeType(void);
 void R_DoneFreeType(void);
-void RE_RegisterFont(const char *fontName, int pointSize, fontInfo_t *font);
+void RE2_RegisterFont(const char *fontName, int pointSize, fontInfo_t *font);
 
 
 #endif	/* TR_LOCAL_H */

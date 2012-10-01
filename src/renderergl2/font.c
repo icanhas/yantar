@@ -320,7 +320,7 @@ readFloat(void)
 }
 
 void
-RE_RegisterFont(const char *fontName, int pointSize, fontInfo_t *font)
+RE2_RegisterFont(const char *fontName, int pointSize, fontInfo_t *font)
 {
 #ifdef BUILD_FREETYPE
 	FT_Face face;
@@ -341,7 +341,7 @@ RE_RegisterFont(const char *fontName, int pointSize, fontInfo_t *font)
 
 	dpi = 72;
 	if(fontName == NULL){
-		ri.Printf(PRINT_ALL,"RE_RegisterFont: called with empty name\n");
+		ri.Printf(PRINT_ALL,"RE2_RegisterFont: called with empty name\n");
 		return;
 	}
 
@@ -352,7 +352,7 @@ RE_RegisterFont(const char *fontName, int pointSize, fontInfo_t *font)
 	R_SyncRenderThread();
 
 	if(registeredFontCount >= MAX_FONTS){
-		ri.Printf(PRINT_ALL,"RE_RegisterFont: Too many fonts registered already.\n");
+		ri.Printf(PRINT_ALL,"RE2_RegisterFont: Too many fonts registered already.\n");
 		return;
 	}
 
@@ -392,7 +392,7 @@ RE_RegisterFont(const char *fontName, int pointSize, fontInfo_t *font)
 		/*      Q_Memcpy(font, faceData, sizeof(fontInfo_t)); */
 		Q_strncpyz(font->name, filename, sizeof(font->name));
 		for(i = GLYPH_START; i < GLYPH_END; i++)
-			font->glyphs[i].glyph = RE_RegisterShaderNoMip(font->glyphs[i].shaderName);
+			font->glyphs[i].glyph = RE2_RegisterShaderNoMip(font->glyphs[i].shaderName);
 
 		Q_Memcpy(&registeredFont[registeredFontCount++],font,
 			sizeof(fontInfo_t));
@@ -400,28 +400,28 @@ RE_RegisterFont(const char *fontName, int pointSize, fontInfo_t *font)
 	}
 
 #ifndef BUILD_FREETYPE
-	ri.Printf(PRINT_ALL,"RE_RegisterFont: FreeType code not available\n");
+	ri.Printf(PRINT_ALL,"RE2_RegisterFont: FreeType code not available\n");
 #else
 	if(ftLibrary == NULL){
-		ri.Printf(PRINT_ALL,"RE_RegisterFont: FreeType not initialized.\n");
+		ri.Printf(PRINT_ALL,"RE2_RegisterFont: FreeType not initialized.\n");
 		return;
 	}
 
 	Q_sprintf(filename, sizeof(filename), "%s.ttf", strippedname);
 	len = ri.FS_ReadFile(fontName,&faceData);
 	if(len <= 0){
-		ri.Printf(PRINT_ALL,"RE_RegisterFont: Unable to read font file\n");
+		ri.Printf(PRINT_ALL,"RE2_RegisterFont: Unable to read font file\n");
 		return;
 	}
 
 	/* allocate on the stack first in case we fail */
 	if(FT_New_Memory_Face(ftLibrary,faceData,len,0,&face)){
-		ri.Printf(PRINT_ALL,"RE_RegisterFont: FreeType2, unable to allocate new face.\n");
+		ri.Printf(PRINT_ALL,"RE2_RegisterFont: FreeType2, unable to allocate new face.\n");
 		return;
 	}
 
 	if(FT_Set_Char_Size(face,pointSize << 6,pointSize << 6,dpi,dpi)){
-		ri.Printf(PRINT_ALL,"RE_RegisterFont: FreeType2, Unable to set face char size.\n");
+		ri.Printf(PRINT_ALL,"RE2_RegisterFont: FreeType2, Unable to set face char size.\n");
 		return;
 	}
 
@@ -431,7 +431,7 @@ RE_RegisterFont(const char *fontName, int pointSize, fontInfo_t *font)
 	 * until all glyphs are rendered */
 	out = ri.Malloc(1024 * 1024);
 	if(out == NULL){
-		ri.Printf(PRINT_ALL,"RE_RegisterFont: Malloc failure during output image creation.\n");
+		ri.Printf(PRINT_ALL,"RE2_RegisterFont: Malloc failure during output image creation.\n");
 		return;
 	}
 
@@ -486,7 +486,7 @@ RE_RegisterFont(const char *fontName, int pointSize, fontInfo_t *font)
 			 * imageNumber++, pointSize); */
 			image = R_CreateImage(filename,imageBuff,256,256,qfalse,qfalse,
 				GL_CLAMP_TO_EDGE);
-			h = RE_RegisterShaderFromImage(filename,LIGHTMAP_2D,image,qfalse);
+			h = RE2_RegisterShaderFromImage(filename,LIGHTMAP_2D,image,qfalse);
 			for(j = lastStart; j < i; j++){
 				font->glyphs[j].glyph = h;
 				Q_strncpyz(font->glyphs[j].shaderName,filename,

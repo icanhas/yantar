@@ -1087,7 +1087,7 @@ R_RemapShader(const char *shaderName, const char *newShaderName, const char *tim
 
 	sh = R_FindShaderByName(shaderName);
 	if(sh == nil || sh == tr.defaultShader){
-		h = RE_RegisterShaderLightMap(shaderName, 0);
+		h = RE2_RegisterShaderLightMap(shaderName, 0);
 		sh = R_GetShaderByHandle(h);
 	}
 	if(sh == nil || sh == tr.defaultShader){
@@ -1097,7 +1097,7 @@ R_RemapShader(const char *shaderName, const char *newShaderName, const char *tim
 
 	sh2 = R_FindShaderByName(newShaderName);
 	if(sh2 == nil || sh2 == tr.defaultShader){
-		h = RE_RegisterShaderLightMap(newShaderName, 0);
+		h = RE2_RegisterShaderLightMap(newShaderName, 0);
 		sh2 = R_GetShaderByHandle(h);
 	}
 
@@ -1377,7 +1377,7 @@ R_FindShader(const char *name, int lightmapIndex, qbool mipRawImage)
 }
 
 qhandle_t
-RE_RegisterShaderFromImage(const char *name, int lightmapIndex, image_t *image, qbool mipRawImage)
+RE2_RegisterShaderFromImage(const char *name, int lightmapIndex, image_t *image, qbool mipRawImage)
 {
 	int i, hash;
 	material_t *sh;
@@ -1478,7 +1478,7 @@ RE_RegisterShaderFromImage(const char *name, int lightmapIndex, image_t *image, 
 }
 
 /*
- * RE_RegisterShader
+ * RE2_RegisterShader
  *
  * This is the exported shader entry point for the rest of the system
  * It will always return an index that will be valid.
@@ -1487,7 +1487,7 @@ RE_RegisterShaderFromImage(const char *name, int lightmapIndex, image_t *image, 
  * way to ask for different implicit lighting modes (vertex, lightmap, etc)
  */
 qhandle_t
-RE_RegisterShaderLightMap(const char *name, int lightmapIndex)
+RE2_RegisterShaderLightMap(const char *name, int lightmapIndex)
 {
 	material_t *sh;
 
@@ -1501,7 +1501,7 @@ RE_RegisterShaderLightMap(const char *name, int lightmapIndex)
 	/* we want to return 0 if the shader failed to
 	 * load for some reason, but R_FindShader should
 	 * still keep a name allocated for it, so if
-	 * something calls RE_RegisterShader again with
+	 * something calls RE2_RegisterShader again with
 	 * the same name, we don't try looking for it again */
 	if(sh->defaultShader)
 		return 0;
@@ -1510,7 +1510,7 @@ RE_RegisterShaderLightMap(const char *name, int lightmapIndex)
 }
 
 /*
- * RE_RegisterShader
+ * RE2_RegisterShader
  *
  * This is the exported shader entry point for the rest of the system
  * It will always return an index that will be valid.
@@ -1519,7 +1519,7 @@ RE_RegisterShaderLightMap(const char *name, int lightmapIndex)
  * way to ask for different implicit lighting modes (vertex, lightmap, etc)
  */
 qhandle_t
-RE_RegisterShader(const char *name)
+RE2_RegisterShader(const char *name)
 {
 	material_t *sh;
 
@@ -1533,7 +1533,7 @@ RE_RegisterShader(const char *name)
 	/* we want to return 0 if the shader failed to
 	 * load for some reason, but R_FindShader should
 	 * still keep a name allocated for it, so if
-	 * something calls RE_RegisterShader again with
+	 * something calls RE2_RegisterShader again with
 	 * the same name, we don't try looking for it again */
 	if(sh->defaultShader)
 		return 0;
@@ -1542,12 +1542,12 @@ RE_RegisterShader(const char *name)
 }
 
 /*
- * RE_RegisterShaderNoMip
+ * RE2_RegisterShaderNoMip
  *
  * For menu graphics that should never be picmiped
  */
 qhandle_t
-RE_RegisterShaderNoMip(const char *name)
+RE2_RegisterShaderNoMip(const char *name)
 {
 	material_t *sh;
 
@@ -1561,7 +1561,7 @@ RE_RegisterShaderNoMip(const char *name)
 	/* we want to return 0 if the shader failed to
 	 * load for some reason, but R_FindShader should
 	 * still keep a name allocated for it, so if
-	 * something calls RE_RegisterShader again with
+	 * something calls RE2_RegisterShader again with
 	 * the same name, we don't try looking for it again */
 	if(sh->defaultShader){
 		return 0;

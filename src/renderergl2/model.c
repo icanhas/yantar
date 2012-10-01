@@ -183,7 +183,7 @@ R_AllocModel(void)
 }
 
 /*
- * RE_RegisterModel
+ * RE2_RegisterModel
  *
  * Loads in a model for the given name
  *
@@ -193,7 +193,7 @@ R_AllocModel(void)
  * asked for again.
  */
 qhandle_t
-RE_RegisterModel(const char *name)
+RE2_RegisterModel(const char *name)
 {
 	model_t *mod;
 	qhandle_t	hModel;
@@ -205,7 +205,7 @@ RE_RegisterModel(const char *name)
 	char	altName[ MAX_QPATH ];
 
 	if(!name || !name[0]){
-		ri.Printf(PRINT_ALL, "RE_RegisterModel: NULL name\n");
+		ri.Printf(PRINT_ALL, "RE2_RegisterModel: NULL name\n");
 		return 0;
 	}
 
@@ -230,7 +230,7 @@ RE_RegisterModel(const char *name)
 	/* allocate a new model_t */
 
 	if((mod = R_AllocModel()) == NULL){
-		ri.Printf(PRINT_WARNING, "RE_RegisterModel: R_AllocModel() failed for '%s'\n", name);
+		ri.Printf(PRINT_WARNING, "RE2_RegisterModel: R_AllocModel() failed for '%s'\n", name);
 		return 0;
 	}
 
@@ -836,10 +836,10 @@ R_LoadMD4(model_t *mod, void *buffer, const char *mod_name)
 /* ============================================================================= */
 
 /*
-** RE_BeginRegistration
+** RE2_BeginRegistration
 */
 void
-RE_BeginRegistration(glconfig_t *glconfigOut)
+RE2_BeginRegistration(glconfig_t *glconfigOut)
 {
 
 	R_Init();
@@ -852,23 +852,23 @@ RE_BeginRegistration(glconfig_t *glconfigOut)
 	memset(tr.visClusters, -2, sizeof(tr.visClusters));	/* force markleafs to regenerate */
 
 	R_ClearFlares();
-	RE_ClearScene();
+	RE2_ClearScene();
 
 	tr.registered = qtrue;
 
 	/* NOTE: this sucks, for some reason the first stretch pic is never drawn
 	 * without this we'd see a white flash on a level load because the very
 	 * first time the level shot would not be drawn */
-/*	RE_StretchPic(0, 0, 0, 0, 0, 0, 1, 1, 0); */
+/*	RE2_StretchPic(0, 0, 0, 0, 0, 0, 1, 1, 0); */
 }
 
 /* ============================================================================= */
 
 /*
- * R_ModelInit
+ * R2_ModelInit
  */
 void
-R_ModelInit(void)
+R2_ModelInit(void)
 {
 	model_t *mod;
 
@@ -881,10 +881,10 @@ R_ModelInit(void)
 
 
 /*
- * R_Modellist_f
+ * R2_Modellist_f
  */
 void
-R_Modellist_f(void)
+R2_Modellist_f(void)
 {
 	int i, j;
 	model_t *mod;
@@ -941,10 +941,10 @@ R_GetTag(mdvModel_t *mod, int frame, const char *_tagName)
 }
 
 /*
- * R_LerpTag
+ * R2_LerpTag
  */
 int
-R_LerpTag(orientation_t *tag, qhandle_t handle, int startFrame, int endFrame,
+R2_LerpTag(orientation_t *tag, qhandle_t handle, int startFrame, int endFrame,
 	  float frac, const char *tagName)
 {
 	mdvTag_t	*start, *end;
@@ -989,10 +989,10 @@ R_LerpTag(orientation_t *tag, qhandle_t handle, int startFrame, int endFrame,
 }
 
 /*
- * R_ModelBounds
+ * R2_ModelBounds
  */
 void
-R_ModelBounds(qhandle_t handle, Vec3 mins, Vec3 maxs)
+R2_ModelBounds(qhandle_t handle, Vec3 mins, Vec3 maxs)
 {
 	model_t *model;
 

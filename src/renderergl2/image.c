@@ -2409,11 +2409,11 @@ CommaParse(char **data_p)
 
 
 /*
- * RE_RegisterSkin
+ * RE2_RegisterSkin
  *
  */
 qhandle_t
-RE_RegisterSkin(const char *name)
+RE2_RegisterSkin(const char *name)
 {
 	qhandle_t	hSkin;
 	skin_t		*skin;
@@ -2427,7 +2427,7 @@ RE_RegisterSkin(const char *name)
 	char surfName[MAX_QPATH];
 
 	if(!name || !name[0]){
-		ri.Printf(PRINT_DEVELOPER, "Empty name passed to RE_RegisterSkin\n");
+		ri.Printf(PRINT_DEVELOPER, "Empty name passed to RE2_RegisterSkin\n");
 		return 0;
 	}
 
@@ -2450,7 +2450,7 @@ RE_RegisterSkin(const char *name)
 
 	/* allocate a new skin */
 	if(tr.numSkins == MAX_SKINS){
-		ri.Printf(PRINT_WARNING, "WARNING: RE_RegisterSkin( '%s' ) MAX_SKINS hit\n", name);
+		ri.Printf(PRINT_WARNING, "WARNING: RE2_RegisterSkin( '%s' ) MAX_SKINS hit\n", name);
 		return 0;
 	}
 	tr.numSkins++;

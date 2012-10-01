@@ -7,7 +7,7 @@
 #ifndef __TR_PUBLIC_H
 #define __TR_PUBLIC_H
 
-enum { REF_API_VERSION = 8 };
+enum { REF_API_VERSION = 9 };
 
 #define MAX_DLIGHTS	32	/* can't be increased, because bit flags are used on surfaces */
 #define ENTITYNUM_BITS	10
@@ -198,24 +198,30 @@ typedef struct {
 
 typedef struct refimport_t refimport_t;	/* funcs imported by the refresh module */
 typedef struct refexport_t refexport_t;	/* funcs exported by the refresh module */
+
 /*
- * this is the only function actually exported at the linker level
- * If the module can't init to a valid rendering state, NULL will be
- * returned.
+ * This is the only function actually exported from each renderer at the
+ * linker level.  If the module can't init to a valid rendering state,
+ * NULL will be returned.
  */
 #ifdef USE_RENDERER_DLOPEN
-typedef refexport_t* (QDECL *GetRefAPI_t)(int apiVersion, refimport_t * rimp);
+typedef refexport_t* (QDECL *GetRefAPI)(int apiVersion, refimport_t * rimp);
+typedef refexport_t* (QDECL *GetRef2API)(int apiVersion, refimport_t * rimp);
 #else
 refexport_t* GetRefAPI(int apiVersion, refimport_t *rimp);
+refexport_t* GetRef2API(int apiVersion, refimport_t *rimp);
 #endif
 
 struct refexport_t {
-	/* called before the library is unloaded
+	/* 
+	 * called before the library is unloaded
 	 * if the system is just reconfiguring, pass destroyWindow = qfalse,
-	 * which will keep the screen from flashing to the desktop. */
+	 * which will keep the screen from flashing to the desktop. 
+	 */
 	void (*Shutdown)(qbool destroyWindow);
 
-	/* All data that will be used in a level should be
+	/* 
+	 * All data that will be used in a level should be
 	 * registered before rendering any frames to prevent disk hits,
 	 * but they can still be registered at a later time
 	 * if necessary.
@@ -223,7 +229,8 @@ struct refexport_t {
 	 * BeginRegistration makes any existing media pointers invalid
 	 * and returns the current gl configuration, including screen width
 	 * and height, which can be used by the client to intelligently
-	 * size display elements */
+	 * size display elements 
+	 */
 	void (*BeginRegistration)(glconfig_t *config);
 	qhandle_t (*RegisterModel)(const char *name);
 	qhandle_t (*RegisterSkin)(const char *name);
@@ -231,16 +238,22 @@ struct refexport_t {
 	qhandle_t (*RegisterShaderNoMip)(const char *name);
 	void (*LoadWorld)(const char *name);
 
-	/* the vis data is a large enough block of data that we go to the trouble
-	 * of sharing it with the clipmodel subsystem */
+	/* 
+	 * the vis data is a large enough block of data that we go to the trouble
+	 * of sharing it with the clipmodel subsystem 
+	 */
 	void (*SetWorldVisData)(const byte *vis);
 
-	/* EndRegistration will draw a tiny polygon with each texture, forcing
-	 * them to be loaded into card memory */
+	/* 
+	 * EndRegistration will draw a tiny polygon with each texture, forcing
+	 * them to be loaded into card memory 
+	 */
 	void (*EndRegistration)(void);
 
-	/* a scene is built up by calls to R_ClearScene and the various R_Add functions.
-	 * Nothing is drawn until R_RenderScene is called. */
+	/* 
+	 * a scene is built up by calls to R_ClearScene and the various R_Add functions.
+	 * Nothing is drawn until R_RenderScene is called. 
+	 */
 	void (*ClearScene)(void);
 	void (*AddRefEntityToScene)(const refEntity_t *re);
 	void (*AddPolyToScene)(qhandle_t hShader, int numVerts, const polyVert_t *verts, int num);

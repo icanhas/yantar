@@ -600,10 +600,10 @@ R_ClusterPVS(int cluster)
 }
 
 /*
- * R_inPVS
+ * R2_inPVS
  */
 qbool
-R_inPVS(const Vec3 p1, const Vec3 p2)
+R2_inPVS(const Vec3 p1, const Vec3 p2)
 {
 	mnode_t *leaf;
 	byte	*vis;
@@ -619,13 +619,13 @@ R_inPVS(const Vec3 p1, const Vec3 p2)
 }
 
 /*
- * R_MarkLeaves
+ * R2_MarkLeaves
  *
  * Mark the leaves and nodes that are in the PVS for the current
  * cluster
  */
 static void
-R_MarkLeaves(void)
+R2_MarkLeaves(void)
 {
 	const byte	*vis;
 	mnode_t		*leaf, *parent;
@@ -734,7 +734,7 @@ R_AddWorldSurfaces(void)
 	tr.shiftedEntityNum	= tr.currentEntityNum << QSORT_ENTITYNUM_SHIFT;
 
 	/* determine which leaves are in the PVS / areamask */
-	R_MarkLeaves ();
+	R2_MarkLeaves ();
 
 	/* clear out the visible min/max */
 	ClearBounds(tr.viewParms.visBounds[0], tr.viewParms.visBounds[1]);
