@@ -12,34 +12,36 @@
 #include "shared.h"
 #include "common.h"
 
-typedef struct snd_info_s {
+typedef struct snd_info_t snd_info_t;
+typedef struct snd_stream_t snd_stream_t;
+typedef struct snd_codec_t snd_codec_t;
+
+/* Codec op types */
+typedef void *(*CODEC_LOAD)(const char *filename, snd_info_t *info);
+typedef snd_stream_t *(*CODEC_OPEN)(const char *filename);
+typedef int (*CODEC_READ)(snd_stream_t *stream, int bytes, void *buffer);
+typedef void (*CODEC_CLOSE)(snd_stream_t *stream);
+
+typedef struct snd_info_t {
 	int	rate;
 	int	width;
 	int	channels;
 	int	samples;
 	int	size;
 	int	dataofs;
-} snd_info_t;
+};
 
-typedef struct snd_codec_s snd_codec_t;
-
-typedef struct snd_stream_s {
+struct snd_stream_t {
 	snd_codec_t	*codec;
 	fileHandle_t	file;
 	snd_info_t	info;
 	int		length;
 	int		pos;
 	void		*ptr;
-} snd_stream_t;
-
-/* Codec functions */
-typedef void *(*CODEC_LOAD)(const char *filename, snd_info_t *info);
-typedef snd_stream_t *(*CODEC_OPEN)(const char *filename);
-typedef int (*CODEC_READ)(snd_stream_t *stream, int bytes, void *buffer);
-typedef void (*CODEC_CLOSE)(snd_stream_t *stream);
+};
 
 /* Codec data structure */
-struct snd_codec_s {
+struct snd_codec_t {
 	char		*ext;
 	CODEC_LOAD	load;
 	CODEC_OPEN	open;
