@@ -3123,23 +3123,20 @@ CL_InitRef(void)
 	char dllName[MAX_OSPATH];
 #endif
 
-	Com_Printf("----- Initializing Renderer ----\n");
+	Com_Printf("----- Initializing refresh module -----\n");
 
 #ifdef USE_RENDERER_DLOPEN
-	cl_renderer = Cvar_Get("cl_renderer", "gl2",
-		CVAR_ARCHIVE | CVAR_LATCH);
+	cl_renderer = Cvar_Get("cl_renderer", "2", CVAR_ARCHIVE | CVAR_LATCH);
 
-	Q_sprintf(dllName, sizeof(dllName), "ref-%s-" ARCH_STRING DLL_EXT,
+	Q_sprintf(dllName, sizeof(dllName), "ref%s-" ARCH_STRING DLL_EXT,
 		cl_renderer->string);
 
-	if(!(rendererLib =
-		     Sys_LoadDll(dllName,
-			     qfalse)) &&
-	   strcmp(cl_renderer->string, cl_renderer->resetString)){
+	if(!(rendererLib = Sys_LoadDll(dllName, qfalse)) 
+	   && strcmp(cl_renderer->string, cl_renderer->resetString) != 0){
 		Cvar_ForceReset("cl_renderer");
 
 		Q_sprintf(dllName, sizeof(dllName),
-			"ref-gl1-" ARCH_STRING DLL_EXT);
+			"ref1-" ARCH_STRING DLL_EXT);
 		rendererLib = Sys_LoadLibrary(dllName);
 	}
 
@@ -3152,7 +3149,6 @@ CL_InitRef(void)
 	if(!GetRefAPI)
 		Com_Errorf(ERR_FATAL, "Can't load symbol GetRefAPI: '%s'",
 			Sys_LibraryError());
-
 #endif
 
 	ri.Cmd_AddCommand = Cmd_AddCommand;
@@ -3162,7 +3158,7 @@ CL_InitRef(void)
 	ri.Cmd_ExecuteText = Cbuf_ExecuteText;
 	ri.Printf	= CL_RefPrintf;
 	ri.Error	= Com_Errorf;
-	ri.Milliseconds = CL_ScaledMilliseconds;
+	ri.Milliseconds	= CL_ScaledMilliseconds;
 	ri.Malloc	= CL_RefMalloc;
 	ri.Free		= Z_Free;
 #ifdef HUNK_DEBUG
@@ -3170,11 +3166,11 @@ CL_InitRef(void)
 #else
 	ri.Hunk_Alloc = Hunk_Alloc;
 #endif
-	ri.Hunk_AllocateTempMemory = Hunk_AllocateTempMemory;
-	ri.Hunk_FreeTempMemory = Hunk_FreeTempMemory;
+	ri.Hunk_AllocateTempMemory	= Hunk_AllocateTempMemory;
+	ri.Hunk_FreeTempMemory	= Hunk_FreeTempMemory;
 
-	ri.CM_ClusterPVS = CM_ClusterPVS;
-	ri.CM_DrawDebugSurface = CM_DrawDebugSurface;
+	ri.CM_ClusterPVS	= CM_ClusterPVS;
+	ri.CM_DrawDebugSurface	= CM_DrawDebugSurface;
 
 	ri.FS_ReadFile	= FS_ReadFile;
 	ri.FS_FreeFile	= FS_FreeFile;
@@ -3187,17 +3183,17 @@ CL_InitRef(void)
 	ri.Cvar_Set	= Cvar_Set;
 	ri.Cvar_SetValue	= Cvar_SetValue;
 	ri.Cvar_CheckRange	= Cvar_CheckRange;
-	ri.Cvar_VariableIntegerValue = Cvar_VariableIntegerValue;
+	ri.Cvar_VariableIntegerValue	= Cvar_VariableIntegerValue;
 
 	/* cinematic stuff */
-
 	ri.CIN_UploadCinematic	= CIN_UploadCinematic;
 	ri.CIN_PlayCinematic	= CIN_PlayCinematic;
-	ri.CIN_RunCinematic = CIN_RunCinematic;
+	ri.CIN_RunCinematic	= CIN_RunCinematic;
 
 	ri.CL_WriteAVIVideoFrame = CL_WriteAVIVideoFrame;
 
-	ri.IN_Init = IN_Init;
+	/* FIXME: nice separation of concerns there... */
+	ri.IN_Init	= IN_Init;
 	ri.IN_Shutdown	= IN_Shutdown;
 	ri.IN_Restart	= IN_Restart;
 
@@ -3213,11 +3209,11 @@ CL_InitRef(void)
 	Com_Printf("-------------------------------\n");
 
 	if(!ret)
-		Com_Errorf (ERR_FATAL, "Couldn't initialize refresh");
+		Com_Errorf (ERR_FATAL, "Couldn't initialize refresh module");
 
 	re = *ret;
 
-	/* unpause so the cgame definately gets a snapshot and renders a frame */
+	/* unpause so the cgame definitely gets a snapshot and renders a frame */
 	Cvar_Set("cl_paused", "0");
 }
 

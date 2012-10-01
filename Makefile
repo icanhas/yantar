@@ -804,15 +804,15 @@ ifneq ($(BUILD_CLIENT),0)
   ifneq ($(USE_RENDERER_DLOPEN),0)
     TARGETS += $(B)/$(CLIENTBIN)$(FULLBINEXT)
     ifneq ($(BUILD_RENDERER_GL1),0)
-      TARGETS += $(B)/ref-gl1-$(SHLIBNAME)
+      TARGETS += $(B)/ref1-$(SHLIBNAME)
         ifneq ($(BUILD_CLIENT_SMP),0)
-          TARGETS += $(B)/ref-gl1-smp-$(SHLIBNAME)
+          TARGETS += $(B)/ref1-smp-$(SHLIBNAME)
         endif
     endif
     ifneq ($(BUILD_RENDERER_GL2), 0)
-      TARGETS += $(B)/ref-gl2-$(SHLIBNAME)
+      TARGETS += $(B)/ref2-$(SHLIBNAME)
       ifneq ($(BUILD_CLIENT_SMP),0)
-        TARGETS += $(B)/ref-gl2-smp-$(SHLIBNAME)
+        TARGETS += $(B)/ref2-smp-$(SHLIBNAME)
       endif
     endif
   else
@@ -1693,22 +1693,22 @@ $(B)/$(CLIENTBIN)$(FULLBINEXT): $(Q3OBJ) $(LIBSDLMAIN)
 		-o $@ $(Q3OBJ) \
 		$(LIBSDLMAIN) $(CLIENT_LIBS) $(LIBS)
 
-$(B)/ref-gl1-$(SHLIBNAME): $(Q3ROBJ) $(JPGOBJ)
+$(B)/ref1-$(SHLIBNAME): $(Q3ROBJ) $(JPGOBJ)
 	$(echo_cmd) "LD $@"
 	$(Q)$(CC) $(CFLAGS) $(SHLIBLDFLAGS) -o $@ $(Q3ROBJ) $(JPGOBJ) \
 		$(THREAD_LIBS) $(LIBSDLMAIN) $(RENDERER_LIBS) $(LIBS)
 
-$(B)/ref-gl1-smp-$(SHLIBNAME): $(Q3ROBJ) $(JPGOBJ)
+$(B)/ref1-smp-$(SHLIBNAME): $(Q3ROBJ) $(JPGOBJ)
 	$(echo_cmd) "LD $@"
 	$(Q)$(CC) $(CFLAGS) $(SHLIBLDFLAGS) -o $@ $(Q3ROBJ) $(JPGOBJ) \
 		$(THREAD_LIBS) $(LIBSDLMAIN) $(RENDERER_LIBS) $(LIBS)
 
-$(B)/ref-gl2-$(SHLIBNAME): $(Q3R2OBJ) $(JPGOBJ)
+$(B)/ref2-$(SHLIBNAME): $(Q3R2OBJ) $(JPGOBJ)
 	$(echo_cmd) "LD $@"
 	$(Q)$(CC) $(CFLAGS) $(SHLIBLDFLAGS) -o $@ $(Q3R2OBJ) $(JPGOBJ) \
 		$(THREAD_LIBS) $(LIBSDLMAIN) $(RENDERER_LIBS) $(LIBS)
 
-$(B)/ref-gl2-smp-$(SHLIBNAME): $(Q3R2OBJ) $(JPGOBJ)
+$(B)/ref2-smp-$(SHLIBNAME): $(Q3R2OBJ) $(JPGOBJ)
 	$(echo_cmd) "LD $@"
 	$(Q)$(CC) $(CFLAGS) $(SHLIBLDFLAGS) -o $@ $(Q3R2OBJ) $(JPGOBJ) \
 		$(THREAD_LIBS) $(LIBSDLMAIN) $(RENDERER_LIBS) $(LIBS)
@@ -2364,10 +2364,10 @@ ifneq ($(BUILD_CLIENT),0)
 	$(INSTALL) $(STRIP_FLAG) -m 0755 $(BR)/$(CLIENTBIN)$(FULLBINEXT) $(COPYBINDIR)/$(CLIENTBIN)$(FULLBINEXT)
   ifneq ($(USE_RENDERER_DLOPEN),0)
     ifneq ($(BUILD_RENDERER_GL1),0)
-	$(INSTALL) $(STRIP_FLAG) -m 0755 $(BR)/ref-gl1-$(SHLIBNAME) $(COPYBINDIR)/ref-gl1-$(SHLIBNAME)
+	$(INSTALL) $(STRIP_FLAG) -m 0755 $(BR)/ref1-$(SHLIBNAME) $(COPYBINDIR)/ref1-$(SHLIBNAME)
     endif
     ifneq ($(BUILD_RENDERER_GL2),0)
-	$(INSTALL) $(STRIP_FLAG) -m 0755 $(BR)/ref-gl2-$(SHLIBNAME) $(COPYBINDIR)/ref-gl2-$(SHLIBNAME)
+	$(INSTALL) $(STRIP_FLAG) -m 0755 $(BR)/ref2-$(SHLIBNAME) $(COPYBINDIR)/ref2-$(SHLIBNAME)
     endif
   endif
 endif
@@ -2375,7 +2375,7 @@ endif
 # Don't copy the SMP until it's working together with SDL.
 ifneq ($(BUILD_CLIENT_SMP),0)
   ifneq ($(USE_RENDERER_DLOPEN),0)
-	$(INSTALL) $(STRIP_FLAG) -m 0755 $(BR)/ref-gl1-smp-$(SHLIBNAME) $(COPYBINDIR)/ref-gl1-smp-$(SHLIBNAME)
+	$(INSTALL) $(STRIP_FLAG) -m 0755 $(BR)/ref1-smp-$(SHLIBNAME) $(COPYBINDIR)/ref1-smp-$(SHLIBNAME)
   else
 	$(INSTALL) $(STRIP_FLAG) -m 0755 $(BR)/$(CLIENTBIN)-smp$(FULLBINEXT) $(COPYBINDIR)/$(CLIENTBIN)-smp$(FULLBINEXT)
   endif
