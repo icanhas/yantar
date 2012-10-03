@@ -144,6 +144,7 @@ typedef struct {
  * the engine just allocate the pool for it based on a cvar
  * many of the vars are re-used for different item types, as such they are not always named appropriately
  * the benefits of c++ in DOOM will greatly help crap like this
+ * YEAH WHATEVER
  * FIXME: need to put a type ptr that points to specific type info per type
  *  */
 #define MAX_LB_COLUMNS 16
