@@ -10,7 +10,6 @@
 #include "game.h"
 #include "local.h"
 #include "team.h"
-#include "../../ui/menudef.h"	/* for the voice chats */
 
 /*
  * DeathmatchScoreboardMessage
@@ -1028,9 +1027,8 @@ Cmd_VoiceTell_f(gentity_t *ent, qbool voiceonly)
 		G_Voice(ent, ent, SAY_TELL, id, voiceonly);
 }
 
-
 /*
- * Cmd_VoiceTaunt_f
+ * this doesn't actually do anything at the moment
  */
 static void
 Cmd_VoiceTaunt_f(gentity_t *ent)
@@ -1045,12 +1043,6 @@ Cmd_VoiceTaunt_f(gentity_t *ent)
 	if(ent->enemy && ent->enemy->client &&
 	   ent->enemy->client->lastkilled_client == ent->s.number){
 		/* i am a dead corpse */
-		if(!(ent->enemy->r.svFlags & SVF_BOT))
-			G_Voice(ent, ent->enemy, SAY_TELL, VOICECHAT_DEATHINSULT,
-				qfalse);
-		if(!(ent->r.svFlags & SVF_BOT))
-			G_Voice(ent, ent,        SAY_TELL, VOICECHAT_DEATHINSULT,
-				qfalse);
 		ent->enemy = NULL;
 		return;
 	}
@@ -1061,23 +1053,9 @@ Cmd_VoiceTaunt_f(gentity_t *ent)
 		if(who->client){
 			/* who is the person I just killed */
 			if(who->client->lasthurt_mod == MOD_GAUNTLET){
-				if(!(who->r.svFlags & SVF_BOT))
-					G_Voice(ent, who, SAY_TELL,
-						VOICECHAT_KILLGAUNTLET,
-						qfalse);	/* and I killed them with a gauntlet */
-				if(!(ent->r.svFlags & SVF_BOT))
-					G_Voice(ent, ent, SAY_TELL,
-						VOICECHAT_KILLGAUNTLET,
-						qfalse);
+				;
 			}else{
-				if(!(who->r.svFlags & SVF_BOT))
-					G_Voice(ent, who, SAY_TELL,
-						VOICECHAT_KILLINSULT,
-						qfalse);	/* and I killed them with something else */
-				if(!(ent->r.svFlags & SVF_BOT))
-					G_Voice(ent, ent, SAY_TELL,
-						VOICECHAT_KILLINSULT,
-						qfalse);
+				;
 			}
 			ent->client->lastkilled_client = -1;
 			return;
@@ -1093,22 +1071,13 @@ Cmd_VoiceTaunt_f(gentity_t *ent)
 			   ent->client->sess.sessionTeam)
 				if(who->client->rewardTime > level.time){
 					if(!(who->r.svFlags & SVF_BOT))
-						G_Voice(ent, who, SAY_TELL,
-							VOICECHAT_PRAISE,
-							qfalse);
+						;
 					if(!(ent->r.svFlags & SVF_BOT))
-						G_Voice(ent, ent, SAY_TELL,
-							VOICECHAT_PRAISE,
-							qfalse);
+						;
 					return;
 				}
 		}
-
-	/* just say something */
-	G_Voice(ent, NULL, SAY_ALL, VOICECHAT_TAUNT, qfalse);
 }
-
-
 
 static char *gc_orders[] = {
 	"hold your position",

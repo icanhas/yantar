@@ -5,50 +5,12 @@
  * it under the terms of the GNU General Public License.
  */
 /*
- * cg_servercmds.c -- reliably sequenced text commands sent by the server
- * these are processed at snapshot transition time, so there will definately
- * be a valid snapshot this frame */
+ * reliably sequenced text commands sent by the server
+ * these are processed at snapshot transition time, so there will definitely
+ * be a valid snapshot this frame 
+ */
 
 #include "local.h"
-#include "../../ui/menudef.h"
-
-typedef struct {
-	const char	*order;
-	int		taskNum;
-} orderTask_t;
-
-static const orderTask_t validOrders[] = {
-	{ VOICECHAT_GETFLAG,
-	  TEAMTASK_OFFENSE },
-	{ VOICECHAT_OFFENSE,
-	  TEAMTASK_OFFENSE },
-	{ VOICECHAT_DEFEND,
-	  TEAMTASK_DEFENSE },
-	{ VOICECHAT_DEFENDFLAG,                                 TEAMTASK_DEFENSE },
-	{ VOICECHAT_PATROL,
-	  TEAMTASK_PATROL },
-	{ VOICECHAT_CAMP,
-	  TEAMTASK_CAMP },
-	{ VOICECHAT_FOLLOWME,
-	  TEAMTASK_FOLLOW },
-	{ VOICECHAT_RETURNFLAG,
-	  TEAMTASK_RETRIEVE },
-	{ VOICECHAT_FOLLOWFLAGCARRIER,  TEAMTASK_ESCORT }
-};
-
-static const int numValidOrders = ARRAY_LEN(validOrders);
-
-#ifdef MISSIONPACK
-static int
-CG_ValidOrder(const char *p)
-{
-	int i;
-	for(i = 0; i < numValidOrders; i++)
-		if(Q_stricmp(p, validOrders[i].order) == 0)
-			return validOrders[i].taskNum;
-	return -1;
-}
-#endif
 
 /*
  * CG_ParseScores

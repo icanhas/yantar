@@ -34,7 +34,6 @@
 #include "chat.h"
 #include "cmd.h"
 #include "dmnet.h"
-#include "vcmd.h"
 
 /*  */
 #include "chars.h"

@@ -41,9 +41,6 @@
 #include "syn.h"	/* synonyms */
 #include "match.h"	/* string matching types and vars */
 
-/* for the voice chats */
-#include "../../../ui/menudef.h"	/* sos001205 - for q3_ui also */
-
 /* from aasfile.h */
 #define AREACONTENTS_MOVER		1024
 #define AREACONTENTS_MODELNUMSHIFT	24
@@ -405,7 +402,6 @@ BotRefuseOrder(bot_state_t *bs)
 	/* if the bot was ordered to do something */
 	if(bs->order_time && bs->order_time > FloatTime() - 10){
 		trap_EA_Action(bs->client, ACTION_NEGATIVE);
-		BotVoiceChat(bs, bs->decisionmaker, VOICECHAT_NO);
 		bs->order_time = 0;
 	}
 }
@@ -449,7 +445,6 @@ BotCTFSeekGoals(bot_state_t *bs)
 				/* don't use any alt route goal, just get the hell out of the base */
 				bs->altroutegoal.areanum = 0;
 			BotSetUserInfo(bs, "teamtask", va("%d", TEAMTASK_OFFENSE));
-			BotVoiceChat(bs, -1, VOICECHAT_IHAVEFLAG);
 		}else if(bs->rushbaseaway_time > FloatTime()){
 			if(BotTeam(bs) == TEAM_RED) flagstatus =
 					bs->redflagstatus;
@@ -498,9 +493,6 @@ BotCTFSeekGoals(bot_state_t *bs)
 					bs->teammessage_time = 0;
 					/* no arrive message */
 					bs->arrive_time = 1;
-					/*  */
-					BotVoiceChat(bs, bs->teammate,
-						VOICECHAT_ONFOLLOW);
 					/* get the team goal time */
 					bs->teamgoal_time = FloatTime() +
 							    TEAM_ACCOMPANY_TIME;
@@ -576,9 +568,6 @@ BotCTFSeekGoals(bot_state_t *bs)
 					bs->teammessage_time = 0;
 					/* no arrive message */
 					bs->arrive_time = 1;
-					/*  */
-					BotVoiceChat(bs, bs->teammate,
-						VOICECHAT_ONFOLLOW);
 					/* get the team goal time */
 					bs->teamgoal_time = FloatTime() +
 							    TEAM_ACCOMPANY_TIME;
@@ -736,7 +725,7 @@ Bot1FCTFSeekGoals(bot_state_t *bs)
 			BotGetAlternateRouteGoal(bs, BotOppositeTeam(bs));
 			/*  */
 			BotSetTeamStatus(bs);
-			BotVoiceChat(bs, -1, VOICECHAT_IHAVEFLAG);
+			
 		}
 		return;
 	}
@@ -767,9 +756,6 @@ Bot1FCTFSeekGoals(bot_state_t *bs)
 					bs->teammessage_time = 0;
 					/* no arrive message */
 					bs->arrive_time = 1;
-					/*  */
-					BotVoiceChat(bs, bs->teammate,
-						VOICECHAT_ONFOLLOW);
 					/* get the team goal time */
 					bs->teamgoal_time = FloatTime() +
 							    TEAM_ACCOMPANY_TIME;
@@ -1259,13 +1245,11 @@ BotCheckItemPickup(bot_state_t *bs, int *oldinventory)
 		if(offence){
 			if(!(bs->teamtaskpreference & TEAMTP_ATTACKER)){
 				/* if we have a bot team leader */
-				if(BotTeamLeader(bs))
+				if(BotTeamLeader(bs)){
 					/* tell the leader we want to be on offence */
-					BotVoiceChat(bs, leader,
-						VOICECHAT_WANTONOFFENSE);
-				/* BotAI_BotInitialChat(bs, "wantoffence", NULL);
-				 * trap_BotEnterChat(bs->cs, leader, CHAT_TELL); */
-				else if(g_spSkill.integer <= 3)
+					BotAI_BotInitialChat(bs, "wantoffence", NULL);
+				 	trap_BotEnterChat(bs->cs, leader, CHAT_TELL);
+				}else if(g_spSkill.integer <= 3)
 					if(bs->ltgtype != LTG_GETFLAG &&
 					   bs->ltgtype !=
 					   LTG_ATTACKENEMYBASE &&
@@ -1276,26 +1260,22 @@ BotCheckItemPickup(bot_state_t *bs, int *oldinventory)
 						     bs->blueflagstatus ==
 						     0)) &&
 						   (gametype != GT_1FCTF ||
-						    bs->neutralflagstatus == 0))
+						    bs->neutralflagstatus == 0)){
 							/* tell the leader we want to be on offence */
-							BotVoiceChat(
-								bs, leader,
-								VOICECHAT_WANTONOFFENSE);
-				/* BotAI_BotInitialChat(bs, "wantoffence", NULL);
-				 * trap_BotEnterChat(bs->cs, leader, CHAT_TELL); */
+							BotAI_BotInitialChat(bs, "wantoffence", NULL);
+							trap_BotEnterChat(bs->cs, leader, CHAT_TELL);
+						}
 				bs->teamtaskpreference |= TEAMTP_ATTACKER;
 			}
 			bs->teamtaskpreference &= ~TEAMTP_DEFENDER;
 		}else{
 			if(!(bs->teamtaskpreference & TEAMTP_DEFENDER)){
 				/* if we have a bot team leader */
-				if(BotTeamLeader(bs))
+				if(BotTeamLeader(bs)){
 					/* tell the leader we want to be on defense */
-					BotVoiceChat(bs, -1,
-						VOICECHAT_WANTONDEFENSE);
-				/* BotAI_BotInitialChat(bs, "wantdefence", NULL);
-				 * trap_BotEnterChat(bs->cs, leader, CHAT_TELL); */
-				else if(g_spSkill.integer <= 3)
+					BotAI_BotInitialChat(bs, "wantdefence", NULL);
+					trap_BotEnterChat(bs->cs, leader, CHAT_TELL);
+				}else if(g_spSkill.integer <= 3)
 					if(bs->ltgtype != LTG_DEFENDKEYAREA)
 						/*  */
 						if((gametype != GT_CTF ||
@@ -1303,13 +1283,11 @@ BotCheckItemPickup(bot_state_t *bs, int *oldinventory)
 						     bs->blueflagstatus ==
 						     0)) &&
 						   (gametype != GT_1FCTF ||
-						    bs->neutralflagstatus == 0))
+						    bs->neutralflagstatus == 0)){
 							/* tell the leader we want to be on defense */
-							BotVoiceChat(
-								bs, -1,
-								VOICECHAT_WANTONDEFENSE);
-				/* BotAI_BotInitialChat(bs, "wantdefence", NULL);
-				 * trap_BotEnterChat(bs->cs, leader, CHAT_TELL); */
+							BotAI_BotInitialChat(bs, "wantdefence", NULL);
+				 			trap_BotEnterChat(bs->cs, leader, CHAT_TELL);
+				 		}
 				bs->teamtaskpreference |= TEAMTP_DEFENDER;
 			}
 			bs->teamtaskpreference &= ~TEAMTP_ATTACKER;

@@ -41,9 +41,6 @@
 #include "syn.h"	/* synonyms */
 #include "match.h"	/* string matching types and vars */
 
-/* for the voice chats */
-#include "../../../ui/menudef.h"
-
 /* goal flag, see ../botlib/be_ai_goal.h for the other GFL_* */
 #define GFL_AIR 128
 
@@ -334,7 +331,6 @@ BotGetLongTermGoal(bot_state_t *bs, int tfl, int retreat, bot_goal_t *goal)
 				EasyClientName(bs->teammate, netname,
 					sizeof(netname)), NULL);
 			trap_BotEnterChat(bs->cs, bs->decisionmaker, CHAT_TELL);
-			BotVoiceChatOnly(bs, bs->decisionmaker, VOICECHAT_YES);
 			trap_EA_Action(bs->client, ACTION_AFFIRMATIVE);
 			bs->teammessage_time = 0;
 		}
@@ -380,7 +376,6 @@ BotGetLongTermGoal(bot_state_t *bs, int tfl, int retreat, bot_goal_t *goal)
 				EasyClientName(bs->teammate, netname,
 					sizeof(netname)), NULL);
 			trap_BotEnterChat(bs->cs, bs->decisionmaker, CHAT_TELL);
-			BotVoiceChatOnly(bs, bs->decisionmaker, VOICECHAT_YES);
 			trap_EA_Action(bs->client, ACTION_AFFIRMATIVE);
 			bs->teammessage_time = 0;
 		}
@@ -586,7 +581,6 @@ BotGetLongTermGoal(bot_state_t *bs, int tfl, int retreat, bot_goal_t *goal)
 			trap_BotGoalName(bs->teamgoal.number, buf, sizeof(buf));
 			BotAI_BotInitialChat(bs, "defend_start", buf, NULL);
 			trap_BotEnterChat(bs->cs, 0, CHAT_TEAM);
-			BotVoiceChatOnly(bs, -1, VOICECHAT_ONDEFENSE);
 			bs->teammessage_time = 0;
 		}
 		/* set the bot goal */
@@ -640,7 +634,6 @@ BotGetLongTermGoal(bot_state_t *bs, int tfl, int retreat, bot_goal_t *goal)
 			trap_BotGoalName(bs->teamgoal.number, buf, sizeof(buf));
 			BotAI_BotInitialChat(bs, "getitem_start", buf, NULL);
 			trap_BotEnterChat(bs->cs, bs->decisionmaker, CHAT_TELL);
-			BotVoiceChatOnly(bs, bs->decisionmaker, VOICECHAT_YES);
 			trap_EA_Action(bs->client, ACTION_AFFIRMATIVE);
 			bs->teammessage_time = 0;
 		}
@@ -675,8 +668,6 @@ BotGetLongTermGoal(bot_state_t *bs, int tfl, int retreat, bot_goal_t *goal)
 						sizeof(netname)), NULL);
 				trap_BotEnterChat(bs->cs, bs->decisionmaker,
 					CHAT_TELL);
-				BotVoiceChatOnly(bs, bs->decisionmaker,
-					VOICECHAT_YES);
 				trap_EA_Action(bs->client, ACTION_AFFIRMATIVE);
 			}
 			bs->teammessage_time = 0;
@@ -706,8 +697,6 @@ BotGetLongTermGoal(bot_state_t *bs, int tfl, int retreat, bot_goal_t *goal)
 					trap_BotEnterChat(bs->cs,
 						bs->decisionmaker,
 						CHAT_TELL);
-					BotVoiceChatOnly(bs, bs->decisionmaker,
-						VOICECHAT_INPOSITION);
 				}
 				bs->arrive_time = FloatTime();
 			}
@@ -770,7 +759,6 @@ BotGetLongTermGoal(bot_state_t *bs, int tfl, int retreat, bot_goal_t *goal)
 			}
 			BotAI_BotInitialChat(bs, "patrol_start", buf, NULL);
 			trap_BotEnterChat(bs->cs, bs->decisionmaker, CHAT_TELL);
-			BotVoiceChatOnly(bs, bs->decisionmaker, VOICECHAT_YES);
 			trap_EA_Action(bs->client, ACTION_AFFIRMATIVE);
 			bs->teammessage_time = 0;
 		}
@@ -824,7 +812,6 @@ BotGetLongTermGoal(bot_state_t *bs, int tfl, int retreat, bot_goal_t *goal)
 				BotAI_BotInitialChat(bs, "captureflag_start",
 					NULL);
 				trap_BotEnterChat(bs->cs, 0, CHAT_TEAM);
-				BotVoiceChatOnly(bs, -1, VOICECHAT_ONGETFLAG);
 				bs->teammessage_time = 0;
 			}
 			/*  */
@@ -889,7 +876,6 @@ BotGetLongTermGoal(bot_state_t *bs, int tfl, int retreat, bot_goal_t *goal)
 				BotAI_BotInitialChat(bs, "returnflag_start",
 					NULL);
 				trap_BotEnterChat(bs->cs, 0, CHAT_TEAM);
-				BotVoiceChatOnly(bs, -1, VOICECHAT_ONRETURNFLAG);
 				bs->teammessage_time = 0;
 			}
 			/*  */
@@ -917,7 +903,6 @@ BotGetLongTermGoal(bot_state_t *bs, int tfl, int retreat, bot_goal_t *goal)
 				BotAI_BotInitialChat(bs, "captureflag_start",
 					NULL);
 				trap_BotEnterChat(bs->cs, 0, CHAT_TEAM);
-				BotVoiceChatOnly(bs, -1, VOICECHAT_ONGETFLAG);
 				bs->teammessage_time = 0;
 			}
 			memcpy(goal, &ctf_neutralflag, sizeof(bot_goal_t));
@@ -959,7 +944,6 @@ BotGetLongTermGoal(bot_state_t *bs, int tfl, int retreat, bot_goal_t *goal)
 				BotAI_BotInitialChat(bs, "attackenemybase_start",
 					NULL);
 				trap_BotEnterChat(bs->cs, 0, CHAT_TEAM);
-				BotVoiceChatOnly(bs, -1, VOICECHAT_ONOFFENSE);
 				bs->teammessage_time = 0;
 			}
 			switch(BotTeam(bs)){
@@ -986,7 +970,6 @@ BotGetLongTermGoal(bot_state_t *bs, int tfl, int retreat, bot_goal_t *goal)
 				BotAI_BotInitialChat(bs, "returnflag_start",
 					NULL);
 				trap_BotEnterChat(bs->cs, 0, CHAT_TEAM);
-				BotVoiceChatOnly(bs, -1, VOICECHAT_ONRETURNFLAG);
 				bs->teammessage_time = 0;
 			}
 			/*  */
