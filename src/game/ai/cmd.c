@@ -847,14 +847,10 @@ BotMatch_GetFlag(bot_state_t *bs, bot_match_t *match)
 	if(gametype == GT_CTF)
 		if(!ctf_redflag.areanum || !ctf_blueflag.areanum)
 			return;
-
-#ifdef MISSIONPACK
 	else if(gametype == GT_1FCTF)
 		if(!ctf_neutralflag.areanum || !ctf_redflag.areanum ||
 		   !ctf_blueflag.areanum)
 			return;
-
-#endif
 	else
 		return;
 	/* if not addressed to this bot */
@@ -897,23 +893,17 @@ BotMatch_AttackEnemyBase(bot_state_t *bs, bot_match_t *match)
 
 	if(gametype == GT_CTF)
 		BotMatch_GetFlag(bs, match);
-
-#ifdef MISSIONPACK
-	else if(gametype == GT_1FCTF || gametype == GT_OBELISK || gametype ==
-		GT_HARVESTER)
-		if(!redobelisk.areanum || !blueobelisk.areanum)
+	/* FIXME */
+	else if(gametype == GT_1FCTF){
+		/*if(!redobelisk.areanum || !blueobelisk.areanum)
 			return;
-
-#endif
-	else
+		*/
+	}else
 		return;
 	/* if not addressed to this bot */
 	if(!BotAddressedToBot(bs, match)) return;
-	/*  */
 	trap_BotMatchVariable(match, NETNAME, netname, sizeof(netname));
-	/*  */
 	client = FindClientByName(netname);
-	/*  */
 	bs->decisionmaker = client;
 	bs->ordered = qtrue;
 	bs->order_time = FloatTime();
@@ -924,7 +914,6 @@ BotMatch_AttackEnemyBase(bot_state_t *bs, bot_match_t *match)
 	/* set the team goal time */
 	bs->teamgoal_time = FloatTime() + TEAM_ATTACKENEMYBASE_TIME;
 	bs->attackaway_time = 0;
-	/*  */
 	BotSetTeamStatus(bs);
 	/* remember last ordered task */
 	BotRememberLastOrderedTask(bs);
@@ -932,49 +921,6 @@ BotMatch_AttackEnemyBase(bot_state_t *bs, bot_match_t *match)
 	BotPrintTeamGoal(bs);
 #endif	/* DEBUG */
 }
-
-#ifdef MISSIONPACK
-/*
- * BotMatch_Harvest
- */
-void
-BotMatch_Harvest(bot_state_t *bs, bot_match_t *match)
-{
-	char	netname[MAX_MESSAGE_SIZE];
-	int	client;
-
-	if(gametype == GT_HARVESTER){
-		if(!neutralobelisk.areanum || !redobelisk.areanum ||
-		   !blueobelisk.areanum)
-			return;
-	}else
-		return;
-	/* if not addressed to this bot */
-	if(!BotAddressedToBot(bs, match)) return;
-	/*  */
-	trap_BotMatchVariable(match, NETNAME, netname, sizeof(netname));
-	/*  */
-	client = FindClientByName(netname);
-	/*  */
-	bs->decisionmaker = client;
-	bs->ordered = qtrue;
-	bs->order_time = FloatTime();
-	/* set the time to send a message to the team mates */
-	bs->teammessage_time = FloatTime() + 2 * random();
-	/* set the ltg type */
-	bs->ltgtype = LTG_HARVEST;
-	/* set the team goal time */
-	bs->teamgoal_time = FloatTime() + TEAM_HARVEST_TIME;
-	bs->harvestaway_time = 0;
-	/*  */
-	BotSetTeamStatus(bs);
-	/* remember last ordered task */
-	BotRememberLastOrderedTask(bs);
-#ifdef DEBUG
-	BotPrintTeamGoal(bs);
-#endif	/* DEBUG */
-}
-#endif
 
 /*
  * BotMatch_RushBase
@@ -990,7 +936,8 @@ BotMatch_RushBase(bot_state_t *bs, bot_match_t *match)
 			return;
 
 #ifdef MISSIONPACK
-	else if(gametype == GT_1FCTF || gametype == GT_HARVESTER)
+	else if(gametype == GT_1FCTF)
+		/* FIXME: is this really appropriate? */
 		if(!redobelisk.areanum || !blueobelisk.areanum)
 			return;
 
@@ -999,11 +946,8 @@ BotMatch_RushBase(bot_state_t *bs, bot_match_t *match)
 		return;
 	/* if not addressed to this bot */
 	if(!BotAddressedToBot(bs, match)) return;
-	/*  */
 	trap_BotMatchVariable(match, NETNAME, netname, sizeof(netname));
-	/*  */
 	client = FindClientByName(netname);
-	/*  */
 	bs->decisionmaker = client;
 	bs->ordered = qtrue;
 	bs->order_time = FloatTime();
@@ -1014,7 +958,6 @@ BotMatch_RushBase(bot_state_t *bs, bot_match_t *match)
 	/* set the team goal time */
 	bs->teamgoal_time = FloatTime() + CTF_RUSHBASE_TIME;
 	bs->rushbaseaway_time = 0;
-	/*  */
 	BotSetTeamStatus(bs);
 #ifdef DEBUG
 	BotPrintTeamGoal(bs);
@@ -1087,11 +1030,8 @@ BotMatch_ReturnFlag(bot_state_t *bs, bot_match_t *match)
 	/* if not addressed to this bot */
 	if(!BotAddressedToBot(bs, match))
 		return;
-	/*  */
 	trap_BotMatchVariable(match, NETNAME, netname, sizeof(netname));
-	/*  */
 	client = FindClientByName(netname);
-	/*  */
 	bs->decisionmaker = client;
 	bs->ordered = qtrue;
 	bs->order_time = FloatTime();
@@ -1102,7 +1042,6 @@ BotMatch_ReturnFlag(bot_state_t *bs, bot_match_t *match)
 	/* set the team goal time */
 	bs->teamgoal_time = FloatTime() + CTF_RETURNFLAG_TIME;
 	bs->rushbaseaway_time = 0;
-	/*  */
 	BotSetTeamStatus(bs);
 #ifdef DEBUG
 	BotPrintTeamGoal(bs);
@@ -1127,7 +1066,6 @@ BotMatch_JoinSubteam(bot_state_t *bs, bot_match_t *match)
 	/* set the sub team name */
 	strncpy(bs->subteam, teammate, 32);
 	bs->subteam[31] = '\0';
-	/*  */
 	trap_BotMatchVariable(match, NETNAME, netname, sizeof(netname));
 	BotAI_BotInitialChat(bs, "joinedteam", teammate, NULL);
 	client = ClientFromName(netname);
@@ -1146,7 +1084,6 @@ BotMatch_LeaveSubteam(bot_state_t *bs, bot_match_t *match)
 	if(!TeamPlayIsOn()) return;
 	/* if not addressed to this bot */
 	if(!BotAddressedToBot(bs, match)) return;
-	/*  */
 	if(strlen(bs->subteam)){
 		BotAI_BotInitialChat(bs, "leftteam", bs->subteam, NULL);
 		trap_BotMatchVariable(match, NETNAME, netname, sizeof(netname));
@@ -1165,7 +1102,6 @@ BotMatch_WhichTeam(bot_state_t *bs, bot_match_t *match)
 	if(!TeamPlayIsOn()) return;
 	/* if not addressed to this bot */
 	if(!BotAddressedToBot(bs, match)) return;
-	/*  */
 	if(strlen(bs->subteam))
 		BotAI_BotInitialChat(bs, "inteam", bs->subteam, NULL);
 	else
@@ -1185,11 +1121,10 @@ BotMatch_CheckPoint(bot_state_t *bs, bot_match_t *match)
 	Vec3 position;
 	bot_waypoint_t *cp;
 
-	if(!TeamPlayIsOn()) return;
-	/*  */
+	if(!TeamPlayIsOn()) 
+		return;
 	trap_BotMatchVariable(match, POSITION, buf, MAX_MESSAGE_SIZE);
 	clearv3(position);
-	/*  */
 	trap_BotMatchVariable(match, NETNAME, netname, sizeof(netname));
 	client = ClientFromName(netname);
 	/* BotGPSToPosition(buf, position); */
@@ -1203,14 +1138,16 @@ BotMatch_CheckPoint(bot_state_t *bs, bot_match_t *match)
 		}
 		return;
 	}
-	/*  */
 	trap_BotMatchVariable(match, NAME, buf, MAX_MESSAGE_SIZE);
 	/* check if there already exists a checkpoint with this name */
 	cp = BotFindWayPoint(bs->checkpoints, buf);
 	if(cp){
-		if(cp->next) cp->next->prev = cp->prev;
-		if(cp->prev) cp->prev->next = cp->next;
-		else bs->checkpoints = cp->next;
+		if(cp->next) 
+			cp->next->prev = cp->prev;
+		if(cp->prev) 
+			cp->prev->next = cp->next;
+		else 
+			bs->checkpoints = cp->next;
 		cp->inuse = qfalse;
 	}
 	/* create a new check point */
@@ -1219,7 +1156,6 @@ BotMatch_CheckPoint(bot_state_t *bs, bot_match_t *match)
 	cp->next = bs->checkpoints;
 	if(bs->checkpoints) bs->checkpoints->prev = cp;
 	bs->checkpoints = cp;
-	/*  */
 	if(BotAddressedToBot(bs, match)){
 		Q_sprintf(buf, sizeof(buf), "%1.0f %1.0f %1.0f",
 			cp->goal.origin[0],
@@ -1244,7 +1180,6 @@ BotMatch_FormationSpace(bot_state_t *bs, bot_match_t *match)
 	if(!TeamPlayIsOn()) return;
 	/* if not addressed to this bot */
 	if(!BotAddressedToBot(bs, match)) return;
-	/*  */
 	trap_BotMatchVariable(match, NUMBER, buf, MAX_MESSAGE_SIZE);
 	/* if it's the distance in feet */
 	if(match->subtype & ST_FEET) space = 0.3048 * 32 * atof(buf);
@@ -1269,13 +1204,10 @@ BotMatch_Dismiss(bot_state_t *bs, bot_match_t *match)
 	if(!BotAddressedToBot(bs, match)) return;
 	trap_BotMatchVariable(match, NETNAME, netname, sizeof(netname));
 	client = ClientFromName(netname);
-	/*  */
 	bs->decisionmaker = client;
-	/*  */
 	bs->ltgtype = 0;
 	bs->lead_time = 0;
 	bs->lastgoal_ltgtype = 0;
-	/*  */
 	BotAI_BotInitialChat(bs, "dismissed", NULL);
 	trap_BotEnterChat(bs->cs, client, CHAT_TELL);
 }

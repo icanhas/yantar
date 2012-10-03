@@ -70,19 +70,11 @@ vmCvar_t	pmove_fixed;
 vmCvar_t	pmove_msec;
 vmCvar_t	g_rankings;
 vmCvar_t	g_listEntity;
-#ifdef MISSIONPACK
-vmCvar_t	g_obeliskHealth;
-vmCvar_t	g_obeliskRegenPeriod;
-vmCvar_t	g_obeliskRegenAmount;
-vmCvar_t	g_obeliskRespawnDelay;
-vmCvar_t	g_cubeTimeout;
 vmCvar_t	g_redteam;
 vmCvar_t	g_blueteam;
-vmCvar_t	g_singlePlayer;
+//vmCvar_t	g_singlePlayer;
 vmCvar_t	g_enableDust;
-vmCvar_t	g_enableBreath;
 vmCvar_t	g_proxMineTimeout;
-#endif
 
 static cvarTable_t gameCvarTable[] = {
 	/* don't override the cheat state set by the system */

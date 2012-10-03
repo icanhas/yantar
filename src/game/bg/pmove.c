@@ -763,19 +763,6 @@ setwaterlevel(void)
 static void
 setplayerbounds(void)
 {
-	if(pm->ps->powerups[PW_INVULNERABILITY]){
-		if(pm->ps->pm_flags & PMF_INVULEXPAND){
-			/* invulnerability sphere has a 42 units radius */
-			setv3(pm->mins, -42, -42, -42);
-			setv3(pm->maxs, 42, 42, 42);
-		}else{
-			setv3(pm->mins, MinsX, MinsY, MinsZ);
-			setv3(pm->maxs, MaxsX, MaxsY, MaxsZ);
-		}
-		return;
-	}
-	pm->ps->pm_flags &= ~PMF_INVULEXPAND;
-	
 	setv3(pm->mins, MinsX, MinsY, MinsZ);
 	setv3(pm->maxs, MaxsX, MaxsY, MaxsZ);
 	pm->ps->viewheight = DEFAULT_VIEWHEIGHT;
@@ -974,7 +961,6 @@ doweapevents(void)
 	case WP_GRAPPLING_HOOK:
 		addTime = 1;
 		break;
-#ifdef MISSIONPACK
 	case WP_NAILGUN:
 		addTime = 1000;
 		break;
@@ -984,17 +970,7 @@ doweapevents(void)
 	case WP_CHAINGUN:
 		addTime = 30;
 		break;
-#endif
 	}
-
-#ifdef MISSIONPACK
-	if(bg_itemlist[pm->ps->stats[STAT_PERSISTANT_POWERUP]].giTag == PW_SCOUT)
-		addTime /= 1.5;
-	else
-	if(bg_itemlist[pm->ps->stats[STAT_PERSISTANT_POWERUP]].giTag == PW_AMMOREGEN)
-		addTime /= 1.3;
-	else
-#endif
 	if(pm->ps->powerups[PW_HASTE])
 		addTime /= 1.3;
 	pm->ps->weaponTime += addTime;

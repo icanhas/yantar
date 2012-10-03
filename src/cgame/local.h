@@ -70,13 +70,8 @@
 #define TEAM_OVERLAY_MAXLOCATION_WIDTH	16
 
 #define DEFAULT_MODEL			"sarge"
-#ifdef MISSIONPACK
-#define DEFAULT_TEAM_MODEL		"james"
-#define DEFAULT_TEAM_HEAD		"*james"
-#else
 #define DEFAULT_TEAM_MODEL		"sarge"
 #define DEFAULT_TEAM_HEAD		"sarge"
-#endif
 
 #define DEFAULT_REDTEAM_NAME	"Stroggs"
 #define DEFAULT_BLUETEAM_NAME	"Pagans"
@@ -210,12 +205,7 @@ typedef enum {
 	LE_FADE_RGB,
 	LE_SCALE_FADE,
 	LE_SCOREPLUM,
-#ifdef MISSIONPACK
-	LE_KAMIKAZE,
-	LE_INVULIMPACT,
-	LE_INVULJUICED,
-	LE_SHOWREFENTITY
-#endif
+	LE_SHOWREFENTITY	/* FIXME: MISSIONPACK; remove? */
 } leType_t;
 
 typedef enum {
@@ -538,11 +528,6 @@ typedef struct {
 	int		spectatorOffset;			/* current offset from start */
 	int		spectatorPaintLen;			/* current offset from start */
 
-#ifdef MISSIONPACK
-	/* skull trails */
-	skulltrail_t skulltrails[MAX_CLIENTS];
-#endif
-
 	/* centerprinting */
 	int	centerPrintTime;
 	int	centerPrintCharWidth;
@@ -643,13 +628,7 @@ typedef struct {
 	qhandle_t	charsetPropGlow;
 	qhandle_t	charsetPropB;
 	qhandle_t	whiteShader;
-
-#ifdef MISSIONPACK
-	qhandle_t	redCubeModel;
-	qhandle_t	blueCubeModel;
-	qhandle_t	redCubeIcon;
-	qhandle_t	blueCubeIcon;
-#endif
+	
 	qhandle_t	redFlagModel;
 	qhandle_t	blueFlagModel;
 	qhandle_t	neutralFlagModel;
@@ -667,18 +646,6 @@ typedef struct {
 	qhandle_t	redFlagBaseModel;
 	qhandle_t	blueFlagBaseModel;
 	qhandle_t	neutralFlagBaseModel;
-
-#ifdef MISSIONPACK
-	qhandle_t	overloadBaseModel;
-	qhandle_t	overloadTargetModel;
-	qhandle_t	overloadLightsModel;
-	qhandle_t	overloadEnergyModel;
-
-	qhandle_t	harvesterModel;
-	qhandle_t	harvesterRedSkin;
-	qhandle_t	harvesterBlueSkin;
-	qhandle_t	harvesterNeutralModel;
-#endif
 
 	qhandle_t	armorModel;
 	qhandle_t	armorIcon;
@@ -728,10 +695,8 @@ typedef struct {
 	qhandle_t	plasmaBallShader;
 	qhandle_t	waterBubbleShader;
 	qhandle_t	bloodTrailShader;
-#ifdef MISSIONPACK
 	qhandle_t	nailPuffShader;
 	qhandle_t	blueProxMine;
-#endif
 
 	qhandle_t	numberShaders[11];
 
@@ -777,21 +742,8 @@ typedef struct {
 	/* special effects models */
 	qhandle_t	teleportEffectModel;
 	qhandle_t	teleportEffectShader;
-#ifdef MISSIONPACK
-	qhandle_t	kamikazeEffectModel;
-	qhandle_t	kamikazeShockWave;
-	qhandle_t	kamikazeHeadModel;
-	qhandle_t	kamikazeHeadTrail;
-	qhandle_t	guardPowerupModel;
-	qhandle_t	scoutPowerupModel;
-	qhandle_t	doublerPowerupModel;
-	qhandle_t	ammoRegenPowerupModel;
-	qhandle_t	invulnerabilityImpactModel;
-	qhandle_t	invulnerabilityJuicedModel;
 	qhandle_t	medkitUsageModel;
 	qhandle_t	dustPuffShader;
-	qhandle_t	heartShader;
-#endif
 	qhandle_t	invulnerabilityPowerupModel;
 
 	/* scoreboard headers */
@@ -824,7 +776,6 @@ typedef struct {
 	/* sfxHandle_t	sfx_railg; */
 	sfxHandle_t	sfx_rockexp;
 	sfxHandle_t	sfx_plasmaexp;
-#ifdef MISSIONPACK
 	sfxHandle_t	sfx_proxexp;
 	sfxHandle_t	sfx_nghit;
 	sfxHandle_t	sfx_nghitflesh;
@@ -832,21 +783,8 @@ typedef struct {
 	sfxHandle_t	sfx_chghit;
 	sfxHandle_t	sfx_chghitflesh;
 	sfxHandle_t	sfx_chghitmetal;
-	sfxHandle_t	kamikazeExplodeSound;
-	sfxHandle_t	kamikazeImplodeSound;
-	sfxHandle_t	kamikazeFarSound;
-	sfxHandle_t	useInvulnerabilitySound;
-	sfxHandle_t	invulnerabilityImpactSound1;
-	sfxHandle_t	invulnerabilityImpactSound2;
-	sfxHandle_t	invulnerabilityImpactSound3;
-	sfxHandle_t	invulnerabilityJuicedSound;
-	sfxHandle_t	obeliskHitSound1;
-	sfxHandle_t	obeliskHitSound2;
-	sfxHandle_t	obeliskHitSound3;
-	sfxHandle_t	obeliskRespawnSound;
 	sfxHandle_t	winnerSound;
 	sfxHandle_t	loserSound;
-#endif
 	sfxHandle_t	gibSound;
 	sfxHandle_t	gibBounce1Sound;
 	sfxHandle_t	gibBounce2Sound;
@@ -944,11 +882,6 @@ typedef struct {
 	qhandle_t	escortShader;
 	qhandle_t	flagShaders[3];
 	sfxHandle_t	countPrepareTeamSound;
-
-	sfxHandle_t	ammoregenSound;
-	sfxHandle_t	doublerSound;
-	sfxHandle_t	guardSound;
-	sfxHandle_t	scoutSound;
 #endif
 	qhandle_t	cursor;
 	qhandle_t	selectCursor;
@@ -1166,7 +1099,6 @@ extern vmCvar_t		cg_enableBreath;
 extern vmCvar_t		cg_singlePlayerActive;
 extern vmCvar_t		cg_recordSPDemo;
 extern vmCvar_t		cg_recordSPDemoName;
-extern vmCvar_t		cg_obeliskRespawnDelay;
 #endif
 
 /*
@@ -1413,14 +1345,6 @@ localEntity_t*CG_SmokePuff(const Vec3 p,
 			   qhandle_t hShader);
 void CG_BubbleTrail(Vec3 start, Vec3 end, float spacing);
 void CG_SpawnEffect(Vec3 org);
-#ifdef MISSIONPACK
-void CG_KamikazeEffect(Vec3 org);
-void CG_ObeliskExplode(Vec3 org, int entityNum);
-void CG_ObeliskPain(Vec3 org);
-void CG_InvulnerabilityImpact(Vec3 org, Vec3 angles);
-void CG_InvulnerabilityJuiced(Vec3 org);
-void CG_LightningBoltBeam(Vec3 start, Vec3 end);
-#endif
 void CG_ScorePlum(int client, Vec3 org, int score);
 
 void CG_GibPlayer(Vec3 playerOrigin);

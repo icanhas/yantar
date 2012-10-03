@@ -291,12 +291,7 @@ struct gclient_s {
 	 * like health / armor countdowns and regeneration */
 	int timeResidual;
 
-#ifdef MISSIONPACK
 	gentity_t	*persistantPowerup;
-	int		portalID;
-	int		ammoTimes[WP_NUM_WEAPONS];
-	int		invulnerabilityTime;
-#endif
 
 	char *areabits;
 };

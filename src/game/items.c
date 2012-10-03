@@ -112,8 +112,6 @@ Pickup_PersistantPowerup(gentity_t *ent, gentity_t *other)
 	float	handicap;
 	int	max;
 
-	other->client->ps.stats[STAT_PERSISTANT_POWERUP] = ent->item -
-							   bg_itemlist;
 	other->client->persistantPowerup = ent;
 
 	switch(ent->item->giTag){
@@ -158,8 +156,6 @@ Pickup_PersistantPowerup(gentity_t *ent, gentity_t *other)
 		if(handicap<=0.0f || handicap>100.0f)
 			handicap = 100.0f;
 		other->client->pers.maxHealth = handicap;
-		memset(other->client->ammoTimes, 0,
-			sizeof(other->client->ammoTimes));
 		break;
 	default:
 		clientNum = other->client->ps.clientNum;
@@ -271,12 +267,6 @@ Pickup_Health(gentity_t *ent, gentity_t *other)
 	int	quantity;
 
 	/* small and mega healths will go over the max */
-#ifdef MISSIONPACK
-	if(bg_itemlist[other->client->ps.stats[STAT_PERSISTANT_POWERUP]].giTag
-	   == PW_GUARD)
-		max = other->client->ps.stats[STAT_MAX_HEALTH];
-	else
-#endif
 	if(ent->item->quantity != 5 && ent->item->quantity != 100)
 		max = other->client->ps.stats[STAT_MAX_HEALTH];
 	else
@@ -299,40 +289,17 @@ Pickup_Health(gentity_t *ent, gentity_t *other)
 	return RESPAWN_HEALTH;
 }
 
-/* ====================================================================== */
-
 int
 Pickup_Armor(gentity_t *ent, gentity_t *other)
 {
-#ifdef MISSIONPACK
-	int upperBound;
-
-	other->client->ps.stats[STAT_ARMOR] += ent->item->quantity;
-
-	if(other->client &&
-	   bg_itemlist[other->client->ps.stats[STAT_PERSISTANT_POWERUP]].giTag
-	   ==
-	   PW_GUARD)
-		upperBound = other->client->ps.stats[STAT_MAX_HEALTH];
-	else
-		upperBound = other->client->ps.stats[STAT_MAX_HEALTH] * 2;
-
-	if(other->client->ps.stats[STAT_ARMOR] > upperBound)
-		other->client->ps.stats[STAT_ARMOR] = upperBound;
-
-#else
 	other->client->ps.stats[STAT_ARMOR] += ent->item->quantity;
 	if(other->client->ps.stats[STAT_ARMOR] >
 	   other->client->ps.stats[STAT_MAX_HEALTH] * 2)
 		other->client->ps.stats[STAT_ARMOR] =
 			other->client->ps.stats[STAT_MAX_HEALTH] * 2;
 
-#endif
-
 	return RESPAWN_ARMOR;
 }
-
-/* ====================================================================== */
 
 /*
  * RespawnItem
@@ -568,12 +535,8 @@ LaunchItem(gitem_t *item, Vec3 origin, Vec3 velocity)
 	copyv3(velocity, dropped->s.pos.trDelta);
 
 	dropped->s.eFlags |= EF_BOUNCE_HALF;
-#ifdef MISSIONPACK
-	if((g_gametype.integer == GT_CTF || g_gametype.integer ==
-	    GT_1FCTF)                    && item->giType == IT_TEAM){	/* Special case for CTF flags */
-#else
-	if(g_gametype.integer == GT_CTF && item->giType == IT_TEAM){	/* Special case for CTF flags */
-#endif
+	if((g_gametype.integer == GT_CTF || g_gametype.integer == GT_1FCTF) 
+	  && item->giType == IT_TEAM){	/* Special case for CTF flags */
 		dropped->think = Team_DroppedFlagThink;
 		dropped->nextthink = level.time + 30000;
 		Team_CheckDroppedItem(dropped);
@@ -724,7 +687,6 @@ G_CheckTeamItems(void)
 				S_COLOR_YELLOW
 				"WARNING: No team_CTF_blueflag in map\n");
 	}
-#ifdef MISSIONPACK
 	if(g_gametype.integer == GT_1FCTF){
 		gitem_t *item;
 
@@ -745,52 +707,6 @@ G_CheckTeamItems(void)
 				S_COLOR_YELLOW
 				"WARNING: No team_CTF_neutralflag in map\n");
 	}
-
-	if(g_gametype.integer == GT_OBELISK){
-		gentity_t *ent;
-
-		/* check for the two obelisks */
-		ent = NULL;
-		ent = G_Find(ent, FOFS(classname), "team_redobelisk");
-		if(!ent)
-			G_Printf(
-				S_COLOR_YELLOW
-				"WARNING: No team_redobelisk in map\n");
-
-		ent = NULL;
-		ent = G_Find(ent, FOFS(classname), "team_blueobelisk");
-		if(!ent)
-			G_Printf(
-				S_COLOR_YELLOW
-				"WARNING: No team_blueobelisk in map\n");
-	}
-
-	if(g_gametype.integer == GT_HARVESTER){
-		gentity_t *ent;
-
-		/* check for all three obelisks */
-		ent = NULL;
-		ent = G_Find(ent, FOFS(classname), "team_redobelisk");
-		if(!ent)
-			G_Printf(
-				S_COLOR_YELLOW
-				"WARNING: No team_redobelisk in map\n");
-
-		ent = NULL;
-		ent = G_Find(ent, FOFS(classname), "team_blueobelisk");
-		if(!ent)
-			G_Printf(
-				S_COLOR_YELLOW
-				"WARNING: No team_blueobelisk in map\n");
-
-		ent = NULL;
-		ent = G_Find(ent, FOFS(classname), "team_neutralobelisk");
-		if(!ent)
-			G_Printf(
-				S_COLOR_YELLOW
-				"WARNING: No team_neutralobelisk in map\n");
-	}
-#endif
 }
 
 /*

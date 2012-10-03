@@ -94,9 +94,7 @@ typedef enum {
 
 	GT_TEAM,	/* team deathmatch */
 	GT_CTF,		/* capture the flag */
-	GT_1FCTF,
-	GT_OBELISK,
-	GT_HARVESTER,
+	GT_1FCTF,	/* one-flag CTF */
 	GT_MAX_GAME_TYPE
 } gametype_t;
 
@@ -130,18 +128,17 @@ typedef enum {
 
 /* pmove->pm_flags */
 enum {
-	PMF_INVULEXPAND		= (1<<0),	/* invulnerability sphere set to full size */
-	PMF_JUMP_HELD		= (1<<1),
-	PMF_BACKWARDS_JUMP	= (1<<2),	/* go into backwards land */
-	PMF_BACKWARDS_RUN	= (1<<3),	/* coast down to backwards run */
-	PMF_TIME_LAND		= (1<<4),	/* pm_time is time before rejump */
-	PMF_TIME_KNOCKBACK	= (1<<5),	/* pm_time is an air-accelerate only time */
-	PMF_TIME_WATERJUMP	= (1<<6),	/* pm_time is waterjump */
-	PMF_RESPAWNED		= (1<<7),	/* clear after attack and jump buttons come up */
-	PMF_USE_ITEM_HELD	= (1<<8),
-	PMF_GRAPPLE_PULL		= (1<<9),	/* pull towards grapple location */
-	PMF_FOLLOW			= (1<<10),/* spectate following another player */
-	PMF_SCOREBOARD		= (1<<11),/* spectate as a scoreboard */
+	PMF_JUMP_HELD		= (1<<0),
+	PMF_BACKWARDS_JUMP	= (1<<1),	/* go into backwards land */
+	PMF_BACKWARDS_RUN	= (1<<2),	/* coast down to backwards run */
+	PMF_TIME_LAND		= (1<<3),	/* pm_time is time before rejump */
+	PMF_TIME_KNOCKBACK	= (1<<4),	/* pm_time is an air-accelerate only time */
+	PMF_TIME_WATERJUMP	= (1<<5),	/* pm_time is waterjump */
+	PMF_RESPAWNED		= (1<<6),	/* clear after attack and jump buttons come up */
+	PMF_USE_ITEM_HELD	= (1<<7),
+	PMF_GRAPPLE_PULL		= (1<<8),	/* pull towards grapple location */
+	PMF_FOLLOW			= (1<<9),/* spectate following another player */
+	PMF_SCOREBOARD		= (1<<10),/* spectate as a scoreboard */
 
 	PMF_ALL_TIMES		= (PMF_TIME_WATERJUMP|PMF_TIME_LAND 
 							| PMF_TIME_KNOCKBACK)
@@ -196,9 +193,7 @@ void Pmove(pmove_t *pmove);
 typedef enum {
 	STAT_HEALTH,
 	STAT_HOLDABLE_ITEM,
-#ifdef MISSIONPACK
-	STAT_PERSISTANT_POWERUP,
-#endif
+	STAT_PERSISTENT_POWERUP,
 	STAT_WEAPONS,	/* 16 bit fields */
 	STAT_ARMOR,
 	STAT_DEAD_YAW,		/* look this direction when dead (FIXME: get rid of?) */
@@ -233,9 +228,7 @@ typedef enum {
 
 /* entityState_t->eFlags */
 #define EF_DEAD			0x00000001	/* don't draw a foe marker over players with EF_DEAD */
-#ifdef MISSIONPACK
 #define EF_TICKING		0x00000002	/* used to make players play the prox mine ticking sound */
-#endif
 #define EF_TELEPORT_BIT		0x00000004	/* toggled every time the origin abruptly changes */
 #define EF_AWARD_EXCELLENT	0x00000008	/* draw an excellent sprite */
 #define EF_PLAYER_EVENT		0x00000010
@@ -259,7 +252,6 @@ typedef enum {
 /* NOTE: may not have more than 16 */
 typedef enum {
 	PW_NONE,
-
 	PW_QUAD,
 	PW_BATTLESUIT,
 	PW_HASTE,
@@ -271,32 +263,23 @@ typedef enum {
 	PW_BLUEFLAG,
 	PW_NEUTRALFLAG,
 
-	PW_SCOUT,
-	PW_GUARD,
-	PW_DOUBLER,
-	PW_AMMOREGEN,
-	PW_INVULNERABILITY,
-
 	PW_NUM_POWERUPS
 
 } powerup_t;
 
 typedef enum {
 	HI_NONE,
-
 	HI_TELEPORTER,
 	HI_MEDKIT,
 	HI_KAMIKAZE,
 	HI_PORTAL,
 	HI_INVULNERABILITY,
-
 	HI_NUM_HOLDABLE
 } holdable_t;
 
 
 typedef enum {
 	WP_NONE,
-
 	WP_GAUNTLET,
 	WP_MACHINEGUN,
 	WP_SHOTGUN,
@@ -307,15 +290,11 @@ typedef enum {
 	WP_PLASMAGUN,
 	WP_BFG,
 	WP_GRAPPLING_HOOK,
-#ifdef MISSIONPACK
 	WP_NAILGUN,
 	WP_PROX_LAUNCHER,
 	WP_CHAINGUN,
-#endif
-
 	WP_NUM_WEAPONS
 } weapon_t;
-
 
 /* reward sounds (stored in ps->persistant[PERS_PLAYEREVENTS]) */
 #define PLAYEREVENT_DENIEDREWARD	0x0001
@@ -421,16 +400,8 @@ typedef enum {
 	EV_GIB_PLAYER,	/* gib a previously living player */
 	EV_SCOREPLUM,	/* score plum */
 
-/* #ifdef MISSIONPACK */
 	EV_PROXIMITY_MINE_STICK,
 	EV_PROXIMITY_MINE_TRIGGER,
-	EV_KAMIKAZE,		/* kamikaze explodes */
-	EV_OBELISKEXPLODE,	/* obelisk explodes */
-	EV_OBELISKPAIN,		/* obelisk is in pain */
-	EV_INVUL_IMPACT,	/* invulnerability sphere impact */
-	EV_JUICED,		/* invulnerability juiced effect */
-	EV_LIGHTNINGBOLT,	/* lightning bolt bounced of invulnerability sphere */
-/* #endif */
 
 	EV_DEBUG_LINE,
 	EV_STOPLOOPINGSOUND,
@@ -586,13 +557,9 @@ typedef enum {
 	MOD_SUICIDE,
 	MOD_TARGET_LASER,
 	MOD_TRIGGER_HURT,
-#ifdef MISSIONPACK
 	MOD_NAIL,
 	MOD_CHAINGUN,
 	MOD_PROXIMITY_MINE,
-	MOD_KAMIKAZE,
-	MOD_JUICED,
-#endif
 	MOD_GRAPPLE
 } meansOfDeath_t;
 

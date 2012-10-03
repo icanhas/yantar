@@ -926,7 +926,7 @@ CG_DrawCTFPowerUp(rectDef_t *rect)
 
 	if(cgs.gametype < GT_CTF)
 		return;
-	value = cg.snap->ps.stats[STAT_PERSISTANT_POWERUP];
+	value = 0 //cg.snap->ps.stats[STAT_PERSISTANT_POWERUP];
 	if(value){
 		CG_RegisterItemVisuals(value);
 		CG_DrawPic(rect->x, rect->y, rect->w, rect->h,

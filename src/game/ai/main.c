@@ -274,32 +274,19 @@ BotReportStatus(bot_state_t *bs)
 	else leader = " ";
 
 	strcpy(flagstatus, "  ");
-	if(gametype == GT_CTF)
+	if(gametype == GT_CTF){
 		if(BotCTFCarryingFlag(bs)){
 			if(BotTeam(bs) == TEAM_RED) strcpy(flagstatus,
 					S_COLOR_RED "F ");
 			else strcpy(flagstatus, S_COLOR_BLUE "F ");
 		}
-
-#ifdef MISSIONPACK
-	else if(gametype == GT_1FCTF){
+	}else if(gametype == GT_1FCTF){
 		if(Bot1FCTFCarryingFlag(bs)){
 			if(BotTeam(bs) == TEAM_RED) strcpy(flagstatus,
 					S_COLOR_RED "F ");
 			else strcpy(flagstatus, S_COLOR_BLUE "F ");
 		}
-	}else if(gametype == GT_HARVESTER)
-		if(BotHarvesterCarryingCubes(bs)){
-			if(BotTeam(bs) == TEAM_RED) Q_sprintf(
-					flagstatus, sizeof(flagstatus),
-					S_COLOR_RED "%2d",
-					bs->inventory[INVENTORY_REDCUBE]);
-			else Q_sprintf(flagstatus, sizeof(flagstatus),
-					S_COLOR_BLUE "%2d",
-					bs->inventory[INVENTORY_BLUECUBE]);
-		}
-
-#endif
+	}
 
 	switch(bs->ltgtype){
 	case LTG_TEAMHELP:
@@ -452,25 +439,13 @@ BotSetInfoConfigString(bot_state_t *bs)
 	else leader = " ";
 
 	strcpy(carrying, "  ");
-	if(gametype == GT_CTF)
+	if(gametype == GT_CTF){
 		if(BotCTFCarryingFlag(bs))
 			strcpy(carrying, "F ");
-
-#ifdef MISSIONPACK
-	else if(gametype == GT_1FCTF){
+	}else if(gametype == GT_1FCTF){
 		if(Bot1FCTFCarryingFlag(bs))
 			strcpy(carrying, "F ");
-	}else if(gametype == GT_HARVESTER)
-		if(BotHarvesterCarryingCubes(bs)){
-			if(BotTeam(bs) ==
-			   TEAM_RED) Q_sprintf(
-					carrying, sizeof(carrying), "%2d",
-					bs->inventory[INVENTORY_REDCUBE]);
-			else Q_sprintf(carrying, sizeof(carrying), "%2d",
-					bs->inventory[INVENTORY_BLUECUBE]);
-		}
-
-#endif
+	}
 
 	switch(bs->ltgtype){
 	case LTG_TEAMHELP:

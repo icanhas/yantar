@@ -61,14 +61,10 @@ BotVoiceChat_GetFlag(bot_state_t *bs, int client, int mode)
 	if(gametype == GT_CTF)
 		if(!ctf_redflag.areanum || !ctf_blueflag.areanum)
 			return;
-
-#ifdef MISSIONPACK
 	else if(gametype == GT_1FCTF)
 		if(!ctf_neutralflag.areanum || !ctf_redflag.areanum ||
 		   !ctf_blueflag.areanum)
 			return;
-
-#endif
 	else
 		return;
 	/*  */
@@ -100,51 +96,24 @@ BotVoiceChat_GetFlag(bot_state_t *bs, int client, int mode)
 void
 BotVoiceChat_Offense(bot_state_t *bs, int client, int mode)
 {
-	if(gametype == GT_CTF
-#ifdef MISSIONPACK
-	   || gametype == GT_1FCTF
-#endif
-	   ){
+	if(gametype == GT_CTF || gametype == GT_1FCTF){
 		BotVoiceChat_GetFlag(bs, client, mode);
 		return;
 	}
-#ifdef MISSIONPACK
-	if(gametype == GT_HARVESTER){
-		/*  */
-		bs->decisionmaker = client;
-		bs->ordered = qtrue;
-		bs->order_time = FloatTime();
-		/* set the time to send a message to the team mates */
-		bs->teammessage_time = FloatTime() + 2 * random();
-		/* set the ltg type */
-		bs->ltgtype = LTG_HARVEST;
-		/* set the team goal time */
-		bs->teamgoal_time = FloatTime() + TEAM_HARVEST_TIME;
-		bs->harvestaway_time = 0;
-		/*  */
-		BotSetTeamStatus(bs);
-		/* remember last ordered task */
-		BotRememberLastOrderedTask(bs);
-	}else
-#endif
-	{
-		/*  */
-		bs->decisionmaker = client;
-		bs->ordered = qtrue;
-		bs->order_time = FloatTime();
-		/* set the time to send a message to the team mates */
-		bs->teammessage_time = FloatTime() + 2 * random();
-		/* set the ltg type */
-		bs->ltgtype = LTG_ATTACKENEMYBASE;
-		/* set the team goal time */
-		bs->teamgoal_time = FloatTime() +
-				    TEAM_ATTACKENEMYBASE_TIME;
-		bs->attackaway_time = 0;
-		/*  */
-		BotSetTeamStatus(bs);
-		/* remember last ordered task */
-		BotRememberLastOrderedTask(bs);
-	}
+	bs->decisionmaker = client;
+	bs->ordered = qtrue;
+	bs->order_time = FloatTime();
+	/* set the time to send a message to the team mates */
+	bs->teammessage_time = FloatTime() + 2 * random();
+	/* set the ltg type */
+	bs->ltgtype = LTG_ATTACKENEMYBASE;
+	/* set the team goal time */
+	bs->teamgoal_time = FloatTime() +
+			    TEAM_ATTACKENEMYBASE_TIME;
+	bs->attackaway_time = 0;
+	BotSetTeamStatus(bs);
+	/* remember last ordered task */
+	BotRememberLastOrderedTask(bs);
 #ifdef DEBUG
 	BotPrintTeamGoal(bs);
 #endif	/* DEBUG */
@@ -371,14 +340,8 @@ void
 BotVoiceChat_ReturnFlag(bot_state_t *bs, int client, int mode)
 {
 	/* if not in CTF mode */
-	if(
-		gametype != GT_CTF
-#ifdef MISSIONPACK
-		&& gametype != GT_1FCTF
-#endif
-		)
+	if(gametype != GT_CTF && gametype != GT_1FCTF)
 		return;
-	/*  */
 	bs->decisionmaker = client;
 	bs->ordered = qtrue;
 	bs->order_time = FloatTime();

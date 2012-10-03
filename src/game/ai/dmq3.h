@@ -133,20 +133,9 @@ void BotRememberLastOrderedTask(bot_state_t *bs);
 void BotCTFSeekGoals(bot_state_t *bs);
 /* set ctf goals (defend base, get enemy flag) during retreat */
 void BotCTFRetreatGoals(bot_state_t *bs);
-/*  */
-#ifdef MISSIONPACK
 int Bot1FCTFCarryingFlag(bot_state_t *bs);
-int BotHarvesterCarryingCubes(bot_state_t *bs);
 void Bot1FCTFSeekGoals(bot_state_t *bs);
 void Bot1FCTFRetreatGoals(bot_state_t *bs);
-void BotObeliskSeekGoals(bot_state_t *bs);
-void BotObeliskRetreatGoals(bot_state_t *bs);
-void BotGoHarvest(bot_state_t *bs);
-void BotHarvesterSeekGoals(bot_state_t *bs);
-void BotHarvesterRetreatGoals(bot_state_t *bs);
-int BotTeamCubeCarrierVisible(bot_state_t *bs);
-int BotEnemyCubeCarrierVisible(bot_state_t *bs);
-#endif
 /* get a random alternate route goal towards the given base */
 int BotGetAlternateRouteGoal(bot_state_t *bs, int base);
 /* returns either the alternate route goal or the given goal */
@@ -185,9 +174,5 @@ extern vmCvar_t bot_challenge;
 
 extern bot_goal_t	ctf_redflag;
 extern bot_goal_t	ctf_blueflag;
-#ifdef MISSIONPACK
 extern bot_goal_t	ctf_neutralflag;
-extern bot_goal_t	redobelisk;
-extern bot_goal_t	blueobelisk;
-extern bot_goal_t	neutralobelisk;
-#endif
+extern bot_goal_t	neutralobelisk;	/* FIXME: remove? */

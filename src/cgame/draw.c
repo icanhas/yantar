@@ -1437,29 +1437,7 @@ CG_DrawHoldableItem(void)
 	}
 
 }
-#endif	/* MISSIONPACK */
-
-#ifdef MISSIONPACK
-/*
- * CG_DrawPersistantPowerup
- */
-#if 0	/* sos001208 - DEAD */
-static void
-CG_DrawPersistantPowerup(void)
-{
-	int value;
-
-	value = cg.snap->ps.stats[STAT_PERSISTANT_POWERUP];
-	if(value){
-		CG_RegisterItemVisuals(value);
-		CG_DrawPic(640-ICON_SIZE,
-			(SCREEN_HEIGHT-ICON_SIZE)/2 - ICON_SIZE, ICON_SIZE,
-			ICON_SIZE,
-			cg_items[ value ].icon);
-	}
-}
-#endif
-#endif	/* MISSIONPACK */
+#endif	/* !MISSIONPACK */
 
 
 /*
@@ -2407,17 +2385,11 @@ CG_DrawWarmup(void)
 			s = "Free For All";
 		else if(cgs.gametype == GT_TEAM)
 			s = "Team Deathmatch";
-		else if(cgs.gametype == GT_CTF){
+		else if(cgs.gametype == GT_CTF)
 			s = "Capture the Flag";
-#ifdef MISSIONPACK
-		}else if(cgs.gametype == GT_1FCTF)
+		else if(cgs.gametype == GT_1FCTF)
 			s = "One Flag CTF";
-		else if(cgs.gametype == GT_OBELISK)
-			s = "Overload";
-		else if(cgs.gametype == GT_HARVESTER){
-			s = "Harvester";
-#endif
-		}else
+		else
 			s = "";
 
 #ifdef MISSIONPACK
@@ -2577,12 +2549,7 @@ CG_Draw2D(stereoFrame_t stereoFrame)
 				CG_DrawCrosshair();
 			CG_DrawCrosshairNames();
 			CG_DrawWeaponSelect();
-
-#ifndef MISSIONPACK
 			CG_DrawHoldableItem();
-#else
-			/* CG_DrawPersistantPowerup(); */
-#endif
 			CG_DrawReward();
 		}
 

@@ -765,22 +765,12 @@ CG_CalcEntityLerpPositions(centity_t *cent)
 			cent->lerpOrigin);
 }
 
-/*
- * CG_TeamBase
- */
 static void
 CG_TeamBase(centity_t *cent)
 {
 	refEntity_t model;
-#ifdef MISSIONPACK
-	Vec3	angles;
-	int	t, h;
-	float	c;
 
 	if(cgs.gametype == GT_CTF || cgs.gametype == GT_1FCTF){
-#else
-	if(cgs.gametype == GT_CTF){
-#endif
 		/* show the flag base */
 		memset(&model, 0, sizeof(model));
 		model.reType = RT_MODEL;
@@ -795,120 +785,6 @@ CG_TeamBase(centity_t *cent)
 			model.hModel = cgs.media.neutralFlagBaseModel;
 		trap_R_AddRefEntityToScene(&model);
 	}
-#ifdef MISSIONPACK
-	else if(cgs.gametype == GT_OBELISK){
-		/* show the obelisk */
-		memset(&model, 0, sizeof(model));
-		model.reType = RT_MODEL;
-		copyv3(cent->lerpOrigin, model.lightingOrigin);
-		copyv3(cent->lerpOrigin, model.origin);
-		eulertoaxis(cent->currentState.angles, model.axis);
-
-		model.hModel = cgs.media.overloadBaseModel;
-		trap_R_AddRefEntityToScene(&model);
-		/* if hit */
-		if(cent->currentState.frame == 1){
-			/* show hit model
-			 * modelindex2 is the health value of the obelisk */
-			c = cent->currentState.modelindex2;
-			model.shaderRGBA[0] = 0xff;
-			model.shaderRGBA[1] = c;
-			model.shaderRGBA[2] = c;
-			model.shaderRGBA[3] = 0xff;
-			/*  */
-			model.hModel = cgs.media.overloadEnergyModel;
-			trap_R_AddRefEntityToScene(&model);
-		}
-		/* if respawning */
-		if(cent->currentState.frame == 2){
-			if(!cent->miscTime)
-				cent->miscTime = cg.time;
-			t = cg.time - cent->miscTime;
-			h = (cg_obeliskRespawnDelay.integer - 5) * 1000;
-			/*  */
-			if(t > h){
-				c = (float)(t - h) / h;
-				if(c > 1)
-					c = 1;
-			}else
-				c = 0;
-			/* show the lights */
-			eulertoaxis(cent->currentState.angles, model.axis);
-			/*  */
-			model.shaderRGBA[0] = c * 0xff;
-			model.shaderRGBA[1] = c * 0xff;
-			model.shaderRGBA[2] = c * 0xff;
-			model.shaderRGBA[3] = c * 0xff;
-
-			model.hModel = cgs.media.overloadLightsModel;
-			trap_R_AddRefEntityToScene(&model);
-			/* show the target */
-			if(t > h){
-				if(!cent->muzzleFlashTime){
-					trap_S_StartSound (
-						cent->lerpOrigin, ENTITYNUM_NONE,
-						CHAN_BODY,
-						cgs.media.obeliskRespawnSound);
-					cent->muzzleFlashTime = 1;
-				}
-				copyv3(cent->currentState.angles, angles);
-				angles[YAW] += (float)16 *
-					       acos(1-c) * 180 / M_PI;
-				eulertoaxis(angles, model.axis);
-
-				scalev3(model.axis[0], c, model.axis[0]);
-				scalev3(model.axis[1], c, model.axis[1]);
-				scalev3(model.axis[2], c, model.axis[2]);
-
-				model.shaderRGBA[0] = 0xff;
-				model.shaderRGBA[1] = 0xff;
-				model.shaderRGBA[2] = 0xff;
-				model.shaderRGBA[3] = 0xff;
-				/*  */
-				model.origin[2] += 56;
-				model.hModel = cgs.media.overloadTargetModel;
-				trap_R_AddRefEntityToScene(&model);
-			}else{
-				/* FIXME: show animated smoke */
-			}
-		}else{
-			cent->miscTime = 0;
-			cent->muzzleFlashTime = 0;
-			/* modelindex2 is the health value of the obelisk */
-			c = cent->currentState.modelindex2;
-			model.shaderRGBA[0] = 0xff;
-			model.shaderRGBA[1] = c;
-			model.shaderRGBA[2] = c;
-			model.shaderRGBA[3] = 0xff;
-			/* show the lights */
-			model.hModel = cgs.media.overloadLightsModel;
-			trap_R_AddRefEntityToScene(&model);
-			/* show the target */
-			model.origin[2] += 56;
-			model.hModel = cgs.media.overloadTargetModel;
-			trap_R_AddRefEntityToScene(&model);
-		}
-	}else if(cgs.gametype == GT_HARVESTER){
-		/* show harvester model */
-		memset(&model, 0, sizeof(model));
-		model.reType = RT_MODEL;
-		copyv3(cent->lerpOrigin, model.lightingOrigin);
-		copyv3(cent->lerpOrigin, model.origin);
-		eulertoaxis(cent->currentState.angles, model.axis);
-
-		if(cent->currentState.modelindex == TEAM_RED){
-			model.hModel = cgs.media.harvesterModel;
-			model.customSkin = cgs.media.harvesterRedSkin;
-		}else if(cent->currentState.modelindex == TEAM_BLUE){
-			model.hModel = cgs.media.harvesterModel;
-			model.customSkin = cgs.media.harvesterBlueSkin;
-		}else{
-			model.hModel = cgs.media.harvesterNeutralModel;
-			model.customSkin = 0;
-		}
-		trap_R_AddRefEntityToScene(&model);
-	}
-#endif
 }
 
 /*

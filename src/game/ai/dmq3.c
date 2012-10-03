@@ -80,12 +80,8 @@ int	max_bspmodelindex;	/* maximum BSP model index */
 /* CTF flag goals */
 bot_goal_t	ctf_redflag;
 bot_goal_t	ctf_blueflag;
-#ifdef MISSIONPACK
 bot_goal_t	ctf_neutralflag;
-bot_goal_t	redobelisk;
-bot_goal_t	blueobelisk;
 bot_goal_t	neutralobelisk;
-#endif
 
 #define MAX_ALTROUTEGOALS 32
 
@@ -259,35 +255,6 @@ EntityHasQuad(aas_entityinfo_t *entinfo)
 	return qfalse;
 }
 
-#ifdef MISSIONPACK
-/*
- * EntityHasKamikze
- */
-qbool
-EntityHasKamikaze(aas_entityinfo_t *entinfo)
-{
-	if(entinfo->flags & EF_KAMIKAZE)
-		return qtrue;
-	return qfalse;
-}
-
-/*
- * EntityCarriesCubes
- */
-qbool
-EntityCarriesCubes(aas_entityinfo_t *entinfo)
-{
-	entityState_t state;
-
-	if(gametype != GT_HARVESTER)
-		return qfalse;
-	/* FIXME: get this info from the aas_entityinfo_t ? */
-	BotAI_GetEntityState(entinfo->number, &state);
-	if(state.generic1 > 0)
-		return qtrue;
-	return qfalse;
-}
-
 /*
  * Bot1FCTFCarryingFlag
  */
@@ -299,20 +266,6 @@ Bot1FCTFCarryingFlag(bot_state_t *bs)
 	if(bs->inventory[INVENTORY_NEUTRALFLAG] > 0) return qtrue;
 	return qfalse;
 }
-
-/*
- * BotHarvesterCarryingCubes
- */
-int
-BotHarvesterCarryingCubes(bot_state_t *bs)
-{
-	if(gametype != GT_HARVESTER) return qfalse;
-
-	if(bs->inventory[INVENTORY_REDCUBE] > 0) return qtrue;
-	if(bs->inventory[INVENTORY_BLUECUBE] > 0) return qtrue;
-	return qfalse;
-}
-#endif
 
 /*
  * BotRememberLastOrderedTask
@@ -345,8 +298,7 @@ BotSetTeamStatus(bot_state_t *bs)
 		break;
 	case LTG_TEAMACCOMPANY:
 		BotEntityInfo(bs->teammate, &entinfo);
-		if(((gametype == GT_CTF ||
-		     gametype == GT_1FCTF) && EntityCarriesFlag(&entinfo))
+		if(((gametype == GT_CTF || gametype == GT_1FCTF) && EntityCarriesFlag(&entinfo))
 		   || (gametype == GT_HARVESTER && EntityCarriesCubes(&entinfo)))
 			teamtask = TEAMTASK_ESCORT;
 		else
@@ -760,7 +712,6 @@ BotCTFRetreatGoals(bot_state_t *bs)
 		}
 }
 
-#ifdef MISSIONPACK
 /*
  * Bot1FCTFSeekGoals
  */
@@ -1006,275 +957,6 @@ Bot1FCTFRetreatGoals(bot_state_t *bs)
 }
 
 /*
- * BotObeliskSeekGoals
- */
-void
-BotObeliskSeekGoals(bot_state_t *bs)
-{
-	float rnd, l1, l2;
-
-	/* don't just do something wait for the bot team leader to give orders */
-	if(BotTeamLeader(bs))
-		return;
-	/* if the bot is ordered to do something */
-	if(bs->lastgoal_ltgtype)
-		bs->teamgoal_time += 60;
-	/* if already a team goal */
-	if(bs->ltgtype == LTG_TEAMHELP ||
-	   bs->ltgtype == LTG_TEAMACCOMPANY ||
-	   bs->ltgtype == LTG_DEFENDKEYAREA ||
-	   bs->ltgtype == LTG_GETFLAG ||
-	   bs->ltgtype == LTG_RUSHBASE ||
-	   bs->ltgtype == LTG_RETURNFLAG ||
-	   bs->ltgtype == LTG_CAMPORDER ||
-	   bs->ltgtype == LTG_PATROL ||
-	   bs->ltgtype == LTG_ATTACKENEMYBASE ||
-	   bs->ltgtype == LTG_GETITEM ||
-	   bs->ltgtype == LTG_MAKELOVE_UNDER ||
-	   bs->ltgtype == LTG_MAKELOVE_ONTOP)
-		return;
-	/*  */
-	if(BotSetLastOrderedTask(bs))
-		return;
-	/* if the bot is roaming */
-	if(bs->ctfroam_time > FloatTime())
-		return;
-	/* if the bot has anough aggression to decide what to do */
-	if(BotAggression(bs) < 50)
-		return;
-	/* set the time to send a message to the team mates */
-	bs->teammessage_time = FloatTime() + 2 * random();
-	/*  */
-	if(bs->teamtaskpreference & (TEAMTP_ATTACKER|TEAMTP_DEFENDER)){
-		if(bs->teamtaskpreference & TEAMTP_ATTACKER)
-			l1 = 0.7f;
-		else
-			l1 = 0.2f;
-		l2 = 0.9f;
-	}else{
-		l1	= 0.4f;
-		l2	= 0.7f;
-	}
-	/* get the flag or defend the base */
-	rnd = random();
-	if(rnd < l1 && redobelisk.areanum && blueobelisk.areanum){
-		bs->decisionmaker = bs->client;
-		bs->ordered = qfalse;
-		/*  */
-		if(BotTeam(bs) == TEAM_RED) memcpy(&bs->teamgoal, &blueobelisk,
-				sizeof(bot_goal_t));
-		else memcpy(&bs->teamgoal, &redobelisk, sizeof(bot_goal_t));
-		/* set the ltg type */
-		bs->ltgtype = LTG_ATTACKENEMYBASE;
-		/* set the time the bot will stop attacking the enemy base */
-		bs->teamgoal_time = FloatTime() + TEAM_ATTACKENEMYBASE_TIME;
-		/* get an alternate route goal towards the enemy base */
-		BotGetAlternateRouteGoal(bs, BotOppositeTeam(bs));
-		BotSetTeamStatus(bs);
-	}else if(rnd < l2 && redobelisk.areanum && blueobelisk.areanum){
-		bs->decisionmaker = bs->client;
-		bs->ordered = qfalse;
-		/*  */
-		if(BotTeam(bs) == TEAM_RED) memcpy(&bs->teamgoal, &redobelisk,
-				sizeof(bot_goal_t));
-		else memcpy(&bs->teamgoal, &blueobelisk, sizeof(bot_goal_t));
-		/* set the ltg type */
-		bs->ltgtype = LTG_DEFENDKEYAREA;
-		/* set the time the bot stops defending the base */
-		bs->teamgoal_time	= FloatTime() + TEAM_DEFENDKEYAREA_TIME;
-		bs->defendaway_time	= 0;
-		BotSetTeamStatus(bs);
-	}else{
-		bs->ltgtype = 0;
-		/* set the time the bot will stop roaming */
-		bs->ctfroam_time = FloatTime() + CTF_ROAM_TIME;
-		BotSetTeamStatus(bs);
-	}
-}
-
-/*
- * BotGoHarvest
- */
-void
-BotGoHarvest(bot_state_t *bs)
-{
-	/*  */
-	if(BotTeam(bs) ==
-	   TEAM_RED) memcpy(&bs->teamgoal, &blueobelisk, sizeof(bot_goal_t));
-	else memcpy(&bs->teamgoal, &redobelisk, sizeof(bot_goal_t));
-	/* set the ltg type */
-	bs->ltgtype = LTG_HARVEST;
-	/* set the time the bot will stop harvesting */
-	bs->teamgoal_time = FloatTime() + TEAM_HARVEST_TIME;
-	bs->harvestaway_time = 0;
-	BotSetTeamStatus(bs);
-}
-
-/*
- * BotObeliskRetreatGoals
- */
-void
-BotObeliskRetreatGoals(bot_state_t *bs)
-{
-	/* nothing special */
-}
-
-/*
- * BotHarvesterSeekGoals
- */
-void
-BotHarvesterSeekGoals(bot_state_t *bs)
-{
-	aas_entityinfo_t entinfo;
-	float	rnd, l1, l2;
-	int	c;
-
-	/* when carrying cubes in harvester the bot should rush to the base */
-	if(BotHarvesterCarryingCubes(bs)){
-		/* if not already rushing to the base */
-		if(bs->ltgtype != LTG_RUSHBASE){
-			BotRefuseOrder(bs);
-			bs->ltgtype = LTG_RUSHBASE;
-			bs->teamgoal_time = FloatTime() + CTF_RUSHBASE_TIME;
-			bs->rushbaseaway_time = 0;
-			bs->decisionmaker = bs->client;
-			bs->ordered = qfalse;
-			/* get an alternative route goal towards the enemy base */
-			BotGetAlternateRouteGoal(bs, BotOppositeTeam(bs));
-			/*  */
-			BotSetTeamStatus(bs);
-		}
-		return;
-	}
-	/* don't just do something wait for the bot team leader to give orders */
-	if(BotTeamLeader(bs))
-		return;
-	/* if the bot decided to follow someone */
-	if(bs->ltgtype == LTG_TEAMACCOMPANY && !bs->ordered){
-		/* if the team mate being accompanied no longer carries the flag */
-		BotEntityInfo(bs->teammate, &entinfo);
-		if(!EntityCarriesCubes(&entinfo))
-			bs->ltgtype = 0;
-	}
-	/* if the bot is ordered to do something */
-	if(bs->lastgoal_ltgtype)
-		bs->teamgoal_time += 60;
-	/* if not yet doing something */
-	if(bs->ltgtype == LTG_TEAMHELP ||
-	   bs->ltgtype == LTG_TEAMACCOMPANY ||
-	   bs->ltgtype == LTG_DEFENDKEYAREA ||
-	   bs->ltgtype == LTG_GETFLAG ||
-	   bs->ltgtype == LTG_CAMPORDER ||
-	   bs->ltgtype == LTG_PATROL ||
-	   bs->ltgtype == LTG_ATTACKENEMYBASE ||
-	   bs->ltgtype == LTG_HARVEST ||
-	   bs->ltgtype == LTG_GETITEM ||
-	   bs->ltgtype == LTG_MAKELOVE_UNDER ||
-	   bs->ltgtype == LTG_MAKELOVE_ONTOP)
-		return;
-	/*  */
-	if(BotSetLastOrderedTask(bs))
-		return;
-	/* if the bot is roaming */
-	if(bs->ctfroam_time > FloatTime())
-		return;
-	/* if the bot has anough aggression to decide what to do */
-	if(BotAggression(bs) < 50)
-		return;
-	/* set the time to send a message to the team mates */
-	bs->teammessage_time = FloatTime() + 2 * random();
-	/*  */
-	c = BotEnemyCubeCarrierVisible(bs);
-	if(c >= 0){
-		/* FIXME: attack enemy cube carrier */
-	}
-	if(bs->ltgtype != LTG_TEAMACCOMPANY){
-		/* if there is a visible team mate carrying cubes */
-		c = BotTeamCubeCarrierVisible(bs);
-		if(c >= 0){
-			/* follow the team mate carrying cubes */
-			bs->decisionmaker = bs->client;
-			bs->ordered = qfalse;
-			/* the team mate */
-			bs->teammate = c;
-			/* last time the team mate was visible */
-			bs->teammatevisible_time = FloatTime();
-			/* no message */
-			bs->teammessage_time = 0;
-			/* no arrive message */
-			bs->arrive_time = 1;
-			/*  */
-			BotVoiceChat(bs, bs->teammate, VOICECHAT_ONFOLLOW);
-			/* get the team goal time */
-			bs->teamgoal_time = FloatTime() + TEAM_ACCOMPANY_TIME;
-			bs->ltgtype = LTG_TEAMACCOMPANY;
-			bs->formation_dist = 3.5 * 32;	/* 3.5 meter */
-			BotSetTeamStatus(bs);
-			return;
-		}
-	}
-	/*  */
-	if(bs->teamtaskpreference & (TEAMTP_ATTACKER|TEAMTP_DEFENDER)){
-		if(bs->teamtaskpreference & TEAMTP_ATTACKER)
-			l1 = 0.7f;
-		else
-			l1 = 0.2f;
-		l2 = 0.9f;
-	}else{
-		l1	= 0.4f;
-		l2	= 0.7f;
-	}
-	/*  */
-	rnd = random();
-	if(rnd < l1 && redobelisk.areanum && blueobelisk.areanum){
-		bs->decisionmaker = bs->client;
-		bs->ordered = qfalse;
-		BotGoHarvest(bs);
-	}else if(rnd < l2 && redobelisk.areanum && blueobelisk.areanum){
-		bs->decisionmaker = bs->client;
-		bs->ordered = qfalse;
-		/*  */
-		if(BotTeam(bs) == TEAM_RED) memcpy(&bs->teamgoal, &redobelisk,
-				sizeof(bot_goal_t));
-		else memcpy(&bs->teamgoal, &blueobelisk, sizeof(bot_goal_t));
-		/* set the ltg type */
-		bs->ltgtype = LTG_DEFENDKEYAREA;
-		/* set the time the bot stops defending the base */
-		bs->teamgoal_time	= FloatTime() + TEAM_DEFENDKEYAREA_TIME;
-		bs->defendaway_time	= 0;
-		BotSetTeamStatus(bs);
-	}else{
-		bs->ltgtype = 0;
-		/* set the time the bot will stop roaming */
-		bs->ctfroam_time = FloatTime() + CTF_ROAM_TIME;
-		BotSetTeamStatus(bs);
-	}
-}
-
-/*
- * BotHarvesterRetreatGoals
- */
-void
-BotHarvesterRetreatGoals(bot_state_t *bs)
-{
-	/* when carrying cubes in harvester the bot should rush to the base */
-	if(BotHarvesterCarryingCubes(bs)){
-		/* if not already rushing to the base */
-		if(bs->ltgtype != LTG_RUSHBASE){
-			BotRefuseOrder(bs);
-			bs->ltgtype = LTG_RUSHBASE;
-			bs->teamgoal_time = FloatTime() + CTF_RUSHBASE_TIME;
-			bs->rushbaseaway_time = 0;
-			bs->decisionmaker = bs->client;
-			bs->ordered = qfalse;
-			BotSetTeamStatus(bs);
-		}
-		return;
-	}
-}
-#endif
-
-/*
  * BotTeamGoals
  */
 void
@@ -1284,30 +966,14 @@ BotTeamGoals(bot_state_t *bs, int retreat)
 	if(retreat){
 		if(gametype == GT_CTF)
 			BotCTFRetreatGoals(bs);
-
-#ifdef MISSIONPACK
 		else if(gametype == GT_1FCTF)
 			Bot1FCTFRetreatGoals(bs);
-		else if(gametype == GT_OBELISK)
-			BotObeliskRetreatGoals(bs);
-		else if(gametype == GT_HARVESTER)
-			BotHarvesterRetreatGoals(bs);
-
-#endif
 	}else{
 		if(gametype == GT_CTF)
 			/* decide what to do in CTF mode */
 			BotCTFSeekGoals(bs);
-
-#ifdef MISSIONPACK
 		else if(gametype == GT_1FCTF)
 			Bot1FCTFSeekGoals(bs);
-		else if(gametype == GT_OBELISK)
-			BotObeliskSeekGoals(bs);
-		else if(gametype == GT_HARVESTER)
-			BotHarvesterSeekGoals(bs);
-
-#endif
 	}
 	/* reset the order time which is used to see if
 	 * we decided to refuse an order */
@@ -1482,24 +1148,10 @@ BotSynonymContext(bot_state_t *bs)
 	int context;
 
 	context = CONTEXT_NORMAL|CONTEXT_NEARBYITEM|CONTEXT_NAMES;
-	/*  */
-	if(gametype == GT_CTF
-#ifdef MISSIONPACK
-	   || gametype == GT_1FCTF
-#endif
-	   ){
+	if(gametype == GT_CTF || gametype == GT_1FCTF){
 		if(BotTeam(bs) == TEAM_RED) context |= CONTEXT_CTFREDTEAM;
 		else context |= CONTEXT_CTFBLUETEAM;
 	}
-#ifdef MISSIONPACK
-	else if(gametype == GT_OBELISK){
-		if(BotTeam(bs) == TEAM_RED) context |= CONTEXT_OBELISKREDTEAM;
-		else context |= CONTEXT_OBELISKBLUETEAM;
-	}else if(gametype == GT_HARVESTER){
-		if(BotTeam(bs) == TEAM_RED) context |= CONTEXT_HARVESTERREDTEAM;
-		else context |= CONTEXT_HARVESTERBLUETEAM;
-	}
-#endif
 	return context;
 }
 
@@ -1565,6 +1217,8 @@ BotSetupForMovement(bot_state_t *bs)
 
 /*
  * BotCheckItemPickup
+ *
+ * FIXME: remove missionpackisms
  */
 void
 BotCheckItemPickup(bot_state_t *bs, int *oldinventory)
@@ -1745,22 +1399,10 @@ BotUpdateInventory(bot_state_t *bs)
 						0;
 	bs->inventory[INVENTORY_REGEN]	= bs->cur_ps.powerups[PW_REGEN] != 0;
 	bs->inventory[INVENTORY_FLIGHT] = bs->cur_ps.powerups[PW_FLIGHT] != 0;
-#ifdef MISSIONPACK
-	bs->inventory[INVENTORY_SCOUT] =
-		bs->cur_ps.stats[STAT_PERSISTANT_POWERUP] == MODELINDEX_SCOUT;
-	bs->inventory[INVENTORY_GUARD] =
-		bs->cur_ps.stats[STAT_PERSISTANT_POWERUP] == MODELINDEX_GUARD;
-	bs->inventory[INVENTORY_DOUBLER] =
-		bs->cur_ps.stats[STAT_PERSISTANT_POWERUP] == MODELINDEX_DOUBLER;
-	bs->inventory[INVENTORY_AMMOREGEN] =
-		bs->cur_ps.stats[STAT_PERSISTANT_POWERUP] ==
-		MODELINDEX_AMMOREGEN;
-#endif
 	bs->inventory[INVENTORY_REDFLAG] =
 		bs->cur_ps.powerups[PW_REDFLAG] != 0;
 	bs->inventory[INVENTORY_BLUEFLAG] =
 		bs->cur_ps.powerups[PW_BLUEFLAG] != 0;
-#ifdef MISSIONPACK
 	bs->inventory[INVENTORY_NEUTRALFLAG] =
 		bs->cur_ps.powerups[PW_NEUTRALFLAG] != 0;
 	if(BotTeam(bs) == TEAM_RED){
@@ -1770,7 +1412,6 @@ BotUpdateInventory(bot_state_t *bs)
 		bs->inventory[INVENTORY_REDCUBE]	= 0;
 		bs->inventory[INVENTORY_BLUECUBE]	= bs->cur_ps.generic1;
 	}
-#endif
 	BotCheckItemPickup(bs, oldinventory);
 }
 
@@ -1791,230 +1432,6 @@ BotUpdateBattleInventory(bot_state_t *bs, int enemy)
 	/* FIXME: add num visible enemies and num visible team mates to the inventory */
 }
 
-#ifdef MISSIONPACK
-/*
- * BotUseKamikaze
- */
-#define KAMIKAZE_DIST 1024
-
-void
-BotUseKamikaze(bot_state_t *bs)
-{
-	int c, teammates, enemies;
-	aas_entityinfo_t	entinfo;
-	Vec3 dir, target;
-	bot_goal_t		*goal;
-	bsp_trace_t		trace;
-
-	/* if the bot has no kamikaze */
-	if(bs->inventory[INVENTORY_KAMIKAZE] <= 0)
-		return;
-	if(bs->kamikaze_time > FloatTime())
-		return;
-	bs->kamikaze_time = FloatTime() + 0.2;
-	if(gametype == GT_CTF){
-		/* never use kamikaze if the team flag carrier is visible */
-		if(BotCTFCarryingFlag(bs))
-			return;
-		c = BotTeamFlagCarrierVisible(bs);
-		if(c >= 0){
-			BotEntityInfo(c, &entinfo);
-			subv3(entinfo.origin, bs->origin, dir);
-			if(lensqrv3(dir) < Square(KAMIKAZE_DIST))
-				return;
-		}
-		c = BotEnemyFlagCarrierVisible(bs);
-		if(c >= 0){
-			BotEntityInfo(c, &entinfo);
-			subv3(entinfo.origin, bs->origin, dir);
-			if(lensqrv3(dir) < Square(KAMIKAZE_DIST)){
-				trap_EA_Use(bs->client);
-				return;
-			}
-		}
-	}else if(gametype == GT_1FCTF){
-		/* never use kamikaze if the team flag carrier is visible */
-		if(Bot1FCTFCarryingFlag(bs))
-			return;
-		c = BotTeamFlagCarrierVisible(bs);
-		if(c >= 0){
-			BotEntityInfo(c, &entinfo);
-			subv3(entinfo.origin, bs->origin, dir);
-			if(lensqrv3(dir) < Square(KAMIKAZE_DIST))
-				return;
-		}
-		c = BotEnemyFlagCarrierVisible(bs);
-		if(c >= 0){
-			BotEntityInfo(c, &entinfo);
-			subv3(entinfo.origin, bs->origin, dir);
-			if(lensqrv3(dir) < Square(KAMIKAZE_DIST)){
-				trap_EA_Use(bs->client);
-				return;
-			}
-		}
-	}else if(gametype == GT_OBELISK){
-		switch(BotTeam(bs)){
-		case TEAM_RED: goal = &blueobelisk; break;
-		default: goal = &redobelisk; break;
-		}
-		/* if the obelisk is visible */
-		copyv3(goal->origin, target);
-		target[2] += 1;
-		subv3(bs->origin, target, dir);
-		if(lensqrv3(dir) < Square(KAMIKAZE_DIST * 0.9)){
-			BotAI_Trace(&trace, bs->eye, NULL, NULL, target,
-				bs->client,
-				CONTENTS_SOLID);
-			if(trace.fraction >= 1 || trace.ent == goal->entitynum){
-				trap_EA_Use(bs->client);
-				return;
-			}
-		}
-	}else if(gametype == GT_HARVESTER){
-		/*  */
-		if(BotHarvesterCarryingCubes(bs))
-			return;
-		/* never use kamikaze if a team mate carrying cubes is visible */
-		c = BotTeamCubeCarrierVisible(bs);
-		if(c >= 0){
-			BotEntityInfo(c, &entinfo);
-			subv3(entinfo.origin, bs->origin, dir);
-			if(lensqrv3(dir) < Square(KAMIKAZE_DIST))
-				return;
-		}
-		c = BotEnemyCubeCarrierVisible(bs);
-		if(c >= 0){
-			BotEntityInfo(c, &entinfo);
-			subv3(entinfo.origin, bs->origin, dir);
-			if(lensqrv3(dir) < Square(KAMIKAZE_DIST)){
-				trap_EA_Use(bs->client);
-				return;
-			}
-		}
-	}
-	/*  */
-	BotVisibleTeamMatesAndEnemies(bs, &teammates, &enemies, KAMIKAZE_DIST);
-	/*  */
-	if(enemies > 2 && enemies > teammates+1){
-		trap_EA_Use(bs->client);
-		return;
-	}
-}
-
-/*
- * BotUseInvulnerability
- */
-void
-BotUseInvulnerability(bot_state_t *bs)
-{
-	int c;
-	Vec3 dir, target;
-	bot_goal_t	*goal;
-	bsp_trace_t	trace;
-
-	/* if the bot has no invulnerability */
-	if(bs->inventory[INVENTORY_INVULNERABILITY] <= 0)
-		return;
-	if(bs->invulnerability_time > FloatTime())
-		return;
-	bs->invulnerability_time = FloatTime() + 0.2;
-	if(gametype == GT_CTF){
-		/* never use kamikaze if the team flag carrier is visible */
-		if(BotCTFCarryingFlag(bs))
-			return;
-		c = BotEnemyFlagCarrierVisible(bs);
-		if(c >= 0)
-			return;
-		/* if near enemy flag and the flag is visible */
-		switch(BotTeam(bs)){
-		case TEAM_RED: goal = &ctf_blueflag; break;
-		default: goal = &ctf_redflag; break;
-		}
-		/* if the obelisk is visible */
-		copyv3(goal->origin, target);
-		target[2] += 1;
-		subv3(bs->origin, target, dir);
-		if(lensqrv3(dir) < Square(200)){
-			BotAI_Trace(&trace, bs->eye, NULL, NULL, target,
-				bs->client,
-				CONTENTS_SOLID);
-			if(trace.fraction >= 1 || trace.ent == goal->entitynum){
-				trap_EA_Use(bs->client);
-				return;
-			}
-		}
-	}else if(gametype == GT_1FCTF){
-		/* never use kamikaze if the team flag carrier is visible */
-		if(Bot1FCTFCarryingFlag(bs))
-			return;
-		c = BotEnemyFlagCarrierVisible(bs);
-		if(c >= 0)
-			return;
-		/* if near enemy flag and the flag is visible */
-		switch(BotTeam(bs)){
-		case TEAM_RED: goal = &ctf_blueflag; break;
-		default: goal = &ctf_redflag; break;
-		}
-		/* if the obelisk is visible */
-		copyv3(goal->origin, target);
-		target[2] += 1;
-		subv3(bs->origin, target, dir);
-		if(lensqrv3(dir) < Square(200)){
-			BotAI_Trace(&trace, bs->eye, NULL, NULL, target,
-				bs->client,
-				CONTENTS_SOLID);
-			if(trace.fraction >= 1 || trace.ent == goal->entitynum){
-				trap_EA_Use(bs->client);
-				return;
-			}
-		}
-	}else if(gametype == GT_OBELISK){
-		switch(BotTeam(bs)){
-		case TEAM_RED: goal = &blueobelisk; break;
-		default: goal = &redobelisk; break;
-		}
-		/* if the obelisk is visible */
-		copyv3(goal->origin, target);
-		target[2] += 1;
-		subv3(bs->origin, target, dir);
-		if(lensqrv3(dir) < Square(300)){
-			BotAI_Trace(&trace, bs->eye, NULL, NULL, target,
-				bs->client,
-				CONTENTS_SOLID);
-			if(trace.fraction >= 1 || trace.ent == goal->entitynum){
-				trap_EA_Use(bs->client);
-				return;
-			}
-		}
-	}else if(gametype == GT_HARVESTER){
-		/*  */
-		if(BotHarvesterCarryingCubes(bs))
-			return;
-		c = BotEnemyCubeCarrierVisible(bs);
-		if(c >= 0)
-			return;
-		/* if near enemy base and enemy base is visible */
-		switch(BotTeam(bs)){
-		case TEAM_RED: goal = &blueobelisk; break;
-		default: goal = &redobelisk; break;
-		}
-		/* if the obelisk is visible */
-		copyv3(goal->origin, target);
-		target[2] += 1;
-		subv3(bs->origin, target, dir);
-		if(lensqrv3(dir) < Square(200)){
-			BotAI_Trace(&trace, bs->eye, NULL, NULL, target,
-				bs->client,
-				CONTENTS_SOLID);
-			if(trace.fraction >= 1 || trace.ent == goal->entitynum){
-				trap_EA_Use(bs->client);
-				return;
-			}
-		}
-	}
-}
-#endif
-
 /*
  * BotBattleUseItems
  */
@@ -2023,23 +1440,13 @@ BotBattleUseItems(bot_state_t *bs)
 {
 	if(bs->inventory[INVENTORY_HEALTH] < 40){
 		if(bs->inventory[INVENTORY_TELEPORTER] > 0){
-			if(!BotCTFCarryingFlag(bs)
-#ifdef MISSIONPACK
-			   && !Bot1FCTFCarryingFlag(bs)
-			   && !BotHarvesterCarryingCubes(bs)
-#endif
-			   )
+			if(!BotCTFCarryingFlag(bs) && !Bot1FCTFCarryingFlag(bs))
 				trap_EA_Use(bs->client);
 		}
 	}
 	if(bs->inventory[INVENTORY_HEALTH] < 60)
 		if(bs->inventory[INVENTORY_MEDKIT] > 0)
 			trap_EA_Use(bs->client);
-
-#ifdef MISSIONPACK
-	BotUseKamikaze(bs);
-	BotUseInvulnerability(bs);
-#endif
 }
 
 /*
@@ -2082,7 +1489,8 @@ qbool
 BotIntermission(bot_state_t *bs)
 {
 	/* NOTE: we shouldn't be looking at the game code... */
-	if(level.intermissiontime) return qtrue;
+	if(level.intermissiontime) 
+		return qtrue;
 	return (bs->cur_ps.pm_type == PM_FREEZE || bs->cur_ps.pm_type ==
 		PM_INTERMISSION);
 }
@@ -2248,40 +1656,22 @@ BotWantsToRetreat(bot_state_t *bs)
 {
 	aas_entityinfo_t entinfo;
 
-	if(gametype == GT_CTF)
+	if(gametype == GT_CTF){
 		/* always retreat when carrying a CTF flag */
 		if(BotCTFCarryingFlag(bs))
 			return qtrue;
-
-#ifdef MISSIONPACK
-	else if(gametype == GT_1FCTF){
+	}else if(gametype == GT_1FCTF){
 		/* if carrying the flag then always retreat */
 		if(Bot1FCTFCarryingFlag(bs))
 			return qtrue;
-	}else if(gametype == GT_OBELISK){
-		/* the bots should be dedicated to attacking the enemy obelisk */
-		if(bs->ltgtype == LTG_ATTACKENEMYBASE)
-			if(bs->enemy != redobelisk.entitynum &&
-			   bs->enemy != blueobelisk.entitynum)
-				return qtrue;
-		if(BotFeelingBad(bs) > 50)
-			return qtrue;
-		return qfalse;
-	}else if(gametype == GT_HARVESTER)
-		/* if carrying cubes then always retreat */
-		if(BotHarvesterCarryingCubes(bs)) return qtrue;
+	}
 
-#endif
-	/*  */
 	if(bs->enemy >= 0){
 		/* if the enemy is carrying a flag */
 		BotEntityInfo(bs->enemy, &entinfo);
 		/* if the enemy is carrying a flag */
-		if(EntityCarriesFlag(&entinfo)) return qfalse;
-#ifdef MISSIONPACK
-		/* if the enemy is carrying cubes */
-		if(EntityCarriesCubes(&entinfo)) return qfalse;
-#endif
+		if(EntityCarriesFlag(&entinfo)) 
+			return qfalse;
 	}
 	/* if the bot is getting the flag */
 	if(bs->ltgtype == LTG_GETFLAG)
@@ -2309,7 +1699,6 @@ BotWantsToChase(bot_state_t *bs)
 		if(EntityCarriesFlag(&entinfo))
 			return qtrue;
 	}
-#ifdef MISSIONPACK
 	else if(gametype == GT_1FCTF){
 		/* never chase if carrying the flag */
 		if(Bot1FCTFCarryingFlag(bs))
@@ -2318,21 +1707,7 @@ BotWantsToChase(bot_state_t *bs)
 		BotEntityInfo(bs->enemy, &entinfo);
 		if(EntityCarriesFlag(&entinfo))
 			return qtrue;
-	}else if(gametype == GT_OBELISK){
-		/* the bots should be dedicated to attacking the enemy obelisk */
-		if(bs->ltgtype == LTG_ATTACKENEMYBASE)
-			if(bs->enemy != redobelisk.entitynum &&
-			   bs->enemy != blueobelisk.entitynum)
-				return qfalse;
-	}else if(gametype == GT_HARVESTER){
-		/* never chase if carrying cubes */
-		if(BotHarvesterCarryingCubes(bs)) return qfalse;
-
-		BotEntityInfo(bs->enemy, &entinfo);
-		/* always chase if the enemy is carrying cubes */
-		if(EntityCarriesCubes(&entinfo)) return qtrue;
 	}
-#endif
 	/* if the bot is getting the flag */
 	if(bs->ltgtype == LTG_GETFLAG)
 		return qfalse;
@@ -2387,7 +1762,9 @@ BotCanAndWantsToRocketJump(bot_state_t *bs)
 int
 BotHasPersistantPowerupAndWeapon(bot_state_t *bs)
 {
-#ifdef MISSIONPACK
+	return qfalse; /* no persistent powerups in the game at present */
+	
+#if 0
 	/* if the bot does not have a persistant powerup */
 	if(!bs->inventory[INVENTORY_SCOUT] &&
 	   !bs->inventory[INVENTORY_GUARD] &&
@@ -4863,7 +4240,6 @@ BotCheckForGrenades(bot_state_t *bs, entityState_t *state)
 	trap_BotAddAvoidSpot(bs->ms, state->pos.trBase, 160, AVOID_ALWAYS);
 }
 
-#ifdef MISSIONPACK
 /*
  * BotCheckForProxMines
  */
@@ -4894,23 +4270,6 @@ BotCheckForProxMines(bot_state_t *bs, entityState_t *state)
 }
 
 /*
- * BotCheckForKamikazeBody
- */
-void
-BotCheckForKamikazeBody(bot_state_t *bs, entityState_t *state)
-{
-	/* if this entity is not wearing the kamikaze */
-	if(!(state->eFlags & EF_KAMIKAZE))
-		return;
-	/* if this entity isn't dead */
-	if(!(state->eFlags & EF_DEAD))
-		return;
-	/* remember this kamikaze body */
-	bs->kamikazebody = state->number;
-}
-#endif
-
-/*
  * BotCheckEvents
  */
 void
@@ -4918,9 +4277,7 @@ BotCheckEvents(bot_state_t *bs, entityState_t *state)
 {
 	int	event;
 	char	buf[128];
-#ifdef MISSIONPACK
 	aas_entityinfo_t entinfo;
-#endif
 
 	/* NOTE: this sucks, we're accessing the gentity_t directly
 	 * but there's no other fast way to do it right now */
@@ -4965,9 +4322,7 @@ BotCheckEvents(bot_state_t *bs, entityState_t *state)
 		}else if(attacker == bs->enemy && target == attacker)
 			bs->enemysuicide = qtrue;
 		/*  */
-#ifdef MISSIONPACK
 		if(gametype == GT_1FCTF){
-			/*  */
 			BotEntityInfo(target, &entinfo);
 			if(entinfo.powerups & (1 << PW_NEUTRALFLAG))
 				if(!BotSameTeam(bs, target)){
@@ -4975,7 +4330,6 @@ BotCheckEvents(bot_state_t *bs, entityState_t *state)
 					bs->flagstatuschanged	= qtrue;
 				}
 		}
-#endif
 		break;
 	}
 	case EV_GLOBAL_SOUND:
@@ -5001,12 +4355,6 @@ BotCheckEvents(bot_state_t *bs, entityState_t *state)
 		 *      bs->flagstatuschanged = qtrue;
 		 * }
 		 * else*/
-#ifdef MISSIONPACK
-		if(!strcmp(buf, Pitemsounds "/kamikazerespawn.wav"))
-			/* the kamikaze respawned so dont avoid it */
-			BotDontAvoid(bs, "Kamikaze");
-		else
-#endif
 		if(!strcmp(buf, Pitemsounds "/poweruprespawn.wav"))
 			/* powerup respawned... go get it */
 			BotGoForPowerups(bs);
@@ -5048,7 +4396,6 @@ BotCheckEvents(bot_state_t *bs, entityState_t *state)
 				break;	/* see BotMatch_CTF */
 			}
 		}
-#ifdef MISSIONPACK
 		else if(gametype == GT_1FCTF){
 			switch(state->eventParm){
 			case GTS_RED_CAPTURE:
@@ -5081,7 +4428,6 @@ BotCheckEvents(bot_state_t *bs, entityState_t *state)
 				break;
 			}
 		}
-#endif
 		break;
 	}
 	case EV_PLAYER_TELEPORT_IN:
@@ -5181,20 +4527,14 @@ BotCheckSnapshot(bot_state_t *bs)
 		BotCheckEvents(bs, &state);
 		/* check for grenades the bot should avoid */
 		BotCheckForGrenades(bs, &state);
-		/*  */
-#ifdef MISSIONPACK
 		/* check for proximity mines which the bot should deactivate */
 		BotCheckForProxMines(bs, &state);
-		/* check for dead bodies with the kamikaze effect which should be gibbed */
-		BotCheckForKamikazeBody(bs, &state);
-#endif
 	}
 	/* check the player state for events */
 	BotAI_GetEntityState(bs->client, &state);
 	/* copy the player state events to the entity state */
 	state.event = bs->cur_ps.externalEvent;
 	state.eventParm = bs->cur_ps.externalEventParm;
-	/*  */
 	BotCheckEvents(bs, &state);
 }
 
@@ -5225,8 +4565,7 @@ BotAlternateRoute(bot_state_t *bs, bot_goal_t *goal)
 		if(bs->reachedaltroutegoal_time)
 			return goal;
 		/* travel time towards alternative route goal */
-		t =
-			trap_AAS_AreaTravelTimeToGoalArea(
+		t = trap_AAS_AreaTravelTimeToGoalArea(
 				bs->areanum, bs->origin,
 				bs->altroutegoal.areanum,
 				bs->tfl);
@@ -5284,7 +4623,6 @@ BotSetupAlternativeRouteGoals(void)
 
 	if(altroutegoals_setup)
 		return;
-#ifdef MISSIONPACK
 	if(gametype == GT_CTF){
 		if(trap_BotGetLevelItemGoal(-1, "Neutral Flag",
 			   &ctf_neutralflag) < 0)
@@ -5324,43 +4662,7 @@ BotSetupAlternativeRouteGoals(void)
 			blue_altroutegoals, MAX_ALTROUTEGOALS,
 			ALTROUTEGOAL_CLUSTERPORTALS|
 			ALTROUTEGOAL_VIEWPORTALS);
-	}else if(gametype == GT_OBELISK){
-		if(trap_BotGetLevelItemGoal(-1, "Neutral Obelisk",
-			   &neutralobelisk) < 0)
-			BotAI_Print(PRT_WARNING,
-				"No alt routes without Neutral Obelisk\n");
-		/*  */
-		red_numaltroutegoals = trap_AAS_AlternativeRouteGoals(
-			neutralobelisk.origin, neutralobelisk.areanum,
-			redobelisk.origin, redobelisk.areanum, TFL_DEFAULT,
-			red_altroutegoals, MAX_ALTROUTEGOALS,
-			ALTROUTEGOAL_CLUSTERPORTALS|
-			ALTROUTEGOAL_VIEWPORTALS);
-		blue_numaltroutegoals = trap_AAS_AlternativeRouteGoals(
-			neutralobelisk.origin, neutralobelisk.areanum,
-			blueobelisk.origin, blueobelisk.areanum, TFL_DEFAULT,
-			blue_altroutegoals, MAX_ALTROUTEGOALS,
-			ALTROUTEGOAL_CLUSTERPORTALS|
-			ALTROUTEGOAL_VIEWPORTALS);
-	}else if(gametype == GT_HARVESTER){
-		if(trap_BotGetLevelItemGoal(-1, "Neutral Obelisk",
-			   &neutralobelisk) < 0)
-			BotAI_Print(PRT_WARNING,
-				"Harvester without Neutral Obelisk\n");
-		red_numaltroutegoals = trap_AAS_AlternativeRouteGoals(
-			neutralobelisk.origin, neutralobelisk.areanum,
-			redobelisk.origin, redobelisk.areanum, TFL_DEFAULT,
-			red_altroutegoals, MAX_ALTROUTEGOALS,
-			ALTROUTEGOAL_CLUSTERPORTALS|
-			ALTROUTEGOAL_VIEWPORTALS);
-		blue_numaltroutegoals = trap_AAS_AlternativeRouteGoals(
-			neutralobelisk.origin, neutralobelisk.areanum,
-			blueobelisk.origin, blueobelisk.areanum, TFL_DEFAULT,
-			blue_altroutegoals, MAX_ALTROUTEGOALS,
-			ALTROUTEGOAL_CLUSTERPORTALS|
-			ALTROUTEGOAL_VIEWPORTALS);
 	}
-#endif
 	altroutegoals_setup = qtrue;
 }
 
@@ -5574,9 +4876,7 @@ BotSetupDeathmatchAI(void)
 			BotAI_Print(PRT_WARNING, "CTF without Red Flag\n");
 		if(trap_BotGetLevelItemGoal(-1, "Blue Flag", &ctf_blueflag) < 0)
 			BotAI_Print(PRT_WARNING, "CTF without Blue Flag\n");
-	}
-#ifdef MISSIONPACK
-	else if(gametype == GT_1FCTF){
+	}else if(gametype == GT_1FCTF){
 		if(trap_BotGetLevelItemGoal(-1, "Neutral Flag",
 			   &ctf_neutralflag) < 0)
 			BotAI_Print(PRT_WARNING,
@@ -5587,33 +4887,7 @@ BotSetupDeathmatchAI(void)
 		if(trap_BotGetLevelItemGoal(-1, "Blue Flag", &ctf_blueflag) < 0)
 			BotAI_Print(PRT_WARNING,
 				"One Flag CTF without Blue Flag\n");
-	}else if(gametype == GT_OBELISK){
-		if(trap_BotGetLevelItemGoal(-1, "Red Obelisk", &redobelisk) < 0)
-			BotAI_Print(PRT_WARNING,
-				"Overload without Red Obelisk\n");
-		BotSetEntityNumForGoal(&redobelisk, "team_redobelisk");
-		if(trap_BotGetLevelItemGoal(-1, "Blue Obelisk",
-			   &blueobelisk) < 0)
-			BotAI_Print(PRT_WARNING,
-				"Overload without Blue Obelisk\n");
-		BotSetEntityNumForGoal(&blueobelisk, "team_blueobelisk");
-	}else if(gametype == GT_HARVESTER){
-		if(trap_BotGetLevelItemGoal(-1, "Red Obelisk", &redobelisk) < 0)
-			BotAI_Print(PRT_WARNING,
-				"Harvester without Red Obelisk\n");
-		BotSetEntityNumForGoal(&redobelisk, "team_redobelisk");
-		if(trap_BotGetLevelItemGoal(-1, "Blue Obelisk",
-			   &blueobelisk) < 0)
-			BotAI_Print(PRT_WARNING,
-				"Harvester without Blue Obelisk\n");
-		BotSetEntityNumForGoal(&blueobelisk, "team_blueobelisk");
-		if(trap_BotGetLevelItemGoal(-1, "Neutral Obelisk",
-			   &neutralobelisk) < 0)
-			BotAI_Print(PRT_WARNING,
-				"Harvester without Neutral Obelisk\n");
-		BotSetEntityNumForGoal(&neutralobelisk, "team_neutralobelisk");
 	}
-#endif
 
 	max_bspmodelindex = 0;
 	for(ent = trap_AAS_NextBSPEntity(0); ent;

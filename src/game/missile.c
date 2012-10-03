@@ -70,7 +70,6 @@ G_ExplodeMissile(gentity_t *ent)
 	trap_LinkEntity(ent);
 }
 
-#ifdef MISSIONPACK
 static void
 ProximityMine_Explode(gentity_t *mine)
 {
@@ -162,19 +161,11 @@ ProximityMine_ExplodeOnPlayer(gentity_t *mine)
 	player = mine->enemy;
 	player->client->ps.eFlags &= ~EF_TICKING;
 
-	if(player->client->invulnerabilityTime > level.time){
-		G_Damage(player, mine->parent, mine->parent, vec3_origin,
-			mine->s.origin, 1000, DAMAGE_NO_KNOCKBACK,
-			MOD_JUICED);
-		player->client->invulnerabilityTime = 0;
-		G_TempEntity(player->client->ps.origin, EV_JUICED);
-	}else{
-		G_SetOrigin(mine, player->s.pos.trBase);
-		/* make sure the explosion gets to the client */
-		mine->r.svFlags &= ~SVF_NOCLIENT;
-		mine->splashMethodOfDeath = MOD_PROXIMITY_MINE;
-		G_ExplodeMissile(mine);
-	}
+	G_SetOrigin(mine, player->s.pos.trBase);
+	/* make sure the explosion gets to the client */
+	mine->r.svFlags &= ~SVF_NOCLIENT;
+	mine->splashMethodOfDeath = MOD_PROXIMITY_MINE;
+	G_ExplodeMissile(mine);
 }
 
 static void
@@ -199,12 +190,8 @@ ProximityMine_Player(gentity_t *mine, gentity_t *player)
 	clearv3(mine->s.pos.trDelta);
 	mine->enemy = player;
 	mine->think = ProximityMine_ExplodeOnPlayer;
-	if(player->client->invulnerabilityTime > level.time)
-		mine->nextthink = level.time + 2 * 1000;
-	else
-		mine->nextthink = level.time + 10 * 1000;
+	mine->nextthink = level.time + 10 * 1000;
 }
-#endif
 
 void
 G_MissileImpact(gentity_t *ent, trace_t *trace)
@@ -224,27 +211,6 @@ G_MissileImpact(gentity_t *ent, trace_t *trace)
 		G_AddEvent(ent, EV_GRENADE_BOUNCE, 0);
 		return;
 	}
-
-#ifdef MISSIONPACK
-	if(other->takedamage){
-		if(ent->s.weapon != WP_PROX_LAUNCHER)
-			if(other->client &&
-			   other->client->invulnerabilityTime > level.time){
-				copyv3(ent->s.pos.trDelta, forward);
-				normv3(forward);
-				if(G_InvulnerabilityEffect(other, forward,
-				  ent->s.pos.trBase, impactpoint, bouncedir)){
-					copyv3(bouncedir, trace->plane.normal);
-					eFlags = ent->s.eFlags & EF_BOUNCE_HALF;
-					ent->s.eFlags &= ~EF_BOUNCE_HALF;
-					G_BounceMissile(ent, trace);
-					ent->s.eFlags |= eFlags;
-				}
-				ent->target_ent = other;
-				return;
-			}
-	}
-#endif
 	/* impact damage */
 	if(other->takedamage)
 		/* FIXME: wrong damage direction? */
@@ -264,7 +230,6 @@ G_MissileImpact(gentity_t *ent, trace_t *trace)
 				velocity, ent->s.origin, ent->damage, 0,
 				ent->methodOfDeath);
 		}
-#ifdef MISSIONPACK
 	if(ent->s.weapon == WP_PROX_LAUNCHER){
 		if(ent->s.pos.trType != TR_GRAVITY)
 			return;
@@ -292,7 +257,6 @@ G_MissileImpact(gentity_t *ent, trace_t *trace)
 		trap_LinkEntity(ent);
 		return;
 	}
-#endif
 
 	if(!strcmp(ent->classname, "hook")){
 		gentity_t	*nent;
@@ -375,11 +339,9 @@ G_RunMissile(gentity_t *ent)
 	/* if this missile bounced off an invulnerability sphere */
 	if(ent->target_ent)
 		passent = ent->target_ent->s.number;
-#ifdef MISSIONPACK
 	/* prox mines that left the owner bbox will attach to anything, even the owner */
 	else if(ent->s.weapon == WP_PROX_LAUNCHER && ent->count)
 		passent = ENTITYNUM_NONE;
-#endif
 	else
 		/* ignore interactions with the missile owner */
 		passent = ent->r.ownerNum;
@@ -413,7 +375,6 @@ G_RunMissile(gentity_t *ent)
 		if(ent->s.eType != ET_MISSILE)
 			return;		/* exploded */
 	}
-#ifdef MISSIONPACK
 	/* if the prox mine wasn't yet outside the player body */
 	if(ent->s.weapon == WP_PROX_LAUNCHER && !ent->count){
 		/* check if the prox mine is outside the owner bbox */
@@ -423,7 +384,6 @@ G_RunMissile(gentity_t *ent)
 		if(!tr.startsolid || tr.entityNum != ent->r.ownerNum)
 			ent->count = 1;
 	}
-#endif
 	/* check think function after bouncing */
 	G_RunThink(ent);
 }
@@ -582,7 +542,6 @@ fire_grapple(gentity_t *self, Vec3 start, Vec3 dir)
 	return hook;
 }
 
-#ifdef MISSIONPACK
 enum { Nailgunspread = 500 };
 gentity_t *
 fire_nail(gentity_t *self, Vec3 start, Vec3 forward, Vec3 right, Vec3 up)
@@ -663,4 +622,4 @@ fire_prox(gentity_t *self, Vec3 start, Vec3 dir)
 	copyv3 (start, bolt->r.currentOrigin);
 	return bolt;
 }
-#endif
+
