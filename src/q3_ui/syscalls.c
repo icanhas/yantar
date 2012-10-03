@@ -6,6 +6,7 @@
  */
 
 #include "shared.h"
+#include "ui.h"
 #include "ref.h"
 #include "local.h"
 
