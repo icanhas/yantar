@@ -4,17 +4,7 @@
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License.
  */
-/*  */
-
-/*****************************************************************************
-* name:		dmq3
-*
-* desc:		Quake3 bot AI
-*
-* $Archive: /source/code/botai/ai_chat.c $
-*
-*****************************************************************************/
-
+ 
 /* setup the deathmatch AI */
 void BotSetupDeathmatchAI(void);
 /* shutdown the deathmatch AI */
@@ -47,10 +37,6 @@ qbool EntityIsDead(aas_entityinfo_t *entinfo);
 qbool EntityIsInvisible(aas_entityinfo_t *entinfo);
 /* returns true if the entity is shooting */
 qbool EntityIsShooting(aas_entityinfo_t *entinfo);
-#ifdef MISSIONPACK
-/* returns true if this entity has the kamikaze */
-qbool EntityHasKamikaze(aas_entityinfo_t *entinfo);
-#endif
 /* set a user info key/value pair */
 void BotSetUserInfo(bot_state_t *bs, char *key, char *value);
 /* set the team status (offense, defense etc.) */
@@ -139,19 +125,17 @@ void Bot1FCTFRetreatGoals(bot_state_t *bs);
 /* get a random alternate route goal towards the given base */
 int BotGetAlternateRouteGoal(bot_state_t *bs, int base);
 /* returns either the alternate route goal or the given goal */
-bot_goal_t*BotAlternateRoute(bot_state_t *bs, bot_goal_t *goal);
+bot_goal_t* BotAlternateRoute(bot_state_t *bs, bot_goal_t *goal);
 /* create a new waypoint */
 bot_waypoint_t*BotCreateWayPoint(char *name, Vec3 origin, int areanum);
 /* find a waypoint with the given name */
 bot_waypoint_t*BotFindWayPoint(bot_waypoint_t *waypoints, char *name);
 /* strstr but case insensitive */
-char*stristr(char *str, char *charset);
+char* stristr(char *str, char *charset);
 /* returns the number of the client with the given name */
 int ClientFromName(char *name);
 int ClientOnSameTeamFromName(bot_state_t *bs, char *name);
-/*  */
 int BotPointAreaNum(Vec3 origin);
-/*  */
 void BotMapScripts(bot_state_t *bs);
 
 /* ctf flags */
@@ -164,14 +148,12 @@ void BotMapScripts(bot_state_t *bs);
 
 extern int	gametype;	/* game type */
 extern int	maxclients;	/* maximum number of clients */
-
 extern vmCvar_t bot_grapple;
 extern vmCvar_t bot_rocketjump;
 extern vmCvar_t bot_fastchat;
 extern vmCvar_t bot_nochat;
 extern vmCvar_t bot_testrchat;
 extern vmCvar_t bot_challenge;
-
 extern bot_goal_t	ctf_redflag;
 extern bot_goal_t	ctf_blueflag;
 extern bot_goal_t	ctf_neutralflag;

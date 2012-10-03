@@ -4,19 +4,9 @@
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License.
  */
-/*  */
-
-/*****************************************************************************
-* name:		main.h
-*
-* desc:		Quake3 bot AI
-*
-* $Archive: /source/code/botai/ai_chat.c $
-*
-*****************************************************************************/
 
 /* #define DEBUG */
-#define CTF
+#define CTF	/* FIXME: remove */
 
 #define MAX_ITEMS			256
 /* bot flags */
@@ -39,10 +29,7 @@
 #define LTG_PATROL			9	/* patrol */
 #define LTG_GETITEM			10	/* get an item */
 #define LTG_KILL			11	/* kill someone */
-#define LTG_HARVEST			12	/* harvest skulls */
 #define LTG_ATTACKENEMYBASE		13	/* attack the enemy base */
-#define LTG_MAKELOVE_UNDER		14
-#define LTG_MAKELOVE_ONTOP		15
 /* some goal dedication times */
 #define TEAM_HELP_TIME			60	/* 1 minute teamplay help time */
 #define TEAM_ACCOMPANY_TIME		600	/* 10 minutes teamplay accompany time */
@@ -53,7 +40,6 @@
 #define TEAM_GETITEM_TIME		60	/* 1 minute */
 #define TEAM_KILL_SOMEONE		180	/* 3 minute to kill someone */
 #define TEAM_ATTACKENEMYBASE_TIME	600	/* 10 minutes */
-#define TEAM_HARVEST_TIME		120	/* 2 minutes */
 #define CTF_GETFLAG_TIME		600	/* 10 minutes ctf get flag time */
 #define CTF_RUSHBASE_TIME		120	/* 2 minutes ctf rush base time */
 #define CTF_RETURNFLAG_TIME		180	/* 3 minutes to return the flag */
@@ -256,24 +242,24 @@ typedef struct bot_state_s {
 } bot_state_t;
 
 /* resets the whole bot state */
-void BotResetState(bot_state_t *bs);
+void	BotResetState(bot_state_t *bs);
 /* returns the number of bots in the game */
-int NumBots(void);
+int	NumBots(void);
 /* returns info about the entity */
-void BotEntityInfo(int entnum, aas_entityinfo_t *info);
+void	BotEntityInfo(int entnum, aas_entityinfo_t *info);
 
 extern float floattime;
 #define FloatTime() floattime
 
 /* from the game source */
-void QDECL BotAI_Print(int type, char *fmt,
-		       ...) __attribute__ ((format (printf, 2, 3)));
-void QDECL QDECL BotAI_BotInitialChat(bot_state_t *bs, char *type, ...);
+void QDECL	BotAI_Print(int type, char *fmt,
+		...) __attribute__ ((format (printf, 2, 3)));
+void QDECL	BotAI_BotInitialChat(bot_state_t *bs, char *type, ...);
 void    BotAI_Trace(bsp_trace_t *bsptrace, Vec3 start, Vec3 mins,
-		    Vec3 maxs, Vec3 end, int passent,
-		    int contentmask);
-int             BotAI_GetClientState(int clientNum, playerState_t *state);
-int             BotAI_GetEntityState(int entityNum, entityState_t *state);
-int             BotAI_GetSnapshotEntity(int clientNum, int sequence,
-					entityState_t *state);
-int             BotTeamLeader(bot_state_t *bs);
+		Vec3 maxs, Vec3 end, int passent,
+		int contentmask);
+int	BotAI_GetClientState(int clientNum, playerState_t *state);
+int	BotAI_GetEntityState(int entityNum, entityState_t *state);
+int	BotAI_GetSnapshotEntity(int clientNum, int sequence,
+		entityState_t *state);
+int	BotTeamLeader(bot_state_t *bs);

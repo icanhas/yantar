@@ -4,16 +4,6 @@
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License.
  */
-/*  */
-
-/*****************************************************************************
-* name:		cmd.h
-*
-* desc:		Quake3 bot AI
-*
-* $Archive: /source/code/botai/ai_chat.c $
-*
-*****************************************************************************/
 
 extern int notleader[MAX_CLIENTS];
 
