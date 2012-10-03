@@ -804,7 +804,7 @@ CG_RegisterSounds(void)
 	cgs.media.sfx_chghitmetal = trap_S_RegisterSound(
 		Pgattlingsounds "/wvulimpm", qfalse);
 	cgs.media.weaponHoverSound = trap_S_RegisterSound(
-		Pweapsounds "/weapon_hover", qfalse);
+		Pweapsounds "/weaphover", qfalse);
 	cgs.media.winnerSound = trap_S_RegisterSound(
 		Pfeedback "/voc_youwin", qfalse);
 	cgs.media.loserSound = trap_S_RegisterSound(
