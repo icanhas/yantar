@@ -57,11 +57,6 @@ equ	trap_GetCDKey							-54
 equ	trap_SetCDKey							-55
 equ trap_R_RegisterFont						-56
 equ trap_R_ModelBounds						-57
-equ trap_PC_AddGlobalDefine					-58
-equ	trap_PC_LoadSource						-59
-equ trap_PC_FreeSource						-60
-equ trap_PC_ReadToken						-61
-equ trap_PC_SourceFileAndLine				-62
 equ trap_S_StopBackgroundTrack				-63
 equ trap_S_StartBackgroundTrack				-64
 equ trap_RealTime							-65
