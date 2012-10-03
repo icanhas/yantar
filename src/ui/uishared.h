@@ -12,8 +12,6 @@
 #include "../renderer/types.h"
 #include "../client/keycodes.h"
 
-#include "../../ui/menudef.h"
-
 #define MAX_MENUNAME		32
 #define MAX_ITEMTEXT		64
 #define MAX_ITEMACTION		64

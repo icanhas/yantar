@@ -4,13 +4,10 @@
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License.
  */
-/*
- * ui_players.c */
 
 #include "shared.h"
-#include "ref.h"
+#include "ui.h"
 #include "local.h"
-
 
 #define UI_TIMER_GESTURE	2300
 #define UI_TIMER_JUMP		1000
@@ -27,11 +24,8 @@
 #define SPIN_SPEED		0.9f
 #define COAST_TIME		1000
 
-
-static int	dp_realtime;
-static float	jumpHeight;
-sfxHandle_t	weaponChangeSound;
-
+static int dp_realtime;
+static float jumpHeight;
 
 /*
  * UI_PlayerInfo_SetWeapon
@@ -75,13 +69,13 @@ tryagain:
 	   weaponNum == WP_BFG){
 		strcpy(path, item->world_model[0]);
 		Q_stripext(path, path, sizeof(path));
-		strcat(path, "_barrel.md3");
+		strcat(path, "_barrel");
 		pi->barrelModel = trap_R_RegisterModel(path);
 	}
 
 	strcpy(path, item->world_model[0]);
 	Q_stripext(path, path, sizeof(path));
-	strcat(path, "_flash.md3");
+	strcat(path, "_flash");
 	pi->flashModel = trap_R_RegisterModel(path);
 
 	switch(weaponNum){
@@ -412,7 +406,7 @@ UI_PlayerAnimation(playerInfo_t *pi, int *legsOld, int *legs,
 {
 
 	/* legs animation */
-	pi->legsAnimationTimer -= uiInfo.uiDC.frameTime;
+	pi->legsAnimationTimer -= uis.frametime;
 	if(pi->legsAnimationTimer < 0)
 		pi->legsAnimationTimer = 0;
 
@@ -427,7 +421,7 @@ UI_PlayerAnimation(playerInfo_t *pi, int *legsOld, int *legs,
 	*legsBackLerp = pi->legs.backlerp;
 
 	/* torso animation */
-	pi->torsoAnimationTimer -= uiInfo.uiDC.frameTime;
+	pi->torsoAnimationTimer -= uis.frametime;
 	if(pi->torsoAnimationTimer < 0)
 		pi->torsoAnimationTimer = 0;
 
@@ -474,14 +468,14 @@ UI_SwingAngles(float destination, float swingTolerance, float clampTolerance,
 
 	/* swing towards the destination angle */
 	if(swing >= 0){
-		move = uiInfo.uiDC.frameTime * scale * speed;
+		move = uis.frametime * scale * speed;
 		if(move >= swing){
 			move = swing;
 			*swinging = qfalse;
 		}
 		*angle = modeuler(*angle + move);
 	}else if(swing < 0){
-		move = uiInfo.uiDC.frameTime * scale * -speed;
+		move = uis.frametime * scale * -speed;
 		if(move <= swing){
 			move = swing;
 			*swinging = qfalse;
@@ -603,6 +597,7 @@ UI_PlayerFloatSprite(playerInfo_t *pi, Vec3 origin, qhandle_t shader)
 {
 	refEntity_t ent;
 
+	UNUSED(pi);
 	memset(&ent, 0, sizeof(ent));
 	copyv3(origin, ent.origin);
 	ent.origin[2] += 48;
@@ -674,10 +669,6 @@ UI_DrawPlayer(float x, float y, float w, float h, playerInfo_t *pi, int time)
 	   !pi->animations[0].numFrames)
 		return;
 
-	/* this allows the ui to cache the player model on the main menu */
-	if(w == 0 || h == 0)
-		return;
-
 	dp_realtime = time;
 
 	if(pi->pendingWeapon != -1 && dp_realtime > pi->weaponTimer){
@@ -710,7 +701,7 @@ UI_DrawPlayer(float x, float y, float w, float h, playerInfo_t *pi, int time)
 	refdef.fov_x = (int)((float)refdef.width / 640.0f * 90.0f);
 	xx = refdef.width / tan(refdef.fov_x / 360 * M_PI);
 	refdef.fov_y = atan2(refdef.height, xx);
-	refdef.fov_y *= (360 / (float)M_PI);
+	refdef.fov_y *= (360 / M_PI);
 
 	/* calculate distance so the player nearly fills the box */
 	len = 0.7 * (maxs[2] - mins[2]);
@@ -787,6 +778,10 @@ UI_DrawPlayer(float x, float y, float w, float h, playerInfo_t *pi, int time)
 	if(pi->currentWeapon != WP_NONE){
 		memset(&gun, 0, sizeof(gun));
 		gun.hModel = pi->weaponModel;
+		if(pi->currentWeapon == WP_RAILGUN)
+			byte4copy(pi->c1RGBA, gun.shaderRGBA);
+		else
+			byte4copy(colorWhite, gun.shaderRGBA);
 		copyv3(origin, gun.lightingOrigin);
 		UI_PositionEntityOnTag(&gun, &torso, pi->torsoModel,
 			"tag_weapon");
@@ -828,6 +823,10 @@ UI_DrawPlayer(float x, float y, float w, float h, playerInfo_t *pi, int time)
 		if(pi->flashModel){
 			memset(&flash, 0, sizeof(flash));
 			flash.hModel = pi->flashModel;
+			if(pi->currentWeapon == WP_RAILGUN)
+				byte4copy(pi->c1RGBA, flash.shaderRGBA);
+			else
+				byte4copy(colorWhite, flash.shaderRGBA);
 			copyv3(origin, flash.lightingOrigin);
 			UI_PositionEntityOnTag(&flash, &gun, pi->weaponModel,
 				"tag_flash");
@@ -866,145 +865,30 @@ UI_DrawPlayer(float x, float y, float w, float h, playerInfo_t *pi, int time)
 	trap_R_RenderScene(&refdef);
 }
 
-/*
- * UI_FileExists
- */
-static qbool
-UI_FileExists(const char *filename)
-{
-	int len;
-
-	len = trap_FS_FOpenFile(filename, NULL, FS_READ);
-	if(len>0)
-		return qtrue;
-	return qfalse;
-}
-
-/*
- * UI_FindClientHeadFile
- */
-static qbool
-UI_FindClientHeadFile(char *filename, int length, const char *teamName,
-		      const char *headModelName, const char *headSkinName,
-		      const char *base,
-		      const char *ext)
-{
-	char	*team, *headsFolder;
-	int	i;
-
-	team = "default";
-
-	if(headModelName[0] == '*'){
-		headsFolder = "heads/";
-		headModelName++;
-	}else
-		headsFolder = "";
-	while(1){
-		for(i = 0; i < 2; i++){
-			if(i == 0 && teamName && *teamName)
-				Q_sprintf(filename, length,
-					"models/players/%s%s/%s/%s%s_%s.%s",
-					headsFolder,
-					headModelName, headSkinName, teamName,
-					base, team,
-					ext);
-			else
-				Q_sprintf(filename, length,
-					"models/players/%s%s/%s/%s_%s.%s",
-					headsFolder,
-					headModelName, headSkinName, base, team,
-					ext);
-			if(UI_FileExists(filename))
-				return qtrue;
-			if(i == 0 && teamName && *teamName)
-				Q_sprintf(filename, length,
-					"models/players/%s%s/%s%s_%s.%s",
-					headsFolder,
-					headModelName, teamName, base,
-					headSkinName,
-					ext);
-			else
-				Q_sprintf(filename, length,
-					"models/players/%s%s/%s_%s.%s",
-					headsFolder,
-					headModelName, base, headSkinName,
-					ext);
-			if(UI_FileExists(filename))
-				return qtrue;
-			if(!teamName || !*teamName)
-				break;
-		}
-		/* if tried the heads folder first */
-		if(headsFolder[0])
-			break;
-		headsFolder = "heads/";
-	}
-
-	return qfalse;
-}
 
 /*
  * UI_RegisterClientSkin
  */
 static qbool
 UI_RegisterClientSkin(playerInfo_t *pi, const char *modelName,
-		      const char *skinName, const char *headModelName,
-		      const char *headSkinName,
-		      const char *teamName)
+		      const char *skinName)
 {
 	char filename[MAX_QPATH];
 
-	if(teamName && *teamName)
-		Q_sprintf(filename, sizeof(filename),
-			"models/players/%s/%s/lower_%s.skin", modelName,
-			teamName,
-			skinName);
-	else
-		Q_sprintf(filename, sizeof(filename),
-			"models/players/%s/lower_%s.skin", modelName,
-			skinName);
+	Q_sprintf(filename, sizeof(filename),
+		Pplayermodels "/%s/lower_%s.skin", modelName,
+		skinName);
 	pi->legsSkin = trap_R_RegisterSkin(filename);
-	if(!pi->legsSkin){
-		if(teamName && *teamName)
-			Q_sprintf(
-				filename, sizeof(filename),
-				"models/players/characters/%s/%s/lower_%s.skin",
-				modelName, teamName, skinName);
-		else
-			Q_sprintf(filename, sizeof(filename),
-				"models/players/characters/%s/lower_%s.skin",
-				modelName,
-				skinName);
-		pi->legsSkin = trap_R_RegisterSkin(filename);
-	}
 
-	if(teamName && *teamName)
-		Q_sprintf(filename, sizeof(filename),
-			"models/players/%s/%s/upper_%s.skin", modelName,
-			teamName,
-			skinName);
-	else
-		Q_sprintf(filename, sizeof(filename),
-			"models/players/%s/upper_%s.skin", modelName,
-			skinName);
+	Q_sprintf(filename, sizeof(filename),
+		Pplayermodels "/%s/upper_%s.skin", modelName,
+		skinName);
 	pi->torsoSkin = trap_R_RegisterSkin(filename);
-	if(!pi->torsoSkin){
-		if(teamName && *teamName)
-			Q_sprintf(
-				filename, sizeof(filename),
-				"models/players/characters/%s/%s/upper_%s.skin",
-				modelName, teamName, skinName);
-		else
-			Q_sprintf(filename, sizeof(filename),
-				"models/players/characters/%s/upper_%s.skin",
-				modelName,
-				skinName);
-		pi->torsoSkin = trap_R_RegisterSkin(filename);
-	}
 
-	if(UI_FindClientHeadFile(filename, sizeof(filename), teamName,
-		   headModelName, headSkinName, "head", "skin"))
-		pi->headSkin = trap_R_RegisterSkin(filename);
+	Q_sprintf(filename, sizeof(filename), Pplayermodels "/%s/head_%s.skin",
+		modelName,
+		skinName);
+	pi->headSkin = trap_R_RegisterSkin(filename);
 
 	if(!pi->legsSkin || !pi->torsoSkin || !pi->headSkin)
 		return qfalse;
@@ -1042,8 +926,6 @@ UI_ParseAnimationFile(const char *filename, animation_t *animations)
 	trap_FS_Read(text, len, f);
 	text[len] = 0;
 	trap_FS_FCloseFile(f);
-
-	Q_compresstr(text);
 
 	/* parse the text */
 	text_p	= text;
@@ -1125,18 +1007,15 @@ UI_ParseAnimationFile(const char *filename, animation_t *animations)
 	return qtrue;
 }
 
+
 /*
  * UI_RegisterClientModelname
  */
 qbool
-UI_RegisterClientModelname(playerInfo_t *pi, const char *modelSkinName,
-			   const char *headModelSkinName,
-			   const char *teamName)
+UI_RegisterClientModelname(playerInfo_t *pi, const char *modelSkinName)
 {
 	char	modelName[MAX_QPATH];
 	char	skinName[MAX_QPATH];
-	char	headModelName[MAX_QPATH];
-	char	headSkinName[MAX_QPATH];
 	char	filename[MAX_QPATH];
 	char	*slash;
 
@@ -1154,75 +1033,39 @@ UI_RegisterClientModelname(playerInfo_t *pi, const char *modelSkinName,
 		Q_strncpyz(skinName, "default", sizeof(skinName));
 	else{
 		Q_strncpyz(skinName, slash + 1, sizeof(skinName));
-		*slash = '\0';
-	}
-
-	Q_strncpyz(headModelName, headModelSkinName, sizeof(headModelName));
-	slash = strchr(headModelName, '/');
-	if(!slash)
-		/* modelName did not include a skin name */
-		Q_strncpyz(headSkinName, "default", sizeof(skinName));
-	else{
-		Q_strncpyz(headSkinName, slash + 1, sizeof(skinName));
-		*slash = '\0';
+		/* truncate modelName */
+		*slash = 0;
 	}
 
 	/* load cmodels before models so filecache works */
 
-	Q_sprintf(filename, sizeof(filename), "models/players/%s/lower.md3",
+	Q_sprintf(filename, sizeof(filename), Pplayermodels "/%s/lower",
 		modelName);
 	pi->legsModel = trap_R_RegisterModel(filename);
 	if(!pi->legsModel){
-		Q_sprintf(filename, sizeof(filename),
-			"models/players/characters/%s/lower.md3",
-			modelName);
-		pi->legsModel = trap_R_RegisterModel(filename);
-		if(!pi->legsModel){
-			Com_Printf("Failed to load model file %s\n", filename);
-			return qfalse;
-		}
+		Com_Printf("Failed to load model file %s\n", filename);
+		return qfalse;
 	}
 
-	Q_sprintf(filename, sizeof(filename), "models/players/%s/upper.md3",
+	Q_sprintf(filename, sizeof(filename), Pplayermodels "/%s/upper",
 		modelName);
 	pi->torsoModel = trap_R_RegisterModel(filename);
 	if(!pi->torsoModel){
-		Q_sprintf(filename, sizeof(filename),
-			"models/players/characters/%s/upper.md3",
-			modelName);
-		pi->torsoModel = trap_R_RegisterModel(filename);
-		if(!pi->torsoModel){
-			Com_Printf("Failed to load model file %s\n", filename);
-			return qfalse;
-		}
+		Com_Printf("Failed to load model file %s\n", filename);
+		return qfalse;
 	}
 
-	if(headModelName[0] == '*')
-		Q_sprintf(filename, sizeof(filename),
-			"models/players/heads/%s/%s.md3", &headModelName[1],
-			&headModelName[1]);
-	else
-		Q_sprintf(filename, sizeof(filename),
-			"models/players/%s/head.md3",
-			headModelName);
+	Q_sprintf(filename, sizeof(filename), Pplayermodels "/%s/head",
+		modelName);
 	pi->headModel = trap_R_RegisterModel(filename);
-	if(!pi->headModel && headModelName[0] != '*'){
-		Q_sprintf(filename, sizeof(filename),
-			"models/players/heads/%s/%s.md3", headModelName,
-			headModelName);
-		pi->headModel = trap_R_RegisterModel(filename);
-	}
-
 	if(!pi->headModel){
 		Com_Printf("Failed to load model file %s\n", filename);
 		return qfalse;
 	}
 
 	/* if any skins failed to load, fall back to default */
-	if(!UI_RegisterClientSkin(pi, modelName, skinName, headModelName,
-		   headSkinName, teamName))
-		if(!UI_RegisterClientSkin(pi, modelName, "default",
-			   headModelName, "default", teamName)){
+	if(!UI_RegisterClientSkin(pi, modelName, skinName))
+		if(!UI_RegisterClientSkin(pi, modelName, "default")){
 			Com_Printf("Failed to load skin file: %s : %s\n",
 				modelName,
 				skinName);
@@ -1231,17 +1074,11 @@ UI_RegisterClientModelname(playerInfo_t *pi, const char *modelSkinName,
 
 	/* load the animations */
 	Q_sprintf(filename, sizeof(filename),
-		"models/players/%s/animation.cfg",
+		Pplayermodels "/%s/animation.cfg",
 		modelName);
 	if(!UI_ParseAnimationFile(filename, pi->animations)){
-		Q_sprintf(filename, sizeof(filename),
-			"models/players/characters/%s/animation.cfg",
-			modelName);
-		if(!UI_ParseAnimationFile(filename, pi->animations)){
-			Com_Printf("Failed to load animation file %s\n",
-				filename);
-			return qfalse;
-		}
+		Com_Printf("Failed to load animation file %s\n", filename);
+		return qfalse;
 	}
 
 	return qtrue;
@@ -1252,12 +1089,10 @@ UI_RegisterClientModelname(playerInfo_t *pi, const char *modelSkinName,
  * UI_PlayerInfo_SetModel
  */
 void
-UI_PlayerInfo_SetModel(playerInfo_t *pi, const char *model,
-		       const char *headmodel,
-		       char *teamName)
+UI_PlayerInfo_SetModel(playerInfo_t *pi, const char *model)
 {
 	memset(pi, 0, sizeof(*pi));
-	UI_RegisterClientModelname(pi, model, headmodel, teamName);
+	UI_RegisterClientModelname(pi, model);
 	pi->weapon = WP_MACHINEGUN;
 	pi->currentWeapon = pi->weapon;
 	pi->lastWeapon = pi->weapon;
@@ -1278,10 +1113,33 @@ UI_PlayerInfo_SetInfo(playerInfo_t *pi, int legsAnim, int torsoAnim,
 		      weapon_t weaponNumber,
 		      qbool chat)
 {
-	int currentAnim;
+	int	currentAnim;
 	weapon_t weaponNum;
+	int	c;
 
 	pi->chat = chat;
+
+	c = (int)trap_Cvar_VariableValue("color1");
+
+	clearv3(pi->color1);
+
+	if(c < 1 || c > 7)
+		setv3(pi->color1, 1, 1, 1);
+	else{
+		if(c & 1)
+			pi->color1[2] = 1.0f;
+
+		if(c & 2)
+			pi->color1[1] = 1.0f;
+
+		if(c & 4)
+			pi->color1[0] = 1.0f;
+	}
+
+	pi->c1RGBA[0]	= 255 * pi->color1[0];
+	pi->c1RGBA[1]	= 255 * pi->color1[1];
+	pi->c1RGBA[2]	= 255 * pi->color1[2];
+	pi->c1RGBA[3]	= 255;
 
 	/* view angles */
 	copyv3(viewAngles, pi->viewAngles);
