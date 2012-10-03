@@ -1,10 +1,8 @@
-# If you require a different configuration from the defaults below, create a
-# new file named "Makeconfig" in the same directory as this file and define
-# your parameters there. This allows you to change configuration without
-# causing problems with keeping up to date with the repository.
+# If you want a different configuration from the defaults below, create
+# a new file named 'Makeconfig' in the same directory as this file and
+# define your parameters there.
 
 COMPILE_PLATFORM=$(shell uname|sed -e s/_.*//|tr '[:upper:]' '[:lower:]'|sed -e 's/\//_/g')
-
 COMPILE_ARCH=$(shell uname -m | sed -e s/i.86/i386/)
 
 ifeq ($(COMPILE_PLATFORM),sunos)
@@ -57,8 +55,6 @@ endif
 ifneq ($(PLATFORM),darwin)
   BUILD_CLIENT_SMP=0
 endif
-
-#########
 
 -include Makeconfig
 
@@ -190,8 +186,6 @@ ifndef USE_OLD_VM64
 USE_OLD_VM64=0
 endif
 
-#############################################################################
-
 DP=debug-$(PLATFORM)-$(ARCH)
 RP=release-$(PLATFORM)-$(ARCH)
 BD=$(BIN_DIR)
@@ -215,7 +209,7 @@ AIDIR=$(GDIR)/ai
 BGDIR=$(GDIR)/bg
 CGDIR=$(MOUNT_DIR)/cgame
 BLIBDIR=$(MOUNT_DIR)/botlib
-Q3UIDIR=$(MOUNT_DIR)/ui
+UIDIR=$(MOUNT_DIR)/ui
 JPDIR=$(MOUNT_DIR)/jpeg-8c
 SPEEXDIR=$(MOUNT_DIR)/libspeex
 ZDIR=$(MOUNT_DIR)/zlib
@@ -251,14 +245,12 @@ ifneq ($(BUILD_CLIENT),0)
   endif
 endif
 
+#
+# setup and build (Linux)
+#
 
-#############################################################################
-# SETUP AND BUILD -- LINUX
-#############################################################################
-
-## Defaults
+# Defaults
 LIB=lib
-
 INSTALL=install
 MKDIR=mkdir
 
@@ -354,11 +346,11 @@ ifneq (,$(findstring "$(PLATFORM)", "linux" "gnu_kfreebsd" "kfreebsd-gnu"))
     BASE_CFLAGS += -m64
   endif
   endif
-else # ifeq Linux
+else # if Linux
 
-#############################################################################
-# SETUP AND BUILD -- MAC OS X
-#############################################################################
+#
+# setup and build (OS X)
+#
 
 ifeq ($(PLATFORM),darwin)
   HAVE_VM_COMPILED=true
@@ -423,15 +415,13 @@ ifeq ($(PLATFORM),darwin)
 
   TOOLS_CFLAGS += -DMACOS_X
 
-else # ifeq darwin
+else # if darwin
 
-
-#############################################################################
-# SETUP AND BUILD -- MINGW32
-#############################################################################
+#
+# setup and build (MinGW)
+#
 
 ifeq ($(PLATFORM),mingw32)
-
   # Some MinGW installations define CC to cc, but don't actually provide cc,
   # so explicitly use gcc instead (which is the only option anyway)
   ifeq ($(call bin_path, $(CC)),)
@@ -442,7 +432,7 @@ ifeq ($(PLATFORM),mingw32)
     WINDRES=windres
   endif
 
-  # Give windres a target flag
+  # give windres a target flag to avoid having it detect the host system's arch
   WINDRES_FLAGS=
   ifeq ($(ARCH),x86)
     WINDRES_FLAGS=-Fpe-i386
@@ -537,14 +527,13 @@ ifeq ($(PLATFORM),mingw32)
 
   BUILD_CLIENT_SMP = 0
 
-else # ifeq mingw32
+else # if mingw32
 
-#############################################################################
-# SETUP AND BUILD -- FREEBSD
-#############################################################################
+#
+# setup and build (FreeBSD)
+#
 
 ifeq ($(PLATFORM),freebsd)
-
   # flags
   BASE_CFLAGS = $(shell env MACHINE_ARCH=$(ARCH) make -f /dev/null -VCFLAGS) \
     -Wall -fno-strict-aliasing -Wimplicit -Wstrict-prototypes \
@@ -590,14 +579,13 @@ ifeq ($(PLATFORM),freebsd)
     endif
   endif
 
-else # ifeq freebsd
+else # if freebsd
 
-#############################################################################
-# SETUP AND BUILD -- OPENBSD
-#############################################################################
+#
+# setup and build (OpenBSD)
+#
 
 ifeq ($(PLATFORM),openbsd)
-
   ARCH=$(shell uname -m)
 
   BASE_CFLAGS = -Wall -fno-strict-aliasing -Wimplicit -Wstrict-prototypes \
@@ -632,14 +620,13 @@ ifeq ($(PLATFORM),openbsd)
     endif
   endif
 
-else # ifeq openbsd
+else # if openbsd
 
-#############################################################################
-# SETUP AND BUILD -- NETBSD
-#############################################################################
+#
+# setup and build (NetBSD)
+#
 
 ifeq ($(PLATFORM),netbsd)
-
   ifeq ($(shell uname -m),i386)
     ARCH=x86
   endif
@@ -660,12 +647,11 @@ ifeq ($(PLATFORM),netbsd)
 
 else # ifeq netbsd
 
-#############################################################################
-# SETUP AND BUILD -- IRIX
-#############################################################################
+#
+# setup and build (IRIX)
+#
 
 ifeq ($(PLATFORM),irix64)
-
   ARCH=mips
 
   CC = c99
@@ -686,14 +672,13 @@ ifeq ($(PLATFORM),irix64)
     -lX11 -lXext -lm
   RENDERER_LIBS = $(SDL_LIBS) -lGL
 
-else # ifeq IRIX
+else # if IRIX
 
-#############################################################################
-# SETUP AND BUILD -- SunOS
-#############################################################################
+#
+# setup and build (SunOS)
+#
 
 ifeq ($(PLATFORM),sunos)
-
   CC=gcc
   INSTALL=ginstall
   MKDIR=gmkdir
@@ -748,11 +733,12 @@ ifeq ($(PLATFORM),sunos)
   CLIENT_LIBS +=$(SDL_LIBS) -lX11 -lXext -liconv -lm
   RENDERER_LIBS = $(SDL_LIBS) -lGL
 
-else # ifeq sunos
+else # if sunos
 
-#############################################################################
-# SETUP AND BUILD -- GENERIC
-#############################################################################
+#
+# setup and build (generic)
+#
+
   BASE_CFLAGS=
   OPTIMIZE = -O3
 
@@ -761,8 +747,8 @@ else # ifeq sunos
   SHLIBLDFLAGS=-shared
 
 endif #Linux
-endif #darwin
-endif #mingw32
+endif #Darwin
+endif #MinGW
 endif #FreeBSD
 endif #OpenBSD
 endif #NetBSD
@@ -975,10 +961,9 @@ $(echo_cmd) "WINDRES $<"
 $(Q)$(WINDRES) $(WINDRES_FLAGS) -i $< -o $@
 endef
 
-
-#############################################################################
-# MAIN TARGETS
-#############################################################################
+#
+# main targets
+#
 
 default: release
 all: debug release
@@ -1104,9 +1089,9 @@ ifeq ($(PLATFORM),darwin)
 	@$(MKDIR) -p $(O)/ded/sys/osx
 endif
 
-#############################################################################
-# QVM BUILD TOOLS
-#############################################################################
+#
+# qvm toolchain
+#
 
 TOOLS_OPTIMIZE = -g -Wall -fno-strict-aliasing
 TOOLS_CFLAGS += $(TOOLS_OPTIMIZE) \
@@ -1132,7 +1117,7 @@ endef
 
 LBURG       = $(B)/cmd/lburg$(BINEXT)
 DAGCHECK_C  = $(B)/cmd/rcc/dagcheck.c
-Q3RCC       = $(B)/cmd/q3rcc$(BINEXT)
+RCC       = $(B)/cmd/q3rcc$(BINEXT)
 Q3CPP       = $(B)/cmd/q3cpp$(BINEXT)
 Q3LCC       = $(B)/cmd/q3lcc$(BINEXT)
 Q3ASM       = $(B)/cmd/q3asm$(BINEXT)
@@ -1148,7 +1133,7 @@ $(LBURG): $(LBURGOBJ)
 	$(echo_cmd) "LD $@"
 	$(Q)$(CC) $(TOOLS_CFLAGS) $(TOOLS_LDFLAGS) -o $@ $^ $(TOOLS_LIBS)
 
-Q3RCCOBJ = \
+RCCOBJ = \
   $(O)/cmd/rcc/alloc.o \
   $(O)/cmd/rcc/bind.o \
   $(O)/cmd/rcc/bytecode.o \
@@ -1189,7 +1174,7 @@ $(O)/cmd/rcc/dagcheck.o: $(DAGCHECK_C)
 $(O)/cmd/rcc/%.o: $(Q3LCCSRCDIR)/%.c
 	$(DO_TOOLS_CC)
 
-$(Q3RCC): $(Q3RCCOBJ)
+$(RCC): $(RCCOBJ)
 	$(echo_cmd) "LD $@"
 	$(Q)$(CC) $(TOOLS_CFLAGS) $(TOOLS_LDFLAGS) -o $@ $^ $(TOOLS_LIBS)
 
@@ -1219,7 +1204,7 @@ Q3LCCOBJ = \
 $(O)/cmd/etc/%.o: $(Q3LCCETCDIR)/%.c
 	$(DO_TOOLS_CC)
 
-$(Q3LCC): $(Q3LCCOBJ) $(Q3RCC) $(Q3CPP)
+$(Q3LCC): $(Q3LCCOBJ) $(RCC) $(Q3CPP)
 	$(echo_cmd) "LD $@"
 	$(Q)$(CC) $(TOOLS_CFLAGS) $(TOOLS_LDFLAGS) -o $@ $(Q3LCCOBJ) $(TOOLS_LIBS)
 
@@ -1255,12 +1240,11 @@ $(Q3ASM): $(Q3ASMOBJ)
 	$(echo_cmd) "LD $@"
 	$(Q)$(CC) $(TOOLS_CFLAGS) $(TOOLS_LDFLAGS) -o $@ $^ $(TOOLS_LIBS)
 
+#
+# client/server
+#
 
-#############################################################################
-# CLIENT/SERVER
-#############################################################################
-
-Q3OBJ = \
+YOBJ = \
   $(O)/client/avi.o \
   $(O)/client/cgame.o \
   $(O)/client/cin.o \
@@ -1359,7 +1343,7 @@ Q3OBJ = \
   $(O)/client/sys/conslog.o \
   $(O)/client/sys/main.o
 
-Q3R2OBJ = \
+R2OBJ = \
   $(O)/renderer/image_bmp.o \
   $(O)/renderer/image_jpg.o \
   $(O)/renderer/image_png.o \
@@ -1399,7 +1383,7 @@ Q3R2OBJ = \
   $(O)/renderer/sys/sdl/gamma.o \
   $(O)/renderer/sys/sdl/glimp.o
 
-Q3ROBJ = \
+ROBJ = \
   $(O)/renderer/animation.o \
   $(O)/renderer/backend.o \
   $(O)/renderer/bsp.o \
@@ -1433,13 +1417,13 @@ Q3ROBJ = \
   $(O)/renderer/sys/sdl/glimp.o
 
 ifneq ($(USE_RENDERER_DLOPEN), 0)
-  Q3ROBJ += \
+  ROBJ += \
     $(O)/renderer/shared.o \
     $(O)/renderer/puff.o \
     $(O)/renderer/maths.o \
     $(O)/renderer/subs.o
 
-  Q3R2OBJ += \
+  R2OBJ += \
     $(O)/renderer/shared.o \
     $(O)/renderer/puff.o \
     $(O)/renderer/maths.o \
@@ -1497,21 +1481,21 @@ ifneq ($(USE_INTERNAL_JPEG),0)
 endif
 
 ifeq ($(ARCH),x86)
-  Q3OBJ += \
+  YOBJ += \
     $(O)/client/snd_mixa.o \
     $(O)/client/matha.o \
     $(O)/client/snapvector.o \
     $(O)/client/ftola.o
 endif
 ifeq ($(ARCH),amd64)
-  Q3OBJ += \
+  YOBJ += \
     $(O)/client/snapvector.o \
     $(O)/client/ftola.o
 endif
 
 ifeq ($(USE_VOIP),1)
 ifeq ($(USE_INTERNAL_SPEEX),1)
-Q3OBJ += \
+YOBJ += \
   $(O)/client/bits.o \
   $(O)/client/buffer.o \
   $(O)/client/cb_search.o \
@@ -1556,7 +1540,7 @@ endif
 endif
 
 ifeq ($(USE_INTERNAL_ZLIB),1)
-Q3OBJ += \
+YOBJ += \
   $(O)/client/adler32.o \
   $(O)/client/crc32.o \
   $(O)/client/inffast.o \
@@ -1567,89 +1551,89 @@ endif
 
 ifeq ($(HAVE_VM_COMPILED),true)
   ifeq ($(ARCH),x86)
-    Q3OBJ += \
+    YOBJ += \
       $(O)/client/vm/x86.o
   endif
   ifeq ($(ARCH),amd64)
     ifeq ($(USE_OLD_VM64),1)
-      Q3OBJ += \
+      YOBJ += \
         $(O)/client/vm/amd64.o \
         $(O)/client/vm/amd64_asm.o
     else
-      Q3OBJ += \
+      YOBJ += \
         $(O)/client/vm/x86.o
     endif
   endif
   ifeq ($(ARCH),ppc)
-    Q3OBJ += $(O)/client/vm/powerpc.o $(B)/client/vm_powerpc_asm.o
+    YOBJ += $(O)/client/vm/powerpc.o $(B)/client/vm_powerpc_asm.o
   endif
   ifeq ($(ARCH),ppc64)
-    Q3OBJ += $(O)/client/vm/powerpc.o $(B)/client/vm_powerpc_asm.o
+    YOBJ += $(O)/client/vm/powerpc.o $(B)/client/vm_powerpc_asm.o
   endif
   ifeq ($(ARCH),sparc)
-    Q3OBJ += $(O)/client/vm/sparc.o
+    YOBJ += $(O)/client/vm/sparc.o
   endif
 endif
 
 ifeq ($(PLATFORM),mingw32)
-  Q3OBJ += \
+  YOBJ += \
     $(O)/client/sys/win/res.o \
     $(O)/client/sys/win/sys.o
 else
-  Q3OBJ += \
+  YOBJ += \
     $(O)/client/unix/sys.o
 endif
 
 ifeq ($(PLATFORM),darwin)
-  Q3OBJ += \
+  YOBJ += \
     $(O)/client/osx/sys.o
 endif
 
 ifeq ($(USE_MUMBLE),1)
-  Q3OBJ += \
+  YOBJ += \
     $(O)/client/libmumblelink.o
 endif
 
 ifneq ($(USE_RENDERER_DLOPEN),0)
 # make renderer shared libraries (gross)
-$(B)/$(CLIENTBIN)$(FULLBINEXT): $(Q3OBJ) $(LIBSDLMAIN)
+$(B)/$(CLIENTBIN)$(FULLBINEXT): $(YOBJ) $(LIBSDLMAIN)
 	$(echo_cmd) "LD $@"
 	$(Q)$(CC) $(CLIENT_CFLAGS) $(CFLAGS) $(CLIENT_LDFLAGS) $(LDFLAGS) \
-		-o $@ $(Q3OBJ) \
+		-o $@ $(YOBJ) \
 		$(LIBSDLMAIN) $(CLIENT_LIBS) $(LIBS)
 
-$(B)/ref1-$(SHLIBNAME): $(Q3ROBJ) $(JPGOBJ)
+$(B)/ref1-$(SHLIBNAME): $(ROBJ) $(JPGOBJ)
 	$(echo_cmd) "LD $@"
-	$(Q)$(CC) $(CFLAGS) $(SHLIBLDFLAGS) -o $@ $(Q3ROBJ) $(JPGOBJ) \
+	$(Q)$(CC) $(CFLAGS) $(SHLIBLDFLAGS) -o $@ $(ROBJ) $(JPGOBJ) \
 		$(THREAD_LIBS) $(LIBSDLMAIN) $(RENDERER_LIBS) $(LIBS)
 
-$(B)/ref1-smp-$(SHLIBNAME): $(Q3ROBJ) $(JPGOBJ)
+$(B)/ref1-smp-$(SHLIBNAME): $(ROBJ) $(JPGOBJ)
 	$(echo_cmd) "LD $@"
-	$(Q)$(CC) $(CFLAGS) $(SHLIBLDFLAGS) -o $@ $(Q3ROBJ) $(JPGOBJ) \
+	$(Q)$(CC) $(CFLAGS) $(SHLIBLDFLAGS) -o $@ $(ROBJ) $(JPGOBJ) \
 		$(THREAD_LIBS) $(LIBSDLMAIN) $(RENDERER_LIBS) $(LIBS)
 
-$(B)/ref2-$(SHLIBNAME): $(Q3R2OBJ) $(JPGOBJ)
+$(B)/ref2-$(SHLIBNAME): $(R2OBJ) $(JPGOBJ)
 	$(echo_cmd) "LD $@"
-	$(Q)$(CC) $(CFLAGS) $(SHLIBLDFLAGS) -o $@ $(Q3R2OBJ) $(JPGOBJ) \
+	$(Q)$(CC) $(CFLAGS) $(SHLIBLDFLAGS) -o $@ $(R2OBJ) $(JPGOBJ) \
 		$(THREAD_LIBS) $(LIBSDLMAIN) $(RENDERER_LIBS) $(LIBS)
 
-$(B)/ref2-smp-$(SHLIBNAME): $(Q3R2OBJ) $(JPGOBJ)
+$(B)/ref2-smp-$(SHLIBNAME): $(R2OBJ) $(JPGOBJ)
 	$(echo_cmd) "LD $@"
-	$(Q)$(CC) $(CFLAGS) $(SHLIBLDFLAGS) -o $@ $(Q3R2OBJ) $(JPGOBJ) \
+	$(Q)$(CC) $(CFLAGS) $(SHLIBLDFLAGS) -o $@ $(R2OBJ) $(JPGOBJ) \
 		$(THREAD_LIBS) $(LIBSDLMAIN) $(RENDERER_LIBS) $(LIBS)
 
 else
 # static link renderer
-$(B)/$(CLIENTBIN)$(FULLBINEXT): $(Q3OBJ) $(Q3R2OBJ) $(LIBSDLMAIN) $(JPGOBJ)
+$(B)/$(CLIENTBIN)$(FULLBINEXT): $(YOBJ) $(R2OBJ) $(LIBSDLMAIN) $(JPGOBJ)
 	$(echo_cmd) "LD $@"
 	$(Q)$(CC) $(CLIENT_CFLAGS) $(CFLAGS) $(CLIENT_LDFLAGS) $(LDFLAGS) \
-		-o $@ $(Q3OBJ) $(Q3R2OBJ) $(JPGOBJ) \
+		-o $@ $(YOBJ) $(R2OBJ) $(JPGOBJ) \
 		$(LIBSDLMAIN) $(CLIENT_LIBS) $(RENDERER_LIBS) $(LIBS)
 
-$(B)/$(CLIENTBIN)-smp$(FULLBINEXT): $(Q3OBJ) $(Q3R2OBJ) $(LIBSDLMAIN) $(JPGOBJ)
+$(B)/$(CLIENTBIN)-smp$(FULLBINEXT): $(YOBJ) $(R2OBJ) $(LIBSDLMAIN) $(JPGOBJ)
 	$(echo_cmd) "LD $@"
 	$(Q)$(CC) $(CLIENT_CFLAGS) $(CFLAGS) $(CLIENT_LDFLAGS) $(LDFLAGS) $(THREAD_LDFLAGS) \
-		-o $@ $(Q3OBJ) $(Q3R2OBJ) $(JPGOBJ) \
+		-o $@ $(YOBJ) $(R2OBJ) $(JPGOBJ) \
 		$(THREAD_LIBS) $(LIBSDLMAIN) $(CLIENT_LIBS) $(RENDERER_LIBS) $(LIBS)
 endif
 
@@ -1661,13 +1645,11 @@ $(LIBSDLMAIN) : $(LIBSDLMAINSRC)
 endif
 endif
 
+#
+# dedicated server
+#
 
-
-#############################################################################
-# DEDICATED SERVER
-#############################################################################
-
-Q3DOBJ = \
+YDOBJ = \
   $(O)/ded/server/bot.o \
   $(O)/ded/server/client.o \
   $(O)/ded/server/ccmds.o \
@@ -1739,19 +1721,19 @@ Q3DOBJ = \
   $(O)/ded/sys/main.o
 
 ifeq ($(ARCH),x86)
-  Q3DOBJ += \
+  YDOBJ += \
       $(O)/ded/matha.o \
       $(O)/ded/snapvector.o \
       $(O)/ded/ftola.o 
 endif
 ifeq ($(ARCH),amd64)
-  Q3DOBJ += \
+  YDOBJ += \
       $(O)/ded/snapvector.o \
       $(O)/ded/ftola.o 
 endif
 
 ifeq ($(USE_INTERNAL_ZLIB),1)
-Q3DOBJ += \
+YDOBJ += \
   $(O)/ded/adler32.o \
   $(O)/ded/crc32.o \
   $(O)/ded/inffast.o \
@@ -1762,61 +1744,59 @@ endif
 
 ifeq ($(HAVE_VM_COMPILED),true)
   ifeq ($(ARCH),x86)
-    Q3DOBJ += \
+    YDOBJ += \
       $(O)/ded/vm/x86.o
   endif
   ifeq ($(ARCH),amd64)
     ifeq ($(USE_OLD_VM64),1)
-      Q3DOBJ += \
+      YDOBJ += \
         $(O)/ded/vm/amd64.o \
         $(O)/ded/vm/amd64_asm.o
     else
-      Q3DOBJ += \
+      YDOBJ += \
         $(O)/ded/vm/x86.o
     endif
   endif
   ifeq ($(ARCH),ppc)
-    Q3DOBJ += \
+    YDOBJ += \
       $(O)/ded/vm/powerpc.o \
       $(O)/ded/vm/powerpc_asm.o
   endif
   ifeq ($(ARCH),ppc64)
-    Q3DOBJ += \
+    YDOBJ += \
       $(O)/ded/vm/powerpc.o \
       $(O)/ded/vm/powerpc_asm.o
   endif
   ifeq ($(ARCH),sparc)
-    Q3DOBJ += $(O)/ded/vm/sparc.o
+    YDOBJ += $(O)/ded/vm/sparc.o
   endif
 endif
 
 ifeq ($(PLATFORM),mingw32)
-  Q3DOBJ += \
+  YDOBJ += \
     $(O)/ded/sys/win/res.o \
     $(O)/ded/sys/win/sys.o \
     $(O)/ded/sys/win/cons.o
 else
-  Q3DOBJ += \
+  YDOBJ += \
     $(O)/ded/sys/unix/sys.o \
     $(O)/ded/sys/unix/cons.o
 endif
 
 ifeq ($(PLATFORM),darwin)
-  Q3DOBJ += \
+  YDOBJ += \
     $(O)/ded/sys/osx/sys.o
 endif
 
-$(B)/$(SERVERBIN)$(FULLBINEXT): $(Q3DOBJ)
+$(B)/$(SERVERBIN)$(FULLBINEXT): $(YDOBJ)
 	$(echo_cmd) "LD $@"
-	$(Q)$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $(Q3DOBJ) $(LIBS)
+	$(Q)$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $(YDOBJ) $(LIBS)
 
+#
+# base cgame
+#
 
-
-#############################################################################
-## BASEQ3 CGAME
-#############################################################################
-
-Q3CGOBJ_ = \
+CGOBJ_ = \
   $(O)/$(BASEGAME)/cgame/bg/misc.o \
   $(O)/$(BASEGAME)/cgame/bg/pmove.o \
   $(O)/$(BASEGAME)/cgame/bg/slidemove.o \
@@ -1845,23 +1825,22 @@ Q3CGOBJ_ = \
   $(O)/$(BASEGAME)/qcommon/utf.o \
   $(O)/$(BASEGAME)/qcommon/vmlibc/vmlibc.o
 
-Q3CGOBJ = $(Q3CGOBJ_) $(O)/$(BASEGAME)/cgame/syscalls.o
-Q3CGVMOBJ = $(Q3CGOBJ_:%.o=%.asm)
+CGOBJ = $(CGOBJ_) $(O)/$(BASEGAME)/cgame/syscalls.o
+CGVMOBJ = $(CGOBJ_:%.o=%.asm)
 
-$(B)/$(BASEGAME)/cgame-$(SHLIBNAME): $(Q3CGOBJ)
+$(B)/$(BASEGAME)/cgame-$(SHLIBNAME): $(CGOBJ)
 	$(echo_cmd) "LD $@"
-	$(Q)$(CC) $(CFLAGS) $(SHLIBLDFLAGS) -o $@ $(Q3CGOBJ)
+	$(Q)$(CC) $(CFLAGS) $(SHLIBLDFLAGS) -o $@ $(CGOBJ)
 
-$(B)/$(BASEGAME)/vm/cgame.qvm: $(Q3CGVMOBJ) $(CGDIR)/syscalls.asm $(Q3ASM)
+$(B)/$(BASEGAME)/vm/cgame.qvm: $(CGVMOBJ) $(CGDIR)/syscalls.asm $(Q3ASM)
 	$(echo_cmd) "Q3ASM $@"
-	$(Q)$(Q3ASM) -o $@ $(Q3CGVMOBJ) $(CGDIR)/syscalls.asm
+	$(Q)$(Q3ASM) -o $@ $(CGVMOBJ) $(CGDIR)/syscalls.asm
 
+#
+# base game
+#
 
-#############################################################################
-## BASEQ3 GAME
-#############################################################################
-
-Q3GOBJ_ = \
+GOBJ_ = \
   $(O)/$(BASEGAME)/game/active.o \
   $(O)/$(BASEGAME)/game/ai/chat.o \
   $(O)/$(BASEGAME)/game/ai/cmd.o \
@@ -1869,7 +1848,6 @@ Q3GOBJ_ = \
   $(O)/$(BASEGAME)/game/ai/dmq3.o \
   $(O)/$(BASEGAME)/game/ai/main.o \
   $(O)/$(BASEGAME)/game/ai/team.o \
-  $(O)/$(BASEGAME)/game/ai/vcmd.o \
   $(O)/$(BASEGAME)/game/arenas.o \
   $(O)/$(BASEGAME)/game/bg/misc.o \
   $(O)/$(BASEGAME)/game/bg/pmove.o \
@@ -1898,23 +1876,22 @@ Q3GOBJ_ = \
   $(O)/$(BASEGAME)/qcommon/utf.o \
   $(O)/$(BASEGAME)/qcommon/vmlibc/vmlibc.o
 
-Q3GOBJ = $(Q3GOBJ_) $(O)/$(BASEGAME)/game/syscalls.o
-Q3GVMOBJ = $(Q3GOBJ_:%.o=%.asm)
+GOBJ = $(GOBJ_) $(O)/$(BASEGAME)/game/syscalls.o
+GVMOBJ = $(GOBJ_:%.o=%.asm)
 
-$(B)/$(BASEGAME)/game-$(SHLIBNAME): $(Q3GOBJ)
+$(B)/$(BASEGAME)/game-$(SHLIBNAME): $(GOBJ)
 	$(echo_cmd) "LD $@"
-	$(Q)$(CC) $(CFLAGS) $(SHLIBLDFLAGS) -o $@ $(Q3GOBJ)
+	$(Q)$(CC) $(CFLAGS) $(SHLIBLDFLAGS) -o $@ $(GOBJ)
 
-$(B)/$(BASEGAME)/vm/game.qvm: $(Q3GVMOBJ) $(GDIR)/syscalls.asm $(Q3ASM)
+$(B)/$(BASEGAME)/vm/game.qvm: $(GVMOBJ) $(GDIR)/syscalls.asm $(Q3ASM)
 	$(echo_cmd) "Q3ASM $@"
-	$(Q)$(Q3ASM) -o $@ $(Q3GVMOBJ) $(GDIR)/syscalls.asm
+	$(Q)$(Q3ASM) -o $@ $(GVMOBJ) $(GDIR)/syscalls.asm
 
+#
+# base ui
+#
 
-#############################################################################
-## BASEQ3 UI
-#############################################################################
-
-Q3UIOBJ_ = \
+UIOBJ_ = \
   $(O)/$(BASEGAME)/ui/bg/misc.o \
   $(O)/$(BASEGAME)/ui/addbots.o \
   $(O)/$(BASEGAME)/ui/atoms.o \
@@ -1961,22 +1938,20 @@ Q3UIOBJ_ = \
   $(O)/$(BASEGAME)/qcommon/utf.o \
   $(O)/$(BASEGAME)/qcommon/vmlibc/vmlibc.o
 
-Q3UIOBJ = $(Q3UIOBJ_) $(O)/$(BASEGAME)/ui/syscalls.o
-Q3UIVMOBJ = $(Q3UIOBJ_:%.o=%.asm)
+UIOBJ = $(UIOBJ_) $(O)/$(BASEGAME)/ui/syscalls.o
+UIVMOBJ = $(UIOBJ_:%.o=%.asm)
 
-$(B)/$(BASEGAME)/ui-$(SHLIBNAME): $(Q3UIOBJ)
+$(B)/$(BASEGAME)/ui-$(SHLIBNAME): $(UIOBJ)
 	$(echo_cmd) "LD $@"
-	$(Q)$(CC) $(CFLAGS) $(SHLIBLDFLAGS) -o $@ $(Q3UIOBJ)
+	$(Q)$(CC) $(CFLAGS) $(SHLIBLDFLAGS) -o $@ $(UIOBJ)
 
-$(B)/$(BASEGAME)/vm/ui.qvm: $(Q3UIVMOBJ) $(Q3UIDIR)/syscalls.asm $(Q3ASM)
+$(B)/$(BASEGAME)/vm/ui.qvm: $(UIVMOBJ) $(UIDIR)/syscalls.asm $(Q3ASM)
 	$(echo_cmd) "Q3ASM $@"
-	$(Q)$(Q3ASM) -o $@ $(Q3UIVMOBJ) $(Q3UIDIR)/syscalls.asm
+	$(Q)$(Q3ASM) -o $@ $(UIVMOBJ) $(UIDIR)/syscalls.asm
 
-
-
-#############################################################################
-## CLIENT/SERVER RULES
-#############################################################################
+#
+# client/server rules
+#
 
 $(O)/client/%.o: $(ASMDIR)/%.s
 	$(DO_AS)
@@ -2061,10 +2036,9 @@ $(O)/ded/sys/sdl/%.o: $(SDLDIR)/%.c
 $(O)/ded/sys/osx/%.o: $(OSXDIR)/%.m
 	$(DO_DED_CC)
 
-
-#############################################################################
-## GAME MODULE RULES
-#############################################################################
+#
+# game module rules
+#
 
 $(O)/$(BASEGAME)/cgame/bg/%.o: $(BGDIR)/%.c
 	$(DO_CGAME_CC)
@@ -2090,11 +2064,11 @@ $(O)/$(BASEGAME)/game/bg/%.asm: $(BGDIR)/%.c $(Q3LCC)
 
 $(O)/$(BASEGAME)/ui/bg/%.o: $(BGDIR)/%.c
 	$(DO_UI_CC)
-$(O)/$(BASEGAME)/ui/%.o: $(Q3UIDIR)/%.c
+$(O)/$(BASEGAME)/ui/%.o: $(UIDIR)/%.c
 	$(DO_UI_CC)
 $(O)/$(BASEGAME)/ui/bg/%.asm: $(BGDIR)/%.c $(Q3LCC)
 	$(DO_UI_Q3LCC)
-$(O)/$(BASEGAME)/ui/%.asm: $(Q3UIDIR)/%.c $(Q3LCC)
+$(O)/$(BASEGAME)/ui/%.asm: $(UIDIR)/%.c $(Q3LCC)
 	$(DO_UI_Q3LCC)
 
 $(O)/$(BASEGAME)/qcommon/%.o: $(COMDIR)/%.c
@@ -2102,15 +2076,14 @@ $(O)/$(BASEGAME)/qcommon/%.o: $(COMDIR)/%.c
 $(O)/$(BASEGAME)/qcommon/%.asm: $(COMDIR)/%.c $(Q3LCC)
 	$(DO_Q3LCC)
 
+#
+# misc
+#
 
-#############################################################################
-# MISC
-#############################################################################
-
-OBJ = $(Q3OBJ) $(Q3ROBJ) $(Q3R2OBJ) $(Q3DOBJ) $(JPGOBJ) \
-  $(Q3GOBJ) $(Q3CGOBJ) $(Q3UIOBJ) \
-  $(Q3GVMOBJ) $(Q3CGVMOBJ) $(Q3UIVMOBJ)
-TOOLSOBJ = $(LBURGOBJ) $(Q3CPPOBJ) $(Q3RCCOBJ) $(Q3LCCOBJ) $(Q3ASMOBJ)
+OBJ = $(YOBJ) $(ROBJ) $(R2OBJ) $(YDOBJ) $(JPGOBJ) \
+  $(GOBJ) $(CGOBJ) $(UIOBJ) \
+  $(GVMOBJ) $(CGVMOBJ) $(UIVMOBJ)
+TOOLSOBJ = $(LBURGOBJ) $(Q3CPPOBJ) $(RCCOBJ) $(Q3LCCOBJ) $(Q3ASMOBJ)
 
 
 copyfiles: release
@@ -2188,7 +2161,7 @@ cmdclean2:
 	@echo "CMD_CLEAN $(B)"
 	@rm -f $(TOOLSOBJ)
 	@rm -f $(TOOLSOBJ_D_FILES)
-	@rm -f $(LBURG) $(DAGCHECK_C) $(Q3RCC) $(Q3CPP) $(Q3LCC) $(Q3ASM)
+	@rm -f $(LBURG) $(DAGCHECK_C) $(RCC) $(Q3CPP) $(Q3LCC) $(Q3ASM)
 
 distclean: clean cmdclean
 	@rm -rf $(BIN_DIR)
@@ -2208,9 +2181,9 @@ endif
 dist:
 	git archive HEAD | xz > $(CLIENTBIN)-$(VERSION)-src.tar.xz
 
-#############################################################################
-# DEPENDENCIES
-#############################################################################
+#
+# dependencies
+#
 
 ifneq ($(B),)
   OBJ_D_FILES=$(filter %.d,$(OBJ:%.o=%.d))
