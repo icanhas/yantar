@@ -726,20 +726,19 @@ gitem_t bg_itemlist[] =
 	{
 		"weapon_prox_launcher",
 		Pmiscsounds "/w_pkup",
-		{ Pproxmodels "/proxmine",
+		{ Pprojectilemodels "/proxmine",
 		  NULL, NULL, NULL},
-/* icon */ Picons "/iconw_proxlauncher",
+/* icon */ Picons "/icon_proxlauncher",
 /* pickup */ "Prox Launcher",
 		5,
 		IT_WEAPON,
 		WP_PROX_LAUNCHER,
 /* precache */ "",
-/* sounds */ Pproxsounds "/wstbtick "
-	     Pproxsounds "/wstbactv "
-	     Pproxsounds "/wstbimpl "
-	     Pproxsounds "/wstbimpm "
-	     Pproxsounds "/wstbimpd "
-	     Pproxsounds "/wstbactv"
+/* sounds */ Pproxsounds "/tick "
+	     Pproxsounds "/actv "
+	     Pproxsounds "/impl "
+	     Pproxsounds "/impm "
+	     Pproxsounds "/bimpd "
 	},
 
 /*QUAKED weapon_chaingun (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
