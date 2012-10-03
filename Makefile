@@ -814,7 +814,7 @@ endif
 ifneq ($(BUILD_GAME_SO),0)
   TARGETS += \
     $(B)/$(BASEGAME)/cgame-$(SHLIBNAME) \
-    $(B)/$(BASEGAME)/qagame-$(SHLIBNAME) \
+    $(B)/$(BASEGAME)/game-$(SHLIBNAME) \
     $(B)/$(BASEGAME)/ui-$(SHLIBNAME)
 endif
 
@@ -822,7 +822,7 @@ ifneq ($(BUILD_GAME_QVM),0)
   ifneq ($(CROSS_COMPILING),1)
     TARGETS += \
       $(B)/$(BASEGAME)/vm/cgame.qvm \
-      $(B)/$(BASEGAME)/vm/qagame.qvm \
+      $(B)/$(BASEGAME)/vm/game.qvm \
       $(B)/$(BASEGAME)/vm/ui.qvm
   endif
 endif
@@ -1901,11 +1901,11 @@ Q3GOBJ_ = \
 Q3GOBJ = $(Q3GOBJ_) $(O)/$(BASEGAME)/game/syscalls.o
 Q3GVMOBJ = $(Q3GOBJ_:%.o=%.asm)
 
-$(B)/$(BASEGAME)/qagame-$(SHLIBNAME): $(Q3GOBJ)
+$(B)/$(BASEGAME)/game-$(SHLIBNAME): $(Q3GOBJ)
 	$(echo_cmd) "LD $@"
 	$(Q)$(CC) $(CFLAGS) $(SHLIBLDFLAGS) -o $@ $(Q3GOBJ)
 
-$(B)/$(BASEGAME)/vm/qagame.qvm: $(Q3GVMOBJ) $(GDIR)/syscalls.asm $(Q3ASM)
+$(B)/$(BASEGAME)/vm/game.qvm: $(Q3GVMOBJ) $(GDIR)/syscalls.asm $(Q3ASM)
 	$(echo_cmd) "Q3ASM $@"
 	$(Q)$(Q3ASM) -o $@ $(Q3GVMOBJ) $(GDIR)/syscalls.asm
 
@@ -2108,8 +2108,8 @@ $(O)/$(BASEGAME)/qcommon/%.asm: $(COMDIR)/%.c $(Q3LCC)
 #############################################################################
 
 OBJ = $(Q3OBJ) $(Q3ROBJ) $(Q3R2OBJ) $(Q3DOBJ) $(JPGOBJ) \
-  $(MPGOBJ) $(Q3GOBJ) $(Q3CGOBJ) $(MPCGOBJ) $(Q3UIOBJ) $(MPUIOBJ) \
-  $(MPGVMOBJ) $(Q3GVMOBJ) $(Q3CGVMOBJ) $(MPCGVMOBJ) $(Q3UIVMOBJ) $(MPUIVMOBJ)
+  $(Q3GOBJ) $(Q3CGOBJ) $(Q3UIOBJ) \
+  $(Q3GVMOBJ) $(Q3CGVMOBJ) $(Q3UIVMOBJ)
 TOOLSOBJ = $(LBURGOBJ) $(Q3CPPOBJ) $(Q3RCCOBJ) $(Q3LCCOBJ) $(Q3ASMOBJ)
 
 
@@ -2151,7 +2151,7 @@ endif
 ifneq ($(BUILD_GAME_SO),0)
 	$(INSTALL) $(STRIP_FLAG) -m 0755 $(BR)/$(BASEGAME)/cgame-$(SHLIBNAME) \
 					$(COPYDIR)/$(BASEGAME)/.
-	$(INSTALL) $(STRIP_FLAG) -m 0755 $(BR)/$(BASEGAME)/qagame-$(SHLIBNAME) \
+	$(INSTALL) $(STRIP_FLAG) -m 0755 $(BR)/$(BASEGAME)/game-$(SHLIBNAME) \
 					$(COPYDIR)/$(BASEGAME)/.
 	$(INSTALL) $(STRIP_FLAG) -m 0755 $(BR)/$(BASEGAME)/ui-$(SHLIBNAME) \
 					$(COPYDIR)/$(BASEGAME)/.
