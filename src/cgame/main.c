@@ -167,19 +167,11 @@ vmCvar_t	cg_oldRocket;
 vmCvar_t	cg_oldPlasma;
 vmCvar_t	cg_trueLightning;
 
-#ifdef MISSIONPACK
 vmCvar_t	cg_redTeamName;
 vmCvar_t	cg_blueTeamName;
 vmCvar_t	cg_currentSelectedPlayer;
 vmCvar_t	cg_currentSelectedPlayerName;
-vmCvar_t	cg_singlePlayer;
 vmCvar_t	cg_enableDust;
-vmCvar_t	cg_enableBreath;
-vmCvar_t	cg_singlePlayerActive;
-vmCvar_t	cg_recordSPDemo;
-vmCvar_t	cg_recordSPDemoName;
-vmCvar_t	cg_obeliskRespawnDelay;
-#endif
 
 typedef struct {
 	vmCvar_t	*vmCvar;
@@ -247,11 +239,7 @@ static cvarTable_t cvarTable[] = {
 	{ &cg_ChatHeight, "cg_ChatHeight", "0", CVAR_ARCHIVE  },
 	{ &cg_forceModel, "cg_forceModel", "0", CVAR_ARCHIVE  },
 	{ &cg_predictItems, "cg_predictItems", "1", CVAR_ARCHIVE },
-#ifdef MISSIONPACK
 	{ &cg_deferPlayers, "cg_deferPlayers", "0", CVAR_ARCHIVE },
-#else
-	{ &cg_deferPlayers, "cg_deferPlayers", "1", CVAR_ARCHIVE },
-#endif
 	{ &cg_drawTeamOverlay, "cg_drawTeamOverlay", "0", CVAR_ARCHIVE },
 	{ &cg_teamOverlayUserinfo, "teamoverlay", "0", CVAR_ROM | CVAR_USERINFO },
 	{ &cg_stats, "cg_stats", "0", 0 },

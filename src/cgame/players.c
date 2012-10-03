@@ -427,7 +427,6 @@ loadclientinfo(int clientNum, clientInfo_t *ci)
 	char teamname[MAX_QPATH];
 
 	teamname[0] = 0;
-#ifdef MISSIONPACK
 	if(cgs.gametype >= GT_TEAM){
 		if(ci->team == TEAM_BLUE)
 			Q_strncpyz(teamname, cg_blueTeamName.string,
@@ -438,8 +437,6 @@ loadclientinfo(int clientNum, clientInfo_t *ci)
 	}
 	if(teamname[0])
 		strcat(teamname, "/");
-
-#endif
 	modelloaded = qtrue;
 	if(!regclientmodel(ci, ci->modelName, ci->skinName, teamname)){
 		if(cg_buildScript.integer)
@@ -1138,7 +1135,6 @@ hastetrail(centity_t *cent)
 	smoke->leType = LE_SCALE_FADE;
 }
 
-#ifdef MISSIONPACK
 static void
 dusttrail(centity_t *cent)
 {
@@ -1175,8 +1171,6 @@ dusttrail(centity_t *cent)
 	CG_SmokePuff(end, vel, 24, .8f, .8f, .7f, .33f, 500,
 		cg.time, 0, 0, cgs.media.dustPuffShader);
 }
-
-#endif
 
 static void
 trailitem(centity_t *cent, qhandle_t hModel)
@@ -1311,69 +1305,6 @@ playerflag(centity_t *cent, qhandle_t skinh, refEntity_t *hull)
 	trap_R_AddRefEntityToScene(&flag);
 
 }
-
-
-#ifdef MISSIONPACK
-static void
-playertokens(centity_t *cent, int renderfx)
-{
-	int tokens, i, j;
-	float	angle;
-	refEntity_t ent;
-	Vec3 dir, origin;
-	skulltrail_t *trail;
-	trail = &cg.skulltrails[cent->currentState.number];
-	tokens = cent->currentState.generic1;
-	if(!tokens){
-		trail->numpositions = 0;
-		return;
-	}
-
-	if(tokens > MAX_SKULLTRAIL)
-		tokens = MAX_SKULLTRAIL;
-
-	/* add skulls if there are more than last time */
-	for(i = 0; i < tokens - trail->numpositions; i++){
-		for(j = trail->numpositions; j > 0; j--)
-			copyv3(trail->positions[j-1], trail->positions[j]);
-		copyv3(cent->lerpOrigin, trail->positions[0]);
-	}
-	trail->numpositions = tokens;
-
-	/* move all the skulls along the trail */
-	copyv3(cent->lerpOrigin, origin);
-	for(i = 0; i < trail->numpositions; i++){
-		subv3(trail->positions[i], origin, dir);
-		if(normv3(dir) > 30)
-			maddv3(origin, 30, dir, trail->positions[i]);
-		copyv3(trail->positions[i], origin);
-	}
-
-	memset(&ent, 0, sizeof(ent));
-	if(cgs.clientinfo[ cent->currentState.clientNum ].team == TEAM_BLUE)
-		ent.hModel = cgs.media.redCubeModel;
-	else
-		ent.hModel = cgs.media.blueCubeModel;
-	ent.renderfx = renderfx;
-
-	copyv3(cent->lerpOrigin, origin);
-	for(i = 0; i < trail->numpositions; i++){
-		subv3(origin, trail->positions[i], ent.axis[0]);
-		ent.axis[0][2] = 0;
-		normv3(ent.axis[0]);
-		setv3(ent.axis[2], 0, 0, 1);
-		crossv3(ent.axis[0], ent.axis[2], ent.axis[1]);
-
-		copyv3(trail->positions[i], ent.origin);
-		angle =
-			(((cg.time + 500 * MAX_SKULLTRAIL - 500 *
-			   i) / 16) & 255) * (M_PI * 2) / 255;
-		ent.origin[2] += sin(angle) * 10;
-		trap_R_AddRefEntityToScene(&ent);
-		copyv3(trail->positions[i], origin);
-	}
-}
-#endif
 
 static void
 playerpowerups(centity_t *cent, refEntity_t *torso)
@@ -1724,14 +1655,10 @@ CG_Player(centity_t *cent)
 	int renderfx;
 	qbool shadow;
 	float shadowplane;
-#ifdef MISSIONPACK
-	refEntity_t skull;
 	refEntity_t powerup;
 	int t;
 	float c;
-	float angle;
-	Vec3 dir, angles;
-#endif
+	Vec3 angles;
 
 	/* 
 	 * the client number is stored in cnum.  It can't be derived
@@ -1771,11 +1698,6 @@ CG_Player(centity_t *cent)
 	if(cg_shadows.integer == 3 && shadow)
 		renderfx |= RF_SHADOW_PLANE;
 	renderfx |= RF_LIGHTING_ORIGIN;	/* use the same origin for all */
-#ifdef MISSIONPACK
-	if(cgs.gametype == GT_HARVESTER)
-		playertokens(cent, renderfx);
-
-#endif
 
 	/* add the craft body */
 	hull.hModel = ci->hullmodel;
@@ -1788,159 +1710,6 @@ CG_Player(centity_t *cent)
 	hull.renderfx = renderfx;
 	copyv3(hull.origin, hull.oldorigin);	/* don't positionally lerp at all */
 	CG_AddRefEntityWithPowerups(&hull, &cent->currentState, ci->team);
-
-#ifdef MISSIONPACK
-	if(cent->currentState.eFlags & EF_KAMIKAZE){
-		memset(&skull, 0, sizeof(skull));
-		copyv3(cent->lerpOrigin, skull.lightingOrigin);
-		skull.shadowPlane = shadowplane;
-		skull.renderfx = renderfx;
-
-		if(cent->currentState.eFlags & EF_DEAD){
-			/* one skull bobbing above the dead body */
-			angle = ((cg.time / 7) & 255) * (M_PI * 2) / 255;
-			if(angle > M_PI * 2)
-				angle -= (float)M_PI * 2;
-			dir[0] = sin(angle) * 20;
-			dir[1] = cos(angle) * 20;
-			angle = ((cg.time / 4) & 255) * (M_PI * 2) / 255;
-			dir[2] = 15 + sin(angle) * 8;
-			addv3(hull.origin, dir, skull.origin);
-
-			dir[2] = 0;
-			copyv3(dir, skull.axis[1]);
-			normv3(skull.axis[1]);
-			setv3(skull.axis[2], 0, 0, 1);
-			crossv3(skull.axis[1], skull.axis[2], skull.axis[0]);
-
-			skull.hModel = cgs.media.kamikazeHeadModel;
-			trap_R_AddRefEntityToScene(&skull);
-			skull.hModel = cgs.media.kamikazeHeadTrail;
-			trap_R_AddRefEntityToScene(&skull);
-		}else{
-			/* three skulls spinning around the player */
-			angle = ((cg.time / 4) & 255) * (M_PI * 2) / 255;
-			dir[0] = cos(angle) * 20;
-			dir[1] = sin(angle) * 20;
-			dir[2] = cos(angle) * 20;
-			addv3(hull.origin, dir, skull.origin);
-
-			angles[0] = sin(angle) * 30;
-			angles[1] = (angle * 180 / M_PI) + 90;
-			if(angles[1] > 360)
-				angles[1] -= 360;
-			angles[2] = 0;
-			eulertoaxis(angles, skull.axis);
-
-			skull.hModel = cgs.media.kamikazeHeadModel;
-			trap_R_AddRefEntityToScene(&skull);
-			/* flip the trail because this skull is spinning in the other direction */
-			invv3(skull.axis[1]);
-			skull.hModel = cgs.media.kamikazeHeadTrail;
-			trap_R_AddRefEntityToScene(&skull);
-
-			angle = ((cg.time / 4) & 255) * (M_PI * 2) / 255 + M_PI;
-			if(angle > M_PI * 2)
-				angle -= (float)M_PI * 2;
-			dir[0] = sin(angle) * 20;
-			dir[1] = cos(angle) * 20;
-			dir[2] = cos(angle) * 20;
-			addv3(hull.origin, dir, skull.origin);
-
-			angles[0] = cos(angle - 0.5 * M_PI) * 30;
-			angles[1] = 360 - (angle * 180 / M_PI);
-			if(angles[1] > 360)
-				angles[1] -= 360;
-			angles[2] = 0;
-			eulertoaxis(angles, skull.axis);
-
-			skull.hModel = cgs.media.kamikazeHeadModel;
-			trap_R_AddRefEntityToScene(&skull);
-			skull.hModel = cgs.media.kamikazeHeadTrail;
-			trap_R_AddRefEntityToScene(&skull);
-
-			angle = ((cg.time /
-				  3) & 255) * (M_PI * 2) / 255 + 0.5 * M_PI;
-			if(angle > M_PI * 2)
-				angle -= (float)M_PI * 2;
-			dir[0] = sin(angle) * 20;
-			dir[1] = cos(angle) * 20;
-			dir[2] = 0;
-			addv3(hull.origin, dir, skull.origin);
-
-			copyv3(dir, skull.axis[1]);
-			normv3(skull.axis[1]);
-			setv3(skull.axis[2], 0, 0, 1);
-			crossv3(skull.axis[1], skull.axis[2], skull.axis[0]);
-
-			skull.hModel = cgs.media.kamikazeHeadModel;
-			trap_R_AddRefEntityToScene(&skull);
-			skull.hModel = cgs.media.kamikazeHeadTrail;
-			trap_R_AddRefEntityToScene(&skull);
-		}
-	}
-
-	if(cent->currentState.powerups & (1 << PW_GUARD)){
-		memcpy(&powerup, &hull, sizeof(hull));
-		powerup.hModel = cgs.media.guardPowerupModel;
-		powerup.frame = 0;
-		powerup.oldframe = 0;
-		powerup.customSkin = 0;
-		trap_R_AddRefEntityToScene(&powerup);
-	}
-	if(cent->currentState.powerups & (1 << PW_SCOUT)){
-		memcpy(&powerup, &hull, sizeof(hull));
-		powerup.hModel = cgs.media.scoutPowerupModel;
-		powerup.frame = 0;
-		powerup.oldframe = 0;
-		powerup.customSkin = 0;
-		trap_R_AddRefEntityToScene(&powerup);
-	}
-	if(cent->currentState.powerups & (1 << PW_DOUBLER)){
-		memcpy(&powerup, &hull, sizeof(hull));
-		powerup.hModel = cgs.media.doublerPowerupModel;
-		powerup.frame = 0;
-		powerup.oldframe = 0;
-		powerup.customSkin = 0;
-		trap_R_AddRefEntityToScene(&powerup);
-	}
-	if(cent->currentState.powerups & (1 << PW_AMMOREGEN)){
-		memcpy(&powerup, &hull, sizeof(hull));
-		powerup.hModel = cgs.media.ammoRegenPowerupModel;
-		powerup.frame = 0;
-		powerup.oldframe = 0;
-		powerup.customSkin = 0;
-		trap_R_AddRefEntityToScene(&powerup);
-	}
-	if(cent->currentState.powerups & (1 << PW_INVULNERABILITY)){
-		if(!ci->invulnerabilityStartTime)
-			ci->invulnerabilityStartTime = cg.time;
-		ci->invulnerabilityStopTime = cg.time;
-	}else
-		ci->invulnerabilityStartTime = 0;
-	if((cent->currentState.powerups & (1 << PW_INVULNERABILITY)) ||
-	   cg.time - ci->invulnerabilityStopTime < 250){
-
-		memcpy(&powerup, &hull, sizeof(hull));
-		powerup.hModel = cgs.media.invulnerabilityPowerupModel;
-		powerup.customSkin = 0;
-		/* always draw */
-		powerup.renderfx &= ~RF_THIRD_PERSON;
-		copyv3(cent->lerpOrigin, powerup.origin);
-
-		if(cg.time - ci->invulnerabilityStartTime < 250)
-			c = (float)(cg.time -
-					ci->invulnerabilityStartTime) / 250;
-		else if(cg.time - ci->invulnerabilityStopTime < 250)
-			c = (float)(250 - (cg.time -
-					 ci->invulnerabilityStopTime)) / 250;
-		else
-			c = 1;
-		setv3(powerup.axis[0], c, 0, 0);
-		setv3(powerup.axis[1], 0, c, 0);
-		setv3(powerup.axis[2], 0, 0, c);
-		trap_R_AddRefEntityToScene(&powerup);
-	}
 
 	t = cg.time - ci->medkitUsageTime;
 	if(ci->medkitUsageTime && t < 500){
@@ -1967,11 +1736,8 @@ CG_Player(centity_t *cent)
 		}
 		trap_R_AddRefEntityToScene(&powerup);
 	}
-#endif	/* MISSIONPACK */
 
-#ifdef MISSIONPACK
 	dusttrail(cent);
-#endif
 
 	/*
 	 * add the gun / barrel / flash
