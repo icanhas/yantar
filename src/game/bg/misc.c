@@ -640,55 +640,6 @@ gitem_t bg_itemlist[] =
 /* sounds */ ""
 	},
 
-#ifdef MISSIONPACK
-/*QUAKED holdable_kamikaze (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
- */
-	{
-		"holdable_kamikaze",
-		Pitemsounds "/holdable",
-		{ Pholdablemodels "/kamikazi",
-		  NULL, NULL, NULL},
-/* icon */ Picons "/kamikaze",
-/* pickup */ "Kamikaze",
-		60,
-		IT_HOLDABLE,
-		HI_KAMIKAZE,
-/* precache */ "",
-/* sounds */ Pitemsounds "/kamikazerespawn"
-	},
-
-/*QUAKED holdable_portal (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
- */
-	{
-		"holdable_portal",
-		Pitemsounds "/holdable",
-		{ Pholdablemodels "/porter",
-		  NULL, NULL, NULL},
-/* icon */ Picons "/portal",
-/* pickup */ "Portal",
-		60,
-		IT_HOLDABLE,
-		HI_PORTAL,
-/* precache */ "",
-/* sounds */ ""
-	},
-
-/*QUAKED holdable_invulnerability (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
- */
-	{
-		"holdable_invulnerability",
-		Pitemsounds "/holdable",
-		{ Pholdablemodels "/invulnerability",
-		  NULL, NULL, NULL},
-/* icon */ Picons "/invulnerability",
-/* pickup */ "Invulnerability",
-		60,
-		IT_HOLDABLE,
-		HI_INVULNERABILITY,
-/* precache */ "",
-/* sounds */ ""
-	},
-
 /*QUAKED ammo_nails (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
  */
 	{
@@ -737,73 +688,6 @@ gitem_t bg_itemlist[] =
 /* sounds */ ""
 	},
 
-	/*
-	 * PERSISTANT POWERUP ITEMS
-	 *  */
-/*QUAKED item_scout (.3 .3 1) (-16 -16 -16) (16 16 16) suspended redTeam blueTeam
- */
-	{
-		"item_scout",
-		Pitemsounds "/scout",
-		{ Pinstantmodels "/scout",
-		  NULL, NULL, NULL },
-/* icon */ Picons "/scout",
-/* pickup */ "Scout",
-		30,
-		IT_PERSISTANT_POWERUP,
-		PW_SCOUT,
-/* precache */ "",
-/* sounds */ ""
-	},
-
-/*QUAKED item_guard (.3 .3 1) (-16 -16 -16) (16 16 16) suspended redTeam blueTeam
- */
-	{
-		"item_guard",
-		Pitemsounds "/guard",
-		{ Pinstantmodels "/guard",
-		  NULL, NULL, NULL },
-/* icon */ Picons "/guard",
-/* pickup */ "Guard",
-		30,
-		IT_PERSISTANT_POWERUP,
-		PW_GUARD,
-/* precache */ "",
-/* sounds */ ""
-	},
-
-/*QUAKED item_doubler (.3 .3 1) (-16 -16 -16) (16 16 16) suspended redTeam blueTeam
- */
-	{
-		"item_doubler",
-		Pitemsounds "/doubler",
-		{ Pinstantmodels "/doubler",
-		  NULL, NULL, NULL },
-/* icon */ Picons "/doubler",
-/* pickup */ "Doubler",
-		30,
-		IT_PERSISTANT_POWERUP,
-		PW_DOUBLER,
-/* precache */ "",
-/* sounds */ ""
-	},
-
-/*QUAKED item_doubler (.3 .3 1) (-16 -16 -16) (16 16 16) suspended redTeam blueTeam
- */
-	{
-		"item_ammoregen",
-		Pitemsounds "/ammoregen",
-		{ Pinstantmodels "/ammo",
-		  NULL, NULL, NULL },
-/* icon */ Picons "/ammo_regen",
-/* pickup */ "Ammo Regen",
-		30,
-		IT_PERSISTANT_POWERUP,
-		PW_AMMOREGEN,
-/* precache */ "",
-/* sounds */ ""
-	},
-
 	/*QUAKED team_CTF_neutralflag (0 0 1) (-16 -16 -16) (16 16 16)
 	 * Only in One Flag CTF games
 	 */
@@ -821,33 +705,6 @@ gitem_t bg_itemlist[] =
 /* sounds */ ""
 	},
 
-	{
-		"item_redcube",
-		Pmiscsounds "/am_pkup",
-		{ Ppowerupmodels "s/orb/r_orb",
-		  NULL, NULL, NULL },
-/* icon */ Picons "/iconh_rorb",
-/* pickup */ "Red Cube",
-		0,
-		IT_TEAM,
-		0,
-/* precache */ "",
-/* sounds */ ""
-	},
-
-	{
-		"item_bluecube",
-		Pmiscsounds "/am_pkup",
-		{ Ppowerupmodels "/orb/b_orb",
-		  NULL, NULL, NULL },
-/* icon */ Picons "/iconh_borb",
-/* pickup */ "Blue Cube",
-		0,
-		IT_TEAM,
-		0,
-/* precache */ "",
-/* sounds */ ""
-	},
 /*QUAKED weapon_nailgun (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
  */
 	{
@@ -900,7 +757,6 @@ gitem_t bg_itemlist[] =
 /* precache */ "",
 /* sounds */ Pgattlingsounds "/wvulwind"
 	},
-#endif
 
 	/* end of list marker */
 	{NULL}
