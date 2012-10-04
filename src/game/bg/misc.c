@@ -7,7 +7,7 @@
  */
 
 #include "shared.h"
-#include "public.h"
+#include "bg.h"
 
 /*QUAKED item_***** ( 0 0 0 ) (-16 -16 -16) (16 16 16) suspended
  * DO NOT USE THIS CLASS, IT JUST HOLDS GENERAL INFORMATION.

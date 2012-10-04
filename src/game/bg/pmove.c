@@ -7,7 +7,7 @@
  */
  
 #include "shared.h"
-#include "public.h"
+#include "bg.h"
 #include "local.h"
 
 #define GrapplePullSpeed 400

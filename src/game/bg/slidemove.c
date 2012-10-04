@@ -4,11 +4,10 @@
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License.
  */
-/*
- * bg_slidemove.c -- part of bg_pmove functionality */
+/* part of bg_pmove functionality */
 
 #include "shared.h"
-#include "public.h"
+#include "bg.h"
 #include "local.h"
 
 /*

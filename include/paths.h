@@ -63,7 +63,7 @@
 #define Pmiscmodels	Pmodels "/misc"
 #define Pprojectilemodels	Pmodels "/projectiles"
 
-#define Pgattlingmodels	Pweapmodels "/vulcan"
+#define Pgattlingmodels	Pweapmodels "/minigun"
 #define Plgmodels	Pweapmodels "/lightning"
 #define Pmgmodels	Pweapmodels "/machinegun"
 #define Pmeleemodels	Pweapmodels "/melee"
