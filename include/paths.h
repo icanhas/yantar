@@ -81,8 +81,6 @@
 
 #define Ptelemodels		Pmiscmodels ""
 
-#define Pharvestermodels	Ppowerupmodels "/harvester"
-#define Pobeliskmodels		Ppowerupmodels "/obelisk"
 #define Parmormodels		Ppowerupmodels "/armor"
 #define Pshieldmodels		Ppowerupmodels "/shield"
 #define Phealthmodels		Ppowerupmodels "/health"
