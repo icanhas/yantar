@@ -9,7 +9,7 @@
 #include "client.h"
 
 #ifdef USE_CURL_DLOPEN
-#include "../sys/sys_loadlib.h"
+#include "../sys/loadlib.h"
 
 cvar_t *cl_cURLLib;
 
