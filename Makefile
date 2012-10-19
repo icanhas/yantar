@@ -1581,12 +1581,12 @@ ifeq ($(PLATFORM),mingw32)
     $(O)/client/sys/win/sys.o
 else
   YOBJ += \
-    $(O)/client/unix/sys.o
+    $(O)/client/sys/unix/sys.o
 endif
 
 ifeq ($(PLATFORM),darwin)
   YOBJ += \
-    $(O)/client/osx/sys.o
+    $(O)/client/sys/osx/sys.o
 endif
 
 ifeq ($(USE_MUMBLE),1)
