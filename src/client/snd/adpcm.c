@@ -1,4 +1,4 @@
-/***********************************************************
+/*
  * Copyright 1992 by Stichting Mathematisch Centrum, Amsterdam, The
  * Netherlands.
  *
@@ -20,7 +20,7 @@
  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT
  * OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  *
- ******************************************************************/
+ */
 
 /*
 ** Intel/DVI ADPCM coder/decoder.
@@ -32,7 +32,6 @@
 */
 
 #include "local.h"
-
 
 /* Intel ADPCM step variation table */
 static int	indexTable[16] = {
@@ -52,9 +51,8 @@ static int	stepsizeTable[89] = {
 	15289, 16818, 18500, 20350, 22385, 24623, 27086, 29794, 32767
 };
 
-
-void
-S_AdpcmEncode(short indata[], char outdata[], int len, struct adpcm_state *state)
+static void
+adpcmencode(short indata[], char outdata[], int len, struct adpcm_state *state)
 {
 	short	*inp;		/* Input buffer pointer */
 	signed char *outp;	/* output buffer pointer */
@@ -152,9 +150,8 @@ S_AdpcmEncode(short indata[], char outdata[], int len, struct adpcm_state *state
 	state->index	= index;
 }
 
-
-/* static */ void
-S_AdpcmDecode(const char indata[], short *outdata, int len,
+static void
+adpcmdecode(const char indata[], short *outdata, int len,
 	      struct adpcm_state *state)
 {
 	signed char *inp;	/* Input buffer pointer */
@@ -230,10 +227,7 @@ S_AdpcmDecode(const char indata[], short *outdata, int len,
 	state->index	= index;
 }
 
-
 /*
- * S_AdpcmMemoryNeeded
- *
  * Returns the amount of memory (in bytes) needed to store the samples in out internal adpcm format
  */
 int
@@ -265,10 +259,6 @@ S_AdpcmMemoryNeeded(const wavinfo_t *info)
 	return sampleMemory + headerMemory;
 }
 
-
-/*
- * S_AdpcmGetSamples
- */
 void
 S_AdpcmGetSamples(sndBuffer *chunk, short *to)
 {
@@ -281,13 +271,9 @@ S_AdpcmGetSamples(sndBuffer *chunk, short *to)
 
 	out = (byte*)chunk->sndChunk;
 	/* get samples */
-	S_AdpcmDecode((char*)out, to, SND_CHUNK_SIZE_BYTE*2, &state);
+	adpcmdecode((char*)out, to, SND_CHUNK_SIZE_BYTE*2, &state);
 }
 
-
-/*
- * S_AdpcmEncodeSound
- */
 void
 S_AdpcmEncodeSound(sfx_t *sfx, short *samples)
 {
@@ -323,7 +309,7 @@ S_AdpcmEncodeSound(sfx_t *sfx, short *samples)
 		out = (byte*)chunk->sndChunk;
 
 		/* encode the samples */
-		S_AdpcmEncode(samples + inOffset, (char*)out, n, &state);
+		adpcmencode(samples + inOffset, (char*)out, n, &state);
 
 		inOffset += n;
 		count -= n;
