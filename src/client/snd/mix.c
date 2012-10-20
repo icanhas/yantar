@@ -14,13 +14,13 @@
 
 static	portable_samplepair_t paintbuffer[PAINTBUFFER_SIZE];
 static int	snd_vol;
-int		*snd_p;
-int		snd_linear_count;
-short	*snd_out;
+static int		*snd_p;
+static int		snd_linear_count;
+static short	*snd_out;
 
 #if     !id386	/* if configured not to use asm */
 
-void
+static void
 S_WriteLinearBlastStereo16(void)
 {
 	int	i;
@@ -44,9 +44,11 @@ S_WriteLinearBlastStereo16(void)
 			snd_out[i+1] = val;
 	}
 }
+
 #elif defined(__GNUC__)
 /* uses snd_mixa.s */
 void S_WriteLinearBlastStereo16(void);
+
 #else
 
 __declspec(naked) void
@@ -96,7 +98,7 @@ S_WriteLinearBlastStereo16(void)
 
 #endif
 
-void
+static void
 S_TransferStereo16(unsigned long *pbuf, int endtime)
 {
 	int	lpos;
@@ -129,7 +131,7 @@ S_TransferStereo16(unsigned long *pbuf, int endtime)
 	}
 }
 
-void
+static void
 S_TransferPaintBuffer(int endtime)
 {
 	int	out_idx;
@@ -467,7 +469,7 @@ S_PaintChannelFrom16(channel_t *ch, const sfx_t *sc, int count, int sampleOffset
 	S_PaintChannelFrom16_scalar(ch, sc, count, sampleOffset, bufferOffset);
 }
 
-void
+static void
 S_PaintChannelFromWavelet(channel_t *ch, sfx_t *sc, int count, int sampleOffset,
 			  int bufferOffset)
 {
@@ -512,7 +514,7 @@ S_PaintChannelFromWavelet(channel_t *ch, sfx_t *sc, int count, int sampleOffset,
 	}
 }
 
-void
+static void
 S_PaintChannelFromADPCM(channel_t *ch, sfx_t *sc, int count, int sampleOffset,
 			int bufferOffset)
 {
@@ -561,7 +563,7 @@ S_PaintChannelFromADPCM(channel_t *ch, sfx_t *sc, int count, int sampleOffset,
 	}
 }
 
-void
+static void
 S_PaintChannelFromMuLaw(channel_t *ch, sfx_t *sc, int count, int sampleOffset,
 			int bufferOffset)
 {
