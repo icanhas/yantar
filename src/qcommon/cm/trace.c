@@ -371,8 +371,8 @@ CM_TraceThroughBrush(traceWork_t *tw, cbrush_t *brush)
 	enterFrac = -1.0;
 	leaveFrac = 1.0;
 	clipplane = NULL;
-
-	if(!brush->numsides)
+	
+	if((tw == nil) || (brush == nil) || (!brush->numsides))
 		return;
 
 	c_brush_traces++;
@@ -511,7 +511,8 @@ CM_TraceThroughBrush(traceWork_t *tw, cbrush_t *brush)
 			tw->trace.fraction = enterFrac;
 			if(clipplane != nil)
 				tw->trace.plane = *clipplane;
-			tw->trace.surfaceFlags = leadside->surfaceFlags;
+			if(leadside != nil)
+				tw->trace.surfaceFlags = leadside->surfaceFlags;
 			tw->trace.contents = brush->contents;
 		}
 }
