@@ -509,7 +509,8 @@ CM_TraceThroughBrush(traceWork_t *tw, cbrush_t *brush)
 			if(enterFrac < 0)
 				enterFrac = 0;
 			tw->trace.fraction = enterFrac;
-			tw->trace.plane = *clipplane;
+			if(clipplane != nil)
+				tw->trace.plane = *clipplane;
 			tw->trace.surfaceFlags = leadside->surfaceFlags;
 			tw->trace.contents = brush->contents;
 		}
