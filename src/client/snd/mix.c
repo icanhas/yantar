@@ -14,9 +14,10 @@
 
 static	portable_samplepair_t paintbuffer[PAINTBUFFER_SIZE];
 static int	snd_vol;
-static int		*snd_p;
-static int		snd_linear_count;
-static short	*snd_out;
+/* FIXME: next three exported so that mixa.s can use */
+int		*snd_p;
+int		snd_linear_count;
+short	*snd_out;
 
 #if     !id386	/* if configured not to use asm */
 
