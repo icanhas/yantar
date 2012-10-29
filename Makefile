@@ -2,26 +2,26 @@
 # a new file named 'Makeconfig' in the same directory as this file and
 # define your parameters there.
 
-COMPILE_PLATFORM=$(shell uname | tr '[:upper:]' '[:lower:]' | sed 's/_.*//; s/\//_/g')
-COMPILE_ARCH=$(shell uname -m | sed 's/i.86/i386/')
+HOSTSYS=$(shell uname | tr '[:upper:]' '[:lower:]' | sed 's/_.*//; s/\//_/g')
+HOSTARCH=$(shell uname -m | sed 's/i.86/i386/')
 
-ifeq ($(COMPILE_PLATFORM),sunos)
+ifeq ($(HOSTSYS),sunos)
   # Solaris uname and GNU uname differ
-  COMPILE_ARCH=$(shell uname -p | sed 's/i.86/i386/')
+  HOSTARCH=$(shell uname -p | sed 's/i.86/i386/')
 endif
-ifeq ($(COMPILE_PLATFORM),darwin)
+ifeq ($(HOSTSYS),darwin)
   # Apple does some things a little differently...
-  COMPILE_ARCH=$(shell uname -p | sed 's/i.86/i386/')
+  HOSTARCH=$(shell uname -p | sed 's/i.86/i386/')
 endif
 
-ifeq ($(COMPILE_ARCH),i386)
-  COMPILE_ARCH=x86
+ifeq ($(HOSTARCH),i386)
+  HOSTARCH=x86
 endif
-ifeq ($(COMPILE_ARCH),x86_64)
-  COMPILE_ARCH=amd64
+ifeq ($(HOSTARCH),x86_64)
+  HOSTARCH=amd64
 endif
-ifeq ($(COMPILE_ARCH),x64)
-  COMPILE_ARCH=amd64
+ifeq ($(HOSTARCH),x64)
+  HOSTARCH=amd64
 endif
 
 ifndef BUILD_STANDALONE
@@ -59,28 +59,28 @@ endif
 -include Makeconfig
 
 ifndef PLATFORM
-PLATFORM=$(COMPILE_PLATFORM)
+PLATFORM=$(HOSTSYS)
 endif
 export PLATFORM
 
-ifeq ($(COMPILE_ARCH),powerpc)
-  COMPILE_ARCH=ppc
+ifeq ($(HOSTARCH),powerpc)
+  HOSTARCH=ppc
 endif
-ifeq ($(COMPILE_ARCH),powerpc64)
-  COMPILE_ARCH=ppc64
+ifeq ($(HOSTARCH),powerpc64)
+  HOSTARCH=ppc64
 endif
 
 ifndef ARCH
-ARCH=$(COMPILE_ARCH)
+ARCH=$(HOSTARCH)
 endif
 export ARCH
 
-ifneq ($(PLATFORM),$(COMPILE_PLATFORM))
+ifneq ($(PLATFORM),$(HOSTSYS))
   CROSS_COMPILING=1
 else
   CROSS_COMPILING=0
 
-  ifneq ($(ARCH),$(COMPILE_ARCH))
+  ifneq ($(ARCH),$(HOSTARCH))
     CROSS_COMPILING=1
   endif
 endif
@@ -255,7 +255,6 @@ INSTALL=install
 MKDIR=mkdir
 
 ifneq (,$(findstring "$(PLATFORM)", "linux" "gnu_kfreebsd" "kfreebsd-gnu"))
-
   ifeq ($(ARCH),axp)
     ARCH=alpha
   else
@@ -414,7 +413,6 @@ ifeq ($(PLATFORM),darwin)
   NOTSHLIBCFLAGS=-mdynamic-no-pic
 
   TOOLS_CFLAGS += -DMACOS_X
-
 else # if darwin
 
 #
@@ -526,7 +524,6 @@ ifeq ($(PLATFORM),mingw32)
   endif
 
   BUILD_CLIENT_SMP = 0
-
 else # if mingw32
 
 #
@@ -578,7 +575,6 @@ ifeq ($(PLATFORM),freebsd)
       BASE_CFLAGS += -m64
     endif
   endif
-
 else # if freebsd
 
 #
@@ -619,7 +615,6 @@ ifeq ($(PLATFORM),openbsd)
       CLIENT_LIBS += -lcurl
     endif
   endif
-
 else # if openbsd
 
 #
@@ -644,7 +639,6 @@ ifeq ($(PLATFORM),netbsd)
   endif
 
   BUILD_CLIENT = 0
-
 else # ifeq netbsd
 
 #
@@ -671,7 +665,6 @@ ifeq ($(PLATFORM),irix64)
   CLIENT_LIBS=-L/usr/X11/$(LIB) $(SDL_LIBS) \
     -lX11 -lXext -lm
   RENDERER_LIBS = $(SDL_LIBS) -lGL
-
 else # if IRIX
 
 #
@@ -732,7 +725,6 @@ ifeq ($(PLATFORM),sunos)
 
   CLIENT_LIBS +=$(SDL_LIBS) -lX11 -lXext -liconv -lm
   RENDERER_LIBS = $(SDL_LIBS) -lGL
-
 else # if sunos
 
 #
@@ -987,8 +979,8 @@ ifeq ($(V),1)
 	@echo "  PLATFORM: $(PLATFORM)"
 	@echo "  ARCH: $(ARCH)"
 	@echo "  VERSION: $(VERSION)"
-	@echo "  COMPILE_PLATFORM: $(COMPILE_PLATFORM)"
-	@echo "  COMPILE_ARCH: $(COMPILE_ARCH)"
+	@echo "  HOSTSYS: $(HOSTSYS)"
+	@echo "  HOSTARCH: $(HOSTARCH)"
 	@echo "  CC: $(CC)"
 	@echo ""
 	@echo "  CFLAGS:"
