@@ -2,16 +2,16 @@
 # a new file named 'Makeconfig' in the same directory as this file and
 # define your parameters there.
 
-COMPILE_PLATFORM=$(shell uname|sed -e s/_.*//|tr '[:upper:]' '[:lower:]'|sed -e 's/\//_/g')
-COMPILE_ARCH=$(shell uname -m | sed -e s/i.86/i386/)
+COMPILE_PLATFORM=$(shell uname | tr '[:upper:]' '[:lower:]' | sed 's/_.*//; s/\//_/g')
+COMPILE_ARCH=$(shell uname -m | sed 's/i.86/i386/')
 
 ifeq ($(COMPILE_PLATFORM),sunos)
   # Solaris uname and GNU uname differ
-  COMPILE_ARCH=$(shell uname -p | sed -e s/i.86/i386/)
+  COMPILE_ARCH=$(shell uname -p | sed 's/i.86/i386/')
 endif
 ifeq ($(COMPILE_PLATFORM),darwin)
   # Apple does some things a little differently...
-  COMPILE_ARCH=$(shell uname -p | sed -e s/i.86/i386/)
+  COMPILE_ARCH=$(shell uname -p | sed 's/i.86/i386/')
 endif
 
 ifeq ($(COMPILE_ARCH),i386)
@@ -919,7 +919,7 @@ $(Q)$(CC) $(NOTSHLIBCFLAGS) $(CFLAGS) $(BOTCFLAGS) $(INCLUDES) $(OPTIMIZE) -DBOT
 endef
 
 ifeq ($(GENERATE_DEPENDENCIES),1)
-  DO_QVM_DEP=cat $(@:%.o=%.d) | sed -e 's/\.o/\.asm/g' >> $(@:%.o=%.d)
+  DO_QVM_DEP=cat $(@:%.o=%.d) | sed 's/\.o/\.asm/g' >> $(@:%.o=%.d)
 endif
 
 define DO_SHLIB_CC
