@@ -2,26 +2,17 @@
 # a new file named 'Makeconfig' in the same directory as this file and
 # define your parameters there.
 
-HOSTSYS=$(shell uname | tr '[:upper:]' '[:lower:]' | sed 's/_.*//; s/\//_/g')
-HOSTARCH=$(shell uname -m | sed 's/i.86/i386/')
+subarch=s/i.86/x86/; s/x86_64/amd64/; s/x64/amd64/
+HOSTSYS=$(shell uname | tr '[:upper:]' '[:lower:]' | sed 's/_.*//; s;/;_;g')
+HOSTARCH=$(shell uname -m | sed '$(subarch)')
 
 ifeq ($(HOSTSYS),sunos)
   # Solaris uname and GNU uname differ
-  HOSTARCH=$(shell uname -p | sed 's/i.86/i386/')
+  HOSTARCH=$(shell uname -p | sed '$(subarch)')
 endif
 ifeq ($(HOSTSYS),darwin)
   # Apple does some things a little differently...
-  HOSTARCH=$(shell uname -p | sed 's/i.86/i386/')
-endif
-
-ifeq ($(HOSTARCH),i386)
-  HOSTARCH=x86
-endif
-ifeq ($(HOSTARCH),x86_64)
-  HOSTARCH=amd64
-endif
-ifeq ($(HOSTARCH),x64)
-  HOSTARCH=amd64
+  HOSTARCH=$(shell uname -p | sed '$(subarch)')
 endif
 
 ifndef BUILD_STANDALONE
