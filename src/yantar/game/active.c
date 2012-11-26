@@ -696,7 +696,7 @@ ClientThink_real(gentity_t *ent)
 
 	/* check for the hit-scan gauntlet, don't let the action
 	 * go through as an attack unless it actually hits something */
-	if(client->ps.weapon == W1_GAUNTLET &&
+	if(client->ps.weapon == W1melee &&
 	   !(ucmd->buttons & BUTTON_TALK) &&
 	   (ucmd->buttons & BUTTON_ATTACK) && client->ps.weaponTime <= 0)
 		pm.gauntletHit = CheckGauntletAttack(ent);

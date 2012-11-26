@@ -276,7 +276,7 @@ CG_Item(centity_t *cent)
 		cent->lerpOrigin[2] += 8;	/* an extra height boost */
 	}
 
-	if(item->giType == IT_WEAPON && item->giTag == W1_RAILGUN){
+	if(item->giType == IT_WEAPON && item->giTag == W1railgun){
 		clientInfo_t *ci = &cgs.clientinfo[cg.snap->ps.clientNum];
 		byte4copy(ci->c1RGBA, ent.shaderRGBA);
 	}
@@ -385,7 +385,7 @@ CG_Missile(centity_t *cent)
 /*	int	col; */
 
 	s1 = &cent->currentState;
-	if(s1->weapon >= W1_NUM_WEAPONS)
+	if(s1->weapon >= Wnumweaps)
 		s1->weapon = 0;
 	weapon = &cg_weapons[s1->weapon];
 
@@ -436,7 +436,7 @@ CG_Missile(centity_t *cent)
 	copyv3(cent->lerpOrigin, ent.origin);
 	copyv3(cent->lerpOrigin, ent.oldorigin);
 
-	if(cent->currentState.weapon == W1_PLASMAGUN){
+	if(cent->currentState.weapon == W1plasmagun){
 		ent.reType = RT_SPRITE;
 		ent.radius = 16;
 		ent.rotation = 0;
@@ -450,7 +450,7 @@ CG_Missile(centity_t *cent)
 	ent.hModel = weapon->missileModel;
 	ent.renderfx = weapon->missileRenderfx | RF_NOSHADOW;
 
-	if(cent->currentState.weapon == W1_PROX_LAUNCHER)
+	if(cent->currentState.weapon == W2proxlauncher)
 		if(s1->generic1 == TEAM_BLUE)
 			ent.hModel = cgs.media.blueProxMine;
 
@@ -462,7 +462,7 @@ CG_Missile(centity_t *cent)
 	if(s1->pos.trType != TR_STATIONARY)
 		RotateAroundDirection(ent.axis, cg.time / 4);
 	else{
-		if(s1->weapon == W1_PROX_LAUNCHER)
+		if(s1->weapon == W2proxlauncher)
 			eulertoaxis(cent->lerpAngles, ent.axis);
 		else{
 			RotateAroundDirection(ent.axis, s1->time);
@@ -486,7 +486,7 @@ CG_Grapple(centity_t *cent)
 	const weaponInfo_t *weapon;
 
 	s1 = &cent->currentState;
-	if(s1->weapon >= W1_NUM_WEAPONS)
+	if(s1->weapon >= Wnumweaps)
 		s1->weapon = 0;
 	weapon = &cg_weapons[s1->weapon];
 

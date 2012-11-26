@@ -363,7 +363,7 @@ CG_ItemPickup(int itemNum)
 	if(bg_itemlist[itemNum].giType == IT_WEAPON)
 		/* select it immediately */
 		if(cg_autoswitch.integer && bg_itemlist[itemNum].giTag !=
-		   W1_MACHINEGUN){
+		   W1machinegun){
 			cg.weaponSelectTime = cg.time;
 			cg.weaponSelect = bg_itemlist[itemNum].giTag;
 		}
@@ -882,7 +882,7 @@ CG_EntityEvent(centity_t *cent, Vec3 position)
 		break;
 	case EV_RAILTRAIL:
 		DEBUGNAME("EV_RAILTRAIL");
-		cent->currentState.weapon = W1_RAILGUN;
+		cent->currentState.weapon = W1railgun;
 
 		if(es->clientNum == cg.snap->ps.clientNum &&
 		   !cg.renderingThirdPerson){

@@ -220,10 +220,10 @@ Cmd_Give_f(gentity_t *ent)
 
 	if(give_all || Q_stricmp(name, "weapons") == 0){
 		ent->client->ps.stats[STAT_PRIWEAPS] =
-			(1 << W1_NUM_WEAPONS) - 1 -
+			(1 << Wnumweaps) - 1 -
 			(1 <<
 			 W1_GRAPPLING_HOOK) -
-			(1 << W1_NONE);
+			(1 << Wnone);
 		if(!give_all)
 			return;
 	}

@@ -182,7 +182,7 @@ gitem_t bg_itemlist[] =
 /* pickup */ "Gauntlet",
 		0,
 		IT_WEAPON,
-		W1_GAUNTLET,
+		W1melee,
 /* precache */ "",
 /* sounds */ ""
 	},
@@ -198,7 +198,7 @@ gitem_t bg_itemlist[] =
 /* pickup */ "Shotgun",
 		10,
 		IT_WEAPON,
-		W1_SHOTGUN,
+		W1shotgun,
 /* precache */ "",
 /* sounds */ ""
 	},
@@ -214,7 +214,7 @@ gitem_t bg_itemlist[] =
 /* pickup */ "Machinegun",
 		200,
 		IT_WEAPON,
-		W1_MACHINEGUN,
+		W1machinegun,
 /* precache */ "",
 /* sounds */ ""
 	},
@@ -230,7 +230,7 @@ gitem_t bg_itemlist[] =
 /* pickup */ "Grenade Launcher",
 		10,
 		IT_WEAPON,
-		W1_GRENADE_LAUNCHER,
+		W2grenadelauncher,
 /* precache */ "",
 /* sounds */
 		(Pgrenadesounds "/hgrenb1a " Pgrenadesounds "/hgrenb2a")
@@ -247,7 +247,7 @@ gitem_t bg_itemlist[] =
 /* pickup */ "Rocket Launcher",
 		10,
 		IT_WEAPON,
-		W1_ROCKET_LAUNCHER,
+		W2rocketlauncher,
 /* precache */ "",
 /* sounds */ ""
 	},
@@ -263,7 +263,7 @@ gitem_t bg_itemlist[] =
 /* pickup */ "Lightning Gun",
 		100,
 		IT_WEAPON,
-		W1_LIGHTNING,
+		W1lightning,
 /* precache */ "",
 /* sounds */ ""
 	},
@@ -279,7 +279,7 @@ gitem_t bg_itemlist[] =
 /* pickup */ "Railgun",
 		10,
 		IT_WEAPON,
-		W1_RAILGUN,
+		W1railgun,
 /* precache */ "",
 /* sounds */ ""
 	},
@@ -295,7 +295,7 @@ gitem_t bg_itemlist[] =
 /* pickup */ "Plasma Gun",
 		50,
 		IT_WEAPON,
-		W1_PLASMAGUN,
+		W1plasmagun,
 /* precache */ "",
 /* sounds */ ""
 	},
@@ -311,7 +311,7 @@ gitem_t bg_itemlist[] =
 /* pickup */ "BFG10K",
 		20,
 		IT_WEAPON,
-		W1_BFG,
+		W2bfg,
 /* precache */ "",
 /* sounds */ ""
 	},
@@ -347,7 +347,7 @@ gitem_t bg_itemlist[] =
 /* pickup */ "Shells",
 		10,
 		IT_AMMO,
-		W1_SHOTGUN,
+		W1shotgun,
 /* precache */ "",
 /* sounds */ ""
 	},
@@ -363,7 +363,7 @@ gitem_t bg_itemlist[] =
 /* pickup */ "Bullets",
 		50,
 		IT_AMMO,
-		W1_MACHINEGUN,
+		W1machinegun,
 /* precache */ "",
 /* sounds */ ""
 	},
@@ -379,7 +379,7 @@ gitem_t bg_itemlist[] =
 /* pickup */ "Grenades",
 		5,
 		IT_AMMO,
-		W1_GRENADE_LAUNCHER,
+		W2grenadelauncher,
 /* precache */ "",
 /* sounds */ ""
 	},
@@ -395,7 +395,7 @@ gitem_t bg_itemlist[] =
 /* pickup */ "Cells",
 		30,
 		IT_AMMO,
-		W1_PLASMAGUN,
+		W1plasmagun,
 /* precache */ "",
 /* sounds */ ""
 	},
@@ -411,7 +411,7 @@ gitem_t bg_itemlist[] =
 /* pickup */ "Lightning",
 		60,
 		IT_AMMO,
-		W1_LIGHTNING,
+		W1lightning,
 /* precache */ "",
 /* sounds */ ""
 	},
@@ -427,7 +427,7 @@ gitem_t bg_itemlist[] =
 /* pickup */ "Rockets",
 		5,
 		IT_AMMO,
-		W1_ROCKET_LAUNCHER,
+		W2rocketlauncher,
 /* precache */ "",
 /* sounds */ ""
 	},
@@ -443,7 +443,7 @@ gitem_t bg_itemlist[] =
 /* pickup */ "Slugs",
 		10,
 		IT_AMMO,
-		W1_RAILGUN,
+		W1railgun,
 /* precache */ "",
 /* sounds */ ""
 	},
@@ -459,7 +459,7 @@ gitem_t bg_itemlist[] =
 /* pickup */ "Bfg Ammo",
 		15,
 		IT_AMMO,
-		W1_BFG,
+		W2bfg,
 /* precache */ "",
 /* sounds */ ""
 	},
@@ -651,7 +651,7 @@ gitem_t bg_itemlist[] =
 /* pickup */ "Nails",
 		20,
 		IT_AMMO,
-		W1_NAILGUN,
+		W1nailgun,
 /* precache */ "",
 /* sounds */ ""
 	},
@@ -667,7 +667,7 @@ gitem_t bg_itemlist[] =
 /* pickup */ "Proximity Mines",
 		10,
 		IT_AMMO,
-		W1_PROX_LAUNCHER,
+		W2proxlauncher,
 /* precache */ "",
 /* sounds */ ""
 	},
@@ -683,7 +683,7 @@ gitem_t bg_itemlist[] =
 /* pickup */ "Chaingun Belt",
 		100,
 		IT_AMMO,
-		W1_CHAINGUN,
+		W1chaingun,
 /* precache */ "",
 /* sounds */ ""
 	},
@@ -716,7 +716,7 @@ gitem_t bg_itemlist[] =
 /* pickup */ "Nailgun",
 		10,
 		IT_WEAPON,
-		W1_NAILGUN,
+		W1nailgun,
 /* precache */ "",
 /* sounds */ ""
 	},
@@ -732,7 +732,7 @@ gitem_t bg_itemlist[] =
 /* pickup */ "Prox Launcher",
 		5,
 		IT_WEAPON,
-		W1_PROX_LAUNCHER,
+		W2proxlauncher,
 /* precache */ "",
 /* sounds */ Pproxsounds "/tick "
 	     Pproxsounds "/actv "
@@ -752,7 +752,7 @@ gitem_t bg_itemlist[] =
 /* pickup */ "Chaingun",
 		80,
 		IT_WEAPON,
-		W1_CHAINGUN,
+		W1chaingun,
 /* precache */ "",
 /* sounds */ Pgattlingsounds "/wvulwind"
 	},

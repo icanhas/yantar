@@ -514,39 +514,39 @@ Controls_UpdateModel(int anim)
 		break;
 
 	case ANIM_WEAPON1:
-		s_controls.playerWeapon = W1_GAUNTLET;
+		s_controls.playerWeapon = W1melee;
 		break;
 
 	case ANIM_WEAPON2:
-		s_controls.playerWeapon = W1_MACHINEGUN;
+		s_controls.playerWeapon = W1machinegun;
 		break;
 
 	case ANIM_WEAPON3:
-		s_controls.playerWeapon = W1_SHOTGUN;
+		s_controls.playerWeapon = W1shotgun;
 		break;
 
 	case ANIM_WEAPON4:
-		s_controls.playerWeapon = W1_GRENADE_LAUNCHER;
+		s_controls.playerWeapon = W2grenadelauncher;
 		break;
 
 	case ANIM_WEAPON5:
-		s_controls.playerWeapon = W1_ROCKET_LAUNCHER;
+		s_controls.playerWeapon = W2rocketlauncher;
 		break;
 
 	case ANIM_WEAPON6:
-		s_controls.playerWeapon = W1_LIGHTNING;
+		s_controls.playerWeapon = W1lightning;
 		break;
 
 	case ANIM_WEAPON7:
-		s_controls.playerWeapon = W1_RAILGUN;
+		s_controls.playerWeapon = W1railgun;
 		break;
 
 	case ANIM_WEAPON8:
-		s_controls.playerWeapon = W1_PLASMAGUN;
+		s_controls.playerWeapon = W1plasmagun;
 		break;
 
 	case ANIM_WEAPON9:
-		s_controls.playerWeapon = W1_BFG;
+		s_controls.playerWeapon = W2bfg;
 		break;
 
 	case ANIM_WEAPON10:
@@ -564,7 +564,7 @@ Controls_UpdateModel(int anim)
 	case ANIM_DIE:
 		s_controls.playerLegs	= BOTH_DEATH1;
 		s_controls.playerTorso	= BOTH_DEATH1;
-		s_controls.playerWeapon = W1_NONE;
+		s_controls.playerWeapon = Wnone;
 		break;
 
 	case ANIM_CHAT:

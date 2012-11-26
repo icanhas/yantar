@@ -795,7 +795,7 @@ dowaterevents(void)	/* FIXME? */
 static void
 startweapchange(int weapon)
 {
-	if(weapon <= W1_NONE || weapon >= W1_NUM_WEAPONS)
+	if(weapon <= Wnone || weapon >= Wnumweaps)
 		return;
 	if(!(pm->ps->stats[STAT_PRIWEAPS] & (1 << weapon)))
 		return;
@@ -813,10 +813,10 @@ finishweapchange(void)
 	int weap;
 
 	weap = pm->cmd.weapon;
-	if(weap < W1_NONE || weap >= W1_NUM_WEAPONS)
-		weap = W1_NONE;
+	if(weap < Wnone || weap >= Wnumweaps)
+		weap = Wnone;
 	if(!(pm->ps->stats[STAT_PRIWEAPS] & (1 << weap)))
-		weap = W1_NONE;
+		weap = Wnone;
 	pm->ps->weapon = weap;
 	pm->ps->weaponstate	= WEAPON_RAISING;
 	pm->ps->weaponTime	+= 250;
@@ -828,7 +828,7 @@ static void
 dotorsoanim(void)
 {
 	if(pm->ps->weaponstate == WEAPON_READY){
-		if(pm->ps->weapon == W1_GAUNTLET)
+		if(pm->ps->weapon == W1melee)
 			settorsoanim(TORSO_STAND2);
 		else
 			settorsoanim(TORSO_STAND);
@@ -850,7 +850,7 @@ doweapevents(void)
 		return;
 	/* check for dead player */
 	if(pm->ps->stats[STAT_HEALTH] <= 0){
-		pm->ps->weapon = W1_NONE;
+		pm->ps->weapon = Wnone;
 		return;
 	}
 	/* check for item using */
@@ -893,7 +893,7 @@ doweapevents(void)
 	}
 	if(pm->ps->weaponstate == WEAPON_RAISING){
 		pm->ps->weaponstate = WEAPON_READY;
-		if(pm->ps->weapon == W1_GAUNTLET)
+		if(pm->ps->weapon == W1melee)
 			starttorsoanim(TORSO_STAND2);
 		else
 			starttorsoanim(TORSO_STAND);
@@ -906,7 +906,7 @@ doweapevents(void)
 		return;
 	}
 	/* start the animation even if out of ammo */
-	if(pm->ps->weapon == W1_GAUNTLET){
+	if(pm->ps->weapon == W1melee){
 		/* the guantlet only "fires" when it actually hits something */
 		if(!pm->gauntletHit){
 			pm->ps->weaponTime	= 0;
@@ -931,43 +931,43 @@ doweapevents(void)
 	
 	switch(pm->ps->weapon){
 	default:
-	case W1_GAUNTLET:
+	case W1melee:
 		addTime = 400;
 		break;
-	case W1_LIGHTNING:
+	case W1lightning:
 		addTime = 50;
 		break;
-	case W1_SHOTGUN:
+	case W1shotgun:
 		addTime = 1000;
 		break;
-	case W1_MACHINEGUN:
+	case W1machinegun:
 		addTime = 50;
 		break;
-	case W1_GRENADE_LAUNCHER:
+	case W2grenadelauncher:
 		addTime = 800;
 		break;
-	case W1_ROCKET_LAUNCHER:
+	case W2rocketlauncher:
 		addTime = 800;
 		break;
-	case W1_PLASMAGUN:
+	case W1plasmagun:
 		addTime = 100;
 		break;
-	case W1_RAILGUN:
+	case W1railgun:
 		addTime = 1500;
 		break;
-	case W1_BFG:
+	case W2bfg:
 		addTime = 200;
 		break;
 	case W1_GRAPPLING_HOOK:
 		addTime = 1;
 		break;
-	case W1_NAILGUN:
+	case W1nailgun:
 		addTime = 1000;
 		break;
-	case W1_PROX_LAUNCHER:
+	case W2proxlauncher:
 		addTime = 800;
 		break;
-	case W1_CHAINGUN:
+	case W1chaingun:
 		addTime = 30;
 		break;
 	}

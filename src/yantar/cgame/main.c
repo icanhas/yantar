@@ -1941,7 +1941,7 @@ CG_Init(int serverMessageNum, int serverCommandSequence, int clientNum)
 
 	CG_InitConsoleCommands();
 
-	cg.weaponSelect = W1_MACHINEGUN;
+	cg.weaponSelect = W1machinegun;
 
 	cgs.redflag = cgs.blueflag = -1;	/* For compatibily, default to unset for */
 	cgs.flagStatus = -1;

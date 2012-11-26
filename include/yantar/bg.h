@@ -276,21 +276,27 @@ typedef enum {
 } holdable_t;
 
 typedef enum {
-	W1_NONE,
-	W1_GAUNTLET,
-	W1_MACHINEGUN,
-	W1_SHOTGUN,
-	W1_GRENADE_LAUNCHER,
-	W1_ROCKET_LAUNCHER,
-	W1_LIGHTNING,
-	W1_RAILGUN,
-	W1_PLASMAGUN,
-	W1_BFG,
+	/* weapons for primary mount point */
+	Wnone,
+	W1melee,
+	W1machinegun,
+	W1shotgun,
+	W1lightning,
+	W1railgun,
+	W1plasmagun,
 	W1_GRAPPLING_HOOK,
-	W1_NAILGUN,
-	W1_PROX_LAUNCHER,
-	W1_CHAINGUN,
-	W1_NUM_WEAPONS
+	W1nailgun,
+	W1chaingun,
+	/* 
+	 * weapons for secondary mount point 
+	 * N.B.: first must not be changed as it explicitly 
+	 * marks the start of the secondaries
+	 */
+	W2rocketlauncher,
+	W2grenadelauncher,
+	W2proxlauncher,
+	W2bfg,
+	Wnumweaps
 } Weapon;
 
 /* reward sounds (stored in ps->persistant[PERS_PLAYEREVENTS]) */

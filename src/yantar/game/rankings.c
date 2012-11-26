@@ -148,35 +148,35 @@ G_RankFireWeapon(int self, int weapon)
 		/* no reports during warmup period */
 		return;
 
-	if(weapon == W1_GAUNTLET)
+	if(weapon == W1melee)
 		/* the gauntlet only "fires" when it actually hits something */
 		return;
 
 	trap_RankReportInt(self, -1, QGR_KEY_SHOT_FIRED, 1, 1);
 
 	switch(weapon){
-	case W1_MACHINEGUN:
+	case W1machinegun:
 		trap_RankReportInt(self, -1, QGR_KEY_SHOT_FIRED_MACHINEGUN, 1, 1);
 		break;
-	case W1_SHOTGUN:
+	case W1shotgun:
 		trap_RankReportInt(self, -1, QGR_KEY_SHOT_FIRED_SHOTGUN, 1, 1);
 		break;
-	case W1_GRENADE_LAUNCHER:
+	case W2grenadelauncher:
 		trap_RankReportInt(self, -1, QGR_KEY_SHOT_FIRED_GRENADE, 1, 1);
 		break;
-	case W1_ROCKET_LAUNCHER:
+	case W2rocketlauncher:
 		trap_RankReportInt(self, -1, QGR_KEY_SHOT_FIRED_ROCKET, 1, 1);
 		break;
-	case W1_LIGHTNING:
+	case W1lightning:
 		trap_RankReportInt(self, -1, QGR_KEY_SHOT_FIRED_LIGHTNING, 1, 1);
 		break;
-	case W1_RAILGUN:
+	case W1railgun:
 		trap_RankReportInt(self, -1, QGR_KEY_SHOT_FIRED_RAILGUN, 1, 1);
 		break;
-	case W1_PLASMAGUN:
+	case W1plasmagun:
 		trap_RankReportInt(self, -1, QGR_KEY_SHOT_FIRED_PLASMA, 1, 1);
 		break;
-	case W1_BFG:
+	case W2bfg:
 		trap_RankReportInt(self, -1, QGR_KEY_SHOT_FIRED_BFG, 1, 1);
 		break;
 	case W1_GRAPPLING_HOOK:
@@ -617,31 +617,31 @@ G_RankWeaponTime(int self, int weapon)
 	trap_RankReportInt(self, -1, QGR_KEY_TIME, time, 1);
 
 	switch(weapon){
-	case W1_GAUNTLET:
+	case W1melee:
 		trap_RankReportInt(self, -1, QGR_KEY_TIME_GAUNTLET, time, 1);
 		break;
-	case W1_MACHINEGUN:
+	case W1machinegun:
 		trap_RankReportInt(self, -1, QGR_KEY_TIME_MACHINEGUN, time, 1);
 		break;
-	case W1_SHOTGUN:
+	case W1shotgun:
 		trap_RankReportInt(self, -1, QGR_KEY_TIME_SHOTGUN, time, 1);
 		break;
-	case W1_GRENADE_LAUNCHER:
+	case W2grenadelauncher:
 		trap_RankReportInt(self, -1, QGR_KEY_TIME_GRENADE, time, 1);
 		break;
-	case W1_ROCKET_LAUNCHER:
+	case W2rocketlauncher:
 		trap_RankReportInt(self, -1, QGR_KEY_TIME_ROCKET, time, 1);
 		break;
-	case W1_LIGHTNING:
+	case W1lightning:
 		trap_RankReportInt(self, -1, QGR_KEY_TIME_LIGHTNING, time, 1);
 		break;
-	case W1_RAILGUN:
+	case W1railgun:
 		trap_RankReportInt(self, -1, QGR_KEY_TIME_RAILGUN, time, 1);
 		break;
-	case W1_PLASMAGUN:
+	case W1plasmagun:
 		trap_RankReportInt(self, -1, QGR_KEY_TIME_PLASMA, time, 1);
 		break;
-	case W1_BFG:
+	case W2bfg:
 		trap_RankReportInt(self, -1, QGR_KEY_TIME_BFG, time, 1);
 		break;
 	case W1_GRAPPLING_HOOK:
@@ -664,31 +664,31 @@ G_RankPickupWeapon(int self, int weapon)
 
 	trap_RankReportInt(self, -1, QGR_KEY_PICKUP_WEAPON, 1, 1);
 	switch(weapon){
-	case W1_GAUNTLET:
+	case W1melee:
 		trap_RankReportInt(self, -1, QGR_KEY_PICKUP_GAUNTLET, 1, 1);
 		break;
-	case W1_MACHINEGUN:
+	case W1machinegun:
 		trap_RankReportInt(self, -1, QGR_KEY_PICKUP_MACHINEGUN, 1, 1);
 		break;
-	case W1_SHOTGUN:
+	case W1shotgun:
 		trap_RankReportInt(self, -1, QGR_KEY_PICKUP_SHOTGUN, 1, 1);
 		break;
-	case W1_GRENADE_LAUNCHER:
+	case W2grenadelauncher:
 		trap_RankReportInt(self, -1, QGR_KEY_PICKUP_GRENADE, 1, 1);
 		break;
-	case W1_ROCKET_LAUNCHER:
+	case W2rocketlauncher:
 		trap_RankReportInt(self, -1, QGR_KEY_PICKUP_ROCKET, 1, 1);
 		break;
-	case W1_LIGHTNING:
+	case W1lightning:
 		trap_RankReportInt(self, -1, QGR_KEY_PICKUP_LIGHTNING, 1, 1);
 		break;
-	case W1_RAILGUN:
+	case W1railgun:
 		trap_RankReportInt(self, -1, QGR_KEY_PICKUP_RAILGUN, 1, 1);
 		break;
-	case W1_PLASMAGUN:
+	case W1plasmagun:
 		trap_RankReportInt(self, -1, QGR_KEY_PICKUP_PLASMA, 1, 1);
 		break;
-	case W1_BFG:
+	case W2bfg:
 		trap_RankReportInt(self, -1, QGR_KEY_PICKUP_BFG, 1, 1);
 		break;
 	case W1_GRAPPLING_HOOK:
@@ -713,36 +713,36 @@ G_RankPickupAmmo(int self, int weapon, int quantity)
 	trap_RankReportInt(self, -1, QGR_KEY_ROUNDS, quantity, 1);
 
 	switch(weapon){
-	case W1_MACHINEGUN:
+	case W1machinegun:
 		trap_RankReportInt(self, -1, QGR_KEY_BOXES_BULLETS, 1, 1);
 		trap_RankReportInt(self, -1, QGR_KEY_ROUNDS_BULLETS, quantity, 1);
 		break;
-	case W1_SHOTGUN:
+	case W1shotgun:
 		trap_RankReportInt(self, -1, QGR_KEY_BOXES_SHELLS, 1, 1);
 		trap_RankReportInt(self, -1, QGR_KEY_ROUNDS_SHELLS, quantity, 1);
 		break;
-	case W1_GRENADE_LAUNCHER:
+	case W2grenadelauncher:
 		trap_RankReportInt(self, -1, QGR_KEY_BOXES_GRENADES, 1, 1);
 		trap_RankReportInt(self, -1, QGR_KEY_ROUNDS_GRENADES, quantity,
 			1);
 		break;
-	case W1_ROCKET_LAUNCHER:
+	case W2rocketlauncher:
 		trap_RankReportInt(self, -1, QGR_KEY_BOXES_ROCKETS, 1, 1);
 		trap_RankReportInt(self, -1, QGR_KEY_ROUNDS_ROCKETS, quantity, 1);
 		break;
-	case W1_LIGHTNING:
+	case W1lightning:
 		trap_RankReportInt(self, -1, QGR_KEY_BOXES_LG_AMMO, 1, 1);
 		trap_RankReportInt(self, -1, QGR_KEY_ROUNDS_LG_AMMO, quantity, 1);
 		break;
-	case W1_RAILGUN:
+	case W1railgun:
 		trap_RankReportInt(self, -1, QGR_KEY_BOXES_SLUGS, 1, 1);
 		trap_RankReportInt(self, -1, QGR_KEY_ROUNDS_SLUGS, quantity, 1);
 		break;
-	case W1_PLASMAGUN:
+	case W1plasmagun:
 		trap_RankReportInt(self, -1, QGR_KEY_BOXES_CELLS, 1, 1);
 		trap_RankReportInt(self, -1, QGR_KEY_ROUNDS_CELLS, quantity, 1);
 		break;
-	case W1_BFG:
+	case W2bfg:
 		trap_RankReportInt(self, -1, QGR_KEY_BOXES_BFG_AMMO, 1, 1);
 		trap_RankReportInt(self, -1, QGR_KEY_ROUNDS_BFG_AMMO, quantity,
 			1);

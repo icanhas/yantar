@@ -742,9 +742,9 @@ FireWeapon(gentity_t *ent)
 
 	/* track shots taken for accuracy tracking.  Grapple is not a weapon and gauntet is just not tracked */
 	if(ent->s.weapon != W1_GRAPPLING_HOOK && ent->s.weapon !=
-	   W1_GAUNTLET){
+	   W1melee){
 #ifdef MISSIONPACK
-		if(ent->s.weapon == W1_NAILGUN)
+		if(ent->s.weapon == W1nailgun)
 			ent->client->accuracy_shots += NUM_NAILSHOTS;
 		else
 			ent->client->accuracy_shots++;
@@ -762,48 +762,48 @@ FireWeapon(gentity_t *ent)
 
 	/* fire the specific weapon */
 	switch(ent->s.weapon){
-	case W1_GAUNTLET:
+	case W1melee:
 		Weapon_Gauntlet(ent);
 		break;
-	case W1_LIGHTNING:
+	case W1lightning:
 		Weapon_LightningFire(ent);
 		break;
-	case W1_SHOTGUN:
+	case W1shotgun:
 		weapon_supershotgun_fire(ent);
 		break;
-	case W1_MACHINEGUN:
+	case W1machinegun:
 		if(g_gametype.integer != GT_TEAM)
 			Bullet_Fire(ent, MACHINEGUN_SPREAD, MACHINEGUN_DAMAGE);
 		else
 			Bullet_Fire(ent, MACHINEGUN_SPREAD,
 				MACHINEGUN_TEAM_DAMAGE);
 		break;
-	case W1_GRENADE_LAUNCHER:
+	case W2grenadelauncher:
 		weapon_grenadelauncher_fire(ent);
 		break;
-	case W1_ROCKET_LAUNCHER:
+	case W2rocketlauncher:
 		Weapon_RocketLauncher_Fire(ent);
 		break;
-	case W1_PLASMAGUN:
+	case W1plasmagun:
 		Weapon_Plasmagun_Fire(ent);
 		break;
-	case W1_RAILGUN:
+	case W1railgun:
 		weapon_railgun_fire(ent);
 		break;
-	case W1_BFG:
+	case W2bfg:
 		BFG_Fire(ent);
 		break;
 	case W1_GRAPPLING_HOOK:
 		Weapon_GrapplingHook_Fire(ent);
 		break;
 #ifdef MISSIONPACK
-	case W1_NAILGUN:
+	case W1nailgun:
 		Weapon_Nailgun_Fire(ent);
 		break;
-	case W1_PROX_LAUNCHER:
+	case W2proxlauncher:
 		weapon_proxlauncher_fire(ent);
 		break;
-	case W1_CHAINGUN:
+	case W1chaingun:
 		Bullet_Fire(ent, CHAINGUN_SPREAD, MACHINEGUN_DAMAGE);
 		break;
 #endif
