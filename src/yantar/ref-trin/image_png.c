@@ -21,7 +21,7 @@
 #include "qfiles.h"
 #include "common.h"
 #include "ref.h"
-#include "../qcommon/puff.h"
+#include "../common/puff.h"
 
 extern refimport_t ri;
 

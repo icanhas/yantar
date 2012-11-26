@@ -187,7 +187,7 @@ SNDDIR=$(CDIR)/snd
 SDIR=$(YAN_DIR)/server
 RDIR=$(YAN_DIR)/ref-trin
 R2DIR=$(YAN_DIR)/ref2
-COMDIR=$(YAN_DIR)/qcommon
+COMDIR=$(YAN_DIR)/common
 NETDIR=$(COMDIR)/net
 ASMDIR=$(YAN_DIR)/asm
 SYSDIR=$(YAN_DIR)/sys
@@ -1050,7 +1050,7 @@ makedirs:
 		$(O)/$(BASEGAME)/game/ai \
 		$(O)/$(BASEGAME)/game/bg \
 		$(O)/$(BASEGAME)/ui/bg \
-		$(O)/$(BASEGAME)/qcommon/vmlibc \
+		$(O)/$(BASEGAME)/common/vmlibc \
 		$(O)/$(BASEGAME)/vm \
 		$(O)/cmd/asm \
 		$(O)/cmd/etc \
@@ -1804,10 +1804,10 @@ CGOBJ_ = \
   $(O)/$(BASEGAME)/cgame/view.o \
   $(O)/$(BASEGAME)/cgame/weapons.o \
   \
-  $(O)/$(BASEGAME)/qcommon/maths.o \
-  $(O)/$(BASEGAME)/qcommon/shared.o \
-  $(O)/$(BASEGAME)/qcommon/utf.o \
-  $(O)/$(BASEGAME)/qcommon/vmlibc/vmlibc.o
+  $(O)/$(BASEGAME)/common/maths.o \
+  $(O)/$(BASEGAME)/common/shared.o \
+  $(O)/$(BASEGAME)/common/utf.o \
+  $(O)/$(BASEGAME)/common/vmlibc/vmlibc.o
 
 CGOBJ = $(CGOBJ_) $(O)/$(BASEGAME)/cgame/syscalls.o
 CGVMOBJ = $(CGOBJ_:%.o=%.asm)
@@ -1855,10 +1855,10 @@ GOBJ_ = \
   $(O)/$(BASEGAME)/game/utils.o \
   $(O)/$(BASEGAME)/game/weapon.o \
   \
-  $(O)/$(BASEGAME)/qcommon/maths.o \
-  $(O)/$(BASEGAME)/qcommon/shared.o \
-  $(O)/$(BASEGAME)/qcommon/utf.o \
-  $(O)/$(BASEGAME)/qcommon/vmlibc/vmlibc.o
+  $(O)/$(BASEGAME)/common/maths.o \
+  $(O)/$(BASEGAME)/common/shared.o \
+  $(O)/$(BASEGAME)/common/utf.o \
+  $(O)/$(BASEGAME)/common/vmlibc/vmlibc.o
 
 GOBJ = $(GOBJ_) $(O)/$(BASEGAME)/game/syscalls.o
 GVMOBJ = $(GOBJ_:%.o=%.asm)
@@ -1917,10 +1917,10 @@ UIOBJ_ = \
   $(O)/$(BASEGAME)/ui/teamorders.o \
   $(O)/$(BASEGAME)/ui/video.o \
   \
-  $(O)/$(BASEGAME)/qcommon/maths.o \
-  $(O)/$(BASEGAME)/qcommon/shared.o \
-  $(O)/$(BASEGAME)/qcommon/utf.o \
-  $(O)/$(BASEGAME)/qcommon/vmlibc/vmlibc.o
+  $(O)/$(BASEGAME)/common/maths.o \
+  $(O)/$(BASEGAME)/common/shared.o \
+  $(O)/$(BASEGAME)/common/utf.o \
+  $(O)/$(BASEGAME)/common/vmlibc/vmlibc.o
 
 UIOBJ = $(UIOBJ_) $(O)/$(BASEGAME)/ui/syscalls.o
 UIVMOBJ = $(UIOBJ_:%.o=%.asm)
@@ -2055,9 +2055,9 @@ $(O)/$(BASEGAME)/ui/bg/%.asm: $(BGDIR)/%.c $(Q3LCC)
 $(O)/$(BASEGAME)/ui/%.asm: $(UIDIR)/%.c $(Q3LCC)
 	$(DO_UI_Q3LCC)
 
-$(O)/$(BASEGAME)/qcommon/%.o: $(COMDIR)/%.c
+$(O)/$(BASEGAME)/common/%.o: $(COMDIR)/%.c
 	$(DO_SHLIB_CC)
-$(O)/$(BASEGAME)/qcommon/%.asm: $(COMDIR)/%.c $(Q3LCC)
+$(O)/$(BASEGAME)/common/%.asm: $(COMDIR)/%.c $(Q3LCC)
 	$(DO_Q3LCC)
 
 #

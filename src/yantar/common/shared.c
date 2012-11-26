@@ -115,7 +115,7 @@ Q_defaultext(char *path, int maxSize, const char *extension)
  */
 /*
  * // can't just use function pointers, or dll linkage can
- * // mess up when qcommon is included in multiple places
+ * // mess up when common is included in multiple places
  * static short	(*_BigShort) (short l);
  * static short	(*_LittleShort) (short l);
  * static int		(*_BigLong) (int l);
