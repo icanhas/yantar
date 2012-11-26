@@ -31,7 +31,7 @@ static float jumpHeight;
  * UI_PlayerInfo_SetWeapon
  */
 static void
-UI_PlayerInfo_SetWeapon(playerInfo_t *pi, weapon_t weaponNum)
+UI_PlayerInfo_SetWeapon(playerInfo_t *pi, Weapon weaponNum)
 {
 	gitem_t * item;
 	char	path[MAX_QPATH];
@@ -43,7 +43,7 @@ tryagain:
 	pi->barrelModel = 0;
 	pi->flashModel	= 0;
 
-	if(weaponNum == WP_NONE)
+	if(weaponNum == W1_NONE)
 		return;
 
 	for(item = bg_itemlist + 1; item->classname; item++){
@@ -57,16 +57,16 @@ tryagain:
 		pi->weaponModel = trap_R_RegisterModel(item->world_model[0]);
 
 	if(pi->weaponModel == 0){
-		if(weaponNum == WP_MACHINEGUN){
-			weaponNum = WP_NONE;
+		if(weaponNum == W1_MACHINEGUN){
+			weaponNum = W1_NONE;
 			goto tryagain;
 		}
-		weaponNum = WP_MACHINEGUN;
+		weaponNum = W1_MACHINEGUN;
 		goto tryagain;
 	}
 
-	if(weaponNum == WP_MACHINEGUN || weaponNum == WP_GAUNTLET ||
-	   weaponNum == WP_BFG){
+	if(weaponNum == W1_MACHINEGUN || weaponNum == W1_GAUNTLET ||
+	   weaponNum == W1_BFG){
 		strcpy(path, item->world_model[0]);
 		Q_stripext(path, path, sizeof(path));
 		strcat(path, "_barrel");
@@ -79,43 +79,43 @@ tryagain:
 	pi->flashModel = trap_R_RegisterModel(path);
 
 	switch(weaponNum){
-	case WP_GAUNTLET:
+	case W1_GAUNTLET:
 		MAKERGB(pi->flashDlightColor, 0.6f, 0.6f, 1);
 		break;
 
-	case WP_MACHINEGUN:
+	case W1_MACHINEGUN:
 		MAKERGB(pi->flashDlightColor, 1, 1, 0);
 		break;
 
-	case WP_SHOTGUN:
+	case W1_SHOTGUN:
 		MAKERGB(pi->flashDlightColor, 1, 1, 0);
 		break;
 
-	case WP_GRENADE_LAUNCHER:
+	case W1_GRENADE_LAUNCHER:
 		MAKERGB(pi->flashDlightColor, 1, 0.7f, 0.5f);
 		break;
 
-	case WP_ROCKET_LAUNCHER:
+	case W1_ROCKET_LAUNCHER:
 		MAKERGB(pi->flashDlightColor, 1, 0.75f, 0);
 		break;
 
-	case WP_LIGHTNING:
+	case W1_LIGHTNING:
 		MAKERGB(pi->flashDlightColor, 0.6f, 0.6f, 1);
 		break;
 
-	case WP_RAILGUN:
+	case W1_RAILGUN:
 		MAKERGB(pi->flashDlightColor, 1, 0.5f, 0);
 		break;
 
-	case WP_PLASMAGUN:
+	case W1_PLASMAGUN:
 		MAKERGB(pi->flashDlightColor, 0.6f, 0.6f, 1);
 		break;
 
-	case WP_BFG:
+	case W1_BFG:
 		MAKERGB(pi->flashDlightColor, 1, 0.7f, 1);
 		break;
 
-	case WP_GRAPPLING_HOOK:
+	case W1_GRAPPLING_HOOK:
 		MAKERGB(pi->flashDlightColor, 0.6f, 0.6f, 1);
 		break;
 
@@ -775,10 +775,10 @@ UI_DrawPlayer(float x, float y, float w, float h, playerInfo_t *pi, int time)
 	/*
 	 * add the gun
 	 *  */
-	if(pi->currentWeapon != WP_NONE){
+	if(pi->currentWeapon != W1_NONE){
 		memset(&gun, 0, sizeof(gun));
 		gun.hModel = pi->weaponModel;
-		if(pi->currentWeapon == WP_RAILGUN)
+		if(pi->currentWeapon == W1_RAILGUN)
 			byte4copy(pi->c1RGBA, gun.shaderRGBA);
 		else
 			byte4copy(colorWhite, gun.shaderRGBA);
@@ -792,8 +792,8 @@ UI_DrawPlayer(float x, float y, float w, float h, playerInfo_t *pi, int time)
 	/*
 	 * add the spinning barrel
 	 *  */
-	if(pi->realWeapon == WP_MACHINEGUN || pi->realWeapon == WP_GAUNTLET ||
-	   pi->realWeapon == WP_BFG){
+	if(pi->realWeapon == W1_MACHINEGUN || pi->realWeapon == W1_GAUNTLET ||
+	   pi->realWeapon == W1_BFG){
 		Vec3 angles;
 
 		memset(&barrel, 0, sizeof(barrel));
@@ -804,7 +804,7 @@ UI_DrawPlayer(float x, float y, float w, float h, playerInfo_t *pi, int time)
 		angles[YAW]	= 0;
 		angles[PITCH]	= 0;
 		angles[ROLL]	= UI_MachinegunSpinAngle(pi);
-		if(pi->realWeapon == WP_GAUNTLET || pi->realWeapon == WP_BFG){
+		if(pi->realWeapon == W1_GAUNTLET || pi->realWeapon == W1_BFG){
 			angles[PITCH]	= angles[ROLL];
 			angles[ROLL]	= 0;
 		}
@@ -823,7 +823,7 @@ UI_DrawPlayer(float x, float y, float w, float h, playerInfo_t *pi, int time)
 		if(pi->flashModel){
 			memset(&flash, 0, sizeof(flash));
 			flash.hModel = pi->flashModel;
-			if(pi->currentWeapon == WP_RAILGUN)
+			if(pi->currentWeapon == W1_RAILGUN)
 				byte4copy(pi->c1RGBA, flash.shaderRGBA);
 			else
 				byte4copy(colorWhite, flash.shaderRGBA);
@@ -1093,7 +1093,7 @@ UI_PlayerInfo_SetModel(playerInfo_t *pi, const char *model)
 {
 	memset(pi, 0, sizeof(*pi));
 	UI_RegisterClientModelname(pi, model);
-	pi->weapon = WP_MACHINEGUN;
+	pi->weapon = W1_MACHINEGUN;
 	pi->currentWeapon = pi->weapon;
 	pi->lastWeapon = pi->weapon;
 	pi->pendingWeapon = -1;
@@ -1110,11 +1110,11 @@ UI_PlayerInfo_SetModel(playerInfo_t *pi, const char *model)
 void
 UI_PlayerInfo_SetInfo(playerInfo_t *pi, int legsAnim, int torsoAnim,
 		      Vec3 viewAngles, Vec3 moveAngles,
-		      weapon_t weaponNumber,
+		      Weapon weaponNumber,
 		      qbool chat)
 {
 	int	currentAnim;
-	weapon_t weaponNum;
+	Weapon weaponNum;
 	int	c;
 
 	pi->chat = chat;
@@ -1177,7 +1177,7 @@ UI_PlayerInfo_SetInfo(playerInfo_t *pi, int legsAnim, int torsoAnim,
 	if(weaponNumber == -1){
 		pi->pendingWeapon = -1;
 		pi->weaponTimer = 0;
-	}else if(weaponNumber != WP_NONE){
+	}else if(weaponNumber != W1_NONE){
 		pi->pendingWeapon = weaponNumber;
 		pi->weaponTimer = dp_realtime + UI_TIMER_WEAPON_DELAY;
 	}
@@ -1186,7 +1186,7 @@ UI_PlayerInfo_SetInfo(playerInfo_t *pi, int legsAnim, int torsoAnim,
 
 	if(torsoAnim == BOTH_DEATH1 || legsAnim == BOTH_DEATH1){
 		torsoAnim = legsAnim = BOTH_DEATH1;
-		pi->weapon = pi->currentWeapon = WP_NONE;
+		pi->weapon = pi->currentWeapon = W1_NONE;
 		UI_PlayerInfo_SetWeapon(pi, pi->weapon);
 
 		jumpHeight = 0;
@@ -1212,14 +1212,14 @@ UI_PlayerInfo_SetInfo(playerInfo_t *pi, int legsAnim, int torsoAnim,
 
 	/* torso animation */
 	if(torsoAnim == TORSO_STAND || torsoAnim == TORSO_STAND2){
-		if(weaponNum == WP_NONE || weaponNum == WP_GAUNTLET)
+		if(weaponNum == W1_NONE || weaponNum == W1_GAUNTLET)
 			torsoAnim = TORSO_STAND2;
 		else
 			torsoAnim = TORSO_STAND;
 	}
 
 	if(torsoAnim == TORSO_ATTACK || torsoAnim == TORSO_ATTACK2){
-		if(weaponNum == WP_NONE || weaponNum == WP_GAUNTLET)
+		if(weaponNum == W1_NONE || weaponNum == W1_GAUNTLET)
 			torsoAnim = TORSO_ATTACK2;
 		else
 			torsoAnim = TORSO_ATTACK;

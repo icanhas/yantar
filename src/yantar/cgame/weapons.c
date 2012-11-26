@@ -625,14 +625,14 @@ CG_RegisterWeapon(int weaponNum)
 			Pshotgunmodels "/shotgun_hand");
 
 	switch(weaponNum){
-	case WP_GAUNTLET:
+	case W1_GAUNTLET:
 		MAKERGB(weaponInfo->flashDlightColor, 0.6f, 0.6f, 1.0f);
 		weaponInfo->firingSound = trap_S_RegisterSound(
 			Pmeleesounds "/fstrun", qfalse);
 		weaponInfo->flashSound[0] = trap_S_RegisterSound(
 			Pmeleesounds "/fstatck", qfalse);
 		break;
-	case WP_LIGHTNING:
+	case W1_LIGHTNING:
 		MAKERGB(weaponInfo->flashDlightColor, 0.6f, 0.6f, 1.0f);
 		weaponInfo->readySound = trap_S_RegisterSound(
 			Pmeleesounds "/fsthum", qfalse);
@@ -651,7 +651,7 @@ CG_RegisterWeapon(int weaponNum)
 		cgs.media.sfx_lghit3 = trap_S_RegisterSound(
 			Plgsounds "/lg_hit3", qfalse);
 		break;
-	case WP_GRAPPLING_HOOK:
+	case W1_GRAPPLING_HOOK:
 		MAKERGB(weaponInfo->flashDlightColor, 0.6f, 0.6f, 1.0f);
 		weaponInfo->missileModel = trap_R_RegisterModel(
 			Prlmodels "/rocket");
@@ -665,7 +665,7 @@ CG_RegisterWeapon(int weaponNum)
 		cgs.media.lightningShader = trap_R_RegisterShader(
 			"lightningBoltNew");
 		break;
-	case WP_CHAINGUN:
+	case W1_CHAINGUN:
 		weaponInfo->firingSound = trap_S_RegisterSound(
 			Pgattlingsounds "/wvulfire", qfalse);
 		MAKERGB(weaponInfo->flashDlightColor, 1, 1, 0);
@@ -681,7 +681,7 @@ CG_RegisterWeapon(int weaponNum)
 		cgs.media.bulletExplosionShader = trap_R_RegisterShader(
 			"bulletExplosion");
 		break;
-	case WP_MACHINEGUN:
+	case W1_MACHINEGUN:
 		MAKERGB(weaponInfo->flashDlightColor, 1, 1, 0);
 		weaponInfo->flashSound[0] = trap_S_RegisterSound(
 			Pmgsounds "/machgf1b", qfalse);
@@ -695,13 +695,13 @@ CG_RegisterWeapon(int weaponNum)
 		cgs.media.bulletExplosionShader = trap_R_RegisterShader(
 			"bulletExplosion");
 		break;
-	case WP_SHOTGUN:
+	case W1_SHOTGUN:
 		MAKERGB(weaponInfo->flashDlightColor, 1, 1, 0);
 		weaponInfo->flashSound[0] = trap_S_RegisterSound(
 			Pshotgunsounds "/sshotf1b", qfalse);
 		weaponInfo->ejectBrassFunc = CG_ShotgunEjectBrass;
 		break;
-	case WP_ROCKET_LAUNCHER:
+	case W1_ROCKET_LAUNCHER:
 		weaponInfo->missileModel = trap_R_RegisterModel(
 			Prlmodels "/rocket");
 		weaponInfo->missileSound = trap_S_RegisterSound(
@@ -716,7 +716,7 @@ CG_RegisterWeapon(int weaponNum)
 			Prlsounds "/rocklf1a", qfalse);
 		cgs.media.rocketExplosionShader = trap_R_RegisterShader("rocketExplosion");
 		break;
-	case WP_PROX_LAUNCHER:
+	case W1_PROX_LAUNCHER:
 		weaponInfo->missileModel = trap_R_RegisterModel(
 			Pweaphitmodels "/proxmine");
 		weaponInfo->missileTrailFunc = CG_GrenadeTrail;
@@ -728,7 +728,7 @@ CG_RegisterWeapon(int weaponNum)
 		cgs.media.grenadeExplosionShader = trap_R_RegisterShader(
 			"grenadeExplosion");
 		break;
-	case WP_GRENADE_LAUNCHER:
+	case W1_GRENADE_LAUNCHER:
 		weaponInfo->missileModel = trap_R_RegisterModel(
 			Pammomodels "/grenade1");
 		weaponInfo->missileTrailFunc = CG_GrenadeTrail;
@@ -740,7 +740,7 @@ CG_RegisterWeapon(int weaponNum)
 		cgs.media.grenadeExplosionShader = trap_R_RegisterShader(
 			"grenadeExplosion");
 		break;
-	case WP_NAILGUN:
+	case W1_NAILGUN:
 		weaponInfo->ejectBrassFunc = CG_NailgunEjectBrass;
 		weaponInfo->missileTrailFunc = CG_NailTrail;
 /*		weaponInfo->missileSound = trap_S_RegisterSound( "sound/weapons/nailgun/wnalflit", qfalse ); */
@@ -752,7 +752,7 @@ CG_RegisterWeapon(int weaponNum)
 		weaponInfo->flashSound[0] = trap_S_RegisterSound(
 			"sound/weapons/nailgun/wnalfire", qfalse);
 		break;
-	case WP_PLASMAGUN:
+	case W1_PLASMAGUN:
 /*		weaponInfo->missileModel = cgs.media.invulnerabilityPowerupModel; */
 		weaponInfo->missileTrailFunc = CG_PlasmaTrail;
 		weaponInfo->missileSound = trap_S_RegisterSound(
@@ -764,7 +764,7 @@ CG_RegisterWeapon(int weaponNum)
 			"plasmaExplosion");
 		cgs.media.railRingsShader = trap_R_RegisterShader("railDisc");
 		break;
-	case WP_RAILGUN:
+	case W1_RAILGUN:
 		weaponInfo->readySound = trap_S_RegisterSound(
 			Prailsounds "/rg_hum", qfalse);
 		MAKERGB(weaponInfo->flashDlightColor, 1, 0.5f, 0);
@@ -777,7 +777,7 @@ CG_RegisterWeapon(int weaponNum)
 		cgs.media.railCoreShader = trap_R_RegisterShader(
 			"railCore");
 		break;
-	case WP_BFG:
+	case W1_BFG:
 		weaponInfo->readySound = trap_S_RegisterSound(
 			Pbfgsounds "/bfg_hum", qfalse);
 		MAKERGB(weaponInfo->flashDlightColor, 1, 0.7f, 1);
@@ -917,7 +917,7 @@ CG_LightningBolt(centity_t *cent, Vec3 origin)
 	Vec3	muzzlePoint, endPoint;
 	int anim;
 
-	if(cent->currentState.weapon != WP_LIGHTNING)
+	if(cent->currentState.weapon != W1_LIGHTNING)
 		return;
 
 	memset(&beam, 0, sizeof(beam));
@@ -1006,7 +1006,7 @@ CG_LightningBolt(centity_t *cent, Vec3 origin)
  *      Vec3			forward;
  *      Vec3			muzzlePoint, endPoint;
  *
- *      if ( cent->currentState.weapon != WP_LIGHTNING ) {
+ *      if ( cent->currentState.weapon != W1_LIGHTNING ) {
  *              return;
  *      }
  *
@@ -1089,7 +1089,7 @@ CG_MachinegunSpinAngle(centity_t *cent)
 		cent->pe.barrelAngle = modeuler(angle);
 		cent->pe.barrelSpinning =
 			!!(cent->currentState.eFlags & EF_FIRING);
-		if(cent->currentState.weapon == WP_CHAINGUN &&
+		if(cent->currentState.weapon == W1_CHAINGUN &&
 		   !cent->pe.barrelSpinning)
 			trap_S_StartSound(
 				NULL, cent->currentState.number, CHAN_WEAPON,
@@ -1134,7 +1134,7 @@ CG_AddPlayerWeapon(refEntity_t *parent, playerState_t *ps, centity_t *cent,
 	refEntity_t	barrel;
 	refEntity_t	flash;
 	Vec3 angles;
-	weapon_t	weaponNum;
+	Weapon	weaponNum;
 	weaponInfo_t	*weapon;
 	centity_t       *nonPredictedCent;
 	orientation_t	lerped;
@@ -1152,7 +1152,7 @@ CG_AddPlayerWeapon(refEntity_t *parent, playerState_t *ps, centity_t *cent,
 	gun.renderfx = parent->renderfx;
 
 	/* set custom shading for railgun refire rate */
-	if(weaponNum == WP_RAILGUN){
+	if(weaponNum == W1_RAILGUN){
 		clientInfo_t *ci = &cgs.clientinfo[cent->currentState.clientNum];
 		if(cent->pe.railFireTime + 1500 > cg.time){
 			int scale = 255 *
@@ -1235,8 +1235,8 @@ CG_AddPlayerWeapon(refEntity_t *parent, playerState_t *ps, centity_t *cent,
 		nonPredictedCent = cent;
 
 	/* add the flash */
-	if((weaponNum == WP_LIGHTNING || weaponNum == WP_GAUNTLET ||
-	    weaponNum == WP_GRAPPLING_HOOK)
+	if((weaponNum == W1_LIGHTNING || weaponNum == W1_GAUNTLET ||
+	    weaponNum == W1_GRAPPLING_HOOK)
 	   && (nonPredictedCent->currentState.eFlags & EF_FIRING)){
 		/* continuous flash */
 	}else
@@ -1259,7 +1259,7 @@ CG_AddPlayerWeapon(refEntity_t *parent, playerState_t *ps, centity_t *cent,
 	eulertoaxis(angles, flash.axis);
 
 	/* colorize the railgun blast */
-	if(weaponNum == WP_RAILGUN){
+	if(weaponNum == W1_RAILGUN){
 		clientInfo_t *ci;
 
 		ci = &cgs.clientinfo[ cent->currentState.clientNum ];
@@ -1465,7 +1465,7 @@ CG_NextWeapon_f(void)
 		cg.weaponSelect++;
 		if(cg.weaponSelect == MAX_WEAPONS)
 			cg.weaponSelect = 0;
-		if(cg.weaponSelect == WP_GAUNTLET)
+		if(cg.weaponSelect == W1_GAUNTLET)
 			continue;	/* never cycle to gauntlet */
 		if(CG_WeaponSelectable(cg.weaponSelect))
 			break;
@@ -1492,7 +1492,7 @@ CG_PrevWeapon_f(void)
 		cg.weaponSelect--;
 		if(cg.weaponSelect == -1)
 			cg.weaponSelect = MAX_WEAPONS - 1;
-		if(cg.weaponSelect == WP_GAUNTLET)
+		if(cg.weaponSelect == W1_GAUNTLET)
 			continue;	/* never cycle to gauntlet */
 		if(CG_WeaponSelectable(cg.weaponSelect))
 			break;
@@ -1546,10 +1546,10 @@ CG_FireWeapon(centity_t *cent)
 	weaponInfo_t	*weap;
 
 	ent = &cent->currentState;
-	if(ent->weapon == WP_NONE)
+	if(ent->weapon == W1_NONE)
 		return;
-	if(ent->weapon >= WP_NUM_WEAPONS){
-		CG_Error("CG_FireWeapon: ent->weapon >= WP_NUM_WEAPONS");
+	if(ent->weapon >= W1_NUM_WEAPONS){
+		CG_Error("CG_FireWeapon: ent->weapon >= W1_NUM_WEAPONS");
 		return;
 	}
 	weap = &cg_weapons[ ent->weapon ];
@@ -1559,10 +1559,10 @@ CG_FireWeapon(centity_t *cent)
 	cent->muzzleFlashTime = cg.time;
 
 	/* lightning gun only does this this on initial press */
-	if(ent->weapon == WP_LIGHTNING)
+	if(ent->weapon == W1_LIGHTNING)
 		if(cent->pe.lightningFiring)
 			return;
-	if(ent->weapon == WP_RAILGUN)
+	if(ent->weapon == W1_RAILGUN)
 		cent->pe.railFireTime = cg.time;
 
 	/* play quad sound if needed */
@@ -1617,7 +1617,7 @@ CG_MissileHitWall(int weapon, int clientNum, Vec3 origin, Vec3 dir,
 
 	switch(weapon){
 	default:
-	case WP_NAILGUN:
+	case W1_NAILGUN:
 		if(soundType == IMPACTSOUND_FLESH)
 			sfx = cgs.media.sfx_nghitflesh;
 		else if(soundType == IMPACTSOUND_METAL)
@@ -1627,7 +1627,7 @@ CG_MissileHitWall(int weapon, int clientNum, Vec3 origin, Vec3 dir,
 		mark = cgs.media.holeMarkShader;
 		radius = 12;
 		break;
-	case WP_LIGHTNING:
+	case W1_LIGHTNING:
 		/* no explosion at LG impact, it is added with the beam */
 		r = rand() & 3;
 		if(r < 2)
@@ -1639,7 +1639,7 @@ CG_MissileHitWall(int weapon, int clientNum, Vec3 origin, Vec3 dir,
 		mark = cgs.media.holeMarkShader;
 		radius = 12;
 		break;
-	case WP_PROX_LAUNCHER:
+	case W1_PROX_LAUNCHER:
 		mod = cgs.media.dishFlashModel;
 		shader = cgs.media.grenadeExplosionShader;
 		sfx = cgs.media.sfx_proxexp;
@@ -1648,7 +1648,7 @@ CG_MissileHitWall(int weapon, int clientNum, Vec3 origin, Vec3 dir,
 		light = 300;
 		isSprite = qtrue;
 		break;
-	case WP_GRENADE_LAUNCHER:
+	case W1_GRENADE_LAUNCHER:
 		mod = cgs.media.dishFlashModel;
 		shader = cgs.media.grenadeExplosionShader;
 		sfx = cgs.media.sfx_rockexp;
@@ -1657,7 +1657,7 @@ CG_MissileHitWall(int weapon, int clientNum, Vec3 origin, Vec3 dir,
 		light = 300;
 		isSprite = qtrue;
 		break;
-	case WP_ROCKET_LAUNCHER:
+	case W1_ROCKET_LAUNCHER:
 		mod = cgs.media.dishFlashModel;
 		shader = cgs.media.rocketExplosionShader;
 		sfx = cgs.media.sfx_rockexp;
@@ -1679,7 +1679,7 @@ CG_MissileHitWall(int weapon, int clientNum, Vec3 origin, Vec3 dir,
 				30);
 		}
 		break;
-	case WP_RAILGUN:
+	case W1_RAILGUN:
 		mod = cgs.media.ringFlashModel;
 		shader = cgs.media.railExplosionShader;
 		/* sfx = cgs.media.sfx_railg; */
@@ -1687,14 +1687,14 @@ CG_MissileHitWall(int weapon, int clientNum, Vec3 origin, Vec3 dir,
 		mark = cgs.media.energyMarkShader;
 		radius = 24;
 		break;
-	case WP_PLASMAGUN:
+	case W1_PLASMAGUN:
 		mod = cgs.media.ringFlashModel;
 		shader	= cgs.media.plasmaExplosionShader;
 		sfx	= cgs.media.sfx_plasmaexp;
 		mark	= cgs.media.energyMarkShader;
 		radius	= 16;
 		break;
-	case WP_BFG:
+	case W1_BFG:
 		mod = cgs.media.dishFlashModel;
 		shader = cgs.media.bfgExplosionShader;
 		sfx = cgs.media.sfx_rockexp;
@@ -1702,14 +1702,14 @@ CG_MissileHitWall(int weapon, int clientNum, Vec3 origin, Vec3 dir,
 		radius = 32;
 		isSprite = qtrue;
 		break;
-	case WP_SHOTGUN:
+	case W1_SHOTGUN:
 		mod = cgs.media.bulletFlashModel;
 		shader	= cgs.media.bulletExplosionShader;
 		mark	= cgs.media.bulletMarkShader;
 		sfx = 0;
 		radius = 4;
 		break;
-	case WP_CHAINGUN:
+	case W1_CHAINGUN:
 		mod = cgs.media.bulletFlashModel;
 		if(soundType == IMPACTSOUND_FLESH)
 			sfx = cgs.media.sfx_chghitflesh;
@@ -1721,7 +1721,7 @@ CG_MissileHitWall(int weapon, int clientNum, Vec3 origin, Vec3 dir,
 
 		radius = 8;
 		break;
-	case WP_MACHINEGUN:
+	case W1_MACHINEGUN:
 		mod = cgs.media.bulletFlashModel;
 		shader	= cgs.media.bulletExplosionShader;
 		mark	= cgs.media.bulletMarkShader;
@@ -1748,7 +1748,7 @@ CG_MissileHitWall(int weapon, int clientNum, Vec3 origin, Vec3 dir,
 			duration, isSprite);
 		le->light = light;
 		copyv3(lightColor, le->lightColor);
-		if(weapon == WP_RAILGUN){
+		if(weapon == W1_RAILGUN){
 			/* colorize with client color */
 			copyv3(cgs.clientinfo[clientNum].color1, le->color);
 			le->refEntity.shaderRGBA[0] = le->color[0] * 0xff;
@@ -1760,7 +1760,7 @@ CG_MissileHitWall(int weapon, int clientNum, Vec3 origin, Vec3 dir,
 
 	/* impact mark */
 	alphaFade = (mark == cgs.media.energyMarkShader);	/* plasma fades alpha, all others fade color */
-	if(weapon == WP_RAILGUN){
+	if(weapon == W1_RAILGUN){
 		float *color;
 
 		/* colorize with client color */
@@ -1782,13 +1782,13 @@ CG_MissileHitPlayer(int weapon, Vec3 origin, Vec3 dir, int entityNum)
 	/* some weapons will make an explosion with the blood, while
 	 * others will just make the blood */
 	switch(weapon){
-	case WP_GRENADE_LAUNCHER:
-	case WP_ROCKET_LAUNCHER:
-	case WP_PLASMAGUN:
-	case WP_BFG:
-	case WP_NAILGUN:
-	case WP_CHAINGUN:
-	case WP_PROX_LAUNCHER:
+	case W1_GRENADE_LAUNCHER:
+	case W1_ROCKET_LAUNCHER:
+	case W1_PLASMAGUN:
+	case W1_BFG:
+	case W1_NAILGUN:
+	case W1_CHAINGUN:
+	case W1_PROX_LAUNCHER:
 		CG_MissileHitWall(weapon, 0, origin, dir, IMPACTSOUND_FLESH);
 		break;
 	default:
@@ -1833,18 +1833,18 @@ CG_ShotgunPellet(Vec3 start, Vec3 end, int skipNum)
 		return;
 
 	if(cg_entities[tr.entityNum].currentState.eType == ET_PLAYER)
-		CG_MissileHitPlayer(WP_SHOTGUN, tr.endpos, tr.plane.normal,
+		CG_MissileHitPlayer(W1_SHOTGUN, tr.endpos, tr.plane.normal,
 			tr.entityNum);
 	else{
 		if(tr.surfaceFlags & SURF_NOIMPACT)
 			/* SURF_NOIMPACT will not make a flame puff or a mark */
 			return;
 		if(tr.surfaceFlags & SURF_METALSTEPS)
-			CG_MissileHitWall(WP_SHOTGUN, 0, tr.endpos,
+			CG_MissileHitWall(W1_SHOTGUN, 0, tr.endpos,
 				tr.plane.normal,
 				IMPACTSOUND_METAL);
 		else
-			CG_MissileHitWall(WP_SHOTGUN, 0, tr.endpos,
+			CG_MissileHitWall(W1_SHOTGUN, 0, tr.endpos,
 				tr.plane.normal,
 				IMPACTSOUND_DEFAULT);
 	}
@@ -2063,7 +2063,7 @@ CG_Bullet(Vec3 end, int sourceEntityNum, Vec3 normal, qbool flesh,
 	if(flesh)
 		CG_Bleed(end, fleshEntityNum);
 	else
-		CG_MissileHitWall(WP_MACHINEGUN, 0, end, normal,
+		CG_MissileHitWall(W1_MACHINEGUN, 0, end, normal,
 			IMPACTSOUND_DEFAULT);
 
 }

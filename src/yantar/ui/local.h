@@ -480,14 +480,14 @@ typedef struct {
 	/* currently in use drawing parms */
 	Vec3		viewAngles;
 	Vec3		moveAngles;
-	weapon_t	currentWeapon;
+	Weapon	currentWeapon;
 	int		legsAnim;
 	int		torsoAnim;
 
 	/* animation vars */
-	weapon_t	weapon;
-	weapon_t	lastWeapon;
-	weapon_t	pendingWeapon;
+	Weapon	weapon;
+	Weapon	lastWeapon;
+	Weapon	pendingWeapon;
 	int		weaponTimer;
 	int		pendingLegsAnim;
 	int		torsoAnimationTimer;
@@ -510,7 +510,7 @@ void UI_DrawPlayer(float x, float y, float w, float h, playerInfo_t *pi,
 void UI_PlayerInfo_SetModel(playerInfo_t *pi, const char *model);
 void UI_PlayerInfo_SetInfo(playerInfo_t *pi, int legsAnim, int torsoAnim,
 			   Vec3 viewAngles, Vec3 moveAngles,
-			   weapon_t weaponNum,
+			   Weapon weaponNum,
 			   qbool chat);
 qbool UI_RegisterClientModelname(playerInfo_t *pi, const char *modelSkinName);
 

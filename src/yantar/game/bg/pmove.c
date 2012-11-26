@@ -795,7 +795,7 @@ dowaterevents(void)	/* FIXME? */
 static void
 startweapchange(int weapon)
 {
-	if(weapon <= WP_NONE || weapon >= WP_NUM_WEAPONS)
+	if(weapon <= W1_NONE || weapon >= W1_NUM_WEAPONS)
 		return;
 	if(!(pm->ps->stats[STAT_PRIWEAPS] & (1 << weapon)))
 		return;
@@ -813,10 +813,10 @@ finishweapchange(void)
 	int weap;
 
 	weap = pm->cmd.weapon;
-	if(weap < WP_NONE || weap >= WP_NUM_WEAPONS)
-		weap = WP_NONE;
+	if(weap < W1_NONE || weap >= W1_NUM_WEAPONS)
+		weap = W1_NONE;
 	if(!(pm->ps->stats[STAT_PRIWEAPS] & (1 << weap)))
-		weap = WP_NONE;
+		weap = W1_NONE;
 	pm->ps->weapon = weap;
 	pm->ps->weaponstate	= WEAPON_RAISING;
 	pm->ps->weaponTime	+= 250;
@@ -828,7 +828,7 @@ static void
 dotorsoanim(void)
 {
 	if(pm->ps->weaponstate == WEAPON_READY){
-		if(pm->ps->weapon == WP_GAUNTLET)
+		if(pm->ps->weapon == W1_GAUNTLET)
 			settorsoanim(TORSO_STAND2);
 		else
 			settorsoanim(TORSO_STAND);
@@ -850,7 +850,7 @@ doweapevents(void)
 		return;
 	/* check for dead player */
 	if(pm->ps->stats[STAT_HEALTH] <= 0){
-		pm->ps->weapon = WP_NONE;
+		pm->ps->weapon = W1_NONE;
 		return;
 	}
 	/* check for item using */
@@ -893,7 +893,7 @@ doweapevents(void)
 	}
 	if(pm->ps->weaponstate == WEAPON_RAISING){
 		pm->ps->weaponstate = WEAPON_READY;
-		if(pm->ps->weapon == WP_GAUNTLET)
+		if(pm->ps->weapon == W1_GAUNTLET)
 			starttorsoanim(TORSO_STAND2);
 		else
 			starttorsoanim(TORSO_STAND);
@@ -906,7 +906,7 @@ doweapevents(void)
 		return;
 	}
 	/* start the animation even if out of ammo */
-	if(pm->ps->weapon == WP_GAUNTLET){
+	if(pm->ps->weapon == W1_GAUNTLET){
 		/* the guantlet only "fires" when it actually hits something */
 		if(!pm->gauntletHit){
 			pm->ps->weaponTime	= 0;
@@ -931,43 +931,43 @@ doweapevents(void)
 	
 	switch(pm->ps->weapon){
 	default:
-	case WP_GAUNTLET:
+	case W1_GAUNTLET:
 		addTime = 400;
 		break;
-	case WP_LIGHTNING:
+	case W1_LIGHTNING:
 		addTime = 50;
 		break;
-	case WP_SHOTGUN:
+	case W1_SHOTGUN:
 		addTime = 1000;
 		break;
-	case WP_MACHINEGUN:
+	case W1_MACHINEGUN:
 		addTime = 50;
 		break;
-	case WP_GRENADE_LAUNCHER:
+	case W1_GRENADE_LAUNCHER:
 		addTime = 800;
 		break;
-	case WP_ROCKET_LAUNCHER:
+	case W1_ROCKET_LAUNCHER:
 		addTime = 800;
 		break;
-	case WP_PLASMAGUN:
+	case W1_PLASMAGUN:
 		addTime = 100;
 		break;
-	case WP_RAILGUN:
+	case W1_RAILGUN:
 		addTime = 1500;
 		break;
-	case WP_BFG:
+	case W1_BFG:
 		addTime = 200;
 		break;
-	case WP_GRAPPLING_HOOK:
+	case W1_GRAPPLING_HOOK:
 		addTime = 1;
 		break;
-	case WP_NAILGUN:
+	case W1_NAILGUN:
 		addTime = 1000;
 		break;
-	case WP_PROX_LAUNCHER:
+	case W1_PROX_LAUNCHER:
 		addTime = 800;
 		break;
-	case WP_CHAINGUN:
+	case W1_CHAINGUN:
 		addTime = 30;
 		break;
 	}

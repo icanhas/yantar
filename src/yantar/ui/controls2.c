@@ -514,43 +514,43 @@ Controls_UpdateModel(int anim)
 		break;
 
 	case ANIM_WEAPON1:
-		s_controls.playerWeapon = WP_GAUNTLET;
+		s_controls.playerWeapon = W1_GAUNTLET;
 		break;
 
 	case ANIM_WEAPON2:
-		s_controls.playerWeapon = WP_MACHINEGUN;
+		s_controls.playerWeapon = W1_MACHINEGUN;
 		break;
 
 	case ANIM_WEAPON3:
-		s_controls.playerWeapon = WP_SHOTGUN;
+		s_controls.playerWeapon = W1_SHOTGUN;
 		break;
 
 	case ANIM_WEAPON4:
-		s_controls.playerWeapon = WP_GRENADE_LAUNCHER;
+		s_controls.playerWeapon = W1_GRENADE_LAUNCHER;
 		break;
 
 	case ANIM_WEAPON5:
-		s_controls.playerWeapon = WP_ROCKET_LAUNCHER;
+		s_controls.playerWeapon = W1_ROCKET_LAUNCHER;
 		break;
 
 	case ANIM_WEAPON6:
-		s_controls.playerWeapon = WP_LIGHTNING;
+		s_controls.playerWeapon = W1_LIGHTNING;
 		break;
 
 	case ANIM_WEAPON7:
-		s_controls.playerWeapon = WP_RAILGUN;
+		s_controls.playerWeapon = W1_RAILGUN;
 		break;
 
 	case ANIM_WEAPON8:
-		s_controls.playerWeapon = WP_PLASMAGUN;
+		s_controls.playerWeapon = W1_PLASMAGUN;
 		break;
 
 	case ANIM_WEAPON9:
-		s_controls.playerWeapon = WP_BFG;
+		s_controls.playerWeapon = W1_BFG;
 		break;
 
 	case ANIM_WEAPON10:
-		s_controls.playerWeapon = WP_GRAPPLING_HOOK;
+		s_controls.playerWeapon = W1_GRAPPLING_HOOK;
 		break;
 
 	case ANIM_ATTACK:
@@ -564,7 +564,7 @@ Controls_UpdateModel(int anim)
 	case ANIM_DIE:
 		s_controls.playerLegs	= BOTH_DEATH1;
 		s_controls.playerTorso	= BOTH_DEATH1;
-		s_controls.playerWeapon = WP_NONE;
+		s_controls.playerWeapon = W1_NONE;
 		break;
 
 	case ANIM_CHAT:

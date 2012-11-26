@@ -685,7 +685,7 @@ ClientThink_real(gentity_t *ent)
 		client->ps.speed *= 1.3;
 
 	/* Let go of the hook if we aren't firing */
-	if(client->ps.weapon == WP_GRAPPLING_HOOK &&
+	if(client->ps.weapon == W1_GRAPPLING_HOOK &&
 	   client->hook && !(ucmd->buttons & BUTTON_ATTACK))
 		Weapon_HookFree(client->hook);
 
@@ -696,7 +696,7 @@ ClientThink_real(gentity_t *ent)
 
 	/* check for the hit-scan gauntlet, don't let the action
 	 * go through as an attack unless it actually hits something */
-	if(client->ps.weapon == WP_GAUNTLET &&
+	if(client->ps.weapon == W1_GAUNTLET &&
 	   !(ucmd->buttons & BUTTON_TALK) &&
 	   (ucmd->buttons & BUTTON_ATTACK) && client->ps.weaponTime <= 0)
 		pm.gauntletHit = CheckGauntletAttack(ent);

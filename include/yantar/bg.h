@@ -276,22 +276,22 @@ typedef enum {
 } holdable_t;
 
 typedef enum {
-	WP_NONE,
-	WP_GAUNTLET,
-	WP_MACHINEGUN,
-	WP_SHOTGUN,
-	WP_GRENADE_LAUNCHER,
-	WP_ROCKET_LAUNCHER,
-	WP_LIGHTNING,
-	WP_RAILGUN,
-	WP_PLASMAGUN,
-	WP_BFG,
-	WP_GRAPPLING_HOOK,
-	WP_NAILGUN,
-	WP_PROX_LAUNCHER,
-	WP_CHAINGUN,
-	WP_NUM_WEAPONS
-} weapon_t;
+	W1_NONE,
+	W1_GAUNTLET,
+	W1_MACHINEGUN,
+	W1_SHOTGUN,
+	W1_GRENADE_LAUNCHER,
+	W1_ROCKET_LAUNCHER,
+	W1_LIGHTNING,
+	W1_RAILGUN,
+	W1_PLASMAGUN,
+	W1_BFG,
+	W1_GRAPPLING_HOOK,
+	W1_NAILGUN,
+	W1_PROX_LAUNCHER,
+	W1_CHAINGUN,
+	W1_NUM_WEAPONS
+} Weapon;
 
 /* reward sounds (stored in ps->persistant[PERS_PLAYEREVENTS]) */
 enum rewardsounds {
@@ -597,7 +597,7 @@ extern gitem_t bg_itemlist[];
 extern int bg_numItems;
 
 gitem_t*	BG_FindItem(const char *pickupName);
-gitem_t*	BG_FindItemForWeapon(weapon_t weapon);
+gitem_t*	BG_FindItemForWeapon(Weapon weapon);
 gitem_t*	BG_FindItemForPowerup(powerup_t pw);
 gitem_t*	BG_FindItemForHoldable(holdable_t pw);
 qbool	BG_CanItemBeGrabbed(int gametype, const entityState_t *ent,

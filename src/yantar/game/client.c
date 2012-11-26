@@ -1123,15 +1123,15 @@ ClientSpawn(gentity_t *ent)
 
 	client->ps.clientNum = index;
 
-	client->ps.stats[STAT_PRIWEAPS] = (1 << WP_MACHINEGUN);
+	client->ps.stats[STAT_PRIWEAPS] = (1 << W1_MACHINEGUN);
 	if(g_gametype.integer == GT_TEAM)
-		client->ps.ammo[WP_MACHINEGUN] = 50;
+		client->ps.ammo[W1_MACHINEGUN] = 50;
 	else
-		client->ps.ammo[WP_MACHINEGUN] = 100;
+		client->ps.ammo[W1_MACHINEGUN] = 100;
 
-	client->ps.stats[STAT_PRIWEAPS]	|= (1 << WP_GAUNTLET);
-	client->ps.ammo[WP_GAUNTLET]	= -1;
-	client->ps.ammo[WP_GRAPPLING_HOOK] = -1;
+	client->ps.stats[STAT_PRIWEAPS]	|= (1 << W1_GAUNTLET);
+	client->ps.ammo[W1_GAUNTLET]	= -1;
+	client->ps.ammo[W1_GRAPPLING_HOOK] = -1;
 
 	/* health will count down towards max_health */
 	ent->health = client->ps.stats[STAT_HEALTH] =
@@ -1161,14 +1161,14 @@ ClientSpawn(gentity_t *ent)
 		if(ent->client->sess.sessionTeam != TEAM_SPECTATOR){
 			G_KillBox(ent);
 			/* force the base weapon up */
-			client->ps.weapon = WP_MACHINEGUN;
+			client->ps.weapon = W1_MACHINEGUN;
 			client->ps.weaponstate = WEAPON_READY;
 			/* fire the targets of the spawn point */
 			G_UseTargets(spawnPoint, ent);
 			/* select the highest weapon number available, after any spawn given items have fired */
 			client->ps.weapon = 1;
 
-			for(i = WP_NUM_WEAPONS - 1; i > 0; i--)
+			for(i = W1_NUM_WEAPONS - 1; i > 0; i--)
 				if(client->ps.stats[STAT_PRIWEAPS] & (1 << i)){
 					client->ps.weapon = i;
 					break;

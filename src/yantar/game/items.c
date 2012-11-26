@@ -247,7 +247,7 @@ Pickup_Weapon(gentity_t *ent, gentity_t *other)
 
 	Add_Ammo(other, ent->item->giTag, quantity);
 
-	if(ent->item->giTag == WP_GRAPPLING_HOOK)
+	if(ent->item->giTag == W1_GRAPPLING_HOOK)
 		other->client->ps.ammo[ent->item->giTag] = -1;	/* unlimited ammo */
 
 	/* team deathmatch has slow weapon respawns */
@@ -718,8 +718,8 @@ ClearRegisteredItems(void)
 	memset(itemRegistered, 0, sizeof(itemRegistered));
 
 	/* players always start with the base weapon */
-	RegisterItem(BG_FindItemForWeapon(WP_MACHINEGUN));
-	RegisterItem(BG_FindItemForWeapon(WP_GAUNTLET));
+	RegisterItem(BG_FindItemForWeapon(W1_MACHINEGUN));
+	RegisterItem(BG_FindItemForWeapon(W1_GAUNTLET));
 #ifdef MISSIONPACK
 	if(g_gametype.integer == GT_HARVESTER){
 		RegisterItem(BG_FindItem("Red Cube"));

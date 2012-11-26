@@ -356,7 +356,7 @@ typedef struct {
 } clientInfo_t;
 
 
-/* each WP_* weapon enum has an associated weaponInfo_t
+/* each W1_* weapon enum has an associated weaponInfo_t
  * that contains media references necessary to present the
  * weapon and its effects */
 typedef struct weaponInfo_s {
