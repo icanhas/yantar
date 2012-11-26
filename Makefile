@@ -105,8 +105,8 @@ ifndef COPYBINDIR
 COPYBINDIR=$(COPYDIR)
 endif
 
-ifndef MOUNT_DIR
-MOUNT_DIR=src
+ifndef SRC
+SRC=src
 endif
 
 ifndef BIN_DIR
@@ -181,39 +181,40 @@ DP=debug-$(PLATFORM)-$(ARCH)
 RP=release-$(PLATFORM)-$(ARCH)
 BD=$(BIN_DIR)
 BR=$(BIN_DIR)
-CDIR=$(MOUNT_DIR)/client
+YAN_DIR=$(SRC)/yantar
+CDIR=$(YAN_DIR)/client
 SNDDIR=$(CDIR)/snd
-SDIR=$(MOUNT_DIR)/server
-RDIR=$(MOUNT_DIR)/renderer
-R2DIR=$(MOUNT_DIR)/renderergl2
-COMDIR=$(MOUNT_DIR)/qcommon
+SDIR=$(YAN_DIR)/server
+RDIR=$(YAN_DIR)/renderer
+R2DIR=$(YAN_DIR)/renderergl2
+COMDIR=$(YAN_DIR)/qcommon
 NETDIR=$(COMDIR)/net
-ASMDIR=$(MOUNT_DIR)/asm
-SYSDIR=$(MOUNT_DIR)/sys
+ASMDIR=$(YAN_DIR)/asm
+SYSDIR=$(YAN_DIR)/sys
 SDLDIR=$(SYSDIR)/sdl
 NDIR=$(SYSDIR)/null
 UNIXDIR=$(SYSDIR)/unix
 OSXDIR=$(SYSDIR)/osx
 WINDIR=$(SYSDIR)/win
-GDIR=$(MOUNT_DIR)/game
+GDIR=$(YAN_DIR)/game
 AIDIR=$(GDIR)/ai
 BGDIR=$(GDIR)/bg
-CGDIR=$(MOUNT_DIR)/cgame
-BLIBDIR=$(MOUNT_DIR)/botlib
-UIDIR=$(MOUNT_DIR)/ui
-JPDIR=$(MOUNT_DIR)/jpeg-8c
-SPEEXDIR=$(MOUNT_DIR)/libspeex
-ZDIR=$(MOUNT_DIR)/zlib
-Q3ASMDIR=$(MOUNT_DIR)/cmd/asm
-LBURGDIR=$(MOUNT_DIR)/cmd/lcc/lburg
-Q3CPPDIR=$(MOUNT_DIR)/cmd/lcc/cpp
-Q3LCCETCDIR=$(MOUNT_DIR)/cmd/lcc/etc
-Q3LCCSRCDIR=$(MOUNT_DIR)/cmd/lcc/src
+CGDIR=$(YAN_DIR)/cgame
+BLIBDIR=$(YAN_DIR)/botlib
+UIDIR=$(YAN_DIR)/ui
+JPDIR=$(YAN_DIR)/jpeg-8c
+SPEEXDIR=$(YAN_DIR)/libspeex
+ZDIR=$(YAN_DIR)/zlib
+Q3ASMDIR=$(SRC)/cmd/asm
+LBURGDIR=$(SRC)/cmd/lcc/lburg
+Q3CPPDIR=$(SRC)/cmd/lcc/cpp
+Q3LCCETCDIR=$(SRC)/cmd/lcc/etc
+Q3LCCSRCDIR=$(SRC)/cmd/lcc/src
 LOKISETUPDIR=misc/setup
 NSISDIR=misc/nsis
-SDLHDIR=$(MOUNT_DIR)/SDL12
-LIBSDIR=$(MOUNT_DIR)/libs
-INCLUDES=-Iinclude
+SDLHDIR=$(YAN_DIR)/SDL12
+LIBSDIR=$(YAN_DIR)/libs
+INCLUDES=-Iinclude -Iinclude/yantar
 
 bin_path=$(shell which $(1) 2> /dev/null)
 
