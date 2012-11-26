@@ -11,7 +11,7 @@
 #       include <SDL.h>
 #endif
 
-#include "../../renderer/local.h"
+#include "../../ref-trin/local.h"
 #include "common.h"
 
 void

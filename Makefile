@@ -36,11 +36,11 @@ endif
 ifndef BUILD_BASEGAME
   BUILD_BASEGAME=0
 endif
-ifndef BUILD_RENDERER_GL2
-  BUILD_RENDERER_GL2=1
+ifndef BUILD_REF2
+  BUILD_REF2=1
 endif
-ifndef BUILD_RENDERER_GL1
-  BUILD_RENDERER_GL1=0
+ifndef BUILD_REF1
+  BUILD_REF1=0
 endif
 
 ifneq ($(PLATFORM),darwin)
@@ -185,8 +185,8 @@ YAN_DIR=$(SRC)/yantar
 CDIR=$(YAN_DIR)/client
 SNDDIR=$(CDIR)/snd
 SDIR=$(YAN_DIR)/server
-RDIR=$(YAN_DIR)/renderer
-R2DIR=$(YAN_DIR)/renderergl2
+RDIR=$(YAN_DIR)/ref-trin
+R2DIR=$(YAN_DIR)/ref2
 COMDIR=$(YAN_DIR)/qcommon
 NETDIR=$(COMDIR)/net
 ASMDIR=$(YAN_DIR)/asm
@@ -761,13 +761,13 @@ endif
 ifneq ($(BUILD_CLIENT),0)
   ifneq ($(USE_RENDERER_DLOPEN),0)
     TARGETS += $(B)/$(CLIENTBIN)$(FULLBINEXT)
-    ifneq ($(BUILD_RENDERER_GL1),0)
+    ifneq ($(BUILD_REF1),0)
       TARGETS += $(B)/ref1-$(SHLIBNAME)
         ifneq ($(BUILD_CLIENT_SMP),0)
           TARGETS += $(B)/ref1-smp-$(SHLIBNAME)
         endif
     endif
-    ifneq ($(BUILD_RENDERER_GL2), 0)
+    ifneq ($(BUILD_REF2), 0)
       TARGETS += $(B)/ref2-$(SHLIBNAME)
       ifneq ($(BUILD_CLIENT_SMP),0)
         TARGETS += $(B)/ref2-smp-$(SHLIBNAME)
@@ -1037,9 +1037,9 @@ makedirs:
 		$(O)/client/sys/null \
 		$(O)/client/sys/sdl \
 		$(O)/client/vm \
-		$(O)/renderer/sys/sdl \
-		$(O)/renderergl2/sys/sdl \
-		$(O)/renderersmp/sys/sdl \
+		$(O)/ref-trin/sys/sdl \
+		$(O)/ref2/sys/sdl \
+		$(O)/ref-trinsmp/sys/sdl \
 		$(O)/ded/cm \
 		$(O)/ded/net \
 		$(O)/ded/server \
@@ -1328,140 +1328,140 @@ YOBJ = \
   $(O)/client/sys/main.o
 
 R2OBJ = \
-  $(O)/renderer/image_bmp.o \
-  $(O)/renderer/image_jpg.o \
-  $(O)/renderer/image_png.o \
-  $(O)/renderer/image_tga.o \
-  $(O)/renderer/noise.o \
-  $(O)/renderergl2/animation.o \
-  $(O)/renderergl2/backend.o \
-  $(O)/renderergl2/bsp.o \
-  $(O)/renderergl2/cmds.o \
-  $(O)/renderergl2/curve.o \
-  $(O)/renderergl2/extensions.o \
-  $(O)/renderergl2/extramath.o \
-  $(O)/renderergl2/fbo.o \
-  $(O)/renderergl2/flares.o \
-  $(O)/renderergl2/font.o \
-  $(O)/renderergl2/glsl.o \
-  $(O)/renderergl2/image.o \
-  $(O)/renderergl2/init.o \
-  $(O)/renderergl2/light.o \
-  $(O)/renderergl2/main.o \
-  $(O)/renderergl2/marks.o \
-  $(O)/renderergl2/material.o \
-  $(O)/renderergl2/material_parse.o \
-  $(O)/renderergl2/mesh.o \
-  $(O)/renderergl2/model.o \
-  $(O)/renderergl2/model_iqm.o \
-  $(O)/renderergl2/postprocess.o \
-  $(O)/renderergl2/scene.o \
-  $(O)/renderergl2/shade.o \
-  $(O)/renderergl2/shade_calc.o \
-  $(O)/renderergl2/shadows.o \
-  $(O)/renderergl2/sky.o \
-  $(O)/renderergl2/surface.o \
-  $(O)/renderergl2/vbo.o \
-  $(O)/renderergl2/world.o \
+  $(O)/ref-trin/image_bmp.o \
+  $(O)/ref-trin/image_jpg.o \
+  $(O)/ref-trin/image_png.o \
+  $(O)/ref-trin/image_tga.o \
+  $(O)/ref-trin/noise.o \
+  $(O)/ref2/animation.o \
+  $(O)/ref2/backend.o \
+  $(O)/ref2/bsp.o \
+  $(O)/ref2/cmds.o \
+  $(O)/ref2/curve.o \
+  $(O)/ref2/extensions.o \
+  $(O)/ref2/extramath.o \
+  $(O)/ref2/fbo.o \
+  $(O)/ref2/flares.o \
+  $(O)/ref2/font.o \
+  $(O)/ref2/glsl.o \
+  $(O)/ref2/image.o \
+  $(O)/ref2/init.o \
+  $(O)/ref2/light.o \
+  $(O)/ref2/main.o \
+  $(O)/ref2/marks.o \
+  $(O)/ref2/material.o \
+  $(O)/ref2/material_parse.o \
+  $(O)/ref2/mesh.o \
+  $(O)/ref2/model.o \
+  $(O)/ref2/model_iqm.o \
+  $(O)/ref2/postprocess.o \
+  $(O)/ref2/scene.o \
+  $(O)/ref2/shade.o \
+  $(O)/ref2/shade_calc.o \
+  $(O)/ref2/shadows.o \
+  $(O)/ref2/sky.o \
+  $(O)/ref2/surface.o \
+  $(O)/ref2/vbo.o \
+  $(O)/ref2/world.o \
   \
-  $(O)/renderer/sys/sdl/gamma.o \
-  $(O)/renderer/sys/sdl/glimp.o
+  $(O)/ref-trin/sys/sdl/gamma.o \
+  $(O)/ref-trin/sys/sdl/glimp.o
 
 ROBJ = \
-  $(O)/renderer/animation.o \
-  $(O)/renderer/backend.o \
-  $(O)/renderer/bsp.o \
-  $(O)/renderer/cmds.o \
-  $(O)/renderer/curve.o \
-  $(O)/renderer/flares.o \
-  $(O)/renderer/font.o \
-  $(O)/renderer/image.o \
-  $(O)/renderer/image_bmp.o \
-  $(O)/renderer/image_jpg.o \
-  $(O)/renderer/image_png.o \
-  $(O)/renderer/image_tga.o \
-  $(O)/renderer/init.o \
-  $(O)/renderer/light.o \
-  $(O)/renderer/main.o \
-  $(O)/renderer/marks.o \
-  $(O)/renderer/mesh.o \
-  $(O)/renderer/model.o \
-  $(O)/renderer/model_iqm.o \
-  $(O)/renderer/noise.o \
-  $(O)/renderer/scene.o \
-  $(O)/renderer/shade.o \
-  $(O)/renderer/shade_calc.o \
-  $(O)/renderer/shader.o \
-  $(O)/renderer/shadows.o \
-  $(O)/renderer/sky.o \
-  $(O)/renderer/surface.o \
-  $(O)/renderer/world.o \
+  $(O)/ref-trin/animation.o \
+  $(O)/ref-trin/backend.o \
+  $(O)/ref-trin/bsp.o \
+  $(O)/ref-trin/cmds.o \
+  $(O)/ref-trin/curve.o \
+  $(O)/ref-trin/flares.o \
+  $(O)/ref-trin/font.o \
+  $(O)/ref-trin/image.o \
+  $(O)/ref-trin/image_bmp.o \
+  $(O)/ref-trin/image_jpg.o \
+  $(O)/ref-trin/image_png.o \
+  $(O)/ref-trin/image_tga.o \
+  $(O)/ref-trin/init.o \
+  $(O)/ref-trin/light.o \
+  $(O)/ref-trin/main.o \
+  $(O)/ref-trin/marks.o \
+  $(O)/ref-trin/mesh.o \
+  $(O)/ref-trin/model.o \
+  $(O)/ref-trin/model_iqm.o \
+  $(O)/ref-trin/noise.o \
+  $(O)/ref-trin/scene.o \
+  $(O)/ref-trin/shade.o \
+  $(O)/ref-trin/shade_calc.o \
+  $(O)/ref-trin/shader.o \
+  $(O)/ref-trin/shadows.o \
+  $(O)/ref-trin/sky.o \
+  $(O)/ref-trin/surface.o \
+  $(O)/ref-trin/world.o \
   \
-  $(O)/renderer/sys/sdl/gamma.o \
-  $(O)/renderer/sys/sdl/glimp.o
+  $(O)/ref-trin/sys/sdl/gamma.o \
+  $(O)/ref-trin/sys/sdl/glimp.o
 
 ifneq ($(USE_RENDERER_DLOPEN), 0)
   ROBJ += \
-    $(O)/renderer/shared.o \
-    $(O)/renderer/puff.o \
-    $(O)/renderer/maths.o \
-    $(O)/renderer/subs.o
+    $(O)/ref-trin/shared.o \
+    $(O)/ref-trin/puff.o \
+    $(O)/ref-trin/maths.o \
+    $(O)/ref-trin/subs.o
 
   R2OBJ += \
-    $(O)/renderer/shared.o \
-    $(O)/renderer/puff.o \
-    $(O)/renderer/maths.o \
-    $(O)/renderer/subs.o
+    $(O)/ref-trin/shared.o \
+    $(O)/ref-trin/puff.o \
+    $(O)/ref-trin/maths.o \
+    $(O)/ref-trin/subs.o
 endif
 
 ifneq ($(USE_INTERNAL_JPEG),0)
   JPGOBJ = \
-    $(O)/renderer/jaricom.o \
-    $(O)/renderer/jcapimin.o \
-    $(O)/renderer/jcapistd.o \
-    $(O)/renderer/jcarith.o \
-    $(O)/renderer/jccoefct.o  \
-    $(O)/renderer/jccolor.o \
-    $(O)/renderer/jcdctmgr.o \
-    $(O)/renderer/jchuff.o   \
-    $(O)/renderer/jcinit.o \
-    $(O)/renderer/jcmainct.o \
-    $(O)/renderer/jcmarker.o \
-    $(O)/renderer/jcmaster.o \
-    $(O)/renderer/jcomapi.o \
-    $(O)/renderer/jcparam.o \
-    $(O)/renderer/jcprepct.o \
-    $(O)/renderer/jcsample.o \
-    $(O)/renderer/jctrans.o \
-    $(O)/renderer/jdapimin.o \
-    $(O)/renderer/jdapistd.o \
-    $(O)/renderer/jdarith.o \
-    $(O)/renderer/jdatadst.o \
-    $(O)/renderer/jdatasrc.o \
-    $(O)/renderer/jdcoefct.o \
-    $(O)/renderer/jdcolor.o \
-    $(O)/renderer/jddctmgr.o \
-    $(O)/renderer/jdhuff.o \
-    $(O)/renderer/jdinput.o \
-    $(O)/renderer/jdmainct.o \
-    $(O)/renderer/jdmarker.o \
-    $(O)/renderer/jdmaster.o \
-    $(O)/renderer/jdmerge.o \
-    $(O)/renderer/jdpostct.o \
-    $(O)/renderer/jdsample.o \
-    $(O)/renderer/jdtrans.o \
-    $(O)/renderer/jerror.o \
-    $(O)/renderer/jfdctflt.o \
-    $(O)/renderer/jfdctfst.o \
-    $(O)/renderer/jfdctint.o \
-    $(O)/renderer/jidctflt.o \
-    $(O)/renderer/jidctfst.o \
-    $(O)/renderer/jidctint.o \
-    $(O)/renderer/jmemmgr.o \
-    $(O)/renderer/jmemnobs.o \
-    $(O)/renderer/jquant1.o \
-    $(O)/renderer/jquant2.o \
-    $(O)/renderer/jutils.o
+    $(O)/ref-trin/jaricom.o \
+    $(O)/ref-trin/jcapimin.o \
+    $(O)/ref-trin/jcapistd.o \
+    $(O)/ref-trin/jcarith.o \
+    $(O)/ref-trin/jccoefct.o  \
+    $(O)/ref-trin/jccolor.o \
+    $(O)/ref-trin/jcdctmgr.o \
+    $(O)/ref-trin/jchuff.o   \
+    $(O)/ref-trin/jcinit.o \
+    $(O)/ref-trin/jcmainct.o \
+    $(O)/ref-trin/jcmarker.o \
+    $(O)/ref-trin/jcmaster.o \
+    $(O)/ref-trin/jcomapi.o \
+    $(O)/ref-trin/jcparam.o \
+    $(O)/ref-trin/jcprepct.o \
+    $(O)/ref-trin/jcsample.o \
+    $(O)/ref-trin/jctrans.o \
+    $(O)/ref-trin/jdapimin.o \
+    $(O)/ref-trin/jdapistd.o \
+    $(O)/ref-trin/jdarith.o \
+    $(O)/ref-trin/jdatadst.o \
+    $(O)/ref-trin/jdatasrc.o \
+    $(O)/ref-trin/jdcoefct.o \
+    $(O)/ref-trin/jdcolor.o \
+    $(O)/ref-trin/jddctmgr.o \
+    $(O)/ref-trin/jdhuff.o \
+    $(O)/ref-trin/jdinput.o \
+    $(O)/ref-trin/jdmainct.o \
+    $(O)/ref-trin/jdmarker.o \
+    $(O)/ref-trin/jdmaster.o \
+    $(O)/ref-trin/jdmerge.o \
+    $(O)/ref-trin/jdpostct.o \
+    $(O)/ref-trin/jdsample.o \
+    $(O)/ref-trin/jdtrans.o \
+    $(O)/ref-trin/jerror.o \
+    $(O)/ref-trin/jfdctflt.o \
+    $(O)/ref-trin/jfdctfst.o \
+    $(O)/ref-trin/jfdctint.o \
+    $(O)/ref-trin/jidctflt.o \
+    $(O)/ref-trin/jidctfst.o \
+    $(O)/ref-trin/jidctint.o \
+    $(O)/ref-trin/jmemmgr.o \
+    $(O)/ref-trin/jmemnobs.o \
+    $(O)/ref-trin/jquant1.o \
+    $(O)/ref-trin/jquant2.o \
+    $(O)/ref-trin/jutils.o
 endif
 
 ifeq ($(ARCH),x86)
@@ -1974,18 +1974,18 @@ $(O)/client/sys/%.o: $(SYSDIR)/%.c
 	$(DO_CC)
 $(O)/client/sys/sdl/%.o: $(SDLDIR)/%.c
 	$(DO_CC)
-$(O)/renderersmp/%.o: $(SDLDIR)/%.c
+$(O)/ref-trinsmp/%.o: $(SDLDIR)/%.c
 	$(DO_SMP_CC)
 
-$(O)/renderer/%.o: $(COMDIR)/%.c
+$(O)/ref-trin/%.o: $(COMDIR)/%.c
 	$(DO_REF_CC)
-$(O)/renderer/sys/sdl/%.o: $(SDLDIR)/%.c
+$(O)/ref-trin/sys/sdl/%.o: $(SDLDIR)/%.c
 	$(DO_REF_CC)
-$(O)/renderer/%.o: $(JPDIR)/%.c
+$(O)/ref-trin/%.o: $(JPDIR)/%.c
 	$(DO_REF_CC)
-$(O)/renderer/%.o: $(RDIR)/%.c
+$(O)/ref-trin/%.o: $(RDIR)/%.c
 	$(DO_REF_CC)
-$(O)/renderergl2/%.o: $(R2DIR)/%.c
+$(O)/ref2/%.o: $(R2DIR)/%.c
 	$(DO_REF_CC)
 
 $(O)/ded/%.o: $(ASMDIR)/%.s
@@ -2081,10 +2081,10 @@ endif
 ifneq ($(BUILD_CLIENT),0)
 	$(INSTALL) $(STRIP_FLAG) -m 0755 $(BR)/$(CLIENTBIN)$(FULLBINEXT) $(COPYBINDIR)/$(CLIENTBIN)$(FULLBINEXT)
   ifneq ($(USE_RENDERER_DLOPEN),0)
-    ifneq ($(BUILD_RENDERER_GL1),0)
+    ifneq ($(BUILD_REF1),0)
 	$(INSTALL) $(STRIP_FLAG) -m 0755 $(BR)/ref1-$(SHLIBNAME) $(COPYBINDIR)/ref1-$(SHLIBNAME)
     endif
-    ifneq ($(BUILD_RENDERER_GL2),0)
+    ifneq ($(BUILD_REF2),0)
 	$(INSTALL) $(STRIP_FLAG) -m 0755 $(BR)/ref2-$(SHLIBNAME) $(COPYBINDIR)/ref2-$(SHLIBNAME)
     endif
   endif

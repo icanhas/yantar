@@ -18,7 +18,7 @@
 #include "fbo.h"
 #include "postprocess.h"
 #include "qgl.h"
-#include "../renderer/iqm.h"
+#include "../ref-trin/iqm.h"
 
 #define GL_INDEX_TYPE GL_UNSIGNED_INT
 typedef unsigned int glIndex_t;

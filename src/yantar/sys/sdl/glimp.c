@@ -23,7 +23,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include "../../renderer/local.h"
+#include "../../ref-trin/local.h"
 #include "../../client/client.h"
 #include "../local.h"
 #include "icon.h"

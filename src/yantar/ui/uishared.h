@@ -9,7 +9,7 @@
 
 
 #include "shared.h"
-#include "../renderer/types.h"
+#include "../ref-trin/types.h"
 #include "../client/keycodes.h"
 
 #define MAX_MENUNAME		32
