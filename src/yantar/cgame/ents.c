@@ -258,7 +258,7 @@ CG_Item(centity_t *cent)
 	/* the weapons have their origin where they attatch to player
 	 * models, so we need to offset them or they will rotate
 	 * eccentricly */
-	if(item->giType == IT_WEAPON){
+	if(item->giType == IT_PRIWEAP){
 		wi = &cg_weapons[item->giTag];
 		cent->lerpOrigin[0] -=
 			wi->weaponMidpoint[0] * ent.axis[0][0] +
@@ -276,7 +276,7 @@ CG_Item(centity_t *cent)
 		cent->lerpOrigin[2] += 8;	/* an extra height boost */
 	}
 
-	if(item->giType == IT_WEAPON && item->giTag == W1railgun){
+	if(item->giType == IT_PRIWEAP && item->giTag == W1railgun){
 		clientInfo_t *ci = &cgs.clientinfo[cg.snap->ps.clientNum];
 		byte4copy(ci->c1RGBA, ent.shaderRGBA);
 	}
@@ -301,12 +301,12 @@ CG_Item(centity_t *cent)
 
 	/* items without glow textures need to keep a minimum light value
 	 * so they are always visible */
-	if((item->giType == IT_WEAPON) ||
+	if((item->giType == IT_PRIWEAP) ||
 	   (item->giType == IT_SHIELD))
 		ent.renderfx |= RF_MINLIGHT;
 
 	/* increase the size of the weapons when they are presented as items */
-	if(item->giType == IT_WEAPON){
+	if(item->giType == IT_PRIWEAP){
 		scalev3(ent.axis[0], 1.5, ent.axis[0]);
 		scalev3(ent.axis[1], 1.5, ent.axis[1]);
 		scalev3(ent.axis[2], 1.5, ent.axis[2]);
@@ -319,7 +319,7 @@ CG_Item(centity_t *cent)
 	/* add to refresh list */
 	trap_R_AddRefEntityToScene(&ent);
 
-	if(item->giType == IT_WEAPON && wi->barrelModel){
+	if(item->giType == IT_PRIWEAP && wi->barrelModel){
 		refEntity_t barrel;
 
 		memset(&barrel, 0, sizeof(barrel));

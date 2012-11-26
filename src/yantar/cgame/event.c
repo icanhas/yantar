@@ -360,7 +360,7 @@ CG_ItemPickup(int itemNum)
 	cg.itemPickupTime = cg.time;
 	cg.itemPickupBlendTime = cg.time;
 	/* see if it should be the grabbed weapon */
-	if(bg_itemlist[itemNum].giType == IT_WEAPON)
+	if(bg_itemlist[itemNum].giType == IT_PRIWEAP)
 		/* select it immediately */
 		if(cg_autoswitch.integer && bg_itemlist[itemNum].giTag !=
 		   W1machinegun){

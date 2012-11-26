@@ -98,7 +98,7 @@ BotDrawDebugPolygons(void (*drawPoly)(int color, int numPoints,
 				"bot_highlightarea", "0", 0);
 		/*  */
 		parm0 = 0;
-		if(svs.clients[0].lastUsercmd.buttons & BUTTON_ATTACK) parm0 |=
+		if(svs.clients[0].lastUsercmd.buttons & BUTTON_PRIATTACK) parm0 |=
 				1;
 		if(bot_reachability->integer) parm0 |= 2;
 		if(bot_groundonly->integer) parm0 |= 4;

@@ -181,7 +181,7 @@ gitem_t bg_itemlist[] =
 /* icon */ Picons "/iconw_gauntlet",
 /* pickup */ "Gauntlet",
 		0,
-		IT_WEAPON,
+		IT_PRIWEAP,
 		W1melee,
 /* precache */ "",
 /* sounds */ ""
@@ -197,7 +197,7 @@ gitem_t bg_itemlist[] =
 /* icon */ Picons "/iconw_shotgun",
 /* pickup */ "Shotgun",
 		10,
-		IT_WEAPON,
+		IT_PRIWEAP,
 		W1shotgun,
 /* precache */ "",
 /* sounds */ ""
@@ -213,7 +213,7 @@ gitem_t bg_itemlist[] =
 /* icon */ Picons "/iconw_machinegun",
 /* pickup */ "Machinegun",
 		200,
-		IT_WEAPON,
+		IT_PRIWEAP,
 		W1machinegun,
 /* precache */ "",
 /* sounds */ ""
@@ -229,7 +229,7 @@ gitem_t bg_itemlist[] =
 /* icon */ Picons "/iconw_grenade",
 /* pickup */ "Grenade Launcher",
 		10,
-		IT_WEAPON,
+		IT_SECWEAP,
 		W2grenadelauncher,
 /* precache */ "",
 /* sounds */
@@ -246,7 +246,7 @@ gitem_t bg_itemlist[] =
 /* icon */ Picons "/iconw_rocket",
 /* pickup */ "Rocket Launcher",
 		10,
-		IT_WEAPON,
+		IT_SECWEAP,
 		W2rocketlauncher,
 /* precache */ "",
 /* sounds */ ""
@@ -262,7 +262,7 @@ gitem_t bg_itemlist[] =
 /* icon */ Picons "/iconw_lightning",
 /* pickup */ "Lightning Gun",
 		100,
-		IT_WEAPON,
+		IT_PRIWEAP,
 		W1lightning,
 /* precache */ "",
 /* sounds */ ""
@@ -278,7 +278,7 @@ gitem_t bg_itemlist[] =
 /* icon */ Picons "/iconw_railgun",
 /* pickup */ "Railgun",
 		10,
-		IT_WEAPON,
+		IT_PRIWEAP,
 		W1railgun,
 /* precache */ "",
 /* sounds */ ""
@@ -294,7 +294,7 @@ gitem_t bg_itemlist[] =
 /* icon */ Picons "/iconw_plasma",
 /* pickup */ "Plasma Gun",
 		50,
-		IT_WEAPON,
+		IT_PRIWEAP,
 		W1plasmagun,
 /* precache */ "",
 /* sounds */ ""
@@ -310,7 +310,7 @@ gitem_t bg_itemlist[] =
 /* icon */ Picons "/iconw_bfg",
 /* pickup */ "BFG10K",
 		20,
-		IT_WEAPON,
+		IT_SECWEAP,
 		W2bfg,
 /* precache */ "",
 /* sounds */ ""
@@ -326,7 +326,7 @@ gitem_t bg_itemlist[] =
 /* icon */ Picons "/iconw_grapple",
 /* pickup */ "Grappling Hook",
 		0,
-		IT_WEAPON,
+		IT_PRIWEAP,
 		W1_GRAPPLING_HOOK,
 /* precache */ "",
 /* sounds */ ""
@@ -715,7 +715,7 @@ gitem_t bg_itemlist[] =
 /* icon */ Picons "/iconw_nailgun",
 /* pickup */ "Nailgun",
 		10,
-		IT_WEAPON,
+		IT_PRIWEAP,
 		W1nailgun,
 /* precache */ "",
 /* sounds */ ""
@@ -731,7 +731,7 @@ gitem_t bg_itemlist[] =
 /* icon */ Picons "/icon_proxlauncher",
 /* pickup */ "Prox Launcher",
 		5,
-		IT_WEAPON,
+		IT_SECWEAP,
 		W2proxlauncher,
 /* precache */ "",
 /* sounds */ Pproxsounds "/tick "
@@ -751,7 +751,7 @@ gitem_t bg_itemlist[] =
 /* icon */ Picons "/iconw_chaingun",
 /* pickup */ "Chaingun",
 		80,
-		IT_WEAPON,
+		IT_PRIWEAP,
 		W1chaingun,
 /* precache */ "",
 /* sounds */ Pgattlingsounds "/wvulwind"
@@ -812,7 +812,7 @@ BG_FindItemForWeapon(Weapon weapon)
 	gitem_t *it;
 
 	for(it = bg_itemlist + 1; it->classname; it++)
-		if(it->giType == IT_WEAPON && it->giTag == weapon)
+		if(it->giType == IT_PRIWEAP && it->giTag == weapon)
 			return it;
 
 	Com_Errorf(ERR_DROP, "Couldn't find item for weapon %i", weapon);
@@ -880,7 +880,7 @@ BG_CanItemBeGrabbed(int gametype, const entityState_t *ent,
 	item = &bg_itemlist[ent->modelindex];
 
 	switch(item->giType){
-	case IT_WEAPON:
+	case IT_PRIWEAP:
 		return qtrue;	/* weapons are always picked up */
 
 	case IT_AMMO:

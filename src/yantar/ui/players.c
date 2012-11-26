@@ -47,7 +47,7 @@ tryagain:
 		return;
 
 	for(item = bg_itemlist + 1; item->classname; item++){
-		if(item->giType != IT_WEAPON)
+		if(item->giType != IT_PRIWEAP)
 			continue;
 		if(item->giTag == weaponNum)
 			break;

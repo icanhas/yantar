@@ -571,7 +571,8 @@ typedef enum {
 /* gitem_t->type */
 typedef enum {
 	IT_BAD,
-	IT_WEAPON,	/* EFX: rotate + upscale + minlight */
+	IT_PRIWEAP,	/* EFX: rotate + upscale + minlight */
+	IT_SECWEAP,	/* secondary weapon */
 	IT_AMMO,	/* EFX: rotate */
 	IT_SHIELD,	/* EFX: rotate + minlight */
 	IT_HEALTH,	/* EFX: static external sphere + rotating internal */

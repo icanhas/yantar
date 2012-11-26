@@ -265,10 +265,12 @@ CG_TouchItem(centity_t *cent)
 		   &cg.predictedPlayerState))
 		return;		/* can't hold it */
 
-	item = &bg_itemlist[ cent->currentState.modelindex ];
+	item = &bg_itemlist[cent->currentState.modelindex];
 
-	/* Special case for flags.
-	 * We don't predict touching our own flag */
+	/* 
+	 * Special case for flags.
+	 * We don't predict touching our own flag 
+	 */
 	if(cgs.gametype == GT_1FCTF)
 		if(item->giTag != PW_NEUTRALFLAG)
 			return;
@@ -293,11 +295,19 @@ CG_TouchItem(centity_t *cent)
 	cent->miscTime = cg.time;
 
 	/* if it's a weapon, give them some predicted ammo so the autoswitch will work */
-	if(item->giType == IT_WEAPON){
-		cg.predictedPlayerState.stats[ STAT_PRIWEAPS ] |= 1 <<
-								 item->giTag;
-		if(!cg.predictedPlayerState.ammo[ item->giTag ])
-			cg.predictedPlayerState.ammo[ item->giTag ] = 1;
+	switch(item->giType){
+	case IT_PRIWEAP:
+		cg.predictedPlayerState.stats[STAT_PRIWEAPS] |= 1<<item->giTag;
+		if(cg.predictedPlayerState.ammo[item->giTag] < 1)
+			cg.predictedPlayerState.ammo[item->giTag] = 1;
+		break;
+	case IT_SECWEAP:
+		cg.predictedPlayerState.stats[STAT_SECWEAPS] |= 1<<item->giTag;
+		if(cg.predictedPlayerState.ammo[item->giTag] < 1)
+			cg.predictedPlayerState.ammo[item->giTag] = 1;
+		break;
+	default:
+		break;
 	}
 }
 

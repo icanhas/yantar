@@ -841,95 +841,98 @@ static void
 doweapevents(void)
 {
 	int addTime;
+	playerState_t *p;
+	
+	p = pm->ps;
 
 	/* don't allow attack until all buttons are up */
-	if(pm->ps->pm_flags & PMF_RESPAWNED)
+	if(p->pm_flags & PMF_RESPAWNED)
 		return;
 	/* ignore if spectator */
-	if(pm->ps->persistant[PERS_TEAM] == TEAM_SPECTATOR)
+	if(p->persistant[PERS_TEAM] == TEAM_SPECTATOR)
 		return;
 	/* check for dead player */
-	if(pm->ps->stats[STAT_HEALTH] <= 0){
-		pm->ps->weapon = Wnone;
+	if(p->stats[STAT_HEALTH] <= 0){
+		p->weapon = Wnone;
 		return;
 	}
 	/* check for item using */
 	if(pm->cmd.buttons & BUTTON_USE_HOLDABLE){
-		if(!(pm->ps->pm_flags & PMF_USE_ITEM_HELD)){
+		if(!(p->pm_flags & PMF_USE_ITEM_HELD)){
 			if(bg_itemlist[pm->ps->stats[STAT_HOLDABLE_ITEM]].giTag == HI_MEDKIT
-			     && pm->ps->stats[STAT_HEALTH] >=
-			     (pm->ps->stats[STAT_MAX_HEALTH] + 25)){
+			  && p->stats[STAT_HEALTH] >=
+			  (p->stats[STAT_MAX_HEALTH] + 25)){
 				/* don't use medkit if at max health */
 			}else{
-				pm->ps->pm_flags |= PMF_USE_ITEM_HELD;
-				PM_AddEvent(EV_USE_ITEM0 +
-					bg_itemlist[pm->ps->stats[
-							    STAT_HOLDABLE_ITEM]]
-					.
-					giTag);
-				pm->ps->stats[STAT_HOLDABLE_ITEM] = 0;
+				p->pm_flags |= PMF_USE_ITEM_HELD;
+				PM_AddEvent(EV_USE_ITEM0 + bg_itemlist[p->stats[STAT_HOLDABLE_ITEM]].giTag);
+				p->stats[STAT_HOLDABLE_ITEM] = 0;
 			}
 			return;
 		}
 	}else
-		pm->ps->pm_flags &= ~PMF_USE_ITEM_HELD;
+		p->pm_flags &= ~PMF_USE_ITEM_HELD;
 
 	/* make weapon function */
-	if(pm->ps->weaponTime > 0)
-		pm->ps->weaponTime -= pml.msec;
+	if(p->weaponTime > 0)
+		p->weaponTime -= pml.msec;
 
-	/* check for weapon change
+	/* 
+	 * check for weapon changes.
 	 * can't change if weapon is firing, but can change
-	 * again if lowering or raising */
-	if(pm->ps->weaponTime <= 0 || pm->ps->weaponstate != WEAPON_FIRING)
-		if(pm->ps->weapon != pm->cmd.weapon)
+	 * again if lowering or raising 
+	 */
+	if(p->weaponTime <= 0 || p->weaponstate != WEAPON_FIRING){
+		if(p->weapon != pm->cmd.weapon)
 			startweapchange(pm->cmd.weapon);
-	if(pm->ps->weaponTime > 0)
+	}
+	if((p->weaponTime > 0) && (p->secweaptime > 0))
 		return;
+		
 	/* change weapon if time */
-	if(pm->ps->weaponstate == WEAPON_DROPPING){
+	if(p->weaponstate == WEAPON_DROPPING){
 		finishweapchange();
 		return;
 	}
-	if(pm->ps->weaponstate == WEAPON_RAISING){
-		pm->ps->weaponstate = WEAPON_READY;
-		if(pm->ps->weapon == W1melee)
+	if(p->weaponstate == WEAPON_RAISING){
+		p->weaponstate = WEAPON_READY;
+		if(p->weapon == W1melee)
 			starttorsoanim(TORSO_STAND2);
 		else
 			starttorsoanim(TORSO_STAND);
 		return;
 	}
 	/* check for fire */
-	if(!(pm->cmd.buttons & BUTTON_ATTACK)){
-		pm->ps->weaponTime	= 0;
-		pm->ps->weaponstate	= WEAPON_READY;
+	if(!(pm->cmd.buttons & BUTTON_PRIATTACK)){
+		p->weaponTime = 0;
+		p->weaponstate = WEAPON_READY;
 		return;
 	}
 	/* start the animation even if out of ammo */
-	if(pm->ps->weapon == W1melee){
-		/* the guantlet only "fires" when it actually hits something */
+	if(p->weapon == W1melee){
+		/* melee only "fires" when it actually hits something */
 		if(!pm->gauntletHit){
-			pm->ps->weaponTime	= 0;
-			pm->ps->weaponstate	= WEAPON_READY;
+			p->weaponTime = 0;
+			p->weaponstate = WEAPON_READY;
 			return;
 		}
 		starttorsoanim(TORSO_ATTACK2);
 	}else
 		starttorsoanim(TORSO_ATTACK);
-	pm->ps->weaponstate = WEAPON_FIRING;
+	p->weaponstate = WEAPON_FIRING;
 	/* check for out of ammo */
-	if(!pm->ps->ammo[ pm->ps->weapon ]){
+	if(!p->ammo[p->weapon]){
 		PM_AddEvent(EV_NOAMMO);
-		pm->ps->weaponTime += 500;
+		p->weaponTime += 500;
 		return;
 	}
 	/* take an ammo away if not infinite */
-	if(pm->ps->ammo[ pm->ps->weapon ] != -1)
-		pm->ps->ammo[ pm->ps->weapon ]--;
+	if(p->ammo[p->weapon] != -1)
+		p->ammo[p->weapon]--;
 	/* fire weapon */
 	PM_AddEvent(EV_FIRE_WEAPON);
 	
-	switch(pm->ps->weapon){
+	switch(p->weapon){
 	default:
 	case W1melee:
 		addTime = 400;
@@ -971,9 +974,9 @@ doweapevents(void)
 		addTime = 30;
 		break;
 	}
-	if(pm->ps->powerups[PW_HASTE])
+	if(p->powerups[PW_HASTE])
 		addTime /= 1.3;
-	pm->ps->weaponTime += addTime;
+	p->weaponTime += addTime;
 }
 
 static void
@@ -1130,7 +1133,7 @@ PmoveSingle(pmove_t *p)
 	/* set the firing flag for continuous beam weapons */
 	if(!(pm->ps->pm_flags & PMF_RESPAWNED) && pm->ps->pm_type !=
 	   PM_INTERMISSION && pm->ps->pm_type != PM_NOCLIP
-	   && (pm->cmd.buttons & BUTTON_ATTACK) &&
+	   && (pm->cmd.buttons & BUTTON_PRIATTACK) &&
 	   pm->ps->ammo[ pm->ps->weapon ])
 		pm->ps->eFlags |= EF_FIRING;
 	else
@@ -1138,7 +1141,7 @@ PmoveSingle(pmove_t *p)
 
 	/* clear the respawned flag if attack and use are cleared */
 	if(pm->ps->stats[STAT_HEALTH] > 0 &&
-	   !(pm->cmd.buttons & (BUTTON_ATTACK | BUTTON_USE_HOLDABLE)))
+	   !(pm->cmd.buttons & (BUTTON_PRIATTACK | BUTTON_USE_HOLDABLE)))
 		pm->ps->pm_flags &= ~PMF_RESPAWNED;
 
 	/*

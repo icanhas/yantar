@@ -1,32 +1,28 @@
 /*
+ * This file acts on changes in a new playerState_t.  With normal play,
+ * this will be done after local prediction, but when following another
+ * player or playing back a demo, it will be checked when the snapshot
+ * transitions like all the other entities .
+ */
+ /*
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License.
  */
-/*
- * cg_playerstate.c -- this file acts on changes in a new playerState_t
- * With normal play, this will be done after local prediction, but when
- * following another player or playing back a demo, it will be checked
- * when the snapshot transitions like all the other entities */
 
 #include "local.h"
 
 /*
- * CG_CheckAmmo
- *
  * If the ammo has gone low enough to generate the warning, play a sound
  */
 void
 CG_CheckAmmo(void)
 {
-	int	i;
-	int	total;
-	int	previous;
-	int	weapons;
+	int i, total, previous, weapons;
 
 	/* see about how many seconds of ammo we have remaining */
-	weapons = cg.snap->ps.stats[ STAT_PRIWEAPS ];
+	weapons = cg.snap->ps.stats[STAT_PRIWEAPS];
 	total	= 0;
 	for(i = W1machinegun; i < Wnumweaps; i++){
 		if(!(weapons & (1 << i)))
@@ -61,9 +57,6 @@ CG_CheckAmmo(void)
 		trap_S_StartLocalSound(cgs.media.noAmmoSound, CHAN_LOCAL_SOUND);
 }
 
-/*
- * CG_DamageFeedback
- */
 void
 CG_DamageFeedback(int yawByte, int pitchByte, int damage)
 {
@@ -150,12 +143,7 @@ CG_DamageFeedback(int yawByte, int pitchByte, int damage)
 	cg.damageTime	= cg.snap->serverTime;
 }
 
-
-
-
 /*
- * CG_Respawn
- *
  * A respawn happened this snapshot
  */
 void
@@ -163,24 +151,19 @@ CG_Respawn(void)
 {
 	/* no error decay on player movement */
 	cg.thisFrameTeleport = qtrue;
-
 	/* display weapons available */
 	cg.weaponSelectTime = cg.time;
-
 	/* select the weapon the server says we are using */
 	cg.weaponSelect = cg.snap->ps.weapon;
 }
 
 extern char *eventnames[];
 
-/*
- * CG_CheckPlayerstateEvents
- */
 void
 CG_CheckPlayerstateEvents(playerState_t *ps, playerState_t *ops)
 {
-	int	i;
-	int	event;
+	int i;
+	int event;
 	centity_t *cent;
 
 	if(ps->externalEvent && ps->externalEvent != ops->externalEvent){
@@ -214,9 +197,6 @@ CG_CheckPlayerstateEvents(playerState_t *ps, playerState_t *ops)
 		}
 }
 
-/*
- * CG_CheckChangedPredictableEvents
- */
 void
 CG_CheckChangedPredictableEvents(playerState_t *ps)
 {
@@ -254,9 +234,6 @@ CG_CheckChangedPredictableEvents(playerState_t *ps)
 	}
 }
 
-/*
- * pushReward
- */
 static void
 pushReward(sfxHandle_t sfx, qhandle_t shader, int rewardCount)
 {
@@ -268,9 +245,6 @@ pushReward(sfxHandle_t sfx, qhandle_t shader, int rewardCount)
 	}
 }
 
-/*
- * CG_CheckLocalSounds
- */
 void
 CG_CheckLocalSounds(playerState_t *ps, playerState_t *ops)
 {
@@ -423,8 +397,7 @@ CG_CheckLocalSounds(playerState_t *ps, playerState_t *ops)
 				CHAN_ANNOUNCER);
 
 	/* lead changes */
-	if(!reward)
-		/*  */
+	if(!reward){
 		if(!cg.warmup){
 			/* never play lead changes during warmup */
 			if(ps->persistant[PERS_RANK] !=
@@ -443,6 +416,7 @@ CG_CheckLocalSounds(playerState_t *ps, playerState_t *ops)
 							cgs.media.lostLeadSound);
 				}
 		}
+	}
 
 	/* timelimit warnings */
 	if(cgs.timelimit > 0){
@@ -490,10 +464,6 @@ CG_CheckLocalSounds(playerState_t *ps, playerState_t *ops)
 	}
 }
 
-/*
- * CG_TransitionPlayerState
- *
- */
 void
 CG_TransitionPlayerState(playerState_t *ps, playerState_t *ops)
 {

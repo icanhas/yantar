@@ -390,7 +390,7 @@ Touch_Item(gentity_t *ent, gentity_t *other, trace_t *trace)
 
 	/* call the item-specific pickup function */
 	switch(ent->item->giType){
-	case IT_WEAPON:
+	case IT_PRIWEAP:
 		respawn = Pickup_Weapon(ent, other);
 /*		predict = qfalse; */
 		break;

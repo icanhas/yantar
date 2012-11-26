@@ -578,7 +578,7 @@ CG_RegisterWeapon(int weaponNum)
 	memset(weaponInfo, 0, sizeof(*weaponInfo));
 	weaponInfo->registered = qtrue;
 	for(item = bg_itemlist + 1; item->classname; item++)
-		if(item->giType == IT_WEAPON && item->giTag == weaponNum){
+		if(item->giType == IT_PRIWEAP && item->giTag == weaponNum){
 			weaponInfo->item = item;
 			break;
 		}
@@ -820,7 +820,7 @@ CG_RegisterItemVisuals(int itemNum)
 	itemInfo->registered = qtrue;
 	itemInfo->models[0] = trap_R_RegisterModel(item->world_model[0]);
 	itemInfo->icon = trap_R_RegisterShader(item->icon);
-	if(item->giType == IT_WEAPON)
+	if(item->giType == IT_PRIWEAP)
 		CG_RegisterWeapon(item->giTag);
 
 	/* powerups have an accompanying ring or sphere */
@@ -1394,7 +1394,7 @@ CG_DrawWeaponSelect(void)
 	cg.itemPickupTime = 0;
 
 	/* count the number of weapons owned */
-	bits = cg.snap->ps.stats[ STAT_PRIWEAPS ];
+	bits = cg.snap->ps.stats[STAT_PRIWEAPS];
 	count = 0;
 	for(i = 1; i < MAX_WEAPONS; i++)
 		if(bits & (1 << i))
