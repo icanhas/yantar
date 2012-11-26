@@ -2,6 +2,7 @@ bin/
 .ofiles/
 Makeconfig
 *.swp
+*.tmp
 *~
 *.diff
 *.patch
