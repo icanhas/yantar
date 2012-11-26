@@ -26,7 +26,7 @@ CG_CheckAmmo(void)
 	int	weapons;
 
 	/* see about how many seconds of ammo we have remaining */
-	weapons = cg.snap->ps.stats[ STAT_WEAPONS ];
+	weapons = cg.snap->ps.stats[ STAT_PRIWEAPS ];
 	total	= 0;
 	for(i = WP_MACHINEGUN; i < WP_NUM_WEAPONS; i++){
 		if(!(weapons & (1 << i)))
@@ -287,8 +287,8 @@ CG_CheckLocalSounds(playerState_t *ps, playerState_t *ops)
 	/* hit changes */
 	if(ps->persistant[PERS_HITS] > ops->persistant[PERS_HITS]){
 #ifdef MISSIONPACK
-		armor	= ps->persistant[PERS_ATTACKEE_ARMOR] & 0xff;
-		health	= ps->persistant[PERS_ATTACKEE_ARMOR] >> 8;
+		armor	= ps->persistant[PERS_ATTACKEE_SHIELD] & 0xff;
+		health	= ps->persistant[PERS_ATTACKEE_SHIELD] >> 8;
 		if(armor > 50)
 			trap_S_StartLocalSound(cgs.media.hitSoundHighArmor,
 				CHAN_LOCAL_SOUND);

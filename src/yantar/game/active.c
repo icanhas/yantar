@@ -115,7 +115,7 @@ P_WorldEffects(gentity_t *ent)
 				ent->pain_debounce_time = level.time + 200;
 
 				G_Damage (ent, NULL, NULL, NULL, NULL,
-					ent->damage, DAMAGE_NO_ARMOR, MOD_WATER);
+					ent->damage, DAMAGE_NO_SHIELD, MOD_WATER);
 			}
 		}
 	}else{
@@ -394,9 +394,9 @@ ClientTimerActions(gentity_t *ent, int msec)
 
 
 		/* count down armor when over max */
-		if(client->ps.stats[STAT_ARMOR] >
+		if(client->ps.stats[STAT_SHIELD] >
 		   client->ps.stats[STAT_MAX_HEALTH])
-			client->ps.stats[STAT_ARMOR]--;
+			client->ps.stats[STAT_SHIELD]--;
 	}
 }
 

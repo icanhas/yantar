@@ -25,7 +25,7 @@
  */
 
 
-#define RESPAWN_ARMOR		25
+#define RESPAWN_SHIELD		25
 #define RESPAWN_HEALTH		35
 #define RESPAWN_AMMO		40
 #define RESPAWN_HOLDABLE	60
@@ -126,7 +126,7 @@ Pickup_PersistantPowerup(gentity_t *ent, gentity_t *other)
 		other->health = max;
 		other->client->ps.stats[STAT_HEALTH] = max;
 		other->client->ps.stats[STAT_MAX_HEALTH] = max;
-		other->client->ps.stats[STAT_ARMOR] = max;
+		other->client->ps.stats[STAT_SHIELD] = max;
 		other->client->pers.maxHealth = max;
 
 		break;
@@ -138,7 +138,7 @@ Pickup_PersistantPowerup(gentity_t *ent, gentity_t *other)
 		if(handicap<=0.0f || handicap>100.0f)
 			handicap = 100.0f;
 		other->client->pers.maxHealth = handicap;
-		other->client->ps.stats[STAT_ARMOR] = 0;
+		other->client->ps.stats[STAT_SHIELD] = 0;
 		break;
 
 	case PW_DOUBLER:
@@ -243,7 +243,7 @@ Pickup_Weapon(gentity_t *ent, gentity_t *other)
 	}
 
 	/* add the weapon */
-	other->client->ps.stats[STAT_WEAPONS] |= (1 << ent->item->giTag);
+	other->client->ps.stats[STAT_PRIWEAPS] |= (1 << ent->item->giTag);
 
 	Add_Ammo(other, ent->item->giTag, quantity);
 
@@ -292,13 +292,13 @@ Pickup_Health(gentity_t *ent, gentity_t *other)
 int
 Pickup_Armor(gentity_t *ent, gentity_t *other)
 {
-	other->client->ps.stats[STAT_ARMOR] += ent->item->quantity;
-	if(other->client->ps.stats[STAT_ARMOR] >
+	other->client->ps.stats[STAT_SHIELD] += ent->item->quantity;
+	if(other->client->ps.stats[STAT_SHIELD] >
 	   other->client->ps.stats[STAT_MAX_HEALTH] * 2)
-		other->client->ps.stats[STAT_ARMOR] =
+		other->client->ps.stats[STAT_SHIELD] =
 			other->client->ps.stats[STAT_MAX_HEALTH] * 2;
 
-	return RESPAWN_ARMOR;
+	return RESPAWN_SHIELD;
 }
 
 /*
@@ -398,7 +398,7 @@ Touch_Item(gentity_t *ent, gentity_t *other, trace_t *trace)
 		respawn = Pickup_Ammo(ent, other);
 /*		predict = qfalse; */
 		break;
-	case IT_ARMOR:
+	case IT_SHIELD:
 		respawn = Pickup_Armor(ent, other);
 		break;
 	case IT_HEALTH:

@@ -793,18 +793,18 @@ G_RankPickupArmor(int self, int quantity)
 		/* no reports during warmup period */
 		return;
 
-	trap_RankReportInt(self, -1, QGR_KEY_ARMOR, 1, 1);
-	trap_RankReportInt(self, -1, QGR_KEY_ARMOR_TOTAL, quantity, 1);
+	trap_RankReportInt(self, -1, QGR_KEY_SHIELD, 1, 1);
+	trap_RankReportInt(self, -1, QGR_KEY_SHIELD_TOTAL, quantity, 1);
 
 	switch(quantity){
 	case 5:
-		trap_RankReportInt(self, -1, QGR_KEY_ARMOR_SHARD, 1, 1);
+		trap_RankReportInt(self, -1, QGR_KEY_SHIELD_SHARD, 1, 1);
 		break;
 	case 50:
-		trap_RankReportInt(self, -1, QGR_KEY_ARMOR_YELLOW, 1, 1);
+		trap_RankReportInt(self, -1, QGR_KEY_SHIELD_YELLOW, 1, 1);
 		break;
 	case 100:
-		trap_RankReportInt(self, -1, QGR_KEY_ARMOR_RED, 1, 1);
+		trap_RankReportInt(self, -1, QGR_KEY_SHIELD_RED, 1, 1);
 		break;
 	default:
 		break;

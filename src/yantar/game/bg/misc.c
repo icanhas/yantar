@@ -43,7 +43,7 @@ gitem_t bg_itemlist[] =
 	},	/* leave index 0 alone */
 
 	/*
-	 * ARMOR
+	 * SHIELD
 	 *  */
 
 /*QUAKED item_armor_shard (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
@@ -57,7 +57,7 @@ gitem_t bg_itemlist[] =
 /* icon */ Picons "/iconr_shard",
 /* pickup */ "Armor Shard",
 		5,
-		IT_ARMOR,
+		IT_SHIELD,
 		0,
 /* precache */ "",
 /* sounds */ ""
@@ -73,7 +73,7 @@ gitem_t bg_itemlist[] =
 /* icon */ Picons "/iconr_yellow",
 /* pickup */ "Armor",
 		50,
-		IT_ARMOR,
+		IT_SHIELD,
 		0,
 /* precache */ "",
 /* sounds */ ""
@@ -89,7 +89,7 @@ gitem_t bg_itemlist[] =
 /* icon */ Picons "/iconr_red",
 /* pickup */ "Heavy Armor",
 		100,
-		IT_ARMOR,
+		IT_SHIELD,
 		0,
 /* precache */ "",
 /* sounds */ ""
@@ -888,8 +888,8 @@ BG_CanItemBeGrabbed(int gametype, const entityState_t *ent,
 			return qfalse;	/* can't hold any more */
 		return qtrue;
 
-	case IT_ARMOR:
-		if(ps->stats[STAT_ARMOR] >= ps->stats[STAT_MAX_HEALTH] * 2)
+	case IT_SHIELD:
+		if(ps->stats[STAT_SHIELD] >= ps->stats[STAT_MAX_HEALTH] * 2)
 			return qfalse;
 		return qtrue;
 

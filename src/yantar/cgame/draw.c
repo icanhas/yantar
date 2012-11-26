@@ -572,7 +572,7 @@ CG_DrawStatusBar(void)
 			185 + CHAR_WIDTH*3 + TEXT_ICON_SPACE + ICON_SIZE,
 			TEAM_FREE);
 
-	if(ps->stats[ STAT_ARMOR ]){
+	if(ps->stats[ STAT_SHIELD ]){
 		origin[0]	= 90;
 		origin[1]	= 0;
 		origin[2]	= -10;
@@ -643,7 +643,7 @@ CG_DrawStatusBar(void)
 	/*
 	 * armor
 	 *  */
-	value = ps->stats[STAT_ARMOR];
+	value = ps->stats[STAT_SHIELD];
 	if(value > 0){
 		trap_R_SetColor(colors[0]);
 		CG_DrawField (370, 432, 3, value);

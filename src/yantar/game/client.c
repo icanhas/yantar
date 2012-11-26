@@ -1123,13 +1123,13 @@ ClientSpawn(gentity_t *ent)
 
 	client->ps.clientNum = index;
 
-	client->ps.stats[STAT_WEAPONS] = (1 << WP_MACHINEGUN);
+	client->ps.stats[STAT_PRIWEAPS] = (1 << WP_MACHINEGUN);
 	if(g_gametype.integer == GT_TEAM)
 		client->ps.ammo[WP_MACHINEGUN] = 50;
 	else
 		client->ps.ammo[WP_MACHINEGUN] = 100;
 
-	client->ps.stats[STAT_WEAPONS]	|= (1 << WP_GAUNTLET);
+	client->ps.stats[STAT_PRIWEAPS]	|= (1 << WP_GAUNTLET);
 	client->ps.ammo[WP_GAUNTLET]	= -1;
 	client->ps.ammo[WP_GRAPPLING_HOOK] = -1;
 
@@ -1169,7 +1169,7 @@ ClientSpawn(gentity_t *ent)
 			client->ps.weapon = 1;
 
 			for(i = WP_NUM_WEAPONS - 1; i > 0; i--)
-				if(client->ps.stats[STAT_WEAPONS] & (1 << i)){
+				if(client->ps.stats[STAT_PRIWEAPS] & (1 << i)){
 					client->ps.weapon = i;
 					break;
 				}

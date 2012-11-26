@@ -75,7 +75,7 @@ TossClientItems(gentity_t *self)
 	if(weapon == WP_MACHINEGUN || weapon == WP_GRAPPLING_HOOK){
 		if(self->client->ps.weaponstate == WEAPON_DROPPING)
 			weapon = self->client->pers.cmd.weapon;
-		if(!(self->client->ps.stats[STAT_WEAPONS] & (1 << weapon)))
+		if(!(self->client->ps.stats[STAT_PRIWEAPS] & (1 << weapon)))
 			weapon = WP_NONE;
 	}
 
@@ -564,19 +564,19 @@ CheckArmor(gentity_t *ent, int damage, int dflags)
 	if(!client)
 		return 0;
 
-	if(dflags & DAMAGE_NO_ARMOR)
+	if(dflags & DAMAGE_NO_SHIELD)
 		return 0;
 
 	/* armor */
-	count	= client->ps.stats[STAT_ARMOR];
-	save	= ceil(damage * ARMOR_PROTECTION);
+	count	= client->ps.stats[STAT_SHIELD];
+	save	= ceil(damage * SHIELD_PROTECTION);
 	if(save >= count)
 		save = count;
 
 	if(!save)
 		return 0;
 
-	client->ps.stats[STAT_ARMOR] -= save;
+	client->ps.stats[STAT_SHIELD] -= save;
 
 	return save;
 }
@@ -639,7 +639,7 @@ RaySphereIntersections(Vec3 origin, float radius, Vec3 point, Vec3 dir,
  *
  * dflags		these flags are used to control how T_Damage works
  *      DAMAGE_RADIUS			damage was indirect (from a nearby explosion)
- *      DAMAGE_NO_ARMOR			armor does not protect from this damage
+ *      DAMAGE_NO_SHIELD			armor does not protect from this damage
  *      DAMAGE_NO_KNOCKBACK		do not affect velocity, just view angles
  *      DAMAGE_NO_PROTECTION	kills godmode, armor, everything
  */
@@ -767,8 +767,8 @@ G_Damage(gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
 			attacker->client->ps.persistant[PERS_HITS]--;
 		else
 			attacker->client->ps.persistant[PERS_HITS]++;
-		attacker->client->ps.persistant[PERS_ATTACKEE_ARMOR] =
-			(targ->health<<8)|(client->ps.stats[STAT_ARMOR]);
+		attacker->client->ps.persistant[PERS_ATTACKEE_SHIELD] =
+			(targ->health<<8)|(client->ps.stats[STAT_SHIELD]);
 	}
 
 	/* always give half damage if hurting self

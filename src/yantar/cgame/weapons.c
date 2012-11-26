@@ -825,7 +825,7 @@ CG_RegisterItemVisuals(int itemNum)
 
 	/* powerups have an accompanying ring or sphere */
 	if(item->giType == IT_POWERUP || item->giType == IT_HEALTH ||
-	   item->giType == IT_ARMOR || item->giType == IT_HOLDABLE)
+	   item->giType == IT_SHIELD || item->giType == IT_HOLDABLE)
 		if(item->world_model[1])
 			itemInfo->models[1] = trap_R_RegisterModel(item->world_model[1]);
 }
@@ -1394,7 +1394,7 @@ CG_DrawWeaponSelect(void)
 	cg.itemPickupTime = 0;
 
 	/* count the number of weapons owned */
-	bits = cg.snap->ps.stats[ STAT_WEAPONS ];
+	bits = cg.snap->ps.stats[ STAT_PRIWEAPS ];
 	count = 0;
 	for(i = 1; i < MAX_WEAPONS; i++)
 		if(bits & (1 << i))
@@ -1441,7 +1441,7 @@ CG_WeaponSelectable(int i)
 {
 	if(!cg.snap->ps.ammo[i])
 		return qfalse;
-	if(!(cg.snap->ps.stats[ STAT_WEAPONS ] & (1 << i)))
+	if(!(cg.snap->ps.stats[ STAT_PRIWEAPS ] & (1 << i)))
 		return qfalse;
 
 	return qtrue;
@@ -1514,7 +1514,7 @@ CG_Weapon_f(void)
 	if(num < 1 || num > MAX_WEAPONS-1)
 		return;
 	cg.weaponSelectTime = cg.time;
-	if(!(cg.snap->ps.stats[STAT_WEAPONS] & (1 << num)))
+	if(!(cg.snap->ps.stats[STAT_PRIWEAPS] & (1 << num)))
 		return;		/* don't have the weapon */
 	cg.weaponSelect = num;
 }

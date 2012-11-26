@@ -219,7 +219,7 @@ Cmd_Give_f(gentity_t *ent)
 	}
 
 	if(give_all || Q_stricmp(name, "weapons") == 0){
-		ent->client->ps.stats[STAT_WEAPONS] =
+		ent->client->ps.stats[STAT_PRIWEAPS] =
 			(1 << WP_NUM_WEAPONS) - 1 -
 			(1 <<
 			 WP_GRAPPLING_HOOK) -
@@ -236,7 +236,7 @@ Cmd_Give_f(gentity_t *ent)
 	}
 
 	if(give_all || Q_stricmp(name, "armor") == 0){
-		ent->client->ps.stats[STAT_ARMOR] = 200;
+		ent->client->ps.stats[STAT_SHIELD] = 200;
 
 		if(!give_all)
 			return;

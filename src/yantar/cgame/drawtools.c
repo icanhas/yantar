@@ -402,7 +402,7 @@ CG_GetColorForHealth(int health, int armor, Vec4 hcolor)
 		return;
 	}
 	count	= armor;
-	max	= health * ARMOR_PROTECTION / (1.0 - ARMOR_PROTECTION);
+	max	= health * SHIELD_PROTECTION / (1.0 - SHIELD_PROTECTION);
 	if(max < count)
 		count = max;
 	health += count;
@@ -433,7 +433,7 @@ CG_ColorForHealth(Vec4 hcolor)
 {
 
 	CG_GetColorForHealth(cg.snap->ps.stats[STAT_HEALTH],
-		cg.snap->ps.stats[STAT_ARMOR], hcolor);
+		cg.snap->ps.stats[STAT_SHIELD], hcolor);
 }
 
 

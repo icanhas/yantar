@@ -797,7 +797,7 @@ startweapchange(int weapon)
 {
 	if(weapon <= WP_NONE || weapon >= WP_NUM_WEAPONS)
 		return;
-	if(!(pm->ps->stats[STAT_WEAPONS] & (1 << weapon)))
+	if(!(pm->ps->stats[STAT_PRIWEAPS] & (1 << weapon)))
 		return;
 	if(pm->ps->weaponstate == WEAPON_DROPPING)
 		return;
@@ -815,7 +815,7 @@ finishweapchange(void)
 	weap = pm->cmd.weapon;
 	if(weap < WP_NONE || weap >= WP_NUM_WEAPONS)
 		weap = WP_NONE;
-	if(!(pm->ps->stats[STAT_WEAPONS] & (1 << weap)))
+	if(!(pm->ps->stats[STAT_PRIWEAPS] & (1 << weap)))
 		weap = WP_NONE;
 	pm->ps->weapon = weap;
 	pm->ps->weaponstate	= WEAPON_RAISING;

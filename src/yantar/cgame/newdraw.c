@@ -205,7 +205,7 @@ CG_DrawPlayerArmorValue(rectDef_t *rect, float scale, Vec4 color,
 
 	ps = &cg.snap->ps;
 
-	value = ps->stats[STAT_ARMOR];
+	value = ps->stats[STAT_SHIELD];
 
 	if(shader){
 		trap_R_SetColor(color);
@@ -1043,7 +1043,7 @@ CG_GetValue(int ownerDraw)
 	ps	= &cg.snap->ps;
 
 	switch(ownerDraw){
-	case CG_SELECTEDPLAYER_ARMOR:
+	case CG_SELECTEDPLAYER_SHIELD:
 		ci = cgs.clientinfo + sortedTeamPlayers[CG_GetSelectedPlayer()];
 		return ci->armor;
 		break;
@@ -1051,8 +1051,8 @@ CG_GetValue(int ownerDraw)
 		ci = cgs.clientinfo + sortedTeamPlayers[CG_GetSelectedPlayer()];
 		return ci->health;
 		break;
-	case CG_PLAYER_ARMOR_VALUE:
-		return ps->stats[STAT_ARMOR];
+	case CG_PLAYER_SHIELD_VALUE:
+		return ps->stats[STAT_SHIELD];
 		break;
 	case CG_PLAYER_AMMO_VALUE:
 		if(cent->currentState.weapon)
@@ -1707,13 +1707,13 @@ CG_OwnerDraw(float x, float y, float w, float h, float text_x, float text_y,
 	rect.h	= h;
 
 	switch(ownerDraw){
-	case CG_PLAYER_ARMOR_ICON:
+	case CG_PLAYER_SHIELD_ICON:
 		CG_DrawPlayerArmorIcon(&rect, ownerDrawFlags & CG_SHOW_2DONLY);
 		break;
-	case CG_PLAYER_ARMOR_ICON2D:
+	case CG_PLAYER_SHIELD_ICON2D:
 		CG_DrawPlayerArmorIcon(&rect, qtrue);
 		break;
-	case CG_PLAYER_ARMOR_VALUE:
+	case CG_PLAYER_SHIELD_VALUE:
 		CG_DrawPlayerArmorValue(&rect, scale, color, shader, textStyle);
 		break;
 	case CG_PLAYER_AMMO_ICON:
@@ -1739,7 +1739,7 @@ CG_OwnerDraw(float x, float y, float w, float h, float text_x, float text_y,
 	case CG_SELECTEDPLAYER_STATUS:
 		CG_DrawSelectedPlayerStatus(&rect);
 		break;
-	case CG_SELECTEDPLAYER_ARMOR:
+	case CG_SELECTEDPLAYER_SHIELD:
 		CG_DrawSelectedPlayerArmor(&rect, scale, color, shader,
 			textStyle);
 		break;

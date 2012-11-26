@@ -302,7 +302,7 @@ CG_Item(centity_t *cent)
 	/* items without glow textures need to keep a minimum light value
 	 * so they are always visible */
 	if((item->giType == IT_WEAPON) ||
-	   (item->giType == IT_ARMOR))
+	   (item->giType == IT_SHIELD))
 		ent.renderfx |= RF_MINLIGHT;
 
 	/* increase the size of the weapons when they are presented as items */
