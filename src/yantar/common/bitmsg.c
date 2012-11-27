@@ -8,6 +8,7 @@
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License.
  */
+ 
 #include "shared.h"
 #include "common.h"
 
@@ -786,6 +787,7 @@ netField_t entityStateFields[] =
 	{ NETF(eFlags), 19 },
 	{ NETF(otherEntityNum), GENTITYNUM_BITS },
 	{ NETF(weapon), 8 },
+	{ NETF(secweap), 8 },
 	{ NETF(clientNum), 8 },
 	{ NETF(angles[1]), 0 },
 	{ NETF(pos.trDuration), 32 },
@@ -1072,6 +1074,7 @@ netField_t playerStateFields[] =
 	{ PSF(viewangles[1]), 0 },
 	{ PSF(viewangles[0]), 0 },
 	{ PSF(weaponTime), -16 },
+	{ PSF(secweaptime), -16 },
 	{ PSF(origin[2]), 0 },
 	{ PSF(velocity[2]), 0 },
 	{ PSF(legsTimer), 8 },
@@ -1085,6 +1088,7 @@ netField_t playerStateFields[] =
 	{ PSF(pm_flags), 16 },
 	{ PSF(groundEntityNum), GENTITYNUM_BITS },
 	{ PSF(weaponstate), 4 },
+	{ PSF(secweapstate), 4 },
 	{ PSF(eFlags), 16 },
 	{ PSF(externalEvent), 10 },
 	{ PSF(gravity), 16 },
@@ -1106,6 +1110,7 @@ netField_t playerStateFields[] =
 	{ PSF(eventParms[1]), 8 },
 	{ PSF(clientNum), 8 },
 	{ PSF(weapon), 5 },
+	{ PSF(secweap), 5 },
 	{ PSF(viewangles[2]), 0 },
 	{ PSF(grapplePoint[0]), 0 },
 	{ PSF(grapplePoint[1]), 0 },
