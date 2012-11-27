@@ -202,7 +202,7 @@ Pickup_Ammo(gentity_t *ent, gentity_t *other)
 }
 
 int
-Pickup_Weapon(gentity_t *ent, gentity_t *other)
+Pickup_Weapon(gentity_t *ent, gentity_t *other, Weapslot sl)
 {
 	int quantity;
 
@@ -220,7 +220,7 @@ Pickup_Weapon(gentity_t *ent, gentity_t *other)
 		then{
 			/* 
 			 * respawning rules
-			 * drop the quantity if the already have over the minimum 
+			 * drop the quantity if they already have over the minimum 
 			 */
 			if(other->client->ps.ammo[ent->item->giTag] 
 			  < quantity)
@@ -232,7 +232,16 @@ Pickup_Weapon(gentity_t *ent, gentity_t *other)
 	}
 
 	/* add the weapon */
-	other->client->ps.stats[STAT_PRIWEAPS] |= (1 << ent->item->giTag);
+	switch(sl){
+	case Wpri:
+		other->client->ps.stats[STAT_PRIWEAPS] |= (1<<ent->item->giTag);
+		break;
+	case Wsec:
+		other->client->ps.stats[STAT_SECWEAPS] |= (1<<ent->item->giTag);
+		break;
+	default:
+		return;
+	}
 
 	Add_Ammo(other, ent->item->giTag, quantity);
 
@@ -370,8 +379,11 @@ Touch_Item(gentity_t *ent, gentity_t *other, trace_t *trace)
 	/* call the item-specific pickup function */
 	switch(ent->item->giType){
 	case IT_PRIWEAP:
-		respawn = Pickup_Weapon(ent, other);
+		respawn = Pickup_Weapon(ent, other, Wpri);
 /*		predict = qfalse; */
+		break;
+	case IT_SECWEAP:
+		respawn = Pickup_Weapon(ent, other, Wsec);
 		break;
 	case IT_AMMO:
 		respawn = Pickup_Ammo(ent, other);

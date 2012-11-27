@@ -355,11 +355,6 @@ typedef struct {
 	qhandle_t	headSkin;
 } clientInfo_t;
 
-typedef enum {
-	Wpri,
-	Wsec
-} Weapslot;
-
 /* each W1_* weapon enum has an associated weaponInfo_t
  * that contains media references necessary to present the
  * weapon and its effects */
