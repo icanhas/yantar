@@ -23,7 +23,6 @@
  * movers and respawn apropriately.
  */
 
-
 #define RESPAWN_SHIELD		25
 #define RESPAWN_HEALTH		35
 #define RESPAWN_AMMO		40
@@ -31,7 +30,7 @@
 #define RESPAWN_MEGAHEALTH	35	/* 120 */
 #define RESPAWN_POWERUP		120
 
-int
+static int
 Pickup_Powerup(gentity_t *ent, gentity_t *other)
 {
 	int	quantity;
@@ -98,7 +97,7 @@ Pickup_Powerup(gentity_t *ent, gentity_t *other)
 }
 
 #ifdef MISSIONPACK
-int
+static int
 Pickup_PersistantPowerup(gentity_t *ent, gentity_t *other)
 {
 	int	clientNum;
@@ -166,7 +165,7 @@ Pickup_PersistantPowerup(gentity_t *ent, gentity_t *other)
 
 #endif
 
-int
+static int
 Pickup_Holdable(gentity_t *ent, gentity_t *other)
 {
 
@@ -186,7 +185,7 @@ Add_Ammo(gentity_t *ent, int weapon, int count)
 		ent->client->ps.ammo[weapon] = 200;
 }
 
-int
+static int
 Pickup_Ammo(gentity_t *ent, gentity_t *other)
 {
 	int quantity;
@@ -201,7 +200,7 @@ Pickup_Ammo(gentity_t *ent, gentity_t *other)
 	return RESPAWN_AMMO;
 }
 
-int
+static int
 Pickup_Weapon(gentity_t *ent, gentity_t *other, Weapslot sl)
 {
 	int quantity;
@@ -255,7 +254,7 @@ Pickup_Weapon(gentity_t *ent, gentity_t *other, Weapslot sl)
 	return g_weaponRespawn.integer;
 }
 
-int
+static int
 Pickup_Health(gentity_t *ent, gentity_t *other)
 {
 	int	max;
@@ -284,7 +283,7 @@ Pickup_Health(gentity_t *ent, gentity_t *other)
 	return RESPAWN_HEALTH;
 }
 
-int
+static int
 Pickup_Armor(gentity_t *ent, gentity_t *other)
 {
 	other->client->ps.stats[STAT_SHIELD] += ent->item->quantity;
@@ -562,7 +561,7 @@ Drop_Item(gentity_t *ent, gitem_t *item, float angle)
 /*
  * Respawn the item
  */
-void
+static void
 Use_Item(gentity_t *ent, gentity_t *other, gentity_t *activator)
 {
 	RespawnItem(ent);
@@ -635,7 +634,7 @@ FinishSpawningItem(gentity_t *ent)
 	trap_LinkEntity (ent);
 }
 
-qbool itemRegistered[MAX_ITEMS];
+static qbool itemRegistered[MAX_ITEMS];
 
 void
 G_CheckTeamItems(void)
