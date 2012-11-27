@@ -562,24 +562,25 @@ CG_GrenadeTrail(centity_t *ent, const weaponInfo_t *wi)
 void
 CG_RegisterWeapon(int weaponNum)
 {
-	weaponInfo_t *weaponInfo;
+	weaponInfo_t *wp;
 	gitem_t *item, *ammo;
 	char	path[MAX_QPATH];
 	Vec3	mins, maxs;
 	int i;
 
-	weaponInfo = &cg_weapons[weaponNum];
+	wp = &cg_weapons[weaponNum];
 
 	if(weaponNum == 0)
 		return;
-	if(weaponInfo->registered)
+	if(wp->registered)
 		return;
 
-	memset(weaponInfo, 0, sizeof(*weaponInfo));
-	weaponInfo->registered = qtrue;
+	memset(wp, 0, sizeof(*wp));
+	wp->registered = qtrue;
 	for(item = bg_itemlist + 1; item->classname; item++)
-		if(item->giType == IT_PRIWEAP && item->giTag == weaponNum){
-			weaponInfo->item = item;
+		if((item->giType == IT_PRIWEAP || item->giType == IT_SECWEAP) 
+		  && item->giTag == weaponNum){
+			wp->item = item;
 			break;
 		}
 	if(!item->classname)
@@ -587,58 +588,58 @@ CG_RegisterWeapon(int weaponNum)
 	CG_RegisterItemVisuals(item - bg_itemlist);
 
 	/* load cmodel before model so filecache works */
-	weaponInfo->weaponModel = trap_R_RegisterModel(item->world_model[0]);
+	wp->weaponModel = trap_R_RegisterModel(item->world_model[0]);
 
 	/* calc midpoint for rotation */
-	trap_R_ModelBounds(weaponInfo->weaponModel, mins, maxs);
+	trap_R_ModelBounds(wp->weaponModel, mins, maxs);
 	for(i = 0; i < 3; i++)
-		weaponInfo->weaponMidpoint[i] = mins[i] + 0.5 *
+		wp->weaponMidpoint[i] = mins[i] + 0.5 *
 						(maxs[i] - mins[i]);
 
-	weaponInfo->weaponIcon	= trap_R_RegisterShader(item->icon);
-	weaponInfo->ammoIcon	= trap_R_RegisterShader(item->icon);
+	wp->weaponIcon	= trap_R_RegisterShader(item->icon);
+	wp->ammoIcon	= trap_R_RegisterShader(item->icon);
 
 	for(ammo = bg_itemlist + 1; ammo->classname; ammo++)
 		if(ammo->giType == IT_AMMO && ammo->giTag == weaponNum)
 			break;
 	if(ammo->classname && ammo->world_model[0])
-		weaponInfo->ammoModel = trap_R_RegisterModel(
+		wp->ammoModel = trap_R_RegisterModel(
 			ammo->world_model[0]);
 
 	strcpy(path, item->world_model[0]);
 	Q_stripext(path, path, sizeof(path));
 	strcat(path, "_flash");
-	weaponInfo->flashModel = trap_R_RegisterModel(path);
+	wp->flashModel = trap_R_RegisterModel(path);
 
 	strcpy(path, item->world_model[0]);
 	Q_stripext(path, path, sizeof(path));
 	strcat(path, "_barrel");
-	weaponInfo->barrelModel = trap_R_RegisterModel(path);
+	wp->barrelModel = trap_R_RegisterModel(path);
 
 	strcpy(path, item->world_model[0]);
 	Q_stripext(path, path, sizeof(path));
 	strcat(path, "_hand");
-	weaponInfo->handsModel = trap_R_RegisterModel(path);
+	wp->handsModel = trap_R_RegisterModel(path);
 
-	if(!weaponInfo->handsModel)
-		weaponInfo->handsModel = trap_R_RegisterModel(
+	if(!wp->handsModel)
+		wp->handsModel = trap_R_RegisterModel(
 			Pshotgunmodels "/shotgun_hand");
 
 	switch(weaponNum){
 	case W1melee:
-		MAKERGB(weaponInfo->flashDlightColor, 0.6f, 0.6f, 1.0f);
-		weaponInfo->firingSound = trap_S_RegisterSound(
+		MAKERGB(wp->flashDlightColor, 0.6f, 0.6f, 1.0f);
+		wp->firingSound = trap_S_RegisterSound(
 			Pmeleesounds "/fstrun", qfalse);
-		weaponInfo->flashSound[0] = trap_S_RegisterSound(
+		wp->flashSound[0] = trap_S_RegisterSound(
 			Pmeleesounds "/fstatck", qfalse);
 		break;
 	case W1lightning:
-		MAKERGB(weaponInfo->flashDlightColor, 0.6f, 0.6f, 1.0f);
-		weaponInfo->readySound = trap_S_RegisterSound(
+		MAKERGB(wp->flashDlightColor, 0.6f, 0.6f, 1.0f);
+		wp->readySound = trap_S_RegisterSound(
 			Pmeleesounds "/fsthum", qfalse);
-		weaponInfo->firingSound = trap_S_RegisterSound(
+		wp->firingSound = trap_S_RegisterSound(
 			Plgsounds "/lg_hum", qfalse);
-		weaponInfo->flashSound[0] = trap_S_RegisterSound(
+		wp->flashSound[0] = trap_S_RegisterSound(
 			Plgsounds "/lg_fire", qfalse);
 		cgs.media.lightningShader = trap_R_RegisterShader(
 			"lightningBoltNew");
@@ -652,123 +653,123 @@ CG_RegisterWeapon(int weaponNum)
 			Plgsounds "/lg_hit3", qfalse);
 		break;
 	case W1_GRAPPLING_HOOK:
-		MAKERGB(weaponInfo->flashDlightColor, 0.6f, 0.6f, 1.0f);
-		weaponInfo->missileModel = trap_R_RegisterModel(
+		MAKERGB(wp->flashDlightColor, 0.6f, 0.6f, 1.0f);
+		wp->missileModel = trap_R_RegisterModel(
 			Prlmodels "/rocket");
-		weaponInfo->missileTrailFunc = CG_GrappleTrail;
-		weaponInfo->missileDlight = 200;
-		MAKERGB(weaponInfo->missileDlightColor, 1, 0.75f, 0);
-		weaponInfo->readySound = trap_S_RegisterSound(
+		wp->missileTrailFunc = CG_GrappleTrail;
+		wp->missileDlight = 200;
+		MAKERGB(wp->missileDlightColor, 1, 0.75f, 0);
+		wp->readySound = trap_S_RegisterSound(
 			Pmeleesounds "/fsthum", qfalse);
-		weaponInfo->firingSound = trap_S_RegisterSound(
+		wp->firingSound = trap_S_RegisterSound(
 			Pmeleesounds "/fstrun", qfalse);
 		cgs.media.lightningShader = trap_R_RegisterShader(
 			"lightningBoltNew");
 		break;
 	case W1chaingun:
-		weaponInfo->firingSound = trap_S_RegisterSound(
+		wp->firingSound = trap_S_RegisterSound(
 			Pgattlingsounds "/wvulfire", qfalse);
-		MAKERGB(weaponInfo->flashDlightColor, 1, 1, 0);
-		weaponInfo->flashSound[0] = trap_S_RegisterSound(
+		MAKERGB(wp->flashDlightColor, 1, 1, 0);
+		wp->flashSound[0] = trap_S_RegisterSound(
 			Pgattlingsounds "/vulcanf1b", qfalse);
-		weaponInfo->flashSound[1] = trap_S_RegisterSound(
+		wp->flashSound[1] = trap_S_RegisterSound(
 			Pgattlingsounds "/vulcanf2b", qfalse);
-		weaponInfo->flashSound[2] = trap_S_RegisterSound(
+		wp->flashSound[2] = trap_S_RegisterSound(
 			Pgattlingsounds "/vulcanf3b", qfalse);
-		weaponInfo->flashSound[3] = trap_S_RegisterSound(
+		wp->flashSound[3] = trap_S_RegisterSound(
 			Pgattlingsounds "/vulcanf4b", qfalse);
-		weaponInfo->ejectBrassFunc = CG_MachineGunEjectBrass;
+		wp->ejectBrassFunc = CG_MachineGunEjectBrass;
 		cgs.media.bulletExplosionShader = trap_R_RegisterShader(
 			"bulletExplosion");
 		break;
 	case W1machinegun:
-		MAKERGB(weaponInfo->flashDlightColor, 1, 1, 0);
-		weaponInfo->flashSound[0] = trap_S_RegisterSound(
+		MAKERGB(wp->flashDlightColor, 1, 1, 0);
+		wp->flashSound[0] = trap_S_RegisterSound(
 			Pmgsounds "/machgf1b", qfalse);
-		weaponInfo->flashSound[1] = trap_S_RegisterSound(
+		wp->flashSound[1] = trap_S_RegisterSound(
 			Pmgsounds "/machgf2b", qfalse);
-		weaponInfo->flashSound[2] = trap_S_RegisterSound(
+		wp->flashSound[2] = trap_S_RegisterSound(
 			Pmgsounds "/machgf3b", qfalse);
-		weaponInfo->flashSound[3] = trap_S_RegisterSound(
+		wp->flashSound[3] = trap_S_RegisterSound(
 			Pmgsounds "/machgf4b", qfalse);
-		weaponInfo->ejectBrassFunc = CG_MachineGunEjectBrass;
+		wp->ejectBrassFunc = CG_MachineGunEjectBrass;
 		cgs.media.bulletExplosionShader = trap_R_RegisterShader(
 			"bulletExplosion");
 		break;
 	case W1shotgun:
-		MAKERGB(weaponInfo->flashDlightColor, 1, 1, 0);
-		weaponInfo->flashSound[0] = trap_S_RegisterSound(
+		MAKERGB(wp->flashDlightColor, 1, 1, 0);
+		wp->flashSound[0] = trap_S_RegisterSound(
 			Pshotgunsounds "/sshotf1b", qfalse);
-		weaponInfo->ejectBrassFunc = CG_ShotgunEjectBrass;
+		wp->ejectBrassFunc = CG_ShotgunEjectBrass;
 		break;
 	case W2rocketlauncher:
-		weaponInfo->missileModel = trap_R_RegisterModel(
+		wp->missileModel = trap_R_RegisterModel(
 			Prlmodels "/rocket");
-		weaponInfo->missileSound = trap_S_RegisterSound(
+		wp->missileSound = trap_S_RegisterSound(
 			Prlsounds "/rockfly", qfalse);
-		weaponInfo->missileTrailFunc = CG_RocketTrail;
-		weaponInfo->missileDlight	= 200;
-		weaponInfo->wiTrailTime		= 4000;
-		weaponInfo->trailRadius		= 64;
-		MAKERGB(weaponInfo->missileDlightColor, 1, 0.75f, 0);
-		MAKERGB(weaponInfo->flashDlightColor, 1, 0.75f, 0);
-		weaponInfo->flashSound[0] = trap_S_RegisterSound(
+		wp->missileTrailFunc = CG_RocketTrail;
+		wp->missileDlight	= 200;
+		wp->wiTrailTime		= 4000;
+		wp->trailRadius		= 64;
+		MAKERGB(wp->missileDlightColor, 1, 0.75f, 0);
+		MAKERGB(wp->flashDlightColor, 1, 0.75f, 0);
+		wp->flashSound[0] = trap_S_RegisterSound(
 			Prlsounds "/rocklf1a", qfalse);
 		cgs.media.rocketExplosionShader = trap_R_RegisterShader("rocketExplosion");
 		break;
 	case W2proxlauncher:
-		weaponInfo->missileModel = trap_R_RegisterModel(
+		wp->missileModel = trap_R_RegisterModel(
 			Pweaphitmodels "/proxmine");
-		weaponInfo->missileTrailFunc = CG_GrenadeTrail;
-		weaponInfo->wiTrailTime = 700;
-		weaponInfo->trailRadius = 32;
-		MAKERGB(weaponInfo->flashDlightColor, 1, 0.70f, 0);
-		weaponInfo->flashSound[0] = trap_S_RegisterSound(
+		wp->missileTrailFunc = CG_GrenadeTrail;
+		wp->wiTrailTime = 700;
+		wp->trailRadius = 32;
+		MAKERGB(wp->flashDlightColor, 1, 0.70f, 0);
+		wp->flashSound[0] = trap_S_RegisterSound(
 			Pproxsounds "/wstbfire", qfalse);
 		cgs.media.grenadeExplosionShader = trap_R_RegisterShader(
 			"grenadeExplosion");
 		break;
 	case W2grenadelauncher:
-		weaponInfo->missileModel = trap_R_RegisterModel(
+		wp->missileModel = trap_R_RegisterModel(
 			Pammomodels "/grenade1");
-		weaponInfo->missileTrailFunc = CG_GrenadeTrail;
-		weaponInfo->wiTrailTime = 700;
-		weaponInfo->trailRadius = 32;
-		MAKERGB(weaponInfo->flashDlightColor, 1, 0.70f, 0);
-		weaponInfo->flashSound[0] = trap_S_RegisterSound(
+		wp->missileTrailFunc = CG_GrenadeTrail;
+		wp->wiTrailTime = 700;
+		wp->trailRadius = 32;
+		MAKERGB(wp->flashDlightColor, 1, 0.70f, 0);
+		wp->flashSound[0] = trap_S_RegisterSound(
 			Pgrenadesounds "/grenlf1a", qfalse);
 		cgs.media.grenadeExplosionShader = trap_R_RegisterShader(
 			"grenadeExplosion");
 		break;
 	case W1nailgun:
-		weaponInfo->ejectBrassFunc = CG_NailgunEjectBrass;
-		weaponInfo->missileTrailFunc = CG_NailTrail;
-/*		weaponInfo->missileSound = trap_S_RegisterSound( "sound/weapons/nailgun/wnalflit", qfalse ); */
-		weaponInfo->trailRadius = 16;
-		weaponInfo->wiTrailTime = 250;
-		weaponInfo->missileModel = trap_R_RegisterModel(
+		wp->ejectBrassFunc = CG_NailgunEjectBrass;
+		wp->missileTrailFunc = CG_NailTrail;
+/*		wp->missileSound = trap_S_RegisterSound( "sound/weapons/nailgun/wnalflit", qfalse ); */
+		wp->trailRadius = 16;
+		wp->wiTrailTime = 250;
+		wp->missileModel = trap_R_RegisterModel(
 			Pweaphitmodels "/nail");
-		MAKERGB(weaponInfo->flashDlightColor, 1, 0.75f, 0);
-		weaponInfo->flashSound[0] = trap_S_RegisterSound(
+		MAKERGB(wp->flashDlightColor, 1, 0.75f, 0);
+		wp->flashSound[0] = trap_S_RegisterSound(
 			"sound/weapons/nailgun/wnalfire", qfalse);
 		break;
 	case W1plasmagun:
-/*		weaponInfo->missileModel = cgs.media.invulnerabilityPowerupModel; */
-		weaponInfo->missileTrailFunc = CG_PlasmaTrail;
-		weaponInfo->missileSound = trap_S_RegisterSound(
+/*		wp->missileModel = cgs.media.invulnerabilityPowerupModel; */
+		wp->missileTrailFunc = CG_PlasmaTrail;
+		wp->missileSound = trap_S_RegisterSound(
 			Pplasmasounds "/lasfly", qfalse);
-		MAKERGB(weaponInfo->flashDlightColor, 0.6f, 0.6f, 1.0f);
-		weaponInfo->flashSound[0] = trap_S_RegisterSound(
+		MAKERGB(wp->flashDlightColor, 0.6f, 0.6f, 1.0f);
+		wp->flashSound[0] = trap_S_RegisterSound(
 			Pplasmasounds "/hyprbf1a", qfalse);
 		cgs.media.plasmaExplosionShader = trap_R_RegisterShader(
 			"plasmaExplosion");
 		cgs.media.railRingsShader = trap_R_RegisterShader("railDisc");
 		break;
 	case W1railgun:
-		weaponInfo->readySound = trap_S_RegisterSound(
+		wp->readySound = trap_S_RegisterSound(
 			Prailsounds "/rg_hum", qfalse);
-		MAKERGB(weaponInfo->flashDlightColor, 1, 0.5f, 0);
-		weaponInfo->flashSound[0] = trap_S_RegisterSound(
+		MAKERGB(wp->flashDlightColor, 1, 0.5f, 0);
+		wp->flashSound[0] = trap_S_RegisterSound(
 			Prailsounds "/railgf1a", qfalse);
 		cgs.media.railExplosionShader = trap_R_RegisterShader(
 			"railExplosion");
@@ -778,21 +779,21 @@ CG_RegisterWeapon(int weaponNum)
 			"railCore");
 		break;
 	case W2bfg:
-		weaponInfo->readySound = trap_S_RegisterSound(
+		wp->readySound = trap_S_RegisterSound(
 			Pbfgsounds "/bfg_hum", qfalse);
-		MAKERGB(weaponInfo->flashDlightColor, 1, 0.7f, 1);
-		weaponInfo->flashSound[0] = trap_S_RegisterSound(
+		MAKERGB(wp->flashDlightColor, 1, 0.7f, 1);
+		wp->flashSound[0] = trap_S_RegisterSound(
 			Pbfgsounds "/bfg_fire", qfalse);
 		cgs.media.bfgExplosionShader = trap_R_RegisterShader(
 			"bfgExplosion");
-		weaponInfo->missileModel = trap_R_RegisterModel(
+		wp->missileModel = trap_R_RegisterModel(
 			Pweaphitmodels "/bfg");
-		weaponInfo->missileSound = trap_S_RegisterSound(
+		wp->missileSound = trap_S_RegisterSound(
 			Prlsounds "/rockfly", qfalse);
 		break;
 	default:
-		MAKERGB(weaponInfo->flashDlightColor, 1, 1, 1);
-		weaponInfo->flashSound[0] = trap_S_RegisterSound(
+		MAKERGB(wp->flashDlightColor, 1, 1, 1);
+		wp->flashSound[0] = trap_S_RegisterSound(
 			Prlsounds "/rocklf1a", qfalse);
 		break;
 	}
