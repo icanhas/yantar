@@ -349,8 +349,6 @@ CG_UseItem(centity_t *cent)
 }
 
 /*
- * CG_ItemPickup
- *
  * A new item was picked up this frame
  */
 static void
@@ -360,19 +358,31 @@ CG_ItemPickup(int itemNum)
 	cg.itemPickupTime = cg.time;
 	cg.itemPickupBlendTime = cg.time;
 	/* see if it should be the grabbed weapon */
-	if(bg_itemlist[itemNum].giType == IT_PRIWEAP)
+	switch(bg_itemlist[itemNum].giType){
+	case IT_PRIWEAP:
 		/* select it immediately */
-		if(cg_autoswitch.integer && bg_itemlist[itemNum].giTag !=
-		   W1machinegun){
+		if(cg_autoswitch.integer && bg_itemlist[itemNum].giTag 
+		  != W1machinegun)
+		then{
 			cg.weaponSelectTime = cg.time;
 			cg.weaponSelect = bg_itemlist[itemNum].giTag;
 		}
-
+		break;
+	case IT_SECWEAP:
+		/* select it immediately */
+		if(cg_autoswitch.integer && bg_itemlist[itemNum].giTag 
+		  != W1machinegun)
+		then{
+			cg.secweapseltime = cg.time;
+			cg.secweapsel = bg_itemlist[itemNum].giTag;
+		}
+		break;
+	default:
+		break;
+	}
 }
 
 /*
- * CG_WaterLevel
- *
  * Returns waterlevel for entity origin
  */
 int

@@ -866,8 +866,6 @@ BG_PlayerTouchesItem(playerState_t *ps, entityState_t *item, int atTime)
 
 
 /*
- * BG_CanItemBeGrabbed
- *
  * Returns false if the item should not be picked up.
  * This needs to be the same for client side prediction and server use.
  */
@@ -884,18 +882,16 @@ BG_CanItemBeGrabbed(int gametype, const entityState_t *ent,
 
 	switch(item->giType){
 	case IT_PRIWEAP:
+	case IT_SECWEAP:
 		return qtrue;	/* weapons are always picked up */
-
 	case IT_AMMO:
 		if(ps->ammo[ item->giTag ] >= 200)
 			return qfalse;	/* can't hold any more */
 		return qtrue;
-
 	case IT_SHIELD:
 		if(ps->stats[STAT_SHIELD] >= ps->stats[STAT_MAX_HEALTH] * 2)
 			return qfalse;
 		return qtrue;
-
 	case IT_HEALTH:
 		/* small and mega healths will go over the max, otherwise
 		 * don't pick up if already at max */
@@ -909,7 +905,6 @@ BG_CanItemBeGrabbed(int gametype, const entityState_t *ent,
 		if(ps->stats[STAT_HEALTH] >= ps->stats[STAT_MAX_HEALTH])
 			return qfalse;
 		return qtrue;
-
 	case IT_POWERUP:
 		return qtrue;	/* powerups are always picked up */
 	case IT_PERSISTANT_POWERUP:
@@ -955,13 +950,11 @@ BG_CanItemBeGrabbed(int gametype, const entityState_t *ent,
 					return qtrue;
 		}
 		return qfalse;
-
 	case IT_HOLDABLE:
 		/* can only hold one item at a time */
 		if(ps->stats[STAT_HOLDABLE_ITEM])
 			return qfalse;
 		return qtrue;
-
 	case IT_BAD:
 		Com_Errorf(ERR_DROP, "BG_CanItemBeGrabbed: IT_BAD");
 	default:

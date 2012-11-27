@@ -239,7 +239,7 @@ Pickup_Weapon(gentity_t *ent, gentity_t *other, Weapslot sl)
 		other->client->ps.stats[STAT_SECWEAPS] |= (1<<ent->item->giTag);
 		break;
 	default:
-		return;
+		return g_weaponRespawn.integer;
 	}
 
 	Add_Ammo(other, ent->item->giTag, quantity);
