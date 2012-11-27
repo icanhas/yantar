@@ -1,10 +1,10 @@
+/* part of pmove functionality */
 /*
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License.
  */
-/* part of bg_pmove functionality */
 
 #include "shared.h"
 #include "bg.h"
@@ -19,13 +19,11 @@
  */
 
 /*
- * PM_SlideMove
- *
  * Returns qtrue if the velocity was clipped in some way
  */
 #define MAX_CLIP_PLANES 5
 qbool
-PM_SlideMove(qbool gravity)
+PM_SlideMove(pmove_t *pm, pml_t *pml, qbool gravity)
 {
 	int bumpcount, numbumps;
 	Vec3	dir;
@@ -48,24 +46,24 @@ PM_SlideMove(qbool gravity)
 
 	if(gravity){
 		copyv3(pm->ps->velocity, endVelocity);
-		endVelocity[2] -= pm->ps->gravity * pml.frametime;
+		endVelocity[2] -= pm->ps->gravity * pml->frametime;
 		pm->ps->velocity[2] =
 			(pm->ps->velocity[2] + endVelocity[2]) * 0.5;
 		primal_velocity[2] = endVelocity[2];
-		if(pml.groundPlane)
+		if(pml->groundPlane)
 			/* slide along the ground plane */
 			PM_ClipVelocity (pm->ps->velocity,
-				pml.groundTrace.plane.normal,
+				pml->groundTrace.plane.normal,
 				pm->ps->velocity,
 				OVERCLIP);
 	}
 
-	time_left = pml.frametime;
+	time_left = pml->frametime;
 
 	/* never turn against the ground plane */
-	if(pml.groundPlane){
+	if(pml->groundPlane){
 		numplanes = 1;
-		copyv3(pml.groundTrace.plane.normal, planes[0]);
+		copyv3(pml->groundTrace.plane.normal, planes[0]);
 	}else
 		numplanes = 0;
 
@@ -97,7 +95,7 @@ PM_SlideMove(qbool gravity)
 			break;	/* moved the entire distance */
 
 		/* save entity for contact */
-		PM_AddTouchEnt(trace.entityNum);
+		PM_AddTouchEnt(pm, trace.entityNum);
 
 		time_left -= time_left * trace.fraction;
 
@@ -134,8 +132,8 @@ PM_SlideMove(qbool gravity)
 				continue;	/* move doesn't interact with the plane */
 
 			/* see how hard we are hitting things */
-			if(-into > pml.impactSpeed)
-				pml.impactSpeed = -into;
+			if(-into > pml->impactSpeed)
+				pml->impactSpeed = -into;
 
 			/* slide along the plane */
 			PM_ClipVelocity (pm->ps->velocity, planes[i],
@@ -184,7 +182,7 @@ PM_SlideMove(qbool gravity)
 						   planes[k]) >= 0.1)
 						continue;	/* move doesn't interact with the plane */
 
-					/* stop dead at a tripple plane interaction */
+					/* stop dead at a triple plane interaction */
 					clearv3(pm->ps->velocity);
 					return qtrue;
 				}
@@ -207,12 +205,8 @@ PM_SlideMove(qbool gravity)
 	return (bumpcount != 0);
 }
 
-/*
- * PM_StepSlideMove
- *
- */
 void
-PM_StepSlideMove(qbool gravity)
+PM_StepSlideMove(pmove_t *pm, pml_t *pml, qbool gravity)
 {
 	Vec3	start_o, start_v;
 /*	Vec3		down_o, down_v; */
@@ -225,7 +219,7 @@ PM_StepSlideMove(qbool gravity)
 	copyv3 (pm->ps->origin, start_o);
 	copyv3 (pm->ps->velocity, start_v);
 
-	if(PM_SlideMove(gravity) == 0)
+	if(PM_SlideMove(pm, pml, gravity) == 0)
 		return;		/* we got exactly where we wanted to go first try */
 
 	copyv3(start_o, down);
@@ -258,7 +252,7 @@ PM_StepSlideMove(qbool gravity)
 	copyv3 (trace.endpos, pm->ps->origin);
 	copyv3 (start_v, pm->ps->velocity);
 
-	PM_SlideMove(gravity);
+	PM_SlideMove(pm, pml, gravity);
 
 	/* push down the final amount */
 	copyv3 (pm->ps->origin, down);
@@ -293,13 +287,13 @@ PM_StepSlideMove(qbool gravity)
 		delta = pm->ps->origin[2] - start_o[2];
 		if(delta > 2){
 			if(delta < 7)
-				PM_AddEvent(EV_STEP_4);
+				PM_AddEvent(pm, pml, EV_STEP_4);
 			else if(delta < 11)
-				PM_AddEvent(EV_STEP_8);
+				PM_AddEvent(pm, pml, EV_STEP_8);
 			else if(delta < 15)
-				PM_AddEvent(EV_STEP_12);
+				PM_AddEvent(pm, pml, EV_STEP_12);
 			else
-				PM_AddEvent(EV_STEP_16);
+				PM_AddEvent(pm, pml, EV_STEP_16);
 		}
 		if(pm->debugLevel)
 			Com_Printf("%u:stepped\n", cnt);
