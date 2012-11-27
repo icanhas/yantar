@@ -812,8 +812,11 @@ BG_FindItemForWeapon(Weapon weapon)
 	gitem_t *it;
 
 	for(it = bg_itemlist + 1; it->classname; it++)
-		if(it->giType == IT_PRIWEAP && it->giTag == weapon)
+		if((it->giType == IT_PRIWEAP || it->giType == IT_SECWEAP) 
+		  && it->giTag == weapon)
+		then{
 			return it;
+		}
 
 	Com_Errorf(ERR_DROP, "Couldn't find item for weapon %i", weapon);
 	return NULL;

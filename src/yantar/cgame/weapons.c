@@ -823,7 +823,7 @@ CG_RegisterItemVisuals(int itemNum)
 	itemInfo->registered = qtrue;
 	itemInfo->models[0] = trap_R_RegisterModel(item->world_model[0]);
 	itemInfo->icon = trap_R_RegisterShader(item->icon);
-	if(item->giType == IT_PRIWEAP)
+	if(item->giType == IT_PRIWEAP || item->giType == IT_SECWEAP)
 		CG_RegisterWeapon(item->giTag);
 
 	/* powerups have an accompanying ring or sphere */

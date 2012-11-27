@@ -82,43 +82,33 @@ tryagain:
 	case W1melee:
 		MAKERGB(pi->flashDlightColor, 0.6f, 0.6f, 1);
 		break;
-
 	case W1machinegun:
 		MAKERGB(pi->flashDlightColor, 1, 1, 0);
 		break;
-
 	case W1shotgun:
 		MAKERGB(pi->flashDlightColor, 1, 1, 0);
 		break;
-
 	case W2grenadelauncher:
 		MAKERGB(pi->flashDlightColor, 1, 0.7f, 0.5f);
 		break;
-
 	case W2rocketlauncher:
 		MAKERGB(pi->flashDlightColor, 1, 0.75f, 0);
 		break;
-
 	case W1lightning:
 		MAKERGB(pi->flashDlightColor, 0.6f, 0.6f, 1);
 		break;
-
 	case W1railgun:
 		MAKERGB(pi->flashDlightColor, 1, 0.5f, 0);
 		break;
-
 	case W1plasmagun:
 		MAKERGB(pi->flashDlightColor, 0.6f, 0.6f, 1);
 		break;
-
 	case W2bfg:
 		MAKERGB(pi->flashDlightColor, 1, 0.7f, 1);
 		break;
-
 	case W1_GRAPPLING_HOOK:
 		MAKERGB(pi->flashDlightColor, 0.6f, 0.6f, 1);
 		break;
-
 	default:
 		MAKERGB(pi->flashDlightColor, 1, 1, 1);
 		break;

@@ -12,7 +12,6 @@
 #include "team.h"
 
 /*
- *
  * Items are any object that a player can touch to gain some effect.
  *
  * Pickup will return the number of seconds until they should respawn.
@@ -31,9 +30,6 @@
 #define RESPAWN_HOLDABLE	60
 #define RESPAWN_MEGAHEALTH	35	/* 120 */
 #define RESPAWN_POWERUP		120
-
-
-/* ====================================================================== */
 
 int
 Pickup_Powerup(gentity_t *ent, gentity_t *other)
@@ -100,8 +96,6 @@ Pickup_Powerup(gentity_t *ent, gentity_t *other)
 	}
 	return RESPAWN_POWERUP;
 }
-
-/* ====================================================================== */
 
 #ifdef MISSIONPACK
 int
@@ -170,7 +164,6 @@ Pickup_PersistantPowerup(gentity_t *ent, gentity_t *other)
 	return -1;
 }
 
-/* ====================================================================== */
 #endif
 
 int
@@ -184,9 +177,6 @@ Pickup_Holdable(gentity_t *ent, gentity_t *other)
 
 	return RESPAWN_HOLDABLE;
 }
-
-
-/* ====================================================================== */
 
 void
 Add_Ammo(gentity_t *ent, int weapon, int count)
@@ -211,9 +201,6 @@ Pickup_Ammo(gentity_t *ent, gentity_t *other)
 	return RESPAWN_AMMO;
 }
 
-/* ====================================================================== */
-
-
 int
 Pickup_Weapon(gentity_t *ent, gentity_t *other)
 {
@@ -228,16 +215,18 @@ Pickup_Weapon(gentity_t *ent, gentity_t *other)
 			quantity = ent->item->quantity;
 
 		/* dropped items and teamplay weapons always have full ammo */
-		if(!(ent->flags & FL_DROPPED_ITEM) && g_gametype.integer !=
-		   GT_TEAM){
-			/* respawning rules
-			 * drop the quantity if the already have over the minimum */
-			if(other->client->ps.ammo[ ent->item->giTag ] <
-			   quantity)
-				quantity = quantity -
-					   other->client->ps.ammo[ ent->item->
-								   giTag ];
-			else
+		if(!(ent->flags & FL_DROPPED_ITEM) 
+		  && g_gametype.integer != GT_TEAM)
+		then{
+			/* 
+			 * respawning rules
+			 * drop the quantity if the already have over the minimum 
+			 */
+			if(other->client->ps.ammo[ent->item->giTag] 
+			  < quantity)
+			then{
+				quantity -= other->client->ps.ammo[ent->item->giTag];
+			}else
 				quantity = 1;	/* only add a single shot */
 		}
 	}
@@ -256,9 +245,6 @@ Pickup_Weapon(gentity_t *ent, gentity_t *other)
 
 	return g_weaponRespawn.integer;
 }
-
-
-/* ====================================================================== */
 
 int
 Pickup_Health(gentity_t *ent, gentity_t *other)
@@ -301,9 +287,6 @@ Pickup_Armor(gentity_t *ent, gentity_t *other)
 	return RESPAWN_SHIELD;
 }
 
-/*
- * RespawnItem
- */
 void
 RespawnItem(gentity_t *ent)
 {
@@ -365,10 +348,6 @@ RespawnItem(gentity_t *ent)
 	ent->nextthink = 0;
 }
 
-
-/*
- * Touch_Item
- */
 void
 Touch_Item(gentity_t *ent, gentity_t *other, trace_t *trace)
 {
@@ -488,10 +467,11 @@ Touch_Item(gentity_t *ent, gentity_t *other, trace_t *trace)
 	ent->s.eFlags	|= EF_NODRAW;
 	ent->r.contents = 0;
 
-	/* ZOID
-	 * A negative respawn times means to never respawn this item (but don't
+	/*
+	 * A negative respawn time means to never respawn this item (but don't
 	 * delete it).  This is used by items that are respawned by third party
-	 * events such as ctf flags */
+	 * events such as ctf flags 
+	 */
 	if(respawn <= 0){
 		ent->nextthink = 0;
 		ent->think = 0;
@@ -502,12 +482,7 @@ Touch_Item(gentity_t *ent, gentity_t *other, trace_t *trace)
 	trap_LinkEntity(ent);
 }
 
-
-/* ====================================================================== */
-
 /*
- * LaunchItem
- *
  * Spawns an item and tosses it forward
  */
 gentity_t *
@@ -553,8 +528,6 @@ LaunchItem(gitem_t *item, Vec3 origin, Vec3 velocity)
 }
 
 /*
- * Drop_Item
- *
  * Spawns an item and tosses it forward
  */
 gentity_t *
@@ -574,10 +547,7 @@ Drop_Item(gentity_t *ent, gitem_t *item, float angle)
 	return LaunchItem(item, ent->s.pos.trBase, velocity);
 }
 
-
 /*
- * Use_Item
- *
  * Respawn the item
  */
 void
@@ -586,11 +556,7 @@ Use_Item(gentity_t *ent, gentity_t *other, gentity_t *activator)
 	RespawnItem(ent);
 }
 
-/* ====================================================================== */
-
 /*
- * FinishSpawningItem
- *
  * Traces down to find where an item should rest, instead of letting them
  * free fall from their spawn points
  */
@@ -624,8 +590,7 @@ FinishSpawningItem(gentity_t *ent)
 			MASK_SOLID);
 		if(tr.startsolid){
 			G_Printf ("FinishSpawningItem: %s startsolid at %s\n",
-				ent->classname, vtos(
-					ent->s.origin));
+			  ent->classname, vtos(ent->s.origin));
 			G_FreeEntity(ent);
 			return;
 		}
@@ -655,16 +620,11 @@ FinishSpawningItem(gentity_t *ent)
 		return;
 	}
 
-
 	trap_LinkEntity (ent);
 }
 
-
 qbool itemRegistered[MAX_ITEMS];
 
-/*
- * G_CheckTeamItems
- */
 void
 G_CheckTeamItems(void)
 {
@@ -678,13 +638,11 @@ G_CheckTeamItems(void)
 		/* check for the two flags */
 		item = BG_FindItem("Red Flag");
 		if(!item || !itemRegistered[ item - bg_itemlist ])
-			G_Printf(
-				S_COLOR_YELLOW
+			G_Printf(S_COLOR_YELLOW
 				"WARNING: No team_CTF_redflag in map\n");
 		item = BG_FindItem("Blue Flag");
 		if(!item || !itemRegistered[ item - bg_itemlist ])
-			G_Printf(
-				S_COLOR_YELLOW
+			G_Printf(S_COLOR_YELLOW
 				"WARNING: No team_CTF_blueflag in map\n");
 	}
 	if(g_gametype.integer == GT_1FCTF){
@@ -709,9 +667,6 @@ G_CheckTeamItems(void)
 	}
 }
 
-/*
- * ClearRegisteredItems
- */
 void
 ClearRegisteredItems(void)
 {
@@ -729,8 +684,6 @@ ClearRegisteredItems(void)
 }
 
 /*
- * RegisterItem
- *
  * The item will be added to the precache list
  */
 void
@@ -741,19 +694,16 @@ RegisterItem(gitem_t *item)
 	itemRegistered[ item - bg_itemlist ] = qtrue;
 }
 
-
 /*
- * SaveRegisteredItems
- *
  * Write the needed items to a config string
  * so the client will know which ones to precache
  */
 void
 SaveRegisteredItems(void)
 {
-	char	string[MAX_ITEMS+1];
-	int	i;
-	int	count;
+	char string[MAX_ITEMS+1];
+	int i;
+	int count;
 
 	count = 0;
 	for(i = 0; i < bg_numItems; i++){
@@ -769,9 +719,6 @@ SaveRegisteredItems(void)
 	trap_SetConfigstring(CS_ITEMS, string);
 }
 
-/*
- * G_ItemDisabled
- */
 int
 G_ItemDisabled(gitem_t *item)
 {
@@ -783,8 +730,6 @@ G_ItemDisabled(gitem_t *item)
 }
 
 /*
- * G_SpawnItem
- *
  * Sets the clipping size and plants the object on the floor.
  *
  * Items can't be immediately dropped to floor, because they might
@@ -820,11 +765,6 @@ G_SpawnItem(gentity_t *ent, gitem_t *item)
 #endif
 }
 
-
-/*
- * G_BounceItem
- *
- */
 void
 G_BounceItem(gentity_t *ent, trace_t *trace)
 {
@@ -857,18 +797,12 @@ G_BounceItem(gentity_t *ent, trace_t *trace)
 	ent->s.pos.trTime = level.time;
 }
 
-
-/*
- * G_RunItem
- *
- */
 void
 G_RunItem(gentity_t *ent)
 {
 	Vec3	origin;
 	trace_t tr;
-	int	contents;
-	int	mask;
+	int contents, mask;
 
 	/* if its groundentity has been set to ENTITYNUM_NONE, it may have been pushed off an edge */
 	if(ent->s.groundEntityNum == ENTITYNUM_NONE)
@@ -916,6 +850,5 @@ G_RunItem(gentity_t *ent)
 			G_FreeEntity(ent);
 		return;
 	}
-
 	G_BounceItem(ent, &tr);
 }
