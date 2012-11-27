@@ -731,14 +731,21 @@ CG_EntityEvent(centity_t *cent, Vec3 position)
 		DEBUGNAME("EV_NOAMMO");
 /*		trap_S_StartSound (NULL, es->number, CHAN_AUTO, cgs.media.noAmmoSound ); */
 		if(es->number == cg.snap->ps.clientNum)
-			CG_OutOfAmmoChange();
+			CG_OutOfAmmoChange(Wpri);
+		break;
+	case EV_NOSECAMMO:
+		DEBUGNAME("EV_NOSECAMMO");
+		if(es->number == cg.snap->ps.clientNum)
+			CG_OutOfAmmoChange(Wsec);
 		break;
 	case EV_CHANGE_WEAPON:
+	case EV_CHANGESECWEAP:
 		DEBUGNAME("EV_CHANGE_WEAPON");
 		trap_S_StartSound (NULL, es->number, CHAN_AUTO,
 			cgs.media.selectSound);
 		break;
 	case EV_FIRE_WEAPON:
+	case EV_FIRESECWEAP:
 		DEBUGNAME("EV_FIRE_WEAPON");
 		CG_FireWeapon(cent);
 		break;

@@ -354,9 +354,12 @@ typedef enum {
 	EV_ITEM_PICKUP,		/* normal item pickups are predictable */
 	EV_GLOBAL_ITEM_PICKUP,	/* powerup / team sounds are broadcast to everyone */
 
-	EV_NOAMMO,
-	EV_CHANGE_WEAPON,
-	EV_FIRE_WEAPON,
+	EV_NOAMMO,			/* primary ammo ran out */
+	EV_NOSECAMMO,		/* seconary ammo ran out */
+	EV_CHANGE_WEAPON,	/* primary weapon changes */
+	EV_CHANGESECWEAP,	/* secondary weapon changes */
+	EV_FIRE_WEAPON,		/* firing primary weapon */
+	EV_FIRESECWEAP,		/* firing secondary weapon */
 
 	EV_USE_ITEM0,
 	EV_USE_ITEM1,

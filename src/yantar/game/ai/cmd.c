@@ -928,9 +928,10 @@ BotMatch_RushBase(bot_state_t *bs, bot_match_t *match)
 	char	netname[MAX_MESSAGE_SIZE];
 	int	client;
 
-	if(gametype == GT_CTF)
+	if(gametype == GT_CTF){
 		if(!ctf_redflag.areanum || !ctf_blueflag.areanum)
 			return;
+	}
 
 #ifdef MISSIONPACK
 	else if(gametype == GT_1FCTF)

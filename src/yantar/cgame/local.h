@@ -355,6 +355,10 @@ typedef struct {
 	qhandle_t	headSkin;
 } clientInfo_t;
 
+typedef enum {
+	Wpri,
+	Wsec
+} Weapslot;
 
 /* each W1_* weapon enum has an associated weaponInfo_t
  * that contains media references necessary to present the
@@ -490,6 +494,7 @@ typedef struct {
 
 	/* input state sent to server */
 	int weaponSelect;
+	int secweapsel;
 
 	/* auto rotating items */
 	Vec3	autoAngles;
@@ -579,6 +584,7 @@ typedef struct {
 	int	itemPickupBlendTime;	/* the pulse around the crosshair is timed seperately */
 
 	int	weaponSelectTime;
+	int	secweapseltime;
 	int	weaponAnimation;
 	int	weaponAnimationTime;
 
@@ -1282,9 +1288,12 @@ void CG_PositionRotatedEntityOnTag(refEntity_t *entity,
 /*
  * cg_weapons.c
  *  */
-void CG_NextWeapon_f(void);
-void CG_PrevWeapon_f(void);
-void CG_Weapon_f(void);
+void CG_NextPriWeap_f(void);
+void CG_PrevPriWeap_f(void);
+void CG_PriWeap_f(void);
+void CG_NextSecWeap_f(void);
+void CG_PrevSecWeap_f(void);
+void CG_SecWeap_f(void);
 
 void CG_RegisterWeapon(int weaponNum);
 void CG_RegisterItemVisuals(int itemNum);
@@ -1302,9 +1311,9 @@ void CG_GrappleTrail(centity_t *ent, const weaponInfo_t *wi);
 void CG_AddViewWeapon(playerState_t *ps);
 void CG_AddPlayerWeapon(refEntity_t *parent, playerState_t *ps, centity_t *cent,
 			int team);
-void CG_DrawWeaponSelect(void);
+void CG_DrawWeaponSelect(Weapslot);
 
-void CG_OutOfAmmoChange(void);	/* should this be in pmove? */
+void CG_OutOfAmmoChange(Weapslot);	/* should this be in pmove? */
 
 /*
  * cg_marks.c

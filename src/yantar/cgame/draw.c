@@ -2548,7 +2548,8 @@ CG_Draw2D(stereoFrame_t stereoFrame)
 			if(stereoFrame == STEREO_CENTER)
 				CG_DrawCrosshair();
 			CG_DrawCrosshairNames();
-			CG_DrawWeaponSelect();
+			CG_DrawWeaponSelect(Wpri);
+			CG_DrawWeaponSelect(Wsec);
 			CG_DrawHoldableItem();
 			CG_DrawReward();
 		}
