@@ -174,6 +174,9 @@ typedef int clipHandle_t;
 #	define UNUSED(x) (void)(x)
 #endif
 
+/* pseudo-keyword, same as Tcl's 'then' */
+#define then
+
 #ifndef NULL
 #define NULL ((void*)0)
 #endif

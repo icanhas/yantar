@@ -579,7 +579,8 @@ CG_RegisterWeapon(int weaponNum)
 	wp->registered = qtrue;
 	for(item = bg_itemlist + 1; item->classname; item++)
 		if((item->giType == IT_PRIWEAP || item->giType == IT_SECWEAP) 
-		  && item->giTag == weaponNum){
+		  && item->giTag == weaponNum)
+		then{
 			wp->item = item;
 			break;
 		}
