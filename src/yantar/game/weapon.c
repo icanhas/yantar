@@ -73,7 +73,7 @@ CheckGauntletAttack(gentity_t *ent)
 	if(ent->client->noclip)
 		return qfalse;
 
-	traceEnt = &g_entities[ tr.entityNum ];
+	traceEnt = &g_entities[tr.entityNum];
 
 	/* send blood impact */
 	if(traceEnt->takedamage && traceEnt->client){
@@ -81,6 +81,7 @@ CheckGauntletAttack(gentity_t *ent)
 		tent->s.otherEntityNum = traceEnt->s.number;
 		tent->s.eventParm = DirToByte(tr.plane.normal);
 		tent->s.weap[Wpri] = ent->s.weap[Wpri];
+		tent->s.weap[Wsec] = ent->s.weap[Wsec];
 	}
 
 	if(!traceEnt->takedamage)
@@ -96,13 +97,13 @@ CheckGauntletAttack(gentity_t *ent)
 	if(ent->client->persistantPowerup &&
 	   ent->client->persistantPowerup->item &&
 	   ent->client->persistantPowerup->item->giTag == PW_DOUBLER)
+	then
 		s_quadFactor *= 2;
 
 #endif
 
 	damage = 50 * s_quadFactor;
-	G_Damage(traceEnt, ent, ent, forward, tr.endpos,
-		damage, 0, MOD_GAUNTLET);
+	G_Damage(traceEnt, ent, ent, forward, tr.endpos, damage, 0, MOD_GAUNTLET);
 
 	return qtrue;
 }
@@ -597,6 +598,7 @@ Weapon_LightningFire(gentity_t *ent)
 			tent->s.otherEntityNum = traceEnt->s.number;
 			tent->s.eventParm = DirToByte(tr.plane.normal);
 			tent->s.weap[Wpri] = ent->s.weap[Wpri];
+			tent->s.weap[Wsec] = ent->s.weap[Wsec];
 			if(LogAccuracyHit(traceEnt, ent))
 				ent->client->accuracy_hits++;
 		}else if(!(tr.surfaceFlags & SURF_NOIMPACT)){

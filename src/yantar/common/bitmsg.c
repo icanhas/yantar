@@ -795,6 +795,7 @@ netField_t entityStateFields[] =
 	{ NETF(otherEntityNum), GENTITYNUM_BITS },
 	{ NETF(weap[Wpri]), 8 },
 	{ NETF(weap[Wsec]), 8 },
+	{ NETF(parentweap), 8 },
 	{ NETF(clientNum), 8 },
 	{ NETF(angles[1]), 0 },
 	{ NETF(pos.trDuration), 32 },

@@ -1307,12 +1307,14 @@ typedef struct {
 	Vec3		trDelta;	/* velocity, etc */
 } trajectory_t;
 
-/* entityState_t is the information conveyed from the server
+/* 
+ * entityState_t is the information conveyed from the server
  * in an update message about entities that the client will
  * need to render in some way
  * Different eTypes may use the information in different ways
  * The messages are delta compressed, so it doesn't really matter if
- * the structure size is fairly large */
+ * the structure size is fairly large 
+ */
 typedef struct entityState_s {
 	int		number;	/* entity index */
 	int		eType;	/* entityType_t */
@@ -1351,6 +1353,7 @@ typedef struct entityState_s {
 	/* for players */
 	int	powerups;	/* bit flags */
 	int	weap[Wnumweapslots];		/* determines weapon and flash model, etc */
+	int	parentweap;	/* only for projectiles; determines appearance and behaviour */
 	int	legsAnim;	/* mask off ANIM_TOGGLEBIT */
 	int	torsoAnim;	/* mask off ANIM_TOGGLEBIT */
 

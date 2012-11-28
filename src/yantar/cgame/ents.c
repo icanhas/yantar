@@ -1,18 +1,14 @@
+/* present snapshot entities, happens every single frame */
 /*
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License.
  */
-/*
- * cg_ents.c -- present snapshot entities, happens every single frame */
 
 #include "local.h"
 
-
 /*
- * CG_PositionEntityOnTag
- *
  * Modifies the entities position and axis by the given
  * tag location
  */
@@ -38,10 +34,7 @@ CG_PositionEntityOnTag(refEntity_t *entity, const refEntity_t *parent,
 	entity->backlerp = parent->backlerp;
 }
 
-
 /*
- * CG_PositionRotatedEntityOnTag
- *
  * Modifies the entities position and axis by the given
  * tag location
  */
@@ -69,17 +62,11 @@ CG_PositionRotatedEntityOnTag(refEntity_t *entity, const refEntity_t *parent,
 	MatrixMultiply(tempAxis, ((refEntity_t*)parent)->axis, entity->axis);
 }
 
-
-
 /*
- *
- * FUNCTIONS CALLED EACH FRAME
- *
+ * Functions called each frame
  */
 
 /*
- * CG_SetEntitySoundPosition
- *
  * Also called by event processing code
  */
 void
@@ -98,8 +85,6 @@ CG_SetEntitySoundPosition(centity_t *cent)
 }
 
 /*
- * CG_EntityEffects
- *
  * Add continuous entity effects, like local entity emission and lighting
  */
 static void
@@ -139,10 +124,6 @@ CG_EntityEffects(centity_t *cent)
 
 }
 
-
-/*
- * CG_General
- */
 static void
 CG_General(centity_t *cent)
 {
@@ -180,8 +161,6 @@ CG_General(centity_t *cent)
 }
 
 /*
- * CG_Speaker
- *
  * Speaker entities can automatically play sounds
  */
 static void
@@ -202,9 +181,6 @@ CG_Speaker(centity_t *cent)
 			 cent->currentState.clientNum * 100 * crandom();
 }
 
-/*
- * CG_Item
- */
 static void
 CG_Item(centity_t *cent)
 {
@@ -373,11 +349,6 @@ CG_Item(centity_t *cent)
 	}
 }
 
-/* ============================================================================ */
-
-/*
- * CG_Missile
- */
 static void
 CG_Missile(centity_t *cent)
 {
@@ -387,9 +358,9 @@ CG_Missile(centity_t *cent)
 /*	int	col; */
 
 	s1 = &cent->currentState;
-	if(s1->weap[Wpri] >= Wnumweaps)
-		s1->weap[Wpri] = 0;
-	weapon = &cg_weapons[s1->weap[Wpri]];
+	if(s1->parentweap >= Wnumweaps)
+		s1->parentweap = Wnone;
+	weapon = &cg_weapons[s1->parentweap];
 
 	/* calculate the axis */
 	copyv3(s1->angles, cent->lerpAngles);
@@ -438,7 +409,7 @@ CG_Missile(centity_t *cent)
 	copyv3(cent->lerpOrigin, ent.origin);
 	copyv3(cent->lerpOrigin, ent.oldorigin);
 
-	if(cent->currentState.weap[Wpri] == W1plasmagun){
+	if(cent->currentState.parentweap == W1plasmagun){
 		ent.reType = RT_SPRITE;
 		ent.radius = 16;
 		ent.rotation = 0;
@@ -452,7 +423,7 @@ CG_Missile(centity_t *cent)
 	ent.hModel = weapon->missileModel;
 	ent.renderfx = weapon->missileRenderfx | RF_NOSHADOW;
 
-	if(cent->currentState.weap[Wpri] == W2proxlauncher)
+	if(cent->currentState.parentweap == W2proxlauncher)
 		if(s1->generic1 == TEAM_BLUE)
 			ent.hModel = cgs.media.blueProxMine;
 
@@ -464,7 +435,7 @@ CG_Missile(centity_t *cent)
 	if(s1->pos.trType != TR_STATIONARY)
 		RotateAroundDirection(ent.axis, cg.time / 4);
 	else{
-		if(s1->weap[Wpri] == W2proxlauncher)
+		if(s1->parentweap == W2proxlauncher)
 			eulertoaxis(cent->lerpAngles, ent.axis);
 		else{
 			RotateAroundDirection(ent.axis, s1->time);
@@ -476,8 +447,6 @@ CG_Missile(centity_t *cent)
 }
 
 /*
- * CG_Grapple
- *
  * This is called when the grapple is sitting up against the wall
  */
 static void
@@ -488,9 +457,9 @@ CG_Grapple(centity_t *cent)
 	const weaponInfo_t *weapon;
 
 	s1 = &cent->currentState;
-	if(s1->weap[Wpri] >= Wnumweaps)
-		s1->weap[Wpri] = 0;
-	weapon = &cg_weapons[s1->weap[Wpri]];
+	if(s1->parentweap >= Wnumweaps)
+		s1->parentweap = Wnone;
+	weapon = &cg_weapons[s1->parentweap];
 
 	/* calculate the axis */
 	copyv3(s1->angles, cent->lerpAngles);
@@ -524,9 +493,6 @@ CG_Grapple(centity_t *cent)
 	trap_R_AddRefEntityToScene(&ent);
 }
 
-/*
- * CG_Mover
- */
 static void
 CG_Mover(centity_t *cent)
 {
@@ -565,8 +531,6 @@ CG_Mover(centity_t *cent)
 }
 
 /*
- * CG_Beam
- *
  * Also called as an event
  */
 void
@@ -590,10 +554,6 @@ CG_Beam(centity_t *cent)
 	trap_R_AddRefEntityToScene(&ent);
 }
 
-
-/*
- * CG_Portal
- */
 static void
 CG_Portal(centity_t *cent)
 {
@@ -623,10 +583,7 @@ CG_Portal(centity_t *cent)
 	trap_R_AddRefEntityToScene(&ent);
 }
 
-
 /*
- * CG_AdjustPositionForMover
- *
  * Also called by client movement prediction code
  */
 void
@@ -664,10 +621,6 @@ CG_AdjustPositionForMover(const Vec3 in, int moverNum, int fromTime,
 	/* FIXME: origin change when on a rotating object */
 }
 
-
-/*
- * CG_InterpolateEntityPosition
- */
 static void
 CG_InterpolateEntityPosition(centity_t *cent)
 {
@@ -703,10 +656,6 @@ CG_InterpolateEntityPosition(centity_t *cent)
 
 }
 
-/*
- * CG_CalcEntityLerpPositions
- *
- */
 static void
 CG_CalcEntityLerpPositions(centity_t *cent)
 {
@@ -770,10 +719,6 @@ CG_TeamBase(centity_t *cent)
 	}
 }
 
-/*
- * CG_AddCEntity
- *
- */
 static void
 CG_AddCEntity(centity_t *cent)
 {
@@ -828,10 +773,6 @@ CG_AddCEntity(centity_t *cent)
 	}
 }
 
-/*
- * CG_AddPacketEntities
- *
- */
 void
 CG_AddPacketEntities(void)
 {
