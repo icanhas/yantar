@@ -714,7 +714,8 @@ CG_DrawActiveFrame(int serverTime, stereoFrame_t stereoView,
 		CG_AddParticles ();
 		CG_AddLocalEntities();
 	}
-	CG_AddViewWeapon(&cg.predictedPlayerState);
+	CG_AddViewWeapon(&cg.predictedPlayerState, Wpri);
+	CG_AddViewWeapon(&cg.predictedPlayerState, Wsec);
 	CG_PlayBufferedSounds();
 	CG_PlayBufferedVoiceChats();
 

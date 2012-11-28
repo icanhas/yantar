@@ -1,12 +1,10 @@
+/* game module information visible to server */
 /*
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License.
  */
-/*  */
-
-/* public.h -- game module information visible to server */
 
 #define GAME_API_VERSION 8
 

@@ -920,16 +920,19 @@ CG_LightningBolt(centity_t *cent, Vec3 origin)
 	Vec3	muzzlePoint, endPoint;
 	int anim;
 
-	if(cent->currentState.weap[Wpri] != W1lightning)
+	if(cent->currentState.weap[Wpri] != W1lightning
+	   && cent->currentState.weap[Wsec] != W1lightning)
+	then
 		return;
 
 	memset(&beam, 0, sizeof(beam));
 
 	/* CPMA  "true" lightning */
 	if((cent->currentState.number == cg.predictedPlayerState.clientNum) &&
-	   (cg_trueLightning.value != 0)){
+	   (cg_trueLightning.value != 0))
+	then{
 		Vec3	angle;
-		int	i;
+		int i;
 
 		for(i = 0; i < 3; i++){
 			float a = cent->lerpAngles[i] - cg.refdefViewAngles[i];
@@ -1291,18 +1294,17 @@ CG_AddPlayerWeapon(refEntity_t *parent, playerState_t *ps, centity_t *cent,
 
 /* Add the weapon, and flash for the player's view */
 void
-CG_AddViewWeapon(playerState_t *ps)
+CG_AddViewWeapon(playerState_t *ps, Weapslot slot)
 {
-	refEntity_t	hand;
-	centity_t	*cent;
+	refEntity_t hand;
+	centity_t *cent;
 	clientInfo_t *ci;
-	float	fovOffset;
-	Vec3	angles;
+	float fovOffset;
+	Vec3 angles;
 	weaponInfo_t *weapon;
 
 	if(ps->persistant[PERS_TEAM] == TEAM_SPECTATOR)
 		return;
-
 	if(ps->pm_type == PM_INTERMISSION)
 		return;
 
@@ -1335,10 +1337,10 @@ CG_AddViewWeapon(playerState_t *ps)
 		fovOffset = 0;
 
 	cent = &cg.predictedPlayerEntity;	/* &cg_entities[cg.snap->ps.clientNum]; */
-	CG_RegisterWeapon(ps->weap[Wpri]);
-	weapon = &cg_weapons[ps->weap[Wpri]];
+	CG_RegisterWeapon(ps->weap[slot]);
+	weapon = &cg_weapons[ps->weap[slot]];
 
-	memset (&hand, 0, sizeof(hand));
+	memset(&hand, 0, sizeof(hand));
 
 	/* set up gun position */
 	CG_CalculateWeaponPosition(hand.origin, angles);
