@@ -1165,6 +1165,8 @@ CL_InitInput(void)
 	Cmd_AddCommand("-brake", BrakeUp);
 	Cmd_AddCommand("+attack", Button0Down);
 	Cmd_AddCommand("-attack", Button0Up);
+	Cmd_AddCommand("+attack2", Button1Down);
+	Cmd_AddCommand("-attack2", Button1Up);
 	Cmd_AddCommand("+button0", Button0Down);
 	Cmd_AddCommand("-button0", Button0Up);
 	Cmd_AddCommand("+button1", Button1Down);
@@ -1243,6 +1245,8 @@ CL_ShutdownInput(void)
 	Cmd_RemoveCommand("-brake");
 	Cmd_RemoveCommand("+attack");
 	Cmd_RemoveCommand("-attack");
+	Cmd_RemoveCommand("+attack2");
+	Cmd_RemoveCommand("-attack2");
 	Cmd_RemoveCommand("+button0");
 	Cmd_RemoveCommand("-button0");
 	Cmd_RemoveCommand("+button1");

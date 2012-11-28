@@ -755,9 +755,12 @@ CG_EntityEvent(centity_t *cent, Vec3 position)
 			cgs.media.selectSound);
 		break;
 	case EV_FIRE_WEAPON:
-	case EV_FIRESECWEAP:
 		DEBUGNAME("EV_FIRE_WEAPON");
-		CG_FireWeapon(cent);
+		CG_FireWeapon(cent, Wpri);
+		break;
+	case EV_FIRESECWEAP:
+		DEBUGNAME("EV_FIRESECWEAP");
+		CG_FireWeapon(cent, Wsec);
 		break;
 	case EV_USE_ITEM0:
 		DEBUGNAME("EV_USE_ITEM0");

@@ -1102,7 +1102,7 @@ dosecweapevents(pmove_t *pm, pml_t *pml)
 	if(p->ammo[p->secweap] != -1)
 		p->ammo[p->secweap]--;
 	/* fire weapon */
-	PM_AddEvent(pm, pml, EV_FIRE_WEAPON);
+	PM_AddEvent(pm, pml, EV_FIRESECWEAP);
 	
 	addTime = weaptimetab(p->secweap);
 	if(p->powerups[PW_HASTE])

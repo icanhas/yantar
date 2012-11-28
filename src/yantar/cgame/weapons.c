@@ -1668,32 +1668,44 @@ CG_OutOfAmmoChange(Weapslot sl)
  * Weapon events
  */
 
-/* Caused by an EV_FIRE_WEAPON event */
+/* Caused by an EV_FIRE_WEAPON or EV_FIRESECWEAP event */
 void
-CG_FireWeapon(centity_t *cent)
+CG_FireWeapon(centity_t *cent, Weapslot sl)
 {
 	entityState_t	*ent;
-	int c;
+	int c, wnum;
 	weaponInfo_t	*weap;
-
+	
 	ent = &cent->currentState;
-	if(ent->weapon == Wnone)
-		return;
-	if(ent->weapon >= Wnumweaps){
-		CG_Error("CG_FireWeapon: ent->weapon >= Wnumweaps");
+	switch(sl){
+	case Wpri:
+		wnum = ent->weapon;
+		break;
+	case Wsec:
+		wnum = ent->secweap;
+		break;
+	default:
 		return;
 	}
-	weap = &cg_weapons[ ent->weapon ];
+	if(wnum == Wnone)
+		return;
+	if(wnum >= Wnumweaps){
+		CG_Error("CG_FireWeapon: wnum >= Wnumweaps (weapslot %d)", sl);
+		return;
+	}
+	weap = &cg_weapons[wnum];
 
-	/* mark the entity as muzzle flashing, so when it is added it will
-	 * append the flash to the weapon model */
+	/* 
+	 * mark the entity as muzzle flashing, so when it is added it will
+	 * append the flash to the weapon model 
+	 */
 	cent->muzzleFlashTime = cg.time;
 
 	/* lightning gun only does this this on initial press */
-	if(ent->weapon == W1lightning)
+	if(wnum == W1lightning)
 		if(cent->pe.lightningFiring)
 			return;
-	if(ent->weapon == W1railgun)
+	if(wnum == W1railgun)
 		cent->pe.railFireTime = cg.time;
 
 	/* play quad sound if needed */

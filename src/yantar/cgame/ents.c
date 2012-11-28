@@ -319,7 +319,9 @@ CG_Item(centity_t *cent)
 	/* add to refresh list */
 	trap_R_AddRefEntityToScene(&ent);
 
-	if(item->giType == IT_PRIWEAP && wi->barrelModel){
+	if((item->giType == IT_PRIWEAP)
+	  && wi->barrelModel)
+	then{
 		refEntity_t barrel;
 
 		memset(&barrel, 0, sizeof(barrel));

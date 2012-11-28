@@ -218,6 +218,7 @@ Cmd_Give_f(gentity_t *ent)
 			return;
 	}
 
+	/* FIXME: secondary */
 	if(give_all || Q_stricmp(name, "weapons") == 0){
 		ent->client->ps.stats[STAT_PRIWEAPS] =
 			(1<<Wnumweaps) 
@@ -1069,10 +1070,12 @@ Cmd_VoiceTaunt_f(gentity_t *ent)
 			   who->client->sess.sessionTeam ==
 			   ent->client->sess.sessionTeam)
 				if(who->client->rewardTime > level.time){
-					if(!(who->r.svFlags & SVF_BOT))
+					if(!(who->r.svFlags & SVF_BOT)){
 						;
-					if(!(ent->r.svFlags & SVF_BOT))
+					}
+					if(!(ent->r.svFlags & SVF_BOT)){
 						;
+					}
 					return;
 				}
 		}

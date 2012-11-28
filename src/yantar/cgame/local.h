@@ -1293,7 +1293,7 @@ void CG_SecWeap_f(void);
 void CG_RegisterWeapon(int weaponNum);
 void CG_RegisterItemVisuals(int itemNum);
 
-void CG_FireWeapon(centity_t *cent);
+void CG_FireWeapon(centity_t *cent, Weapslot);
 void CG_MissileHitWall(int weapon, int clientNum, Vec3 origin, Vec3 dir,
 		       impactSound_t soundType);
 void CG_MissileHitPlayer(int weapon, Vec3 origin, Vec3 dir, int entityNum);

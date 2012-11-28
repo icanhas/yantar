@@ -124,7 +124,8 @@ typedef enum {
 
 typedef enum {
 	Wpri,
-	Wsec
+	Wsec,
+	Wnumweapslots
 } Weapslot;
 
 typedef enum {
