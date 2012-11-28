@@ -640,15 +640,15 @@ gitem_t bg_itemlist[] =
 /* sounds */ ""
 	},
 
-/*QUAKED ammo_nails (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
+/*QUAKED ammo_flak (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
  */
 	{
-		"ammo_nails",
+		"ammo_flak",
 		Pmiscsounds "/am_pkup",
-		{ Pammomodels "/nailgunam",
+		{ Pammomodels "/flak",
 		  NULL, NULL, NULL},
-/* icon */ Picons "/icona_nailgun",
-/* pickup */ "Nails",
+/* icon */ Picons "/icona_flakcannon",
+/* pickup */ "Flak",
 		20,
 		IT_AMMO,
 		W1nailgun,
@@ -661,7 +661,7 @@ gitem_t bg_itemlist[] =
 	{
 		"ammo_mines",
 		Pmiscsounds "/am_pkup",
-		{ Pammomodels "/proxmineam",
+		{ Pammomodels "/proxmines",
 		  NULL, NULL, NULL},
 /* icon */ Picons "/icona_proxlauncher",
 /* pickup */ "Proximity Mines",
@@ -705,15 +705,15 @@ gitem_t bg_itemlist[] =
 /* sounds */ ""
 	},
 
-/*QUAKED weapon_nailgun (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
+/*QUAKED weapon_flakcannon (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
  */
 	{
-		"weapon_nailgun",
+		"weapon_flakcannon",
 		Pmiscsounds "/w_pkup",
-		{ "models/weapons/nailgun/nailgun",
+		{ Pnailgunmodels "/flakcannon",
 		  NULL, NULL, NULL},
-/* icon */ Picons "/iconw_nailgun",
-/* pickup */ "Nailgun",
+/* icon */ Picons "/iconw_flakcannon",
+/* pickup */ "Flak Cannon",
 		10,
 		IT_PRIWEAP,
 		W1nailgun,
@@ -726,7 +726,7 @@ gitem_t bg_itemlist[] =
 	{
 		"weapon_prox_launcher",
 		Pmiscsounds "/w_pkup",
-		{ Pprojectilemodels "/proxmine",
+		{ Pproxmodels "/prox",
 		  NULL, NULL, NULL},
 /* icon */ Picons "/icon_proxlauncher",
 /* pickup */ "Prox Launcher",

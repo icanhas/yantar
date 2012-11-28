@@ -69,6 +69,7 @@
 #define Pmeleemodels	Pweapmodels "/melee"
 #define Pgrenademodels	Pweapmodels "/grenade"
 #define Pproxmodels	Pweapmodels "/prox"
+#define Pnailgunmodels	Pweapmodels "/flakcannon"
 #define Prlmodels	Pweapmodels "/rocket"
 #define Pshotgunmodels	Pweapmodels "/shotgun"
 #define Pshellmodels	Pweapmodels "/shells"
