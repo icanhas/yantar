@@ -1,10 +1,10 @@
+/* misc utility functions for game module */
 /*
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License.
  */
-/* misc utility functions for game module */
 
 #include "shared.h"
 #include "bg.h"
@@ -61,15 +61,9 @@ BuildShaderStateConfig(void)
 }
 
 /*
- *
  * model / sound configstring indexes
- *
  */
 
-/*
- * G_FindConfigstringIndex
- *
- */
 int
 G_FindConfigstringIndex(char *name, int start, int max, qbool create)
 {
@@ -111,12 +105,7 @@ G_SoundIndex(char *name)
 	return G_FindConfigstringIndex (name, CS_SOUNDS, MAX_SOUNDS, qtrue);
 }
 
-/* ===================================================================== */
-
-
 /*
- * G_TeamCommand
- *
  * Broadcasts a command to only a specific team
  */
 void
@@ -130,10 +119,7 @@ G_TeamCommand(team_t team, char *cmd)
 				trap_SendServerCommand(i, va("%s", cmd));
 }
 
-
 /*
- * G_Find
- *
  * Searches all active entities for the next one that holds
  * the matching string at fieldofs (use the FOFS() macro) in the structure.
  *
@@ -164,10 +150,7 @@ G_Find(gentity_t *from, int fieldofs, const char *match)
 	return NULL;
 }
 
-
 /*
- * G_PickTarget
- *
  * Selects a random entity from among the targets
  */
 #define MAXCHOICES 32
@@ -201,15 +184,11 @@ G_PickTarget(char *targetname)
 	return choice[rand() % num_choices];
 }
 
-
 /*
- * G_UseTargets
- *
  * "activator" should be set to the entity that initiated the firing.
  *
  * Search for (string)targetname in all entities that
  * match (string)self.target and call their .use function
- *
  */
 void
 G_UseTargets(gentity_t *ent, gentity_t *activator)
@@ -242,10 +221,7 @@ G_UseTargets(gentity_t *ent, gentity_t *activator)
 	}
 }
 
-
 /*
- * TempVector
- *
  * This is just a convenience function
  * for making temporary vectors for function calls
  */
@@ -268,10 +244,7 @@ tv(float x, float y, float z)
 	return v;
 }
 
-
 /*
- * VectorToString
- *
  * This is just a convenience function
  * for printing vectors
  */
@@ -291,10 +264,7 @@ vtos(const Vec3 v)
 	return s;
 }
 
-
 /*
- * G_SetMovedir
- *
  * The editor only specifies a single value for angles (yaw),
  * but we have special constants to generate an up or down direction.
  * Angles will be cleared, because it is being used to represent a direction
@@ -317,7 +287,6 @@ G_SetMovedir(Vec3 angles, Vec3 movedir)
 	clearv3(angles);
 }
 
-
 float
 vectoyaw(const Vec3 vec)
 {
@@ -339,7 +308,6 @@ vectoyaw(const Vec3 vec)
 	return yaw;
 }
 
-
 void
 G_InitGentity(gentity_t *e)
 {
@@ -350,8 +318,6 @@ G_InitGentity(gentity_t *e)
 }
 
 /*
- * G_Spawn
- *
  * Either finds a free entity, or allocates a new one.
  *
  * The slots from 0 to MAX_CLIENTS-1 are always reserved for clients, and will
@@ -368,8 +334,8 @@ G_Spawn(void)
 	int i, force;
 	gentity_t *e;
 
-	e = NULL;	/* shut up warning */
-	i = 0;		/* shut up warning */
+	e = NULL;
+	i = 0;
 	for(force = 0; force < 2; force++){
 		/* if we go through all entities and can't find one to free,
 		 * override the normal minimum times before use */
@@ -378,10 +344,13 @@ G_Spawn(void)
 			if(e->inuse)
 				continue;
 
-			/* the first couple seconds of server time can involve a lot of
-			 * freeing and allocating, so relax the replacement policy */
+			/* 
+			 * the first couple seconds of server time can involve a lot of
+			 * freeing and allocating, so relax the replacement policy 
+			 */
 			if(!force && e->freetime > level.startTime + 2000 &&
 			   level.time - e->freetime < 1000)
+			then
 				continue;
 
 			/* reuse this slot */
@@ -409,9 +378,6 @@ G_Spawn(void)
 	return e;
 }
 
-/*
- * G_EntitiesFree
- */
 qbool
 G_EntitiesFree(void)
 {
@@ -428,10 +394,7 @@ G_EntitiesFree(void)
 	return qfalse;
 }
 
-
 /*
- * G_FreeEntity
- *
  * Marks the entity as free
  */
 void
@@ -449,8 +412,6 @@ G_FreeEntity(gentity_t *ed)
 }
 
 /*
- * G_TempEntity
- *
  * Spawns an event entity that will be auto-removed
  * The origin will be snapped to save net bandwidth, so care
  * must be taken if the origin is right on a surface (snap towards start vector first)
@@ -478,17 +439,11 @@ G_TempEntity(Vec3 origin, int event)
 	return e;
 }
 
-
-
 /*
- *
  * Kill box
- *
  */
 
 /*
- * G_KillBox
- *
  * Kills all entities that would touch the proposed new positioning
  * of ent.  Ent should be unlinked before calling this!
  */
@@ -516,11 +471,7 @@ G_KillBox(gentity_t *ent)
 
 }
 
-/* ============================================================================== */
-
 /*
- * G_AddPredictableEvent
- *
  * Use for non-pmove events that would also be predicted on the
  * client side: jumppads and item pickups
  * Adds an event+parm and twiddles the event counter
@@ -533,10 +484,7 @@ G_AddPredictableEvent(gentity_t *ent, int event, int eventParm)
 	BG_AddPredictableEventToPlayerstate(event, eventParm, &ent->client->ps);
 }
 
-
 /*
- * G_AddEvent
- *
  * Adds an event+parm and twiddles the event counter
  */
 void
@@ -566,10 +514,6 @@ G_AddEvent(gentity_t *ent, int event, int eventParm)
 	ent->eventTime = level.time;
 }
 
-
-/*
- * G_Sound
- */
 void
 G_Sound(gentity_t *ent, int channel, int soundIndex)
 {
@@ -579,13 +523,7 @@ G_Sound(gentity_t *ent, int channel, int soundIndex)
 	te->s.eventParm = soundIndex;
 }
 
-
-/* ============================================================================== */
-
-
 /*
- * G_SetOrigin
- *
  * Sets the pos trajectory for a fixed position
  */
 void
@@ -601,8 +539,6 @@ G_SetOrigin(gentity_t *ent, Vec3 origin)
 }
 
 /*
- * DebugLine
- *
  * debug polygons only work when running a local game
  * with r_debugSurface set to 2
  */
