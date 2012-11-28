@@ -1123,14 +1123,17 @@ ClientSpawn(gentity_t *ent)
 
 	client->ps.clientNum = index;
 
-	client->ps.stats[STAT_PRIWEAPS] = (1 << W1machinegun);
+	/* give the client the spawn weapons */
+	client->ps.stats[STAT_PRIWEAPS] = (1<<W1machinegun);
+	client->ps.stats[STAT_PRIWEAPS] |= (1<<W1melee);
+	client->ps.stats[STAT_SECWEAPS] = (1<<W2rocketlauncher);
+	
 	if(g_gametype.integer == GT_TEAM)
 		client->ps.ammo[W1machinegun] = 50;
 	else
 		client->ps.ammo[W1machinegun] = 100;
-
-	client->ps.stats[STAT_PRIWEAPS]	|= (1 << W1melee);
-	client->ps.ammo[W1melee]	= -1;
+	client->ps.ammo[W2rocketlauncher] = 10;
+	client->ps.ammo[W1melee] = -1;
 	client->ps.ammo[W1_GRAPPLING_HOOK] = -1;
 
 	/* health will count down towards max_health */
@@ -1150,7 +1153,7 @@ ClientSpawn(gentity_t *ent)
 	client->ps.pm_time = 100;
 
 	client->respawnTime = level.time;
-	client->inactivityTime	= level.time + g_inactivity.integer * 1000;
+	client->inactivityTime = level.time + g_inactivity.integer * 1000;
 	client->latched_buttons = 0;
 
 	/* set default animations */
@@ -1163,16 +1166,26 @@ ClientSpawn(gentity_t *ent)
 			/* force the base weapon up */
 			client->ps.weap[Wpri] = W1machinegun;
 			client->ps.weapstate[Wpri] = WEAPON_READY;
+			client->ps.weap[Wsec] = W2rocketlauncher;
+			client->ps.weapstate[Wsec] = WEAPON_READY;
 			/* fire the targets of the spawn point */
 			G_UseTargets(spawnPoint, ent);
+			if(0){
 			/* select the highest weapon number available, after any spawn given items have fired */
 			client->ps.weap[Wpri] = 1;
+			client->ps.weap[Wsec] = 1;
 
-			for(i = Wnumweaps - 1; i > 0; i--)
+			for(i = Wnumweaps - 1; i > 0; i--){
 				if(client->ps.stats[STAT_PRIWEAPS] & (1 << i)){
 					client->ps.weap[Wpri] = i;
 					break;
 				}
+				if(client->ps.stats[STAT_SECWEAPS] & (1 << i)){
+					client->ps.weap[Wsec] = i;
+					break;
+				}
+			}
+			}
 			/* positively link the client, even if the command times are weird */
 			copyv3(ent->client->ps.origin, ent->r.currentOrigin);
 
