@@ -885,24 +885,24 @@ CG_EntityEvent(centity_t *cent, Vec3 position)
 	case EV_MISSILE_HIT:
 		DEBUGNAME("EV_MISSILE_HIT");
 		ByteToDir(es->eventParm, dir);
-		CG_MissileHitPlayer(es->weap[Wpri], position, dir,
+		CG_MissileHitPlayer(es->parentweap, position, dir,
 			es->otherEntityNum);
 		break;
 	case EV_MISSILE_MISS:
 		DEBUGNAME("EV_MISSILE_MISS");
 		ByteToDir(es->eventParm, dir);
-		CG_MissileHitWall(es->weap[Wpri], 0, position, dir,
+		CG_MissileHitWall(es->parentweap, 0, position, dir,
 			IMPACTSOUND_DEFAULT);
 		break;
 	case EV_MISSILE_MISS_METAL:
 		DEBUGNAME("EV_MISSILE_MISS_METAL");
 		ByteToDir(es->eventParm, dir);
-		CG_MissileHitWall(es->weap[Wpri], 0, position, dir,
+		CG_MissileHitWall(es->parentweap, 0, position, dir,
 			IMPACTSOUND_METAL);
 		break;
 	case EV_RAILTRAIL:
 		DEBUGNAME("EV_RAILTRAIL");
-		cent->currentState.weap[Wpri] = W1railgun;
+		cent->currentState.parentweap = W1railgun;
 
 		if(es->clientNum == cg.snap->ps.clientNum &&
 		   !cg.renderingThirdPerson){
@@ -919,7 +919,7 @@ CG_EntityEvent(centity_t *cent, Vec3 position)
 		/* if the end was on a nomark surface, don't make an explosion */
 		if(es->eventParm != 255){
 			ByteToDir(es->eventParm, dir);
-			CG_MissileHitWall(es->weap[Wpri], es->clientNum, position,
+			CG_MissileHitWall(es->parentweap, es->clientNum, position,
 				dir, IMPACTSOUND_DEFAULT);
 		}
 		break;
