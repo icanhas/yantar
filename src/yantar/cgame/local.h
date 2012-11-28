@@ -1303,7 +1303,7 @@ void CG_RailTrail(clientInfo_t *ci, Vec3 start, Vec3 end);
 void CG_GrappleTrail(centity_t *ent, const weaponInfo_t *wi);
 void CG_AddViewWeapon(playerState_t *ps, Weapslot);
 void CG_AddPlayerWeapon(refEntity_t *parent, playerState_t *ps, centity_t *cent,
-			int team);
+	Weapslot, int team);
 void CG_DrawWeaponSelect(Weapslot);
 
 void CG_OutOfAmmoChange(Weapslot);	/* should this be in pmove? */

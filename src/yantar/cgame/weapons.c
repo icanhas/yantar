@@ -1134,11 +1134,9 @@ CG_AddWeaponWithPowerups(refEntity_t *gun, int powerups)
  */
 void
 CG_AddPlayerWeapon(refEntity_t *parent, playerState_t *ps, centity_t *cent,
-		   int team)
+	Weapslot slot, int team)
 {
-	refEntity_t	gun;
-	refEntity_t	barrel;
-	refEntity_t	flash;
+	refEntity_t gun, barrel, flash;
 	Vec3 angles;
 	Weapon	weaponNum;
 	weaponInfo_t	*weapon;
@@ -1146,7 +1144,7 @@ CG_AddPlayerWeapon(refEntity_t *parent, playerState_t *ps, centity_t *cent,
 	orientation_t	lerped;
 
 	UNUSED(team);
-	weaponNum = cent->currentState.weap[Wpri];
+	weaponNum = cent->currentState.weap[slot];
 
 	CG_RegisterWeapon(weaponNum);
 	weapon = &cg_weapons[weaponNum];
@@ -1369,7 +1367,7 @@ CG_AddViewWeapon(playerState_t *ps, Weapslot slot)
 	hand.renderfx = RF_DEPTHHACK | RF_FIRST_PERSON | RF_MINLIGHT;
 	/* add everything onto the hand */
 	CG_AddPlayerWeapon(&hand, ps, &cg.predictedPlayerEntity,
-		ps->persistant[PERS_TEAM]);
+		slot, ps->persistant[PERS_TEAM]);
 }
 
 /*
