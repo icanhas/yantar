@@ -132,9 +132,8 @@ dofriction(pmove_t *pm, pml_t *pml)
 
 /* Handles user intended acceleration */
 static void
-accelerate(pmove_t *pm, pml_t *pml, Vec3 wishdir, float wishspeed, float accel)
+q2accelerate(pmove_t *pm, pml_t *pml, Vec3 wishdir, float wishspeed, float accel)
 {
-#if 1
 	/* q2 style */
 	int i;
 	float addspeed, accelspeed, currentspeed;
@@ -148,7 +147,11 @@ accelerate(pmove_t *pm, pml_t *pml, Vec3 wishdir, float wishspeed, float accel)
 		accelspeed = addspeed;
 	for(i=0; i<3; i++)
 		pm->ps->velocity[i] += accelspeed*wishdir[i];
-#else
+}
+
+static void
+accelerate(pmove_t *pm, pml_t *pml, Vec3 wishdir, float wishspeed, float accel)
+{
 	/* proper way (avoids strafe jump maxspeed bug), but feels bad */
 	Vec3	wishVelocity;
 	Vec3	pushDir;
@@ -162,7 +165,6 @@ accelerate(pmove_t *pm, pml_t *pml, Vec3 wishdir, float wishspeed, float accel)
 	if(canPush > pushLen)
 		canPush = pushLen;
 	maddv3(pm->ps->velocity, canPush, pushDir, pm->ps->velocity);
-#endif
 }
 
 /*
@@ -480,8 +482,8 @@ grapplemove(pmove_t *pm, pml_t *pml)
 		grspd = GrapplePullSpeed;
 	
 	normv3(vel);
-	accelerate(pm, pml, wishdir, wishspeed, pm_airaccelerate);
-	accelerate(pm, pml, vel, grspd, pm_airaccelerate);
+	q2accelerate(pm, pml, wishdir, wishspeed, pm_airaccelerate);
+	q2accelerate(pm, pml, vel, grspd, pm_airaccelerate);
 	pml->groundPlane = qfalse;
 	PM_StepSlideMove(pm, pml, qtrue);
 	pm->ps->oldgrapplelen = vlen;
