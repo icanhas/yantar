@@ -1,11 +1,11 @@
+/* initialization and primary entry point for cgame */
 /*
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License.
  */
-/* initialization and primary entry point for cgame */
-
+ 
 #include "local.h"
 
 #ifdef MISSIONPACK
@@ -19,10 +19,7 @@ int forceModelModificationCount = -1;
 void CG_Init(int serverMessageNum, int serverCommandSequence, int clientNum);
 void CG_Shutdown(void);
 
-
 /*
- * vmMain
- *
  * This is the only way control passes into the module.
  * This must be the very first function compiled into the .q3vm file
  */
@@ -166,7 +163,6 @@ vmCvar_t	cg_oldRail;
 vmCvar_t	cg_oldRocket;
 vmCvar_t	cg_oldPlasma;
 vmCvar_t	cg_trueLightning;
-
 vmCvar_t	cg_redTeamName;
 vmCvar_t	cg_blueTeamName;
 vmCvar_t	cg_currentSelectedPlayer;
@@ -247,8 +243,10 @@ static cvarTable_t cvarTable[] = {
 	{ &cg_ChatsOnly, "cg_ChatsOnly", "0", CVAR_ARCHIVE },
 	{ &cg_noVoiceChats, "cg_noVoiceChats", "0", CVAR_ARCHIVE },
 	{ &cg_noVoiceText, "cg_noVoiceText", "0", CVAR_ARCHIVE },
-	/* the following variables are created in other parts of the system,
-	 * but we also reference them here */
+	/* 
+	 * the following variables are created in other parts of the system,
+	 * but we also reference them here 
+	 */
 	{ &cg_buildScript, "com_buildScript", "0", 0 },	/* force loading of all possible data amd error on failures */
 	{ &cg_paused, "cl_paused", "0", CVAR_ROM },
 	{ &cg_blood, "com_blood", "1", CVAR_ARCHIVE },
@@ -294,12 +292,8 @@ static cvarTable_t cvarTable[] = {
 	{ &cg_trueLightning, "cg_trueLightning", "0.0", CVAR_ARCHIVE}
 /*	{ &cg_pmove_fixed, "cg_pmove_fixed", "0", CVAR_USERINFO | CVAR_ARCHIVE } */
 };
-
 static int cvarTableSize = ARRAY_LEN(cvarTable);
 
-/*
- * CG_RegisterCvars
- */
 void
 CG_RegisterCvars(void)
 {
@@ -327,9 +321,6 @@ CG_RegisterCvars(void)
 		CVAR_USERINFO | CVAR_ARCHIVE);
 }
 
-/*
- * CG_ForceModelChange
- */
 static void
 CG_ForceModelChange(void)
 {
@@ -345,9 +336,6 @@ CG_ForceModelChange(void)
 	}
 }
 
-/*
- * CG_UpdateCvars
- */
 void
 CG_UpdateCvars(void)
 {
@@ -447,9 +435,6 @@ Com_Printf(const char *msg, ...)
 	CG_Printf ("%s", text);
 }
 
-/*
- * CG_Argv
- */
 const char *
 CG_Argv(int arg)
 {
@@ -460,12 +445,7 @@ CG_Argv(int arg)
 	return buffer;
 }
 
-
-/* ======================================================================== */
-
 /*
- * CG_RegisterItemSounds
- *
  * The server says this item is used on this level
  */
 static void
@@ -507,10 +487,7 @@ CG_RegisterItemSounds(int itemNum)
 	}
 }
 
-
 /*
- * CG_RegisterSounds
- *
  * called during a precache command
  */
 static void
@@ -832,8 +809,6 @@ CG_RegisterSounds(void)
 }
 
 /*
- * CG_RegisterGraphics
- *
  * This function may execute for a couple of minutes with a slow disk.
  */
 static void
@@ -1135,10 +1110,6 @@ CG_RegisterGraphics(void)
  */
 }
 
-/*
- * CG_BuildSpectatorString
- *
- */
 void
 CG_BuildSpectatorString(void)
 {
@@ -1156,10 +1127,6 @@ CG_BuildSpectatorString(void)
 	}
 }
 
-
-/*
- * CG_RegisterClients
- */
 static void
 CG_RegisterClients(void)
 {
@@ -1183,11 +1150,6 @@ CG_RegisterClients(void)
 	CG_BuildSpectatorString();
 }
 
-/* =========================================================================== */
-
-/*
- * CG_ConfigString
- */
 const char *
 CG_ConfigString(int index)
 {
@@ -1196,12 +1158,6 @@ CG_ConfigString(int index)
 	return cgs.gameState.stringData + cgs.gameState.stringOffsets[ index ];
 }
 
-/* ================================================================== */
-
-/*
- * CG_StartMusic
- *
- */
 void
 CG_StartMusic(void)
 {
@@ -1215,6 +1171,7 @@ CG_StartMusic(void)
 
 	trap_S_StartBackgroundTrack(parm1, parm2);
 }
+
 #ifdef MISSIONPACK
 char *
 CG_GetMenuBuffer(const char *filename)
@@ -1246,9 +1203,10 @@ CG_GetMenuBuffer(const char *filename)
 	return buf;
 }
 
+/* FIXME: remove */
 /*
- * new hud stuff ( mission pack )
- *  */
+ * new hud stuff (mission pack)
+ */
 qbool
 CG_Asset_Parse(int handle)
 {
@@ -1537,14 +1495,11 @@ CG_LoadMenus(const char *menuFile)
 
 }
 
-
-
 static qbool
 CG_OwnerDrawHandleKey(int ownerDraw, int flags, float *special, int key)
 {
 	return qfalse;
 }
-
 
 static int
 CG_FeederCount(float feederID)
@@ -1563,7 +1518,6 @@ CG_FeederCount(float feederID)
 		return cg.numScores;
 	return count;
 }
-
 
 void
 CG_SetScoreSelection(void *p)
@@ -1799,10 +1753,6 @@ CG_RunCinematicFrame(int handle)
 	trap_CIN_RunCinematic(handle);
 }
 
-/*
- * CG_LoadHudMenu();
- *
- */
 void
 CG_LoadHudMenu(void)
 {
@@ -1903,9 +1853,8 @@ CG_AssetCache(void)
 	cgDC.Assets.sliderThumb = trap_R_RegisterShaderNoMip(ASSET_SLIDER_THUMB);
 }
 #endif
+
 /*
- * CG_Init
- *
  * Called after every level change or subsystem restart
  * Will perform callbacks to make the loading info screen update.
  */
@@ -1942,7 +1891,7 @@ CG_Init(int serverMessageNum, int serverCommandSequence, int clientNum)
 	CG_InitConsoleCommands();
 
 	cg.weapsel[Wpri] = W1machinegun;
-	cg.weapsel[Wsec] = Wnone;
+	cg.weapsel[Wsec] = W2rocketlauncher;
 
 	cgs.redflag = cgs.blueflag = -1;	/* For compatibily, default to unset for */
 	cgs.flagStatus = -1;
@@ -2020,8 +1969,6 @@ CG_Init(int serverMessageNum, int serverCommandSequence, int clientNum)
 }
 
 /*
- * CG_Shutdown
- *
  * Called before every level change or subsystem restart
  */
 void
@@ -2033,27 +1980,28 @@ CG_Shutdown(void)
 
 
 /*
- * CG_EventHandling
  * type 0 - no event handling
  *    1 - team menu
  *    2 - hud editor
- *
  */
 #ifndef MISSIONPACK
 void
 CG_EventHandling(int type)
 {
+	UNUSED(type);
 }
-
-
 
 void
 CG_KeyEvent(int key, qbool down)
 {
+	UNUSED(key);
+	UNUSED(down);
 }
 
 void
 CG_MouseEvent(int x, int y)
 {
+	UNUSED(x);
+	UNUSED(y);
 }
 #endif
