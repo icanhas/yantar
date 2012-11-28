@@ -839,7 +839,8 @@ finishmove(usercmd_t *cmd)
 	uint i;
 
 	/* copy the state that the cgame is currently sending */
-	cmd->weapon = cl.cgameUserCmdValue;
+	cmd->weap[Wpri] = cl.cgameweapsel[Wpri];
+	cmd->weap[Wsec] = cl.cgameweapsel[Wsec];
 	/*
 	 * send the current server time so the amount of movement
 	 * can be determined without allowing cheating

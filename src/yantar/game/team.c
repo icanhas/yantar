@@ -1084,7 +1084,7 @@ TeamplayInfoMessage(gentity_t *ent)
 			Q_sprintf (entry, sizeof(entry), " %i %i %i %i %i %i",
 /*				level.sortedClients[i], player->client->pers.teamState.location, h, a, */
 				i, player->client->pers.teamState.location, h, a,
-				player->client->ps.weapon, player->s.powerups);
+				player->client->ps.weap[Wpri], player->s.powerups);
 			j = strlen(entry);
 			if(stringlength + j >= sizeof(string))
 				break;

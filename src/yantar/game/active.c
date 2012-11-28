@@ -685,7 +685,7 @@ ClientThink_real(gentity_t *ent)
 		client->ps.speed *= 1.3;
 
 	/* Let go of the hook if we aren't firing */
-	if(client->ps.weapon == W1_GRAPPLING_HOOK &&
+	if(client->ps.weap[Wpri] == W1_GRAPPLING_HOOK &&
 	   client->hook && !(ucmd->buttons & BUTTON_PRIATTACK))
 		Weapon_HookFree(client->hook);
 
@@ -694,12 +694,17 @@ ClientThink_real(gentity_t *ent)
 
 	memset (&pm, 0, sizeof(pm));
 
-	/* check for the hit-scan gauntlet, don't let the action
-	 * go through as an attack unless it actually hits something */
-	if(client->ps.weapon == W1melee &&
+	/* 
+	 * check for the hit-scan melee weap, don't let the action
+	 * go through as an attack unless it actually hits something 
+	 */
+	if(client->ps.weap[Wpri] == W1melee &&
 	   !(ucmd->buttons & BUTTON_TALK) &&
-	   (ucmd->buttons & BUTTON_PRIATTACK) && client->ps.weaponTime <= 0)
+	   (((ucmd->buttons & BUTTON_PRIATTACK) && client->ps.weaptime[Wpri] <= 0)
+	   || ((ucmd->buttons & BUTTON_SECATTACK) && client->ps.weaptime[Wsec] <= 0)))
+	then{
 		pm.gauntletHit = CheckGauntletAttack(ent);
+	}
 
 	if(ent->flags & FL_FORCE_GESTURE){
 		ent->flags &= ~FL_FORCE_GESTURE;

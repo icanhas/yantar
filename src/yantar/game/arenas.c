@@ -181,9 +181,9 @@ SpawnModelOnVictoryPad(gentity_t *pad, Vec3 offset, gentity_t *ent, int place)
 	body->s.groundEntityNum = ENTITYNUM_WORLD;
 	body->s.legsAnim	= LEGS_IDLE;
 	body->s.torsoAnim	= TORSO_STAND;
-	if(body->s.weapon == Wnone)
-		body->s.weapon = W1machinegun;
-	if(body->s.weapon == W1melee)
+	if(body->s.weap[Wpri] == Wnone)
+		body->s.weap[Wpri] = W1machinegun;
+	if(body->s.weap[Wpri] == W1melee)
 		body->s.torsoAnim = TORSO_STAND2;
 	body->s.event	= 0;
 	body->r.svFlags = ent->r.svFlags;
@@ -221,7 +221,7 @@ CelebrateStop(gentity_t *player)
 {
 	int anim;
 
-	if(player->s.weapon == W1melee)
+	if(player->s.weap[Wpri] == W1melee)
 		anim = TORSO_STAND2;
 	else
 		anim = TORSO_STAND;

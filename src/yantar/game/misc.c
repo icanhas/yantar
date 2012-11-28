@@ -268,7 +268,7 @@ Use_Shooter(gentity_t *ent, gentity_t *other, gentity_t *activator)
 
 	normv3(dir);
 
-	switch(ent->s.weapon){
+	switch(ent->s.weap[Wpri]){
 	case W2grenadelauncher:
 		fire_grenade(ent, ent->s.origin, dir);
 		break;
@@ -296,7 +296,7 @@ void
 InitShooter(gentity_t *ent, int weapon)
 {
 	ent->use = Use_Shooter;
-	ent->s.weapon = weapon;
+	ent->s.weap[Wpri] = weapon;
 
 	RegisterItem(BG_FindItemForWeapon(weapon));
 

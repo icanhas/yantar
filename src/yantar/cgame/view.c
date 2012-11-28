@@ -690,7 +690,7 @@ CG_DrawActiveFrame(int serverTime, stereoFrame_t stereoView,
 	}
 
 	/* let the client system know what our weapon and zoom settings are */
-	trap_SetUserCmdValue(cg.weaponSelect, cg.zoomSensitivity);
+	trap_SetUserCmdValue(cg.weapsel[Wpri], cg.weapsel[Wsec], cg.zoomSensitivity);
 
 	cg.clientFrame++;
 

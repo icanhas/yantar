@@ -920,7 +920,7 @@ CG_LightningBolt(centity_t *cent, Vec3 origin)
 	Vec3	muzzlePoint, endPoint;
 	int anim;
 
-	if(cent->currentState.weapon != W1lightning)
+	if(cent->currentState.weap[Wpri] != W1lightning)
 		return;
 
 	memset(&beam, 0, sizeof(beam));
@@ -1092,7 +1092,7 @@ CG_MachinegunSpinAngle(centity_t *cent)
 		cent->pe.barrelAngle = modeuler(angle);
 		cent->pe.barrelSpinning =
 			!!(cent->currentState.eFlags & EF_FIRING);
-		if(cent->currentState.weapon == W1chaingun &&
+		if(cent->currentState.weap[Wpri] == W1chaingun &&
 		   !cent->pe.barrelSpinning)
 			trap_S_StartSound(
 				NULL, cent->currentState.number, CHAN_WEAPON,
@@ -1143,7 +1143,7 @@ CG_AddPlayerWeapon(refEntity_t *parent, playerState_t *ps, centity_t *cent,
 	orientation_t	lerped;
 
 	UNUSED(team);
-	weaponNum = cent->currentState.weapon;
+	weaponNum = cent->currentState.weap[Wpri];
 
 	CG_RegisterWeapon(weaponNum);
 	weapon = &cg_weapons[weaponNum];
@@ -1335,8 +1335,8 @@ CG_AddViewWeapon(playerState_t *ps)
 		fovOffset = 0;
 
 	cent = &cg.predictedPlayerEntity;	/* &cg_entities[cg.snap->ps.clientNum]; */
-	CG_RegisterWeapon(ps->weapon);
-	weapon = &cg_weapons[ ps->weapon ];
+	CG_RegisterWeapon(ps->weap[Wpri]);
+	weapon = &cg_weapons[ps->weap[Wpri]];
 
 	memset (&hand, 0, sizeof(hand));
 
@@ -1390,17 +1390,9 @@ CG_DrawWeaponSelect(Weapslot slot)
 	/* don't display if dead */
 	if(cg.predictedPlayerState.stats[STAT_HEALTH] <= 0)
 		return;
-
-	switch(slot){
-	case Wpri:
-		color = CG_FadeColor(cg.weaponSelectTime, WEAPON_SELECT_TIME);
-		break;
-	case Wsec:
-		color = CG_FadeColor(cg.secweapseltime, WEAPON_SELECT_TIME);
-		break;
-	default:
+	if(slot >= Wnumweapslots)
 		return;
-	}
+	color = CG_FadeColor(cg.weapseltime[slot], WEAPON_SELECT_TIME);
 	if(!color)
 		return;
 	trap_R_SetColor(color);
@@ -1412,27 +1404,20 @@ CG_DrawWeaponSelect(Weapslot slot)
 	switch(slot){
 	case Wpri:
 		bits = cg.snap->ps.stats[STAT_PRIWEAPS];
+		y = 380; 
 		break;
 	case Wsec:
 		bits = cg.snap->ps.stats[STAT_SECWEAPS];
+		y = 280; 
 		break;
 	default:
-		return;
+		break;
 	}
 	count = 0;
 	for(i = 1; i < MAX_WEAPONS; i++)
 		if(bits & (1 << i))
 			count++;
-
 	x = 320 - count*20;
-	switch(slot){
-	case Wpri:
-		y = 380; break;
-	case Wsec:
-		y = 280; break;
-	default:
-		return;
-	}
 
 	for(i = 1; i < MAX_WEAPONS; i++){
 		if(!(bits & (1 << i)))
@@ -1444,7 +1429,8 @@ CG_DrawWeaponSelect(Weapslot slot)
 		CG_DrawPic(x, y, 32, 32, cg_weapons[i].weaponIcon);
 
 		/* draw selection marker */
-		if((i == cg.weaponSelect) || (i == cg.secweapsel))
+		/* FIXME */
+		if(i == cg.weapsel[slot])
 			CG_DrawPic(x-4, y-4, 40, 40, cgs.media.selectShader);
 
 		/* no ammo cross on top */
@@ -1455,19 +1441,18 @@ CG_DrawWeaponSelect(Weapslot slot)
 	}
 
 	/* draw the selected name */
-	if(cg_weapons[ cg.weaponSelect ].item){
-		name = cg_weapons[ cg.weaponSelect ].item->pickup_name;
+	if(cg_weapons[cg.weapsel[slot]].item){
+		name = cg_weapons[cg.weapsel[slot]].item->pickup_name;
 		if(name){
 			w = CG_DrawStrlen(name) * BIGCHAR_WIDTH;
 			x = (SCREEN_WIDTH - w) / 2;
 			CG_DrawBigStringColor(x, y - 22, name, color);
 		}
 	}
-
 	trap_R_SetColor(NULL);
 }
 
-static qbool
+static ID_INLINE qbool
 weapselectable(Weapslot sl, int i)
 {
 	if(!cg.snap->ps.ammo[i])
@@ -1500,41 +1485,22 @@ nextweap(Weapslot sl)
 		return;
 	if(cg.snap->ps.pm_flags & PMF_FOLLOW)
 		return;
-
-	switch(sl){
-	case Wpri:
-		cg.weaponSelectTime = cg.time;
-		original = cg.weaponSelect;
-		for(i = 0; i < MAX_WEAPONS; i++){
-			cg.weaponSelect++;
-			if(cg.weaponSelect == MAX_WEAPONS)
-				cg.weaponSelect = 0;
-			if(cg.weaponSelect == W1melee)
-				continue;	/* never cycle to gauntlet */
-			if(weapselectable(sl, cg.weaponSelect))
-				break;
-		}
-		if(i == MAX_WEAPONS)
-			cg.weaponSelect = original;
-		break;
-	case Wsec:
-		cg.secweapseltime = cg.time;
-		original = cg.secweapsel;
-		for(i = 0; i < MAX_WEAPONS; i++){
-			cg.secweapsel++;
-			if(cg.secweapsel == MAX_WEAPONS)
-				cg.secweapsel = 0;
-			if(cg.secweapsel == W1melee)
-				continue;	/* never cycle to gauntlet */
-			if(weapselectable(sl, cg.secweapsel))
-				break;
-		}
-		if(i == MAX_WEAPONS)
-			cg.secweapsel = original;
-		break;
-	default:
+	if(sl >= Wnumweapslots)
 		return;
+
+	cg.weapseltime[sl] = cg.time;
+	original = cg.weapsel[sl];
+	for(i = 0; i < MAX_WEAPONS; i++){
+		cg.weapsel[sl]++;
+		if(cg.weapsel[sl] >= MAX_WEAPONS)
+			cg.weapsel[sl] = 0;
+		if(cg.weapsel[sl] == W1melee)
+			continue;	/* don't cycle to melee */
+		if(weapselectable(sl, cg.weapsel[sl]))
+			break;
 	}
+	if(i >= MAX_WEAPONS)
+		cg.weapsel[sl] = original;
 }
 
 static ID_INLINE void
@@ -1546,41 +1512,22 @@ prevweap(Weapslot sl)
 		return;
 	if(cg.snap->ps.pm_flags & PMF_FOLLOW)
 		return;
-	
-	switch(sl){
-	case Wpri:
-		cg.weaponSelectTime = cg.time;
-		original = cg.weaponSelect;
-		for(i = 0; i < MAX_WEAPONS; i++){
-			cg.weaponSelect--;
-			if(cg.weaponSelect == -1)
-				cg.weaponSelect = MAX_WEAPONS - 1;
-			if(cg.weaponSelect == W1melee)
-				continue;	/* never cycle to gauntlet */
-			if(weapselectable(Wpri, cg.weaponSelect))
-				break;
-		}
-		if(i == MAX_WEAPONS)
-			cg.weaponSelect = original;
-		break;
-	case Wsec:
-		cg.secweapseltime = cg.time;
-		original = cg.secweapsel;
-		for(i = 0; i < MAX_WEAPONS; i++){
-			cg.secweapsel--;
-			if(cg.secweapsel == -1)
-				cg.secweapsel = MAX_WEAPONS - 1;
-			if(cg.secweapsel == W1melee)
-				continue;	/* never cycle to gauntlet */
-			if(weapselectable(Wpri, cg.secweapsel))
-				break;
-		}
-		if(i == MAX_WEAPONS)
-			cg.secweapsel = original;
-		break;
-	default:
+	if(sl >= Wnumweapslots)
 		return;
+	
+	cg.weapseltime[sl] = cg.time;
+	original = cg.weapsel[sl];
+	for(i = 0; i < MAX_WEAPONS; i++){
+		cg.weapsel[sl]--;
+		if(cg.weapsel[sl] == -1)
+			cg.weapsel[sl] = MAX_WEAPONS-1;
+		if(cg.weapsel[sl] == W1melee)
+			continue;
+		if(weapselectable(sl, cg.weapsel[sl]))
+			break;
 	}
+	if(i >= MAX_WEAPONS)
+		cg.weapsel[sl] = original;
 }
 
 void
@@ -1607,10 +1554,10 @@ CG_PriWeap_f(void)
 	num = atoi(CG_Argv(1));
 	if(num < 1 || num > MAX_WEAPONS-1)
 		return;
-	cg.weaponSelectTime = cg.time;
+	cg.weapseltime[Wpri] = cg.time;
 	if(!(cg.snap->ps.stats[STAT_PRIWEAPS] & (1 << num)))
 		return;		/* don't have the weapon */
-	cg.weaponSelect = num;
+	cg.weapsel[Wpri] = num;
 }
 
 void
@@ -1637,10 +1584,10 @@ CG_SecWeap_f(void)
 	num = atoi(CG_Argv(1));
 	if(num < 1 || num > MAX_WEAPONS-1)
 		return;
-	cg.secweapseltime = cg.time;
+	cg.weapseltime[Wsec] = cg.time;
 	if(!(cg.snap->ps.stats[STAT_SECWEAPS] & (1 << num)))
 		return;		/* don't have the weapon */
-	cg.secweapsel = num;
+	cg.weapsel[Wsec] = num;
 }
 
 /* The current weapon has just run out of ammo */
@@ -1648,20 +1595,17 @@ void
 CG_OutOfAmmoChange(Weapslot sl)
 {
 	int i;
-
-	if(sl == Wpri)
-		cg.weaponSelectTime = cg.time;
-	else
-		cg.secweapseltime = cg.time;
 	
-	for(i = MAX_WEAPONS-1; i > 0; i--)
+	if(sl >= Wnumweapslots)
+		return;
+		
+	cg.weapseltime[sl] = cg.time;
+	for(i = MAX_WEAPONS-1; i > 0; --i){
 		if(weapselectable(sl, i)){
-			if(sl == Wpri)
-				cg.weaponSelect = i;
-			else
-				cg.secweapsel = i;
+			cg.weapsel[sl] = i;
 			break;
 		}
+	}
 }
 
 /*
@@ -1676,18 +1620,11 @@ CG_FireWeapon(centity_t *cent, Weapslot sl)
 	int c, wnum;
 	weaponInfo_t	*weap;
 	
-	ent = &cent->currentState;
-	switch(sl){
-	case Wpri:
-		wnum = ent->weapon;
-		break;
-	case Wsec:
-		wnum = ent->secweap;
-		break;
-	default:
+	if(sl >= Wnumweapslots)
 		return;
-	}
-	if(wnum == Wnone)
+	
+	ent = &cent->currentState;
+	if((wnum = ent->weap[sl]) == Wnone)
 		return;
 	if(wnum >= Wnumweaps){
 		CG_Error("CG_FireWeapon: wnum >= Wnumweaps (weapslot %d)", sl);

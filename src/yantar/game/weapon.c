@@ -80,7 +80,7 @@ CheckGauntletAttack(gentity_t *ent)
 		tent = G_TempEntity(tr.endpos, EV_MISSILE_HIT);
 		tent->s.otherEntityNum = traceEnt->s.number;
 		tent->s.eventParm = DirToByte(tr.plane.normal);
-		tent->s.weapon = ent->s.weapon;
+		tent->s.weap[Wpri] = ent->s.weap[Wpri];
 	}
 
 	if(!traceEnt->takedamage)
@@ -596,7 +596,7 @@ Weapon_LightningFire(gentity_t *ent)
 			tent = G_TempEntity(tr.endpos, EV_MISSILE_HIT);
 			tent->s.otherEntityNum = traceEnt->s.number;
 			tent->s.eventParm = DirToByte(tr.plane.normal);
-			tent->s.weapon = ent->s.weapon;
+			tent->s.weap[Wpri] = ent->s.weap[Wpri];
 			if(LogAccuracyHit(traceEnt, ent))
 				ent->client->accuracy_hits++;
 		}else if(!(tr.surfaceFlags & SURF_NOIMPACT)){
@@ -741,7 +741,7 @@ FireWeapon(gentity_t *ent)
 #endif
 
 	/* track shots taken for accuracy tracking.  Grapple is not a weapon and gauntet is just not tracked */
-	if(ent->s.weapon != W1_GRAPPLING_HOOK && ent->s.weapon !=
+	if(ent->s.weap[Wpri] != W1_GRAPPLING_HOOK && ent->s.weap[Wpri] !=
 	   W1melee){
 #ifdef MISSIONPACK
 		if(ent->s.weapon == W1nailgun)
@@ -761,7 +761,7 @@ FireWeapon(gentity_t *ent)
 		muzzle);
 
 	/* fire the specific weapon */
-	switch(ent->s.weapon){
+	switch(ent->s.weap[Wpri]){
 	case W1melee:
 		Weapon_Gauntlet(ent);
 		break;

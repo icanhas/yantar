@@ -488,8 +488,7 @@ typedef struct {
 	int		landTime;
 
 	/* input state sent to server */
-	int weaponSelect;
-	int secweapsel;
+	int weapsel[Wnumweapslots];
 
 	/* auto rotating items */
 	Vec3	autoAngles;
@@ -578,10 +577,9 @@ typedef struct {
 	int	itemPickupTime;
 	int	itemPickupBlendTime;	/* the pulse around the crosshair is timed seperately */
 
-	int	weaponSelectTime;
-	int	secweapseltime;
-	int	weaponAnimation;
-	int	weaponAnimationTime;
+	int	weapseltime[Wnumweapslots];
+	int	weapanim[Wnumweapslots];
+	int	weapanimtime[Wnumweapslots];
 
 	/* blend blobs */
 	float	damageTime;
@@ -1586,7 +1584,7 @@ int                     trap_GetCurrentCmdNumber(void);
 qbool        trap_GetUserCmd(int cmdNumber, usercmd_t *ucmd);
 
 /* used for the weapon select and zoom */
-void            trap_SetUserCmdValue(int stateValue, float sensitivityScale);
+void            trap_SetUserCmdValue(int, int, float);
 
 /* aids for VM testing */
 void            testPrintInt(char *string, int i);

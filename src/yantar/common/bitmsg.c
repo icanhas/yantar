@@ -658,7 +658,8 @@ MSG_WriteDeltaUsercmd(msg_t *msg, usercmd_t *from, usercmd_t *to)
 	MSG_WriteDelta(msg, from->rightmove, to->rightmove, 8);
 	MSG_WriteDelta(msg, from->upmove, to->upmove, 8);
 	MSG_WriteDelta(msg, from->buttons, to->buttons, 16);
-	MSG_WriteDelta(msg, from->weapon, to->weapon, 8);
+	MSG_WriteDelta(msg, from->weap[Wpri], to->weap[Wpri], 8);
+	MSG_WriteDelta(msg, from->weap[Wsec], to->weap[Wsec], 8);
 }
 
 void
@@ -682,7 +683,8 @@ MSG_ReadDeltaUsercmd(msg_t *msg, usercmd_t *from, usercmd_t *to)
 		to->upmove = -127;
 	to->brakefrac = MSG_ReadDelta(msg, from->brakefrac, 8);
 	to->buttons = MSG_ReadDelta(msg, from->buttons, 16);
-	to->weapon = MSG_ReadDelta(msg, from->weapon, 8);
+	to->weap[Wpri] = MSG_ReadDelta(msg, from->weap[Wpri], 8);
+	to->weap[Wsec] = MSG_ReadDelta(msg, from->weap[Wsec], 8);
 }
 
 void
@@ -703,7 +705,9 @@ MSG_WriteDeltaUsercmdKey(msg_t *msg, int key, usercmd_t *from, usercmd_t *to)
 	   from->upmove == to->upmove &&
 	   from->brakefrac == to->brakefrac &&
 	   from->buttons == to->buttons &&
-	   from->weapon == to->weapon){
+	   from->weap[Wpri] == to->weap[Wpri] &&
+	   from->weap[Wsec] == to->weap[Wsec])
+	then{
 		MSG_WriteBits(msg, 0, 1);	/* no change */
 		oldsize += 7;
 		return;
@@ -718,7 +722,8 @@ MSG_WriteDeltaUsercmdKey(msg_t *msg, int key, usercmd_t *from, usercmd_t *to)
 	MSG_WriteDeltaKey(msg, key, from->upmove, to->upmove, 8);
 	MSG_WriteDeltaKey(msg, key, from->brakefrac, to->brakefrac, 8);
 	MSG_WriteDeltaKey(msg, key, from->buttons, to->buttons, 16);
-	MSG_WriteDeltaKey(msg, key, from->weapon, to->weapon, 8);
+	MSG_WriteDeltaKey(msg, key, from->weap[Wpri], to->weap[Wpri], 8);
+	MSG_WriteDeltaKey(msg, key, from->weap[Wsec], to->weap[Wsec], 8);
 }
 
 void
@@ -730,25 +735,27 @@ MSG_ReadDeltaUsercmdKey(msg_t *msg, int key, usercmd_t *from, usercmd_t *to)
 		to->serverTime = MSG_ReadBits(msg, 32);
 	if(MSG_ReadBits(msg, 1)){
 		key ^= to->serverTime;
-		to->angles[0]	= MSG_ReadDeltaKey(msg, key, from->angles[0], 16);
-		to->angles[1]	= MSG_ReadDeltaKey(msg, key, from->angles[1], 16);
-		to->angles[2]	= MSG_ReadDeltaKey(msg, key, from->angles[2], 16);
+		to->angles[0] = MSG_ReadDeltaKey(msg, key, from->angles[0], 16);
+		to->angles[1] = MSG_ReadDeltaKey(msg, key, from->angles[1], 16);
+		to->angles[2] = MSG_ReadDeltaKey(msg, key, from->angles[2], 16);
 		to->forwardmove = MSG_ReadDeltaKey(msg, key, from->forwardmove,
 			8);
-		to->rightmove	= MSG_ReadDeltaKey(msg, key, from->rightmove, 8);
-		to->upmove	= MSG_ReadDeltaKey(msg, key, from->upmove, 8);
+		to->rightmove = MSG_ReadDeltaKey(msg, key, from->rightmove, 8);
+		to->upmove = MSG_ReadDeltaKey(msg, key, from->upmove, 8);
 		to->brakefrac = MSG_ReadDeltaKey(msg, key, from->brakefrac, 8);
-		to->buttons	= MSG_ReadDeltaKey(msg, key, from->buttons, 16);
-		to->weapon	= MSG_ReadDeltaKey(msg, key, from->weapon, 8);
+		to->buttons = MSG_ReadDeltaKey(msg, key, from->buttons, 16);
+		to->weap[Wpri] = MSG_ReadDeltaKey(msg, key, from->weap[Wpri], 8);
+		to->weap[Wsec] = MSG_ReadDeltaKey(msg, key, from->weap[Wsec], 8);
 	}else{
-		to->angles[0]	= from->angles[0];
-		to->angles[1]	= from->angles[1];
-		to->angles[2]	= from->angles[2];
+		to->angles[0] = from->angles[0];
+		to->angles[1] = from->angles[1];
+		to->angles[2] = from->angles[2];
 		to->forwardmove = from->forwardmove;
-		to->rightmove	= from->rightmove;
-		to->upmove	= from->upmove;
-		to->buttons	= from->buttons;
-		to->weapon	= from->weapon;
+		to->rightmove = from->rightmove;
+		to->upmove = from->upmove;
+		to->buttons = from->buttons;
+		to->weap[Wpri] = from->weap[Wpri];
+		to->weap[Wsec] = from->weap[Wsec];
 	}
 }
 
@@ -786,8 +793,8 @@ netField_t entityStateFields[] =
 	{ NETF(pos.trType), 8 },
 	{ NETF(eFlags), 19 },
 	{ NETF(otherEntityNum), GENTITYNUM_BITS },
-	{ NETF(weapon), 8 },
-	{ NETF(secweap), 8 },
+	{ NETF(weap[Wpri]), 8 },
+	{ NETF(weap[Wsec]), 8 },
 	{ NETF(clientNum), 8 },
 	{ NETF(angles[1]), 0 },
 	{ NETF(pos.trDuration), 32 },
@@ -1068,15 +1075,16 @@ netField_t playerStateFields[] =
 	{ PSF(commandTime), 32 },
 	{ PSF(origin[0]), 0 },
 	{ PSF(origin[1]), 0 },
+	{ PSF(origin[2]), 0 },
 	{ PSF(bobCycle), 8 },
 	{ PSF(velocity[0]), 0 },
 	{ PSF(velocity[1]), 0 },
-	{ PSF(viewangles[1]), 0 },
-	{ PSF(viewangles[0]), 0 },
-	{ PSF(weaponTime), -16 },
-	{ PSF(secweaptime), -16 },
-	{ PSF(origin[2]), 0 },
 	{ PSF(velocity[2]), 0 },
+	{ PSF(viewangles[0]), 0 },
+	{ PSF(viewangles[1]), 0 },
+	{ PSF(viewangles[2]), 0 },
+	{ PSF(weaptime[Wpri]), -16 },
+	{ PSF(weaptime[Wsec]), -16 },
 	{ PSF(legsTimer), 8 },
 	{ PSF(pm_time), -16 },
 	{ PSF(eventSequence), 16 },
@@ -1087,8 +1095,8 @@ netField_t playerStateFields[] =
 	{ PSF(events[1]), 8 },
 	{ PSF(pm_flags), 16 },
 	{ PSF(groundEntityNum), GENTITYNUM_BITS },
-	{ PSF(weaponstate), 4 },
-	{ PSF(secweapstate), 4 },
+	{ PSF(weapstate[Wpri]), 4 },
+	{ PSF(weapstate[Wsec]), 4 },
 	{ PSF(eFlags), 16 },
 	{ PSF(externalEvent), 10 },
 	{ PSF(gravity), 16 },
@@ -1109,9 +1117,8 @@ netField_t playerStateFields[] =
 	{ PSF(eventParms[0]), 8 },
 	{ PSF(eventParms[1]), 8 },
 	{ PSF(clientNum), 8 },
-	{ PSF(weapon), 5 },
-	{ PSF(secweap), 5 },
-	{ PSF(viewangles[2]), 0 },
+	{ PSF(weap[Wpri]), 5 },
+	{ PSF(weap[Wsec]), 5 },
 	{ PSF(grapplePoint[0]), 0 },
 	{ PSF(grapplePoint[1]), 0 },
 	{ PSF(grapplePoint[2]), 0 },

@@ -1294,7 +1294,8 @@ BG_PlayerStateToEntityState(playerState_t *ps, entityState_t *s, qbool snap)
 		ps->entityEventSequence++;
 	}
 
-	s->weapon = ps->weapon;
+	s->weap[Wpri] = ps->weap[Wpri];
+	s->weap[Wsec] = ps->weap[Wsec];
 	s->groundEntityNum = ps->groundEntityNum;
 
 	s->powerups = 0;
@@ -1371,7 +1372,8 @@ BG_PlayerStateToEntityStateExtraPolate(playerState_t *ps, entityState_t *s,
 		ps->entityEventSequence++;
 	}
 
-	s->weapon = ps->weapon;
+	s->weap[Wpri] = ps->weap[Wpri];
+	s->weap[Wsec] = ps->weap[Wsec];
 	s->groundEntityNum = ps->groundEntityNum;
 
 	s->powerups = 0;

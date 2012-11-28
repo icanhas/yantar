@@ -157,9 +157,10 @@ CL_GetSnapshot(int snapshotNumber, snapshot_t *snapshot)
  * CL_SetUserCmdValue
  */
 void
-CL_SetUserCmdValue(int userCmdValue, float sensitivityScale)
+CL_SetUserCmdValue(int weap1, int weap2, float sensitivityScale)
 {
-	cl.cgameUserCmdValue = userCmdValue;
+	cl.cgameweapsel[Wpri] = weap1;
+	cl.cgameweapsel[Wsec] = weap2;
 	cl.cgameSensitivity = sensitivityScale;
 }
 
@@ -604,7 +605,7 @@ CL_CgameSystemCalls(intptr_t *args)
 	case CG_GETUSERCMD:
 		return CL_GetUserCmd(args[1], VMA(2));
 	case CG_SETUSERCMDVALUE:
-		CL_SetUserCmdValue(args[1], VMF(2));
+		CL_SetUserCmdValue(args[1], args[2], VMF(2));
 		return 0;
 	case CG_MEMORY_REMAINING:
 		return Hunk_MemoryRemaining();

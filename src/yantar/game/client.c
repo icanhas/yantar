@@ -1161,16 +1161,16 @@ ClientSpawn(gentity_t *ent)
 		if(ent->client->sess.sessionTeam != TEAM_SPECTATOR){
 			G_KillBox(ent);
 			/* force the base weapon up */
-			client->ps.weapon = W1machinegun;
-			client->ps.weaponstate = WEAPON_READY;
+			client->ps.weap[Wpri] = W1machinegun;
+			client->ps.weapstate[Wpri] = WEAPON_READY;
 			/* fire the targets of the spawn point */
 			G_UseTargets(spawnPoint, ent);
 			/* select the highest weapon number available, after any spawn given items have fired */
-			client->ps.weapon = 1;
+			client->ps.weap[Wpri] = 1;
 
 			for(i = Wnumweaps - 1; i > 0; i--)
 				if(client->ps.stats[STAT_PRIWEAPS] & (1 << i)){
-					client->ps.weapon = i;
+					client->ps.weap[Wpri] = i;
 					break;
 				}
 			/* positively link the client, even if the command times are weird */

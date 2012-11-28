@@ -544,15 +544,15 @@ CG_DrawStatusBar(void)
 	clearv3(angles);
 
 	/* draw any 3D icons first, so the changes back to 2D are minimized */
-	if(cent->currentState.weapon &&
-	   cg_weapons[ cent->currentState.weapon ].ammoModel){
+	if(cent->currentState.weap[Wpri] &&
+	   cg_weapons[cent->currentState.weap[Wpri]].ammoModel){
 		origin[0]	= 70;
 		origin[1]	= 0;
 		origin[2]	= 0;
 		angles[YAW]	= 90 + 20 * sin(cg.time / 1000.0);
 		CG_Draw3DModel(CHAR_WIDTH*3 + TEXT_ICON_SPACE, 432, ICON_SIZE,
 			ICON_SIZE,
-			cg_weapons[ cent->currentState.weapon ].ammoModel, 0,
+			cg_weapons[cent->currentState.weap[Wpri]].ammoModel, 0,
 			origin,
 			angles);
 	}
@@ -585,14 +585,17 @@ CG_DrawStatusBar(void)
 	/*
 	 * ammo
 	 *  */
-	if(cent->currentState.weapon){
-		value = ps->ammo[cent->currentState.weapon];
+	if(cent->currentState.weap[Wpri]){
+		value = ps->ammo[cent->currentState.weap[Wpri]];
 		if(value > -1){
-			if(cg.predictedPlayerState.weaponstate == WEAPON_FIRING
-			   && cg.predictedPlayerState.weaponTime > 100)
+			if((cg.predictedPlayerState.weapstate[Wpri] == WEAPON_FIRING
+			   && cg.predictedPlayerState.weaptime[Wpri] > 100)
+			   || (cg.predictedPlayerState.weapstate[Wsec] == WEAPON_FIRING
+			   && cg.predictedPlayerState.weaptime[Wsec] > 100))
+			then{
 				/* draw as dark grey when reloading */
 				color = 2;	/* dark grey */
-			else{
+			}else{
 				if(value >= 0)
 					color = 0;	/* green */
 				else
@@ -607,22 +610,18 @@ CG_DrawStatusBar(void)
 			if(!cg_draw3dIcons.integer && cg_drawIcons.integer){
 				qhandle_t icon;
 
-				icon =
-					cg_weapons[ cg.predictedPlayerState.
-						    weapon ].
-					ammoIcon;
-				if(icon)
-					CG_DrawPic(
-						CHAR_WIDTH*3 + TEXT_ICON_SPACE,
-						432,
-						ICON_SIZE, ICON_SIZE, icon);
+				icon = cg_weapons[cg.predictedPlayerState.weap[Wpri]].ammoIcon;
+				if(icon){
+					CG_DrawPic(CHAR_WIDTH*3 + TEXT_ICON_SPACE,
+						432, ICON_SIZE, ICON_SIZE, icon);
+				}
 			}
 		}
 	}
 
 	/*
 	 * health
-	 *  */
+	 */
 	value = ps->stats[STAT_HEALTH];
 	if(value > 100)
 		trap_R_SetColor(colors[3]);	/* white */

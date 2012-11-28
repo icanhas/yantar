@@ -1153,6 +1153,12 @@ enum {
 	PS_PMOVEFRAMECOUNTBITS	= 6,
 };
 
+typedef enum {
+	Wpri,
+	Wsec,
+	Wnumweapslots
+} Weapslot;
+
 /*
  * playerState_t is the information needed by both the client and server
  * to predict player motion and actions
@@ -1176,8 +1182,7 @@ typedef struct playerState_s {
 
 	Vec3	origin;
 	Vec3	velocity;
-	int	weaponTime;	/* primary weapon */
-	int	secweaptime;	/* secondary */
+	int	weaptime[Wnumweapslots];
 	int	gravity;
 	int	speed;
 	float	swingstrength;		/* for grapple */
@@ -1212,10 +1217,8 @@ typedef struct playerState_s {
 	int	externalEventTime;
 
 	int	clientNum;	/* ranges from 0 to MAX_CLIENTS-1 */
-	int	weapon;		/* copied to entityState_t->weapon */
-	int	weaponstate;
-	int	secweap;		/* secondary */
-	int	secweapstate;
+	int	weap[Wnumweapslots];		/* copied to entityState_t->weapon */
+	int	weapstate[Wnumweapslots];
 
 	Vec3	viewangles;	/* for fixed views */
 	int	viewheight;
@@ -1279,8 +1282,7 @@ typedef struct usercmd_s {
 	int		serverTime;
 	int		angles[3];
 	int		buttons;
-	byte		weapon;	/* primary weapon */
-	byte		secweap;	/* secondary weapon */
+	byte		weap[Wnumweapslots];
 	signed char	forwardmove, rightmove, upmove, brakefrac;
 } usercmd_t;
 
@@ -1348,8 +1350,7 @@ typedef struct entityState_s {
 
 	/* for players */
 	int	powerups;	/* bit flags */
-	int	weapon;		/* determines weapon and flash model, etc */
-	int	secweap;		/* ...and secondary */
+	int	weap[Wnumweapslots];		/* determines weapon and flash model, etc */
 	int	legsAnim;	/* mask off ANIM_TOGGLEBIT */
 	int	torsoAnim;	/* mask off ANIM_TOGGLEBIT */
 

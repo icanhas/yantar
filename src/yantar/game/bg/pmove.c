@@ -806,28 +806,28 @@ startpriweapchange(pmove_t *pm, pml_t *pml, int weapon)
 		return;
 	if(!(pm->ps->stats[STAT_PRIWEAPS] & (1 << weapon)))
 		return;
-	if(pm->ps->weaponstate == WEAPON_DROPPING)
+	if(pm->ps->weapstate[Wpri] == WEAPON_DROPPING)
 		return;
 	PM_AddEvent(pm, pml, EV_CHANGE_WEAPON);
-	pm->ps->weaponstate = WEAPON_DROPPING;
-	pm->ps->weaponTime += 200;
+	pm->ps->weapstate[Wpri] = WEAPON_DROPPING;
+	pm->ps->weaptime[Wpri] += 200;
 	starttorsoanim(pm, TORSO_DROP);
 }
 
 static void
 finishpriweapchange(pmove_t *pm, pml_t *pml)
 {
-	int weap;
+	Weapon weap;
 
 	UNUSED(pml);
-	weap = pm->cmd.weapon;
+	weap = pm->cmd.weap[Wpri];
 	if(weap < Wnone || weap >= Wnumweaps)
 		weap = Wnone;
 	if(!(pm->ps->stats[STAT_PRIWEAPS] & (1 << weap)))
 		weap = Wnone;
-	pm->ps->weapon = weap;
-	pm->ps->weaponstate = WEAPON_RAISING;
-	pm->ps->weaponTime += 250;
+	pm->ps->weap[Wpri] = weap;
+	pm->ps->weapstate[Wpri] = WEAPON_RAISING;
+	pm->ps->weaptime[Wpri] += 250;
 	starttorsoanim(pm, TORSO_RAISE);
 }
 
@@ -844,29 +844,29 @@ startsecweapchange(pmove_t *pm, pml_t *pml, int wp)
 		return;
 	if(!(p->stats[STAT_SECWEAPS] & (1<<wp)))
 		return;
-	if(p->secweapstate == WEAPON_DROPPING)
+	if(p->weapstate[Wsec] == WEAPON_DROPPING)
 		return;
 	PM_AddEvent(pm, pml, EV_CHANGE_WEAPON);
-	p->secweapstate = WEAPON_DROPPING;
-	p->secweaptime += 200;
+	p->weapstate[Wsec] = WEAPON_DROPPING;
+	p->weaptime[Wsec] += 200;
 }
 
 static void
 finishsecweapchange(pmove_t *pm, pml_t *pml)
 {
-	int wp;
+	Weapon wp;
 	playerState_t *p;
 
 	UNUSED(pml);
 	p = pm->ps;
-	wp = pm->cmd.secweap;
+	wp = pm->cmd.weap[Wsec];
 	if((wp < Wnone) || (wp >= Wnumweaps))
 		wp = Wnone;
 	if(!(p->stats[STAT_SECWEAPS] & (1 << wp)))
 		wp = Wnone;
-	p->secweap = wp;
-	p->secweapstate = WEAPON_RAISING;
-	p->secweaptime += 250;
+	p->weap[Wsec] = wp;
+	p->weapstate[Wsec] = WEAPON_RAISING;
+	p->weaptime[Wsec] += 250;
 }
 
 /* choose the torso animation */
@@ -874,8 +874,8 @@ static void
 dotorsoanim(pmove_t *pm, pml_t *pml)
 {
 	UNUSED(pml);
-	if(pm->ps->weaponstate == WEAPON_READY){
-		if(pm->ps->weapon == W1melee)
+	if(pm->ps->weapstate[Wpri] == WEAPON_READY){
+		if(pm->ps->weap[Wpri] == W1melee)
 			settorsoanim(pm, TORSO_STAND2);
 		else
 			settorsoanim(pm, TORSO_STAND);
@@ -930,7 +930,7 @@ doweapevents(pmove_t *pm, pml_t *pml)
 		return;	/* ignore if spectator */
 	if(p->stats[STAT_HEALTH] <= 0){
 		/* player is dead */
-		p->weapon = Wnone;
+		p->weap[Wpri] = Wnone;
 		return;
 	}
 	/* check for item usage */
@@ -951,29 +951,29 @@ doweapevents(pmove_t *pm, pml_t *pml)
 		p->pm_flags &= ~PMF_USE_ITEM_HELD;
 
 	/* make weapon function */
-	if(p->weaponTime > 0)
-		p->weaponTime -= pml->msec;
+	if(p->weaptime[Wpri] > 0)
+		p->weaptime[Wpri] -= pml->msec;
 
 	/* 
 	 * check for weapon changes.
 	 * can't change if weapon is firing, but can change
 	 * again if lowering or raising 
 	 */
-	if(p->weaponTime <= 0 || p->weaponstate != WEAPON_FIRING){
-		if(p->weapon != pm->cmd.weapon)
-			startpriweapchange(pm, pml, pm->cmd.weapon);
+	if(p->weaptime[Wpri] <= 0 || p->weapstate[Wpri] != WEAPON_FIRING){
+		if(p->weap[Wpri] != pm->cmd.weap[Wpri])
+			startpriweapchange(pm, pml, pm->cmd.weap[Wpri]);
 	}
-	if(p->weaponTime > 0)
+	if(p->weaptime[Wpri] > 0)
 		return;
 		
 	/* change weapon if time */
-	if(p->weaponstate == WEAPON_DROPPING){
+	if(p->weapstate[Wpri] == WEAPON_DROPPING){
 		finishpriweapchange(pm, pml);
 		return;
 	}
-	if(p->weaponstate == WEAPON_RAISING){
-		p->weaponstate = WEAPON_READY;
-		if(p->weapon == W1melee)
+	if(p->weapstate[Wpri] == WEAPON_RAISING){
+		p->weapstate[Wpri] = WEAPON_READY;
+		if(p->weap[Wpri] == W1melee)
 			starttorsoanim(pm, TORSO_STAND2);
 		else
 			starttorsoanim(pm, TORSO_STAND);
@@ -981,38 +981,38 @@ doweapevents(pmove_t *pm, pml_t *pml)
 	}
 	/* check for fire */
 	if(!(pm->cmd.buttons & BUTTON_PRIATTACK)){
-		p->weaponTime = 0;
-		p->weaponstate = WEAPON_READY;
+		p->weaptime[Wpri] = 0;
+		p->weapstate[Wpri] = WEAPON_READY;
 		return;
 	}
 	/* start the animation even if out of ammo */
-	if(p->weapon == W1melee){
+	if(p->weap[Wpri] == W1melee){
 		/* melee only "fires" when it actually hits something */
 		if(!pm->gauntletHit){
-			p->weaponTime = 0;
-			p->weaponstate = WEAPON_READY;
+			p->weaptime[Wpri] = 0;
+			p->weapstate[Wpri] = WEAPON_READY;
 			return;
 		}
 		starttorsoanim(pm, TORSO_ATTACK2);
 	}else
 		starttorsoanim(pm, TORSO_ATTACK);
-	p->weaponstate = WEAPON_FIRING;
+	p->weapstate[Wpri] = WEAPON_FIRING;
 	/* check for out of ammo */
-	if(!p->ammo[p->weapon]){
+	if(!p->ammo[p->weap[Wpri]]){
 		PM_AddEvent(pm, pml, EV_NOAMMO);
-		p->weaponTime += 500;
+		p->weaptime[Wpri] += 500;
 		return;
 	}
 	/* take an ammo away if not infinite */
-	if(p->ammo[p->weapon] != -1)
-		p->ammo[p->weapon]--;
+	if(p->ammo[p->weap[Wpri]] != -1)
+		p->ammo[p->weap[Wpri]]--;
 	/* fire weapon */
 	PM_AddEvent(pm, pml, EV_FIRE_WEAPON);
 	
-	addTime = weaptimetab(p->weapon);
+	addTime = weaptimetab(p->weap[Wpri]);
 	if(p->powerups[PW_HASTE])
 		addTime /= 1.3;
-	p->weaponTime += addTime;
+	p->weaptime[Wpri] += addTime;
 }
 
 /* Generates weapon events and modifes the weapon counter */
@@ -1029,7 +1029,7 @@ dosecweapevents(pmove_t *pm, pml_t *pml)
 		return;	/* ignore if spectator */
 	if(p->stats[STAT_HEALTH] <= 0){
 		/* player is dead */
-		p->secweap = Wnone;
+		p->weap[Wsec] = Wnone;
 		return;
 	}
 	/* check for item usage */
@@ -1050,64 +1050,64 @@ dosecweapevents(pmove_t *pm, pml_t *pml)
 		p->pm_flags &= ~PMF_USE_ITEM_HELD;
 
 	/* make weapon function */
-	if(p->secweaptime > 0)
-		p->secweaptime -= pml->msec;
+	if(p->weaptime[Wsec] > 0)
+		p->weaptime[Wsec] -= pml->msec;
 
 	/* 
 	 * check for weapon changes.
 	 * can't change if weapon is firing, but can change
 	 * again if lowering or raising 
 	 */
-	if(p->secweaptime <= 0 || p->secweapstate != WEAPON_FIRING){
-		if(p->secweap != pm->cmd.secweap)
-			startsecweapchange(pm, pml, pm->cmd.secweap);
+	if(p->weaptime[Wsec] <= 0 || p->weapstate[Wsec] != WEAPON_FIRING){
+		if(p->weap[Wsec] != pm->cmd.weap[Wsec])
+			startsecweapchange(pm, pml, pm->cmd.weap[Wsec]);
 	}
-	if(p->secweaptime > 0)
+	if(p->weaptime[Wsec] > 0)
 		return;
 		
 	/* change weapon if time */
-	if(p->secweapstate == WEAPON_DROPPING){
+	if(p->weapstate[Wsec] == WEAPON_DROPPING){
 		finishsecweapchange(pm, pml);
 		return;
 	}
-	if(p->secweapstate == WEAPON_RAISING)
-		p->secweapstate = WEAPON_READY;
+	if(p->weapstate[Wsec] == WEAPON_RAISING)
+		p->weapstate[Wsec] = WEAPON_READY;
 
 	/* check for fire */
 	if(!(pm->cmd.buttons & BUTTON_SECATTACK)){
-		p->secweaptime = 0;
-		p->secweapstate = WEAPON_READY;
+		p->weaptime[Wsec] = 0;
+		p->weapstate[Wsec] = WEAPON_READY;
 		return;
 	}
 	/* start the animation even if out of ammo */
-	if(p->secweap == W1melee){
+	if(p->weap[Wsec] == W1melee){
 		/* melee only "fires" when it actually hits something */
 		if(!pm->gauntletHit){
-			p->secweaptime = 0;
-			p->secweapstate = WEAPON_READY;
+			p->weaptime[Wsec] = 0;
+			p->weapstate[Wsec] = WEAPON_READY;
 			return;
 		}
 		starttorsoanim(pm, TORSO_ATTACK2);
 	}else
 		starttorsoanim(pm, TORSO_ATTACK);
-	p->secweapstate = WEAPON_FIRING;
+	p->weapstate[Wsec] = WEAPON_FIRING;
 
 	/* check for out of ammo */
-	if(!p->ammo[p->weapon]){
+	if(!p->ammo[p->weap[Wsec]]){
 		PM_AddEvent(pm, pml, EV_NOAMMO);
-		p->secweaptime += 500;
+		p->weaptime[Wsec] += 500;
 		return;
 	}
 	/* take an ammo away if not infinite */
-	if(p->ammo[p->secweap] != -1)
-		p->ammo[p->secweap]--;
+	if(p->ammo[p->weap[Wsec]] != -1)
+		p->ammo[p->weap[Wsec]]--;
 	/* fire weapon */
 	PM_AddEvent(pm, pml, EV_FIRESECWEAP);
 	
-	addTime = weaptimetab(p->secweap);
+	addTime = weaptimetab(p->weap[Wsec]);
 	if(p->powerups[PW_HASTE])
 		addTime /= 1.3;
-	p->secweaptime += addTime;
+	p->weaptime[Wsec] += addTime;
 }
 
 static void
@@ -1266,7 +1266,7 @@ PmoveSingle(pmove_t *pm)
 	if(!(pm->ps->pm_flags & PMF_RESPAWNED) && pm->ps->pm_type !=
 	   PM_INTERMISSION && pm->ps->pm_type != PM_NOCLIP
 	   && (pm->cmd.buttons & BUTTON_PRIATTACK) &&
-	   pm->ps->ammo[ pm->ps->weapon ])
+	   pm->ps->ammo[pm->ps->weap[Wpri]])
 		pm->ps->eFlags |= EF_FIRING;
 	else
 		pm->ps->eFlags &= ~EF_FIRING;

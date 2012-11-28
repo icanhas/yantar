@@ -364,8 +364,8 @@ CG_ItemPickup(int itemNum)
 		if(cg_autoswitch.integer && bg_itemlist[itemNum].giTag 
 		  != W1machinegun)
 		then{
-			cg.weaponSelectTime = cg.time;
-			cg.weaponSelect = bg_itemlist[itemNum].giTag;
+			cg.weapseltime[Wpri] = cg.time;
+			cg.weapsel[Wpri] = bg_itemlist[itemNum].giTag;
 		}
 		break;
 	case IT_SECWEAP:
@@ -373,8 +373,8 @@ CG_ItemPickup(int itemNum)
 		if(cg_autoswitch.integer && bg_itemlist[itemNum].giTag 
 		  != W1machinegun)
 		then{
-			cg.secweapseltime = cg.time;
-			cg.secweapsel = bg_itemlist[itemNum].giTag;
+			cg.weapseltime[Wsec] = cg.time;
+			cg.weapsel[Wsec] = bg_itemlist[itemNum].giTag;
 		}
 		break;
 	default:
@@ -885,24 +885,24 @@ CG_EntityEvent(centity_t *cent, Vec3 position)
 	case EV_MISSILE_HIT:
 		DEBUGNAME("EV_MISSILE_HIT");
 		ByteToDir(es->eventParm, dir);
-		CG_MissileHitPlayer(es->weapon, position, dir,
+		CG_MissileHitPlayer(es->weap[Wpri], position, dir,
 			es->otherEntityNum);
 		break;
 	case EV_MISSILE_MISS:
 		DEBUGNAME("EV_MISSILE_MISS");
 		ByteToDir(es->eventParm, dir);
-		CG_MissileHitWall(es->weapon, 0, position, dir,
+		CG_MissileHitWall(es->weap[Wpri], 0, position, dir,
 			IMPACTSOUND_DEFAULT);
 		break;
 	case EV_MISSILE_MISS_METAL:
 		DEBUGNAME("EV_MISSILE_MISS_METAL");
 		ByteToDir(es->eventParm, dir);
-		CG_MissileHitWall(es->weapon, 0, position, dir,
+		CG_MissileHitWall(es->weap[Wpri], 0, position, dir,
 			IMPACTSOUND_METAL);
 		break;
 	case EV_RAILTRAIL:
 		DEBUGNAME("EV_RAILTRAIL");
-		cent->currentState.weapon = W1railgun;
+		cent->currentState.weap[Wpri] = W1railgun;
 
 		if(es->clientNum == cg.snap->ps.clientNum &&
 		   !cg.renderingThirdPerson){
@@ -919,7 +919,7 @@ CG_EntityEvent(centity_t *cent, Vec3 position)
 		/* if the end was on a nomark surface, don't make an explosion */
 		if(es->eventParm != 255){
 			ByteToDir(es->eventParm, dir);
-			CG_MissileHitWall(es->weapon, es->clientNum, position,
+			CG_MissileHitWall(es->weap[Wpri], es->clientNum, position,
 				dir, IMPACTSOUND_DEFAULT);
 		}
 		break;
@@ -940,12 +940,12 @@ CG_EntityEvent(centity_t *cent, Vec3 position)
 		break;
 	case EV_GENERAL_SOUND:
 		DEBUGNAME("EV_GENERAL_SOUND");
-		if(cgs.gameSounds[ es->eventParm ])
-			trap_S_StartSound (NULL, es->number, CHAN_VOICE,
-				cgs.gameSounds[ es->eventParm ]);
+		if(cgs.gameSounds[es->eventParm])
+			trap_S_StartSound(NULL, es->number, CHAN_VOICE,
+				cgs.gameSounds[es->eventParm]);
 		else{
 			s = CG_ConfigString(CS_SOUNDS + es->eventParm);
-			trap_S_StartSound (NULL, es->number, CHAN_VOICE,
+			trap_S_StartSound(NULL, es->number, CHAN_VOICE,
 				CG_CustomSound(es->number,
 					s));
 		}
@@ -953,15 +953,14 @@ CG_EntityEvent(centity_t *cent, Vec3 position)
 	/* play from the player's head so it never diminishes */
 	case EV_GLOBAL_SOUND:	
 		DEBUGNAME("EV_GLOBAL_SOUND");
-		if(cgs.gameSounds[ es->eventParm ])
-			trap_S_StartSound (NULL, cg.snap->ps.clientNum,
+		if(cgs.gameSounds[es->eventParm])
+			trap_S_StartSound(NULL, cg.snap->ps.clientNum,
 				CHAN_AUTO,
-				cgs.gameSounds[ es->eventParm ]);
+				cgs.gameSounds[es->eventParm]);
 		else{
 			s = CG_ConfigString(CS_SOUNDS + es->eventParm);
-			trap_S_StartSound (NULL, cg.snap->ps.clientNum,
-				CHAN_AUTO, CG_CustomSound(es->number,
-					s));
+			trap_S_StartSound(NULL, cg.snap->ps.clientNum,
+				CHAN_AUTO, CG_CustomSound(es->number, s));
 		}
 		break;
 	/* play from the player's head so it never diminishes */

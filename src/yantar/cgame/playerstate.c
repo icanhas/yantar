@@ -149,12 +149,16 @@ CG_DamageFeedback(int yawByte, int pitchByte, int damage)
 void
 CG_Respawn(void)
 {
+	Weapslot i;
+
 	/* no error decay on player movement */
 	cg.thisFrameTeleport = qtrue;
-	/* display weapons available */
-	cg.weaponSelectTime = cg.time;
-	/* select the weapon the server says we are using */
-	cg.weaponSelect = cg.snap->ps.weapon;
+	for(i = 0; i < Wnumweapslots; ++i){
+		/* display weapons available */
+		cg.weapseltime[i] = cg.time;
+		/* select the weapon the server says we are using */
+		cg.weapsel[i] = cg.snap->ps.weap[i];
+	}
 }
 
 extern char *eventnames[];

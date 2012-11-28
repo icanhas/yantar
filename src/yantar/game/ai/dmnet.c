@@ -1319,7 +1319,7 @@ BotClearPath(bot_state_t *bs, bot_moveresult_t *moveresult)
 				moveresult->flags |= MOVERESULT_MOVEMENTWEAPON |
 						     MOVERESULT_MOVEMENTVIEW;
 				/* if holding the right weapon */
-				if(bs->cur_ps.weapon == moveresult->weapon)
+				if(bs->cur_ps.weap[Wpri] == moveresult->weapon)
 					/* if the bot is pretty close with its aim */
 					if(InFieldOfVision(bs->viewangles, 20,
 						   moveresult->ideal_viewangles)){
@@ -1382,11 +1382,10 @@ BotClearPath(bot_state_t *bs, bot_moveresult_t *moveresult)
 				moveresult->flags |= MOVERESULT_MOVEMENTWEAPON |
 						     MOVERESULT_MOVEMENTVIEW;
 				/* if holding the right weapon */
-				if(bs->cur_ps.weapon == moveresult->weapon)
+				if(bs->cur_ps.weap[Wpri] == moveresult->weapon)
 					/* if the bot is pretty close with its aim */
 					if(InFieldOfVision(bs->viewangles, 20,
 						   moveresult->ideal_viewangles)){
-						/*  */
 						BotAI_Trace(&bsptrace, bs->eye,
 							NULL, NULL, target,
 							bs->entitynum,
@@ -1472,10 +1471,8 @@ AINode_Seek_ActivateEntity(bot_state_t *bs)
 		if(bsptrace.fraction >= 1.0 || bsptrace.ent == goal->entitynum){
 			targetvisible = qtrue;
 			/* if holding the right weapon */
-			if(bs->cur_ps.weapon == bs->activatestack->weapon){
-				subv3(bs->activatestack->target,
-					bs->eye,
-					dir);
+			if(bs->cur_ps.weap[Wpri] == bs->activatestack->weapon){
+				subv3(bs->activatestack->target, bs->eye, dir);
 				v3toeuler(dir, ideal_viewangles);
 				/* if the bot is pretty close with its aim */
 				if(InFieldOfVision(bs->viewangles, 20,

@@ -123,12 +123,6 @@ typedef enum {
 } pmtype_t;
 
 typedef enum {
-	Wpri,
-	Wsec,
-	Wnumweapslots
-} Weapslot;
-
-typedef enum {
 	WEAPON_READY,
 	WEAPON_RAISING,
 	WEAPON_DROPPING,

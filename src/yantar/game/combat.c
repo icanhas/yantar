@@ -66,15 +66,15 @@ TossClientItems(gentity_t *self)
 	gentity_t *drop;
 
 	/* drop the weapon if not a gauntlet or machinegun */
-	weapon = self->s.weapon;
+	weapon = self->s.weap[Wpri];
 
 	/* make a special check to see if they are changing to a new
 	 * weapon that isn't the mg or gauntlet.  Without this, a client
 	 * can pick up a weapon, be killed, and not drop the weapon because
 	 * their weapon change hasn't completed yet and they are still holding the MG. */
 	if(weapon == W1machinegun || weapon == W1_GRAPPLING_HOOK){
-		if(self->client->ps.weaponstate == WEAPON_DROPPING)
-			weapon = self->client->pers.cmd.weapon;
+		if(self->client->ps.weapstate[Wpri] == WEAPON_DROPPING)
+			weapon = self->client->pers.cmd.weap[Wpri];
 		if(!(self->client->ps.stats[STAT_PRIWEAPS] & (1 << weapon)))
 			weapon = Wnone;
 	}
@@ -475,7 +475,7 @@ player_die(gentity_t *self, gentity_t *inflictor, gentity_t *attacker,
 
 	self->takedamage = qtrue;	/* can still be gibbed */
 
-	self->s.weapon = Wnone;
+	self->s.weap[Wpri] = Wnone;
 	self->s.powerups = 0;
 	self->r.contents = CONTENTS_CORPSE;
 
