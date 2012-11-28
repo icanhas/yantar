@@ -462,11 +462,12 @@ ClientEvents(gentity_t *ent, int oldEventSequence)
 			G_Damage (ent, NULL, NULL, NULL, NULL, damage, 0,
 				MOD_FALLING);
 			break;
-
 		case EV_FIRE_WEAPON:
-			FireWeapon(ent);
+			FireWeapon(ent, Wpri);
 			break;
-
+		case EV_FIRESECWEAP:
+			FireWeapon(ent, Wsec);
+			break;
 		case EV_USE_ITEM1:	/* teleporter */
 			/* drop flags in CTF */
 			item = NULL;

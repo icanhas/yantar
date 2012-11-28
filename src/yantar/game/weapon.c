@@ -725,7 +725,7 @@ CalcMuzzlePointOrigin(gentity_t *ent, Vec3 origin, Vec3 forward,
  * FireWeapon
  */
 void
-FireWeapon(gentity_t *ent)
+FireWeapon(gentity_t *ent, Weapslot slot)
 {
 	if(ent->client->ps.powerups[PW_QUAD])
 		s_quadFactor = g_quadfactor.value;
@@ -741,10 +741,10 @@ FireWeapon(gentity_t *ent)
 #endif
 
 	/* track shots taken for accuracy tracking.  Grapple is not a weapon and gauntet is just not tracked */
-	if(ent->s.weap[Wpri] != W1_GRAPPLING_HOOK && ent->s.weap[Wpri] !=
+	if(ent->s.weap[slot] != W1_GRAPPLING_HOOK && ent->s.weap[slot] !=
 	   W1melee){
 #ifdef MISSIONPACK
-		if(ent->s.weapon == W1nailgun)
+		if(ent->s.weap[slot] == W1nailgun)
 			ent->client->accuracy_shots += NUM_NAILSHOTS;
 		else
 			ent->client->accuracy_shots++;
@@ -761,7 +761,7 @@ FireWeapon(gentity_t *ent)
 		muzzle);
 
 	/* fire the specific weapon */
-	switch(ent->s.weap[Wpri]){
+	switch(ent->s.weap[slot]){
 	case W1melee:
 		Weapon_Gauntlet(ent);
 		break;

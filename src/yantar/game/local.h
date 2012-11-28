@@ -567,7 +567,7 @@ qbool	G_FilterPacket(char *from);
 /*
  * g_weapon.c
  */
-void	FireWeapon(gentity_t *ent);
+void	FireWeapon(gentity_t*, Weapslot);
 #ifdef MISSIONPACK
 void	G_StartKamikaze(gentity_t *ent);
 #endif
