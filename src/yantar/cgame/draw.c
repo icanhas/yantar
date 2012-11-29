@@ -1296,7 +1296,7 @@ CG_DrawLowerLeft(void)
 {
 	float y;
 
-	y = 480 - ICON_SIZE;
+	y = 420 - ICON_SIZE;
 
 	if(cgs.gametype >= GT_TEAM && cg_drawTeamOverlay.integer == 3)
 		y = CG_DrawTeamOverlay(y, qfalse, qfalse);
