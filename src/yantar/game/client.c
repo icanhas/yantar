@@ -51,21 +51,8 @@ SP_info_player_start(gentity_t *ent)
 void
 SP_info_player_intermission(gentity_t *ent)
 {
-
 }
 
-
-
-/*
- *
- * SelectSpawnPoint
- *
- */
-
-/*
- * SpotWouldTelefrag
- *
- */
 qbool
 SpotWouldTelefrag(gentity_t *spot)
 {
@@ -90,8 +77,6 @@ SpotWouldTelefrag(gentity_t *spot)
 }
 
 /*
- * SelectNearestDeathmatchSpawnPoint
- *
  * Find the spot that we DON'T want to use
  */
 #define MAX_SPAWN_POINTS 128
@@ -122,10 +107,7 @@ SelectNearestDeathmatchSpawnPoint(Vec3 from)
 	return nearestSpot;
 }
 
-
 /*
- * SelectRandomDeathmatchSpawnPoint
- *
  * go to a random point that doesn't telefrag
  */
 #define MAX_SPAWN_POINTS 128
@@ -164,8 +146,6 @@ SelectRandomDeathmatchSpawnPoint(qbool isbot)
 }
 
 /*
- * SelectRandomFurthestSpawnPoint
- *
  * Chooses a player start, deathmatch start, etc
  */
 gentity_t *
@@ -243,8 +223,6 @@ SelectRandomFurthestSpawnPoint(Vec3 avoidPoint, Vec3 origin, Vec3 angles,
 }
 
 /*
- * SelectSpawnPoint
- *
  * Chooses a player start, deathmatch start, etc
  */
 gentity_t *
@@ -282,8 +260,6 @@ SelectSpawnPoint(Vec3 avoidPoint, Vec3 origin, Vec3 angles, qbool isbot)
 }
 
 /*
- * SelectInitialSpawnPoint
- *
  * Try to find a spawn point marked 'initial', otherwise
  * use normal spawn selection.
  */
@@ -315,10 +291,6 @@ SelectInitialSpawnPoint(Vec3 origin, Vec3 angles, qbool isbot)
 	return spot;
 }
 
-/*
- * SelectSpectatorSpawnPoint
- *
- */
 gentity_t *
 SelectSpectatorSpawnPoint(Vec3 origin, Vec3 angles)
 {
@@ -331,14 +303,9 @@ SelectSpectatorSpawnPoint(Vec3 origin, Vec3 angles)
 }
 
 /*
- *
  * BODYQUE
- *
  */
 
-/*
- * InitBodyQue
- */
 void
 InitBodyQue(void)
 {
@@ -355,9 +322,7 @@ InitBodyQue(void)
 }
 
 /*
- * BodySink
- *
- * After sitting around for five seconds, fall into the ground and dissapear
+ * After sitting around for some seconds, fall into the ground and dissapear
  */
 void
 BodySink(gentity_t *ent)
@@ -373,8 +338,6 @@ BodySink(gentity_t *ent)
 }
 
 /*
- * CopyToBodyQue
- *
  * A player is respawning, so make an entity that looks
  * just like the existing corpse to leave behind.
  */
@@ -477,13 +440,6 @@ CopyToBodyQue(gentity_t *ent)
 	trap_LinkEntity (body);
 }
 
-/* ====================================================================== */
-
-
-/*
- * SetClientViewAngle
- *
- */
 void
 SetClientViewAngle(gentity_t *ent, Vec3 angle)
 {
@@ -502,9 +458,6 @@ SetClientViewAngle(gentity_t *ent, Vec3 angle)
 	copyv3 (ent->s.angles, ent->client->ps.viewangles);
 }
 
-/*
- * ClientRespawn
- */
 void
 ClientRespawn(gentity_t *ent)
 {
@@ -514,8 +467,6 @@ ClientRespawn(gentity_t *ent)
 }
 
 /*
- * TeamCount
- *
  * Returns number of players on a team
  */
 team_t
@@ -537,8 +488,6 @@ TeamCount(int ignoreClientNum, int team)
 }
 
 /*
- * TeamLeader
- *
  * Returns the client number of the team leader
  */
 int
@@ -557,11 +506,6 @@ TeamLeader(int team)
 	return -1;
 }
 
-
-/*
- * PickTeam
- *
- */
 team_t
 PickTeam(int ignoreClientNum)
 {
@@ -581,8 +525,6 @@ PickTeam(int ignoreClientNum)
 }
 
 /*
- * ForceClientSkin
- *
  * Forces a client's skin (for teamplay)
  */
 /*
@@ -598,9 +540,6 @@ PickTeam(int ignoreClientNum)
  * }
  */
 
-/*
- * ClientCheckName
- */
 static void
 ClientCleanName(const char *in, char *out, int outSize)
 {
@@ -647,10 +586,7 @@ ClientCleanName(const char *in, char *out, int outSize)
 		Q_strncpyz(out, "UnnamedPlayer", outSize);
 }
 
-
 /*
- * ClientUserInfoChanged
- *
  * Called from ClientConnect when the player first connects and
  * directly by the server system when the player updates a userinfo variable.
  *
@@ -845,10 +781,7 @@ ClientUserinfoChanged(int clientNum)
 	G_LogPrintf("ClientUserinfoChanged: %i %s\n", clientNum, s);
 }
 
-
 /*
- * ClientConnect
- *
  * Called when a player begins connecting to the server.
  * Called again for every map change or tournement restart.
  *
@@ -945,8 +878,6 @@ ClientConnect(int clientNum, qbool firstTime, qbool isBot)
 }
 
 /*
- * ClientBegin
- *
  * called when a client has finished connecting, and is ready
  * to be placed into the level.  This will happen every level load,
  * and on transition between teams, but doesn't happen on respawns
@@ -998,8 +929,6 @@ ClientBegin(int clientNum)
 }
 
 /*
- * ClientSpawn
- *
  * Called every time a client is placed fresh in the world:
  * after the first ClientBegin, and after each respawn
  * Initializes all non-persistant parts of playerState
@@ -1127,6 +1056,7 @@ ClientSpawn(gentity_t *ent)
 	client->ps.stats[STAT_PRIWEAPS] = (1<<W1machinegun);
 	client->ps.stats[STAT_PRIWEAPS] |= (1<<W1melee);
 	client->ps.stats[STAT_SECWEAPS] = (1<<W2rocketlauncher);
+	client->ps.stats[STAT_HOOKWEAPS] = (1<<W1_GRAPPLING_HOOK);
 	
 	if(g_gametype.integer == GT_TEAM)
 		client->ps.ammo[W1machinegun] = 50;
@@ -1165,9 +1095,11 @@ ClientSpawn(gentity_t *ent)
 			G_KillBox(ent);
 			/* force the base weapon up */
 			client->ps.weap[Wpri] = W1machinegun;
-			client->ps.weapstate[Wpri] = WEAPON_READY;
 			client->ps.weap[Wsec] = W2rocketlauncher;
+			client->ps.weap[Whookslot] = W1_GRAPPLING_HOOK;
+			client->ps.weapstate[Wpri] = WEAPON_READY;
 			client->ps.weapstate[Wsec] = WEAPON_READY;
+			client->ps.weapstate[Whookslot] = WEAPON_READY;
 			/* fire the targets of the spawn point */
 			G_UseTargets(spawnPoint, ent);
 			if(0){
@@ -1210,10 +1142,7 @@ ClientSpawn(gentity_t *ent)
 	BG_PlayerStateToEntityState(&client->ps, &ent->s, qtrue);
 }
 
-
 /*
- * ClientDisconnect
- *
  * Called when a player drops from the server.
  * Will not be called between levels.
  *

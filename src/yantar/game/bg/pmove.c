@@ -920,7 +920,7 @@ weaptimetab(Weapon wp)
 
 /* Generates weapon events and modifes the weapon counter */
 static void
-doweapevents(pmove_t *pm, pml_t *pml)
+dopriweapevents(pmove_t *pm, pml_t *pml)
 {
 	int addTime;
 	playerState_t *p;
@@ -1113,6 +1113,54 @@ dosecweapevents(pmove_t *pm, pml_t *pml)
 }
 
 static void
+dohookevents(pmove_t *pm, pml_t *pml)
+{
+	int addTime;
+	playerState_t *p;
+	
+	p = pm->ps;
+	if(p->pm_flags & PMF_RESPAWNED)
+		return;	/* don't allow hook until all buttons are up */
+	if(p->persistant[PERS_TEAM] == TEAM_SPECTATOR)
+		return;	/* ignore if spectator */
+	if(p->stats[STAT_HEALTH] <= 0){
+		/* player is dead */
+		p->weap[Whookslot] = Wnone;
+		return;
+	}
+
+	/* make hook function */
+	if(p->weaptime[Whookslot] > 0)
+		p->weaptime[Whookslot] -= pml->msec;
+
+	if(p->weaptime[Whookslot] > 0)
+		return;
+
+	/* check for fire */
+	if(!(pm->cmd.buttons & BUTTON_HOOKFIRE)){
+		p->weaptime[Whookslot] = 0;
+		p->weapstate[Whookslot] = WEAPON_READY;
+		return;
+	}
+	p->weapstate[Whookslot] = WEAPON_FIRING;
+	/* fire weapon */
+	PM_AddEvent(pm, pml, EV_FIREHOOK);
+	
+	addTime = weaptimetab(p->weap[Whookslot]);
+	if(p->powerups[PW_HASTE])
+		addTime /= 1.3;
+	p->weaptime[Whookslot] += addTime;
+}
+
+static ID_INLINE void
+doweapevents(pmove_t *pm, pml_t *pml)
+{
+	dopriweapevents(pm,  pml);
+	dosecweapevents(pm, pml);
+	dohookevents(pm, pml);
+}
+
+static void
 animate(pmove_t *pm, pml_t *pml)
 {
 	if(pm->cmd.buttons & BUTTON_GESTURE){
@@ -1266,17 +1314,28 @@ PmoveSingle(pmove_t *pm)
 
 	/* set the firing flag for continuous beam weapons */
 	if(!(pm->ps->pm_flags & PMF_RESPAWNED) && pm->ps->pm_type !=
-	   PM_INTERMISSION && pm->ps->pm_type != PM_NOCLIP
-	   && (pm->cmd.buttons & BUTTON_PRIATTACK) &&
-	   pm->ps->ammo[pm->ps->weap[Wpri]])
-	then
-		pm->ps->eFlags |= EF_FIRING;
-	else
-		pm->ps->eFlags &= ~EF_FIRING;
+	   PM_INTERMISSION && pm->ps->pm_type != PM_NOCLIP)
+	then{
+		if((pm->cmd.buttons & BUTTON_PRIATTACK)
+		  && pm->ps->ammo[pm->ps->weap[Wpri]])
+		then{
+			pm->ps->eFlags |= EF_FIRING;
+		}else if((pm->cmd.buttons & BUTTON_SECATTACK)
+		  && pm->ps->ammo[pm->ps->weap[Wsec]])
+		then{
+		   	pm->ps->eFlags |= EF_FIRING;
+		}else if((pm->cmd.buttons & BUTTON_HOOKFIRE)
+		  && pm->ps->ammo[pm->ps->weap[Whookslot]])
+		then{
+		   	pm->ps->eFlags |= EF_FIRING;
+		}else{
+			pm->ps->eFlags &= ~EF_FIRING;
+		}
+	}
 
 	/* clear the respawned flag if attack and use are cleared */
 	if(pm->ps->stats[STAT_HEALTH] > 0 &&
-	   !(pm->cmd.buttons & (BUTTON_PRIATTACK | BUTTON_USE_HOLDABLE)))
+	   !(pm->cmd.buttons & (BUTTON_PRIATTACK | BUTTON_SECATTACK | BUTTON_USE_HOLDABLE)))
 		pm->ps->pm_flags &= ~PMF_RESPAWNED;
 
 	/*
@@ -1370,7 +1429,6 @@ PmoveSingle(pmove_t *pm)
 
 	animate(pm, &pml);
 	doweapevents(pm, &pml);
-	dosecweapevents(pm, &pml);
 	dotorsoanim(pm, &pml);
 	dowaterevents(pm, &pml);
 	/* snap some parts of playerstate to save network bandwidth */

@@ -194,6 +194,7 @@ typedef enum {
 	STAT_PERSISTENT_POWERUP,
 	STAT_PRIWEAPS,	/* 16 bit fields, primary weapons */
 	STAT_SECWEAPS,	/* 16 bit fields, secondary weapons (e.g. rockets) */
+	STAT_HOOKWEAPS,	/* offhand hook has a stats slot as well, for uniformity */
 	STAT_SHIELD,
 	STAT_DEAD_YAW,		/* look this direction when dead (FIXME: get rid of?) */
 	STAT_CLIENTS_READY,	/* bit mask of clients wishing to exit the intermission (FIXME: configstring?) */
@@ -360,6 +361,7 @@ typedef enum {
 	EV_CHANGESECWEAP,	/* secondary weapon changes */
 	EV_FIRE_WEAPON,		/* firing primary weapon */
 	EV_FIRESECWEAP,		/* firing secondary weapon */
+	EV_FIREHOOK,			/* firing grappling hook */
 
 	EV_USE_ITEM0,
 	EV_USE_ITEM1,

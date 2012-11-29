@@ -762,6 +762,10 @@ CG_EntityEvent(centity_t *cent, Vec3 position)
 		DEBUGNAME("EV_FIRESECWEAP");
 		CG_FireWeapon(cent, Wsec);
 		break;
+	case EV_FIREHOOK:
+		DEBUGNAME("EV_FIREHOOK");
+		CG_FireWeapon(cent, Whookslot);
+		break;
 	case EV_USE_ITEM0:
 		DEBUGNAME("EV_USE_ITEM0");
 		CG_UseItem(cent);

@@ -11,8 +11,6 @@
 #include "local.h"
 
 /*
- * G_DamageFeedback
- *
  * Called just before a snapshot is sent to the given player.
  * Totals up all damage and generates both the player_state_t
  * damage values to that client for pain blends and kicks, and
@@ -71,11 +69,7 @@ P_DamageFeedback(gentity_t *player)
 	client->damage_knockback = 0;
 }
 
-
-
 /*
- * P_WorldEffects
- *
  * Check for lava / slime contents and drowning
  */
 void
@@ -125,7 +119,7 @@ P_WorldEffects(gentity_t *ent)
 
 	/*
 	 * check for sizzle damage (move to pmove?)
-	 *  */
+	 */
 	if(waterlevel &&
 	   (ent->watertype&(CONTENTS_LAVA|CONTENTS_SLIME)))
 		if(ent->health > 0
@@ -145,11 +139,6 @@ P_WorldEffects(gentity_t *ent)
 		}
 }
 
-
-
-/*
- * G_SetClientSound
- */
 void
 G_SetClientSound(gentity_t *ent)
 {
@@ -163,13 +152,6 @@ G_SetClientSound(gentity_t *ent)
 		ent->client->ps.loopSound = 0;
 }
 
-
-
-/* ============================================================== */
-
-/*
- * ClientImpacts
- */
 void
 ClientImpacts(gentity_t *ent, pmove_t *pm)
 {
@@ -198,8 +180,6 @@ ClientImpacts(gentity_t *ent, pmove_t *pm)
 }
 
 /*
- * G_TouchTriggers
- *
  * Find all trigger entities that ent's current position touches.
  * Spectators will only interact with teleporters.
  */
@@ -271,9 +251,6 @@ G_TouchTriggers(gentity_t *ent)
 	}
 }
 
-/*
- * SpectatorThink
- */
 void
 SpectatorThink(gentity_t *ent, usercmd_t *ucmd)
 {
@@ -312,11 +289,7 @@ SpectatorThink(gentity_t *ent, usercmd_t *ucmd)
 		Cmd_FollowCycle_f(ent, 1);
 }
 
-
-
 /*
- * ClientInactivityTimer
- *
  * Returns qfalse if the client is dropped
  */
 qbool
@@ -328,9 +301,12 @@ ClientInactivityTimer(gclient_t *client)
 		client->inactivityTime = level.time + 60 * 1000;
 		client->inactivityWarning = qfalse;
 	}else if(client->pers.cmd.forwardmove ||
-		 client->pers.cmd.rightmove ||
-		 client->pers.cmd.upmove ||
-		 (client->pers.cmd.buttons & BUTTON_PRIATTACK)){
+	  client->pers.cmd.rightmove ||
+	  client->pers.cmd.upmove ||
+	  (client->pers.cmd.buttons & BUTTON_PRIATTACK) ||
+	  (client->pers.cmd.buttons & BUTTON_SECATTACK) ||
+	  (client->pers.cmd.buttons & BUTTON_HOOKFIRE))
+	then{
 		client->inactivityTime = level.time + g_inactivity.integer *
 					 1000;
 		client->inactivityWarning = qfalse;
@@ -352,8 +328,6 @@ ClientInactivityTimer(gclient_t *client)
 }
 
 /*
- * ClientTimerActions
- *
  * Actions that happen once a second
  */
 void
@@ -400,9 +374,6 @@ ClientTimerActions(gentity_t *ent, int msec)
 	}
 }
 
-/*
- * ClientIntermissionThink
- */
 void
 ClientIntermissionThink(gclient_t *client)
 {
@@ -415,16 +386,13 @@ ClientIntermissionThink(gclient_t *client)
 	client->oldbuttons = client->buttons;
 	client->buttons = client->pers.cmd.buttons;
 	if(client->buttons &
-	   (BUTTON_PRIATTACK |
+	   (BUTTON_PRIATTACK | BUTTON_SECATTACK |
 	    BUTTON_USE_HOLDABLE) & (client->oldbuttons ^ client->buttons))
 		/* this used to be an ^1 but once a player says ready, it should stick */
 		client->readyToExit = 1;
 }
 
-
 /*
- * ClientEvents
- *
  * Events will be passed on to the clients for presentation,
  * but any server game effects are handled here
  */
@@ -467,6 +435,9 @@ ClientEvents(gentity_t *ent, int oldEventSequence)
 			break;
 		case EV_FIRESECWEAP:
 			FireWeapon(ent, Wsec);
+			break;
+		case EV_FIREHOOK:
+			FireWeapon(ent, Whookslot);
 			break;
 		case EV_USE_ITEM1:	/* teleporter */
 			/* drop flags in CTF */
@@ -514,9 +485,6 @@ ClientEvents(gentity_t *ent, int oldEventSequence)
 }
 
 #ifdef MISSIONPACK
-/*
- * StuckInOtherClient
- */
 static int
 StuckInOtherClient(gentity_t *ent)
 {
@@ -554,9 +522,6 @@ StuckInOtherClient(gentity_t *ent)
 
 void BotTestSolid(Vec3 origin);
 
-/*
- * SendPendingPredictableEvents
- */
 void
 SendPendingPredictableEvents(playerState_t *ps)
 {
@@ -591,8 +556,6 @@ SendPendingPredictableEvents(playerState_t *ps)
 }
 
 /*
- * ClientThink
- *
  * This will be called once for each client frame, which will
  * usually be a couple times for each server frame on fast clients.
  *
@@ -687,7 +650,7 @@ ClientThink_real(gentity_t *ent)
 
 	/* Let go of the hook if we aren't firing */
 	if(client->ps.weap[Wpri] == W1_GRAPPLING_HOOK &&
-	   client->hook && !(ucmd->buttons & BUTTON_PRIATTACK))
+	   client->hook && !(ucmd->buttons & BUTTON_HOOKFIRE))
 		Weapon_HookFree(client->hook);
 
 	/* set up for pmove */
@@ -809,7 +772,7 @@ ClientThink_real(gentity_t *ent)
 			}
 
 			/* pressing attack or use is the normal respawn method */
-			if(ucmd->buttons & (BUTTON_PRIATTACK | BUTTON_USE_HOLDABLE))
+			if(ucmd->buttons & (BUTTON_PRIATTACK | BUTTON_SECATTACK | BUTTON_USE_HOLDABLE))
 				ClientRespawn(ent);
 		}
 		return;
@@ -820,8 +783,6 @@ ClientThink_real(gentity_t *ent)
 }
 
 /*
- * ClientThink
- *
  * A new command has arrived from the client
  */
 void
@@ -832,14 +793,15 @@ ClientThink(int clientNum)
 	ent = g_entities + clientNum;
 	trap_GetUsercmd(clientNum, &ent->client->pers.cmd);
 
-	/* mark the time we got info, so we can display the
-	 * phone jack if they don't get any for a while */
+	/* 
+	 * mark the time we got info, so we can display the
+	 * phone jack if they don't get any for a while 
+	 */
 	ent->client->lastCmdTime = level.time;
 
 	if(!(ent->r.svFlags & SVF_BOT) && !g_synchronousClients.integer)
 		ClientThink_real(ent);
 }
-
 
 void
 G_RunClient(gentity_t *ent)
@@ -850,11 +812,6 @@ G_RunClient(gentity_t *ent)
 	ClientThink_real(ent);
 }
 
-
-/*
- * SpectatorClientEndFrame
- *
- */
 void
 SpectatorClientEndFrame(gentity_t *ent)
 {
@@ -902,8 +859,6 @@ SpectatorClientEndFrame(gentity_t *ent)
 }
 
 /*
- * ClientEndFrame
- *
  * Called at the end of each server frame for each connected client
  * A fast client will have multiple ClientThink for each ClientEdFrame,
  * while a slow client may have multiple ClientEndFrame between ClientThink.

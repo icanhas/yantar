@@ -1612,7 +1612,10 @@ CG_OutOfAmmoChange(Weapslot sl)
  * Weapon events
  */
 
-/* Caused by an EV_FIRE_WEAPON or EV_FIRESECWEAP event */
+/* 
+ * Caused by an EV_FIRE_WEAPON, EV_FIRESECWEAP, or 
+ * EV_FIREHOOK event 
+ */
 void
 CG_FireWeapon(centity_t *cent, Weapslot sl)
 {

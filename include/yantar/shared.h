@@ -1154,8 +1154,9 @@ enum {
 };
 
 typedef enum {
-	Wpri,
-	Wsec,
+	Wpri,		/* rail guns, etc. */
+	Wsec,		/* missile pods, etc. */
+	Whookslot,	/* offhand grappling hook */
 	Wnumweapslots
 } Weapslot;
 
@@ -1197,7 +1198,7 @@ typedef struct playerState_s {
 	int	torsoTimer;	/* don't change low priority animations until this runs out */
 	int	torsoAnim;	/* mask off ANIM_TOGGLEBIT */
 
-	int	movementDir;	/* a number 0 to 7 that represents the reletive angle */
+	int	movementDir;	/* a number 0 to 7 that represents the relative angle */
 	/* of movement to the view angle (axial and diagonals)
 	 * when at rest, the value will remain unchanged
 	 * used to twist the legs during strafing */
@@ -1252,25 +1253,26 @@ typedef struct playerState_s {
 enum buttonflags {
 	BUTTON_PRIATTACK	= (1<<0),	/* primary attack */
 	BUTTON_SECATTACK	= (1<<1),	/* secondary attack */
-	BUTTON_TALK			= (1<<2),	/* displays talk balloon and disables actions */
-	BUTTON_USE_HOLDABLE	= (1<<3),
-	BUTTON_GESTURE		= (1<<4),
-	BUTTON_WALKING		= (1<<5),	/* walking can't just be inferred from 
+	BUTTON_HOOKFIRE		= (1<<2),	/* grappling hook */
+	BUTTON_TALK			= (1<<3),	/* displays talk balloon and disables actions */
+	BUTTON_USE_HOLDABLE	= (1<<4),
+	BUTTON_GESTURE		= (1<<5),
+	BUTTON_WALKING		= (1<<6),	/* walking can't just be inferred from 
 								 * MOVE_RUN, because a key pressed late
 								 * in the frame will only generate a 
 								 * small move value for that frame
 								 * walking will use different 
 								 * animations and won't generate
 								 * footsteps */
-	BUTTON_AFFIRMATIVE	= (1<<6),
-	BUTTON_NEGATIVE		= (1<<7),
+	BUTTON_AFFIRMATIVE	= (1<<7),
+	BUTTON_NEGATIVE		= (1<<8),
 
-	BUTTON_GETFLAG		= (1<<8),
-	BUTTON_GUARDBASE	= (1<<9),
-	BUTTON_PATROL		= (1<<10),
-	BUTTON_FOLLOWME	= (1<<11),
+	BUTTON_GETFLAG		= (1<<9),
+	BUTTON_GUARDBASE	= (1<<10),
+	BUTTON_PATROL		= (1<<11),
+	BUTTON_FOLLOWME	= (1<<12),
 
-	BUTTON_ANY			= (1<<12),	/* any key whatsoever */
+	BUTTON_ANY			= (1<<13),	/* any key whatsoever */
 
 	MOVE_RUN			= 120,	/* if forwardmove or rightmove >= MOVE_RUN,
 								 * then BUTTON_WALKING should be set */
