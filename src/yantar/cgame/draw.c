@@ -1,12 +1,13 @@
+/* 
+ * Draw all of the graphical elements during active (after loading) 
+ * gameplay 
+ */
 /*
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License.
  */
-/*
- * cg_draw.c -- draw all of the graphical elements during
- * active (after loading) gameplay */
 
 #include "local.h"
 
@@ -193,13 +194,9 @@ CG_Text_Paint(float x, float y, float scale, Vec4 color, const char *text,
 		trap_R_SetColor(NULL);
 	}
 }
-
-
 #endif
 
 /*
- * CG_DrawField
- *
  * Draws large numbers for status bar and powerups
  */
 #ifndef MISSIONPACK
@@ -258,10 +255,6 @@ CG_DrawField(int x, int y, int width, int value)
 }
 #endif	/* MISSIONPACK */
 
-/*
- * CG_Draw3DModel
- *
- */
 void
 CG_Draw3DModel(float x, float y, float w, float h, qhandle_t model,
 	       qhandle_t skin, Vec3 origin,
@@ -304,8 +297,6 @@ CG_Draw3DModel(float x, float y, float w, float h, qhandle_t model,
 }
 
 /*
- * CG_DrawHead
- *
  * Used for both the status bar and the scoreboard
  */
 void
@@ -349,8 +340,6 @@ CG_DrawHead(float x, float y, float w, float h, int clientNum, Vec3 headAngles)
 }
 
 /*
- * CG_DrawFlagModel
- *
  * Used for both the status bar and the scoreboard
  */
 void
@@ -406,10 +395,6 @@ CG_DrawFlagModel(float x, float y, float w, float h, int team, qbool force2D)
 	}
 }
 
-/*
- * CG_DrawStatusBarHead
- *
- */
 #ifndef MISSIONPACK
 
 static void
@@ -470,10 +455,6 @@ CG_DrawStatusBarHead(float x)
 }
 #endif	/* MISSIONPACK */
 
-/*
- * CG_DrawStatusBarFlag
- *
- */
 #ifndef MISSIONPACK
 static void
 CG_DrawStatusBarFlag(float x, int team)
@@ -482,10 +463,6 @@ CG_DrawStatusBarFlag(float x, int team)
 }
 #endif	/* MISSIONPACK */
 
-/*
- * CG_DrawTeamBackground
- *
- */
 void
 CG_DrawTeamBackground(int x, int y, int w, int h, float alpha, int team)
 {
@@ -507,10 +484,6 @@ CG_DrawTeamBackground(int x, int y, int w, int h, float alpha, int team)
 	trap_R_SetColor(NULL);
 }
 
-/*
- * CG_DrawStatusBar
- *
- */
 #ifndef MISSIONPACK
 static void
 CG_DrawStatusBar(void)
@@ -546,10 +519,10 @@ CG_DrawStatusBar(void)
 	/* draw any 3D icons first, so the changes back to 2D are minimized */
 	if(cent->currentState.weap[Wpri] &&
 	   cg_weapons[cent->currentState.weap[Wpri]].ammoModel){
-		origin[0]	= 70;
-		origin[1]	= 0;
-		origin[2]	= 0;
-		angles[YAW]	= 90 + 20 * sin(cg.time / 1000.0);
+		origin[0] = 70;
+		origin[1] = 0;
+		origin[2] = 0;
+		angles[YAW] = 90 + 20 * sin(cg.time / 1000.0);
 		CG_Draw3DModel(CHAR_WIDTH*3 + TEXT_ICON_SPACE, 432, ICON_SIZE,
 			ICON_SIZE,
 			cg_weapons[cent->currentState.weap[Wpri]].ammoModel, 0,
@@ -584,14 +557,12 @@ CG_DrawStatusBar(void)
 	}
 	/*
 	 * ammo
-	 *  */
+	 */
 	if(cent->currentState.weap[Wpri]){
 		value = ps->ammo[cent->currentState.weap[Wpri]];
 		if(value > -1){
-			if((cg.predictedPlayerState.weapstate[Wpri] == WEAPON_FIRING
+			if(cg.predictedPlayerState.weapstate[Wpri] == WEAPON_FIRING
 			   && cg.predictedPlayerState.weaptime[Wpri] > 100)
-			   || (cg.predictedPlayerState.weapstate[Wsec] == WEAPON_FIRING
-			   && cg.predictedPlayerState.weaptime[Wsec] > 100))
 			then{
 				/* draw as dark grey when reloading */
 				color = 2;	/* dark grey */
@@ -603,7 +574,7 @@ CG_DrawStatusBar(void)
 			}
 			trap_R_SetColor(colors[color]);
 
-			CG_DrawField (0, 432, 3, value);
+			CG_DrawField (0, 384, 3, value);
 			trap_R_SetColor(NULL);
 
 			/* if we didn't draw a 3D icon, draw a 2D icon for ammo */
@@ -611,6 +582,37 @@ CG_DrawStatusBar(void)
 				qhandle_t icon;
 
 				icon = cg_weapons[cg.predictedPlayerState.weap[Wpri]].ammoIcon;
+				if(icon){
+					CG_DrawPic(CHAR_WIDTH*3 + TEXT_ICON_SPACE,
+						432, ICON_SIZE, ICON_SIZE, icon);
+				}
+			}
+		}
+	}
+	if(cent->currentState.weap[Wsec]){
+		value = ps->ammo[cent->currentState.weap[Wsec]];
+		if(value > -1){
+			if(cg.predictedPlayerState.weapstate[Wsec] == WEAPON_FIRING
+			   && cg.predictedPlayerState.weaptime[Wsec] > 100)
+			then{
+				/* draw as dark grey when reloading */
+				color = 2;	/* dark grey */
+			}else{
+				if(value >= 0)
+					color = 0;	/* green */
+				else
+					color = 1;	/* red */
+			}
+			trap_R_SetColor(colors[color]);
+
+			CG_DrawField(0, 432, 3, value);
+			trap_R_SetColor(NULL);
+
+			/* if we didn't draw a 3D icon, draw a 2D icon for ammo */
+			if(!cg_draw3dIcons.integer && cg_drawIcons.integer){
+				qhandle_t icon;
+
+				icon = cg_weapons[cg.predictedPlayerState.weap[Wsec]].ammoIcon;
 				if(icon){
 					CG_DrawPic(CHAR_WIDTH*3 + TEXT_ICON_SPACE,
 						432, ICON_SIZE, ICON_SIZE, icon);
@@ -638,10 +640,9 @@ CG_DrawStatusBar(void)
 	CG_ColorForHealth(hcolor);
 	trap_R_SetColor(hcolor);
 
-
 	/*
 	 * armor
-	 *  */
+	 */
 	value = ps->stats[STAT_SHIELD];
 	if(value > 0){
 		trap_R_SetColor(colors[0]);
@@ -658,15 +659,9 @@ CG_DrawStatusBar(void)
 #endif
 
 /*
- *
- * UPPER RIGHT CORNER
- *
+ * Upper right corner
  */
 
-/*
- * CG_DrawAttacker
- *
- */
 static float
 CG_DrawAttacker(float y)
 {
@@ -710,9 +705,6 @@ CG_DrawAttacker(float y)
 	return y + BIGCHAR_HEIGHT + 2;
 }
 
-/*
- * CG_DrawSnapshot
- */
 static float
 CG_DrawSnapshot(float y)
 {
@@ -728,9 +720,6 @@ CG_DrawSnapshot(float y)
 	return y + BIGCHAR_HEIGHT + 4;
 }
 
-/*
- * CG_DrawFPS
- */
 #define FPS_FRAMES 4
 static float
 CG_DrawFPS(float y)
@@ -770,9 +759,6 @@ CG_DrawFPS(float y)
 	return y + BIGCHAR_HEIGHT + 4;
 }
 
-/*
- * CG_DrawTimer
- */
 static float
 CG_DrawTimer(float y)
 {
@@ -796,11 +782,6 @@ CG_DrawTimer(float y)
 
 	return y + BIGCHAR_HEIGHT + 4;
 }
-
-
-/*
- * CG_DrawTeamOverlay
- */
 
 static float
 CG_DrawTeamOverlay(float y, qbool right, qbool upper)
@@ -977,11 +958,6 @@ CG_DrawTeamOverlay(float y, qbool right, qbool upper)
 /* #endif */
 }
 
-
-/*
- * CG_DrawUpperRight
- *
- */
 static void
 CG_DrawUpperRight(stereoFrame_t stereoFrame)
 {
@@ -1004,14 +980,10 @@ CG_DrawUpperRight(stereoFrame_t stereoFrame)
 }
 
 /*
- *
- * LOWER RIGHT CORNER
- *
+ * Lower right corner
  */
 
 /*
- * CG_DrawScores
- *
  * Draw the small two score display
  */
 #ifndef MISSIONPACK
@@ -1169,9 +1141,6 @@ CG_DrawScores(float y)
 }
 #endif	/* MISSIONPACK */
 
-/*
- * CG_DrawPowerups
- */
 #ifndef MISSIONPACK
 static float
 CG_DrawPowerups(float y)
@@ -1273,10 +1242,6 @@ CG_DrawPowerups(float y)
 }
 #endif	/* MISSIONPACK */
 
-/*
- * CG_DrawLowerRight
- *
- */
 #ifndef MISSIONPACK
 static void
 CG_DrawLowerRight(void)
@@ -1293,9 +1258,6 @@ CG_DrawLowerRight(void)
 }
 #endif	/* MISSIONPACK */
 
-/*
- * CG_DrawPickupItem
- */
 #ifndef MISSIONPACK
 static int
 CG_DrawPickupItem(int y)
@@ -1328,10 +1290,6 @@ CG_DrawPickupItem(int y)
 }
 #endif	/* MISSIONPACK */
 
-/*
- * CG_DrawLowerLeft
- *
- */
 #ifndef MISSIONPACK
 static void
 CG_DrawLowerLeft(void)
@@ -1348,12 +1306,6 @@ CG_DrawLowerLeft(void)
 }
 #endif	/* MISSIONPACK */
 
-
-/* =========================================================================================== */
-
-/*
- * CG_DrawTeamInfo
- */
 #ifndef MISSIONPACK
 static void
 CG_DrawTeamInfo(void)
@@ -1418,9 +1370,6 @@ CG_DrawTeamInfo(void)
 }
 #endif	/* MISSIONPACK */
 
-/*
- * CG_DrawHoldableItem
- */
 #ifndef MISSIONPACK
 static void
 CG_DrawHoldableItem(void)
@@ -1438,10 +1387,6 @@ CG_DrawHoldableItem(void)
 }
 #endif	/* !MISSIONPACK */
 
-
-/*
- * CG_DrawReward
- */
 static void
 CG_DrawReward(void)
 {
@@ -1509,29 +1454,24 @@ CG_DrawReward(void)
 	trap_R_SetColor(NULL);
 }
 
-
 /*
- *
- * LAGOMETER
- *
+ * Lagometer
  */
 
 #define LAG_SAMPLES 128
 
-
-typedef struct {
+typedef struct lagometer_t lagometer_t;
+struct lagometer_t {
 	int	frameSamples[LAG_SAMPLES];
 	int	frameCount;
 	int	snapshotFlags[LAG_SAMPLES];
 	int	snapshotSamples[LAG_SAMPLES];
 	int	snapshotCount;
-} lagometer_t;
+};
 
 lagometer_t lagometer;
 
 /*
- * CG_AddLagometerFrameInfo
- *
  * Adds the current interpolate / extrapolate bar for this frame
  */
 void
@@ -1546,8 +1486,6 @@ CG_AddLagometerFrameInfo(void)
 }
 
 /*
- * CG_AddLagometerSnapshotInfo
- *
  * Each time a snapshot is received, log its ping time and
  * the number of snapshots that were dropped before it.
  *
@@ -1573,8 +1511,6 @@ CG_AddLagometerSnapshotInfo(snapshot_t *snap)
 }
 
 /*
- * CG_DrawDisconnect
- *
  * Should we draw something differnet for long lag vs no packets?
  */
 static void
@@ -1608,13 +1544,9 @@ CG_DrawDisconnect(void)
 	CG_DrawPic(x, y, 48, 48, trap_R_RegisterShader(P2dart "/net.tga"));
 }
 
-
 #define MAX_LAGOMETER_PING	900
 #define MAX_LAGOMETER_RANGE	300
 
-/*
- * CG_DrawLagometer
- */
 static void
 CG_DrawLagometer(void)
 {
@@ -1631,7 +1563,7 @@ CG_DrawLagometer(void)
 
 	/*
 	 * draw the graph
-	 *  */
+	 */
 #ifdef MISSIONPACK
 	x	= 640 - 48;
 	y	= 480 - 144;
@@ -1736,18 +1668,11 @@ CG_DrawLagometer(void)
 	CG_DrawDisconnect();
 }
 
-
-
 /*
- *
- * CENTER PRINTING
- *
+ * Centre printing
  */
 
-
 /*
- * CG_CenterPrint
- *
  * Called for important messages that should stay in the center of the screen
  * for a few moments
  */
@@ -1772,10 +1697,6 @@ CG_CenterPrint(const char *str, int y, int charWidth)
 	}
 }
 
-
-/*
- * CG_DrawCenterString
- */
 static void
 CG_DrawCenterString(void)
 {
@@ -1838,18 +1759,10 @@ CG_DrawCenterString(void)
 	trap_R_SetColor(NULL);
 }
 
-
-
 /*
- *
- * CROSSHAIR
- *
+ * Crosshair
  */
 
-
-/*
- * CG_DrawCrosshair
- */
 static void
 CG_DrawCrosshair(void)
 {
@@ -1901,9 +1814,6 @@ CG_DrawCrosshair(void)
 		w, h, 0, 0, 1, 1, hShader);
 }
 
-/*
- * CG_DrawCrosshair3D
- */
 static void
 CG_DrawCrosshair3D(void)
 {
@@ -1973,11 +1883,6 @@ CG_DrawCrosshair3D(void)
 	trap_R_AddRefEntityToScene(&ent);
 }
 
-
-
-/*
- * CG_ScanForCrosshairEntity
- */
 static void
 CG_ScanForCrosshairEntity(void)
 {
@@ -2008,10 +1913,6 @@ CG_ScanForCrosshairEntity(void)
 	cg.crosshairClientTime	= cg.time;
 }
 
-
-/*
- * CG_DrawCrosshairNames
- */
 static void
 CG_DrawCrosshairNames(void)
 {
@@ -2049,12 +1950,6 @@ CG_DrawCrosshairNames(void)
 	trap_R_SetColor(NULL);
 }
 
-
-/* ============================================================================== */
-
-/*
- * CG_DrawSpectator
- */
 static void
 CG_DrawSpectator(void)
 {
@@ -2067,9 +1962,6 @@ CG_DrawSpectator(void)
 			1.0F);
 }
 
-/*
- * CG_DrawVote
- */
 static void
 CG_DrawVote(void)
 {
@@ -2102,9 +1994,6 @@ CG_DrawVote(void)
 #endif
 }
 
-/*
- * CG_DrawTeamVote
- */
 static void
 CG_DrawTeamVote(void)
 {
@@ -2137,7 +2026,6 @@ CG_DrawTeamVote(void)
 			cgs.teamVoteNo[cs_offset]);
 	CG_DrawSmallString(0, 90, s, 1.0F);
 }
-
 
 static qbool
 CG_DrawScoreboard(void)
@@ -2200,9 +2088,6 @@ CG_DrawScoreboard(void)
 #endif
 }
 
-/*
- * CG_DrawIntermission
- */
 static void
 CG_DrawIntermission(void)
 {
@@ -2222,9 +2107,6 @@ CG_DrawIntermission(void)
 	cg.scoreBoardShowing = CG_DrawScoreboard();
 }
 
-/*
- * CG_DrawFollow
- */
 static qbool
 CG_DrawFollow(void)
 {
@@ -2253,11 +2135,6 @@ CG_DrawFollow(void)
 	return qtrue;
 }
 
-
-
-/*
- * CG_DrawAmmoWarning
- */
 static void
 CG_DrawAmmoWarning(void)
 {
@@ -2278,11 +2155,7 @@ CG_DrawAmmoWarning(void)
 	CG_DrawBigString(320 - w / 2, 64, s, 1.0F);
 }
 
-
 #ifdef MISSIONPACK
-/*
- * CG_DrawProxWarning
- */
 static void
 CG_DrawProxWarning(void)
 {
@@ -2320,10 +2193,6 @@ CG_DrawProxWarning(void)
 }
 #endif
 
-
-/*
- * CG_DrawWarmup
- */
 static void
 CG_DrawWarmup(void)
 {
@@ -2473,11 +2342,7 @@ CG_DrawWarmup(void)
 #endif
 }
 
-/* ================================================================================== */
 #ifdef MISSIONPACK
-/*
- * CG_DrawTimedMenus
- */
 void
 CG_DrawTimedMenus(void)
 {
@@ -2491,9 +2356,7 @@ CG_DrawTimedMenus(void)
 	}
 }
 #endif
-/*
- * CG_Draw2D
- */
+
 static void
 CG_Draw2D(stereoFrame_t stereoFrame)
 {
@@ -2587,7 +2450,6 @@ CG_Draw2D(stereoFrame_t stereoFrame)
 		CG_DrawCenterString();
 }
 
-
 static void
 CG_DrawTourneyScoreboard(void)
 {
@@ -2598,8 +2460,6 @@ CG_DrawTourneyScoreboard(void)
 }
 
 /*
- * CG_DrawActive
- *
  * Perform all drawing needed to completely fill the screen
  */
 void
