@@ -218,12 +218,13 @@ Cmd_Give_f(gentity_t *ent)
 			return;
 	}
 
-	/* FIXME: secondary */
 	if(give_all || Q_stricmp(name, "weapons") == 0){
 		ent->client->ps.stats[STAT_PRIWEAPS] =
 			(1<<Wnumweaps) 
-			- 1 - (1<<W1_GRAPPLING_HOOK) 
-			- (1<<Wnone);
+			- 1 - (1<<Wnone);
+		ent->client->ps.stats[STAT_SECWEAPS] =
+			(1<<Wnumweaps) 
+			- 1 - (1<<W1_GRAPPLING_HOOK) - (1<<Wnone);
 		if(!give_all)
 			return;
 	}
@@ -265,7 +266,7 @@ Cmd_Give_f(gentity_t *ent)
 
 	/* spawn a specific item right on the player */
 	if(!give_all){
-		it = BG_FindItem (name);
+		it = BG_FindItem(name);
 		if(!it)
 			return;
 

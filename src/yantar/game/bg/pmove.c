@@ -1269,6 +1269,7 @@ PmoveSingle(pmove_t *pm)
 	   PM_INTERMISSION && pm->ps->pm_type != PM_NOCLIP
 	   && (pm->cmd.buttons & BUTTON_PRIATTACK) &&
 	   pm->ps->ammo[pm->ps->weap[Wpri]])
+	then
 		pm->ps->eFlags |= EF_FIRING;
 	else
 		pm->ps->eFlags &= ~EF_FIRING;
