@@ -24,7 +24,6 @@
 #include <stdlib.h>
 #include <math.h>
 #include "../../ref-trin/local.h"
-#include "../../client/client.h"
 #include "../local.h"
 #include "icon.h"
 
