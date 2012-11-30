@@ -277,8 +277,6 @@ typedef struct {
 } serverInfo_t;
 
 struct clientStatic_t {
-	qbool cddialog;	/* bring up the cd needed dialog next frame */
-
 	/* when the server clears the hunk, all of these must be restarted */
 	qbool		rendererStarted;
 	qbool		soundStarted;

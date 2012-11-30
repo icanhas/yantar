@@ -773,7 +773,7 @@ Cvar_WriteVariables(fileHandle_t f)
 	cvar_t *var;
 
 	for(var = cvar_vars; var != nil; var = var->next){
-		if((var->name == nil) || Q_stricmp(var->name, "cl_cdkey") == 0)
+		if(var->name == nil)
 			continue;
 
 		if(!(var->flags & CVAR_ARCHIVE)){

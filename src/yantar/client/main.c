@@ -141,17 +141,6 @@ void CL_ShowIP_f(void);
 void CL_ServerStatus_f(void);
 void CL_ServerStatusResponse(netadr_t from, msg_t *msg);
 
-/*
- * CL_CDDialog
- *
- * Called by Com_Errorf when a cd is needed
- */
-void
-CL_CDDialog(void)
-{
-	cls.cddialog = qtrue;	/* start it next frame */
-}
-
 #ifdef USE_MUMBLE
 static
 void
@@ -1524,7 +1513,7 @@ CL_RequestMotd(void)
 }
 
 /*
- * CL_RequestAuthorization
+ * N.B.: CD keys are long gone, but this function is kept as a curiosity
  *
  * Authorization server protocol
  * -----------------------------
@@ -1585,7 +1574,8 @@ CL_RequestAuthorization(void)
 	}
 	if(cls.authorizeServer.type == NA_BAD)
 		return;
-
+		
+#if 0
 	/* only grab the alphanumeric values from the cdkey, to avoid any dashes or spaces */
 	j	= 0;
 	l	= strlen(cl_cdkey);
@@ -1600,6 +1590,7 @@ CL_RequestAuthorization(void)
 			j++;
 		}
 	nums[j] = 0;
+#endif
 
 	fs = Cvar_Get ("cl_anonymous", "0", CVAR_INIT|CVAR_SYSTEMINFO);
 
@@ -2882,11 +2873,7 @@ CL_Frame(int msec)
 	}
 #endif
 
-	if(cls.cddialog){
-		/* bring up the cd error dialog if needed */
-		cls.cddialog = qfalse;
-		VM_Call(uivm, UI_SET_ACTIVE_MENU, UIMENU_NEED_CD);
-	}else if(clc.state == CA_DISCONNECTED &&
+	if(clc.state == CA_DISCONNECTED &&
 		 !(Key_GetCatcher( ) & KEYCATCH_UI)
 		 && !com_sv_running->integer && uivm){
 		/* if disconnected, bring up the menu */
@@ -4482,67 +4469,4 @@ void
 CL_ShowIP_f(void)
 {
 	Sys_ShowIP();
-}
-
-/*
- * CL_CDKeyValidate
- */
-qbool
-CL_CDKeyValidate(const char *key, const char *checksum)
-{
-#ifdef STANDALONE
-	return qtrue;
-#else
-	char	ch;
-	byte	sum;
-	char	chs[3];
-	int	i, len;
-
-	len = strlen(key);
-	if(len != CDKEY_LEN)
-		return qfalse;
-
-	if(checksum && strlen(checksum) != CDCHKSUM_LEN)
-		return qfalse;
-
-	sum = 0;
-	/* for loop gets rid of conditional assignment warning */
-	for(i = 0; i < len; i++){
-		ch = *key++;
-		if(ch>='a' && ch<='z')
-			ch -= 32;
-		switch(ch){
-		case '2':
-		case '3':
-		case '7':
-		case 'A':
-		case 'B':
-		case 'C':
-		case 'D':
-		case 'G':
-		case 'H':
-		case 'J':
-		case 'L':
-		case 'P':
-		case 'R':
-		case 'S':
-		case 'T':
-		case 'W':
-			sum += ch;
-			continue;
-		default:
-			return qfalse;
-		}
-	}
-
-	sprintf(chs, "%02x", sum);
-
-	if(checksum && !Q_stricmp(chs, checksum))
-		return qtrue;
-
-	if(!checksum)
-		return qtrue;
-
-	return qfalse;
-#endif
 }

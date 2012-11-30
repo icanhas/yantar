@@ -586,10 +586,6 @@ void Field_CompleteCommand(char *cmd,
  * MISC
  */
 
-/* centralizing the declarations for cl_cdkey
- * https://zerowing.idsoftware.com/bugzilla/show_bug.cgi?id=470 */
-extern char cl_cdkey[34];
-
 /* returned by Sys_GetProcessorFeatures */
 typedef enum {
 	CF_RDTSC		= 1 << 0,
@@ -783,8 +779,6 @@ void CL_MapLoading(void);
 * things like godmode, noclip, etc, are commands directed to the server,
 * so when they are typed in at the console, they will need to be forwarded. */
 void CL_ForwardCommandToServer(const char *string);
-/* bring up the "need a cd to play" dialog */
-void CL_CDDialog(void);
 /* dump all memory on an error */
 void CL_FlushMemory(void);
 /* shutdown client */
@@ -822,7 +816,6 @@ int SV_SendQueuedPackets(void);
  * UI interface
  */
 qbool UI_GameCommand(void);
-qbool UI_usesUniqueCDKey(void);
 
 
 /*

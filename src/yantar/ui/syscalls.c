@@ -474,18 +474,6 @@ trap_MemoryRemaining(void)
 	return syscall(UI_MEMORY_REMAINING);
 }
 
-void
-trap_GetCDKey(char *buf, int buflen)
-{
-	syscall(UI_GET_CDKEY, buf, buflen);
-}
-
-void
-trap_SetCDKey(char *buf)
-{
-	syscall(UI_SET_CDKEY, buf);
-}
-
 int
 trap_RealTime(qtime_t *qtime)
 {
@@ -540,10 +528,4 @@ trap_R_RemapShader(const char *oldShader, const char *newShader,
 		   const char *timeOffset)
 {
 	syscall(UI_R_REMAP_SHADER, oldShader, newShader, timeOffset);
-}
-
-qbool
-trap_VerifyCDKey(const char *key, const char *chksum)
-{
-	return syscall(UI_VERIFY_CDKEY, key, chksum);
 }

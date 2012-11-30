@@ -780,20 +780,6 @@ UI_IsFullscreen(void)
 	return qfalse;
 }
 
-static void
-NeedCDAction(qbool result)
-{
-	if(!result)
-		trap_Cmd_ExecuteText(EXEC_APPEND, "quit\n");
-}
-
-static void
-NeedCDKeyAction(qbool result)
-{
-	if(!result)
-		trap_Cmd_ExecuteText(EXEC_APPEND, "quit\n");
-}
-
 void
 UI_SetActiveMenu(uiMenuCommand_t menu)
 {
@@ -807,12 +793,6 @@ UI_SetActiveMenu(uiMenuCommand_t menu)
 		return;
 	case UIMENU_MAIN:
 		UI_MainMenu();
-		return;
-	case UIMENU_NEED_CD:
-		UI_ConfirmMenu("Insert the CD", 0, NeedCDAction);
-		return;
-	case UIMENU_BAD_CD_KEY:
-		UI_ConfirmMenu("Bad CD Key", 0, NeedCDKeyAction);
 		return;
 	case UIMENU_INGAME:
 		/*
@@ -979,7 +959,6 @@ UI_Cache_f(void)
 /* UI_LoadConfig_Cache();
  * UI_SaveConfigMenu_Cache(); */
 	UI_BotSelectMenu_Cache();
-	UI_CDKeyMenu_Cache();
 	UI_ModsMenu_Cache();
 
 }
@@ -1033,11 +1012,6 @@ UI_ConsoleCommand(int realTime)
 
 	if(Q_stricmp (cmd, "iamamonkey") == 0){
 		UI_SPUnlockMedals_f();
-		return qtrue;
-	}
-
-	if(Q_stricmp (cmd, "ui_cdkey") == 0){
-		UI_CDKeyMenu_f();
 		return qtrue;
 	}
 

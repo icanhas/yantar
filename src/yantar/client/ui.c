@@ -590,50 +590,6 @@ Key_GetBindingBuf(int keynum, char *buf, int buflen)
 }
 
 /*
- * CLUI_GetCDKey
- */
-static void
-CLUI_GetCDKey(char *buf, int buflen)
-{
-#ifndef STANDALONE
-	cvar_t *fs;
-	fs = Cvar_Get ("fs_game", "", CVAR_INIT|CVAR_SYSTEMINFO);
-	if(UI_usesUniqueCDKey() && fs && fs->string[0] != 0){
-		Q_Memcpy(buf, &cl_cdkey[16], 16);
-		buf[16] = 0;
-	}else{
-		Q_Memcpy(buf, cl_cdkey, 16);
-		buf[16] = 0;
-	}
-#else
-	*buf = 0;
-#endif
-}
-
-
-/*
- * CLUI_SetCDKey
- */
-#ifndef STANDALONE
-static void
-CLUI_SetCDKey(char *buf)
-{
-	cvar_t *fs;
-	fs = Cvar_Get ("fs_game", "", CVAR_INIT|CVAR_SYSTEMINFO);
-	if(UI_usesUniqueCDKey() && fs && fs->string[0] != 0){
-		Q_Memcpy(&cl_cdkey[16], buf, 16);
-		cl_cdkey[32] = 0;
-		/* set the flag so the fle will be written at the next opportunity */
-		cvar_modifiedFlags |= CVAR_ARCHIVE;
-	}else{
-		Q_Memcpy(cl_cdkey, buf, 16);
-		/* set the flag so the fle will be written at the next opportunity */
-		cvar_modifiedFlags |= CVAR_ARCHIVE;
-	}
-}
-#endif
-
-/*
  * GetConfigString
  */
 static int
@@ -938,16 +894,6 @@ CL_UISystemCalls(intptr_t *args)
 	case UI_MEMORY_REMAINING:
 		return Hunk_MemoryRemaining();
 
-	case UI_GET_CDKEY:
-		CLUI_GetCDKey(VMA(1), args[2]);
-		return 0;
-
-	case UI_SET_CDKEY:
-#ifndef STANDALONE
-		CLUI_SetCDKey(VMA(1));
-#endif
-		return 0;
-
 	case UI_R_REGISTERFONT:
 		re.RegisterFont(VMA(1), args[2], VMA(3));
 		return 0;
@@ -984,9 +930,6 @@ CL_UISystemCalls(intptr_t *args)
 	case UI_R_REMAP_SHADER:
 		re.RemapShader(VMA(1), VMA(2), VMA(3));
 		return 0;
-
-	case UI_VERIFY_CDKEY:
-		return CL_CDKeyValidate(VMA(1), VMA(2));
 
 	case TRAP_MEMSET:
 		Q_Memset(VMA(1), args[2], args[3]);
@@ -1075,16 +1018,6 @@ CL_InitUI(void)
 		VM_Call(uivm, UI_INIT,
 			(clc.state >= CA_AUTHORIZING && clc.state < CA_ACTIVE));
 }
-
-#ifndef STANDALONE
-qbool
-UI_usesUniqueCDKey(void)
-{
-	if(uivm == NULL)
-		return qfalse;
-	return VM_Call(uivm, UI_HASUNIQUECDKEY);
-}
-#endif
 
 /* UI_GameCommand: See if the current console command is claimed by the ui */
 qbool

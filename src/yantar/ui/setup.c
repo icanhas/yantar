@@ -26,11 +26,10 @@
 #define ID_CUSTOMIZECONTROLS	11
 #define ID_SYSTEMCONFIG		12
 #define ID_GAME			13
-/* #define ID_CDKEY				14 */
-#define ID_LOAD			15
-#define ID_SAVE			16
-#define ID_DEFAULTS		17
-#define ID_BACK			18
+#define ID_LOAD			14
+#define ID_SAVE			15
+#define ID_DEFAULTS		16
+#define ID_BACK			17
 
 
 typedef struct {
@@ -43,9 +42,8 @@ typedef struct {
 	menutext_s	setupcontrols;
 	menutext_s	setupsystem;
 	menutext_s	game;
-	menutext_s	cdkey;
-/* menutext_s		load;
- * menutext_s		save; */
+	// menutext_s		load;
+	// menutext_s		save;
 	menutext_s	defaults;
 	menubitmap_s	back;
 } setupMenuInfo_t;
@@ -107,11 +105,6 @@ UI_SetupMenu_Event(void *ptr, int event)
 	case ID_GAME:
 		UI_PreferencesMenu();
 		break;
-
-	/*case ID_CDKEY:
-	 *      UI_CDKeyMenu();
-	 *      break;
-	 */
 
 /*	case ID_LOAD: */
 /*		UI_LoadConfigMenu(); */
@@ -226,19 +219,6 @@ UI_SetupMenu_Init(void)
 	setupMenuInfo.game.color	= color_black;
 	setupMenuInfo.game.style	= UI_LEFT;
 
-	/*
-	 * y += Yspacing;
-	 * setupMenuInfo.cdkey.generic.type				= MTYPE_PTEXT;
-	 * setupMenuInfo.cdkey.generic.flags				= QMF_CENTER_JUSTIFY|QMF_PULSEIFFOCUS;
-	 * setupMenuInfo.cdkey.generic.x					= 320;
-	 * setupMenuInfo.cdkey.generic.y					= y;
-	 * setupMenuInfo.cdkey.generic.id					= ID_CDKEY;
-	 * setupMenuInfo.cdkey.generic.callback			= UI_SetupMenu_Event;
-	 * setupMenuInfo.cdkey.string						= "CD Key";
-	 * setupMenuInfo.cdkey.color						= color_red;
-	 * setupMenuInfo.cdkey.style						= UI_CENTER;
-	 */
-
 	if(!trap_Cvar_VariableValue("cl_paused")){
 #if 0
 		y += Yspacing;
@@ -300,7 +280,6 @@ UI_SetupMenu_Init(void)
 	Menu_AddItem(&setupMenuInfo.menu, &setupMenuInfo.setupcontrols);
 	Menu_AddItem(&setupMenuInfo.menu, &setupMenuInfo.setupsystem);
 	Menu_AddItem(&setupMenuInfo.menu, &setupMenuInfo.game);
-	/* Menu_AddItem( &setupMenuInfo.menu, &setupMenuInfo.cdkey ); */
 /* Menu_AddItem( &setupMenuInfo.menu, &setupMenuInfo.load );
  * Menu_AddItem( &setupMenuInfo.menu, &setupMenuInfo.save ); */
 	if(!trap_Cvar_VariableValue("cl_paused"))
