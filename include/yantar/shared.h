@@ -112,28 +112,6 @@ int Q_vsnprintf(char *str, size_t size, const char *format, va_list ap);
 
 #endif
 
-/* shared vm traps */
-enum {
-	TRAP_MEMSET = 100,
-	TRAP_MEMCPY,
-	TRAP_STRNCPY,
-	TRAP_SIN,
-	TRAP_COS,
-	TRAP_ATAN2,
-	TRAP_SQRT,
-	TRAP_FLOOR,
-	TRAP_CEIL,
-	TRAP_ACOS,
-	TRAP_ASIN,
-	TRAP_ATAN,
-	TRAP_MATRIXMULTIPLY,
-	TRAP_ANGLEVECTORS,
-	TRAP_PERPENDICULARVECTOR,
-
-	TRAP_TESTPRINTINT,
-	TRAP_TESTPRINTFLOAT
-};
-
 #include "paths.h"
 
 #include "platform.h"

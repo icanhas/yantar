@@ -8,7 +8,7 @@
 #ifndef __UI_PUBLIC_H__
 #define __UI_PUBLIC_H__
 
-#define UI_API_VERSION 6
+#define UI_API_VERSION 0
 
 typedef struct {
 	connstate_t	connState;
@@ -99,7 +99,26 @@ typedef enum {
 	UI_LAN_SERVERISVISIBLE,
 	UI_LAN_COMPARESERVERS,
 	/* 1.32 */
-	UI_FS_SEEK
+	UI_FS_SEEK,
+	
+	UI_MEMSET,
+	UI_MEMCPY,
+	UI_STRNCPY,
+	UI_SIN,
+	UI_COS,
+	UI_ATAN2,
+	UI_SQRT,
+	UI_FLOOR,
+	UI_CEIL,
+	UI_ACOS,
+	UI_ASIN,
+	UI_ATAN,
+	UI_MATRIXMULTIPLY,
+	UI_ANGLEVECTORS,
+	UI_PERPENDICULARVECTOR,
+
+	UI_TESTPRINTINT,
+	UI_TESTPRINTFLOAT
 } uiImport_t;
 
 typedef enum {

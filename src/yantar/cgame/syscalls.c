@@ -501,13 +501,13 @@ trap_SetUserCmdValue(int weap1, int weap2, float sensitivityscale)
 void
 testPrintInt(char *string, int i)
 {
-	syscall(TRAP_TESTPRINTINT, string, i);
+	syscall(CG_TESTPRINTINT, string, i);
 }
 
 void
 testPrintFloat(char *string, float f)
 {
-	syscall(TRAP_TESTPRINTFLOAT, string, PASSFLOAT(f));
+	syscall(CG_TESTPRINTFLOAT, string, PASSFLOAT(f));
 }
 
 int

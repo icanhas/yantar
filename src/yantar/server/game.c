@@ -828,41 +828,41 @@ SV_GameSystemCalls(intptr_t *args)
 		return botlib_export->ai.GeneticParentsAndChildSelection(args[1],
 			VMA(2), VMA(3), VMA(4), VMA(5));
 
-	case TRAP_MEMSET:
+	case G_MEMSET:
 		Q_Memset(VMA(1), args[2], args[3]);
 		return 0;
-	case TRAP_MEMCPY:
+	case G_MEMCPY:
 		Q_Memcpy(VMA(1), VMA(2), args[3]);
 		return 0;
-	case TRAP_STRNCPY:
+	case G_STRNCPY:
 		strncpy(VMA(1), VMA(2), args[3]);
 		return args[1];
-	case TRAP_SIN:
+	case G_SIN:
 		return FloatAsInt(sin(VMF(1)));
-	case TRAP_COS:
+	case G_COS:
 		return FloatAsInt(cos(VMF(1)));
-	case TRAP_ATAN2:
+	case G_ATAN2:
 		return FloatAsInt(atan2(VMF(1), VMF(2)));
-	case TRAP_SQRT:
+	case G_SQRT:
 		return FloatAsInt(sqrt(VMF(1)));
-	case TRAP_MATRIXMULTIPLY:
+	case G_MATRIXMULTIPLY:
 		MatrixMultiply(VMA(1), VMA(2), VMA(3));
 		return 0;
-	case TRAP_ANGLEVECTORS:
+	case G_ANGLEVECTORS:
 		anglev3s(VMA(1), VMA(2), VMA(3), VMA(4));
 		return 0;
-	case TRAP_PERPENDICULARVECTOR:
+	case G_PERPENDICULARVECTOR:
 		perpv3(VMA(1), VMA(2));
 		return 0;
-	case TRAP_FLOOR:
+	case G_FLOOR:
 		return FloatAsInt(floor(VMF(1)));
-	case TRAP_CEIL:
+	case G_CEIL:
 		return FloatAsInt(ceil(VMF(1)));
-	case TRAP_ACOS:
+	case G_ACOS:
 		return FloatAsInt(Q_acos(VMF(1)));
-	case TRAP_ASIN:
+	case G_ASIN:
 		return FloatAsInt(asin(VMF(1)));
-	case TRAP_ATAN:
+	case G_ATAN:
 		return FloatAsInt(atan(VMF(1)));
 	default:
 		Com_Errorf(ERR_DROP, "Bad game system trap: %ld",

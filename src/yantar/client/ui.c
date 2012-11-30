@@ -931,32 +931,32 @@ CL_UISystemCalls(intptr_t *args)
 		re.RemapShader(VMA(1), VMA(2), VMA(3));
 		return 0;
 
-	case TRAP_MEMSET:
+	case UI_MEMSET:
 		Q_Memset(VMA(1), args[2], args[3]);
 		return 0;
-	case TRAP_MEMCPY:
+	case UI_MEMCPY:
 		Q_Memcpy(VMA(1), VMA(2), args[3]);
 		return 0;
-	case TRAP_STRNCPY:
+	case UI_STRNCPY:
 		strncpy(VMA(1), VMA(2), args[3]);
 		return args[1];
-	case TRAP_SIN:
+	case UI_SIN:
 		return FloatAsInt(sin(VMF(1)));
-	case TRAP_COS:
+	case UI_COS:
 		return FloatAsInt(cos(VMF(1)));
-	case TRAP_ATAN2:
+	case UI_ATAN2:
 		return FloatAsInt(atan2(VMF(1), VMF(2)));
-	case TRAP_SQRT:
+	case UI_SQRT:
 		return FloatAsInt(sqrt(VMF(1)));
-	case TRAP_FLOOR:
+	case UI_FLOOR:
 		return FloatAsInt(floor(VMF(1)));
-	case TRAP_CEIL:
+	case UI_CEIL:
 		return FloatAsInt(ceil(VMF(1)));
-	case TRAP_ACOS:
+	case UI_ACOS:
 		return FloatAsInt(Q_acos(VMF(1)));
-	case TRAP_ASIN:
+	case UI_ASIN:
 		return FloatAsInt(asin(VMF(1)));
-	case TRAP_ATAN:
+	case UI_ATAN:
 		return FloatAsInt(atan(VMF(1)));
 	default:
 		Com_Errorf(ERR_DROP, "Bad UI system trap: %ld",

@@ -6,7 +6,7 @@
  * it under the terms of the GNU General Public License.
  */
 
-#define GAME_API_VERSION 8
+#define GAME_API_VERSION 0
 
 /* entity->svFlags
  * the server does not know how to interpret most of the values
@@ -212,6 +212,25 @@ typedef enum {
 
 	/* 1.32 */
 	G_FS_SEEK,
+	
+	G_MEMSET,
+	G_MEMCPY,
+	G_STRNCPY,
+	G_SIN,
+	G_COS,
+	G_ATAN2,
+	G_SQRT,
+	G_FLOOR,
+	G_CEIL,
+	G_ACOS,
+	G_ASIN,
+	G_ATAN,
+	G_MATRIXMULTIPLY,
+	G_ANGLEVECTORS,
+	G_PERPENDICULARVECTOR,
+
+	G_TESTPRINTINT,
+	G_TESTPRINTFLOAT,
 
 	BOTLIB_SETUP = 200,	/* ( void ); */
 	BOTLIB_SHUTDOWN,	/* ( void ); */

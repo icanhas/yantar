@@ -7,7 +7,7 @@
 #ifndef __TR_PUBLIC_H
 #define __TR_PUBLIC_H
 
-enum { REF_API_VERSION = 8 };
+enum { REF_API_VERSION = 0 };
 
 #define MAX_DLIGHTS	32	/* can't be increased, because bit flags are used on surfaces */
 #define ENTITYNUM_BITS	10
