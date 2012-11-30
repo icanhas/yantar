@@ -1250,7 +1250,7 @@ YOBJ = \
   $(O)/client/cmd.o \
   $(O)/client/common.o \
   $(O)/client/cvar.o \
-  $(O)/client/files.o \
+  $(O)/client/fs.o \
   $(O)/client/huffman.o \
   $(O)/client/md4.o \
   $(O)/client/md5.o \
@@ -1653,7 +1653,7 @@ YDOBJ = \
   $(O)/ded/cmd.o \
   $(O)/ded/common.o \
   $(O)/ded/cvar.o \
-  $(O)/ded/files.o \
+  $(O)/ded/fs.o \
   $(O)/ded/huffman.o \
   $(O)/ded/md4.o \
   $(O)/ded/net/chan.o \
@@ -1879,7 +1879,6 @@ UIOBJ_ = \
   $(O)/$(BASEGAME)/ui/bg/misc.o \
   $(O)/$(BASEGAME)/ui/addbots.o \
   $(O)/$(BASEGAME)/ui/atoms.o \
-  $(O)/$(BASEGAME)/ui/cdkey.o \
   $(O)/$(BASEGAME)/ui/cinematics.o \
   $(O)/$(BASEGAME)/ui/confirm.o \
   $(O)/$(BASEGAME)/ui/connect.o \
