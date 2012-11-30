@@ -11,9 +11,10 @@
 #include "unzip.h"
 
 /*
- * QUAKE3 FILESYSTEM
+ * The Virtual Filesystem
+ * FIXME: documentation is not code.
  *
- * All of Quake's data access is through a hierarchical file system, but the contents of
+ * All of Yantar's data access is through a hierarchical file system, but the contents of
  * the file system can be transparently merged from several sources.
  *
  * A "qpath" is a reference to game file data.  MAX_ZPATH is 256 characters, which must include
@@ -144,10 +145,13 @@
  * game directory passing and restarting
  */
 
-/* every time a new demo pk3 file is built, this checksum must be updated.
- * the easiest way to get it is to just run the game and see what it spits out */
+/* 
+ * every time a new demo pk3 file is built, this checksum must be updated.
+ * the easiest way to get it is to just run the game and see what it spits out 
+ */
 #define DEMO_PAK0_CHECKSUM 2985612116u
-static const unsigned int	pak_checksums[] = {
+static const unsigned int	pak_checksums[] = 
+{
 	1566731103u,
 	298122907u,
 	412165236u,
@@ -167,26 +171,36 @@ static const unsigned int	missionpak_checksums[] =
 	1438664554u
 };
 
-/* if this is defined, the executable positively won't work with any paks other
+/* 
+ * if this is defined, the executable positively won't work with any paks other
  * than the demo pak, even if productid is present.  This is only used for our
  * last demo release to prevent the mac and linux users from using the demo
  * executable with the production windows pak before the mac/linux products
  * hit the shelves a little later
  * NOW defined in build files
- * #define PRE_RELEASE_TADEMO */
+ */
+// #define PRE_RELEASE_TADEMO 
 
 #define MAX_ZPATH		256
 #define MAX_SEARCH_PATHS	4096
 #define MAX_FILEHASH_SIZE	1024
 
-typedef struct fileInPack_s {
+typedef struct fileInPack_t fileInPack_t;
+typedef struct pack_t pack_t;
+typedef struct directory_t directory_t;
+typedef struct searchpath_t searchpath_t;
+typedef union qfile_gut qfile_gut;
+typedef struct qfile_ut qfile_ut;
+typedef struct fileHandleData_t fileHandleData_t;
+
+struct fileInPack_t {
 	char			*name;	/* name of the file */
 	unsigned long		pos;	/* file info position in zip */
 	unsigned long		len;	/* uncompress file size */
-	struct  fileInPack_s	* next;	/* next file in the hash */
-} fileInPack_t;
+	fileInPack_t		*next;	/* next file in the hash */
+};
 
-typedef struct {
+struct pack_t {
 	char		pakPathname[MAX_OSPATH];	/* c:\quake3\baseq3 */
 	char		pakFilename[MAX_OSPATH];	/* c:\quake3\baseq3\pak0.pk3 */
 	char		pakBasename[MAX_OSPATH];	/* pak0 */
@@ -199,20 +213,40 @@ typedef struct {
 	int		hashSize;			/* hash table size (power of 2) */
 	fileInPack_t	* *hashTable;			/* hash table */
 	fileInPack_t	* buildBuffer;			/* buffer with the filenames etc. */
-} pack_t;
+};
 
-typedef struct {
+struct directory_t {
 	char	path[MAX_OSPATH];	/* c:\quake3 */
 	char	fullpath[MAX_OSPATH];	/* c:\quake3\baseq3 */
 	char	gamedir[MAX_OSPATH];	/* baseq3 */
-} directory_t;
+};
 
-typedef struct searchpath_s {
-	struct searchpath_s	*next;
+struct searchpath_t {
+	searchpath_t	*next;
+	pack_t		*pack;	/* only one of pack / dir will be non NULL */
+	directory_t	*dir;
+};
 
-	pack_t			*pack;	/* only one of pack / dir will be non NULL */
-	directory_t		*dir;
-} searchpath_t;
+union qfile_gut {
+	FILE	* o;
+	unzFile z;
+};
+
+struct qfile_ut {
+	qfile_gut	file;
+	qbool		unique;
+};
+
+struct fileHandleData_t {
+	qfile_ut	handleFiles;
+	qbool		handleSync;
+	int		baseOffset;
+	int		fileSize;
+	int		zipFilePos;
+	qbool		zipFile;
+	qbool		streamed;
+	char		name[MAX_ZPATH];
+};
 
 static char fs_gamedir[MAX_OSPATH];	/* this will be a single file name with no separators */
 static cvar_t	*fs_debug;
@@ -234,31 +268,9 @@ static int	fs_packFiles = 0;	/* total number of files in packs */
 
 static int	fs_checksumFeed;
 
-typedef union qfile_gus {
-	FILE	* o;
-	unzFile z;
-} qfile_gut;
-
-typedef struct qfile_us {
-	qfile_gut	file;
-	qbool		unique;
-} qfile_ut;
-
-typedef struct {
-	qfile_ut	handleFiles;
-	qbool		handleSync;
-	int		baseOffset;
-	int		fileSize;
-	int		zipFilePos;
-	qbool		zipFile;
-	qbool		streamed;
-	char		name[MAX_ZPATH];
-} fileHandleData_t;
-
 static fileHandleData_t fsh[MAX_FILE_HANDLES];
 
-/* TTimo - https://zerowing.idsoftware.com/bugzilla/show_bug.cgi?id=540
- * wether we did a reorder on the current search path when joining the server */
+/* whether we did a reorder on the current search path when joining the server */
 static qbool fs_reordered;
 
 /* never load anything from pk3 files that are not present at the server when pure */
@@ -277,7 +289,7 @@ char	lastValidBase[MAX_OSPATH];
 char	lastValidGame[MAX_OSPATH];
 
 #ifdef FS_MISSING
-FILE * missingFiles = NULL;
+FILE *missingFiles = nil;
 #endif
 
 /* C99 defines __func__ */
@@ -350,7 +362,7 @@ FS_HandleForFile(void)
 	return 0;
 }
 
-static FILE     *
+static FILE*
 FS_FileForHandle(fileHandle_t f)
 {
 	if(f < 1 || f > MAX_FILE_HANDLES)
@@ -1474,9 +1486,8 @@ FS_Seek(fileHandle_t f, long offset, int origin)
 	}
 }
 
-
 /*
- * CONVENIENCE FUNCTIONS FOR ENTIRE FILES
+ * Convenience functions for entire files
  */
 
 int
@@ -3508,9 +3519,8 @@ FS_ConditionalRestart(int checksumFeed, qbool disconnect)
 	return qfalse;
 }
 
-
 /*
- * Handle based file calls for virtual machines
+ * Handle-based file calls for virtual machines
  */
 
 int
