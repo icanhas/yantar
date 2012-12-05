@@ -1,8 +1,9 @@
 #!/bin/bash -e
 
 # This script retrieves and builds the libraries that yantar needs. You
-# need to have sudo, mingw, curl, autotools (unfortunately), and libtool
-# installed, or this script will fail.
+# need to have mingw, curl, autotools (unfortunately), and libtool
+# installed, or this script will fail. You also need to run this with root 
+# privileges.
 
 chain=
 procs=4
@@ -30,7 +31,7 @@ function mkzlib(){
 	curl -# http://zlib.net/zlib-1.2.7.tar.gz | gunzip | tar -x
 	(cd zlib-1.2.7
 	./configure --static
-	sudo make --silent -j$procs -fwin32/Makefile.gcc PREFIX=$chain- RC=$chain-windres \
+	make --silent -j$procs -fwin32/Makefile.gcc PREFIX=$chain- RC=$chain-windres \
 		BINARY_PATH=/usr/$chain/bin INCLUDE_PATH=/usr/$chain/include \
 		LIBRARY_PATH=/usr/$chain/lib install)
 }
@@ -41,7 +42,7 @@ function mklibogg(){
 	(cd libogg-1.3.0
 	./configure --prefix=/usr/$chain --host=$chain --target=$chain --enable-static \
 		--disable-shared >/dev/null
-	make --silent -j$procs && sudo make --silent install)
+	make --silent -j$procs && make --silent install)
 }
 
 function mklibvorbis(){
@@ -51,7 +52,7 @@ function mklibvorbis(){
 	./autogen.sh --prefix=/usr/$chain --host=$chain --target=$chain --enable-static \
 		--disable-shared >/dev/null
 	make --silent -j$procs
-	sudo make --silent install)
+	make --silent install)
 }
 
 function mklibfreetype(){
@@ -61,8 +62,8 @@ function mklibfreetype(){
 	./autogen.sh --prefix=/usr/$chain --host=$chain --target=$chain --enable-static \
 		--disable-shared >/dev/null
 	make -j$procs
-	sudo make --silent install &&
-	sudo ln -sf /usr/$chain/include/freetype2/freetype /usr/$chain/include/freetype)
+	make --silent install &&
+	ln -sf /usr/$chain/include/freetype2/freetype /usr/$chain/include/freetype)
 }
 
 function mklibsdl(){
@@ -72,7 +73,7 @@ function mklibsdl(){
 	./configure --prefix=/usr/$chain --host=$chain --target=$chain --enable-static \
 		--disable-shared --enable-render-d3d=no --enable-directx=no >/dev/null
 	make --silent -j$procs
-	sudo make --silent install)
+	make --silent install)
 }
 
 function mklibjpeg(){
@@ -82,7 +83,7 @@ function mklibjpeg(){
 	./configure --prefix=/usr/$chain --host=$chain --target=$chain --enable-static \
 		--disable-shared >/dev/null
 	make --silent -j$procs
-	sudo make --silent install)
+	make --silent install)
 }
 
 function mklibcurl(){
@@ -92,14 +93,14 @@ function mklibcurl(){
 	./configure --prefix=/usr/$chain --host=$chain --target=$chain --enable-static \
 		--disable-shared >/dev/null
 	make --silent -j$procs
-	sudo make --silent install)
+	make --silent install)
 }
 
 mkdir getlibs
 
 (cd getlibs
 determine &&
-sudo rm -rf /usr/$chain/lib/libvorbis* /usr/$chain/lib/libogg* /usr/$chain/lib/libfreetype* \
+rm -rf /usr/$chain/lib/libvorbis* /usr/$chain/lib/libogg* /usr/$chain/lib/libfreetype* \
 	/usr/$chain/lib/libz.* /usr/$chain/lib/libjpeg.* /usr/$chain/lib/libcurl.* \
 	/usr/$chain/lib/libSDL* /usr/$chain/include/SDL &&
 mklibsdl &&
@@ -111,4 +112,4 @@ mklibjpeg &&
 mklibcurl
 ) && echo && echo done && echo
 
-sudo rm -rf getlibs
+rm -rf getlibs
