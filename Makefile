@@ -441,8 +441,8 @@ ifeq ($(PLATFORM),mingw32)
   CLIENT_CFLAGS += $(SDL_CFLAGS)
   CLIENT_LDFLAGS += -mwindows
   # libmingw32 must be linked before libSDLmain
-  CLIENT_LIBS = -lmingw32 $(SDL_LIBS) -lgdi32 -lole32
-  RENDERER_LIBS = -lmingw32 $(SDL_LIBS) -lgdi32 -lole32 -lopengl32 -lfreetype
+  CLIENT_LIBS = -lmingw32 $(SDL_LIBS) -lgdi32 -lole32 -ldxguid
+  RENDERER_LIBS = -lmingw32 $(SDL_LIBS) -lgdi32 -lole32 -lopengl32 -lfreetype -ldxguid
   
   ifeq ($(USE_CURL),1)
     CLIENT_CFLAGS += -DCURL_STATICLIB

@@ -71,7 +71,7 @@ function mklibsdl(){
 	curl -# http://www.libsdl.org/release/SDL-1.2.15.tar.gz | gunzip | tar -x
 	(cd SDL-1.2.15
 	./configure --prefix=/usr/$chain --host=$chain --target=$chain --enable-static \
-		--disable-shared --enable-render-d3d=no --enable-directx=no >/dev/null
+		--disable-shared --enable-render-d3d=no >/dev/null
 	make --silent -j$procs
 	make --silent install)
 }
