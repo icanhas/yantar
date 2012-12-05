@@ -5,11 +5,8 @@
  * it under the terms of the GNU General Public License.
  */
 
-#ifdef USE_LOCAL_HEADERS
-#       include "SDL.h"
-#else
-#       include <SDL.h>
-#endif
+
+#include <SDL/SDL.h>
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>

@@ -6,11 +6,7 @@
  */
 /* extensions needed by the renderer not in sdl_glimp.c */
 
-#ifdef USE_LOCAL_HEADERS
-#       include "SDL.h"
-#else
-#       include <SDL.h>
-#endif
+#include <SDL/SDL.h>
 #include "local.h"
 
 /* GL_EXT_multi_draw_arrays */

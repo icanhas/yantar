@@ -17,13 +17,8 @@
 #include <errno.h>
 
 #ifndef DEDICATED
-#ifdef USE_LOCAL_HEADERS
-#       include "SDL.h"
-#       include "SDL_cpuinfo.h"
-#else
-#       include <SDL.h>
-#       include <SDL_cpuinfo.h>
-#endif
+#include <SDL/SDL.h>
+#include <SDL/SDL_cpuinfo.h>
 #endif
 
 #include "local.h"

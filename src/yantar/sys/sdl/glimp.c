@@ -5,20 +5,10 @@
  * it under the terms of the GNU General Public License.
  */
 
-#ifdef USE_LOCAL_HEADERS
-#       include "SDL.h"
-#else
-#       include <SDL.h>
-#endif
-
+#include <SDL/SDL.h>
 #ifdef SMP
-#       ifdef USE_LOCAL_HEADERS
-#               include "SDL_thread.h"
-#       else
-#               include <SDL_thread.h>
-#       endif
+#  include <SDL/SDL_thread.h>
 #endif
-
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
