@@ -91,7 +91,7 @@ function mklibcurl(){
 	curl -# http://curl.haxx.se/download/curl-7.28.1.tar.bz2 | bunzip2 | tar -x
 	(cd curl-7.28.1
 	./configure --prefix=/usr/$chain --host=$chain --target=$chain --enable-static \
-		--disable-shared >/dev/null
+		--disable-shared --enable-ldap=no --enable-ldaps=no >/dev/null
 	make --silent -j$procs
 	make --silent install)
 }
