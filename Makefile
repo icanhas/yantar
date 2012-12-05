@@ -292,7 +292,7 @@ ifneq (,$(findstring "$(PLATFORM)", "linux" "gnu_kfreebsd" "kfreebsd-gnu"))
   LIBS=-ldl -lm
 
   CLIENT_LIBS=$(SDL_LIBS)
-  RENDERER_LIBS = $(SDL_LIBS) -lGL
+  RENDERER_LIBS = $(SDL_LIBS) -lGL -lfreetype
 
   ifeq ($(USE_CURL),1)
     CLIENT_LIBS += -lcurl
