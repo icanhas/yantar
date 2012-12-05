@@ -130,11 +130,7 @@ USE_CURL=1
 endif
 
 ifndef USE_CURL_DLOPEN
-  ifeq ($(PLATFORM),mingw32)
-    USE_CURL_DLOPEN=0
-  else
-    USE_CURL_DLOPEN=1
-  endif
+  USE_CURL_DLOPEN=0
 endif
 
 ifndef USE_CODEC_VORBIS
@@ -218,24 +214,7 @@ INCLUDES=-Iinclude -Iinclude/yantar
 
 bin_path=$(shell which $(1) 2> /dev/null)
 
-# We won't need this if we only build the server
-ifneq ($(BUILD_CLIENT),0)
-  # set PKG_CONFIG_PATH to influence this, e.g.
-  # PKG_CONFIG_PATH=/opt/cross/i386-mingw32msvc/lib/pkgconfig
-  ifneq ($(call bin_path, pkg-config),)
-    CURL_CFLAGS=$(shell pkg-config --silence-errors --cflags libcurl)
-    CURL_LIBS=$(shell pkg-config --silence-errors --libs libcurl)
-    SDL_CFLAGS=$(shell pkg-config --silence-errors --cflags sdl|sed 's/-Dmain=SDL_main//')
-    SDL_LIBS=$(shell pkg-config --silence-errors --libs sdl)
-  endif
-  # Use sdl-config if all else fails
-  ifeq ($(SDL_CFLAGS),)
-    ifneq ($(call bin_path, sdl-config),)
-      SDL_CFLAGS=$(shell sdl-config --cflags)
-      SDL_LIBS=$(shell sdl-config --static-libs)
-    endif
-  endif
-endif
+SDL_LIBS = -lSDLmain -lSDL 
 
 #
 # setup and build (Linux)
@@ -316,9 +295,7 @@ ifneq (,$(findstring "$(PLATFORM)", "linux" "gnu_kfreebsd" "kfreebsd-gnu"))
   RENDERER_LIBS = $(SDL_LIBS) -lGL
 
   ifeq ($(USE_CURL),1)
-    ifneq ($(USE_CURL_DLOPEN),1)
-      CLIENT_LIBS += -lcurl
-    endif
+    CLIENT_LIBS += -lcurl
   endif
 
   ifeq ($(USE_CODEC_VORBIS),1)
@@ -461,24 +438,15 @@ ifeq ($(PLATFORM),mingw32)
   BINEXT=.exe
 
   LIBS= -lws2_32 -lwinmm -lpsapi
+  CLIENT_CFLAGS += $(SDL_CFLAGS)
   CLIENT_LDFLAGS += -mwindows
-  CLIENT_LIBS = -lgdi32 -lole32
-  RENDERER_LIBS = -lgdi32 -lole32 -lopengl32 -lfreetype
+  # libmingw32 must be linked before libSDLmain
+  CLIENT_LIBS = -lmingw32 $(SDL_LIBS) -lgdi32 -lole32
+  RENDERER_LIBS = -lmingw32 $(SDL_LIBS) -lgdi32 -lole32 -lopengl32 -lfreetype
   
   ifeq ($(USE_CURL),1)
-    CLIENT_CFLAGS += $(CURL_CFLAGS)
-    ifneq ($(USE_CURL_DLOPEN),1)
-      ifeq ($(USE_LOCAL_HEADERS),1)
-        CLIENT_CFLAGS += -DCURL_STATICLIB
-        ifeq ($(ARCH),amd64)
-          CLIENT_LIBS += $(LIBSDIR)/win64/libcurl.a
-        else
-          CLIENT_LIBS += $(LIBSDIR)/win32/libcurl.a
-        endif
-      else
-        CLIENT_LIBS += $(CURL_LIBS)
-      endif
-    endif
+    CLIENT_CFLAGS += -DCURL_STATICLIB
+    CLIENT_LIBS += -lcurl
   endif
 
   ifeq ($(USE_CODEC_VORBIS),1)
@@ -490,29 +458,6 @@ ifeq ($(PLATFORM),mingw32)
     BASE_CFLAGS += -m32
   else
     BASE_CFLAGS += -m64
-  endif
-
-  # libmingw32 must be linked before libSDLmain
-  CLIENT_LIBS += -lmingw32
-  RENDERER_LIBS += -lmingw32
-  
-  ifeq ($(USE_LOCAL_HEADERS),1)
-    CLIENT_CFLAGS += -I$(SDLHDIR)/include
-    ifeq ($(ARCH), x86)
-    CLIENT_LIBS += $(LIBSDIR)/win32/libSDLmain.a \
-                      $(LIBSDIR)/win32/libSDL.dll.a
-    RENDERER_LIBS += $(LIBSDIR)/win32/libSDLmain.a \
-                      $(LIBSDIR)/win32/libSDL.dll.a
-    else
-    CLIENT_LIBS += $(LIBSDIR)/win64/libSDLmain.a \
-                      $(LIBSDIR)/win64/libSDL64.dll.a
-    RENDERER_LIBS += $(LIBSDIR)/win64/libSDLmain.a \
-                      $(LIBSDIR)/win64/libSDL64.dll.a
-    endif
-  else
-    CLIENT_CFLAGS += $(SDL_CFLAGS)
-    CLIENT_LIBS += $(SDL_LIBS)
-    RENDERER_LIBS += $(SDL_LIBS)
   endif
 
   BUILD_CLIENT_SMP = 0
@@ -798,10 +743,7 @@ ifneq ($(BUILD_GAME_QVM),0)
 endif
 
 ifeq ($(USE_CURL),1)
-  CLIENT_CFLAGS += -DUSE_CURL -Iinclude/libcurl
-  ifeq ($(USE_CURL_DLOPEN),1)
-    CLIENT_CFLAGS += -DUSE_CURL_DLOPEN
-  endif
+  CLIENT_CFLAGS += -DUSE_CURL
 endif
 
 ifeq ($(USE_CODEC_VORBIS),1)
