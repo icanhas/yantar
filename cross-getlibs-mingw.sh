@@ -2,7 +2,7 @@
 
 # This script fetches, builds, and installs the prerequisite libraries
 # to cross-compile yantar using mingw.  You need to have mingw, curl,
-# autotools (unfortunately), and libtool installed, or this will fail. 
+# and libtool installed, or this will fail. 
 # Also, you need to run this with root privileges.
 
 chain=
@@ -49,7 +49,7 @@ function mklibvorbis(){
 	echo && echo mklibvorbis
 	curl -# http://downloads.xiph.org/releases/vorbis/libvorbis-1.3.3.tar.gz | gunzip | tar -x
 	(cd libvorbis-1.3.3
-	./autogen.sh --prefix=/usr/$chain --host=$chain --target=$chain --enable-static \
+	./configure --prefix=/usr/$chain --host=$chain --target=$chain --enable-static \
 		--disable-shared >/dev/null
 	make --silent -j$procs
 	make --silent install)
@@ -59,7 +59,7 @@ function mklibfreetype(){
 	echo && echo mklibfreetype
 	curl -# ftp://ftp.igh.cnrs.fr/pub/nongnu/freetype/freetype-2.4.10.tar.bz2 | bunzip2 | tar -x
 	(cd freetype-2.4.10
-	./autogen.sh --prefix=/usr/$chain --host=$chain --target=$chain --enable-static \
+	./configure --prefix=/usr/$chain --host=$chain --target=$chain --enable-static \
 		--disable-shared >/dev/null
 	make -j$procs
 	make --silent install &&
@@ -103,12 +103,12 @@ determine &&
 rm -rf /usr/$chain/lib/libvorbis* /usr/$chain/lib/libogg* /usr/$chain/lib/libfreetype* \
 	/usr/$chain/lib/libz.* /usr/$chain/lib/libjpeg.* /usr/$chain/lib/libcurl.* \
 	/usr/$chain/lib/libSDL* /usr/$chain/include/SDL &&
-mklibsdl &&
 mkzlib &&
 mklibogg &&
 mklibvorbis &&
 mklibfreetype &&
 mklibjpeg &&
+mklibsdl &&
 mklibcurl
 ) && echo && echo done && echo
 
