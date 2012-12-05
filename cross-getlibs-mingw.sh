@@ -1,9 +1,9 @@
 #!/bin/bash -e
 
-# This script retrieves and builds the libraries that yantar needs. You
-# need to have mingw, curl, autotools (unfortunately), and libtool
-# installed, or this script will fail. You also need to run this with root 
-# privileges.
+# This script fetches, builds, and installs the prerequisite libraries
+# to cross-compile yantar using mingw.  You need to have mingw, curl,
+# autotools (unfortunately), and libtool installed, or this will fail. 
+# Also, you need to run this with root privileges.
 
 chain=
 procs=4
