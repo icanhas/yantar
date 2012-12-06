@@ -779,7 +779,7 @@ typedef enum {
 /*
  * unicode (q_utf.c)
  */
-typedef uint rune_t;	/* a unicode code point */
+typedef uint Rune;	/* a unicode code point */
 
 enum {
 	Runemax		= 0x10ffff,	/* max legal code point as defined by Unicode 6.x */
@@ -788,33 +788,33 @@ enum {
 	Runeerror	= 0xfffd,		/* '�' represents a bad UTF sequence */
 };
 
-int		Q_runetochar(char*, rune_t*);
-int		Q_chartorune(rune_t*, char*);
+int		Q_runetochar(char*, Rune*);
+int		Q_chartorune(Rune*, char*);
 int		Q_runelen(ulong);
 int		Q_fullrune(char*, int);
 size_t	Q_utflen(char*);
 char*	Q_utfrune(char*, ulong);
 char*	Q_utfutf(char*, char*);
 
-rune_t*	Q_runestrcat(rune_t*, rune_t*);
-rune_t*	Q_runestrchr(rune_t*, rune_t);
-int		Q_runestrcmp(rune_t*, rune_t*);
-rune_t*	Q_runestrcpy(rune_t*, rune_t*);
-rune_t*	Q_runestrncpy(rune_t*, rune_t*, size_t);
-rune_t*	Q_runestrncat(rune_t*, rune_t*, size_t);
-int		Q_runestrncmp(rune_t*, rune_t*, size_t);
-size_t	Q_runestrlen(rune_t*);
-rune_t*	Q_runestrstr(rune_t*, rune_t*);
+Rune*	Q_runestrcat(Rune*, Rune*);
+Rune*	Q_runestrchr(Rune*, Rune);
+int		Q_runestrcmp(Rune*, Rune*);
+Rune*	Q_runestrcpy(Rune*, Rune*);
+Rune*	Q_runestrncpy(Rune*, Rune*, size_t);
+Rune*	Q_runestrncat(Rune*, Rune*, size_t);
+int		Q_runestrncmp(Rune*, Rune*, size_t);
+size_t	Q_runestrlen(Rune*);
+Rune*	Q_runestrstr(Rune*, Rune*);
 
-rune_t	Q_tolowerrune(rune_t);
-rune_t	Q_totitlerune(rune_t);
-rune_t	Q_toupperrune(rune_t);
-int		Q_isalpharune(rune_t);
-int		Q_isdigitrune(rune_t);
-int		Q_islowerrune(rune_t);
-int		Q_isspacerune(rune_t);
-int		Q_istitlerune(rune_t);
-int		Q_isupperrune(rune_t);
+Rune	Q_tolowerrune(Rune);
+Rune	Q_totitlerune(Rune);
+Rune	Q_toupperrune(Rune);
+int		Q_isalpharune(Rune);
+int		Q_isdigitrune(Rune);
+int		Q_islowerrune(Rune);
+int		Q_isspacerune(Rune);
+int		Q_istitlerune(Rune);
+int		Q_isupperrune(Rune);
 
 /*
  * strings

@@ -2059,7 +2059,7 @@ Com_Crash_f(void)
 
 /* just for Com_Testutf8_f */
 static void
-runeprops(rune_t r)
+runeprops(Rune r)
 {
 	Com_Printf("rune %#x properties:", r);
 	if(Q_isalpharune(r)) Com_Printf("isalpha ");
@@ -2075,8 +2075,8 @@ static void
 Com_Testutf8_f(void)
 {
 	char str[50] = "test тест δοκιμή próf 시험 テスト";
-	rune_t r;
-	rune_t rstr[29];
+	Rune r;
+	Rune rstr[29];
 	int n;
 	uint i;
 	

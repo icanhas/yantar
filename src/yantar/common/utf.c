@@ -37,7 +37,7 @@ enum {
  * alpha ranges -
  *	only covers ranges not in lower||upper
  */
-static rune_t	_alpha2[] =
+static Rune	_alpha2[] =
 {
 	0x00d8,	0x00f6,	/* Ø - ö */
 	0x00f8,	0x01f5,	/* ø - ǵ */
@@ -197,7 +197,7 @@ static rune_t	_alpha2[] =
  * alpha singlets -
  *	only covers ranges not in lower||upper
  */
-static rune_t	_alpha1[] =
+static Rune	_alpha1[] =
 {
 	0x00aa,	/* ª */
 	0x00b5,	/* µ */
@@ -236,7 +236,7 @@ static rune_t	_alpha1[] =
 /*
  * space ranges
  */
-static rune_t	_space2[] =
+static Rune	_space2[] =
 {
 	0x0009,	0x000a,	/* tab and newline */
 	0x0020,	0x0020,	/* space */
@@ -256,7 +256,7 @@ static rune_t	_space2[] =
  * lower case ranges
  *	3rd col is conversion excess 500
  */
-static rune_t	_toupper2[] =
+static Rune	_toupper2[] =
 {
 	0x0061,	0x007a, 468,	/* a-z A-Z */
 	0x00e0,	0x00f6, 468,	/* à-ö À-Ö */
@@ -299,7 +299,7 @@ static rune_t	_toupper2[] =
  * lower case singlets
  *	2nd col is conversion excess 500
  */
-static rune_t	_toupper1[] =
+static Rune	_toupper1[] =
 {
 	0x00ff, 621,	/* ÿ Ÿ */
 	0x0101, 499,	/* ā Ā */
@@ -643,7 +643,7 @@ static rune_t	_toupper1[] =
 	0x1ff3, 509,	/* ῳ ῼ */
 };
 
-static rune_t __isdigitr[] = {
+static Rune __isdigitr[] = {
 	0x0030, 0x0039,
 	0x0660, 0x0669,
 	0x06f0, 0x06f9,
@@ -675,7 +675,7 @@ static rune_t __isdigitr[] = {
  * upper case ranges
  *	3rd col is conversion excess 500
  */
-static rune_t	_tolower2[] =
+static Rune	_tolower2[] =
 {
 	0x0041,	0x005a, 532,	/* A-Z a-z */
 	0x00c0,	0x00d6, 532,	/* À-Ö à-ö */
@@ -719,7 +719,7 @@ static rune_t	_tolower2[] =
  * upper case singlets
  *	2nd col is conversion excess 500
  */
-static rune_t	_tolower1[] =
+static Rune	_tolower1[] =
 {
 	0x0100, 501,	/* Ā ā */
 	0x0102, 501,	/* Ă ă */
@@ -1060,7 +1060,7 @@ static rune_t	_tolower1[] =
  * title characters are those between
  * upper and lower case. ie DZ Dz dz
  */
-static rune_t	_totitle1[] =
+static Rune	_totitle1[] =
 {
 	0x01c4, 501,	/* Ǆ ǅ */
 	0x01c6, 499,	/* ǆ ǅ */
@@ -1078,9 +1078,9 @@ static rune_t	_totitle1[] =
  */
 
 int
-Q_runetochar(char *s, rune_t *rune)
+Q_runetochar(char *s, Rune *rune)
 {
-	rune_t c;
+	Rune c;
 	
 	c = *rune;
 	/* one char sequence (0000-007f => 00-7f) */
@@ -1114,10 +1114,10 @@ Q_runetochar(char *s, rune_t *rune)
 	return 4;	
 }
 
-int Q_chartorune(rune_t *rune, char *s)
+int Q_chartorune(Rune *rune, char *s)
 {
 	int c, c1, c2, c3;
-	rune_t r;
+	Rune r;
 	
 	c = *(byte*)s;
 	/* one char sequence (0000-007f => T1) */
@@ -1175,7 +1175,7 @@ bad:
 int
 Q_runelen(ulong c)
 {
-	rune_t r;
+	Rune r;
 	char s[10];
 	
 	r = c;
@@ -1204,7 +1204,7 @@ Q_utflen(char *s)
 {
 	int c;
 	long n;
-	rune_t r;
+	Rune r;
 	
 	n = 0;
 	for(;;){
@@ -1224,7 +1224,7 @@ char*
 Q_utfrune(char *s, ulong c)
 {
 	ulong c1;
-	rune_t r;
+	Rune r;
 	int n;
 	
 	if(c < Runesync)
@@ -1253,7 +1253,7 @@ Q_utfutf(char *s1, char *s2)
 {
 	char *p;
 	ulong f, n1, n2;
-	rune_t r;
+	Rune r;
 	
 	n1 = Q_chartorune(&r, s2);
 	f = r;
@@ -1271,17 +1271,17 @@ Q_utfutf(char *s1, char *s2)
  * rune str routines
  */
 
-rune_t*
-Q_runestrcat(rune_t *s1, rune_t *s2)
+Rune*
+Q_runestrcat(Rune *s1, Rune *s2)
 {
 	Q_runestrcpy(Q_runestrchr(s1, 0), s2);
 	return s1;
 }
 
-rune_t*
-Q_runestrchr(rune_t *s, rune_t c)
+Rune*
+Q_runestrchr(Rune *s, Rune c)
 {
-	rune_t c0, c1;
+	Rune c0, c1;
 	
 	c0 = c;
 	if(c == 0){
@@ -1296,9 +1296,9 @@ Q_runestrchr(rune_t *s, rune_t c)
 }
 
 int
-Q_runestrcmp(rune_t *s1, rune_t *s2)
+Q_runestrcmp(Rune *s1, Rune *s2)
 {
-	rune_t c1, c2;
+	Rune c1, c2;
 	
 	for(;;){
 		c1 = *s1++;
@@ -1313,10 +1313,10 @@ Q_runestrcmp(rune_t *s1, rune_t *s2)
 	}
 }
 
-rune_t*
-Q_runestrcpy(rune_t *dst, rune_t *src)
+Rune*
+Q_runestrcpy(Rune *dst, Rune *src)
 {
-	rune_t *odst;
+	Rune *odst;
 	
 	odst = dst;
 	while((*dst++ = *src++))
@@ -1324,11 +1324,11 @@ Q_runestrcpy(rune_t *dst, rune_t *src)
 	return odst;
 }
 
-rune_t*
-Q_runestrncpy(rune_t* dst, rune_t *src, size_t n)
+Rune*
+Q_runestrncpy(Rune* dst, Rune *src, size_t n)
 {
 	size_t i;
-	rune_t *odst;
+	Rune *odst;
 	
 	odst = dst;
 	for(i = 0; i < n; i++)
@@ -1341,9 +1341,9 @@ Q_runestrncpy(rune_t* dst, rune_t *src, size_t n)
 }
 
 int
-Q_runestrncmp(rune_t *s1, rune_t *s2, size_t n)
+Q_runestrncmp(Rune *s1, Rune *s2, size_t n)
 {
-	rune_t c1, c2;
+	Rune c1, c2;
 	
 	while(n > 0){
 		c1 = *s1++;
@@ -1361,17 +1361,17 @@ Q_runestrncmp(rune_t *s1, rune_t *s2, size_t n)
 }
 
 size_t
-Q_runestrlen(rune_t *s)
+Q_runestrlen(Rune *s)
 {
 	/* FIXME */
 	return (size_t)(Q_runestrchr(s, 0) - s);
 }
 
 /* return pointer to first occurrence of s2 in s1, or nil if none */
-rune_t*
-Q_runestrstr(rune_t *s1, rune_t *s2)
+Rune*
+Q_runestrstr(Rune *s1, Rune *s2)
 {
-	rune_t *p, *pa, *pb;
+	Rune *p, *pa, *pb;
 	ulong c0, c;
 	
 	c0 = *s2;
@@ -1395,11 +1395,11 @@ Q_runestrstr(rune_t *s1, rune_t *s2)
  * rune properties & conversion routines
  */
  
-static rune_t*
-rbsearch(rune_t ch, rune_t *t, int n, int ne)
+static Rune*
+rbsearch(Rune ch, Rune *t, int n, int ne)
 {
 	int m;
-	rune_t *p;
+	Rune *p;
 	
 	while(n > 1){
 		m = n/2;
@@ -1415,10 +1415,10 @@ rbsearch(rune_t ch, rune_t *t, int n, int ne)
 	return 0;
 }
 
-rune_t
-Q_tolowerrune(rune_t ch)
+Rune
+Q_tolowerrune(Rune ch)
 {
-	rune_t *p;
+	Rune *p;
 	
 	p = rbsearch(ch, _tolower2, ARRAY_LEN(_tolower2)/2, 3);
 	if(p && ch >= p[0] && ch <= p[1])
@@ -1429,10 +1429,10 @@ Q_tolowerrune(rune_t ch)
 	return ch;
 }
 
-rune_t
-Q_toupperrune(rune_t ch)
+Rune
+Q_toupperrune(Rune ch)
 {
-	rune_t *p;
+	Rune *p;
 	
 	p = rbsearch(ch, _toupper2, ARRAY_LEN(_toupper2)/3,  3);
 	if(p && ch >= p[0] && ch <= p[1])
@@ -1443,10 +1443,10 @@ Q_toupperrune(rune_t ch)
 	return ch;
 }
 
-rune_t
-Q_totitlerune(rune_t ch)
+Rune
+Q_totitlerune(Rune ch)
 {
-	rune_t *p;
+	Rune *p;
 	
 	p = rbsearch(ch, _totitle1, ARRAY_LEN(_totitle1)/3, 3);
 	if(p && ch == p[0])
@@ -1455,9 +1455,9 @@ Q_totitlerune(rune_t ch)
 }
 
 int
-Q_islowerrune(rune_t ch)
+Q_islowerrune(Rune ch)
 {
-	rune_t *p;
+	Rune *p;
 	
 	p = rbsearch(ch, _toupper2, ARRAY_LEN(_toupper2)/3, 3);
 	if(p && ch >= p[0] && ch <= p[1])
@@ -1470,9 +1470,9 @@ Q_islowerrune(rune_t ch)
 
 
 int
-Q_isupperrune(rune_t ch)
+Q_isupperrune(Rune ch)
 {
-	rune_t *p;
+	Rune *p;
 	
 	p = rbsearch(ch, _tolower2, ARRAY_LEN(_tolower2)/3, 3);
 	if(p && ch >= p[0] && ch <= p[1])
@@ -1484,9 +1484,9 @@ Q_isupperrune(rune_t ch)
 }
 
 int
-Q_isalpharune(rune_t ch)
+Q_isalpharune(Rune ch)
 {
-	rune_t *p;
+	Rune *p;
 	
 	if(Q_isupperrune(ch) || Q_islowerrune(ch))
 		return 1;
@@ -1500,9 +1500,9 @@ Q_isalpharune(rune_t ch)
 }
 
 int
-Q_isdigitrune(rune_t ch)
+Q_isdigitrune(Rune ch)
 {
-	rune_t *p;
+	Rune *p;
 	
 	p = rbsearch(ch, __isdigitr, ARRAY_LEN(__isdigitr)/2, 2);
 	if(p && ch >= p[0] && ch <= p[1])
@@ -1511,15 +1511,15 @@ Q_isdigitrune(rune_t ch)
 }
 
 int
-Q_istitlerune(rune_t ch)
+Q_istitlerune(Rune ch)
 {
 	return Q_isupperrune(ch) && Q_islowerrune(ch);
 }
 
 int
-Q_isspacerune(rune_t ch)
+Q_isspacerune(Rune ch)
 {
-	rune_t *p;
+	Rune *p;
 	
 	p = rbsearch(ch, _space2, ARRAY_LEN(_space2)/2, 2);
 	if(p && ch >= p[0] && ch <= p[1])
