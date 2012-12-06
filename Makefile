@@ -488,13 +488,11 @@ ifeq ($(PLATFORM),freebsd)
 
   CLIENT_LIBS =
 
-  CLIENT_LIBS += $(SDL_LIBS)
-  RENDERER_LIBS = $(SDL_LIBS) -lGL
+  CLIENT_LIBS += $(SDL_LIBS) -pthread -lvgl -lusbhid
+  RENDERER_LIBS = $(SDL_LIBS) -pthread -lGL -lvgl -lusbhid
 
   ifeq ($(USE_CURL),1)
-    ifeq ($(USE_CURL_DLOPEN),1)
-      CLIENT_LIBS += -lcurl
-    endif
+    CLIENT_LIBS += -lcurl
   endif
 
   ifeq ($(USE_CODEC_VORBIS),1)
