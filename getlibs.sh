@@ -30,7 +30,7 @@ rm -rf $prefix/lib/libvorbis* $prefix/lib/libogg* $prefix/lib/libfreetype* \
 echo && echo mkzlib
 curl -# http://zlib.net/zlib-1.2.7.tar.gz | gunzip | tar xf -
 (cd zlib-1.2.7
-./configure --static
+./configure --prefix=$prefix --static
 $make -s -j$procs $zcross \
 	BINARY_PATH=$prefix/bin INCLUDE_PATH=$prefix/include \
 	LIBRARY_PATH=$prefix/lib install) &&
@@ -79,7 +79,10 @@ echo && echo mklibcurl
 curl -# http://curl.haxx.se/download/curl-7.28.1.tar.bz2 | bunzip2 | tar xf -
 (cd curl-7.28.1
 ./configure --prefix=$prefix $cross --enable-static \
-	--disable-shared --enable-ldap=no --enable-ldaps=no >/dev/null
+	--disable-shared --disable-ldap --disable-ldaps \
+	--disable-pop3 --disable-telnet --disable-cookies \
+	--disable-imap --disable-manual \
+	--disable-smtp --without-ssl --without-libssh2 >/dev/null
 $make -s -j$procs
 $make -s install)
 
