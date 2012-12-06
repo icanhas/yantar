@@ -11,6 +11,10 @@ procs=4
 prefixes="i386-mingw32 i486-mingw32 i586-mingw32 i686-mingw32 \
 	i586-mingw32msvc i686-w64-mingw32 amd64-mingw32 \
 	x86_64-w64-mingw32 amd64-mingw32msvc"
+	
+if [ "X$make" = "X" ]; then
+	make="make"
+fi
 
 function determine(){
 	for try in $prefixes; do
@@ -31,7 +35,7 @@ function mkzlib(){
 	curl -# http://zlib.net/zlib-1.2.7.tar.gz | gunzip | tar -x
 	(cd zlib-1.2.7
 	./configure --static
-	make --silent -j$procs -fwin32/Makefile.gcc PREFIX=$chain- RC=$chain-windres \
+	$make --silent -j$procs -fwin32/Makefile.gcc PREFIX=$chain- RC=$chain-windres \
 		BINARY_PATH=/usr/$chain/bin INCLUDE_PATH=/usr/$chain/include \
 		LIBRARY_PATH=/usr/$chain/lib install)
 }
@@ -42,7 +46,7 @@ function mklibogg(){
 	(cd libogg-1.3.0
 	./configure --prefix=/usr/$chain --host=$chain --target=$chain --enable-static \
 		--disable-shared >/dev/null
-	make --silent -j$procs && make --silent install)
+	$make --silent -j$procs && $make --silent install)
 }
 
 function mklibvorbis(){
@@ -51,8 +55,8 @@ function mklibvorbis(){
 	(cd libvorbis-1.3.3
 	./configure --prefix=/usr/$chain --host=$chain --target=$chain --enable-static \
 		--disable-shared >/dev/null
-	make --silent -j$procs
-	make --silent install)
+	$make --silent -j$procs
+	$make --silent install)
 }
 
 function mklibfreetype(){
@@ -61,8 +65,8 @@ function mklibfreetype(){
 	(cd freetype-2.4.10
 	./configure --prefix=/usr/$chain --host=$chain --target=$chain --enable-static \
 		--disable-shared >/dev/null
-	make -j$procs
-	make --silent install &&
+	$make -j$procs
+	$make --silent install &&
 	ln -sf /usr/$chain/include/freetype2/freetype /usr/$chain/include/freetype)
 }
 
@@ -72,8 +76,8 @@ function mklibsdl(){
 	(cd SDL-1.2.15
 	./configure --prefix=/usr/$chain --host=$chain --target=$chain --enable-static \
 		--disable-shared --enable-render-d3d=no >/dev/null
-	make --silent -j$procs
-	make --silent install)
+	$make --silent -j$procs
+	$make --silent install)
 }
 
 function mklibjpeg(){
@@ -82,8 +86,8 @@ function mklibjpeg(){
 	(cd jpeg-8d
 	./configure --prefix=/usr/$chain --host=$chain --target=$chain --enable-static \
 		--disable-shared >/dev/null
-	make --silent -j$procs
-	make --silent install)
+	$make --silent -j$procs
+	$make --silent install)
 }
 
 function mklibcurl(){
@@ -92,8 +96,8 @@ function mklibcurl(){
 	(cd curl-7.28.1
 	./configure --prefix=/usr/$chain --host=$chain --target=$chain --enable-static \
 		--disable-shared --enable-ldap=no --enable-ldaps=no >/dev/null
-	make --silent -j$procs
-	make --silent install)
+	$make --silent -j$procs
+	$make --silent install)
 }
 
 mkdir getlibs
