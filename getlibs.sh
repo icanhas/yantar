@@ -1,8 +1,7 @@
 #!/bin/sh -e
 
-# This is only really meant for platforms without all of the needed libs
-# in their packages & ports systems (e.g.  OpenBSD, FreeBSD), or if
-# we're cross-compiling.
+# This is for platforms without all of the needed libs in their packages
+# & ports systems (e.g.  OpenBSD, FreeBSD), or if we're cross-compiling.
 
 if [ "X$procs" = "X" ]; then
 	procs=4
@@ -20,12 +19,12 @@ if [ ! "X$chain" = "X" ]; then
 	zcross="-fwin32/Makefile.gcc PREFIX=$chain- RC=$chain-windres"
 fi
 
-mkdir -p getlibs
-
-(cd getlibs
 rm -rf $prefix/lib/libvorbis* $prefix/lib/libogg* $prefix/lib/libfreetype* \
 	$prefix/lib/libz.* $prefix/lib/libjpeg.* $prefix/lib/libcurl.* \
 	$prefix/lib/libSDL* $prefix/include/SDL &&
+
+mkdir -p /tmp/getlibs
+(cd /tmp/getlibs
 
 echo && echo mkzlib
 curl -# http://zlib.net/zlib-1.2.7.tar.gz | gunzip | tar xf -
@@ -88,4 +87,4 @@ $make -s install)
 
 ) && echo && echo done && echo
 
-rm -rf getlibs
+rm -rf /tmp/getlibs
