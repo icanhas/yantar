@@ -32,7 +32,7 @@ function determine(){
 
 function mkzlib(){
 	echo && echo mkzlib
-	curl -# http://zlib.net/zlib-1.2.7.tar.gz | gunzip | tar -x
+	curl -# http://zlib.net/zlib-1.2.7.tar.gz | gunzip | tar xf -
 	(cd zlib-1.2.7
 	./configure --static
 	$make --silent -j$procs -fwin32/Makefile.gcc PREFIX=$chain- RC=$chain-windres \
@@ -42,7 +42,7 @@ function mkzlib(){
 
 function mklibogg(){
 	echo && echo mklibogg
-	curl -# http://downloads.xiph.org/releases/ogg/libogg-1.3.0.tar.gz | gunzip | tar -x
+	curl -# http://downloads.xiph.org/releases/ogg/libogg-1.3.0.tar.gz | gunzip | tar xf -
 	(cd libogg-1.3.0
 	./configure --prefix=/usr/$chain --host=$chain --target=$chain --enable-static \
 		--disable-shared >/dev/null
@@ -51,7 +51,7 @@ function mklibogg(){
 
 function mklibvorbis(){
 	echo && echo mklibvorbis
-	curl -# http://downloads.xiph.org/releases/vorbis/libvorbis-1.3.3.tar.gz | gunzip | tar -x
+	curl -# http://downloads.xiph.org/releases/vorbis/libvorbis-1.3.3.tar.gz | gunzip | tar xf -
 	(cd libvorbis-1.3.3
 	./configure --prefix=/usr/$chain --host=$chain --target=$chain --enable-static \
 		--disable-shared >/dev/null
@@ -61,7 +61,7 @@ function mklibvorbis(){
 
 function mklibfreetype(){
 	echo && echo mklibfreetype
-	curl -# ftp://ftp.igh.cnrs.fr/pub/nongnu/freetype/freetype-2.4.10.tar.bz2 | bunzip2 | tar -x
+	curl -# ftp://ftp.igh.cnrs.fr/pub/nongnu/freetype/freetype-2.4.10.tar.bz2 | bunzip2 | tar xf -
 	(cd freetype-2.4.10
 	./configure --prefix=/usr/$chain --host=$chain --target=$chain --enable-static \
 		--disable-shared >/dev/null
@@ -72,7 +72,7 @@ function mklibfreetype(){
 
 function mklibsdl(){
 	echo && echo mklibsdl
-	curl -# http://www.libsdl.org/release/SDL-1.2.15.tar.gz | gunzip | tar -x
+	curl -# http://www.libsdl.org/release/SDL-1.2.15.tar.gz | gunzip | tar xf -
 	(cd SDL-1.2.15
 	./configure --prefix=/usr/$chain --host=$chain --target=$chain --enable-static \
 		--disable-shared --enable-render-d3d=no >/dev/null
@@ -82,7 +82,7 @@ function mklibsdl(){
 
 function mklibjpeg(){
 	echo && echo mklibjpeg
-	curl -# http://ijg.org/files/jpegsrc.v8d.tar.gz | gunzip | tar -x
+	curl -# http://ijg.org/files/jpegsrc.v8d.tar.gz | gunzip | tar xf -
 	(cd jpeg-8d
 	./configure --prefix=/usr/$chain --host=$chain --target=$chain --enable-static \
 		--disable-shared >/dev/null
@@ -92,7 +92,7 @@ function mklibjpeg(){
 
 function mklibcurl(){
 	echo && echo mklibcurl
-	curl -# http://curl.haxx.se/download/curl-7.28.1.tar.bz2 | bunzip2 | tar -x
+	curl -# http://curl.haxx.se/download/curl-7.28.1.tar.bz2 | bunzip2 | tar xf -
 	(cd curl-7.28.1
 	./configure --prefix=/usr/$chain --host=$chain --target=$chain --enable-static \
 		--disable-shared --enable-ldap=no --enable-ldaps=no >/dev/null
