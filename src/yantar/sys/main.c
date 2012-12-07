@@ -333,13 +333,14 @@ Sys_ParseArgs(int argc, char **argv)
 	if(argc == 2){
 		if(!strcmp(argv[1], "--version") ||
 		   !strcmp(argv[1], "-v")){
-			const char * date = __DATE__;
+			const char *date = __DATE__;
 #ifdef DEDICATED
-			fprintf(stdout, Q3_VERSION " dedicated server (%s)\n",
+			printf(Q3_VERSION " dedicated server (%s)\n",
 				date);
 #else
-			fprintf(stdout, Q3_VERSION " client (%s)\n", date);
+			printf(Q3_VERSION " client (%s)\n", date);
 #endif
+			fflush(stdout);
 			Sys_Exit(0);
 		}
 	}
