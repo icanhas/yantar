@@ -363,7 +363,7 @@ Com_Parsecmdline(char *commandLine)
 
 /*
  * Check for "safe" on the command line, which will
- * skip loading of q3config.cfg
+ * skip loading of user.cfg
  */
 qbool
 Com_Insafemode(void)
@@ -1268,7 +1268,7 @@ Com_Initsmallzone(void)
 
 /*
  * N.B.: com_zoneMegs can only be set on the command line, and not in
- * q3config.cfg or Com_Startupvar, as they haven't been executed by this
+ * user.cfg or Com_Startupvar, as they haven't been executed by this
  * point.  It's a chicken and egg problem.  We need the memory manager
  * configured to handle those places where you would configure the memory
  * manager.
@@ -2139,7 +2139,7 @@ Com_Execconfig(void)
 	Cbuf_Execute();	/* Always execute after exec to prevent text buffer overflowing */
 
 	if(!Com_Insafemode()){
-		/* skip the q3config.cfg if "safe" is on the command line */
+		/* skip the user.cfg if "safe" is on the command line */
 		Cbuf_ExecuteText(EXEC_NOW, "exec " Q3CONFIG_CFG "\n");
 		Cbuf_Execute();
 	}

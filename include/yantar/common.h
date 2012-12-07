@@ -483,9 +483,9 @@ enum {
 };
 
 #ifdef DEDICATED
-# define Q3CONFIG_CFG	"q3config_server.cfg"
+# define Q3CONFIG_CFG	"server.cfg"
 #else
-# define Q3CONFIG_CFG	"q3config.cfg"
+# define Q3CONFIG_CFG	"user.cfg"
 #endif
 
 qbool FS_Initialized(void);

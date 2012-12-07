@@ -172,7 +172,7 @@ SV_Map_f(void)
 			Cvar_SetValue("g_gametype", GT_FFA);
 	}
 
-	/* save the map name here cause on a map restart we reload the q3config.cfg
+	/* save the map name here cause on a map restart we reload the user.cfg
 	 * and thus nuke the arguments of the map command */
 	Q_strncpyz(mapname, map, sizeof(mapname));
 

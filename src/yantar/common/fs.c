@@ -136,7 +136,7 @@
  *
  * Different version coexistance?
  *
- * When building a pak file, make sure a q3config.cfg isn't present in it,
+ * When building a pak file, make sure a user.cfg isn't present in it,
  * or configs will never get loaded from disk!
  *
  * todo:
@@ -3482,7 +3482,7 @@ FS_Restart(int checksumFeed)
 	}
 
 	if(Q_stricmp(fs_gamedirvar->string, lastValidGame))
-		/* skip the q3config.cfg if "safe" is on the command line */
+		/* skip the user.cfg if "safe" is on the command line */
 		if(!Com_Insafemode())
 			Cbuf_AddText ("exec " Q3CONFIG_CFG "\n");
 
