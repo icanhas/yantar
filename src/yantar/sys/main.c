@@ -15,19 +15,29 @@
 #include <string.h>
 #include <ctype.h>
 #include <errno.h>
-
 #ifndef DEDICATED
-#include <SDL/SDL.h>
-#include <SDL/SDL_cpuinfo.h>
+#  include <SDL/SDL.h>
+#  include <SDL/SDL_cpuinfo.h>
 #endif
-
 #include "local.h"
 #include "loadlib.h"
 #include "shared.h"
 #include "common.h"
 
-static char binaryPath[ MAX_OSPATH ] = { 0 };
-static char installPath[ MAX_OSPATH ] = { 0 };
+static char binaryPath[MAX_OSPATH] = { 0 };
+static char installPath[MAX_OSPATH] = { 0 };
+
+static int	q3ToAnsi[8] =
+{
+	30,	/* COLOR_BLACK */
+	31,	/* COLOR_RED */
+	32,	/* COLOR_GREEN */
+	33,	/* COLOR_YELLOW */
+	34,	/* COLOR_BLUE */
+	36,	/* COLOR_CYAN */
+	35,	/* COLOR_MAGENTA */
+	0	/* COLOR_WHITE */
+};
 
 void
 Sys_SetBinaryPath(const char *path)
@@ -35,7 +45,7 @@ Sys_SetBinaryPath(const char *path)
 	Q_strncpyz(binaryPath, path, sizeof(binaryPath));
 }
 
-char *
+char*
 Sys_BinaryPath(void)
 {
 	return binaryPath;
@@ -47,7 +57,7 @@ Sys_SetDefaultInstallPath(const char *path)
 	Q_strncpyz(installPath, path, sizeof(installPath));
 }
 
-char *
+char*
 Sys_DefaultInstallPath(void)
 {
 	if(*installPath)
@@ -56,7 +66,7 @@ Sys_DefaultInstallPath(void)
 		return Sys_Cwd();
 }
 
-char *
+char*
 Sys_DefaultAppPath(void)
 {
 	return Sys_BinaryPath();
@@ -131,19 +141,8 @@ Sys_Init(void)
 void
 Sys_AnsiColorPrint(const char *msg)
 {
-	static char buffer[ MAXPRINTMSG ];
+	static char buffer[MAXPRINTMSG];
 	int length = 0;
-	static int	q3ToAnsi[ 8 ] =
-	{
-		30,	/* COLOR_BLACK */
-		31,	/* COLOR_RED */
-		32,	/* COLOR_GREEN */
-		33,	/* COLOR_YELLOW */
-		34,	/* COLOR_BLUE */
-		36,	/* COLOR_CYAN */
-		35,	/* COLOR_MAGENTA */
-		0	/* COLOR_WHITE */
-	};
 
 	while(*msg){
 		if(Q_IsColorString(msg) || *msg == '\n'){
@@ -169,14 +168,14 @@ Sys_AnsiColorPrint(const char *msg)
 			if(length >= MAXPRINTMSG - 1)
 				break;
 
-			buffer[ length ] = *msg;
+			buffer[length] = *msg;
 			length++;
 			msg++;
 		}
 	}
 	/* Empty anything still left in the buffer */
 	if(length > 0){
-		buffer[ length ] = '\0';
+		buffer[length] = '\0';
 		fputs(buffer, stderr);
 	}
 }
@@ -194,28 +193,27 @@ Sys_Error(const char *error, ...)
 	va_list argptr;
 	char	string[1024];
 
-	va_start (argptr,error);
-	Q_vsnprintf (string, sizeof(string), error, argptr);
-	va_end (argptr);
+	va_start(argptr,error);
+	Q_vsnprintf(string, sizeof(string), error, argptr);
+	va_end(argptr);
 
 	Sys_ErrorDialog(string);
 	Sys_Exit(3);
 }
 
-#if 0
-static __attribute__ ((format (printf, 1, 2))) void
-Sys_Warn(char *warning, ...)
+/* FIXME */
+__attribute__ ((format (printf, 1, 2))) void
+Sys_Warn(const char *warning, ...)
 {
 	va_list argptr;
 	char	string[1024];
 
-	va_start (argptr,warning);
-	Q_vsnprintf (string, sizeof(string), warning, argptr);
-	va_end (argptr);
+	va_start(argptr, warning);
+	Q_vsnprintf(string, sizeof(string), warning, argptr);
+	va_end(argptr);
 
 	CON_Print(va("Warning: %s", string));
 }
-#endif
 
 /* returns -1 if not present */
 int
@@ -235,7 +233,6 @@ Sys_UnloadDll(void *dllHandle)
 		Com_Printf("Sys_UnloadDll(NULL)\n");
 		return;
 	}
-
 	Sys_UnloadLibrary(dllHandle);
 }
 
@@ -243,7 +240,6 @@ Sys_UnloadDll(void *dllHandle)
  * First try to load library name from system library path,
  * from executable path, then fs_basepath.
  */
-
 void *
 Sys_LoadDll(const char *name, qbool useSystemLib)
 {
@@ -273,13 +269,10 @@ Sys_LoadDll(const char *name, qbool useSystemLib)
 				basePath = ".";
 
 			if(FS_FilenameCompare(topDir, basePath)){
-				Com_Printf(
-					"Trying to load \"%s\" from \"%s\"...\n",
-					name,
-					basePath);
+				Com_Printf("Trying to load \"%s\" from \"%s\"...\n",
+					name, basePath);
 				Q_sprintf(libPath, sizeof(libPath), "%s%c%s",
-					basePath, PATH_SEP,
-					name);
+					basePath, PATH_SEP, name);
 				dllhandle = Sys_LoadLibrary(libPath);
 			}
 
@@ -394,7 +387,7 @@ main(int argc, char **argv)
 #       endif
 
 	/* Run time */
-	const SDL_version *ver = SDL_Linked_Version( );
+	const SDL_version *ver = SDL_Linked_Version();
 
 #define MINSDL_VERSION \
 	XSTRING(MINSDL_MAJOR) "." \
@@ -407,11 +400,9 @@ main(int argc, char **argv)
 			va(
 				"SDL version " MINSDL_VERSION
 				" or greater is required, "
-				"but only version %d.%d.%d was found. You may be able to obtain a more recent copy "
-				"from http://www.libsdl.org/.",
-				ver->major, ver->minor,
-				ver->patch), "SDL Library Too Old");
-
+				"but only version %d.%d.%d was found.",
+			ver->major, ver->minor,
+			ver->patch), "SDL library too old");
 		Sys_Exit(1);
 	}
 #endif
@@ -437,8 +428,8 @@ main(int argc, char **argv)
 	}
 
 	Com_Init(commandLine);
-	NET_Init( );
-	CON_Init( );
+	NET_Init();
+	CON_Init();
 
 	signal(SIGILL, Sys_SigHandler);
 	signal(SIGFPE, Sys_SigHandler);
@@ -447,8 +438,8 @@ main(int argc, char **argv)
 	signal(SIGINT, Sys_SigHandler);
 
 	for(;;){
-		IN_Frame( );
-		Com_Frame( );
+		IN_Frame();
+		Com_Frame();
 	}
 	return 0;
 }
