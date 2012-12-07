@@ -2092,8 +2092,8 @@ Com_Testutf8_f(void)
 	Com_Printf("%s\n", str);
 	rstr[0] = r;
 	rstr[1] = 'a'; rstr[2] = 's'; rstr[3] = 'd'; rstr[4] = 'f'; rstr[5] = r;
-	Com_Printf("rstr has runestrlen %u\n", Q_runestrlen(rstr));
-	Com_Printf("str has utflen %u\n", Q_utflen(str));
+	Com_Printf("rstr has runestrlen %lu\n", (ulong)Q_runestrlen(rstr));
+	Com_Printf("str has utflen %lu\n", (ulong)Q_utflen(str));
 	runeprops(r);
 	runeprops(Q_toupperrune(r));
 	runeprops(Q_tolowerrune(r));
