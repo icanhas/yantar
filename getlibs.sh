@@ -62,7 +62,9 @@ echo && echo mklibsdl
 curl -# http://www.libsdl.org/release/SDL-1.2.15.tar.gz | gunzip | tar xf -
 (cd SDL-1.2.15
 ./configure --prefix=$prefix $cross --enable-static \
-	--disable-shared --enable-render-d3d=no >/dev/null
+	--disable-shared --enable-dlopen --enable-loadso \
+	--enable-render-d3d=no --enable-sdl-dlopen \
+	>/dev/null
 $make -s -j$procs
 $make -s install) &&
 
