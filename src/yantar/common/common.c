@@ -2103,7 +2103,7 @@ Com_Testutf8_f(void)
 	runeprops(Q_toupperrune(r));
 	runeprops(Q_tolowerrune(r));
 	runeprops(Q_totitlerune(r));
-	r = 0x01C5; /* titlecase 'Dz' */
+	r = 0x01C5;	/* Titlecase 'Dz' */
 	runeprops(r);
 	runeprops(Q_toupperrune(r));
 	runeprops(Q_tolowerrune(r));
@@ -2139,10 +2139,8 @@ Com_Execconfig(void)
 	Cbuf_Execute();	/* Always execute after exec to prevent text buffer overflowing */
 
 	if(!Com_Insafemode()){
-		/* skip the q3config.cfg and autoexec.cfg if "safe" is on the command line */
+		/* skip the q3config.cfg if "safe" is on the command line */
 		Cbuf_ExecuteText(EXEC_NOW, "exec " Q3CONFIG_CFG "\n");
-		Cbuf_Execute();
-		Cbuf_ExecuteText(EXEC_NOW, "exec autoexec.cfg\n");
 		Cbuf_Execute();
 	}
 }
@@ -2175,11 +2173,14 @@ Com_Gamerestart(int checksumFeed, qbool disconnect)
 		Cvar_Restart(qtrue);
 		Com_Execconfig();
 
-		if(disconnect)
-			/* We don't want to change any network settings if gamedir
+		if(disconnect){
+			/* 
+			 * We don't want to change any network settings if gamedir
 			 * change was triggered by a connect to server because the
-			 * new network settings might make the connection fail. */
+			 * new network settings might make the connection fail. 
+			 */
 			NET_Restart_f();
+		}
 
 		if(clWasRunning){
 			CL_Init();
