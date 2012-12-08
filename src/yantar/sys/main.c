@@ -5,16 +5,16 @@
  * it under the terms of the GNU General Public License.
  */
 
-#include <signal.h>
-#include <stdlib.h>
-#include <limits.h>
-#include <sys/types.h>
-#include <stdarg.h>
-#include <stdio.h>
-#include <sys/stat.h>
-#include <string.h>
 #include <ctype.h>
 #include <errno.h>
+#include <limits.h>
+#include <signal.h>
+#include <stdarg.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/stat.h>
+#include <sys/types.h>
 #ifndef DEDICATED
 #  include <SDL/SDL.h>
 #  include <SDL/SDL_cpuinfo.h>
@@ -27,7 +27,7 @@
 static char binaryPath[MAX_OSPATH] = { 0 };
 static char installPath[MAX_OSPATH] = { 0 };
 
-static int	q3ToAnsi[8] =
+static int q3ToAnsi[8] =
 {
 	30,	/* COLOR_BLACK */
 	31,	/* COLOR_RED */
@@ -38,6 +38,20 @@ static int	q3ToAnsi[8] =
 	35,	/* COLOR_MAGENTA */
 	0	/* COLOR_WHITE */
 };
+
+static char*
+signame(int sig)
+{
+	switch(sig){
+	case SIGABRT:	return "SIGABRT";
+	case SIGFPE:	return "SIGFPE";
+	case SIGILL:	return "SIGILL";
+	case SIGINT:	return "SIGINT";
+	case SIGSEGV:	return "SIGSEGV";
+	case SIGTERM:	return "SIGTERM";
+	default:	return "unknown";
+	}
+}
 
 void
 Sys_SetBinaryPath(const char *path)
@@ -76,25 +90,25 @@ Sys_DefaultAppPath(void)
 void
 Sys_In_Restart_f(void)
 {
-	IN_Restart( );
+	IN_Restart();
 }
 
 /* Handle new console input */
 char *
 Sys_ConsoleInput(void)
 {
-	return CON_Input( );
+	return CON_Input();
 }
 
 /* Single exit point (regular exit or in case of error) */
 static __attribute__ ((noreturn)) void
 Sys_Exit(int exitCode)
 {
-	CON_Shutdown( );
+	CON_Shutdown();
 #ifndef DEDICATED
-	SDL_Quit( );
+	SDL_Quit();
 #endif
-	Sys_PlatformExit( );
+	Sys_PlatformExit();
 	exit(exitCode);
 }
 
@@ -131,7 +145,7 @@ Sys_Init(void)
 
 	Cmd_AddCommand("in_restart", Sys_In_Restart_f);
 	Cvar_Set("arch", OS_STRING " " ARCH_STRING);
-	Cvar_Set("username", Sys_GetCurrentUser( ));
+	Cvar_Set("username", Sys_GetCurrentUser());
 	Q_sprintf(pidbuf, sizeof(pidbuf), "%d", Sys_PID());
 	Cvar_Get("pid", pidbuf, CVAR_ROM);
 	Cvar_SetDesc("pid", "process ID, for debugging purposes");
@@ -148,7 +162,7 @@ Sys_AnsiColorPrint(const char *msg)
 		if(Q_IsColorString(msg) || *msg == '\n'){
 			/* First empty the buffer */
 			if(length > 0){
-				buffer[ length ] = '\0';
+				buffer[length] = '\0';
 				fputs(buffer, stderr);
 				length = 0;
 			}
@@ -351,21 +365,25 @@ void
 Sys_SigHandler(int signal)
 {
 	static qbool signalcaught = qfalse;
-
+	const char *name;
+	
+	name = signame(signal);
+	fprintf(stderr, "GOOFED: received signal %d (%s)", signal, name);
 	if(signalcaught)
 		fprintf(stderr,
-			"DOUBLE SIGNAL FAULT: Received signal %d, exiting...\n",
-			signal);
+			"DOUBLE SIGNAL FAULT: received signal %d (%s), exiting...\n",
+			signal, name);
 	else{
 		signalcaught = qtrue;
 		VM_Forced_Unload_Start();
 #ifndef DEDICATED
-		CL_Shutdown(va("Received signal %d", signal), qtrue, qtrue);
+		CL_Shutdown(va("received signal %d (%s)", signal, name), qtrue, qtrue);
 #endif
-		SV_Shutdown(va("Received signal %d", signal));
+		SV_Shutdown(va("received signal %d (%s)", signal, name));
 		VM_Forced_Unload_Done();
 	}
-
+	fflush(stdout);
+	fflush(stderr);
 	if(signal == SIGTERM || signal == SIGINT)
 		Sys_Exit(1);
 	else
