@@ -19,9 +19,9 @@ if [ ! "X$chain" = "X" ]; then
 	zcross="-fwin32/Makefile.gcc PREFIX=$chain- RC=$chain-windres"
 fi
 
-rm -rf $prefix/lib/libvorbis* $prefix/lib/libogg* $prefix/lib/libfreetype* \
-	$prefix/lib/libz.* $prefix/lib/libjpeg.* $prefix/lib/libcurl.* \
-	$prefix/lib/libSDL* $prefix/include/SDL &&
+rm -rf $prefix/lib/libvorbis.a $prefix/lib/libogg.a $prefix/lib/libfreetype.a \
+	$prefix/lib/libz.a $prefix/lib/libjpeg.a $prefix/lib/libcurl.a \
+	$prefix/lib/libSDL.a $prefix/include/SDL &&
 
 mkdir -p /tmp/getlibs
 (cd /tmp/getlibs
