@@ -52,7 +52,7 @@
 #define Pmiscart	Pgraphics "/misc"
 #define Pmedalart	Pgraphics	"/medals"
 
-#define Pplayermodels	Pmodels "/players"
+#define Pplayermodels	Pmodels "/ships"
 #define Pammomodels	Pmodels "/ammo"
 #define Pweapmodels	Pmodels "/weaps"
 #define Pweaphitmodels	Pmodels "/weaphits"
