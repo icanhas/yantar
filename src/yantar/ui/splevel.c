@@ -127,9 +127,15 @@ PlayerIcon(const char *modelAndSkin, char *iconName, int iconNameMaxSize)
 
 	if(!trap_R_RegisterShaderNoMip(iconName) &&
 	   Q_stricmp(skin, "default") != 0)
+	then{
 		Q_sprintf(iconName, iconNameMaxSize,
-			Pplayermodels "/%s/icon_default.tga",
+			Pplayermodels "/%s/icon_default",
 			model);
+	}
+	if(!trap_R_RegisterShaderNoMip(iconName)){
+		/* we don't have icon_default either, so use nomen nescio */
+		iconName = (Picons "/anon");
+	}
 }
 
 

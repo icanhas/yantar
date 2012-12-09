@@ -390,7 +390,11 @@ regclientmodel(clientInfo_t *ci, const char *name,
 	/* FIXME: account for teams/skins etc. */
 	Q_sprintf(fname, sizeof fname, Pplayermodels "/%s/icon_default", name);
 	ci->modelIcon = trap_R_RegisterShaderNoMip(fname);
-	if(!ci->modelIcon)
+	if(ci->modelIcon <= 0){
+		/* use the nomen nescio icon */
+		ci->modelIcon = trap_R_RegisterShaderNoMip(Picons "/anon");
+	}
+	if(ci->modelIcon <= 0)
 		return qfalse;
 	return qtrue;
 }
