@@ -43,14 +43,16 @@
 
 #define Pgraphics	Pvis ""
 #define Pmodels		Pvis "/models"
-#define Picons		Pvis "/icons"
 #define Psprites	Pvis "/sprites"
+#define Ptex		Pvis "/textures"
 
 #define Pmenuart	Pgraphics "/menu"
 #define P2dart		Pgraphics "/2d"
 #define Pdmgart	Pgraphics "/dmg"
 #define Pmiscart	Pgraphics "/misc"
 #define Pmedalart	Pgraphics	"/medals"
+
+#define Picons		Ptex "/icons"
 
 #define Pplayermodels	Pmodels "/ships"
 #define Pammomodels	Pmodels "/ammo"
