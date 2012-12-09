@@ -69,9 +69,9 @@
 #define TEAM_OVERLAY_MAXNAME_WIDTH	12
 #define TEAM_OVERLAY_MAXLOCATION_WIDTH	16
 
-#define DEFAULT_MODEL			"sarge"
-#define DEFAULT_TEAM_MODEL		"sarge"
-#define DEFAULT_TEAM_HEAD		"sarge"
+#define DEFAULT_MODEL			"griever"
+#define DEFAULT_TEAM_MODEL		"griever"
+#define DEFAULT_TEAM_HEAD		"griever"
 
 #define DEFAULT_REDTEAM_NAME	"Stroggs"
 #define DEFAULT_BLUETEAM_NAME	"Pagans"
