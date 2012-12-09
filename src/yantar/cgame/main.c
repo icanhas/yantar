@@ -992,7 +992,7 @@ CG_RegisterGraphics(void)
 
 	cgs.media.smoke2 = trap_R_RegisterModel(Pshellmodels "/s_shell");
 
-	cgs.media.balloonShader = trap_R_RegisterShader(Psprites "/balloon3");
+	cgs.media.balloonShader = trap_R_RegisterShader(Psprites "/balloon4");
 
 	cgs.media.bloodExplosionShader = trap_R_RegisterShader("bloodExplosion");
 

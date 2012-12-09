@@ -837,7 +837,7 @@ UI_DrawPlayer(float x, float y, float w, float h, playerInfo_t *pi, int time)
 	 *  */
 	if(pi->chat)
 		UI_PlayerFloatSprite(pi, origin,
-			trap_R_RegisterShaderNoMip("sprites/balloon3"));
+			trap_R_RegisterShaderNoMip("sprites/balloon4"));
 
 	/*
 	 * add an accent light
