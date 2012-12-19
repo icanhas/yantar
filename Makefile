@@ -161,10 +161,6 @@ ifndef USE_LOCAL_HEADERS
 USE_LOCAL_HEADERS=0
 endif
 
-ifndef USE_RENDERER_DLOPEN
-USE_RENDERER_DLOPEN=1
-endif
-
 ifndef DEBUG_CFLAGS
 DEBUG_CFLAGS=-g -O0
 endif
@@ -702,25 +698,9 @@ ifneq ($(BUILD_SERVER),0)
 endif
 
 ifneq ($(BUILD_CLIENT),0)
-  ifneq ($(USE_RENDERER_DLOPEN),0)
-    TARGETS += $(B)/$(CLIENTBIN)$(FULLBINEXT)
-    ifneq ($(BUILD_REF1),0)
-      TARGETS += $(B)/ref1-$(SHLIBNAME)
-        ifneq ($(BUILD_CLIENT_SMP),0)
-          TARGETS += $(B)/ref1-smp-$(SHLIBNAME)
-        endif
-    endif
-    ifneq ($(BUILD_REF2), 0)
-      TARGETS += $(B)/ref2-$(SHLIBNAME)
-      ifneq ($(BUILD_CLIENT_SMP),0)
-        TARGETS += $(B)/ref2-smp-$(SHLIBNAME)
-      endif
-    endif
-  else
-    TARGETS += $(B)/$(CLIENTBIN)$(FULLBINEXT)
-    ifneq ($(BUILD_CLIENT_SMP),0)
-      TARGETS += $(B)/$(CLIENTBIN)-smp$(FULLBINEXT)
-    endif
+  TARGETS += $(B)/$(CLIENTBIN)$(FULLBINEXT)
+  ifneq ($(BUILD_CLIENT_SMP),0)
+    TARGETS += $(B)/$(CLIENTBIN)-smp$(FULLBINEXT)
   endif
 endif
 
@@ -746,10 +726,6 @@ endif
 
 ifeq ($(USE_CODEC_VORBIS),1)
   CLIENT_CFLAGS += -DUSE_CODEC_VORBIS
-endif
-
-ifeq ($(USE_RENDERER_DLOPEN),1)
-  CLIENT_CFLAGS += -DUSE_RENDERER_DLOPEN
 endif
 
 ifeq ($(USE_MUMBLE),1)
@@ -1268,11 +1244,6 @@ YOBJ = \
   $(O)/client/sys/main.o
 
 R2OBJ = \
-  $(O)/ref-trin/image_bmp.o \
-  $(O)/ref-trin/image_jpg.o \
-  $(O)/ref-trin/image_png.o \
-  $(O)/ref-trin/image_tga.o \
-  $(O)/ref-trin/noise.o \
   $(O)/ref2/animation.o \
   $(O)/ref2/backend.o \
   $(O)/ref2/bsp.o \
@@ -1285,6 +1256,10 @@ R2OBJ = \
   $(O)/ref2/font.o \
   $(O)/ref2/glsl.o \
   $(O)/ref2/image.o \
+  $(O)/ref-trin/image_bmp.o \
+  $(O)/ref-trin/image_jpg.o \
+  $(O)/ref-trin/image_png.o \
+  $(O)/ref-trin/image_tga.o \
   $(O)/ref2/init.o \
   $(O)/ref2/light.o \
   $(O)/ref2/main.o \
@@ -1294,6 +1269,7 @@ R2OBJ = \
   $(O)/ref2/mesh.o \
   $(O)/ref2/model.o \
   $(O)/ref2/model_iqm.o \
+  $(O)/ref-trin/noise.o \
   $(O)/ref2/postprocess.o \
   $(O)/ref2/scene.o \
   $(O)/ref2/shade.o \
@@ -1306,53 +1282,6 @@ R2OBJ = \
   \
   $(O)/ref-trin/sys/sdl/gamma.o \
   $(O)/ref-trin/sys/sdl/glimp.o
-
-ROBJ = \
-  $(O)/ref-trin/animation.o \
-  $(O)/ref-trin/backend.o \
-  $(O)/ref-trin/bsp.o \
-  $(O)/ref-trin/cmds.o \
-  $(O)/ref-trin/curve.o \
-  $(O)/ref-trin/flares.o \
-  $(O)/ref-trin/font.o \
-  $(O)/ref-trin/image.o \
-  $(O)/ref-trin/image_bmp.o \
-  $(O)/ref-trin/image_jpg.o \
-  $(O)/ref-trin/image_png.o \
-  $(O)/ref-trin/image_tga.o \
-  $(O)/ref-trin/init.o \
-  $(O)/ref-trin/light.o \
-  $(O)/ref-trin/main.o \
-  $(O)/ref-trin/marks.o \
-  $(O)/ref-trin/mesh.o \
-  $(O)/ref-trin/model.o \
-  $(O)/ref-trin/model_iqm.o \
-  $(O)/ref-trin/noise.o \
-  $(O)/ref-trin/scene.o \
-  $(O)/ref-trin/shade.o \
-  $(O)/ref-trin/shade_calc.o \
-  $(O)/ref-trin/shader.o \
-  $(O)/ref-trin/shadows.o \
-  $(O)/ref-trin/sky.o \
-  $(O)/ref-trin/surface.o \
-  $(O)/ref-trin/world.o \
-  \
-  $(O)/ref-trin/sys/sdl/gamma.o \
-  $(O)/ref-trin/sys/sdl/glimp.o
-
-ifneq ($(USE_RENDERER_DLOPEN), 0)
-  ROBJ += \
-    $(O)/ref-trin/shared.o \
-    $(O)/ref-trin/puff.o \
-    $(O)/ref-trin/maths.o \
-    $(O)/ref-trin/subs.o
-
-  R2OBJ += \
-    $(O)/ref-trin/shared.o \
-    $(O)/ref-trin/puff.o \
-    $(O)/ref-trin/maths.o \
-    $(O)/ref-trin/subs.o
-endif
 
 ifneq ($(USE_INTERNAL_JPEG),0)
   JPGOBJ = \
@@ -1518,36 +1447,7 @@ ifeq ($(USE_MUMBLE),1)
     $(O)/client/libmumblelink.o
 endif
 
-ifneq ($(USE_RENDERER_DLOPEN),0)
-# make renderer shared libraries (gross)
-$(B)/$(CLIENTBIN)$(FULLBINEXT): $(YOBJ) $(LIBSDLMAIN)
-	$(echo_cmd) "LD $@"
-	$(Q)$(CC) $(CLIENT_CFLAGS) $(CFLAGS) $(CLIENT_LDFLAGS) $(LDFLAGS) \
-		-o $@ $(YOBJ) \
-		$(LIBSDLMAIN) $(CLIENT_LIBS) $(LIBS)
-
-$(B)/ref1-$(SHLIBNAME): $(ROBJ) $(JPGOBJ)
-	$(echo_cmd) "LD $@"
-	$(Q)$(CC) $(CFLAGS) $(SHLIBLDFLAGS) -o $@ $(ROBJ) $(JPGOBJ) \
-		$(THREAD_LIBS) $(LIBSDLMAIN) $(RENDERER_LIBS) $(LIBS)
-
-$(B)/ref1-smp-$(SHLIBNAME): $(ROBJ) $(JPGOBJ)
-	$(echo_cmd) "LD $@"
-	$(Q)$(CC) $(CFLAGS) $(SHLIBLDFLAGS) -o $@ $(ROBJ) $(JPGOBJ) \
-		$(THREAD_LIBS) $(LIBSDLMAIN) $(RENDERER_LIBS) $(LIBS)
-
-$(B)/ref2-$(SHLIBNAME): $(R2OBJ) $(JPGOBJ)
-	$(echo_cmd) "LD $@"
-	$(Q)$(CC) $(CFLAGS) $(SHLIBLDFLAGS) -o $@ $(R2OBJ) $(JPGOBJ) \
-		$(THREAD_LIBS) $(LIBSDLMAIN) $(RENDERER_LIBS) $(LIBS)
-
-$(B)/ref2-smp-$(SHLIBNAME): $(R2OBJ) $(JPGOBJ)
-	$(echo_cmd) "LD $@"
-	$(Q)$(CC) $(CFLAGS) $(SHLIBLDFLAGS) -o $@ $(R2OBJ) $(JPGOBJ) \
-		$(THREAD_LIBS) $(LIBSDLMAIN) $(RENDERER_LIBS) $(LIBS)
-
-else
-# static link renderer
+# statically link renderer
 $(B)/$(CLIENTBIN)$(FULLBINEXT): $(YOBJ) $(R2OBJ) $(LIBSDLMAIN) $(JPGOBJ)
 	$(echo_cmd) "LD $@"
 	$(Q)$(CC) $(CLIENT_CFLAGS) $(CFLAGS) $(CLIENT_LDFLAGS) $(LDFLAGS) \
@@ -1559,7 +1459,6 @@ $(B)/$(CLIENTBIN)-smp$(FULLBINEXT): $(YOBJ) $(R2OBJ) $(LIBSDLMAIN) $(JPGOBJ)
 	$(Q)$(CC) $(CLIENT_CFLAGS) $(CFLAGS) $(CLIENT_LDFLAGS) $(LDFLAGS) $(THREAD_LDFLAGS) \
 		-o $@ $(YOBJ) $(R2OBJ) $(JPGOBJ) \
 		$(THREAD_LIBS) $(LIBSDLMAIN) $(CLIENT_LIBS) $(RENDERER_LIBS) $(LIBS)
-endif
 
 ifneq ($(strip $(LIBSDLMAIN)),)
 ifneq ($(strip $(LIBSDLMAINSRC)),)
@@ -2003,7 +1902,7 @@ $(O)/$(BASEGAME)/common/%.asm: $(COMDIR)/%.c $(Q3LCC)
 # misc
 #
 
-OBJ = $(YOBJ) $(ROBJ) $(R2OBJ) $(YDOBJ) $(JPGOBJ) \
+OBJ = $(YOBJ) $(R2OBJ) $(YDOBJ) $(JPGOBJ) \
   $(GOBJ) $(CGOBJ) $(UIOBJ) \
   $(GVMOBJ) $(CGVMOBJ) $(UIVMOBJ)
 TOOLSOBJ = $(LBURGOBJ) $(Q3CPPOBJ) $(RCCOBJ) $(Q3LCCOBJ) $(Q3ASMOBJ)
@@ -2019,23 +1918,11 @@ endif
 
 ifneq ($(BUILD_CLIENT),0)
 	$(INSTALL) $(STRIP_FLAG) -m 0755 $(BR)/$(CLIENTBIN)$(FULLBINEXT) $(COPYBINDIR)/$(CLIENTBIN)$(FULLBINEXT)
-  ifneq ($(USE_RENDERER_DLOPEN),0)
-    ifneq ($(BUILD_REF1),0)
-	$(INSTALL) $(STRIP_FLAG) -m 0755 $(BR)/ref1-$(SHLIBNAME) $(COPYBINDIR)/ref1-$(SHLIBNAME)
-    endif
-    ifneq ($(BUILD_REF2),0)
-	$(INSTALL) $(STRIP_FLAG) -m 0755 $(BR)/ref2-$(SHLIBNAME) $(COPYBINDIR)/ref2-$(SHLIBNAME)
-    endif
-  endif
 endif
 
 # Don't copy the SMP until it's working together with SDL.
 ifneq ($(BUILD_CLIENT_SMP),0)
-  ifneq ($(USE_RENDERER_DLOPEN),0)
-	$(INSTALL) $(STRIP_FLAG) -m 0755 $(BR)/ref1-smp-$(SHLIBNAME) $(COPYBINDIR)/ref1-smp-$(SHLIBNAME)
-  else
 	$(INSTALL) $(STRIP_FLAG) -m 0755 $(BR)/$(CLIENTBIN)-smp$(FULLBINEXT) $(COPYBINDIR)/$(CLIENTBIN)-smp$(FULLBINEXT)
-  endif
 endif
 
 ifneq ($(BUILD_SERVER),0)
@@ -2092,7 +1979,6 @@ distclean: clean cmdclean
 installer: release
 ifeq ($(PLATFORM),mingw32)
 	@$(MAKE) VERSION=$(VERSION) -C $(NSISDIR) V=$(V) \
-		USE_RENDERER_DLOPEN=$(USE_RENDERER_DLOPEN) \
 		USE_CURL_DLOPEN=$(USE_CURL_DLOPEN) \
 		USE_INTERNAL_SPEEX=$(USE_INTERNAL_SPEEX) \
 		USE_INTERNAL_ZLIB=$(USE_INTERNAL_ZLIB) \
