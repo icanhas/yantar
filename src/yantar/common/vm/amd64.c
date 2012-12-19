@@ -1,3 +1,4 @@
+/* load time compiler and execution environment for amd64 */
 /*
  * Copyright (C) 1999-2005 Id Software, Inc.
  * Copyright (C) 2005 Ludwig Nussel <ludwig.nussel@web.de>
@@ -5,9 +6,7 @@
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License.
  */
-/* vm_x86_64.c -- load time compiler and execution environment for x86-64 */
 
-#include "vm_local.h"
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <sys/time.h>
@@ -16,8 +15,8 @@
 #include <errno.h>
 #include <unistd.h>
 #include <stdarg.h>
-
 #include <inttypes.h>
+#include "local.h"
 
 #ifdef __WIN64__
 	#include <windows.h>

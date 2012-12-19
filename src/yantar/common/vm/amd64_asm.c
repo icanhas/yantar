@@ -1,5 +1,5 @@
 /*
- * vm_x86_64_assembler.c -- assembler for x86-64
+ * assembler for amd64
  *
  * Copyright (C) 2007 Ludwig Nussel <ludwig.nussel@suse.de>, Novell inc.
  *
@@ -20,13 +20,12 @@
 
 #define _ISOC99_SOURCE
 
-#include "vm_local.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdarg.h>
-
 #include <inttypes.h>
+#include "local.h"
 
 /* Ignore __attribute__ on non-gcc platforms */
 #ifndef __GNUC__
