@@ -1472,8 +1472,6 @@ enum {
 	#error "Need to update sorting, too many bits."
 #endif
 
-extern int gl_filter_min, gl_filter_max;
-
 /*
 ** performanceCounters_t
 */

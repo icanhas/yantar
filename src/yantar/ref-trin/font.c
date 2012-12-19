@@ -70,7 +70,7 @@
 #define _CEIL(x)	(((x)+63) & -64)
 #define _TRUNC(x)	((x) >> 6)
 
-FT_Library ftLibrary = NULL;
+static FT_Library ftLibrary = NULL;
 #endif
 
 #define MAX_FONTS 6
@@ -78,7 +78,7 @@ static int registeredFontCount = 0;
 static fontInfo_t registeredFont[MAX_FONTS];
 
 #ifdef BUILD_FREETYPE
-void
+static void
 R_GetGlyphInfo(FT_GlyphSlot glyph, int *left, int *right, int *width, int *top, int *bottom, int *height,
 	       int *pitch)
 {
@@ -94,7 +94,7 @@ R_GetGlyphInfo(FT_GlyphSlot glyph, int *left, int *right, int *width, int *top, 
 }
 
 
-FT_Bitmap *
+static FT_Bitmap*
 R_RenderGlyph(FT_GlyphSlot glyph, glyphInfo_t* glyphOut)
 {
 
@@ -134,7 +134,7 @@ R_RenderGlyph(FT_GlyphSlot glyph, glyphInfo_t* glyphOut)
 	return NULL;
 }
 
-void
+static void
 WriteTGA(char *filename, byte *data, int width, int height)
 {
 	byte *buffer;
@@ -292,7 +292,7 @@ RE_ConstructGlyphInfo(unsigned char *imageOut, int *xOut, int *yOut, int *maxHei
 static int fdOffset;
 static byte *fdFile;
 
-int
+static int
 readInt(void)
 {
 	int i = fdFile[fdOffset]+(fdFile[fdOffset+1]<<8)+(fdFile[fdOffset+2]<<16)+(fdFile[fdOffset+3]<<24);
@@ -305,7 +305,7 @@ typedef union {
 	float	ffred;
 } poor;
 
-float
+static float
 readFloat(void)
 {
 	poor me;

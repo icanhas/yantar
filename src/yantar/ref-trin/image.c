@@ -10,8 +10,8 @@
 static byte s_intensitytable[256];
 static unsigned char s_gammatable[256];
 
-int gl_filter_min	= GL_LINEAR_MIPMAP_NEAREST;
-int gl_filter_max	= GL_LINEAR;
+static int gl_filter_min	= GL_LINEAR_MIPMAP_NEAREST;
+static int gl_filter_max	= GL_LINEAR;
 
 #define FILE_HASH_SIZE 1024
 static image_t * hashTable[FILE_HASH_SIZE];
@@ -33,7 +33,7 @@ typedef struct {
 	int	minimize, maximize;
 } textureMode_t;
 
-textureMode_t modes[] = {
+static textureMode_t modes[] = {
 	{"GL_NEAREST", GL_NEAREST, GL_NEAREST},
 	{"GL_LINEAR", GL_LINEAR, GL_LINEAR},
 	{"GL_NEAREST_MIPMAP_NEAREST", GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST},
@@ -471,7 +471,7 @@ R_BlendOverTexture(byte *data, int pixelCount, byte blend[4])
 	}
 }
 
-byte mipBlendColors[16][4] = {
+static byte mipBlendColors[16][4] = {
 	{0,0,0,0},
 	{255,0,0,128},
 	{0,255,0,128},
