@@ -36,12 +36,6 @@ endif
 ifndef BUILD_BASEGAME
   BUILD_BASEGAME=0
 endif
-ifndef BUILD_REF2
-  BUILD_REF2=1
-endif
-ifndef BUILD_REF1
-  BUILD_REF1=0
-endif
 
 ifneq ($(PLATFORM),darwin)
   BUILD_CLIENT_SMP=0
@@ -129,10 +123,6 @@ ifndef USE_CURL
 USE_CURL=1
 endif
 
-ifndef USE_CURL_DLOPEN
-  USE_CURL_DLOPEN=0
-endif
-
 ifndef USE_CODEC_VORBIS
 USE_CODEC_VORBIS=1
 endif
@@ -143,22 +133,6 @@ endif
 
 ifndef USE_VOIP
 USE_VOIP=0
-endif
-
-ifndef USE_INTERNAL_SPEEX
-USE_INTERNAL_SPEEX=0
-endif
-
-ifndef USE_INTERNAL_ZLIB
-USE_INTERNAL_ZLIB=0
-endif
-
-ifndef USE_INTERNAL_JPEG
-USE_INTERNAL_JPEG=0
-endif
-
-ifndef USE_LOCAL_HEADERS
-USE_LOCAL_HEADERS=0
 endif
 
 ifndef DEBUG_CFLAGS
@@ -194,9 +168,6 @@ BGDIR=$(GDIR)/bg
 CGDIR=$(YAN_DIR)/cgame
 BLIBDIR=$(YAN_DIR)/botlib
 UIDIR=$(YAN_DIR)/ui
-JPDIR=$(YAN_DIR)/jpeg-8c
-SPEEXDIR=$(YAN_DIR)/libspeex
-ZDIR=$(YAN_DIR)/zlib
 Q3ASMDIR=$(SRC)/cmd/asm
 LBURGDIR=$(SRC)/cmd/lcc/lburg
 Q3CPPDIR=$(SRC)/cmd/lcc/cpp
@@ -204,8 +175,6 @@ Q3LCCETCDIR=$(SRC)/cmd/lcc/etc
 Q3LCCSRCDIR=$(SRC)/cmd/lcc/src
 LOKISETUPDIR=misc/setup
 NSISDIR=misc/nsis
-SDLHDIR=$(YAN_DIR)/SDL12
-LIBSDIR=$(YAN_DIR)/libs
 INCLUDES=-Iinclude -Iinclude/yantar
 
 bin_path=$(shell which $(1) 2> /dev/null)
@@ -345,9 +314,7 @@ ifeq ($(PLATFORM),darwin)
   BASE_CFLAGS += -fno-strict-aliasing -DMACOS_X -fno-common -pipe
 
   ifeq ($(USE_CURL),1)
-    ifneq ($(USE_CURL_DLOPEN),1)
-      CLIENT_LIBS += -lcurl
-    endif
+    CLIENT_LIBS += -lcurl
   endif
 
   ifeq ($(USE_CODEC_VORBIS),1)
@@ -521,7 +488,6 @@ ifeq ($(PLATFORM),openbsd)
 
   ifeq ($(USE_CURL),1)
     CLIENT_CFLAGS += $(CURL_CFLAGS)
-    USE_CURL_DLOPEN=0
   endif
 
   SHLIBEXT=so
@@ -542,9 +508,7 @@ ifeq ($(PLATFORM),openbsd)
   endif
 
   ifeq ($(USE_CURL),1) 
-    ifneq ($(USE_CURL_DLOPEN),1)
-      CLIENT_LIBS += -lcurl
-    endif
+    CLIENT_LIBS += -lcurl
   endif
 else # if openbsd
 
@@ -592,7 +556,7 @@ ifeq ($(PLATFORM),irix64)
   SHLIBLDFLAGS=-shared
 
   LIBS=-ldl -lm -lgen
-  # FIXME: The X libraries probably aren't necessary?
+  # FIXME: The X libraries probably aren't necessary
   CLIENT_LIBS=-L/usr/X11/$(LIB) $(SDL_LIBS) \
     -lX11 -lXext -lm
   RENDERER_LIBS = $(SDL_LIBS) -lGL
@@ -735,26 +699,11 @@ endif
 ifeq ($(USE_VOIP),1)
   CLIENT_CFLAGS += -DUSE_VOIP
   SERVER_CFLAGS += -DUSE_VOIP
-  ifeq ($(USE_INTERNAL_SPEEX),1)
-    CLIENT_CFLAGS += -DFLOATING_POINT -DUSE_ALLOCA -I$(SPEEXDIR)/include
-  else
-    CLIENT_LIBS += -lspeex -lspeexdsp
-  endif
+  CLIENT_LIBS += -lspeex -lspeexdsp
 endif
 
-ifeq ($(USE_INTERNAL_ZLIB),1)
-  BASE_CFLAGS += -DNO_GZIP
-  BASE_CFLAGS += -I$(ZDIR)
-else
-  LIBS += -lz
-endif
-
-ifeq ($(USE_INTERNAL_JPEG),1)
-  BASE_CFLAGS += -DUSE_INTERNAL_JPEG
-  BASE_CFLAGS += -I$(JPDIR)
-else
-  RENDERER_LIBS += -ljpeg
-endif
+LIBS += -lz
+RENDERER_LIBS += -ljpeg
 
 ifeq ("$(CC)", $(findstring "$(CC)", "clang" "clang++"))
 	BASE_CFLAGS += -Qunused-arguments
@@ -762,10 +711,6 @@ endif
 
 ifdef DEFAULT_BASEDIR
   BASE_CFLAGS += -DDEFAULT_BASEDIR=\\\"$(DEFAULT_BASEDIR)\\\"
-endif
-
-ifeq ($(USE_LOCAL_HEADERS),1)
-  BASE_CFLAGS += -DUSE_LOCAL_HEADERS
 endif
 
 ifeq ($(BUILD_STANDALONE),1)
@@ -1283,56 +1228,6 @@ R2OBJ = \
   $(O)/ref-trin/sys/sdl/gamma.o \
   $(O)/ref-trin/sys/sdl/glimp.o
 
-ifneq ($(USE_INTERNAL_JPEG),0)
-  JPGOBJ = \
-    $(O)/ref-trin/jaricom.o \
-    $(O)/ref-trin/jcapimin.o \
-    $(O)/ref-trin/jcapistd.o \
-    $(O)/ref-trin/jcarith.o \
-    $(O)/ref-trin/jccoefct.o  \
-    $(O)/ref-trin/jccolor.o \
-    $(O)/ref-trin/jcdctmgr.o \
-    $(O)/ref-trin/jchuff.o   \
-    $(O)/ref-trin/jcinit.o \
-    $(O)/ref-trin/jcmainct.o \
-    $(O)/ref-trin/jcmarker.o \
-    $(O)/ref-trin/jcmaster.o \
-    $(O)/ref-trin/jcomapi.o \
-    $(O)/ref-trin/jcparam.o \
-    $(O)/ref-trin/jcprepct.o \
-    $(O)/ref-trin/jcsample.o \
-    $(O)/ref-trin/jctrans.o \
-    $(O)/ref-trin/jdapimin.o \
-    $(O)/ref-trin/jdapistd.o \
-    $(O)/ref-trin/jdarith.o \
-    $(O)/ref-trin/jdatadst.o \
-    $(O)/ref-trin/jdatasrc.o \
-    $(O)/ref-trin/jdcoefct.o \
-    $(O)/ref-trin/jdcolor.o \
-    $(O)/ref-trin/jddctmgr.o \
-    $(O)/ref-trin/jdhuff.o \
-    $(O)/ref-trin/jdinput.o \
-    $(O)/ref-trin/jdmainct.o \
-    $(O)/ref-trin/jdmarker.o \
-    $(O)/ref-trin/jdmaster.o \
-    $(O)/ref-trin/jdmerge.o \
-    $(O)/ref-trin/jdpostct.o \
-    $(O)/ref-trin/jdsample.o \
-    $(O)/ref-trin/jdtrans.o \
-    $(O)/ref-trin/jerror.o \
-    $(O)/ref-trin/jfdctflt.o \
-    $(O)/ref-trin/jfdctfst.o \
-    $(O)/ref-trin/jfdctint.o \
-    $(O)/ref-trin/jidctflt.o \
-    $(O)/ref-trin/jidctfst.o \
-    $(O)/ref-trin/jidctint.o \
-    $(O)/ref-trin/jmemmgr.o \
-    $(O)/ref-trin/jmemnobs.o \
-    $(O)/ref-trin/jquant1.o \
-    $(O)/ref-trin/jquant2.o \
-    $(O)/ref-trin/jutils.o
-endif
-
 ifeq ($(ARCH),x86)
   YOBJ += \
     $(O)/client/snd_mixa.o \
@@ -1344,62 +1239,6 @@ ifeq ($(ARCH),amd64)
   YOBJ += \
     $(O)/client/snapvector.o \
     $(O)/client/ftola.o
-endif
-
-ifeq ($(USE_VOIP),1)
-ifeq ($(USE_INTERNAL_SPEEX),1)
-YOBJ += \
-  $(O)/client/bits.o \
-  $(O)/client/buffer.o \
-  $(O)/client/cb_search.o \
-  $(O)/client/exc_10_16_table.o \
-  $(O)/client/exc_10_32_table.o \
-  $(O)/client/exc_20_32_table.o \
-  $(O)/client/exc_5_256_table.o \
-  $(O)/client/exc_5_64_table.o \
-  $(O)/client/exc_8_128_table.o \
-  $(O)/client/fftwrap.o \
-  $(O)/client/filterbank.o \
-  $(O)/client/filters.o \
-  $(O)/client/gain_table.o \
-  $(O)/client/gain_table_lbr.o \
-  $(O)/client/hexc_10_32_table.o \
-  $(O)/client/hexc_table.o \
-  $(O)/client/high_lsp_tables.o \
-  $(O)/client/jitter.o \
-  $(O)/client/kiss_fft.o \
-  $(O)/client/kiss_fftr.o \
-  $(O)/client/lpc.o \
-  $(O)/client/lsp.o \
-  $(O)/client/lsp_tables_nb.o \
-  $(O)/client/ltp.o \
-  $(O)/client/mdf.o \
-  $(O)/client/modes.o \
-  $(O)/client/modes_wb.o \
-  $(O)/client/nb_celp.o \
-  $(O)/client/preprocess.o \
-  $(O)/client/quant_lsp.o \
-  $(O)/client/resample.o \
-  $(O)/client/sb_celp.o \
-  $(O)/client/smallft.o \
-  $(O)/client/speex.o \
-  $(O)/client/speex_callbacks.o \
-  $(O)/client/speex_header.o \
-  $(O)/client/stereo.o \
-  $(O)/client/vbr.o \
-  $(O)/client/vq.o \
-  $(O)/client/window.o
-endif
-endif
-
-ifeq ($(USE_INTERNAL_ZLIB),1)
-YOBJ += \
-  $(O)/client/adler32.o \
-  $(O)/client/crc32.o \
-  $(O)/client/inffast.o \
-  $(O)/client/inflate.o \
-  $(O)/client/inftrees.o \
-  $(O)/client/zutil.o
 endif
 
 ifeq ($(HAVE_VM_COMPILED),true)
@@ -1553,16 +1392,6 @@ ifeq ($(ARCH),amd64)
   YDOBJ += \
       $(O)/ded/snapvector.o \
       $(O)/ded/ftola.o 
-endif
-
-ifeq ($(USE_INTERNAL_ZLIB),1)
-YDOBJ += \
-  $(O)/ded/adler32.o \
-  $(O)/ded/crc32.o \
-  $(O)/ded/inffast.o \
-  $(O)/ded/inflate.o \
-  $(O)/ded/inftrees.o \
-  $(O)/ded/zutil.o
 endif
 
 ifeq ($(HAVE_VM_COMPILED),true)
@@ -1978,11 +1807,7 @@ distclean: clean cmdclean
 
 installer: release
 ifeq ($(PLATFORM),mingw32)
-	@$(MAKE) VERSION=$(VERSION) -C $(NSISDIR) V=$(V) \
-		USE_CURL_DLOPEN=$(USE_CURL_DLOPEN) \
-		USE_INTERNAL_SPEEX=$(USE_INTERNAL_SPEEX) \
-		USE_INTERNAL_ZLIB=$(USE_INTERNAL_ZLIB) \
-		USE_INTERNAL_JPEG=$(USE_INTERNAL_JPEG)
+	@$(MAKE) VERSION=$(VERSION) -C $(NSISDIR) V=$(V)
 else
 	@$(MAKE) VERSION=$(VERSION) -C $(LOKISETUPDIR) V=$(V)
 endif
