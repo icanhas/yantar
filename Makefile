@@ -15,27 +15,13 @@ ifeq ($(HOSTSYS),darwin)
   HOSTARCH=$(shell uname -p | sed '$(subarch)')
 endif
 
-ifndef BUILD_STANDALONE
-  BUILD_STANDALONE=1
-endif
-ifndef BUILD_CLIENT
-  BUILD_CLIENT=1
-endif
-ifndef BUILD_CLIENT_SMP
-  BUILD_CLIENT_SMP=0
-endif
-ifndef BUILD_SERVER
-  BUILD_SERVER=1
-endif
-ifndef BUILD_GAME_SO
-  BUILD_GAME_SO=1
-endif
-ifndef BUILD_GAME_QVM
-  BUILD_GAME_QVM=0
-endif
-ifndef BUILD_BASEGAME
-  BUILD_BASEGAME=0
-endif
+BUILD_STANDALONE?=1
+BUILD_CLIENT?=1
+BUILD_CLIENT_SMP?=0
+BUILD_SERVER?=1
+BUILD_GAME_SO?=1
+BUILD_GAME_QVM?=0
+BUILD_BASEGAME?=0
 
 ifneq ($(PLATFORM),darwin)
   BUILD_CLIENT_SMP=0
@@ -43,9 +29,7 @@ endif
 
 -include Makeconfig
 
-ifndef PLATFORM
-PLATFORM=$(HOSTSYS)
-endif
+PLATFORM?=$(HOSTSYS)
 export PLATFORM
 
 ifeq ($(HOSTARCH),powerpc)
@@ -55,9 +39,7 @@ ifeq ($(HOSTARCH),powerpc64)
   HOSTARCH=ppc64
 endif
 
-ifndef ARCH
-ARCH=$(HOSTARCH)
-endif
+ARCH?=$(HOSTARCH)
 export ARCH
 
 ifneq ($(PLATFORM),$(HOSTSYS))
@@ -71,77 +53,27 @@ else
 endif
 export CROSS_COMPILING
 
-ifndef VERSION
-	VERSION=0.1.6
-endif
+VERSION?=0.1.6
+CLIENTBIN?=yantar
+SERVERBIN?=yantarded
+BASEGAME?=base
+BASEGAME_CFLAGS?=
 
-ifndef CLIENTBIN
-	CLIENTBIN=yantar
-endif
+COPYDIR?="/usr/local/games/yantar"
+COPYBINDIR?=$(COPYDIR)
+SRC?=src
+BIN_DIR?=bin
+OBJ_DIR?=.ofiles
+TEMPDIR?=/tmp
 
-ifndef SERVERBIN
-	SERVERBIN=yantarded
-endif
+GENERATE_DEPENDENCIES?=1
+USE_CURL?=1
+USE_CODEC_VORBIS?=1
+USE_MUMBLE?=0
+USE_VOIP?=0
 
-ifndef BASEGAME
-	BASEGAME=base
-endif
-
-ifndef BASEGAME_CFLAGS
-	BASEGAME_CFLAGS=
-endif
-
-ifndef COPYDIR
-COPYDIR="/usr/local/games/yantar"
-endif
-
-ifndef COPYBINDIR
-COPYBINDIR=$(COPYDIR)
-endif
-
-ifndef SRC
-SRC=src
-endif
-
-ifndef BIN_DIR
-BIN_DIR=bin
-endif
-
-ifndef OBJ_DIR
-OBJ_DIR=.ofiles
-endif
-
-ifndef TEMPDIR
-TEMPDIR=/tmp
-endif
-
-ifndef GENERATE_DEPENDENCIES
-GENERATE_DEPENDENCIES=1
-endif
-
-ifndef USE_CURL
-USE_CURL=1
-endif
-
-ifndef USE_CODEC_VORBIS
-USE_CODEC_VORBIS=1
-endif
-
-ifndef USE_MUMBLE
-USE_MUMBLE=0
-endif
-
-ifndef USE_VOIP
-USE_VOIP=0
-endif
-
-ifndef DEBUG_CFLAGS
-DEBUG_CFLAGS=-g -O0
-endif
-
-ifndef USE_OLD_VM64
-USE_OLD_VM64=0
-endif
+DEBUG_CFLAGS?=-g -O0
+USE_OLD_VM64?=0
 
 DP=debug-$(PLATFORM)-$(ARCH)
 RP=release-$(PLATFORM)-$(ARCH)
@@ -358,9 +290,7 @@ ifeq ($(PLATFORM),mingw32)
     CC=gcc
   endif
 
-  ifndef WINDRES
-    WINDRES=windres
-  endif
+  WINDRES?=windres
 
   # give windres a target flag to avoid having it detect the host system's arch
   WINDRES_FLAGS=
@@ -649,13 +579,8 @@ endif
 
 TARGETS =
 
-ifndef FULLBINEXT
-  FULLBINEXT=-$(ARCH)$(BINEXT)
-endif
-
-ifndef SHLIBNAME
-  SHLIBNAME=$(ARCH).$(SHLIBEXT)
-endif
+FULLBINEXT?=-$(ARCH)$(BINEXT)
+SHLIBNAME?=$(ARCH).$(SHLIBEXT)
 
 ifneq ($(BUILD_SERVER),0)
   TARGETS += $(B)/$(SERVERBIN)$(FULLBINEXT)
@@ -943,8 +868,6 @@ TOOLS_CFLAGS += $(TOOLS_OPTIMIZE) \
                 -DTEMPDIR=\"$(TEMPDIR)\" -DSYSTEM=\"\" \
                 -I$(Q3LCCSRCDIR) \
                 -I$(LBURGDIR)
-TOOLS_LIBS =
-TOOLS_LDFLAGS =
 
 ifeq ($(GENERATE_DEPENDENCIES),1)
 	TOOLS_CFLAGS += -MMD
