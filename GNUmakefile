@@ -2,6 +2,11 @@
 # a new file named 'Makeconfig' in the same directory as this file and
 # define your parameters there.
 
+# may be a cross-compiler
+CC?=cc
+# native compiler
+NCC?=cc
+
 subarch=s/i.86/x86/; s/x86_64/amd64/; s/x64/amd64/
 HOSTSYS=$(shell uname | tr '[:upper:]' '[:lower:]' | sed 's/_.*//; s;/;_;g')
 HOSTARCH=$(shell uname -m | sed '$(subarch)')
@@ -101,6 +106,7 @@ CGDIR=$(YAN_DIR)/cgame
 BLIBDIR=$(YAN_DIR)/botlib
 UIDIR=$(YAN_DIR)/ui
 Q3ASMDIR=$(SRC)/cmd/asm
+Q3LCCDIR=$(SRC)/cmd/lcc
 LBURGDIR=$(SRC)/cmd/lcc/lburg
 Q3CPPDIR=$(SRC)/cmd/lcc/cpp
 Q3LCCETCDIR=$(SRC)/cmd/lcc/etc
@@ -289,6 +295,9 @@ ifeq ($(PLATFORM),mingw32)
   ifeq ($(call bin_path, $(CC)),)
     CC=gcc
   endif
+  ifeq ($(call bin_path, $(NCC)),)
+    NCC=gcc
+  endif
 
   WINDRES?=windres
 
@@ -328,7 +337,11 @@ ifeq ($(PLATFORM),mingw32)
   SHLIBCFLAGS=
   SHLIBLDFLAGS=-shared $(LDFLAGS)
 
-  BINEXT=.exe
+  E=.exe
+  ifeq ($(CROSS_COMPILING),0)
+    # native bin extension (lcc etc)
+    NE=.exe
+  endif
 
   LIBS= -lws2_32 -lwinmm -lpsapi
   CLIENT_CFLAGS += $(SDL_CFLAGS)
@@ -474,6 +487,7 @@ ifeq ($(PLATFORM),irix64)
   ARCH=mips
 
   CC = c99
+  NCC = C99
   MKDIR = mkdir -p
 
   BASE_CFLAGS=-Dstricmp=strcasecmp -Xcpluscomm -woff 1185 \
@@ -498,6 +512,7 @@ else # if IRIX
 
 ifeq ($(PLATFORM),sunos)
   CC=gcc
+  NCC=gcc
   INSTALL=ginstall
   MKDIR=gmkdir
   COPYDIR="/usr/local/share/games/quake3"
@@ -579,7 +594,7 @@ endif
 
 TARGETS =
 
-FULLBINEXT?=-$(ARCH)$(BINEXT)
+FULLBINEXT?=-$(ARCH)$E
 SHLIBNAME?=$(ARCH).$(SHLIBEXT)
 
 ifneq ($(BUILD_SERVER),0)
@@ -601,12 +616,10 @@ ifneq ($(BUILD_GAME_SO),0)
 endif
 
 ifneq ($(BUILD_GAME_QVM),0)
-  ifneq ($(CROSS_COMPILING),1)
-    TARGETS += \
-      $(B)/$(BASEGAME)/vm/cgame.qvm \
-      $(B)/$(BASEGAME)/vm/game.qvm \
-      $(B)/$(BASEGAME)/vm/ui.qvm
-  endif
+  TARGETS += \
+    $(B)/$(BASEGAME)/vm/cgame.qvm \
+    $(B)/$(BASEGAME)/vm/game.qvm \
+    $(B)/$(BASEGAME)/vm/ui.qvm
 endif
 
 ifeq ($(USE_CURL),1)
@@ -760,6 +773,7 @@ ifeq ($(V),1)
 	@echo "  HOSTSYS: $(HOSTSYS)"
 	@echo "  HOSTARCH: $(HOSTARCH)"
 	@echo "  CC: $(CC)"
+	@echo "  NCC: $(NCC)"
 	@echo ""
 	@echo "  CFLAGS:"
 	-@for i in $(CFLAGS); \
@@ -807,6 +821,20 @@ ifeq ($(V),1)
 		echo "    $$i"; \
 	done
 	@echo ""
+endif
+ifeq ($(BUILD_GAME_QVM),1)
+# make q3as
+	$Q(cd $(Q3ASMDIR) && \
+	  $(MAKE) CC=$(NCC) CFLAGS="$(TOOLS_CFLAGS)" Q=$Q V=$V \
+	  LDFLAGS="$(TOOLS_LDFLAGS)" Q3ASM=../../../$(Q3ASM) INC=-I../../../include/yantar \
+	  echo_cmd=$(echo_cmd))
+# make q3lcc
+	$Q(cd $(Q3LCCDIR) && \
+	  $(MAKE) CC=$(NCC) CFLAGS=" \
+	  $(TOOLS_CFLAGS)" LDFLAGS=$(TOOLS_LDFLAGS) Q=$Q V=$V \
+	  RCC=../../../$(RCC) LBURG=../../../$(LBURG) Q3CPP=../../../$(Q3CPP) Q3LCC=../../../$(Q3LCC) \
+	  DAGCHECK_C=../../../$(DAGCHECK_C) \
+	  echo_cmd=$(echo_cmd))
 endif
 ifneq ($(TARGETS),)
 	@$(MAKE) $(TARGETS) V=$(V)
@@ -865,116 +893,19 @@ endif
 
 TOOLS_OPTIMIZE = -g -Wall -fno-strict-aliasing
 TOOLS_CFLAGS += $(TOOLS_OPTIMIZE) \
-                -DTEMPDIR=\"$(TEMPDIR)\" -DSYSTEM=\"\" \
-                -I$(Q3LCCSRCDIR) \
-                -I$(LBURGDIR)
+                -DTEMPDIR=\\\"$(TEMPDIR)\\\" -DSYSTEM=\"\"
 
 ifeq ($(GENERATE_DEPENDENCIES),1)
 	TOOLS_CFLAGS += -MMD
 endif
 
-define DO_TOOLS_CC
-$(echo_cmd) "TOOLS_CC $<"
-$(Q)$(CC) $(TOOLS_CFLAGS)  $(INCLUDES) -o $@ -c $<
-endef
-
-define DO_TOOLS_CC_DAGCHECK
-$(echo_cmd) "TOOLS_CC_DAGCHECK $<"
-$(Q)$(CC) $(TOOLS_CFLAGS) -Wno-unused -o $@ -c $<
-endef
-
-LBURG       = $(B)/cmd/lburg$(BINEXT)
-DAGCHECK_C  = $(B)/cmd/rcc/dagcheck.c
-RCC       = $(B)/cmd/q3rcc$(BINEXT)
-Q3CPP       = $(B)/cmd/q3cpp$(BINEXT)
-Q3LCC       = $(B)/cmd/q3lcc$(BINEXT)
-Q3ASM       = $(B)/cmd/q3asm$(BINEXT)
-
-LBURGOBJ= \
-	$(O)/cmd/lburg/lburg.o \
-	$(O)/cmd/lburg/gram.o
-
-$(O)/cmd/lburg/%.o: $(LBURGDIR)/%.c
-	$(DO_TOOLS_CC)
-
-$(LBURG): $(LBURGOBJ)
-	$(echo_cmd) "LD $@"
-	$(Q)$(CC) $(TOOLS_CFLAGS) $(TOOLS_LDFLAGS) -o $@ $^ $(TOOLS_LIBS)
-
-RCCOBJ = \
-  $(O)/cmd/rcc/alloc.o \
-  $(O)/cmd/rcc/bind.o \
-  $(O)/cmd/rcc/bytecode.o \
-  $(O)/cmd/rcc/dag.o \
-  $(O)/cmd/rcc/dagcheck.o \
-  $(O)/cmd/rcc/decl.o \
-  $(O)/cmd/rcc/enode.o \
-  $(O)/cmd/rcc/error.o \
-  $(O)/cmd/rcc/event.o \
-  $(O)/cmd/rcc/expr.o \
-  $(O)/cmd/rcc/gen.o \
-  $(O)/cmd/rcc/init.o \
-  $(O)/cmd/rcc/inits.o \
-  $(O)/cmd/rcc/input.o \
-  $(O)/cmd/rcc/lex.o \
-  $(O)/cmd/rcc/list.o \
-  $(O)/cmd/rcc/main.o \
-  $(O)/cmd/rcc/null.o \
-  $(O)/cmd/rcc/output.o \
-  $(O)/cmd/rcc/prof.o \
-  $(O)/cmd/rcc/profio.o \
-  $(O)/cmd/rcc/simp.o \
-  $(O)/cmd/rcc/stmt.o \
-  $(O)/cmd/rcc/string.o \
-  $(O)/cmd/rcc/sym.o \
-  $(O)/cmd/rcc/symbolic.o \
-  $(O)/cmd/rcc/trace.o \
-  $(O)/cmd/rcc/tree.o \
-  $(O)/cmd/rcc/types.o
-
-$(DAGCHECK_C): $(LBURG) $(Q3LCCSRCDIR)/dagcheck.md
-	$(echo_cmd) "LBURG $(Q3LCCSRCDIR)/dagcheck.md"
-	$(Q)$(LBURG) $(Q3LCCSRCDIR)/dagcheck.md $@
-
-$(O)/cmd/rcc/dagcheck.o: $(DAGCHECK_C)
-	$(DO_TOOLS_CC_DAGCHECK)
-
-$(O)/cmd/rcc/%.o: $(Q3LCCSRCDIR)/%.c
-	$(DO_TOOLS_CC)
-
-$(RCC): $(RCCOBJ)
-	$(echo_cmd) "LD $@"
-	$(Q)$(CC) $(TOOLS_CFLAGS) $(TOOLS_LDFLAGS) -o $@ $^ $(TOOLS_LIBS)
-
-Q3CPPOBJ = \
-	$(O)/cmd/cpp/cpp.o \
-	$(O)/cmd/cpp/eval.o \
-	$(O)/cmd/cpp/getopt.o \
-	$(O)/cmd/cpp/hideset.o \
-	$(O)/cmd/cpp/include.o \
-	$(O)/cmd/cpp/lex.o \
-	$(O)/cmd/cpp/macro.o \
-	$(O)/cmd/cpp/nlist.o \
-	$(O)/cmd/cpp/tokens.o \
-	$(O)/cmd/cpp/unix.o
-
-$(O)/cmd/cpp/%.o: $(Q3CPPDIR)/%.c
-	$(DO_TOOLS_CC)
-
-$(Q3CPP): $(Q3CPPOBJ)
-	$(echo_cmd) "LD $@"
-	$(Q)$(CC) $(TOOLS_CFLAGS) $(TOOLS_LDFLAGS) -o $@ $^ $(TOOLS_LIBS)
-
-Q3LCCOBJ = \
-	$(O)/cmd/etc/lcc.o \
-	$(O)/cmd/etc/bytecode.o
-
-$(O)/cmd/etc/%.o: $(Q3LCCETCDIR)/%.c
-	$(DO_TOOLS_CC)
-
-$(Q3LCC): $(Q3LCCOBJ) $(RCC) $(Q3CPP)
-	$(echo_cmd) "LD $@"
-	$(Q)$(CC) $(TOOLS_CFLAGS) $(TOOLS_LDFLAGS) -o $@ $(Q3LCCOBJ) $(TOOLS_LIBS)
+# These are built for the host system only
+LBURG = $(B)/cmd/lburg$(NE)
+DAGCHECK_C = $(B)/cmd/rcc/dagcheck.c
+RCC = $(B)/cmd/q3rcc$(NE)
+Q3CPP = $(B)/cmd/q3cpp$(NE)
+Q3LCC = $(B)/cmd/q3lcc$(NE)
+Q3ASM = $(B)/cmd/q3asm$(NE)
 
 define DO_Q3LCC
 $(echo_cmd) "Q3LCC $<"
@@ -995,18 +926,6 @@ define DO_UI_Q3LCC
 $(echo_cmd) "UI_Q3LCC $<"
 $(Q)$(Q3LCC) $(BASEGAME_CFLAGS) -DUI $(INCLUDES) -o $@ $<
 endef
-
-
-Q3ASMOBJ = \
-  $(O)/cmd/asm/q3asm.o \
-  $(O)/cmd/asm/cmdlib.o
-
-$(O)/cmd/asm/%.o: $(Q3ASMDIR)/%.c
-	$(DO_TOOLS_CC)
-
-$(Q3ASM): $(Q3ASMOBJ)
-	$(echo_cmd) "LD $@"
-	$(Q)$(CC) $(TOOLS_CFLAGS) $(TOOLS_LDFLAGS) -o $@ $^ $(TOOLS_LIBS)
 
 #
 # client/server
@@ -1657,7 +1576,6 @@ $(O)/$(BASEGAME)/common/%.asm: $(COMDIR)/%.c $(Q3LCC)
 OBJ = $(YOBJ) $(R2OBJ) $(YDOBJ) $(JPGOBJ) \
   $(GOBJ) $(CGOBJ) $(UIOBJ) \
   $(GVMOBJ) $(CGVMOBJ) $(UIVMOBJ)
-TOOLSOBJ = $(LBURGOBJ) $(Q3CPPOBJ) $(RCCOBJ) $(Q3LCCOBJ) $(Q3ASMOBJ)
 
 
 copyfiles: release
@@ -1714,16 +1632,25 @@ clean2:
 cmdclean: cmdclean-debug cmdclean-release
 
 cmdclean-debug:
+	@echo cmdclean-debug
 	@$(MAKE) cmdclean2 B=$(BIN_DIR) O=$(OBJ_DIR)/$(DP)
 
 cmdclean-release:
+	@echo cmdclean-release
 	@$(MAKE) cmdclean2 B=$(BIN_DIR) O=$(OBJ_DIR)/$(RP)
 
 cmdclean2:
-	@echo "CMD_CLEAN $(B)"
-	@rm -f $(TOOLSOBJ)
-	@rm -f $(TOOLSOBJ_D_FILES)
-	@rm -f $(LBURG) $(DAGCHECK_C) $(RCC) $(Q3CPP) $(Q3LCC) $(Q3ASM)
+# clean q3as
+	$Q(cd $(Q3ASMDIR) && \
+	  $(MAKE) clean Q=$Q V=$V \
+	  LDFLAGS="$(TOOLS_LDFLAGS)" Q3ASM=../../../$(Q3ASM) INC=-I../../../include/yantar \
+	  echo_cmd=$(echo_cmd))
+# clean q3lcc
+	$Q(cd $(Q3LCCDIR) && \
+	  $(MAKE) clean Q=$Q V=$V \
+	  RCC=../../../$(RCC) LBURG=../../../$(LBURG) Q3CPP=../../../$(Q3CPP) Q3LCC=../../../$(Q3LCC) \
+	  DAGCHECK_C=../../../$(DAGCHECK_C) \
+	  echo_cmd=$(echo_cmd))
 
 distclean: clean cmdclean
 	@rm -rf $(BIN_DIR)
@@ -1744,12 +1671,11 @@ dist:
 
 ifneq ($(B),)
   OBJ_D_FILES=$(filter %.d,$(OBJ:%.o=%.d))
-  TOOLSOBJ_D_FILES=$(filter %.d,$(TOOLSOBJ:%.o=%.d))
-  -include $(OBJ_D_FILES) $(TOOLSOBJ_D_FILES)
+  -include $(OBJ_D_FILES)
 endif
 
 .PHONY: all clean clean2 clean-debug clean-release copyfiles \
 	debug default dist distclean installer makedirs \
 	release targets \
 	cmdclean cmdclean2 cmdclean-debug cmdclean-release \
-	$(OBJ_D_FILES) $(TOOLSOBJ_D_FILES)
+	$(OBJ_D_FILES)
