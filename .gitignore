@@ -1,6 +1,8 @@
 bin/
 .ofiles/
 Makeconfig
+*.o
+*.d
 *.swp
 *.tmp
 *~
