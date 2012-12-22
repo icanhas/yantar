@@ -1537,9 +1537,9 @@ $(O)/$(BASEGAME)/cgame/bg/%.o: $(BGDIR)/%.c
 	$(DO_CGAME_CC)
 $(O)/$(BASEGAME)/cgame/%.o: $(CGDIR)/%.c
 	$(DO_CGAME_CC)
-$(O)/$(BASEGAME)/cgame/bg/%.asm: $(BGDIR)/%.c $(Q3LCC)
+$(O)/$(BASEGAME)/cgame/bg/%.asm: $(BGDIR)/%.c
 	$(DO_CGAME_Q3LCC)
-$(O)/$(BASEGAME)/cgame/%.asm: $(CGDIR)/%.c $(Q3LCC)
+$(O)/$(BASEGAME)/cgame/%.asm: $(CGDIR)/%.c
 	$(DO_CGAME_Q3LCC)
 
 $(O)/$(BASEGAME)/game/%.o: $(GDIR)/%.c
@@ -1548,35 +1548,34 @@ $(O)/$(BASEGAME)/game/ai/%.o: $(AIDIR)/%.c
 	$(DO_GAME_CC)
 $(O)/$(BASEGAME)/game/bg/%.o: $(BGDIR)/%.c
 	$(DO_GAME_CC)
-$(O)/$(BASEGAME)/game/%.asm: $(GDIR)/%.c $(Q3LCC)
+$(O)/$(BASEGAME)/game/%.asm: $(GDIR)/%.c
 	$(DO_GAME_Q3LCC)
-$(O)/$(BASEGAME)/game/ai/%.asm: $(AIDIR)/%.c $(Q3LCC)
+$(O)/$(BASEGAME)/game/ai/%.asm: $(AIDIR)/%.c
 	$(DO_GAME_Q3LCC)
-$(O)/$(BASEGAME)/game/bg/%.asm: $(BGDIR)/%.c $(Q3LCC)
+$(O)/$(BASEGAME)/game/bg/%.asm: $(BGDIR)/%.c
 	$(DO_GAME_Q3LCC)
 
 $(O)/$(BASEGAME)/ui/bg/%.o: $(BGDIR)/%.c
 	$(DO_UI_CC)
 $(O)/$(BASEGAME)/ui/%.o: $(UIDIR)/%.c
 	$(DO_UI_CC)
-$(O)/$(BASEGAME)/ui/bg/%.asm: $(BGDIR)/%.c $(Q3LCC)
+$(O)/$(BASEGAME)/ui/bg/%.asm: $(BGDIR)/%.c
 	$(DO_UI_Q3LCC)
-$(O)/$(BASEGAME)/ui/%.asm: $(UIDIR)/%.c $(Q3LCC)
+$(O)/$(BASEGAME)/ui/%.asm: $(UIDIR)/%.c
 	$(DO_UI_Q3LCC)
 
 $(O)/$(BASEGAME)/common/%.o: $(COMDIR)/%.c
 	$(DO_SHLIB_CC)
-$(O)/$(BASEGAME)/common/%.asm: $(COMDIR)/%.c $(Q3LCC)
+$(O)/$(BASEGAME)/common/%.asm: $(COMDIR)/%.c
 	$(DO_Q3LCC)
 
 #
 # misc
 #
 
-OBJ = $(YOBJ) $(R2OBJ) $(YDOBJ) $(JPGOBJ) \
+OBJ = $(YOBJ) $(R2OBJ) $(YDOBJ) \
   $(GOBJ) $(CGOBJ) $(UIOBJ) \
   $(GVMOBJ) $(CGVMOBJ) $(UIVMOBJ)
-
 
 copyfiles: release
 	@if [ ! -d $(COPYDIR)/$(BASEGAME) ]; then echo "You need to set COPYDIR to where your Quake3 data is!"; fi
