@@ -101,7 +101,7 @@ OSXDIR=$(SYSDIR)/osx
 WINDIR=$(SYSDIR)/win
 GDIR=$(YAN_DIR)/game
 AIDIR=$(GDIR)/ai
-BGDIR=$(GDIR)/bg
+BGDIR=$(YAN_DIR)/bg
 CGDIR=$(YAN_DIR)/cgame
 BLIBDIR=$(YAN_DIR)/botlib
 UIDIR=$(YAN_DIR)/ui
@@ -860,10 +860,10 @@ makedirs:
 		$(O)/ded/sys/null \
 		$(O)/ded/sys/sdl \
 		$(O)/ded/vm \
-		$(O)/$(BASEGAME)/cgame/bg \
+		$(O)/$(BASEGAME)/bg \
+		$(O)/$(BASEGAME)/cgame \
 		$(O)/$(BASEGAME)/game/ai \
-		$(O)/$(BASEGAME)/game/bg \
-		$(O)/$(BASEGAME)/ui/bg \
+		$(O)/$(BASEGAME)/ui \
 		$(O)/$(BASEGAME)/common/vmlibc \
 		$(O)/$(BASEGAME)/vm \
 		$(O)/cmd/asm \
@@ -1291,9 +1291,9 @@ $(B)/$(SERVERBIN)$(FULLBINEXT): $(YDOBJ)
 #
 
 CGOBJ_ = \
-  $(O)/$(BASEGAME)/cgame/bg/misc.o \
-  $(O)/$(BASEGAME)/cgame/bg/pmove.o \
-  $(O)/$(BASEGAME)/cgame/bg/slidemove.o \
+  $(O)/$(BASEGAME)/bg/misc.o \
+  $(O)/$(BASEGAME)/bg/pmove.o \
+  $(O)/$(BASEGAME)/bg/slidemove.o \
   $(O)/$(BASEGAME)/cgame/consolecmds.o \
   $(O)/$(BASEGAME)/cgame/draw.o \
   $(O)/$(BASEGAME)/cgame/drawtools.o \
@@ -1343,9 +1343,9 @@ GOBJ_ = \
   $(O)/$(BASEGAME)/game/ai/main.o \
   $(O)/$(BASEGAME)/game/ai/team.o \
   $(O)/$(BASEGAME)/game/arenas.o \
-  $(O)/$(BASEGAME)/game/bg/misc.o \
-  $(O)/$(BASEGAME)/game/bg/pmove.o \
-  $(O)/$(BASEGAME)/game/bg/slidemove.o \
+  $(O)/$(BASEGAME)/bg/misc.o \
+  $(O)/$(BASEGAME)/bg/pmove.o \
+  $(O)/$(BASEGAME)/bg/slidemove.o \
   $(O)/$(BASEGAME)/game/bot.o \
   $(O)/$(BASEGAME)/game/client.o \
   $(O)/$(BASEGAME)/game/cmds.o \
@@ -1386,7 +1386,7 @@ $(B)/$(BASEGAME)/vm/game.qvm: $(GVMOBJ) $(GDIR)/syscalls.asm
 #
 
 UIOBJ_ = \
-  $(O)/$(BASEGAME)/ui/bg/misc.o \
+  $(O)/$(BASEGAME)/bg/misc.o \
   $(O)/$(BASEGAME)/ui/addbots.o \
   $(O)/$(BASEGAME)/ui/atoms.o \
   $(O)/$(BASEGAME)/ui/cinematics.o \
@@ -1533,11 +1533,11 @@ $(O)/ded/sys/osx/%.o: $(OSXDIR)/%.m
 # game module rules
 #
 
-$(O)/$(BASEGAME)/cgame/bg/%.o: $(BGDIR)/%.c
+$(O)/$(BASEGAME)/bg/%.o: $(BGDIR)/%.c
 	$(DO_CGAME_CC)
 $(O)/$(BASEGAME)/cgame/%.o: $(CGDIR)/%.c
 	$(DO_CGAME_CC)
-$(O)/$(BASEGAME)/cgame/bg/%.asm: $(BGDIR)/%.c
+$(O)/$(BASEGAME)/bg/%.asm: $(BGDIR)/%.c
 	$(DO_CGAME_Q3LCC)
 $(O)/$(BASEGAME)/cgame/%.asm: $(CGDIR)/%.c
 	$(DO_CGAME_Q3LCC)
@@ -1546,20 +1546,20 @@ $(O)/$(BASEGAME)/game/%.o: $(GDIR)/%.c
 	$(DO_GAME_CC)
 $(O)/$(BASEGAME)/game/ai/%.o: $(AIDIR)/%.c
 	$(DO_GAME_CC)
-$(O)/$(BASEGAME)/game/bg/%.o: $(BGDIR)/%.c
+$(O)/$(BASEGAME)/bg/%.o: $(BGDIR)/%.c
 	$(DO_GAME_CC)
 $(O)/$(BASEGAME)/game/%.asm: $(GDIR)/%.c
 	$(DO_GAME_Q3LCC)
 $(O)/$(BASEGAME)/game/ai/%.asm: $(AIDIR)/%.c
 	$(DO_GAME_Q3LCC)
-$(O)/$(BASEGAME)/game/bg/%.asm: $(BGDIR)/%.c
+$(O)/$(BASEGAME)/bg/%.asm: $(BGDIR)/%.c
 	$(DO_GAME_Q3LCC)
 
-$(O)/$(BASEGAME)/ui/bg/%.o: $(BGDIR)/%.c
+$(O)/$(BASEGAME)/bg/%.o: $(BGDIR)/%.c
 	$(DO_UI_CC)
 $(O)/$(BASEGAME)/ui/%.o: $(UIDIR)/%.c
 	$(DO_UI_CC)
-$(O)/$(BASEGAME)/ui/bg/%.asm: $(BGDIR)/%.c
+$(O)/$(BASEGAME)/bg/%.asm: $(BGDIR)/%.c
 	$(DO_UI_Q3LCC)
 $(O)/$(BASEGAME)/ui/%.asm: $(UIDIR)/%.c
 	$(DO_UI_Q3LCC)
