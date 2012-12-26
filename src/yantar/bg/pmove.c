@@ -454,14 +454,6 @@ airmove(pmove_t *pm, pml_t *pml)
 	_airmove(pm, pml, &pm->cmd, &wishvel, &wishdir, &wishspeed);
 	/* not on ground, so little effect on velocity */
 	accelerate(pm, pml, wishdir, wishspeed, pm_airaccelerate);
-	/*
-	 * we may have a ground plane that is very steep, even
-	 * though we don't have a groundentity
-	 * slide along the steep plane
-	 */
-	if(pml->groundPlane)
-		PM_ClipVelocity(pm->ps->velocity, pml->groundTrace.plane.normal,
-			pm->ps->velocity, OVERCLIP);
 	PM_SlideMove(pm, pml, qtrue);
 }
 
