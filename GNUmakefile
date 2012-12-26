@@ -1291,6 +1291,7 @@ $(B)/$(SERVERBIN)$(FULLBINEXT): $(YDOBJ)
 #
 
 CGOBJ_ = \
+  $(O)/$(BASEGAME)/bg/item.o \
   $(O)/$(BASEGAME)/bg/misc.o \
   $(O)/$(BASEGAME)/bg/pmove.o \
   $(O)/$(BASEGAME)/bg/slidemove.o \
@@ -1343,6 +1344,7 @@ GOBJ_ = \
   $(O)/$(BASEGAME)/game/ai/main.o \
   $(O)/$(BASEGAME)/game/ai/team.o \
   $(O)/$(BASEGAME)/game/arenas.o \
+  $(O)/$(BASEGAME)/bg/item.o \
   $(O)/$(BASEGAME)/bg/misc.o \
   $(O)/$(BASEGAME)/bg/pmove.o \
   $(O)/$(BASEGAME)/bg/slidemove.o \
@@ -1386,6 +1388,7 @@ $(B)/$(BASEGAME)/vm/game.qvm: $(GVMOBJ) $(GDIR)/syscalls.asm
 #
 
 UIOBJ_ = \
+  $(O)/$(BASEGAME)/bg/item.o \
   $(O)/$(BASEGAME)/bg/misc.o \
   $(O)/$(BASEGAME)/ui/addbots.o \
   $(O)/$(BASEGAME)/ui/atoms.o \
