@@ -92,12 +92,11 @@ dofriction(pmove_t *pm, pml_t *pml)
 
 	vel = pm->ps->velocity;
 	copyv3(vel, vec);
-	if(pml->walking)
-		vec[2] = 0;	/* ignore slope movement */
 	speed = lenv3(vec);
 	if(speed < 1){
 		vel[0] = 0;
 		vel[1] = 0;	/* allow sinking underwater */
+		vel[2] = 0;
 		/* FIXME: still have z friction underwater? */
 		return;
 	}
@@ -455,7 +454,15 @@ airmove(pmove_t *pm, pml_t *pml)
 	_airmove(pm, pml, &pm->cmd, &wishvel, &wishdir, &wishspeed);
 	/* not on ground, so little effect on velocity */
 	accelerate(pm, pml, wishdir, wishspeed, pm_airaccelerate);
-	PM_StepSlideMove(pm, pml, qtrue);
+	/*
+	 * we may have a ground plane that is very steep, even
+	 * though we don't have a groundentity
+	 * slide along the steep plane
+	 */
+	if(pml->groundPlane)
+		PM_ClipVelocity(pm->ps->velocity, pml->groundTrace.plane.normal,
+			pm->ps->velocity, OVERCLIP);
+	PM_SlideMove(pm, pml, qtrue);
 }
 
 static void
@@ -496,7 +503,7 @@ deadmove(pmove_t *pm, pml_t *pml)
 
 	if(!pml->walking)
 		return;
-	forward = lenv3 (pm->ps->velocity);	/* extra friction */
+	forward = lenv3(pm->ps->velocity);	/* extra friction */
 	forward -= 20;
 	if(forward <= 0)
 		clearv3(pm->ps->velocity);
@@ -652,9 +659,10 @@ setfalling(pmove_t *pm, pml_t *pml)
 static void
 groundtrace(pmove_t *pm, pml_t *pml)
 {
-	Vec3 point;
+	Vec3 point, vel;
 	trace_t trace;
 
+	copyv3(pm->ps->velocity, vel);
 	point[0] = pm->ps->origin[0];
 	point[1] = pm->ps->origin[1];
 	point[2] = pm->ps->origin[2] - 0.25;
@@ -675,8 +683,9 @@ groundtrace(pmove_t *pm, pml_t *pml)
 	}
 	
 	/* check if getting thrown off the ground */
-	if(pm->ps->velocity[2] > 0 &&
-	   dotv3(pm->ps->velocity, trace.plane.normal) > 10){
+	if(vel[2] > 0 &&
+	   dotv3(vel, trace.plane.normal) > 10)
+	then{
 		if(pm->debugLevel)
 			Com_Printf("%u:kickoff\n", cnt);
 		/* go into jump animation */
@@ -726,9 +735,6 @@ groundtrace(pmove_t *pm, pml_t *pml)
 		}
 	}
 	pm->ps->groundEntityNum = trace.entityNum;
-	/* don't reset the z velocity for slopes */
-	/* pm->ps->velocity[2] = 0; */
-
 	PM_AddTouchEnt(pm, trace.entityNum);
 }
 
