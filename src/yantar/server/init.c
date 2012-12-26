@@ -7,10 +7,7 @@
 
 #include "server.h"
 
-
 /*
- * SV_SendConfigstring
- *
  * Creates and sends the server command necessary to update the CS index for the
  * given client
  */
@@ -51,8 +48,6 @@ SV_SendConfigstring(client_t *client, int index)
 }
 
 /*
- * SV_UpdateConfigstrings
- *
  * Called when a client goes from CS_PRIMED to CS_ACTIVE.  Updates all
  * Configstring indexes that have changed while the client was in CS_PRIMED
  */
@@ -75,10 +70,6 @@ SV_UpdateConfigstrings(client_t *client)
 	}
 }
 
-/*
- * SV_SetConfigstring
- *
- */
 void
 SV_SetConfigstring(int index, const char *val)
 {
@@ -120,10 +111,6 @@ SV_SetConfigstring(int index, const char *val)
 		}
 }
 
-/*
- * SV_GetConfigstring
- *
- */
 void
 SV_GetConfigstring(int index, char *buffer, int bufferSize)
 {
@@ -140,11 +127,6 @@ SV_GetConfigstring(int index, char *buffer, int bufferSize)
 	Q_strncpyz(buffer, sv.configstrings[index], bufferSize);
 }
 
-
-/*
- * SV_SetUserinfo
- *
- */
 void
 SV_SetUserinfo(int index, const char *val)
 {
@@ -160,12 +142,6 @@ SV_SetUserinfo(int index, const char *val)
 			"name"), sizeof(svs.clients[index].name));
 }
 
-
-
-/*
- * SV_GetUserinfo
- *
- */
 void
 SV_GetUserinfo(int index, char *buffer, int bufferSize)
 {
@@ -177,10 +153,7 @@ SV_GetUserinfo(int index, char *buffer, int bufferSize)
 	Q_strncpyz(buffer, svs.clients[ index ].userinfo, bufferSize);
 }
 
-
 /*
- * SV_CreateBaseline
- *
  * Entity baselines are used to compress non-delta messages
  * to the clients -- only the fields that differ from the
  * baseline will be transmitted
@@ -199,16 +172,11 @@ SV_CreateBaseline(void)
 
 		/*
 		 * take current state as baseline
-		 *  */
+		 */
 		sv.svEntities[entnum].baseline = svent->s;
 	}
 }
 
-
-/*
- * SV_BoundMaxClients
- *
- */
 static void
 SV_BoundMaxClients(int minimum)
 {
@@ -223,10 +191,7 @@ SV_BoundMaxClients(int minimum)
 		Cvar_Set("sv_maxclients", va("%i", MAX_CLIENTS));
 }
 
-
 /*
- * SV_Startup
- *
  * Called when a host starts a map when it wasn't running
  * one before.  Successive map or map_restart commands will
  * NOT cause this to be called, unless the game is exited to
@@ -258,17 +223,11 @@ SV_Startup(void)
 	NET_JoinMulticast6();
 }
 
-
-/*
- * SV_ChangeMaxClients
- */
 void
 SV_ChangeMaxClients(void)
 {
-	int	oldMaxClients;
-	int	i;
+	int oldMaxClients, i, count;
 	client_t *oldClients;
-	int	count;
 
 	/* get the highest client number in use */
 	count = 0;
@@ -318,9 +277,6 @@ SV_ChangeMaxClients(void)
 		svs.numSnapshotEntities = sv_maxclients->integer * 4 * 64;
 }
 
-/*
- * SV_ClearServer
- */
 static void
 SV_ClearServer(void)
 {
@@ -333,9 +289,7 @@ SV_ClearServer(void)
 }
 
 /*
- * SV_TouchCGame
- *
- * touch the cgame.vm so that a pure client can load it if it's in a seperate pk3
+ * touch the cgame.vm so that a pure client can load it if it's in a separate pk3
  */
 static void
 SV_TouchCGame(void)
@@ -564,8 +518,6 @@ SV_SpawnServer(char *server, qbool killBots)
 }
 
 /*
- * SV_Init
- *
  * Only called at main exe startup, not for each game
  */
 void
@@ -631,12 +583,12 @@ SV_Init(void)
 		sv_master[index] = Cvar_Get(va("sv_master%d",
 				index + 1), "", CVAR_ARCHIVE);
 
-	sv_reconnectlimit	= Cvar_Get ("sv_reconnectlimit", "3", 0);
-	sv_showloss		= Cvar_Get ("sv_showloss", "0", 0);
-	sv_padPackets		= Cvar_Get ("sv_padPackets", "0", 0);
-	sv_killserver		= Cvar_Get ("sv_killserver", "0", 0);
-	sv_mapChecksum		= Cvar_Get ("sv_mapChecksum", "", CVAR_ROM);
-	sv_lanForceRate		= Cvar_Get ("sv_lanForceRate", "1", CVAR_ARCHIVE);
+	sv_reconnectlimit = Cvar_Get ("sv_reconnectlimit", "3", 0);
+	sv_showloss = Cvar_Get ("sv_showloss", "0", 0);
+	sv_padPackets	 = Cvar_Get ("sv_padPackets", "0", 0);
+	sv_killserver = Cvar_Get ("sv_killserver", "0", 0);
+	sv_mapChecksum = Cvar_Get ("sv_mapChecksum", "", CVAR_ROM);
+	sv_lanForceRate = Cvar_Get ("sv_lanForceRate", "1", CVAR_ARCHIVE);
 #ifndef STANDALONE
 	sv_strictAuth = Cvar_Get ("sv_strictAuth", "1", CVAR_ARCHIVE);
 #endif
@@ -652,10 +604,7 @@ SV_Init(void)
 	Cbuf_AddText("rehashbans\n");
 }
 
-
 /*
- * SV_FinalMessage
- *
  * Used by SV_Shutdown to send a final message to all
  * connected clients before the server goes down.  The messages are sent immediately,
  * not just stuck on the outgoing message list, because the server is going
@@ -669,29 +618,22 @@ SV_FinalMessage(char *message)
 
 	/* send it twice, ignoring rate */
 	for(j = 0; j < 2; j++){
-		for(i=0, cl = svs.clients; i < sv_maxclients->integer; i++, cl++)
-			if(cl->state >= CS_CONNECTED){
-				/* don't send a disconnect to a local client */
-				if(cl->netchan.remoteAddress.type !=
-				   NA_LOOPBACK){
-					SV_SendServerCommand(cl,
-						"print \"%s\n\"\n",
-						message);
-					SV_SendServerCommand(cl,
-						"disconnect \"%s\"",
-						message);
-				}
-				/* force a snapshot to be sent */
-				cl->lastSnapshotTime = 0;
-				SV_SendClientSnapshot(cl);
+		for(i=0, cl = svs.clients; i < sv_maxclients->integer; i++, cl++){
+			if(cl->state < CS_CONNECTED)
+				continue;
+			/* don't send a disconnect to a local client */
+			if(cl->netchan.remoteAddress.type != NA_LOOPBACK){
+				SV_SendServerCommand(cl, "print \"%s\n\"\n", message);
+				SV_SendServerCommand(cl, "disconnect \"%s\"", message);
 			}
+			/* force a snapshot to be sent */
+			cl->lastSnapshotTime = 0;
+			SV_SendClientSnapshot(cl);
+		}
 	}
 }
 
-
 /*
- * SV_Shutdown
- *
  * Called when each game quits,
  * before Sys_Quit or Sys_Error
  */
