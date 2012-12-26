@@ -1217,6 +1217,9 @@ CL_ClearMemory(qbool shutdownRef)
 
 	/* if not running a server clear the whole hunk */
 	if(!com_sv_running->integer){
+		CL_ShutdownCGame();
+		CL_ShutdownUI();
+		CIN_CloseAllVideos();
 		/* clear the whole hunk */
 		Hunk_Clear();
 		/* clear collision map data */
@@ -1856,19 +1859,18 @@ CL_Vid_Restart_f(void)
 		if(com_sv_running->integer)
 			/* clear all the client data on the hunk */
 			Hunk_ClearToMark();
-		else
+		else{
+			CL_ShutdownCGame();
+			CL_ShutdownUI();
+			CIN_CloseAllVideos();
 			/* clear the whole hunk */
 			Hunk_Clear();
+		}
 
-		/* shutdown the UI */
 		CL_ShutdownUI();
-		/* shutdown the CGame */
 		CL_ShutdownCGame();
-		/* shutdown the renderer and clear the renderer interface */
 		CL_ShutdownRef();
-		/* client is no longer pure untill new checksums are sent */
-		CL_ResetPureClientAtServer();
-		/* clear pak references */
+		CL_ResetPureClientAtServer();	/* client is no longer pure untill new checksums are sent */
 		FS_ClearPakReferences(FS_UI_REF | FS_CGAME_REF);
 		/* reinitialize the filesystem if the game directory or checksum has changed */
 

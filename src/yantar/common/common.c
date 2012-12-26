@@ -1462,23 +1462,10 @@ Hunk_CheckMark(void)
 	return qfalse;
 }
 
-extern void CL_ShutdownCGame(void);
-extern void CL_ShutdownUI(void);
-extern void SV_ShutdownGameProgs(void);
-
 /* The server calls this before shutting down or loading a new map */
 void
 Hunk_Clear(void)
 {
-
-#ifndef DEDICATED
-	CL_ShutdownCGame();
-	CL_ShutdownUI();
-#endif
-	SV_ShutdownGameProgs();
-#ifndef DEDICATED
-	CIN_CloseAllVideos();
-#endif
 	hunk_low.mark = 0;
 	hunk_low.permanent = 0;
 	hunk_low.temp = 0;
@@ -2460,8 +2447,10 @@ Com_Init(char *commandLine)
 	/* allocate the stack based hunk allocator */
 	Com_Inithunk();
 
-	/* if any archived cvars are modified after this, we will trigger a writing
-	 * of the config file */
+	/* 
+	 * if any archived cvars are modified after this, we will trigger a write
+	 * of the config file 
+	 */
 	cvar_modifiedFlags &= ~CVAR_ARCHIVE;
 
 	/*
@@ -2528,13 +2517,14 @@ Com_Init(char *commandLine)
 	SV_Init();
 
 	com_dedicated->modified = qfalse;
-#ifndef DEDICATED
-	CL_Init();
-#endif
+	if(!com_dedicated->integer)
+		CL_Init();
 
-	/* set com_frameTime so that if a map is started on the
+	/* 
+	 * set com_frameTime so that if a map is started on the
 	 * command line it will still be able to count on com_frameTime
-	 * being random enough for a serverid */
+	 * being random enough for a serverid 
+	 */
 	com_frameTime = Com_Millisecs();
 
 	/* add + commands from command line */
@@ -2736,32 +2726,32 @@ Com_Frame(void)
 		}
 	}
 
-#ifndef DEDICATED
-	/*
-	 * client system
-	 *
-	 * run event loop a second time to get server to client packets
-	 * without a frame of latency
-	 *  */
-	if(com_speeds->integer)
-		timeBeforeEvents = Sys_Milliseconds ();
-	Com_Eventloop();
-	Cbuf_Execute ();
+	if(com_dedicated->integer){
+		if(com_speeds->integer){
+			timeAfter = Sys_Milliseconds ();
+			timeBeforeEvents = timeAfter;
+			timeBeforeClient = timeAfter;
+		}
+	}else{
+		/*
+		 * client system
+		 *
+		 * run event loop a second time to get server to client packets
+		 * without a frame of latency
+		 */
+		if(com_speeds->integer)
+			timeBeforeEvents = Sys_Milliseconds ();
+		Com_Eventloop();
+		Cbuf_Execute ();
 
 
-	/* client side */
-	if(com_speeds->integer)
-		timeBeforeClient = Sys_Milliseconds ();
-	CL_Frame(msec);
-	if(com_speeds->integer)
-		timeAfter = Sys_Milliseconds ();
-#else
-	if(com_speeds->integer){
-		timeAfter = Sys_Milliseconds ();
-		timeBeforeEvents = timeAfter;
-		timeBeforeClient = timeAfter;
+		/* client side */
+		if(com_speeds->integer)
+			timeBeforeClient = Sys_Milliseconds ();
+		CL_Frame(msec);
+		if(com_speeds->integer)
+			timeAfter = Sys_Milliseconds ();
 	}
-#endif
 
 	NET_FlushPacketQueue();
 

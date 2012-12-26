@@ -350,8 +350,6 @@ SV_TouchCGame(void)
 }
 
 /*
- * SV_SpawnServer
- *
  * Change the server to a new map, taking all connected
  * clients along with it.
  * This is NOT called for map_restart
@@ -359,73 +357,63 @@ SV_TouchCGame(void)
 void
 SV_SpawnServer(char *server, qbool killBots)
 {
-	int	i;
-	int	checksum;
+	int i, checksum;
 	qbool isBot;
 	char	systemInfo[16384];
 	const char *p;
 
-	/* shut down the existing game if it is running */
-	SV_ShutdownGameProgs();
+	SV_ShutdownGameProgs();	/* shut down any existing game */
 
-	Com_Printf ("------ Server Initialization ------\n");
-	Com_Printf ("Server: %s\n",server);
+	Com_Printf("------ Server Initialization ------\n");
+	Com_Printf("Server: %s\n",server);
 
-	/* if not running a dedicated server CL_MapLoading will connect the client to the server
-	 * also print some status stuff */
-	CL_MapLoading();
+	/*
+	 * FIXME: CL_ stuff should not be here
+	 */
+	if(!com_dedicated->integer){
+		CL_MapLoading();		/* connect the client to the server and print some status stuff */
+		CL_ShutdownAll(qfalse);	/* make sure all the client stuff is unloaded */
+		CL_StartHunkUsers(qtrue);	/* Restart renderer */
+	}
+	Hunk_Clear();	/* clear it all because we're (re)loading the server */
 
-	/* make sure all the client stuff is unloaded */
-	CL_ShutdownAll(qfalse);
-
-	/* clear the whole hunk because we're (re)loading the server */
-	Hunk_Clear();
-
-#ifndef DEDICATED
-	/* Restart renderer */
-	CL_StartHunkUsers(qtrue);
-#endif
-
-	/* clear collision map data */
 	CM_ClearMap();
 
 	/* init client structures and svs.numSnapshotEntities */
 	if(!Cvar_VariableValue("sv_running"))
 		SV_Startup();
-	else
-	/* check for maxclients change */
-	if(sv_maxclients->modified)
+	else if(sv_maxclients->modified)
 		SV_ChangeMaxClients();
 
-
-	/* clear pak references */
 	FS_ClearPakReferences(0);
-
-	/* allocate the snapshot entities on the hunk */
-	svs.snapshotEntities = Hunk_Alloc(
-		sizeof(entityState_t)*svs.numSnapshotEntities, h_high);
+	
+	svs.snapshotEntities = Hunk_Alloc(sizeof(entityState_t)*svs.numSnapshotEntities, h_high);
 	svs.nextSnapshotEntities = 0;
 
-	/* toggle the server bit so clients can detect that a
-	 * server has changed */
+	/* 
+	 * toggle the server bit so clients can detect that a
+	 * server has changed 
+	 */
 	svs.snapFlagServerBit ^= SNAPFLAG_SERVERCOUNT;
 
-	/* set nextmap to the same map, but it may be overriden
-	 * by the game startup or another console command */
+	/* 
+	 * set nextmap to the same map, but it may be overriden
+	 * by the game startup or another console command 
+	 */
 	Cvar_Set("nextmap", "map_restart 0");
 /*	Cvar_Set( "nextmap", va("map %s", server) ); */
 
-	for(i=0; i<sv_maxclients->integer; i++)
+	for(i=0; i<sv_maxclients->integer; i++){
 		/* save when the server started for each client already connected */
 		if(svs.clients[i].state >= CS_CONNECTED)
 			svs.clients[i].oldServerTime = sv.time;
+	}
 
 	/* wipe the entire per-level structure */
 	SV_ClearServer();
 	for(i = 0; i < MAX_CONFIGSTRINGS; i++)
 		sv.configstrings[i] = Copystr("");
 
-	/* make sure we are not paused */
 	Cvar_Set("cl_paused", "0");
 
 	/* get a new checksum feed and restart the file system */
@@ -434,30 +422,27 @@ SV_SpawnServer(char *server, qbool killBots)
 
 	CM_LoadMap(va(Pmaps "/%s.bsp", server), qfalse, &checksum);
 
-	/* set serverinfo visible name */
-	Cvar_Set("mapname", server);
+
+	Cvar_Set("mapname", server);	/* set serverinfo visible name */
 
 	Cvar_Set("sv_mapChecksum", va("%i",checksum));
 
-	/* serverid should be different each time */
-	sv.serverId = com_frameTime;
+	sv.serverId = com_frameTime;	/* serverid should be different each time */
 	sv.restartedServerId = sv.serverId;	/* I suppose the init here is just to be safe */
 	sv.checksumFeedServerId = sv.serverId;
 	Cvar_Set("sv_serverid", va("%i", sv.serverId));
 
-	/* clear physics interaction links */
-	SV_ClearWorld ();
+	SV_ClearWorld();	/* clear physics interaction links */
 
-	/* media configstring setting should be done during
+	/* 
+	 * media configstring setting should be done during
 	 * the loading stage, so connected clients don't have
-	 * to load during actual gameplay */
+	 * to load during actual gameplay 
+	 */
 	sv.state = SS_LOADING;
 
-	/* load and spawn all other entities */
-	SV_InitGameProgs();
-
-	/* don't allow a map_restart if game is modified */
-	sv_gametype->modified = qfalse;
+	SV_InitGameProgs();	/* load and spawn all other entities */
+	sv_gametype->modified = qfalse;	/* don't allow a map_restart if game is modified */
 
 	/* run a few frames to allow everything to settle */
 	for(i = 0; i < 3; i++){
@@ -467,10 +452,9 @@ SV_SpawnServer(char *server, qbool killBots)
 		svs.time += 100;
 	}
 
-	/* create a baseline for more efficient communications */
-	SV_CreateBaseline ();
+	SV_CreateBaseline();	/* create a baseline for more efficient communications */
 
-	for(i=0; i<sv_maxclients->integer; i++)
+	for(i=0; i<sv_maxclients->integer; i++){
 		/* send the new gamestate to all connected clients */
 		if(svs.clients[i].state >= CS_CONNECTED){
 			char *denied;
@@ -490,16 +474,20 @@ SV_SpawnServer(char *server, qbool killBots)
 				VM_ExplicitArgPtr(gvm,
 					VM_Call(gvm, GAME_CLIENT_CONNECT, i,
 						qfalse, isBot));	/* firstTime = qfalse */
-			if(denied)
-				/* this generally shouldn't happen, because the client
-				 * was connected before the level change */
+			if(denied){
+				/* 
+				 * this generally shouldn't happen, because the client
+				 * was connected before the level change 
+				 */
 				SV_DropClient(&svs.clients[i], denied);
-			else{
-				if(!isBot)
-					/* when we get the next packet from a connected client,
-					 * the new gamestate will be sent */
+			}else{
+				if(!isBot){
+					/* 
+					 * when we get the next packet from a connected client,
+					 * the new gamestate will be sent 
+					 */
 					svs.clients[i].state = CS_CONNECTED;
-				else{
+				}else{
 					client_t *client;
 					sharedEntity_t *ent;
 
@@ -508,14 +496,13 @@ SV_SpawnServer(char *server, qbool killBots)
 					ent = SV_GentityNum(i);
 					ent->s.number	= i;
 					client->gentity = ent;
-
 					client->deltaMessage = -1;
 					client->lastSnapshotTime = 0;	/* generate a snapshot immediately */
-
 					VM_Call(gvm, GAME_CLIENT_BEGIN, i);
 				}
 			}
 		}
+	}
 
 	/* run another frame to allow things to look at all the players */
 	VM_Call (gvm, GAME_RUN_FRAME, sv.time);
@@ -524,8 +511,10 @@ SV_SpawnServer(char *server, qbool killBots)
 	svs.time += 100;
 
 	if(sv_pure->integer){
-		/* the server sends these to the clients so they will only
-		 * load pk3s also loaded at the server */
+		/* 
+		 * the server sends these to the clients so they will only
+		 * load pk3s also loaded at the server 
+		 */
 		p = FS_LoadedPakChecksums();
 		Cvar_Set("sv_paks", p);
 		if(strlen(p) == 0)
@@ -534,16 +523,20 @@ SV_SpawnServer(char *server, qbool killBots)
 		p = FS_LoadedPakNames();
 		Cvar_Set("sv_pakNames", p);
 
-		/* if a dedicated pure server we need to touch the cgame because it could be in a
-		 * seperate pk3 file and the client will need to load the latest cgame.qvm */
+		/* 
+		 * if a dedicated pure server we need to touch the cgame because it could be in a
+		 * seperate pk3 file and the client will need to load the latest cgame.qvm 
+		 */
 		if(com_dedicated->integer)
 			SV_TouchCGame();
 	}else{
 		Cvar_Set("sv_paks", "");
 		Cvar_Set("sv_pakNames", "");
 	}
-	/* the server sends these to the clients so they can figure
-	 * out which pk3s should be auto-downloaded */
+	/* 
+	 * the server sends these to the clients so they can figure
+	 * out which pk3s should be auto-downloaded 
+	 */
 	p = FS_ReferencedPakChecksums();
 	Cvar_Set("sv_referencedPaks", p);
 	p = FS_ReferencedPakNames();
@@ -558,16 +551,15 @@ SV_SpawnServer(char *server, qbool killBots)
 	SV_SetConfigstring(CS_SERVERINFO, Cvar_InfoString(CVAR_SERVERINFO));
 	cvar_modifiedFlags &= ~CVAR_SERVERINFO;
 
-	/* any media configstring setting now should issue a warning
+	/* 
+	 * any media configstring setting now should issue a warning
 	 * and any configstring changes should be reliably transmitted
-	 * to all clients */
+	 * to all clients 
+	 */
 	sv.state = SS_GAME;
 
-	/* send a heartbeat now so the master will get up to date info */
-	SV_Heartbeat_f();
-
+	SV_Heartbeat_f();	/* One night to be confused */
 	Hunk_SetMark();
-
 	Com_Printf ("-----------------------------------\n");
 }
 
