@@ -348,11 +348,6 @@ CL_SystemInfoChanged(void)
 		return;
 
 #ifdef USE_VOIP
-#ifdef LEGACY_PROTOCOL
-	if(clc.compat)
-		clc.voipEnabled = qfalse;
-	else
-#endif
 	{
 		s = Info_ValueForKey(systemInfo, "sv_voip");
 		if(Cvar_VariableValue("g_gametype") == GT_SINGLE_PLAYER ||

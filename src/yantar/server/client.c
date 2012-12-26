@@ -53,12 +53,6 @@ SV_GetChallenge(netadr_t from)
 
 	gameName = Cmd_Argv(2);
 
-#ifdef LEGACY_PROTOCOL
-	/* gamename is optional for legacy protocol */
-	if(com_legacyprotocol->integer && !*gameName)
-		gameMismatch = qfalse;
-	else
-#endif
 	gameMismatch = !*gameName || strcmp(gameName, com_gamename->string) != 0;
 
 	/* reject client if the gamename string sent by the client doesn't match ours */
@@ -311,9 +305,6 @@ SV_DirectConnect(netadr_t from)
 	intptr_t denied;
 	int	count;
 	char *ip;
-#ifdef LEGACY_PROTOCOL
-	qbool compat = qfalse;
-#endif
 
 	Com_DPrintf ("SVC_DirectConnect ()\n");
 
@@ -328,11 +319,6 @@ SV_DirectConnect(netadr_t from)
 
 	version = atoi(Info_ValueForKey(userinfo, "protocol"));
 
-#ifdef LEGACY_PROTOCOL
-	if(version > 0 && com_legacyprotocol->integer == version)
-		compat = qtrue;
-	else
-#endif
 	{
 		if(version != com_protocol->integer){
 			NET_OutOfBandPrint(
@@ -529,12 +515,7 @@ gotnewcl:
 	newcl->challenge = challenge;
 
 	/* save the address */
-#ifdef LEGACY_PROTOCOL
-	newcl->compat = compat;
-	Netchan_Setup(NS_SERVER, &newcl->netchan, from, qport, challenge, compat);
-#else
 	Netchan_Setup(NS_SERVER, &newcl->netchan, from, qport, challenge, qfalse);
-#endif
 	/* init the netchan queue */
 	newcl->netchan_end_queue = &newcl->netchan_start_queue;
 
@@ -1447,11 +1428,6 @@ SV_UserinfoChanged(client_t *cl)
 	}
 
 #ifdef USE_VOIP
-#ifdef LEGACY_PROTOCOL
-	if(cl->compat)
-		cl->hasVoip = qfalse;
-	else
-#endif
 	{
 		val = Info_ValueForKey(cl->userinfo, "cl_voip");
 		cl->hasVoip = atoi(val);

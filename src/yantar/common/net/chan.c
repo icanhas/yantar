@@ -80,9 +80,6 @@ Netchan_Setup(netsrc_t sock, netchan_t *chan, netadr_t adr, int qport,
 	chan->outgoingSequence	= 1;
 	chan->challenge = challenge;
 
-#ifdef LEGACY_PROTOCOL
-	chan->compat = compat;
-#endif
 }
 
 /*
@@ -108,9 +105,6 @@ Netchan_TransmitNextFragment(netchan_t *chan)
 	if(chan->sock == NS_CLIENT)
 		MSG_WriteShort(&send, qport->integer);
 
-#ifdef LEGACY_PROTOCOL
-	if(!chan->compat)
-#endif
 	MSG_WriteLong(&send,
 		NETCHAN_GENCHECKSUM(chan->challenge, chan->outgoingSequence));
 
@@ -189,9 +183,6 @@ Netchan_Transmit(netchan_t *chan, int length, const byte *data)
 	if(chan->sock == NS_CLIENT)
 		MSG_WriteShort(&send, qport->integer);
 
-#ifdef LEGACY_PROTOCOL
-	if(!chan->compat)
-#endif
 	MSG_WriteLong(&send,
 		NETCHAN_GENCHECKSUM(chan->challenge, chan->outgoingSequence));
 
@@ -249,9 +240,6 @@ Netchan_Process(netchan_t *chan, msg_t *msg)
 	if(chan->sock == NS_SERVER)
 		MSG_ReadShort(msg);
 
-#ifdef LEGACY_PROTOCOL
-	if(!chan->compat)
-#endif
 	{
 		int checksum = MSG_ReadLong(msg);
 

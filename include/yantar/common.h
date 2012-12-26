@@ -235,9 +235,6 @@ struct netchan_s {
 	int		lastSentTime;
 	int		lastSentSize;
 
-#ifdef LEGACY_PROTOCOL
-	qbool compat;
-#endif
 };
 
 void Netchan_Init(int qport);
@@ -682,9 +679,6 @@ extern cvar_t	*sv_packetdelay;
 
 extern cvar_t	*com_gamename;
 extern cvar_t	*com_protocol;
-#ifdef LEGACY_PROTOCOL
-extern cvar_t	*com_legacyprotocol;
-#endif
 
 /* com_speeds times */
 extern int	time_game;

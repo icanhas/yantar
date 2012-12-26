@@ -109,9 +109,6 @@ typedef enum {
 typedef struct netchan_buffer_s {
 	msg_t	msg;
 	byte	msgBuffer[MAX_MSGLEN];
-#ifdef LEGACY_PROTOCOL
-	char	clientCommandString[MAX_STRING_CHARS];	/* valid command string for SV_Netchan_Encode */
-#endif
 	struct netchan_buffer_s *next;
 } netchan_buffer_t;
 
@@ -182,9 +179,6 @@ typedef struct client_s {
 	int		oldServerTime;
 	qbool		csUpdated[MAX_CONFIGSTRINGS+1];
 
-#ifdef LEGACY_PROTOCOL
-	qbool compat;
-#endif
 } client_t;
 
 /* ============================================================================= */

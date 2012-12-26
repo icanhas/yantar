@@ -69,9 +69,6 @@ cvar_t	*com_abnormalExit;
 cvar_t	*com_standalone;
 cvar_t	*com_gamename;
 cvar_t	*com_protocol;
-#ifdef LEGACY_PROTOCOL
-cvar_t	*com_legacyprotocol;
-#endif
 cvar_t	*com_basegame;
 cvar_t	*com_homepath;
 cvar_t	*com_busyWait;
@@ -2495,16 +2492,6 @@ Com_Init(char *commandLine)
 		CVAR_SERVERINFO | CVAR_INIT);
 	com_protocol = Cvar_Get("com_protocol", va("%i",
 			PROTOCOL_VERSION), CVAR_SERVERINFO | CVAR_INIT);
-#ifdef LEGACY_PROTOCOL
-	com_legacyprotocol =
-		Cvar_Get("com_legacyprotocol", va("%i",
-				PROTOCOL_LEGACY_VERSION), CVAR_INIT);
-
-	/* Keep for compatibility with old mods / mods that haven't updated yet. */
-	if(com_legacyprotocol->integer > 0)
-		Cvar_Get("protocol", com_legacyprotocol->string, CVAR_ROM);
-	else
-#endif
 	Cvar_Get("protocol", com_protocol->string, CVAR_ROM);
 
 	Sys_Init();

@@ -245,9 +245,6 @@ struct clientConnection_t {
 	byte			voipOutgoingData[1024];
 	float			voipPower;
 #endif
-#ifdef LEGACY_PROTOCOL
-	qbool compat;
-#endif
 	/* big stuff at end of structure so most offsets are 15 bits or less */
 	netchan_t netchan;
 };
