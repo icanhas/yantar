@@ -1039,16 +1039,13 @@ SV_FrameMsec()
 }
 
 /*
- * SV_Frame
- *
  * Player movement occurs as a result of packet events, which
  * happen before SV_Frame is called
  */
 void
 SV_Frame(int msec)
 {
-	int	frameMsec;
-	int	startTime;
+	int frameMsec, startTime;
 
 	/* the menu kills the server with this cvar */
 	if(sv_killserver->integer){
@@ -1059,17 +1056,13 @@ SV_Frame(int msec)
 
 	if(!com_sv_running->integer){
 		/* Running as a server, but no map loaded */
-#ifdef DEDICATED
-		/* Block until something interesting happens */
-		Sys_Sleep(-1);
-#endif
-
+		if(com_dedicated->integer)
+			Sys_Sleep(-1);	/* Block till something interesting happens */
 		return;
 	}
 
-	/* allow pause if only the local client is connected */
 	if(SV_CheckPaused())
-		return;
+		return;	/* allow pause if only the local client is connected */
 
 	/* if it isn't time for the next frame, do nothing */
 	if(sv_fps->integer < 1)
@@ -1086,10 +1079,12 @@ SV_Frame(int msec)
 
 	if(!com_dedicated->integer) SV_BotFrame (sv.time + sv.timeResidual);
 
-	/* if time is about to hit the 32nd bit, kick all clients
+	/* 
+	 * if time is about to hit the 32nd bit, kick all clients
 	 * and clear sv.time, rather
 	 * than checking for negative time wraparound everywhere.
-	 * 2giga-milliseconds = 23 days, so it won't be too often */
+	 * 2giga-milliseconds = 23 days, so it won't be too often 
+	 */
 	if(svs.time > 0x70000000){
 		SV_Shutdown("Restarting server due to time wrapping");
 		Cbuf_AddText(va("map %s\n", Cvar_VariableString("mapname")));

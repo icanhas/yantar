@@ -341,12 +341,8 @@ Sys_ParseArgs(int argc, char **argv)
 		if(!strcmp(argv[1], "--version") ||
 		   !strcmp(argv[1], "-v")){
 			const char *date = __DATE__;
-#ifdef DEDICATED
-			printf(Q3_VERSION " dedicated server (%s)\n",
-				date);
-#else
-			printf(Q3_VERSION " client (%s)\n", date);
-#endif
+			
+			printf(Q3_VERSION " (%s)\n", date);
 			fflush(stdout);
 			Sys_Exit(0);
 		}
@@ -376,9 +372,8 @@ Sys_SigHandler(int signal)
 	else{
 		signalcaught = qtrue;
 		VM_Forced_Unload_Start();
-#ifndef DEDICATED
-		CL_Shutdown(va("received signal %d (%s)", signal, name), qtrue, qtrue);
-#endif
+		if(!com_dedicated->integer)
+			CL_Shutdown(va("received signal %d (%s)", signal, name), qtrue, qtrue);
 		SV_Shutdown(va("received signal %d (%s)", signal, name));
 		VM_Forced_Unload_Done();
 	}

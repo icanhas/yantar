@@ -477,13 +477,12 @@ Sys_ErrorDialog(const char *error)
 	char *ospath = FS_BuildOSPath(homepath, gamedir, fileName);
 
 	Sys_Print(va("%s\n", error));
+	
+	if(!com_dedicated->integer)
+		Sys_Dialog(DT_ERROR, va("%s. See \"%s\" for details.", error,
+		   ospath), "Error");
 
-#ifndef DEDICATED
-	Sys_Dialog(DT_ERROR, va("%s. See \"%s\" for details.", error,
-			ospath), "Error");
-#endif
-
-	/* Make sure the write path for the crashlog exists... */
+	/* Make sure the write path for the crashlog exists */
 	if(FS_CreatePath(ospath)){
 		Com_Printf("ERROR: couldn't create path '%s' for crash log.\n",
 			ospath);
