@@ -11,11 +11,8 @@
 #include "local.h"
 
 /*
- *
  * input: origin, velocity, bounds, groundPlane, trace function
- *
  * output: origin, velocity, impacts, stairup boolean
- *
  */
 
 /*
@@ -25,37 +22,29 @@
 qbool
 PM_SlideMove(pmove_t *pm, pml_t *pml, qbool gravity)
 {
-	int bumpcount, numbumps;
+	int i, j, k, bumpcount, numbumps, numplanes;
 	Vec3	dir;
-	float	d;
-	int	numplanes;
+	float	d, time_left, into;
 	Vec3	planes[MAX_CLIP_PLANES];
-	Vec3	primal_velocity;
-	Vec3	clipVelocity;
-	int	i, j, k;
+	Vec3	primal_velocity, clipVelocity;
 	trace_t trace;
-	Vec3	end;
-	float	time_left;
-	float	into;
-	Vec3	endVelocity;
-	Vec3	endClipVelocity;
+	Vec3	end, endVelocity, endClipVelocity;
 
 	numbumps = 4;
 
-	copyv3 (pm->ps->velocity, primal_velocity);
+	copyv3(pm->ps->velocity, primal_velocity);
 
 	if(gravity){
 		copyv3(pm->ps->velocity, endVelocity);
 		endVelocity[2] -= pm->ps->gravity * pml->frametime;
-		pm->ps->velocity[2] =
-			(pm->ps->velocity[2] + endVelocity[2]) * 0.5;
+		pm->ps->velocity[2] = (pm->ps->velocity[2] + endVelocity[2]) * 0.5;
 		primal_velocity[2] = endVelocity[2];
-		if(pml->groundPlane)
+		if(pml->groundPlane){
 			/* slide along the ground plane */
-			PM_ClipVelocity (pm->ps->velocity,
-				pml->groundTrace.plane.normal,
+			PM_ClipVelocity(pm->ps->velocity, pml->groundTrace.plane.normal,
 				pm->ps->velocity,
 				OVERCLIP);
+		}
 	}
 
 	time_left = pml->frametime;
@@ -72,7 +61,6 @@ PM_SlideMove(pmove_t *pm, pml_t *pml, qbool gravity)
 	numplanes++;
 
 	for(bumpcount=0; bumpcount < numbumps; bumpcount++){
-
 		/* calculate position we are trying to move to */
 		maddv3(pm->ps->origin, time_left, pm->ps->velocity, end);
 
@@ -123,7 +111,7 @@ PM_SlideMove(pmove_t *pm, pml_t *pml, qbool gravity)
 
 		/*
 		 * modify velocity so it parallels all of the clip planes
-		 *  */
+		 */
 
 		/* find a plane that it enters */
 		for(i = 0; i < numplanes; i++){
@@ -136,13 +124,10 @@ PM_SlideMove(pmove_t *pm, pml_t *pml, qbool gravity)
 				pml->impactSpeed = -into;
 
 			/* slide along the plane */
-			PM_ClipVelocity (pm->ps->velocity, planes[i],
-				clipVelocity,
-				OVERCLIP);
+			PM_ClipVelocity(pm->ps->velocity, planes[i], clipVelocity, OVERCLIP);
 
 			/* slide along the plane */
-			PM_ClipVelocity (endVelocity, planes[i], endClipVelocity,
-				OVERCLIP);
+			PM_ClipVelocity(endVelocity, planes[i], endClipVelocity, OVERCLIP);
 
 			/* see if there is a second plane that the new move enters */
 			for(j = 0; j < numplanes; j++){
@@ -152,12 +137,8 @@ PM_SlideMove(pmove_t *pm, pml_t *pml, qbool gravity)
 					continue;	/* move doesn't interact with the plane */
 
 				/* try clipping the move to the plane */
-				PM_ClipVelocity(clipVelocity, planes[j],
-					clipVelocity,
-					OVERCLIP);
-				PM_ClipVelocity(endClipVelocity, planes[j],
-					endClipVelocity,
-					OVERCLIP);
+				PM_ClipVelocity(clipVelocity, planes[j], clipVelocity, OVERCLIP);
+				PM_ClipVelocity(endClipVelocity, planes[j], endClipVelocity, OVERCLIP);
 
 				/* see if it goes back into the first clip plane */
 				if(dotv3(clipVelocity, planes[i]) >= 0)
@@ -215,6 +196,7 @@ PM_StepSlideMove(pmove_t *pm, pml_t *pml, qbool gravity)
  * Vec3		delta, delta2; */
 	Vec3	up, down;
 	float	stepSize;
+	float delta;
 
 	copyv3 (pm->ps->origin, start_o);
 	copyv3 (pm->ps->velocity, start_v);
@@ -280,22 +262,18 @@ PM_StepSlideMove(pmove_t *pm, pml_t *pml, qbool gravity)
 			Com_Printf("%u:bend\n", cnt);
 	}else
 #endif
-	{
-		/* use the step move */
-		float delta;
-
-		delta = pm->ps->origin[2] - start_o[2];
-		if(delta > 2){
-			if(delta < 7)
-				PM_AddEvent(pm, pml, EV_STEP_4);
-			else if(delta < 11)
-				PM_AddEvent(pm, pml, EV_STEP_8);
-			else if(delta < 15)
-				PM_AddEvent(pm, pml, EV_STEP_12);
-			else
-				PM_AddEvent(pm, pml, EV_STEP_16);
-		}
-		if(pm->debugLevel)
-			Com_Printf("%u:stepped\n", cnt);
+	/* use the step move */
+	delta = pm->ps->origin[2] - start_o[2];
+	if(delta > 2){
+		if(delta < 7)
+			PM_AddEvent(pm, pml, EV_STEP_4);
+		else if(delta < 11)
+			PM_AddEvent(pm, pml, EV_STEP_8);
+		else if(delta < 15)
+			PM_AddEvent(pm, pml, EV_STEP_12);
+		else
+			PM_AddEvent(pm, pml, EV_STEP_16);
 	}
+	if(pm->debugLevel)
+		Com_Printf("%u:stepped\n", cnt);
 }
