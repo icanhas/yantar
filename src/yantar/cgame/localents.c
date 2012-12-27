@@ -123,7 +123,7 @@ CG_BloodTrail(localEntity_t *le)
 		/* use the optimized version */
 		blood->leType = LE_FALL_SCALE_FADE;
 		/* drop a total of 40 units over its lifetime */
-		blood->pos.trDelta[2] = 40;
+		blood->pos.delta[2] = 40;
 	}
 }
 
@@ -204,20 +204,20 @@ CG_ReflectVelocity(localEntity_t *le, trace_t *trace)
 	hitTime = cg.time - cg.frametime + cg.frametime * trace->fraction;
 	BG_EvaluateTrajectoryDelta(&le->pos, hitTime, velocity);
 	dot = dotv3(velocity, trace->plane.normal);
-	maddv3(velocity, -2*dot, trace->plane.normal, le->pos.trDelta);
+	maddv3(velocity, -2*dot, trace->plane.normal, le->pos.delta);
 
-	scalev3(le->pos.trDelta, le->bounceFactor, le->pos.trDelta);
+	scalev3(le->pos.delta, le->bounceFactor, le->pos.delta);
 
-	copyv3(trace->endpos, le->pos.trBase);
-	le->pos.trTime = cg.time;
+	copyv3(trace->endpos, le->pos.base);
+	le->pos.time = cg.time;
 
 
 	/* check for stop, making sure that even on low FPS systems it doesn't bobble */
 	if(trace->allsolid ||
 	   (trace->plane.normal[2] > 0 &&
-	    (le->pos.trDelta[2] < 40 || le->pos.trDelta[2] < -cg.frametime *
-	      le->pos.trDelta[2])))
-		le->pos.trType = TR_STATIONARY;
+	    (le->pos.delta[2] < 40 || le->pos.delta[2] < -cg.frametime *
+	      le->pos.delta[2])))
+		le->pos.type = TR_STATIONARY;
 	else{
 
 	}
@@ -232,7 +232,7 @@ CG_AddFragment(localEntity_t *le)
 	Vec3	newOrigin;
 	trace_t trace;
 
-	if(le->pos.trType == TR_STATIONARY){
+	if(le->pos.type == TR_STATIONARY){
 		/* sink into the ground if near the removal time */
 		int t;
 		float oldZ;
@@ -432,7 +432,7 @@ CG_AddFallScaleFade(localEntity_t *le)
 
 	re->shaderRGBA[3] = 0xff * c * le->color[3];
 
-	re->origin[2] = le->pos.trBase[2] - (1.0 - c) * le->pos.trDelta[2];
+	re->origin[2] = le->pos.base[2] - (1.0 - c) * le->pos.delta[2];
 
 	re->radius = le->radius * (1.0 - c) + 16;
 
@@ -577,7 +577,7 @@ CG_AddScorePlum(localEntity_t *le)
 
 	re->radius = NUMBER_SIZE / 2;
 
-	copyv3(le->pos.trBase, origin);
+	copyv3(le->pos.base, origin);
 	origin[2] += 110 - c * 100;
 
 	subv3(cg.refdef.vieworg, origin, dir);

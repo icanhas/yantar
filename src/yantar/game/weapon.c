@@ -236,7 +236,7 @@ BFG_Fire(gentity_t *ent)
 	m->damage *= s_quadFactor;
 	m->splashDamage *= s_quadFactor;
 
-/*	addv3( m->s.pos.trDelta, ent->client->ps.velocity, m->s.pos.trDelta );	// "real" physics */
+/*	addv3( m->s.traj.delta, ent->client->ps.velocity, m->s.traj.delta );	// "real" physics */
 }
 
 
@@ -329,7 +329,7 @@ weapon_supershotgun_fire(gentity_t *ent)
 	tent->s.eventParm = rand() & 255;	/* seed for spread pattern */
 	tent->s.otherEntityNum = ent->s.number;
 
-	ShotgunPattern(tent->s.pos.trBase, tent->s.origin2, tent->s.eventParm,
+	ShotgunPattern(tent->s.traj.base, tent->s.origin2, tent->s.eventParm,
 		ent);
 }
 
@@ -350,7 +350,7 @@ weapon_grenadelauncher_fire(gentity_t *ent)
 	m->damage *= s_quadFactor;
 	m->splashDamage *= s_quadFactor;
 
-	addv3(m->s.pos.trDelta, ent->client->ps.velocity, m->s.pos.trDelta);	// "real" physics
+	addv3(m->s.traj.delta, ent->client->ps.velocity, m->s.traj.delta);	// "real" physics
 }
 
 /*
@@ -365,11 +365,11 @@ Weapon_RocketLauncher_Fire(gentity_t *ent)
 	Vec3 fw;
 	Scalar s;
 	
-	m = fire_rocket (ent, muzzle, forward);
+	m = fire_rocket(ent, muzzle, forward);
 	m->damage *= s_quadFactor;
 	m->splashDamage *= s_quadFactor;
 
-	addv3(m->s.pos.trDelta, ent->client->ps.velocity, m->s.pos.trDelta);	// "real" physics
+	addv3(m->s.traj.delta, ent->client->ps.velocity, m->s.traj.delta);	// "real" physics
 }
 
 /*
@@ -387,7 +387,7 @@ Weapon_Plasmagun_Fire(gentity_t *ent)
 	m->damage *= s_quadFactor;
 	m->splashDamage *= s_quadFactor;
 
-	addv3(m->s.pos.trDelta, ent->client->ps.velocity, m->s.pos.trDelta);	// "real" physics
+	addv3(m->s.traj.delta, ent->client->ps.velocity, m->s.traj.delta);	// "real" physics
 }
 
 /*
@@ -626,7 +626,7 @@ Weapon_Nailgun_Fire(gentity_t *ent)
 		m->splashDamage *= s_quadFactor;
 	}
 
-/*	addv3( m->s.pos.trDelta, ent->client->ps.velocity, m->s.pos.trDelta );	// "real" physics */
+/*	addv3( m->s.traj.delta, ent->client->ps.velocity, m->s.traj.delta );	// "real" physics */
 }
 
 
@@ -649,7 +649,7 @@ weapon_proxlauncher_fire(gentity_t *ent)
 	m->damage *= s_quadFactor;
 	m->splashDamage *= s_quadFactor;
 
-/*	addv3( m->s.pos.trDelta, ent->client->ps.velocity, m->s.pos.trDelta );	// "real" physics */
+/*	addv3( m->s.traj.delta, ent->client->ps.velocity, m->s.traj.delta );	// "real" physics */
 }
 
 #endif
@@ -694,7 +694,7 @@ void
 CalcMuzzlePoint(gentity_t *ent, Vec3 forward, Vec3 right, Vec3 up,
 		Vec3 muzzlePoint)
 {
-	copyv3(ent->s.pos.trBase, muzzlePoint);
+	copyv3(ent->s.traj.base, muzzlePoint);
 	muzzlePoint[2] += ent->client->ps.viewheight;
 	maddv3(muzzlePoint, 14, forward, muzzlePoint);
 	/* snap to integer coordinates for more efficient network bandwidth usage */
@@ -711,7 +711,7 @@ CalcMuzzlePointOrigin(gentity_t *ent, Vec3 origin, Vec3 forward,
 		      Vec3 right, Vec3 up,
 		      Vec3 muzzlePoint)
 {
-	copyv3(ent->s.pos.trBase, muzzlePoint);
+	copyv3(ent->s.traj.base, muzzlePoint);
 	muzzlePoint[2] += ent->client->ps.viewheight;
 	maddv3(muzzlePoint, 14, forward, muzzlePoint);
 	/* snap to integer coordinates for more efficient network bandwidth usage */
@@ -962,7 +962,7 @@ KamikazeDamage(gentity_t *self)
 	if(self->count >= KAMI_SHOCKWAVE_STARTTIME){
 		/* shockwave push back */
 		t = self->count - KAMI_SHOCKWAVE_STARTTIME;
-		KamikazeShockWave(self->s.pos.trBase, self->activator, 25, 400,
+		KamikazeShockWave(self->s.traj.base, self->activator, 25, 400,
 			(int)(float)t * KAMI_SHOCKWAVE_MAXRADIUS /
 			(KAMI_SHOCKWAVE_ENDTIME - KAMI_SHOCKWAVE_STARTTIME));
 	}
@@ -970,7 +970,7 @@ KamikazeDamage(gentity_t *self)
 	if(self->count >= KAMI_EXPLODE_STARTTIME){
 		/* do our damage */
 		t = self->count - KAMI_EXPLODE_STARTTIME;
-		KamikazeRadiusDamage(self->s.pos.trBase, self->activator, 400,
+		KamikazeRadiusDamage(self->s.traj.base, self->activator, 400,
 			(int)(float)t * KAMI_BOOMSPHERE_MAXRADIUS /
 			(KAMI_IMPLODE_STARTTIME - KAMI_EXPLODE_STARTTIME));
 	}
@@ -1026,14 +1026,14 @@ G_StartKamikaze(gentity_t *ent)
 	explosion->eventTime = level.time;
 
 	if(ent->client)
-		copyv3(ent->s.pos.trBase, snapped);
+		copyv3(ent->s.traj.base, snapped);
 	else
-		copyv3(ent->activator->s.pos.trBase, snapped);
+		copyv3(ent->activator->s.traj.base, snapped);
 	snapv3(snapped);	/* save network bandwidth */
 	G_SetOrigin(explosion, snapped);
 
 	explosion->classname = "kamikaze";
-	explosion->s.pos.trType = TR_STATIONARY;
+	explosion->s.traj.type = TR_STATIONARY;
 
 	explosion->kamikazeTime = level.time;
 

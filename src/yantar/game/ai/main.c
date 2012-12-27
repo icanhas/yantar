@@ -1501,7 +1501,7 @@ BotAIStartFrame(int time)
 			/*  */
 			copyv3(ent->r.currentOrigin, state.origin);
 			if(i < MAX_CLIENTS)
-				copyv3(ent->s.apos.trBase, state.angles);
+				copyv3(ent->s.apos.base, state.angles);
 			else
 				copyv3(ent->r.currentAngles, state.angles);
 			copyv3(ent->s.origin2, state.old_origin);

@@ -4209,7 +4209,7 @@ BotCheckForGrenades(bot_state_t *bs, entityState_t *state)
 	if(state->eType != ET_MISSILE || state->weap[Wpri] != W2grenadelauncher)
 		return;
 	/* try to avoid the grenade */
-	trap_BotAddAvoidSpot(bs->ms, state->pos.trBase, 160, AVOID_ALWAYS);
+	trap_BotAddAvoidSpot(bs->ms, state->traj.base, 160, AVOID_ALWAYS);
 }
 
 /*
@@ -4233,7 +4233,7 @@ BotCheckForProxMines(bot_state_t *bs, entityState_t *state)
 	     bs->inventory[INVENTORY_BFGAMMO] > 0))
 		return;
 	/* try to avoid the prox mine */
-	trap_BotAddAvoidSpot(bs->ms, state->pos.trBase, 160, AVOID_ALWAYS);
+	trap_BotAddAvoidSpot(bs->ms, state->traj.base, 160, AVOID_ALWAYS);
 	/*  */
 	if(bs->numproxmines >= MAX_PROXMINES)
 		return;

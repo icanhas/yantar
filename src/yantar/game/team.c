@@ -565,7 +565,7 @@ Team_ReturnFlagSound(gentity_t *ent, int team)
 		return;
 	}
 
-	te = G_TempEntity(ent->s.pos.trBase, EV_GLOBAL_TEAM_SOUND);
+	te = G_TempEntity(ent->s.traj.base, EV_GLOBAL_TEAM_SOUND);
 	if(team == TEAM_BLUE)
 		te->s.eventParm = GTS_RED_RETURN;
 	else
@@ -601,7 +601,7 @@ Team_TakeFlagSound(gentity_t *ent, int team)
 		break;
 	}
 
-	te = G_TempEntity(ent->s.pos.trBase, EV_GLOBAL_TEAM_SOUND);
+	te = G_TempEntity(ent->s.traj.base, EV_GLOBAL_TEAM_SOUND);
 	if(team == TEAM_BLUE)
 		te->s.eventParm = GTS_RED_TAKEN;
 	else
@@ -619,7 +619,7 @@ Team_CaptureFlagSound(gentity_t *ent, int team)
 		return;
 	}
 
-	te = G_TempEntity(ent->s.pos.trBase, EV_GLOBAL_TEAM_SOUND);
+	te = G_TempEntity(ent->s.traj.base, EV_GLOBAL_TEAM_SOUND);
 	if(team == TEAM_BLUE)
 		te->s.eventParm = GTS_BLUE_CAPTURE;
 	else
@@ -723,7 +723,7 @@ Team_TouchOurFlag(gentity_t *ent, gentity_t *other, int team)
 	teamgame.last_capture_team = team;
 
 	/* Increase the team's score */
-	AddTeamScore(ent->s.pos.trBase, other->client->sess.sessionTeam, 1);
+	AddTeamScore(ent->s.traj.base, other->client->sess.sessionTeam, 1);
 	Team_ForceGesture(other->client->sess.sessionTeam);
 
 	other->client->pers.teamState.captures++;
@@ -1217,7 +1217,7 @@ ObeliskDie(gentity_t *self, gentity_t *inflictor, gentity_t *attacker,
 	int otherTeam;
 
 	otherTeam = OtherTeam(self->spawnflags);
-	AddTeamScore(self->s.pos.trBase, otherTeam, 1);
+	AddTeamScore(self->s.pos.base, otherTeam, 1);
 	Team_ForceGesture(otherTeam);
 
 	CalculateRanks();
@@ -1264,7 +1264,7 @@ ObeliskTouch(gentity_t *self, gentity_t *other, trace_t *trace)
 	PrintMsg(NULL, "%s" S_COLOR_WHITE " brought in %i skull%s.\n",
 		other->client->pers.netname, tokens, tokens ? "s" : "");
 
-	AddTeamScore(self->s.pos.trBase, other->client->sess.sessionTeam, tokens);
+	AddTeamScore(self->s.pos.base, other->client->sess.sessionTeam, tokens);
 	Team_ForceGesture(other->client->sess.sessionTeam);
 
 	AddScore(other, self->r.currentOrigin, CTF_CAPTURE_BONUS*tokens);
@@ -1307,7 +1307,7 @@ SpawnObelisk(Vec3 origin, int team, int spawnflags)
 	ent = G_Spawn();
 
 	copyv3(origin, ent->s.origin);
-	copyv3(origin, ent->s.pos.trBase);
+	copyv3(origin, ent->s.pos.base);
 	copyv3(origin, ent->r.currentOrigin);
 
 	setv3(ent->r.mins, -15, -15, 0);
@@ -1467,7 +1467,7 @@ CheckObeliskAttack(gentity_t *obelisk, gentity_t *attacker)
 	    OVERLOAD_ATTACK_BASE_SOUND_TIME)){
 
 		/* tell which obelisk is under attack */
-		te = G_TempEntity(obelisk->s.pos.trBase, EV_GLOBAL_TEAM_SOUND);
+		te = G_TempEntity(obelisk->s.pos.base, EV_GLOBAL_TEAM_SOUND);
 		if(obelisk->spawnflags == TEAM_RED){
 			te->s.eventParm = GTS_REDOBELISK_ATTACKED;
 			teamgame.redObeliskAttackedTime = level.time;

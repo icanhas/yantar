@@ -77,7 +77,7 @@ BG_PlayerTouchesItem(playerState_t *ps, entityState_t *item, int atTime)
 {
 	Vec3 origin;
 
-	BG_EvaluateTrajectory(&item->pos, atTime, origin);
+	BG_EvaluateTrajectory(&item->traj, atTime, origin);
 
 	/* we are ignoring ducked differences here */
 	if(ps->origin[0] - origin[0] > 44

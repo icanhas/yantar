@@ -239,7 +239,7 @@ SP_target_speaker(gentity_t *ent)
 	if(ent->spawnflags & 4)
 		ent->r.svFlags |= SVF_BROADCAST;
 
-	copyv3(ent->s.origin, ent->s.pos.trBase);
+	copyv3(ent->s.origin, ent->s.traj.base);
 
 	/* must link the entity so we get areas and clusters so
 	 * the server can determine who to send updates to */

@@ -62,12 +62,12 @@ CG_BubbleTrail(Vec3 start, Vec3 end, float spacing)
 
 		le->color[3] = 1.0;
 
-		le->pos.trType	= TR_LINEAR;
-		le->pos.trTime	= cg.time;
-		copyv3(move, le->pos.trBase);
-		le->pos.trDelta[0]	= crandom()*5;
-		le->pos.trDelta[1]	= crandom()*5;
-		le->pos.trDelta[2]	= crandom()*5 + 6;
+		le->pos.type	= TR_LINEAR;
+		le->pos.time	= cg.time;
+		copyv3(move, le->pos.base);
+		le->pos.delta[0]	= crandom()*5;
+		le->pos.delta[1]	= crandom()*5;
+		le->pos.delta[2]	= crandom()*5 + 6;
 
 		addv3 (move, vec, move);
 	}
@@ -116,10 +116,10 @@ CG_SmokePuff(const Vec3 p, const Vec3 vel,
 	le->color[3]	= a;
 
 
-	le->pos.trType	= TR_LINEAR;
-	le->pos.trTime	= startTime;
-	copyv3(vel, le->pos.trDelta);
-	copyv3(p, le->pos.trBase);
+	le->pos.type	= TR_LINEAR;
+	le->pos.time	= startTime;
+	copyv3(vel, le->pos.delta);
+	copyv3(p, le->pos.base);
 
 	copyv3(p, re->origin);
 	re->customShader = hShader;
@@ -207,9 +207,9 @@ CG_ScorePlum(int client, Vec3 org, int score)
 	le->color[0]	= le->color[1] = le->color[2] = le->color[3] = 1.0;
 	le->radius	= score;
 
-	copyv3(org, le->pos.trBase);
+	copyv3(org, le->pos.base);
 	if(org[2] >= lastPos[2] - 20 && org[2] <= lastPos[2] + 20)
-		le->pos.trBase[2] -= 20;
+		le->pos.base[2] -= 20;
 
 	/* CG_Printf( "Plum origin %i %i %i -- %i\n", (int)org[0], (int)org[1], (int)org[2], (int)distv3(org, lastPos)); */
 	copyv3(org, lastPos);
@@ -338,10 +338,10 @@ CG_LaunchGib(Vec3 origin, Vec3 velocity, qhandle_t hModel)
 	copyaxis(axisDefault, re->axis);
 	re->hModel = hModel;
 
-	le->pos.trType = TR_GRAVITY;
-	copyv3(origin, le->pos.trBase);
-	copyv3(velocity, le->pos.trDelta);
-	le->pos.trTime = cg.time;
+	le->pos.type = TR_GRAVITY;
+	copyv3(origin, le->pos.base);
+	copyv3(velocity, le->pos.delta);
+	le->pos.time = cg.time;
 
 	le->bounceFactor = 0.6f;
 
@@ -452,10 +452,10 @@ CG_LaunchExplode(Vec3 origin, Vec3 velocity, qhandle_t hModel)
 	copyaxis(axisDefault, re->axis);
 	re->hModel = hModel;
 
-	le->pos.trType = TR_GRAVITY;
-	copyv3(origin, le->pos.trBase);
-	copyv3(velocity, le->pos.trDelta);
-	le->pos.trTime = cg.time;
+	le->pos.type = TR_GRAVITY;
+	copyv3(origin, le->pos.base);
+	copyv3(velocity, le->pos.delta);
+	le->pos.time = cg.time;
 
 	le->bounceFactor = 0.1f;
 

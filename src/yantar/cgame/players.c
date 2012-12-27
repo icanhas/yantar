@@ -1093,7 +1093,7 @@ playerangles(centity_t *cent, Vec3 hull[3])
 	}
 	
 	/* lean a bit towards the direction of travel */
-	copyv3(cent->currentState.pos.trDelta, vel);
+	copyv3(cent->currentState.traj.delta, vel);
 	speed = normv3(vel);
 	if(speed > 0.0){
 		Vec3 axis[3];
@@ -1159,16 +1159,16 @@ dusttrail(centity_t *cent)
 	if(cent->dustTrailTime < cg.time)
 		cent->dustTrailTime = cg.time;
 
-	copyv3(cent->currentState.pos.trBase, end);
+	copyv3(cent->currentState.traj.base, end);
 	end[2] -= 64;
-	CG_Trace(&tr, cent->currentState.pos.trBase, NULL, NULL, end,
+	CG_Trace(&tr, cent->currentState.traj.base, NULL, NULL, end,
 		cent->currentState.number,
 		MASK_PLAYERSOLID);
 
 	if(!(tr.surfaceFlags & SURF_DUST))
 		return;
 		
-	copyv3(cent->currentState.pos.trBase, end);
+	copyv3(cent->currentState.traj.base, end);
 	end[2] -= 16;
 
 	setv3(vel, 0, 0, -30);
@@ -1240,7 +1240,7 @@ playerflag(centity_t *cent, qhandle_t skinh, refEntity_t *hull)
 
 	if(updateangles){
 
-		copyv3(cent->currentState.pos.trDelta, dir);
+		copyv3(cent->currentState.traj.delta, dir);
 		/* add gravity */
 		dir[2] += 100;
 		normv3(dir);
@@ -1265,7 +1265,7 @@ playerflag(centity_t *cent, qhandle_t skinh, refEntity_t *hull)
 			if(angles[YAW] > 360)
 				angles[YAW] -= 360;
 
-			/* v3toeuler( cent->currentState.pos.trDelta, tmpangles );
+			/* v3toeuler( cent->currentState.pos.delta, tmpangles );
 			 * angles[YAW] = tmpangles[YAW] + 45 - cent->pe.hull.yawAngle;
 			 * change the yaw angle */
 			swingangles(angles[YAW], 25, 90, 0.15f,
@@ -1768,7 +1768,7 @@ CG_ResetPlayerEntity(centity_t *cent)
 		&cent->pe.torso,
 		cent->currentState.torsoAnim);
 
-	BG_EvaluateTrajectory(&cent->currentState.pos, cg.time, cent->lerpOrigin);
+	BG_EvaluateTrajectory(&cent->currentState.traj, cg.time, cent->lerpOrigin);
 	BG_EvaluateTrajectory(&cent->currentState.apos, cg.time,
 		cent->lerpAngles);
 

@@ -455,7 +455,7 @@ G_SpawnGEntityFromSpawnVars(void)
 		}
 
 	/* move editor origin to pos */
-	copyv3(ent->s.origin, ent->s.pos.trBase);
+	copyv3(ent->s.origin, ent->s.traj.base);
 	copyv3(ent->s.origin, ent->r.currentOrigin);
 
 	/* if we didn't get a classname, don't bother spawning anything */

@@ -33,8 +33,8 @@ CG_MachineGunEjectBrass(centity_t *cent)
 	le->endTime	= le->startTime + cg_brassTime.integer +
 			  (cg_brassTime.integer / 4) * random();
 
-	le->pos.trType	= TR_GRAVITY;
-	le->pos.trTime	= cg.time - (rand()&15);
+	le->pos.type	= TR_GRAVITY;
+	le->pos.time	= cg.time - (rand()&15);
 
 	eulertoaxis(cent->lerpAngles, v);
 
@@ -50,7 +50,7 @@ CG_MachineGunEjectBrass(centity_t *cent)
 		     offset[2] * v[2][2];
 	addv3(cent->lerpOrigin, xoffset, re->origin);
 
-	copyv3(re->origin, le->pos.trBase);
+	copyv3(re->origin, le->pos.base);
 
 	if(CG_PointContents(re->origin, -1) & CONTENTS_WATER)
 		waterScale = 0.10f;
@@ -61,21 +61,21 @@ CG_MachineGunEjectBrass(centity_t *cent)
 		       velocity[2] * v[2][1];
 	xvelocity[2] = velocity[0] * v[0][2] + velocity[1] * v[1][2] +
 		       velocity[2] * v[2][2];
-	scalev3(xvelocity, waterScale, le->pos.trDelta);
+	scalev3(xvelocity, waterScale, le->pos.delta);
 
 	copyaxis(axisDefault, re->axis);
 	re->hModel = cgs.media.machinegunBrassModel;
 
 	le->bounceFactor = 0.4 * waterScale;
 
-	le->angles.trType = TR_LINEAR;
-	le->angles.trTime = cg.time;
-	le->angles.trBase[0] = rand()&31;
-	le->angles.trBase[1] = rand()&31;
-	le->angles.trBase[2] = rand()&31;
-	le->angles.trDelta[0]	= 2;
-	le->angles.trDelta[1]	= 1;
-	le->angles.trDelta[2]	= 0;
+	le->angles.type = TR_LINEAR;
+	le->angles.time = cg.time;
+	le->angles.base[0] = rand()&31;
+	le->angles.base[1] = rand()&31;
+	le->angles.base[2] = rand()&31;
+	le->angles.delta[0]	= 2;
+	le->angles.delta[1]	= 1;
+	le->angles.delta[2]	= 0;
 
 	le->leFlags = LEF_TUMBLE;
 	le->leBounceSoundType = LEBS_BRASS;
@@ -113,8 +113,8 @@ CG_ShotgunEjectBrass(centity_t *cent)
 		le->endTime	= le->startTime + cg_brassTime.integer*3 +
 				  cg_brassTime.integer*random();
 
-		le->pos.trType	= TR_GRAVITY;
-		le->pos.trTime	= cg.time;
+		le->pos.type	= TR_GRAVITY;
+		le->pos.time	= cg.time;
 
 		eulertoaxis(cent->lerpAngles, v);
 
@@ -129,7 +129,7 @@ CG_ShotgunEjectBrass(centity_t *cent)
 		xoffset[2] = offset[0] * v[0][2] + offset[1] * v[1][2] +
 			     offset[2] * v[2][2];
 		addv3(cent->lerpOrigin, xoffset, re->origin);
-		copyv3(re->origin, le->pos.trBase);
+		copyv3(re->origin, le->pos.base);
 		if(CG_PointContents(re->origin, -1) & CONTENTS_WATER)
 			waterScale = 0.10f;
 
@@ -139,20 +139,20 @@ CG_ShotgunEjectBrass(centity_t *cent)
 			       v[1][1] + velocity[2] * v[2][1];
 		xvelocity[2] = velocity[0] * v[0][2] + velocity[1] *
 			       v[1][2] + velocity[2] * v[2][2];
-		scalev3(xvelocity, waterScale, le->pos.trDelta);
+		scalev3(xvelocity, waterScale, le->pos.delta);
 
 		copyaxis(axisDefault, re->axis);
 		re->hModel = cgs.media.shotgunBrassModel;
 		le->bounceFactor = 0.3f;
 
-		le->angles.trType = TR_LINEAR;
-		le->angles.trTime = cg.time;
-		le->angles.trBase[0] = rand()&31;
-		le->angles.trBase[1] = rand()&31;
-		le->angles.trBase[2] = rand()&31;
-		le->angles.trDelta[0]	= 1;
-		le->angles.trDelta[1]	= 0.5;
-		le->angles.trDelta[2]	= 0;
+		le->angles.type = TR_LINEAR;
+		le->angles.time = cg.time;
+		le->angles.base[0] = rand()&31;
+		le->angles.base[1] = rand()&31;
+		le->angles.base[2] = rand()&31;
+		le->angles.delta[0]	= 1;
+		le->angles.delta[1]	= 0.5;
+		le->angles.delta[2]	= 0;
 
 		le->leFlags = LEF_TUMBLE;
 		le->leBounceSoundType = LEBS_BRASS;
@@ -280,16 +280,16 @@ CG_RailTrail(clientInfo_t *ci, Vec3 start, Vec3 end)
 			le->color[2] = ci->color2[2] * 0.75;
 			le->color[3] = 1.0f;
 
-			le->pos.trType	= TR_LINEAR;
-			le->pos.trTime	= cg.time;
+			le->pos.type	= TR_LINEAR;
+			le->pos.time	= cg.time;
 
 			copyv3(move, move2);
 			maddv3(move2, RADIUS, axis[j], move2);
-			copyv3(move2, le->pos.trBase);
+			copyv3(move2, le->pos.base);
 
-			le->pos.trDelta[0] = axis[j][0]*6;
-			le->pos.trDelta[1] = axis[j][1]*6;
-			le->pos.trDelta[2] = axis[j][2]*6;
+			le->pos.delta[0] = axis[j][0]*6;
+			le->pos.delta[1] = axis[j][1]*6;
+			le->pos.delta[2] = axis[j][2]*6;
 		}
 
 		addv3 (move, vec, move);
@@ -323,16 +323,16 @@ CG_RocketTrail(centity_t *ent, const weaponInfo_t *wi)
 	startTime = ent->trailTime;
 	t = step * ((startTime + step) / step);
 
-	BG_EvaluateTrajectory(&es->pos, cg.time, origin);
+	BG_EvaluateTrajectory(&es->traj, cg.time, origin);
 	contents = CG_PointContents(origin, -1);
 
 	/* if object (e.g. grenade) is stationary, don't toss up smoke */
-	if(es->pos.trType == TR_STATIONARY){
+	if(es->traj.type == TR_STATIONARY){
 		ent->trailTime = cg.time;
 		return;
 	}
 
-	BG_EvaluateTrajectory(&es->pos, ent->trailTime, lastPos);
+	BG_EvaluateTrajectory(&es->traj, ent->trailTime, lastPos);
 	lastContents = CG_PointContents(lastPos, -1);
 
 	ent->trailTime = cg.time;
@@ -344,7 +344,7 @@ CG_RocketTrail(centity_t *ent, const weaponInfo_t *wi)
 	}
 
 	for(; t <= ent->trailTime; t += step){
-		BG_EvaluateTrajectory(&es->pos, t, lastPos);
+		BG_EvaluateTrajectory(&es->traj, t, lastPos);
 
 		smoke = CG_SmokePuff(lastPos, up,
 			wi->trailRadius,
@@ -385,16 +385,16 @@ CG_NailTrail(centity_t *ent, const weaponInfo_t *wi)
 	startTime = ent->trailTime;
 	t = step * ((startTime + step) / step);
 
-	BG_EvaluateTrajectory(&es->pos, cg.time, origin);
+	BG_EvaluateTrajectory(&es->traj, cg.time, origin);
 	contents = CG_PointContents(origin, -1);
 
 	/* if object (e.g. grenade) is stationary, don't toss up smoke */
-	if(es->pos.trType == TR_STATIONARY){
+	if(es->traj.type == TR_STATIONARY){
 		ent->trailTime = cg.time;
 		return;
 	}
 
-	BG_EvaluateTrajectory(&es->pos, ent->trailTime, lastPos);
+	BG_EvaluateTrajectory(&es->traj, ent->trailTime, lastPos);
 	lastContents = CG_PointContents(lastPos, -1);
 
 	ent->trailTime = cg.time;
@@ -406,7 +406,7 @@ CG_NailTrail(centity_t *ent, const weaponInfo_t *wi)
 	}
 
 	for(; t <= ent->trailTime; t += step){
-		BG_EvaluateTrajectory(&es->pos, t, lastPos);
+		BG_EvaluateTrajectory(&es->traj, t, lastPos);
 
 		smoke = CG_SmokePuff(lastPos, up,
 			wi->trailRadius,
@@ -439,7 +439,7 @@ CG_PlasmaTrail(centity_t *cent, const weaponInfo_t *wi)
 
 	es = &cent->currentState;
 
-	BG_EvaluateTrajectory(&es->pos, cg.time, origin);
+	BG_EvaluateTrajectory(&es->traj, cg.time, origin);
 
 	le = CG_AllocLocalEntity();
 	re = &le->refEntity;
@@ -456,8 +456,8 @@ CG_PlasmaTrail(centity_t *cent, const weaponInfo_t *wi)
 	le->startTime	= cg.time;
 	le->endTime	= le->startTime + 600;
 
-	le->pos.trType	= TR_GRAVITY;
-	le->pos.trTime	= cg.time;
+	le->pos.type	= TR_GRAVITY;
+	le->pos.time	= cg.time;
 
 	eulertoaxis(cent->lerpAngles, v);
 
@@ -473,7 +473,7 @@ CG_PlasmaTrail(centity_t *cent, const weaponInfo_t *wi)
 		     offset[2] * v[2][2];
 
 	addv3(origin, xoffset, re->origin);
-	copyv3(re->origin, le->pos.trBase);
+	copyv3(re->origin, le->pos.base);
 
 	if(CG_PointContents(re->origin, -1) & CONTENTS_WATER)
 		waterScale = 0.10f;
@@ -484,7 +484,7 @@ CG_PlasmaTrail(centity_t *cent, const weaponInfo_t *wi)
 		       velocity[2] * v[2][1];
 	xvelocity[2] = velocity[0] * v[0][2] + velocity[1] * v[1][2] +
 		       velocity[2] * v[2][2];
-	scalev3(xvelocity, waterScale, le->pos.trDelta);
+	scalev3(xvelocity, waterScale, le->pos.delta);
 
 	copyaxis(axisDefault, re->axis);
 	re->shaderTime = cg.time / 1000.0f;
@@ -503,14 +503,14 @@ CG_PlasmaTrail(centity_t *cent, const weaponInfo_t *wi)
 	le->color[2] = wi->flashDlightColor[2] * 0.2;
 	le->color[3] = 0.25f;
 
-	le->angles.trType = TR_LINEAR;
-	le->angles.trTime = cg.time;
-	le->angles.trBase[0] = rand()&31;
-	le->angles.trBase[1] = rand()&31;
-	le->angles.trBase[2] = rand()&31;
-	le->angles.trDelta[0]	= 1;
-	le->angles.trDelta[1]	= 0.5;
-	le->angles.trDelta[2]	= 0;
+	le->angles.type = TR_LINEAR;
+	le->angles.time = cg.time;
+	le->angles.base[0] = rand()&31;
+	le->angles.base[1] = rand()&31;
+	le->angles.base[2] = rand()&31;
+	le->angles.delta[0]	= 1;
+	le->angles.delta[1]	= 0.5;
+	le->angles.delta[2]	= 0;
 
 }
 
@@ -525,7 +525,7 @@ CG_GrappleTrail(centity_t *ent, const weaponInfo_t *wi)
 	UNUSED(wi);
 	es = &ent->currentState;
 
-	BG_EvaluateTrajectory(&es->pos, cg.time, origin);
+	BG_EvaluateTrajectory(&es->traj, cg.time, origin);
 	ent->trailTime = cg.time;
 
 	memset(&beam, 0, sizeof(beam));
@@ -1971,15 +1971,15 @@ CG_ShotgunFire(entityState_t *es)
 	Vec3	v;
 	int	contents;
 
-	subv3(es->origin2, es->pos.trBase, v);
+	subv3(es->origin2, es->traj.base, v);
 	normv3(v);
 	scalev3(v, 32, v);
-	addv3(es->pos.trBase, v, v);
+	addv3(es->traj.base, v, v);
 	if(cgs.glconfig.hardwareType != GLHW_RAGEPRO){
 		/* ragepro can't alpha fade, so don't even bother with smoke */
 		Vec3 up;
 
-		contents = CG_PointContents(es->pos.trBase, 0);
+		contents = CG_PointContents(es->traj.base, 0);
 		if(!(contents & CONTENTS_WATER)){
 			setv3(up, 0, 0, 8);
 			CG_SmokePuff(v, up, 32, 1, 1, 1, 0.33f, 900, cg.time, 0,
@@ -1987,7 +1987,7 @@ CG_ShotgunFire(entityState_t *es)
 				cgs.media.shotgunSmokePuffShader);
 		}
 	}
-	CG_ShotgunPattern(es->pos.trBase, es->origin2, es->eventParm,
+	CG_ShotgunPattern(es->traj.base, es->origin2, es->eventParm,
 		es->otherEntityNum);
 }
 
@@ -2089,9 +2089,9 @@ CG_CalcMuzzlePoint(int entityNum, Vec3 muzzle)
 	if(!cent->currentValid)
 		return qfalse;
 
-	copyv3(cent->currentState.pos.trBase, muzzle);
+	copyv3(cent->currentState.traj.base, muzzle);
 
-	anglev3s(cent->currentState.apos.trBase, forward, NULL, NULL);
+	anglev3s(cent->currentState.apos.base, forward, NULL, NULL);
 	anim = cent->currentState.legsAnim & ~ANIM_TOGGLEBIT;
 	if(anim == LEGS_WALKCR || anim == LEGS_IDLECR)
 		muzzle[2] += CROUCH_VIEWHEIGHT;

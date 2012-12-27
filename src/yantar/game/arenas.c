@@ -177,7 +177,7 @@ SpawnModelOnVictoryPad(gentity_t *pad, Vec3 offset, gentity_t *ent, int place)
 	body->physicsObject	= qtrue;
 	body->physicsBounce	= 0;	/* don't bounce */
 	body->s.event		= 0;
-	body->s.pos.trType	= TR_STATIONARY;
+	body->s.traj.type	= TR_STATIONARY;
 	body->s.groundEntityNum = ENTITYNUM_WORLD;
 	body->s.legsAnim	= LEGS_IDLE;
 	body->s.torsoAnim	= TORSO_STAND;
@@ -197,11 +197,11 @@ SpawnModelOnVictoryPad(gentity_t *pad, Vec3 offset, gentity_t *ent, int place)
 	body->takedamage	= qfalse;
 
 	subv3(level.intermission_origin, pad->r.currentOrigin, vec);
-	v3toeuler(vec, body->s.apos.trBase);
-	body->s.apos.trBase[PITCH]	= 0;
-	body->s.apos.trBase[ROLL]	= 0;
+	v3toeuler(vec, body->s.apos.base);
+	body->s.apos.base[PITCH]	= 0;
+	body->s.apos.base[ROLL]	= 0;
 
-	anglev3s(body->s.apos.trBase, f, r, u);
+	anglev3s(body->s.apos.base, f, r, u);
 	maddv3(pad->r.currentOrigin, offset[0], f, vec);
 	maddv3(vec, offset[1], r, vec);
 	maddv3(vec, offset[2], u, vec);
@@ -272,11 +272,11 @@ PodiumPlacementThink(gentity_t *podium)
 		subv3(level.intermission_origin,
 			podium->r.currentOrigin,
 			vec);
-		v3toeuler(vec, podium1->s.apos.trBase);
-		podium1->s.apos.trBase[PITCH]	= 0;
-		podium1->s.apos.trBase[ROLL]	= 0;
+		v3toeuler(vec, podium1->s.apos.base);
+		podium1->s.apos.base[PITCH]	= 0;
+		podium1->s.apos.base[ROLL]	= 0;
 
-		anglev3s(podium1->s.apos.trBase, f, r, u);
+		anglev3s(podium1->s.apos.base, f, r, u);
 		maddv3(podium->r.currentOrigin, offsetFirst[0], f, vec);
 		maddv3(vec, offsetFirst[1], r, vec);
 		maddv3(vec, offsetFirst[2], u, vec);
@@ -288,11 +288,11 @@ PodiumPlacementThink(gentity_t *podium)
 		subv3(level.intermission_origin,
 			podium->r.currentOrigin,
 			vec);
-		v3toeuler(vec, podium2->s.apos.trBase);
-		podium2->s.apos.trBase[PITCH]	= 0;
-		podium2->s.apos.trBase[ROLL]	= 0;
+		v3toeuler(vec, podium2->s.apos.base);
+		podium2->s.apos.base[PITCH]	= 0;
+		podium2->s.apos.base[ROLL]	= 0;
 
-		anglev3s(podium2->s.apos.trBase, f, r, u);
+		anglev3s(podium2->s.apos.base, f, r, u);
 		maddv3(podium->r.currentOrigin, offsetSecond[0], f, vec);
 		maddv3(vec, offsetSecond[1], r, vec);
 		maddv3(vec, offsetSecond[2], u, vec);
@@ -304,11 +304,11 @@ PodiumPlacementThink(gentity_t *podium)
 		subv3(level.intermission_origin,
 			podium->r.currentOrigin,
 			vec);
-		v3toeuler(vec, podium3->s.apos.trBase);
-		podium3->s.apos.trBase[PITCH]	= 0;
-		podium3->s.apos.trBase[ROLL]	= 0;
+		v3toeuler(vec, podium3->s.apos.base);
+		podium3->s.apos.base[PITCH]	= 0;
+		podium3->s.apos.base[ROLL]	= 0;
 
-		anglev3s(podium3->s.apos.trBase, f, r, u);
+		anglev3s(podium3->s.apos.base, f, r, u);
 		maddv3(podium->r.currentOrigin, offsetThird[0], f, vec);
 		maddv3(vec, offsetThird[1], r, vec);
 		maddv3(vec, offsetThird[2], u, vec);
@@ -343,7 +343,7 @@ SpawnPodium(void)
 	G_SetOrigin(podium, origin);
 
 	subv3(level.intermission_origin, podium->r.currentOrigin, vec);
-	podium->s.apos.trBase[YAW] = vectoyaw(vec);
+	podium->s.apos.base[YAW] = vectoyaw(vec);
 	trap_LinkEntity (podium);
 
 	podium->think = PodiumPlacementThink;

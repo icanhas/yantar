@@ -918,7 +918,7 @@ CG_EntityEvent(centity_t *cent, Vec3 position)
 					es->origin2);
 		}
 
-		CG_RailTrail(ci, es->origin2, es->pos.trBase);
+		CG_RailTrail(ci, es->origin2, es->traj.base);
 
 		/* if the end was on a nomark surface, don't make an explosion */
 		if(es->eventParm != 255){
@@ -930,12 +930,12 @@ CG_EntityEvent(centity_t *cent, Vec3 position)
 	case EV_BULLET_HIT_WALL:
 		DEBUGNAME("EV_BULLET_HIT_WALL");
 		ByteToDir(es->eventParm, dir);
-		CG_Bullet(es->pos.trBase, es->otherEntityNum, dir, qfalse,
+		CG_Bullet(es->traj.base, es->otherEntityNum, dir, qfalse,
 			ENTITYNUM_WORLD);
 		break;
 	case EV_BULLET_HIT_FLESH:
 		DEBUGNAME("EV_BULLET_HIT_FLESH");
-		CG_Bullet(es->pos.trBase, es->otherEntityNum, dir, qtrue,
+		CG_Bullet(es->traj.base, es->otherEntityNum, dir, qtrue,
 			es->eventParm);
 		break;
 	case EV_SHOTGUN:
@@ -1182,7 +1182,7 @@ CG_CheckEvents(centity_t *cent)
 	}
 
 	/* calculate the position at exactly the frame time */
-	BG_EvaluateTrajectory(&cent->currentState.pos, cg.snap->serverTime,
+	BG_EvaluateTrajectory(&cent->currentState.traj, cg.snap->serverTime,
 		cent->lerpOrigin);
 	CG_SetEntitySoundPosition(cent);
 

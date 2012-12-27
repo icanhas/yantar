@@ -396,7 +396,7 @@ CG_Missile(centity_t *cent)
 	if(weapon->missileSound){
 		Vec3 velocity;
 
-		BG_EvaluateTrajectoryDelta(&cent->currentState.pos, cg.time,
+		BG_EvaluateTrajectoryDelta(&cent->currentState.traj, cg.time,
 			velocity);
 
 		trap_S_AddLoopingSound(cent->currentState.number,
@@ -428,11 +428,11 @@ CG_Missile(centity_t *cent)
 			ent.hModel = cgs.media.blueProxMine;
 
 	/* convert direction of travel into axis */
-	if(norm2v3(s1->pos.trDelta, ent.axis[0]) == 0)
+	if(norm2v3(s1->traj.delta, ent.axis[0]) == 0)
 		ent.axis[0][2] = 1;
 
 	/* spin as it moves */
-	if(s1->pos.trType != TR_STATIONARY)
+	if(s1->traj.type != TR_STATIONARY)
 		RotateAroundDirection(ent.axis, cg.time / 4);
 	else{
 		if(s1->parentweap == W2proxlauncher)
@@ -487,7 +487,7 @@ CG_Grapple(centity_t *cent)
 	ent.renderfx = weapon->missileRenderfx | RF_NOSHADOW;
 
 	/* convert direction of travel into axis */
-	if(norm2v3(s1->pos.trDelta, ent.axis[0]) == 0)
+	if(norm2v3(s1->traj.delta, ent.axis[0]) == 0)
 		ent.axis[0][2] = 1;
 
 	trap_R_AddRefEntityToScene(&ent);
@@ -543,7 +543,7 @@ CG_Beam(centity_t *cent)
 
 	/* create the render entity */
 	memset (&ent, 0, sizeof(ent));
-	copyv3(s1->pos.trBase, ent.origin);
+	copyv3(s1->traj.base, ent.origin);
 	copyv3(s1->origin2, ent.oldorigin);
 	clearaxis(ent.axis);
 	ent.reType = RT_BEAM;
@@ -607,10 +607,10 @@ CG_AdjustPositionForMover(const Vec3 in, int moverNum, int fromTime,
 		return;
 	}
 
-	BG_EvaluateTrajectory(&cent->currentState.pos, fromTime, oldOrigin);
+	BG_EvaluateTrajectory(&cent->currentState.traj, fromTime, oldOrigin);
 	BG_EvaluateTrajectory(&cent->currentState.apos, fromTime, oldAngles);
 
-	BG_EvaluateTrajectory(&cent->currentState.pos, toTime, origin);
+	BG_EvaluateTrajectory(&cent->currentState.traj, toTime, origin);
 	BG_EvaluateTrajectory(&cent->currentState.apos, toTime, angles);
 
 	subv3(origin, oldOrigin, deltaOrigin);
@@ -636,9 +636,9 @@ CG_InterpolateEntityPosition(centity_t *cent)
 
 	/* this will linearize a sine or parabolic curve, but it is important
 	 * to not extrapolate player positions if more recent data is available */
-	BG_EvaluateTrajectory(&cent->currentState.pos, cg.snap->serverTime,
+	BG_EvaluateTrajectory(&cent->currentState.traj, cg.snap->serverTime,
 		current);
-	BG_EvaluateTrajectory(&cent->nextState.pos, cg.nextSnap->serverTime,
+	BG_EvaluateTrajectory(&cent->nextState.traj, cg.nextSnap->serverTime,
 		next);
 
 	cent->lerpOrigin[0] = current[0] + f * (next[0] - current[0]);
@@ -664,11 +664,11 @@ CG_CalcEntityLerpPositions(centity_t *cent)
 	if(!cg_smoothClients.integer)
 		/* make sure the clients use TR_INTERPOLATE */
 		if(cent->currentState.number < MAX_CLIENTS){
-			cent->currentState.pos.trType = TR_INTERPOLATE;
-			cent->nextState.pos.trType = TR_INTERPOLATE;
+			cent->currentState.traj.type = TR_INTERPOLATE;
+			cent->nextState.traj.type = TR_INTERPOLATE;
 		}
 
-	if(cent->interpolate && cent->currentState.pos.trType ==
+	if(cent->interpolate && cent->currentState.traj.type ==
 	   TR_INTERPOLATE){
 		CG_InterpolateEntityPosition(cent);
 		return;
@@ -676,7 +676,7 @@ CG_CalcEntityLerpPositions(centity_t *cent)
 
 	/* first see if we can interpolate between two snaps for
 	 * linear extrapolated clients */
-	if(cent->interpolate && cent->currentState.pos.trType ==
+	if(cent->interpolate && cent->currentState.traj.type ==
 	   TR_LINEAR_STOP &&
 	   cent->currentState.number < MAX_CLIENTS){
 		CG_InterpolateEntityPosition(cent);
@@ -684,7 +684,7 @@ CG_CalcEntityLerpPositions(centity_t *cent)
 	}
 
 	/* just use the current frame and evaluate as best we can */
-	BG_EvaluateTrajectory(&cent->currentState.pos, cg.time, cent->lerpOrigin);
+	BG_EvaluateTrajectory(&cent->currentState.traj, cg.time, cent->lerpOrigin);
 	BG_EvaluateTrajectory(&cent->currentState.apos, cg.time,
 		cent->lerpAngles);
 

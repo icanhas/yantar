@@ -142,9 +142,9 @@ LookAtKiller(gentity_t *self, gentity_t *inflictor, gentity_t *attacker)
 	Vec3 dir;
 
 	if(attacker && attacker != self)
-		subv3 (attacker->s.pos.trBase, self->s.pos.trBase, dir);
+		subv3 (attacker->s.traj.base, self->s.traj.base, dir);
 	else if(inflictor && inflictor != self)
-		subv3 (inflictor->s.pos.trBase, self->s.pos.trBase, dir);
+		subv3 (inflictor->s.traj.base, self->s.traj.base, dir);
 	else{
 		self->client->ps.stats[STAT_DEAD_YAW] = self->s.angles[YAW];
 		return;

@@ -90,7 +90,7 @@ CG_ClipMoveToEntities(const Vec3 start, const Vec3 mins, const Vec3 maxs,
 			/* special value for bmodel */
 			cmodel = trap_CM_InlineModel(ent->modelindex);
 			copyv3(cent->lerpAngles, angles);
-			BG_EvaluateTrajectory(&cent->currentState.pos,
+			BG_EvaluateTrajectory(&cent->currentState.traj,
 				cg.physicsTime,
 				origin);
 		}else{

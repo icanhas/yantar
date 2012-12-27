@@ -72,7 +72,7 @@ Pickup_Powerup(gentity_t *ent, gentity_t *other)
 			continue;
 
 		/* if too far away, no sound */
-		subv3(ent->s.pos.trBase, client->ps.origin, delta);
+		subv3(ent->s.traj.base, client->ps.origin, delta);
 		len = normv3(delta);
 		if(len > 192)
 			continue;
@@ -83,7 +83,7 @@ Pickup_Powerup(gentity_t *ent, gentity_t *other)
 			continue;
 
 		/* if not line of sight, no sound */
-		trap_Trace(&tr, client->ps.origin, NULL, NULL, ent->s.pos.trBase,
+		trap_Trace(&tr, client->ps.origin, NULL, NULL, ent->s.traj.base,
 			ENTITYNUM_NONE,
 			CONTENTS_SOLID);
 		if(tr.fraction != 1.0)
@@ -329,9 +329,9 @@ RespawnItem(gentity_t *ent)
 
 		/* if the powerup respawn sound should Not be global */
 		if(ent->speed)
-			te = G_TempEntity(ent->s.pos.trBase, EV_GENERAL_SOUND);
+			te = G_TempEntity(ent->s.traj.base, EV_GENERAL_SOUND);
 		else
-			te = G_TempEntity(ent->s.pos.trBase, EV_GLOBAL_SOUND);
+			te = G_TempEntity(ent->s.traj.base, EV_GLOBAL_SOUND);
 		te->s.eventParm = G_SoundIndex(Pitemsounds "/poweruprespawn");
 		te->r.svFlags	|= SVF_BROADCAST;
 	}
@@ -343,9 +343,9 @@ RespawnItem(gentity_t *ent)
 
 		/* if the powerup respawn sound should Not be global */
 		if(ent->speed)
-			te = G_TempEntity(ent->s.pos.trBase, EV_GENERAL_SOUND);
+			te = G_TempEntity(ent->s.traj.base, EV_GENERAL_SOUND);
 		else
-			te = G_TempEntity(ent->s.pos.trBase, EV_GLOBAL_SOUND);
+			te = G_TempEntity(ent->s.traj.base, EV_GLOBAL_SOUND);
 		te->s.eventParm = G_SoundIndex(Pitemsounds "/kamikazerespawn");
 		te->r.svFlags	|= SVF_BROADCAST;
 	}
@@ -428,14 +428,14 @@ Touch_Item(gentity_t *ent, gentity_t *other, trace_t *trace)
 		if(!ent->speed){
 			gentity_t *te;
 
-			te = G_TempEntity(ent->s.pos.trBase,
+			te = G_TempEntity(ent->s.traj.base,
 				EV_GLOBAL_ITEM_PICKUP);
 			te->s.eventParm = ent->s.modelindex;
 			te->r.svFlags	|= SVF_BROADCAST;
 		}else{
 			gentity_t *te;
 
-			te = G_TempEntity(ent->s.pos.trBase,
+			te = G_TempEntity(ent->s.traj.base,
 				EV_GLOBAL_ITEM_PICKUP);
 			te->s.eventParm = ent->s.modelindex;
 			/* only send this temp entity to a single client */
@@ -516,9 +516,9 @@ LaunchItem(gitem_t *item, Vec3 origin, Vec3 velocity)
 	dropped->touch = Touch_Item;
 
 	G_SetOrigin(dropped, origin);
-	dropped->s.pos.trType	= TR_GRAVITY;
-	dropped->s.pos.trTime	= level.time;
-	copyv3(velocity, dropped->s.pos.trDelta);
+	dropped->s.traj.type	= TR_GRAVITY;
+	dropped->s.traj.time	= level.time;
+	copyv3(velocity, dropped->s.traj.delta);
 
 	dropped->s.eFlags |= EF_BOUNCE_HALF;
 	if((g_gametype.integer == GT_CTF || g_gametype.integer == GT_1FCTF) 
@@ -547,7 +547,7 @@ Drop_Item(gentity_t *ent, gitem_t *item, float angle)
 	Vec3	velocity;
 	Vec3	angles;
 
-	copyv3(ent->s.apos.trBase, angles);
+	copyv3(ent->s.apos.base, angles);
 	angles[YAW] += angle;
 	angles[PITCH] = 0;	/* always forward */
 
@@ -555,7 +555,7 @@ Drop_Item(gentity_t *ent, gitem_t *item, float angle)
 	scalev3(velocity, 150, velocity);
 	velocity[2] += 200 + crandom() * 50;
 
-	return LaunchItem(item, ent->s.pos.trBase, velocity);
+	return LaunchItem(item, ent->s.traj.base, velocity);
 }
 
 /*
@@ -786,15 +786,15 @@ G_BounceItem(gentity_t *ent, trace_t *trace)
 	/* reflect the velocity on the trace plane */
 	hitTime = level.previousTime +
 		  (level.time - level.previousTime) * trace->fraction;
-	BG_EvaluateTrajectoryDelta(&ent->s.pos, hitTime, velocity);
+	BG_EvaluateTrajectoryDelta(&ent->s.traj, hitTime, velocity);
 	dot = dotv3(velocity, trace->plane.normal);
-	maddv3(velocity, -2*dot, trace->plane.normal, ent->s.pos.trDelta);
+	maddv3(velocity, -2*dot, trace->plane.normal, ent->s.traj.delta);
 
 	/* cut the velocity to keep from bouncing forever */
-	scalev3(ent->s.pos.trDelta, ent->physicsBounce, ent->s.pos.trDelta);
+	scalev3(ent->s.traj.delta, ent->physicsBounce, ent->s.traj.delta);
 
 	/* check for stop */
-	if(trace->plane.normal[2] > 0 && ent->s.pos.trDelta[2] < 40){
+	if(trace->plane.normal[2] > 0 && ent->s.traj.delta[2] < 40){
 		trace->endpos[2] += 1.0;	/* make sure it is off ground */
 		snapv3(trace->endpos);
 		G_SetOrigin(ent, trace->endpos);
@@ -804,8 +804,8 @@ G_BounceItem(gentity_t *ent, trace_t *trace)
 
 	addv3(ent->r.currentOrigin, trace->plane.normal,
 		ent->r.currentOrigin);
-	copyv3(ent->r.currentOrigin, ent->s.pos.trBase);
-	ent->s.pos.trTime = level.time;
+	copyv3(ent->r.currentOrigin, ent->s.traj.base);
+	ent->s.traj.time = level.time;
 }
 
 void
@@ -817,19 +817,19 @@ G_RunItem(gentity_t *ent)
 
 	/* if its groundentity has been set to ENTITYNUM_NONE, it may have been pushed off an edge */
 	if(ent->s.groundEntityNum == ENTITYNUM_NONE)
-		if(ent->s.pos.trType != TR_GRAVITY){
-			ent->s.pos.trType = TR_GRAVITY;
-			ent->s.pos.trTime = level.time;
+		if(ent->s.traj.type != TR_GRAVITY){
+			ent->s.traj.type = TR_GRAVITY;
+			ent->s.traj.time = level.time;
 		}
 
-	if(ent->s.pos.trType == TR_STATIONARY){
+	if(ent->s.traj.type == TR_STATIONARY){
 		/* check think function */
 		G_RunThink(ent);
 		return;
 	}
 
 	/* get current position */
-	BG_EvaluateTrajectory(&ent->s.pos, level.time, origin);
+	BG_EvaluateTrajectory(&ent->s.traj, level.time, origin);
 
 	/* trace a line from the previous position to the current position */
 	if(ent->clipmask)

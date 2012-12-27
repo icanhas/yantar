@@ -725,7 +725,7 @@ ClientThink_real(gentity_t *ent)
 		client->fireHeld = qfalse;	/* for grapple */
 
 	/* use the snapped origin for linking so it matches client predicted versions */
-	copyv3(ent->s.pos.trBase, ent->r.currentOrigin);
+	copyv3(ent->s.traj.base, ent->r.currentOrigin);
 
 	copyv3 (pm.mins, ent->r.mins);
 	copyv3 (pm.maxs, ent->r.maxs);

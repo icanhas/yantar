@@ -334,7 +334,7 @@ BodySink(gentity_t *ent)
 		return;
 	}
 	ent->nextthink = level.time + 100;
-	ent->s.pos.trBase[2] -= 1;
+	ent->s.traj.base[2] -= 1;
 }
 
 /*
@@ -389,11 +389,11 @@ CopyToBodyQue(gentity_t *ent)
 	body->physicsObject = qtrue;
 	body->physicsBounce = 0;	/* don't bounce */
 	if(body->s.groundEntityNum == ENTITYNUM_NONE){
-		body->s.pos.trType = TR_GRAVITY;
-		body->s.pos.trTime = level.time;
-		copyv3(ent->client->ps.velocity, body->s.pos.trDelta);
+		body->s.traj.type = TR_GRAVITY;
+		body->s.traj.time = level.time;
+		copyv3(ent->client->ps.velocity, body->s.traj.delta);
 	}else
-		body->s.pos.trType = TR_STATIONARY;
+		body->s.traj.type = TR_STATIONARY;
 	body->s.event = 0;
 
 	/* change the animation to the last-frame only, so the sequence
@@ -436,7 +436,7 @@ CopyToBodyQue(gentity_t *ent)
 		body->takedamage = qtrue;
 
 
-	copyv3 (body->s.pos.trBase, body->r.currentOrigin);
+	copyv3 (body->s.traj.base, body->r.currentOrigin);
 	trap_LinkEntity (body);
 }
 

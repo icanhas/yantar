@@ -1305,7 +1305,7 @@ BotClearPath(bot_state_t *bs, bot_moveresult_t *moveresult)
 		     (MOVERESULT_MOVEMENTVIEW | MOVERESULT_MOVEMENTWEAPON))){
 			/*  */
 			BotAI_GetEntityState(bs->kamikazebody, &state);
-			copyv3(state.pos.trBase, target);
+			copyv3(state.traj.base, target);
 			target[2] += 8;
 			subv3(target, bs->eye, dir);
 			v3toeuler(dir, moveresult->ideal_viewangles);
@@ -1347,7 +1347,7 @@ BotClearPath(bot_state_t *bs, bot_moveresult_t *moveresult)
 		bestmine	= -1;
 		for(i = 0; i < bs->numproxmines; i++){
 			BotAI_GetEntityState(bs->proxmines[i], &state);
-			subv3(state.pos.trBase, bs->origin, dir);
+			subv3(state.traj.base, bs->origin, dir);
 			dist = lenv3(dir);
 			if(dist < bestdist){
 				bestdist	= dist;
@@ -1361,7 +1361,7 @@ BotClearPath(bot_state_t *bs, bot_moveresult_t *moveresult)
 			 * deactivate prox mines in the bot's path by shooting
 			 * rockets or plasma cells etc. at them */
 			BotAI_GetEntityState(bs->proxmines[bestmine], &state);
-			copyv3(state.pos.trBase, target);
+			copyv3(state.traj.base, target);
 			target[2] += 2;
 			subv3(target, bs->eye, dir);
 			v3toeuler(dir, moveresult->ideal_viewangles);

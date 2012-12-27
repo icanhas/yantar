@@ -144,7 +144,7 @@ SP_misc_model(gentity_t *ent)
 	trap_LinkEntity (ent);
 
 	G_SetOrigin(ent, ent->s.origin);
-	copyv3(ent->s.angles, ent->s.apos.trBase);
+	copyv3(ent->s.angles, ent->s.apos.base);
 #else
 	G_FreeEntity(ent);
 #endif
@@ -365,21 +365,21 @@ DropPortalDestination(gentity_t *player)
 	ent->s.modelindex = G_ModelIndex(
 		"models/powerups/teleporter/tele_exit.md3");
 
-	copyv3(player->s.pos.trBase, snapped);
+	copyv3(player->s.pos.base, snapped);
 	snapv3(snapped);
 	G_SetOrigin(ent, snapped);
 	copyv3(player->r.mins, ent->r.mins);
 	copyv3(player->r.maxs, ent->r.maxs);
 
 	ent->classname = "hi_portal destination";
-	ent->s.pos.trType = TR_STATIONARY;
+	ent->s.pos.type = TR_STATIONARY;
 
 	ent->r.contents = CONTENTS_CORPSE;
 	ent->takedamage = qtrue;
 	ent->health = 200;
 	ent->die = PortalDie;
 
-	copyv3(player->s.apos.trBase, ent->s.angles);
+	copyv3(player->s.apos.base, ent->s.angles);
 
 	ent->think = G_FreeEntity;
 	ent->nextthink = level.time + 2 * 60 * 1000;
@@ -438,7 +438,7 @@ PortalTouch(gentity_t *self, gentity_t *other, trace_t *trace)
 		return;
 	}
 
-	TeleportPlayer(other, destination->s.pos.trBase, destination->s.angles);
+	TeleportPlayer(other, destination->s.pos.base, destination->s.angles);
 }
 
 
@@ -463,14 +463,14 @@ DropPortalSource(gentity_t *player)
 	ent->s.modelindex = G_ModelIndex(
 		"models/powerups/teleporter/tele_enter.md3");
 
-	copyv3(player->s.pos.trBase, snapped);
+	copyv3(player->s.pos.base, snapped);
 	snapv3(snapped);
 	G_SetOrigin(ent, snapped);
 	copyv3(player->r.mins, ent->r.mins);
 	copyv3(player->r.maxs, ent->r.maxs);
 
 	ent->classname = "hi_portal source";
-	ent->s.pos.trType = TR_STATIONARY;
+	ent->s.pos.type = TR_STATIONARY;
 
 	ent->r.contents = CONTENTS_CORPSE | CONTENTS_TRIGGER;
 	ent->takedamage = qtrue;
@@ -493,7 +493,7 @@ DropPortalSource(gentity_t *player)
 		       G_Find(destination, FOFS(classname),
 			       "hi_portal destination")) != NULL)
 		if(destination->count == ent->count){
-			copyv3(destination->s.pos.trBase, ent->pos1);
+			copyv3(destination->s.pos.base, ent->pos1);
 			break;
 		}
 

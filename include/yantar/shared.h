@@ -1276,14 +1276,14 @@ typedef enum {
 	TR_LINEAR_STOP,
 	TR_SINE,	/* value = base + sin( time / duration ) * delta */
 	TR_GRAVITY
-} trType_t;
+} type_t;
 
 typedef struct {
-	trType_t	trType;
-	int		trTime;
-	int		trDuration;	/* if non 0, trTime + trDuration = stop time */
-	Vec3		trBase;
-	Vec3		trDelta;	/* velocity, etc */
+	type_t	type;
+	int		time;
+	int		duration;	/* if non 0, time + duration = stop time */
+	Vec3		base;
+	Vec3		delta;	/* velocity, etc */
 } trajectory_t;
 
 /* 
@@ -1299,7 +1299,7 @@ typedef struct entityState_s {
 	int		eType;	/* entityType_t */
 	int		eFlags;
 
-	trajectory_t	pos;	/* for calculating position */
+	trajectory_t	traj;	/* for calculating position */
 	trajectory_t	apos;	/* for calculating angles */
 
 	int		time;

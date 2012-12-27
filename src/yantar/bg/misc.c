@@ -15,36 +15,36 @@ BG_EvaluateTrajectory(const trajectory_t *tr, int atTime, Vec3 result)
 	float	deltaTime;
 	float	phase;
 
-	switch(tr->trType){
+	switch(tr->type){
 	case TR_STATIONARY:
 	case TR_INTERPOLATE:
-		copyv3(tr->trBase, result);
+		copyv3(tr->base, result);
 		break;
 	case TR_LINEAR:
-		deltaTime = (atTime - tr->trTime) * 0.001;	/* milliseconds to seconds */
-		maddv3(tr->trBase, deltaTime, tr->trDelta, result);
+		deltaTime = (atTime - tr->time) * 0.001;	/* milliseconds to seconds */
+		maddv3(tr->base, deltaTime, tr->delta, result);
 		break;
 	case TR_SINE:
-		deltaTime = (atTime - tr->trTime) / (float)tr->trDuration;
+		deltaTime = (atTime - tr->time) / (float)tr->duration;
 		phase = sin(deltaTime * M_PI * 2);
-		maddv3(tr->trBase, phase, tr->trDelta, result);
+		maddv3(tr->base, phase, tr->delta, result);
 		break;
 	case TR_LINEAR_STOP:
-		if(atTime > tr->trTime + tr->trDuration)
-			atTime = tr->trTime + tr->trDuration;
-		deltaTime = (atTime - tr->trTime) * 0.001;	/* milliseconds to seconds */
+		if(atTime > tr->time + tr->duration)
+			atTime = tr->time + tr->duration;
+		deltaTime = (atTime - tr->time) * 0.001;	/* milliseconds to seconds */
 		if(deltaTime < 0)
 			deltaTime = 0;
-		maddv3(tr->trBase, deltaTime, tr->trDelta, result);
+		maddv3(tr->base, deltaTime, tr->delta, result);
 		break;
 	case TR_GRAVITY:
-		deltaTime = (atTime - tr->trTime) * 0.001;	/* milliseconds to seconds */
-		maddv3(tr->trBase, deltaTime, tr->trDelta, result);
+		deltaTime = (atTime - tr->time) * 0.001;	/* milliseconds to seconds */
+		maddv3(tr->base, deltaTime, tr->delta, result);
 		result[2] -= 0.5 * DEFAULT_GRAVITY * deltaTime * deltaTime;	/* FIXME: local gravity... */
 		break;
 	default:
-		Com_Errorf(ERR_DROP, "BG_EvaluateTrajectory: unknown trType: %i",
-			tr->trTime);
+		Com_Errorf(ERR_DROP, "BG_EvaluateTrajectory: unknown type: %i",
+			tr->time);
 		break;
 	}
 }
@@ -58,36 +58,36 @@ BG_EvaluateTrajectoryDelta(const trajectory_t *tr, int atTime, Vec3 result)
 	float	deltaTime;
 	float	phase;
 
-	switch(tr->trType){
+	switch(tr->type){
 	case TR_STATIONARY:
 	case TR_INTERPOLATE:
 		clearv3(result);
 		break;
 	case TR_LINEAR:
-		copyv3(tr->trDelta, result);
+		copyv3(tr->delta, result);
 		break;
 	case TR_SINE:
-		deltaTime	= (atTime - tr->trTime) / (float)tr->trDuration;
+		deltaTime	= (atTime - tr->time) / (float)tr->duration;
 		phase		= cos(deltaTime * M_PI * 2);	/* derivative of sin = cos */
 		phase		*= 0.5;
-		scalev3(tr->trDelta, phase, result);
+		scalev3(tr->delta, phase, result);
 		break;
 	case TR_LINEAR_STOP:
-		if(atTime > tr->trTime + tr->trDuration){
+		if(atTime > tr->time + tr->duration){
 			clearv3(result);
 			return;
 		}
-		copyv3(tr->trDelta, result);
+		copyv3(tr->delta, result);
 		break;
 	case TR_GRAVITY:
-		deltaTime = (atTime - tr->trTime) * 0.001;	/* milliseconds to seconds */
-		copyv3(tr->trDelta, result);
+		deltaTime = (atTime - tr->time) * 0.001;	/* milliseconds to seconds */
+		copyv3(tr->delta, result);
 		result[2] -= DEFAULT_GRAVITY * deltaTime;	/* FIXME: local gravity... */
 		break;
 	default:
 		Com_Errorf(ERR_DROP,
-			"BG_EvaluateTrajectoryDelta: unknown trType: %i",
-			tr->trTime);
+			"BG_EvaluateTrajectoryDelta: unknown type: %i",
+			tr->time);
 		break;
 	}
 }
@@ -281,17 +281,17 @@ BG_PlayerStateToEntityState(playerState_t *ps, entityState_t *s, qbool snap)
 
 	s->number = ps->clientNum;
 
-	s->pos.trType = TR_INTERPOLATE;
-	copyv3(ps->origin, s->pos.trBase);
+	s->traj.type = TR_INTERPOLATE;
+	copyv3(ps->origin, s->traj.base);
 	if(snap)
-		snapv3(s->pos.trBase);
-	/* set the trDelta for flag direction */
-	copyv3(ps->velocity, s->pos.trDelta);
+		snapv3(s->traj.base);
+	/* set the delta for flag direction */
+	copyv3(ps->velocity, s->traj.delta);
 
-	s->apos.trType = TR_INTERPOLATE;
-	copyv3(ps->viewangles, s->apos.trBase);
+	s->apos.type = TR_INTERPOLATE;
+	copyv3(ps->viewangles, s->apos.base);
 	if(snap)
-		snapv3(s->apos.trBase);
+		snapv3(s->apos.base);
 
 	s->angles2[YAW] = ps->movementDir;
 	s->legsAnim	= ps->legsAnim;
@@ -351,21 +351,21 @@ BG_PlayerStateToEntityStateExtraPolate(playerState_t *ps, entityState_t *s, int 
 
 	s->number = ps->clientNum;
 
-	s->pos.trType = TR_LINEAR_STOP;
-	copyv3(ps->origin, s->pos.trBase);
+	s->traj.type = TR_LINEAR_STOP;
+	copyv3(ps->origin, s->traj.base);
 	if(snap)
-		snapv3(s->pos.trBase);
-	/* set the trDelta for flag direction and linear prediction */
-	copyv3(ps->velocity, s->pos.trDelta);
+		snapv3(s->traj.base);
+	/* set the delta for flag direction and linear prediction */
+	copyv3(ps->velocity, s->traj.delta);
 	/* set the time for linear prediction */
-	s->pos.trTime = time;
+	s->traj.time = time;
 	/* set maximum extra polation time */
-	s->pos.trDuration = 50;	/* 1000 / sv_fps (default = 20) */
+	s->traj.duration = 50;	/* 1000 / sv_fps (default = 20) */
 
-	s->apos.trType = TR_INTERPOLATE;
-	copyv3(ps->viewangles, s->apos.trBase);
+	s->apos.type = TR_INTERPOLATE;
+	copyv3(ps->viewangles, s->apos.base);
 	if(snap)
-		snapv3(s->apos.trBase);
+		snapv3(s->apos.base);
 
 	s->angles2[YAW] = ps->movementDir;
 	s->legsAnim	= ps->legsAnim;

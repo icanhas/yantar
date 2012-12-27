@@ -529,11 +529,11 @@ G_Sound(gentity_t *ent, int channel, int soundIndex)
 void
 G_SetOrigin(gentity_t *ent, Vec3 origin)
 {
-	copyv3(origin, ent->s.pos.trBase);
-	ent->s.pos.trType = TR_STATIONARY;
-	ent->s.pos.trTime = 0;
-	ent->s.pos.trDuration = 0;
-	clearv3(ent->s.pos.trDelta);
+	copyv3(origin, ent->s.traj.base);
+	ent->s.traj.type = TR_STATIONARY;
+	ent->s.traj.time = 0;
+	ent->s.traj.duration = 0;
+	clearv3(ent->s.traj.delta);
 
 	copyv3(origin, ent->r.currentOrigin);
 }

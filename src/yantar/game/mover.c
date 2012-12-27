@@ -46,8 +46,8 @@ G_TestEntityPosition(gentity_t *ent)
 			ent->client->ps.origin, ent->s.number,
 			mask);
 	else
-		trap_Trace(&tr, ent->s.pos.trBase, ent->r.mins, ent->r.maxs,
-			ent->s.pos.trBase, ent->s.number,
+		trap_Trace(&tr, ent->s.traj.base, ent->r.mins, ent->r.maxs,
+			ent->s.traj.base, ent->s.number,
 			mask);
 
 	if(tr.startsolid)
@@ -115,8 +115,8 @@ G_TryPushingEntity(gentity_t *check, gentity_t *pusher, Vec3 move,
 	if(pushed_p > &pushed[MAX_GENTITIES])
 		G_Error("pushed_p > &pushed[MAX_GENTITIES]");
 	pushed_p->ent = check;
-	copyv3 (check->s.pos.trBase, pushed_p->origin);
-	copyv3 (check->s.apos.trBase, pushed_p->angles);
+	copyv3 (check->s.traj.base, pushed_p->origin);
+	copyv3 (check->s.apos.base, pushed_p->angles);
 	if(check->client){
 		pushed_p->deltayaw = check->client->ps.delta_angles[YAW];
 		copyv3 (check->client->ps.origin, pushed_p->origin);
@@ -132,14 +132,14 @@ G_TryPushingEntity(gentity_t *check, gentity_t *pusher, Vec3 move,
 			pusher->r.currentOrigin,
 			org);
 	else
-		subv3 (check->s.pos.trBase, pusher->r.currentOrigin,
+		subv3 (check->s.traj.base, pusher->r.currentOrigin,
 			org);
 	copyv3(org, org2);
 	G_RotatePoint(org2, matrix);
 	subv3 (org2, org, move2);
 	/* add movement */
-	addv3 (check->s.pos.trBase, move, check->s.pos.trBase);
-	addv3 (check->s.pos.trBase, move2, check->s.pos.trBase);
+	addv3 (check->s.traj.base, move, check->s.traj.base);
+	addv3 (check->s.traj.base, move2, check->s.traj.base);
 	if(check->client){
 		addv3 (check->client->ps.origin, move,
 			check->client->ps.origin);
@@ -160,7 +160,7 @@ G_TryPushingEntity(gentity_t *check, gentity_t *pusher, Vec3 move,
 			copyv3(check->client->ps.origin,
 				check->r.currentOrigin);
 		else
-			copyv3(check->s.pos.trBase, check->r.currentOrigin);
+			copyv3(check->s.traj.base, check->r.currentOrigin);
 		trap_LinkEntity (check);
 		return qtrue;
 	}
@@ -168,10 +168,10 @@ G_TryPushingEntity(gentity_t *check, gentity_t *pusher, Vec3 move,
 	/* if it is ok to leave in the old position, do it
 	 * this is only relevent for riding entities, not pushed
 	 * Sliding trapdoors can cause this. */
-	copyv3((pushed_p-1)->origin, check->s.pos.trBase);
+	copyv3((pushed_p-1)->origin, check->s.traj.base);
 	if(check->client)
 		copyv3((pushed_p-1)->origin, check->client->ps.origin);
-	copyv3((pushed_p-1)->angles, check->s.apos.trBase);
+	copyv3((pushed_p-1)->angles, check->s.apos.base);
 	block = G_TestEntityPosition (check);
 	if(!block){
 		check->s.groundEntityNum = ENTITYNUM_NONE;
@@ -192,8 +192,8 @@ G_CheckProxMinePosition(gentity_t *check)
 	Vec3	start, end;
 	trace_t tr;
 
-	maddv3(check->s.pos.trBase, 0.125, check->movedir, start);
-	maddv3(check->s.pos.trBase, 2, check->movedir, end);
+	maddv3(check->s.traj.base, 0.125, check->movedir, start);
+	maddv3(check->s.traj.base, 2, check->movedir, end);
 	trap_Trace(&tr, start, NULL, NULL, end, check->s.number, MASK_SOLID);
 
 	if(tr.startsolid || tr.fraction < 1)
@@ -218,19 +218,19 @@ G_TryPushingProxMine(gentity_t *check, gentity_t *pusher, Vec3 move,
 	anglev3s (org, forward, right, up);
 
 	/* try moving the contacted entity */
-	addv3 (check->s.pos.trBase, move, check->s.pos.trBase);
+	addv3 (check->s.traj.base, move, check->s.traj.base);
 
 	/* figure movement due to the pusher's amove */
-	subv3 (check->s.pos.trBase, pusher->r.currentOrigin, org);
+	subv3 (check->s.traj.base, pusher->r.currentOrigin, org);
 	org2[0] = dotv3 (org, forward);
 	org2[1] = -dotv3 (org, right);
 	org2[2] = dotv3 (org, up);
 	subv3 (org2, org, move2);
-	addv3 (check->s.pos.trBase, move2, check->s.pos.trBase);
+	addv3 (check->s.traj.base, move2, check->s.traj.base);
 
 	ret = G_CheckProxMinePosition(check);
 	if(ret){
-		copyv3(check->s.pos.trBase, check->r.currentOrigin);
+		copyv3(check->s.traj.base, check->r.currentOrigin);
 		trap_LinkEntity (check);
 	}
 	return ret;
@@ -373,7 +373,7 @@ G_MoverPush(gentity_t *pusher, Vec3 move, Vec3 amove, gentity_t **obstacle)
 		/* the move was blocked an entity */
 
 		/* bobbing entities are instant-kill and never get blocked */
-		if(pusher->s.pos.trType == TR_SINE || pusher->s.apos.trType ==
+		if(pusher->s.traj.type == TR_SINE || pusher->s.apos.type ==
 		   TR_SINE){
 			G_Damage(check, pusher, pusher, NULL, NULL, 99999, 0,
 				MOD_CRUSH);
@@ -388,8 +388,8 @@ G_MoverPush(gentity_t *pusher, Vec3 move, Vec3 amove, gentity_t **obstacle)
 		 * go backwards, so if the same entity was pushed
 		 * twice, it goes back to the original position */
 		for(p=pushed_p-1; p>=pushed; p--){
-			copyv3 (p->origin, p->ent->s.pos.trBase);
-			copyv3 (p->angles, p->ent->s.apos.trBase);
+			copyv3 (p->origin, p->ent->s.traj.base);
+			copyv3 (p->angles, p->ent->s.apos.base);
 			if(p->ent->client){
 				p->ent->client->ps.delta_angles[YAW] =
 					p->deltayaw;
@@ -422,7 +422,7 @@ G_MoverTeam(gentity_t *ent)
 	pushed_p = pushed;
 	for(part = ent; part; part=part->teamchain){
 		/* get current position */
-		BG_EvaluateTrajectory(&part->s.pos, level.time, origin);
+		BG_EvaluateTrajectory(&part->s.traj, level.time, origin);
 		BG_EvaluateTrajectory(&part->s.apos, level.time, angles);
 		subv3(origin, part->r.currentOrigin, move);
 		subv3(angles, part->r.currentAngles, amove);
@@ -433,11 +433,11 @@ G_MoverTeam(gentity_t *ent)
 	if(part){
 		/* go back to the previous position */
 		for(part = ent; part; part = part->teamchain){
-			part->s.pos.trTime += level.time -
+			part->s.traj.time += level.time -
 					      level.previousTime;
-			part->s.apos.trTime += level.time -
+			part->s.apos.time += level.time -
 					       level.previousTime;
-			BG_EvaluateTrajectory(&part->s.pos, level.time,
+			BG_EvaluateTrajectory(&part->s.traj, level.time,
 				part->r.currentOrigin);
 			BG_EvaluateTrajectory(&part->s.apos, level.time,
 				part->r.currentAngles);
@@ -453,9 +453,9 @@ G_MoverTeam(gentity_t *ent)
 	/* the move succeeded */
 	for(part = ent; part; part = part->teamchain)
 		/* call the reached function if time is at or past end point */
-		if(part->s.pos.trType == TR_LINEAR_STOP)
-			if(level.time >= part->s.pos.trTime +
-			   part->s.pos.trDuration)
+		if(part->s.traj.type == TR_LINEAR_STOP)
+			if(level.time >= part->s.traj.time +
+			   part->s.traj.duration)
 				if(part->reached)
 					part->reached(part);
 }
@@ -473,7 +473,7 @@ G_RunMover(gentity_t *ent)
 		return;
 
 	/* if stationary at one of the positions, don't move anything */
-	if(ent->s.pos.trType != TR_STATIONARY || ent->s.apos.trType !=
+	if(ent->s.traj.type != TR_STATIONARY || ent->s.apos.type !=
 	   TR_STATIONARY)
 		G_MoverTeam(ent);
 
@@ -500,32 +500,32 @@ SetMoverState(gentity_t *ent, moverState_t moverState, int time)
 
 	ent->moverState = moverState;
 
-	ent->s.pos.trTime = time;
+	ent->s.traj.time = time;
 	switch(moverState){
 	case MOVER_POS1:
-		copyv3(ent->pos1, ent->s.pos.trBase);
-		ent->s.pos.trType = TR_STATIONARY;
+		copyv3(ent->pos1, ent->s.traj.base);
+		ent->s.traj.type = TR_STATIONARY;
 		break;
 	case MOVER_POS2:
-		copyv3(ent->pos2, ent->s.pos.trBase);
-		ent->s.pos.trType = TR_STATIONARY;
+		copyv3(ent->pos2, ent->s.traj.base);
+		ent->s.traj.type = TR_STATIONARY;
 		break;
 	case MOVER_1TO2:
-		copyv3(ent->pos1, ent->s.pos.trBase);
+		copyv3(ent->pos1, ent->s.traj.base);
 		subv3(ent->pos2, ent->pos1, delta);
-		f = 1000.0 / ent->s.pos.trDuration;
-		scalev3(delta, f, ent->s.pos.trDelta);
-		ent->s.pos.trType = TR_LINEAR_STOP;
+		f = 1000.0 / ent->s.traj.duration;
+		scalev3(delta, f, ent->s.traj.delta);
+		ent->s.traj.type = TR_LINEAR_STOP;
 		break;
 	case MOVER_2TO1:
-		copyv3(ent->pos2, ent->s.pos.trBase);
+		copyv3(ent->pos2, ent->s.traj.base);
 		subv3(ent->pos1, ent->pos2, delta);
-		f = 1000.0 / ent->s.pos.trDuration;
-		scalev3(delta, f, ent->s.pos.trDelta);
-		ent->s.pos.trType = TR_LINEAR_STOP;
+		f = 1000.0 / ent->s.traj.duration;
+		scalev3(delta, f, ent->s.traj.delta);
+		ent->s.traj.type = TR_LINEAR_STOP;
 		break;
 	}
-	BG_EvaluateTrajectory(&ent->s.pos, level.time, ent->r.currentOrigin);
+	BG_EvaluateTrajectory(&ent->s.traj, level.time, ent->r.currentOrigin);
 	trap_LinkEntity(ent);
 }
 
@@ -648,8 +648,8 @@ Use_BinaryMover(gentity_t *ent, gentity_t *other, gentity_t *activator)
 
 	/* only partway down before reversing */
 	if(ent->moverState == MOVER_2TO1){
-		total	= ent->s.pos.trDuration;
-		partial = level.time - ent->s.pos.trTime;
+		total	= ent->s.traj.duration;
+		partial = level.time - ent->s.traj.time;
 		if(partial > total)
 			partial = total;
 
@@ -662,8 +662,8 @@ Use_BinaryMover(gentity_t *ent, gentity_t *other, gentity_t *activator)
 
 	/* only partway up before reversing */
 	if(ent->moverState == MOVER_1TO2){
-		total	= ent->s.pos.trDuration;
-		partial = level.time - ent->s.pos.trTime;
+		total	= ent->s.traj.duration;
+		partial = level.time - ent->s.traj.time;
 		if(partial > total)
 			partial = total;
 
@@ -733,18 +733,18 @@ InitMover(gentity_t *ent)
 	copyv3 (ent->pos1, ent->r.currentOrigin);
 	trap_LinkEntity (ent);
 
-	ent->s.pos.trType = TR_STATIONARY;
-	copyv3(ent->pos1, ent->s.pos.trBase);
+	ent->s.traj.type = TR_STATIONARY;
+	copyv3(ent->pos1, ent->s.traj.base);
 
 	/* calculate time to reach second position from speed */
 	subv3(ent->pos2, ent->pos1, move);
 	distance = lenv3(move);
 	if(!ent->speed)
 		ent->speed = 100;
-	scalev3(move, ent->speed, ent->s.pos.trDelta);
-	ent->s.pos.trDuration = distance * 1000 / ent->speed;
-	if(ent->s.pos.trDuration <= 0)
-		ent->s.pos.trDuration = 1;
+	scalev3(move, ent->speed, ent->s.traj.delta);
+	ent->s.traj.duration = distance * 1000 / ent->speed;
+	if(ent->s.traj.duration <= 0)
+		ent->s.traj.duration = 1;
 }
 
 
@@ -1212,8 +1212,8 @@ SP_func_button(gentity_t *ent)
 void
 Think_BeginMoving(gentity_t *ent)
 {
-	ent->s.pos.trTime = level.time;
-	ent->s.pos.trType = TR_LINEAR_STOP;
+	ent->s.traj.time = level.time;
+	ent->s.traj.type = TR_LINEAR_STOP;
 }
 
 /*
@@ -1253,22 +1253,22 @@ Reached_Train(gentity_t *ent)
 	subv3(ent->pos2, ent->pos1, move);
 	length = lenv3(move);
 
-	ent->s.pos.trDuration = length * 1000 / speed;
+	ent->s.traj.duration = length * 1000 / speed;
 
 	/* Tequila comment: Be sure to send to clients after any fast move case */
 	ent->r.svFlags &= ~SVF_NOCLIENT;
 
 	/* Tequila comment: Fast move case */
-	if(ent->s.pos.trDuration<1){
-		/* Tequila comment: As trDuration is used later in a division, we need to avoid that case now
-		 * With null trDuration,
+	if(ent->s.traj.duration<1){
+		/* Tequila comment: As duration is used later in a division, we need to avoid that case now
+		 * With null duration,
 		 * the calculated rocks bounding box becomes infinite and the engine think for a short time
 		 * any entity is riding that mover but not the world entity... In rare case, I found it
 		 * can also stuck every map entities after func_door are used.
 		 * The desired effect with very very big speed is to have instant move, so any not null duration
 		 * lower than a frame duration should be sufficient.
 		 * Afaik, the negative case don't have to be supported. */
-		ent->s.pos.trDuration=1;
+		ent->s.traj.duration=1;
 
 		/* Tequila comment: Don't send entity to clients so it becomes really invisible */
 		ent->r.svFlags |= SVF_NOCLIENT;
@@ -1284,7 +1284,7 @@ Reached_Train(gentity_t *ent)
 	if(next->wait){
 		ent->nextthink = level.time + next->wait * 1000;
 		ent->think = Think_BeginMoving;
-		ent->s.pos.trType = TR_STATIONARY;
+		ent->s.traj.type = TR_STATIONARY;
 	}
 }
 
@@ -1422,7 +1422,7 @@ SP_func_static(gentity_t *ent)
 {
 	trap_SetBrushModel(ent, ent->model);
 	InitMover(ent);
-	copyv3(ent->s.origin, ent->s.pos.trBase);
+	copyv3(ent->s.origin, ent->s.traj.base);
 	copyv3(ent->s.origin, ent->r.currentOrigin);
 }
 
@@ -1452,13 +1452,13 @@ SP_func_rotating(gentity_t *ent)
 		ent->speed = 100;
 
 	/* set the axis of rotation */
-	ent->s.apos.trType = TR_LINEAR;
+	ent->s.apos.type = TR_LINEAR;
 	if(ent->spawnflags & 4)
-		ent->s.apos.trDelta[2] = ent->speed;
+		ent->s.apos.delta[2] = ent->speed;
 	else if(ent->spawnflags & 8)
-		ent->s.apos.trDelta[0] = ent->speed;
+		ent->s.apos.delta[0] = ent->speed;
 	else
-		ent->s.apos.trDelta[1] = ent->speed;
+		ent->s.apos.delta[1] = ent->speed;
 
 	if(!ent->damage)
 		ent->damage = 2;
@@ -1466,9 +1466,9 @@ SP_func_rotating(gentity_t *ent)
 	trap_SetBrushModel(ent, ent->model);
 	InitMover(ent);
 
-	copyv3(ent->s.origin, ent->s.pos.trBase);
-	copyv3(ent->s.pos.trBase, ent->r.currentOrigin);
-	copyv3(ent->s.apos.trBase, ent->r.currentAngles);
+	copyv3(ent->s.origin, ent->s.traj.base);
+	copyv3(ent->s.traj.base, ent->r.currentOrigin);
+	copyv3(ent->s.apos.base, ent->r.currentAngles);
 
 	trap_LinkEntity(ent);
 }
@@ -1505,20 +1505,20 @@ SP_func_bobbing(gentity_t *ent)
 	trap_SetBrushModel(ent, ent->model);
 	InitMover(ent);
 
-	copyv3(ent->s.origin, ent->s.pos.trBase);
+	copyv3(ent->s.origin, ent->s.traj.base);
 	copyv3(ent->s.origin, ent->r.currentOrigin);
 
-	ent->s.pos.trDuration	= ent->speed * 1000;
-	ent->s.pos.trTime	= ent->s.pos.trDuration * phase;
-	ent->s.pos.trType	= TR_SINE;
+	ent->s.traj.duration	= ent->speed * 1000;
+	ent->s.traj.time	= ent->s.traj.duration * phase;
+	ent->s.traj.type	= TR_SINE;
 
 	/* set the axis of bobbing */
 	if(ent->spawnflags & 1)
-		ent->s.pos.trDelta[0] = height;
+		ent->s.traj.delta[0] = height;
 	else if(ent->spawnflags & 2)
-		ent->s.pos.trDelta[1] = height;
+		ent->s.traj.delta[1] = height;
 	else
-		ent->s.pos.trDelta[2] = height;
+		ent->s.traj.delta[2] = height;
 }
 
 /*
@@ -1560,17 +1560,17 @@ SP_func_pendulum(gentity_t *ent)
 
 	freq = 1 / (M_PI * 2) * sqrt(g_gravity.value / (3 * length));
 
-	ent->s.pos.trDuration = (1000 / freq);
+	ent->s.traj.duration = (1000 / freq);
 
 	InitMover(ent);
 
-	copyv3(ent->s.origin, ent->s.pos.trBase);
+	copyv3(ent->s.origin, ent->s.traj.base);
 	copyv3(ent->s.origin, ent->r.currentOrigin);
 
-	copyv3(ent->s.angles, ent->s.apos.trBase);
+	copyv3(ent->s.angles, ent->s.apos.base);
 
-	ent->s.apos.trDuration	= 1000 / freq;
-	ent->s.apos.trTime	= ent->s.apos.trDuration * phase;
-	ent->s.apos.trType	= TR_SINE;
-	ent->s.apos.trDelta[2]	= speed;
+	ent->s.apos.duration	= 1000 / freq;
+	ent->s.apos.time	= ent->s.apos.duration * phase;
+	ent->s.apos.type	= TR_SINE;
+	ent->s.apos.delta[2]	= speed;
 }
