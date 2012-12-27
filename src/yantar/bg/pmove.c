@@ -144,8 +144,7 @@ q2accelerate(pmove_t *pm, pml_t *pml, Vec3 wishdir, float wishspeed, float accel
 	accelspeed = accel*pml->frametime*wishspeed;
 	if(accelspeed > addspeed)
 		accelspeed = addspeed;
-	for(i=0; i<3; i++)
-		pm->ps->velocity[i] += accelspeed*wishdir[i];
+	maddv3(pm->ps->velocity, accelspeed, wishdir, pm->ps->velocity);
 }
 
 static void
@@ -442,7 +441,7 @@ brakemove(pmove_t *pm, pml_t *pml)
 	float	amt;
 
 	amt = 4.0 * (float)pm->cmd.brakefrac / 127.0;
-	accelerate(pm, pml, pm->ps->velocity, amt, -1);
+	q2accelerate(pm, pml, pm->ps->velocity, amt, -1);
 }
 
 static void
@@ -453,7 +452,7 @@ airmove(pmove_t *pm, pml_t *pml)
 	
 	_airmove(pm, pml, &pm->cmd, &wishvel, &wishdir, &wishspeed);
 	/* not on ground, so little effect on velocity */
-	accelerate(pm, pml, wishdir, wishspeed, pm_airaccelerate);
+	q2accelerate(pm, pml, wishdir, wishspeed, pm_airaccelerate);
 	PM_SlideMove(pm, pml, qtrue);
 }
 
