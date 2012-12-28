@@ -158,7 +158,6 @@ struct gentity_s {
 	gitem_t *item;	/* for bonus items */
 };
 
-
 typedef enum {
 	CON_DISCONNECTED,
 	CON_CONNECTING,
@@ -230,7 +229,6 @@ typedef struct {
 	qbool			teamInfo;		/* send team overlay updates? */
 } clientPersistant_t;
 
-
 /* this structure is cleared on each ClientSpawn(),
  * except for 'client->pers' and 'client->sess' */
 struct gclient_s {
@@ -267,7 +265,6 @@ struct gclient_s {
 	int		accuracy_shots;	/* total number of shots */
 	int		accuracy_hits;	/* total number of hits */
 
-	/*  */
 	int	lastkilled_client;	/* last client that this client killed */
 	int	lasthurt_client;	/* last client that damaged this client */
 	int	lasthurt_mod;		/* type of damage the client did */
@@ -295,7 +292,6 @@ struct gclient_s {
 
 	char *areabits;
 };
-
 
 /*
  * this structure is cleared as each map is entered
@@ -387,7 +383,7 @@ typedef struct {
 } level_locals_t;
 
 /*
- * g_spawn.c
+ * spawn.c
  */
 qbool	G_SpawnString(const char *key, const char *defaultString,
 		char **out);
@@ -401,7 +397,7 @@ void	G_SpawnEntitiesFromString(void);
 char*	G_NewString(const char *string);
 
 /*
- * g_cmds.c
+ * cmds.c
  */
 void	Cmd_Score_f(gentity_t *ent);
 void	StopFollowing(gentity_t *ent);
@@ -410,7 +406,7 @@ void	SetTeam(gentity_t *ent, char *s);
 void	Cmd_FollowCycle_f(gentity_t *ent, int dir);
 
 /*
- * g_items.c
+ * items.c
  */
 void	G_CheckTeamItems(void);
 void	G_RunItem(gentity_t *ent);
@@ -433,7 +429,7 @@ void	RegisterItem(gitem_t *item);
 void	SaveRegisteredItems(void);
 
 /*
- * g_utils.c
+ * utils.c
  */
 int	G_ModelIndex(char *name);
 int	G_SoundIndex(char *name);
@@ -465,7 +461,7 @@ void	AddRemap(const char *oldShader, const char *newShader, float timeOffset);
 char*	BuildShaderStateConfig(void); /* FIXME */
 
 /*
- * g_combat.c
+ * combat.c
  */
 qbool	CanDamage(gentity_t *targ, Vec3 origin);
 void	G_Damage(gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
@@ -492,7 +488,7 @@ void	TossClientCubes(gentity_t *self);
 #endif
 
 /*
- * g_missile.c
+ * missile.c
  */
 void	G_RunMissile(gentity_t *ent);
 gentity_t*	fire_plasma(gentity_t *self, Vec3 start, Vec3 aimdir);
@@ -500,25 +496,23 @@ gentity_t*	fire_grenade(gentity_t *self, Vec3 start, Vec3 aimdir);
 gentity_t*	fire_rocket(gentity_t *self, Vec3 start, Vec3 dir);
 gentity_t*	fire_bfg(gentity_t *self, Vec3 start, Vec3 dir);
 gentity_t*	fire_grapple(gentity_t *self, Vec3 start, Vec3 dir);
-#ifdef MISSIONPACK
 gentity_t*	fire_nail(gentity_t *self, Vec3 start, Vec3 forward, Vec3 right,
 		Vec3 up);
 gentity_t*	fire_prox(gentity_t *self, Vec3 start, Vec3 aimdir);
-#endif
 
 /*
- * g_mover.c
+ * mover.c
  */
 void	G_RunMover(gentity_t *ent);
 void	Touch_DoorTrigger(gentity_t *ent, gentity_t *other, trace_t *trace);
 
 /*
- * g_trigger.c
+ * trigger.c
  */
 void	trigger_teleporter_touch(gentity_t *self, gentity_t *other, trace_t *trace);
 
 /*
- * g_misc.c
+ * misc.c
  */
 void	TeleportPlayer(gentity_t *player, Vec3 origin, Vec3 angles);
 #ifdef MISSIONPACK
@@ -527,7 +521,7 @@ void	DropPortalDestination(gentity_t *ent);
 #endif
 
 /*
- * g_weapon.c
+ * weapon.c
  */
 qbool	LogAccuracyHit(gentity_t *target, gentity_t *attacker);
 void	CalcMuzzlePoint(gentity_t *ent, Vec3 forward, Vec3 right, Vec3 up,
@@ -538,7 +532,7 @@ void	Weapon_HookFree(gentity_t *ent);
 void	Weapon_HookThink(gentity_t *ent);
 
 /*
- * g_client.c
+ * client.c
  */
 team_t	TeamCount(int ignoreClientNum, int team);
 int	TeamLeader(int team);
@@ -558,14 +552,14 @@ void	CalculateRanks(void);
 qbool	SpotWouldTelefrag(gentity_t *spot);
 
 /*
- * g_svcmds.c
+ * svcmds.c
  */
 qbool	ConsoleCommand(void);
 void	G_ProcessIPBans(void);
 qbool	G_FilterPacket(char *from);
 
 /*
- * g_weapon.c
+ * weapon.c
  */
 void	FireWeapon(gentity_t*, Weapslot);
 #ifdef MISSIONPACK
@@ -573,16 +567,12 @@ void	G_StartKamikaze(gentity_t *ent);
 #endif
 
 /*
- * g_cmds.c
+ * cmds.c
  */
 void	DeathmatchScoreboardMessage(gentity_t *ent);
 
 /*
- * g_pweapon.c
- */
-
-/*
- * g_main.c
+ * main.c
  */
 void	MoveClientToIntermission(gentity_t *ent);
 void	FindIntermissionPoint(void);
@@ -598,7 +588,7 @@ void	QDECL G_Error(const char *fmt,
 		...) __attribute__ ((noreturn, format (printf, 1, 2)));
 
 /*
- * g_client.c
+ * client.c
  */
 char*	ClientConnect(int clientNum, qbool firstTime, qbool isBot);
 void	ClientUserinfoChanged(int clientNum);
@@ -607,28 +597,28 @@ void	ClientBegin(int clientNum);
 void	ClientCommand(int clientNum);
 
 /*
- * g_active.c
+ * active.c
  */
 void	ClientThink(int clientNum);
 void	ClientEndFrame(gentity_t *ent);
 void	G_RunClient(gentity_t *ent);
 
 /*
- * g_team.c
+ * team.c
  */
 qbool	OnSameTeam(gentity_t *ent1, gentity_t *ent2);
 void	Team_CheckDroppedItem(gentity_t *dropped);
 qbool	CheckObeliskAttack(gentity_t *obelisk, gentity_t *attacker);
 
 /*
- * g_mem.c
+ * mem.c
  */
 void*	G_Alloc(int size);
 void	G_InitMemory(void);
 void	Svcmd_GameMem_f(void);
 
 /*
- * g_session.c
+ * session.c
  */
 void	G_ReadSessionData(gclient_t *client);
 void	G_InitSessionData(gclient_t *client, char *userinfo);
@@ -636,14 +626,14 @@ void	G_InitWorldSession(void);
 void	G_WriteSessionData(void);
 
 /*
- * g_arenas.c
+ * arenas.c
  */
 void	UpdateTournamentInfo(void);
 void	SpawnModelsOnVictoryPads(void);
 void	Svcmd_AbortPodium_f(void);
 
 /*
- * g_bot.c
+ * bot.c
  */
 void	G_InitBots(qbool restart);
 char*	G_GetBotInfoByNumber(int num);

@@ -622,4 +622,3 @@ fire_prox(gentity_t *self, Vec3 start, Vec3 dir)
 	copyv3 (start, bolt->r.currentOrigin);
 	return bolt;
 }
-
