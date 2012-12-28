@@ -721,13 +721,13 @@ CG_RegisterWeapon(int weaponNum)
 		break;
 	case W2proxlauncher:
 		wp->missileModel = trap_R_RegisterModel(
-			Pweaphitmodels "/proxmine");
+			Pprojectilemodels "/proxmine");
 		wp->missileTrailFunc = CG_GrenadeTrail;
 		wp->wiTrailTime = 700;
 		wp->trailRadius = 32;
 		MAKERGB(wp->flashDlightColor, 1, 0.70f, 0);
 		wp->flashSound[0] = trap_S_RegisterSound(
-			Pproxsounds "/wstbfire", qfalse);
+			Pproxsounds "/fire", qfalse);
 		cgs.media.grenadeExplosionShader = trap_R_RegisterShader(
 			"grenadeExplosion");
 		break;
