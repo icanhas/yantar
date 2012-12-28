@@ -2155,7 +2155,6 @@ CG_DrawAmmoWarning(void)
 	CG_DrawBigString(320 - w / 2, 64, s, 1.0F);
 }
 
-#ifdef MISSIONPACK
 static void
 CG_DrawProxWarning(void)
 {
@@ -2191,7 +2190,6 @@ CG_DrawProxWarning(void)
 		g_color_table[ColorIndex(
 				      COLOR_RED)]);
 }
-#endif
 
 static void
 CG_DrawWarmup(void)
