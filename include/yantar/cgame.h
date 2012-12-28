@@ -4,39 +4,18 @@
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License.
  */
-/*  */
 
-
-#define CMD_BACKUP	64
-#define CMD_MASK	(CMD_BACKUP - 1)
-/* allow a lot of command backups for very fast systems
- * multiple commands may be combined into a single packet, so this
- * needs to be larger than PACKET_BACKUP */
-
-
-#define MAX_ENTITIES_IN_SNAPSHOT 256
-
-/* snapshots are a view of the server at a given time */
-
-/* Snapshots are generated at regular time intervals by the server,
- * but they may not be sent if a client's rate level is exceeded, or
- * they may be dropped by the network. */
-typedef struct {
-	int		snapFlags;	/* SNAPFLAG_RATE_DELAYED, etc */
-	int		ping;
-
-	int		serverTime;	/* server time the message is valid for (in msec) */
-
-	byte		areamask[MAX_MAP_AREA_BYTES];	/* portalarea visibility bits */
-
-	playerState_t	ps;	/* complete information about the current player at this time */
-
-	int		numEntities;				/* all of the entities that need to be presented */
-	entityState_t	entities[MAX_ENTITIES_IN_SNAPSHOT];	/* at the time of this snapshot */
-
-	int		numServerCommands;	/* text based server commands to execute when this */
-	int		serverCommandSequence;	/* snapshot becomes current */
-} snapshot_t;
+enum {
+	CGAME_IMPORT_API_VERSION	= 0,
+	/*
+	 * allow a lot of command backups for very fast systems multiple
+	 * commands may be combined into a single packet, so this needs
+	 * to be larger than PACKET_BACKUP
+	 */
+	MAX_ENTITIES_IN_SNAPSHOT	= 256,
+	CMD_BACKUP			= 64,
+	CMD_MASK			= (CMD_BACKUP - 1)
+};
 
 enum {
 	CGAME_EVENT_NONE,
@@ -45,15 +24,27 @@ enum {
 	CGAME_EVENT_EDITHUD
 };
 
+/*
+ * Snapshots are a view of the server at a given time.  They are
+ * generated at regular time intervals by the server, but they may not be
+ * sent if a client's rate level is exceeded, or they may be dropped by
+ * the network.
+ */
+typedef struct {
+	int		snapFlags;	/* SNAPFLAG_RATE_DELAYED, etc */
+	int		ping;
+	int		serverTime;	/* server time the message is valid for (in msec) */
+	byte		areamask[MAX_MAP_AREA_BYTES];	/* portalarea visibility bits */
+	playerState_t	ps;		/* complete info about the current player at this time */
+	int		numEntities;	/* all of the entities that need to be presented at the time of this snapshot */
+	entityState_t	entities[MAX_ENTITIES_IN_SNAPSHOT];
+	int		numServerCommands;	/* text based server cmds to execute when this snapshot becomes current */
+	int		serverCommandSequence;
+} snapshot_t;
 
 /*
- *
  * functions imported from the main executable
- *
  */
-
-#define CGAME_IMPORT_API_VERSION 0
-
 typedef enum {
 	CG_PRINT,
 	CG_ERROR,
@@ -162,52 +153,37 @@ typedef enum {
 	CG_TESTPRINTFLOAT
 } cgameImport_t;
 
-
 /*
- *
  * functions exported to the main executable
- *
  */
-
 typedef enum {
-	CG_INIT,
-/*	void CG_Init( int serverMessageNum, int serverCommandSequence, int clientNum ) */
-	/* called when the level loads or when the renderer is restarted
+	/* 
+	 * called when the level loads or when the renderer is restarted
 	 * all media should be registered at this time
 	 * cgame will display loading status by calling SCR_Update, which
 	 * will call CG_DrawInformation during the loading process
 	 * reliableCommandSequence will be 0 on fresh loads, but higher for
-	 * demos, tourney restarts, or vid_restarts */
-
+	 * demos, tourney restarts, or vid_restarts 
+	 '*/
+	CG_INIT,
+	/* opportunity to flush and close any open files */
 	CG_SHUTDOWN,
-/*	void (*CG_Shutdown)( void ); */
-	/* oportunity to flush and close any open files */
-
-	CG_CONSOLE_COMMAND,
-/*	qbool (*CG_ConsoleCommand)( void ); */
-	/* a console command has been issued locally that is not recognized by the
+	/*
+	 * a console command has been issued locally that is not recognized by the
 	 * main game system.
 	 * use Cmd_Argc() / Cmd_Argv() to read the command, return qfalse if the
-	 * command is not known to the game */
-
+	 * command is not known to the game 
+	 */
+	CG_CONSOLE_COMMAND,
+	/*
+	 * Generates and draws a game scene and status information at the given time.
+	 * If demoPlayback is set, local movement prediction will not be enabled 
+	 */
 	CG_DRAW_ACTIVE_FRAME,
-/*	void (*CG_DrawActiveFrame)( int serverTime, stereoFrame_t stereoView, qbool demoPlayback ); */
-	/* Generates and draws a game scene and status information at the given time.
-	 * If demoPlayback is set, local movement prediction will not be enabled */
-
 	CG_CROSSHAIR_PLAYER,
-/*	int (*CG_CrosshairPlayer)( void ); */
-
 	CG_LAST_ATTACKER,
-/*	int (*CG_LastAttacker)( void ); */
-
 	CG_KEY_EVENT,
-/*	void	(*CG_KeyEvent)( int key, qbool down ); */
-
 	CG_MOUSE_EVENT,
-/*	void	(*CG_MouseEvent)( int dx, int dy ); */
 	CG_EVENT_HANDLING
-/*	void (*CG_EventHandling)(int type); */
 } cgameExport_t;
 
-/* ---------------------------------------------- */
