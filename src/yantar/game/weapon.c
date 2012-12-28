@@ -669,15 +669,10 @@ FireWeapon(gentity_t *ent, Weapslot slot)
 	/* track shots taken for accuracy tracking.  Grapple is not a weapon and gauntet is just not tracked */
 	if(ent->s.weap[slot] != W1_GRAPPLING_HOOK && ent->s.weap[slot] !=
 	   W1melee){
-#ifdef MISSIONPACK
 		if(ent->s.weap[slot] == W1nailgun)
 			ent->client->accuracy_shots += NUM_NAILSHOTS;
 		else
 			ent->client->accuracy_shots++;
-
-#else
-		ent->client->accuracy_shots++;
-#endif
 	}
 
 	/* set aiming directions */
