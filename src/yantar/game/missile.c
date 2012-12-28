@@ -558,6 +558,7 @@ fire_nail(gentity_t *self, Vec3 start, Vec3 forward, Vec3 right, Vec3 up)
 	bolt->s.eType = ET_MISSILE;
 	bolt->r.svFlags = SVF_USE_CURRENT_ORIGIN;
 	bolt->s.parentweap = W1nailgun;
+	bolt->s.eFlags = EF_BOUNCE_HALF;
 	bolt->r.ownerNum = self->s.number;
 	bolt->parent = self;
 	bolt->damage = 20;
