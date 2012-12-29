@@ -14,6 +14,8 @@ BG_EvaluateTrajectory(const trajectory_t *tr, int atTime, Vec3 result)
 {
 	float	deltaTime;
 	float	phase;
+	int i;
+	Vec3 dir;
 
 	switch(tr->type){
 	case TR_STATIONARY:
@@ -42,6 +44,15 @@ BG_EvaluateTrajectory(const trajectory_t *tr, int atTime, Vec3 result)
 		maddv3(tr->base, deltaTime, tr->delta, result);
 		result[2] -= 0.5 * DEFAULT_GRAVITY * deltaTime * deltaTime;	/* FIXME: local gravity... */
 		break;
+	case TR_STOCHASTIC:
+		deltaTime = (atTime - tr->time) * 0.001;
+		for(i = 0; i < 3; ++i)
+			dir[i] = crandom();
+		normv3(dir);
+		scalev3(dir, 10*deltaTime, dir);
+		maddv3(tr->base, deltaTime, tr->delta, result);
+		addv3(result, dir, result);
+		break;
 	default:
 		Com_Errorf(ERR_DROP, "BG_EvaluateTrajectory: unknown type: %i", tr->type);
 		break;
@@ -56,6 +67,8 @@ BG_EvaluateTrajectoryDelta(const trajectory_t *tr, int atTime, Vec3 result)
 {
 	float	deltaTime;
 	float	phase;
+	int i;
+	Vec3 dir;
 
 	switch(tr->type){
 	case TR_STATIONARY:
@@ -82,6 +95,14 @@ BG_EvaluateTrajectoryDelta(const trajectory_t *tr, int atTime, Vec3 result)
 		deltaTime = (atTime - tr->time) * 0.001;	/* milliseconds to seconds */
 		copyv3(tr->delta, result);
 		result[2] -= DEFAULT_GRAVITY * deltaTime;	/* FIXME: local gravity... */
+		break;
+	case TR_STOCHASTIC:
+		deltaTime = (atTime - tr->time) * 0.001;	/* milliseconds to seconds */
+		for(i = 0; i < 3; ++i)
+			dir[i] = tr->delta[i] + crandom();
+		normv3(dir);
+		scalev3(dir, 10*deltaTime, dir);
+		addv3(tr->delta, dir, result);
 		break;
 	default:
 		Com_Errorf(ERR_DROP,
