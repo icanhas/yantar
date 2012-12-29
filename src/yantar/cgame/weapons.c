@@ -746,14 +746,12 @@ CG_RegisterWeapon(int weaponNum)
 	case W1nanoidcannon:
 		wp->ejectBrassFunc = CG_NailgunEjectBrass;
 		wp->missileTrailFunc = CG_NailTrail;
-/*		wp->missileSound = trap_S_RegisterSound( "sound/weapons/nailgun/wnalflit", qfalse ); */
+		wp->missileSound = trap_S_RegisterSound(Pnanoidsounds "/nanoidflight", qfalse);
 		wp->trailRadius = 16;
 		wp->wiTrailTime = 250;
-		wp->missileModel = trap_R_RegisterModel(
-			Pweaphitmodels "/nail");
+		wp->missileModel = trap_R_RegisterModel(Pweaphitmodels "/nanoid");
 		MAKERGB(wp->flashDlightColor, 1, 0.75f, 0);
-		wp->flashSound[0] = trap_S_RegisterSound(
-			"sound/weapons/nailgun/wnalfire", qfalse);
+		wp->flashSound[0] = trap_S_RegisterSound(Pnanoidsounds "/fire", qfalse);
 		break;
 	case W1plasmagun:
 /*		wp->missileModel = cgs.media.invulnerabilityPowerupModel; */

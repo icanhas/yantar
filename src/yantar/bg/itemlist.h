@@ -699,7 +699,7 @@ gitem_t bg_itemlist[] =
 	{
 		"weapon_nanoidcannon",
 		Pmiscsounds "/w_pkup",
-		{ Pnailgunmodels "/nanoidcannon",
+		{ Pnanoidmodels "/nanoidcannon",
 		  NULL, NULL, NULL},
 /* icon */ Picons "/nanoidcannon",
 /* pickup */ "Nanoid Cannon",
