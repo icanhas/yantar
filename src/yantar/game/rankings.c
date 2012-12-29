@@ -6,6 +6,10 @@
  */
 /* reports for global rankings system */
 
+/*
+ * FIXME: Need to account for prox. mines etc. Do we even want this file anymore?
+ */
+
 #include "shared.h"
 #include "bg.h"
 #include "game.h"

@@ -262,8 +262,9 @@ CG_Obituary(entityState_t *ent)
 			message = "was blasted by";
 			message2 = "'s BFG";
 			break;
-		case MOD_NAIL:
-			message = "was nailed by";
+		case MOD_NANOID:
+			message = "was wracked by";
+			message2= "'s Nanoid Cannon";
 			break;
 		case MOD_CHAINGUN:
 			message = "got lead poisoning from";

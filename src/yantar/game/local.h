@@ -496,7 +496,7 @@ gentity_t*	fire_grenade(gentity_t *self, Vec3 start, Vec3 aimdir);
 gentity_t*	fire_rocket(gentity_t *self, Vec3 start, Vec3 dir);
 gentity_t*	fire_bfg(gentity_t *self, Vec3 start, Vec3 dir);
 gentity_t*	fire_grapple(gentity_t *self, Vec3 start, Vec3 dir);
-gentity_t*	fire_nail(gentity_t *self, Vec3 start, Vec3 forward, Vec3 right,
+gentity_t*	firenanoid(gentity_t *self, Vec3 start, Vec3 forward, Vec3 right,
 		Vec3 up);
 gentity_t*	fire_prox(gentity_t *self, Vec3 start, Vec3 aimdir);
 

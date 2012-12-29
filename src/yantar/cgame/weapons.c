@@ -743,7 +743,7 @@ CG_RegisterWeapon(int weaponNum)
 		cgs.media.grenadeExplosionShader = trap_R_RegisterShader(
 			"grenadeExplosion");
 		break;
-	case W1nailgun:
+	case W1nanoidcannon:
 		wp->ejectBrassFunc = CG_NailgunEjectBrass;
 		wp->missileTrailFunc = CG_NailTrail;
 /*		wp->missileSound = trap_S_RegisterSound( "sound/weapons/nailgun/wnalflit", qfalse ); */
@@ -1700,7 +1700,7 @@ CG_MissileHitWall(int weapon, int clientNum, Vec3 origin, Vec3 dir,
 
 	switch(weapon){
 	default:
-	case W1nailgun:
+	case W1nanoidcannon:
 		if(soundType == IMPACTSOUND_FLESH)
 			sfx = cgs.media.sfx_nghitflesh;
 		else if(soundType == IMPACTSOUND_METAL)
@@ -1871,7 +1871,7 @@ CG_MissileHitPlayer(int weapon, Vec3 origin, Vec3 dir, int entityNum)
 	case W2rocketlauncher:
 	case W1plasmagun:
 	case W2bfg:
-	case W1nailgun:
+	case W1nanoidcannon:
 	case W1chaingun:
 	case W2proxlauncher:
 		CG_MissileHitWall(weapon, 0, origin, dir, IMPACTSOUND_FLESH);

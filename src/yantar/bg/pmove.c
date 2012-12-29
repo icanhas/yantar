@@ -900,7 +900,7 @@ weaptimetab(Weapon wp)
 		return 100;
 	case W1_GRAPPLING_HOOK:
 		return 1;
-	case W1nailgun:
+	case W1nanoidcannon:
 		return 1000;
 	case W1chaingun:
 		return 30;

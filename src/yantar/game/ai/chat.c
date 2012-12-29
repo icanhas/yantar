@@ -282,13 +282,9 @@ BotWeaponNameForMeansOfDeath(int mod)
 	case MOD_LIGHTNING: return "Lightning Gun";
 	case MOD_BFG:
 	case MOD_BFG_SPLASH: return "BFG10K";
-#ifdef MISSIONPACK
-	case MOD_NAIL: return "Nailgun";
+	case MOD_NANOID: return "Nanoid Cannon";
 	case MOD_CHAINGUN: return "Chaingun";
 	case MOD_PROXIMITY_MINE: return "Proximity Launcher";
-	case MOD_KAMIKAZE: return "Kamikaze";
-	case MOD_JUICED: return "Prox mine";
-#endif
 	case MOD_GRAPPLE: return "Grapple";
 	default: return "[unknown weapon]";
 	}

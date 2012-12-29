@@ -10,7 +10,10 @@
 #include "game.h"
 #include "local.h"
 
-enum { Presteptime = 50 };
+enum { 
+	Presteptime = 50,
+	Nanospread = 500
+};
 
 void
 G_BounceMissile(gentity_t *ent, trace_t *trace)
@@ -542,35 +545,33 @@ fire_grapple(gentity_t *self, Vec3 start, Vec3 dir)
 	return hook;
 }
 
-enum { Nailgunspread = 500 };
 gentity_t *
-fire_nail(gentity_t *self, Vec3 start, Vec3 forward, Vec3 right, Vec3 up)
+firenanoid(gentity_t *self, Vec3 start, Vec3 forward, Vec3 right, Vec3 up)
 {
 	gentity_t *bolt;
-	Vec3 dir;
-	Vec3 end;
+	Vec3 dir, end;
 	float r, u, scale;
 
 	bolt = G_Spawn();
-	bolt->classname = "nail";
+	bolt->classname = "nanoid";
 	bolt->nextthink = level.time + 10000;
 	bolt->think = G_ExplodeMissile;
 	bolt->s.eType = ET_MISSILE;
 	bolt->r.svFlags = SVF_USE_CURRENT_ORIGIN;
-	bolt->s.parentweap = W1nailgun;
+	bolt->s.parentweap = W1nanoidcannon;
 	bolt->s.eFlags = EF_BOUNCE_HALF;
 	bolt->r.ownerNum = self->s.number;
 	bolt->parent = self;
-	bolt->damage = 20;
-	bolt->methodOfDeath = MOD_NAIL;
+	bolt->damage = 10;
+	bolt->methodOfDeath = MOD_NANOID;
 	bolt->clipmask = MASK_SHOT;
 	bolt->target_ent = nil;
-	bolt->s.traj.type = TR_LINEAR;
-	bolt->s.traj.time = level.time;
+	bolt->s.traj.type = TR_STOCHASTIC;
+	bolt->s.traj.time = level.time - Presteptime;	/* move a bit on the very first frame */
 	copyv3(start, bolt->s.traj.base);
 	r = random() * M_PI * 2.0f;
-	u = sin(r) * crandom() * Nailgunspread * 16;
-	r = cos(r) * crandom() * Nailgunspread * 16;
+	u = sin(r) * crandom() * Nanospread * 16;
+	r = cos(r) * crandom() * Nanospread * 16;
 	maddv3(start, 8192 * 16, forward, end);
 	maddv3(end, r, right, end);
 	maddv3(end, u, up, end);

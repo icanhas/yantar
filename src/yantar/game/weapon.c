@@ -15,7 +15,7 @@ static float s_quadFactor;
 static Vec3 forward, right, up;
 static Vec3 muzzle;
 
-#define NUM_NAILSHOTS 15
+#define Nnanoshots	16
 
 #define CHAINGUN_SPREAD		600
 #define MACHINEGUN_SPREAD		200
@@ -562,21 +562,21 @@ Weapon_LightningFire(gentity_t *ent)
 }
 
 /*
- * Nailgun
+ * Nanoid cannon
  */
 
 void
-Weapon_Nailgun_Fire(gentity_t *ent)
+firenanoidcannon(gentity_t *ent)
 {
-	gentity_t       *m;
+	gentity_t *m;
 	int count;
 
-	for(count = 0; count < NUM_NAILSHOTS; count++){
-		m = fire_nail(ent, muzzle, forward, right, up);
+	for(count = 0; count < Nnanoshots; count++){
+		m = firenanoid(ent, muzzle, forward, right, up);
 		m->damage *= s_quadFactor;
 		m->splashDamage *= s_quadFactor;
 	}
-
+	
 /*	addv3( m->s.traj.delta, ent->client->ps.velocity, m->s.traj.delta );	// "real" physics */
 }
 
@@ -669,8 +669,8 @@ FireWeapon(gentity_t *ent, Weapslot slot)
 	/* track shots taken for accuracy tracking.  Grapple is not a weapon and gauntet is just not tracked */
 	if(ent->s.weap[slot] != W1_GRAPPLING_HOOK && ent->s.weap[slot] !=
 	   W1melee){
-		if(ent->s.weap[slot] == W1nailgun)
-			ent->client->accuracy_shots += NUM_NAILSHOTS;
+		if(ent->s.weap[slot] == W1nanoidcannon)
+			ent->client->accuracy_shots += Nnanoshots;
 		else
 			ent->client->accuracy_shots++;
 	}
@@ -678,7 +678,7 @@ FireWeapon(gentity_t *ent, Weapslot slot)
 	/* set aiming directions */
 	anglev3s(ent->client->ps.viewangles, forward, right, up);
 
-	CalcMuzzlePointOrigin (ent, ent->client->oldOrigin, forward, right, up,
+	CalcMuzzlePointOrigin(ent, ent->client->oldOrigin, forward, right, up,
 		muzzle);
 
 	/* fire the specific weapon */
@@ -692,8 +692,8 @@ FireWeapon(gentity_t *ent, Weapslot slot)
 	case W1shotgun:
 		weapon_supershotgun_fire(ent);
 		break;
-	case W1nailgun:
-		Weapon_Nailgun_Fire(ent);
+	case W1nanoidcannon:
+		firenanoidcannon(ent);
 		break;
 	case W1machinegun:
 		if(g_gametype.integer != GT_TEAM)

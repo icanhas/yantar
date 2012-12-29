@@ -1326,7 +1326,7 @@ BotUpdateInventory(bot_state_t *bs)
 		(bs->cur_ps.stats[STAT_PRIWEAPS] & (1 << W1_GRAPPLING_HOOK)) != 0;
 #ifdef MISSIONPACK
 	bs->inventory[INVENTORY_NAILGUN] =
-		(bs->cur_ps.stats[STAT_PRIWEAPS] & (1 << W1nailgun)) != 0;;
+		(bs->cur_ps.stats[STAT_PRIWEAPS] & (1 << W1nanoidcannon)) != 0;;
 	bs->inventory[INVENTORY_PROXLAUNCHER] =
 		(bs->cur_ps.stats[STAT_PRIWEAPS] & (1 << W2proxlauncher)) != 0;;
 	bs->inventory[INVENTORY_CHAINGUN] =
@@ -1344,7 +1344,7 @@ BotUpdateInventory(bot_state_t *bs)
 	bs->inventory[INVENTORY_SLUGS]		= bs->cur_ps.ammo[W1railgun];
 	bs->inventory[INVENTORY_BFGAMMO]	= bs->cur_ps.ammo[W2bfg];
 #ifdef MISSIONPACK
-	bs->inventory[INVENTORY_NAILS]	= bs->cur_ps.ammo[W1nailgun];
+	bs->inventory[INVENTORY_NAILS]	= bs->cur_ps.ammo[W1nanoidcannon];
 	bs->inventory[INVENTORY_MINES]	= bs->cur_ps.ammo[W2proxlauncher];
 	bs->inventory[INVENTORY_BELT]	= bs->cur_ps.ammo[W1chaingun];
 #endif

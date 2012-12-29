@@ -629,18 +629,18 @@ gitem_t bg_itemlist[] =
 /* sounds */ ""
 	},
 
-/*QUAKED ammo_flak (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
+/*QUAKED ammo_nanoids (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
  */
 	{
-		"ammo_flak",
+		"ammo_nanoids",
 		Pmiscsounds "/am_pkup",
-		{ Pammomodels "/flak",
+		{ Pammomodels "/nanoids",
 		  NULL, NULL, NULL},
-/* icon */ Picons "/icona_flakcannon",
-/* pickup */ "Flak",
+/* icon */ Picons "/nanoidcannon",
+/* pickup */ "Nanoids",
 		20,
 		IT_AMMO,
-		W1nailgun,
+		W1nanoidcannon,
 /* precache */ "",
 /* sounds */ ""
 	},
@@ -694,18 +694,18 @@ gitem_t bg_itemlist[] =
 /* sounds */ ""
 	},
 
-/*QUAKED weapon_flakcannon (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
+/*QUAKED weapon_nanoidcannon (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
  */
 	{
-		"weapon_flakcannon",
+		"weapon_nanoidcannon",
 		Pmiscsounds "/w_pkup",
-		{ Pnailgunmodels "/flakcannon",
+		{ Pnailgunmodels "/nanoidcannon",
 		  NULL, NULL, NULL},
-/* icon */ Picons "/iconw_flakcannon",
-/* pickup */ "Flak Cannon",
+/* icon */ Picons "/nanoidcannon",
+/* pickup */ "Nanoid Cannon",
 		10,
 		IT_PRIWEAP,
-		W1nailgun,
+		W1nanoidcannon,
 /* precache */ "",
 /* sounds */ ""
 	},
