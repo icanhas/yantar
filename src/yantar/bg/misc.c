@@ -43,8 +43,7 @@ BG_EvaluateTrajectory(const trajectory_t *tr, int atTime, Vec3 result)
 		result[2] -= 0.5 * DEFAULT_GRAVITY * deltaTime * deltaTime;	/* FIXME: local gravity... */
 		break;
 	default:
-		Com_Errorf(ERR_DROP, "BG_EvaluateTrajectory: unknown type: %i",
-			tr->time);
+		Com_Errorf(ERR_DROP, "BG_EvaluateTrajectory: unknown type: %i", tr->type);
 		break;
 	}
 }
@@ -86,8 +85,7 @@ BG_EvaluateTrajectoryDelta(const trajectory_t *tr, int atTime, Vec3 result)
 		break;
 	default:
 		Com_Errorf(ERR_DROP,
-			"BG_EvaluateTrajectoryDelta: unknown type: %i",
-			tr->time);
+			"BG_EvaluateTrajectoryDelta: unknown type: %i", tr->type);
 		break;
 	}
 }
