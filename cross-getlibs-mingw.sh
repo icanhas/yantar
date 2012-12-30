@@ -30,4 +30,6 @@ if [ "X$prefix" = "X" ]; then
 	exit 1
 fi
 
+export chain
+export prefix
 ./getlibs.sh
