@@ -4,8 +4,10 @@
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License.
  */
-/* bg_lib.h -- standard C library replacement routines used by code
- * compiled for the virtual machine */
+/* 
+ * stdlib replacement routines used by code compiled for the virtual 
+ * machine 
+ */
 
 /* This file is NOT included on native builds */
 #if !defined(BG_LIB_H) && defined(Q3_VM)
@@ -23,8 +25,9 @@
 #endif
 
 typedef unsigned int size_t;
+typedef char* va_list;
+typedef int cmp_t (const void *, const void *);
 
-typedef char *  va_list;
 #define _INTSIZEOF(n)	((sizeof(n) + sizeof(int) - 1) & ~(sizeof(int) - 1))
 #define va_start(ap,v)	(ap = (va_list)&v + _INTSIZEOF(v))
 #define va_arg(ap,t)	(*(t*)((ap += _INTSIZEOF(t)) - _INTSIZEOF(t)))
@@ -62,53 +65,46 @@ typedef char *  va_list;
 #define isxlower(c)	(isdigit(c) || (c >= 'a' && c <= 'f'))
 #define isxupper(c)	(isdigit(c) || (c >= 'A' && c <= 'F'))
 
-/* Misc functions */
-typedef int cmp_t (const void *, const void *);
-void qsort(void *a, size_t n, size_t es, cmp_t *cmp);
-void    srand(unsigned seed);
-int             rand(void);
+void	qsort(void*, size_t, size_t, cmp_t*);
+void	srand(unsigned);
+int 	rand(void);
 
-/* String functions */
-size_t strlen(const char *string);
-char*strcat(char *strDestination, const char *strSource);
-char*strcpy(char *strDestination, const char *strSource);
-int strcmp(const char *string1, const char *string2);
-char*strchr(const char *string, int c);
-char*strrchr(const char *string, int c);
-char*strstr(const char *string, const char *strCharSet);
-char*strncpy(char *strDest, const char *strSource, size_t count);
-int tolower(int c);
-int toupper(int c);
+size_t	strlen(const char*);
+char*	strcat(char*, const char*);
+char*	strcpy(char*, const char*);
+int	strcmp(const char*, const char*);
+char*	strchr(const char*, int);
+char*	strrchr(const char*, int);
+char*	strstr(const char*, const char*);
+char*	strncpy(char*, const char*, size_t);
+int	tolower(int);
+int	toupper(int);
 
-double atof(const char *string);
-double _atof(const char **stringPtr);
-double strtod(const char *nptr, char **endptr);
-int atoi(const char *string);
-int _atoi(const char **stringPtr);
-long strtol(const char *nptr, char **endptr, int base);
+double	atof(const char*);
+double	_atof(const char**);
+double	strtod(const char*r, char**);
+int	atoi(const char*);
+int	_atoi(const char**);
+long	strtol(const char*, char**, int);
+int	Q_vsnprintf(char*, size_t, const char*, va_list);
+int	sscanf(const char*, const char*, ...) __attribute__ ((format (scanf, 2, 3)));
 
-int Q_vsnprintf(char *buffer, size_t length, const char *fmt, va_list argptr);
+void*	memmove(void*, const void*, size_t);
+void*	memset(void*, int, size_t);
+void*	memcpy(void*, const void*, size_t);
 
-int sscanf(const char *buffer, const char *fmt,
-	   ...) __attribute__ ((format (scanf, 2, 3)));
-
-/* Memory functions */
-void*memmove(void *dest, const void *src, size_t count);
-void*memset(void *dest, int c, size_t count);
-void*memcpy(void *dest, const void *src, size_t count);
-
-/* Math functions */
-double ceil(double x);
-double floor(double x);
-double sqrt(double x);
-double sin(double x);
-double cos(double x);
-double acos(double x);
-double atan2(double y, double x);
-double atan(double x);
-double asin(double x);
-double tan(double x);
-int abs(int n);
-double fabs(double x);
+double	ceil(double);
+double	floor(double);
+double	sqrt(double);
+double	sin(double);
+double	cos(double);
+double	acos(double);
+double	atan2(double, double);
+double	atan(double);
+double	asin(double);
+double	tan(double);
+int	abs(int);
+double	fabs(double);
 
 #endif	/* BG_LIB_H */
+

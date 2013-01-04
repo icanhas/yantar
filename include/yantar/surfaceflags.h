@@ -5,12 +5,12 @@
  * it under the terms of the GNU General Public License.
  */
 /*
- * This file must be identical in the quake and utils directories */
-
-/* contents flags are seperate bits
- * a given brush can contribute multiple content bits */
-
-/* these definitions also need to be in q_shared.h! */
+ * This file must be identical in the yantar and cmd directories, and
+ * these definitions also need to be in shared.h
+ *
+ * Content flags are separate bits. A given brush can contribute
+ * multiple content flags.
+ */
 
 #define CONTENTS_SOLID		1	/* an eye is never valid in a solid */
 #define CONTENTS_LAVA		8
