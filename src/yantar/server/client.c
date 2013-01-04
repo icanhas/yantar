@@ -893,9 +893,6 @@ SV_WriteDownloadToClient(client_t *cl, msg_t *msg)
 
 	if(!cl->download){
 		qbool		idPack = qfalse;
-		#ifndef STANDALONE
-		qbool		missionPack = qfalse;
-		#endif
 
 		/* Chop off filename extension. */
 		Q_sprintf(pakbuf, sizeof(pakbuf), "%s", cl->downloadName);
@@ -920,17 +917,11 @@ SV_WriteDownloadToClient(client_t *cl, msg_t *msg)
 						   pakbuf)){
 						unreferenced = 0;
 
-						/* now that we know the file is referenced,
-						 * check whether it's legal to download it. */
-#ifndef STANDALONE
-						missionPack = FS_idPak(
-							pakbuf, BASETA,
-							NUM_TA_PAKS);
-						idPack = missionPack;
-#endif
-						idPack = idPack || FS_idPak(
-							pakbuf, BASEGAME,
-							NUM_ID_PAKS);
+						/* 
+						 * now that we know the file is referenced,
+						 * check whether it's legal to download it. 
+						 */
+						idPack = idPack || FS_idPak(pakbuf, BASEGAME, NUM_ID_PAKS);
 
 						break;
 					}
@@ -962,23 +953,9 @@ SV_WriteDownloadToClient(client_t *cl, msg_t *msg)
 					"clientDownload: %d : \"%s\" cannot download id pk3 files\n",
 					(int)(cl - svs.clients),
 					cl->downloadName);
-#ifndef STANDALONE
-				if(missionPack)
-					Q_sprintf(
-						errorMessage,
-						sizeof(errorMessage),
-						"Cannot autodownload Team Arena file \"%s\"\n"
-						"The Team Arena mission pack can be found in your local game store.",
-						cl->downloadName);
-				else
-#endif
-				{
-					Q_sprintf(
-						errorMessage,
-						sizeof(errorMessage),
-						"Cannot autodownload id pk3 file \"%s\"",
-						cl->downloadName);
-				}
+				Q_sprintf(errorMessage, sizeof(errorMessage),
+					"Cannot autodownload id pk3 file \"%s\"",
+					cl->downloadName);
 			}else if(!(sv_allowDownload->integer & DLF_ENABLE) ||
 				 (sv_allowDownload->integer & DLF_NO_UDP)){
 

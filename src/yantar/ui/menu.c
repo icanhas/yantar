@@ -11,19 +11,18 @@
 #include "local.h"
 
 enum {
-	ID_SINGLEPLAYER = 10,
+	ID_SINGLEPLAYER	= 10,
 	ID_MULTIPLAYER	= 11,
 	ID_SETUP	= 12,
 	ID_DEMOS	= 13,
 	ID_CINEMATICS	= 14,
-	ID_TEAMARENA	= 15,
-	ID_MODS = 16,
-	ID_EXIT = 17,
+	ID_MODS	= 15,
+	ID_EXIT	= 16,
 
 	Xbegin	= 16,	/* starting position of menu items */
 	Ybegin	= 134,
 
-	Yspacing = 24	/* vertical space between items */
+	Yspacing	= 24	/* vertical space between items */
 };
 
 typedef struct {
@@ -83,10 +82,6 @@ Main_MenuEvent(void* ptr, int event)
 		break;
 	case ID_MODS:
 		UI_ModsMenu();
-		break;
-	case ID_TEAMARENA:
-		trap_Cvar_Set("fs_game", BASETA);
-		trap_Cmd_ExecuteText(EXEC_APPEND, "vid_restart;");
 		break;
 	case ID_EXIT:
 		UI_ConfirmMenu("EXIT GAME?", 0, MainMenu_ExitAction);
@@ -166,28 +161,6 @@ Main_MenuDraw(void)
 
 
 	UI_DrawString(320, 450, "Y A N T A R", UI_CENTER|UI_SMALLFONT, color);
-}
-
-static qbool
-UI_TeamArenaExists(void)
-{
-	int	numdirs;
-	char	dirlist[2048];
-	char	*dirptr;
-	char    *descptr;
-	int	i;
-	int	dirlen;
-
-	numdirs = trap_FS_GetFileList("$modlist", "", dirlist, sizeof(dirlist));
-	dirptr	= dirlist;
-	for(i = 0; i < numdirs; ++i){
-		dirlen	= strlen(dirptr) + 1;
-		descptr = dirptr + dirlen;
-		if(Q_stricmp(dirptr, BASETA) == 0)
-			return qtrue;
-		dirptr += dirlen + strlen(descptr) + 1;
-	}
-	return qfalse;
 }
 
 /*
@@ -288,21 +261,6 @@ UI_MainMenu(void)
 	s_main.cinematics.string	= "CINEMATICS";
 	s_main.cinematics.color		= color_black;
 	s_main.cinematics.style		= style;
-
-	if(UI_TeamArenaExists()){
-		teamArena = qtrue;
-		y += Yspacing;
-		s_main.teamArena.generic.type	= MTYPE_PTEXT;
-		s_main.teamArena.generic.flags	= QMF_LEFT_JUSTIFY|
-						  QMF_PULSEIFFOCUS;
-		s_main.teamArena.generic.x	= Xbegin;
-		s_main.teamArena.generic.y	= y;
-		s_main.teamArena.generic.id	= ID_TEAMARENA;
-		s_main.teamArena.generic.callback = Main_MenuEvent;
-		s_main.teamArena.string = "TEAM ARENA";
-		s_main.teamArena.color	= color_black;
-		s_main.teamArena.style	= style;
-	}
 
 	y += Yspacing;
 	s_main.mods.generic.type = MTYPE_PTEXT;

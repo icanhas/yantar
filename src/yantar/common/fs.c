@@ -6,6 +6,8 @@
  * it under the terms of the GNU General Public License.
  */
  
+ /* FIXME: magic numbers everywhere */
+ 
 #include "shared.h"
 #include "common.h"
 #include "unzip.h"
@@ -62,7 +64,7 @@
  * Additionally, we search in several subdirectories:
  * current game is the current mode
  * base game is a variable to allow mods based on other mods
- * (such as baseq3 + missionpack content combination in a mod for instance)
+ * (such as baseq3 content combination in a mod for instance)
  * BASEGAME is the hardcoded base game ("baseq3")
  *
  * e.g. the qpath "sound/newstuff/test.wav" would be searched for in the following places:
@@ -149,25 +151,17 @@ static const unsigned int	pak_checksums[] =
 	977125798u
 };
 
-static const unsigned int	missionpak_checksums[] =
-{
-	2430342401u,
-	511014160u,
-	2662638993u,
-	1438664554u
-};
-
 #define MAX_ZPATH		256
 #define MAX_SEARCH_PATHS	4096
 #define MAX_FILEHASH_SIZE	1024
 
-typedef struct fileInPack_t fileInPack_t;
-typedef struct pack_t pack_t;
-typedef struct directory_t directory_t;
-typedef struct searchpath_t searchpath_t;
-typedef union qfile_gut qfile_gut;
-typedef struct qfile_ut qfile_ut;
-typedef struct fileHandleData_t fileHandleData_t;
+typedef struct fileInPack_t	fileInPack_t;
+typedef struct pack_t		pack_t;
+typedef struct directory_t		directory_t;
+typedef struct searchpath_t	searchpath_t;
+typedef union qfile_gut		qfile_gut;
+typedef struct qfile_ut		qfile_ut;
+typedef struct fileHandleData_t	fileHandleData_t;
 
 struct fileInPack_t {
 	char			*name;	/* name of the file */
@@ -2654,12 +2648,7 @@ FS_ComparePaks(char *neededpaks, int len, qbool dlstring)
 
 		/* never autodownload any of the id paks */
 		if(FS_idPak(fs_serverReferencedPakNames[i], BASEGAME,
-			   NUM_ID_PAKS)
-#ifndef STANDALONE
-		   || FS_idPak(fs_serverReferencedPakNames[i], BASETA,
-			   NUM_TA_PAKS)
-#endif
-		   )
+			   NUM_ID_PAKS))
 			continue;
 
 		/* Make sure the server cannot make us write to non-quake3 directories. */
@@ -2929,7 +2918,7 @@ FS_CheckPak0(void)
 	searchpath_t *path;
 	pack_t *curpack;
 	qbool founddemo = qfalse;
-	unsigned int foundPak = 0, foundTA = 0;
+	unsigned int foundPak = 0;
 
 	for(path = fs_searchpaths; path; path = path->next){
 		const char * pakBasename = path->pack->pakBasename;
@@ -2973,30 +2962,13 @@ FS_CheckPak0(void)
 			}
 
 			foundPak |= 1<<(pakBasename[3]-'0');
-		}else if(!Q_stricmpn(curpack->pakGamename, BASETA, MAX_OSPATH)
-			 && strlen(pakBasename) == 4 &&
-			 !Q_stricmpn(pakBasename, "pak", 3)
-			 && pakBasename[3] >= '0' && pakBasename[3] <= '0' +
-			 NUM_TA_PAKS - 1){
-			if(curpack->checksum !=
-			   missionpak_checksums[pakBasename[3]-'0'])
-				Com_Printf(
-					"\n\n"
-					"**************************************************\n"
-					"WARNING: " BASETA
-					"/pak%d.pk3 is present but its checksum (%u)\n"
-					"is not correct. Please re-install Team Arena\n"
-					"**************************************************\n\n\n",
-					pakBasename[3]-'0', curpack->checksum);
-
-			foundTA |= 1 << (pakBasename[3]-'0');
 		}else{
 			int index;
 
 			/* Finally check whether this pak's checksum is listed because the user tried
 			 * to trick us by renaming the file, and set foundPak's highest bit to indicate this case. */
 
-			for(index = 0; index < ARRAY_LEN(pak_checksums); index++)
+			for(index = 0; index < ARRAY_LEN(pak_checksums); index++){
 				if(curpack->checksum == pak_checksums[index]){
 					Com_Printf(
 						"\n\n"
@@ -3011,27 +2983,11 @@ FS_CheckPak0(void)
 
 					foundPak |= 0x80000000;
 				}
-
-			for(index = 0; index < ARRAY_LEN(missionpak_checksums);
-			    index++)
-				if(curpack->checksum ==
-				   missionpak_checksums[index]){
-					Com_Printf(
-						"\n\n"
-						"**************************************************\n"
-						"WARNING: %s is renamed pak file %s%cpak%d.pk3\n"
-						"Running in standalone mode won't work\n"
-						"Please rename, or remove this file\n"
-						"**************************************************\n\n\n",
-						curpack->pakFilename, BASETA,
-						PATH_SEP, index);
-
-					foundTA |= 0x80000000;
-				}
+			}
 		}
 	}
 
-	if(!foundPak && !foundTA && Q_stricmp(com_basegame->string, BASEGAME))
+	if(!foundPak && Q_stricmp(com_basegame->string, BASEGAME))
 		Cvar_Set("com_standalone", "1");
 	else
 		Cvar_Set("com_standalone", "0");
@@ -3073,26 +3029,6 @@ FS_CheckPak0(void)
 
 		Com_Errorf(ERR_FATAL, "%s", errorText);
 	}
-
-	if(!com_standalone->integer && foundTA && (foundTA & 0x0f) != 0x0f){
-		char errorText[MAX_STRING_CHARS] = "";
-
-		if((foundTA & 0x01) != 0x01)
-			Q_sprintf(
-				errorText, sizeof(errorText),
-				"\"" BASETA
-				"%cpak0.pk3\" is missing. Please copy it "
-				"from your legitimate Quake 3 Team Arena CDROM. ",
-				PATH_SEP);
-
-		if((foundTA & 0x0e) != 0x0e)
-			Q_strcat(
-				errorText, sizeof(errorText),
-				"Team Arena Point Release files are missing. Please "
-				"re-install the latest Team Arena point release.");
-
-		Com_Errorf(ERR_FATAL, "%s", errorText);
-	}
 }
 #endif
 
@@ -3100,7 +3036,7 @@ FS_CheckPak0(void)
  * Returns a space separated string containing the checksums of all loaded pk3 files.
  * Servers with sv_pure set will get this string and pass it to clients.
  */
-const char *
+const char*
 FS_LoadedPakChecksums(void)
 {
 	static char info[BIG_INFO_STRING];

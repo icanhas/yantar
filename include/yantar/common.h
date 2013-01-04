@@ -474,7 +474,6 @@ enum {
 	FS_CGAME_REF	= 0x04,
 	/* number of id paks that will never be autodownloaded from baseq3/missionpack */
 	NUM_ID_PAKS		= 9,
-	NUM_TA_PAKS		= 4,
 
 	MAX_FILE_HANDLES	= 64
 };

@@ -10,7 +10,6 @@
 
 #define PRODUCT_NAME		"yantar"
 #define BASEGAME		"base"
-#define BASETA			"missionpack"	/* remove this */
 #define CLIENT_WINDOW_TITLE	"Konkrete"
 #define CLIENT_WINDOW_MIN_TITLE "Konkrete"
 #define HOMEPATH_NAME_UNIX	".konkrete"
