@@ -85,8 +85,8 @@
 #error overflow: (CS_MAX) > MAX_CONFIGSTRINGS
 #endif
 
-typedef struct pmove_t		pmove_t;
-typedef struct gitem_t		gitem_t;
+typedef struct Pmove		Pmove;
+typedef struct Gitem		Gitem;
 typedef struct animation_t	animation_t;
 
 typedef enum {
@@ -107,12 +107,12 @@ typedef enum {
 	GENDER_MALE, 
 	GENDER_FEMALE, 
 	GENDER_NEUTER 
-} gender_t;
+} Gender;
 
 /*
  * pmove module
  *
- * The pmove code takes a player_state_t and a usercmd_t and generates a new player_state_t
+ * The pmove code takes a player_state_t and a Usrcmd and generates a new player_state_t
  * and some other output data.  Used for local prediction on the client game and true
  * movement on the server game.
  */
@@ -150,12 +150,12 @@ enum pmflags {
 };
 
 #define MAXTOUCH		32
-struct pmove_t {
+struct Pmove {
 	/* state (in / out) */
-	playerState_t *ps;
+	Playerstate *ps;
 
 	/* command (in) */
-	usercmd_t	cmd;
+	Usrcmd	cmd;
 	int	tracemask;	/* collide against these types of surfaces */
 	int	debugLevel;	/* if set, diagnostic output will be printed */
 	qbool	noFootsteps;	/* if the game is setup for no footsteps by the server */
@@ -178,7 +178,7 @@ struct pmove_t {
 	 * callbacks to test the world
 	 * these will be different functions during game and cgame 
 	 */
-	void (*trace)(trace_t *results, const Vec3 start, const Vec3 mins,
+	void (*trace)(Trace *results, const Vec3 start, const Vec3 mins,
 		const Vec3 maxs, const Vec3 end, int passEntityNum,
 		int contentMask);
 	int (*pointcontents)(const Vec3 point, int passEntityNum);
@@ -226,7 +226,7 @@ typedef enum {
 	PERS_CAPTURES			/* captures */
 } persEnum_t;
 
-/* entityState_t->eFlags */
+/* Entstate->eFlags */
 enum entflags {
 	EF_DEAD			= (1<<0),	/* don't draw a foe marker over players with EF_DEAD */
 	EF_TICKING		= (1<<1),	/* used to make players play the prox mine ticking sound */
@@ -264,7 +264,7 @@ typedef enum {
 	PW_BLUEFLAG,
 	PW_NEUTRALFLAG,
 	PW_NUM_POWERUPS
-} powerup_t;
+} Powerup;
 
 typedef enum {
 	HI_NONE,
@@ -274,7 +274,7 @@ typedef enum {
 	HI_PORTAL,
 	HI_INVULNERABILITY,
 	HI_NUM_HOLDABLE
-} holdable_t;
+} Holdable;
 
 typedef enum {
 	/* weapons for primary mount point */
@@ -304,7 +304,7 @@ enum rewardsounds {
 };
 
 /* 
- * entityState_t->event values
+ * Entstate->event values
  * Entity events are for effects that take place relative
  * to an existing entities origin.  Very network efficient. 
  */
@@ -569,7 +569,7 @@ typedef enum {
 	MOD_GRAPPLE
 } meansOfDeath_t;
 
-/* gitem_t->type */
+/* Gitem->type */
 typedef enum {
 	IT_BAD,
 	IT_PRIWEAP,	/* EFX: rotate + upscale + minlight */
@@ -587,7 +587,7 @@ typedef enum {
 
 #define MAX_ITEM_MODELS 4
 
-struct gitem_t {
+struct Gitem {
 	char	*classname;	/* spawning name */
 	char	*pickup_sound;
 	char	*world_model[MAX_ITEM_MODELS];
@@ -616,7 +616,7 @@ struct gitem_t {
 #define MASK_SHOT		(CONTENTS_SOLID|CONTENTS_BODY|CONTENTS_CORPSE)
 
 /*
- * entityState_t->eType
+ * Entstate->eType
  */
 typedef enum {
 	ET_GENERAL,
@@ -665,29 +665,29 @@ typedef enum {
 #define KAMI_SHOCKWAVE2_MAXRADIUS	704
 
 /* included in both the game dll and the client */
-extern gitem_t bg_itemlist[];
+extern Gitem bg_itemlist[];
 extern int bg_numItems;
 
-gitem_t*	BG_FindItem(const char *pickupName);
-gitem_t*	BG_FindItemForWeapon(Weapon weapon);
-gitem_t*	BG_FindItemForPowerup(powerup_t pw);
-gitem_t*	BG_FindItemForHoldable(holdable_t pw);
-qbool	BG_CanItemBeGrabbed(int gametype, const entityState_t *ent,
-		const playerState_t *ps);
+Gitem*	BG_FindItem(const char *pickupName);
+Gitem*	BG_FindItemForWeapon(Weapon weapon);
+Gitem*	BG_FindItemForPowerup(Powerup pw);
+Gitem*	BG_FindItemForHoldable(Holdable pw);
+qbool	BG_CanItemBeGrabbed(int gametype, const Entstate *ent,
+		const Playerstate *ps);
 				    
 /* if a full pmove isn't done on the client, you can just update the angles */
-void	PM_UpdateViewAngles(playerState_t *ps, const usercmd_t *cmd);
-void	Pmove(pmove_t *pmove);
+void	PM_UpdateViewAngles(Playerstate *ps, const Usrcmd *cmd);
+void	PM_Pmove(Pmove *pmove);
 
-void	BG_EvaluateTrajectory(const trajectory_t *tr, int atTime, Vec3 result);
-void	BG_EvaluateTrajectoryDelta(const trajectory_t *tr, int atTime,
+void	BG_EvaluateTrajectory(const Trajectory *tr, int atTime, Vec3 result);
+void	BG_EvaluateTrajectoryDelta(const Trajectory *tr, int atTime,
 		Vec3 result);
 void	BG_AddPredictableEventToPlayerstate(int newEvent, int eventParm,
-		playerState_t *ps);
-void	BG_TouchJumpPad(playerState_t *ps, entityState_t *jumppad);
-void	BG_PlayerStateToEntityState(playerState_t *ps, entityState_t *s,
+		Playerstate *ps);
+void	BG_TouchJumpPad(Playerstate *ps, Entstate *jumppad);
+void	BG_PlayerStateToEntityState(Playerstate *ps, Entstate *s,
 		qbool snap);
-void	BG_PlayerStateToEntityStateExtraPolate(playerState_t *ps,
-		entityState_t *s, int time, qbool snap);
-qbool	BG_PlayerTouchesItem(playerState_t *ps, entityState_t *item,
+void	BG_PlayerStateToEntityStateExtraPolate(Playerstate *ps,
+		Entstate *s, int time, qbool snap);
+qbool	BG_PlayerTouchesItem(Playerstate *ps, Entstate *item,
 		int atTime);

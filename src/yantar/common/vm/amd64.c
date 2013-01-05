@@ -46,7 +46,7 @@ size_t assembler_get_code_size(void);
 void assembler_init(int pass);
 void assemble_line(const char* input, size_t len);
 
-static void VM_Destroy_Compiled(vm_t* self);
+static void VM_Destroy_Compiled(Vm* self);
 
 /*
  *
@@ -70,7 +70,7 @@ static void VM_Destroy_Compiled(vm_t* self);
 static intptr_t CROSSCALL
 callAsmCall(intptr_t callProgramStack, int64_t callSyscallNum)
 {
-	vm_t *savedVM;
+	Vm *savedVM;
 	intptr_t	ret = 0x77;
 	intptr_t	args[16];
 /*	int iargs[16]; */
@@ -371,7 +371,7 @@ emit(const char* fmt, ...)
 #endif
 
 static void*
-getentrypoint(vm_t* vm)
+getentrypoint(Vm* vm)
 {
 	return vm->codeBase;
 }
@@ -412,7 +412,7 @@ opstackviolation(void)
  * VM_Compile
  */
 void
-VM_Compile(vm_t *vm, vmHeader_t *header)
+VM_Compile(Vm *vm, vmHeader_t *header)
 {
 	unsigned char op;
 	int pc;
@@ -1001,7 +1001,7 @@ VM_Compile(vm_t *vm, vmHeader_t *header)
 
 
 void
-VM_Destroy_Compiled(vm_t* self)
+VM_Destroy_Compiled(Vm* self)
 {
 	if(self && self->codeBase){
 #ifdef VM_X86_64_MMAP
@@ -1025,7 +1025,7 @@ static char * memData;
 #endif
 
 int
-VM_CallCompiled(vm_t *vm, int *args)
+VM_CallCompiled(Vm *vm, int *args)
 {
 	int	stack[OPSTACK_SIZE + 15];
 	int	programCounter;

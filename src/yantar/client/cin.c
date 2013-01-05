@@ -59,7 +59,7 @@ typedef struct {
 	int		CIN_WIDTH, CIN_HEIGHT;
 	int		xpos, ypos, width, height;
 	qbool	looping, holdAtEnd, dirty, alterGameState, silent, shader;
-	fileHandle_t	iFile;
+	Fhandle	iFile;
 	e_status	status;
 	uint		startTime;
 	uint		lastTime;

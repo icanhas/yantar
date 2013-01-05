@@ -14,7 +14,7 @@
 level_locals_t level;
 
 typedef struct {
-	vmCvar_t	*vmCvar;
+	Vmcvar	*vmCvar;
 	char		*cvarName;
 	char		*defaultString;
 	int		cvarFlags;
@@ -23,58 +23,58 @@ typedef struct {
 	qbool		teamShader;		/* track and if changed, update shader state */
 } cvarTable_t;
 
-gentity_t	g_entities[MAX_GENTITIES];
-gclient_t	g_clients[MAX_CLIENTS];
+Gentity	g_entities[MAX_GENTITIES];
+gClient	g_clients[MAX_CLIENTS];
 
-vmCvar_t	g_gametype;
-vmCvar_t	g_dmflags;
-vmCvar_t	g_fraglimit;
-vmCvar_t	g_timelimit;
-vmCvar_t	g_capturelimit;
-vmCvar_t	g_friendlyFire;
-vmCvar_t	g_password;
-vmCvar_t	g_needpass;
-vmCvar_t	g_maxclients;
-vmCvar_t	g_maxGameClients;
-vmCvar_t	g_dedicated;
-vmCvar_t	g_speed;
-vmCvar_t	g_gravity;
-vmCvar_t g_swingstrength;
-vmCvar_t	g_cheats;
-vmCvar_t	g_knockback;
-vmCvar_t	g_quadfactor;
-vmCvar_t	g_forcerespawn;
-vmCvar_t	g_inactivity;
-vmCvar_t	g_debugMove;
-vmCvar_t	g_debugDamage;
-vmCvar_t	g_debugAlloc;
-vmCvar_t	g_weaponRespawn;
-vmCvar_t	g_weaponTeamRespawn;
-vmCvar_t	g_motd;
-vmCvar_t	g_synchronousClients;
-vmCvar_t	g_warmup;
-vmCvar_t	g_doWarmup;
-vmCvar_t	g_restarted;
-vmCvar_t	g_logfile;
-vmCvar_t	g_logfileSync;
-vmCvar_t	g_blood;
-vmCvar_t	g_podiumDist;
-vmCvar_t	g_podiumDrop;
-vmCvar_t	g_allowVote;
-vmCvar_t	g_teamAutoJoin;
-vmCvar_t	g_teamForceBalance;
-vmCvar_t	g_banIPs;
-vmCvar_t	g_filterBan;
-vmCvar_t	g_smoothClients;
-vmCvar_t	pmove_fixed;
-vmCvar_t	pmove_msec;
-vmCvar_t	g_rankings;
-vmCvar_t	g_listEntity;
-vmCvar_t	g_redteam;
-vmCvar_t	g_blueteam;
-//vmCvar_t	g_singlePlayer;
-vmCvar_t	g_enableDust;
-vmCvar_t	g_proxMineTimeout;
+Vmcvar	g_gametype;
+Vmcvar	g_dmflags;
+Vmcvar	g_fraglimit;
+Vmcvar	g_timelimit;
+Vmcvar	g_capturelimit;
+Vmcvar	g_friendlyFire;
+Vmcvar	g_password;
+Vmcvar	g_needpass;
+Vmcvar	g_maxclients;
+Vmcvar	g_maxGameClients;
+Vmcvar	g_dedicated;
+Vmcvar	g_speed;
+Vmcvar	g_gravity;
+Vmcvar g_swingstrength;
+Vmcvar	g_cheats;
+Vmcvar	g_knockback;
+Vmcvar	g_quadfactor;
+Vmcvar	g_forcerespawn;
+Vmcvar	g_inactivity;
+Vmcvar	g_debugMove;
+Vmcvar	g_debugDamage;
+Vmcvar	g_debugAlloc;
+Vmcvar	g_weaponRespawn;
+Vmcvar	g_weaponTeamRespawn;
+Vmcvar	g_motd;
+Vmcvar	g_synchronousClients;
+Vmcvar	g_warmup;
+Vmcvar	g_doWarmup;
+Vmcvar	g_restarted;
+Vmcvar	g_logfile;
+Vmcvar	g_logfileSync;
+Vmcvar	g_blood;
+Vmcvar	g_podiumDist;
+Vmcvar	g_podiumDrop;
+Vmcvar	g_allowVote;
+Vmcvar	g_teamAutoJoin;
+Vmcvar	g_teamForceBalance;
+Vmcvar	g_banIPs;
+Vmcvar	g_filterBan;
+Vmcvar	g_smoothClients;
+Vmcvar	pmove_fixed;
+Vmcvar	pmove_msec;
+Vmcvar	g_rankings;
+Vmcvar	g_listEntity;
+Vmcvar	g_redteam;
+Vmcvar	g_blueteam;
+//Vmcvar	g_singlePlayer;
+Vmcvar	g_enableDust;
+Vmcvar	g_proxMineTimeout;
 
 static cvarTable_t gameCvarTable[] = {
 	/* don't override the cheat state set by the system */
@@ -267,7 +267,7 @@ G_Error(const char *fmt, ...)
 void
 G_FindTeams(void)
 {
-	gentity_t *e, *e2;
+	Gentity *e, *e2;
 	int	i, j;
 	int	c, c2;
 
@@ -470,7 +470,7 @@ G_InitGame(int levelTime, int randomSeed, int restart)
 
 	/* let the server system know where the entites are */
 	trap_LocateGameData(level.gentities, level.num_entities,
-		sizeof(gentity_t),
+		sizeof(Gentity),
 		&level.clients[0].ps, sizeof(level.clients[0]));
 
 	/* reserve some spots for dead player bodies */
@@ -577,8 +577,8 @@ void
 AddTournamentPlayer(void)
 {
 	int i;
-	gclient_t	*client;
-	gclient_t	*nextInLine;
+	gClient	*client;
+	gClient	*nextInLine;
 
 	if(level.numPlayingClients >= 2)
 		return;
@@ -621,10 +621,10 @@ AddTournamentPlayer(void)
  */
 
 void
-AddTournamentQueue(gclient_t *client)
+AddTournamentQueue(gClient *client)
 {
 	int index;
-	gclient_t *curclient;
+	gClient *curclient;
 
 	for(index = 0; index < level.maxclients; index++){
 		curclient = &level.clients[index];
@@ -709,7 +709,7 @@ AdjustTournamentScores(void)
 int QDECL
 SortRanks(const void *a, const void *b)
 {
-	gclient_t *ca, *cb;
+	gClient *ca, *cb;
 
 	ca = &level.clients[*(int*)a];
 	cb = &level.clients[*(int*)b];
@@ -767,7 +767,7 @@ CalculateRanks(void)
 	int	rank;
 	int	score;
 	int	newScore;
-	gclient_t *cl;
+	gClient *cl;
 
 	level.follow1	= -1;
 	level.follow2	= -1;
@@ -933,7 +933,7 @@ SendScoreboardMessageToAllClients(void)
  * If a new client connects, this will be called after the spawn function.
  */
 void
-MoveClientToIntermission(gentity_t *ent)
+MoveClientToIntermission(Gentity *ent)
 {
 	/* take out of follow mode if needed */
 	if(ent->client->sess.spectatorState == SPECTATOR_FOLLOW)
@@ -966,7 +966,7 @@ MoveClientToIntermission(gentity_t *ent)
 void
 FindIntermissionPoint(void)
 {
-	gentity_t	*ent, *target;
+	Gentity	*ent, *target;
 	Vec3		dir;
 
 	/* find the intermission spot */
@@ -999,7 +999,7 @@ void
 BeginIntermission(void)
 {
 	int i;
-	gentity_t *client;
+	Gentity *client;
 
 	if(level.intermissiontime)
 		return;		/* already active */
@@ -1048,7 +1048,7 @@ void
 ExitLevel(void)
 {
 	int	i;
-	gclient_t *cl;
+	gClient *cl;
 	char	nextmap[MAX_STRING_CHARS];
 	char	d1[MAX_STRING_CHARS];
 
@@ -1144,7 +1144,7 @@ void
 LogExit(const char *string)
 {
 	int i, numSorted;
-	gclient_t	*cl;
+	gClient	*cl;
 #ifdef MISSIONPACK
 	qbool		won = qtrue;
 #endif
@@ -1218,7 +1218,7 @@ CheckIntermissionExit(void)
 {
 	int	ready, notReady, playerCount;
 	int	i;
-	gclient_t *cl;
+	gClient *cl;
 	int	readyMask;
 
 	if(g_gametype.integer == GT_SINGLE_PLAYER)
@@ -1320,7 +1320,7 @@ void
 CheckExitRules(void)
 {
 	int i;
-	gclient_t *cl;
+	gClient *cl;
 	/* if at the intermission, wait for all non-bots to
 	 * signal ready, then go to next level */
 	if(level.intermissiontime){
@@ -1734,7 +1734,7 @@ CheckCvars(void)
  * Runs thinking code for this frame if necessary
  */
 void
-G_RunThink(gentity_t *ent)
+G_RunThink(Gentity *ent)
 {
 	float thinktime;
 
@@ -1759,7 +1759,7 @@ void
 G_RunFrame(int levelTime)
 {
 	int i;
-	gentity_t *ent;
+	Gentity *ent;
 
 	/* if we are waiting for the level to restart, do nothing */
 	if(level.restarted)

@@ -84,7 +84,7 @@ BotIsFirstInRankings(bot_state_t *bs)
 	int	i, score;
 	char	buf[MAX_INFO_STRING];
 	static int maxclients;
-	playerState_t ps;
+	Playerstate ps;
 
 	if(!maxclients)
 		maxclients = trap_Cvar_VariableIntegerValue("sv_maxclients");
@@ -112,7 +112,7 @@ BotIsLastInRankings(bot_state_t *bs)
 	int	i, score;
 	char	buf[MAX_INFO_STRING];
 	static int maxclients;
-	playerState_t ps;
+	Playerstate ps;
 
 	if(!maxclients)
 		maxclients = trap_Cvar_VariableIntegerValue("sv_maxclients");
@@ -141,7 +141,7 @@ BotFirstClientInRankings(void)
 	char	buf[MAX_INFO_STRING];
 	static char	name[32];
 	static int	maxclients;
-	playerState_t ps;
+	Playerstate ps;
 
 	if(!maxclients)
 		maxclients = trap_Cvar_VariableIntegerValue("sv_maxclients");
@@ -175,7 +175,7 @@ BotLastClientInRankings(void)
 	char	buf[MAX_INFO_STRING];
 	static char	name[32];
 	static int	maxclients;
-	playerState_t ps;
+	Playerstate ps;
 
 	if(!maxclients)
 		maxclients = trap_Cvar_VariableIntegerValue("sv_maxclients");
@@ -363,7 +363,7 @@ int
 BotValidChatPosition(bot_state_t *bs)
 {
 	Vec3 point, start, end, mins, maxs;
-	bsp_trace_t trace;
+	bsp_Trace trace;
 
 	/* if the bot is dead all positions are valid */
 	if(BotIsDead(bs)) return qtrue;

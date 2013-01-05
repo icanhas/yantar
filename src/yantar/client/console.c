@@ -41,8 +41,8 @@ extern console_t con;
 
 console_t	con;
 
-cvar_t		*con_conspeed;
-cvar_t		*con_notifytime;
+Cvar		*con_conspeed;
+Cvar		*con_notifytime;
 
 #define DEFAULT_CONSOLE_WIDTH 78
 
@@ -151,7 +151,7 @@ Con_Dump_f(void)
 {
 	int l, x, i;
 	short	*line;
-	fileHandle_t f;
+	Fhandle f;
 	char	buffer[1024];
 
 	if(Cmd_Argc() != 2){

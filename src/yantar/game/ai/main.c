@@ -57,18 +57,18 @@ float	regularupdate_time;
 int	bot_interbreed;
 int	bot_interbreedmatchcount;
 /*  */
-vmCvar_t	bot_thinktime;
-vmCvar_t	bot_memorydump;
-vmCvar_t	bot_saveroutingcache;
-vmCvar_t	bot_pause;
-vmCvar_t	bot_report;
-vmCvar_t	bot_testsolid;
-vmCvar_t	bot_testclusters;
-vmCvar_t	bot_developer;
-vmCvar_t	bot_interbreedchar;
-vmCvar_t	bot_interbreedbots;
-vmCvar_t	bot_interbreedcycle;
-vmCvar_t	bot_interbreedwrite;
+Vmcvar	bot_thinktime;
+Vmcvar	bot_memorydump;
+Vmcvar	bot_saveroutingcache;
+Vmcvar	bot_pause;
+Vmcvar	bot_report;
+Vmcvar	bot_testsolid;
+Vmcvar	bot_testclusters;
+Vmcvar	bot_developer;
+Vmcvar	bot_interbreedchar;
+Vmcvar	bot_interbreedbots;
+Vmcvar	bot_interbreedcycle;
+Vmcvar	bot_interbreedwrite;
 
 
 void ExitLevel(void);
@@ -120,11 +120,11 @@ BotAI_Print(int type, char *fmt, ...)
  * BotAI_Trace
  */
 void
-BotAI_Trace(bsp_trace_t *bsptrace, Vec3 start, Vec3 mins, Vec3 maxs,
+BotAI_Trace(bsp_Trace *bsptrace, Vec3 start, Vec3 mins, Vec3 maxs,
 	    Vec3 end, int passent,
 	    int contentmask)
 {
-	trace_t trace;
+	Trace trace;
 
 	trap_Trace(&trace, start, mins, maxs, end, passent, contentmask);
 	/* copy the trace information */
@@ -147,9 +147,9 @@ BotAI_Trace(bsp_trace_t *bsptrace, Vec3 start, Vec3 mins, Vec3 maxs,
  * BotAI_GetClientState
  */
 int
-BotAI_GetClientState(int clientNum, playerState_t *state)
+BotAI_GetClientState(int clientNum, Playerstate *state)
 {
-	gentity_t *ent;
+	Gentity *ent;
 
 	ent = &g_entities[clientNum];
 	if(!ent->inuse)
@@ -157,7 +157,7 @@ BotAI_GetClientState(int clientNum, playerState_t *state)
 	if(!ent->client)
 		return qfalse;
 
-	memcpy(state, &ent->client->ps, sizeof(playerState_t));
+	memcpy(state, &ent->client->ps, sizeof(Playerstate));
 	return qtrue;
 }
 
@@ -165,16 +165,16 @@ BotAI_GetClientState(int clientNum, playerState_t *state)
  * BotAI_GetEntityState
  */
 int
-BotAI_GetEntityState(int entityNum, entityState_t *state)
+BotAI_GetEntityState(int entityNum, Entstate *state)
 {
-	gentity_t *ent;
+	Gentity *ent;
 
 	ent = &g_entities[entityNum];
-	memset(state, 0, sizeof(entityState_t));
+	memset(state, 0, sizeof(Entstate));
 	if(!ent->inuse) return qfalse;
 	if(!ent->r.linked) return qfalse;
 	if(ent->r.svFlags & SVF_NOCLIENT) return qfalse;
-	memcpy(state, &ent->s, sizeof(entityState_t));
+	memcpy(state, &ent->s, sizeof(Entstate));
 	return qtrue;
 }
 
@@ -182,13 +182,13 @@ BotAI_GetEntityState(int entityNum, entityState_t *state)
  * BotAI_GetSnapshotEntity
  */
 int
-BotAI_GetSnapshotEntity(int clientNum, int sequence, entityState_t *state)
+BotAI_GetSnapshotEntity(int clientNum, int sequence, Entstate *state)
 {
 	int entNum;
 
 	entNum = trap_BotGetSnapshotEntity(clientNum, sequence);
 	if(entNum == -1){
-		memset(state, 0, sizeof(entityState_t));
+		memset(state, 0, sizeof(Entstate));
 		return -1;
 	}
 
@@ -795,7 +795,7 @@ BotChangeViewAngles(bot_state_t *bs, float thinktime)
  * BotInputToUserCommand
  */
 void
-BotInputToUserCommand(bot_input_t *bi, usercmd_t *ucmd, int delta_angles[3],
+BotInputToUserCommand(bot_input_t *bi, Usrcmd *ucmd, int delta_angles[3],
 		      int time)
 {
 	Vec3	angles, forward, right;
@@ -804,7 +804,7 @@ BotInputToUserCommand(bot_input_t *bi, usercmd_t *ucmd, int delta_angles[3],
 	float	f, r, u, m;
 
 	/* clear the whole structure */
-	memset(ucmd, 0, sizeof(usercmd_t));
+	memset(ucmd, 0, sizeof(Usrcmd));
 	/* the duration for the user command in milli seconds */
 	ucmd->serverTime = time;
 	/*  */
@@ -1305,12 +1305,12 @@ BotResetState(bot_state_t *bs)
 	int	movestate, goalstate, chatstate, weaponstate;
 	bot_settings_t settings;
 	int	character;
-	playerState_t ps;	/* current player state */
+	Playerstate ps;	/* current player state */
 	float entergame_time;
 
 	/* save some things that should not be reset here */
 	memcpy(&settings, &bs->settings, sizeof(bot_settings_t));
-	memcpy(&ps, &bs->cur_ps, sizeof(playerState_t));
+	memcpy(&ps, &bs->cur_ps, sizeof(Playerstate));
 	inuse	= bs->inuse;
 	client	= bs->client;
 	entitynum = bs->entitynum;
@@ -1330,7 +1330,7 @@ BotResetState(bot_state_t *bs)
 	bs->gs	= goalstate;
 	bs->cs	= chatstate;
 	bs->ws	= weaponstate;
-	memcpy(&bs->cur_ps, &ps, sizeof(playerState_t));
+	memcpy(&bs->cur_ps, &ps, sizeof(Playerstate));
 	memcpy(&bs->settings, &settings, sizeof(bot_settings_t));
 	bs->inuse = inuse;
 	bs->client = client;
@@ -1352,7 +1352,7 @@ int
 BotAILoadMap(int restart)
 {
 	int i;
-	vmCvar_t mapname;
+	Vmcvar mapname;
 
 	if(!restart){
 		trap_Cvar_Register(&mapname, "mapname", "",
@@ -1372,7 +1372,7 @@ BotAILoadMap(int restart)
 }
 
 #ifdef MISSIONPACK
-void ProximityMine_Trigger(gentity_t *trigger, gentity_t *other, trace_t *trace);
+void ProximityMine_Trigger(Gentity *trigger, Gentity *other, Trace *trace);
 #endif
 
 /*
@@ -1382,7 +1382,7 @@ int
 BotAIStartFrame(int time)
 {
 	int i;
-	gentity_t *ent;
+	Gentity *ent;
 	bot_entitystate_t state;
 	int elapsed_time, thinktime;
 	static int	local_time;

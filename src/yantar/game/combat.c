@@ -15,9 +15,9 @@
  * ScorePlum
  */
 void
-ScorePlum(gentity_t *ent, Vec3 origin, int score)
+ScorePlum(Gentity *ent, Vec3 origin, int score)
 {
-	gentity_t *plum;
+	Gentity *plum;
 
 	plum = G_TempEntity(origin, EV_SCOREPLUM);
 	/* only send this temp entity to a single client */
@@ -34,7 +34,7 @@ ScorePlum(gentity_t *ent, Vec3 origin, int score)
  * Adds score to both the client and his team
  */
 void
-AddScore(gentity_t *ent, Vec3 origin, int score)
+AddScore(Gentity *ent, Vec3 origin, int score)
 {
 	if(!ent->client)
 		return;
@@ -57,13 +57,13 @@ AddScore(gentity_t *ent, Vec3 origin, int score)
  * Toss the weapon and powerups for the killed player
  */
 void
-TossClientItems(gentity_t *self)
+TossClientItems(Gentity *self)
 {
-	gitem_t *item;
+	Gitem *item;
 	int weapon;
 	float	angle;
 	int i;
-	gentity_t *drop;
+	Gentity *drop;
 
 	/* drop the weapon if not a gauntlet or machinegun */
 	weapon = self->s.weap[Wpri];
@@ -113,9 +113,9 @@ TossClientItems(gentity_t *self)
  * TossClientPersistantPowerups
  */
 void
-TossClientPersistantPowerups(gentity_t *ent)
+TossClientPersistantPowerups(Gentity *ent)
 {
-	gentity_t *powerup;
+	Gentity *powerup;
 
 	if(!ent->client)
 		return;
@@ -137,7 +137,7 @@ TossClientPersistantPowerups(gentity_t *ent)
  * LookAtKiller
  */
 void
-LookAtKiller(gentity_t *self, gentity_t *inflictor, gentity_t *attacker)
+LookAtKiller(Gentity *self, Gentity *inflictor, Gentity *attacker)
 {
 	Vec3 dir;
 
@@ -157,9 +157,9 @@ LookAtKiller(gentity_t *self, gentity_t *inflictor, gentity_t *attacker)
  * GibEntity
  */
 void
-GibEntity(gentity_t *self, int killer)
+GibEntity(Gentity *self, int killer)
 {
-	gentity_t *ent;
+	Gentity *ent;
 	int i;
 
 	/* if this entity still has kamikaze */
@@ -186,7 +186,7 @@ GibEntity(gentity_t *self, int killer)
  * body_die
  */
 void
-body_die(gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int damage,
+body_die(Gentity *self, Gentity *inflictor, Gentity *attacker, int damage,
 	 int meansOfDeath)
 {
 	if(self->health > GIB_HEALTH)
@@ -239,9 +239,9 @@ mod2str(meansOfDeath_t mod)
  * CheckAlmostCapture
  */
 void
-CheckAlmostCapture(gentity_t *self, gentity_t *attacker)
+CheckAlmostCapture(Gentity *self, Gentity *attacker)
 {
-	gentity_t	*ent;
+	Gentity	*ent;
 	Vec3		dir;
 	char		*classname;
 
@@ -286,9 +286,9 @@ CheckAlmostCapture(gentity_t *self, gentity_t *attacker)
  * CheckAlmostScored
  */
 void
-CheckAlmostScored(gentity_t *self, gentity_t *attacker)
+CheckAlmostScored(Gentity *self, Gentity *attacker)
 {
-	gentity_t	*ent;
+	Gentity	*ent;
 	Vec3		dir;
 	char		*classname;
 
@@ -320,11 +320,11 @@ CheckAlmostScored(gentity_t *self, gentity_t *attacker)
  * player_die
  */
 void
-player_die(gentity_t *self, gentity_t *inflictor, gentity_t *attacker,
+player_die(Gentity *self, Gentity *inflictor, Gentity *attacker,
 	   int damage,
 	   int meansOfDeath)
 {
-	gentity_t *ent;
+	Gentity *ent;
 	int	anim;
 	int	contents;
 	int	killer;
@@ -463,7 +463,7 @@ player_die(gentity_t *self, gentity_t *inflictor, gentity_t *attacker,
 	/* send updated scores to any clients that are following this one,
 	 * or they would get stale scoreboards */
 	for(i = 0; i < level.maxclients; i++){
-		gclient_t *client;
+		gClient *client;
 
 		client = &level.clients[i];
 		if(client->pers.connected != CON_CONNECTED)
@@ -551,9 +551,9 @@ player_die(gentity_t *self, gentity_t *inflictor, gentity_t *attacker,
  * CheckArmor
  */
 int
-CheckArmor(gentity_t *ent, int damage, int dflags)
+CheckArmor(Gentity *ent, int damage, int dflags)
 {
-	gclient_t *client;
+	gClient *client;
 	int	save;
 	int	count;
 
@@ -646,10 +646,10 @@ RaySphereIntersections(Vec3 origin, float radius, Vec3 point, Vec3 dir,
  */
 
 void
-G_Damage(gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
+G_Damage(Gentity *targ, Gentity *inflictor, Gentity *attacker,
 	 Vec3 dir, Vec3 point, int damage, int dflags, int mod)
 {
-	gclient_t *client;
+	gClient *client;
 	int	take;
 	int	asave;
 	int	knockback;
@@ -853,10 +853,10 @@ G_Damage(gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
  * explosions and melee attacks.
  */
 qbool
-CanDamage(gentity_t *targ, Vec3 origin)
+CanDamage(Gentity *targ, Vec3 origin)
 {
 	Vec3	dest;
-	trace_t tr;
+	Trace tr;
 	Vec3	midpoint;
 
 	/* use the midpoint of the bounds instead of the origin, because
@@ -912,11 +912,11 @@ CanDamage(gentity_t *targ, Vec3 origin)
  * G_RadiusDamage
  */
 qbool
-G_RadiusDamage(Vec3 origin, gentity_t *attacker, float damage, float radius,
-	       gentity_t *ignore, int mod)
+G_RadiusDamage(Vec3 origin, Gentity *attacker, float damage, float radius,
+	       Gentity *ignore, int mod)
 {
 	float	points, dist;
-	gentity_t *ent;
+	Gentity *ent;
 	int	entityList[MAX_GENTITIES];
 	int	numListedEntities;
 	Vec3	mins, maxs;

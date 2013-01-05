@@ -20,7 +20,7 @@ void AAS_InitAASLinkedEntities(void);
 void AAS_FreeAASLinkHeap(void);
 void AAS_FreeAASLinkedEntities(void);
 aas_face_t*AAS_AreaGroundFace(int areanum, Vec3 point);
-aas_face_t*AAS_TraceEndFace(aas_trace_t *trace);
+aas_face_t*AAS_TraceEndFace(aas_Trace *trace);
 aas_plane_t*AAS_PlaneFromNum(int planenum);
 aas_link_t*AAS_AASLinkEntity(Vec3 absmins, Vec3 absmaxs, int entnum);
 aas_link_t*AAS_LinkEntityClientBBox(Vec3 absmins, Vec3 absmaxs, int entnum,
@@ -40,7 +40,7 @@ int AAS_AreaPresenceType(int areanum);
 /* returns the presence type(s) at the given point */
 int AAS_PointPresenceType(Vec3 point);
 /* returns the result of the trace of a client bbox */
-aas_trace_t AAS_TraceClientBBox(Vec3 start, Vec3 end, int presencetype,
+aas_Trace AAS_TraceClientBBox(Vec3 start, Vec3 end, int presencetype,
 				int passent);
 /* stores the areas the trace went through and returns the number of passed areas */
 int AAS_TraceAreas(Vec3 start, Vec3 end, int *areas, Vec3 *points,

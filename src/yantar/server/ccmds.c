@@ -13,10 +13,10 @@
 /*
  * Returns the player with player id or name from Cmd_Argv(1)
  */
-static client_t *
+static Client *
 SV_GetPlayerByHandle(void)
 {
-	client_t *cl;
+	Client *cl;
 	int i;
 	char *s;
 	char	cleanName[64];
@@ -64,10 +64,10 @@ SV_GetPlayerByHandle(void)
 /*
  * Returns the player with idnum from Cmd_Argv(1)
  */
-static client_t *
+static Client *
 SV_GetPlayerByNum(void)
 {
-	client_t *cl;
+	Client *cl;
 	int i, idnum;
 	char *s;
 
@@ -176,7 +176,7 @@ static void
 SV_MapRestart_f(void)
 {
 	int i;
-	client_t *client;
+	Client *client;
 	char *denied;
 	qbool isBot;
 	int delay;
@@ -307,7 +307,7 @@ SV_MapRestart_f(void)
 static void
 SV_Kick_f(void)
 {
-	client_t *cl;
+	Client *cl;
 	int i;
 
 	/* make sure server is running */
@@ -370,7 +370,7 @@ SV_Kick_f(void)
 static void
 SV_Ban_f(void)
 {
-	client_t *cl;
+	Client *cl;
 
 	if(!com_sv_running->integer){
 		Com_Printf("Server is not running.\n");
@@ -425,7 +425,7 @@ SV_Ban_f(void)
 static void
 SV_BanNum_f(void)
 {
-	client_t *cl;
+	Client *cl;
 
 	if(!com_sv_running->integer){
 		Com_Printf("Server is not running.\n");
@@ -481,7 +481,7 @@ static void
 SV_RehashBans_f(void)
 {
 	int i, flen;
-	fileHandle_t readfrom;
+	Fhandle readfrom;
 	char	*textbuf, *curpos, *maskpos, *newlinepos, *endpos;
 	char	path[MAX_QPATH];
 
@@ -554,7 +554,7 @@ static void
 SV_WriteBans(void)
 {
 	uint i;
-	fileHandle_t writeto;
+	Fhandle writeto;
 	char	filepath[MAX_QPATH];
 
 	if(!sv_banFile->string || !*sv_banFile->string)
@@ -599,10 +599,10 @@ SV_DelBanEntryFromList(uint index)
 }
 
 /*
- * Parse a CIDR notation type string and return a netadr_t and suffix by reference
+ * Parse a CIDR notation type string and return a Netaddr and suffix by reference
  */
 static qbool
-SV_ParseCIDRNotation(netadr_t *dest, int *mask, char *adrstr)
+SV_ParseCIDRNotation(Netaddr *dest, int *mask, char *adrstr)
 {
 	char *suffix;
 
@@ -641,7 +641,7 @@ SV_AddBanToList(qbool isexception)
 {
 	char	*banstring;
 	char	addy2[NET_ADDRSTRMAXLEN];
-	netadr_t ip;
+	Netaddr ip;
 	uint index;
 	int argc;
 	int mask;
@@ -666,7 +666,7 @@ SV_AddBanToList(qbool isexception)
 			return;
 		}
 	}else{
-		client_t *cl;
+		Client *cl;
 
 		/* client num. */
 		if(!com_sv_running->integer){
@@ -769,7 +769,7 @@ SV_DelBanFromList(qbool isexception)
 {
 	uint index, count = 0, todel;
 	int mask;
-	netadr_t ip;
+	Netaddr ip;
 	char *banstring;
 
 	if(Cmd_Argc() != 2){
@@ -905,7 +905,7 @@ SV_ExceptDel_f(void)
 static void
 SV_KickNum_f(void)
 {
-	client_t *cl;
+	Client *cl;
 
 	if(!com_sv_running->integer){
 		Com_Printf("Server is not running.\n");
@@ -933,8 +933,8 @@ static void
 SV_Status_f(void)
 {
 	int i, j, l;
-	client_t *cl;
-	playerState_t *ps;
+	Client *cl;
+	Playerstate *ps;
 	const char *s;
 	int ping;
 
@@ -1021,7 +1021,7 @@ SV_ConTell_f(void)
 {
 	char *p;
 	char text[1024];
-	client_t *cl;
+	Client *cl;
 	
 	if(!com_sv_running->integer){
 		Com_Printf("Server is not running.\n");
@@ -1079,7 +1079,7 @@ SV_Systeminfo_f(void)
 static void
 SV_DumpUser_f(void)
 {
-	client_t *cl;
+	Client *cl;
 
 	if(!com_sv_running->integer){
 		Com_Printf("Server is not running.\n");

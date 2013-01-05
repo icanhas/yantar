@@ -20,14 +20,14 @@
  */
 #define MAX_CLIP_PLANES 5
 qbool
-PM_SlideMove(pmove_t *pm, pml_t *pml, qbool gravity)
+PM_SlideMove(Pmove *pm, Pml *pml, qbool gravity)
 {
 	int i, j, k, bumpcount, numbumps, numplanes;
 	Vec3	dir;
 	float	d, time_left, into;
 	Vec3	planes[MAX_CLIP_PLANES];
 	Vec3	primal_velocity, clipVelocity;
-	trace_t trace;
+	Trace trace;
 	Vec3	end, endVelocity, endClipVelocity;
 
 	numbumps = 4;
@@ -187,11 +187,11 @@ PM_SlideMove(pmove_t *pm, pml_t *pml, qbool gravity)
 }
 
 void
-PM_StepSlideMove(pmove_t *pm, pml_t *pml, qbool gravity)
+PM_StepSlideMove(Pmove *pm, Pml *pml, qbool gravity)
 {
 	Vec3	start_o, start_v;
 /*	Vec3		down_o, down_v; */
-	trace_t trace;
+	Trace trace;
 /* float		down_dist, up_dist;
  * Vec3		delta, delta2; */
 	Vec3	up, down;

@@ -15,8 +15,8 @@
  * given entity.  If the entity is a bsp model, the headnode will
  * be returned, otherwise a custom box tree will be constructed.
  */
-clipHandle_t
-SV_ClipHandleForEntity(const sharedEntity_t *ent)
+Cliphandle
+SV_ClipHandleForEntity(const Sharedent *ent)
 {
 	if(ent->r.bmodel)
 		/* explicit hulls in the BSP model */
@@ -46,7 +46,7 @@ typedef struct worldSector_s {
 	int	axis;	/* -1 = leaf node */
 	float	dist;
 	struct worldSector_s	*children[2];
-	svEntity_t		*entities;
+	Svent			*entities;
 } worldSector_t;
 
 #define AREA_DEPTH	4
@@ -64,7 +64,7 @@ SV_SectorList_f(void)
 {
 	int i, c;
 	worldSector_t	*sec;
-	svEntity_t	*ent;
+	Svent		*ent;
 
 	for(i = 0; i < AREA_NODES; i++){
 		sec = &sv_worldSectors[i];
@@ -125,7 +125,7 @@ SV_CreateworldSector(int depth, Vec3 mins, Vec3 maxs)
 void
 SV_ClearWorld(void)
 {
-	clipHandle_t h;
+	Cliphandle h;
 	Vec3 mins, maxs;
 
 	Q_Memset(sv_worldSectors, 0, sizeof(sv_worldSectors));
@@ -143,10 +143,10 @@ SV_ClearWorld(void)
  *
  */
 void
-SV_UnlinkEntity(sharedEntity_t *gEnt)
+SV_UnlinkEntity(Sharedent *gEnt)
 {
-	svEntity_t	*ent;
-	svEntity_t	*scan;
+	Svent		*ent;
+	Svent		*scan;
 	worldSector_t *ws;
 
 	ent = SV_SvEntityForGentity(gEnt);
@@ -180,7 +180,7 @@ SV_UnlinkEntity(sharedEntity_t *gEnt)
  */
 #define MAX_TOTAL_ENT_LEAFS 128
 void
-SV_LinkEntity(sharedEntity_t *gEnt)
+SV_LinkEntity(Sharedent *gEnt)
 {
 	worldSector_t *node;
 	int	leafs[MAX_TOTAL_ENT_LEAFS];
@@ -190,14 +190,14 @@ SV_LinkEntity(sharedEntity_t *gEnt)
 	int	area;
 	int	lastLeaf;
 	float *origin, *angles;
-	svEntity_t *ent;
+	Svent *ent;
 
 	ent = SV_SvEntityForGentity(gEnt);
 
 	if(ent->worldSector)
 		SV_UnlinkEntity(gEnt);	/* unlink from old position */
 
-	/* encode the size into the entityState_t for client prediction */
+	/* encode the size into the Entstate for client prediction */
 	if(gEnt->r.bmodel)
 		gEnt->s.solid = SOLID_BMODEL;	/* a solid_box will never create this value */
 	else if(gEnt->r.contents & (CONTENTS_SOLID | CONTENTS_BODY)){
@@ -353,8 +353,8 @@ typedef struct {
 static void
 SV_AreaEntities_r(worldSector_t *node, areaParms_t *ap)
 {
-	svEntity_t *check, *next;
-	sharedEntity_t *gcheck;
+	Svent *check, *next;
+	Sharedent *gcheck;
 
 	for(check = node->entities; check; check = next){
 		next = check->nextEntityInWorldSector;
@@ -419,7 +419,7 @@ typedef struct {
 	const float	*maxs;	/* size of the moving object */
 	const float	*start;
 	Vec3		end;
-	trace_t		trace;
+	Trace		trace;
 	int		passEntityNum;
 	int		contentmask;
 	int		capsule;
@@ -431,18 +431,18 @@ typedef struct {
  *
  */
 void
-SV_ClipToEntity(trace_t *trace, const Vec3 start, const Vec3 mins,
+SV_ClipToEntity(Trace *trace, const Vec3 start, const Vec3 mins,
 		const Vec3 maxs, const Vec3 end, int entityNum,
 		int contentmask,
 		int capsule)
 {
-	sharedEntity_t	*touch;
-	clipHandle_t	clipHandle;
+	Sharedent	*touch;
+	Cliphandle	clipHandle;
 	float *origin, *angles;
 
 	touch = SV_GentityNum(entityNum);
 
-	Q_Memset(trace, 0, sizeof(trace_t));
+	Q_Memset(trace, 0, sizeof(Trace));
 
 	/* if it doesn't have any brushes of a type we
 	 * are looking for, ignore it */
@@ -478,10 +478,10 @@ SV_ClipMoveToEntities(moveclip_t *clip)
 {
 	int	i, num;
 	int	touchlist[MAX_GENTITIES];
-	sharedEntity_t *touch;
+	Sharedent *touch;
 	int	passOwnerNum;
-	trace_t trace;
-	clipHandle_t clipHandle;
+	Trace trace;
+	Cliphandle clipHandle;
 	float	*origin, *angles;
 
 	num = SV_AreaEntities(clip->boxmins, clip->boxmaxs, touchlist,
@@ -560,7 +560,7 @@ SV_ClipMoveToEntities(moveclip_t *clip)
  * passEntityNum and entities owned by passEntityNum are explicitly not checked.
  */
 void
-SV_Trace(trace_t *results, const Vec3 start, Vec3 mins, Vec3 maxs,
+SV_Trace(Trace *results, const Vec3 start, Vec3 mins, Vec3 maxs,
 	 const Vec3 end, int passEntityNum, int contentmask,
 	 int capsule)
 {
@@ -621,10 +621,10 @@ int
 SV_PointContents(const Vec3 p, int passEntityNum)
 {
 	int	touch[MAX_GENTITIES];
-	sharedEntity_t *hit;
+	Sharedent *hit;
 	int	i, num;
 	int	contents, c2;
-	clipHandle_t clipHandle;
+	Cliphandle clipHandle;
 	float *angles;
 
 	/* get base contents from world */

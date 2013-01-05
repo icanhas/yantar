@@ -551,7 +551,7 @@ static void
 RB_SurfaceBeam(void)
 {
 #define NUM_BEAM_SEGS 6
-	refEntity_t *e;
+	Refent *e;
 	int i;
 	Vec3	perpvec;
 	Vec3	direction, normalized_direction;
@@ -759,7 +759,7 @@ DoRailDiscs(int numSegs, const Vec3 start, const Vec3 dir, const Vec3 right, con
 static void
 RB_SurfaceRailRings(void)
 {
-	refEntity_t *e;
+	Refent *e;
 	int	numSegs;
 	int	len;
 	Vec3	vec;
@@ -791,7 +791,7 @@ RB_SurfaceRailRings(void)
 static void
 RB_SurfaceRailCore(void)
 {
-	refEntity_t *e;
+	Refent *e;
 	int len;
 	Vec3	right;
 	Vec3	vec;
@@ -823,7 +823,7 @@ RB_SurfaceRailCore(void)
 static void
 RB_SurfaceLightningBolt(void)
 {
-	refEntity_t *e;
+	Refent *e;
 	int len;
 	Vec3	right;
 	Vec3	vec;
@@ -1602,7 +1602,7 @@ RB_SurfaceVBOMDVMesh(srfVBOMDVMesh_t * surface)
 {
 	mdvModel_t *mdvModel;
 	mdvSurface_t *mdvSurface;
-	refEntity_t *refEnt;
+	Refent *refEnt;
 
 	GLimp_LogComment("--- RB_SurfaceVBOMDVMesh ---\n");
 

@@ -19,20 +19,20 @@
 
 #define OVERCLIP	1.001f
 
- typedef struct pml_t pml_t;
+ typedef struct Pml Pml;
  
 /* 
  * all of the locals will be zeroed before each
  * pmove, just to make totally sure we don't have
  * any differences when running on client or server 
  */
-struct pml_t {
+struct Pml {
 	Vec3		forward, right, up;
 	float		frametime;
 	int		msec;
 	qbool		walking;
 	qbool		groundPlane;
-	trace_t		groundTrace;
+	Trace		groundTrace;
 	float		impactSpeed;
 	Vec3		previous_origin;
 	Vec3		previous_velocity;
@@ -56,8 +56,8 @@ extern float	pm_flightfriction;
 extern uint	cnt;
 
 void	PM_ClipVelocity(Vec3 in, Vec3 normal, Vec3 out, float overbounce);
-void	PM_AddTouchEnt(pmove_t*, int);
-void	PM_AddEvent(pmove_t*, pml_t*, int);
+void	PM_AddTouchEnt(Pmove*, int);
+void	PM_AddEvent(Pmove*, Pml*, int);
 
-qbool	PM_SlideMove(pmove_t*, pml_t*, qbool);
-void		PM_StepSlideMove(pmove_t*, pml_t*, qbool gravity);
+qbool	PM_SlideMove(Pmove*, Pml*, qbool);
+void		PM_StepSlideMove(Pmove*, Pml*, qbool gravity);

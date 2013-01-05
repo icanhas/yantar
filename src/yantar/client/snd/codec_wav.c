@@ -10,7 +10,7 @@
 #include "codec.h"
 
 static int
-FGetLittleLong(fileHandle_t f)
+FGetLittleLong(Fhandle f)
 {
 	int v;
 
@@ -19,7 +19,7 @@ FGetLittleLong(fileHandle_t f)
 }
 
 static short
-FGetLittleShort(fileHandle_t f)
+FGetLittleShort(Fhandle f)
 {
 	short v;
 
@@ -28,7 +28,7 @@ FGetLittleShort(fileHandle_t f)
 }
 
 static int
-S_ReadChunkInfo(fileHandle_t f, char *name)
+S_ReadChunkInfo(Fhandle f, char *name)
 {
 	int len, r;
 
@@ -47,7 +47,7 @@ S_ReadChunkInfo(fileHandle_t f, char *name)
 
 /* Returns the length of the data in the chunk, or -1 if not found */
 static int
-S_FindRIFFChunk(fileHandle_t f, char *chunk)
+S_FindRIFFChunk(Fhandle f, char *chunk)
 {
 	char	name[5];
 	int	len;
@@ -80,7 +80,7 @@ S_ByteSwapRawSamples(int samples, int width, int s_channels, const byte *data)
 }
 
 static qbool
-S_ReadRIFFHeader(fileHandle_t file, snd_info_t *info)
+S_ReadRIFFHeader(Fhandle file, snd_info_t *info)
 {
 	char	dump[16];
 	int	bits;
@@ -124,7 +124,7 @@ S_ReadRIFFHeader(fileHandle_t file, snd_info_t *info)
 	return qtrue;
 }
 
-snd_codec_t wav_codec =
+Sndcodec wav_codec =
 {
 	"wav",
 	S_WAV_CodecLoad,
@@ -137,7 +137,7 @@ snd_codec_t wav_codec =
 void *
 S_WAV_CodecLoad(const char *filename, snd_info_t *info)
 {
-	fileHandle_t file;
+	Fhandle file;
 	void *buffer;
 
 	FS_FOpenFileRead(filename, &file, qtrue);
@@ -166,10 +166,10 @@ S_WAV_CodecLoad(const char *filename, snd_info_t *info)
 	return buffer;
 }
 
-snd_stream_t *
+Sndstream *
 S_WAV_CodecOpenStream(const char *filename)
 {
-	snd_stream_t *rv;
+	Sndstream *rv;
 
 	rv = S_CodecUtilOpen(filename, &wav_codec);
 	if(!rv)
@@ -182,13 +182,13 @@ S_WAV_CodecOpenStream(const char *filename)
 }
 
 void
-S_WAV_CodecCloseStream(snd_stream_t *stream)
+S_WAV_CodecCloseStream(Sndstream *stream)
 {
 	S_CodecUtilClose(&stream);
 }
 
 int
-S_WAV_CodecReadStream(snd_stream_t *stream, int bytes, void *buffer)
+S_WAV_CodecReadStream(Sndstream *stream, int bytes, void *buffer)
 {
 	int	remaining = stream->info.size - stream->pos;
 	int	samples;

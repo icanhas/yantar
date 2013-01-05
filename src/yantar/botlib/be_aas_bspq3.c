@@ -122,11 +122,11 @@ PrintContents(int contents)
  * Returns:					-
  * Changes Globals:		-
  * =========================================================================== */
-bsp_trace_t
+bsp_Trace
 AAS_Trace(Vec3 start, Vec3 mins, Vec3 maxs, Vec3 end, int passent,
 	  int contentmask)
 {
-	bsp_trace_t bsptrace;
+	bsp_Trace bsptrace;
 	botimport.Trace(&bsptrace, start, mins, maxs, end, passent, contentmask);
 	return bsptrace;
 }	/* end of the function AAS_Trace */
@@ -151,14 +151,14 @@ AAS_PointContents(Vec3 point)
 qbool
 AAS_EntityCollision(int entnum,
 		    Vec3 start, Vec3 boxmins, Vec3 boxmaxs, Vec3 end,
-		    int contentmask, bsp_trace_t *trace)
+		    int contentmask, bsp_Trace *trace)
 {
-	bsp_trace_t enttrace;
+	bsp_Trace enttrace;
 
 	botimport.EntityTrace(&enttrace, start, boxmins, boxmaxs, end, entnum,
 		contentmask);
 	if(enttrace.fraction < trace->fraction){
-		Q_Memcpy(trace, &enttrace, sizeof(bsp_trace_t));
+		Q_Memcpy(trace, &enttrace, sizeof(bsp_Trace));
 		return qtrue;
 	}
 	return qfalse;

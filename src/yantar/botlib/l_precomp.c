@@ -149,9 +149,9 @@ SourceWarning(source_t *source, char *str, ...)
 void
 PC_PushIndent(source_t *source, int type, int skip)
 {
-	indent_t *indent;
+	Indent *indent;
 
-	indent = (indent_t*)GetMemory(sizeof(indent_t));
+	indent = (Indent*)GetMemory(sizeof(Indent));
 	indent->type = type;
 	indent->script	= source->scriptstack;
 	indent->skip	= (skip != 0);
@@ -163,7 +163,7 @@ PC_PushIndent(source_t *source, int type, int skip)
 void
 PC_PopIndent(source_t *source, int *type, int *skip)
 {
-	indent_t *indent;
+	Indent *indent;
 
 	*type	= 0;
 	*skip	= 0;
@@ -2563,7 +2563,7 @@ FreeSource(source_t *source)
 	script_t *script;
 	token_t *token;
 	define_t *define;
-	indent_t *indent;
+	Indent *indent;
 	int i;
 
 	/* PC_PrintDefineHashTable(source->definehash);

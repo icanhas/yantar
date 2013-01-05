@@ -27,7 +27,7 @@ dllEntry(intptr_t (QDECL  *syscallptr)(intptr_t arg,...))
 int
 PASSFLOAT(float x)
 {
-	floatint_t fi;
+	Flint fi;
 	fi.f = x;
 	return fi.i;
 }
@@ -53,7 +53,7 @@ trap_Milliseconds(void)
 }
 
 void
-trap_Cvar_Register(vmCvar_t *vmCvar, const char *varName,
+trap_Cvar_Register(Vmcvar *vmCvar, const char *varName,
 		   const char *defaultValue,
 		   int flags)
 {
@@ -61,7 +61,7 @@ trap_Cvar_Register(vmCvar_t *vmCvar, const char *varName,
 }
 
 void
-trap_Cvar_Update(vmCvar_t *vmCvar)
+trap_Cvar_Update(Vmcvar *vmCvar)
 {
 	syscall(CG_CVAR_UPDATE, vmCvar);
 }
@@ -97,31 +97,31 @@ trap_Args(char *buffer, int bufferLength)
 }
 
 int
-trap_FS_FOpenFile(const char *qpath, fileHandle_t *f, fsMode_t mode)
+trap_FS_FOpenFile(const char *qpath, Fhandle *f, Fsmode mode)
 {
 	return syscall(CG_FS_FOPENFILE, qpath, f, mode);
 }
 
 void
-trap_FS_Read(void *buffer, int len, fileHandle_t f)
+trap_FS_Read(void *buffer, int len, Fhandle f)
 {
 	syscall(CG_FS_READ, buffer, len, f);
 }
 
 void
-trap_FS_Write(const void *buffer, int len, fileHandle_t f)
+trap_FS_Write(const void *buffer, int len, Fhandle f)
 {
 	syscall(CG_FS_WRITE, buffer, len, f);
 }
 
 void
-trap_FS_FCloseFile(fileHandle_t f)
+trap_FS_FCloseFile(Fhandle f)
 {
 	syscall(CG_FS_FCLOSEFILE, f);
 }
 
 int
-trap_FS_Seek(fileHandle_t f, long offset, int origin)
+trap_FS_Seek(Fhandle f, long offset, int origin)
 {
 	return syscall(CG_FS_SEEK, f, offset, origin);
 }
@@ -168,32 +168,32 @@ trap_CM_NumInlineModels(void)
 	return syscall(CG_CM_NUMINLINEMODELS);
 }
 
-clipHandle_t
+Cliphandle
 trap_CM_InlineModel(int index)
 {
 	return syscall(CG_CM_INLINEMODEL, index);
 }
 
-clipHandle_t
+Cliphandle
 trap_CM_TempBoxModel(const Vec3 mins, const Vec3 maxs)
 {
 	return syscall(CG_CM_TEMPBOXMODEL, mins, maxs);
 }
 
-clipHandle_t
+Cliphandle
 trap_CM_TempCapsuleModel(const Vec3 mins, const Vec3 maxs)
 {
 	return syscall(CG_CM_TEMPCAPSULEMODEL, mins, maxs);
 }
 
 int
-trap_CM_PointContents(const Vec3 p, clipHandle_t model)
+trap_CM_PointContents(const Vec3 p, Cliphandle model)
 {
 	return syscall(CG_CM_POINTCONTENTS, p, model);
 }
 
 int
-trap_CM_TransformedPointContents(const Vec3 p, clipHandle_t model,
+trap_CM_TransformedPointContents(const Vec3 p, Cliphandle model,
 				 const Vec3 origin,
 				 const Vec3 angles)
 {
@@ -201,28 +201,28 @@ trap_CM_TransformedPointContents(const Vec3 p, clipHandle_t model,
 }
 
 void
-trap_CM_BoxTrace(trace_t *results, const Vec3 start, const Vec3 end,
+trap_CM_BoxTrace(Trace *results, const Vec3 start, const Vec3 end,
 		 const Vec3 mins, const Vec3 maxs,
-		 clipHandle_t model, int brushmask)
+		 Cliphandle model, int brushmask)
 {
 	syscall(CG_CM_BOXTRACE, results, start, end, mins, maxs, model,
 		brushmask);
 }
 
 void
-trap_CM_CapsuleTrace(trace_t *results, const Vec3 start, const Vec3 end,
+trap_CM_CapsuleTrace(Trace *results, const Vec3 start, const Vec3 end,
 		     const Vec3 mins, const Vec3 maxs,
-		     clipHandle_t model, int brushmask)
+		     Cliphandle model, int brushmask)
 {
 	syscall(CG_CM_CAPSULETRACE, results, start, end, mins, maxs, model,
 		brushmask);
 }
 
 void
-trap_CM_TransformedBoxTrace(trace_t *results, const Vec3 start,
+trap_CM_TransformedBoxTrace(Trace *results, const Vec3 start,
 			    const Vec3 end,
 			    const Vec3 mins, const Vec3 maxs,
-			    clipHandle_t model, int brushmask,
+			    Cliphandle model, int brushmask,
 			    const Vec3 origin,
 			    const Vec3 angles)
 {
@@ -232,10 +232,10 @@ trap_CM_TransformedBoxTrace(trace_t *results, const Vec3 start,
 }
 
 void
-trap_CM_TransformedCapsuleTrace(trace_t *results, const Vec3 start,
+trap_CM_TransformedCapsuleTrace(Trace *results, const Vec3 start,
 				const Vec3 end,
 				const Vec3 mins, const Vec3 maxs,
-				clipHandle_t model, int brushmask,
+				Cliphandle model, int brushmask,
 				const Vec3 origin,
 				const Vec3 angles)
 {
@@ -248,7 +248,7 @@ int
 trap_CM_MarkFragments(int numPoints, const Vec3 *points,
 		      const Vec3 projection,
 		      int maxPoints, Vec3 pointBuffer,
-		      int maxFragments, markFragment_t *fragmentBuffer)
+		      int maxFragments, Markfrag *fragmentBuffer)
 {
 	return syscall(CG_CM_MARKFRAGMENTS, numPoints, points, projection,
 		maxPoints, pointBuffer, maxFragments,
@@ -256,13 +256,13 @@ trap_CM_MarkFragments(int numPoints, const Vec3 *points,
 }
 
 void
-trap_S_StartSound(Vec3 origin, int entityNum, int entchannel, sfxHandle_t sfx)
+trap_S_StartSound(Vec3 origin, int entityNum, int entchannel, Sfxhandle sfx)
 {
 	syscall(CG_S_STARTSOUND, origin, entityNum, entchannel, sfx);
 }
 
 void
-trap_S_StartLocalSound(sfxHandle_t sfx, int channelNum)
+trap_S_StartLocalSound(Sfxhandle sfx, int channelNum)
 {
 	syscall(CG_S_STARTLOCALSOUND, sfx, channelNum);
 }
@@ -275,7 +275,7 @@ trap_S_ClearLoopingSounds(qbool killall)
 
 void
 trap_S_AddLoopingSound(int entityNum, const Vec3 origin, const Vec3 velocity,
-		       sfxHandle_t sfx)
+		       Sfxhandle sfx)
 {
 	syscall(CG_S_ADDLOOPINGSOUND, entityNum, origin, velocity, sfx);
 }
@@ -283,7 +283,7 @@ trap_S_AddLoopingSound(int entityNum, const Vec3 origin, const Vec3 velocity,
 void
 trap_S_AddRealLoopingSound(int entityNum, const Vec3 origin,
 			   const Vec3 velocity,
-			   sfxHandle_t sfx)
+			   Sfxhandle sfx)
 {
 	syscall(CG_S_ADDREALLOOPINGSOUND, entityNum, origin, velocity, sfx);
 }
@@ -307,7 +307,7 @@ trap_S_Respatialize(int entityNum, const Vec3 origin, Vec3 axis[3],
 	syscall(CG_S_RESPATIALIZE, entityNum, origin, axis, inwater);
 }
 
-sfxHandle_t
+Sfxhandle
 trap_S_RegisterSound(const char *sample, qbool compressed)
 {
 	return syscall(CG_S_REGISTERSOUND, sample, compressed);
@@ -325,32 +325,32 @@ trap_R_LoadWorldMap(const char *mapname)
 	syscall(CG_R_LOADWORLDMAP, mapname);
 }
 
-qhandle_t
+Handle
 trap_R_RegisterModel(const char *name)
 {
 	return syscall(CG_R_REGISTERMODEL, name);
 }
 
-qhandle_t
+Handle
 trap_R_RegisterSkin(const char *name)
 {
 	return syscall(CG_R_REGISTERSKIN, name);
 }
 
-qhandle_t
+Handle
 trap_R_RegisterShader(const char *name)
 {
 	return syscall(CG_R_REGISTERSHADER, name);
 }
 
-qhandle_t
+Handle
 trap_R_RegisterShaderNoMip(const char *name)
 {
 	return syscall(CG_R_REGISTERSHADERNOMIP, name);
 }
 
 void
-trap_R_RegisterFont(const char *fontName, int pointSize, fontInfo_t *font)
+trap_R_RegisterFont(const char *fontName, int pointSize, Fontinfo *font)
 {
 	syscall(CG_R_REGISTERFONT, fontName, pointSize, font);
 }
@@ -362,19 +362,19 @@ trap_R_ClearScene(void)
 }
 
 void
-trap_R_AddRefEntityToScene(const refEntity_t *re)
+trap_R_AddRefEntityToScene(const Refent *re)
 {
 	syscall(CG_R_ADDREFENTITYTOSCENE, re);
 }
 
 void
-trap_R_AddPolyToScene(qhandle_t hShader, int numVerts, const polyVert_t *verts)
+trap_R_AddPolyToScene(Handle hShader, int numVerts, const polyVert_t *verts)
 {
 	syscall(CG_R_ADDPOLYTOSCENE, hShader, numVerts, verts);
 }
 
 void
-trap_R_AddPolysToScene(qhandle_t hShader, int numVerts, const polyVert_t *verts,
+trap_R_AddPolysToScene(Handle hShader, int numVerts, const polyVert_t *verts,
 		       int num)
 {
 	syscall(CG_R_ADDPOLYSTOSCENE, hShader, numVerts, verts, num);
@@ -419,7 +419,7 @@ trap_R_SetColor(const float *rgba)
 
 void
 trap_R_DrawStretchPic(float x, float y, float w, float h,
-		      float s1, float t1, float s2, float t2, qhandle_t hShader)
+		      float s1, float t1, float s2, float t2, Handle hShader)
 {
 	syscall(CG_R_DRAWSTRETCHPIC, PASSFLOAT(x), PASSFLOAT(y), PASSFLOAT(
 			w), PASSFLOAT(h), PASSFLOAT(s1), PASSFLOAT(
@@ -428,13 +428,13 @@ trap_R_DrawStretchPic(float x, float y, float w, float h,
 }
 
 void
-trap_R_ModelBounds(clipHandle_t model, Vec3 mins, Vec3 maxs)
+trap_R_ModelBounds(Cliphandle model, Vec3 mins, Vec3 maxs)
 {
 	syscall(CG_R_MODELBOUNDS, model, mins, maxs);
 }
 
 int
-trap_R_LerpTag(orientation_t *tag, clipHandle_t mod, int startFrame,
+trap_R_LerpTag(Orient *tag, Cliphandle mod, int startFrame,
 	       int endFrame,
 	       float frac,
 	       const char *tagName)
@@ -451,13 +451,13 @@ trap_R_RemapShader(const char *oldShader, const char *newShader,
 }
 
 void
-trap_GetGlconfig(glconfig_t *glconfig)
+trap_GetGlconfig(Glconfig *glconfig)
 {
 	syscall(CG_GETGLCONFIG, glconfig);
 }
 
 void
-trap_GetGameState(gameState_t *gamestate)
+trap_GetGameState(Gamestate *gamestate)
 {
 	syscall(CG_GETGAMESTATE, gamestate);
 }
@@ -469,7 +469,7 @@ trap_GetCurrentSnapshotNumber(int *snapshotNumber, int *serverTime)
 }
 
 qbool
-trap_GetSnapshot(int snapshotNumber, snapshot_t *snapshot)
+trap_GetSnapshot(int snapshotNumber, Snap *snapshot)
 {
 	return syscall(CG_GETSNAPSHOT, snapshotNumber, snapshot);
 }
@@ -487,7 +487,7 @@ trap_GetCurrentCmdNumber(void)
 }
 
 qbool
-trap_GetUserCmd(int cmdNumber, usercmd_t *ucmd)
+trap_GetUserCmd(int cmdNumber, Usrcmd *ucmd)
 {
 	return syscall(CG_GETUSERCMD, cmdNumber, ucmd);
 }

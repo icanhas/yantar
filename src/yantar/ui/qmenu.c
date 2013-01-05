@@ -15,16 +15,16 @@
 #include "ui.h"
 #include "local.h"
 
-sfxHandle_t	menu_in_sound;
-sfxHandle_t	menu_move_sound;
-sfxHandle_t	menu_out_sound;
-sfxHandle_t	menu_buzz_sound;
-sfxHandle_t	menu_null_sound;
-sfxHandle_t	weaponChangeSound;
+Sfxhandle	menu_in_sound;
+Sfxhandle	menu_move_sound;
+Sfxhandle	menu_out_sound;
+Sfxhandle	menu_buzz_sound;
+Sfxhandle	menu_null_sound;
+Sfxhandle	weaponChangeSound;
 
-static qhandle_t	sliderBar;
-static qhandle_t	sliderButton_0;
-static qhandle_t	sliderButton_1;
+static Handle		sliderBar;
+static Handle		sliderButton_0;
+static Handle		sliderButton_1;
 
 Vec4	menu_text_color = {0.0f, 0.0f, 0.0f, 1.0f};
 Vec4	menu_dim_color = {0.0f, 0.0f, 0.0f, 0.75f};
@@ -52,17 +52,17 @@ static void     Action_Draw(menuaction_s *a);
 /* radio button widget */
 static void     RadioButton_Init(menuradiobutton_s *rb);
 static void     RadioButton_Draw(menuradiobutton_s *rb);
-static sfxHandle_t RadioButton_Key(menuradiobutton_s *rb, int key);
+static Sfxhandle RadioButton_Key(menuradiobutton_s *rb, int key);
 
 /* slider widget */
 static void Slider_Init(menuslider_s *s);
-static sfxHandle_t Slider_Key(menuslider_s *s, int key);
+static Sfxhandle Slider_Key(menuslider_s *s, int key);
 static void     Slider_Draw(menuslider_s *s);
 
 /* spin control widget */
 static void     SpinControl_Init(menulist_s *s);
 static void     SpinControl_Draw(menulist_s *s);
-static sfxHandle_t SpinControl_Key(menulist_s *l, int key);
+static Sfxhandle SpinControl_Key(menulist_s *l, int key);
 
 /* text widget */
 static void Text_Init(menutext_s *b);
@@ -70,7 +70,7 @@ static void Text_Draw(menutext_s *b);
 
 /* scrolllist widget */
 static void     ScrollList_Init(menulist_s *l);
-sfxHandle_t ScrollList_Key(menulist_s *l, int key);
+Sfxhandle ScrollList_Key(menulist_s *l, int key);
 
 /* proportional text widget */
 static void PText_Init(menutext_s *b);
@@ -396,7 +396,7 @@ RadioButton_Init(menuradiobutton_s *rb)
 /*
  * RadioButton_Key
  */
-static sfxHandle_t
+static Sfxhandle
 RadioButton_Key(menuradiobutton_s *rb, int key)
 {
 	switch(key){
@@ -501,10 +501,10 @@ Slider_Init(menuslider_s *s)
 /*
  * Slider_Key
  */
-static sfxHandle_t
+static Sfxhandle
 Slider_Key(menuslider_s *s, int key)
 {
-	sfxHandle_t sound;
+	Sfxhandle sound;
 	int	x;
 	int	oldvalue;
 
@@ -723,10 +723,10 @@ SpinControl_Init(menulist_s *s)
 /*
  * SpinControl_Key
  */
-static sfxHandle_t
+static Sfxhandle
 SpinControl_Key(menulist_s *s, int key)
 {
-	sfxHandle_t sound;
+	Sfxhandle sound;
 
 	sound = 0;
 	switch(key){
@@ -834,7 +834,7 @@ ScrollList_Init(menulist_s *l)
 /*
  * ScrollList_Key
  */
-sfxHandle_t
+Sfxhandle
 ScrollList_Key(menulist_s *l, int key)
 {
 	int	x;
@@ -1423,7 +1423,7 @@ Menu_ItemAtCursor(menuframework_s *m)
 /*
  * Menu_ActivateItem
  */
-sfxHandle_t
+Sfxhandle
 Menu_ActivateItem(menuframework_s *s, menucommon_s* item)
 {
 	if(item->callback){
@@ -1438,10 +1438,10 @@ Menu_ActivateItem(menuframework_s *s, menucommon_s* item)
 /*
  * Menu_DefaultKey
  */
-sfxHandle_t
+Sfxhandle
 Menu_DefaultKey(menuframework_s *m, int key)
 {
-	sfxHandle_t sound = 0;
+	Sfxhandle sound = 0;
 	menucommon_s *item;
 	int cursor_prev;
 

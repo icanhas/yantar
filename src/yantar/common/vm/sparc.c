@@ -495,7 +495,7 @@ static const char *opnames[256] = {
 };
 
 static void
-VM_Destroy_Compiled(vm_t *vm)
+VM_Destroy_Compiled(Vm *vm)
 {
 	if(vm->codeBase)
 		if(munmap(vm->codeBase, vm->codeLength))
@@ -712,7 +712,7 @@ ErrJump(void)
 }
 
 static void
-jump_insn_append(vm_t *vm, struct func_info * const fp, enum sparc_iname iname,
+jump_insn_append(Vm *vm, struct func_info * const fp, enum sparc_iname iname,
 		 int dest)
 {
 	struct jump_insn *jp = Z_Malloc(sizeof(*jp));
@@ -756,7 +756,7 @@ end_emit(struct func_info * const fp)
 }
 
 static void
-emit_jump(vm_t *vm, struct func_info * const fp, enum sparc_iname iname,
+emit_jump(Vm *vm, struct func_info * const fp, enum sparc_iname iname,
 	  int dest)
 {
 	end_emit(fp);
@@ -814,7 +814,7 @@ analyze_function(struct func_info * const fp)
 static int
 asmcall(int call, int pstack)
 {
-	vm_t	*savedVM = currentVM;
+	Vm	*savedVM = currentVM;
 	int	i, ret;
 
 	currentVM->programStack = pstack - 4;
@@ -889,7 +889,7 @@ do_emit_const(struct func_info * const fp, struct src_insn *sp)
 	} while(0)
 
 static void
-compile_one_insn(vm_t *vm, struct func_info * const fp, struct src_insn *sp)
+compile_one_insn(Vm *vm, struct func_info * const fp, struct src_insn *sp)
 {
 	start_emit(fp, sp->i_count);
 
@@ -1390,7 +1390,7 @@ free_source_insns(struct func_info * const fp)
 }
 
 static void
-compile_function(vm_t *vm, struct func_info * const fp)
+compile_function(Vm *vm, struct func_info * const fp)
 {
 	struct src_insn *sp;
 
@@ -1416,9 +1416,9 @@ compile_function(vm_t *vm, struct func_info * const fp)
  * those fixed globals across the call.
  */
 static void
-emit_vm_thunk(struct func_info * const fp)
+emit_Vmhunk(struct func_info * const fp)
 {
-	/* int vm_thunk(void *vmdata, int programstack, void *database, int datamask) */
+	/* int Vmhunk(void *vmdata, int programstack, void *database, int datamask) */
 	start_emit(fp, THUNK_ICOUNT);
 
 	in(OR, G0, O0, rVMDATA);
@@ -1453,7 +1453,7 @@ emit_vm_thunk(struct func_info * const fp)
 }
 
 static void
-sparc_compute_code(vm_t *vm, struct func_info * const fp)
+sparc_compute_code(Vm *vm, struct func_info * const fp)
 {
 	struct dst_insn *dp = fp->dst_first;
 	unsigned int	*code_now, *code_begin;
@@ -1576,7 +1576,7 @@ sparc_compute_code(vm_t *vm, struct func_info * const fp)
 }
 
 void
-VM_Compile(vm_t *vm, vmHeader_t *header)
+VM_Compile(Vm *vm, vmHeader_t *header)
 {
 	struct func_info fi;
 	unsigned char *code;
@@ -1598,7 +1598,7 @@ VM_Compile(vm_t *vm, vmHeader_t *header)
 
 	vm->compiled = qfalse;
 
-	emit_vm_thunk(&fi);
+	emit_Vmhunk(&fi);
 
 	code = (unsigned char*)header + header->codeOffset;
 	pc = 0;
@@ -1667,7 +1667,7 @@ VM_Compile(vm_t *vm, vmHeader_t *header)
 }
 
 int
-VM_CallCompiled(vm_t *vm, int *args)
+VM_CallCompiled(Vm *vm, int *args)
 {
 	vm_data_t *vm_dataAndCode	= (void*)vm->codeBase;
 	int	programStack		= vm->programStack;

@@ -368,7 +368,7 @@ CollapseStagesToLightall(shaderStage_t *diffuse,
 			if(parallax && r_parallaxMapping->integer)
 				defs |= LIGHTDEF_USE_PARALLAXMAP;
 		}else if(diffuse->bundle[TB_NORMALMAP].image[0]){
-			image_t *tmpImg = diffuse->bundle[TB_NORMALMAP].image[0];
+			Img *tmpImg = diffuse->bundle[TB_NORMALMAP].image[0];
 			diffuse->bundle[TB_NORMALMAP] = diffuse->bundle[TB_DIFFUSEMAP];
 			diffuse->bundle[TB_NORMALMAP].image[0] = tmpImg;
 			defs |= LIGHTDEF_USE_NORMALMAP;
@@ -382,7 +382,7 @@ CollapseStagesToLightall(shaderStage_t *diffuse,
 			diffuse->specularReflectance = specular->specularReflectance;
 			defs |= LIGHTDEF_USE_SPECULARMAP;
 		}else if(diffuse->bundle[TB_SPECULARMAP].image[0]){
-			image_t *tmpImg = diffuse->bundle[TB_SPECULARMAP].image[0];
+			Img *tmpImg = diffuse->bundle[TB_SPECULARMAP].image[0];
 			diffuse->bundle[TB_SPECULARMAP] = diffuse->bundle[TB_DIFFUSEMAP];
 			diffuse->bundle[TB_SPECULARMAP].image[0] = tmpImg;
 			defs |= LIGHTDEF_USE_SPECULARMAP;
@@ -1083,7 +1083,7 @@ R_RemapShader(const char *shaderName, const char *newShaderName, const char *tim
 	char		strippedName[MAX_QPATH];
 	int		hash;
 	material_t	*sh, *sh2;
-	qhandle_t	h;
+	Handle		h;
 
 	sh = R_FindShaderByName(shaderName);
 	if(sh == nil || sh == tr.defaultShader){
@@ -1247,7 +1247,7 @@ R_FindShader(const char *name, int lightmapIndex, qbool mipRawImage)
 	char strippedName[MAX_QPATH];
 	int i, hash;
 	char *shaderText;
-	image_t *image;
+	Img *image;
 	material_t *sh;
 
 	if(name[0] == 0)
@@ -1376,8 +1376,8 @@ R_FindShader(const char *name, int lightmapIndex, qbool mipRawImage)
 	return FinishShader();
 }
 
-qhandle_t
-RE_RegisterShaderFromImage(const char *name, int lightmapIndex, image_t *image, qbool mipRawImage)
+Handle
+RE_RegisterShaderFromImage(const char *name, int lightmapIndex, Img *image, qbool mipRawImage)
 {
 	int i, hash;
 	material_t *sh;
@@ -1486,7 +1486,7 @@ RE_RegisterShaderFromImage(const char *name, int lightmapIndex, image_t *image, 
  * This should really only be used for explicit shaders, because there is no
  * way to ask for different implicit lighting modes (vertex, lightmap, etc)
  */
-qhandle_t
+Handle
 RE_RegisterShaderLightMap(const char *name, int lightmapIndex)
 {
 	material_t *sh;
@@ -1518,7 +1518,7 @@ RE_RegisterShaderLightMap(const char *name, int lightmapIndex)
  * This should really only be used for explicit shaders, because there is no
  * way to ask for different implicit lighting modes (vertex, lightmap, etc)
  */
-qhandle_t
+Handle
 RE_RegisterShader(const char *name)
 {
 	material_t *sh;
@@ -1546,7 +1546,7 @@ RE_RegisterShader(const char *name)
  *
  * For menu graphics that should never be picmiped
  */
-qhandle_t
+Handle
 RE_RegisterShaderNoMip(const char *name)
 {
 	material_t *sh;
@@ -1577,7 +1577,7 @@ RE_RegisterShaderNoMip(const char *name)
  * it and returns a valid (possibly default) material_t to be used internally.
  */
 material_t *
-R_GetShaderByHandle(qhandle_t hShader)
+R_GetShaderByHandle(Handle hShader)
 {
 	if(hShader < 0){
 		ri.Printf(PRINT_WARNING, "R_GetShaderByHandle: out of range hShader '%d'\n", hShader);

@@ -62,12 +62,12 @@ static qbool localClient;	/* true if local client has been displayed */
  * CG_DrawScoreboard
  */
 static void
-CG_DrawClientScore(int y, score_t *score, float *color, float fade,
+CG_DrawClientScore(int y, Score *score, float *color, float fade,
 		   qbool largeFormat)
 {
 	char string[1024];
 	Vec3	headAngles;
-	clientInfo_t    *ci;
+	Clientinfo    *ci;
 	int	iconx, headx;
 
 	if(score->client < 0 || score->client >= cgs.maxclients){
@@ -231,10 +231,10 @@ static int
 CG_TeamScoreboard(int y, team_t team, float fade, int maxClients, int lineHeight)
 {
 	int i;
-	score_t *score;
+	Score *score;
 	float	color[4];
 	int count;
-	clientInfo_t *ci;
+	Clientinfo *ci;
 
 	color[0]	= color[1] = color[2] = 1.0;
 	color[3]	= fade;
@@ -479,7 +479,7 @@ CG_DrawOldTourneyScoreboard(void)
 	const char *s;
 	Vec4	color;
 	int	min, tens, ones;
-	clientInfo_t    *ci;
+	Clientinfo    *ci;
 	int	y;
 	int	i;
 

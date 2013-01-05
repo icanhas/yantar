@@ -21,19 +21,19 @@ extern void startCamera(int time);
 extern qbool getCameraInfo(int time, Vec3 *origin, Vec3 *angles);
 
 void
-CL_GetGameState(gameState_t *gs)
+CL_GetGameState(Gamestate *gs)
 {
 	*gs = cl.gameState;
 }
 
 void
-CL_GetGlconfig(glconfig_t *glconfig)
+CL_GetGlconfig(Glconfig *glconfig)
 {
 	*glconfig = cls.glconfig;
 }
 
 qbool
-CL_GetUserCmd(int cmdNumber, usercmd_t *ucmd)
+CL_GetUserCmd(int cmdNumber, Usrcmd *ucmd)
 {
 	/* cmds[cmdNumber] is the last properly generated command */
 
@@ -61,7 +61,7 @@ CL_GetCurrentCmdNumber(void)
 }
 
 qbool
-CL_GetParseEntityState(int parseEntityNumber, entityState_t *state)
+CL_GetParseEntityState(int parseEntityNumber, Entstate *state)
 {
 	/* can't return anything that hasn't been parsed yet */
 	if(parseEntityNumber >= cl.parseEntitiesNum)
@@ -84,9 +84,9 @@ CL_GetCurrentSnapshotNumber(int *snapshotNumber, int *serverTime)
 }
 
 qbool
-CL_GetSnapshot(int snapshotNumber, snapshot_t *snapshot)
+CL_GetSnapshot(int snapshotNumber, Snap *snapshot)
 {
-	clSnapshot_t *clSnap;
+	Clsnapshot *clSnap;
 	int i, count;
 
 	if(snapshotNumber > cl.snap.messageNum)
@@ -160,7 +160,7 @@ CL_ConfigstringModified(void)
 	char	*old, *s;
 	int	i, index;
 	char	*dup;
-	gameState_t oldGs;
+	Gamestate oldGs;
 	int	len;
 
 	index = atoi(Cmd_Argv(1));
@@ -173,7 +173,7 @@ CL_ConfigstringModified(void)
 	if(!strcmp(old, s))
 		return;		/* unchanged */
 
-	/* build the new gameState_t */
+	/* build the new Gamestate */
 	oldGs = cl.gameState;
 
 	Q_Memset(&cl.gameState, 0, sizeof(cl.gameState));
@@ -348,7 +348,7 @@ CL_ShutdownCGame(void)
 static int
 FloatAsInt(float f)
 {
-	floatint_t fi;
+	Flint fi;
 	fi.f = f;
 	return fi.i;
 }

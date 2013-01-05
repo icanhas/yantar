@@ -1200,7 +1200,7 @@ AAS_AddTeleporterPortals(void)
 	Vec3	bbmins, bbmaxs;
 	aas_area_t	*area;
 	aas_face_t	*face;
-	aas_trace_t	trace;
+	aas_Trace	trace;
 	aas_link_t	*areas, *link;
 
 	entities = AAS_ParseBSPEntities();

@@ -76,68 +76,68 @@ vmMain(int command, int arg0, int arg1, int arg2, int arg3, int arg4, int arg5,
  */
 
 typedef struct {
-	vmCvar_t	*vmCvar;
+	Vmcvar	*vmCvar;
 	char		*cvarName;
 	char		*defaultString;
 	int		cvarFlags;
 } cvarTable_t;
 
-vmCvar_t	ui_ffa_fraglimit;
-vmCvar_t	ui_ffa_timelimit;
+Vmcvar	ui_ffa_fraglimit;
+Vmcvar	ui_ffa_timelimit;
 
-vmCvar_t	ui_tourney_fraglimit;
-vmCvar_t	ui_tourney_timelimit;
+Vmcvar	ui_tourney_fraglimit;
+Vmcvar	ui_tourney_timelimit;
 
-vmCvar_t	ui_team_fraglimit;
-vmCvar_t	ui_team_timelimit;
-vmCvar_t	ui_team_friendly;
+Vmcvar	ui_team_fraglimit;
+Vmcvar	ui_team_timelimit;
+Vmcvar	ui_team_friendly;
 
-vmCvar_t	ui_ctf_capturelimit;
-vmCvar_t	ui_ctf_timelimit;
-vmCvar_t	ui_ctf_friendly;
+Vmcvar	ui_ctf_capturelimit;
+Vmcvar	ui_ctf_timelimit;
+Vmcvar	ui_ctf_friendly;
 
-vmCvar_t	ui_arenasFile;
-vmCvar_t	ui_botsFile;
-vmCvar_t	ui_spScores1;
-vmCvar_t	ui_spScores2;
-vmCvar_t	ui_spScores3;
-vmCvar_t	ui_spScores4;
-vmCvar_t	ui_spScores5;
-vmCvar_t	ui_spAwards;
-vmCvar_t	ui_spVideos;
-vmCvar_t	ui_spSkill;
+Vmcvar	ui_arenasFile;
+Vmcvar	ui_botsFile;
+Vmcvar	ui_spScores1;
+Vmcvar	ui_spScores2;
+Vmcvar	ui_spScores3;
+Vmcvar	ui_spScores4;
+Vmcvar	ui_spScores5;
+Vmcvar	ui_spAwards;
+Vmcvar	ui_spVideos;
+Vmcvar	ui_spSkill;
 
-vmCvar_t	ui_spSelection;
+Vmcvar	ui_spSelection;
 
-vmCvar_t	ui_browserMaster;
-vmCvar_t	ui_browserGameType;
-vmCvar_t	ui_browserSortKey;
-vmCvar_t	ui_browserShowFull;
-vmCvar_t	ui_browserShowEmpty;
+Vmcvar	ui_browserMaster;
+Vmcvar	ui_browserGameType;
+Vmcvar	ui_browserSortKey;
+Vmcvar	ui_browserShowFull;
+Vmcvar	ui_browserShowEmpty;
 
-vmCvar_t	ui_brassTime;
-vmCvar_t	ui_drawCrosshair;
-vmCvar_t	ui_drawCrosshairNames;
-vmCvar_t	ui_marks;
+Vmcvar	ui_brassTime;
+Vmcvar	ui_drawCrosshair;
+Vmcvar	ui_drawCrosshairNames;
+Vmcvar	ui_marks;
 
-vmCvar_t	ui_server1;
-vmCvar_t	ui_server2;
-vmCvar_t	ui_server3;
-vmCvar_t	ui_server4;
-vmCvar_t	ui_server5;
-vmCvar_t	ui_server6;
-vmCvar_t	ui_server7;
-vmCvar_t	ui_server8;
-vmCvar_t	ui_server9;
-vmCvar_t	ui_server10;
-vmCvar_t	ui_server11;
-vmCvar_t	ui_server12;
-vmCvar_t	ui_server13;
-vmCvar_t	ui_server14;
-vmCvar_t	ui_server15;
-vmCvar_t	ui_server16;
+Vmcvar	ui_server1;
+Vmcvar	ui_server2;
+Vmcvar	ui_server3;
+Vmcvar	ui_server4;
+Vmcvar	ui_server5;
+Vmcvar	ui_server6;
+Vmcvar	ui_server7;
+Vmcvar	ui_server8;
+Vmcvar	ui_server9;
+Vmcvar	ui_server10;
+Vmcvar	ui_server11;
+Vmcvar	ui_server12;
+Vmcvar	ui_server13;
+Vmcvar	ui_server14;
+Vmcvar	ui_server15;
+Vmcvar	ui_server16;
 
-vmCvar_t	ui_skipExitCredits;
+Vmcvar	ui_skipExitCredits;
 
 static cvarTable_t cvarTable[] = {
 	{ &ui_ffa_fraglimit, "ui_ffa_fraglimit", "20", CVAR_ARCHIVE },

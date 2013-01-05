@@ -10,7 +10,7 @@
 #include "common.h"
 
 /*
- * cvar_t variables are used to hold scalar or string variables that can be changed
+ * Cvar variables are used to hold scalar or string variables that can be changed
  * or displayed at the console or prog code as well as accessed directly
  * in C code.
  *
@@ -33,11 +33,11 @@ enum {
 
 int cvar_modifiedFlags;
 
-static cvar_t	*cvar_vars = nil;
-static cvar_t   *cvar_cheats;
-static cvar_t	cvar_indexes[MAX_CVARS];
+static Cvar	*cvar_vars = nil;
+static Cvar   *cvar_cheats;
+static Cvar	cvar_indexes[MAX_CVARS];
 static int	cvar_numIndexes;
-static cvar_t *hashTable[HASH_SIZE];
+static Cvar *hashTable[HASH_SIZE];
 
 static qbool
 Cvar_ValidateString(const char *s)
@@ -53,10 +53,10 @@ Cvar_ValidateString(const char *s)
 	return qtrue;
 }
 
-static cvar_t *
+static Cvar *
 Cvar_FindVar(const char *var_name)
 {
-	cvar_t	*var;
+	Cvar	*var;
 	long	hash;
 
 	hash = Q_hashstr(var_name, HASH_SIZE);
@@ -72,7 +72,7 @@ Cvar_FindVar(const char *var_name)
 float
 Cvar_VariableValue(const char *var_name)
 {
-	cvar_t *var;
+	Cvar *var;
 
 	var = Cvar_FindVar(var_name);
 	if(var == nil)
@@ -83,7 +83,7 @@ Cvar_VariableValue(const char *var_name)
 int
 Cvar_VariableIntegerValue(const char *var_name)
 {
-	cvar_t *var;
+	Cvar *var;
 
 	var = Cvar_FindVar(var_name);
 	if(var == nil)
@@ -95,7 +95,7 @@ Cvar_VariableIntegerValue(const char *var_name)
 char *
 Cvar_VariableString(const char *var_name)
 {
-	cvar_t *var;
+	Cvar *var;
 
 	var = Cvar_FindVar(var_name);
 	if(var == nil)
@@ -106,7 +106,7 @@ Cvar_VariableString(const char *var_name)
 void
 Cvar_VariableStringBuffer(const char *var_name, char *buffer, int bufsize)
 {
-	cvar_t *var;
+	Cvar *var;
 
 	var = Cvar_FindVar(var_name);
 	if(var == nil)
@@ -118,7 +118,7 @@ Cvar_VariableStringBuffer(const char *var_name, char *buffer, int bufsize)
 int
 Cvar_Flags(const char *var_name)
 {
-	cvar_t *var;
+	Cvar *var;
 
 	var = Cvar_FindVar(var_name);
 	if(var == nil)
@@ -134,7 +134,7 @@ Cvar_Flags(const char *var_name)
 void
 Cvar_CommandCompletion(void (*callback)(const char *s))
 {
-	cvar_t *cvar;
+	Cvar *cvar;
 
 	for(cvar = cvar_vars; cvar; cvar = cvar->next)
 		if(cvar->name != nil)
@@ -142,7 +142,7 @@ Cvar_CommandCompletion(void (*callback)(const char *s))
 }
 
 static const char *
-Cvar_Validate(cvar_t *var, const char *value, qbool warn)
+Cvar_Validate(Cvar *var, const char *value, qbool warn)
 {
 	static char	s[MAX_CVAR_VALUE_STRING];
 	float valuef;
@@ -228,7 +228,7 @@ Cvar_Validate(cvar_t *var, const char *value, qbool warn)
 
 /* set value of an existing cvar */
 static void
-setNewVal(cvar_t *var, const char *var_name, const char *var_value, int flags)
+setNewVal(Cvar *var, const char *var_name, const char *var_value, int flags)
 {
 	var_value = Cvar_Validate(var, var_value, qfalse);
 	/*
@@ -293,10 +293,10 @@ setNewVal(cvar_t *var, const char *var_name, const char *var_value, int flags)
  * If the variable already exists, the value will not be set unless
  * CVAR_ROM. The flags will be or'ed in if the variable exists.
  */
-cvar_t *
+Cvar *
 Cvar_Get(const char *var_name, const char *var_value, int flags)
 {
-	cvar_t	*var;
+	Cvar	*var;
 	long	hash;
 	int	index;
 
@@ -379,7 +379,7 @@ Cvar_Get(const char *var_name, const char *var_value, int flags)
  * the given variable
  */
 void
-Cvar_Print(cvar_t *v)
+Cvar_Print(Cvar *v)
 {
 	Com_Printf("%s: ", v->name);
 	if(v->desc != nil)
@@ -405,7 +405,7 @@ Cvar_Print(cvar_t *v)
 void
 Cvar_SetDesc(const char *name, const char *desc)
 {
-	cvar_t *cv;
+	Cvar *cv;
 
 	cv = Cvar_FindVar(name);
 	if((cv == nil) || (desc == nil))
@@ -416,10 +416,10 @@ Cvar_SetDesc(const char *name, const char *desc)
 }
 
 /* same as Cvar_Set, but allows more control over setting of cvar */
-cvar_t *
+Cvar *
 Cvar_Set2(const char *var_name, const char *value, qbool force)
 {
-	cvar_t *var;
+	Cvar *var;
 
 /*	Com_DPrintf( "Cvar_Set2: %s %s\n", var_name, value ); */
 
@@ -591,7 +591,7 @@ Cvar_ForceReset(const char *var_name)
 void
 Cvar_SetCheatState(void)
 {
-	cvar_t *var;
+	Cvar *var;
 
 	/* set all default vars to the safe value */
 	for(var = cvar_vars; var != nil; var = var->next)
@@ -620,7 +620,7 @@ Cvar_SetCheatState(void)
 qbool
 Cvar_Command(void)
 {
-	cvar_t *v;
+	Cvar *v;
 
 	/* check variables */
 	v = Cvar_FindVar(Cmd_Argv(0));
@@ -646,7 +646,7 @@ void
 Cvar_Print_f(void)
 {
 	char *name;
-	cvar_t *cv;
+	Cvar *cv;
 
 	if(Cmd_Argc() != 2){
 		Com_Printf ("usage: print <variable>\n");
@@ -712,7 +712,7 @@ Cvar_Set_f(void)
 {
 	int c;
 	char *cmd;
-	cvar_t *v;
+	Cvar *v;
 
 	c	= Cmd_Argc();
 	cmd	= Cmd_Argv(0);
@@ -766,11 +766,11 @@ Cvar_Reset_f(void)
  * all variables with the archive flag set.
  */
 void
-Cvar_WriteVariables(fileHandle_t f)
+Cvar_WriteVariables(Fhandle f)
 {
 	int	len;	/* total length of name + archival string */
 	char	buffer[1024];
-	cvar_t *var;
+	Cvar *var;
 
 	for(var = cvar_vars; var != nil; var = var->next){
 		if(var->name == nil)
@@ -813,7 +813,7 @@ Cvar_WriteVariables(fileHandle_t f)
 void
 Cvar_List_f(void)
 {
-	cvar_t	*var;
+	Cvar	*var;
 	int	i;
 	char *match;
 
@@ -880,10 +880,10 @@ Cvar_List_f(void)
 }
 
 /* Unsets a cvar */
-cvar_t *
-Cvar_Unset(cvar_t *cv)
+Cvar *
+Cvar_Unset(Cvar *cv)
 {
-	cvar_t *next = cv->next;
+	Cvar *next = cv->next;
 
 	if(cv->name)
 		Z_Free(cv->name);
@@ -921,7 +921,7 @@ Cvar_Unset(cvar_t *cv)
 void
 Cvar_Unset_f(void)
 {
-	cvar_t *cv;
+	Cvar *cv;
 
 	if(Cmd_Argc() != 2){
 		Com_Printf("Usage: %s <varname>\n", Cmd_Argv(0));
@@ -947,7 +947,7 @@ Cvar_Unset_f(void)
 void
 Cvar_Restart(qbool unsetVM)
 {
-	cvar_t *var;
+	Cvar *var;
 
 	for(var = cvar_vars; var != nil; var = var->next){
 		if((var->flags & CVAR_USER_CREATED) ||
@@ -978,7 +978,7 @@ char *
 Cvar_InfoString(int bit)
 {
 	static char info[MAX_INFO_STRING];
-	cvar_t *var;
+	Cvar *var;
 
 	info[0] = 0;
 
@@ -995,7 +995,7 @@ char *
 Cvar_InfoString_Big(int bit)
 {
 	static char info[BIG_INFO_STRING];
-	cvar_t *var;
+	Cvar *var;
 
 	info[0] = 0;
 
@@ -1012,7 +1012,7 @@ Cvar_InfoStringBuffer(int bit, char* buff, int buffsize)
 }
 
 void
-Cvar_CheckRange(cvar_t *var, float min, float max, qbool integral)
+Cvar_CheckRange(Cvar *var, float min, float max, qbool integral)
 {
 	var->validate	= qtrue;
 	var->min	= min;
@@ -1026,10 +1026,10 @@ Cvar_CheckRange(cvar_t *var, float min, float max, qbool integral)
  * basically a slightly modified Cvar_Get for the interpreted modules
  */
 void
-Cvar_Register(vmCvar_t *vmCvar, const char *varName, const char *defaultValue,
+Cvar_Register(Vmcvar *vmCvar, const char *varName, const char *defaultValue,
 	      int flags)
 {
-	cvar_t *cv;
+	Cvar *cv;
 
 	/* There is code in Cvar_Get to prevent CVAR_ROM cvars being changed by the
 	 * user. In other words CVAR_ARCHIVE and CVAR_ROM are mutually exclusive
@@ -1055,9 +1055,9 @@ Cvar_Register(vmCvar_t *vmCvar, const char *varName, const char *defaultValue,
 
 /* updates an interpreted modules' version of a cvar */
 void
-Cvar_Update(vmCvar_t *vmCvar)
+Cvar_Update(Vmcvar *vmCvar)
 {
-	cvar_t *cv = nil;
+	Cvar *cv = nil;
 	assert(vmCvar != nil);
 
 	if((unsigned)vmCvar->handle >= cvar_numIndexes)

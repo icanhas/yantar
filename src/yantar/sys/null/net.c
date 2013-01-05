@@ -21,7 +21,7 @@
  * =============
  */
 qbool
-NET_StringToAdr(char *s, netadr_t *a)
+NET_StringToAdr(char *s, Netaddr *a)
 {
 	if(!strcmp (s, "localhost")){
 		memset (a, 0, sizeof(*a));
@@ -38,6 +38,6 @@ NET_StringToAdr(char *s, netadr_t *a)
  * ==================
  */
 void
-Sys_SendPacket(int length, void *data, netadr_t to)
+Sys_SendPacket(int length, void *data, Netaddr to)
 {
 }

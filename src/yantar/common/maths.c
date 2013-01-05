@@ -467,7 +467,7 @@ Q_rsqrt(float number)
 {
 	float x2, y;
 	const float threehalfs = 1.5f;
-	floatint_t t;
+	Flint t;
 
 	x2 = number * 0.5f;
 	t.f = number;
@@ -483,7 +483,7 @@ Q_rsqrt(float number)
 float
 Q_fabs(float f)
 {
-	floatint_t fi;
+	Flint fi;
 	fi.f = f;
 	fi.i &= 0x7FFFFFFF;
 	return fi.f;
@@ -1153,7 +1153,7 @@ perpv3(Vec3 dst, const Vec3 src)
 int
 Q_isnan(float x)
 {
-	floatint_t fi;
+	Flint fi;
 
 	fi.f = x;
 	fi.ui	&= 0x7FFFFFFF;

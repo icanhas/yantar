@@ -16,7 +16,7 @@ static int	inUse = 0;
 static int	totalInUse = 0;
 
 short		*sfxScratchBuffer = NULL;
-sfx_t		*sfxScratchPointer = NULL;
+Sfx		*sfxScratchPointer = NULL;
 int sfxScratchIndex = 0;
 
 void
@@ -46,7 +46,7 @@ void
 SND_setup(void)
 {
 	sndBuffer	*p, *q;
-	cvar_t		*cv;
+	Cvar		*cv;
 	int scs;
 
 	cv = Cvar_Get("com_soundMegs", DEF_COMSOUNDMEGS,
@@ -78,7 +78,7 @@ SND_shutdown(void)
 
 /* resample / decimate to the current source rate */
 static void
-ResampleSfx(sfx_t *sfx, int inrate, int inwidth, byte *data, qbool compressed)
+ResampleSfx(Sfx *sfx, int inrate, int inwidth, byte *data, qbool compressed)
 {
 	int	outcount;
 	int	srcsample;
@@ -157,7 +157,7 @@ ResampleSfxRaw(short *sfx, int inrate, int inwidth, int samples, byte *data)
  * of a forced fallback of a player specific sound
  */
 qbool
-S_LoadSound(sfx_t *sfx)
+S_LoadSound(Sfx *sfx)
 {
 	byte *data;
 	short *samples;

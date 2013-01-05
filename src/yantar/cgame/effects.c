@@ -38,8 +38,8 @@ CG_BubbleTrail(Vec3 start, Vec3 end, float spacing)
 	scalev3 (vec, spacing, vec);
 
 	for(; i < len; i += spacing){
-		localEntity_t *le;
-		refEntity_t *re;
+		Localent *le;
+		Refent *re;
 
 		le = CG_AllocLocalEntity();
 		le->leFlags	= LEF_PUFF_DONT_SCALE;
@@ -78,7 +78,7 @@ CG_BubbleTrail(Vec3 start, Vec3 end, float spacing)
  *
  * Adds a smoke puff or blood trail localEntity.
  */
-localEntity_t *
+Localent *
 CG_SmokePuff(const Vec3 p, const Vec3 vel,
 	     float radius,
 	     float r, float g, float b, float a,
@@ -86,11 +86,11 @@ CG_SmokePuff(const Vec3 p, const Vec3 vel,
 	     int startTime,
 	     int fadeInTime,
 	     int leFlags,
-	     qhandle_t hShader)
+	     Handle hShader)
 {
 	static int seed = 0x92;
-	localEntity_t *le;
-	refEntity_t *re;
+	Localent *le;
+	Refent *re;
 /*	int fadeInTime = startTime + duration / 2; */
 
 	le = CG_AllocLocalEntity();
@@ -152,8 +152,8 @@ CG_SmokePuff(const Vec3 p, const Vec3 vel,
 void
 CG_SpawnEffect(Vec3 org)
 {
-	localEntity_t *le;
-	refEntity_t *re;
+	Localent *le;
+	Refent *re;
 
 	le = CG_AllocLocalEntity();
 	le->leFlags	= 0;
@@ -186,8 +186,8 @@ CG_SpawnEffect(Vec3 org)
 void
 CG_ScorePlum(int client, Vec3 org, int score)
 {
-	localEntity_t *le;
-	refEntity_t *re;
+	Localent *le;
+	Refent *re;
 	Vec3 angles;
 	static Vec3 lastPos;
 
@@ -228,13 +228,13 @@ CG_ScorePlum(int client, Vec3 org, int score)
 /*
  * CG_MakeExplosion
  */
-localEntity_t *
+Localent *
 CG_MakeExplosion(Vec3 origin, Vec3 dir,
-		 qhandle_t hModel, qhandle_t shader,
+		 Handle hModel, Handle shader,
 		 int msec, qbool isSprite)
 {
 	float	ang;
-	localEntity_t *ex;
+	Localent *ex;
 	int	offset;
 	Vec3	tmpVec, newOrigin;
 
@@ -293,7 +293,7 @@ CG_MakeExplosion(Vec3 origin, Vec3 dir,
 void
 CG_Bleed(Vec3 origin, int entityNum)
 {
-	localEntity_t *ex;
+	Localent *ex;
 
 	if(!cg_blood.integer)
 		return;
@@ -322,10 +322,10 @@ CG_Bleed(Vec3 origin, int entityNum)
  * CG_LaunchGib
  */
 void
-CG_LaunchGib(Vec3 origin, Vec3 velocity, qhandle_t hModel)
+CG_LaunchGib(Vec3 origin, Vec3 velocity, Handle hModel)
 {
-	localEntity_t *le;
-	refEntity_t *re;
+	Localent *le;
+	Refent *re;
 
 	le	= CG_AllocLocalEntity();
 	re	= &le->refEntity;
@@ -436,10 +436,10 @@ CG_GibPlayer(Vec3 playerOrigin)
  * CG_LaunchGib
  */
 void
-CG_LaunchExplode(Vec3 origin, Vec3 velocity, qhandle_t hModel)
+CG_LaunchExplode(Vec3 origin, Vec3 velocity, Handle hModel)
 {
-	localEntity_t *le;
-	refEntity_t *re;
+	Localent *le;
+	Refent *re;
 
 	le	= CG_AllocLocalEntity();
 	re	= &le->refEntity;

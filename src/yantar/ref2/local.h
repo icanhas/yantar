@@ -65,7 +65,7 @@ typedef struct dlight_s {
 /* a trRefEntity_t has all the information passed in by
  * the client game, as well as some locally derived info */
 typedef struct {
-	refEntity_t	e;
+	Refent	e;
 
 	float		axisLength;	/* compensate for non-normalized axis */
 
@@ -117,7 +117,7 @@ typedef struct image_s {
 	int		wrapClampMode;	/* GL_CLAMP_TO_EDGE or GL_REPEAT */
 
 	struct image_s	* next;
-} image_t;
+} Img;
 
 typedef enum {
 	VBO_USAGE_STATIC,
@@ -354,7 +354,7 @@ typedef struct {
 #define MAX_IMAGE_ANIMATIONS 8
 
 typedef struct {
-	image_t		*image[MAX_IMAGE_ANIMATIONS];
+	Img		*image[MAX_IMAGE_ANIMATIONS];
 	int		numImageAnimations;
 	float		imageAnimationSpeed;
 
@@ -441,7 +441,7 @@ typedef enum {
 
 typedef struct {
 	float	cloudHeight;
-	image_t *outerbox[6], *innerbox[6];
+	Img *outerbox[6], *innerbox[6];
 } skyParms_t;
 
 typedef struct {
@@ -961,7 +961,7 @@ typedef struct drawSurf_s {
  * as soon as it is called */
 typedef struct srfPoly_s {
 	surfaceType_t	surfaceType;
-	qhandle_t	hShader;
+	Handle		hShader;
 	int		fogIndex;
 	int		numVerts;
 	polyVert_t	*verts;
@@ -1419,10 +1419,10 @@ typedef struct model_s {
 #define MAX_MOD_KNOWN 1024
 
 void            R_ModelInit(void);
-model_t*R_GetModelByHandle(qhandle_t hModel);
-int                     R_LerpTag(orientation_t *tag, qhandle_t handle, int startFrame, int endFrame,
+model_t*R_GetModelByHandle(Handle hModel);
+int                     R_LerpTag(Orient *tag, Handle handle, int startFrame, int endFrame,
 				  float frac, const char *tagName);
-void            R_ModelBounds(qhandle_t handle, Vec3 mins, Vec3 maxs);
+void            R_ModelBounds(Handle handle, Vec3 mins, Vec3 maxs);
 
 void            R_Modellist_f(void);
 
@@ -1629,28 +1629,28 @@ typedef struct {
 
 	const byte	*externalVisData;	/* from RE_SetWorldVisData, shared with CM_Load */
 
-	image_t *defaultImage;
-	image_t *scratchImage[32];
-	image_t *fogImage;
-	image_t *dlightImage;	/* inverse-quare highlight for projective adding */
-	image_t *flareImage;
-	image_t *whiteImage;		/* full of 0xff */
-	image_t *identityLightImage;	/* full of tr.identityLightByte */
+	Img *defaultImage;
+	Img *scratchImage[32];
+	Img *fogImage;
+	Img *dlightImage;	/* inverse-quare highlight for projective adding */
+	Img *flareImage;
+	Img *whiteImage;		/* full of 0xff */
+	Img *identityLightImage;	/* full of tr.identityLightByte */
 
-	image_t *shadowCubemaps[MAX_DLIGHTS];
+	Img *shadowCubemaps[MAX_DLIGHTS];
 
 
-	image_t		*renderImage;
-	image_t		*godRaysImage;
-	image_t		*renderDepthImage;
-	image_t		*pshadowMaps[MAX_DRAWN_PSHADOWS];
-	image_t		*textureScratchImage[2];
-	image_t		*screenScratchImage;
-	image_t		*quarterImage[2];
-	image_t		*calcLevelsImage;
-	image_t		*fixedLevelsImage;
+	Img		*renderImage;
+	Img		*godRaysImage;
+	Img		*renderDepthImage;
+	Img		*pshadowMaps[MAX_DRAWN_PSHADOWS];
+	Img		*textureScratchImage[2];
+	Img		*screenScratchImage;
+	Img		*quarterImage[2];
+	Img		*calcLevelsImage;
+	Img		*fixedLevelsImage;
 
-	image_t		*textureDepthImage;
+	Img		*textureDepthImage;
 
 	FBO_t		*renderFbo;
 	FBO_t		*godRaysFbo;
@@ -1670,8 +1670,8 @@ typedef struct {
 
 	int		numLightmaps;
 	int		lightmapSize;
-	image_t		**lightmaps;
-	image_t		**deluxemaps;
+	Img		**lightmaps;
+	Img		**deluxemaps;
 
 	int		fatLightmapSize;
 	int		fatLightmapStep;
@@ -1726,7 +1726,7 @@ typedef struct {
 	int	numModels;
 
 	int	numImages;
-	image_t *images[MAX_DRAWIMAGES];
+	Img *images[MAX_DRAWIMAGES];
 
 	int	numFBOs;
 	FBO_t	*fbos[MAX_FBOS];
@@ -1763,12 +1763,12 @@ typedef struct {
 
 extern backEndState_t backEnd;
 extern trGlobals_t tr;
-extern glconfig_t glConfig;	/* outside of TR since it shouldn't be cleared during ref re-init */
+extern Glconfig glConfig;	/* outside of TR since it shouldn't be cleared during ref re-init */
 extern glstate_t glState;	/* outside of TR since it shouldn't be cleared during ref re-init */
 
 /* These three variables should live inside glConfig but can't because of compatibility issues to the original ID vms.
  * If you release a stand-alone game and your mod uses types.h from this build you can safely move them to
- * the glconfig_t struct. */
+ * the Glconfig struct. */
 extern qbool textureFilterAnisotropic;
 extern int maxAnisotropy;
 extern glRefConfig_t glRefConfig;
@@ -1778,155 +1778,155 @@ extern float displayAspect;
 /*
  * cvars
  *  */
-extern cvar_t	*r_flareSize;
-extern cvar_t	*r_flareFade;
+extern Cvar	*r_flareSize;
+extern Cvar	*r_flareFade;
 /* coefficient for the flare intensity falloff function. */
 #define FLARE_STDCOEFF "150"
-extern cvar_t	*r_flareCoeff;
+extern Cvar	*r_flareCoeff;
 
-extern cvar_t	*r_railWidth;
-extern cvar_t	*r_railCoreWidth;
-extern cvar_t	*r_railSegmentLength;
+extern Cvar	*r_railWidth;
+extern Cvar	*r_railCoreWidth;
+extern Cvar	*r_railSegmentLength;
 
-extern cvar_t	*r_ignore;	/* used for debugging anything */
-extern cvar_t	*r_verbose;	/* used for verbose debug spew */
+extern Cvar	*r_ignore;	/* used for debugging anything */
+extern Cvar	*r_verbose;	/* used for verbose debug spew */
 
-extern cvar_t	*r_znear;		/* near Z clip plane */
-extern cvar_t	*r_zproj;		/* z distance of projection plane */
-extern cvar_t	*r_stereoSeparation;	/* separation of cameras for stereo rendering */
+extern Cvar	*r_znear;		/* near Z clip plane */
+extern Cvar	*r_zproj;		/* z distance of projection plane */
+extern Cvar	*r_stereoSeparation;	/* separation of cameras for stereo rendering */
 
-extern cvar_t	*r_stencilbits;	/* number of desired stencil bits */
-extern cvar_t	*r_depthbits;	/* number of desired depth bits */
-extern cvar_t	*r_colorbits;	/* number of desired color bits, only relevant for fullscreen */
-extern cvar_t	*r_texturebits;	/* number of desired texture bits */
-extern cvar_t	*r_ext_multisample;
+extern Cvar	*r_stencilbits;	/* number of desired stencil bits */
+extern Cvar	*r_depthbits;	/* number of desired depth bits */
+extern Cvar	*r_colorbits;	/* number of desired color bits, only relevant for fullscreen */
+extern Cvar	*r_texturebits;	/* number of desired texture bits */
+extern Cvar	*r_ext_multisample;
 /* 0 = use framebuffer depth
  * 16 = use 16-bit textures
  * 32 = use 32-bit textures
  * all else = error */
 
-extern cvar_t	*r_measureOverdraw;	/* enables stencil buffer overdraw measurement */
+extern Cvar	*r_measureOverdraw;	/* enables stencil buffer overdraw measurement */
 
-extern cvar_t	*r_lodbias;	/* push/pull LOD transitions */
-extern cvar_t	*r_lodscale;
+extern Cvar	*r_lodbias;	/* push/pull LOD transitions */
+extern Cvar	*r_lodscale;
 
-extern cvar_t	*r_inGameVideo;		/* controls whether in game video should be draw */
-extern cvar_t	*r_fastsky;		/* controls whether sky should be cleared or drawn */
-extern cvar_t	*r_drawSun;		/* controls drawing of sun quad */
-extern cvar_t	*r_dynamiclight;	/* dynamic lights enabled/disabled */
-extern cvar_t	*r_dlightBacks;		/* dlight non-facing surfaces for continuity */
+extern Cvar	*r_inGameVideo;		/* controls whether in game video should be draw */
+extern Cvar	*r_fastsky;		/* controls whether sky should be cleared or drawn */
+extern Cvar	*r_drawSun;		/* controls drawing of sun quad */
+extern Cvar	*r_dynamiclight;	/* dynamic lights enabled/disabled */
+extern Cvar	*r_dlightBacks;		/* dlight non-facing surfaces for continuity */
 
-extern cvar_t	*r_norefresh;		/* bypasses the ref rendering */
-extern cvar_t	*r_drawentities;	/* disable/enable entity rendering */
-extern cvar_t	*r_drawworld;		/* disable/enable world rendering */
-extern cvar_t	*r_speeds;		/* various levels of information display */
-extern cvar_t	*r_detailTextures;	/* enables/disables detail texturing stages */
-extern cvar_t	*r_novis;		/* disable/enable usage of PVS */
-extern cvar_t	*r_nocull;
-extern cvar_t	*r_facePlaneCull;	/* enables culling of planar surfaces with back side test */
-extern cvar_t	*r_nocurves;
-extern cvar_t	*r_showcluster;
+extern Cvar	*r_norefresh;		/* bypasses the ref rendering */
+extern Cvar	*r_drawentities;	/* disable/enable entity rendering */
+extern Cvar	*r_drawworld;		/* disable/enable world rendering */
+extern Cvar	*r_speeds;		/* various levels of information display */
+extern Cvar	*r_detailTextures;	/* enables/disables detail texturing stages */
+extern Cvar	*r_novis;		/* disable/enable usage of PVS */
+extern Cvar	*r_nocull;
+extern Cvar	*r_facePlaneCull;	/* enables culling of planar surfaces with back side test */
+extern Cvar	*r_nocurves;
+extern Cvar	*r_showcluster;
 
-extern cvar_t	*r_mode;	/* video mode */
-extern cvar_t	*r_fullscreen;
-extern cvar_t	*r_noborder;
-extern cvar_t	*r_gamma;
-extern cvar_t	*r_ignorehwgamma;	/* overrides hardware gamma capabilities */
+extern Cvar	*r_mode;	/* video mode */
+extern Cvar	*r_fullscreen;
+extern Cvar	*r_noborder;
+extern Cvar	*r_gamma;
+extern Cvar	*r_ignorehwgamma;	/* overrides hardware gamma capabilities */
 
-extern cvar_t	*r_allowExtensions;		/* global enable/disable of OpenGL extensions */
-extern cvar_t	*r_ext_compressed_textures;	/* these control use of specific extensions */
-extern cvar_t	*r_ext_multitexture;
-extern cvar_t	*r_ext_compiled_vertex_array;
-extern cvar_t	*r_ext_texture_env_add;
+extern Cvar	*r_allowExtensions;		/* global enable/disable of OpenGL extensions */
+extern Cvar	*r_ext_compressed_textures;	/* these control use of specific extensions */
+extern Cvar	*r_ext_multitexture;
+extern Cvar	*r_ext_compiled_vertex_array;
+extern Cvar	*r_ext_texture_env_add;
 
-extern cvar_t	*r_ext_texture_filter_anisotropic;
-extern cvar_t	*r_ext_max_anisotropy;
+extern Cvar	*r_ext_texture_filter_anisotropic;
+extern Cvar	*r_ext_max_anisotropy;
 
-extern cvar_t	*r_ext_multi_draw_arrays;
-extern cvar_t	*r_ext_framebuffer_object;
-extern cvar_t	*r_ext_texture_float;
-extern cvar_t	*r_arb_half_float_pixel;
+extern Cvar	*r_ext_multi_draw_arrays;
+extern Cvar	*r_ext_framebuffer_object;
+extern Cvar	*r_ext_texture_float;
+extern Cvar	*r_arb_half_float_pixel;
 
-extern cvar_t	*r_nobind;		/* turns off binding to appropriate textures */
-extern cvar_t	*r_singleShader;	/* make most world faces use default shader */
-extern cvar_t	*r_roundImagesDown;
-extern cvar_t	*r_colorMipLevels;	/* development aid to see texture mip usage */
-extern cvar_t	*r_picmip;		/* controls picmip values */
-extern cvar_t	*r_finish;
-extern cvar_t	*r_drawBuffer;
-extern cvar_t	*r_swapInterval;
-extern cvar_t	*r_textureMode;
-extern cvar_t	*r_offsetFactor;
-extern cvar_t	*r_offsetUnits;
+extern Cvar	*r_nobind;		/* turns off binding to appropriate textures */
+extern Cvar	*r_singleShader;	/* make most world faces use default shader */
+extern Cvar	*r_roundImagesDown;
+extern Cvar	*r_colorMipLevels;	/* development aid to see texture mip usage */
+extern Cvar	*r_picmip;		/* controls picmip values */
+extern Cvar	*r_finish;
+extern Cvar	*r_drawBuffer;
+extern Cvar	*r_swapInterval;
+extern Cvar	*r_textureMode;
+extern Cvar	*r_offsetFactor;
+extern Cvar	*r_offsetUnits;
 
-extern cvar_t	*r_fullbright;		/* avoid lightmap pass */
-extern cvar_t	*r_lightmap;		/* render lightmaps only */
-extern cvar_t	*r_vertexLight;		/* vertex lighting mode for better performance */
-extern cvar_t	*r_uiFullScreen;	/* ui is running fullscreen */
+extern Cvar	*r_fullbright;		/* avoid lightmap pass */
+extern Cvar	*r_lightmap;		/* render lightmaps only */
+extern Cvar	*r_vertexLight;		/* vertex lighting mode for better performance */
+extern Cvar	*r_uiFullScreen;	/* ui is running fullscreen */
 
-extern cvar_t	*r_logFile;	/* number of frames to emit GL logs */
-extern cvar_t	*r_showtris;	/* enables wireframe rendering of the world */
-extern cvar_t	*r_showsky;	/* forces sky in front of all surfaces */
-extern cvar_t	*r_shownormals;	/* draws wireframe normals */
-extern cvar_t	*r_clear;	/* force screen clear every frame */
+extern Cvar	*r_logFile;	/* number of frames to emit GL logs */
+extern Cvar	*r_showtris;	/* enables wireframe rendering of the world */
+extern Cvar	*r_showsky;	/* forces sky in front of all surfaces */
+extern Cvar	*r_shownormals;	/* draws wireframe normals */
+extern Cvar	*r_clear;	/* force screen clear every frame */
 
-extern cvar_t	*r_shadows;	/* controls shadows: 0 = none, 1 = blur, 2 = stencil, 3 = black planar projection */
-extern cvar_t	*r_flares;	/* light flares */
+extern Cvar	*r_shadows;	/* controls shadows: 0 = none, 1 = blur, 2 = stencil, 3 = black planar projection */
+extern Cvar	*r_flares;	/* light flares */
 
-extern cvar_t	*r_intensity;
+extern Cvar	*r_intensity;
 
-extern cvar_t	*r_lockpvs;
-extern cvar_t	*r_noportals;
-extern cvar_t	*r_portalOnly;
+extern Cvar	*r_lockpvs;
+extern Cvar	*r_noportals;
+extern Cvar	*r_portalOnly;
 
-extern cvar_t	*r_subdivisions;
-extern cvar_t	*r_lodCurveError;
-extern cvar_t	*r_smp;
-extern cvar_t	*r_showSmp;
-extern cvar_t	*r_skipBackEnd;
+extern Cvar	*r_subdivisions;
+extern Cvar	*r_lodCurveError;
+extern Cvar	*r_smp;
+extern Cvar	*r_showSmp;
+extern Cvar	*r_skipBackEnd;
 
-extern cvar_t	*r_stereoEnabled;
-extern cvar_t	*r_anaglyphMode;
+extern Cvar	*r_stereoEnabled;
+extern Cvar	*r_anaglyphMode;
 
-extern cvar_t	*r_mergeMultidraws;
-extern cvar_t	*r_mergeLeafSurfaces;
+extern Cvar	*r_mergeMultidraws;
+extern Cvar	*r_mergeLeafSurfaces;
 
-extern cvar_t	*r_hdr;
-extern cvar_t	*r_postProcess;
-extern cvar_t	*r_toneMap;
-extern cvar_t	*r_autoExposure;
-extern cvar_t	*r_cameraExposure;
+extern Cvar	*r_hdr;
+extern Cvar	*r_postProcess;
+extern Cvar	*r_toneMap;
+extern Cvar	*r_autoExposure;
+extern Cvar	*r_cameraExposure;
 
-extern cvar_t	*r_normalMapping;
-extern cvar_t	*r_specularMapping;
-extern cvar_t	*r_deluxeMapping;
-extern cvar_t	*r_parallaxMapping;
-extern cvar_t	*r_normalAmbient;
-extern cvar_t	*r_dlightMode;
-extern cvar_t	*r_pshadowDist;
-extern cvar_t	*r_recalcMD3Normals;
-extern cvar_t	*r_mergeLightmaps;
-extern cvar_t	*r_imageUpsample;
-extern cvar_t	*r_imageUpsampleMaxSize;
-extern cvar_t	*r_imageUpsampleType;
+extern Cvar	*r_normalMapping;
+extern Cvar	*r_specularMapping;
+extern Cvar	*r_deluxeMapping;
+extern Cvar	*r_parallaxMapping;
+extern Cvar	*r_normalAmbient;
+extern Cvar	*r_dlightMode;
+extern Cvar	*r_pshadowDist;
+extern Cvar	*r_recalcMD3Normals;
+extern Cvar	*r_mergeLightmaps;
+extern Cvar	*r_imageUpsample;
+extern Cvar	*r_imageUpsampleMaxSize;
+extern Cvar	*r_imageUpsampleType;
 
-extern cvar_t	*r_greyscale;
+extern Cvar	*r_greyscale;
 
-extern cvar_t	*r_ignoreGLErrors;
+extern Cvar	*r_ignoreGLErrors;
 
-extern cvar_t	*r_overBrightBits;
-extern cvar_t	*r_mapOverBrightBits;
+extern Cvar	*r_overBrightBits;
+extern Cvar	*r_mapOverBrightBits;
 
-extern cvar_t	*r_debugSurface;
-extern cvar_t	*r_simpleMipMaps;
+extern Cvar	*r_debugSurface;
+extern Cvar	*r_simpleMipMaps;
 
-extern cvar_t	*r_showImages;
-extern cvar_t	*r_debugSort;
+extern Cvar	*r_showImages;
+extern Cvar	*r_debugSort;
 
-extern cvar_t	*r_printShaders;
-extern cvar_t	*r_saveFontData;
+extern Cvar	*r_printShaders;
+extern Cvar	*r_saveFontData;
 
-extern cvar_t	*r_marksOnTriangleMeshes;
+extern Cvar	*r_marksOnTriangleMeshes;
 
 /* ==================================================================== */
 
@@ -1977,9 +1977,9 @@ void R_RotateForEntity(const trRefEntity_t *ent, const viewParms_t *viewParms, o
 /*
 ** GL wrapper/helper functions
 */
-void    GL_Bind(image_t *image);
-void    GL_BindCubemap(image_t *image);
-void    GL_BindToTMU(image_t *image, int tmu);
+void    GL_Bind(Img *image);
+void    GL_BindCubemap(Img *image);
+void    GL_BindToTMU(Img *image, int tmu);
 void    GL_SetDefaultState(void);
 void    GL_SelectTexture(int unit);
 void    GL_TextureMode(const char *string);
@@ -2031,11 +2031,11 @@ void    RE_StretchRaw(int x, int y, int w, int h, int cols, int rows, const byte
 void    RE_UploadCinematic(int w, int h, int cols, int rows, const byte *data, int client, qbool dirty);
 
 void            RE_BeginFrame(stereoFrame_t stereoFrame);
-void            RE_BeginRegistration(glconfig_t *glconfig);
+void            RE_BeginRegistration(Glconfig *glconfig);
 void            RE_LoadWorldMap(const char *mapname);
 void            RE_SetWorldVisData(const byte *vis);
-qhandle_t       RE_RegisterModel(const char *name);
-qhandle_t       RE_RegisterSkin(const char *name);
+Handle       RE_RegisterModel(const char *name);
+Handle       RE_RegisterSkin(const char *name);
 void            RE_Shutdown(qbool destroyWindow);
 
 qbool        R_GetEntityToken(char *buffer, int size);
@@ -2043,13 +2043,13 @@ qbool        R_GetEntityToken(char *buffer, int size);
 model_t*R_AllocModel(void);
 
 void            R_Init(void);
-image_t*R_FindImageFile(const char *name, qbool mipmap, qbool allowPicmip, int glWrapClampMode);
-image_t*R_FindImageFile2(const char *name, imgFlags_t flags);
-image_t*R_CreateImage(const char *name, byte *pic, int width, int height, qbool mipmap
+Img*R_FindImageFile(const char *name, qbool mipmap, qbool allowPicmip, int glWrapClampMode);
+Img*R_FindImageFile2(const char *name, imgFlags_t flags);
+Img*R_CreateImage(const char *name, byte *pic, int width, int height, qbool mipmap
 		      , qbool allowPicmip, int wrapClampMode);
-image_t*R_CreateImage2(const char *name, byte *pic, int width, int height, imgFlags_t flags,
+Img*R_CreateImage2(const char *name, byte *pic, int width, int height, imgFlags_t flags,
 		       int internalFormat);
-void            R_UpdateSubImage(image_t *image, byte *pic, int x, int y, int width, int height);
+void            R_UpdateSubImage(Img *image, byte *pic, int x, int y, int width, int height);
 qbool        R_GetModeInfo(int *width, int *height, float *windowAspect, int mode);
 
 void            R_SetColorMappings(void);
@@ -2067,7 +2067,7 @@ void    R_InitImages(void);
 void    R_DeleteTextures(void);
 int             R_SumOfUsedImages(void);
 void    R_InitSkins(void);
-skin_t*R_GetSkinByHandle(qhandle_t hSkin);
+skin_t*R_GetSkinByHandle(Handle hSkin);
 
 int R_ComputeLOD(trRefEntity_t *ent);
 
@@ -2076,14 +2076,14 @@ const void*RB_TakeVideoFrameCmd(const void *data);
 /*
  * tr_shader.c
  *  */
-qhandle_t                RE_RegisterShaderLightMap(const char *name, int lightmapIndex);
-qhandle_t                RE_RegisterShader(const char *name);
-qhandle_t                RE_RegisterShaderNoMip(const char *name);
-qhandle_t RE_RegisterShaderFromImage(const char *name, int lightmapIndex, image_t *image,
+Handle                RE_RegisterShaderLightMap(const char *name, int lightmapIndex);
+Handle                RE_RegisterShader(const char *name);
+Handle                RE_RegisterShaderNoMip(const char *name);
+Handle RE_RegisterShaderFromImage(const char *name, int lightmapIndex, Img *image,
 				     qbool mipRawImage);
 
 material_t*R_FindShader(const char *name, int lightmapIndex, qbool mipRawImage);
-material_t*R_GetShaderByHandle(qhandle_t hShader);
+material_t*R_GetShaderByHandle(Handle hShader);
 material_t*R_GetShaderByState(int index, long *cycleTime);
 material_t*R_FindShaderByName(const char *name);
 void            R_InitShaders(void);
@@ -2272,7 +2272,7 @@ void R_FreeSurfaceGridMesh(srfGridMesh_t *grid);
  */
 
 int R_MarkFragments(int numPoints, const Vec3 *points, const Vec3 projection,
-		    int maxPoints, Vec3 pointBuffer, int maxFragments, markFragment_t *fragmentBuffer);
+		    int maxPoints, Vec3 pointBuffer, int maxFragments, Markfrag *fragmentBuffer);
 
 
 /*
@@ -2334,8 +2334,8 @@ shaderProgram_t*GLSL_GetGenericShaderProgram(int stage);
 void R_ToggleSmpFrame(void);
 
 void RE_ClearScene(void);
-void RE_AddRefEntityToScene(const refEntity_t *ent);
-void RE_AddPolyToScene(qhandle_t hShader, int numVerts, const polyVert_t *verts, int num);
+void RE_AddRefEntityToScene(const Refent *ent);
+void RE_AddPolyToScene(Handle hShader, int numVerts, const polyVert_t *verts, int num);
 void RE_AddLightToScene(const Vec3 org, float intensity, float r, float g, float b);
 void RE_AddAdditiveLightToScene(const Vec3 org, float intensity, float r, float g, float b);
 void RE_RenderScene(const refdef_t *fd);
@@ -2352,7 +2352,7 @@ void RB_SurfaceAnim(md4Surface_t *surfType);
 qbool R_LoadIQM(model_t *mod, void *buffer, size_t filesize, const char *name);
 void R_AddIQMSurfaces(trRefEntity_t *ent);
 void RB_IQMSurfaceAnim(surfaceType_t *surface);
-int R_IQMLerpTag(orientation_t *tag, iqmData_t *data,
+int R_IQMLerpTag(Orient *tag, iqmData_t *data,
 		 int startFrame, int endFrame,
 		 float frac, const char *tagName);
 
@@ -2439,7 +2439,7 @@ typedef struct {
 
 typedef struct {
 	int	commandId;
-	image_t *image;
+	Img *image;
 	int	width;
 	int	height;
 	void	*data;
@@ -2572,7 +2572,7 @@ void R_AddPostProcessCmd(void);
 
 void RE_SetColor(const float *rgba);
 void RE_StretchPic(float x, float y, float w, float h,
-		   float s1, float t1, float s2, float t2, qhandle_t hShader);
+		   float s1, float t1, float s2, float t2, Handle hShader);
 void RE_BeginFrame(stereoFrame_t stereoFrame);
 void RE_EndFrame(int *frontEndMsec, int *backEndMsec);
 void RE_SaveJPG(char * filename, int quality, int image_width, int image_height,
@@ -2585,7 +2585,7 @@ void RE_TakeVideoFrame(int width, int height,
 /* font stuff */
 void R_InitFreeType(void);
 void R_DoneFreeType(void);
-void RE_RegisterFont(const char *fontName, int pointSize, fontInfo_t *font);
+void RE_RegisterFont(const char *fontName, int pointSize, Fontinfo *font);
 
 
 #endif	/* TR_LOCAL_H */

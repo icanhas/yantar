@@ -25,7 +25,7 @@ static float s_flipMatrix[16] = {
 ** GL_Bind2
 */
 void
-GL_Bind2(image_t *image, GLenum type)
+GL_Bind2(Img *image, GLenum type)
 {
 	int texnum;
 
@@ -51,7 +51,7 @@ GL_Bind2(image_t *image, GLenum type)
 ** GL_Bind2
 */
 void
-GL_Bind(image_t *image)
+GL_Bind(Img *image)
 {
 	GL_Bind2(image, GL_TEXTURE_2D);
 }
@@ -60,7 +60,7 @@ GL_Bind(image_t *image)
 ** GL_BindCubemap
 */
 void
-GL_BindCubemap(image_t *image)
+GL_BindCubemap(Img *image)
 {
 	GL_Bind2(image, GL_TEXTURE_CUBE_MAP);
 }
@@ -88,7 +88,7 @@ GL_SelectTexture(int unit)
 ** GL_BindMultitexture
 */
 void
-GL_BindMultitexture(image_t *image0, GLuint env0, image_t *image1, GLuint env1)
+GL_BindMultitexture(Img *image0, GLuint env0, Img *image1, GLuint env1)
 {
 	int texnum0, texnum1;
 
@@ -117,7 +117,7 @@ GL_BindMultitexture(image_t *image0, GLuint env0, image_t *image1, GLuint env1)
 ** GL_BindToTMU
 */
 void
-GL_BindToTMU(image_t *image, int tmu)
+GL_BindToTMU(Img *image, int tmu)
 {
 	int texnum;
 	int oldtmu = glState.currenttmu;
@@ -1156,7 +1156,7 @@ void
 RB_ShowImages(void)
 {
 	int i;
-	image_t *image;
+	Img *image;
 	float	x, y, w, h;
 	int start, end;
 

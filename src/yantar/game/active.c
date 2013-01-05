@@ -17,9 +17,9 @@
  * global pain sound events for all clients.
  */
 void
-P_DamageFeedback(gentity_t *player)
+P_DamageFeedback(Gentity *player)
 {
-	gclient_t	*client;
+	gClient	*client;
 	float count;
 	Vec3		angles;
 
@@ -73,7 +73,7 @@ P_DamageFeedback(gentity_t *player)
  * Check for lava / slime contents and drowning
  */
 void
-P_WorldEffects(gentity_t *ent)
+P_WorldEffects(Gentity *ent)
 {
 	qbool envirosuit;
 	int waterlevel;
@@ -140,7 +140,7 @@ P_WorldEffects(gentity_t *ent)
 }
 
 void
-G_SetClientSound(gentity_t *ent)
+G_SetClientSound(Gentity *ent)
 {
 	if(ent->s.eFlags & EF_TICKING)
 		ent->client->ps.loopSound = G_SoundIndex(
@@ -153,11 +153,11 @@ G_SetClientSound(gentity_t *ent)
 }
 
 void
-ClientImpacts(gentity_t *ent, pmove_t *pm)
+ClientImpacts(Gentity *ent, Pmove *pm)
 {
 	int i, j;
-	trace_t trace;
-	gentity_t *other;
+	Trace trace;
+	Gentity *other;
 
 	memset(&trace, 0, sizeof(trace));
 	for(i=0; i<pm->numtouch; i++){
@@ -184,12 +184,12 @@ ClientImpacts(gentity_t *ent, pmove_t *pm)
  * Spectators will only interact with teleporters.
  */
 void
-G_TouchTriggers(gentity_t *ent)
+G_TouchTriggers(Gentity *ent)
 {
 	int	i, num;
 	int	touch[MAX_GENTITIES];
-	gentity_t	*hit;
-	trace_t		trace;
+	Gentity	*hit;
+	Trace		trace;
 	Vec3		mins, maxs;
 	static Vec3 range = { 40, 40, 52 };
 
@@ -252,10 +252,10 @@ G_TouchTriggers(gentity_t *ent)
 }
 
 void
-SpectatorThink(gentity_t *ent, usercmd_t *ucmd)
+SpectatorThink(Gentity *ent, Usrcmd *ucmd)
 {
-	pmove_t pm;
-	gclient_t *client;
+	Pmove pm;
+	gClient *client;
 
 	client = ent->client;
 
@@ -272,7 +272,7 @@ SpectatorThink(gentity_t *ent, usercmd_t *ucmd)
 		pm.pointcontents = trap_PointContents;
 
 		/* perform a pmove */
-		Pmove (&pm);
+		PM_Pmove(&pm);
 		/* save results of pmove */
 		copyv3(client->ps.origin, ent->s.origin);
 
@@ -293,7 +293,7 @@ SpectatorThink(gentity_t *ent, usercmd_t *ucmd)
  * Returns qfalse if the client is dropped
  */
 qbool
-ClientInactivityTimer(gclient_t *client)
+ClientInactivityTimer(gClient *client)
 {
 	if(!g_inactivity.integer){
 		/* give everyone some time, so if the operator sets g_inactivity during
@@ -331,9 +331,9 @@ ClientInactivityTimer(gclient_t *client)
  * Actions that happen once a second
  */
 void
-ClientTimerActions(gentity_t *ent, int msec)
+ClientTimerActions(Gentity *ent, int msec)
 {
-	gclient_t *client;
+	gClient *client;
 
 	client = ent->client;
 	client->timeResidual += msec;
@@ -375,7 +375,7 @@ ClientTimerActions(gentity_t *ent, int msec)
 }
 
 void
-ClientIntermissionThink(gclient_t *client)
+ClientIntermissionThink(gClient *client)
 {
 	client->ps.eFlags &= ~EF_TALK;
 	client->ps.eFlags &= ~EF_FIRING;
@@ -397,16 +397,16 @@ ClientIntermissionThink(gclient_t *client)
  * but any server game effects are handled here
  */
 void
-ClientEvents(gentity_t *ent, int oldEventSequence)
+ClientEvents(Gentity *ent, int oldEventSequence)
 {
 	int	i, j;
 	int	event;
-	gclient_t *client;
+	gClient *client;
 	int	damage;
 	Vec3 origin, angles;
 /*	qbool		fired; */
-	gitem_t *item;
-	gentity_t *drop;
+	Gitem *item;
+	Gentity *drop;
 
 	client = ent->client;
 
@@ -486,10 +486,10 @@ ClientEvents(gentity_t *ent, int oldEventSequence)
 
 #ifdef MISSIONPACK
 static int
-StuckInOtherClient(gentity_t *ent)
+StuckInOtherClient(Gentity *ent)
 {
 	int i;
-	gentity_t *ent2;
+	Gentity *ent2;
 
 	ent2 = &g_entities[0];
 	for(i = 0; i < MAX_CLIENTS; i++, ent2++){
@@ -523,9 +523,9 @@ StuckInOtherClient(gentity_t *ent)
 void BotTestSolid(Vec3 origin);
 
 void
-SendPendingPredictableEvents(playerState_t *ps)
+SendPendingPredictableEvents(Playerstate *ps)
 {
-	gentity_t *t;
+	Gentity *t;
 	int	event, seq;
 	int	extEvent, number;
 
@@ -563,13 +563,13 @@ SendPendingPredictableEvents(playerState_t *ps)
  * once for each server frame, which makes for smooth demo recording.
  */
 void
-ClientThink_real(gentity_t *ent)
+ClientThink_real(Gentity *ent)
 {
-	gclient_t	*client;
-	pmove_t		pm;
+	gClient	*client;
+	Pmove		pm;
 	int	oldEventSequence;
 	int	msec;
-	usercmd_t *ucmd;
+	Usrcmd *ucmd;
 
 	client = ent->client;
 
@@ -705,9 +705,9 @@ ClientThink_real(gentity_t *ent)
 					"centerview\n");
 			ent->client->ps.pm_type = PM_SPINTERMISSION;
 		}
-	Pmove (&pm);
+	PM_Pmove(&pm);
 #else
-	Pmove (&pm);
+	PM_Pmove(&pm);
 #endif
 
 	/* save results of pmove */
@@ -788,7 +788,7 @@ ClientThink_real(gentity_t *ent)
 void
 ClientThink(int clientNum)
 {
-	gentity_t *ent;
+	Gentity *ent;
 
 	ent = g_entities + clientNum;
 	trap_GetUsercmd(clientNum, &ent->client->pers.cmd);
@@ -804,7 +804,7 @@ ClientThink(int clientNum)
 }
 
 void
-G_RunClient(gentity_t *ent)
+G_RunClient(Gentity *ent)
 {
 	if(!(ent->r.svFlags & SVF_BOT) && !g_synchronousClients.integer)
 		return;
@@ -813,9 +813,9 @@ G_RunClient(gentity_t *ent)
 }
 
 void
-SpectatorClientEndFrame(gentity_t *ent)
+SpectatorClientEndFrame(Gentity *ent)
 {
-	gclient_t *cl;
+	gClient *cl;
 
 	/* if we are doing a chase cam or a remote view, grab the latest info */
 	if(ent->client->sess.spectatorState == SPECTATOR_FOLLOW){
@@ -864,7 +864,7 @@ SpectatorClientEndFrame(gentity_t *ent)
  * while a slow client may have multiple ClientEndFrame between ClientThink.
  */
 void
-ClientEndFrame(gentity_t *ent)
+ClientEndFrame(Gentity *ent)
 {
 	int i;
 

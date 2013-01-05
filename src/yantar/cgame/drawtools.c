@@ -97,7 +97,7 @@ CG_DrawRect(float x, float y, float width, float height, float size,
  * Coordinates are 640*480 virtual values
  */
 void
-CG_DrawPic(float x, float y, float width, float height, qhandle_t hShader)
+CG_DrawPic(float x, float y, float width, float height, Handle hShader)
 {
 	CG_AdjustFrom640(&x, &y, &width, &height);
 	trap_R_DrawStretchPic(x, y, width, height, 0, 0, 1, 1, hShader);
@@ -280,7 +280,7 @@ CG_DrawStrlen(const char *str)
  * refresh window.
  */
 static void
-CG_TileClearBox(int x, int y, int w, int h, qhandle_t hShader)
+CG_TileClearBox(int x, int y, int w, int h, Handle hShader)
 {
 	float s1, t1, s2, t2;
 
@@ -723,7 +723,7 @@ UI_ProportionalStringWidth(const char* str)
 static void
 UI_DrawProportionalString2(int x, int y, const char* str, Vec4 color,
 			   float sizeScale,
-			   qhandle_t charset)
+			   Handle charset)
 {
 	const char * s;
 	unsigned char ch;

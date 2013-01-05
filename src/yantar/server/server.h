@@ -36,13 +36,13 @@ typedef struct svEntity_s {
 	struct worldSector_s	*worldSector;
 	struct svEntity_s	*nextEntityInWorldSector;
 
-	entityState_t		baseline;	/* for delta compression of initial sighting */
+	Entstate		baseline;	/* for delta compression of initial sighting */
 	int			numClusters;	/* if -1, use headnode instead */
 	int			clusternums[MAX_ENT_CLUSTERS];
 	int			lastCluster;	/* if all the clusters don't fit in clusternums */
 	int			areanum, areanum2;
 	int			snapshotCounter;	/* used to prevent double adding from portal views */
-} svEntity_t;
+} Svent;
 
 typedef enum {
 	SS_DEAD,	/* no map loaded */
@@ -64,17 +64,17 @@ typedef struct {
 	int		nextFrameTime;		/* when time > nextFrameTime, process world */
 	struct cmodel_s *models[MAX_MODELS];
 	char		*configstrings[MAX_CONFIGSTRINGS];
-	svEntity_t	svEntities[MAX_GENTITIES];
+	Svent		svEntities[MAX_GENTITIES];
 
 	char		*entityParsePoint;	/* used during game VM init */
 
 	/* the game virtual machine will update these on init and changes */
-	sharedEntity_t	*gentities;
+	Sharedent	*gentities;
 	int		gentitySize;
 	int		num_entities;	/* current number, <= MAX_GENTITIES */
 
-	playerState_t	*gameClients;
-	int		gameClientSize;	/* will be > sizeof(playerState_t) due to game private data */
+	Playerstate	*gameClients;
+	int		gameClientSize;	/* will be > sizeof(Playerstate) due to game private data */
 
 	int		restartTime;
 	int		time;
@@ -87,7 +87,7 @@ typedef struct {
 typedef struct {
 	int		areabytes;
 	byte		areabits[MAX_MAP_AREA_BYTES];	/* portalarea visibility bits */
-	playerState_t	ps;
+	Playerstate	ps;
 	int		num_entities;
 	int		first_entity;	/* into the circular sv_packet_entities[] */
 	/* the entities MUST be in increasing state number
@@ -101,13 +101,13 @@ typedef enum {
 	CS_FREE,	/* can be reused for a new connection */
 	CS_ZOMBIE,	/* client has been disconnected, but don't reuse */
 	/* connection for a couple seconds */
-	CS_CONNECTED,	/* has been assigned to a client_t, but no gamestate yet */
+	CS_CONNECTED,	/* has been assigned to a Client, but no gamestate yet */
 	CS_PRIMED,	/* gamestate has been sent, but client hasn't sent a usercmd */
 	CS_ACTIVE	/* client is fully in game */
 } clientState_t;
 
 typedef struct netchan_buffer_s {
-	msg_t	msg;
+	Bitmsg	msg;
 	byte	msgBuffer[MAX_MSGLEN];
 	struct netchan_buffer_s *next;
 } netchan_buffer_t;
@@ -126,16 +126,16 @@ typedef struct client_s {
 	int		gamestateMessageNum;	/* netchan->outgoingSequence of gamestate */
 	int		challenge;
 
-	usercmd_t	lastUsercmd;
+	Usrcmd	lastUsercmd;
 	int		lastMessageNum;		/* for delta compression */
 	int		lastClientCommand;	/* reliable client message sequence */
 	char		lastClientCommandString[MAX_STRING_CHARS];
-	sharedEntity_t	*gentity;		/* SV_GentityNum(clientnum) */
+	Sharedent	*gentity;		/* SV_GentityNum(clientnum) */
 	char		name[MAX_NAME_LENGTH];	/* extracted from userinfo, high bits masked */
 
 	/* downloading */
 	char			downloadName[MAX_QPATH];		/* if not empty string, we are downloading */
-	fileHandle_t		download;				/* file being downloaded */
+	Fhandle		download;				/* file being downloaded */
 	int			downloadSize;				/* total bytes (can't use EOF because of paks) */
 	int			downloadCount;				/* bytes sent */
 	int			downloadClientBlock;			/* last block we sent to the client, awaiting ack */
@@ -159,7 +159,7 @@ typedef struct client_s {
 	int			snapshotMsec;	/* requests a snapshot every snapshotMsec unless rate choked */
 	int			pureAuthentic;
 	qbool			gotCP;	/* TTimo - additional flag to distinguish between a bad pure checksum, and no cp command at all */
-	netchan_t		netchan;
+	Netchan		netchan;
 	/* TTimo
 	 * queuing outgoing fragmented messages to send them properly, without udp packet bursts
 	 * in case large fragmented messages are stacking up
@@ -179,7 +179,7 @@ typedef struct client_s {
 	int		oldServerTime;
 	qbool		csUpdated[MAX_CONFIGSTRINGS+1];
 
-} client_t;
+} Client;
 
 /* ============================================================================= */
 
@@ -196,7 +196,7 @@ typedef struct client_s {
 #define AUTHORIZE_TIMEOUT	5000
 
 typedef struct {
-	netadr_t	adr;
+	Netaddr	adr;
 	int		challenge;
 	int		clientChallenge;	/* challenge number coming from the client */
 	int		time;			/* time the last packet was sent to the autherize server */
@@ -214,21 +214,21 @@ typedef struct {
 
 	int		snapFlagServerBit;	/* ^= SNAPFLAG_SERVERCOUNT every SV_SpawnServer() */
 
-	client_t	*clients;		/* [sv_maxclients->integer]; */
+	Client	*clients;		/* [sv_maxclients->integer]; */
 	int		numSnapshotEntities;	/* sv_maxclients->integer*PACKET_BACKUP*MAX_PACKET_ENTITIES */
 	int		nextSnapshotEntities;	/* next snapshotEntities to use */
-	entityState_t	*snapshotEntities;	/* [numSnapshotEntities] */
+	Entstate	*snapshotEntities;	/* [numSnapshotEntities] */
 	int		nextHeartbeatTime;
 	challenge_t	challenges[MAX_CHALLENGES];	/* to prevent invalid IPs from connecting */
-	netadr_t	redirectAddress;		/* for rcon return messages */
+	Netaddr	redirectAddress;		/* for rcon return messages */
 
-	netadr_t	authorizeAddress;	/* for rcon return messages */
+	Netaddr	authorizeAddress;	/* for rcon return messages */
 } serverStatic_t;
 
 #define SERVER_MAXBANS 1024
 /* Structure for managing bans */
 typedef struct {
-	netadr_t	ip;
+	Netaddr	ip;
 	/* For a CIDR-Notation type suffix */
 	int		subnet;
 
@@ -239,45 +239,45 @@ typedef struct {
 
 extern serverStatic_t svs;	/* persistant server info across maps */
 extern server_t sv;		/* cleared each map */
-extern vm_t	*gvm;		/* game virtual machine */
+extern Vm	*gvm;		/* game virtual machine */
 
-extern cvar_t	*sv_fps;
-extern cvar_t	*sv_timeout;
-extern cvar_t	*sv_zombietime;
-extern cvar_t	*sv_rconPassword;
-extern cvar_t	*sv_privatePassword;
-extern cvar_t	*sv_allowDownload;
-extern cvar_t	*sv_maxclients;
+extern Cvar	*sv_fps;
+extern Cvar	*sv_timeout;
+extern Cvar	*sv_zombietime;
+extern Cvar	*sv_rconPassword;
+extern Cvar	*sv_privatePassword;
+extern Cvar	*sv_allowDownload;
+extern Cvar	*sv_maxclients;
 
-extern cvar_t	*sv_privateClients;
-extern cvar_t	*sv_hostname;
-extern cvar_t	*sv_master[MAX_MASTER_SERVERS];
-extern cvar_t	*sv_reconnectlimit;
-extern cvar_t	*sv_showloss;
-extern cvar_t	*sv_padPackets;
-extern cvar_t	*sv_killserver;
-extern cvar_t	*sv_mapname;
-extern cvar_t	*sv_mapChecksum;
-extern cvar_t	*sv_serverid;
-extern cvar_t	*sv_minRate;
-extern cvar_t	*sv_maxRate;
-extern cvar_t	*sv_dlRate;
-extern cvar_t	*sv_minPing;
-extern cvar_t	*sv_maxPing;
-extern cvar_t	*sv_gametype;
-extern cvar_t	*sv_pure;
-extern cvar_t	*sv_floodProtect;
-extern cvar_t	*sv_lanForceRate;
+extern Cvar	*sv_privateClients;
+extern Cvar	*sv_hostname;
+extern Cvar	*sv_master[MAX_MASTER_SERVERS];
+extern Cvar	*sv_reconnectlimit;
+extern Cvar	*sv_showloss;
+extern Cvar	*sv_padPackets;
+extern Cvar	*sv_killserver;
+extern Cvar	*sv_mapname;
+extern Cvar	*sv_mapChecksum;
+extern Cvar	*sv_serverid;
+extern Cvar	*sv_minRate;
+extern Cvar	*sv_maxRate;
+extern Cvar	*sv_dlRate;
+extern Cvar	*sv_minPing;
+extern Cvar	*sv_maxPing;
+extern Cvar	*sv_gametype;
+extern Cvar	*sv_pure;
+extern Cvar	*sv_floodProtect;
+extern Cvar	*sv_lanForceRate;
 #ifndef STANDALONE
-extern cvar_t	*sv_strictAuth;
+extern Cvar	*sv_strictAuth;
 #endif
-extern cvar_t	*sv_banFile;
+extern Cvar	*sv_banFile;
 
 extern serverBan_t serverBans[SERVER_MAXBANS];
 extern uint serverBansCount;
 
 #ifdef USE_VOIP
-extern cvar_t *sv_voip;
+extern Cvar *sv_voip;
 #endif
 
 
@@ -287,7 +287,7 @@ extern cvar_t *sv_voip;
  * sv_main.c
  *  */
 void SV_FinalMessage(char *message);
-void QDECL SV_SendServerCommand(client_t *cl, const char *fmt,
+void QDECL SV_SendServerCommand(Client *cl, const char *fmt,
 				...) __attribute__ ((format (printf, 2, 3)));
 
 
@@ -296,7 +296,7 @@ void SV_RemoveOperatorCommands(void);
 
 
 void SV_MasterShutdown(void);
-int SV_RateMsec(client_t *client);
+int SV_RateMsec(Client *client);
 
 
 
@@ -305,7 +305,7 @@ int SV_RateMsec(client_t *client);
  *  */
 void SV_SetConfigstring(int index, const char *val);
 void SV_GetConfigstring(int index, char *buffer, int bufferSize);
-void SV_UpdateConfigstrings(client_t *client);
+void SV_UpdateConfigstrings(Client *client);
 
 void SV_SetUserinfo(int index, const char *val);
 void SV_GetUserinfo(int index, char *buffer, int bufferSize);
@@ -318,25 +318,25 @@ void SV_SpawnServer(char *server, qbool killBots);
 /*
  * sv_client.c
  *  */
-void SV_GetChallenge(netadr_t from);
+void SV_GetChallenge(Netaddr from);
 
-void SV_DirectConnect(netadr_t from);
+void SV_DirectConnect(Netaddr from);
 
 #ifndef STANDALONE
-void SV_AuthorizeIpPacket(netadr_t from);
+void SV_AuthorizeIpPacket(Netaddr from);
 #endif
 
-void SV_ExecuteClientMessage(client_t *cl, msg_t *msg);
-void SV_UserinfoChanged(client_t *cl);
+void SV_ExecuteClientMessage(Client *cl, Bitmsg *msg);
+void SV_UserinfoChanged(Client *cl);
 
-void SV_ClientEnterWorld(client_t *client, usercmd_t *cmd);
-void SV_FreeClient(client_t *client);
-void SV_DropClient(client_t *drop, const char *reason);
+void SV_ClientEnterWorld(Client *client, Usrcmd *cmd);
+void SV_FreeClient(Client *client);
+void SV_DropClient(Client *drop, const char *reason);
 
-void SV_ExecuteClientCommand(client_t *cl, const char *s, qbool clientOK);
-void SV_ClientThink(client_t *cl, usercmd_t *cmd);
+void SV_ExecuteClientCommand(Client *cl, const char *s, qbool clientOK);
+void SV_ClientThink(Client *cl, Usrcmd *cmd);
 
-int SV_WriteDownloadToClient(client_t *cl, msg_t *msg);
+int SV_WriteDownloadToClient(Client *cl, Bitmsg *msg);
 int SV_SendDownloadMessages(void);
 int SV_SendQueuedMessages(void);
 
@@ -349,21 +349,21 @@ void SV_Heartbeat_f(void);
 /*
  * sv_snapshot.c
  *  */
-void SV_AddServerCommand(client_t *client, const char *cmd);
-void SV_UpdateServerCommandsToClient(client_t *client, msg_t *msg);
-void SV_WriteFrameToClient(client_t *client, msg_t *msg);
-void SV_SendMessageToClient(msg_t *msg, client_t *client);
+void SV_AddServerCommand(Client *client, const char *cmd);
+void SV_UpdateServerCommandsToClient(Client *client, Bitmsg *msg);
+void SV_WriteFrameToClient(Client *client, Bitmsg *msg);
+void SV_SendMessageToClient(Bitmsg *msg, Client *client);
 void SV_SendClientMessages(void);
-void SV_SendClientSnapshot(client_t *client);
+void SV_SendClientSnapshot(Client *client);
 
 /*
  * sv_game.c
  *  */
-int     SV_NumForGentity(sharedEntity_t *ent);
-sharedEntity_t*SV_GentityNum(int num);
-playerState_t*SV_GameClientNum(int num);
-svEntity_t*SV_SvEntityForGentity(sharedEntity_t *gEnt);
-sharedEntity_t*SV_GEntityForSvEntity(svEntity_t *svEnt);
+int     SV_NumForGentity(Sharedent *ent);
+Sharedent*SV_GentityNum(int num);
+Playerstate*SV_GameClientNum(int num);
+Svent*SV_SvEntityForGentity(Sharedent *gEnt);
+Sharedent*SV_GEntityForSvEntity(Svent *svEnt);
 void            SV_InitGameProgs(void);
 void            SV_ShutdownGameProgs(void);
 void            SV_RestartGameProgs(void);
@@ -395,11 +395,11 @@ void SV_BotInitBotLib(void);
 void SV_ClearWorld(void);
 /* called after the world model has been loaded, before linking any entities */
 
-void SV_UnlinkEntity(sharedEntity_t *ent);
+void SV_UnlinkEntity(Sharedent *ent);
 /* call before removing an entity, and before trying to move one,
  * so it doesn't clip against itself */
 
-void SV_LinkEntity(sharedEntity_t *ent);
+void SV_LinkEntity(Sharedent *ent);
 /* Needs to be called any time an entity changes origin, mins, maxs,
  * or solid.  Automatically unlinks if needed.
  * sets ent->v.absmin and ent->v.absmax
@@ -407,7 +407,7 @@ void SV_LinkEntity(sharedEntity_t *ent);
  * is not solid */
 
 
-clipHandle_t SV_ClipHandleForEntity(const sharedEntity_t *ent);
+Cliphandle SV_ClipHandleForEntity(const Sharedent *ent);
 
 
 void SV_SectorList_f(void);
@@ -427,7 +427,7 @@ int SV_PointContents(const Vec3 p, int passEntityNum);
 /* returns the CONTENTS_* value from the world and all entities at the given point. */
 
 
-void SV_Trace(trace_t *results, const Vec3 start, Vec3 mins, Vec3 maxs,
+void SV_Trace(Trace *results, const Vec3 start, Vec3 mins, Vec3 maxs,
 	      const Vec3 end, int passEntityNum, int contentmask,
 	      int capsule);
 /* mins and maxs are relative */
@@ -441,7 +441,7 @@ void SV_Trace(trace_t *results, const Vec3 start, Vec3 mins, Vec3 maxs,
 /* passEntityNum is explicitly excluded from clipping checks (normally ENTITYNUM_NONE) */
 
 
-void SV_ClipToEntity(trace_t *trace, const Vec3 start, const Vec3 mins,
+void SV_ClipToEntity(Trace *trace, const Vec3 start, const Vec3 mins,
 		     const Vec3 maxs, const Vec3 end, int entityNum,
 		     int contentmask,
 		     int capsule);
@@ -450,7 +450,7 @@ void SV_ClipToEntity(trace_t *trace, const Vec3 start, const Vec3 mins,
 /*
  * sv_net_chan.c
  *  */
-void SV_Netchan_Transmit(client_t *client, msg_t *msg);
-int SV_Netchan_TransmitNextFragment(client_t *client);
-qbool SV_Netchan_Process(client_t *client, msg_t *msg);
-void SV_Netchan_FreeQueue(client_t *client);
+void SV_Netchan_Transmit(Client *client, Bitmsg *msg);
+int SV_Netchan_TransmitNextFragment(Client *client);
+qbool SV_Netchan_Process(Client *client, Bitmsg *msg);
+void SV_Netchan_FreeQueue(Client *client);

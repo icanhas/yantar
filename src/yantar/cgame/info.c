@@ -14,8 +14,8 @@ enum {
 
 static int	loadingPlayerIconCount;
 static int	loadingItemIconCount;
-static qhandle_t	loadingPlayerIcons[MAX_LOADING_PLAYER_ICONS];
-static qhandle_t	loadingItemIcons[MAX_LOADING_ITEM_ICONS];
+static Handle		loadingPlayerIcons[MAX_LOADING_PLAYER_ICONS];
+static Handle		loadingItemIcons[MAX_LOADING_ITEM_ICONS];
 
 static void
 CG_DrawLoadingIcons(void)
@@ -46,7 +46,7 @@ CG_LoadingString(const char *s)
 void
 CG_LoadingItem(int itemNum)
 {
-	gitem_t *item;
+	Gitem *item;
 
 	item = &bg_itemlist[itemNum];
 	if(item->icon && loadingItemIconCount < MAX_LOADING_ITEM_ICONS)
@@ -111,7 +111,7 @@ CG_DrawInformation(void)
 {
 	const char *s, *info, *sysInfo;
 	int y, value;
-	qhandle_t levelshot, detail;
+	Handle levelshot, detail;
 	char buf[1024];
 
 	info = CG_ConfigString(CS_SERVERINFO);

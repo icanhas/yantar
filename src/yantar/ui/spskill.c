@@ -53,9 +53,9 @@ typedef struct {
 	menubitmap_s	item_fight;
 
 	const char	*arenaInfo;
-	qhandle_t	skillpics[5];
-	sfxHandle_t	nightmareSound;
-	sfxHandle_t	silenceSound;
+	Handle		skillpics[5];
+	Sfxhandle	nightmareSound;
+	Sfxhandle	silenceSound;
 } skillMenuInfo_t;
 
 static skillMenuInfo_t skillMenuInfo;
@@ -146,7 +146,7 @@ UI_SPSkillMenu_BackEvent(void* ptr, int notification)
 /*
  * UI_SPSkillMenu_Key
  */
-static sfxHandle_t
+static Sfxhandle
 UI_SPSkillMenu_Key(int key)
 {
 	if(key == K_MOUSE2 || key == K_ESCAPE)

@@ -60,7 +60,7 @@ typedef struct {
 	menuradiobutton_s	allowdownload;
 	menubitmap_s		back;
 
-	qhandle_t		crosshairShader[NUM_CROSSHAIRS];
+	Handle			crosshairShader[NUM_CROSSHAIRS];
 } preferences_t;
 
 static preferences_t s_preferences;

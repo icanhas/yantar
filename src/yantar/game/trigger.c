@@ -11,7 +11,7 @@
 #include "local.h"
 
 void
-InitTrigger(gentity_t *self)
+InitTrigger(Gentity *self)
 {
 	if(!cmpv3 (self->s.angles, vec3_origin))
 		G_SetMovedir (self->s.angles, self->movedir);
@@ -24,7 +24,7 @@ InitTrigger(gentity_t *self)
 
 /* the wait time has passed, so set back up for another activation */
 void
-multi_wait(gentity_t *ent)
+multi_wait(Gentity *ent)
 {
 	ent->nextthink = 0;
 }
@@ -34,7 +34,7 @@ multi_wait(gentity_t *ent)
  * ent->activator should be set to the activator so it can be held through a delay
  * so wait for the delay time before firing */
 void
-multi_trigger(gentity_t *ent, gentity_t *activator)
+multi_trigger(Gentity *ent, Gentity *activator)
 {
 	ent->activator = activator;
 	if(ent->nextthink)
@@ -65,13 +65,13 @@ multi_trigger(gentity_t *ent, gentity_t *activator)
 }
 
 void
-Use_Multi(gentity_t *ent, gentity_t *other, gentity_t *activator)
+Use_Multi(Gentity *ent, Gentity *other, Gentity *activator)
 {
 	multi_trigger(ent, activator);
 }
 
 void
-Touch_Multi(gentity_t *self, gentity_t *other, trace_t *trace)
+Touch_Multi(Gentity *self, Gentity *other, Trace *trace)
 {
 	if(!other->client)
 		return;
@@ -86,7 +86,7 @@ Touch_Multi(gentity_t *self, gentity_t *other, trace_t *trace)
  * (wait - random) and (wait + random)
  */
 void
-SP_trigger_multiple(gentity_t *ent)
+SP_trigger_multiple(Gentity *ent)
 {
 	G_SpawnFloat("wait", "0.5", &ent->wait);
 	G_SpawnFloat("random", "0", &ent->random);
@@ -112,7 +112,7 @@ SP_trigger_multiple(gentity_t *ent)
  */
 
 void
-trigger_always_think(gentity_t *ent)
+trigger_always_think(Gentity *ent)
 {
 	G_UseTargets(ent, ent);
 	G_FreeEntity(ent);
@@ -122,7 +122,7 @@ trigger_always_think(gentity_t *ent)
  * This trigger will always fire.  It is activated by the world.
  */
 void
-SP_trigger_always(gentity_t *ent)
+SP_trigger_always(Gentity *ent)
 {
 	/* we must have some delay to make sure our use targets are present */
 	ent->nextthink = level.time + 300;
@@ -137,7 +137,7 @@ SP_trigger_always(gentity_t *ent)
  */
 
 void
-trigger_push_touch(gentity_t *self, gentity_t *other, trace_t *trace)
+trigger_push_touch(Gentity *self, Gentity *other, Trace *trace)
 {
 
 	if(!other->client)
@@ -153,9 +153,9 @@ trigger_push_touch(gentity_t *self, gentity_t *other, trace_t *trace)
  * Calculate origin2 so the target apogee will be hit
  */
 void
-AimAtTarget(gentity_t *self)
+AimAtTarget(Gentity *self)
 {
-	gentity_t	*ent;
+	Gentity	*ent;
 	Vec3		origin;
 	float	height, gravity, time, forward;
 	float	dist;
@@ -194,7 +194,7 @@ AimAtTarget(gentity_t *self)
  * This will be client side predicted, unlike target_push
  */
 void
-SP_trigger_push(gentity_t *self)
+SP_trigger_push(Gentity *self)
 {
 	InitTrigger (self);
 
@@ -213,7 +213,7 @@ SP_trigger_push(gentity_t *self)
 
 
 void
-Use_target_push(gentity_t *self, gentity_t *other, gentity_t *activator)
+Use_target_push(Gentity *self, Gentity *other, Gentity *activator)
 {
 	if(!activator->client)
 		return;
@@ -238,7 +238,7 @@ Use_target_push(gentity_t *self, gentity_t *other, gentity_t *activator)
  * if "bouncepad", play bounce noise instead of windfly
  */
 void
-SP_target_push(gentity_t *self)
+SP_target_push(Gentity *self)
 {
 	if(!self->speed)
 		self->speed = 1000;
@@ -265,9 +265,9 @@ SP_target_push(gentity_t *self)
  */
 
 void
-trigger_teleporter_touch(gentity_t *self, gentity_t *other, trace_t *trace)
+trigger_teleporter_touch(Gentity *self, Gentity *other, Trace *trace)
 {
-	gentity_t *dest;
+	Gentity *dest;
 
 	if(!other->client)
 		return;
@@ -298,7 +298,7 @@ trigger_teleporter_touch(gentity_t *self, gentity_t *other, trace_t *trace)
  * automatically near doors to allow spectators to move through them
  */
 void
-SP_trigger_teleport(gentity_t *self)
+SP_trigger_teleport(Gentity *self)
 {
 	InitTrigger (self);
 
@@ -338,7 +338,7 @@ SP_trigger_teleport(gentity_t *self)
  *
  */
 void
-hurt_use(gentity_t *self, gentity_t *other, gentity_t *activator)
+hurt_use(Gentity *self, Gentity *other, Gentity *activator)
 {
 	if(self->r.linked)
 		trap_UnlinkEntity(self);
@@ -347,7 +347,7 @@ hurt_use(gentity_t *self, gentity_t *other, gentity_t *activator)
 }
 
 void
-hurt_touch(gentity_t *self, gentity_t *other, trace_t *trace)
+hurt_touch(Gentity *self, Gentity *other, Trace *trace)
 {
 	int dflags;
 
@@ -375,7 +375,7 @@ hurt_touch(gentity_t *self, gentity_t *other, trace_t *trace)
 }
 
 void
-SP_trigger_hurt(gentity_t *self)
+SP_trigger_hurt(Gentity *self)
 {
 	InitTrigger(self);
 
@@ -411,7 +411,7 @@ SP_trigger_hurt(gentity_t *self)
  *
  */
 void
-func_timer_think(gentity_t *self)
+func_timer_think(Gentity *self)
 {
 	G_UseTargets (self, self->activator);
 	/* set time before next firing */
@@ -420,7 +420,7 @@ func_timer_think(gentity_t *self)
 }
 
 void
-func_timer_use(gentity_t *self, gentity_t *other, gentity_t *activator)
+func_timer_use(Gentity *self, Gentity *other, Gentity *activator)
 {
 	self->activator = activator;
 
@@ -435,7 +435,7 @@ func_timer_use(gentity_t *self, gentity_t *other, gentity_t *activator)
 }
 
 void
-SP_func_timer(gentity_t *self)
+SP_func_timer(Gentity *self)
 {
 	G_SpawnFloat("random", "1", &self->random);
 	G_SpawnFloat("wait", "1", &self->wait);

@@ -30,7 +30,7 @@
 /* (entityShared_t->singleClient) */
 
 typedef struct {
-	entityState_t unused;	/* apparently this field was put here accidentally */
+	Entstate unused;	/* apparently this field was put here accidentally */
 	/*  (and is kept only for compatibility, as a struct pad) */
 
 	qbool		linked;	/* qfalse if not in any good cluster */
@@ -69,11 +69,11 @@ typedef struct {
 	int ownerNum;
 } entityShared_t;
 
-/* the server looks at a sharedEntity, which is the start of the game's gentity_t structure */
+/* the server looks at a sharedEntity, which is the start of the game's Gentity structure */
 typedef struct {
-	entityState_t	s;	/* communicated by server to clients */
+	Entstate	s;	/* communicated by server to clients */
 	entityShared_t	r;	/* shared by both the server system and game */
-} sharedEntity_t;
+} Sharedent;
 
 /*
  * system traps provided by the main engine

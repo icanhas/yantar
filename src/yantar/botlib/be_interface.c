@@ -365,10 +365,10 @@ BotExportTest(int parm0, char *parm1, Vec3 parm2, Vec3 parm3)
 /*	int reachnum; */
 	Vec3 eye, forward, right, end, origin;
 /* Vec3 bottomcenter;
- * aas_trace_t trace;
+ * aas_Trace trace;
  * aas_face_t *face;
  * aas_entity_t *ent;
- * bsp_trace_t bsptrace;
+ * bsp_Trace bsptrace;
  * aas_reachability_t reach;
  * bot_goal_t goal; */
 

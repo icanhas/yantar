@@ -23,7 +23,7 @@ char *svc_strings[256] = {
 };
 
 void
-SHOWNET(msg_t *msg, char *s)
+SHOWNET(Bitmsg *msg, char *s)
 {
 	if(cl_shownet->integer >= 2)
 		Com_Printf ("%3i:%s\n", msg->readcount-1, s);
@@ -43,10 +43,10 @@ SHOWNET(msg_t *msg, char *s)
  * to the current frame
  */
 void
-CL_DeltaEntity(msg_t *msg, clSnapshot_t *frame, int newnum, entityState_t *old,
+CL_DeltaEntity(Bitmsg *msg, Clsnapshot *frame, int newnum, Entstate *old,
 	       qbool unchanged)
 {
-	entityState_t *state;
+	Entstate *state;
 
 	/* save the parsed entity state into the big circular buffer so
 	 * it can be used as the source for a later delta */
@@ -68,11 +68,11 @@ CL_DeltaEntity(msg_t *msg, clSnapshot_t *frame, int newnum, entityState_t *old,
  *
  */
 void
-CL_ParsePacketEntities(msg_t *msg, clSnapshot_t *oldframe,
-		       clSnapshot_t *newframe)
+CL_ParsePacketEntities(Bitmsg *msg, Clsnapshot *oldframe,
+		       Clsnapshot *newframe)
 {
 	int	newnum;
-	entityState_t *oldstate;
+	Entstate *oldstate;
 	int	oldindex, oldnum;
 
 	newframe->parseEntitiesNum = cl.parseEntitiesNum;
@@ -188,11 +188,11 @@ CL_ParsePacketEntities(msg_t *msg, clSnapshot_t *oldframe,
  * for any reason, no changes to the state will be made at all.
  */
 void
-CL_ParseSnapshot(msg_t *msg)
+CL_ParseSnapshot(Bitmsg *msg)
 {
 	int len;
-	clSnapshot_t	*old;
-	clSnapshot_t	newSnap;
+	Clsnapshot	*old;
+	Clsnapshot	newSnap;
 	int	deltaNum;
 	int	oldMessageNum;
 	int	i, packetNum;
@@ -448,12 +448,12 @@ CL_ParseServerInfo(void)
  * CL_ParseGamestate
  */
 void
-CL_ParseGamestate(msg_t *msg)
+CL_ParseGamestate(Bitmsg *msg)
 {
 	int	i;
-	entityState_t *es;
+	Entstate *es;
 	int	newnum;
-	entityState_t nullstate;
+	Entstate nullstate;
 	int	cmd;
 	char    *s;
 	char	oldGame[MAX_QPATH];
@@ -554,7 +554,7 @@ CL_ParseGamestate(msg_t *msg)
  * A download message has been received from the server
  */
 void
-CL_ParseDownload(msg_t *msg)
+CL_ParseDownload(Bitmsg *msg)
 {
 	int size;
 	unsigned char data[MAX_MSGLEN];
@@ -689,7 +689,7 @@ CL_PlayVoip(int sender, int samplecnt, const byte *data, int flags)
  */
 static
 void
-CL_ParseVoip(msg_t *msg)
+CL_ParseVoip(Bitmsg *msg)
 {
 	static short	decoded[4096];	/* !!! FIXME: don't hardcode. */
 
@@ -840,7 +840,7 @@ CL_ParseVoip(msg_t *msg)
  * when it transitions a snapshot
  */
 void
-CL_ParseCommandString(msg_t *msg)
+CL_ParseCommandString(Bitmsg *msg)
 {
 	char	*s;
 	int	seq;
@@ -864,7 +864,7 @@ CL_ParseCommandString(msg_t *msg)
  * CL_ParseServerMessage
  */
 void
-CL_ParseServerMessage(msg_t *msg)
+CL_ParseServerMessage(Bitmsg *msg)
 {
 	int cmd;
 

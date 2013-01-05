@@ -1239,7 +1239,7 @@ ArenaServers_MenuDraw(void)
 /*
  * ArenaServers_MenuKey
  */
-static sfxHandle_t
+static Sfxhandle
 ArenaServers_MenuKey(int key)
 {
 	if(key == K_SPACE  && g_arenaservers.refreshservers){

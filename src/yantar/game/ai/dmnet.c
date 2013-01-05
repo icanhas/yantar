@@ -102,7 +102,7 @@ BotRecordNodeSwitch(bot_state_t *bs, char *node, char *str, char *s)
 int
 BotGetAirGoal(bot_state_t *bs, bot_goal_t *goal)
 {
-	bsp_trace_t bsptrace;
+	bsp_Trace bsptrace;
 	Vec3	end, mins = {-15, -15, -2}, maxs = {15, 15, 2};
 	int	areanum;
 
@@ -1295,8 +1295,8 @@ BotClearPath(bot_state_t *bs, bot_moveresult_t *moveresult)
 	int i, bestmine;
 	float	dist, bestdist;
 	Vec3	target, dir;
-	bsp_trace_t bsptrace;
-	entityState_t state;
+	bsp_Trace bsptrace;
+	Entstate state;
 
 	/* if there is a dead body wearing kamikze nearby */
 	if(bs->kamikazebody)
@@ -1422,7 +1422,7 @@ AINode_Seek_ActivateEntity(bot_state_t *bs)
 	Vec3	target, dir, ideal_viewangles;
 	bot_moveresult_t moveresult;
 	int	targetvisible;
-	bsp_trace_t bsptrace;
+	bsp_Trace bsptrace;
 	aas_entityinfo_t entinfo;
 
 	if(BotIsObserver(bs)){

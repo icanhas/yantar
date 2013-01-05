@@ -187,7 +187,7 @@ typedef struct {
 		reg_t	reg;
 	} index;
 	unsigned scale;
-} memref_t;
+} Memref;
 
 #define LABELLEN 32
 
@@ -196,7 +196,7 @@ typedef struct {
 	union {
 		u64		imm;
 		reg_t		reg;
-		memref_t	mem;
+		Memref	mem;
 		char		label[LABELLEN];
 	} v;
 	int absolute : 1;

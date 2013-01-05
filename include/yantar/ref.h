@@ -45,7 +45,7 @@ typedef struct {
 } polyVert_t;
 
 typedef struct poly_s {
-	qhandle_t	hShader;
+	Handle		hShader;
 	int		numVerts;
 	polyVert_t *verts;
 } poly_t;
@@ -67,7 +67,7 @@ typedef struct {
 	refEntityType_t reType;
 	int		renderfx;
 
-	qhandle_t	hModel;	/* opaque type outside refresh */
+	Handle		hModel;	/* opaque type outside refresh */
 
 	/* most recent data */
 	Vec3		lightingOrigin;	/* so multi-part models can be lit identically (RF_LIGHTING_ORIGIN) */
@@ -85,8 +85,8 @@ typedef struct {
 
 	/* texturing */
 	int		skinNum;	/* inline skin index */
-	qhandle_t	customSkin;	/* NULL for default skin */
-	qhandle_t	customShader;	/* use one image for the entire thing */
+	Handle		customSkin;	/* NULL for default skin */
+	Handle		customShader;	/* use one image for the entire thing */
 
 	/* misc */
 	byte	shaderRGBA[4];		/* colors used by rgbgen entity shaders */
@@ -96,7 +96,7 @@ typedef struct {
 	/* extra sprite information */
 	float	radius;
 	float	rotation;
-} refEntity_t;
+} Refent;
 
 
 #define MAX_RENDER_STRINGS		8
@@ -129,7 +129,7 @@ typedef enum {
 
 
 /*
-** glconfig_t
+** Glconfig
 **
 ** Contains variables specific to the OpenGL configuration
 ** being run right now.  These are constant once the OpenGL
@@ -193,7 +193,7 @@ typedef struct {
 	qbool		isFullscreen;
 	qbool		stereoEnabled;
 	qbool		smpActive;	/* dual processor */
-} glconfig_t;
+} Glconfig;
 
 
 typedef struct refimport_t refimport_t;	/* funcs imported by the refresh module */
@@ -224,11 +224,11 @@ struct refexport_t {
 	 * and returns the current gl configuration, including screen width
 	 * and height, which can be used by the client to intelligently
 	 * size display elements */
-	void (*BeginRegistration)(glconfig_t *config);
-	qhandle_t (*RegisterModel)(const char *name);
-	qhandle_t (*RegisterSkin)(const char *name);
-	qhandle_t (*RegisterShader)(const char *name);
-	qhandle_t (*RegisterShaderNoMip)(const char *name);
+	void (*BeginRegistration)(Glconfig *config);
+	Handle (*RegisterModel)(const char *name);
+	Handle (*RegisterSkin)(const char *name);
+	Handle (*RegisterShader)(const char *name);
+	Handle (*RegisterShaderNoMip)(const char *name);
 	void (*LoadWorld)(const char *name);
 
 	/* the vis data is a large enough block of data that we go to the trouble
@@ -242,8 +242,8 @@ struct refexport_t {
 	/* a scene is built up by calls to R_ClearScene and the various R_Add functions.
 	 * Nothing is drawn until R_RenderScene is called. */
 	void (*ClearScene)(void);
-	void (*AddRefEntityToScene)(const refEntity_t *re);
-	void (*AddPolyToScene)(qhandle_t hShader, int numVerts, const polyVert_t *verts, int num);
+	void (*AddRefEntityToScene)(const Refent *re);
+	void (*AddPolyToScene)(Handle hShader, int numVerts, const polyVert_t *verts, int num);
 	int (*LightForPoint)(Vec3 point, Vec3 ambientLight, Vec3 directedLight, Vec3 lightDir);
 	void (*AddLightToScene)(const Vec3 org, float intensity, float r, float g, float b);
 	void (*AddAdditiveLightToScene)(const Vec3 org, float intensity, float r, float g, float b);
@@ -251,7 +251,7 @@ struct refexport_t {
 
 	void (*SetColor)(const float *rgba);	/* NULL = 1,1,1,1 */
 	void (*DrawStretchPic)(float x, float y, float w, float h,
-			       float s1, float t1, float s2, float t2, qhandle_t hShader);	/* 0 = white */
+			       float s1, float t1, float s2, float t2, Handle hShader);	/* 0 = white */
 
 	/* Draw images for cinematic rendering, pass as 32 bit rgba */
 	void (*DrawStretchRaw)(int x, int y, int w, int h, int cols, int rows, const byte *data, int client,
@@ -266,13 +266,13 @@ struct refexport_t {
 
 	int (*MarkFragments)(int numPoints, const Vec3 *points, const Vec3 projection,
 			     int maxPoints, Vec3 pointBuffer, int maxFragments,
-			     markFragment_t *fragmentBuffer);
+			     Markfrag *fragmentBuffer);
 
-	int (*LerpTag)(orientation_t *tag,  qhandle_t model, int startFrame, int endFrame,
+	int (*LerpTag)(Orient *tag,  Handle model, int startFrame, int endFrame,
 		       float frac, const char *tagName);
-	void (*ModelBounds)(qhandle_t model, Vec3 mins, Vec3 maxs);
+	void (*ModelBounds)(Handle model, Vec3 mins, Vec3 maxs);
 	
-	void (*RegisterFont)(const char *fontName, int pointSize, fontInfo_t *font);
+	void (*RegisterFont)(const char *fontName, int pointSize, Fontinfo *font);
 	void (*RemapShader)(const char *oldShader, const char *newShader, const char *offsetTime);
 	qbool (*GetEntityToken)(char *buffer, int size);
 	qbool (*inPVS)(const Vec3 p1, const Vec3 p2);
@@ -306,10 +306,10 @@ struct refimport_t {
 	void    *(*Malloc)(int bytes);
 	void (*Free)(void *buf);
 
-	cvar_t  *(*Cvar_Get)(const char *name, const char *value, int flags);
+	Cvar  *(*Cvar_Get)(const char *name, const char *value, int flags);
 	void (*Cvar_Set)(const char *name, const char *value);
 	void (*Cvar_SetValue)(const char *name, float value);
-	void (*Cvar_CheckRange)(cvar_t *cv, float minVal, float maxVal, qbool shouldBeIntegral);
+	void (*Cvar_CheckRange)(Cvar *cv, float minVal, float maxVal, qbool shouldBeIntegral);
 
 	int (*Cvar_VariableIntegerValue)(const char *var_name);
 

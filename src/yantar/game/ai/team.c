@@ -91,7 +91,7 @@ BotNumTeamMates(bot_state_t *bs)
 int
 BotClientTravelTimeToGoal(int client, bot_goal_t *goal)
 {
-	playerState_t ps;
+	Playerstate ps;
 	int areanum;
 
 	BotAI_GetClientState(client, &ps);

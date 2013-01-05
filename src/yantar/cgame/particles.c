@@ -29,7 +29,7 @@ typedef struct particle_s {
 	float			alpha;
 	float			alphavel;
 	int			type;
-	qhandle_t		pshader;
+	Handle			pshader;
 
 	float			height;
 	float			width;
@@ -81,7 +81,7 @@ static char	*shaderAnimNames[MAX_SHADER_ANIMS] = {
 	"explode1",
 	NULL
 };
-static qhandle_t shaderAnims[MAX_SHADER_ANIMS][MAX_SHADER_ANIM_FRAMES];
+static Handle shaderAnims[MAX_SHADER_ANIMS][MAX_SHADER_ANIM_FRAMES];
 static int	shaderAnimCounts[MAX_SHADER_ANIMS] = {
 	23
 };
@@ -100,7 +100,7 @@ static char	*shaderAnimNames[MAX_SHADER_ANIMS] = {
 	"blood",
 	NULL
 };
-static qhandle_t shaderAnims[MAX_SHADER_ANIMS][MAX_SHADER_ANIM_FRAMES];
+static Handle shaderAnims[MAX_SHADER_ANIMS][MAX_SHADER_ANIM_FRAMES];
 static int	shaderAnimCounts[MAX_SHADER_ANIMS] = {
 	23,
 	25,
@@ -894,7 +894,7 @@ CG_AddParticles(void)
  * CG_AddParticles
  */
 void
-CG_ParticleSnowFlurry(qhandle_t pshader, centity_t *cent)
+CG_ParticleSnowFlurry(Handle pshader, Centity *cent)
 {
 	cparticle_t	*p;
 	qbool		turb = qtrue;
@@ -959,7 +959,7 @@ CG_ParticleSnowFlurry(qhandle_t pshader, centity_t *cent)
 }
 
 void
-CG_ParticleSnow(qhandle_t pshader, Vec3 origin, Vec3 origin2, int turb,
+CG_ParticleSnow(Handle pshader, Vec3 origin, Vec3 origin2, int turb,
 		float range,
 		int snum)
 {
@@ -1014,7 +1014,7 @@ CG_ParticleSnow(qhandle_t pshader, Vec3 origin, Vec3 origin2, int turb,
 }
 
 void
-CG_ParticleBubble(qhandle_t pshader, Vec3 origin, Vec3 origin2, int turb,
+CG_ParticleBubble(Handle pshader, Vec3 origin, Vec3 origin2, int turb,
 		  float range,
 		  int snum)
 {
@@ -1073,7 +1073,7 @@ CG_ParticleBubble(qhandle_t pshader, Vec3 origin, Vec3 origin2, int turb,
 }
 
 void
-CG_ParticleSmoke(qhandle_t pshader, centity_t *cent)
+CG_ParticleSmoke(Handle pshader, Centity *cent)
 {
 
 	/* using cent->density = enttime
@@ -1229,7 +1229,7 @@ CG_ParticleExplosion(char *animStr, Vec3 origin, Vec3 vel, int duration,
 
 /* Rafael Shrapnel */
 void
-CG_AddParticleShrapnel(localEntity_t *le)
+CG_AddParticleShrapnel(Localent *le)
 {
 	return;
 }
@@ -1309,7 +1309,7 @@ CG_NewParticleArea(int num)
 }
 
 void
-CG_SnowLink(centity_t *cent, qbool particleOn)
+CG_SnowLink(Centity *cent, qbool particleOn)
 {
 	cparticle_t *p, *next;
 	int id;
@@ -1331,7 +1331,7 @@ CG_SnowLink(centity_t *cent, qbool particleOn)
 }
 
 void
-CG_ParticleImpactSmokePuff(qhandle_t pshader, Vec3 origin)
+CG_ParticleImpactSmokePuff(Handle pshader, Vec3 origin)
 {
 	cparticle_t *p;
 
@@ -1372,7 +1372,7 @@ CG_ParticleImpactSmokePuff(qhandle_t pshader, Vec3 origin)
 }
 
 void
-CG_Particle_Bleed(qhandle_t pshader, Vec3 start, Vec3 dir,
+CG_Particle_Bleed(Handle pshader, Vec3 start, Vec3 dir,
 		  int fleshEntityNum,
 		  int duration)
 {
@@ -1425,7 +1425,7 @@ CG_Particle_Bleed(qhandle_t pshader, Vec3 start, Vec3 dir,
 }
 
 void
-CG_Particle_OilParticle(qhandle_t pshader, centity_t *cent)
+CG_Particle_OilParticle(Handle pshader, Centity *cent)
 {
 	cparticle_t *p;
 
@@ -1490,7 +1490,7 @@ CG_Particle_OilParticle(qhandle_t pshader, centity_t *cent)
 
 
 void
-CG_Particle_OilSlick(qhandle_t pshader, centity_t *cent)
+CG_Particle_OilSlick(Handle pshader, Centity *cent)
 {
 	cparticle_t *p;
 
@@ -1554,7 +1554,7 @@ CG_Particle_OilSlick(qhandle_t pshader, centity_t *cent)
 }
 
 void
-CG_OilSlickRemove(centity_t *cent)
+CG_OilSlickRemove(Centity *cent)
 {
 	cparticle_t *p, *next;
 	int id;
@@ -1587,7 +1587,7 @@ ValidBloodPool(Vec3 start)
 	Vec3	thispos, xpos, center, endpos;
 	int	x, y;
 	int	fwidth, fheight;
-	trace_t trace;
+	Trace trace;
 	Vec3	normal;
 
 	fwidth	= 16;
@@ -1618,7 +1618,7 @@ ValidBloodPool(Vec3 start)
 }
 
 void
-CG_BloodPool(localEntity_t *le, qhandle_t pshader, trace_t *tr)
+CG_BloodPool(Localent *le, Handle pshader, Trace *tr)
 {
 	cparticle_t	*p;
 	qbool		legit;
@@ -1682,7 +1682,7 @@ CG_BloodPool(localEntity_t *le, qhandle_t pshader, trace_t *tr)
 #define LARGESIZE	32
 
 void
-CG_ParticleBloodCloud(centity_t *cent, Vec3 origin, Vec3 dir)
+CG_ParticleBloodCloud(Centity *cent, Vec3 origin, Vec3 dir)
 {
 	float	length;
 	float	dist;
@@ -1809,7 +1809,7 @@ CG_ParticleSparks(Vec3 org, Vec3 vel, int duration, float x, float y,
 }
 
 void
-CG_ParticleDust(centity_t *cent, Vec3 origin, Vec3 dir)
+CG_ParticleDust(Centity *cent, Vec3 origin, Vec3 dir)
 {
 	float	length;
 	float	dist;
@@ -1904,7 +1904,7 @@ CG_ParticleDust(centity_t *cent, Vec3 origin, Vec3 dir)
 }
 
 void
-CG_ParticleMisc(qhandle_t pshader, Vec3 origin, int size, int duration,
+CG_ParticleMisc(Handle pshader, Vec3 origin, int size, int duration,
 		float alpha)
 {
 	cparticle_t *p;

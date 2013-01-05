@@ -24,10 +24,10 @@ char *cg_customSoundNames[] = {
 	nil
 };
 
-sfxHandle_t
+Sfxhandle
 CG_CustomSound(int cnum, const char *soundname)
 {
-	clientInfo_t *ci;
+	Clientinfo *ci;
 	char **p;
 	int i;
 
@@ -56,12 +56,12 @@ CG_CustomSound(int cnum, const char *soundname)
  * (models/players/visor/animation.cfg, etc)
  */
 static qbool
-parseanimfile(const char *filename, clientInfo_t *ci)
+parseanimfile(const char *filename, Clientinfo *ci)
 {
 	char txt[20000], *txtp, *prev, *tok;
 	int i, len, skip;
 	float fps;
-	fileHandle_t f;
+	Fhandle f;
 	animation_t *p, *anims;
 
 	/* load the file */
@@ -263,7 +263,7 @@ fileexists(const char *name)
 }
 
 static qbool
-findclientmodelfile(char *out, int len, clientInfo_t *ci,
+findclientmodelfile(char *out, int len, Clientinfo *ci,
 	const char *team, const char *model, const char *skin, 
 	const char *base, const char *ext)
 {
@@ -321,7 +321,7 @@ findclientmodelfile(char *out, int len, clientInfo_t *ci,
 }
 
 static qbool
-regclientskin(clientInfo_t *ci, const char *team, const char *model, 
+regclientskin(Clientinfo *ci, const char *team, const char *model, 
 	const char *skin)
 {
 	char fname[MAX_QPATH];
@@ -341,7 +341,7 @@ regclientskin(clientInfo_t *ci, const char *team, const char *model,
  * icon, and chosen skin
  */
 static qbool
-regclientmodel(clientInfo_t *ci, const char *name,
+regclientmodel(Clientinfo *ci, const char *name,
 	const char *skin, const char *team)
 {
 	char	fname[MAX_QPATH], newteam[MAX_QPATH];
@@ -423,7 +423,7 @@ colourfromstr(const char *v, Vec3 color)
  * This will usually be deferred to a safe time
  */
 static void
-loadclientinfo(int clientNum, clientInfo_t *ci)
+loadclientinfo(int clientNum, Clientinfo *ci)
 {
 	const char *dir, *fallback;
 	int i, modelloaded;
@@ -471,7 +471,7 @@ loadclientinfo(int clientNum, clientInfo_t *ci)
 
 	ci->newAnims = qfalse;
 	if(ci->hullmodel){
-		orientation_t tag;
+		Orient tag;
 		/* if the body model has the "tag_flag" */
 		if(trap_R_LerpTag(&tag, ci->hullmodel, 0, 0, 1, "tag_flag"))
 			ci->newAnims = qtrue;
@@ -509,7 +509,7 @@ loadclientinfo(int clientNum, clientInfo_t *ci)
 
 /* copy model info */
 static void
-cpclientinfomodel(clientInfo_t *from, clientInfo_t *to)
+cpclientinfomodel(Clientinfo *from, Clientinfo *to)
 {
 	copyv3(from->headOffset, to->headOffset);
 	to->footsteps = from->footsteps;
@@ -527,10 +527,10 @@ cpclientinfomodel(clientInfo_t *from, clientInfo_t *to)
  * so we can avoid loading checks if possible 
  */
 static qbool
-ciexists(clientInfo_t *ci)
+ciexists(Clientinfo *ci)
 {
 	int i;
-	clientInfo_t *match;
+	Clientinfo *match;
 
 	for(i = 0; i < cgs.maxclients; i++){
 		match = &cgs.clientinfo[ i ];
@@ -559,9 +559,9 @@ ciexists(clientInfo_t *ci)
  * client's info to use until we have some spare time.
  */
 static void
-setdeferredci(int clientnum, clientInfo_t *ci)
+setdeferredci(int clientnum, Clientinfo *ci)
 {
-	clientInfo_t *match;
+	Clientinfo *match;
 	int i;
 
 	/* 
@@ -624,7 +624,7 @@ setdeferredci(int clientnum, clientInfo_t *ci)
 void
 CG_NewClientInfo(int clientNum)
 {
-	clientInfo_t *ci, newinfo;
+	Clientinfo *ci, newinfo;
 	const char *configstring, *v;
 	char *slash;
 
@@ -835,7 +835,7 @@ void
 CG_LoadDeferredPlayers(void)
 {
 	int i;
-	clientInfo_t *ci;
+	Clientinfo *ci;
 
 	/* scan for a deferred player to load */
 	for(i = 0, ci = cgs.clientinfo; i < cgs.maxclients; i++, ci++)
@@ -857,7 +857,7 @@ CG_LoadDeferredPlayers(void)
 
 /* may include ANIM_TOGGLEBIT */
 static void
-setlerpframeanim(clientInfo_t *ci, lerpFrame_t *lf, int newAnimation)
+setlerpframeanim(Clientinfo *ci, lerpFrame_t *lf, int newAnimation)
 {
 	animation_t *p;
 
@@ -879,7 +879,7 @@ setlerpframeanim(clientInfo_t *ci, lerpFrame_t *lf, int newAnimation)
  * cg.time should be between oldFrameTime and frameTime after exit
  */
 static void
-runlerpframe(clientInfo_t *ci, lerpFrame_t *lf, int newAnimation,
+runlerpframe(Clientinfo *ci, lerpFrame_t *lf, int newAnimation,
 		float speedScale)
 {
 	int f, numFrames;
@@ -956,7 +956,7 @@ runlerpframe(clientInfo_t *ci, lerpFrame_t *lf, int newAnimation,
 }
 
 static void
-clearlerpframe(clientInfo_t *ci, lerpFrame_t *lf, int animationNumber)
+clearlerpframe(Clientinfo *ci, lerpFrame_t *lf, int animationNumber)
 {
 	lf->frameTime = lf->oldFrameTime = cg.time;
 	setlerpframeanim(ci, lf, animationNumber);
@@ -964,9 +964,9 @@ clearlerpframe(clientInfo_t *ci, lerpFrame_t *lf, int animationNumber)
 }
 
 static void
-playeranim(centity_t *cent, int *hullold, int *hull, float *hullbacklerp)
+playeranim(Centity *cent, int *hullold, int *hull, float *hullbacklerp)
 {
-	clientInfo_t *ci;
+	Clientinfo *ci;
 	int cnum;
 	float speedscale;
 
@@ -1053,7 +1053,7 @@ swingangles(float destination, float swingTolerance, float clampTolerance,
 
 /* twitch if hit */
 static void
-addpaintwitch(centity_t *cent, Vec3 torsoAngles)
+addpaintwitch(Centity *cent, Vec3 torsoAngles)
 {
 	int t;
 	float f;
@@ -1070,7 +1070,7 @@ addpaintwitch(centity_t *cent, Vec3 torsoAngles)
 
 /* craft always looks exactly at cent->lerpAngles */
 static void
-playerangles(centity_t *cent, Vec3 hull[3])
+playerangles(Centity *cent, Vec3 hull[3])
 {
 	Vec3 angles, vel;
 	Scalar speed;
@@ -1114,9 +1114,9 @@ playerangles(centity_t *cent, Vec3 hull[3])
 }
 
 static void
-hastetrail(centity_t *cent)
+hastetrail(Centity *cent)
 {
-	localEntity_t *smoke;
+	Localent *smoke;
 	Vec3 origin;
 	int anim;
 
@@ -1140,11 +1140,11 @@ hastetrail(centity_t *cent)
 }
 
 static void
-dusttrail(centity_t *cent)
+dusttrail(Centity *cent)
 {
 	int anim;
 	Vec3 end, vel;
-	trace_t tr;
+	Trace tr;
 
 	if(!cg_enableDust.integer)
 		return;
@@ -1177,9 +1177,9 @@ dusttrail(centity_t *cent)
 }
 
 static void
-trailitem(centity_t *cent, qhandle_t hModel)
+trailitem(Centity *cent, Handle hModel)
 {
-	refEntity_t ent;
+	Refent ent;
 	Vec3	angles;
 	Vec3	axis[3];
 
@@ -1199,10 +1199,10 @@ trailitem(centity_t *cent, qhandle_t hModel)
 }
 
 static void
-playerflag(centity_t *cent, qhandle_t skinh, refEntity_t *hull)
+playerflag(Centity *cent, Handle skinh, Refent *hull)
 {
-	clientInfo_t *ci;
-	refEntity_t pole, flag;
+	Clientinfo *ci;
+	Refent pole, flag;
 	Vec3 angles, dir;
 	int legsAnim, flagAnim, updateangles;
 	float angle, d;
@@ -1311,10 +1311,10 @@ playerflag(centity_t *cent, qhandle_t skinh, refEntity_t *hull)
 }
 
 static void
-playerpowerups(centity_t *cent, refEntity_t *torso)
+playerpowerups(Centity *cent, Refent *torso)
 {
 	int powerups;
-	clientInfo_t *ci;
+	Clientinfo *ci;
 
 	powerups = cent->currentState.powerups;
 	if(!powerups)
@@ -1369,10 +1369,10 @@ playerpowerups(centity_t *cent, refEntity_t *torso)
 
 /* Float a sprite over the player */
 static void
-floatsprite(centity_t *cent, qhandle_t shader)
+floatsprite(Centity *cent, Handle shader)
 {
 	int rf;
-	refEntity_t ent;
+	Refent ent;
 
 	if(cent->currentState.number == cg.snap->ps.clientNum &&
 	   !cg.renderingThirdPerson)
@@ -1396,7 +1396,7 @@ floatsprite(centity_t *cent, qhandle_t shader)
 
 /* Float sprites over the player */
 static void
-playersprites(centity_t *cent)
+playersprites(Centity *cent)
 {
 	int team;
 
@@ -1456,12 +1456,12 @@ playersprites(centity_t *cent)
  */
 #define SHADOW_DISTANCE 128
 static qbool
-playershadow(centity_t *cent, float *shadowPlane)
+playershadow(Centity *cent, float *shadowPlane)
 {
 	Vec3 end;
 	Vec3 mins = {-15, -15, 0};
 	Vec3 maxs = { 15,  15, 2};
-	trace_t trace;
+	Trace trace;
 	float	alpha;
 	
 	*shadowPlane = 0;
@@ -1502,10 +1502,10 @@ playershadow(centity_t *cent, float *shadowPlane)
 
 /* Draw a mark at the water surface */
 static void
-playersplash(centity_t *cent)
+playersplash(Centity *cent)
 {
 	Vec3 start, end;
-	trace_t trace;
+	Trace trace;
 	int contents;
 	polyVert_t verts[4];
 
@@ -1583,7 +1583,7 @@ playersplash(centity_t *cent)
  * Also called by CG_Missile for quad rockets, but nobody can tell...
  */
 void
-CG_AddRefEntityWithPowerups(refEntity_t *ent, entityState_t *state, int team)
+CG_AddRefEntityWithPowerups(Refent *ent, Entstate *state, int team)
 {
 	if(state->powerups & (1 << PW_INVIS)){
 		ent->customShader = cgs.media.invisShader;
@@ -1651,15 +1651,15 @@ CG_LightVerts(Vec3 normal, int numVerts, polyVert_t *verts)
 }
 
 void
-CG_Player(centity_t *cent)
+CG_Player(Centity *cent)
 {
-	clientInfo_t *ci;
-	refEntity_t hull;
+	Clientinfo *ci;
+	Refent hull;
 	int cnum;
 	int renderfx;
 	qbool shadow;
 	float shadowplane;
-	refEntity_t powerup;
+	Refent powerup;
 	int t;
 	float c;
 	Vec3 angles;
@@ -1756,7 +1756,7 @@ CG_Player(centity_t *cent)
 
 /*  A player just came into view or teleported, so reset all animation info */
 void
-CG_ResetPlayerEntity(centity_t *cent)
+CG_ResetPlayerEntity(Centity *cent)
 {
 	cent->errorTime = -99999;	/* guarantee no error decay added */
 	cent->extrapolated = qfalse;

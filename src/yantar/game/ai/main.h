@@ -93,9 +93,9 @@ typedef struct bot_state_s {
 	int			botthink_residual;		/* residual for the bot thinks */
 	int			client;				/* client number of the bot */
 	int			entitynum;			/* entity number of the bot */
-	playerState_t		cur_ps;				/* current player state */
+	Playerstate		cur_ps;				/* current player state */
 	int			last_eFlags;			/* last ps flags */
-	usercmd_t		lastucmd;			/* usercmd from last frame */
+	Usrcmd		lastucmd;			/* usercmd from last frame */
 	int			entityeventTime[MAX_GENTITIES];	/* last entity event time */
 	/*  */
 	bot_settings_t		settings;			/* several bot settings */
@@ -255,11 +255,11 @@ extern float floattime;
 void QDECL	BotAI_Print(int type, char *fmt,
 		...) __attribute__ ((format (printf, 2, 3)));
 void QDECL	BotAI_BotInitialChat(bot_state_t *bs, char *type, ...);
-void    BotAI_Trace(bsp_trace_t *bsptrace, Vec3 start, Vec3 mins,
+void    BotAI_Trace(bsp_Trace *bsptrace, Vec3 start, Vec3 mins,
 		Vec3 maxs, Vec3 end, int passent,
 		int contentmask);
-int	BotAI_GetClientState(int clientNum, playerState_t *state);
-int	BotAI_GetEntityState(int entityNum, entityState_t *state);
+int	BotAI_GetClientState(int clientNum, Playerstate *state);
+int	BotAI_GetEntityState(int entityNum, Entstate *state);
 int	BotAI_GetSnapshotEntity(int clientNum, int sequence,
-		entityState_t *state);
+		Entstate *state);
 int	BotTeamLeader(bot_state_t *bs);

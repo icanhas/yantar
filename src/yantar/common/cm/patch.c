@@ -1229,7 +1229,7 @@ CM_TracePointThroughPatchCollide(traceWork_t *tw,
 	float	offset;
 	float	d1, d2;
 #ifndef BSPC
-	static cvar_t *cv;
+	static Cvar *cv;
 #endif	/* BSPC */
 
 #ifndef BSPC
@@ -1373,7 +1373,7 @@ CM_TraceThroughPatchCollide(traceWork_t *tw, const struct patchCollide_s *pc)
 	float	plane[4] = {0, 0, 0, 0}, bestplane[4] = {0, 0, 0, 0};
 	Vec3	startp, endp;
 #ifndef BSPC
-	static cvar_t *cv;
+	static Cvar *cv;
 #endif	/* BSPC */
 
 	if(!CM_BoundsIntersect(tw->bounds[0], tw->bounds[1],
@@ -1612,9 +1612,9 @@ void BotDrawDebugPolygons(void (*drawPoly)(int color, int numPoints,
 void
 CM_DrawDebugSurface(void (*drawPoly)(int color, int numPoints, float *points))
 {
-	static cvar_t *cv;
+	static Cvar *cv;
 #ifndef BSPC
-	static cvar_t *cv2;
+	static Cvar *cv2;
 #endif
 	const patchCollide_t *pc;
 	facet_t *facet;

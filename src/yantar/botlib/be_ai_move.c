@@ -281,8 +281,8 @@ BotReachabilityArea(Vec3 origin, int client)
 	int modelnum, modeltype, reachnum, areanum;
 	aas_reachability_t reach;
 	Vec3 org, end, mins, maxs, up = {0, 0, 1};
-	bsp_trace_t	bsptrace;
-	aas_trace_t	trace;
+	bsp_Trace	bsptrace;
+	aas_Trace	trace;
 
 	/* check if the bot is standing on something */
 	AAS_PresenceTypeBoundingBox(PRESENCE_CROUCH, mins, maxs);
@@ -343,7 +343,7 @@ BotReachabilityArea(Vec3 origin, int client)
  *      int areas[10], numareas, areanum, bestareanum;
  *      float dist, bestdist;
  *      Vec3 org, end, points[10], v;
- *      aas_trace_t trace;
+ *      aas_Trace trace;
  *
  *      firstareanum = 0;
  *      for (i = 0; i < 2; i++)
@@ -418,7 +418,7 @@ BotOnMover(Vec3 origin, int entnum, aas_reachability_t *reach)
 	Vec3	mins, maxs, modelorigin, org, end;
 	Vec3	angles	= {0, 0, 0};
 	Vec3	boxmins = {-16, -16, -8}, boxmaxs = {16, 16, 8};
-	bsp_trace_t trace;
+	bsp_Trace trace;
 
 	modelnum = reach->facenum & 0x0000FFFF;
 	/* get some bsp model info */
@@ -524,7 +524,7 @@ int
 BotOnTopOfEntity(bot_movestate_t *ms)
 {
 	Vec3 mins, maxs, end, up = {0, 0, 1};
-	bsp_trace_t trace;
+	bsp_Trace trace;
 
 	AAS_PresenceTypeBoundingBox(ms->presencetype, mins, maxs);
 	maddv3(ms->origin, -3, up, end);
@@ -879,7 +879,7 @@ BotMovementViewTarget(int movestate, bot_goal_t *goal, int travelflags,
 int
 BotVisible(int ent, Vec3 eye, Vec3 target)
 {
-	bsp_trace_t trace;
+	bsp_Trace trace;
 
 	trace = AAS_Trace(eye, NULL, NULL, target, ent,
 		CONTENTS_SOLID|CONTENTS_PLAYERCLIP);
@@ -985,7 +985,7 @@ BotGapVec3distv3(Vec3 origin, Vec3 hordir, int entnum)
 	int dist;
 	float	startz;
 	Vec3	start, end;
-	aas_trace_t trace;
+	aas_Trace trace;
 
 	/* do gap checking
 	 * startz = origin[2];
@@ -1034,7 +1034,7 @@ int
 BotCheckBarrierJump(bot_movestate_t *ms, Vec3 dir, float speed)
 {
 	Vec3 start, hordir, end;
-	aas_trace_t trace;
+	aas_Trace trace;
 
 	copyv3(ms->origin, end);
 	end[2] += sv_maxbarrier->value;
@@ -1258,7 +1258,7 @@ BotCheckBlocked(bot_movestate_t *ms, Vec3 dir, int checkbottom,
 		bot_moveresult_t *result)
 {
 	Vec3 mins, maxs, end, up = {0, 0, 1};
-	bsp_trace_t trace;
+	bsp_Trace trace;
 
 	/* test for entities obstructing the bot's path */
 	AAS_PresenceTypeBoundingBox(ms->presencetype, mins, maxs);
@@ -1752,7 +1752,7 @@ BotFinishTravel_WalkOffLedge(bot_movestate_t *ms, aas_reachability_t *reach)
  *      int gapdist;
  *      float dist1, dist2, speed;
  *      bot_moveresult_t_cleared( result );
- *      bsp_trace_t trace;
+ *      bsp_Trace trace;
  *
  *      //
  *      hordir[0] = reach->start[0] - reach->end[0];
@@ -2494,7 +2494,7 @@ BotTravel_Grapple(bot_movestate_t *ms, aas_reachability_t *reach)
 	float	dist, speed;
 	Vec3	dir, viewdir, org;
 	int	state, areanum;
-	bsp_trace_t trace;
+	bsp_Trace trace;
 
 #ifdef DEBUG_GRAPPLE
 	static int debugline;
@@ -2943,7 +2943,7 @@ BotMoveToGoal(bot_moveresult_t *result, int movestate, bot_goal_t *goal,
 	aas_reachability_t reach, lastreach;
 	bot_movestate_t *ms;
 	/* Vec3 mins, maxs, up = {0, 0, 1};
-	 * bsp_trace_t trace;
+	 * bsp_Trace trace;
 	 * static int debugline; */
 
 	result->failure = qfalse;

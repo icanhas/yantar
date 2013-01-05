@@ -16,7 +16,7 @@
  * SV_Netchan_FreeQueue
  */
 void
-SV_Netchan_FreeQueue(client_t *client)
+SV_Netchan_FreeQueue(Client *client)
 {
 	netchan_buffer_t *netbuf, *next;
 
@@ -33,7 +33,7 @@ SV_Netchan_FreeQueue(client_t *client)
  * SV_Netchan_TransmitNextInQueue
  */
 void
-SV_Netchan_TransmitNextInQueue(client_t *client)
+SV_Netchan_TransmitNextInQueue(Client *client)
 {
 	netchan_buffer_t *netbuf;
 
@@ -64,7 +64,7 @@ SV_Netchan_TransmitNextInQueue(client_t *client)
  */
 
 int
-SV_Netchan_TransmitNextFragment(client_t *client)
+SV_Netchan_TransmitNextFragment(Client *client)
 {
 	if(client->netchan.unsentFragments){
 		Netchan_TransmitNextFragment(&client->netchan);
@@ -88,7 +88,7 @@ SV_Netchan_TransmitNextFragment(client_t *client)
  */
 
 void
-SV_Netchan_Transmit(client_t *client, msg_t *msg)
+SV_Netchan_Transmit(Client *client, Bitmsg *msg)
 {
 	MSG_WriteByte(msg, svc_EOF);
 
@@ -114,7 +114,7 @@ SV_Netchan_Transmit(client_t *client, msg_t *msg)
  * Netchan_SV_Process
  */
 qbool
-SV_Netchan_Process(client_t *client, msg_t *msg)
+SV_Netchan_Process(Client *client, Bitmsg *msg)
 {
 	int ret;
 	ret = Netchan_Process(&client->netchan, msg);

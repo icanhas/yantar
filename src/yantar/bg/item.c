@@ -9,8 +9,8 @@
 #include "bg.h"
 #include "itemlist.h"
 
-gitem_t*
-BG_FindItemForPowerup(powerup_t pw)
+Gitem*
+BG_FindItemForPowerup(Powerup pw)
 {
 	int i;
 
@@ -25,8 +25,8 @@ BG_FindItemForPowerup(powerup_t pw)
 	return NULL;
 }
 
-gitem_t *
-BG_FindItemForHoldable(holdable_t pw)
+Gitem *
+BG_FindItemForHoldable(Holdable pw)
 {
 	int i;
 
@@ -40,10 +40,10 @@ BG_FindItemForHoldable(holdable_t pw)
 	return NULL;
 }
 
-gitem_t *
+Gitem *
 BG_FindItemForWeapon(Weapon weapon)
 {
-	gitem_t *it;
+	Gitem *it;
 
 	for(it = bg_itemlist + 1; it->classname; it++)
 		if((it->giType == IT_PRIWEAP || it->giType == IT_SECWEAP) 
@@ -56,10 +56,10 @@ BG_FindItemForWeapon(Weapon weapon)
 	return NULL;
 }
 
-gitem_t *
+Gitem *
 BG_FindItem(const char *pickupName)
 {
-	gitem_t *it;
+	Gitem *it;
 
 	for(it = bg_itemlist + 1; it->classname; it++)
 		if(!Q_stricmp(it->pickup_name, pickupName))
@@ -73,7 +73,7 @@ BG_FindItem(const char *pickupName)
  * grabbing them easier
  */
 qbool
-BG_PlayerTouchesItem(playerState_t *ps, entityState_t *item, int atTime)
+BG_PlayerTouchesItem(Playerstate *ps, Entstate *item, int atTime)
 {
 	Vec3 origin;
 
@@ -98,10 +98,10 @@ BG_PlayerTouchesItem(playerState_t *ps, entityState_t *item, int atTime)
  * This needs to be the same for client side prediction and server use.
  */
 qbool
-BG_CanItemBeGrabbed(int gametype, const entityState_t *ent,
-		    const playerState_t *ps)
+BG_CanItemBeGrabbed(int gametype, const Entstate *ent,
+		    const Playerstate *ps)
 {
-	gitem_t *item;
+	Gitem *item;
 
 	if(ent->modelindex < 1 || ent->modelindex >= bg_numItems)
 		Com_Errorf(ERR_DROP, "BG_CanItemBeGrabbed: index out of range");

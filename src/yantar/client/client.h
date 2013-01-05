@@ -38,31 +38,31 @@ enum {
 };
 
 /*
- * The clientActive_t structure is wiped completely at every
+ * The Clientactive structure is wiped completely at every
  * new gamestate_t, potentially several times during an established connection.
  *
- * The clientConnection_t structure is wiped when disconnecting from a server,
+ * The Clientconn structure is wiped when disconnecting from a server,
  * either to go to a full screen console, play a demo, or connect to a different server.
  * A connection can be to either a server through the network layer or a
  * demo through a file.
  *
- * The clientStatic_t structure is never wiped, and is used even when
+ * The Clientstatic structure is never wiped, and is used even when
  * no client connection is active at all.
  */
-typedef struct clSnapshot_t clSnapshot_t;
-typedef struct outPacket_t outPacket_t;
-typedef struct clientActive_t clientActive_t;
-typedef struct clientConnection_t clientConnection_t;
-typedef struct ping_t ping_t;
-typedef struct clientStatic_t clientStatic_t;
-extern clientActive_t cl;
-extern clientConnection_t clc;
-extern clientStatic_t cls;
+typedef struct Clsnapshot Clsnapshot;
+typedef struct Outpacket Outpacket;
+typedef struct Clientactive Clientactive;
+typedef struct Clientconn Clientconn;
+typedef struct Ping Ping;
+typedef struct Clientstatic Clientstatic;
+extern Clientactive cl;
+extern Clientconn clc;
+extern Clientstatic cls;
 
 extern int g_console_field_width;
  
 /* snapshots are a view of the server at a given time */
-struct clSnapshot_t {
+struct Clsnapshot {
 	qbool	valid;	/* cleared if delta parsing was invalid */
 	int		snapFlags;	/* rate delayed and dropped commands */
 
@@ -74,7 +74,7 @@ struct clSnapshot_t {
 	byte		areamask[MAX_MAP_AREA_BYTES];	/* portalarea visibility bits */
 
 	int		cmdNum;	/* the next cmdNum the server is expecting */
-	playerState_t	ps;	/* complete information about the current player at this time */
+	Playerstate	ps;	/* complete information about the current player at this time */
 
 	int		numEntities;		/* all of the entities that need to be presented */
 	int		parseEntitiesNum;	/* at the time of this snapshot */
@@ -83,17 +83,17 @@ struct clSnapshot_t {
 								 * making the snapshot current */
 };
 
-struct outPacket_t {
+struct Outpacket {
 	int	p_cmdNumber;	/* cl.cmdNumber when packet was sent */
 	int	p_serverTime;	/* usercmd->serverTime when packet was sent */
 	int	p_realtime;	/* cls.realtime when packet was sent */
 };
 
-struct clientActive_t {
+struct Clientactive {
 	int timeoutcount;	/* it requres several frames in a timeout condition */
 	/* to disconnect, preventing debugging breaks from
 	 * causing immediate disconnects on continue */
-	clSnapshot_t	snap;	/* latest received from server */
+	Clsnapshot	snap;	/* latest received from server */
 
 	int		serverTime;		/* may be paused during play */
 	int		oldServerTime;		/* to prevent time from flowing bakcwards */
@@ -104,7 +104,7 @@ struct clientActive_t {
 	/* cleared when CL_AdjustTimeDelta looks at it */
 	qbool		newSnapshots;	/* set on parse of any valid packet */
 
-	gameState_t	gameState;		/* configstrings */
+	Gamestate	gameState;		/* configstrings */
 	char		mapname[MAX_QPATH];	/* extracted from CS_SERVERINFO */
 
 	int		parseEntitiesNum;	/* index (not anded off) into cl_parse_entities[] */
@@ -114,16 +114,16 @@ struct clientActive_t {
 	int		joystickAxis[MAX_JOYSTICK_AXIS];	/* set by joystick events */
 
 	/* cgame communicates a few values to the client system */
-	int	cgameweapsel[Wnumweapslots];	/* current weapons to add to usercmd_t */
+	int	cgameweapsel[Wnumweapslots];	/* current weapons to add to Usrcmd */
 	float	cgameSensitivity;
 
 	/* cmds[cmdNumber] is the predicted command, [cmdNumber-1] is the last
 	 * properly generated command */
-	usercmd_t	cmds[CMD_BACKUP];	/* each mesage will send several old cmds */
+	Usrcmd	cmds[CMD_BACKUP];	/* each mesage will send several old cmds */
 	int		cmdNumber;		/* incremented each frame, because multiple */
 	/* frames may need to be packed into a single packet */
 
-	outPacket_t outPackets[PACKET_BACKUP];	/* information about each packet we have sent out */
+	Outpacket outPackets[PACKET_BACKUP];	/* information about each packet we have sent out */
 
 	/* the client maintains its own idea of view angles, which are
 	 * sent to the server each frame.  It is cleared to 0 upon entering each level.
@@ -135,14 +135,14 @@ struct clientActive_t {
 	int	serverId;	/* included in each client message so the server */
 	/* can tell if it is for a prior map_restart
 	 * big stuff at end of structure so most offsets are 15 bits or less */
-	clSnapshot_t	snapshots[PACKET_BACKUP];
+	Clsnapshot	snapshots[PACKET_BACKUP];
 
-	entityState_t	entityBaselines[MAX_GENTITIES];	/* for delta compression when not in previous frame */
+	Entstate	entityBaselines[MAX_GENTITIES];	/* for delta compression when not in previous frame */
 
-	entityState_t	parseEntities[MAX_PARSE_ENTITIES];
+	Entstate	parseEntities[MAX_PARSE_ENTITIES];
 };
 
-struct clientConnection_t {
+struct Clientconn {
 	connstate_t	state;	/* connection status */
 
 	int		clientNum;
@@ -150,7 +150,7 @@ struct clientConnection_t {
 	int		lastPacketTime;		/* for timeouts */
 
 	char		servername[MAX_OSPATH];	/* name of server from original connect (used by reconnect) */
-	netadr_t	serverAddress;
+	Netaddr	serverAddress;
 	int		connectTime;				/* for connection retransmits */
 	int		connectPacketCount;			/* for display on connection dialog */
 	char		serverMessage[MAX_STRING_TOKENS];	/* for display on connection dialog */
@@ -177,7 +177,7 @@ struct clientConnection_t {
 	char	serverCommands[MAX_RELIABLE_COMMANDS][MAX_STRING_CHARS];
 
 	/* file transfer from server */
-	fileHandle_t	download;
+	Fhandle	download;
 	char		downloadTempName[MAX_OSPATH];
 	char		downloadName[MAX_OSPATH];
 #ifdef USE_CURL
@@ -204,7 +204,7 @@ struct clientConnection_t {
 	qbool		demoplaying;
 	qbool		demowaiting;	/* don't record until a non-delta message is received */
 	qbool		firstDemoFrameSkipped;
-	fileHandle_t	demofile;
+	Fhandle	demofile;
 
 	int		timeDemoFrames;					/* counter of rendered frames */
 	int		timeDemoStart;					/* cls.realtime before first frame */
@@ -246,18 +246,18 @@ struct clientConnection_t {
 	float			voipPower;
 #endif
 	/* big stuff at end of structure so most offsets are 15 bits or less */
-	netchan_t netchan;
+	Netchan netchan;
 };
 
-struct ping_t {
-	netadr_t	adr;
+struct Ping {
+	Netaddr	adr;
 	int		start;
 	int		time;
 	char		info[MAX_INFO_STRING];
 };
 
 typedef struct {
-	netadr_t	adr;
+	Netaddr	adr;
 	char		hostName[MAX_NAME_LENGTH];
 	char		mapName[MAX_NAME_LENGTH];
 	char		game[MAX_NAME_LENGTH];
@@ -273,7 +273,7 @@ typedef struct {
 	int		g_needpass;
 } serverInfo_t;
 
-struct clientStatic_t {
+struct Clientstatic {
 	/* when the server clears the hunk, all of these must be restarted */
 	qbool		rendererStarted;
 	qbool		soundStarted;
@@ -294,7 +294,7 @@ struct clientStatic_t {
 	serverInfo_t	globalServers[MAX_GLOBAL_SERVERS];
 	/* additional global servers */
 	int		numGlobalServerAddresses;
-	netadr_t	globalServerAddresses[MAX_GLOBAL_SERVERS];
+	Netaddr	globalServerAddresses[MAX_GLOBAL_SERVERS];
 
 	int		numfavoriteservers;
 	serverInfo_t	favoriteServers[MAX_OTHER_SERVERS];
@@ -305,100 +305,100 @@ struct clientStatic_t {
 	qbool		oldGameSet;
 
 	/* update server info */
-	netadr_t	updateServer;
+	Netaddr	updateServer;
 	char		updateChallenge[MAX_TOKEN_CHARS];
 	char		updateInfoString[MAX_INFO_STRING];
 
-	netadr_t	authorizeServer;
+	Netaddr	authorizeServer;
 
 	/* rendering info */
-	glconfig_t	glconfig;
-	qhandle_t	charSetShader;
-	fontInfo_t	consolefont;
-	qhandle_t	whiteShader;
-	qhandle_t	consoleShader;
+	Glconfig	glconfig;
+	Handle		charSetShader;
+	Fontinfo	consolefont;
+	Handle		whiteShader;
+	Handle		consoleShader;
 };
 
-extern vm_t *cgvm;		/* interface to cgame dll or vm */
-extern vm_t *uivm;		/* interface to ui dll or vm */
+extern Vm *cgvm;		/* interface to cgame dll or vm */
+extern Vm *uivm;		/* interface to ui dll or vm */
 extern refexport_t re;	/* interface to refresh .dll */
 
-extern cvar_t *cl_nodelta;
-extern cvar_t *cl_debugMove;
-extern cvar_t *cl_noprint;
-extern cvar_t *cl_timegraph;
-extern cvar_t *cl_maxpackets;
-extern cvar_t *cl_packetdup;
-extern cvar_t *cl_shownet;
-extern cvar_t *cl_showSend;
-extern cvar_t *cl_timeNudge;
-extern cvar_t *cl_showTimeDelta;
-extern cvar_t *cl_freezeDemo;
+extern Cvar *cl_nodelta;
+extern Cvar *cl_debugMove;
+extern Cvar *cl_noprint;
+extern Cvar *cl_timegraph;
+extern Cvar *cl_maxpackets;
+extern Cvar *cl_packetdup;
+extern Cvar *cl_shownet;
+extern Cvar *cl_showSend;
+extern Cvar *cl_timeNudge;
+extern Cvar *cl_showTimeDelta;
+extern Cvar *cl_freezeDemo;
 
-extern cvar_t *cl_yawspeed;
-extern cvar_t *cl_pitchspeed;
-extern cvar_t *cl_rollspeed;
-extern cvar_t *cl_run;
-extern cvar_t *cl_anglespeedkey;
+extern Cvar *cl_yawspeed;
+extern Cvar *cl_pitchspeed;
+extern Cvar *cl_rollspeed;
+extern Cvar *cl_run;
+extern Cvar *cl_anglespeedkey;
 
-extern cvar_t *cl_sensitivity;
-extern cvar_t *cl_freelook;
+extern Cvar *cl_sensitivity;
+extern Cvar *cl_freelook;
 
-extern cvar_t *cl_mouseAccel;
-extern cvar_t *cl_mouseAccelOffset;
-extern cvar_t *cl_mouseAccelStyle;
-extern cvar_t *cl_showMouseRate;
+extern Cvar *cl_mouseAccel;
+extern Cvar *cl_mouseAccelOffset;
+extern Cvar *cl_mouseAccelStyle;
+extern Cvar *cl_showMouseRate;
 
-extern cvar_t *m_pitch;
-extern cvar_t *m_yaw;
-extern cvar_t *m_forward;
-extern cvar_t *m_side;
-extern cvar_t *m_filter;
+extern Cvar *m_pitch;
+extern Cvar *m_yaw;
+extern Cvar *m_forward;
+extern Cvar *m_side;
+extern Cvar *m_filter;
 
-extern cvar_t *j_pitch;
-extern cvar_t *j_yaw;
-extern cvar_t *j_forward;
-extern cvar_t *j_side;
-extern cvar_t *j_up;
-extern cvar_t *j_pitch_axis;
-extern cvar_t *j_yaw_axis;
-extern cvar_t *j_forward_axis;
-extern cvar_t *j_side_axis;
-extern cvar_t *j_up_axis;
+extern Cvar *j_pitch;
+extern Cvar *j_yaw;
+extern Cvar *j_forward;
+extern Cvar *j_side;
+extern Cvar *j_up;
+extern Cvar *j_pitch_axis;
+extern Cvar *j_yaw_axis;
+extern Cvar *j_forward_axis;
+extern Cvar *j_side_axis;
+extern Cvar *j_up_axis;
 
-extern cvar_t *cl_timedemo;
-extern cvar_t *cl_aviFrameRate;
-extern cvar_t *cl_aviMotionJpeg;
+extern Cvar *cl_timedemo;
+extern Cvar *cl_aviFrameRate;
+extern Cvar *cl_aviMotionJpeg;
 
-extern cvar_t *cl_activeAction;
+extern Cvar *cl_activeAction;
 
-extern cvar_t *cl_allowDownload;
-extern cvar_t *cl_downloadMethod;
-extern cvar_t *cl_conXOffset;
-extern cvar_t *cl_inGameVideo;
+extern Cvar *cl_allowDownload;
+extern Cvar *cl_downloadMethod;
+extern Cvar *cl_conXOffset;
+extern Cvar *cl_inGameVideo;
 
-extern cvar_t *cl_lanForcePackets;
-extern cvar_t *cl_autoRecordDemo;
+extern Cvar *cl_lanForcePackets;
+extern Cvar *cl_autoRecordDemo;
 
-extern cvar_t *cl_consoleKeys;
+extern Cvar *cl_consoleKeys;
 
 #ifdef USE_MUMBLE
-extern cvar_t *cl_useMumble;
-extern cvar_t *cl_mumbleScale;
+extern Cvar *cl_useMumble;
+extern Cvar *cl_mumbleScale;
 #endif
 
 #ifdef USE_VOIP
 /* cl_voipSendTarget is a string: "all" to broadcast to everyone, "none" to
  *  send to no one, or a comma-separated list of client numbers:
  *  "0,7,2,23" ... an empty string is treated like "all". */
-extern cvar_t *cl_voipUseVAD;
-extern cvar_t *cl_voipVADThreshold;
-extern cvar_t *cl_voipSend;
-extern cvar_t *cl_voipSendTarget;
-extern cvar_t *cl_voipGainDuringCapture;
-extern cvar_t *cl_voipCaptureMult;
-extern cvar_t *cl_voipShowMeter;
-extern cvar_t *cl_voip;
+extern Cvar *cl_voipUseVAD;
+extern Cvar *cl_voipVADThreshold;
+extern Cvar *cl_voipSend;
+extern Cvar *cl_voipSendTarget;
+extern Cvar *cl_voipGainDuringCapture;
+extern Cvar *cl_voipCaptureMult;
+extern Cvar *cl_voipShowMeter;
+extern Cvar *cl_voip;
 #endif
 
 /*
@@ -461,9 +461,9 @@ void	CL_Voip_f(void);
 #endif
 
 void	CL_SystemInfoChanged(void);
-void	CL_ParseServerMessage(msg_t	*msg);
+void	CL_ParseServerMessage(Bitmsg	*msg);
 
-void	CL_ServerInfoPacket(netadr_t	from, msg_t *msg);
+void	CL_ServerInfoPacket(Netaddr	from, Bitmsg *msg);
 void	CL_LocalServers_f(void);
 void	CL_GlobalServers_f(void);
 void	CL_FavoriteServers_f(void);
@@ -502,7 +502,7 @@ void	SCR_AdjustFrom640(float *x, float *y, float *w, float *h);
 void	SCR_FillRect(float x, float y, float width, float height,
 			const float *color);
 void	SCR_DrawPic(float x, float y, float width, float height,
-			qhandle_t hShader);
+			Handle hShader);
 void	SCR_DrawNamedPic(float x, float y, float width, float height,
 			const char *picname);
 void	SCR_DrawBigString(int x, int y, const char *s, float alpha,
@@ -554,8 +554,8 @@ void LAN_SaveServersToCache(void);
 /*
  * cl_net_chan.c
  */
-void		CL_Netchan_Transmit(netchan_t *chan, msg_t* msg);	/* int length, const byte *data ); */
-qbool	CL_Netchan_Process(netchan_t *chan, msg_t *msg);
+void		CL_Netchan_Transmit(Netchan *chan, Bitmsg* msg);	/* int length, const byte *data ); */
+qbool	CL_Netchan_Process(Netchan *chan, Bitmsg *msg);
 
 /*
  * cl_avi.c
@@ -570,4 +570,4 @@ qbool CL_VideoRecording(void);
 /*
  * cl_main.c
  */
-void CL_WriteDemoMessage(msg_t *msg, int headerBytes);
+void CL_WriteDemoMessage(Bitmsg *msg, int headerBytes);

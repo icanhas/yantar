@@ -219,17 +219,17 @@ struct fileHandleData_t {
 };
 
 static char fs_gamedir[MAX_OSPATH];	/* this will be a single file name with no separators */
-static cvar_t	*fs_debug;
-static cvar_t	*fs_homepath;
+static Cvar	*fs_debug;
+static Cvar	*fs_homepath;
 
 #ifdef MACOS_X
 /* Also search the .app bundle for .pk3 files */
-static cvar_t *fs_apppath;
+static Cvar *fs_apppath;
 #endif
 
-static cvar_t *fs_basepath;
-static cvar_t *fs_basegame;
-static cvar_t	*fs_gamedirvar;
+static Cvar *fs_basepath;
+static Cvar *fs_basegame;
+static Cvar	*fs_gamedirvar;
 static searchpath_t *fs_searchpaths;
 static int	fs_readCount;		/* total bytes read */
 static int	fs_loadCount;		/* total files read */
@@ -322,7 +322,7 @@ FS_HashFileName(const char *fname, int hashSize)
 	return hash;
 }
 
-static fileHandle_t
+static Fhandle
 FS_HandleForFile(void)
 {
 	int i;
@@ -335,7 +335,7 @@ FS_HandleForFile(void)
 }
 
 static FILE*
-FS_FileForHandle(fileHandle_t f)
+FS_FileForHandle(Fhandle f)
 {
 	if(f < 1 || f > MAX_FILE_HANDLES)
 		Com_Errorf(ERR_DROP, "FS_FileForHandle: out of range");
@@ -350,7 +350,7 @@ FS_FileForHandle(fileHandle_t f)
 
 /* forces flush on files we're writing to. */
 void
-FS_ForceFlush(fileHandle_t f)
+FS_ForceFlush(Fhandle f)
 {
 	FILE *file;
 
@@ -378,7 +378,7 @@ FS_fplength(FILE *h)
  * size of the file.
  */
 long
-FS_filelength(fileHandle_t f)
+FS_filelength(Fhandle f)
 {
 	FILE *h;
 
@@ -535,11 +535,11 @@ FS_SV_FileExists(const char *file)
 	return FS_FileInPathExists(testpath);
 }
 
-fileHandle_t
+Fhandle
 FS_SV_FOpenFileWrite(const char *filename)
 {
 	char *ospath;
-	fileHandle_t f;
+	Fhandle f;
 
 	if(!fs_searchpaths)
 		Com_Errorf(ERR_FATAL,
@@ -581,10 +581,10 @@ FS_SV_FOpenFileWrite(const char *filename)
  * file IO goes through FS_ReadFile, which Does The Right Thing already.
  */
 long
-FS_SV_FOpenFileRead(const char *filename, fileHandle_t *fp)
+FS_SV_FOpenFileRead(const char *filename, Fhandle *fp)
 {
 	char *ospath;
-	fileHandle_t f = 0;
+	Fhandle f = 0;
 
 	if(!fs_searchpaths)
 		Com_Errorf(ERR_FATAL,
@@ -691,7 +691,7 @@ FS_Rename(const char *from, const char *to)
  * on files returned by FS_FOpenFile...
  */
 void
-FS_FCloseFile(fileHandle_t f)
+FS_FCloseFile(Fhandle f)
 {
 	if(!fs_searchpaths)
 		Com_Errorf(ERR_FATAL,
@@ -711,11 +711,11 @@ FS_FCloseFile(fileHandle_t f)
 	Q_Memset(&fsh[f], 0, sizeof(fsh[f]));
 }
 
-fileHandle_t
+Fhandle
 FS_FOpenFileWrite(const char *filename)
 {
 	char *ospath;
-	fileHandle_t f;
+	Fhandle f;
 
 	if(!fs_searchpaths)
 		Com_Errorf(ERR_FATAL,
@@ -747,11 +747,11 @@ FS_FOpenFileWrite(const char *filename)
 	return f;
 }
 
-fileHandle_t
+Fhandle
 FS_FOpenFileAppend(const char *filename)
 {
 	char *ospath;
-	fileHandle_t f;
+	Fhandle f;
 
 	if(!fs_searchpaths)
 		Com_Errorf(ERR_FATAL,
@@ -782,12 +782,12 @@ FS_FOpenFileAppend(const char *filename)
 	return f;
 }
 
-fileHandle_t
+Fhandle
 FS_FCreateOpenPipeFile(const char *filename)
 {
 	char	*ospath;
 	FILE	*fifo;
-	fileHandle_t f;
+	Fhandle f;
 
 	if(!fs_searchpaths)
 		Com_Errorf(ERR_FATAL,
@@ -898,7 +898,7 @@ extern qbool com_fullyInitialized;
 
 long
 FS_FOpenFileReadDir(const char *filename, searchpath_t *search,
-		    fileHandle_t *file, qbool uniqueFILE,
+		    Fhandle *file, qbool uniqueFILE,
 		    qbool unpure)
 {
 	long hash;
@@ -1141,7 +1141,7 @@ FS_FOpenFileReadDir(const char *filename, searchpath_t *search,
  * separate file or a ZIP file.
  */
 long
-FS_FOpenFileRead(const char *filename, fileHandle_t *file, qbool uniqueFILE)
+FS_FOpenFileRead(const char *filename, Fhandle *file, qbool uniqueFILE)
 {
 	searchpath_t *search;
 	long len;
@@ -1261,7 +1261,7 @@ FS_FindVM(void **startSearch, char *found, int foundlen, const char *name,
 
 /* Properly handles partial reads */
 int
-FS_Read2(void *buffer, int len, fileHandle_t f)
+FS_Read2(void *buffer, int len, Fhandle f)
 {
 	if(!fs_searchpaths)
 		Com_Errorf(ERR_FATAL,
@@ -1280,7 +1280,7 @@ FS_Read2(void *buffer, int len, fileHandle_t f)
 }
 
 int
-FS_Read(void *buffer, int len, fileHandle_t f)
+FS_Read(void *buffer, int len, Fhandle f)
 {
 	int	block, remaining;
 	int	read;
@@ -1328,7 +1328,7 @@ FS_Read(void *buffer, int len, fileHandle_t f)
 
 /* Properly handles partial writes */
 int
-FS_Write(const void *buffer, int len, fileHandle_t h)
+FS_Write(const void *buffer, int len, Fhandle h)
 {
 	int	block, remaining;
 	int	written;
@@ -1374,7 +1374,7 @@ FS_Write(const void *buffer, int len, fileHandle_t h)
 }
 
 void QDECL
-FS_Printf(fileHandle_t h, const char *fmt, ...)
+FS_Printf(Fhandle h, const char *fmt, ...)
 {
 	va_list argptr;
 	char	msg[MAXPRINTMSG];
@@ -1390,7 +1390,7 @@ FS_Printf(fileHandle_t h, const char *fmt, ...)
 
 /* seek on a file (doesn't work for zip files! */
 int
-FS_Seek(fileHandle_t f, long offset, int origin)
+FS_Seek(Fhandle f, long offset, int origin)
 {
 	int _origin;
 
@@ -1542,7 +1542,7 @@ long
 FS_ReadFileDir(const char *qpath, void *searchPath, qbool unpure,
 	       void **buffer)
 {
-	fileHandle_t	h;
+	Fhandle	h;
 	searchpath_t	*search;
 	byte	* buf;
 	qbool isConfig;
@@ -1688,7 +1688,7 @@ FS_FreeFile(void *buffer)
 void
 FS_WriteFile(const char *qpath, const void *buffer, int size)
 {
-	fileHandle_t f;
+	Fhandle f;
 
 	if(!fs_searchpaths)
 		Com_Errorf(ERR_FATAL,
@@ -2158,7 +2158,7 @@ FS_GetModList(char *listbuf, int bufsize)
 	char	**pPaks = NULL;
 	char    *name, *path;
 	char	descPath[MAX_OSPATH];
-	fileHandle_t descHandle;
+	Fhandle descHandle;
 
 	int dummy;
 	char **pFiles0	= NULL;
@@ -2409,7 +2409,7 @@ FS_Path_f(void)
 void
 FS_TouchFile_f(void)
 {
-	fileHandle_t f;
+	Fhandle f;
 
 	if(Cmd_Argc() != 2){
 		Com_Printf("Usage: touchFile <file>\n");
@@ -3422,7 +3422,7 @@ FS_ConditionalRestart(int checksumFeed, qbool disconnect)
  */
 
 int
-FS_FOpenFileByMode(const char *qpath, fileHandle_t *f, fsMode_t mode)
+FS_FOpenFileByMode(const char *qpath, Fhandle *f, Fsmode mode)
 {
 	int r;
 	qbool sync;
@@ -3472,7 +3472,7 @@ FS_FOpenFileByMode(const char *qpath, fileHandle_t *f, fsMode_t mode)
 }
 
 int
-FS_FTell(fileHandle_t f)
+FS_FTell(Fhandle f)
 {
 	int pos;
 	if(fsh[f].zipFile == qtrue)
@@ -3483,7 +3483,7 @@ FS_FTell(fileHandle_t f)
 }
 
 void
-FS_Flush(fileHandle_t f)
+FS_Flush(Fhandle f)
 {
 	fflush(fsh[f].handleFiles.file.o);
 }

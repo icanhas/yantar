@@ -67,7 +67,7 @@ ConfirmMenu_Event(void* ptr, int event)
 /*
  * ConfirmMenu_Key
  */
-static sfxHandle_t
+static Sfxhandle
 ConfirmMenu_Key(int key)
 {
 	switch(key){

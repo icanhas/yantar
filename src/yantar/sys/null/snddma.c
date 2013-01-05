@@ -40,14 +40,14 @@ SNDDMA_Submit(void)
 {
 }
 
-sfxHandle_t
+Sfxhandle
 S_RegisterSound(const char *name, qbool compressed)
 {
 	return 0;
 }
 
 void
-S_StartLocalSound(sfxHandle_t sfxHandle, int channelNum)
+S_StartLocalSound(Sfxhandle sfxHandle, int channelNum)
 {
 }
 

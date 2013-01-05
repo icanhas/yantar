@@ -332,7 +332,7 @@ typedef struct VM_Data {
 static long int
 VM_AsmCall(int callSyscallInvNum, int callProgramStack)
 {
-	vm_t *savedVM = currentVM;
+	Vm *savedVM = currentVM;
 	long int i, ret;
 #ifdef VM_TIMES
 	struct tms	start_time, stop_time;
@@ -1810,7 +1810,7 @@ PPC_ShrinkJumps(void)
  * puts all the data in one place, it consists of many different tasks
  */
 static void
-PPC_ComputeCode(vm_t *vm)
+PPC_ComputeCode(Vm *vm)
 {
 	dest_instruction_t	*di_now = di_first;
 
@@ -1987,7 +1987,7 @@ PPC_ComputeCode(vm_t *vm)
 }
 
 static void
-VM_Destroy_Compiled(vm_t *self)
+VM_Destroy_Compiled(Vm *self)
 {
 	if(self->codeBase)
 		if(munmap(self->codeBase, self->codeLength))
@@ -1998,7 +1998,7 @@ VM_Destroy_Compiled(vm_t *self)
 }
 
 void
-VM_Compile(vm_t *vm, vmHeader_t *header)
+VM_Compile(Vm *vm, vmHeader_t *header)
 {
 	long int pc = 0;
 	unsigned long int	i_count;
@@ -2112,7 +2112,7 @@ VM_Compile(vm_t *vm, vmHeader_t *header)
 }
 
 int
-VM_CallCompiled(vm_t *vm, int *args)
+VM_CallCompiled(Vm *vm, int *args)
 {
 	int	retVal;
 	int	*argPointer;

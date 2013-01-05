@@ -22,7 +22,7 @@
 #define OGG_SAMPLEWIDTH 2
 
 /* Q3 OGG codec */
-snd_codec_t ogg_codec =
+Sndcodec ogg_codec =
 {
 	"ogg",
 	S_OGG_CodecLoad,
@@ -38,7 +38,7 @@ snd_codec_t ogg_codec =
 size_t
 S_OGG_Callback_read(void *ptr, size_t size, size_t nmemb, void *datasource)
 {
-	snd_stream_t *stream;
+	Sndstream *stream;
 	int	byteSize = 0;
 	int	bytesRead = 0;
 	size_t nMembRead = 0;
@@ -60,8 +60,8 @@ S_OGG_Callback_read(void *ptr, size_t size, size_t nmemb, void *datasource)
 		return 0;
 	}
 
-	/* we use a snd_stream_t in the generic pointer to pass around */
-	stream = (snd_stream_t*)datasource;
+	/* we use a Sndstream in the generic pointer to pass around */
+	stream = (Sndstream*)datasource;
 
 	/* FS_Read does not support multi-byte elements */
 	byteSize = nmemb * size;
@@ -87,7 +87,7 @@ S_OGG_Callback_read(void *ptr, size_t size, size_t nmemb, void *datasource)
 int
 S_OGG_Callback_seek(void *datasource, ogg_int64_t offset, int whence)
 {
-	snd_stream_t *stream;
+	Sndstream *stream;
 	int retVal = 0;
 
 	/* check if input is valid */
@@ -96,8 +96,8 @@ S_OGG_Callback_seek(void *datasource, ogg_int64_t offset, int whence)
 		return -1;
 	}
 
-	/* snd_stream_t in the generic pointer */
-	stream = (snd_stream_t*)datasource;
+	/* Sndstream in the generic pointer */
+	stream = (Sndstream*)datasource;
 
 	/* we must map the whence to its Q3 counterpart */
 	switch(whence){
@@ -177,7 +177,7 @@ S_OGG_Callback_close(void *datasource)
 long
 S_OGG_Callback_tell(void *datasource)
 {
-	snd_stream_t *stream;
+	Sndstream *stream;
 
 	/* check if input is valid */
 	if(!datasource){
@@ -185,8 +185,8 @@ S_OGG_Callback_tell(void *datasource)
 		return -1;
 	}
 
-	/* snd_stream_t in the generic pointer */
-	stream = (snd_stream_t*)datasource;
+	/* Sndstream in the generic pointer */
+	stream = (Sndstream*)datasource;
 
 	return (long)FS_FTell(stream->file);
 }
@@ -200,10 +200,10 @@ const ov_callbacks S_OGG_Callbacks =
 	&S_OGG_Callback_tell
 };
 
-snd_stream_t *
+Sndstream *
 S_OGG_CodecOpenStream(const char *filename)
 {
-	snd_stream_t *stream;
+	Sndstream *stream;
 
 	/* OGG codec control structure */
 	OggVorbis_File *vf;
@@ -294,7 +294,7 @@ S_OGG_CodecOpenStream(const char *filename)
 }
 
 void
-S_OGG_CodecCloseStream(snd_stream_t *stream)
+S_OGG_CodecCloseStream(Sndstream *stream)
 {
 	/* check if input is valid */
 	if(!stream)
@@ -311,7 +311,7 @@ S_OGG_CodecCloseStream(snd_stream_t *stream)
 }
 
 int
-S_OGG_CodecReadStream(snd_stream_t *stream, int bytes, void *buffer)
+S_OGG_CodecReadStream(Sndstream *stream, int bytes, void *buffer)
 {
 	/* buffer handling */
 	int bytesRead, bytesLeft, c;
@@ -370,7 +370,7 @@ S_OGG_CodecReadStream(snd_stream_t *stream, int bytes, void *buffer)
 void *
 S_OGG_CodecLoad(const char *filename, snd_info_t *info)
 {
-	snd_stream_t *stream;
+	Sndstream *stream;
 	byte	*buffer;
 	int	bytesRead;
 

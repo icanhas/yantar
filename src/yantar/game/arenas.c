@@ -10,9 +10,9 @@
 #include "game.h"
 #include "local.h"
 
-gentity_t *podium1;
-gentity_t *podium2;
-gentity_t *podium3;
+Gentity *podium1;
+Gentity *podium2;
+Gentity *podium3;
 
 
 /*
@@ -22,7 +22,7 @@ void
 UpdateTournamentInfo(void)
 {
 	int	i;
-	gentity_t *player;
+	Gentity *player;
 	int	playerClientNum;
 	int	n, accuracy, perfect,   msglen;
 #ifdef MISSIONPACK
@@ -152,10 +152,10 @@ UpdateTournamentInfo(void)
 }
 
 
-static gentity_t *
-SpawnModelOnVictoryPad(gentity_t *pad, Vec3 offset, gentity_t *ent, int place)
+static Gentity *
+SpawnModelOnVictoryPad(Gentity *pad, Vec3 offset, Gentity *ent, int place)
 {
-	gentity_t	*body;
+	Gentity	*body;
 	Vec3		vec;
 	Vec3		f, r, u;
 
@@ -217,7 +217,7 @@ SpawnModelOnVictoryPad(gentity_t *pad, Vec3 offset, gentity_t *ent, int place)
 
 
 static void
-CelebrateStop(gentity_t *player)
+CelebrateStop(Gentity *player)
 {
 	int anim;
 
@@ -232,7 +232,7 @@ CelebrateStop(gentity_t *player)
 
 #define TIMER_GESTURE (34*66+50)
 static void
-CelebrateStart(gentity_t *player)
+CelebrateStart(Gentity *player)
 {
 	player->s.torsoAnim =
 		((player->s.torsoAnim &
@@ -254,7 +254,7 @@ static Vec3	offsetSecond = {-10, 60, 54};
 static Vec3	offsetThird = {-19, -60, 45};
 
 static void
-PodiumPlacementThink(gentity_t *podium)
+PodiumPlacementThink(Gentity *podium)
 {
 	Vec3	vec;
 	Vec3	origin;
@@ -318,10 +318,10 @@ PodiumPlacementThink(gentity_t *podium)
 }
 
 
-static gentity_t *
+static Gentity *
 SpawnPodium(void)
 {
-	gentity_t	*podium;
+	Gentity	*podium;
 	Vec3		vec;
 	Vec3		origin;
 
@@ -358,8 +358,8 @@ SpawnPodium(void)
 void
 SpawnModelsOnVictoryPads(void)
 {
-	gentity_t *player;
-	gentity_t *podium;
+	Gentity *player;
+	Gentity *podium;
 
 	podium1 = NULL;
 	podium2 = NULL;

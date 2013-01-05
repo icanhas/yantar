@@ -20,62 +20,62 @@
 
 typedef void (*voidfunc_f)(void);
 
-extern vmCvar_t ui_ffa_fraglimit;
-extern vmCvar_t ui_ffa_timelimit;
+extern Vmcvar ui_ffa_fraglimit;
+extern Vmcvar ui_ffa_timelimit;
 
-extern vmCvar_t ui_tourney_fraglimit;
-extern vmCvar_t ui_tourney_timelimit;
+extern Vmcvar ui_tourney_fraglimit;
+extern Vmcvar ui_tourney_timelimit;
 
-extern vmCvar_t ui_team_fraglimit;
-extern vmCvar_t ui_team_timelimit;
-extern vmCvar_t ui_team_friendly;
+extern Vmcvar ui_team_fraglimit;
+extern Vmcvar ui_team_timelimit;
+extern Vmcvar ui_team_friendly;
 
-extern vmCvar_t ui_ctf_capturelimit;
-extern vmCvar_t ui_ctf_timelimit;
-extern vmCvar_t ui_ctf_friendly;
+extern Vmcvar ui_ctf_capturelimit;
+extern Vmcvar ui_ctf_timelimit;
+extern Vmcvar ui_ctf_friendly;
 
-extern vmCvar_t ui_arenasFile;
-extern vmCvar_t ui_botsFile;
-extern vmCvar_t ui_spScores1;
-extern vmCvar_t ui_spScores2;
-extern vmCvar_t ui_spScores3;
-extern vmCvar_t ui_spScores4;
-extern vmCvar_t ui_spScores5;
-extern vmCvar_t ui_spAwards;
-extern vmCvar_t ui_spVideos;
-extern vmCvar_t ui_spSkill;
+extern Vmcvar ui_arenasFile;
+extern Vmcvar ui_botsFile;
+extern Vmcvar ui_spScores1;
+extern Vmcvar ui_spScores2;
+extern Vmcvar ui_spScores3;
+extern Vmcvar ui_spScores4;
+extern Vmcvar ui_spScores5;
+extern Vmcvar ui_spAwards;
+extern Vmcvar ui_spVideos;
+extern Vmcvar ui_spSkill;
 
-extern vmCvar_t ui_spSelection;
+extern Vmcvar ui_spSelection;
 
-extern vmCvar_t ui_browserMaster;
-extern vmCvar_t ui_browserGameType;
-extern vmCvar_t ui_browserSortKey;
-extern vmCvar_t ui_browserShowFull;
-extern vmCvar_t ui_browserShowEmpty;
+extern Vmcvar ui_browserMaster;
+extern Vmcvar ui_browserGameType;
+extern Vmcvar ui_browserSortKey;
+extern Vmcvar ui_browserShowFull;
+extern Vmcvar ui_browserShowEmpty;
 
-extern vmCvar_t ui_brassTime;
-extern vmCvar_t ui_drawCrosshair;
-extern vmCvar_t ui_drawCrosshairNames;
-extern vmCvar_t ui_marks;
+extern Vmcvar ui_brassTime;
+extern Vmcvar ui_drawCrosshair;
+extern Vmcvar ui_drawCrosshairNames;
+extern Vmcvar ui_marks;
 
-extern vmCvar_t ui_server1;
-extern vmCvar_t ui_server2;
-extern vmCvar_t ui_server3;
-extern vmCvar_t ui_server4;
-extern vmCvar_t ui_server5;
-extern vmCvar_t ui_server6;
-extern vmCvar_t ui_server7;
-extern vmCvar_t ui_server8;
-extern vmCvar_t ui_server9;
-extern vmCvar_t ui_server10;
-extern vmCvar_t ui_server11;
-extern vmCvar_t ui_server12;
-extern vmCvar_t ui_server13;
-extern vmCvar_t ui_server14;
-extern vmCvar_t ui_server15;
-extern vmCvar_t ui_server16;
+extern Vmcvar ui_server1;
+extern Vmcvar ui_server2;
+extern Vmcvar ui_server3;
+extern Vmcvar ui_server4;
+extern Vmcvar ui_server5;
+extern Vmcvar ui_server6;
+extern Vmcvar ui_server7;
+extern Vmcvar ui_server8;
+extern Vmcvar ui_server9;
+extern Vmcvar ui_server10;
+extern Vmcvar ui_server11;
+extern Vmcvar ui_server12;
+extern Vmcvar ui_server13;
+extern Vmcvar ui_server14;
+extern Vmcvar ui_server15;
+extern Vmcvar ui_server16;
 
-extern vmCvar_t ui_skipExitCredits;
+extern Vmcvar ui_skipExitCredits;
 
 
 /*
@@ -138,7 +138,7 @@ typedef struct _tag_menuframework {
 	void	*items[MAX_MENUITEMS];
 
 	void (*draw)(void);
-	sfxHandle_t (*key)(int key);
+	Sfxhandle (*key)(int key);
 
 	qbool		wrapAround;
 	qbool		fullscreen;
@@ -215,8 +215,8 @@ typedef struct {
 	menucommon_s	generic;
 	char		* focuspic;
 	char		* errorpic;
-	qhandle_t	shader;
-	qhandle_t	focusshader;
+	Handle		shader;
+	Handle		focusshader;
 	int		width;
 	int		height;
 	float		* focuscolor;
@@ -235,21 +235,21 @@ extern void                     Menu_AddItem(menuframework_s *menu, void *item);
 extern void                     Menu_AdjustCursor(menuframework_s *menu, int dir);
 extern void                     Menu_Draw(menuframework_s *menu);
 extern void*Menu_ItemAtCursor(menuframework_s *m);
-extern sfxHandle_t      Menu_ActivateItem(menuframework_s *s, menucommon_s* item);
+extern Sfxhandle      Menu_ActivateItem(menuframework_s *s, menucommon_s* item);
 extern void                     Menu_SetCursor(menuframework_s *s, int cursor);
 extern void                     Menu_SetCursorToItem(menuframework_s *m,
 						     void* ptr);
-extern sfxHandle_t      Menu_DefaultKey(menuframework_s *s, int key);
+extern Sfxhandle      Menu_DefaultKey(menuframework_s *s, int key);
 extern void                     Bitmap_Init(menubitmap_s *b);
 extern void                     Bitmap_Draw(menubitmap_s *b);
 extern void                     ScrollList_Draw(menulist_s *l);
-extern sfxHandle_t      ScrollList_Key(menulist_s *l, int key);
-extern sfxHandle_t	menu_in_sound;
-extern sfxHandle_t	menu_move_sound;
-extern sfxHandle_t	menu_out_sound;
-extern sfxHandle_t	menu_buzz_sound;
-extern sfxHandle_t	menu_null_sound;
-extern sfxHandle_t	weaponChangeSound;
+extern Sfxhandle      ScrollList_Key(menulist_s *l, int key);
+extern Sfxhandle	menu_in_sound;
+extern Sfxhandle	menu_move_sound;
+extern Sfxhandle	menu_out_sound;
+extern Sfxhandle	menu_buzz_sound;
+extern Sfxhandle	menu_null_sound;
+extern Sfxhandle	weaponChangeSound;
 extern Vec4	menu_text_color;
 extern Vec4	menu_grayed_color;
 extern Vec4	menu_dark_color;
@@ -286,7 +286,7 @@ extern void                     MField_Draw(mfield_t *edit, int x, int y,
 					    Vec4 color);
 extern void                     MenuField_Init(menufield_s* m);
 extern void                     MenuField_Draw(menufield_s *f);
-extern sfxHandle_t      MenuField_Key(menufield_s* m, int* key);
+extern Sfxhandle      MenuField_Key(menufield_s* m, int* key);
 
 /*
  * ui_menu.c
@@ -445,22 +445,22 @@ typedef struct {
 
 typedef struct {
 	/* model info */
-	qhandle_t	legsModel;
-	qhandle_t	legsSkin;
+	Handle		legsModel;
+	Handle		legsSkin;
 	lerpFrame_t	legs;
 
-	qhandle_t	torsoModel;
-	qhandle_t	torsoSkin;
+	Handle		torsoModel;
+	Handle		torsoSkin;
 	lerpFrame_t	torso;
 
-	qhandle_t	headModel;
-	qhandle_t	headSkin;
+	Handle		headModel;
+	Handle		headSkin;
 
 	animation_t	animations[MAX_ANIMATIONS];
 
-	qhandle_t	weaponModel;
-	qhandle_t	barrelModel;
-	qhandle_t	flashModel;
+	Handle		weaponModel;
+	Handle		barrelModel;
+	Handle		flashModel;
 	Vec3		flashDlightColor;
 	int		muzzleFlashTime;
 
@@ -493,16 +493,16 @@ typedef struct {
 	int		barrelTime;
 
 	int		realWeapon;
-} playerInfo_t;
+} Playerinfo;
 
-void UI_DrawPlayer(float x, float y, float w, float h, playerInfo_t *pi,
+void UI_DrawPlayer(float x, float y, float w, float h, Playerinfo *pi,
 		   int time);
-void UI_PlayerInfo_SetModel(playerInfo_t *pi, const char *model);
-void UI_PlayerInfo_SetInfo(playerInfo_t *pi, int legsAnim, int torsoAnim,
+void UI_PlayerInfo_SetModel(Playerinfo *pi, const char *model);
+void UI_PlayerInfo_SetInfo(Playerinfo *pi, int legsAnim, int torsoAnim,
 			   Vec3 viewAngles, Vec3 moveAngles,
 			   Weapon weaponNum,
 			   qbool chat);
-qbool UI_RegisterClientModelname(playerInfo_t *pi, const char *modelSkinName);
+qbool UI_RegisterClientModelname(Playerinfo *pi, const char *modelSkinName);
 
 /*
  * ui_atoms.c
@@ -515,18 +515,18 @@ typedef struct {
 	int		menusp;
 	menuframework_s * activemenu;
 	menuframework_s * stack[MAX_MENUDEPTH];
-	glconfig_t	glconfig;
+	Glconfig	glconfig;
 	qbool		debug;
-	qhandle_t	whiteShader;
-	qhandle_t	menuBackShader;
-	qhandle_t	menuBackNoLogoShader;
-	qhandle_t	charset;
-	qhandle_t	charsetProp;
-	qhandle_t	charsetPropGlow;
-	qhandle_t	charsetPropB;
-	qhandle_t	cursor;
-	qhandle_t	rb_on;
-	qhandle_t	rb_off;
+	Handle		whiteShader;
+	Handle		menuBackShader;
+	Handle		menuBackNoLogoShader;
+	Handle		charset;
+	Handle		charsetProp;
+	Handle		charsetPropGlow;
+	Handle		charsetPropB;
+	Handle		cursor;
+	Handle		rb_on;
+	Handle		rb_off;
 	float		xscale;
 	float		yscale;
 	float		bias;
@@ -546,7 +546,7 @@ extern void                     UI_DrawNamedPic(float x, float y, float width,
 						const char *picname);
 extern void                     UI_DrawHandlePic(float x, float y, float w,
 						 float h,
-						 qhandle_t hShader);
+						 Handle hShader);
 extern void                     UI_FillRect(float x, float y, float width,
 					    float height,
 					    const float *color);
@@ -622,10 +622,10 @@ void UI_SPSkillMenu_Cache(void);
 void                    trap_Print(const char *string);
 void                    trap_Error(const char *string) __attribute__((noreturn));
 int                             trap_Milliseconds(void);
-void                    trap_Cvar_Register(vmCvar_t *vmCvar, const char *varName,
+void                    trap_Cvar_Register(Vmcvar *vmCvar, const char *varName,
 					   const char *defaultValue,
 					   int flags);
-void                    trap_Cvar_Update(vmCvar_t *vmCvar);
+void                    trap_Cvar_Update(Vmcvar *vmCvar);
 void                    trap_Cvar_Set(const char *var_name, const char *value);
 float                   trap_Cvar_VariableValue(const char *var_name);
 void                    trap_Cvar_VariableStringBuffer(const char *var_name,
@@ -642,24 +642,24 @@ int                             trap_Argc(void);
 void                    trap_Argv(int n, char *buffer, int bufferLength);
 void                    trap_Cmd_ExecuteText(int exec_when, const char *text);	/* don't use EXEC_NOW! */
 int                             trap_FS_FOpenFile(const char *qpath,
-						  fileHandle_t *f,
-						  fsMode_t mode);
-void                    trap_FS_Read(void *buffer, int len, fileHandle_t f);
+						  Fhandle *f,
+						  Fsmode mode);
+void                    trap_FS_Read(void *buffer, int len, Fhandle f);
 void                    trap_FS_Write(const void *buffer, int len,
-				      fileHandle_t f);
-void                    trap_FS_FCloseFile(fileHandle_t f);
+				      Fhandle f);
+void                    trap_FS_FCloseFile(Fhandle f);
 int                             trap_FS_GetFileList(const char *path,
 						    const char *extension,
 						    char *listbuf,
 						    int bufsize);
-int                             trap_FS_Seek(fileHandle_t f, long offset,
+int                             trap_FS_Seek(Fhandle f, long offset,
 					     int origin);	/* fsOrigin_t */
-qhandle_t               trap_R_RegisterModel(const char *name);
-qhandle_t               trap_R_RegisterSkin(const char *name);
-qhandle_t               trap_R_RegisterShaderNoMip(const char *name);
+Handle               trap_R_RegisterModel(const char *name);
+Handle               trap_R_RegisterSkin(const char *name);
+Handle               trap_R_RegisterShaderNoMip(const char *name);
 void                    trap_R_ClearScene(void);
-void                    trap_R_AddRefEntityToScene(const refEntity_t *re);
-void                    trap_R_AddPolyToScene(qhandle_t hShader, int numVerts,
+void                    trap_R_AddRefEntityToScene(const Refent *re);
+void                    trap_R_AddPolyToScene(Handle hShader, int numVerts,
 					      const polyVert_t *verts);
 void                    trap_R_AddLightToScene(const Vec3 org, float intensity,
 					       float r, float g,
@@ -669,14 +669,14 @@ void                    trap_R_SetColor(const float *rgba);
 void                    trap_R_DrawStretchPic(float x, float y, float w, float h,
 					      float s1, float t1, float s2,
 					      float t2,
-					      qhandle_t hShader);
+					      Handle hShader);
 void                    trap_UpdateScreen(void);
-int                             trap_CM_LerpTag(orientation_t *tag,
-						clipHandle_t mod, int startFrame,
+int                             trap_CM_LerpTag(Orient *tag,
+						Cliphandle mod, int startFrame,
 						int endFrame, float frac,
 						const char *tagName);
-void                    trap_S_StartLocalSound(sfxHandle_t sfx, int channelNum);
-sfxHandle_t     trap_S_RegisterSound(const char *sample, qbool compressed);
+void                    trap_S_StartLocalSound(Sfxhandle sfx, int channelNum);
+Sfxhandle     trap_S_RegisterSound(const char *sample, qbool compressed);
 void                    trap_Key_KeynumToStringBuf(int keynum, char *buf,
 						   int buflen);
 void                    trap_Key_GetBindingBuf(int keynum, char *buf, int buflen);
@@ -689,7 +689,7 @@ int                             trap_Key_GetCatcher(void);
 void                    trap_Key_SetCatcher(int catcher);
 void                    trap_GetClipboardData(char *buf, int bufsize);
 void                    trap_GetClientState(uiClientState_t *state);
-void                    trap_GetGlconfig(glconfig_t *glconfig);
+void                    trap_GetGlconfig(Glconfig *glconfig);
 int                             trap_GetConfigString(int index, char* buff,
 						     int buffsize);
 int                             trap_LAN_GetServerCount(int source);

@@ -8,8 +8,8 @@
 void	S_Init(void);
 void	S_Shutdown(void);
 /* if origin is NULL, the sound will be dynamically sourced from the entity */
-void	S_StartSound(Vec3 origin, int entnum, int entchannel, sfxHandle_t sfx);
-void	S_StartLocalSound(sfxHandle_t sfx, int channelNum);
+void	S_StartSound(Vec3 origin, int entnum, int entchannel, Sfxhandle sfx);
+void	S_StartLocalSound(Sfxhandle sfx, int channelNum);
 void	S_StartBackgroundTrack(const char *intro, const char *loop);
 void	S_StopBackgroundTrack(void);
 /* 
@@ -23,10 +23,10 @@ void	S_StopAllSounds(void);
 /* all continuous looping sounds must be added before calling S_Update */
 void	S_ClearLoopingSounds(qbool killall);
 void	S_AddLoopingSound(int entityNum, const Vec3 origin, const Vec3 velocity,
-		sfxHandle_t sfx);
+		Sfxhandle sfx);
 void	S_AddRealLoopingSound(int entityNum, const Vec3 origin,
 		const Vec3 velocity,
-		sfxHandle_t sfx);
+		Sfxhandle sfx);
 void	S_StopLoopingSound(int entityNum);
 /* 
  * recompute the volumes for all running sounds
@@ -44,7 +44,7 @@ void	S_BeginRegistration(void);
  * has to create a placeholder.  This prevents continuous filesystem
  * checks for missing files 
  */
-sfxHandle_t	S_RegisterSound(const char *sample, qbool compressed);
+Sfxhandle	S_RegisterSound(const char *sample, qbool compressed);
 void	S_DisplayFreeMemory(void);
 void	S_ClearSoundBuffer(void);
 void	SNDDMA_Activate(void);

@@ -42,7 +42,7 @@ int
 AAS_DropToFloor(Vec3 origin, Vec3 mins, Vec3 maxs)
 {
 	Vec3 end;
-	bsp_trace_t trace;
+	bsp_Trace trace;
 
 	copyv3(origin, end);
 	end[2]	-= 100;
@@ -182,7 +182,7 @@ AAS_AgainstLadder(Vec3 origin)
 int
 AAS_OnGround(Vec3 origin, int presencetype, int passent)
 {
-	aas_trace_t trace;
+	aas_Trace trace;
 	Vec3 end, up = {0, 0, 1};
 	aas_plane_t *plane;
 
@@ -291,7 +291,7 @@ AAS_WeaponJumpZVelocity(Vec3 origin, float radiusdamage)
 	Vec3	rocketoffset = {8, 8, -8};
 	Vec3	botmins = {-16, -16, -24};
 	Vec3	botmaxs = {16, 16, 32};
-	bsp_trace_t bsptrace;
+	bsp_Trace bsptrace;
 
 	/* look down (90 degrees) */
 	viewangles[PITCH] = 90;
@@ -413,7 +413,7 @@ AAS_ApplyFriction(Vec3 vel, float friction, float stopspeed,
  * Changes Globals:		-
  * =========================================================================== */
 int
-AAS_ClipToBBox(aas_trace_t *trace, Vec3 start, Vec3 end, int presencetype,
+AAS_ClipToBBox(aas_Trace *trace, Vec3 start, Vec3 end, int presencetype,
 	       Vec3 mins,
 	       Vec3 maxs)
 {
@@ -517,7 +517,7 @@ AAS_ClientMovementPrediction(struct aas_clientmove_s *move,
 	Vec3	frame_test_vel, old_frame_test_vel, left_test_vel;
 	Vec3	up = {0, 0, 1};
 	aas_plane_t	*plane, *plane2;
-	aas_trace_t	trace, steptrace;
+	aas_Trace	trace, steptrace;
 
 	if(frametime <= 0) frametime = 0.1f;
 	/*  */
@@ -537,7 +537,7 @@ AAS_ClientMovementPrediction(struct aas_clientmove_s *move,
 	phys_jumpvel = aassettings.phys_jumpvel * frametime;
 	/*  */
 	Q_Memset(move, 0, sizeof(aas_clientmove_t));
-	Q_Memset(&trace, 0, sizeof(aas_trace_t));
+	Q_Memset(&trace, 0, sizeof(aas_Trace));
 	/* start at the current origin */
 	copyv3(origin, org);
 	org[2] += 0.25;
@@ -1017,7 +1017,7 @@ AAS_ClientMovementPrediction(struct aas_clientmove_s *move,
 			return qtrue;
 		}	/* end else if */
 		else if(stopevent & SE_GAP){
-			aas_trace_t gaptrace;
+			aas_Trace gaptrace;
 
 			copyv3(org, start);
 			copyv3(start, end);

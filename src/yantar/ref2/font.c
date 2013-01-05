@@ -73,7 +73,7 @@ static FT_Library ftLibrary = NULL;
 #endif
 #define MAX_FONTS 6
 static int registeredFontCount = 0;
-static fontInfo_t registeredFont[MAX_FONTS];
+static Fontinfo registeredFont[MAX_FONTS];
 
 #ifdef BUILD_FREETYPE
 
@@ -320,7 +320,7 @@ readFloat(void)
 }
 
 void
-RE_RegisterFont(const char *fontName, int pointSize, fontInfo_t *font)
+RE_RegisterFont(const char *fontName, int pointSize, Fontinfo *font)
 {
 #ifdef BUILD_FREETYPE
 	FT_Face face;
@@ -328,8 +328,8 @@ RE_RegisterFont(const char *fontName, int pointSize, fontInfo_t *font)
 	int	scaledSize, newSize, maxHeight, left;
 	byte *out, *imageBuff;
 	glyphInfo_t	*glyph;
-	image_t         *image;
-	qhandle_t	h;
+	Img         *image;
+	Handle		h;
 	float max;
 	float	glyphScale;
 #endif
@@ -360,12 +360,12 @@ RE_RegisterFont(const char *fontName, int pointSize, fontInfo_t *font)
 	Q_sprintf(filename, sizeof(filename),"%s_%i.dat", strippedname, pointSize);
 	for(i = 0; i < registeredFontCount; i++)
 		if(Q_stricmp(filename, registeredFont[i].name) == 0){
-			Q_Memcpy(font, &registeredFont[i], sizeof(fontInfo_t));
+			Q_Memcpy(font, &registeredFont[i], sizeof(Fontinfo));
 			return;
 		}
 
 	len = ri.FS_ReadFile(filename,NULL);
-	if(len == sizeof(fontInfo_t)){
+	if(len == sizeof(Fontinfo)){
 		ri.FS_ReadFile(filename,&faceData);
 		fdOffset	= 0;
 		fdFile		= faceData;
@@ -389,13 +389,13 @@ RE_RegisterFont(const char *fontName, int pointSize, fontInfo_t *font)
 		font->glyphScale = readFloat();
 		Q_Memcpy(font->name,&fdFile[fdOffset],MAX_QPATH);
 
-		/*      Q_Memcpy(font, faceData, sizeof(fontInfo_t)); */
+		/*      Q_Memcpy(font, faceData, sizeof(Fontinfo)); */
 		Q_strncpyz(font->name, filename, sizeof(font->name));
 		for(i = GLYPH_START; i < GLYPH_END; i++)
 			font->glyphs[i].glyph = RE_RegisterShaderNoMip(font->glyphs[i].shaderName);
 
 		Q_Memcpy(&registeredFont[registeredFontCount++],font,
-			sizeof(fontInfo_t));
+			sizeof(Fontinfo));
 		return;
 	}
 
@@ -513,11 +513,11 @@ RE_RegisterFont(const char *fontName, int pointSize, fontInfo_t *font)
 	glyphScale *= 48.0f / pointSize;
 	registeredFont[registeredFontCount].glyphScale = glyphScale;
 	font->glyphScale = glyphScale;
-	Q_Memcpy(&registeredFont[registeredFontCount++],font,sizeof(fontInfo_t));
+	Q_Memcpy(&registeredFont[registeredFontCount++],font,sizeof(Fontinfo));
 
 	Q_sprintf(filename, sizeof(filename), "%s_%i.dat", strippedname, pointSize);
 	if(r_saveFontData->integer)
-		ri.FS_WriteFile(va("fonts/fontImage_%i.dat", pointSize),font,sizeof(fontInfo_t));
+		ri.FS_WriteFile(va("fonts/fontImage_%i.dat", pointSize),font,sizeof(Fontinfo));
 
 	ri.Free(out);
 	ri.FS_FreeFile(faceData);

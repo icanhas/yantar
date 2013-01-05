@@ -17,9 +17,9 @@
 #include "local.h"
 
 enum { MAX_VM = 3 };
-vm_t *currentVM = NULL;
-vm_t *lastVM = NULL;
-vm_t vmTable[MAX_VM];
+Vm *currentVM = NULL;
+Vm *lastVM = NULL;
+Vm vmTable[MAX_VM];
 int vm_debugLevel;
 static int forced_unload;	/* used by Com_Errorf to get rid of running
 					 * vm's before longjmp */
@@ -58,7 +58,7 @@ VM_Init(void)
 
 /* Assumes a program counter value */
 const char *
-VM_ValueToSymbol(vm_t *vm, int value)
+VM_ValueToSymbol(Vm *vm, int value)
 {
 	vmSymbol_t	*sym;
 	static char	text[MAX_TOKEN_CHARS];
@@ -78,7 +78,7 @@ VM_ValueToSymbol(vm_t *vm, int value)
 
 /* For profiling, find the symbol behind this value */
 vmSymbol_t *
-VM_ValueToFunctionSymbol(vm_t *vm, int value)
+VM_ValueToFunctionSymbol(Vm *vm, int value)
 {
 	vmSymbol_t *sym;
 	static vmSymbol_t nullSym;
@@ -94,7 +94,7 @@ VM_ValueToFunctionSymbol(vm_t *vm, int value)
 }
 
 int
-VM_SymbolToValue(vm_t *vm, const char *symbol)
+VM_SymbolToValue(Vm *vm, const char *symbol)
 {
 	vmSymbol_t *sym;
 
@@ -106,7 +106,7 @@ VM_SymbolToValue(vm_t *vm, const char *symbol)
 
 #if 0	/* 64bit! */
 const char *
-VM_SymbolForCompiledPointer(vm_t *vm, void *code)
+VM_SymbolForCompiledPointer(Vm *vm, void *code)
 {
 	int i;
 
@@ -152,7 +152,7 @@ ParseHex(const char *text)
 }
 
 void
-VM_LoadSymbols(vm_t *vm)
+VM_LoadSymbols(Vm *vm)
 {
 	union {
 		char	*c;
@@ -289,7 +289,7 @@ VM_DllSyscall(intptr_t arg, ...)
 
 /* Load a .qvm file */
 vmHeader_t *
-VM_LoadQVM(vm_t *vm, qbool alloc, qbool unpure)
+VM_LoadQVM(Vm *vm, qbool alloc, qbool unpure)
 {
 	int	dataLength;
 	int	i;
@@ -452,8 +452,8 @@ VM_LoadQVM(vm_t *vm, qbool alloc, qbool unpure)
  * We need to make sure that servers can access unpure QVMs (not contained in any pak)
  * even if the client is pure, so take "unpure" as argument.
  */
-vm_t *
-VM_Restart(vm_t *vm, qbool unpure)
+Vm *
+VM_Restart(Vm *vm, qbool unpure)
 {
 	vmHeader_t *header;
 
@@ -487,11 +487,11 @@ VM_Restart(vm_t *vm, qbool unpure)
  * If image ends in .qvm it will be interpreted, otherwise
  * it will attempt to load as a system dll
  */
-vm_t *
+Vm *
 VM_Create(const char *module, intptr_t (*systemCalls)(intptr_t *),
 	  vmInterpret_t interpret)
 {
-	vm_t	*vm;
+	Vm	*vm;
 	vmHeader_t *header;
 	int	i, remaining, retval;
 	char	filename[MAX_OSPATH];
@@ -515,7 +515,7 @@ VM_Create(const char *module, intptr_t (*systemCalls)(intptr_t *),
 			break;
 
 	if(i == MAX_VM)
-		Com_Errorf(ERR_FATAL, "VM_Create: no free vm_t");
+		Com_Errorf(ERR_FATAL, "VM_Create: no free Vm");
 
 	vm = &vmTable[i];
 
@@ -597,7 +597,7 @@ VM_Create(const char *module, intptr_t (*systemCalls)(intptr_t *),
 }
 
 void
-VM_Free(vm_t *vm)
+VM_Free(Vm *vm)
 {
 
 	if(!vm)
@@ -669,7 +669,7 @@ VM_ArgPtr(intptr_t intValue)
 }
 
 void *
-VM_ExplicitArgPtr(vm_t *vm, intptr_t intValue)
+VM_ExplicitArgPtr(Vm *vm, intptr_t intValue)
 {
 	if(!intValue)
 		return NULL;
@@ -701,9 +701,9 @@ VM_ExplicitArgPtr(vm_t *vm, intptr_t intValue)
  * locals from sp
  */
 intptr_t QDECL
-VM_Call(vm_t *vm, int callnum, ...)
+VM_Call(Vm *vm, int callnum, ...)
 {
-	vm_t	*oldVM;
+	Vm	*oldVM;
 	intptr_t r;
 	int	i;
 
@@ -784,7 +784,7 @@ VM_ProfileSort(const void *a, const void *b)
 void
 VM_VmProfile_f(void)
 {
-	vm_t	*vm;
+	Vm	*vm;
 	vmSymbol_t **sorted, *sym;
 	int i;
 	double total;
@@ -818,7 +818,7 @@ VM_VmProfile_f(void)
 void
 VM_VmInfo_f(void)
 {
-	vm_t	*vm;
+	Vm	*vm;
 	int i;
 
 	Com_Printf("Registered virtual machines:\n");

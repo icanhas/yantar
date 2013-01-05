@@ -32,46 +32,46 @@ enum {
 static jmp_buf abortframe;	/* an ERR_DROP occured, exit the entire frame */
 
 FILE *debuglogfile;
-static fileHandle_t	pipefile;
-static fileHandle_t	logfile;
-fileHandle_t	com_journalFile;	/* events are written here */
-fileHandle_t	com_journalDataFile;	/* config files are written here */
+static Fhandle	pipefile;
+static Fhandle	logfile;
+Fhandle	com_journalFile;	/* events are written here */
+Fhandle	com_journalDataFile;	/* config files are written here */
 
-cvar_t	*com_speeds;
-cvar_t	*com_developer;
-cvar_t	*com_dedicated;
-cvar_t	*com_timescale;
-cvar_t	*com_fixedtime;
-cvar_t	*com_journal;
-cvar_t	*com_maxfps;
-cvar_t	*com_altivec;
-cvar_t	*com_timedemo;
-cvar_t	*com_sv_running;
-cvar_t	*com_cl_running;
-cvar_t	*com_logfile;	/* 1 = buffer log, 2 = flush after each print */
-cvar_t	*com_pipefile;
-cvar_t	*com_showtrace;
-cvar_t	*com_version;
-cvar_t	*com_blood;
-cvar_t	*com_buildScript;	/* for automated data building scripts */
-cvar_t	*com_introPlayed;
-cvar_t	*cl_paused;
-cvar_t	*sv_paused;
-cvar_t	*cl_packetdelay;
-cvar_t	*sv_packetdelay;
-cvar_t	*com_cameraMode;
-cvar_t	*com_ansiColor;
-cvar_t	*com_unfocused;
-cvar_t	*com_maxfpsUnfocused;
-cvar_t	*com_minimized;
-cvar_t	*com_maxfpsMinimized;
-cvar_t	*com_abnormalExit;
-cvar_t	*com_standalone;
-cvar_t	*com_gamename;
-cvar_t	*com_protocol;
-cvar_t	*com_basegame;
-cvar_t	*com_homepath;
-cvar_t	*com_busyWait;
+Cvar	*com_speeds;
+Cvar	*com_developer;
+Cvar	*com_dedicated;
+Cvar	*com_timescale;
+Cvar	*com_fixedtime;
+Cvar	*com_journal;
+Cvar	*com_maxfps;
+Cvar	*com_altivec;
+Cvar	*com_timedemo;
+Cvar	*com_sv_running;
+Cvar	*com_cl_running;
+Cvar	*com_logfile;	/* 1 = buffer log, 2 = flush after each print */
+Cvar	*com_pipefile;
+Cvar	*com_showtrace;
+Cvar	*com_version;
+Cvar	*com_blood;
+Cvar	*com_buildScript;	/* for automated data building scripts */
+Cvar	*com_introPlayed;
+Cvar	*cl_paused;
+Cvar	*sv_paused;
+Cvar	*cl_packetdelay;
+Cvar	*sv_packetdelay;
+Cvar	*com_cameraMode;
+Cvar	*com_ansiColor;
+Cvar	*com_unfocused;
+Cvar	*com_maxfpsUnfocused;
+Cvar	*com_minimized;
+Cvar	*com_maxfpsMinimized;
+Cvar	*com_abnormalExit;
+Cvar	*com_standalone;
+Cvar	*com_gamename;
+Cvar	*com_protocol;
+Cvar	*com_basegame;
+Cvar	*com_homepath;
+Cvar	*com_busyWait;
 
 #if idx64
 int	(*Q_VMftol)(void);
@@ -631,8 +631,8 @@ enum {
 };
 
 typedef struct zonedebug_s zonedebug_t;
-typedef struct memblock_s memblock_t;
-typedef struct memzone_s memzone_t;
+typedef struct memblock_s Memblk;
+typedef struct memzone_s Memzone;
 
 void Z_CheckHeap(void);
 
@@ -656,25 +656,25 @@ struct memblock_s {
 struct memzone_s {
 	int		size;		/* total bytes malloced, including header */
 	int		used;		/* total bytes used */
-	memblock_t	blocklist;	/* start / end cap for linked list */
-	memblock_t	*rover;
+	Memblk	blocklist;	/* start / end cap for linked list */
+	Memblk	*rover;
 };
 
 /* main zone for all "dynamic" memory allocation */
-memzone_t *mainzone;
+Memzone *mainzone;
 /* we also have a small zone for small allocations that would only
  * fragment the main zone (think of cvar and cmd strings) */
-memzone_t *smallzone;
+Memzone *smallzone;
 
 void
-Z_ClearZone(memzone_t *zone, int size)
+Z_ClearZone(Memzone *zone, int size)
 {
-	memblock_t *block;
+	Memblk *block;
 
 	/* set the entire zone to one free block */
 
 	zone->blocklist.next = 
-		zone->blocklist.prev = block = (memblock_t*)((byte*)zone + sizeof(memzone_t));
+		zone->blocklist.prev = block = (Memblk*)((byte*)zone + sizeof(Memzone));
 	zone->blocklist.tag = 1;	/* in use block */
 	zone->blocklist.id = 0;
 	zone->blocklist.size = 0;
@@ -685,11 +685,11 @@ Z_ClearZone(memzone_t *zone, int size)
 	block->prev = block->next = &zone->blocklist;
 	block->tag = 0;	/* free block */
 	block->id = ZONEID;
-	block->size = size - sizeof(memzone_t);
+	block->size = size - sizeof(Memzone);
 }
 
 int
-Z_AvailableZoneMemory(memzone_t *zone)
+Z_AvailableZoneMemory(Memzone *zone)
 {
 	return zone->size - zone->used;
 }
@@ -703,13 +703,13 @@ Z_AvailableMemory(void)
 void
 Z_Free(void *ptr)
 {
-	memblock_t *block, *other;
-	memzone_t *zone;
+	Memblk *block, *other;
+	Memzone *zone;
 
 	if(!ptr)
 		Com_Errorf(ERR_DROP, "Z_Free: NULL pointer");
 
-	block = (memblock_t*)((byte*)ptr - sizeof(memblock_t));
+	block = (Memblk*)((byte*)ptr - sizeof(Memblk));
 	if(block->id != ZONEID)
 		Com_Errorf(ERR_FATAL, "Z_Free: freed a pointer without ZONEID");
 	if(block->tag == 0)
@@ -762,7 +762,7 @@ void
 Z_FreeTags(int tag)
 {
 	int count;
-	memzone_t *zone;
+	Memzone *zone;
 
 	if(tag == TAG_SMALL)
 		zone = smallzone;
@@ -790,8 +790,8 @@ void* Z_TagMalloc(int size, int tag)
 #endif
 {
 	int extra;
-	memblock_t *start, *rover, *new, *base;
-	memzone_t *zone;
+	Memblk *start, *rover, *new, *base;
+	Memzone *zone;
 
 	if(!tag)
 		Com_Errorf(ERR_FATAL, "Z_TagMalloc: tried to use a 0 tag");
@@ -806,7 +806,7 @@ void* Z_TagMalloc(int size, int tag)
 #endif
 	/* scan through the block list looking for the first free block
 	 * of sufficient size */
-	size += sizeof(memblock_t);		/* account for size of block header */
+	size += sizeof(Memblk);		/* account for size of block header */
 	size += 4;				/* space for memory trash tester */
 	size = PAD(size, sizeof(intptr_t));	/* align to 32/64 bit boundary */
 
@@ -840,7 +840,7 @@ void* Z_TagMalloc(int size, int tag)
 	extra = base->size - size;
 	if(extra > MINFRAGMENT){
 		/* there will be a free fragment after the allocated block */
-		new = (memblock_t*)((byte*)base + size);
+		new = (Memblk*)((byte*)base + size);
 		new->size = extra;
 		new->tag = 0;	/* free block */
 		new->prev = base;
@@ -867,7 +867,7 @@ void* Z_TagMalloc(int size, int tag)
 	/* marker for memory trash testing */
 	*(int*)((byte*)base + base->size - 4) = ZONEID;
 
-	return (void*)((byte*)base + sizeof(memblock_t));
+	return (void*)((byte*)base + sizeof(Memblk));
 }
 
 #ifdef ZONE_DEBUG
@@ -910,7 +910,7 @@ S_Malloc(int size)
 void
 Z_CheckHeap(void)
 {
-	memblock_t *block;
+	Memblk *block;
 
 	for(block = mainzone->blocklist.next;; block = block->next){
 		if(block->next == &mainzone->blocklist)
@@ -928,13 +928,13 @@ Z_CheckHeap(void)
 }
 
 void
-Z_LogZoneHeap(memzone_t *zone, char *name)
+Z_LogZoneHeap(Memzone *zone, char *name)
 {
 #ifdef ZONE_DEBUG
 	char	dump[32], *ptr;
 	int	i, j;
 #endif
-	memblock_t *block;
+	Memblk *block;
 	char	buf[4096];
 	int	size, allocSize, numBlocks;
 
@@ -952,7 +952,7 @@ Z_LogZoneHeap(memzone_t *zone, char *name)
 	    block = block->next){
 		if(block->tag){
 #ifdef ZONE_DEBUG
-			ptr = ((char*)block) + sizeof(memblock_t);
+			ptr = ((char*)block) + sizeof(Memblk);
 			j = 0;
 			for(i = 0; i < 20 && i < block->d.allocSize; i++){
 				if(ptr[i] >= 32 && ptr[i] < 127)
@@ -977,7 +977,7 @@ Z_LogZoneHeap(memzone_t *zone, char *name)
 	/* subtract debug memory */
 	size -= numBlocks * sizeof(zonedebug_t);
 #else
-	allocSize = numBlocks * sizeof(memblock_t);	/* + 32 bit alignment */
+	allocSize = numBlocks * sizeof(Memblk);	/* + 32 bit alignment */
 #endif
 	Q_sprintf(buf, sizeof(buf), "%d %s memory in %d blocks\r\n", size,
 		name,
@@ -998,12 +998,12 @@ Z_LogHeap(void)
 
 /* static mem blocks to reduce a lot of small zone overhead */
 typedef struct memstatic_s {
-	memblock_t	b;
+	Memblk	b;
 	byte		mem[2];
 } memstatic_t;
 
 memstatic_t	emptystring = {
-	{(sizeof(memblock_t)+2 + 3) & ~3, TAG_STATIC, NULL, NULL, ZONEID}, {'\0', '\0'} 
+	{(sizeof(Memblk)+2 + 3) & ~3, TAG_STATIC, NULL, NULL, ZONEID}, {'\0', '\0'} 
 };
 memstatic_t	numberstring[] = {
 	{ {(sizeof(memstatic_t) + 3) & ~3, TAG_STATIC, NULL, NULL,
@@ -1038,11 +1038,11 @@ Copystr(const char *in)
 	char *out;
 
 	if(!in[0])
-		return ((char*)&emptystring) + sizeof(memblock_t);
+		return ((char*)&emptystring) + sizeof(Memblk);
 	else if(!in[1])
 		if(in[0] >= '0' && in[0] <= '9')
 			return ((char*)&numberstring[in[0]-
-						     '0']) + sizeof(memblock_t);
+						     '0']) + sizeof(Memblk);
 	out = S_Malloc (strlen(in)+1);
 	strcpy (out, in);
 	return out;
@@ -1101,8 +1101,8 @@ Copystr(const char *in)
 #define HUNK_FREE_MAGIC 0x89537893
 
 typedef struct hunkHeader_s hunkHeader_t;
-typedef struct hunkUsed_s hunkUsed_t;
-typedef struct hunkblock_s hunkblock_t;
+typedef struct hunkUsed_s Hunkused;
+typedef struct hunkblock_s Hunkblk;
 
 struct hunkHeader_s {
 	uint	magic;
@@ -1125,9 +1125,9 @@ struct hunkblock_s {
 	int			line;
 };
 
-static hunkblock_t	*hunkblocks;
-static hunkUsed_t	hunk_low, hunk_high;
-static hunkUsed_t	*hunk_permanent, *hunk_temp;
+static Hunkblk	*hunkblocks;
+static Hunkused	hunk_low, hunk_high;
+static Hunkused	*hunk_permanent, *hunk_temp;
 static byte		*s_hunkData = NULL;
 static int			s_hunkTotal;
 static int			s_zoneTotal;
@@ -1136,7 +1136,7 @@ static int			s_smallZoneTotal;
 void
 Q_Meminfo_f(void)
 {
-	memblock_t *block;
+	Memblk *block;
 	int zoneBytes, zoneBlocks;
 	int smallZoneBytes, smallZoneBlocks;
 	int botlibBytes, rendererBytes;
@@ -1221,7 +1221,7 @@ Com_Touchmem(void)
 	int	start, end;
 	int	i, j;
 	int	sum;
-	memblock_t *block;
+	Memblk *block;
 
 	Z_CheckHeap();
 
@@ -1273,7 +1273,7 @@ Com_Initsmallzone(void)
 void
 Com_Initzone(void)
 {
-	cvar_t *cv;
+	Cvar *cv;
 
 	/* allocate the random block zone */
 	cv = Cvar_Get("com_zoneMegs", DEF_COMZONEMEGS_S,
@@ -1293,7 +1293,7 @@ Com_Initzone(void)
 void
 Hunk_Log(void)
 {
-	hunkblock_t *block;
+	Hunkblk *block;
 	char	buf[4096];
 	int	size, numBlocks;
 
@@ -1325,7 +1325,7 @@ Hunk_Log(void)
 void
 Hunk_SmallLog(void)
 {
-	hunkblock_t *block, *block2;
+	Hunkblk *block, *block2;
 	char	buf[4096];
 	int	size, locsize, numBlocks;
 
@@ -1372,7 +1372,7 @@ Hunk_SmallLog(void)
 void
 Com_Inithunk(void)
 {
-	cvar_t	*cv;
+	Cvar	*cv;
 	int	nMinAlloc;
 	char *pMsg = NULL;
 
@@ -1486,7 +1486,7 @@ Hunk_Clear(void)
 static void
 Hunk_SwapBanks(void)
 {
-	hunkUsed_t *swap;
+	Hunkused *swap;
 
 	/* can't swap banks if there is any temp already allocated */
 	if(hunk_temp->temp != hunk_temp->permanent)
@@ -1524,7 +1524,7 @@ void* Hunk_Alloc(int size, ha_pref preference)
 			Hunk_SwapBanks();
 	}
 #ifdef HUNK_DEBUG
-	size += sizeof(hunkblock_t);
+	size += sizeof(Hunkblk);
 #endif
 	/* round to cacheline */
 	size = (size+31)&~31;
@@ -1557,16 +1557,16 @@ void* Hunk_Alloc(int size, ha_pref preference)
 
 #ifdef HUNK_DEBUG
 	{
-		hunkblock_t *block;
+		Hunkblk *block;
 
-		block = (hunkblock_t*)buf;
-		block->size = size - sizeof(hunkblock_t);
+		block = (Hunkblk*)buf;
+		block->size = size - sizeof(Hunkblk);
 		block->file = file;
 		block->label = label;
 		block->line = line;
 		block->next = hunkblocks;
 		hunkblocks = block;
-		buf = ((byte*)buf) + sizeof(hunkblock_t);
+		buf = ((byte*)buf) + sizeof(Hunkblk);
 	}
 #endif
 	return buf;
@@ -1914,7 +1914,7 @@ Q_GetEvent(void)
 }
 
 void
-Com_Runserverpacket(netadr_t *evFrom, msg_t *buf)
+Com_Runserverpacket(Netaddr *evFrom, Bitmsg *buf)
 {
 	int t1, t2, msec;
 
@@ -1935,9 +1935,9 @@ int
 Com_Eventloop(void)
 {
 	sysEvent_t	ev;
-	netadr_t	evFrom;
+	Netaddr	evFrom;
 	byte	bufData[MAX_MSGLEN];
-	msg_t	buf;
+	Bitmsg	buf;
 
 	MSG_Init(&buf, bufData, sizeof(bufData));
 	while(1){
@@ -2193,7 +2193,7 @@ Com_Gamerestart_f(void)
 void
 Com_Writeconfigtofile(const char *filename)
 {
-	fileHandle_t f;
+	Fhandle f;
 
 	f = FS_FOpenFileWrite(filename);
 	if(!f){

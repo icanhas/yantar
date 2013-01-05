@@ -30,7 +30,7 @@ int
 SV_BotAllocateClient(void)
 {
 	int i;
-	client_t *cl;
+	Client *cl;
 
 	/* find a client slot */
 	for(i = 0, cl = svs.clients; i < sv_maxclients->integer; i++, cl++)
@@ -56,7 +56,7 @@ SV_BotAllocateClient(void)
 void
 SV_BotFreeClient(int clientNum)
 {
-	client_t *cl;
+	Client *cl;
 
 	if(clientNum < 0 || clientNum >= sv_maxclients->integer)
 		Com_Errorf(ERR_DROP, "SV_BotFreeClient: bad clientNum: %i",
@@ -75,7 +75,7 @@ void
 BotDrawDebugPolygons(void (*drawPoly)(int color, int numPoints,
 				      float *points), int value)
 {
-	static cvar_t *bot_debug, *bot_groundonly, *bot_reachability,
+	static Cvar *bot_debug, *bot_groundonly, *bot_reachability,
 	*bot_highlightarea;
 	bot_debugpoly_t *poly;
 	int i, parm0;
@@ -162,11 +162,11 @@ BotImport_Print(int type, char *fmt, ...)
  * BotImport_Trace
  */
 static void
-BotImport_Trace(bsp_trace_t *bsptrace, Vec3 start, Vec3 mins, Vec3 maxs,
+BotImport_Trace(bsp_Trace *bsptrace, Vec3 start, Vec3 mins, Vec3 maxs,
 		Vec3 end, int passent,
 		int contentmask)
 {
-	trace_t trace;
+	Trace trace;
 
 	SV_Trace(&trace, start, mins, maxs, end, passent, contentmask, qfalse);
 	/* copy the trace information */
@@ -189,11 +189,11 @@ BotImport_Trace(bsp_trace_t *bsptrace, Vec3 start, Vec3 mins, Vec3 maxs,
  * BotImport_EntityTrace
  */
 static void
-BotImport_EntityTrace(bsp_trace_t *bsptrace, Vec3 start, Vec3 mins,
+BotImport_EntityTrace(bsp_Trace *bsptrace, Vec3 start, Vec3 mins,
 		      Vec3 maxs, Vec3 end, int entnum,
 		      int contentmask)
 {
-	trace_t trace;
+	Trace trace;
 
 	SV_ClipToEntity(&trace, start, mins, maxs, end, entnum, contentmask,
 		qfalse);
@@ -249,7 +249,7 @@ BotImport_BSPModelMinsMaxsOrigin(int modelnum, Vec3 angles, Vec3 outmins,
 				 Vec3 outmaxs,
 				 Vec3 origin)
 {
-	clipHandle_t h;
+	Cliphandle h;
 	Vec3	mins, maxs;
 	float	max;
 	int	i;
@@ -562,7 +562,7 @@ SV_BotInitBotLib(void)
 int
 SV_BotGetConsoleMessage(int client, char *buf, int size)
 {
-	client_t *cl;
+	Client *cl;
 	int index;
 
 	cl = &svs.clients[client];
@@ -588,7 +588,7 @@ SV_BotGetConsoleMessage(int client, char *buf, int size)
 int
 EntityInPVS(int client, int entityNum)
 {
-	client_t *cl;
+	Client *cl;
 	clientSnapshot_t *frame;
 	int i;
 
@@ -610,7 +610,7 @@ EntityInPVS(int client, int entityNum)
 int
 SV_BotGetSnapshotEntity(int client, int sequence)
 {
-	client_t *cl;
+	Client *cl;
 	clientSnapshot_t *frame;
 
 	cl = &svs.clients[client];

@@ -24,7 +24,7 @@
  * Called on game shutdown
  */
 void
-G_WriteClientSessionData(gclient_t *client)
+G_WriteClientSessionData(gClient *client)
 {
 	const char *s;
 	const char *var;
@@ -50,7 +50,7 @@ G_WriteClientSessionData(gclient_t *client)
  * Called on a reconnect
  */
 void
-G_ReadSessionData(gclient_t *client)
+G_ReadSessionData(gClient *client)
 {
 	char	s[MAX_STRING_CHARS];
 	const char      *var;
@@ -83,7 +83,7 @@ G_ReadSessionData(gclient_t *client)
  * Called on a first-time connect
  */
 void
-G_InitSessionData(gclient_t *client, char *userinfo)
+G_InitSessionData(gClient *client, char *userinfo)
 {
 	clientSession_t *sess;
 	const char *value;

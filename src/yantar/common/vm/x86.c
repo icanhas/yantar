@@ -27,7 +27,7 @@
   #endif
 #endif
 
-static void VM_Destroy_Compiled(vm_t* self);
+static void VM_Destroy_Compiled(Vm* self);
 
 /*
  *
@@ -234,7 +234,7 @@ EmitCommand(ELastCommand command)
 }
 
 static void
-EmitPushStack(vm_t *vm)
+EmitPushStack(Vm *vm)
 {
 	if(!jlabel){
 		if(LastCommand == LAST_COMMAND_SUB_BL_1){	/* sub bl, 1 */
@@ -254,7 +254,7 @@ EmitPushStack(vm_t *vm)
 }
 
 static void
-EmitMovEAXStack(vm_t *vm, int andit)
+EmitMovEAXStack(Vm *vm, int andit)
 {
 	if(!jlabel){
 		if(LastCommand == LAST_COMMAND_MOV_STACK_EAX){	/* mov [edi + ebx * 4], eax */
@@ -288,7 +288,7 @@ EmitMovEAXStack(vm_t *vm, int andit)
 }
 
 void
-EmitMovECXStack(vm_t *vm)
+EmitMovECXStack(Vm *vm)
 {
 	if(!jlabel){
 		if(LastCommand == LAST_COMMAND_MOV_STACK_EAX){	/* mov [edi + ebx * 4], eax */
@@ -310,7 +310,7 @@ EmitMovECXStack(vm_t *vm)
 
 
 void
-EmitMovEDXStack(vm_t *vm, int andit)
+EmitMovEDXStack(Vm *vm, int andit)
 {
 	if(!jlabel){
 		if(LastCommand == LAST_COMMAND_MOV_STACK_EAX){	/* mov dword ptr [edi + ebx * 4], eax */
@@ -401,7 +401,7 @@ DoSyscall(void)
 	intptr_t	arg;
 #endif
 
-	vm_t *savedVM;
+	Vm *savedVM;
 
 #if defined(_MSC_VER)
   #if !idx64
@@ -478,7 +478,7 @@ DoSyscall(void)
  */
 
 void
-EmitCallRel(vm_t *vm, int callOfs)
+EmitCallRel(Vm *vm, int callOfs)
 {
 	EmitString("E8");	/* call 0x12345678 */
 	Emit4(callOfs - compiledOfs - 4);
@@ -490,7 +490,7 @@ EmitCallRel(vm_t *vm, int callOfs)
  */
 
 int
-EmitCallDoSyscall(vm_t *vm)
+EmitCallDoSyscall(Vm *vm)
 {
 	/* use edx register to store DoSyscall address */
 #if defined(_MSC_VER) && idx64
@@ -543,7 +543,7 @@ EmitCallDoSyscall(vm_t *vm)
  */
 
 static void
-EmitCallErrJump(vm_t *vm, int sysCallOfs)
+EmitCallErrJump(Vm *vm, int sysCallOfs)
 {
 	EmitString("B8");	/* mov eax, 0x12345678 */
 	Emit4(VM_JMP_VIOLATION);
@@ -557,7 +557,7 @@ EmitCallErrJump(vm_t *vm, int sysCallOfs)
  */
 
 int
-EmitCallProcedure(vm_t *vm, int sysCallOfs)
+EmitCallProcedure(Vm *vm, int sysCallOfs)
 {
 	int	jmpSystemCall, jmpBadAddr;
 	int	retval;
@@ -613,7 +613,7 @@ EmitCallProcedure(vm_t *vm, int sysCallOfs)
  */
 
 void
-EmitJumpIns(vm_t *vm, const char *jmpop, int cdest)
+EmitJumpIns(Vm *vm, const char *jmpop, int cdest)
 {
 	JUSED(cdest);
 
@@ -632,7 +632,7 @@ EmitJumpIns(vm_t *vm, const char *jmpop, int cdest)
  */
 
 void
-EmitCallIns(vm_t *vm, int cdest)
+EmitCallIns(Vm *vm, int cdest)
 {
 	JUSED(cdest);
 
@@ -651,7 +651,7 @@ EmitCallIns(vm_t *vm, int cdest)
  */
 
 void
-EmitCallConst(vm_t *vm, int cdest, int callProcOfsSyscall)
+EmitCallConst(Vm *vm, int cdest, int callProcOfsSyscall)
 {
 	if(cdest < 0){
 		EmitString("B8");	/* mov eax, cdest */
@@ -667,7 +667,7 @@ EmitCallConst(vm_t *vm, int cdest, int callProcOfsSyscall)
  * Emits x86 branch condition as given in op
  */
 void
-EmitBranchConditions(vm_t *vm, int op)
+EmitBranchConditions(Vm *vm, int op)
 {
 	switch(op){
 	case OP_EQ:
@@ -711,7 +711,7 @@ EmitBranchConditions(vm_t *vm, int op)
  */
 
 qbool
-ConstOptimize(vm_t *vm, int callProcOfsSyscall)
+ConstOptimize(Vm *vm, int callProcOfsSyscall)
 {
 	int	v;
 	int	op1;
@@ -1032,7 +1032,7 @@ ConstOptimize(vm_t *vm, int callProcOfsSyscall)
  * VM_Compile
  */
 void
-VM_Compile(vm_t *vm, vmHeader_t *header)
+VM_Compile(Vm *vm, vmHeader_t *header)
 {
 	int	op;
 	int	maxLength;
@@ -1679,7 +1679,7 @@ VM_Compile(vm_t *vm, vmHeader_t *header)
 }
 
 void
-VM_Destroy_Compiled(vm_t* self)
+VM_Destroy_Compiled(Vm* self)
 {
 #ifdef VM_X86_MMAP
 	munmap(self->codeBase, self->codeLength);
@@ -1697,7 +1697,7 @@ VM_Destroy_Compiled(vm_t* self)
  */
 
 int
-VM_CallCompiled(vm_t *vm, int *args)
+VM_CallCompiled(Vm *vm, int *args)
 {
 	byte	stack[OPSTACK_SIZE + 15];
 	void    *entryPoint;

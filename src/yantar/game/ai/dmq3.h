@@ -148,12 +148,12 @@ void BotMapScripts(bot_state_t *bs);
 
 extern int	gametype;	/* game type */
 extern int	maxclients;	/* maximum number of clients */
-extern vmCvar_t bot_grapple;
-extern vmCvar_t bot_rocketjump;
-extern vmCvar_t bot_fastchat;
-extern vmCvar_t bot_nochat;
-extern vmCvar_t bot_testrchat;
-extern vmCvar_t bot_challenge;
+extern Vmcvar bot_grapple;
+extern Vmcvar bot_rocketjump;
+extern Vmcvar bot_fastchat;
+extern Vmcvar bot_nochat;
+extern Vmcvar bot_testrchat;
+extern Vmcvar bot_challenge;
 extern bot_goal_t	ctf_redflag;
 extern bot_goal_t	ctf_blueflag;
 extern bot_goal_t	ctf_neutralflag;

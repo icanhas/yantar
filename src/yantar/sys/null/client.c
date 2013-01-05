@@ -10,7 +10,7 @@
 #include "shared.h"
 #include "common.h"
 
-cvar_t *cl_shownet;
+Cvar *cl_shownet;
 
 void
 CL_Shutdown(char *finalmsg, qbool disconnect, qbool quit)
@@ -29,7 +29,7 @@ CL_MouseEvent(int dx, int dy, int time)
 }
 
 void
-Key_WriteBindings(fileHandle_t f)
+Key_WriteBindings(Fhandle f)
 {
 }
 
@@ -39,7 +39,7 @@ CL_Frame(int msec)
 }
 
 void
-CL_PacketEvent(netadr_t from, msg_t *msg)
+CL_PacketEvent(Netaddr from, Bitmsg *msg)
 {
 }
 

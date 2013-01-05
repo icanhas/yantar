@@ -14,7 +14,7 @@
 
 extern botlib_export_t *botlib_export;
 
-vm_t *uivm;
+Vm *uivm;
 
 /*
  * GetClientState
@@ -39,7 +39,7 @@ void
 LAN_LoadCachedServers(void)
 {
 	int size;
-	fileHandle_t fileIn;
+	Fhandle fileIn;
 	cls.numglobalservers = cls.numfavoriteservers = 0;
 	cls.numGlobalServerAddresses = 0;
 	if(FS_SV_FOpenFileRead("servercache.dat", &fileIn)){
@@ -67,7 +67,7 @@ void
 LAN_SaveServersToCache(void)
 {
 	int size;
-	fileHandle_t fileOut = FS_SV_FOpenFileWrite("servercache.dat");
+	Fhandle fileOut = FS_SV_FOpenFileWrite("servercache.dat");
 	FS_Write(&cls.numglobalservers, sizeof(int), fileOut);
 	FS_Write(&cls.numfavoriteservers, sizeof(int), fileOut);
 	size = sizeof(cls.globalServers) + sizeof(cls.favoriteServers);
@@ -115,7 +115,7 @@ static int
 LAN_AddServer(int source, const char *name, const char *address)
 {
 	int max, *count, i;
-	netadr_t adr;
+	Netaddr adr;
 	serverInfo_t *servers = NULL;
 	max = MAX_OTHER_SERVERS;
 	count = NULL;
@@ -179,7 +179,7 @@ LAN_RemoveServer(int source, const char *addr)
 		break;
 	}
 	if(servers){
-		netadr_t comp;
+		Netaddr comp;
 		NET_StringToAdr(addr, &comp, NA_IP);
 		for(i = 0; i < *count; i++)
 			if(NET_CompareAdr(comp, servers[i].adr)){
@@ -540,7 +540,7 @@ LAN_GetServerStatus(char *serverAddress, char *serverStatus, int maxLen)
  * CL_GetGlConfig
  */
 static void
-CL_GetGlconfig(glconfig_t *config)
+CL_GetGlconfig(Glconfig *config)
 {
 	*config = cls.glconfig;
 }
@@ -618,7 +618,7 @@ GetConfigString(int index, char *buf, int size)
 static int
 FloatAsInt(float f)
 {
-	floatint_t fi;
+	Flint fi;
 	fi.f = f;
 	return fi.i;
 }

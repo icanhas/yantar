@@ -280,7 +280,7 @@ void
 Svcmd_EntityList_f(void)
 {
 	int e;
-	gentity_t *check;
+	Gentity *check;
 
 	check = g_entities+1;
 	for(e = 1; e < level.num_entities; e++, check++){
@@ -335,10 +335,10 @@ Svcmd_EntityList_f(void)
 	}
 }
 
-gclient_t       *
+gClient       *
 ClientForString(const char *s)
 {
-	gclient_t *cl;
+	gClient *cl;
 	int	i;
 	int	idnum;
 
@@ -376,7 +376,7 @@ ClientForString(const char *s)
 void
 Svcmd_ForceTeam_f(void)
 {
-	gclient_t *cl;
+	gClient *cl;
 	char str[MAX_TOKEN_CHARS];
 	
 	if(trap_Argc() < 3){

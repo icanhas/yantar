@@ -308,7 +308,7 @@ AAS_FileInfo(void)
  * Changes Globals:		-
  * =========================================================================== */
 char *
-AAS_LoadAASLump(fileHandle_t fp, int offset, int length, int *lastoffset,
+AAS_LoadAASLump(Fhandle fp, int offset, int length, int *lastoffset,
 		int size)
 {
 	char *buf;
@@ -359,7 +359,7 @@ AAS_DData(unsigned char *data, int size)
 int
 AAS_LoadAASFile(char *filename)
 {
-	fileHandle_t	fp;
+	Fhandle	fp;
 	aas_header_t	header;
 	int offset, length, lastoffset;
 
@@ -541,7 +541,7 @@ AAS_LoadAASFile(char *filename)
 static int AAS_WriteAASLump_offset;
 
 int
-AAS_WriteAASLump(fileHandle_t fp, aas_header_t *h, int lumpnum, void *data,
+AAS_WriteAASLump(Fhandle fp, aas_header_t *h, int lumpnum, void *data,
 		 int length)
 {
 	aas_lump_t *lump;
@@ -569,7 +569,7 @@ qbool
 AAS_WriteAASFile(char *filename)
 {
 	aas_header_t	header;
-	fileHandle_t	fp;
+	Fhandle	fp;
 
 	botimport.Print(PRT_MESSAGE, "writing %s\n", filename);
 	/* swap the aas data */

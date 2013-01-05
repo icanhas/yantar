@@ -15,7 +15,7 @@ botlib_export_t *botlib_export;
 /* these functions must be used instead of pointer arithmetic, because
  * the game allocates gentities with private information after the server shared part */
 int
-SV_NumForGentity(sharedEntity_t *ent)
+SV_NumForGentity(Sharedent *ent)
 {
 	int num;
 
@@ -24,36 +24,36 @@ SV_NumForGentity(sharedEntity_t *ent)
 	return num;
 }
 
-sharedEntity_t *
+Sharedent *
 SV_GentityNum(int num)
 {
-	sharedEntity_t *ent;
+	Sharedent *ent;
 
-	ent = (sharedEntity_t*)((byte*)sv.gentities + sv.gentitySize*(num));
+	ent = (Sharedent*)((byte*)sv.gentities + sv.gentitySize*(num));
 
 	return ent;
 }
 
-playerState_t *
+Playerstate *
 SV_GameClientNum(int num)
 {
-	playerState_t *ps;
+	Playerstate *ps;
 
-	ps = (playerState_t*)((byte*)sv.gameClients + sv.gameClientSize*(num));
+	ps = (Playerstate*)((byte*)sv.gameClients + sv.gameClientSize*(num));
 
 	return ps;
 }
 
-svEntity_t      *
-SV_SvEntityForGentity(sharedEntity_t *gEnt)
+Svent      *
+SV_SvEntityForGentity(Sharedent *gEnt)
 {
 	if(!gEnt || gEnt->s.number < 0 || gEnt->s.number >= MAX_GENTITIES)
 		Com_Errorf(ERR_DROP, "SV_SvEntityForGentity: bad gEnt");
 	return &sv.svEntities[ gEnt->s.number ];
 }
 
-sharedEntity_t *
-SV_GEntityForSvEntity(svEntity_t *svEnt)
+Sharedent *
+SV_GEntityForSvEntity(Svent *svEnt)
 {
 	int num;
 
@@ -99,9 +99,9 @@ SV_GameDropClient(int clientNum, const char *reason)
  * sets mins and maxs for inline bmodels
  */
 void
-SV_SetBrushModel(sharedEntity_t *ent, const char *name)
+SV_SetBrushModel(Sharedent *ent, const char *name)
 {
-	clipHandle_t h;
+	Cliphandle h;
 	Vec3 mins, maxs;
 
 	if(!name)
@@ -186,9 +186,9 @@ SV_inPVSIgnorePortals(const Vec3 p1, const Vec3 p2)
  * SV_AdjustAreaPortalState
  */
 void
-SV_AdjustAreaPortalState(sharedEntity_t *ent, qbool open)
+SV_AdjustAreaPortalState(Sharedent *ent, qbool open)
 {
-	svEntity_t *svEnt;
+	Svent *svEnt;
 
 	svEnt = SV_SvEntityForGentity(ent);
 	if(svEnt->areanum2 == -1)
@@ -201,12 +201,12 @@ SV_AdjustAreaPortalState(sharedEntity_t *ent, qbool open)
  * SV_EntityContact
  */
 qbool
-SV_EntityContact(Vec3 mins, Vec3 maxs, const sharedEntity_t *gEnt,
+SV_EntityContact(Vec3 mins, Vec3 maxs, const Sharedent *gEnt,
 		 int capsule)
 {
 	const float	*origin, *angles;
-	clipHandle_t	ch;
-	trace_t trace;
+	Cliphandle	ch;
+	Trace trace;
 
 	/* check for exact collision */
 	origin	= gEnt->r.currentOrigin;
@@ -238,8 +238,8 @@ SV_GetServerinfo(char *buffer, int bufferSize)
  *
  */
 void
-SV_LocateGameData(sharedEntity_t *gEnts, int numGEntities, int sizeofGEntity_t,
-		  playerState_t *clients, int sizeofGameClient)
+SV_LocateGameData(Sharedent *gEnts, int numGEntities, int sizeofGEntity_t,
+		  Playerstate *clients, int sizeofGameClient)
 {
 	sv.gentities = gEnts;
 	sv.gentitySize	= sizeofGEntity_t;
@@ -255,7 +255,7 @@ SV_LocateGameData(sharedEntity_t *gEnts, int numGEntities, int sizeofGEntity_t,
  *
  */
 void
-SV_GetUsercmd(int clientNum, usercmd_t *cmd)
+SV_GetUsercmd(int clientNum, Usrcmd *cmd)
 {
 	if(clientNum < 0 || clientNum >= sv_maxclients->integer)
 		Com_Errorf(ERR_DROP, "SV_GetUsercmd: bad clientNum:%i", clientNum);
@@ -267,7 +267,7 @@ SV_GetUsercmd(int clientNum, usercmd_t *cmd)
 static int
 FloatAsInt(float f)
 {
-	floatint_t fi;
+	Flint fi;
 	fi.f = f;
 	return fi.i;
 }
@@ -942,7 +942,7 @@ SV_RestartGameProgs(void)
 void
 SV_InitGameProgs(void)
 {
-	cvar_t *var;
+	Cvar *var;
 	/* FIXME these are temp while I make bots run in vm */
 	extern int bot_enable;
 

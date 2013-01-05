@@ -59,16 +59,16 @@ bot_waypoint_t	*botai_freewaypoints;
 int	gametype;	/* game type */
 int	maxclients;	/* maximum number of clients */
 
-vmCvar_t	bot_grapple;
-vmCvar_t	bot_rocketjump;
-vmCvar_t	bot_fastchat;
-vmCvar_t	bot_nochat;
-vmCvar_t	bot_testrchat;
-vmCvar_t	bot_challenge;
-vmCvar_t	bot_predictobstacles;
-vmCvar_t	g_spSkill;
+Vmcvar	bot_grapple;
+Vmcvar	bot_rocketjump;
+Vmcvar	bot_fastchat;
+Vmcvar	bot_nochat;
+Vmcvar	bot_testrchat;
+Vmcvar	bot_challenge;
+Vmcvar	bot_predictobstacles;
+Vmcvar	g_spSkill;
 
-extern vmCvar_t bot_developer;
+extern Vmcvar bot_developer;
 
 Vec3	lastteleport_origin;	/* last teleport event origin */
 float	lastteleport_time;	/* last teleport event time */
@@ -178,7 +178,7 @@ BotTeamFlag(bot_state_t *bs)
 qbool
 EntityIsDead(aas_entityinfo_t *entinfo)
 {
-	playerState_t ps;
+	Playerstate ps;
 
 	if(entinfo->number >= 0 && entinfo->number < MAX_CLIENTS){
 		/* retrieve the current client state */
@@ -1917,7 +1917,7 @@ BotRoamGoal(bot_state_t *bs, Vec3 goal)
 	int pc, i;
 	float	len, rnd;
 	Vec3	dir, bestorg, belowbestorg;
-	bsp_trace_t trace;
+	bsp_Trace trace;
 
 	for(i = 0; i < 10; i++){
 		/* start at the bot origin */
@@ -2160,7 +2160,7 @@ BotEntityVisible(int viewer, Vec3 eye, Vec3 viewangles, float fov, int ent)
 {
 	int i, contents_mask, passent, hitent, infog, inwater, otherinfog, pc;
 	float squaredfogdist, waterfactor, vis, bestvis;
-	bsp_trace_t trace;
+	bsp_Trace trace;
 	aas_entityinfo_t entinfo;
 	Vec3 dir, entangles, start, end, middle;
 
@@ -2302,7 +2302,7 @@ BotFindEnemy(bot_state_t *bs, int curenemy)
 	if(gametype == GT_OBELISK){
 		Vec3 target;
 		bot_goal_t	*goal;
-		bsp_trace_t	trace;
+		bsp_Trace	trace;
 
 		if(BotTeam(bs) == TEAM_RED)
 			goal = &blueobelisk;
@@ -2631,7 +2631,7 @@ BotAimAtEnemy(bot_state_t *bs)
 	weaponinfo_t	wi;
 	aas_entityinfo_t entinfo;
 	bot_goal_t	goal;
-	bsp_trace_t	trace;
+	bsp_Trace	trace;
 	Vec3 target;
 
 	/* if the bot has no enemy */
@@ -2975,11 +2975,11 @@ BotCheckAttack(bot_state_t *bs)
 {
 	float	points, reactiontime, fov, firethrottle;
 	int	attackentity;
-	bsp_trace_t bsptrace;
+	bsp_Trace bsptrace;
 	/* float selfpreservation; */
 	Vec3 forward, right, start, end, dir, angles;
 	weaponinfo_t	wi;
-	bsp_trace_t	trace;
+	bsp_Trace	trace;
 	aas_entityinfo_t entinfo;
 	Vec3 mins = {-8, -8, -8}, maxs = {8, 8, 8};
 
@@ -3195,7 +3195,7 @@ int
 BotModelMinsMaxs(int modelindex, int eType, int contents, Vec3 mins,
 		 Vec3 maxs)
 {
-	gentity_t *ent;
+	Gentity *ent;
 	int i;
 
 	ent = &g_entities[0];
@@ -3236,7 +3236,7 @@ BotFuncButtonActivateGoal(bot_state_t *bs, int bspent,
 	Vec3	size, start, end, mins, maxs, angles, points[10];
 	Vec3	movedir, origin, goalorigin, bboxmins, bboxmaxs;
 	Vec3	extramins = {1, 1, 1}, extramaxs = {-1, -1, -1};
-	bsp_trace_t bsptrace;
+	bsp_Trace bsptrace;
 
 	activategoal->shoot = qfalse;
 	clearv3(activategoal->target);
@@ -4203,7 +4203,7 @@ BotCheckConsoleMessages(bot_state_t *bs)
  * BotCheckEvents
  */
 void
-BotCheckForGrenades(bot_state_t *bs, entityState_t *state)
+BotCheckForGrenades(bot_state_t *bs, Entstate *state)
 {
 	/* if this is not a grenade */
 	if(state->eType != ET_MISSILE || state->weap[Wpri] != W2grenadelauncher)
@@ -4216,7 +4216,7 @@ BotCheckForGrenades(bot_state_t *bs, entityState_t *state)
  * BotCheckForProxMines
  */
 void
-BotCheckForProxMines(bot_state_t *bs, entityState_t *state)
+BotCheckForProxMines(bot_state_t *bs, Entstate *state)
 {
 	/* if this is not a prox mine */
 	if(state->eType != ET_MISSILE || state->weap[Wpri] != W2proxlauncher)
@@ -4245,13 +4245,13 @@ BotCheckForProxMines(bot_state_t *bs, entityState_t *state)
  * BotCheckEvents
  */
 void
-BotCheckEvents(bot_state_t *bs, entityState_t *state)
+BotCheckEvents(bot_state_t *bs, Entstate *state)
 {
 	int	event;
 	char	buf[128];
 	aas_entityinfo_t entinfo;
 
-	/* NOTE: this sucks, we're accessing the gentity_t directly
+	/* NOTE: this sucks, we're accessing the Gentity directly
 	 * but there's no other fast way to do it right now */
 	if(bs->entityeventTime[state->number] ==
 	   g_entities[state->number].eventTime)
@@ -4484,7 +4484,7 @@ void
 BotCheckSnapshot(bot_state_t *bs)
 {
 	int ent;
-	entityState_t state;
+	Entstate state;
 
 	/* remove all avoid spots */
 	trap_BotAddAvoidSpot(bs->ms, vec3_origin, 0, AVOID_CLEAR);
@@ -4741,7 +4741,7 @@ BotDeathmatchAI(bot_state_t *bs, float thinktime)
 void
 BotSetEntityNumForGoalWithModel(bot_goal_t *goal, int eType, char *modelname)
 {
-	gentity_t	*ent;
+	Gentity	*ent;
 	int i, modelindex;
 	Vec3		dir;
 
@@ -4768,7 +4768,7 @@ BotSetEntityNumForGoalWithModel(bot_goal_t *goal, int eType, char *modelname)
 void
 BotSetEntityNumForGoal(bot_goal_t *goal, char *classname)
 {
-	gentity_t	*ent;
+	Gentity	*ent;
 	int i;
 	Vec3		dir;
 

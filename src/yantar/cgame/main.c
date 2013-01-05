@@ -67,110 +67,110 @@ vmMain(int command, int arg0, int arg1, int arg2, int arg3, int arg4, int arg5,
 
 cg_t	cg;
 cgs_t	cgs;
-centity_t	cg_entities[MAX_GENTITIES];
-weaponInfo_t cg_weapons[MAX_WEAPONS];
+Centity	cg_entities[MAX_GENTITIES];
+Weapinfo cg_weapons[MAX_WEAPONS];
 itemInfo_t	cg_items[MAX_ITEMS];
 
-vmCvar_t	cg_railTrailTime;
-vmCvar_t	cg_centertime;
-vmCvar_t	cg_runpitch;
-vmCvar_t	cg_runroll;
-vmCvar_t	cg_bobup;
-vmCvar_t	cg_bobpitch;
-vmCvar_t	cg_bobroll;
-vmCvar_t	cg_swingSpeed;
-vmCvar_t	cg_shadows;
-vmCvar_t	cg_gibs;
-vmCvar_t	cg_drawTimer;
-vmCvar_t	cg_drawFPS;
-vmCvar_t	cg_drawSnapshot;
-vmCvar_t	cg_draw3dIcons;
-vmCvar_t	cg_drawIcons;
-vmCvar_t	cg_drawAmmoWarning;
-vmCvar_t	cg_drawCrosshair;
-vmCvar_t	cg_drawCrosshairNames;
-vmCvar_t	cg_drawRewards;
-vmCvar_t	cg_crosshairSize;
-vmCvar_t	cg_crosshairX;
-vmCvar_t	cg_crosshairY;
-vmCvar_t	cg_crosshairHealth;
-vmCvar_t	cg_draw2D;
-vmCvar_t	cg_drawStatus;
-vmCvar_t	cg_animSpeed;
-vmCvar_t	cg_debugAnim;
-vmCvar_t	cg_debugPosition;
-vmCvar_t	cg_debugEvents;
-vmCvar_t	cg_errorDecay;
-vmCvar_t	cg_nopredict;
-vmCvar_t	cg_noPlayerAnims;
-vmCvar_t	cg_showmiss;
-vmCvar_t	cg_footsteps;
-vmCvar_t	cg_addMarks;
-vmCvar_t	cg_brassTime;
-vmCvar_t	cg_viewsize;
-vmCvar_t	cg_drawGun;
-vmCvar_t	cg_gun_frame;
-vmCvar_t	cg_gun_x;
-vmCvar_t	cg_gun_y;
-vmCvar_t	cg_gun_z;
-vmCvar_t	cg_tracerChance;
-vmCvar_t	cg_tracerWidth;
-vmCvar_t	cg_tracerLength;
-vmCvar_t	cg_autoswitch;
-vmCvar_t	cg_ignore;
-vmCvar_t	cg_simpleItems;
-vmCvar_t	cg_fov;
-vmCvar_t	cg_zoomFov;
-vmCvar_t	cg_thirdPerson;
-vmCvar_t	cg_thirdPersonRange;
-vmCvar_t	cg_thirdPersonAngle;
-vmCvar_t	cg_lagometer;
-vmCvar_t	cg_drawAttacker;
-vmCvar_t	cg_synchronousClients;
-vmCvar_t	cg_ChatTime;
-vmCvar_t	cg_ChatHeight;
-vmCvar_t	cg_stats;
-vmCvar_t	cg_buildScript;
-vmCvar_t	cg_forceModel;
-vmCvar_t	cg_paused;
-vmCvar_t	cg_blood;
-vmCvar_t	cg_predictItems;
-vmCvar_t	cg_deferPlayers;
-vmCvar_t	cg_drawTeamOverlay;
-vmCvar_t	cg_teamOverlayUserinfo;
-vmCvar_t	cg_drawFriend;
-vmCvar_t	cg_ChatsOnly;
-vmCvar_t	cg_noVoiceChats;
-vmCvar_t	cg_noVoiceText;
-vmCvar_t	cg_hudFiles;
-vmCvar_t	cg_scorePlum;
-vmCvar_t	cg_smoothClients;
-vmCvar_t	pmove_fixed;
-/* vmCvar_t	cg_pmove_fixed; */
-vmCvar_t	pmove_msec;
-vmCvar_t	cg_pmove_msec;
-vmCvar_t	cg_cameraMode;
-vmCvar_t	cg_cameraOrbit;
-vmCvar_t	cg_cameraOrbitDelay;
-vmCvar_t	cg_timescaleFadeEnd;
-vmCvar_t	cg_timescaleFadeSpeed;
-vmCvar_t	cg_timescale;
-vmCvar_t	cg_smallFont;
-vmCvar_t	cg_bigFont;
-vmCvar_t	cg_noTaunt;
-vmCvar_t	cg_noProjectileTrail;
-vmCvar_t	cg_oldRail;
-vmCvar_t	cg_oldRocket;
-vmCvar_t	cg_oldPlasma;
-vmCvar_t	cg_trueLightning;
-vmCvar_t	cg_redTeamName;
-vmCvar_t	cg_blueTeamName;
-vmCvar_t	cg_currentSelectedPlayer;
-vmCvar_t	cg_currentSelectedPlayerName;
-vmCvar_t	cg_enableDust;
+Vmcvar	cg_railTrailTime;
+Vmcvar	cg_centertime;
+Vmcvar	cg_runpitch;
+Vmcvar	cg_runroll;
+Vmcvar	cg_bobup;
+Vmcvar	cg_bobpitch;
+Vmcvar	cg_bobroll;
+Vmcvar	cg_swingSpeed;
+Vmcvar	cg_shadows;
+Vmcvar	cg_gibs;
+Vmcvar	cg_drawTimer;
+Vmcvar	cg_drawFPS;
+Vmcvar	cg_drawSnapshot;
+Vmcvar	cg_draw3dIcons;
+Vmcvar	cg_drawIcons;
+Vmcvar	cg_drawAmmoWarning;
+Vmcvar	cg_drawCrosshair;
+Vmcvar	cg_drawCrosshairNames;
+Vmcvar	cg_drawRewards;
+Vmcvar	cg_crosshairSize;
+Vmcvar	cg_crosshairX;
+Vmcvar	cg_crosshairY;
+Vmcvar	cg_crosshairHealth;
+Vmcvar	cg_draw2D;
+Vmcvar	cg_drawStatus;
+Vmcvar	cg_animSpeed;
+Vmcvar	cg_debugAnim;
+Vmcvar	cg_debugPosition;
+Vmcvar	cg_debugEvents;
+Vmcvar	cg_errorDecay;
+Vmcvar	cg_nopredict;
+Vmcvar	cg_noPlayerAnims;
+Vmcvar	cg_showmiss;
+Vmcvar	cg_footsteps;
+Vmcvar	cg_addMarks;
+Vmcvar	cg_brassTime;
+Vmcvar	cg_viewsize;
+Vmcvar	cg_drawGun;
+Vmcvar	cg_gun_frame;
+Vmcvar	cg_gun_x;
+Vmcvar	cg_gun_y;
+Vmcvar	cg_gun_z;
+Vmcvar	cg_tracerChance;
+Vmcvar	cg_tracerWidth;
+Vmcvar	cg_tracerLength;
+Vmcvar	cg_autoswitch;
+Vmcvar	cg_ignore;
+Vmcvar	cg_simpleItems;
+Vmcvar	cg_fov;
+Vmcvar	cg_zoomFov;
+Vmcvar	cg_thirdPerson;
+Vmcvar	cg_thirdPersonRange;
+Vmcvar	cg_thirdPersonAngle;
+Vmcvar	cg_lagometer;
+Vmcvar	cg_drawAttacker;
+Vmcvar	cg_synchronousClients;
+Vmcvar	cg_ChatTime;
+Vmcvar	cg_ChatHeight;
+Vmcvar	cg_stats;
+Vmcvar	cg_buildScript;
+Vmcvar	cg_forceModel;
+Vmcvar	cg_paused;
+Vmcvar	cg_blood;
+Vmcvar	cg_predictItems;
+Vmcvar	cg_deferPlayers;
+Vmcvar	cg_drawTeamOverlay;
+Vmcvar	cg_teamOverlayUserinfo;
+Vmcvar	cg_drawFriend;
+Vmcvar	cg_ChatsOnly;
+Vmcvar	cg_noVoiceChats;
+Vmcvar	cg_noVoiceText;
+Vmcvar	cg_hudFiles;
+Vmcvar	cg_scorePlum;
+Vmcvar	cg_smoothClients;
+Vmcvar	pmove_fixed;
+/* Vmcvar	cg_pmove_fixed; */
+Vmcvar	pmove_msec;
+Vmcvar	cg_pmove_msec;
+Vmcvar	cg_cameraMode;
+Vmcvar	cg_cameraOrbit;
+Vmcvar	cg_cameraOrbitDelay;
+Vmcvar	cg_timescaleFadeEnd;
+Vmcvar	cg_timescaleFadeSpeed;
+Vmcvar	cg_timescale;
+Vmcvar	cg_smallFont;
+Vmcvar	cg_bigFont;
+Vmcvar	cg_noTaunt;
+Vmcvar	cg_noProjectileTrail;
+Vmcvar	cg_oldRail;
+Vmcvar	cg_oldRocket;
+Vmcvar	cg_oldPlasma;
+Vmcvar	cg_trueLightning;
+Vmcvar	cg_redTeamName;
+Vmcvar	cg_blueTeamName;
+Vmcvar	cg_currentSelectedPlayer;
+Vmcvar	cg_currentSelectedPlayerName;
+Vmcvar	cg_enableDust;
 
 typedef struct {
-	vmCvar_t	*vmCvar;
+	Vmcvar	*vmCvar;
 	char		*cvarName;
 	char		*defaultString;
 	int		cvarFlags;
@@ -451,7 +451,7 @@ CG_Argv(int arg)
 static void
 CG_RegisterItemSounds(int itemNum)
 {
-	gitem_t *item;
+	Gitem *item;
 	char	data[MAX_QPATH];
 	char	*s, *start;
 	int len;
@@ -1177,7 +1177,7 @@ char *
 CG_GetMenuBuffer(const char *filename)
 {
 	int len;
-	fileHandle_t	f;
+	Fhandle	f;
 	static char	buf[MAX_MENUFILE];
 
 	len = trap_FS_FOpenFile(filename, &f, FS_READ);
@@ -1428,7 +1428,7 @@ CG_LoadMenus(const char *menuFile)
 	char	*token;
 	char	*p;
 	int	len, start;
-	fileHandle_t	f;
+	Fhandle	f;
 	static char	buf[MAX_MENUDEFFILE];
 
 	start = trap_Milliseconds();
@@ -1523,7 +1523,7 @@ void
 CG_SetScoreSelection(void *p)
 {
 	menuDef_t *menu		= (menuDef_t*)p;
-	playerState_t *ps	= &cg.snap->ps;
+	Playerstate *ps	= &cg.snap->ps;
 	int i, red, blue;
 	red = blue = 0;
 	for(i = 0; i < cg.numScores; i++){
@@ -1554,7 +1554,7 @@ CG_SetScoreSelection(void *p)
 }
 
 /* FIXME: might need to cache this info */
-static clientInfo_t *
+static Clientinfo *
 CG_InfoFromScoreIndex(int index, int team, int *scoreIndex)
 {
 	int i, count;
@@ -1575,13 +1575,13 @@ CG_InfoFromScoreIndex(int index, int team, int *scoreIndex)
 }
 
 static const char *
-CG_FeederItemText(float feederID, int index, int column, qhandle_t *handle)
+CG_FeederItemText(float feederID, int index, int column, Handle *handle)
 {
-	gitem_t *item;
+	Gitem *item;
 	int	scoreIndex	= 0;
-	clientInfo_t *info	= NULL;
+	Clientinfo *info	= NULL;
 	int	team	= -1;
-	score_t *sp	= NULL;
+	Score *sp	= NULL;
 
 	*handle = -1;
 
@@ -1659,7 +1659,7 @@ CG_FeederItemText(float feederID, int index, int column, qhandle_t *handle)
 	return "";
 }
 
-static qhandle_t
+static Handle
 CG_FeederItemImage(float feederID, int index)
 {
 	return 0;

@@ -13,11 +13,11 @@
 
 qbool		snd_inited = qfalse;
 
-cvar_t		*s_sdlBits;
-cvar_t		*s_sdlSpeed;
-cvar_t		*s_sdlChannels;
-cvar_t		*s_sdlDevSamps;
-cvar_t		*s_sdlMixSamps;
+Cvar		*s_sdlBits;
+Cvar		*s_sdlSpeed;
+Cvar		*s_sdlChannels;
+Cvar		*s_sdlDevSamps;
+Cvar		*s_sdlMixSamps;
 
 /* The audio callback. All the magic happens here. */
 static int	dmapos	= 0;

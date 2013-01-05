@@ -177,12 +177,12 @@ void
 R_AddMarkFragments(int numClipPoints, Vec3 clipPoints[2][MAX_VERTS_ON_POLY],
 		   int numPlanes, Vec3 *normals, float *dists,
 		   int maxPoints, Vec3 pointBuffer,
-		   int maxFragments, markFragment_t *fragmentBuffer,
+		   int maxFragments, Markfrag *fragmentBuffer,
 		   int *returnedPoints, int *returnedFragments,
 		   Vec3 mins, Vec3 maxs)
 {
 	int pingPong, i;
-	markFragment_t *mf;
+	Markfrag *mf;
 
 	/* chop the surface by all the bounding planes of the to be projected polygon */
 	pingPong = 0;
@@ -234,7 +234,7 @@ R_AddMarkFragments(int numClipPoints, Vec3 clipPoints[2][MAX_VERTS_ON_POLY],
  */
 int
 R_MarkFragments(int numPoints, const Vec3 *points, const Vec3 projection,
-		int maxPoints, Vec3 pointBuffer, int maxFragments, markFragment_t *fragmentBuffer)
+		int maxPoints, Vec3 pointBuffer, int maxFragments, Markfrag *fragmentBuffer)
 {
 	int numsurfaces, numPlanes;
 	int i, j, k, m, n;

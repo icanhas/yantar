@@ -14,7 +14,7 @@
  * "count" override quantity or duration on most items.
  */
 
-gitem_t bg_itemlist[] =
+Gitem bg_itemlist[] =
 {
 	{
 		NULL,

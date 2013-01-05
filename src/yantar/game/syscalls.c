@@ -29,7 +29,7 @@ dllEntry(intptr_t (QDECL *syscallptr)(intptr_t arg,...))
 int
 PASSFLOAT(float x)
 {
-	floatint_t fi;
+	Flint fi;
 	fi.f = x;
 	return fi.i;
 }
@@ -65,25 +65,25 @@ trap_Argv(int n, char *buffer, int bufferLength)
 }
 
 int
-trap_FS_FOpenFile(const char *qpath, fileHandle_t *f, fsMode_t mode)
+trap_FS_FOpenFile(const char *qpath, Fhandle *f, Fsmode mode)
 {
 	return syscall(G_FS_FOPEN_FILE, qpath, f, mode);
 }
 
 void
-trap_FS_Read(void *buffer, int len, fileHandle_t f)
+trap_FS_Read(void *buffer, int len, Fhandle f)
 {
 	syscall(G_FS_READ, buffer, len, f);
 }
 
 void
-trap_FS_Write(const void *buffer, int len, fileHandle_t f)
+trap_FS_Write(const void *buffer, int len, Fhandle f)
 {
 	syscall(G_FS_WRITE, buffer, len, f);
 }
 
 void
-trap_FS_FCloseFile(fileHandle_t f)
+trap_FS_FCloseFile(Fhandle f)
 {
 	syscall(G_FS_FCLOSE_FILE, f);
 }
@@ -96,7 +96,7 @@ trap_FS_GetFileList(const char *path, const char *extension, char *listbuf,
 }
 
 int
-trap_FS_Seek(fileHandle_t f, long offset, int origin)
+trap_FS_Seek(Fhandle f, long offset, int origin)
 {
 	return syscall(G_FS_SEEK, f, offset, origin);
 }
@@ -108,14 +108,14 @@ trap_SendConsoleCommand(int exec_when, const char *text)
 }
 
 void
-trap_Cvar_Register(vmCvar_t *cvar, const char *var_name, const char *value,
+trap_Cvar_Register(Vmcvar *cvar, const char *var_name, const char *value,
 		   int flags)
 {
 	syscall(G_CVAR_REGISTER, cvar, var_name, value, flags);
 }
 
 void
-trap_Cvar_Update(vmCvar_t *cvar)
+trap_Cvar_Update(Vmcvar *cvar)
 {
 	syscall(G_CVAR_UPDATE, cvar);
 }
@@ -140,8 +140,8 @@ trap_Cvar_VariableStringBuffer(const char *var_name, char *buffer, int bufsize)
 
 
 void
-trap_LocateGameData(gentity_t *gEnts, int numGEntities, int sizeofGEntity_t,
-		    playerState_t *clients, int sizeofGClient)
+trap_LocateGameData(Gentity *gEnts, int numGEntities, int sizeofGEntity_t,
+		    Playerstate *clients, int sizeofGClient)
 {
 	syscall(G_LOCATE_GAME_DATA, gEnts, numGEntities, sizeofGEntity_t,
 		clients,
@@ -191,13 +191,13 @@ trap_GetServerinfo(char *buffer, int bufferSize)
 }
 
 void
-trap_SetBrushModel(gentity_t *ent, const char *name)
+trap_SetBrushModel(Gentity *ent, const char *name)
 {
 	syscall(G_SET_BRUSH_MODEL, ent, name);
 }
 
 void
-trap_Trace(trace_t *results, const Vec3 start, const Vec3 mins,
+trap_Trace(Trace *results, const Vec3 start, const Vec3 mins,
 	   const Vec3 maxs, const Vec3 end, int passEntityNum,
 	   int contentmask)
 {
@@ -206,7 +206,7 @@ trap_Trace(trace_t *results, const Vec3 start, const Vec3 mins,
 }
 
 void
-trap_TraceCapsule(trace_t *results, const Vec3 start, const Vec3 mins,
+trap_TraceCapsule(Trace *results, const Vec3 start, const Vec3 mins,
 		  const Vec3 maxs, const Vec3 end, int passEntityNum,
 		  int contentmask)
 {
@@ -234,7 +234,7 @@ trap_InPVSIgnorePortals(const Vec3 p1, const Vec3 p2)
 }
 
 void
-trap_AdjustAreaPortalState(gentity_t *ent, qbool open)
+trap_AdjustAreaPortalState(Gentity *ent, qbool open)
 {
 	syscall(G_ADJUST_AREA_PORTAL_STATE, ent, open);
 }
@@ -246,13 +246,13 @@ trap_AreasConnected(int area1, int area2)
 }
 
 void
-trap_LinkEntity(gentity_t *ent)
+trap_LinkEntity(Gentity *ent)
 {
 	syscall(G_LINKENTITY, ent);
 }
 
 void
-trap_UnlinkEntity(gentity_t *ent)
+trap_UnlinkEntity(Gentity *ent)
 {
 	syscall(G_UNLINKENTITY, ent);
 }
@@ -264,14 +264,14 @@ trap_EntitiesInBox(const Vec3 mins, const Vec3 maxs, int *list, int maxcount)
 }
 
 qbool
-trap_EntityContact(const Vec3 mins, const Vec3 maxs, const gentity_t *ent)
+trap_EntityContact(const Vec3 mins, const Vec3 maxs, const Gentity *ent)
 {
 	return syscall(G_ENTITY_CONTACT, mins, maxs, ent);
 }
 
 qbool
 trap_EntityContactCapsule(const Vec3 mins, const Vec3 maxs,
-			  const gentity_t *ent)
+			  const Gentity *ent)
 {
 	return syscall(G_ENTITY_CONTACTCAPSULE, mins, maxs, ent);
 }
@@ -289,7 +289,7 @@ trap_BotFreeClient(int clientNum)
 }
 
 void
-trap_GetUsercmd(int clientNum, usercmd_t *cmd)
+trap_GetUsercmd(int clientNum, Usrcmd *cmd)
 {
 	syscall(G_GET_USERCMD, clientNum, cmd);
 }
@@ -393,7 +393,7 @@ trap_BotGetServerCommand(int clientNum, char *message, int size)
 }
 
 void
-trap_BotUserCommand(int clientNum, usercmd_t *ucmd)
+trap_BotUserCommand(int clientNum, Usrcmd *ucmd)
 {
 	syscall(BOTLIB_USER_COMMAND, clientNum, ucmd);
 }
@@ -419,7 +419,7 @@ trap_AAS_PresenceTypeBoundingBox(int presencetype, Vec3 mins, Vec3 maxs)
 float
 trap_AAS_Time(void)
 {
-	floatint_t fi;
+	Flint fi;
 	fi.i = syscall(BOTLIB_AAS_TIME);
 	return fi.f;
 }
@@ -721,7 +721,7 @@ trap_BotFreeCharacter(int character)
 float
 trap_Characteristic_Float(int character, int index)
 {
-	floatint_t fi;
+	Flint fi;
 	fi.i = syscall(BOTLIB_AI_CHARACTERISTIC_FLOAT, character, index);
 	return fi.f;
 }
@@ -729,7 +729,7 @@ trap_Characteristic_Float(int character, int index)
 float
 trap_Characteristic_BFloat(int character, int index, float min, float max)
 {
-	floatint_t fi;
+	Flint fi;
 	fi.i =
 		syscall(BOTLIB_AI_CHARACTERISTIC_BFLOAT, character, index,
 			PASSFLOAT(
@@ -1012,7 +1012,7 @@ trap_BotGetMapLocationGoal(char *name, void /* struct bot_goal_s */ *goal)
 float
 trap_BotAvoidGoalTime(int goalstate, int number)
 {
-	floatint_t fi;
+	Flint fi;
 	fi.i = syscall(BOTLIB_AI_AVOID_GOAL_TIME, goalstate, number);
 	return fi.f;
 }

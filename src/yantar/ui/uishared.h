@@ -125,7 +125,7 @@ typedef struct {
 	Vec4		backColor;	/* border color */
 	Vec4		borderColor;	/* border color */
 	Vec4		outlineColor;	/* border color */
-	qhandle_t	background;	/* background asset */
+	Handle		background;	/* background asset */
 } windowDef_t;
 
 typedef windowDef_t Window;
@@ -214,7 +214,7 @@ typedef struct itemDef_s {
 	int		textStyle;		/* ( optional ) style, normal and shadowed are it for now */
 	const char	*text;			/* display text */
 	void		*parent;		/* menu owner */
-	qhandle_t	asset;			/* handle to asset */
+	Handle		asset;			/* handle to asset */
 	const char	*mouseEnterText;	/* mouse enter script */
 	const char	*mouseExitText;		/* mouse exit script */
 	const char	*mouseEnter;		/* mouse enter script */
@@ -226,7 +226,7 @@ typedef struct itemDef_s {
 	const char	*cvarTest;		/* associated cvar for enable actions */
 	const char	*enableCvar;		/* enable, disable, show, or hide based on value, this can contain a list */
 	int		cvarFlags;		/*	what type of action to take on cvarenables */
-	sfxHandle_t	focusSound;
+	Sfxhandle	focusSound;
 	int		numColors;	/* number of color ranges */
 	colorRangeDef_t colorRanges[MAX_COLOR_RANGES];
 	float		special;	/* used for feeder id's etc.. diff per type */
@@ -258,26 +258,26 @@ typedef struct {
 	const char	*fontStr;
 	const char	*cursorStr;
 	const char	*gradientStr;
-	fontInfo_t	textFont;
-	fontInfo_t	smallFont;
-	fontInfo_t	bigFont;
-	qhandle_t	cursor;
-	qhandle_t	gradientBar;
-	qhandle_t	scrollBarArrowUp;
-	qhandle_t	scrollBarArrowDown;
-	qhandle_t	scrollBarArrowLeft;
-	qhandle_t	scrollBarArrowRight;
-	qhandle_t	scrollBar;
-	qhandle_t	scrollBarThumb;
-	qhandle_t	buttonMiddle;
-	qhandle_t	buttonInside;
-	qhandle_t	solidBox;
-	qhandle_t	sliderBar;
-	qhandle_t	sliderThumb;
-	sfxHandle_t	menuEnterSound;
-	sfxHandle_t	menuExitSound;
-	sfxHandle_t	menuBuzzSound;
-	sfxHandle_t	itemFocusSound;
+	Fontinfo	textFont;
+	Fontinfo	smallFont;
+	Fontinfo	bigFont;
+	Handle		cursor;
+	Handle		gradientBar;
+	Handle		scrollBarArrowUp;
+	Handle		scrollBarArrowDown;
+	Handle		scrollBarArrowLeft;
+	Handle		scrollBarArrowRight;
+	Handle		scrollBar;
+	Handle		scrollBarThumb;
+	Handle		buttonMiddle;
+	Handle		buttonInside;
+	Handle		solidBox;
+	Handle		sliderBar;
+	Handle		sliderThumb;
+	Sfxhandle	menuEnterSound;
+	Sfxhandle	menuExitSound;
+	Sfxhandle	menuBuzzSound;
+	Sfxhandle	itemFocusSound;
 	float		fadeClamp;
 	int		fadeCycle;
 	float		fadeAmount;
@@ -288,9 +288,9 @@ typedef struct {
 	qbool		fontRegistered;
 
 	/* player settings */
-	qhandle_t	fxBasePic;
-	qhandle_t	fxPic[7];
-	qhandle_t	crosshairShader[NUM_CROSSHAIRS];
+	Handle		fxBasePic;
+	Handle		fxPic[7];
+	Handle		crosshairShader[NUM_CROSSHAIRS];
 
 } cachedAssets_t;
 
@@ -300,32 +300,32 @@ typedef struct {
 } commandDef_t;
 
 typedef struct {
-	qhandle_t (*registerShaderNoMip)(const char *p);
+	Handle (*registerShaderNoMip)(const char *p);
 	void (*setColor)(const Vec4 v);
 	void (*drawHandlePic)(float x, float y, float w, float h,
-			      qhandle_t asset);
+			      Handle asset);
 	void (*drawStretchPic)(float x, float y, float w, float h, float s1,
-			       float t1, float s2, float t2, qhandle_t hShader);
+			       float t1, float s2, float t2, Handle hShader);
 	void (*drawText)(float x, float y, float scale, Vec4 color,
 			 const char *text, float adjust, int limit, int style);
 	int (*textWidth)(const char *text, float scale, int limit);
 	int (*textHeight)(const char *text, float scale, int limit);
-	qhandle_t (*registerModel)(const char *p);
-	void (*modelBounds)(qhandle_t model, Vec3 min, Vec3 max);
+	Handle (*registerModel)(const char *p);
+	void (*modelBounds)(Handle model, Vec3 min, Vec3 max);
 	void (*fillRect)(float x, float y, float w, float h, const Vec4 color);
 	void (*drawRect)(float x, float y, float w, float h, float size,
 			 const Vec4 color);
 	void (*drawSides)(float x, float y, float w, float h, float size);
 	void (*drawTopBottom)(float x, float y, float w, float h, float size);
 	void (*clearScene)(void);
-	void (*addRefEntityToScene)(const refEntity_t *re);
+	void (*addRefEntityToScene)(const Refent *re);
 	void (*renderScene)(const refdef_t *fd);
 	void (*registerFont)(const char *pFontname, int pointSize,
-			     fontInfo_t *font);
+			     Fontinfo *font);
 	void (*ownerDrawItem)(float x, float y, float w, float h, float text_x,
 			      float text_y, int ownerDraw, int ownerDrawFlags,
 			      int align, float special,
-			      float scale, Vec4 color, qhandle_t shader,
+			      float scale, Vec4 color, Handle shader,
 			      int textStyle);
 	float (*getValue)(int ownerDraw);
 	qbool (*ownerDrawVisible)(int flags);
@@ -339,13 +339,13 @@ typedef struct {
 				   int limit, int style);
 	void (*setOverstrikeMode)(qbool b);
 	qbool (*getOverstrikeMode)(void);
-	void (*startLocalSound)(sfxHandle_t sfx, int channelNum);
+	void (*startLocalSound)(Sfxhandle sfx, int channelNum);
 	qbool (*ownerDrawHandleKey)(int ownerDraw, int flags, float *special,
 				       int key);
 	int (*feederCount)(float feederID);
 	const char *(*feederItemText)(float feederID, int index, int column,
-				      qhandle_t *handle);
-	qhandle_t (*feederItemImage)(float feederID, int index);
+				      Handle *handle);
+	Handle (*feederItemImage)(float feederID, int index);
 	void (*feederSelection)(float feederID, int index);
 	void (*keynumToStringBuf)(int keynum, char *buf, int buflen);
 	void (*getBindingBuf)(int keynum, char *buf, int buflen);
@@ -356,7 +356,7 @@ typedef struct {
 	void (*Print)(const char *msg, ...) __attribute__ ((format (printf, 1, 2)));
 	void (*Pause)(qbool b);
 	int (*ownerDrawWidth)(int ownerDraw, float scale);
-	sfxHandle_t (*registerSound)(const char *name, qbool compressed);
+	Sfxhandle (*registerSound)(const char *name, qbool compressed);
 	void (*startBackgroundTrack)(const char *intro, const char *loop);
 	void (*stopBackgroundTrack)(void);
 	int (*playCinematic)(const char *name, float x, float y, float w,
@@ -376,10 +376,10 @@ typedef struct {
 
 	cachedAssets_t	Assets;
 
-	glconfig_t	glconfig;
-	qhandle_t	whiteShader;
-	qhandle_t	gradientImage;
-	qhandle_t	cursor;
+	Glconfig	glconfig;
+	Handle		whiteShader;
+	Handle		gradientImage;
+	Handle		cursor;
 	float		FPS;
 
 } displayContextDef_t;

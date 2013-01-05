@@ -39,9 +39,9 @@
 
 #define FRAGMENT_BIT	(1<<31)
 
-cvar_t *showpackets;
-cvar_t *showdrop;
-cvar_t *qport;
+Cvar *showpackets;
+Cvar *showdrop;
+Cvar *qport;
 
 static char *netsrcString[2] = {
 	"client",
@@ -67,7 +67,7 @@ Netchan_Init(int port)
  * called to open a channel to a remote system
  */
 void
-Netchan_Setup(netsrc_t sock, netchan_t *chan, netadr_t adr, int qport,
+Netchan_Setup(netsrc_t sock, Netchan *chan, Netaddr adr, int qport,
 	      int challenge,
 	      qbool compat)
 {
@@ -88,9 +88,9 @@ Netchan_Setup(netsrc_t sock, netchan_t *chan, netadr_t adr, int qport,
  * Send one fragment of the current message
  */
 void
-Netchan_TransmitNextFragment(netchan_t *chan)
+Netchan_TransmitNextFragment(Netchan *chan)
 {
-	msg_t	send;
+	Bitmsg	send;
 	byte	send_buf[MAX_PACKETLEN];
 	int	fragmentLength;
 	int	outgoingSequence;
@@ -153,9 +153,9 @@ Netchan_TransmitNextFragment(netchan_t *chan)
  * A 0 length will still generate a packet.
  */
 void
-Netchan_Transmit(netchan_t *chan, int length, const byte *data)
+Netchan_Transmit(Netchan *chan, int length, const byte *data)
 {
-	msg_t	send;
+	Bitmsg	send;
 	byte	send_buf[MAX_PACKETLEN];
 
 	if(length > MAX_MSGLEN)
@@ -216,7 +216,7 @@ Netchan_Transmit(netchan_t *chan, int length, const byte *data)
  * copied out.
  */
 qbool
-Netchan_Process(netchan_t *chan, msg_t *msg)
+Netchan_Process(Netchan *chan, Bitmsg *msg)
 {
 	int	sequence;
 	int	fragmentStart, fragmentLength;
@@ -391,10 +391,10 @@ Netchan_Process(netchan_t *chan, msg_t *msg)
 typedef struct {
 	byte	data[MAX_PACKETLEN];
 	int	datalen;
-} loopmsg_t;
+} loopBitmsg;
 
 typedef struct {
-	loopmsg_t	msgs[MAX_LOOPBACK];
+	loopBitmsg	msgs[MAX_LOOPBACK];
 	int		get, send;
 } loopback_t;
 
@@ -402,7 +402,7 @@ loopback_t loopbacks[2];
 
 
 qbool
-NET_GetLoopPacket(netsrc_t sock, netadr_t *net_from, msg_t *net_message)
+NET_GetLoopPacket(netsrc_t sock, Netaddr *net_from, Bitmsg *net_message)
 {
 	int i;
 	loopback_t *loop;
@@ -428,7 +428,7 @@ NET_GetLoopPacket(netsrc_t sock, netadr_t *net_from, msg_t *net_message)
 
 
 void
-NET_SendLoopPacket(netsrc_t sock, int length, const void *data, netadr_t to)
+NET_SendLoopPacket(netsrc_t sock, int length, const void *data, Netaddr to)
 {
 	int i;
 	loopback_t *loop;
@@ -448,14 +448,14 @@ typedef struct packetQueue_s {
 	struct packetQueue_s	*next;
 	int			length;
 	byte			*data;
-	netadr_t		to;
+	Netaddr		to;
 	int			release;
 } packetQueue_t;
 
 packetQueue_t *packetQueue = NULL;
 
 static void
-NET_QueuePacket(int length, const void *data, netadr_t to,
+NET_QueuePacket(int length, const void *data, Netaddr to,
 		int offset)
 {
 	packetQueue_t *new, *next = packetQueue;
@@ -505,7 +505,7 @@ NET_FlushPacketQueue(void)
 }
 
 void
-NET_SendPacket(netsrc_t sock, int length, const void *data, netadr_t to)
+NET_SendPacket(netsrc_t sock, int length, const void *data, Netaddr to)
 {
 
 	/* sequenced packets are shown in netchan, so just show oob */
@@ -535,7 +535,7 @@ NET_SendPacket(netsrc_t sock, int length, const void *data, netadr_t to)
  * Sends a text message in an out-of-band datagram
  */
 void QDECL
-NET_OutOfBandPrint(netsrc_t sock, netadr_t adr, const char *format, ...)
+NET_OutOfBandPrint(netsrc_t sock, Netaddr adr, const char *format, ...)
 {
 	va_list argptr;
 	char	string[MAX_MSGLEN];
@@ -561,11 +561,11 @@ NET_OutOfBandPrint(netsrc_t sock, netadr_t adr, const char *format, ...)
  * Sends a data message in an out-of-band datagram (only used for "connect")
  */
 void QDECL
-NET_OutOfBandData(netsrc_t sock, netadr_t adr, byte *format, int len)
+NET_OutOfBandData(netsrc_t sock, Netaddr adr, byte *format, int len)
 {
 	byte	string[MAX_MSGLEN*2];
 	int	i;
-	msg_t	mbuf;
+	Bitmsg	mbuf;
 
 	/* set the header */
 	string[0]	= 0xff;
@@ -590,7 +590,7 @@ NET_OutOfBandData(netsrc_t sock, netadr_t adr, byte *format, int len)
  * return 0 on address not found, 1 on address found with port, 2 on address found without port.
  */
 int
-NET_StringToAdr(const char *s, netadr_t *a, netadrtype_t family)
+NET_StringToAdr(const char *s, Netaddr *a, netadrtype_t family)
 {
 	char base[MAX_STRING_CHARS], *search;
 	char *port = NULL;

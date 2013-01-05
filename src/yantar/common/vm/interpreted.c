@@ -133,7 +133,7 @@ loadWord(void *addr)
 #endif
 
 char *
-VM_Indent(vm_t *vm)
+VM_Indent(Vm *vm)
 {
 	static char *string = "                                        ";
 	if(vm->callLevel > 20)
@@ -142,7 +142,7 @@ VM_Indent(vm_t *vm)
 }
 
 void
-VM_StackTrace(vm_t *vm, int programCounter, int programStack)
+VM_StackTrace(Vm *vm, int programCounter, int programStack)
 {
 	int count;
 
@@ -160,7 +160,7 @@ VM_StackTrace(vm_t *vm, int programCounter, int programStack)
  * VM_PrepareInterpreter
  */
 void
-VM_PrepareInterpreter(vm_t *vm, vmHeader_t *header)
+VM_PrepareInterpreter(Vm *vm, vmHeader_t *header)
 {
 	int	op;
 	int	byte_pc;
@@ -314,7 +314,7 @@ VM_PrepareInterpreter(vm_t *vm, vmHeader_t *header)
 #define DEBUGSTR va("%s%i", VM_Indent(vm), opStackOfs)
 
 int
-VM_CallInterpreted(vm_t *vm, int *args)
+VM_CallInterpreted(Vm *vm, int *args)
 {
 	byte stack[OPSTACK_SIZE + 15];
 	register int *opStack;

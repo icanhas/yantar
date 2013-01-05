@@ -31,12 +31,12 @@
 /*
  * SV_EmitPacketEntities
  *
- * Writes a delta update of an entityState_t list to the message.
+ * Writes a delta update of an Entstate list to the message.
  */
 static void
-SV_EmitPacketEntities(clientSnapshot_t *from, clientSnapshot_t *to, msg_t *msg)
+SV_EmitPacketEntities(clientSnapshot_t *from, clientSnapshot_t *to, Bitmsg *msg)
 {
-	entityState_t *oldent, *newent;
+	Entstate *oldent, *newent;
 	int	oldindex, newindex;
 	int	oldnum, newnum;
 	int	from_num_entities;
@@ -108,7 +108,7 @@ SV_EmitPacketEntities(clientSnapshot_t *from, clientSnapshot_t *to, msg_t *msg)
  * SV_WriteSnapshotToClient
  */
 static void
-SV_WriteSnapshotToClient(client_t *client, msg_t *msg)
+SV_WriteSnapshotToClient(Client *client, Bitmsg *msg)
 {
 	clientSnapshot_t *frame, *oldframe;
 	int	lastframe;
@@ -206,7 +206,7 @@ SV_WriteSnapshotToClient(client_t *client, msg_t *msg)
  * (re)send all server commands the client hasn't acknowledged yet
  */
 void
-SV_UpdateServerCommandsToClient(client_t *client, msg_t *msg)
+SV_UpdateServerCommandsToClient(Client *client, Bitmsg *msg)
 {
 	int i;
 
@@ -260,7 +260,7 @@ SV_QsortEntityNumbers(const void *a, const void *b)
  * SV_AddEntToSnapshot
  */
 static void
-SV_AddEntToSnapshot(svEntity_t *svEnt, sharedEntity_t *gEnt,
+SV_AddEntToSnapshot(Svent *svEnt, Sharedent *gEnt,
 		    snapshotEntityNumbers_t *eNums)
 {
 	/* if we have already added this entity to this snapshot, don't add again */
@@ -284,8 +284,8 @@ SV_AddEntitiesVisibleFromPoint(Vec3 origin, clientSnapshot_t *frame,
 			       snapshotEntityNumbers_t *eNums, qbool portal)
 {
 	int e, i;
-	sharedEntity_t	*ent;
-	svEntity_t	*svEnt;
+	Sharedent	*ent;
+	Svent		*svEnt;
 	int	l;
 	int	clientarea, clientcluster;
 	int	leafnum;
@@ -417,18 +417,18 @@ SV_AddEntitiesVisibleFromPoint(Vec3 origin, clientSnapshot_t *frame,
  * For viewing through other player's eyes, clent can be something other than client->gentity
  */
 static void
-SV_BuildClientSnapshot(client_t *client)
+SV_BuildClientSnapshot(Client *client)
 {
 	Vec3 org;
 	clientSnapshot_t *frame;
 	snapshotEntityNumbers_t entityNumbers;
 	int i;
-	sharedEntity_t	*ent;
-	entityState_t	*state;
-	svEntity_t	*svEnt;
-	sharedEntity_t	*clent;
+	Sharedent	*ent;
+	Entstate	*state;
+	Svent		*svEnt;
+	Sharedent	*clent;
 	int clientNum;
-	playerState_t	*ps;
+	Playerstate	*ps;
 
 	/* bump the counter used to prevent double adding */
 	sv.snapshotCounter++;
@@ -449,7 +449,7 @@ SV_BuildClientSnapshot(client_t *client)
 	if(!clent || client->state == CS_ZOMBIE)
 		return;
 
-	/* grab the current playerState_t */
+	/* grab the current Playerstate */
 	ps = SV_GameClientNum(client - svs.clients);
 	frame->ps = *ps;
 
@@ -506,7 +506,7 @@ SV_BuildClientSnapshot(client_t *client)
  * Check to see if there is any VoIP queued for a client, and send if there is.
  */
 static void
-SV_WriteVoipToClient(client_t *cl, msg_t *msg)
+SV_WriteVoipToClient(Client *cl, Bitmsg *msg)
 {
 	int	totalbytes = 0;
 	int	i;
@@ -552,7 +552,7 @@ SV_WriteVoipToClient(client_t *cl, msg_t *msg)
  * Called by SV_SendClientSnapshot and SV_SendClientGameState
  */
 void
-SV_SendMessageToClient(msg_t *msg, client_t *client)
+SV_SendMessageToClient(Bitmsg *msg, Client *client)
 {
 	/* record information about the message */
 	client->frames[client->netchan.outgoingSequence &
@@ -574,10 +574,10 @@ SV_SendMessageToClient(msg_t *msg, client_t *client)
  *
  */
 void
-SV_SendClientSnapshot(client_t *client)
+SV_SendClientSnapshot(Client *client)
 {
 	byte	msg_buf[MAX_MSGLEN];
-	msg_t	msg;
+	Bitmsg	msg;
 
 	/* build the snapshot */
 	SV_BuildClientSnapshot(client);
@@ -597,8 +597,8 @@ SV_SendClientSnapshot(client_t *client)
 	/* (re)send any reliable server commands */
 	SV_UpdateServerCommandsToClient(client, &msg);
 
-	/* send over all the relevant entityState_t
-	 * and the playerState_t */
+	/* send over all the relevant Entstate
+	 * and the Playerstate */
 	SV_WriteSnapshotToClient(client, &msg);
 
 #ifdef USE_VOIP
@@ -622,7 +622,7 @@ void
 SV_SendClientMessages(void)
 {
 	int i;
-	client_t *c;
+	Client *c;
 
 	/* send a message to each connected client */
 	for(i=0; i < sv_maxclients->integer; i++){

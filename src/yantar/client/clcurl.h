@@ -29,7 +29,7 @@
   #define ALTERNATE_CURL_LIB	"libcurl.so.3"
 #endif
 
-extern cvar_t *cl_cURLLib;
+extern Cvar *cl_cURLLib;
 
 extern char * (*qcurl_version)(void);
 

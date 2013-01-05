@@ -344,7 +344,7 @@ offset3rdpersonview(void)
 	Vec3 forward, right, up;
 	Vec3 view;
 	Vec3 focusAngles;
-	trace_t trace;
+	Trace trace;
 	static Vec3 mins = { -4, -4, -4 };
 	static Vec3 maxs = { 4, 4, 4 };
 	Vec3 focusPoint;
@@ -502,7 +502,7 @@ dmgblendblob(void)
 {
 	int	t;
 	int	maxTime;
-	refEntity_t ent;
+	Refent ent;
 
 	if(!cg.damageValue)
 		return;
@@ -538,7 +538,7 @@ dmgblendblob(void)
 static int
 calcviewvals(void)
 {
-	playerState_t *ps;
+	Playerstate *ps;
 
 	ps = &cg.predictedPlayerState;
 	memset(&cg.refdef, 0, sizeof(cg.refdef));
@@ -629,7 +629,7 @@ poweruptimersounds(void)
 }
 
 void
-CG_AddBufferedSound(sfxHandle_t sfx)
+CG_AddBufferedSound(Sfxhandle sfx)
 {
 	if(!sfx)
 		return;

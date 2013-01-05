@@ -35,12 +35,12 @@ typedef struct {
 	int		ping;
 	int		serverTime;	/* server time the message is valid for (in msec) */
 	byte		areamask[MAX_MAP_AREA_BYTES];	/* portalarea visibility bits */
-	playerState_t	ps;		/* complete info about the current player at this time */
+	Playerstate	ps;		/* complete info about the current player at this time */
 	int		numEntities;	/* all of the entities that need to be presented at the time of this snapshot */
-	entityState_t	entities[MAX_ENTITIES_IN_SNAPSHOT];
+	Entstate	entities[MAX_ENTITIES_IN_SNAPSHOT];
 	int		numServerCommands;	/* text based server cmds to execute when this snapshot becomes current */
 	int		serverCommandSequence;
-} snapshot_t;
+} Snap;
 
 /*
  * functions imported from the main executable

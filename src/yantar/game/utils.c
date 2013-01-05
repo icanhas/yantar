@@ -127,8 +127,8 @@ G_TeamCommand(team_t team, char *cmd)
  * NULL will be returned if the end of the list is reached.
  *
  */
-gentity_t *
-G_Find(gentity_t *from, int fieldofs, const char *match)
+Gentity *
+G_Find(Gentity *from, int fieldofs, const char *match)
 {
 	char *s;
 
@@ -155,12 +155,12 @@ G_Find(gentity_t *from, int fieldofs, const char *match)
  */
 #define MAXCHOICES 32
 
-gentity_t *
+Gentity *
 G_PickTarget(char *targetname)
 {
-	gentity_t	*ent = NULL;
+	Gentity	*ent = NULL;
 	int num_choices = 0;
-	gentity_t	*choice[MAXCHOICES];
+	Gentity	*choice[MAXCHOICES];
 
 	if(!targetname){
 		G_Printf("G_PickTarget called with NULL targetname\n");
@@ -191,9 +191,9 @@ G_PickTarget(char *targetname)
  * match (string)self.target and call their .use function
  */
 void
-G_UseTargets(gentity_t *ent, gentity_t *activator)
+G_UseTargets(Gentity *ent, Gentity *activator)
 {
-	gentity_t *t;
+	Gentity *t;
 
 	if(!ent)
 		return;
@@ -309,7 +309,7 @@ vectoyaw(const Vec3 vec)
 }
 
 void
-G_InitGentity(gentity_t *e)
+G_InitGentity(Gentity *e)
 {
 	e->inuse = qtrue;
 	e->classname = "noclass";
@@ -328,11 +328,11 @@ G_InitGentity(gentity_t *e)
  * instead of being removed and recreated, which can cause interpolated
  * angles and bad trails.
  */
-gentity_t *
+Gentity *
 G_Spawn(void)
 {
 	int i, force;
-	gentity_t *e;
+	Gentity *e;
 
 	e = NULL;
 	i = 0;
@@ -371,7 +371,7 @@ G_Spawn(void)
 
 	/* let the server system know that there are more entities */
 	trap_LocateGameData(level.gentities, level.num_entities,
-		sizeof(gentity_t),
+		sizeof(Gentity),
 		&level.clients[0].ps, sizeof(level.clients[0]));
 
 	G_InitGentity(e);
@@ -382,7 +382,7 @@ qbool
 G_EntitiesFree(void)
 {
 	int i;
-	gentity_t *e;
+	Gentity *e;
 
 	e = &g_entities[MAX_CLIENTS];
 	for(i = MAX_CLIENTS; i < level.num_entities; i++, e++){
@@ -398,7 +398,7 @@ G_EntitiesFree(void)
  * Marks the entity as free
  */
 void
-G_FreeEntity(gentity_t *ed)
+G_FreeEntity(Gentity *ed)
 {
 	trap_UnlinkEntity (ed);	/* unlink from world */
 
@@ -416,10 +416,10 @@ G_FreeEntity(gentity_t *ed)
  * The origin will be snapped to save net bandwidth, so care
  * must be taken if the origin is right on a surface (snap towards start vector first)
  */
-gentity_t *
+Gentity *
 G_TempEntity(Vec3 origin, int event)
 {
-	gentity_t	*e;
+	Gentity	*e;
 	Vec3		snapped;
 
 	e = G_Spawn();
@@ -448,11 +448,11 @@ G_TempEntity(Vec3 origin, int event)
  * of ent.  Ent should be unlinked before calling this!
  */
 void
-G_KillBox(gentity_t *ent)
+G_KillBox(Gentity *ent)
 {
 	int	i, num;
 	int	touch[MAX_GENTITIES];
-	gentity_t	*hit;
+	Gentity	*hit;
 	Vec3		mins, maxs;
 
 	addv3(ent->client->ps.origin, ent->r.mins, mins);
@@ -477,7 +477,7 @@ G_KillBox(gentity_t *ent)
  * Adds an event+parm and twiddles the event counter
  */
 void
-G_AddPredictableEvent(gentity_t *ent, int event, int eventParm)
+G_AddPredictableEvent(Gentity *ent, int event, int eventParm)
 {
 	if(!ent->client)
 		return;
@@ -488,7 +488,7 @@ G_AddPredictableEvent(gentity_t *ent, int event, int eventParm)
  * Adds an event+parm and twiddles the event counter
  */
 void
-G_AddEvent(gentity_t *ent, int event, int eventParm)
+G_AddEvent(Gentity *ent, int event, int eventParm)
 {
 	int bits;
 
@@ -498,7 +498,7 @@ G_AddEvent(gentity_t *ent, int event, int eventParm)
 		return;
 	}
 
-	/* clients need to add the event in playerState_t instead of entityState_t */
+	/* clients need to add the event in Playerstate instead of Entstate */
 	if(ent->client){
 		bits = ent->client->ps.externalEvent & EV_EVENT_BITS;
 		bits = (bits + EV_EVENT_BIT1) & EV_EVENT_BITS;
@@ -515,9 +515,9 @@ G_AddEvent(gentity_t *ent, int event, int eventParm)
 }
 
 void
-G_Sound(gentity_t *ent, int channel, int soundIndex)
+G_Sound(Gentity *ent, int channel, int soundIndex)
 {
-	gentity_t *te;
+	Gentity *te;
 
 	te = G_TempEntity(ent->r.currentOrigin, EV_GENERAL_SOUND);
 	te->s.eventParm = soundIndex;
@@ -527,7 +527,7 @@ G_Sound(gentity_t *ent, int channel, int soundIndex)
  * Sets the pos trajectory for a fixed position
  */
 void
-G_SetOrigin(gentity_t *ent, Vec3 origin)
+G_SetOrigin(Gentity *ent, Vec3 origin)
 {
 	copyv3(origin, ent->s.traj.base);
 	ent->s.traj.type = TR_STATIONARY;

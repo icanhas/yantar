@@ -146,7 +146,7 @@ R_LoadLightmaps(lump_t *l)
 		return;
 	}
 
-	tr.lightmaps = ri.Hunk_Alloc(tr.numLightmaps * sizeof(image_t *), h_low);
+	tr.lightmaps = ri.Hunk_Alloc(tr.numLightmaps * sizeof(Img *), h_low);
 	for(i = 0; i < tr.numLightmaps; i++){
 		/* expand the 24 bit on-disk to 32 bit */
 		buf_p = buf + i * LIGHTMAP_SIZE*LIGHTMAP_SIZE * 3;

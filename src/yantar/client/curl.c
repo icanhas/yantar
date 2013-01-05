@@ -11,7 +11,7 @@
 #ifdef USE_CURL_DLOPEN
 #include "../sys/loadlib.h"
 
-cvar_t *cl_cURLLib;
+Cvar *cl_cURLLib;
 
 char * (*qcurl_version)(void);
 
@@ -183,7 +183,7 @@ static size_t
 CL_cURL_CallbackWrite(void *buffer, size_t size, size_t nmemb,
 		      void *stream)
 {
-	FS_Write(buffer, size*nmemb, ((fileHandle_t*)stream)[0]);
+	FS_Write(buffer, size*nmemb, ((Fhandle*)stream)[0]);
 	return size*nmemb;
 }
 

@@ -40,7 +40,7 @@ CG_Text_Width(const char *text, float scale, int limit)
 /* FIXME: see ui_main.c, same problem
  * const unsigned char *s = text; */
 	const char	*s = text;
-	fontInfo_t	*font = &cgDC.Assets.textFont;
+	Fontinfo	*font = &cgDC.Assets.textFont;
 	if(scale <= cg_smallFont.value)
 		font = &cgDC.Assets.smallFont;
 	else if(scale > cg_bigFont.value)
@@ -77,7 +77,7 @@ CG_Text_Height(const char *text, float scale, int limit)
 /* TTimo: FIXME
  * const unsigned char *s = text; */
 	const char	*s = text;
-	fontInfo_t	*font = &cgDC.Assets.textFont;
+	Fontinfo	*font = &cgDC.Assets.textFont;
 	if(scale <= cg_smallFont.value)
 		font = &cgDC.Assets.smallFont;
 	else if(scale > cg_bigFont.value)
@@ -108,7 +108,7 @@ CG_Text_Height(const char *text, float scale, int limit)
 void
 CG_Text_PaintChar(float x, float y, float width, float height, float scale,
 		  float s, float t, float s2, float t2,
-		  qhandle_t hShader)
+		  Handle hShader)
 {
 	float w, h;
 	w	= width * scale;
@@ -126,7 +126,7 @@ CG_Text_Paint(float x, float y, float scale, Vec4 color, const char *text,
 	Vec4	newColor;
 	glyphInfo_t *glyph;
 	float	useScale;
-	fontInfo_t *font = &cgDC.Assets.textFont;
+	Fontinfo *font = &cgDC.Assets.textFont;
 	if(scale <= cg_smallFont.value)
 		font = &cgDC.Assets.smallFont;
 	else if(scale > cg_bigFont.value)
@@ -256,12 +256,12 @@ CG_DrawField(int x, int y, int width, int value)
 #endif	/* MISSIONPACK */
 
 void
-CG_Draw3DModel(float x, float y, float w, float h, qhandle_t model,
-	       qhandle_t skin, Vec3 origin,
+CG_Draw3DModel(float x, float y, float w, float h, Handle model,
+	       Handle skin, Vec3 origin,
 	       Vec3 angles)
 {
 	refdef_t refdef;
-	refEntity_t ent;
+	Refent ent;
 
 	if(!cg_draw3dIcons.integer || !cg_drawIcons.integer)
 		return;
@@ -302,8 +302,8 @@ CG_Draw3DModel(float x, float y, float w, float h, qhandle_t model,
 void
 CG_DrawHead(float x, float y, float w, float h, int clientNum, Vec3 headAngles)
 {
-	clipHandle_t cm;
-	clientInfo_t *ci;
+	Cliphandle cm;
+	Clientinfo *ci;
 	float	len;
 	Vec3	origin;
 	Vec3	mins, maxs;
@@ -345,11 +345,11 @@ CG_DrawHead(float x, float y, float w, float h, int clientNum, Vec3 headAngles)
 void
 CG_DrawFlagModel(float x, float y, float w, float h, int team, qbool force2D)
 {
-	qhandle_t	cm;
+	Handle		cm;
 	float len;
 	Vec3		origin, angles;
 	Vec3		mins, maxs;
-	qhandle_t	handle;
+	Handle		handle;
 
 	if(!force2D && cg_draw3dIcons.integer){
 
@@ -380,7 +380,7 @@ CG_DrawFlagModel(float x, float y, float w, float h, int team, qbool force2D)
 			return;
 		CG_Draw3DModel(x, y, w, h, handle, 0, origin, angles);
 	}else if(cg_drawIcons.integer){
-		gitem_t *item;
+		Gitem *item;
 
 		if(team == TEAM_RED)
 			item = BG_FindItemForPowerup(PW_REDFLAG);
@@ -489,8 +489,8 @@ static void
 CG_DrawStatusBar(void)
 {
 	int color;
-	centity_t *cent;
-	playerState_t *ps;
+	Centity *cent;
+	Playerstate *ps;
 	int value;
 	Vec4	hcolor;
 	Vec3	angles;
@@ -579,7 +579,7 @@ CG_DrawStatusBar(void)
 
 			/* if we didn't draw a 3D icon, draw a 2D icon for ammo */
 			if(!cg_draw3dIcons.integer && cg_drawIcons.integer){
-				qhandle_t icon;
+				Handle icon;
 
 				icon = cg_weapons[cg.predictedPlayerState.weap[Wpri]].ammoIcon;
 				if(icon){
@@ -610,7 +610,7 @@ CG_DrawStatusBar(void)
 
 			/* if we didn't draw a 3D icon, draw a 2D icon for ammo */
 			if(!cg_draw3dIcons.integer && cg_drawIcons.integer){
-				qhandle_t icon;
+				Handle icon;
 
 				icon = cg_weapons[cg.predictedPlayerState.weap[Wsec]].ammoIcon;
 				if(icon){
@@ -793,8 +793,8 @@ CG_DrawTeamOverlay(float y, qbool right, qbool upper)
 	int	pwidth, lwidth;
 	int	plyrs;
 	char	st[16];
-	clientInfo_t *ci;
-	gitem_t *item;
+	Clientinfo *ci;
+	Gitem *item;
 	int ret_y, count;
 
 	if(!cg_drawTeamOverlay.integer)
@@ -996,7 +996,7 @@ CG_DrawScores(float y)
 	int	v;
 	Vec4	color;
 	float	y1;
-	gitem_t *item;
+	Gitem *item;
 
 	s1	= cgs.scores1;
 	s2	= cgs.scores2;
@@ -1149,9 +1149,9 @@ CG_DrawPowerups(float y)
 	int	sortedTime[MAX_POWERUPS];
 	int	i, j, k;
 	int	active;
-	playerState_t *ps;
+	Playerstate *ps;
 	int	t;
-	gitem_t *item;
+	Gitem *item;
 	int	x;
 	int	color;
 	float	size;
@@ -1492,7 +1492,7 @@ CG_AddLagometerFrameInfo(void)
  * Pass NULL for a dropped packet.
  */
 void
-CG_AddLagometerSnapshotInfo(snapshot_t *snap)
+CG_AddLagometerSnapshotInfo(Snap *snap)
 {
 	/* dropped packet */
 	if(!snap){
@@ -1518,7 +1518,7 @@ CG_DrawDisconnect(void)
 {
 	float	x, y;
 	int	cmdNum;
-	usercmd_t cmd;
+	Usrcmd cmd;
 	const char *s;
 	int w;
 
@@ -1767,7 +1767,7 @@ static void
 CG_DrawCrosshair(void)
 {
 	float	w, h;
-	qhandle_t hShader;
+	Handle hShader;
 	float	f;
 	float	x, y;
 	int	ca;
@@ -1818,15 +1818,15 @@ static void
 CG_DrawCrosshair3D(void)
 {
 	float	w;
-	qhandle_t hShader;
+	Handle hShader;
 	float	f;
 	int	ca;
 
-	trace_t trace;
+	Trace trace;
 	Vec3	endpos;
 	float	stereoSep, zProj, maxdist, xmax;
 	char	rendererinfos[128];
-	refEntity_t ent;
+	Refent ent;
 
 	if(!cg_drawCrosshair.integer)
 		return;
@@ -1886,7 +1886,7 @@ CG_DrawCrosshair3D(void)
 static void
 CG_ScanForCrosshairEntity(void)
 {
-	trace_t trace;
+	Trace trace;
 	Vec3	start, end;
 	int content;
 
@@ -2202,7 +2202,7 @@ CG_DrawWarmup(void)
 #else
 	int	cw;
 #endif
-	clientInfo_t *ci1, *ci2;
+	Clientinfo *ci1, *ci2;
 	const char *s;
 
 	sec = cg.warmup;

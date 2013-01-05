@@ -47,9 +47,9 @@ int c_pointcontents;
 int c_traces, c_brush_traces, c_patch_traces;
 byte *cmod_base;
 #ifndef BSPC
-cvar_t *cm_noAreas;
-cvar_t *cm_noCurves;
-cvar_t *cm_playerCurveClip;
+Cvar *cm_noAreas;
+Cvar *cm_noCurves;
+Cvar *cm_playerCurveClip;
 #endif
 cmodel_t box_model;
 cplane_t *box_planes;
@@ -572,7 +572,7 @@ CM_ClearMap(void)
 }
 
 cmodel_t        *
-CM_ClipHandleToModel(clipHandle_t handle)
+CM_ClipHandleToModel(Cliphandle handle)
 {
 	if(handle < 0)
 		Com_Errorf(ERR_DROP, "CM_ClipHandleToModel: bad handle %i",
@@ -593,7 +593,7 @@ CM_ClipHandleToModel(clipHandle_t handle)
 
 }
 
-clipHandle_t
+Cliphandle
 CM_InlineModel(int index)
 {
 	if(index < 0 || index >= cm.numSubModels)
@@ -688,7 +688,7 @@ CM_InitBoxHull(void)
  * BSP trees instead of being compared directly.
  * Capsules are handled differently though.
  */
-clipHandle_t
+Cliphandle
 CM_TempBoxModel(const Vec3 mins, const Vec3 maxs, int capsule)
 {
 	copyv3(mins, box_model.mins);
@@ -717,7 +717,7 @@ CM_TempBoxModel(const Vec3 mins, const Vec3 maxs, int capsule)
 }
 
 void
-CM_ModelBounds(clipHandle_t model, Vec3 mins, Vec3 maxs)
+CM_ModelBounds(Cliphandle model, Vec3 mins, Vec3 maxs)
 {
 	cmodel_t *cmod;
 

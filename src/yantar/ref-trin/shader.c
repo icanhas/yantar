@@ -56,7 +56,7 @@ R_RemapShader(const char *shaderName, const char *newShaderName, const char *tim
 	char	strippedName[MAX_QPATH];
 	int	hash;
 	material_t	*sh, *sh2;
-	qhandle_t	h;
+	Handle		h;
 
 	sh = R_FindShaderByName(shaderName);
 	if(sh == NULL || sh == tr.defaultShader){
@@ -2284,7 +2284,7 @@ R_FindShader(const char *name, int lightmapIndex, qbool mipRawImage)
 	char strippedName[MAX_QPATH];
 	int i, hash;
 	char *shaderText;
-	image_t *image;
+	Img *image;
 	material_t *sh;
 
 	if(name[0] == 0){
@@ -2426,8 +2426,8 @@ R_FindShader(const char *name, int lightmapIndex, qbool mipRawImage)
 }
 
 
-qhandle_t
-RE_RegisterShaderFromImage(const char *name, int lightmapIndex, image_t *image, qbool mipRawImage)
+Handle
+RE_RegisterShaderFromImage(const char *name, int lightmapIndex, Img *image, qbool mipRawImage)
 {
 	int i, hash;
 	material_t *sh;
@@ -2541,7 +2541,7 @@ RE_RegisterShaderFromImage(const char *name, int lightmapIndex, image_t *image, 
  * This should really only be used for explicit shaders, because there is no
  * way to ask for different implicit lighting modes (vertex, lightmap, etc)
  */
-qhandle_t
+Handle
 RE_RegisterShaderLightMap(const char *name, int lightmapIndex)
 {
 	material_t *sh;
@@ -2575,7 +2575,7 @@ RE_RegisterShaderLightMap(const char *name, int lightmapIndex)
  * This should really only be used for explicit shaders, because there is no
  * way to ask for different implicit lighting modes (vertex, lightmap, etc)
  */
-qhandle_t
+Handle
 RE_RegisterShader(const char *name)
 {
 	material_t *sh;
@@ -2605,7 +2605,7 @@ RE_RegisterShader(const char *name)
  *
  * For menu graphics that should never be picmiped
  */
-qhandle_t
+Handle
 RE_RegisterShaderNoMip(const char *name)
 {
 	material_t *sh;
@@ -2636,7 +2636,7 @@ RE_RegisterShaderNoMip(const char *name)
  * it and returns a valid (possibly default) material_t to be used internally.
  */
 material_t *
-R_GetShaderByHandle(qhandle_t hShader)
+R_GetShaderByHandle(Handle hShader)
 {
 	if(hShader < 0){
 		ri.Printf(PRINT_WARNING, "R_GetShaderByHandle: out of range hShader '%d'\n", hShader);

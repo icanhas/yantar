@@ -73,11 +73,11 @@ typedef struct aas_trace_s {
 	int		lastarea;	/* last area the trace was in (zero if none) */
 	int		area;		/* area blocking the trace (zero if none) */
 	int		planenum;	/* number of the plane that was hit */
-} aas_trace_t;
+} aas_Trace;
 
 /* Defined in botlib.h
  *
- * //bsp_trace_t hit surface
+ * //bsp_Trace hit surface
  * typedef struct bsp_surface_s
  * {
  *      char name[16];
@@ -98,7 +98,7 @@ typedef struct aas_trace_s {
  *      bsp_surface_t	surface;	// hit surface
  *      int				contents;	// contents on other side of surface hit
  *      int				ent;		// number of entity hit
- * } bsp_trace_t;
+ * } bsp_Trace;
  * //
  */
 
@@ -160,7 +160,7 @@ typedef struct aas_clientmove_s {
 	Vec3		endpos;		/* position at the end of movement prediction */
 	int		endarea;	/* area at end of movement prediction */
 	Vec3		velocity;	/* velocity at the end of movement prediction */
-	aas_trace_t	trace;		/* last trace */
+	aas_Trace	trace;		/* last trace */
 	int		presencetype;	/* presence type at end of movement prediction */
 	int		stopevent;	/* event that made the prediction stop */
 	int		endcontents;	/* contents at the end of movement prediction */

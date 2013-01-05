@@ -12,7 +12,7 @@
 #include <altivec.h>
 #endif
 
-static	portable_samplepair_t paintbuffer[PAINTBUFFER_SIZE];
+static	Samppair paintbuffer[PAINTBUFFER_SIZE];
 static int	snd_vol;
 /* FIXME: next three exported so that mixa.s can use */
 int		*snd_p;
@@ -196,14 +196,14 @@ S_TransferPaintBuffer(int endtime)
 
 #if idppc_altivec
 static void
-S_PaintChannelFrom16_altivec(channel_t *ch, const sfx_t *sc, int count,
+S_PaintChannelFrom16_altivec(Channel *ch, const Sfx *sc, int count,
 			     int sampleOffset,
 			     int bufferOffset)
 {
 	int	data, aoff, boff;
 	int	leftvol, rightvol;
 	int	i, j;
-	portable_samplepair_t *samp;
+	Samppair *samp;
 	sndBuffer	*chunk;
 	short		*samples;
 	float		ooff, fdata, fdiv, fleftvol, frightvol;
@@ -382,14 +382,14 @@ S_PaintChannelFrom16_altivec(channel_t *ch, const sfx_t *sc, int count,
 #endif
 
 static void
-S_PaintChannelFrom16_scalar(channel_t *ch, const sfx_t *sc, int count,
+S_PaintChannelFrom16_scalar(Channel *ch, const Sfx *sc, int count,
 			    int sampleOffset,
 			    int bufferOffset)
 {
 	int	data, aoff, boff;
 	int	leftvol, rightvol;
 	int	i, j;
-	portable_samplepair_t *samp;
+	Samppair *samp;
 	sndBuffer	*chunk;
 	short		*samples;
 	float		ooff, fdata, fdiv, fleftvol, frightvol;
@@ -456,7 +456,7 @@ S_PaintChannelFrom16_scalar(channel_t *ch, const sfx_t *sc, int count,
 }
 
 static void
-S_PaintChannelFrom16(channel_t *ch, const sfx_t *sc, int count, int sampleOffset,
+S_PaintChannelFrom16(Channel *ch, const Sfx *sc, int count, int sampleOffset,
 		     int bufferOffset)
 {
 #if idppc_altivec
@@ -471,13 +471,13 @@ S_PaintChannelFrom16(channel_t *ch, const sfx_t *sc, int count, int sampleOffset
 }
 
 static void
-S_PaintChannelFromWavelet(channel_t *ch, sfx_t *sc, int count, int sampleOffset,
+S_PaintChannelFromWavelet(Channel *ch, Sfx *sc, int count, int sampleOffset,
 			  int bufferOffset)
 {
 	int	data;
 	int	leftvol, rightvol;
 	int	i;
-	portable_samplepair_t *samp;
+	Samppair *samp;
 	sndBuffer *chunk;
 	short *samples;
 
@@ -516,13 +516,13 @@ S_PaintChannelFromWavelet(channel_t *ch, sfx_t *sc, int count, int sampleOffset,
 }
 
 static void
-S_PaintChannelFromADPCM(channel_t *ch, sfx_t *sc, int count, int sampleOffset,
+S_PaintChannelFromADPCM(Channel *ch, Sfx *sc, int count, int sampleOffset,
 			int bufferOffset)
 {
 	int	data;
 	int	leftvol, rightvol;
 	int	i;
-	portable_samplepair_t *samp;
+	Samppair *samp;
 	sndBuffer *chunk;
 	short *samples;
 
@@ -565,13 +565,13 @@ S_PaintChannelFromADPCM(channel_t *ch, sfx_t *sc, int count, int sampleOffset,
 }
 
 static void
-S_PaintChannelFromMuLaw(channel_t *ch, sfx_t *sc, int count, int sampleOffset,
+S_PaintChannelFromMuLaw(Channel *ch, Sfx *sc, int count, int sampleOffset,
 			int bufferOffset)
 {
 	int	data;
 	int	leftvol, rightvol;
 	int	i;
-	portable_samplepair_t *samp;
+	Samppair *samp;
 	sndBuffer	*chunk;
 	byte		*samples;
 	float		ooff;
@@ -626,8 +626,8 @@ S_PaintChannels(int endtime)
 	int	i;
 	int	end;
 	int	stream;
-	channel_t *ch;
-	sfx_t	*sc;
+	Channel *ch;
+	Sfx	*sc;
 	int	ltime, count;
 	int	sampleOffset;
 
@@ -649,7 +649,7 @@ S_PaintChannels(int endtime)
 		for(stream = 0; stream < MAX_RAW_STREAMS; stream++)
 			if(s_rawend[stream] >= s_paintedtime){
 				/* copy from the streaming sound source */
-				const portable_samplepair_t *rawsamples =
+				const Samppair *rawsamples =
 					s_rawsamples[stream];
 				const int stop =
 					(end <

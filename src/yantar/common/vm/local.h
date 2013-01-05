@@ -132,7 +132,7 @@ struct vm_s {
 	/* for dynamic linked modules */
 	void		*dllHandle;
 	intptr_t	(QDECL *entryPoint)(int callNum, ...);
-	void		(*destroy)(vm_t* self);
+	void		(*destroy)(Vm* self);
 
 	/* for interpreted modules */
 	qbool		currentlyInterpreting;
@@ -162,18 +162,18 @@ struct vm_s {
 };
 
 
-extern vm_t	*currentVM;
+extern Vm	*currentVM;
 extern int	vm_debugLevel;
 
-void VM_Compile(vm_t *vm, vmHeader_t *header);
-int     VM_CallCompiled(vm_t *vm, int *args);
+void VM_Compile(Vm *vm, vmHeader_t *header);
+int     VM_CallCompiled(Vm *vm, int *args);
 
-void VM_PrepareInterpreter(vm_t *vm, vmHeader_t *header);
-int     VM_CallInterpreted(vm_t *vm, int *args);
+void VM_PrepareInterpreter(Vm *vm, vmHeader_t *header);
+int     VM_CallInterpreted(Vm *vm, int *args);
 
-vmSymbol_t*VM_ValueToFunctionSymbol(vm_t *vm, int value);
-int VM_SymbolToValue(vm_t *vm, const char *symbol);
-const char*VM_ValueToSymbol(vm_t *vm, int value);
+vmSymbol_t*VM_ValueToFunctionSymbol(Vm *vm, int value);
+int VM_SymbolToValue(Vm *vm, const char *symbol);
+const char*VM_ValueToSymbol(Vm *vm, int value);
 void VM_LogSyscalls(int *args);
 
 void VM_BlockCopy(unsigned int dest, unsigned int src, size_t n);

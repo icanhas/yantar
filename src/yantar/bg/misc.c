@@ -10,7 +10,7 @@
 #include "bg.h"
 
 void
-BG_EvaluateTrajectory(const trajectory_t *tr, int atTime, Vec3 result)
+BG_EvaluateTrajectory(const Trajectory *tr, int atTime, Vec3 result)
 {
 	float	deltaTime;
 	float	phase;
@@ -63,7 +63,7 @@ BG_EvaluateTrajectory(const trajectory_t *tr, int atTime, Vec3 result)
  * For determining velocity at a given time
  */
 void
-BG_EvaluateTrajectoryDelta(const trajectory_t *tr, int atTime, Vec3 result)
+BG_EvaluateTrajectoryDelta(const Trajectory *tr, int atTime, Vec3 result)
 {
 	float	deltaTime;
 	float	phase;
@@ -218,7 +218,7 @@ char *eventnames[] = {
 void trap_Cvar_VariableStringBuffer(const char *var_name, char *buffer, int bufsize);
 
 void
-BG_AddPredictableEventToPlayerstate(int newEvent, int eventParm, playerState_t *ps)
+BG_AddPredictableEventToPlayerstate(int newEvent, int eventParm, Playerstate *ps)
 {
 #ifdef _DEBUG
 	{
@@ -247,7 +247,7 @@ BG_AddPredictableEventToPlayerstate(int newEvent, int eventParm, playerState_t *
 }
 
 void
-BG_TouchJumpPad(playerState_t *ps, entityState_t *jumppad)
+BG_TouchJumpPad(Playerstate *ps, Entstate *jumppad)
 {
 	Vec3	angles;
 	float	p;
@@ -283,11 +283,11 @@ BG_TouchJumpPad(playerState_t *ps, entityState_t *jumppad)
 }
 
 /*
- * This is done after each set of usercmd_t on the server,
+ * This is done after each set of Usrcmd on the server,
  * and after local prediction on the client
  */
 void
-BG_PlayerStateToEntityState(playerState_t *ps, entityState_t *s, qbool snap)
+BG_PlayerStateToEntityState(Playerstate *ps, Entstate *s, qbool snap)
 {
 	int i;
 
@@ -353,11 +353,11 @@ BG_PlayerStateToEntityState(playerState_t *ps, entityState_t *s, qbool snap)
 }
 
 /*
- * This is done after each set of usercmd_t on the server,
+ * This is done after each set of Usrcmd on the server,
  * and after local prediction on the client
  */
 void
-BG_PlayerStateToEntityStateExtraPolate(playerState_t *ps, entityState_t *s, int time, qbool snap)
+BG_PlayerStateToEntityStateExtraPolate(Playerstate *ps, Entstate *s, int time, qbool snap)
 {
 	int i;
 

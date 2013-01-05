@@ -19,7 +19,7 @@
 typedef struct {
 	int	left;	/* the final values will be clamped to +/- 0x00ffff00 and shifted down */
 	int	right;
-} portable_samplepair_t;
+} Samppair;
 
 typedef struct adpcm_state {
 	short	sample;	/* Previous output value */
@@ -43,7 +43,7 @@ typedef struct sfx_s {
 	char		soundName[MAX_QPATH];
 	int		lastTimeUsed;
 	struct sfx_s	*next;
-} sfx_t;
+} Sfx;
 
 typedef struct {
 	int	channels;
@@ -61,7 +61,7 @@ typedef struct {
 typedef struct loopSound_s {
 	Vec3		origin;
 	Vec3		velocity;
-	sfx_t		*sfx;
+	Sfx		*sfx;
 	int		mergeFrame;
 	qbool		active;
 	qbool		kill;
@@ -83,9 +83,9 @@ typedef struct {
 	float		oldDopplerScale;
 	Vec3		origin;		/* only use if fixed_origin is set */
 	qbool		fixed_origin;	/* use origin instead of fetching entnum's origin */
-	sfx_t		*thesfx;	/* sfx structure */
+	Sfx		*thesfx;	/* sfx structure */
 	qbool		doppler;
-} channel_t;
+} Channel;
 
 
 #define WAV_FORMAT_PCM 1
@@ -104,8 +104,8 @@ typedef struct {
 typedef struct {
 	void (*Shutdown)(void);
 	void (*StartSound)(Vec3 origin, int entnum, int entchannel,
-			   sfxHandle_t sfx);
-	void (*StartLocalSound)(sfxHandle_t sfx, int channelNum);
+			   Sfxhandle sfx);
+	void (*StartLocalSound)(Sfxhandle sfx, int channelNum);
 	void (*StartBackgroundTrack)(const char *intro, const char *loop);
 	void (*StopBackgroundTrack)(void);
 	void (*RawSamples)(int stream, int samples, int rate, int width,
@@ -114,9 +114,9 @@ typedef struct {
 	void (*StopAllSounds)(void);
 	void (*ClearLoopingSounds)(qbool killall);
 	void (*AddLoopingSound)(int entityNum, const Vec3 origin,
-				const Vec3 velocity, sfxHandle_t sfx);
+				const Vec3 velocity, Sfxhandle sfx);
 	void (*AddRealLoopingSound)(int entityNum, const Vec3 origin,
-				    const Vec3 velocity, sfxHandle_t sfx);
+				    const Vec3 velocity, Sfxhandle sfx);
 	void (*StopLoopingSound)(int entityNum);
 	void (*Respatialize)(int entityNum, const Vec3 origin, Vec3 axis[3],
 			     int inwater);
@@ -124,7 +124,7 @@ typedef struct {
 	void (*Update)(void);
 	void (*DisableSounds)(void);
 	void (*BeginRegistration)(void);
-	sfxHandle_t (*RegisterSound)(const char *sample, qbool compressed);
+	Sfxhandle (*RegisterSound)(const char *sample, qbool compressed);
 	void (*ClearSoundBuffer)(void);
 	void (*SoundInfo)(void);
 	void (*SoundList)(void);
@@ -161,8 +161,8 @@ void    SNDDMA_Submit(void);
 
 #define MAX_CHANNELS 96
 
-extern channel_t	s_channels[MAX_CHANNELS];
-extern channel_t	loop_channels[MAX_CHANNELS];
+extern Channel	s_channels[MAX_CHANNELS];
+extern Channel	loop_channels[MAX_CHANNELS];
 extern int	numLoopChannels;
 
 extern int	s_paintedtime;
@@ -173,17 +173,17 @@ extern dma_t	dma;
 
 #define MAX_RAW_SAMPLES 16384
 #define MAX_RAW_STREAMS (MAX_CLIENTS * 2 + 1)
-extern portable_samplepair_t s_rawsamples[MAX_RAW_STREAMS][MAX_RAW_SAMPLES];
+extern Samppair s_rawsamples[MAX_RAW_STREAMS][MAX_RAW_SAMPLES];
 extern int s_rawend[MAX_RAW_STREAMS];
 
-extern cvar_t *s_volume;
-extern cvar_t *s_musicVolume;
-extern cvar_t *s_muted;
-extern cvar_t *s_doppler;
+extern Cvar *s_volume;
+extern Cvar *s_musicVolume;
+extern Cvar *s_muted;
+extern Cvar *s_doppler;
 
-extern cvar_t *s_testsound;
+extern Cvar *s_testsound;
 
-qbool S_LoadSound(sfx_t *sfx);
+qbool S_LoadSound(Sfx *sfx);
 
 void            SND_free(sndBuffer *v);
 sndBuffer*SND_malloc(void);
@@ -192,14 +192,14 @@ void            SND_shutdown(void);
 
 void S_PaintChannels(int endtime);
 
-void S_memoryLoad(sfx_t *sfx);
+void S_memoryLoad(Sfx *sfx);
 
 /* spatializes a channel */
-void S_Spatialize(channel_t *ch);
+void S_Spatialize(Channel *ch);
 
 /* adpcm functions */
 int  S_AdpcmMemoryNeeded(const wavinfo_t *info);
-void S_AdpcmEncodeSound(sfx_t *sfx, short *samples);
+void S_AdpcmEncodeSound(Sfx *sfx, short *samples);
 void S_AdpcmGetSamples(sndBuffer *chunk, short *to);
 
 /* wavelet function */
@@ -211,14 +211,14 @@ void S_FreeOldestSound(void);
 
 #define NXStream byte
 
-void encodeWavelet(sfx_t *sfx, short *packets);
+void encodeWavelet(Sfx *sfx, short *packets);
 void decodeWavelet(sndBuffer *stream, short *packets);
 
-void encodeMuLaw(sfx_t *sfx, short *packets);
+void encodeMuLaw(Sfx *sfx, short *packets);
 extern short mulawToShort[256];
 
 extern short	*sfxScratchBuffer;
-extern sfx_t    *sfxScratchPointer;
+extern Sfx    *sfxScratchPointer;
 extern int	sfxScratchIndex;
 
 qbool S_Base_Init(soundInterface_t *si);

@@ -549,7 +549,7 @@ R_SetupProjectionZ(viewParms_t *dest)
  * R_MirrorPoint
  */
 void
-R_MirrorPoint(Vec3 in, orientation_t *surface, orientation_t *camera, Vec3 out)
+R_MirrorPoint(Vec3 in, Orient *surface, Orient *camera, Vec3 out)
 {
 	int i;
 	Vec3	local;
@@ -568,7 +568,7 @@ R_MirrorPoint(Vec3 in, orientation_t *surface, orientation_t *camera, Vec3 out)
 }
 
 void
-R_MirrorVector(Vec3 in, orientation_t *surface, orientation_t *camera, Vec3 out)
+R_MirrorVector(Vec3 in, Orient *surface, Orient *camera, Vec3 out)
 {
 	int i;
 	float d;
@@ -633,7 +633,7 @@ R_PlaneForSurface(surfaceType_t *surfType, cplane_t *plane)
  */
 qbool
 R_GetPortalOrientations(drawSurf_t *drawSurf, int entityNum,
-			orientation_t *surface, orientation_t *camera,
+			Orient *surface, Orient *camera,
 			Vec3 pvsOrigin, qbool *mirror)
 {
 	int i;
@@ -911,7 +911,7 @@ R_MirrorViewBySurface(drawSurf_t *drawSurf, int entityNum)
 	Vec4 clipDest[128];
 	viewParms_t newParms;
 	viewParms_t oldParms;
-	orientation_t surface, camera;
+	Orient surface, camera;
 
 	/* don't recursively mirror */
 	if(tr.viewParms.isPortal){

@@ -79,7 +79,7 @@ typedef struct {
 	menutext_s	modelname;
 	menutext_s	skinname;
 	menutext_s	playername;
-	playerInfo_t	playerinfo;
+	Playerinfo	playerinfo;
 	int		nummodels;
 	char		modelnames[MAX_PLAYERMODELS][128];
 	int		modelpage;
@@ -154,7 +154,7 @@ PlayerModel_UpdateModel(void)
 	Vec3	viewangles;
 	Vec3	moveangles;
 
-	memset(&s_playermodel.playerinfo, 0, sizeof(playerInfo_t));
+	memset(&s_playermodel.playerinfo, 0, sizeof(Playerinfo));
 
 	viewangles[YAW] = 180 - 30;
 	viewangles[PITCH] = 0;
@@ -214,7 +214,7 @@ PlayerModel_MenuEvent(void* ptr, int event)
 /*
  * PlayerModel_MenuKey
  */
-static sfxHandle_t
+static Sfxhandle
 PlayerModel_MenuKey(int key)
 {
 	menucommon_s * m;

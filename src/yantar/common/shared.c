@@ -217,7 +217,7 @@ Q_long64noswap(qint64 ll)
 float
 Q_floatswap(const float *f)
 {
-	floatint_t out;
+	Flint out;
 
 	out.f	= *f;
 	out.ui	= Q_longswap(out.ui);

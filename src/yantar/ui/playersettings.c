@@ -49,9 +49,9 @@ typedef struct {
 	menubitmap_s	model;
 	menubitmap_s	item_null;
 
-	qhandle_t	fxBasePic;
-	qhandle_t	fxPic[7];
-	playerInfo_t	playerinfo;
+	Handle		fxBasePic;
+	Handle		fxPic[7];
+	Playerinfo	playerinfo;
 	int		current_fx;
 	char		playerModel[MAX_QPATH];
 } playersettings_t;
@@ -275,7 +275,7 @@ PlayerSettings_SaveChanges(void)
 /*
  * PlayerSettings_MenuKey
  */
-static sfxHandle_t
+static Sfxhandle
 PlayerSettings_MenuKey(int key)
 {
 	if(key == K_MOUSE2 || key == K_ESCAPE)
@@ -306,7 +306,7 @@ PlayerSettings_SetMenuItems(void)
 	s_playersettings.effects.curvalue = gamecodetoui[c];
 
 	/* model/skin */
-	memset(&s_playersettings.playerinfo, 0, sizeof(playerInfo_t));
+	memset(&s_playersettings.playerinfo, 0, sizeof(Playerinfo));
 
 	viewangles[YAW]		= 180 - 30;
 	viewangles[PITCH]	= 0;

@@ -252,10 +252,10 @@ R_LoadLightmaps(lump_t *l, lump_t *surfs)
 		tr.numLightmaps = numLightmaps;
 	}
 
-	tr.lightmaps = ri.Hunk_Alloc(tr.numLightmaps * sizeof(image_t *), h_low);
+	tr.lightmaps = ri.Hunk_Alloc(tr.numLightmaps * sizeof(Img *), h_low);
 
 	if(tr.worldDeluxeMapping || r_deluxeMapping->integer == 2){
-		tr.deluxemaps = ri.Hunk_Alloc(tr.numLightmaps * sizeof(image_t *), h_low);
+		tr.deluxemaps = ri.Hunk_Alloc(tr.numLightmaps * sizeof(Img *), h_low);
 	}
 
 	if(r_hdr->integer && glRefConfig.textureFloat && glRefConfig.halfFloatPixel)

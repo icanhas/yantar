@@ -554,11 +554,11 @@ mlookup(void)
 		centerview();
 }
 
-cvar_t *cl_yawspeed;
-cvar_t *cl_pitchspeed;
-cvar_t *cl_rollspeed;
-cvar_t *cl_run;
-cvar_t *cl_anglespeedkey;
+Cvar *cl_yawspeed;
+Cvar *cl_pitchspeed;
+Cvar *cl_rollspeed;
+Cvar *cl_run;
+Cvar *cl_anglespeedkey;
 
 static const Scalar Maxrolldelta = 300.0;
 
@@ -602,9 +602,9 @@ adjustangles(void)
 	cl.viewangles[ROLL] = roll;
 }
 
-/* Sets the usercmd_t based on key states */
+/* Sets the Usrcmd based on key states */
 static void
-keymove(usercmd_t *cmd)
+keymove(Usrcmd *cmd)
 {
 	int	mvspeed;
 	int	fwd, side, _up, brk;
@@ -670,7 +670,7 @@ CL_JoystickEvent(int axis, int value, int time)
 }
 
 static void
-joystickmove(usercmd_t *cmd)
+joystickmove(Usrcmd *cmd)
 {
 	float anglespeed;
 
@@ -731,7 +731,7 @@ joystickmove(usercmd_t *cmd)
  * X and Y?
  */
 static void
-mousemove(usercmd_t *cmd)
+mousemove(Usrcmd *cmd)
 {
 	float mx, my;
 
@@ -808,7 +808,7 @@ mousemove(usercmd_t *cmd)
 }
 
 static void
-cmdbuttons(usercmd_t *cmd)
+cmdbuttons(Usrcmd *cmd)
 {
 	int i;
 
@@ -834,7 +834,7 @@ cmdbuttons(usercmd_t *cmd)
 }
 
 static void
-finishmove(usercmd_t *cmd)
+finishmove(Usrcmd *cmd)
 {
 	uint i;
 
@@ -850,10 +850,10 @@ finishmove(usercmd_t *cmd)
 		cmd->angles[i] = ANGLE2SHORT(cl.viewangles[i]);
 }
 
-static usercmd_t
+static Usrcmd
 createcmd(void)
 {
-	usercmd_t cmd;
+	Usrcmd cmd;
 	Vec3 oldangles;
 
 	copyv3(cl.viewangles, oldangles);
@@ -884,7 +884,7 @@ createcmd(void)
 	return cmd;
 }
 
-/* Create a new usercmd_t structure for this frame */
+/* Create a new Usrcmd structure for this frame */
 static void
 createnewcmds(void)
 {
@@ -976,10 +976,10 @@ readytosend(void)
 void
 CL_WritePacket(void)
 {
-	msg_t buf;
+	Bitmsg buf;
 	byte data[MAX_MSGLEN];
 	int i, j;
-	usercmd_t *cmd, *oldcmd, nullcmd;
+	Usrcmd *cmd, *oldcmd, nullcmd;
 	int packetNum, oldPacketNum;
 	int count, key;
 
@@ -1049,7 +1049,7 @@ CL_WritePacket(void)
 			 *  and misordered packets here. */
 			if(clc.demorecording && !clc.demowaiting){
 				const int voipSize = clc.voipOutgoingDataSize;
-				msg_t fakemsg;
+				Bitmsg fakemsg;
 				byte	fakedata[MAX_MSGLEN];
 				
 				MSG_Init (&fakemsg, fakedata, sizeof(fakedata));

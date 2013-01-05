@@ -19,7 +19,7 @@
  * Used as a positional target for calculations in the utilities (spotlights, etc), but removed during gameplay.
  */
 void
-SP_info_camp(gentity_t *self)
+SP_info_camp(Gentity *self)
 {
 	G_SetOrigin(self, self->s.origin);
 }
@@ -29,7 +29,7 @@ SP_info_camp(gentity_t *self)
  * Used as a positional target for calculations in the utilities (spotlights, etc), but removed during gameplay.
  */
 void
-SP_info_null(gentity_t *self)
+SP_info_null(Gentity *self)
 {
 	G_FreeEntity(self);
 }
@@ -40,7 +40,7 @@ SP_info_null(gentity_t *self)
  * target_position does the same thing
  */
 void
-SP_info_notnull(gentity_t *self)
+SP_info_notnull(Gentity *self)
 {
 	G_SetOrigin(self, self->s.origin);
 }
@@ -54,7 +54,7 @@ SP_info_notnull(gentity_t *self)
  * "radius" overrides the default 64 unit radius of a spotlight at the target point.
  */
 void
-SP_light(gentity_t *self)
+SP_light(Gentity *self)
 {
 	G_FreeEntity(self);
 }
@@ -68,9 +68,9 @@ SP_light(gentity_t *self)
  */
 
 void
-TeleportPlayer(gentity_t *player, Vec3 origin, Vec3 angles)
+TeleportPlayer(Gentity *player, Vec3 origin, Vec3 angles)
 {
-	gentity_t	*tent;
+	Gentity	*tent;
 	qbool		noAngles;
 
 	noAngles = (angles[0] > 999999.0);
@@ -123,7 +123,7 @@ TeleportPlayer(gentity_t *player, Vec3 origin, Vec3 angles)
  * an info_notnull
  */
 void
-SP_misc_teleporter_dest(gentity_t *ent)
+SP_misc_teleporter_dest(Gentity *ent)
 {
 }
 
@@ -134,7 +134,7 @@ SP_misc_teleporter_dest(gentity_t *ent)
  * "model"		arbitrary .md3 file to display
  */
 void
-SP_misc_model(gentity_t *ent)
+SP_misc_model(Gentity *ent)
 {
 
 #if 0
@@ -153,11 +153,11 @@ SP_misc_model(gentity_t *ent)
 /* =========================================================== */
 
 void
-locateCamera(gentity_t *ent)
+locateCamera(Gentity *ent)
 {
 	Vec3 dir;
-	gentity_t	*target;
-	gentity_t	*owner;
+	Gentity	*target;
+	Gentity	*owner;
 
 	owner = G_PickTarget(ent->target);
 	if(!owner){
@@ -201,7 +201,7 @@ locateCamera(gentity_t *ent)
  * This must be within 64 world units of the surface!
  */
 void
-SP_misc_portal_surface(gentity_t *ent)
+SP_misc_portal_surface(Gentity *ent)
 {
 	clearv3(ent->r.mins);
 	clearv3(ent->r.maxs);
@@ -223,7 +223,7 @@ SP_misc_portal_surface(gentity_t *ent)
  * "roll" an angle modifier to orient the camera around the target vector;
  */
 void
-SP_misc_portal_camera(gentity_t *ent)
+SP_misc_portal_camera(Gentity *ent)
 {
 	float roll;
 
@@ -243,7 +243,7 @@ SP_misc_portal_camera(gentity_t *ent)
  */
 
 void
-Use_Shooter(gentity_t *ent, gentity_t *other, gentity_t *activator)
+Use_Shooter(Gentity *ent, Gentity *other, Gentity *activator)
 {
 	Vec3	dir;
 	float	deg;
@@ -285,7 +285,7 @@ Use_Shooter(gentity_t *ent, gentity_t *other, gentity_t *activator)
 
 
 static void
-InitShooter_Finish(gentity_t *ent)
+InitShooter_Finish(Gentity *ent)
 {
 	ent->enemy = G_PickTarget(ent->target);
 	ent->think = 0;
@@ -293,7 +293,7 @@ InitShooter_Finish(gentity_t *ent)
 }
 
 void
-InitShooter(gentity_t *ent, int weapon)
+InitShooter(Gentity *ent, int weapon)
 {
 	ent->use = Use_Shooter;
 	ent->s.weap[Wpri] = weapon;
@@ -318,7 +318,7 @@ InitShooter(gentity_t *ent, int weapon)
  * "random" the number of degrees of deviance from the taget. (1.0 default)
  */
 void
-SP_shooter_rocket(gentity_t *ent)
+SP_shooter_rocket(Gentity *ent)
 {
 	InitShooter(ent, W2rocketlauncher);
 }
@@ -328,7 +328,7 @@ SP_shooter_rocket(gentity_t *ent)
  * "random" is the number of degrees of deviance from the taget. (1.0 default)
  */
 void
-SP_shooter_plasma(gentity_t *ent)
+SP_shooter_plasma(Gentity *ent)
 {
 	InitShooter(ent, W1plasmagun);
 }
@@ -338,7 +338,7 @@ SP_shooter_plasma(gentity_t *ent)
  * "random" is the number of degrees of deviance from the taget. (1.0 default)
  */
 void
-SP_shooter_grenade(gentity_t *ent)
+SP_shooter_grenade(Gentity *ent)
 {
 	InitShooter(ent, W2grenadelauncher);
 }
@@ -346,7 +346,7 @@ SP_shooter_grenade(gentity_t *ent)
 
 #ifdef MISSIONPACK
 static void
-PortalDie(gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int damage,
+PortalDie(Gentity *self, Gentity *inflictor, Gentity *attacker, int damage,
 	  int mod)
 {
 	G_FreeEntity(self);
@@ -355,9 +355,9 @@ PortalDie(gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int damage
 
 
 void
-DropPortalDestination(gentity_t *player)
+DropPortalDestination(Gentity *player)
 {
-	gentity_t	*ent;
+	Gentity	*ent;
 	Vec3		snapped;
 
 	/* create the portal destination */
@@ -396,9 +396,9 @@ DropPortalDestination(gentity_t *player)
 
 
 static void
-PortalTouch(gentity_t *self, gentity_t *other, trace_t *trace)
+PortalTouch(Gentity *self, Gentity *other, Trace *trace)
 {
-	gentity_t *destination;
+	Gentity *destination;
 
 	/* see if we will even let other try to use it */
 	if(other->health <= 0)
@@ -443,7 +443,7 @@ PortalTouch(gentity_t *self, gentity_t *other, trace_t *trace)
 
 
 static void
-PortalEnable(gentity_t *self)
+PortalEnable(Gentity *self)
 {
 	self->touch = PortalTouch;
 	self->think = G_FreeEntity;
@@ -452,10 +452,10 @@ PortalEnable(gentity_t *self)
 
 
 void
-DropPortalSource(gentity_t *player)
+DropPortalSource(Gentity *player)
 {
-	gentity_t	*ent;
-	gentity_t       *destination;
+	Gentity	*ent;
+	Gentity       *destination;
 	Vec3		snapped;
 
 	/* create the portal source */

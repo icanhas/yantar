@@ -527,7 +527,7 @@ BotInitLevelItems(void)
 	int	ent, goalareanum;
 	itemconfig_t	*ic;
 	levelitem_t     *li;
-	bsp_trace_t	trace;
+	bsp_Trace	trace;
 
 	/* initialize the map locations and camp spots */
 	BotInitInfoEntities();
@@ -1588,7 +1588,7 @@ BotItemGoalInVisButNotVisible(int viewer, Vec3 eye, Vec3 viewangles,
 			      bot_goal_t *goal)
 {
 	aas_entityinfo_t entinfo;
-	bsp_trace_t trace;
+	bsp_Trace trace;
 	Vec3 middle;
 
 	if(!(goal->flags & GFL_ITEM)) return qfalse;

@@ -16,7 +16,7 @@ static qbool R_LoadMD4(model_t *mod, void *buffer, const char *name);
 /*
  * R_RegisterMD3
  */
-qhandle_t
+Handle
 R_RegisterMD3(const char *name, model_t *mod)
 {
 	union {
@@ -94,7 +94,7 @@ R_RegisterMD3(const char *name, model_t *mod)
 /*
  * R_RegisterIQM
  */
-qhandle_t
+Handle
 R_RegisterIQM(const char *name, model_t *mod)
 {
 	union {
@@ -126,7 +126,7 @@ R_RegisterIQM(const char *name, model_t *mod)
 
 typedef struct {
 	char *ext;
-	qhandle_t (*ModelLoader)(const char *, model_t *);
+	Handle (*ModelLoader)(const char *, model_t *);
 } modelExtToLoaderMap_t;
 
 /* Note that the ordering indicates the order of preference used
@@ -146,7 +146,7 @@ static int numModelLoaders = ARRAY_LEN(modelLoaders);
 ** R_GetModelByHandle
 */
 model_t *
-R_GetModelByHandle(qhandle_t index)
+R_GetModelByHandle(Handle index)
 {
 	model_t *mod;
 
@@ -192,11 +192,11 @@ R_AllocModel(void)
  * optimization to prevent disk rescanning if they are
  * asked for again.
  */
-qhandle_t
+Handle
 RE_RegisterModel(const char *name)
 {
 	model_t *mod;
-	qhandle_t	hModel;
+	Handle		hModel;
 	qbool		orgNameFailed = qfalse;
 	int	orgLoader = -1;
 	int	i;
@@ -839,7 +839,7 @@ R_LoadMD4(model_t *mod, void *buffer, const char *mod_name)
 ** RE_BeginRegistration
 */
 void
-RE_BeginRegistration(glconfig_t *glconfigOut)
+RE_BeginRegistration(Glconfig *glconfigOut)
 {
 
 	R_Init();
@@ -944,7 +944,7 @@ R_GetTag(mdvModel_t *mod, int frame, const char *_tagName)
  * R_LerpTag
  */
 int
-R_LerpTag(orientation_t *tag, qhandle_t handle, int startFrame, int endFrame,
+R_LerpTag(Orient *tag, Handle handle, int startFrame, int endFrame,
 	  float frac, const char *tagName)
 {
 	mdvTag_t	*start, *end;
@@ -992,7 +992,7 @@ R_LerpTag(orientation_t *tag, qhandle_t handle, int startFrame, int endFrame,
  * R_ModelBounds
  */
 void
-R_ModelBounds(qhandle_t handle, Vec3 mins, Vec3 maxs)
+R_ModelBounds(Handle handle, Vec3 mins, Vec3 maxs)
 {
 	model_t *model;
 

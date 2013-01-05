@@ -944,7 +944,7 @@ Key_Bind_f(void)
  * Writes lines containing "bind key value"
  */
 void
-Key_WriteBindings(fileHandle_t f)
+Key_WriteBindings(Fhandle f)
 {
 	int i;
 
@@ -1252,7 +1252,7 @@ CL_LoadConsoleHistory(void)
 {
 	char	*token, *text_p;
 	int	i, numChars, numLines = 0;
-	fileHandle_t f;
+	Fhandle f;
 
 	consoleSaveBufferSize = FS_FOpenFileRead(CONSOLE_HISTORY_FILE, &f,
 		qfalse);
@@ -1319,7 +1319,7 @@ CL_SaveConsoleHistory(void)
 {
 	int	i;
 	int	lineLength, saveBufferLength, additionalLength;
-	fileHandle_t f;
+	Fhandle f;
 
 	consoleSaveBuffer[ 0 ] = '\0';
 

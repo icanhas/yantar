@@ -36,7 +36,7 @@ typedef struct {
 	char	* name;
 	float	defaultvalue;
 	float	value;
-} configcvar_t;
+} configCvar;
 
 #define SAVE_NOOP	0
 #define SAVE_YES	1
@@ -181,7 +181,7 @@ typedef struct {
 	menuaction_s		showscores;
 	menuradiobutton_s	autoswitch;
 	menuaction_s		useitem;
-	playerInfo_t		playerinfo;
+	Playerinfo		playerinfo;
 	qbool			changesmade;
 	menuaction_s		chat;
 	menuaction_s		chat2;
@@ -297,7 +297,7 @@ static bind_t	g_bindings[] =
 	 -1,             -1,     -1},
 };
 
-static configcvar_t g_configcvars[] =
+static configCvar g_configcvars[] =
 {
 	{"cl_run",                      0,
 	 0},
@@ -386,7 +386,7 @@ static void
 Controls_InitCvars(void)
 {
 	int i;
-	configcvar_t * cvarptr;
+	configCvar * cvarptr;
 
 	cvarptr = g_configcvars;
 	for(i=0;; i++,cvarptr++){
@@ -411,7 +411,7 @@ Controls_InitCvars(void)
 static float
 Controls_GetCvarDefault(char* name)
 {
-	configcvar_t * cvarptr;
+	configCvar * cvarptr;
 	int i;
 
 	cvarptr = g_configcvars;
@@ -432,7 +432,7 @@ Controls_GetCvarDefault(char* name)
 static float
 Controls_GetCvarValue(char* name)
 {
-	configcvar_t * cvarptr;
+	configCvar * cvarptr;
 	int i;
 
 	cvarptr = g_configcvars;
@@ -963,7 +963,7 @@ Controls_SetDefaults(void)
 /*
  * Controls_MenuKey
  */
-static sfxHandle_t
+static Sfxhandle
 Controls_MenuKey(int key)
 {
 	int	id;
@@ -1192,7 +1192,7 @@ Controls_ActionEvent(void* ptr, int event)
 static void
 Controls_InitModel(void)
 {
-	memset(&s_controls.playerinfo, 0, sizeof(playerInfo_t));
+	memset(&s_controls.playerinfo, 0, sizeof(Playerinfo));
 
 	UI_PlayerInfo_SetModel(&s_controls.playerinfo,
 		UI_Cvar_VariableString("model"));
@@ -1206,7 +1206,7 @@ Controls_InitModel(void)
 static void
 Controls_InitWeapons(void)
 {
-	gitem_t * item;
+	Gitem * item;
 
 	for(item = bg_itemlist + 1; item->classname; item++){
 		if(item->giType != IT_PRIWEAP)

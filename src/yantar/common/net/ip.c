@@ -79,22 +79,22 @@ typedef int ioctlarg_t;
 static qbool usingSocks = qfalse;
 static int networkingEnabled = 0;
 
-static cvar_t	*net_enabled;
+static Cvar	*net_enabled;
 
-static cvar_t	*net_socksEnabled;
-static cvar_t	*net_socksServer;
-static cvar_t	*net_socksPort;
-static cvar_t	*net_socksUsername;
-static cvar_t	*net_socksPassword;
+static Cvar	*net_socksEnabled;
+static Cvar	*net_socksServer;
+static Cvar	*net_socksPort;
+static Cvar	*net_socksUsername;
+static Cvar	*net_socksPassword;
 
-static cvar_t	*net_ip;
-static cvar_t	*net_ip6;
-static cvar_t	*net_port;
-static cvar_t	*net_port6;
-static cvar_t	*net_mcast6addr;
-static cvar_t	*net_mcast6iface;
+static Cvar	*net_ip;
+static Cvar	*net_ip6;
+static Cvar	*net_port;
+static Cvar	*net_port6;
+static Cvar	*net_mcast6addr;
+static Cvar	*net_mcast6iface;
 
-static cvar_t	*net_dropsim;
+static Cvar	*net_dropsim;
 
 static struct sockaddr socksRelayAddr;
 
@@ -194,7 +194,7 @@ NET_ErrorString(void)
 }
 
 static void
-NetadrToSockadr(netadr_t *a, struct sockaddr *s)
+NetadrToSockadr(Netaddr *a, struct sockaddr *s)
 {
 	if(a->type == NA_BROADCAST){
 		((struct sockaddr_in*)s)->sin_family	= AF_INET;
@@ -220,7 +220,7 @@ NetadrToSockadr(netadr_t *a, struct sockaddr *s)
 
 
 static void
-SockadrToNetadr(struct sockaddr *s, netadr_t *a)
+SockadrToNetadr(struct sockaddr *s, Netaddr *a)
 {
 	if(s->sa_family == AF_INET){
 		a->type = NA_IP;
@@ -337,7 +337,7 @@ Sys_SockaddrToString(char *dest, int destlen, struct sockaddr *input)
  * Sys_StringToAdr
  */
 qbool
-Sys_StringToAdr(const char *s, netadr_t *a, netadrtype_t family)
+Sys_StringToAdr(const char *s, Netaddr *a, netadrtype_t family)
 {
 	struct sockaddr_storage sadr;
 	sa_family_t fam;
@@ -367,7 +367,7 @@ Sys_StringToAdr(const char *s, netadr_t *a, netadrtype_t family)
  * Compare without port, and up to the bit number given in netmask.
  */
 qbool
-NET_CompareBaseAdrMask(netadr_t a, netadr_t b, int netmask)
+NET_CompareBaseAdrMask(Netaddr a, Netaddr b, int netmask)
 {
 	byte	cmpmask, *addra, *addrb;
 	int	curbyte;
@@ -420,13 +420,13 @@ NET_CompareBaseAdrMask(netadr_t a, netadr_t b, int netmask)
  * Compares without the port
  */
 qbool
-NET_CompareBaseAdr(netadr_t a, netadr_t b)
+NET_CompareBaseAdr(Netaddr a, Netaddr b)
 {
 	return NET_CompareBaseAdrMask(a, b, -1);
 }
 
 const char      *
-NET_AdrToString(netadr_t a)
+NET_AdrToString(Netaddr a)
 {
 	static char s[NET_ADDRSTRMAXLEN];
 
@@ -446,7 +446,7 @@ NET_AdrToString(netadr_t a)
 }
 
 const char      *
-NET_AdrToStringwPort(netadr_t a)
+NET_AdrToStringwPort(Netaddr a)
 {
 	static char s[NET_ADDRSTRMAXLEN];
 
@@ -466,7 +466,7 @@ NET_AdrToStringwPort(netadr_t a)
 
 
 qbool
-NET_CompareAdr(netadr_t a, netadr_t b)
+NET_CompareAdr(Netaddr a, Netaddr b)
 {
 	if(!NET_CompareBaseAdr(a, b))
 		return qfalse;
@@ -482,7 +482,7 @@ NET_CompareAdr(netadr_t a, netadr_t b)
 
 
 qbool
-NET_IsLocalAddress(netadr_t adr)
+NET_IsLocalAddress(Netaddr adr)
 {
 	return adr.type == NA_LOOPBACK;
 }
@@ -499,7 +499,7 @@ int recvfromCount;
 #endif
 
 qbool
-NET_GetPacket(netadr_t *net_from, msg_t *net_message, fd_set *fdr)
+NET_GetPacket(Netaddr *net_from, Bitmsg *net_message, fd_set *fdr)
 {
 	int ret;
 	struct sockaddr_storage from;
@@ -634,7 +634,7 @@ static char socksBuf[4096];
  * Sys_SendPacket
  */
 void
-Sys_SendPacket(int length, const void *data, netadr_t to)
+Sys_SendPacket(int length, const void *data, Netaddr to)
 {
 	int ret = SOCKET_ERROR;
 	struct sockaddr_storage addr;
@@ -704,7 +704,7 @@ Sys_SendPacket(int length, const void *data, netadr_t to)
  * LAN clients will have their rate var ignored
  */
 qbool
-Sys_IsLANAddress(netadr_t adr)
+Sys_IsLANAddress(Netaddr adr)
 {
 	int index, run, addrsize;
 	qbool differed;
@@ -1622,8 +1622,8 @@ void
 NET_Event(fd_set *fdr)
 {
 	byte	bufData[MAX_MSGLEN + 1];
-	netadr_t from;
-	msg_t	netmsg;
+	Netaddr from;
+	Bitmsg	netmsg;
 
 	while(1){
 		MSG_Init(&netmsg, bufData, sizeof(bufData));

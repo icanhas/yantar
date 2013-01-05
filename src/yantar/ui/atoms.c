@@ -445,7 +445,7 @@ UI_ProportionalStringWidth(const char* str)
 static void
 UI_DrawProportionalString2(int x, int y, const char* str, Vec4 color,
 			   float sizeScale,
-			   qhandle_t charset)
+			   Handle charset)
 {
 	const char * s;
 	unsigned char ch;
@@ -820,7 +820,7 @@ UI_SetActiveMenu(uiMenuCommand_t menu)
 void
 UI_KeyEvent(int key, int down)
 {
-	sfxHandle_t s;
+	Sfxhandle s;
 
 	if(!uis.activemenu)
 		return;
@@ -1077,7 +1077,7 @@ UI_AdjustFrom640(float *x, float *y, float *w, float *h)
 void
 UI_DrawNamedPic(float x, float y, float width, float height, const char *picname)
 {
-	qhandle_t hShader;
+	Handle hShader;
 
 	hShader = trap_R_RegisterShaderNoMip(picname);
 	UI_AdjustFrom640(&x, &y, &width, &height);
@@ -1085,7 +1085,7 @@ UI_DrawNamedPic(float x, float y, float width, float height, const char *picname
 }
 
 void
-UI_DrawHandlePic(float x, float y, float w, float h, qhandle_t hShader)
+UI_DrawHandlePic(float x, float y, float w, float h, Handle hShader)
 {
 	float	s0;
 	float	s1;

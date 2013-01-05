@@ -14,7 +14,7 @@
  * CL_Netchan_TransmitNextFragment
  */
 qbool
-CL_Netchan_TransmitNextFragment(netchan_t *chan)
+CL_Netchan_TransmitNextFragment(Netchan *chan)
 {
 	if(chan->unsentFragments){
 		Netchan_TransmitNextFragment(chan);
@@ -28,7 +28,7 @@ CL_Netchan_TransmitNextFragment(netchan_t *chan)
  * CL_Netchan_Transmit
  */
 void
-CL_Netchan_Transmit(netchan_t *chan, msg_t* msg)
+CL_Netchan_Transmit(Netchan *chan, Bitmsg* msg)
 {
 	MSG_WriteByte(msg, clc_EOF);
 
@@ -45,7 +45,7 @@ CL_Netchan_Transmit(netchan_t *chan, msg_t* msg)
  * CL_Netchan_Process
  */
 qbool
-CL_Netchan_Process(netchan_t *chan, msg_t *msg)
+CL_Netchan_Process(Netchan *chan, Bitmsg *msg)
 {
 	int ret;
 

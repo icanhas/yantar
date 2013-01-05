@@ -1275,7 +1275,7 @@ script_t *
 LoadScriptFile(const char *filename)
 {
 #ifdef BOTLIB
-	fileHandle_t fp;
+	Fhandle fp;
 	char	pathname[MAX_QPATH];
 #else
 	FILE	*fp;

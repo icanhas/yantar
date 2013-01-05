@@ -1003,7 +1003,7 @@ RB_IQMSurfaceAnim(surfaceType_t *surface)
 }
 
 int
-R_IQMLerpTag(orientation_t *tag, iqmData_t *data,
+R_IQMLerpTag(Orient *tag, iqmData_t *data,
 	     int startFrame, int endFrame,
 	     float frac, const char *tagName)
 {

@@ -16,13 +16,13 @@
  *
  */
 void
-DeathmatchScoreboardMessage(gentity_t *ent)
+DeathmatchScoreboardMessage(Gentity *ent)
 {
 	char	entry[1024];
 	char	string[1400];
 	int	stringlength;
 	int	i, j;
-	gclient_t *cl;
+	gClient *cl;
 	int	numSorted, scoreFlags, accuracy, perfect;
 
 	/* send the latest information on all clients */
@@ -83,7 +83,7 @@ DeathmatchScoreboardMessage(gentity_t *ent)
  * Request current scoreboard information
  */
 void
-Cmd_Score_f(gentity_t *ent)
+Cmd_Score_f(Gentity *ent)
 {
 	DeathmatchScoreboardMessage(ent);
 }
@@ -94,7 +94,7 @@ Cmd_Score_f(gentity_t *ent)
  * CheatsOk
  */
 qbool
-CheatsOk(gentity_t *ent)
+CheatsOk(Gentity *ent)
 {
 	if(!g_cheats.integer){
 		trap_SendServerCommand(ent-g_entities,
@@ -148,9 +148,9 @@ ConcatArgs(int start)
  * Returns -1 if invalid
  */
 int
-ClientNumberFromString(gentity_t *to, char *s)
+ClientNumberFromString(Gentity *to, char *s)
 {
-	gclient_t *cl;
+	gClient *cl;
 	int	idnum;
 	char	cleanName[MAX_STRING_CHARS];
 
@@ -193,14 +193,14 @@ ClientNumberFromString(gentity_t *to, char *s)
  * Give items to a client
  */
 void
-Cmd_Give_f(gentity_t *ent)
+Cmd_Give_f(Gentity *ent)
 {
 	char	*name;
-	gitem_t *it;
+	Gitem *it;
 	int	i;
 	qbool		give_all;
-	gentity_t *it_ent;
-	trace_t		trace;
+	Gentity *it_ent;
+	Trace		trace;
 
 	if(!CheatsOk(ent))
 		return;
@@ -291,7 +291,7 @@ Cmd_Give_f(gentity_t *ent)
  * argv(0) god
  */
 void
-Cmd_God_f(gentity_t *ent)
+Cmd_God_f(Gentity *ent)
 {
 	char *msg;
 
@@ -316,7 +316,7 @@ Cmd_God_f(gentity_t *ent)
  * argv(0) notarget
  */
 void
-Cmd_Notarget_f(gentity_t *ent)
+Cmd_Notarget_f(Gentity *ent)
 {
 	char *msg;
 
@@ -339,7 +339,7 @@ Cmd_Notarget_f(gentity_t *ent)
  * argv(0) noclip
  */
 void
-Cmd_Noclip_f(gentity_t *ent)
+Cmd_Noclip_f(Gentity *ent)
 {
 	char *msg;
 
@@ -365,7 +365,7 @@ Cmd_Noclip_f(gentity_t *ent)
  * hide the scoreboard, and take a special screenshot
  */
 void
-Cmd_LevelShot_f(gentity_t *ent)
+Cmd_LevelShot_f(Gentity *ent)
 {
 	if(!ent->client->pers.localClient){
 		trap_SendServerCommand(
@@ -394,7 +394,7 @@ Cmd_LevelShot_f(gentity_t *ent)
  * Cmd_TeamTask_f
  */
 void
-Cmd_TeamTask_f(gentity_t *ent)
+Cmd_TeamTask_f(Gentity *ent)
 {
 	char	userinfo[MAX_INFO_STRING];
 	char	arg[MAX_TOKEN_CHARS];
@@ -417,7 +417,7 @@ Cmd_TeamTask_f(gentity_t *ent)
  * Cmd_Kill_f
  */
 void
-Cmd_Kill_f(gentity_t *ent)
+Cmd_Kill_f(Gentity *ent)
 {
 	if(ent->client->sess.sessionTeam == TEAM_SPECTATOR)
 		return;
@@ -434,7 +434,7 @@ Cmd_Kill_f(gentity_t *ent)
  * Let everyone know about a team change
  */
 void
-BroadcastTeamChange(gclient_t *client, int oldTeam)
+BroadcastTeamChange(gClient *client, int oldTeam)
 {
 	if(client->sess.sessionTeam == TEAM_RED)
 		trap_SendServerCommand(-1,
@@ -459,10 +459,10 @@ BroadcastTeamChange(gclient_t *client, int oldTeam)
  * SetTeam
  */
 void
-SetTeam(gentity_t *ent, char *s)
+SetTeam(Gentity *ent, char *s)
 {
 	int	team, oldTeam;
-	gclient_t *client;
+	gClient *client;
 	int	clientNum;
 	spectatorState_t specState;
 	int	specClient;
@@ -599,7 +599,7 @@ SetTeam(gentity_t *ent, char *s)
  * to free floating spectator mode
  */
 void
-StopFollowing(gentity_t *ent)
+StopFollowing(Gentity *ent)
 {
 	ent->client->ps.persistant[ PERS_TEAM ] = TEAM_SPECTATOR;
 	ent->client->sess.sessionTeam = TEAM_SPECTATOR;
@@ -613,7 +613,7 @@ StopFollowing(gentity_t *ent)
  * Cmd_Team_f
  */
 void
-Cmd_Team_f(gentity_t *ent)
+Cmd_Team_f(Gentity *ent)
 {
 	int	oldTeam;
 	char	s[MAX_TOKEN_CHARS];
@@ -665,7 +665,7 @@ Cmd_Team_f(gentity_t *ent)
  * Cmd_Follow_f
  */
 void
-Cmd_Follow_f(gentity_t *ent)
+Cmd_Follow_f(Gentity *ent)
 {
 	int	i;
 	char	arg[MAX_TOKEN_CHARS];
@@ -706,7 +706,7 @@ Cmd_Follow_f(gentity_t *ent)
  * Cmd_FollowCycle_f
  */
 void
-Cmd_FollowCycle_f(gentity_t *ent, int dir)
+Cmd_FollowCycle_f(Gentity *ent, int dir)
 {
 	int	clientnum;
 	int	original;
@@ -755,7 +755,7 @@ Cmd_FollowCycle_f(gentity_t *ent, int dir)
  */
 
 static void
-G_SayTo(gentity_t *ent, gentity_t *other, int mode, int color, const char *name,
+G_SayTo(Gentity *ent, Gentity *other, int mode, int color, const char *name,
 	const char *message)
 {
 	if(!other)
@@ -782,10 +782,10 @@ G_SayTo(gentity_t *ent, gentity_t *other, int mode, int color, const char *name,
 #define EC "\x19"
 
 void
-G_Say(gentity_t *ent, gentity_t *target, int mode, const char *chatText)
+G_Say(Gentity *ent, Gentity *target, int mode, const char *chatText)
 {
 	int	j;
-	gentity_t *other;
+	Gentity *other;
 	int	color;
 	char	name[64];
 	/* don't let text be too long for malicious reasons */
@@ -863,7 +863,7 @@ G_Say(gentity_t *ent, gentity_t *target, int mode, const char *chatText)
  * Cmd_Say_f
  */
 static void
-Cmd_Say_f(gentity_t *ent, int mode, qbool arg0)
+Cmd_Say_f(Gentity *ent, int mode, qbool arg0)
 {
 	char *p;
 
@@ -882,10 +882,10 @@ Cmd_Say_f(gentity_t *ent, int mode, qbool arg0)
  * Cmd_Tell_f
  */
 static void
-Cmd_Tell_f(gentity_t *ent)
+Cmd_Tell_f(Gentity *ent)
 {
 	int targetNum;
-	gentity_t	*target;
+	Gentity	*target;
 	char		*p;
 	char		arg[MAX_TOKEN_CHARS];
 
@@ -915,7 +915,7 @@ Cmd_Tell_f(gentity_t *ent)
 
 
 static void
-G_VoiceTo(gentity_t *ent, gentity_t *other, int mode, const char *id,
+G_VoiceTo(Gentity *ent, Gentity *other, int mode, const char *id,
 	  qbool voiceonly)
 {
 	int color;
@@ -949,11 +949,11 @@ G_VoiceTo(gentity_t *ent, gentity_t *other, int mode, const char *id,
 }
 
 void
-G_Voice(gentity_t *ent, gentity_t *target, int mode, const char *id,
+G_Voice(Gentity *ent, Gentity *target, int mode, const char *id,
 	qbool voiceonly)
 {
 	int j;
-	gentity_t *other;
+	Gentity *other;
 
 	if(g_gametype.integer < GT_TEAM && mode == SAY_TEAM)
 		mode = SAY_ALL;
@@ -978,7 +978,7 @@ G_Voice(gentity_t *ent, gentity_t *target, int mode, const char *id,
  * Cmd_Voice_f
  */
 static void
-Cmd_Voice_f(gentity_t *ent, int mode, qbool arg0, qbool voiceonly)
+Cmd_Voice_f(Gentity *ent, int mode, qbool arg0, qbool voiceonly)
 {
 	char *p;
 
@@ -997,10 +997,10 @@ Cmd_Voice_f(gentity_t *ent, int mode, qbool arg0, qbool voiceonly)
  * Cmd_VoiceTell_f
  */
 static void
-Cmd_VoiceTell_f(gentity_t *ent, qbool voiceonly)
+Cmd_VoiceTell_f(Gentity *ent, qbool voiceonly)
 {
 	int targetNum;
-	gentity_t	*target;
+	Gentity	*target;
 	char		*id;
 	char		arg[MAX_TOKEN_CHARS];
 
@@ -1032,9 +1032,9 @@ Cmd_VoiceTell_f(gentity_t *ent, qbool voiceonly)
  * this doesn't actually do anything at the moment
  */
 static void
-Cmd_VoiceTaunt_f(gentity_t *ent)
+Cmd_VoiceTaunt_f(Gentity *ent)
 {
-	gentity_t *who;
+	Gentity *who;
 	int i;
 
 	if(!ent->client)
@@ -1093,7 +1093,7 @@ static char *gc_orders[] = {
 };
 
 void
-Cmd_GameCommand_f(gentity_t *ent)
+Cmd_GameCommand_f(Gentity *ent)
 {
 	int	player;
 	int	order;
@@ -1116,7 +1116,7 @@ Cmd_GameCommand_f(gentity_t *ent)
  * Cmd_Where_f
  */
 void
-Cmd_Where_f(gentity_t *ent)
+Cmd_Where_f(Gentity *ent)
 {
 	trap_SendServerCommand(ent-g_entities,
 		va("print \"%s\n\"", vtos(ent->r.currentOrigin)));
@@ -1137,7 +1137,7 @@ static const char *gameNames[] = {
  * Cmd_CallVote_f
  */
 void
-Cmd_CallVote_f(gentity_t *ent)
+Cmd_CallVote_f(Gentity *ent)
 {
 	char	* c;
 	int	i;
@@ -1286,7 +1286,7 @@ Cmd_CallVote_f(gentity_t *ent)
  * Cmd_Vote_f
  */
 void
-Cmd_Vote_f(gentity_t *ent)
+Cmd_Vote_f(Gentity *ent)
 {
 	char msg[64];
 
@@ -1329,7 +1329,7 @@ Cmd_Vote_f(gentity_t *ent)
  * Cmd_CallTeamVote_f
  */
 void
-Cmd_CallTeamVote_f(gentity_t *ent)
+Cmd_CallTeamVote_f(Gentity *ent)
 {
 	int	i, team, cs_offset;
 	char	arg1[MAX_STRING_TOKENS];
@@ -1485,7 +1485,7 @@ Cmd_CallTeamVote_f(gentity_t *ent)
  * Cmd_TeamVote_f
  */
 void
-Cmd_TeamVote_f(gentity_t *ent)
+Cmd_TeamVote_f(Gentity *ent)
 {
 	int	team, cs_offset;
 	char	msg[64];
@@ -1540,7 +1540,7 @@ Cmd_TeamVote_f(gentity_t *ent)
  * Cmd_SetViewpos_f
  */
 void
-Cmd_SetViewpos_f(gentity_t *ent)
+Cmd_SetViewpos_f(Gentity *ent)
 {
 	Vec3	origin, angles;
 	char	buffer[MAX_TOKEN_CHARS];
@@ -1575,7 +1575,7 @@ Cmd_SetViewpos_f(gentity_t *ent)
  * Cmd_Stats_f
  */
 void
-Cmd_Stats_f(gentity_t *ent)
+Cmd_Stats_f(Gentity *ent)
 {
 /*
  *      int max, n, i;
@@ -1599,7 +1599,7 @@ Cmd_Stats_f(gentity_t *ent)
 void
 ClientCommand(int clientNum)
 {
-	gentity_t *ent;
+	Gentity *ent;
 	char cmd[MAX_TOKEN_CHARS];
 
 	ent = g_entities + clientNum;

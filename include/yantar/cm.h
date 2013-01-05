@@ -10,22 +10,22 @@
 void		CM_LoadMap(const char *name, qbool clientload,
 			   int *checksum);
 void		CM_ClearMap(void);
-clipHandle_t	CM_InlineModel(int index);	/* 0 = world, 1 + are bmodels */
-clipHandle_t	CM_TempBoxModel(const Vec3 mins, const Vec3 maxs, int capsule);
-void		CM_ModelBounds(clipHandle_t model, Vec3 mins, Vec3 maxs);
+Cliphandle	CM_InlineModel(int index);	/* 0 = world, 1 + are bmodels */
+Cliphandle	CM_TempBoxModel(const Vec3 mins, const Vec3 maxs, int capsule);
+void		CM_ModelBounds(Cliphandle model, Vec3 mins, Vec3 maxs);
 int		CM_NumClusters(void);
 int		CM_NumInlineModels(void);
 char*	CM_EntityString(void);
 /* returns an ORed contents mask */
-int		CM_PointContents(const Vec3 p, clipHandle_t model);
-int		CM_TransformedPointContents(const Vec3 p, clipHandle_t model,
+int		CM_PointContents(const Vec3 p, Cliphandle model);
+int		CM_TransformedPointContents(const Vec3 p, Cliphandle model,
 			const Vec3 origin, const Vec3 angles);
-void		CM_BoxTrace(trace_t *results, const Vec3 start,
+void		CM_BoxTrace(Trace *results, const Vec3 start,
 			const Vec3 end, Vec3 mins, Vec3 maxs,
-			clipHandle_t model, int brushmask, int capsule);
-void		CM_TransformedBoxTrace(trace_t *results, const Vec3 start,
+			Cliphandle model, int brushmask, int capsule);
+void		CM_TransformedBoxTrace(Trace *results, const Vec3 start,
 			const Vec3 end, Vec3 mins, Vec3 maxs,
-			clipHandle_t model, int brushmask,
+			Cliphandle model, int brushmask,
 			const Vec3 origin, const Vec3 angles,
 			int capsule);
 byte*	CM_ClusterPVS(int cluster);
@@ -40,14 +40,14 @@ void		CM_AdjustAreaPortalState(int area1, int area2, qbool open);
 qbool	CM_AreasConnected(int area1, int area2);
 int		CM_WriteAreaBits(byte *buffer, int area);
 /* cm/tag.c */
-int		CM_LerpTag(orientation_t *tag,  clipHandle_t model,
+int		CM_LerpTag(Orient *tag,  Cliphandle model,
 			int startFrame, int endFrame, float frac,
 			const char *tagName);
 /* cm/marks.c */
 int		CM_MarkFragments(int numPoints, const Vec3 *points,
 			const Vec3 projection, int maxPoints,
 			Vec3 pointBuffer, int maxFragments,
-			markFragment_t *fragmentBuffer);
+			Markfrag *fragmentBuffer);
 /* cm/patch.c */
 void		CM_DrawDebugSurface(void (*drawPoly)(int color, int numPoints,
 			float *points));

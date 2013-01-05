@@ -34,7 +34,7 @@
 /*
  * msg.c
  */
-typedef struct msg_s msg_t;
+typedef struct msg_s Bitmsg;
 struct usercmd_s;
 struct entityState_s;
 struct playerState_s;
@@ -50,63 +50,63 @@ struct msg_s {
 	int		bit;	/* for bitwise reads and writes */
 };
 
-void MSG_Init(msg_t *buf, byte *data, int length);
-void MSG_InitOOB(msg_t *buf, byte *data, int length);
-void MSG_Clear(msg_t *buf);
-void MSG_WriteData(msg_t *buf, const void *data, int length);
-void MSG_Bitstream(msg_t *buf);
+void MSG_Init(Bitmsg *buf, byte *data, int length);
+void MSG_InitOOB(Bitmsg *buf, byte *data, int length);
+void MSG_Clear(Bitmsg *buf);
+void MSG_WriteData(Bitmsg *buf, const void *data, int length);
+void MSG_Bitstream(Bitmsg *buf);
 
 /* TTimo
- * copy a msg_t in case we need to store it as is for a bit
- * (as I needed this to keep an msg_t from a static var for later use)
+ * copy a Bitmsg in case we need to store it as is for a bit
+ * (as I needed this to keep an Bitmsg from a static var for later use)
  * sets data buffer as MSG_Init does prior to do the copy */
-void MSG_Copy(msg_t *buf, byte *data, int length, msg_t *src);
-void MSG_WriteBits(msg_t *msg, int value, int bits);
+void MSG_Copy(Bitmsg *buf, byte *data, int length, Bitmsg *src);
+void MSG_WriteBits(Bitmsg *msg, int value, int bits);
 
-void MSG_WriteChar(msg_t *sb, int c);
-void MSG_WriteByte(msg_t *sb, int c);
-void MSG_WriteShort(msg_t *sb, int c);
-void MSG_WriteLong(msg_t *sb, int c);
-void MSG_WriteFloat(msg_t *sb, float f);
-void MSG_WriteString(msg_t *sb, const char *s);
-void MSG_WriteBigString(msg_t *sb, const char *s);
-void MSG_WriteAngle16(msg_t *sb, float f);
+void MSG_WriteChar(Bitmsg *sb, int c);
+void MSG_WriteByte(Bitmsg *sb, int c);
+void MSG_WriteShort(Bitmsg *sb, int c);
+void MSG_WriteLong(Bitmsg *sb, int c);
+void MSG_WriteFloat(Bitmsg *sb, float f);
+void MSG_WriteString(Bitmsg *sb, const char *s);
+void MSG_WriteBigString(Bitmsg *sb, const char *s);
+void MSG_WriteAngle16(Bitmsg *sb, float f);
 int MSG_HashKey(const char *string, int maxlen);
 
-void MSG_BeginReading(msg_t *sb);
-void MSG_BeginReadingOOB(msg_t *sb);
+void MSG_BeginReading(Bitmsg *sb);
+void MSG_BeginReadingOOB(Bitmsg *sb);
 
-int MSG_ReadBits(msg_t *msg, int bits);
+int MSG_ReadBits(Bitmsg *msg, int bits);
 
-int MSG_ReadChar(msg_t *sb);
-int MSG_ReadByte(msg_t *sb);
-int MSG_ReadShort(msg_t *sb);
-int MSG_ReadLong(msg_t *sb);
-float MSG_ReadFloat(msg_t *sb);
-char* MSG_ReadString(msg_t *sb);
-char* MSG_ReadBigString(msg_t *sb);
-char* MSG_ReadStringLine(msg_t *sb);
-float MSG_ReadAngle16(msg_t *sb);
-void MSG_ReadData(msg_t *sb, void *buffer, int size);
-int MSG_LookaheadByte(msg_t *msg);
+int MSG_ReadChar(Bitmsg *sb);
+int MSG_ReadByte(Bitmsg *sb);
+int MSG_ReadShort(Bitmsg *sb);
+int MSG_ReadLong(Bitmsg *sb);
+float MSG_ReadFloat(Bitmsg *sb);
+char* MSG_ReadString(Bitmsg *sb);
+char* MSG_ReadBigString(Bitmsg *sb);
+char* MSG_ReadStringLine(Bitmsg *sb);
+float MSG_ReadAngle16(Bitmsg *sb);
+void MSG_ReadData(Bitmsg *sb, void *buffer, int size);
+int MSG_LookaheadByte(Bitmsg *msg);
 
-void MSG_WriteDeltaUsercmd(msg_t *msg, struct usercmd_s *from,
+void MSG_WriteDeltaUsercmd(Bitmsg *msg, struct usercmd_s *from,
 			 struct usercmd_s *to);
-void MSG_ReadDeltaUsercmd(msg_t *msg, struct usercmd_s *from,
+void MSG_ReadDeltaUsercmd(Bitmsg *msg, struct usercmd_s *from,
 			 struct usercmd_s *to);
 
-void MSG_WriteDeltaUsercmdKey(msg_t *msg, int key, usercmd_t *from,
-			 usercmd_t *to);
-void MSG_ReadDeltaUsercmdKey(msg_t *msg, int key, usercmd_t *from, usercmd_t *to);
+void MSG_WriteDeltaUsercmdKey(Bitmsg *msg, int key, Usrcmd *from,
+			 Usrcmd *to);
+void MSG_ReadDeltaUsercmdKey(Bitmsg *msg, int key, Usrcmd *from, Usrcmd *to);
 
-void MSG_WriteDeltaEntity(msg_t *msg, struct entityState_s *from,
+void MSG_WriteDeltaEntity(Bitmsg *msg, struct entityState_s *from,
 			 struct entityState_s *to, qbool force);
-void MSG_ReadDeltaEntity(msg_t *msg, entityState_t *from, entityState_t *to,
+void MSG_ReadDeltaEntity(Bitmsg *msg, Entstate *from, Entstate *to,
 			 int number);
 
-void MSG_WriteDeltaPlayerstate(msg_t *msg, struct playerState_s *from,
+void MSG_WriteDeltaPlayerstate(Bitmsg *msg, struct playerState_s *from,
 			 struct playerState_s *to);
-void MSG_ReadDeltaPlayerstate(msg_t *msg, struct playerState_s *from,
+void MSG_ReadDeltaPlayerstate(Bitmsg *msg, struct playerState_s *from,
 			 struct playerState_s *to);
 
 /*
@@ -128,7 +128,7 @@ enum {
 								 * and ping estimation */
 	PACKET_MASK		 	= (PACKET_BACKUP-1),
 
-	MAX_PACKET_USERCMDS	= 32,	/* max number of usercmd_t in a packet */
+	MAX_PACKET_USERCMDS	= 32,	/* max number of Usrcmd in a packet */
 
 	#define PORT_ANY		-1	/* (#def'd because sign is implementation-defined) */
 
@@ -146,8 +146,8 @@ enum {
 
 typedef enum netadrtype_e netadrtype_t;
 typedef enum netsrc_e netsrc_t;
-typedef struct netadr_s netadr_t;
-typedef struct netchan_s netchan_t;
+typedef struct netadr_s Netaddr;
+typedef struct netchan_s Netchan;
 
 enum netadrtype_e {
 	NA_BAD = 0,	/* an address lookup failed */
@@ -181,21 +181,21 @@ void NET_Restart_f(void);
 void NET_Config(qbool enableNetworking);
 void NET_FlushPacketQueue(void);
 void NET_SendPacket(netsrc_t sock, int length, const void *data,
-			 netadr_t to);
-void QDECL NET_OutOfBandPrint(netsrc_t net_socket, netadr_t adr,
+			 Netaddr to);
+void QDECL NET_OutOfBandPrint(netsrc_t net_socket, Netaddr adr,
 			 const char *format,
 			 ...) __attribute__ ((format (printf, 3, 4)));
-void QDECL NET_OutOfBandData(netsrc_t sock, netadr_t adr, byte *format, int len);
+void QDECL NET_OutOfBandData(netsrc_t sock, Netaddr adr, byte *format, int len);
 
-qbool NET_CompareAdr(netadr_t a, netadr_t b);
-qbool NET_CompareBaseAdrMask(netadr_t a, netadr_t b, int netmask);
-qbool NET_CompareBaseAdr(netadr_t a, netadr_t b);
-qbool NET_IsLocalAddress(netadr_t adr);
-const char* NET_AdrToString(netadr_t a);
-const char* NET_AdrToStringwPort(netadr_t a);
-int NET_StringToAdr(const char *s, netadr_t *a, netadrtype_t family);
-qbool NET_GetLoopPacket(netsrc_t sock, netadr_t *net_from,
-			msg_t *net_message);
+qbool NET_CompareAdr(Netaddr a, Netaddr b);
+qbool NET_CompareBaseAdrMask(Netaddr a, Netaddr b, int netmask);
+qbool NET_CompareBaseAdr(Netaddr a, Netaddr b);
+qbool NET_IsLocalAddress(Netaddr adr);
+const char* NET_AdrToString(Netaddr a);
+const char* NET_AdrToStringwPort(Netaddr a);
+int NET_StringToAdr(const char *s, Netaddr *a, netadrtype_t family);
+qbool NET_GetLoopPacket(netsrc_t sock, Netaddr *net_from,
+			Bitmsg *net_message);
 void NET_JoinMulticast6(void);
 void NET_LeaveMulticast6(void);
 void NET_Sleep(int msec);
@@ -212,7 +212,7 @@ struct netchan_s {
 
 	int		dropped;	/* between last packet and previous */
 
-	netadr_t	remoteAddress;
+	Netaddr	remoteAddress;
 	int		qport;	/* qport value to write when transmitting */
 
 	/* sequencing variables */
@@ -238,12 +238,12 @@ struct netchan_s {
 };
 
 void Netchan_Init(int qport);
-void Netchan_Setup(netsrc_t sock, netchan_t *chan, netadr_t adr, int qport,
+void Netchan_Setup(netsrc_t sock, Netchan *chan, Netaddr adr, int qport,
 		 int challenge,
 		 qbool compat);
-void Netchan_Transmit(netchan_t *chan, int length, const byte *data);
-void Netchan_TransmitNextFragment(netchan_t *chan);
-qbool Netchan_Process(netchan_t *chan, msg_t *msg);
+void Netchan_Transmit(Netchan *chan, int length, const byte *data);
+void Netchan_TransmitNextFragment(Netchan *chan);
+qbool Netchan_Process(Netchan *chan, Bitmsg *msg);
 
 
 /*
@@ -310,8 +310,8 @@ enum {
 enum {
 	clc_bad,
 	clc_nop,
-	clc_move,		/* [[usercmd_t] */
-	clc_moveNoDelta,	/* [[usercmd_t] */
+	clc_move,		/* [[Usrcmd] */
+	clc_moveNoDelta,	/* [[Usrcmd] */
 	clc_clientCommand,	/* [string] message */
 	clc_EOF,
 	/* new commands, supported only by ioquake3 protocol but not legacy */
@@ -323,7 +323,7 @@ enum {
  * VIRTUAL MACHINE
  */
 
-typedef struct vm_s vm_t;
+typedef struct vm_s Vm;
 typedef enum vmInterpret_e vmInterpret_t;
 typedef enum sharedTraps_e sharedTraps_t;
 
@@ -335,23 +335,23 @@ enum vmInterpret_e {
 
 void VM_Init(void);
 /* module should be bare: "cgame", not "cgame.dll" or "vm/cgame.qvm" */
-vm_t* VM_Create(const char *module, intptr_t (*systemCalls)(intptr_t *),
+Vm* VM_Create(const char *module, intptr_t (*systemCalls)(intptr_t *),
  		vmInterpret_t interpret);
-void VM_Free(vm_t *vm);
+void VM_Free(Vm *vm);
 void VM_Clear(void);
 void VM_Forced_Unload_Start(void);
 void VM_Forced_Unload_Done(void);
-vm_t* VM_Restart(vm_t *vm, qbool unpure);
-intptr_t QDECL VM_Call(vm_t *vm, int callNum, ...);
+Vm* VM_Restart(Vm *vm, qbool unpure);
+intptr_t QDECL VM_Call(Vm *vm, int callNum, ...);
 void VM_Debug(int level);
 void* VM_ArgPtr(intptr_t intValue);
-void* VM_ExplicitArgPtr(vm_t *vm, intptr_t intValue);
+void* VM_ExplicitArgPtr(Vm *vm, intptr_t intValue);
 
 #define VMA(x) VM_ArgPtr(args[x])
 static ID_INLINE float
 _vmf(intptr_t x)
 {
-	floatint_t fi;
+	Flint fi;
 	fi.i = (int)x;
 	return fi.f;
 }
@@ -415,15 +415,15 @@ void Cmd_ExecuteString(const char *text);
  * CVAR
  */
 
-cvar_t* Cvar_Get(const char *var_name, const char *value, int flags);
+Cvar* Cvar_Get(const char *var_name, const char *value, int flags);
 /* basically a slightly modified Cvar_Get for the interpreted modules */
-void Cvar_Register(vmCvar_t *vmCvar, const char *varName,
+void Cvar_Register(Vmcvar *vmCvar, const char *varName,
  		const char *defaultValue,
  		int flags);
-void Cvar_Update(vmCvar_t *vmCvar);
+void Cvar_Update(Vmcvar *vmCvar);
 void Cvar_SetDesc(const char *name, const char *desc);
 void Cvar_Set(const char *var_name, const char *value);
-cvar_t* Cvar_Set2(const char *var_name, const char *value, qbool force);
+Cvar* Cvar_Set2(const char *var_name, const char *value, qbool force);
 void Cvar_SetSafe(const char *var_name, const char *value);
 void Cvar_SetLatched(const char *var_name, const char *value);
 void Cvar_SetValue(const char *var_name, float value);
@@ -440,12 +440,12 @@ void Cvar_Reset(const char *var_name);
 void Cvar_ForceReset(const char *var_name);
 void Cvar_SetCheatState(void);
 qbool Cvar_Command(void);
-void Cvar_WriteVariables(fileHandle_t f);
+void Cvar_WriteVariables(Fhandle f);
 void Cvar_Init(void);
 char* Cvar_InfoString(int bit);
 char* Cvar_InfoString_Big(int bit);
 void Cvar_InfoStringBuffer(int bit, char *buff, int buffsize);
-void Cvar_CheckRange(cvar_t *cv, float minVal, float maxVal,
+void Cvar_CheckRange(Cvar *cv, float minVal, float maxVal,
  qbool shouldBeIntegral);
 void Cvar_Restart(qbool unsetVM);
 void Cvar_Restart_f(void);
@@ -505,33 +505,33 @@ int FS_GetFileList(const char *path, const char *extension,
 		char *listbuf,
 		int bufsize);
 int FS_GetModList(char *listbuf, int bufsize);
-fileHandle_t FS_FOpenFileWrite(const char *qpath);
-fileHandle_t FS_FOpenFileAppend(const char *filename);
-fileHandle_t FS_FCreateOpenPipeFile(const char *filename);
-fileHandle_t FS_SV_FOpenFileWrite(const char *filename);
-long FS_SV_FOpenFileRead(const char *filename, fileHandle_t *fp);
+Fhandle FS_FOpenFileWrite(const char *qpath);
+Fhandle FS_FOpenFileAppend(const char *filename);
+Fhandle FS_FCreateOpenPipeFile(const char *filename);
+Fhandle FS_SV_FOpenFileWrite(const char *filename);
+long FS_SV_FOpenFileRead(const char *filename, Fhandle *fp);
 void FS_SV_Rename(const char *from, const char *to);
-long FS_FOpenFileRead(const char *qpath, fileHandle_t *file,
+long FS_FOpenFileRead(const char *qpath, Fhandle *file,
 		qbool uniqueFILE);
 int FS_FileIsInPAK(const char *filename, int *pChecksum);
-int FS_Write(const void *buffer, int len, fileHandle_t f);
-int FS_Read2(void *buffer, int len, fileHandle_t f);
-int FS_Read(void *buffer, int len, fileHandle_t f);
-void FS_FCloseFile(fileHandle_t f);
+int FS_Write(const void *buffer, int len, Fhandle f);
+int FS_Read2(void *buffer, int len, Fhandle f);
+int FS_Read(void *buffer, int len, Fhandle f);
+void FS_FCloseFile(Fhandle f);
 long FS_ReadFileDir(const char *qpath, void *searchPath, qbool unpure,
 		void **buffer);
 long FS_ReadFile(const char *qpath, void **buffer);
-void FS_ForceFlush(fileHandle_t f);
+void FS_ForceFlush(Fhandle f);
 void FS_FreeFile(void *buffer);
 void FS_WriteFile(const char *qpath, const void *buffer, int size);
-long FS_filelength(fileHandle_t f);
-int FS_FTell(fileHandle_t f);
-void FS_Flush(fileHandle_t f);
-void QDECL FS_Printf(fileHandle_t f, const char *fmt,
+long FS_filelength(Fhandle f);
+int FS_FTell(Fhandle f);
+void FS_Flush(Fhandle f);
+void QDECL FS_Printf(Fhandle f, const char *fmt,
 			...) __attribute__ ((format (printf, 2, 3)));
-int FS_FOpenFileByMode(const char *qpath, fileHandle_t *f,
- 			 fsMode_t mode);
-int FS_Seek(fileHandle_t f, long offset, int origin);
+int FS_FOpenFileByMode(const char *qpath, Fhandle *f,
+ 			 Fsmode mode);
+int FS_Seek(Fhandle f, long offset, int origin);
 qbool FS_FilenameCompare(const char *s1, const char *s2);
 const char* FS_LoadedPakNames(void);
 const char* FS_LoadedPakChecksums(void);
@@ -643,41 +643,41 @@ int 	Q_FilterPath(char *filter, char *name,
 					int casesensitive);
 int 	Com_RealTime(qtime_t *qtime);
 qbool Com_Insafemode(void);
-void 	Com_Runserverpacket(netadr_t *evFrom, msg_t *buf);
+void 	Com_Runserverpacket(Netaddr *evFrom, Bitmsg *buf);
 qbool Com_Isvoiptarget(uint8_t *voipTargets, int voipTargetsSize,
 			int clientNum);
 void 	Com_Startupvar(const char *match);
 
-extern cvar_t	*com_developer;
-extern cvar_t	*com_dedicated;
-extern cvar_t	*com_speeds;
-extern cvar_t	*com_timescale;
-extern cvar_t	*com_sv_running;
-extern cvar_t	*com_cl_running;
-extern cvar_t	*com_version;
-extern cvar_t	*com_blood;
-extern cvar_t	*com_buildScript;	/* for building release pak files */
-extern cvar_t	*com_journal;
-extern cvar_t	*com_cameraMode;
-extern cvar_t	*com_ansiColor;
-extern cvar_t	*com_unfocused;
-extern cvar_t	*com_maxfpsUnfocused;
-extern cvar_t	*com_minimized;
-extern cvar_t	*com_maxfpsMinimized;
-extern cvar_t	*com_altivec;
-extern cvar_t	*com_standalone;
-extern cvar_t	*com_basegame;
-extern cvar_t	*com_homepath;
+extern Cvar	*com_developer;
+extern Cvar	*com_dedicated;
+extern Cvar	*com_speeds;
+extern Cvar	*com_timescale;
+extern Cvar	*com_sv_running;
+extern Cvar	*com_cl_running;
+extern Cvar	*com_version;
+extern Cvar	*com_blood;
+extern Cvar	*com_buildScript;	/* for building release pak files */
+extern Cvar	*com_journal;
+extern Cvar	*com_cameraMode;
+extern Cvar	*com_ansiColor;
+extern Cvar	*com_unfocused;
+extern Cvar	*com_maxfpsUnfocused;
+extern Cvar	*com_minimized;
+extern Cvar	*com_maxfpsMinimized;
+extern Cvar	*com_altivec;
+extern Cvar	*com_standalone;
+extern Cvar	*com_basegame;
+extern Cvar	*com_homepath;
 
 /* both client and server must agree to pause */
-extern cvar_t	*cl_paused;
-extern cvar_t	*sv_paused;
+extern Cvar	*cl_paused;
+extern Cvar	*sv_paused;
 
-extern cvar_t	*cl_packetdelay;
-extern cvar_t	*sv_packetdelay;
+extern Cvar	*cl_packetdelay;
+extern Cvar	*sv_packetdelay;
 
-extern cvar_t	*com_gamename;
-extern cvar_t	*com_protocol;
+extern Cvar	*com_gamename;
+extern Cvar	*com_protocol;
 
 /* com_speeds times */
 extern int	time_game;
@@ -689,8 +689,8 @@ extern int	com_frameTime;
 extern qbool com_errorEntered;
 extern qbool com_fullyInitialized;
 
-extern fileHandle_t	com_journalFile;
-extern fileHandle_t	com_journalDataFile;
+extern Fhandle	com_journalFile;
+extern Fhandle	com_journalDataFile;
 
 typedef enum {
 	TAG_FREE,
@@ -699,7 +699,7 @@ typedef enum {
 	TAG_RENDERER,
 	TAG_SMALL,
 	TAG_STATIC
-} memtag_t;
+} Memtag;
 
 #if defined(_DEBUG) && !defined(BSPC)
 	#define ZONE_DEBUG
@@ -761,7 +761,7 @@ void CL_KeyEvent(int key, qbool down, unsigned time);
 void CL_CharEvent(int key);
 void CL_MouseEvent(int dx, int dy, int time);
 void CL_JoystickEvent(int axis, int value, int time);
-void CL_PacketEvent(netadr_t from, msg_t *msg);
+void CL_PacketEvent(Netaddr from, Bitmsg *msg);
 void CL_ConsolePrint(char *text);
 /* do a screen update before starting to load a map
  * when the server is going to load a new map, the entire hunk
@@ -785,7 +785,7 @@ void CL_Snd_Shutdown(void);
 /* for keyname autocompletion */
 void Key_KeynameCompletion(void (*callback)(const char *s));
 /* for writing the config files */
-void Key_WriteBindings(fileHandle_t f);
+void Key_WriteBindings(Fhandle f);
 /* call before filesystem access */
 void S_ClearSoundBuffer(void);
 
@@ -800,7 +800,7 @@ enum { AVI_LINE_PADDING = 4 };
 void SV_Init(void);
 void SV_Shutdown(char *finalmsg);
 void SV_Frame(int msec);
-void SV_PacketEvent(netadr_t from, msg_t *msg);
+void SV_PacketEvent(Netaddr from, Bitmsg *msg);
 int SV_FrameMsec(void);
 qbool SV_GameCommand(void);
 int SV_SendQueuedPackets(void);
@@ -864,10 +864,10 @@ qbool Sys_RandomBytes(byte *string, int len);
 void 	Sys_DisplaySystemConsole(qbool show);
 cpuFeatures_t Sys_GetProcessorFeatures(void);
 void 	Sys_SetErrorText(const char *text);
-void 	Sys_SendPacket(int length, const void *data, netadr_t to);
+void 	Sys_SendPacket(int length, const void *data, Netaddr to);
 /* Does NOT parse port numbers, only base addresses. */
-qbool Sys_StringToAdr(const char *s, netadr_t *a, netadrtype_t family);
-qbool Sys_IsLANAddress(netadr_t adr);
+qbool Sys_StringToAdr(const char *s, Netaddr *a, netadrtype_t family);
+qbool Sys_IsLANAddress(Netaddr adr);
 void 	Sys_ShowIP(void);
 qbool Sys_Mkdir(const char *path);
 FILE* Sys_Mkfifo(const char *ospath);
@@ -926,21 +926,21 @@ typedef struct {
 
 	node_t	nodeList[768];
 	node_t	* nodePtrs[768];
-} huff_t;
+} Huff;
 
 typedef struct {
-	huff_t	compressor;
-	huff_t	decompressor;
-} huffman_t;
+	Huff	compressor;
+	Huff	decompressor;
+} Huffman;
 
-void Huff_Compress(msg_t *buf, int offset);
-void Huff_Decompress(msg_t *buf, int offset);
-void Huff_Init(huffman_t *huff);
-void Huff_addRef(huff_t* huff, byte ch);
+void Huff_Compress(Bitmsg *buf, int offset);
+void Huff_Decompress(Bitmsg *buf, int offset);
+void Huff_Init(Huffman *huff);
+void Huff_addRef(Huff* huff, byte ch);
 int Huff_Receive(node_t *node, int *ch, byte *fin);
-void Huff_transmit(huff_t *huff, int ch, byte *fout);
+void Huff_transmit(Huff *huff, int ch, byte *fout);
 void Huff_offsetReceive(node_t *node, int *ch, byte *fin, int *offset);
-void Huff_offsetTransmit(huff_t *huff, int ch, byte *fout, int *offset);
+void Huff_offsetTransmit(Huff *huff, int ch, byte *fout, int *offset);
 void Huff_putBit(int bit, byte *fout, int *offset);
 int Huff_getBit(byte *fout, int *offset);
 
@@ -948,7 +948,7 @@ int Huff_getBit(byte *fout, int *offset);
 int Huff_getBloc(void);
 void Huff_setBloc(int _bloc);
 
-extern huffman_t clientHuffTables;
+extern Huffman clientHuffTables;
 
 enum {
 	SV_ENCODE_START 	= 4,

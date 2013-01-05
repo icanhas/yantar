@@ -43,11 +43,11 @@ typedef enum {
 
 #define SP_PODIUM_MODEL Pobjectmodels "/podium/podium4.md3"
 
-typedef struct gentity_s gentity_t;
-typedef struct gclient_s gclient_t;
+typedef struct gentity_s Gentity;
+typedef struct gclient_s gClient;
 
 struct gentity_s {
-	entityState_t	s;	/* communicated by server to clients */
+	Entstate	s;	/* communicated by server to clients */
 	entityShared_t	r;	/* shared by both the server system and game */
 
 	/* DO NOT MODIFY ANYTHING ABOVE THIS, THE SERVER
@@ -88,9 +88,9 @@ struct gentity_s {
 	int		sound2to1;
 	int		soundPos2;
 	int		soundLoop;
-	gentity_t	*parent;
-	gentity_t	*nextTrain;
-	gentity_t	*prevTrain;
+	Gentity	*parent;
+	Gentity	*nextTrain;
+	Gentity	*prevTrain;
 	Vec3		pos1, pos2;
 
 	char		*message;
@@ -102,22 +102,22 @@ struct gentity_s {
 	char		*team;
 	char		*targetShaderName;
 	char		*targetShaderNewName;
-	gentity_t	*target_ent;
+	Gentity	*target_ent;
 
 	float		speed;
 	Vec3		movedir;
 
 	int		nextthink;
-	void		(*think)(gentity_t *self);
-	void		(*reached)(gentity_t *self);	/* movers call this when hitting endpoint */
-	void		(*blocked)(gentity_t *self, gentity_t *other);
-	void		(*touch)(gentity_t *self, gentity_t *other,
-				 trace_t *trace);
-	void		(*use)(gentity_t *self, gentity_t *other,
-			       gentity_t *activator);
-	void		(*pain)(gentity_t *self, gentity_t *attacker, int damage);
-	void		(*die)(gentity_t *self, gentity_t *inflictor,
-			       gentity_t *attacker, int damage, int mod);
+	void		(*think)(Gentity *self);
+	void		(*reached)(Gentity *self);	/* movers call this when hitting endpoint */
+	void		(*blocked)(Gentity *self, Gentity *other);
+	void		(*touch)(Gentity *self, Gentity *other,
+				 Trace *trace);
+	void		(*use)(Gentity *self, Gentity *other,
+			       Gentity *activator);
+	void		(*pain)(Gentity *self, Gentity *attacker, int damage);
+	void		(*die)(Gentity *self, Gentity *inflictor,
+			       Gentity *attacker, int damage, int mod);
 
 	int		pain_debounce_time;
 	int		fly_sound_debounce_time;	/* wind tunnel */
@@ -135,11 +135,11 @@ struct gentity_s {
 
 	int		count;
 
-	gentity_t	*chain;
-	gentity_t	*enemy;
-	gentity_t	*activator;
-	gentity_t	*teamchain;	/* next entity in team */
-	gentity_t	*teammaster;	/* master of the team */
+	Gentity	*chain;
+	Gentity	*enemy;
+	Gentity	*activator;
+	Gentity	*teamchain;	/* next entity in team */
+	Gentity	*teammaster;	/* master of the team */
 
 #ifdef MISSIONPACK
 	int	kamikazeTime;
@@ -155,7 +155,7 @@ struct gentity_s {
 	float	wait;
 	float	random;
 
-	gitem_t *item;	/* for bonus items */
+	Gitem *item;	/* for bonus items */
 };
 
 typedef enum {
@@ -215,7 +215,7 @@ typedef struct {
  * on each level change or team change at ClientBegin() */
 typedef struct {
 	clientConnected_t	connected;
-	usercmd_t		cmd;			/* we would lose angles if not persistent */
+	Usrcmd		cmd;			/* we would lose angles if not persistent */
 	qbool			localClient;		/* true if "ip" info key is "localhost" */
 	qbool			initialSpawn;		/* the first spawn should be at a cool location */
 	qbool			predictItemPickup;	/* based on cg_predictItems userinfo */
@@ -233,7 +233,7 @@ typedef struct {
  * except for 'client->pers' and 'client->sess' */
 struct gclient_s {
 	/* ps MUST be the first element, because the server expects it */
-	playerState_t ps;	/* communicated by server to clients */
+	Playerstate ps;	/* communicated by server to clients */
 
 	/* the rest of the structure is private to game */
 	clientPersistant_t	pers;
@@ -243,7 +243,7 @@ struct gclient_s {
 
 	qbool			noclip;
 
-	int			lastCmdTime;	/* level.time of last usercmd_t, for EF_CONNECTION */
+	int			lastCmdTime;	/* level.time of last Usrcmd, for EF_CONNECTION */
 	/* we can't just use pers.lastCommand.time, because
 	 * of the g_sycronousclients case */
 	int	buttons;
@@ -280,7 +280,7 @@ struct gclient_s {
 	int		lastKillTime;	/* for multiple kill rewards */
 
 	qbool		fireHeld;	/* used for hook */
-	gentity_t	*hook;		/* grapple hook if out */
+	Gentity	*hook;		/* grapple hook if out */
 
 	int		switchTeamTime;	/* time the player switched teams */
 
@@ -288,7 +288,7 @@ struct gclient_s {
 	 * like health / armor countdowns and regeneration */
 	int timeResidual;
 
-	gentity_t	*persistantPowerup;
+	Gentity	*persistantPowerup;
 
 	char *areabits;
 };
@@ -308,7 +308,7 @@ typedef struct {
 
 	int			warmupTime;	/* restart match at this time */
 
-	fileHandle_t		logFile;
+	Fhandle		logFile;
 
 	/* store latched cvars here that we want to get at often */
 	int		maxclients;
@@ -374,9 +374,9 @@ typedef struct {
 	Vec3		intermission_angle;
 
 	qbool		locationLinked;	/* target_locations get linked */
-	gentity_t	*locationHead;	/* head of the location list */
+	Gentity	*locationHead;	/* head of the location list */
 	int		bodyQueIndex;	/* dead bodies */
-	gentity_t	*bodyQue[BODY_QUEUE_SIZE];
+	Gentity	*bodyQue[BODY_QUEUE_SIZE];
 #ifdef MISSIONPACK
 	int		portalSequence;
 #endif
@@ -399,33 +399,33 @@ char*	G_NewString(const char *string);
 /*
  * cmds.c
  */
-void	Cmd_Score_f(gentity_t *ent);
-void	StopFollowing(gentity_t *ent);
-void	BroadcastTeamChange(gclient_t *client, int oldTeam);
-void	SetTeam(gentity_t *ent, char *s);
-void	Cmd_FollowCycle_f(gentity_t *ent, int dir);
+void	Cmd_Score_f(Gentity *ent);
+void	StopFollowing(Gentity *ent);
+void	BroadcastTeamChange(gClient *client, int oldTeam);
+void	SetTeam(Gentity *ent, char *s);
+void	Cmd_FollowCycle_f(Gentity *ent, int dir);
 
 /*
  * items.c
  */
 void	G_CheckTeamItems(void);
-void	G_RunItem(gentity_t *ent);
-void	RespawnItem(gentity_t *ent);
+void	G_RunItem(Gentity *ent);
+void	RespawnItem(Gentity *ent);
 
-void	UseHoldableItem(gentity_t *ent);
-void	PrecacheItem(gitem_t *it);
-gentity_t*	Drop_Item(gentity_t *ent, gitem_t *item, float angle);
-gentity_t*	LaunchItem(gitem_t *item, Vec3 origin, Vec3 velocity);
-void	SetRespawn(gentity_t *ent, float delay);
-void	G_SpawnItem(gentity_t *ent, gitem_t *item);
-void	FinishSpawningItem(gentity_t *ent);
-void	Think_Weapon(gentity_t *ent);
-int	ArmorIndex(gentity_t *ent);
-void	Add_Ammo(gentity_t *ent, int weapon, int count);
-void	Touch_Item(gentity_t *ent, gentity_t *other, trace_t *trace);
+void	UseHoldableItem(Gentity *ent);
+void	PrecacheItem(Gitem *it);
+Gentity*	Drop_Item(Gentity *ent, Gitem *item, float angle);
+Gentity*	LaunchItem(Gitem *item, Vec3 origin, Vec3 velocity);
+void	SetRespawn(Gentity *ent, float delay);
+void	G_SpawnItem(Gentity *ent, Gitem *item);
+void	FinishSpawningItem(Gentity *ent);
+void	Think_Weapon(Gentity *ent);
+int	ArmorIndex(Gentity *ent);
+void	Add_Ammo(Gentity *ent, int weapon, int count);
+void	Touch_Item(Gentity *ent, Gentity *other, Trace *trace);
 
 void	ClearRegisteredItems(void);
-void	RegisterItem(gitem_t *item);
+void	RegisterItem(Gitem *item);
 void	SaveRegisteredItems(void);
 
 /*
@@ -434,49 +434,49 @@ void	SaveRegisteredItems(void);
 int	G_ModelIndex(char *name);
 int	G_SoundIndex(char *name);
 void	G_TeamCommand(team_t team, char *cmd);
-void	G_KillBox(gentity_t *ent);
-gentity_t*	G_Find(gentity_t *from, int fieldofs, const char *match);
-gentity_t*	G_PickTarget(char *targetname);
-void	G_UseTargets(gentity_t *ent, gentity_t *activator);
+void	G_KillBox(Gentity *ent);
+Gentity*	G_Find(Gentity *from, int fieldofs, const char *match);
+Gentity*	G_PickTarget(char *targetname);
+void	G_UseTargets(Gentity *ent, Gentity *activator);
 void	G_SetMovedir(Vec3 angles, Vec3 movedir);
 
-void	G_InitGentity(gentity_t *e);
-gentity_t*	G_Spawn(void);
-gentity_t*	G_TempEntity(Vec3 origin, int event);
-void	G_Sound(gentity_t *ent, int channel, int soundIndex);
-void	G_FreeEntity(gentity_t *e);
+void	G_InitGentity(Gentity *e);
+Gentity*	G_Spawn(void);
+Gentity*	G_TempEntity(Vec3 origin, int event);
+void	G_Sound(Gentity *ent, int channel, int soundIndex);
+void	G_FreeEntity(Gentity *e);
 qbool	G_EntitiesFree(void);
 
-void	G_TouchTriggers(gentity_t *ent);
+void	G_TouchTriggers(Gentity *ent);
 
 float*	tv(float x, float y, float z);
 char*	vtos(const Vec3 v);
 
 float	vectoyaw(const Vec3 vec);
 
-void	G_AddPredictableEvent(gentity_t *ent, int event, int eventParm);
-void	G_AddEvent(gentity_t *ent, int event, int eventParm);
-void	G_SetOrigin(gentity_t *ent, Vec3 origin);
+void	G_AddPredictableEvent(Gentity *ent, int event, int eventParm);
+void	G_AddEvent(Gentity *ent, int event, int eventParm);
+void	G_SetOrigin(Gentity *ent, Vec3 origin);
 void	AddRemap(const char *oldShader, const char *newShader, float timeOffset);
 char*	BuildShaderStateConfig(void); /* FIXME */
 
 /*
  * combat.c
  */
-qbool	CanDamage(gentity_t *targ, Vec3 origin);
-void	G_Damage(gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
+qbool	CanDamage(Gentity *targ, Vec3 origin);
+void	G_Damage(Gentity *targ, Gentity *inflictor, Gentity *attacker,
 		Vec3 dir, Vec3 point, int damage, int dflags, int mod);
-qbool	G_RadiusDamage(Vec3 origin, gentity_t *attacker, float damage,
-		float radius, gentity_t *ignore, int mod);
-int	G_InvulnerabilityEffect(gentity_t *targ, Vec3 dir, Vec3 point,
+qbool	G_RadiusDamage(Vec3 origin, Gentity *attacker, float damage,
+		float radius, Gentity *ignore, int mod);
+int	G_InvulnerabilityEffect(Gentity *targ, Vec3 dir, Vec3 point,
 		Vec3 impactpoint, Vec3 bouncedir);
-void	body_die(gentity_t *self, gentity_t *inflictor, gentity_t *attacker,
+void	body_die(Gentity *self, Gentity *inflictor, Gentity *attacker,
 		int damage, int meansOfDeath);
-void	TossClientItems(gentity_t *self);
+void	TossClientItems(Gentity *self);
 #ifdef MISSIONPACK
-void	TossClientPersistantPowerups(gentity_t *self);
+void	TossClientPersistantPowerups(Gentity *self);
 #endif
-void	TossClientCubes(gentity_t *self);
+void	TossClientCubes(Gentity *self);
 
 /* damage flags */
 #define DAMAGE_RADIUS			0x00000001	/* damage was indirect */
@@ -490,46 +490,46 @@ void	TossClientCubes(gentity_t *self);
 /*
  * missile.c
  */
-void	G_RunMissile(gentity_t *ent);
-gentity_t*	fire_plasma(gentity_t *self, Vec3 start, Vec3 aimdir);
-gentity_t*	fire_grenade(gentity_t *self, Vec3 start, Vec3 aimdir);
-gentity_t*	fire_rocket(gentity_t *self, Vec3 start, Vec3 dir);
-gentity_t*	fire_bfg(gentity_t *self, Vec3 start, Vec3 dir);
-gentity_t*	fire_grapple(gentity_t *self, Vec3 start, Vec3 dir);
-gentity_t*	firenanoid(gentity_t *self, Vec3 start, Vec3 forward, Vec3 right,
+void	G_RunMissile(Gentity *ent);
+Gentity*	fire_plasma(Gentity *self, Vec3 start, Vec3 aimdir);
+Gentity*	fire_grenade(Gentity *self, Vec3 start, Vec3 aimdir);
+Gentity*	fire_rocket(Gentity *self, Vec3 start, Vec3 dir);
+Gentity*	fire_bfg(Gentity *self, Vec3 start, Vec3 dir);
+Gentity*	fire_grapple(Gentity *self, Vec3 start, Vec3 dir);
+Gentity*	firenanoid(Gentity *self, Vec3 start, Vec3 forward, Vec3 right,
 		Vec3 up);
-gentity_t*	fire_prox(gentity_t *self, Vec3 start, Vec3 aimdir);
+Gentity*	fire_prox(Gentity *self, Vec3 start, Vec3 aimdir);
 
 /*
  * mover.c
  */
-void	G_RunMover(gentity_t *ent);
-void	Touch_DoorTrigger(gentity_t *ent, gentity_t *other, trace_t *trace);
+void	G_RunMover(Gentity *ent);
+void	Touch_DoorTrigger(Gentity *ent, Gentity *other, Trace *trace);
 
 /*
  * trigger.c
  */
-void	trigger_teleporter_touch(gentity_t *self, gentity_t *other, trace_t *trace);
+void	trigger_teleporter_touch(Gentity *self, Gentity *other, Trace *trace);
 
 /*
  * misc.c
  */
-void	TeleportPlayer(gentity_t *player, Vec3 origin, Vec3 angles);
+void	TeleportPlayer(Gentity *player, Vec3 origin, Vec3 angles);
 #ifdef MISSIONPACK
-void	DropPortalSource(gentity_t *ent);
-void	DropPortalDestination(gentity_t *ent);
+void	DropPortalSource(Gentity *ent);
+void	DropPortalDestination(Gentity *ent);
 #endif
 
 /*
  * weapon.c
  */
-qbool	LogAccuracyHit(gentity_t *target, gentity_t *attacker);
-void	CalcMuzzlePoint(gentity_t *ent, Vec3 forward, Vec3 right, Vec3 up,
+qbool	LogAccuracyHit(Gentity *target, Gentity *attacker);
+void	CalcMuzzlePoint(Gentity *ent, Vec3 forward, Vec3 right, Vec3 up,
 		Vec3 muzzlePoint);
 void	snapv3Towards(Vec3 v, Vec3 to);
-qbool	CheckGauntletAttack(gentity_t *ent);
-void	Weapon_HookFree(gentity_t *ent);
-void	Weapon_HookThink(gentity_t *ent);
+qbool	CheckGauntletAttack(Gentity *ent);
+void	Weapon_HookFree(Gentity *ent);
+void	Weapon_HookThink(Gentity *ent);
 
 /*
  * client.c
@@ -537,19 +537,19 @@ void	Weapon_HookThink(gentity_t *ent);
 team_t	TeamCount(int ignoreClientNum, int team);
 int	TeamLeader(int team);
 team_t	PickTeam(int ignoreClientNum);
-void	SetClientViewAngle(gentity_t *ent, Vec3 angle);
-gentity_t*	SelectSpawnPoint(Vec3 avoidPoint, Vec3 origin, Vec3 angles,
+void	SetClientViewAngle(Gentity *ent, Vec3 angle);
+Gentity*	SelectSpawnPoint(Vec3 avoidPoint, Vec3 origin, Vec3 angles,
 		qbool isbot);
-void	CopyToBodyQue(gentity_t *ent);
-void	ClientRespawn(gentity_t *ent);
+void	CopyToBodyQue(Gentity *ent);
+void	ClientRespawn(Gentity *ent);
 void	BeginIntermission(void);
 void	InitBodyQue(void);
-void	ClientSpawn(gentity_t *ent);
-void	player_die(gentity_t *self, gentity_t *inflictor, gentity_t *attacker,
+void	ClientSpawn(Gentity *ent);
+void	player_die(Gentity *self, Gentity *inflictor, Gentity *attacker,
 		int damage, int mod);
-void	AddScore(gentity_t *ent, Vec3 origin, int score);
+void	AddScore(Gentity *ent, Vec3 origin, int score);
 void	CalculateRanks(void);
-qbool	SpotWouldTelefrag(gentity_t *spot);
+qbool	SpotWouldTelefrag(Gentity *spot);
 
 /*
  * svcmds.c
@@ -561,25 +561,25 @@ qbool	G_FilterPacket(char *from);
 /*
  * weapon.c
  */
-void	FireWeapon(gentity_t*, Weapslot);
+void	FireWeapon(Gentity*, Weapslot);
 #ifdef MISSIONPACK
-void	G_StartKamikaze(gentity_t *ent);
+void	G_StartKamikaze(Gentity *ent);
 #endif
 
 /*
  * cmds.c
  */
-void	DeathmatchScoreboardMessage(gentity_t *ent);
+void	DeathmatchScoreboardMessage(Gentity *ent);
 
 /*
  * main.c
  */
-void	MoveClientToIntermission(gentity_t *ent);
+void	MoveClientToIntermission(Gentity *ent);
 void	FindIntermissionPoint(void);
 void	SetLeader(int team, uint client);
 void	CheckTeamLeader(int team);
-void	G_RunThink(gentity_t *ent);
-void	AddTournamentQueue(gclient_t *client);
+void	G_RunThink(Gentity *ent);
+void	AddTournamentQueue(gClient *client);
 void	QDECL G_LogPrintf(const char *fmt,
 		...) __attribute__ ((format (printf, 1, 2)));
 void	SendScoreboardMessageToAllClients(void);
@@ -600,15 +600,15 @@ void	ClientCommand(int clientNum);
  * active.c
  */
 void	ClientThink(int clientNum);
-void	ClientEndFrame(gentity_t *ent);
-void	G_RunClient(gentity_t *ent);
+void	ClientEndFrame(Gentity *ent);
+void	G_RunClient(Gentity *ent);
 
 /*
  * team.c
  */
-qbool	OnSameTeam(gentity_t *ent1, gentity_t *ent2);
-void	Team_CheckDroppedItem(gentity_t *dropped);
-qbool	CheckObeliskAttack(gentity_t *obelisk, gentity_t *attacker);
+qbool	OnSameTeam(Gentity *ent1, Gentity *ent2);
+void	Team_CheckDroppedItem(Gentity *dropped);
+qbool	CheckObeliskAttack(Gentity *obelisk, Gentity *attacker);
 
 /*
  * mem.c
@@ -620,8 +620,8 @@ void	Svcmd_GameMem_f(void);
 /*
  * session.c
  */
-void	G_ReadSessionData(gclient_t *client);
-void	G_InitSessionData(gclient_t *client, char *userinfo);
+void	G_ReadSessionData(gClient *client);
+void	G_InitSessionData(gClient *client, char *userinfo);
 void	G_InitWorldSession(void);
 void	G_WriteSessionData(void);
 
@@ -667,61 +667,61 @@ int	BotAIStartFrame(int time);
 void	BotTestAAS(Vec3 origin);
 
 extern level_locals_t level;
-extern gentity_t g_entities[MAX_GENTITIES];
+extern Gentity g_entities[MAX_GENTITIES];
 
-#define FOFS(x) ((size_t)&(((gentity_t*)0)->x))
+#define FOFS(x) ((size_t)&(((Gentity*)0)->x))
 
-extern vmCvar_t g_gametype;
-extern vmCvar_t g_dedicated;
-extern vmCvar_t g_cheats;
-extern vmCvar_t g_maxclients;		/* allow this many total, including spectators */
-extern vmCvar_t g_maxGameClients;	/* allow this many active */
-extern vmCvar_t g_restarted;
+extern Vmcvar g_gametype;
+extern Vmcvar g_dedicated;
+extern Vmcvar g_cheats;
+extern Vmcvar g_maxclients;		/* allow this many total, including spectators */
+extern Vmcvar g_maxGameClients;	/* allow this many active */
+extern Vmcvar g_restarted;
 
-extern vmCvar_t g_dmflags;
-extern vmCvar_t g_fraglimit;
-extern vmCvar_t g_timelimit;
-extern vmCvar_t g_capturelimit;
-extern vmCvar_t g_friendlyFire;
-extern vmCvar_t g_password;
-extern vmCvar_t g_needpass;
-extern vmCvar_t g_gravity;
-extern vmCvar_t g_speed;
-extern vmCvar_t g_swingstrength;
-extern vmCvar_t g_knockback;
-extern vmCvar_t g_quadfactor;
-extern vmCvar_t g_forcerespawn;
-extern vmCvar_t g_inactivity;
-extern vmCvar_t g_debugMove;
-extern vmCvar_t g_debugAlloc;
-extern vmCvar_t g_debugDamage;
-extern vmCvar_t g_weaponRespawn;
-extern vmCvar_t g_weaponTeamRespawn;
-extern vmCvar_t g_synchronousClients;
-extern vmCvar_t g_motd;
-extern vmCvar_t g_warmup;
-extern vmCvar_t g_doWarmup;
-extern vmCvar_t g_blood;
-extern vmCvar_t g_allowVote;
-extern vmCvar_t g_teamAutoJoin;
-extern vmCvar_t g_teamForceBalance;
-extern vmCvar_t g_banIPs;
-extern vmCvar_t g_filterBan;
-extern vmCvar_t g_obeliskHealth;
-extern vmCvar_t g_obeliskRegenPeriod;
-extern vmCvar_t g_obeliskRegenAmount;
-extern vmCvar_t g_obeliskRespawnDelay;
-extern vmCvar_t g_cubeTimeout;
-extern vmCvar_t g_redteam;
-extern vmCvar_t g_blueteam;
-extern vmCvar_t g_smoothClients;
-extern vmCvar_t pmove_fixed;
-extern vmCvar_t pmove_msec;
-extern vmCvar_t g_rankings;
-extern vmCvar_t g_enableDust;
-extern vmCvar_t g_enableBreath;
-extern vmCvar_t g_singlePlayer;
-extern vmCvar_t g_proxMineTimeout;
+extern Vmcvar g_dmflags;
+extern Vmcvar g_fraglimit;
+extern Vmcvar g_timelimit;
+extern Vmcvar g_capturelimit;
+extern Vmcvar g_friendlyFire;
+extern Vmcvar g_password;
+extern Vmcvar g_needpass;
+extern Vmcvar g_gravity;
+extern Vmcvar g_speed;
+extern Vmcvar g_swingstrength;
+extern Vmcvar g_knockback;
+extern Vmcvar g_quadfactor;
+extern Vmcvar g_forcerespawn;
+extern Vmcvar g_inactivity;
+extern Vmcvar g_debugMove;
+extern Vmcvar g_debugAlloc;
+extern Vmcvar g_debugDamage;
+extern Vmcvar g_weaponRespawn;
+extern Vmcvar g_weaponTeamRespawn;
+extern Vmcvar g_synchronousClients;
+extern Vmcvar g_motd;
+extern Vmcvar g_warmup;
+extern Vmcvar g_doWarmup;
+extern Vmcvar g_blood;
+extern Vmcvar g_allowVote;
+extern Vmcvar g_teamAutoJoin;
+extern Vmcvar g_teamForceBalance;
+extern Vmcvar g_banIPs;
+extern Vmcvar g_filterBan;
+extern Vmcvar g_obeliskHealth;
+extern Vmcvar g_obeliskRegenPeriod;
+extern Vmcvar g_obeliskRegenAmount;
+extern Vmcvar g_obeliskRespawnDelay;
+extern Vmcvar g_cubeTimeout;
+extern Vmcvar g_redteam;
+extern Vmcvar g_blueteam;
+extern Vmcvar g_smoothClients;
+extern Vmcvar pmove_fixed;
+extern Vmcvar pmove_msec;
+extern Vmcvar g_rankings;
+extern Vmcvar g_enableDust;
+extern Vmcvar g_enableBreath;
+extern Vmcvar g_singlePlayer;
+extern Vmcvar g_proxMineTimeout;
 
 /*
  * vm syscalls
@@ -733,25 +733,25 @@ int	trap_RealTime(qtime_t *qtime);
 int	trap_Argc(void);
 void	trap_Argv(int n, char *buffer, int bufferLength);
 void	trap_Args(char *buffer, int bufferLength);
-int	trap_FS_FOpenFile(const char *qpath, fileHandle_t *f,
-		fsMode_t mode);
-void	trap_FS_Read(void *buffer, int len, fileHandle_t f);
-void	trap_FS_Write(const void *buffer, int len, fileHandle_t f);
-void	trap_FS_FCloseFile(fileHandle_t f);
+int	trap_FS_FOpenFile(const char *qpath, Fhandle *f,
+		Fsmode mode);
+void	trap_FS_Read(void *buffer, int len, Fhandle f);
+void	trap_FS_Write(const void *buffer, int len, Fhandle f);
+void	trap_FS_FCloseFile(Fhandle f);
 int	trap_FS_GetFileList(const char *path, const char *extension,
 		char *listbuf, int bufsize);
-int	trap_FS_Seek(fileHandle_t f, long offset, int origin);	/* fsOrigin_t */
+int	trap_FS_Seek(Fhandle f, long offset, int origin);	/* fsOrigin_t */
 void	trap_SendConsoleCommand(int exec_when, const char *text);
-void	trap_Cvar_Register(vmCvar_t *cvar, const char *var_name,
+void	trap_Cvar_Register(Vmcvar *cvar, const char *var_name,
 		const char *value, int flags);
-void	trap_Cvar_Update(vmCvar_t *cvar);
+void	trap_Cvar_Update(Vmcvar *cvar);
 void	trap_Cvar_Set(const char *var_name, const char *value);
 int	trap_Cvar_VariableIntegerValue(const char *var_name);
 float	trap_Cvar_VariableValue(const char *var_name);
 void	trap_Cvar_VariableStringBuffer(const char *var_name, char *buffer,
 		int bufsize);
-void	trap_LocateGameData(gentity_t *gEnts, int numGEntities,
-		int sizeofGEntity_t, playerState_t *gameClients,
+void	trap_LocateGameData(Gentity *gEnts, int numGEntities,
+		int sizeofGEntity_t, Playerstate *gameClients,
 		int sizeofGameClient);
 void	trap_DropClient(int clientNum, const char *reason);
 void	trap_SendServerCommand(int clientNum, const char *text);
@@ -760,24 +760,24 @@ void	trap_GetConfigstring(int num, char *buffer, int bufferSize);
 void	trap_GetUserinfo(int num, char *buffer, int bufferSize);
 void	trap_SetUserinfo(int num, const char *buffer);
 void	trap_GetServerinfo(char *buffer, int bufferSize);
-void	trap_SetBrushModel(gentity_t *ent, const char *name);
-void	trap_Trace(trace_t *results, const Vec3 start, const Vec3 mins,
+void	trap_SetBrushModel(Gentity *ent, const char *name);
+void	trap_Trace(Trace *results, const Vec3 start, const Vec3 mins,
 		const Vec3 maxs, const Vec3 end, int passEntityNum,
 		int contentmask);
 int	trap_PointContents(const Vec3 point, int passEntityNum);
 qbool	trap_InPVS(const Vec3 p1, const Vec3 p2);
 qbool	trap_InPVSIgnorePortals(const Vec3 p1, const Vec3 p2);
-void	trap_AdjustAreaPortalState(gentity_t *ent, qbool open);
+void	trap_AdjustAreaPortalState(Gentity *ent, qbool open);
 qbool	trap_AreasConnected(int area1, int area2);
-void	trap_LinkEntity(gentity_t *ent);
-void	trap_UnlinkEntity(gentity_t *ent);
+void	trap_LinkEntity(Gentity *ent);
+void	trap_UnlinkEntity(Gentity *ent);
 int	trap_EntitiesInBox(const Vec3 mins, const Vec3 maxs,
 		int *entityList, int maxcount);
 qbool	trap_EntityContact(const Vec3 mins, const Vec3 maxs,
-		const gentity_t *ent);
+		const Gentity *ent);
 int	trap_BotAllocateClient(void);
 void	trap_BotFreeClient(int clientNum);
-void	trap_GetUsercmd(int clientNum, usercmd_t *cmd);
+void	trap_GetUsercmd(int clientNum, Usrcmd *cmd);
 qbool	trap_GetEntityToken(char *buffer, int bufferSize);
 
 int	trap_DebugPolygonCreate(int color, int numPoints, Vec3 *points);
@@ -796,7 +796,7 @@ int	trap_BotLibTest(int parm0, char *parm1, Vec3 parm2,
 
 int	trap_BotGetSnapshotEntity(int clientNum, int sequence);
 int	trap_BotGetServerCommand(int clientNum, char *message, int size);
-void	trap_BotUserCommand(int client, usercmd_t *ucmd);
+void	trap_BotUserCommand(int client, Usrcmd *ucmd);
 
 int	trap_AAS_BBoxAreas(Vec3 absmins, Vec3 absmaxs, int *areas,
 		int maxareas);

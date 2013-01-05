@@ -8,7 +8,7 @@
 
 #include "server.h"
 
-static void SV_CloseDownload(client_t *cl);
+static void SV_CloseDownload(Client *cl);
 
 /*
  * SV_GetChallenge
@@ -34,7 +34,7 @@ static void SV_CloseDownload(client_t *cl);
  * v4-only auth server for these new types of connections.
  */
 void
-SV_GetChallenge(netadr_t from)
+SV_GetChallenge(Netaddr from)
 {
 	int	i;
 	int	oldest;
@@ -139,7 +139,7 @@ SV_GetChallenge(netadr_t from)
 			Com_DPrintf("authorize server timed out\n");
 		else{
 			/* otherwise send their ip to the authorize server */
-			cvar_t	*fs;
+			Cvar	*fs;
 			char	game[1024];
 
 			Com_DPrintf("sending getIpAuthorize for %s\n",
@@ -181,7 +181,7 @@ SV_GetChallenge(netadr_t from)
  * challengeResponse to it
  */
 void
-SV_AuthorizeIpPacket(netadr_t from)
+SV_AuthorizeIpPacket(Netaddr from)
 {
 	int	challenge;
 	int	i;
@@ -260,7 +260,7 @@ SV_AuthorizeIpPacket(netadr_t from)
  */
 
 static qbool
-SV_IsBanned(netadr_t *from, qbool isexception)
+SV_IsBanned(Netaddr *from, qbool isexception)
 {
 	uint index;
 	serverBan_t *curban;
@@ -289,13 +289,13 @@ SV_IsBanned(netadr_t *from, qbool isexception)
  */
 
 void
-SV_DirectConnect(netadr_t from)
+SV_DirectConnect(Netaddr from)
 {
 	char	userinfo[MAX_INFO_STRING];
 	int	i;
-	client_t	*cl, *newcl;
-	client_t	temp;
-	sharedEntity_t *ent;
+	Client	*cl, *newcl;
+	Client	temp;
+	Sharedent *ent;
 	int	clientNum;
 	int	version;
 	int	qport;
@@ -421,7 +421,7 @@ SV_DirectConnect(netadr_t from)
 	}
 
 	newcl = &temp;
-	Q_Memset (newcl, 0, sizeof(client_t));
+	Q_Memset (newcl, 0, sizeof(Client));
 
 	/* if there is already a slot for this ip, reuse it */
 	for(i=0,cl=svs.clients; i < sv_maxclients->integer; i++,cl++){
@@ -505,7 +505,7 @@ SV_DirectConnect(netadr_t from)
 gotnewcl:
 	/* build a new connection
 	 * accept the new client
-	 * this is the only place a client_t is ever initialized */
+	 * this is the only place a Client is ever initialized */
 	*newcl = temp;
 	clientNum = newcl - svs.clients;
 	ent = SV_GentityNum(clientNum);
@@ -566,7 +566,7 @@ gotnewcl:
  * Destructor for data allocated in a client structure
  */
 void
-SV_FreeClient(client_t *client)
+SV_FreeClient(Client *client)
 {
 #ifdef USE_VOIP
 	int index;
@@ -593,7 +593,7 @@ SV_FreeClient(client_t *client)
  * or crashing -- SV_FinalMessage() will handle that
  */
 void
-SV_DropClient(client_t *drop, const char *reason)
+SV_DropClient(Client *drop, const char *reason)
 {
 	int i;
 	challenge_t *challenge;
@@ -664,11 +664,11 @@ SV_DropClient(client_t *drop, const char *reason)
  * the wrong gamestate.
  */
 static void
-SV_SendClientGameState(client_t *client)
+SV_SendClientGameState(Client *client)
 {
 	int start;
-	entityState_t *base, nullstate;
-	msg_t	msg;
+	Entstate *base, nullstate;
+	Bitmsg	msg;
 	byte	msgBuffer[MAX_MSGLEN];
 
 	Com_DPrintf ("SV_SendClientGameState() for %s\n", client->name);
@@ -733,10 +733,10 @@ SV_SendClientGameState(client_t *client)
  * SV_ClientEnterWorld
  */
 void
-SV_ClientEnterWorld(client_t *client, usercmd_t *cmd)
+SV_ClientEnterWorld(Client *client, Usrcmd *cmd)
 {
 	int clientNum;
-	sharedEntity_t *ent;
+	Sharedent *ent;
 
 	Com_DPrintf("Going from CS_PRIMED to CS_ACTIVE for %s\n", client->name);
 	client->state = CS_ACTIVE;
@@ -775,7 +775,7 @@ SV_ClientEnterWorld(client_t *client, usercmd_t *cmd)
  * clear/free any download vars
  */
 static void
-SV_CloseDownload(client_t *cl)
+SV_CloseDownload(Client *cl)
 {
 	int i;
 
@@ -800,7 +800,7 @@ SV_CloseDownload(client_t *cl)
  * Abort a download if in progress
  */
 static void
-SV_StopDownload_f(client_t *cl)
+SV_StopDownload_f(Client *cl)
 {
 	if(*cl->downloadName)
 		Com_DPrintf("clientDownload: %d : file \"%s\" aborted\n",
@@ -815,7 +815,7 @@ SV_StopDownload_f(client_t *cl)
  * Downloads are finished
  */
 static void
-SV_DoneDownload_f(client_t *cl)
+SV_DoneDownload_f(Client *cl)
 {
 	Com_DPrintf("clientDownload: %s Done\n", cl->name);
 	/* resend the game state to update any clients that entered during the download */
@@ -829,7 +829,7 @@ SV_DoneDownload_f(client_t *cl)
  * the same as cl->downloadClientBlock
  */
 static void
-SV_NextDownload_f(client_t *cl)
+SV_NextDownload_f(Client *cl)
 {
 	int block = atoi(Cmd_Argv(1));
 
@@ -862,7 +862,7 @@ SV_NextDownload_f(client_t *cl)
  * SV_BeginDownload_f
  */
 static void
-SV_BeginDownload_f(client_t *cl)
+SV_BeginDownload_f(Client *cl)
 {
 
 	/* Kill any existing download */
@@ -880,7 +880,7 @@ SV_BeginDownload_f(client_t *cl)
  * Fill up msg with data, return number of download blocks added
  */
 int
-SV_WriteDownloadToClient(client_t *cl, msg_t *msg)
+SV_WriteDownloadToClient(Client *cl, Bitmsg *msg)
 {
 	int	curindex;
 	int	unreferenced = 1;
@@ -1108,7 +1108,7 @@ int
 SV_SendQueuedMessages(void)
 {
 	int i, retval = -1, nextFragT;
-	client_t *cl;
+	Client *cl;
 
 	for(i=0; i < sv_maxclients->integer; i++){
 		cl = &svs.clients[i];
@@ -1138,8 +1138,8 @@ int
 SV_SendDownloadMessages(void)
 {
 	int i, numDLs = 0, retval;
-	client_t	*cl;
-	msg_t		msg;
+	Client	*cl;
+	Bitmsg		msg;
 	byte msgBuffer[MAX_MSGLEN];
 
 	for(i=0; i < sv_maxclients->integer; i++){
@@ -1168,7 +1168,7 @@ SV_SendDownloadMessages(void)
  * The client is going to disconnect, so remove the connection immediately  FIXME: move to game?
  */
 static void
-SV_Disconnect_f(client_t *cl)
+SV_Disconnect_f(Client *cl)
 {
 	SV_DropClient(cl, "disconnected");
 }
@@ -1185,7 +1185,7 @@ SV_Disconnect_f(client_t *cl)
  *
  */
 static void
-SV_VerifyPaks_f(client_t *cl)
+SV_VerifyPaks_f(Client *cl)
 {
 	int	nChkSum1, nChkSum2, nClientPaks, nServerPaks, i, j, nCurArg;
 	int	nClientChkSum[1024];
@@ -1333,7 +1333,7 @@ SV_VerifyPaks_f(client_t *cl)
  * SV_ResetPureClient_f
  */
 static void
-SV_ResetPureClient_f(client_t *cl)
+SV_ResetPureClient_f(Client *cl)
 {
 	cl->pureAuthentic = 0;
 	cl->gotCP = qfalse;
@@ -1346,7 +1346,7 @@ SV_ResetPureClient_f(client_t *cl)
  * into a more C friendly form.
  */
 void
-SV_UserinfoChanged(client_t *cl)
+SV_UserinfoChanged(Client *cl)
 {
 	char	*val;
 	char    *ip;
@@ -1437,7 +1437,7 @@ SV_UserinfoChanged(client_t *cl)
  * SV_UpdateUserinfo_f
  */
 static void
-SV_UpdateUserinfo_f(client_t *cl)
+SV_UpdateUserinfo_f(Client *cl)
 {
 	Q_strncpyz(cl->userinfo, Cmd_Argv(1), sizeof(cl->userinfo));
 
@@ -1450,7 +1450,7 @@ SV_UpdateUserinfo_f(client_t *cl)
 #ifdef USE_VOIP
 static
 void
-SV_UpdateVoipIgnore(client_t *cl, const char *idstr, qbool ignore)
+SV_UpdateVoipIgnore(Client *cl, const char *idstr, qbool ignore)
 {
 	if((*idstr >= '0') && (*idstr <= '9')){
 		const int id = atoi(idstr);
@@ -1463,7 +1463,7 @@ SV_UpdateVoipIgnore(client_t *cl, const char *idstr, qbool ignore)
  * SV_Voip_f
  */
 static void
-SV_Voip_f(client_t *cl)
+SV_Voip_f(Client *cl)
 {
 	const char *cmd = Cmd_Argv(1);
 	if(strcmp(cmd, "ignore") == 0)
@@ -1480,7 +1480,7 @@ SV_Voip_f(client_t *cl)
 
 typedef struct {
 	char *name;
-	void (*func)(client_t *cl);
+	void (*func)(Client *cl);
 } ucmd_t;
 
 static ucmd_t ucmds[] = {
@@ -1506,7 +1506,7 @@ static ucmd_t ucmds[] = {
  * Also called by bot code
  */
 void
-SV_ExecuteClientCommand(client_t *cl, const char *s, qbool clientOK)
+SV_ExecuteClientCommand(Client *cl, const char *s, qbool clientOK)
 {
 	ucmd_t *u;
 	qbool bProcessed = qfalse;
@@ -1538,7 +1538,7 @@ SV_ExecuteClientCommand(client_t *cl, const char *s, qbool clientOK)
  * SV_ClientCommand
  */
 static qbool
-SV_ClientCommand(client_t *cl, msg_t *msg)
+SV_ClientCommand(Client *cl, Bitmsg *msg)
 {
 	int seq;
 	const char	*s;
@@ -1598,7 +1598,7 @@ SV_ClientCommand(client_t *cl, msg_t *msg)
  * Also called by bot code
  */
 void
-SV_ClientThink(client_t *cl, usercmd_t *cmd)
+SV_ClientThink(Client *cl, Usrcmd *cmd)
 {
 	cl->lastUsercmd = *cmd;
 
@@ -1619,13 +1619,13 @@ SV_ClientThink(client_t *cl, usercmd_t *cmd)
  * each of the backup packets.
  */
 static void
-SV_UserMove(client_t *cl, msg_t *msg, qbool delta)
+SV_UserMove(Client *cl, Bitmsg *msg, qbool delta)
 {
 	int	i, key;
 	int	cmdCount;
-	usercmd_t	nullcmd;
-	usercmd_t	cmds[MAX_PACKET_USERCMDS];
-	usercmd_t	*cmd, *oldcmd;
+	Usrcmd	nullcmd;
+	Usrcmd	cmds[MAX_PACKET_USERCMDS];
+	Usrcmd	*cmd, *oldcmd;
 
 	if(delta)
 		cl->deltaMessage = cl->messageAcknowledge;
@@ -1727,7 +1727,7 @@ SV_UserMove(client_t *cl, msg_t *msg, qbool delta)
  */
 
 static qbool
-SV_ShouldIgnoreVoipSender(const client_t *cl)
+SV_ShouldIgnoreVoipSender(const Client *cl)
 {
 	if(!sv_voip->integer)
 		return qtrue;	/* VoIP disabled on this server. */
@@ -1741,13 +1741,13 @@ SV_ShouldIgnoreVoipSender(const client_t *cl)
 
 static
 void
-SV_UserVoip(client_t *cl, msg_t *msg)
+SV_UserVoip(Client *cl, Bitmsg *msg)
 {
 	int	sender, generation, sequence, frames, packetsize;
 	uint8_t recips[(MAX_CLIENTS + 7) / 8];
 	int	flags;
 	byte	encoded[sizeof(cl->voipPacket[0]->data)];
-	client_t *client = NULL;
+	Client *client = NULL;
 	voipServerPacket_t *packet = NULL;
 	int i;
 
@@ -1847,7 +1847,7 @@ SV_UserVoip(client_t *cl, msg_t *msg)
  * Parse a client packet
  */
 void
-SV_ExecuteClientMessage(client_t *cl, msg_t *msg)
+SV_ExecuteClientMessage(Client *cl, Bitmsg *msg)
 {
 	int	c;
 	int	serverId;
@@ -1935,7 +1935,7 @@ SV_ExecuteClientMessage(client_t *cl, msg_t *msg)
 			return;		/* disconnect command */
 	} while(1);
 
-	/* read the usercmd_t */
+	/* read the Usrcmd */
 	if(c == clc_move)
 		SV_UserMove(cl, msg, qtrue);
 	else if(c == clc_moveNoDelta)

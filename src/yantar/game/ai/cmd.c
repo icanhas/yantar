@@ -1419,7 +1419,7 @@ BotNearestVisibleItem(bot_state_t *bs, char *itemname, bot_goal_t *goal)
 	bot_goal_t tmpgoal;
 	float	dist, bestdist;
 	Vec3	dir;
-	bsp_trace_t trace;
+	bsp_Trace trace;
 
 	bestdist = 999999;
 	i = -1;

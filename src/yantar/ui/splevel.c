@@ -79,17 +79,17 @@ typedef struct {
 	char		levelNames[4][16];
 	int		levelScores[4];
 	int		levelScoresSkill[4];
-	qhandle_t	levelSelectedPic;
-	qhandle_t	levelFocusPic;
-	qhandle_t	levelCompletePic[5];
+	Handle		levelSelectedPic;
+	Handle		levelFocusPic;
+	Handle		levelCompletePic[5];
 
 	char		playerModel[MAX_QPATH];
 	char		playerPicName[MAX_QPATH];
 	int		awardLevels[6];
-	sfxHandle_t	awardSounds[6];
+	Sfxhandle	awardSounds[6];
 
 	int		numBots;
-	qhandle_t	botPics[7];
+	Handle		botPics[7];
 	char		botNames[7][10];
 } levelMenuInfo_t;
 
@@ -142,7 +142,7 @@ PlayerIcon(const char *modelAndSkin, char *iconName, int iconNameMaxSize)
 /*
  * PlayerIconhandle
  */
-static qhandle_t
+static Handle
 PlayerIconHandle(const char *modelAndSkin)
 {
 	char iconName[MAX_QPATH];

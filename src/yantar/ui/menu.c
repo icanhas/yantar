@@ -37,7 +37,7 @@ typedef struct {
 	menutext_s	mods;
 	menutext_s	exit;
 
-	qhandle_t	bannerModel;
+	Handle		bannerModel;
 } mainmenu_t;
 
 
@@ -94,7 +94,7 @@ MainMenu_Cache(void)
 {
 }
 
-sfxHandle_t
+Sfxhandle
 ErrorMessage_Key(int key)
 {
 	trap_Cvar_Set("com_errorMessage", "");

@@ -12,12 +12,12 @@
 
 #include "local.h"
 
-static pmove_t cg_pmove;
+static Pmove cg_pmove;
 
 static int	cg_numSolidEntities;
-static centity_t       *cg_solidEntities[MAX_ENTITIES_IN_SNAPSHOT];
+static Centity       *cg_solidEntities[MAX_ENTITIES_IN_SNAPSHOT];
 static int	cg_numTriggerEntities;
-static centity_t *cg_triggerEntities[MAX_ENTITIES_IN_SNAPSHOT];
+static Centity *cg_triggerEntities[MAX_ENTITIES_IN_SNAPSHOT];
 
 /*
  * CG_BuildSolidList
@@ -30,9 +30,9 @@ void
 CG_BuildSolidList(void)
 {
 	int i;
-	centity_t *cent;
-	snapshot_t *snap;
-	entityState_t *ent;
+	Centity *cent;
+	Snap *snap;
+	Entstate *ent;
 
 	cg_numSolidEntities	= 0;
 	cg_numTriggerEntities	= 0;
@@ -69,15 +69,15 @@ static void
 CG_ClipMoveToEntities(const Vec3 start, const Vec3 mins, const Vec3 maxs,
 		      const Vec3 end,
 		      int skipNumber, int mask,
-		      trace_t *tr)
+		      Trace *tr)
 {
 	int i, x, zd, zu;
-	trace_t trace;
-	entityState_t	*ent;
-	clipHandle_t	cmodel;
+	Trace trace;
+	Entstate	*ent;
+	Cliphandle	cmodel;
 	Vec3	bmins, bmaxs;
 	Vec3	origin, angles;
-	centity_t *cent;
+	Centity *cent;
 
 	for(i = 0; i < cg_numSolidEntities; i++){
 		cent	= cg_solidEntities[ i ];
@@ -127,12 +127,12 @@ CG_ClipMoveToEntities(const Vec3 start, const Vec3 mins, const Vec3 maxs,
  * CG_Trace
  */
 void
-CG_Trace(trace_t *result, const Vec3 start, const Vec3 mins,
+CG_Trace(Trace *result, const Vec3 start, const Vec3 mins,
 	 const Vec3 maxs, const Vec3 end,
 	 int skipNumber,
 	 int mask)
 {
-	trace_t t;
+	Trace t;
 
 	trap_CM_BoxTrace (&t, start, end, mins, maxs, 0, mask);
 	t.entityNum = t.fraction != 1.0 ? ENTITYNUM_WORLD : ENTITYNUM_NONE;
@@ -149,9 +149,9 @@ int
 CG_PointContents(const Vec3 point, int passEntityNum)
 {
 	int i;
-	entityState_t	*ent;
-	centity_t	*cent;
-	clipHandle_t	cmodel;
+	Entstate	*ent;
+	Centity	*cent;
+	Cliphandle	cmodel;
 	int contents;
 
 	contents = trap_CM_PointContents (point, 0);
@@ -192,8 +192,8 @@ CG_InterpolatePlayerState(qbool grabAngles)
 {
 	float	f;
 	int	i;
-	playerState_t *out;
-	snapshot_t *prev, *next;
+	Playerstate *out;
+	Snap *prev, *next;
 
 	out	= &cg.predictedPlayerState;
 	prev	= cg.snap;
@@ -203,7 +203,7 @@ CG_InterpolatePlayerState(qbool grabAngles)
 
 	/* if we are still allowing local input, short circuit the view angles */
 	if(grabAngles){
-		usercmd_t cmd;
+		Usrcmd cmd;
 		int cmdNum;
 
 		cmdNum = trap_GetCurrentCmdNumber();
@@ -247,9 +247,9 @@ CG_InterpolatePlayerState(qbool grabAngles)
  * CG_TouchItem
  */
 static void
-CG_TouchItem(centity_t *cent)
+CG_TouchItem(Centity *cent)
 {
-	gitem_t *item;
+	Gitem *item;
 
 	if(!cg_predictItems.integer)
 		return;
@@ -321,10 +321,10 @@ static void
 CG_TouchTriggerPrediction(void)
 {
 	int i;
-	trace_t trace;
-	entityState_t	*ent;
-	clipHandle_t	cmodel;
-	centity_t	*cent;
+	Trace trace;
+	Entstate	*ent;
+	Cliphandle	cmodel;
+	Centity	*cent;
 	qbool		spectator;
 
 	/* dead clients don't activate triggers */
@@ -383,19 +383,19 @@ CG_TouchTriggerPrediction(void)
  * cg.predictedPlayerState is guaranteed to be valid after exiting.
  *
  * For demo playback, this will be an interpolation between two valid
- * playerState_t.
+ * Playerstate.
  *
- * For normal gameplay, it will be the result of predicted usercmd_t on
- * top of the most recent playerState_t received from the server.
+ * For normal gameplay, it will be the result of predicted Usrcmd on
+ * top of the most recent Playerstate received from the server.
  *
  * Each new snapshot will usually have one or more new usercmd over the last,
  * but we simulate all unacknowledged commands each time, not just the new ones.
  * This means that on an internet connection, quite a few pmoves may be issued
  * each frame.
  *
- * OPTIMIZE: don't re-simulate unless the newly arrived snapshot playerState_t
+ * OPTIMIZE: don't re-simulate unless the newly arrived snapshot Playerstate
  * differs from the predicted one.  Would require saving all intermediate
- * playerState_t during prediction.
+ * Playerstate during prediction.
  *
  * We detect prediction errors and allow them to be decayed off over several frames
  * to ease the jerk.
@@ -404,10 +404,10 @@ void
 CG_PredictPlayerState(void)
 {
 	int cmdNum, current;
-	playerState_t oldPlayerState;
+	Playerstate oldPlayerState;
 	qbool		moved;
-	usercmd_t	oldestCmd;
-	usercmd_t	latestCmd;
+	Usrcmd	oldestCmd;
+	Usrcmd	latestCmd;
 
 	cg.hyperspace = qfalse;	/* will be set if touching a trigger_teleport */
 
@@ -573,7 +573,7 @@ CG_PredictPlayerState(void)
 				((cg_pmove.cmd.serverTime + pmove_msec.integer-
 				  1) / pmove_msec.integer) * pmove_msec.integer;
 
-		Pmove (&cg_pmove);
+		PM_Pmove(&cg_pmove);
 
 		moved = qtrue;
 

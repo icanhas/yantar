@@ -25,7 +25,7 @@ static float s_flipMatrix[16] = {
 ** GL_Bind
 */
 void
-GL_Bind(image_t *image)
+GL_Bind(Img *image)
 {
 	int texnum;
 
@@ -79,7 +79,7 @@ GL_SelectTexture(int unit)
 ** GL_BindMultitexture
 */
 void
-GL_BindMultitexture(image_t *image0, GLuint env0, image_t *image1, GLuint env1)
+GL_BindMultitexture(Img *image0, GLuint env0, Img *image1, GLuint env1)
 {
 	int texnum0, texnum1;
 
@@ -925,7 +925,7 @@ void
 RB_ShowImages(void)
 {
 	int i;
-	image_t *image;
+	Img *image;
 	float	x, y, w, h;
 	int start, end;
 

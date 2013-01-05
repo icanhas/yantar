@@ -393,16 +393,16 @@ AAS_BoxOriginVec3distv3FromPlane(Vec3 normal, Vec3 mins, Vec3 maxs, int side)
  * =========================================================================== */
 qbool
 AAS_AreaEntityCollision(int areanum, Vec3 start, Vec3 end,
-			int presencetype, int passent, aas_trace_t *trace)
+			int presencetype, int passent, aas_Trace *trace)
 {
 	int collision;
 	Vec3 boxmins, boxmaxs;
 	aas_link_t	*link;
-	bsp_trace_t	bsptrace;
+	bsp_Trace	bsptrace;
 
 	AAS_PresenceTypeBoundingBox(presencetype, boxmins, boxmaxs);
 
-	Q_Memset(&bsptrace, 0, sizeof(bsp_trace_t));	/* make compiler happy */
+	Q_Memset(&bsptrace, 0, sizeof(bsp_Trace));	/* make compiler happy */
 	/* assume no collision */
 	bsptrace.fraction = 1;
 	collision = qfalse;
@@ -433,7 +433,7 @@ AAS_AreaEntityCollision(int areanum, Vec3 start, Vec3 end,
  * Returns:					-
  * Changes Globals:		-
  * =========================================================================== */
-aas_trace_t
+aas_Trace
 AAS_TraceClientBBox(Vec3 start, Vec3 end, int presencetype,
 		    int passent)
 {
@@ -444,10 +444,10 @@ AAS_TraceClientBBox(Vec3 start, Vec3 end, int presencetype,
 	aas_tracestack_t        *tstack_p;
 	aas_node_t		*aasnode;
 	aas_plane_t		*plane;
-	aas_trace_t		trace;
+	aas_Trace		trace;
 
 	/* clear the trace structure */
-	Q_Memset(&trace, 0, sizeof(aas_trace_t));
+	Q_Memset(&trace, 0, sizeof(aas_Trace));
 
 	if(!aasworld.loaded) return trace;
 
@@ -1068,7 +1068,7 @@ AAS_FacePlane(int facenum, Vec3 normal, float *dist)
  * Changes Globals:		-
  * =========================================================================== */
 aas_face_t *
-AAS_TraceEndFace(aas_trace_t *trace)
+AAS_TraceEndFace(aas_Trace *trace)
 {
 	int i, facenum;
 	aas_area_t *area;

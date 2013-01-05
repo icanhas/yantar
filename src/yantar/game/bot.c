@@ -30,11 +30,11 @@ typedef struct {
 
 static botSpawnQueue_t botSpawnQueue[BOT_SPAWN_QUEUE_DEPTH];
 
-vmCvar_t bot_minplayers;
+Vmcvar bot_minplayers;
 
-extern gentity_t	*podium1;
-extern gentity_t	*podium2;
-extern gentity_t	*podium3;
+extern Gentity	*podium1;
+extern Gentity	*podium2;
+extern Gentity	*podium3;
 
 float
 trap_Cvar_VariableValue(const char *var_name)
@@ -109,7 +109,7 @@ static void
 G_LoadArenasFromFile(char *filename)
 {
 	int	len;
-	fileHandle_t f;
+	Fhandle f;
 	char	buf[MAX_ARENAS_TEXT];
 
 	len = trap_FS_FOpenFile(filename, &f, FS_READ);
@@ -141,7 +141,7 @@ static void
 G_LoadArenas(void)
 {
 	int	numdirs;
-	vmCvar_t arenasFile;
+	Vmcvar arenasFile;
 	char	filename[128];
 	char	dirlist[1024];
 	char * dirptr;
@@ -221,7 +221,7 @@ G_AddRandomBot(int team)
 	int i, n, num;
 	float	skill;
 	char	*value, netname[36], *teamstr;
-	gclient_t *cl;
+	gClient *cl;
 
 	num = 0;
 	for(n = 0; n < g_numBots; n++){
@@ -283,7 +283,7 @@ int
 G_RemoveRandomBot(int team)
 {
 	int i;
-	gclient_t *cl;
+	gClient *cl;
 
 	for(i=0; i< g_maxclients.integer; i++){
 		cl = level.clients + i;
@@ -307,7 +307,7 @@ int
 G_CountHumanPlayers(int team)
 {
 	int i, num;
-	gclient_t *cl;
+	gClient *cl;
 
 	num = 0;
 	for(i=0; i< g_maxclients.integer; i++){
@@ -330,7 +330,7 @@ int
 G_CountBotPlayers(int team)
 {
 	int i, n, num;
-	gclient_t *cl;
+	gClient *cl;
 
 	num = 0;
 	for(i=0; i< g_maxclients.integer; i++){
@@ -520,7 +520,7 @@ G_AddBot(const char *name, float skill, const char *team, int delay,
 {
 	int clientNum;
 	char *botinfo;
-	gentity_t	*bot;
+	Gentity	*bot;
 	char		*key;
 	char		*s;
 	char		*botname;
@@ -791,7 +791,7 @@ static void
 G_LoadBotsFromFile(char *filename)
 {
 	int	len;
-	fileHandle_t f;
+	Fhandle f;
 	char	buf[MAX_BOTS_TEXT];
 
 	len = trap_FS_FOpenFile(filename, &f, FS_READ);
@@ -822,7 +822,7 @@ G_LoadBotsFromFile(char *filename)
 static void
 G_LoadBots(void)
 {
-	vmCvar_t botsFile;
+	Vmcvar botsFile;
 	int	numdirs;
 	char	filename[128];
 	char	dirlist[1024];

@@ -28,7 +28,7 @@ dllEntry(intptr_t (QDECL *syscallptr)(intptr_t arg,...))
 int
 PASSFLOAT(float x)
 {
-	floatint_t fi;
+	Flint fi;
 	fi.f = x;
 	return fi.i;
 }
@@ -53,14 +53,14 @@ trap_Milliseconds(void)
 }
 
 void
-trap_Cvar_Register(vmCvar_t *cvar, const char *var_name, const char *value,
+trap_Cvar_Register(Vmcvar *cvar, const char *var_name, const char *value,
 		   int flags)
 {
 	syscall(UI_CVAR_REGISTER, cvar, var_name, value, flags);
 }
 
 void
-trap_Cvar_Update(vmCvar_t *cvar)
+trap_Cvar_Update(Vmcvar *cvar)
 {
 	syscall(UI_CVAR_UPDATE, cvar);
 }
@@ -74,7 +74,7 @@ trap_Cvar_Set(const char *var_name, const char *value)
 float
 trap_Cvar_VariableValue(const char *var_name)
 {
-	floatint_t fi;
+	Flint fi;
 	fi.i = syscall(UI_CVAR_VARIABLEVALUE, var_name);
 	return fi.f;
 }
@@ -128,25 +128,25 @@ trap_Cmd_ExecuteText(int exec_when, const char *text)
 }
 
 int
-trap_FS_FOpenFile(const char *qpath, fileHandle_t *f, fsMode_t mode)
+trap_FS_FOpenFile(const char *qpath, Fhandle *f, Fsmode mode)
 {
 	return syscall(UI_FS_FOPENFILE, qpath, f, mode);
 }
 
 void
-trap_FS_Read(void *buffer, int len, fileHandle_t f)
+trap_FS_Read(void *buffer, int len, Fhandle f)
 {
 	syscall(UI_FS_READ, buffer, len, f);
 }
 
 void
-trap_FS_Write(const void *buffer, int len, fileHandle_t f)
+trap_FS_Write(const void *buffer, int len, Fhandle f)
 {
 	syscall(UI_FS_WRITE, buffer, len, f);
 }
 
 void
-trap_FS_FCloseFile(fileHandle_t f)
+trap_FS_FCloseFile(Fhandle f)
 {
 	syscall(UI_FS_FCLOSEFILE, f);
 }
@@ -159,30 +159,30 @@ trap_FS_GetFileList(const char *path, const char *extension, char *listbuf,
 }
 
 int
-trap_FS_Seek(fileHandle_t f, long offset, int origin)
+trap_FS_Seek(Fhandle f, long offset, int origin)
 {
 	return syscall(UI_FS_SEEK, f, offset, origin);
 }
 
-qhandle_t
+Handle
 trap_R_RegisterModel(const char *name)
 {
 	return syscall(UI_R_REGISTERMODEL, name);
 }
 
-qhandle_t
+Handle
 trap_R_RegisterSkin(const char *name)
 {
 	return syscall(UI_R_REGISTERSKIN, name);
 }
 
 void
-trap_R_RegisterFont(const char *fontName, int pointSize, fontInfo_t *font)
+trap_R_RegisterFont(const char *fontName, int pointSize, Fontinfo *font)
 {
 	syscall(UI_R_REGISTERFONT, fontName, pointSize, font);
 }
 
-qhandle_t
+Handle
 trap_R_RegisterShaderNoMip(const char *name)
 {
 	return syscall(UI_R_REGISTERSHADERNOMIP, name);
@@ -195,13 +195,13 @@ trap_R_ClearScene(void)
 }
 
 void
-trap_R_AddRefEntityToScene(const refEntity_t *re)
+trap_R_AddRefEntityToScene(const Refent *re)
 {
 	syscall(UI_R_ADDREFENTITYTOSCENE, re);
 }
 
 void
-trap_R_AddPolyToScene(qhandle_t hShader, int numVerts, const polyVert_t *verts)
+trap_R_AddPolyToScene(Handle hShader, int numVerts, const polyVert_t *verts)
 {
 	syscall(UI_R_ADDPOLYTOSCENE, hShader, numVerts, verts);
 }
@@ -229,7 +229,7 @@ trap_R_SetColor(const float *rgba)
 void
 trap_R_DrawStretchPic(float x, float y, float w, float h, float s1, float t1,
 		      float s2, float t2,
-		      qhandle_t hShader)
+		      Handle hShader)
 {
 	syscall(UI_R_DRAWSTRETCHPIC, PASSFLOAT(x), PASSFLOAT(y), PASSFLOAT(
 			w), PASSFLOAT(h), PASSFLOAT(s1), PASSFLOAT(
@@ -238,7 +238,7 @@ trap_R_DrawStretchPic(float x, float y, float w, float h, float s1, float t1,
 }
 
 void
-trap_R_ModelBounds(clipHandle_t model, Vec3 mins, Vec3 maxs)
+trap_R_ModelBounds(Cliphandle model, Vec3 mins, Vec3 maxs)
 {
 	syscall(UI_R_MODELBOUNDS, model, mins, maxs);
 }
@@ -250,7 +250,7 @@ trap_UpdateScreen(void)
 }
 
 int
-trap_CM_LerpTag(orientation_t *tag, clipHandle_t mod, int startFrame,
+trap_CM_LerpTag(Orient *tag, Cliphandle mod, int startFrame,
 		int endFrame, float frac,
 		const char *tagName)
 {
@@ -259,12 +259,12 @@ trap_CM_LerpTag(orientation_t *tag, clipHandle_t mod, int startFrame,
 }
 
 void
-trap_S_StartLocalSound(sfxHandle_t sfx, int channelNum)
+trap_S_StartLocalSound(Sfxhandle sfx, int channelNum)
 {
 	syscall(UI_S_STARTLOCALSOUND, sfx, channelNum);
 }
 
-sfxHandle_t
+Sfxhandle
 trap_S_RegisterSound(const char *sample, qbool compressed)
 {
 	return syscall(UI_S_REGISTERSOUND, sample, compressed);
@@ -349,7 +349,7 @@ trap_GetClientState(uiClientState_t *state)
 }
 
 void
-trap_GetGlconfig(glconfig_t *glconfig)
+trap_GetGlconfig(Glconfig *glconfig)
 {
 	syscall(UI_GETGLCONFIG, glconfig);
 }

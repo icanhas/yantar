@@ -124,7 +124,7 @@ static void
 UI_LoadArenasFromFile(char *filename)
 {
 	int	len;
-	fileHandle_t f;
+	Fhandle f;
 	char	buf[MAX_ARENAS_TEXT];
 
 	len = trap_FS_FOpenFile(filename, &f, FS_READ);
@@ -156,7 +156,7 @@ static void
 UI_LoadArenas(void)
 {
 	int	numdirs;
-	vmCvar_t arenasFile;
+	Vmcvar arenasFile;
 	char	filename[128];
 	char	dirlist[2048];
 	char * dirptr;
@@ -318,7 +318,7 @@ static void
 UI_LoadBotsFromFile(char *filename)
 {
 	int	len;
-	fileHandle_t f;
+	Fhandle f;
 	char	buf[MAX_BOTS_TEXT];
 
 	len = trap_FS_FOpenFile(filename, &f, FS_READ);
@@ -353,7 +353,7 @@ UI_LoadBotsFromFile(char *filename)
 static void
 UI_LoadBots(void)
 {
-	vmCvar_t botsFile;
+	Vmcvar botsFile;
 	int	numdirs;
 	char	filename[128];
 	char	dirlist[1024];

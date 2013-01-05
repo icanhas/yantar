@@ -453,7 +453,7 @@ CG_MapRestart(void)
 typedef struct voiceChat_s {
 	char		id[64];
 	int		numSounds;
-	sfxHandle_t	sounds[MAX_VOICESOUNDS];
+	Sfxhandle	sounds[MAX_VOICESOUNDS];
 	char		chats[MAX_VOICESOUNDS][MAX_CHATSIZE];
 } voiceChat_t;
 
@@ -480,13 +480,13 @@ CG_ParseVoiceChats(const char *filename, voiceChatList_t *voiceChatList,
 		   int maxVoiceChats)
 {
 	int	len, i;
-	fileHandle_t f;
+	Fhandle f;
 	char	buf[MAX_VOICEFILESIZE];
 	char **p, *ptr;
 	char *token;
 	voiceChat_t	*voiceChats;
 	qbool		compress;
-	sfxHandle_t	sound;
+	Sfxhandle	sound;
 
 	compress = qtrue;
 	if(cg_buildScript.integer)
@@ -619,7 +619,7 @@ int
 CG_HeadModelVoiceChats(char *filename)
 {
 	int	len, i;
-	fileHandle_t f;
+	Fhandle f;
 	char	buf[MAX_VOICEFILESIZE];
 	char **p, *ptr;
 	char *token;
@@ -661,7 +661,7 @@ CG_HeadModelVoiceChats(char *filename)
  * CG_GetVoiceChat
  */
 int
-CG_GetVoiceChat(voiceChatList_t *voiceChatList, const char *id, sfxHandle_t *snd,
+CG_GetVoiceChat(voiceChatList_t *voiceChatList, const char *id, Sfxhandle *snd,
 		char **chat)
 {
 	int i, rnd;
@@ -683,7 +683,7 @@ CG_GetVoiceChat(voiceChatList_t *voiceChatList, const char *id, sfxHandle_t *snd
 voiceChatList_t *
 CG_VoiceChatListForClient(int clientNum)
 {
-	clientInfo_t *ci;
+	Clientinfo *ci;
 	int	voiceChatNum, i, j, k, gender;
 	char	filename[MAX_QPATH], headModelName[MAX_QPATH];
 
@@ -787,7 +787,7 @@ CG_VoiceChatListForClient(int clientNum)
 
 typedef struct bufferedVoiceChat_s {
 	int		clientNum;
-	sfxHandle_t	snd;
+	Sfxhandle	snd;
 	int		voiceOnly;
 	char		cmd[MAX_SAY_TEXT];
 	char		message[MAX_SAY_TEXT];
@@ -882,8 +882,8 @@ CG_VoiceChatLocal(int mode, qbool voiceOnly, int clientNum, int color,
 #ifdef MISSIONPACK
 	char *chat;
 	voiceChatList_t *voiceChatList;
-	clientInfo_t	*ci;
-	sfxHandle_t snd;
+	Clientinfo	*ci;
+	Sfxhandle snd;
 	bufferedVoiceChat_t vchat;
 
 	/* if we are going into the intermission, don't start any voices */

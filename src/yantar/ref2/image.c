@@ -18,7 +18,7 @@ static unsigned char s_gammatable[256];
 static int gl_filter_min	= GL_LINEAR_MIPMAP_NEAREST;
 static int gl_filter_max	= GL_LINEAR;
 #define FILE_HASH_SIZE 1024
-static image_t * hashTable[FILE_HASH_SIZE];
+static Img * hashTable[FILE_HASH_SIZE];
 
 /*
 ** R_GammaCorrect
@@ -53,7 +53,7 @@ void
 GL_TextureMode(const char *string)
 {
 	int i;
-	image_t *glt;
+	Img *glt;
 
 	for(i=0; i< 6; i++)
 		if(!Q_stricmp(modes[i].name, string)){
@@ -112,7 +112,7 @@ void
 R_ImageList_f(void)
 {
 	int i;
-	image_t *image;
+	Img *image;
 	int	texels;
 	const char *yesno[] = {
 		"no ", "yes"
@@ -1514,12 +1514,12 @@ EmptyTexture(int width, int height, imgFlags_t flags,
 /*
  * R_CreateImage
  *
- * This is the only way any image_t are created
+ * This is the only way any Img are created
  */
-image_t *
+Img *
 R_CreateImage2(const char *name, byte *pic, int width, int height, imgFlags_t flags, int internalFormat)
 {
-	image_t *image;
+	Img *image;
 	qbool		isLightmap = qfalse;
 	long	hash;
 	int	glWrapClampMode;
@@ -1535,7 +1535,7 @@ R_CreateImage2(const char *name, byte *pic, int width, int height, imgFlags_t fl
 		ri.Error(ERR_DROP, "R_CreateImage: MAX_DRAWIMAGES hit");
 	}
 
-	image = tr.images[tr.numImages] = ri.Hunk_Alloc(sizeof(image_t), h_low);
+	image = tr.images[tr.numImages] = ri.Hunk_Alloc(sizeof(Img), h_low);
 	image->texnum = 1024 + tr.numImages;
 	tr.numImages++;
 
@@ -1621,7 +1621,7 @@ R_CreateImage2(const char *name, byte *pic, int width, int height, imgFlags_t fl
 	return image;
 }
 
-image_t *
+Img *
 R_CreateImage(const char *name, byte *pic, int width, int height,
 	      qbool mipmap, qbool allowPicmip, int glWrapClampMode)
 {
@@ -1639,7 +1639,7 @@ R_CreateImage(const char *name, byte *pic, int width, int height,
 	return R_CreateImage2(name, pic, width, height, flags, 0);
 }
 
-image_t *
+Img *
 R_CreateCubeImage(const char *name, byte *pic, int width, int height,
 		  qbool mipmap, qbool allowPicmip, int glWrapClampMode)
 {
@@ -1658,7 +1658,7 @@ R_CreateCubeImage(const char *name, byte *pic, int width, int height,
 }
 
 void
-R_UpdateSubImage(image_t *image, byte *pic, int x, int y, int width, int height)
+R_UpdateSubImage(Img *image, byte *pic, int x, int y, int width, int height)
 {
 	byte *scaledBuffer = NULL;
 	byte *resampledBuffer = NULL;
@@ -1832,10 +1832,10 @@ R_LoadImage(const char *name, byte **pic, int *width, int *height)
  * Finds or loads the given image.
  * Returns NULL if it fails, not a default image.
  */
-image_t *
+Img *
 R_FindImageFile2(const char *name, imgFlags_t flags)
 {
-	image_t *image;
+	Img *image;
 	int width, height;
 	byte	*pic;
 	long	hash;
@@ -1878,7 +1878,7 @@ R_FindImageFile2(const char *name, imgFlags_t flags)
 }
 
 
-image_t *
+Img *
 R_FindImageFile(const char *name, qbool mipmap, qbool allowPicmip, int glWrapClampMode)
 {
 	imgFlags_t flags = IMGFLAG_NONE;
@@ -2410,10 +2410,10 @@ CommaParse(char **data_p)
  * RE_RegisterSkin
  *
  */
-qhandle_t
+Handle
 RE_RegisterSkin(const char *name)
 {
-	qhandle_t	hSkin;
+	Handle		hSkin;
 	skin_t		*skin;
 	skinSurface_t *surf;
 	union {
@@ -2537,7 +2537,7 @@ R_InitSkins(void)
  * R_GetSkinByHandle
  */
 skin_t  *
-R_GetSkinByHandle(qhandle_t hSkin)
+R_GetSkinByHandle(Handle hSkin)
 {
 	if(hSkin < 1 || hSkin >= tr.numSkins){
 		return tr.skins[0];

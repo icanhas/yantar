@@ -100,7 +100,7 @@ R_AddPolygonSurfaces(void)
  *
  */
 void
-RE_AddPolyToScene(qhandle_t hShader, int numVerts, const polyVert_t *verts, int numPolys)
+RE_AddPolyToScene(Handle hShader, int numVerts, const polyVert_t *verts, int numPolys)
 {
 	srfPoly_t	*poly;
 	int	i, j;
@@ -191,7 +191,7 @@ RE_AddPolyToScene(qhandle_t hShader, int numVerts, const polyVert_t *verts, int 
  *
  */
 void
-RE_AddRefEntityToScene(const refEntity_t *ent)
+RE_AddRefEntityToScene(const Refent *ent)
 {
 #ifdef REACTION
 	/* JBravo: Mirrored models */

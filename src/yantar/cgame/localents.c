@@ -12,9 +12,9 @@
 #include "local.h"
 
 #define MAX_LOCAL_ENTITIES 512
-localEntity_t	cg_localEntities[MAX_LOCAL_ENTITIES];
-localEntity_t	cg_activeLocalEntities;	/* double linked list */
-localEntity_t	*cg_freeLocalEntities;	/* single linked list */
+Localent	cg_localEntities[MAX_LOCAL_ENTITIES];
+Localent	cg_activeLocalEntities;	/* double linked list */
+Localent	*cg_freeLocalEntities;	/* single linked list */
 
 /*
  * CG_InitLocalEntities
@@ -39,7 +39,7 @@ CG_InitLocalEntities(void)
  * CG_FreeLocalEntity
  */
 void
-CG_FreeLocalEntity(localEntity_t *le)
+CG_FreeLocalEntity(Localent *le)
 {
 	if(!le->prev)
 		CG_Error("CG_FreeLocalEntity: not active");
@@ -58,10 +58,10 @@ CG_FreeLocalEntity(localEntity_t *le)
  *
  * Will allways succeed, even if it requires freeing an old active entity
  */
-localEntity_t   *
+Localent   *
 CG_AllocLocalEntity(void)
 {
-	localEntity_t *le;
+	Localent *le;
 
 	if(!cg_freeLocalEntities)
 		/* no free entities, so free the one at the end of the chain
@@ -97,13 +97,13 @@ CG_AllocLocalEntity(void)
  * Leave expanding blood puffs behind gibs
  */
 void
-CG_BloodTrail(localEntity_t *le)
+CG_BloodTrail(Localent *le)
 {
 	int	t;
 	int	t2;
 	int	step;
 	Vec3 newOrigin;
-	localEntity_t *blood;
+	Localent *blood;
 
 	step = 150;
 	t = step * ((cg.time - cg.frametime + step) / step);
@@ -132,7 +132,7 @@ CG_BloodTrail(localEntity_t *le)
  * CG_FragmentBounceMark
  */
 void
-CG_FragmentBounceMark(localEntity_t *le, trace_t *trace)
+CG_FragmentBounceMark(Localent *le, Trace *trace)
 {
 	int radius;
 
@@ -162,13 +162,13 @@ CG_FragmentBounceMark(localEntity_t *le, trace_t *trace)
  * CG_FragmentBounceSound
  */
 void
-CG_FragmentBounceSound(localEntity_t *le, trace_t *trace)
+CG_FragmentBounceSound(Localent *le, Trace *trace)
 {
 	if(le->leBounceSoundType == LEBS_BLOOD){
 		/* half the gibs will make splat sounds */
 		if(rand() & 1){
 			int r = rand()&3;
-			sfxHandle_t s;
+			Sfxhandle s;
 
 			if(r == 0)
 				s = cgs.media.gibBounce1Sound;
@@ -194,7 +194,7 @@ CG_FragmentBounceSound(localEntity_t *le, trace_t *trace)
  * CG_ReflectVelocity
  */
 void
-CG_ReflectVelocity(localEntity_t *le, trace_t *trace)
+CG_ReflectVelocity(Localent *le, Trace *trace)
 {
 	Vec3	velocity;
 	float	dot;
@@ -227,10 +227,10 @@ CG_ReflectVelocity(localEntity_t *le, trace_t *trace)
  * CG_AddFragment
  */
 void
-CG_AddFragment(localEntity_t *le)
+CG_AddFragment(Localent *le)
 {
 	Vec3	newOrigin;
-	trace_t trace;
+	Trace trace;
 
 	if(le->pos.type == TR_STATIONARY){
 		/* sink into the ground if near the removal time */
@@ -313,9 +313,9 @@ CG_AddFragment(localEntity_t *le)
  * CG_AddFadeRGB
  */
 void
-CG_AddFadeRGB(localEntity_t *le)
+CG_AddFadeRGB(Localent *le)
 {
-	refEntity_t *re;
+	Refent *re;
 	float c;
 
 	re = &le->refEntity;
@@ -335,9 +335,9 @@ CG_AddFadeRGB(localEntity_t *le)
  * CG_AddMoveScaleFade
  */
 static void
-CG_AddMoveScaleFade(localEntity_t *le)
+CG_AddMoveScaleFade(Localent *le)
 {
-	refEntity_t *re;
+	Refent *re;
 	float	c;
 	Vec3	delta;
 	float	len;
@@ -381,9 +381,9 @@ CG_AddMoveScaleFade(localEntity_t *le)
  * There are often many of these, so it needs to be simple.
  */
 static void
-CG_AddScaleFade(localEntity_t *le)
+CG_AddScaleFade(Localent *le)
 {
-	refEntity_t *re;
+	Refent *re;
 	float	c;
 	Vec3	delta;
 	float	len;
@@ -418,9 +418,9 @@ CG_AddScaleFade(localEntity_t *le)
  * There are often 100+ of these, so it needs to be simple.
  */
 static void
-CG_AddFallScaleFade(localEntity_t *le)
+CG_AddFallScaleFade(Localent *le)
 {
-	refEntity_t *re;
+	Refent *re;
 	float	c;
 	Vec3	delta;
 	float	len;
@@ -454,9 +454,9 @@ CG_AddFallScaleFade(localEntity_t *le)
  * CG_AddExplosion
  */
 static void
-CG_AddExplosion(localEntity_t *ex)
+CG_AddExplosion(Localent *ex)
 {
-	refEntity_t *ent;
+	Refent *ent;
 
 	ent = &ex->refEntity;
 
@@ -485,9 +485,9 @@ CG_AddExplosion(localEntity_t *ex)
  * CG_AddSpriteExplosion
  */
 static void
-CG_AddSpriteExplosion(localEntity_t *le)
+CG_AddSpriteExplosion(Localent *le)
 {
-	refEntity_t re;
+	Refent re;
 	float c;
 
 	re = le->refEntity;
@@ -525,7 +525,7 @@ CG_AddSpriteExplosion(localEntity_t *le)
 }
 
 void
-CG_AddRefEntity(localEntity_t *le)
+CG_AddRefEntity(Localent *le)
 {
 	if(le->endTime < cg.time){
 		CG_FreeLocalEntity(le);
@@ -540,9 +540,9 @@ CG_AddRefEntity(localEntity_t *le)
 #define NUMBER_SIZE 8
 
 void
-CG_AddScorePlum(localEntity_t *le)
+CG_AddScorePlum(Localent *le)
 {
-	refEntity_t *re;
+	Refent *re;
 	Vec3	origin, delta, dir, vec, up = {0, 0, 1};
 	float	c, len;
 	int	i, score, digits[10], numdigits, negative;
@@ -633,7 +633,7 @@ CG_AddScorePlum(localEntity_t *le)
 void
 CG_AddLocalEntities(void)
 {
-	localEntity_t *le, *next;
+	Localent *le, *next;
 
 	/* walk the list backwards, so any new local entities generated
 	 * (trails, marks, etc) will be present this frame */

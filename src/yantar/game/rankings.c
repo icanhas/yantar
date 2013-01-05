@@ -22,8 +22,8 @@
 void
 G_RankRunFrame()
 {
-	gentity_t * ent;
-	gentity_t * ent2;
+	Gentity * ent;
+	Gentity * ent2;
 	grank_status_t	old_status;
 	grank_status_t	status;
 	int	time;
@@ -604,7 +604,7 @@ G_RankPlayerDie(int self, int attacker, int means_of_death)
 void
 G_RankWeaponTime(int self, int weapon)
 {
-	gclient_t * client;
+	gClient * client;
 	int time;
 
 	if(level.warmupTime != 0)
@@ -955,7 +955,7 @@ G_RankUserTeamName(int self, char* team_name)
 void
 G_RankClientDisconnect(int self)
 {
-	gclient_t * client;
+	gClient * client;
 	int	time;
 	int	match_rating;
 

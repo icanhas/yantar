@@ -208,7 +208,7 @@ CM_BoxBrushes(const Vec3 mins, const Vec3 maxs, cbrush_t **list,
  *
  */
 int
-CM_PointContents(const Vec3 p, clipHandle_t model)
+CM_PointContents(const Vec3 p, Cliphandle model)
 {
 	int	leafnum;
 	int	i, k;
@@ -261,7 +261,7 @@ CM_PointContents(const Vec3 p, clipHandle_t model)
  * rotating entities
  */
 int
-CM_TransformedPointContents(const Vec3 p, clipHandle_t model,
+CM_TransformedPointContents(const Vec3 p, Cliphandle model,
 			    const Vec3 origin,
 			    const Vec3 angles)
 {

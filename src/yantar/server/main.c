@@ -8,44 +8,44 @@
 #include "server.h"
 
 #ifdef USE_VOIP
-cvar_t *sv_voip;
+Cvar *sv_voip;
 #endif
 
 serverStatic_t svs;		/* persistant server info */
 server_t	sv;		/* local server */
-vm_t		*gvm = NULL;	/* game virtual machine */
+Vm		*gvm = NULL;	/* game virtual machine */
 
-cvar_t		*sv_fps = NULL;		/* time rate for running non-clients */
-cvar_t		*sv_timeout;		/* seconds without any message */
-cvar_t		*sv_zombietime;		/* seconds to sink messages after disconnect */
-cvar_t		*sv_rconPassword;	/* password for remote server commands */
-cvar_t		*sv_privatePassword;	/* password for the privateClient slots */
-cvar_t		*sv_allowDownload;
-cvar_t		*sv_maxclients;
+Cvar		*sv_fps = NULL;		/* time rate for running non-clients */
+Cvar		*sv_timeout;		/* seconds without any message */
+Cvar		*sv_zombietime;		/* seconds to sink messages after disconnect */
+Cvar		*sv_rconPassword;	/* password for remote server commands */
+Cvar		*sv_privatePassword;	/* password for the privateClient slots */
+Cvar		*sv_allowDownload;
+Cvar		*sv_maxclients;
 
-cvar_t		*sv_privateClients;	/* number of clients reserved for password */
-cvar_t		*sv_hostname;
-cvar_t		*sv_master[MAX_MASTER_SERVERS];	/* master server ip address */
-cvar_t		*sv_reconnectlimit;		/* minimum seconds between connect messages */
-cvar_t		*sv_showloss;			/* report when usercmds are lost */
-cvar_t		*sv_padPackets;			/* add nop bytes to messages */
-cvar_t		*sv_killserver;			/* menu system can set to 1 to shut server down */
-cvar_t		*sv_mapname;
-cvar_t		*sv_mapChecksum;
-cvar_t		*sv_serverid;
-cvar_t		*sv_minRate;
-cvar_t		*sv_maxRate;
-cvar_t		*sv_dlRate;
-cvar_t		*sv_minPing;
-cvar_t		*sv_maxPing;
-cvar_t		*sv_gametype;
-cvar_t		*sv_pure;
-cvar_t		*sv_floodProtect;
-cvar_t		*sv_lanForceRate;	/* dedicated 1 (LAN) server forces local client rates to 99999 (bug #491) */
+Cvar		*sv_privateClients;	/* number of clients reserved for password */
+Cvar		*sv_hostname;
+Cvar		*sv_master[MAX_MASTER_SERVERS];	/* master server ip address */
+Cvar		*sv_reconnectlimit;		/* minimum seconds between connect messages */
+Cvar		*sv_showloss;			/* report when usercmds are lost */
+Cvar		*sv_padPackets;			/* add nop bytes to messages */
+Cvar		*sv_killserver;			/* menu system can set to 1 to shut server down */
+Cvar		*sv_mapname;
+Cvar		*sv_mapChecksum;
+Cvar		*sv_serverid;
+Cvar		*sv_minRate;
+Cvar		*sv_maxRate;
+Cvar		*sv_dlRate;
+Cvar		*sv_minPing;
+Cvar		*sv_maxPing;
+Cvar		*sv_gametype;
+Cvar		*sv_pure;
+Cvar		*sv_floodProtect;
+Cvar		*sv_lanForceRate;	/* dedicated 1 (LAN) server forces local client rates to 99999 (bug #491) */
 #ifndef STANDALONE
-cvar_t		*sv_strictAuth;
+Cvar		*sv_strictAuth;
 #endif
-cvar_t		*sv_banFile;
+Cvar		*sv_banFile;
 
 serverBan_t serverBans[SERVER_MAXBANS];
 uint serverBansCount = 0;
@@ -88,7 +88,7 @@ SV_ExpandNewlines(char *in)
  */
 #if 0	/* unused */
 static int
-SV_ReplacePendingServerCommands(client_t *client, const char *cmd)
+SV_ReplacePendingServerCommands(Client *client, const char *cmd)
 {
 	int i, index, csnum1, csnum2;
 
@@ -121,10 +121,10 @@ SV_ReplacePendingServerCommands(client_t *client, const char *cmd)
  * SV_AddServerCommand
  *
  * The given command will be transmitted to the client, and is guaranteed to
- * not have future snapshot_t executed before it is executed
+ * not have future Snap executed before it is executed
  */
 void
-SV_AddServerCommand(client_t *client, const char *cmd)
+SV_AddServerCommand(Client *client, const char *cmd)
 {
 	int index, i;
 
@@ -170,11 +170,11 @@ SV_AddServerCommand(client_t *client, const char *cmd)
  * A NULL client will broadcast to all clients
  */
 void QDECL
-SV_SendServerCommand(client_t *cl, const char *fmt, ...)
+SV_SendServerCommand(Client *cl, const char *fmt, ...)
 {
 	va_list argptr;
 	byte	message[MAX_MSGLEN];
-	client_t *client;
+	Client *client;
 	int j;
 
 	va_start (argptr,fmt);
@@ -224,7 +224,7 @@ SV_SendServerCommand(client_t *cl, const char *fmt, ...)
 void
 SV_MasterHeartbeat(const char *message)
 {
-	static netadr_t adr[MAX_MASTER_SERVERS][2];	/* [2] for v4 and v6 address for the same address string. */
+	static Netaddr adr[MAX_MASTER_SERVERS][2];	/* [2] for v4 and v6 address for the same address string. */
 	int	i;
 	int	res;
 	int	netenabled;
@@ -382,7 +382,7 @@ static leakyBucket_t	*bucketHashes[ MAX_HASHES ];
  * SVC_HashForAddress
  */
 static long
-SVC_HashForAddress(netadr_t address)
+SVC_HashForAddress(Netaddr address)
 {
 	byte	*ip	= NULL;
 	size_t size	= 0;
@@ -417,7 +417,7 @@ SVC_HashForAddress(netadr_t address)
  * Find or allocate a bucket for an address
  */
 static leakyBucket_t *
-SVC_BucketForAddress(netadr_t address, int burst, int period)
+SVC_BucketForAddress(Netaddr address, int burst, int period)
 {
 	leakyBucket_t *bucket = NULL;
 	int	i;
@@ -527,7 +527,7 @@ SVC_RateLimit(leakyBucket_t *bucket, int burst, int period)
  * Rate limit for a particular address
  */
 static qbool
-SVC_RateLimitAddress(netadr_t from, int burst, int period)
+SVC_RateLimitAddress(Netaddr from, int burst, int period)
 {
 	leakyBucket_t *bucket = SVC_BucketForAddress(from, burst, period);
 
@@ -542,13 +542,13 @@ SVC_RateLimitAddress(netadr_t from, int burst, int period)
  * the simple info query.
  */
 static void
-SVC_Status(netadr_t from)
+SVC_Status(Netaddr from)
 {
 	char	player[1024];
 	char	status[MAX_MSGLEN];
 	int	i;
-	client_t *cl;
-	playerState_t *ps;
+	Client *cl;
+	Playerstate *ps;
 	int	statusLength;
 	int	playerLength;
 	char	infostring[MAX_INFO_STRING];
@@ -608,7 +608,7 @@ SVC_Status(netadr_t from)
  * if a user is interested in a server to do a full status
  */
 void
-SVC_Info(netadr_t from)
+SVC_Info(Netaddr from)
 {
 	int	i, count, humans;
 	char	*gamedir;
@@ -699,7 +699,7 @@ SV_FlushRedirect(char *outputbuf)
  * Redirect all printfs
  */
 static void
-SVC_RemoteCommand(netadr_t from, msg_t *msg)
+SVC_RemoteCommand(Netaddr from, Bitmsg *msg)
 {
 	qbool valid;
 	char remaining[1024];
@@ -779,7 +779,7 @@ SVC_RemoteCommand(netadr_t from, msg_t *msg)
  * connectionless packets.
  */
 static void
-SV_ConnectionlessPacket(netadr_t from, msg_t *msg)
+SV_ConnectionlessPacket(Netaddr from, Bitmsg *msg)
 {
 	char *s;
 	char *c;
@@ -825,10 +825,10 @@ SV_ConnectionlessPacket(netadr_t from, msg_t *msg)
  * SV_PacketEvent
  */
 void
-SV_PacketEvent(netadr_t from, msg_t *msg)
+SV_PacketEvent(Netaddr from, Bitmsg *msg)
 {
 	int	i;
-	client_t *cl;
+	Client *cl;
 	int	qport;
 
 	/* check for connectionless packet (0xffffffff) first */
@@ -886,10 +886,10 @@ static void
 SV_CalcPings(void)
 {
 	int	i, j;
-	client_t *cl;
+	Client *cl;
 	int	total, count;
 	int	delta;
-	playerState_t *ps;
+	Playerstate *ps;
 
 	for(i=0; i < sv_maxclients->integer; i++){
 		cl = &svs.clients[i];
@@ -937,7 +937,7 @@ SV_CalcPings(void)
  * seconds, drop the conneciton.  Server time is used instead of
  * realtime to avoid dropping the local client while debugging.
  *
- * When a client is normally dropped, the client_t goes into a zombie state
+ * When a client is normally dropped, the Client goes into a zombie state
  * for a few seconds to make sure any final reliable message gets resent
  * if necessary
  */
@@ -945,7 +945,7 @@ static void
 SV_CheckTimeouts(void)
 {
 	int	i;
-	client_t *cl;
+	Client *cl;
 	int	droppoint;
 	int	zombiepoint;
 
@@ -987,7 +987,7 @@ static qbool
 SV_CheckPaused(void)
 {
 	int	count;
-	client_t *cl;
+	Client *cl;
 	int	i;
 
 	if(!cl_paused->integer)
@@ -1154,7 +1154,7 @@ SV_Frame(int msec)
 #define UDPIP6_HEADER_SIZE	48
 
 int
-SV_RateMsec(client_t *client)
+SV_RateMsec(Client *client)
 {
 	int	rate, rateMsec;
 	int	messageSize;

@@ -16,7 +16,7 @@ enum {
 };
 
 void
-G_BounceMissile(gentity_t *ent, trace_t *trace)
+G_BounceMissile(Gentity *ent, Trace *trace)
 {
 	Vec3 velocity;
 	float dot;
@@ -48,7 +48,7 @@ G_BounceMissile(gentity_t *ent, trace_t *trace)
 
 /* Explode a missile without an impact */
 void
-G_ExplodeMissile(gentity_t *ent)
+G_ExplodeMissile(Gentity *ent)
 {
 	Vec3 dir;
 	Vec3 origin;
@@ -74,7 +74,7 @@ G_ExplodeMissile(gentity_t *ent)
 }
 
 static void
-ProximityMine_Explode(gentity_t *mine)
+ProximityMine_Explode(Gentity *mine)
 {
 	G_ExplodeMissile(mine);
 	/* if the prox mine has a trigger free it */
@@ -85,7 +85,7 @@ ProximityMine_Explode(gentity_t *mine)
 }
 
 static void
-ProximityMine_Die(gentity_t *ent, gentity_t *inflictor, gentity_t *attacker,
+ProximityMine_Die(Gentity *ent, Gentity *inflictor, Gentity *attacker,
 	int damage, int mod)
 {
 	UNUSED(inflictor);
@@ -97,10 +97,10 @@ ProximityMine_Die(gentity_t *ent, gentity_t *inflictor, gentity_t *attacker,
 }
 
 void
-ProximityMine_Trigger(gentity_t *trigger, gentity_t *other, trace_t *trace)
+ProximityMine_Trigger(Gentity *trigger, Gentity *other, Trace *trace)
 {
 	Vec3 v;
-	gentity_t *mine;
+	Gentity *mine;
 	
 	UNUSED(trace);
 	if(!other->client)
@@ -129,9 +129,9 @@ ProximityMine_Trigger(gentity_t *trigger, gentity_t *other, trace_t *trace)
 }
 
 static void
-ProximityMine_Activate(gentity_t *ent)
+ProximityMine_Activate(Gentity *ent)
 {
-	gentity_t *trigger;
+	Gentity *trigger;
 	float r;
 
 	ent->think = ProximityMine_Explode;
@@ -157,9 +157,9 @@ ProximityMine_Activate(gentity_t *ent)
 }
 
 static void
-ProximityMine_ExplodeOnPlayer(gentity_t *mine)
+ProximityMine_ExplodeOnPlayer(Gentity *mine)
 {
-	gentity_t *player;
+	Gentity *player;
 
 	player = mine->enemy;
 	player->client->ps.eFlags &= ~EF_TICKING;
@@ -172,7 +172,7 @@ ProximityMine_ExplodeOnPlayer(gentity_t *mine)
 }
 
 static void
-ProximityMine_Player(gentity_t *mine, gentity_t *player)
+ProximityMine_Player(Gentity *mine, Gentity *player)
 {
 	if(mine->s.eFlags & EF_NODRAW)
 		return;
@@ -197,9 +197,9 @@ ProximityMine_Player(gentity_t *mine, gentity_t *player)
 }
 
 void
-G_MissileImpact(gentity_t *ent, trace_t *trace)
+G_MissileImpact(Gentity *ent, Trace *trace)
 {
-	gentity_t *other;
+	Gentity *other;
 	qbool hitClient = qfalse;
 #ifdef MISSIONPACK
 	Vec3 forward, impactpoint, bouncedir;
@@ -262,7 +262,7 @@ G_MissileImpact(gentity_t *ent, trace_t *trace)
 	}
 
 	if(!strcmp(ent->classname, "hook")){
-		gentity_t	*nent;
+		Gentity	*nent;
 		Vec3		v;
 
 		nent = G_Spawn();
@@ -331,10 +331,10 @@ G_MissileImpact(gentity_t *ent, trace_t *trace)
 }
 
 void
-G_RunMissile(gentity_t *ent)
+G_RunMissile(Gentity *ent)
 {
 	Vec3 origin;
-	trace_t tr;
+	Trace tr;
 	int passent;
 
 	/* get current position */
@@ -391,10 +391,10 @@ G_RunMissile(gentity_t *ent)
 	G_RunThink(ent);
 }
 
-gentity_t *
-fire_plasma(gentity_t *self, Vec3 start, Vec3 dir)
+Gentity *
+fire_plasma(Gentity *self, Vec3 start, Vec3 dir)
 {
-	gentity_t *bolt;
+	Gentity *bolt;
 
 	normv3 (dir);
 	bolt = G_Spawn();
@@ -422,10 +422,10 @@ fire_plasma(gentity_t *self, Vec3 start, Vec3 dir)
 	return bolt;
 }
 
-gentity_t *
-fire_grenade(gentity_t *self, Vec3 start, Vec3 dir)
+Gentity *
+fire_grenade(Gentity *self, Vec3 start, Vec3 dir)
 {
-	gentity_t *bolt;
+	Gentity *bolt;
 
 	normv3 (dir);
 	bolt = G_Spawn();
@@ -454,10 +454,10 @@ fire_grenade(gentity_t *self, Vec3 start, Vec3 dir)
 	return bolt;
 }
 
-gentity_t *
-fire_bfg(gentity_t *self, Vec3 start, Vec3 dir)
+Gentity *
+fire_bfg(Gentity *self, Vec3 start, Vec3 dir)
 {
-	gentity_t *bolt;
+	Gentity *bolt;
 
 	normv3 (dir);
 	bolt = G_Spawn();
@@ -485,10 +485,10 @@ fire_bfg(gentity_t *self, Vec3 start, Vec3 dir)
 	return bolt;
 }
 
-gentity_t *
-fire_rocket(gentity_t *self, Vec3 start, Vec3 dir)
+Gentity *
+fire_rocket(Gentity *self, Vec3 start, Vec3 dir)
 {
-	gentity_t *bolt;
+	Gentity *bolt;
 
 	normv3 (dir);
 	bolt = G_Spawn();
@@ -516,10 +516,10 @@ fire_rocket(gentity_t *self, Vec3 start, Vec3 dir)
 	return bolt;
 }
 
-gentity_t *
-fire_grapple(gentity_t *self, Vec3 start, Vec3 dir)
+Gentity *
+fire_grapple(Gentity *self, Vec3 start, Vec3 dir)
 {
-	gentity_t *hook;
+	Gentity *hook;
 
 	normv3 (dir);
 	hook = G_Spawn();
@@ -545,10 +545,10 @@ fire_grapple(gentity_t *self, Vec3 start, Vec3 dir)
 	return hook;
 }
 
-gentity_t *
-firenanoid(gentity_t *self, Vec3 start, Vec3 forward, Vec3 right, Vec3 up)
+Gentity *
+firenanoid(Gentity *self, Vec3 start, Vec3 forward, Vec3 right, Vec3 up)
 {
-	gentity_t *bolt;
+	Gentity *bolt;
 	Vec3 dir, end;
 	float r, u, scale;
 
@@ -584,10 +584,10 @@ firenanoid(gentity_t *self, Vec3 start, Vec3 forward, Vec3 right, Vec3 up)
 	return bolt;
 }
 
-gentity_t *
-fire_prox(gentity_t *self, Vec3 start, Vec3 dir)
+Gentity *
+fire_prox(Gentity *self, Vec3 start, Vec3 dir)
 {
-	gentity_t *bolt;
+	Gentity *bolt;
 
 	normv3 (dir);
 	bolt = G_Spawn();

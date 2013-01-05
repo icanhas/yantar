@@ -9,7 +9,7 @@
 #include "../client.h"
 #include "codec.h"
 
-static snd_codec_t *codecs;
+static Sndcodec *codecs;
 
 /*
  * Opens/loads a sound, tries codec based on the sound's file extension
@@ -18,8 +18,8 @@ static snd_codec_t *codecs;
 static void *
 S_CodecGetSound(const char *filename, snd_info_t *info)
 {
-	snd_codec_t	*codec;
-	snd_codec_t	*orgCodec = NULL;
+	Sndcodec	*codec;
+	Sndcodec	*orgCodec = NULL;
 	qbool		orgNameFailed = qfalse;
 	char	localName[ MAX_QPATH ];
 	const char      *ext;
@@ -110,7 +110,7 @@ S_CodecShutdown()
 }
 
 void
-S_CodecRegister(snd_codec_t *codec)
+S_CodecRegister(Sndcodec *codec)
 {
 	codec->next = codecs;
 	codecs = codec;
@@ -122,31 +122,31 @@ S_CodecLoad(const char *filename, snd_info_t *info)
 	return S_CodecGetSound(filename, info);
 }
 
-snd_stream_t *
+Sndstream *
 S_CodecOpenStream(const char *filename)
 {
 	return S_CodecGetSound(filename, NULL);
 }
 
 void
-S_CodecCloseStream(snd_stream_t *stream)
+S_CodecCloseStream(Sndstream *stream)
 {
 	stream->codec->close(stream);
 }
 
 int
-S_CodecReadStream(snd_stream_t *stream, int bytes, void *buffer)
+S_CodecReadStream(Sndstream *stream, int bytes, void *buffer)
 {
 	return stream->codec->read(stream, bytes, buffer);
 }
 
 /* Util functions (used by codecs) */
 
-snd_stream_t *
-S_CodecUtilOpen(const char *filename, snd_codec_t *codec)
+Sndstream *
+S_CodecUtilOpen(const char *filename, Sndcodec *codec)
 {
-	snd_stream_t	*stream;
-	fileHandle_t	hnd;
+	Sndstream	*stream;
+	Fhandle	hnd;
 	int length;
 
 	/* Try to open the file */
@@ -157,7 +157,7 @@ S_CodecUtilOpen(const char *filename, snd_codec_t *codec)
 	}
 
 	/* Allocate a stream */
-	stream = Z_Malloc(sizeof(snd_stream_t));
+	stream = Z_Malloc(sizeof(Sndstream));
 	if(!stream){
 		FS_FCloseFile(hnd);
 		return NULL;
@@ -171,7 +171,7 @@ S_CodecUtilOpen(const char *filename, snd_codec_t *codec)
 }
 
 void
-S_CodecUtilClose(snd_stream_t **stream)
+S_CodecUtilClose(Sndstream **stream)
 {
 	FS_FCloseFile((*stream)->file);
 	Z_Free(*stream);

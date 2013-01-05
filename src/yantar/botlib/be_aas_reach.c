@@ -197,7 +197,7 @@ AAS_GetJumpPadInfo(int ent, Vec3 areastart, Vec3 absmins, Vec3 absmaxs,
 	int modelnum, ent2;
 	float	speed, height, gravity, time, dist, forward;
 	Vec3	origin, angles, teststart, ent2origin;
-	aas_trace_t trace;
+	aas_Trace trace;
 	char	model[MAX_EPAIRKEY];
 	char	target[MAX_EPAIRKEY], targetname[MAX_EPAIRKEY];
 
@@ -343,7 +343,7 @@ AAS_BestReachableArea(Vec3 origin, Vec3 mins, Vec3 maxs, Vec3 goalorigin)
 	Vec3	absmins, absmaxs;
 	/* Vec3 bbmins, bbmaxs; */
 	Vec3	start, end;
-	aas_trace_t trace;
+	aas_Trace trace;
 
 	if(!aasworld.loaded){
 		botimport.Print(PRT_ERROR,
@@ -1104,7 +1104,7 @@ AAS_Reachability_Step_Barrier_WaterJump_WalkOffLedge(int area1num, int area2num)
 	aas_face_t *groundface1, *groundface2;
 	aas_edge_t	*edge1, *edge2;
 	aas_lreachability_t *lreach;
-	aas_trace_t	trace;
+	aas_Trace	trace;
 
 	/* must be able to walk or swim in the first area */
 	if(!AAS_AreaGrounded(area1num) && !AAS_AreaSwim(area1num)) return qfalse;
@@ -2234,7 +2234,7 @@ AAS_Reachability_Jump(int area1num, int area2num)
 	aas_face_t *face1, *face2;
 	aas_edge_t	*edge1, *edge2;
 	aas_plane_t     *plane1, *plane2, *plane;
-	aas_trace_t	trace;
+	aas_Trace	trace;
 	aas_clientmove_t move;
 	aas_lreachability_t *lreach;
 
@@ -2518,7 +2518,7 @@ AAS_Reachability_Ladder(int area1num, int area2num)
 	aas_plane_t *plane1, *plane2;
 	aas_edge_t	*sharededge, *edge1;
 	aas_lreachability_t *lreach;
-	aas_trace_t	trace;
+	aas_Trace	trace;
 
 	if(!AAS_AreaLadder(area1num) || !AAS_AreaLadder(area2num)) return qfalse;
 	/*  */
@@ -2909,7 +2909,7 @@ AAS_Reachability_Teleport(void)
 	Vec3	mid, velocity, cmdmove;
 	aas_lreachability_t	*lreach;
 	aas_clientmove_t	move;
-	aas_trace_t trace;
+	aas_Trace trace;
 	aas_link_t		*areas, *link;
 
 	for(ent = AAS_NextBSPEntity(0); ent; ent = AAS_NextBSPEntity(ent)){
@@ -3117,7 +3117,7 @@ AAS_Reachability_Elevator(void)
 	Vec3	bottomorg, toporg, start, end, dir;
 	Scalar	xvals[8], yvals[8], xvals_top[8], yvals_top[8];
 	aas_lreachability_t *lreach;
-	aas_trace_t trace;
+	aas_Trace trace;
 
 #ifdef REACH_DEBUG
 	Log_Write("AAS_Reachability_Elevator\r\n");
@@ -3762,7 +3762,7 @@ AAS_Reachability_JumpPad(void)
 	Vec3	velocity, absmins, absmaxs;
 	/* Vec3 origin, ent2origin, angles, teststart; */
 	aas_clientmove_t move;
-	/* aas_trace_t trace; */
+	/* aas_Trace trace; */
 	aas_link_t *areas, *link;
 	/* char target[MAX_EPAIRKEY], targetname[MAX_EPAIRKEY], model[MAX_EPAIRKEY]; */
 	char classname[MAX_EPAIRKEY];
@@ -4160,8 +4160,8 @@ AAS_Reachability_Grapple(int area1num, int area2num)
 {
 	int face2num, i, j, areanum, numareas, areas[20];
 	float mingrappleangle, z, hordist;
-	bsp_trace_t	bsptrace;
-	aas_trace_t	trace;
+	bsp_Trace	bsptrace;
+	aas_Trace	trace;
 	aas_face_t *face2;
 	aas_area_t *area1, *area2;
 	aas_lreachability_t *lreach;
@@ -4388,7 +4388,7 @@ AAS_Reachability_WeaponJump(int area1num, int area2num)
 	Vec3	areastart, facecenter, start, end, dir, cmdmove;	/* teststart; */
 	Vec3	velocity;
 	aas_clientmove_t move;
-	aas_trace_t trace;
+	aas_Trace trace;
 
 	visualize = qfalse;
 /* if (area1num == 4436 && area2num == 4318)
@@ -4535,7 +4535,7 @@ AAS_Reachability_WalkOffLedge(int areanum)
 	Scalar	*v1, *v2;
 	Vec3	sharededgevec, mid, dir, testend;
 	aas_lreachability_t *lreach;
-	aas_trace_t trace;
+	aas_Trace trace;
 
 	if(!AAS_AreaGrounded(areanum) || AAS_AreaSwim(areanum)) return;
 	/*  */

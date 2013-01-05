@@ -12,7 +12,7 @@
  * given client
  */
 static void
-SV_SendConfigstring(client_t *client, int index)
+SV_SendConfigstring(Client *client, int index)
 {
 	int	maxChunkSize = MAX_STRING_CHARS - 24;
 	int	len;
@@ -52,7 +52,7 @@ SV_SendConfigstring(client_t *client, int index)
  * Configstring indexes that have changed while the client was in CS_PRIMED
  */
 void
-SV_UpdateConfigstrings(client_t *client)
+SV_UpdateConfigstrings(Client *client)
 {
 	int index;
 
@@ -74,7 +74,7 @@ void
 SV_SetConfigstring(int index, const char *val)
 {
 	int i;
-	client_t *client;
+	Client *client;
 
 	if(index < 0 || index >= MAX_CONFIGSTRINGS)
 		Com_Errorf (ERR_DROP, "SV_SetConfigstring: bad index %i", index);
@@ -161,7 +161,7 @@ SV_GetUserinfo(int index, char *buffer, int bufferSize)
 static void
 SV_CreateBaseline(void)
 {
-	sharedEntity_t *svent;
+	Sharedent *svent;
 	int entnum;
 
 	for(entnum = 1; entnum < sv.num_entities; entnum++){
@@ -204,7 +204,7 @@ SV_Startup(void)
 		Com_Errorf(ERR_FATAL, "SV_Startup: svs.initialized");
 	SV_BoundMaxClients(1);
 
-	svs.clients = Z_Malloc (sizeof(client_t) * sv_maxclients->integer);
+	svs.clients = Z_Malloc (sizeof(Client) * sv_maxclients->integer);
 	if(com_dedicated->integer)
 		svs.numSnapshotEntities = sv_maxclients->integer *
 					  PACKET_BACKUP * 64;
@@ -227,7 +227,7 @@ void
 SV_ChangeMaxClients(void)
 {
 	int oldMaxClients, i, count;
-	client_t *oldClients;
+	Client *oldClients;
 
 	/* get the highest client number in use */
 	count = 0;
@@ -244,21 +244,21 @@ SV_ChangeMaxClients(void)
 	if(sv_maxclients->integer == oldMaxClients)
 		return;
 
-	oldClients = Hunk_AllocateTempMemory(count * sizeof(client_t));
+	oldClients = Hunk_AllocateTempMemory(count * sizeof(Client));
 	/* copy the clients to hunk memory */
 	for(i = 0; i < count; i++){
 		if(svs.clients[i].state >= CS_CONNECTED)
 			oldClients[i] = svs.clients[i];
 		else
-			Q_Memset(&oldClients[i], 0, sizeof(client_t));
+			Q_Memset(&oldClients[i], 0, sizeof(Client));
 	}
 
 	/* free old clients arrays */
 	Z_Free(svs.clients);
 
 	/* allocate new clients */
-	svs.clients = Z_Malloc (sv_maxclients->integer * sizeof(client_t));
-	Q_Memset(svs.clients, 0, sv_maxclients->integer * sizeof(client_t));
+	svs.clients = Z_Malloc (sv_maxclients->integer * sizeof(Client));
+	Q_Memset(svs.clients, 0, sv_maxclients->integer * sizeof(Client));
 
 	/* copy the clients over */
 	for(i = 0; i < count; i++)
@@ -294,7 +294,7 @@ SV_ClearServer(void)
 static void
 SV_TouchCGame(void)
 {
-	fileHandle_t f;
+	Fhandle f;
 	char filename[MAX_QPATH];
 
 	Q_sprintf(filename, sizeof(filename), Pvmfiles "/%s.qvm", "cgame");
@@ -341,7 +341,7 @@ SV_SpawnServer(char *server, qbool killBots)
 
 	FS_ClearPakReferences(0);
 	
-	svs.snapshotEntities = Hunk_Alloc(sizeof(entityState_t)*svs.numSnapshotEntities, h_high);
+	svs.snapshotEntities = Hunk_Alloc(sizeof(Entstate)*svs.numSnapshotEntities, h_high);
 	svs.nextSnapshotEntities = 0;
 
 	/* 
@@ -442,8 +442,8 @@ SV_SpawnServer(char *server, qbool killBots)
 					 */
 					svs.clients[i].state = CS_CONNECTED;
 				}else{
-					client_t *client;
-					sharedEntity_t *ent;
+					Client *client;
+					Sharedent *ent;
 
 					client = &svs.clients[i];
 					client->state = CS_ACTIVE;
@@ -614,7 +614,7 @@ void
 SV_FinalMessage(char *message)
 {
 	int i, j;
-	client_t *cl;
+	Client *cl;
 
 	/* send it twice, ignoring rate */
 	for(j = 0; j < 2; j++){

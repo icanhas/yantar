@@ -22,7 +22,7 @@ typedef struct serverStatus_t serverStatus_t;
 struct serverStatus_t
 {
 	char		string[BIG_INFO_STRING];
-	netadr_t	address;
+	Netaddr	address;
 	int		time, startTime;
 	qbool		pending;
 	qbool		print;
@@ -33,87 +33,87 @@ extern void SV_BotFrame(int time);
 void CL_CheckForResend(void);
 void CL_ShowIP_f(void);
 void CL_ServerStatus_f(void);
-void CL_ServerStatusResponse(netadr_t from, msg_t *msg);
+void CL_ServerStatusResponse(Netaddr from, Bitmsg *msg);
 
 #ifdef USE_MUMBLE
-cvar_t *cl_useMumble;
-cvar_t *cl_mumbleScale;
+Cvar *cl_useMumble;
+Cvar *cl_mumbleScale;
 #endif
 #ifdef USE_VOIP
-cvar_t *cl_voipUseVAD;
-cvar_t *cl_voipVADThreshold;
-cvar_t *cl_voipSend;
-cvar_t *cl_voipSendTarget;
-cvar_t *cl_voipGainDuringCapture;
-cvar_t *cl_voipCaptureMult;
-cvar_t *cl_voipShowMeter;
-cvar_t *cl_voip;
+Cvar *cl_voipUseVAD;
+Cvar *cl_voipVADThreshold;
+Cvar *cl_voipSend;
+Cvar *cl_voipSendTarget;
+Cvar *cl_voipGainDuringCapture;
+Cvar *cl_voipCaptureMult;
+Cvar *cl_voipShowMeter;
+Cvar *cl_voip;
 #endif
 #ifdef USE_RENDERER_DLOPEN
-cvar_t *cl_renderer;
+Cvar *cl_renderer;
 #endif
-cvar_t *cl_nodelta;
-cvar_t *cl_debugMove;
-cvar_t *cl_noprint;
+Cvar *cl_nodelta;
+Cvar *cl_debugMove;
+Cvar *cl_noprint;
 #ifdef UPDATE_SERVER_NAME
-cvar_t *cl_motd;
+Cvar *cl_motd;
 #endif
-cvar_t *rcon_client_password;
-cvar_t *rconAddress;
-cvar_t *cl_timeout;
-cvar_t *cl_maxpackets;
-cvar_t *cl_packetdup;
-cvar_t *cl_timeNudge;
-cvar_t *cl_showTimeDelta;
-cvar_t *cl_freezeDemo;
-cvar_t *cl_shownet;
-cvar_t *cl_showSend;
-cvar_t *cl_timedemo;
-cvar_t *cl_timedemoLog;
-cvar_t *cl_autoRecordDemo;
-cvar_t *cl_aviFrameRate;
-cvar_t *cl_aviMotionJpeg;
-cvar_t *cl_forceavidemo;
-cvar_t *cl_freelook;
-cvar_t *cl_sensitivity;
-cvar_t *cl_mouseAccel;
-cvar_t *cl_mouseAccelOffset;
-cvar_t *cl_mouseAccelStyle;
-cvar_t *cl_showMouseRate;
-cvar_t *m_pitch;
-cvar_t *m_yaw;
-cvar_t *m_forward;
-cvar_t *m_side;
-cvar_t *m_filter;
-cvar_t *j_pitch;
-cvar_t *j_yaw;
-cvar_t *j_forward;
-cvar_t *j_side;
-cvar_t *j_up;
-cvar_t *j_pitch_axis;
-cvar_t *j_yaw_axis;
-cvar_t *j_forward_axis;
-cvar_t *j_side_axis;
-cvar_t *j_up_axis;
-cvar_t *cl_activeAction;
-cvar_t *cl_motdString;
-cvar_t *cl_allowDownload;
-cvar_t *cl_conXOffset;
-cvar_t *cl_inGameVideo;
-cvar_t *cl_serverStatusResendTime;
-cvar_t *cl_trn;
-cvar_t *cl_lanForcePackets;
-cvar_t *cl_guidServerUniq;
-cvar_t *cl_consoleKeys;
-clientActive_t	cl;
-clientConnection_t clc;
-clientStatic_t	cls;
-vm_t *cgvm;
+Cvar *rcon_client_password;
+Cvar *rconAddress;
+Cvar *cl_timeout;
+Cvar *cl_maxpackets;
+Cvar *cl_packetdup;
+Cvar *cl_timeNudge;
+Cvar *cl_showTimeDelta;
+Cvar *cl_freezeDemo;
+Cvar *cl_shownet;
+Cvar *cl_showSend;
+Cvar *cl_timedemo;
+Cvar *cl_timedemoLog;
+Cvar *cl_autoRecordDemo;
+Cvar *cl_aviFrameRate;
+Cvar *cl_aviMotionJpeg;
+Cvar *cl_forceavidemo;
+Cvar *cl_freelook;
+Cvar *cl_sensitivity;
+Cvar *cl_mouseAccel;
+Cvar *cl_mouseAccelOffset;
+Cvar *cl_mouseAccelStyle;
+Cvar *cl_showMouseRate;
+Cvar *m_pitch;
+Cvar *m_yaw;
+Cvar *m_forward;
+Cvar *m_side;
+Cvar *m_filter;
+Cvar *j_pitch;
+Cvar *j_yaw;
+Cvar *j_forward;
+Cvar *j_side;
+Cvar *j_up;
+Cvar *j_pitch_axis;
+Cvar *j_yaw_axis;
+Cvar *j_forward_axis;
+Cvar *j_side_axis;
+Cvar *j_up_axis;
+Cvar *cl_activeAction;
+Cvar *cl_motdString;
+Cvar *cl_allowDownload;
+Cvar *cl_conXOffset;
+Cvar *cl_inGameVideo;
+Cvar *cl_serverStatusResendTime;
+Cvar *cl_trn;
+Cvar *cl_lanForcePackets;
+Cvar *cl_guidServerUniq;
+Cvar *cl_consoleKeys;
+Clientactive	cl;
+Clientconn clc;
+Clientstatic	cls;
+Vm *cgvm;
 refexport_t re;	/* Structure containing functions exported from refresh DLL */
 #ifdef USE_RENDERER_DLOPEN
 static void *rendererLib = NULL;
 #endif
-ping_t cl_pinglist[MAX_PINGREQUESTS];
+Ping cl_pinglist[MAX_PINGREQUESTS];
 serverStatus_t cl_serverStatusList[MAX_SERVERSTATUSREQUESTS];
 int serverStatusCount;
 static int noGameRestart = qfalse;
@@ -508,7 +508,7 @@ CL_CaptureVoip(void)
 
 /*
  * The given command will be transmitted to the server, and is gauranteed to
- * not have future usercmd_t executed before it is executed
+ * not have future Usrcmd executed before it is executed
  */
 void
 CL_AddReliableCommand(const char *cmd, qbool isDisconnectCmd)
@@ -553,7 +553,7 @@ CL_ChangeReliableCommand(void)
  * Dumps the current net message, prefixed by the length
  */
 void
-CL_WriteDemoMessage(msg_t *msg, int headerBytes)
+CL_WriteDemoMessage(Bitmsg *msg, int headerBytes)
 {
 	int len, swlen;
 
@@ -622,11 +622,11 @@ CL_Record_f(void)
 {
 	char	name[MAX_OSPATH];
 	byte	bufData[MAX_MSGLEN];
-	msg_t	buf;
+	Bitmsg	buf;
 	int	i;
 	int	len;
-	entityState_t	*ent;
-	entityState_t	nullstate;
+	Entstate	*ent;
+	Entstate	nullstate;
 	char *s;
 
 	if(Cmd_Argc() > 2){
@@ -805,7 +805,7 @@ CL_DemoCompleted(void)
 			   0){
 				int	i;
 				int	numFrames;
-				fileHandle_t f;
+				Fhandle f;
 
 				if((clc.timeDemoFrames - 1) >
 				   MAX_TIMEDEMO_DURATIONS)
@@ -842,7 +842,7 @@ void
 CL_ReadDemoMessage(void)
 {
 	int	r;
-	msg_t	buf;
+	Bitmsg	buf;
 	byte	bufData[ MAX_MSGLEN ];
 	int	s;
 
@@ -1178,7 +1178,7 @@ CL_ClearState(void)
 static void
 CL_UpdateGUID(const char *prefix, int prefix_len)
 {
-	fileHandle_t f;
+	Fhandle f;
 	int len;
 
 	len = FS_SV_FOpenFileRead(QKEY_FILE, &f);
@@ -1414,7 +1414,7 @@ CL_RequestAuthorization(void)
 {
 	char	nums[64];
 	int	i, j, l;
-	cvar_t *fs;
+	Cvar *fs;
 
 	if(!cls.authorizeServer.port){
 		Com_Printf("Resolving %s\n", AUTHORIZE_SERVER_NAME);
@@ -1604,7 +1604,7 @@ void
 CL_Rcon_f(void)
 {
 	char message[MAX_RCON_MESSAGE];
-	netadr_t to;
+	Netaddr to;
 
 	if(!rcon_client_password->string){
 		Com_Printf ("You must set 'rconpassword' before\n"
@@ -2110,7 +2110,7 @@ CL_CheckForResend(void)
  * to the client so it doesn't have to wait for the full timeout period.
  */
 void
-CL_DisconnectPacket(netadr_t from)
+CL_DisconnectPacket(Netaddr from)
 {
 	if(clc.state < CA_AUTHORIZING)
 		return;
@@ -2131,7 +2131,7 @@ CL_DisconnectPacket(netadr_t from)
 }
 
 void
-CL_MotdPacket(netadr_t from)
+CL_MotdPacket(Netaddr from)
 {
 #ifdef UPDATE_SERVER_NAME
 	char *challenge;
@@ -2156,7 +2156,7 @@ CL_MotdPacket(netadr_t from)
 }
 
 void
-CL_InitServerInfo(serverInfo_t *server, netadr_t *address)
+CL_InitServerInfo(serverInfo_t *server, Netaddr *address)
 {
 	server->adr = *address;
 	server->clients = 0;
@@ -2174,10 +2174,10 @@ CL_InitServerInfo(serverInfo_t *server, netadr_t *address)
 #define MAX_SERVERSPERPACKET 256
 
 void
-CL_ServersResponsePacket(const netadr_t* from, msg_t *msg, qbool extended)
+CL_ServersResponsePacket(const Netaddr* from, Bitmsg *msg, qbool extended)
 {
 	int	i, j, count, total;
-	netadr_t addresses[MAX_SERVERSPERPACKET];
+	Netaddr addresses[MAX_SERVERSPERPACKET];
 	int	numservers;
 	byte * buffptr;
 	byte * buffend;
@@ -2293,7 +2293,7 @@ CL_ServersResponsePacket(const netadr_t* from, msg_t *msg, qbool extended)
  * Responses to broadcasts, etc
  */
 void
-CL_ConnectionlessPacket(netadr_t from, msg_t *msg)
+CL_ConnectionlessPacket(Netaddr from, Bitmsg *msg)
 {
 	char	*s;
 	char	*c;
@@ -2462,7 +2462,7 @@ CL_ConnectionlessPacket(netadr_t from, msg_t *msg)
  * A packet has arrived from the main event loop
  */
 void
-CL_PacketEvent(netadr_t from, msg_t *msg)
+CL_PacketEvent(Netaddr from, Bitmsg *msg)
 {
 	int headerBytes;
 
@@ -2979,7 +2979,7 @@ CL_GenerateQKey(void)
 {
 	int len = 0;
 	unsigned char	buff[ QKEY_SIZE ];
-	fileHandle_t	f;
+	Fhandle	f;
 
 	len = FS_SV_FOpenFileRead(QKEY_FILE, &f);
 	FS_FCloseFile(f);
@@ -3339,7 +3339,7 @@ CL_SetServerInfo(serverInfo_t *server, const char *info, int ping)
 }
 
 static void
-CL_SetServerInfoByAddress(netadr_t from, const char *info, int ping)
+CL_SetServerInfoByAddress(Netaddr from, const char *info, int ping)
 {
 	int i;
 
@@ -3358,7 +3358,7 @@ CL_SetServerInfoByAddress(netadr_t from, const char *info, int ping)
 }
 
 void
-CL_ServerInfoPacket(netadr_t from, msg_t *msg)
+CL_ServerInfoPacket(Netaddr from, Bitmsg *msg)
 {
 	int	i, type;
 	char	info[MAX_INFO_STRING];
@@ -3469,7 +3469,7 @@ CL_ServerInfoPacket(netadr_t from, msg_t *msg)
 }
 
 serverStatus_t *
-CL_GetServerStatus(netadr_t from)
+CL_GetServerStatus(Netaddr from)
 {
 	int i, oldest, oldestTime;
 
@@ -3498,7 +3498,7 @@ int
 CL_ServerStatus(char *serverAddress, char *serverStatusString, int maxLen)
 {
 	int i;
-	netadr_t to;
+	Netaddr to;
 	serverStatus_t *serverStatus;
 
 	/* if no server address then reset all server status requests */
@@ -3556,7 +3556,7 @@ CL_ServerStatus(char *serverAddress, char *serverStatusString, int maxLen)
 }
 
 void
-CL_ServerStatusResponse(netadr_t from, msg_t *msg)
+CL_ServerStatusResponse(Netaddr from, Bitmsg *msg)
 {
 	char	*s;
 	char	info[MAX_INFO_STRING];
@@ -3650,7 +3650,7 @@ CL_LocalServers_f(void)
 {
 	char	*message;
 	int	i, j;
-	netadr_t to;
+	Netaddr to;
 
 	Com_Printf("Scanning for servers on the local network...\n");
 
@@ -3688,7 +3688,7 @@ CL_LocalServers_f(void)
 void
 CL_GlobalServers_f(void)
 {
-	netadr_t to;
+	Netaddr to;
 	int	count, i, masterNum;
 	char	command[1024], *masteraddress;
 
@@ -3816,7 +3816,7 @@ CL_GetPingQueueCount(void)
 {
 	int	i;
 	int	count;
-	ping_t * pingptr;
+	Ping * pingptr;
 
 	count	= 0;
 	pingptr = cl_pinglist;
@@ -3828,11 +3828,11 @@ CL_GetPingQueueCount(void)
 	return (count);
 }
 
-ping_t*
+Ping*
 CL_GetFreePing(void)
 {
-	ping_t	* pingptr;
-	ping_t  * best;
+	Ping	* pingptr;
+	Ping  * best;
 	int	oldest;
 	int	i;
 	int	time;
@@ -3874,8 +3874,8 @@ CL_GetFreePing(void)
 void
 CL_Ping_f(void)
 {
-	netadr_t	to;
-	ping_t		* pingptr;
+	Netaddr	to;
+	Ping		* pingptr;
 	char	* server;
 	int	argc;
 	netadrtype_t family = NA_UNSPEC;
@@ -3901,14 +3901,14 @@ CL_Ping_f(void)
 		server = Cmd_Argv(2);
 	}
 
-	Q_Memset(&to, 0, sizeof(netadr_t));
+	Q_Memset(&to, 0, sizeof(Netaddr));
 
 	if(!NET_StringToAdr(server, &to, family))
 		return;
 
 	pingptr = CL_GetFreePing();
 
-	memcpy(&pingptr->adr, &to, sizeof(netadr_t));
+	memcpy(&pingptr->adr, &to, sizeof(Netaddr));
 	pingptr->start	= Sys_Milliseconds();
 	pingptr->time	= 0;
 
@@ -3973,7 +3973,7 @@ CL_UpdateVisiblePings_f(int source)
 								break;
 						memcpy(&cl_pinglist[j].adr,
 							&server[i].adr,
-							sizeof(netadr_t));
+							sizeof(Netaddr));
 						cl_pinglist[j].start = Sys_Milliseconds();
 						cl_pinglist[j].time = 0;
 						NET_OutOfBandPrint(NS_CLIENT,
@@ -4015,7 +4015,7 @@ CL_UpdateVisiblePings_f(int source)
 void
 CL_ServerStatus_f(void)
 {
-	netadr_t	to, *toptr = NULL;
+	Netaddr	to, *toptr = NULL;
 	char		*server;
 	serverStatus_t	*serverStatus;
 	int argc;
@@ -4034,7 +4034,7 @@ CL_ServerStatus_f(void)
 	}
 
 	if(!toptr){
-		Q_Memset(&to, 0, sizeof(netadr_t));
+		Q_Memset(&to, 0, sizeof(Netaddr));
 
 		if(argc == 2)
 			server = Cmd_Argv(1);

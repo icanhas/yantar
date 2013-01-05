@@ -66,7 +66,7 @@ typedef struct indent_s {
 	int		skip;		/* true if skipping current indent */
 	script_t	*script;	/* script the indent was in */
 	struct indent_s *next;		/* next indent on the indent stack */
-} indent_t;
+} Indent;
 
 /* source file */
 typedef struct source_s {
@@ -77,7 +77,7 @@ typedef struct source_s {
 	token_t		*tokens;		/* tokens to read first */
 	define_t	*defines;		/* list with macro definitions */
 	define_t	**definehash;		/* hash chain with defines */
-	indent_t	*indentstack;		/* stack with indents */
+	Indent	*indentstack;		/* stack with indents */
 	int		skip;			/* > 0 if skipping conditional code */
 	token_t		token;			/* last read token */
 } source_t;

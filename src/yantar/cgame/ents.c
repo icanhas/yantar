@@ -13,11 +13,11 @@
  * tag location
  */
 void
-CG_PositionEntityOnTag(refEntity_t *entity, const refEntity_t *parent,
-		       qhandle_t parentModel, char *tagName)
+CG_PositionEntityOnTag(Refent *entity, const Refent *parent,
+		       Handle parentModel, char *tagName)
 {
 	int i;
-	orientation_t lerped;
+	Orient lerped;
 
 	/* lerp the tag */
 	trap_R_LerpTag(&lerped, parentModel, parent->oldframe, parent->frame,
@@ -30,7 +30,7 @@ CG_PositionEntityOnTag(refEntity_t *entity, const refEntity_t *parent,
 			entity->origin);
 
 	/* had to cast away the const to avoid compiler problems... */
-	MatrixMultiply(lerped.axis, ((refEntity_t*)parent)->axis, entity->axis);
+	MatrixMultiply(lerped.axis, ((Refent*)parent)->axis, entity->axis);
 	entity->backlerp = parent->backlerp;
 }
 
@@ -39,11 +39,11 @@ CG_PositionEntityOnTag(refEntity_t *entity, const refEntity_t *parent,
  * tag location
  */
 void
-CG_PositionRotatedEntityOnTag(refEntity_t *entity, const refEntity_t *parent,
-			      qhandle_t parentModel, char *tagName)
+CG_PositionRotatedEntityOnTag(Refent *entity, const Refent *parent,
+			      Handle parentModel, char *tagName)
 {
 	int i;
-	orientation_t lerped;
+	Orient lerped;
 	Vec3 tempAxis[3];
 
 /* clearaxis( entity->axis ); */
@@ -59,7 +59,7 @@ CG_PositionRotatedEntityOnTag(refEntity_t *entity, const refEntity_t *parent,
 
 	/* had to cast away the const to avoid compiler problems... */
 	MatrixMultiply(entity->axis, lerped.axis, tempAxis);
-	MatrixMultiply(tempAxis, ((refEntity_t*)parent)->axis, entity->axis);
+	MatrixMultiply(tempAxis, ((Refent*)parent)->axis, entity->axis);
 }
 
 /*
@@ -70,7 +70,7 @@ CG_PositionRotatedEntityOnTag(refEntity_t *entity, const refEntity_t *parent,
  * Also called by event processing code
  */
 void
-CG_SetEntitySoundPosition(centity_t *cent)
+CG_SetEntitySoundPosition(Centity *cent)
 {
 	if(cent->currentState.solid == SOLID_BMODEL){
 		Vec3	origin;
@@ -88,7 +88,7 @@ CG_SetEntitySoundPosition(centity_t *cent)
  * Add continuous entity effects, like local entity emission and lighting
  */
 static void
-CG_EntityEffects(centity_t *cent)
+CG_EntityEffects(Centity *cent)
 {
 
 	/* update sound origins */
@@ -125,10 +125,10 @@ CG_EntityEffects(centity_t *cent)
 }
 
 static void
-CG_General(centity_t *cent)
+CG_General(Centity *cent)
 {
-	refEntity_t ent;
-	entityState_t *s1;
+	Refent ent;
+	Entstate *s1;
 
 	s1 = &cent->currentState;
 
@@ -164,7 +164,7 @@ CG_General(centity_t *cent)
  * Speaker entities can automatically play sounds
  */
 static void
-CG_Speaker(centity_t *cent)
+CG_Speaker(Centity *cent)
 {
 	if(!cent->currentState.clientNum)	/* FIXME: use something other than clientNum... */
 		return;				/* not auto triggering */
@@ -182,15 +182,15 @@ CG_Speaker(centity_t *cent)
 }
 
 static void
-CG_Item(centity_t *cent)
+CG_Item(Centity *cent)
 {
-	refEntity_t	ent;
-	entityState_t *es;
-	gitem_t		*item;
+	Refent	ent;
+	Entstate *es;
+	Gitem		*item;
 	int msec;
 	float	frac;
 	float	scale;
-	weaponInfo_t *wi;
+	Weapinfo *wi;
 
 	es = &cent->currentState;
 	if(es->modelindex >= bg_numItems)
@@ -253,7 +253,7 @@ CG_Item(centity_t *cent)
 	}
 
 	if(item->giType == IT_PRIWEAP && item->giTag == W1railgun){
-		clientInfo_t *ci = &cgs.clientinfo[cg.snap->ps.clientNum];
+		Clientinfo *ci = &cgs.clientinfo[cg.snap->ps.clientNum];
 		byte4copy(ci->c1RGBA, ent.shaderRGBA);
 	}
 
@@ -298,7 +298,7 @@ CG_Item(centity_t *cent)
 	if((item->giType == IT_PRIWEAP)
 	  && wi->barrelModel)
 	then{
-		refEntity_t barrel;
+		Refent barrel;
 
 		memset(&barrel, 0, sizeof(barrel));
 
@@ -350,11 +350,11 @@ CG_Item(centity_t *cent)
 }
 
 static void
-CG_Missile(centity_t *cent)
+CG_Missile(Centity *cent)
 {
-	refEntity_t ent;
-	entityState_t *s1;
-	const weaponInfo_t *weapon;
+	Refent ent;
+	Entstate *s1;
+	const Weapinfo *weapon;
 /*	int	col; */
 
 	s1 = &cent->currentState;
@@ -450,11 +450,11 @@ CG_Missile(centity_t *cent)
  * This is called when the grapple is sitting up against the wall
  */
 static void
-CG_Grapple(centity_t *cent)
+CG_Grapple(Centity *cent)
 {
-	refEntity_t ent;
-	entityState_t *s1;
-	const weaponInfo_t *weapon;
+	Refent ent;
+	Entstate *s1;
+	const Weapinfo *weapon;
 
 	s1 = &cent->currentState;
 	if(s1->parentweap >= Wnumweaps)
@@ -494,10 +494,10 @@ CG_Grapple(centity_t *cent)
 }
 
 static void
-CG_Mover(centity_t *cent)
+CG_Mover(Centity *cent)
 {
-	refEntity_t ent;
-	entityState_t *s1;
+	Refent ent;
+	Entstate *s1;
 
 	s1 = &cent->currentState;
 
@@ -534,10 +534,10 @@ CG_Mover(centity_t *cent)
  * Also called as an event
  */
 void
-CG_Beam(centity_t *cent)
+CG_Beam(Centity *cent)
 {
-	refEntity_t ent;
-	entityState_t *s1;
+	Refent ent;
+	Entstate *s1;
 
 	s1 = &cent->currentState;
 
@@ -555,10 +555,10 @@ CG_Beam(centity_t *cent)
 }
 
 static void
-CG_Portal(centity_t *cent)
+CG_Portal(Centity *cent)
 {
-	refEntity_t ent;
-	entityState_t *s1;
+	Refent ent;
+	Entstate *s1;
 
 	s1 = &cent->currentState;
 
@@ -591,7 +591,7 @@ CG_AdjustPositionForMover(const Vec3 in, int moverNum, int fromTime,
 			  int toTime,
 			  Vec3 out)
 {
-	centity_t	*cent;
+	Centity	*cent;
 	Vec3		oldOrigin, origin, deltaOrigin;
 	Vec3		oldAngles, angles;
 	/* Vec3	deltaAngles; */
@@ -622,7 +622,7 @@ CG_AdjustPositionForMover(const Vec3 in, int moverNum, int fromTime,
 }
 
 static void
-CG_InterpolateEntityPosition(centity_t *cent)
+CG_InterpolateEntityPosition(Centity *cent)
 {
 	Vec3	current, next;
 	float	f;
@@ -657,7 +657,7 @@ CG_InterpolateEntityPosition(centity_t *cent)
 }
 
 static void
-CG_CalcEntityLerpPositions(centity_t *cent)
+CG_CalcEntityLerpPositions(Centity *cent)
 {
 
 	/* if this player does not want to see extrapolated players */
@@ -698,9 +698,9 @@ CG_CalcEntityLerpPositions(centity_t *cent)
 }
 
 static void
-CG_TeamBase(centity_t *cent)
+CG_TeamBase(Centity *cent)
 {
-	refEntity_t model;
+	Refent model;
 
 	if(cgs.gametype == GT_CTF || cgs.gametype == GT_1FCTF){
 		/* show the flag base */
@@ -720,7 +720,7 @@ CG_TeamBase(centity_t *cent)
 }
 
 static void
-CG_AddCEntity(centity_t *cent)
+CG_AddCEntity(Centity *cent)
 {
 	/* event-only entities will have been dealt with already */
 	if(cent->currentState.eType >= ET_EVENTS)
@@ -777,8 +777,8 @@ void
 CG_AddPacketEntities(void)
 {
 	int num;
-	centity_t *cent;
-	playerState_t *ps;
+	Centity *cent;
+	Playerstate *ps;
 
 	/* set cg.frameInterpolation */
 	if(cg.nextSnap){

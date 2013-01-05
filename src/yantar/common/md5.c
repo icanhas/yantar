@@ -266,7 +266,7 @@ Q_MD5File(const char *fn, int length, const char *prefix, int prefix_len)
 {
 	static char	final[33] = {""};
 	unsigned char	digest[16] = {""};
-	fileHandle_t	f;
+	Fhandle	f;
 	MD5_CTX md5;
 	byte	buffer[2048];
 	int	i;

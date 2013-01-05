@@ -25,7 +25,7 @@ typedef struct teamgame_s {
 
 teamgame_t	teamgame;
 
-gentity_t	*neutralObelisk;
+Gentity	*neutralObelisk;
 
 void Team_SetFlagStatus(int team, flagStatus_t status);
 
@@ -86,7 +86,7 @@ TeamColorString(int team)
 
 /* NULL for everyone */
 static __attribute__ ((format (printf, 2, 3))) void QDECL
-PrintMsg(gentity_t *ent, const char *fmt, ...)
+PrintMsg(Gentity *ent, const char *fmt, ...)
 {
 	char msg[1024];
 	va_list argptr;
@@ -114,7 +114,7 @@ PrintMsg(gentity_t *ent, const char *fmt, ...)
 void
 AddTeamScore(Vec3 origin, int team, int score)
 {
-	gentity_t *te;
+	Gentity *te;
 
 	te = G_TempEntity(origin, EV_GLOBAL_TEAM_SOUND);
 	te->r.svFlags |= SVF_BROADCAST;
@@ -155,7 +155,7 @@ AddTeamScore(Vec3 origin, int team, int score)
  * OnSameTeam
  */
 qbool
-OnSameTeam(gentity_t *ent1, gentity_t *ent2)
+OnSameTeam(Gentity *ent1, Gentity *ent2)
 {
 	if(!ent1->client || !ent2->client)
 		return qfalse;
@@ -218,7 +218,7 @@ Team_SetFlagStatus(int team, flagStatus_t status)
 }
 
 void
-Team_CheckDroppedItem(gentity_t *dropped)
+Team_CheckDroppedItem(Gentity *dropped)
 {
 	if(dropped->item->giTag == PW_REDFLAG)
 		Team_SetFlagStatus(TEAM_RED, FLAG_DROPPED);
@@ -235,7 +235,7 @@ void
 Team_ForceGesture(int team)
 {
 	int i;
-	gentity_t *ent;
+	Gentity *ent;
 
 	for(i = 0; i < MAX_CLIENTS; i++){
 		ent = &g_entities[i];
@@ -258,14 +258,14 @@ Team_ForceGesture(int team)
  * order.
  */
 void
-Team_FragBonuses(gentity_t *targ, gentity_t *inflictor, gentity_t *attacker)
+Team_FragBonuses(Gentity *targ, Gentity *inflictor, Gentity *attacker)
 {
 	int	i;
-	gentity_t *ent;
+	Gentity *ent;
 	int	flag_pw, enemy_flag_pw;
 	int	otherteam;
 	int	tokens;
-	gentity_t	*flag, *carrier = NULL;
+	Gentity	*flag, *carrier = NULL;
 	char *c;
 	Vec3		v1, v2;
 	int team;
@@ -485,7 +485,7 @@ Team_FragBonuses(gentity_t *targ, gentity_t *inflictor, gentity_t *attacker)
  * carrier defense.
  */
 void
-Team_CheckHurtCarrier(gentity_t *targ, gentity_t *attacker)
+Team_CheckHurtCarrier(Gentity *targ, Gentity *attacker)
 {
 	int flag_pw;
 
@@ -509,11 +509,11 @@ Team_CheckHurtCarrier(gentity_t *targ, gentity_t *attacker)
 }
 
 
-gentity_t *
+Gentity *
 Team_ResetFlag(int team)
 {
 	char *c;
-	gentity_t *ent, *rent = NULL;
+	Gentity *ent, *rent = NULL;
 
 	switch(team){
 	case TEAM_RED:
@@ -556,9 +556,9 @@ Team_ResetFlags(void)
 }
 
 void
-Team_ReturnFlagSound(gentity_t *ent, int team)
+Team_ReturnFlagSound(Gentity *ent, int team)
 {
-	gentity_t *te;
+	Gentity *te;
 
 	if(ent == NULL){
 		G_Printf ("Warning:  NULL passed to Team_ReturnFlagSound\n");
@@ -574,9 +574,9 @@ Team_ReturnFlagSound(gentity_t *ent, int team)
 }
 
 void
-Team_TakeFlagSound(gentity_t *ent, int team)
+Team_TakeFlagSound(Gentity *ent, int team)
 {
-	gentity_t *te;
+	Gentity *te;
 
 	if(ent == NULL){
 		G_Printf ("Warning:  NULL passed to Team_TakeFlagSound\n");
@@ -610,9 +610,9 @@ Team_TakeFlagSound(gentity_t *ent, int team)
 }
 
 void
-Team_CaptureFlagSound(gentity_t *ent, int team)
+Team_CaptureFlagSound(Gentity *ent, int team)
 {
-	gentity_t *te;
+	Gentity *te;
 
 	if(ent == NULL){
 		G_Printf ("Warning:  NULL passed to Team_CaptureFlagSound\n");
@@ -638,7 +638,7 @@ Team_ReturnFlag(int team)
 }
 
 void
-Team_FreeEntity(gentity_t *ent)
+Team_FreeEntity(Gentity *ent)
 {
 	if(ent->item->giTag == PW_REDFLAG)
 		Team_ReturnFlag(TEAM_RED);
@@ -656,7 +656,7 @@ Team_FreeEntity(gentity_t *ent)
  * Flags are unique in that if they are dropped, the base flag must be respawned when they time out
  */
 void
-Team_DroppedFlagThink(gentity_t *ent)
+Team_DroppedFlagThink(Gentity *ent)
 {
 	int team = TEAM_FREE;
 
@@ -676,11 +676,11 @@ Team_DroppedFlagThink(gentity_t *ent)
  * Team_DroppedFlagThink
  */
 int
-Team_TouchOurFlag(gentity_t *ent, gentity_t *other, int team)
+Team_TouchOurFlag(Gentity *ent, Gentity *other, int team)
 {
 	int i;
-	gentity_t	*player;
-	gclient_t	*cl = other->client;
+	Gentity	*player;
+	gClient	*cl = other->client;
 	int enemy_flag;
 
 	if(g_gametype.integer == GT_1FCTF)
@@ -805,9 +805,9 @@ Team_TouchOurFlag(gentity_t *ent, gentity_t *other, int team)
 }
 
 int
-Team_TouchEnemyFlag(gentity_t *ent, gentity_t *other, int team)
+Team_TouchEnemyFlag(Gentity *ent, Gentity *other, int team)
 {
-	gclient_t *cl = other->client;
+	gClient *cl = other->client;
 
 	if(g_gametype.integer == GT_1FCTF){
 		PrintMsg (NULL, "%s" S_COLOR_WHITE " got the flag!\n",
@@ -839,10 +839,10 @@ Team_TouchEnemyFlag(gentity_t *ent, gentity_t *other, int team)
 }
 
 int
-Pickup_Team(gentity_t *ent, gentity_t *other)
+Pickup_Team(Gentity *ent, Gentity *other)
 {
 	int team;
-	gclient_t *cl = other->client;
+	gClient *cl = other->client;
 	
 	/* figure out what team this flag is */
 	if(strcmp(ent->classname, "team_CTF_redflag") == 0)
@@ -875,10 +875,10 @@ Pickup_Team(gentity_t *ent, gentity_t *other)
  *
  * Report a location for the player. Uses placed nearby target_location entities
  */
-gentity_t *
-Team_GetLocation(gentity_t *ent)
+Gentity *
+Team_GetLocation(Gentity *ent)
 {
-	gentity_t	*eloc, *best;
+	Gentity	*eloc, *best;
 	float bestlen, len;
 	Vec3		origin;
 
@@ -919,9 +919,9 @@ Team_GetLocation(gentity_t *ent)
  * Report a location for the player. Uses placed nearby target_location entities
  */
 qbool
-Team_GetLocationMsg(gentity_t *ent, char *loc, int loclen)
+Team_GetLocationMsg(Gentity *ent, char *loc, int loclen)
 {
-	gentity_t *best;
+	Gentity *best;
 
 	best = Team_GetLocation(ent);
 
@@ -948,13 +948,13 @@ Team_GetLocationMsg(gentity_t *ent, char *loc, int loclen)
  * go to a random point that doesn't telefrag
  */
 #define MAX_TEAM_SPAWN_POINTS 32
-gentity_t *
+Gentity *
 SelectRandomTeamSpawnPoint(int teamstate, team_t team)
 {
-	gentity_t *spot;
+	Gentity *spot;
 	int	count;
 	int	selection;
-	gentity_t *spots[MAX_TEAM_SPAWN_POINTS];
+	Gentity *spots[MAX_TEAM_SPAWN_POINTS];
 	char *classname;
 
 	if(teamstate == TEAM_BEGIN){
@@ -996,11 +996,11 @@ SelectRandomTeamSpawnPoint(int teamstate, team_t team)
  * SelectCTFSpawnPoint
  *
  */
-gentity_t *
+Gentity *
 SelectCTFSpawnPoint(team_t team, int teamstate, Vec3 origin, Vec3 angles,
 		    qbool isbot)
 {
-	gentity_t *spot;
+	Gentity *spot;
 
 	spot = SelectRandomTeamSpawnPoint (teamstate, team);
 
@@ -1028,13 +1028,13 @@ SortClients(const void *a, const void *b)
  *      clientNum location health armor weapon powerups
  */
 void
-TeamplayInfoMessage(gentity_t *ent)
+TeamplayInfoMessage(Gentity *ent)
 {
 	char	entry[1024];
 	char	string[8192];
 	int	stringlength;
 	int	i, j;
-	gentity_t *player;
+	Gentity *player;
 	int	cnt;
 	int	h, a;
 	int	clients[TEAM_MAXOVERLAY];
@@ -1100,7 +1100,7 @@ void
 CheckTeamStatus(void)
 {
 	int i;
-	gentity_t *loc, *ent;
+	Gentity *loc, *ent;
 
 	if(level.time - level.lastTeamLocationTime > TEAM_LOCATION_UPDATE_TIME){
 
@@ -1140,7 +1140,7 @@ CheckTeamStatus(void)
  * Only in CTF games.  Red players spawn here at game start.
  */
 void
-SP_team_CTF_redplayer(gentity_t *ent)
+SP_team_CTF_redplayer(Gentity *ent)
 {
 }
 
@@ -1149,7 +1149,7 @@ SP_team_CTF_redplayer(gentity_t *ent)
  * Only in CTF games.  Blue players spawn here at game start.
  */
 void
-SP_team_CTF_blueplayer(gentity_t *ent)
+SP_team_CTF_blueplayer(Gentity *ent)
 {
 }
 
@@ -1159,7 +1159,7 @@ SP_team_CTF_blueplayer(gentity_t *ent)
  * Targets will be fired when someone spawns in on them.
  */
 void
-SP_team_CTF_redspawn(gentity_t *ent)
+SP_team_CTF_redspawn(Gentity *ent)
 {
 }
 
@@ -1168,7 +1168,7 @@ SP_team_CTF_redspawn(gentity_t *ent)
  * Targets will be fired when someone spawns in on them.
  */
 void
-SP_team_CTF_bluespawn(gentity_t *ent)
+SP_team_CTF_bluespawn(Gentity *ent)
 {
 }
 
@@ -1179,7 +1179,7 @@ SP_team_CTF_bluespawn(gentity_t *ent)
  */
 
 static void
-ObeliskRegen(gentity_t *self)
+ObeliskRegen(Gentity *self)
 {
 	self->nextthink = level.time + g_obeliskRegenPeriod.integer * 1000;
 	if(self->health >= g_obeliskHealth.integer)
@@ -1197,7 +1197,7 @@ ObeliskRegen(gentity_t *self)
 
 
 static void
-ObeliskRespawn(gentity_t *self)
+ObeliskRespawn(Gentity *self)
 {
 	self->takedamage = qtrue;
 	self->health = g_obeliskHealth.integer;
@@ -1210,7 +1210,7 @@ ObeliskRespawn(gentity_t *self)
 
 
 static void
-ObeliskDie(gentity_t *self, gentity_t *inflictor, gentity_t *attacker,
+ObeliskDie(Gentity *self, Gentity *inflictor, Gentity *attacker,
 	   int damage,
 	   int mod)
 {
@@ -1247,7 +1247,7 @@ ObeliskDie(gentity_t *self, gentity_t *inflictor, gentity_t *attacker,
 
 
 static void
-ObeliskTouch(gentity_t *self, gentity_t *other, trace_t *trace)
+ObeliskTouch(Gentity *self, Gentity *other, Trace *trace)
 {
 	int tokens;
 
@@ -1284,7 +1284,7 @@ ObeliskTouch(gentity_t *self, gentity_t *other, trace_t *trace)
 }
 
 static void
-ObeliskPain(gentity_t *self, gentity_t *attacker, int damage)
+ObeliskPain(Gentity *self, Gentity *attacker, int damage)
 {
 	int actualDamage = damage / 10;
 	if(actualDamage <= 0)
@@ -1297,12 +1297,12 @@ ObeliskPain(gentity_t *self, gentity_t *attacker, int damage)
 	AddScore(attacker, self->r.currentOrigin, actualDamage);
 }
 
-gentity_t *
+Gentity *
 SpawnObelisk(Vec3 origin, int team, int spawnflags)
 {
-	trace_t tr;
+	Trace tr;
 	Vec3	dest;
-	gentity_t *ent;
+	Gentity *ent;
 
 	ent = G_Spawn();
 
@@ -1370,9 +1370,9 @@ SpawnObelisk(Vec3 origin, int team, int spawnflags)
 /*QUAKED team_redobelisk (1 0 0) (-16 -16 0) (16 16 8)
  */
 void
-SP_team_redobelisk(gentity_t *ent)
+SP_team_redobelisk(Gentity *ent)
 {
-	gentity_t *obelisk;
+	Gentity *obelisk;
 
 	if(g_gametype.integer <= GT_TEAM){
 		G_FreeEntity(ent);
@@ -1397,9 +1397,9 @@ SP_team_redobelisk(gentity_t *ent)
 /*QUAKED team_blueobelisk (0 0 1) (-16 -16 0) (16 16 88)
  */
 void
-SP_team_blueobelisk(gentity_t *ent)
+SP_team_blueobelisk(Gentity *ent)
 {
-	gentity_t *obelisk;
+	Gentity *obelisk;
 
 	if(g_gametype.integer <= GT_TEAM){
 		G_FreeEntity(ent);
@@ -1424,7 +1424,7 @@ SP_team_blueobelisk(gentity_t *ent)
 /*QUAKED team_neutralobelisk (0 0 1) (-16 -16 0) (16 16 88)
  */
 void
-SP_team_neutralobelisk(gentity_t *ent)
+SP_team_neutralobelisk(Gentity *ent)
 {
 	if(g_gametype.integer != GT_1FCTF){
 		G_FreeEntity(ent);
@@ -1440,9 +1440,9 @@ SP_team_neutralobelisk(gentity_t *ent)
  * CheckObeliskAttack
  */
 qbool
-CheckObeliskAttack(gentity_t *obelisk, gentity_t *attacker)
+CheckObeliskAttack(Gentity *obelisk, Gentity *attacker)
 {
-	gentity_t *te;
+	Gentity *te;
 
 	/* if this really is an obelisk */
 	if(obelisk->die != ObeliskDie)

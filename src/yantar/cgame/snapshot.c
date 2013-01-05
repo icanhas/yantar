@@ -16,7 +16,7 @@
  * CG_ResetEntity
  */
 static void
-CG_ResetEntity(centity_t *cent)
+CG_ResetEntity(Centity *cent)
 {
 	/* if the previous snapshot this entity was updated in is at least
 	 * an event window back in time then we can reset the previous event */
@@ -37,7 +37,7 @@ CG_ResetEntity(centity_t *cent)
  * cent->nextState is moved to cent->currentState and events are fired
  */
 static void
-CG_TransitionEntity(centity_t *cent)
+CG_TransitionEntity(Centity *cent)
 {
 	cent->currentState = cent->nextState;
 	cent->currentValid = qtrue;
@@ -64,11 +64,11 @@ CG_TransitionEntity(centity_t *cent)
  * FIXME: Also called by map_restart?
  */
 void
-CG_SetInitialSnapshot(snapshot_t *snap)
+CG_SetInitialSnapshot(Snap *snap)
 {
 	int i;
-	centity_t *cent;
-	entityState_t *state;
+	Centity *cent;
+	Entstate *state;
 
 	cg.snap = snap;
 
@@ -89,7 +89,7 @@ CG_SetInitialSnapshot(snapshot_t *snap)
 		state	= &cg.snap->entities[ i ];
 		cent	= &cg_entities[ state->number ];
 
-		memcpy(&cent->currentState, state, sizeof(entityState_t));
+		memcpy(&cent->currentState, state, sizeof(Entstate));
 		/* cent->currentState = *state; */
 		cent->interpolate = qfalse;
 		cent->currentValid = qtrue;
@@ -110,8 +110,8 @@ CG_SetInitialSnapshot(snapshot_t *snap)
 static void
 CG_TransitionSnapshot(void)
 {
-	centity_t *cent;
-	snapshot_t *oldFrame;
+	Centity *cent;
+	Snap *oldFrame;
 	int i;
 
 	if(!cg.snap)
@@ -152,7 +152,7 @@ CG_TransitionSnapshot(void)
 
 	/* check for playerstate transition events */
 	if(oldFrame){
-		playerState_t *ops, *ps;
+		Playerstate *ops, *ps;
 
 		ops = &oldFrame->ps;
 		ps = &cg.snap->ps;
@@ -176,11 +176,11 @@ CG_TransitionSnapshot(void)
  * A new snapshot has just been read in from the client system.
  */
 static void
-CG_SetNextSnap(snapshot_t *snap)
+CG_SetNextSnap(Snap *snap)
 {
 	int num;
-	entityState_t	*es;
-	centity_t	*cent;
+	Entstate	*es;
+	Centity	*cent;
 
 	cg.nextSnap = snap;
 
@@ -194,7 +194,7 @@ CG_SetNextSnap(snapshot_t *snap)
 		es = &snap->entities[num];
 		cent = &cg_entities[ es->number ];
 
-		memcpy(&cent->nextState, es, sizeof(entityState_t));
+		memcpy(&cent->nextState, es, sizeof(Entstate));
 		/* cent->nextState = *es; */
 
 		/* if this frame is a teleport, or the entity wasn't in the
@@ -234,11 +234,11 @@ CG_SetNextSnap(snapshot_t *snap)
  * times if the client system fails to return a
  * valid snapshot.
  */
-static snapshot_t *
+static Snap *
 CG_ReadNextSnapshot(void)
 {
 	qbool r;
-	snapshot_t *dest;
+	Snap *dest;
 
 	if(cg.latestSnapshotNum > cgs.processedSnapshotNum + 1000)
 		CG_Printf(
@@ -304,7 +304,7 @@ CG_ReadNextSnapshot(void)
 void
 CG_ProcessSnapshots(void)
 {
-	snapshot_t *snap;
+	Snap *snap;
 	int n;
 
 	/* see what the latest snapshot the client system has is */

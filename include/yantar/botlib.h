@@ -81,7 +81,7 @@ struct weaponinfo_s;
 #define ACTION_FOLLOWME		0x08000000
 #define ACTION_JUMPEDLASTFRAME	0x10000000
 
-/* the bot input, will be converted to an usercmd_t */
+/* the bot input, will be converted to an Usrcmd */
 typedef struct bot_input_s {
 	float	thinktime;	/* time since last output (in seconds) */
 	Vec3	dir;		/* movement direction */
@@ -95,7 +95,7 @@ typedef struct bot_input_s {
 
 #define BSPTRACE
 
-/* bsp_trace_t hit surface */
+/* bsp_Trace hit surface */
 typedef struct bsp_surface_s {
 	char	name[16];
 	int	flags;
@@ -115,7 +115,7 @@ typedef struct bsp_trace_s {
 	bsp_surface_t	surface;	/* the hit point surface */
 	int		contents;	/* contents on other side of surface hit */
 	int		ent;		/* number of entity hit */
-} bsp_trace_t;
+} bsp_Trace;
 
 #endif	/* BSPTRACE */
 
@@ -147,10 +147,10 @@ typedef struct botlib_import_s {
 	void (QDECL *Print)(int type, char *fmt,
 			    ...) __attribute__ ((format (printf, 2, 3)));
 	/* trace a bbox through the world */
-	void (*Trace)(bsp_trace_t *trace, Vec3 start, Vec3 mins, Vec3 maxs,
+	void (*Trace)(bsp_Trace *trace, Vec3 start, Vec3 mins, Vec3 maxs,
 		      Vec3 end, int passent, int contentmask);
 	/* trace a bbox against a specific entity */
-	void (*EntityTrace)(bsp_trace_t *trace, Vec3 start, Vec3 mins,
+	void (*EntityTrace)(bsp_Trace *trace, Vec3 start, Vec3 mins,
 			    Vec3 maxs, Vec3 end, int entnum, int contentmask);
 	/* retrieve the contents at the given point */
 	int (*PointContents)(Vec3 point);
@@ -169,11 +169,11 @@ typedef struct botlib_import_s {
 	int (*AvailableMemory)(void);			/* available Zone memory */
 	void            *(*HunkAlloc)(int size);	/* allocate from hunk */
 	/* file system access */
-	int (*FS_FOpenFile)(const char *qpath, fileHandle_t *file, fsMode_t mode);
-	int (*FS_Read)(void *buffer, int len, fileHandle_t f);
-	int (*FS_Write)(const void *buffer, int len, fileHandle_t f);
-	void (*FS_FCloseFile)(fileHandle_t f);
-	int (*FS_Seek)(fileHandle_t f, long offset, int origin);
+	int (*FS_FOpenFile)(const char *qpath, Fhandle *file, Fsmode mode);
+	int (*FS_Read)(void *buffer, int len, Fhandle f);
+	int (*FS_Write)(const void *buffer, int len, Fhandle f);
+	void (*FS_FCloseFile)(Fhandle f);
+	int (*FS_Seek)(Fhandle f, long offset, int origin);
 	/* debug visualisation stuff */
 	int (*DebugLineCreate)(void);
 	void (*DebugLineDelete)(int line);

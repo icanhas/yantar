@@ -12,18 +12,18 @@
 
 qbool		scr_initialized;	/* ready to draw */
 
-cvar_t		*cl_timegraph;
-cvar_t		*cl_debuggraph;
-cvar_t		*cl_graphheight;
-cvar_t		*cl_graphscale;
-cvar_t		*cl_graphshift;
+Cvar		*cl_timegraph;
+Cvar		*cl_debuggraph;
+Cvar		*cl_graphheight;
+Cvar		*cl_graphscale;
+Cvar		*cl_graphshift;
 
 /* SCR_DrawNamedPic: Coordinates are 640*480 virtual values */
 void
 SCR_DrawNamedPic(float x, float y, float width, float height,
 		 const char *picname)
 {
-	qhandle_t hShader;
+	Handle hShader;
 
 	assert(width != 0);
 
@@ -73,7 +73,7 @@ SCR_FillRect(float x, float y, float width, float height, const float *color)
 
 /* SCR_DrawPic: Coordinates are 640*480 virtual values */
 void
-SCR_DrawPic(float x, float y, float width, float height, qhandle_t hShader)
+SCR_DrawPic(float x, float y, float width, float height, Handle hShader)
 {
 	SCR_AdjustFrom640(&x, &y, &width, &height);
 	re.DrawStretchPic(x, y, width, height, 0, 0, 1, 1, hShader);

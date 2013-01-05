@@ -957,7 +957,7 @@ AAS_WriteRouteCache(void)
 	int i, j, numportalcache, numareacache, totalsize;
 	aas_routingcache_t	*cache;
 	aas_cluster_t		*cluster;
-	fileHandle_t fp;
+	Fhandle fp;
 	char filename[MAX_QPATH];
 	routecacheheader_t routecacheheader;
 
@@ -1041,7 +1041,7 @@ AAS_WriteRouteCache(void)
  * Changes Globals:		-
  * =========================================================================== */
 aas_routingcache_t *
-AAS_ReadCache(fileHandle_t fp)
+AAS_ReadCache(Fhandle fp)
 {
 	int size;
 	aas_routingcache_t *cache;
@@ -1068,7 +1068,7 @@ int
 AAS_ReadRouteCache(void)
 {
 	int	i, clusterareanum;	/* , size; */
-	fileHandle_t fp;
+	Fhandle fp;
 	char	filename[MAX_QPATH];
 	routecacheheader_t	routecacheheader;
 	aas_routingcache_t	*cache;
@@ -2064,7 +2064,7 @@ AAS_RandomGoalArea(int areanum, int travelflags, int *goalareanum,
 {
 	int i, n, t;
 	Vec3 start, end;
-	aas_trace_t trace;
+	aas_Trace trace;
 
 	/* if the area has no reachabilities */
 	if(!AAS_AreaReachability(areanum)) return qfalse;

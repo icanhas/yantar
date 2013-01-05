@@ -275,7 +275,7 @@ S_AdpcmGetSamples(sndBuffer *chunk, short *to)
 }
 
 void
-S_AdpcmEncodeSound(sfx_t *sfx, short *samples)
+S_AdpcmEncodeSound(Sfx *sfx, short *samples)
 {
 	adpcm_state_t state;
 	int	inOffset;

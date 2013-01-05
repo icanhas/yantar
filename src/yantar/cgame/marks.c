@@ -107,7 +107,7 @@ CG_AllocMark(void)
 #define MAX_MARK_POINTS		384
 
 void
-CG_ImpactMark(qhandle_t markShader, const Vec3 origin, const Vec3 dir,
+CG_ImpactMark(Handle markShader, const Vec3 origin, const Vec3 dir,
 	      float orientation, float red, float green, float blue, float alpha,
 	      qbool alphaFade, float radius, qbool temporary)
 {
@@ -117,7 +117,7 @@ CG_ImpactMark(qhandle_t markShader, const Vec3 origin, const Vec3 dir,
 	byte	colors[4];
 	int	i, j;
 	int	numFragments;
-	markFragment_t markFragments[MAX_MARK_FRAGMENTS], *mf;
+	Markfrag markFragments[MAX_MARK_FRAGMENTS], *mf;
 	Vec3	markPoints[MAX_MARK_POINTS];
 	Vec3	projection;
 

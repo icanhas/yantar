@@ -264,7 +264,7 @@ R_AttachFBOTexturePackedDepthStencil(int texId)
 }
 
 void
-FBO_AttachTextureImage(image_t *img, int index)
+FBO_AttachTextureImage(Img *img, int index)
 {
 	if(!glState.currentFBO){
 		ri.Printf(PRINT_WARNING, "FBO: attempted to attach a texture image with no FBO bound!\n");

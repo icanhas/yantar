@@ -121,9 +121,9 @@ typedef struct {
 extern clipMap_t cm;
 extern int	c_pointcontents;
 extern int	c_traces, c_brush_traces, c_patch_traces;
-extern cvar_t *cm_noAreas;
-extern cvar_t *cm_noCurves;
-extern cvar_t *cm_playerCurveClip;
+extern Cvar *cm_noAreas;
+extern Cvar *cm_noCurves;
+extern Cvar *cm_playerCurveClip;
 
 /* cm_test.c */
 
@@ -146,7 +146,7 @@ typedef struct {
 	Vec3		modelOrigin;	/* origin of the model tracing through */
 	int		contents;	/* ored contents of the model tracing through */
 	qbool		isPoint;	/* optimized case */
-	trace_t		trace;		/* returned from trace call */
+	Trace		trace;		/* returned from trace call */
 	sphere_t	sphere;		/* sphere for oriendted capsule collision */
 } traceWork_t;
 
@@ -169,7 +169,7 @@ void CM_StoreBrushes(leafList_t *ll, int nodenum);
 
 void CM_BoxLeafnums_r(leafList_t *ll, int nodenum);
 
-cmodel_t*CM_ClipHandleToModel(clipHandle_t handle);
+cmodel_t*CM_ClipHandleToModel(Cliphandle handle);
 qbool CM_BoundsIntersect(const Vec3 mins, const Vec3 maxs,
 			    const Vec3 mins2,
 			    const Vec3 maxs2);

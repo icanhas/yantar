@@ -19,7 +19,7 @@ extern refimport_t ri;
  */
 
 typedef struct _TargaHeader {
-	unsigned char	id_length, colormap_type, image_type;
+	unsigned char	id_length, colormap_type, Imgype;
 	unsigned short	colormap_index, colormap_length;
 	unsigned char	colormap_size;
 	unsigned short	x_origin, y_origin, width, height;
@@ -66,7 +66,7 @@ R_LoadTGA(const char *name, byte **pic, int *width, int *height)
 
 	targa_header.id_length = buf_p[0];
 	targa_header.colormap_type = buf_p[1];
-	targa_header.image_type = buf_p[2];
+	targa_header.Imgype = buf_p[2];
 
 	memcpy(&targa_header.colormap_index, &buf_p[3], 2);
 	memcpy(&targa_header.colormap_length, &buf_p[5], 2);
@@ -87,9 +87,9 @@ R_LoadTGA(const char *name, byte **pic, int *width, int *height)
 
 	buf_p += 18;
 
-	if(targa_header.image_type!=2
-	   && targa_header.image_type!=10
-	   && targa_header.image_type != 3){
+	if(targa_header.Imgype!=2
+	   && targa_header.Imgype!=10
+	   && targa_header.Imgype != 3){
 		ri.Error (ERR_DROP, "LoadTGA: Only type 2 (RGB), 3 (gray), and 10 (RGB) TGA images supported");
 	}
 
@@ -97,7 +97,7 @@ R_LoadTGA(const char *name, byte **pic, int *width, int *height)
 		ri.Error(ERR_DROP, "LoadTGA: colormaps not supported");
 	}
 
-	if((targa_header.pixel_size != 32 && targa_header.pixel_size != 24) && targa_header.image_type != 3){
+	if((targa_header.pixel_size != 32 && targa_header.pixel_size != 24) && targa_header.Imgype != 3){
 		ri.Error (ERR_DROP, "LoadTGA: Only 32 or 24 bit images supported (no colormaps)");
 	}
 
@@ -119,7 +119,7 @@ R_LoadTGA(const char *name, byte **pic, int *width, int *height)
 		buf_p += targa_header.id_length;	/* skip TARGA image comment */
 	}
 
-	if(targa_header.image_type==2 || targa_header.image_type == 3){
+	if(targa_header.Imgype==2 || targa_header.Imgype == 3){
 		if(buf_p + columns*rows*targa_header.pixel_size/8 > end){
 			ri.Error (ERR_DROP, "LoadTGA: file truncated (%s)", name);
 		}
@@ -168,7 +168,7 @@ R_LoadTGA(const char *name, byte **pic, int *width, int *height)
 				}
 			}
 		}
-	}else if(targa_header.image_type==10){	/* Runlength encoded RGB images */
+	}else if(targa_header.Imgype==10){	/* Runlength encoded RGB images */
 		unsigned char red,green,blue,alphabyte,packetHeader,packetSize,j;
 
 		red = 0;

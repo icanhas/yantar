@@ -194,7 +194,7 @@ CM_TestInLeaf(traceWork_t *tw, cLeaf_t *leaf)
  * capsule inside capsule check
  */
 void
-CM_TestCapsuleInCapsule(traceWork_t *tw, clipHandle_t model)
+CM_TestCapsuleInCapsule(traceWork_t *tw, Cliphandle model)
 {
 	int i;
 	Vec3	mins, maxs;
@@ -261,10 +261,10 @@ CM_TestCapsuleInCapsule(traceWork_t *tw, clipHandle_t model)
  * bounding box inside capsule check
  */
 void
-CM_TestBoundingBoxInCapsule(traceWork_t *tw, clipHandle_t model)
+CM_TestBoundingBoxInCapsule(traceWork_t *tw, Cliphandle model)
 {
 	Vec3 mins, maxs, offset, size[2];
-	clipHandle_t h;
+	Cliphandle h;
 	cmodel_t *cmod;
 	int i;
 
@@ -766,7 +766,7 @@ CM_TraceThroughVerticalCylinder(traceWork_t *tw, Vec3 origin, float radius,
  * capsule vs. capsule collision (not rotated)
  */
 void
-CM_TraceCapsuleThroughCapsule(traceWork_t *tw, clipHandle_t model)
+CM_TraceCapsuleThroughCapsule(traceWork_t *tw, Cliphandle model)
 {
 	int i;
 	Vec3	mins, maxs;
@@ -826,10 +826,10 @@ CM_TraceCapsuleThroughCapsule(traceWork_t *tw, clipHandle_t model)
  * bounding box vs. capsule collision
  */
 void
-CM_TraceBoundingBoxThroughCapsule(traceWork_t *tw, clipHandle_t model)
+CM_TraceBoundingBoxThroughCapsule(traceWork_t *tw, Cliphandle model)
 {
 	Vec3 mins, maxs, offset, size[2];
-	clipHandle_t h;
+	Cliphandle h;
 	cmodel_t *cmod;
 	int i;
 
@@ -966,9 +966,9 @@ CM_TraceThroughTree(traceWork_t *tw, int num, float p1f, float p2f, Vec3 p1,
 }
 
 void
-CM_Trace(trace_t *results, const Vec3 start, const Vec3 end, Vec3 mins,
+CM_Trace(Trace *results, const Vec3 start, const Vec3 end, Vec3 mins,
 	 Vec3 maxs,
-	 clipHandle_t model, const Vec3 origin, int brushmask, int capsule,
+	 Cliphandle model, const Vec3 origin, int brushmask, int capsule,
 	 sphere_t *sphere)
 {
 	int i;
@@ -1176,9 +1176,9 @@ CM_Trace(trace_t *results, const Vec3 start, const Vec3 end, Vec3 mins,
 }
 
 void
-CM_BoxTrace(trace_t *results, const Vec3 start, const Vec3 end,
+CM_BoxTrace(Trace *results, const Vec3 start, const Vec3 end,
 	    Vec3 mins, Vec3 maxs,
-	    clipHandle_t model, int brushmask, int capsule)
+	    Cliphandle model, int brushmask, int capsule)
 {
 	CM_Trace(results, start, end, mins, maxs, model, vec3_origin, brushmask,
 		capsule,
@@ -1190,12 +1190,12 @@ CM_BoxTrace(trace_t *results, const Vec3 start, const Vec3 end,
  * rotating entities
  */
 void
-CM_TransformedBoxTrace(trace_t *results, const Vec3 start, const Vec3 end,
+CM_TransformedBoxTrace(Trace *results, const Vec3 start, const Vec3 end,
 		       Vec3 mins, Vec3 maxs,
-		       clipHandle_t model, int brushmask,
+		       Cliphandle model, int brushmask,
 		       const Vec3 origin, const Vec3 angles, int capsule)
 {
-	trace_t		trace;
+	Trace		trace;
 	Vec3		start_l, end_l;
 	qbool		rotated;
 	Vec3		offset;

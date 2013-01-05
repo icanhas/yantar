@@ -1,5 +1,5 @@
 /*
- * This file acts on changes in a new playerState_t.  With normal play,
+ * This file acts on changes in a new Playerstate.  With normal play,
  * this will be done after local prediction, but when following another
  * player or playing back a demo, it will be checked when the snapshot
  * transitions like all the other entities .
@@ -164,11 +164,11 @@ CG_Respawn(void)
 extern char *eventnames[];
 
 void
-CG_CheckPlayerstateEvents(playerState_t *ps, playerState_t *ops)
+CG_CheckPlayerstateEvents(Playerstate *ps, Playerstate *ops)
 {
 	int i;
 	int event;
-	centity_t *cent;
+	Centity *cent;
 
 	if(ps->externalEvent && ps->externalEvent != ops->externalEvent){
 		cent = &cg_entities[ ps->clientNum ];
@@ -202,11 +202,11 @@ CG_CheckPlayerstateEvents(playerState_t *ps, playerState_t *ops)
 }
 
 void
-CG_CheckChangedPredictableEvents(playerState_t *ps)
+CG_CheckChangedPredictableEvents(Playerstate *ps)
 {
 	int	i;
 	int	event;
-	centity_t *cent;
+	Centity *cent;
 
 	cent = &cg.predictedPlayerEntity;
 	for(i = ps->eventSequence - MAX_PS_EVENTS; i < ps->eventSequence;
@@ -239,7 +239,7 @@ CG_CheckChangedPredictableEvents(playerState_t *ps)
 }
 
 static void
-pushReward(sfxHandle_t sfx, qhandle_t shader, int rewardCount)
+pushReward(Sfxhandle sfx, Handle shader, int rewardCount)
 {
 	if(cg.rewardStack < (MAX_REWARDSTACK-1)){
 		cg.rewardStack++;
@@ -250,13 +250,13 @@ pushReward(sfxHandle_t sfx, qhandle_t shader, int rewardCount)
 }
 
 void
-CG_CheckLocalSounds(playerState_t *ps, playerState_t *ops)
+CG_CheckLocalSounds(Playerstate *ps, Playerstate *ops)
 {
 	int	highScore, reward;
 #ifdef MISSIONPACK
 	int	health, armor;
 #endif
-	sfxHandle_t sfx;
+	Sfxhandle sfx;
 
 	/* don't play the sounds if the player just changed teams */
 	if(ps->persistant[PERS_TEAM] != ops->persistant[PERS_TEAM])
@@ -469,7 +469,7 @@ CG_CheckLocalSounds(playerState_t *ps, playerState_t *ops)
 }
 
 void
-CG_TransitionPlayerState(playerState_t *ps, playerState_t *ops)
+CG_TransitionPlayerState(Playerstate *ps, Playerstate *ops)
 {
 	/* check for changing follow mode */
 	if(ps->clientNum != ops->clientNum){

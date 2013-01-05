@@ -54,7 +54,7 @@ CG_PlaceString(int rank)
  * CG_Obituary
  */
 static void
-CG_Obituary(entityState_t *ent)
+CG_Obituary(Entstate *ent)
 {
 	int	mod;
 	int	target, attacker;
@@ -64,8 +64,8 @@ CG_Obituary(entityState_t *ent)
 	const char	*attackerInfo;
 	char	targetName[32];
 	char	attackerName[32];
-	gender_t gender;
-	clientInfo_t *ci;
+	Gender gender;
+	Clientinfo *ci;
 
 	target = ent->otherEntityNum;
 	attacker = ent->otherEntityNum2;
@@ -300,12 +300,12 @@ CG_Obituary(entityState_t *ent)
  * CG_UseItem
  */
 static void
-CG_UseItem(centity_t *cent)
+CG_UseItem(Centity *cent)
 {
-	clientInfo_t *ci;
+	Clientinfo *ci;
 	int itemNum, clientNum;
-	gitem_t *item;
-	entityState_t *es;
+	Gitem *item;
+	Entstate *es;
 
 	es = &cent->currentState;
 
@@ -387,7 +387,7 @@ CG_ItemPickup(int itemNum)
  * Returns waterlevel for entity origin
  */
 int
-CG_WaterLevel(centity_t *cent)
+CG_WaterLevel(Centity *cent)
 {
 	Vec3	point;
 	int	contents, sample1, sample2, anim, waterlevel;
@@ -431,7 +431,7 @@ CG_WaterLevel(centity_t *cent)
  * Also called by playerstate transition
  */
 void
-CG_PainEvent(centity_t *cent, int health)
+CG_PainEvent(Centity *cent, int health)
 {
 	char *snd;
 
@@ -478,14 +478,14 @@ CG_PainEvent(centity_t *cent, int health)
  */
 #define DEBUGNAME(x) if(cg_debugEvents.integer){CG_Printf(x "\n"); }
 void
-CG_EntityEvent(centity_t *cent, Vec3 position)
+CG_EntityEvent(Centity *cent, Vec3 position)
 {
-	entityState_t *es;
+	Entstate *es;
 	int event;
 	Vec3	dir;
 	const char              *s;
 	int	clientNum;
-	clientInfo_t *ci;
+	Clientinfo *ci;
 
 	es = &cent->currentState;
 	event = es->event & ~EV_EVENT_BITS;
@@ -681,7 +681,7 @@ CG_EntityEvent(centity_t *cent, Vec3 position)
 	case EV_ITEM_PICKUP:
 		DEBUGNAME("EV_ITEM_PICKUP");
 		{
-			gitem_t *item;
+			Gitem *item;
 			int index;
 
 			index = es->eventParm;	/* player predicted */
@@ -715,7 +715,7 @@ CG_EntityEvent(centity_t *cent, Vec3 position)
 	case EV_GLOBAL_ITEM_PICKUP:
 		DEBUGNAME("EV_GLOBAL_ITEM_PICKUP");
 		{
-			gitem_t *item;
+			Gitem *item;
 			int index;
 
 			index = es->eventParm;	/* player predicted */
@@ -1159,7 +1159,7 @@ CG_EntityEvent(centity_t *cent, Vec3 position)
  *
  */
 void
-CG_CheckEvents(centity_t *cent)
+CG_CheckEvents(Centity *cent)
 {
 	/* check for event-only entities */
 	if(cent->currentState.eType > ET_EVENTS){

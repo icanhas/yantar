@@ -1242,7 +1242,7 @@ loop:   SWAPINIT(a, es);
 
 		/* special string parsing */
 		if(Q_stricmpn(nptr, "nan", 3) == 0){
-			floatint_t nan;
+			Flint nan;
 
 			if(endptr)
 				*endptr = (char*)&nptr[3];
@@ -1267,7 +1267,7 @@ loop:   SWAPINIT(a, es);
 			return nan.f;
 		}
 		if(Q_stricmpn(nptr, "inf", 3) == 0){
-			floatint_t inf;
+			Flint inf;
 			inf.ui = 0x7f800000;
 			if(endptr == NULL)
 				return inf.f;

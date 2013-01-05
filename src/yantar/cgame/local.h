@@ -143,11 +143,11 @@ typedef struct {
 
 
 
-/* centity_t have a direct corespondence with gentity_t in the game, but
- * only the entityState_t is directly communicated to the cgame */
+/* Centity have a direct corespondence with Gentity in the game, but
+ * only the Entstate is directly communicated to the cgame */
 typedef struct centity_s {
-	entityState_t	currentState;	/* from cg.frame */
-	entityState_t	nextState;	/* from cg.nextFrame, if available */
+	Entstate	currentState;	/* from cg.frame */
+	Entstate	nextState;	/* from cg.nextFrame, if available */
 	qbool		interpolate;	/* true if next is valid to interpolate to */
 	qbool		currentValid;	/* true if cg.frame holds this entity */
 
@@ -176,7 +176,7 @@ typedef struct centity_s {
 	/* exact interpolated position of entity on this frame */
 	Vec3	lerpOrigin;
 	Vec3	lerpAngles;
-} centity_t;
+} Centity;
 
 
 /* ====================================================================== */
@@ -187,7 +187,7 @@ typedef struct centity_s {
 typedef struct markPoly_s {
 	struct markPoly_s	*prevMark, *nextMark;
 	int			time;
-	qhandle_t		markShader;
+	Handle			markShader;
 	qbool			alphaFade;	/* fade alpha instead of rgb */
 	float			color[4];
 	poly_t			poly;
@@ -238,8 +238,8 @@ typedef struct localEntity_s {
 
 	float			lifeRate;	/* 1.0 / (endTime - startTime) */
 
-	trajectory_t		pos;
-	trajectory_t		angles;
+	Trajectory		pos;
+	Trajectory		angles;
 
 	float			bounceFactor;	/* 0.0 = no bounce, 1.0 = perfect */
 
@@ -253,8 +253,8 @@ typedef struct localEntity_s {
 	leMarkType_t		leMarkType;	/* mark to leave on fragment impact */
 	leBounceSoundType_t	leBounceSoundType;
 
-	refEntity_t		refEntity;
-} localEntity_t;
+	Refent		refEntity;
+} Localent;
 
 /* ====================================================================== */
 
@@ -275,9 +275,9 @@ typedef struct {
 	int		captures;
 	qbool		perfect;
 	int		team;
-} score_t;
+} Score;
 
-/* each client has an associated clientInfo_t
+/* each client has an associated Clientinfo
  * that contains media references necessary to present the
  * client model and other color coded effects
  * this is regenerated each time a client's configstring changes,
@@ -333,66 +333,66 @@ typedef struct {
 
 	Vec3		headOffset;	/* move head in icon views */
 	footstep_t	footsteps;
-	gender_t	gender;	/* from model */
+	Gender	gender;	/* from model */
 
-	qhandle_t hullmodel;	/* craft body */
-	qhandle_t hullskin;
+	Handle hullmodel;	/* craft body */
+	Handle hullskin;
 
-	qhandle_t	modelIcon;
+	Handle		modelIcon;
 
 	animation_t	animations[MAX_TOTALANIMATIONS];
 
-	sfxHandle_t	sounds[MAX_CUSTOM_SOUNDS];
+	Sfxhandle	sounds[MAX_CUSTOM_SOUNDS];
 	
 	// remove these
 	char		headModelName[MAX_QPATH];
 	char		headSkinName[MAX_QPATH];
-	qhandle_t	legsModel;
-	qhandle_t	legsSkin;
-	qhandle_t	torsoModel;
-	qhandle_t	torsoSkin;
-	qhandle_t	headModel;
-	qhandle_t	headSkin;
-} clientInfo_t;
+	Handle		legsModel;
+	Handle		legsSkin;
+	Handle		torsoModel;
+	Handle		torsoSkin;
+	Handle		headModel;
+	Handle		headSkin;
+} Clientinfo;
 
-/* each W1_* weapon enum has an associated weaponInfo_t
+/* each W1_* weapon enum has an associated Weapinfo
  * that contains media references necessary to present the
  * weapon and its effects */
 typedef struct weaponInfo_s {
 	qbool		registered;
-	gitem_t		*item;
+	Gitem		*item;
 
-	qhandle_t	handsModel;	/* the hands don't actually draw, they just position the weapon */
-	qhandle_t	weaponModel;
-	qhandle_t	barrelModel;
-	qhandle_t	flashModel;
+	Handle		handsModel;	/* the hands don't actually draw, they just position the weapon */
+	Handle		weaponModel;
+	Handle		barrelModel;
+	Handle		flashModel;
 
 	Vec3		weaponMidpoint;	/* so it will rotate centered instead of by tag */
 
 	float		flashDlight;
 	Vec3		flashDlightColor;
-	sfxHandle_t	flashSound[4];	/* fast firing weapons randomly choose */
+	Sfxhandle	flashSound[4];	/* fast firing weapons randomly choose */
 
-	qhandle_t	weaponIcon;
-	qhandle_t	ammoIcon;
+	Handle		weaponIcon;
+	Handle		ammoIcon;
 
-	qhandle_t	ammoModel;
+	Handle		ammoModel;
 
-	qhandle_t	missileModel;
-	sfxHandle_t	missileSound;
-	void (*missileTrailFunc)(centity_t *, const struct weaponInfo_s *wi);
+	Handle		missileModel;
+	Sfxhandle	missileSound;
+	void (*missileTrailFunc)(Centity *, const struct weaponInfo_s *wi);
 	float		missileDlight;
 	Vec3		missileDlightColor;
 	int		missileRenderfx;
 
-	void (*ejectBrassFunc)(centity_t *);
+	void (*ejectBrassFunc)(Centity *);
 
 	float		trailRadius;
 	float		wiTrailTime;
 
-	sfxHandle_t	readySound;
-	sfxHandle_t	firingSound;
-} weaponInfo_t;
+	Sfxhandle	readySound;
+	Sfxhandle	firingSound;
+} Weapinfo;
 
 
 /* each IT_* item has an associated itemInfo_t
@@ -400,8 +400,8 @@ typedef struct weaponInfo_s {
  * item and its effects */
 typedef struct {
 	qbool		registered;
-	qhandle_t	models[MAX_ITEM_MODELS];
-	qhandle_t	icon;
+	Handle		models[MAX_ITEM_MODELS];
+	Handle		icon;
 } itemInfo_t;
 
 
@@ -439,13 +439,13 @@ typedef struct {
 	qbool		loading;		/* don't defer players at initial startup */
 	qbool		intermissionStarted;	/* don't play voice rewards, because game will end shortly */
 
-	/* there are only one or two snapshot_t that are relevent at a time */
+	/* there are only one or two Snap that are relevent at a time */
 	int		latestSnapshotNum;	/* the number of snapshots the client system has received */
 	int		latestSnapshotTime;	/* the time from latestSnapshotNum, so we don't need to read the snapshot yet */
 
-	snapshot_t	*snap;		/* cg.snap->serverTime <= cg.time */
-	snapshot_t	*nextSnap;	/* cg.nextSnap->serverTime > cg.time, or NULL */
-	snapshot_t	activeSnapshots[2];
+	Snap	*snap;		/* cg.snap->serverTime <= cg.time */
+	Snap	*nextSnap;	/* cg.nextSnap->serverTime > cg.time, or NULL */
+	Snap	activeSnapshots[2];
 
 	float		frameInterpolation;	/* (float)( cg.time - cg.frame->serverTime ) / (cg.nextFrame->serverTime - cg.frame->serverTime) */
 
@@ -469,8 +469,8 @@ typedef struct {
 
 	/* prediction state */
 	qbool		hyperspace;	/* true if prediction has hit a trigger_teleport */
-	playerState_t	predictedPlayerState;
-	centity_t	predictedPlayerEntity;
+	Playerstate	predictedPlayerState;
+	Centity	predictedPlayerEntity;
 	qbool		validPPS;	/* clear until the first call to CG_PredictPlayerState */
 	int		predictedErrorTime;
 	Vec3		predictedError;
@@ -513,7 +513,7 @@ typedef struct {
 	int		numScores;
 	int		selectedScore;
 	int		teamScores[2];
-	score_t		scores[MAX_CLIENTS];
+	Score		scores[MAX_CLIENTS];
 	qbool		showScores;
 	qbool		scoreBoardShowing;
 	int		scoreFadeTime;
@@ -553,14 +553,14 @@ typedef struct {
 	int		rewardStack;
 	int		rewardTime;
 	int		rewardCount[MAX_REWARDSTACK];
-	qhandle_t	rewardShader[MAX_REWARDSTACK];
-	qhandle_t	rewardSound[MAX_REWARDSTACK];
+	Handle		rewardShader[MAX_REWARDSTACK];
+	Handle		rewardSound[MAX_REWARDSTACK];
 
 	/* sound buffer mainly for announcer sounds */
 	int		soundBufferIn;
 	int		soundBufferOut;
 	int		soundTime;
-	qhandle_t	soundBuffer[MAX_SOUNDBUFFER];
+	Handle		soundBuffer[MAX_SOUNDBUFFER];
 
 	/* for voice chat buffer */
 	int	voiceChatTime;
@@ -609,7 +609,7 @@ typedef struct {
 
 
 	/* development tool */
-	refEntity_t	testModelEntity;
+	Refent	testModelEntity;
 	char		testModelName[MAX_QPATH];
 	qbool		testGun;
 	uint		ntestlights;
@@ -620,281 +620,281 @@ typedef struct {
 /* all of the model, shader, and sound references that are
  * loaded at gamestate time are stored in cgMedia_t
  * Other media that can be tied to clients, weapons, or items are
- * stored in the clientInfo_t, itemInfo_t, weaponInfo_t, and powerupInfo_t */
+ * stored in the Clientinfo, itemInfo_t, Weapinfo, and powerupInfo_t */
 typedef struct {
-	qhandle_t	charsetShader;
-	qhandle_t	charsetProp;
-	qhandle_t	charsetPropGlow;
-	qhandle_t	charsetPropB;
-	qhandle_t	whiteShader;
+	Handle		charsetShader;
+	Handle		charsetProp;
+	Handle		charsetPropGlow;
+	Handle		charsetPropB;
+	Handle		whiteShader;
 	
-	qhandle_t	redFlagModel;
-	qhandle_t	blueFlagModel;
-	qhandle_t	neutralFlagModel;
-	qhandle_t	redFlagShader[3];
-	qhandle_t	blueFlagShader[3];
-	qhandle_t	flagShader[4];
+	Handle		redFlagModel;
+	Handle		blueFlagModel;
+	Handle		neutralFlagModel;
+	Handle		redFlagShader[3];
+	Handle		blueFlagShader[3];
+	Handle		flagShader[4];
 
-	qhandle_t	flagPoleModel;
-	qhandle_t	flagFlapModel;
+	Handle		flagPoleModel;
+	Handle		flagFlapModel;
 
-	qhandle_t	redFlagFlapSkin;
-	qhandle_t	blueFlagFlapSkin;
-	qhandle_t	neutralFlagFlapSkin;
+	Handle		redFlagFlapSkin;
+	Handle		blueFlagFlapSkin;
+	Handle		neutralFlagFlapSkin;
 
-	qhandle_t	redFlagBaseModel;
-	qhandle_t	blueFlagBaseModel;
-	qhandle_t	neutralFlagBaseModel;
+	Handle		redFlagBaseModel;
+	Handle		blueFlagBaseModel;
+	Handle		neutralFlagBaseModel;
 
-	qhandle_t	armorModel;
-	qhandle_t	armorIcon;
+	Handle		armorModel;
+	Handle		armorIcon;
 
-	qhandle_t	teamStatusBar;
+	Handle		teamStatusBar;
 
-	qhandle_t	deferShader;
+	Handle		deferShader;
 
 	/* gib explosions */
-	qhandle_t	gibAbdomen;
-	qhandle_t	gibArm;
-	qhandle_t	gibChest;
-	qhandle_t	gibFist;
-	qhandle_t	gibFoot;
-	qhandle_t	gibForearm;
-	qhandle_t	gibIntestine;
-	qhandle_t	gibLeg;
-	qhandle_t	gibSkull;
-	qhandle_t	gibBrain;
+	Handle		gibAbdomen;
+	Handle		gibArm;
+	Handle		gibChest;
+	Handle		gibFist;
+	Handle		gibFoot;
+	Handle		gibForearm;
+	Handle		gibIntestine;
+	Handle		gibLeg;
+	Handle		gibSkull;
+	Handle		gibBrain;
 
-	qhandle_t	smoke2;
+	Handle		smoke2;
 
-	qhandle_t	machinegunBrassModel;
-	qhandle_t	shotgunBrassModel;
+	Handle		machinegunBrassModel;
+	Handle		shotgunBrassModel;
 
-	qhandle_t	railRingsShader;
-	qhandle_t	railCoreShader;
+	Handle		railRingsShader;
+	Handle		railCoreShader;
 
-	qhandle_t	lightningShader;
+	Handle		lightningShader;
 
-	qhandle_t	friendShader;
+	Handle		friendShader;
 
-	qhandle_t	balloonShader;
-	qhandle_t	connectionShader;
+	Handle		balloonShader;
+	Handle		connectionShader;
 
-	qhandle_t	selectShader;
-	qhandle_t	viewBloodShader;
-	qhandle_t	tracerShader;
-	qhandle_t	crosshairShader[NUM_CROSSHAIRS];
-	qhandle_t	lagometerShader;
-	qhandle_t	backTileShader;
-	qhandle_t	noammoShader;
+	Handle		selectShader;
+	Handle		viewBloodShader;
+	Handle		tracerShader;
+	Handle		crosshairShader[NUM_CROSSHAIRS];
+	Handle		lagometerShader;
+	Handle		backTileShader;
+	Handle		noammoShader;
 
-	qhandle_t	smokePuffShader;
-	qhandle_t	smokePuffRageProShader;
-	qhandle_t	shotgunSmokePuffShader;
-	qhandle_t	plasmaBallShader;
-	qhandle_t	waterBubbleShader;
-	qhandle_t	bloodTrailShader;
-	qhandle_t	nailPuffShader;
-	qhandle_t	blueProxMine;
+	Handle		smokePuffShader;
+	Handle		smokePuffRageProShader;
+	Handle		shotgunSmokePuffShader;
+	Handle		plasmaBallShader;
+	Handle		waterBubbleShader;
+	Handle		bloodTrailShader;
+	Handle		nailPuffShader;
+	Handle		blueProxMine;
 
-	qhandle_t	numberShaders[11];
+	Handle		numberShaders[11];
 
-	qhandle_t	shadowMarkShader;
+	Handle		shadowMarkShader;
 
-	qhandle_t	botSkillShaders[5];
+	Handle		botSkillShaders[5];
 
 	/* wall mark shaders */
-	qhandle_t	wakeMarkShader;
-	qhandle_t	bloodMarkShader;
-	qhandle_t	bulletMarkShader;
-	qhandle_t	burnMarkShader;
-	qhandle_t	holeMarkShader;
-	qhandle_t	energyMarkShader;
+	Handle		wakeMarkShader;
+	Handle		bloodMarkShader;
+	Handle		bulletMarkShader;
+	Handle		burnMarkShader;
+	Handle		holeMarkShader;
+	Handle		energyMarkShader;
 
 	/* powerup shaders */
-	qhandle_t	quadShader;
-	qhandle_t	redQuadShader;
-	qhandle_t	quadWeaponShader;
-	qhandle_t	invisShader;
-	qhandle_t	regenShader;
-	qhandle_t	battleSuitShader;
-	qhandle_t	battleWeaponShader;
-	qhandle_t	hastePuffShader;
-	qhandle_t	redKamikazeShader;
-	qhandle_t	blueKamikazeShader;
+	Handle		quadShader;
+	Handle		redQuadShader;
+	Handle		quadWeaponShader;
+	Handle		invisShader;
+	Handle		regenShader;
+	Handle		battleSuitShader;
+	Handle		battleWeaponShader;
+	Handle		hastePuffShader;
+	Handle		redKamikazeShader;
+	Handle		blueKamikazeShader;
 
 	/* weapon effect models */
-	qhandle_t	bulletFlashModel;
-	qhandle_t	ringFlashModel;
-	qhandle_t	dishFlashModel;
-	qhandle_t	lightningExplosionModel;
+	Handle		bulletFlashModel;
+	Handle		ringFlashModel;
+	Handle		dishFlashModel;
+	Handle		lightningExplosionModel;
 
 	/* weapon effect shaders */
-	qhandle_t	railExplosionShader;
-	qhandle_t	plasmaExplosionShader;
-	qhandle_t	bulletExplosionShader;
-	qhandle_t	rocketExplosionShader;
-	qhandle_t	grenadeExplosionShader;
-	qhandle_t	bfgExplosionShader;
-	qhandle_t	bloodExplosionShader;
+	Handle		railExplosionShader;
+	Handle		plasmaExplosionShader;
+	Handle		bulletExplosionShader;
+	Handle		rocketExplosionShader;
+	Handle		grenadeExplosionShader;
+	Handle		bfgExplosionShader;
+	Handle		bloodExplosionShader;
 
 	/* special effects models */
-	qhandle_t	teleportEffectModel;
-	qhandle_t	teleportEffectShader;
-	qhandle_t	medkitUsageModel;
-	qhandle_t	dustPuffShader;
-	qhandle_t	invulnerabilityPowerupModel;
+	Handle		teleportEffectModel;
+	Handle		teleportEffectShader;
+	Handle		medkitUsageModel;
+	Handle		dustPuffShader;
+	Handle		invulnerabilityPowerupModel;
 
 	/* scoreboard headers */
-	qhandle_t	scoreboardName;
-	qhandle_t	scoreboardPing;
-	qhandle_t	scoreboardScore;
-	qhandle_t	scoreboardTime;
+	Handle		scoreboardName;
+	Handle		scoreboardPing;
+	Handle		scoreboardScore;
+	Handle		scoreboardTime;
 
 	/* medals shown during gameplay */
-	qhandle_t	medalImpressive;
-	qhandle_t	medalExcellent;
-	qhandle_t	medalGauntlet;
-	qhandle_t	medalDefend;
-	qhandle_t	medalAssist;
-	qhandle_t	medalCapture;
+	Handle		medalImpressive;
+	Handle		medalExcellent;
+	Handle		medalGauntlet;
+	Handle		medalDefend;
+	Handle		medalAssist;
+	Handle		medalCapture;
 
 	/* sounds */
-	sfxHandle_t	quadSound;
-	sfxHandle_t	tracerSound;
-	sfxHandle_t	selectSound;
-	sfxHandle_t	useNothingSound;
-	sfxHandle_t	wearOffSound;
-	sfxHandle_t	footsteps[FOOTSTEP_TOTAL][4];
-	sfxHandle_t	sfx_lghit1;
-	sfxHandle_t	sfx_lghit2;
-	sfxHandle_t	sfx_lghit3;
-	sfxHandle_t	sfx_ric1;
-	sfxHandle_t	sfx_ric2;
-	sfxHandle_t	sfx_ric3;
-	/* sfxHandle_t	sfx_railg; */
-	sfxHandle_t	sfx_rockexp;
-	sfxHandle_t	sfx_plasmaexp;
-	sfxHandle_t	sfx_proxexp;
-	sfxHandle_t	sfx_nghit;
-	sfxHandle_t	sfx_nghitflesh;
-	sfxHandle_t	sfx_nghitmetal;
-	sfxHandle_t	sfx_chghit;
-	sfxHandle_t	sfx_chghitflesh;
-	sfxHandle_t	sfx_chghitmetal;
-	sfxHandle_t	winnerSound;
-	sfxHandle_t	loserSound;
-	sfxHandle_t	gibSound;
-	sfxHandle_t	gibBounce1Sound;
-	sfxHandle_t	gibBounce2Sound;
-	sfxHandle_t	gibBounce3Sound;
-	sfxHandle_t	teleInSound;
-	sfxHandle_t	teleOutSound;
-	sfxHandle_t	noAmmoSound;
-	sfxHandle_t	respawnSound;
-	sfxHandle_t	talkSound;
-	sfxHandle_t	landSound;
-	sfxHandle_t	fallSound;
-	sfxHandle_t	jumpPadSound;
+	Sfxhandle	quadSound;
+	Sfxhandle	tracerSound;
+	Sfxhandle	selectSound;
+	Sfxhandle	useNothingSound;
+	Sfxhandle	wearOffSound;
+	Sfxhandle	footsteps[FOOTSTEP_TOTAL][4];
+	Sfxhandle	sfx_lghit1;
+	Sfxhandle	sfx_lghit2;
+	Sfxhandle	sfx_lghit3;
+	Sfxhandle	sfx_ric1;
+	Sfxhandle	sfx_ric2;
+	Sfxhandle	sfx_ric3;
+	/* Sfxhandle	sfx_railg; */
+	Sfxhandle	sfx_rockexp;
+	Sfxhandle	sfx_plasmaexp;
+	Sfxhandle	sfx_proxexp;
+	Sfxhandle	sfx_nghit;
+	Sfxhandle	sfx_nghitflesh;
+	Sfxhandle	sfx_nghitmetal;
+	Sfxhandle	sfx_chghit;
+	Sfxhandle	sfx_chghitflesh;
+	Sfxhandle	sfx_chghitmetal;
+	Sfxhandle	winnerSound;
+	Sfxhandle	loserSound;
+	Sfxhandle	gibSound;
+	Sfxhandle	gibBounce1Sound;
+	Sfxhandle	gibBounce2Sound;
+	Sfxhandle	gibBounce3Sound;
+	Sfxhandle	teleInSound;
+	Sfxhandle	teleOutSound;
+	Sfxhandle	noAmmoSound;
+	Sfxhandle	respawnSound;
+	Sfxhandle	talkSound;
+	Sfxhandle	landSound;
+	Sfxhandle	fallSound;
+	Sfxhandle	jumpPadSound;
 
-	sfxHandle_t	oneMinuteSound;
-	sfxHandle_t	fiveMinuteSound;
-	sfxHandle_t	suddenDeathSound;
+	Sfxhandle	oneMinuteSound;
+	Sfxhandle	fiveMinuteSound;
+	Sfxhandle	suddenDeathSound;
 
-	sfxHandle_t	threeFragSound;
-	sfxHandle_t	twoFragSound;
-	sfxHandle_t	oneFragSound;
+	Sfxhandle	threeFragSound;
+	Sfxhandle	twoFragSound;
+	Sfxhandle	oneFragSound;
 
-	sfxHandle_t	hitSound;
-	sfxHandle_t	hitSoundHighArmor;
-	sfxHandle_t	hitSoundLowArmor;
-	sfxHandle_t	hitTeamSound;
-	sfxHandle_t	impressiveSound;
-	sfxHandle_t	excellentSound;
-	sfxHandle_t	deniedSound;
-	sfxHandle_t	humiliationSound;
-	sfxHandle_t	assistSound;
-	sfxHandle_t	defendSound;
-	sfxHandle_t	firstImpressiveSound;
-	sfxHandle_t	firstExcellentSound;
-	sfxHandle_t	firstHumiliationSound;
+	Sfxhandle	hitSound;
+	Sfxhandle	hitSoundHighArmor;
+	Sfxhandle	hitSoundLowArmor;
+	Sfxhandle	hitTeamSound;
+	Sfxhandle	impressiveSound;
+	Sfxhandle	excellentSound;
+	Sfxhandle	deniedSound;
+	Sfxhandle	humiliationSound;
+	Sfxhandle	assistSound;
+	Sfxhandle	defendSound;
+	Sfxhandle	firstImpressiveSound;
+	Sfxhandle	firstExcellentSound;
+	Sfxhandle	firstHumiliationSound;
 
-	sfxHandle_t	takenLeadSound;
-	sfxHandle_t	tiedLeadSound;
-	sfxHandle_t	lostLeadSound;
+	Sfxhandle	takenLeadSound;
+	Sfxhandle	tiedLeadSound;
+	Sfxhandle	lostLeadSound;
 
-	sfxHandle_t	voteNow;
-	sfxHandle_t	votePassed;
-	sfxHandle_t	voteFailed;
+	Sfxhandle	voteNow;
+	Sfxhandle	votePassed;
+	Sfxhandle	voteFailed;
 
-	sfxHandle_t	watrInSound;
-	sfxHandle_t	watrOutSound;
-	sfxHandle_t	watrUnSound;
+	Sfxhandle	watrInSound;
+	Sfxhandle	watrOutSound;
+	Sfxhandle	watrUnSound;
 
-	sfxHandle_t	flightSound;
-	sfxHandle_t	medkitSound;
+	Sfxhandle	flightSound;
+	Sfxhandle	medkitSound;
 
-	sfxHandle_t	weaponHoverSound;
+	Sfxhandle	weaponHoverSound;
 
 	/* teamplay sounds */
-	sfxHandle_t	captureAwardSound;
-	sfxHandle_t	redScoredSound;
-	sfxHandle_t	blueScoredSound;
-	sfxHandle_t	redLeadsSound;
-	sfxHandle_t	blueLeadsSound;
-	sfxHandle_t	teamsTiedSound;
+	Sfxhandle	captureAwardSound;
+	Sfxhandle	redScoredSound;
+	Sfxhandle	blueScoredSound;
+	Sfxhandle	redLeadsSound;
+	Sfxhandle	blueLeadsSound;
+	Sfxhandle	teamsTiedSound;
 
-	sfxHandle_t	captureYourTeamSound;
-	sfxHandle_t	captureOpponentSound;
-	sfxHandle_t	returnYourTeamSound;
-	sfxHandle_t	returnOpponentSound;
-	sfxHandle_t	takenYourTeamSound;
-	sfxHandle_t	takenOpponentSound;
+	Sfxhandle	captureYourTeamSound;
+	Sfxhandle	captureOpponentSound;
+	Sfxhandle	returnYourTeamSound;
+	Sfxhandle	returnOpponentSound;
+	Sfxhandle	takenYourTeamSound;
+	Sfxhandle	takenOpponentSound;
 
-	sfxHandle_t	redFlagReturnedSound;
-	sfxHandle_t	blueFlagReturnedSound;
-	sfxHandle_t	neutralFlagReturnedSound;
-	sfxHandle_t	enemyTookYourFlagSound;
-	sfxHandle_t	enemyTookTheFlagSound;
-	sfxHandle_t	yourTeamTookEnemyFlagSound;
-	sfxHandle_t	yourTeamTookTheFlagSound;
-	sfxHandle_t	youHaveFlagSound;
-	sfxHandle_t	yourBaseIsUnderAttackSound;
-	sfxHandle_t	holyShitSound;
+	Sfxhandle	redFlagReturnedSound;
+	Sfxhandle	blueFlagReturnedSound;
+	Sfxhandle	neutralFlagReturnedSound;
+	Sfxhandle	enemyTookYourFlagSound;
+	Sfxhandle	enemyTookTheFlagSound;
+	Sfxhandle	yourTeamTookEnemyFlagSound;
+	Sfxhandle	yourTeamTookTheFlagSound;
+	Sfxhandle	youHaveFlagSound;
+	Sfxhandle	yourBaseIsUnderAttackSound;
+	Sfxhandle	holyShitSound;
 
 	/* tournament sounds */
-	sfxHandle_t	count3Sound;
-	sfxHandle_t	count2Sound;
-	sfxHandle_t	count1Sound;
-	sfxHandle_t	countFightSound;
-	sfxHandle_t	countPrepareSound;
+	Sfxhandle	count3Sound;
+	Sfxhandle	count2Sound;
+	Sfxhandle	count1Sound;
+	Sfxhandle	countFightSound;
+	Sfxhandle	countPrepareSound;
 
 #ifdef MISSIONPACK
 	/* new stuff */
-	qhandle_t	patrolShader;
-	qhandle_t	assaultShader;
-	qhandle_t	campShader;
-	qhandle_t	followShader;
-	qhandle_t	defendShader;
-	qhandle_t	teamLeaderShader;
-	qhandle_t	retrieveShader;
-	qhandle_t	escortShader;
-	qhandle_t	flagShaders[3];
-	sfxHandle_t	countPrepareTeamSound;
+	Handle		patrolShader;
+	Handle		assaultShader;
+	Handle		campShader;
+	Handle		followShader;
+	Handle		defendShader;
+	Handle		teamLeaderShader;
+	Handle		retrieveShader;
+	Handle		escortShader;
+	Handle		flagShaders[3];
+	Sfxhandle	countPrepareTeamSound;
 #endif
-	qhandle_t	cursor;
-	qhandle_t	selectCursor;
-	qhandle_t	sizeCursor;
+	Handle		cursor;
+	Handle		selectCursor;
+	Handle		sizeCursor;
 
-	sfxHandle_t	regenSound;
-	sfxHandle_t	protectSound;
-	sfxHandle_t	n_healthSound;
-	sfxHandle_t	hgrenb1aSound;
-	sfxHandle_t	hgrenb2aSound;
-	sfxHandle_t	wstbimplSound;
-	sfxHandle_t	wstbimpmSound;
-	sfxHandle_t	wstbimpdSound;
-	sfxHandle_t	wstbactvSound;
+	Sfxhandle	regenSound;
+	Sfxhandle	protectSound;
+	Sfxhandle	n_healthSound;
+	Sfxhandle	hgrenb1aSound;
+	Sfxhandle	hgrenb2aSound;
+	Sfxhandle	wstbimplSound;
+	Sfxhandle	wstbimpmSound;
+	Sfxhandle	wstbimpdSound;
+	Sfxhandle	wstbactvSound;
 
 } cgMedia_t;
 
@@ -904,8 +904,8 @@ typedef struct {
  * be cleared when a tournement restart is done, allowing
  * all clients to begin playing instantly */
 typedef struct {
-	gameState_t	gameState;	/* gamestate from server */
-	glconfig_t	glconfig;	/* rendering configuration */
+	Gamestate	gameState;	/* gamestate from server */
+	Glconfig	glconfig;	/* rendering configuration */
 	float		screenXScale;	/* derived from glconfig */
 	float		screenYScale;
 	float		screenXBias;
@@ -950,14 +950,14 @@ typedef struct {
 	/*
 	 * locally derived information from gamestate
 	 *  */
-	qhandle_t	gameModels[MAX_MODELS];
-	sfxHandle_t	gameSounds[MAX_SOUNDS];
+	Handle		gameModels[MAX_MODELS];
+	Sfxhandle	gameSounds[MAX_SOUNDS];
 
 	int		numInlineModels;
-	qhandle_t	inlineDrawModel[MAX_MODELS];
+	Handle		inlineDrawModel[MAX_MODELS];
 	Vec3		inlineModelMidpoints[MAX_MODELS];
 
-	clientInfo_t	clientinfo[MAX_CLIENTS];
+	Clientinfo	clientinfo[MAX_CLIENTS];
 
 	/* teamchat width is *3 because of embedded color codes */
 	char		teamChatMsgs[TEAMCHAT_HEIGHT][TEAMCHAT_WIDTH*3+1];
@@ -971,7 +971,7 @@ typedef struct {
 	qbool		mouseCaptured;
 	qbool		sizingHud;
 	void		*capturedItem;
-	qhandle_t	activeCursor;
+	Handle		activeCursor;
 
 	/* orders */
 	int		currentOrder;
@@ -992,107 +992,107 @@ typedef struct {
 
 extern cgs_t	cgs;
 extern cg_t	cg;
-extern centity_t	cg_entities[MAX_GENTITIES];
-extern weaponInfo_t cg_weapons[MAX_WEAPONS];
+extern Centity	cg_entities[MAX_GENTITIES];
+extern Weapinfo cg_weapons[MAX_WEAPONS];
 extern itemInfo_t	cg_items[MAX_ITEMS];
 extern markPoly_t	cg_markPolys[MAX_MARK_POLYS];
 
-extern vmCvar_t		cg_centertime;
-extern vmCvar_t		cg_runpitch;
-extern vmCvar_t		cg_runroll;
-extern vmCvar_t		cg_bobup;
-extern vmCvar_t		cg_bobpitch;
-extern vmCvar_t		cg_bobroll;
-extern vmCvar_t		cg_swingSpeed;
-extern vmCvar_t		cg_shadows;
-extern vmCvar_t		cg_gibs;
-extern vmCvar_t		cg_drawTimer;
-extern vmCvar_t		cg_drawFPS;
-extern vmCvar_t		cg_drawSnapshot;
-extern vmCvar_t		cg_draw3dIcons;
-extern vmCvar_t		cg_drawIcons;
-extern vmCvar_t		cg_drawAmmoWarning;
-extern vmCvar_t		cg_drawCrosshair;
-extern vmCvar_t		cg_drawCrosshairNames;
-extern vmCvar_t		cg_drawRewards;
-extern vmCvar_t		cg_drawTeamOverlay;
-extern vmCvar_t		cg_teamOverlayUserinfo;
-extern vmCvar_t		cg_crosshairX;
-extern vmCvar_t		cg_crosshairY;
-extern vmCvar_t		cg_crosshairSize;
-extern vmCvar_t		cg_crosshairHealth;
-extern vmCvar_t		cg_drawStatus;
-extern vmCvar_t		cg_draw2D;
-extern vmCvar_t		cg_animSpeed;
-extern vmCvar_t		cg_debugAnim;
-extern vmCvar_t		cg_debugPosition;
-extern vmCvar_t		cg_debugEvents;
-extern vmCvar_t		cg_railTrailTime;
-extern vmCvar_t		cg_errorDecay;
-extern vmCvar_t		cg_nopredict;
-extern vmCvar_t		cg_noPlayerAnims;
-extern vmCvar_t		cg_showmiss;
-extern vmCvar_t		cg_footsteps;
-extern vmCvar_t		cg_addMarks;
-extern vmCvar_t		cg_brassTime;
-extern vmCvar_t		cg_gun_frame;
-extern vmCvar_t		cg_gun_x;
-extern vmCvar_t		cg_gun_y;
-extern vmCvar_t		cg_gun_z;
-extern vmCvar_t		cg_drawGun;
-extern vmCvar_t		cg_viewsize;
-extern vmCvar_t		cg_tracerChance;
-extern vmCvar_t		cg_tracerWidth;
-extern vmCvar_t		cg_tracerLength;
-extern vmCvar_t		cg_autoswitch;
-extern vmCvar_t		cg_ignore;
-extern vmCvar_t		cg_simpleItems;
-extern vmCvar_t		cg_fov;
-extern vmCvar_t		cg_zoomFov;
-extern vmCvar_t		cg_thirdPersonRange;
-extern vmCvar_t		cg_thirdPersonAngle;
-extern vmCvar_t		cg_thirdPerson;
-extern vmCvar_t		cg_lagometer;
-extern vmCvar_t		cg_drawAttacker;
-extern vmCvar_t		cg_synchronousClients;
-extern vmCvar_t		cg_ChatTime;
-extern vmCvar_t		cg_ChatHeight;
-extern vmCvar_t		cg_stats;
-extern vmCvar_t		cg_forceModel;
-extern vmCvar_t		cg_buildScript;
-extern vmCvar_t		cg_paused;
-extern vmCvar_t		cg_blood;
-extern vmCvar_t		cg_predictItems;
-extern vmCvar_t		cg_deferPlayers;
-extern vmCvar_t		cg_drawFriend;
-extern vmCvar_t		cg_ChatsOnly;
-extern vmCvar_t		cg_noVoiceChats;
-extern vmCvar_t		cg_noVoiceText;
-extern vmCvar_t		cg_scorePlum;
-extern vmCvar_t		cg_smoothClients;
-extern vmCvar_t		pmove_fixed;
-extern vmCvar_t		pmove_msec;
-/* extern	vmCvar_t		cg_pmove_fixed; */
-extern vmCvar_t		cg_cameraOrbit;
-extern vmCvar_t		cg_cameraOrbitDelay;
-extern vmCvar_t		cg_timescaleFadeEnd;
-extern vmCvar_t		cg_timescaleFadeSpeed;
-extern vmCvar_t		cg_timescale;
-extern vmCvar_t		cg_cameraMode;
-extern vmCvar_t		cg_smallFont;
-extern vmCvar_t		cg_bigFont;
-extern vmCvar_t		cg_noTaunt;
-extern vmCvar_t		cg_noProjectileTrail;
-extern vmCvar_t		cg_oldRail;
-extern vmCvar_t		cg_oldRocket;
-extern vmCvar_t		cg_oldPlasma;
-extern vmCvar_t		cg_trueLightning;
+extern Vmcvar		cg_centertime;
+extern Vmcvar		cg_runpitch;
+extern Vmcvar		cg_runroll;
+extern Vmcvar		cg_bobup;
+extern Vmcvar		cg_bobpitch;
+extern Vmcvar		cg_bobroll;
+extern Vmcvar		cg_swingSpeed;
+extern Vmcvar		cg_shadows;
+extern Vmcvar		cg_gibs;
+extern Vmcvar		cg_drawTimer;
+extern Vmcvar		cg_drawFPS;
+extern Vmcvar		cg_drawSnapshot;
+extern Vmcvar		cg_draw3dIcons;
+extern Vmcvar		cg_drawIcons;
+extern Vmcvar		cg_drawAmmoWarning;
+extern Vmcvar		cg_drawCrosshair;
+extern Vmcvar		cg_drawCrosshairNames;
+extern Vmcvar		cg_drawRewards;
+extern Vmcvar		cg_drawTeamOverlay;
+extern Vmcvar		cg_teamOverlayUserinfo;
+extern Vmcvar		cg_crosshairX;
+extern Vmcvar		cg_crosshairY;
+extern Vmcvar		cg_crosshairSize;
+extern Vmcvar		cg_crosshairHealth;
+extern Vmcvar		cg_drawStatus;
+extern Vmcvar		cg_draw2D;
+extern Vmcvar		cg_animSpeed;
+extern Vmcvar		cg_debugAnim;
+extern Vmcvar		cg_debugPosition;
+extern Vmcvar		cg_debugEvents;
+extern Vmcvar		cg_railTrailTime;
+extern Vmcvar		cg_errorDecay;
+extern Vmcvar		cg_nopredict;
+extern Vmcvar		cg_noPlayerAnims;
+extern Vmcvar		cg_showmiss;
+extern Vmcvar		cg_footsteps;
+extern Vmcvar		cg_addMarks;
+extern Vmcvar		cg_brassTime;
+extern Vmcvar		cg_gun_frame;
+extern Vmcvar		cg_gun_x;
+extern Vmcvar		cg_gun_y;
+extern Vmcvar		cg_gun_z;
+extern Vmcvar		cg_drawGun;
+extern Vmcvar		cg_viewsize;
+extern Vmcvar		cg_tracerChance;
+extern Vmcvar		cg_tracerWidth;
+extern Vmcvar		cg_tracerLength;
+extern Vmcvar		cg_autoswitch;
+extern Vmcvar		cg_ignore;
+extern Vmcvar		cg_simpleItems;
+extern Vmcvar		cg_fov;
+extern Vmcvar		cg_zoomFov;
+extern Vmcvar		cg_thirdPersonRange;
+extern Vmcvar		cg_thirdPersonAngle;
+extern Vmcvar		cg_thirdPerson;
+extern Vmcvar		cg_lagometer;
+extern Vmcvar		cg_drawAttacker;
+extern Vmcvar		cg_synchronousClients;
+extern Vmcvar		cg_ChatTime;
+extern Vmcvar		cg_ChatHeight;
+extern Vmcvar		cg_stats;
+extern Vmcvar		cg_forceModel;
+extern Vmcvar		cg_buildScript;
+extern Vmcvar		cg_paused;
+extern Vmcvar		cg_blood;
+extern Vmcvar		cg_predictItems;
+extern Vmcvar		cg_deferPlayers;
+extern Vmcvar		cg_drawFriend;
+extern Vmcvar		cg_ChatsOnly;
+extern Vmcvar		cg_noVoiceChats;
+extern Vmcvar		cg_noVoiceText;
+extern Vmcvar		cg_scorePlum;
+extern Vmcvar		cg_smoothClients;
+extern Vmcvar		pmove_fixed;
+extern Vmcvar		pmove_msec;
+/* extern	Vmcvar		cg_pmove_fixed; */
+extern Vmcvar		cg_cameraOrbit;
+extern Vmcvar		cg_cameraOrbitDelay;
+extern Vmcvar		cg_timescaleFadeEnd;
+extern Vmcvar		cg_timescaleFadeSpeed;
+extern Vmcvar		cg_timescale;
+extern Vmcvar		cg_cameraMode;
+extern Vmcvar		cg_smallFont;
+extern Vmcvar		cg_bigFont;
+extern Vmcvar		cg_noTaunt;
+extern Vmcvar		cg_noProjectileTrail;
+extern Vmcvar		cg_oldRail;
+extern Vmcvar		cg_oldRocket;
+extern Vmcvar		cg_oldPlasma;
+extern Vmcvar		cg_trueLightning;
 
-extern vmCvar_t		cg_redTeamName;
-extern vmCvar_t		cg_blueTeamName;
-extern vmCvar_t		cg_currentSelectedPlayer;
-extern vmCvar_t		cg_currentSelectedPlayerName;
-extern vmCvar_t		cg_enableDust;
+extern Vmcvar		cg_redTeamName;
+extern Vmcvar		cg_blueTeamName;
+extern Vmcvar		cg_currentSelectedPlayer;
+extern Vmcvar		cg_currentSelectedPlayerName;
+extern Vmcvar		cg_enableDust;
 
 /*
  * cg_main.c
@@ -1116,7 +1116,7 @@ void CG_MouseEvent(int x, int y);
 void CG_EventHandling(int type);
 void CG_RankRunFrame(void);
 void CG_SetScoreSelection(void *menu);
-score_t*CG_GetSelectedScore(void);
+Score*CG_GetSelectedScore(void);
 void CG_BuildSpectatorString(void);
 
 
@@ -1132,7 +1132,7 @@ void CG_TestModelPrevSkin_f(void);
 void CG_TestLight_f(void);
 void CG_ZoomDown_f(void);
 void CG_ZoomUp_f(void);
-void CG_AddBufferedSound(sfxHandle_t sfx);
+void CG_AddBufferedSound(Sfxhandle sfx);
 
 void CG_DrawActiveFrame(int serverTime, stereoFrame_t stereoView,
 			qbool demoPlayback);
@@ -1143,7 +1143,7 @@ void CG_DrawActiveFrame(int serverTime, stereoFrame_t stereoView,
  *  */
 void CG_AdjustFrom640(float *x, float *y, float *w, float *h);
 void CG_FillRect(float x, float y, float width, float height, const float *color);
-void CG_DrawPic(float x, float y, float width, float height, qhandle_t hShader);
+void CG_DrawPic(float x, float y, float width, float height, Handle hShader);
 void CG_DrawString(float x, float y, const char *string,
 		   float charWidth, float charHeight, const float *modulate);
 
@@ -1184,7 +1184,7 @@ extern char	teamChat1[256];
 extern char	teamChat2[256];
 
 void CG_AddLagometerFrameInfo(void);
-void CG_AddLagometerSnapshotInfo(snapshot_t *snap);
+void CG_AddLagometerSnapshotInfo(Snap *snap);
 void CG_CenterPrint(const char *str, int y, int charWidth);
 void CG_DrawHead(float x, float y, float w, float h, int clientNum,
 		 Vec3 headAngles);
@@ -1195,7 +1195,7 @@ void CG_DrawTeamBackground(int x, int y, int w, int h, float alpha, int team);
 void CG_OwnerDraw(float x, float y, float w, float h, float text_x, float text_y,
 		  int ownerDraw, int ownerDrawFlags, int align, float special,
 		  float scale,
-		  Vec4 color, qhandle_t shader,
+		  Vec4 color, Handle shader,
 		  int textStyle);
 void CG_Text_Paint(float x, float y, float scale, Vec4 color, const char *text,
 		   float adjust, int limit,
@@ -1213,36 +1213,36 @@ void CG_InitTeamChat(void);
 void CG_GetTeamColor(Vec4 *color);
 const char*CG_GetGameStatusText(void);
 const char*CG_GetKillerText(void);
-void CG_Draw3DModel(float x, float y, float w, float h, qhandle_t model,
-		    qhandle_t skin, Vec3 origin,
+void CG_Draw3DModel(float x, float y, float w, float h, Handle model,
+		    Handle skin, Vec3 origin,
 		    Vec3 angles);
 void CG_Text_PaintChar(float x, float y, float width, float height, float scale,
 		       float s, float t, float s2, float t2,
-		       qhandle_t hShader);
+		       Handle hShader);
 void CG_CheckOrderPending(void);
 const char*CG_GameTypeString(void);
 qbool CG_YourTeamHasFlag(void);
 qbool CG_OtherTeamHasFlag(void);
-qhandle_t CG_StatusHandle(int task);
+Handle CG_StatusHandle(int task);
 
 
 
 /*
  * cg_player.c
  *  */
-void CG_Player(centity_t *cent);
-void CG_ResetPlayerEntity(centity_t *cent);
-void CG_AddRefEntityWithPowerups(refEntity_t *ent, entityState_t *state,
+void CG_Player(Centity *cent);
+void CG_ResetPlayerEntity(Centity *cent);
+void CG_AddRefEntityWithPowerups(Refent *ent, Entstate *state,
 				 int team);
 void CG_NewClientInfo(int clientNum);
-sfxHandle_t     CG_CustomSound(int clientNum, const char *soundName);
+Sfxhandle     CG_CustomSound(int clientNum, const char *soundName);
 
 /*
  * cg_predict.c
  *  */
 void CG_BuildSolidList(void);
 int     CG_PointContents(const Vec3 point, int passEntityNum);
-void CG_Trace(trace_t *result, const Vec3 start, const Vec3 mins,
+void CG_Trace(Trace *result, const Vec3 start, const Vec3 mins,
 	      const Vec3 maxs, const Vec3 end,
 	      int skipNumber,
 	      int mask);
@@ -1253,27 +1253,27 @@ void CG_LoadDeferredPlayers(void);
 /*
  * cg_events.c
  *  */
-void CG_CheckEvents(centity_t *cent);
+void CG_CheckEvents(Centity *cent);
 const char*CG_PlaceString(int rank);
-void CG_EntityEvent(centity_t *cent, Vec3 position);
-void CG_PainEvent(centity_t *cent, int health);
+void CG_EntityEvent(Centity *cent, Vec3 position);
+void CG_PainEvent(Centity *cent, int health);
 
 
 /*
  * cg_ents.c
  *  */
-void CG_SetEntitySoundPosition(centity_t *cent);
+void CG_SetEntitySoundPosition(Centity *cent);
 void CG_AddPacketEntities(void);
-void CG_Beam(centity_t *cent);
+void CG_Beam(Centity *cent);
 void CG_AdjustPositionForMover(const Vec3 in, int moverNum, int fromTime,
 			       int toTime,
 			       Vec3 out);
 
-void CG_PositionEntityOnTag(refEntity_t *entity, const refEntity_t *parent,
-			    qhandle_t parentModel, char *tagName);
-void CG_PositionRotatedEntityOnTag(refEntity_t *entity,
-				   const refEntity_t *parent,
-				   qhandle_t parentModel,
+void CG_PositionEntityOnTag(Refent *entity, const Refent *parent,
+			    Handle parentModel, char *tagName);
+void CG_PositionRotatedEntityOnTag(Refent *entity,
+				   const Refent *parent,
+				   Handle parentModel,
 				   char *tagName);
 
 
@@ -1291,18 +1291,18 @@ void CG_SecWeap_f(void);
 void CG_RegisterWeapon(int weaponNum);
 void CG_RegisterItemVisuals(int itemNum);
 
-void CG_FireWeapon(centity_t *cent, Weapslot);
+void CG_FireWeapon(Centity *cent, Weapslot);
 void CG_MissileHitWall(int weapon, int clientNum, Vec3 origin, Vec3 dir,
 		       impactSound_t soundType);
 void CG_MissileHitPlayer(int weapon, Vec3 origin, Vec3 dir, int entityNum);
-void CG_ShotgunFire(entityState_t *es);
+void CG_ShotgunFire(Entstate *es);
 void CG_Bullet(Vec3 origin, int sourceEntityNum, Vec3 normal, qbool flesh,
 	       int fleshEntityNum);
 
-void CG_RailTrail(clientInfo_t *ci, Vec3 start, Vec3 end);
-void CG_GrappleTrail(centity_t *ent, const weaponInfo_t *wi);
-void CG_AddViewWeapon(playerState_t *ps, Weapslot);
-void CG_AddPlayerWeapon(refEntity_t *parent, playerState_t *ps, centity_t *cent,
+void CG_RailTrail(Clientinfo *ci, Vec3 start, Vec3 end);
+void CG_GrappleTrail(Centity *ent, const Weapinfo *wi);
+void CG_AddViewWeapon(Playerstate *ps, Weapslot);
+void CG_AddPlayerWeapon(Refent *parent, Playerstate *ps, Centity *cent,
 	Weapslot, int team);
 void CG_DrawWeaponSelect(Weapslot);
 
@@ -1313,7 +1313,7 @@ void CG_OutOfAmmoChange(Weapslot);	/* should this be in pmove? */
  *  */
 void    CG_InitMarkPolys(void);
 void    CG_AddMarks(void);
-void    CG_ImpactMark(qhandle_t markShader,
+void    CG_ImpactMark(Handle markShader,
 		      const Vec3 origin, const Vec3 dir,
 		      float orientation,
 		      float r, float g, float b, float a,
@@ -1324,13 +1324,13 @@ void    CG_ImpactMark(qhandle_t markShader,
  * cg_localents.c
  *  */
 void    CG_InitLocalEntities(void);
-localEntity_t*CG_AllocLocalEntity(void);
+Localent*CG_AllocLocalEntity(void);
 void    CG_AddLocalEntities(void);
 
 /*
  * cg_effects.c
  *  */
-localEntity_t*CG_SmokePuff(const Vec3 p,
+Localent*CG_SmokePuff(const Vec3 p,
 			   const Vec3 vel,
 			   float radius,
 			   float r, float g, float b, float a,
@@ -1338,7 +1338,7 @@ localEntity_t*CG_SmokePuff(const Vec3 p,
 			   int startTime,
 			   int fadeInTime,
 			   int leFlags,
-			   qhandle_t hShader);
+			   Handle hShader);
 void CG_BubbleTrail(Vec3 start, Vec3 end, float spacing);
 void CG_SpawnEffect(Vec3 org);
 void CG_ScorePlum(int client, Vec3 org, int score);
@@ -1348,8 +1348,8 @@ void CG_BigExplode(Vec3 playerOrigin);
 
 void CG_Bleed(Vec3 origin, int entityNum);
 
-localEntity_t*CG_MakeExplosion(Vec3 origin, Vec3 dir,
-			       qhandle_t hModel, qhandle_t shader, int msec,
+Localent*CG_MakeExplosion(Vec3 origin, Vec3 dir,
+			       Handle hModel, Handle shader, int msec,
 			       qbool isSprite);
 
 /*
@@ -1393,8 +1393,8 @@ void CG_PlayBufferedVoiceChats(void);
  * cg_playerstate.c
  *  */
 void CG_Respawn(void);
-void CG_TransitionPlayerState(playerState_t *ps, playerState_t *ops);
-void CG_CheckChangedPredictableEvents(playerState_t *ps);
+void CG_TransitionPlayerState(Playerstate *ps, Playerstate *ops);
+void CG_CheckChangedPredictableEvents(Playerstate *ps);
 
 
 /* =============================================== */
@@ -1415,10 +1415,10 @@ void            trap_Error(const char *fmt) __attribute__((noreturn));
 int                     trap_Milliseconds(void);
 
 /* console variable interaction */
-void            trap_Cvar_Register(vmCvar_t *vmCvar, const char *varName,
+void            trap_Cvar_Register(Vmcvar *vmCvar, const char *varName,
 				   const char *defaultValue,
 				   int flags);
-void            trap_Cvar_Update(vmCvar_t *vmCvar);
+void            trap_Cvar_Update(Vmcvar *vmCvar);
 void            trap_Cvar_Set(const char *var_name, const char *value);
 void            trap_Cvar_VariableStringBuffer(const char *var_name,
 					       char *buffer,
@@ -1431,12 +1431,12 @@ void            trap_Args(char *buffer, int bufferLength);
 
 /* filesystem access
  * returns length of file */
-int                     trap_FS_FOpenFile(const char *qpath, fileHandle_t *f,
-					  fsMode_t mode);
-void            trap_FS_Read(void *buffer, int len, fileHandle_t f);
-void            trap_FS_Write(const void *buffer, int len, fileHandle_t f);
-void            trap_FS_FCloseFile(fileHandle_t f);
-int                     trap_FS_Seek(fileHandle_t f, long offset, int origin);	/* fsOrigin_t */
+int                     trap_FS_FOpenFile(const char *qpath, Fhandle *f,
+					  Fsmode mode);
+void            trap_FS_Read(void *buffer, int len, Fhandle f);
+void            trap_FS_Write(const void *buffer, int len, Fhandle f);
+void            trap_FS_FCloseFile(Fhandle f);
+int                     trap_FS_Seek(Fhandle f, long offset, int origin);	/* fsOrigin_t */
 
 /* add commands to the local console as if they were typed in
  * for map changing, etc.  The command is not executed immediately,
@@ -1457,22 +1457,22 @@ void            trap_UpdateScreen(void);
 /* model collision */
 void            trap_CM_LoadMap(const char *mapname);
 int                     trap_CM_NumInlineModels(void);
-clipHandle_t trap_CM_InlineModel(int index);	/* 0 = world, 1+ = bmodels */
-clipHandle_t trap_CM_TempBoxModel(const Vec3 mins, const Vec3 maxs);
-int                     trap_CM_PointContents(const Vec3 p, clipHandle_t model);
+Cliphandle trap_CM_InlineModel(int index);	/* 0 = world, 1+ = bmodels */
+Cliphandle trap_CM_TempBoxModel(const Vec3 mins, const Vec3 maxs);
+int                     trap_CM_PointContents(const Vec3 p, Cliphandle model);
 int                     trap_CM_TransformedPointContents(const Vec3 p,
-							 clipHandle_t model,
+							 Cliphandle model,
 							 const Vec3 origin,
 							 const Vec3 angles);
-void            trap_CM_BoxTrace(trace_t *results, const Vec3 start,
+void            trap_CM_BoxTrace(Trace *results, const Vec3 start,
 				 const Vec3 end,
 				 const Vec3 mins, const Vec3 maxs,
-				 clipHandle_t model,
+				 Cliphandle model,
 				 int brushmask);
-void            trap_CM_TransformedBoxTrace(trace_t *results, const Vec3 start,
+void            trap_CM_TransformedBoxTrace(Trace *results, const Vec3 start,
 					    const Vec3 end,
 					    const Vec3 mins, const Vec3 maxs,
-					    clipHandle_t model, int brushmask,
+					    Cliphandle model, int brushmask,
 					    const Vec3 origin,
 					    const Vec3 angles);
 
@@ -1482,30 +1482,30 @@ int                     trap_CM_MarkFragments(int numPoints,
 					      const Vec3 projection,
 					      int maxPoints, Vec3 pointBuffer,
 					      int maxFragments,
-					      markFragment_t *fragmentBuffer);
+					      Markfrag *fragmentBuffer);
 
 /* normal sounds will have their volume dynamically changed as their entity
  * moves and the listener moves */
 void            trap_S_StartSound(Vec3 origin, int entityNum, int entchannel,
-				  sfxHandle_t sfx);
+				  Sfxhandle sfx);
 void            trap_S_StopLoopingSound(int entnum);
 
 /* a local sound is always played full volume */
-void            trap_S_StartLocalSound(sfxHandle_t sfx, int channelNum);
+void            trap_S_StartLocalSound(Sfxhandle sfx, int channelNum);
 void            trap_S_ClearLoopingSounds(qbool killall);
 void            trap_S_AddLoopingSound(int entityNum, const Vec3 origin,
 				       const Vec3 velocity,
-				       sfxHandle_t sfx);
+				       Sfxhandle sfx);
 void            trap_S_AddRealLoopingSound(int entityNum, const Vec3 origin,
 					   const Vec3 velocity,
-					   sfxHandle_t sfx);
+					   Sfxhandle sfx);
 void            trap_S_UpdateEntityPosition(int entityNum, const Vec3 origin);
 
 /* respatialize recalculates the volumes of sound as they should be heard by the
  * given entityNum and position */
 void trap_S_Respatialize(int entityNum, const Vec3 origin, Vec3 axis[3],
 			 int inwater);
-sfxHandle_t     trap_S_RegisterSound(const char *sample, qbool compressed);		/* returns buzz if not found */
+Sfxhandle     trap_S_RegisterSound(const char *sample, qbool compressed);		/* returns buzz if not found */
 void            trap_S_StartBackgroundTrack(const char *intro, const char *loop);	/* empty name stops music */
 void    trap_S_StopBackgroundTrack(void);
 
@@ -1514,21 +1514,21 @@ void            trap_R_LoadWorldMap(const char *mapname);
 
 /* all media should be registered during level startup to prevent
  * hitches during gameplay */
-qhandle_t       trap_R_RegisterModel(const char *name);		/* returns rgb axis if not found */
-qhandle_t       trap_R_RegisterSkin(const char *name);		/* returns all white if not found */
-qhandle_t       trap_R_RegisterShader(const char *name);	/* returns all white if not found */
-qhandle_t       trap_R_RegisterShaderNoMip(const char *name);	/* returns all white if not found */
+Handle       trap_R_RegisterModel(const char *name);		/* returns rgb axis if not found */
+Handle       trap_R_RegisterSkin(const char *name);		/* returns all white if not found */
+Handle       trap_R_RegisterShader(const char *name);	/* returns all white if not found */
+Handle       trap_R_RegisterShaderNoMip(const char *name);	/* returns all white if not found */
 
 /* a scene is built up by calls to R_ClearScene and the various R_Add functions.
  * Nothing is drawn until R_RenderScene is called. */
 void            trap_R_ClearScene(void);
-void            trap_R_AddRefEntityToScene(const refEntity_t *re);
+void            trap_R_AddRefEntityToScene(const Refent *re);
 
 /* polys are intended for simple wall marks, not really for doing
  * significant construction */
-void            trap_R_AddPolyToScene(qhandle_t hShader, int numVerts,
+void            trap_R_AddPolyToScene(Handle hShader, int numVerts,
 				      const polyVert_t *verts);
-void            trap_R_AddPolysToScene(qhandle_t hShader, int numVerts,
+void            trap_R_AddPolysToScene(Handle hShader, int numVerts,
 				       const polyVert_t *verts,
 				       int numPolys);
 void            trap_R_AddLightToScene(const Vec3 org, float intensity,
@@ -1541,23 +1541,23 @@ void            trap_R_RenderScene(const refdef_t *fd);
 void            trap_R_SetColor(const float *rgba);	/* NULL = 1,1,1,1 */
 void            trap_R_DrawStretchPic(float x, float y, float w, float h,
 				      float s1, float t1, float s2, float t2,
-				      qhandle_t hShader);
-void            trap_R_ModelBounds(clipHandle_t model, Vec3 mins, Vec3 maxs);
-int                     trap_R_LerpTag(orientation_t *tag, clipHandle_t mod,
+				      Handle hShader);
+void            trap_R_ModelBounds(Cliphandle model, Vec3 mins, Vec3 maxs);
+int                     trap_R_LerpTag(Orient *tag, Cliphandle mod,
 				       int startFrame, int endFrame,
 				       float frac,
 				       const char *tagName);
 void            trap_R_RemapShader(const char *oldShader, const char *newShader,
 				   const char *timeOffset);
 
-/* The glconfig_t will not change during the life of a cgame.
+/* The Glconfig will not change during the life of a cgame.
  * If it needs to change, the entire cgame will be restarted, because
- * all the qhandle_t are then invalid. */
-void            trap_GetGlconfig(glconfig_t *glconfig);
+ * all the Handle are then invalid. */
+void            trap_GetGlconfig(Glconfig *glconfig);
 
 /* the gamestate should be grabbed at startup, and whenever a
  * configstring changes */
-void            trap_GetGameState(gameState_t *gamestate);
+void            trap_GetGameState(Gamestate *gamestate);
 
 /* cgame will poll each frame to see if a newer snapshot has arrived
  * that it is interested in.  The time is returned seperately so that
@@ -1567,7 +1567,7 @@ void            trap_GetCurrentSnapshotNumber(int *snapshotNumber,
 
 /* a snapshot get can fail if the snapshot (or the entties it holds) is so
  * old that it has fallen out of the client system queue */
-qbool        trap_GetSnapshot(int snapshotNumber, snapshot_t *snapshot);
+qbool        trap_GetSnapshot(int snapshotNumber, Snap *snapshot);
 
 /* retrieve a text command from the server stream
  * the current snapshot will hold the number of the most recent command
@@ -1581,7 +1581,7 @@ qbool        trap_GetServerCommand(int serverCommandNumber);
  * a lagged connection */
 int                     trap_GetCurrentCmdNumber(void);
 
-qbool        trap_GetUserCmd(int cmdNumber, usercmd_t *ucmd);
+qbool        trap_GetUserCmd(int cmdNumber, Usrcmd *ucmd);
 
 /* used for the weapon select and zoom */
 void            trap_SetUserCmdValue(int, int, float);
@@ -1592,7 +1592,7 @@ void            testPrintFloat(char *string, float f);
 
 int                     trap_MemoryRemaining(void);
 void            trap_R_RegisterFont(const char *fontName, int pointSize,
-				    fontInfo_t *font);
+				    Fontinfo *font);
 qbool        trap_Key_IsDown(int keynum);
 int                     trap_Key_GetCatcher(void);
 void            trap_Key_SetCatcher(int catcher);
@@ -1624,17 +1624,17 @@ qbool        trap_GetEntityToken(char *buffer, int bufferSize);
 
 void    CG_ClearParticles(void);
 void    CG_AddParticles(void);
-void    CG_ParticleSnow(qhandle_t pshader, Vec3 origin, Vec3 origin2,
+void    CG_ParticleSnow(Handle pshader, Vec3 origin, Vec3 origin2,
 			int turb, float range,
 			int snum);
-void    CG_ParticleSmoke(qhandle_t pshader, centity_t *cent);
-void    CG_AddParticleShrapnel(localEntity_t *le);
-void    CG_ParticleSnowFlurry(qhandle_t pshader, centity_t *cent);
+void    CG_ParticleSmoke(Handle pshader, Centity *cent);
+void    CG_AddParticleShrapnel(Localent *le);
+void    CG_ParticleSnowFlurry(Handle pshader, Centity *cent);
 void    CG_ParticleBulletDebris(Vec3 org, Vec3 vel, int duration);
 void    CG_ParticleSparks(Vec3 org, Vec3 vel, int duration, float x, float y,
 			  float speed);
-void    CG_ParticleDust(centity_t *cent, Vec3 origin, Vec3 dir);
-void    CG_ParticleMisc(qhandle_t pshader, Vec3 origin, int size, int duration,
+void    CG_ParticleDust(Centity *cent, Vec3 origin, Vec3 dir);
+void    CG_ParticleMisc(Handle pshader, Vec3 origin, int size, int duration,
 			float alpha);
 void    CG_ParticleExplosion(char *animStr, Vec3 origin, Vec3 vel,
 			     int duration, int sizeStart,

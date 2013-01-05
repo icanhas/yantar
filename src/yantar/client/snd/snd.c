@@ -12,13 +12,13 @@
 #include "local.h"
 #include "snd.h"
 
-cvar_t	*s_volume;
-cvar_t	*s_muted;
-cvar_t	*s_musicVolume;
-cvar_t	*s_doppler;
-cvar_t	*s_backend;
-cvar_t	*s_muteWhenMinimized;
-cvar_t	*s_muteWhenUnfocused;
+Cvar	*s_volume;
+Cvar	*s_muted;
+Cvar	*s_musicVolume;
+Cvar	*s_doppler;
+Cvar	*s_backend;
+Cvar	*s_muteWhenMinimized;
+Cvar	*s_muteWhenUnfocused;
 
 static soundInterface_t si;
 
@@ -58,14 +58,14 @@ S_ValidSoundInterface(soundInterface_t *si)
 }
 
 void
-S_StartSound(Vec3 origin, int entnum, int entchannel, sfxHandle_t sfx)
+S_StartSound(Vec3 origin, int entnum, int entchannel, Sfxhandle sfx)
 {
 	if(si.StartSound)
 		si.StartSound(origin, entnum, entchannel, sfx);
 }
 
 void
-S_StartLocalSound(sfxHandle_t sfx, int channelNum)
+S_StartLocalSound(Sfxhandle sfx, int channelNum)
 {
 	if(si.StartLocalSound)
 		si.StartLocalSound(sfx, channelNum);
@@ -111,7 +111,7 @@ S_ClearLoopingSounds(qbool killall)
 
 void
 S_AddLoopingSound(int entityNum, const Vec3 origin,
-		  const Vec3 velocity, sfxHandle_t sfx)
+		  const Vec3 velocity, Sfxhandle sfx)
 {
 	if(si.AddLoopingSound)
 		si.AddLoopingSound(entityNum, origin, velocity, sfx);
@@ -119,7 +119,7 @@ S_AddLoopingSound(int entityNum, const Vec3 origin,
 
 void
 S_AddRealLoopingSound(int entityNum, const Vec3 origin,
-		      const Vec3 velocity, sfxHandle_t sfx)
+		      const Vec3 velocity, Sfxhandle sfx)
 {
 	if(si.AddRealLoopingSound)
 		si.AddRealLoopingSound(entityNum, origin, velocity, sfx);
@@ -180,7 +180,7 @@ S_BeginRegistration(void)
 		si.BeginRegistration( );
 }
 
-sfxHandle_t
+Sfxhandle
 S_RegisterSound(const char *sample, qbool compressed)
 {
 	if(si.RegisterSound)
@@ -252,7 +252,7 @@ void
 S_Play_f(void)
 {
 	int	i;
-	sfxHandle_t h;
+	Sfxhandle h;
 	char	name[256];
 
 	if(!si.RegisterSound || !si.StartLocalSound)
@@ -302,7 +302,7 @@ S_StopMusic_f(void)
 void
 S_Init(void)
 {
-	cvar_t *cv;
+	Cvar *cv;
 	qbool started = qfalse;
 
 	Com_Printf("------ Initializing Sound ------\n");

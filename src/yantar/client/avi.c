@@ -24,13 +24,13 @@ typedef struct audioFormat_s {
 
 typedef struct aviFileData_s {
 	qbool		fileOpen;
-	fileHandle_t	f;
+	Fhandle	f;
 	char		fileName[ MAX_QPATH ];
 	int		fileSize;
 	int		moviOffset;
 	int		moviSize;
 
-	fileHandle_t	idxF;
+	Fhandle	idxF;
 	int		numIndices;
 
 	int		frameRate;
@@ -61,7 +61,7 @@ static int	bufIndex;
  * SafeFS_Write
  */
 static ID_INLINE void
-SafeFS_Write(const void *buffer, int len, fileHandle_t f)
+SafeFS_Write(const void *buffer, int len, Fhandle f)
 {
 	if(FS_Write(buffer, len, f) < len)
 		Com_Errorf(ERR_DROP, "Failed to write avi file");
