@@ -155,22 +155,23 @@ static const unsigned int	pak_checksums[] =
 #define MAX_SEARCH_PATHS	4096
 #define MAX_FILEHASH_SIZE	1024
 
-typedef struct fileInPack_t	fileInPack_t;
-typedef struct pack_t		pack_t;
-typedef struct directory_t		directory_t;
-typedef struct searchpath_t	searchpath_t;
+typedef struct Pakchild	Pakchild;
+typedef struct Pak		Pak;
+typedef struct Dir		Dir;
+typedef struct Searchpath	Searchpath;
 typedef union qfile_gut		qfile_gut;
 typedef struct qfile_ut		qfile_ut;
-typedef struct fileHandleData_t	fileHandleData_t;
+typedef struct Fhandledata	Fhandledata;
 
-struct fileInPack_t {
+/* a file in a pak */
+struct Pakchild {
 	char			*name;	/* name of the file */
 	unsigned long		pos;	/* file info position in zip */
 	unsigned long		len;	/* uncompress file size */
-	fileInPack_t		*next;	/* next file in the hash */
+	Pakchild		*next;
 };
 
-struct pack_t {
+struct Pak {
 	char		pakPathname[MAX_OSPATH];	/* c:\quake3\baseq3 */
 	char		pakFilename[MAX_OSPATH];	/* c:\quake3\baseq3\pak0.pk3 */
 	char		pakBasename[MAX_OSPATH];	/* pak0 */
@@ -181,20 +182,20 @@ struct pack_t {
 	int		numfiles;			/* number of files in pk3 */
 	int		referenced;			/* referenced file flags */
 	int		hashSize;			/* (power of 2) */
-	fileInPack_t	**hashTable;
-	fileInPack_t	* buildBuffer;			/* buffer with the filenames etc. */
+	Pakchild	**hashTable;
+	Pakchild	* buildBuffer;			/* buffer with the filenames etc. */
 };
 
-struct directory_t {
+struct Dir {
 	char	path[MAX_OSPATH];	/* c:\quake3 */
 	char	fullpath[MAX_OSPATH];	/* c:\quake3\baseq3 */
 	char	gamedir[MAX_OSPATH];	/* baseq3 */
 };
 
-struct searchpath_t {
-	searchpath_t	*next;
-	pack_t		*pack;	/* only one of pack / dir will be non NULL */
-	directory_t	*dir;
+struct Searchpath {
+	Searchpath	*next;
+	Pak		*pack;	/* only one of pack / dir will be non NULL */
+	Dir	*dir;
 };
 
 union qfile_gut {
@@ -207,7 +208,7 @@ struct qfile_ut {
 	qbool		unique;
 };
 
-struct fileHandleData_t {
+struct Fhandledata {
 	qfile_ut	handleFiles;
 	qbool		handleSync;
 	int		baseOffset;
@@ -230,7 +231,7 @@ static Cvar *fs_apppath;
 static Cvar *fs_basepath;
 static Cvar *fs_basegame;
 static Cvar	*fs_gamedirvar;
-static searchpath_t *fs_searchpaths;
+static Searchpath *fs_searchpaths;
 static int	fs_readCount;		/* total bytes read */
 static int	fs_loadCount;		/* total files read */
 static int	fs_loadStack;		/* total files in memory */
@@ -238,7 +239,7 @@ static int	fs_packFiles = 0;	/* total number of files in packs */
 
 static int	fs_checksumFeed;
 
-static fileHandleData_t fsh[MAX_FILE_HANDLES];
+static Fhandledata fsh[MAX_FILE_HANDLES];
 
 /* whether we did a reorder on the current search path when joining the server */
 static qbool fs_reordered;
@@ -276,7 +277,7 @@ FS_Initialized(void)
 }
 
 qbool
-FS_PakIsPure(pack_t *pack)
+FS_PakIsPure(Pak *pack)
 {
 	int i;
 
@@ -897,14 +898,14 @@ FS_IsDemoExt(const char *filename, int namelen)
 extern qbool com_fullyInitialized;
 
 long
-FS_FOpenFileReadDir(const char *filename, searchpath_t *search,
+FS_FOpenFileReadDir(const char *filename, Searchpath *search,
 		    Fhandle *file, qbool uniqueFILE,
 		    qbool unpure)
 {
 	long hash;
-	pack_t *pak;
-	fileInPack_t	*pakFile;
-	directory_t	*dir;
+	Pak *pak;
+	Pakchild	*pakFile;
+	Dir	*dir;
 	char	*netpath;
 	FILE    *filep;
 	int	len;
@@ -1143,7 +1144,7 @@ FS_FOpenFileReadDir(const char *filename, searchpath_t *search,
 long
 FS_FOpenFileRead(const char *filename, Fhandle *file, qbool uniqueFILE)
 {
-	searchpath_t *search;
+	Searchpath *search;
 	long len;
 
 	if(!fs_searchpaths)
@@ -1189,9 +1190,9 @@ vmInterpret_t
 FS_FindVM(void **startSearch, char *found, int foundlen, const char *name,
 	  int enableDll)
 {
-	searchpath_t *search, *lastSearch;
-	directory_t	*dir;
-	pack_t		*pack;
+	Searchpath *search, *lastSearch;
+	Dir	*dir;
+	Pak		*pack;
 	char dllName[MAX_OSPATH], qvmName[MAX_OSPATH];
 	char		*netpath;
 
@@ -1471,9 +1472,9 @@ FS_Seek(Fhandle f, long offset, int origin)
 int
 FS_FileIsInPAK(const char *filename, int *pChecksum)
 {
-	searchpath_t *search;
-	pack_t	*pak;
-	fileInPack_t    *pakFile;
+	Searchpath *search;
+	Pak	*pak;
+	Pakchild    *pakFile;
 	long	hash = 0;
 
 	if(!fs_searchpaths)
@@ -1543,7 +1544,7 @@ FS_ReadFileDir(const char *qpath, void *searchPath, qbool unpure,
 	       void **buffer)
 {
 	Fhandle	h;
-	searchpath_t	*search;
+	Searchpath	*search;
 	byte	* buf;
 	qbool isConfig;
 	long	len;
@@ -1717,11 +1718,11 @@ FS_WriteFile(const char *qpath, const void *buffer, int size)
  * Creates a new pak_t in the search chain for the contents
  * of a zip file.
  */
-static pack_t *
+static Pak *
 FS_LoadZipFile(const char *zipfile, const char *basename)
 {
-	fileInPack_t *buildBuffer;
-	pack_t	*pack;
+	Pakchild *buildBuffer;
+	Pak	*pack;
 	unzFile uf;
 	int	err;
 	unz_global_info gi;
@@ -1753,8 +1754,8 @@ FS_LoadZipFile(const char *zipfile, const char *basename)
 		unzGoToNextFile(uf);
 	}
 
-	buildBuffer = Z_Malloc((gi.number_entry * sizeof(fileInPack_t)) + len);
-	namePtr = ((char*)buildBuffer) + gi.number_entry * sizeof(fileInPack_t);
+	buildBuffer = Z_Malloc((gi.number_entry * sizeof(Pakchild)) + len);
+	namePtr = ((char*)buildBuffer) + gi.number_entry * sizeof(Pakchild);
 	fs_headerLongs = Z_Malloc((gi.number_entry + 1) * sizeof(int));
 	fs_headerLongs[ fs_numHeaderLongs++ ] = LittleLong(fs_checksumFeed);
 
@@ -1766,9 +1767,9 @@ FS_LoadZipFile(const char *zipfile, const char *basename)
 		if(i > gi.number_entry)
 			break;
 
-	pack = Z_Malloc(sizeof(pack_t) + i * sizeof(fileInPack_t *));
+	pack = Z_Malloc(sizeof(Pak) + i * sizeof(Pakchild *));
 	pack->hashSize	= i;
-	pack->hashTable = (fileInPack_t**)(((char*)pack) + sizeof(pack_t));
+	pack->hashTable = (Pakchild**)(((char*)pack) + sizeof(Pak));
 	for(i = 0; i < pack->hashSize; i++)
 		pack->hashTable[i] = NULL;
 
@@ -1824,7 +1825,7 @@ FS_LoadZipFile(const char *zipfile, const char *basename)
 
 /* Frees a pak structure and releases all associated resources */
 static void
-FS_FreePak(pack_t *thepak)
+FS_FreePak(Pak *thepak)
 {
 	unzClose(thepak->handle);
 	Z_Free(thepak->buildBuffer);
@@ -1835,7 +1836,7 @@ FS_FreePak(pack_t *thepak)
 qbool
 FS_CompareZipChecksum(const char *zipfile)
 {
-	pack_t	*thepak;
+	Pak	*thepak;
 	int	index, checksum;
 
 	thepak = FS_LoadZipFile(zipfile, "");
@@ -1911,13 +1912,13 @@ FS_ListFilteredFiles(const char *path, const char *extension, char *filter,
 	int nfiles;
 	char **listCopy;
 	char	*list[MAX_FOUND_FILES];
-	searchpath_t *search;
+	Searchpath *search;
 	int	i;
 	int	pathLength;
 	int	extensionLength;
 	int	length, pathDepth, temp;
-	pack_t	*pak;
-	fileInPack_t    *buildBuffer;
+	Pak	*pak;
+	Pakchild    *buildBuffer;
 	char	zpath[MAX_ZPATH];
 
 	if(!fs_searchpaths)
@@ -2380,7 +2381,7 @@ FS_NewDir_f(void)
 void
 FS_Path_f(void)
 {
-	searchpath_t *s;
+	Searchpath *s;
 	int i;
 
 	Com_Printf ("Current search path:\n");
@@ -2424,7 +2425,7 @@ FS_TouchFile_f(void)
 qbool
 FS_Which(const char *filename, void *searchPath)
 {
-	searchpath_t *search = searchPath;
+	Searchpath *search = searchPath;
 
 	if(FS_FOpenFileReadDir(filename, search, NULL, qfalse, qfalse) > 0){
 		if(search->pack){
@@ -2444,7 +2445,7 @@ FS_Which(const char *filename, void *searchPath)
 void
 FS_Which_f(void)
 {
-	searchpath_t *search;
+	Searchpath *search;
 	char *filename;
 
 	filename = Cmd_Argv(1);
@@ -2492,8 +2493,8 @@ FS_AddGameDirectory(const char *path, const char *dir)
 	char	**pakfiles, **pakdirs;
 	char	*pakfile, curpath[MAX_OSPATH + 1];
 	enum {Pakfile, Pakdir} paktype;
-	pack_t *pak;
-	searchpath_t *sp;
+	Pak *pak;
+	Searchpath *sp;
 
 	for(sp = fs_searchpaths; sp != NULL; sp = sp->next)
 		if(sp->dir && Q_stricmp(sp->dir->gamedir, dir)
@@ -2546,7 +2547,7 @@ FS_AddGameDirectory(const char *path, const char *dir)
 			++i;
 		}else{
 			int len;
-			directory_t *p;
+			Dir *p;
 
 			len = strlen(pakdirs[j]);
 			/* filter out anything that doesn't end with .dir3 */
@@ -2632,7 +2633,7 @@ FS_CheckDirTraversal(const char *checkdir)
 qbool
 FS_ComparePaks(char *neededpaks, int len, qbool dlstring)
 {
-	searchpath_t *sp;
+	Searchpath *sp;
 	qbool havepak;
 	char *origpos = neededpaks;
 	int i;
@@ -2733,7 +2734,7 @@ FS_ComparePaks(char *neededpaks, int len, qbool dlstring)
 void
 FS_Shutdown(qbool closemfp)
 {
-	searchpath_t *p, *next;
+	Searchpath *p, *next;
 	int i;
 
 	for(i = 0; i < MAX_FILE_HANDLES; i++)
@@ -2775,9 +2776,9 @@ FS_Shutdown(qbool closemfp)
 static void
 FS_ReorderPurePaks(void)
 {
-	searchpath_t *s;
+	Searchpath *s;
 	int i;
-	searchpath_t **p_insert_index,	/* for linked list reordering */
+	Searchpath **p_insert_index,	/* for linked list reordering */
 	**p_previous;			/* when doing the scan */
 
 	fs_reordered = qfalse;
@@ -2915,8 +2916,8 @@ FS_Startup(const char *gameName)
 static void
 FS_CheckPak0(void)
 {
-	searchpath_t *path;
-	pack_t *curpack;
+	Searchpath *path;
+	Pak *curpack;
 	qbool founddemo = qfalse;
 	unsigned int foundPak = 0;
 
@@ -3040,7 +3041,7 @@ const char*
 FS_LoadedPakChecksums(void)
 {
 	static char info[BIG_INFO_STRING];
-	searchpath_t *search;
+	Searchpath *search;
 
 	info[0] = 0;
 
@@ -3063,7 +3064,7 @@ const char *
 FS_LoadedPakNames(void)
 {
 	static char info[BIG_INFO_STRING];
-	searchpath_t *search;
+	Searchpath *search;
 
 	info[0] = 0;
 
@@ -3089,7 +3090,7 @@ const char *
 FS_LoadedPakPureChecksums(void)
 {
 	static char info[BIG_INFO_STRING];
-	searchpath_t *search;
+	Searchpath *search;
 
 	info[0] = 0;
 
@@ -3113,7 +3114,7 @@ const char*
 FS_ReferencedPakChecksums(void)
 {
 	static char info[BIG_INFO_STRING];
-	searchpath_t *search;
+	Searchpath *search;
 
 	info[0] = 0;
 	for(search = fs_searchpaths; search; search = search->next)
@@ -3138,7 +3139,7 @@ const char*
 FS_ReferencedPakPureChecksums(void)
 {
 	static char info[BIG_INFO_STRING];
-	searchpath_t *search;
+	Searchpath *search;
 	int nFlags, numPaks, checksum;
 
 	info[0] = 0;
@@ -3181,7 +3182,7 @@ const char *
 FS_ReferencedPakNames(void)
 {
 	static char info[BIG_INFO_STRING];
-	searchpath_t *search;
+	Searchpath *search;
 
 	info[0] = 0;
 
@@ -3212,7 +3213,7 @@ FS_ReferencedPakNames(void)
 void
 FS_ClearPakReferences(int flags)
 {
-	searchpath_t *search;
+	Searchpath *search;
 
 	if(!flags)
 		flags = -1;
