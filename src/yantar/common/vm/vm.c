@@ -288,14 +288,14 @@ VM_DllSyscall(intptr_t arg, ...)
 }
 
 /* Load a .qvm file */
-vmHeader_t *
+Vmheader *
 VM_LoadQVM(Vm *vm, qbool alloc, qbool unpure)
 {
 	int	dataLength;
 	int	i;
 	char	filename[MAX_QPATH];
 	union {
-		vmHeader_t	*h;
+		Vmheader	*h;
 		void		*v;
 	} header;
 
@@ -320,7 +320,7 @@ VM_LoadQVM(Vm *vm, qbool alloc, qbool unpure)
 		Com_Printf("...which has vmMagic VM_MAGIC_VER2\n");
 
 		/* byte swap the header */
-		for(i = 0; i < sizeof(vmHeader_t) / 4; i++)
+		for(i = 0; i < sizeof(Vmheader) / 4; i++)
 			((int*)header.h)[i] = LittleLong(((int*)header.h)[i]);
 
 		/* validate */
@@ -338,8 +338,8 @@ VM_LoadQVM(Vm *vm, qbool alloc, qbool unpure)
 		}
 	}else if(LittleLong(header.h->vmMagic) == VM_MAGIC){
 		/* byte swap the header
-		 * sizeof( vmHeader_t ) - sizeof( int ) is the 1.32b vm header size */
-		for(i = 0; i < (sizeof(vmHeader_t) - sizeof(int)) / 4; i++)
+		 * sizeof( Vmheader ) - sizeof( int ) is the 1.32b vm header size */
+		for(i = 0; i < (sizeof(Vmheader) - sizeof(int)) / 4; i++)
 			((int*)header.h)[i] = LittleLong(((int*)header.h)[i]);
 
 		/* validate */
@@ -455,7 +455,7 @@ VM_LoadQVM(Vm *vm, qbool alloc, qbool unpure)
 Vm *
 VM_Restart(Vm *vm, qbool unpure)
 {
-	vmHeader_t *header;
+	Vmheader *header;
 
 	/* DLL's can't be restarted in place */
 	if(vm->dllHandle){
@@ -492,7 +492,7 @@ VM_Create(const char *module, intptr_t (*systemCalls)(intptr_t *),
 	  vmInterpret_t interpret)
 {
 	Vm	*vm;
-	vmHeader_t *header;
+	Vmheader *header;
 	int	i, remaining, retval;
 	char	filename[MAX_OSPATH];
 	void	*startSearch = NULL;

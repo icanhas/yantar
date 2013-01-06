@@ -313,7 +313,7 @@ trap_DebugPolygonDelete(int id)
 }
 
 int
-trap_RealTime(qtime_t *qtime)
+trap_RealTime(Qtime *qtime)
 {
 	return syscall(G_REAL_TIME, qtime);
 }

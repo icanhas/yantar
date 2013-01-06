@@ -1374,7 +1374,7 @@ CG_Text_Paint_Limit(float *maxX, float x, float y, float scale, Vec4 color,
 {
 	int len, count;
 	Vec4 newColor;
-	glyphInfo_t *glyph;
+	Glyphinfo *glyph;
 	if(text){
 		const char *s	= text;
 		float	max	= *maxX;

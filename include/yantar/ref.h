@@ -42,13 +42,13 @@ typedef struct {
 	Vec3	xyz;
 	float	st[2];
 	byte	modulate[4];
-} polyVert_t;
+} Polyvert;
 
 typedef struct poly_s {
 	Handle		hShader;
 	int		numVerts;
-	polyVert_t *verts;
-} poly_t;
+	Polyvert *verts;
+} Poly;
 
 typedef enum {
 	RT_MODEL,
@@ -61,10 +61,10 @@ typedef enum {
 	RT_PORTALSURFACE,	/* doesn't draw anything, just info for portals */
 
 	RT_MAX_REF_ENTITY_TYPE
-} refEntityType_t;
+} Refenttype;
 
 typedef struct {
-	refEntityType_t reType;
+	Refenttype reType;
 	int		renderfx;
 
 	Handle		hModel;	/* opaque type outside refresh */
@@ -118,14 +118,14 @@ typedef struct {
 
 	/* text messages for deform text shaders */
 	char text[MAX_RENDER_STRINGS][MAX_RENDER_STRING_LENGTH];
-} refdef_t;
+} Refdef;
 
 
 typedef enum {
 	STEREO_CENTER,
 	STEREO_LEFT,
 	STEREO_RIGHT
-} stereoFrame_t;
+} Stereoframe;
 
 
 /*
@@ -243,11 +243,11 @@ struct refexport_t {
 	 * Nothing is drawn until R_RenderScene is called. */
 	void (*ClearScene)(void);
 	void (*AddRefEntityToScene)(const Refent *re);
-	void (*AddPolyToScene)(Handle hShader, int numVerts, const polyVert_t *verts, int num);
+	void (*AddPolyToScene)(Handle hShader, int numVerts, const Polyvert *verts, int num);
 	int (*LightForPoint)(Vec3 point, Vec3 ambientLight, Vec3 directedLight, Vec3 lightDir);
 	void (*AddLightToScene)(const Vec3 org, float intensity, float r, float g, float b);
 	void (*AddAdditiveLightToScene)(const Vec3 org, float intensity, float r, float g, float b);
-	void (*RenderScene)(const refdef_t *fd);
+	void (*RenderScene)(const Refdef *fd);
 
 	void (*SetColor)(const float *rgba);	/* NULL = 1,1,1,1 */
 	void (*DrawStretchPic)(float x, float y, float w, float h,
@@ -259,7 +259,7 @@ struct refexport_t {
 	void (*UploadCinematic)(int w, int h, int cols, int rows, const byte *data, int client,
 				qbool dirty);
 
-	void (*BeginFrame)(stereoFrame_t stereoFrame);
+	void (*BeginFrame)(Stereoframe stereoFrame);
 
 	/* if the pointers are not NULL, timing info will be returned */
 	void (*EndFrame)(int *frontEndMsec, int *backEndMsec);

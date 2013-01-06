@@ -248,7 +248,7 @@ R_MarkFragments(int numPoints, const Vec3 *points, const Vec3 projection,
 	int	numClipPoints;
 	float	*v;
 	srfGridMesh_t	*cv;
-	drawVert_t	*dv;
+	Drawvert	*dv;
 	Vec3	normal;
 	Vec3	projectionDir;
 	Vec3	v1, v2;

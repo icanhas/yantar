@@ -62,7 +62,7 @@ parseanimfile(const char *filename, Clientinfo *ci)
 	int i, len, skip;
 	float fps;
 	Fhandle f;
-	animation_t *p, *anims;
+	Anim *p, *anims;
 
 	/* load the file */
 	len = trap_FS_FOpenFile(filename, &f, FS_READ);
@@ -150,7 +150,7 @@ parseanimfile(const char *filename, Clientinfo *ci)
 	anims = ci->animations;
 	/* read information for each frame */
 	for(i = 0, p = anims; i < MAX_ANIMATIONS; i++, p++){
-		animation_t *p2;
+		Anim *p2;
 		
 		tok = Q_readtok(&txtp);
 		if(!*tok){
@@ -210,11 +210,11 @@ parseanimfile(const char *filename, Clientinfo *ci)
 
 	/* crouch backward animation */
 	memcpy(&anims[LEGS_BACKCR], &anims[LEGS_WALKCR],
-		sizeof(animation_t));
+		sizeof(Anim));
 	anims[LEGS_BACKCR].reversed = qtrue;
 	/* walk backward animation */
 	memcpy(&anims[LEGS_BACKWALK], &anims[LEGS_WALK], 
-		sizeof(animation_t));
+		sizeof(Anim));
 	anims[LEGS_BACKWALK].reversed = qtrue;
 	/* flag moving fast */
 	p = &anims[FLAG_RUN];
@@ -859,7 +859,7 @@ CG_LoadDeferredPlayers(void)
 static void
 setlerpframeanim(Clientinfo *ci, lerpFrame_t *lf, int newAnimation)
 {
-	animation_t *p;
+	Anim *p;
 
 	lf->animationNumber = newAnimation;
 	newAnimation &= ~ANIM_TOGGLEBIT;
@@ -883,7 +883,7 @@ runlerpframe(Clientinfo *ci, lerpFrame_t *lf, int newAnimation,
 		float speedScale)
 {
 	int f, numFrames;
-	animation_t *anim;
+	Anim *anim;
 
 	/* debugging tool to get no animations */
 	if(cg_animSpeed.integer == 0){
@@ -1507,7 +1507,7 @@ playersplash(Centity *cent)
 	Vec3 start, end;
 	Trace trace;
 	int contents;
-	polyVert_t verts[4];
+	Polyvert verts[4];
 
 	if(!cg_shadows.integer)
 		return;
@@ -1611,7 +1611,7 @@ CG_AddRefEntityWithPowerups(Refent *ent, Entstate *state, int team)
 }
 
 int
-CG_LightVerts(Vec3 normal, int numVerts, polyVert_t *verts)
+CG_LightVerts(Vec3 normal, int numVerts, Polyvert *verts)
 {
 	int i, j;
 	float	incoming;

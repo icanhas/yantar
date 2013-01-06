@@ -109,7 +109,7 @@ G_SoundIndex(char *name)
  * Broadcasts a command to only a specific team
  */
 void
-G_TeamCommand(team_t team, char *cmd)
+G_TeamCommand(Team team, char *cmd)
 {
 	int i;
 

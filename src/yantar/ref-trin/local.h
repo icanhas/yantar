@@ -406,7 +406,7 @@ typedef struct shaderState_s {
 } shaderState_t;
 
 
-/* trRefdef_t holds everything that comes in refdef_t,
+/* trRefdef_t holds everything that comes in Refdef,
  * as well as the locally generated scene information */
 typedef struct {
 	int		x, y, width, height;
@@ -414,7 +414,7 @@ typedef struct {
 	Vec3		vieworg;
 	Vec3		viewaxis[3];	/* transformation matrix */
 
-	stereoFrame_t	stereoFrame;
+	Stereoframe	stereoFrame;
 
 	int		time;		/* time in milliseconds for shader effects and other time dependent rendering issues */
 	int		rdflags;	/* RDF_NOWORLDMODEL, etc */
@@ -480,14 +480,14 @@ typedef struct {
 	qbool		isMirror;	/* the portal is a mirror, invert the face culling */
 	int		frameSceneNum;	/* copied from tr.frameSceneNum */
 	int		frameCount;	/* copied from tr.frameCount */
-	cplane_t	portalPlane;	/* clip anything behind this if mirroring */
+	Cplane	portalPlane;	/* clip anything behind this if mirroring */
 	int		viewportX, viewportY, viewportWidth, viewportHeight;
 	float		fovX, fovY;
 	float		projectionMatrix[16];
-	cplane_t	frustum[4];
+	Cplane	frustum[4];
 	Vec3		visBounds[2];
 	float		zFar;
-	stereoFrame_t	stereoFrame;
+	Stereoframe	stereoFrame;
 } viewParms_t;
 
 
@@ -533,7 +533,7 @@ typedef struct srfPoly_s {
 	Handle		hShader;
 	int		fogIndex;
 	int		numVerts;
-	polyVert_t	*verts;
+	Polyvert	*verts;
 } srfPoly_t;
 
 typedef struct srfDisplayList_s {
@@ -572,7 +572,7 @@ typedef struct srfGridMesh_s {
 	int		width, height;
 	float		*widthLodError;
 	float		*heightLodError;
-	drawVert_t	verts[1];	/* variable sized */
+	Drawvert	verts[1];	/* variable sized */
 } srfGridMesh_t;
 
 
@@ -580,7 +580,7 @@ typedef struct srfGridMesh_s {
 #define VERTEXSIZE 8
 typedef struct {
 	surfaceType_t	surfaceType;
-	cplane_t	plane;
+	Cplane	plane;
 
 	/* dynamic lighting information */
 	int dlightBits[SMP_FRAMES];
@@ -611,7 +611,7 @@ typedef struct {
 	int		*indexes;
 
 	int		numVerts;
-	drawVert_t	*verts;
+	Drawvert	*verts;
 } srfTriangles_t;
 
 /* inter-quake-model */
@@ -685,7 +685,7 @@ typedef struct mnode_s {
 	struct mnode_s	*parent;
 
 	/* node specific */
-	cplane_t	*plane;
+	Cplane	*plane;
 	struct mnode_s	*children[2];
 
 	/* leaf specific */
@@ -709,12 +709,12 @@ typedef struct {
 	int		dataSize;
 
 	int		numShaders;
-	dmaterial_t	*shaders;
+	Dmaterial	*shaders;
 
 	bmodel_t	*bmodels;
 
 	int		numplanes;
-	cplane_t	*planes;
+	Cplane	*planes;
 
 	int		numnodes;	/* includes leafs */
 	int		numDecisionNodes;
@@ -763,7 +763,7 @@ typedef struct model_s {
 
 	int		dataSize;		/* just for listing purposes */
 	bmodel_t	*bmodel;		/* only if type == MOD_BRUSH */
-	md3Header_t	*md3[MD3_MAX_LODS];	/* only if type == MOD_MESH */
+	MD3header	*md3[MD3_MAX_LODS];	/* only if type == MOD_MESH */
 	void		*modelData;		/* only if type == (MOD_MD4 | MOD_MDR | MOD_IQM) */
 
 	int		numLods;
@@ -1206,7 +1206,7 @@ void    RE_StretchRaw(int x, int y, int w, int h, int cols, int rows, const byte
 		      qbool dirty);
 void    RE_UploadCinematic(int w, int h, int cols, int rows, const byte *data, int client, qbool dirty);
 
-void            RE_BeginFrame(stereoFrame_t stereoFrame);
+void            RE_BeginFrame(Stereoframe stereoFrame);
 void            RE_BeginRegistration(Glconfig *glconfig);
 void            RE_LoadWorldMap(const char *mapname);
 void            RE_SetWorldVisData(const byte *vis);
@@ -1414,7 +1414,7 @@ void RB_ClipSkyPolygons(shaderCommands_t *shader);
 #define PATCH_STITCHING
 
 srfGridMesh_t*R_SubdividePatchToGrid(int width, int height,
-				     drawVert_t points[MAX_PATCH_SIZE*MAX_PATCH_SIZE]);
+				     Drawvert points[MAX_PATCH_SIZE*MAX_PATCH_SIZE]);
 srfGridMesh_t*R_GridInsertColumn(srfGridMesh_t *grid, int column, int row, Vec3 point, float loderror);
 srfGridMesh_t*R_GridInsertRow(srfGridMesh_t *grid, int row, int column, Vec3 point, float loderror);
 void R_FreeSurfaceGridMesh(srfGridMesh_t *grid);
@@ -1439,10 +1439,10 @@ void R_ToggleSmpFrame(void);
 
 void RE_ClearScene(void);
 void RE_AddRefEntityToScene(const Refent *ent);
-void RE_AddPolyToScene(Handle hShader, int numVerts, const polyVert_t *verts, int num);
+void RE_AddPolyToScene(Handle hShader, int numVerts, const Polyvert *verts, int num);
 void RE_AddLightToScene(const Vec3 org, float intensity, float r, float g, float b);
 void RE_AddAdditiveLightToScene(const Vec3 org, float intensity, float r, float g, float b);
-void RE_RenderScene(const refdef_t *fd);
+void RE_RenderScene(const Refdef *fd);
 
 /*
  *
@@ -1623,7 +1623,7 @@ typedef struct {
 	dlight_t		dlights[MAX_DLIGHTS];
 	trRefEntity_t		entities[MAX_ENTITIES];
 	srfPoly_t		*polys;	/* [MAX_POLYS]; */
-	polyVert_t		*polyVerts;	/* [MAX_POLYVERTS]; */
+	Polyvert		*polyVerts;	/* [MAX_POLYVERTS]; */
 	renderCommandList_t	commands;
 } backEndData_t;
 
@@ -1650,7 +1650,7 @@ void R_AddDrawSurfCmd(drawSurf_t *drawSurfs, int numDrawSurfs);
 void RE_SetColor(const float *rgba);
 void RE_StretchPic(float x, float y, float w, float h,
 		   float s1, float t1, float s2, float t2, Handle hShader);
-void RE_BeginFrame(stereoFrame_t stereoFrame);
+void RE_BeginFrame(Stereoframe stereoFrame);
 void RE_EndFrame(int *frontEndMsec, int *backEndMsec);
 void RE_SaveJPG(char * filename, int quality, int image_width, int image_height,
 		unsigned char *image_buffer, int padding);

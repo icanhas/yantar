@@ -283,7 +283,7 @@ RE_StretchPic(float x, float y, float w, float h,
 #define MODE_MAX	MODE_RED_GREEN
 
 void
-R_SetColorMode(GLboolean *rgba, stereoFrame_t stereoFrame, int colormode)
+R_SetColorMode(GLboolean *rgba, Stereoframe stereoFrame, int colormode)
 {
 	rgba[0] = rgba[1] = rgba[2] = rgba[3] = GL_TRUE;
 
@@ -316,7 +316,7 @@ R_SetColorMode(GLboolean *rgba, stereoFrame_t stereoFrame, int colormode)
  * for each RE_EndFrame
  */
 void
-RE_BeginFrame(stereoFrame_t stereoFrame)
+RE_BeginFrame(Stereoframe stereoFrame)
 {
 	drawBufferCommand_t *cmd	= NULL;
 	colorMaskCommand_t *colcmd	= NULL;

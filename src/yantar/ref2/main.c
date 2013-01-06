@@ -582,7 +582,7 @@ R_CullLocalBox(Vec3 localBounds[2])
 	Vec3	transformed[8];
 	float	dists[8];
 	Vec3	v;
-	cplane_t        *frust;
+	Cplane        *frust;
 	int	anyBack;
 	int	front, back;
 
@@ -667,7 +667,7 @@ int
 R_CullBox(Vec3 worldBounds[2])
 {
 	int i;
-	cplane_t	*frust;
+	Cplane	*frust;
 	qbool		anyClip;
 	int r;
 
@@ -713,11 +713,11 @@ R_CullLocalPointAndRadius(const Vec3 pt, float radius)
 ** R_CullPointAndRadius
 */
 int
-R_CullPointAndRadiusEx(const Vec3 pt, float radius, const cplane_t* frustum, int numPlanes)
+R_CullPointAndRadiusEx(const Vec3 pt, float radius, const Cplane* frustum, int numPlanes)
 {
 	int i;
 	float dist;
-	const cplane_t *frust;
+	const Cplane *frust;
 	qbool mightBeClipped = qfalse;
 
 	if(r_nocull->integer){
@@ -1249,7 +1249,7 @@ R_MirrorVector(Vec3 in, Orient *surface, Orient *camera, Vec3 out)
  * R_PlaneForSurface
  */
 void
-R_PlaneForSurface(surfaceType_t *surfType, cplane_t *plane)
+R_PlaneForSurface(surfaceType_t *surfType, Cplane *plane)
 {
 	srfTriangles_t *tri;
 	srfPoly_t	*poly;
@@ -1301,7 +1301,7 @@ R_GetPortalOrientations(drawSurf_t *drawSurf, int entityNum,
 			Vec3 pvsOrigin, qbool *mirror)
 {
 	int i;
-	cplane_t	originalPlane, plane;
+	Cplane	originalPlane, plane;
 	trRefEntity_t *e;
 	float	d;
 	Vec3	transformed;
@@ -1419,7 +1419,7 @@ static qbool
 IsMirror(const drawSurf_t *drawSurf, int entityNum)
 {
 	int i;
-	cplane_t	originalPlane, plane;
+	Cplane	originalPlane, plane;
 	trRefEntity_t *e;
 	float		d;
 
@@ -2028,7 +2028,7 @@ R_RenderView(viewParms_t *parms)
 
 
 void
-R_RenderDlightCubemaps(const refdef_t *fd)
+R_RenderDlightCubemaps(const Refdef *fd)
 {
 	int i;
 
@@ -2106,7 +2106,7 @@ R_RenderDlightCubemaps(const refdef_t *fd)
 
 
 void
-R_RenderPshadowMaps(const refdef_t *fd)
+R_RenderPshadowMaps(const Refdef *fd)
 {
 	viewParms_t shadowParms;
 	int i;

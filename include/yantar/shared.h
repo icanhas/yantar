@@ -515,9 +515,9 @@ void ByteToDir(int b, Vec3 dir);
 /* this is a little hack to get more efficient copies in our interpreter */
 typedef struct {
 	float v[3];
-} vec3struct_t;
+} Vec3struct;
 
-#define copyv3(a,b) (*(vec3struct_t*)b=*(vec3struct_t*)a)
+#define copyv3(a,b) (*(Vec3struct*)b=*(Vec3struct*)a)
 #endif
 #endif
 
@@ -773,7 +773,7 @@ typedef enum {
 	FS_SEEK_CUR,
 	FS_SEEK_END,
 	FS_SEEK_SET
-} fsOrigin_t;
+} Fsorigin;
 
 /*
  * unicode (q_utf.c)
@@ -957,14 +957,14 @@ struct cvar_s {
 	int		hashIndex;
 };
 
-typedef int cvarHandle_t;
+typedef int Cvarhandle;
 
 /*
  * the modules that run in the virtual machine can't access the Cvar directly,
  * so they must ask for structured updates
  */
 typedef struct {
-	cvarHandle_t	handle;
+	Cvarhandle	handle;
 	int		modificationCount;
 	float		value;
 	int		integer;
@@ -1012,7 +1012,7 @@ typedef struct cplane_s {
 	byte	type;		/* for fast side tests: 0,1,2 = axial, 3 = nonaxial */
 	byte	signbits;	/* signx + (signy<<1) + (signz<<2), used as lookup during collision */
 	byte	pad[2];
-} cplane_t;
+} Cplane;
 
 
 /* a trace is returned when a box is swept through the world */
@@ -1021,7 +1021,7 @@ typedef struct {
 	qbool		startsolid;	/* if true, the initial point was in a solid area */
 	float		fraction;	/* time completed, 1.0 = didn't hit anything */
 	Vec3		endpos;		/* final position */
-	cplane_t	plane;		/* surface normal at impact, transformed to world space */
+	Cplane	plane;		/* surface normal at impact, transformed to world space */
 	int		surfaceFlags;	/* surface hit */
 	int		contents;	/* contents on other side of surface hit */
 	int		entityNum;	/* entity the contacted sirface is a part of */
@@ -1067,7 +1067,7 @@ typedef enum {
 	CHAN_BODY,
 	CHAN_LOCAL_SOUND,	/* chat messages, etc */
 	CHAN_ANNOUNCER		/* announcer voices, etc */
-} soundChannel_t;
+} Sndchan;
 
 /* elements communicated across the net */
 #define ANGLE2SHORT(x)	((int)((x)*65536/360) & 65535)
@@ -1296,7 +1296,7 @@ typedef struct {
  */
 typedef struct entityState_s {
 	int		number;	/* entity index */
-	int		eType;	/* entityType_t */
+	int		eType;	/* Enttype */
 	int		eFlags;
 
 	Trajectory	traj;	/* for calculating position */
@@ -1350,7 +1350,7 @@ typedef enum {
 	CA_PRIMED,		/* got gamestate, waiting for first frame */
 	CA_ACTIVE,		/* game views should be displayed */
 	CA_CINEMATIC		/* playing a cinematic or a static pic, not connected to a server */
-} connstate_t;
+} Connstate;
 
 /* font support */
 enum {
@@ -1376,10 +1376,10 @@ typedef struct {
 	float		t2;
 	Handle		glyph;	/* handle to the shader with the glyph */
 	char		shaderName[32];
-} glyphInfo_t;
+} Glyphinfo;
 
 typedef struct {
-	glyphInfo_t	glyphs [GLYPHS_PER_FONT];
+	Glyphinfo	glyphs [GLYPHS_PER_FONT];
 	float		glyphScale;
 	char		name[MAX_QPATH];
 } Fontinfo;
@@ -1397,7 +1397,7 @@ typedef struct qtime_s {
 	int	tm_wday;	/* days since Sunday - [0,6] */
 	int	tm_yday;	/* days since January 1 - [0,365] */
 	int	tm_isdst;	/* daylight savings time flag */
-} qtime_t;
+} Qtime;
 
 /* server browser sources
  * TTimo: AS_MPLAYER is no longer used */
@@ -1425,7 +1425,7 @@ typedef enum _flag_status {
 	FLAG_TAKEN_RED,		/* One Flag CTF */
 	FLAG_TAKEN_BLUE,	/* One Flag CTF */
 	FLAG_DROPPED
-} flagStatus_t;
+} Flagstatus;
 
 enum {
 	MAX_GLOBAL_SERVERS		= 4096,

@@ -201,7 +201,7 @@ body_die(Gentity *self, Gentity *inflictor, Gentity *attacker, int damage,
 
 /* these are just for logging, the client prints its own messages */
 char*
-mod2str(meansOfDeath_t mod)
+mod2str(Meansofdeath mod)
 {
 	switch(mod){
 	case MOD_UNKNOWN:	return "MOD_UNKNOWN";

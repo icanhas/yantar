@@ -368,13 +368,13 @@ trap_R_AddRefEntityToScene(const Refent *re)
 }
 
 void
-trap_R_AddPolyToScene(Handle hShader, int numVerts, const polyVert_t *verts)
+trap_R_AddPolyToScene(Handle hShader, int numVerts, const Polyvert *verts)
 {
 	syscall(CG_R_ADDPOLYTOSCENE, hShader, numVerts, verts);
 }
 
 void
-trap_R_AddPolysToScene(Handle hShader, int numVerts, const polyVert_t *verts,
+trap_R_AddPolysToScene(Handle hShader, int numVerts, const Polyvert *verts,
 		       int num)
 {
 	syscall(CG_R_ADDPOLYSTOSCENE, hShader, numVerts, verts, num);
@@ -406,7 +406,7 @@ trap_R_AddAdditiveLightToScene(const Vec3 org, float intensity, float r,
 }
 
 void
-trap_R_RenderScene(const refdef_t *fd)
+trap_R_RenderScene(const Refdef *fd)
 {
 	syscall(CG_R_RENDERSCENE, fd);
 }
@@ -547,7 +547,7 @@ trap_S_StopBackgroundTrack(void)
 }
 
 int
-trap_RealTime(qtime_t *qtime)
+trap_RealTime(Qtime *qtime)
 {
 	return syscall(CG_REAL_TIME, qtime);
 }

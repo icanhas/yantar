@@ -564,7 +564,7 @@ deltaeuler(float angle1, float angle2)
 }
 
 void
-SetPlaneSignbits(cplane_t *out)
+SetPlaneSignbits(Cplane *out)
 {
 	int bits, j;
 

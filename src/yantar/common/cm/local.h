@@ -15,7 +15,7 @@
 
 
 typedef struct {
-	cplane_t	*plane;
+	Cplane	*plane;
 	int		children[2];	/* negative numbers are leafs */
 } cNode_t;
 
@@ -33,10 +33,10 @@ typedef struct {
 typedef struct cmodel_s {
 	Vec3	mins, maxs;
 	cLeaf_t leaf;	/* submodels don't reference the main tree */
-} cmodel_t;
+} Cmodel;
 
 typedef struct {
-	cplane_t	*plane;
+	Cplane	*plane;
 	int		surfaceFlags;
 	int		shaderNum;
 } cbrushside_t;
@@ -68,13 +68,13 @@ typedef struct {
 	char		name[MAX_QPATH];
 
 	int		numShaders;
-	dmaterial_t	*shaders;
+	Dmaterial	*shaders;
 
 	int		numBrushSides;
 	cbrushside_t	*brushsides;
 
 	int		numPlanes;
-	cplane_t	*planes;
+	Cplane	*planes;
 
 	int		numNodes;
 	cNode_t		*nodes;
@@ -89,7 +89,7 @@ typedef struct {
 	int		*leafsurfaces;
 
 	int		numSubModels;
-	cmodel_t	*cmodels;
+	Cmodel	*cmodels;
 
 	int		numBrushes;
 	cbrush_t	*brushes;
@@ -169,7 +169,7 @@ void CM_StoreBrushes(leafList_t *ll, int nodenum);
 
 void CM_BoxLeafnums_r(leafList_t *ll, int nodenum);
 
-cmodel_t*CM_ClipHandleToModel(Cliphandle handle);
+Cmodel*CM_ClipHandleToModel(Cliphandle handle);
 qbool CM_BoundsIntersect(const Vec3 mins, const Vec3 maxs,
 			    const Vec3 mins2,
 			    const Vec3 maxs2);

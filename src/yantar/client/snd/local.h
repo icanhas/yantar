@@ -52,7 +52,7 @@ typedef struct {
 	int	samplebits;
 	int	speed;
 	byte	*buffer;
-} dma_t;
+} Dma;
 
 #define START_SAMPLE_IMMEDIATE	0x7fffffff
 
@@ -69,7 +69,7 @@ typedef struct loopSound_s {
 	float		dopplerScale;
 	float		oldDopplerScale;
 	int		framenum;
-} loopSound_t;
+} Loopsnd;
 
 typedef struct {
 	int		allocTime;
@@ -98,7 +98,7 @@ typedef struct {
 	int	channels;
 	int	samples;
 	int	dataofs;	/* chunk starts this many bytes from file start */
-} wavinfo_t;
+} Wavinfo;
 
 /* Interface between Q3 sound "api" and the sound backend */
 typedef struct {
@@ -169,7 +169,7 @@ extern int	s_paintedtime;
 extern Vec3	listener_forward;
 extern Vec3	listener_right;
 extern Vec3	listener_up;
-extern dma_t	dma;
+extern Dma	dma;
 
 #define MAX_RAW_SAMPLES 16384
 #define MAX_RAW_STREAMS (MAX_CLIENTS * 2 + 1)
@@ -198,7 +198,7 @@ void S_memoryLoad(Sfx *sfx);
 void S_Spatialize(Channel *ch);
 
 /* adpcm functions */
-int  S_AdpcmMemoryNeeded(const wavinfo_t *info);
+int  S_AdpcmMemoryNeeded(const Wavinfo *info);
 void S_AdpcmEncodeSound(Sfx *sfx, short *samples);
 void S_AdpcmGetSamples(sndBuffer *chunk, short *to);
 

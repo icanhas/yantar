@@ -120,7 +120,7 @@ typedef struct {
 	qbool		pitching;
 
 	int		animationNumber;	/* may include ANIM_TOGGLEBIT */
-	animation_t	*animation;
+	Anim	*animation;
 	int		animationTime;	/* time when the first frame of the animation will be exact */
 } lerpFrame_t;
 
@@ -190,8 +190,8 @@ typedef struct markPoly_s {
 	Handle			markShader;
 	qbool			alphaFade;	/* fade alpha instead of rgb */
 	float			color[4];
-	poly_t			poly;
-	polyVert_t		verts[MAX_VERTS_ON_POLY];
+	Poly			poly;
+	Polyvert		verts[MAX_VERTS_ON_POLY];
 } markPoly_t;
 
 
@@ -288,7 +288,7 @@ typedef struct {
 	qbool		infoValid;
 
 	char		name[MAX_QPATH];
-	team_t		team;
+	Team		team;
 
 	int		botSkill;	/* 0 = not bot, 1-5 = bot */
 
@@ -340,7 +340,7 @@ typedef struct {
 
 	Handle		modelIcon;
 
-	animation_t	animations[MAX_TOTALANIMATIONS];
+	Anim	animations[MAX_TOTALANIMATIONS];
 
 	Sfxhandle	sounds[MAX_CUSTOM_SOUNDS];
 	
@@ -497,7 +497,7 @@ typedef struct {
 	Vec3	autoAxisFast[3];
 
 	/* view rendering */
-	refdef_t	refdef;
+	Refdef	refdef;
 	Vec3		refdefViewAngles;	/* will be converted to refdef.viewaxis */
 
 	/* zoom key */
@@ -916,7 +916,7 @@ typedef struct {
 	qbool		localServer;	/* detected on startup by checking sv_running */
 
 	/* parsed from serverinfo */
-	gametype_t	gametype;
+	Gametype	gametype;
 	int		dmflags;
 	int		teamflags;
 	int		fraglimit;
@@ -1134,7 +1134,7 @@ void CG_ZoomDown_f(void);
 void CG_ZoomUp_f(void);
 void CG_AddBufferedSound(Sfxhandle sfx);
 
-void CG_DrawActiveFrame(int serverTime, stereoFrame_t stereoView,
+void CG_DrawActiveFrame(int serverTime, Stereoframe stereoView,
 			qbool demoPlayback);
 
 
@@ -1188,7 +1188,7 @@ void CG_AddLagometerSnapshotInfo(Snap *snap);
 void CG_CenterPrint(const char *str, int y, int charWidth);
 void CG_DrawHead(float x, float y, float w, float h, int clientNum,
 		 Vec3 headAngles);
-void CG_DrawActive(stereoFrame_t stereoView);
+void CG_DrawActive(Stereoframe stereoView);
 void CG_DrawFlagModel(float x, float y, float w, float h, int team,
 		      qbool force2D);
 void CG_DrawTeamBackground(int x, int y, int w, int h, float alpha, int team);
@@ -1436,7 +1436,7 @@ int                     trap_FS_FOpenFile(const char *qpath, Fhandle *f,
 void            trap_FS_Read(void *buffer, int len, Fhandle f);
 void            trap_FS_Write(const void *buffer, int len, Fhandle f);
 void            trap_FS_FCloseFile(Fhandle f);
-int                     trap_FS_Seek(Fhandle f, long offset, int origin);	/* fsOrigin_t */
+int                     trap_FS_Seek(Fhandle f, long offset, int origin);	/* Fsorigin */
 
 /* add commands to the local console as if they were typed in
  * for map changing, etc.  The command is not executed immediately,
@@ -1527,9 +1527,9 @@ void            trap_R_AddRefEntityToScene(const Refent *re);
 /* polys are intended for simple wall marks, not really for doing
  * significant construction */
 void            trap_R_AddPolyToScene(Handle hShader, int numVerts,
-				      const polyVert_t *verts);
+				      const Polyvert *verts);
 void            trap_R_AddPolysToScene(Handle hShader, int numVerts,
-				       const polyVert_t *verts,
+				       const Polyvert *verts,
 				       int numPolys);
 void            trap_R_AddLightToScene(const Vec3 org, float intensity,
 				       float r, float g,
@@ -1537,7 +1537,7 @@ void            trap_R_AddLightToScene(const Vec3 org, float intensity,
 int                     trap_R_LightForPoint(Vec3 point, Vec3 ambientLight,
 					     Vec3 directedLight,
 					     Vec3 lightDir);
-void            trap_R_RenderScene(const refdef_t *fd);
+void            trap_R_RenderScene(const Refdef *fd);
 void            trap_R_SetColor(const float *rgba);	/* NULL = 1,1,1,1 */
 void            trap_R_DrawStretchPic(float x, float y, float w, float h,
 				      float s1, float t1, float s2, float t2,

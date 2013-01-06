@@ -412,7 +412,7 @@ opstackviolation(void)
  * VM_Compile
  */
 void
-VM_Compile(Vm *vm, vmHeader_t *header)
+VM_Compile(Vm *vm, Vmheader *header)
 {
 	unsigned char op;
 	int pc;

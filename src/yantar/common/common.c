@@ -590,7 +590,7 @@ Q_FilterPath(char *filter, char *name, int casesensitive)
 }
 
 int
-Com_RealTime(qtime_t *qtime)
+Com_RealTime(Qtime *qtime)
 {
 	time_t t;
 	struct tm *tms;
@@ -1712,7 +1712,7 @@ Hunk_Trash(void)
 enum { MAX_PUSHED_EVENTS = 1024 };
 static int	com_pushedEventsHead = 0;
 static int	com_pushedEventsTail = 0;
-static sysEvent_t com_pushedEvents[MAX_PUSHED_EVENTS];
+static Sysevent com_pushedEvents[MAX_PUSHED_EVENTS];
 
 void
 Com_Initjournaling(void)
@@ -1747,7 +1747,7 @@ Com_Initjournaling(void)
 #define MAX_QUEUED_EVENTS	256
 #define MASK_QUEUED_EVENTS	(MAX_QUEUED_EVENTS - 1)
 
-static sysEvent_t eventQueue[ MAX_QUEUED_EVENTS ];
+static Sysevent eventQueue[ MAX_QUEUED_EVENTS ];
 static int	eventHead = 0;
 static int	eventTail = 0;
 
@@ -1757,11 +1757,11 @@ static int	eventTail = 0;
  * be freed by the game later.
  */
 void
-Com_Queueevent(int time, sysEventType_t type, int value, int value2,
+Com_Queueevent(int time, Syseventtype type, int value, int value2,
 	       int ptrLength,
 	       void *ptr)
 {
-	sysEvent_t *ev;
+	Sysevent *ev;
 
 	ev = &eventQueue[ eventHead & MASK_QUEUED_EVENTS ];
 
@@ -1786,10 +1786,10 @@ Com_Queueevent(int time, sysEventType_t type, int value, int value2,
 	ev->evPtr = ptr;
 }
 
-sysEvent_t
+Sysevent
 Com_Getsysevent(void)
 {
-	sysEvent_t ev;
+	Sysevent ev;
 	char *s;
 
 	/* return if we have data */
@@ -1823,11 +1823,11 @@ Com_Getsysevent(void)
 	return ev;
 }
 
-sysEvent_t
+Sysevent
 Com_Getrealevent(void)
 {
 	int r;
-	sysEvent_t ev;
+	Sysevent ev;
 
 	/* either get an event from the system or the journal file */
 	if(com_journal->integer == 2){
@@ -1877,9 +1877,9 @@ Com_Initpushevent(void)
 }
 
 void
-Com_Pushevent(sysEvent_t *event)
+Com_Pushevent(Sysevent *event)
 {
-	sysEvent_t	*ev;
+	Sysevent	*ev;
 	static int	printedWarning = 0;
 
 	ev = &com_pushedEvents[ com_pushedEventsHead & (MAX_PUSHED_EVENTS-1) ];
@@ -1902,7 +1902,7 @@ Com_Pushevent(sysEvent_t *event)
 	com_pushedEventsHead++;
 }
 
-sysEvent_t
+Sysevent
 Q_GetEvent(void)
 {
 	if(com_pushedEventsHead > com_pushedEventsTail){
@@ -1934,7 +1934,7 @@ Com_Runserverpacket(Netaddr *evFrom, Bitmsg *buf)
 int
 Com_Eventloop(void)
 {
-	sysEvent_t	ev;
+	Sysevent	ev;
 	Netaddr	evFrom;
 	byte	bufData[MAX_MSGLEN];
 	Bitmsg	buf;
@@ -1988,7 +1988,7 @@ Com_Eventloop(void)
 int
 Com_Millisecs(void)
 {
-	sysEvent_t ev;
+	Sysevent ev;
 
 	/* get events and push them until we get a null event with the current time */
 	do{
@@ -2315,7 +2315,7 @@ static void
 Com_Detectsse(void)
 {
 #if !idx64
-	cpuFeatures_t feat;
+	CPUfeatures feat;
 
 	feat = Sys_GetProcessorFeatures();
 	if(feat & CF_SSE){
@@ -2371,7 +2371,7 @@ Com_Init(char *commandLine)
 		Sys_Error ("Error during initialization");
 
 	/* Clear queues */
-	Q_Memset(&eventQueue[ 0 ], 0, MAX_QUEUED_EVENTS * sizeof(sysEvent_t));
+	Q_Memset(&eventQueue[ 0 ], 0, MAX_QUEUED_EVENTS * sizeof(Sysevent));
 
 	/* initialize the weak pseudo-random number generator for use later. */
 	Com_Initrand();
@@ -2783,7 +2783,7 @@ Com_Frame(void)
  */
 
 void
-Field_Clear(field_t *edit)
+Field_Clear(Field *edit)
 {
 	memset(edit->buffer, 0, MAX_EDIT_LINE);
 	edit->cursor = 0;
@@ -2794,7 +2794,7 @@ static const char *completionString;
 static char	shortestMatch[MAX_TOKEN_CHARS];
 static int	matchCount;
 /* field we are working on, passed to Field_AutoComplete(&g_consoleCommand for instance) */
-static field_t *completionField;
+static Field *completionField;
 
 static void
 findmatches(const char *s)
@@ -2980,7 +2980,7 @@ Field_CompleteCommand(char *cmd,
 
 /* Perform Tab expansion */
 void
-Field_AutoComplete(field_t *field)
+Field_AutoComplete(Field *field)
 {
 	completionField = field;
 

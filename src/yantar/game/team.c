@@ -14,9 +14,9 @@
 typedef struct teamgame_s {
 	float		last_flag_capture;
 	int		last_capture_team;
-	flagStatus_t	redStatus;	/* CTF */
-	flagStatus_t	blueStatus;	/* CTF */
-	flagStatus_t	flagStatus;	/* One Flag CTF */
+	Flagstatus	redStatus;	/* CTF */
+	Flagstatus	blueStatus;	/* CTF */
+	Flagstatus	flagStatus;	/* One Flag CTF */
 	int		redTakenTime;
 	int		blueTakenTime;
 	int		redObeliskAttackedTime;
@@ -27,7 +27,7 @@ teamgame_t	teamgame;
 
 Gentity	*neutralObelisk;
 
-void Team_SetFlagStatus(int team, flagStatus_t status);
+void Team_SetFlagStatus(int team, Flagstatus status);
 
 void
 Team_InitGame(void)
@@ -174,7 +174,7 @@ static char	ctfFlagStatusRemap[] = { '0', '1', '*', '*', '2' };
 static char	oneFlagStatusRemap[] = { '0', '1', '2', '3', '4' };
 
 void
-Team_SetFlagStatus(int team, flagStatus_t status)
+Team_SetFlagStatus(int team, Flagstatus status)
 {
 	qbool modified = qfalse;
 
@@ -949,7 +949,7 @@ Team_GetLocationMsg(Gentity *ent, char *loc, int loclen)
  */
 #define MAX_TEAM_SPAWN_POINTS 32
 Gentity *
-SelectRandomTeamSpawnPoint(int teamstate, team_t team)
+SelectRandomTeamSpawnPoint(int teamstate, Team team)
 {
 	Gentity *spot;
 	int	count;
@@ -997,7 +997,7 @@ SelectRandomTeamSpawnPoint(int teamstate, team_t team)
  *
  */
 Gentity *
-SelectCTFSpawnPoint(team_t team, int teamstate, Vec3 origin, Vec3 angles,
+SelectCTFSpawnPoint(Team team, int teamstate, Vec3 origin, Vec3 angles,
 		    qbool isbot)
 {
 	Gentity *spot;

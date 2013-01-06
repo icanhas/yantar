@@ -92,7 +92,7 @@ R_GetGlyphInfo(FT_GlyphSlot glyph, int *left, int *right, int *width, int *top,
 }
 
 static FT_Bitmap*
-R_RenderGlyph(FT_GlyphSlot glyph, glyphInfo_t *glyphOut)
+R_RenderGlyph(FT_GlyphSlot glyph, Glyphinfo *glyphOut)
 {
 	FT_Bitmap *bit2;
 	int left, right, width, top, bottom, height, pitch, size;
@@ -162,19 +162,19 @@ WriteTGA(char *filename, byte *data, int width, int height)
 	ri.Free(buffer);
 }
 
-static glyphInfo_t *
+static Glyphinfo *
 RE_ConstructGlyphInfo(byte *imageOut, int *xOut, int *yOut,
 		      int *maxHeight, FT_Face face, const byte c,
 		      qbool calcHeight)
 {
 	int i;
-	static glyphInfo_t glyph;
+	static Glyphinfo glyph;
 	byte *src, *dst;
 	float scaled_width, scaled_height;
 	FT_Bitmap *bitmap;
 
 	bitmap = NULL;
-	Q_Memset(&glyph,0,sizeof(glyphInfo_t));
+	Q_Memset(&glyph,0,sizeof(Glyphinfo));
 
 	/* make sure everything is here */
 	if(face != NULL){
@@ -327,7 +327,7 @@ RE_RegisterFont(const char *fontName, int pointSize, Fontinfo *font)
 	int	j, k, xOut, yOut, lastStart, imageNumber;
 	int	scaledSize, newSize, maxHeight, left;
 	byte *out, *imageBuff;
-	glyphInfo_t	*glyph;
+	Glyphinfo	*glyph;
 	Img         *image;
 	Handle		h;
 	float max;
@@ -500,7 +500,7 @@ RE_RegisterFont(const char *fontName, int pointSize, Fontinfo *font)
 			ri.Free(imageBuff);
 			i++;
 		}else{
-			Q_Memcpy(&font->glyphs[i],glyph,sizeof(glyphInfo_t));
+			Q_Memcpy(&font->glyphs[i],glyph,sizeof(Glyphinfo));
 			i++;
 		}
 	}

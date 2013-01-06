@@ -12,7 +12,7 @@
 #include "../bspc/l_qfiles.h"
 
 void
-SetPlaneSignbits(cplane_t *out)
+SetPlaneSignbits(Cplane *out)
 {
 	int bits, j;
 
@@ -51,8 +51,8 @@ Cvar *cm_noAreas;
 Cvar *cm_noCurves;
 Cvar *cm_playerCurveClip;
 #endif
-cmodel_t box_model;
-cplane_t *box_planes;
+Cmodel box_model;
+Cplane *box_planes;
 cbrush_t *box_brush;
 
 void    CM_InitBoxHull(void);
@@ -63,9 +63,9 @@ void    CM_FloodAreaConnections(void);
  */
 
 void
-CMod_LoadShaders(lump_t *l)
+CMod_LoadShaders(Lump *l)
 {
-	dmaterial_t *in, *out;
+	Dmaterial *in, *out;
 	int i, count;
 
 	in = (void*)(cmod_base + l->fileofs);
@@ -88,10 +88,10 @@ CMod_LoadShaders(lump_t *l)
 }
 
 void
-CMod_LoadSubmodels(lump_t *l)
+CMod_LoadSubmodels(Lump *l)
 {
-	dmodel_t *in;
-	cmodel_t	*out;
+	Dmodel *in;
+	Cmodel	*out;
 	int i, j, count;
 	int		*indexes;
 
@@ -135,9 +135,9 @@ CMod_LoadSubmodels(lump_t *l)
 }
 
 void
-CMod_LoadNodes(lump_t *l)
+CMod_LoadNodes(Lump *l)
 {
-	dnode_t *in;
+	Dnode *in;
 	int child;
 	cNode_t *out;
 	int i, j, count;
@@ -178,9 +178,9 @@ CM_BoundBrush(cbrush_t *b)
 }
 
 void
-CMod_LoadBrushes(lump_t *l)
+CMod_LoadBrushes(Lump *l)
 {
-	dbrush_t *in;
+	Dbrush *in;
 	cbrush_t *out;
 	int i, count;
 
@@ -212,11 +212,11 @@ CMod_LoadBrushes(lump_t *l)
 }
 
 void
-CMod_LoadLeafs(lump_t *l)
+CMod_LoadLeafs(Lump *l)
 {
 	int i;
 	cLeaf_t *out;
-	dleaf_t *in;
+	Dleaf *in;
 	int count;
 
 	in = (void*)(cmod_base + l->fileofs);
@@ -252,11 +252,11 @@ CMod_LoadLeafs(lump_t *l)
 }
 
 void
-CMod_LoadPlanes(lump_t *l)
+CMod_LoadPlanes(Lump *l)
 {
 	int i, j;
-	cplane_t *out;
-	dplane_t *in;
+	Cplane *out;
+	Dplane *in;
 	int count;
 	int bits;
 
@@ -287,7 +287,7 @@ CMod_LoadPlanes(lump_t *l)
 }
 
 void
-CMod_LoadLeafBrushes(lump_t *l)
+CMod_LoadLeafBrushes(Lump *l)
 {
 	int i;
 	int *out;
@@ -311,7 +311,7 @@ CMod_LoadLeafBrushes(lump_t *l)
 }
 
 void
-CMod_LoadLeafSurfaces(lump_t *l)
+CMod_LoadLeafSurfaces(Lump *l)
 {
 	int i, *out, *in, count;
 
@@ -330,11 +330,11 @@ CMod_LoadLeafSurfaces(lump_t *l)
 }
 
 void
-CMod_LoadBrushSides(lump_t *l)
+CMod_LoadBrushSides(Lump *l)
 {
 	int i;
 	cbrushside_t *out;
-	dbrushside_t *in;
+	Dbrushside *in;
 	int count, num;
 
 	in = (void*)(cmod_base + l->fileofs);
@@ -361,7 +361,7 @@ CMod_LoadBrushSides(lump_t *l)
 }
 
 void
-CMod_LoadEntityString(lump_t *l)
+CMod_LoadEntityString(Lump *l)
 {
 	cm.entityString = Hunk_Alloc(l->filelen, h_high);
 	cm.numEntityChars = l->filelen;
@@ -369,7 +369,7 @@ CMod_LoadEntityString(lump_t *l)
 }
 
 void
-CMod_LoadVisibility(lump_t *l)
+CMod_LoadVisibility(Lump *l)
 {
 	int len;
 	byte *buf;
@@ -391,10 +391,10 @@ CMod_LoadVisibility(lump_t *l)
 }
 
 void
-CMod_LoadPatches(lump_t *surfs, lump_t *verts)
+CMod_LoadPatches(Lump *surfs, Lump *verts)
 {
-	drawVert_t *dv, *dv_p;
-	dsurface_t *in;
+	Drawvert *dv, *dv_p;
+	Dsurf *in;
 	int count, i, j, c, width, height, shaderNum;
 	cPatch_t *patch;
 	Vec3 points[MAX_PATCH_VERTS];
@@ -442,14 +442,14 @@ CMod_LoadPatches(lump_t *surfs, lump_t *verts)
 }
 
 unsigned
-CM_LumpChecksum(lump_t *lump)
+CM_LumpChecksum(Lump *lump)
 {
 	return LittleLong (Q_BlockChecksum (cmod_base + lump->fileofs,
 			lump->filelen));
 }
 
 unsigned
-CM_Checksum(dheader_t *header)
+CM_Checksum(Dheader *header)
 {
 	unsigned checksums[16];
 	checksums[0] = CM_LumpChecksum(&header->lumps[LUMP_SHADERS]);
@@ -478,7 +478,7 @@ CM_LoadMap(const char *name, qbool clientload, int *checksum)
 		void	*v;
 	} buf;
 	int i, length;
-	dheader_t header;
+	Dheader header;
 	static uint last_checksum;
 
 	if(!name || !name[0])
@@ -525,8 +525,8 @@ CM_LoadMap(const char *name, qbool clientload, int *checksum)
 	last_checksum = LittleLong (Q_BlockChecksum (buf.i, length));
 	*checksum = last_checksum;
 
-	header = *(dheader_t*)buf.i;
-	for(i=0; i<sizeof(dheader_t)/4; i++)
+	header = *(Dheader*)buf.i;
+	for(i=0; i<sizeof(Dheader)/4; i++)
 		((int*)&header)[i] = LittleLong (((int*)&header)[i]);
 
 	if(header.version != BSP_VERSION)
@@ -571,7 +571,7 @@ CM_ClearMap(void)
 	CM_ClearLevelPatches();
 }
 
-cmodel_t        *
+Cmodel        *
 CM_ClipHandleToModel(Cliphandle handle)
 {
 	if(handle < 0)
@@ -643,7 +643,7 @@ void
 CM_InitBoxHull(void)
 {
 	int i, side;
-	cplane_t *p;
+	Cplane *p;
 	cbrushside_t *s;
 
 	box_planes = &cm.planes[cm.numPlanes];
@@ -719,7 +719,7 @@ CM_TempBoxModel(const Vec3 mins, const Vec3 maxs, int capsule)
 void
 CM_ModelBounds(Cliphandle model, Vec3 mins, Vec3 maxs)
 {
-	cmodel_t *cmod;
+	Cmodel *cmod;
 
 	cmod = CM_ClipHandleToModel(model);
 	copyv3(cmod->mins, mins);

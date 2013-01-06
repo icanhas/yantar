@@ -87,7 +87,7 @@
 
 typedef struct Pmove		Pmove;
 typedef struct Gitem		Gitem;
-typedef struct animation_t	animation_t;
+typedef struct Anim	Anim;
 
 typedef enum {
 	GT_FFA,			/* free for all */
@@ -100,7 +100,7 @@ typedef enum {
 	GT_CTF,			/* capture the flag */
 	GT_1FCTF,		/* one-flag CTF */
 	GT_MAX_GAME_TYPE
-} gametype_t;
+} Gametype;
 
 /* FIXME: remarkably, machines don't have genders */
 typedef enum { 
@@ -124,14 +124,14 @@ typedef enum {
 	PM_FREEZE,		/* stuck in place with no control */
 	PM_INTERMISSION,	/* no movement or status bar */
 	PM_SPINTERMISSION	/* no movement or status bar */
-} pmtype_t;
+} Pmtype;
 
 typedef enum {
 	WEAPON_READY,
 	WEAPON_RAISING,
 	WEAPON_DROPPING,
 	WEAPON_FIRING
-} weaponstate_t;
+} Weapstate;
 
 /* pmove->pm_flags */
 enum pmflags {
@@ -197,7 +197,7 @@ typedef enum {
 	STAT_DEAD_YAW,		/* look this direction when dead (FIXME: get rid of?) */
 	STAT_CLIENTS_READY,	/* bit mask of clients wishing to exit the intermission (FIXME: configstring?) */
 	STAT_MAX_HEALTH		/* health / armor limit, changable by handicap */
-} statIndex_t;
+} Statindex;
 
 /* 
  * player_state->persistant[] indexes
@@ -224,7 +224,7 @@ typedef enum {
 	PERS_ASSIST_COUNT,		/* assist awards */
 	PERS_GAUNTLET_FRAG_COUNT,	/* kills with the guantlet */
 	PERS_CAPTURES			/* captures */
-} persEnum_t;
+} Persenum;
 
 /* Entstate->eFlags */
 enum entflags {
@@ -422,7 +422,7 @@ typedef enum {
 	EV_TAUNT_GETFLAG,
 	EV_TAUNT_GUARDBASE,
 	EV_TAUNT_PATROL
-} entity_event_t;
+} Entevent;
 
 typedef enum {
 	GTS_RED_CAPTURE,
@@ -494,9 +494,9 @@ typedef enum {
 	FLAG_STAND2RUN,
 
 	MAX_TOTALANIMATIONS
-} animNumber_t;
+} Animnum;
 
-struct animation_t {
+struct Anim {
 	int	firstFrame;
 	int	numFrames;
 	int	loopFrames;	/* 0 to numFrames */
@@ -518,7 +518,7 @@ typedef enum {
 	TEAM_BLUE,
 	TEAM_SPECTATOR,
 	TEAM_NUM_TEAMS
-} team_t;
+} Team;
 
 /* Time between location updates */
 #define TEAM_LOCATION_UPDATE_TIME 1000
@@ -536,7 +536,7 @@ typedef enum {
 	TEAMTASK_RETRIEVE,
 	TEAMTASK_ESCORT,
 	TEAMTASK_CAMP
-} teamtask_t;
+} Teamtask;
 
 /* means of death */
 typedef enum {
@@ -567,7 +567,7 @@ typedef enum {
 	MOD_CHAINGUN,
 	MOD_PROXIMITY_MINE,
 	MOD_GRAPPLE
-} meansOfDeath_t;
+} Meansofdeath;
 
 /* Gitem->type */
 typedef enum {
@@ -583,7 +583,7 @@ typedef enum {
 	/* EFX: rotate + bob */
 	IT_PERSISTANT_POWERUP,
 	IT_TEAM
-} itemType_t;
+} Itemtype;
 
 #define MAX_ITEM_MODELS 4
 
@@ -594,7 +594,7 @@ struct Gitem {
 	char	*icon;
 	char	*pickup_name;	/* for printing on pickup */
 	int	quantity;	/* for ammo how much, or duration of powerup */
-	itemType_t	giType;		/* IT_* flags */
+	Itemtype	giType;		/* IT_* flags */
 	int	giTag;
 	char	*precaches;	/* string of all models and images this item will use */
 	char	*sounds;	/* string of all sounds this item will use */
@@ -635,7 +635,7 @@ typedef enum {
 	ET_EVENTS	/* any of the EV_* events can be added freestanding
 			 * by setting eType to ET_EVENTS + eventNum
 			 * this avoids having to set eFlags and eventNum */
-} entityType_t;
+} Enttype;
 
 #define ARENAS_PER_TIER	4
 #define MAX_ARENAS	1024

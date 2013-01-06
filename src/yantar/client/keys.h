@@ -15,22 +15,22 @@ struct qkey_t {
 };
 
 enum { COMMAND_HISTORY = 32 };
-extern field_t	historyEditLines[COMMAND_HISTORY];
-extern field_t	g_consoleField;
-extern field_t	chatField;
+extern Field	historyEditLines[COMMAND_HISTORY];
+extern Field	g_consoleField;
+extern Field	chatField;
 extern int		anykeydown;
 extern qbool	chat_team;
 extern int		chat_playerNum;
 extern qbool	key_overstrikeMode;
 extern qkey_t	keys[MAX_KEYS];
 
-/* NOTE TTimo the declaration of field_t and Field_Clear is now in qcommon/qcommon.h */
+/* NOTE TTimo the declaration of Field and Field_Clear is now in qcommon/qcommon.h */
 /* well done ttimo! go on my son! */
-void		Field_KeyDownEvent(field_t *edit, int key);
-void		Field_CharEvent(field_t *edit, int ch);
-void		Field_Draw(field_t *edit, int x, int y, int width, qbool showCursor,
+void		Field_KeyDownEvent(Field *edit, int key);
+void		Field_CharEvent(Field *edit, int ch);
+void		Field_Draw(Field *edit, int x, int y, int width, qbool showCursor,
 			qbool noColorEscape);
-void		Field_BigDraw(field_t *edit, int x, int y, int width, qbool showCursor,
+void		Field_BigDraw(Field *edit, int x, int y, int width, qbool showCursor,
 			qbool noColorEscape);
 void		Key_WriteBindings(Fhandle f);
 void		Key_SetBinding(int keynum, const char *binding);

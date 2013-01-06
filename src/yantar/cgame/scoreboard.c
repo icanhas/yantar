@@ -228,7 +228,7 @@ CG_DrawClientScore(int y, Score *score, float *color, float fade,
  * CG_TeamScoreboard
  */
 static int
-CG_TeamScoreboard(int y, team_t team, float fade, int maxClients, int lineHeight)
+CG_TeamScoreboard(int y, Team team, float fade, int maxClients, int lineHeight)
 {
 	int i;
 	Score *score;

@@ -1997,7 +1997,7 @@ void
 CG_Tracer(Vec3 source, Vec3 dest)
 {
 	Vec3	forward, right;
-	polyVert_t verts[4];
+	Polyvert verts[4];
 	Vec3	line;
 	float	len, begin, end;
 	Vec3	start, finish;

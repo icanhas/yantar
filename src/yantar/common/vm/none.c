@@ -8,7 +8,7 @@ VM_CallCompiled(Vm *vm, int *args)
 }
 
 void
-VM_Compile(Vm *vm, vmHeader_t *header)
+VM_Compile(Vm *vm, Vmheader *header)
 {
 	exit(99);
 }

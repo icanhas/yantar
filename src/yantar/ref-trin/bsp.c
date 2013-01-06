@@ -115,7 +115,7 @@ R_ColorShiftLightingBytes(byte in[4], byte out[4])
  */
 #define LIGHTMAP_SIZE 128
 static void
-R_LoadLightmaps(lump_t *l)
+R_LoadLightmaps(Lump *l)
 {
 	byte	*buf, *buf_p;
 	int	len;
@@ -211,7 +211,7 @@ RE_SetWorldVisData(const byte *vis)
  * R_LoadVisibility
  */
 static void
-R_LoadVisibility(lump_t *l)
+R_LoadVisibility(Lump *l)
 {
 	int len;
 	byte *buf;
@@ -252,7 +252,7 @@ static material_t *
 ShaderForShaderNum(int shaderNum, int lightmapNum)
 {
 	material_t *shader;
-	dmaterial_t *dsh;
+	Dmaterial *dsh;
 
 	shaderNum = LittleLong(shaderNum);
 	if(shaderNum < 0 || shaderNum >= s_worldData.numShaders){
@@ -282,7 +282,7 @@ ShaderForShaderNum(int shaderNum, int lightmapNum)
  * ParseFace
  */
 static void
-ParseFace(dsurface_t *ds, drawVert_t *verts, msurface_t *surf, int *indexes)
+ParseFace(Dsurf *ds, Drawvert *verts, msurface_t *surf, int *indexes)
 {
 	int	i, j;
 	srfSurfaceFace_t *cv;
@@ -351,12 +351,12 @@ ParseFace(dsurface_t *ds, drawVert_t *verts, msurface_t *surf, int *indexes)
  * ParseMesh
  */
 static void
-ParseMesh(dsurface_t *ds, drawVert_t *verts, msurface_t *surf)
+ParseMesh(Dsurf *ds, Drawvert *verts, msurface_t *surf)
 {
 	srfGridMesh_t *grid;
 	int	i, j;
 	int	width, height, numPoints;
-	drawVert_t	points[MAX_PATCH_SIZE*MAX_PATCH_SIZE];
+	Drawvert	points[MAX_PATCH_SIZE*MAX_PATCH_SIZE];
 	int		lightmapNum;
 	Vec3	bounds[2];
 	Vec3	tmpVec;
@@ -418,7 +418,7 @@ ParseMesh(dsurface_t *ds, drawVert_t *verts, msurface_t *surf)
  * ParseTriSurf
  */
 static void
-ParseTriSurf(dsurface_t *ds, drawVert_t *verts, msurface_t *surf, int *indexes)
+ParseTriSurf(Dsurf *ds, Drawvert *verts, msurface_t *surf, int *indexes)
 {
 	srfTriangles_t *tri;
 	int	i, j;
@@ -441,7 +441,7 @@ ParseTriSurf(dsurface_t *ds, drawVert_t *verts, msurface_t *surf, int *indexes)
 	tri->surfaceType	= SF_TRIANGLES;
 	tri->numVerts	= numVerts;
 	tri->numIndexes = numIndexes;
-	tri->verts	= (drawVert_t*)(tri + 1);
+	tri->verts	= (Drawvert*)(tri + 1);
 	tri->indexes	= (int*)(tri->verts + tri->numVerts);
 
 	surf->data = (surfaceType_t*)tri;
@@ -477,7 +477,7 @@ ParseTriSurf(dsurface_t *ds, drawVert_t *verts, msurface_t *surf, int *indexes)
  * ParseFlare
  */
 static void
-ParseFlare(dsurface_t *ds, drawVert_t *verts, msurface_t *surf, int *indexes)
+ParseFlare(Dsurf *ds, Drawvert *verts, msurface_t *surf, int *indexes)
 {
 	srfFlare_t *flare;
 	int i;
@@ -1230,7 +1230,7 @@ R_MovePatchSurfacesToHunk(void)
 		if(grid->surfaceType != SF_GRID)
 			continue;
 		/*  */
-		size = (grid->width * grid->height - 1) * sizeof(drawVert_t) + sizeof(*grid);
+		size = (grid->width * grid->height - 1) * sizeof(Drawvert) + sizeof(*grid);
 		hunkgrid = ri.Hunk_Alloc(size, h_low);
 		Q_Memcpy(hunkgrid, grid, size);
 
@@ -1250,11 +1250,11 @@ R_MovePatchSurfacesToHunk(void)
  * R_LoadSurfaces
  */
 static void
-R_LoadSurfaces(lump_t *surfs, lump_t *verts, lump_t *indexLump)
+R_LoadSurfaces(Lump *surfs, Lump *verts, Lump *indexLump)
 {
-	dsurface_t *in;
+	Dsurf *in;
 	msurface_t	*out;
-	drawVert_t	*dv;
+	Drawvert	*dv;
 	int	*indexes;
 	int	count;
 	int	numFaces, numMeshes, numTriSurfs, numFlares;
@@ -1326,9 +1326,9 @@ R_LoadSurfaces(lump_t *surfs, lump_t *verts, lump_t *indexLump)
  * R_LoadSubmodels
  */
 static void
-R_LoadSubmodels(lump_t *l)
+R_LoadSubmodels(Lump *l)
 {
-	dmodel_t *in;
+	Dmodel *in;
 	bmodel_t *out;
 	int i, j, count;
 
@@ -1384,21 +1384,21 @@ R_SetParent(mnode_t *node, mnode_t *parent)
  * R_LoadNodesAndLeafs
  */
 static void
-R_LoadNodesAndLeafs(lump_t *nodeLump, lump_t *leafLump)
+R_LoadNodesAndLeafs(Lump *nodeLump, Lump *leafLump)
 {
 	int i, j, p;
-	dnode_t *in;
-	dleaf_t *inLeaf;
+	Dnode *in;
+	Dleaf *inLeaf;
 	mnode_t *out;
 	int numNodes, numLeafs;
 
 	in = (void*)(fileBase + nodeLump->fileofs);
-	if(nodeLump->filelen % sizeof(dnode_t) ||
-	   leafLump->filelen % sizeof(dleaf_t)){
+	if(nodeLump->filelen % sizeof(Dnode) ||
+	   leafLump->filelen % sizeof(Dleaf)){
 		ri.Error (ERR_DROP, "LoadMap: funny lump size in %s",s_worldData.name);
 	}
-	numNodes	= nodeLump->filelen / sizeof(dnode_t);
-	numLeafs	= leafLump->filelen / sizeof(dleaf_t);
+	numNodes	= nodeLump->filelen / sizeof(Dnode);
+	numLeafs	= leafLump->filelen / sizeof(Dleaf);
 
 	out = ri.Hunk_Alloc ((numNodes + numLeafs) * sizeof(*out), h_low);
 
@@ -1457,10 +1457,10 @@ R_LoadNodesAndLeafs(lump_t *nodeLump, lump_t *leafLump)
  * R_LoadShaders
  */
 static void
-R_LoadShaders(lump_t *l)
+R_LoadShaders(Lump *l)
 {
 	int i, count;
-	dmaterial_t *in, *out;
+	Dmaterial *in, *out;
 
 	in = (void*)(fileBase + l->fileofs);
 	if(l->filelen % sizeof(*in))
@@ -1484,7 +1484,7 @@ R_LoadShaders(lump_t *l)
  * R_LoadMarksurfaces
  */
 static void
-R_LoadMarksurfaces(lump_t *l)
+R_LoadMarksurfaces(Lump *l)
 {
 	int i, j, count;
 	int *in;
@@ -1510,11 +1510,11 @@ R_LoadMarksurfaces(lump_t *l)
  * R_LoadPlanes
  */
 static void
-R_LoadPlanes(lump_t *l)
+R_LoadPlanes(Lump *l)
 {
 	int i, j;
-	cplane_t	*out;
-	dplane_t	*in;
+	Cplane	*out;
+	Dplane	*in;
 	int	count;
 	int	bits;
 
@@ -1547,13 +1547,13 @@ R_LoadPlanes(lump_t *l)
  *
  */
 static void
-R_LoadFogs(lump_t *l, lump_t *brushesLump, lump_t *sidesLump)
+R_LoadFogs(Lump *l, Lump *brushesLump, Lump *sidesLump)
 {
 	int i;
 	fog_t *out;
-	dfog_t *fogs;
-	dbrush_t	*brushes, *brush;
-	dbrushside_t *sides;
+	Dfog *fogs;
+	Dbrush	*brushes, *brush;
+	Dbrushside *sides;
 	int		count, brushesCount, sidesCount;
 	int		sideNum;
 	int		planeNum;
@@ -1662,7 +1662,7 @@ R_LoadFogs(lump_t *l, lump_t *brushesLump, lump_t *sidesLump)
  *
  */
 void
-R_LoadLightGrid(lump_t *l)
+R_LoadLightGrid(Lump *l)
 {
 	int i;
 	Vec3	maxs;
@@ -1707,7 +1707,7 @@ R_LoadLightGrid(lump_t *l)
  * R_LoadEntities
  */
 void
-R_LoadEntities(lump_t *l)
+R_LoadEntities(Lump *l)
 {
 	char	*p, *token, *s;
 	char	keyname[MAX_TOKEN_CHARS];
@@ -1813,7 +1813,7 @@ void
 RE_LoadWorldMap(const char *name)
 {
 	int i;
-	dheader_t *header;
+	Dheader *header;
 	union {
 		byte	*b;
 		void	*v;
@@ -1853,7 +1853,7 @@ RE_LoadWorldMap(const char *name)
 	startMarker	= ri.Hunk_Alloc(0, h_low);
 	c_gridVerts	= 0;
 
-	header		= (dheader_t*)buffer.b;
+	header		= (Dheader*)buffer.b;
 	fileBase	= (byte*)header;
 
 	i = LittleLong (header->version);
@@ -1863,7 +1863,7 @@ RE_LoadWorldMap(const char *name)
 	}
 
 	/* swap all the lumps */
-	for(i=0; i<sizeof(dheader_t)/4; i++)
+	for(i=0; i<sizeof(Dheader)/4; i++)
 		((int*)header)[i] = LittleLong (((int*)header)[i]);
 
 	/* load into heap */

@@ -16,7 +16,7 @@ CM_PointLeafnum_r(const Vec3 p, int num)
 {
 	float d;
 	cNode_t *node;
-	cplane_t *plane;
+	Cplane *plane;
 
 	while(num >= 0){
 		node = cm.nodes + num;
@@ -122,7 +122,7 @@ CM_StoreBrushes(leafList_t *ll, int nodenum)
 void
 CM_BoxLeafnums_r(leafList_t *ll, int nodenum)
 {
-	cplane_t	*plane;
+	Cplane	*plane;
 	cNode_t		*node;
 	int s;
 
@@ -217,7 +217,7 @@ CM_PointContents(const Vec3 p, Cliphandle model)
 	cbrush_t	*b;
 	int contents;
 	float		d;
-	cmodel_t *clipm;
+	Cmodel *clipm;
 
 	if(!cm.numNodes)	/* map not loaded */
 		return 0;

@@ -21,13 +21,13 @@
 #define SVF_PORTAL		0x00000040	/* merge a second pvs at origin2 into snapshots */
 #define SVF_USE_CURRENT_ORIGIN	0x00000080	/* entity->r.currentOrigin instead of entity->s.origin */
 /* for link position (missiles and movers) */
-#define SVF_SINGLECLIENT	0x00000100	/* only send to a single client (entityShared_t->singleClient) */
+#define SVF_SINGLECLIENT	0x00000100	/* only send to a single client (Entshared->singleClient) */
 #define SVF_NOSERVERINFO	0x00000200	/* don't send CS_SERVERINFO updates to this client */
 /* so that it can be updated for ping tools without
  * lagging clients */
 #define SVF_CAPSULE		0x00000400	/* use capsule for collision detection instead of bbox */
 #define SVF_NOTSINGLECLIENT	0x00000800	/* send entity to everyone but one client */
-/* (entityShared_t->singleClient) */
+/* (Entshared->singleClient) */
 
 typedef struct {
 	Entstate unused;	/* apparently this field was put here accidentally */
@@ -67,12 +67,12 @@ typedef struct {
 	 * entity[ent->r.ownerNum].r.ownerNum == passEntityNum	(don't interact with other missiles from owner) 
 	 */
 	int ownerNum;
-} entityShared_t;
+} Entshared;
 
 /* the server looks at a sharedEntity, which is the start of the game's Gentity structure */
 typedef struct {
 	Entstate	s;	/* communicated by server to clients */
-	entityShared_t	r;	/* shared by both the server system and game */
+	Entshared	r;	/* shared by both the server system and game */
 } Sharedent;
 
 /*

@@ -1576,7 +1576,7 @@ sparc_compute_code(Vm *vm, struct func_info * const fp)
 }
 
 void
-VM_Compile(Vm *vm, vmHeader_t *header)
+VM_Compile(Vm *vm, Vmheader *header)
 {
 	struct func_info fi;
 	unsigned char *code;

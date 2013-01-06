@@ -15,7 +15,7 @@
 
 /* extra refdef flags start at 0x0008 */
 #define RDF_NOFOG	0x0008	/* don't apply fog */
-#define RDF_EXTRA	0x0010	/* Makro - refdefex_t to follow after refdef_t */
+#define RDF_EXTRA	0x0010	/* Makro - refdefex_t to follow after Refdef */
 
 typedef struct {
 	float blurFactor;

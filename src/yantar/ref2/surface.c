@@ -921,7 +921,7 @@ VectorArrayNormalize(Vec4 *normals, unsigned int count)
 */
 #if idppc_altivec
 static void
-LerpMeshVertexes_altivec(md3Surface_t *surf, float backlerp)
+LerpMeshVertexes_altivec(MD3surf *surf, float backlerp)
 {
 	short *oldXyz, *newXyz, *oldNormals, *newNormals;
 	float *outXyz, *outNormal;

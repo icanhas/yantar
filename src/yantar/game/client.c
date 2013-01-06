@@ -469,7 +469,7 @@ ClientRespawn(Gentity *ent)
 /*
  * Returns number of players on a team
  */
-team_t
+Team
 TeamCount(int ignoreClientNum, int team)
 {
 	int	i;
@@ -506,7 +506,7 @@ TeamLeader(int team)
 	return -1;
 }
 
-team_t
+Team
 PickTeam(int ignoreClientNum)
 {
 	int counts[TEAM_NUM_TEAMS];

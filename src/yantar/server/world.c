@@ -46,7 +46,7 @@ typedef struct worldSector_s {
 	int	axis;	/* -1 = leaf node */
 	float	dist;
 	struct worldSector_s	*children[2];
-	Svent			*entities;
+	Svent					*entities;
 } worldSector_t;
 
 #define AREA_DEPTH	4
@@ -64,7 +64,7 @@ SV_SectorList_f(void)
 {
 	int i, c;
 	worldSector_t	*sec;
-	Svent		*ent;
+	Svent				*ent;
 
 	for(i = 0; i < AREA_NODES; i++){
 		sec = &sv_worldSectors[i];
@@ -145,8 +145,8 @@ SV_ClearWorld(void)
 void
 SV_UnlinkEntity(Sharedent *gEnt)
 {
-	Svent		*ent;
-	Svent		*scan;
+	Svent				*ent;
+	Svent				*scan;
 	worldSector_t *ws;
 
 	ent = SV_SvEntityForGentity(gEnt);

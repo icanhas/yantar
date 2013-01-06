@@ -558,7 +558,7 @@ qbool FS_Which(const char *filename, void *searchPath);
  * Edit fields and command line history/completion
  */
  
- typedef struct field_s field_t;
+ typedef struct field_s Field;
 
 enum { MAX_EDIT_LINE = 256 };
 struct field_s {
@@ -568,8 +568,8 @@ struct field_s {
 	char	buffer[MAX_EDIT_LINE];
 };
 
-void Field_Clear(field_t *edit);
-void Field_AutoComplete(field_t *edit);
+void Field_Clear(Field *edit);
+void Field_AutoComplete(Field *edit);
 void Field_CompleteKeyname(void);
 void Field_CompleteFilename(const char *dir,
 	 const char *ext, qbool stripExt,
@@ -592,7 +592,7 @@ typedef enum {
 	CF_SSE			= 1 << 5,
 	CF_SSE2			= 1 << 6,
 	CF_ALTIVEC		= 1 << 7
-} cpuFeatures_t;
+} CPUfeatures;
 
 /* centralized and cleaned, that's the max string you can send to a Com_Printf / Com_DPrintf (above gets truncated) */
 #define MAXPRINTMSG 4096
@@ -606,21 +606,21 @@ typedef enum {
 	SE_MOUSE,		/* evValue and evValue2 are reletive signed x / y moves */
 	SE_JOYSTICK_AXIS,	/* evValue is an axis number and evValue2 is the current state (-127 to 127) */
 	SE_CONSOLE		/* evPtr is a char* */
-} sysEventType_t;
+} Syseventtype;
 
 typedef struct {
 	int		evTime;
-	sysEventType_t	evType;
+	Syseventtype	evType;
 	int		evValue, evValue2;
 	int		evPtrLength;	/* bytes of data pointed to by evPtr, for journaling */
 	void		*evPtr;		/* this must be manually freed if not NULL */
-} sysEvent_t;
+} Sysevent;
 
-void 	Com_Queueevent(int time, sysEventType_t type, int value,
+void 	Com_Queueevent(int time, Syseventtype type, int value,
 		int value2, int ptrLength,
 		void *ptr);
 int 	Com_Eventloop(void);
-sysEvent_t Com_Getsysevent(void);
+Sysevent Com_Getsysevent(void);
 char* Copystr(const char *in);
 void 	Info_Print(const char *s);
 
@@ -641,7 +641,7 @@ char* Q_MD5File(const char *filename, int length,
 int 	Q_Filter(char *filter, char *name, int casesensitive);
 int 	Q_FilterPath(char *filter, char *name,
 					int casesensitive);
-int 	Com_RealTime(qtime_t *qtime);
+int 	Com_RealTime(Qtime *qtime);
 qbool Com_Insafemode(void);
 void 	Com_Runserverpacket(Netaddr *evFrom, Bitmsg *buf);
 qbool Com_Isvoiptarget(uint8_t *voipTargets, int voipTargetsSize,
@@ -862,7 +862,7 @@ void 	Sys_snapv3(float *v);
 qbool Sys_RandomBytes(byte *string, int len);
 /* the system console is shown when a dedicated server is running */
 void 	Sys_DisplaySystemConsole(qbool show);
-cpuFeatures_t Sys_GetProcessorFeatures(void);
+CPUfeatures Sys_GetProcessorFeatures(void);
 void 	Sys_SetErrorText(const char *text);
 void 	Sys_SendPacket(int length, const void *data, Netaddr to);
 /* Does NOT parse port numbers, only base addresses. */
@@ -910,7 +910,7 @@ typedef struct nodetype {
 	struct nodetype	**head;			/* highest ranked node in block */
 	int			weight;
 	int			symbol;
-} node_t;
+} Node;
 
 #define HMAX 256	/* Maximum symbol */
 
@@ -918,14 +918,14 @@ typedef struct {
 	int	blocNode;
 	int	blocPtrs;
 
-	node_t	* tree;
-	node_t	* lhead;
-	node_t	* ltail;
-	node_t	* loc[HMAX+1];
-	node_t	** freelist;
+	Node	* tree;
+	Node	* lhead;
+	Node	* ltail;
+	Node	* loc[HMAX+1];
+	Node	** freelist;
 
-	node_t	nodeList[768];
-	node_t	* nodePtrs[768];
+	Node	nodeList[768];
+	Node	* nodePtrs[768];
 } Huff;
 
 typedef struct {
@@ -937,9 +937,9 @@ void Huff_Compress(Bitmsg *buf, int offset);
 void Huff_Decompress(Bitmsg *buf, int offset);
 void Huff_Init(Huffman *huff);
 void Huff_addRef(Huff* huff, byte ch);
-int Huff_Receive(node_t *node, int *ch, byte *fin);
+int Huff_Receive(Node *node, int *ch, byte *fin);
 void Huff_transmit(Huff *huff, int ch, byte *fout);
-void Huff_offsetReceive(node_t *node, int *ch, byte *fin, int *offset);
+void Huff_offsetReceive(Node *node, int *ch, byte *fin, int *offset);
 void Huff_offsetTransmit(Huff *huff, int ch, byte *fout, int *offset);
 void Huff_putBit(int bit, byte *fout, int *offset);
 int Huff_getBit(byte *fout, int *offset);

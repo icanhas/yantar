@@ -31,10 +31,10 @@ static int ttycon_hide = 0;
 static int	TTY_erase;	/* some key codes that the terminal */
 static int	TTY_eof;		/*   may be using; initialised on startup */
 static struct termios TTY_tc;
-static field_t TTY_con;
+static Field TTY_con;
 /* This is a bit of duplicate of the graphical console history
  * but it's safer/more modular to have our own here */
-static field_t ttyEditLines[HISTLEN];
+static Field ttyEditLines[HISTLEN];
 static int hist_current = -1;
 static int hist_count = 0;
 
@@ -124,7 +124,7 @@ Show(void)
 }
 
 static void
-HistAdd(field_t *field)
+HistAdd(Field *field)
 {
 	int i;
 	assert(hist_count <= HISTLEN);
@@ -140,7 +140,7 @@ HistAdd(field_t *field)
 	hist_current = -1;	/* re-init */
 }
 
-static field_t *
+static Field *
 HistPrev(void)
 {
 	int hist_prev;
@@ -155,7 +155,7 @@ HistPrev(void)
 	return &(ttyEditLines[hist_current]);
 }
 
-static field_t *
+static Field *
 HistNext(void)
 {
 	assert(hist_count <= HISTLEN);
@@ -241,7 +241,7 @@ CON_Input(void)
 	static char text[MAX_EDIT_LINE];
 	int	avail;
 	char	key;
-	field_t *history;
+	Field *history;
 
 	if(ttycon_on){
 		avail = read(STDIN_FILENO, &key, 1);

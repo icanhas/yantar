@@ -388,7 +388,7 @@ SCR_Init(void)
 
 /* SCR_DrawScreenField: This will be called twice if rendering in stereo mode */
 void
-SCR_DrawScreenField(stereoFrame_t stereoFrame)
+SCR_DrawScreenField(Stereoframe stereoFrame)
 {
 	qbool uiFullscreen;
 

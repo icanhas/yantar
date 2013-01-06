@@ -83,7 +83,7 @@ typedef enum {
 	GT_CTF,		/* capture the flag */
 	GT_1FCTF,	/* one-flag CTF */
 	GT_MAX_GAME_TYPE
-} gametype_t;
+} Gametype;
 
 typedef struct levelitem_s {
 	int	number;		/* number of the level item */
@@ -960,7 +960,7 @@ BotFindEntityForLevelItem(levelitem_t *li)
  * Changes Globals:		-
  * =========================================================================== */
 
-/* NOTE: enum entityType_t in bg/public.h */
+/* NOTE: enum Enttype in bg/public.h */
 #define ET_ITEM 2
 
 void

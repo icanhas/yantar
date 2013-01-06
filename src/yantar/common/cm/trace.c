@@ -69,7 +69,7 @@ void
 CM_TestBoxInBrush(traceWork_t *tw, cbrush_t *brush)
 {
 	int i;
-	cplane_t	*plane;
+	Cplane	*plane;
 	float		dist;
 	float		d1;
 	cbrushside_t *side;
@@ -265,7 +265,7 @@ CM_TestBoundingBoxInCapsule(traceWork_t *tw, Cliphandle model)
 {
 	Vec3 mins, maxs, offset, size[2];
 	Cliphandle h;
-	cmodel_t *cmod;
+	Cmodel *cmod;
 	int i;
 
 	/* mins maxs of the capsule */
@@ -357,7 +357,7 @@ void
 CM_TraceThroughBrush(traceWork_t *tw, cbrush_t *brush)
 {
 	int i;
-	cplane_t	*plane, *clipplane;
+	Cplane	*plane, *clipplane;
 	float		dist;
 	float		enterFrac, leaveFrac;
 	float		d1, d2;
@@ -830,7 +830,7 @@ CM_TraceBoundingBoxThroughCapsule(traceWork_t *tw, Cliphandle model)
 {
 	Vec3 mins, maxs, offset, size[2];
 	Cliphandle h;
-	cmodel_t *cmod;
+	Cmodel *cmod;
 	int i;
 
 	/* mins maxs of the capsule */
@@ -869,7 +869,7 @@ CM_TraceThroughTree(traceWork_t *tw, int num, float p1f, float p2f, Vec3 p1,
 		    Vec3 p2)
 {
 	cNode_t *node;
-	cplane_t        *plane;
+	Cplane        *plane;
 	float	t1, t2, offset;
 	float	frac, frac2;
 	float	idist;
@@ -974,7 +974,7 @@ CM_Trace(Trace *results, const Vec3 start, const Vec3 end, Vec3 mins,
 	int i;
 	traceWork_t	tw;
 	Vec3 offset;
-	cmodel_t	*cmod;
+	Cmodel	*cmod;
 
 	cmod = CM_ClipHandleToModel(model);
 

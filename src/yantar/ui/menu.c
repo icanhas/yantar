@@ -109,7 +109,7 @@ ErrorMessage_Key(int key)
 static void
 Main_MenuDraw(void)
 {
-	refdef_t	refdef;
+	Refdef	refdef;
 	float		x, y, w, h;
 	Vec4		color = {0.5, 0, 0.5, 0.8};
 

@@ -12,7 +12,7 @@
 typedef struct uiClientState_t	uiClientState_t;
 
 struct uiClientState_t {
-	connstate_t	connState;
+	Connstate	connState;
 	int		connectPacketCount;
 	int		clientNum;
 	char		servername[MAX_STRING_CHARS];

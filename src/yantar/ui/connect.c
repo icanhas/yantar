@@ -13,7 +13,7 @@
 qbool passwordNeeded = qtrue;
 menufield_s passwordField;
 
-static connstate_t lastConnState;
+static Connstate lastConnState;
 static char lastLoadingText[MAX_INFO_VALUE];
 
 static void

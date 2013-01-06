@@ -18,7 +18,7 @@
  * Only a single entry point:
  *
  * srfGridMesh_t *R_SubdividePatchToGrid( int width, int height,
- *                                                              drawVert_t points[MAX_PATCH_SIZE*MAX_PATCH_SIZE] ) {
+ *                                                              Drawvert points[MAX_PATCH_SIZE*MAX_PATCH_SIZE] ) {
  *
  */
 
@@ -27,7 +27,7 @@
  * LerpDrawVert
  */
 static void
-LerpDrawVert(drawVert_t *a, drawVert_t *b, drawVert_t *out)
+LerpDrawVert(Drawvert *a, Drawvert *b, Drawvert *out)
 {
 	out->xyz[0] = 0.5f * (a->xyz[0] + b->xyz[0]);
 	out->xyz[1] = 0.5f * (a->xyz[1] + b->xyz[1]);
@@ -49,10 +49,10 @@ LerpDrawVert(drawVert_t *a, drawVert_t *b, drawVert_t *out)
  * Transpose
  */
 static void
-Transpose(int width, int height, drawVert_t ctrl[MAX_GRID_SIZE][MAX_GRID_SIZE])
+Transpose(int width, int height, Drawvert ctrl[MAX_GRID_SIZE][MAX_GRID_SIZE])
 {
 	int i, j;
-	drawVert_t temp;
+	Drawvert temp;
 
 	if(width > height){
 		for(i = 0; i < height; i++)
@@ -91,7 +91,7 @@ Transpose(int width, int height, drawVert_t ctrl[MAX_GRID_SIZE][MAX_GRID_SIZE])
  * Handles all the complicated wrapping and degenerate cases
  */
 static void
-MakeMeshNormals(int width, int height, drawVert_t ctrl[MAX_GRID_SIZE][MAX_GRID_SIZE])
+MakeMeshNormals(int width, int height, Drawvert ctrl[MAX_GRID_SIZE][MAX_GRID_SIZE])
 {
 	int i, j, k, dist;
 	Vec3	normal;
@@ -100,7 +100,7 @@ MakeMeshNormals(int width, int height, drawVert_t ctrl[MAX_GRID_SIZE][MAX_GRID_S
 	Vec3	base;
 	Vec3	delta;
 	int	x, y;
-	drawVert_t      *dv;
+	Drawvert      *dv;
 	Vec3	around[8], temp;
 	qbool good[8];
 	qbool wrapWidth, wrapHeight;
@@ -199,10 +199,10 @@ MakeMeshNormals(int width, int height, drawVert_t ctrl[MAX_GRID_SIZE][MAX_GRID_S
  * InvertCtrl
  */
 static void
-InvertCtrl(int width, int height, drawVert_t ctrl[MAX_GRID_SIZE][MAX_GRID_SIZE])
+InvertCtrl(int width, int height, Drawvert ctrl[MAX_GRID_SIZE][MAX_GRID_SIZE])
 {
 	int i, j;
-	drawVert_t temp;
+	Drawvert temp;
 
 	for(i = 0; i < height; i++)
 		for(j = 0; j < width/2; j++){
@@ -236,11 +236,11 @@ InvertErrorTable(float errorTable[2][MAX_GRID_SIZE], int width, int height)
  * PutPointsOnCurve
  */
 static void
-PutPointsOnCurve(drawVert_t ctrl[MAX_GRID_SIZE][MAX_GRID_SIZE],
+PutPointsOnCurve(Drawvert ctrl[MAX_GRID_SIZE][MAX_GRID_SIZE],
 		 int width, int height)
 {
 	int i, j;
-	drawVert_t prev, next;
+	Drawvert prev, next;
 
 	for(i = 0; i < width; i++)
 		for(j = 1; j < height; j += 2){
@@ -263,15 +263,15 @@ PutPointsOnCurve(drawVert_t ctrl[MAX_GRID_SIZE][MAX_GRID_SIZE],
  */
 srfGridMesh_t *
 R_CreateSurfaceGridMesh(int width, int height,
-			drawVert_t ctrl[MAX_GRID_SIZE][MAX_GRID_SIZE], float errorTable[2][MAX_GRID_SIZE])
+			Drawvert ctrl[MAX_GRID_SIZE][MAX_GRID_SIZE], float errorTable[2][MAX_GRID_SIZE])
 {
 	int i, j, size;
-	drawVert_t *vert;
+	Drawvert *vert;
 	Vec3 tmpVec;
 	srfGridMesh_t *grid;
 
 	/* copy the results out to a grid */
-	size = (width * height - 1) * sizeof(drawVert_t) + sizeof(*grid);
+	size = (width * height - 1) * sizeof(Drawvert) + sizeof(*grid);
 
 #ifdef PATCH_STITCHING
 	grid = /*ri.Hunk_Alloc*/ ri.Malloc(size);
@@ -332,7 +332,7 @@ R_FreeSurfaceGridMesh(srfGridMesh_t *grid)
  */
 srfGridMesh_t *
 R_SubdividePatchToGrid(int width, int height,
-		       drawVert_t points[MAX_PATCH_SIZE*MAX_PATCH_SIZE])
+		       Drawvert points[MAX_PATCH_SIZE*MAX_PATCH_SIZE])
 {
 	int i, j, k, l;
 	drawVert_t_cleared(prev);
@@ -341,7 +341,7 @@ R_SubdividePatchToGrid(int width, int height,
 	float len, maxLen;
 	int dir;
 	int t;
-	drawVert_t	ctrl[MAX_GRID_SIZE][MAX_GRID_SIZE];
+	Drawvert	ctrl[MAX_GRID_SIZE][MAX_GRID_SIZE];
 	float		errorTable[2][MAX_GRID_SIZE];
 
 	for(i = 0; i < width; i++)
@@ -493,7 +493,7 @@ R_GridInsertColumn(srfGridMesh_t *grid, int column, int row, Vec3 point, float l
 {
 	int i, j;
 	int width, height, oldwidth;
-	drawVert_t	ctrl[MAX_GRID_SIZE][MAX_GRID_SIZE];
+	Drawvert	ctrl[MAX_GRID_SIZE][MAX_GRID_SIZE];
 	float	errorTable[2][MAX_GRID_SIZE];
 	float	lodRadius;
 	Vec3	lodOrigin;
@@ -546,7 +546,7 @@ R_GridInsertRow(srfGridMesh_t *grid, int row, int column, Vec3 point, float lode
 {
 	int i, j;
 	int width, height, oldheight;
-	drawVert_t	ctrl[MAX_GRID_SIZE][MAX_GRID_SIZE];
+	Drawvert	ctrl[MAX_GRID_SIZE][MAX_GRID_SIZE];
 	float	errorTable[2][MAX_GRID_SIZE];
 	float	lodRadius;
 	Vec3	lodOrigin;

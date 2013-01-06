@@ -50,7 +50,7 @@ typedef struct {
 
 	/* !!! below here is VM_MAGIC_VER2 !!! */
 	int jtrgLength;	/* number of jump table targets */
-} vmHeader_t;
+} Vmheader;
 
 /*
  *
@@ -78,23 +78,23 @@ typedef struct md3Frame_s {
 	Vec3	localOrigin;
 	float	radius;
 	char	name[16];
-} md3Frame_t;
+} MD3frame;
 
 typedef struct md3Tag_s {
 	char	name[MAX_QPATH];	/* tag name */
 	Vec3	origin;
 	Vec3	axis[3];
-} md3Tag_t;
+} MD3tag;
 
 /*
-** md3Surface_t
+** MD3surf
 **
 ** CHUNK			SIZE
-** header			sizeof( md3Surface_t )
-** shaders			sizeof( md3Shader_t ) * numShaders
-** triangles[0]		sizeof( md3Triangle_t ) * numTriangles
+** header			sizeof( MD3surf )
+** shaders			sizeof( MD3shader ) * numShaders
+** triangles[0]		sizeof( MD3tri ) * numTriangles
 ** st				sizeof( md3St_t ) * numVerts
-** XyzNormals		sizeof( md3XyzNormal_t ) * numVerts * numFrames
+** XyzNormals		sizeof( MD3xyznorm ) * numVerts * numFrames
 */
 typedef struct {
 	int	ident;	/*  */
@@ -110,21 +110,21 @@ typedef struct {
 	int	numTriangles;
 	int	ofsTriangles;
 
-	int	ofsShaders;	/* offset from start of md3Surface_t */
+	int	ofsShaders;	/* offset from start of MD3surf */
 	int	ofsSt;		/* texture coords are common for all frames */
 	int	ofsXyzNormals;	/* numVerts * numFrames */
 
 	int	ofsEnd;	/* next surface follows */
-} md3Surface_t;
+} MD3surf;
 
 typedef struct {
 	char	name[MAX_QPATH];
 	int	shaderIndex;	/* for in-game use */
-} md3Shader_t;
+} MD3shader;
 
 typedef struct {
 	int indexes[3];
-} md3Triangle_t;
+} MD3tri;
 
 typedef struct {
 	float st[2];
@@ -133,7 +133,7 @@ typedef struct {
 typedef struct {
 	short	xyz[3];
 	short	normal;
-} md3XyzNormal_t;
+} MD3xyznorm;
 
 typedef struct {
 	int	ident;
@@ -154,7 +154,7 @@ typedef struct {
 	int	ofsSurfaces;	/* first surface, others follow */
 
 	int	ofsEnd;	/* end of file */
-} md3Header_t;
+} MD3header;
 
 /*
  *
@@ -304,7 +304,7 @@ typedef struct {
 
 typedef struct {
 	int fileofs, filelen;
-} lump_t;
+} Lump;
 
 #define LUMP_ENTITIES		0
 #define LUMP_SHADERS		1
@@ -329,34 +329,34 @@ typedef struct {
 	int	ident;
 	int	version;
 
-	lump_t	lumps[HEADER_LUMPS];
-} dheader_t;
+	Lump	lumps[HEADER_LUMPS];
+} Dheader;
 
 typedef struct {
 	float	mins[3], maxs[3];
 	int	firstSurface, numSurfaces;
 	int	firstBrush, numBrushes;
-} dmodel_t;
+} Dmodel;
 
 typedef struct {
 	char	shader[MAX_QPATH];
 	int	surfaceFlags;
 	int	contentFlags;
-} dmaterial_t;
+} Dmaterial;
 
 /* planes x^1 is allways the opposite of plane x */
 
 typedef struct {
 	float	normal[3];
 	float	dist;
-} dplane_t;
+} Dplane;
 
 typedef struct {
 	int	planeNum;
 	int	children[2];	/* negative numbers are -(leafs+1), not nodes */
 	int	mins[3];	/* for frustom culling */
 	int	maxs[3];
-} dnode_t;
+} Dnode;
 
 typedef struct {
 	int	cluster;	/* -1 = opaque cluster (do I still store these?) */
@@ -370,24 +370,24 @@ typedef struct {
 
 	int	firstLeafBrush;
 	int	numLeafBrushes;
-} dleaf_t;
+} Dleaf;
 
 typedef struct {
 	int	planeNum;	/* positive plane side faces out of the leaf */
 	int	shaderNum;
-} dbrushside_t;
+} Dbrushside;
 
 typedef struct {
 	int	firstSide;
 	int	numSides;
 	int	shaderNum;	/* the shader that determines the contents flags */
-} dbrush_t;
+} Dbrush;
 
 typedef struct {
 	char	shader[MAX_QPATH];
 	int	brushNum;
 	int	visibleSide;	/* the brush side that ray tests need to clip against (-1 == none) */
-} dfog_t;
+} Dfog;
 
 typedef struct {
 	Vec3	xyz;
@@ -395,9 +395,9 @@ typedef struct {
 	float	lightmap[2];
 	Vec3	normal;
 	byte	color[4];
-} drawVert_t;
+} Drawvert;
 
-#define drawVert_t_cleared(x) drawVert_t (x) = \
+#define drawVert_t_cleared(x) Drawvert (x) = \
 {{0, 0, 0}, {0, 0}, {0, 0}, {0, 0, 0}, {0, 0, 0, 0}}
 
 typedef enum {
@@ -406,7 +406,7 @@ typedef enum {
 	MST_PATCH,
 	MST_TRIANGLE_SOUP,
 	MST_FLARE
-} mapSurfaceType_t;
+} Mapsurftype;
 
 typedef struct {
 	int	shaderNum;
@@ -428,7 +428,7 @@ typedef struct {
 
 	int	patchWidth;
 	int	patchHeight;
-} dsurface_t;
+} Dsurf;
 
 
 #endif

@@ -285,7 +285,7 @@ SV_AddEntitiesVisibleFromPoint(Vec3 origin, clientSnapshot_t *frame,
 {
 	int e, i;
 	Sharedent	*ent;
-	Svent		*svEnt;
+	Svent				*svEnt;
 	int	l;
 	int	clientarea, clientcluster;
 	int	leafnum;
@@ -425,7 +425,7 @@ SV_BuildClientSnapshot(Client *client)
 	int i;
 	Sharedent	*ent;
 	Entstate	*state;
-	Svent		*svEnt;
+	Svent				*svEnt;
 	Sharedent	*clent;
 	int clientNum;
 	Playerstate	*ps;

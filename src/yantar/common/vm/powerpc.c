@@ -1998,7 +1998,7 @@ VM_Destroy_Compiled(Vm *self)
 }
 
 void
-VM_Compile(Vm *vm, vmHeader_t *header)
+VM_Compile(Vm *vm, Vmheader *header)
 {
 	long int pc = 0;
 	unsigned long int	i_count;

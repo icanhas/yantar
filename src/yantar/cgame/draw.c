@@ -35,7 +35,7 @@ CG_Text_Width(const char *text, float scale, int limit)
 {
 	int count,len;
 	float	out;
-	glyphInfo_t *glyph;
+	Glyphinfo *glyph;
 	float	useScale;
 /* FIXME: see ui_main.c, same problem
  * const unsigned char *s = text; */
@@ -72,7 +72,7 @@ CG_Text_Height(const char *text, float scale, int limit)
 {
 	int len, count;
 	float	max;
-	glyphInfo_t *glyph;
+	Glyphinfo *glyph;
 	float	useScale;
 /* TTimo: FIXME
  * const unsigned char *s = text; */
@@ -124,7 +124,7 @@ CG_Text_Paint(float x, float y, float scale, Vec4 color, const char *text,
 {
 	int len, count;
 	Vec4	newColor;
-	glyphInfo_t *glyph;
+	Glyphinfo *glyph;
 	float	useScale;
 	Fontinfo *font = &cgDC.Assets.textFont;
 	if(scale <= cg_smallFont.value)
@@ -260,7 +260,7 @@ CG_Draw3DModel(float x, float y, float w, float h, Handle model,
 	       Handle skin, Vec3 origin,
 	       Vec3 angles)
 {
-	refdef_t refdef;
+	Refdef refdef;
 	Refent ent;
 
 	if(!cg_draw3dIcons.integer || !cg_drawIcons.integer)
@@ -959,7 +959,7 @@ CG_DrawTeamOverlay(float y, qbool right, qbool upper)
 }
 
 static void
-CG_DrawUpperRight(stereoFrame_t stereoFrame)
+CG_DrawUpperRight(Stereoframe stereoFrame)
 {
 	float y;
 
@@ -2356,7 +2356,7 @@ CG_DrawTimedMenus(void)
 #endif
 
 static void
-CG_Draw2D(stereoFrame_t stereoFrame)
+CG_Draw2D(Stereoframe stereoFrame)
 {
 #ifdef MISSIONPACK
 	if(cgs.orderPending && cg.time > cgs.orderTime)
@@ -2461,7 +2461,7 @@ CG_DrawTourneyScoreboard(void)
  * Perform all drawing needed to completely fill the screen
  */
 void
-CG_DrawActive(stereoFrame_t stereoView)
+CG_DrawActive(Stereoframe stereoView)
 {
 	/* optionally draw the info screen instead */
 	if(!cg.snap){

@@ -111,7 +111,7 @@ typedef enum {
 	BSSSEG,		/* 0 filled */
 	JTRGSEG,	/* pseudo-segment that contains only jump table targets */
 	NUM_SEGMENTS
-} segmentName_t;
+} Segname;
 
 #define MAX_IMAGE 0x400000
 
@@ -119,32 +119,32 @@ typedef struct {
 	byte	image[MAX_IMAGE];
 	int	imageUsed;
 	int	segmentBase;	/* only valid on second pass */
-} segment_t;
+} Seg;
 
 typedef struct symbol_s {
 	struct  symbol_s	*next;
 	int			hash;
-	segment_t		*segment;
+	Seg		*segment;
 	char			*name;
 	int			value;
-} symbol_t;
+} Sym;
 
 typedef struct hashchain_s {
 	void			*data;
 	struct hashchain_s	*next;
-} hashchain_t;
+} Hashchain;
 
 typedef struct hashtable_s {
 	int		buckets;
-	hashchain_t	**table;
-} hashtable_t;
+	Hashchain	**table;
+} Hashtable;
 
 int symtablelen = DEFAULT_HASHTABLE_SIZE;
-hashtable_t *symtable;
-hashtable_t	*optable;
+Hashtable *symtable;
+Hashtable	*optable;
 
-segment_t	segment[NUM_SEGMENTS];
-segment_t	*currentSegment;
+Seg	segment[NUM_SEGMENTS];
+Seg	*currentSegment;
 
 int	passNumber;
 
@@ -155,13 +155,13 @@ typedef struct options_s {
 	qbool		verbose;
 	qbool		writeMapFile;
 	qbool		vq3compat;
-} options_t;
+} Options;
 
-options_t options = { 0 };
+Options options = { 0 };
 
 
-symbol_t *symbols;
-symbol_t *lastSymbol = 0;	/* Most recent symbol defined. */
+Sym *symbols;
+Sym *lastSymbol = 0;	/* Most recent symbol defined. */
 
 
 #define MAX_ASM_FILES 256
@@ -193,9 +193,9 @@ int instructionCount;
 typedef struct {
 	char	*name;
 	int	opcode;
-} sourceOps_t;
+} Sourceops;
 
-sourceOps_t sourceOps[] = {
+Sourceops sourceOps[] = {
 #include "opstrings.h"
 };
 
@@ -226,19 +226,19 @@ report(const char *fmt, ...)
 /* The chain-and-bucket hash table.  -PH */
 
 static void
-hashtable_init(hashtable_t *htab, int buckets)
+hashtable_init(Hashtable *htab, int buckets)
 {
 	htab->buckets	= buckets;
 	htab->table	= calloc(htab->buckets, sizeof(*(htab->table)));
 	return;
 }
 
-static hashtable_t *
+static Hashtable *
 hashtable_new(int buckets)
 {
-	hashtable_t *htab;
+	Hashtable *htab;
 
-	htab = malloc(sizeof(hashtable_t));
+	htab = malloc(sizeof(Hashtable));
 	hashtable_init(htab, buckets);
 	return htab;
 }
@@ -246,9 +246,9 @@ hashtable_new(int buckets)
 /* No destroy/destructor.  No need. */
 
 static void
-hashtable_add(hashtable_t *htab, int hashvalue, void *datum)
+hashtable_add(Hashtable *htab, int hashvalue, void *datum)
 {
-	hashchain_t *hc, **hb;
+	Hashchain *hc, **hb;
 
 	hashvalue = (abs(hashvalue) % htab->buckets);
 	hb = &(htab->table[hashvalue]);
@@ -267,20 +267,20 @@ hashtable_add(hashtable_t *htab, int hashvalue, void *datum)
 	return;
 }
 
-static hashchain_t *
-hashtable_get(hashtable_t *htab, int hashvalue)
+static Hashchain *
+hashtable_get(Hashtable *htab, int hashvalue)
 {
 	hashvalue = (abs(hashvalue) % htab->buckets);
 	return (htab->table[hashvalue]);
 }
 
 static void
-hashtable_stats(hashtable_t *htab)
+hashtable_stats(Hashtable *htab)
 {
 	int len, empties, longest, nodes;
 	int i;
 	float meanlen;
-	hashchain_t *hc;
+	Hashchain *hc;
 
 	report("Stats for hashtable %08X", htab);
 	empties = 0;
@@ -316,10 +316,10 @@ hashtable_stats(hashtable_t *htab)
 /* Check if symbol already exists. */
 /* Returns 0 if symbol does NOT already exist, non-zero otherwise. */
 static int
-hashtable_symbol_exists(hashtable_t *htab, int hash, char *sym)
+hashtable_symbol_exists(Hashtable *htab, int hash, char *sym)
 {
-	hashchain_t	*hc;
-	symbol_t	*s;
+	Hashchain	*hc;
+	Sym	*s;
 
 	hash	= (abs(hash) % htab->buckets);
 	hc	= htab->table[hash];
@@ -327,7 +327,7 @@ hashtable_symbol_exists(hashtable_t *htab, int hash, char *sym)
 		/* Empty chain means this symbol has not yet been defined. */
 		return 0;
 	for(; hc; hc = hc->next){
-		s = (symbol_t*)hc->data;
+		s = (Sym*)hc->data;
 /*      if ((hash == s->hash) && (strcmp(sym, s->name) == 0)) */
 /* We _already_ know the hash is the same.  That's why we're probing! */
 		if(strcmp(sym, s->name) == 0)
@@ -341,10 +341,10 @@ hashtable_symbol_exists(hashtable_t *htab, int hash, char *sym)
 static int
 symlist_cmp(const void *e1, const void *e2)
 {
-	const symbol_t *a, *b;
+	const Sym *a, *b;
 
-	a	= *(const symbol_t**)e1;
-	b	= *(const symbol_t**)e2;
+	a	= *(const Sym**)e1;
+	b	= *(const Sym**)e2;
 /* crumb("Symbol comparison (1) %d  to  (2) %d\n", a->value, b->value); */
 	return (a->value - b->value);
 }
@@ -359,8 +359,8 @@ static void
 sort_symbols()
 {
 	int i, elems;
-	symbol_t *s;
-	symbol_t **symlist;
+	Sym *s;
+	Sym **symlist;
 
 	if(!symbols)
 		return;
@@ -368,11 +368,11 @@ sort_symbols()
 /* crumb("sort_symbols: Constructing symlist array\n"); */
 	for(elems = 0, s = symbols; s; s = s->next, elems++) /* nop */;
 
-	symlist = malloc(elems * sizeof(symbol_t*));
+	symlist = malloc(elems * sizeof(Sym*));
 	for(i = 0, s = symbols; s; s = s->next, i++)
 		symlist[i] = s;
 	/* crumbf("sort_symbols: Quick-sorting %d symbols\n", elems); */
-	qsort(symlist, elems, sizeof(symbol_t*), symlist_cmp);
+	qsort(symlist, elems, sizeof(Sym*), symlist_cmp);
 /* crumbf("sort_symbols: Reconstructing symbols list\n"); */
 	s = symbols = symlist[0];
 	for(i = 1; i < elems; i++){
@@ -464,7 +464,7 @@ CodeError(char *fmt, ...)
 }
 
 static void
-EmitByte(segment_t *seg, int v)
+EmitByte(Seg *seg, int v)
 {
 	if(seg->imageUsed >= MAX_IMAGE)
 		Error("MAX_IMAGE");
@@ -473,7 +473,7 @@ EmitByte(segment_t *seg, int v)
 }
 
 static void
-EmitInt(segment_t *seg, int v)
+EmitInt(Seg *seg, int v)
 {
 	if(seg->imageUsed >= MAX_IMAGE - 4)
 		Error("MAX_IMAGE");
@@ -491,7 +491,7 @@ static void
 DefineSymbol(char *sym, int value)
 {
 	/* Hand optimization by PhaethonH */
-	symbol_t	*s;
+	Sym	*s;
 	char	expanded[MAX_LINE_LENGTH];
 	int	hash;
 
@@ -542,10 +542,10 @@ DefineSymbol(char *sym, int value)
 static int
 LookupSymbol(char *sym)
 {
-	symbol_t	*s;
+	Sym	*s;
 	char	expanded[MAX_LINE_LENGTH];
 	int	hash;
-	hashchain_t *hc;
+	Hashchain *hc;
 
 	if(passNumber == 0)
 		return 0;
@@ -565,7 +565,7 @@ LookupSymbol(char *sym)
  * -PH
  */
 	for(hc = hashtable_get(symtable, hash); hc; hc = hc->next){
-		s = (symbol_t*)hc->data;	/* ugly typecasting, but it's fast! */
+		s = (Sym*)hc->data;	/* ugly typecasting, but it's fast! */
 		if((hash == s->hash) && !strcmp(sym, s->name))
 			return s->segment->segmentBase + s->value;
 	}
@@ -726,7 +726,7 @@ ParseExpression(void)
  * aren't read only as in some architectures.
  */
 static void
-HackToSegment(segmentName_t seg)
+HackToSegment(Segname seg)
 {
 	if(currentSegment == &segment[seg])
 		return;
@@ -1070,8 +1070,8 @@ ASM(LABEL)
 static void
 AssembleLine(void)
 {
-	hashchain_t	*hc;
-	sourceOps_t	*op;
+	Hashchain	*hc;
+	Sourceops	*op;
 	int i;
 	int hash;
 
@@ -1087,7 +1087,7 @@ AssembleLine(void)
 	 * Always with the tree :)		 * -PH
 	 */
 	for(hc = hashtable_get(optable, hash); hc; hc = hc->next){
-		op	= (sourceOps_t*)(hc->data);
+		op	= (Sourceops*)(hc->data);
 		i	= op - sourceOps;
 		if((hash == opcodesHash[i]) && (!strcmp(token, op->name))){
 			int opcode;
@@ -1214,7 +1214,7 @@ static void
 WriteMapFile(void)
 {
 	FILE	*f;
-	symbol_t *s;
+	Sym *s;
 	char	imageName[MAX_OS_PATH];
 	int	seg;
 
@@ -1240,7 +1240,7 @@ static void
 WriteVmFile(void)
 {
 	char imageName[MAX_OS_PATH];
-	vmHeader_t	header;
+	Vmheader	header;
 	FILE	*f;
 	int	headerSize;
 
@@ -1272,7 +1272,7 @@ WriteVmFile(void)
 		/* Don't write the VM_MAGIC_VER2 bits when maintaining 1.32b compatibility.
 		 * (I know this isn't strictly correct due to padding, but then platforms
 		 * that pad wouldn't be able to write a correct header anyway).  Note: if
-		 * vmHeader_t changes, this needs to be adjusted too. */
+		 * Vmheader changes, this needs to be adjusted too. */
 		headerSize = sizeof(header) - sizeof(header.jtrgLength);
 	}
 
@@ -1292,7 +1292,7 @@ WriteVmFile(void)
 		int i;
 
 		/* byte swap the header */
-		for(i = 0; i < sizeof(vmHeader_t) / 4; i++)
+		for(i = 0; i < sizeof(Vmheader) / 4; i++)
 			((int*)&header)[i] = LittleLong(((int*)&header)[i]);
 	}
 #endif
@@ -1509,7 +1509,7 @@ main(int argc, char **argv)
 	Assemble();
 
 	{
-		symbol_t *s;
+		Sym *s;
 
 		/* nop */
 		for ( i = 0, s = symbols ; s ; s = s->next, i++ )

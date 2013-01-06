@@ -32,19 +32,19 @@ static int old_com_frameTime;
  * at the same time.
  */
 
-static kbutton_t	left, right, forward, back;
-static kbutton_t	lookup, lookdown, moveleft, moveright;
-static kbutton_t	strafe, speed, brake;
-static kbutton_t	up, down;
-static kbutton_t	rollleft, rollright;
+static Kbutton	left, right, forward, back;
+static Kbutton	lookup, lookdown, moveleft, moveright;
+static Kbutton	strafe, speed, brake;
+static Kbutton	up, down;
+static Kbutton	rollleft, rollright;
 #ifdef USE_VOIP
-kbutton_t voiprecord;
+Kbutton voiprecord;
 #endif
-kbutton_t buttons[16];
+Kbutton buttons[16];
 qbool mlooking;
 
 static void
-keydown(kbutton_t *b)
+keydown(Kbutton *b)
 {
 	int k;
 	char *c;
@@ -78,7 +78,7 @@ keydown(kbutton_t *b)
 }
 
 static void
-keyup(kbutton_t *b)
+keyup(Kbutton *b)
 {
 	int k;
 	char *c;
@@ -118,7 +118,7 @@ keyup(kbutton_t *b)
 
 /* Returns the fraction of the frame that the key was down */
 static float
-keystate(kbutton_t *key)
+keystate(Kbutton *key)
 {
 	float val;
 	int msec;

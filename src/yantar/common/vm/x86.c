@@ -1032,7 +1032,7 @@ ConstOptimize(Vm *vm, int callProcOfsSyscall)
  * VM_Compile
  */
 void
-VM_Compile(Vm *vm, vmHeader_t *header)
+VM_Compile(Vm *vm, Vmheader *header)
 {
 	int	op;
 	int	maxLength;

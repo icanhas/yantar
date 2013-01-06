@@ -201,7 +201,7 @@ trap_R_AddRefEntityToScene(const Refent *re)
 }
 
 void
-trap_R_AddPolyToScene(Handle hShader, int numVerts, const polyVert_t *verts)
+trap_R_AddPolyToScene(Handle hShader, int numVerts, const Polyvert *verts)
 {
 	syscall(UI_R_ADDPOLYTOSCENE, hShader, numVerts, verts);
 }
@@ -215,7 +215,7 @@ trap_R_AddLightToScene(const Vec3 org, float intensity, float r, float g,
 }
 
 void
-trap_R_RenderScene(const refdef_t *fd)
+trap_R_RenderScene(const Refdef *fd)
 {
 	syscall(UI_R_RENDERSCENE, fd);
 }
@@ -475,7 +475,7 @@ trap_MemoryRemaining(void)
 }
 
 int
-trap_RealTime(qtime_t *qtime)
+trap_RealTime(Qtime *qtime)
 {
 	return syscall(UI_REAL_TIME, qtime);
 }

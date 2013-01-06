@@ -319,7 +319,7 @@ typedef struct {
 	void (*drawTopBottom)(float x, float y, float w, float h, float size);
 	void (*clearScene)(void);
 	void (*addRefEntityToScene)(const Refent *re);
-	void (*renderScene)(const refdef_t *fd);
+	void (*renderScene)(const Refdef *fd);
 	void (*registerFont)(const char *pFontname, int pointSize,
 			     Fontinfo *font);
 	void (*ownerDrawItem)(float x, float y, float w, float h, float text_x,

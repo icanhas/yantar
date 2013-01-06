@@ -64,7 +64,7 @@ typedef struct {
 	int		nextFrameTime;		/* when time > nextFrameTime, process world */
 	struct cmodel_s *models[MAX_MODELS];
 	char		*configstrings[MAX_CONFIGSTRINGS];
-	Svent		svEntities[MAX_GENTITIES];
+	Svent				svEntities[MAX_GENTITIES];
 
 	char		*entityParsePoint;	/* used during game VM init */
 

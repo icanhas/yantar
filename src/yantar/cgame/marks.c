@@ -163,8 +163,8 @@ CG_ImpactMark(Handle markShader, const Vec3 origin, const Vec3 dir,
 	colors[3]	= alpha * 255;
 
 	for(i = 0, mf = markFragments; i < numFragments; i++, mf++){
-		polyVert_t	*v;
-		polyVert_t	verts[MAX_VERTS_ON_POLY];
+		Polyvert	*v;
+		Polyvert	verts[MAX_VERTS_ON_POLY];
 		markPoly_t *mark;
 
 		/* we have an upper limit on the complexity of polygons

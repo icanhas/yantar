@@ -48,7 +48,7 @@ typedef struct gclient_s gClient;
 
 struct gentity_s {
 	Entstate	s;	/* communicated by server to clients */
-	entityShared_t	r;	/* shared by both the server system and game */
+	Entshared	r;	/* shared by both the server system and game */
 
 	/* DO NOT MODIFY ANYTHING ABOVE THIS, THE SERVER
 	 * EXPECTS THE FIELDS IN THAT ORDER!
@@ -199,7 +199,7 @@ typedef struct {
  * time and reading them back at connection time.  Anything added here
  * MUST be dealt with in G_InitSessionData() / G_ReadSessionData() / G_WriteSessionData() */
 typedef struct {
-	team_t			sessionTeam;
+	Team			sessionTeam;
 	int			spectatorNum;		/* for determining next-in-line to play */
 	spectatorState_t	spectatorState;
 	int			spectatorClient;	/* for chasecam and follow mode */
@@ -433,7 +433,7 @@ void	SaveRegisteredItems(void);
  */
 int	G_ModelIndex(char *name);
 int	G_SoundIndex(char *name);
-void	G_TeamCommand(team_t team, char *cmd);
+void	G_TeamCommand(Team team, char *cmd);
 void	G_KillBox(Gentity *ent);
 Gentity*	G_Find(Gentity *from, int fieldofs, const char *match);
 Gentity*	G_PickTarget(char *targetname);
@@ -534,9 +534,9 @@ void	Weapon_HookThink(Gentity *ent);
 /*
  * client.c
  */
-team_t	TeamCount(int ignoreClientNum, int team);
+Team	TeamCount(int ignoreClientNum, int team);
 int	TeamLeader(int team);
-team_t	PickTeam(int ignoreClientNum);
+Team	PickTeam(int ignoreClientNum);
 void	SetClientViewAngle(Gentity *ent, Vec3 angle);
 Gentity*	SelectSpawnPoint(Vec3 avoidPoint, Vec3 origin, Vec3 angles,
 		qbool isbot);
@@ -729,7 +729,7 @@ extern Vmcvar g_proxMineTimeout;
 void	trap_Print(const char *fmt);
 void	trap_Error(const char *fmt) __attribute__((noreturn));
 int	trap_Milliseconds(void);
-int	trap_RealTime(qtime_t *qtime);
+int	trap_RealTime(Qtime *qtime);
 int	trap_Argc(void);
 void	trap_Argv(int n, char *buffer, int bufferLength);
 void	trap_Args(char *buffer, int bufferLength);
@@ -740,7 +740,7 @@ void	trap_FS_Write(const void *buffer, int len, Fhandle f);
 void	trap_FS_FCloseFile(Fhandle f);
 int	trap_FS_GetFileList(const char *path, const char *extension,
 		char *listbuf, int bufsize);
-int	trap_FS_Seek(Fhandle f, long offset, int origin);	/* fsOrigin_t */
+int	trap_FS_Seek(Fhandle f, long offset, int origin);	/* Fsorigin */
 void	trap_SendConsoleCommand(int exec_when, const char *text);
 void	trap_Cvar_Register(Vmcvar *cvar, const char *var_name,
 		const char *value, int flags);

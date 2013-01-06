@@ -257,7 +257,7 @@ CON_Input(void)
 			CON_HistNext();
 			break;
 		}else if(key == VK_TAB){
-			field_t f;
+			Field f;
 
 			Q_strncpyz(f.buffer, qconsole_line,
 				sizeof(f.buffer));

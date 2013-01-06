@@ -109,7 +109,7 @@ typedef struct bsp_trace_s {
 	qbool		startsolid;	/* if true, the initial point was in a solid area */
 	float		fraction;	/* time completed, 1.0 = didn't hit anything */
 	Vec3		endpos;		/* final position */
-	cplane_t	plane;		/* surface normal at impact */
+	Cplane	plane;		/* surface normal at impact */
 	float		exp_dist;	/* expanded plane distance */
 	int		sidenum;	/* number of the brush side hit */
 	bsp_surface_t	surface;	/* the hit point surface */

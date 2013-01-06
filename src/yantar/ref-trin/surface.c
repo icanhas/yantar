@@ -213,7 +213,7 @@ static void
 RB_SurfaceTriangles(srfTriangles_t *srf)
 {
 	int i;
-	drawVert_t	*dv;
+	Drawvert	*dv;
 	float		*xyz, *normal, *texCoords;
 	byte            *color;
 	int		dlightBits;
@@ -603,7 +603,7 @@ VectorArrayNormalize(Vec4 *normals, unsigned int count)
 */
 #if idppc_altivec
 static void
-LerpMeshVertexes_altivec(md3Surface_t *surf, float backlerp)
+LerpMeshVertexes_altivec(MD3surf *surf, float backlerp)
 {
 	short	*oldXyz, *newXyz, *oldNormals, *newNormals;
 	float	*outXyz, *outNormal;
@@ -741,7 +741,7 @@ LerpMeshVertexes_altivec(md3Surface_t *surf, float backlerp)
 #endif
 
 static void
-LerpMeshVertexes_scalar(md3Surface_t *surf, float backlerp)
+LerpMeshVertexes_scalar(MD3surf *surf, float backlerp)
 {
 	short *oldXyz, *newXyz, *oldNormals, *newNormals;
 	float *outXyz, *outNormal;
@@ -846,7 +846,7 @@ LerpMeshVertexes_scalar(md3Surface_t *surf, float backlerp)
 }
 
 static void
-LerpMeshVertexes(md3Surface_t *surf, float backlerp)
+LerpMeshVertexes(MD3surf *surf, float backlerp)
 {
 #if idppc_altivec
 	if(com_altivec->integer){
@@ -863,7 +863,7 @@ LerpMeshVertexes(md3Surface_t *surf, float backlerp)
  * RB_SurfaceMesh
  */
 static void
-RB_SurfaceMesh(md3Surface_t *surface)
+RB_SurfaceMesh(MD3surf *surface)
 {
 	int j;
 	float backlerp;
@@ -1002,7 +1002,7 @@ RB_SurfaceGrid(srfGridMesh_t *cv)
 	float	*texCoords;
 	float	*normal;
 	unsigned char	*color;
-	drawVert_t	*dv;
+	Drawvert	*dv;
 	int rows, irows, vrows;
 	int used;
 	int widthTable[MAX_GRID_SIZE];

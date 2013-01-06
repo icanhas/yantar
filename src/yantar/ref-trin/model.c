@@ -305,18 +305,18 @@ static qbool
 R_LoadMD3(model_t *mod, int lod, void *buffer, const char *mod_name)
 {
 	int i, j;
-	md3Header_t *pinmodel;
-	md3Frame_t *frame;
-	md3Surface_t *surf;
-	md3Shader_t *shader;
-	md3Triangle_t *tri;
+	MD3header *pinmodel;
+	MD3frame *frame;
+	MD3surf *surf;
+	MD3shader *shader;
+	MD3tri *tri;
 	md3St_t *st;
-	md3XyzNormal_t *xyz;
-	md3Tag_t	*tag;
+	MD3xyznorm *xyz;
+	MD3tag	*tag;
 	int	version;
 	int	size;
 
-	pinmodel = (md3Header_t*)buffer;
+	pinmodel = (MD3header*)buffer;
 
 	version = LittleLong (pinmodel->version);
 	if(version != MD3_VERSION){
@@ -348,7 +348,7 @@ R_LoadMD3(model_t *mod, int lod, void *buffer, const char *mod_name)
 	}
 
 	/* swap all the frames */
-	frame = (md3Frame_t*)((byte*)mod->md3[lod] + mod->md3[lod]->ofsFrames);
+	frame = (MD3frame*)((byte*)mod->md3[lod] + mod->md3[lod]->ofsFrames);
 	for(i = 0; i < mod->md3[lod]->numFrames; i++, frame++){
 		frame->radius = LittleFloat(frame->radius);
 		for(j = 0; j < 3; j++){
@@ -359,7 +359,7 @@ R_LoadMD3(model_t *mod, int lod, void *buffer, const char *mod_name)
 	}
 
 	/* swap all the tags */
-	tag = (md3Tag_t*)((byte*)mod->md3[lod] + mod->md3[lod]->ofsTags);
+	tag = (MD3tag*)((byte*)mod->md3[lod] + mod->md3[lod]->ofsTags);
 	for(i = 0; i < mod->md3[lod]->numTags * mod->md3[lod]->numFrames; i++, tag++)
 		for(j = 0; j < 3; j++){
 			tag->origin[j]	= LittleFloat(tag->origin[j]);
@@ -369,7 +369,7 @@ R_LoadMD3(model_t *mod, int lod, void *buffer, const char *mod_name)
 		}
 
 	/* swap all the surfaces */
-	surf = (md3Surface_t*)((byte*)mod->md3[lod] + mod->md3[lod]->ofsSurfaces);
+	surf = (MD3surf*)((byte*)mod->md3[lod] + mod->md3[lod]->ofsSurfaces);
 	for(i = 0; i < mod->md3[lod]->numSurfaces; i++){
 
 		LL(surf->ident);
@@ -411,7 +411,7 @@ R_LoadMD3(model_t *mod, int lod, void *buffer, const char *mod_name)
 		}
 
 		/* register the shaders */
-		shader = (md3Shader_t*)((byte*)surf + surf->ofsShaders);
+		shader = (MD3shader*)((byte*)surf + surf->ofsShaders);
 		for(j = 0; j < surf->numShaders; j++, shader++){
 			material_t *sh;
 
@@ -424,7 +424,7 @@ R_LoadMD3(model_t *mod, int lod, void *buffer, const char *mod_name)
 		}
 
 		/* swap all the triangles */
-		tri = (md3Triangle_t*)((byte*)surf + surf->ofsTriangles);
+		tri = (MD3tri*)((byte*)surf + surf->ofsTriangles);
 		for(j = 0; j < surf->numTriangles; j++, tri++){
 			LL(tri->indexes[0]);
 			LL(tri->indexes[1]);
@@ -439,7 +439,7 @@ R_LoadMD3(model_t *mod, int lod, void *buffer, const char *mod_name)
 		}
 
 		/* swap all the XyzNormals */
-		xyz = (md3XyzNormal_t*)((byte*)surf + surf->ofsXyzNormals);
+		xyz = (MD3xyznorm*)((byte*)surf + surf->ofsXyzNormals);
 		for(j = 0; j < surf->numVerts * surf->numFrames; j++, xyz++){
 			xyz->xyz[0]	= LittleShort(xyz->xyz[0]);
 			xyz->xyz[1]	= LittleShort(xyz->xyz[1]);
@@ -450,7 +450,7 @@ R_LoadMD3(model_t *mod, int lod, void *buffer, const char *mod_name)
 
 
 		/* find the next surface */
-		surf = (md3Surface_t*)((byte*)surf + surf->ofsEnd);
+		surf = (MD3surf*)((byte*)surf + surf->ofsEnd);
 	}
 
 	return qtrue;
@@ -698,10 +698,10 @@ R_Modellist_f(void)
 /*
  * R_GetTag
  */
-static md3Tag_t *
-R_GetTag(md3Header_t *mod, int frame, const char *tagName)
+static MD3tag *
+R_GetTag(MD3header *mod, int frame, const char *tagName)
 {
-	md3Tag_t *tag;
+	MD3tag *tag;
 	int i;
 
 	if(frame >= mod->numFrames){
@@ -709,7 +709,7 @@ R_GetTag(md3Header_t *mod, int frame, const char *tagName)
 		frame = mod->numFrames - 1;
 	}
 
-	tag = (md3Tag_t*)((byte*)mod + mod->ofsTags) + frame * mod->numTags;
+	tag = (MD3tag*)((byte*)mod + mod->ofsTags) + frame * mod->numTags;
 	for(i = 0; i < mod->numTags; i++, tag++)
 		if(!strcmp(tag->name, tagName)){
 			return tag;	/* found it */
@@ -725,7 +725,7 @@ int
 R_LerpTag(Orient *tag, Handle handle, int startFrame, int endFrame,
 	  float frac, const char *tagName)
 {
-	md3Tag_t	*start, *end;
+	MD3tag	*start, *end;
 	int i;
 	float frontLerp, backLerp;
 	model_t *model;
@@ -785,11 +785,11 @@ R_ModelBounds(Handle handle, Vec3 mins, Vec3 maxs)
 
 		return;
 	}else if(model->type == MOD_MESH){
-		md3Header_t *header;
-		md3Frame_t *frame;
+		MD3header *header;
+		MD3frame *frame;
 
 		header	= model->md3[0];
-		frame	= (md3Frame_t*)((byte*)header + header->ofsFrames);
+		frame	= (MD3frame*)((byte*)header + header->ofsFrames);
 
 		copyv3(frame->bounds[0], mins);
 		copyv3(frame->bounds[1], maxs);

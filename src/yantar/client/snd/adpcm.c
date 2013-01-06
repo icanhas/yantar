@@ -231,7 +231,7 @@ adpcmdecode(const char indata[], short *outdata, int len,
  * Returns the amount of memory (in bytes) needed to store the samples in out internal adpcm format
  */
 int
-S_AdpcmMemoryNeeded(const wavinfo_t *info)
+S_AdpcmMemoryNeeded(const Wavinfo *info)
 {
 	float	scale;
 	int	scaledSampleCount;

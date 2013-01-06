@@ -767,12 +767,12 @@ typedef struct {
 	char	*name;
 	int	offset;
 	int	bits;	/* 0 = float */
-} netField_t;
+} Netfield;
 
 /* using the stringizing operator to save typing... */
 #define NETF(x) # x,(size_t)&((Entstate*)0)->x
 
-netField_t entityStateFields[] =
+Netfield entityStateFields[] =
 {
 	{ NETF(traj.time), 32 },
 	{ NETF(traj.base[0]), 0 },
@@ -848,7 +848,7 @@ MSG_WriteDeltaEntity(Bitmsg *msg, struct entityState_s *from,
 {
 	int i, lc;
 	int numFields;
-	netField_t *field;
+	Netfield *field;
 	int trunc;
 	float fullFloat;
 	int *fromF, *toF;
@@ -956,7 +956,7 @@ MSG_ReadDeltaEntity(Bitmsg *msg, Entstate *from, Entstate *to,
 {
 	int i, lc;
 	int numFields;
-	netField_t	*field;
+	Netfield	*field;
 	int *fromF, *toF;
 	int print;
 	int trunc;
@@ -1072,7 +1072,7 @@ MSG_ReadDeltaEntity(Bitmsg *msg, Entstate *from, Entstate *to,
 /* using the stringizing operator to save typing... */
 #define PSF(x) # x,(size_t)&((Playerstate*)0)->x
 
-netField_t playerStateFields[] =
+Netfield playerStateFields[] =
 {
 	{ PSF(commandTime), 32 },
 	{ PSF(origin[0]), 0 },
@@ -1144,7 +1144,7 @@ MSG_WriteDeltaPlayerstate(Bitmsg *msg, struct playerState_s *from,
 	int ammobits;
 	int powerupbits;
 	int numFields;
-	netField_t *field;
+	Netfield *field;
 	int *fromF, *toF;
 	float fullFloat;
 	int trunc, lc;
@@ -1262,7 +1262,7 @@ MSG_ReadDeltaPlayerstate(Bitmsg *msg, Playerstate *from, Playerstate *to)
 {
 	int i, lc;
 	int bits;
-	netField_t *field;
+	Netfield *field;
 	int numFields;
 	int startBit, endBit;
 	int print;

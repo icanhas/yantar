@@ -659,7 +659,7 @@ CG_PlayBufferedSounds(void)
   * given time.  
   */
 void
-CG_DrawActiveFrame(int serverTime, stereoFrame_t stereoView,
+CG_DrawActiveFrame(int serverTime, Stereoframe stereoView,
 		   qbool demoPlayback)
 {
 	int inwater;

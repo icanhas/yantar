@@ -97,7 +97,7 @@ R_AddPolygonSurfaces(void)
  *
  */
 void
-RE_AddPolyToScene(Handle hShader, int numVerts, const polyVert_t *verts, int numPolys)
+RE_AddPolyToScene(Handle hShader, int numVerts, const Polyvert *verts, int numPolys)
 {
 	srfPoly_t	*poly;
 	int	i, j;
@@ -278,7 +278,7 @@ RE_AddAdditiveLightToScene(const Vec3 org, float intensity, float r, float g, fl
  * @@@@@@@@@@@@@@@@@@@@@
  */
 void
-RE_RenderScene(const refdef_t *fd)
+RE_RenderScene(const Refdef *fd)
 {
 	viewParms_t parms;
 	int startTime;

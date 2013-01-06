@@ -60,15 +60,15 @@ ProjectRadius(float r, Vec3 location)
  * R_CullModel
  */
 static int
-R_CullModel(md3Header_t *header, trRefEntity_t *ent)
+R_CullModel(MD3header *header, trRefEntity_t *ent)
 {
 	Vec3	bounds[2];
-	md3Frame_t      *oldFrame, *newFrame;
+	MD3frame      *oldFrame, *newFrame;
 	int	i;
 
 	/* compute frame pointers */
-	newFrame = ( md3Frame_t* )(( byte* )header + header->ofsFrames) + ent->e.frame;
-	oldFrame = ( md3Frame_t* )(( byte* )header + header->ofsFrames) + ent->e.oldframe;
+	newFrame = ( MD3frame* )(( byte* )header + header->ofsFrames) + ent->e.frame;
+	oldFrame = ( MD3frame* )(( byte* )header + header->ofsFrames) + ent->e.oldframe;
 
 	/* cull bounding sphere ONLY if this is not an upscaled entity */
 	if(!ent->e.nonNormalizedAxes){
@@ -144,7 +144,7 @@ R_ComputeLOD(trRefEntity_t *ent)
 	float radius;
 	float flod, lodscale;
 	float projectedRadius;
-	md3Frame_t *frame;
+	MD3frame *frame;
 	int lod;
 
 	if(tr.currentModel->numLods < 2){
@@ -153,7 +153,7 @@ R_ComputeLOD(trRefEntity_t *ent)
 	}else{
 		/* multiple LODs exist, so compute projected bounding sphere
 		 * and use that as a criteria for selecting LOD */
-		frame = (md3Frame_t*)(((byte*)tr.currentModel->md3[0]) +
+		frame = (MD3frame*)(((byte*)tr.currentModel->md3[0]) +
 						tr.currentModel->md3[0]->ofsFrames);
 		frame += ent->e.frame;
 		radius = RadiusFromBounds(frame->bounds[0], frame->bounds[1]);
@@ -192,11 +192,11 @@ R_ComputeLOD(trRefEntity_t *ent)
  *
  */
 int
-R_ComputeFogNum(md3Header_t *header, trRefEntity_t *ent)
+R_ComputeFogNum(MD3header *header, trRefEntity_t *ent)
 {
 	int i, j;
 	fog_t *fog;
-	md3Frame_t	*md3Frame;
+	MD3frame	*md3Frame;
 	Vec3		localOrigin;
 
 	if(tr.refdef.rdflags & RDF_NOWORLDMODEL){
@@ -204,7 +204,7 @@ R_ComputeFogNum(md3Header_t *header, trRefEntity_t *ent)
 	}
 
 	/* FIXME: non-normalized axis issues */
-	md3Frame = ( md3Frame_t* )(( byte* )header + header->ofsFrames) + ent->e.frame;
+	md3Frame = ( MD3frame* )(( byte* )header + header->ofsFrames) + ent->e.frame;
 	addv3(ent->e.origin, md3Frame->localOrigin, localOrigin);
 	for(i = 1; i < tr.world->numfogs; i++){
 		fog = &tr.world->fogs[i];
@@ -232,9 +232,9 @@ void
 R_AddMD3Surfaces(trRefEntity_t *ent)
 {
 	int i;
-	md3Header_t	*header = NULL;
-	md3Surface_t *surface	= NULL;
-	md3Shader_t	*md3Shader = NULL;
+	MD3header	*header = NULL;
+	MD3surf *surface	= NULL;
+	MD3shader	*md3Shader = NULL;
 	material_t	*shader = NULL;
 	int cull;
 	int lod;
@@ -297,7 +297,7 @@ R_AddMD3Surfaces(trRefEntity_t *ent)
 	/*
 	 * draw all surfaces
 	 *  */
-	surface = (md3Surface_t*)((byte*)header + header->ofsSurfaces);
+	surface = (MD3surf*)((byte*)header + header->ofsSurfaces);
 	for(i = 0; i < header->numSurfaces; i++){
 
 		if(ent->e.customShader){
@@ -328,7 +328,7 @@ R_AddMD3Surfaces(trRefEntity_t *ent)
 		}else if(surface->numShaders <= 0){
 			shader = tr.defaultShader;
 		}else{
-			md3Shader = (md3Shader_t*)((byte*)surface + surface->ofsShaders);
+			md3Shader = (MD3shader*)((byte*)surface + surface->ofsShaders);
 			md3Shader += ent->e.skinNum % surface->numShaders;
 			shader = tr.shaders[ md3Shader->shaderIndex ];
 		}
@@ -358,7 +358,7 @@ R_AddMD3Surfaces(trRefEntity_t *ent)
 			R_AddDrawSurf((void*)surface, shader, fogNum, qfalse);
 		}
 
-		surface = (md3Surface_t*)((byte*)surface + surface->ofsEnd);
+		surface = (MD3surf*)((byte*)surface + surface->ofsEnd);
 	}
 
 }

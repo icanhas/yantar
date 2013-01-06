@@ -64,7 +64,7 @@ void Team_CheckHurtCarrier(Gentity *targ, Gentity *attacker);
 void Team_InitGame(void);
 void Team_ReturnFlag(int team);
 void Team_FreeEntity(Gentity *ent);
-Gentity*SelectCTFSpawnPoint(team_t team, int teamstate, Vec3 origin,
+Gentity*SelectCTFSpawnPoint(Team team, int teamstate, Vec3 origin,
 			      Vec3 angles,
 			      qbool isbot);
 Gentity*Team_GetLocation(Gentity *ent);

@@ -26,14 +26,14 @@ struct keyname_t {
 #define	MAX_CONSOLE_SAVE_BUFFER 1024
 #define	CONSOLE_HISTORY_FILE	"consolehistory"
 
-field_t	g_consoleField;
-field_t	chatField;
+Field	g_consoleField;
+Field	chatField;
 qbool	chat_team;
 int		chat_playerNum;
 qbool	key_overstrikeMode;
 int		anykeydown;
 qkey_t	keys[MAX_KEYS];
-field_t	historyEditLines[COMMAND_HISTORY];
+Field	historyEditLines[COMMAND_HISTORY];
 
 static int	nextHistoryLine;	/* the last line in the history buffer, not masked */
 static int	historyLine;		/* the line being displayed from history buffer
@@ -292,7 +292,7 @@ keyname_t keynames[] =
  */
 /* FIXME: this is all shit */
 void
-Field_VariableSizeDraw(field_t *edit, int x, int y, int width, int size,
+Field_VariableSizeDraw(Field *edit, int x, int y, int width, int size,
 		       qbool showCursor,
 		       qbool noColorEscape)
 {
@@ -362,7 +362,7 @@ Field_VariableSizeDraw(field_t *edit, int x, int y, int width, int size,
 }
 
 void
-Field_Draw(field_t *edit, int x, int y, int width, qbool showCursor,
+Field_Draw(Field *edit, int x, int y, int width, qbool showCursor,
 	   qbool noColorEscape)
 {
 	Field_VariableSizeDraw(edit, x, y, width, SMALLCHAR_WIDTH, showCursor,
@@ -370,7 +370,7 @@ Field_Draw(field_t *edit, int x, int y, int width, qbool showCursor,
 }
 
 void
-Field_BigDraw(field_t *edit, int x, int y, int width, qbool showCursor,
+Field_BigDraw(Field *edit, int x, int y, int width, qbool showCursor,
 	      qbool noColorEscape)
 {
 	Field_VariableSizeDraw(edit, x, y, width, BIGCHAR_WIDTH, showCursor,
@@ -378,7 +378,7 @@ Field_BigDraw(field_t *edit, int x, int y, int width, qbool showCursor,
 }
 
 void
-Field_Paste(field_t *edit)
+Field_Paste(Field *edit)
 {
 	char	*cbd;
 	int	pasteLen, i;
@@ -403,7 +403,7 @@ Field_Paste(field_t *edit)
  * Key events are used for non-printable characters, others are gotten from char events.
  */
 void
-Field_KeyDownEvent(field_t *edit, int key)
+Field_KeyDownEvent(Field *edit, int key)
 {
 	int len;
 
@@ -459,7 +459,7 @@ Field_KeyDownEvent(field_t *edit, int key)
 }
 
 void
-Field_CharEvent(field_t *edit, int ch)
+Field_CharEvent(Field *edit, int ch)
 {
 	int len;
 
@@ -1299,7 +1299,7 @@ CL_LoadConsoleHistory(void)
 		}
 
 		memmove(&historyEditLines[ 0 ], &historyEditLines[ i + 1 ],
-			numLines * sizeof(field_t));
+			numLines * sizeof(Field));
 		for(i = numLines; i < COMMAND_HISTORY; i++)
 			Field_Clear(&historyEditLines[ i ]);
 

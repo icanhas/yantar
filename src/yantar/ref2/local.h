@@ -826,7 +826,7 @@ enum {
  * #define USE_UNIFORM_FIREWALL 1
  * #define LOG_GLSL_UNIFORMS 1 */
 
-/* trRefdef_t holds everything that comes in refdef_t,
+/* trRefdef_t holds everything that comes in Refdef,
  * as well as the locally generated scene information */
 typedef struct {
 	int		x, y, width, height;
@@ -834,7 +834,7 @@ typedef struct {
 	Vec3		vieworg;
 	Vec3		viewaxis[3];	/* transformation matrix */
 
-	stereoFrame_t	stereoFrame;
+	Stereoframe	stereoFrame;
 
 	int		time;		/* time in milliseconds for shader effects and other time dependent rendering issues */
 	int		rdflags;	/* RDF_NOWORLDMODEL, etc */
@@ -907,15 +907,15 @@ typedef struct {
 	qbool		isShadowmap;
 	int		frameSceneNum;	/* copied from tr.frameSceneNum */
 	int		frameCount;	/* copied from tr.frameCount */
-	cplane_t	portalPlane;	/* clip anything behind this if mirroring */
+	Cplane	portalPlane;	/* clip anything behind this if mirroring */
 	int		viewportX, viewportY, viewportWidth, viewportHeight;
 	FBO_t		*targetFbo;
 	float		fovX, fovY;
 	float		projectionMatrix[16];
-	cplane_t	frustum[5];
+	Cplane	frustum[5];
 	Vec3		visBounds[2];
 	float		zFar;
-	stereoFrame_t	stereoFrame;
+	Stereoframe	stereoFrame;
 } viewParms_t;
 
 
@@ -964,7 +964,7 @@ typedef struct srfPoly_s {
 	Handle		hShader;
 	int		fogIndex;
 	int		numVerts;
-	polyVert_t	*verts;
+	Polyvert	*verts;
 } srfPoly_t;
 
 typedef struct srfDisplayList_s {
@@ -1056,7 +1056,7 @@ typedef struct {
 	int	pshadowBits[SMP_FRAMES];
 
 	/* culling information */
-	cplane_t	plane;
+	Cplane	plane;
 	Vec3		bounds[2];
 
 	/* triangle definitions */
@@ -1197,7 +1197,7 @@ typedef struct pshadow_s {
 	Vec3		lightViewAxis[3];
 	Vec3		lightOrigin;
 	float		lightRadius;
-	cplane_t	cullPlane;
+	Cplane	cullPlane;
 } pshadow_t;
 
 
@@ -1226,7 +1226,7 @@ typedef struct cullinfo_s {
 	Vec3		bounds[2];
 	Vec3		localOrigin;
 	float		radius;
-	cplane_t	plane;
+	Cplane	plane;
 } cullinfo_t;
 
 typedef struct msurface_s {
@@ -1248,7 +1248,7 @@ typedef struct mnode_s {
 	struct mnode_s	*parent;
 
 	/* node specific */
-	cplane_t	*plane;
+	Cplane	*plane;
 	struct mnode_s	*children[2];
 
 	/* leaf specific */
@@ -1272,13 +1272,13 @@ typedef struct {
 	int		dataSize;
 
 	int		numShaders;
-	dmaterial_t	*shaders;
+	Dmaterial	*shaders;
 
 	int		numBModels;
 	bmodel_t	*bmodels;
 
 	int		numplanes;
-	cplane_t	*planes;
+	Cplane	*planes;
 
 	int		numnodes;	/* includes leafs */
 	int		numDecisionNodes;
@@ -1936,8 +1936,8 @@ void  R_NoiseInit(void);
 void R_SwapBuffers(int);
 
 void R_RenderView(viewParms_t *parms);
-void R_RenderDlightCubemaps(const refdef_t *fd);
-void R_RenderPshadowMaps(const refdef_t *fd);
+void R_RenderDlightCubemaps(const Refdef *fd);
+void R_RenderPshadowMaps(const Refdef *fd);
 
 void R_AddMD3Surfaces(trRefEntity_t *e);
 void R_AddNullModelSurfaces(trRefEntity_t *e);
@@ -1967,7 +1967,7 @@ void R_LocalNormalToWorld(const Vec3 local, Vec3 world);
 void R_LocalPointToWorld(const Vec3 local, Vec3 world);
 int R_CullBox(Vec3 bounds[2]);
 int R_CullLocalBox(Vec3 bounds[2]);
-int R_CullPointAndRadiusEx(const Vec3 origin, float radius, const cplane_t* frustum, int numPlanes);
+int R_CullPointAndRadiusEx(const Vec3 origin, float radius, const Cplane* frustum, int numPlanes);
 int R_CullPointAndRadius(const Vec3 origin, float radius);
 int R_CullLocalPointAndRadius(const Vec3 origin, float radius);
 
@@ -2030,7 +2030,7 @@ void    RE_StretchRaw(int x, int y, int w, int h, int cols, int rows, const byte
 		      qbool dirty);
 void    RE_UploadCinematic(int w, int h, int cols, int rows, const byte *data, int client, qbool dirty);
 
-void            RE_BeginFrame(stereoFrame_t stereoFrame);
+void            RE_BeginFrame(Stereoframe stereoFrame);
 void            RE_BeginRegistration(Glconfig *glconfig);
 void            RE_LoadWorldMap(const char *mapname);
 void            RE_SetWorldVisData(const byte *vis);
@@ -2335,10 +2335,10 @@ void R_ToggleSmpFrame(void);
 
 void RE_ClearScene(void);
 void RE_AddRefEntityToScene(const Refent *ent);
-void RE_AddPolyToScene(Handle hShader, int numVerts, const polyVert_t *verts, int num);
+void RE_AddPolyToScene(Handle hShader, int numVerts, const Polyvert *verts, int num);
 void RE_AddLightToScene(const Vec3 org, float intensity, float r, float g, float b);
 void RE_AddAdditiveLightToScene(const Vec3 org, float intensity, float r, float g, float b);
-void RE_RenderScene(const refdef_t *fd);
+void RE_RenderScene(const Refdef *fd);
 
 /*
  *
@@ -2543,7 +2543,7 @@ typedef struct {
 	dlight_t		dlights[MAX_DLIGHTS];
 	trRefEntity_t		entities[MAX_ENTITIES];
 	srfPoly_t		*polys;	/* [MAX_POLYS]; */
-	polyVert_t		*polyVerts;	/* [MAX_POLYVERTS]; */
+	Polyvert		*polyVerts;	/* [MAX_POLYVERTS]; */
 	pshadow_t		pshadows[MAX_CALC_PSHADOWS];
 	renderCommandList_t	commands;
 } backEndData_t;
@@ -2573,7 +2573,7 @@ void R_AddPostProcessCmd(void);
 void RE_SetColor(const float *rgba);
 void RE_StretchPic(float x, float y, float w, float h,
 		   float s1, float t1, float s2, float t2, Handle hShader);
-void RE_BeginFrame(stereoFrame_t stereoFrame);
+void RE_BeginFrame(Stereoframe stereoFrame);
 void RE_EndFrame(int *frontEndMsec, int *backEndMsec);
 void RE_SaveJPG(char * filename, int quality, int image_width, int image_height,
 		unsigned char *image_buffer, int padding);

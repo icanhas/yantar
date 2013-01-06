@@ -165,10 +165,10 @@ struct vm_s {
 extern Vm	*currentVM;
 extern int	vm_debugLevel;
 
-void VM_Compile(Vm *vm, vmHeader_t *header);
+void VM_Compile(Vm *vm, Vmheader *header);
 int     VM_CallCompiled(Vm *vm, int *args);
 
-void VM_PrepareInterpreter(Vm *vm, vmHeader_t *header);
+void VM_PrepareInterpreter(Vm *vm, Vmheader *header);
 int     VM_CallInterpreted(Vm *vm, int *args);
 
 vmSymbol_t*VM_ValueToFunctionSymbol(Vm *vm, int value);

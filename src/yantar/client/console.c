@@ -35,11 +35,11 @@ typedef struct {
 	int		times[NUM_CON_TIMES];	/* cls.realtime time the line was generated */
 	/* for transparent notify lines */
 	Vec4		color;
-} console_t;
+} Console;
 
-extern console_t con;
+extern Console con;
 
-console_t	con;
+Console	con;
 
 Cvar		*con_conspeed;
 Cvar		*con_notifytime;

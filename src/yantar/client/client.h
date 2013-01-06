@@ -143,7 +143,7 @@ struct Clientactive {
 };
 
 struct Clientconn {
-	connstate_t	state;	/* connection status */
+	Connstate	state;	/* connection status */
 
 	int		clientNum;
 	int		lastPacketSentTime;	/* for retransmits during connection */
@@ -436,7 +436,7 @@ typedef struct {
 	unsigned	msec;		/* msec down this frame if both a down and up happened */
 	qbool	active;		/* current state */
 	qbool	wasPressed;	/* set when down, not cleared when up */
-} kbutton_t;
+} Kbutton;
 
 void	CL_InitInput(void);
 void	CL_ShutdownInput(void);
@@ -536,7 +536,7 @@ void	CIN_CloseAllVideos(void);
 void CL_InitCGame(void);
 void CL_ShutdownCGame(void);
 qbool CL_GameCommand(void);
-void CL_CGameRendering(stereoFrame_t stereo);
+void CL_CGameRendering(Stereoframe stereo);
 void CL_SetCGameTime(void);
 void CL_FirstSnapshot(void);
 void CL_ShaderStateChanged(void);

@@ -160,7 +160,7 @@ VM_StackTrace(Vm *vm, int programCounter, int programStack)
  * VM_PrepareInterpreter
  */
 void
-VM_PrepareInterpreter(Vm *vm, vmHeader_t *header)
+VM_PrepareInterpreter(Vm *vm, Vmheader *header)
 {
 	int	op;
 	int	byte_pc;

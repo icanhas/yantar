@@ -52,7 +52,7 @@ typedef struct particle_s {
 
 	int	accumroll;
 
-} cparticle_t;
+} Cparticle;
 
 typedef enum {
 	P_NONE,
@@ -127,8 +127,8 @@ static float	shaderAnimSTRatio[MAX_SHADER_ANIMS] = {
 #define         MAX_PARTICLES	1024
 #endif
 
-cparticle_t	*active_particles, *free_particles;
-cparticle_t	particles[MAX_PARTICLES];
+Cparticle	*active_particles, *free_particles;
+Cparticle	particles[MAX_PARTICLES];
 int cl_numparticles = MAX_PARTICLES;
 
 qbool		initparticles = qfalse;
@@ -178,18 +178,18 @@ CG_ClearParticles(void)
  * CG_AddParticleToScene
  */
 void
-CG_AddParticleToScene(cparticle_t *p, Vec3 org, float alpha)
+CG_AddParticleToScene(Cparticle *p, Vec3 org, float alpha)
 {
 
 	Vec3	point;
-	polyVert_t verts[4];
+	Polyvert verts[4];
 	float	width;
 	float	height;
 	float	time, time2;
 	float	ratio;
 	float	invratio;
 	Vec3	color;
-	polyVert_t TRIverts[3];
+	Polyvert TRIverts[3];
 	Vec3	rright2, rup2;
 
 	if(p->type == P_WEATHER || p->type == P_WEATHER_TURBULENT || p->type ==
@@ -780,11 +780,11 @@ static float roll = 0.0;
 void
 CG_AddParticles(void)
 {
-	cparticle_t *p, *next;
+	Cparticle *p, *next;
 	float	alpha;
 	float	time, time2;
 	Vec3	org;
-	cparticle_t             *active, *tail;
+	Cparticle             *active, *tail;
 	Vec3	rotate_ang;
 
 	if(!initparticles)
@@ -896,7 +896,7 @@ CG_AddParticles(void)
 void
 CG_ParticleSnowFlurry(Handle pshader, Centity *cent)
 {
-	cparticle_t	*p;
+	Cparticle	*p;
 	qbool		turb = qtrue;
 
 	if(!pshader)
@@ -963,7 +963,7 @@ CG_ParticleSnow(Handle pshader, Vec3 origin, Vec3 origin2, int turb,
 		float range,
 		int snum)
 {
-	cparticle_t *p;
+	Cparticle *p;
 
 	if(!pshader)
 		CG_Printf ("CG_ParticleSnow pshader == ZERO!\n");
@@ -1018,7 +1018,7 @@ CG_ParticleBubble(Handle pshader, Vec3 origin, Vec3 origin2, int turb,
 		  float range,
 		  int snum)
 {
-	cparticle_t *p;
+	Cparticle *p;
 	float randsize;
 
 	if(!pshader)
@@ -1078,7 +1078,7 @@ CG_ParticleSmoke(Handle pshader, Centity *cent)
 
 	/* using cent->density = enttime
 	 *       cent->frame = startfade */
-	cparticle_t *p;
+	Cparticle *p;
 
 	if(!pshader)
 		CG_Printf ("CG_ParticleSmoke == ZERO!\n");
@@ -1125,7 +1125,7 @@ void
 CG_ParticleBulletDebris(Vec3 org, Vec3 vel, int duration)
 {
 
-	cparticle_t *p;
+	Cparticle *p;
 
 	if(!free_particles)
 		return;
@@ -1172,7 +1172,7 @@ CG_ParticleExplosion(char *animStr, Vec3 origin, Vec3 vel, int duration,
 		     int sizeStart,
 		     int sizeEnd)
 {
-	cparticle_t *p;
+	Cparticle *p;
 	int anim;
 
 	if(animStr < (char*)10)
@@ -1311,7 +1311,7 @@ CG_NewParticleArea(int num)
 void
 CG_SnowLink(Centity *cent, qbool particleOn)
 {
-	cparticle_t *p, *next;
+	Cparticle *p, *next;
 	int id;
 
 	id = cent->currentState.frame;
@@ -1333,7 +1333,7 @@ CG_SnowLink(Centity *cent, qbool particleOn)
 void
 CG_ParticleImpactSmokePuff(Handle pshader, Vec3 origin)
 {
-	cparticle_t *p;
+	Cparticle *p;
 
 	if(!pshader)
 		CG_Printf ("CG_ParticleImpactSmokePuff pshader == ZERO!\n");
@@ -1376,7 +1376,7 @@ CG_Particle_Bleed(Handle pshader, Vec3 start, Vec3 dir,
 		  int fleshEntityNum,
 		  int duration)
 {
-	cparticle_t *p;
+	Cparticle *p;
 
 	if(!pshader)
 		CG_Printf ("CG_Particle_Bleed pshader == ZERO!\n");
@@ -1427,7 +1427,7 @@ CG_Particle_Bleed(Handle pshader, Vec3 start, Vec3 dir,
 void
 CG_Particle_OilParticle(Handle pshader, Centity *cent)
 {
-	cparticle_t *p;
+	Cparticle *p;
 
 	int	time;
 	int	time2;
@@ -1492,7 +1492,7 @@ CG_Particle_OilParticle(Handle pshader, Centity *cent)
 void
 CG_Particle_OilSlick(Handle pshader, Centity *cent)
 {
-	cparticle_t *p;
+	Cparticle *p;
 
 	if(!pshader)
 		CG_Printf ("CG_Particle_OilSlick == ZERO!\n");
@@ -1556,7 +1556,7 @@ CG_Particle_OilSlick(Handle pshader, Centity *cent)
 void
 CG_OilSlickRemove(Centity *cent)
 {
-	cparticle_t *p, *next;
+	Cparticle *p, *next;
 	int id;
 
 	id = 1.0f;
@@ -1620,7 +1620,7 @@ ValidBloodPool(Vec3 start)
 void
 CG_BloodPool(Localent *le, Handle pshader, Trace *tr)
 {
-	cparticle_t	*p;
+	Cparticle	*p;
 	qbool		legit;
 	Vec3	start;
 	float	rndSize;
@@ -1689,7 +1689,7 @@ CG_ParticleBloodCloud(Centity *cent, Vec3 origin, Vec3 dir)
 	float	crittersize;
 	Vec3	angles, forward;
 	Vec3	point;
-	cparticle_t     *p;
+	Cparticle     *p;
 	int	i;
 
 	dist = 0;
@@ -1762,7 +1762,7 @@ void
 CG_ParticleSparks(Vec3 org, Vec3 vel, int duration, float x, float y,
 		  float speed)
 {
-	cparticle_t *p;
+	Cparticle *p;
 
 	if(!free_particles)
 		return;
@@ -1816,7 +1816,7 @@ CG_ParticleDust(Centity *cent, Vec3 origin, Vec3 dir)
 	float	crittersize;
 	Vec3	angles, forward;
 	Vec3	point;
-	cparticle_t     *p;
+	Cparticle     *p;
 	int	i;
 
 	dist = 0;
@@ -1907,7 +1907,7 @@ void
 CG_ParticleMisc(Handle pshader, Vec3 origin, int size, int duration,
 		float alpha)
 {
-	cparticle_t *p;
+	Cparticle *p;
 
 	if(!pshader)
 		CG_Printf ("CG_ParticleImpactSmokePuff pshader == ZERO!\n");

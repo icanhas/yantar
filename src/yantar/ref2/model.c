@@ -307,14 +307,14 @@ R_LoadMD3(model_t * mod, int lod, void *buffer, int bufferSize, const char *modN
 {
 	int f, i, j, k;
 
-	md3Header_t *md3Model;
-	md3Frame_t *md3Frame;
-	md3Surface_t *md3Surf;
-	md3Shader_t *md3Shader;
-	md3Triangle_t *md3Tri;
+	MD3header *md3Model;
+	MD3frame *md3Frame;
+	MD3surf *md3Surf;
+	MD3shader *md3Shader;
+	MD3tri *md3Tri;
 	md3St_t *md3st;
-	md3XyzNormal_t *md3xyz;
-	md3Tag_t *md3Tag;
+	MD3xyznorm *md3xyz;
+	MD3tag *md3Tag;
 
 	mdvModel_t	*mdvModel;
 	mdvFrame_t	*frame;
@@ -330,7 +330,7 @@ R_LoadMD3(model_t * mod, int lod, void *buffer, int bufferSize, const char *modN
 	int	size;
 
 	UNUSED(bufferSize);
-	md3Model = (md3Header_t*)buffer;
+	md3Model = (MD3header*)buffer;
 
 	version = LittleLong(md3Model->version);
 	if(version != MD3_VERSION){
@@ -366,7 +366,7 @@ R_LoadMD3(model_t * mod, int lod, void *buffer, int bufferSize, const char *modN
 	mdvModel->numFrames = md3Model->numFrames;
 	mdvModel->frames = frame = ri.Hunk_Alloc(sizeof(*frame) * md3Model->numFrames, h_low);
 
-	md3Frame = (md3Frame_t*)((byte*)md3Model + md3Model->ofsFrames);
+	md3Frame = (MD3frame*)((byte*)md3Model + md3Model->ofsFrames);
 	for(i = 0; i < md3Model->numFrames; i++, frame++, md3Frame++){
 		frame->radius = LittleFloat(md3Frame->radius);
 		for(j = 0; j < 3; j++){
@@ -380,7 +380,7 @@ R_LoadMD3(model_t * mod, int lod, void *buffer, int bufferSize, const char *modN
 	mdvModel->numTags = md3Model->numTags;
 	mdvModel->tags = tag = ri.Hunk_Alloc(sizeof(*tag) * (md3Model->numTags * md3Model->numFrames), h_low);
 
-	md3Tag = (md3Tag_t*)((byte*)md3Model + md3Model->ofsTags);
+	md3Tag = (MD3tag*)((byte*)md3Model + md3Model->ofsTags);
 	for(i = 0; i < md3Model->numTags * md3Model->numFrames; i++, tag++, md3Tag++)
 		for(j = 0; j < 3; j++){
 			tag->origin[j]	= LittleFloat(md3Tag->origin[j]);
@@ -392,7 +392,7 @@ R_LoadMD3(model_t * mod, int lod, void *buffer, int bufferSize, const char *modN
 
 	mdvModel->tagNames = tagName = ri.Hunk_Alloc(sizeof(*tagName) * (md3Model->numTags), h_low);
 
-	md3Tag = (md3Tag_t*)((byte*)md3Model + md3Model->ofsTags);
+	md3Tag = (MD3tag*)((byte*)md3Model + md3Model->ofsTags);
 	for(i = 0; i < md3Model->numTags; i++, tagName++, md3Tag++)
 		Q_strncpyz(tagName->name, md3Tag->name, sizeof(tagName->name));
 
@@ -400,7 +400,7 @@ R_LoadMD3(model_t * mod, int lod, void *buffer, int bufferSize, const char *modN
 	mdvModel->numSurfaces = md3Model->numSurfaces;
 	mdvModel->surfaces = surf = ri.Hunk_Alloc(sizeof(*surf) * md3Model->numSurfaces, h_low);
 
-	md3Surf = (md3Surface_t*)((byte*)md3Model + md3Model->ofsSurfaces);
+	md3Surf = (MD3surf*)((byte*)md3Model + md3Model->ofsSurfaces);
 	for(i = 0; i < md3Model->numSurfaces; i++){
 		LL(md3Surf->ident);
 		LL(md3Surf->flags);
@@ -449,7 +449,7 @@ R_LoadMD3(model_t * mod, int lod, void *buffer, int bufferSize, const char *modN
 		surf->shaderIndexes = shaderIndex = ri.Hunk_Alloc(sizeof(*shaderIndex) * md3Surf->numShaders,
 			h_low);
 
-		md3Shader = (md3Shader_t*)((byte*)md3Surf + md3Surf->ofsShaders);
+		md3Shader = (MD3shader*)((byte*)md3Surf + md3Surf->ofsShaders);
 		for(j = 0; j < md3Surf->numShaders; j++, shaderIndex++, md3Shader++){
 			material_t *sh;
 
@@ -465,7 +465,7 @@ R_LoadMD3(model_t * mod, int lod, void *buffer, int bufferSize, const char *modN
 		surf->numTriangles = md3Surf->numTriangles;
 		surf->triangles = tri = ri.Hunk_Alloc(sizeof(*tri) * md3Surf->numTriangles, h_low);
 
-		md3Tri = (md3Triangle_t*)((byte*)md3Surf + md3Surf->ofsTriangles);
+		md3Tri = (MD3tri*)((byte*)md3Surf + md3Surf->ofsTriangles);
 		for(j = 0; j < md3Surf->numTriangles; j++, tri++, md3Tri++){
 			tri->indexes[0] = LittleLong(md3Tri->indexes[0]);
 			tri->indexes[1] = LittleLong(md3Tri->indexes[1]);
@@ -478,7 +478,7 @@ R_LoadMD3(model_t * mod, int lod, void *buffer, int bufferSize, const char *modN
 		surf->numVerts = md3Surf->numVerts;
 		surf->verts = v = ri.Hunk_Alloc(sizeof(*v) * (md3Surf->numVerts * md3Surf->numFrames), h_low);
 
-		md3xyz = (md3XyzNormal_t*)((byte*)md3Surf + md3Surf->ofsXyzNormals);
+		md3xyz = (MD3xyznorm*)((byte*)md3Surf + md3Surf->ofsXyzNormals);
 		for(j = 0; j < md3Surf->numVerts * md3Surf->numFrames; j++, md3xyz++, v++){
 			unsigned lat, lng;
 			unsigned short normal;
@@ -577,7 +577,7 @@ R_LoadMD3(model_t * mod, int lod, void *buffer, int bufferSize, const char *modN
 		}
 
 		/* find the next surface */
-		md3Surf = (md3Surface_t*)((byte*)md3Surf + md3Surf->ofsEnd);
+		md3Surf = (MD3surf*)((byte*)md3Surf + md3Surf->ofsEnd);
 		surf++;
 	}
 

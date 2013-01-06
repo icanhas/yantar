@@ -118,10 +118,10 @@ Sys_Quit(void)
 	Sys_Exit(0);
 }
 
-cpuFeatures_t
+CPUfeatures
 Sys_GetProcessorFeatures(void)
 {
-	cpuFeatures_t f;
+	CPUfeatures f;
 	
 	f = 0;
 #ifndef DEDICATED

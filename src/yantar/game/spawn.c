@@ -79,9 +79,9 @@ typedef struct {
 	char		*name;
 	size_t		ofs;
 	fieldtype_t	type;
-} field_t;
+} Field;
 
-field_t fields[] = {
+Field fields[] = {
 	{"classname", FOFS(classname), F_STRING},
 	{"origin", FOFS(s.origin), F_VECTOR},
 	{"model", FOFS(model), F_STRING},
@@ -332,7 +332,7 @@ G_NewString(const char *string)
 void
 G_ParseField(const char *key, const char *value, Gentity *ent)
 {
-	field_t *f;
+	Field *f;
 	byte	*b;
 	float	v;
 	Vec3	vec;

@@ -439,7 +439,7 @@ typedef struct {
 	qbool		pitching;
 
 	int		animationNumber;	/* may include ANIM_TOGGLEBIT */
-	animation_t	*animation;
+	Anim	*animation;
 	int		animationTime;	/* time when the first frame of the animation will be exact */
 } lerpFrame_t;
 
@@ -456,7 +456,7 @@ typedef struct {
 	Handle		headModel;
 	Handle		headSkin;
 
-	animation_t	animations[MAX_ANIMATIONS];
+	Anim	animations[MAX_ANIMATIONS];
 
 	Handle		weaponModel;
 	Handle		barrelModel;
@@ -653,18 +653,18 @@ int                             trap_FS_GetFileList(const char *path,
 						    char *listbuf,
 						    int bufsize);
 int                             trap_FS_Seek(Fhandle f, long offset,
-					     int origin);	/* fsOrigin_t */
+					     int origin);	/* Fsorigin */
 Handle               trap_R_RegisterModel(const char *name);
 Handle               trap_R_RegisterSkin(const char *name);
 Handle               trap_R_RegisterShaderNoMip(const char *name);
 void                    trap_R_ClearScene(void);
 void                    trap_R_AddRefEntityToScene(const Refent *re);
 void                    trap_R_AddPolyToScene(Handle hShader, int numVerts,
-					      const polyVert_t *verts);
+					      const Polyvert *verts);
 void                    trap_R_AddLightToScene(const Vec3 org, float intensity,
 					       float r, float g,
 					       float b);
-void                    trap_R_RenderScene(const refdef_t *fd);
+void                    trap_R_RenderScene(const Refdef *fd);
 void                    trap_R_SetColor(const float *rgba);
 void                    trap_R_DrawStretchPic(float x, float y, float w, float h,
 					      float s1, float t1, float s2,

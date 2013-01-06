@@ -725,7 +725,7 @@ CL_GameCommand(void)
 }
 
 void
-CL_CGameRendering(stereoFrame_t stereo)
+CL_CGameRendering(Stereoframe stereo)
 {
 	VM_Call(cgvm, CG_DRAW_ACTIVE_FRAME, cl.serverTime, stereo,
 		clc.demoplaying);

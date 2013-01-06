@@ -479,7 +479,7 @@ R_PointInLeaf(const Vec3 p)
 {
 	mnode_t *node;
 	float	d;
-	cplane_t *plane;
+	Cplane *plane;
 
 	if(!tr.world){
 		ri.Error (ERR_DROP, "R_PointInLeaf: bad model");

@@ -311,7 +311,7 @@ UI_PositionRotatedEntityOnTag(Refent *entity, const Refent *parent,
 static void
 UI_SetLerpFrameAnimation(Playerinfo *ci, lerpFrame_t *lf, int newAnimation)
 {
-	animation_t *anim;
+	Anim *anim;
 
 	lf->animationNumber = newAnimation;
 	newAnimation &= ~ANIM_TOGGLEBIT;
@@ -333,7 +333,7 @@ static void
 UI_RunLerpFrame(Playerinfo *ci, lerpFrame_t *lf, int newAnimation)
 {
 	int f;
-	animation_t *anim;
+	Anim *anim;
 
 	/* see if the animation sequence is switching */
 	if(newAnimation != lf->animationNumber || !lf->animation)
@@ -641,7 +641,7 @@ UI_MachinegunSpinAngle(Playerinfo *pi)
 void
 UI_DrawPlayer(float x, float y, float w, float h, Playerinfo *pi, int time)
 {
-	refdef_t refdef;
+	Refdef refdef;
 	Refent	legs;
 	Refent	torso;
 	Refent	head;
@@ -891,7 +891,7 @@ UI_RegisterClientSkin(Playerinfo *pi, const char *modelName,
  * UI_ParseAnimationFile
  */
 static qbool
-UI_ParseAnimationFile(const char *filename, animation_t *animations)
+UI_ParseAnimationFile(const char *filename, Anim *animations)
 {
 	char	*text_p, *prev;
 	int	len;
@@ -902,7 +902,7 @@ UI_ParseAnimationFile(const char *filename, animation_t *animations)
 	char	text[20000];
 	Fhandle f;
 
-	memset(animations, 0, sizeof(animation_t) * MAX_ANIMATIONS);
+	memset(animations, 0, sizeof(Anim) * MAX_ANIMATIONS);
 
 	/* load the file */
 	len = trap_FS_FOpenFile(filename, &f, FS_READ);

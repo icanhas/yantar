@@ -31,9 +31,9 @@ static int listener_number;
 static Vec3 listener_origin;
 static Vec3 listener_axis[3];
 static Sfx *sfxHash[LOOP_HASH];
-static loopSound_t loopSounds[MAX_GENTITIES];
+static Loopsnd loopSounds[MAX_GENTITIES];
 static Channel *freelist = NULL;
-dma_t dma;
+Dma dma;
 Channel s_channels[MAX_CHANNELS];
 Channel	loop_channels[MAX_CHANNELS];
 int numLoopChannels;
@@ -504,7 +504,7 @@ S_Base_ClearSoundBuffer(void)
 		return;
 
 	/* stop looping sounds */
-	Q_Memset(loopSounds, 0, MAX_GENTITIES*sizeof(loopSound_t));
+	Q_Memset(loopSounds, 0, MAX_GENTITIES*sizeof(Loopsnd));
 	Q_Memset(loop_channels, 0, MAX_CHANNELS*sizeof(Channel));
 	numLoopChannels = 0;
 
@@ -661,7 +661,7 @@ S_AddLoopSounds(void)
 	int	i, j, time;
 	int	left_total, right_total, left, right;
 	Channel	*ch;
-	loopSound_t *loop, *loop2;
+	Loopsnd *loop, *loop2;
 	static int	loopFrame;
 
 
