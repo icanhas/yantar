@@ -32,9 +32,9 @@ typedef struct voipServerPacket_s {
 } voipServerPacket_t;
 #endif
 
-typedef struct svEntity_s {
+typedef struct Svent {
 	struct worldSector_s	*worldSector;
-	struct svEntity_s	*nextEntityInWorldSector;
+	struct Svent	*nextEntityInWorldSector;
 
 	Entstate		baseline;	/* for delta compression of initial sighting */
 	int			numClusters;	/* if -1, use headnode instead */
@@ -62,7 +62,7 @@ typedef struct {
 	int		snapshotCounter;	/* incremented for each snapshot built */
 	int		timeResidual;		/* <= 1000 / sv_frame->value */
 	int		nextFrameTime;		/* when time > nextFrameTime, process world */
-	struct cmodel_s *models[MAX_MODELS];
+	struct Cmodel *models[MAX_MODELS];
 	char		*configstrings[MAX_CONFIGSTRINGS];
 	Svent				svEntities[MAX_GENTITIES];
 
@@ -78,7 +78,7 @@ typedef struct {
 
 	int		restartTime;
 	int		time;
-} server_t;
+} Server;
 
 
 
@@ -112,7 +112,7 @@ typedef struct netchan_buffer_s {
 	struct netchan_buffer_s *next;
 } netchan_buffer_t;
 
-typedef struct client_s {
+typedef struct Client {
 	clientState_t	state;
 	char		userinfo[MAX_INFO_STRING];	/* name, etc */
 
@@ -238,7 +238,7 @@ typedef struct {
 /* ============================================================================= */
 
 extern serverStatic_t svs;	/* persistant server info across maps */
-extern server_t sv;		/* cleared each map */
+extern Server sv;		/* cleared each map */
 extern Vm	*gvm;		/* game virtual machine */
 
 extern Cvar	*sv_fps;

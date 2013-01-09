@@ -126,9 +126,9 @@ typedef struct {
 	Vec4		borderColor;	/* border color */
 	Vec4		outlineColor;	/* border color */
 	Handle		background;	/* background asset */
-} windowDef_t;
+} Winddef;
 
-typedef windowDef_t Window;
+typedef Winddef Window;
 
 typedef struct {
 	Vec4	color;

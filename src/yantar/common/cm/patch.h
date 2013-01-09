@@ -13,8 +13,8 @@
  *
  * void CM_ClearLevelPatches( void );
  * struct patchCollide_s	*CM_GeneratePatchCollide( int width, int height, const Vec3 *points );
- * void CM_TraceThroughPatchCollide( traceWork_t *tw, const struct patchCollide_s *pc );
- * qbool CM_PositionTestInPatchCollide( traceWork_t *tw, const struct patchCollide_s *pc );
+ * void CM_TraceThroughPatchCollide( Tracework *tw, const struct patchCollide_s *pc );
+ * qbool CM_PositionTestInPatchCollide( Tracework *tw, const struct patchCollide_s *pc );
  * void CM_DrawDebugSurface( void (*drawPoly)(int color, int numPoints, flaot *points) );
  *
  *
@@ -51,7 +51,7 @@
 typedef struct {
 	float	plane[4];
 	int	signbits;	/* signx + (signy<<1) + (signz<<2), used as lookup during collision */
-} patchPlane_t;
+} Patchplane;
 
 typedef struct {
 	int		surfacePlane;
@@ -64,7 +64,7 @@ typedef struct {
 typedef struct patchCollide_s {
 	Vec3		bounds[2];
 	int		numPlanes;	/* surface planes plus edge planes */
-	patchPlane_t	*planes;
+	Patchplane	*planes;
 	int		numFacets;
 	facet_t		*facets;
 } patchCollide_t;

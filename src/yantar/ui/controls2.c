@@ -29,7 +29,7 @@ typedef struct {
 	int	defaultbind2;
 	int	bind1;
 	int	bind2;
-} bind_t;
+} Bind;
 
 typedef struct {
 	char	* name;
@@ -206,7 +206,7 @@ static controls_t s_controls;
 
 static Vec4	controls_binding_color = {1.00f, 0.43f, 0.00f, 1.00f};
 
-static bind_t	g_bindings[] =
+static Bind	g_bindings[] =
 {
 	{"+scores",                     "show scores",          ID_SHOWSCORES,
 	 ANIM_IDLE,              K_TAB,                  -1,
@@ -843,7 +843,7 @@ Controls_GetConfig(void)
 {
 	int	i;
 	int	twokeys[2];
-	bind_t * bindptr;
+	Bind * bindptr;
 
 	/* put the bindings into a local store */
 	bindptr = g_bindings;
@@ -884,7 +884,7 @@ static void
 Controls_SetConfig(void)
 {
 	int i;
-	bind_t * bindptr;
+	Bind * bindptr;
 
 	/* set the bindings from the local store */
 	bindptr = g_bindings;
@@ -927,7 +927,7 @@ static void
 Controls_SetDefaults(void)
 {
 	int i;
-	bind_t * bindptr;
+	Bind * bindptr;
 
 	/* set the bindings from the local store */
 	bindptr = g_bindings;
@@ -968,7 +968,7 @@ Controls_MenuKey(int key)
 	int	id;
 	int	i;
 	qbool		found;
-	bind_t		* bindptr;
+	Bind		* bindptr;
 	found = qfalse;
 
 	if(!s_controls.waitingforkey){

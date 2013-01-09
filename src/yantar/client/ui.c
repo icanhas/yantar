@@ -20,7 +20,7 @@ Vm *uivm;
  * GetClientState
  */
 static void
-GetClientState(uiClientState_t *state)
+GetClientState(UIclientstate *state)
 {
 	state->connectPacketCount = clc.connectPacketCount;
 	state->connState = clc.state;

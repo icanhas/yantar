@@ -843,8 +843,8 @@ Netfield entityStateFields[] =
  * identical, under the assumption that the in-order delta code will catch it.
  */
 void
-MSG_WriteDeltaEntity(Bitmsg *msg, struct entityState_s *from,
-	struct entityState_s *to, qbool force)
+MSG_WriteDeltaEntity(Bitmsg *msg, struct Entstate *from,
+	struct Entstate *to, qbool force)
 {
 	int i, lc;
 	int numFields;
@@ -1134,8 +1134,8 @@ Netfield playerStateFields[] =
 };
 
 void
-MSG_WriteDeltaPlayerstate(Bitmsg *msg, struct playerState_s *from,
-			  struct playerState_s *to)
+MSG_WriteDeltaPlayerstate(Bitmsg *msg, struct Playerstate *from,
+			  struct Playerstate *to)
 {
 	int i;
 	Playerstate dummy;

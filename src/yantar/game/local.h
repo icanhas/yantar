@@ -43,10 +43,10 @@ typedef enum {
 
 #define SP_PODIUM_MODEL Pobjectmodels "/podium/podium4.md3"
 
-typedef struct gentity_s Gentity;
-typedef struct gclient_s gClient;
+typedef struct Gentity Gentity;
+typedef struct Gclient gClient;
 
-struct gentity_s {
+struct Gentity {
 	Entstate	s;	/* communicated by server to clients */
 	Entshared	r;	/* shared by both the server system and game */
 
@@ -54,7 +54,7 @@ struct gentity_s {
 	 * EXPECTS THE FIELDS IN THAT ORDER!
 	 * ================================ */
 
-	struct gclient_s	*client;	/* NULL if not a client */
+	struct Gclient	*client;	/* NULL if not a client */
 
 	qbool			inuse;
 
@@ -230,7 +230,7 @@ typedef struct {
 
 /* this structure is cleared on each ClientSpawn(),
  * except for 'client->pers' and 'client->sess' */
-struct gclient_s {
+struct Gclient {
 	/* ps MUST be the first element, because the server expects it */
 	Playerstate ps;	/* communicated by server to clients */
 
@@ -299,9 +299,9 @@ struct gclient_s {
 #define MAX_SPAWN_VARS_CHARS	4096
 
 typedef struct {
-	struct gclient_s	*clients;	/* [maxclients] */
+	struct Gclient	*clients;	/* [maxclients] */
 
-	struct gentity_s	*gentities;
+	struct Gentity	*gentities;
 	int			gentitySize;
 	int			num_entities;	/* MAX_CLIENTS <= num_entities <= ENTITYNUM_MAX_NORMAL */
 

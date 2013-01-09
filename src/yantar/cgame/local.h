@@ -137,7 +137,7 @@ typedef struct {
 	float		barrelAngle;
 	int		barrelTime;
 	qbool		barrelSpinning;
-} playerEntity_t;
+} Playerent;
 
 /* ================================================= */
 
@@ -145,7 +145,7 @@ typedef struct {
 
 /* Centity have a direct corespondence with Gentity in the game, but
  * only the Entstate is directly communicated to the cgame */
-typedef struct centity_s {
+typedef struct Centity {
 	Entstate	currentState;	/* from cg.frame */
 	Entstate	nextState;	/* from cg.nextFrame, if available */
 	qbool		interpolate;	/* true if next is valid to interpolate to */
@@ -161,7 +161,7 @@ typedef struct centity_s {
 
 	int		snapShotTime;	/* last time this entity was found in a snapshot */
 
-	playerEntity_t	pe;
+	Playerent	pe;
 
 	int		errorTime;	/* decay the error from this time */
 	Vec3		errorOrigin;
@@ -227,8 +227,8 @@ typedef enum {
 	LEBS_BRASS
 } leBounceSoundType_t;	/* fragment local entities can make sounds on impacts */
 
-typedef struct localEntity_s {
-	struct localEntity_s	*prev, *next;
+typedef struct Localent {
+	struct Localent	*prev, *next;
 	leType_t		leType;
 	int			leFlags;
 
@@ -358,7 +358,7 @@ typedef struct {
 /* each W1_* weapon enum has an associated Weapinfo
  * that contains media references necessary to present the
  * weapon and its effects */
-typedef struct weaponInfo_s {
+typedef struct Weapinfo {
 	qbool		registered;
 	Gitem		*item;
 
@@ -380,7 +380,7 @@ typedef struct weaponInfo_s {
 
 	Handle		missileModel;
 	Sfxhandle	missileSound;
-	void (*missileTrailFunc)(Centity *, const struct weaponInfo_s *wi);
+	void (*missileTrailFunc)(Centity *, const struct Weapinfo *wi);
 	float		missileDlight;
 	Vec3		missileDlightColor;
 	int		missileRenderfx;
@@ -407,7 +407,7 @@ typedef struct {
 
 typedef struct {
 	int itemNum;
-} powerupInfo_t;
+} Powerupinfo;
 
 
 #define MAX_SKULLTRAIL 10
@@ -620,7 +620,7 @@ typedef struct {
 /* all of the model, shader, and sound references that are
  * loaded at gamestate time are stored in cgMedia_t
  * Other media that can be tied to clients, weapons, or items are
- * stored in the Clientinfo, itemInfo_t, Weapinfo, and powerupInfo_t */
+ * stored in the Clientinfo, itemInfo_t, Weapinfo, and Powerupinfo */
 typedef struct {
 	Handle		charsetShader;
 	Handle		charsetProp;

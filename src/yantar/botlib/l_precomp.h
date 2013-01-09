@@ -61,11 +61,11 @@ typedef struct define_s {
 /* indents
  * used for conditional compilation directives:
  * #if, #else, #elif, #ifdef, #ifndef */
-typedef struct indent_s {
+typedef struct Indent {
 	int		type;		/* indent type */
 	int		skip;		/* true if skipping current indent */
 	script_t	*script;	/* script the indent was in */
-	struct indent_s *next;		/* next indent on the indent stack */
+	struct Indent *next;		/* next indent on the indent stack */
 } Indent;
 
 /* source file */

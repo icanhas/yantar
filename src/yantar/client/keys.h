@@ -6,9 +6,9 @@
  * it under the terms of the GNU General Public License.
  */
  
-typedef struct qkey_t qkey_t;
+typedef struct Qkey Qkey;
 
-struct qkey_t {
+struct Qkey {
 	qbool		down;
 	int		repeats;	/* if > 1, it is autorepeating */
 	char		*binding;
@@ -22,7 +22,7 @@ extern int		anykeydown;
 extern qbool	chat_team;
 extern int		chat_playerNum;
 extern qbool	key_overstrikeMode;
-extern qkey_t	keys[MAX_KEYS];
+extern Qkey	keys[MAX_KEYS];
 
 /* NOTE TTimo the declaration of Field and Field_Clear is now in qcommon/qcommon.h */
 /* well done ttimo! go on my son! */

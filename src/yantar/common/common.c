@@ -631,8 +631,8 @@ enum {
 };
 
 typedef struct zonedebug_s zonedebug_t;
-typedef struct memblock_s Memblk;
-typedef struct memzone_s Memzone;
+typedef struct Memblk Memblk;
+typedef struct Memzone Memzone;
 
 void Z_CheckHeap(void);
 
@@ -643,17 +643,17 @@ struct zonedebug_s {
 	int	allocSize;
 };
 
-struct memblock_s {
+struct Memblk {
 	int			size;	/* including the header and possibly tiny fragments */
 	int			tag;	/* a tag of 0 is a free block */
-	struct memblock_s	*next, *prev;
+	struct Memblk	*next, *prev;
 	int			id;	/* should be ZONEID */
 #ifdef ZONE_DEBUG
 	zonedebug_t		d;
 #endif
 };
 
-struct memzone_s {
+struct Memzone {
 	int		size;		/* total bytes malloced, including header */
 	int		used;		/* total bytes used */
 	Memblk	blocklist;	/* start / end cap for linked list */
@@ -1101,25 +1101,25 @@ Copystr(const char *in)
 #define HUNK_FREE_MAGIC 0x89537893
 
 typedef struct hunkHeader_s hunkHeader_t;
-typedef struct hunkUsed_s Hunkused;
-typedef struct hunkblock_s Hunkblk;
+typedef struct Hunkused Hunkused;
+typedef struct Hunkblk Hunkblk;
 
 struct hunkHeader_s {
 	uint	magic;
 	uint	size;
 };
 
-struct hunkUsed_s {
+struct Hunkused {
 	int	mark;
 	int	permanent;
 	int	temp;
 	int	tempHighwater;
 };
 
-struct hunkblock_s {
+struct Hunkblk {
 	int	size;
 	byte	printed;
-	struct hunkblock_s	*next;
+	struct Hunkblk	*next;
 	char			*label;
 	char			*file;
 	int			line;

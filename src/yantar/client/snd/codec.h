@@ -12,17 +12,17 @@
 #include "shared.h"
 #include "common.h"
 
-typedef struct snd_info_t snd_info_t;
+typedef struct Sndinfo Sndinfo;
 typedef struct Sndstream Sndstream;
 typedef struct Sndcodec Sndcodec;
 
 /* Codec op types */
-typedef void *(*CODEC_LOAD)(const char *filename, snd_info_t *info);
+typedef void *(*CODEC_LOAD)(const char *filename, Sndinfo *info);
 typedef Sndstream *(*CODEC_OPEN)(const char *filename);
 typedef int (*CODEC_READ)(Sndstream *stream, int bytes, void *buffer);
 typedef void (*CODEC_CLOSE)(Sndstream *stream);
 
-typedef struct snd_info_t {
+typedef struct Sndinfo {
 	int	rate;
 	int	width;
 	int	channels;
@@ -34,7 +34,7 @@ typedef struct snd_info_t {
 struct Sndstream {
 	Sndcodec	*codec;
 	Fhandle	file;
-	snd_info_t	info;
+	Sndinfo	info;
 	int		length;
 	int		pos;
 	void		*ptr;
@@ -54,7 +54,7 @@ struct Sndcodec {
 void S_CodecInit(void);
 void S_CodecShutdown(void);
 void S_CodecRegister(Sndcodec *codec);
-void*S_CodecLoad(const char *filename, snd_info_t *info);
+void*S_CodecLoad(const char *filename, Sndinfo *info);
 Sndstream*S_CodecOpenStream(const char *filename);
 void S_CodecCloseStream(Sndstream *stream);
 int S_CodecReadStream(Sndstream *stream, int bytes, void *buffer);
@@ -65,7 +65,7 @@ void S_CodecUtilClose(Sndstream **stream);
 
 /* WAV Codec */
 extern Sndcodec wav_codec;
-void*S_WAV_CodecLoad(const char *filename, snd_info_t *info);
+void*S_WAV_CodecLoad(const char *filename, Sndinfo *info);
 Sndstream*S_WAV_CodecOpenStream(const char *filename);
 void S_WAV_CodecCloseStream(Sndstream *stream);
 int S_WAV_CodecReadStream(Sndstream *stream, int bytes, void *buffer);
@@ -73,7 +73,7 @@ int S_WAV_CodecReadStream(Sndstream *stream, int bytes, void *buffer);
 /* Ogg Vorbis codec */
 #ifdef USE_CODEC_VORBIS
 extern Sndcodec ogg_codec;
-void*S_OGG_CodecLoad(const char *filename, snd_info_t *info);
+void*S_OGG_CodecLoad(const char *filename, Sndinfo *info);
 Sndstream*S_OGG_CodecOpenStream(const char *filename);
 void S_OGG_CodecCloseStream(Sndstream *stream);
 int S_OGG_CodecReadStream(Sndstream *stream, int bytes, void *buffer);

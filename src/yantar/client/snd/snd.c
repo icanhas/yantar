@@ -20,10 +20,10 @@ Cvar	*s_backend;
 Cvar	*s_muteWhenMinimized;
 Cvar	*s_muteWhenUnfocused;
 
-static soundInterface_t si;
+static Sndinferface si;
 
 static qbool
-S_ValidSoundInterface(soundInterface_t *si)
+S_ValidSoundInterface(Sndinferface *si)
 {
 	if(!si->Shutdown) return qfalse;
 	if(!si->StartSound) return qfalse;
@@ -354,7 +354,7 @@ S_Shutdown(void)
 {
 	if(si.Shutdown)
 		si.Shutdown( );
-	Q_Memset(&si, 0, sizeof(soundInterface_t));
+	Q_Memset(&si, 0, sizeof(Sndinferface));
 	Cmd_RemoveCommand("play");
 	Cmd_RemoveCommand("music");
 	Cmd_RemoveCommand("stopmusic");

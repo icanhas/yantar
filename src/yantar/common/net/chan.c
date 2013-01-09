@@ -396,16 +396,16 @@ typedef struct {
 typedef struct {
 	loopBitmsg	msgs[MAX_LOOPBACK];
 	int		get, send;
-} loopback_t;
+} Loopback;
 
-loopback_t loopbacks[2];
+Loopback loopbacks[2];
 
 
 qbool
 NET_GetLoopPacket(netsrc_t sock, Netaddr *net_from, Bitmsg *net_message)
 {
 	int i;
-	loopback_t *loop;
+	Loopback *loop;
 
 	loop = &loopbacks[sock];
 
@@ -431,7 +431,7 @@ void
 NET_SendLoopPacket(netsrc_t sock, int length, const void *data, Netaddr to)
 {
 	int i;
-	loopback_t *loop;
+	Loopback *loop;
 
 	loop = &loopbacks[sock^1];
 

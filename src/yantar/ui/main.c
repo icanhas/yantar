@@ -79,7 +79,7 @@ typedef struct {
 	char		*cvarName;
 	char		*defaultString;
 	int		cvarFlags;
-} cvarTable_t;
+} Cvartable;
 
 Vmcvar	ui_ffa_fraglimit;
 Vmcvar	ui_ffa_timelimit;
@@ -138,7 +138,7 @@ Vmcvar	ui_server16;
 
 Vmcvar	ui_skipExitCredits;
 
-static cvarTable_t cvarTable[] = {
+static Cvartable cvarTable[] = {
 	{ &ui_ffa_fraglimit, "ui_ffa_fraglimit", "20", CVAR_ARCHIVE },
 	{ &ui_ffa_timelimit, "ui_ffa_timelimit", "0", CVAR_ARCHIVE },
 
@@ -207,7 +207,7 @@ void
 UI_RegisterCvars(void)
 {
 	int i;
-	cvarTable_t *cv;
+	Cvartable *cv;
 
 	for(i = 0, cv = cvarTable; i < cvarTableSize; i++, cv++)
 		trap_Cvar_Register(cv->vmCvar, cv->cvarName, cv->defaultString,
@@ -221,7 +221,7 @@ void
 UI_UpdateCvars(void)
 {
 	int i;
-	cvarTable_t *cv;
+	Cvartable *cv;
 
 	for(i = 0, cv = cvarTable; i < cvarTableSize; i++, cv++)
 		trap_Cvar_Update(cv->vmCvar);

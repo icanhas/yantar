@@ -243,7 +243,7 @@ NameToGenFunc(const char *funcname)
  * ParseWaveForm
  */
 static void
-ParseWaveForm(char **text, waveForm_t *wave)
+ParseWaveForm(char **text, Waveform *wave)
 {
 	char *token;
 

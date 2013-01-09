@@ -374,7 +374,7 @@ extern Vec4 g_color_table[8];
 #define DEG2RAD(a)		(((a) * M_PI) / 180.0F)
 #define RAD2DEG(a)		(((a) * 180.0f) / M_PI)
 
-struct cplane_s;
+struct Cplane;
 
 extern Vec3	vec3_origin;
 extern Vec3	axisDefault[3];
@@ -668,8 +668,8 @@ void	copyaxis(Vec3 in[3], Vec3 out[3]);
 
 void	setq(Quat, Scalar w, Scalar x, Scalar y, Scalar z);
 
-void	SetPlaneSignbits(struct cplane_s *out);
-int	BoxOnPlaneSide(const Vec3 emins, const Vec3 emaxs, const struct cplane_s *plane);
+void	SetPlaneSignbits(struct Cplane *out);
+int	BoxOnPlaneSide(const Vec3 emins, const Vec3 emaxs, const struct Cplane *plane);
 
 qbool	BoundsIntersect(const Vec3 mins, const Vec3 maxs,
 			 const Vec3 mins2, const Vec3 maxs2);
@@ -933,8 +933,8 @@ enum {
 };
 
 /* nothing outside the Cvar_*() functions should modify these fields! */
-typedef struct cvar_s Cvar;
-struct cvar_s {
+typedef struct Cvar Cvar;
+struct Cvar {
 	char		*name;
 	char		*desc;	/* description string */
 	char		*string;
@@ -1006,7 +1006,7 @@ enum {
 
 /* plane_t structure
  * !!! if this is changed, it must be changed in asm code too !!! */
-typedef struct cplane_s {
+typedef struct Cplane {
 	Vec3	normal;
 	float	dist;
 	byte	type;		/* for fast side tests: 0,1,2 = axial, 3 = nonaxial */
@@ -1150,7 +1150,7 @@ typedef enum {
  * so if a Playerstate is transmitted, the Entstate can be fully derived
  * from it.
  */
-typedef struct playerState_s {
+typedef struct Playerstate {
 	int	commandTime;	/* cmd->serverTime of last executed command */
 	int	pm_type;
 	int	bobCycle;	/* for view bobbing and footstep generation */
@@ -1256,7 +1256,7 @@ enum buttonflags {
 };
 
 /* Usrcmd is sent to the server each client frame */
-typedef struct usercmd_s {
+typedef struct Usrcmd {
 	int		serverTime;
 	int		angles[3];
 	int		buttons;
@@ -1294,7 +1294,7 @@ typedef struct {
  * The messages are delta compressed, so it doesn't really matter if
  * the structure size is fairly large 
  */
-typedef struct entityState_s {
+typedef struct Entstate {
 	int		number;	/* entity index */
 	int		eType;	/* Enttype */
 	int		eFlags;
@@ -1387,7 +1387,7 @@ typedef struct {
 #define Square(x) ((x)*(x))
 
 /* real time */
-typedef struct qtime_s {
+typedef struct Qtime {
 	int	tm_sec;		/* seconds after the minute - [0,59] */
 	int	tm_min;		/* minutes after the hour - [0,59] */
 	int	tm_hour;	/* hours since midnight - [0,23] */

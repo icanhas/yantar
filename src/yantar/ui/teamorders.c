@@ -274,7 +274,7 @@ UI_TeamOrdersMenu_ListEvent(void *ptr, int event)
 static void
 UI_TeamOrdersMenu_BuildBotList(void)
 {
-	uiClientState_t cs;
+	UIclientstate cs;
 	int	numPlayers;
 	int	isBot;
 	int	n;
@@ -413,7 +413,7 @@ UI_TeamOrdersMenu(void)
 void
 UI_TeamOrdersMenu_f(void)
 {
-	uiClientState_t cs;
+	UIclientstate cs;
 	char	info[MAX_INFO_STRING];
 	int	team;
 

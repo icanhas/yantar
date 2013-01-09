@@ -33,7 +33,7 @@ typedef struct sndBuffer_s {
 	adpcm_state_t	adpcm;
 } sndBuffer;
 
-typedef struct sfx_s {
+typedef struct Sfx {
 	sndBuffer	*soundData;
 	qbool		defaultSound;		/* couldn't be loaded, so use buzz */
 	qbool		inMemory;		/* not in Memory */
@@ -42,7 +42,7 @@ typedef struct sfx_s {
 	int		soundLength;
 	char		soundName[MAX_QPATH];
 	int		lastTimeUsed;
-	struct sfx_s	*next;
+	struct Sfx	*next;
 } Sfx;
 
 typedef struct {
@@ -58,7 +58,7 @@ typedef struct {
 
 #define MAX_DOPPLER_SCALE	50.0f	/* arbitrary */
 
-typedef struct loopSound_s {
+typedef struct Loopsnd {
 	Vec3		origin;
 	Vec3		velocity;
 	Sfx		*sfx;
@@ -135,7 +135,7 @@ typedef struct {
 	void (*StopCapture)(void);
 	void (*MasterGain)(float gain);
 #endif
-} soundInterface_t;
+} Sndinferface;
 
 
 /*
@@ -221,4 +221,4 @@ extern short	*sfxScratchBuffer;
 extern Sfx    *sfxScratchPointer;
 extern int	sfxScratchIndex;
 
-qbool S_Base_Init(soundInterface_t *si);
+qbool S_Base_Init(Sndinferface *si);

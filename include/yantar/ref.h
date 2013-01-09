@@ -44,7 +44,7 @@ typedef struct {
 	byte	modulate[4];
 } Polyvert;
 
-typedef struct poly_s {
+typedef struct Poly {
 	Handle		hShader;
 	int		numVerts;
 	Polyvert *verts;

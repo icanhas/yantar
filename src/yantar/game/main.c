@@ -21,7 +21,7 @@ typedef struct {
 	int		modificationCount;	/* for tracking changes */
 	qbool		trackChange;		/* track this variable, and announce if changed */
 	qbool		teamShader;		/* track and if changed, update shader state */
-} cvarTable_t;
+} Cvartable;
 
 Gentity	g_entities[MAX_GENTITIES];
 gClient	g_clients[MAX_CLIENTS];
@@ -76,7 +76,7 @@ Vmcvar	g_blueteam;
 Vmcvar	g_enableDust;
 Vmcvar	g_proxMineTimeout;
 
-static cvarTable_t gameCvarTable[] = {
+static Cvartable gameCvarTable[] = {
 	/* don't override the cheat state set by the system */
 	{ &g_cheats, "sv_cheats", "", 0, 0, qfalse },
 
@@ -334,7 +334,7 @@ void
 G_RegisterCvars(void)
 {
 	int i;
-	cvarTable_t	*cv;
+	Cvartable	*cv;
 	qbool		remapped = qfalse;
 
 	for(i = 0, cv = gameCvarTable; i < gameCvarTableSize; i++, cv++){
@@ -367,7 +367,7 @@ void
 G_UpdateCvars(void)
 {
 	int i;
-	cvarTable_t	*cv;
+	Cvartable	*cv;
 	qbool		remapped = qfalse;
 
 	for(i = 0, cv = gameCvarTable; i < gameCvarTableSize; i++, cv++)

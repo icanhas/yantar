@@ -43,10 +43,10 @@ TableForFunc(genFunc_t func)
 /*
 ** EvalWaveForm
 **
-** Evaluates a given waveForm_t, referencing backEnd.refdef.time directly
+** Evaluates a given Waveform, referencing backEnd.refdef.time directly
 */
 static float
-EvalWaveForm(const waveForm_t *wf)
+EvalWaveForm(const Waveform *wf)
 {
 	float *table;
 
@@ -56,7 +56,7 @@ EvalWaveForm(const waveForm_t *wf)
 }
 
 static float
-EvalWaveFormClamped(const waveForm_t *wf)
+EvalWaveFormClamped(const Waveform *wf)
 {
 	float glow = EvalWaveForm(wf);
 
@@ -75,7 +75,7 @@ EvalWaveFormClamped(const waveForm_t *wf)
 ** RB_CalcStretchTexCoords
 */
 void
-RB_CalcStretchTexCoords(const waveForm_t *wf, float *st)
+RB_CalcStretchTexCoords(const Waveform *wf, float *st)
 {
 	float p;
 	texModInfo_t tmi;
@@ -651,7 +651,7 @@ RB_CalcAlphaFromOneMinusEntity(unsigned char *dstColors)
 ** RB_CalcWaveColor
 */
 void
-RB_CalcWaveColor(const waveForm_t *wf, unsigned char *dstColors)
+RB_CalcWaveColor(const Waveform *wf, unsigned char *dstColors)
 {
 	int i;
 	int v;
@@ -686,7 +686,7 @@ RB_CalcWaveColor(const waveForm_t *wf, unsigned char *dstColors)
 ** RB_CalcWaveAlpha
 */
 void
-RB_CalcWaveAlpha(const waveForm_t *wf, unsigned char *dstColors)
+RB_CalcWaveAlpha(const Waveform *wf, unsigned char *dstColors)
 {
 	int i;
 	int v;
@@ -897,7 +897,7 @@ RB_CalcEnvironmentTexCoords(float *st)
 ** RB_CalcTurbulentTexCoords
 */
 void
-RB_CalcTurbulentTexCoords(const waveForm_t *wf, float *st)
+RB_CalcTurbulentTexCoords(const Waveform *wf, float *st)
 {
 	int i;
 	float now;

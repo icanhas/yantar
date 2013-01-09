@@ -118,7 +118,7 @@ typedef struct vmSymbol_s {
 #define VM_OFFSET_PROGRAM_STACK 0
 #define VM_OFFSET_SYSTEM_CALL	4
 
-struct vm_s {
+struct Vm {
 	/* DO NOT MOVE OR CHANGE THESE WITHOUT CHANGING THE VM_OFFSET_* DEFINES
 	 * USED BY THE ASM CODE */
 	int		programStack;	/* the vm may be recursively entered */

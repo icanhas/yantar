@@ -174,9 +174,9 @@ typedef struct {
 	char		*cvarName;
 	char		*defaultString;
 	int		cvarFlags;
-} cvarTable_t;
+} Cvartable;
 
-static cvarTable_t cvarTable[] = {
+static Cvartable cvarTable[] = {
 	{ &cg_ignore, "cg_ignore", "0", 0 },	/* used for debugging */
 	{ &cg_autoswitch, "cg_autoswitch", "1", CVAR_ARCHIVE },
 	{ &cg_drawGun, "cg_drawGun", "1", CVAR_ARCHIVE },
@@ -298,7 +298,7 @@ void
 CG_RegisterCvars(void)
 {
 	int	i;
-	cvarTable_t *cv;
+	Cvartable *cv;
 	char	var[MAX_TOKEN_CHARS];
 
 	for(i = 0, cv = cvarTable; i < cvarTableSize; i++, cv++)
@@ -340,7 +340,7 @@ void
 CG_UpdateCvars(void)
 {
 	int i;
-	cvarTable_t *cv;
+	Cvartable *cv;
 
 	for(i = 0, cv = cvarTable; i < cvarTableSize; i++, cv++)
 		trap_Cvar_Update(cv->vmCvar);

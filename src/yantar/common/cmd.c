@@ -16,10 +16,10 @@ typedef struct {
 	byte	*data;
 	int	maxsize;
 	int	cursize;
-} cmd_t;
+} Cmd;
 
 int	cmd_wait;
-cmd_t	cmd_text;
+Cmd	cmd_text;
 byte	cmd_text_buf[MAX_CMD_BUFFER];
 
 

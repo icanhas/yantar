@@ -66,7 +66,7 @@ CM_distv3FromLineSquared(Vec3 p, Vec3 lp1, Vec3 lp2, Vec3 dir)
  */
 
 void
-CM_TestBoxInBrush(traceWork_t *tw, cbrush_t *brush)
+CM_TestBoxInBrush(Tracework *tw, cbrush_t *brush)
 {
 	int i;
 	Cplane	*plane;
@@ -136,7 +136,7 @@ CM_TestBoxInBrush(traceWork_t *tw, cbrush_t *brush)
 }
 
 void
-CM_TestInLeaf(traceWork_t *tw, cLeaf_t *leaf)
+CM_TestInLeaf(Tracework *tw, cLeaf_t *leaf)
 {
 	int	k;
 	int	brushnum;
@@ -194,7 +194,7 @@ CM_TestInLeaf(traceWork_t *tw, cLeaf_t *leaf)
  * capsule inside capsule check
  */
 void
-CM_TestCapsuleInCapsule(traceWork_t *tw, Cliphandle model)
+CM_TestCapsuleInCapsule(Tracework *tw, Cliphandle model)
 {
 	int i;
 	Vec3	mins, maxs;
@@ -261,7 +261,7 @@ CM_TestCapsuleInCapsule(traceWork_t *tw, Cliphandle model)
  * bounding box inside capsule check
  */
 void
-CM_TestBoundingBoxInCapsule(traceWork_t *tw, Cliphandle model)
+CM_TestBoundingBoxInCapsule(Tracework *tw, Cliphandle model)
 {
 	Vec3 mins, maxs, offset, size[2];
 	Cliphandle h;
@@ -295,7 +295,7 @@ CM_TestBoundingBoxInCapsule(traceWork_t *tw, Cliphandle model)
 
 #define MAX_POSITION_LEAFS 1024
 void
-CM_PositionTest(traceWork_t *tw)
+CM_PositionTest(Tracework *tw)
 {
 	int	leafs[MAX_POSITION_LEAFS];
 	int	i;
@@ -337,7 +337,7 @@ CM_PositionTest(traceWork_t *tw)
  */
 
 void
-CM_TraceThroughPatch(traceWork_t *tw, cPatch_t *patch)
+CM_TraceThroughPatch(Tracework *tw, cPatch_t *patch)
 {
 	float oldFrac;
 
@@ -354,7 +354,7 @@ CM_TraceThroughPatch(traceWork_t *tw, cPatch_t *patch)
 }
 
 void
-CM_TraceThroughBrush(traceWork_t *tw, cbrush_t *brush)
+CM_TraceThroughBrush(Tracework *tw, cbrush_t *brush)
 {
 	int i;
 	Cplane	*plane, *clipplane;
@@ -518,7 +518,7 @@ CM_TraceThroughBrush(traceWork_t *tw, cbrush_t *brush)
 }
 
 void
-CM_TraceThroughLeaf(traceWork_t *tw, cLeaf_t *leaf)
+CM_TraceThroughLeaf(Tracework *tw, cLeaf_t *leaf)
 {
 	int	k;
 	int	brushnum;
@@ -579,7 +579,7 @@ CM_TraceThroughLeaf(traceWork_t *tw, cLeaf_t *leaf)
  * get the first intersection of the ray with the sphere
  */
 void
-CM_TraceThroughSphere(traceWork_t *tw, Vec3 origin, float radius, Vec3 start,
+CM_TraceThroughSphere(Tracework *tw, Vec3 origin, float radius, Vec3 start,
 		      Vec3 end)
 {
 	float	l1, l2, length, scale, fraction;
@@ -661,7 +661,7 @@ CM_TraceThroughSphere(traceWork_t *tw, Vec3 origin, float radius, Vec3 start,
  * the cylinder extends halfheight above and below the origin
  */
 void
-CM_TraceThroughVerticalCylinder(traceWork_t *tw, Vec3 origin, float radius,
+CM_TraceThroughVerticalCylinder(Tracework *tw, Vec3 origin, float radius,
 				float halfheight, Vec3 start,
 				Vec3 end)
 {
@@ -759,7 +759,7 @@ CM_TraceThroughVerticalCylinder(traceWork_t *tw, Vec3 origin, float radius,
  * capsule vs. capsule collision (not rotated)
  */
 void
-CM_TraceCapsuleThroughCapsule(traceWork_t *tw, Cliphandle model)
+CM_TraceCapsuleThroughCapsule(Tracework *tw, Cliphandle model)
 {
 	int i;
 	Vec3	mins, maxs;
@@ -819,7 +819,7 @@ CM_TraceCapsuleThroughCapsule(traceWork_t *tw, Cliphandle model)
  * bounding box vs. capsule collision
  */
 void
-CM_TraceBoundingBoxThroughCapsule(traceWork_t *tw, Cliphandle model)
+CM_TraceBoundingBoxThroughCapsule(Tracework *tw, Cliphandle model)
 {
 	Vec3 mins, maxs, offset, size[2];
 	Cliphandle h;
@@ -858,7 +858,7 @@ CM_TraceBoundingBoxThroughCapsule(traceWork_t *tw, Cliphandle model)
  * a smaller intercept fraction.
  */
 void
-CM_TraceThroughTree(traceWork_t *tw, int num, float p1f, float p2f, Vec3 p1,
+CM_TraceThroughTree(Tracework *tw, int num, float p1f, float p2f, Vec3 p1,
 		    Vec3 p2)
 {
 	cNode_t *node;
@@ -962,10 +962,10 @@ void
 CM_Trace(Trace *results, const Vec3 start, const Vec3 end, Vec3 mins,
 	 Vec3 maxs,
 	 Cliphandle model, const Vec3 origin, int brushmask, int capsule,
-	 sphere_t *sphere)
+	 Sphere *sphere)
 {
 	int i;
-	traceWork_t	tw;
+	Tracework	tw;
 	Vec3 offset;
 	Cmodel	*cmod;
 
@@ -1198,7 +1198,7 @@ CM_TransformedBoxTrace(Trace *results, const Vec3 start, const Vec3 end,
 	float		halfwidth;
 	float		halfheight;
 	float		t;
-	sphere_t	sphere;
+	Sphere	sphere;
 
 	if(!mins)
 		mins = vec3_origin;

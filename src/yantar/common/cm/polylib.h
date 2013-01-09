@@ -10,7 +10,7 @@
 typedef struct {
 	int	numpoints;
 	Vec3	p[4];	/* variable sized */
-} winding_t;
+} Winding;
 
 #define MAX_POINTS_ON_WINDING	64
 
@@ -28,26 +28,26 @@ typedef struct {
 #define ON_EPSILON 0.1f
 #endif
 
-winding_t*AllocWinding(int points);
-Scalar   WindingArea(winding_t *w);
-void    WindingCenter(winding_t *w, Vec3 center);
-void    ClipWindingEpsilon(winding_t *in, Vec3 normal, Scalar dist,
-			   Scalar epsilon, winding_t **front, winding_t **back);
-winding_t*ChopWinding(winding_t *in, Vec3 normal, Scalar dist);
-winding_t*CopyWinding(winding_t *w);
-winding_t*ReverseWinding(winding_t *w);
-winding_t*BaseWindingForPlane(Vec3 normal, Scalar dist);
-void    CheckWinding(winding_t *w);
-void    WindingPlane(winding_t *w, Vec3 normal, Scalar *dist);
-void    RemoveColinearPoints(winding_t *w);
-int             WindingOnPlaneSide(winding_t *w, Vec3 normal, Scalar dist);
-void    FreeWinding(winding_t *w);
-void    WindingBounds(winding_t *w, Vec3 mins, Vec3 maxs);
+Winding*AllocWinding(int points);
+Scalar   WindingArea(Winding *w);
+void    WindingCenter(Winding *w, Vec3 center);
+void    ClipWindingEpsilon(Winding *in, Vec3 normal, Scalar dist,
+			   Scalar epsilon, Winding **front, Winding **back);
+Winding*ChopWinding(Winding *in, Vec3 normal, Scalar dist);
+Winding*CopyWinding(Winding *w);
+Winding*ReverseWinding(Winding *w);
+Winding*BaseWindingForPlane(Vec3 normal, Scalar dist);
+void    CheckWinding(Winding *w);
+void    WindingPlane(Winding *w, Vec3 normal, Scalar *dist);
+void    RemoveColinearPoints(Winding *w);
+int             WindingOnPlaneSide(Winding *w, Vec3 normal, Scalar dist);
+void    FreeWinding(Winding *w);
+void    WindingBounds(Winding *w, Vec3 mins, Vec3 maxs);
 
-void    AddWindingToConvexHull(winding_t *w, winding_t **hull, Vec3 normal);
+void    AddWindingToConvexHull(Winding *w, Winding **hull, Vec3 normal);
 
-void    ChopWindingInPlace(winding_t **w, Vec3 normal, Scalar dist,
+void    ChopWindingInPlace(Winding **w, Vec3 normal, Scalar dist,
 			   Scalar epsilon);
 /* frees the original if clipped */
 
-void pw(winding_t *w);
+void pw(Winding *w);

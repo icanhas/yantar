@@ -73,14 +73,14 @@ typedef struct {
 /* vertex scales */
 #define MD3_XYZ_SCALE (1.0/64)
 
-typedef struct md3Frame_s {
+typedef struct MD3frame {
 	Vec3	bounds[2];
 	Vec3	localOrigin;
 	float	radius;
 	char	name[16];
 } MD3frame;
 
-typedef struct md3Tag_s {
+typedef struct MD3tag {
 	char	name[MAX_QPATH];	/* tag name */
 	Vec3	origin;
 	Vec3	axis[3];

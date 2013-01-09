@@ -9,7 +9,7 @@
 #ifndef __TR_FBO_H__
 #define __TR_FBO_H__
 
-struct image_s;
+struct Img;
 struct shaderProgram_s;
 
 typedef struct FBO_s {
@@ -21,7 +21,7 @@ typedef struct FBO_s {
 
 	uint32_t	colorBuffers[16];
 	int		colorFormat;
-	struct image_s	*colorImage[16];
+	struct Img	*colorImage[16];
 
 	uint32_t	depthBuffer;
 	int		depthFormat;
@@ -40,7 +40,7 @@ void FBO_Bind(FBO_t *fbo);
 void FBO_Init(void);
 void FBO_Shutdown(void);
 
-void FBO_BlitFromTexture(struct image_s *src, Vec4 srcBox, Vec2 srcTexScale, FBO_t *dst, Vec4 dstBox,
+void FBO_BlitFromTexture(struct Img *src, Vec4 srcBox, Vec2 srcTexScale, FBO_t *dst, Vec4 dstBox,
 			 struct shaderProgram_s *shaderProgram, Vec4 color,
 			 int blend);
 void FBO_Blit(FBO_t *src, Vec4 srcBox, Vec2 srcTexScale, FBO_t *dst, Vec4 dstBox,

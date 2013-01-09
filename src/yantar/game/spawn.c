@@ -109,7 +109,7 @@ Field fields[] = {
 typedef struct {
 	char *name;
 	void (*spawn)(Gentity *ent);
-} spawn_t;
+} Spawn;
 
 void SP_info_player_start(Gentity *ent);
 void SP_info_player_deathmatch(Gentity *ent);
@@ -176,7 +176,7 @@ SP_item_botroam(Gentity *ent)
 {
 }
 
-spawn_t spawns[] = {
+Spawn spawns[] = {
 	/* info entities don't do anything at all, but provide positional
 	 * information for things controlled by other processes */
 	{"info_player_start", SP_info_player_start},
@@ -261,7 +261,7 @@ spawn_t spawns[] = {
 qbool
 G_CallSpawn(Gentity *ent)
 {
-	spawn_t *s;
+	Spawn *s;
 	Gitem *item;
 
 	if(!ent->classname){

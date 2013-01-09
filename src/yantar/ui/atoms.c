@@ -14,7 +14,7 @@
 #include "ui.h"
 #include "local.h"
 
-uiStatic_t	uis;
+UIstatic	uis;
 qbool		m_entersound;	/* after a frame, so caching won't disrupt the sound */
 
 void QDECL

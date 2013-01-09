@@ -578,7 +578,7 @@ SetPlaneSignbits(Cplane *out)
 
 /* returns 1, 2, or 1 + 2 */
 int
-BoxOnPlaneSide(const Vec3 emins, const Vec3 emaxs, const struct cplane_s *p)
+BoxOnPlaneSide(const Vec3 emins, const Vec3 emaxs, const struct Cplane *p)
 {
 	float	dist[2];
 	int	sides;

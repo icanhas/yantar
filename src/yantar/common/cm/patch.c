@@ -14,8 +14,8 @@
  *
  * void CM_ClearLevelPatches( void );
  * struct patchCollide_s	*CM_GeneratePatchCollide( int width, int height, const Vec3 *points );
- * void CM_TraceThroughPatchCollide( traceWork_t *tw, const struct patchCollide_s *pc );
- * qbool CM_PositionTestInPatchCollide( traceWork_t *tw, const struct patchCollide_s *pc );
+ * void CM_TraceThroughPatchCollide( Tracework *tw, const struct patchCollide_s *pc );
+ * qbool CM_PositionTestInPatchCollide( Tracework *tw, const struct patchCollide_s *pc );
  * void CM_DrawDebugSurface( void (*drawPoly)(int color, int numPoints, flaot *points) );
  *
  *
@@ -31,7 +31,7 @@
  * typedef struct {
  *      float	plane[4];
  *      int		signbits;		// signx + (signy<<1) + (signz<<2), used as lookup during collision
- * } patchPlane_t;
+ * } Patchplane;
  *
  * typedef struct {
  *      int			surfacePlane;
@@ -44,7 +44,7 @@
  * typedef struct patchCollide_s {
  *      Vec3	bounds[2];
  *      int		numPlanes;			// surface planes plus edge planes
- *      patchPlane_t	*planes;
+ *      Patchplane	*planes;
  *      int		numFacets;
  *      facet_t	*facets;
  * } patchCollide_t;
@@ -383,7 +383,7 @@ CM_RemoveDegenerateColumns(cGrid_t *grid)
  */
 
 static int numPlanes;
-static patchPlane_t planes[MAX_PATCH_PLANES];
+static Patchplane planes[MAX_PATCH_PLANES];
 
 static int numFacets;
 static facet_t facets[MAX_PATCH_PLANES];	/* maybe MAX_FACETS ?? */
@@ -395,7 +395,7 @@ static facet_t facets[MAX_PATCH_PLANES];	/* maybe MAX_FACETS ?? */
  * CM_PlaneEqual
  */
 int
-CM_PlaneEqual(patchPlane_t *p, float plane[4], int *flipped)
+CM_PlaneEqual(Patchplane *p, float plane[4], int *flipped)
 {
 	float invplane[4];
 
@@ -716,7 +716,7 @@ CM_ValidateFacet(facet_t *facet)
 {
 	float	plane[4];
 	int	j;
-	winding_t       *w;
+	Winding       *w;
 	Vec3	bounds[2];
 
 	if(facet->surfacePlane == -1)
@@ -765,7 +765,7 @@ CM_AddFacetBevels(facet_t *facet)
 	int	i, j, k, l;
 	int	axis, dir, order, flipped;
 	float	plane[4], d, newplane[4];
-	winding_t *w, *w2;
+	Winding *w, *w2;
 	Vec3	mins, maxs, vec, vec2;
 
 	copyv4(planes[ facet->surfacePlane ].plane, plane);
@@ -1215,13 +1215,13 @@ CM_GeneratePatchCollide(int width, int height, Vec3 *points)
  * special case for point traces because the patch collide "brushes" have no volume
  */
 void
-CM_TracePointThroughPatchCollide(traceWork_t *tw,
+CM_TracePointThroughPatchCollide(Tracework *tw,
 				 const struct patchCollide_s *pc)
 {
 	qbool		frontFacing[MAX_PATCH_PLANES];
 	float		intersection[MAX_PATCH_PLANES];
 	float		intersect;
-	const patchPlane_t *planes;
+	const Patchplane *planes;
 	const facet_t *facet;
 	int i, j, k;
 	float	offset;
@@ -1362,11 +1362,11 @@ CM_CheckFacetPlane(float *plane, Vec3 start, Vec3 end, float *enterFrac,
  * CM_TraceThroughPatchCollide
  */
 void
-CM_TraceThroughPatchCollide(traceWork_t *tw, const struct patchCollide_s *pc)
+CM_TraceThroughPatchCollide(Tracework *tw, const struct patchCollide_s *pc)
 {
 	int i, j, hit, hitnum;
 	float offset, enterFrac, leaveFrac, t;
-	patchPlane_t *planes;
+	Patchplane *planes;
 	facet_t *facet;
 	float	plane[4] = {0, 0, 0, 0}, bestplane[4] = {0, 0, 0, 0};
 	Vec3	startp, endp;
@@ -1507,11 +1507,11 @@ CM_TraceThroughPatchCollide(traceWork_t *tw, const struct patchCollide_s *pc)
  * CM_PositionTestInPatchCollide
  */
 qbool
-CM_PositionTestInPatchCollide(traceWork_t *tw, const struct patchCollide_s *pc)
+CM_PositionTestInPatchCollide(Tracework *tw, const struct patchCollide_s *pc)
 {
 	int i, j;
 	float offset, t;
-	patchPlane_t *planes;
+	Patchplane *planes;
 	facet_t *facet;
 	float	plane[4];
 	Vec3	startp;
@@ -1614,7 +1614,7 @@ CM_DrawDebugSurface(void (*drawPoly)(int color, int numPoints, float *points))
 #endif
 	const patchCollide_t *pc;
 	facet_t *facet;
-	winding_t *w;
+	Winding *w;
 	int	i, j, k, n;
 	int	curplanenum, planenum, curinward, inward;
 	float	plane[4];

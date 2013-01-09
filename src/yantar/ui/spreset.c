@@ -126,7 +126,7 @@ Reset_Cache(void)
 void
 UI_ResetMenu(void)
 {
-	uiClientState_t cstate;
+	UIclientstate cstate;
 	int	n1, n2, n3;
 	int	l1, l2, l3;
 

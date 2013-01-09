@@ -157,7 +157,7 @@ void
 UI_DrawConnectScreen(qbool overlay)
 {
 	char	*s;
-	uiClientState_t cstate;
+	UIclientstate cstate;
 	char	info[MAX_INFO_VALUE];
 
 	Menu_Cache();

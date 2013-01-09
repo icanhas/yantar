@@ -32,7 +32,7 @@ qbool	chat_team;
 int		chat_playerNum;
 qbool	key_overstrikeMode;
 int		anykeydown;
-qkey_t	keys[MAX_KEYS];
+Qkey	keys[MAX_KEYS];
 Field	historyEditLines[COMMAND_HISTORY];
 
 static int	nextHistoryLine;	/* the last line in the history buffer, not masked */

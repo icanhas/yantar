@@ -1202,7 +1202,7 @@ S_Base_Shutdown(void)
 }
 
 qbool
-S_Base_Init(soundInterface_t *si)
+S_Base_Init(Sndinferface *si)
 {
 	qbool r;
 

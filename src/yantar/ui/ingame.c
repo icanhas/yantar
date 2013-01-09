@@ -137,7 +137,7 @@ void
 InGame_MenuInit(void)
 {
 	int	y;
-	uiClientState_t cs;
+	UIclientstate cs;
 	char	info[MAX_INFO_STRING];
 	int	team;
 

@@ -531,7 +531,7 @@ typedef struct {
 	float		bias;
 	qbool		demoversion;
 	qbool		firstdraw;
-} uiStatic_t;
+} UIstatic;
 
 extern void                     UI_Init(void);
 extern void                     UI_Shutdown(void);
@@ -588,7 +588,7 @@ extern char*UI_Cvar_VariableString(const char *var_name);
 extern void                     UI_Refresh(int time);
 extern void                     UI_StartDemoLoop(void);
 extern qbool m_entersound;
-extern uiStatic_t uis;
+extern UIstatic uis;
 
 /*
  * ui_spLevel.c
@@ -687,7 +687,7 @@ void                    trap_Key_ClearStates(void);
 int                             trap_Key_GetCatcher(void);
 void                    trap_Key_SetCatcher(int catcher);
 void                    trap_GetClipboardData(char *buf, int bufsize);
-void                    trap_GetClientState(uiClientState_t *state);
+void                    trap_GetClientState(UIclientstate *state);
 void                    trap_GetGlconfig(Glconfig *glconfig);
 int                             trap_GetConfigString(int index, char* buff,
 						     int buffsize);

@@ -185,8 +185,8 @@ RB_BeginSurface(material_t *shader, int fogNum)
 
 
 
-extern float EvalWaveForm(const waveForm_t *wf);
-extern float EvalWaveFormClamped(const waveForm_t *wf);
+extern float EvalWaveForm(const Waveform *wf);
+extern float EvalWaveFormClamped(const Waveform *wf);
 
 
 static void

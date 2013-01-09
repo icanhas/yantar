@@ -514,7 +514,7 @@ R_FBOList_f(void)
 extern void RB_SetGL2D(void);
 
 void
-FBO_BlitFromTexture(struct image_s *src, Vec4 srcBox, Vec2 srcTexScale, FBO_t *dst, Vec4 dstBox,
+FBO_BlitFromTexture(struct Img *src, Vec4 srcBox, Vec2 srcTexScale, FBO_t *dst, Vec4 dstBox,
 		    struct shaderProgram_s *shaderProgram, Vec4 color,
 		    int blend)
 {

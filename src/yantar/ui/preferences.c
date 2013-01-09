@@ -60,9 +60,9 @@ typedef struct {
 	menubitmap_s		back;
 
 	Handle			crosshairShader[NUM_CROSSHAIRS];
-} preferences_t;
+} Prefs;
 
-static preferences_t s_preferences;
+static Prefs s_preferences;
 
 static const char *teamoverlay_names[] =
 {
@@ -225,7 +225,7 @@ Preferences_MenuInit(void)
 {
 	int y;
 
-	memset(&s_preferences, 0,sizeof(preferences_t));
+	memset(&s_preferences, 0,sizeof(Prefs));
 
 	Preferences_Cache();
 

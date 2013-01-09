@@ -43,10 +43,10 @@ TableForFunc(genFunc_t func)
 /*
 ** EvalWaveForm
 **
-** Evaluates a given waveForm_t, referencing backEnd.refdef.time directly
+** Evaluates a given Waveform, referencing backEnd.refdef.time directly
 */
 static float
-EvalWaveForm(const waveForm_t *wf)
+EvalWaveForm(const Waveform *wf)
 {
 	float *table;
 
@@ -56,7 +56,7 @@ EvalWaveForm(const waveForm_t *wf)
 }
 
 static float
-EvalWaveFormClamped(const waveForm_t *wf)
+EvalWaveFormClamped(const Waveform *wf)
 {
 	float glow = EvalWaveForm(wf);
 
@@ -75,7 +75,7 @@ EvalWaveFormClamped(const waveForm_t *wf)
 ** RB_CalcStretchTexCoords
 */
 void
-RB_CalcStretchTexCoords(const waveForm_t *wf, float *st)
+RB_CalcStretchTexCoords(const Waveform *wf, float *st)
 {
 	float p;
 	texModInfo_t tmi;
@@ -94,7 +94,7 @@ RB_CalcStretchTexCoords(const waveForm_t *wf, float *st)
 }
 
 void
-RB_CalcStretchTexMatrix(const waveForm_t *wf, float *matrix)
+RB_CalcStretchTexMatrix(const Waveform *wf, float *matrix)
 {
 	float p;
 	texModInfo_t tmi;
@@ -677,7 +677,7 @@ RB_CalcAlphaFromOneMinusEntity(unsigned char *dstColors)
 ** RB_CalcWaveColorSingle
 */
 float
-RB_CalcWaveColorSingle(const waveForm_t *wf)
+RB_CalcWaveColorSingle(const Waveform *wf)
 {
 	float glow;
 
@@ -701,7 +701,7 @@ RB_CalcWaveColorSingle(const waveForm_t *wf)
 ** RB_CalcWaveColor
 */
 void
-RB_CalcWaveColor(const waveForm_t *wf, unsigned char *dstColors)
+RB_CalcWaveColor(const Waveform *wf, unsigned char *dstColors)
 {
 	int i;
 	int v;
@@ -724,7 +724,7 @@ RB_CalcWaveColor(const waveForm_t *wf, unsigned char *dstColors)
 ** RB_CalcWaveAlphaSingle
 */
 float
-RB_CalcWaveAlphaSingle(const waveForm_t *wf)
+RB_CalcWaveAlphaSingle(const Waveform *wf)
 {
 	return EvalWaveFormClamped(wf);
 }
@@ -733,7 +733,7 @@ RB_CalcWaveAlphaSingle(const waveForm_t *wf)
 ** RB_CalcWaveAlpha
 */
 void
-RB_CalcWaveAlpha(const waveForm_t *wf, unsigned char *dstColors)
+RB_CalcWaveAlpha(const Waveform *wf, unsigned char *dstColors)
 {
 	int i;
 	int v;
@@ -944,7 +944,7 @@ RB_CalcEnvironmentTexCoords(float *st)
 ** RB_CalcTurbulentTexCoords
 */
 void
-RB_CalcTurbulentTexCoords(const waveForm_t *wf, float *st)
+RB_CalcTurbulentTexCoords(const Waveform *wf, float *st)
 {
 	int i;
 	float now;
@@ -966,7 +966,7 @@ RB_CalcTurbulentTexCoords(const waveForm_t *wf, float *st)
 }
 
 void
-RB_CalcTurbulentTexMatrix(const waveForm_t *wf, Mat4 matrix)
+RB_CalcTurbulentTexMatrix(const Waveform *wf, Mat4 matrix)
 {
 	float now;
 

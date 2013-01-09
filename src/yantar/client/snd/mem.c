@@ -161,7 +161,7 @@ S_LoadSound(Sfx *sfx)
 {
 	byte *data;
 	short *samples;
-	snd_info_t info;
+	Sndinfo info;
 /*	int		size; */
 
 	/* player specific sounds are never directly loaded */

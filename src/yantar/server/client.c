@@ -1480,9 +1480,9 @@ SV_Voip_f(Client *cl)
 typedef struct {
 	char *name;
 	void (*func)(Client *cl);
-} ucmd_t;
+} Ucmd;
 
-static ucmd_t ucmds[] = {
+static Ucmd ucmds[] = {
 	{"userinfo", SV_UpdateUserinfo_f},
 	{"disconnect", SV_Disconnect_f},
 	{"cp", SV_VerifyPaks_f},
@@ -1507,7 +1507,7 @@ static ucmd_t ucmds[] = {
 void
 SV_ExecuteClientCommand(Client *cl, const char *s, qbool clientOK)
 {
-	ucmd_t *u;
+	Ucmd *u;
 	qbool bProcessed = qfalse;
 
 	Cmd_TokenizeString(s);

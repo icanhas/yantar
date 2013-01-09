@@ -368,7 +368,7 @@ S_OGG_CodecReadStream(Sndstream *stream, int bytes, void *buffer)
  * where we read the whole stream at once.
  */
 void *
-S_OGG_CodecLoad(const char *filename, snd_info_t *info)
+S_OGG_CodecLoad(const char *filename, Sndinfo *info)
 {
 	Sndstream *stream;
 	byte	*buffer;

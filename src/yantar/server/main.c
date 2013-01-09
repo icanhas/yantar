@@ -12,7 +12,7 @@ Cvar *sv_voip;
 #endif
 
 serverStatic_t svs;		/* persistant server info */
-server_t	sv;		/* local server */
+Server	sv;		/* local server */
 Vm		*gvm = NULL;	/* game virtual machine */
 
 Cvar		*sv_fps = NULL;		/* time rate for running non-clients */

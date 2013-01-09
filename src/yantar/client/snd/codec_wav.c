@@ -80,7 +80,7 @@ S_ByteSwapRawSamples(int samples, int width, int s_channels, const byte *data)
 }
 
 static qbool
-S_ReadRIFFHeader(Fhandle file, snd_info_t *info)
+S_ReadRIFFHeader(Fhandle file, Sndinfo *info)
 {
 	char	dump[16];
 	int	bits;
@@ -135,7 +135,7 @@ Sndcodec wav_codec =
 };
 
 void *
-S_WAV_CodecLoad(const char *filename, snd_info_t *info)
+S_WAV_CodecLoad(const char *filename, Sndinfo *info)
 {
 	Fhandle file;
 	void *buffer;

@@ -54,9 +54,9 @@ typedef struct {
 	Playerinfo	playerinfo;
 	int		current_fx;
 	char		playerModel[MAX_QPATH];
-} playersettings_t;
+} Playersettings;
 
-static playersettings_t s_playersettings;
+static Playersettings s_playersettings;
 
 static int	gamecodetoui[] = {4,2,3,0,5,1,6};
 static int	uitogamecode[] = {4,6,2,3,1,5,7};
@@ -361,7 +361,7 @@ PlayerSettings_MenuInit(void)
 {
 	int y;
 
-	memset(&s_playersettings,0,sizeof(playersettings_t));
+	memset(&s_playersettings,0,sizeof(Playersettings));
 
 	PlayerSettings_Cache();
 

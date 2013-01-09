@@ -22,8 +22,8 @@ typedef struct {
 	Vec3		origin;
 	Vec3		angles;
 	float		deltayaw;
-} pushed_t;
-pushed_t pushed[MAX_GENTITIES], *pushed_p;
+} Pushed;
+Pushed pushed[MAX_GENTITIES], *pushed_p;
 
 
 /*
@@ -250,7 +250,7 @@ G_MoverPush(Gentity *pusher, Vec3 move, Vec3 amove, Gentity **obstacle)
 	int i, e;
 	Gentity	*check;
 	Vec3		mins, maxs;
-	pushed_t *p;
+	Pushed *p;
 	int	entityList[MAX_GENTITIES];
 	int	listedEntities;
 	Vec3 totalMins, totalMaxs;

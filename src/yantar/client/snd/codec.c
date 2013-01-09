@@ -16,7 +16,7 @@ static Sndcodec *codecs;
  * then tries all supported codecs.
  */
 static void *
-S_CodecGetSound(const char *filename, snd_info_t *info)
+S_CodecGetSound(const char *filename, Sndinfo *info)
 {
 	Sndcodec	*codec;
 	Sndcodec	*orgCodec = NULL;
@@ -117,7 +117,7 @@ S_CodecRegister(Sndcodec *codec)
 }
 
 void *
-S_CodecLoad(const char *filename, snd_info_t *info)
+S_CodecLoad(const char *filename, Sndinfo *info)
 {
 	return S_CodecGetSound(filename, info);
 }

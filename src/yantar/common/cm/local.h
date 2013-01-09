@@ -30,7 +30,7 @@ typedef struct {
 	int	numLeafSurfaces;
 } cLeaf_t;
 
-typedef struct cmodel_s {
+typedef struct Cmodel {
 	Vec3	mins, maxs;
 	cLeaf_t leaf;	/* submodels don't reference the main tree */
 } Cmodel;
@@ -133,7 +133,7 @@ typedef struct {
 	float		radius;
 	float		halfheight;
 	Vec3		offset;
-} sphere_t;
+} Sphere;
 
 typedef struct {
 	Vec3		start;
@@ -147,8 +147,8 @@ typedef struct {
 	int		contents;	/* ored contents of the model tracing through */
 	qbool		isPoint;	/* optimized case */
 	Trace		trace;		/* returned from trace call */
-	sphere_t	sphere;		/* sphere for oriendted capsule collision */
-} traceWork_t;
+	Sphere	sphere;		/* sphere for oriendted capsule collision */
+} Tracework;
 
 typedef struct leafList_s {
 	int		count;
@@ -180,8 +180,8 @@ qbool CM_BoundsIntersectPoint(const Vec3 mins, const Vec3 maxs,
 
 struct patchCollide_s *CM_GeneratePatchCollide(int width, int height,
 					       Vec3 *points);
-void CM_TraceThroughPatchCollide(traceWork_t *tw,
+void CM_TraceThroughPatchCollide(Tracework *tw,
 				 const struct patchCollide_s *pc);
-qbool CM_PositionTestInPatchCollide(traceWork_t *tw,
+qbool CM_PositionTestInPatchCollide(Tracework *tw,
 				       const struct patchCollide_s *pc);
 void CM_ClearLevelPatches(void);

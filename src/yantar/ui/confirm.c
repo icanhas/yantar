@@ -152,7 +152,7 @@ void
 UI_ConfirmMenu_Style(const char *question, int style, void (*draw)(
 			     void), void (*action)(qbool result))
 {
-	uiClientState_t cstate;
+	UIclientstate cstate;
 	int	n1, n2, n3;
 	int	l1, l2, l3;
 
@@ -229,7 +229,7 @@ UI_ConfirmMenu(const char *question, void (*draw)(void), void (*action)(
 void
 UI_Message(const char **lines)
 {
-	uiClientState_t cstate;
+	UIclientstate cstate;
 	int n1, l1;
 
 	/* zero set all our globals */

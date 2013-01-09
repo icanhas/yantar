@@ -102,7 +102,7 @@ typedef enum {
 	IMGFLAG_CLAMPTOEDGE	= 0x0080,
 } imgFlags_t;
 
-typedef struct image_s {
+typedef struct Img {
 	char		imgName[MAX_QPATH];		/* game path, including extension */
 	int		width, height;			/* source image */
 	int		uploadWidth, uploadHeight;	/* after power of two and picmip but not including clamp to MAX_TEXTURE_SIZE */
@@ -116,7 +116,7 @@ typedef struct image_s {
 	imgFlags_t	flags;
 	int		wrapClampMode;	/* GL_CLAMP_TO_EDGE or GL_REPEAT */
 
-	struct image_s	* next;
+	struct Img	* next;
 } Img;
 
 typedef enum {
@@ -297,7 +297,7 @@ typedef struct {
 	float		amplitude;
 	float		phase;
 	float		frequency;
-} waveForm_t;
+} Waveform;
 
 #define TR_MAX_TEXMODS 4
 
@@ -317,7 +317,7 @@ typedef struct {
 	deform_t	deformation;	/* vertex coordinate modification type */
 
 	Vec3		moveVector;
-	waveForm_t	deformationWave;
+	Waveform	deformationWave;
 	float		deformationSpread;
 
 	float		bulgeWidth;
@@ -330,7 +330,7 @@ typedef struct {
 	texMod_t type;
 
 	/* used for TMOD_TURBULENT and TMOD_STRETCH */
-	waveForm_t wave;
+	Waveform wave;
 
 	/* used for TMOD_TRANSFORM */
 	float	matrix[2][2];	/* s' = s * m[0][0] + t * m[1][0] + trans[0] */
@@ -397,10 +397,10 @@ typedef struct {
 
 	textureBundle_t		bundle[NUM_TEXTURE_BUNDLES];
 
-	waveForm_t		rgbWave;
+	Waveform		rgbWave;
 	colorGen_t		rgbGen;
 
-	waveForm_t		alphaWave;
+	Waveform		alphaWave;
 	alphaGen_t		alphaGen;
 
 	byte			constantColor[4];	/* for CGEN_CONST and AGEN_CONST */
@@ -2380,26 +2380,26 @@ void    RB_CalcFogTexCoords(float *dstTexCoords);
 void    RB_CalcScrollTexCoords(const float scroll[2], float *dstTexCoords);
 void    RB_CalcRotateTexCoords(float rotSpeed, float *dstTexCoords);
 void    RB_CalcScaleTexCoords(const float scale[2], float *dstTexCoords);
-void    RB_CalcTurbulentTexCoords(const waveForm_t *wf, float *dstTexCoords);
+void    RB_CalcTurbulentTexCoords(const Waveform *wf, float *dstTexCoords);
 void    RB_CalcTransformTexCoords(const texModInfo_t *tmi, float *dstTexCoords);
 
 void    RB_CalcScaleTexMatrix(const float scale[2], float *matrix);
 void    RB_CalcScrollTexMatrix(const float scrollSpeed[2], float *matrix);
 void    RB_CalcRotateTexMatrix(float degsPerSecond, float *matrix);
-void RB_CalcTurbulentTexMatrix(const waveForm_t *wf, Mat4 matrix);
+void RB_CalcTurbulentTexMatrix(const Waveform *wf, Mat4 matrix);
 void    RB_CalcTransformTexMatrix(const texModInfo_t *tmi, float *matrix);
-void    RB_CalcStretchTexMatrix(const waveForm_t *wf, float *matrix);
+void    RB_CalcStretchTexMatrix(const Waveform *wf, float *matrix);
 
 void    RB_CalcModulateColorsByFog(unsigned char *dstColors);
 void    RB_CalcModulateAlphasByFog(unsigned char *dstColors);
 void    RB_CalcModulateRGBAsByFog(unsigned char *dstColors);
-void    RB_CalcWaveAlpha(const waveForm_t *wf, unsigned char *dstColors);
-float   RB_CalcWaveAlphaSingle(const waveForm_t *wf);
-void    RB_CalcWaveColor(const waveForm_t *wf, unsigned char *dstColors);
-float   RB_CalcWaveColorSingle(const waveForm_t *wf);
+void    RB_CalcWaveAlpha(const Waveform *wf, unsigned char *dstColors);
+float   RB_CalcWaveAlphaSingle(const Waveform *wf);
+void    RB_CalcWaveColor(const Waveform *wf, unsigned char *dstColors);
+float   RB_CalcWaveColorSingle(const Waveform *wf);
 void    RB_CalcAlphaFromEntity(unsigned char *dstColors);
 void    RB_CalcAlphaFromOneMinusEntity(unsigned char *dstColors);
-void    RB_CalcStretchTexCoords(const waveForm_t *wf, float *texCoords);
+void    RB_CalcStretchTexCoords(const Waveform *wf, float *texCoords);
 void    RB_CalcColorFromEntity(unsigned char *dstColors);
 void    RB_CalcColorFromOneMinusEntity(unsigned char *dstColors);
 void    RB_CalcSpecularAlpha(unsigned char *alphas);

@@ -34,12 +34,12 @@
 /*
  * msg.c
  */
-typedef struct msg_s Bitmsg;
-struct usercmd_s;
-struct entityState_s;
-struct playerState_s;
+typedef struct Bitmsg Bitmsg;
+struct Usrcmd;
+struct Entstate;
+struct Playerstate;
 
-struct msg_s {
+struct Bitmsg {
 	qbool		allowoverflow;	/* if false, do a Com_Errorf */
 	qbool		overflowed;	/* set to true if the buffer size failed (with allowoverflow set) */
 	qbool		oob;		/* set to true if the buffer size failed (with allowoverflow set) */
@@ -90,24 +90,24 @@ float MSG_ReadAngle16(Bitmsg *sb);
 void MSG_ReadData(Bitmsg *sb, void *buffer, int size);
 int MSG_LookaheadByte(Bitmsg *msg);
 
-void MSG_WriteDeltaUsercmd(Bitmsg *msg, struct usercmd_s *from,
-			 struct usercmd_s *to);
-void MSG_ReadDeltaUsercmd(Bitmsg *msg, struct usercmd_s *from,
-			 struct usercmd_s *to);
+void MSG_WriteDeltaUsercmd(Bitmsg *msg, struct Usrcmd *from,
+			 struct Usrcmd *to);
+void MSG_ReadDeltaUsercmd(Bitmsg *msg, struct Usrcmd *from,
+			 struct Usrcmd *to);
 
 void MSG_WriteDeltaUsercmdKey(Bitmsg *msg, int key, Usrcmd *from,
 			 Usrcmd *to);
 void MSG_ReadDeltaUsercmdKey(Bitmsg *msg, int key, Usrcmd *from, Usrcmd *to);
 
-void MSG_WriteDeltaEntity(Bitmsg *msg, struct entityState_s *from,
-			 struct entityState_s *to, qbool force);
+void MSG_WriteDeltaEntity(Bitmsg *msg, struct Entstate *from,
+			 struct Entstate *to, qbool force);
 void MSG_ReadDeltaEntity(Bitmsg *msg, Entstate *from, Entstate *to,
 			 int number);
 
-void MSG_WriteDeltaPlayerstate(Bitmsg *msg, struct playerState_s *from,
-			 struct playerState_s *to);
-void MSG_ReadDeltaPlayerstate(Bitmsg *msg, struct playerState_s *from,
-			 struct playerState_s *to);
+void MSG_WriteDeltaPlayerstate(Bitmsg *msg, struct Playerstate *from,
+			 struct Playerstate *to);
+void MSG_ReadDeltaPlayerstate(Bitmsg *msg, struct Playerstate *from,
+			 struct Playerstate *to);
 
 /*
  * NET
@@ -146,8 +146,8 @@ enum {
 
 typedef enum netadrtype_e netadrtype_t;
 typedef enum netsrc_e netsrc_t;
-typedef struct netadr_s Netaddr;
-typedef struct netchan_s Netchan;
+typedef struct Netaddr Netaddr;
+typedef struct Netchan Netchan;
 
 enum netadrtype_e {
 	NA_BAD = 0,	/* an address lookup failed */
@@ -165,7 +165,7 @@ enum netsrc_e {
 	NS_SERVER
 };
 
-struct netadr_s {
+struct Netaddr {
 	netadrtype_t	type;
 
 	byte		ip[4];
@@ -207,7 +207,7 @@ void NET_Sleep(int msec);
  * Netchan handles packet fragmentation and out of order / duplicate suppression
  */
 
-struct netchan_s {
+struct Netchan {
 	netsrc_t	sock;
 
 	int		dropped;	/* between last packet and previous */
@@ -323,7 +323,7 @@ enum {
  * VIRTUAL MACHINE
  */
 
-typedef struct vm_s Vm;
+typedef struct Vm Vm;
 typedef enum vmInterpret_e vmInterpret_t;
 typedef enum sharedTraps_e sharedTraps_t;
 
@@ -558,10 +558,10 @@ qbool FS_Which(const char *filename, void *searchPath);
  * Edit fields and command line history/completion
  */
  
- typedef struct field_s Field;
+ typedef struct Field Field;
 
 enum { MAX_EDIT_LINE = 256 };
-struct field_s {
+struct Field {
 	int	cursor;
 	int	scroll;
 	int	widthInChars;

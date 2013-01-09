@@ -86,9 +86,9 @@ typedef struct {
 	int		numpages;
 	char		modelskin[64];
 	int		selectedmodel;
-} playermodel_t;
+} Playermodel;
 
-static playermodel_t s_playermodel;
+static Playermodel s_playermodel;
 
 /*
  * PlayerModel_UpdateGrid
@@ -501,7 +501,7 @@ PlayerModel_MenuInit(void)
 	static char	skinname[32];
 
 	/* zero set all our globals */
-	memset(&s_playermodel, 0,sizeof(playermodel_t));
+	memset(&s_playermodel, 0,sizeof(Playermodel));
 
 	PlayerModel_Cache();
 

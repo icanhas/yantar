@@ -97,7 +97,7 @@ void
 Options_MenuInit(void)
 {
 	int y;
-	uiClientState_t cstate;
+	UIclientstate cstate;
 
 	memset(&s_options, 0, sizeof(optionsmenu_t));
 

@@ -9,9 +9,9 @@
 
 #define UI_API_VERSION 0
 
-typedef struct uiClientState_t	uiClientState_t;
+typedef struct UIclientstate	UIclientstate;
 
-struct uiClientState_t {
+struct UIclientstate {
 	Connstate	connState;
 	int		connectPacketCount;
 	int		clientNum;

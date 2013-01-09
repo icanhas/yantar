@@ -309,7 +309,7 @@ static Vec3 s_skyPoints[SKY_SUBDIVISIONS+1][SKY_SUBDIVISIONS+1];
 static float s_skyTexCoords[SKY_SUBDIVISIONS+1][SKY_SUBDIVISIONS+1][2];
 
 static void
-DrawSkySide(struct image_s *image, const int mins[2], const int maxs[2])
+DrawSkySide(struct Img *image, const int mins[2], const int maxs[2])
 {
 	int s, t;
 	int firstVertex = tess.numVertexes;

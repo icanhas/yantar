@@ -121,20 +121,20 @@ typedef struct {
 	int	segmentBase;	/* only valid on second pass */
 } Seg;
 
-typedef struct symbol_s {
-	struct  symbol_s	*next;
+typedef struct Sym {
+	struct  Sym	*next;
 	int			hash;
 	Seg		*segment;
 	char			*name;
 	int			value;
 } Sym;
 
-typedef struct hashchain_s {
+typedef struct Hashchain {
 	void			*data;
-	struct hashchain_s	*next;
+	struct Hashchain	*next;
 } Hashchain;
 
-typedef struct hashtable_s {
+typedef struct Hashtable {
 	int		buckets;
 	Hashchain	**table;
 } Hashtable;
@@ -151,7 +151,7 @@ int	passNumber;
 int	numSymbols;
 int	errorCount;
 
-typedef struct options_s {
+typedef struct Options {
 	qbool		verbose;
 	qbool		writeMapFile;
 	qbool		vq3compat;

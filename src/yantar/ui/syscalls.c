@@ -343,7 +343,7 @@ trap_GetClipboardData(char *buf, int bufsize)
 }
 
 void
-trap_GetClientState(uiClientState_t *state)
+trap_GetClientState(UIclientstate *state)
 {
 	syscall(UI_GETCLIENTSTATE, state);
 }
