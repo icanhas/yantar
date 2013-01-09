@@ -1435,10 +1435,7 @@ enum {
 
 	SAY_ALL				= 0,
 	SAY_TEAM			= 1,
-	SAY_TELL			= 2,
-
-	CDKEY_LEN			= 16,
-	CDCHKSUM_LEN			= 2
+	SAY_TELL			= 2
 };
 
 #define LERP(a, b, w)		((a) * (1.0f - (w)) + (b) * (w))

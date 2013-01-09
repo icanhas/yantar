@@ -1,10 +1,8 @@
 /*
- * ===========================================================================
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License.
- * ===========================================================================
  */
 
 #include "shared.h"
@@ -96,11 +94,6 @@ CL_InitKeyCommands(void)
 }
 
 void
-CL_CDDialog(void)
-{
-}
-
-void
 CL_FlushMemory(void)
 {
 }
@@ -123,10 +116,4 @@ CL_InitRef(void)
 void
 CL_Snd_Shutdown(void)
 {
-}
-
-qbool
-CL_CDKeyValidate(const char *key, const char *checksum)
-{
-	return qtrue;
 }
