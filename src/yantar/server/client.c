@@ -438,7 +438,6 @@ SV_DirectConnect(Netaddr from)
 /*              // disconnect the client from the game first so any flags the
  *              // player might have are dropped
  *              VM_Call( gvm, GAME_CLIENT_DISCONNECT, newcl - svs.clients ); */
-			/*  */
 			goto gotnewcl;
 		}
 	}

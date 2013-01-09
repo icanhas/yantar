@@ -4,7 +4,6 @@
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License.
  */
-/*  */
 
 /*****************************************************************************
 * name:		be_aas.h
@@ -46,7 +45,6 @@
 #define TFL_FUNCBOB		0x01000000	/* func bobbing */
 #define TFL_FLIGHT		0x02000000	/* flight */
 #define TFL_BRIDGE		0x04000000	/* move over a bridge */
-/*  */
 #define TFL_NOTTEAM1		0x08000000	/* not team 1 */
 #define TFL_NOTTEAM2		0x10000000	/* not team 2 */
 

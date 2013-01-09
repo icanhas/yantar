@@ -230,15 +230,12 @@ AAS_ShowBoundingBox(Vec3 origin, Vec3 mins, Vec3 maxs)
 	bboxcorners[0][0] = origin[0] + maxs[0];
 	bboxcorners[0][1] = origin[1] + maxs[1];
 	bboxcorners[0][2] = origin[2] + maxs[2];
-	/*  */
 	bboxcorners[1][0] = origin[0] + mins[0];
 	bboxcorners[1][1] = origin[1] + maxs[1];
 	bboxcorners[1][2] = origin[2] + maxs[2];
-	/*  */
 	bboxcorners[2][0] = origin[0] + mins[0];
 	bboxcorners[2][1] = origin[1] + mins[1];
 	bboxcorners[2][2] = origin[2] + maxs[2];
-	/*  */
 	bboxcorners[3][0] = origin[0] + maxs[0];
 	bboxcorners[3][1] = origin[1] + mins[1];
 	bboxcorners[3][2] = origin[2] + maxs[2];
@@ -369,9 +366,7 @@ AAS_ShowArea(int areanum, int groundfacesonly)
 	aas_face_t *face;
 	aas_edge_t *edge;
 
-	/*  */
 	numareaedges = 0;
-	/*  */
 	if(areanum < 0 || areanum >= aasworld.numareas){
 		botimport.Print(PRT_ERROR, "area %d out of range [0, %d]\n",
 			areanum, aasworld.numareas);
@@ -445,7 +440,6 @@ AAS_ShowAreaPolygons(int areanum, int color, int groundfacesonly)
 	aas_area_t *area;
 	aas_face_t *face;
 
-	/*  */
 	if(areanum < 0 || areanum >= aasworld.numareas){
 		botimport.Print(PRT_ERROR, "area %d out of range [0, %d]\n",
 			areanum, aasworld.numareas);
@@ -499,7 +493,6 @@ AAS_PrintTravelType(int traveltype)
 {
 #ifdef DEBUG
 	char *str;
-	/*  */
 	switch(traveltype & TRAVELTYPE_MASK){
 	case TRAVEL_INVALID: str	= "TRAVEL_INVALID"; break;
 	case TRAVEL_WALK: str		= "TRAVEL_WALK"; break;
@@ -565,13 +558,11 @@ AAS_ShowReachability(aas_reachability_t *reach)
 	AAS_ShowAreaPolygons(reach->areanum, 5, qtrue);
 	/* AAS_ShowArea(reach->areanum, qtrue); */
 	AAS_DrawArrow(reach->start, reach->end, LINECOLOR_BLUE, LINECOLOR_YELLOW);
-	/*  */
 	if((reach->traveltype & TRAVELTYPE_MASK) == TRAVEL_JUMP ||
 	   (reach->traveltype & TRAVELTYPE_MASK) == TRAVEL_WALKOFFLEDGE){
 		AAS_HorizontalVelocityForJump(aassettings.phys_jumpvel,
 			reach->start, reach->end,
 			&speed);
-		/*  */
 		subv3(reach->end, reach->start, dir);
 		dir[2] = 0;
 		normv3(dir);
@@ -580,13 +571,11 @@ AAS_ShowReachability(aas_reachability_t *reach)
 		/* set the command movement */
 		clearv3(cmdmove);
 		cmdmove[2] = aassettings.phys_jumpvel;
-		/*  */
 		AAS_PredictClientMovement(
 			&move, -1, reach->start, PRESENCE_NORMAL, qtrue,
 			velocity, cmdmove, 3, 30, 0.1f,
 			SE_HITGROUND|SE_ENTERWATER|SE_ENTERSLIME|
 			SE_ENTERLAVA|SE_HITGROUNDDAMAGE, 0, qtrue);
-		/*  */
 		if((reach->traveltype & TRAVELTYPE_MASK) == TRAVEL_JUMP){
 			AAS_JumpReachRunStart(reach, dir);
 			AAS_DrawCross(dir, 4, LINECOLOR_BLUE);
@@ -595,14 +584,12 @@ AAS_ShowReachability(aas_reachability_t *reach)
 		zvel = AAS_RocketJumpZVelocity(reach->start);
 		AAS_HorizontalVelocityForJump(zvel, reach->start, reach->end,
 			&speed);
-		/*  */
 		subv3(reach->end, reach->start, dir);
 		dir[2] = 0;
 		normv3(dir);
 		/* get command movement */
 		scalev3(dir, speed, cmdmove);
 		setv3(velocity, 0, 0, zvel);
-		/*  */
 		AAS_PredictClientMovement(
 			&move, -1, reach->start, PRESENCE_NORMAL, qtrue,
 			velocity, cmdmove, 30, 30, 0.1f,
@@ -612,7 +599,6 @@ AAS_ShowReachability(aas_reachability_t *reach)
 	}	/* end else if */
 	else if((reach->traveltype & TRAVELTYPE_MASK) == TRAVEL_JUMPPAD){
 		setv3(cmdmove, 0, 0, 0);
-		/*  */
 		subv3(reach->end, reach->start, dir);
 		dir[2] = 0;
 		normv3(dir);
@@ -621,7 +607,6 @@ AAS_ShowReachability(aas_reachability_t *reach)
 		scalev3(dir, reach->edgenum, velocity);
 		/* NOTE: the facenum is the Z velocity */
 		velocity[2] = reach->facenum;
-		/*  */
 		AAS_PredictClientMovement(
 			&move, -1, reach->start, PRESENCE_NORMAL, qtrue,
 			velocity, cmdmove, 30, 30, 0.1f,
@@ -649,11 +634,8 @@ AAS_ShowReachableAreas(int areanum)
 		lastareanum = areanum;
 	}
 	settings = &aasworld.areasettings[areanum];
-	/*  */
 	if(!settings->numreachableareas) return;
-	/*  */
 	if(index >= settings->numreachableareas) index = 0;
-	/*  */
 	if(AAS_Time() - lasttime > 1.5){
 		Q_Memcpy(
 			&reach,
@@ -701,7 +683,6 @@ AAS_FloodAreas_r(int areanum, int cluster, int *done)
 			continue;
 		AAS_FloodAreas_r(nextareanum, cluster, done);
 	}
-	/*  */
 	for(i = 0; i < settings->numreachableareas; i++){
 		reach = &aasworld.reachability[settings->firstreachablearea + i];
 		nextareanum = reach->areanum;

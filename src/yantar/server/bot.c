@@ -84,7 +84,6 @@ BotDrawDebugPolygons(void (*drawPoly)(int color, int numPoints,
 		return;
 	/* bot debugging */
 	if(!bot_debug) bot_debug = Cvar_Get("bot_debug", "0", 0);
-	/*  */
 	if(bot_enable && bot_debug->integer){
 		/* show reachabilities */
 		if(!bot_reachability) bot_reachability = Cvar_Get(
@@ -96,7 +95,6 @@ BotDrawDebugPolygons(void (*drawPoly)(int color, int numPoints,
 		/* get the hightlight area */
 		if(!bot_highlightarea) bot_highlightarea = Cvar_Get(
 				"bot_highlightarea", "0", 0);
-		/*  */
 		parm0 = 0;
 		if(svs.clients[0].lastUsercmd.buttons & BUTTON_PRIATTACK) parm0 |=
 				1;
@@ -326,7 +324,6 @@ BotImport_DebugPolygonCreate(int color, int numPoints, Vec3 *points)
 	poly->color	= color;
 	poly->numPoints = numPoints;
 	Q_Memcpy(poly->points, points, numPoints * sizeof(Vec3));
-	/*  */
 	return i;
 }
 

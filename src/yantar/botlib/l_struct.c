@@ -108,7 +108,6 @@ ReadNumber(source_t *source, fielddef_t *fd, void *p)
 		*(float*)p = (float)floatval;
 		return 1;
 	}
-	/*  */
 	intval = token.intvalue;
 	if(negative) intval = -intval;
 	/* check bounds */
@@ -198,7 +197,6 @@ ReadString(source_t *source, fielddef_t *fd, void *p)
 	strncpy((char*)p, token.string, MAX_STRINGFIELD);
 	/* make sure the string is closed with a zero */
 	((char*)p)[MAX_STRINGFIELD-1] = '\0';
-	/*  */
 	return 1;
 }	/* end of the function ReadString */
 /* ===========================================================================

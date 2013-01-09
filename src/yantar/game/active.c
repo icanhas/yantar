@@ -501,7 +501,6 @@ StuckInOtherClient(Gentity *ent)
 			continue;
 		if(ent2->health <= 0)
 			continue;
-		/*  */
 		if(ent2->r.absmin[0] > ent->r.absmax[0])
 			continue;
 		if(ent2->r.absmin[1] > ent->r.absmax[1])

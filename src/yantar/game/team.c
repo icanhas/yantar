@@ -245,7 +245,6 @@ Team_ForceGesture(int team)
 			continue;
 		if(ent->client->sess.sessionTeam != team)
 			continue;
-		/*  */
 		ent->flags |= FL_FORCE_GESTURE;
 	}
 }

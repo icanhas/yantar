@@ -107,15 +107,15 @@ typedef rectDef_t Rectangle;
 typedef struct {
 	Rectangle	rect;		/* client coord rectangle */
 	Rectangle	rectClient;	/* screen coord rectangle */
-	const char	*name;		/*  */
+	const char	*name;
 	const char	*group;		/* if it belongs to a group */
 	const char	*cinematicName;	/* cinematic name */
 	int		cinematic;	/* cinematic handle */
-	int		style;		/*  */
-	int		border;		/*  */
+	int		style;
+	int		border;
 	int		ownerDraw;	/* ownerDraw style */
 	int		ownerDrawFlags;	/* show flags for ownerdraw items */
-	float		borderSize;	/*  */
+	float		borderSize;
 	int		flags;		/* visible, focus, mouseover, cursor */
 	Rectangle	rectEffects;	/* for various effects */
 	Rectangle	rectEffects2;	/* for various effects */
@@ -171,12 +171,12 @@ typedef struct listBoxDef_s {
 
 typedef struct editFieldDef_s {
 	float	minVal;		/*	edit field limits */
-	float	maxVal;		/*  */
-	float	defVal;		/*  */
-	float	range;		/*  */
+	float	maxVal;
+	float	defVal;
+	float	range;
 	int	maxChars;	/* for edit fields */
 	int	maxPaintChars;	/* for edit fields */
-	int	paintOffset;	/*  */
+	int	paintOffset;
 } editFieldDef_t;
 
 #define MAX_MULTI_CVARS 32
@@ -239,11 +239,11 @@ typedef struct {
 	const char	*font;		/* font */
 	qbool		fullScreen;	/* covers entire screen */
 	int		itemCount;	/* number of items; */
-	int		fontIndex;	/*  */
+	int		fontIndex;
 	int		cursorItem;	/* which item as the cursor */
-	int		fadeCycle;	/*  */
-	float		fadeClamp;	/*  */
-	float		fadeAmount;	/*  */
+	int		fadeCycle;
+	float		fadeClamp;
+	float		fadeAmount;
 	const char	*onOpen;	/* run when the menu is first opened */
 	const char	*onClose;	/* run when the menu is closed */
 	const char	*onESC;		/* run when the menu is closed */

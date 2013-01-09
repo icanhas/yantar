@@ -1247,7 +1247,6 @@ playerflag(Centity *cent, Handle skinh, Refent *hull)
 		d = dotv3(pole.axis[2], dir);
 		/* if there is anough movement orthogonal to the flag pole */
 		if(fabs(d) < 0.9){
-			/*  */
 			d = dotv3(pole.axis[0], dir);
 			if(d > 1.0f)
 				d = 1.0f;

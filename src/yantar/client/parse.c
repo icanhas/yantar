@@ -877,7 +877,6 @@ CL_ParseServerMessage(Bitmsg *msg)
 
 	/* get the reliable sequence acknowledge number */
 	clc.reliableAcknowledge = MSG_ReadLong(msg);
-	/*  */
 	if(clc.reliableAcknowledge < clc.reliableSequence -
 	   MAX_RELIABLE_COMMANDS)
 		clc.reliableAcknowledge = clc.reliableSequence;

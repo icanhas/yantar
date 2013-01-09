@@ -49,9 +49,6 @@ float AAS_BFGJumpZVelocity(Vec3 origin);
 /* calculates the horizontal velocity needed for a jump and returns true this velocity could be calculated */
 int AAS_HorizontalVelocityForJump(float zvel, Vec3 start, Vec3 end,
 				  float *velocity);
-/*  */
 void AAS_SetMovedir(Vec3 angles, Vec3 movedir);
-/*  */
 int AAS_DropToFloor(Vec3 origin, Vec3 mins, Vec3 maxs);
-/*  */
 void AAS_InitSettings(void);

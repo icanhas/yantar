@@ -73,7 +73,6 @@ punctuation_t default_punctuations[] =
 	/* binary operators */
 	{">>=",P_RSHIFT_ASSIGN, NULL},
 	{"<<=",P_LSHIFT_ASSIGN, NULL},
-	/*  */
 	{"...",P_PARMS, NULL},
 	/* define merge operator */
 	{"##",P_PRECOMPMERGE, NULL},
@@ -135,7 +134,6 @@ punctuation_t default_punctuations[] =
 	{"}",P_BRACECLOSE, NULL},
 	{"[",P_SQBRACKETOPEN, NULL},
 	{"]",P_SQBRACKETCLOSE, NULL},
-	/*  */
 	{"\\",P_BACKSLASH, NULL},
 	/* precompiler operator */
 	{"#",P_PRECOMP, NULL},
@@ -441,7 +439,6 @@ PS_ReadString(script_t *script, token_t *token, int quote)
 	len = 0;
 	/* leading quote */
 	token->string[len++] = *script->script_p++;
-	/*  */
 	while(1){
 		/* minus 2 because trailing double quote and zero have to be appended */
 		if(len >= MAX_TOKEN - 2){
@@ -466,7 +463,6 @@ PS_ReadString(script_t *script, token_t *token, int quote)
 			script->script_p++;
 			/* if white spaces in a string are not allowed */
 			if(script->flags & SCFL_NOSTRINGWHITESPACES) break;
-			/*  */
 			tmpscript_p = script->script_p;
 			tmpline = script->line;
 			/* read unusefull stuff between possible two following strings */
@@ -743,7 +739,6 @@ PS_ReadLiteral(script_t *script, token_t *token)
 	token->string[3] = '\0';
 	/* the sub type is the integer literal value */
 	token->subtype = token->string[1];
-	/*  */
 	return 1;
 }	/* end of the function PS_ReadLiteral */
 /* ============================================================================
@@ -1193,7 +1188,6 @@ ResetScript(script_t *script)
 	script->endwhitespace_p = NULL;
 	/* set if there's a token available in script->token */
 	script->tokenavailable = 0;
-	/*  */
 	script->line = 1;
 	script->lastline = 1;
 	/* clear the saved token */
@@ -1314,12 +1308,9 @@ LoadScriptFile(const char *filename)
 	script->end_p = &script->buffer[length];
 	/* set if there's a token available in script->token */
 	script->tokenavailable = 0;
-	/*  */
 	script->line = 1;
 	script->lastline = 1;
-	/*  */
 	SetScriptPunctuations(script, NULL);
-	/*  */
 #ifdef BOTLIB
 	botimport.FS_Read(script->buffer, length, fp);
 	botimport.FS_FCloseFile(fp);
@@ -1360,14 +1351,10 @@ LoadScriptMemory(char *ptr, int length, char *name)
 	script->end_p = &script->buffer[length];
 	/* set if there's a token available in script->token */
 	script->tokenavailable = 0;
-	/*  */
 	script->line = 1;
 	script->lastline = 1;
-	/*  */
 	SetScriptPunctuations(script, NULL);
-	/*  */
 	Q_Memcpy(script->buffer, ptr, length);
-	/*  */
 	return script;
 }	/* end of the function LoadScriptMemory */
 /* ============================================================================

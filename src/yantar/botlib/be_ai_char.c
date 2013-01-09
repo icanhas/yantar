@@ -166,7 +166,6 @@ BotDefaultCharacteristics(bot_character_t *ch, bot_character_t *defaultch)
 
 	for(i = 0; i < MAX_CHARACTERISTICS; i++){
 		if(ch->c[i].type) continue;
-		/*  */
 		if(defaultch->c[i].type == CT_FLOAT){
 			ch->c[i].type = CT_FLOAT;
 			ch->c[i].value._float = defaultch->c[i].value._float;
@@ -328,7 +327,6 @@ BotLoadCharacterFromFile(char *charfile, int skill)
 		}
 	}
 	FreeSource(source);
-	/*  */
 	if(!foundcharacter){
 		BotFreeCharacterStrings(ch);
 		FreeMemory(ch);
@@ -387,13 +385,11 @@ BotLoadCachedCharacter(char *charfile, float skill, int reload)
 			return cachedhandle;
 		}
 	}
-	/*  */
 	intskill = (int)(skill + 0.5);
 	/* try to load the character with the given skill */
 	ch = BotLoadCharacterFromFile(charfile, intskill);
 	if(ch){
 		botcharacters[handle] = ch;
-		/*  */
 		botimport.Print(PRT_MESSAGE, "loaded skill %d from %s\n",
 			intskill,
 			charfile);
@@ -405,10 +401,8 @@ BotLoadCachedCharacter(char *charfile, float skill, int reload)
 #endif	/* DEBUG */
 		return handle;
 	}
-	/*  */
 	botimport.Print(PRT_WARNING, "couldn't find skill %d in %s\n", intskill,
 		charfile);
-	/*  */
 	if(!reload){
 		/* try to load a cached default character with the given skill */
 		cachedhandle = BotFindCachedCharacter(DEFAULT_CHARACTER, skill);
@@ -429,7 +423,6 @@ BotLoadCachedCharacter(char *charfile, float skill, int reload)
 			charfile);
 		return handle;
 	}
-	/*  */
 	if(!reload){
 		/* try to load a cached character with any skill */
 		cachedhandle = BotFindCachedCharacter(charfile, -1);
@@ -450,7 +443,6 @@ BotLoadCachedCharacter(char *charfile, float skill, int reload)
 			charfile);
 		return handle;
 	}
-	/*  */
 	if(!reload){
 		/* try to load a cached character with any skill */
 		cachedhandle = BotFindCachedCharacter(DEFAULT_CHARACTER, -1);
@@ -471,7 +463,6 @@ BotLoadCachedCharacter(char *charfile, float skill, int reload)
 			charfile);
 		return handle;
 	}
-	/*  */
 	botimport.Print(PRT_WARNING, "couldn't load any skill from %s\n",
 		charfile);
 	/* couldn't load any character */
@@ -528,7 +519,6 @@ BotInterpolateCharacters(int handle1, int handle2, float desiredskill)
 
 	scale = (float)(desiredskill - ch1->skill) / (ch2->skill - ch1->skill);
 	for(i = 0; i < MAX_CHARACTERISTICS; i++){
-		/*  */
 		if(ch1->c[i].type == CT_FLOAT && ch2->c[i].type == CT_FLOAT){
 			out->c[i].type = CT_FLOAT;
 			out->c[i].value._float = ch1->c[i].value._float +
@@ -592,7 +582,6 @@ BotLoadCharacter(char *charfile, float skill)
 	if(!handle) return 0;
 	/* write the character to the log file */
 	BotDumpCharacter(botcharacters[handle]);
-	/*  */
 	return handle;
 }	/* end of the function BotLoadCharacter */
 /* ===========================================================================

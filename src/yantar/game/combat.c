@@ -23,7 +23,6 @@ ScorePlum(Gentity *ent, Vec3 origin, int score)
 	/* only send this temp entity to a single client */
 	plum->r.svFlags |= SVF_SINGLECLIENT;
 	plum->r.singleClient = ent->s.number;
-	/*  */
 	plum->s.otherEntityNum = ent->s.number;
 	plum->s.time = score;
 }
@@ -43,7 +42,6 @@ AddScore(Gentity *ent, Vec3 origin, int score)
 		return;
 	/* show score plum */
 	ScorePlum(ent, origin, score);
-	/*  */
 	ent->client->ps.persistant[PERS_SCORE] += score;
 	if(g_gametype.integer == GT_TEAM)
 		level.teamScores[ ent->client->ps.persistant[PERS_TEAM] ] +=

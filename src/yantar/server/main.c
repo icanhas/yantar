@@ -94,7 +94,6 @@ SV_ReplacePendingServerCommands(Client *client, const char *cmd)
 
 	for(i = client->reliableSent+1; i <= client->reliableSequence; i++){
 		index = i & (MAX_RELIABLE_COMMANDS - 1);
-		/*  */
 		if(!Q_strncmp(cmd, client->reliableCommands[ index ],
 			   strlen("cs"))){
 			sscanf(cmd, "cs %i", &csnum1);

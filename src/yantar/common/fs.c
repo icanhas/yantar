@@ -1500,7 +1500,6 @@ FS_FileIsInPAK(const char *filename, int *pChecksum)
 	 *  */
 
 	for(search = fs_searchpaths; search; search = search->next){
-		/*  */
 		if(search->pack)
 			hash = FS_HashFileName(filename, search->pack->hashSize);
 		/* is the element a pak file? */

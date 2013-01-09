@@ -352,7 +352,6 @@ AAS_FreeBSPEntities(void)
 		ent = &bspworld.entities[i];
 		for(epair = ent->epairs; epair; epair = nextepair){
 			nextepair = epair->next;
-			/*  */
 			if(epair->key) FreeMemory(epair->key);
 			if(epair->value) FreeMemory(epair->value);
 			FreeMemory(epair);
@@ -457,7 +456,6 @@ AAS_DumpBSPData(void)
 	if(bspworld.dentdata) FreeMemory(bspworld.dentdata);
 	bspworld.dentdata = NULL;
 	bspworld.entdatasize = 0;
-	/*  */
 	bspworld.loaded = qfalse;
 	Q_Memset(&bspworld, 0, sizeof(bspworld));
 }	/* end of the function AAS_DumpBSPData */

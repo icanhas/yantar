@@ -215,7 +215,6 @@ typedef struct aas_s {
 	/* clusters */
 	int				numclusters;
 	aas_cluster_t			*clusters;
-	/*  */
 	int				numreachabilityareas;
 	float				reachabilitytime;
 	/* enities linked in the areas */

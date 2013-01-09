@@ -42,7 +42,6 @@ botlib_globals_t	botlibglobals;
 
 botlib_export_t		be_botlib_export;
 botlib_import_t		botimport;
-/*  */
 int	botDeveloper;
 /* qtrue if the library is setup */
 int	botlibsetup = qfalse;
@@ -203,7 +202,6 @@ Export_BotLibShutdown(void)
 #ifndef DEMO
 	/* DumpFileCRCs(); */
 #endif	/* DEMO */
-	/*  */
 	BotShutdownChatAI();		/* be_ai_chat.c */
 	BotShutdownMoveAI();		/* be_ai_move.c */
 	BotShutdownGoalAI();		/* be_ai_goal.c */
@@ -226,12 +224,10 @@ Export_BotLibShutdown(void)
 #endif
 	/* shut down library log file */
 	Log_Shutdown();
-	/*  */
 	botlibsetup = qfalse;
 	botlibglobals.botlibsetup = qfalse;
 	/* print any files still open */
 	PC_CheckOpenSourceHandles();
-	/*  */
 	return BLERR_NOERROR;
 }	/* end of the function Export_BotLibShutdown */
 /* ===========================================================================
@@ -289,7 +285,6 @@ Export_BotLibLoadMap(const char *mapname)
 	int	errnum;
 
 	if(!BotLibSetup("BotLoadMap")) return BLERR_LIBRARYNOTSETUP;
-	/*  */
 	botimport.Print(PRT_MESSAGE, "------------ Map Loading ------------\n");
 	/* startup AAS for the current map, model and sound index */
 	errnum = AAS_LoadMap(mapname);
@@ -297,13 +292,11 @@ Export_BotLibLoadMap(const char *mapname)
 	/* initialize the items in the level */
 	BotInitLevelItems();		/* be_ai_goal.h */
 	BotSetBrushModelTypes();	/* be_ai_move.h */
-	/*  */
 	botimport.Print(PRT_MESSAGE, "-------------------------------------\n");
 #ifdef DEBUG
 	botimport.Print(PRT_MESSAGE, "map loaded in %d msec\n", Sys_MilliSeconds(
 			) - starttime);
 #endif
-	/*  */
 	return BLERR_NOERROR;
 }	/* end of the function Export_BotLibLoadMap */
 /* ===========================================================================

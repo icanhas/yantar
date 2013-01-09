@@ -312,7 +312,6 @@ R_CreateSurfaceGridMesh(int width, int height,
 
 	copyv3(grid->localOrigin, grid->lodOrigin);
 	grid->lodRadius = grid->meshRadius;
-	/*  */
 	return grid;
 }
 

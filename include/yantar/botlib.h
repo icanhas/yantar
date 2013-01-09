@@ -158,7 +158,6 @@ typedef struct botlib_import_s {
 	int (*inPVS)(Vec3 p1, Vec3 p2);
 	/* retrieve the BSP entity data lump */
 	char            *(*BSPEntityData)(void);
-	/*  */
 	void (*BSPModelMinsMaxsOrigin)(int modelnum, Vec3 angles, Vec3 mins,
 				       Vec3 maxs, Vec3 origin);
 	/* send a bot client command */
@@ -178,7 +177,6 @@ typedef struct botlib_import_s {
 	int (*DebugLineCreate)(void);
 	void (*DebugLineDelete)(int line);
 	void (*DebugLineShow)(int line, Vec3 start, Vec3 end, int color);
-	/*  */
 	int (*DebugPolygonCreate)(int color, int numPoints, Vec3 *points);
 	void (*DebugPolygonDelete)(int id);
 } botlib_import_t;

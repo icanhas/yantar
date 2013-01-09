@@ -108,7 +108,6 @@ AAS_InitAASLinkHeap(void)
 	aasworld.linkheap[max_aaslinks-1].next_ent = NULL;
 	/* pointer to the first free link */
 	aasworld.freelinks = &aasworld.linkheap[0];
-	/*  */
 	numaaslinks = max_aaslinks;
 }	/* end of the function AAS_InitAASLinkHeap */
 /* ===========================================================================
@@ -410,7 +409,6 @@ AAS_AreaEntityCollision(int areanum, Vec3 start, Vec3 end,
 	    link = link->next_ent){
 		/* ignore the pass entity */
 		if(link->entnum == passent) continue;
-		/*  */
 		if(AAS_EntityCollision(link->entnum, start, boxmins, boxmaxs,
 			   end,
 			   CONTENTS_SOLID|CONTENTS_PLAYERCLIP, &bsptrace))
@@ -666,7 +664,6 @@ AAS_TraceClientBBox(Vec3 start, Vec3 end, int presencetype,
 			if(front < 0) frac =
 					(front + TRACEPLANE_EPSILON)/(front-back);
 			else frac = (front - TRACEPLANE_EPSILON)/(front-back);	/* bk010221 */
-			/*  */
 			if(frac < 0)
 				frac = 0.001f;	/* 0 */
 			else if(frac > 1)
@@ -946,7 +943,6 @@ AAS_InsideFace(aas_face_t *face, Vec3 pnormal, Vec3 point, float epsilon)
 		/* edge vector */
 		subv3(aasworld.vertexes[edge->v[!firstvertex]], v0,
 			edgevec);
-		/*  */
 #ifdef AAS_SAMPLE_DEBUG
 		if(lastvertex && lastvertex != edge->v[firstvertex])
 			botimport.Print(PRT_MESSAGE,
@@ -990,7 +986,6 @@ AAS_PointInsideFace(int facenum, Vec3 point, float epsilon)
 
 	face = &aasworld.faces[facenum];
 	plane = &aasworld.planes[face->planenum];
-	/*  */
 	for(i = 0; i < face->numedges; i++){
 		edgenum = aasworld.edgeindex[face->firstedge + i];
 		edge = &aasworld.edges[abs(edgenum)];
@@ -1002,9 +997,7 @@ AAS_PointInsideFace(int facenum, Vec3 point, float epsilon)
 		subv3(v2, v1, edgevec);
 		/* vector from first edge point to point possible in face */
 		subv3(point, v1, pointvec);
-		/*  */
 		crossv3(edgevec, plane->normal, sepnormal);
-		/*  */
 		if(dotv3(pointvec, sepnormal) < -epsilon) return qfalse;
 	}
 	return qtrue;
@@ -1233,7 +1226,6 @@ AAS_AASLinkEntity(Vec3 absmins, Vec3 absmaxs, int entnum)
 	}
 
 	areas = NULL;
-	/*  */
 	lstack_p = linkstack;
 	/* we start with the whole line on the stack
 	 * start with node 1 because node zero is a dummy used for solid leafs */
@@ -1256,7 +1248,6 @@ AAS_AASLinkEntity(Vec3 absmins, Vec3 absmaxs, int entnum)
 			    link = link->next_ent)
 				if(link->entnum == entnum) break;
 			if(link) continue;
-			/*  */
 			link = AAS_AllocAASLink();
 			if(!link) return areas;
 			link->entnum = entnum;
@@ -1273,7 +1264,6 @@ AAS_AASLinkEntity(Vec3 absmins, Vec3 absmaxs, int entnum)
 				aasworld.arealinkedentities[-nodenum]->prev_ent
 					= link;
 			aasworld.arealinkedentities[-nodenum] = link;
-			/*  */
 			continue;
 		}
 		/* if solid leaf */

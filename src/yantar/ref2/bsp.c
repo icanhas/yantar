@@ -1030,7 +1030,6 @@ R_FixSharedVertexLodError_r(int start, srfGridMesh_t *grid1)
 	srfGridMesh_t *grid2;
 
 	for(j = start; j < s_worldData.numsurfaces; j++){
-		/*  */
 		grid2 = (srfGridMesh_t*)s_worldData.surfaces[j].data;
 		/* if this surface is not a grid */
 		if(grid2->surfaceType != SF_GRID) continue;
@@ -1042,10 +1041,8 @@ R_FixSharedVertexLodError_r(int start, srfGridMesh_t *grid1)
 		if(grid1->lodOrigin[0] != grid2->lodOrigin[0]) continue;
 		if(grid1->lodOrigin[1] != grid2->lodOrigin[1]) continue;
 		if(grid1->lodOrigin[2] != grid2->lodOrigin[2]) continue;
-		/*  */
 		touch = qfalse;
 		for(n = 0; n < 2; n++){
-			/*  */
 			if(n) offset1 = (grid1->height-1) * grid1->width;
 			else offset1 = 0;
 			if(R_MergedWidthPoints(grid1, offset1)) continue;
@@ -1056,7 +1053,6 @@ R_FixSharedVertexLodError_r(int start, srfGridMesh_t *grid1)
 					else offset2 = 0;
 					if(R_MergedWidthPoints(grid2, offset2)) continue;
 					for(l = 1; l < grid2->width-1; l++){
-						/*  */
 						if(fabs(grid1->verts[k +
 								     offset1].xyz[0] -
 							   grid2->verts[l + offset2].xyz[0]) >
@@ -1080,7 +1076,6 @@ R_FixSharedVertexLodError_r(int start, srfGridMesh_t *grid1)
 					else offset2 = 0;
 					if(R_MergedHeightPoints(grid2, offset2)) continue;
 					for(l = 1; l < grid2->height-1; l++){
-						/*  */
 						if(fabs(grid1->verts[k +
 								     offset1].xyz[0] -
 							   grid2->verts[grid2->width * l + offset2].xyz[0]) >
@@ -1101,7 +1096,6 @@ R_FixSharedVertexLodError_r(int start, srfGridMesh_t *grid1)
 			}
 		}
 		for(n = 0; n < 2; n++){
-			/*  */
 			if(n) offset1 = grid1->width-1;
 			else offset1 = 0;
 			if(R_MergedHeightPoints(grid1, offset1)) continue;
@@ -1112,7 +1106,6 @@ R_FixSharedVertexLodError_r(int start, srfGridMesh_t *grid1)
 					else offset2 = 0;
 					if(R_MergedWidthPoints(grid2, offset2)) continue;
 					for(l = 1; l < grid2->width-1; l++){
-						/*  */
 						if(fabs(grid1->verts[grid1->width * k +
 								     offset1].xyz[0] -
 							   grid2->verts[l + offset2].xyz[0]) >
@@ -1136,7 +1129,6 @@ R_FixSharedVertexLodError_r(int start, srfGridMesh_t *grid1)
 					else offset2 = 0;
 					if(R_MergedHeightPoints(grid2, offset2)) continue;
 					for(l = 1; l < grid2->height-1; l++){
-						/*  */
 						if(fabs(grid1->verts[grid1->width * k +
 								     offset1].xyz[0] -
 							   grid2->verts[grid2->width * l + offset2].xyz[0]) >
@@ -1178,15 +1170,12 @@ R_FixSharedVertexLodError(void)
 	srfGridMesh_t *grid1;
 
 	for(i = 0; i < s_worldData.numsurfaces; i++){
-		/*  */
 		grid1 = (srfGridMesh_t*)s_worldData.surfaces[i].data;
 		/* if this surface is not a grid */
 		if(grid1->surfaceType != SF_GRID)
 			continue;
-		/*  */
 		if(grid1->lodFixed)
 			continue;
-		/*  */
 		grid1->lodFixed = 2;
 		/* recursively fix other patches in the same LOD group */
 		R_FixSharedVertexLodError_r(i + 1, grid1);
@@ -1207,7 +1196,6 @@ R_StitchPatches(int grid1num, int grid2num)
 	grid1	= (srfGridMesh_t*)s_worldData.surfaces[grid1num].data;
 	grid2	= (srfGridMesh_t*)s_worldData.surfaces[grid2num].data;
 	for(n = 0; n < 2; n++){
-		/*  */
 		if(n) offset1 = (grid1->height-1) * grid1->width;
 		else offset1 = 0;
 		if(R_MergedWidthPoints(grid1, offset1))
@@ -1221,7 +1209,6 @@ R_StitchPatches(int grid1num, int grid2num)
 				if(m) offset2 = (grid2->height-1) * grid2->width;
 				else offset2 = 0;
 				for(l = 0; l < grid2->width-1; l++){
-					/*  */
 					v1	= grid1->verts[k + offset1].xyz;
 					v2	= grid2->verts[l + offset2].xyz;
 					if(fabs(v1[0] - v2[0]) > .1)
@@ -1239,7 +1226,6 @@ R_StitchPatches(int grid1num, int grid2num)
 						continue;
 					if(fabs(v1[2] - v2[2]) > .1)
 						continue;
-					/*  */
 					v1	= grid2->verts[l + offset2].xyz;
 					v2	= grid2->verts[l + 1 + offset2].xyz;
 					if(fabs(v1[0] - v2[0]) < .01 &&
@@ -1265,7 +1251,6 @@ R_StitchPatches(int grid1num, int grid2num)
 				if(m) offset2 = grid2->width-1;
 				else offset2 = 0;
 				for(l = 0; l < grid2->height-1; l++){
-					/*  */
 					v1	= grid1->verts[k + offset1].xyz;
 					v2	= grid2->verts[grid2->width * l + offset2].xyz;
 					if(fabs(v1[0] - v2[0]) > .1)
@@ -1283,7 +1268,6 @@ R_StitchPatches(int grid1num, int grid2num)
 						continue;
 					if(fabs(v1[2] - v2[2]) > .1)
 						continue;
-					/*  */
 					v1	= grid2->verts[grid2->width * l + offset2].xyz;
 					v2	= grid2->verts[grid2->width * (l + 1) + offset2].xyz;
 					if(fabs(v1[0] - v2[0]) < .01 &&
@@ -1305,7 +1289,6 @@ R_StitchPatches(int grid1num, int grid2num)
 		}
 	}
 	for(n = 0; n < 2; n++){
-		/*  */
 		if(n) offset1 = grid1->width-1;
 		else offset1 = 0;
 		if(R_MergedHeightPoints(grid1, offset1))
@@ -1318,7 +1301,6 @@ R_StitchPatches(int grid1num, int grid2num)
 				if(m) offset2 = (grid2->height-1) * grid2->width;
 				else offset2 = 0;
 				for(l = 0; l < grid2->width-1; l++){
-					/*  */
 					v1	= grid1->verts[grid1->width * k + offset1].xyz;
 					v2	= grid2->verts[l + offset2].xyz;
 					if(fabs(v1[0] - v2[0]) > .1)
@@ -1336,7 +1318,6 @@ R_StitchPatches(int grid1num, int grid2num)
 						continue;
 					if(fabs(v1[2] - v2[2]) > .1)
 						continue;
-					/*  */
 					v1	= grid2->verts[l + offset2].xyz;
 					v2	= grid2->verts[(l + 1) + offset2].xyz;
 					if(fabs(v1[0] - v2[0]) < .01 &&
@@ -1364,7 +1345,6 @@ R_StitchPatches(int grid1num, int grid2num)
 				if(m) offset2 = grid2->width-1;
 				else offset2 = 0;
 				for(l = 0; l < grid2->height-1; l++){
-					/*  */
 					v1	= grid1->verts[grid1->width * k + offset1].xyz;
 					v2	= grid2->verts[grid2->width * l + offset2].xyz;
 					if(fabs(v1[0] - v2[0]) > .1)
@@ -1382,7 +1362,6 @@ R_StitchPatches(int grid1num, int grid2num)
 						continue;
 					if(fabs(v1[2] - v2[2]) > .1)
 						continue;
-					/*  */
 					v1	= grid2->verts[grid2->width * l + offset2].xyz;
 					v2	= grid2->verts[grid2->width * (l + 1) + offset2].xyz;
 					if(fabs(v1[0] - v2[0]) < .01 &&
@@ -1406,7 +1385,6 @@ R_StitchPatches(int grid1num, int grid2num)
 		}
 	}
 	for(n = 0; n < 2; n++){
-		/*  */
 		if(n) offset1 = (grid1->height-1) * grid1->width;
 		else offset1 = 0;
 		if(R_MergedWidthPoints(grid1, offset1))
@@ -1420,7 +1398,6 @@ R_StitchPatches(int grid1num, int grid2num)
 				if(m) offset2 = (grid2->height-1) * grid2->width;
 				else offset2 = 0;
 				for(l = 0; l < grid2->width-1; l++){
-					/*  */
 					v1	= grid1->verts[k + offset1].xyz;
 					v2	= grid2->verts[l + offset2].xyz;
 					if(fabs(v1[0] - v2[0]) > .1)
@@ -1438,7 +1415,6 @@ R_StitchPatches(int grid1num, int grid2num)
 						continue;
 					if(fabs(v1[2] - v2[2]) > .1)
 						continue;
-					/*  */
 					v1	= grid2->verts[l + offset2].xyz;
 					v2	= grid2->verts[(l + 1) + offset2].xyz;
 					if(fabs(v1[0] - v2[0]) < .01 &&
@@ -1464,7 +1440,6 @@ R_StitchPatches(int grid1num, int grid2num)
 				if(m) offset2 = grid2->width-1;
 				else offset2 = 0;
 				for(l = 0; l < grid2->height-1; l++){
-					/*  */
 					v1	= grid1->verts[k + offset1].xyz;
 					v2	= grid2->verts[grid2->width * l + offset2].xyz;
 					if(fabs(v1[0] - v2[0]) > .1)
@@ -1482,7 +1457,6 @@ R_StitchPatches(int grid1num, int grid2num)
 						continue;
 					if(fabs(v1[2] - v2[2]) > .1)
 						continue;
-					/*  */
 					v1	= grid2->verts[grid2->width * l + offset2].xyz;
 					v2	= grid2->verts[grid2->width * (l + 1) + offset2].xyz;
 					if(fabs(v1[0] - v2[0]) < .01 &&
@@ -1506,7 +1480,6 @@ R_StitchPatches(int grid1num, int grid2num)
 		}
 	}
 	for(n = 0; n < 2; n++){
-		/*  */
 		if(n) offset1 = grid1->width-1;
 		else offset1 = 0;
 		if(R_MergedHeightPoints(grid1, offset1))
@@ -1519,7 +1492,6 @@ R_StitchPatches(int grid1num, int grid2num)
 				if(m) offset2 = (grid2->height-1) * grid2->width;
 				else offset2 = 0;
 				for(l = 0; l < grid2->width-1; l++){
-					/*  */
 					v1	= grid1->verts[grid1->width * k + offset1].xyz;
 					v2	= grid2->verts[l + offset2].xyz;
 					if(fabs(v1[0] - v2[0]) > .1)
@@ -1537,7 +1509,6 @@ R_StitchPatches(int grid1num, int grid2num)
 						continue;
 					if(fabs(v1[2] - v2[2]) > .1)
 						continue;
-					/*  */
 					v1	= grid2->verts[l + offset2].xyz;
 					v2	= grid2->verts[(l + 1) + offset2].xyz;
 					if(fabs(v1[0] - v2[0]) < .01 &&
@@ -1565,7 +1536,6 @@ R_StitchPatches(int grid1num, int grid2num)
 				if(m) offset2 = grid2->width-1;
 				else offset2 = 0;
 				for(l = 0; l < grid2->height-1; l++){
-					/*  */
 					v1	= grid1->verts[grid1->width * k + offset1].xyz;
 					v2	= grid2->verts[grid2->width * l + offset2].xyz;
 					if(fabs(v1[0] - v2[0]) > .1)
@@ -1583,7 +1553,6 @@ R_StitchPatches(int grid1num, int grid2num)
 						continue;
 					if(fabs(v1[2] - v2[2]) > .1)
 						continue;
-					/*  */
 					v1	= grid2->verts[grid2->width * l + offset2].xyz;
 					v2	= grid2->verts[grid2->width * (l + 1) + offset2].xyz;
 					if(fabs(v1[0] - v2[0]) < .01 &&
@@ -1629,7 +1598,6 @@ R_TryStitchingPatch(int grid1num)
 	numstitches = 0;
 	grid1 = (srfGridMesh_t*)s_worldData.surfaces[grid1num].data;
 	for(j = 0; j < s_worldData.numsurfaces; j++){
-		/*  */
 		grid2 = (srfGridMesh_t*)s_worldData.surfaces[j].data;
 		/* if this surface is not a grid */
 		if(grid2->surfaceType != SF_GRID) continue;
@@ -1639,7 +1607,6 @@ R_TryStitchingPatch(int grid1num)
 		if(grid1->lodOrigin[0] != grid2->lodOrigin[0]) continue;
 		if(grid1->lodOrigin[1] != grid2->lodOrigin[1]) continue;
 		if(grid1->lodOrigin[2] != grid2->lodOrigin[2]) continue;
-		/*  */
 		while(R_StitchPatches(grid1num, j))
 			numstitches++;
 	}
@@ -1659,18 +1626,14 @@ R_StitchAllPatches(void)
 	do {
 		stitched = qfalse;
 		for(i = 0; i < s_worldData.numsurfaces; i++){
-			/*  */
 			grid1 = (srfGridMesh_t*)s_worldData.surfaces[i].data;
 			/* if this surface is not a grid */
 			if(grid1->surfaceType != SF_GRID)
 				continue;
-			/*  */
 			if(grid1->lodStitched)
 				continue;
-			/*  */
 			grid1->lodStitched = qtrue;
 			stitched = qtrue;
-			/*  */
 			numstitches += R_TryStitchingPatch(i);
 		}
 	} while(stitched);
@@ -1687,12 +1650,10 @@ R_MovePatchSurfacesToHunk(void)
 	srfGridMesh_t *grid, *hunkgrid;
 
 	for(i = 0; i < s_worldData.numsurfaces; i++){
-		/*  */
 		grid = (srfGridMesh_t*)s_worldData.surfaces[i].data;
 		/* if this surface is not a grid */
 		if(grid->surfaceType != SF_GRID)
 			continue;
-		/*  */
 		size = sizeof(*grid);
 		hunkgrid = ri.Hunk_Alloc(size, h_low);
 		Q_Memcpy(hunkgrid, grid, size);

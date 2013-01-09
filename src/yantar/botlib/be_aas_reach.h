@@ -19,7 +19,6 @@
 void AAS_InitReachability(void);
 /* continue calculating the reachabilities */
 int AAS_ContinueInitReachability(float time);
-/*  */
 int AAS_BestReachableLinkArea(aas_link_t *areas);
 #endif	/* AASINTERN */
 

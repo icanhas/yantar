@@ -1001,7 +1001,6 @@ CG_EntityEvent(Centity *cent, Vec3 position)
 				CG_AddBufferedSound(cgs.media.returnYourTeamSound);
 			else
 				CG_AddBufferedSound(cgs.media.returnOpponentSound);
-			/*  */
 			CG_AddBufferedSound(cgs.media.redFlagReturnedSound);
 			break;
 		/* CTF: red team took blue flag, 1FCTF: blue team took the neutral flag */

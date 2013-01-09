@@ -97,7 +97,7 @@ typedef struct md3Tag_s {
 ** XyzNormals		sizeof( MD3xyznorm ) * numVerts * numFrames
 */
 typedef struct {
-	int	ident;	/*  */
+	int	ident;
 
 	char	name[MAX_QPATH];	/* polyset name */
 

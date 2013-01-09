@@ -208,7 +208,7 @@ G_ProcessIPBans(void)
 
 	Q_strncpyz(str, g_banIPs.string, sizeof(str));
 
-	for(t = s = g_banIPs.string; *t; /* */){
+	for(t = s = g_banIPs.string; *t;){
 		s = strchr(s, ' ');
 		if(!s)
 			break;

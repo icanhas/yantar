@@ -226,7 +226,6 @@ G_AddRandomBot(int team)
 	num = 0;
 	for(n = 0; n < g_numBots; n++){
 		value = Info_ValueForKey(g_botInfos[n], "name");
-		/*  */
 		for(i=0; i< g_maxclients.integer; i++){
 			cl = level.clients + i;
 			if(cl->pers.connected != CON_CONNECTED)
@@ -244,7 +243,6 @@ G_AddRandomBot(int team)
 	num = random() * num;
 	for(n = 0; n < g_numBots; n++){
 		value = Info_ValueForKey(g_botInfos[n], "name");
-		/*  */
 		for(i=0; i< g_maxclients.integer; i++){
 			cl = level.clients + i;
 			if(cl->pers.connected != CON_CONNECTED)
@@ -378,15 +376,12 @@ G_CheckMinimumPlayers(void)
 
 		humanplayers = G_CountHumanPlayers(TEAM_RED);
 		botplayers = G_CountBotPlayers(TEAM_RED);
-		/*  */
 		if(humanplayers + botplayers < minplayers)
 			G_AddRandomBot(TEAM_RED);
 		else if(humanplayers + botplayers > minplayers && botplayers)
 			G_RemoveRandomBot(TEAM_RED);
-		/*  */
 		humanplayers = G_CountHumanPlayers(TEAM_BLUE);
 		botplayers = G_CountBotPlayers(TEAM_BLUE);
-		/*  */
 		if(humanplayers + botplayers < minplayers)
 			G_AddRandomBot(TEAM_BLUE);
 		else if(humanplayers + botplayers > minplayers && botplayers)
@@ -396,7 +391,6 @@ G_CheckMinimumPlayers(void)
 			minplayers = g_maxclients.integer-1;
 		humanplayers = G_CountHumanPlayers(-1);
 		botplayers = G_CountBotPlayers(-1);
-		/*  */
 		if(humanplayers + botplayers < minplayers)
 			G_AddRandomBot(TEAM_FREE);
 		else if(humanplayers + botplayers > minplayers && botplayers)
@@ -409,7 +403,6 @@ G_CheckMinimumPlayers(void)
 			minplayers = g_maxclients.integer-1;
 		humanplayers = G_CountHumanPlayers(TEAM_FREE);
 		botplayers = G_CountBotPlayers(TEAM_FREE);
-		/*  */
 		if(humanplayers + botplayers < minplayers)
 			G_AddRandomBot(TEAM_FREE);
 		else if(humanplayers + botplayers > minplayers && botplayers)

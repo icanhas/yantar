@@ -677,7 +677,6 @@ PC_ExpandDefine(source_t *source, token_t *deftoken, define_t *define,
 				if(dt->next) parmnum = PC_FindDefineParm(
 						define, dt->next->string);
 				else parmnum = -1;
-				/*  */
 				if(parmnum >= 0){
 					/* step over the stringizing operator */
 					dt = dt->next;
@@ -789,7 +788,6 @@ PC_Directive_include(source_t *source)
 #endif	/* QUAKE */
 
 	if(source->skip > 0) return qtrue;
-	/*  */
 	if(!PC_ReadSourceToken(source, &token)){
 		SourceError(source, "#include without file name");
 		return qfalse;
@@ -1013,7 +1011,6 @@ PC_Directive_define(source_t *source)
 						"invalid define parameter");
 					return qfalse;
 				}
-				/*  */
 				if(PC_FindDefineParm(define,
 					   token.string) >= 0){
 					SourceError(
@@ -1036,7 +1033,6 @@ PC_Directive_define(source_t *source)
 						"define parameters not terminated");
 					return qfalse;
 				}
-				/*  */
 				if(!strcmp(token.string, ")")) break;
 				/* then it must be a comma */
 				if(strcmp(token.string, ",")){
@@ -1062,7 +1058,6 @@ PC_Directive_define(source_t *source)
 		else define->tokens = t;
 		last = t;
 	} while(PC_ReadLine(source, &token));
-	/*  */
 	if(last)
 		/* check for merge operators at the beginning or end */
 		if(!strcmp(define->tokens->string, "##") ||
@@ -1109,17 +1104,14 @@ PC_DefineFromString(char *string)
 #else
 	def = src.defines;
 #endif	/* DEFINEHASHING */
-	/*  */
 #if DEFINEHASHING
 	FreeMemory(src.definehash);
 #endif	/* DEFINEHASHING */
-	/*  */
 	FreeScript(script);
 	/* if the define was created successfully */
 	if(res > 0) return def;
 	/* free the define is created */
 	if(src.defines) PC_FreeDefine(def);
-	/*  */
 	return NULL;
 }
 
@@ -1628,7 +1620,6 @@ PC_EvaluateTokens(source_t *source, token_t *tokens, signed long int *intvalue,
 			error = 1;
 		}	/* end else if */
 	}
-	/*  */
 	gotquestmarkvalue = qfalse;
 	questmarkintvalue = 0;
 	questmarkfloatvalue = 0;
@@ -1772,7 +1763,6 @@ PC_EvaluateTokens(source_t *source, token_t *tokens, signed long int *intvalue,
 		   && o->operator != P_BIN_NOT){
 			/* remove the second value if not question mark operator */
 			if(o->operator != P_QUESTIONMARK) v = v->next;
-			/*  */
 			if(v->prev) v->prev->next = v->next;
 			else firstvalue = v->next;
 			if(v->next) v->next->prev = v->prev;
@@ -1819,7 +1809,6 @@ PC_Evaluate(source_t *source, signed long int *intvalue,
 
 	if(intvalue) *intvalue = 0;
 	if(floatvalue) *floatvalue = 0;
-	/*  */
 	if(!PC_ReadLine(source, &token)){
 		SourceError(source, "no value after #if/#elif");
 		return qfalse;
@@ -1876,10 +1865,8 @@ PC_Evaluate(source_t *source, signed long int *intvalue,
 			return qfalse;
 		}
 	} while(PC_ReadLine(source, &token));
-	/*  */
 	if(!PC_EvaluateTokens(source, firsttoken, intvalue, floatvalue,
 		   integer)) return qfalse;
-	/*  */
 #ifdef DEBUG_EVAL
 	Log_Write("eval:");
 #endif	/* DEBUG_EVAL */
@@ -1894,7 +1881,6 @@ PC_Evaluate(source_t *source, signed long int *intvalue,
 	if(integer) Log_Write("eval result: %d", *intvalue);
 	else Log_Write("eval result: %f", *floatvalue);
 #endif	/* DEBUG_EVAL */
-	/*  */
 	return qtrue;
 }
 
@@ -1909,7 +1895,6 @@ PC_DollarEvaluate(source_t *source, signed long int *intvalue,
 
 	if(intvalue) *intvalue = 0;
 	if(floatvalue) *floatvalue = 0;
-	/*  */
 	if(!PC_ReadSourceToken(source, &token)){
 		SourceError(source, "no leading ( after $evalint/$evalfloat");
 		return qfalse;
@@ -1974,10 +1959,8 @@ PC_DollarEvaluate(source_t *source, signed long int *intvalue,
 			return qfalse;
 		}
 	} while(PC_ReadSourceToken(source, &token));
-	/*  */
 	if(!PC_EvaluateTokens(source, firsttoken, intvalue, floatvalue,
 		   integer)) return qfalse;
-	/*  */
 #ifdef DEBUG_EVAL
 	Log_Write("$eval:");
 #endif	/* DEBUG_EVAL */
@@ -1992,7 +1975,6 @@ PC_DollarEvaluate(source_t *source, signed long int *intvalue,
 	if(integer) Log_Write("$eval result: %d", *intvalue);
 	else Log_Write("$eval result: %f", *floatvalue);
 #endif	/* DEBUG_EVAL */
-	/*  */
 	return qtrue;
 }
 
@@ -2075,7 +2057,6 @@ PC_Directive_eval(source_t *source)
 	token_t token;
 
 	if(!PC_Evaluate(source, &value, NULL, qtrue)) return qfalse;
-	/*  */
 	token.line = source->scriptstack->line;
 	token.whitespace_p = source->scriptstack->script_p;
 	token.endwhitespace_p = source->scriptstack->script_p;
@@ -2160,7 +2141,6 @@ PC_DollarDirective_evalint(source_t *source)
 	token_t token;
 
 	if(!PC_DollarEvaluate(source, &value, NULL, qtrue)) return qfalse;
-	/*  */
 	token.line = source->scriptstack->line;
 	token.whitespace_p = source->scriptstack->script_p;
 	token.endwhitespace_p = source->scriptstack->script_p;
@@ -2438,7 +2418,6 @@ PC_CheckTokenString(source_t *source, char *string)
 	if(!PC_ReadToken(source, &tok)) return qfalse;
 	/* if the token is available */
 	if(!strcmp(tok.string, string)) return qtrue;
-	/*  */
 	PC_UnreadSourceToken(source, &tok);
 	return qfalse;
 }
@@ -2455,7 +2434,6 @@ PC_CheckTokenType(source_t *source, int type, int subtype, token_t *token)
 		Q_Memcpy(token, &tok, sizeof(token_t));
 		return qtrue;
 	}
-	/*  */
 	PC_UnreadSourceToken(source, &tok);
 	return qfalse;
 }
@@ -2601,7 +2579,6 @@ FreeSource(source_t *source)
 		FreeMemory(indent);
 	}
 #if DEFINEHASHING
-	/*  */
 	if(source->definehash) FreeMemory(source->definehash);
 #endif	/* DEFINEHASHING */
 	/* free the source itself */

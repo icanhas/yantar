@@ -30,7 +30,6 @@ CG_ParseScores(void)
 
 	memset(cg.scores, 0, sizeof(cg.scores));
 	for(i = 0; i < cg.numScores; i++){
-		/*  */
 		cg.scores[i].client = atoi(CG_Argv(i * 14 + 4));
 		cg.scores[i].score = atoi(CG_Argv(i * 14 + 5));
 		cg.scores[i].ping = atoi(CG_Argv(i * 14 + 6));
@@ -839,9 +838,7 @@ CG_PlayBufferedVoiceChats(void)
 	if(cg.voiceChatTime < cg.time)
 		if(cg.voiceChatBufferOut != cg.voiceChatBufferIn &&
 		   voiceChatBuffer[cg.voiceChatBufferOut].snd){
-			/*  */
 			CG_PlayVoiceChat(&voiceChatBuffer[cg.voiceChatBufferOut]);
-			/*  */
 			cg.voiceChatBufferOut =
 				(cg.voiceChatBufferOut +
 				 1) % MAX_VOICECHATBUFFER;
@@ -899,7 +896,6 @@ CG_VoiceChatLocal(int mode, qbool voiceOnly, int clientNum, int color,
 	voiceChatList = CG_VoiceChatListForClient(clientNum);
 
 	if(CG_GetVoiceChat(voiceChatList, cmd, &snd, &chat))
-		/*  */
 		if(mode == SAY_TEAM || !cg_ChatsOnly.integer){
 			vchat.clientNum = clientNum;
 			vchat.snd = snd;

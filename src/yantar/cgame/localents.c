@@ -4,7 +4,6 @@
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License.
  */
-/*  */
 
 /* cg_localents.c -- every frame, generate renderer commands for locally
  * processed entities, like smoke puffs, gibs, shells, etc. */

@@ -21,10 +21,8 @@ void AAS_InitRouting(void);
 void AAS_FreeRoutingCaches(void);
 /* returns the travel time from start to end in the given area */
 unsigned short int AAS_AreaTravelTime(int areanum, Vec3 start, Vec3 end);
-/*  */
 void AAS_CreateAllRoutingCache(void);
 void AAS_WriteRouteCache(void);
-/*  */
 void AAS_RoutingInfo(void);
 #endif	/* AASINTERN */
 

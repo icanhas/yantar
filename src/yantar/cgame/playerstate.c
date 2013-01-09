@@ -211,7 +211,6 @@ CG_CheckChangedPredictableEvents(Playerstate *ps)
 	cent = &cg.predictedPlayerEntity;
 	for(i = ps->eventSequence - MAX_PS_EVENTS; i < ps->eventSequence;
 	    i++){
-		/*  */
 		if(i >= cg.eventSequence)
 			continue;
 		/* if this event is not further back in than the maximum predictable events we remember */

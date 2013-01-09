@@ -849,7 +849,6 @@ KamikazeShockWave(Vec3 origin, Gentity *attacker, float damage, float push,
 		G_Damage(ent, NULL, attacker, dir, origin, damage,
 			DAMAGE_RADIUS|DAMAGE_NO_TEAM_PROTECTION,
 			MOD_KAMIKAZE);
-		/*  */
 		dir[2] = 0;
 		normv3(dir);
 		if(ent->client){
@@ -879,7 +878,6 @@ KamikazeDamage(Gentity *self)
 			(int)(float)t * KAMI_SHOCKWAVE_MAXRADIUS /
 			(KAMI_SHOCKWAVE_ENDTIME - KAMI_SHOCKWAVE_STARTTIME));
 	}
-	/*  */
 	if(self->count >= KAMI_EXPLODE_STARTTIME){
 		/* do our damage */
 		t = self->count - KAMI_EXPLODE_STARTTIME;
@@ -955,9 +953,7 @@ G_StartKamikaze(Gentity *ent)
 	trap_LinkEntity(explosion);
 
 	if(ent->client){
-		/*  */
 		explosion->activator = ent;
-		/*  */
 		ent->s.eFlags &= ~EF_KAMIKAZE;
 		/* nuke the guy that used it */
 		G_Damage(ent, ent, ent, NULL, NULL, 100000, DAMAGE_NO_PROTECTION,

@@ -16,7 +16,6 @@
 
 /* clear the shown debug lines */
 void AAS_ClearShownDebugLines(void);
-/*  */
 void AAS_ClearShownPolygons(void);
 /* show a debug line */
 void AAS_DebugLine(Vec3 start, Vec3 end, int color);
@@ -33,7 +32,6 @@ void AAS_ShowBoundingBox(Vec3 origin, Vec3 mins, Vec3 maxs);
 void AAS_ShowFace(int facenum);
 /* show an area */
 void AAS_ShowArea(int areanum, int groundfacesonly);
-/*  */
 void AAS_ShowAreaPolygons(int areanum, int color, int groundfacesonly);
 /* draw a cros */
 void AAS_DrawCross(Vec3 origin, float size, int color);

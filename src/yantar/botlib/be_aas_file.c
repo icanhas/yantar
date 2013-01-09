@@ -234,7 +234,6 @@ AAS_DumpAASData(void)
 	if(aasworld.clusters) FreeMemory(aasworld.clusters);
 	aasworld.clusters = NULL;
 	aasworld.numclusters = 0;
-	/*  */
 	aasworld.loaded = qfalse;
 	aasworld.initialized = qfalse;
 	aasworld.savefile = qfalse;
@@ -270,11 +269,9 @@ AAS_FileInfo(void)
 	botimport.Print(PRT_MESSAGE, "portalindexsize = %d\n",
 		aasworld.portalindexsize);
 	botimport.Print(PRT_MESSAGE, "numclusters = %d\n", aasworld.numclusters);
-	/*  */
 	for(n = 0, i = 0; i < aasworld.numareasettings; i++)
 		if(aasworld.areasettings[i].areaflags & AREA_GROUNDED) n++;
 	botimport.Print(PRT_MESSAGE, "num grounded areas = %d\n", n);
-	/*  */
 	botimport.Print(PRT_MESSAGE, "planes size %d bytes\n",
 		aasworld.numplanes * sizeof(aas_plane_t));
 	botimport.Print(PRT_MESSAGE, "areas size %d bytes\n",
@@ -312,7 +309,6 @@ AAS_LoadAASLump(Fhandle fp, int offset, int length, int *lastoffset,
 		int size)
 {
 	char *buf;
-	/*  */
 	if(!length)
 		/* just alloc a dummy */
 		return (char*)GetClearedHunkMemory(size+1);
@@ -384,7 +380,6 @@ AAS_LoadAASFile(char *filename)
 	}
 	/* check the version */
 	header.version = LittleLong(header.version);
-	/*  */
 	if(header.version != AASVERSION_OLD && header.version != AASVERSION){
 		AAS_Error("aas file %s is version %i, not %i\n", filename,
 			header.version,
@@ -392,11 +387,9 @@ AAS_LoadAASFile(char *filename)
 		botimport.FS_FCloseFile(fp);
 		return BLERR_WRONGAASFILEVERSION;
 	}
-	/*  */
 	if(header.version == AASVERSION)
 		AAS_DData((unsigned char*)&header + 8,
 			sizeof(aas_header_t) - 8);
-	/*  */
 	aasworld.bspchecksum = atoi(LibVarGetString("sv_mapChecksum"));
 	if(LittleLong(header.bspchecksum) != aasworld.bspchecksum){
 		AAS_Error("aas file %s is out of date\n", filename);
@@ -525,11 +518,9 @@ AAS_LoadAASFile(char *filename)
 	aasworld.loaded = qtrue;
 	/* close the file */
 	botimport.FS_FCloseFile(fp);
-	/*  */
 #ifdef AASFILEDEBUG
 	AAS_FileInfo();
 #endif	/* AASFILEDEBUG */
-	/*  */
 	return BLERR_NOERROR;
 }	/* end of the function AAS_LoadAASFile */
 /* ===========================================================================

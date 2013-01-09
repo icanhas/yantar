@@ -1686,7 +1686,6 @@ CheckTeamVote(int team)
 			/* execute the command, then remove the vote */
 			trap_SendServerCommand(-1,
 				"print \"Team vote passed.\n\"");
-			/*  */
 			if(!Q_strncmp("leader", level.teamVoteString[cs_offset],
 				   6))
 				/* set the team leader */

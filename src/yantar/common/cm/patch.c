@@ -889,7 +889,6 @@ CM_AddFacetBevels(facet_t *facet)
 						= 0;
 					facet->borderInward[facet->numBorders]
 						= flipped;
-					/*  */
 					w2 = CopyWinding(w);
 					copyv4(
 						planes[facet->borderPlanes[
@@ -910,7 +909,6 @@ CM_AddFacetBevels(facet_t *facet)
 						continue;
 					}else
 						FreeWinding(w2);
-					/*  */
 					facet->numBorders++;
 					/* already got a bevel */
 /*					break; */
@@ -1390,7 +1388,6 @@ CM_TraceThroughPatchCollide(traceWork_t *tw, const struct patchCollide_s *pc)
 		enterFrac	= -1.0;
 		leaveFrac	= 1.0;
 		hitnum = -1;
-		/*  */
 		planes = &pc->planes[ facet->surfacePlane ];
 		copyv3(planes->plane, plane);
 		plane[3] = planes->plane[3];
@@ -1521,7 +1518,6 @@ CM_PositionTestInPatchCollide(traceWork_t *tw, const struct patchCollide_s *pc)
 
 	if(tw->isPoint)
 		return qfalse;
-	/*  */
 	facet = pc->facets;
 	for(i = 0; i < pc->numFacets; i++, facet++){
 		planes = &pc->planes[ facet->surfacePlane ];
@@ -1649,7 +1645,6 @@ CM_DrawDebugSurface(void (*drawPoly)(int color, int numPoints, float *points))
 	for(i = 0, facet = pc->facets; i < pc->numFacets; i++, facet++)
 
 		for(k = 0; k < facet->numBorders + 1; k++){
-			/*  */
 			if(k < facet->numBorders){
 				planenum	= facet->borderPlanes[k];
 				inward		= facet->borderInward[k];
@@ -1679,7 +1674,6 @@ CM_DrawDebugSurface(void (*drawPoly)(int color, int numPoints, float *points))
 
 			w = BaseWindingForPlane(plane,  plane[3]);
 			for(j = 0; j < facet->numBorders + 1 && w; j++){
-				/*  */
 				if(j < facet->numBorders){
 					curplanenum	= facet->borderPlanes[j];
 					curinward	= facet->borderInward[j];
@@ -1688,7 +1682,6 @@ CM_DrawDebugSurface(void (*drawPoly)(int color, int numPoints, float *points))
 					curinward	= qfalse;
 					/* continue; */
 				}
-				/*  */
 				if(curplanenum == planenum) continue;
 
 				copyv4(pc->planes[ curplanenum ].plane,

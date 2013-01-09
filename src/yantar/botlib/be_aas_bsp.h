@@ -37,7 +37,6 @@ qbool AAS_EntityCollision(int entnum,
 			     bsp_Trace *trace);
 /* for debugging */
 void AAS_PrintFreeBSPLinks(char *str);
-/*  */
 #endif	/* AASINTERN */
 
 #define MAX_EPAIRKEY 128

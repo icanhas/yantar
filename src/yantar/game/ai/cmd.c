@@ -4,7 +4,6 @@
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License.
  */
-/*  */
 
 /*****************************************************************************
 * name:		ai_cmd.c
@@ -28,14 +27,12 @@
 #include "../../botlib/be_ai_goal.h"
 #include "../../botlib/be_ai_move.h"
 #include "../../botlib/be_ai_weap.h"
-/*  */
 #include "main.h"
 #include "dmq3.h"
 #include "chat.h"
 #include "cmd.h"
 #include "dmnet.h"
 #include "team.h"
-/*  */
 #include "chars.h"	/* characteristics */
 #include "inv.h"	/* indexes into the inventory */
 #include "syn.h"	/* synonyms */
@@ -330,9 +327,7 @@ BotGetPatrolWaypoints(bot_state_t *bs, bot_match_t *match)
 
 	newpatrolpoints = NULL;
 	patrolflags = 0;
-	/*  */
 	trap_BotMatchVariable(match, KEYAREA, keyarea, MAX_MESSAGE_SIZE);
-	/*  */
 	while(1){
 		if(!trap_BotFindMatch(keyarea, &keyareamatch,
 			   MTCONTEXT_PATROLKEYAREA)){
@@ -364,7 +359,6 @@ BotGetPatrolWaypoints(bot_state_t *bs, bot_match_t *match)
 			wp->next = newwp;
 			newwp->prev = wp;
 		}
-		/*  */
 		if(keyareamatch.subtype & ST_BACK){
 			patrolflags = PATROL_LOOP;
 			break;
@@ -377,20 +371,16 @@ BotGetPatrolWaypoints(bot_state_t *bs, bot_match_t *match)
 		else
 			break;
 	}
-	/*  */
 	if(!newpatrolpoints || !newpatrolpoints->next){
 		trap_EA_SayTeam(bs->client, "I need more key points to patrol\n");
 		BotFreeWaypoints(newpatrolpoints);
 		newpatrolpoints = NULL;
 		return qfalse;
 	}
-	/*  */
 	BotFreeWaypoints(bs->patrolpoints);
 	bs->patrolpoints = newpatrolpoints;
-	/*  */
 	bs->curpatrolpoint = bs->patrolpoints;
 	bs->patrolflags = patrolflags;
-	/*  */
 	return qtrue;
 }
 
@@ -416,7 +406,6 @@ BotAddressedToBot(bot_state_t *bs, bot_match_t *match)
 			sizeof(addressedto));
 		/* the name of this bot */
 		ClientName(bs->client, botname, 128);
-		/*  */
 		while(trap_BotFindMatch(addressedto, &addresseematch,
 			      MTCONTEXT_ADDRESSEE)){
 			if(addresseematch.type == MSG_EVERYONE)
@@ -544,7 +533,6 @@ BotMatch_HelpAccompany(bot_state_t *bs, bot_match_t *match)
 	/* don't help or accompany yourself */
 	if(client == bs->client)
 		return;
-	/*  */
 	bs->teamgoal.entitynum = -1;
 	BotEntityInfo(client, &entinfo);
 	/* if info is valid (in PVS) */
@@ -565,13 +553,11 @@ BotMatch_HelpAccompany(bot_state_t *bs, bot_match_t *match)
 			/* get the match variable */
 			trap_BotMatchVariable(match, ITEM, itemname,
 				sizeof(itemname));
-			/*  */
 			if(!BotGetMessageTeamGoal(bs, itemname, &bs->teamgoal))
 				/* BotAI_BotInitialChat(bs, "cannotfind", itemname, NULL);
 				 * trap_BotEnterChat(bs->cs, bs->client, CHAT_TEAM); */
 				return;
 		}
-	/*  */
 	if(bs->teamgoal.entitynum < 0){
 		if(other) BotAI_BotInitialChat(bs, "whereis", teammate, NULL);
 		else BotAI_BotInitialChat(bs, "whereareyou", netname, NULL);
@@ -581,9 +567,7 @@ BotMatch_HelpAccompany(bot_state_t *bs, bot_match_t *match)
 	}
 	/* the team mate */
 	bs->teammate = client;
-	/*  */
 	trap_BotMatchVariable(match, NETNAME, netname, sizeof(netname));
-	/*  */
 	client = ClientFromName(netname);
 	/* the team mate who ordered */
 	bs->decisionmaker = client;
@@ -606,7 +590,6 @@ BotMatch_HelpAccompany(bot_state_t *bs, bot_match_t *match)
 							   TEAM_ACCOMPANY_TIME;
 		bs->formation_dist = 3.5 * 32;	/* 3.5 meter */
 		bs->arrive_time = 0;
-		/*  */
 		BotSetTeamStatus(bs);
 		/* remember last ordered task */
 		BotRememberLastOrderedTask(bs);
@@ -631,14 +614,11 @@ BotMatch_DefendKeyArea(bot_state_t *bs, bot_match_t *match)
 	if(!BotAddressedToBot(bs, match)) return;
 	/* get the match variable */
 	trap_BotMatchVariable(match, KEYAREA, itemname, sizeof(itemname));
-	/*  */
 	if(!BotGetMessageTeamGoal(bs, itemname, &bs->teamgoal))
 		/* BotAI_BotInitialChat(bs, "cannotfind", itemname, NULL);
 		 * trap_BotEnterChat(bs->cs, bs->client, CHAT_TEAM); */
 		return;
-	/*  */
 	trap_BotMatchVariable(match, NETNAME, netname, sizeof(netname));
-	/*  */
 	client = ClientFromName(netname);
 	/* the team mate who ordered */
 	bs->decisionmaker = client;
@@ -655,7 +635,6 @@ BotMatch_DefendKeyArea(bot_state_t *bs, bot_match_t *match)
 						   TEAM_DEFENDKEYAREA_TIME;
 	/* away from defending */
 	bs->defendaway_time = 0;
-	/*  */
 	BotSetTeamStatus(bs);
 	/* remember last ordered task */
 	BotRememberLastOrderedTask(bs);
@@ -679,14 +658,12 @@ BotMatch_GetItem(bot_state_t *bs, bot_match_t *match)
 	if(!BotAddressedToBot(bs, match)) return;
 	/* get the match variable */
 	trap_BotMatchVariable(match, ITEM, itemname, sizeof(itemname));
-	/*  */
 	if(!BotGetMessageTeamGoal(bs, itemname, &bs->teamgoal))
 		/* BotAI_BotInitialChat(bs, "cannotfind", itemname, NULL);
 		 * trap_BotEnterChat(bs->cs, bs->client, CHAT_TEAM); */
 		return;
 	trap_BotMatchVariable(match, NETNAME, netname, sizeof(netname));
 	client = ClientOnSameTeamFromName(bs, netname);
-	/*  */
 	bs->decisionmaker = client;
 	bs->ordered = qtrue;
 	bs->order_time = FloatTime();
@@ -696,7 +673,6 @@ BotMatch_GetItem(bot_state_t *bs, bot_match_t *match)
 	bs->ltgtype = LTG_GETITEM;
 	/* set the team goal time */
 	bs->teamgoal_time = FloatTime() + TEAM_GETITEM_TIME;
-	/*  */
 	BotSetTeamStatus(bs);
 #ifdef DEBUG
 	BotPrintTeamGoal(bs);
@@ -717,7 +693,6 @@ BotMatch_Camp(bot_state_t *bs, bot_match_t *match)
 	if(!TeamPlayIsOn()) return;
 	/* if not addressed to this bot */
 	if(!BotAddressedToBot(bs, match)) return;
-	/*  */
 	trap_BotMatchVariable(match, NETNAME, netname, sizeof(netname));
 	/* asked for someone else */
 	client = FindClientByName(netname);
@@ -740,7 +715,6 @@ BotMatch_Camp(bot_state_t *bs, bot_match_t *match)
 	}else if(match->subtype & ST_HERE){
 		/* if this is the bot self */
 		if(client == bs->client) return;
-		/*  */
 		bs->teamgoal.entitynum = -1;
 		BotEntityInfo(client, &entinfo);
 		/* if info is valid (in PVS) */
@@ -769,7 +743,6 @@ BotMatch_Camp(bot_state_t *bs, bot_match_t *match)
 		 * client = ClientFromName(netname);
 		 * trap_BotEnterChat(bs->cs, client, CHAT_TELL); */
 		return;
-	/*  */
 	bs->decisionmaker = client;
 	bs->ordered = qtrue;
 	bs->order_time = FloatTime();
@@ -783,7 +756,6 @@ BotMatch_Camp(bot_state_t *bs, bot_match_t *match)
 	if(!bs->teamgoal_time) bs->teamgoal_time = FloatTime() + TEAM_CAMP_TIME;
 	/* not arrived yet */
 	bs->arrive_time = 0;
-	/*  */
 	BotSetTeamStatus(bs);
 	/* remember last ordered task */
 	BotRememberLastOrderedTask(bs);
@@ -806,11 +778,8 @@ BotMatch_Patrol(bot_state_t *bs, bot_match_t *match)
 	if(!BotAddressedToBot(bs, match)) return;
 	/* get the patrol waypoints */
 	if(!BotGetPatrolWaypoints(bs, match)) return;
-	/*  */
 	trap_BotMatchVariable(match, NETNAME, netname, sizeof(netname));
-	/*  */
 	client = FindClientByName(netname);
-	/*  */
 	bs->decisionmaker = client;
 	bs->ordered = qtrue;
 	bs->order_time = FloatTime();
@@ -823,7 +792,6 @@ BotMatch_Patrol(bot_state_t *bs, bot_match_t *match)
 	/* set the team goal time if not set already */
 	if(!bs->teamgoal_time) bs->teamgoal_time = FloatTime() +
 						   TEAM_PATROL_TIME;
-	/*  */
 	BotSetTeamStatus(bs);
 	/* remember last ordered task */
 	BotRememberLastOrderedTask(bs);
@@ -852,11 +820,8 @@ BotMatch_GetFlag(bot_state_t *bs, bot_match_t *match)
 		return;
 	/* if not addressed to this bot */
 	if(!BotAddressedToBot(bs, match)) return;
-	/*  */
 	trap_BotMatchVariable(match, NETNAME, netname, sizeof(netname));
-	/*  */
 	client = FindClientByName(netname);
-	/*  */
 	bs->decisionmaker = client;
 	bs->ordered = qtrue;
 	bs->order_time = FloatTime();
@@ -870,7 +835,6 @@ BotMatch_GetFlag(bot_state_t *bs, bot_match_t *match)
 	if(gametype == GT_CTF)
 		/* get an alternative route goal towards the enemy base */
 		BotGetAlternateRouteGoal(bs, BotOppositeTeam(bs));
-	/*  */
 	BotSetTeamStatus(bs);
 	/* remember last ordered task */
 	BotRememberLastOrderedTask(bs);
@@ -1000,7 +964,6 @@ BotMatch_TaskPreference(bot_state_t *bs, bot_match_t *match)
 	}
 	}
 	BotSetTeamMateTaskPreference(bs, teammate, preference);
-	/*  */
 	EasyClientName(teammate, teammatename, sizeof(teammatename));
 	BotAI_BotInitialChat(bs, "keepinmind", teammatename, NULL);
 	trap_BotEnterChat(bs->cs, teammate, CHAT_TELL);
@@ -1221,9 +1184,7 @@ BotMatch_Suicide(bot_state_t *bs, bot_match_t *match)
 	if(!TeamPlayIsOn()) return;
 	/* if not addressed to this bot */
 	if(!BotAddressedToBot(bs, match)) return;
-	/*  */
 	trap_EA_Command(bs->client, "kill");
-	/*  */
 	trap_BotMatchVariable(match, NETNAME, netname, sizeof(netname));
 	client = ClientFromName(netname);
 	trap_EA_Action(bs->client, ACTION_AFFIRMATIVE);
@@ -1313,7 +1274,6 @@ BotMatch_WhatAreYouDoing(bot_state_t *bs, bot_match_t *match)
 
 	/* if not addressed to this bot */
 	if(!BotAddressedToBot(bs, match)) return;
-	/*  */
 	switch(bs->ltgtype){
 	case LTG_TEAMHELP:
 	{
@@ -1487,7 +1447,6 @@ BotMatch_WhereAreYou(bot_state_t *bs, bot_match_t *match)
 #endif
 		NULL
 	};
-	/*  */
 	if(!TeamPlayIsOn())
 		return;
 	/* if not addressed to this bot */
@@ -1597,7 +1556,6 @@ BotMatch_LeadTheWay(bot_state_t *bs, bot_match_t *match)
 		trap_BotEnterChat(bs->cs, bs->client, CHAT_TEAM);
 		return;
 	}
-	/*  */
 	bs->lead_teamgoal.entitynum = -1;
 	BotEntityInfo(client, &entinfo);
 	/* if info is valid (in PVS) */
@@ -1639,7 +1597,6 @@ BotMatch_Kill(bot_state_t *bs, bot_match_t *match)
 	if(!BotAddressedToBot(bs, match)) return;
 
 	trap_BotMatchVariable(match, ENEMY, enemy, sizeof(enemy));
-	/*  */
 	client = FindEnemyByName(bs, enemy);
 	if(client < 0){
 		BotAI_BotInitialChat(bs, "whois", enemy, NULL);
@@ -1655,7 +1612,6 @@ BotMatch_Kill(bot_state_t *bs, bot_match_t *match)
 	bs->ltgtype = LTG_KILL;
 	/* set the team goal time */
 	bs->teamgoal_time = FloatTime() + TEAM_KILL_SOMEONE;
-	/*  */
 	BotSetTeamStatus(bs);
 #ifdef DEBUG
 	BotPrintTeamGoal(bs);

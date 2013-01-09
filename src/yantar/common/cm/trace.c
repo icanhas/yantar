@@ -600,10 +600,8 @@ CM_TraceThroughSphere(traceWork_t *tw, Vec3 origin, float radius, Vec3 start,
 			tw->trace.allsolid = qtrue;
 		return;
 	}
-	/*  */
 	subv3(end, start, dir);
 	length = normv3(dir);
-	/*  */
 	l1 = CM_distv3FromLineSquared(origin, start, end, dir);
 	subv3(end, origin, v1);
 	l2 = lensqrv3(v1);
@@ -628,7 +626,6 @@ CM_TraceThroughSphere(traceWork_t *tw, Vec3 origin, float radius, Vec3 start,
 		sqrtd = sqrt(d);
 		/* = (- b + sqrtd) * 0.5f; // / (2.0f * a); */
 		fraction = (-b - sqrtd) * 0.5f;	/* / (2.0f * a); */
-		/*  */
 		if(fraction < 0)
 			fraction = 0;
 		else
@@ -693,10 +690,8 @@ CM_TraceThroughVerticalCylinder(traceWork_t *tw, Vec3 origin, float radius,
 			return;
 		}
 	}
-	/*  */
 	subv3(end2d, start2d, dir);
 	length = normv3(dir);
-	/*  */
 	l1 = CM_distv3FromLineSquared(org2d, start2d, end2d, dir);
 	subv3(end2d, org2d, v1);
 	l2 = lensqrv3(v1);
@@ -724,7 +719,6 @@ CM_TraceThroughVerticalCylinder(traceWork_t *tw, Vec3 origin, float radius,
 		sqrtd = sqrt(d);
 		/* = (- b + sqrtd) * 0.5f;// / (2.0f * a); */
 		fraction = (-b - sqrtd) * 0.5f;	/* / (2.0f * a); */
-		/*  */
 		if(fraction < 0)
 			fraction = 0;
 		else
@@ -735,7 +729,6 @@ CM_TraceThroughVerticalCylinder(traceWork_t *tw, Vec3 origin, float radius,
 			/* if the intersection is between the cylinder lower and upper bound */
 			if(intersection[2] <= origin[2] + halfheight &&
 			   intersection[2] >= origin[2] - halfheight){
-				/*  */
 				tw->trace.fraction = fraction;
 				subv3(intersection, origin, dir);
 				dir[2] = 0;

@@ -57,7 +57,6 @@
 #define PRESENCE_NONE			1
 #define PRESENCE_NORMAL			2
 #define PRESENCE_CROUCH			4
-/*  */
 #define MAX_PROXMINES			64
 
 /* check points */
@@ -97,7 +96,6 @@ typedef struct bot_state_s {
 	int			last_eFlags;			/* last ps flags */
 	Usrcmd		lastucmd;			/* usercmd from last frame */
 	int			entityeventTime[MAX_GENTITIES];	/* last entity event time */
-	/*  */
 	bot_settings_t		settings;			/* several bot settings */
 	int (*ainode)(struct bot_state_s *bs);			/* current AI node */
 	float			thinktime;			/* time the bot thinks this frame */
@@ -170,17 +168,14 @@ typedef struct bot_state_s {
 	Vec3			aimtarget;
 	Vec3			enemyvelocity;	/* enemy velocity 0.5 secs ago during battle */
 	Vec3			enemyorigin;	/* enemy origin 0.5 secs ago during battle */
-	/*  */
 	int			kamikazebody;	/* kamikaze body */
 	int			proxmines[MAX_PROXMINES];
 	int			numproxmines;
-	/*  */
 	int			character;	/* the bot character */
 	int			ms;		/* move state of the bot */
 	int			gs;		/* goal state of the bot */
 	int			cs;		/* chat state of the bot */
 	int			ws;		/* weapon state of the bot */
-	/*  */
 	int			enemy;			/* enemy entity number */
 	int			lastenemyareanum;	/* last reachability area the enemy was in */
 	Vec3			lastenemyorigin;	/* last origin of the enemy in the reachability area */
@@ -188,7 +183,6 @@ typedef struct bot_state_s {
 	Vec3			viewangles;		/* current view angles */
 	Vec3			ideal_viewangles;	/* ideal view angles */
 	Vec3			viewanglespeed;
-	/*  */
 	int			ltgtype;	/* long term goal type */
 	/* team goals */
 	int			teammate;			/* team mate involved in this team goal */
@@ -215,7 +209,6 @@ typedef struct bot_state_s {
 	float			leadvisible_time;	/* last time the team mate was visible */
 	float			leadmessage_time;	/* last time a messaged was sent to the team mate */
 	float			leadbackup_time;	/* time backing up towards team mate */
-	/*  */
 	char			teamleader[32];		/* netname of the team leader */
 	float			askteamleader_time;	/* time asked for team leader */
 	float			becometeamleader_time;	/* time the bot will become the team leader */
