@@ -60,7 +60,7 @@ typedef struct {
 	int		xpos, ypos, width, height;
 	qbool	looping, holdAtEnd, dirty, alterGameState, silent, shader;
 	Fhandle	iFile;
-	e_status	status;
+	Cinstatus	status;
 	uint		startTime;
 	uint		lastTime;
 	long		tfps;
@@ -1167,7 +1167,7 @@ RoQShutdown(void)
 	currentHandle = -1;
 }
 
-e_status
+Cinstatus
 CIN_StopCinematic(int handle)
 {
 
@@ -1188,7 +1188,7 @@ CIN_StopCinematic(int handle)
 }
 
 /* Fetch and decompress the pending frame */
-e_status
+Cinstatus
 CIN_RunCinematic(int handle)
 {
 	uint	start = 0;

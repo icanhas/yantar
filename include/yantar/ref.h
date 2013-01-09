@@ -339,7 +339,7 @@ struct refimport_t {
 	/* cinematic stuff */
 	void (*CIN_UploadCinematic)(int handle);
 	int (*CIN_PlayCinematic)(const char *arg0, int xpos, int ypos, int width, int height, int bits);
-	e_status (*CIN_RunCinematic)(int handle);
+	Cinstatus (*CIN_RunCinematic)(int handle);
 
 	void (*CL_WriteAVIVideoFrame)(const byte *buffer, int size);
 

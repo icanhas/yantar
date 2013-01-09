@@ -1417,7 +1417,7 @@ typedef enum {
 	FMV_ID_IDLE,
 	FMV_LOOPED,
 	FMV_ID_WAIT
-} e_status;
+} Cinstatus;
 
 typedef enum _flag_status {
 	FLAG_ATBASE = 0,

@@ -1609,8 +1609,8 @@ typedef enum {
 int trap_CIN_PlayCinematic(const char *arg0, int xpos, int ypos, int width,
 			   int height,
 			   int bits);
-e_status trap_CIN_StopCinematic(int handle);
-e_status trap_CIN_RunCinematic(int handle);
+Cinstatus trap_CIN_StopCinematic(int handle);
+Cinstatus trap_CIN_RunCinematic(int handle);
 void trap_CIN_DrawCinematic(int handle);
 void trap_CIN_SetExtents(int handle, int x, int y, int w, int h);
 
