@@ -430,7 +430,7 @@ ClientEvents(Gentity *ent, int oldEventSequence)
 			G_Damage (ent, NULL, NULL, NULL, NULL, damage, 0,
 				MOD_FALLING);
 			break;
-		case EV_FIRE_WEAPON:
+		case EV_FIREPRIWEAP:
 			FireWeapon(ent, Wpri);
 			break;
 		case EV_FIRESECWEAP:

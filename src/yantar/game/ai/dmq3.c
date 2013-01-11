@@ -4318,7 +4318,7 @@ BotCheckEvents(bot_state_t *bs, Entstate *state)
 	case EV_GLOBAL_ITEM_PICKUP:
 	case EV_NOAMMO:
 	case EV_CHANGE_WEAPON:
-	case EV_FIRE_WEAPON:
+	case EV_FIREPRIWEAP:
 		/* FIXME: either add to sound queue or mark player as someone making noise */
 		break;
 	case EV_USE_ITEM0:

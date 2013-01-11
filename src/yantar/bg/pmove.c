@@ -1006,7 +1006,7 @@ dopriweapevents(Pmove *pm, Pml *pml)
 	if(p->ammo[p->weap[Wpri]] != -1)
 		p->ammo[p->weap[Wpri]]--;
 	/* fire weapon */
-	PM_AddEvent(pm, pml, EV_FIRE_WEAPON);
+	PM_AddEvent(pm, pml, EV_FIREPRIWEAP);
 	
 	addTime = weaptimetab(p->weap[Wpri]);
 	if(p->powerups[PW_HASTE])

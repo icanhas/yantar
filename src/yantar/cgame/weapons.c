@@ -1609,7 +1609,7 @@ CG_OutOfAmmoChange(Weapslot sl)
  */
 
 /* 
- * Caused by an EV_FIRE_WEAPON, EV_FIRESECWEAP, or 
+ * Caused by an EV_FIREPRIWEAP, EV_FIRESECWEAP, or 
  * EV_FIREHOOK event 
  */
 void

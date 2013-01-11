@@ -142,7 +142,7 @@ char *eventnames[] = {
 
 	"EV_NOAMMO",
 	"EV_CHANGE_WEAPON",
-	"EV_FIRE_WEAPON",
+	"EV_FIREPRIWEAP",
 	"EV_FIRESECWEAP",
 	"EV_FIREHOOK",
 

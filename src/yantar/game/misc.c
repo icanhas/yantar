@@ -280,7 +280,7 @@ Use_Shooter(Gentity *ent, Gentity *other, Gentity *activator)
 		break;
 	}
 
-	G_AddEvent(ent, EV_FIRE_WEAPON, 0);
+	G_AddEvent(ent, EV_FIREPRIWEAP, 0);
 }
 
 

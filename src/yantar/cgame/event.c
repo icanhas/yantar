@@ -755,8 +755,8 @@ CG_EntityEvent(Centity *cent, Vec3 position)
 		trap_S_StartSound (NULL, es->number, CHAN_AUTO,
 			cgs.media.selectSound);
 		break;
-	case EV_FIRE_WEAPON:
-		DEBUGNAME("EV_FIRE_WEAPON");
+	case EV_FIREPRIWEAP:
+		DEBUGNAME("EV_FIREPRIWEAP");
 		CG_FireWeapon(cent, Wpri);
 		break;
 	case EV_FIRESECWEAP:

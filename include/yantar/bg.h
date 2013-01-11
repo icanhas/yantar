@@ -355,7 +355,7 @@ typedef enum {
 	EV_NOSECAMMO,		/* seconary ammo ran out */
 	EV_CHANGE_WEAPON,	/* primary weapon changes */
 	EV_CHANGESECWEAP,	/* secondary weapon changes */
-	EV_FIRE_WEAPON,		/* firing primary weapon */
+	EV_FIREPRIWEAP,		/* firing primary weapon */
 	EV_FIRESECWEAP,		/* firing secondary weapon */
 	EV_FIREHOOK,		/* firing grappling hook */
 
