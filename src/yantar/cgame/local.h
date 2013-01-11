@@ -151,7 +151,7 @@ typedef struct Centity {
 	qbool		interpolate;	/* true if next is valid to interpolate to */
 	qbool		currentValid;	/* true if cg.frame holds this entity */
 
-	int		muzzleFlashTime;	/* move to playerEntity? */
+	int		muzzleFlashTime[Wnumweapslots];	/* move to playerEntity? */
 	int		previousEvent;
 	int		teleportFlag;
 

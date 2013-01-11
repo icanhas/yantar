@@ -1243,7 +1243,7 @@ CG_AddPlayerWeapon(Refent *parent, Playerstate *ps, Centity *cent,
 		/* continuous flash */
 	}else
 	/* impulse flash */
-	if(cg.time - cent->muzzleFlashTime > MUZZLE_FLASH_TIME)
+	if(cg.time - cent->muzzleFlashTime[slot] > MUZZLE_FLASH_TIME)
 		return;
 
 
@@ -1637,7 +1637,7 @@ CG_FireWeapon(Centity *cent, Weapslot sl)
 	 * mark the entity as muzzle flashing, so when it is added it will
 	 * append the flash to the weapon model 
 	 */
-	cent->muzzleFlashTime = cg.time;
+	cent->muzzleFlashTime[sl] = cg.time;
 
 	/* lightning gun only does this this on initial press */
 	if(wnum == W1lightning)
@@ -1648,7 +1648,7 @@ CG_FireWeapon(Centity *cent, Weapslot sl)
 
 	/* play quad sound if needed */
 	if(cent->currentState.powerups & (1 << PW_QUAD))
-		trap_S_StartSound (NULL, cent->currentState.number, CHAN_ITEM,
+		trap_S_StartSound(NULL, cent->currentState.number, CHAN_ITEM,
 			cgs.media.quadSound);
 
 	/* play a sound */
