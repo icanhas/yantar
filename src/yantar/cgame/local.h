@@ -122,10 +122,10 @@ typedef struct {
 	int		animationNumber;	/* may include ANIM_TOGGLEBIT */
 	Anim	*animation;
 	int		animationTime;	/* time when the first frame of the animation will be exact */
-} lerpFrame_t;
+} Lerpframe;
 
 typedef struct {
-	lerpFrame_t	legs, torso, flag;
+	Lerpframe	legs, torso, flag;
 	int		painTime;
 	int		painDirection;	/* flip from 0 to 1 */
 } Playerent;
@@ -180,15 +180,15 @@ typedef struct Centity {
  * and live independantly from all server transmitted entities
  */
 
-typedef struct markPoly_s {
-	struct markPoly_s	*prevMark, *nextMark;
+typedef struct Markpoly {
+	struct Markpoly	*prevMark, *nextMark;
 	int			time;
 	Handle			markShader;
 	qbool			alphaFade;	/* fade alpha instead of rgb */
 	float			color[4];
 	Poly			poly;
 	Polyvert		verts[MAX_VERTS_ON_POLY];
-} markPoly_t;
+} Markpoly;
 
 typedef enum {
 	LE_MARK,
@@ -201,30 +201,30 @@ typedef enum {
 	LE_SCALE_FADE,
 	LE_SCOREPLUM,
 	LE_SHOWREFENTITY	/* FIXME: MISSIONPACK; remove? */
-} leType_t;
+} Letype;
 
 typedef enum {
 	LEF_PUFF_DONT_SCALE = 0x0001,	/* do not scale size over time */
 	LEF_TUMBLE	= 0x0002,	/* tumble over time, used for ejecting shells */
 	LEF_SOUND1	= 0x0004,	/* sound 1 for kamikaze */
 	LEF_SOUND2	= 0x0008	/* sound 2 for kamikaze */
-} leFlag_t;
+} Leflag;
 
 typedef enum {
 	LEMT_NONE,
 	LEMT_BURN,
 	LEMT_BLOOD
-} leMarkType_t;	/* fragment local entities can leave marks on walls */
+} Lemarktype;	/* fragment local entities can leave marks on walls */
 
 typedef enum {
 	LEBS_NONE,
 	LEBS_BLOOD,
 	LEBS_BRASS
-} leBounceSoundType_t;	/* fragment local entities can make sounds on impacts */
+} Lebouncesndtype;	/* fragment local entities can make sounds on impacts */
 
 typedef struct Localent {
 	struct Localent	*prev, *next;
-	leType_t		leType;
+	Letype		leType;
 	int			leFlags;
 
 	int			startTime;
@@ -245,8 +245,8 @@ typedef struct Localent {
 	float			light;
 	Vec3			lightColor;
 
-	leMarkType_t		leMarkType;	/* mark to leave on fragment impact */
-	leBounceSoundType_t	leBounceSoundType;
+	Lemarktype		leMarkType;	/* mark to leave on fragment impact */
+	Lebouncesndtype	leBounceSoundType;
 
 	Refent		refEntity;
 } Localent;
@@ -391,7 +391,7 @@ typedef struct Weapinfo {
 } Weapinfo;
 
 /* 
- * each IT_* item has an associated itemInfo_t
+ * each IT_* item has an associated Iteminfo
  * that constains media references necessary to present the
  * item and its effects
  */
@@ -399,7 +399,7 @@ typedef struct {
 	qbool		registered;
 	Handle		models[MAX_ITEM_MODELS];
 	Handle		icon;
-} itemInfo_t;
+} Iteminfo;
 
 typedef struct {
 	int itemNum;
@@ -410,7 +410,7 @@ typedef struct {
 typedef struct {
 	Vec3	positions[MAX_SKULLTRAIL];
 	int	numpositions;
-} skulltrail_t;
+} Skulltrail;
 
 #define MAX_REWARDSTACK 10
 #define MAX_SOUNDBUFFER 20
@@ -603,13 +603,13 @@ typedef struct {
 	qbool		testGun;
 	uint		ntestlights;
 	Vec3	testlightorigs[Maxtestlights];
-} cg_t;
+} Gg;
 
 /* 
  * all of the model, shader, and sound references that are
- * loaded at gamestate time are stored in cgMedia_t
+ * loaded at gamestate time are stored in Cgmedia
  * Other media that can be tied to clients, weapons, or items are
- * stored in the Clientinfo, itemInfo_t, Weapinfo, and Powerupinfo 
+ * stored in the Clientinfo, Iteminfo, Weapinfo, and Powerupinfo 
  */
 typedef struct {
 	Handle		charsetShader;
@@ -885,7 +885,7 @@ typedef struct {
 	Sfxhandle	wstbimpmSound;
 	Sfxhandle	wstbimpdSound;
 	Sfxhandle	wstbactvSound;
-} cgMedia_t;
+} Cgmedia;
 
 /* 
  * The client game static (cgs) structure hold everything
@@ -974,15 +974,15 @@ typedef struct {
 	char		acceptVoice[MAX_NAME_LENGTH];
 
 	/* media */
-	cgMedia_t media;
-} cgs_t;
+	Cgmedia media;
+} Cgs;
 
-extern cgs_t	cgs;
-extern cg_t	cg;
+extern Cgs	cgs;
+extern Gg	cg;
 extern Centity	cg_entities[MAX_GENTITIES];
 extern Weapinfo cg_weapons[MAX_WEAPONS];
-extern itemInfo_t	cg_items[MAX_ITEMS];
-extern markPoly_t	cg_markPolys[MAX_MARK_POLYS];
+extern Iteminfo	cg_items[MAX_ITEMS];
+extern Markpoly	cg_markPolys[MAX_MARK_POLYS];
 
 extern Vmcvar		cg_centertime;
 extern Vmcvar		cg_runpitch;

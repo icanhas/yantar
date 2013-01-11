@@ -440,17 +440,17 @@ typedef struct {
 	int		animationNumber;	/* may include ANIM_TOGGLEBIT */
 	Anim	*animation;
 	int		animationTime;	/* time when the first frame of the animation will be exact */
-} lerpFrame_t;
+} Lerpframe;
 
 typedef struct {
 	/* model info */
 	Handle		legsModel;
 	Handle		legsSkin;
-	lerpFrame_t	legs;
+	Lerpframe	legs;
 
 	Handle		torsoModel;
 	Handle		torsoSkin;
-	lerpFrame_t	torso;
+	Lerpframe	torso;
 
 	Handle		headModel;
 	Handle		headSkin;

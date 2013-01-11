@@ -309,7 +309,7 @@ UI_PositionRotatedEntityOnTag(Refent *entity, const Refent *parent,
  * UI_SetLerpFrameAnimation
  */
 static void
-UI_SetLerpFrameAnimation(Playerinfo *ci, lerpFrame_t *lf, int newAnimation)
+UI_SetLerpFrameAnimation(Playerinfo *ci, Lerpframe *lf, int newAnimation)
 {
 	Anim *anim;
 
@@ -330,7 +330,7 @@ UI_SetLerpFrameAnimation(Playerinfo *ci, lerpFrame_t *lf, int newAnimation)
  * UI_RunLerpFrame
  */
 static void
-UI_RunLerpFrame(Playerinfo *ci, lerpFrame_t *lf, int newAnimation)
+UI_RunLerpFrame(Playerinfo *ci, Lerpframe *lf, int newAnimation)
 {
 	int f;
 	Anim *anim;

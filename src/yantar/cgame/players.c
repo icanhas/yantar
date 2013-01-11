@@ -857,7 +857,7 @@ CG_LoadDeferredPlayers(void)
 
 /* may include ANIM_TOGGLEBIT */
 static void
-setlerpframeanim(Clientinfo *ci, lerpFrame_t *lf, int newAnimation)
+setlerpframeanim(Clientinfo *ci, Lerpframe *lf, int newAnimation)
 {
 	Anim *p;
 
@@ -879,7 +879,7 @@ setlerpframeanim(Clientinfo *ci, lerpFrame_t *lf, int newAnimation)
  * cg.time should be between oldFrameTime and frameTime after exit
  */
 static void
-runlerpframe(Clientinfo *ci, lerpFrame_t *lf, int newAnimation,
+runlerpframe(Clientinfo *ci, Lerpframe *lf, int newAnimation,
 		float speedScale)
 {
 	int f, numFrames;
@@ -956,7 +956,7 @@ runlerpframe(Clientinfo *ci, lerpFrame_t *lf, int newAnimation,
 }
 
 static void
-clearlerpframe(Clientinfo *ci, lerpFrame_t *lf, int animationNumber)
+clearlerpframe(Clientinfo *ci, Lerpframe *lf, int animationNumber)
 {
 	lf->frameTime = lf->oldFrameTime = cg.time;
 	setlerpframeanim(ci, lf, animationNumber);

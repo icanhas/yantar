@@ -65,11 +65,11 @@ vmMain(int command, int arg0, int arg1, int arg2, int arg3, int arg4, int arg5,
 	return -1;
 }
 
-cg_t	cg;
-cgs_t	cgs;
+Gg	cg;
+Cgs	cgs;
 Centity	cg_entities[MAX_GENTITIES];
 Weapinfo cg_weapons[MAX_WEAPONS];
-itemInfo_t	cg_items[MAX_ITEMS];
+Iteminfo	cg_items[MAX_ITEMS];
 
 Vmcvar	cg_railTrailTime;
 Vmcvar	cg_centertime;

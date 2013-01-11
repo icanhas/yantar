@@ -803,7 +803,7 @@ CG_RegisterWeapon(int weaponNum)
 void
 CG_RegisterItemVisuals(int itemNum)
 {
-	itemInfo_t	*itemInfo;
+	Iteminfo	*itemInfo;
 	Gitem		*item;
 
 	if(itemNum < 0 || itemNum >= bg_numItems)
