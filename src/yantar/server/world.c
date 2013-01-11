@@ -343,7 +343,7 @@ typedef struct {
 	const float	*maxs;
 	int		*list;
 	int		count, maxcount;
-} Arenaparams;
+} Areaparams;
 
 
 /*
@@ -351,7 +351,7 @@ typedef struct {
  *
  */
 static void
-SV_AreaEntities_r(worldSector_t *node, Arenaparams *ap)
+SV_AreaEntities_r(worldSector_t *node, Areaparams *ap)
 {
 	Svent *check, *next;
 	Sharedent *gcheck;
@@ -395,7 +395,7 @@ int
 SV_AreaEntities(const Vec3 mins, const Vec3 maxs, int *entityList,
 		int maxcount)
 {
-	Arenaparams ap;
+	Areaparams ap;
 
 	ap.mins = mins;
 	ap.maxs = maxs;

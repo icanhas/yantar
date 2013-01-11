@@ -135,7 +135,7 @@ typedef struct {
 	void (*StopCapture)(void);
 	void (*MasterGain)(float gain);
 #endif
-} Sndinferface;
+} Sndinterface;
 
 
 /*
@@ -221,4 +221,4 @@ extern short	*sfxScratchBuffer;
 extern Sfx    *sfxScratchPointer;
 extern int	sfxScratchIndex;
 
-qbool S_Base_Init(Sndinferface *si);
+qbool S_Base_Init(Sndinterface *si);

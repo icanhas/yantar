@@ -1202,7 +1202,7 @@ S_Base_Shutdown(void)
 }
 
 qbool
-S_Base_Init(Sndinferface *si)
+S_Base_Init(Sndinterface *si)
 {
 	qbool r;
 
