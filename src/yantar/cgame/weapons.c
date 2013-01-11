@@ -910,7 +910,7 @@ CG_CalculateWeaponPosition(Vec3 origin, Vec3 angles)
  * angle)
  */
 static void
-CG_LightningBolt(Centity *cent, Vec3 origin)
+CG_LightningBolt(Centity *cent, Vec3 origin, Weapslot sl)
 {
 	Trace trace;
 	Refent beam;
@@ -918,9 +918,7 @@ CG_LightningBolt(Centity *cent, Vec3 origin)
 	Vec3	muzzlePoint, endPoint;
 	int anim;
 
-	if(cent->currentState.weap[Wpri] != W1lightning
-	   && cent->currentState.weap[Wsec] != W1lightning)
-	then
+	if(cent->currentState.weap[sl] != W1lightning)
 		return;
 
 	memset(&beam, 0, sizeof(beam));
@@ -1069,32 +1067,32 @@ CG_LightningBolt(Centity *cent, Vec3 origin)
 #define         SPIN_SPEED	0.9
 #define         COAST_TIME	1000
 static float
-CG_MachinegunSpinAngle(Centity *cent)
+CG_MachinegunSpinAngle(Centity *cent, Weapslot sl)
 {
 	int delta;
 	float	angle;
 	float	speed;
 
-	delta = cg.time - cent->pe.barrelTime;
-	if(cent->pe.barrelSpinning)
-		angle = cent->pe.barrelAngle + delta * SPIN_SPEED;
+	delta = cg.time - cent->w[sl].barrelTime;
+	if(cent->w[sl].barrelSpinning)
+		angle = cent->w[sl].barrelAngle + delta * SPIN_SPEED;
 	else{
 		if(delta > COAST_TIME)
 			delta = COAST_TIME;
 
 		speed = 0.5 *
 			(SPIN_SPEED + (float)(COAST_TIME - delta) / COAST_TIME);
-		angle = cent->pe.barrelAngle + delta * speed;
+		angle = cent->w[sl].barrelAngle + delta * speed;
 	}
 
-	if(cent->pe.barrelSpinning ==
+	if(cent->w[sl].barrelSpinning ==
 	   !(cent->currentState.eFlags & EF_FIRING)){
-		cent->pe.barrelTime = cg.time;
-		cent->pe.barrelAngle = modeuler(angle);
-		cent->pe.barrelSpinning =
+		cent->w[sl].barrelTime = cg.time;
+		cent->w[sl].barrelAngle = modeuler(angle);
+		cent->w[sl].barrelSpinning =
 			!!(cent->currentState.eFlags & EF_FIRING);
-		if(cent->currentState.weap[Wpri] == W1chaingun &&
-		   !cent->pe.barrelSpinning)
+		if(cent->currentState.weap[sl] == W1chaingun &&
+		   !cent->w[sl].barrelSpinning)
 			trap_S_StartSound(
 				NULL, cent->currentState.number, CHAN_WEAPON,
 				trap_S_RegisterSound(
@@ -1156,9 +1154,9 @@ CG_AddPlayerWeapon(Refent *parent, Playerstate *ps, Centity *cent,
 	/* set custom shading for railgun refire rate */
 	if(weaponNum == W1railgun){
 		Clientinfo *ci = &cgs.clientinfo[cent->currentState.clientNum];
-		if(cent->pe.railFireTime + 1500 > cg.time){
+		if(cent->w[slot].railFireTime + 1500 > cg.time){
 			int scale = 255 *
-				    (cg.time - cent->pe.railFireTime) / 1500;
+				    (cg.time - cent->w[slot].railFireTime) / 1500;
 			gun.shaderRGBA[0] = (ci->c1RGBA[0] * scale) >> 8;
 			gun.shaderRGBA[1] = (ci->c1RGBA[1] * scale) >> 8;
 			gun.shaderRGBA[2] = (ci->c1RGBA[2] * scale) >> 8;
@@ -1173,14 +1171,14 @@ CG_AddPlayerWeapon(Refent *parent, Playerstate *ps, Centity *cent,
 
 	if(!ps){
 		/* add weapon ready sound */
-		cent->pe.lightningFiring = qfalse;
+		cent->w[slot].lightningFiring = qfalse;
 		if((cent->currentState.eFlags & EF_FIRING) &&
 		   weapon->firingSound){
 			/* lightning gun and guantlet make a different sound when fire is held down */
 			trap_S_AddLoopingSound(cent->currentState.number,
 				cent->lerpOrigin, vec3_origin,
 				weapon->firingSound);
-			cent->pe.lightningFiring = qtrue;
+			cent->w[slot].lightningFiring = qtrue;
 		}else if(weapon->readySound)
 			trap_S_AddLoopingSound(cent->currentState.number,
 				cent->lerpOrigin, vec3_origin,
@@ -1217,7 +1215,7 @@ CG_AddPlayerWeapon(Refent *parent, Playerstate *ps, Centity *cent,
 		barrel.hModel	= weapon->barrelModel;
 		angles[YAW]	= 0;
 		angles[PITCH]	= 0;
-		angles[ROLL]	= CG_MachinegunSpinAngle(cent);
+		angles[ROLL]	= CG_MachinegunSpinAngle(cent, slot);
 		eulertoaxis(angles, barrel.axis);
 
 		CG_PositionRotatedEntityOnTag(&barrel, &gun, weapon->weaponModel,
@@ -1243,7 +1241,7 @@ CG_AddPlayerWeapon(Refent *parent, Playerstate *ps, Centity *cent,
 		/* continuous flash */
 	}else
 	/* impulse flash */
-	if(cg.time - cent->muzzleFlashTime[slot] > MUZZLE_FLASH_TIME)
+	if(cg.time - cent->w[slot].muzzleFlashTime > MUZZLE_FLASH_TIME)
 		return;
 
 
@@ -1277,7 +1275,7 @@ CG_AddPlayerWeapon(Refent *parent, Playerstate *ps, Centity *cent,
 	if(ps || cg.renderingThirdPerson ||
 	   cent->currentState.number != cg.predictedPlayerState.clientNum){
 		/* add lightning bolt */
-		CG_LightningBolt(nonPredictedCent, flash.origin);
+		CG_LightningBolt(nonPredictedCent, flash.origin, slot);
 
 		if(weapon->flashDlightColor[0] ||
 		   weapon->flashDlightColor[1] || weapon->flashDlightColor[2])
@@ -1317,7 +1315,7 @@ CG_AddViewWeapon(Playerstate *ps, Weapslot slot)
 			/* special hack for lightning gun... */
 			copyv3(cg.refdef.vieworg, origin);
 			maddv3(origin, -8, cg.refdef.viewaxis[2], origin);
-			CG_LightningBolt(&cg_entities[ps->clientNum], origin);
+			CG_LightningBolt(&cg_entities[ps->clientNum], origin, slot);
 		}
 		return;
 	}
@@ -1637,14 +1635,14 @@ CG_FireWeapon(Centity *cent, Weapslot sl)
 	 * mark the entity as muzzle flashing, so when it is added it will
 	 * append the flash to the weapon model 
 	 */
-	cent->muzzleFlashTime[sl] = cg.time;
+	cent->w[sl].muzzleFlashTime = cg.time;
 
 	/* lightning gun only does this this on initial press */
 	if(wnum == W1lightning)
-		if(cent->pe.lightningFiring)
+		if(cent->w[sl].lightningFiring)
 			return;
 	if(wnum == W1railgun)
-		cent->pe.railFireTime = cg.time;
+		cent->w[sl].railFireTime = cg.time;
 
 	/* play quad sound if needed */
 	if(cent->currentState.powerups & (1 << PW_QUAD))

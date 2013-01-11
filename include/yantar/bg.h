@@ -237,7 +237,7 @@ enum entflags {
 	EF_BOUNCE_HALF		= (1<<6),	/* for missiles */
 	EF_AWARD_GAUNTLET	= (1<<7),	/* draw a gauntlet sprite */
 	EF_NODRAW		= (1<<8),	/* may have an event, but no model (unspawned items) */
-	EF_FIRING		= (1<<9),	/* for lightning gun */
+	EF_FIRING		= (1<<9),	/* for continuous-fire weapons like LG */
 	EF_KAMIKAZE		= (1<<10),
 	EF_MOVER_STOP		= (1<<11),	/* will push otherwise */
 	EF_AWARD_CAP		= (1<<12),	/* draw the capture sprite */

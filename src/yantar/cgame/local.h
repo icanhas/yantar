@@ -129,15 +129,17 @@ typedef struct {
 	lerpFrame_t	legs, torso, flag;
 	int		painTime;
 	int		painDirection;	/* flip from 0 to 1 */
+} Playerent;
+
+typedef struct Weapent	Weapent;
+struct Weapent {
+	int		muzzleFlashTime;
 	int		lightningFiring;
-
 	int		railFireTime;
-
-	/* machinegun spinning */
-	float		barrelAngle;
+	float		barrelAngle;	/* machinegun spinning */
 	int		barrelTime;
 	qbool		barrelSpinning;
-} Playerent;
+};
 
 /* ================================================= */
 
@@ -148,10 +150,12 @@ typedef struct {
 typedef struct Centity {
 	Entstate	currentState;	/* from cg.frame */
 	Entstate	nextState;	/* from cg.nextFrame, if available */
-	qbool		interpolate;	/* true if next is valid to interpolate to */
+	Playerent	pe;
+	Weapent		w[Wnumweapslots];
+
+	qbool		interpolate;	/* true if next state is valid to interpolate to */
 	qbool		currentValid;	/* true if cg.frame holds this entity */
 
-	int		muzzleFlashTime[Wnumweapslots];	/* move to playerEntity? */
 	int		previousEvent;
 	int		teleportFlag;
 
@@ -161,8 +165,6 @@ typedef struct Centity {
 
 	int		snapShotTime;	/* last time this entity was found in a snapshot */
 
-	Playerent	pe;
-
 	int		errorTime;	/* decay the error from this time */
 	Vec3		errorOrigin;
 	Vec3		errorAngles;
@@ -170,8 +172,6 @@ typedef struct Centity {
 	qbool		extrapolated;	/* false if origin / angles is an interpolation */
 	Vec3		rawOrigin;
 	Vec3		rawAngles;
-
-	Vec3		beamEnd;
 
 	/* exact interpolated position of entity on this frame */
 	Vec3	lerpOrigin;
