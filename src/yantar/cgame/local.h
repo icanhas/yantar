@@ -88,13 +88,13 @@ typedef enum {
 	FOOTSTEP_SPLASH,
 
 	FOOTSTEP_TOTAL
-} footstep_t;
+} Footstep;
 
 typedef enum {
 	IMPACTSOUND_DEFAULT,
 	IMPACTSOUND_METAL,
 	IMPACTSOUND_FLESH
-} impactSound_t;
+} Impactsnd;
 
 /* player entities need to track more information
  * than any other type of entity. */
@@ -326,7 +326,7 @@ typedef struct {
 	qbool		fixedtorso;	/* true if torso never changes yaw */
 
 	Vec3		headOffset;	/* move head in icon views */
-	footstep_t	footsteps;
+	Footstep	footsteps;
 	Gender	gender;	/* from model */
 
 	Handle hullmodel;	/* craft body */
@@ -1263,7 +1263,7 @@ void	CG_RegisterWeapon(int weaponNum);
 void	CG_RegisterItemVisuals(int itemNum);
 void	CG_FireWeapon(Centity *cent, Weapslot);
 void	CG_MissileHitWall(int weapon, int clientNum, Vec3 origin, Vec3 dir,
-		impactSound_t soundType);
+		Impactsnd soundType);
 void	CG_MissileHitPlayer(int weapon, Vec3 origin, Vec3 dir, int entityNum);
 void	CG_ShotgunFire(Entstate *es);
 void	CG_Bullet(Vec3 origin, int sourceEntityNum, Vec3 normal, qbool flesh,

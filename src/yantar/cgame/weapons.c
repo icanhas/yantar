@@ -1668,7 +1668,7 @@ CG_FireWeapon(Centity *cent, Weapslot sl)
 /* Caused by an EV_MISSILE_MISS event, or directly by local bullet tracing */
 void
 CG_MissileHitWall(int weapon, int clientNum, Vec3 origin, Vec3 dir,
-		  impactSound_t soundType)
+		  Impactsnd soundType)
 {
 	Handle		mod, mark, shader;
 	Sfxhandle sfx;
