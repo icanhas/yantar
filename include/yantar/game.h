@@ -30,9 +30,6 @@
 /* (Entshared->singleClient) */
 
 typedef struct {
-	Entstate unused;	/* apparently this field was put here accidentally */
-	/*  (and is kept only for compatibility, as a struct pad) */
-
 	qbool		linked;	/* qfalse if not in any good cluster */
 	int		linkcount;
 
