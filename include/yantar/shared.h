@@ -473,6 +473,9 @@ float Q_fabs(float f);
 float Q_rsqrt(float f);	/* reciprocal square root */
 #endif
 
+#define min(a,b) (((a)<(b)) ? (a) : (b))
+#define max(a,b) (((a)>(b)) ? (a) : (b))
+
 qbool closeenough(float, float, float);
 
 #define SQRTFAST(x) ((x) * Q_rsqrt(x))
