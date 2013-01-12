@@ -648,7 +648,7 @@ ClientThink_real(Gentity *ent)
 		client->ps.speed *= 1.3;
 
 	/* Let go of the hook if we aren't firing */
-	if(client->ps.weap[Wpri] == Whook &&
+	if(client->ps.weap[Whookslot] == Whook &&
 	   client->hook && !(ucmd->buttons & BUTTON_HOOKFIRE))
 		Weapon_HookFree(client->hook);
 

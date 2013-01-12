@@ -1892,6 +1892,7 @@ CG_Init(int serverMessageNum, int serverCommandSequence, int clientNum)
 
 	cg.weapsel[Wpri] = Wmachinegun;
 	cg.weapsel[Wsec] = Wrocketlauncher;
+	cg.weapsel[Whookslot] = Whook;
 
 	cgs.redflag = cgs.blueflag = -1;	/* For compatibily, default to unset for */
 	cgs.flagStatus = -1;

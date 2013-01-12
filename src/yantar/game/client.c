@@ -1102,21 +1102,31 @@ ClientSpawn(Gentity *ent)
 			client->ps.weapstate[Whookslot] = WEAPON_READY;
 			/* fire the targets of the spawn point */
 			G_UseTargets(spawnPoint, ent);
-			if(0){
-			/* select the highest weapon number available, after any spawn given items have fired */
+			/* 
+			 * select the highest weapon number available,
+			 * after any spawn given items have fired
+			 */
 			client->ps.weap[Wpri] = 1;
 			client->ps.weap[Wsec] = 1;
+			client->ps.weap[Whookslot] = 1;
 
 			for(i = Wnumweaps - 1; i > 0; i--){
 				if(client->ps.stats[STAT_PRIWEAPS] & (1 << i)){
 					client->ps.weap[Wpri] = i;
 					break;
 				}
+			}
+			for(i = Wnumweaps - 1; i > 0; i--){
 				if(client->ps.stats[STAT_SECWEAPS] & (1 << i)){
 					client->ps.weap[Wsec] = i;
 					break;
 				}
 			}
+			for(i = Wnumweaps - 1; i > 0; i--){
+				if(client->ps.stats[STAT_HOOKWEAPS] & (1 << i)){
+					client->ps.weap[Whookslot] = i;
+					break;
+				}
 			}
 			/* positively link the client, even if the command times are weird */
 			copyv3(ent->client->ps.origin, ent->r.currentOrigin);
@@ -1125,7 +1135,7 @@ ClientSpawn(Gentity *ent)
 				EV_PLAYER_TELEPORT_IN);
 			tent->s.clientNum = ent->s.clientNum;
 
-			trap_LinkEntity (ent);
+			trap_LinkEntity(ent);
 		}
 	}else
 		/* move players to intermission */
