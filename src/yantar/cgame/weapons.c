@@ -864,7 +864,7 @@ CG_CalculateWeaponPosition(Vec3 origin, Vec3 angles)
 
 	copyv3(cg.refdef.vieworg, origin);
 	copyv3(cg.refdefViewAngles, angles);
-
+if(0){
 	/* on odd legs, invert some angles */
 	if(cg.bobcycle & 1)
 		scale = -cg.xyspeed;
@@ -875,6 +875,7 @@ CG_CalculateWeaponPosition(Vec3 origin, Vec3 angles)
 	angles[ROLL] += scale * cg.bobfracsin * 0.005;
 	angles[YAW] += scale * cg.bobfracsin * 0.01;
 	angles[PITCH] += cg.xyspeed * cg.bobfracsin * 0.005;
+}
 
 	/* drop the weapon when landing */
 	delta = cg.time - cg.landTime;
@@ -894,12 +895,14 @@ CG_CalculateWeaponPosition(Vec3 origin, Vec3 angles)
 			     (STEP_TIME - delta) / (STEP_TIME/2);
 
 #endif
+if(0){
 	/* idle drift */
 	scale	= cg.xyspeed + 40;
 	fracsin = sin(cg.time * 0.001);
 	angles[ROLL] += scale * fracsin * 0.01;
 	angles[YAW] += scale * fracsin * 0.01;
 	angles[PITCH] += scale * fracsin * 0.01;
+}
 }
 
 /*
