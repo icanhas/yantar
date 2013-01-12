@@ -269,13 +269,13 @@ Use_Shooter(Gentity *ent, Gentity *other, Gentity *activator)
 	normv3(dir);
 
 	switch(ent->s.weap[Wpri]){
-	case W2grenadelauncher:
+	case Wgrenadelauncher:
 		fire_grenade(ent, ent->s.origin, dir);
 		break;
-	case W2rocketlauncher:
+	case Wrocketlauncher:
 		fire_rocket(ent, ent->s.origin, dir);
 		break;
-	case W1plasmagun:
+	case Wplasmagun:
 		fire_plasma(ent, ent->s.origin, dir);
 		break;
 	}
@@ -320,7 +320,7 @@ InitShooter(Gentity *ent, int weapon)
 void
 SP_shooter_rocket(Gentity *ent)
 {
-	InitShooter(ent, W2rocketlauncher);
+	InitShooter(ent, Wrocketlauncher);
 }
 
 /*QUAKED shooter_plasma (1 0 0) (-16 -16 -16) (16 16 16)
@@ -330,7 +330,7 @@ SP_shooter_rocket(Gentity *ent)
 void
 SP_shooter_plasma(Gentity *ent)
 {
-	InitShooter(ent, W1plasmagun);
+	InitShooter(ent, Wplasmagun);
 }
 
 /*QUAKED shooter_grenade (1 0 0) (-16 -16 -16) (16 16 16)
@@ -340,7 +340,7 @@ SP_shooter_plasma(Gentity *ent)
 void
 SP_shooter_grenade(Gentity *ent)
 {
-	InitShooter(ent, W2grenadelauncher);
+	InitShooter(ent, Wgrenadelauncher);
 }
 
 

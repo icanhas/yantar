@@ -224,7 +224,7 @@ Cmd_Give_f(Gentity *ent)
 			- 1 - (1<<Wnone);
 		ent->client->ps.stats[STAT_SECWEAPS] =
 			(1<<Wnumweaps) 
-			- 1 - (1<<W1_GRAPPLING_HOOK) - (1<<Wnone);
+			- 1 - (1<<Whook) - (1<<Wnone);
 		if(!give_all)
 			return;
 	}

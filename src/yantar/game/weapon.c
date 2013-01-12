@@ -667,9 +667,9 @@ FireWeapon(Gentity *ent, Weapslot slot)
 #endif
 
 	/* track shots taken for accuracy tracking.  Grapple is not a weapon and gauntet is just not tracked */
-	if(ent->s.weap[slot] != W1_GRAPPLING_HOOK && ent->s.weap[slot] !=
-	   W1melee){
-		if(ent->s.weap[slot] == W1nanoidcannon)
+	if(ent->s.weap[slot] != Whook && ent->s.weap[slot] !=
+	   Wmelee){
+		if(ent->s.weap[slot] == Wnanoidcannon)
 			ent->client->accuracy_shots += Nnanoshots;
 		else
 			ent->client->accuracy_shots++;
@@ -683,46 +683,46 @@ FireWeapon(Gentity *ent, Weapslot slot)
 
 	/* fire the specific weapon */
 	switch(ent->s.weap[slot]){
-	case W1melee:
+	case Wmelee:
 		Weapon_Gauntlet(ent);
 		break;
-	case W1lightning:
+	case Wlightning:
 		Weapon_LightningFire(ent);
 		break;
-	case W1shotgun:
+	case Wshotgun:
 		weapon_supershotgun_fire(ent);
 		break;
-	case W1nanoidcannon:
+	case Wnanoidcannon:
 		firenanoidcannon(ent);
 		break;
-	case W1machinegun:
+	case Wmachinegun:
 		if(g_gametype.integer != GT_TEAM)
 			Bullet_Fire(ent, MACHINEGUN_SPREAD, MACHINEGUN_DAMAGE);
 		else
 			Bullet_Fire(ent, MACHINEGUN_SPREAD, MACHINEGUN_TEAM_DAMAGE);
 		break;
-	case W1plasmagun:
+	case Wplasmagun:
 		Weapon_Plasmagun_Fire(ent);
 		break;
-	case W1railgun:
+	case Wrailgun:
 		weapon_railgun_fire(ent);
 		break;
-	case W1chaingun:
+	case Wchaingun:
 		Bullet_Fire(ent, CHAINGUN_SPREAD, MACHINEGUN_DAMAGE);
 		break;
-	case W2grenadelauncher:
+	case Wgrenadelauncher:
 		weapon_grenadelauncher_fire(ent);
 		break;
-	case W2rocketlauncher:
+	case Wrocketlauncher:
 		Weapon_RocketLauncher_Fire(ent);
 		break;
-	case W2proxlauncher:
+	case Wproxlauncher:
 		weapon_proxlauncher_fire(ent);
 		break;
-	case W2bfg:
+	case Wbfg:
 		BFG_Fire(ent);
 		break;
-	case W1_GRAPPLING_HOOK:
+	case Whook:
 		Weapon_GrapplingHook_Fire(ent);
 		break;
 	default:

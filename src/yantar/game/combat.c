@@ -72,14 +72,14 @@ TossClientItems(Gentity *self)
 	 * can pick up a weapon, be killed, and not drop the weapon because
 	 * their weapon change hasn't completed yet and they are still holding the MG. 
 	 */
-	if(weapon == W1machinegun || weapon == W1_GRAPPLING_HOOK){
+	if(weapon == Wmachinegun || weapon == Whook){
 		if(self->client->ps.weapstate[Wpri] == WEAPON_DROPPING)
 			weapon = self->client->pers.cmd.weap[Wpri];
 		if(!(self->client->ps.stats[STAT_PRIWEAPS] & (1 << weapon)))
 			weapon = Wnone;
 	}
 
-	if(weapon > W1machinegun && weapon != W1_GRAPPLING_HOOK 
+	if(weapon > Wmachinegun && weapon != Whook 
 	   && self->client->ps.ammo[weapon])
 	then{
 		/* find the item type for this weapon */

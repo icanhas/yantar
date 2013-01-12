@@ -252,7 +252,7 @@ CG_Item(Centity *cent)
 		cent->lerpOrigin[2] += 8;	/* an extra height boost */
 	}
 
-	if(item->giType == IT_PRIWEAP && item->giTag == W1railgun){
+	if(item->giType == IT_PRIWEAP && item->giTag == Wrailgun){
 		Clientinfo *ci = &cgs.clientinfo[cg.snap->ps.clientNum];
 		byte4copy(ci->c1RGBA, ent.shaderRGBA);
 	}
@@ -409,7 +409,7 @@ CG_Missile(Centity *cent)
 	copyv3(cent->lerpOrigin, ent.origin);
 	copyv3(cent->lerpOrigin, ent.oldorigin);
 
-	if(cent->currentState.parentweap == W1plasmagun){
+	if(cent->currentState.parentweap == Wplasmagun){
 		ent.reType = RT_SPRITE;
 		ent.radius = 16;
 		ent.rotation = 0;
@@ -423,7 +423,7 @@ CG_Missile(Centity *cent)
 	ent.hModel = weapon->missileModel;
 	ent.renderfx = weapon->missileRenderfx | RF_NOSHADOW;
 
-	if(cent->currentState.parentweap == W2proxlauncher)
+	if(cent->currentState.parentweap == Wproxlauncher)
 		if(s1->generic1 == TEAM_BLUE)
 			ent.hModel = cgs.media.blueProxMine;
 
@@ -435,7 +435,7 @@ CG_Missile(Centity *cent)
 	if(s1->traj.type != TR_STATIONARY)
 		RotateAroundDirection(ent.axis, cg.time / 4);
 	else{
-		if(s1->parentweap == W2proxlauncher)
+		if(s1->parentweap == Wproxlauncher)
 			eulertoaxis(cent->lerpAngles, ent.axis);
 		else{
 			RotateAroundDirection(ent.axis, s1->time);

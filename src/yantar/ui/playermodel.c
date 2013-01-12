@@ -164,7 +164,7 @@ PlayerModel_UpdateModel(void)
 	UI_PlayerInfo_SetModel(&s_playermodel.playerinfo,
 		s_playermodel.modelskin);
 	UI_PlayerInfo_SetInfo(&s_playermodel.playerinfo, LEGS_IDLE, TORSO_STAND,
-		viewangles, moveangles, W1machinegun,
+		viewangles, moveangles, Wmachinegun,
 		qfalse);
 }
 

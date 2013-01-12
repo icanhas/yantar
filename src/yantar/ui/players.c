@@ -57,16 +57,16 @@ tryagain:
 		pi->weaponModel = trap_R_RegisterModel(item->world_model[0]);
 
 	if(pi->weaponModel == 0){
-		if(weaponNum == W1machinegun){
+		if(weaponNum == Wmachinegun){
 			weaponNum = Wnone;
 			goto tryagain;
 		}
-		weaponNum = W1machinegun;
+		weaponNum = Wmachinegun;
 		goto tryagain;
 	}
 
-	if(weaponNum == W1machinegun || weaponNum == W1melee ||
-	   weaponNum == W2bfg){
+	if(weaponNum == Wmachinegun || weaponNum == Wmelee ||
+	   weaponNum == Wbfg){
 		strcpy(path, item->world_model[0]);
 		Q_stripext(path, path, sizeof(path));
 		strcat(path, "_barrel");
@@ -79,34 +79,34 @@ tryagain:
 	pi->flashModel = trap_R_RegisterModel(path);
 
 	switch(weaponNum){
-	case W1melee:
+	case Wmelee:
 		MAKERGB(pi->flashDlightColor, 0.6f, 0.6f, 1);
 		break;
-	case W1machinegun:
+	case Wmachinegun:
 		MAKERGB(pi->flashDlightColor, 1, 1, 0);
 		break;
-	case W1shotgun:
+	case Wshotgun:
 		MAKERGB(pi->flashDlightColor, 1, 1, 0);
 		break;
-	case W2grenadelauncher:
+	case Wgrenadelauncher:
 		MAKERGB(pi->flashDlightColor, 1, 0.7f, 0.5f);
 		break;
-	case W2rocketlauncher:
+	case Wrocketlauncher:
 		MAKERGB(pi->flashDlightColor, 1, 0.75f, 0);
 		break;
-	case W1lightning:
+	case Wlightning:
 		MAKERGB(pi->flashDlightColor, 0.6f, 0.6f, 1);
 		break;
-	case W1railgun:
+	case Wrailgun:
 		MAKERGB(pi->flashDlightColor, 1, 0.5f, 0);
 		break;
-	case W1plasmagun:
+	case Wplasmagun:
 		MAKERGB(pi->flashDlightColor, 0.6f, 0.6f, 1);
 		break;
-	case W2bfg:
+	case Wbfg:
 		MAKERGB(pi->flashDlightColor, 1, 0.7f, 1);
 		break;
-	case W1_GRAPPLING_HOOK:
+	case Whook:
 		MAKERGB(pi->flashDlightColor, 0.6f, 0.6f, 1);
 		break;
 	default:
@@ -768,7 +768,7 @@ UI_DrawPlayer(float x, float y, float w, float h, Playerinfo *pi, int time)
 	if(pi->currentWeapon != Wnone){
 		memset(&gun, 0, sizeof(gun));
 		gun.hModel = pi->weaponModel;
-		if(pi->currentWeapon == W1railgun)
+		if(pi->currentWeapon == Wrailgun)
 			byte4copy(pi->c1RGBA, gun.shaderRGBA);
 		else
 			byte4copy(colorWhite, gun.shaderRGBA);
@@ -782,8 +782,8 @@ UI_DrawPlayer(float x, float y, float w, float h, Playerinfo *pi, int time)
 	/*
 	 * add the spinning barrel
 	 *  */
-	if(pi->realWeapon == W1machinegun || pi->realWeapon == W1melee ||
-	   pi->realWeapon == W2bfg){
+	if(pi->realWeapon == Wmachinegun || pi->realWeapon == Wmelee ||
+	   pi->realWeapon == Wbfg){
 		Vec3 angles;
 
 		memset(&barrel, 0, sizeof(barrel));
@@ -794,7 +794,7 @@ UI_DrawPlayer(float x, float y, float w, float h, Playerinfo *pi, int time)
 		angles[YAW]	= 0;
 		angles[PITCH]	= 0;
 		angles[ROLL]	= UI_MachinegunSpinAngle(pi);
-		if(pi->realWeapon == W1melee || pi->realWeapon == W2bfg){
+		if(pi->realWeapon == Wmelee || pi->realWeapon == Wbfg){
 			angles[PITCH]	= angles[ROLL];
 			angles[ROLL]	= 0;
 		}
@@ -813,7 +813,7 @@ UI_DrawPlayer(float x, float y, float w, float h, Playerinfo *pi, int time)
 		if(pi->flashModel){
 			memset(&flash, 0, sizeof(flash));
 			flash.hModel = pi->flashModel;
-			if(pi->currentWeapon == W1railgun)
+			if(pi->currentWeapon == Wrailgun)
 				byte4copy(pi->c1RGBA, flash.shaderRGBA);
 			else
 				byte4copy(colorWhite, flash.shaderRGBA);
@@ -1083,7 +1083,7 @@ UI_PlayerInfo_SetModel(Playerinfo *pi, const char *model)
 {
 	memset(pi, 0, sizeof(*pi));
 	UI_RegisterClientModelname(pi, model);
-	pi->weapon = W1machinegun;
+	pi->weapon = Wmachinegun;
 	pi->currentWeapon = pi->weapon;
 	pi->lastWeapon = pi->weapon;
 	pi->pendingWeapon = -1;
@@ -1202,14 +1202,14 @@ UI_PlayerInfo_SetInfo(Playerinfo *pi, int legsAnim, int torsoAnim,
 
 	/* torso animation */
 	if(torsoAnim == TORSO_STAND || torsoAnim == TORSO_STAND2){
-		if(weaponNum == Wnone || weaponNum == W1melee)
+		if(weaponNum == Wnone || weaponNum == Wmelee)
 			torsoAnim = TORSO_STAND2;
 		else
 			torsoAnim = TORSO_STAND;
 	}
 
 	if(torsoAnim == TORSO_ATTACK || torsoAnim == TORSO_ATTACK2){
-		if(weaponNum == Wnone || weaponNum == W1melee)
+		if(weaponNum == Wnone || weaponNum == Wmelee)
 			torsoAnim = TORSO_ATTACK2;
 		else
 			torsoAnim = TORSO_ATTACK;

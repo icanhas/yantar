@@ -363,7 +363,7 @@ CG_ItemPickup(int itemNum)
 	case IT_PRIWEAP:
 		/* select it immediately */
 		if(cg_autoswitch.integer && bg_itemlist[itemNum].giTag 
-		  != W1machinegun)
+		  != Wmachinegun)
 		then{
 			cg.weapseltime[Wpri] = cg.time;
 			cg.weapsel[Wpri] = bg_itemlist[itemNum].giTag;
@@ -372,7 +372,7 @@ CG_ItemPickup(int itemNum)
 	case IT_SECWEAP:
 		/* select it immediately */
 		if(cg_autoswitch.integer && bg_itemlist[itemNum].giTag 
-		  != W1machinegun)
+		  != Wmachinegun)
 		then{
 			cg.weapseltime[Wsec] = cg.time;
 			cg.weapsel[Wsec] = bg_itemlist[itemNum].giTag;
@@ -907,7 +907,7 @@ CG_EntityEvent(Centity *cent, Vec3 position)
 		break;
 	case EV_RAILTRAIL:
 		DEBUGNAME("EV_RAILTRAIL");
-		cent->currentState.parentweap = W1railgun;
+		cent->currentState.parentweap = Wrailgun;
 
 		if(es->clientNum == cg.snap->ps.clientNum &&
 		   !cg.renderingThirdPerson){

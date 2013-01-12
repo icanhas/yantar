@@ -242,7 +242,7 @@ PlayerSettings_DrawPlayer(void *self)
 		viewangles[PITCH]	= 0;
 		viewangles[ROLL]	= 0;
 		UI_PlayerInfo_SetInfo(&s_playersettings.playerinfo, LEGS_IDLE,
-			TORSO_STAND, viewangles, vec3_origin, W1machinegun,
+			TORSO_STAND, viewangles, vec3_origin, Wmachinegun,
 			qfalse);
 	}
 
@@ -316,7 +316,7 @@ PlayerSettings_SetMenuItems(void)
 		UI_Cvar_VariableString(
 			"model"));
 	UI_PlayerInfo_SetInfo(&s_playersettings.playerinfo, LEGS_IDLE,
-		TORSO_STAND, viewangles, vec3_origin, W1machinegun,
+		TORSO_STAND, viewangles, vec3_origin, Wmachinegun,
 		qfalse);
 
 	/* handicap */

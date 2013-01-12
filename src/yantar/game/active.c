@@ -648,7 +648,7 @@ ClientThink_real(Gentity *ent)
 		client->ps.speed *= 1.3;
 
 	/* Let go of the hook if we aren't firing */
-	if(client->ps.weap[Wpri] == W1_GRAPPLING_HOOK &&
+	if(client->ps.weap[Wpri] == Whook &&
 	   client->hook && !(ucmd->buttons & BUTTON_HOOKFIRE))
 		Weapon_HookFree(client->hook);
 
@@ -661,7 +661,7 @@ ClientThink_real(Gentity *ent)
 	 * check for the hit-scan melee weap, don't let the action
 	 * go through as an attack unless it actually hits something 
 	 */
-	if(client->ps.weap[Wpri] == W1melee &&
+	if(client->ps.weap[Wpri] == Wmelee &&
 	   !(ucmd->buttons & BUTTON_TALK) &&
 	   (((ucmd->buttons & BUTTON_PRIATTACK) && client->ps.weaptime[Wpri] <= 0)
 	   || ((ucmd->buttons & BUTTON_SECATTACK) && client->ps.weaptime[Wsec] <= 0)))

@@ -1456,7 +1456,7 @@ BotAIStartFrame(int time)
 			}
 			/* do not update missiles */
 			if(ent->s.eType == ET_MISSILE && ent->s.weap[Wpri] !=
-			   W1_GRAPPLING_HOOK){
+			   Whook){
 				trap_BotLibUpdateEntity(i, NULL);
 				continue;
 			}

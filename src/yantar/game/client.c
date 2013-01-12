@@ -1053,10 +1053,10 @@ ClientSpawn(Gentity *ent)
 	client->ps.clientNum = index;
 
 	/* give the client the spawn weapons */
-	client->ps.stats[STAT_PRIWEAPS] = (1<<W1machinegun);
-	client->ps.stats[STAT_PRIWEAPS] |= (1<<W1melee);
-	client->ps.stats[STAT_SECWEAPS] = (1<<W2rocketlauncher);
-	client->ps.stats[STAT_HOOKWEAPS] = (1<<W1_GRAPPLING_HOOK);
+	client->ps.stats[STAT_PRIWEAPS] = (1<<Wmachinegun);
+	client->ps.stats[STAT_PRIWEAPS] |= (1<<Wmelee);
+	client->ps.stats[STAT_SECWEAPS] = (1<<Wrocketlauncher);
+	client->ps.stats[STAT_HOOKWEAPS] = (1<<Whook);
 	
 	if(g_gametype.integer == GT_TEAM)
 		client->ps.ammo[W1machinegun] = 50;
@@ -1094,9 +1094,9 @@ ClientSpawn(Gentity *ent)
 		if(ent->client->sess.sessionTeam != TEAM_SPECTATOR){
 			G_KillBox(ent);
 			/* force the base weapon up */
-			client->ps.weap[Wpri] = W1machinegun;
-			client->ps.weap[Wsec] = W2rocketlauncher;
-			client->ps.weap[Whookslot] = W1_GRAPPLING_HOOK;
+			client->ps.weap[Wpri] = Wmachinegun;
+			client->ps.weap[Wsec] = Wrocketlauncher;
+			client->ps.weap[Whookslot] = Whook;
 			client->ps.weapstate[Wpri] = WEAPON_READY;
 			client->ps.weapstate[Wsec] = WEAPON_READY;
 			client->ps.weapstate[Whookslot] = WEAPON_READY;

@@ -513,43 +513,43 @@ Controls_UpdateModel(int anim)
 		break;
 
 	case ANIM_WEAPON1:
-		s_controls.playerWeapon = W1melee;
+		s_controls.playerWeapon = Wmelee;
 		break;
 
 	case ANIM_WEAPON2:
-		s_controls.playerWeapon = W1machinegun;
+		s_controls.playerWeapon = Wmachinegun;
 		break;
 
 	case ANIM_WEAPON3:
-		s_controls.playerWeapon = W1shotgun;
+		s_controls.playerWeapon = Wshotgun;
 		break;
 
 	case ANIM_WEAPON4:
-		s_controls.playerWeapon = W2grenadelauncher;
+		s_controls.playerWeapon = Wgrenadelauncher;
 		break;
 
 	case ANIM_WEAPON5:
-		s_controls.playerWeapon = W2rocketlauncher;
+		s_controls.playerWeapon = Wrocketlauncher;
 		break;
 
 	case ANIM_WEAPON6:
-		s_controls.playerWeapon = W1lightning;
+		s_controls.playerWeapon = Wlightning;
 		break;
 
 	case ANIM_WEAPON7:
-		s_controls.playerWeapon = W1railgun;
+		s_controls.playerWeapon = Wrailgun;
 		break;
 
 	case ANIM_WEAPON8:
-		s_controls.playerWeapon = W1plasmagun;
+		s_controls.playerWeapon = Wplasmagun;
 		break;
 
 	case ANIM_WEAPON9:
-		s_controls.playerWeapon = W2bfg;
+		s_controls.playerWeapon = Wbfg;
 		break;
 
 	case ANIM_WEAPON10:
-		s_controls.playerWeapon = W1_GRAPPLING_HOOK;
+		s_controls.playerWeapon = Whook;
 		break;
 
 	case ANIM_ATTACK:

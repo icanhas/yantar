@@ -279,20 +279,20 @@ typedef enum {
 typedef enum {
 	/* weapons for primary mount point */
 	Wnone,
-	W1melee,
-	W1machinegun,
-	W1chaingun,
-	W1shotgun,
-	W1nanoidcannon,
-	W1lightning,
-	W1railgun,
-	W1plasmagun,
-	W1_GRAPPLING_HOOK,
+	Wmelee,
+	Wmachinegun,
+	Wchaingun,
+	Wshotgun,
+	Wnanoidcannon,
+	Wlightning,
+	Wrailgun,
+	Wplasmagun,
+	Whook,
 	/* weapons for secondary mount point */
-	W2rocketlauncher,
-	W2grenadelauncher,
-	W2proxlauncher,
-	W2bfg,
+	Wrocketlauncher,
+	Wgrenadelauncher,
+	Wproxlauncher,
+	Wbfg,
 	Wnumweaps
 } Weapon;
 

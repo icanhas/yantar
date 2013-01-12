@@ -874,7 +874,7 @@ dotorsoanim(Pmove *pm, Pml *pml)
 {
 	UNUSED(pml);
 	if(pm->ps->weapstate[Wpri] == WEAPON_READY){
-		if(pm->ps->weap[Wpri] == W1melee)
+		if(pm->ps->weap[Wpri] == Wmelee)
 			settorsoanim(pm, TORSO_STAND2);
 		else
 			settorsoanim(pm, TORSO_STAND);
@@ -886,29 +886,29 @@ static ID_INLINE int
 weaptimetab(Weapon wp)
 {
 	switch(wp){
-	case W1melee:
+	case Wmelee:
 		return 400;
-	case W1machinegun:
+	case Wmachinegun:
 		return 50;
-	case W1shotgun:
+	case Wshotgun:
 		return 1000;
-	case W1lightning:
+	case Wlightning:
 		return 50;
-	case W1railgun:
+	case Wrailgun:
 		return 1500;
-	case W1plasmagun:
+	case Wplasmagun:
 		return 100;
-	case W1_GRAPPLING_HOOK:
+	case Whook:
 		return 1;
-	case W1nanoidcannon:
+	case Wnanoidcannon:
 		return 1000;
-	case W1chaingun:
+	case Wchaingun:
 		return 30;
-	case W2rocketlauncher:
-	case W2grenadelauncher:
-	case W2proxlauncher:
+	case Wrocketlauncher:
+	case Wgrenadelauncher:
+	case Wproxlauncher:
 		return 800;
-	case W2bfg:
+	case Wbfg:
 		return 200;
 	default:
 		return 0;
@@ -972,7 +972,7 @@ dopriweapevents(Pmove *pm, Pml *pml)
 	}
 	if(p->weapstate[Wpri] == WEAPON_RAISING){
 		p->weapstate[Wpri] = WEAPON_READY;
-		if(p->weap[Wpri] == W1melee)
+		if(p->weap[Wpri] == Wmelee)
 			starttorsoanim(pm, TORSO_STAND2);
 		else
 			starttorsoanim(pm, TORSO_STAND);
@@ -985,7 +985,7 @@ dopriweapevents(Pmove *pm, Pml *pml)
 		return;
 	}
 	/* start the animation even if out of ammo */
-	if(p->weap[Wpri] == W1melee){
+	if(p->weap[Wpri] == Wmelee){
 		/* melee only "fires" when it actually hits something */
 		if(!pm->gauntletHit){
 			p->weaptime[Wpri] = 0;
@@ -1079,7 +1079,7 @@ dosecweapevents(Pmove *pm, Pml *pml)
 		return;
 	}
 	/* start the animation even if out of ammo */
-	if(p->weap[Wsec] == W1melee){
+	if(p->weap[Wsec] == Wmelee){
 		/* melee only "fires" when it actually hits something */
 		if(!pm->gauntletHit){
 			p->weaptime[Wsec] = 0;
