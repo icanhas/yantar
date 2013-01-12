@@ -466,7 +466,6 @@ weapon_railgun_fire(Gentity *ent)
 void
 Weapon_GrapplingHook_Fire(Gentity *ent)
 {
-	Com_Printf("hook fire\n");
 	if(!ent->client->fireHeld && !ent->client->hook)
 		fire_grapple(ent, muzzle, forward);
 	ent->client->fireHeld = qtrue;
