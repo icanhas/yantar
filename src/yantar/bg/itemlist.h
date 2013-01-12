@@ -44,7 +44,7 @@ Gitem bg_itemlist[] =
 		  Parmormodels "/shard_sphere",
 		  NULL, NULL},
 /* icon */ Picons "/iconr_shard",
-/* pickup */ "Armor Shard",
+/* pickup */ "5 Shield Cells",
 		5,
 		IT_SHIELD,
 		0,
@@ -60,7 +60,7 @@ Gitem bg_itemlist[] =
 		{ Parmormodels "/armor_yel",
 		  NULL, NULL, NULL},
 /* icon */ Picons "/iconr_yellow",
-/* pickup */ "Armor",
+/* pickup */ "50 Shield Cells",
 		50,
 		IT_SHIELD,
 		0,
@@ -76,7 +76,7 @@ Gitem bg_itemlist[] =
 		{ Parmormodels "/armor_red",
 		  NULL, NULL, NULL},
 /* icon */ Picons "/iconr_red",
-/* pickup */ "Heavy Armor",
+/* pickup */ "Heavy Shield Gen",
 		100,
 		IT_SHIELD,
 		0,
@@ -96,7 +96,7 @@ Gitem bg_itemlist[] =
 		  Phealthmodels "/small_sphere",
 		  NULL, NULL },
 /* icon */ Picons "/iconh_green",
-/* pickup */ "5 Health",
+/* pickup */ "5 Armor",
 		5,
 		IT_HEALTH,
 		0,
@@ -113,7 +113,7 @@ Gitem bg_itemlist[] =
 		  Phealthmodels "/medium_sphere",
 		  NULL, NULL },
 /* icon */ Picons "/iconh_yellow",
-/* pickup */ "25 Health",
+/* pickup */ "25 Armor",
 		25,
 		IT_HEALTH,
 		0,
@@ -130,7 +130,7 @@ Gitem bg_itemlist[] =
 		  Phealthmodels "/large_sphere",
 		  NULL, NULL },
 /* icon */ Picons "/iconh_red",
-/* pickup */ "50 Health",
+/* pickup */ "50 Armor",
 		50,
 		IT_HEALTH,
 		0,
@@ -147,7 +147,7 @@ Gitem bg_itemlist[] =
 		  Phealthmodels "/mega_sphere",
 		  NULL, NULL },
 /* icon */ Picons "/iconh_mega",
-/* pickup */ "Mega Health",
+/* pickup */ "Heavy Armor",
 		100,
 		IT_HEALTH,
 		0,
@@ -158,7 +158,7 @@ Gitem bg_itemlist[] =
 
 	/*
 	 * WEAPONS
-	 *  */
+	 */
 
 /*QUAKED weapon_gauntlet (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
  */
