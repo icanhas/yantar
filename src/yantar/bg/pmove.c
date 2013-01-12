@@ -1125,11 +1125,9 @@ dohookevents(Pmove *pm, Pml *pml)
 		p->weap[Whookslot] = Wnone;
 		return;
 	}
-
-	/* make hook function */
-	if(p->weaptime[Whookslot] > 0)
-		p->weaptime[Whookslot] -= pml->msec;
-
+	
+	/* make the hook function */
+	p->weaptime[Whookslot] = max(0, p->weaptime[Whookslot] - pml->msec);
 	if(p->weaptime[Whookslot] > 0)
 		return;
 
@@ -1139,6 +1137,7 @@ dohookevents(Pmove *pm, Pml *pml)
 		p->weapstate[Whookslot] = WEAPON_READY;
 		return;
 	}
+
 	p->weapstate[Whookslot] = WEAPON_FIRING;
 	/* fire weapon */
 	PM_AddEvent(pm, pml, EV_FIREHOOK);

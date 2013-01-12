@@ -238,6 +238,9 @@ Pickup_Weapon(Gentity *ent, Gentity *other, Weapslot sl)
 	case Wsec:
 		other->client->ps.stats[STAT_SECWEAPS] |= (1<<ent->item->giTag);
 		break;
+	case Whookslot:
+		other->client->ps.stats[STAT_HOOKWEAPS] |= (1<<ent->item->giTag);
+		break;
 	default:
 		return g_weaponRespawn.integer;
 	}

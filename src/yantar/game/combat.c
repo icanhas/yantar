@@ -231,7 +231,7 @@ mod2str(Meansofdeath mod)
 	case MOD_GRAPPLE:	return "MOD_GRAPPLE";
 	default:		return "<bad obituary>";
 	}
-};
+}
 
 /*
  * CheckAlmostCapture
@@ -475,6 +475,8 @@ player_die(Gentity *self, Gentity *inflictor, Gentity *attacker,
 	self->takedamage = qtrue;	/* can still be gibbed */
 
 	self->s.weap[Wpri] = Wnone;
+	self->s.weap[Wsec] = Wnone;
+	self->s.weap[Whookslot] = Wnone;
 	self->s.powerups = 0;
 	self->r.contents = CONTENTS_CORPSE;
 

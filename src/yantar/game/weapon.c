@@ -102,6 +102,7 @@ CheckGauntletAttack(Gentity *ent)
 		tent->s.eventParm = DirToByte(tr.plane.normal);
 		tent->s.weap[Wpri] = ent->s.weap[Wpri];
 		tent->s.weap[Wsec] = ent->s.weap[Wsec];
+		tent->s.weap[Whookslot] = ent->s.weap[Whookslot];
 	}
 
 	if(!traceEnt->takedamage)
@@ -551,6 +552,7 @@ Weapon_LightningFire(Gentity *ent)
 			tent->s.eventParm = DirToByte(tr.plane.normal);
 			tent->s.weap[Wpri] = ent->s.weap[Wpri];
 			tent->s.weap[Wsec] = ent->s.weap[Wsec];
+			tent->s.weap[Whookslot] = ent->s.weap[Whookslot];
 			if(LogAccuracyHit(traceEnt, ent))
 				ent->client->accuracy_hits++;
 		}else if(!(tr.surfaceFlags & SURF_NOIMPACT)){
@@ -654,6 +656,14 @@ CalcMuzzlePointOrigin(Gentity *ent, Vec3 origin, Vec3 forward,
 void
 FireWeapon(Gentity *ent, Weapslot slot)
 {
+	Weapon w;
+	
+	if(slot >= Wnumweapslots){
+		G_Printf("bad weapslot %u\n", slot);
+		return;
+	}
+	w = ent->s.weap[slot];
+
 	if(ent->client->ps.powerups[PW_QUAD])
 		s_quadFactor = g_quadfactor.value;
 	else
@@ -668,9 +678,8 @@ FireWeapon(Gentity *ent, Weapslot slot)
 #endif
 
 	/* track shots taken for accuracy tracking.  Grapple is not a weapon and gauntet is just not tracked */
-	if(ent->s.weap[slot] != Whook && ent->s.weap[slot] !=
-	   Wmelee){
-		if(ent->s.weap[slot] == Wnanoidcannon)
+	if(w != Whook && w != Wmelee){
+		if(w == Wnanoidcannon)
 			ent->client->accuracy_shots += Nnanoshots;
 		else
 			ent->client->accuracy_shots++;
@@ -683,7 +692,7 @@ FireWeapon(Gentity *ent, Weapslot slot)
 		muzzle);
 
 	/* fire the specific weapon */
-	switch(ent->s.weap[slot]){
+	switch(w){
 	case Wmelee:
 		Weapon_Gauntlet(ent);
 		break;
@@ -727,7 +736,7 @@ FireWeapon(Gentity *ent, Weapslot slot)
 		Weapon_GrapplingHook_Fire(ent);
 		break;
 	default:
-/* FIXME		G_Error("Bad ent->s.weapon"); */
+		G_Printf("bad weap %u (slot %u)\n", w, slot);
 		break;
 	}
 }
