@@ -1301,20 +1301,20 @@ BotUpdateInventory(bot_state_t *bs)
 		(bs->cur_ps.stats[STAT_PRIWEAPS] & (1 << Wchaingun)) != 0;;
 #endif
 	/* ammo */
-	bs->inventory[INVENTORY_SHELLS]		= bs->cur_ps.ammo[W1shotgun];
-	bs->inventory[INVENTORY_BULLETS]	= bs->cur_ps.ammo[W1machinegun];
+	bs->inventory[INVENTORY_SHELLS]		= bs->cur_ps.ammo[Wshotgun];
+	bs->inventory[INVENTORY_BULLETS]	= bs->cur_ps.ammo[Wmachinegun];
 	bs->inventory[INVENTORY_GRENADES]	=
-		bs->cur_ps.ammo[W2grenadelauncher];
-	bs->inventory[INVENTORY_CELLS] = bs->cur_ps.ammo[W1plasmagun];
-	bs->inventory[INVENTORY_LIGHTNINGAMMO]	= bs->cur_ps.ammo[W1lightning];
+		bs->cur_ps.ammo[Wgrenadelauncher];
+	bs->inventory[INVENTORY_CELLS] = bs->cur_ps.ammo[Wplasmagun];
+	bs->inventory[INVENTORY_LIGHTNINGAMMO]	= bs->cur_ps.ammo[Wlightning];
 	bs->inventory[INVENTORY_ROCKETS]	=
-		bs->cur_ps.ammo[W2rocketlauncher];
-	bs->inventory[INVENTORY_SLUGS]		= bs->cur_ps.ammo[W1railgun];
-	bs->inventory[INVENTORY_BFGAMMO]	= bs->cur_ps.ammo[W2bfg];
+		bs->cur_ps.ammo[Wrocketlauncher];
+	bs->inventory[INVENTORY_SLUGS]		= bs->cur_ps.ammo[Wrailgun];
+	bs->inventory[INVENTORY_BFGAMMO]	= bs->cur_ps.ammo[Wbfg];
 #ifdef MISSIONPACK
-	bs->inventory[INVENTORY_NAILS]	= bs->cur_ps.ammo[W1nanoidcannon];
-	bs->inventory[INVENTORY_MINES]	= bs->cur_ps.ammo[W2proxlauncher];
-	bs->inventory[INVENTORY_BELT]	= bs->cur_ps.ammo[W1chaingun];
+	bs->inventory[INVENTORY_NAILS]	= bs->cur_ps.ammo[Wnanoidcannon];
+	bs->inventory[INVENTORY_MINES]	= bs->cur_ps.ammo[Wproxlauncher];
+	bs->inventory[INVENTORY_BELT]	= bs->cur_ps.ammo[Wchaingun];
 #endif
 	/* powerups */
 	bs->inventory[INVENTORY_HEALTH] = bs->cur_ps.stats[STAT_HEALTH];

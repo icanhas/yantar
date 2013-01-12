@@ -1059,12 +1059,12 @@ ClientSpawn(Gentity *ent)
 	client->ps.stats[STAT_HOOKWEAPS] = (1<<Whook);
 	
 	if(g_gametype.integer == GT_TEAM)
-		client->ps.ammo[W1machinegun] = 50;
+		client->ps.ammo[Wmachinegun] = 50;
 	else
-		client->ps.ammo[W1machinegun] = 100;
-	client->ps.ammo[W2rocketlauncher] = 10;
-	client->ps.ammo[W1melee] = -1;
-	client->ps.ammo[W1_GRAPPLING_HOOK] = -1;
+		client->ps.ammo[Wmachinegun] = 100;
+	client->ps.ammo[Wrocketlauncher] = 10;
+	client->ps.ammo[Wmelee] = -1;
+	client->ps.ammo[Whook] = -1;
 
 	/* health will count down towards max_health */
 	ent->health = client->ps.stats[STAT_HEALTH] =
