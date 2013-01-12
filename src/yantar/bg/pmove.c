@@ -820,7 +820,7 @@ finishpriweapchange(Pmove *pm, Pml *pml)
 
 	UNUSED(pml);
 	weap = pm->cmd.weap[Wpri];
-	if(weap < Wnone || weap >= Wnumweaps)
+	if(weap >= Wnumweaps)
 		weap = Wnone;
 	if(!(pm->ps->stats[STAT_PRIWEAPS] & (1 << weap)))
 		weap = Wnone;
@@ -859,7 +859,7 @@ finishsecweapchange(Pmove *pm, Pml *pml)
 	UNUSED(pml);
 	p = pm->ps;
 	wp = pm->cmd.weap[Wsec];
-	if((wp < Wnone) || (wp >= Wnumweaps))
+	if(wp >= Wnumweaps)
 		wp = Wnone;
 	if(!(p->stats[STAT_SECWEAPS] & (1 << wp)))
 		wp = Wnone;
