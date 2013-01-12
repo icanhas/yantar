@@ -466,7 +466,7 @@ void
 Weapon_GrapplingHook_Fire(Gentity *ent)
 {
 	if(!ent->client->fireHeld && !ent->client->hook)
-		fire_grapple (ent, muzzle, forward);
+		fire_grapple(ent, muzzle, forward);
 	ent->client->fireHeld = qtrue;
 }
 

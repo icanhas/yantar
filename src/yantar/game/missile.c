@@ -261,13 +261,12 @@ G_MissileImpact(Gentity *ent, Trace *trace)
 		return;
 	}
 
-	if(!strcmp(ent->classname, "hook")){
+	if(ent->s.parentweap == Whook){
 		Gentity	*nent;
 		Vec3		v;
 
 		nent = G_Spawn();
 		if(other->takedamage && other->client){
-
 			G_AddEvent(nent, EV_MISSILE_HIT,
 				DirToByte(trace->plane.normal));
 			nent->s.otherEntityNum = other->s.number;
