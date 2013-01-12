@@ -341,12 +341,12 @@ offset1stpersonview(void)
 static void
 offset3rdpersonview(void)
 {
+	const Vec3 mins = { -4, -4, -4 };
+	const Vec3 maxs = { 4, 4, 4 };
 	Vec3 forward, right, up;
 	Vec3 view;
 	Vec3 focusAngles;
 	Trace trace;
-	static Vec3 mins = { -4, -4, -4 };
-	static Vec3 maxs = { 4, 4, 4 };
 	Vec3 focusPoint;
 	float focusDist;
 	float forwardScale, sideScale;
@@ -360,13 +360,9 @@ offset3rdpersonview(void)
 			cg.predictedPlayerState.stats[STAT_DEAD_YAW];
 	}
 
-	if(focusAngles[PITCH] > 45)
-		focusAngles[PITCH] = 45;	/* don't go too far overhead */
 	anglev3s(focusAngles, forward, NULL, NULL);
 	maddv3(cg.refdef.vieworg, Focusdistance, forward, focusPoint);
 	copyv3(cg.refdef.vieworg, view);
-	view[2] += 8;
-	cg.refdefViewAngles[PITCH] *= 0.5;
 	anglev3s(cg.refdefViewAngles, forward, right, up);
 	forwardScale = cos(cg_thirdPersonAngle.value / 180 * M_PI);
 	sideScale = sin(cg_thirdPersonAngle.value / 180 * M_PI);
@@ -599,7 +595,7 @@ calcviewvals(void)
 		/* offset for local bobbing and kicks */
 		offset1stpersonview();
 
-	/* position eye reletive to origin */
+	/* position eye relative to origin */
 	eulertoaxis(cg.refdefViewAngles, cg.refdef.viewaxis);
 
 	if(cg.hyperspace)
