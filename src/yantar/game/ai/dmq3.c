@@ -194,10 +194,8 @@ EntityCarriesFlag(aas_entityinfo_t *entinfo)
 		return qtrue;
 	if(entinfo->powerups & (1 << PW_BLUEFLAG))
 		return qtrue;
-#ifdef MISSIONPACK
 	if(entinfo->powerups & (1 << PW_NEUTRALFLAG))
 		return qtrue;
-#endif
 	return qfalse;
 }
 
@@ -1292,14 +1290,12 @@ BotUpdateInventory(bot_state_t *bs)
 		(bs->cur_ps.stats[STAT_PRIWEAPS] & (1 << Wbfg)) != 0;
 	bs->inventory[INVENTORY_GRAPPLINGHOOK] =
 		(bs->cur_ps.stats[STAT_PRIWEAPS] & (1 << Whook)) != 0;
-#ifdef MISSIONPACK
 	bs->inventory[INVENTORY_NAILGUN] =
 		(bs->cur_ps.stats[STAT_PRIWEAPS] & (1 << Wnanoidcannon)) != 0;;
 	bs->inventory[INVENTORY_PROXLAUNCHER] =
 		(bs->cur_ps.stats[STAT_PRIWEAPS] & (1 << Wproxlauncher)) != 0;;
 	bs->inventory[INVENTORY_CHAINGUN] =
 		(bs->cur_ps.stats[STAT_PRIWEAPS] & (1 << Wchaingun)) != 0;;
-#endif
 	/* ammo */
 	bs->inventory[INVENTORY_SHELLS]		= bs->cur_ps.ammo[Wshotgun];
 	bs->inventory[INVENTORY_BULLETS]	= bs->cur_ps.ammo[Wmachinegun];
@@ -1311,11 +1307,9 @@ BotUpdateInventory(bot_state_t *bs)
 		bs->cur_ps.ammo[Wrocketlauncher];
 	bs->inventory[INVENTORY_SLUGS]		= bs->cur_ps.ammo[Wrailgun];
 	bs->inventory[INVENTORY_BFGAMMO]	= bs->cur_ps.ammo[Wbfg];
-#ifdef MISSIONPACK
 	bs->inventory[INVENTORY_NAILS]	= bs->cur_ps.ammo[Wnanoidcannon];
 	bs->inventory[INVENTORY_MINES]	= bs->cur_ps.ammo[Wproxlauncher];
 	bs->inventory[INVENTORY_BELT]	= bs->cur_ps.ammo[Wchaingun];
-#endif
 	/* powerups */
 	bs->inventory[INVENTORY_HEALTH] = bs->cur_ps.stats[STAT_HEALTH];
 	bs->inventory[INVENTORY_TELEPORTER] =
