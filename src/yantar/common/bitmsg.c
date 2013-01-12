@@ -660,6 +660,7 @@ MSG_WriteDeltaUsercmd(Bitmsg *msg, Usrcmd *from, Usrcmd *to)
 	MSG_WriteDelta(msg, from->buttons, to->buttons, 16);
 	MSG_WriteDelta(msg, from->weap[Wpri], to->weap[Wpri], 8);
 	MSG_WriteDelta(msg, from->weap[Wsec], to->weap[Wsec], 8);
+	MSG_WriteDelta(msg, from->weap[Whookslot], to->weap[Whookslot], 8);
 }
 
 void
@@ -685,6 +686,7 @@ MSG_ReadDeltaUsercmd(Bitmsg *msg, Usrcmd *from, Usrcmd *to)
 	to->buttons = MSG_ReadDelta(msg, from->buttons, 16);
 	to->weap[Wpri] = MSG_ReadDelta(msg, from->weap[Wpri], 8);
 	to->weap[Wsec] = MSG_ReadDelta(msg, from->weap[Wsec], 8);
+	to->weap[Whookslot] = MSG_ReadDelta(msg, from->weap[Whookslot], 8);
 }
 
 void
@@ -706,7 +708,8 @@ MSG_WriteDeltaUsercmdKey(Bitmsg *msg, int key, Usrcmd *from, Usrcmd *to)
 	   from->brakefrac == to->brakefrac &&
 	   from->buttons == to->buttons &&
 	   from->weap[Wpri] == to->weap[Wpri] &&
-	   from->weap[Wsec] == to->weap[Wsec])
+	   from->weap[Wsec] == to->weap[Wsec] &&
+	   from->weap[Whookslot] == to->weap[Whookslot])
 	then{
 		MSG_WriteBits(msg, 0, 1);	/* no change */
 		oldsize += 7;
@@ -724,6 +727,7 @@ MSG_WriteDeltaUsercmdKey(Bitmsg *msg, int key, Usrcmd *from, Usrcmd *to)
 	MSG_WriteDeltaKey(msg, key, from->buttons, to->buttons, 16);
 	MSG_WriteDeltaKey(msg, key, from->weap[Wpri], to->weap[Wpri], 8);
 	MSG_WriteDeltaKey(msg, key, from->weap[Wsec], to->weap[Wsec], 8);
+	MSG_WriteDeltaKey(msg, key, from->weap[Whookslot], to->weap[Whookslot], 8);
 }
 
 void
@@ -746,6 +750,7 @@ MSG_ReadDeltaUsercmdKey(Bitmsg *msg, int key, Usrcmd *from, Usrcmd *to)
 		to->buttons = MSG_ReadDeltaKey(msg, key, from->buttons, 16);
 		to->weap[Wpri] = MSG_ReadDeltaKey(msg, key, from->weap[Wpri], 8);
 		to->weap[Wsec] = MSG_ReadDeltaKey(msg, key, from->weap[Wsec], 8);
+		to->weap[Whookslot] = MSG_ReadDeltaKey(msg, key, from->weap[Whookslot], 8);
 	}else{
 		to->angles[0] = from->angles[0];
 		to->angles[1] = from->angles[1];
@@ -756,6 +761,7 @@ MSG_ReadDeltaUsercmdKey(Bitmsg *msg, int key, Usrcmd *from, Usrcmd *to)
 		to->buttons = from->buttons;
 		to->weap[Wpri] = from->weap[Wpri];
 		to->weap[Wsec] = from->weap[Wsec];
+		to->weap[Whookslot] = from->weap[Whookslot];
 	}
 }
 
