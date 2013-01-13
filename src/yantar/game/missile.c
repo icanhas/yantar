@@ -139,10 +139,10 @@ ProximityMine_Activate(Gentity *ent)
 	ent->takedamage = qtrue;
 	ent->health = 1;
 	ent->die = ProximityMine_Die;
-	ent->s.loopSound = G_SoundIndex(Pproxsounds "/wstbtick.wav");
+	ent->s.loopSound = G_SoundIndex(Pproxsounds "/tick");
 
 	/* build the proximity trigger */
-	trigger = G_Spawn ();
+	trigger = G_Spawn();
 	trigger->classname = "proxmine_trigger";
 	r = ent->splashRadius;
 	setv3(trigger->r.mins, -r, -r, -r);
@@ -151,7 +151,7 @@ ProximityMine_Activate(Gentity *ent)
 	trigger->parent = ent;
 	trigger->r.contents = CONTENTS_TRIGGER;
 	trigger->touch = ProximityMine_Trigger;
-	trap_LinkEntity (trigger);
+	trap_LinkEntity(trigger);
 	/* set pointer to trigger so the entity can be freed when the mine explodes */
 	ent->activator = trigger;
 }

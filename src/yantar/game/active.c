@@ -143,8 +143,7 @@ void
 G_SetClientSound(Gentity *ent)
 {
 	if(ent->s.eFlags & EF_TICKING)
-		ent->client->ps.loopSound = G_SoundIndex(
-			Pproxsounds "/wstbtick.wav");
+		ent->client->ps.loopSound = G_SoundIndex(Pproxsounds "/tick");
 	else
 	if(ent->waterlevel && (ent->watertype&(CONTENTS_LAVA|CONTENTS_SLIME)))
 		ent->client->ps.loopSound = level.snd_fry;
