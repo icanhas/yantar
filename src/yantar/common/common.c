@@ -2055,6 +2055,10 @@ runeprops(Rune r)
 	Com_Printf("\n");
 }
 
+/*
+ * crap tests
+ */
+
 static void
 Com_Testutf8_f(void)
 {
@@ -2092,6 +2096,82 @@ Com_Testutf8_f(void)
 	runeprops(Q_toupperrune(r));
 	runeprops(Q_tolowerrune(r));
 	runeprops(Q_totitlerune(r));
+}
+
+static void
+printmatrix(Scalar *m, int w, int h)
+{
+	int i, j;
+
+	for(i = 0; i < h; ++i){
+		for(j = 0; j < w; ++j)
+			Com_Printf(" %-7.2f", m[i*w + j]);
+		Com_Printf("\n");
+	}
+	Com_Printf("\n");
+}
+
+static void
+Com_Testmaths_f(void)
+{
+	Mat2 a2, b2, c2 = { 1, 2, 3, 4 };
+	Mat3 a3, b3, c3 = {
+		1, 2, 3,
+		4, 5, 6,
+		7, 8, 9
+	};
+	Mat4 a4, b4, c4 = {
+		1, 2, 3, 4,
+		5, 6, 7, 8,
+		9, 10, 11, 12,
+		13, 14, 15, 16
+	};
+	Mat4 l4, u4;
+	
+	#define test(stmt, var)	(stmt); printmatrix((var), 2, 2)
+	test(clearm2(a2), a2);
+	test(identm2(a2), a2);
+	test(copym2(a2, b2), b2);
+	test(transposem2(a2, a2), a2);
+	test(scalem2(a2, 1234.0f, a2), a2);
+	/* M * id */
+	identm2(b2);
+	test(mulm2(c2, b2, a2), a2);
+	/* M * MT */
+	test(transposem2(c2, a2), a2);
+	test(mulm2(c2, a2, b2), b2);
+	clearm2(a2);
+	Com_Printf("c2 %s c2; ", (cmpm2(c2, c2)) ? "==" : "!=");
+	Com_Printf("c2 %s a2\n\n", (cmpm2(c2, a2)) ? "==" : "!=");
+	#undef test
+
+	#define test(stmt, var)	(stmt); printmatrix((var), 3, 3)
+	test(clearm3(a3), a3);
+	test(identm3(a3), a3);
+	test(copym3(a3, b3), b3);
+	test(transposem3(a3, a3), a3);
+	test(scalem3(a3, 77.0f, a3), a3);
+	/* M * id */
+	identm3(b3);
+	test(mulm3(c3, b3, a3), a3);
+	/* M * MT */
+	test(transposem3(c3, a3), a3);
+	test(mulm3(c3, a3, b3), b3);
+	#undef test
+
+	#define test(stmt, var)	(stmt); printmatrix((var), 4, 4)
+	test(clearm4(a4), a4);
+	test(identm4(a4), a4);
+	test(copym4(a4, b4), b4);
+	test(transposem4(a4, a4), a4);
+	test(scalem4(a4, 77.0f, a4), a4);
+	/* M * id */
+	identm4(b4);
+	test(mulm4(c4, b4, a4), a4);
+	/* M * MT */
+	test(transposem4(c4, a4), a4);
+	test(mulm4(c4, a4, b4), b4);
+	#undef test
 }
 	
 /* For controlling environment variables */
@@ -2422,6 +2502,7 @@ Com_Init(char *commandLine)
 		Cmd_AddCommand("freeze", Com_Freeze_f);
 	}
 	Cmd_AddCommand("testutf", Com_Testutf8_f);
+	Cmd_AddCommand("testmaths", Com_Testmaths_f);
 	Cmd_AddCommand("quit", Com_Quit_f);
 	Cmd_AddCommand("q", Com_Quit_f);
 	Cmd_AddCommand("writeconfig", Com_Writeconfig_f);

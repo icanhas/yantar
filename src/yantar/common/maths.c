@@ -847,55 +847,173 @@ lerpv3(const Vec3 a, const Vec3 b, float amount, Vec3 c)
 	c[2] = a[2] * (1.0f-amount) + b[2] * amount;
 }
 
+#define identmatrix(m, w) \
+	do{	int i, j; \
+		for(i = 0; i < (w); ++i) \
+			for(j = 0; j < (w); ++j) \
+				(m)[i*(w) + j] = (i==j ? 1.0f : 0.0f); \
+	}while(0);
+#define clearmatrix(m, w, h) \
+	do{	int i; \
+		for(i = 0; i < (w)*(h); ++i) \
+			(m)[i] = 0.0f; \
+	}while(0);
+#define copymatrix(src, dst, w, h) \
+	do{	int i; \
+		for(i = 0; i < (w)*(h); ++i) \
+			(dst)[i] = (src)[i]; \
+	}while(0);
+#define transposematrix(m, o, w, h) \
+	do{	int i, j; \
+		for(i = 0; i < (h); ++i) \
+			for(j = 0; j < (w); ++j) \
+				(o)[i + j*h] = (m)[i*w + j]; \
+	}while(0);
+#define scalematrix(m, s, o, w, h) \
+	do{	int i; \
+		for(i = 0; i < (w)*(h); ++i) \
+			(o)[i] = (m)[i]*(s); \
+	}while(0);
+#define mulmatrix(a, b, out, sz) \
+	do{	int i, j, k; Scalar ij; \
+		for(i = 0; i < (sz); ++i) \
+			for(j = 0; j < (sz); ++j){ \
+				for(k = 0, ij = 0.0f; k < (sz); ++k) \
+					ij += (a)[i*(sz) + k] * (b)[k*(sz) + j]; \
+				(out)[i*(sz) + j] = ij; \
+			} \
+	}while(0);
+
+static qbool
+eqmatrix(const Scalar *a, const Scalar *b, int w, int h)
+{
+	int i;
+	const int sz = w*h;
+
+	for(i = 0; i < sz; ++i)
+		if(a[i] != b[i])
+			return qfalse;
+	return qtrue;
+}
+
+void
+clearm2(Mat2 m)
+{
+	clearmatrix(m, 2, 2);
+}
+
+void
+identm2(Mat2 m)
+{
+	identmatrix(m, 2);
+}
+
+void
+copym2(const Mat2 src, Mat2 dst)
+{
+	copymatrix(src, dst, 2, 2);
+}
+
+void
+transposem2(const Mat2 m, Mat2 out)
+{
+	transposematrix(m, out, 2, 2);
+}
+
+void
+scalem2(const Mat2 m, Scalar s, Mat2 out)
+{
+	scalematrix(m, s, out, 2, 2);
+}
+
+void
+mulm2(const Mat2 a, const Mat2 b, Mat2 out)
+{
+	mulmatrix(a, b, out, 2);
+}
+
+qbool
+cmpm2(const Mat2 a, const Mat2 b)
+{
+	return eqmatrix(a, b, 2, 2);
+}
+
+void
+clearm3(Mat3 m)
+{
+	clearmatrix(m, 3, 3);
+}
+
+void
+identm3(Mat3 m)
+{
+	identmatrix(m, 3);
+}
+
+void
+copym3(const Mat3 src, Mat3 dst)
+{
+	copymatrix(src, dst, 3, 3);
+}
+
+void
+transposem3(const Mat3 m, Mat3 out)
+{
+	transposematrix(m, out, 3, 3);
+}
+
+void
+scalem3(const Mat3 m, Scalar s, Mat3 out)
+{
+	scalematrix(m, s, out, 3, 3);
+}
+
+void
+mulm3(const Mat3 a, const Mat3 b, Mat3 out)
+{
+	mulmatrix(a, b, out, 3);
+}
+
+qbool
+cmpm3(const Mat3 a, const Mat3 b)
+{
+	return eqmatrix(a, b, 3, 3);
+}
+
 void
 clearm4(Mat4 m)
 {
-	unsigned int i;
-
-	for(i = 0; i < 16; ++i)
-		m[i] = 0.0f;
+	clearmatrix(m, 4, 4);
 }
 
 void
 identm4(Mat4 m)
 {
-	m[ 0] = 1.0f; m[ 4] = 0.0f; m[ 8] = 0.0f; m[12] = 0.0f;
-	m[ 1] = 0.0f; m[ 5] = 1.0f; m[ 9] = 0.0f; m[13] = 0.0f;
-	m[ 2] = 0.0f; m[ 6] = 0.0f; m[10] = 1.0f; m[14] = 0.0f;
-	m[ 3] = 0.0f; m[ 7] = 0.0f; m[11] = 0.0f; m[15] = 1.0f;
+	identmatrix(m, 4);
 }
 
 void
-copym4(const Mat4 in, Mat4 out)
+copym4(const Mat4 src, Mat4 dst)
 {
-	unsigned int i;
+	copymatrix(src, dst, 4, 4);
+}
 
-	for(i = 0; i < 16; ++i)
-		out[i] = in[i];
+void
+transposem4(const Mat4 m, Mat4 out)
+{
+	transposematrix(m, out, 4, 4);
+}
+
+void
+scalem4(const Mat4 m, Scalar s, Mat4 out)
+{
+	scalematrix(m, s, out, 4, 4);
 }
 
 void
 mulm4(const Mat4 a, const Mat4 b, Mat4 out)
 {
-	out[ 0] = a[ 0] * b[ 0] + a[ 4] * b[ 1] + a[ 8] * b[ 2] + a[12] * b[ 3];
-	out[ 1] = a[ 1] * b[ 0] + a[ 5] * b[ 1] + a[ 9] * b[ 2] + a[13] * b[ 3];
-	out[ 2] = a[ 2] * b[ 0] + a[ 6] * b[ 1] + a[10] * b[ 2] + a[14] * b[ 3];
-	out[ 3] = a[ 3] * b[ 0] + a[ 7] * b[ 1] + a[11] * b[ 2] + a[15] * b[ 3];
-
-	out[ 4] = a[ 0] * b[ 4] + a[ 4] * b[ 5] + a[ 8] * b[ 6] + a[12] * b[ 7];
-	out[ 5] = a[ 1] * b[ 4] + a[ 5] * b[ 5] + a[ 9] * b[ 6] + a[13] * b[ 7];
-	out[ 6] = a[ 2] * b[ 4] + a[ 6] * b[ 5] + a[10] * b[ 6] + a[14] * b[ 7];
-	out[ 7] = a[ 3] * b[ 4] + a[ 7] * b[ 5] + a[11] * b[ 6] + a[15] * b[ 7];
-
-	out[ 8] = a[ 0] * b[ 8] + a[ 4] * b[ 9] + a[ 8] * b[10] + a[12] * b[11];
-	out[ 9] = a[ 1] * b[ 8] + a[ 5] * b[ 9] + a[ 9] * b[10] + a[13] * b[11];
-	out[10] = a[ 2] * b[ 8] + a[ 6] * b[ 9] + a[10] * b[10] + a[14] * b[11];
-	out[11] = a[ 3] * b[ 8] + a[ 7] * b[ 9] + a[11] * b[10] + a[15] * b[11];
-
-	out[12] = a[ 0] * b[12] + a[ 4] * b[13] + a[ 8] * b[14] + a[12] * b[15];
-	out[13] = a[ 1] * b[12] + a[ 5] * b[13] + a[ 9] * b[14] + a[13] * b[15];
-	out[14] = a[ 2] * b[12] + a[ 6] * b[13] + a[10] * b[14] + a[14] * b[15];
-	out[15] = a[ 3] * b[12] + a[ 7] * b[13] + a[11] * b[14] + a[15] * b[15];
+	mulmatrix(a, b, out, 4);
 }
 
 void
@@ -910,21 +1028,16 @@ transformm4(const Mat4 in1, const Vec4 in2, Vec4 out)
 qbool
 cmpm4(const Mat4 a, const Mat4 b)
 {
-	unsigned int i;
-
-	for(i = 0; i < 16; ++i)
-		if(a[i] != b[i])
-			return qfalse;
-	return qtrue;
+	return eqmatrix(a, b, 4, 4);
 }
 
 void
-translationm4(Vec3 v, Mat4 out)
-{
-	out[ 0] = 1.0f; out[ 4] = 0.0f; out[ 8] = 0.0f; out[12] = v[0];
-	out[ 1] = 0.0f; out[ 5] = 1.0f; out[ 9] = 0.0f; out[13] = v[1];
-	out[ 2] = 0.0f; out[ 6] = 0.0f; out[10] = 1.0f; out[14] = v[2];
-	out[ 3] = 0.0f; out[ 7] = 0.0f; out[11] = 0.0f; out[15] = 1.0f;
+translationm4(const Vec3 v, Mat4 out)
+{	
+	identm4(out);
+	out[12] = v[0];
+	out[13] = v[1];
+	out[14] = v[2];
 }
 
 void
@@ -966,9 +1079,9 @@ eulertoq(const Vec3 angles, Quat out)
 	sy = sin(a[YAW]);
 	sr = sin(a[ROLL]);
 	out[0] = cr*cp*cy + sr*sp*sy;	/* r */
-	out[1] = sr*cp*cy - cr*sp*sy;	/* v0 */
-	out[2] = cr*sp*cy + sr*cp*sy;	/* v1 */
-	out[3] = cr*cp*sy - sr*sp*cy;	/* v2 */
+	out[1] = sr*cp*cy - cr*sp*sy;	/* v₀ */
+	out[2] = cr*sp*cy + sr*cp*sy;	/* v₁ */
+	out[3] = cr*cp*sy - sr*sp*cy;	/* v₂ */
 }
 
 /* Quaternion to Euler angles */

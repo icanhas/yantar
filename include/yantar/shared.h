@@ -295,17 +295,22 @@ enum {
 };
 
 /* mathlib */
-typedef float Scalar;
-typedef Scalar Vec2[2];
-typedef Scalar Vec3[3];
-typedef Scalar Vec4[4];
-typedef Scalar Vec5[5];
-typedef Scalar Mat4[16];
-typedef Vec4 Quat;	/* r, v0, v1, v2 */
-
-typedef int fixed4_t;
-typedef int fixed8_t;
-typedef int fixed16_t;
+typedef float	Scalar;
+typedef Scalar	Vec2[2];
+typedef Scalar	Vec3[3];
+typedef Scalar	Vec4[4];
+typedef Scalar	Vec5[5];
+/* 
+ * N.B.: Matrices in yantar are treated in row-major order.
+ * Aij -> A[i*ncols + j]
+ */
+typedef Scalar	Mat2[2*2];
+typedef Scalar	Mat3[3*3];
+typedef Scalar	Mat4[4*4];
+typedef Vec4	Quat;	/* r, v₀, v₁, v₂ */
+typedef int	fixed4_t;
+typedef int	fixed8_t;
+typedef int	fixed16_t;
 
 #ifndef M_PI
 #define M_PI 3.14159265358979323846f	/* matches value in gcc v2 math.h */
@@ -544,15 +549,35 @@ void	_scalev3(const Vec3 in, float scale, Vec3 out);
 void	_maddv3(const Vec3 veca, float scale, const Vec3 vecb, Vec3 vecc);
 void	lerpv3(const Vec3 a, const Vec3 b, float lerp, Vec3 c);
 
-void	clearm4(Mat4 out);
-void	identm4(Mat4 out);
-void	copym4(const Mat4 in, Mat4 out);
-void	mulm4(const Mat4 in1, const Mat4 in2, Mat4 out);
-void	transformm4(const Mat4 in1, const Vec4 in2, Vec4 out);
-qbool	cmpm4(const Mat4 a, const Mat4 b);
-void	translationm4(Vec3 vec, Mat4 out);
+/* Mat2 */
+void	clearm2(Mat2);
+void	identm2(Mat2);
+void	copym2(const Mat2, Mat2);
+void	transposem2(const Mat2, Mat2);
+void	scalem2(const Mat2, Scalar, Mat2);
+void	mulm2(const Mat2, const Mat2, Mat2);
+qbool	cmpm2(const Mat2, const Mat2);
+/* Mat3 */
+void	clearm3(Mat3);
+void	identm3(Mat3);
+void	copym3(const Mat3, Mat3);
+void	transposem3(const Mat3, Mat3);
+void	scalem3(const Mat3, Scalar, Mat3);
+void	mulm3(const Mat3, const Mat3, Mat3);
+qbool	cmpm3(const Mat3, const Mat3);
+/* Mat4 */
+void	clearm4(Mat4);
+void	identm4(Mat4);
+void	copym4(const Mat4, Mat4);
+void	transposem4(const Mat4, Mat4);
+void	scalem4(const Mat4, Scalar, Mat4);
+void	mulm4(const Mat4, const Mat4, Mat4);
+void	transformm4(const Mat4, const Vec4, Vec4);
+qbool	cmpm4(const Mat4, const Mat4);
+void	translationm4(const Vec3, Mat4);
 void	orthom4(float left, float right, float bottom, float top, float znear, float zfar, Mat4 out);
 
+/* Quat */
 void mulq(const Quat, const Quat, Quat);
 
 unsigned colourbytes3(float r, float g, float b);
@@ -701,7 +726,7 @@ void	MakeNormalVectors(const Vec3 forward, Vec3 right, Vec3 up);
 
 /* int	PlaneTypeForNormal (Vec3 normal); */
 
-void	MatrixMultiply(float in1[3][3], float in2[3][3], float out[3][3]);
+void	MatrixMultiply(float in1[3][3], float in2[3][3], float out[3][3]);	/* FIXME: get rid of this */
 void	anglev3s(const Vec3 angles, Vec3 forward, Vec3 right, Vec3 up);
 void	perpv3(Vec3 dst, const Vec3 src);
 
