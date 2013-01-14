@@ -373,7 +373,7 @@ void
 GL_SetProjectionMatrix(Mat4 matrix)
 {
 	copym4(matrix, glState.projection);
-	mulm4(glState.projection, glState.modelview, glState.modelviewProjection);
+	mulm4(glState.modelview, glState.projection, glState.modelviewProjection);
 }
 
 
@@ -381,7 +381,7 @@ void
 GL_SetModelviewMatrix(Mat4 matrix)
 {
 	copym4(matrix, glState.modelview);
-	mulm4(glState.projection, glState.modelview, glState.modelviewProjection);
+	mulm4(glState.modelview, glState.projection, glState.modelviewProjection);
 }
 
 
