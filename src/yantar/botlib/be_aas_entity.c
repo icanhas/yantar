@@ -4,15 +4,9 @@
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License.
  */
-
-/*****************************************************************************
-* name:		be_aas_entity.c
-*
-* desc:		AAS entities
-*
-* $Archive: /MissionPack/code/botlib/be_aas_entity.c $
-*
-*****************************************************************************/
+/*
+ * AAS entities
+ */
 
 #include "shared.h"
 #include "l_memory.h"
@@ -39,12 +33,6 @@ enum {
 	ET_MOVER
 };
 
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
 int
 AAS_UpdateEntity(int entnum, bot_entitystate_t *state)
 {
@@ -86,10 +74,8 @@ AAS_UpdateEntity(int entnum, bot_entitystate_t *state)
 	ent->i.weapon = state->weapon;
 	ent->i.legsAnim = state->legsAnim;
 	ent->i.torsoAnim = state->torsoAnim;
-	/* number of the entity */
 	ent->i.number = entnum;
-	/* updated so set valid flag */
-	ent->i.valid = qtrue;
+	ent->i.valid = qtrue;	/* updated so set valid flag */
 	/* link everything the first frame */
 	if(aasworld.numframes == 1) relink = qtrue;
 	else relink = qfalse;
@@ -126,8 +112,7 @@ AAS_UpdateEntity(int entnum, bot_entitystate_t *state)
 			/* absolute mins and maxs */
 			addv3(ent->i.mins, ent->i.origin, absmins);
 			addv3(ent->i.maxs, ent->i.origin, absmaxs);
-			/* unlink the entity */
-			AAS_UnlinkFromAreas(ent->areas);
+			AAS_UnlinkFromAreas(ent->areas);	/* unlink the entity */
 			/* relink the entity to the AAS areas (use the larges bbox) */
 			ent->areas =
 				AAS_LinkEntityClientBBox(absmins, absmaxs,
@@ -141,12 +126,7 @@ AAS_UpdateEntity(int entnum, bot_entitystate_t *state)
 		}
 	return BLERR_NOERROR;
 }
-/* ===========================================================================
- *
- * Parameter:			-
- * Returns:				-
- * Changes Globals:		-
- * =========================================================================== */
+
 void
 AAS_EntityInfo(int entnum, aas_entityinfo_t *info)
 {
@@ -167,12 +147,7 @@ AAS_EntityInfo(int entnum, aas_entityinfo_t *info)
 
 	Q_Memcpy(info, &aasworld.entities[entnum].i, sizeof(aas_entityinfo_t));
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 void
 AAS_EntityOrigin(int entnum, Vec3 origin)
 {
@@ -186,12 +161,7 @@ AAS_EntityOrigin(int entnum, Vec3 origin)
 
 	copyv3(aasworld.entities[entnum].i.origin, origin);
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 int
 AAS_EntityModelindex(int entnum)
 {
@@ -203,12 +173,7 @@ AAS_EntityModelindex(int entnum)
 	}
 	return aasworld.entities[entnum].i.modelindex;
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 int
 AAS_EntityType(int entnum)
 {
@@ -221,13 +186,8 @@ AAS_EntityType(int entnum)
 		return 0;
 	}
 	return aasworld.entities[entnum].i.type;
-}	/* end of the AAS_EntityType */
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+}
+
 int
 AAS_EntityModelNum(int entnum)
 {
@@ -241,12 +201,7 @@ AAS_EntityModelNum(int entnum)
 	}
 	return aasworld.entities[entnum].i.modelindex;
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 int
 AAS_OriginOfMoverWithModelNum(int modelnum, Vec3 origin)
 {
@@ -263,12 +218,7 @@ AAS_OriginOfMoverWithModelNum(int modelnum, Vec3 origin)
 	}
 	return qfalse;
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 void
 AAS_EntitySize(int entnum, Vec3 mins, Vec3 maxs)
 {
@@ -287,12 +237,7 @@ AAS_EntitySize(int entnum, Vec3 mins, Vec3 maxs)
 	copyv3(ent->i.mins, mins);
 	copyv3(ent->i.maxs, maxs);
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 void
 AAS_EntityBSPData(int entnum, bsp_entdata_t *entdata)
 {
@@ -306,12 +251,7 @@ AAS_EntityBSPData(int entnum, bsp_entdata_t *entdata)
 	entdata->solid = ent->i.solid;
 	entdata->modelnum = ent->i.modelindex - 1;
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 void
 AAS_ResetEntityLinks(void)
 {
@@ -321,12 +261,7 @@ AAS_ResetEntityLinks(void)
 		aasworld.entities[i].leaves = NULL;
 	}
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 void
 AAS_InvalidateEntities(void)
 {
@@ -336,12 +271,7 @@ AAS_InvalidateEntities(void)
 		aasworld.entities[i].i.number = i;
 	}
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 void
 AAS_UnlinkInvalidEntities(void)
 {
@@ -358,12 +288,7 @@ AAS_UnlinkInvalidEntities(void)
 		}
 	}
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 int
 AAS_NearestEntity(Vec3 origin, int modelindex)
 {
@@ -389,12 +314,7 @@ AAS_NearestEntity(Vec3 origin, int modelindex)
 	}
 	return bestentnum;
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 int
 AAS_BestReachableEntityArea(int entnum)
 {
@@ -403,12 +323,7 @@ AAS_BestReachableEntityArea(int entnum)
 	ent = &aasworld.entities[entnum];
 	return AAS_BestReachableLinkArea(ent->areas);
 }
-/* ===========================================================================
- *
- * Parameter:			-
- * Returns:				-
- * Changes Globals:		-
- * =========================================================================== */
+
 int
 AAS_NextEntity(int entnum)
 {
