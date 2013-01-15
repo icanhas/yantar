@@ -5,15 +5,6 @@
  * it under the terms of the GNU General Public License.
  */
 
-/*****************************************************************************
-* name:		be_ai_char.h
-*
-* desc:		bot characters
-*
-* $Archive: /source/code/botlib/be_ai_char.h $
-*
-*****************************************************************************/
-
 /* loads a bot character from a file */
 int BotLoadCharacter(char *charfile, float skill);
 /* frees a bot character */

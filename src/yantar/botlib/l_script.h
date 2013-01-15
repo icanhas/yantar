@@ -4,15 +4,9 @@
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License.
  */
-
-/*****************************************************************************
-* name:		l_script.h
-*
-* desc:		lexicographical parser
-*
-* $Archive: /source/code/botlib/l_script.h $
-*
-*****************************************************************************/
+/*
+ * lexicographical parser
+ */
 
 /* undef if binary numbers of the form 0b... or 0B... are not allowed */
 #define BINARYNUMBERS

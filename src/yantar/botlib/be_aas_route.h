@@ -5,16 +5,8 @@
  * it under the terms of the GNU General Public License.
  */
 
-/*****************************************************************************
-* name:		be_aas_route.h
-*
-* desc:		AAS
-*
-* $Archive: /source/code/botlib/be_aas_route.h $
-*
-*****************************************************************************/
-
 #ifdef AASINTERN
+
 /* initialize the AAS routing */
 void AAS_InitRouting(void);
 /* free the AAS routing caches */
@@ -24,6 +16,7 @@ unsigned short int AAS_AreaTravelTime(int areanum, Vec3 start, Vec3 end);
 void AAS_CreateAllRoutingCache(void);
 void AAS_WriteRouteCache(void);
 void AAS_RoutingInfo(void);
+
 #endif	/* AASINTERN */
 
 /* returns the travel flag for the given travel type */

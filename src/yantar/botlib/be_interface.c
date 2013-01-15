@@ -4,15 +4,9 @@
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License.
  */
-
-/*****************************************************************************
-* name:		be_interface.c
-*
-* desc:		bot library interface
-*
-* $Archive: /MissionPack/code/botlib/be_interface.c $
-*
-*****************************************************************************/
+/*
+ * bot library interface
+ */
 
 #include "shared.h"
 #include "l_memory.h"
@@ -46,29 +40,16 @@ int	botDeveloper;
 /* qtrue if the library is setup */
 int	botlibsetup = qfalse;
 
-/* ===========================================================================
- *
+/*
  * several functions used by the exported functions
- *
- * =========================================================================== */
+ */
 
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
 int
 Sys_MilliSeconds(void)
 {
 	return clock() * 1000 / CLOCKS_PER_SEC;
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 qbool
 ValidClientNumber(int num, char *str)
 {
@@ -82,12 +63,7 @@ ValidClientNumber(int num, char *str)
 	}
 	return qtrue;
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 qbool
 ValidEntityNumber(int num, char *str)
 {
@@ -100,12 +76,7 @@ ValidEntityNumber(int num, char *str)
 	}
 	return qtrue;
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 qbool
 BotLibSetup(char *str)
 {
@@ -118,12 +89,6 @@ BotLibSetup(char *str)
 	return qtrue;
 }
 
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
 int
 Export_BotLibSetup(void)
 {
@@ -189,12 +154,7 @@ Export_BotLibSetup(void)
 
 	return BLERR_NOERROR;
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 int
 Export_BotLibShutdown(void)
 {
@@ -230,24 +190,14 @@ Export_BotLibShutdown(void)
 	PC_CheckOpenSourceHandles();
 	return BLERR_NOERROR;
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 int
 Export_BotLibVarSet(char *var_name, char *value)
 {
 	LibVarSet(var_name, value);
 	return BLERR_NOERROR;
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 int
 Export_BotLibVarGet(char *var_name, char *value, int size)
 {
@@ -258,24 +208,14 @@ Export_BotLibVarGet(char *var_name, char *value, int size)
 	value[size-1] = '\0';
 	return BLERR_NOERROR;
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 int
 Export_BotLibStartFrame(float time)
 {
 	if(!BotLibSetup("BotStartFrame")) return BLERR_LIBRARYNOTSETUP;
 	return AAS_StartFrame(time);
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 int
 Export_BotLibLoadMap(const char *mapname)
 {
@@ -299,12 +239,7 @@ Export_BotLibLoadMap(const char *mapname)
 #endif
 	return BLERR_NOERROR;
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 int
 Export_BotLibUpdateEntity(int ent, bot_entitystate_t *state)
 {
@@ -314,12 +249,7 @@ Export_BotLibUpdateEntity(int ent, bot_entitystate_t *state)
 
 	return AAS_UpdateEntity(ent, state);
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 void AAS_TestMovementPrediction(int entnum, Vec3 origin, Vec3 dir);
 void ElevatorBottomCenter(aas_reachability_t *reach, Vec3 bottomcenter);
 int BotGetReachabilityToGoal(Vec3 origin, int areanum,
@@ -660,10 +590,6 @@ BotExportTest(int parm0, char *parm1, Vec3 parm2, Vec3 parm3)
 	return 0;
 }
 
-
-/*
- * Init_AAS_Export
- */
 static void
 Init_AAS_Export(aas_export_t *aas)
 {
@@ -715,10 +641,6 @@ Init_AAS_Export(aas_export_t *aas)
 	aas->AAS_PredictClientMovement = AAS_PredictClientMovement;
 }
 
-
-/*
- * Init_EA_Export
- */
 static void
 Init_EA_Export(ea_export_t *ea)
 {
@@ -751,10 +673,6 @@ Init_EA_Export(ea_export_t *ea)
 	ea->EA_ResetInput = EA_ResetInput;
 }
 
-
-/*
- * Init_AI_Export
- */
 static void
 Init_AI_Export(ai_export_t *ai)
 {
@@ -853,10 +771,6 @@ Init_AI_Export(ai_export_t *ai)
 	ai->GeneticParentsAndChildSelection = GeneticParentsAndChildSelection;
 }
 
-
-/*
- * GetBotLibAPI
- */
 botlib_export_t *
 GetBotLibAPI(int apiVersion, botlib_import_t *import)
 {

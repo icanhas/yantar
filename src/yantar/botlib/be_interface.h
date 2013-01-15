@@ -4,15 +4,9 @@
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License.
  */
-
-/*****************************************************************************
-* name:		be_interface.h
-*
-* desc:		botlib interface
-*
-* $Archive: /source/code/botlib/be_interface.h $
-*
-*****************************************************************************/
+/*
+ * botlib interface
+ */
 
 /* #define DEBUG			//debug code */
 #define RANDOMIZE	/* randomize bot behaviour */
@@ -30,7 +24,6 @@ typedef struct botlib_globals_s {
 	int		runai;
 #endif
 } botlib_globals_t;
-
 
 extern botlib_globals_t botlibglobals;
 extern botlib_import_t	botimport;

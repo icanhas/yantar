@@ -5,15 +5,6 @@
  * it under the terms of the GNU General Public License.
  */
 
-/*****************************************************************************
-* name:		be_ai_weap.h
-*
-* desc:		weapon AI
-*
-* $Archive: /source/code/botlib/be_ai_weap.h $
-*
-*****************************************************************************/
-
 /* projectile flags */
 #define PFL_WINDOWDAMAGE	1	/* projectile damages through window */
 #define PFL_RETURN		2	/* set when projectile returns to owner */

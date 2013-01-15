@@ -4,15 +4,9 @@
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License.
  */
-
-/*****************************************************************************
-* name:		be_ea.h
-*
-* desc:		elementary actions
-*
-* $Archive: /source/code/botlib/be_ea.h $
-*
-*****************************************************************************/
+/*
+ * elementary actions
+ */
 
 /* ClientCommand elementary actions */
 void EA_Say(int client, char *str);

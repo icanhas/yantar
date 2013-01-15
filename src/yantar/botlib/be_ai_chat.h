@@ -4,14 +4,6 @@
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License.
  */
-/*****************************************************************************
-* name:		be_chat.h
-*
-* desc:		char AI
-*
-* $Archive: /source/code/botlib/be_chat.h $
-*
-*****************************************************************************/
 
 #define MAX_MESSAGE_SIZE	256
 #define MAX_CHATTYPE_NAME	32

@@ -4,16 +4,9 @@
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License.
  */
-
-/*****************************************************************************
-* name:		l_struct.h
-*
-* desc:		structure reading/writing
-*
-* $Archive: /source/code/botlib/l_struct.h $
-*
-*****************************************************************************/
-
+/*
+ * structure reading/writing
+ */
 
 #define MAX_STRINGFIELD 80
 /* field types */

@@ -5,15 +5,6 @@
  * it under the terms of the GNU General Public License.
  */
 
-/*****************************************************************************
-* name:		be_aas_reach.h
-*
-* desc:		AAS
-*
-* $Archive: /source/code/botlib/be_aas_reach.h $
-*
-*****************************************************************************/
-
 #ifdef AASINTERN
 /* initialize calculating the reachabilities */
 void AAS_InitReachability(void);

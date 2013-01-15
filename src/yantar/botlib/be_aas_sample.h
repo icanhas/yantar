@@ -5,16 +5,8 @@
  * it under the terms of the GNU General Public License.
  */
 
-/*****************************************************************************
-* name:		be_aas_sample.h
-*
-* desc:		AAS
-*
-* $Archive: /source/code/botlib/be_aas_sample.h $
-*
-*****************************************************************************/
-
 #ifdef AASINTERN
+
 void AAS_InitAASLinkHeap(void);
 void AAS_InitAASLinkedEntities(void);
 void AAS_FreeAASLinkHeap(void);
@@ -29,6 +21,7 @@ qbool AAS_PointInsideFace(int facenum, Vec3 point, float epsilon);
 qbool AAS_InsideFace(aas_face_t *face, Vec3 pnormal, Vec3 point,
 			float epsilon);
 void AAS_UnlinkFromAreas(aas_link_t *areas);
+
 #endif	/* AASINTERN */
 
 /* returns the mins and maxs of the bounding box for the given presence type */

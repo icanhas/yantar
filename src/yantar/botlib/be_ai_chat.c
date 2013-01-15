@@ -4,15 +4,9 @@
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License.
  */
-
-/*****************************************************************************
-* name:		be_ai_chat.c
-*
-* desc:		bot chat AI
-*
-* $Archive: /MissionPack/code/botlib/be_ai_chat.c $
-*
-*****************************************************************************/
+/*
+ * bot chat AI
+ */
 
 #include "shared.h"
 #include "l_memory.h"
@@ -181,12 +175,6 @@ bot_randomlist_t	*randomstrings = NULL;
 /* reply chats */
 bot_replychat_t		*replychats = NULL;
 
-/* ========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * ======================================================================== */
 bot_chatstate_t *
 BotChatStateFromHandle(int handle)
 {
@@ -201,13 +189,10 @@ BotChatStateFromHandle(int handle)
 	}
 	return botchatstates[handle];
 }
-/* ===========================================================================
+
+/*
  * initialize the heap with unused console messages
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+ */
 void
 InitConsoleMessageHeap(void)
 {
@@ -230,13 +215,7 @@ InitConsoleMessageHeap(void)
 	/* pointer to the free console messages */
 	freeconsolemessages = consolemessageheap;
 }
-/* ===========================================================================
- * allocate one console message from the heap
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 bot_consolemessage_t *
 AllocConsoleMessage(void)
 {
@@ -246,13 +225,7 @@ AllocConsoleMessage(void)
 	if(freeconsolemessages) freeconsolemessages->prev = NULL;
 	return message;
 }
-/* ===========================================================================
- * deallocate one console message from the heap
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 void
 FreeConsoleMessage(bot_consolemessage_t *message)
 {
@@ -261,12 +234,7 @@ FreeConsoleMessage(bot_consolemessage_t *message)
 	message->next	= freeconsolemessages;
 	freeconsolemessages = message;
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 void
 BotRemoveConsoleMessage(int chatstate, int handle)
 {
@@ -290,12 +258,7 @@ BotRemoveConsoleMessage(int chatstate, int handle)
 		}
 	}
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 void
 BotQueueConsoleMessage(int chatstate, int type, char *message)
 {
@@ -328,12 +291,7 @@ BotQueueConsoleMessage(int chatstate, int type, char *message)
 	}
 	cs->numconsolemessages++;
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 int
 BotNextConsoleMessage(int chatstate, bot_consolemessage_t *cm)
 {
@@ -361,12 +319,7 @@ BotNextConsoleMessage(int chatstate, bot_consolemessage_t *cm)
 	}
 	return 0;
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 int
 BotNumConsoleMessages(int chatstate)
 {
@@ -376,12 +329,7 @@ BotNumConsoleMessages(int chatstate)
 	if(!cs) return 0;
 	return cs->numconsolemessages;
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 int
 IsWhiteSpace(char c)
 {
@@ -397,12 +345,7 @@ IsWhiteSpace(char c)
 	   || c == '+' || c == '=') return qfalse;
 	return qtrue;
 }
-/* ===========================================================================
- *
- * Parameter:			-
- * Returns:				-
- * Changes Globals:		-
- * =========================================================================== */
+
 void
 BotRemoveTildes(char *message)
 {
@@ -414,12 +357,7 @@ BotRemoveTildes(char *message)
 			memmove(&message[i], &message[i+1], strlen(
 					&message[i+1])+1);
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 void
 UnifyWhiteSpaces(char *string)
 {
@@ -437,12 +375,7 @@ UnifyWhiteSpaces(char *string)
 		while(*ptr && !IsWhiteSpace(*ptr)) ptr++;
 	}
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 int
 StringContains(char *str1, char *str2, int casesensitive)
 {
@@ -462,12 +395,7 @@ StringContains(char *str1, char *str2, int casesensitive)
 	}
 	return -1;
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 char *
 StringContainsWord(char *str1, char *str2, int casesensitive)
 {
@@ -497,12 +425,7 @@ StringContainsWord(char *str1, char *str2, int casesensitive)
 	}
 	return NULL;
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 void
 StringReplaceWords(char *string, char *synonym, char *replacement)
 {
@@ -531,12 +454,7 @@ StringReplaceWords(char *string, char *synonym, char *replacement)
 				replacement), synonym, qfalse);
 	}
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 void
 BotDumpSynonymList(bot_synonymlist_t *synlist)
 {
@@ -557,12 +475,7 @@ BotDumpSynonymList(bot_synonymlist_t *synlist)
 		fprintf(fp, "]\n");
 	}
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 bot_synonymlist_t *
 BotLoadSynonyms(char *filename)
 {
@@ -732,13 +645,7 @@ BotLoadSynonyms(char *filename)
 	 *  */
 	return synlist;
 }
-/* ===========================================================================
- * replace all the synonyms in the string
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 void
 BotReplaceSynonyms(char *string, unsigned long int context)
 {
@@ -753,12 +660,7 @@ BotReplaceSynonyms(char *string, unsigned long int context)
 				syn->firstsynonym->string);
 	}
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 void
 BotReplaceWeightedSynonyms(char *string, unsigned long int context)
 {
@@ -787,12 +689,7 @@ BotReplaceWeightedSynonyms(char *string, unsigned long int context)
 		}
 	}
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 void
 BotReplaceReplySynonyms(char *string, unsigned long int context)
 {
@@ -832,12 +729,7 @@ BotReplaceReplySynonyms(char *string, unsigned long int context)
 		if(!*str1) break;
 	}
 }
-/* ===========================================================================
- *
- * Parameter:			-
- * Returns:				-
- * Changes Globals:		-
- * =========================================================================== */
+
 int
 BotLoadChatMessage(source_t *source, char *chatmessagestring)
 {
@@ -890,12 +782,7 @@ BotLoadChatMessage(source_t *source, char *chatmessagestring)
 	}
 	return qtrue;
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 void
 BotDumpRandomStringList(bot_randomlist_t *randomlist)
 {
@@ -914,12 +801,7 @@ BotDumpRandomStringList(bot_randomlist_t *randomlist)
 		}
 	}
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 bot_randomlist_t *
 BotLoadRandomStrings(char *filename)
 {
@@ -1013,12 +895,7 @@ BotLoadRandomStrings(char *filename)
 #endif	/* DEBUG */
 	return randomlist;
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 char *
 RandomString(char *name)
 {
@@ -1036,12 +913,7 @@ RandomString(char *name)
 		}
 	return NULL;
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 void
 BotDumpMatchTemplates(bot_matchtemplate_t *matches)
 {
@@ -1068,12 +940,7 @@ BotDumpMatchTemplates(bot_matchtemplate_t *matches)
 		fprintf(fp, " = (%d, %d);}\n", mt->type, mt->subtype);
 	}
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 void
 BotFreeMatchPieces(bot_matchpiece_t *matchpieces)
 {
@@ -1090,12 +957,7 @@ BotFreeMatchPieces(bot_matchpiece_t *matchpieces)
 		FreeMemory(mp);
 	}
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 bot_matchpiece_t *
 BotLoadMatchPieces(source_t *source, char *endtoken)
 {
@@ -1189,12 +1051,7 @@ BotLoadMatchPieces(source_t *source, char *endtoken)
 	}
 	return firstpiece;
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 void
 BotFreeMatchTemplates(bot_matchtemplate_t *mt)
 {
@@ -1206,12 +1063,7 @@ BotFreeMatchTemplates(bot_matchtemplate_t *mt)
 		FreeMemory(mt);
 	}
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 bot_matchtemplate_t *
 BotLoadMatchTemplates(char *matchfile)
 {
@@ -1298,12 +1150,7 @@ BotLoadMatchTemplates(char *matchfile)
 	 *  */
 	return matches;
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 int
 StringsMatch(bot_matchpiece_t *pieces, bot_match_t *match)
 {
@@ -1373,12 +1220,7 @@ StringsMatch(bot_matchpiece_t *pieces, bot_match_t *match)
 	}
 	return qfalse;
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 int
 BotFindMatch(char *str, bot_match_t *match, unsigned long int context)
 {
@@ -1404,12 +1246,7 @@ BotFindMatch(char *str, bot_match_t *match, unsigned long int context)
 	}
 	return qfalse;
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 void
 BotMatchVariable(bot_match_t *match, int variable, char *buf, int size)
 {
@@ -1432,12 +1269,7 @@ BotMatchVariable(bot_match_t *match, int variable, char *buf, int size)
 		strcpy(buf, "");
 	return;
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 bot_stringlist_t *
 BotFindStringInList(bot_stringlist_t *list, char *string)
 {
@@ -1447,12 +1279,7 @@ BotFindStringInList(bot_stringlist_t *list, char *string)
 		if(!strcmp(s->string, string)) return s;
 	return NULL;
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 bot_stringlist_t *
 BotCheckChatMessageIntegrety(char *message, bot_stringlist_t *stringlist)
 {
@@ -1523,12 +1350,7 @@ BotCheckChatMessageIntegrety(char *message, bot_stringlist_t *stringlist)
 	}
 	return stringlist;
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 void
 BotCheckInitialChatIntegrety(bot_chat_t *chat)
 {
@@ -1546,12 +1368,7 @@ BotCheckInitialChatIntegrety(bot_chat_t *chat)
 		FreeMemory(s);
 	}
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 void
 BotCheckReplyChatIntegrety(bot_replychat_t *replychat)
 {
@@ -1569,12 +1386,7 @@ BotCheckReplyChatIntegrety(bot_replychat_t *replychat)
 		FreeMemory(s);
 	}
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 void
 BotDumpReplyChat(bot_replychat_t *replychat)
 {
@@ -1619,12 +1431,7 @@ BotDumpReplyChat(bot_replychat_t *replychat)
 		fprintf(fp, "}\n");
 	}
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 void
 BotFreeReplyChat(bot_replychat_t *replychat)
 {
@@ -1647,12 +1454,7 @@ BotFreeReplyChat(bot_replychat_t *replychat)
 		FreeMemory(rp);
 	}
 }
-/* ===========================================================================
- *
- * Parameter:			-
- * Returns:				-
- * Changes Globals:		-
- * =========================================================================== */
+
 void
 BotCheckValidReplyChatKeySet(source_t *source, bot_replychatkey_t *keys)
 {
@@ -1751,12 +1553,7 @@ BotCheckValidReplyChatKeySet(source_t *source, bot_replychatkey_t *keys)
 			source, "variables from the match template(s) could be "
 				"invalid when outputting one of the chat messages");
 }
-/* ===========================================================================
- *
- * Parameter:			-
- * Returns:				-
- * Changes Globals:		-
- * =========================================================================== */
+
 bot_replychat_t *
 BotLoadReplyChat(char *filename)
 {
@@ -1904,12 +1701,7 @@ BotLoadReplyChat(char *filename)
 	if(!replychatlist) botimport.Print(PRT_MESSAGE, "no rchats\n");
 	return replychatlist;
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 void
 BotDumpInitialChat(bot_chat_t *chat)
 {
@@ -1927,12 +1719,7 @@ BotDumpInitialChat(bot_chat_t *chat)
 	}
 	Log_Write("}");
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 bot_chat_t *
 BotLoadInitialChat(char *chatfile, char *chatname)
 {
@@ -2134,12 +1921,7 @@ BotLoadInitialChat(char *chatfile, char *chatname)
 	/* character was read successfully */
 	return chat;
 }
-/* ===========================================================================
- *
- * Parameter:			-
- * Returns:				-
- * Changes Globals:		-
- * =========================================================================== */
+
 void
 BotFreeChatFile(int chatstate)
 {
@@ -2150,12 +1932,7 @@ BotFreeChatFile(int chatstate)
 	if(cs->chat) FreeMemory(cs->chat);
 	cs->chat = NULL;
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 int
 BotLoadChatFile(int chatstate, char *chatfile, char *chatname)
 {
@@ -2210,12 +1987,7 @@ BotLoadChatFile(int chatstate, char *chatfile, char *chatname)
 
 	return BLERR_NOERROR;
 }
-/* ===========================================================================
- *
- * Parameter:			-
- * Returns:				-
- * Changes Globals:		-
- * =========================================================================== */
+
 int
 BotExpandChatMessage(char *outmessage, char *message, unsigned long mcontext,
 		     bot_match_t *match, unsigned long vcontext, int reply)
@@ -2336,12 +2108,7 @@ BotExpandChatMessage(char *outmessage, char *message, unsigned long mcontext,
 	/* return true if a random was expanded */
 	return expansion;
 }
-/* ===========================================================================
- *
- * Parameter:			-
- * Returns:				-
- * Changes Globals:		-
- * =========================================================================== */
+
 void
 BotConstructChatMessage(bot_chatstate_t *chatstate, char *message,
 			unsigned long mcontext,
@@ -2364,13 +2131,10 @@ BotConstructChatMessage(bot_chatstate_t *chatstate, char *message,
 		botimport.Print(PRT_WARNING, "%s\n", chatstate->chatmessage);
 	}
 }
-/* ===========================================================================
+
+/*
  * randomly chooses one of the chat message of the given type
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+ */
 char *
 BotChooseInitialChatMessage(bot_chatstate_t *cs, char *type)
 {
@@ -2414,12 +2178,7 @@ BotChooseInitialChatMessage(bot_chatstate_t *cs, char *type)
 		}
 	return NULL;
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 int
 BotNumInitialChats(int chatstate, char *type)
 {
@@ -2442,12 +2201,7 @@ BotNumInitialChats(int chatstate, char *type)
 		}
 	return 0;
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 void
 BotInitialChat(int chatstate, char *type, int mcontext, char *var0, char *var1,
 	       char *var2, char *var3, char *var4, char *var5, char *var6,
@@ -2524,12 +2278,7 @@ BotInitialChat(int chatstate, char *type, int mcontext, char *var0, char *var1,
 	}
 	BotConstructChatMessage(cs, message, mcontext, &match, 0, qfalse);
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 void
 BotPrintReplyChatKeys(bot_replychat_t *replychat)
 {
@@ -2566,12 +2315,7 @@ BotPrintReplyChatKeys(bot_replychat_t *replychat)
 	}
 	botimport.Print(PRT_MESSAGE, "{\n");
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 int
 BotReplyChat(int chatstate, char *message, int mcontext, int vcontext,
 	     char *var0, char *var1, char *var2, char *var3, char *var4,
@@ -2726,12 +2470,7 @@ BotReplyChat(int chatstate, char *message, int mcontext, int vcontext,
 	}
 	return qfalse;
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 int
 BotChatLength(int chatstate)
 {
@@ -2741,12 +2480,7 @@ BotChatLength(int chatstate)
 	if(!cs) return 0;
 	return strlen(cs->chatmessage);
 }
-/* ===========================================================================
- *
- * Parameter:			-
- * Returns:				-
- * Changes Globals:		-
- * =========================================================================== */
+
 void
 BotEnterChat(int chatstate, int clientto, int sendto)
 {
@@ -2780,12 +2514,7 @@ BotEnterChat(int chatstate, int clientto, int sendto)
 		strcpy(cs->chatmessage, "");
 	}
 }
-/* ===========================================================================
- *
- * Parameter:			-
- * Returns:				-
- * Changes Globals:		-
- * =========================================================================== */
+
 void
 BotGetChatMessage(int chatstate, char *buf, int size)
 {
@@ -2800,12 +2529,7 @@ BotGetChatMessage(int chatstate, char *buf, int size)
 	/* clear the chat message from the state */
 	strcpy(cs->chatmessage, "");
 }
-/* ===========================================================================
- *
- * Parameter:			-
- * Returns:				-
- * Changes Globals:		-
- * =========================================================================== */
+
 void
 BotSetChatGender(int chatstate, int gender)
 {
@@ -2819,12 +2543,7 @@ BotSetChatGender(int chatstate, int gender)
 	default: cs->gender = CHAT_GENDERLESS; break;
 	}	/* end switch */
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 void
 BotSetChatName(int chatstate, char *name, int client)
 {
@@ -2837,12 +2556,7 @@ BotSetChatName(int chatstate, char *name, int client)
 	strncpy(cs->name, name, sizeof(cs->name));
 	cs->name[sizeof(cs->name)-1] = '\0';
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 void
 BotResetChatAI(void)
 {
@@ -2853,12 +2567,7 @@ BotResetChatAI(void)
 		for(m = rchat->firstchatmessage; m; m = m->next)
 			m->time = 0;
 }
-/* ========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * ======================================================================== */
+
 int
 BotAllocChatState(void)
 {
@@ -2872,12 +2581,7 @@ BotAllocChatState(void)
 		}
 	return 0;
 }
-/* ========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * ======================================================================== */
+
 void
 BotFreeChatState(int handle)
 {
@@ -2903,12 +2607,7 @@ BotFreeChatState(int handle)
 	FreeMemory(botchatstates[handle]);
 	botchatstates[handle] = NULL;
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 int
 BotSetupChatAI(void)
 {
@@ -2937,12 +2636,7 @@ BotSetupChatAI(void)
 #endif	/* DEBUG */
 	return BLERR_NOERROR;
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 void
 BotShutdownChatAI(void)
 {

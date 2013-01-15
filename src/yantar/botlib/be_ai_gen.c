@@ -4,15 +4,9 @@
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License.
  */
-
-/*****************************************************************************
-* name:		be_ai_gen.c
-*
-* desc:		genetic selection
-*
-* $Archive: /MissionPack/code/botlib/be_ai_gen.c $
-*
-*****************************************************************************/
+/*
+ * genetic selection
+ */
 
 #include "shared.h"
 #include "l_memory.h"
@@ -28,12 +22,6 @@
 #include "be_interface.h"
 #include "be_ai_gen.h"
 
-/* ===========================================================================
- *
- * Parameter:			-
- * Returns:				-
- * Changes Globals:		-
- * =========================================================================== */
 int
 GeneticSelection(int numranks, float *rankings)
 {
@@ -63,12 +51,7 @@ GeneticSelection(int numranks, float *rankings)
 	}
 	return 0;
 }
-/* ===========================================================================
- *
- * Parameter:			-
- * Returns:				-
- * Changes Globals:		-
- * =========================================================================== */
+
 int
 GeneticParentsAndChildSelection(int numranks, float *ranks, int *parent1,
 				int *parent2,

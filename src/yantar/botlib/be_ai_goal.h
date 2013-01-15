@@ -4,14 +4,6 @@
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License.
  */
-/*****************************************************************************
-* name:		be_ai_goal.h
-*
-* desc:		goal AI
-*
-* $Archive: /source/code/botlib/be_ai_goal.h $
-*
-*****************************************************************************/
 
 #define MAX_AVOIDGOALS	256
 #define MAX_GOALSTACK	8

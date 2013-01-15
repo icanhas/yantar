@@ -5,15 +5,6 @@
  * it under the terms of the GNU General Public License.
  */
 
-/*****************************************************************************
-* name:		be_aas_routealt.c
-*
-* desc:		AAS
-*
-* $Archive: /MissionPack/code/botlib/be_aas_routealt.c $
-*
-*****************************************************************************/
-
 #include "shared.h"
 #include "l_utils.h"
 #include "l_memory.h"
@@ -41,12 +32,6 @@ midrangearea_t *midrangeareas;
 int	*clusterareas;
 int	numclusterareas;
 
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
 void
 AAS_AltRoutingFloodCluster_r(int areanum)
 {
@@ -75,12 +60,7 @@ AAS_AltRoutingFloodCluster_r(int areanum)
 		AAS_AltRoutingFloodCluster_r(otherareanum);
 	}
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 int
 AAS_AlternativeRouteGoals(Vec3 start, int startareanum, Vec3 goal,
 			  int goalareanum, int travelflags,
@@ -194,12 +174,7 @@ AAS_AlternativeRouteGoals(Vec3 start, int startareanum, Vec3 goal,
 	return numaltroutegoals;
 #endif
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 void
 AAS_InitAlternativeRouting(void)
 {
@@ -212,12 +187,7 @@ AAS_InitAlternativeRouting(void)
 	clusterareas = (int*)GetMemory(aasworld.numareas * sizeof(int));
 #endif
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 void
 AAS_ShutdownAlternativeRouting(void)
 {
