@@ -589,13 +589,13 @@ typedef enum {
 
 struct Gitem {
 	char	*classname;	/* spawning name */
-	char	*pickup_sound;
-	char	*world_model[MAX_ITEM_MODELS];
+	char	*pickupsound;
+	char	*worldmodel[MAX_ITEM_MODELS];
 	char	*icon;
-	char	*pickup_name;	/* for printing on pickup */
+	char	*pickupname;	/* for printing on pickup */
 	int	quantity;	/* for ammo how much, or duration of powerup */
-	Itemtype	giType;		/* IT_* flags */
-	int	giTag;
+	Itemtype	type;		/* IT_* flags */
+	int	tag;
 	char	*precaches;	/* string of all models and images this item will use */
 	char	*sounds;	/* string of all sounds this item will use */
 };

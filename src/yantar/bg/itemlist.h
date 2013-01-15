@@ -18,13 +18,13 @@ Gitem bg_itemlist[] =
 {
 	{
 		nil,		/* classname */
-		nil,		/* pickup_sound */
-		{ nil },	/* world_model[] */
+		nil,		/* pickupsound */
+		{ nil },	/* worldmodel[] */
 		nil,		/* icon */
-		nil,		/* pickup_name */
+		nil,		/* pickupname */
 		0,		/* quantity */
-		0,		/* giType */
-		0,		/* giTag */
+		0,		/* type */
+		0,		/* tag */
 		"",		/* precache */
 		""		/* sounds */
 	},	/* leave index 0 alone */

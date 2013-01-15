@@ -201,7 +201,7 @@ CG_Item(Centity *cent)
 		return;
 
 	item = &bg_itemlist[ es->modelindex ];
-	if(cg_simpleItems.integer && item->giType != IT_TEAM){
+	if(cg_simpleItems.integer && item->type != IT_TEAM){
 		memset(&ent, 0, sizeof(ent));
 		ent.reType = RT_SPRITE;
 		copyv3(cent->lerpOrigin, ent.origin);
@@ -222,7 +222,7 @@ CG_Item(Centity *cent)
 	memset (&ent, 0, sizeof(ent));
 
 	/* autorotate at one of two speeds */
-	if(item->giType == IT_HEALTH){
+	if(item->type == IT_HEALTH){
 		copyv3(cg.autoAnglesFast, cent->lerpAngles);
 		copyaxis(cg.autoAxisFast, ent.axis);
 	}else{
@@ -234,8 +234,8 @@ CG_Item(Centity *cent)
 	/* the weapons have their origin where they attatch to player
 	 * models, so we need to offset them or they will rotate
 	 * eccentricly */
-	if(item->giType == IT_PRIWEAP){
-		wi = &cg_weapons[item->giTag];
+	if(item->type == IT_PRIWEAP){
+		wi = &cg_weapons[item->tag];
 		cent->lerpOrigin[0] -=
 			wi->weaponMidpoint[0] * ent.axis[0][0] +
 			wi->weaponMidpoint[1] * ent.axis[1][0] +
@@ -252,7 +252,7 @@ CG_Item(Centity *cent)
 		cent->lerpOrigin[2] += 8;	/* an extra height boost */
 	}
 
-	if(item->giType == IT_PRIWEAP && item->giTag == Wrailgun){
+	if(item->type == IT_PRIWEAP && item->tag == Wrailgun){
 		Clientinfo *ci = &cgs.clientinfo[cg.snap->ps.clientNum];
 		byte4copy(ci->c1RGBA, ent.shaderRGBA);
 	}
@@ -277,12 +277,12 @@ CG_Item(Centity *cent)
 
 	/* items without glow textures need to keep a minimum light value
 	 * so they are always visible */
-	if((item->giType == IT_PRIWEAP) ||
-	   (item->giType == IT_SHIELD))
+	if((item->type == IT_PRIWEAP) ||
+	   (item->type == IT_SHIELD))
 		ent.renderfx |= RF_MINLIGHT;
 
 	/* increase the size of the weapons when they are presented as items */
-	if(item->giType == IT_PRIWEAP){
+	if(item->type == IT_PRIWEAP){
 		scalev3(ent.axis[0], 1.5, ent.axis[0]);
 		scalev3(ent.axis[1], 1.5, ent.axis[1]);
 		scalev3(ent.axis[2], 1.5, ent.axis[2]);
@@ -295,7 +295,7 @@ CG_Item(Centity *cent)
 	/* add to refresh list */
 	trap_R_AddRefEntityToScene(&ent);
 
-	if((item->giType == IT_PRIWEAP)
+	if((item->type == IT_PRIWEAP)
 	  && wi->barrelModel)
 	then{
 		Refent barrel;
@@ -323,10 +323,10 @@ CG_Item(Centity *cent)
 
 		clearv3(spinAngles);
 
-		if(item->giType == IT_HEALTH || item->giType == IT_POWERUP)
+		if(item->type == IT_HEALTH || item->type == IT_POWERUP)
 			if((ent.hModel = cg_items[es->modelindex].models[1]) !=
 			   0){
-				if(item->giType == IT_POWERUP){
+				if(item->type == IT_POWERUP){
 					ent.origin[2]	+= 12;
 					spinAngles[1]	=
 						(cg.time &

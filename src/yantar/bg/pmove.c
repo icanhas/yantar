@@ -935,13 +935,13 @@ dopriweapevents(Pmove *pm, Pml *pml)
 	/* check for item usage */
 	if(pm->cmd.buttons & BUTTON_USE_HOLDABLE){
 		if(!(p->pm_flags & PMF_USE_ITEM_HELD)){
-			if(bg_itemlist[pm->ps->stats[STAT_HOLDABLE_ITEM]].giTag == HI_MEDKIT
+			if(bg_itemlist[pm->ps->stats[STAT_HOLDABLE_ITEM]].tag == HI_MEDKIT
 			  && p->stats[STAT_HEALTH] >=
 			  (p->stats[STAT_MAX_HEALTH] + 25)){
 				/* don't use medkit if at max health */
 			}else{
 				p->pm_flags |= PMF_USE_ITEM_HELD;
-				PM_AddEvent(pm, pml, EV_USE_ITEM0 + bg_itemlist[p->stats[STAT_HOLDABLE_ITEM]].giTag);
+				PM_AddEvent(pm, pml, EV_USE_ITEM0 + bg_itemlist[p->stats[STAT_HOLDABLE_ITEM]].tag);
 				p->stats[STAT_HOLDABLE_ITEM] = 0;
 			}
 			return;
@@ -1034,13 +1034,13 @@ dosecweapevents(Pmove *pm, Pml *pml)
 	/* check for item usage */
 	if(pm->cmd.buttons & BUTTON_USE_HOLDABLE){
 		if(!(p->pm_flags & PMF_USE_ITEM_HELD)){
-			if(bg_itemlist[pm->ps->stats[STAT_HOLDABLE_ITEM]].giTag == HI_MEDKIT
+			if(bg_itemlist[pm->ps->stats[STAT_HOLDABLE_ITEM]].tag == HI_MEDKIT
 			  && p->stats[STAT_HEALTH] >=
 			  (p->stats[STAT_MAX_HEALTH] + 25)){
 				/* don't use medkit if at max health */
 			}else{
 				p->pm_flags |= PMF_USE_ITEM_HELD;
-				PM_AddEvent(pm, pml, EV_USE_ITEM0 + bg_itemlist[p->stats[STAT_HOLDABLE_ITEM]].giTag);
+				PM_AddEvent(pm, pml, EV_USE_ITEM0 + bg_itemlist[p->stats[STAT_HOLDABLE_ITEM]].tag);
 				p->stats[STAT_HOLDABLE_ITEM] = 0;
 			}
 			return;

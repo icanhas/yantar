@@ -1208,9 +1208,9 @@ Controls_InitWeapons(void)
 	Gitem * item;
 
 	for(item = bg_itemlist + 1; item->classname; item++){
-		if(item->giType != IT_PRIWEAP)
+		if(item->type != IT_PRIWEAP)
 			continue;
-		trap_R_RegisterModel(item->world_model[0]);
+		trap_R_RegisterModel(item->worldmodel[0]);
 	}
 }
 

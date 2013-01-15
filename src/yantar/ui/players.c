@@ -47,14 +47,14 @@ tryagain:
 		return;
 
 	for(item = bg_itemlist + 1; item->classname; item++){
-		if(item->giType != IT_PRIWEAP)
+		if(item->type != IT_PRIWEAP)
 			continue;
-		if(item->giTag == weaponNum)
+		if(item->tag == weaponNum)
 			break;
 	}
 
 	if(item->classname)
-		pi->weaponModel = trap_R_RegisterModel(item->world_model[0]);
+		pi->weaponModel = trap_R_RegisterModel(item->worldmodel[0]);
 
 	if(pi->weaponModel == 0){
 		if(weaponNum == Wmachinegun){
@@ -67,13 +67,13 @@ tryagain:
 
 	if(weaponNum == Wmachinegun || weaponNum == Wmelee ||
 	   weaponNum == Wbfg){
-		strcpy(path, item->world_model[0]);
+		strcpy(path, item->worldmodel[0]);
 		Q_stripext(path, path, sizeof(path));
 		strcat(path, "_barrel");
 		pi->barrelModel = trap_R_RegisterModel(path);
 	}
 
-	strcpy(path, item->world_model[0]);
+	strcpy(path, item->worldmodel[0]);
 	Q_stripext(path, path, sizeof(path));
 	strcat(path, "_flash");
 	pi->flashModel = trap_R_RegisterModel(path);

@@ -765,7 +765,7 @@ Blocked_Door(Gentity *ent, Gentity *other)
 	/* remove anything other than a client */
 	if(!other->client){
 		/* except CTF flags!!!! */
-		if(other->s.eType == ET_ITEM && other->item->giType ==
+		if(other->s.eType == ET_ITEM && other->item->type ==
 		   IT_TEAM){
 			Team_DroppedFlagThink(other);
 			return;

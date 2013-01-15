@@ -579,8 +579,8 @@ CG_RegisterWeapon(int weaponNum)
 	memset(wp, 0, sizeof(*wp));
 	wp->registered = qtrue;
 	for(item = bg_itemlist + 1; item->classname; item++)
-		if((item->giType == IT_PRIWEAP || item->giType == IT_SECWEAP) 
-		  && item->giTag == weaponNum)
+		if((item->type == IT_PRIWEAP || item->type == IT_SECWEAP) 
+		  && item->tag == weaponNum)
 		then{
 			wp->item = item;
 			break;
@@ -590,7 +590,7 @@ CG_RegisterWeapon(int weaponNum)
 	CG_RegisterItemVisuals(item - bg_itemlist);
 
 	/* load cmodel before model so filecache works */
-	wp->weaponModel = trap_R_RegisterModel(item->world_model[0]);
+	wp->weaponModel = trap_R_RegisterModel(item->worldmodel[0]);
 
 	/* calc midpoint for rotation */
 	trap_R_ModelBounds(wp->weaponModel, mins, maxs);
@@ -602,23 +602,23 @@ CG_RegisterWeapon(int weaponNum)
 	wp->ammoIcon	= trap_R_RegisterShader(item->icon);
 
 	for(ammo = bg_itemlist + 1; ammo->classname; ammo++)
-		if(ammo->giType == IT_AMMO && ammo->giTag == weaponNum)
+		if(ammo->type == IT_AMMO && ammo->tag == weaponNum)
 			break;
-	if(ammo->classname && ammo->world_model[0])
+	if(ammo->classname && ammo->worldmodel[0])
 		wp->ammoModel = trap_R_RegisterModel(
-			ammo->world_model[0]);
+			ammo->worldmodel[0]);
 
-	strcpy(path, item->world_model[0]);
+	strcpy(path, item->worldmodel[0]);
 	Q_stripext(path, path, sizeof(path));
 	strcat(path, "_flash");
 	wp->flashModel = trap_R_RegisterModel(path);
 
-	strcpy(path, item->world_model[0]);
+	strcpy(path, item->worldmodel[0]);
 	Q_stripext(path, path, sizeof(path));
 	strcat(path, "_barrel");
 	wp->barrelModel = trap_R_RegisterModel(path);
 
-	strcpy(path, item->world_model[0]);
+	strcpy(path, item->worldmodel[0]);
 	Q_stripext(path, path, sizeof(path));
 	strcat(path, "_hand");
 	wp->handsModel = trap_R_RegisterModel(path);
@@ -819,16 +819,16 @@ CG_RegisterItemVisuals(int itemNum)
 	item = &bg_itemlist[itemNum];
 	memset(itemInfo, 0, sizeof(*itemInfo));
 	itemInfo->registered = qtrue;
-	itemInfo->models[0] = trap_R_RegisterModel(item->world_model[0]);
+	itemInfo->models[0] = trap_R_RegisterModel(item->worldmodel[0]);
 	itemInfo->icon = trap_R_RegisterShader(item->icon);
-	if(item->giType == IT_PRIWEAP || item->giType == IT_SECWEAP)
-		CG_RegisterWeapon(item->giTag);
+	if(item->type == IT_PRIWEAP || item->type == IT_SECWEAP)
+		CG_RegisterWeapon(item->tag);
 
 	/* powerups have an accompanying ring or sphere */
-	if(item->giType == IT_POWERUP || item->giType == IT_HEALTH ||
-	   item->giType == IT_SHIELD || item->giType == IT_HOLDABLE)
-		if(item->world_model[1])
-			itemInfo->models[1] = trap_R_RegisterModel(item->world_model[1]);
+	if(item->type == IT_POWERUP || item->type == IT_HEALTH ||
+	   item->type == IT_SHIELD || item->type == IT_HOLDABLE)
+		if(item->worldmodel[1])
+			itemInfo->models[1] = trap_R_RegisterModel(item->worldmodel[1]);
 }
 
 /*
@@ -1441,7 +1441,7 @@ CG_DrawWeaponSelect(Weapslot slot)
 
 	/* draw the selected name */
 	if(cg_weapons[cg.weapsel[slot]].item){
-		name = cg_weapons[cg.weapsel[slot]].item->pickup_name;
+		name = cg_weapons[cg.weapsel[slot]].item->pickupname;
 		if(name){
 			w = CG_DrawStrlen(name) * BIGCHAR_WIDTH;
 			x = (SCREEN_WIDTH - w) / 2;

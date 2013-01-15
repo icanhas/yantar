@@ -220,11 +220,11 @@ Team_SetFlagStatus(int team, Flagstatus status)
 void
 Team_CheckDroppedItem(Gentity *dropped)
 {
-	if(dropped->item->giTag == PW_REDFLAG)
+	if(dropped->item->tag == PW_REDFLAG)
 		Team_SetFlagStatus(TEAM_RED, FLAG_DROPPED);
-	else if(dropped->item->giTag == PW_BLUEFLAG)
+	else if(dropped->item->tag == PW_BLUEFLAG)
 		Team_SetFlagStatus(TEAM_BLUE, FLAG_DROPPED);
-	else if(dropped->item->giTag == PW_NEUTRALFLAG)
+	else if(dropped->item->tag == PW_NEUTRALFLAG)
 		Team_SetFlagStatus(TEAM_FREE, FLAG_DROPPED);
 }
 
@@ -639,11 +639,11 @@ Team_ReturnFlag(int team)
 void
 Team_FreeEntity(Gentity *ent)
 {
-	if(ent->item->giTag == PW_REDFLAG)
+	if(ent->item->tag == PW_REDFLAG)
 		Team_ReturnFlag(TEAM_RED);
-	else if(ent->item->giTag == PW_BLUEFLAG)
+	else if(ent->item->tag == PW_BLUEFLAG)
 		Team_ReturnFlag(TEAM_BLUE);
-	else if(ent->item->giTag == PW_NEUTRALFLAG)
+	else if(ent->item->tag == PW_NEUTRALFLAG)
 		Team_ReturnFlag(TEAM_FREE);
 }
 
@@ -659,11 +659,11 @@ Team_DroppedFlagThink(Gentity *ent)
 {
 	int team = TEAM_FREE;
 
-	if(ent->item->giTag == PW_REDFLAG)
+	if(ent->item->tag == PW_REDFLAG)
 		team = TEAM_RED;
-	else if(ent->item->giTag == PW_BLUEFLAG)
+	else if(ent->item->tag == PW_BLUEFLAG)
 		team = TEAM_BLUE;
-	else if(ent->item->giTag == PW_NEUTRALFLAG)
+	else if(ent->item->tag == PW_NEUTRALFLAG)
 		team = TEAM_FREE;
 
 	Team_ReturnFlagSound(Team_ResetFlag(team), team);

@@ -272,14 +272,14 @@ CG_TouchItem(Centity *cent)
 	 * We don't predict touching our own flag 
 	 */
 	if(cgs.gametype == GT_1FCTF)
-		if(item->giTag != PW_NEUTRALFLAG)
+		if(item->tag != PW_NEUTRALFLAG)
 			return;
 	if(cgs.gametype == GT_CTF){
 		if(cg.predictedPlayerState.persistant[PERS_TEAM] == TEAM_RED &&
-		   item->giTag == PW_REDFLAG)
+		   item->tag == PW_REDFLAG)
 			return;
 		if(cg.predictedPlayerState.persistant[PERS_TEAM] == TEAM_BLUE &&
-		   item->giTag == PW_BLUEFLAG)
+		   item->tag == PW_BLUEFLAG)
 			return;
 	}
 
@@ -295,16 +295,16 @@ CG_TouchItem(Centity *cent)
 	cent->miscTime = cg.time;
 
 	/* if it's a weapon, give them some predicted ammo so the autoswitch will work */
-	switch(item->giType){
+	switch(item->type){
 	case IT_PRIWEAP:
-		cg.predictedPlayerState.stats[STAT_PRIWEAPS] |= 1<<item->giTag;
-		if(cg.predictedPlayerState.ammo[item->giTag] < 1)
-			cg.predictedPlayerState.ammo[item->giTag] = 1;
+		cg.predictedPlayerState.stats[STAT_PRIWEAPS] |= 1<<item->tag;
+		if(cg.predictedPlayerState.ammo[item->tag] < 1)
+			cg.predictedPlayerState.ammo[item->tag] = 1;
 		break;
 	case IT_SECWEAP:
-		cg.predictedPlayerState.stats[STAT_SECWEAPS] |= 1<<item->giTag;
-		if(cg.predictedPlayerState.ammo[item->giTag] < 1)
-			cg.predictedPlayerState.ammo[item->giTag] = 1;
+		cg.predictedPlayerState.stats[STAT_SECWEAPS] |= 1<<item->tag;
+		if(cg.predictedPlayerState.ammo[item->tag] < 1)
+			cg.predictedPlayerState.ammo[item->tag] = 1;
 		break;
 	default:
 		break;

@@ -321,7 +321,7 @@ CG_UseItem(Centity *cent)
 		else{
 			item = BG_FindItemForHoldable(itemNum);
 			CG_CenterPrint(va("Use %s",
-					item->pickup_name), SCREEN_HEIGHT * 0.30,
+					item->pickupname), SCREEN_HEIGHT * 0.30,
 				BIGCHAR_WIDTH);
 		}
 	}
@@ -359,23 +359,23 @@ CG_ItemPickup(int itemNum)
 	cg.itemPickupTime = cg.time;
 	cg.itemPickupBlendTime = cg.time;
 	/* see if it should be the grabbed weapon */
-	switch(bg_itemlist[itemNum].giType){
+	switch(bg_itemlist[itemNum].type){
 	case IT_PRIWEAP:
 		/* select it immediately */
-		if(cg_autoswitch.integer && bg_itemlist[itemNum].giTag 
+		if(cg_autoswitch.integer && bg_itemlist[itemNum].tag 
 		  != Wmachinegun)
 		then{
 			cg.weapseltime[Wpri] = cg.time;
-			cg.weapsel[Wpri] = bg_itemlist[itemNum].giTag;
+			cg.weapsel[Wpri] = bg_itemlist[itemNum].tag;
 		}
 		break;
 	case IT_SECWEAP:
 		/* select it immediately */
-		if(cg_autoswitch.integer && bg_itemlist[itemNum].giTag 
+		if(cg_autoswitch.integer && bg_itemlist[itemNum].tag 
 		  != Wmachinegun)
 		then{
 			cg.weapseltime[Wsec] = cg.time;
-			cg.weapsel[Wsec] = bg_itemlist[itemNum].giTag;
+			cg.weapsel[Wsec] = bg_itemlist[itemNum].tag;
 		}
 		break;
 	default:
@@ -692,19 +692,19 @@ CG_EntityEvent(Centity *cent, Vec3 position)
 
 			/* powerups and team items will have a separate global sound, this one
 			 * will be played at prediction time */
-			if(item->giType == IT_POWERUP || item->giType ==
+			if(item->type == IT_POWERUP || item->type ==
 			   IT_TEAM)
 				trap_S_StartSound (NULL, es->number, CHAN_AUTO,
 					cgs.media.n_healthSound);
-			else if(item->giType == IT_PERSISTANT_POWERUP){
-				switch(item->giTag){
+			else if(item->type == IT_PERSISTANT_POWERUP){
+				switch(item->tag){
 				/* we have no persistent powerups in the game at present */
 				default:
 					break;
 				}
 			}else
 				trap_S_StartSound (NULL, es->number, CHAN_AUTO,
-					trap_S_RegisterSound(item->pickup_sound,
+					trap_S_RegisterSound(item->pickupsound,
 						qfalse));
 
 			/* show icon and name on status bar */
@@ -724,10 +724,10 @@ CG_EntityEvent(Centity *cent, Vec3 position)
 				break;
 			item = &bg_itemlist[ index ];
 			/* powerup pickups are global */
-			if(item->pickup_sound)
+			if(item->pickupsound)
 				trap_S_StartSound (
 					NULL, cg.snap->ps.clientNum, CHAN_AUTO,
-					trap_S_RegisterSound(item->pickup_sound,
+					trap_S_RegisterSound(item->pickupsound,
 						qfalse));
 
 			/* show icon and name on status bar */

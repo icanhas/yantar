@@ -15,10 +15,10 @@ BG_FindItemForPowerup(Powerup pw)
 	int i;
 
 	for(i = 0; i < bg_numItems; i++)
-		if((bg_itemlist[i].giType == IT_POWERUP ||
-		    bg_itemlist[i].giType == IT_TEAM ||
-		    bg_itemlist[i].giType == IT_PERSISTANT_POWERUP) &&
-		    bg_itemlist[i].giTag == pw)
+		if((bg_itemlist[i].type == IT_POWERUP ||
+		    bg_itemlist[i].type == IT_TEAM ||
+		    bg_itemlist[i].type == IT_PERSISTANT_POWERUP) &&
+		    bg_itemlist[i].tag == pw)
 		then{
 			return &bg_itemlist[i];
 		}
@@ -31,8 +31,8 @@ BG_FindItemForHoldable(Holdable pw)
 	int i;
 
 	for(i = 0; i < bg_numItems; i++)
-		if(bg_itemlist[i].giType == IT_HOLDABLE &&
-		   bg_itemlist[i].giTag == pw)
+		if(bg_itemlist[i].type == IT_HOLDABLE &&
+		   bg_itemlist[i].tag == pw)
 			return &bg_itemlist[i];
 
 	Com_Errorf(ERR_DROP, "HoldableItem not found");
@@ -46,8 +46,8 @@ BG_FindItemForWeapon(Weapon weapon)
 	Gitem *it;
 
 	for(it = bg_itemlist + 1; it->classname; it++)
-		if((it->giType == IT_PRIWEAP || it->giType == IT_SECWEAP) 
-		  && it->giTag == weapon)
+		if((it->type == IT_PRIWEAP || it->type == IT_SECWEAP) 
+		  && it->tag == weapon)
 		then{
 			return it;
 		}
@@ -62,7 +62,7 @@ BG_FindItem(const char *pickupName)
 	Gitem *it;
 
 	for(it = bg_itemlist + 1; it->classname; it++)
-		if(!Q_stricmp(it->pickup_name, pickupName))
+		if(!Q_stricmp(it->pickupname, pickupName))
 			return it;
 
 	return NULL;
@@ -108,12 +108,12 @@ BG_CanItemBeGrabbed(int gametype, const Entstate *ent,
 
 	item = &bg_itemlist[ent->modelindex];
 
-	switch(item->giType){
+	switch(item->type){
 	case IT_PRIWEAP:
 	case IT_SECWEAP:
 		return qtrue;	/* weapons are always picked up */
 	case IT_AMMO:
-		if(ps->ammo[ item->giTag ] >= 200)
+		if(ps->ammo[ item->tag ] >= 200)
 			return qfalse;	/* can't hold any more */
 		return qtrue;
 	case IT_SHIELD:
@@ -147,14 +147,14 @@ BG_CanItemBeGrabbed(int gametype, const Entstate *ent,
 	case IT_TEAM:	/* team items, such as flags */
 		if(gametype == GT_1FCTF){
 			/* neutral flag can always be picked up */
-			if(item->giTag == PW_NEUTRALFLAG)
+			if(item->tag == PW_NEUTRALFLAG)
 				return qtrue;
 			if(ps->persistant[PERS_TEAM] == TEAM_RED){
-				if(item->giTag == PW_BLUEFLAG  &&
+				if(item->tag == PW_BLUEFLAG  &&
 				   ps->powerups[PW_NEUTRALFLAG])
 					return qtrue;
 			}else if(ps->persistant[PERS_TEAM] == TEAM_BLUE)
-				if(item->giTag == PW_REDFLAG  &&
+				if(item->tag == PW_REDFLAG  &&
 				   ps->powerups[PW_NEUTRALFLAG])
 					return qtrue;
 		}
@@ -165,17 +165,17 @@ BG_CanItemBeGrabbed(int gametype, const Entstate *ent,
 			 * but we can't pick up our flag at base 
 			 */
 			if(ps->persistant[PERS_TEAM] == TEAM_RED){
-				if(item->giTag == PW_BLUEFLAG ||
-				   (item->giTag == PW_REDFLAG &&
+				if(item->tag == PW_BLUEFLAG ||
+				   (item->tag == PW_REDFLAG &&
 				    ent->modelindex2) ||
-				   (item->giTag == PW_REDFLAG &&
+				   (item->tag == PW_REDFLAG &&
 				    ps->powerups[PW_BLUEFLAG]))
 					return qtrue;
 			}else if(ps->persistant[PERS_TEAM] == TEAM_BLUE)
-				if(item->giTag == PW_REDFLAG ||
-				   (item->giTag == PW_BLUEFLAG &&
+				if(item->tag == PW_REDFLAG ||
+				   (item->tag == PW_BLUEFLAG &&
 				    ent->modelindex2) ||
-				   (item->giTag == PW_BLUEFLAG &&
+				   (item->tag == PW_BLUEFLAG &&
 				    ps->powerups[PW_REDFLAG]))
 					return qtrue;
 		}
@@ -191,7 +191,7 @@ BG_CanItemBeGrabbed(int gametype, const Entstate *ent,
 #ifndef Q3_VM
 #ifndef NDEBUG
 		Com_Printf("BG_CanItemBeGrabbed: unknown enum %d\n",
-			item->giType);
+			item->type);
 #endif
 #endif
 		break;

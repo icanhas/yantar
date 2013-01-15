@@ -117,7 +117,7 @@ CheckGauntletAttack(Gentity *ent)
 #ifdef MISSIONPACK
 	if(ent->client->persistantPowerup &&
 	   ent->client->persistantPowerup->item &&
-	   ent->client->persistantPowerup->item->giTag == PW_DOUBLER)
+	   ent->client->persistantPowerup->item->tag == PW_DOUBLER)
 	then
 		s_quadFactor *= 2;
 #endif
@@ -671,7 +671,7 @@ FireWeapon(Gentity *ent, Weapslot slot)
 #ifdef MISSIONPACK
 	if(ent->client->persistantPowerup &&
 	   ent->client->persistantPowerup->item &&
-	   ent->client->persistantPowerup->item->giTag == PW_DOUBLER)
+	   ent->client->persistantPowerup->item->tag == PW_DOUBLER)
 		s_quadFactor *= 2;
 
 #endif

@@ -37,10 +37,10 @@ Pickup_Powerup(Gentity *ent, Gentity *other)
 	int	i;
 	gClient *client;
 
-	if(!other->client->ps.powerups[ent->item->giTag])
+	if(!other->client->ps.powerups[ent->item->tag])
 		/* round timing to seconds to make multiple powerup timers
 		 * count in sync */
-		other->client->ps.powerups[ent->item->giTag] =
+		other->client->ps.powerups[ent->item->tag] =
 			level.time - (level.time % 1000);
 
 	if(ent->count)
@@ -48,7 +48,7 @@ Pickup_Powerup(Gentity *ent, Gentity *other)
 	else
 		quantity = ent->item->quantity;
 
-	other->client->ps.powerups[ent->item->giTag] += quantity * 1000;
+	other->client->ps.powerups[ent->item->tag] += quantity * 1000;
 
 	/* give any nearby players a "denied" anti-reward */
 	for(i = 0; i < level.maxclients; i++){
@@ -107,7 +107,7 @@ Pickup_PersistantPowerup(Gentity *ent, Gentity *other)
 
 	other->client->persistantPowerup = ent;
 
-	switch(ent->item->giTag){
+	switch(ent->item->tag){
 	case PW_GUARD:
 		clientNum = other->client->ps.clientNum;
 		trap_GetUserinfo(clientNum, userinfo, sizeof(userinfo));
@@ -171,7 +171,7 @@ Pickup_Holdable(Gentity *ent, Gentity *other)
 
 	other->client->ps.stats[STAT_HOLDABLE_ITEM] = ent->item - bg_itemlist;
 
-	if(ent->item->giTag == HI_KAMIKAZE)
+	if(ent->item->tag == HI_KAMIKAZE)
 		other->client->ps.eFlags |= EF_KAMIKAZE;
 
 	return RESPAWN_HOLDABLE;
@@ -195,7 +195,7 @@ Pickup_Ammo(Gentity *ent, Gentity *other)
 	else
 		quantity = ent->item->quantity;
 
-	Add_Ammo (other, ent->item->giTag, quantity);
+	Add_Ammo (other, ent->item->tag, quantity);
 
 	return RESPAWN_AMMO;
 }
@@ -221,10 +221,10 @@ Pickup_Weapon(Gentity *ent, Gentity *other, Weapslot sl)
 			 * respawning rules
 			 * drop the quantity if they already have over the minimum 
 			 */
-			if(other->client->ps.ammo[ent->item->giTag] 
+			if(other->client->ps.ammo[ent->item->tag] 
 			  < quantity)
 			then{
-				quantity -= other->client->ps.ammo[ent->item->giTag];
+				quantity -= other->client->ps.ammo[ent->item->tag];
 			}else
 				quantity = 1;	/* only add a single shot */
 		}
@@ -233,22 +233,22 @@ Pickup_Weapon(Gentity *ent, Gentity *other, Weapslot sl)
 	/* add the weapon */
 	switch(sl){
 	case Wpri:
-		other->client->ps.stats[STAT_PRIWEAPS] |= (1<<ent->item->giTag);
+		other->client->ps.stats[STAT_PRIWEAPS] |= (1<<ent->item->tag);
 		break;
 	case Wsec:
-		other->client->ps.stats[STAT_SECWEAPS] |= (1<<ent->item->giTag);
+		other->client->ps.stats[STAT_SECWEAPS] |= (1<<ent->item->tag);
 		break;
 	case Whookslot:
-		other->client->ps.stats[STAT_HOOKWEAPS] |= (1<<ent->item->giTag);
+		other->client->ps.stats[STAT_HOOKWEAPS] |= (1<<ent->item->tag);
 		break;
 	default:
 		return g_weaponRespawn.integer;
 	}
 
-	Add_Ammo(other, ent->item->giTag, quantity);
+	Add_Ammo(other, ent->item->tag, quantity);
 
-	if(ent->item->giTag == Whook)
-		other->client->ps.ammo[ent->item->giTag] = -1;	/* unlimited ammo */
+	if(ent->item->tag == Whook)
+		other->client->ps.ammo[ent->item->tag] = -1;	/* unlimited ammo */
 
 	/* team deathmatch has slow weapon respawns */
 	if(g_gametype.integer == GT_TEAM)
@@ -326,7 +326,7 @@ RespawnItem(Gentity *ent)
 	ent->r.svFlags	&= ~SVF_NOCLIENT;
 	trap_LinkEntity (ent);
 
-	if(ent->item->giType == IT_POWERUP){
+	if(ent->item->type == IT_POWERUP){
 		/* play powerup spawn sound to all clients */
 		Gentity *te;
 
@@ -339,7 +339,7 @@ RespawnItem(Gentity *ent)
 		te->r.svFlags	|= SVF_BROADCAST;
 	}
 
-	if(ent->item->giType == IT_HOLDABLE && ent->item->giTag ==
+	if(ent->item->type == IT_HOLDABLE && ent->item->tag ==
 	   HI_KAMIKAZE){
 		/* play powerup spawn sound to all clients */
 		Gentity *te;
@@ -379,7 +379,7 @@ Touch_Item(Gentity *ent, Gentity *other, Trace *trace)
 	predict = other->client->pers.predictItemPickup;
 
 	/* call the item-specific pickup function */
-	switch(ent->item->giType){
+	switch(ent->item->type){
 	case IT_PRIWEAP:
 		respawn = Pickup_Weapon(ent, other, Wpri);
 /*		predict = qfalse; */
@@ -426,7 +426,7 @@ Touch_Item(Gentity *ent, Gentity *other, Trace *trace)
 		G_AddEvent(other, EV_ITEM_PICKUP, ent->s.modelindex);
 
 	/* powerup pickups are global broadcasts */
-	if(ent->item->giType == IT_POWERUP || ent->item->giType == IT_TEAM){
+	if(ent->item->type == IT_POWERUP || ent->item->type == IT_TEAM){
 		/* if we want the global sound to play */
 		if(!ent->speed){
 			Gentity *te;
@@ -525,7 +525,7 @@ LaunchItem(Gitem *item, Vec3 origin, Vec3 velocity)
 
 	dropped->s.eFlags |= EF_BOUNCE_HALF;
 	if((g_gametype.integer == GT_CTF || g_gametype.integer == GT_1FCTF) 
-	  && item->giType == IT_TEAM){	/* Special case for CTF flags */
+	  && item->type == IT_TEAM){	/* Special case for CTF flags */
 		dropped->think = Team_DroppedFlagThink;
 		dropped->nextthink = level.time + 30000;
 		Team_CheckDroppedItem(dropped);
@@ -623,7 +623,7 @@ FinishSpawningItem(Gentity *ent)
 	}
 
 	/* powerups don't spawn in for a while */
-	if(ent->item->giType == IT_POWERUP){
+	if(ent->item->type == IT_POWERUP){
 		float respawn;
 
 		respawn = 45 + crandom() * 15;
@@ -767,13 +767,13 @@ G_SpawnItem(Gentity *ent, Gitem *item)
 
 	ent->physicsBounce = 0.50;	/* items are bouncy */
 
-	if(item->giType == IT_POWERUP){
+	if(item->type == IT_POWERUP){
 		G_SoundIndex(Pitemsounds "/poweruprespawn");
 		G_SpawnFloat("noglobalsound", "0", &ent->speed);
 	}
 
 #ifdef MISSIONPACK
-	if(item->giType == IT_PERSISTANT_POWERUP)
+	if(item->type == IT_PERSISTANT_POWERUP)
 		ent->s.generic1 = ent->spawnflags;
 
 #endif
@@ -858,7 +858,7 @@ G_RunItem(Gentity *ent)
 	/* if it is in a nodrop volume, remove it */
 	contents = trap_PointContents(ent->r.currentOrigin, -1);
 	if(contents & CONTENTS_NODROP){
-		if(ent->item && ent->item->giType == IT_TEAM)
+		if(ent->item && ent->item->type == IT_TEAM)
 			Team_FreeEntity(ent);
 		else
 			G_FreeEntity(ent);

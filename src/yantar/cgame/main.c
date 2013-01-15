@@ -458,8 +458,8 @@ CG_RegisterItemSounds(int itemNum)
 
 	item = &bg_itemlist[ itemNum ];
 
-	if(item->pickup_sound)
-		trap_S_RegisterSound(item->pickup_sound, qfalse);
+	if(item->pickupsound)
+		trap_S_RegisterSound(item->pickupsound, qfalse);
 
 	/* parse the space seperated precache string for other media */
 	s = item->sounds;

@@ -1280,7 +1280,7 @@ CG_DrawPickupItem(int y)
 				cg_items[ value ].icon);
 			CG_DrawBigString(ICON_SIZE + 16, y +
 				(ICON_SIZE/2 - BIGCHAR_HEIGHT/2),
-				bg_itemlist[ value ].pickup_name,
+				bg_itemlist[ value ].pickupname,
 				fadeColor[0]);
 			trap_R_SetColor(NULL);
 		}
