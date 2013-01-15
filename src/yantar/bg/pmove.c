@@ -187,7 +187,7 @@ calccmdscale(Pmove *pm, Pml *pml, const Usrcmd *cmd)
 	total = sqrt(cmd->forwardmove*cmd->forwardmove 
 		+ cmd->rightmove*cmd->rightmove
 		+ cmd->upmove*cmd->upmove);
-	scale = (float)pm->ps->speed * max / (127.0 * total);
+	scale = (float)pm->ps->speed * max / (127.0f * total);
 	return scale;
 }
 
@@ -383,7 +383,7 @@ noclipmove(Pmove *pm, Pml *pml)
 	else{
 		drop = 0;
 
-		friction = pm_friction*1.5;	/* extra friction */
+		friction = pm_friction*1.5f;	/* extra friction */
 		control = speed < pm_stopspeed ? pm_stopspeed : speed;
 		drop += control * friction * pml->frametime;
 
@@ -440,7 +440,7 @@ brakemove(Pmove *pm, Pml *pml)
 {
 	float	amt;
 
-	amt = 4.0 * (float)pm->cmd.brakefrac / 127.0;
+	amt = 4.0 * (float)pm->cmd.brakefrac / 127.0f;
 	q2accelerate(pm, pml, pm->ps->velocity, amt, -1);
 }
 
@@ -541,15 +541,15 @@ crashland(Pmove *pm, Pml *pml)
 	t = (-b - sqrt(den)) / (2 * a);
 
 	delta	= vel + t * acc;
-	delta	= delta*delta * 0.0001;
+	delta	= delta*delta * 0.0001f;
 	/* never take falling damage if completely underwater */
 	if(pm->waterlevel == 3)
 		return;
 	/* reduce falling damage if there is standing water */
 	if(pm->waterlevel == 2)
-		delta *= 0.25;
+		delta *= 0.25f;
 	if(pm->waterlevel == 1)
-		delta *= 0.5;
+		delta *= 0.5f;
 	if(delta < 1)
 		return;
 
@@ -594,7 +594,7 @@ correctallsolid(Pmove *pm, Pml *pml, Trace *trace)
 				if(!trace->allsolid){
 					point[0] = pm->ps->origin[0];
 					point[1] = pm->ps->origin[1];
-					point[2] = pm->ps->origin[2] - 0.25;
+					point[2] = pm->ps->origin[2] - 0.25f;
 					pm->trace(trace, pm->ps->origin,
 						pm->mins, pm->maxs, point,
 						pm->ps->clientNum,
@@ -656,7 +656,7 @@ groundtrace(Pmove *pm, Pml *pml)
 	copyv3(pm->ps->velocity, vel);
 	point[0] = pm->ps->origin[0];
 	point[1] = pm->ps->origin[1];
-	point[2] = pm->ps->origin[2] - 0.25;
+	point[2] = pm->ps->origin[2] - 0.25f;
 	pm->trace(&trace, pm->ps->origin, pm->mins, pm->maxs, point,
 		pm->ps->clientNum,
 		pm->tracemask);
@@ -666,7 +666,7 @@ groundtrace(Pmove *pm, Pml *pml)
 		if(!correctallsolid(pm, pml, &trace))
 			return;
 	/* if the trace didn't hit anything, we are in free fall */
-	if(trace.fraction == 1.0){
+	if(trace.fraction == 1.0f){
 		setfalling(pm, pml);
 		pml->groundPlane = qfalse;
 		pml->walking = qfalse;
@@ -1010,7 +1010,7 @@ dopriweapevents(Pmove *pm, Pml *pml)
 	
 	addTime = weaptimetab(p->weap[Wpri]);
 	if(p->powerups[PW_HASTE])
-		addTime /= 1.3;
+		addTime /= 1.3f;
 	p->weaptime[Wpri] += addTime;
 }
 
@@ -1105,7 +1105,7 @@ dosecweapevents(Pmove *pm, Pml *pml)
 	
 	addTime = weaptimetab(p->weap[Wsec]);
 	if(p->powerups[PW_HASTE])
-		addTime /= 1.3;
+		addTime /= 1.3f;
 	p->weaptime[Wsec] += addTime;
 }
 
@@ -1144,7 +1144,7 @@ dohookevents(Pmove *pm, Pml *pml)
 	
 	addTime = weaptimetab(p->weap[Whookslot]);
 	if(p->powerups[PW_HASTE])
-		addTime /= 1.3;
+		addTime /= 1.3f;
 	p->weaptime[Whookslot] += addTime;
 }
 
@@ -1357,7 +1357,7 @@ PmoveSingle(Pmove *pm)
 	else if(pml.msec > 200)
 		pml.msec = 200;
 	pm->ps->commandTime = pm->cmd.serverTime;
-	pml.frametime = pml.msec * 0.001;
+	pml.frametime = pml.msec * 0.001f;
 
 	/* save old org in case we get stuck */
 	copyv3(pm->ps->origin, pml.previous_origin);
@@ -1417,7 +1417,7 @@ PmoveSingle(Pmove *pm)
 	else{	/* airborne */
 		airmove(pm, &pml);
 		pm->ps->grapplelast = qfalse;
-		pm->ps->oldgrapplelen = 0.0;
+		pm->ps->oldgrapplelen = 0.0f;
 	}
 	
 	if(pm->cmd.brakefrac > 0)

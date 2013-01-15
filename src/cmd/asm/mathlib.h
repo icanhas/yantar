@@ -31,7 +31,7 @@ typedef Scalar Vec4[4];
 
 extern Vec3 vec3_origin;
 
-#define EQUAL_EPSILON 0.001
+#define EQUAL_EPSILON 0.001f
 
 /* plane types are used to speed some tests
  * 0-2 are axial planes */

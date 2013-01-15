@@ -238,7 +238,7 @@ typedef enum {
 } errorParm_t;
 
 /* font rendering values used by ui and cgame */
-#define PROP_SMALL_SIZE_SCALE 0.75
+#define PROP_SMALL_SIZE_SCALE 0.75f
 
 enum {
 	PROP_GAP_WIDTH	= 3,
@@ -683,7 +683,7 @@ float	Q_random(int *seed);
 float	Q_crandom(int *seed);
 
 #define random()	((rand () & 0x7fff) / ((float)0x7fff))
-#define crandom()	(2.0 * (random() - 0.5))
+#define crandom()	(2.0f * (random() - 0.5f))
 
 void	v3toeuler(const Vec3 value1, Vec3 angles);
 void	eulertoq(const Vec3, Quat);
@@ -1027,9 +1027,9 @@ enum {
 };
 
 #define PlaneTypeForNormal(x) \
-	(x[0] == 1.0 ? PLANE_X : \
-	(x[1] == 1.0 ? PLANE_Y : \
-	(x[2] == 1.0 ? PLANE_Z : \
+	(x[0] == 1.0f ? PLANE_X : \
+	(x[1] == 1.0f ? PLANE_Y : \
+	(x[2] == 1.0f ? PLANE_Z : \
 	PLANE_NON_AXIAL)))
 
 /* plane_t structure
@@ -1099,7 +1099,7 @@ typedef enum {
 
 /* elements communicated across the net */
 #define ANGLE2SHORT(x)	((int)((x)*65536/360) & 65535)
-#define SHORT2ANGLE(x)	((x)*(360.0/65536))
+#define SHORT2ANGLE(x)	((x)*(360.0f/65536))
 
 enum {
 	SNAPFLAG_RATE_DELAYED	= 1,

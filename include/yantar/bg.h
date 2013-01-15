@@ -15,7 +15,7 @@
 
 #define DEFAULT_GRAVITY		800
 #define GIB_HEALTH		-40
-#define SHIELD_PROTECTION	0.66
+#define SHIELD_PROTECTION	0.66f
 
 #define MAX_ITEMS		256
 

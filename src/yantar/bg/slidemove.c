@@ -37,7 +37,7 @@ PM_SlideMove(Pmove *pm, Pml *pml, qbool gravity)
 	if(gravity){
 		copyv3(pm->ps->velocity, endVelocity);
 		endVelocity[2] -= pm->ps->gravity * pml->frametime;
-		pm->ps->velocity[2] = (pm->ps->velocity[2] + endVelocity[2]) * 0.5;
+		pm->ps->velocity[2] = (pm->ps->velocity[2] + endVelocity[2]) * 0.5f;
 		primal_velocity[2] = endVelocity[2];
 		if(pml->groundPlane){
 			/* slide along the ground plane */
@@ -99,7 +99,7 @@ PM_SlideMove(Pmove *pm, Pml *pml, qbool gravity)
 		 * non-axial planes
 		 *  */
 		for(i = 0; i < numplanes; i++)
-			if(dotv3(trace.plane.normal, planes[i]) > 0.99){
+			if(dotv3(trace.plane.normal, planes[i]) > 0.99f){
 				addv3(trace.plane.normal, pm->ps->velocity,
 					pm->ps->velocity);
 				break;
@@ -116,7 +116,7 @@ PM_SlideMove(Pmove *pm, Pml *pml, qbool gravity)
 		/* find a plane that it enters */
 		for(i = 0; i < numplanes; i++){
 			into = dotv3(pm->ps->velocity, planes[i]);
-			if(into >= 0.1)
+			if(into >= 0.1f)
 				continue;	/* move doesn't interact with the plane */
 
 			/* see how hard we are hitting things */
@@ -133,7 +133,7 @@ PM_SlideMove(Pmove *pm, Pml *pml, qbool gravity)
 			for(j = 0; j < numplanes; j++){
 				if(j == i)
 					continue;
-				if(dotv3(clipVelocity, planes[j]) >= 0.1)
+				if(dotv3(clipVelocity, planes[j]) >= 0.1f)
 					continue;	/* move doesn't interact with the plane */
 
 				/* try clipping the move to the plane */
@@ -160,7 +160,7 @@ PM_SlideMove(Pmove *pm, Pml *pml, qbool gravity)
 					if(k == i || k == j)
 						continue;
 					if(dotv3(clipVelocity,
-						   planes[k]) >= 0.1)
+						   planes[k]) >= 0.1f)
 						continue;	/* move doesn't interact with the plane */
 
 					/* stop dead at a triple plane interaction */
@@ -210,8 +210,8 @@ PM_StepSlideMove(Pmove *pm, Pml *pml, qbool gravity)
 		pm->tracemask);
 	setv3(up, 0, 0, 1);
 	/* never step up when you still have up velocity */
-	if(pm->ps->velocity[2] > 0 && (trace.fraction == 1.0 ||
-				       dotv3(trace.plane.normal, up) < 0.7))
+	if(pm->ps->velocity[2] > 0 && (trace.fraction == 1.0f ||
+				       dotv3(trace.plane.normal, up) < 0.7f))
 		return;
 
 	/* copyv3 (pm->ps->origin, down_o);
@@ -244,7 +244,7 @@ PM_StepSlideMove(Pmove *pm, Pml *pml, qbool gravity)
 		pm->tracemask);
 	if(!trace.allsolid)
 		copyv3 (trace.endpos, pm->ps->origin);
-	if(trace.fraction < 1.0)
+	if(trace.fraction < 1.0f)
 		PM_ClipVelocity(pm->ps->velocity, trace.plane.normal,
 			pm->ps->velocity,
 			OVERCLIP);
@@ -254,7 +254,7 @@ PM_StepSlideMove(Pmove *pm, Pml *pml, qbool gravity)
 	pm->trace(&trace, pm->ps->origin, pm->mins, pm->maxs, start_o,
 		pm->ps->clientNum,
 		pm->tracemask);
-	if(trace.fraction == 1.0){
+	if(trace.fraction == 1.0f){
 		/* use the original move */
 		copyv3 (down_o, pm->ps->origin);
 		copyv3 (down_v, pm->ps->velocity);
