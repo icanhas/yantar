@@ -10,7 +10,8 @@
 #include "bg.h"
 #include "local.h"
 
-#define GrapplePullSpeed 400
+#define Hooklinelen		200.0f
+#define Maxhookforce	6.0f
 
 float pm_stopspeed			= 100.0f;
 float pm_duckScale			= 0.25f;
@@ -21,7 +22,7 @@ float pm_wateraccelerate		= 4.0f;
 float pm_flyaccelerate		= 8.0f;
 float pm_friction			= 6.0f;
 float pm_waterfriction		= 1.0f;
-float pm_flightfriction		= 3.0f;
+float pm_flightfriction		= 1.0f;
 float pm_spectatorfriction	= 5.0f;
 /*
  * this counter lets us debug movement problems with a journal
@@ -108,7 +109,7 @@ dofriction(Pmove *pm, Pml *pml)
 			if(!(pm->ps->pm_flags & PMF_TIME_KNOCKBACK)){
 				control = speed < pm_stopspeed
 					? pm_stopspeed : speed;
-				drop += control*pm_friction*pml->frametime;
+				drop += control*pm_flightfriction*pml->frametime;
 			}
 	}
 	if(pm->waterlevel)
@@ -134,13 +135,10 @@ static void
 q2accelerate(Pmove *pm, Pml *pml, Vec3 wishdir, float wishspeed, float accel)
 {
 	/* q2 style */
-	int i;
 	float addspeed, accelspeed, currentspeed;
 
 	currentspeed = dotv3(pm->ps->velocity, wishdir);
 	addspeed = wishspeed;
-	if(addspeed <= 0)
-		return;
 	accelspeed = accel*pml->frametime*wishspeed;
 	if(accelspeed > addspeed)
 		accelspeed = addspeed;
@@ -459,32 +457,26 @@ airmove(Pmove *pm, Pml *pml)
 static void
 grapplemove(Pmove *pm, Pml *pml)
 {
-	Vec3 wishvel, wishdir, vel, v;
-	float	wishspeed, vlen, oldlen, pullspeedcoef, grspd = GrapplePullSpeed;
+	Vec3 wishvel, wishdir, line;
+	Scalar f, k, x, wishspeed;
 
+	dofriction(pm, pml);
 	_airmove(pm, pml, &pm->cmd, &wishvel, &wishdir, &wishspeed);
-	scalev3(pml->forward, -16, v);
-	addv3(pm->ps->grapplePoint, v, v);
-	subv3(v, pm->ps->origin, vel);
-	vlen = lenv3(vel);
-	if(pm->ps->grapplelast == qfalse)
-		oldlen = vlen;
+
+	subv3(pm->ps->origin, pm->ps->grapplePoint, line);
+	x = normv3(line) - Hooklinelen;
+	if(pm->ps->swingstrength == 0.0f)
+		k = 0.0f;
 	else
-		oldlen = pm->ps->oldgrapplelen;
-	if(vlen > oldlen){
-		pullspeedcoef = vlen - oldlen;
-		pullspeedcoef *= pm->ps->swingstrength;
-		grspd *= pullspeedcoef;
-	}
-	if(grspd < GrapplePullSpeed)
-		grspd = GrapplePullSpeed;
-	
-	normv3(vel);
+		k = 1.0f/pm->ps->swingstrength;
+	f = (-k)*x;
+	f = min(f, Maxhookforce);
+	f = max(f, -Maxhookforce);
+
 	q2accelerate(pm, pml, wishdir, wishspeed, pm_airaccelerate);
-	q2accelerate(pm, pml, vel, grspd, pm_airaccelerate);
+	q2accelerate(pm, pml, line, f, pm_airaccelerate);
 	pml->groundPlane = qfalse;
 	PM_StepSlideMove(pm, pml, qtrue);
-	pm->ps->oldgrapplelen = vlen;
 }
 
 static void
