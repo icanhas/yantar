@@ -62,7 +62,7 @@ int
 Sys_MilliSeconds(void)
 {
 	return clock() * 1000 / CLOCKS_PER_SEC;
-}	/* end of the function Sys_MilliSeconds */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -81,7 +81,7 @@ ValidClientNumber(int num, char *str)
 		return qfalse;
 	}
 	return qtrue;
-}	/* end of the function BotValidateClientNumber */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -99,7 +99,7 @@ ValidEntityNumber(int num, char *str)
 		return qfalse;
 	}
 	return qtrue;
-}	/* end of the function BotValidateClientNumber */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -116,7 +116,7 @@ BotLibSetup(char *str)
 		return qfalse;
 	}
 	return qtrue;
-}	/* end of the function BotLibSetup */
+}
 
 /* ===========================================================================
  *
@@ -188,7 +188,7 @@ Export_BotLibSetup(void)
 	botlibglobals.botlibsetup = qtrue;
 
 	return BLERR_NOERROR;
-}	/* end of the function Export_BotLibSetup */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -229,7 +229,7 @@ Export_BotLibShutdown(void)
 	/* print any files still open */
 	PC_CheckOpenSourceHandles();
 	return BLERR_NOERROR;
-}	/* end of the function Export_BotLibShutdown */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -241,7 +241,7 @@ Export_BotLibVarSet(char *var_name, char *value)
 {
 	LibVarSet(var_name, value);
 	return BLERR_NOERROR;
-}	/* end of the function Export_BotLibVarSet */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -257,7 +257,7 @@ Export_BotLibVarGet(char *var_name, char *value, int size)
 	strncpy(value, varvalue, size-1);
 	value[size-1] = '\0';
 	return BLERR_NOERROR;
-}	/* end of the function Export_BotLibVarGet */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -269,7 +269,7 @@ Export_BotLibStartFrame(float time)
 {
 	if(!BotLibSetup("BotStartFrame")) return BLERR_LIBRARYNOTSETUP;
 	return AAS_StartFrame(time);
-}	/* end of the function Export_BotLibStartFrame */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -298,7 +298,7 @@ Export_BotLibLoadMap(const char *mapname)
 			) - starttime);
 #endif
 	return BLERR_NOERROR;
-}	/* end of the function Export_BotLibLoadMap */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -313,7 +313,7 @@ Export_BotLibUpdateEntity(int ent, bot_entitystate_t *state)
 		   "BotUpdateEntity")) return BLERR_INVALIDENTITYNUMBER;
 
 	return AAS_UpdateEntity(ent, state);
-}	/* end of the function Export_BotLibUpdateEntity */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -658,7 +658,7 @@ BotExportTest(int parm0, char *parm1, Vec3 parm2, Vec3 parm3)
 #endif
 #endif
 	return 0;
-}	/* end of the function BotExportTest */
+}
 
 
 /*

@@ -71,7 +71,7 @@ AAS_PresenceTypeBoundingBox(int presencetype, Vec3 mins, Vec3 maxs)
 	}
 	copyv3(boxmins[index], mins);
 	copyv3(boxmaxs[index], maxs);
-}	/* end of the function AAS_PresenceTypeBoundingBox */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -109,7 +109,7 @@ AAS_InitAASLinkHeap(void)
 	/* pointer to the first free link */
 	aasworld.freelinks = &aasworld.linkheap[0];
 	numaaslinks = max_aaslinks;
-}	/* end of the function AAS_InitAASLinkHeap */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -122,7 +122,7 @@ AAS_FreeAASLinkHeap(void)
 	if(aasworld.linkheap) FreeMemory(aasworld.linkheap);
 	aasworld.linkheap = NULL;
 	aasworld.linkheapsize = 0;
-}	/* end of the function AAS_FreeAASLinkHeap */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -148,7 +148,7 @@ AAS_AllocAASLink(void)
 	if(aasworld.freelinks) aasworld.freelinks->prev_ent = NULL;
 	numaaslinks--;
 	return link;
-}	/* end of the function AAS_AllocAASLink */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -165,7 +165,7 @@ AAS_DeAllocAASLink(aas_link_t *link)
 	link->next_area = NULL;
 	aasworld.freelinks = link;
 	numaaslinks++;
-}	/* end of the function AAS_DeAllocAASLink */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -179,7 +179,7 @@ AAS_InitAASLinkedEntities(void)
 	if(aasworld.arealinkedentities) FreeMemory(aasworld.arealinkedentities);
 	aasworld.arealinkedentities = (aas_link_t**)GetClearedHunkMemory(
 		aasworld.numareas * sizeof(aas_link_t *));
-}	/* end of the function AAS_InitAASLinkedEntities */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -191,7 +191,7 @@ AAS_FreeAASLinkedEntities(void)
 {
 	if(aasworld.arealinkedentities) FreeMemory(aasworld.arealinkedentities);
 	aasworld.arealinkedentities = NULL;
-}	/* end of the function AAS_InitAASLinkedEntities */
+}
 /* ===========================================================================
  * returns the AAS area the point is in
  *
@@ -247,7 +247,7 @@ AAS_PointAreaNum(Vec3 point)
 		return 0;
 	}
 	return -nodenum;
-}	/* end of the function AAS_PointAreaNum */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -284,7 +284,7 @@ AAS_PointReachabilityAreaIndex(Vec3 origin)
 		index += aasworld.clusters[i].numreachabilityareas;
 	index += areanum;
 	return index;
-}	/* end of the function AAS_PointReachabilityAreaIndex */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -300,7 +300,7 @@ AAS_AreaCluster(int areanum)
 		return 0;
 	}
 	return aasworld.areasettings[areanum].cluster;
-}	/* end of the function AAS_AreaCluster */
+}
 /* ===========================================================================
  * returns the presence types of the given area
  *
@@ -318,7 +318,7 @@ AAS_AreaPresenceType(int areanum)
 		return 0;
 	}
 	return aasworld.areasettings[areanum].presencetype;
-}	/* end of the function AAS_AreaPresenceType */
+}
 /* ===========================================================================
  * returns the presence type at the given point
  *
@@ -336,7 +336,7 @@ AAS_PointPresenceType(Vec3 point)
 	areanum = AAS_PointAreaNum(point);
 	if(!areanum) return PRESENCE_NONE;
 	return aasworld.areasettings[areanum].presencetype;
-}	/* end of the function AAS_PointPresenceType */
+}
 /* ===========================================================================
  * calculates the minimum distance between the origin of the box and the
  * given plane when both will collide on the given side of the plane
@@ -383,7 +383,7 @@ AAS_BoxOriginVec3distv3FromPlane(Vec3 normal, Vec3 mins, Vec3 maxs, int side)
 	invv3(v2);
 /*	negv3(normal, v2); */
 	return dotv3(v1, v2);
-}	/* end of the function AAS_BoxOriginVec3distv3FromPlane */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -423,7 +423,7 @@ AAS_AreaEntityCollision(int areanum, Vec3 start, Vec3 end,
 		return qtrue;
 	}
 	return qfalse;
-}	/* end of the function AAS_AreaEntityCollision */
+}
 /* ===========================================================================
  * recursive subdivision of the line by the BSP tree.
  *
@@ -710,7 +710,7 @@ AAS_TraceClientBBox(Vec3 start, Vec3 end, int presencetype,
 		}
 	}
 /*	return trace; */
-}	/* end of the function AAS_TraceClientBBox */
+}
 /* ===========================================================================
  * recursive subdivision of the line by the BSP tree.
  *
@@ -900,7 +900,7 @@ AAS_TraceAreas(Vec3 start, Vec3 end, int *areas, Vec3 *points,
 		}
 	}
 /*	return numareas; */
-}	/* end of the function AAS_TraceAreas */
+}
 /* ===========================================================================
  * a simple cross product
  *
@@ -965,7 +965,7 @@ AAS_InsideFace(aas_face_t *face, Vec3 pnormal, Vec3 point, float epsilon)
 		if(dotv3(pointvec, sepnormal) < -epsilon) return qfalse;
 	}
 	return qtrue;
-}	/* end of the function AAS_InsideFace */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -1001,7 +1001,7 @@ AAS_PointInsideFace(int facenum, Vec3 point, float epsilon)
 		if(dotv3(pointvec, sepnormal) < -epsilon) return qfalse;
 	}
 	return qtrue;
-}	/* end of the function AAS_PointInsideFace */
+}
 /* ===========================================================================
  * returns the ground face the given point is above in the given area
  *
@@ -1036,7 +1036,7 @@ AAS_AreaGroundFace(int areanum, Vec3 point)
 		}
 	}
 	return NULL;
-}	/* end of the function AAS_AreaGroundFace */
+}
 /* ===========================================================================
  * returns the face the trace end position is situated in
  *
@@ -1052,7 +1052,7 @@ AAS_FacePlane(int facenum, Vec3 normal, float *dist)
 	plane = &aasworld.planes[aasworld.faces[facenum].planenum];
 	copyv3(plane->normal, normal);
 	*dist = plane->dist;
-}	/* end of the function AAS_FacePlane */
+}
 /* ===========================================================================
  * returns the face the trace end position is situated in
  *
@@ -1112,7 +1112,7 @@ AAS_TraceEndFace(aas_Trace *trace)
 				   trace->endpos, 0.01f)) return face;
 	}
 	return firstface;
-}	/* end of the function AAS_TraceEndFace */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -1142,7 +1142,7 @@ AAS_BoxOnPlaneSide2(Vec3 absmins, Vec3 absmaxs, aas_plane_t *p)
 	if(dist2 < 0) sides |= 2;
 
 	return sides;
-}	/* end of the function AAS_BoxOnPlaneSide2 */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -1172,7 +1172,7 @@ AAS_BoxOnPlaneSide2(Vec3 absmins, Vec3 absmaxs, aas_plane_t *p)
 		( \
 			AAS_BoxOnPlaneSide2((absmins), (absmaxs), (p)) \
 		) \
-		)	/* end of the function AAS_BoxOnPlaneSide */
+		)
 /* ===========================================================================
  * remove the links to this entity from all areas
  *
@@ -1195,7 +1195,7 @@ AAS_UnlinkFromAreas(aas_link_t *areas)
 		/* deallocate the link structure */
 		AAS_DeAllocAASLink(link);
 	}
-}	/* end of the function AAS_UnlinkFromAreas */
+}
 /* ===========================================================================
  * link the entity to the areas the bounding box is totally or partly
  * situated in. This is done with recursion down the tree using the
@@ -1296,7 +1296,7 @@ AAS_AASLinkEntity(Vec3 absmins, Vec3 absmaxs, int entnum)
 		}
 	}
 	return areas;
-}	/* end of the function AAS_AASLinkEntity */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -1315,7 +1315,7 @@ AAS_LinkEntityClientBBox(Vec3 absmins, Vec3 absmaxs, int entnum,
 	subv3(absmaxs, mins, newabsmaxs);
 	/* relink the entity */
 	return AAS_AASLinkEntity(newabsmins, newabsmaxs, entnum);
-}	/* end of the function AAS_LinkEntityClientBBox */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -1338,7 +1338,7 @@ AAS_BBoxAreas(Vec3 absmins, Vec3 absmaxs, int *areas, int maxareas)
 	}
 	AAS_UnlinkFromAreas(linkedareas);
 	return num;
-}	/* end of the function AAS_BBoxAreas */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -1366,7 +1366,7 @@ AAS_AreaInfo(int areanum, aas_areainfo_t *info)
 	copyv3(aasworld.areas[areanum].maxs, info->maxs);
 	copyv3(aasworld.areas[areanum].center, info->center);
 	return sizeof(aas_areainfo_t);
-}	/* end of the function AAS_AreaInfo */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -1379,4 +1379,4 @@ AAS_PlaneFromNum(int planenum)
 	if(!aasworld.loaded) return NULL;
 
 	return &aasworld.planes[planenum];
-}	/* end of the function AAS_PlaneFromNum */
+}

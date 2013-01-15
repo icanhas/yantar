@@ -200,7 +200,7 @@ BotChatStateFromHandle(int handle)
 		return NULL;
 	}
 	return botchatstates[handle];
-}	/* end of the function BotChatStateFromHandle */
+}
 /* ===========================================================================
  * initialize the heap with unused console messages
  *
@@ -229,7 +229,7 @@ InitConsoleMessageHeap(void)
 	consolemessageheap[max_messages-1].next = NULL;
 	/* pointer to the free console messages */
 	freeconsolemessages = consolemessageheap;
-}	/* end of the function InitConsoleMessageHeap */
+}
 /* ===========================================================================
  * allocate one console message from the heap
  *
@@ -245,7 +245,7 @@ AllocConsoleMessage(void)
 	if(freeconsolemessages) freeconsolemessages = freeconsolemessages->next;
 	if(freeconsolemessages) freeconsolemessages->prev = NULL;
 	return message;
-}	/* end of the function AllocConsoleMessage */
+}
 /* ===========================================================================
  * deallocate one console message from the heap
  *
@@ -260,7 +260,7 @@ FreeConsoleMessage(bot_consolemessage_t *message)
 	message->prev	= NULL;
 	message->next	= freeconsolemessages;
 	freeconsolemessages = message;
-}	/* end of the function FreeConsoleMessage */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -289,7 +289,7 @@ BotRemoveConsoleMessage(int chatstate, int handle)
 			break;
 		}
 	}
-}	/* end of the function BotRemoveConsoleMessage */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -327,7 +327,7 @@ BotQueueConsoleMessage(int chatstate, int type, char *message)
 		m->prev = NULL;
 	}
 	cs->numconsolemessages++;
-}	/* end of the function BotQueueConsoleMessage */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -360,7 +360,7 @@ BotNextConsoleMessage(int chatstate, bot_consolemessage_t *cm)
 		return cm->handle;
 	}
 	return 0;
-}	/* end of the function BotConsoleMessage */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -375,7 +375,7 @@ BotNumConsoleMessages(int chatstate)
 	cs = BotChatStateFromHandle(chatstate);
 	if(!cs) return 0;
 	return cs->numconsolemessages;
-}	/* end of the function BotNumConsoleMessages */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -396,7 +396,7 @@ IsWhiteSpace(char c)
 	   || c == '-' || c == '_'
 	   || c == '+' || c == '=') return qfalse;
 	return qtrue;
-}	/* end of the function IsWhiteSpace */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -413,7 +413,7 @@ BotRemoveTildes(char *message)
 		if(message[i] == '~')
 			memmove(&message[i], &message[i+1], strlen(
 					&message[i+1])+1);
-}	/* end of the function BotRemoveTildes */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -436,7 +436,7 @@ UnifyWhiteSpaces(char *string)
 		}
 		while(*ptr && !IsWhiteSpace(*ptr)) ptr++;
 	}
-}	/* end of the function UnifyWhiteSpaces */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -461,7 +461,7 @@ StringContains(char *str1, char *str2, int casesensitive)
 		if(!str2[j]) return index;
 	}
 	return -1;
-}	/* end of the function StringContains */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -496,7 +496,7 @@ StringContainsWord(char *str1, char *str2, int casesensitive)
 			   str1[j] == ',' || str1[j] == '!') return str1;
 	}
 	return NULL;
-}	/* end of the function StringContainsWord */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -530,7 +530,7 @@ StringReplaceWords(char *string, char *synonym, char *replacement)
 		str = StringContainsWord(str+strlen(
 				replacement), synonym, qfalse);
 	}
-}	/* end of the function StringReplaceWords */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -556,7 +556,7 @@ BotDumpSynonymList(bot_synonymlist_t *synlist)
 		}
 		fprintf(fp, "]\n");
 	}
-}	/* end of the function BotDumpSynonymList */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -718,7 +718,7 @@ BotLoadSynonyms(char *filename)
 					FreeSource(source);
 					return NULL;
 				}
-			}	/* end else if */
+			}
 		}
 		FreeSource(source);
 		if(contextlevel > 0){
@@ -731,7 +731,7 @@ BotLoadSynonyms(char *filename)
 	 * BotDumpSynonymList(synlist);
 	 *  */
 	return synlist;
-}	/* end of the function BotLoadSynonyms */
+}
 /* ===========================================================================
  * replace all the synonyms in the string
  *
@@ -752,7 +752,7 @@ BotReplaceSynonyms(char *string, unsigned long int context)
 			StringReplaceWords(string, synonym->string,
 				syn->firstsynonym->string);
 	}
-}	/* end of the function BotReplaceSynonyms */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -786,7 +786,7 @@ BotReplaceWeightedSynonyms(char *string, unsigned long int context)
 				replacement->string);
 		}
 	}
-}	/* end of the function BotReplaceWeightedSynonyms */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -831,7 +831,7 @@ BotReplaceReplySynonyms(char *string, unsigned long int context)
 		while(*str1 && *str1 > ' ') str1++;
 		if(!*str1) break;
 	}
-}	/* end of the function BotReplaceReplySynonyms */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -857,7 +857,7 @@ BotLoadChatMessage(source_t *source, char *chatmessagestring)
 				return qfalse;
 			}
 			strcat(ptr, token.string);
-		}	/* end else if */
+		}
 			/* variable string */
 		else if(token.type == TT_NUMBER &&
 			(token.subtype & TT_INTEGER)){
@@ -879,7 +879,7 @@ BotLoadChatMessage(source_t *source, char *chatmessagestring)
 			sprintf(&ptr[strlen(
 					     ptr)], "%cr%s%c", ESCAPE_CHAR,
 				token.string, ESCAPE_CHAR);
-		}	/* end else if */
+		}
 		else{
 			SourceError(source, "unknown message component %s\n",
 				token.string);
@@ -889,7 +889,7 @@ BotLoadChatMessage(source_t *source, char *chatmessagestring)
 		if(!PC_ExpectTokenString(source, ",")) return qfalse;
 	}
 	return qtrue;
-}	/* end of the function BotLoadChatMessage */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -913,7 +913,7 @@ BotDumpRandomStringList(bot_randomlist_t *randomlist)
 			else fprintf(fp, "}\n");
 		}
 	}
-}	/* end of the function BotDumpRandomStringList */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -1012,7 +1012,7 @@ BotLoadRandomStrings(char *filename)
 	/* BotDumpRandomStringList(randomlist); */
 #endif	/* DEBUG */
 	return randomlist;
-}	/* end of the function BotLoadRandomStrings */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -1035,7 +1035,7 @@ RandomString(char *name)
 				return rs->string;
 		}
 	return NULL;
-}	/* end of the function RandomString */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -1062,12 +1062,12 @@ BotDumpMatchTemplates(bot_matchtemplate_t *matches)
 				}
 			else if(mp->type == MT_VARIABLE)
 				fprintf(fp, "%d", mp->variable);
-			/* end else if */
+
 			if(mp->next) fprintf(fp, ", ");
 		}
 		fprintf(fp, " = (%d, %d);}\n", mt->type, mt->subtype);
 	}
-}	/* end of the function BotDumpMatchTemplates */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -1089,7 +1089,7 @@ BotFreeMatchPieces(bot_matchpiece_t *matchpieces)
 			}
 		FreeMemory(mp);
 	}
-}	/* end of the function BotFreeMatchPieces */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -1188,7 +1188,7 @@ BotLoadMatchPieces(source_t *source, char *endtoken)
 		}
 	}
 	return firstpiece;
-}	/* end of the function BotLoadMatchPieces */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -1205,7 +1205,7 @@ BotFreeMatchTemplates(bot_matchtemplate_t *mt)
 		BotFreeMatchPieces(mt->first);
 		FreeMemory(mt);
 	}
-}	/* end of the function BotFreeMatchTemplates */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -1297,7 +1297,7 @@ BotLoadMatchTemplates(char *matchfile)
 	 * BotDumpMatchTemplates(matches);
 	 *  */
 	return matches;
-}	/* end of the function BotLoadMatchTemplates */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -1357,7 +1357,7 @@ StringsMatch(bot_matchpiece_t *pieces, bot_match_t *match)
 			match->variables[mp->variable].offset = strptr -
 								match->string;
 			lastvariable = mp->variable;
-		}	/* end else if */
+		}
 	}
 	/* if a match was found */
 	if(!mp && (lastvariable >= 0 || !strlen(strptr))){
@@ -1372,7 +1372,7 @@ StringsMatch(bot_matchpiece_t *pieces, bot_match_t *match)
 		return qtrue;
 	}
 	return qfalse;
-}	/* end of the function StringsMatch */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -1403,7 +1403,7 @@ BotFindMatch(char *str, bot_match_t *match, unsigned long int context)
 		}
 	}
 	return qfalse;
-}	/* end of the function BotFindMatch */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -1431,7 +1431,7 @@ BotMatchVariable(bot_match_t *match, int variable, char *buf, int size)
 	}else
 		strcpy(buf, "");
 	return;
-}	/* end of the function BotMatchVariable */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -1446,7 +1446,7 @@ BotFindStringInList(bot_stringlist_t *list, char *string)
 	for(s = list; s; s = s->next)
 		if(!strcmp(s->string, string)) return s;
 	return NULL;
-}	/* end of the function BotFindStringInList */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -1522,7 +1522,7 @@ BotCheckChatMessageIntegrety(char *message, bot_stringlist_t *stringlist)
 			msgptr++;
 	}
 	return stringlist;
-}	/* end of the function BotCheckChatMessageIntegrety */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -1545,7 +1545,7 @@ BotCheckInitialChatIntegrety(bot_chat_t *chat)
 		nexts = s->next;
 		FreeMemory(s);
 	}
-}	/* end of the function BotCheckInitialChatIntegrety */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -1568,7 +1568,7 @@ BotCheckReplyChatIntegrety(bot_replychat_t *replychat)
 		nexts = s->next;
 		FreeMemory(s);
 	}
-}	/* end of the function BotCheckReplyChatIntegrety */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -1618,7 +1618,7 @@ BotDumpReplyChat(bot_replychat_t *replychat)
 			fprintf(fp, "\t\"%s\";\n", cm->chatmessage);
 		fprintf(fp, "}\n");
 	}
-}	/* end of the function BotDumpReplyChat */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -1646,7 +1646,7 @@ BotFreeReplyChat(bot_replychat_t *replychat)
 		}
 		FreeMemory(rp);
 	}
-}	/* end of the function BotFreeReplyChat */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -1672,7 +1672,7 @@ BotCheckValidReplyChatKeySet(source_t *source, bot_replychatkey_t *keys)
 					   MT_VARIABLE) hasvariableskey = qtrue;
 			}else if(key->flags & RCKFL_STRING)
 				hasstringkey = qtrue;
-			/* end else if */
+
 		}else if((key->flags & RCKFL_AND) && (key->flags & RCKFL_STRING))
 			for(key2 = keys; key2; key2 = key2->next){
 				if(key2 == key) continue;
@@ -1742,7 +1742,7 @@ BotCheckValidReplyChatKeySet(source_t *source, bot_replychatkey_t *keys)
 										ms
 										->
 										string);
-				/* end else if */
+
 			}
 	}
 	if(allprefixed) SourceWarning(source, "all keys have a & or ! prefix");
@@ -1750,7 +1750,7 @@ BotCheckValidReplyChatKeySet(source_t *source, bot_replychatkey_t *keys)
 		SourceWarning(
 			source, "variables from the match template(s) could be "
 				"invalid when outputting one of the chat messages");
-}	/* end of the function BotCheckValidReplyChatKeySet */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -1819,7 +1819,7 @@ BotLoadReplyChat(char *filename)
 					BotFreeReplyChat(replychatlist);
 					return NULL;
 				}
-			}						/* end else if */
+			}
 			else if(PC_CheckTokenString(source, "<")){	/* bot names */
 				key->flags |= RCKFL_BOTNAMES;
 				strcpy(namebuffer, "");
@@ -1843,7 +1843,7 @@ BotLoadReplyChat(char *filename)
 				key->string = (char*)GetClearedHunkMemory(
 					strlen(namebuffer) + 1);
 				strcpy(key->string, namebuffer);
-			}	/* end else if */
+			}
 			else{	/* normal string key */
 				key->flags |= RCKFL_STRING;
 				if(!PC_ExpectTokenType(source, TT_STRING, 0,
@@ -1903,7 +1903,7 @@ BotLoadReplyChat(char *filename)
 		BotCheckReplyChatIntegrety(replychatlist);
 	if(!replychatlist) botimport.Print(PRT_MESSAGE, "no rchats\n");
 	return replychatlist;
-}	/* end of the function BotLoadReplyChat */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -1926,7 +1926,7 @@ BotDumpInitialChat(bot_chat_t *chat)
 		Log_Write(" }");
 	}
 	Log_Write("}");
-}	/* end of the function BotDumpInitialChat */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -2133,7 +2133,7 @@ BotLoadInitialChat(char *chatfile, char *chatname)
 #endif	/* DEBUG */
 	/* character was read successfully */
 	return chat;
-}	/* end of the function BotLoadInitialChat */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -2149,7 +2149,7 @@ BotFreeChatFile(int chatstate)
 	if(!cs) return;
 	if(cs->chat) FreeMemory(cs->chat);
 	cs->chat = NULL;
-}	/* end of the function BotFreeChatFile */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -2209,7 +2209,7 @@ BotLoadChatFile(int chatstate, char *chatfile, char *chatname)
 	}
 
 	return BLERR_NOERROR;
-}	/* end of the function BotLoadChatFile */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -2335,7 +2335,7 @@ BotExpandChatMessage(char *outmessage, char *message, unsigned long mcontext,
 	BotReplaceWeightedSynonyms(outputbuf, mcontext);
 	/* return true if a random was expanded */
 	return expansion;
-}	/* end of the function BotExpandChatMessage */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -2363,7 +2363,7 @@ BotConstructChatMessage(bot_chatstate_t *chatstate, char *message,
 			"too many expansions in chat message\n");
 		botimport.Print(PRT_WARNING, "%s\n", chatstate->chatmessage);
 	}
-}	/* end of the function BotConstructChatMessage */
+}
 /* ===========================================================================
  * randomly chooses one of the chat message of the given type
  *
@@ -2413,7 +2413,7 @@ BotChooseInitialChatMessage(bot_chatstate_t *cs, char *type)
 			return NULL;
 		}
 	return NULL;
-}	/* end of the function BotChooseInitialChatMessage */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -2441,7 +2441,7 @@ BotNumInitialChats(int chatstate, char *type)
 			return t->numchatmessages;
 		}
 	return 0;
-}	/* end of the function BotNumInitialChats */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -2523,7 +2523,7 @@ BotInitialChat(int chatstate, char *type, int mcontext, char *var0, char *var1,
 		index += strlen(var7);
 	}
 	BotConstructChatMessage(cs, message, mcontext, &match, 0, qfalse);
-}	/* end of the function BotInitialChat */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -2565,7 +2565,7 @@ BotPrintReplyChatKeys(bot_replychat_t *replychat)
 				replychat->priority);
 	}
 	botimport.Print(PRT_MESSAGE, "{\n");
-}	/* end of the function BotPrintReplyChatKeys */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -2622,7 +2622,7 @@ BotReplyChat(int chatstate, char *message, int mcontext, int vcontext,
 					found = qfalse;
 					break;
 				}
-			}	/* end else if */
+			}
 			/* if the key must be absent */
 			else if(key->flags & RCKFL_NOT){
 				if(res){
@@ -2725,7 +2725,7 @@ BotReplyChat(int chatstate, char *message, int mcontext, int vcontext,
 		return qtrue;
 	}
 	return qfalse;
-}	/* end of the function BotReplyChat */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -2740,7 +2740,7 @@ BotChatLength(int chatstate)
 	cs = BotChatStateFromHandle(chatstate);
 	if(!cs) return 0;
 	return strlen(cs->chatmessage);
-}	/* end of the function BotChatLength */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -2779,7 +2779,7 @@ BotEnterChat(int chatstate, int clientto, int sendto)
 		/* clear the chat message from the state */
 		strcpy(cs->chatmessage, "");
 	}
-}	/* end of the function BotEnterChat */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -2799,7 +2799,7 @@ BotGetChatMessage(int chatstate, char *buf, int size)
 	buf[size-1] = '\0';
 	/* clear the chat message from the state */
 	strcpy(cs->chatmessage, "");
-}	/* end of the function BotGetChatMessage */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -2818,7 +2818,7 @@ BotSetChatGender(int chatstate, int gender)
 	case CHAT_GENDERMALE: cs->gender	= CHAT_GENDERMALE; break;
 	default: cs->gender = CHAT_GENDERLESS; break;
 	}	/* end switch */
-}		/* end of the function BotSetChatGender */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -2836,7 +2836,7 @@ BotSetChatName(int chatstate, char *name, int client)
 	Q_Memset(cs->name, 0, sizeof(cs->name));
 	strncpy(cs->name, name, sizeof(cs->name));
 	cs->name[sizeof(cs->name)-1] = '\0';
-}	/* end of the function BotSetChatName */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -2852,7 +2852,7 @@ BotResetChatAI(void)
 	for(rchat = replychats; rchat; rchat = rchat->next)
 		for(m = rchat->firstchatmessage; m; m = m->next)
 			m->time = 0;
-}	/* end of the function BotResetChatAI */
+}
 /* ========================================================================
  *
  * Parameter:				-
@@ -2871,7 +2871,7 @@ BotAllocChatState(void)
 			return i;
 		}
 	return 0;
-}	/* end of the function BotAllocChatState */
+}
 /* ========================================================================
  *
  * Parameter:				-
@@ -2902,7 +2902,7 @@ BotFreeChatState(int handle)
 		BotRemoveConsoleMessage(handle, h);
 	FreeMemory(botchatstates[handle]);
 	botchatstates[handle] = NULL;
-}	/* end of the function BotFreeChatState */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -2936,7 +2936,7 @@ BotSetupChatAI(void)
 			) - starttime);
 #endif	/* DEBUG */
 	return BLERR_NOERROR;
-}	/* end of the function BotSetupChatAI */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -2969,4 +2969,4 @@ BotShutdownChatAI(void)
 	synonyms = NULL;
 	if(replychats) BotFreeReplyChat(replychats);
 	replychats = NULL;
-}	/* end of the function BotShutdownChatAI */
+}

@@ -140,7 +140,7 @@ AAS_UpdateEntity(int entnum, bot_entitystate_t *state)
 				0);
 		}
 	return BLERR_NOERROR;
-}	/* end of the function AAS_UpdateEntity */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -166,7 +166,7 @@ AAS_EntityInfo(int entnum, aas_entityinfo_t *info)
 	}
 
 	Q_Memcpy(info, &aasworld.entities[entnum].i, sizeof(aas_entityinfo_t));
-}	/* end of the function AAS_EntityInfo */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -185,7 +185,7 @@ AAS_EntityOrigin(int entnum, Vec3 origin)
 	}
 
 	copyv3(aasworld.entities[entnum].i.origin, origin);
-}	/* end of the function AAS_EntityOrigin */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -202,7 +202,7 @@ AAS_EntityModelindex(int entnum)
 		return 0;
 	}
 	return aasworld.entities[entnum].i.modelindex;
-}	/* end of the function AAS_EntityModelindex */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -240,7 +240,7 @@ AAS_EntityModelNum(int entnum)
 		return 0;
 	}
 	return aasworld.entities[entnum].i.modelindex;
-}	/* end of the function AAS_EntityModelNum */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -262,7 +262,7 @@ AAS_OriginOfMoverWithModelNum(int modelnum, Vec3 origin)
 			}
 	}
 	return qfalse;
-}	/* end of the function AAS_OriginOfMoverWithModelNum */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -286,7 +286,7 @@ AAS_EntitySize(int entnum, Vec3 mins, Vec3 maxs)
 	ent = &aasworld.entities[entnum];
 	copyv3(ent->i.mins, mins);
 	copyv3(ent->i.maxs, maxs);
-}	/* end of the function AAS_EntitySize */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -305,7 +305,7 @@ AAS_EntityBSPData(int entnum, bsp_entdata_t *entdata)
 	addv3(ent->i.origin, ent->i.maxs, entdata->absmaxs);
 	entdata->solid = ent->i.solid;
 	entdata->modelnum = ent->i.modelindex - 1;
-}	/* end of the function AAS_EntityBSPData */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -320,7 +320,7 @@ AAS_ResetEntityLinks(void)
 		aasworld.entities[i].areas = NULL;
 		aasworld.entities[i].leaves = NULL;
 	}
-}	/* end of the function AAS_ResetEntityLinks */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -335,7 +335,7 @@ AAS_InvalidateEntities(void)
 		aasworld.entities[i].i.valid = qfalse;
 		aasworld.entities[i].i.number = i;
 	}
-}	/* end of the function AAS_InvalidateEntities */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -357,7 +357,7 @@ AAS_UnlinkInvalidEntities(void)
 			ent->leaves = NULL;
 		}
 	}
-}	/* end of the function AAS_UnlinkInvalidEntities */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -388,7 +388,7 @@ AAS_NearestEntity(Vec3 origin, int modelindex)
 			}
 	}
 	return bestentnum;
-}	/* end of the function AAS_NearestEntity */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -402,7 +402,7 @@ AAS_BestReachableEntityArea(int entnum)
 
 	ent = &aasworld.entities[entnum];
 	return AAS_BestReachableLinkArea(ent->areas);
-}	/* end of the function AAS_BestReachableEntityArea */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -418,4 +418,4 @@ AAS_NextEntity(int entnum)
 	while(++entnum < aasworld.maxentities)
 		if(aasworld.entities[entnum].i.valid) return entnum;
 	return 0;
-}	/* end of the function AAS_NextEntity */
+}

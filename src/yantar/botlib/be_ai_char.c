@@ -77,7 +77,7 @@ BotCharacterFromHandle(int handle)
 		return NULL;
 	}
 	return botcharacters[handle];
-}	/* end of the function BotCharacterFromHandle */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -103,7 +103,7 @@ BotDumpCharacter(bot_character_t *ch)
 		}	/* end case */
 	}
 	Log_Write("}\n");
-}	/* end of the function BotDumpCharacter */
+}
 /* ========================================================================
  *
  * Parameter:			-
@@ -118,7 +118,7 @@ BotFreeCharacterStrings(bot_character_t *ch)
 	for(i = 0; i < MAX_CHARACTERISTICS; i++)
 		if(ch->c[i].type == CT_STRING)
 			FreeMemory(ch->c[i].value.string);
-}	/* end of the function BotFreeCharacterStrings */
+}
 /* ========================================================================
  *
  * Parameter:			-
@@ -140,7 +140,7 @@ BotFreeCharacter2(int handle)
 	BotFreeCharacterStrings(botcharacters[handle]);
 	FreeMemory(botcharacters[handle]);
 	botcharacters[handle] = NULL;
-}	/* end of the function BotFreeCharacter2 */
+}
 /* ========================================================================
  *
  * Parameter:			-
@@ -152,7 +152,7 @@ BotFreeCharacter(int handle)
 {
 	if(!LibVarGetValue("bot_reloadcharacters")) return;
 	BotFreeCharacter2(handle);
-}	/* end of the function BotFreeCharacter */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -172,7 +172,7 @@ BotDefaultCharacteristics(bot_character_t *ch, bot_character_t *defaultch)
 		}else if(defaultch->c[i].type == CT_INTEGER){
 			ch->c[i].type = CT_INTEGER;
 			ch->c[i].value.integer = defaultch->c[i].value.integer;
-		}	/* end else if */
+		}
 		else if(defaultch->c[i].type == CT_STRING){
 			ch->c[i].type = CT_STRING;
 			ch->c[i].value.string =
@@ -180,9 +180,9 @@ BotDefaultCharacteristics(bot_character_t *ch, bot_character_t *defaultch)
 						string)+1);
 			strcpy(ch->c[i].value.string,
 				defaultch->c[i].value.string);
-		}	/* end else if */
+		}
 	}
-}	/* end of the function BotDefaultCharacteristics */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -290,7 +290,7 @@ BotLoadCharacterFromFile(char *charfile, int skill)
 						strcpy(ch->c[index].value.string,
 							token.string);
 						ch->c[index].type = CT_STRING;
-					}	/* end else if */
+					}
 					else{
 						SourceError(
 							source,
@@ -333,7 +333,7 @@ BotLoadCharacterFromFile(char *charfile, int skill)
 		return NULL;
 	}
 	return ch;
-}	/* end of the function BotLoadCharacterFromFile */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -353,7 +353,7 @@ BotFindCachedCharacter(char *charfile, float skill)
 			return handle;
 	}
 	return 0;
-}	/* end of the function BotFindCachedCharacter */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -467,7 +467,7 @@ BotLoadCachedCharacter(char *charfile, float skill, int reload)
 		charfile);
 	/* couldn't load any character */
 	return 0;
-}	/* end of the function BotLoadCachedCharacter */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -489,7 +489,7 @@ BotLoadCharacterSkill(char *charfile, float skill)
 			botcharacters[defaultch]);
 
 	return ch;
-}	/* end of the function BotLoadCharacterSkill */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -528,17 +528,17 @@ BotInterpolateCharacters(int handle1, int handle2, float desiredskill)
 		}else if(ch1->c[i].type == CT_INTEGER){
 			out->c[i].type = CT_INTEGER;
 			out->c[i].value.integer = ch1->c[i].value.integer;
-		}	/* end else if */
+		}
 		else if(ch1->c[i].type == CT_STRING){
 			out->c[i].type = CT_STRING;
 			out->c[i].value.string =
 				(char*)GetMemory(strlen(
 						ch1->c[i].value.string)+1);
 			strcpy(out->c[i].value.string, ch1->c[i].value.string);
-		}	/* end else if */
+		}
 	}
 	return handle;
-}	/* end of the function BotInterpolateCharacters */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -583,7 +583,7 @@ BotLoadCharacter(char *charfile, float skill)
 	/* write the character to the log file */
 	BotDumpCharacter(botcharacters[handle]);
 	return handle;
-}	/* end of the function BotLoadCharacter */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -609,7 +609,7 @@ CheckCharacteristicIndex(int character, int index)
 		return qfalse;
 	}
 	return qtrue;
-}	/* end of the function CheckCharacteristicIndex */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -631,15 +631,15 @@ Characteristic_Float(int character, int index)
 	/* floats are just returned */
 	else if(ch->c[index].type == CT_FLOAT)
 		return ch->c[index].value._float;
-	/* end else if */
+
 	/* cannot convert a string pointer to a float */
 	else{
 		botimport.Print(PRT_ERROR, "characteristic %d is not a float\n",
 			index);
 		return 0;
-	}	/* end else if */
+	}
 /*	return 0; */
-}	/* end of the function Characteristic_Float */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -665,7 +665,7 @@ Characteristic_BFloat(int character, int index, float min, float max)
 	if(value < min) return min;
 	if(value > max) return max;
 	return value;
-}	/* end of the function Characteristic_BFloat */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -687,15 +687,15 @@ Characteristic_Integer(int character, int index)
 	/* floats are casted to integers */
 	else if(ch->c[index].type == CT_FLOAT)
 		return (int)ch->c[index].value._float;
-	/* end else if */
+
 	else{
 		botimport.Print(PRT_ERROR,
 			"characteristic %d is not a integer\n",
 			index);
 		return 0;
-	}	/* end else if */
+	}
 /*	return 0; */
-}	/* end of the function Characteristic_Integer */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -721,7 +721,7 @@ Characteristic_BInteger(int character, int index, int min, int max)
 	if(value < min) return min;
 	if(value > max) return max;
 	return value;
-}	/* end of the function Characteristic_BInteger */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -746,9 +746,9 @@ Characteristic_String(int character, int index, char *buf, int size)
 		botimport.Print(PRT_ERROR, "characteristic %d is not a string\n",
 			index);
 		return;
-	}	/* end else if */
+	}
 	return;
-}	/* end of the function Characteristic_String */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -763,4 +763,4 @@ BotShutdownCharacters(void)
 	for(handle = 1; handle <= MAX_CLIENTS; handle++)
 		if(botcharacters[handle])
 			BotFreeCharacter2(handle);
-}	/* end of the function BotShutdownCharacters */
+}

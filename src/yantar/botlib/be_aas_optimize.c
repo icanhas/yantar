@@ -62,7 +62,7 @@ int
 AAS_KeepEdge(aas_edge_t *edge)
 {
 	return 1;
-}	/* end of the function AAS_KeepFace */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -106,7 +106,7 @@ AAS_OptimizeEdge(optimized_t *optimized, int edgenum)
 	/* keep the edge reversed sign */
 	if(edgenum > 0) return optedgenum;
 	else return -optedgenum;
-}	/* end of the function AAS_OptimizeEdge */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -118,7 +118,7 @@ AAS_KeepFace(aas_face_t *face)
 {
 	if(!(face->faceflags & FACE_LADDER)) return 0;
 	else return 1;
-}	/* end of the function AAS_KeepFace */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -162,7 +162,7 @@ AAS_OptimizeFace(optimized_t *optimized, int facenum)
 	/* keep the face side sign */
 	if(facenum > 0) return optfacenum;
 	else return -optfacenum;
-}	/* end of the function AAS_OptimizeFace */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -191,7 +191,7 @@ AAS_OptimizeArea(optimized_t *optimized, int areanum)
 			optimized->faceindexsize++;
 		}
 	}
-}	/* end of the function AAS_OptimizeArea */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -225,7 +225,7 @@ AAS_OptimizeAlloc(optimized_t *optimized)
 		aasworld.numedges * sizeof(int));
 	optimized->faceoptimizeindex = (int*)GetClearedMemory(
 		aasworld.numfaces * sizeof(int));
-}	/* end of the function AAS_OptimizeAlloc */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -263,7 +263,7 @@ AAS_OptimizeStore(optimized_t *optimized)
 	FreeMemory(optimized->vertexoptimizeindex);
 	FreeMemory(optimized->edgeoptimizeindex);
 	FreeMemory(optimized->faceoptimizeindex);
-}	/* end of the function AAS_OptimizeStore */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -310,4 +310,4 @@ AAS_Optimize(void)
 	AAS_OptimizeStore(&optimized);
 	/* print some nice stuff :) */
 	botimport.Print(PRT_MESSAGE, "AAS data optimized.\n");
-}	/* end of the function AAS_Optimize */
+}

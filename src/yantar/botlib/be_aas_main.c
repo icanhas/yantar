@@ -49,7 +49,7 @@ AAS_Error(char *fmt, ...)
 	Q_vsnprintf(str, sizeof(str), fmt, arglist);
 	va_end(arglist);
 	botimport.Print(PRT_FATAL, "%s", str);
-}	/* end of the function AAS_Error */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -79,7 +79,7 @@ AAS_StringFromIndex(char *indexname, char *stringindex[], int numindexes,
 		return "";
 	}
 	return stringindex[index];
-}	/* end of the function AAS_StringFromIndex */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -102,7 +102,7 @@ AAS_IndexFromString(char *indexname, char *stringindex[], int numindexes,
 		if(!Q_stricmp(stringindex[i], string)) return i;
 	}
 	return 0;
-}	/* end of the function AAS_IndexFromString */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -114,7 +114,7 @@ AAS_ModelFromIndex(int index)
 {
 	return AAS_StringFromIndex("ModelFromIndex",
 		&aasworld.configstrings[CS_MODELS], MAX_MODELS, index);
-}	/* end of the function AAS_ModelFromIndex */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -126,7 +126,7 @@ AAS_IndexFromModel(char *modelname)
 {
 	return AAS_IndexFromString("IndexFromModel",
 		&aasworld.configstrings[CS_MODELS], MAX_MODELS, modelname);
-}	/* end of the function AAS_IndexFromModel */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -146,7 +146,7 @@ AAS_UpdateStringIndexes(int numconfigstrings, char *configstrings[])
 			strcpy(aasworld.configstrings[i], configstrings[i]);
 		}
 	aasworld.indexessetup = qtrue;
-}	/* end of the function AAS_UpdateStringIndexes */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -157,7 +157,7 @@ int
 AAS_Loaded(void)
 {
 	return aasworld.loaded;
-}	/* end of the function AAS_Loaded */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -168,7 +168,7 @@ int
 AAS_Initialized(void)
 {
 	return aasworld.initialized;
-}	/* end of the function AAS_Initialized */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -186,7 +186,7 @@ AAS_SetInitialized(void)
 	 *
 	 * AAS_RoutingInfo(); */
 #endif
-}	/* end of the function AAS_SetInitialized */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -221,7 +221,7 @@ AAS_ContinueInit(float time)
 	AAS_InitRouting();
 	/* at this point AAS is initialized */
 	AAS_SetInitialized();
-}	/* end of the function AAS_ContinueInit */
+}
 /* ===========================================================================
  * called at the start of every frame
  *
@@ -260,7 +260,7 @@ AAS_StartFrame(float time)
 	}
 	aasworld.numframes++;
 	return BLERR_NOERROR;
-}	/* end of the function AAS_StartFrame */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -271,7 +271,7 @@ float
 AAS_Time(void)
 {
 	return aasworld.time;
-}	/* end of the function AAS_Time */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -289,7 +289,7 @@ AAS_ProjectPointOntoVector(Vec3 point, Vec3 vStart, Vec3 vEnd,
 	normv3(vec);
 	/* project onto the directional vector for this segment */
 	maddv3(vStart, dotv3(pVec, vec), vec, vProj);
-}	/* end of the function AAS_ProjectPointOntoVector */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -320,7 +320,7 @@ AAS_LoadFiles(const char *mapname)
 	botimport.Print(PRT_MESSAGE, "loaded %s\n", aasfile);
 	strncpy(aasworld.filename, aasfile, MAX_PATH);
 	return BLERR_NOERROR;
-}	/* end of the function AAS_LoadFiles */
+}
 /* ===========================================================================
  * called everytime a map changes
  *
@@ -358,7 +358,7 @@ AAS_LoadMap(const char *mapname)
 	AAS_InitAlternativeRouting();
 	/* everything went ok */
 	return 0;
-}	/* end of the function AAS_LoadMap */
+}
 /* ===========================================================================
  * called when the library is first loaded
  *
@@ -384,7 +384,7 @@ AAS_Setup(void)
 	 * LibVarSet("forcereachability", "1");		//force reachability calculation */
 	aasworld.numframes = 0;
 	return BLERR_NOERROR;
-}	/* end of the function AAS_Setup */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -414,4 +414,4 @@ AAS_Shutdown(void)
 	 * freed an reallocated, so there's no need to free that memory here
 	 * print shutdown */
 	botimport.Print(PRT_MESSAGE, "AAS shutdown.\n");
-}	/* end of the function AAS_Shutdown */
+}

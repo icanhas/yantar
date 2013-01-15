@@ -183,7 +183,7 @@ BotGoalStateFromHandle(int handle)
 		return NULL;
 	}
 	return botgoalstates[handle];
-}	/* end of the function BotGoalStateFromHandle */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -201,7 +201,7 @@ BotInterbreedGoalFuzzyLogic(int parent1, int parent2, int child)
 
 	InterbreedWeightConfigs(p1->itemweightconfig, p2->itemweightconfig,
 		c->itemweightconfig);
-}	/* end of the function BotInterbreedingGoalFuzzyLogic */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -216,7 +216,7 @@ BotSaveGoalFuzzyLogic(int goalstate, char *filename)
 	/* gs = BotGoalStateFromHandle(goalstate); */
 
 	/* WriteWeightConfig(filename, gs->itemweightconfig); */
-}	/* end of the function BotSaveGoalFuzzyLogic */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -231,7 +231,7 @@ BotMutateGoalFuzzyLogic(int goalstate, float range)
 	gs = BotGoalStateFromHandle(goalstate);
 
 	EvolveWeightConfig(gs->itemweightconfig);
-}	/* end of the function BotMutateGoalFuzzyLogic */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -309,7 +309,7 @@ LoadItemConfig(char *filename)
 			"no item info loaded\n");
 	botimport.Print(PRT_MESSAGE, "loaded %s\n", path);
 	return ic;
-}	/* end of the function LoadItemConfig */
+}
 /* ===========================================================================
  * index to find the weight function of an iteminfo
  *
@@ -333,7 +333,7 @@ ItemWeightIndex(weightconfig_t *iwc, itemconfig_t *ic)
 				ic->iteminfo[i].classname);
 	}
 	return index;
-}	/* end of the function ItemWeightIndex */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -355,7 +355,7 @@ InitLevelItemHeap(void)
 		levelitemheap[i].next = &levelitemheap[i + 1];
 	levelitemheap[max_levelitems-1].next = NULL;
 	freelevelitems = levelitemheap;
-}	/* end of the function InitLevelItemHeap */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -375,7 +375,7 @@ AllocLevelItem(void)
 	freelevelitems = freelevelitems->next;
 	Q_Memset(li, 0, sizeof(levelitem_t));
 	return li;
-}	/* end of the function AllocLevelItem */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -387,7 +387,7 @@ FreeLevelItem(levelitem_t *li)
 {
 	li->next = freelevelitems;
 	freelevelitems = li;
-}	/* end of the function FreeLevelItem */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -401,7 +401,7 @@ AddLevelItemToList(levelitem_t *li)
 	li->prev = NULL;
 	li->next = levelitems;
 	levelitems = li;
-}	/* end of the function AddLevelItemToList */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -414,7 +414,7 @@ RemoveLevelItemFromList(levelitem_t *li)
 	if(li->prev) li->prev->next = li->next;
 	else levelitems = li->next;
 	if(li->next) li->next->prev = li->prev;
-}	/* end of the function RemoveLevelItemFromList */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -437,7 +437,7 @@ BotFreeInfoEntities(void)
 		FreeMemory(cs);
 	}
 	campspots = NULL;
-}	/* end of the function BotFreeInfoEntities */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -497,13 +497,13 @@ BotInitInfoEntities(void)
 			campspots = cs;
 			/* AAS_DrawPermanentCross(cs->origin, 4, LINECOLOR_YELLOW); */
 			numcampspots++;
-		}	/* end else if */
+		}
 	}
 	if(botDeveloper){
 		botimport.Print(PRT_MESSAGE, "%d map locations\n", numlocations);
 		botimport.Print(PRT_MESSAGE, "%d camp spots\n", numcampspots);
 	}
-}	/* end of the function BotInitInfoEntities */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -636,7 +636,7 @@ BotInitLevelItems(void)
 		AddLevelItemToList(li);
 	}
 	botimport.Print(PRT_MESSAGE, "found %d level items\n", numlevelitems);
-}	/* end of the function BotInitLevelItems */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -658,7 +658,7 @@ BotGoalName(int number, char *name, int size)
 		}
 	strcpy(name, "");
 	return;
-}	/* end of the function BotGoalName */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -674,7 +674,7 @@ BotResetAvoidGoals(int goalstate)
 	if(!gs) return;
 	Q_Memset(gs->avoidgoals, 0, MAX_AVOIDGOALS * sizeof(int));
 	Q_Memset(gs->avoidgoaltimes, 0, MAX_AVOIDGOALS * sizeof(float));
-}	/* end of the function BotResetAvoidGoals */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -698,7 +698,7 @@ BotDumpAvoidGoals(int goalstate)
 				gs->avoidgoals[i],
 				gs->avoidgoaltimes[i] - AAS_Time());
 		}
-}	/* end of the function BotDumpAvoidGoals */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -725,7 +725,7 @@ BotAddToAvoidGoals(bot_goalstate_t *gs, int number, float avoidtime)
 			gs->avoidgoaltimes[i] = AAS_Time() + avoidtime;
 			return;
 		}
-}	/* end of the function BotAddToAvoidGoals */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -747,7 +747,7 @@ BotRemoveFromAvoidGoals(int goalstate, int number)
 			gs->avoidgoaltimes[i] = 0;
 			return;
 		}
-}	/* end of the function BotRemoveFromAvoidGoals */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -768,7 +768,7 @@ BotAvoidGoalTime(int goalstate, int number)
 		   AAS_Time())
 			return gs->avoidgoaltimes[i] - AAS_Time();
 	return 0;
-}	/* end of the function BotAvoidGoalTime */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -802,7 +802,7 @@ BotSetAvoidGoalTime(int goalstate, int number, float avoidtime)
 		return;
 	}else
 		BotAddToAvoidGoals(gs, number, avoidtime);
-}	/* end of the function BotSetAvoidGoalTime */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -846,7 +846,7 @@ BotGetLevelItemGoal(int index, char *name, bot_goal_t *goal)
 		}
 	}
 	return -1;
-}	/* end of the function BotGetLevelItemGoal */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -869,7 +869,7 @@ BotGetMapLocationGoal(char *name, bot_goal_t *goal)
 			return qtrue;
 		}
 	return qfalse;
-}	/* end of the function BotGetMapLocationGoal */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -895,7 +895,7 @@ BotGetNextCampSpotGoal(int num, bot_goal_t *goal)
 			return num+1;
 		}
 	return 0;
-}	/* end of the function BotGetNextCampSpotGoal */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -930,7 +930,7 @@ BotFindEntityForLevelItem(levelitem_t *li)
 				li->entitynum = ent;
 		}
 	}
-}	/* end of the function BotFindEntityForLevelItem */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -1103,7 +1103,7 @@ BotUpdateEntityItems(void)
 	 *              BotFindEntityForLevelItem(li);
 	 *      }
 	 * } */
-}	/* end of the function BotUpdateEntityItems */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -1123,7 +1123,7 @@ BotDumpGoalStack(int goalstate)
 		BotGoalName(gs->goalstack[i].number, name, 32);
 		Log_Write("%d: %s", i, name);
 	}
-}	/* end of the function BotDumpGoalStack */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -1144,7 +1144,7 @@ BotPushGoal(int goalstate, bot_goal_t *goal)
 	}
 	gs->goalstacktop++;
 	Q_Memcpy(&gs->goalstack[gs->goalstacktop], goal, sizeof(bot_goal_t));
-}	/* end of the function BotPushGoal */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -1159,7 +1159,7 @@ BotPopGoal(int goalstate)
 	gs = BotGoalStateFromHandle(goalstate);
 	if(!gs) return;
 	if(gs->goalstacktop > 0) gs->goalstacktop--;
-}	/* end of the function BotPopGoal */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -1174,7 +1174,7 @@ BotEmptyGoalStack(int goalstate)
 	gs = BotGoalStateFromHandle(goalstate);
 	if(!gs) return;
 	gs->goalstacktop = 0;
-}	/* end of the function BotEmptyGoalStack */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -1191,7 +1191,7 @@ BotGetTopGoal(int goalstate, bot_goal_t *goal)
 	if(!gs->goalstacktop) return qfalse;
 	Q_Memcpy(goal, &gs->goalstack[gs->goalstacktop], sizeof(bot_goal_t));
 	return qtrue;
-}	/* end of the function BotGetTopGoal */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -1208,7 +1208,7 @@ BotGetSecondGoal(int goalstate, bot_goal_t *goal)
 	if(gs->goalstacktop <= 1) return qfalse;
 	Q_Memcpy(goal, &gs->goalstack[gs->goalstacktop-1], sizeof(bot_goal_t));
 	return qtrue;
-}	/* end of the function BotGetSecondGoal */
+}
 /* ===========================================================================
  * pops a new long term goal on the goal stack in the goalstate
  *
@@ -1363,7 +1363,7 @@ BotChooseLTGItem(int goalstate, Vec3 origin, int *inventory, int travelflags)
 	/* push the goal on the stack */
 	BotPushGoal(goalstate, &goal);
 	return qtrue;
-}	/* end of the function BotChooseLTGItem */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -1511,7 +1511,7 @@ BotChooseNBGItem(int goalstate, Vec3 origin, int *inventory, int travelflags,
 	/* push the goal on the stack */
 	BotPushGoal(goalstate, &goal);
 	return qtrue;
-}	/* end of the function BotChooseNBGItem */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -1540,7 +1540,7 @@ BotTouchingGoal(Vec3 origin, bot_goal_t *goal)
 		if(origin[i] < absmins[i] || origin[i] >
 		   absmaxs[i]) return qfalse;
 	return qtrue;
-}	/* end of the function BotTouchingGoal */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -1576,7 +1576,7 @@ BotItemGoalInVisButNotVisible(int viewer, Vec3 eye, Vec3 viewangles,
 			return qtrue;
 	}
 	return qfalse;
-}	/* end of the function BotItemGoalInVisButNotVisible */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -1593,7 +1593,7 @@ BotResetGoalState(int goalstate)
 	Q_Memset(gs->goalstack, 0, MAX_GOALSTACK * sizeof(bot_goal_t));
 	gs->goalstacktop = 0;
 	BotResetAvoidGoals(goalstate);
-}	/* end of the function BotResetGoalState */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -1619,7 +1619,7 @@ BotLoadItemWeights(int goalstate, char *filename)
 	gs->itemweightindex = ItemWeightIndex(gs->itemweightconfig, itemconfig);
 	/* everything went ok */
 	return BLERR_NOERROR;
-}	/* end of the function BotLoadItemWeights */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -1635,7 +1635,7 @@ BotFreeItemWeights(int goalstate)
 	if(!gs) return;
 	if(gs->itemweightconfig) FreeWeightConfig(gs->itemweightconfig);
 	if(gs->itemweightindex) FreeMemory(gs->itemweightindex);
-}	/* end of the function BotFreeItemWeights */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -1655,7 +1655,7 @@ BotAllocGoalState(int client)
 			return i;
 		}
 	return 0;
-}	/* end of the function BotAllocGoalState */
+}
 /* ========================================================================
  *
  * Parameter:				-
@@ -1678,7 +1678,7 @@ BotFreeGoalState(int handle)
 	BotFreeItemWeights(handle);
 	FreeMemory(botgoalstates[handle]);
 	botgoalstates[handle] = NULL;
-}	/* end of the function BotFreeGoalState */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -1703,7 +1703,7 @@ BotSetupGoalAI(void)
 	droppedweight = LibVar("droppedweight", "1000");
 	/* everything went ok */
 	return BLERR_NOERROR;
-}	/* end of the function BotSetupGoalAI */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -1728,4 +1728,4 @@ BotShutdownGoalAI(void)
 	for(i = 1; i <= MAX_CLIENTS; i++)
 		if(botgoalstates[i])
 			BotFreeGoalState(i);
-}	/* end of the function BotShutdownGoalAI */
+}

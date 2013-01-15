@@ -74,7 +74,7 @@ AAS_AltRoutingFloodCluster_r(int areanum)
 		if(!midrangeareas[otherareanum].valid) continue;
 		AAS_AltRoutingFloodCluster_r(otherareanum);
 	}
-}	/* end of the function AAS_AltRoutingFloodCluster_r */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -193,7 +193,7 @@ AAS_AlternativeRouteGoals(Vec3 start, int startareanum, Vec3 goal,
 #endif
 	return numaltroutegoals;
 #endif
-}	/* end of the function AAS_AlternativeRouteGoals */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -211,7 +211,7 @@ AAS_InitAlternativeRouting(void)
 	if(clusterareas) FreeMemory(clusterareas);
 	clusterareas = (int*)GetMemory(aasworld.numareas * sizeof(int));
 #endif
-}	/* end of the function AAS_InitAlternativeRouting */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -228,4 +228,4 @@ AAS_ShutdownAlternativeRouting(void)
 	clusterareas = NULL;
 	numclusterareas = 0;
 #endif
-}	/* end of the function AAS_ShutdownAlternativeRouting */
+}

@@ -125,7 +125,7 @@ BotValidWeaponNumber(int weaponnum)
 		return qfalse;
 	}
 	return qtrue;
-}	/* end of the function BotValidWeaponNumber */
+}
 /* ========================================================================
  *
  * Parameter:				-
@@ -145,7 +145,7 @@ BotWeaponStateFromHandle(int handle)
 		return NULL;
 	}
 	return botweaponstates[handle];
-}	/* end of the function BotWeaponStateFromHandle */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -171,7 +171,7 @@ DumpWeaponConfig(weaponconfig_t *wc)
 			(char*)&wc->weaponinfo[i]);
 		Log_Flush();
 	}
-}	/* end of the function DumpWeaponConfig */
+}
 #endif	/* DEBUG_AI_WEAP */
 /* ===========================================================================
  *
@@ -315,7 +315,7 @@ LoadWeaponConfig(char *filename)
 			"no weapon info loaded\n");
 	botimport.Print(PRT_MESSAGE, "loaded %s\n", path);
 	return wc;
-}	/* end of the function LoadWeaponConfig */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -333,7 +333,7 @@ WeaponWeightIndex(weightconfig_t *wwc, weaponconfig_t *wc)
 	for(i = 0; i < wc->numweapons; i++)
 		index[i] = FindFuzzyWeight(wwc, wc->weaponinfo[i].name);
 	return index;
-}	/* end of the function WeaponWeightIndex */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -349,7 +349,7 @@ BotFreeWeaponWeights(int weaponstate)
 	if(!ws) return;
 	if(ws->weaponweightconfig) FreeWeightConfig(ws->weaponweightconfig);
 	if(ws->weaponweightindex) FreeMemory(ws->weaponweightindex);
-}	/* end of the function BotFreeWeaponWeights */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -374,7 +374,7 @@ BotLoadWeaponWeights(int weaponstate, char *filename)
 	ws->weaponweightindex = WeaponWeightIndex(ws->weaponweightconfig,
 		weaponconfig);
 	return BLERR_NOERROR;
-}	/* end of the function BotLoadWeaponWeights */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -392,7 +392,7 @@ BotGetWeaponInfo(int weaponstate, int weapon, weaponinfo_t *weaponinfo)
 	if(!weaponconfig) return;
 	Q_Memcpy(weaponinfo, &weaponconfig->weaponinfo[weapon],
 		sizeof(weaponinfo_t));
-}	/* end of the function BotGetWeaponInfo */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -428,7 +428,7 @@ BotChooseBestFightWeapon(int weaponstate, int *inventory)
 		}
 	}
 	return bestweapon;
-}	/* end of the function BotChooseBestFightWeapon */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -450,7 +450,7 @@ BotResetWeaponState(int weaponstate)
 	/* Q_Memset(ws, 0, sizeof(bot_weaponstate_t)); */
 	ws->weaponweightconfig	= weaponweightconfig;
 	ws->weaponweightindex	= weaponweightindex;
-}	/* end of the function BotResetWeaponState */
+}
 /* ========================================================================
  *
  * Parameter:				-
@@ -469,7 +469,7 @@ BotAllocWeaponState(void)
 			return i;
 		}
 	return 0;
-}	/* end of the function BotAllocWeaponState */
+}
 /* ========================================================================
  *
  * Parameter:				-
@@ -491,7 +491,7 @@ BotFreeWeaponState(int handle)
 	BotFreeWeaponWeights(handle);
 	FreeMemory(botweaponstates[handle]);
 	botweaponstates[handle] = NULL;
-}	/* end of the function BotFreeWeaponState */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -514,7 +514,7 @@ BotSetupWeaponAI(void)
 	DumpWeaponConfig(weaponconfig);
 #endif	/* DEBUG_AI_WEAP */
 	return BLERR_NOERROR;
-}	/* end of the function BotSetupWeaponAI */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -532,4 +532,4 @@ BotShutdownWeaponAI(void)
 	for(i = 1; i <= MAX_CLIENTS; i++)
 		if(botweaponstates[i])
 			BotFreeWeaponState(i);
-}	/* end of the function BotShutdownWeaponAI */
+}

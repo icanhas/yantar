@@ -59,7 +59,7 @@ LinkMemoryBlock(memoryblock_t *block)
 	block->next = memory;
 	if(memory) memory->prev = block;
 	memory = block;
-}	/* end of the function LinkMemoryBlock */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -72,7 +72,7 @@ UnlinkMemoryBlock(memoryblock_t *block)
 	if(block->prev) block->prev->next = block->next;
 	else memory = block->next;
 	if(block->next) block->next->prev = block->prev;
-}	/* end of the function UnlinkMemoryBlock */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -104,7 +104,7 @@ void *GetMemory(unsigned long size)
 	totalmemorysize += block->size + sizeof(memoryblock_t);
 	numblocks++;
 	return block->ptr;
-}	/* end of the function GetMemoryDebug */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -126,7 +126,7 @@ void *GetClearedMemory(unsigned long size)
 #endif	/* MEMDEBUG */
 	Q_Memset(ptr, 0, size);
 	return ptr;
-}	/* end of the function GetClearedMemory */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -158,7 +158,7 @@ void *GetHunkMemory(unsigned long size)
 	totalmemorysize += block->size + sizeof(memoryblock_t);
 	numblocks++;
 	return block->ptr;
-}	/* end of the function GetHunkMemoryDebug */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -180,7 +180,7 @@ void *GetClearedHunkMemory(unsigned long size)
 #endif	/* MEMDEBUG */
 	Q_Memset(ptr, 0, size);
 	return ptr;
-}	/* end of the function GetClearedHunkMemory */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -211,7 +211,7 @@ BlockFromPointer(void *ptr, char *str)
 		return NULL;
 	}
 	return block;
-}	/* end of the function BlockFromPointer */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -231,7 +231,7 @@ FreeMemory(void *ptr)
 	numblocks--;
 	if(block->id == MEM_ID)
 		botimport.FreeMemory(block);
-}	/* end of the function FreeMemory */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -242,7 +242,7 @@ int
 AvailableMemory(void)
 {
 	return botimport.AvailableMemory();
-}	/* end of the function AvailableMemory */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -257,7 +257,7 @@ MemoryByteSize(void *ptr)
 	block = BlockFromPointer(ptr, "MemoryByteSize");
 	if(!block) return 0;
 	return block->size;
-}	/* end of the function MemoryByteSize */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -272,7 +272,7 @@ PrintUsedMemorySize(void)
 	botimport.Print(PRT_MESSAGE, "total botlib memory: %d KB\n",
 		totalmemorysize >> 10);
 	botimport.Print(PRT_MESSAGE, "total memory blocks: %d\n", numblocks);
-}	/* end of the function PrintUsedMemorySize */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -304,7 +304,7 @@ PrintMemoryLabels(void)
 #endif	/* MEMDEBUG */
 		i++;
 	}
-}	/* end of the function PrintMemoryLabels */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -320,7 +320,7 @@ DumpMemory(void)
 		FreeMemory(block->ptr);
 	totalmemorysize = 0;
 	allocatedmemory = 0;
-}	/* end of the function DumpMemory */
+}
 
 #else
 
@@ -345,7 +345,7 @@ void *GetMemory(unsigned long size)
 	memid	= (unsigned long int*)ptr;
 	*memid	= MEM_ID;
 	return (unsigned long int*)((char*)ptr + sizeof(unsigned long int));
-}	/* end of the function GetMemory */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -367,7 +367,7 @@ void *GetClearedMemory(unsigned long size)
 #endif	/* MEMDEBUG */
 	Q_Memset(ptr, 0, size);
 	return ptr;
-}	/* end of the function GetClearedMemory */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -389,7 +389,7 @@ void *GetHunkMemory(unsigned long size)
 	memid	= (unsigned long int*)ptr;
 	*memid	= HUNK_ID;
 	return (unsigned long int*)((char*)ptr + sizeof(unsigned long int));
-}	/* end of the function GetHunkMemory */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -411,7 +411,7 @@ void *GetClearedHunkMemory(unsigned long size)
 #endif	/* MEMDEBUG */
 	Q_Memset(ptr, 0, size);
 	return ptr;
-}	/* end of the function GetClearedHunkMemory */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -427,7 +427,7 @@ FreeMemory(void *ptr)
 
 	if(*memid == MEM_ID)
 		botimport.FreeMemory(memid);
-}	/* end of the function FreeMemory */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -438,7 +438,7 @@ int
 AvailableMemory(void)
 {
 	return botimport.AvailableMemory();
-}	/* end of the function AvailableMemory */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -448,7 +448,7 @@ AvailableMemory(void)
 void
 PrintUsedMemorySize(void)
 {
-}	/* end of the function PrintUsedMemorySize */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -458,6 +458,6 @@ PrintUsedMemorySize(void)
 void
 PrintMemoryLabels(void)
 {
-}	/* end of the function PrintMemoryLabels */
+}
 
 #endif

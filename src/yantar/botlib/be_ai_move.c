@@ -117,7 +117,7 @@ BotAllocMoveState(void)
 			return i;
 		}
 	return 0;
-}	/* end of the function BotAllocMoveState */
+}
 /* ========================================================================
  *
  * Parameter:			-
@@ -138,7 +138,7 @@ BotFreeMoveState(int handle)
 	}
 	FreeMemory(botmovestates[handle]);
 	botmovestates[handle] = NULL;
-}	/* end of the function BotFreeMoveState */
+}
 /* ========================================================================
  *
  * Parameter:				-
@@ -158,7 +158,7 @@ BotMoveStateFromHandle(int handle)
 		return NULL;
 	}
 	return botmovestates[handle];
-}	/* end of the function BotMoveStateFromHandle */
+}
 /* ========================================================================
  *
  * Parameter:			-
@@ -193,7 +193,7 @@ BotInitMoveState(int handle, bot_initmove_t *initmove)
 	ms->moveflags &= ~MFL_GRAPPLEPULL;
 	if(initmove->or_moveflags & MFL_GRAPPLEPULL) ms->moveflags |=
 			MFL_GRAPPLEPULL;
-}	/* end of the function BotInitMoveState */
+}
 /* ========================================================================
  *
  * Parameter:			-
@@ -210,7 +210,7 @@ AngleDiff(float ang1, float ang2)
 		if(diff > 180.0) diff -= 360.0;
 	}else if(diff < -180.0) diff += 360.0;
 	return diff;
-}	/* end of the function AngleDiff */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -266,7 +266,7 @@ BotFuzzyPointReachabilityArea(Vec3 origin)
 		if(bestareanum) return bestareanum;
 	}
 	return firstareanum;
-}	/* end of the function BotFuzzyPointReachabilityArea */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -305,7 +305,7 @@ BotReachabilityArea(Vec3 origin, int client)
 				AAS_ReachabilityFromNum(reachnum, &reach);
 				return reach.areanum;
 			}
-		}	/* end else if */
+		}
 
 		/* if the bot is swimming the bot should be in a valid area */
 		if(AAS_Swimming(origin))
@@ -323,7 +323,7 @@ BotReachabilityArea(Vec3 origin, int client)
 		return BotFuzzyPointReachabilityArea(org);
 	}
 	return BotFuzzyPointReachabilityArea(origin);
-}	/* end of the function BotReachabilityArea */
+}
 /* ===========================================================================
  * returns the reachability area the bot is in
  *
@@ -439,7 +439,7 @@ BotOnMover(Vec3 origin, int entnum, aas_reachability_t *reach)
 		   AAS_EntityModelNum(trace.ent) == modelnum)
 			return qtrue;
 	return qfalse;
-}	/* end of the function BotOnMover */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -464,7 +464,7 @@ MoverDown(aas_reachability_t *reach)
 	/* if the top of the plat is below the reachability start point */
 	if(origin[2] + maxs[2] < reach->start[2]) return qtrue;
 	return qfalse;
-}	/* end of the function MoverDown */
+}
 /* ========================================================================
  *
  * Parameter:			-
@@ -502,7 +502,7 @@ BotSetBrushModelTypes(void)
 		else if(!Q_stricmp(classname, "func_static"))
 			modeltypes[modelnum] = MODELTYPE_FUNC_STATIC;
 	}
-}	/* end of the function BotSetBrushModelTypes */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -523,7 +523,7 @@ BotOnTopOfEntity(bot_movestate_t *ms)
 	   (trace.ent != ENTITYNUM_WORLD && trace.ent != ENTITYNUM_NONE))
 		return trace.ent;
 	return -1;
-}	/* end of the function BotOnTopOfEntity */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -540,7 +540,7 @@ BotValidTravel(Vec3 origin, aas_reachability_t *reach, int travelflags)
 	if(AAS_AreaContentsTravelFlags(reach->areanum) &
 	   ~travelflags) return qfalse;
 	return qtrue;
-}	/* end of the function BotValidTravel */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -569,7 +569,7 @@ BotAddToAvoidReach(bot_movestate_t *ms, int number, float avoidtime)
 			ms->avoidreachtries[i]	= 1;
 			return;
 		}
-}	/* end of the function BotAddToAvoidReach */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -596,7 +596,7 @@ Vec3distv3FromLineSquared(Vec3 p, Vec3 lp1, Vec3 lp2)
 	}
 	subv3(p, proj, dir);
 	return lensqrv3(dir);
-}	/* end of the function Vec3distv3FromLineSquared */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -609,7 +609,7 @@ VectorVec3distsqrv3(Vec3 p1, Vec3 p2)
 	Vec3 dir;
 	subv3(p2, p1, dir);
 	return lensqrv3(dir);
-}	/* end of the function VectorVec3distsqrv3 */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -674,7 +674,7 @@ BotAvoidSpots(Vec3 origin, aas_reachability_t *reach,
 			return type;
 	}
 	return type;
-}	/* end of the function BotAvoidSpots */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -699,7 +699,7 @@ BotAddAvoidSpot(int movestate, Vec3 origin, float radius, int type)
 	ms->avoidspots[ms->numavoidspots].radius = radius;
 	ms->avoidspots[ms->numavoidspots].type = type;
 	ms->numavoidspots++;
-}	/* end of the function BotAddAvoidSpot */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -776,7 +776,7 @@ BotGetReachabilityToGoal(Vec3 origin, int areanum,
 		}
 	}
 	return bestreachnum;
-}	/* end of the function BotGetReachabilityToGoal */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -801,7 +801,7 @@ BotAddToTarget(Vec3 start, Vec3 end, float maxdist, float *dist,
 		*dist = maxdist;
 		return qtrue;
 	}
-}	/* end of the function BotAddToTarget */
+}
 
 int
 BotMovementViewTarget(int movestate, bot_goal_t *goal, int travelflags,
@@ -854,7 +854,7 @@ BotMovementViewTarget(int movestate, bot_goal_t *goal, int travelflags,
 		}
 	}
 	return qfalse;
-}	/* end of the function BotMovementViewTarget */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -870,7 +870,7 @@ BotVisible(int ent, Vec3 eye, Vec3 target)
 		CONTENTS_SOLID|CONTENTS_PLAYERCLIP);
 	if(trace.fraction >= 1) return qtrue;
 	return qfalse;
-}	/* end of the function BotVisible */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -925,7 +925,7 @@ BotPredictVisiblePosition(Vec3 origin, int areanum, bot_goal_t *goal,
 		copyv3(reach.end, end);
 	}
 	return qfalse;
-}	/* end of the function BotPredictVisiblePosition */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -949,7 +949,7 @@ MoverBottomCenter(aas_reachability_t *reach, Vec3 bottomcenter)
 	addv3(mins, maxs, mids);
 	maddv3(origin, 0.5, mids, bottomcenter);
 	bottomcenter[2] = reach->start[2];
-}	/* end of the function MoverBottomCenter */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -999,7 +999,7 @@ BotGapVec3distv3(Vec3 origin, Vec3 hordir, int entnum)
 		}
 	}
 	return 0;
-}	/* end of the function BotGapVec3distv3 */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -1048,7 +1048,7 @@ BotCheckBarrierJump(bot_movestate_t *ms, Vec3 dir, float speed)
 	ms->moveflags |= MFL_BARRIERJUMP;
 	/* there is a barrier */
 	return qtrue;
-}	/* end of the function BotCheckBarrierJump */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -1064,7 +1064,7 @@ BotSwimInDirection(bot_movestate_t *ms, Vec3 dir, float speed, int type)
 	normv3(normdir);
 	EA_Move(ms->client, normdir, speed);
 	return qtrue;
-}	/* end of the function BotSwimInDirection */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -1171,7 +1171,7 @@ BotWalkInDirection(bot_movestate_t *ms, Vec3 dir, float speed, int type)
 		/* FIXME: do air control to avoid hazards */
 		return qtrue;
 	}
-}	/* end of the function BotWalkInDirection */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -1190,7 +1190,7 @@ BotMoveInDirection(int movestate, Vec3 dir, float speed, int type)
 		return BotSwimInDirection(ms, dir, speed, type);
 	else
 		return BotWalkInDirection(ms, dir, speed, type);
-}	/* end of the function BotMoveInDirection */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -1216,7 +1216,7 @@ Intersection(Vec2 p1, Vec2 p2, Vec2 p3, Vec2 p4, Vec2 out)
 		return qtrue;
 	}else
 		return qfalse;
-}	/* end of the function Intersection */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -1266,7 +1266,7 @@ BotCheckBlocked(bot_movestate_t *ms, Vec3 dir, int checkbottom,
 #endif	/* DEBUG */
 		}
 	}
-}	/* end of the function BotCheckBlocked */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -1310,7 +1310,7 @@ BotTravel_Walk(bot_movestate_t *ms, aas_reachability_t *reach)
 	EA_Move(ms->client, hordir, speed);
 	copyv3(hordir, result.movedir);
 	return result;
-}	/* end of the function BotTravel_Walk */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -1344,7 +1344,7 @@ BotFinishTravel_Walk(bot_movestate_t *ms, aas_reachability_t *reach)
 	EA_Move(ms->client, hordir, speed);
 	copyv3(hordir, result.movedir);
 	return result;
-}	/* end of the function BotFinishTravel_Walk */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -1370,7 +1370,7 @@ BotTravel_Crouch(bot_movestate_t *ms, aas_reachability_t *reach)
 	EA_Move(ms->client, hordir, speed);
 	copyv3(hordir, result.movedir);
 	return result;
-}	/* end of the function BotTravel_Crouch */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -1400,7 +1400,7 @@ BotTravel_BarrierJump(bot_movestate_t *ms, aas_reachability_t *reach)
 	}
 	copyv3(hordir, result.movedir);
 	return result;
-}	/* end of the function BotTravel_BarrierJump */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -1423,7 +1423,7 @@ BotFinishTravel_BarrierJump(bot_movestate_t *ms, aas_reachability_t *reach)
 		copyv3(hordir, result.movedir);
 	}
 	return result;
-}	/* end of the function BotFinishTravel_BarrierJump */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -1446,7 +1446,7 @@ BotTravel_Swim(bot_movestate_t *ms, aas_reachability_t *reach)
 	Vector2Angles(dir, result.ideal_viewangles);
 	result.flags |= MOVERESULT_SWIMVIEW;
 	return result;
-}	/* end of the function BotTravel_Swim */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -1478,7 +1478,7 @@ BotTravel_WaterJump(bot_movestate_t *ms, aas_reachability_t *reach)
 	result.flags |= MOVERESULT_MOVEMENTVIEW;
 	copyv3(dir, result.movedir);
 	return result;
-}	/* end of the function BotTravel_WaterJump */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -1512,7 +1512,7 @@ BotFinishTravel_WaterJump(bot_movestate_t *ms, aas_reachability_t *reach)
 	result.flags |= MOVERESULT_MOVEMENTVIEW;
 	copyv3(dir, result.movedir);
 	return result;
-}	/* end of the function BotFinishTravel_WaterJump */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -1562,7 +1562,7 @@ BotTravel_WalkOffLedge(bot_movestate_t *ms, aas_reachability_t *reach)
 	EA_Move(ms->client, hordir, speed);
 	copyv3(hordir, result.movedir);
 	return result;
-}	/* end of the function BotTravel_WalkOffLedge */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -1596,7 +1596,7 @@ BotAirControl(Vec3 origin, Vec3 velocity, Vec3 goal, Vec3 dir,
 	setv3(dir, 0, 0, 0);
 	*speed = 400;
 	return qfalse;
-}	/* end of the function BotAirControl */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -1626,7 +1626,7 @@ BotFinishTravel_WalkOffLedge(bot_movestate_t *ms, aas_reachability_t *reach)
 	EA_Move(ms->client, hordir, speed);
 	copyv3(hordir, result.movedir);
 	return result;
-}	/* end of the function BotFinishTravel_WalkOffLedge */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -1809,7 +1809,7 @@ BotTravel_Jump(bot_movestate_t *ms, aas_reachability_t *reach)
 	}
 	copyv3(hordir, result.movedir);
 	return result;
-}	/* end of the function BotTravel_Jump* / */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -1840,7 +1840,7 @@ BotFinishTravel_Jump(bot_movestate_t *ms, aas_reachability_t *reach)
 	EA_Move(ms->client, hordir, speed);
 	copyv3(hordir, result.movedir);
 	return result;
-}	/* end of the function BotFinishTravel_Jump */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -1894,7 +1894,7 @@ BotTravel_Ladder(bot_movestate_t *ms, aas_reachability_t *reach)
 	/* save the movement direction */
 	copyv3(dir, result.movedir);
 	return result;
-}	/* end of the function BotTravel_Ladder */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -1924,7 +1924,7 @@ BotTravel_Teleport(bot_movestate_t *ms, aas_reachability_t *reach)
 
 	copyv3(hordir, result.movedir);
 	return result;
-}	/* end of the function BotTravel_Teleport */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -2051,7 +2051,7 @@ BotTravel_Elevator(bot_movestate_t *ms, aas_reachability_t *reach)
 				MOVERESULT_SWIMVIEW;
 	}
 	return result;
-}	/* end of the function BotTravel_Elevator */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -2075,7 +2075,7 @@ BotFinishTravel_Elevator(bot_movestate_t *ms, aas_reachability_t *reach)
 		EA_Move(ms->client, topdir, 300);
 	}
 	return result;
-}	/* end of the function BotFinishTravel_Elevator */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -2121,7 +2121,7 @@ BotFuncBobStartEnd(aas_reachability_t *reach, Vec3 start, Vec3 end,
 		origin[0] = mid[0];
 		origin[1] += mid[1];
 		origin[2] = mid[2];
-	}	/* end else if */
+	}
 	else{
 		start[2] = num0;
 		end[2] = num1;
@@ -2129,7 +2129,7 @@ BotFuncBobStartEnd(aas_reachability_t *reach, Vec3 start, Vec3 end,
 		origin[1] = mid[1];
 		origin[2] += mid[2];
 	}
-}	/* end of the function BotFuncBobStartEnd */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -2269,7 +2269,7 @@ BotTravel_FuncBobbing(bot_movestate_t *ms, aas_reachability_t *reach)
 				MOVERESULT_SWIMVIEW;
 	}
 	return result;
-}	/* end of the function BotTravel_FuncBobbing */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -2311,7 +2311,7 @@ BotFinishTravel_FuncBobbing(bot_movestate_t *ms, aas_reachability_t *reach)
 		}
 	}
 	return result;
-}	/* end of the function BotFinishTravel_FuncBobbing */
+}
 /* ===========================================================================
  * 0  no valid grapple hook visible
  * 1  the grapple hook is still flying
@@ -2340,7 +2340,7 @@ GrappleState(bot_movestate_t *ms, aas_reachability_t *reach)
 		}
 	/* no valid grapple at all */
 	return 0;
-}	/* end of the function GrappleState */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -2366,7 +2366,7 @@ BotResetGrapple(bot_movestate_t *ms)
 #endif	/* DEBUG_GRAPPLE */
 		}
 	}
-}	/* end of the function BotResetGrapple */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -2505,7 +2505,7 @@ BotTravel_Grapple(bot_movestate_t *ms, aas_reachability_t *reach)
 		   ms->reachareanum) ms->reachability_time = 0;
 	}
 	return result;
-}	/* end of the function BotTravel_Grapple */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -2562,7 +2562,7 @@ BotTravel_RocketJump(bot_movestate_t *ms, aas_reachability_t *reach)
 	result.flags	|= MOVERESULT_MOVEMENTWEAPON;
 	copyv3(hordir, result.movedir);
 	return result;
-}	/* end of the function BotTravel_RocketJump */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -2615,7 +2615,7 @@ BotTravel_BFGJump(bot_movestate_t *ms, aas_reachability_t *reach)
 	result.flags	|= MOVERESULT_MOVEMENTWEAPON;
 	copyv3(hordir, result.movedir);
 	return result;
-}	/* end of the function BotTravel_BFGJump */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -2652,7 +2652,7 @@ BotFinishTravel_WeaponJump(bot_movestate_t *ms, aas_reachability_t *reach)
 	EA_Move(ms->client, hordir, speed);
 	copyv3(hordir, result.movedir);
 	return result;
-}	/* end of the function BotFinishTravel_WeaponJump */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -2674,7 +2674,7 @@ BotTravel_JumpPad(bot_movestate_t *ms, aas_reachability_t *reach)
 	EA_Move(ms->client, hordir, 400);
 	copyv3(hordir, result.movedir);
 	return result;
-}	/* end of the function BotTravel_JumpPad */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -2701,7 +2701,7 @@ BotFinishTravel_JumpPad(bot_movestate_t *ms, aas_reachability_t *reach)
 	EA_Move(ms->client, hordir, speed);
 	copyv3(hordir, result.movedir);
 	return result;
-}	/* end of the function BotFinishTravel_JumpPad */
+}
 /* ===========================================================================
  * time before the reachability times out
  *
@@ -2736,7 +2736,7 @@ BotReachabilityTime(aas_reachability_t *reach)
 		return 8;
 	}	/* end case */
 	}	/* end switch */
-}		/* end of the function BotReachabilityTime */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -2784,7 +2784,7 @@ BotMoveInGoalArea(bot_movestate_t *ms, bot_goal_t *goal)
 	ms->lastgoalareanum = goal->areanum;
 	copyv3(ms->origin, ms->lastorigin);
 	return result;
-}	/* end of the function BotMoveInGoalArea */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -2934,7 +2934,7 @@ BotMoveToGoal(bot_moveresult_t *result, int movestate, bot_goal_t *goal,
 							MOVERESULT_ONTOPOFOBSTACLE;
 						return;
 					}
-				}	/* end else if */
+				}
 				else{
 					result->blocked = qtrue;
 					result->blockentity = ent;
@@ -3025,7 +3025,7 @@ BotMoveToGoal(bot_moveresult_t *result, int movestate, bot_goal_t *goal,
 				   ms->lastareanum != ms->areanum)
 					reachnum = 0;
 				/* botimport.Print(PRT_MESSAGE, "area change or timeout\n"); */
-				/* end else if */
+
 			}
 		}
 		resultflags = 0;
@@ -3287,7 +3287,7 @@ BotMoveToGoal(bot_moveresult_t *result, int movestate, bot_goal_t *goal,
 	copyv3(ms->origin, ms->lastorigin);
 	/* return the movement result */
 	return;
-}	/* end of the function BotMoveToGoal */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -3304,7 +3304,7 @@ BotResetAvoidReach(int movestate)
 	Q_Memset(ms->avoidreach, 0, MAX_AVOIDREACH * sizeof(int));
 	Q_Memset(ms->avoidreachtimes, 0, MAX_AVOIDREACH * sizeof(float));
 	Q_Memset(ms->avoidreachtries, 0, MAX_AVOIDREACH * sizeof(int));
-}	/* end of the function BotResetAvoidReach */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -3332,7 +3332,7 @@ BotResetLastAvoidReach(int movestate)
 		if(ms->avoidreachtries[latest] >
 		   0) ms->avoidreachtries[latest]--;
 	}
-}	/* end of the function BotResetLastAvoidReach */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -3347,7 +3347,7 @@ BotResetMoveState(int movestate)
 	ms = BotMoveStateFromHandle(movestate);
 	if(!ms) return;
 	Q_Memset(ms, 0, sizeof(bot_movestate_t));
-}	/* end of the function BotResetMoveState */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -3369,7 +3369,7 @@ BotSetupMoveAI(void)
 	cmd_grappleon	= LibVar("cmd_grappleon", "grappleon");
 	cmd_grappleoff	= LibVar("cmd_grappleoff", "grappleoff");
 	return BLERR_NOERROR;
-}	/* end of the function BotSetupMoveAI */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -3386,4 +3386,4 @@ BotShutdownMoveAI(void)
 			FreeMemory(botmovestates[i]);
 			botmovestates[i] = NULL;
 		}
-}	/* end of the function BotShutdownMoveAI */
+}

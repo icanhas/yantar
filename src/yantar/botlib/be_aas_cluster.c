@@ -52,7 +52,7 @@ AAS_RemoveClusterAreas(void)
 
 	for(i = 1; i < aasworld.numareas; i++)
 		aasworld.areasettings[i].cluster = 0;
-}	/* end of the function AAS_RemoveClusterAreas */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -67,7 +67,7 @@ AAS_ClearCluster(int clusternum)
 	for(i = 1; i < aasworld.numareas; i++)
 		if(aasworld.areasettings[i].cluster == clusternum)
 			aasworld.areasettings[i].cluster = 0;
-}	/* end of the function AAS_ClearCluster */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -85,7 +85,7 @@ AAS_RemovePortalsClusterReference(int clusternum)
 		if(aasworld.portals[portalnum].backcluster == clusternum)
 			aasworld.portals[portalnum].backcluster = 0;
 	}
-}	/* end of the function AAS_RemovePortalsClusterReference */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -116,7 +116,7 @@ AAS_UpdatePortal(int areanum, int clusternum)
 	/* if the portal has no back cluster yet */
 	else if(!portal->backcluster)
 		portal->backcluster = clusternum;
-	/* end else if */
+
 	else{
 		/* remove the cluster portal flag contents */
 		aasworld.areasettings[areanum].contents &=
@@ -139,7 +139,7 @@ AAS_UpdatePortal(int areanum, int clusternum)
 	aasworld.portalindexsize++;
 	cluster->numportals++;
 	return qtrue;
-}	/* end of the function AAS_UpdatePortal */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -208,7 +208,7 @@ AAS_FloodClusterAreas_r(int areanum, int clusternum)
 			   clusternum)) return qfalse;
 	}
 	return qtrue;
-}	/* end of the function AAS_FloodClusterAreas_r */
+}
 /* ===========================================================================
  * try to flood from all areas without cluster into areas with a cluster set
  *
@@ -250,7 +250,7 @@ AAS_FloodClusterAreasUsingReachabilities(int clusternum)
 		}
 	}
 	return qtrue;
-}	/* end of the function AAS_FloodClusterAreasUsingReachabilities */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -273,7 +273,7 @@ AAS_NumberClusterPortals(int clusternum)
 		else
 			portal->clusterareanum[1] = cluster->numareas++;
 	}
-}	/* end of the function AAS_NumberClusterPortals */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -333,7 +333,7 @@ AAS_NumberClusterAreas(int clusternum)
 		else
 			portal->clusterareanum[1] = cluster->numareas++;
 	}
-}	/* end of the function AAS_NumberClusterAreas */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -381,7 +381,7 @@ AAS_FindClusters(void)
 		aasworld.numclusters++;
 	}
 	return qtrue;
-}	/* end of the function AAS_FindClusters */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -408,7 +408,7 @@ AAS_CreatePortals(void)
 			portal->backcluster	= 0;
 			aasworld.numportals++;
 		}
-}	/* end of the function AAS_CreatePortals */
+}
 /*
  * //===========================================================================
  * //
@@ -663,7 +663,7 @@ AAS_ConnectedAreas_r(int *areanums, int numareas, int *connectedareas,
 		/* recursively proceed with the other area */
 		AAS_ConnectedAreas_r(areanums, numareas, connectedareas, j);
 	}
-}	/* end of the function AAS_ConnectedAreas_r */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -682,7 +682,7 @@ AAS_ConnectedAreas(int *areanums, int numareas)
 	for(i = 0; i < numareas; i++)
 		if(!connectedareas[i]) return qfalse;
 	return qtrue;
-}	/* end of the function AAS_ConnectedAreas */
+}
 /* ===========================================================================
  * gets adjacent areas with less presence types recursively
  *
@@ -730,7 +730,7 @@ AAS_GetAdjacentAreasWithLessPresenceTypes_r(int *areanums, int numareas,
 		}
 	}
 	return numareas;
-}	/* end of the function AAS_GetAdjacentAreasWithLessPresenceTypes_r */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -856,7 +856,7 @@ AAS_CheckAreaForPossiblePortals(int areanum)
 		Log_Write("possible portal: %d\r\n", areanums[i]);
 	}
 	return numareas;
-}	/* end of the function AAS_CheckAreaForPossiblePortals */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -873,7 +873,7 @@ AAS_FindPossiblePortals(void)
 		numpossibleportals += AAS_CheckAreaForPossiblePortals(i);
 	botimport.Print(PRT_MESSAGE, "\r%6d possible portal areas\n",
 		numpossibleportals);
-}	/* end of the function AAS_FindPossiblePortals */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -887,7 +887,7 @@ AAS_RemoveAllPortals(void)
 
 	for(i = 1; i < aasworld.numareas; i++)
 		aasworld.areasettings[i].contents &= ~AREACONTENTS_CLUSTERPORTAL;
-}	/* end of the function AAS_RemoveAllPortals */
+}
 
 #if 0
 /* ===========================================================================
@@ -944,7 +944,7 @@ AAS_FloodCluster_r(int areanum, int clusternum)
 		if(aasworld.areasettings[otherareanum].cluster) continue;
 		AAS_FloodCluster_r(otherareanum, clusternum);
 	}
-}	/* end of the function AAS_FloodCluster_r */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -973,7 +973,7 @@ AAS_RemoveTeleporterPortals(void)
 				break;
 			}
 		}
-}	/* end of the function AAS_RemoveTeleporterPortals */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -1010,7 +1010,7 @@ AAS_FloodClusterReachabilities(int clusternum)
 			}
 		}
 	}
-}	/* end of the function AAS_FloodClusterReachabilities */
+}
 
 /* ===========================================================================
  *
@@ -1076,7 +1076,7 @@ AAS_RemoveNotClusterClosingPortals(void)
 	}
 	botimport.Print(PRT_MESSAGE, "\r%6d non closing portals removed\n",
 		nonclosingportals);
-}	/* end of the function AAS_RemoveNotClusterClosingPortals */
+}
 
 /* ===========================================================================
  *
@@ -1150,7 +1150,7 @@ AAS_RemoveNotClusterClosingPortals(void)
 	}
 	botimport.Print(PRT_MESSAGE, "\r%6d non closing portals removed\n",
 		nonclosingportals);
-}	/* end of the function AAS_RemoveNotClusterClosingPortals */
+}
 
 /* ===========================================================================
  *
@@ -1293,7 +1293,7 @@ AAS_AddTeleporterPortals(void)
 		}
 	}
 	AAS_FreeBSPEntities(entities);
-}	/* end of the function AAS_AddTeleporterPortals */
+}
 
 /* ===========================================================================
  *
@@ -1319,7 +1319,7 @@ AAS_AddTeleporterPortals(void)
 			aasworld.areasettings[areanum].contents |=
 				AREACONTENTS_CLUSTERPORTAL;
 		}
-}	/* end of the function AAS_AddTeleporterPortals */
+}
 
 #endif
 
@@ -1353,7 +1353,7 @@ AAS_TestPortals(void)
 		}
 	}
 	return qtrue;
-}	/* end of the function */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -1373,7 +1373,7 @@ AAS_CountForcedClusterPortals(void)
 			num++;
 		}
 	botimport.Print(PRT_MESSAGE, "%6d forced portal areas\n", num);
-}	/* end of the function AAS_CountForcedClusterPortals */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -1390,7 +1390,7 @@ AAS_CreateViewPortals(void)
 		   AREACONTENTS_CLUSTERPORTAL)
 			aasworld.areasettings[i].contents |=
 				AREACONTENTS_VIEWPORTAL;
-}	/* end of the function AAS_CreateViewPortals */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -1406,7 +1406,7 @@ AAS_SetViewPortalsAsClusterPortals(void)
 		if(aasworld.areasettings[i].contents & AREACONTENTS_VIEWPORTAL)
 			aasworld.areasettings[i].contents |=
 				AREACONTENTS_CLUSTERPORTAL;
-}	/* end of the function AAS_SetViewPortalsAsClusterPortals */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -1502,4 +1502,4 @@ AAS_InitClustering(void)
 	botimport.Print(PRT_MESSAGE,
 		"%6i AAS memory/CPU usage (the lower the better)\n",
 		total * 3);
-}	/* end of the function AAS_InitClustering */
+}

@@ -1618,7 +1618,7 @@ PC_EvaluateTokens(source_t *source, token_t *tokens, signed long int *intvalue,
 		}else if(parentheses){
 			SourceError(source, "too many ( in #if/#elif");
 			error = 1;
-		}	/* end else if */
+		}
 	}
 	gotquestmarkvalue = qfalse;
 	questmarkintvalue = 0;
@@ -2396,7 +2396,7 @@ PC_ExpectTokenType(source_t *source, int type, int subtype, token_t *token)
 			SourceError(source, "found %s", token->string);
 			return qfalse;
 		}
-	/* end else if */
+
 	return qtrue;
 }
 

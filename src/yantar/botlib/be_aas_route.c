@@ -85,7 +85,7 @@ AAS_RoutingInfo(void)
 		numportalcacheupdates);
 	botimport.Print(PRT_MESSAGE, "%d bytes routing cache\n",
 		routingcachesize);
-}	/* end of the function AAS_RoutingInfo */
+}
 #endif	/* ROUTING_DEBUG */
 /* ===========================================================================
  * returns the number of the area in the cluster
@@ -114,7 +114,7 @@ AAS_ClusterAreaNum(int cluster, int areanum)
 		side = aasworld.portals[-areacluster].frontcluster != cluster;
 		return aasworld.portals[-areacluster].clusterareanum[side];
 	}
-}	/* end of the function AAS_ClusterAreaNum */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -147,7 +147,7 @@ AAS_InitTravelFlagFromType(void)
 	aasworld.travelflagfortype[TRAVEL_STRAFEJUMP]	= TFL_STRAFEJUMP;
 	aasworld.travelflagfortype[TRAVEL_JUMPPAD]	= TFL_JUMPPAD;
 	aasworld.travelflagfortype[TRAVEL_FUNCBOB]	= TFL_FUNCBOB;
-}	/* end of the function AAS_InitTravelFlagFromType */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -169,7 +169,7 @@ AAS_TravelFlagForType_inline(int traveltype)
 		return TFL_INVALID;
 	tfl |= aasworld.travelflagfortype[traveltype];
 	return tfl;
-}	/* end of the function AAS_TravelFlagForType_inline */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -180,7 +180,7 @@ int
 AAS_TravelFlagForType(int traveltype)
 {
 	return AAS_TravelFlagForType_inline(traveltype);
-}	/* end of the function AAS_TravelFlagForType_inline */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -196,7 +196,7 @@ AAS_UnlinkCache(aas_routingcache_t *cache)
 	else aasworld.oldestcache = cache->time_next;
 	cache->time_next	= NULL;
 	cache->time_prev	= NULL;
-}	/* end of the function AAS_UnlinkCache */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -215,7 +215,7 @@ AAS_LinkCache(aas_routingcache_t *cache)
 	}
 	cache->time_next = NULL;
 	aasworld.newestcache = cache;
-}	/* end of the function AAS_LinkCache */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -228,7 +228,7 @@ AAS_FreeRoutingCache(aas_routingcache_t *cache)
 	AAS_UnlinkCache(cache);
 	routingcachesize -= cache->size;
 	FreeMemory(cache);
-}	/* end of the function AAS_FreeRoutingCache */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -253,7 +253,7 @@ AAS_RemoveRoutingCacheInCluster(int clusternum)
 		}
 		aasworld.clusterareacache[clusternum][i] = NULL;
 	}
-}	/* end of the function AAS_RemoveRoutingCacheInCluster */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -286,7 +286,7 @@ AAS_RemoveRoutingCacheUsingArea(int areanum)
 		}
 		aasworld.portalcache[i] = NULL;
 	}
-}	/* end of the function AAS_RemoveRoutingCacheUsingArea */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -320,7 +320,7 @@ AAS_EnableRoutingArea(int areanum, int enable)
 		/* remove all routing cache involving this area */
 		AAS_RemoveRoutingCacheUsingArea(areanum);
 	return !flags;
-}	/* end of the function AAS_EnableRoutingArea */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -331,7 +331,7 @@ ID_INLINE float
 AAS_RoutingTime(void)
 {
 	return AAS_Time();
-}	/* end of the function AAS_RoutingTime */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -362,7 +362,7 @@ AAS_GetAreaContentsTravelFlags(int areanum)
 	if(aasworld.areasettings[areanum].areaflags & AREA_BRIDGE)
 		tfl |= TFL_BRIDGE;
 	return tfl;
-}	/* end of the function AAS_GetAreaContentsTravelFlags */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -373,7 +373,7 @@ ID_INLINE int
 AAS_AreaContentsTravelFlags_inline(int areanum)
 {
 	return aasworld.areacontentstravelflags[areanum];
-}	/* end of the function AAS_AreaContentsTravelFlags */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -384,7 +384,7 @@ int
 AAS_AreaContentsTravelFlags(int areanum)
 {
 	return aasworld.areacontentstravelflags[areanum];
-}	/* end of the function AAS_AreaContentsTravelFlags */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -403,7 +403,7 @@ AAS_InitAreaContentsTravelFlags(void)
 	for(i = 0; i < aasworld.numareas; i++)
 		aasworld.areacontentstravelflags[i] =
 			AAS_GetAreaContentsTravelFlags(i);
-}	/* end of the function AAS_InitAreaContentsTravelFlags */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -466,7 +466,7 @@ AAS_CreateReversedReachability(void)
 	botimport.Print(PRT_MESSAGE, "reversed reachability %d msec\n",
 		Sys_MilliSeconds() - starttime);
 #endif
-}	/* end of the function AAS_CreateReversedReachability */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -492,7 +492,7 @@ AAS_AreaTravelTime(int areanum, Vec3 start, Vec3 end)
 	/* make sure the distance isn't zero */
 	if(intdist <= 0) intdist = 1;
 	return intdist;
-}	/* end of the function AAS_AreaTravelTime */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -563,7 +563,7 @@ AAS_CalculateAreaTravelTimes(void)
 	botimport.Print(PRT_MESSAGE, "area travel times %d msec\n",
 		Sys_MilliSeconds() - starttime);
 #endif
-}	/* end of the function AAS_CalculateAreaTravelTimes */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -593,7 +593,7 @@ AAS_PortalMaxTravelTime(int portalnum)
 				maxt = t;
 		}
 	return maxt;
-}	/* end of the function AAS_PortalMaxTravelTime */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -614,7 +614,7 @@ AAS_InitPortalMaxTravelTimes(void)
 	for(i = 0; i < aasworld.numportals; i++)
 		aasworld.portalmaxtraveltimes[i] = AAS_PortalMaxTravelTime(i);
 	/* botimport.Print(PRT_MESSAGE, "portal %d max tt = %d\n", i, aasworld.portalmaxtraveltimes[i]); */
-}	/* end of the function AAS_InitPortalMaxTravelTimes */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -730,7 +730,7 @@ AAS_FreeOldestCache(void)
 		return qtrue;
 	}
 	return qfalse;
-}	/* end of the function AAS_FreeOldestCache */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -753,7 +753,7 @@ AAS_AllocRoutingCache(int numtraveltimes)
 				+ numtraveltimes * sizeof(unsigned short int);
 	cache->size = size;
 	return cache;
-}	/* end of the function AAS_AllocRoutingCache */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -784,7 +784,7 @@ AAS_FreeAllClusterAreaCache(void)
 	/* free the cluster cache array */
 	FreeMemory(aasworld.clusterareacache);
 	aasworld.clusterareacache = NULL;
-}	/* end of the function AAS_FreeAllClusterAreaCache */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -811,7 +811,7 @@ AAS_InitClusterAreaCache(void)
 		ptr += aasworld.clusters[i].numareas *
 		       sizeof(aas_routingcache_t *);
 	}
-}	/* end of the function AAS_InitClusterAreaCache */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -836,7 +836,7 @@ AAS_FreeAllPortalCache(void)
 	}
 	FreeMemory(aasworld.portalcache);
 	aasworld.portalcache = NULL;
-}	/* end of the function AAS_FreeAllPortalCache */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -848,7 +848,7 @@ AAS_InitPortalCache(void)
 {
 	aasworld.portalcache = (aas_routingcache_t**)GetClearedMemory(
 		aasworld.numareas * sizeof(aas_routingcache_t *));
-}	/* end of the function AAS_InitPortalCache */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -875,7 +875,7 @@ AAS_InitRoutingUpdate(void)
 	/* allocate memory for the portal update fields */
 	aasworld.portalupdate = (aas_routingupdate_t*)GetClearedMemory(
 		(aasworld.numportals+1) * sizeof(aas_routingupdate_t));
-}	/* end of the function AAS_InitRoutingUpdate */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -903,7 +903,7 @@ AAS_CreateAllRoutingCache(void)
 		}
 	}
 	aasworld.initialized = qfalse;
-}	/* end of the function AAS_CreateAllRoutingCache */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -1011,7 +1011,7 @@ AAS_WriteRouteCache(void)
 	botimport.Print(PRT_MESSAGE, "\nroute cache written to %s\n", filename);
 	botimport.Print(PRT_MESSAGE, "written %d bytes of routing cache\n",
 		totalsize);
-}	/* end of the function AAS_WriteRouteCache */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -1035,7 +1035,7 @@ AAS_ReadCache(Fhandle fp)
 				(size - sizeof(aas_routingcache_t) +
 				 sizeof(unsigned short)) / 3 * 2;
 	return cache;
-}	/* end of the function AAS_ReadCache */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -1121,7 +1121,7 @@ AAS_ReadRouteCache(void)
 	 */
 	botimport.FS_FCloseFile(fp);
 	return qtrue;
-}	/* end of the function AAS_ReadRouteCache */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -1203,7 +1203,7 @@ AAS_InitReachabilityAreas(void)
 			aasworld.reachabilityareaindex[numreachareas++] =
 				areas[j];
 	}
-}	/* end of the function AAS_InitReachabilityAreas */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -1238,7 +1238,7 @@ AAS_InitRouting(void)
 		"4096");
 	/* read any routing cache if available */
 	AAS_ReadRouteCache();
-}	/* end of the function AAS_InitRouting */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -1279,7 +1279,7 @@ AAS_FreeRoutingCaches(void)
 	if(aasworld.areacontentstravelflags) FreeMemory(
 			aasworld.areacontentstravelflags);
 	aasworld.areacontentstravelflags = NULL;
-}	/* end of the function AAS_FreeRoutingCaches */
+}
 /* ===========================================================================
  * update the given routing cache
  *
@@ -1397,7 +1397,7 @@ AAS_UpdateAreaRoutingCache(aas_routingcache_t *areacache)
 			}
 		}
 	}
-}	/* end of the function AAS_UpdateAreaRoutingCache */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -1439,7 +1439,7 @@ AAS_GetAreaRoutingCache(int clusternum, int areanum, int travelflags)
 	cache->type	= CACHETYPE_AREA;
 	AAS_LinkCache(cache);
 	return cache;
-}	/* end of the function AAS_GetAreaRoutingCache */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -1533,7 +1533,7 @@ AAS_UpdatePortalRoutingCache(aas_routingcache_t *portalcache)
 			}
 		}
 	}
-}	/* end of the function AAS_UpdatePortalRoutingCache */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -1571,7 +1571,7 @@ AAS_GetPortalRoutingCache(int clusternum, int areanum, int travelflags)
 	cache->type	= CACHETYPE_PORTAL;
 	AAS_LinkCache(cache);
 	return cache;
-}	/* end of the function AAS_GetPortalRoutingCache */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -1742,7 +1742,7 @@ AAS_AreaRouteToGoalArea(int areanum, Vec3 origin, int goalareanum,
 	*reachnum	= bestreachnum;
 	*traveltime	= besttime;
 	return qtrue;
-}	/* end of the function AAS_AreaRouteToGoalArea */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -1759,7 +1759,7 @@ AAS_AreaTravelTimeToGoalArea(int areanum, Vec3 origin, int goalareanum,
 		   &traveltime, &reachnum))
 		return traveltime;
 	return 0;
-}	/* end of the function AAS_AreaTravelTimeToGoalArea */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -1776,7 +1776,7 @@ AAS_AreaReachabilityToGoalArea(int areanum, Vec3 origin, int goalareanum,
 		   &traveltime, &reachnum))
 		return reachnum;
 	return 0;
-}	/* end of the function AAS_AreaReachabilityToGoalArea */
+}
 /* ===========================================================================
  * predict the route and stop on one of the stop events
  *
@@ -1904,7 +1904,7 @@ AAS_PredictRoute(struct aas_predictroute_s *route, int areanum, Vec3 origin,
 	if(curareanum != goalareanum)
 		return qfalse;
 	return qtrue;
-}	/* end of the function AAS_PredictRoute */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -1915,7 +1915,7 @@ int
 AAS_BridgeWalkable(int areanum)
 {
 	return qfalse;
-}	/* end of the function AAS_BridgeWalkable */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -1934,7 +1934,7 @@ AAS_ReachabilityFromNum(int num, struct aas_reachability_s *reach)
 		return;
 	}
 	Q_Memcpy(reach, &aasworld.reachability[num], sizeof(aas_reachability_t));;
-}	/* end of the function AAS_ReachabilityFromNum */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -1970,7 +1970,7 @@ AAS_NextAreaReachability(int areanum, int reachnum)
 	   settings->numreachableareas)
 		return 0;
 	return reachnum;
-}	/* end of the function AAS_NextAreaReachability */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -1996,7 +1996,7 @@ AAS_NextModelReachability(int num, int modelnum)
 			   modelnum) return i;
 	}
 	return 0;
-}	/* end of the function AAS_NextModelReachability */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -2056,7 +2056,7 @@ AAS_RandomGoalArea(int areanum, int travelflags, int *goalareanum,
 		n++;
 	}
 	return qfalse;
-}	/* end of the function AAS_RandomGoalArea */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -2067,7 +2067,7 @@ int
 AAS_AreaVisible(int srcarea, int destarea)
 {
 	return qfalse;
-}	/* end of the function AAS_AreaVisible */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -2082,7 +2082,7 @@ Vec3distv3PointToLine(Vec3 v1, Vec3 v2, Vec3 point)
 	AAS_ProjectPointOntoVector(point, v1, v2, p2);
 	subv3(point, p2, vec);
 	return lenv3(vec);
-}	/* end of the function Vec3distv3PointToLine */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -2212,4 +2212,4 @@ AAS_NearestHideArea(int srcnum, Vec3 origin, int areanum, int enemynum,
 		}
 	}
 	return bestarea;
-}	/* end of the function AAS_NearestHideArea */
+}

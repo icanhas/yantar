@@ -50,7 +50,7 @@ FindField(fielddef_t *defs, char *name)
 	for(i = 0; defs[i].name; i++)
 		if(!strcmp(defs[i].name, name)) return &defs[i];
 	return NULL;
-}	/* end of the function FindField */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -120,7 +120,7 @@ ReadNumber(source_t *source, fielddef_t *fd, void *p)
 		if(fd->type & FT_UNSIGNED){
 			intmin = 0; intmax = 65535;
 		}else{intmin = -32768; intmax = 32767; }
-	}	/* end else if */
+	}
 	if((fd->type & FT_TYPE) == FT_CHAR || (fd->type & FT_TYPE) == FT_INT){
 		if(fd->type & FT_BOUNDED){
 			intmin	= Maximum(intmin, fd->floatmin);
@@ -142,7 +142,7 @@ ReadNumber(source_t *source, fielddef_t *fd, void *p)
 					fd->floatmax);
 				return 0;
 			}
-	}	/* end else if */
+	}
 		/* store the value */
 	if((fd->type & FT_TYPE) == FT_CHAR){
 		if(fd->type & FT_UNSIGNED) *(unsigned char*)p =
@@ -155,7 +155,7 @@ ReadNumber(source_t *source, fielddef_t *fd, void *p)
 	}else if((fd->type & FT_TYPE) == FT_FLOAT)
 		*(float*)p = (float)intval;
 	return 1;
-}	/* end of the function ReadNumber */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -178,7 +178,7 @@ ReadChar(source_t *source, fielddef_t *fd, void *p)
 		if(!ReadNumber(source, fd, p)) return 0;
 	}
 	return 1;
-}	/* end of the function ReadChar */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -198,7 +198,7 @@ ReadString(source_t *source, fielddef_t *fd, void *p)
 	/* make sure the string is closed with a zero */
 	((char*)p)[MAX_STRINGFIELD-1] = '\0';
 	return 1;
-}	/* end of the function ReadString */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -286,7 +286,7 @@ ReadStructure(source_t *source, structdef_t *def, char *structure)
 		}
 	}
 	return qtrue;
-}	/* end of the function ReadStructure */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -299,7 +299,7 @@ WriteIndent(FILE *fp, int indent)
 	while(indent-- > 0)
 		if(fprintf(fp, "\t") < 0) return qfalse;
 	return qtrue;
-}	/* end of the function WriteIndent */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -326,7 +326,7 @@ WriteFloat(FILE *fp, float value)
 	/* write the float to file */
 	if(fprintf(fp, "%s", buf) < 0) return 0;
 	return 1;
-}	/* end of the function WriteFloat */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -404,7 +404,7 @@ WriteStructWithIndent(FILE *fp, structdef_t *def, char *structure, int indent)
 	if(!WriteIndent(fp, indent)) return qfalse;
 	if(fprintf(fp, "}\r\n") < 0) return qfalse;
 	return qtrue;
-}	/* end of the function WriteStructWithIndent */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -415,4 +415,4 @@ int
 WriteStructure(FILE *fp, structdef_t *def, char *structure)
 {
 	return WriteStructWithIndent(fp, def, structure, 0);
-}	/* end of the function WriteStructure */
+}

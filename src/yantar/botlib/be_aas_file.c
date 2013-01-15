@@ -180,7 +180,7 @@ AAS_SwapAASData(void)
 		aasworld.clusters[i].firstportal = LittleLong(
 			aasworld.clusters[i].firstportal);
 	}
-}	/* end of the function AAS_SwapAASData */
+}
 /* ===========================================================================
  * dump the current loaded aas file
  *
@@ -237,7 +237,7 @@ AAS_DumpAASData(void)
 	aasworld.loaded = qfalse;
 	aasworld.initialized = qfalse;
 	aasworld.savefile = qfalse;
-}	/* end of the function AAS_DumpAASData */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -295,7 +295,7 @@ AAS_FileInfo(void)
 		    aasworld.numportals * sizeof(aas_portal_t) +
 		    aasworld.numclusters * sizeof(aas_cluster_t);
 	botimport.Print(PRT_MESSAGE, "optimzed size %d KB\n", optimized >> 10);
-}	/* end of the function AAS_FileInfo */
+}
 #endif	/* AASFILEDEBUG */
 /* ===========================================================================
  * allocate memory and read a lump of a AAS file
@@ -330,7 +330,7 @@ AAS_LoadAASLump(Fhandle fp, int offset, int length, int *lastoffset,
 		*lastoffset += length;
 	}
 	return buf;
-}	/* end of the function AAS_LoadAASLump */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -344,7 +344,7 @@ AAS_DData(unsigned char *data, int size)
 
 	for(i = 0; i < size; i++)
 		data[i] ^= (unsigned char)i * 119;
-}	/* end of the function AAS_DData */
+}
 /* ===========================================================================
  * load an aas file
  *
@@ -522,7 +522,7 @@ AAS_LoadAASFile(char *filename)
 	AAS_FileInfo();
 #endif	/* AASFILEDEBUG */
 	return BLERR_NOERROR;
-}	/* end of the function AAS_LoadAASFile */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -548,7 +548,7 @@ AAS_WriteAASLump(Fhandle fp, aas_header_t *h, int lumpnum, void *data,
 	AAS_WriteAASLump_offset += length;
 
 	return qtrue;
-}	/* end of the function AAS_WriteAASLump */
+}
 /* ===========================================================================
  * aas data is useless after writing to file because it is byte swapped
  *
@@ -623,4 +623,4 @@ AAS_WriteAASFile(char *filename)
 	/* close the file */
 	botimport.FS_FCloseFile(fp);
 	return qtrue;
-}	/* end of the function AAS_WriteAASFile */
+}

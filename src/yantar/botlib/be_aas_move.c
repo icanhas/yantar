@@ -50,7 +50,7 @@ AAS_DropToFloor(Vec3 origin, Vec3 mins, Vec3 maxs)
 	if(trace.startsolid) return qfalse;
 	copyv3(trace.endpos, origin);
 	return qtrue;
-}	/* end of the function AAS_DropToFloor */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -112,7 +112,7 @@ AAS_InitSettings(void)
 	aassettings.rs_maxfallheight	= LibVarValue("rs_maxfallheight", "0");
 	aassettings.rs_maxjumpfallheight = LibVarValue("rs_maxjumpfallheight",
 		"450");
-}	/* end of the function AAS_InitSettings */
+}
 /* ===========================================================================
  * returns qtrue if the bot is against a ladder
  *
@@ -170,7 +170,7 @@ AAS_AgainstLadder(Vec3 origin)
 				   0.1f)) return qtrue;
 	}
 	return qfalse;
-}	/* end of the function AAS_AgainstLadder */
+}
 /* ===========================================================================
  * returns qtrue if the bot is on the ground
  *
@@ -202,7 +202,7 @@ AAS_OnGround(Vec3 origin, int presencetype, int passent)
 		   up) < aassettings.phys_maxsteepness) return qfalse;
 	/* the bot is on the ground */
 	return qtrue;
-}	/* end of the function AAS_OnGround */
+}
 /* ===========================================================================
  * returns qtrue if a bot at the given position is swimming
  *
@@ -220,7 +220,7 @@ AAS_Swimming(Vec3 origin)
 	if(AAS_PointContents(testorg) &
 	   (CONTENTS_LAVA|CONTENTS_SLIME|CONTENTS_WATER)) return qtrue;
 	return qfalse;
-}	/* end of the function AAS_Swimming */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -239,10 +239,10 @@ AAS_SetMovedir(Vec3 angles, Vec3 movedir)
 		copyv3(MOVEDIR_UP, movedir);
 	else if(cmpv3(angles, VEC_DOWN))
 		copyv3(MOVEDIR_DOWN, movedir);
-	/* end else if */
+
 	else
 		anglev3s(angles, movedir, NULL, NULL);
-}	/* end of the function AAS_SetMovedir */
+}
 /* ===========================================================================
  *
  * Parameter:				-
@@ -272,7 +272,7 @@ AAS_JumpReachRunStart(aas_reachability_t *reach, Vec3 runstart)
 	/* don't enter slime or lava and don't fall from too high */
 	if(move.stopevent & (SE_ENTERSLIME|SE_ENTERLAVA|SE_HITGROUNDDAMAGE))
 		copyv3(start, runstart);
-}	/* end of the function AAS_JumpReachRunStart */
+}
 /* ===========================================================================
  * returns the Z velocity when rocket jumping at the origin
  *
@@ -327,7 +327,7 @@ AAS_WeaponJumpZVelocity(Vec3 origin, float radiusdamage)
 	scalev3(dir, 1600.0 * (float)knockback / mass, kvel);	/* the rocket jump hack... */
 	/* rocket impact velocity + jump velocity */
 	return kvel[2] + aassettings.phys_jumpvel;
-}	/* end of the function AAS_WeaponJumpZVelocity */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -339,7 +339,7 @@ AAS_RocketJumpZVelocity(Vec3 origin)
 {
 	/* rocket radius damage is 120 (p_weapon.c: Weapon_RocketLauncher_Fire) */
 	return AAS_WeaponJumpZVelocity(origin, 120);
-}	/* end of the function AAS_RocketJumpZVelocity */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -351,7 +351,7 @@ AAS_BFGJumpZVelocity(Vec3 origin)
 {
 	/* bfg radius damage is 1000 (p_weapon.c: weapon_bfg_fire) */
 	return AAS_WeaponJumpZVelocity(origin, 120);
-}	/* end of the function AAS_BFGJumpZVelocity */
+}
 /* ===========================================================================
  * applies ground friction to the given velocity
  *
@@ -377,7 +377,7 @@ AAS_Accelerate(Vec3 velocity, float frametime, Vec3 wishdir, float wishspeed,
 
 	for(i=0; i<3; i++)
 		velocity[i] += accelspeed*wishdir[i];
-}	/* end of the function AAS_Accelerate */
+}
 /* ===========================================================================
  * applies ground friction to the given velocity
  *
@@ -401,7 +401,7 @@ AAS_ApplyFriction(Vec3 vel, float friction, float stopspeed,
 		vel[0]		*= newspeed;
 		vel[1]		*= newspeed;
 	}
-}	/* end of the function AAS_ApplyFriction */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -467,7 +467,7 @@ AAS_ClipToBBox(aas_Trace *trace, Vec3 start, Vec3 end, int presencetype,
 		return qtrue;
 	}
 	return qfalse;
-}	/* end of the function AAS_ClipToBBox */
+}
 /* ===========================================================================
  * predicts the movement
  * assumes regular bounding box sizes
@@ -998,7 +998,7 @@ AAS_ClientMovementPrediction(struct aas_clientmove_s *move,
 			move->time		= n * frametime;
 			move->frames		= n;
 			return qtrue;
-		}	/* end else if */
+		}
 		else if(stopevent & SE_GAP){
 			aas_Trace gaptrace;
 
@@ -1031,7 +1031,7 @@ AAS_ClientMovementPrediction(struct aas_clientmove_s *move,
 						return qtrue;
 					}
 			}
-		}	/* end else if */
+		}
 	}
 	copyv3(org, move->endpos);
 	move->endarea = AAS_PointAreaNum(org);
@@ -1042,7 +1042,7 @@ AAS_ClientMovementPrediction(struct aas_clientmove_s *move,
 	move->time		= n * frametime;
 	move->frames		= n;
 	return qtrue;
-}	/* end of the function AAS_ClientMovementPrediction */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -1065,7 +1065,7 @@ AAS_PredictClientMovement(struct aas_clientmove_s *move,
 		frametime, stopevent, stopareanum,
 		mins, maxs,
 		visualize);
-}	/* end of the function AAS_PredictClientMovement */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -1087,7 +1087,7 @@ AAS_ClientMovementHitBBox(struct aas_clientmove_s *move,
 		frametime, SE_HITBOUNDINGBOX, 0,
 		mins, maxs,
 		visualize);
-}	/* end of the function AAS_ClientMovementHitBBox */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -1110,7 +1110,7 @@ AAS_TestMovementPrediction(int entnum, Vec3 origin, Vec3 dir)
 		velocity, cmdmove, 13, 13, 0.1f, SE_HITGROUND, 0, qtrue);	/* SE_LEAVEGROUND); */
 	if(move.stopevent & SE_LEAVEGROUND)
 		botimport.Print(PRT_MESSAGE, "leave ground\n");
-}	/* end of the function TestMovementPrediction */
+}
 /* ===========================================================================
  * calculates the horizontal velocity needed to perform a jump from start
  * to end
@@ -1162,4 +1162,4 @@ AAS_HorizontalVelocityForJump(float zvel, Vec3 start, Vec3 end,
 		return 0;
 	}
 	return 1;
-}	/* end of the function AAS_HorizontalVelocityForJump */
+}

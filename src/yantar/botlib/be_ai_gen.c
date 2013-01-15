@@ -62,7 +62,7 @@ GeneticSelection(int numranks, float *rankings)
 		index = (index + 1) % numranks;
 	}
 	return 0;
-}	/* end of the function GeneticSelection */
+}
 /* ===========================================================================
  *
  * Parameter:			-
@@ -115,4 +115,4 @@ GeneticParentsAndChildSelection(int numranks, float *ranks, int *parent1,
 	/* select child */
 	*child = GeneticSelection(numranks, rankings);
 	return qtrue;
-}	/* end of the function GeneticParentsAndChildSelection */
+}
