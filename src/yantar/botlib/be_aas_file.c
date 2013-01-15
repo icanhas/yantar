@@ -4,15 +4,9 @@
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License.
  */
-
-/*****************************************************************************
-* name:		be_aas_file.c
-*
-* desc:		AAS file loading/writing
-*
-* $Archive: /MissionPack/code/botlib/be_aas_file.c $
-*
-*****************************************************************************/
+/*
+ * AAS file loading/writing
+ */
 
 #include "shared.h"
 #include "l_memory.h"
@@ -30,12 +24,6 @@
 
 /* #define AASFILEDEBUG */
 
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
 void
 AAS_SwapAASData(void)
 {
@@ -181,13 +169,10 @@ AAS_SwapAASData(void)
 			aasworld.clusters[i].firstportal);
 	}
 }
-/* ===========================================================================
+
+/*
  * dump the current loaded aas file
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+ */
 void
 AAS_DumpAASData(void)
 {
@@ -238,12 +223,7 @@ AAS_DumpAASData(void)
 	aasworld.initialized = qfalse;
 	aasworld.savefile = qfalse;
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 #ifdef AASFILEDEBUG
 void
 AAS_FileInfo(void)
@@ -297,14 +277,11 @@ AAS_FileInfo(void)
 	botimport.Print(PRT_MESSAGE, "optimzed size %d KB\n", optimized >> 10);
 }
 #endif	/* AASFILEDEBUG */
-/* ===========================================================================
+
+/*
  * allocate memory and read a lump of a AAS file
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
-char *
+ */
+char*
 AAS_LoadAASLump(Fhandle fp, int offset, int length, int *lastoffset,
 		int size)
 {
@@ -331,12 +308,7 @@ AAS_LoadAASLump(Fhandle fp, int offset, int length, int *lastoffset,
 	}
 	return buf;
 }
-/* ===========================================================================
- *
- * Parameter:			-
- * Returns:				-
- * Changes Globals:		-
- * =========================================================================== */
+
 void
 AAS_DData(unsigned char *data, int size)
 {
@@ -345,13 +317,7 @@ AAS_DData(unsigned char *data, int size)
 	for(i = 0; i < size; i++)
 		data[i] ^= (unsigned char)i * 119;
 }
-/* ===========================================================================
- * load an aas file
- *
- * Parameter:			-
- * Returns:				-
- * Changes Globals:		-
- * =========================================================================== */
+
 int
 AAS_LoadAASFile(char *filename)
 {
@@ -523,12 +489,7 @@ AAS_LoadAASFile(char *filename)
 #endif	/* AASFILEDEBUG */
 	return BLERR_NOERROR;
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 static int AAS_WriteAASLump_offset;
 
 int
@@ -549,13 +510,11 @@ AAS_WriteAASLump(Fhandle fp, aas_header_t *h, int lumpnum, void *data,
 
 	return qtrue;
 }
-/* ===========================================================================
+
+/*
  * aas data is useless after writing to file because it is byte swapped
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+ * FIXME: so don't swap it itself
+ */
 qbool
 AAS_WriteAASFile(char *filename)
 {
