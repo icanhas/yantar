@@ -17,736 +17,647 @@
 Gitem bg_itemlist[] =
 {
 	{
-		NULL,
-		NULL,
-		{ NULL,
-		  NULL,
-		  NULL, NULL},
-/* icon */ NULL,
-/* pickup */ NULL,
-		0,
-		0,
-		0,
-/* precache */ "",
-/* sounds */ ""
+		nil,		/* classname */
+		nil,		/* pickup_sound */
+		{ nil },	/* world_model[] */
+		nil,		/* icon */
+		nil,		/* pickup_name */
+		0,		/* quantity */
+		0,		/* giType */
+		0,		/* giTag */
+		"",		/* precache */
+		""		/* sounds */
 	},	/* leave index 0 alone */
 
 	/*
-	 * SHIELD
-	 *  */
-
-/*QUAKED item_armor_shard (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
- */
+	 * shield
+	 */
+	/* QUAKED item_armor_shard (.3 .3 1) (-16 -16 -16) (16 16 16) suspended */
 	{
 		"item_armor_shard",
 		Pmiscsounds "/ar1_pkup",
 		{ Parmormodels "/shard",
-		  Parmormodels "/shard_sphere",
-		  NULL, NULL},
-/* icon */ Picons "/iconr_shard",
-/* pickup */ "5 Shield Cells",
+		Parmormodels "/shard_sphere" },
+		Picons "/iconr_shard",
+		"5 Shield Cells",
 		5,
 		IT_SHIELD,
 		0,
-/* precache */ "",
-/* sounds */ ""
+		"",
+		""
 	},
 
-/*QUAKED item_armor_combat (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
- */
+	/* QUAKED item_armor_combat (.3 .3 1) (-16 -16 -16) (16 16 16) suspended */
 	{
 		"item_armor_combat",
 		Pmiscsounds "/ar2_pkup",
-		{ Parmormodels "/armor_yel",
-		  NULL, NULL, NULL},
-/* icon */ Picons "/iconr_yellow",
-/* pickup */ "50 Shield Cells",
+		{ Parmormodels "/armor_yel" },
+		 Picons "/iconr_yellow",
+		 "50 Shield Cells",
 		50,
 		IT_SHIELD,
 		0,
-/* precache */ "",
-/* sounds */ ""
+		 "",
+		 ""
 	},
 
-/*QUAKED item_armor_body (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
- */
+	/* QUAKED item_armor_body (.3 .3 1) (-16 -16 -16) (16 16 16) suspended */
 	{
 		"item_armor_body",
 		Pmiscsounds "/ar2_pkup",
-		{ Parmormodels "/armor_red",
-		  NULL, NULL, NULL},
-/* icon */ Picons "/iconr_red",
-/* pickup */ "Heavy Shield Gen",
+		{ Parmormodels "/armor_red" },
+		 Picons "/iconr_red",
+		 "Heavy Shield Gen",
 		100,
 		IT_SHIELD,
 		0,
-/* precache */ "",
-/* sounds */ ""
+		 "",
+		 ""
 	},
 
 	/*
 	 * health
-	 *  */
-/*QUAKED item_health_small (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
- */
+	 */
+	/* QUAKED item_health_small (.3 .3 1) (-16 -16 -16) (16 16 16) suspended */
 	{
 		"item_health_small",
 		Pitemsounds "/s_health",
 		{ Phealthmodels "/small_cross",
-		  Phealthmodels "/small_sphere",
-		  NULL, NULL },
-/* icon */ Picons "/iconh_green",
-/* pickup */ "5 Armor",
+		  Phealthmodels "/small_sphere" },
+		 Picons "/iconh_green",
+		 "5 Armor",
 		5,
 		IT_HEALTH,
 		0,
-/* precache */ "",
-/* sounds */ ""
+		 "",
+		 ""
 	},
 
-/*QUAKED item_health (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
- */
+	/* QUAKED item_health (.3 .3 1) (-16 -16 -16) (16 16 16) suspended */
 	{
 		"item_health",
 		Pitemsounds "/n_health",
 		{ Phealthmodels "/medium_cross",
-		  Phealthmodels "/medium_sphere",
-		  NULL, NULL },
-/* icon */ Picons "/iconh_yellow",
-/* pickup */ "25 Armor",
+		  Phealthmodels "/medium_sphere" },
+		 Picons "/iconh_yellow",
+		 "25 Armor",
 		25,
 		IT_HEALTH,
 		0,
-/* precache */ "",
-/* sounds */ ""
+		 "",
+		 ""
 	},
 
-/*QUAKED item_health_large (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
- */
+	/* QUAKED item_health_large (.3 .3 1) (-16 -16 -16) (16 16 16) suspended */
 	{
 		"item_health_large",
 		Pitemsounds "/l_health",
 		{ Phealthmodels "/large_cross",
-		  Phealthmodels "/large_sphere",
-		  NULL, NULL },
-/* icon */ Picons "/iconh_red",
-/* pickup */ "50 Armor",
+		  Phealthmodels "/large_sphere" },
+		 Picons "/iconh_red",
+		 "50 Armor",
 		50,
 		IT_HEALTH,
 		0,
-/* precache */ "",
-/* sounds */ ""
+		 "",
+		 ""
 	},
 
-/*QUAKED item_health_mega (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
- */
+	/* QUAKED item_health_mega (.3 .3 1) (-16 -16 -16) (16 16 16) suspended */
 	{
 		"item_health_mega",
 		Pitemsounds "/m_health",
 		{ Phealthmodels "/mega_cross",
-		  Phealthmodels "/mega_sphere",
-		  NULL, NULL },
-/* icon */ Picons "/iconh_mega",
-/* pickup */ "Heavy Armor",
+		  Phealthmodels "/mega_sphere" },
+		 Picons "/iconh_mega",
+		 "Heavy Armor",
 		100,
 		IT_HEALTH,
 		0,
-/* precache */ "",
-/* sounds */ ""
+		 "",
+		 ""
 	},
 
-
 	/*
-	 * WEAPONS
+	 * weapons
 	 */
-
-/*QUAKED weapon_gauntlet (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
- */
+	/* QUAKED weapon_gauntlet (.3 .3 1) (-16 -16 -16) (16 16 16) suspended */
 	{
 		"weapon_gauntlet",
 		Pmiscsounds "/w_pkup",
-		{ Pmeleemodels "/gauntlet",
-		  NULL, NULL, NULL},
-/* icon */ Picons "/iconw_gauntlet",
-/* pickup */ "Gauntlet",
+		{ Pmeleemodels "/gauntlet" },
+		 Picons "/iconw_gauntlet",
+		 "Gauntlet",
 		0,
 		IT_PRIWEAP,
 		Wmelee,
-/* precache */ "",
-/* sounds */ ""
+		 "",
+		 ""
 	},
 
-/*QUAKED weapon_shotgun (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
- */
+	/* QUAKED weapon_shotgun (.3 .3 1) (-16 -16 -16) (16 16 16) suspended */
 	{
 		"weapon_shotgun",
 		Pmiscsounds "/w_pkup",
-		{ Pshotgunmodels "/shotgun",
-		  NULL, NULL, NULL},
-/* icon */ Picons "/iconw_shotgun",
-/* pickup */ "Shotgun",
+		{ Pshotgunmodels "/shotgun" },
+		 Picons "/iconw_shotgun",
+		 "Shotgun",
 		10,
 		IT_PRIWEAP,
 		Wshotgun,
-/* precache */ "",
-/* sounds */ ""
+		 "",
+		 ""
 	},
 
-/*QUAKED weapon_machinegun (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
- */
+	/* QUAKED weapon_machinegun (.3 .3 1) (-16 -16 -16) (16 16 16) suspended */
 	{
 		"weapon_machinegun",
 		Pmiscsounds "/w_pkup",
-		{ Pmgmodels "/machinegun",
-		  NULL, NULL, NULL},
-/* icon */ Picons "/iconw_machinegun",
-/* pickup */ "Machinegun",
+		{ Pmgmodels "/machinegun" },
+		 Picons "/iconw_machinegun",
+		 "Machinegun",
 		200,
 		IT_PRIWEAP,
 		Wmachinegun,
-/* precache */ "",
-/* sounds */ ""
+		 "",
+		 ""
 	},
 
-/*QUAKED weapon_grenadelauncher (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
- */
+	/* QUAKED weapon_grenadelauncher (.3 .3 1) (-16 -16 -16) (16 16 16) suspended */
 	{
 		"weapon_grenadelauncher",
 		Pmiscsounds "/w_pkup",
-		{ Pgrenademodels "/grenadel",
-		  NULL, NULL, NULL},
-/* icon */ Picons "/iconw_grenade",
-/* pickup */ "Grenade Launcher",
+		{ Pgrenademodels "/grenadel" },
+		 Picons "/iconw_grenade",
+		 "Grenade Launcher",
 		10,
 		IT_SECWEAP,
 		Wgrenadelauncher,
-/* precache */ "",
-/* sounds */
+		 "",
+		
 		(Pgrenadesounds "/hgrenb1a " Pgrenadesounds "/hgrenb2a")
 	},
 
-/*QUAKED weapon_rocketlauncher (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
- */
+	/* QUAKED weapon_rocketlauncher (.3 .3 1) (-16 -16 -16) (16 16 16) suspended */
 	{
 		"weapon_rocketlauncher",
 		Pmiscsounds "/w_pkup",
-		{ Prlmodels "/rocketl",
-		  NULL, NULL, NULL},
-/* icon */ Picons "/iconw_rocket",
-/* pickup */ "Rocket Launcher",
+		{ Prlmodels "/rocketl" },
+		 Picons "/iconw_rocket",
+		 "Rocket Launcher",
 		10,
 		IT_SECWEAP,
 		Wrocketlauncher,
-/* precache */ "",
-/* sounds */ ""
+		 "",
+		 ""
 	},
 
-/*QUAKED weapon_lightning (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
- */
+	/* QUAKED weapon_lightning (.3 .3 1) (-16 -16 -16) (16 16 16) suspended */
 	{
 		"weapon_lightning",
 		Pmiscsounds "/w_pkup",
-		{ Plgmodels "/lightning",
-		  NULL, NULL, NULL},
-/* icon */ Picons "/iconw_lightning",
-/* pickup */ "Lightning Gun",
+		{ Plgmodels "/lightning" },
+		Picons "/iconw_lightning",
+		"Lightning Gun",
 		100,
 		IT_PRIWEAP,
 		Wlightning,
-/* precache */ "",
-/* sounds */ ""
+		"",
+		""
 	},
 
-/*QUAKED weapon_railgun (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
- */
+	/* QUAKED weapon_railgun (.3 .3 1) (-16 -16 -16) (16 16 16) suspended */
 	{
 		"weapon_railgun",
 		Pmiscsounds "/w_pkup",
-		{ Prailmodels "/railgun",
-		  NULL, NULL, NULL},
-/* icon */ Picons "/iconw_railgun",
-/* pickup */ "Railgun",
+		{ Prailmodels "/railgun" },
+		 Picons "/iconw_railgun",
+		 "Railgun",
 		10,
 		IT_PRIWEAP,
 		Wrailgun,
-/* precache */ "",
-/* sounds */ ""
+		 "",
+		 ""
 	},
 
-/*QUAKED weapon_plasmagun (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
- */
+	/* QUAKED weapon_plasmagun (.3 .3 1) (-16 -16 -16) (16 16 16) suspended */
 	{
 		"weapon_plasmagun",
 		Pmiscsounds "/w_pkup",
-		{ Pplasmamodels "/plasma",
-		  NULL, NULL, NULL},
-/* icon */ Picons "/iconw_plasma",
-/* pickup */ "Plasma Gun",
+		{ Pplasmamodels "/plasma" },
+		 Picons "/iconw_plasma",
+		 "Plasma Gun",
 		50,
 		IT_PRIWEAP,
 		Wplasmagun,
-/* precache */ "",
-/* sounds */ ""
+		 "",
+		 ""
 	},
 
-/*QUAKED weapon_bfg (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
- */
+	/* QUAKED weapon_bfg (.3 .3 1) (-16 -16 -16) (16 16 16) suspended */
 	{
 		"weapon_bfg",
 		Pmiscsounds "/w_pkup",
-		{ Pbfgmodels "/bfg",
-		  NULL, NULL, NULL},
-/* icon */ Picons "/iconw_bfg",
-/* pickup */ "BFG10K",
+		{ Pbfgmodels "/bfg" },
+		 Picons "/iconw_bfg",
+		 "BFG10K",
 		20,
 		IT_SECWEAP,
 		Wbfg,
-/* precache */ "",
-/* sounds */ ""
+		 "",
+		 ""
 	},
 
-/*QUAKED weapon_grapplinghook (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
- */
+	/* QUAKED weapon_grapplinghook (.3 .3 1) (-16 -16 -16) (16 16 16) suspended */
 	{
 		"weapon_grapplinghook",
 		Pmiscsounds "/w_pkup",
-		{ Phookmodels "/grapple",
-		  NULL, NULL, NULL},
-/* icon */ Picons "/iconw_grapple",
-/* pickup */ "Grappling Hook",
+		{ Phookmodels "/grapple" },
+		 Picons "/iconw_grapple",
+		 "Grappling Hook",
 		0,
 		IT_PRIWEAP,
 		Whook,
-/* precache */ "",
-/* sounds */ ""
+		 "",
+		 ""
 	},
 
 	/*
-	 * AMMO ITEMS
-	 *  */
-
-/*QUAKED ammo_shells (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
- */
+	 * ammo
+	 */
+	/* QUAKED ammo_shells (.3 .3 1) (-16 -16 -16) (16 16 16) suspended */
 	{
 		"ammo_shells",
 		Pmiscsounds "/am_pkup",
-		{ Pammomodels "/shotgunam",
-		  NULL, NULL, NULL},
-/* icon */ Picons "/icona_shotgun",
-/* pickup */ "Shells",
+		{ Pammomodels "/shotgunam" },
+		 Picons "/icona_shotgun",
+		 "Shells",
 		10,
 		IT_AMMO,
 		Wshotgun,
-/* precache */ "",
-/* sounds */ ""
+		 "",
+		 ""
 	},
 
-/*QUAKED ammo_bullets (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
- */
+	/* QUAKED ammo_bullets (.3 .3 1) (-16 -16 -16) (16 16 16) suspended */
 	{
 		"ammo_bullets",
 		Pmiscsounds "/am_pkup",
-		{ Pammomodels "/machinegunam",
-		  NULL, NULL, NULL},
-/* icon */ Picons "/icona_machinegun",
-/* pickup */ "Bullets",
+		{ Pammomodels "/machinegunam" },
+		 Picons "/icona_machinegun",
+		 "Bullets",
 		50,
 		IT_AMMO,
 		Wmachinegun,
-/* precache */ "",
-/* sounds */ ""
+		 "",
+		 ""
 	},
 
-/*QUAKED ammo_grenades (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
- */
+	/* QUAKED ammo_grenades (.3 .3 1) (-16 -16 -16) (16 16 16) suspended */
 	{
 		"ammo_grenades",
 		Pmiscsounds "/am_pkup",
-		{ Pammomodels "/grenadeam",
-		  NULL, NULL, NULL},
-/* icon */ Picons "/icona_grenade",
-/* pickup */ "Grenades",
+		{ Pammomodels "/grenadeam" },
+		 Picons "/icona_grenade",
+		 "Grenades",
 		5,
 		IT_AMMO,
 		Wgrenadelauncher,
-/* precache */ "",
-/* sounds */ ""
+		 "",
+		 ""
 	},
 
-/*QUAKED ammo_cells (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
- */
+	/* QUAKED ammo_cells (.3 .3 1) (-16 -16 -16) (16 16 16) suspended */
 	{
 		"ammo_cells",
 		Pmiscsounds "/am_pkup",
-		{ Pammomodels "/plasmaam",
-		  NULL, NULL, NULL},
-/* icon */ Picons "/icona_plasma",
-/* pickup */ "Cells",
+		{ Pammomodels "/plasmaam" },
+		 Picons "/icona_plasma",
+		 "Cells",
 		30,
 		IT_AMMO,
 		Wplasmagun,
-/* precache */ "",
-/* sounds */ ""
+		 "",
+		 ""
 	},
 
-/*QUAKED ammo_lightning (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
- */
+	/* QUAKED ammo_lightning (.3 .3 1) (-16 -16 -16) (16 16 16) suspended */
 	{
 		"ammo_lightning",
 		Pmiscsounds "/am_pkup",
-		{ Pammomodels "/lightningam",
-		  NULL, NULL, NULL},
-/* icon */ Picons "/icona_lightning",
-/* pickup */ "Lightning",
+		{ Pammomodels "/lightningam" },
+		 Picons "/icona_lightning",
+		 "Lightning",
 		60,
 		IT_AMMO,
 		Wlightning,
-/* precache */ "",
-/* sounds */ ""
+		 "",
+		 ""
 	},
 
-/*QUAKED ammo_rockets (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
- */
+	/* QUAKED ammo_rockets (.3 .3 1) (-16 -16 -16) (16 16 16) suspended */
 	{
 		"ammo_rockets",
 		Pmiscsounds "/am_pkup",
-		{ Pammomodels "/rocketam",
-		  NULL, NULL, NULL},
-/* icon */ Picons "/icona_rocket",
-/* pickup */ "Rockets",
+		{ Pammomodels "/rocketam" },
+		 Picons "/icona_rocket",
+		 "Rockets",
 		5,
 		IT_AMMO,
 		Wrocketlauncher,
-/* precache */ "",
-/* sounds */ ""
+		 "",
+		 ""
 	},
 
-/*QUAKED ammo_slugs (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
- */
+	/* QUAKED ammo_slugs (.3 .3 1) (-16 -16 -16) (16 16 16) suspended */
 	{
 		"ammo_slugs",
 		Pmiscsounds "/am_pkup",
-		{ Pammomodels "/railgunam",
-		  NULL, NULL, NULL},
-/* icon */ Picons "/icona_railgun",
-/* pickup */ "Slugs",
+		{ Pammomodels "/railgunam" },
+		 Picons "/icona_railgun",
+		 "Slugs",
 		10,
 		IT_AMMO,
 		Wrailgun,
-/* precache */ "",
-/* sounds */ ""
+		 "",
+		 ""
 	},
 
-/*QUAKED ammo_bfg (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
- */
+	/* QUAKED ammo_bfg (.3 .3 1) (-16 -16 -16) (16 16 16) suspended */
 	{
 		"ammo_bfg",
 		Pmiscsounds "/am_pkup",
-		{ Pammomodels "/bfgam",
-		  NULL, NULL, NULL},
-/* icon */ Picons "/icona_bfg",
-/* pickup */ "Bfg Ammo",
+		{ Pammomodels "/bfgam" },
+		 Picons "/icona_bfg",
+		 "Bfg Ammo",
 		15,
 		IT_AMMO,
 		Wbfg,
-/* precache */ "",
-/* sounds */ ""
+		 "",
+		 ""
 	},
 
 	/*
-	 * HOLDABLE ITEMS
-	 *  */
-/*QUAKED holdable_teleporter (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
- */
+	 * holdable items
+	 */
+	/* QUAKED holdable_teleporter (.3 .3 1) (-16 -16 -16) (16 16 16) suspended */
 	{
 		"holdable_teleporter",
 		Pitemsounds "/holdable",
-		{ Pholdablemodels "/teleporter",
-		  NULL, NULL, NULL},
-/* icon */ Picons "/teleporter",
-/* pickup */ "Personal Teleporter",
+		{ Pholdablemodels "/teleporter" },
+		 Picons "/teleporter",
+		 "Personal Teleporter",
 		60,
 		IT_HOLDABLE,
 		HI_TELEPORTER,
-/* precache */ "",
-/* sounds */ ""
+		 "",
+		 ""
 	},
-/*QUAKED holdable_medkit (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
- */
+	/* QUAKED holdable_medkit (.3 .3 1) (-16 -16 -16) (16 16 16) suspended */
 	{
 		"holdable_medkit",
 		Pitemsounds "/holdable",
-		{
-			Pholdablemodels "/medkit",
-			Pholdablemodels "/medkit_sphere",
-			NULL, NULL
-		},
-/* icon */ Picons "/medkit",
-/* pickup */ "Medkit",
+		{ Pholdablemodels "/medkit",
+		  Pholdablemodels "/medkit_sphere" },
+		 Picons "/medkit",
+		 "Medkit",
 		60,
 		IT_HOLDABLE,
 		HI_MEDKIT,
-/* precache */ "",
-/* sounds */ Pitemsounds "/use_medkit"
+		 "",
+		 Pitemsounds "/use_medkit"
 	},
 
 	/*
 	 * POWERUP ITEMS
 	 *  */
-/*QUAKED item_quad (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
- */
+	/* QUAKED item_quad (.3 .3 1) (-16 -16 -16) (16 16 16) suspended */
 	{
 		"item_quad",
 		Pitemsounds "/quaddamage",
 		{ Pinstantmodels "/quad",
-		  Pinstantmodels "/quad_ring",
-		  NULL, NULL },
-/* icon */ Picons "/quad",
-/* pickup */ "Quad Damage",
+		  Pinstantmodels "/quad_ring" },
+		 Picons "/quad",
+		 "Quad Damage",
 		30,
 		IT_POWERUP,
 		PW_QUAD,
-/* precache */ "",
-/* sounds */ (Pitemsounds "/damage2 " Pitemsounds "/damage3")
+		 "",
+		 (Pitemsounds "/damage2 " Pitemsounds "/damage3")
 	},
 
-/*QUAKED item_enviro (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
- */
+	/* QUAKED item_enviro (.3 .3 1) (-16 -16 -16) (16 16 16) suspended */
 	{
 		"item_enviro",
 		Pitemsounds "/protect",
 		{ Pinstantmodels "/enviro",
-		  Pinstantmodels "/enviro_ring",
-		  NULL, NULL },
-/* icon */ Picons "/envirosuit",
-/* pickup */ "Battle Suit",
+		  Pinstantmodels "/enviro_ring" },
+		 Picons "/envirosuit",
+		 "Battle Suit",
 		30,
 		IT_POWERUP,
 		PW_BATTLESUIT,
-/* precache */ "",
-/* sounds */ (Pitemsounds "/airout " Pitemsounds "/protect3")
+		 "",
+		 (Pitemsounds "/airout " Pitemsounds "/protect3")
 	},
 
-/*QUAKED item_haste (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
- */
+	/* QUAKED item_haste (.3 .3 1) (-16 -16 -16) (16 16 16) suspended */
 	{
 		"item_haste",
 		Pitemsounds "/haste",
 		{ Pinstantmodels "/haste",
-		  Pinstantmodels "/haste_ring",
-		  NULL, NULL },
-/* icon */ Picons "/haste",
-/* pickup */ "Speed",
+		  Pinstantmodels "/haste_ring" },
+		 Picons "/haste",
+		 "Speed",
 		30,
 		IT_POWERUP,
 		PW_HASTE,
-/* precache */ "",
-/* sounds */ ""
+		 "",
+		 ""
 	},
 
-/*QUAKED item_invis (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
- */
+	/* QUAKED item_invis (.3 .3 1) (-16 -16 -16) (16 16 16) suspended */
 	{
 		"item_invis",
 		Pitemsounds "/invisibility",
 		{ Pinstantmodels "/invis",
-		  Pinstantmodels "/invis_ring",
-		  NULL, NULL },
-/* icon */ Picons "/invis",
-/* pickup */ "Invisibility",
+		  Pinstantmodels "/invis_ring" },
+		 Picons "/invis",
+		 "Invisibility",
 		30,
 		IT_POWERUP,
 		PW_INVIS,
-/* precache */ "",
-/* sounds */ ""
+		 "",
+		 ""
 	},
 
-/*QUAKED item_regen (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
- */
+	/* QUAKED item_regen (.3 .3 1) (-16 -16 -16) (16 16 16) suspended */
 	{
 		"item_regen",
 		Pitemsounds "/regeneration",
 		{ Pinstantmodels "/regen",
-		  Pinstantmodels "/regen_ring",
-		  NULL, NULL },
-/* icon */ Picons "/regen",
-/* pickup */ "Regeneration",
+		  Pinstantmodels "/regen_ring" },
+		 Picons "/regen",
+		 "Regeneration",
 		30,
 		IT_POWERUP,
 		PW_REGEN,
-/* precache */ "",
-/* sounds */ Pitemsounds "/regen"
+		 "",
+		 Pitemsounds "/regen"
 	},
 
-/*QUAKED item_flight (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
- */
+	/* QUAKED item_flight (.3 .3 1) (-16 -16 -16) (16 16 16) suspended */
 	{
 		"item_flight",
 		Pitemsounds "/flight",
 		{ Pinstantmodels "/flight",
-		  Pinstantmodels "/flight_ring",
-		  NULL, NULL },
-/* icon */ Picons "/flight",
-/* pickup */ "Flight",
+		  Pinstantmodels "/flight_ring" },
+		 Picons "/flight",
+		 "Flight",
 		60,
 		IT_POWERUP,
 		PW_FLIGHT,
-/* precache */ "",
-/* sounds */ Pitemsounds "/flight"
+		 "",
+		 Pitemsounds "/flight"
 	},
 
-/*QUAKED team_CTF_redflag (1 0 0) (-16 -16 -16) (16 16 16)
- * Only in CTF games
- */
+	/* QUAKED team_CTF_redflag (1 0 0) (-16 -16 -16) (16 16 16)
+	 * Only in CTF games
+	 */
 	{
 		"team_CTF_redflag",
-		NULL,
-		{ Pflagmodels "/r_flag",
-		  NULL, NULL, NULL },
-/* icon */ Picons "/iconf_red1",
-/* pickup */ "Red Flag",
+		nil,
+		{ Pflagmodels "/r_flag" },
+		 Picons "/iconf_red1",
+		 "Red Flag",
 		0,
 		IT_TEAM,
 		PW_REDFLAG,
-/* precache */ "",
-/* sounds */ ""
+		 "",
+		 ""
 	},
 
-/*QUAKED team_CTF_blueflag (0 0 1) (-16 -16 -16) (16 16 16)
- * Only in CTF games
- */
+	/* QUAKED team_CTF_blueflag (0 0 1) (-16 -16 -16) (16 16 16)
+	 * Only in CTF games
+	 */
 	{
 		"team_CTF_blueflag",
-		NULL,
-		{ Pflagmodels "/b_flag",
-		  NULL, NULL, NULL },
-/* icon */ Picons "/iconf_blu1",
-/* pickup */ "Blue Flag",
+		nil,
+		{ Pflagmodels "/b_flag" },
+		 Picons "/iconf_blu1",
+		 "Blue Flag",
 		0,
 		IT_TEAM,
 		PW_BLUEFLAG,
-/* precache */ "",
-/* sounds */ ""
+		 "",
+		 ""
 	},
 
-/*QUAKED ammo_nanoids (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
- */
+	/* QUAKED ammo_nanoids (.3 .3 1) (-16 -16 -16) (16 16 16) suspended */
 	{
 		"ammo_nanoids",
 		Pmiscsounds "/am_pkup",
-		{ Pammomodels "/nanoids",
-		  NULL, NULL, NULL},
-/* icon */ Picons "/nanoidcannon",
-/* pickup */ "Nanoids",
+		{ Pammomodels "/nanoids" },
+		 Picons "/nanoidcannon",
+		 "Nanoids",
 		20,
 		IT_AMMO,
 		Wnanoidcannon,
-/* precache */ "",
-/* sounds */ ""
+		 "",
+		 ""
 	},
 
-/*QUAKED ammo_mines (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
- */
+	/* QUAKED ammo_mines (.3 .3 1) (-16 -16 -16) (16 16 16) suspended */
 	{
 		"ammo_mines",
 		Pmiscsounds "/am_pkup",
-		{ Pammomodels "/proxmines",
-		  NULL, NULL, NULL},
-/* icon */ Picons "/icona_proxlauncher",
-/* pickup */ "Proximity Mines",
+		{ Pammomodels "/proxmines" },
+		 Picons "/icona_proxlauncher",
+		 "Proximity Mines",
 		10,
 		IT_AMMO,
 		Wproxlauncher,
-/* precache */ "",
-/* sounds */ ""
+		 "",
+		 ""
 	},
 
-/*QUAKED ammo_belt (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
- */
+	/* QUAKED ammo_belt (.3 .3 1) (-16 -16 -16) (16 16 16) suspended */
 	{
 		"ammo_belt",
 		Pmiscsounds "/am_pkup",
-		{ Pammomodels "/chaingunam",
-		  NULL, NULL, NULL},
-/* icon */ Picons "/icona_chaingun",
-/* pickup */ "Chaingun Belt",
+		{ Pammomodels "/chaingunam" },
+		 Picons "/icona_chaingun",
+		 "Chaingun Belt",
 		100,
 		IT_AMMO,
 		Wchaingun,
-/* precache */ "",
-/* sounds */ ""
+		 "",
+		 ""
 	},
 
-	/*QUAKED team_CTF_neutralflag (0 0 1) (-16 -16 -16) (16 16 16)
+	/* QUAKED team_CTF_neutralflag (0 0 1) (-16 -16 -16) (16 16 16)
 	 * Only in One Flag CTF games
 	 */
 	{
 		"team_CTF_neutralflag",
-		NULL,
-		{ Pflagmodels "/n_flag",
-		  NULL, NULL, NULL },
-/* icon */ Picons "/iconf_neutral1",
-/* pickup */ "Neutral Flag",
+		nil,
+		{ Pflagmodels "/n_flag" },
+		 Picons "/iconf_neutral1",
+		 "Neutral Flag",
 		0,
 		IT_TEAM,
 		PW_NEUTRALFLAG,
-/* precache */ "",
-/* sounds */ ""
+		 "",
+		 ""
 	},
 
-/*QUAKED weapon_nanoidcannon (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
- */
+	/* QUAKED weapon_nanoidcannon (.3 .3 1) (-16 -16 -16) (16 16 16) suspended */
 	{
 		"weapon_nanoidcannon",
 		Pmiscsounds "/w_pkup",
-		{ Pnanoidmodels "/nanoidcannon",
-		  NULL, NULL, NULL},
-/* icon */ Picons "/nanoidcannon",
-/* pickup */ "Nanoid Cannon",
+		{ Pnanoidmodels "/nanoidcannon" },
+		 Picons "/nanoidcannon",
+		 "Nanoid Cannon",
 		10,
 		IT_PRIWEAP,
 		Wnanoidcannon,
-/* precache */ "",
-/* sounds */ ""
+		 "",
+		 ""
 	},
 
-/*QUAKED weapon_prox_launcher (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
- */
+	/* QUAKED weapon_prox_launcher (.3 .3 1) (-16 -16 -16) (16 16 16) suspended */
 	{
 		"weapon_prox_launcher",
 		Pmiscsounds "/w_pkup",
-		{ Pproxmodels "/prox",
-		  NULL, NULL, NULL},
-/* icon */ Picons "/icon_proxlauncher",
-/* pickup */ "Prox Launcher",
+		{ Pproxmodels "/prox" },
+		 Picons "/icon_proxlauncher",
+		 "Prox Launcher",
 		5,
 		IT_SECWEAP,
 		Wproxlauncher,
-/* precache */ "",
-/* sounds */ Pproxsounds "/tick "
+		 "",
+		 Pproxsounds "/tick "
 	     Pproxsounds "/actv "
 	     Pproxsounds "/impl "
 	     Pproxsounds "/impm "
 	     Pproxsounds "/bimpd "
 	},
 
-/*QUAKED weapon_chaingun (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
- */
+	/* QUAKED weapon_chaingun (.3 .3 1) (-16 -16 -16) (16 16 16) suspended */
 	{
 		"weapon_chaingun",
 		Pmiscsounds "/w_pkup",
-		{ Pgattlingmodels "/vulcan",
-		  NULL, NULL, NULL},
-/* icon */ Picons "/iconw_chaingun",
-/* pickup */ "Chaingun",
+		{ Pgattlingmodels "/vulcan" },
+		 Picons "/iconw_chaingun",
+		 "Chaingun",
 		80,
 		IT_PRIWEAP,
 		Wchaingun,
-/* precache */ "",
-/* sounds */ Pgattlingsounds "/wvulwind"
+		 "",
+		 Pgattlingsounds "/wvulwind"
 	},
 	
-	{NULL}	/* end of list marker */
+	{nil, nil, {nil}, nil, nil, 0, 0, 0, "", ""}	/* end of list marker */
 };
 
 int bg_numItems = ARRAY_LEN(bg_itemlist) - 1;
