@@ -4,15 +4,9 @@
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License.
  */
-
-/*****************************************************************************
-* name:		be_aas_debug.c
-*
-* desc:		AAS debug code
-*
-* $Archive: /MissionPack/code/botlib/be_aas_debug.c $
-*
-*****************************************************************************/
+/*
+ * AAS debug code
+ */
 
 #include "shared.h"
 #include "l_memory.h"
@@ -30,29 +24,22 @@
 #define MAX_DEBUGLINES		1024
 #define MAX_DEBUGPOLYGONS	8192
 
-int	debuglines[MAX_DEBUGLINES];
-int	debuglinevisible[MAX_DEBUGLINES];
-int	numdebuglines;
+int debuglines[MAX_DEBUGLINES];
+int debuglinevisible[MAX_DEBUGLINES];
+int numdebuglines;
 
 static int debugpolygons[MAX_DEBUGPOLYGONS];
 
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
 void
 AAS_ClearShownPolygons(void)
 {
 	int i;
-/* * */
+
 	for(i = 0; i < MAX_DEBUGPOLYGONS; i++){
 		if(debugpolygons[i]) botimport.DebugPolygonDelete(debugpolygons[
 					i]);
 		debugpolygons[i] = 0;
 	}
-/* * / */
 /*
  *      for (i = 0; i < MAX_DEBUGPOLYGONS; i++)
  *      {
@@ -61,12 +48,7 @@ AAS_ClearShownPolygons(void)
  *      }
  */
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 void
 AAS_ShowPolygon(int color, int numpoints, Vec3 *points)
 {
@@ -79,12 +61,7 @@ AAS_ShowPolygon(int color, int numpoints, Vec3 *points)
 			break;
 		}
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 void
 AAS_ClearShownDebugLines(void)
 {
@@ -99,12 +76,7 @@ AAS_ClearShownDebugLines(void)
 			debuglinevisible[i] = qfalse;
 		}
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 void
 AAS_DebugLine(Vec3 start, Vec3 end, int color)
 {
@@ -124,12 +96,7 @@ AAS_DebugLine(Vec3 start, Vec3 end, int color)
 		}
 	}
 }
-/* ===========================================================================
- *
- * Parameter:			-
- * Returns:				-
- * Changes Globals:		-
- * =========================================================================== */
+
 void
 AAS_PermanentLine(Vec3 start, Vec3 end, int color)
 {
@@ -138,12 +105,7 @@ AAS_PermanentLine(Vec3 start, Vec3 end, int color)
 	line = botimport.DebugLineCreate();
 	botimport.DebugLineShow(line, start, end, color);
 }
-/* ===========================================================================
- *
- * Parameter:			-
- * Returns:				-
- * Changes Globals:		-
- * =========================================================================== */
+
 void
 AAS_DrawPermanentCross(Vec3 origin, float size, int color)
 {
@@ -160,12 +122,7 @@ AAS_DrawPermanentCross(Vec3 origin, float size, int color)
 		botimport.DebugLineShow(debugline, start, end, color);
 	}
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 void
 AAS_DrawPlaneCross(Vec3 point, Vec3 normal, float dist, int type, int color)
 {
@@ -213,12 +170,7 @@ AAS_DrawPlaneCross(Vec3 point, Vec3 normal, float dist, int type, int color)
 	botimport.DebugLineShow(lines[0], start1, end1, color);
 	botimport.DebugLineShow(lines[1], start2, end2, color);
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 void
 AAS_ShowBoundingBox(Vec3 origin, Vec3 mins, Vec3 maxs)
 {
@@ -266,12 +218,7 @@ AAS_ShowBoundingBox(Vec3 origin, Vec3 mins, Vec3 maxs)
 			bboxcorners[4+i], LINECOLOR_RED);
 	}
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 void
 AAS_ShowFace(int facenum)
 {
@@ -310,12 +257,7 @@ AAS_ShowFace(int facenum)
 	maddv3(start, 20, plane->normal, end);
 	AAS_DebugLine(start, end, LINECOLOR_RED);
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 void
 AAS_ShowFacePolygon(int facenum, int color, int flip)
 {
@@ -350,12 +292,7 @@ AAS_ShowFacePolygon(int facenum, int color, int flip)
 		}
 	AAS_ShowPolygon(color, numpoints, points);
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 void
 AAS_ShowArea(int areanum, int groundfacesonly)
 {
@@ -425,14 +362,9 @@ AAS_ShowArea(int areanum, int groundfacesonly)
 			aasworld.vertexes[edge->v[1]],
 			color);
 		debuglinevisible[line] = qtrue;
-	}	/* end for* / */
+	}
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 void
 AAS_ShowAreaPolygons(int areanum, int color, int groundfacesonly)
 {
@@ -462,12 +394,7 @@ AAS_ShowAreaPolygons(int areanum, int color, int groundfacesonly)
 		AAS_ShowFacePolygon(facenum, color, face->frontarea != areanum);
 	}
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 void
 AAS_DrawCross(Vec3 origin, float size, int color)
 {
@@ -482,12 +409,7 @@ AAS_DrawCross(Vec3 origin, float size, int color)
 		AAS_DebugLine(start, end, color);
 	}
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 void
 AAS_PrintTravelType(int traveltype)
 {
@@ -511,16 +433,11 @@ AAS_PrintTravelType(int traveltype)
 	case TRAVEL_JUMPPAD: str = "TRAVEL_JUMPPAD"; break;
 	case TRAVEL_FUNCBOB: str = "TRAVEL_FUNCBOB"; break;
 	default: str = "UNKNOWN TRAVEL TYPE"; break;
-	}	/* end switch */
+	}
 	botimport.Print(PRT_MESSAGE, "%s", str);
 #endif
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 void
 AAS_DrawArrow(Vec3 start, Vec3 end, int linecolor, int arrowcolor)
 {
@@ -542,12 +459,7 @@ AAS_DrawArrow(Vec3 start, Vec3 end, int linecolor, int arrowcolor)
 	AAS_DebugLine(p1, end, arrowcolor);
 	AAS_DebugLine(p2, end, arrowcolor);
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 void
 AAS_ShowReachability(aas_reachability_t *reach)
 {
@@ -615,12 +527,7 @@ AAS_ShowReachability(aas_reachability_t *reach)
 			SE_TOUCHJUMPPAD|SE_HITGROUNDAREA, reach->areanum, qtrue);
 	}
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 void
 AAS_ShowReachableAreas(int areanum)
 {
