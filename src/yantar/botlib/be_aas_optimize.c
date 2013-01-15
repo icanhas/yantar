@@ -5,15 +5,10 @@
  * it under the terms of the GNU General Public License.
  */
 
-/*****************************************************************************
-* name:		be_aas_optimize.c
-*
-* desc:		decreases the .aas file size after the reachabilities have
-*				been calculated, just dumps all the faces, edges and vertexes
-*
-* $Archive: /MissionPack/code/botlib/be_aas_optimize.c $
-*
-*****************************************************************************/
+/*
+ * Decreases the .aas file size after the reachabilities have been
+ * calculated, just dumps all the faces, edges and vertices
+ */
 
 #include "shared.h"
 #include "l_libvar.h"
@@ -29,19 +24,14 @@
 #include "be_aas_def.h"
 
 typedef struct optimized_s {
-	/* vertexes */
 	int		numvertexes;
 	aas_vertex_t	*vertexes;
-	/* edges */
 	int		numedges;
 	aas_edge_t	*edges;
-	/* edge index */
 	int		edgeindexsize;
 	aas_edgeindex_t *edgeindex;
-	/* faces */
 	int		numfaces;
 	aas_face_t	*faces;
-	/* face index */
 	int		faceindexsize;
 	aas_faceindex_t *faceindex;
 	/* convex areas */
@@ -52,23 +42,12 @@ typedef struct optimized_s {
 	int		*faceoptimizeindex;
 } optimized_t;
 
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
 int
 AAS_KeepEdge(aas_edge_t *edge)
 {
 	return 1;
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 int
 AAS_OptimizeEdge(optimized_t *optimized, int edgenum)
 {
@@ -107,24 +86,14 @@ AAS_OptimizeEdge(optimized_t *optimized, int edgenum)
 	if(edgenum > 0) return optedgenum;
 	else return -optedgenum;
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 int
 AAS_KeepFace(aas_face_t *face)
 {
 	if(!(face->faceflags & FACE_LADDER)) return 0;
 	else return 1;
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 int
 AAS_OptimizeFace(optimized_t *optimized, int facenum)
 {
@@ -163,12 +132,7 @@ AAS_OptimizeFace(optimized_t *optimized, int facenum)
 	if(facenum > 0) return optfacenum;
 	else return -optfacenum;
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 void
 AAS_OptimizeArea(optimized_t *optimized, int areanum)
 {
@@ -192,12 +156,7 @@ AAS_OptimizeArea(optimized_t *optimized, int areanum)
 		}
 	}
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 void
 AAS_OptimizeAlloc(optimized_t *optimized)
 {
@@ -226,12 +185,7 @@ AAS_OptimizeAlloc(optimized_t *optimized)
 	optimized->faceoptimizeindex = (int*)GetClearedMemory(
 		aasworld.numfaces * sizeof(int));
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 void
 AAS_OptimizeStore(optimized_t *optimized)
 {
@@ -264,12 +218,7 @@ AAS_OptimizeStore(optimized_t *optimized)
 	FreeMemory(optimized->edgeoptimizeindex);
 	FreeMemory(optimized->faceoptimizeindex);
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 void
 AAS_Optimize(void)
 {
