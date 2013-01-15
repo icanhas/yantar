@@ -5,15 +5,6 @@
  * it under the terms of the GNU General Public License.
  */
 
-/*****************************************************************************
-* name:		be_aas_main.c
-*
-* desc:		AAS
-*
-* $Archive: /MissionPack/code/botlib/be_aas_main.c $
-*
-*****************************************************************************/
-
 #include "shared.h"
 #include "l_memory.h"
 #include "l_libvar.h"
@@ -30,15 +21,8 @@
 #include "be_aas_def.h"
 
 aas_t aasworld;
-
 libvar_t *saveroutingcache;
 
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
 void QDECL
 AAS_Error(char *fmt, ...)
 {
@@ -50,13 +34,8 @@ AAS_Error(char *fmt, ...)
 	va_end(arglist);
 	botimport.Print(PRT_FATAL, "%s", str);
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
-char *
+
+char*
 AAS_StringFromIndex(char *indexname, char *stringindex[], int numindexes,
 		    int index)
 {
@@ -80,12 +59,7 @@ AAS_StringFromIndex(char *indexname, char *stringindex[], int numindexes,
 	}
 	return stringindex[index];
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 int
 AAS_IndexFromString(char *indexname, char *stringindex[], int numindexes,
 		    char *string)
@@ -103,36 +77,21 @@ AAS_IndexFromString(char *indexname, char *stringindex[], int numindexes,
 	}
 	return 0;
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
-char *
+
+char*
 AAS_ModelFromIndex(int index)
 {
 	return AAS_StringFromIndex("ModelFromIndex",
 		&aasworld.configstrings[CS_MODELS], MAX_MODELS, index);
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 int
 AAS_IndexFromModel(char *modelname)
 {
 	return AAS_IndexFromString("IndexFromModel",
 		&aasworld.configstrings[CS_MODELS], MAX_MODELS, modelname);
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 void
 AAS_UpdateStringIndexes(int numconfigstrings, char *configstrings[])
 {
@@ -147,34 +106,19 @@ AAS_UpdateStringIndexes(int numconfigstrings, char *configstrings[])
 		}
 	aasworld.indexessetup = qtrue;
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 int
 AAS_Loaded(void)
 {
 	return aasworld.loaded;
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 int
 AAS_Initialized(void)
 {
 	return aasworld.initialized;
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 void
 AAS_SetInitialized(void)
 {
@@ -187,27 +131,18 @@ AAS_SetInitialized(void)
 	 * AAS_RoutingInfo(); */
 #endif
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 void
 AAS_ContinueInit(float time)
 {
-	/* if no AAS file loaded */
 	if(!aasworld.loaded) return;
-	/* if AAS is already initialized */
 	if(aasworld.initialized) return;
 	/* calculate reachability, if not finished return */
 	if(AAS_ContinueInitReachability(time)) return;
-	/* initialize clustering for the new map */
 	AAS_InitClustering();
 	/* if reachability has been calculated and an AAS file should be written
 	 * or there is a forced data optimization */
 	if(aasworld.savefile || ((int)LibVarGetValue("forcewrite"))){
-		/* optimize the AAS data */
 		if((int)LibVarValue("aasoptimize", "0")) AAS_Optimize();
 		/* save the AAS file */
 		if(AAS_WriteAASFile(aasworld.filename))
@@ -217,27 +152,19 @@ AAS_ContinueInit(float time)
 			botimport.Print(PRT_ERROR, "couldn't write %s\n",
 				aasworld.filename);
 	}
-	/* initialize the routing */
 	AAS_InitRouting();
-	/* at this point AAS is initialized */
 	AAS_SetInitialized();
 }
-/* ===========================================================================
+
+/*
  * called at the start of every frame
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+ */
 int
 AAS_StartFrame(float time)
 {
 	aasworld.time = time;
-	/* unlink all entities that were not updated last frame */
 	AAS_UnlinkInvalidEntities();
-	/* invalidate the entities */
 	AAS_InvalidateEntities();
-	/* initialize AAS */
 	AAS_ContinueInit(time);
 	aasworld.frameroutingupdates = 0;
 	if(botDeveloper){
@@ -261,23 +188,13 @@ AAS_StartFrame(float time)
 	aasworld.numframes++;
 	return BLERR_NOERROR;
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 float
 AAS_Time(void)
 {
 	return aasworld.time;
 }
-/* ===========================================================================
- *
- * Parameter:			-
- * Returns:				-
- * Changes Globals:		-
- * =========================================================================== */
+
 void
 AAS_ProjectPointOntoVector(Vec3 point, Vec3 vStart, Vec3 vEnd,
 			   Vec3 vProj)
@@ -290,12 +207,7 @@ AAS_ProjectPointOntoVector(Vec3 point, Vec3 vStart, Vec3 vEnd,
 	/* project onto the directional vector for this segment */
 	maddv3(vStart, dotv3(pVec, vec), vec, vProj);
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 int
 AAS_LoadFiles(const char *mapname)
 {
@@ -321,13 +233,10 @@ AAS_LoadFiles(const char *mapname)
 	strncpy(aasworld.filename, aasfile, MAX_PATH);
 	return BLERR_NOERROR;
 }
-/* ===========================================================================
- * called everytime a map changes
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
+/*
+ * called every time a map changes
+ */
 int
 AAS_LoadMap(const char *mapname)
 {
@@ -341,31 +250,22 @@ AAS_LoadMap(const char *mapname)
 	 * to free the caches the old number of areas, number of clusters
 	 * and number of areas in a clusters must be available */
 	AAS_FreeRoutingCaches();
-	/* load the map */
 	errnum = AAS_LoadFiles(mapname);
 	if(errnum != BLERR_NOERROR){
 		aasworld.loaded = qfalse;
 		return errnum;
 	}
 	AAS_InitSettings();
-	/* initialize the AAS link heap for the new map */
 	AAS_InitAASLinkHeap();
-	/* initialize the AAS linked entities for the new map */
 	AAS_InitAASLinkedEntities();
-	/* initialize reachability for the new map */
 	AAS_InitReachability();
-	/* initialize the alternative routing */
 	AAS_InitAlternativeRouting();
-	/* everything went ok */
 	return 0;
 }
-/* ===========================================================================
+
+/*
  * called when the library is first loaded
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+ */
 int
 AAS_Setup(void)
 {
@@ -377,7 +277,6 @@ AAS_Setup(void)
 	if(aasworld.entities) FreeMemory(aasworld.entities);
 	aasworld.entities = (aas_entity_t*)GetClearedHunkMemory(
 		aasworld.maxentities * sizeof(aas_entity_t));
-	/* invalidate all the entities */
 	AAS_InvalidateEntities();
 	/* force some recalculations
 	 * LibVarSet("forceclustering", "1");			//force clustering calculation
@@ -385,30 +284,18 @@ AAS_Setup(void)
 	aasworld.numframes = 0;
 	return BLERR_NOERROR;
 }
-/* ===========================================================================
- *
- * Parameter:				-
- * Returns:					-
- * Changes Globals:		-
- * =========================================================================== */
+
 void
 AAS_Shutdown(void)
 {
 	AAS_ShutdownAlternativeRouting();
 	AAS_DumpBSPData();
-	/* free routing caches */
 	AAS_FreeRoutingCaches();
-	/* free aas link heap */
 	AAS_FreeAASLinkHeap();
-	/* free aas linked entities */
 	AAS_FreeAASLinkedEntities();
-	/* free the aas data */
 	AAS_DumpAASData();
-	/* free the entities */
 	if(aasworld.entities) FreeMemory(aasworld.entities);
-	/* clear the aasworld structure */
 	Q_Memset(&aasworld, 0, sizeof(aas_t));
-	/* aas has not been initialized */
 	aasworld.initialized = qfalse;
 	/* NOTE: as soon as a new .bsp file is loaded the .bsp file memory is
 	 * freed an reallocated, so there's no need to free that memory here

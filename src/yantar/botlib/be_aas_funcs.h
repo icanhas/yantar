@@ -5,15 +5,6 @@
  * it under the terms of the GNU General Public License.
  */
 
-/*****************************************************************************
-* name:		be_aas_funcs.h
-*
-* desc:		AAS
-*
-* $Archive: /source/code/botlib/be_aas_funcs.h $
-*
-*****************************************************************************/
-
 #ifndef BSPCINCLUDE
 
 #include "be_aas_main.h"
