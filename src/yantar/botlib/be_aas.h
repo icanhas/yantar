@@ -5,14 +5,9 @@
  * it under the terms of the GNU General Public License.
  */
 
-/*****************************************************************************
-* name:		be_aas.h
-*
-* desc:		Area Awareness System, stuff exported to the AI
-*
-* $Archive: /source/code/botlib/be_aas.h $
-*
-*****************************************************************************/
+/*
+ * Area Awareness System, stuff exported to the AI
+ */
 
 #ifndef MAX_STRINGFIELD
 #define MAX_STRINGFIELD 80
@@ -72,33 +67,6 @@ typedef struct aas_trace_s {
 	int		area;		/* area blocking the trace (zero if none) */
 	int		planenum;	/* number of the plane that was hit */
 } aas_Trace;
-
-/* Defined in botlib.h
- *
- * //bsp_Trace hit surface
- * typedef struct bsp_surface_s
- * {
- *      char name[16];
- *      int flags;
- *      int value;
- * } bsp_surface_t;
- *
- * //a trace is returned when a box is swept through the BSP world
- * typedef struct bsp_trace_s
- * {
- *      qbool			allsolid;	// if true, plane is not valid
- *      qbool			startsolid;	// if true, the initial point was in a solid area
- *      float			fraction;	// time completed, 1.0 = didn't hit anything
- *      Vec3			endpos;		// final position
- *      Cplane		plane;		// surface normal at impact
- *      float			exp_dist;	// expanded plane distance
- *      int				sidenum;	// number of the brush side hit
- *      bsp_surface_t	surface;	// hit surface
- *      int				contents;	// contents on other side of surface hit
- *      int				ent;		// number of entity hit
- * } bsp_Trace;
- * //
- */
 
 /* entity info */
 typedef struct aas_entityinfo_s {
