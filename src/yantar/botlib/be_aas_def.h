@@ -5,15 +5,6 @@
  * it under the terms of the GNU General Public License.
  */
 
-/*****************************************************************************
-* name:		be_aas_def.h
-*
-* desc:		AAS
-*
-* $Archive: /source/code/botlib/be_aas_def.h $
-*
-*****************************************************************************/
-
 #include "shared.h"
 
 /* debugging on */
@@ -167,53 +158,38 @@ typedef struct aas_s {
 	int	initialized;	/* true when AAS has been initialized */
 	int	savefile;	/* set true when file should be saved */
 	int	bspchecksum;
-	/* current time */
-	float	time;
+	float	time;	/* current time */
 	int	numframes;
-	/* name of the aas file */
-	char	filename[MAX_PATH];
+	char	filename[MAX_PATH];	/* name of the aas file */
 	char	mapname[MAX_PATH];
-	/* bounding boxes */
 	int	numbboxes;
 	aas_bbox_t	*bboxes;
-	/* vertexes */
 	int		numvertexes;
 	aas_vertex_t	*vertexes;
-	/* planes */
 	int		numplanes;
 	aas_plane_t	*planes;
-	/* edges */
 	int		numedges;
 	aas_edge_t	*edges;
-	/* edge index */
 	int		edgeindexsize;
 	aas_edgeindex_t *edgeindex;
-	/* faces */
 	int		numfaces;
 	aas_face_t	*faces;
-	/* face index */
 	int		faceindexsize;
 	aas_faceindex_t *faceindex;
 	/* convex areas */
 	int		numareas;
 	aas_area_t	*areas;
-	/* convex area settings */
-	int		numareasettings;
+	int		numareasettings;	/* convex area settings */
 	aas_areasettings_t		*areasettings;
-	/* reachablity list */
-	int				reachabilitysize;
+	int				reachabilitysize;	/* reachablity list */
 	aas_reachability_t		*reachability;
-	/* nodes of the bsp tree */
-	int				numnodes;
+	int				numnodes;	/* nodes of the bsp tree */
 	aas_node_t			*nodes;
-	/* cluster portals */
-	int				numportals;
+	int				numportals;	/* cluster portals */
 	aas_portal_t			*portals;
-	/* cluster portal index */
-	int				portalindexsize;
+	int				portalindexsize;	/* cluster portal index */
 	aas_portalindex_t		*portalindex;
-	/* clusters */
-	int				numclusters;
+	int				numclusters;	/* clusters */
 	aas_cluster_t			*clusters;
 	int				numreachabilityareas;
 	float				reachabilitytime;
@@ -222,36 +198,29 @@ typedef struct aas_s {
 	int				linkheapsize;		/* size of the link heap */
 	aas_link_t			*freelinks;		/* first free link */
 	aas_link_t			**arealinkedentities;	/* entities linked into areas */
-	/* entities */
-	int				maxentities;
+	int				maxentities;	/* entities */
 	int				maxclients;
 	aas_entity_t			*entities;
-	/* string indexes */
-	char				*configstrings[MAX_CONFIGSTRINGS];
+	char				*configstrings[MAX_CONFIGSTRINGS];	/* string indexes */
 	int				indexessetup;
 	/* index to retrieve travel flag for a travel type */
 	int				travelflagfortype[MAX_TRAVELTYPES];
 	/* travel flags for each area based on contents */
 	int				*areacontentstravelflags;
-	/* routing update */
-	aas_routingupdate_t		*areaupdate;
+	aas_routingupdate_t		*areaupdate;	/* routing update */
 	aas_routingupdate_t		*portalupdate;
 	/* number of routing updates during a frame (reset every frame) */
 	int				frameroutingupdates;
-	/* reversed reachability links */
-	aas_reversedreachability_t	*reversedreachability;
-	/* travel times within the areas */
-	unsigned short			***areatraveltimes;
+	aas_reversedreachability_t	*reversedreachability;	/* reversed reachability links */
+	ushort			***areatraveltimes;	/* travel times within the areas */
 	/* array of size numclusters with cluster cache */
 	aas_routingcache_t		***clusterareacache;
 	aas_routingcache_t		**portalcache;
 	/* cache list sorted on time */
 	aas_routingcache_t		*oldestcache;	/* start of cache list sorted on time */
 	aas_routingcache_t		*newestcache;	/* end of cache list sorted on time */
-	/* maximum travel time through portal areas */
-	int				*portalmaxtraveltimes;
-	/* areas the reachabilities go through */
-	int				*reachabilityareaindex;
+	int		*portalmaxtraveltimes;	/* maximum travel time through portal areas */
+	int		*reachabilityareaindex;	/* areas the reachabilities go through */
 	aas_reachabilityareas_t		*reachabilityareas;
 } aas_t;
 
