@@ -25,7 +25,7 @@ float pm_flightfriction		= 3.0f;
 float pm_spectatorfriction	= 5.0f;
 /*
  * this counter lets us debug movement problems with a journal
- * by setting a conditional breakpoint fot the previous frame
+ * by setting a conditional breakpoint for the previous frame
  */
 uint cnt = 0;
 
@@ -453,7 +453,7 @@ airmove(Pmove *pm, Pml *pml)
 	_airmove(pm, pml, &pm->cmd, &wishvel, &wishdir, &wishspeed);
 	/* not on ground, so little effect on velocity */
 	q2accelerate(pm, pml, wishdir, wishspeed, pm_airaccelerate);
-	PM_SlideMove(pm, pml, qtrue);
+	PM_StepSlideMove(pm, pml, qtrue);
 }
 
 static void
