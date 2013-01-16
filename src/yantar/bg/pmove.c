@@ -1401,15 +1401,12 @@ PmoveSingle(Pmove *pm)
 		deadmove(pm, &pml);
 	else if(pm->ps->pm_flags & PMF_GRAPPLE_PULL){
 		grapplemove(pm, &pml);
-		pm->ps->grapplelast = qtrue;
 	}else if(pm->ps->pm_flags & PMF_TIME_WATERJUMP)
 		waterjumpmove(pm, &pml);
 	else if(pm->waterlevel > 1)	/* swimming */
 		watermove(pm, &pml);
 	else{	/* airborne */
 		airmove(pm, &pml);
-		pm->ps->grapplelast = qfalse;
-		pm->ps->oldgrapplelen = 0.0f;
 	}
 	
 	if(pm->cmd.brakefrac > 0)
