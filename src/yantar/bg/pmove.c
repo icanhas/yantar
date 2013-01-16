@@ -1299,7 +1299,7 @@ PmoveSingle(Pmove *pm)
 
 	/* set the firing flag for continuous beam weapons */
 	if(!(pm->ps->pm_flags & PMF_RESPAWNED) && pm->ps->pm_type !=
-	   PM_INTERMISSION && pm->ps->pm_type != PM_NOCLIP)
+	   PM_INTERMISSION)
 	then{
 		if((pm->cmd.buttons & BUTTON_PRIATTACK)
 		  && pm->ps->ammo[pm->ps->weap[Wpri]])
@@ -1377,11 +1377,6 @@ PmoveSingle(Pmove *pm)
 		droptimers(pm, &pml);
 		return;
 	}
-	if(pm->ps->pm_type == PM_NOCLIP){
-		noclipmove(pm, &pml);
-		droptimers(pm, &pml);
-		return;
-	}
 	if(pm->ps->pm_type == PM_FREEZE
 	  || pm->ps->pm_type == PM_INTERMISSION
 	  || pm->ps->pm_type == PM_SPINTERMISSION)
@@ -1396,6 +1391,8 @@ PmoveSingle(Pmove *pm)
 	
 	if(pm->ps->pm_type == PM_DEAD)
 		deadmove(pm, &pml);
+	else if(pm->ps->pm_type == PM_NOCLIP)
+		noclipmove(pm, &pml);
 	else if(pm->ps->pm_flags & PMF_GRAPPLE_PULL){
 		grapplemove(pm, &pml);
 	}else if(pm->ps->pm_flags & PMF_TIME_WATERJUMP)
