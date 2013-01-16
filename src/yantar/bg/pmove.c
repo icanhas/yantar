@@ -27,7 +27,7 @@ static const Scalar pm_wateraccelerate	= 4.0f;
 static const Scalar pm_flyaccelerate	= 8.0f;
 static const Scalar pm_friction		= 6.0f;
 static const Scalar pm_waterfriction	= 1.0f;
-static const Scalar pm_flightfriction	= 1.0f;
+static const Scalar pm_flightfriction	= 0.2f;
 static const Scalar pm_spectatorfriction	= 5.0f;
 
 static void
@@ -448,6 +448,7 @@ airmove(Pmove *pm, Pml *pml)
 	Vec3 wishvel, wishdir;
 	float	wishspeed;
 	
+	dofriction(pm, pml);
 	_airmove(pm, pml, &pm->cmd, &wishvel, &wishdir, &wishspeed);
 	/* not on ground, so little effect on velocity */
 	q2accelerate(pm, pml, wishdir, wishspeed, pm_airaccelerate);
