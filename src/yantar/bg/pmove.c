@@ -1371,12 +1371,6 @@ PmoveSingle(Pmove *pm)
 		pm->cmd.rightmove = 0;
 		pm->cmd.upmove = 0;
 	}
-	if(pm->ps->pm_type == PM_SPECTATOR){
-		setplayerbounds(pm, &pml);
-		specmove(pm, &pml);
-		droptimers(pm, &pml);
-		return;
-	}
 	if(pm->ps->pm_type == PM_FREEZE
 	  || pm->ps->pm_type == PM_INTERMISSION
 	  || pm->ps->pm_type == PM_SPINTERMISSION)
@@ -1393,7 +1387,10 @@ PmoveSingle(Pmove *pm)
 		deadmove(pm, &pml);
 	else if(pm->ps->pm_type == PM_NOCLIP)
 		noclipmove(pm, &pml);
-	else if(pm->ps->pm_flags & PMF_GRAPPLE_PULL){
+	else if(pm->ps->pm_type == PM_SPECTATOR){
+		specmove(pm, &pml);
+		return;
+	}else if(pm->ps->pm_flags & PMF_GRAPPLE_PULL){
 		grapplemove(pm, &pml);
 	}else if(pm->ps->pm_flags & PMF_TIME_WATERJUMP)
 		waterjumpmove(pm, &pml);
