@@ -17,7 +17,7 @@
 uint cnt = 0;
 
 static const Scalar Hooklinelen		= 2.0f;
-static const Scalar Maxhookforce	= 3.0f;
+static const Scalar Maxhookforce	= 6.0f;
 static const Scalar pm_stopspeed	= 100.0f;
 static const Scalar pm_duckScale	= 0.25f;
 static const Scalar pm_swimScale	= 0.50f;

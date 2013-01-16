@@ -128,7 +128,7 @@ static Cvartable gameCvarTable[] = {
 
 	{ &g_speed, "g_speed", "320", CVAR_CHEAT, 0, qtrue  },
 	{ &g_gravity, "g_gravity", "800", CVAR_CHEAT, 0, qtrue  },
-	{ &g_swingstrength, "g_swingstrength", "0.16", CVAR_CHEAT, 0, qtrue },
+	{ &g_swingstrength, "g_swingstrength", "2.0", CVAR_CHEAT, 0, qtrue },
 	{ &g_knockback, "g_knockback", "1000", 0, 0, qtrue  },
 	{ &g_quadfactor, "g_quadfactor", "3", 0, 0, qtrue  },
 	{ &g_weaponRespawn, "g_weaponrespawn", "5", 0, 0, qtrue  },
