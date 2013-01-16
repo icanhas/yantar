@@ -10,25 +10,25 @@
 #include "bg.h"
 #include "local.h"
 
-#define Hooklinelen		200.0f
-#define Maxhookforce	2.5f
-
-float pm_stopspeed			= 100.0f;
-float pm_duckScale			= 0.25f;
-float pm_swimScale			= 0.50f;
-float pm_accelerate			= 10.0f;
-float pm_airaccelerate		= 1.0f;
-float pm_wateraccelerate		= 4.0f;
-float pm_flyaccelerate		= 8.0f;
-float pm_friction			= 6.0f;
-float pm_waterfriction		= 1.0f;
-float pm_flightfriction		= 1.0f;
-float pm_spectatorfriction	= 5.0f;
 /*
  * this counter lets us debug movement problems with a journal
  * by setting a conditional breakpoint for the previous frame
  */
 uint cnt = 0;
+
+static const Scalar Hooklinelen		= 200.0f;
+static const Scalar Maxhookforce	= 2.5f;
+static const Scalar pm_stopspeed	= 100.0f;
+static const Scalar pm_duckScale	= 0.25f;
+static const Scalar pm_swimScale	= 0.50f;
+static const Scalar pm_accelerate	= 10.0f;
+static const Scalar pm_airaccelerate	= 1.0f;
+static const Scalar pm_wateraccelerate	= 4.0f;
+static const Scalar pm_flyaccelerate	= 8.0f;
+static const Scalar pm_friction		= 6.0f;
+static const Scalar pm_waterfriction	= 1.0f;
+static const Scalar pm_flightfriction	= 1.0f;
+static const Scalar pm_spectatorfriction	= 5.0f;
 
 static void
 starttorsoanim(Pmove *pm, int anim)
