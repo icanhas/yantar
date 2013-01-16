@@ -172,24 +172,9 @@ adjustangles(void)
 	}
 
 	cl.viewangles[PITCH] += spd * ps * (keystate(&lookup) - keystate(&lookdown));
-	
-	roll = cl.viewangles[ROLL];
+
 	rolldelta = (keystate(&rollright) - keystate(&rollleft));
-	if(rolldelta == 0.0){
-		if(closeenough(roll*spd, 0.0, 0.1))
-			roll = 0.0;
-		else if(roll < 0.0)
-			roll += spd * (rs * 0.2);
-		else if(roll > 0.0)
-			roll -=  spd * (rs * 0.2);
-	}else{
-		roll += spd * rs * rolldelta;
-		if(roll > spd * rs)
-			roll = spd * rs;
-		if(roll < -spd * rs)
-			roll = -spd * rs;
-	}
-	cl.viewangles[ROLL] = roll;
+	cl.viewangles[ROLL] = spd * (rolldelta * rs);
 }
 
 /* Sets the Usrcmd based on key states */
@@ -426,7 +411,7 @@ cmdbuttons(Usrcmd *cmd)
 static void
 finishmove(Usrcmd *cmd)
 {
-	uint i;
+	int i;
 
 	/* copy the state that the cgame is currently sending */
 	cmd->weap[Wpri] = cl.cgameweapsel[Wpri];
@@ -439,6 +424,17 @@ finishmove(Usrcmd *cmd)
 	cmd->serverTime = cl.serverTime;
 	for(i=0; i<3; i++)
 		cmd->angles[i] = ANGLE2SHORT(cl.viewangles[i]);
+}
+
+static void
+quatify(Usrcmd *cmd, Vec3 oldangles)
+{
+	Quat orient, delta, neworient;
+	
+	eulertoq(cl.viewangles, delta);
+	eulertoq(oldangles, orient);
+	mulq(orient, delta, neworient);
+	qtoeuler(neworient, cl.viewangles);
 }
 
 static Usrcmd
@@ -454,12 +450,19 @@ createcmd(void)
 	keymove(&cmd);
 	mousemove(&cmd);
 	joystickmove(&cmd);
+	
+	quatify(&cmd, oldangles);
 
-	/* check to make sure the angles haven't wrapped */
-	if(cl.viewangles[PITCH] - oldangles[PITCH] > 90)
-		cl.viewangles[PITCH] = oldangles[PITCH] + 90;
-	else if(oldangles[PITCH] - cl.viewangles[PITCH] > 90)
-		cl.viewangles[PITCH] = oldangles[PITCH] - 90;
+	if(cl.snap.ps.pm_flags == PMF_RESPAWNED){
+		/*
+		 * HACK: Not sure how to determine inside the client
+		 * whether we have respawned.  Using a pmove flag for
+		 * now.  Viewangles will be locked to 0,0,0 whilst the
+		 * button that triggered the respawn is still held down,
+		 * matching the behaviour of the PMF_RESPAWNED flag.
+		 */
+		setv3(cl.viewangles, 0, 0, 0);
+	}
 
 	/* store out the final values */
 	finishmove(&cmd);
