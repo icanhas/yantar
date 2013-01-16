@@ -11,7 +11,7 @@
 #include "local.h"
 
 #define Hooklinelen		200.0f
-#define Maxhookforce	6.0f
+#define Maxhookforce	2.5f
 
 float pm_stopspeed			= 100.0f;
 float pm_duckScale			= 0.25f;
