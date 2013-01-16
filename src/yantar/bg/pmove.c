@@ -468,8 +468,7 @@ grapplemove(Pmove *pm, Pml *pml)
 	x = normv3(line) - Hooklinelen;
 	k = pm->ps->swingstrength;
 	f = (-k)*x;
-	f = min(f, Maxhookforce);
-	f = max(f, -Maxhookforce);
+	f = Q_clamp(-Maxhookforce, Maxhookforce, f);
 
 	q2accelerate(pm, pml, wishdir, wishspeed, pm_airaccelerate);
 	q2accelerate(pm, pml, line, f, pm_airaccelerate);
