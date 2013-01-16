@@ -465,10 +465,7 @@ grapplemove(Pmove *pm, Pml *pml)
 
 	subv3(pm->ps->origin, pm->ps->grapplePoint, line);
 	x = normv3(line) - Hooklinelen;
-	if(pm->ps->swingstrength == 0.0f)
-		k = 0.0f;
-	else
-		k = 1.0f/pm->ps->swingstrength;
+	k = pm->ps->swingstrength;
 	f = (-k)*x;
 	f = min(f, Maxhookforce);
 	f = max(f, -Maxhookforce);
