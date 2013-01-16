@@ -13,11 +13,8 @@
 #include "keys.h"
 #include "ui.h"
 
-static unsigned frame_msec;
-static int old_com_frameTime;
-
 /*
- * KEY BUTTONS
+ * keybuttons
  *
  * Continuous button event tracking is complicated by the fact that two different
  * input sources (say, mouse button 1 and the control key) can both press the
@@ -32,16 +29,25 @@ static int old_com_frameTime;
  * at the same time.
  */
 
-static Kbutton	left, right, forward, back;
-static Kbutton	lookup, lookdown, moveleft, moveright;
-static Kbutton	strafe, speed, brake;
-static Kbutton	up, down;
-static Kbutton	rollleft, rollright;
+Cvar *cl_yawspeed;
+Cvar *cl_pitchspeed;
+Cvar *cl_rollspeed;
+Cvar *cl_run;
+Cvar *cl_anglespeedkey;
+
+static const Scalar Maxrolldelta = 300.0;
+static uint frame_msec;
+static int old_com_frameTime;
+static Kbutton left, right, forward, back;
+static Kbutton lookup, lookdown, moveleft, moveright;
+static Kbutton strafe, speed, brake;
+static Kbutton up, down;
+static Kbutton rollleft, rollright;
 #ifdef USE_VOIP
-Kbutton voiprecord;
+static Kbutton voiprecord;
 #endif
-Kbutton buttons[16];
-qbool mlooking;
+static Kbutton buttons[16];
+static qbool mlooking;
 
 static void
 keydown(Kbutton *b)
@@ -145,422 +151,6 @@ keystate(Kbutton *key)
 		val = 1;
 	return val;
 }
-
-static void
-UpDown(void)
-{
-	keydown(&up);
-}
-
-static void
-UpUp(void)
-{
-	keyup(&up);
-}
-
-static void
-DownDown(void)
-{
-	keydown(&down);
-}
-
-static void
-DownUp(void)
-{
-	keyup(&down);
-}
-
-static void
-LeftDown(void)
-{
-	keydown(&left);
-}
-
-static void
-LeftUp(void)
-{
-	keyup(&left);
-}
-
-static void
-RightDown(void)
-{
-	keydown(&right);
-}
-
-static void
-RightUp(void)
-{
-	keyup(&right);
-}
-
-static void
-ForwardDown(void)
-{
-	keydown(&forward);
-}
-
-static void
-ForwardUp(void)
-{
-	keyup(&forward);
-}
-
-static void
-BackDown(void)
-{
-	keydown(&back);
-}
-
-static void
-BackUp(void)
-{
-	keyup(&back);
-}
-
-static void
-LookupDown(void)
-{
-	keydown(&lookup);
-}
-
-static void
-LookupUp(void)
-{
-	keyup(&lookup);
-}
-
-static void
-LookdownDown(void)
-{
-	keydown(&lookdown);
-}
-
-static void
-LookdownUp(void)
-{
-	keyup(&lookdown);
-}
-
-static void
-MoveleftDown(void)
-{
-	keydown(&moveleft);
-}
-
-static void
-MoveleftUp(void)
-{
-	keyup(&moveleft);
-}
-
-static void
-MoverightDown(void)
-{
-	keydown(&moveright);
-}
-
-static void
-MoverightUp(void)
-{
-	keyup(&moveright);
-}
-
-static void
-SpeedDown(void)
-{
-	keydown(&speed);
-}
-
-static void
-SpeedUp(void)
-{
-	keyup(&speed);
-}
-
-static void
-BrakeDown(void)
-{
-	keydown(&brake);
-}
-
-static void
-BrakeUp(void)
-{
-	keyup(&brake);
-}
-
-static void
-StrafeDown(void)
-{
-	keydown(&strafe);
-}
-
-static void
-StrafeUp(void)
-{
-	keyup(&strafe);
-}
-
-#ifdef USE_VOIP
-static void
-VoipRecordDown(void)
-{
-	keydown(&voiprecord);
-	Cvar_Set("cl_voipSend", "1");
-}
-
-static void
-VoipRecordUp(void)
-{
-	keyup(&voiprecord);
-	Cvar_Set("cl_voipSend", "0");
-}
-#endif
-
-static void
-Button0Down(void)
-{
-	keydown(&buttons[0]);
-}
-
-static void
-Button0Up(void)
-{
-	keyup(&buttons[0]);
-}
-
-static void
-Button1Down(void)
-{
-	keydown(&buttons[1]);
-}
-
-static void
-Button1Up(void)
-{
-	keyup(&buttons[1]);
-}
-
-static void
-Button2Down(void)
-{
-	keydown(&buttons[2]);
-}
-
-static void
-Button2Up(void)
-{
-	keyup(&buttons[2]);
-}
-
-static void
-Button3Down(void)
-{
-	keydown(&buttons[3]);
-}
-
-static void
-Button3Up(void)
-{
-	keyup(&buttons[3]);
-}
-
-static void
-Button4Down(void)
-{
-	keydown(&buttons[4]);
-}
-
-static void
-Button4Up(void)
-{
-	keyup(&buttons[4]);
-}
-
-static void
-Button5Down(void)
-{
-	keydown(&buttons[5]);
-}
-
-static void
-Button5Up(void)
-{
-	keyup(&buttons[5]);
-}
-
-static void
-Button6Down(void)
-{
-	keydown(&buttons[6]);
-}
-
-static void
-Button6Up(void)
-{
-	keyup(&buttons[6]);
-}
-
-static void
-Button7Down(void)
-{
-	keydown(&buttons[7]);
-}
-
-static void
-Button7Up(void)
-{
-	keyup(&buttons[7]);
-}
-
-static void
-Button8Down(void)
-{
-	keydown(&buttons[8]);
-}
-
-static void
-Button8Up(void)
-{
-	keyup(&buttons[8]);
-}
-
-static void
-Button9Down(void)
-{
-	keydown(&buttons[9]);
-}
-
-static void
-Button9Up(void)
-{
-	keyup(&buttons[9]);
-}
-
-static void
-Button10Down(void)
-{
-	keydown(&buttons[10]);
-}
-
-static void
-Button10Up(void)
-{
-	keyup(&buttons[10]);
-}
-
-static void
-Button11Down(void)
-{
-	keydown(&buttons[11]);
-}
-
-static void
-Button11Up(void)
-{
-	keyup(&buttons[11]);
-}
-
-static void
-Button12Down(void)
-{
-	keydown(&buttons[12]);
-}
-
-static void
-Button12Up(void)
-{
-	keyup(&buttons[12]);
-}
-
-static void
-Button13Down(void)
-{
-	keydown(&buttons[13]);
-}
-
-static void
-Button13Up(void)
-{
-	keyup(&buttons[13]);
-}
-
-static void
-Button14Down(void)
-{
-	keydown(&buttons[14]);
-}
-
-static void
-Button14Up(void)
-{
-	keyup(&buttons[14]);
-}
-
-static void
-Button15Down(void)
-{
-	keydown(&buttons[15]);
-}
-
-static void
-Button15Up(void)
-{
-	keyup(&buttons[15]);
-}
-
-static void
-RollLeftDown(void)
-{
-	keydown(&rollleft);
-}
-
-static void
-RollLeftUp(void)
-{
-	keyup(&rollleft);
-}
-
-static void
-RollRightDown(void)
-{
-	keydown(&rollright);
-}
-
-static void
-RollRightUp(void)
-{
-	keyup(&rollright);
-}
-
-static void
-centerview(void)
-{
-	cl.viewangles[PITCH] = -SHORT2ANGLE(cl.snap.ps.delta_angles[PITCH]);
-}
-
-static void
-mlookdown(void)
-{
-	mlooking = qtrue;
-}
-
-static void
-mlookup(void)
-{
-	mlooking = qfalse;
-	if(!cl_freelook->integer)
-		centerview();
-}
-
-Cvar *cl_yawspeed;
-Cvar *cl_pitchspeed;
-Cvar *cl_rollspeed;
-Cvar *cl_run;
-Cvar *cl_anglespeedkey;
-
-static const Scalar Maxrolldelta = 300.0;
 
 /* Moves the local angle positions */
 static void
@@ -1133,6 +723,414 @@ CL_SendCmd(void)
 		return;
 	}
 	CL_WritePacket();
+}
+
+static void
+UpDown(void)
+{
+	keydown(&up);
+}
+
+static void
+UpUp(void)
+{
+	keyup(&up);
+}
+
+static void
+DownDown(void)
+{
+	keydown(&down);
+}
+
+static void
+DownUp(void)
+{
+	keyup(&down);
+}
+
+static void
+LeftDown(void)
+{
+	keydown(&left);
+}
+
+static void
+LeftUp(void)
+{
+	keyup(&left);
+}
+
+static void
+RightDown(void)
+{
+	keydown(&right);
+}
+
+static void
+RightUp(void)
+{
+	keyup(&right);
+}
+
+static void
+ForwardDown(void)
+{
+	keydown(&forward);
+}
+
+static void
+ForwardUp(void)
+{
+	keyup(&forward);
+}
+
+static void
+BackDown(void)
+{
+	keydown(&back);
+}
+
+static void
+BackUp(void)
+{
+	keyup(&back);
+}
+
+static void
+LookupDown(void)
+{
+	keydown(&lookup);
+}
+
+static void
+LookupUp(void)
+{
+	keyup(&lookup);
+}
+
+static void
+LookdownDown(void)
+{
+	keydown(&lookdown);
+}
+
+static void
+LookdownUp(void)
+{
+	keyup(&lookdown);
+}
+
+static void
+MoveleftDown(void)
+{
+	keydown(&moveleft);
+}
+
+static void
+MoveleftUp(void)
+{
+	keyup(&moveleft);
+}
+
+static void
+MoverightDown(void)
+{
+	keydown(&moveright);
+}
+
+static void
+MoverightUp(void)
+{
+	keyup(&moveright);
+}
+
+static void
+SpeedDown(void)
+{
+	keydown(&speed);
+}
+
+static void
+SpeedUp(void)
+{
+	keyup(&speed);
+}
+
+static void
+BrakeDown(void)
+{
+	keydown(&brake);
+}
+
+static void
+BrakeUp(void)
+{
+	keyup(&brake);
+}
+
+static void
+StrafeDown(void)
+{
+	keydown(&strafe);
+}
+
+static void
+StrafeUp(void)
+{
+	keyup(&strafe);
+}
+
+#ifdef USE_VOIP
+static void
+VoipRecordDown(void)
+{
+	keydown(&voiprecord);
+	Cvar_Set("cl_voipSend", "1");
+}
+
+static void
+VoipRecordUp(void)
+{
+	keyup(&voiprecord);
+	Cvar_Set("cl_voipSend", "0");
+}
+#endif
+
+static void
+Button0Down(void)
+{
+	keydown(&buttons[0]);
+}
+
+static void
+Button0Up(void)
+{
+	keyup(&buttons[0]);
+}
+
+static void
+Button1Down(void)
+{
+	keydown(&buttons[1]);
+}
+
+static void
+Button1Up(void)
+{
+	keyup(&buttons[1]);
+}
+
+static void
+Button2Down(void)
+{
+	keydown(&buttons[2]);
+}
+
+static void
+Button2Up(void)
+{
+	keyup(&buttons[2]);
+}
+
+static void
+Button3Down(void)
+{
+	keydown(&buttons[3]);
+}
+
+static void
+Button3Up(void)
+{
+	keyup(&buttons[3]);
+}
+
+static void
+Button4Down(void)
+{
+	keydown(&buttons[4]);
+}
+
+static void
+Button4Up(void)
+{
+	keyup(&buttons[4]);
+}
+
+static void
+Button5Down(void)
+{
+	keydown(&buttons[5]);
+}
+
+static void
+Button5Up(void)
+{
+	keyup(&buttons[5]);
+}
+
+static void
+Button6Down(void)
+{
+	keydown(&buttons[6]);
+}
+
+static void
+Button6Up(void)
+{
+	keyup(&buttons[6]);
+}
+
+static void
+Button7Down(void)
+{
+	keydown(&buttons[7]);
+}
+
+static void
+Button7Up(void)
+{
+	keyup(&buttons[7]);
+}
+
+static void
+Button8Down(void)
+{
+	keydown(&buttons[8]);
+}
+
+static void
+Button8Up(void)
+{
+	keyup(&buttons[8]);
+}
+
+static void
+Button9Down(void)
+{
+	keydown(&buttons[9]);
+}
+
+static void
+Button9Up(void)
+{
+	keyup(&buttons[9]);
+}
+
+static void
+Button10Down(void)
+{
+	keydown(&buttons[10]);
+}
+
+static void
+Button10Up(void)
+{
+	keyup(&buttons[10]);
+}
+
+static void
+Button11Down(void)
+{
+	keydown(&buttons[11]);
+}
+
+static void
+Button11Up(void)
+{
+	keyup(&buttons[11]);
+}
+
+static void
+Button12Down(void)
+{
+	keydown(&buttons[12]);
+}
+
+static void
+Button12Up(void)
+{
+	keyup(&buttons[12]);
+}
+
+static void
+Button13Down(void)
+{
+	keydown(&buttons[13]);
+}
+
+static void
+Button13Up(void)
+{
+	keyup(&buttons[13]);
+}
+
+static void
+Button14Down(void)
+{
+	keydown(&buttons[14]);
+}
+
+static void
+Button14Up(void)
+{
+	keyup(&buttons[14]);
+}
+
+static void
+Button15Down(void)
+{
+	keydown(&buttons[15]);
+}
+
+static void
+Button15Up(void)
+{
+	keyup(&buttons[15]);
+}
+
+static void
+RollLeftDown(void)
+{
+	keydown(&rollleft);
+}
+
+static void
+RollLeftUp(void)
+{
+	keyup(&rollleft);
+}
+
+static void
+RollRightDown(void)
+{
+	keydown(&rollright);
+}
+
+static void
+RollRightUp(void)
+{
+	keyup(&rollright);
+}
+
+static void
+centerview(void)
+{
+	cl.viewangles[PITCH] = -SHORT2ANGLE(cl.snap.ps.delta_angles[PITCH]);
+}
+
+static void
+mlookdown(void)
+{
+	mlooking = qtrue;
+}
+
+static void
+mlookup(void)
+{
+	mlooking = qfalse;
+	if(!cl_freelook->integer)
+		centerview();
 }
 
 void
