@@ -785,76 +785,109 @@ dowaterevents(Pmove *pm, Pml *pml)	/* FIXME? */
 }
 
 /*
- * primary weapon
+ * Weapon events
+ * FIXME: feels wrong having this in pmove
+ */
+
+static ID_INLINE int
+weaptimetab(Weapon wp)
+{
+	switch(wp){
+	case Wmelee:		return 400;
+	case Wmachinegun:	return 50;
+	case Wshotgun:		return 1000;
+	case Wlightning:	return 50;
+	case Wrailgun:		return 1500;
+	case Wplasmagun:	return 100;
+	case Whook:		return 1;
+	case Wnanoidcannon:	return 1000;
+	case Wchaingun:		return 30;
+	case Wrocketlauncher:
+	case Wgrenadelauncher:
+	case Wproxlauncher:	return 800;
+	case Wbfg:		return 200;
+	default:		return 0;
+	}
+}
+
+static int
+slot2attackbutton(Weapslot sl)
+{
+	switch(sl){
+	case Wpri:	return BUTTON_PRIATTACK;
+	case Wsec:	return BUTTON_SECATTACK;
+	case Whookslot:	return BUTTON_HOOKFIRE;
+	default:	return -1;
+	}
+}
+
+static int
+slot2weapstat(Weapslot sl)
+{
+	switch(sl){
+	case Wpri:	return STAT_PRIWEAPS;
+	case Wsec:	return STAT_SECWEAPS;
+	default:	return -1;
+	}
+}
+
+static int
+slot2fireevent(Weapslot sl)
+{
+	switch(sl){
+	case Wpri:	return EV_FIREPRIWEAP;
+	case Wsec:	return EV_FIRESECWEAP;
+	case Whookslot:	return EV_FIREHOOK;
+	default:	return -1;
+	}
+}
+
+static int
+slot2noammoevent(Weapslot sl)
+{
+	switch(sl){
+	default:	return EV_NOAMMO;
+	}
+}
+
+/*
+ * weapon changes
  */
 static void
-startpriweapchange(Pmove *pm, Pml *pml, int weapon)
+startweapchange(Pmove *pm, Pml *pml, Weapslot sl, int weapon)
 {
-	if(weapon <= Wnone || weapon >= Wnumweaps)
+	if(weapon <= Wnone || weapon >= Wnumweaps 
+	  || sl >= Wnumweapslots)
+	then{
 		return;
-	if(!(pm->ps->stats[STAT_PRIWEAPS] & (1 << weapon)))
+	}
+	if(!(pm->ps->stats[slot2weapstat(sl)] & (1 << weapon)))
 		return;
-	if(pm->ps->weapstate[Wpri] == WEAPON_DROPPING)
+	if(pm->ps->weapstate[sl] == WEAPON_DROPPING)
 		return;
 	PM_AddEvent(pm, pml, EV_CHANGE_WEAPON);
-	pm->ps->weapstate[Wpri] = WEAPON_DROPPING;
-	pm->ps->weaptime[Wpri] += 200;
+	pm->ps->weapstate[sl] = WEAPON_DROPPING;
+	pm->ps->weaptime[sl] += 200;
 	starttorsoanim(pm, TORSO_DROP);
 }
 
 static void
-finishpriweapchange(Pmove *pm, Pml *pml)
+finishweapchange(Pmove *pm, Pml *pml, Weapslot sl)
 {
 	Weapon weap;
 
 	UNUSED(pml);
-	weap = pm->cmd.weap[Wpri];
+	if(sl >= Wnumweapslots)
+		return;
+	weap = pm->cmd.weap[sl];
 	if(weap >= Wnumweaps)
 		weap = Wnone;
-	if(!(pm->ps->stats[STAT_PRIWEAPS] & (1 << weap)))
+	if(!(pm->ps->stats[slot2weapstat(sl)] & (1 << weap)))
 		weap = Wnone;
-	pm->ps->weap[Wpri] = weap;
-	pm->ps->weapstate[Wpri] = WEAPON_RAISING;
-	pm->ps->weaptime[Wpri] += 250;
+	pm->ps->weap[sl] = weap;
+	pm->ps->weapstate[sl] = WEAPON_RAISING;
+	pm->ps->weaptime[sl] += 250;
 	starttorsoanim(pm, TORSO_RAISE);
-}
-
-/*
- * secondary weapon
- */
-static void
-startsecweapchange(Pmove *pm, Pml *pml, int wp)
-{
-	Playerstate *p;
-	
-	p = pm->ps;
-	if((wp <= Wnone) || (wp >= Wnumweaps))
-		return;
-	if(!(p->stats[STAT_SECWEAPS] & (1<<wp)))
-		return;
-	if(p->weapstate[Wsec] == WEAPON_DROPPING)
-		return;
-	PM_AddEvent(pm, pml, EV_CHANGE_WEAPON);
-	p->weapstate[Wsec] = WEAPON_DROPPING;
-	p->weaptime[Wsec] += 200;
-}
-
-static void
-finishsecweapchange(Pmove *pm, Pml *pml)
-{
-	Weapon wp;
-	Playerstate *p;
-
-	UNUSED(pml);
-	p = pm->ps;
-	wp = pm->cmd.weap[Wsec];
-	if(wp >= Wnumweaps)
-		wp = Wnone;
-	if(!(p->stats[STAT_SECWEAPS] & (1 << wp)))
-		wp = Wnone;
-	p->weap[Wsec] = wp;
-	p->weapstate[Wsec] = WEAPON_RAISING;
-	p->weaptime[Wsec] += 250;
 }
 
 /* choose the torso animation */
@@ -871,46 +904,15 @@ dotorsoanim(Pmove *pm, Pml *pml)
 	}
 }
 
-static ID_INLINE int
-weaptimetab(Weapon wp)
-{
-	switch(wp){
-	case Wmelee:
-		return 400;
-	case Wmachinegun:
-		return 50;
-	case Wshotgun:
-		return 1000;
-	case Wlightning:
-		return 50;
-	case Wrailgun:
-		return 1500;
-	case Wplasmagun:
-		return 100;
-	case Whook:
-		return 1;
-	case Wnanoidcannon:
-		return 1000;
-	case Wchaingun:
-		return 30;
-	case Wrocketlauncher:
-	case Wgrenadelauncher:
-	case Wproxlauncher:
-		return 800;
-	case Wbfg:
-		return 200;
-	default:
-		return 0;
-	}
-}
-
 /* Generates weapon events and modifes the weapon counter */
 static void
-dopriweapevents(Pmove *pm, Pml *pml)
+doweapevents(Pmove *pm, Pml *pml, Weapslot sl)
 {
 	int addTime;
 	Playerstate *p;
 	
+	if(sl >= Wnumweapslots)
+		return;
 	p = pm->ps;
 	if(p->pm_flags & PMF_RESPAWNED)
 		return;	/* don't allow attack until all buttons are up */
@@ -918,7 +920,7 @@ dopriweapevents(Pmove *pm, Pml *pml)
 		return;	/* ignore if spectator */
 	if(p->stats[STAT_HEALTH] <= 0){
 		/* player is dead */
-		p->weap[Wpri] = Wnone;
+		p->weap[sl] = Wnone;
 		return;
 	}
 	/* check for item usage */
@@ -939,216 +941,71 @@ dopriweapevents(Pmove *pm, Pml *pml)
 		p->pm_flags &= ~PMF_USE_ITEM_HELD;
 
 	/* make weapon function */
-	if(p->weaptime[Wpri] > 0)
-		p->weaptime[Wpri] -= pml->msec;
+	if(p->weaptime[sl] > 0)
+		p->weaptime[sl] -= pml->msec;
 
 	/* 
 	 * check for weapon changes.
 	 * can't change if weapon is firing, but can change
 	 * again if lowering or raising 
 	 */
-	if(p->weaptime[Wpri] <= 0 || p->weapstate[Wpri] != WEAPON_FIRING){
-		if(p->weap[Wpri] != pm->cmd.weap[Wpri])
-			startpriweapchange(pm, pml, pm->cmd.weap[Wpri]);
+	if(p->weaptime[sl] <= 0 || p->weapstate[sl] != WEAPON_FIRING){
+		if(p->weap[sl] != pm->cmd.weap[sl])
+			startweapchange(pm, pml, sl, pm->cmd.weap[sl]);
 	}
 	/*
 	 * do nothing if weapon is still in cooldown state
 	 */
-	if(p->weaptime[Wpri] > 0 && p->weapstate[Wpri] == WEAPON_FIRING)
+	if(p->weaptime[sl] > 0 && p->weapstate[sl] == WEAPON_FIRING)
 		return;
 		
 	/* change weapon if time */
-	if(p->weapstate[Wpri] == WEAPON_DROPPING){
-		finishpriweapchange(pm, pml);
+	if(p->weapstate[sl] == WEAPON_DROPPING){
+		finishweapchange(pm, pml, sl);
 		return;
 	}
-	if(p->weapstate[Wpri] == WEAPON_RAISING){
-		p->weapstate[Wpri] = WEAPON_READY;
-		if(p->weap[Wpri] == Wmelee)
+	if(p->weapstate[sl] == WEAPON_RAISING){
+		p->weapstate[sl] = WEAPON_READY;
+		if(p->weap[sl] == Wmelee)
 			starttorsoanim(pm, TORSO_STAND2);
 		else
 			starttorsoanim(pm, TORSO_STAND);
 		return;
 	}
 	/* check for fire */
-	if(!(pm->cmd.buttons & BUTTON_PRIATTACK)){
-		p->weaptime[Wpri] = 0;
-		p->weapstate[Wpri] = WEAPON_READY;
+	if(!(pm->cmd.buttons & slot2attackbutton(sl))){
+		p->weaptime[sl] = 0;
+		p->weapstate[sl] = WEAPON_READY;
 		return;
 	}
 	/* start the animation even if out of ammo */
-	if(p->weap[Wpri] == Wmelee){
+	if(p->weap[sl] == Wmelee){
 		/* melee only "fires" when it actually hits something */
 		if(!pm->gauntletHit){
-			p->weaptime[Wpri] = 0;
-			p->weapstate[Wpri] = WEAPON_READY;
+			p->weaptime[sl] = 0;
+			p->weapstate[sl] = WEAPON_READY;
 			return;
 		}
 		starttorsoanim(pm, TORSO_ATTACK2);
 	}else
 		starttorsoanim(pm, TORSO_ATTACK);
-	p->weapstate[Wpri] = WEAPON_FIRING;
+	p->weapstate[sl] = WEAPON_FIRING;
 	/* check for out of ammo */
-	if(!p->ammo[p->weap[Wpri]]){
-		PM_AddEvent(pm, pml, EV_NOAMMO);
-		p->weaptime[Wpri] += 500;
+	if(p->ammo[p->weap[sl]] == 0){
+		PM_AddEvent(pm, pml, slot2noammoevent(sl));
+		p->weaptime[sl] += 500;
 		return;
 	}
 	/* take an ammo away if not infinite */
-	if(p->ammo[p->weap[Wpri]] != -1)
-		p->ammo[p->weap[Wpri]]--;
+	if(p->ammo[p->weap[sl]] != -1)
+		p->ammo[p->weap[sl]]--;
 	/* fire weapon */
-	PM_AddEvent(pm, pml, EV_FIREPRIWEAP);
+	PM_AddEvent(pm, pml, slot2fireevent(sl));
 	
-	addTime = weaptimetab(p->weap[Wpri]);
+	addTime = weaptimetab(p->weap[sl]);
 	if(p->powerups[PW_HASTE])
 		addTime /= 1.3f;
-	p->weaptime[Wpri] += addTime;
-}
-
-/* Generates weapon events and modifes the weapon counter */
-static void
-dosecweapevents(Pmove *pm, Pml *pml)
-{
-	int addTime;
-	Playerstate *p;
-	
-	p = pm->ps;
-	if(p->pm_flags & PMF_RESPAWNED)
-		return;	/* don't allow attack until all buttons are up */
-	if(p->persistant[PERS_TEAM] == TEAM_SPECTATOR)
-		return;	/* ignore if spectator */
-	if(p->stats[STAT_HEALTH] <= 0){
-		/* player is dead */
-		p->weap[Wsec] = Wnone;
-		return;
-	}
-	/* check for item usage */
-	if(pm->cmd.buttons & BUTTON_USE_HOLDABLE){
-		if(!(p->pm_flags & PMF_USE_ITEM_HELD)){
-			if(bg_itemlist[pm->ps->stats[STAT_HOLDABLE_ITEM]].tag == HI_MEDKIT
-			  && p->stats[STAT_HEALTH] >=
-			  (p->stats[STAT_MAX_HEALTH] + 25)){
-				/* don't use medkit if at max health */
-			}else{
-				p->pm_flags |= PMF_USE_ITEM_HELD;
-				PM_AddEvent(pm, pml, EV_USE_ITEM0 + bg_itemlist[p->stats[STAT_HOLDABLE_ITEM]].tag);
-				p->stats[STAT_HOLDABLE_ITEM] = 0;
-			}
-			return;
-		}
-	}else
-		p->pm_flags &= ~PMF_USE_ITEM_HELD;
-
-	/* make weapon function */
-	if(p->weaptime[Wsec] > 0)
-		p->weaptime[Wsec] -= pml->msec;
-
-	/* 
-	 * check for weapon changes.
-	 * can't change if weapon is firing, but can change
-	 * again if lowering or raising 
-	 */
-	if(p->weaptime[Wsec] <= 0 || p->weapstate[Wsec] != WEAPON_FIRING){
-		if(p->weap[Wsec] != pm->cmd.weap[Wsec])
-			startsecweapchange(pm, pml, pm->cmd.weap[Wsec]);
-	}
-	/*
-	 * do nothing if weapon is still in cooldown state
-	 */
-	if(p->weaptime[Wsec] > 0 && p->weapstate[Wsec] == WEAPON_FIRING)
-		return;
-		
-	/* change weapon if time */
-	if(p->weapstate[Wsec] == WEAPON_DROPPING){
-		finishsecweapchange(pm, pml);
-		return;
-	}
-	if(p->weapstate[Wsec] == WEAPON_RAISING)
-		p->weapstate[Wsec] = WEAPON_READY;
-
-	/* check for fire */
-	if(!(pm->cmd.buttons & BUTTON_SECATTACK)){
-		p->weaptime[Wsec] = 0;
-		p->weapstate[Wsec] = WEAPON_READY;
-		return;
-	}
-	/* start the animation even if out of ammo */
-	if(p->weap[Wsec] == Wmelee){
-		/* melee only "fires" when it actually hits something */
-		if(!pm->gauntletHit){
-			p->weaptime[Wsec] = 0;
-			p->weapstate[Wsec] = WEAPON_READY;
-			return;
-		}
-		starttorsoanim(pm, TORSO_ATTACK2);
-	}else
-		starttorsoanim(pm, TORSO_ATTACK);
-	p->weapstate[Wsec] = WEAPON_FIRING;
-
-	/* check for out of ammo */
-	if(!p->ammo[p->weap[Wsec]]){
-		PM_AddEvent(pm, pml, EV_NOAMMO);
-		p->weaptime[Wsec] += 500;
-		return;
-	}
-	/* take an ammo away if not infinite */
-	if(p->ammo[p->weap[Wsec]] != -1)
-		p->ammo[p->weap[Wsec]]--;
-	/* fire weapon */
-	PM_AddEvent(pm, pml, EV_FIRESECWEAP);
-	
-	addTime = weaptimetab(p->weap[Wsec]);
-	if(p->powerups[PW_HASTE])
-		addTime /= 1.3f;
-	p->weaptime[Wsec] += addTime;
-}
-
-static void
-dohookevents(Pmove *pm, Pml *pml)
-{
-	int addTime;
-	Playerstate *p;
-	
-	p = pm->ps;
-	if(p->pm_flags & PMF_RESPAWNED)
-		return;	/* don't allow hook until all buttons are up */
-	if(p->persistant[PERS_TEAM] == TEAM_SPECTATOR)
-		return;	/* ignore if spectator */
-	if(p->stats[STAT_HEALTH] <= 0){
-		/* player is dead */
-		p->weap[Whookslot] = Wnone;
-		return;
-	}
-	
-	/* make the hook function */
-	p->weaptime[Whookslot] = max(0, p->weaptime[Whookslot] - pml->msec);
-	if(p->weaptime[Whookslot] > 0)
-		return;
-
-	/* check for fire */
-	if(!(pm->cmd.buttons & BUTTON_HOOKFIRE)){
-		p->weaptime[Whookslot] = 0;
-		p->weapstate[Whookslot] = WEAPON_READY;
-		return;
-	}
-
-	p->weapstate[Whookslot] = WEAPON_FIRING;
-	/* fire weapon */
-	PM_AddEvent(pm, pml, EV_FIREHOOK);
-	
-	addTime = weaptimetab(p->weap[Whookslot]);
-	if(p->powerups[PW_HASTE])
-		addTime /= 1.3f;
-	p->weaptime[Whookslot] += addTime;
-}
-
-static ID_INLINE void
-doweapevents(Pmove *pm, Pml *pml)
-{
-	dopriweapevents(pm,  pml);
-	dosecweapevents(pm, pml);
-	dohookevents(pm, pml);
+	p->weaptime[sl] += addTime;
 }
 
 static void
@@ -1280,6 +1137,7 @@ void
 PmoveSingle(Pmove *pm)
 {
 	Pml pml;
+	Weapslot sl;
 	
 	cnt++;
 	/* clear results */
@@ -1410,7 +1268,8 @@ PmoveSingle(Pmove *pm)
 		brakemove(pm, &pml);
 
 	animate(pm, &pml);
-	doweapevents(pm, &pml);
+	for(sl = 0; sl < Wnumweapslots; ++sl)
+		doweapevents(pm, &pml, sl);
 	dotorsoanim(pm, &pml);
 	dowaterevents(pm, &pml);
 	/* snap some parts of playerstate to save network bandwidth */
