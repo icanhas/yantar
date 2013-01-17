@@ -783,6 +783,21 @@ CG_DrawTimer(float y)
 	return y + BIGCHAR_HEIGHT + 4;
 }
 
+/* FIXME: is this correct? */
+static float
+CG_Drawspeed(float y)
+{
+	Scalar speed;
+	char *s;
+	int w;
+	
+	speed = lenv3(cg.snap->ps.velocity);
+	s = va("%.2f m/s", speed/100.0f);
+	w = CG_DrawStrlen(s) * BIGCHAR_WIDTH;
+	CG_DrawBigString(635 - w, y + 2, s, 1.0f);
+	return y + BIGCHAR_HEIGHT + 4;
+}
+
 static float
 CG_DrawTeamOverlay(float y, qbool right, qbool upper)
 {
@@ -972,6 +987,8 @@ CG_DrawUpperRight(Stereoframe stereoFrame)
 	if(cg_drawFPS.integer &&
 	   (stereoFrame == STEREO_CENTER || stereoFrame == STEREO_RIGHT))
 		y = CG_DrawFPS(y);
+	if(cg_drawspeed.integer)
+		y = CG_Drawspeed(y);
 	if(cg_drawTimer.integer)
 		y = CG_DrawTimer(y);
 	if(cg_drawAttacker.integer)

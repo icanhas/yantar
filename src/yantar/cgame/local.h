@@ -995,6 +995,7 @@ extern Vmcvar		cg_shadows;
 extern Vmcvar		cg_gibs;
 extern Vmcvar		cg_drawTimer;
 extern Vmcvar		cg_drawFPS;
+extern Vmcvar		cg_drawspeed;
 extern Vmcvar		cg_drawSnapshot;
 extern Vmcvar		cg_draw3dIcons;
 extern Vmcvar		cg_drawIcons;
