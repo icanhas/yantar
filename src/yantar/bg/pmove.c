@@ -951,7 +951,10 @@ dopriweapevents(Pmove *pm, Pml *pml)
 		if(p->weap[Wpri] != pm->cmd.weap[Wpri])
 			startpriweapchange(pm, pml, pm->cmd.weap[Wpri]);
 	}
-	if(p->weaptime[Wpri] > 0)
+	/*
+	 * do nothing if weapon is still in cooldown state
+	 */
+	if(p->weaptime[Wpri] > 0 && p->weapstate[Wpri] == WEAPON_FIRING)
 		return;
 		
 	/* change weapon if time */
@@ -1050,7 +1053,10 @@ dosecweapevents(Pmove *pm, Pml *pml)
 		if(p->weap[Wsec] != pm->cmd.weap[Wsec])
 			startsecweapchange(pm, pml, pm->cmd.weap[Wsec]);
 	}
-	if(p->weaptime[Wsec] > 0)
+	/*
+	 * do nothing if weapon is still in cooldown state
+	 */
+	if(p->weaptime[Wsec] > 0 && p->weapstate[Wsec] == WEAPON_FIRING)
 		return;
 		
 	/* change weapon if time */
