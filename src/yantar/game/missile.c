@@ -553,7 +553,7 @@ firenanoid(Gentity *self, Vec3 start, Vec3 forward, Vec3 right, Vec3 up)
 
 	bolt = G_Spawn();
 	bolt->classname = "nanoid";
-	bolt->nextthink = level.time + 10000;
+	bolt->nextthink = level.time + 10000 + random()*2000;
 	bolt->think = G_ExplodeMissile;
 	bolt->s.eType = ET_MISSILE;
 	bolt->r.svFlags = SVF_USE_CURRENT_ORIGIN;
