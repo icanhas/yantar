@@ -686,7 +686,7 @@ CG_DrawActiveFrame(int serverTime, Stereoframe stereoView,
 	}
 
 	/* let the client system know what our weapon and zoom settings are */
-	trap_SetUserCmdValue(cg.weapsel[Wpri], cg.weapsel[Wsec], cg.zoomSensitivity);
+	trap_SetUserCmdValue(cg.weapsel[WSpri], cg.weapsel[WSsec], cg.zoomSensitivity);
 
 	cg.clientFrame++;
 
@@ -710,8 +710,8 @@ CG_DrawActiveFrame(int serverTime, Stereoframe stereoView,
 		CG_AddParticles ();
 		CG_AddLocalEntities();
 	}
-	CG_AddViewWeapon(&cg.predictedPlayerState, Wpri);
-	CG_AddViewWeapon(&cg.predictedPlayerState, Wsec);
+	CG_AddViewWeapon(&cg.predictedPlayerState, WSpri);
+	CG_AddViewWeapon(&cg.predictedPlayerState, WSsec);
 	CG_PlayBufferedSounds();
 	CG_PlayBufferedVoiceChats();
 

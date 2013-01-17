@@ -137,8 +137,8 @@ CL_GetSnapshot(int snapshotNumber, Snap *snapshot)
 void
 CL_SetUserCmdValue(int weap1, int weap2, float sensitivityScale)
 {
-	cl.cgameweapsel[Wpri] = weap1;
-	cl.cgameweapsel[Wsec] = weap2;
+	cl.cgameweapsel[WSpri] = weap1;
+	cl.cgameweapsel[WSsec] = weap2;
 	cl.cgameSensitivity = sensitivityScale;
 }
 

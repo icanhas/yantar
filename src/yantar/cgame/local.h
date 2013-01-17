@@ -148,7 +148,7 @@ typedef struct Centity {
 	Entstate	currentState;	/* from cg.frame */
 	Entstate	nextState;	/* from cg.nextFrame, if available */
 	Playerent	pe;
-	Weapent		w[Wnumweapslots];
+	Weapent		w[WSnumslots];
 
 	qbool		interpolate;	/* true if next state is valid to interpolate to */
 	qbool		currentValid;	/* true if cg.frame holds this entity */
@@ -480,7 +480,7 @@ typedef struct {
 	int		landTime;
 
 	/* input state sent to server */
-	int weapsel[Wnumweapslots];
+	int weapsel[WSnumslots];
 
 	/* auto rotating items */
 	Vec3	autoAngles;
@@ -569,9 +569,9 @@ typedef struct {
 	int	itemPickupTime;
 	int	itemPickupBlendTime;	/* the pulse around the crosshair is timed seperately */
 
-	int	weapseltime[Wnumweapslots];
-	int	weapanim[Wnumweapslots];
-	int	weapanimtime[Wnumweapslots];
+	int	weapseltime[WSnumslots];
+	int	weapanim[WSnumslots];
+	int	weapanimtime[WSnumslots];
 
 	/* blend blobs */
 	float	damageTime;

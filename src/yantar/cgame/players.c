@@ -1745,8 +1745,8 @@ CG_Player(Centity *cent)
 	/*
 	 * add the gun / barrel / flash
 	 */
-	CG_AddPlayerWeapon(&hull, NULL, cent, Wpri, ci->team);
-	CG_AddPlayerWeapon(&hull, NULL, cent, Wsec, ci->team);
+	CG_AddPlayerWeapon(&hull, NULL, cent, WSpri, ci->team);
+	CG_AddPlayerWeapon(&hull, NULL, cent, WSsec, ci->team);
 
 	/* add powerups floating behind the player */
 	playerpowerups(cent, &hull);

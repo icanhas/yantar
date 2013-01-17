@@ -1083,7 +1083,7 @@ TeamplayInfoMessage(Gentity *ent)
 			Q_sprintf (entry, sizeof(entry), " %i %i %i %i %i %i",
 /*				level.sortedClients[i], player->client->pers.teamState.location, h, a, */
 				i, player->client->pers.teamState.location, h, a,
-				player->client->ps.weap[Wpri], player->s.powerups);
+				player->client->ps.weap[WSpri], player->s.powerups);
 			j = strlen(entry);
 			if(stringlength + j >= sizeof(string))
 				break;

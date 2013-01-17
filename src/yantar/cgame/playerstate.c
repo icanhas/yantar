@@ -153,7 +153,7 @@ CG_Respawn(void)
 
 	/* no error decay on player movement */
 	cg.thisFrameTeleport = qtrue;
-	for(i = 0; i < Wnumweapslots; ++i){
+	for(i = 0; i < WSnumslots; ++i){
 		/* display weapons available */
 		cg.weapseltime[i] = cg.time;
 		/* select the weapon the server says we are using */

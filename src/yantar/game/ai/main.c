@@ -808,7 +808,7 @@ BotInputToUserCommand(bot_input_t *bi, Usrcmd *ucmd, int delta_angles[3],
 	if(bi->actionflags & ACTION_GUARDBASE) ucmd->buttons |= BUTTON_GUARDBASE;
 	if(bi->actionflags & ACTION_PATROL) ucmd->buttons |= BUTTON_PATROL;
 	if(bi->actionflags & ACTION_FOLLOWME) ucmd->buttons |= BUTTON_FOLLOWME;
-	ucmd->weap[Wpri] = bi->weapon;
+	ucmd->weap[WSpri] = bi->weapon;
 	/* set the view angles
 	 * NOTE: the ucmd->angles are the angles WITHOUT the delta angles */
 	ucmd->angles[PITCH] = ANGLE2SHORT(bi->viewangles[PITCH]);
@@ -1455,7 +1455,7 @@ BotAIStartFrame(int time)
 				continue;
 			}
 			/* do not update missiles */
-			if(ent->s.eType == ET_MISSILE && ent->s.weap[Wpri] !=
+			if(ent->s.eType == ET_MISSILE && ent->s.weap[WSpri] !=
 			   Whook){
 				trap_BotLibUpdateEntity(i, NULL);
 				continue;
@@ -1496,7 +1496,7 @@ BotAIStartFrame(int time)
 			state.powerups		= ent->s.powerups;
 			state.legsAnim		= ent->s.legsAnim;
 			state.torsoAnim		= ent->s.torsoAnim;
-			state.weapon		= ent->s.weap[Wpri];
+			state.weapon		= ent->s.weap[WSpri];
 			trap_BotLibUpdateEntity(i, &state);
 		}
 

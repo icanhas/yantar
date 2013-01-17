@@ -114,7 +114,7 @@ struct Clientactive {
 	int		joystickAxis[MAX_JOYSTICK_AXIS];	/* set by joystick events */
 
 	/* cgame communicates a few values to the client system */
-	int	cgameweapsel[Wnumweapslots];	/* current weapons to add to Usrcmd */
+	int	cgameweapsel[WSnumslots];	/* current weapons to add to Usrcmd */
 	float	cgameSensitivity;
 
 	/* cmds[cmdNumber] is the predicted command, [cmdNumber-1] is the last

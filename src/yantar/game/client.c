@@ -1094,37 +1094,37 @@ ClientSpawn(Gentity *ent)
 		if(ent->client->sess.sessionTeam != TEAM_SPECTATOR){
 			G_KillBox(ent);
 			/* force the base weapon up */
-			client->ps.weap[Wpri] = Wmachinegun;
-			client->ps.weap[Wsec] = Wrocketlauncher;
-			client->ps.weap[Whookslot] = Whook;
-			client->ps.weapstate[Wpri] = WEAPON_READY;
-			client->ps.weapstate[Wsec] = WEAPON_READY;
-			client->ps.weapstate[Whookslot] = WEAPON_READY;
+			client->ps.weap[WSpri] = Wmachinegun;
+			client->ps.weap[WSsec] = Wrocketlauncher;
+			client->ps.weap[WShook] = Whook;
+			client->ps.weapstate[WSpri] = WEAPON_READY;
+			client->ps.weapstate[WSsec] = WEAPON_READY;
+			client->ps.weapstate[WShook] = WEAPON_READY;
 			/* fire the targets of the spawn point */
 			G_UseTargets(spawnPoint, ent);
 			/* 
 			 * select the highest weapon number available,
 			 * after any spawn given items have fired
 			 */
-			client->ps.weap[Wpri] = 1;
-			client->ps.weap[Wsec] = 1;
-			client->ps.weap[Whookslot] = 1;
+			client->ps.weap[WSpri] = 1;
+			client->ps.weap[WSsec] = 1;
+			client->ps.weap[WShook] = 1;
 
 			for(i = Wnumweaps - 1; i > 0; i--){
 				if(client->ps.stats[STAT_PRIWEAPS] & (1 << i)){
-					client->ps.weap[Wpri] = i;
+					client->ps.weap[WSpri] = i;
 					break;
 				}
 			}
 			for(i = Wnumweaps - 1; i > 0; i--){
 				if(client->ps.stats[STAT_SECWEAPS] & (1 << i)){
-					client->ps.weap[Wsec] = i;
+					client->ps.weap[WSsec] = i;
 					break;
 				}
 			}
 			for(i = Wnumweaps - 1; i > 0; i--){
 				if(client->ps.stats[STAT_HOOKWEAPS] & (1 << i)){
-					client->ps.weap[Whookslot] = i;
+					client->ps.weap[WShook] = i;
 					break;
 				}
 			}

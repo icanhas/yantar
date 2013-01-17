@@ -517,15 +517,15 @@ CG_DrawStatusBar(void)
 	clearv3(angles);
 
 	/* draw any 3D icons first, so the changes back to 2D are minimized */
-	if(cent->currentState.weap[Wpri] &&
-	   cg_weapons[cent->currentState.weap[Wpri]].ammoModel){
+	if(cent->currentState.weap[WSpri] &&
+	   cg_weapons[cent->currentState.weap[WSpri]].ammoModel){
 		origin[0] = 70;
 		origin[1] = 0;
 		origin[2] = 0;
 		angles[YAW] = 90 + 20 * sin(cg.time / 1000.0);
 		CG_Draw3DModel(CHAR_WIDTH*3 + TEXT_ICON_SPACE, 432, ICON_SIZE,
 			ICON_SIZE,
-			cg_weapons[cent->currentState.weap[Wpri]].ammoModel, 0,
+			cg_weapons[cent->currentState.weap[WSpri]].ammoModel, 0,
 			origin,
 			angles);
 	}
@@ -558,11 +558,11 @@ CG_DrawStatusBar(void)
 	/*
 	 * ammo
 	 */
-	if(cent->currentState.weap[Wpri]){
-		value = ps->ammo[cent->currentState.weap[Wpri]];
+	if(cent->currentState.weap[WSpri]){
+		value = ps->ammo[cent->currentState.weap[WSpri]];
 		if(value > -1){
-			if(cg.predictedPlayerState.weapstate[Wpri] == WEAPON_FIRING
-			   && cg.predictedPlayerState.weaptime[Wpri] > 100)
+			if(cg.predictedPlayerState.weapstate[WSpri] == WEAPON_FIRING
+			   && cg.predictedPlayerState.weaptime[WSpri] > 100)
 			then{
 				/* draw as dark grey when reloading */
 				color = 2;	/* dark grey */
@@ -581,7 +581,7 @@ CG_DrawStatusBar(void)
 			if(!cg_draw3dIcons.integer && cg_drawIcons.integer){
 				Handle icon;
 
-				icon = cg_weapons[cg.predictedPlayerState.weap[Wpri]].ammoIcon;
+				icon = cg_weapons[cg.predictedPlayerState.weap[WSpri]].ammoIcon;
 				if(icon){
 					CG_DrawPic(CHAR_WIDTH*3 + TEXT_ICON_SPACE,
 						432, ICON_SIZE, ICON_SIZE, icon);
@@ -589,11 +589,11 @@ CG_DrawStatusBar(void)
 			}
 		}
 	}
-	if(cent->currentState.weap[Wsec]){
-		value = ps->ammo[cent->currentState.weap[Wsec]];
+	if(cent->currentState.weap[WSsec]){
+		value = ps->ammo[cent->currentState.weap[WSsec]];
 		if(value > -1){
-			if(cg.predictedPlayerState.weapstate[Wsec] == WEAPON_FIRING
-			   && cg.predictedPlayerState.weaptime[Wsec] > 100)
+			if(cg.predictedPlayerState.weapstate[WSsec] == WEAPON_FIRING
+			   && cg.predictedPlayerState.weaptime[WSsec] > 100)
 			then{
 				/* draw as dark grey when reloading */
 				color = 2;	/* dark grey */
@@ -612,7 +612,7 @@ CG_DrawStatusBar(void)
 			if(!cg_draw3dIcons.integer && cg_drawIcons.integer){
 				Handle icon;
 
-				icon = cg_weapons[cg.predictedPlayerState.weap[Wsec]].ammoIcon;
+				icon = cg_weapons[cg.predictedPlayerState.weap[WSsec]].ammoIcon;
 				if(icon){
 					CG_DrawPic(CHAR_WIDTH*3 + TEXT_ICON_SPACE,
 						432, ICON_SIZE, ICON_SIZE, icon);
@@ -2425,8 +2425,8 @@ CG_Draw2D(Stereoframe stereoFrame)
 			if(stereoFrame == STEREO_CENTER)
 				CG_DrawCrosshair();
 			CG_DrawCrosshairNames();
-			CG_DrawWeaponSelect(Wpri);
-			CG_DrawWeaponSelect(Wsec);
+			CG_DrawWeaponSelect(WSpri);
+			CG_DrawWeaponSelect(WSsec);
 			CG_DrawHoldableItem();
 			CG_DrawReward();
 		}

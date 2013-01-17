@@ -232,13 +232,13 @@ Pickup_Weapon(Gentity *ent, Gentity *other, Weapslot sl)
 
 	/* add the weapon */
 	switch(sl){
-	case Wpri:
+	case WSpri:
 		other->client->ps.stats[STAT_PRIWEAPS] |= (1<<ent->item->tag);
 		break;
-	case Wsec:
+	case WSsec:
 		other->client->ps.stats[STAT_SECWEAPS] |= (1<<ent->item->tag);
 		break;
-	case Whookslot:
+	case WShook:
 		other->client->ps.stats[STAT_HOOKWEAPS] |= (1<<ent->item->tag);
 		break;
 	default:
@@ -381,11 +381,11 @@ Touch_Item(Gentity *ent, Gentity *other, Trace *trace)
 	/* call the item-specific pickup function */
 	switch(ent->item->type){
 	case IT_PRIWEAP:
-		respawn = Pickup_Weapon(ent, other, Wpri);
+		respawn = Pickup_Weapon(ent, other, WSpri);
 /*		predict = qfalse; */
 		break;
 	case IT_SECWEAP:
-		respawn = Pickup_Weapon(ent, other, Wsec);
+		respawn = Pickup_Weapon(ent, other, WSsec);
 		break;
 	case IT_AMMO:
 		respawn = Pickup_Ammo(ent, other);

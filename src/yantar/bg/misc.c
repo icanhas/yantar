@@ -339,9 +339,9 @@ BG_PlayerStateToEntityState(Playerstate *ps, Entstate *s, qbool snap)
 		ps->entityEventSequence++;
 	}
 
-	s->weap[Wpri] = ps->weap[Wpri];
-	s->weap[Wsec] = ps->weap[Wsec];
-	s->weap[Whookslot] = ps->weap[Whookslot];
+	s->weap[WSpri] = ps->weap[WSpri];
+	s->weap[WSsec] = ps->weap[WSsec];
+	s->weap[WShook] = ps->weap[WShook];
 	s->groundEntityNum = ps->groundEntityNum;
 
 	s->powerups = 0;
@@ -414,9 +414,9 @@ BG_PlayerStateToEntityStateExtraPolate(Playerstate *ps, Entstate *s, int time, q
 		ps->entityEventSequence++;
 	}
 
-	s->weap[Wpri] = ps->weap[Wpri];
-	s->weap[Wsec] = ps->weap[Wsec];
-	s->weap[Whookslot] = ps->weap[Whookslot];
+	s->weap[WSpri] = ps->weap[WSpri];
+	s->weap[WSsec] = ps->weap[WSsec];
+	s->weap[WShook] = ps->weap[WShook];
 	s->groundEntityNum = ps->groundEntityNum;
 
 	s->powerups = 0;

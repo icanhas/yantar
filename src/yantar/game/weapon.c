@@ -100,9 +100,9 @@ CheckGauntletAttack(Gentity *ent)
 		tent = G_TempEntity(tr.endpos, EV_MISSILE_HIT);
 		tent->s.otherEntityNum = traceEnt->s.number;
 		tent->s.eventParm = DirToByte(tr.plane.normal);
-		tent->s.weap[Wpri] = ent->s.weap[Wpri];
-		tent->s.weap[Wsec] = ent->s.weap[Wsec];
-		tent->s.weap[Whookslot] = ent->s.weap[Whookslot];
+		tent->s.weap[WSpri] = ent->s.weap[WSpri];
+		tent->s.weap[WSsec] = ent->s.weap[WSsec];
+		tent->s.weap[WShook] = ent->s.weap[WShook];
 	}
 
 	if(!traceEnt->takedamage)
@@ -549,9 +549,9 @@ Weapon_LightningFire(Gentity *ent)
 			tent = G_TempEntity(tr.endpos, EV_MISSILE_HIT);
 			tent->s.otherEntityNum = traceEnt->s.number;
 			tent->s.eventParm = DirToByte(tr.plane.normal);
-			tent->s.weap[Wpri] = ent->s.weap[Wpri];
-			tent->s.weap[Wsec] = ent->s.weap[Wsec];
-			tent->s.weap[Whookslot] = ent->s.weap[Whookslot];
+			tent->s.weap[WSpri] = ent->s.weap[WSpri];
+			tent->s.weap[WSsec] = ent->s.weap[WSsec];
+			tent->s.weap[WShook] = ent->s.weap[WShook];
 			if(LogAccuracyHit(traceEnt, ent))
 				ent->client->accuracy_hits++;
 		}else if(!(tr.surfaceFlags & SURF_NOIMPACT)){
@@ -657,7 +657,7 @@ FireWeapon(Gentity *ent, Weapslot slot)
 {
 	Weapon w;
 	
-	if(slot >= Wnumweapslots){
+	if(slot >= WSnumslots){
 		G_Printf("bad weapslot %u\n", slot);
 		return;
 	}

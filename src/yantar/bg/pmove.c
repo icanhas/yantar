@@ -814,9 +814,9 @@ static int
 slot2attackbutton(Weapslot sl)
 {
 	switch(sl){
-	case Wpri:	return BUTTON_PRIATTACK;
-	case Wsec:	return BUTTON_SECATTACK;
-	case Whookslot:	return BUTTON_HOOKFIRE;
+	case WSpri:	return BUTTON_PRIATTACK;
+	case WSsec:	return BUTTON_SECATTACK;
+	case WShook:	return BUTTON_HOOKFIRE;
 	default:	return -1;
 	}
 }
@@ -825,8 +825,8 @@ static int
 slot2weapstat(Weapslot sl)
 {
 	switch(sl){
-	case Wpri:	return STAT_PRIWEAPS;
-	case Wsec:	return STAT_SECWEAPS;
+	case WSpri:	return STAT_PRIWEAPS;
+	case WSsec:	return STAT_SECWEAPS;
 	default:	return -1;
 	}
 }
@@ -835,9 +835,9 @@ static int
 slot2fireevent(Weapslot sl)
 {
 	switch(sl){
-	case Wpri:	return EV_FIREPRIWEAP;
-	case Wsec:	return EV_FIRESECWEAP;
-	case Whookslot:	return EV_FIREHOOK;
+	case WSpri:	return EV_FIREPRIWEAP;
+	case WSsec:	return EV_FIRESECWEAP;
+	case WShook:	return EV_FIREHOOK;
 	default:	return -1;
 	}
 }
@@ -857,7 +857,7 @@ static void
 startweapchange(Pmove *pm, Pml *pml, Weapslot sl, int weapon)
 {
 	if(weapon <= Wnone || weapon >= Wnumweaps 
-	  || sl >= Wnumweapslots)
+	  || sl >= WSnumslots)
 	then{
 		return;
 	}
@@ -877,7 +877,7 @@ finishweapchange(Pmove *pm, Pml *pml, Weapslot sl)
 	Weapon weap;
 
 	UNUSED(pml);
-	if(sl >= Wnumweapslots)
+	if(sl >= WSnumslots)
 		return;
 	weap = pm->cmd.weap[sl];
 	if(weap >= Wnumweaps)
@@ -895,8 +895,8 @@ static void
 dotorsoanim(Pmove *pm, Pml *pml)
 {
 	UNUSED(pml);
-	if(pm->ps->weapstate[Wpri] == WEAPON_READY){
-		if(pm->ps->weap[Wpri] == Wmelee)
+	if(pm->ps->weapstate[WSpri] == WEAPON_READY){
+		if(pm->ps->weap[WSpri] == Wmelee)
 			settorsoanim(pm, TORSO_STAND2);
 		else
 			settorsoanim(pm, TORSO_STAND);
@@ -911,7 +911,7 @@ doweapevents(Pmove *pm, Pml *pml, Weapslot sl)
 	int addTime;
 	Playerstate *p;
 	
-	if(sl >= Wnumweapslots)
+	if(sl >= WSnumslots)
 		return;
 	p = pm->ps;
 	if(p->pm_flags & PMF_RESPAWNED)
@@ -1166,15 +1166,15 @@ PmoveSingle(Pmove *pm)
 	   PM_INTERMISSION)
 	then{
 		if((pm->cmd.buttons & BUTTON_PRIATTACK)
-		  && pm->ps->ammo[pm->ps->weap[Wpri]])
+		  && pm->ps->ammo[pm->ps->weap[WSpri]])
 		then{
 			pm->ps->eFlags |= EF_FIRING;
 		}else if((pm->cmd.buttons & BUTTON_SECATTACK)
-		  && pm->ps->ammo[pm->ps->weap[Wsec]])
+		  && pm->ps->ammo[pm->ps->weap[WSsec]])
 		then{
 		   	pm->ps->eFlags |= EF_FIRING;
 		}else if((pm->cmd.buttons & BUTTON_HOOKFIRE)
-		  && pm->ps->ammo[pm->ps->weap[Whookslot]])
+		  && pm->ps->ammo[pm->ps->weap[WShook]])
 		then{
 		   	pm->ps->eFlags |= EF_FIRING;
 		}else{
@@ -1268,7 +1268,7 @@ PmoveSingle(Pmove *pm)
 		brakemove(pm, &pml);
 
 	animate(pm, &pml);
-	for(sl = 0; sl < Wnumweapslots; ++sl)
+	for(sl = 0; sl < WSnumslots; ++sl)
 		doweapevents(pm, &pml, sl);
 	dotorsoanim(pm, &pml);
 	dowaterevents(pm, &pml);

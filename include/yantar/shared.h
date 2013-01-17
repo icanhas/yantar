@@ -1158,10 +1158,10 @@ enum {
 };
 
 typedef enum {
-	Wpri,		/* rail guns, etc. */
-	Wsec,		/* missile pods, etc. */
-	Whookslot,	/* offhand grappling hook */
-	Wnumweapslots
+	WSpri,	/* rail guns, etc. */
+	WSsec,	/* missile pods, etc. */
+	WShook,	/* offhand grappling hook */
+	WSnumslots
 } Weapslot;
 
 /*
@@ -1187,7 +1187,7 @@ typedef struct Playerstate {
 
 	Vec3	origin;
 	Vec3	velocity;
-	int	weaptime[Wnumweapslots];
+	int	weaptime[WSnumslots];
 	int	gravity;
 	int	speed;
 	float	swingstrength;		/* for grapple */
@@ -1220,8 +1220,8 @@ typedef struct Playerstate {
 	int	externalEventTime;
 
 	int	clientNum;	/* ranges from 0 to MAX_CLIENTS-1 */
-	int	weap[Wnumweapslots];		/* copied to Entstate->weapon */
-	int	weapstate[Wnumweapslots];
+	int	weap[WSnumslots];		/* copied to Entstate->weapon */
+	int	weapstate[WSnumslots];
 
 	Vec3	viewangles;	/* for fixed views */
 	int	viewheight;
@@ -1286,7 +1286,7 @@ typedef struct Usrcmd {
 	int		serverTime;
 	int		angles[3];
 	int		buttons;
-	byte		weap[Wnumweapslots];
+	byte		weap[WSnumslots];
 	signed char	forwardmove, rightmove, upmove, brakefrac;
 } Usrcmd;
 
@@ -1357,7 +1357,7 @@ typedef struct Entstate {
 
 	/* for players */
 	int	powerups;	/* bit flags */
-	int	weap[Wnumweapslots];		/* determines weapon and flash model, etc */
+	int	weap[WSnumslots];		/* determines weapon and flash model, etc */
 	int	parentweap;	/* only for projectiles; determines appearance and behaviour */
 	int	legsAnim;	/* mask off ANIM_TOGGLEBIT */
 	int	torsoAnim;	/* mask off ANIM_TOGGLEBIT */

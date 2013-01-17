@@ -658,9 +658,9 @@ MSG_WriteDeltaUsercmd(Bitmsg *msg, Usrcmd *from, Usrcmd *to)
 	MSG_WriteDelta(msg, from->rightmove, to->rightmove, 8);
 	MSG_WriteDelta(msg, from->upmove, to->upmove, 8);
 	MSG_WriteDelta(msg, from->buttons, to->buttons, 16);
-	MSG_WriteDelta(msg, from->weap[Wpri], to->weap[Wpri], 8);
-	MSG_WriteDelta(msg, from->weap[Wsec], to->weap[Wsec], 8);
-	MSG_WriteDelta(msg, from->weap[Whookslot], to->weap[Whookslot], 8);
+	MSG_WriteDelta(msg, from->weap[WSpri], to->weap[WSpri], 8);
+	MSG_WriteDelta(msg, from->weap[WSsec], to->weap[WSsec], 8);
+	MSG_WriteDelta(msg, from->weap[WShook], to->weap[WShook], 8);
 }
 
 void
@@ -684,9 +684,9 @@ MSG_ReadDeltaUsercmd(Bitmsg *msg, Usrcmd *from, Usrcmd *to)
 		to->upmove = -127;
 	to->brakefrac = MSG_ReadDelta(msg, from->brakefrac, 8);
 	to->buttons = MSG_ReadDelta(msg, from->buttons, 16);
-	to->weap[Wpri] = MSG_ReadDelta(msg, from->weap[Wpri], 8);
-	to->weap[Wsec] = MSG_ReadDelta(msg, from->weap[Wsec], 8);
-	to->weap[Whookslot] = MSG_ReadDelta(msg, from->weap[Whookslot], 8);
+	to->weap[WSpri] = MSG_ReadDelta(msg, from->weap[WSpri], 8);
+	to->weap[WSsec] = MSG_ReadDelta(msg, from->weap[WSsec], 8);
+	to->weap[WShook] = MSG_ReadDelta(msg, from->weap[WShook], 8);
 }
 
 void
@@ -707,9 +707,9 @@ MSG_WriteDeltaUsercmdKey(Bitmsg *msg, int key, Usrcmd *from, Usrcmd *to)
 	   from->upmove == to->upmove &&
 	   from->brakefrac == to->brakefrac &&
 	   from->buttons == to->buttons &&
-	   from->weap[Wpri] == to->weap[Wpri] &&
-	   from->weap[Wsec] == to->weap[Wsec] &&
-	   from->weap[Whookslot] == to->weap[Whookslot])
+	   from->weap[WSpri] == to->weap[WSpri] &&
+	   from->weap[WSsec] == to->weap[WSsec] &&
+	   from->weap[WShook] == to->weap[WShook])
 	then{
 		MSG_WriteBits(msg, 0, 1);	/* no change */
 		oldsize += 7;
@@ -725,9 +725,9 @@ MSG_WriteDeltaUsercmdKey(Bitmsg *msg, int key, Usrcmd *from, Usrcmd *to)
 	MSG_WriteDeltaKey(msg, key, from->upmove, to->upmove, 8);
 	MSG_WriteDeltaKey(msg, key, from->brakefrac, to->brakefrac, 8);
 	MSG_WriteDeltaKey(msg, key, from->buttons, to->buttons, 16);
-	MSG_WriteDeltaKey(msg, key, from->weap[Wpri], to->weap[Wpri], 8);
-	MSG_WriteDeltaKey(msg, key, from->weap[Wsec], to->weap[Wsec], 8);
-	MSG_WriteDeltaKey(msg, key, from->weap[Whookslot], to->weap[Whookslot], 8);
+	MSG_WriteDeltaKey(msg, key, from->weap[WSpri], to->weap[WSpri], 8);
+	MSG_WriteDeltaKey(msg, key, from->weap[WSsec], to->weap[WSsec], 8);
+	MSG_WriteDeltaKey(msg, key, from->weap[WShook], to->weap[WShook], 8);
 }
 
 void
@@ -748,9 +748,9 @@ MSG_ReadDeltaUsercmdKey(Bitmsg *msg, int key, Usrcmd *from, Usrcmd *to)
 		to->upmove = MSG_ReadDeltaKey(msg, key, from->upmove, 8);
 		to->brakefrac = MSG_ReadDeltaKey(msg, key, from->brakefrac, 8);
 		to->buttons = MSG_ReadDeltaKey(msg, key, from->buttons, 16);
-		to->weap[Wpri] = MSG_ReadDeltaKey(msg, key, from->weap[Wpri], 8);
-		to->weap[Wsec] = MSG_ReadDeltaKey(msg, key, from->weap[Wsec], 8);
-		to->weap[Whookslot] = MSG_ReadDeltaKey(msg, key, from->weap[Whookslot], 8);
+		to->weap[WSpri] = MSG_ReadDeltaKey(msg, key, from->weap[WSpri], 8);
+		to->weap[WSsec] = MSG_ReadDeltaKey(msg, key, from->weap[WSsec], 8);
+		to->weap[WShook] = MSG_ReadDeltaKey(msg, key, from->weap[WShook], 8);
 	}else{
 		to->angles[0] = from->angles[0];
 		to->angles[1] = from->angles[1];
@@ -759,9 +759,9 @@ MSG_ReadDeltaUsercmdKey(Bitmsg *msg, int key, Usrcmd *from, Usrcmd *to)
 		to->rightmove = from->rightmove;
 		to->upmove = from->upmove;
 		to->buttons = from->buttons;
-		to->weap[Wpri] = from->weap[Wpri];
-		to->weap[Wsec] = from->weap[Wsec];
-		to->weap[Whookslot] = from->weap[Whookslot];
+		to->weap[WSpri] = from->weap[WSpri];
+		to->weap[WSsec] = from->weap[WSsec];
+		to->weap[WShook] = from->weap[WShook];
 	}
 }
 
@@ -799,9 +799,9 @@ Netfield entityStateFields[] =
 	{ NETF(traj.type), 8 },
 	{ NETF(eFlags), 19 },
 	{ NETF(otherEntityNum), GENTITYNUM_BITS },
-	{ NETF(weap[Wpri]), 8 },
-	{ NETF(weap[Wsec]), 8 },
-	{ NETF(weap[Whookslot]), 8 },
+	{ NETF(weap[WSpri]), 8 },
+	{ NETF(weap[WSsec]), 8 },
+	{ NETF(weap[WShook]), 8 },
 	{ NETF(parentweap), 8 },
 	{ NETF(clientNum), 8 },
 	{ NETF(angles[1]), 0 },
@@ -1091,9 +1091,9 @@ Netfield playerStateFields[] =
 	{ PSF(viewangles[0]), 0 },
 	{ PSF(viewangles[1]), 0 },
 	{ PSF(viewangles[2]), 0 },
-	{ PSF(weaptime[Wpri]), -16 },
-	{ PSF(weaptime[Wsec]), -16 },
-	{ PSF(weaptime[Whookslot]), -16 },
+	{ PSF(weaptime[WSpri]), -16 },
+	{ PSF(weaptime[WSsec]), -16 },
+	{ PSF(weaptime[WShook]), -16 },
 	{ PSF(legsTimer), 8 },
 	{ PSF(pm_time), -16 },
 	{ PSF(eventSequence), 16 },
@@ -1104,9 +1104,9 @@ Netfield playerStateFields[] =
 	{ PSF(events[1]), 8 },
 	{ PSF(pm_flags), 16 },
 	{ PSF(groundEntityNum), GENTITYNUM_BITS },
-	{ PSF(weapstate[Wpri]), 4 },
-	{ PSF(weapstate[Wsec]), 4 },
-	{ PSF(weapstate[Whookslot]), 4},
+	{ PSF(weapstate[WSpri]), 4 },
+	{ PSF(weapstate[WSsec]), 4 },
+	{ PSF(weapstate[WShook]), 4},
 	{ PSF(eFlags), 16 },
 	{ PSF(externalEvent), 10 },
 	{ PSF(gravity), 16 },
@@ -1127,9 +1127,9 @@ Netfield playerStateFields[] =
 	{ PSF(eventParms[0]), 8 },
 	{ PSF(eventParms[1]), 8 },
 	{ PSF(clientNum), 8 },
-	{ PSF(weap[Wpri]), 5 },
-	{ PSF(weap[Wsec]), 5 },
-	{ PSF(weap[Whookslot]), 5},
+	{ PSF(weap[WSpri]), 5 },
+	{ PSF(weap[WSsec]), 5 },
+	{ PSF(weap[WShook]), 5},
 	{ PSF(grapplePoint[0]), 0 },
 	{ PSF(grapplePoint[1]), 0 },
 	{ PSF(grapplePoint[2]), 0 },

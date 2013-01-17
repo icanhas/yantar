@@ -430,13 +430,13 @@ ClientEvents(Gentity *ent, int oldEventSequence)
 				MOD_FALLING);
 			break;
 		case EV_FIREPRIWEAP:
-			FireWeapon(ent, Wpri);
+			FireWeapon(ent, WSpri);
 			break;
 		case EV_FIRESECWEAP:
-			FireWeapon(ent, Wsec);
+			FireWeapon(ent, WSsec);
 			break;
 		case EV_FIREHOOK:
-			FireWeapon(ent, Whookslot);
+			FireWeapon(ent, WShook);
 			break;
 		case EV_USE_ITEM1:	/* teleporter */
 			/* drop flags in CTF */
@@ -647,7 +647,7 @@ ClientThink_real(Gentity *ent)
 		client->ps.speed *= 1.3;
 
 	/* Let go of the hook if we aren't firing */
-	if(client->ps.weap[Whookslot] == Whook &&
+	if(client->ps.weap[WShook] == Whook &&
 	   client->hook && !(ucmd->buttons & BUTTON_HOOKFIRE))
 		Weapon_HookFree(client->hook);
 
@@ -660,10 +660,10 @@ ClientThink_real(Gentity *ent)
 	 * check for the hit-scan melee weap, don't let the action
 	 * go through as an attack unless it actually hits something 
 	 */
-	if(client->ps.weap[Wpri] == Wmelee &&
+	if(client->ps.weap[WSpri] == Wmelee &&
 	   !(ucmd->buttons & BUTTON_TALK) &&
-	   (((ucmd->buttons & BUTTON_PRIATTACK) && client->ps.weaptime[Wpri] <= 0)
-	   || ((ucmd->buttons & BUTTON_SECATTACK) && client->ps.weaptime[Wsec] <= 0)))
+	   (((ucmd->buttons & BUTTON_PRIATTACK) && client->ps.weaptime[WSpri] <= 0)
+	   || ((ucmd->buttons & BUTTON_SECATTACK) && client->ps.weaptime[WSsec] <= 0)))
 	then{
 		pm.gauntletHit = CheckGauntletAttack(ent);
 	}

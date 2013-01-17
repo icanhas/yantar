@@ -64,7 +64,7 @@ TossClientItems(Gentity *self)
 	Gentity *drop;
 
 	/* drop the weapon if not a gauntlet or machinegun */
-	weapon = self->s.weap[Wpri];
+	weapon = self->s.weap[WSpri];
 
 	/* 
 	 * make a special check to see if they are changing to a new
@@ -73,8 +73,8 @@ TossClientItems(Gentity *self)
 	 * their weapon change hasn't completed yet and they are still holding the MG. 
 	 */
 	if(weapon == Wmachinegun || weapon == Whook){
-		if(self->client->ps.weapstate[Wpri] == WEAPON_DROPPING)
-			weapon = self->client->pers.cmd.weap[Wpri];
+		if(self->client->ps.weapstate[WSpri] == WEAPON_DROPPING)
+			weapon = self->client->pers.cmd.weap[WSpri];
 		if(!(self->client->ps.stats[STAT_PRIWEAPS] & (1 << weapon)))
 			weapon = Wnone;
 	}
@@ -474,9 +474,9 @@ player_die(Gentity *self, Gentity *inflictor, Gentity *attacker,
 
 	self->takedamage = qtrue;	/* can still be gibbed */
 
-	self->s.weap[Wpri] = Wnone;
-	self->s.weap[Wsec] = Wnone;
-	self->s.weap[Whookslot] = Wnone;
+	self->s.weap[WSpri] = Wnone;
+	self->s.weap[WSsec] = Wnone;
+	self->s.weap[WShook] = Wnone;
 	self->s.powerups = 0;
 	self->r.contents = CONTENTS_CORPSE;
 

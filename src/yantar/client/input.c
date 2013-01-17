@@ -414,9 +414,9 @@ finishmove(Usrcmd *cmd)
 	int i;
 
 	/* copy the state that the cgame is currently sending */
-	cmd->weap[Wpri] = cl.cgameweapsel[Wpri];
-	cmd->weap[Wsec] = cl.cgameweapsel[Wsec];
-	cmd->weap[Whookslot] = cl.cgameweapsel[Whookslot];
+	cmd->weap[WSpri] = cl.cgameweapsel[WSpri];
+	cmd->weap[WSsec] = cl.cgameweapsel[WSsec];
+	cmd->weap[WShook] = cl.cgameweapsel[WShook];
 	/*
 	 * send the current server time so the amount of movement
 	 * can be determined without allowing cheating

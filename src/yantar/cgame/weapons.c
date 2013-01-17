@@ -1389,7 +1389,7 @@ CG_DrawWeaponSelect(Weapslot slot)
 	/* don't display if dead */
 	if(cg.predictedPlayerState.stats[STAT_HEALTH] <= 0)
 		return;
-	if(slot >= Wnumweapslots)
+	if(slot >= WSnumslots)
 		return;
 	color = CG_FadeColor(cg.weapseltime[slot], WEAPON_SELECT_TIME);
 	if(!color)
@@ -1401,11 +1401,11 @@ CG_DrawWeaponSelect(Weapslot slot)
 
 	/* count the number of weapons owned */
 	switch(slot){
-	case Wpri:
+	case WSpri:
 		bits = cg.snap->ps.stats[STAT_PRIWEAPS];
 		y = 380; 
 		break;
-	case Wsec:
+	case WSsec:
 		bits = cg.snap->ps.stats[STAT_SECWEAPS];
 		y = 280; 
 		break;
@@ -1457,11 +1457,11 @@ weapselectable(Weapslot sl, int i)
 	if(!cg.snap->ps.ammo[i])
 		return qfalse;
 	switch(sl){
-	case Wpri:
+	case WSpri:
 		if(!(cg.snap->ps.stats[STAT_PRIWEAPS] & (1 << i)))
 			return qfalse;
 		break;
-	case Wsec:
+	case WSsec:
 		if(!(cg.snap->ps.stats[STAT_SECWEAPS] & (1<<i)))
 			return qfalse;
 		break;
@@ -1484,7 +1484,7 @@ nextweap(Weapslot sl)
 		return;
 	if(cg.snap->ps.pm_flags & PMF_FOLLOW)
 		return;
-	if(sl >= Wnumweapslots)
+	if(sl >= WSnumslots)
 		return;
 
 	cg.weapseltime[sl] = cg.time;
@@ -1511,7 +1511,7 @@ prevweap(Weapslot sl)
 		return;
 	if(cg.snap->ps.pm_flags & PMF_FOLLOW)
 		return;
-	if(sl >= Wnumweapslots)
+	if(sl >= WSnumslots)
 		return;
 	
 	cg.weapseltime[sl] = cg.time;
@@ -1532,13 +1532,13 @@ prevweap(Weapslot sl)
 void
 CG_NextPriWeap_f(void)
 {
-	nextweap(Wpri);
+	nextweap(WSpri);
 }
 
 void
 CG_PrevPriWeap_f(void)
 {
-	prevweap(Wpri);
+	prevweap(WSpri);
 }
 
 void
@@ -1553,22 +1553,22 @@ CG_PriWeap_f(void)
 	num = atoi(CG_Argv(1));
 	if(num < 1 || num > MAX_WEAPONS-1)
 		return;
-	cg.weapseltime[Wpri] = cg.time;
+	cg.weapseltime[WSpri] = cg.time;
 	if(!(cg.snap->ps.stats[STAT_PRIWEAPS] & (1 << num)))
 		return;		/* don't have the weapon */
-	cg.weapsel[Wpri] = num;
+	cg.weapsel[WSpri] = num;
 }
 
 void
 CG_NextSecWeap_f(void)
 {
-	nextweap(Wsec);
+	nextweap(WSsec);
 }
 
 void
 CG_PrevSecWeap_f(void)
 {
-	prevweap(Wsec);
+	prevweap(WSsec);
 }
 
 void
@@ -1583,10 +1583,10 @@ CG_SecWeap_f(void)
 	num = atoi(CG_Argv(1));
 	if(num < 1 || num > MAX_WEAPONS-1)
 		return;
-	cg.weapseltime[Wsec] = cg.time;
+	cg.weapseltime[WSsec] = cg.time;
 	if(!(cg.snap->ps.stats[STAT_SECWEAPS] & (1 << num)))
 		return;		/* don't have the weapon */
-	cg.weapsel[Wsec] = num;
+	cg.weapsel[WSsec] = num;
 }
 
 /* The current weapon has just run out of ammo */
@@ -1595,7 +1595,7 @@ CG_OutOfAmmoChange(Weapslot sl)
 {
 	int i;
 	
-	if(sl >= Wnumweapslots)
+	if(sl >= WSnumslots)
 		return;
 		
 	cg.weapseltime[sl] = cg.time;
@@ -1622,7 +1622,7 @@ CG_FireWeapon(Centity *cent, Weapslot sl)
 	int c, wnum;
 	Weapinfo	*weap;
 	
-	if(sl >= Wnumweapslots)
+	if(sl >= WSnumslots)
 		return;
 	
 	ent = &cent->currentState;

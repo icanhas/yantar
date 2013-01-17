@@ -365,8 +365,8 @@ CG_ItemPickup(int itemNum)
 		if(cg_autoswitch.integer && bg_itemlist[itemNum].tag 
 		  != Wmachinegun)
 		then{
-			cg.weapseltime[Wpri] = cg.time;
-			cg.weapsel[Wpri] = bg_itemlist[itemNum].tag;
+			cg.weapseltime[WSpri] = cg.time;
+			cg.weapsel[WSpri] = bg_itemlist[itemNum].tag;
 		}
 		break;
 	case IT_SECWEAP:
@@ -374,8 +374,8 @@ CG_ItemPickup(int itemNum)
 		if(cg_autoswitch.integer && bg_itemlist[itemNum].tag 
 		  != Wmachinegun)
 		then{
-			cg.weapseltime[Wsec] = cg.time;
-			cg.weapsel[Wsec] = bg_itemlist[itemNum].tag;
+			cg.weapseltime[WSsec] = cg.time;
+			cg.weapsel[WSsec] = bg_itemlist[itemNum].tag;
 		}
 		break;
 	default:
@@ -742,12 +742,12 @@ CG_EntityEvent(Centity *cent, Vec3 position)
 		DEBUGNAME("EV_NOAMMO");
 /*		trap_S_StartSound (NULL, es->number, CHAN_AUTO, cgs.media.noAmmoSound ); */
 		if(es->number == cg.snap->ps.clientNum)
-			CG_OutOfAmmoChange(Wpri);
+			CG_OutOfAmmoChange(WSpri);
 		break;
 	case EV_NOSECAMMO:
 		DEBUGNAME("EV_NOSECAMMO");
 		if(es->number == cg.snap->ps.clientNum)
-			CG_OutOfAmmoChange(Wsec);
+			CG_OutOfAmmoChange(WSsec);
 		break;
 	case EV_CHANGE_WEAPON:
 	case EV_CHANGESECWEAP:
@@ -757,15 +757,15 @@ CG_EntityEvent(Centity *cent, Vec3 position)
 		break;
 	case EV_FIREPRIWEAP:
 		DEBUGNAME("EV_FIREPRIWEAP");
-		CG_FireWeapon(cent, Wpri);
+		CG_FireWeapon(cent, WSpri);
 		break;
 	case EV_FIRESECWEAP:
 		DEBUGNAME("EV_FIRESECWEAP");
-		CG_FireWeapon(cent, Wsec);
+		CG_FireWeapon(cent, WSsec);
 		break;
 	case EV_FIREHOOK:
 		DEBUGNAME("EV_FIREHOOK");
-		CG_FireWeapon(cent, Whookslot);
+		CG_FireWeapon(cent, WShook);
 		break;
 	case EV_USE_ITEM0:
 		DEBUGNAME("EV_USE_ITEM0");

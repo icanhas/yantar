@@ -1114,8 +1114,8 @@ BotChooseWeapon(bot_state_t *bs)
 {
 	int newweaponnum;
 
-	if(bs->cur_ps.weapstate[Wpri] == WEAPON_RAISING ||
-	   bs->cur_ps.weapstate[Wpri] == WEAPON_DROPPING)
+	if(bs->cur_ps.weapstate[WSpri] == WEAPON_RAISING ||
+	   bs->cur_ps.weapstate[WSpri] == WEAPON_DROPPING)
 		trap_EA_SelectWeapon(bs->client, bs->weaponnum);
 	else{
 		newweaponnum = trap_BotChooseBestFightWeapon(bs->ws,
@@ -1994,7 +1994,7 @@ BotAttackMove(bot_state_t *bs, int tfl)
 		else
 			bs->attackjump_time = FloatTime() + 1;
 	}
-	if(bs->cur_ps.weap[Wpri] == Wmelee){
+	if(bs->cur_ps.weap[WSpri] == Wmelee){
 		attack_dist	= 0;
 		attack_range	= 0;
 	}else{
@@ -2702,7 +2702,7 @@ BotAimAtEnemy(bot_state_t *bs)
 				/* if skilled anough do exact prediction */
 				if(aim_skill > 0.8 &&
 					/* if the weapon is ready to fire */
-				   bs->cur_ps.weapstate[Wpri] == WEAPON_READY){
+				   bs->cur_ps.weapstate[WSpri] == WEAPON_READY){
 					aas_clientmove_t move;
 					Vec3 origin;
 
@@ -4070,7 +4070,7 @@ void
 BotCheckForGrenades(bot_state_t *bs, Entstate *state)
 {
 	/* if this is not a grenade */
-	if(state->eType != ET_MISSILE || state->weap[Wpri] != Wgrenadelauncher)
+	if(state->eType != ET_MISSILE || state->weap[WSpri] != Wgrenadelauncher)
 		return;
 	/* try to avoid the grenade */
 	trap_BotAddAvoidSpot(bs->ms, state->traj.base, 160, AVOID_ALWAYS);
@@ -4083,7 +4083,7 @@ void
 BotCheckForProxMines(bot_state_t *bs, Entstate *state)
 {
 	/* if this is not a prox mine */
-	if(state->eType != ET_MISSILE || state->weap[Wpri] != Wproxlauncher)
+	if(state->eType != ET_MISSILE || state->weap[WSpri] != Wproxlauncher)
 		return;
 	/* if this prox mine is from someone on our own team */
 	if(state->generic1 == BotTeam(bs))
