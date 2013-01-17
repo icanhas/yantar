@@ -719,6 +719,18 @@ CG_RegisterWeapon(int weaponNum)
 			Prlsounds "/rocklf1a", qfalse);
 		cgs.media.rocketExplosionShader = trap_R_RegisterShader("rocketExplosion");
 		break;
+	case Whominglauncher:
+		wp->missileModel = trap_R_RegisterModel(Pprojectilemodels "/rocketweak");
+		wp->missileSound = trap_S_RegisterSound(Prlsounds "/rockfly", qfalse);
+		wp->missileTrailFunc = CG_RocketTrail;
+		wp->missileDlight = 200;
+		wp->wiTrailTime = 4000;
+		wp->trailRadius = 50;
+		MAKERGB(wp->missileDlightColor, 1.0f, 0.75f, 0.3f);
+		MAKERGB(wp->flashDlightColor, 1.0f, 0.75f, 0.3f);
+		wp->flashSound[0] = trap_S_RegisterSound(Prlsounds "/rocklf1a", qfalse);
+		cgs.media.rocketExplosionShader = trap_R_RegisterShader("rocketExplosion");
+		break;
 	case Wproxlauncher:
 		wp->missileModel = trap_R_RegisterModel(
 			Pprojectilemodels "/proxmine");
@@ -1749,8 +1761,30 @@ CG_MissileHitWall(int weapon, int clientNum, Vec3 origin, Vec3 dir,
 		isSprite = qtrue;
 		duration = 1000;
 		lightColor[0]	= 1;
-		lightColor[1]	= 0.75;
-		lightColor[2]	= 0.0;
+		lightColor[1]	= 0.75f;
+		lightColor[2]	= 0.0f;
+		if(cg_oldRocket.integer == 0){
+			/* explosion sprite animation */
+			maddv3(origin, 24, dir, sprOrg);
+			scalev3(dir, 64, sprVel);
+
+			CG_ParticleExplosion("explode1", sprOrg, sprVel, 1400,
+				20,
+				30);
+		}
+		break;
+	case Whominglauncher:
+		mod = cgs.media.dishFlashModel;
+		shader = cgs.media.rocketExplosionShader;
+		sfx = cgs.media.sfx_rockexp;
+		mark = cgs.media.burnMarkShader;
+		radius = 50;
+		light = 300;
+		isSprite = qtrue;
+		duration = 1200;
+		lightColor[0]	= 1.0f;
+		lightColor[1]	= 0.75f;
+		lightColor[2]	= 0.3f;
 		if(cg_oldRocket.integer == 0){
 			/* explosion sprite animation */
 			maddv3(origin, 24, dir, sprOrg);
@@ -1868,6 +1902,7 @@ CG_MissileHitPlayer(int weapon, Vec3 origin, Vec3 dir, int entityNum)
 	switch(weapon){
 	case Wgrenadelauncher:
 	case Wrocketlauncher:
+	case Whominglauncher:
 	case Wplasmagun:
 	case Wbfg:
 	case Wnanoidcannon:

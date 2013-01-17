@@ -805,6 +805,7 @@ weaptimetab(Weapon wp)
 	case Wrocketlauncher:
 	case Wgrenadelauncher:
 	case Wproxlauncher:	return 800;
+	case Whominglauncher:	return 1200;
 	case Wbfg:		return 200;
 	default:		return 0;
 	}

@@ -1056,6 +1056,7 @@ ClientSpawn(Gentity *ent)
 	client->ps.stats[STAT_PRIWEAPS] = (1<<Wmachinegun);
 	client->ps.stats[STAT_PRIWEAPS] |= (1<<Wmelee);
 	client->ps.stats[STAT_SECWEAPS] = (1<<Wrocketlauncher);
+	client->ps.stats[STAT_SECWEAPS] |= (1<<Whominglauncher);
 	client->ps.stats[STAT_HOOKWEAPS] = (1<<Whook);
 	
 	if(g_gametype.integer == GT_TEAM)
@@ -1063,6 +1064,7 @@ ClientSpawn(Gentity *ent)
 	else
 		client->ps.ammo[Wmachinegun] = 100;
 	client->ps.ammo[Wrocketlauncher] = 10;
+	client->ps.ammo[Whominglauncher] = 30;
 	client->ps.ammo[Wmelee] = -1;
 	client->ps.ammo[Whook] = -1;
 

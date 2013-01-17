@@ -15,7 +15,10 @@ static float s_quadFactor;
 static Vec3 forward, right, up;
 static Vec3 muzzle;
 
-#define Nnanoshots	16
+enum {
+	Nhomingshots	= 3,
+	Nnanoshots	= 16
+};
 
 #define CHAINGUN_SPREAD		600
 #define MACHINEGUN_SPREAD		200
@@ -339,6 +342,25 @@ Weapon_RocketLauncher_Fire(Gentity *ent)
 	m->damage *= s_quadFactor;
 	m->splashDamage *= s_quadFactor;
 
+	addv3(m->s.traj.delta, ent->client->ps.velocity, m->s.traj.delta);	// "real" physics
+}
+
+/*
+ * Homing rocket launcher
+ */
+
+void
+firehominglauncher(Gentity *ent)
+{
+	Gentity *m;
+	int n;
+
+	for(n = 0; n < Nhomingshots; ++n){
+		m = firehoming(ent, muzzle, forward, right, up);
+		m->damage *= s_quadFactor;
+		m->splashDamage *= s_quadFactor;
+	}
+	
 	addv3(m->s.traj.delta, ent->client->ps.velocity, m->s.traj.delta);	// "real" physics
 }
 
@@ -724,6 +746,9 @@ FireWeapon(Gentity *ent, Weapslot slot)
 		break;
 	case Wrocketlauncher:
 		Weapon_RocketLauncher_Fire(ent);
+		break;
+	case Whominglauncher:
+		firehominglauncher(ent);
 		break;
 	case Wproxlauncher:
 		weapon_proxlauncher_fire(ent);

@@ -275,6 +275,9 @@ Use_Shooter(Gentity *ent, Gentity *other, Gentity *activator)
 	case Wrocketlauncher:
 		fire_rocket(ent, ent->s.origin, dir);
 		break;
+	case Whominglauncher:
+		firehoming(ent, ent->s.origin, dir, right, up);
+		break;
 	case Wplasmagun:
 		fire_plasma(ent, ent->s.origin, dir);
 		break;

@@ -515,6 +515,47 @@ fire_rocket(Gentity *self, Vec3 start, Vec3 dir)
 	return bolt;
 }
 
+Gentity*
+firehoming(Gentity *self, Vec3 start, Vec3 forward, Vec3 right, Vec3 up)
+{
+	Gentity *bolt;
+	Vec3 dir, end;
+	float r, u, scale;
+
+	bolt = G_Spawn();
+	bolt->classname = "homingrocket";
+	bolt->nextthink = level.time + 14000 + random()*1000;
+	bolt->think = G_ExplodeMissile;
+	bolt->s.eType = ET_MISSILE;
+	bolt->r.svFlags = SVF_USE_CURRENT_ORIGIN;
+	bolt->s.parentweap = Whominglauncher;
+	bolt->r.ownerNum = self->s.number;
+	bolt->parent = self;
+	bolt->damage = 24;
+	bolt->splashDamage = 10;
+	bolt->splashRadius = 100;
+	bolt->methodOfDeath = MOD_HOMINGROCKET;
+	bolt->splashMethodOfDeath = MOD_HOMINGROCKET_SPLASH;
+	bolt->clipmask = MASK_SHOT;
+	bolt->target_ent = nil;
+	bolt->s.traj.type = TR_LINEAR;
+	bolt->s.traj.time = level.time - Presteptime;	/* move a bit on the very first frame */
+	copyv3(start, bolt->s.traj.base);
+	r = random() * M_PI * 2.0f;
+	u = sin(r) * crandom() * Nanospread * 16;
+	r = cos(r) * crandom() * Nanospread * 16;
+	maddv3(start, 8192 * 16, forward, end);
+	maddv3(end, r, right, end);
+	maddv3(end, u, up, end);
+	subv3(end, start, dir);
+	normv3(dir);
+	scale = 555 + random() * 1800;
+	scalev3(dir, scale, bolt->s.traj.delta);
+	snapv3(bolt->s.traj.delta);
+	copyv3(start, bolt->r.currentOrigin);
+	return bolt;
+}
+
 Gentity *
 fire_grapple(Gentity *self, Vec3 start, Vec3 dir)
 {

@@ -290,6 +290,7 @@ typedef enum {
 	Whook,
 	/* weapons for secondary mount point */
 	Wrocketlauncher,
+	Whominglauncher,
 	Wgrenadelauncher,
 	Wproxlauncher,
 	Wbfg,
@@ -548,6 +549,8 @@ typedef enum {
 	MOD_GRENADE_SPLASH,
 	MOD_ROCKET,
 	MOD_ROCKET_SPLASH,
+	MOD_HOMINGROCKET,
+	MOD_HOMINGROCKET_SPLASH,
 	MOD_PLASMA,
 	MOD_PLASMA_SPLASH,
 	MOD_RAILGUN,

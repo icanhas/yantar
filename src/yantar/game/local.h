@@ -493,6 +493,7 @@ void	G_RunMissile(Gentity *ent);
 Gentity*	fire_plasma(Gentity *self, Vec3 start, Vec3 aimdir);
 Gentity*	fire_grenade(Gentity *self, Vec3 start, Vec3 aimdir);
 Gentity*	fire_rocket(Gentity *self, Vec3 start, Vec3 dir);
+Gentity*	firehoming(Gentity *self, Vec3 start, Vec3 forward, Vec3 right, Vec3 up);
 Gentity*	fire_bfg(Gentity *self, Vec3 start, Vec3 dir);
 Gentity*	fire_grapple(Gentity *self, Vec3 start, Vec3 dir);
 Gentity*	firenanoid(Gentity *self, Vec3 start, Vec3 forward, Vec3 right,

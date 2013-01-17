@@ -212,6 +212,20 @@ Gitem bg_itemlist[] =
 		 ""
 	},
 
+	/* QUAKED weapon_hominglauncher (.3 .3 1) (-16 -16 -16) (16 16 16) suspended */
+	{
+		"weapon_hominglauncher",
+		Pweapsounds "/pickup",
+		{ Prlmodels "/rocketpodweak" },
+		 Picons "/homing",
+		 "Homing Rocket Launcher",
+		30,
+		IT_SECWEAP,
+		Whominglauncher,
+		 "",
+		 ""
+	},
+
 	/* QUAKED weapon_lightning (.3 .3 1) (-16 -16 -16) (16 16 16) suspended */
 	{
 		"weapon_lightning",
@@ -365,6 +379,20 @@ Gitem bg_itemlist[] =
 		5,
 		IT_AMMO,
 		Wrocketlauncher,
+		 "",
+		 ""
+	},
+
+	/* QUAKED ammo_homingrockets (.3 .3 1) (-16 -16 -16) (16 16 16) suspended */
+	{
+		"ammo_homingrockets",
+		Pweapsounds "/pickup",
+		{ Pammomodels "/homingrockets" },
+		 Picons "/homing",
+		 "Homing Rockets",
+		5,
+		IT_AMMO,
+		Whominglauncher,
 		 "",
 		 ""
 	},
