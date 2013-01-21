@@ -2112,9 +2112,18 @@ printmatrix(Scalar *m, int w, int h)
 }
 
 static void
-Com_Testmaths_f(void)
+printquat(Quat q)
 {
-	Mat2 a2, b2, c2 = { 1, 2, 3, 4 };
+	Com_Printf("% .4g%+.4gi%+.4gj%+.4gk\n", q[0], q[1], q[2], q[3]);
+}
+
+static void
+matrixtest(void)
+{
+	Mat2 a2, b2, c2 = {
+		1, 2, 
+		3, 4
+	};
 	Mat3 a3, b3, c3 = {
 		1, 2, 3,
 		4, 5, 6,
@@ -2126,9 +2135,11 @@ Com_Testmaths_f(void)
 		9, 10, 11, 12,
 		13, 14, 15, 16
 	};
-	Mat4 l4, u4;
 	
-	#define test(stmt, var)	(stmt); printmatrix((var), 2, 2)
+	Com_Printf("matrixtest:\n\n");
+	#define test(stmt, var)	(stmt); \
+		Com_Printf("%s =\n", XSTRING(stmt)); \
+		printmatrix((var), 2, 2)
 	test(clearm2(a2), a2);
 	test(identm2(a2), a2);
 	test(copym2(a2, b2), b2);
@@ -2145,7 +2156,9 @@ Com_Testmaths_f(void)
 	Com_Printf("c2 %s a2\n\n", (cmpm2(c2, a2)) ? "==" : "!=");
 	#undef test
 
-	#define test(stmt, var)	(stmt); printmatrix((var), 3, 3)
+	#define test(stmt, var)	(stmt); \
+		Com_Printf("%s =\n", XSTRING(stmt)); \
+		printmatrix((var), 3, 3)
 	test(clearm3(a3), a3);
 	test(identm3(a3), a3);
 	test(copym3(a3, b3), b3);
@@ -2159,7 +2172,9 @@ Com_Testmaths_f(void)
 	test(mulm3(c3, a3, b3), b3);
 	#undef test
 
-	#define test(stmt, var)	(stmt); printmatrix((var), 4, 4)
+	#define test(stmt, var)	(stmt); \
+		Com_Printf("%s =\n", XSTRING(stmt)); \
+		printmatrix((var), 4, 4)
 	test(clearm4(a4), a4);
 	test(identm4(a4), a4);
 	test(copym4(a4, b4), b4);
@@ -2172,6 +2187,41 @@ Com_Testmaths_f(void)
 	test(transposem4(c4, a4), a4);
 	test(mulm4(c4, a4, b4), b4);
 	#undef test
+}
+
+static void
+catternyantest(void)
+{
+	Quat a = { 1, 2, 3, 4 }, b, c = { 7, 8, 9, 10 }, angle;
+	Vec3 eangle = { 23, -90, 353 };
+	Scalar m;
+	
+	Com_Printf("catternyantest:\n\n");
+	#define test(stmt, var)	(stmt); \
+		Com_Printf("%-30s = ", XSTRING(stmt)); \
+		printquat((var))
+	test(conjq(a, b), b);
+	test(invq(a, b), b);
+	test(mulq(a, b, b), b);
+	test(mulq(a, c, b), b);
+	test(eulertoq(eangle, angle), angle);
+	test(invq(angle, b), b);
+	test(invq(b, b), b);
+	#undef test
+	
+	#define test(stmt, var)	(stmt); \
+		Com_Printf("%-30s = ", XSTRING(stmt)); \
+		Com_Printf("%f\n", (var))
+	test(m = magq(a), m);
+	test(m = magq(angle), m);	/* norm of an angle should always be 1.0 */
+	#undef test
+}
+
+static void
+Com_Testmaths_f(void)
+{
+	matrixtest();
+	catternyantest();
 }
 	
 /* For controlling environment variables */
