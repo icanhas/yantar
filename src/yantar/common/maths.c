@@ -1128,6 +1128,9 @@ qtoaxis(Quat q, Vec3  axis[3])
 	axis[2][2] = 1.0 - (xx + yy);
 }
 
+/*
+ * out = q1q2
+ */
 void
 mulq(const Quat q1, const Quat q2, Quat out)
 {
@@ -1170,13 +1173,41 @@ if(1){
 }
 
 /*
- * returns magnitude of q
+ * returns magnitude/norm of q
  */
 Scalar
 magq(const Quat q)
 {
 	return sqrt(Square(q[0]) + Square(q[1]) + Square(q[2])
 		+ Square(q[3]));
+}
+
+/*
+ * out = conjugate of q
+ * a - bi - cj - dk
+ */
+void
+conjq(const Quat q, Quat out)
+{
+	copyv4(q, out);
+	invv3(&out[1]);
+}
+
+/*
+ * out = inverse/reciprocal of q
+ * q^-1 = q* / ||q||^2 = q* / q x q*
+ */
+void
+invq(const Quat q, Quat out)
+{
+	Scalar m;
+
+	conjq(q, out);
+	m = Square(magq(q));
+	out[0] /= m;
+	out[1] /= m;
+	out[2] /= m;
+	out[3] /= m;
 }
 
 int
