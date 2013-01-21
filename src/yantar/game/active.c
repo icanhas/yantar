@@ -769,9 +769,15 @@ ClientThink_real(Gentity *ent)
 				return;
 			}
 
-			/* pressing attack or use is the normal respawn method */
-			if(ucmd->buttons & (BUTTON_PRIATTACK | BUTTON_SECATTACK | BUTTON_USE_HOLDABLE))
+			/* 
+			 * pressing attack/use or pressing a movement key is the normal 
+			 * respawn method 
+			 */
+			if((ucmd->buttons & (BUTTON_PRIATTACK | BUTTON_SECATTACK | BUTTON_USE_HOLDABLE))
+			  || (ucmd->forwardmove | ucmd->upmove | ucmd->rightmove) != 0)
+			then{
 				ClientRespawn(ent);
+			}
 		}
 		return;
 	}
