@@ -796,7 +796,7 @@ AAS_NearbySolidOrGap(Vec3 start, Vec3 end)
 	subv3(end, start, dir);
 	dir[2] = 0;
 	normv3(dir);
-	maddv3(end, 48, dir, testpoint);
+	saddv3(end, 48, dir, testpoint);
 
 	areanum = AAS_PointAreaNum(testpoint);
 	if(!areanum){
@@ -804,7 +804,7 @@ AAS_NearbySolidOrGap(Vec3 start, Vec3 end)
 		areanum = AAS_PointAreaNum(testpoint);
 		if(!areanum) return qtrue;
 	}
-	maddv3(end, 64, dir, testpoint);
+	saddv3(end, 64, dir, testpoint);
 	areanum = AAS_PointAreaNum(testpoint);
 	if(areanum)
 		if(!AAS_AreaSwim(areanum) &&
@@ -864,7 +864,7 @@ AAS_Reachability_Swim(int area1num, int area2num)
 					plane =
 						&aasworld.planes[face1->planenum
 								 ^ side1];
-					maddv3(lreach->start, -INSIDEUNITS,
+					saddv3(lreach->start, -INSIDEUNITS,
 						plane->normal,
 						lreach->end);
 					lreach->traveltype = TRAVEL_SWIM;
@@ -986,11 +986,11 @@ AAS_Reachability_EqualFloorHeight(int area1num, int area2num)
 						normal);
 					normv3(normal);
 					/*
-					 * maddv3(start, -1, normal, start); */
-					maddv3(end, INSIDEUNITS_WALKEND,
+					 * saddv3(start, -1, normal, start); */
+					saddv3(end, INSIDEUNITS_WALKEND,
 						normal,
 						end);
-					maddv3(start, INSIDEUNITS_WALKSTART,
+					saddv3(start, INSIDEUNITS_WALKSTART,
 						normal,
 						start);
 					end[2] += 0.125;
@@ -1374,10 +1374,10 @@ AAS_Reachability_Step_Barrier_WaterJump_WalkOffLedge(int area1num, int area2num)
 			lreach->areanum = area2num;
 			lreach->facenum = 0;
 			lreach->edgenum = ground_bestarea2groundedgenum;
-			maddv3(ground_beststart, INSIDEUNITS_WALKSTART,
+			saddv3(ground_beststart, INSIDEUNITS_WALKSTART,
 				ground_bestnormal,
 				lreach->start);
-			maddv3(ground_bestend, INSIDEUNITS_WALKEND,
+			saddv3(ground_bestend, INSIDEUNITS_WALKEND,
 				ground_bestnormal,
 				lreach->end);
 			lreach->traveltype = TRAVEL_WALK;
@@ -1422,7 +1422,7 @@ AAS_Reachability_Step_Barrier_WaterJump_WalkOffLedge(int area1num, int area2num)
 	 * check for a waterjump reachability */
 	if(water_foundreach){
 		/* get a test point a little bit towards area1 */
-		maddv3(water_bestend, -INSIDEUNITS, water_bestnormal,
+		saddv3(water_bestend, -INSIDEUNITS, water_bestnormal,
 			testpoint);
 		/* go down the maximum waterjump height */
 		testpoint[2] -= aassettings.phys_maxwaterjump;
@@ -1446,7 +1446,7 @@ AAS_Reachability_Step_Barrier_WaterJump_WalkOffLedge(int area1num, int area2num)
 						water_bestarea2groundedgenum;
 					copyv3(water_beststart,
 						lreach->start);
-					maddv3(water_bestend,
+					saddv3(water_bestend,
 						INSIDEUNITS_WATERJUMP,
 						water_bestnormal,
 						lreach->end);
@@ -1494,11 +1494,11 @@ AAS_Reachability_Step_Barrier_WaterJump_WalkOffLedge(int area1num, int area2num)
 					lreach->facenum = 0;
 					lreach->edgenum =
 						ground_bestarea2groundedgenum;
-					maddv3(ground_beststart,
+					saddv3(ground_beststart,
 						INSIDEUNITS_WALKSTART,
 						ground_bestnormal,
 						lreach->start);
-					maddv3(ground_bestend,
+					saddv3(ground_bestend,
 						INSIDEUNITS_WALKEND,
 						ground_bestnormal,
 						lreach->end);
@@ -1546,10 +1546,10 @@ AAS_Reachability_Step_Barrier_WaterJump_WalkOffLedge(int area1num, int area2num)
 				lreach->areanum = area2num;
 				lreach->facenum = 0;
 				lreach->edgenum = ground_bestarea2groundedgenum;
-				maddv3(ground_beststart, INSIDEUNITS_WALKSTART,
+				saddv3(ground_beststart, INSIDEUNITS_WALKSTART,
 					ground_bestnormal,
 					lreach->start);
-				maddv3(ground_bestend, INSIDEUNITS_WALKEND,
+				saddv3(ground_bestend, INSIDEUNITS_WALKEND,
 					ground_bestnormal,
 					lreach->end);
 				lreach->traveltype = TRAVEL_WALK;
@@ -1565,7 +1565,7 @@ AAS_Reachability_Step_Barrier_WaterJump_WalkOffLedge(int area1num, int area2num)
 			   fabs(ground_bestdist) <
 			   aassettings.rs_maxfallheight){
 				/* trace a bounding box vertically to check for solids */
-				maddv3(ground_bestend, INSIDEUNITS,
+				saddv3(ground_bestend, INSIDEUNITS,
 					ground_bestnormal,
 					ground_bestend);
 				copyv3(ground_bestend, start);
@@ -2288,7 +2288,7 @@ AAS_Reachability_Jump(int area1num, int area2num)
 		}
 		subv3(bestend, beststart, dir);
 		normv3(dir);
-		maddv3(beststart, 1, dir, teststart);
+		saddv3(beststart, 1, dir, teststart);
 		copyv3(teststart, testend);
 		testend[2] -= 100;
 		trace = AAS_TraceClientBBox(teststart, testend, PRESENCE_NORMAL,
@@ -2306,7 +2306,7 @@ AAS_Reachability_Jump(int area1num, int area2num)
 					   aassettings.phys_maxbarrier)
 						return qfalse;
 		}
-		maddv3(bestend, -1, dir, teststart);
+		saddv3(bestend, -1, dir, teststart);
 		copyv3(teststart, testend);
 		testend[2] -= 100;
 		trace = AAS_TraceClientBBox(teststart, testend, PRESENCE_NORMAL,
@@ -2366,7 +2366,7 @@ AAS_Reachability_Jump(int area1num, int area2num)
 				return qfalse;
 			/* the end position should be in area2, also test a little bit back
 			 * because the predicted jump could have rushed through the area */
-			maddv3(move.endpos, -64, dir, teststart);
+			saddv3(move.endpos, -64, dir, teststart);
 			teststart[2] += 1;
 			numareas =
 				AAS_TraceAreas(move.endpos, teststart, areas,
@@ -2531,8 +2531,8 @@ AAS_Reachability_Ladder(int area1num, int area2num)
 		crossv3(plane1->normal, sharededgevec, dir);
 		normv3(dir);
 		/* NOTE: 32 because that's larger than 16 (bot bbox x,y) */
-		maddv3(area1point, -32, dir, area1point);
-		maddv3(area2point, 32, dir, area2point);
+		saddv3(area1point, -32, dir, area1point);
+		saddv3(area2point, 32, dir, area2point);
 		ladderface1vertical =
 			abs(dotv3(plane1->normal, up)) < 0.1;
 		ladderface2vertical =
@@ -2553,7 +2553,7 @@ AAS_Reachability_Ladder(int area1num, int area2num)
 			lreach->edgenum = abs(sharededgenum);
 			copyv3(area1point, lreach->start);
 			/* copyv3(area2point, lreach->end); */
-			maddv3(area2point, -3, plane1->normal, lreach->end);
+			saddv3(area2point, -3, plane1->normal, lreach->end);
 			lreach->traveltype = TRAVEL_LADDER;
 			lreach->traveltime = 10;
 			lreach->next = areareachability[area1num];
@@ -2567,7 +2567,7 @@ AAS_Reachability_Ladder(int area1num, int area2num)
 			lreach->edgenum = abs(sharededgenum);
 			copyv3(area2point, lreach->start);
 			/* copyv3(area1point, lreach->end); */
-			maddv3(area1point, -3, plane1->normal, lreach->end);
+			saddv3(area1point, -3, plane1->normal, lreach->end);
 			lreach->traveltype = TRAVEL_LADDER;
 			lreach->traveltime = 10;
 			lreach->next = areareachability[area2num];
@@ -2589,7 +2589,7 @@ AAS_Reachability_Ladder(int area1num, int area2num)
 			copyv3(area1point, lreach->start);
 			copyv3(area2point, lreach->end);
 			lreach->end[2] += 16;
-			maddv3(lreach->end, -15, plane1->normal, lreach->end);
+			saddv3(lreach->end, -15, plane1->normal, lreach->end);
 			lreach->traveltype = TRAVEL_LADDER;
 			lreach->traveltime = 10;
 			lreach->next = areareachability[area1num];
@@ -2631,7 +2631,7 @@ AAS_Reachability_Ladder(int area1num, int area2num)
 			}
 			plane1 = &aasworld.planes[ladderface1->planenum];
 			/* trace down in the middle of this edge */
-			maddv3(lowestpoint, 5, plane1->normal, start);
+			saddv3(lowestpoint, 5, plane1->normal, start);
 			copyv3(start, end);
 			start[2] += 5;
 			end[2] -= 100;
@@ -2691,7 +2691,7 @@ AAS_Reachability_Ladder(int area1num, int area2num)
 					lreach->edgenum = lowestedgenum;
 					copyv3(trace.endpos, lreach->start);
 					/* get the end point a little bit into the ladder */
-					maddv3(lowestpoint, -5, plane1->normal,
+					saddv3(lowestpoint, -5, plane1->normal,
 						lreach->end);
 					/* get the end point a little higher */
 					lreach->end[2] += 10;
@@ -2722,7 +2722,7 @@ AAS_Reachability_Ladder(int area1num, int area2num)
 			    AREACONTENTS_LAVA))
 				for(i = 20; i <= 120; i += 20){
 					/* trace down in the middle of this edge */
-					maddv3(lowestpoint, i, plane1->normal,
+					saddv3(lowestpoint, i, plane1->normal,
 						start);
 					copyv3(start, end);
 					start[2] += 5;
@@ -3064,11 +3064,11 @@ AAS_Reachability_Elevator(void)
 			/*
 			 * get a point just above the plat in the bottom position */
 			addv3(mins, maxs, mids);
-			maddv3(pos2, 0.5, mids, platbottom);
+			saddv3(pos2, 0.5, mids, platbottom);
 			platbottom[2] = maxs[2] - (pos1[2] - pos2[2]) + 2;
 			/* get a point just above the plat in the top position */
 			addv3(mins, maxs, mids);
-			maddv3(pos2, 0.5, mids, plattop);
+			saddv3(pos2, 0.5, mids, plattop);
 			plattop[2] = maxs[2] + 2;
 			/*if (!area1num)
 			 * {
@@ -3526,10 +3526,10 @@ AAS_Reachability_FuncBobbing(void)
 					dir[2] = 0;
 					normv3(dir);
 					copyv3(startreach->start, start);
-					maddv3(startreach->start, 1, dir,
+					saddv3(startreach->start, 1, dir,
 						start);
 					start[2] += 1;
-					maddv3(startreach->start, 16, dir, end);
+					saddv3(startreach->start, 16, dir, end);
 					end[2] += 1;
 					numareas =
 						AAS_TraceAreas(start, end, areas,
@@ -4077,7 +4077,7 @@ AAS_Reachability_Grapple(int area1num, int area2num)
 		mingrappleangle = 15;	/* 15 degrees */
 		if(z / hordist < tan(2 * M_PI * mingrappleangle / 360)) continue;
 		copyv3(facecenter, start);
-		maddv3(facecenter, -500,
+		saddv3(facecenter, -500,
 			aasworld.planes[face2->planenum].normal,
 			end);
 		bsptrace = AAS_Trace(start, NULL, NULL, end, 0, CONTENTS_SOLID);
@@ -4088,7 +4088,7 @@ AAS_Reachability_Grapple(int area1num, int area2num)
 		 * the center of the face */
 		subv3(facecenter, areastart, dir);
 		normv3(dir);
-		maddv3(areastart, 4, dir, start);
+		saddv3(areastart, 4, dir, start);
 		copyv3(bsptrace.endpos, end);
 		trace = AAS_TraceClientBBox(start, end, PRESENCE_NORMAL, -1);
 		subv3(trace.endpos, facecenter, dir);
@@ -4521,7 +4521,7 @@ AAS_Reachability_WalkOffLedge(int areanum)
 						normv3(dir);
 						addv3(v1, v2, mid);
 						scalev3(mid, 0.5, mid);
-						maddv3(mid, 8, dir, mid);
+						saddv3(mid, 8, dir, mid);
 						copyv3(mid, testend);
 						testend[2] -= 1000;
 						trace = AAS_TraceClientBBox(

@@ -26,7 +26,7 @@ CG_PositionEntityOnTag(Refent *entity, const Refent *parent,
 	/* FIXME: allow origin offsets along tag? */
 	copyv3(parent->origin, entity->origin);
 	for(i = 0; i < 3; i++)
-		maddv3(entity->origin, lerped.origin[i], parent->axis[i],
+		saddv3(entity->origin, lerped.origin[i], parent->axis[i],
 			entity->origin);
 
 	/* had to cast away the const to avoid compiler problems... */
@@ -54,7 +54,7 @@ CG_PositionRotatedEntityOnTag(Refent *entity, const Refent *parent,
 	/* FIXME: allow origin offsets along tag? */
 	copyv3(parent->origin, entity->origin);
 	for(i = 0; i < 3; i++)
-		maddv3(entity->origin, lerped.origin[i], parent->axis[i],
+		saddv3(entity->origin, lerped.origin[i], parent->axis[i],
 			entity->origin);
 
 	/* had to cast away the const to avoid compiler problems... */

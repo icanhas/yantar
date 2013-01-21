@@ -432,7 +432,7 @@ AAS_TraceClientBBox(Vec3 start, Vec3 end, int presencetype,
 						v2);
 					trace.fraction = lenv3(v2) /
 							 normv3(v1);
-					maddv3(tstack_p->start, -0.125, v1,
+					saddv3(tstack_p->start, -0.125, v1,
 						tstack_p->start);
 				}
 				copyv3(tstack_p->start, trace.endpos);
@@ -488,7 +488,7 @@ AAS_TraceClientBBox(Vec3 start, Vec3 end, int presencetype,
 				subv3(tstack_p->start, start, v2);
 				trace.fraction = lenv3(v2) /
 						 normv3(v1);
-				maddv3(tstack_p->start, -0.125, v1,
+				saddv3(tstack_p->start, -0.125, v1,
 					tstack_p->start);
 			}
 			copyv3(tstack_p->start, trace.endpos);

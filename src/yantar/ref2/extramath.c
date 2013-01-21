@@ -33,7 +33,7 @@ BoundingSphereOfSpheres(Vec3 origin1, float radius1, Vec3 origin2, float radius2
 	Vec3 diff;
 
 	scalev3(origin1, 0.5f, origin3);
-	maddv3(origin3, 0.5f, origin2, origin3);
+	saddv3(origin3, 0.5f, origin2, origin3);
 
 	subv3(origin1, origin2, diff);
 	*radius3 = lenv3(diff) * 0.5f + MAX(radius1, radius2);

@@ -62,7 +62,7 @@ PM_SlideMove(Pmove *pm, Pml *pml, qbool gravity)
 
 	for(bumpcount=0; bumpcount < numbumps; bumpcount++){
 		/* calculate position we are trying to move to */
-		maddv3(pm->ps->origin, time_left, pm->ps->velocity, end);
+		saddv3(pm->ps->origin, time_left, pm->ps->velocity, end);
 
 		/* see if we can make it there */
 		pm->trace (&trace, pm->ps->origin, pm->mins, pm->maxs, end,

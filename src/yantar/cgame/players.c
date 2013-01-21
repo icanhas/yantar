@@ -1189,7 +1189,7 @@ trailitem(Centity *cent, Handle hModel)
 	eulertoaxis(angles, axis);
 
 	memset(&ent, 0, sizeof(ent));
-	maddv3(cent->lerpOrigin, -16, axis[0], ent.origin);
+	saddv3(cent->lerpOrigin, -16, axis[0], ent.origin);
 	ent.origin[2]	+= 16;
 	angles[YAW]	+= 90;
 	eulertoaxis(angles, ent.axis);

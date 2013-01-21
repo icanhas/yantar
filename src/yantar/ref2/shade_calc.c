@@ -299,7 +299,7 @@ DeformText(const char *text)
 
 	/* determine the starting position */
 	len = strlen(text);
-	maddv3(origin, (len-1), width, origin);
+	saddv3(origin, (len-1), width, origin);
 
 	/* clear the shader indexes */
 	tess.numIndexes = 0;
@@ -326,7 +326,7 @@ DeformText(const char *text)
 
 			RB_AddQuadStampExt(origin, width, height, color, fcol, frow, fcol + size, frow + size);
 		}
-		maddv3(origin, -2, width, origin);
+		saddv3(origin, -2, width, origin);
 	}
 }
 
@@ -521,11 +521,11 @@ Autosprite2Deform(void)
 				}
 
 			if(k == 5){
-				maddv3(mid[j], l, minor, v1);
-				maddv3(mid[j], -l, minor, v2);
+				saddv3(mid[j], l, minor, v1);
+				saddv3(mid[j], -l, minor, v2);
 			}else{
-				maddv3(mid[j], -l, minor, v1);
-				maddv3(mid[j], l, minor, v2);
+				saddv3(mid[j], -l, minor, v1);
+				saddv3(mid[j], l, minor, v2);
 			}
 		}
 	}

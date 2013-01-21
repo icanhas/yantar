@@ -142,7 +142,7 @@ q2accelerate(Pmove *pm, Pml *pml, Vec3 wishdir, float wishspeed, float accel)
 	accelspeed = accel*pml->frametime*wishspeed;
 	if(accelspeed > addspeed)
 		accelspeed = addspeed;
-	maddv3(pm->ps->velocity, accelspeed, wishdir, pm->ps->velocity);
+	saddv3(pm->ps->velocity, accelspeed, wishdir, pm->ps->velocity);
 }
 
 static void
@@ -160,7 +160,7 @@ accelerate(Pmove *pm, Pml *pml, Vec3 wishdir, float wishspeed, float accel)
 	canPush = accel*pml->frametime*wishspeed;
 	if(canPush > pushLen)
 		canPush = pushLen;
-	maddv3(pm->ps->velocity, canPush, pushDir, pm->ps->velocity);
+	saddv3(pm->ps->velocity, canPush, pushDir, pm->ps->velocity);
 }
 
 /*
@@ -243,7 +243,7 @@ checkwaterjump(Pmove *pm, Pml *pml)
 	flatforward[2] = 0;
 	normv3(flatforward);
 
-	maddv3(pm->ps->origin, 30, flatforward, spot);
+	saddv3(pm->ps->origin, 30, flatforward, spot);
 	spot[2] += 4;
 	cont = pm->pointcontents(spot, pm->ps->clientNum);
 	if(!(cont & CONTENTS_SOLID))
@@ -405,7 +405,7 @@ noclipmove(Pmove *pm, Pml *pml)
 	wishspeed *= scale;
 	accelerate(pm, pml, wishdir, wishspeed, pm_accelerate);
 	/* move */
-	maddv3(pm->ps->origin, pml->frametime, pm->ps->velocity,
+	saddv3(pm->ps->origin, pml->frametime, pm->ps->velocity,
 		pm->ps->origin);
 }
 

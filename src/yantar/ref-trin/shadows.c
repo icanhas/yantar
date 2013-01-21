@@ -159,7 +159,7 @@ RB_ShadowTessEnd(void)
 
 	/* project vertexes away from light direction */
 	for(i = 0; i < tess.numVertexes; i++)
-		maddv3(tess.xyz[i], -512, lightDir, tess.xyz[i+tess.numVertexes]);
+		saddv3(tess.xyz[i], -512, lightDir, tess.xyz[i+tess.numVertexes]);
 
 	/* decide which triangles face the light */
 	Q_Memset(numEdgeDefs, 0, 4 * tess.numVertexes);
@@ -312,7 +312,7 @@ RB_ProjectionShadowDeform(void)
 	d = dotv3(lightDir, ground);
 	/* don't let the shadows get too long or go negative */
 	if(d < 0.5){
-		maddv3(lightDir, (0.5 - d), ground, lightDir);
+		saddv3(lightDir, (0.5 - d), ground, lightDir);
 		d = dotv3(lightDir, ground);
 	}
 	d = 1.0 / d;

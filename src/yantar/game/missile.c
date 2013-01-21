@@ -27,7 +27,7 @@ G_BounceMissile(Gentity *ent, Trace *trace)
 		  (level.time - level.previousTime) * trace->fraction;
 	BG_EvaluateTrajectoryDelta(&ent->s.traj, hitTime, velocity);
 	dot = dotv3(velocity, trace->plane.normal);
-	maddv3(velocity, -2*dot, trace->plane.normal, ent->s.traj.delta);
+	saddv3(velocity, -2*dot, trace->plane.normal, ent->s.traj.delta);
 
 	if(ent->s.eFlags & EF_BOUNCE_HALF){
 		scalev3(ent->s.traj.delta, 0.65, ent->s.traj.delta);
@@ -544,9 +544,9 @@ firehoming(Gentity *self, Vec3 start, Vec3 forward, Vec3 right, Vec3 up)
 	r = random() * M_PI * 2.0f;
 	u = sin(r) * crandom() * Nanospread * 16;
 	r = cos(r) * crandom() * Nanospread * 16;
-	maddv3(start, 8192 * 16, forward, end);
-	maddv3(end, r, right, end);
-	maddv3(end, u, up, end);
+	saddv3(start, 8192 * 16, forward, end);
+	saddv3(end, r, right, end);
+	saddv3(end, u, up, end);
 	subv3(end, start, dir);
 	normv3(dir);
 	scale = 555 + random() * 1800;
@@ -612,9 +612,9 @@ firenanoid(Gentity *self, Vec3 start, Vec3 forward, Vec3 right, Vec3 up)
 	r = random() * M_PI * 2.0f;
 	u = sin(r) * crandom() * Nanospread * 16;
 	r = cos(r) * crandom() * Nanospread * 16;
-	maddv3(start, 8192 * 16, forward, end);
-	maddv3(end, r, right, end);
-	maddv3(end, u, up, end);
+	saddv3(start, 8192 * 16, forward, end);
+	saddv3(end, r, right, end);
+	saddv3(end, u, up, end);
 	subv3(end, start, dir);
 	normv3(dir);
 	scale = 555 + random() * 1800;

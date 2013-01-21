@@ -33,7 +33,7 @@ CG_BubbleTrail(Vec3 start, Vec3 end, float spacing)
 
 	/* advance a random amount first */
 	i = rand() % (int)spacing;
-	maddv3(move, i, vec, move);
+	saddv3(move, i, vec, move);
 
 	scalev3 (vec, spacing, vec);
 

@@ -24,12 +24,12 @@ BG_EvaluateTrajectory(const Trajectory *tr, int atTime, Vec3 result)
 		break;
 	case TR_LINEAR:
 		deltaTime = (atTime - tr->time) * 0.001;	/* milliseconds to seconds */
-		maddv3(tr->base, deltaTime, tr->delta, result);
+		saddv3(tr->base, deltaTime, tr->delta, result);
 		break;
 	case TR_SINE:
 		deltaTime = (atTime - tr->time) / (float)tr->duration;
 		phase = sin(deltaTime * M_PI * 2);
-		maddv3(tr->base, phase, tr->delta, result);
+		saddv3(tr->base, phase, tr->delta, result);
 		break;
 	case TR_LINEAR_STOP:
 		if(atTime > tr->time + tr->duration)
@@ -37,11 +37,11 @@ BG_EvaluateTrajectory(const Trajectory *tr, int atTime, Vec3 result)
 		deltaTime = (atTime - tr->time) * 0.001;	/* milliseconds to seconds */
 		if(deltaTime < 0)
 			deltaTime = 0;
-		maddv3(tr->base, deltaTime, tr->delta, result);
+		saddv3(tr->base, deltaTime, tr->delta, result);
 		break;
 	case TR_GRAVITY:
 		deltaTime = (atTime - tr->time) * 0.001;	/* milliseconds to seconds */
-		maddv3(tr->base, deltaTime, tr->delta, result);
+		saddv3(tr->base, deltaTime, tr->delta, result);
 		result[2] -= 0.5 * DEFAULT_GRAVITY * deltaTime * deltaTime;	/* FIXME: local gravity... */
 		break;
 	case TR_STOCHASTIC:
@@ -50,7 +50,7 @@ BG_EvaluateTrajectory(const Trajectory *tr, int atTime, Vec3 result)
 			dir[i] = crandom();
 		normv3(dir);
 		scalev3(dir, 10*deltaTime, dir);
-		maddv3(tr->base, deltaTime, tr->delta, result);
+		saddv3(tr->base, deltaTime, tr->delta, result);
 		addv3(result, dir, result);
 		break;
 	default:

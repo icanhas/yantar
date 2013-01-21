@@ -263,12 +263,12 @@ AAS_WeaponJumpZVelocity(Vec3 origin, float radiusdamage)
 	start[2] += forward[2] * rocketoffset[0] + right[2] *
 		    rocketoffset[1] + rocketoffset[2];
 	/* end point of the trace */
-	maddv3(start, 500, forward, end);
+	saddv3(start, 500, forward, end);
 	/* trace a line to get the impact point */
 	bsptrace = AAS_Trace(start, NULL, NULL, end, 1, CONTENTS_SOLID);
 	/* calculate the damage the bot will get from the rocket impact */
 	addv3(botmins, botmaxs, v);
-	maddv3(origin, 0.5, v, v);
+	saddv3(origin, 0.5, v, v);
 	subv3(bsptrace.endpos, v, v);
 	points = radiusdamage - 0.5 * lenv3(v);
 	if(points < 0) points = 0;
@@ -679,7 +679,7 @@ AAS_ClientMovementPrediction(struct aas_clientmove_s *move,
 				if(plane->normal[2] == 0 &&
 				   (jump_frame < 0 || n - jump_frame > 2)){
 					/* check for a step */
-					maddv3(org, -0.25, plane->normal,
+					saddv3(org, -0.25, plane->normal,
 						start);
 					copyv3(start, stepend);
 					start[2] += phys_maxstep;
@@ -707,7 +707,7 @@ AAS_ClientMovementPrediction(struct aas_clientmove_s *move,
 				if(!step){
 					/* velocity left to test for this frame is the projection
 					 * of the current test velocity into the hit plane */
-					maddv3(left_test_vel,
+					saddv3(left_test_vel,
 						-dotv3(left_test_vel,
 							plane->normal),
 						plane->normal, left_test_vel);
@@ -716,7 +716,7 @@ AAS_ClientMovementPrediction(struct aas_clientmove_s *move,
 						old_frame_test_vel);
 					/* test velocity for the next frame is the projection
 					 * of the velocity of the current frame into the hit plane */
-					maddv3(frame_test_vel,
+					saddv3(frame_test_vel,
 						-dotv3(frame_test_vel,
 							plane->normal),
 						plane->normal, frame_test_vel);

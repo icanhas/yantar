@@ -248,7 +248,7 @@ CG_RailTrail(Clientinfo *ci, Vec3 start, Vec3 end)
 	for(i = 0; i < 36; i++)
 		RotatePointAroundVector(axis[i], vec, temp, i * 10);	/* banshee 2.4 was 10 */
 
-	maddv3(move, 20, vec, move);
+	saddv3(move, 20, vec, move);
 	scalev3 (vec, SPACING, vec);
 
 	skip = -1;
@@ -284,7 +284,7 @@ CG_RailTrail(Clientinfo *ci, Vec3 start, Vec3 end)
 			le->pos.time	= cg.time;
 
 			copyv3(move, move2);
-			maddv3(move2, RADIUS, axis[j], move2);
+			saddv3(move2, RADIUS, axis[j], move2);
 			copyv3(move2, le->pos.base);
 
 			le->pos.delta[0] = axis[j][0]*6;
@@ -536,7 +536,7 @@ CG_GrappleTrail(Centity *ent, const Weapinfo *wi)
 	anglev3s(cg_entities[ent->currentState.otherEntityNum].lerpAngles,
 		forward, NULL,
 		up);
-	maddv3(beam.origin, -6, up, beam.origin);
+	saddv3(beam.origin, -6, up, beam.origin);
 	copyv3(origin, beam.oldorigin);
 
 	if(distv3(beam.origin, beam.oldorigin) < 64)
@@ -974,10 +974,10 @@ CG_LightningBolt(Centity *cent, Vec3 origin, Weapslot sl)
 	else
 		muzzlePoint[2] += DEFAULT_VIEWHEIGHT;
 
-	maddv3(muzzlePoint, 14, forward, muzzlePoint);
+	saddv3(muzzlePoint, 14, forward, muzzlePoint);
 
 	/* project forward by the lightning range */
-	maddv3(muzzlePoint, LIGHTNING_RANGE, forward, endPoint);
+	saddv3(muzzlePoint, LIGHTNING_RANGE, forward, endPoint);
 
 	/* see if it hit a wall */
 	CG_Trace(&trace, muzzlePoint, vec3_origin, vec3_origin, endPoint,
@@ -1005,7 +1005,7 @@ CG_LightningBolt(Centity *cent, Vec3 origin, Weapslot sl)
 		memset(&beam, 0, sizeof(beam));
 		beam.hModel = cgs.media.lightningExplosionModel;
 
-		maddv3(trace.endpos, -16, dir, beam.origin);
+		saddv3(trace.endpos, -16, dir, beam.origin);
 
 		/* make a random orientation */
 		angles[0] = rand() % 360;
@@ -1036,10 +1036,10 @@ CG_LightningBolt(Centity *cent, Vec3 origin, Weapslot sl)
  *      // FIXME: crouch
  *      muzzlePoint[2] += DEFAULT_VIEWHEIGHT;
  *
- *      maddv3( muzzlePoint, 14, forward, muzzlePoint );
+ *      saddv3( muzzlePoint, 14, forward, muzzlePoint );
  *
  *      // project forward by the lightning range
- *      maddv3( muzzlePoint, LIGHTNING_RANGE, forward, endPoint );
+ *      saddv3( muzzlePoint, LIGHTNING_RANGE, forward, endPoint );
  *
  *      // see if it hit a wall
  *      CG_Trace( &trace, muzzlePoint, vec3_origin, vec3_origin, endPoint,
@@ -1067,7 +1067,7 @@ CG_LightningBolt(Centity *cent, Vec3 origin, Weapslot sl)
  *              memset( &beam, 0, sizeof( beam ) );
  *              beam.hModel = cgs.media.lightningExplosionModel;
  *
- *              maddv3( trace.endpos, -16, dir, beam.origin );
+ *              saddv3( trace.endpos, -16, dir, beam.origin );
  *
  *              // make a random orientation
  *              angles[0] = rand() % 360;
@@ -1204,17 +1204,17 @@ CG_AddPlayerWeapon(Refent *parent, Playerstate *ps, Centity *cent,
 		1.0 - parent->backlerp, "tag_weapon");
 	copyv3(parent->origin, gun.origin);
 
-	maddv3(gun.origin, lerped.origin[0], parent->axis[0], gun.origin);
+	saddv3(gun.origin, lerped.origin[0], parent->axis[0], gun.origin);
 
 	/* Make weapon appear left-handed for 2 and centered for 3 */
 	if(ps && cg_drawGun.integer == 2)
-		maddv3(gun.origin, -lerped.origin[1], parent->axis[1],
+		saddv3(gun.origin, -lerped.origin[1], parent->axis[1],
 			gun.origin);
 	else if(!ps || cg_drawGun.integer != 3)
-		maddv3(gun.origin, lerped.origin[1], parent->axis[1],
+		saddv3(gun.origin, lerped.origin[1], parent->axis[1],
 			gun.origin);
 
-	maddv3(gun.origin, lerped.origin[2], parent->axis[2], gun.origin);
+	saddv3(gun.origin, lerped.origin[2], parent->axis[2], gun.origin);
 	MatrixMultiply(lerped.axis, ((Refent*)parent)->axis, gun.axis);
 	gun.backlerp = parent->backlerp;
 
@@ -1329,7 +1329,7 @@ CG_AddViewWeapon(Playerstate *ps, Weapslot slot)
 		if(cg.predictedPlayerState.eFlags & EF_FIRING){
 			/* special hack for lightning gun... */
 			copyv3(cg.refdef.vieworg, origin);
-			maddv3(origin, -8, cg.refdef.viewaxis[2], origin);
+			saddv3(origin, -8, cg.refdef.viewaxis[2], origin);
 			CG_LightningBolt(&cg_entities[ps->clientNum], origin, slot);
 		}
 		return;
@@ -1354,9 +1354,9 @@ CG_AddViewWeapon(Playerstate *ps, Weapslot slot)
 	/* set up gun position */
 	CG_CalculateWeaponPosition(hand.origin, angles);
 
-	maddv3(hand.origin, cg_gun_x.value, cg.refdef.viewaxis[0], hand.origin);
-	maddv3(hand.origin, cg_gun_y.value, cg.refdef.viewaxis[1], hand.origin);
-	maddv3(hand.origin, (cg_gun_z.value+fovOffset), cg.refdef.viewaxis[2],
+	saddv3(hand.origin, cg_gun_x.value, cg.refdef.viewaxis[0], hand.origin);
+	saddv3(hand.origin, cg_gun_y.value, cg.refdef.viewaxis[1], hand.origin);
+	saddv3(hand.origin, (cg_gun_z.value+fovOffset), cg.refdef.viewaxis[2],
 		hand.origin);
 
 	eulertoaxis(angles, hand.axis);
@@ -1765,7 +1765,7 @@ CG_MissileHitWall(int weapon, int clientNum, Vec3 origin, Vec3 dir,
 		lightColor[2]	= 0.0f;
 		if(cg_oldRocket.integer == 0){
 			/* explosion sprite animation */
-			maddv3(origin, 24, dir, sprOrg);
+			saddv3(origin, 24, dir, sprOrg);
 			scalev3(dir, 64, sprVel);
 
 			CG_ParticleExplosion("explode1", sprOrg, sprVel, 1400,
@@ -1787,7 +1787,7 @@ CG_MissileHitWall(int weapon, int clientNum, Vec3 origin, Vec3 dir,
 		lightColor[2]	= 0.3f;
 		if(cg_oldRocket.integer == 0){
 			/* explosion sprite animation */
-			maddv3(origin, 24, dir, sprOrg);
+			saddv3(origin, 24, dir, sprOrg);
 			scalev3(dir, 64, sprVel);
 
 			CG_ParticleExplosion("explode1", sprOrg, sprVel, 1400,
@@ -1991,9 +1991,9 @@ CG_ShotgunPattern(Vec3 origin, Vec3 origin2, int seed, int otherEntNum)
 	for(i = 0; i < DEFAULT_SHOTGUN_COUNT; i++){
 		r = Q_crandom(&seed) * DEFAULT_SHOTGUN_SPREAD * 16;
 		u = Q_crandom(&seed) * DEFAULT_SHOTGUN_SPREAD * 16;
-		maddv3(origin, 8192 * 16, forward, end);
-		maddv3 (end, r, right, end);
-		maddv3 (end, u, up, end);
+		saddv3(origin, 8192 * 16, forward, end);
+		saddv3 (end, r, right, end);
+		saddv3 (end, u, up, end);
 
 		CG_ShotgunPellet(origin, end, otherEntNum);
 	}
@@ -2050,17 +2050,17 @@ CG_Tracer(Vec3 source, Vec3 dest)
 	end	= begin + cg_tracerLength.value;
 	if(end > len)
 		end = len;
-	maddv3(source, begin, forward, start);
-	maddv3(source, end, forward, finish);
+	saddv3(source, begin, forward, start);
+	saddv3(source, end, forward, finish);
 
 	line[0] = dotv3(forward, cg.refdef.viewaxis[1]);
 	line[1] = dotv3(forward, cg.refdef.viewaxis[2]);
 
 	scalev3(cg.refdef.viewaxis[1], line[1], right);
-	maddv3(right, -line[0], cg.refdef.viewaxis[2], right);
+	saddv3(right, -line[0], cg.refdef.viewaxis[2], right);
 	normv3(right);
 
-	maddv3(finish, cg_tracerWidth.value, right, verts[0].xyz);
+	saddv3(finish, cg_tracerWidth.value, right, verts[0].xyz);
 	verts[0].st[0]	= 0;
 	verts[0].st[1]	= 1;
 	verts[0].modulate[0] = 255;
@@ -2068,7 +2068,7 @@ CG_Tracer(Vec3 source, Vec3 dest)
 	verts[0].modulate[2] = 255;
 	verts[0].modulate[3] = 255;
 
-	maddv3(finish, -cg_tracerWidth.value, right, verts[1].xyz);
+	saddv3(finish, -cg_tracerWidth.value, right, verts[1].xyz);
 	verts[1].st[0]	= 1;
 	verts[1].st[1]	= 0;
 	verts[1].modulate[0] = 255;
@@ -2076,7 +2076,7 @@ CG_Tracer(Vec3 source, Vec3 dest)
 	verts[1].modulate[2] = 255;
 	verts[1].modulate[3] = 255;
 
-	maddv3(start, -cg_tracerWidth.value, right, verts[2].xyz);
+	saddv3(start, -cg_tracerWidth.value, right, verts[2].xyz);
 	verts[2].st[0]	= 1;
 	verts[2].st[1]	= 1;
 	verts[2].modulate[0] = 255;
@@ -2084,7 +2084,7 @@ CG_Tracer(Vec3 source, Vec3 dest)
 	verts[2].modulate[2] = 255;
 	verts[2].modulate[3] = 255;
 
-	maddv3(start, cg_tracerWidth.value, right, verts[3].xyz);
+	saddv3(start, cg_tracerWidth.value, right, verts[3].xyz);
 	verts[3].st[0]	= 0;
 	verts[3].st[1]	= 0;
 	verts[3].modulate[0] = 255;
@@ -2115,7 +2115,7 @@ CG_CalcMuzzlePoint(int entityNum, Vec3 muzzle)
 		copyv3(cg.snap->ps.origin, muzzle);
 		muzzle[2] += cg.snap->ps.viewheight;
 		anglev3s(cg.snap->ps.viewangles, forward, NULL, NULL);
-		maddv3(muzzle, 14, forward, muzzle);
+		saddv3(muzzle, 14, forward, muzzle);
 		return qtrue;
 	}
 
@@ -2132,7 +2132,7 @@ CG_CalcMuzzlePoint(int entityNum, Vec3 muzzle)
 	else
 		muzzle[2] += DEFAULT_VIEWHEIGHT;
 
-	maddv3(muzzle, 14, forward, muzzle);
+	saddv3(muzzle, 14, forward, muzzle);
 
 	return qtrue;
 

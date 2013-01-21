@@ -205,7 +205,7 @@ AAS_ProjectPointOntoVector(Vec3 point, Vec3 vStart, Vec3 vEnd,
 	subv3(vEnd, vStart, vec);
 	normv3(vec);
 	/* project onto the directional vector for this segment */
-	maddv3(vStart, dotv3(pVec, vec), vec, vProj);
+	saddv3(vStart, dotv3(pVec, vec), vec, vProj);
 }
 
 int

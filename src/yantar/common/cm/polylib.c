@@ -207,7 +207,7 @@ BaseWindingForPlane(Vec3 normal, Scalar dist)
 	}
 
 	v = dotv3 (vup, normal);
-	maddv3 (vup, -v, normal, vup);
+	saddv3 (vup, -v, normal, vup);
 	norm2v3(vup, vup);
 
 	scalev3 (normal, dist, org);

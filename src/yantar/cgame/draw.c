@@ -1884,7 +1884,7 @@ CG_DrawCrosshair3D(void)
 
 	/* let the trace run through until a change in stereo separation of the crosshair becomes less than one pixel. */
 	maxdist = cgs.glconfig.vidWidth * stereoSep * zProj / (2 * xmax);
-	maddv3(cg.refdef.vieworg, maxdist, cg.refdef.viewaxis[0], endpos);
+	saddv3(cg.refdef.vieworg, maxdist, cg.refdef.viewaxis[0], endpos);
 	CG_Trace(&trace, cg.refdef.vieworg, NULL, NULL, endpos, 0, MASK_SHOT);
 
 	memset(&ent, 0, sizeof(ent));
@@ -1908,7 +1908,7 @@ CG_ScanForCrosshairEntity(void)
 	int content;
 
 	copyv3(cg.refdef.vieworg, start);
-	maddv3(start, 131072, cg.refdef.viewaxis[0], end);
+	saddv3(start, 131072, cg.refdef.viewaxis[0], end);
 
 	CG_Trace(&trace, start, vec3_origin, vec3_origin, end,
 		cg.snap->ps.clientNum, CONTENTS_SOLID|CONTENTS_BODY);

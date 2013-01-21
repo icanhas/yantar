@@ -240,7 +240,7 @@ BotReachabilityArea(Vec3 origin, int client)
 
 	/* check if the bot is standing on something */
 	AAS_PresenceTypeBoundingBox(PRESENCE_CROUCH, mins, maxs);
-	maddv3(origin, -3, up, end);
+	saddv3(origin, -3, up, end);
 	bsptrace = AAS_Trace(origin, mins, maxs, end, client,
 		CONTENTS_SOLID|CONTENTS_PLAYERCLIP);
 	if(!bsptrace.startsolid && bsptrace.fraction < 1 && bsptrace.ent !=
@@ -376,7 +376,7 @@ BotOnTopOfEntity(bot_movestate_t *ms)
 	bsp_Trace trace;
 
 	AAS_PresenceTypeBoundingBox(ms->presencetype, mins, maxs);
-	maddv3(ms->origin, -3, up, end);
+	saddv3(ms->origin, -3, up, end);
 	trace = AAS_Trace(ms->origin, mins, maxs, end, ms->entitynum,
 		CONTENTS_SOLID|CONTENTS_PLAYERCLIP);
 	if(!trace.startsolid &&
@@ -617,7 +617,7 @@ BotAddToTarget(Vec3 start, Vec3 end, float maxdist, float *dist,
 		*dist += curdist;
 		return qfalse;
 	}else{
-		maddv3(start, maxdist - *dist, dir, target);
+		saddv3(start, maxdist - *dist, dir, target);
 		*dist = maxdist;
 		return qtrue;
 	}
@@ -752,7 +752,7 @@ MoverBottomCenter(aas_reachability_t *reach, Vec3 bottomcenter)
 			modelnum);
 	/* get a point just above the plat in the bottom position */
 	addv3(mins, maxs, mids);
-	maddv3(origin, 0.5, mids, bottomcenter);
+	saddv3(origin, 0.5, mids, bottomcenter);
 	bottomcenter[2] = reach->start[2];
 }
 
@@ -777,7 +777,7 @@ BotGapVec3distv3(Vec3 origin, Vec3 hordir, int entnum)
 		startz = trace.endpos[2] + 1;
 	}
 	for(dist = 8; dist <= 100; dist += 8){
-		maddv3(origin, dist, hordir, start);
+		saddv3(origin, dist, hordir, start);
 		start[2] = startz + 24;
 		copyv3(start, end);
 		end[2]	-= 48 + sv_maxbarrier->value;
@@ -820,7 +820,7 @@ BotCheckBarrierJump(bot_movestate_t *ms, Vec3 dir, float speed)
 	hordir[1] = dir[1];
 	hordir[2] = 0;
 	normv3(hordir);
-	maddv3(ms->origin, ms->thinktime * speed * 0.5, hordir, end);
+	saddv3(ms->origin, ms->thinktime * speed * 0.5, hordir, end);
 	copyv3(trace.endpos, start);
 	end[2] = trace.endpos[2];
 	/* trace from previous trace end pos horizontally in the move direction */
@@ -1006,7 +1006,7 @@ BotCheckBlocked(bot_movestate_t *ms, Vec3 dir, int checkbottom,
 		mins[2] += sv_maxstep->value;	/* if the bot can step on */
 		maxs[2] -= 10;			/* a little lower to avoid low ceiling */
 	}
-	maddv3(ms->origin, 3, dir, end);
+	saddv3(ms->origin, 3, dir, end);
 	trace = AAS_Trace(ms->origin, mins, maxs, end, ms->entitynum,
 		CONTENTS_SOLID|CONTENTS_PLAYERCLIP|CONTENTS_BODY);
 	/* if not started in solid and not hitting the world entity */
@@ -1022,7 +1022,7 @@ BotCheckBlocked(bot_movestate_t *ms, Vec3 dir, int checkbottom,
 	else if(checkbottom && !AAS_AreaReachability(ms->areanum)){
 		/* check if the bot is standing on something */
 		AAS_PresenceTypeBoundingBox(ms->presencetype, mins, maxs);
-		maddv3(ms->origin, -3, up, end);
+		saddv3(ms->origin, -3, up, end);
 		trace = AAS_Trace(ms->origin, mins, maxs, end, ms->entitynum,
 			CONTENTS_SOLID|CONTENTS_PLAYERCLIP);
 		if(!trace.startsolid &&
@@ -1330,7 +1330,7 @@ BotFinishTravel_WalkOffLedge(bot_movestate_t *ms, aas_reachability_t *reach)
 	subv3(reach->end, ms->origin, v);
 	v[2] = 0;
 	dist = normv3(v);
-	if(dist > 16) maddv3(reach->end, 16, v, end);
+	if(dist > 16) saddv3(reach->end, 16, v, end);
 	else copyv3(reach->end, end);
 	if(!BotAirControl(ms->origin, ms->velocity, end, hordir, &speed)){
 		/* go straight to the reachability end */
@@ -1409,7 +1409,7 @@ BotFinishTravel_WalkOffLedge(bot_movestate_t *ms, aas_reachability_t *reach)
  *      copyv3(reach->start, start);
  *      start[2] += 1;
  *      //minus back the bouding box size plus 16
- *      maddv3(reach->start, 80, hordir, end);
+ *      saddv3(reach->start, 80, hordir, end);
  *      //
  *      AAS_PresenceTypeBoundingBox(PRESENCE_NORMAL, mins, maxs);
  *      //check for solids
@@ -1418,13 +1418,13 @@ BotFinishTravel_WalkOffLedge(bot_movestate_t *ms, aas_reachability_t *reach)
  *      //check for a gap
  *      for (gapdist = 0; gapdist < 80; gapdist += 10)
  *      {
- *              maddv3(start, gapdist+10, hordir, end);
+ *              saddv3(start, gapdist+10, hordir, end);
  *              end[2] += 1;
  *              if (AAS_PointAreaNum(end) != ms->reachareanum) break;
  *      }
- *      if (gapdist < 80) maddv3(reach->start, gapdist, hordir, trace.endpos);
+ *      if (gapdist < 80) saddv3(reach->start, gapdist, hordir, trace.endpos);
  * //	dist1 = BotGapVec3distv3(start, hordir, ms->entitynum);
- * //	if (dist1 && dist1 <= trace.fraction * 80) maddv3(reach->start, dist1-20, hordir, trace.endpos);
+ * //	if (dist1 && dist1 <= trace.fraction * 80) saddv3(reach->start, dist1-20, hordir, trace.endpos);
  *      //
  *      subv3(ms->origin, reach->start, dir1);
  *      dir1[2] = 0;
@@ -1482,14 +1482,14 @@ BotTravel_Jump(bot_movestate_t *ms, aas_reachability_t *reach)
 	normv3(hordir);
 	copyv3(reach->start, start);
 	start[2] += 1;
-	maddv3(reach->start, 80, hordir, runstart);
+	saddv3(reach->start, 80, hordir, runstart);
 	/* check for a gap */
 	for(gapdist = 0; gapdist < 80; gapdist += 10){
-		maddv3(start, gapdist+10, hordir, end);
+		saddv3(start, gapdist+10, hordir, end);
 		end[2] += 1;
 		if(AAS_PointAreaNum(end) != ms->reachareanum) break;
 	}
-	if(gapdist < 80) maddv3(reach->start, gapdist, hordir, runstart);
+	if(gapdist < 80) saddv3(reach->start, gapdist, hordir, runstart);
 	subv3(ms->origin, reach->start, dir1);
 	dir1[2] = 0;
 	dist1	= normv3(dir1);
@@ -2785,7 +2785,7 @@ BotMoveToGoal(bot_moveresult_t *result, int movestate, bot_goal_t *goal,
 
 		/* special handling of jump pads when the bot uses a jump pad without knowing it */
 		foundjumppad = qfalse;
-		maddv3(ms->origin, -2 * ms->thinktime, ms->velocity, end);
+		saddv3(ms->origin, -2 * ms->thinktime, ms->velocity, end);
 		numareas = AAS_TraceAreas(ms->origin, end, areas, NULL, 16);
 		for(i = numareas-1; i >= 0; i--)
 			if(AAS_AreaJumpPad(areas[i])){

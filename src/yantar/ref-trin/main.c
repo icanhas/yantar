@@ -51,9 +51,9 @@ R_CullLocalBox(Vec3 bounds[2])
 		v[2] = bounds[(i>>2)&1][2];
 
 		copyv3(tr.or.origin, transformed[i]);
-		maddv3(transformed[i], v[0], tr.or.axis[0], transformed[i]);
-		maddv3(transformed[i], v[1], tr.or.axis[1], transformed[i]);
-		maddv3(transformed[i], v[2], tr.or.axis[2], transformed[i]);
+		saddv3(transformed[i], v[0], tr.or.axis[0], transformed[i]);
+		saddv3(transformed[i], v[1], tr.or.axis[1], transformed[i]);
+		saddv3(transformed[i], v[2], tr.or.axis[2], transformed[i]);
 	}
 
 	/* check against frustum planes */
@@ -436,24 +436,24 @@ R_SetupFrustum(viewParms_t *dest, float xmin, float xmax, float ymax, float zPro
 		adjleg	= zProj / length;
 
 		scalev3(dest->or.axis[0], oppleg, dest->frustum[0].normal);
-		maddv3(dest->frustum[0].normal, adjleg, dest->or.axis[1], dest->frustum[0].normal);
+		saddv3(dest->frustum[0].normal, adjleg, dest->or.axis[1], dest->frustum[0].normal);
 
 		scalev3(dest->or.axis[0], oppleg, dest->frustum[1].normal);
-		maddv3(dest->frustum[1].normal, -adjleg, dest->or.axis[1], dest->frustum[1].normal);
+		saddv3(dest->frustum[1].normal, -adjleg, dest->or.axis[1], dest->frustum[1].normal);
 	}else{
 		/* In stereo rendering, due to the modification of the projection matrix, dest->or.origin is not the
 		 * actual origin that we're rendering so offset the tip of the view pyramid. */
-		maddv3(dest->or.origin, stereoSep, dest->or.axis[1], ofsorigin);
+		saddv3(dest->or.origin, stereoSep, dest->or.axis[1], ofsorigin);
 
 		oppleg	= xmax + stereoSep;
 		length	= sqrt(oppleg * oppleg + zProj * zProj);
 		scalev3(dest->or.axis[0], oppleg / length, dest->frustum[0].normal);
-		maddv3(dest->frustum[0].normal, zProj / length, dest->or.axis[1], dest->frustum[0].normal);
+		saddv3(dest->frustum[0].normal, zProj / length, dest->or.axis[1], dest->frustum[0].normal);
 
 		oppleg	= xmin + stereoSep;
 		length	= sqrt(oppleg * oppleg + zProj * zProj);
 		scalev3(dest->or.axis[0], -oppleg / length, dest->frustum[1].normal);
-		maddv3(dest->frustum[1].normal, -zProj / length, dest->or.axis[1], dest->frustum[1].normal);
+		saddv3(dest->frustum[1].normal, -zProj / length, dest->or.axis[1], dest->frustum[1].normal);
 	}
 
 	length	= sqrt(ymax * ymax + zProj * zProj);
@@ -461,10 +461,10 @@ R_SetupFrustum(viewParms_t *dest, float xmin, float xmax, float ymax, float zPro
 	adjleg	= zProj / length;
 
 	scalev3(dest->or.axis[0], oppleg, dest->frustum[2].normal);
-	maddv3(dest->frustum[2].normal, adjleg, dest->or.axis[2], dest->frustum[2].normal);
+	saddv3(dest->frustum[2].normal, adjleg, dest->or.axis[2], dest->frustum[2].normal);
 
 	scalev3(dest->or.axis[0], oppleg, dest->frustum[3].normal);
-	maddv3(dest->frustum[3].normal, -adjleg, dest->or.axis[2], dest->frustum[3].normal);
+	saddv3(dest->frustum[3].normal, -adjleg, dest->or.axis[2], dest->frustum[3].normal);
 
 	for(i=0; i<4; i++){
 		dest->frustum[i].type	= PLANE_NON_AXIAL;
@@ -561,7 +561,7 @@ R_MirrorPoint(Vec3 in, Orient *surface, Orient *camera, Vec3 out)
 	clearv3(transformed);
 	for(i = 0; i < 3; i++){
 		d = dotv3(local, surface->axis[i]);
-		maddv3(transformed, d, camera->axis[i], transformed);
+		saddv3(transformed, d, camera->axis[i], transformed);
 	}
 
 	addv3(transformed, camera->origin, out);
@@ -576,7 +576,7 @@ R_MirrorVector(Vec3 in, Orient *surface, Orient *camera, Vec3 out)
 	clearv3(out);
 	for(i = 0; i < 3; i++){
 		d = dotv3(in, surface->axis[i]);
-		maddv3(out, d, camera->axis[i], out);
+		saddv3(out, d, camera->axis[i], out);
 	}
 }
 
@@ -702,7 +702,7 @@ R_GetPortalOrientations(drawSurf_t *drawSurf, int entityNum,
 		/* project the origin onto the surface plane to get
 		 * an origin point we can rotate around */
 		d = dotv3(e->e.origin, plane.normal) - plane.dist;
-		maddv3(e->e.origin, -d, surface->axis[0], surface->origin);
+		saddv3(e->e.origin, -d, surface->axis[0], surface->origin);
 
 		/* now get the camera origin and orientation */
 		copyv3(e->e.oldorigin, camera->origin);

@@ -611,13 +611,13 @@ RaySphereIntersections(Vec3 origin, float radius, Vec3 point, Vec3 dir,
 	d = b * b - 4 * c;
 	if(d > 0){
 		t = (-b + sqrt(d)) / 2;
-		maddv3(point, t, dir, intersections[0]);
+		saddv3(point, t, dir, intersections[0]);
 		t = (-b - sqrt(d)) / 2;
-		maddv3(point, t, dir, intersections[1]);
+		saddv3(point, t, dir, intersections[1]);
 		return 2;
 	}else if(d == 0){
 		t = (-b) / 2;
-		maddv3(point, t, dir, intersections[0]);
+		saddv3(point, t, dir, intersections[0]);
 		return 1;
 	}
 	return 0;

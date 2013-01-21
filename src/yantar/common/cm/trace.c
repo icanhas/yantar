@@ -36,7 +36,7 @@ CM_ProjectPointOntoVector(Vec3 point, Vec3 vStart, Vec3 vDir, Vec3 vProj)
 
 	subv3(point, vStart, pVec);
 	/* project onto the directional vector for this segment */
-	maddv3(vStart, dotv3(pVec, vDir), vDir, vProj);
+	saddv3(vStart, dotv3(pVec, vDir), vDir, vProj);
 }
 
 float
@@ -633,7 +633,7 @@ CM_TraceThroughSphere(Tracework *tw, Vec3 origin, float radius, Vec3 start,
 		if(fraction < tw->trace.fraction){
 			tw->trace.fraction = fraction;
 			subv3(end, start, dir);
-			maddv3(start, fraction, dir, intersection);
+			saddv3(start, fraction, dir, intersection);
 			subv3(intersection, origin, dir);
 			#ifdef CAPSULE_DEBUG
 			l2 = lenv3(dir);
@@ -725,7 +725,7 @@ CM_TraceThroughVerticalCylinder(Tracework *tw, Vec3 origin, float radius,
 			fraction /= length;
 		if(fraction < tw->trace.fraction){
 			subv3(end, start, dir);
-			maddv3(start, fraction, dir, intersection);
+			saddv3(start, fraction, dir, intersection);
 			/* if the intersection is between the cylinder lower and upper bound */
 			if(intersection[2] <= origin[2] + halfheight &&
 			   intersection[2] >= origin[2] - halfheight){

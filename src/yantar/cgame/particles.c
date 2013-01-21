@@ -241,8 +241,8 @@ CG_AddParticleToScene(Cparticle *p, Vec3 org, float alpha)
 		/* done. */
 
 		if(p->type == P_BUBBLE || p->type == P_BUBBLE_TURBULENT){
-			maddv3 (org, -p->height, vup, point);
-			maddv3 (point, -p->width, vright, point);
+			saddv3 (org, -p->height, vup, point);
+			saddv3 (point, -p->width, vright, point);
 			copyv3 (point, verts[0].xyz);
 			verts[0].st[0]	= 0;
 			verts[0].st[1]	= 0;
@@ -251,8 +251,8 @@ CG_AddParticleToScene(Cparticle *p, Vec3 org, float alpha)
 			verts[0].modulate[2] = 255;
 			verts[0].modulate[3] = 255 * p->alpha;
 
-			maddv3 (org, -p->height, vup, point);
-			maddv3 (point, p->width, vright, point);
+			saddv3 (org, -p->height, vup, point);
+			saddv3 (point, p->width, vright, point);
 			copyv3 (point, verts[1].xyz);
 			verts[1].st[0]	= 0;
 			verts[1].st[1]	= 1;
@@ -261,8 +261,8 @@ CG_AddParticleToScene(Cparticle *p, Vec3 org, float alpha)
 			verts[1].modulate[2] = 255;
 			verts[1].modulate[3] = 255 * p->alpha;
 
-			maddv3 (org, p->height, vup, point);
-			maddv3 (point, p->width, vright, point);
+			saddv3 (org, p->height, vup, point);
+			saddv3 (point, p->width, vright, point);
 			copyv3 (point, verts[2].xyz);
 			verts[2].st[0]	= 1;
 			verts[2].st[1]	= 1;
@@ -271,8 +271,8 @@ CG_AddParticleToScene(Cparticle *p, Vec3 org, float alpha)
 			verts[2].modulate[2] = 255;
 			verts[2].modulate[3] = 255 * p->alpha;
 
-			maddv3 (org, p->height, vup, point);
-			maddv3 (point, -p->width, vright, point);
+			saddv3 (org, p->height, vup, point);
+			saddv3 (point, -p->width, vright, point);
 			copyv3 (point, verts[3].xyz);
 			verts[3].st[0]	= 1;
 			verts[3].st[1]	= 0;
@@ -281,8 +281,8 @@ CG_AddParticleToScene(Cparticle *p, Vec3 org, float alpha)
 			verts[3].modulate[2] = 255;
 			verts[3].modulate[3] = 255 * p->alpha;
 		}else{
-			maddv3 (org, -p->height, vup, point);
-			maddv3 (point, -p->width, vright, point);
+			saddv3 (org, -p->height, vup, point);
+			saddv3 (point, -p->width, vright, point);
 			copyv3(point, TRIverts[0].xyz);
 			TRIverts[0].st[0] = 1;
 			TRIverts[0].st[1] = 0;
@@ -291,8 +291,8 @@ CG_AddParticleToScene(Cparticle *p, Vec3 org, float alpha)
 			TRIverts[0].modulate[2] = 255;
 			TRIverts[0].modulate[3] = 255 * p->alpha;
 
-			maddv3 (org, p->height, vup, point);
-			maddv3 (point, -p->width, vright, point);
+			saddv3 (org, p->height, vup, point);
+			saddv3 (point, -p->width, vright, point);
 			copyv3 (point, TRIverts[1].xyz);
 			TRIverts[1].st[0] = 0;
 			TRIverts[1].st[1] = 0;
@@ -301,8 +301,8 @@ CG_AddParticleToScene(Cparticle *p, Vec3 org, float alpha)
 			TRIverts[1].modulate[2] = 255;
 			TRIverts[1].modulate[3] = 255 * p->alpha;
 
-			maddv3 (org, p->height, vup, point);
-			maddv3 (point, p->width, vright, point);
+			saddv3 (org, p->height, vup, point);
+			saddv3 (point, p->width, vright, point);
 			copyv3 (point, TRIverts[2].xyz);
 			TRIverts[2].st[0] = 0;
 			TRIverts[2].st[1] = 1;
@@ -335,11 +335,11 @@ CG_AddParticleToScene(Cparticle *p, Vec3 org, float alpha)
 		}
 
 		if(p->roll){
-			maddv3 (org, -height, ru, point);
-			maddv3 (point, -width, rr, point);
+			saddv3 (org, -height, ru, point);
+			saddv3 (point, -width, rr, point);
 		}else{
-			maddv3 (org, -height, vup, point);
-			maddv3 (point, -width, vright, point);
+			saddv3 (org, -height, vup, point);
+			saddv3 (point, -width, vright, point);
 		}
 		copyv3 (point, verts[0].xyz);
 		verts[0].st[0]	= 0;
@@ -350,9 +350,9 @@ CG_AddParticleToScene(Cparticle *p, Vec3 org, float alpha)
 		verts[0].modulate[3] = 255;
 
 		if(p->roll)
-			maddv3 (point, 2*height, ru, point);
+			saddv3 (point, 2*height, ru, point);
 		else
-			maddv3 (point, 2*height, vup, point);
+			saddv3 (point, 2*height, vup, point);
 		copyv3 (point, verts[1].xyz);
 		verts[1].st[0]	= 0;
 		verts[1].st[1]	= 1;
@@ -362,9 +362,9 @@ CG_AddParticleToScene(Cparticle *p, Vec3 org, float alpha)
 		verts[1].modulate[3] = 255;
 
 		if(p->roll)
-			maddv3 (point, 2*width, rr, point);
+			saddv3 (point, 2*width, rr, point);
 		else
-			maddv3 (point, 2*width, vright, point);
+			saddv3 (point, 2*width, vright, point);
 		copyv3 (point, verts[2].xyz);
 		verts[2].st[0]	= 1;
 		verts[2].st[1]	= 1;
@@ -374,9 +374,9 @@ CG_AddParticleToScene(Cparticle *p, Vec3 org, float alpha)
 		verts[2].modulate[3] = 255;
 
 		if(p->roll)
-			maddv3 (point, -2*height, ru, point);
+			saddv3 (point, -2*height, ru, point);
 		else
-			maddv3 (point, -2*height, vup, point);
+			saddv3 (point, -2*height, vup, point);
 		copyv3 (point, verts[3].xyz);
 		verts[3].st[0]	= 1;
 		verts[3].st[1]	= 0;
@@ -451,11 +451,11 @@ CG_AddParticleToScene(Cparticle *p, Vec3 org, float alpha)
 		}
 
 		if(p->rotate){
-			maddv3 (org, -height, rup2, point);
-			maddv3 (point, -width, rright2, point);
+			saddv3 (org, -height, rup2, point);
+			saddv3 (point, -width, rright2, point);
 		}else{
-			maddv3 (org, -p->height, vup, point);
-			maddv3 (point, -p->width, vright, point);
+			saddv3 (org, -p->height, vup, point);
+			saddv3 (point, -p->width, vright, point);
 		}
 		copyv3 (point, verts[0].xyz);
 		verts[0].st[0]	= 0;
@@ -466,11 +466,11 @@ CG_AddParticleToScene(Cparticle *p, Vec3 org, float alpha)
 		verts[0].modulate[3] = 255 * invratio;
 
 		if(p->rotate){
-			maddv3 (org, -height, rup2, point);
-			maddv3 (point, width, rright2, point);
+			saddv3 (org, -height, rup2, point);
+			saddv3 (point, width, rright2, point);
 		}else{
-			maddv3 (org, -p->height, vup, point);
-			maddv3 (point, p->width, vright, point);
+			saddv3 (org, -p->height, vup, point);
+			saddv3 (point, p->width, vright, point);
 		}
 		copyv3 (point, verts[1].xyz);
 		verts[1].st[0]	= 0;
@@ -481,11 +481,11 @@ CG_AddParticleToScene(Cparticle *p, Vec3 org, float alpha)
 		verts[1].modulate[3] = 255 * invratio;
 
 		if(p->rotate){
-			maddv3 (org, height, rup2, point);
-			maddv3 (point, width, rright2, point);
+			saddv3 (org, height, rup2, point);
+			saddv3 (point, width, rright2, point);
 		}else{
-			maddv3 (org, p->height, vup, point);
-			maddv3 (point, p->width, vright, point);
+			saddv3 (org, p->height, vup, point);
+			saddv3 (point, p->width, vright, point);
 		}
 		copyv3 (point, verts[2].xyz);
 		verts[2].st[0]	= 1;
@@ -496,11 +496,11 @@ CG_AddParticleToScene(Cparticle *p, Vec3 org, float alpha)
 		verts[2].modulate[3] = 255 * invratio;
 
 		if(p->rotate){
-			maddv3 (org, height, rup2, point);
-			maddv3 (point, -width, rright2, point);
+			saddv3 (org, height, rup2, point);
+			saddv3 (point, -width, rright2, point);
 		}else{
-			maddv3 (org, p->height, vup, point);
-			maddv3 (point, -p->width, vright, point);
+			saddv3 (org, p->height, vup, point);
+			saddv3 (point, -p->width, vright, point);
 		}
 		copyv3 (point, verts[3].xyz);
 		verts[3].st[0]	= 1;
@@ -529,8 +529,8 @@ CG_AddParticleToScene(Cparticle *p, Vec3 org, float alpha)
 			copyv3 (vright, rr);
 		}
 
-		maddv3 (org, -p->height, ru, point);
-		maddv3 (point, -p->width, rr, point);
+		saddv3 (org, -p->height, ru, point);
+		saddv3 (point, -p->width, rr, point);
 		copyv3 (point, verts[0].xyz);
 		verts[0].st[0]	= 0;
 		verts[0].st[1]	= 0;
@@ -539,8 +539,8 @@ CG_AddParticleToScene(Cparticle *p, Vec3 org, float alpha)
 		verts[0].modulate[2] = 9;
 		verts[0].modulate[3] = 255 * alpha;
 
-		maddv3 (org, -p->height, ru, point);
-		maddv3 (point, p->width, rr, point);
+		saddv3 (org, -p->height, ru, point);
+		saddv3 (point, p->width, rr, point);
 		copyv3 (point, verts[1].xyz);
 		verts[1].st[0]	= 0;
 		verts[1].st[1]	= 1;
@@ -549,8 +549,8 @@ CG_AddParticleToScene(Cparticle *p, Vec3 org, float alpha)
 		verts[1].modulate[2] = 9;
 		verts[1].modulate[3] = 255 * alpha;
 
-		maddv3 (org, p->height, ru, point);
-		maddv3 (point, p->width, rr, point);
+		saddv3 (org, p->height, ru, point);
+		saddv3 (point, p->width, rr, point);
 		copyv3 (point, verts[2].xyz);
 		verts[2].st[0]	= 1;
 		verts[2].st[1]	= 1;
@@ -559,8 +559,8 @@ CG_AddParticleToScene(Cparticle *p, Vec3 org, float alpha)
 		verts[2].modulate[2] = 9;
 		verts[2].modulate[3] = 255 * alpha;
 
-		maddv3 (org, p->height, ru, point);
-		maddv3 (point, -p->width, rr, point);
+		saddv3 (org, p->height, ru, point);
+		saddv3 (point, -p->width, rr, point);
 		copyv3 (point, verts[3].xyz);
 		verts[3].st[0]	= 1;
 		verts[3].st[1]	= 0;
@@ -706,11 +706,11 @@ CG_AddParticleToScene(Cparticle *p, Vec3 org, float alpha)
 		}
 
 		if(p->roll){
-			maddv3 (org, -height, ru, point);
-			maddv3 (point, -width, rr, point);
+			saddv3 (org, -height, ru, point);
+			saddv3 (point, -width, rr, point);
 		}else{
-			maddv3 (org, -height, vup, point);
-			maddv3 (point, -width, vright, point);
+			saddv3 (org, -height, vup, point);
+			saddv3 (point, -width, vright, point);
 		}
 		copyv3 (point, verts[0].xyz);
 		verts[0].st[0]	= 0;
@@ -721,9 +721,9 @@ CG_AddParticleToScene(Cparticle *p, Vec3 org, float alpha)
 		verts[0].modulate[3] = 255;
 
 		if(p->roll)
-			maddv3 (point, 2*height, ru, point);
+			saddv3 (point, 2*height, ru, point);
 		else
-			maddv3 (point, 2*height, vup, point);
+			saddv3 (point, 2*height, vup, point);
 		copyv3 (point, verts[1].xyz);
 		verts[1].st[0]	= 0;
 		verts[1].st[1]	= 1;
@@ -733,9 +733,9 @@ CG_AddParticleToScene(Cparticle *p, Vec3 org, float alpha)
 		verts[1].modulate[3] = 255;
 
 		if(p->roll)
-			maddv3 (point, 2*width, rr, point);
+			saddv3 (point, 2*width, rr, point);
 		else
-			maddv3 (point, 2*width, vright, point);
+			saddv3 (point, 2*width, vright, point);
 		copyv3 (point, verts[2].xyz);
 		verts[2].st[0]	= 1;
 		verts[2].st[1]	= 1;
@@ -745,9 +745,9 @@ CG_AddParticleToScene(Cparticle *p, Vec3 org, float alpha)
 		verts[2].modulate[3] = 255;
 
 		if(p->roll)
-			maddv3 (point, -2*height, ru, point);
+			saddv3 (point, -2*height, ru, point);
 		else
-			maddv3 (point, -2*height, vup, point);
+			saddv3 (point, -2*height, vup, point);
 		copyv3 (point, verts[3].xyz);
 		verts[3].st[0]	= 1;
 		verts[3].st[1]	= 0;
@@ -1596,14 +1596,14 @@ ValidBloodPool(Vec3 start)
 	setv3(normal, 0, 0, 1);
 	v3toeuler(normal, angles);
 	anglev3s(angles, NULL, right, up);
-	maddv3(start, EXTRUDE_DIST, normal, center);
+	saddv3(start, EXTRUDE_DIST, normal, center);
 
 	for(x = -fwidth / 2; x < fwidth; x += fwidth){
-		maddv3(center, x, right, xpos);
+		saddv3(center, x, right, xpos);
 
 		for(y = -fheight / 2; y < fheight; y += fheight){
-			maddv3(xpos, y, up, thispos);
-			maddv3(thispos, -EXTRUDE_DIST * 2, normal, endpos);
+			saddv3(xpos, y, up, thispos);
+			saddv3(thispos, -EXTRUDE_DIST * 2, normal, endpos);
 
 			CG_Trace(&trace, thispos, NULL, NULL, endpos, -1,
 				CONTENTS_SOLID);
@@ -1709,7 +1709,7 @@ CG_ParticleBloodCloud(Centity *cent, Vec3 origin, Vec3 dir)
 	copyv3 (origin, point);
 
 	for(i=0; i<dist; i++){
-		maddv3 (point, crittersize, forward, point);
+		saddv3 (point, crittersize, forward, point);
 
 		if(!free_particles)
 			return;
@@ -1837,7 +1837,7 @@ CG_ParticleDust(Centity *cent, Vec3 origin, Vec3 dir)
 	copyv3 (origin, point);
 
 	for(i=0; i<dist; i++){
-		maddv3 (point, crittersize, forward, point);
+		saddv3 (point, crittersize, forward, point);
 
 		if(!free_particles)
 			return;

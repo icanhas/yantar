@@ -60,9 +60,9 @@ G_BounceProjectile(Vec3 start, Vec3 impact, Vec3 dir, Vec3 endout)
 
 	subv3(impact, start, v);
 	dot = dotv3(v, dir);
-	maddv3(v, -2*dot, dir, newv);
+	saddv3(v, -2*dot, dir, newv);
 	normv3(newv);
-	maddv3(impact, 8192, newv, endout);
+	saddv3(impact, 8192, newv, endout);
 }
 
 /*
@@ -88,7 +88,7 @@ CheckGauntletAttack(Gentity *ent)
 
 	CalcMuzzlePoint (ent, forward, right, up, muzzle);
 
-	maddv3 (muzzle, 32, forward, end);
+	saddv3 (muzzle, 32, forward, end);
 
 	trap_Trace (&tr, muzzle, NULL, NULL, end, ent->s.number, MASK_SHOT);
 	if(tr.surfaceFlags & SURF_NOIMPACT)
@@ -153,9 +153,9 @@ Bullet_Fire(Gentity *ent, float spread, int damage)
 	r = random() * M_PI * 2.0f;
 	u = sin(r) * crandom() * spread * 16;
 	r = cos(r) * crandom() * spread * 16;
-	maddv3 (muzzle, 8192*16, forward, end);
-	maddv3 (end, r, right, end);
-	maddv3 (end, u, up, end);
+	saddv3 (muzzle, 8192*16, forward, end);
+	saddv3 (end, r, right, end);
+	saddv3 (end, u, up, end);
 
 	passent = ent->s.number;
 	for(i = 0; i < 10; i++){
@@ -285,9 +285,9 @@ ShotgunPattern(Vec3 origin, Vec3 origin2, int seed, Gentity *ent)
 	for(i = 0; i < DEFAULT_SHOTGUN_COUNT; i++){
 		r = Q_crandom(&seed) * DEFAULT_SHOTGUN_SPREAD * 16;
 		u = Q_crandom(&seed) * DEFAULT_SHOTGUN_SPREAD * 16;
-		maddv3(origin, 8192 * 16, forward, end);
-		maddv3 (end, r, right, end);
-		maddv3 (end, u, up, end);
+		saddv3(origin, 8192 * 16, forward, end);
+		saddv3 (end, r, right, end);
+		saddv3 (end, u, up, end);
 		if(ShotgunPellet(origin, end, ent) && !hitClient){
 			hitClient = qtrue;
 			ent->client->accuracy_hits++;
@@ -403,7 +403,7 @@ weapon_railgun_fire(Gentity *ent)
 
 	damage = 100 * s_quadFactor;
 
-	maddv3 (muzzle, 8192, forward, end);
+	saddv3 (muzzle, 8192, forward, end);
 
 	/* trace only against the solids, so the railgun will go through people */
 	unlinked = 0;
@@ -446,8 +446,8 @@ weapon_railgun_fire(Gentity *ent)
 
 	copyv3(muzzle, tent->s.origin2);
 	/* move origin a bit to come closer to the drawn gun muzzle */
-	maddv3(tent->s.origin2, 4, right, tent->s.origin2);
-	maddv3(tent->s.origin2, -1, up, tent->s.origin2);
+	saddv3(tent->s.origin2, 4, right, tent->s.origin2);
+	saddv3(tent->s.origin2, -1, up, tent->s.origin2);
 
 	/* no explosion at end if SURF_NOIMPACT, but still make the trail */
 	if(trace.surfaceFlags & SURF_NOIMPACT)
@@ -541,7 +541,7 @@ Weapon_LightningFire(Gentity *ent)
 
 	passent = ent->s.number;
 	for(i = 0; i < 10; i++){
-		maddv3(muzzle, LIGHTNING_RANGE, forward, end);
+		saddv3(muzzle, LIGHTNING_RANGE, forward, end);
 
 		trap_Trace(&tr, muzzle, NULL, NULL, end, passent, MASK_SHOT);
 
@@ -654,7 +654,7 @@ CalcMuzzlePoint(Gentity *ent, Vec3 forward, Vec3 right, Vec3 up,
 {
 	copyv3(ent->s.traj.base, muzzlePoint);
 	muzzlePoint[2] += ent->client->ps.viewheight;
-	maddv3(muzzlePoint, 14, forward, muzzlePoint);
+	saddv3(muzzlePoint, 14, forward, muzzlePoint);
 	/* snap to integer coordinates for more efficient network bandwidth usage */
 	snapv3(muzzlePoint);
 }
@@ -669,7 +669,7 @@ CalcMuzzlePointOrigin(Gentity *ent, Vec3 origin, Vec3 forward,
 {
 	copyv3(ent->s.traj.base, muzzlePoint);
 	muzzlePoint[2] += ent->client->ps.viewheight;
-	maddv3(muzzlePoint, 14, forward, muzzlePoint);
+	saddv3(muzzlePoint, 14, forward, muzzlePoint);
 	/* snap to integer coordinates for more efficient network bandwidth usage */
 	snapv3(muzzlePoint);
 }

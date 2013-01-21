@@ -912,10 +912,10 @@ CG_EntityEvent(Centity *cent, Vec3 position)
 		if(es->clientNum == cg.snap->ps.clientNum &&
 		   !cg.renderingThirdPerson){
 			if(cg_drawGun.integer == 2)
-				maddv3(es->origin2, 8, cg.refdef.viewaxis[1],
+				saddv3(es->origin2, 8, cg.refdef.viewaxis[1],
 					es->origin2);
 			else if(cg_drawGun.integer == 3)
-				maddv3(es->origin2, 4, cg.refdef.viewaxis[1],
+				saddv3(es->origin2, 4, cg.refdef.viewaxis[1],
 					es->origin2);
 		}
 

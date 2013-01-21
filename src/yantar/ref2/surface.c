@@ -275,10 +275,10 @@ RB_SurfaceSprite(void)
 		c	= cos(ang);
 
 		scalev3(backEnd.viewParms.or.axis[1], c * radius, left);
-		maddv3(left, -s * radius, backEnd.viewParms.or.axis[2], left);
+		saddv3(left, -s * radius, backEnd.viewParms.or.axis[2], left);
 
 		scalev3(backEnd.viewParms.or.axis[2], c * radius, up);
-		maddv3(up, s * radius, backEnd.viewParms.or.axis[1], up);
+		saddv3(up, s * radius, backEnd.viewParms.or.axis[1], up);
 	}
 	if(backEnd.viewParms.isMirror){
 		subv3(vec3_origin, left, left);
@@ -651,7 +651,7 @@ DoRailCore(const Vec3 start, const Vec3 end, const Vec3 up, float len, float spa
 	spanWidth2 = -spanWidth;
 
 	/* FIXME: use quad stamp? */
-	maddv3(start, spanWidth, up, tess.xyz[tess.numVertexes]);
+	saddv3(start, spanWidth, up, tess.xyz[tess.numVertexes]);
 	tess.texCoords[tess.numVertexes][0][0]	= 0;
 	tess.texCoords[tess.numVertexes][0][1]	= 0;
 	tess.vertexColors[tess.numVertexes][0]	= backEnd.currentEntity->e.shaderRGBA[0] * 0.25 / 255.0f;
@@ -659,7 +659,7 @@ DoRailCore(const Vec3 start, const Vec3 end, const Vec3 up, float len, float spa
 	tess.vertexColors[tess.numVertexes][2]	= backEnd.currentEntity->e.shaderRGBA[2] * 0.25 / 255.0f;
 	tess.numVertexes++;
 
-	maddv3(start, spanWidth2, up, tess.xyz[tess.numVertexes]);
+	saddv3(start, spanWidth2, up, tess.xyz[tess.numVertexes]);
 	tess.texCoords[tess.numVertexes][0][0]	= 0;
 	tess.texCoords[tess.numVertexes][0][1]	= 1;
 	tess.vertexColors[tess.numVertexes][0]	= backEnd.currentEntity->e.shaderRGBA[0] / 255.0f;
@@ -667,7 +667,7 @@ DoRailCore(const Vec3 start, const Vec3 end, const Vec3 up, float len, float spa
 	tess.vertexColors[tess.numVertexes][2]	= backEnd.currentEntity->e.shaderRGBA[2] / 255.0f;
 	tess.numVertexes++;
 
-	maddv3(end, spanWidth, up, tess.xyz[tess.numVertexes]);
+	saddv3(end, spanWidth, up, tess.xyz[tess.numVertexes]);
 
 	tess.texCoords[tess.numVertexes][0][0]	= t;
 	tess.texCoords[tess.numVertexes][0][1]	= 0;
@@ -676,7 +676,7 @@ DoRailCore(const Vec3 start, const Vec3 end, const Vec3 up, float len, float spa
 	tess.vertexColors[tess.numVertexes][2]	= backEnd.currentEntity->e.shaderRGBA[2] / 255.0f;
 	tess.numVertexes++;
 
-	maddv3(end, spanWidth2, up, tess.xyz[tess.numVertexes]);
+	saddv3(end, spanWidth2, up, tess.xyz[tess.numVertexes]);
 	tess.texCoords[tess.numVertexes][0][0]	= t;
 	tess.texCoords[tess.numVertexes][0][1]	= 1;
 	tess.vertexColors[tess.numVertexes][0]	= backEnd.currentEntity->e.shaderRGBA[0] / 255.0f;

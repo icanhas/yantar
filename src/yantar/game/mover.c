@@ -191,8 +191,8 @@ G_CheckProxMinePosition(Gentity *check)
 	Vec3	start, end;
 	Trace tr;
 
-	maddv3(check->s.traj.base, 0.125, check->movedir, start);
-	maddv3(check->s.traj.base, 2, check->movedir, end);
+	saddv3(check->s.traj.base, 0.125, check->movedir, start);
+	saddv3(check->s.traj.base, 2, check->movedir, end);
 	trap_Trace(&tr, start, NULL, NULL, end, check->s.number, MASK_SOLID);
 
 	if(tr.startsolid || tr.fraction < 1)
@@ -941,7 +941,7 @@ SP_func_door(Gentity *ent)
 	abs_movedir[2]	= fabs(ent->movedir[2]);
 	subv3(ent->r.maxs, ent->r.mins, size);
 	distance = dotv3(abs_movedir, size) - lip;
-	maddv3(ent->pos1, distance, ent->movedir, ent->pos2);
+	saddv3(ent->pos1, distance, ent->movedir, ent->pos2);
 
 	/* if "start_open", reverse position 1 and 2 */
 	if(ent->spawnflags & 1){
@@ -1178,7 +1178,7 @@ SP_func_button(Gentity *ent)
 	subv3(ent->r.maxs, ent->r.mins, size);
 	distance = abs_movedir[0] * size[0] + abs_movedir[1] * size[1] +
 		   abs_movedir[2] * size[2] - lip;
-	maddv3 (ent->pos1, distance, ent->movedir, ent->pos2);
+	saddv3 (ent->pos1, distance, ent->movedir, ent->pos2);
 
 	if(ent->health)
 		/* shootable button */

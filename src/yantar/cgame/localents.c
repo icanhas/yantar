@@ -203,7 +203,7 @@ CG_ReflectVelocity(Localent *le, Trace *trace)
 	hitTime = cg.time - cg.frametime + cg.frametime * trace->fraction;
 	BG_EvaluateTrajectoryDelta(&le->pos, hitTime, velocity);
 	dot = dotv3(velocity, trace->plane.normal);
-	maddv3(velocity, -2*dot, trace->plane.normal, le->pos.delta);
+	saddv3(velocity, -2*dot, trace->plane.normal, le->pos.delta);
 
 	scalev3(le->pos.delta, le->bounceFactor, le->pos.delta);
 
@@ -583,7 +583,7 @@ CG_AddScorePlum(Localent *le)
 	crossv3(dir, up, vec);
 	normv3(vec);
 
-	maddv3(origin, -10 + 20 * sin(c * 2 * M_PI), vec, origin);
+	saddv3(origin, -10 + 20 * sin(c * 2 * M_PI), vec, origin);
 
 	/* if the view would be "inside" the sprite, kill the sprite
 	 * so it doesn't add too much overdraw */
@@ -611,7 +611,7 @@ CG_AddScorePlum(Localent *le)
 	}
 
 	for(i = 0; i < numdigits; i++){
-		maddv3(origin,
+		saddv3(origin,
 			(float)(((float)numdigits / 2) - i) * NUMBER_SIZE, vec,
 			re->origin);
 		re->customShader =

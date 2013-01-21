@@ -261,10 +261,10 @@ Use_Shooter(Gentity *ent, Gentity *other, Gentity *activator)
 	crossv3(up, dir, right);
 
 	deg = crandom() * ent->random;
-	maddv3(dir, deg, up, dir);
+	saddv3(dir, deg, up, dir);
 
 	deg = crandom() * ent->random;
-	maddv3(dir, deg, right, dir);
+	saddv3(dir, deg, right, dir);
 
 	normv3(dir);
 

@@ -397,10 +397,10 @@ BotImport_DebugLineShow(int line, Vec3 start, Vec3 end, int color)
 
 	normv3(cross);
 
-	maddv3(points[0], 2, cross, points[0]);
-	maddv3(points[1], -2, cross, points[1]);
-	maddv3(points[2], -2, cross, points[2]);
-	maddv3(points[3], 2, cross, points[3]);
+	saddv3(points[0], 2, cross, points[0]);
+	saddv3(points[1], -2, cross, points[1]);
+	saddv3(points[2], -2, cross, points[2]);
+	saddv3(points[3], 2, cross, points[3]);
 
 	BotImport_DebugPolygonShow(line, color, 4, points);
 }

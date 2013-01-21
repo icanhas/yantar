@@ -262,14 +262,14 @@ target_laser_think(Gentity *self)
 
 	/* if pointed at another entity, set movedir to point at it */
 	if(self->enemy){
-		maddv3 (self->enemy->s.origin, 0.5, self->enemy->r.mins, point);
-		maddv3 (point, 0.5, self->enemy->r.maxs, point);
+		saddv3 (self->enemy->s.origin, 0.5, self->enemy->r.mins, point);
+		saddv3 (point, 0.5, self->enemy->r.maxs, point);
 		subv3 (point, self->s.origin, self->movedir);
 		normv3 (self->movedir);
 	}
 
 	/* fire forward and see what we hit */
-	maddv3 (self->s.origin, 2048, self->movedir, end);
+	saddv3 (self->s.origin, 2048, self->movedir, end);
 
 	trap_Trace(&tr, self->s.origin, NULL, NULL, end, self->s.number,
 		CONTENTS_SOLID|CONTENTS_BODY|CONTENTS_CORPSE);

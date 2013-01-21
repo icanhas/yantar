@@ -791,7 +791,7 @@ G_BounceItem(Gentity *ent, Trace *trace)
 		  (level.time - level.previousTime) * trace->fraction;
 	BG_EvaluateTrajectoryDelta(&ent->s.traj, hitTime, velocity);
 	dot = dotv3(velocity, trace->plane.normal);
-	maddv3(velocity, -2*dot, trace->plane.normal, ent->s.traj.delta);
+	saddv3(velocity, -2*dot, trace->plane.normal, ent->s.traj.delta);
 
 	/* cut the velocity to keep from bouncing forever */
 	scalev3(ent->s.traj.delta, ent->physicsBounce, ent->s.traj.delta);

@@ -254,7 +254,7 @@ AAS_ShowFace(int facenum)
 	edgenum = abs(aasworld.edgeindex[face->firstedge]);
 	edge = &aasworld.edges[edgenum];
 	copyv3(aasworld.vertexes[edge->v[0]], start);
-	maddv3(start, 20, plane->normal, end);
+	saddv3(start, 20, plane->normal, end);
 	AAS_DebugLine(start, end, LINECOLOR_RED);
 }
 
@@ -450,10 +450,10 @@ AAS_DrawArrow(Vec3 start, Vec3 end, int linecolor, int arrowcolor)
 	if(dot > 0.99 || dot < -0.99) setv3(cross, 1, 0, 0);
 	else crossv3(dir, up, cross);
 
-	maddv3(end, -6, dir, p1);
+	saddv3(end, -6, dir, p1);
 	copyv3(p1, p2);
-	maddv3(p1, 6, cross, p1);
-	maddv3(p2, -6, cross, p2);
+	saddv3(p1, 6, cross, p1);
+	saddv3(p2, -6, cross, p2);
 
 	AAS_DebugLine(start, end, linecolor);
 	AAS_DebugLine(p1, end, arrowcolor);

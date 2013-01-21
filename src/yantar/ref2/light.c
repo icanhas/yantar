@@ -236,7 +236,7 @@ R_SetupEntityLightingGrid(trRefEntity_t *ent, world_t *world)
 		normal[1]	= tr.sinTable[lat] * tr.sinTable[lng];
 		normal[2]	= tr.sinTable[(lng+(FUNCTABLE_SIZE/4))&FUNCTABLE_MASK];
 
-		maddv3(direction, factor, normal, direction);
+		saddv3(direction, factor, normal, direction);
 	}
 
 	if(totalFactor > 0 && totalFactor < 0.99){
@@ -353,8 +353,8 @@ R_SetupEntityLighting(const trRefdef_t *refdef, trRefEntity_t *ent)
 		}
 		d = power / (d * d);
 
-		maddv3(ent->directedLight, d, dl->color, ent->directedLight);
-		maddv3(lightDir, d, dir, lightDir);
+		saddv3(ent->directedLight, d, dl->color, ent->directedLight);
+		saddv3(lightDir, d, dir, lightDir);
 	}
 
 	/* clamp ambient */

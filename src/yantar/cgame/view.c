@@ -68,7 +68,7 @@ CG_TestModel_f(void)
 		return;
 	}
 
-	maddv3(cg.refdef.vieworg, 100, cg.refdef.viewaxis[0],
+	saddv3(cg.refdef.vieworg, 100, cg.refdef.viewaxis[0],
 		cg.testModelEntity.origin);
 
 	angles[PITCH]	= 0;
@@ -162,7 +162,7 @@ CG_TestLight_f(void)
 	Scalar *v;
 	
 	v = cg.testlightorigs[cg.ntestlights % Maxtestlights];
-	maddv3(cg.refdef.vieworg, 100, cg.refdef.viewaxis[0], v);
+	saddv3(cg.refdef.vieworg, 100, cg.refdef.viewaxis[0], v);
 	cg.ntestlights++;
 }
 
@@ -332,8 +332,8 @@ offset1stpersonview(void)
 
 		cg.refdef.vieworg[2] -= NECK_LENGTH;
 		anglev3s(cg.refdefViewAngles, forward, NULL, up);
-		maddv3(cg.refdef.vieworg, 3, forward, cg.refdef.vieworg);
-		maddv3(cg.refdef.vieworg, NECK_LENGTH, up, cg.refdef.vieworg);
+		saddv3(cg.refdef.vieworg, 3, forward, cg.refdef.vieworg);
+		saddv3(cg.refdef.vieworg, NECK_LENGTH, up, cg.refdef.vieworg);
 	}
 #endif
 }
@@ -361,13 +361,13 @@ offset3rdpersonview(void)
 	}
 
 	anglev3s(focusAngles, forward, NULL, NULL);
-	maddv3(cg.refdef.vieworg, Focusdistance, forward, focusPoint);
+	saddv3(cg.refdef.vieworg, Focusdistance, forward, focusPoint);
 	copyv3(cg.refdef.vieworg, view);
 	anglev3s(cg.refdefViewAngles, forward, right, up);
 	forwardScale = cos(cg_thirdPersonAngle.value / 180 * M_PI);
 	sideScale = sin(cg_thirdPersonAngle.value / 180 * M_PI);
-	maddv3(view, -cg_thirdPersonRange.value * forwardScale, forward, view);
-	maddv3(view, -cg_thirdPersonRange.value * sideScale, right, view);
+	saddv3(view, -cg_thirdPersonRange.value * forwardScale, forward, view);
+	saddv3(view, -cg_thirdPersonRange.value * sideScale, right, view);
 	/* 
 	 * trace a ray from the origin to the viewpoint to make sure
 	 * the view isn't in a solid block.  Use an 8 by 8 block to
@@ -516,9 +516,9 @@ dmgblendblob(void)
 	ent.reType = RT_SPRITE;
 	ent.renderfx = RF_FIRST_PERSON;
 
-	maddv3(cg.refdef.vieworg, 8, cg.refdef.viewaxis[0], ent.origin);
-	maddv3(ent.origin, cg.damageX * -8, cg.refdef.viewaxis[1], ent.origin);
-	maddv3(ent.origin, cg.damageY * 8, cg.refdef.viewaxis[2], ent.origin);
+	saddv3(cg.refdef.vieworg, 8, cg.refdef.viewaxis[0], ent.origin);
+	saddv3(ent.origin, cg.damageX * -8, cg.refdef.viewaxis[1], ent.origin);
+	saddv3(ent.origin, cg.damageY * 8, cg.refdef.viewaxis[2], ent.origin);
 
 	ent.radius = cg.damageValue * 3;
 	ent.customShader = cgs.media.viewBloodShader;
@@ -582,7 +582,7 @@ calcviewvals(void)
 		t = cg.time - cg.predictedErrorTime;
 		f = (cg_errorDecay.value - t) / cg_errorDecay.value;
 		if(f > 0 && f < 1)
-			maddv3(cg.refdef.vieworg, f, cg.predictedError,
+			saddv3(cg.refdef.vieworg, f, cg.predictedError,
 				cg.refdef.vieworg);
 		else
 			cg.predictedErrorTime = 0;

@@ -502,7 +502,7 @@ void ByteToDir(int b, Vec3 dir);
 #define copyv3(a,b)		((b)[0]=(a)[0],(b)[1]=(a)[1],(b)[2]=(a)[2])
 #define scalev3(v, s, o)	((o)[0]=(v)[0]*(s),(o)[1]=(v)[1]*(s),(o)[2]= \
 						(v)[2]*(s))
-#define maddv3(v, s, b, o)	((o)[0]=(v)[0]+(b)[0]*(s),(o)[1]=(v)[1]+(b)[1]*	\
+#define saddv3(v, s, b, o)	((o)[0]=(v)[0]+(b)[0]*(s),(o)[1]=(v)[1]+(b)[1]*	\
 							(s),(o)[2]=(v)[2]+(b)[2]*(s))
 
 #else
@@ -512,7 +512,7 @@ void ByteToDir(int b, Vec3 dir);
 #define addv3(a,b,c)	_addv3(a,b,c)
 #define copyv3(a,b)		_copyv3(a,b)
 #define scalev3(v, s, o)	_scalev3(v,s,o)
-#define maddv3(v, s, b, o)	_maddv3(v,s,b,o)
+#define saddv3(v, s, b, o)	_saddv3(v,s,b,o)
 
 #endif
 
@@ -546,7 +546,7 @@ void	_subv3(const Vec3 veca, const Vec3 vecb, Vec3 out);
 void	_addv3(const Vec3 veca, const Vec3 vecb, Vec3 out);
 void	_copyv3(const Vec3 in, Vec3 out);
 void	_scalev3(const Vec3 in, float scale, Vec3 out);
-void	_maddv3(const Vec3 veca, float scale, const Vec3 vecb, Vec3 vecc);
+void	_saddv3(const Vec3 veca, float scale, const Vec3 vecb, Vec3 vecc);
 void	lerpv3(const Vec3 a, const Vec3 b, float lerp, Vec3 c);
 
 /* Mat2 */

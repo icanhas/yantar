@@ -202,9 +202,9 @@ SpawnModelOnVictoryPad(Gentity *pad, Vec3 offset, Gentity *ent, int place)
 	body->s.apos.base[ROLL]	= 0;
 
 	anglev3s(body->s.apos.base, f, r, u);
-	maddv3(pad->r.currentOrigin, offset[0], f, vec);
-	maddv3(vec, offset[1], r, vec);
-	maddv3(vec, offset[2], u, vec);
+	saddv3(pad->r.currentOrigin, offset[0], f, vec);
+	saddv3(vec, offset[1], r, vec);
+	saddv3(vec, offset[2], u, vec);
 
 	G_SetOrigin(body, vec);
 
@@ -263,7 +263,7 @@ PodiumPlacementThink(Gentity *podium)
 	podium->nextthink = level.time + 100;
 
 	anglev3s(level.intermission_angle, vec, NULL, NULL);
-	maddv3(level.intermission_origin,
+	saddv3(level.intermission_origin,
 		trap_Cvar_VariableIntegerValue("g_podiumDist"), vec, origin);
 	origin[2] -= trap_Cvar_VariableIntegerValue("g_podiumDrop");
 	G_SetOrigin(podium, origin);
@@ -277,9 +277,9 @@ PodiumPlacementThink(Gentity *podium)
 		podium1->s.apos.base[ROLL]	= 0;
 
 		anglev3s(podium1->s.apos.base, f, r, u);
-		maddv3(podium->r.currentOrigin, offsetFirst[0], f, vec);
-		maddv3(vec, offsetFirst[1], r, vec);
-		maddv3(vec, offsetFirst[2], u, vec);
+		saddv3(podium->r.currentOrigin, offsetFirst[0], f, vec);
+		saddv3(vec, offsetFirst[1], r, vec);
+		saddv3(vec, offsetFirst[2], u, vec);
 
 		G_SetOrigin(podium1, vec);
 	}
@@ -293,9 +293,9 @@ PodiumPlacementThink(Gentity *podium)
 		podium2->s.apos.base[ROLL]	= 0;
 
 		anglev3s(podium2->s.apos.base, f, r, u);
-		maddv3(podium->r.currentOrigin, offsetSecond[0], f, vec);
-		maddv3(vec, offsetSecond[1], r, vec);
-		maddv3(vec, offsetSecond[2], u, vec);
+		saddv3(podium->r.currentOrigin, offsetSecond[0], f, vec);
+		saddv3(vec, offsetSecond[1], r, vec);
+		saddv3(vec, offsetSecond[2], u, vec);
 
 		G_SetOrigin(podium2, vec);
 	}
@@ -309,9 +309,9 @@ PodiumPlacementThink(Gentity *podium)
 		podium3->s.apos.base[ROLL]	= 0;
 
 		anglev3s(podium3->s.apos.base, f, r, u);
-		maddv3(podium->r.currentOrigin, offsetThird[0], f, vec);
-		maddv3(vec, offsetThird[1], r, vec);
-		maddv3(vec, offsetThird[2], u, vec);
+		saddv3(podium->r.currentOrigin, offsetThird[0], f, vec);
+		saddv3(vec, offsetThird[1], r, vec);
+		saddv3(vec, offsetThird[2], u, vec);
 
 		G_SetOrigin(podium3, vec);
 	}
@@ -337,7 +337,7 @@ SpawnPodium(void)
 	podium->s.modelindex	= G_ModelIndex(SP_PODIUM_MODEL);
 
 	anglev3s(level.intermission_angle, vec, NULL, NULL);
-	maddv3(level.intermission_origin,
+	saddv3(level.intermission_origin,
 		trap_Cvar_VariableIntegerValue("g_podiumDist"), vec, origin);
 	origin[2] -= trap_Cvar_VariableIntegerValue("g_podiumDrop");
 	G_SetOrigin(podium, origin);

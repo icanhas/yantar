@@ -512,11 +512,11 @@ BotExportTest(int parm0, char *parm1, Vec3 parm2, Vec3 parm3)
 
 	anglev3s(parm3, forward, right, NULL);
 	/* get the eye 16 units to the right of the origin */
-	maddv3(parm2, 8, right, eye);
+	saddv3(parm2, 8, right, eye);
 	/* get the eye 24 units up */
 	eye[2] += 24;
 	/* get the end point for the line to be traced */
-	maddv3(eye, 800, forward, end);
+	saddv3(eye, 800, forward, end);
 
 /*	AAS_TestMovementPrediction(1, parm2, forward); */
 /*

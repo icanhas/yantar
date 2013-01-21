@@ -709,7 +709,7 @@ R_ComputeIQMFogNum(iqmData_t *data, trRefEntity_t *ent)
 		bounds = defaultBounds;
 	}
 	subv3(bounds+3, bounds, diag);
-	maddv3(bounds, 0.5f, diag, center);
+	saddv3(bounds, 0.5f, diag, center);
 	addv3(ent->e.origin, center, localOrigin);
 	radius = 0.5f * lenv3(diag);
 

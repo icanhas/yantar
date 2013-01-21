@@ -229,11 +229,11 @@ MakeMeshTangentVectors(int width, int height, srfVert_t ctrl[MAX_GRID_SIZE][MAX_
 		normv3(dv0->bitangent);
 #else
 		d = dotv3(dv0->tangent, dv0->normal);
-		maddv3(dv0->tangent, -d, dv0->normal, dv0->tangent);
+		saddv3(dv0->tangent, -d, dv0->normal, dv0->tangent);
 		normv3(dv0->tangent);
 
 		d = dotv3(dv0->bitangent, dv0->normal);
-		maddv3(dv0->bitangent, -d, dv0->normal, dv0->bitangent);
+		saddv3(dv0->bitangent, -d, dv0->normal, dv0->bitangent);
 		normv3(dv0->bitangent);
 #endif
 	}

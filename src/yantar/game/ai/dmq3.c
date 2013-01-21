@@ -2746,7 +2746,7 @@ BotAimAtEnemy(bot_state_t *bs)
 						entinfo.update_time;
 					/* botimport.Print(PRT_MESSAGE, "speed = %f, wi->speed = %f\n", speed, wi->speed);
 					 * best spot to aim at */
-					maddv3(entinfo.origin,
+					saddv3(entinfo.origin,
 						(dist / wi.speed) * speed, dir,
 						bestorigin);
 				}
@@ -2966,9 +2966,9 @@ BotCheckAttack(bot_state_t *bs)
 	start[2]	+= forward[2] * wi.offset[0] + right[2] * wi.offset[1] +
 			   wi.offset[2];
 	/* end point aiming at */
-	maddv3(start, 1000, forward, end);
+	saddv3(start, 1000, forward, end);
 	/* a little back to make sure not inside a very close enemy */
-	maddv3(start, -12, forward, start);
+	saddv3(start, -12, forward, start);
 	BotAI_Trace(&trace, start, mins, maxs, end, bs->entitynum, MASK_SHOT);
 	/* if the entity is a client */
 	if(trace.ent >= 0 && trace.ent < MAX_CLIENTS)
@@ -3175,7 +3175,7 @@ BotFuncButtonActivateGoal(bot_state_t *bs, int bspent,
 	/* if the button is shootable */
 	if(health){
 		/* calculate the shoot target */
-		maddv3(origin, -dist, movedir, goalorigin);
+		saddv3(origin, -dist, movedir, goalorigin);
 		copyv3(goalorigin, activategoal->target);
 		activategoal->shoot = qtrue;
 		BotAI_Trace(&bsptrace, bs->eye, NULL, NULL, goalorigin,
@@ -3203,7 +3203,7 @@ BotFuncButtonActivateGoal(bot_state_t *bs, int bspent,
 				else dist += fabs(movedir[i]) * fabs(bboxmins[i]);
 			}
 			/* calculate the goal origin */
-			maddv3(origin, -dist, movedir, goalorigin);
+			saddv3(origin, -dist, movedir, goalorigin);
 			copyv3(goalorigin, start);
 			start[2] += 24;
 			copyv3(start, end);
@@ -3248,7 +3248,7 @@ BotFuncButtonActivateGoal(bot_state_t *bs, int bspent,
 			else dist += fabs(movedir[i]) * fabs(bboxmins[i]);
 		}
 		/* calculate the goal origin */
-		maddv3(origin, -dist, movedir, goalorigin);
+		saddv3(origin, -dist, movedir, goalorigin);
 		copyv3(goalorigin, start);
 		start[2] += 24;
 		copyv3(start, end);
@@ -3835,7 +3835,7 @@ BotAIBlocked(bot_state_t *bs, bot_moveresult_t *moveresult, int activate)
 	 * the bot might be able to crouch through
 	 * copyv3(bs->origin, start);
 	 * start[2] += 18;
-	 * maddv3(start, 5, hordir, end);
+	 * saddv3(start, 5, hordir, end);
 	 * setv3(mins, -16, -16, -24);
 	 * setv3(maxs, 16, 16, 4);
 	 *
@@ -3853,7 +3853,7 @@ BotAIBlocked(bot_state_t *bs, bot_moveresult_t *moveresult, int activate)
 			bs->flags ^= BFL_AVOIDRIGHT;
 			/* flip the direction
 			 * negv3(sideward, sideward); */
-			maddv3(sideward, -1, hordir, sideward);
+			saddv3(sideward, -1, hordir, sideward);
 			/* move in the other direction */
 			trap_BotMoveInDirection(bs->ms, sideward, 400, movetype);
 		}

@@ -273,7 +273,7 @@ DrawNormals(shaderCommands_t *input)
 	qglBegin (GL_LINES);
 	for(i = 0; i < input->numVertexes; i++){
 		qglVertex3fv (input->xyz[i]);
-		maddv3 (input->xyz[i], 2, input->normal[i], temp);
+		saddv3 (input->xyz[i], 2, input->normal[i], temp);
 		qglVertex3fv (temp);
 	}
 	qglEnd ();

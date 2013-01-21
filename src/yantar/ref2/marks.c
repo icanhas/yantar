@@ -276,7 +276,7 @@ R_MarkFragments(int numPoints, const Vec3 *points, const Vec3 projection,
 		addv3(points[i], projection, temp);
 		AddPointToBounds(temp, mins, maxs);
 		/* make sure we get all the leafs (also the one(s) in front of the hit surface) */
-		maddv3(points[i], -20, projectionDir, temp);
+		saddv3(points[i], -20, projectionDir, temp);
 		AddPointToBounds(temp, mins, maxs);
 	}
 
@@ -339,13 +339,13 @@ R_MarkFragments(int numPoints, const Vec3 *points, const Vec3 projection,
 					dv = cv->verts + m * cv->width + n;
 
 					copyv3(dv[0].xyz, clipPoints[0][0]);
-					maddv3(clipPoints[0][0], MARKER_OFFSET, dv[0].normal,
+					saddv3(clipPoints[0][0], MARKER_OFFSET, dv[0].normal,
 						clipPoints[0][0]);
 					copyv3(dv[cv->width].xyz, clipPoints[0][1]);
-					maddv3(clipPoints[0][1], MARKER_OFFSET, dv[cv->width].normal,
+					saddv3(clipPoints[0][1], MARKER_OFFSET, dv[cv->width].normal,
 						clipPoints[0][1]);
 					copyv3(dv[1].xyz, clipPoints[0][2]);
-					maddv3(clipPoints[0][2], MARKER_OFFSET, dv[1].normal,
+					saddv3(clipPoints[0][2], MARKER_OFFSET, dv[1].normal,
 						clipPoints[0][2]);
 					/* check the normal of this triangle */
 					subv3(clipPoints[0][0], clipPoints[0][1], v1);
@@ -366,13 +366,13 @@ R_MarkFragments(int numPoints, const Vec3 *points, const Vec3 projection,
 					}
 
 					copyv3(dv[1].xyz, clipPoints[0][0]);
-					maddv3(clipPoints[0][0], MARKER_OFFSET, dv[1].normal,
+					saddv3(clipPoints[0][0], MARKER_OFFSET, dv[1].normal,
 						clipPoints[0][0]);
 					copyv3(dv[cv->width].xyz, clipPoints[0][1]);
-					maddv3(clipPoints[0][1], MARKER_OFFSET, dv[cv->width].normal,
+					saddv3(clipPoints[0][1], MARKER_OFFSET, dv[cv->width].normal,
 						clipPoints[0][1]);
 					copyv3(dv[cv->width+1].xyz, clipPoints[0][2]);
-					maddv3(clipPoints[0][2], MARKER_OFFSET, dv[cv->width+1].normal,
+					saddv3(clipPoints[0][2], MARKER_OFFSET, dv[cv->width+1].normal,
 						clipPoints[0][2]);
 					/* check the normal of this triangle */
 					subv3(clipPoints[0][0], clipPoints[0][1], v1);
@@ -404,7 +404,7 @@ R_MarkFragments(int numPoints, const Vec3 *points, const Vec3 projection,
 			for(k = 0, tri = surf->triangles; k < surf->numTriangles; k++, tri++){
 				for(j = 0; j < 3; j++){
 					v = surf->verts[tri->indexes[j]].xyz;
-					maddv3(v, MARKER_OFFSET, surf->plane.normal, clipPoints[0][j]);
+					saddv3(v, MARKER_OFFSET, surf->plane.normal, clipPoints[0][j]);
 				}
 
 				/* add the fragments of this face */
@@ -424,7 +424,7 @@ R_MarkFragments(int numPoints, const Vec3 *points, const Vec3 projection,
 			for(k = 0, tri = surf->triangles; k < surf->numTriangles; k++, tri++){
 				for(j = 0; j < 3; j++){
 					v = surf->verts[tri->indexes[j]].xyz;
-					maddv3(v, MARKER_OFFSET, surf->verts[tri->indexes[j]].normal,
+					saddv3(v, MARKER_OFFSET, surf->verts[tri->indexes[j]].normal,
 						clipPoints[0][j]);
 				}
 

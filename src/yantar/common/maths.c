@@ -445,7 +445,7 @@ MakeNormalVectors(const Vec3 forward, Vec3 right, Vec3 up)
 	right[0] = forward[2];
 
 	d = dotv3 (right, forward);
-	maddv3(right, -d, forward, right);
+	saddv3(right, -d, forward, right);
 	normv3(right);
 	crossv3(right, forward, up);
 }
@@ -785,7 +785,7 @@ norm2v3(const Vec3 v, Vec3 out)
   * make b s units long, add to v, result in o
   */
 void
-_maddv3(const Vec3 veca, float scale, const Vec3 vecb, Vec3 vecc)
+_saddv3(const Vec3 veca, float scale, const Vec3 vecb, Vec3 vecc)
 {
 	vecc[0] = veca[0] + scale*vecb[0];
 	vecc[1] = veca[1] + scale*vecb[1];
