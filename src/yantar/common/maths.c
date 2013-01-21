@@ -1169,6 +1169,16 @@ if(1){
 }
 }
 
+/*
+ * returns magnitude of q
+ */
+Scalar
+magq(const Quat q)
+{
+	return sqrt(Square(q[0]) + Square(q[1]) + Square(q[2])
+		+ Square(q[3]));
+}
+
 int
 Q_log2(int val)
 {

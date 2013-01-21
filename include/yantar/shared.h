@@ -578,7 +578,8 @@ void	translationm4(const Vec3, Mat4);
 void	orthom4(float left, float right, float bottom, float top, float znear, float zfar, Mat4 out);
 
 /* Quat */
-void mulq(const Quat, const Quat, Quat);
+void	mulq(const Quat, const Quat, Quat);
+Scalar	magq(const Quat);
 
 unsigned colourbytes3(float r, float g, float b);
 unsigned colourbytes4(float r, float g, float b, float a);
