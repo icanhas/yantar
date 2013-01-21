@@ -1100,6 +1100,18 @@ typedef enum {
 /* elements communicated across the net */
 #define ANGLE2SHORT(x)	((int)((x)*65536/360) & 65535)
 #define SHORT2ANGLE(x)	((x)*(360.0f/65536))
+#define eulertoshorts(e, s) \
+	do{ \
+		(s)[0] = ANGLE2SHORT((e)[0]); \
+		(s)[1] = ANGLE2SHORT((e)[1]); \
+		(s)[2] = ANGLE2SHORT((e)[2]); \
+	}while(0);
+#define shortstoeuler(s, e) \
+	do{ \
+		(e)[0] = SHORT2ANGLE((s)[0]); \
+		(e)[1] = SHORT2ANGLE((s)[1]); \
+		(e)[2] = SHORT2ANGLE((s)[2]); \
+	}while(0);
 
 enum {
 	SNAPFLAG_RATE_DELAYED	= 1,
