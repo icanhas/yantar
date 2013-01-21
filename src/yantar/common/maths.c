@@ -1131,8 +1131,9 @@ qtoaxis(Quat q, Vec3  axis[3])
 void
 mulq(const Quat q1, const Quat q2, Quat out)
 {
+if(1){
 	float a, b, c, d, e, f, g, h;
-	
+
 	a = (q1[0] + q1[1])*(q2[0] + q2[1]);
 	b = (q1[3] - q1[2])*(q2[2] - q2[3]);
 	c = (q1[0] - q1[1])*(q2[2] + q2[3]);
@@ -1145,6 +1146,27 @@ mulq(const Quat q1, const Quat q2, Quat out)
 	out[1] = a - (e + f + g + h)*0.5;	/* v0 */
 	out[2] = c + (e - f + g - h)*0.5;	/* v1 */
 	out[3] = d + (e - f - g + h)*0.5;	/* v2 */
+}else{
+	Scalar a, c;
+	Vec3 b, d, cros, acc;
+
+	/* 
+	 * Sweetser calls this 'the easy way to multiply quaternions',
+	 * and it almost works, but turns sort of flat & degenerate as
+	 * you approach ±180° yaw.  I must be doing this wrong.
+	 */
+	a = q1[0];
+	c = q2[0];
+	copyv3(&q1[1], b);
+	copyv3(&q2[1], d);
+	out[0] = a*c - dotv3(b, d);
+	scalev3(d, a, d);
+	scalev3(b, c, b);
+	addv3(d, b, acc);
+	crossv3(d, b, cros);
+	addv3(acc, cros, acc);
+	copyv3(acc, &out[1]);
+}
 }
 
 int
