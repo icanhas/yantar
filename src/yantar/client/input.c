@@ -170,7 +170,7 @@ adjustangles(void)
 		cl.viewangles[YAW] -= spd * ys * (keystate(&right) - keystate(&left));
 	}
 	cl.viewangles[PITCH] -= spd * ps * (keystate(&lookup) - keystate(&lookdown));
-	cl.viewangles[ROLL] -= spd * rs * (keystate(&rollright) - keystate(&rollleft));
+	cl.viewangles[ROLL] += spd * rs * (keystate(&rollright) - keystate(&rollleft));
 }
 
 /* Sets the Usrcmd based on key states */
