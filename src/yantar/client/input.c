@@ -453,8 +453,6 @@ createcmd(void)
 	
 	quatify(oldangles);
 
-	//Com_Printf(" %f %f %f\n", cl.viewangles[0], cl.viewangles[1], cl.viewangles[2]);
-
 	/* store out the final values */
 	finishmove(&cmd);
 
