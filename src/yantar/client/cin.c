@@ -1428,7 +1428,7 @@ CIN_DrawCinematic(int handle)
 		re.DrawStretchRaw(x, y, w, h, 256, 256, (byte*)buf2, handle,
 			qtrue);
 		cinTable[handle].dirty = qfalse;
-		Hunk_FreeTempMemory(buf2);
+		hunkfreetemp(buf2);
 		return;
 	}
 
@@ -1527,7 +1527,7 @@ CIN_UploadCinematic(int handle)
 				handle,
 				qtrue);
 			cinTable[handle].dirty = qfalse;
-			Hunk_FreeTempMemory(buf2);
+			hunkfreetemp(buf2);
 		}else{
 			/* Upload video at normal resolution */
 			re.UploadCinematic(cinTable[handle].CIN_WIDTH,

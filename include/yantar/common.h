@@ -707,17 +707,17 @@ typedef enum {
 #endif
 
 #ifdef ZONE_DEBUG
-#define	ztagalloc(size, tag)	ztagallocdebug(size, tag, # size, __FILE__, \
+#define ztagalloc(size, tag)	ztagallocdebug(size, tag, # size, __FILE__, \
 	__LINE__)
-#define	zalloc(size)		zallocdebug(size, # size, __FILE__, __LINE__)
-#define	salloc(size)		sallocdebug(size, # size, __FILE__, __LINE__)
-void* ztagallocdebug(int size, int tag, char *label, char *file, int line);	/* NOT 0 filled memory */
-void* zallocdebug(int size, char *label, char *file, int line);		/* returns 0 filled memory */
-void* sallocdebug(int size, char *label, char *file, int line);		/* returns 0 filled memory */
+#define zalloc(size)		zallocdebug(size, # size, __FILE__, __LINE__)
+#define salloc(size)		sallocdebug(size, # size, __FILE__, __LINE__)
+void*	ztagallocdebug(int size, int tag, char *label, char *file, int line);	/* NOT 0 filled memory */
+void*	zallocdebug(int size, char *label, char *file, int line);		/* returns 0 filled memory */
+void*	sallocdebug(int size, char *label, char *file, int line);		/* returns 0 filled memory */
 #else
-void* ztagalloc(int size, int tag);	/* NOT 0 filled memory */
-void* zalloc(int size);		/* returns 0 filled memory */
-void* salloc(int size);		/* NOT 0 filled memory only for small allocations */
+void*	ztagalloc(int size, int tag);	/* NOT 0 filled memory */
+void*	zalloc(int size);		/* returns 0 filled memory */
+void*	salloc(int size);		/* NOT 0 filled memory only for small allocations */
 #endif
 void 	zfree(void *ptr);
 void 	zfreetags(int tag);
@@ -727,20 +727,19 @@ void 	zlogheap(void);
 void 	hunkclear(void);
 void 	hunkcleartomark(void);
 void 	hunksetmark(void);
-qbool hunkcheckmark(void);
-void 	hunkclearTempMemory(void);
-void* hunkalloctemp(int size);
-void 	Hunk_FreeTempMemory(void *buf);
+qbool	hunkcheckmark(void);
+void 	hunkcleartemp(void);
+void*	hunkalloctemp(int size);
+void 	hunkfreetemp(void *buf);
 int 	hunkmemremaining(void);
 void 	hunklog(void);
 void 	hunktrash(void);
 
 void 	Com_Touchmem(void);
 
-void Com_Init(char *commandLine);
-void Com_Frame(void);
-void Com_Shutdown(void);
-
+void	Com_Init(char *commandLine);
+void	Com_Frame(void);
+void	Com_Shutdown(void);
 
 /*
  * CLIENT / SERVER SYSTEMS

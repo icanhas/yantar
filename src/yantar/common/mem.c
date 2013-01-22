@@ -1009,7 +1009,7 @@ hunkalloctemp(int size)
 }
 
 void
-Hunk_FreeTempMemory(void *buf)
+hunkfreetemp(void *buf)
 {
 	Hunkhdr *hdr;
 
@@ -1023,21 +1023,21 @@ Hunk_FreeTempMemory(void *buf)
 	}
 	hdr = ((Hunkhdr*)buf) - 1;
 	if(hdr->magic != Hunkmagic)
-		Com_Errorf(ERR_FATAL, "Hunk_FreeTempMemory: bad magic");
+		Com_Errorf(ERR_FATAL, "hunkfreetemp: bad magic");
 	hdr->magic = Hunkfreemagic;
 
 	/* this only works if the files are freed in stack order,
-	 * otherwise the memory will stay around until hunkclearTempMemory */
+	 * otherwise the memory will stay around until hunkcleartemp */
 	if(hunk_temp == &hunk_low){
 		if(hdr == (void*)(s_hunkData + hunk_temp->temp - hdr->size))
 			hunk_temp->temp -= hdr->size;
 		else
-			Com_Printf("Hunk_FreeTempMemory: not the final block\n");
+			Com_Printf("hunkfreetemp: not the final block\n");
 	}else{
 		if(hdr == (void*)(s_hunkData + s_hunkTotal - hunk_temp->temp))
 			hunk_temp->temp -= hdr->size;
 		else
-			Com_Printf("Hunk_FreeTempMemory: not the final block\n");
+			Com_Printf("hunkfreetemp: not the final block\n");
 	}
 }
 
@@ -1047,7 +1047,7 @@ Hunk_FreeTempMemory(void *buf)
  * permanent allocs use this side.
  */
 void
-hunkclearTempMemory(void)
+hunkcleartemp(void)
 {
 	if(s_hunkData != nil)
 		hunk_temp->temp = hunk_temp->permanent;

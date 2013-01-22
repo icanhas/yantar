@@ -871,7 +871,7 @@ R_MipMap2(byte *in, int inWidth, int inHeight)
 		}
 
 	Q_Memcpy(in, temp, outWidth * outHeight * 4);
-	ri.Hunk_FreeTempMemory(temp);
+	ri.hunkfreetemp(temp);
 }
 
 /*
@@ -1468,9 +1468,9 @@ done:
 	GL_CheckErrors();
 
 	if(scaledBuffer != 0)
-		ri.Hunk_FreeTempMemory(scaledBuffer);
+		ri.hunkfreetemp(scaledBuffer);
 	if(resampledBuffer != 0)
-		ri.Hunk_FreeTempMemory(resampledBuffer);
+		ri.hunkfreetemp(resampledBuffer);
 }
 
 
@@ -1730,9 +1730,9 @@ done:
 	GL_CheckErrors();
 
 	if(scaledBuffer != 0)
-		ri.Hunk_FreeTempMemory(scaledBuffer);
+		ri.hunkfreetemp(scaledBuffer);
 	if(resampledBuffer != 0)
-		ri.Hunk_FreeTempMemory(resampledBuffer);
+		ri.hunkfreetemp(resampledBuffer);
 }
 
 /* =================================================================== */
@@ -2015,7 +2015,7 @@ R_CreateFogImage(void)
 	 * the border color at the edges.  OpenGL 1.2 has clamp-to-edge, which does
 	 * what we want. */
 	tr.fogImage = R_CreateImage("*fog", (byte*)data, FOG_S, FOG_T, qfalse, qfalse, GL_CLAMP_TO_EDGE);
-	ri.Hunk_FreeTempMemory(data);
+	ri.hunkfreetemp(data);
 
 	borderColor[0]	= 1.0;
 	borderColor[1]	= 1.0;

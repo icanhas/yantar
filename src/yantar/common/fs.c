@@ -1676,11 +1676,11 @@ FS_FreeFile(void *buffer)
 		Com_Errorf(ERR_FATAL, "FS_FreeFile( NULL )");
 	fs_loadStack--;
 
-	Hunk_FreeTempMemory(buffer);
+	hunkfreetemp(buffer);
 
 	/* if all of our temp files are free, clear all of our space */
 	if(fs_loadStack == 0)
-		hunkclearTempMemory();
+		hunkcleartemp();
 }
 
 /* writes a complete file, creating any subdirectories needed */

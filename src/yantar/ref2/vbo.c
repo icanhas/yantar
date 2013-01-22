@@ -304,7 +304,7 @@ R_CreateVBO2(const char *name, int nverts, srfVert_t *verts,
 	qglBindBufferARB(GL_ARRAY_BUFFER_ARB, 0);
 	glState.currentVBO = nil;
 	GL_CheckErrors();
-	ri.Hunk_FreeTempMemory(data);
+	ri.hunkfreetemp(data);
 	return vbo;
 }
 
@@ -410,7 +410,7 @@ R_CreateIBO2(const char *name, int ntris, srfTriangle_t *triangles, vboUsage_t u
 	qglBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, 0);
 	GL_CheckErrors();
 	glState.currentIBO = nil;
-	ri.Hunk_FreeTempMemory(indexes);
+	ri.hunkfreetemp(indexes);
 	return ibo;
 }
 

@@ -1955,8 +1955,8 @@ R_CreateWorldVBO(void)
 
 	ri.Free(surfacesSorted);
 
-	ri.Hunk_FreeTempMemory(triangles);
-	ri.Hunk_FreeTempMemory(verts);
+	ri.hunkfreetemp(triangles);
+	ri.hunkfreetemp(verts);
 }
 
 /*

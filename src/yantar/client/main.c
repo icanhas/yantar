@@ -2844,7 +2844,7 @@ CL_InitRef(void)
 	ri.hunkalloc = hunkalloc;
 #endif
 	ri.hunkalloctemp	= hunkalloctemp;
-	ri.Hunk_FreeTempMemory	= Hunk_FreeTempMemory;
+	ri.hunkfreetemp	= hunkfreetemp;
 
 	ri.CM_ClusterPVS	= CM_ClusterPVS;
 	ri.CM_DrawDebugSurface	= CM_DrawDebugSurface;

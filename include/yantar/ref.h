@@ -300,7 +300,7 @@ struct refimport_t {
 	void    *(*hunkalloc)(int size, ha_pref pref);
 	#endif
 	void    *(*hunkalloctemp)(int size);
-	void (*Hunk_FreeTempMemory)(void *block);
+	void (*hunkfreetemp)(void *block);
 
 	/* dynamic memory allocator for things that need to be freed */
 	void    *(*Malloc)(int bytes);

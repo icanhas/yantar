@@ -266,7 +266,7 @@ SV_ChangeMaxClients(void)
 			svs.clients[i] = oldClients[i];
 
 	/* free the old clients on the hunk */
-	Hunk_FreeTempMemory(oldClients);
+	hunkfreetemp(oldClients);
 
 	/* allocate new snapshot entities */
 	if(com_dedicated->integer)

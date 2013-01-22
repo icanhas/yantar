@@ -225,8 +225,8 @@ S_LoadSound(Sfx *sfx)
 			qfalse);
 	}
 
-	Hunk_FreeTempMemory(samples);
-	Hunk_FreeTempMemory(data);
+	hunkfreetemp(samples);
+	hunkfreetemp(data);
 
 	return qtrue;
 }

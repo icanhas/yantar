@@ -1044,7 +1044,7 @@ RB_SwapBuffers(const void *data)
 			sum += stencilReadback[i];
 
 		backEnd.pc.c_overDraw += sum;
-		ri.Hunk_FreeTempMemory(stencilReadback);
+		ri.hunkfreetemp(stencilReadback);
 	}
 
 

@@ -345,7 +345,7 @@ R_ModeList_f(void)
  *
  * Stores the length of padding after a line of pixels to address padlen
  *
- * Return value must be freed with ri.Hunk_FreeTempMemory()
+ * Return value must be freed with ri.hunkfreetemp()
  */
 
 byte *
@@ -427,7 +427,7 @@ RB_TakeScreenshot(int x, int y, int width, int height, char *fileName)
 
 	ri.FS_WriteFile(fileName, buffer, memcount + 18);
 
-	ri.Hunk_FreeTempMemory(allbuf);
+	ri.hunkfreetemp(allbuf);
 }
 
 /*
@@ -449,7 +449,7 @@ RB_TakeScreenshotJPEG(int x, int y, int width, int height, char *fileName)
 		R_GammaCorrect(buffer + offset, memcount);
 
 	RE_SaveJPG(fileName, r_screenshotJpegQuality->integer, width, height, buffer + offset, padlen);
-	ri.Hunk_FreeTempMemory(buffer);
+	ri.hunkfreetemp(buffer);
 }
 
 /*
@@ -604,8 +604,8 @@ R_LevelShot(void)
 
 	ri.FS_WriteFile(checkname, buffer, 128 * 128*3 + 18);
 
-	ri.Hunk_FreeTempMemory(buffer);
-	ri.Hunk_FreeTempMemory(allsource);
+	ri.hunkfreetemp(buffer);
+	ri.hunkfreetemp(allsource);
 
 	ri.Printf(PRINT_ALL, "Wrote %s\n", checkname);
 }

@@ -405,7 +405,7 @@ S_OGG_CodecLoad(const char *filename, Sndinfo *info)
 
 	/* we don't even have read a single byte */
 	if(bytesRead <= 0){
-		Hunk_FreeTempMemory(buffer);
+		hunkfreetemp(buffer);
 		S_OGG_CodecCloseStream(stream);
 
 		return NULL;
