@@ -1210,6 +1210,22 @@ invq(const Quat q, Quat out)
 	out[3] /= m;
 }
 
+/*
+ * out = orientation between initial and final unit quaternions
+ *
+ * initial * diff = final
+ * diff = final * initial^-1
+ * diff = final * conj(initial)
+ */
+void
+diffq(const Quat initial, const Quat final, Quat out)
+{
+	Quat ci;
+
+	conjq(initial, ci);
+	mulq(final, ci, out);
+}
+
 int
 Q_log2(int val)
 {

@@ -582,6 +582,7 @@ void	mulq(const Quat, const Quat, Quat);
 Scalar	magq(const Quat);
 void	conjq(const Quat, Quat);
 void	invq(const Quat, Quat);
+void	diffq(const Quat, const Quat, Quat);
 
 unsigned colourbytes3(float r, float g, float b);
 unsigned colourbytes4(float r, float g, float b, float a);
