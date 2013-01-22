@@ -1,10 +1,12 @@
-/* common.c -- misc functions used in client and server */
 /*
  * Copyright (C) 1999-2005 Id Software, Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License.
  */
+ /* 
+  * Misc. functions used in client and server 
+  */
 
 #include "shared.h"
 #include "common.h"
@@ -97,8 +99,6 @@ char com_errorMessage[MAXPRINTMSG];
 
 extern void CIN_CloseAllVideos(void);
 
-/* ============================================================================ */
-
 static char	*rd_buffer;
 static uint	rd_buffersize;
 static void	(*rd_flush)(char *buffer);
@@ -120,10 +120,9 @@ Com_Endredirect(void)
 {
 	if(rd_flush)
 		rd_flush(rd_buffer);
-
-	rd_buffer = NULL;
+	rd_buffer = nil;
 	rd_buffersize = 0;
-	rd_flush = NULL;
+	rd_flush = nil;
 }
 
 /*
@@ -132,7 +131,7 @@ Com_Endredirect(void)
  * 
  * May be passed UTF-8.
  *
- * A raw string should NEVER be passed as fmt, because of "%f" type crashers.
+ * A string variable should NEVER be passed as fmt, because of "%f" type crashers.
  */
 void QDECL
 Com_Printf(const char *fmt, ...)
@@ -167,8 +166,8 @@ Com_Printf(const char *fmt, ...)
 		/* TTimo: only open the qconsole.log if the filesystem is in an initialized state
 		*   also, avoid recursing in the qconsole.log opening (i.e. if fs_debug is on) */
 		if(!logfile && FS_Initialized() && !opening_qconsole){
-			struct tm	*newtime;
-			time_t		aclock;
+			struct tm *newtime;
+			time_t aclock;
 
 			opening_qconsole = qtrue;
 			time(&aclock);
@@ -312,19 +311,15 @@ Com_Quit_f(void)
 }
 
 /*
+ * Command-line functions
  *
- * COMMAND LINE FUNCTIONS
+ * '+' characters separate the commandLine string into multiple console
+ * command lines.
  *
- + characters seperate the commandLine string into multiple console
- + command lines.
- +
- + All of these are valid:
- +
- + quake3 +set test blah +map test
- + quake3 set test blah+map test
- + quake3 set test blah + map test
- +
- + ============================================================================
+ * All of these are valid:
+ * yantar +set test blah +map test
+ * yantar set test blah+map test
+ * yantar set test blah + map test
  */
 
 #define MAX_CONSOLE_LINES 32
@@ -380,7 +375,7 @@ Com_Insafemode(void)
 
 /*
  * Searches for command line parameters that are set commands.
- * If match is not NULL, only that cvar will be looked for.
+ * If match is not nil, only that cvar will be looked for.
  * That is necessary because cddir and basedir need to be set
  * before the filesystem is started, but all other sets should
  * be after execing the config and default.
@@ -438,10 +433,10 @@ Com_Addstartupcmds(void)
 void
 Info_Print(const char *s)
 {
-	char	key[BIG_INFO_KEY];
+	char key[BIG_INFO_KEY];
 	char	value[BIG_INFO_VALUE];
-	char    *o;
-	int	l;
+	char *o;
+	int l;
 
 	if(*s == '\\')
 		s++;
@@ -451,14 +446,14 @@ Info_Print(const char *s)
 			*o++ = *s++;
 		l = o - key;
 		if(l < 20){
-			Q_Memset (o, ' ', 20-l);
+			Q_Memset(o, ' ', 20-l);
 			key[20] = 0;
 		}else
 			*o = 0;
 		Com_Printf ("%s ", key);
 
 		if(!*s){
-			Com_Printf ("MISSING VALUE\n");
+			Com_Printf("MISSING VALUE\n");
 			return;
 		}
 		o = value;
@@ -469,7 +464,7 @@ Info_Print(const char *s)
 
 		if(*s)
 			s++;
-		Com_Printf ("%s\n", value);
+		Com_Printf("%s\n", value);
 	}
 }
 
@@ -490,15 +485,15 @@ Q_StringContains(char *str1, char *str2, int casesensitive)
 		if(!str2[j])
 			return str1;
 	}
-	return NULL;
+	return nil;
 }
 
 int
 Q_Filter(char *filter, char *name, int casesensitive)
 {
-	char	buf[MAX_TOKEN_CHARS];
-	char    *ptr;
-	int	i, found;
+	char buf[MAX_TOKEN_CHARS];
+	char *ptr;
+	int i, found;
 
 	while(*filter){
 		if(*filter == '*'){
@@ -526,38 +521,41 @@ Q_Filter(char *filter, char *name, int casesensitive)
 			while(*filter && !found){
 				if(*filter == ']' && *(filter+1) != ']') break;
 				if(*(filter+1) == '-' && *(filter+2) &&
-				   (*(filter+2) != ']' || *(filter+3) == ']')){
+				   (*(filter+2) != ']' || *(filter+3) == ']'))
+				then{
 					if(casesensitive){
-						if(*name >= *filter && *name <=
-						   *(filter+2)) found = qtrue;
-					}else if(toupper(*name) >=
-						 toupper(*filter) &&
-						 toupper(*name) <=
-						 toupper(*(filter+
-							   2))) found = qtrue;
+						if(*name >= *filter && *name <= *(filter+2)) 
+							found = qtrue;
+					}else if(toupper(*name) >= toupper(*filter) &&
+					   toupper(*name) <= toupper(*(filter+2))) 
+					then{
+						found = qtrue;
+					}
 					filter += 3;
 				}else{
 					if(casesensitive){
-						if(*filter == *name) found =
-								qtrue;
-					}else if(toupper(*filter) ==
-						 toupper(*name)) found =
-							qtrue;
+						if(*filter == *name) 
+							found = qtrue;
+					}else if(toupper(*filter) == toupper(*name)) 
+						found = qtrue;
 					filter++;
 				}
 			}
-			if(!found) return qfalse;
+			if(!found) 
+				return qfalse;
 			while(*filter){
-				if(*filter == ']' && *(filter+1) != ']') break;
+				if(*filter == ']' && *(filter+1) != ']') 
+					break;
 				filter++;
 			}
 			filter++;
 			name++;
 		}else{
 			if(casesensitive){
-				if(*filter != *name) return qfalse;
-			}else if(toupper(*filter) !=
-				 toupper(*name)) return qfalse;
+				if(*filter != *name) 
+					return qfalse;
+			}else if(toupper(*filter) != toupper(*name))
+				return qfalse;
 			filter++;
 			name++;
 		}
@@ -595,20 +593,20 @@ Com_RealTime(Qtime *qtime)
 	time_t t;
 	struct tm *tms;
 
-	t = time(NULL);
+	t = time(nil);
 	if(!qtime)
 		return t;
 	tms = localtime(&t);
 	if(tms){
-		qtime->tm_sec	= tms->tm_sec;
-		qtime->tm_min	= tms->tm_min;
-		qtime->tm_hour	= tms->tm_hour;
-		qtime->tm_mday	= tms->tm_mday;
-		qtime->tm_mon	= tms->tm_mon;
-		qtime->tm_year	= tms->tm_year;
-		qtime->tm_wday	= tms->tm_wday;
-		qtime->tm_yday	= tms->tm_yday;
-		qtime->tm_isdst	= tms->tm_isdst;
+		qtime->tm_sec = tms->tm_sec;
+		qtime->tm_min = tms->tm_min;
+		qtime->tm_hour = tms->tm_hour;
+		qtime->tm_mday = tms->tm_mday;
+		qtime->tm_mon = tms->tm_mon;
+		qtime->tm_year = tms->tm_year;
+		qtime->tm_wday = tms->tm_wday;
+		qtime->tm_yday = tms->tm_yday;
+		qtime->tm_isdst = tms->tm_isdst;
 	}
 	return t;
 }
@@ -707,7 +705,7 @@ Z_Free(void *ptr)
 	Memzone *zone;
 
 	if(!ptr)
-		Com_Errorf(ERR_DROP, "Z_Free: NULL pointer");
+		Com_Errorf(ERR_DROP, "Z_Free: nil pointer");
 
 	block = (Memblk*)((byte*)ptr - sizeof(Memblk));
 	if(block->id != ZONEID)
@@ -828,7 +826,7 @@ void* Z_TagMalloc(int size, int tag)
 					     " %i bytes from the %s zone",
 				size, zone == smallzone ? "small" : "main");
 #endif
-			return NULL;
+			return nil;
 		}
 		if(rover->tag)
 			base = rover = rover->next;
@@ -1003,28 +1001,28 @@ typedef struct memstatic_s {
 } memstatic_t;
 
 memstatic_t	emptystring = {
-	{(sizeof(Memblk)+2 + 3) & ~3, TAG_STATIC, NULL, NULL, ZONEID}, {'\0', '\0'} 
+	{(sizeof(Memblk)+2 + 3) & ~3, TAG_STATIC, nil, nil, ZONEID}, {'\0', '\0'} 
 };
 memstatic_t	numberstring[] = {
-	{ {(sizeof(memstatic_t) + 3) & ~3, TAG_STATIC, NULL, NULL,
+	{ {(sizeof(memstatic_t) + 3) & ~3, TAG_STATIC, nil, nil,
 	   ZONEID}, {'0', '\0'} },
-	{ {(sizeof(memstatic_t) + 3) & ~3, TAG_STATIC, NULL, NULL,
+	{ {(sizeof(memstatic_t) + 3) & ~3, TAG_STATIC, nil, nil,
 	   ZONEID}, {'1', '\0'} },
-	{ {(sizeof(memstatic_t) + 3) & ~3, TAG_STATIC, NULL, NULL,
+	{ {(sizeof(memstatic_t) + 3) & ~3, TAG_STATIC, nil, nil,
 	   ZONEID}, {'2', '\0'} },
-	{ {(sizeof(memstatic_t) + 3) & ~3, TAG_STATIC, NULL, NULL,
+	{ {(sizeof(memstatic_t) + 3) & ~3, TAG_STATIC, nil, nil,
 	   ZONEID}, {'3', '\0'} },
-	{ {(sizeof(memstatic_t) + 3) & ~3, TAG_STATIC, NULL, NULL,
+	{ {(sizeof(memstatic_t) + 3) & ~3, TAG_STATIC, nil, nil,
 	   ZONEID}, {'4', '\0'} },
-	{ {(sizeof(memstatic_t) + 3) & ~3, TAG_STATIC, NULL, NULL,
+	{ {(sizeof(memstatic_t) + 3) & ~3, TAG_STATIC, nil, nil,
 	   ZONEID}, {'5', '\0'} },
-	{ {(sizeof(memstatic_t) + 3) & ~3, TAG_STATIC, NULL, NULL,
+	{ {(sizeof(memstatic_t) + 3) & ~3, TAG_STATIC, nil, nil,
 	   ZONEID}, {'6', '\0'} },
-	{ {(sizeof(memstatic_t) + 3) & ~3, TAG_STATIC, NULL, NULL,
+	{ {(sizeof(memstatic_t) + 3) & ~3, TAG_STATIC, nil, nil,
 	   ZONEID}, {'7', '\0'} },
-	{ {(sizeof(memstatic_t) + 3) & ~3, TAG_STATIC, NULL, NULL,
+	{ {(sizeof(memstatic_t) + 3) & ~3, TAG_STATIC, nil, nil,
 	   ZONEID}, {'8', '\0'} },
-	{ {(sizeof(memstatic_t) + 3) & ~3, TAG_STATIC, NULL, NULL,
+	{ {(sizeof(memstatic_t) + 3) & ~3, TAG_STATIC, nil, nil,
 	   ZONEID}, {'9', '\0'} }
 };
 
@@ -1128,7 +1126,7 @@ struct Hunkblk {
 static Hunkblk	*hunkblocks;
 static Hunkused	hunk_low, hunk_high;
 static Hunkused	*hunk_permanent, *hunk_temp;
-static byte		*s_hunkData = NULL;
+static byte		*s_hunkData = nil;
 static int			s_hunkTotal;
 static int			s_zoneTotal;
 static int			s_smallZoneTotal;
@@ -1256,7 +1254,7 @@ Com_Initsmallzone(void)
 {
 	s_smallZoneTotal = 512 * 1024;
 	smallzone = calloc(s_smallZoneTotal, 1);
-	if(smallzone == NULL)
+	if(smallzone == nil)
 		Com_Errorf(ERR_FATAL, "Small zone data failed to allocate %1.1f"
 				     "megs", (float)s_smallZoneTotal /
 			(1024*1024));
@@ -1374,7 +1372,7 @@ Com_Inithunk(void)
 {
 	Cvar	*cv;
 	int	nMinAlloc;
-	char *pMsg = NULL;
+	char *pMsg = nil;
 
 	/* make sure the file system has allocated and "not" freed any temp blocks
 	 * this allows the config and product id files (journal files too) to be loaded
@@ -1479,7 +1477,7 @@ Hunk_Clear(void)
 	Com_Printf("Hunk_Clear: reset the hunk ok\n");
 	VM_Clear();
 #ifdef HUNK_DEBUG
-	hunkblocks = NULL;
+	hunkblocks = nil;
 #endif
 }
 
@@ -1511,7 +1509,7 @@ void* Hunk_Alloc(int size, ha_pref preference)
 {
 	void *buf;
 
-	if(s_hunkData == NULL)
+	if(s_hunkData == nil)
 		Com_Errorf(ERR_FATAL,
 			"Hunk_Alloc: Hunk memory system not initialized");
 	/* can't do preference if there is any temp allocated */
@@ -1587,7 +1585,7 @@ Hunk_AllocateTempMemory(int size)
 	 * this allows the config and product id files ( journal files too ) to be loaded
 	 * by the file system without redunant routines in the file system utilizing different
 	 * memory systems */
-	if(s_hunkData == NULL)
+	if(s_hunkData == nil)
 		return Z_Malloc(size);
 
 	Hunk_SwapBanks();
@@ -1628,7 +1626,7 @@ Hunk_FreeTempMemory(void *buf)
 	 * this allows the config and product id files ( journal files too ) to be loaded
 	 * by the file system without redunant routines in the file system utilizing different
 	 * memory systems */
-	if(s_hunkData == NULL){
+	if(s_hunkData == nil){
 		Z_Free(buf);
 		return;
 	}
@@ -1660,7 +1658,7 @@ Hunk_FreeTempMemory(void *buf)
 void
 Hunk_ClearTempMemory(void)
 {
-	if(s_hunkData != NULL)
+	if(s_hunkData != nil)
 		hunk_temp->temp = hunk_temp->permanent;
 }
 
@@ -1672,7 +1670,7 @@ Hunk_Trash(void)
 
 	return;
 
-	if(s_hunkData == NULL)
+	if(s_hunkData == nil)
 		return;
 #ifdef _DEBUG
 	Com_Errorf(ERR_DROP, "hunk trashed");
@@ -2485,7 +2483,7 @@ Com_Initrand(void)
 	if(Sys_RandomBytes((byte*)&seed, sizeof(seed)))
 		srand(seed);
 	else
-		srand(time(NULL));
+		srand(time(nil));
 }
 
 /* commandLine should not include the executable name (argv[0]) */
@@ -2522,7 +2520,7 @@ Com_Init(char *commandLine)
 	Com_Detectsse();
 
 	/* override anything from the config files with command line args */
-	Com_Startupvar(NULL);
+	Com_Startupvar(nil);
 
 	Com_Initzone();
 	Cmd_Init ();
@@ -2562,7 +2560,7 @@ Com_Init(char *commandLine)
 	Com_Execconfig();
 
 	/* override anything from the config files with command line args */
-	Com_Startupvar(NULL);
+	Com_Startupvar(nil);
 
 	/* get dedicated here for proper hunk megs initialization */
 #ifdef DEDICATED
@@ -2711,7 +2709,7 @@ Com_Readpipe(void)
 	if(!pipefile)
 		return;
 	while((read = FS_Read(buf+accu, sizeof(buf)-accu-1, pipefile)) > 0){
-		char *brk = NULL;
+		char *brk = nil;
 		uint i;
 
 		for(i = accu; i < accu + read; ++i){
@@ -2977,7 +2975,7 @@ Field_FindFirstSeparator(char *s)
 		if(s[ i ] == ';')
 			return &s[ i ];
 
-	return NULL;
+	return nil;
 }
 
 static qbool
