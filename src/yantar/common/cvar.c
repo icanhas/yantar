@@ -237,7 +237,7 @@ setNewVal(Cvar *var, const char *var_name, const char *var_value, int flags)
 	 */
 	if(var->flags & CVAR_USER_CREATED){
 		var->flags &= ~CVAR_USER_CREATED;
-		Z_Free(var->resetString);
+		zfree(var->resetString);
 		var->resetString = Copystr(var_value);
 
 		if(flags & CVAR_ROM){
@@ -246,7 +246,7 @@ setNewVal(Cvar *var, const char *var_name, const char *var_value, int flags)
 			 * so force it to value given by the engine.
 			 */
 			if(var->latchedString != '\0')
-				Z_Free(var->latchedString);
+				zfree(var->latchedString);
 			var->latchedString = Copystr(var_value);
 		}
 	}
@@ -270,7 +270,7 @@ setNewVal(Cvar *var, const char *var_name, const char *var_value, int flags)
 	/* only allow one non-empty reset string without a warning */
 	if(var->resetString[0] == '\0'){
 		/* we don't have a reset string yet */
-		Z_Free(var->resetString);
+		zfree(var->resetString);
 		var->resetString = Copystr(var_value);
 	}else if(var_value[0] && strcmp(var->resetString, var_value))
 		Com_DPrintf("Warning: cvar \"%s\" given initial values: \"%s\""
@@ -282,7 +282,7 @@ setNewVal(Cvar *var, const char *var_name, const char *var_value, int flags)
 		s = var->latchedString;
 		var->latchedString = nil;	/* otherwise cvar_set2 would free it */
 		Cvar_Set2(var_name, s, qtrue);
-		Z_Free(s);
+		zfree(s);
 	}
 	/* ZOID--needs to be set so that cvars the game sets as
 	 * SERVERINFO get sent to clients */
@@ -411,7 +411,7 @@ Cvar_SetDesc(const char *name, const char *desc)
 	if((cv == nil) || (desc == nil))
 		return;
 	if(cv->desc != nil)
-		Z_Free(cv->desc);
+		zfree(cv->desc);
 	cv->desc = Copystr(desc);
 }
 
@@ -453,7 +453,7 @@ Cvar_Set2(const char *var_name, const char *value, qbool force)
 
 	if((var->flags & CVAR_LATCH) && (var->latchedString != nil)){
 		if(!strcmp(value, var->string)){
-			Z_Free(var->latchedString);
+			zfree(var->latchedString);
 			var->latchedString = nil;
 			return var;
 		}
@@ -481,7 +481,7 @@ Cvar_Set2(const char *var_name, const char *value, qbool force)
 			if(var->latchedString){
 				if(strcmp(value, var->latchedString) == 0)
 					return var;
-				Z_Free(var->latchedString);
+				zfree(var->latchedString);
 			}else if(strcmp(value, var->string) == 0)
 				return var;
 
@@ -499,7 +499,7 @@ Cvar_Set2(const char *var_name, const char *value, qbool force)
 		}
 
 	}else if(var->latchedString != nil){
-		Z_Free(var->latchedString);
+		zfree(var->latchedString);
 		var->latchedString = nil;
 	}
 
@@ -509,7 +509,7 @@ Cvar_Set2(const char *var_name, const char *value, qbool force)
 	var->modified = qtrue;
 	var->modificationCount++;
 
-	Z_Free(var->string);	/* free the old value string */
+	zfree(var->string);	/* free the old value string */
 
 	var->string	= Copystr(value);
 	var->value	= atof (var->string);
@@ -602,7 +602,7 @@ Cvar_SetCheatState(void)
 			 * different var->latchedString
 			 * */
 			if(var->latchedString != nil){
-				Z_Free(var->latchedString);
+				zfree(var->latchedString);
 				var->latchedString = nil;
 			}
 			if(strcmp(var->resetString, var->string))
@@ -886,13 +886,13 @@ Cvar_Unset(Cvar *cv)
 	Cvar *next = cv->next;
 
 	if(cv->name)
-		Z_Free(cv->name);
+		zfree(cv->name);
 	if(cv->string)
-		Z_Free(cv->string);
+		zfree(cv->string);
 	if(cv->latchedString)
-		Z_Free(cv->latchedString);
+		zfree(cv->latchedString);
 	if(cv->resetString)
-		Z_Free(cv->resetString);
+		zfree(cv->resetString);
 
 	if(cv->prev)
 		cv->prev->next = cv->next;

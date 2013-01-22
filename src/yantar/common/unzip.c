@@ -61,10 +61,10 @@
 #endif
 
 #ifndef ALLOC
-# define ALLOC(size) (Z_Malloc(size))
+# define ALLOC(size) (zalloc(size))
 #endif
 #ifndef TRYFREE
-# define TRYFREE(p) {if(p) Z_Free(p); }
+# define TRYFREE(p) {if(p) zfree(p); }
 #endif
 
 #define SIZECENTRALDIRITEM	(0x2e)

@@ -1095,12 +1095,12 @@ CL_ClearMemory(qbool shutdownRef)
 		CL_ShutdownUI();
 		CIN_CloseAllVideos();
 		/* clear the whole hunk */
-		Hunk_Clear();
+		hunkclear();
 		/* clear collision map data */
 		CM_ClearMap();
 	}else
 		/* clear all the client data on the hunk */
-		Hunk_ClearToMark();
+		hunkcleartomark();
 }
 
 /*
@@ -1686,13 +1686,13 @@ CL_Vid_Restart_f(void)
 		/* if not running a server clear the whole hunk */
 		if(com_sv_running->integer)
 			/* clear all the client data on the hunk */
-			Hunk_ClearToMark();
+			hunkcleartomark();
 		else{
 			CL_ShutdownCGame();
 			CL_ShutdownUI();
 			CIN_CloseAllVideos();
 			/* clear the whole hunk */
-			Hunk_Clear();
+			hunkclear();
 		}
 
 		CL_ShutdownUI();
@@ -2781,7 +2781,7 @@ CL_StartHunkUsers(qbool rendererOnly)
 void *
 CL_RefMalloc(int size)
 {
-	return Z_TagMalloc(size, TAG_RENDERER);
+	return ztagalloc(size, MTrenderer);
 }
 
 int
@@ -2837,13 +2837,13 @@ CL_InitRef(void)
 	ri.Error	= Com_Errorf;
 	ri.Milliseconds	= CL_ScaledMilliseconds;
 	ri.Malloc	= CL_RefMalloc;
-	ri.Free		= Z_Free;
+	ri.Free		= zfree;
 #ifdef HUNK_DEBUG
-	ri.Hunk_AllocDebug = Hunk_AllocDebug;
+	ri.hunkallocdebug = hunkallocdebug;
 #else
-	ri.Hunk_Alloc = Hunk_Alloc;
+	ri.hunkalloc = hunkalloc;
 #endif
-	ri.Hunk_AllocateTempMemory	= Hunk_AllocateTempMemory;
+	ri.hunkalloctemp	= hunkalloctemp;
 	ri.Hunk_FreeTempMemory	= Hunk_FreeTempMemory;
 
 	ri.CM_ClusterPVS	= CM_ClusterPVS;

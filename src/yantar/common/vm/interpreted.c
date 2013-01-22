@@ -169,7 +169,7 @@ VM_PrepareInterpreter(Vm *vm, Vmheader *header)
 	int	instruction;
 	int	*codeBase;
 
-	vm->codeBase = Hunk_Alloc(vm->codeLength*4, h_high);	/* we're now int aligned */
+	vm->codeBase = hunkalloc(vm->codeLength*4, h_high);	/* we're now int aligned */
 /*	memcpy( vm->codeBase, (byte *)header + header->codeOffset, vm->codeLength ); */
 
 	/* we don't need to translate the instructions, but we still need

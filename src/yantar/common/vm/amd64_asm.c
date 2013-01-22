@@ -276,10 +276,10 @@ hash_add_label(const char* label, unsigned address)
 	int labellen;
 
 	i	%= ARRAY_LEN(labelhash);
-	h	= Z_Malloc(sizeof(struct hashentry));
+	h	= zalloc(sizeof(struct hashentry));
 
 	labellen	= strlen(label) + 1;
-	h->label	= Z_Malloc(labellen);
+	h->label	= zalloc(labellen);
 	memcpy(h->label, label, labellen);
 
 	h->address = address;
@@ -312,8 +312,8 @@ labelhash_free(void)
 		h = labelhash[i];
 		while(h){
 			struct hashentry * next = h->next;
-			Z_Free(h->label);
-			Z_Free(h);
+			zfree(h->label);
+			zfree(h);
 			h = next;
 			++n;
 		}

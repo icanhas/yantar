@@ -197,7 +197,7 @@ Sys_GetClipboardData(void)
 
 		if((hClipboardData = GetClipboardData(CF_TEXT)) != 0)
 			if((cliptext = GlobalLock(hClipboardData)) != 0){
-				data = Z_Malloc(GlobalSize(hClipboardData) + 1);
+				data = zalloc(GlobalSize(hClipboardData) + 1);
 				Q_strncpyz(data, cliptext,
 					GlobalSize(hClipboardData));
 				GlobalUnlock(hClipboardData);
@@ -423,7 +423,7 @@ Sys_ListFiles(const char *directory, const char *extension, char *filter,
 		if(!nfiles)
 			return NULL;
 
-		listCopy = Z_Malloc((nfiles + 1) * sizeof(*listCopy));
+		listCopy = zalloc((nfiles + 1) * sizeof(*listCopy));
 		for(i = 0; i < nfiles; i++)
 			listCopy[i] = list[i];
 		listCopy[i] = NULL;
@@ -473,7 +473,7 @@ Sys_ListFiles(const char *directory, const char *extension, char *filter,
 	if(!nfiles)
 		return NULL;
 
-	listCopy = Z_Malloc((nfiles + 1) * sizeof(*listCopy));
+	listCopy = zalloc((nfiles + 1) * sizeof(*listCopy));
 	for(i = 0; i < nfiles; i++)
 		listCopy[i] = list[i];
 	listCopy[i] = NULL;
@@ -504,9 +504,9 @@ Sys_FreeFileList(char **list)
 		return;
 
 	for(i = 0; list[i]; i++)
-		Z_Free(list[i]);
+		zfree(list[i]);
 
-	Z_Free(list);
+	zfree(list);
 }
 
 

@@ -536,7 +536,7 @@ SV_WriteVoipToClient(Client *cl, Bitmsg *msg)
 				MSG_WriteData(msg, packet->data, packet->len);
 			}
 
-			Z_Free(packet);
+			zfree(packet);
 		}
 
 		cl->queuedVoipPackets	-= i;

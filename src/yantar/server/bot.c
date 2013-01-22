@@ -277,7 +277,7 @@ BotImport_GetMemory(int size)
 {
 	void *ptr;
 
-	ptr = Z_TagMalloc(size, TAG_BOTLIB);
+	ptr = ztagalloc(size, MTbotlib);
 	return ptr;
 }
 
@@ -287,7 +287,7 @@ BotImport_GetMemory(int size)
 static void
 BotImport_FreeMemory(void *ptr)
 {
-	Z_Free(ptr);
+	zfree(ptr);
 }
 
 /*
@@ -296,10 +296,10 @@ BotImport_FreeMemory(void *ptr)
 static void *
 BotImport_HunkAlloc(int size)
 {
-	if(Hunk_CheckMark())
+	if(hunkcheckmark())
 		Com_Errorf(ERR_DROP,
 			"SV_Bot_HunkAlloc: Alloc with marks already set");
-	return Hunk_Alloc(size, h_high);
+	return hunkalloc(size, h_high);
 }
 
 /*
@@ -508,9 +508,9 @@ SV_BotInitBotLib(void)
 {
 	botlib_import_t botlib_import;
 
-	if(debugpolygons) Z_Free(debugpolygons);
+	if(debugpolygons) zfree(debugpolygons);
 	bot_maxdebugpolys = Cvar_VariableIntegerValue("bot_maxdebugpolys");
-	debugpolygons = Z_Malloc(sizeof(bot_debugpoly_t) * bot_maxdebugpolys);
+	debugpolygons = zalloc(sizeof(bot_debugpoly_t) * bot_maxdebugpolys);
 
 	botlib_import.Print	= BotImport_Print;
 	botlib_import.Trace	= BotImport_Trace;
@@ -524,7 +524,7 @@ SV_BotInitBotLib(void)
 	/* memory management */
 	botlib_import.GetMemory		= BotImport_GetMemory;
 	botlib_import.FreeMemory	= BotImport_FreeMemory;
-	botlib_import.AvailableMemory = Z_AvailableMemory;
+	botlib_import.AvailableMemory = zmemavailable;
 	botlib_import.HunkAlloc = BotImport_HunkAlloc;
 
 	/* file system access */

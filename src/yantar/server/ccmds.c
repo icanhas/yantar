@@ -499,7 +499,7 @@ SV_RehashBans_f(void)
 		return;
 	}
 
-	curpos = textbuf = Z_Malloc(flen);
+	curpos = textbuf = zalloc(flen);
 	flen = FS_Read(textbuf, flen, readfrom);
 	FS_FCloseFile(readfrom);
 	endpos = textbuf + flen;
@@ -544,7 +544,7 @@ SV_RehashBans_f(void)
 		curpos = newlinepos + 1;
 	}
 	serverBansCount = i;
-	Z_Free(textbuf);
+	zfree(textbuf);
 }
 
 /*

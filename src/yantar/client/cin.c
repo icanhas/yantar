@@ -1421,7 +1421,7 @@ CIN_DrawCinematic(int handle)
 	    cinTable[handle].CIN_HEIGHT != cinTable[handle].drawY)){
 		int *buf2;
 
-		buf2 = Hunk_AllocateTempMemory(256*256*4);
+		buf2 = hunkalloctemp(256*256*4);
 
 		CIN_ResampleCinematic(handle, buf2);
 
@@ -1517,7 +1517,7 @@ CIN_UploadCinematic(int handle)
 		    cinTable[handle].CIN_HEIGHT != cinTable[handle].drawY)){
 			int *buf2;
 
-			buf2 = Hunk_AllocateTempMemory(256*256*4);
+			buf2 = hunkalloctemp(256*256*4);
 
 			CIN_ResampleCinematic(handle, buf2);
 

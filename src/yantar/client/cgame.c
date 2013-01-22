@@ -558,7 +558,7 @@ CL_CgameSystemCalls(intptr_t *args)
 		CL_SetUserCmdValue(args[1], args[2], VMF(3));
 		return 0;
 	case CG_MEMORY_REMAINING:
-		return Hunk_MemoryRemaining();
+		return hunkmemremaining();
 	case CG_KEY_ISDOWN:
 		return Key_IsDown(args[1]);
 	case CG_KEY_GETCATCHER:

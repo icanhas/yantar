@@ -162,7 +162,7 @@ SV_RankBegin(char *gamekey)
 		GRankLogLevel(GRLOG_TRACE);
 
 	/* allocate rankings info for each player */
-	s_ranked_players = Z_Malloc(sv_maxclients->value *
+	s_ranked_players = zalloc(sv_maxclients->value *
 		sizeof(ranked_player_t));
 	memset((void*)s_ranked_players, 0,sv_maxclients->value
 		* sizeof(ranked_player_t));
@@ -1155,7 +1155,7 @@ SV_RankCloseContext(ranked_player_t* ranked_player)
 		GRankLogLevel(GRLOG_OFF);
 
 		if(s_ranked_players != NULL){
-			Z_Free(s_ranked_players);
+			zfree(s_ranked_players);
 			s_ranked_players = NULL;
 		}
 

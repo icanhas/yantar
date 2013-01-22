@@ -151,7 +151,7 @@ S_WAV_CodecLoad(const char *filename, Sndinfo *info)
 		return NULL;
 	}
 
-	buffer = Hunk_AllocateTempMemory(info->size);
+	buffer = hunkalloctemp(info->size);
 	if(!buffer){
 		FS_FCloseFile(file);
 		Com_Printf(S_COLOR_RED "ERROR: Out of memory reading \"%s\"\n",

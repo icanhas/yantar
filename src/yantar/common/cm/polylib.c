@@ -44,7 +44,7 @@ AllocWinding(int points)
 		c_peak_windings = c_active_windings;
 
 	s	= sizeof(Scalar)*3*points + sizeof(int);
-	w	= Z_Malloc (s);
+	w	= zalloc (s);
 	Q_Memset (w, 0, s);
 	return w;
 }
@@ -57,7 +57,7 @@ FreeWinding(Winding *w)
 	*(unsigned*)w = 0xdeaddead;
 
 	c_active_windings--;
-	Z_Free (w);
+	zfree (w);
 }
 
 /*

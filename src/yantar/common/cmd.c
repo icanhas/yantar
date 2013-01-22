@@ -535,7 +535,7 @@ Cmd_AddCommand(const char *cmd_name, xcommand_t function)
 		return;
 	}
 	/* use a small malloc to avoid zone fragmentation */
-	cmd = S_Malloc(sizeof(*cmd));
+	cmd = salloc(sizeof(*cmd));
 	cmd->name = Copystr(cmd_name);
 	cmd->function = function;
 	cmd->complete = NULL;
@@ -567,8 +567,8 @@ Cmd_RemoveCommand(const char *cmd_name)
 		if(!strcmp(cmd_name, cmd->name)){
 			*back = cmd->next;
 			if(cmd->name)
-				Z_Free(cmd->name);
-			Z_Free(cmd);
+				zfree(cmd->name);
+			zfree(cmd);
 			return;
 		}
 		back = &cmd->next;

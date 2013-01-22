@@ -87,7 +87,7 @@ SV_SetConfigstring(int index, const char *val)
 		return;
 
 	/* change the string in sv */
-	Z_Free(sv.configstrings[index]);
+	zfree(sv.configstrings[index]);
 	sv.configstrings[index] = Copystr(val);
 
 	/* send it to all the clients if we aren't
@@ -204,7 +204,7 @@ SV_Startup(void)
 		Com_Errorf(ERR_FATAL, "SV_Startup: svs.initialized");
 	SV_BoundMaxClients(1);
 
-	svs.clients = Z_Malloc (sizeof(Client) * sv_maxclients->integer);
+	svs.clients = zalloc (sizeof(Client) * sv_maxclients->integer);
 	if(com_dedicated->integer)
 		svs.numSnapshotEntities = sv_maxclients->integer *
 					  PACKET_BACKUP * 64;
@@ -244,7 +244,7 @@ SV_ChangeMaxClients(void)
 	if(sv_maxclients->integer == oldMaxClients)
 		return;
 
-	oldClients = Hunk_AllocateTempMemory(count * sizeof(Client));
+	oldClients = hunkalloctemp(count * sizeof(Client));
 	/* copy the clients to hunk memory */
 	for(i = 0; i < count; i++){
 		if(svs.clients[i].state >= CS_CONNECTED)
@@ -254,10 +254,10 @@ SV_ChangeMaxClients(void)
 	}
 
 	/* free old clients arrays */
-	Z_Free(svs.clients);
+	zfree(svs.clients);
 
 	/* allocate new clients */
-	svs.clients = Z_Malloc (sv_maxclients->integer * sizeof(Client));
+	svs.clients = zalloc (sv_maxclients->integer * sizeof(Client));
 	Q_Memset(svs.clients, 0, sv_maxclients->integer * sizeof(Client));
 
 	/* copy the clients over */
@@ -284,7 +284,7 @@ SV_ClearServer(void)
 
 	for(i = 0; i < MAX_CONFIGSTRINGS; i++)
 		if(sv.configstrings[i])
-			Z_Free(sv.configstrings[i]);
+			zfree(sv.configstrings[i]);
 	Q_Memset (&sv, 0, sizeof(sv));
 }
 
@@ -329,7 +329,7 @@ SV_SpawnServer(char *server, qbool killBots)
 		CL_ShutdownAll(qfalse);	/* make sure all the client stuff is unloaded */
 		CL_StartHunkUsers(qtrue);	/* Restart renderer */
 	}
-	Hunk_Clear();	/* clear it all because we're (re)loading the server */
+	hunkclear();	/* clear it all because we're (re)loading the server */
 
 	CM_ClearMap();
 
@@ -341,7 +341,7 @@ SV_SpawnServer(char *server, qbool killBots)
 
 	FS_ClearPakReferences(0);
 	
-	svs.snapshotEntities = Hunk_Alloc(sizeof(Entstate)*svs.numSnapshotEntities, h_high);
+	svs.snapshotEntities = hunkalloc(sizeof(Entstate)*svs.numSnapshotEntities, h_high);
 	svs.nextSnapshotEntities = 0;
 
 	/* 
@@ -513,7 +513,7 @@ SV_SpawnServer(char *server, qbool killBots)
 	sv.state = SS_GAME;
 
 	SV_Heartbeat_f();	/* One night to be confused */
-	Hunk_SetMark();
+	hunksetmark();
 	Com_Printf ("-----------------------------------\n");
 }
 
@@ -664,7 +664,7 @@ SV_Shutdown(char *finalmsg)
 		for(index = 0; index < sv_maxclients->integer; index++)
 			SV_FreeClient(&svs.clients[index]);
 
-		Z_Free(svs.clients);
+		zfree(svs.clients);
 	}
 	Q_Memset(&svs, 0, sizeof(svs));
 

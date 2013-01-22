@@ -393,7 +393,7 @@ Field_Paste(Field *edit)
 	for(i = 0; i < pasteLen; i++)
 		Field_CharEvent(edit, cbd[i]);
 
-	Z_Free(cbd);
+	zfree(cbd);
 }
 
 /*
@@ -844,7 +844,7 @@ Key_SetBinding(int keynum, const char *binding)
 
 	/* free old bindings */
 	if(keys[ keynum ].binding)
-		Z_Free(keys[ keynum ].binding);
+		zfree(keys[ keynum ].binding);
 
 	/* allocate memory for new binding */
 	keys[keynum].binding = Copystr(binding);

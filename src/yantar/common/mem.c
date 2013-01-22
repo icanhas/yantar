@@ -130,34 +130,34 @@ Z_AvailableZoneMemory(Memzone *zone)
 }
 
 int
-Z_AvailableMemory(void)
+zmemavailable(void)
 {
 	return Z_AvailableZoneMemory(mainzone);
 }
 
 void
-Z_Free(void *ptr)
+zfree(void *ptr)
 {
 	Memblk *block, *other;
 	Memzone *zone;
 
 	if(!ptr)
-		Com_Errorf(ERR_DROP, "Z_Free: nil pointer");
+		Com_Errorf(ERR_DROP, "zfree: nil pointer");
 
 	block = (Memblk*)((byte*)ptr - sizeof(Memblk));
 	if(block->id != Zoneid)
-		Com_Errorf(ERR_FATAL, "Z_Free: freed a pointer without Zoneid");
+		Com_Errorf(ERR_FATAL, "zfree: freed a pointer without Zoneid");
 	if(block->tag == 0)
-		Com_Errorf(ERR_FATAL, "Z_Free: freed a freed pointer");
+		Com_Errorf(ERR_FATAL, "zfree: freed a freed pointer");
 	/* if static memory */
-	if(block->tag == TAG_STATIC)
+	if(block->tag == MTstatic)
 		return;
 
 	/* check the memory trash tester */
 	if(*(int*)((byte*)block + block->size - 4) != Zoneid)
-		Com_Errorf(ERR_FATAL, "Z_Free: memory block wrote past end");
+		Com_Errorf(ERR_FATAL, "zfree: memory block wrote past end");
 
-	if(block->tag == TAG_SMALL)
+	if(block->tag == MTsmall)
 		zone = smallzone;
 	else
 		zone = mainzone;
@@ -196,25 +196,25 @@ Z_Free(void *ptr)
 }
 
 void
-Z_FreeTags(int tag)
+zfreetags(int tag)
 {
 	int count;
 	Memzone *zone;
 
-	if(tag == TAG_SMALL)
+	if(tag == MTsmall)
 		zone = smallzone;
 	else
 		zone = mainzone;
 	count = 0;
 	/* 
 	 * use the rover as our pointer, because
-	 * Z_Free automatically adjusts it 
+	 * zfree automatically adjusts it 
 	 */
 	zone->rover = zone->blocklist.next;
 	do {
 		if(zone->rover->tag == tag){
 			count++;
-			Z_Free((void*)(zone->rover + 1));
+			zfree((void*)(zone->rover + 1));
 			continue;
 		}
 		zone->rover = zone->rover->next;
@@ -222,11 +222,11 @@ Z_FreeTags(int tag)
 }
 
 #ifdef ZONE_DEBUG
-void *Z_TagMallocDebug(int size, int tag, char *label, char *file, int line)
+void *ztagallocdebug(int size, int tag, char *label, char *file, int line)
 {
 	int allocSize;
 #else
-void* Z_TagMalloc(int size, int tag)
+void* ztagalloc(int size, int tag)
 {
 #endif
 	int extra;
@@ -234,9 +234,9 @@ void* Z_TagMalloc(int size, int tag)
 	Memzone *zone;
 
 	if(!tag)
-		Com_Errorf(ERR_FATAL, "Z_TagMalloc: tried to use a 0 tag");
+		Com_Errorf(ERR_FATAL, "ztagalloc: tried to use a 0 tag");
 
-	if(tag == TAG_SMALL)
+	if(tag == MTsmall)
 		zone = smallzone;
 	else
 		zone = mainzone;
@@ -257,14 +257,14 @@ void* Z_TagMalloc(int size, int tag)
 		if(rover == start){
 			/* scaned all the way around the list */
 #ifdef ZONE_DEBUG
-			Z_LogHeap();
+			zlogheap();
 			Com_Errorf(
-				ERR_FATAL, "Z_Malloc: failed on allocation of"
+				ERR_FATAL, "zalloc: failed on allocation of"
 					   " %i bytes from the %s zone: %s, line: %d (%s)",
 				size, zone == smallzone ? "small" : "main",
 				file, line, label);
 #else
-			Com_Errorf(ERR_FATAL, "Z_Malloc: failed on allocation of"
+			Com_Errorf(ERR_FATAL, "zalloc: failed on allocation of"
 					     " %i bytes from the %s zone",
 				size, zone == smallzone ? "small" : "main");
 #endif
@@ -312,11 +312,11 @@ void* Z_TagMalloc(int size, int tag)
 
 #ifdef ZONE_DEBUG
 void*
-Z_MallocDebug(int size, char *label, char *file, int line)
+zallocdebug(int size, char *label, char *file, int line)
 {
 #else
 void*
-Z_Malloc(int size)
+zalloc(int size)
 {
 #endif
 	void *buf;
@@ -324,9 +324,9 @@ Z_Malloc(int size)
 	/* Z_CheckHeap ();	// DEBUG */
 
 #ifdef ZONE_DEBUG
-	buf = Z_TagMallocDebug(size, TAG_GENERAL, label, file, line);
+	buf = ztagallocdebug(size, MTgeneral, label, file, line);
 #else
-	buf = Z_TagMalloc(size, TAG_GENERAL);
+	buf = ztagalloc(size, MTgeneral);
 #endif
 	Q_Memset(buf, 0, size);
 
@@ -335,17 +335,17 @@ Z_Malloc(int size)
 
 #ifdef ZONE_DEBUG
 void*
-S_MallocDebug(int size, char *label, char *file, int line)
+sallocdebug(int size, char *label, char *file, int line)
 {
-	return Z_TagMallocDebug(size, TAG_SMALL, label, file, line);
+	return ztagallocdebug(size, MTsmall, label, file, line);
 }
 
 #else
 
 void*
-S_Malloc(int size)
+salloc(int size)
 {
-	return Z_TagMalloc(size, TAG_SMALL);
+	return ztagalloc(size, MTsmall);
 }
 #endif
 
@@ -432,26 +432,26 @@ Z_LogZoneHeap(Memzone *zone, char *name)
 }
 
 void
-Z_LogHeap(void)
+zlogheap(void)
 {
 	Z_LogZoneHeap(mainzone, "MAIN");
 	Z_LogZoneHeap(smallzone, "SMALL");
 }
 
 Memstatic emptystring = {
-	{(sizeof(Memblk)+2 + 3) & ~3, TAG_STATIC, nil, nil, Zoneid}, {'\0', '\0'} 
+	{(sizeof(Memblk)+2 + 3) & ~3, MTstatic, nil, nil, Zoneid}, {'\0', '\0'} 
 };
 Memstatic numberstring[] = {
-	{ {(sizeof(Memstatic) + 3) & ~3, TAG_STATIC, nil, nil, Zoneid}, {'0', '\0'} },
-	{ {(sizeof(Memstatic) + 3) & ~3, TAG_STATIC, nil, nil, Zoneid}, {'1', '\0'} },
-	{ {(sizeof(Memstatic) + 3) & ~3, TAG_STATIC, nil, nil, Zoneid}, {'2', '\0'} },
-	{ {(sizeof(Memstatic) + 3) & ~3, TAG_STATIC, nil, nil, Zoneid}, {'3', '\0'} },
-	{ {(sizeof(Memstatic) + 3) & ~3, TAG_STATIC, nil, nil, Zoneid}, {'4', '\0'} },
-	{ {(sizeof(Memstatic) + 3) & ~3, TAG_STATIC, nil, nil, Zoneid}, {'5', '\0'} },
-	{ {(sizeof(Memstatic) + 3) & ~3, TAG_STATIC, nil, nil, Zoneid}, {'6', '\0'} },
-	{ {(sizeof(Memstatic) + 3) & ~3, TAG_STATIC, nil, nil, Zoneid}, {'7', '\0'} },
-	{ {(sizeof(Memstatic) + 3) & ~3, TAG_STATIC, nil, nil, Zoneid}, {'8', '\0'} },
-	{ {(sizeof(Memstatic) + 3) & ~3, TAG_STATIC, nil, nil, Zoneid}, {'9', '\0'} }
+	{ {(sizeof(Memstatic) + 3) & ~3, MTstatic, nil, nil, Zoneid}, {'0', '\0'} },
+	{ {(sizeof(Memstatic) + 3) & ~3, MTstatic, nil, nil, Zoneid}, {'1', '\0'} },
+	{ {(sizeof(Memstatic) + 3) & ~3, MTstatic, nil, nil, Zoneid}, {'2', '\0'} },
+	{ {(sizeof(Memstatic) + 3) & ~3, MTstatic, nil, nil, Zoneid}, {'3', '\0'} },
+	{ {(sizeof(Memstatic) + 3) & ~3, MTstatic, nil, nil, Zoneid}, {'4', '\0'} },
+	{ {(sizeof(Memstatic) + 3) & ~3, MTstatic, nil, nil, Zoneid}, {'5', '\0'} },
+	{ {(sizeof(Memstatic) + 3) & ~3, MTstatic, nil, nil, Zoneid}, {'6', '\0'} },
+	{ {(sizeof(Memstatic) + 3) & ~3, MTstatic, nil, nil, Zoneid}, {'7', '\0'} },
+	{ {(sizeof(Memstatic) + 3) & ~3, MTstatic, nil, nil, Zoneid}, {'8', '\0'} },
+	{ {(sizeof(Memstatic) + 3) & ~3, MTstatic, nil, nil, Zoneid}, {'9', '\0'} }
 };
 
 /*
@@ -468,7 +468,7 @@ Copystr(const char *in)
 	else if(!in[1])
 		if(in[0] >= '0' && in[0] <= '9')
 			return ((char*)&numberstring[in[0]-'0']) + sizeof(Memblk);
-	out = S_Malloc (strlen(in)+1);
+	out = salloc (strlen(in)+1);
 	strcpy (out, in);
 	return out;
 }
@@ -542,9 +542,9 @@ Q_Meminfo_f(void)
 		if(block->tag){
 			zoneBytes += block->size;
 			zoneBlocks++;
-			if(block->tag == TAG_BOTLIB)
+			if(block->tag == MTbotlib)
 				botlibBytes += block->size;
-			else if(block->tag == TAG_RENDERER)
+			else if(block->tag == MTrenderer)
 				rendererBytes += block->size;
 		}
 
@@ -680,7 +680,7 @@ Com_Initzone(void)
 }
 
 void
-Hunk_Log(void)
+hunklog(void)
 {
 	Hunkblk *block;
 	char	buf[4096];
@@ -799,20 +799,20 @@ Com_Inithunk(void)
 			s_hunkTotal / (1024*1024));
 	/* cacheline align */
 	s_hunkData = (byte*)(((intptr_t)s_hunkData + 31) & ~31);
-	Hunk_Clear();
+	hunkclear();
 
 	Cmd_AddCommand("meminfo", Q_Meminfo_f);
 #ifdef ZONE_DEBUG
-	Cmd_AddCommand("zonelog", Z_LogHeap);
+	Cmd_AddCommand("zonelog", zlogheap);
 #endif
 #ifdef HUNK_DEBUG
-	Cmd_AddCommand("hunklog", Hunk_Log);
+	Cmd_AddCommand("hunklog", hunklog);
 	Cmd_AddCommand("hunksmalllog", Hunk_SmallLog);
 #endif
 }
 
 int
-Hunk_MemoryRemaining(void)
+hunkmemremaining(void)
 {
 	int low, high;
 
@@ -826,7 +826,7 @@ Hunk_MemoryRemaining(void)
 
 /* The server calls this after the level and game VM have been loaded */
 void
-Hunk_SetMark(void)
+hunksetmark(void)
 {
 	hunk_low.mark = hunk_low.permanent;
 	hunk_high.mark = hunk_high.permanent;
@@ -834,14 +834,14 @@ Hunk_SetMark(void)
 
 /* The client calls this before starting a vid_restart or snd_restart */
 void
-Hunk_ClearToMark(void)
+hunkcleartomark(void)
 {
 	hunk_low.permanent = hunk_low.temp = hunk_low.mark;
 	hunk_high.permanent = hunk_high.temp = hunk_high.mark;
 }
 
 qbool
-Hunk_CheckMark(void)
+hunkcheckmark(void)
 {
 	if(hunk_low.mark || hunk_high.mark)
 		return qtrue;
@@ -850,7 +850,7 @@ Hunk_CheckMark(void)
 
 /* The server calls this before shutting down or loading a new map */
 void
-Hunk_Clear(void)
+hunkclear(void)
 {
 	hunk_low.mark = 0;
 	hunk_low.permanent = 0;
@@ -865,7 +865,7 @@ Hunk_Clear(void)
 	hunk_permanent = &hunk_low;
 	hunk_temp = &hunk_high;
 
-	Com_Printf("Hunk_Clear: reset the hunk ok\n");
+	Com_Printf("hunkclear: reset the hunk ok\n");
 	VM_Clear();
 #ifdef HUNK_DEBUG
 	hunkblocks = nil;
@@ -893,16 +893,16 @@ Hunk_SwapBanks(void)
 
 /* Allocate permanent (until the hunk is cleared) memory */
 #ifdef HUNK_DEBUG
-void* Hunk_AllocDebug(int size, ha_pref preference, char *label, char *file, int line)
+void* hunkallocdebug(int size, ha_pref preference, char *label, char *file, int line)
 #else
-void* Hunk_Alloc(int size, ha_pref preference)
+void* hunkalloc(int size, ha_pref preference)
 #endif
 {
 	void *buf;
 
 	if(s_hunkData == nil)
 		Com_Errorf(ERR_FATAL,
-			"Hunk_Alloc: Hunk memory system not initialized");
+			"hunkalloc: Hunk memory system not initialized");
 	/* can't do preference if there is any temp allocated */
 	if(preference == h_dontcare || hunk_temp->temp != hunk_temp->permanent)
 		Hunk_SwapBanks();
@@ -920,13 +920,13 @@ void* Hunk_Alloc(int size, ha_pref preference)
 	
 	if(hunk_low.temp + hunk_high.temp + size > s_hunkTotal){
 #ifdef HUNK_DEBUG
-		Hunk_Log();
+		hunklog();
 		Hunk_SmallLog();
 
-		Com_Errorf(ERR_DROP, "Hunk_Alloc failed on %i: %s, line: %d (%s)"
+		Com_Errorf(ERR_DROP, "hunkalloc failed on %i: %s, line: %d (%s)"
 			, size, file, line, label);
 #else
-		Com_Errorf(ERR_DROP, "Hunk_Alloc failed on %i", size);
+		Com_Errorf(ERR_DROP, "hunkalloc failed on %i", size);
 #endif
 	}
 
@@ -967,24 +967,24 @@ void* Hunk_Alloc(int size, ha_pref preference)
  * When the files-in-use count reaches zero, all temp memory will be deleted
  */
 void *
-Hunk_AllocateTempMemory(int size)
+hunkalloctemp(int size)
 {
 	void *buf;
 	Hunkhdr *hdr;
 
-	/* return a Z_Malloc'd block if the hunk has not been initialized
+	/* return a zalloc'd block if the hunk has not been initialized
 	 * this allows the config and product id files ( journal files too ) to be loaded
 	 * by the file system without redunant routines in the file system utilizing different
 	 * memory systems */
 	if(s_hunkData == nil)
-		return Z_Malloc(size);
+		return zalloc(size);
 
 	Hunk_SwapBanks();
 
 	size = PAD(size, sizeof(intptr_t)) + sizeof(Hunkhdr);
 
 	if(hunk_temp->temp + hunk_permanent->permanent + size > s_hunkTotal)
-		Com_Errorf(ERR_DROP, "Hunk_AllocateTempMemory: failed on %i",
+		Com_Errorf(ERR_DROP, "hunkalloctemp: failed on %i",
 			size);
 
 	if(hunk_temp == &hunk_low){
@@ -1013,12 +1013,12 @@ Hunk_FreeTempMemory(void *buf)
 {
 	Hunkhdr *hdr;
 
-	/* free with Z_Free if the hunk has not been initialized
+	/* free with zfree if the hunk has not been initialized
 	 * this allows the config and product id files ( journal files too ) to be loaded
 	 * by the file system without redunant routines in the file system utilizing different
 	 * memory systems */
 	if(s_hunkData == nil){
-		Z_Free(buf);
+		zfree(buf);
 		return;
 	}
 	hdr = ((Hunkhdr*)buf) - 1;
@@ -1027,7 +1027,7 @@ Hunk_FreeTempMemory(void *buf)
 	hdr->magic = Hunkfreemagic;
 
 	/* this only works if the files are freed in stack order,
-	 * otherwise the memory will stay around until Hunk_ClearTempMemory */
+	 * otherwise the memory will stay around until hunkclearTempMemory */
 	if(hunk_temp == &hunk_low){
 		if(hdr == (void*)(s_hunkData + hunk_temp->temp - hdr->size))
 			hunk_temp->temp -= hdr->size;
@@ -1047,14 +1047,14 @@ Hunk_FreeTempMemory(void *buf)
  * permanent allocs use this side.
  */
 void
-Hunk_ClearTempMemory(void)
+hunkclearTempMemory(void)
 {
 	if(s_hunkData != nil)
 		hunk_temp->temp = hunk_temp->permanent;
 }
 
 void
-Hunk_Trash(void)
+hunktrash(void)
 {
 	int length, i, rnd;
 	char *buf, value;

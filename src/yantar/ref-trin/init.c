@@ -361,7 +361,7 @@ RB_ReadPixels(int x, int y, int width, int height, size_t *offset, int *padlen)
 	padwidth	= PAD(linelen, packAlign);
 
 	/* Allocate a few more bytes so that we can choose an alignment we like */
-	buffer = ri.Hunk_AllocateTempMemory(padwidth * height + *offset + packAlign - 1);
+	buffer = ri.hunkalloctemp(padwidth * height + *offset + packAlign - 1);
 
 	bufstart = PADP((intptr_t)buffer + *offset, packAlign);
 	qglReadPixels(x, y, width, height, GL_RGB, GL_UNSIGNED_BYTE, bufstart);
@@ -569,7 +569,7 @@ R_LevelShot(void)
 	allsource = RB_ReadPixels(0, 0, glConfig.vidWidth, glConfig.vidHeight, &offset, &padlen);
 	source = allsource + offset;
 
-	buffer = ri.Hunk_AllocateTempMemory(128 * 128*3 + 18);
+	buffer = ri.hunkalloctemp(128 * 128*3 + 18);
 	Q_Memset (buffer, 0, 18);
 	buffer[2]	= 2;	/* uncompressed type */
 	buffer[12]	= 128;
@@ -1159,7 +1159,7 @@ R_Init(void)
 	if(max_polyverts < MAX_POLYVERTS)
 		max_polyverts = MAX_POLYVERTS;
 
-	ptr = ri.Hunk_Alloc(
+	ptr = ri.hunkalloc(
 		sizeof(*backEndData[0]) + sizeof(srfPoly_t) * max_polys + sizeof(Polyvert) * max_polyverts,
 		h_low);
 	backEndData[0] = (backEndData_t*)ptr;
@@ -1168,7 +1168,7 @@ R_Init(void)
 		(Polyvert*)((char*)ptr + sizeof(*backEndData[0]) + sizeof(srfPoly_t) * max_polys);
 	if(r_smp->integer){
 		ptr =
-			ri.Hunk_Alloc(
+			ri.hunkalloc(
 				sizeof(*backEndData[1]) + sizeof(srfPoly_t) * max_polys +
 				sizeof(Polyvert) * max_polyverts,
 				h_low);

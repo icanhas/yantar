@@ -694,12 +694,12 @@ extern Fhandle	com_journalFile;
 extern Fhandle	com_journalDataFile;
 
 typedef enum {
-	TAG_FREE,
-	TAG_GENERAL,
-	TAG_BOTLIB,
-	TAG_RENDERER,
-	TAG_SMALL,
-	TAG_STATIC
+	MTfree,
+	MTgeneral,
+	MTbotlib,
+	MTrenderer,
+	MTsmall,
+	MTstatic
 } Memtag;
 
 #if defined(_DEBUG) && !defined(BSPC)
@@ -707,33 +707,33 @@ typedef enum {
 #endif
 
 #ifdef ZONE_DEBUG
-#define	Z_TagMalloc(size, tag)	Z_TagMallocDebug(size, tag, # size, __FILE__, \
+#define	ztagalloc(size, tag)	ztagallocdebug(size, tag, # size, __FILE__, \
 	__LINE__)
-#define	Z_Malloc(size)		Z_MallocDebug(size, # size, __FILE__, __LINE__)
-#define	S_Malloc(size)		S_MallocDebug(size, # size, __FILE__, __LINE__)
-void* Z_TagMallocDebug(int size, int tag, char *label, char *file, int line);	/* NOT 0 filled memory */
-void* Z_MallocDebug(int size, char *label, char *file, int line);		/* returns 0 filled memory */
-void* S_MallocDebug(int size, char *label, char *file, int line);		/* returns 0 filled memory */
+#define	zalloc(size)		zallocdebug(size, # size, __FILE__, __LINE__)
+#define	salloc(size)		sallocdebug(size, # size, __FILE__, __LINE__)
+void* ztagallocdebug(int size, int tag, char *label, char *file, int line);	/* NOT 0 filled memory */
+void* zallocdebug(int size, char *label, char *file, int line);		/* returns 0 filled memory */
+void* sallocdebug(int size, char *label, char *file, int line);		/* returns 0 filled memory */
 #else
-void* Z_TagMalloc(int size, int tag);	/* NOT 0 filled memory */
-void* Z_Malloc(int size);		/* returns 0 filled memory */
-void* S_Malloc(int size);		/* NOT 0 filled memory only for small allocations */
+void* ztagalloc(int size, int tag);	/* NOT 0 filled memory */
+void* zalloc(int size);		/* returns 0 filled memory */
+void* salloc(int size);		/* NOT 0 filled memory only for small allocations */
 #endif
-void 	Z_Free(void *ptr);
-void 	Z_FreeTags(int tag);
-int 	Z_AvailableMemory(void);
-void 	Z_LogHeap(void);
+void 	zfree(void *ptr);
+void 	zfreetags(int tag);
+int 	zmemavailable(void);
+void 	zlogheap(void);
 
-void 	Hunk_Clear(void);
-void 	Hunk_ClearToMark(void);
-void 	Hunk_SetMark(void);
-qbool Hunk_CheckMark(void);
-void 	Hunk_ClearTempMemory(void);
-void* Hunk_AllocateTempMemory(int size);
+void 	hunkclear(void);
+void 	hunkcleartomark(void);
+void 	hunksetmark(void);
+qbool hunkcheckmark(void);
+void 	hunkclearTempMemory(void);
+void* hunkalloctemp(int size);
 void 	Hunk_FreeTempMemory(void *buf);
-int 	Hunk_MemoryRemaining(void);
-void 	Hunk_Log(void);
-void 	Hunk_Trash(void);
+int 	hunkmemremaining(void);
+void 	hunklog(void);
+void 	hunktrash(void);
 
 void 	Com_Touchmem(void);
 

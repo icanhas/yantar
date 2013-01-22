@@ -22,7 +22,7 @@ SV_Netchan_FreeQueue(Client *client)
 
 	for(netbuf = client->netchan_start_queue; netbuf; netbuf = next){
 		next = netbuf->next;
-		Z_Free(netbuf);
+		zfree(netbuf);
 	}
 
 	client->netchan_start_queue	= NULL;
@@ -53,7 +53,7 @@ SV_Netchan_TransmitNextInQueue(Client *client)
 		Com_DPrintf(
 			"#462 Netchan_TransmitNextFragment: remaining queued message\n");
 
-	Z_Free(netbuf);
+	zfree(netbuf);
 }
 
 /*
@@ -96,7 +96,7 @@ SV_Netchan_Transmit(Client *client, Bitmsg *msg)
 		netchan_buffer_t *netbuf;
 		Com_DPrintf(
 			"#462 SV_Netchan_Transmit: unsent fragments, stacked\n");
-		netbuf = (netchan_buffer_t*)Z_Malloc(sizeof(netchan_buffer_t));
+		netbuf = (netchan_buffer_t*)zalloc(sizeof(netchan_buffer_t));
 		/* store the msg, we can't store it encoded, as the encoding depends on stuff we still have to finish sending */
 		MSG_Copy(&netbuf->msg, netbuf->msgBuffer,
 			sizeof(netbuf->msgBuffer), msg);

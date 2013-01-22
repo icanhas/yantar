@@ -35,7 +35,7 @@ R_CreateVBO(const char *name, byte * vertexes, int vertexesSize, vboUsage_t usag
 	/* make sure the render thread is stopped */
 	R_SyncRenderThread();
 
-	vbo =  ri.Hunk_Alloc(sizeof(*vbo), h_low);
+	vbo =  ri.hunkalloc(sizeof(*vbo), h_low);
 	tr.vbos[tr.numVBOs] = vbo;
 	tr.numVBOs++;
 	memset(vbo, 0, sizeof(*vbo));
@@ -87,7 +87,7 @@ R_CreateVBO2(const char *name, int nverts, srfVert_t *verts,
 	/* make sure the render thread is stopped */
 	R_SyncRenderThread();
 
-	vbo = ri.Hunk_Alloc(sizeof(*vbo), h_low);
+	vbo = ri.hunkalloc(sizeof(*vbo), h_low);
 	tr.vbos[tr.numVBOs] = vbo;
 	tr.numVBOs++;
 	memset(vbo, 0, sizeof(*vbo));
@@ -137,7 +137,7 @@ R_CreateVBO2(const char *name, int nverts, srfVert_t *verts,
 
 		/* create VBO */
 		dataSize *= nverts;
-		data = ri.Hunk_AllocateTempMemory(dataSize);
+		data = ri.hunkalloctemp(dataSize);
 		dataOfs = 0;
 
 		/* ri.Printf(PRINT_ALL, "CreateVBO: %d, %d %d %d %d %d, %d %d %d %d %d\n", dataSize, vbo->ofs_xyz, vbo->ofs_normal, vbo->ofs_st, vbo->ofs_lightmap, vbo->ofs_vertexcolor,
@@ -210,7 +210,7 @@ R_CreateVBO2(const char *name, int nverts, srfVert_t *verts,
 
 		/* create VBO */
 		dataSize *= nverts;
-		data = ri.Hunk_AllocateTempMemory(dataSize);
+		data = ri.hunkalloctemp(dataSize);
 		dataOfs = 0;
 
 		vbo->ofs_xyz = 0;
@@ -336,7 +336,7 @@ R_CreateIBO(const char *name, byte *indexes, int indexesSize, vboUsage_t usage)
 	/* make sure the render thread is stopped */
 	R_SyncRenderThread();
 
-	ibo = ri.Hunk_Alloc(sizeof(*ibo), h_low);
+	ibo = ri.hunkalloc(sizeof(*ibo), h_low);
 	tr.ibos[tr.numIBOs] = ibo;
 	tr.numIBOs++;
 	Q_strncpyz(ibo->name, name, sizeof(ibo->name));
@@ -388,13 +388,13 @@ R_CreateIBO2(const char *name, int ntris, srfTriangle_t *triangles, vboUsage_t u
 	/* make sure the render thread is stopped */
 	R_SyncRenderThread();
 
-	ibo = ri.Hunk_Alloc(sizeof(*ibo), h_low);
+	ibo = ri.hunkalloc(sizeof(*ibo), h_low);
 	tr.ibos[tr.numIBOs] = ibo;
 	tr.numIBOs++;
 	Q_strncpyz(ibo->name, name, sizeof(ibo->name));
 
 	indexesSize = ntris * 3 * sizeof(int);
-	indexes = ri.Hunk_AllocateTempMemory(indexesSize);
+	indexes = ri.hunkalloctemp(indexesSize);
 	indexesOfs = 0;
 	for(i = 0, tri = triangles; i < ntris; i++, tri++)
 		for(j = 0; j < 3; j++){

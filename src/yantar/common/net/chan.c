@@ -463,8 +463,8 @@ NET_QueuePacket(int length, const void *data, Netaddr to,
 	if(offset > 999)
 		offset = 999;
 
-	new = S_Malloc(sizeof(packetQueue_t));
-	new->data = S_Malloc(length);
+	new = salloc(sizeof(packetQueue_t));
+	new->data = salloc(length);
 	Q_Memcpy(new->data, data, length);
 	new->length = length;
 	new->to = to;
@@ -499,8 +499,8 @@ NET_FlushPacketQueue(void)
 			packetQueue->to);
 		last = packetQueue;
 		packetQueue = packetQueue->next;
-		Z_Free(last->data);
-		Z_Free(last);
+		zfree(last->data);
+		zfree(last);
 	}
 }
 

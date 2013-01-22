@@ -273,13 +273,13 @@ typedef enum {
 } ha_pref;
 
 #ifdef HUNK_DEBUG
-#define Hunk_Alloc(size, preference) Hunk_AllocDebug(size, preference, # size, \
+#define hunkalloc(size, preference) hunkallocdebug(size, preference, # size, \
 	__FILE__, \
 	__LINE__)
-void*	Hunk_AllocDebug(int size, ha_pref preference, char *label, char *file,
+void*	hunkallocdebug(int size, ha_pref preference, char *label, char *file,
 		     int line);
 #else
-void*	Hunk_Alloc(int size, ha_pref preference);
+void*	hunkalloc(int size, ha_pref preference);
 #endif
 
 #define Q_Memset memset

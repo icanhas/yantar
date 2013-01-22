@@ -574,7 +574,7 @@ SV_FreeClient(Client *client)
 	    index++){
 		index %= ARRAY_LEN(client->voipPacket);
 
-		Z_Free(client->voipPacket[index]);
+		zfree(client->voipPacket[index]);
 	}
 
 	client->queuedVoipPackets = 0;
@@ -787,7 +787,7 @@ SV_CloseDownload(Client *cl)
 	/* Free the temporary buffer space */
 	for(i = 0; i < MAX_DOWNLOAD_WINDOW; i++)
 		if(cl->downloadBlocks[i]){
-			Z_Free(cl->downloadBlocks[i]);
+			zfree(cl->downloadBlocks[i]);
 			cl->downloadBlocks[i] = NULL;
 		}
 
@@ -1022,7 +1022,7 @@ SV_WriteDownloadToClient(Client *cl, Bitmsg *msg)
 		curindex = (cl->downloadCurrentBlock % MAX_DOWNLOAD_WINDOW);
 
 		if(!cl->downloadBlocks[curindex])
-			cl->downloadBlocks[curindex] = Z_Malloc(
+			cl->downloadBlocks[curindex] = zalloc(
 				MAX_DOWNLOAD_BLKSIZE);
 
 		cl->downloadBlockSize[curindex] =
@@ -1815,7 +1815,7 @@ SV_UserVoip(Client *cl, Bitmsg *msg)
 			continue;	/* no room for another packet right now. */
 		}
 
-		packet = Z_Malloc(sizeof(*packet));
+		packet = zalloc(sizeof(*packet));
 		packet->sender	= sender;
 		packet->frames	= frames;
 		packet->len = packetsize;

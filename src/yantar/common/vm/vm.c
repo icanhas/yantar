@@ -211,7 +211,7 @@ VM_LoadSymbols(Vm *vm)
 			break;
 		}
 		chars	= strlen(token);
-		sym	= Hunk_Alloc(sizeof(*sym) + chars, h_high);
+		sym	= hunkalloc(sizeof(*sym) + chars, h_high);
 		*prev	= sym;
 		prev	= &sym->next;
 		sym->next = NULL;
@@ -376,7 +376,7 @@ VM_LoadQVM(Vm *vm, qbool alloc, qbool unpure)
 
 	if(alloc){
 		/* allocate zero filled space for initialized and uninitialized data */
-		vm->dataBase = Hunk_Alloc(dataLength, h_high);
+		vm->dataBase = hunkalloc(dataLength, h_high);
 		vm->dataMask = dataLength - 1;
 	}else{
 		/* clear the data, but make sure we're not clearing more than allocated */
@@ -411,7 +411,7 @@ VM_LoadQVM(Vm *vm, qbool alloc, qbool unpure)
 			vm->numJumpTableTargets);
 
 		if(alloc)
-			vm->jumpTableTargets = Hunk_Alloc(header.h->jtrgLength,
+			vm->jumpTableTargets = hunkalloc(header.h->jtrgLength,
 				h_high);
 		else{
 			if(vm->numJumpTableTargets != prevNumJumpTableTargets){
@@ -500,7 +500,7 @@ VM_Create(const char *module, intptr_t (*systemCalls)(intptr_t *),
 	if(!module || !module[0] || !systemCalls)
 		Com_Errorf(ERR_FATAL, "VM_Create: bad parms");
 
-	remaining = Hunk_MemoryRemaining();
+	remaining = hunkmemremaining();
 
 	/* see if we already have the VM */
 	for(i = 0; i < MAX_VM; i++)
@@ -557,7 +557,7 @@ VM_Create(const char *module, intptr_t (*systemCalls)(intptr_t *),
 	/* allocate space for the jump targets, which will be filled in by the compile/prep functions */
 	vm->instructionCount = header->instructionCount;
 	vm->instructionPointers =
-		Hunk_Alloc(vm->instructionCount *
+		hunkalloc(vm->instructionCount *
 			sizeof(*vm->instructionPointers),
 			h_high);
 
@@ -592,7 +592,7 @@ VM_Create(const char *module, intptr_t (*systemCalls)(intptr_t *),
 	vm->stackBottom = vm->programStack - PROGRAM_STACK_SIZE;
 
 	Com_Printf("%s loaded in %d bytes on the hunk\n", module,
-		remaining - Hunk_MemoryRemaining());
+		remaining - hunkmemremaining());
 	return vm;
 }
 
@@ -620,11 +620,11 @@ VM_Free(Vm *vm)
 	}
 #if 0	/* now automatically freed by hunk */
 	if(vm->codeBase)
-		Z_Free(vm->codeBase);
+		zfree(vm->codeBase);
 	if(vm->dataBase)
-		Z_Free(vm->dataBase);
+		zfree(vm->dataBase);
 	if(vm->instructionPointers)
-		Z_Free(vm->instructionPointers);
+		zfree(vm->instructionPointers);
 
 #endif
 	Q_Memset(vm, 0, sizeof(*vm));
@@ -794,7 +794,7 @@ VM_VmProfile_f(void)
 	vm = lastVM;
 	if(!vm->numSymbols)
 		return;
-	sorted = Z_Malloc(vm->numSymbols * sizeof(*sorted));
+	sorted = zalloc(vm->numSymbols * sizeof(*sorted));
 	sorted[0] = vm->symbols;
 	total = sorted[0]->profileCount;
 	for(i = 1; i < vm->numSymbols; i++){
@@ -812,7 +812,7 @@ VM_VmProfile_f(void)
 		sym->profileCount = 0;
 	}
 	Com_Printf("    %9.0f total\n", total);
-	Z_Free(sorted);
+	zfree(sorted);
 }
 
 void

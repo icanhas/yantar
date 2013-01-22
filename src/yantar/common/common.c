@@ -674,7 +674,7 @@ Com_Queueevent(int time, Syseventtype type, int value, int value2,
 		Com_Printf("Com_Queueevent: overflow\n");
 		/* we are discarding an event, but don't leak memory */
 		if(ev->evPtr)
-			Z_Free(ev->evPtr);
+			zfree(ev->evPtr);
 		eventTail++;
 	}
 
@@ -710,7 +710,7 @@ Com_Getsysevent(void)
 		int	len;
 
 		len = strlen(s) + 1;
-		b = Z_Malloc(len);
+		b = zalloc(len);
 		strcpy(b, s);
 		Com_Queueevent(0, SE_CONSOLE, 0, 0, len, b);
 	}
@@ -740,7 +740,7 @@ Com_Getrealevent(void)
 		if(r != sizeof(ev))
 			Com_Errorf(ERR_FATAL, "Error reading from journal file");
 		if(ev.evPtrLength){
-			ev.evPtr = Z_Malloc(ev.evPtrLength);
+			ev.evPtr = zalloc(ev.evPtrLength);
 			r = FS_Read(ev.evPtr, ev.evPtrLength, com_journalFile);
 			if(r != ev.evPtrLength)
 				Com_Errorf(ERR_FATAL,
@@ -798,7 +798,7 @@ Com_Pushevent(Sysevent *event)
 		}
 
 		if(ev->evPtr)
-			Z_Free(ev->evPtr);
+			zfree(ev->evPtr);
 		com_pushedEventsTail++;
 	}else
 		printedWarning = qfalse;
@@ -883,7 +883,7 @@ Com_Eventloop(void)
 		}
 		/* free any block data */
 		if(ev.evPtr)
-			Z_Free(ev.evPtr);
+			zfree(ev.evPtr);
 	}
 
 	return 0;	/* never reached */

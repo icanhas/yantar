@@ -38,7 +38,7 @@ static clock_t	time_total_vm	= 0;
 
 /*
  * vm_powerpc uses large quantities of memory during compilation,
- * Z_Malloc memory may not be enough for some big qvm files
+ * zalloc memory may not be enough for some big qvm files
  */
 
 /* #define VM_SYSTEM_MALLOC */
@@ -54,8 +54,8 @@ PPC_Malloc(size_t size)
 }
 # define PPC_Free	free
 #else
-# define PPC_Malloc	Z_Malloc
-# define PPC_Free	Z_Free
+# define PPC_Malloc	zalloc
+# define PPC_Free	zfree
 #endif
 
 /*
@@ -2016,10 +2016,10 @@ VM_Compile(Vm *vm, Vmheader *header)
 	i_first->next = NULL;
 
 	/* realloc instructionPointers with correct size
-	 * use Z_Malloc so vm.c will be able to free the memory */
+	 * use zalloc so vm.c will be able to free the memory */
 	if(sizeof(void *) != sizeof(int)){
-		Z_Free(vm->instructionPointers);
-		vm->instructionPointers = Z_Malloc(
+		zfree(vm->instructionPointers);
+		vm->instructionPointers = zalloc(
 			header->instructionCount * sizeof(void *));
 	}
 	di_pointers = (void*)vm->instructionPointers;

@@ -43,7 +43,7 @@ static void VM_Destroy_Compiled(Vm* self);
  *
  */
 
-#define VMFREE_BUFFERS() do {Z_Free(buf); Z_Free(jused); } while(0)
+#define VMFREE_BUFFERS() do {zfree(buf); zfree(jused); } while(0)
 static byte	*buf = NULL;
 static byte     *jused = NULL;
 static int	jusedSize = 0;
@@ -1044,9 +1044,9 @@ VM_Compile(Vm *vm, Vmheader *header)
 
 	/* allocate a very large temp buffer, we will shrink it later */
 	maxLength	= header->codeLength * 8 + 64;
-	buf		= Z_Malloc(maxLength);
-	jused		= Z_Malloc(jusedSize);
-	code		= Z_Malloc(header->codeLength+32);
+	buf		= zalloc(maxLength);
+	jused		= zalloc(jusedSize);
+	code		= zalloc(header->codeLength+32);
 
 	Q_Memset(jused, 0, jusedSize);
 	Q_Memset(buf, 0, maxLength);
@@ -1665,9 +1665,9 @@ VM_Compile(Vm *vm, Vmheader *header)
 	}
 #endif
 
-	Z_Free(code);
-	Z_Free(buf);
-	Z_Free(jused);
+	zfree(code);
+	zfree(buf);
+	zfree(jused);
 	Com_Printf("VM file %s compiled to %i bytes of code\n", vm->name,
 		compiledOfs);
 

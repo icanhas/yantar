@@ -426,7 +426,7 @@ R_LoadIQM(model_t *mod, void *buffer, int filesize, const char *mod_name)
 	size += joint_names;						/* joint names */
 
 	mod->type = MOD_IQM;
-	iqmData = (iqmData_t*)ri.Hunk_Alloc(size, h_low);
+	iqmData = (iqmData_t*)ri.hunkalloc(size, h_low);
 	mod->modelData = iqmData;
 
 	/* fill header */

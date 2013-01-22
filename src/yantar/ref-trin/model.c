@@ -173,7 +173,7 @@ R_AllocModel(void)
 		return NULL;
 	}
 
-	mod = ri.Hunk_Alloc(sizeof(*tr.models[tr.numModels]), h_low);
+	mod = ri.hunkalloc(sizeof(*tr.models[tr.numModels]), h_low);
 	mod->index = tr.numModels;
 	tr.models[tr.numModels] = mod;
 	tr.numModels++;
@@ -328,7 +328,7 @@ R_LoadMD3(model_t *mod, int lod, void *buffer, const char *mod_name)
 	mod->type = MOD_MESH;
 	size = LittleLong(pinmodel->ofsEnd);
 	mod->dataSize	+= size;
-	mod->md3[lod]	= ri.Hunk_Alloc(size, h_low);
+	mod->md3[lod]	= ri.hunkalloc(size, h_low);
 
 	Q_Memcpy (mod->md3[lod], buffer, LittleLong(pinmodel->ofsEnd));
 
@@ -486,7 +486,7 @@ R_LoadMD4(model_t *mod, void *buffer, const char *mod_name)
 	mod->type = MOD_MD4;
 	size = LittleLong(pinmodel->ofsEnd);
 	mod->dataSize	+= size;
-	mod->modelData	= md4 = ri.Hunk_Alloc(size, h_low);
+	mod->modelData	= md4 = ri.hunkalloc(size, h_low);
 
 	Q_Memcpy(md4, buffer, size);
 

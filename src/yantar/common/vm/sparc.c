@@ -635,7 +635,7 @@ sparc_push_data(struct func_info * const fp, unsigned int val)
 
 	dp = last;
 	if(!dp || dp->count >= HUNK_SIZE){
-		struct data_hunk *new = Z_Malloc(sizeof(*new));
+		struct data_hunk *new = zalloc(sizeof(*new));
 		if(!dp)
 			fp->data_first = new;
 		else
@@ -677,7 +677,7 @@ static struct dst_insn *
 dst_new(struct func_info * const fp, unsigned int length,
 	struct jump_insn *jp, int insns_size)
 {
-	struct dst_insn *dp = Z_Malloc(sizeof(struct dst_insn) + insns_size);
+	struct dst_insn *dp = zalloc(sizeof(struct dst_insn) + insns_size);
 
 	dp->length = length;
 	dp->jump = jp;
@@ -715,7 +715,7 @@ static void
 jump_insn_append(Vm *vm, struct func_info * const fp, enum sparc_iname iname,
 		 int dest)
 {
-	struct jump_insn *jp = Z_Malloc(sizeof(*jp));
+	struct jump_insn *jp = zalloc(sizeof(*jp));
 	struct dst_insn *dp;
 
 	if(dest < 0 || dest >= vm->instructionCount)
@@ -1384,7 +1384,7 @@ free_source_insns(struct func_info * const fp)
 
 	while(sp){
 		struct src_insn *next = sp->next;
-		Z_Free(sp);
+		zfree(sp);
 		sp = next;
 	}
 }
@@ -1557,7 +1557,7 @@ sparc_compute_code(Vm *vm, struct func_info * const fp)
 
 		off += dhp->count;
 
-		Z_Free(dhp);
+		zfree(dhp);
 
 		dhp = next;
 	}
@@ -1568,8 +1568,8 @@ sparc_compute_code(Vm *vm, struct func_info * const fp)
 	while(dp){
 		struct dst_insn *next = dp->next;
 		if(dp->jump)
-			Z_Free(dp->jump);
-		Z_Free(dp);
+			zfree(dp->jump);
+		zfree(dp);
 		dp = next;
 	}
 	fp->dst_first = fp->dst_last = NULL;
@@ -1584,12 +1584,12 @@ VM_Compile(Vm *vm, Vmheader *header)
 
 	memset(&fi, 0, sizeof(fi));
 
-	fi.first = Z_Malloc(sizeof(struct src_insn));
+	fi.first = zalloc(sizeof(struct src_insn));
 	fi.first->next = NULL;
 
 #ifdef __arch64__
-	Z_Free(vm->instructionPointers);
-	vm->instructionPointers = Z_Malloc(header->instructionCount *
+	zfree(vm->instructionPointers);
+	vm->instructionPointers = zalloc(header->instructionCount *
 		sizeof(void *));
 #endif
 
@@ -1622,7 +1622,7 @@ VM_Compile(Vm *vm, Vmheader *header)
 			fi.has_call = fi.need_float_tmp = 0;
 		}
 
-		sp = Z_Malloc(sizeof(*sp));
+		sp = zalloc(sizeof(*sp));
 		sp->op = op;
 		sp->i_count	= i_count;
 		sp->arg.i	= 0;
@@ -1645,7 +1645,7 @@ VM_Compile(Vm *vm, Vmheader *header)
 	}
 	compile_function(vm, &fi);
 
-	Z_Free(fi.first);
+	zfree(fi.first);
 
 	memset(fi.dst_by_i_count, 0, header->instructionCount * sizeof(void *));
 	sparc_compute_code(vm, &fi);

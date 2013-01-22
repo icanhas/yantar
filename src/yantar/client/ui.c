@@ -562,7 +562,7 @@ CL_GetClipboardData(char *buf, int buflen)
 
 	Q_strncpyz(buf, cbd, buflen);
 
-	Z_Free(cbd);
+	zfree(cbd);
 }
 
 /*
@@ -892,7 +892,7 @@ CL_UISystemCalls(intptr_t *args)
 			args[5]);
 
 	case UI_MEMORY_REMAINING:
-		return Hunk_MemoryRemaining();
+		return hunkmemremaining();
 
 	case UI_R_REGISTERFONT:
 		re.RegisterFont(VMA(1), args[2], VMA(3));
