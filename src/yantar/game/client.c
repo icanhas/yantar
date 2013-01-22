@@ -436,32 +436,38 @@ CopyToBodyQue(Gentity *ent)
 		body->takedamage = qtrue;
 
 
-	copyv3 (body->s.traj.base, body->r.currentOrigin);
+	copyv3(body->s.traj.base, body->r.currentOrigin);
 	trap_LinkEntity (body);
 }
 
 void
 SetClientViewAngle(Gentity *ent, Vec3 angle)
 {
-	int i;
+	Quat persq, angq, q;
+	Vec3 a;
+	
+	/*
+	 * angles between client's viewangles at the time and the desired 
+	 * angles are sent in delta_angles
+	 *
+	 * initial * diff = final
+	 * diff = final * initial^-1
+	 */
+	shortstoeuler(ent->client->pers.cmd.angles, a);
+	eulertoq(a, persq);
+	eulertoq(angle, angq);
+	invq(persq, persq);
+	mulq(angq, persq, q);
+	qtoeuler(q,  a);
+	eulertoshorts(a, ent->client->ps.delta_angles);
 
-	/* set the delta angle */
-	for(i=0; i<3; i++){
-		int cmdAngle;
-
-		cmdAngle = ANGLE2SHORT(angle[i]);
-		ent->client->ps.delta_angles[i] = cmdAngle -
-						  ent->client->pers.cmd.angles[i
-						  ];
-	}
 	copyv3(angle, ent->s.angles);
-	copyv3 (ent->s.angles, ent->client->ps.viewangles);
+	copyv3(ent->s.angles, ent->client->ps.viewangles);
 }
 
 void
 ClientRespawn(Gentity *ent)
 {
-
 	CopyToBodyQue (ent);
 	ClientSpawn(ent);
 }

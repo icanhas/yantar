@@ -427,7 +427,7 @@ finishmove(Usrcmd *cmd)
 }
 
 static void
-quatify(Usrcmd *cmd, Vec3 oldangles)
+quatify(Vec3 oldangles)
 {
 	Quat orient, delta, neworient;
 	
@@ -451,18 +451,9 @@ createcmd(void)
 	mousemove(&cmd);
 	joystickmove(&cmd);
 	
-	quatify(&cmd, oldangles);
+	quatify(oldangles);
 
-	if(cl.snap.ps.pm_flags == PMF_RESPAWNED){
-		/*
-		 * HACK: Not sure how to determine inside the client
-		 * whether we have respawned.  Using a pmove flag for
-		 * now.  Viewangles will be locked to 0,0,0 whilst the
-		 * button that triggered the respawn is still held down,
-		 * matching the behaviour of the PMF_RESPAWNED flag.
-		 */
-		setv3(cl.viewangles, 0, 0, 0);
-	}
+	//Com_Printf(" %f %f %f\n", cl.viewangles[0], cl.viewangles[1], cl.viewangles[2]);
 
 	/* store out the final values */
 	finishmove(&cmd);

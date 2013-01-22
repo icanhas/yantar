@@ -1094,11 +1094,9 @@ PM_UpdateViewAngles(Playerstate *ps, const Usrcmd *cmd)
 		return;	/* no view changes at all */
 	}
 
-	for(i = 0; i < 3; i++)
-		d[i] = SHORT2ANGLE(cmd->angles[i]);
+	shortstoeuler(cmd->angles, d);
 	eulertoq(d, orient);
-	for(i = 0; i < 3; i++)
-		d[i] = SHORT2ANGLE(ps->delta_angles[i]);
+	shortstoeuler(ps->delta_angles, d);
 	eulertoq(d, delta);
 	mulq(delta, orient, neworient);
 	qtoeuler(neworient, ps->viewangles);
