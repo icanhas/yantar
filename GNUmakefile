@@ -957,6 +957,7 @@ YOBJ = \
   $(O)/client/huffman.o \
   $(O)/client/md4.o \
   $(O)/client/md5.o \
+  $(O)/client/mem.o \
   $(O)/client/bitmsg.o \
   $(O)/client/net/chan.o \
   $(O)/client/net/ip.o \
@@ -1176,6 +1177,7 @@ YDOBJ = \
   $(O)/ded/fs.o \
   $(O)/ded/huffman.o \
   $(O)/ded/md4.o \
+  $(O)/ded/mem.o \
   $(O)/ded/net/chan.o \
   $(O)/ded/net/ip.o \
   \
