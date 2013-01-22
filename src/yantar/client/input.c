@@ -368,7 +368,7 @@ mousemove(Usrcmd *cmd)
 	if(strafe.active)
 		cmd->rightmove = clampchar(cmd->rightmove + m_side->value * mx);
 	else
-		cl.viewangles[YAW] += m_yaw->value * mx;
+		cl.viewangles[YAW] -= m_yaw->value * mx;
 
 	if((mlooking || cl_freelook->integer) && !strafe.active)
 		cl.viewangles[PITCH] += m_pitch->value * my;
