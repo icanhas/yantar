@@ -4,52 +4,52 @@
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License.
  */
-/* cl_parse.c  -- parse a message received from the server */
+/* 
+ * Parse messages received from the server 
+ */
 
+#include "shared.h"
 #include "client.h"
 
-char *svc_strings[256] = {
-	"svc_bad",
+int cl_connectedToPureServer;
+int cl_connectedToCheatServer;
 
-	"svc_nop",
-	"svc_gamestate",
-	"svc_configstring",
-	"svc_baseline",
-	"svc_serverCommand",
-	"svc_download",
-	"svc_snapshot",
-	"svc_EOF",
-	"svc_voip",
+static char *svcstr[] = {
+	[svc_bad]=			"svc_bad",
+	[svc_nop]=			"svc_nop",
+	[svc_configstring]=		"svc_configstring",
+	[svc_baseline]=		"svc_baseline",
+	[svc_serverCommand]=	"svc_serverCommand",
+	[svc_download]=		"svc_download",
+	[svc_snapshot]=		"svc_snapshot",
+	[svc_EOF]=			"svc_EOF",
+	[svc_voip]=			"svc_voip"
 };
 
-void
+static void
 SHOWNET(Bitmsg *msg, char *s)
 {
 	if(cl_shownet->integer >= 2)
 		Com_Printf ("%3i:%s\n", msg->readcount-1, s);
 }
 
-
 /*
- *
- * MESSAGE PARSING
- *
+ * Message parsing
  */
 
 /*
- * CL_DeltaEntity
- *
  * Parses deltas from the given base and adds the resulting entity
  * to the current frame
  */
-void
-CL_DeltaEntity(Bitmsg *msg, Clsnapshot *frame, int newnum, Entstate *old,
-	       qbool unchanged)
+static void
+deltaentity(Bitmsg *msg, Clsnapshot *frame, int newnum, Entstate *old, qbool unchanged)
 {
 	Entstate *state;
 
-	/* save the parsed entity state into the big circular buffer so
-	 * it can be used as the source for a later delta */
+	/* 
+	 * save the parsed entity state into the big circular buffer so
+	 * it can be used as the source for a later delta 
+	 */
 	state = &cl.parseEntities[cl.parseEntitiesNum & (MAX_PARSE_ENTITIES-1)];
 
 	if(unchanged)
@@ -63,17 +63,11 @@ CL_DeltaEntity(Bitmsg *msg, Clsnapshot *frame, int newnum, Entstate *old,
 	frame->numEntities++;
 }
 
-/*
- * CL_ParsePacketEntities
- *
- */
-void
-CL_ParsePacketEntities(Bitmsg *msg, Clsnapshot *oldframe,
-		       Clsnapshot *newframe)
+static void
+parsepacketentities(Bitmsg *msg, Clsnapshot *oldframe, Clsnapshot *newframe)
 {
-	int	newnum;
+	int i, newnum, oldindex, oldnum;
 	Entstate *oldstate;
-	int	oldindex, oldnum;
 
 	newframe->parseEntitiesNum = cl.parseEntitiesNum;
 	newframe->numEntities = 0;
@@ -87,14 +81,14 @@ CL_ParsePacketEntities(Bitmsg *msg, Clsnapshot *oldframe,
 		if(oldindex >= oldframe->numEntities)
 			oldnum = 99999;
 		else{
-			oldstate = &cl.parseEntities[
-				(oldframe->parseEntitiesNum +
-				 oldindex) & (MAX_PARSE_ENTITIES-1)];
+			i = (oldframe->parseEntitiesNum + oldindex) 
+				& (MAX_PARSE_ENTITIES-1);
+			oldstate = &cl.parseEntities[i];
 			oldnum = oldstate->number;
 		}
 	}
 
-	while(1){
+	for(;;){
 		/* read the entity index number */
 		newnum = MSG_ReadBits(msg, GENTITYNUM_BITS);
 
@@ -103,42 +97,42 @@ CL_ParsePacketEntities(Bitmsg *msg, Clsnapshot *oldframe,
 
 		if(msg->readcount > msg->cursize)
 			Com_Errorf (ERR_DROP,
-				"CL_ParsePacketEntities: end of message");
+				"parsepacketentities: end of message");
 
 		while(oldnum < newnum){
 			/* one or more entities from the old packet are unchanged */
 			if(cl_shownet->integer == 3)
-				Com_Printf ("%3i:  unchanged: %i\n",
+				Com_Printf("%3i:  unchanged: %i\n",
 					msg->readcount,
 					oldnum);
-			CL_DeltaEntity(msg, newframe, oldnum, oldstate, qtrue);
+			deltaentity(msg, newframe, oldnum, oldstate, qtrue);
 
 			oldindex++;
 
 			if(oldindex >= oldframe->numEntities)
 				oldnum = 99999;
 			else{
-				oldstate = &cl.parseEntities[
-					(oldframe->parseEntitiesNum +
-					 oldindex) & (MAX_PARSE_ENTITIES-1)];
+				i = (oldframe->parseEntitiesNum + oldindex) 
+					& (MAX_PARSE_ENTITIES-1);
+				oldstate = &cl.parseEntities[i];
 				oldnum = oldstate->number;
 			}
 		}
 		if(oldnum == newnum){
 			/* delta from previous state */
 			if(cl_shownet->integer == 3)
-				Com_Printf ("%3i:  delta: %i\n", msg->readcount,
+				Com_Printf("%3i:  delta: %i\n", msg->readcount,
 					newnum);
-			CL_DeltaEntity(msg, newframe, newnum, oldstate, qfalse);
+			deltaentity(msg, newframe, newnum, oldstate, qfalse);
 
 			oldindex++;
 
 			if(oldindex >= oldframe->numEntities)
 				oldnum = 99999;
 			else{
-				oldstate = &cl.parseEntities[
-					(oldframe->parseEntitiesNum +
-					 oldindex) & (MAX_PARSE_ENTITIES-1)];
+				i = (oldframe->parseEntitiesNum + oldindex) 
+					& (MAX_PARSE_ENTITIES-1);
+				oldstate = &cl.parseEntities[i];
 				oldnum = oldstate->number;
 			}
 			continue;
@@ -147,10 +141,10 @@ CL_ParsePacketEntities(Bitmsg *msg, Clsnapshot *oldframe,
 		if(oldnum > newnum){
 			/* delta from baseline */
 			if(cl_shownet->integer == 3)
-				Com_Printf ("%3i:  baseline: %i\n",
+				Com_Printf("%3i:  baseline: %i\n",
 					msg->readcount,
 					newnum);
-			CL_DeltaEntity(msg, newframe, newnum,
+			deltaentity(msg, newframe, newnum,
 				&cl.entityBaselines[newnum],
 				qfalse);
 			continue;
@@ -164,55 +158,56 @@ CL_ParsePacketEntities(Bitmsg *msg, Clsnapshot *oldframe,
 		if(cl_shownet->integer == 3)
 			Com_Printf ("%3i:  unchanged: %i\n", msg->readcount,
 				oldnum);
-		CL_DeltaEntity(msg, newframe, oldnum, oldstate, qtrue);
+		deltaentity(msg, newframe, oldnum, oldstate, qtrue);
 
 		oldindex++;
 
 		if(oldindex >= oldframe->numEntities)
 			oldnum = 99999;
 		else{
-			oldstate = &cl.parseEntities[
-				(oldframe->parseEntitiesNum +
-				 oldindex) & (MAX_PARSE_ENTITIES-1)];
+			i = (oldframe->parseEntitiesNum + oldindex) 
+				& (MAX_PARSE_ENTITIES-1);
+			oldstate = &cl.parseEntities[i];
 			oldnum = oldstate->number;
 		}
 	}
 }
 
-
 /*
- * CL_ParseSnapshot
- *
  * If the snapshot is parsed properly, it will be copied to
  * cl.snap and saved in cl.snapshots[].  If the snapshot is invalid
  * for any reason, no changes to the state will be made at all.
  */
-void
-CL_ParseSnapshot(Bitmsg *msg)
+static void
+parsesnap(Bitmsg *msg)
 {
-	int len;
-	Clsnapshot	*old;
-	Clsnapshot	newSnap;
-	int	deltaNum;
-	int	oldMessageNum;
-	int	i, packetNum;
+	Clsnapshot *old, newSnap;
+	int len, deltaNum, oldMessageNum, i, packetNum;
 
-	/* get the reliable sequence acknowledge number
+	/* 
+	 * get the reliable sequence acknowledge number
 	 * NOTE: now sent with all server to client messages
-	 * clc.reliableAcknowledge = MSG_ReadLong( msg ); */
+	 * clc.reliableAcknowledge = MSG_ReadLong(msg); 
+	 */
 
-	/* read in the new snapshot to a temporary buffer
-	 * we will only copy to cl.snap if it is valid */
+	/* 
+	 * read in the new snapshot to a temporary buffer
+	 * we will only copy to cl.snap if it is valid 
+	 */
 	Q_Memset (&newSnap, 0, sizeof(newSnap));
 
-	/* we will have read any new server commands in this
-	 * message before we got to svc_snapshot */
+	/* 
+	 * we will have read any new server commands in this
+	 * message before we got to svc_snapshot 
+	 */
 	newSnap.serverCommandNum = clc.serverCommandSequence;
 
 	newSnap.serverTime = MSG_ReadLong(msg);
 
-	/* if we were just unpaused, we can only *now* really let the
-	 * change come into effect or the client hangs. */
+	/* 
+	 * if we were just unpaused, we can only *now* really let the
+	 * change come into effect or the client hangs. 
+	 */
 	cl_paused->modified = 0;
 
 	newSnap.messageNum = clc.serverMessageSequence;
@@ -236,11 +231,12 @@ CL_ParseSnapshot(Bitmsg *msg)
 		old = &cl.snapshots[newSnap.deltaNum & PACKET_MASK];
 		if(!old->valid)
 			/* should never happen */
-			Com_Printf (
-				"Delta from invalid frame (not supposed to happen!).\n");
+			Com_Printf("Delta from invalid frame (not supposed to happen!).\n");
 		else if(old->messageNum != newSnap.deltaNum)
-			/* The frame that the server did the delta from
-			 * is too old, so we can't reconstruct it properly. */
+			/* 
+			 * The frame that the server did the delta from
+			 * is too old, so we can't reconstruct it properly. 
+			 */
 			Com_Printf ("Delta frame too old.\n");
 		else if(cl.parseEntitiesNum - old->parseEntitiesNum >
 			MAX_PARSE_ENTITIES-128)
@@ -254,7 +250,7 @@ CL_ParseSnapshot(Bitmsg *msg)
 
 	if(len > sizeof(newSnap.areamask)){
 		Com_Errorf (ERR_DROP,
-			"CL_ParseSnapshot: Invalid size %d for areamask",
+			"parsesnap: Invalid size %d for areamask",
 			len);
 		return;
 	}
@@ -270,10 +266,12 @@ CL_ParseSnapshot(Bitmsg *msg)
 
 	/* read packet entities */
 	SHOWNET(msg, "packet entities");
-	CL_ParsePacketEntities(msg, old, &newSnap);
+	parsepacketentities(msg, old, &newSnap);
 
-	/* if not valid, dump the entire thing now that it has
-	 * been properly read */
+	/* 
+	 * if not valid, dump the entire thing now that it has
+	 * been properly read 
+	 */
 	if(!newSnap.valid)
 		return;
 
@@ -295,9 +293,9 @@ CL_ParseSnapshot(Bitmsg *msg)
 	for(i = 0; i < PACKET_BACKUP; i++){
 		packetNum = (clc.netchan.outgoingSequence - 1 - i) & PACKET_MASK;
 		if(cl.snap.ps.commandTime >=
-		   cl.outPackets[ packetNum ].p_serverTime){
+		   cl.outPackets[packetNum].p_serverTime){
 			cl.snap.ping = cls.simtime -
-				       cl.outPackets[ packetNum ].p_simtime;
+				       cl.outPackets[packetNum].p_simtime;
 			break;
 		}
 	}
@@ -313,150 +311,25 @@ CL_ParseSnapshot(Bitmsg *msg)
 	cl.newSnapshots = qtrue;
 }
 
-
-/* ===================================================================== */
-
-int	cl_connectedToPureServer;
-int	cl_connectedToCheatServer;
-
-/*
- * CL_SystemInfoChanged
- *
- * The systeminfo configstring has been changed, so parse
- * new information out of it.  This will happen at every
- * gamestate, and possibly during gameplay.
- */
-void
-CL_SystemInfoChanged(void)
-{
-	char	*systemInfo;
-	const char *s, *t;
-	char	key[BIG_INFO_KEY];
-	char	value[BIG_INFO_VALUE];
-	qbool gameSet;
-
-	systemInfo = cl.gameState.stringData +
-		     cl.gameState.stringOffsets[ CS_SYSTEMINFO ];
-	/* NOTE TTimo:
-	 * when the serverId changes, any further messages we send to the server will use this new serverId
-	 * https://zerowing.idsoftware.com/bugzilla/show_bug.cgi?id=475
-	 * in some cases, outdated cp commands might get sent with this news serverId */
-	cl.serverId = atoi(Info_ValueForKey(systemInfo, "sv_serverid"));
-
-	/* don't set any vars when playing a demo */
-	if(clc.demoplaying)
-		return;
-
-#ifdef USE_VOIP
-	{
-		s = Info_ValueForKey(systemInfo, "sv_voip");
-		if(Cvar_VariableValue("g_gametype") == GT_SINGLE_PLAYER ||
-		   Cvar_VariableValue("ui_singlePlayerActive"))
-			clc.voipEnabled = qfalse;
-		else
-			clc.voipEnabled = atoi(s);
-	}
-#endif
-
-	s = Info_ValueForKey(systemInfo, "sv_cheats");
-	cl_connectedToCheatServer = atoi(s);
-	if(!cl_connectedToCheatServer)
-		Cvar_SetCheatState();
-
-	/* check pure server string */
-	s = Info_ValueForKey(systemInfo, "sv_paks");
-	t = Info_ValueForKey(systemInfo, "sv_pakNames");
-	FS_PureServerSetLoadedPaks(s, t);
-
-	s = Info_ValueForKey(systemInfo, "sv_referencedPaks");
-	t = Info_ValueForKey(systemInfo, "sv_referencedPakNames");
-	FS_PureServerSetReferencedPaks(s, t);
-
-	gameSet = qfalse;
-	/* scan through all the variables in the systeminfo and locally set cvars to match */
-	s = systemInfo;
-	while(s){
-		int cvar_flags;
-
-		Info_NextPair(&s, key, value);
-		if(!key[0])
-			break;
-
-		/* ehw! */
-		if(!Q_stricmp(key, "fs_game")){
-			if(FS_CheckDirTraversal(value)){
-				Com_Printf(
-					S_COLOR_YELLOW
-					"WARNING: Server sent invalid fs_game value %s\n",
-					value);
-				continue;
-			}
-
-			gameSet = qtrue;
-		}
-
-		if((cvar_flags = Cvar_Flags(key)) == CVAR_NONEXISTENT)
-			Cvar_Get(key, value, CVAR_SERVER_CREATED | CVAR_ROM);
-		else{
-			/* If this cvar may not be modified by a server discard the value. */
-			if(!(cvar_flags &
-			     (CVAR_SYSTEMINFO | CVAR_SERVER_CREATED |
-			      CVAR_USER_CREATED))){
-#ifndef STANDALONE
-				if(Q_stricmp(key,
-					   "g_synchronousClients") &&
-				   Q_stricmp(key, "pmove_fixed") &&
-				   Q_stricmp(key, "pmove_msec"))
-#endif
-				{
-					Com_Printf(
-						S_COLOR_YELLOW
-						"WARNING: server is not allowed to set %s=%s\n",
-						key, value);
-					continue;
-				}
-			}
-
-			Cvar_SetSafe(key, value);
-		}
-	}
-	/* if game folder should not be set and it is set at the client side */
-	if(!gameSet && *Cvar_VariableString("fs_game"))
-		Cvar_Set("fs_game", "");
-	cl_connectedToPureServer = Cvar_VariableValue("sv_pure");
-}
-
-/*
- * CL_ParseServerInfo
- */
 static void
-CL_ParseServerInfo(void)
+parseservinfo(void)
 {
 	const char *serverInfo;
 
 	serverInfo = cl.gameState.stringData
-		     + cl.gameState.stringOffsets[ CS_SERVERINFO ];
-
-	clc.sv_allowDownload = atoi(Info_ValueForKey(serverInfo,
-			"sv_allowDownload"));
+		     + cl.gameState.stringOffsets[CS_SERVERINFO];
+	clc.sv_allowDownload = atoi(Info_ValueForKey(serverInfo, "sv_allowDownload"));
 	Q_strncpyz(clc.sv_dlURL,
 		Info_ValueForKey(serverInfo, "sv_dlURL"),
 		sizeof(clc.sv_dlURL));
 }
 
-/*
- * CL_ParseGamestate
- */
-void
-CL_ParseGamestate(Bitmsg *msg)
+static void
+parsegamestate(Bitmsg *msg)
 {
-	int	i;
-	Entstate *es;
-	int	newnum;
-	Entstate nullstate;
-	int	cmd;
-	char    *s;
-	char	oldGame[MAX_QPATH];
+	int i, newnum, cmd;
+	Entstate *es, nullstate;
+	char *s, oldGame[MAX_QPATH];
 
 	Con_Close();
 
@@ -470,12 +343,10 @@ CL_ParseGamestate(Bitmsg *msg)
 
 	/* parse all the configstrings and baselines */
 	cl.gameState.dataCount = 1;	/* leave a 0 at the beginning for uninitialized configstrings */
-	while(1){
+	for(;;){
 		cmd = MSG_ReadByte(msg);
-
 		if(cmd == svc_EOF)
 			break;
-
 		if(cmd == svc_configstring){
 			int len;
 
@@ -509,21 +380,15 @@ CL_ParseGamestate(Bitmsg *msg)
 			MSG_ReadDeltaEntity(msg, &nullstate, es, newnum);
 		}else
 			Com_Errorf(ERR_DROP,
-				"CL_ParseGamestate: bad command byte");
+				"parsegamestate: bad command byte");
 	}
 
 	clc.clientNum = MSG_ReadLong(msg);
-	/* read the checksum feed */
 	clc.checksumFeed = MSG_ReadLong(msg);
 
-	/* save old gamedir */
-	Cvar_VariableStringBuffer("fs_game", oldGame, sizeof(oldGame));
-
-	/* parse useful values out of CS_SERVERINFO */
-	CL_ParseServerInfo();
-
-	/* parse serverId and other cvars */
-	CL_SystemInfoChanged();
+	Cvar_VariableStringBuffer("fs_game", oldGame, sizeof(oldGame));	/* save old gamedir */
+	parseservinfo();	/* parse useful values out of CS_SERVERINFO */
+	CL_SystemInfoChanged();	/* parse serverId and other cvars */
 
 	/* stop recording now so the demo won't have an unnecessary level load at the end. */
 	if(cl_autoRecordDemo->integer && clc.demorecording)
@@ -537,24 +402,21 @@ CL_ParseGamestate(Bitmsg *msg)
 
 	FS_ConditionalRestart(clc.checksumFeed, qfalse);
 
-	/* This used to call CL_StartHunkUsers, but now we enter the download state before loading the
-	 * cgame */
+	/* 
+	 * This used to call CL_StartHunkUsers, but now we enter the download state before loading the
+	 * cgame 
+	 */
 	CL_InitDownloads();
 
 	/* make sure the game starts */
 	Cvar_Set("cl_paused", "0");
 }
 
-
-/* ===================================================================== */
-
 /*
- * CL_ParseDownload
- *
  * A download message has been received from the server
  */
-void
-CL_ParseDownload(Bitmsg *msg)
+static void
+parsedownload(Bitmsg *msg)
 {
 	int size;
 	unsigned char data[MAX_MSGLEN];
@@ -572,7 +434,7 @@ CL_ParseDownload(Bitmsg *msg)
 
 	if(!block && !clc.downloadBlock){
 		/* block zero is special, contains file size */
-		clc.downloadSize = MSG_ReadLong (msg);
+		clc.downloadSize = MSG_ReadLong(msg);
 
 		Cvar_SetValue("cl_downloadSize", clc.downloadSize);
 
@@ -582,10 +444,10 @@ CL_ParseDownload(Bitmsg *msg)
 		}
 	}
 
-	size = MSG_ReadShort (msg);
+	size = MSG_ReadShort(msg);
 	if(size < 0 || size > sizeof(data)){
 		Com_Errorf(ERR_DROP,
-			"CL_ParseDownload: Invalid size %d for download chunk",
+			"parsedownload: Invalid size %d for download chunk",
 			size);
 		return;
 	}
@@ -593,7 +455,7 @@ CL_ParseDownload(Bitmsg *msg)
 	MSG_ReadData(msg, data, size);
 
 	if((clc.downloadBlock & 0xFFFF) != block){
-		Com_DPrintf("CL_ParseDownload: Expected block %d, got %d\n",
+		Com_DPrintf("parsedownload: Expected block %d, got %d\n",
 			(clc.downloadBlock & 0xFFFF), block);
 		return;
 	}
@@ -639,13 +501,12 @@ CL_ParseDownload(Bitmsg *msg)
 		CL_WritePacket();
 
 		/* get another file if needed */
-		CL_NextDownload ();
+		CL_NextDownload();
 	}
 }
 
 #ifdef USE_VOIP
-static
-qbool
+static qbool
 CL_ShouldIgnoreVoipSender(int sender)
 {
 	if(!cl_voip->integer)
@@ -663,11 +524,8 @@ CL_ShouldIgnoreVoipSender(int sender)
 }
 
 /*
- * CL_PlayVoip
- *
  * Play raw data
  */
-
 static void
 CL_PlayVoip(int sender, int samplecnt, const byte *data, int flags)
 {
@@ -683,26 +541,23 @@ CL_PlayVoip(int sender, int samplecnt, const byte *data, int flags)
 }
 
 /*
- * CL_ParseVoip
- *
  * A VoIP message has been received from the server
  */
-static
-void
+static void
 CL_ParseVoip(Bitmsg *msg)
 {
 	static short	decoded[4096];	/* !!! FIXME: don't hardcode. */
 
-	const int	sender = MSG_ReadShort(msg);
-	const int	generation	= MSG_ReadByte(msg);
-	const int	sequence	= MSG_ReadLong(msg);
-	const int	frames = MSG_ReadByte(msg);
-	const int	packetsize = MSG_ReadShort(msg);
-	const int	flags = MSG_ReadBits(msg, VOIP_FLAGCNT);
+	const int sender = MSG_ReadShort(msg);
+	const int generation = MSG_ReadByte(msg);
+	const int sequence	= MSG_ReadLong(msg);
+	const int frames = MSG_ReadByte(msg);
+	const int packetsize = MSG_ReadShort(msg);
+	const int flags = MSG_ReadBits(msg, VOIP_FLAGCNT);
 	char	encoded[1024];
-	int	seqdiff = sequence - clc.voipIncomingSequence[sender];
-	int	written = 0;
-	int	i;
+	int seqdiff = sequence - clc.voipIncomingSequence[sender];
+	int written = 0;
+	int i;
 
 	Com_DPrintf("VoIP: %d-byte packet from client %d\n", packetsize, sender);
 
@@ -802,7 +657,9 @@ CL_ParseVoip(Bitmsg *msg)
 		speex_bits_read_from(&clc.speexDecoderBits[sender], encoded, len);
 		speex_decode_int(clc.speexDecoder[sender],
 			&clc.speexDecoderBits[sender], decoded + written);
-
+		/* 
+		 * FIXME: what is this shit? 
+		 */
 		#if 0
 		static FILE *encio = NULL;
 		if(encio == NULL) encio = fopen("voip-incoming-encoded.bin",
@@ -832,19 +689,15 @@ CL_ParseVoip(Bitmsg *msg)
 }
 #endif
 
-
 /*
- * CL_ParseCommandString
- *
  * Command strings are just saved off until cgame asks for them
  * when it transitions a snapshot
  */
-void
-CL_ParseCommandString(Bitmsg *msg)
+static void
+parsecmdstr(Bitmsg *msg)
 {
-	char	*s;
-	int	seq;
-	int	index;
+	char *s;
+	int seq, i;
 
 	seq = MSG_ReadLong(msg);
 	s = MSG_ReadString(msg);
@@ -854,15 +707,112 @@ CL_ParseCommandString(Bitmsg *msg)
 		return;
 	clc.serverCommandSequence = seq;
 
-	index = seq & (MAX_RELIABLE_COMMANDS-1);
-	Q_strncpyz(clc.serverCommands[ index ], s,
-		sizeof(clc.serverCommands[ index ]));
+	i = seq & (MAX_RELIABLE_COMMANDS-1);
+	Q_strncpyz(clc.serverCommands[i], s,
+		sizeof(clc.serverCommands[i]));
 }
 
-
 /*
- * CL_ParseServerMessage
+ * The systeminfo configstring has been changed, so parse
+ * new information out of it.  This will happen at every
+ * gamestate, and possibly during gameplay.
  */
+void
+CL_SystemInfoChanged(void)
+{
+	char	*systemInfo;
+	const char *s, *t;
+	char	key[BIG_INFO_KEY];
+	char	value[BIG_INFO_VALUE];
+	qbool gameSet;
+
+	systemInfo = cl.gameState.stringData +
+		     cl.gameState.stringOffsets[ CS_SYSTEMINFO ];
+	/* NOTE TTimo:
+	 * when the serverId changes, any further messages we send to the server will use this new serverId
+	 * in some cases, outdated cp commands might get sent with this news serverId */
+	cl.serverId = atoi(Info_ValueForKey(systemInfo, "sv_serverid"));
+
+	/* don't set any vars when playing a demo */
+	if(clc.demoplaying)
+		return;
+
+#ifdef USE_VOIP
+	{
+		s = Info_ValueForKey(systemInfo, "sv_voip");
+		if(Cvar_VariableValue("g_gametype") == GT_SINGLE_PLAYER ||
+		   Cvar_VariableValue("ui_singlePlayerActive"))
+			clc.voipEnabled = qfalse;
+		else
+			clc.voipEnabled = atoi(s);
+	}
+#endif
+
+	s = Info_ValueForKey(systemInfo, "sv_cheats");
+	cl_connectedToCheatServer = atoi(s);
+	if(!cl_connectedToCheatServer)
+		Cvar_SetCheatState();
+
+	/* check pure server string */
+	s = Info_ValueForKey(systemInfo, "sv_paks");
+	t = Info_ValueForKey(systemInfo, "sv_pakNames");
+	FS_PureServerSetLoadedPaks(s, t);
+
+	s = Info_ValueForKey(systemInfo, "sv_referencedPaks");
+	t = Info_ValueForKey(systemInfo, "sv_referencedPakNames");
+	FS_PureServerSetReferencedPaks(s, t);
+
+	gameSet = qfalse;
+	/* scan through all the variables in the systeminfo and locally set cvars to match */
+	s = systemInfo;
+	while(s){
+		int cvar_flags;
+
+		Info_NextPair(&s, key, value);
+		if(!key[0])
+			break;
+
+		/* ehw! */
+		if(!Q_stricmp(key, "fs_game")){
+			if(FS_CheckDirTraversal(value)){
+				Com_Printf(S_COLOR_YELLOW
+					"WARNING: Server sent invalid fs_game value %s\n",
+					value);
+				continue;
+			}
+
+			gameSet = qtrue;
+		}
+
+		if((cvar_flags = Cvar_Flags(key)) == CVAR_NONEXISTENT)
+			Cvar_Get(key, value, CVAR_SERVER_CREATED | CVAR_ROM);
+		else{
+			/* If this cvar may not be modified by a server discard the value. */
+			if(!(cvar_flags &
+			     (CVAR_SYSTEMINFO | CVAR_SERVER_CREATED |
+			      CVAR_USER_CREATED))){
+#ifndef STANDALONE
+				if(Q_stricmp(key, "g_synchronousClients") 
+				   && Q_stricmp(key, "pmove_fixed") 
+				   && Q_stricmp(key, "pmove_msec"))
+#endif
+				then{
+					Com_Printf(S_COLOR_YELLOW
+						"WARNING: server is not allowed to set %s=%s\n",
+						key, value);
+					continue;
+				}
+			}
+
+			Cvar_SetSafe(key, value);
+		}
+	}
+	/* if game folder should not be set and it is set at the client side */
+	if(!gameSet && *Cvar_VariableString("fs_game"))
+		Cvar_Set("fs_game", "");
+	cl_connectedToPureServer = Cvar_VariableValue("sv_pure");
+}
+
 void
 CL_ParseServerMessage(Bitmsg *msg)
 {
@@ -877,56 +827,50 @@ CL_ParseServerMessage(Bitmsg *msg)
 
 	/* get the reliable sequence acknowledge number */
 	clc.reliableAcknowledge = MSG_ReadLong(msg);
-	if(clc.reliableAcknowledge < clc.reliableSequence -
-	   MAX_RELIABLE_COMMANDS)
+	if(clc.reliableAcknowledge < clc.reliableSequence - MAX_RELIABLE_COMMANDS)
 		clc.reliableAcknowledge = clc.reliableSequence;
 
 	/*
 	 * parse the message
-	 *  */
-	while(1){
+	 */
+	for(;;){
 		if(msg->readcount > msg->cursize){
-			Com_Errorf (
-				ERR_DROP,
+			Com_Errorf(ERR_DROP,
 				"CL_ParseServerMessage: read past end of server message");
 			break;
 		}
 
 		cmd = MSG_ReadByte(msg);
-
 		if(cmd == svc_EOF){
 			SHOWNET(msg, "END OF MESSAGE");
 			break;
 		}
-
 		if(cl_shownet->integer >= 2){
-			if((cmd < 0) || (!svc_strings[cmd]))
-				Com_Printf("%3i:BAD CMD %i\n", msg->readcount-1,
-					cmd);
+			if(cmd < 0 || cmd >= svc_numsvc)
+				Com_Printf("%3i: BAD CMD %i\n", msg->readcount-1, cmd);
 			else
-				SHOWNET(msg, svc_strings[cmd]);
+				SHOWNET(msg, svcstr[cmd]);
 		}
 
 		/* other commands */
 		switch(cmd){
 		default:
-			Com_Errorf (
-				ERR_DROP,
+			Com_Errorf(ERR_DROP,
 				"CL_ParseServerMessage: Illegible server message");
 			break;
 		case svc_nop:
 			break;
 		case svc_serverCommand:
-			CL_ParseCommandString(msg);
+			parsecmdstr(msg);
 			break;
 		case svc_gamestate:
-			CL_ParseGamestate(msg);
+			parsegamestate(msg);
 			break;
 		case svc_snapshot:
-			CL_ParseSnapshot(msg);
+			parsesnap(msg);
 			break;
 		case svc_download:
-			CL_ParseDownload(msg);
+			parsedownload(msg);
 			break;
 		case svc_voip:
 #ifdef USE_VOIP

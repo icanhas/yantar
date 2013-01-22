@@ -302,6 +302,7 @@ enum {
 	svc_EOF,
 	/* new commands, supported only by ioquake3 protocol but not legacy */
 	svc_voip,	/* not wrapped in USE_VOIP, so this value is reserved. */
+	svc_numsvc,
 } svc_ops_e;
 
 /*
