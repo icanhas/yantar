@@ -151,13 +151,14 @@ keystate(Kbutton *key)
 	return val;
 }
 
-/* Moves the local angle positions */
+/* out = initial angles + change due to look keys being pressed */
 static void
-adjustangles(void)
+keybangles(const Vec3 initial, Vec3 out)
 {
 	Scalar spd;
 	Scalar ys, ps, rs;	/* yaw, pitch, roll speeds */
 	
+	copyv3(initial, out);
 	ys = cl_yawspeed->value;
 	ps = cl_pitchspeed->value;
 	rs = cl_rollspeed->value;
@@ -167,10 +168,10 @@ adjustangles(void)
 		spd = 0.001 * cls.realframetime;
 
 	if(!strafe.active){
-		cl.viewangles[YAW] -= spd * ys * (keystate(&right) - keystate(&left));
+		out[YAW] -= spd * ys * (keystate(&right) - keystate(&left));
 	}
-	cl.viewangles[PITCH] -= spd * ps * (keystate(&lookup) - keystate(&lookdown));
-	cl.viewangles[ROLL] += spd * rs * (keystate(&rollright) - keystate(&rollleft));
+	out[PITCH] -= spd * ps * (keystate(&lookup) - keystate(&lookdown));
+	out[ROLL] += spd * rs * (keystate(&rollright) - keystate(&rollleft));
 }
 
 /* Sets the Usrcmd based on key states */
@@ -240,10 +241,11 @@ CL_JoystickEvent(int axis, int value, int time)
 }
 
 static void
-joystickmove(Usrcmd *cmd)
+joystickmove(Usrcmd *cmd, const Vec3 initialangles, Vec3 angles)
 {
 	float anglespeed;
 
+	copyv3(initialangles, angles);
 	if(!(speed.active ^ cl_run->integer))
 		cmd->buttons |= BUTTON_WALKING;
 
@@ -253,14 +255,14 @@ joystickmove(Usrcmd *cmd)
 		anglespeed = 0.001 * cls.realframetime;
 
 	if(!strafe.active){
-		cl.viewangles[YAW] += anglespeed * j_yaw->value *
+		angles[YAW] += anglespeed * j_yaw->value *
 				      cl.joystickAxis[j_yaw_axis->integer];
 		cmd->rightmove =
 			clampchar(cmd->rightmove +
 				(int)(j_side->value *
 				      cl.joystickAxis[j_side_axis->integer]));
 	}else{
-		cl.viewangles[YAW] += anglespeed * j_side->value *
+		angles[YAW] += anglespeed * j_side->value *
 				      cl.joystickAxis[j_side_axis->integer];
 		cmd->rightmove =
 			clampchar(cmd->rightmove +
@@ -269,14 +271,14 @@ joystickmove(Usrcmd *cmd)
 	}
 
 	if(mlooking){
-		cl.viewangles[PITCH] += anglespeed * j_forward->value *
+		angles[PITCH] += anglespeed * j_forward->value *
 					cl.joystickAxis[j_forward_axis->integer];
 		cmd->forwardmove =
 			clampchar(cmd->forwardmove +
 				(int)(j_pitch->value *
 				      cl.joystickAxis[j_pitch_axis->integer]));
 	}else{
-		cl.viewangles[PITCH] += anglespeed * j_pitch->value *
+		angles[PITCH] += anglespeed * j_pitch->value *
 					cl.joystickAxis[j_pitch_axis->integer];
 		cmd->forwardmove =
 			clampchar(cmd->forwardmove +
@@ -301,10 +303,11 @@ joystickmove(Usrcmd *cmd)
  * X and Y?
  */
 static void
-mousemove(Usrcmd *cmd)
+mousemove(Usrcmd *cmd, const Vec3 initialangles, Vec3 angles)
 {
 	float mx, my;
 
+	copyv3(initialangles, angles);
 	/* allow mouse smoothing */
 	if(m_filter->integer){
 		mx = (cl.mouseDx[0] + cl.mouseDx[1]) * 0.5f;
@@ -368,10 +371,10 @@ mousemove(Usrcmd *cmd)
 	if(strafe.active)
 		cmd->rightmove = clampchar(cmd->rightmove + m_side->value * mx);
 	else
-		cl.viewangles[YAW] -= m_yaw->value * mx;
+		angles[YAW] -= m_yaw->value * mx;
 
 	if((mlooking || cl_freelook->integer) && !strafe.active)
-		cl.viewangles[PITCH] += m_pitch->value * my;
+		angles[PITCH] += m_pitch->value * my;
 	else
 		cmd->forwardmove = clampchar(
 			cmd->forwardmove - m_forward->value * my);
@@ -421,33 +424,33 @@ finishmove(Usrcmd *cmd)
 		cmd->angles[i] = ANGLE2SHORT(cl.viewangles[i]);
 }
 
+/* out = angles composed with delta */
 static void
-quatify(Vec3 oldangles)
+quatify(const Vec3 angles, const Vec3 delta, Vec3 out)
 {
-	Quat orient, delta, neworient;
+	Quat orient, deltaq;
 	
-	eulertoq(cl.viewangles, delta);
-	eulertoq(oldangles, orient);
-	mulq(orient, delta, neworient);
-	qtoeuler(neworient, cl.viewangles);
+	eulertoq(angles, orient);
+	eulertoq(delta, deltaq);
+	mulq(orient, deltaq, orient);
+	qtoeuler(orient, out);
 }
 
 static Usrcmd
 createcmd(void)
 {
 	Usrcmd cmd;
-	Vec3 oldangles;
+	Vec3 oldangles, adelta = { 0.0f, 0.0f, 0.0f };
 
 	copyv3(cl.viewangles, oldangles);
-	setv3(cl.viewangles, 0.0f, 0.0f, 0.0f);
-	adjustangles();	/* keyboard angle adjustment */
+	keybangles(adelta, adelta);	/* keyboard angle adjustment */
 	Q_Memset(&cmd, 0, sizeof(cmd));
 	cmdbuttons(&cmd);
 	keymove(&cmd);
-	mousemove(&cmd);
-	joystickmove(&cmd);
+	mousemove(&cmd, adelta, adelta);
+	joystickmove(&cmd, adelta, adelta);
 	
-	quatify(oldangles);
+	quatify(cl.viewangles, adelta, cl.viewangles);
 
 	/* store out the final values */
 	finishmove(&cmd);
@@ -528,7 +531,7 @@ readytosend(void)
 	else if(cl_maxpackets->integer > 125)
 		Cvar_Set("cl_maxpackets", "125");
 	oldPacketNum = (clc.netchan.outgoingSequence - 1) & PACKET_MASK;
-	delta = cls.simtime -  cl.outPackets[ oldPacketNum ].p_simtime;
+	delta = cls.simtime -  cl.outPackets[oldPacketNum].p_simtime;
 	if(delta < 1000 / cl_maxpackets->integer)
 		/* the accumulated commands will go out in the next packet */
 		return qfalse;
@@ -601,7 +604,7 @@ CL_WritePacket(void)
 		Cvar_Set("cl_packetdup", "5");
 	oldPacketNum = (clc.netchan.outgoingSequence - 1
 		- cl_packetdup->integer) & PACKET_MASK;
-	count = cl.cmdNumber - cl.outPackets[ oldPacketNum ].p_cmdNumber;
+	count = cl.cmdNumber - cl.outPackets[oldPacketNum].p_cmdNumber;
 	if(count > MAX_PACKET_USERCMDS){
 		count = MAX_PACKET_USERCMDS;
 		Com_Printf("MAX_PACKET_USERCMDS\n");
@@ -610,16 +613,16 @@ CL_WritePacket(void)
 #ifdef USE_VOIP
 	if(clc.voipOutgoingDataSize > 0){
 		if((clc.voipFlags & VOIP_SPATIAL) ||
-		   Com_Isvoiptarget(clc.voipTargets, sizeof(clc.voipTargets),
-			   -1)){
-			MSG_WriteByte (&buf, clc_voip);
-			MSG_WriteByte (&buf, clc.voipOutgoingGeneration);
-			MSG_WriteLong (&buf, clc.voipOutgoingSequence);
-			MSG_WriteByte (&buf, clc.voipOutgoingDataFrames);
-			MSG_WriteData (&buf, clc.voipTargets, sizeof(clc.voipTargets));
+		   Com_Isvoiptarget(clc.voipTargets, sizeof(clc.voipTargets), -1))
+		then{
+			MSG_WriteByte(&buf, clc_voip);
+			MSG_WriteByte(&buf, clc.voipOutgoingGeneration);
+			MSG_WriteLong(&buf, clc.voipOutgoingSequence);
+			MSG_WriteByte(&buf, clc.voipOutgoingDataFrames);
+			MSG_WriteData(&buf, clc.voipTargets, sizeof(clc.voipTargets));
 			MSG_WriteByte(&buf, clc.voipFlags);
-			MSG_WriteShort (&buf, clc.voipOutgoingDataSize);
-			MSG_WriteData (&buf, clc.voipOutgoingData, 
+			MSG_WriteShort(&buf, clc.voipOutgoingDataSize);
+			MSG_WriteData(&buf, clc.voipOutgoingData, 
 				clc.voipOutgoingDataSize);
 
 			/* If we're recording a demo, we have to fake a server packet with
@@ -629,7 +632,7 @@ CL_WritePacket(void)
 			if(clc.demorecording && !clc.demowaiting){
 				const int voipSize = clc.voipOutgoingDataSize;
 				Bitmsg fakemsg;
-				byte	fakedata[MAX_MSGLEN];
+				byte fakedata[MAX_MSGLEN];
 				
 				MSG_Init (&fakemsg, fakedata, sizeof(fakedata));
 				MSG_Bitstream (&fakemsg);
@@ -671,7 +674,7 @@ CL_WritePacket(void)
 		key ^= clc.serverMessageSequence;	/* also use the message acknowledge */
 		/* also use the last acknowledged server command in the key */
 		key ^= MSG_HashKey(clc.serverCommands[clc.serverCommandSequence &
-			(MAX_RELIABLE_COMMANDS-1) ], 32);
+			(MAX_RELIABLE_COMMANDS-1)], 32);
 
 		/* write all the commands, including the predicted command */
 		for(i = 0; i < count; i++){
@@ -684,9 +687,9 @@ CL_WritePacket(void)
 
 	/* deliver the message */
 	packetNum = clc.netchan.outgoingSequence & PACKET_MASK;
-	cl.outPackets[ packetNum ].p_simtime = cls.simtime;
-	cl.outPackets[ packetNum ].p_serverTime = oldcmd->serverTime;
-	cl.outPackets[ packetNum ].p_cmdNumber = cl.cmdNumber;
+	cl.outPackets[packetNum].p_simtime = cls.simtime;
+	cl.outPackets[packetNum].p_serverTime = oldcmd->serverTime;
+	cl.outPackets[packetNum].p_cmdNumber = cl.cmdNumber;
 	clc.lastPacketSentTime = cls.simtime;
 	if(cl_showSend->integer)
 		Com_Printf("%i ", buf.cursize);
