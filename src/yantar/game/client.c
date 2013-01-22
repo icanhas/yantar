@@ -449,16 +449,12 @@ SetClientViewAngle(Gentity *ent, Vec3 angle)
 	/*
 	 * angles between client's viewangles at the time and the desired 
 	 * angles are sent in delta_angles
-	 *
-	 * initial * diff = final
-	 * diff = final * initial^-1
 	 */
 	shortstoeuler(ent->client->pers.cmd.angles, a);
 	eulertoq(a, persq);
 	eulertoq(angle, angq);
-	invq(persq, persq);
-	mulq(angq, persq, q);
-	qtoeuler(q,  a);
+	diffq(persq, angq, angq);
+	qtoeuler(angq,  a);
 	eulertoshorts(a, ent->client->ps.delta_angles);
 
 	copyv3(angle, ent->s.angles);
