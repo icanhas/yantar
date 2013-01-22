@@ -1025,5 +1025,5 @@ UI_GameCommand(void)
 {
 	if(uivm == NULL)
 		return qfalse;
-	return VM_Call(uivm, UI_CONSOLE_COMMAND, cls.realtime);
+	return VM_Call(uivm, UI_CONSOLE_COMMAND, cls.simtime);
 }

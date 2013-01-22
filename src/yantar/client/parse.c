@@ -296,8 +296,8 @@ CL_ParseSnapshot(Bitmsg *msg)
 		packetNum = (clc.netchan.outgoingSequence - 1 - i) & PACKET_MASK;
 		if(cl.snap.ps.commandTime >=
 		   cl.outPackets[ packetNum ].p_serverTime){
-			cl.snap.ping = cls.realtime -
-				       cl.outPackets[ packetNum ].p_realtime;
+			cl.snap.ping = cls.simtime -
+				       cl.outPackets[ packetNum ].p_simtime;
 			break;
 		}
 	}

@@ -338,7 +338,7 @@ Field_VariableSizeDraw(Field *edit, int x, int y, int width, int size,
 
 	/* draw the cursor */
 	if(showCursor){
-		if((int)(cls.realtime >> 7) & 1)
+		if((int)(cls.simtime >> 7) & 1)
 			return;		/* off blink */
 
 		cursorChar = 11;	/* a block */

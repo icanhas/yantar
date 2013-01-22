@@ -206,7 +206,7 @@ CL_cURL_BeginDownload(const char *localName, const char *remoteURL)
 	Cvar_Set("cl_downloadName", localName);
 	Cvar_Set("cl_downloadSize", "0");
 	Cvar_Set("cl_downloadCount", "0");
-	Cvar_SetValue("cl_downloadTime", cls.realtime);
+	Cvar_SetValue("cl_downloadTime", cls.simtime);
 
 	clc.downloadBlock = 0;	/* Starting new file */
 	clc.downloadCount = 0;

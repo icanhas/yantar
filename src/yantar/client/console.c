@@ -32,7 +32,7 @@ typedef struct {
 
 	int		vislines;	/* in scanlines */
 
-	int		times[NUM_CON_TIMES];	/* cls.realtime time the line was generated */
+	int		times[NUM_CON_TIMES];	/* cls.simtime time the line was generated */
 	/* for transparent notify lines */
 	Vec4		color;
 } Console;
@@ -338,7 +338,7 @@ Con_Linefeed(qbool skipnotify)
 		if(skipnotify)
 			con.times[con.current % NUM_CON_TIMES] = 0;
 		else
-			con.times[con.current % NUM_CON_TIMES] = cls.realtime;
+			con.times[con.current % NUM_CON_TIMES] = cls.simtime;
 	}
 
 	con.x = 0;
@@ -435,7 +435,7 @@ CL_ConsolePrint(char *txt)
 			con.times[prev] = 0;
 		}else
 			/* -NERVE - SMF */
-			con.times[con.current % NUM_CON_TIMES] = cls.realtime;
+			con.times[con.current % NUM_CON_TIMES] = cls.simtime;
 	}
 }
 
@@ -499,7 +499,7 @@ Con_DrawNotify(void)
 		time = con.times[i % NUM_CON_TIMES];
 		if(time == 0)
 			continue;
-		time = cls.realtime - time;
+		time = cls.simtime - time;
 		if(time > con_notifytime->value*1000)
 			continue;
 		text = con.text + (i % con.totallines)*con.linewidth;
@@ -688,12 +688,12 @@ Con_RunConsole(void)
 
 	/* fade it towards the destined opacity */
 	if(con.finalopac < con.opacity){
-		con.opacity -= con_conspeed->value*cls.realFrametime*0.001;
+		con.opacity -= con_conspeed->value*cls.simframetime*0.001;
 		if(con.finalopac > con.opacity)
 			con.opacity = con.finalopac;
 
 	}else if(con.finalopac > con.opacity){
-		con.opacity += con_conspeed->value*cls.realFrametime*0.001;
+		con.opacity += con_conspeed->value*cls.simframetime*0.001;
 		if(con.finalopac < con.opacity)
 			con.opacity = con.finalopac;
 	}

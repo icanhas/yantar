@@ -761,7 +761,7 @@ CL_AdjustTimeDelta(void)
 	if(clc.demoplaying)
 		return;
 
-	newDelta = cl.snap.serverTime - cls.realtime;
+	newDelta = cl.snap.serverTime - cls.simtime;
 	deltaDelta = abs(newDelta - cl.serverTimeDelta);
 
 	if(deltaDelta > RESET_TIME){
@@ -780,7 +780,7 @@ CL_AdjustTimeDelta(void)
 	 * slow drift adjust, only move 1 or 2 msec
 	 * if any of the frames between this and the previous snapshot
 	 * had to be extrapolated, nudge our sense of time back a little
-	 * the granularity of +1 / -2 is too high for timescale modified frametimes 
+	 * the granularity of +1 / -2 is too high for timescale modified realframetimes 
 	 */
 	if(com_timescale->value == 0 || com_timescale->value == 1){
 		if(cl.extrapolatedSnapshot){
@@ -804,7 +804,7 @@ CL_FirstSnapshot(void)
 	clc.state = CA_ACTIVE;
 
 	/* set the timedelta so we are exactly on this first frame */
-	cl.serverTimeDelta = cl.snap.serverTime - cls.realtime;
+	cl.serverTimeDelta = cl.snap.serverTime - cls.simtime;
 	cl.oldServerTime = cl.snap.serverTime;
 
 	clc.timeDemoBaseTime = cl.snap.serverTime;
@@ -921,7 +921,7 @@ CL_SetCGameTime(void)
 		else if(tn>30)
 			tn = 30;
 
-		cl.serverTime = cls.realtime + cl.serverTimeDelta - tn;
+		cl.serverTime = cls.simtime + cl.serverTimeDelta - tn;
 
 		/* 
 		 *  guarantee that time will never flow backwards, even if
@@ -935,7 +935,7 @@ CL_SetCGameTime(void)
 		 * note if we are almost past the latest frame (without timeNudge),
 		 * so we will try and adjust back a bit when the next snapshot arrives
 		 */
-		if(cls.realtime + cl.serverTimeDelta >= cl.snap.serverTime - 5)
+		if(cls.simtime + cl.serverTimeDelta >= cl.snap.serverTime - 5)
 			cl.extrapolatedSnapshot = qtrue;
 	}
 

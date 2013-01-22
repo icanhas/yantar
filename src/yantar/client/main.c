@@ -883,7 +883,7 @@ CL_ReadDemoMessage(void)
 		return;
 	}
 
-	clc.lastPacketTime = cls.realtime;
+	clc.lastPacketTime = cls.simtime;
 	buf.readcount = 0;
 	CL_ParseServerMessage(&buf);
 }
@@ -1882,7 +1882,7 @@ CL_BeginDownload(const char *localName, const char *remoteName)
 	Cvar_Set("cl_downloadName", remoteName);
 	Cvar_Set("cl_downloadSize", "0");
 	Cvar_Set("cl_downloadCount", "0");
-	Cvar_SetValue("cl_downloadTime", cls.realtime);
+	Cvar_SetValue("cl_downloadTime", cls.simtime);
 
 	clc.downloadBlock	= 0;	/* Starting new file */
 	clc.downloadCount	= 0;
@@ -2042,10 +2042,10 @@ CL_CheckForResend(void)
 	if(clc.state != CA_CONNECTING && clc.state != CA_CHALLENGING)
 		return;
 
-	if(cls.realtime - clc.connectTime < RETRANSMIT_TIMEOUT)
+	if(cls.simtime - clc.connectTime < RETRANSMIT_TIMEOUT)
 		return;
 
-	clc.connectTime = cls.realtime;	/* for retransmit requests */
+	clc.connectTime = cls.simtime;	/* for retransmit requests */
 	clc.connectPacketCount++;
 
 
@@ -2121,7 +2121,7 @@ CL_DisconnectPacket(Netaddr from)
 
 	/* if we have received packets within three seconds, ignore it
 	 * (it might be a malicious spoof) */
-	if(cls.realtime - clc.lastPacketTime < 3000)
+	if(cls.simtime - clc.lastPacketTime < 3000)
 		return;
 
 	/* drop the connection */
@@ -2466,7 +2466,7 @@ CL_PacketEvent(Netaddr from, Bitmsg *msg)
 {
 	int headerBytes;
 
-	clc.lastPacketTime = cls.realtime;
+	clc.lastPacketTime = cls.simtime;
 
 	if(msg->cursize >= 4 && *(int*)msg->data == -1){
 		CL_ConnectionlessPacket(from, msg);
@@ -2502,7 +2502,7 @@ CL_PacketEvent(Netaddr from, Bitmsg *msg)
 	 * gamestate */
 	clc.serverMessageSequence = LittleLong(*(int*)msg->data);
 
-	clc.lastPacketTime = cls.realtime;
+	clc.lastPacketTime = cls.simtime;
 	CL_ParseServerMessage(msg);
 
 	/*
@@ -2521,7 +2521,7 @@ CL_CheckTimeout(void)
 	 *  */
 	if((!CL_CheckPaused() || !sv_paused->integer)
 	   && clc.state >= CA_CONNECTED && clc.state != CA_CINEMATIC
-	   && cls.realtime - clc.lastPacketTime > cl_timeout->value*1000){
+	   && cls.simtime - clc.lastPacketTime > cl_timeout->value*1000){
 		if(++cl.timeoutcount > 5){	/* timeoutcount saves debugger */
 			Com_Printf ("\nServer connection timed out.\n");
 			CL_Disconnect(qtrue);
@@ -2568,9 +2568,11 @@ CL_CheckUserinfo(void)
 void
 CL_Frame(int msec)
 {
+	int realframetime, lasttime;
 
 	if(!com_cl_running->integer)
 		return;
+	lasttime = cls.realtime;
 
 #ifdef USE_CURL
 	if(clc.downloadCURLM){
@@ -2579,9 +2581,10 @@ CL_Frame(int msec)
 		 * download mode since the ui vm expects clc.state to be
 		 * CA_CONNECTED */
 		if(clc.cURLDisconnected){
-			cls.realFrametime	= msec;
-			cls.frametime		= msec;
-			cls.realtime		+= cls.frametime;
+			cls.simframetime = msec;	/* save the msec before checking pause */
+			cls.simtime += cls.simframetime;	/* decide the simulation time */
+			cls.realframetime = Sys_Milliseconds() - lasttime;
+			cls.realtime += cls.realframetime;
 			SCR_UpdateScreen();
 			S_Update();
 			Con_RunConsole();
@@ -2651,16 +2654,13 @@ CL_Frame(int msec)
 			CL_StopRecord_f( );
 	}
 
-	/* save the msec before checking pause */
-	cls.realFrametime = msec;
-
-	/* decide the simulation time */
-	cls.frametime = msec;
-
-	cls.realtime += cls.frametime;
+	cls.simframetime = msec;	/* save the msec before checking pause */
+	cls.simtime += cls.simframetime;	/* decide the simulation time */
+	cls.realframetime = Sys_Milliseconds() - lasttime;
+	cls.realtime += cls.realframetime;
 
 	if(cl_timegraph->integer)
-		SCR_DebugGraph (cls.realFrametime * 0.25);
+		SCR_DebugGraph (cls.simframetime * 0.25);
 
 	/* see if we need to update any userinfo */
 	CL_CheckUserinfo();
@@ -3011,7 +3011,7 @@ CL_Init(void)
 {
 	Com_Printf("----- Client Initialization -----\n");
 
-	Con_Init ();
+	Con_Init();
 
 	if(!com_fullyInitialized){
 		CL_ClearState();
@@ -3019,6 +3019,7 @@ CL_Init(void)
 		cls.oldGameSet = qfalse;
 	}
 
+	cls.simtime = 0;
 	cls.realtime = 0;
 
 	CL_InitInput ();

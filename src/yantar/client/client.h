@@ -86,7 +86,7 @@ struct Clsnapshot {
 struct Outpacket {
 	int	p_cmdNumber;	/* cl.cmdNumber when packet was sent */
 	int	p_serverTime;	/* usercmd->serverTime when packet was sent */
-	int	p_realtime;	/* cls.realtime when packet was sent */
+	int	p_simtime;	/* cls.simtime when packet was sent */
 };
 
 struct Clientactive {
@@ -98,7 +98,7 @@ struct Clientactive {
 	int		serverTime;		/* may be paused during play */
 	int		oldServerTime;		/* to prevent time from flowing bakcwards */
 	int		oldFrameServerTime;	/* to check tournament restarts */
-	int		serverTimeDelta;	/* cl.serverTime = cls.realtime + cl.serverTimeDelta */
+	int		serverTimeDelta;	/* cl.serverTime = cls.simtime + cl.serverTimeDelta */
 	/* this value changes as net lag varies */
 	qbool		extrapolatedSnapshot;	/* set if any cgame frame has been forced to extrapolate */
 	/* cleared when CL_AdjustTimeDelta looks at it */
@@ -207,7 +207,7 @@ struct Clientconn {
 	Fhandle	demofile;
 
 	int		timeDemoFrames;					/* counter of rendered frames */
-	int		timeDemoStart;					/* cls.realtime before first frame */
+	int		timeDemoStart;					/* cls.simtime before first frame */
 	int		timeDemoBaseTime;				/* each frame will be at this time + frameNum * 50 */
 	int		timeDemoLastFrame;				/* time the last frame was rendered */
 	int		timeDemoMinDuration;				/* minimum frame duration */
@@ -282,10 +282,11 @@ struct Clientstatic {
 	qbool		cgameStarted;
 
 	int		framecount;
-	int		frametime;	/* msec since last frame */
+	int		realtime;	/* IRL time */
+	int		realframetime;	/* msec since last frame */
 
-	int		realtime;	/* ignores pause */
-	int		realFrametime;	/* ignoring pause, so console always works */
+	int		simtime;	/* may be different from realtime due to timescale, ignores pause */
+	int		simframetime;	/* ignoring pause, so console always works */
 
 	int		numlocalservers;
 	serverInfo_t	localServers[MAX_OTHER_SERVERS];

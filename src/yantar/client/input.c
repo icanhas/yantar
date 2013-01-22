@@ -35,7 +35,6 @@ Cvar *cl_rollspeed;
 Cvar *cl_run;
 Cvar *cl_anglespeedkey;
 
-static const Scalar Maxrolldelta = 300.0;
 static uint frame_msec;
 static int old_com_frameTime;
 static Kbutton left, right, forward, back;
@@ -156,33 +155,29 @@ keystate(Kbutton *key)
 static void
 adjustangles(void)
 {
-	Scalar spd, roll, rolldelta;
+	Scalar spd;
 	Scalar ys, ps, rs;	/* yaw, pitch, roll speeds */
 	
 	ys = cl_yawspeed->value;
 	ps = cl_pitchspeed->value;
 	rs = cl_rollspeed->value;
 	if(speed.active)
-		spd = 0.001 * cls.frametime * cl_anglespeedkey->value;
+		spd = 0.001 * cls.realframetime * cl_anglespeedkey->value;
 	else
-		spd = 0.001 * cls.frametime;
+		spd = 0.001 * cls.realframetime;
 
 	if(!strafe.active){
-		cl.viewangles[YAW] += spd * ys * (keystate(&right) - keystate(&left));
+		cl.viewangles[YAW] = spd * ys * (keystate(&right) - keystate(&left));
 	}
-
-	cl.viewangles[PITCH] += spd * ps * (keystate(&lookup) - keystate(&lookdown));
-
-	rolldelta = (keystate(&rollright) - keystate(&rollleft));
-	cl.viewangles[ROLL] = spd * (rolldelta * rs);
+	cl.viewangles[PITCH] = spd * ps * (keystate(&lookup) - keystate(&lookdown));
+	cl.viewangles[ROLL] = spd * rs * (keystate(&rollright) - keystate(&rollleft));
 }
 
 /* Sets the Usrcmd based on key states */
 static void
 keymove(Usrcmd *cmd)
 {
-	int	mvspeed;
-	int	fwd, side, _up, brk;
+	int mvspeed, fwd, side, _up, brk;
 
 	fwd = 0;
 	side = 0;
@@ -224,10 +219,10 @@ void
 CL_MouseEvent(int dx, int dy, int time)
 {
 	UNUSED(time);
-	if(Key_GetCatcher( ) & KEYCATCH_UI)
+	if(Key_GetCatcher() & KEYCATCH_UI)
 		VM_Call(uivm, UI_MOUSE_EVENT, dx, dy);
-	else if(Key_GetCatcher( ) & KEYCATCH_CGAME)
-		VM_Call (cgvm, CG_MOUSE_EVENT, dx, dy);
+	else if(Key_GetCatcher() & KEYCATCH_CGAME)
+		VM_Call(cgvm, CG_MOUSE_EVENT, dx, dy);
 	else{
 		cl.mouseDx[cl.mouseIndex] += dx;
 		cl.mouseDy[cl.mouseIndex] += dy;
@@ -253,9 +248,9 @@ joystickmove(Usrcmd *cmd)
 		cmd->buttons |= BUTTON_WALKING;
 
 	if(speed.active)
-		anglespeed = 0.001 * cls.frametime * cl_anglespeedkey->value;
+		anglespeed = 0.001 * cls.realframetime * cl_anglespeedkey->value;
 	else
-		anglespeed = 0.001 * cls.frametime;
+		anglespeed = 0.001 * cls.realframetime;
 
 	if(!strafe.active){
 		cl.viewangles[YAW] += anglespeed * j_yaw->value *
@@ -509,7 +504,7 @@ readytosend(void)
 		return qfalse;
 	/* If we are downloading, we send no less than 50ms between packets */
 	if(*clc.downloadTempName &&
-	   cls.realtime - clc.lastPacketSentTime < 50)
+	   cls.simtime - clc.lastPacketSentTime < 50)
 		return qfalse;
 	/*
 	 * if we don't have a valid gamestate yet, only send
@@ -517,7 +512,7 @@ readytosend(void)
 	 */
 	if(clc.state != CA_ACTIVE && clc.state != CA_PRIMED &&
 	   !(*clc.downloadTempName) &&
-	   cls.realtime - clc.lastPacketSentTime < 1000)
+	   cls.simtime - clc.lastPacketSentTime < 1000)
 		return qfalse;
 	/* send every frame for loopbacks */
 	if(clc.netchan.remoteAddress.type == NA_LOOPBACK)
@@ -532,7 +527,7 @@ readytosend(void)
 	else if(cl_maxpackets->integer > 125)
 		Cvar_Set("cl_maxpackets", "125");
 	oldPacketNum = (clc.netchan.outgoingSequence - 1) & PACKET_MASK;
-	delta = cls.realtime -  cl.outPackets[ oldPacketNum ].p_realtime;
+	delta = cls.simtime -  cl.outPackets[ oldPacketNum ].p_simtime;
 	if(delta < 1000 / cl_maxpackets->integer)
 		/* the accumulated commands will go out in the next packet */
 		return qfalse;
@@ -665,9 +660,9 @@ CL_WritePacket(void)
 		/* begin a client move command */
 		if(cl_nodelta->integer || !cl.snap.valid || clc.demowaiting
 		   || clc.serverMessageSequence != cl.snap.messageNum)
-			MSG_WriteByte (&buf, clc_moveNoDelta);
+			MSG_WriteByte(&buf, clc_moveNoDelta);
 		else
-			MSG_WriteByte (&buf, clc_move);
+			MSG_WriteByte(&buf, clc_move);
 
 		MSG_WriteByte(&buf, count);
 
@@ -688,13 +683,13 @@ CL_WritePacket(void)
 
 	/* deliver the message */
 	packetNum = clc.netchan.outgoingSequence & PACKET_MASK;
-	cl.outPackets[ packetNum ].p_realtime = cls.realtime;
+	cl.outPackets[ packetNum ].p_simtime = cls.simtime;
 	cl.outPackets[ packetNum ].p_serverTime = oldcmd->serverTime;
 	cl.outPackets[ packetNum ].p_cmdNumber = cl.cmdNumber;
-	clc.lastPacketSentTime = cls.realtime;
+	clc.lastPacketSentTime = cls.simtime;
 	if(cl_showSend->integer)
 		Com_Printf("%i ", buf.cursize);
-	CL_Netchan_Transmit (&clc.netchan, &buf);
+	CL_Netchan_Transmit(&clc.netchan, &buf);
 }
 
 /* Called every frame to builds and sends a command packet to the server. */

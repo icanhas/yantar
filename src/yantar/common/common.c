@@ -2816,7 +2816,7 @@ Com_Frame(void)
 
 	msec = com_frameTime - lastTime;
 
-	Cbuf_Execute ();
+	Cbuf_Execute();
 
 	if(com_altivec->modified){
 		Com_Detectaltivec();
