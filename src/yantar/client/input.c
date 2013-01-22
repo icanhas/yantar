@@ -167,10 +167,10 @@ adjustangles(void)
 		spd = 0.001 * cls.realframetime;
 
 	if(!strafe.active){
-		cl.viewangles[YAW] = spd * ys * (keystate(&right) - keystate(&left));
+		cl.viewangles[YAW] -= spd * ys * (keystate(&right) - keystate(&left));
 	}
-	cl.viewangles[PITCH] = spd * ps * (keystate(&lookup) - keystate(&lookdown));
-	cl.viewangles[ROLL] = spd * rs * (keystate(&rollright) - keystate(&rollleft));
+	cl.viewangles[PITCH] -= spd * ps * (keystate(&lookup) - keystate(&lookdown));
+	cl.viewangles[ROLL] -= spd * rs * (keystate(&rollright) - keystate(&rollleft));
 }
 
 /* Sets the Usrcmd based on key states */
@@ -368,10 +368,10 @@ mousemove(Usrcmd *cmd)
 	if(strafe.active)
 		cmd->rightmove = clampchar(cmd->rightmove + m_side->value * mx);
 	else
-		cl.viewangles[YAW] = m_yaw->value * mx;
+		cl.viewangles[YAW] += m_yaw->value * mx;
 
 	if((mlooking || cl_freelook->integer) && !strafe.active)
-		cl.viewangles[PITCH] = m_pitch->value * my;
+		cl.viewangles[PITCH] += m_pitch->value * my;
 	else
 		cmd->forwardmove = clampchar(
 			cmd->forwardmove - m_forward->value * my);
@@ -439,6 +439,7 @@ createcmd(void)
 	Vec3 oldangles;
 
 	copyv3(cl.viewangles, oldangles);
+	setv3(cl.viewangles, 0.0f, 0.0f, 0.0f);
 	adjustangles();	/* keyboard angle adjustment */
 	Q_Memset(&cmd, 0, sizeof(cmd));
 	cmdbuttons(&cmd);
