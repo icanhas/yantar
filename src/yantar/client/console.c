@@ -32,9 +32,8 @@ typedef struct {
 
 	int		vislines;	/* in scanlines */
 
-	int		times[NUM_CON_TIMES];	/* cls.simtime time the line was generated */
-	/* for transparent notify lines */
-	Vec4		color;
+	int		times[NUM_CON_TIMES];	/* cls.realtime time the line was generated */
+	Vec4		color;	/* for transparent notify lines */
 } Console;
 
 extern Console con;
@@ -289,8 +288,8 @@ Con_Init(void)
 {
 	int i;
 
-	con_notifytime	= Cvar_Get ("con_notifytime", "3", 0);
-	con_conspeed	= Cvar_Get ("scr_conspeed", "3", 0);
+	con_notifytime	= Cvar_Get("con_notifytime", "3", 0);
+	con_conspeed	= Cvar_Get("scr_conspeed", "3", 0);
 
 	Field_Clear(&g_consoleField);
 	g_consoleField.widthInChars = g_console_field_width;
@@ -338,7 +337,7 @@ Con_Linefeed(qbool skipnotify)
 		if(skipnotify)
 			con.times[con.current % NUM_CON_TIMES] = 0;
 		else
-			con.times[con.current % NUM_CON_TIMES] = cls.simtime;
+			con.times[con.current % NUM_CON_TIMES] = cls.realtime;
 	}
 
 	con.x = 0;
@@ -435,7 +434,7 @@ CL_ConsolePrint(char *txt)
 			con.times[prev] = 0;
 		}else
 			/* -NERVE - SMF */
-			con.times[con.current % NUM_CON_TIMES] = cls.simtime;
+			con.times[con.current % NUM_CON_TIMES] = cls.realtime;
 	}
 }
 
@@ -499,7 +498,7 @@ Con_DrawNotify(void)
 		time = con.times[i % NUM_CON_TIMES];
 		if(time == 0)
 			continue;
-		time = cls.simtime - time;
+		time = cls.realtime - time;
 		if(time > con_notifytime->value*1000)
 			continue;
 		text = con.text + (i % con.totallines)*con.linewidth;
@@ -688,12 +687,12 @@ Con_RunConsole(void)
 
 	/* fade it towards the destined opacity */
 	if(con.finalopac < con.opacity){
-		con.opacity -= con_conspeed->value*cls.simframetime*0.001;
+		con.opacity -= con_conspeed->value*cls.realframetime*0.001;
 		if(con.finalopac > con.opacity)
 			con.opacity = con.finalopac;
 
 	}else if(con.finalopac > con.opacity){
-		con.opacity += con_conspeed->value*cls.simframetime*0.001;
+		con.opacity += con_conspeed->value*cls.realframetime*0.001;
 		if(con.finalopac < con.opacity)
 			con.opacity = con.finalopac;
 	}
