@@ -936,20 +936,20 @@ struct Huffman {
 	Huff	decompressor;
 };
 
-void Huff_Compress(Bitmsg *buf, int offset);
-void Huff_Decompress(Bitmsg *buf, int offset);
-void Huff_Init(Huffman *huff);
-void Huff_addRef(Huff* huff, byte ch);
-int Huff_Receive(Node *node, int *ch, byte *fin);
-void Huff_transmit(Huff *huff, int ch, byte *fout);
-void Huff_offsetReceive(Node *node, int *ch, byte *fin, int *offset);
-void Huff_offsetTransmit(Huff *huff, int ch, byte *fout, int *offset);
-void Huff_putBit(int bit, byte *fout, int *offset);
-int Huff_getBit(byte *fout, int *offset);
+void huffcompress(Bitmsg *buf, int offset);
+void huffdecompress(Bitmsg *buf, int offset);
+void huffinit(Huffman *huff);
+void huffaddref(Huff* huff, byte ch);
+int huffrecv(Node *node, int *ch, byte *fin);
+void hufftransmit(Huff *huff, int ch, byte *fout);
+void huffoffsetrecv(Node *node, int *ch, byte *fin, int *offset);
+void huffoffsettransmit(Huff *huff, int ch, byte *fout, int *offset);
+void huffputbit(int bit, byte *fout, int *offset);
+int huffgetbit(byte *fout, int *offset);
 
 /* don't use if you don't know what you're doing. */
-int Huff_getBloc(void);
-void Huff_setBloc(int _bloc);
+int huffgetbloc(void);
+void huffsetbloc(int _bloc);
 
 extern Huffman clientHuffTables;
 

@@ -140,14 +140,14 @@ MSG_WriteBits(Bitmsg *msg, int value, int bits)
 			int nbits;
 			nbits = bits&7;
 			for(i=0; i<nbits; i++){
-				Huff_putBit((value&1), msg->data, &msg->bit);
+				huffputbit((value&1), msg->data, &msg->bit);
 				value = (value>>1);
 			}
 			bits = bits - nbits;
 		}
 		if(bits)
 			for(i=0; i<bits; i+=8){
-				Huff_offsetTransmit (&msgHuff.compressor,
+				huffoffsettransmit (&msgHuff.compressor,
 					(value&0xff), msg->data, &msg->bit);
 				value = (value>>8);
 			}
@@ -192,12 +192,12 @@ MSG_ReadBits(Bitmsg *msg, int bits)
 		if(bits&7){
 			nbits = bits&7;
 			for(i=0; i<nbits; i++)
-				value |= (Huff_getBit(msg->data, &msg->bit)<<i);
+				value |= (huffgetbit(msg->data, &msg->bit)<<i);
 			bits = bits - nbits;
 		}
 		if(bits)
 			for(i=0; i<bits; i+=8){
-				Huff_offsetReceive (msgHuff.decompressor.tree,
+				huffoffsetrecv (msgHuff.decompressor.tree,
 					&get, msg->data,
 					&msg->bit);
 				value |= (get<<(i+nbits));
@@ -360,11 +360,11 @@ MSG_LookaheadByte(Bitmsg *msg)
 	int bloc, readcount, bit;
 	int c;
 	
-	bloc = Huff_getBloc();
+	bloc = huffgetbloc();
 	readcount = msg->readcount;
 	bit = msg->bit;
 	c = MSG_ReadByte(msg);
-	Huff_setBloc(bloc);
+	huffsetbloc(bloc);
 	msg->readcount = readcount;
 	msg->bit = bit;
 	return c;
@@ -1651,10 +1651,10 @@ MSG_initHuffman(void)
 	int i, j;
 
 	msgInit = qtrue;
-	Huff_Init(&msgHuff);
+	huffinit(&msgHuff);
 	for(i=0; i<256; i++)
 		for(j=0; j<msg_hData[i]; j++){
-			Huff_addRef(&msgHuff.compressor, (byte)i);	/* Do update */
-			Huff_addRef(&msgHuff.decompressor, (byte)i);	/* Do update */
+			huffaddref(&msgHuff.compressor, (byte)i);	/* Do update */
+			huffaddref(&msgHuff.decompressor, (byte)i);	/* Do update */
 		}
 }

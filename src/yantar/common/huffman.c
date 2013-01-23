@@ -165,7 +165,7 @@ send(Node *node, Node *child, byte *fout)
 }
 
 void
-Huff_addRef(Huff* h, byte ch)
+huffaddref(Huff* h, byte ch)
 {
 	Node *tn, *tn2;
 
@@ -238,7 +238,7 @@ Huff_addRef(Huff* h, byte ch)
 
 /* Get a symbol */
 int
-Huff_Receive(Node *node, int *ch, byte *fin)
+huffrecv(Node *node, int *ch, byte *fin)
 {
 	while(node && node->symbol == INTERNAL_NODE){
 		if(get_bit(fin))
@@ -255,7 +255,7 @@ Huff_Receive(Node *node, int *ch, byte *fin)
 
 /* Get a symbol */
 void
-Huff_offsetReceive(Node *node, int *ch, byte *fin, int *offset)
+huffoffsetrecv(Node *node, int *ch, byte *fin, int *offset)
 {
 	bloc = *offset;
 	while(node && node->symbol == INTERNAL_NODE){
@@ -274,7 +274,7 @@ Huff_offsetReceive(Node *node, int *ch, byte *fin, int *offset)
 }
 
 void
-Huff_putBit(int bit, byte *fout, int *offset)
+huffputbit(int bit, byte *fout, int *offset)
 {
 	bloc = *offset;
 	if((bloc&7) == 0)
@@ -285,19 +285,19 @@ Huff_putBit(int bit, byte *fout, int *offset)
 }
 
 int
-Huff_getBloc(void)
+huffgetbloc(void)
 {
 	return bloc;
 }
 
 void
-Huff_setBloc(int _bloc)
+huffsetbloc(int _bloc)
 {
 	bloc = _bloc;
 }
 
 int
-Huff_getBit(byte *fin, int *offset)
+huffgetbit(byte *fin, int *offset)
 {
 	int t;
 	bloc = *offset;
@@ -309,12 +309,12 @@ Huff_getBit(byte *fin, int *offset)
 
 /* Send a symbol */
 void
-Huff_transmit(Huff *huff, int ch, byte *fout)
+hufftransmit(Huff *huff, int ch, byte *fout)
 {
 	int i;
 	if(huff->loc[ch] == nil){
 		/* Node hasn't been transmitted, send a NYT, then the symbol */
-		Huff_transmit(huff, NYT, fout);
+		hufftransmit(huff, NYT, fout);
 		for(i = 7; i >= 0; i--)
 			add_bit((char)((ch >> i) & 0x1), fout);
 	}else
@@ -322,7 +322,7 @@ Huff_transmit(Huff *huff, int ch, byte *fout)
 }
 
 void
-Huff_offsetTransmit(Huff *huff, int ch, byte *fout, int *offset)
+huffoffsettransmit(Huff *huff, int ch, byte *fout, int *offset)
 {
 	bloc = *offset;
 	send(huff->loc[ch], nil, fout);
@@ -330,7 +330,7 @@ Huff_offsetTransmit(Huff *huff, int ch, byte *fout, int *offset)
 }
 
 void
-Huff_Decompress(Bitmsg *mbuf, int offset)
+huffdecompress(Bitmsg *mbuf, int offset)
 {
 	int ch, cch, i, j, size;
 	byte seq[65536], *buffer;
@@ -366,7 +366,7 @@ Huff_Decompress(Bitmsg *mbuf, int offset)
 			seq[j] = 0;
 			break;
 		}
-		Huff_Receive(huff.tree, &ch, buffer);	/* Get a character */
+		huffrecv(huff.tree, &ch, buffer);	/* Get a character */
 		if(ch == NYT){				/* We got a NYT, get the symbol associated with it */
 			ch = 0;
 			for(i = 0; i < 8; i++)
@@ -375,7 +375,7 @@ Huff_Decompress(Bitmsg *mbuf, int offset)
 
 		seq[j] = ch;	/* Write symbol */
 
-		Huff_addRef(&huff, (byte)ch);	/* Increment node */
+		huffaddref(&huff, (byte)ch);	/* Increment node */
 	}
 	mbuf->cursize = cch + offset;
 	Q_Memcpy(mbuf->data + offset, seq, cch);
@@ -384,7 +384,7 @@ Huff_Decompress(Bitmsg *mbuf, int offset)
 extern int oldsize;
 
 void
-Huff_Compress(Bitmsg *mbuf, int offset)
+huffcompress(Bitmsg *mbuf, int offset)
 {
 	int i, ch, size;
 	byte seq[65536], *buffer;
@@ -411,8 +411,8 @@ Huff_Compress(Bitmsg *mbuf, int offset)
 
 	for(i=0; i<size; i++){
 		ch = buffer[i];
-		Huff_transmit(&huff, ch, seq);	/* Transmit symbol */
-		Huff_addRef(&huff, (byte)ch);	/* Do update */
+		hufftransmit(&huff, ch, seq);	/* Transmit symbol */
+		huffaddref(&huff, (byte)ch);	/* Do update */
 	}
 
 	bloc += 8;	/* next byte */
@@ -422,7 +422,7 @@ Huff_Compress(Bitmsg *mbuf, int offset)
 }
 
 void
-Huff_Init(Huffman *huff)
+huffinit(Huffman *huff)
 {
 	Node *p;
 

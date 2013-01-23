@@ -787,7 +787,7 @@ SV_ConnectionlessPacket(Netaddr from, Bitmsg *msg)
 	MSG_ReadLong(msg);	/* skip the -1 marker */
 
 	if(!Q_strncmp("connect", (char*)&msg->data[4], 7))
-		Huff_Decompress(msg, 12);
+		huffdecompress(msg, 12);
 
 	s = MSG_ReadStringLine(msg);
 	cmdstrtok(s);
