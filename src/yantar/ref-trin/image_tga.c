@@ -52,7 +52,7 @@ R_LoadTGA(const char *name, byte **pic, int *width, int *height)
 	/*
 	 * load the file
 	 *  */
-	length = ri.FS_ReadFile (( char* )name, &buffer.v);
+	length = ri.fsreadfile (( char* )name, &buffer.v);
 	if(!buffer.b || length < 0){
 		return;
 	}
@@ -301,5 +301,5 @@ breakOut:;
 
 	*pic = targa_rgba;
 
-	ri.FS_FreeFile (buffer.v);
+	ri.fsfreefile (buffer.v);
 }

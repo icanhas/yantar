@@ -206,7 +206,7 @@ Demos_MenuInit(void)
 
 	Q_sprintf(extension, sizeof(extension), ".%s%d", DEMOEXT, protocol);
 	s_demos.numDemos =
-		trap_FS_GetFileList("demos", extension, s_demos.names, ARRAY_LEN(
+		trap_fsgetfilelist("demos", extension, s_demos.names, ARRAY_LEN(
 				s_demos.names));
 
 	demoname = s_demos.names;
@@ -229,7 +229,7 @@ Demos_MenuInit(void)
 				Q_sprintf(extension, sizeof(extension),
 					".%s%d", DEMOEXT,
 					protocolLegacy);
-				s_demos.numDemos += trap_FS_GetFileList(
+				s_demos.numDemos += trap_fsgetfilelist(
 					"demos", extension, demoname,
 					ARRAY_LEN(s_demos.names) -
 					(demoname - s_demos.names));

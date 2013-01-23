@@ -949,7 +949,7 @@ GLSL_LoadGPUShaderText(const char *name, const char *fallback,
 	}
 
 	ri.Printf(PRINT_DEVELOPER, "...loading '%s'\n", filename);
-	size = ri.FS_ReadFile(filename, (void**)&buffer);
+	size = ri.fsreadfile(filename, (void**)&buffer);
 	if(!buffer){
 		if(fallback){
 			ri.Printf(PRINT_DEVELOPER, "couldn't load, using fallback\n");
@@ -974,7 +974,7 @@ GLSL_LoadGPUShaderText(const char *name, const char *fallback,
 	}
 
 	if(buffer){
-		ri.FS_FreeFile(buffer);
+		ri.fsfreefile(buffer);
 	}
 
 	return result;

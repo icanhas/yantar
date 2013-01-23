@@ -514,7 +514,7 @@ CM_LoadMap(const char *name, qbool clientload, int *checksum)
 	 * load the file
 	 */
 #ifndef BSPC
-	length = FS_ReadFile(name, &buf.v);
+	length = fsreadfile(name, &buf.v);
 #else
 	length = LoadQuakeFile((quakefile_t*)name, &buf.v);
 #endif
@@ -553,7 +553,7 @@ CM_LoadMap(const char *name, qbool clientload, int *checksum)
 		&header.lumps[LUMP_DRAWVERTS]);
 
 	/* we are NOT freeing the file, because it is cached for the ref */
-	FS_FreeFile (buf.v);
+	fsfreefile (buf.v);
 
 	CM_InitBoxHull ();
 

@@ -389,18 +389,18 @@ CL_CgameSystemCalls(intptr_t *args)
 		cmdargsbuf(VMA(1), args[2]);
 		return 0;
 	case CG_FS_FOPENFILE:
-		return FS_FOpenFileByMode(VMA(1), VMA(2), args[3]);
+		return fsopenmode(VMA(1), VMA(2), args[3]);
 	case CG_FS_READ:
-		FS_Read2(VMA(1), args[2], args[3]);
+		fsread2(VMA(1), args[2], args[3]);
 		return 0;
 	case CG_FS_WRITE:
-		FS_Write(VMA(1), args[2], args[3]);
+		fswrite(VMA(1), args[2], args[3]);
 		return 0;
 	case CG_FS_FCLOSEFILE:
-		FS_FCloseFile(args[1]);
+		fsclose(args[1]);
 		return 0;
 	case CG_FS_SEEK:
-		return FS_Seek(args[1], args[2], args[3]);
+		return fsseek(args[1], args[2], args[3]);
 	case CG_SENDCONSOLECOMMAND:
 		cbufaddstr(VMA(1));
 		return 0;

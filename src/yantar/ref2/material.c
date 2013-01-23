@@ -1674,7 +1674,7 @@ ScanAndLoadShaderFiles(void)
 
 	long	sum = 0, summand;
 	/* scan for shader files */
-	shaderFiles = ri.FS_ListFiles("scripts", ".shader", &numShaderFiles);
+	shaderFiles = ri.fslistfiles("scripts", ".shader", &numShaderFiles);
 
 	if(!shaderFiles || !numShaderFiles){
 		ri.Printf(PRINT_WARNING, "WARNING: no shader files found\n");
@@ -1691,7 +1691,7 @@ ScanAndLoadShaderFiles(void)
 
 		Q_sprintf(filename, sizeof(filename), "scripts/%s", shaderFiles[i]);
 		ri.Printf(PRINT_DEVELOPER, "...loading '%s'\n", filename);
-		summand = ri.FS_ReadFile(filename, (void**)&buffers[i]);
+		summand = ri.fsreadfile(filename, (void**)&buffers[i]);
 
 		if(!buffers[i])
 			ri.Error(ERR_DROP, "Couldn't load %s", filename);
@@ -1711,7 +1711,7 @@ ScanAndLoadShaderFiles(void)
 				ri.Printf(PRINT_WARNING,
 					"WARNING: Bad shader file %s has incorrect syntax.\n",
 					filename);
-				ri.FS_FreeFile(buffers[i]);
+				ri.fsfreefile(buffers[i]);
 				buffers[i] = nil;
 				break;
 			}
@@ -1737,13 +1737,13 @@ ScanAndLoadShaderFiles(void)
 		strcat(textEnd, buffers[i]);
 		strcat(textEnd, "\n");
 		textEnd += strlen(textEnd);
-		ri.FS_FreeFile(buffers[i]);
+		ri.fsfreefile(buffers[i]);
 	}
 
 	Q_compresstr(s_shaderText);
 
 	/* free up memory */
-	ri.FS_FreeFileList(shaderFiles);
+	ri.fsfreefilelist(shaderFiles);
 
 	Q_Memset(shaderTextHashTableSizes, 0, sizeof(shaderTextHashTableSizes));
 	size = 0;

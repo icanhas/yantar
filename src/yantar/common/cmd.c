@@ -247,7 +247,7 @@ Cmd_Exec_f(void)
 
 	Q_strncpyz(filename, cmdargv(1), sizeof(filename));
 	Q_defaultext(filename, sizeof(filename), ".cfg");
-	FS_ReadFile(filename, &f.v);
+	fsreadfile(filename, &f.v);
 	if(!f.c){
 		Com_Printf("couldn't exec %s\n",cmdargv(1));
 		return;
@@ -255,7 +255,7 @@ Cmd_Exec_f(void)
 	Com_Printf("execing %s\n",cmdargv(1));
 	cbufinsertstr(f.c);
 
-	FS_FreeFile(f.v);
+	fsfreefile(f.v);
 }
 
 /*

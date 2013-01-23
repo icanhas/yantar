@@ -528,11 +528,11 @@ SV_BotInitBotLib(void)
 	botlib_import.HunkAlloc = BotImport_HunkAlloc;
 
 	/* file system access */
-	botlib_import.FS_FOpenFile = FS_FOpenFileByMode;
-	botlib_import.FS_Read	= FS_Read2;
-	botlib_import.FS_Write	= FS_Write;
-	botlib_import.FS_FCloseFile = FS_FCloseFile;
-	botlib_import.FS_Seek = FS_Seek;
+	botlib_import.fsopen = fsopenmode;
+	botlib_import.fsread	= fsread2;
+	botlib_import.fswrite	= fswrite;
+	botlib_import.fsclose = fsclose;
+	botlib_import.fsseek = fsseek;
 
 	/* debug lines */
 	botlib_import.DebugLineCreate	= BotImport_DebugLineCreate;

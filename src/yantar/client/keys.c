@@ -948,11 +948,11 @@ Key_WriteBindings(Fhandle f)
 {
 	int i;
 
-	FS_Printf (f, "unbindall\n");
+	fsprintf (f, "unbindall\n");
 
 	for(i=0; i<MAX_KEYS; i++)
 		if(keys[i].binding && keys[i].binding[0])
-			FS_Printf (f, "bind %s \"%s\"\n", Key_KeynumToString(
+			fsprintf (f, "bind %s \"%s\"\n", Key_KeynumToString(
 					i), keys[i].binding);
 }
 
@@ -1254,7 +1254,7 @@ CL_LoadConsoleHistory(void)
 	int	i, numChars, numLines = 0;
 	Fhandle f;
 
-	consoleSaveBufferSize = FS_FOpenFileRead(CONSOLE_HISTORY_FILE, &f,
+	consoleSaveBufferSize = fsopenr(CONSOLE_HISTORY_FILE, &f,
 		qfalse);
 	if(!f){
 		Com_Printf("Couldn't read %s.\n", CONSOLE_HISTORY_FILE);
@@ -1262,7 +1262,7 @@ CL_LoadConsoleHistory(void)
 	}
 
 	if(consoleSaveBufferSize <= MAX_CONSOLE_SAVE_BUFFER &&
-	   FS_Read(consoleSaveBuffer, consoleSaveBufferSize,
+	   fsread(consoleSaveBuffer, consoleSaveBufferSize,
 		   f) == consoleSaveBufferSize){
 		text_p = consoleSaveBuffer;
 
@@ -1307,7 +1307,7 @@ CL_LoadConsoleHistory(void)
 	}else
 		Com_Printf("Couldn't read %s.\n", CONSOLE_HISTORY_FILE);
 
-	FS_FCloseFile(f);
+	fsclose(f);
 }
 
 /*
@@ -1349,14 +1349,14 @@ CL_SaveConsoleHistory(void)
 
 	consoleSaveBufferSize = strlen(consoleSaveBuffer);
 
-	f = FS_FOpenFileWrite(CONSOLE_HISTORY_FILE);
+	f = fsopenw(CONSOLE_HISTORY_FILE);
 	if(!f){
 		Com_Printf("Couldn't write %s.\n", CONSOLE_HISTORY_FILE);
 		return;
 	}
 
-	if(FS_Write(consoleSaveBuffer, consoleSaveBufferSize,
+	if(fswrite(consoleSaveBuffer, consoleSaveBufferSize,
 		   f) < consoleSaveBufferSize)
 		Com_Printf("Couldn't write %s.\n", CONSOLE_HISTORY_FILE);
-	FS_FCloseFile(f);
+	fsclose(f);
 }

@@ -905,17 +905,17 @@ UI_ParseAnimationFile(const char *filename, Anim *animations)
 	memset(animations, 0, sizeof(Anim) * MAX_ANIMATIONS);
 
 	/* load the file */
-	len = trap_FS_FOpenFile(filename, &f, FS_READ);
+	len = trap_fsopen(filename, &f, FS_READ);
 	if(len <= 0)
 		return qfalse;
 	if(len >= (sizeof(text) - 1)){
 		Com_Printf("File %s too long\n", filename);
-		trap_FS_FCloseFile(f);
+		trap_fsclose(f);
 		return qfalse;
 	}
-	trap_FS_Read(text, len, f);
+	trap_fsread(text, len, f);
 	text[len] = 0;
-	trap_FS_FCloseFile(f);
+	trap_fsclose(f);
 
 	/* parse the text */
 	text_p	= text;

@@ -276,12 +276,12 @@ Q_MD5File(const char *fn, int length, const char *prefix, int prefix_len)
 
 	Q_strncpyz(final, "", sizeof(final));
 
-	filelen = FS_SV_FOpenFileRead(fn, &f);
+	filelen = fssvopenr(fn, &f);
 
 	if(!f)
 		return final;
 	if(filelen < 1){
-		FS_FCloseFile(f);
+		fsclose(f);
 		return final;
 	}
 	if(filelen < length || !length)
@@ -293,7 +293,7 @@ Q_MD5File(const char *fn, int length, const char *prefix, int prefix_len)
 		MD5Update(&md5, (unsigned char*)prefix, prefix_len);
 
 	for(;; ){
-		r = FS_Read2(buffer, sizeof(buffer), f);
+		r = fsread2(buffer, sizeof(buffer), f);
 		if(r < 1)
 			break;
 		if(r + total > length)
@@ -303,7 +303,7 @@ Q_MD5File(const char *fn, int length, const char *prefix, int prefix_len)
 		if(r < sizeof(buffer) || total >= length)
 			break;
 	}
-	FS_FCloseFile(f);
+	fsclose(f);
 	MD5Final(&md5, digest);
 	final[0] = '\0';
 	for(i = 0; i < 16; i++)

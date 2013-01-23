@@ -380,7 +380,7 @@ Z_LogZoneHeap(Memzone *zone, char *name)
 	char	buf[4096];
 	int	size, allocSize, numBlocks;
 
-	if(!logfile || !FS_Initialized())
+	if(!logfile || !fsisinitialized())
 		return;
 	size = numBlocks = 0;
 #ifdef ZONE_DEBUG
@@ -389,7 +389,7 @@ Z_LogZoneHeap(Memzone *zone, char *name)
 	Q_sprintf(buf, sizeof(buf),
 		"\r\n================\r\n%s log\r\n================\r\n",
 		name);
-	FS_Write(buf, strlen(buf), logfile);
+	fswrite(buf, strlen(buf), logfile);
 	for(block = zone->blocklist.next; block->next != &zone->blocklist;
 	    block = block->next){
 		if(block->tag){
@@ -408,7 +408,7 @@ Z_LogZoneHeap(Memzone *zone, char *name)
 				block->d.allocSize, block->d.file, block->d.line,
 				block->d.label,
 				dump);
-			FS_Write(buf, strlen(buf), logfile);
+			fswrite(buf, strlen(buf), logfile);
 			allocSize += block->d.allocSize;
 #endif
 			size += block->size;
@@ -424,11 +424,11 @@ Z_LogZoneHeap(Memzone *zone, char *name)
 	Q_sprintf(buf, sizeof(buf), "%d %s memory in %d blocks\r\n", size,
 		name,
 		numBlocks);
-	FS_Write(buf, strlen(buf), logfile);
+	fswrite(buf, strlen(buf), logfile);
 	Q_sprintf(buf, sizeof(buf), "%d %s memory overhead\r\n", size -
 		allocSize,
 		name);
-	FS_Write(buf, strlen(buf), logfile);
+	fswrite(buf, strlen(buf), logfile);
 }
 
 void
@@ -686,13 +686,13 @@ hunklog(void)
 	char	buf[4096];
 	int	size, numBlocks;
 
-	if(!logfile || !FS_Initialized())
+	if(!logfile || !fsisinitialized())
 		return;
 	size = 0;
 	numBlocks = 0;
 	Q_sprintf(buf, sizeof(buf),
 		"\r\n================\r\nHunk log\r\n================\r\n");
-	FS_Write(buf, strlen(buf), logfile);
+	fswrite(buf, strlen(buf), logfile);
 	for(block = hunkblocks; block; block = block->next){
 #ifdef HUNK_DEBUG
 		Q_sprintf(buf, sizeof(buf),
@@ -700,15 +700,15 @@ hunklog(void)
 			block->file,
 			block->line,
 			block->label);
-		FS_Write(buf, strlen(buf), logfile);
+		fswrite(buf, strlen(buf), logfile);
 #endif
 		size += block->size;
 		numBlocks++;
 	}
 	Q_sprintf(buf, sizeof(buf), "%d Hunk memory\r\n", size);
-	FS_Write(buf, strlen(buf), logfile);
+	fswrite(buf, strlen(buf), logfile);
 	Q_sprintf(buf, sizeof(buf), "%d hunk blocks\r\n", numBlocks);
-	FS_Write(buf, strlen(buf), logfile);
+	fswrite(buf, strlen(buf), logfile);
 }
 
 void
@@ -718,7 +718,7 @@ Hunk_SmallLog(void)
 	char	buf[4096];
 	int	size, locsize, numBlocks;
 
-	if(!logfile || !FS_Initialized())
+	if(!logfile || !fsisinitialized())
 		return;
 	for(block = hunkblocks; block; block = block->next)
 		block->printed = qfalse;
@@ -727,7 +727,7 @@ Hunk_SmallLog(void)
 	Q_sprintf(
 		buf, sizeof(buf),
 		"\r\n================\r\nHunk Small log\r\n================\r\n");
-	FS_Write(buf, strlen(buf), logfile);
+	fswrite(buf, strlen(buf), logfile);
 	for(block = hunkblocks; block; block = block->next){
 		if(block->printed)
 			continue;
@@ -747,15 +747,15 @@ Hunk_SmallLog(void)
 			block->file,
 			block->line,
 			block->label);
-		FS_Write(buf, strlen(buf), logfile);
+		fswrite(buf, strlen(buf), logfile);
 #endif
 		size += block->size;
 		numBlocks++;
 	}
 	Q_sprintf(buf, sizeof(buf), "%d Hunk memory\r\n", size);
-	FS_Write(buf, strlen(buf), logfile);
+	fswrite(buf, strlen(buf), logfile);
 	Q_sprintf(buf, sizeof(buf), "%d hunk blocks\r\n", numBlocks);
-	FS_Write(buf, strlen(buf), logfile);
+	fswrite(buf, strlen(buf), logfile);
 }
 
 void
@@ -769,7 +769,7 @@ Com_Inithunk(void)
 	 * this allows the config and product id files (journal files too) to be loaded
 	 * by the file system without redunant routines in the file system utilizing different
 	 * memory systems */
-	if(FS_LoadStack() != 0)
+	if(fsloadstack() != 0)
 		Com_Errorf(ERR_FATAL,
 			"Hunk initialization failed. File system load stack not zero");
 

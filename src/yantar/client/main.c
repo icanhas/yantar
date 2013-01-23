@@ -560,12 +560,12 @@ CL_WriteDemoMessage(Bitmsg *msg, int headerBytes)
 	/* write the packet sequence */
 	len	= clc.serverMessageSequence;
 	swlen	= LittleLong(len);
-	FS_Write (&swlen, 4, clc.demofile);
+	fswrite (&swlen, 4, clc.demofile);
 	/* skip the packet sequencing information */
 	len	= msg->cursize - headerBytes;
 	swlen	= LittleLong(len);
-	FS_Write (&swlen, 4, clc.demofile);
-	FS_Write (msg->data + headerBytes, len, clc.demofile);
+	fswrite (&swlen, 4, clc.demofile);
+	fswrite (msg->data + headerBytes, len, clc.demofile);
 }
 
 /*
@@ -583,9 +583,9 @@ CL_StopRecord_f(void)
 
 	/* finish up */
 	len = -1;
-	FS_Write (&len, 4, clc.demofile);
-	FS_Write (&len, 4, clc.demofile);
-	FS_FCloseFile (clc.demofile);
+	fswrite (&len, 4, clc.demofile);
+	fswrite (&len, 4, clc.demofile);
+	fsclose (clc.demofile);
 	clc.demofile = 0;
 	clc.demorecording	= qfalse;
 	clc.spDemoRecording	= qfalse;
@@ -668,7 +668,7 @@ CL_Record_f(void)
 				demoName, DEMOEXT,
 				com_protocol->integer);
 
-			if(!FS_FileExists(name))
+			if(!fsfileexists(name))
 				break;	/* file doesn't exist */
 		}
 	}
@@ -676,7 +676,7 @@ CL_Record_f(void)
 	/* open the demo file */
 
 	Com_Printf ("recording to %s.\n", name);
-	clc.demofile = FS_FOpenFileWrite(name);
+	clc.demofile = fsopenw(name);
 	if(!clc.demofile){
 		Com_Printf ("ERROR: couldn't open.\n");
 		return;
@@ -736,11 +736,11 @@ CL_Record_f(void)
 
 	/* write it to the demo file */
 	len = LittleLong(clc.serverMessageSequence - 1);
-	FS_Write (&len, 4, clc.demofile);
+	fswrite (&len, 4, clc.demofile);
 
 	len = LittleLong (buf.cursize);
-	FS_Write (&len, 4, clc.demofile);
-	FS_Write (buf.data, buf.cursize, clc.demofile);
+	fswrite (&len, 4, clc.demofile);
+	fswrite (buf.data, buf.cursize, clc.demofile);
 
 	/* the rest of the demo file will be copied from net messages */
 }
@@ -813,17 +813,17 @@ CL_DemoCompleted(void)
 				else
 					numFrames = clc.timeDemoFrames - 1;
 
-				f = FS_FOpenFileWrite(cl_timedemoLog->string);
+				f = fsopenw(cl_timedemoLog->string);
 				if(f){
-					FS_Printf(f, "# %s", buffer);
+					fsprintf(f, "# %s", buffer);
 
 					for(i = 0; i < numFrames; i++)
-						FS_Printf(
+						fsprintf(
 							f, "%d\n",
 							clc.timeDemoDurations[ i
 							]);
 
-					FS_FCloseFile(f);
+					fsclose(f);
 					Com_Printf("%s written\n",
 						cl_timedemoLog->string);
 				}else
@@ -852,7 +852,7 @@ CL_ReadDemoMessage(void)
 	}
 
 	/* get the sequence number */
-	r = FS_Read(&s, 4, clc.demofile);
+	r = fsread(&s, 4, clc.demofile);
 	if(r != 4){
 		CL_DemoCompleted ();
 		return;
@@ -863,7 +863,7 @@ CL_ReadDemoMessage(void)
 	MSG_Init(&buf, bufData, sizeof(bufData));
 
 	/* get the length */
-	r = FS_Read(&buf.cursize, 4, clc.demofile);
+	r = fsread(&buf.cursize, 4, clc.demofile);
 	if(r != 4){
 		CL_DemoCompleted ();
 		return;
@@ -876,7 +876,7 @@ CL_ReadDemoMessage(void)
 	if(buf.cursize > buf.maxsize)
 		Com_Errorf (ERR_DROP,
 			"CL_ReadDemoMessage: demoMsglen > MAX_MSGLEN");
-	r = FS_Read(buf.data, buf.cursize, clc.demofile);
+	r = fsread(buf.data, buf.cursize, clc.demofile);
 	if(r != buf.cursize){
 		Com_Printf("Demo file was truncated.\n");
 		CL_DemoCompleted ();
@@ -897,7 +897,7 @@ CL_WalkDemoExt(char *arg, char *name, int *demofile)
 	{
 		Q_sprintf(name, MAX_OSPATH, "demos/%s.%s%d", arg, DEMOEXT,
 			com_protocol->integer);
-		FS_FOpenFileRead(name, demofile, qtrue);
+		fsopenr(name, demofile, qtrue);
 
 		if(*demofile){
 			Com_Printf("Demo file: %s\n", name);
@@ -913,7 +913,7 @@ CL_WalkDemoExt(char *arg, char *name, int *demofile)
 
 		Q_sprintf (name, MAX_OSPATH, "demos/%s.%s%d", arg, DEMOEXT,
 			demo_protocols[i]);
-		FS_FOpenFileRead(name, demofile, qtrue);
+		fsopenr(name, demofile, qtrue);
 		if(*demofile){
 			Com_Printf("Demo file: %s\n", name);
 
@@ -977,7 +977,7 @@ CL_PlayDemo_f(void)
 		if(demo_protocols[i] || protocol == com_protocol->integer
 		   ){
 			Q_sprintf(name, sizeof(name), "demos/%s", arg);
-			FS_FOpenFileRead(name, &clc.demofile, qtrue);
+			fsopenr(name, &clc.demofile, qtrue);
 		}else{
 			int len;
 
@@ -1181,8 +1181,8 @@ CL_UpdateGUID(const char *prefix, int prefix_len)
 	Fhandle f;
 	int len;
 
-	len = FS_SV_FOpenFileRead(QKEY_FILE, &f);
-	FS_FCloseFile(f);
+	len = fssvopenr(QKEY_FILE, &f);
+	fsclose(f);
 
 	if(len != QKEY_SIZE)
 		cvarsetstr("cl_guid", "");
@@ -1198,7 +1198,7 @@ CL_OldGame(void)
 		/* change back to previous fs_game */
 		cls.oldGameSet = qfalse;
 		cvarsetstr2("fs_game", cls.oldGame, qtrue);
-		FS_ConditionalRestart(clc.checksumFeed, qfalse);
+		fscondrestart(clc.checksumFeed, qfalse);
 	}
 }
 
@@ -1221,7 +1221,7 @@ CL_Disconnect(qbool showMainMenu)
 		CL_StopRecord_f ();
 
 	if(clc.download){
-		FS_FCloseFile(clc.download);
+		fsclose(clc.download);
 		clc.download = 0;
 	}
 	*clc.downloadTempName = *clc.downloadName = 0;
@@ -1258,7 +1258,7 @@ CL_Disconnect(qbool showMainMenu)
 #endif
 
 	if(clc.demofile){
-		FS_FCloseFile(clc.demofile);
+		fsclose(clc.demofile);
 		clc.demofile = 0;
 	}
 
@@ -1278,7 +1278,7 @@ CL_Disconnect(qbool showMainMenu)
 	}
 
 	/* Remove pure paks */
-	FS_PureServerSetLoadedPaks("", "");
+	fspureservsetloadedpaks("", "");
 
 	CL_ClearState ();
 
@@ -1651,7 +1651,7 @@ CL_SendPureChecksums(void)
 
 	/* if we are pure we need to send back a command with our referenced pk3 checksums */
 	Q_sprintf(cMsg, sizeof(cMsg), "cp %d %s", cl.serverId,
-		FS_ReferencedPakPureChecksums());
+		fsreferencedpakpurechecksums());
 
 	CL_AddReliableCommand(cMsg, qfalse);
 }
@@ -1682,7 +1682,7 @@ CL_Vid_Restart_f(void)
 	/* don't let them loop during the restart */
 	S_StopAllSounds();
 
-	if(!FS_ConditionalRestart(clc.checksumFeed, qtrue)){
+	if(!fscondrestart(clc.checksumFeed, qtrue)){
 		/* if not running a server clear the whole hunk */
 		if(com_sv_running->integer)
 			/* clear all the client data on the hunk */
@@ -1699,7 +1699,7 @@ CL_Vid_Restart_f(void)
 		CL_ShutdownCGame();
 		CL_ShutdownRef();
 		CL_ResetPureClientAtServer();	/* client is no longer pure untill new checksums are sent */
-		FS_ClearPakReferences(FS_UI_REF | FS_CGAME_REF);
+		fsclearpakrefs(FS_UI_REF | FS_CGAME_REF);
 		/* reinitialize the filesystem if the game directory or checksum has changed */
 
 		cls.rendererStarted = qfalse;
@@ -1752,13 +1752,13 @@ CL_Snd_Restart_f(void)
 void
 CL_OpenedPK3List_f(void)
 {
-	Com_Printf("Opened PK3 Names: %s\n", FS_LoadedPakNames());
+	Com_Printf("Opened PK3 Names: %s\n", fsloadedpaknames());
 }
 
 void
 CL_ReferencedPK3List_f(void)
 {
-	Com_Printf("Referenced PK3 Names: %s\n", FS_ReferencedPakNames());
+	Com_Printf("Referenced PK3 Names: %s\n", fsreferencedpaknames());
 }
 
 void
@@ -1805,7 +1805,7 @@ CL_DownloadsComplete(void)
 		CL_cURL_Shutdown();
 		if(clc.cURLDisconnected){
 			if(clc.downloadRestart){
-				FS_Restart(clc.checksumFeed);
+				fsrestart(clc.checksumFeed);
 				clc.downloadRestart = qfalse;
 			}
 			clc.cURLDisconnected = qfalse;
@@ -1819,7 +1819,7 @@ CL_DownloadsComplete(void)
 	if(clc.downloadRestart){
 		clc.downloadRestart = qfalse;
 
-		FS_Restart(clc.checksumFeed);	/* We possibly downloaded a pak, restart the file system to load it */
+		fsrestart(clc.checksumFeed);	/* We possibly downloaded a pak, restart the file system to load it */
 
 		/* inform the server so we get new gamestate info */
 		CL_AddReliableCommand("donedl", qfalse);
@@ -1902,11 +1902,11 @@ CL_NextDownload(void)
 
 	/* A download has finished, check whether this matches a referenced checksum */
 	if(*clc.downloadName){
-		char *zippath = FS_BuildOSPath(cvargetstr(
+		char *zippath = fsbuildospath(cvargetstr(
 				"fs_homepath"), clc.downloadName, "");
 		zippath[strlen(zippath)-1] = '\0';
 
-		if(!FS_CompareZipChecksum(zippath))
+		if(!fscompzipchecksum(zippath))
 			Com_Errorf(ERR_DROP, "Incorrect checksum for file: %s",
 				clc.downloadName);
 	}
@@ -1995,7 +1995,7 @@ CL_InitDownloads(void)
 	if(!(cl_allowDownload->integer & DLF_ENABLE)){
 		/* autodownload is disabled on the client
 		 * but it's possible that some referenced files on the server are missing */
-		if(FS_ComparePaks(missingfiles, sizeof(missingfiles), qfalse))
+		if(fscomparepaks(missingfiles, sizeof(missingfiles), qfalse))
 			/* NOTE TTimo I would rather have that printed as a modal message box
 			 *   but at this point while joining the game we don't know wether we will successfully join or not */
 			Com_Printf(
@@ -2003,7 +2003,7 @@ CL_InitDownloads(void)
 				"You might not be able to join the game\n"
 				"Go to the setting menu to turn on autodownload, or get the file elsewhere\n\n",
 				missingfiles);
-	}else if(FS_ComparePaks(clc.downloadList, sizeof(clc.downloadList),
+	}else if(fscomparepaks(clc.downloadList, sizeof(clc.downloadList),
 			 qtrue)){
 
 		Com_Printf("Need paks: %s\n", clc.downloadList);
@@ -2849,13 +2849,13 @@ CL_InitRef(void)
 	ri.CM_ClusterPVS	= CM_ClusterPVS;
 	ri.CM_DrawDebugSurface	= CM_DrawDebugSurface;
 
-	ri.FS_ReadFile	= FS_ReadFile;
-	ri.FS_FreeFile	= FS_FreeFile;
-	ri.FS_WriteFile = FS_WriteFile;
-	ri.FS_FreeFileList = FS_FreeFileList;
-	ri.FS_ListFiles		= FS_ListFiles;
-	ri.FS_FileIsInPAK	= FS_FileIsInPAK;
-	ri.FS_FileExists	= FS_FileExists;
+	ri.fsreadfile	= fsreadfile;
+	ri.fsfreefile	= fsfreefile;
+	ri.fswritefile = fswritefile;
+	ri.fsfreefilelist = fsfreefilelist;
+	ri.fslistfiles		= fslistfiles;
+	ri.fsfileisinpak	= fsfileisinpak;
+	ri.fsfileexists	= fsfileexists;
 	ri.cvarget	= cvarget;
 	ri.cvarsetstr	= cvarsetstr;
 	ri.cvarsetf	= cvarsetf;
@@ -2949,7 +2949,7 @@ CL_Video_f(void)
 				a, b, c,
 				d);
 
-			if(!FS_FileExists(filename))
+			if(!fsfileexists(filename))
 				break;	/* file doesn't exist */
 		}
 
@@ -2981,8 +2981,8 @@ CL_GenerateQKey(void)
 	unsigned char	buff[ QKEY_SIZE ];
 	Fhandle	f;
 
-	len = FS_SV_FOpenFileRead(QKEY_FILE, &f);
-	FS_FCloseFile(f);
+	len = fssvopenr(QKEY_FILE, &f);
+	fsclose(f);
 	if(len == QKEY_SIZE){
 		Com_Printf("QKEY found.\n");
 		return;
@@ -2994,14 +2994,14 @@ CL_GenerateQKey(void)
 		Com_Printf("QKEY building random string\n");
 		Com_Randombytes(buff, sizeof(buff));
 
-		f = FS_SV_FOpenFileWrite(QKEY_FILE);
+		f = fssvopenw(QKEY_FILE);
 		if(!f){
 			Com_Printf("QKEY could not open %s for write\n",
 				QKEY_FILE);
 			return;
 		}
-		FS_Write(buff, sizeof(buff), f);
-		FS_FCloseFile(f);
+		fswrite(buff, sizeof(buff), f);
+		fsclose(f);
 		Com_Printf("QKEY generated\n");
 	}
 }

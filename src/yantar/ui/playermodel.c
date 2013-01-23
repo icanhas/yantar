@@ -379,7 +379,7 @@ PlayerModel_BuildList(void)
 	s_playermodel.nummodels = 0;
 
 	/* iterate directory of all player models */
-	numdirs = trap_FS_GetFileList(Pplayermodels, "/", dirlist, 2048);
+	numdirs = trap_fsgetfilelist(Pplayermodels, "/", dirlist, 2048);
 	dirptr	= dirlist;
 	for(i=0; i<numdirs && s_playermodel.nummodels < MAX_PLAYERMODELS;
 	    i++,dirptr+=dirlen+1){
@@ -391,7 +391,7 @@ PlayerModel_BuildList(void)
 			continue;
 
 		/* FIXME iterate all skin files in directory */
-		numfiles = trap_FS_GetFileList(va(Pplayermodels "/%s",
+		numfiles = trap_fsgetfilelist(va(Pplayermodels "/%s",
 					dirptr), "tga", filelist, 2048);
 		fileptr = filelist;
 		for(j=0;

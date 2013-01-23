@@ -63,11 +63,11 @@ S_OGG_Callback_read(void *ptr, size_t size, size_t nmemb, void *datasource)
 	/* we use a Sndstream in the generic pointer to pass around */
 	stream = (Sndstream*)datasource;
 
-	/* FS_Read does not support multi-byte elements */
+	/* fsread does not support multi-byte elements */
 	byteSize = nmemb * size;
 
-	/* read it with the Q3 function FS_Read() */
-	bytesRead = FS_Read(ptr, byteSize, stream->file);
+	/* read it with the Q3 function fsread() */
+	bytesRead = fsread(ptr, byteSize, stream->file);
 
 	/* update the file position */
 	stream->pos += bytesRead;
@@ -104,7 +104,7 @@ S_OGG_Callback_seek(void *datasource, ogg_int64_t offset, int whence)
 	case SEEK_SET:
 	{
 		/* set the file position in the actual file with the Q3 function */
-		retVal = FS_Seek(stream->file, (long)offset, FS_SEEK_SET);
+		retVal = fsseek(stream->file, (long)offset, FS_SEEK_SET);
 
 		/* something has gone wrong, so we return here */
 		if(retVal < 0)
@@ -118,7 +118,7 @@ S_OGG_Callback_seek(void *datasource, ogg_int64_t offset, int whence)
 	case SEEK_CUR:
 	{
 		/* set the file position in the actual file with the Q3 function */
-		retVal = FS_Seek(stream->file, (long)offset, FS_SEEK_CUR);
+		retVal = fsseek(stream->file, (long)offset, FS_SEEK_CUR);
 
 		/* something has gone wrong, so we return here */
 		if(retVal < 0)
@@ -136,7 +136,7 @@ S_OGG_Callback_seek(void *datasource, ogg_int64_t offset, int whence)
 
 		/* set the file position in the actual file with the Q3 function */
 		retVal =
-			FS_Seek(stream->file, (long)stream->length +
+			fsseek(stream->file, (long)stream->length +
 				(long)offset,
 				FS_SEEK_SET);
 
@@ -188,7 +188,7 @@ S_OGG_Callback_tell(void *datasource)
 	/* Sndstream in the generic pointer */
 	stream = (Sndstream*)datasource;
 
-	return (long)FS_FTell(stream->file);
+	return (long)fsftell(stream->file);
 }
 
 /* the callback structure */

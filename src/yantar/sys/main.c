@@ -282,7 +282,7 @@ Sys_LoadDll(const char *name, qbool useSystemLib)
 			if(!basePath || !*basePath)
 				basePath = ".";
 
-			if(FS_FilenameCompare(topDir, basePath)){
+			if(fscomparefname(topDir, basePath)){
 				Com_Printf("Trying to load \"%s\" from \"%s\"...\n",
 					name, basePath);
 				Q_sprintf(libPath, sizeof(libPath), "%s%c%s",

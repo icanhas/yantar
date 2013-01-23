@@ -65,38 +65,38 @@ trap_Argv(int n, char *buffer, int bufferLength)
 }
 
 int
-trap_FS_FOpenFile(const char *qpath, Fhandle *f, Fsmode mode)
+trap_fsopen(const char *qpath, Fhandle *f, Fsmode mode)
 {
 	return syscall(G_FS_FOPEN_FILE, qpath, f, mode);
 }
 
 void
-trap_FS_Read(void *buffer, int len, Fhandle f)
+trap_fsread(void *buffer, int len, Fhandle f)
 {
 	syscall(G_FS_READ, buffer, len, f);
 }
 
 void
-trap_FS_Write(const void *buffer, int len, Fhandle f)
+trap_fswrite(const void *buffer, int len, Fhandle f)
 {
 	syscall(G_FS_WRITE, buffer, len, f);
 }
 
 void
-trap_FS_FCloseFile(Fhandle f)
+trap_fsclose(Fhandle f)
 {
 	syscall(G_FS_FCLOSE_FILE, f);
 }
 
 int
-trap_FS_GetFileList(const char *path, const char *extension, char *listbuf,
+trap_fsgetfilelist(const char *path, const char *extension, char *listbuf,
 		    int bufsize)
 {
 	return syscall(G_FS_GETFILELIST, path, extension, listbuf, bufsize);
 }
 
 int
-trap_FS_Seek(Fhandle f, long offset, int origin)
+trap_fsseek(Fhandle f, long offset, int origin)
 {
 	return syscall(G_FS_SEEK, f, offset, origin);
 }

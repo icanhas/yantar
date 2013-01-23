@@ -161,14 +161,14 @@ Com_Printf(const char *fmt, ...)
 	if(com_logfile && com_logfile->integer){
 		/* TTimo: only open the qconsole.log if the filesystem is in an initialized state
 		*   also, avoid recursing in the qconsole.log opening (i.e. if fs_debug is on) */
-		if(!logfile && FS_Initialized() && !opening_qconsole){
+		if(!logfile && fsisinitialized() && !opening_qconsole){
 			struct tm *newtime;
 			time_t aclock;
 
 			opening_qconsole = qtrue;
 			time(&aclock);
 			newtime = localtime(&aclock);
-			logfile = FS_FOpenFileWrite("qconsole.log");
+			logfile = fsopenw("qconsole.log");
 			if(logfile){
 				Com_Printf("logfile opened on %s\n",
 					asctime(newtime));
@@ -176,15 +176,15 @@ Com_Printf(const char *fmt, ...)
 				if(com_logfile->integer > 1)
 					/* force it to not buffer so we get valid
 					 * data even if we are crashing */
-					FS_ForceFlush(logfile);
+					fsforceflush(logfile);
 			}else{
 				Com_Printf("Opening qconsole.log failed!\n");
 				cvarsetf("logfile", 0);
 			}
 			opening_qconsole = qfalse;
 		}
-		if(logfile && FS_Initialized())
-			FS_Write(msg, strlen(msg), logfile);
+		if(logfile && fsisinitialized())
+			fswrite(msg, strlen(msg), logfile);
 	}
 }
 
@@ -254,7 +254,7 @@ Com_Errorf(int code, const char *fmt, ...)
 		CL_FlushMemory( );
 		vmclearforceunload();
 		/* make sure we can get at our local stuff */
-		FS_PureServerSetLoadedPaks("", "");
+		fspureservsetloadedpaks("", "");
 		com_errorEntered = qfalse;
 		longjmp (abortframe, -1);
 	}else if(code == ERR_DROP){
@@ -266,7 +266,7 @@ Com_Errorf(int code, const char *fmt, ...)
 		CL_Disconnect(qtrue);
 		CL_FlushMemory( );
 		vmclearforceunload();
-		FS_PureServerSetLoadedPaks("", "");
+		fspureservsetloadedpaks("", "");
 		com_errorEntered = qfalse;
 		longjmp(abortframe, -1);
 	}else{
@@ -301,7 +301,7 @@ Com_Quit_f(void)
 		CL_Shutdown(p[0] ? p : "Client quit", qtrue, qtrue);
 		vmclearforceunload();
 		Com_Shutdown ();
-		FS_Shutdown(qtrue);
+		fsshutdown(qtrue);
 	}
 	Sys_Quit ();
 }
@@ -629,12 +629,12 @@ Com_Initjournaling(void)
 
 	if(com_journal->integer == 1){
 		Com_Printf("Journaling events\n");
-		com_journalFile = FS_FOpenFileWrite("journal.dat");
-		com_journalDataFile = FS_FOpenFileWrite("journaldata.dat");
+		com_journalFile = fsopenw("journal.dat");
+		com_journalDataFile = fsopenw("journaldata.dat");
 	}else if(com_journal->integer == 2){
 		Com_Printf("Replaying journaled events\n");
-		FS_FOpenFileRead("journal.dat", &com_journalFile, qtrue);
-		FS_FOpenFileRead("journaldata.dat", &com_journalDataFile, qtrue);
+		fsopenr("journal.dat", &com_journalFile, qtrue);
+		fsopenr("journaldata.dat", &com_journalDataFile, qtrue);
 	}
 
 	if(!com_journalFile || !com_journalDataFile){
@@ -736,12 +736,12 @@ Com_Getrealevent(void)
 
 	/* either get an event from the system or the journal file */
 	if(com_journal->integer == 2){
-		r = FS_Read(&ev, sizeof(ev), com_journalFile);
+		r = fsread(&ev, sizeof(ev), com_journalFile);
 		if(r != sizeof(ev))
 			Com_Errorf(ERR_FATAL, "Error reading from journal file");
 		if(ev.evPtrLength){
 			ev.evPtr = zalloc(ev.evPtrLength);
-			r = FS_Read(ev.evPtr, ev.evPtrLength, com_journalFile);
+			r = fsread(ev.evPtr, ev.evPtrLength, com_journalFile);
 			if(r != ev.evPtrLength)
 				Com_Errorf(ERR_FATAL,
 					"Error reading from journal file");
@@ -751,12 +751,12 @@ Com_Getrealevent(void)
 
 		/* write the journal value out if needed */
 		if(com_journal->integer == 1){
-			r = FS_Write(&ev, sizeof(ev), com_journalFile);
+			r = fswrite(&ev, sizeof(ev), com_journalFile);
 			if(r != sizeof(ev))
 				Com_Errorf(ERR_FATAL,
 					"Error writing to journal file");
 			if(ev.evPtrLength){
-				r = FS_Write(ev.evPtr, ev.evPtrLength,
+				r = fswrite(ev.evPtr, ev.evPtrLength,
 					com_journalFile);
 				if(r != ev.evPtrLength)
 					Com_Errorf(
@@ -1186,7 +1186,7 @@ Com_Gamerestart(int checksumFeed, qbool disconnect)
 			CL_Shutdown("Game directory changed", disconnect, qfalse);
 		}
 
-		FS_Restart(checksumFeed);
+		fsrestart(checksumFeed);
 
 		/* Clean out any user and VM created cvars */
 		cvarrestart(qtrue);
@@ -1214,7 +1214,7 @@ Com_Gamerestart(int checksumFeed, qbool disconnect)
 void
 Com_Gamerestart_f(void)
 {
-	if(!FS_FilenameCompare(cmdargv(1), com_basegame->string))
+	if(!fscomparefname(cmdargv(1), com_basegame->string))
 		/* This is the standard base game. Servers and clients should
 		 * use "" and not the standard basegame name because this messes
 		 * up pak file negotiation and lots of other stuff */
@@ -1230,15 +1230,15 @@ Com_Writeconfigtofile(const char *filename)
 {
 	Fhandle f;
 
-	f = FS_FOpenFileWrite(filename);
+	f = fsopenw(filename);
 	if(!f){
 		Com_Printf ("Couldn't write %s.\n", filename);
 		return;
 	}
-	FS_Printf(f, "// ／人◕‿‿ ◕人＼\n");
+	fsprintf(f, "// ／人◕‿‿ ◕人＼\n");
 	Key_WriteBindings(f);
 	cvarwritevars(f);
-	FS_FCloseFile(f);
+	fsclose(f);
 }
 
 /* Writes key bindings and archived cvars to config file if modified */
@@ -1445,7 +1445,7 @@ Com_Init(char *commandLine)
 	if(!com_basegame->string[0])
 		cvarforcereset("com_basegame");
 
-	FS_InitFilesystem ();
+	fsinit ();
 
 	Com_Initjournaling();
 
@@ -1580,7 +1580,7 @@ Com_Init(char *commandLine)
 
 	com_pipefile = cvarget("com_pipefile", "", CVAR_ARCHIVE|CVAR_LATCH);
 	if(com_pipefile->string[0])
-		pipefile = FS_FCreateOpenPipeFile(com_pipefile->string);
+		pipefile = fscreatepipefile(com_pipefile->string);
 
 	Com_Printf ("--- Common Initialization Complete ---\n");
 }
@@ -1589,18 +1589,18 @@ void
 Com_Shutdown(void)
 {
 	if(logfile){
-		FS_FCloseFile (logfile);
+		fsclose (logfile);
 		logfile = 0;
 	}
 
 	if(com_journalFile){
-		FS_FCloseFile(com_journalFile);
+		fsclose(com_journalFile);
 		com_journalFile = 0;
 	}
 
 	if(pipefile){
-		FS_FCloseFile(pipefile);
-		FS_HomeRemove(com_pipefile->string);
+		fsclose(pipefile);
+		fshomeremove(com_pipefile->string);
 	}
 
 }
@@ -1615,7 +1615,7 @@ Com_Readpipe(void)
 
 	if(!pipefile)
 		return;
-	while((read = FS_Read(buf+accu, sizeof(buf)-accu-1, pipefile)) > 0){
+	while((read = fsread(buf+accu, sizeof(buf)-accu-1, pipefile)) > 0){
 		char *brk = nil;
 		uint i;
 
@@ -1929,10 +1929,10 @@ Field_CompleteFilename(const char *dir, const char *ext, qbool stripExt,
 	matchCount = 0;
 	shortestMatch[ 0 ] = 0;
 
-	FS_FilenameCompletion(dir, ext, stripExt, findmatches,
+	fsfnamecompletion(dir, ext, stripExt, findmatches,
 		allowNonPureFilesOnDisk);
 	if(!Field_Complete( ))
-		FS_FilenameCompletion(dir, ext, stripExt, printmatches,
+		fsfnamecompletion(dir, ext, stripExt, printmatches,
 			allowNonPureFilesOnDisk);
 }
 

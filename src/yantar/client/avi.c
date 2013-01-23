@@ -58,12 +58,12 @@ static byte	buffer[ MAX_AVI_BUFFER ];
 static int	bufIndex;
 
 /*
- * SafeFS_Write
+ * Safefswrite
  */
 static ID_INLINE void
-SafeFS_Write(const void *buffer, int len, Fhandle f)
+Safefswrite(const void *buffer, int len, Fhandle f)
 {
-	if(FS_Write(buffer, len, f) < len)
+	if(fswrite(buffer, len, f) < len)
 		Com_Errorf(ERR_DROP, "Failed to write avi file");
 }
 
@@ -311,12 +311,12 @@ CL_OpenAVIForWriting(const char *fileName)
 		return qfalse;
 	}
 
-	if((afd.f = FS_FOpenFileWrite(fileName)) <= 0)
+	if((afd.f = fsopenw(fileName)) <= 0)
 		return qfalse;
 
-	if((afd.idxF = FS_FOpenFileWrite(
+	if((afd.idxF = fsopenw(
 		    va("%s" INDEX_FILE_EXTENSION, fileName))) <= 0){
-		FS_FCloseFile(afd.f);
+		fsclose(afd.f);
 		return qfalse;
 	}
 
@@ -377,12 +377,12 @@ CL_OpenAVIForWriting(const char *fileName)
 	 * correct amount of space at the beginning of the file */
 	CL_WriteAVIHeader( );
 
-	SafeFS_Write(buffer, bufIndex, afd.f);
+	Safefswrite(buffer, bufIndex, afd.f);
 	afd.fileSize = bufIndex;
 
 	bufIndex = 0;
 	START_CHUNK("idx1");
-	SafeFS_Write(buffer, bufIndex, afd.idxF);
+	Safefswrite(buffer, bufIndex, afd.idxF);
 
 	afd.moviSize = 4;	/* For the "movi" */
 	afd.fileOpen = qtrue;
@@ -441,9 +441,9 @@ CL_WriteAVIVideoFrame(const byte *imageBuffer, int size)
 	WRITE_STRING("00dc");
 	WRITE_4BYTES(size);
 
-	SafeFS_Write(buffer, 8, afd.f);
-	SafeFS_Write(imageBuffer, size, afd.f);
-	SafeFS_Write(padding, paddingSize, afd.f);
+	Safefswrite(buffer, 8, afd.f);
+	Safefswrite(imageBuffer, size, afd.f);
+	Safefswrite(padding, paddingSize, afd.f);
 	afd.fileSize += (chunkSize + paddingSize);
 
 	afd.numVideoFrames++;
@@ -458,7 +458,7 @@ CL_WriteAVIVideoFrame(const byte *imageBuffer, int size)
 	WRITE_4BYTES(0x00000010);	/* dwFlags (all frames are KeyFrames) */
 	WRITE_4BYTES(chunkOffset);	/* dwOffset */
 	WRITE_4BYTES(size);		/* dwLength */
-	SafeFS_Write(buffer, 16, afd.idxF);
+	Safefswrite(buffer, 16, afd.idxF);
 
 	afd.numIndices++;
 }
@@ -506,9 +506,9 @@ CL_WriteAVIAudioFrame(const byte *pcmBuffer, int size)
 		WRITE_STRING("01wb");
 		WRITE_4BYTES(bytesInBuffer);
 
-		SafeFS_Write(buffer, 8, afd.f);
-		SafeFS_Write(pcmCaptureBuffer, bytesInBuffer, afd.f);
-		SafeFS_Write(padding, paddingSize, afd.f);
+		Safefswrite(buffer, 8, afd.f);
+		Safefswrite(pcmCaptureBuffer, bytesInBuffer, afd.f);
+		Safefswrite(padding, paddingSize, afd.f);
 		afd.fileSize += (chunkSize + paddingSize);
 
 		afd.numAudioFrames++;
@@ -521,7 +521,7 @@ CL_WriteAVIAudioFrame(const byte *pcmBuffer, int size)
 		WRITE_4BYTES(0);		/* dwFlags */
 		WRITE_4BYTES(chunkOffset);	/* dwOffset */
 		WRITE_4BYTES(bytesInBuffer);	/* dwLength */
-		SafeFS_Write(buffer, 16, afd.idxF);
+		Safefswrite(buffer, 16, afd.idxF);
 
 		afd.numIndices++;
 
@@ -561,18 +561,18 @@ CL_CloseAVI(void)
 
 	afd.fileOpen = qfalse;
 
-	FS_Seek(afd.idxF, 4, FS_SEEK_SET);
+	fsseek(afd.idxF, 4, FS_SEEK_SET);
 	bufIndex = 0;
 	WRITE_4BYTES(indexSize);
-	SafeFS_Write(buffer, bufIndex, afd.idxF);
-	FS_FCloseFile(afd.idxF);
+	Safefswrite(buffer, bufIndex, afd.idxF);
+	fsclose(afd.idxF);
 
 	/* Write index */
 
 	/* Open the temp index file */
-	if((indexSize = FS_FOpenFileRead(idxFileName,
+	if((indexSize = fsopenr(idxFileName,
 		    &afd.idxF, qtrue)) <= 0){
-		FS_FCloseFile(afd.f);
+		fsclose(afd.f);
 		return qfalse;
 	}
 
@@ -580,21 +580,21 @@ CL_CloseAVI(void)
 
 	/* Append index to end of avi file */
 	while(indexRemainder > MAX_AVI_BUFFER){
-		FS_Read(buffer, MAX_AVI_BUFFER, afd.idxF);
-		SafeFS_Write(buffer, MAX_AVI_BUFFER, afd.f);
+		fsread(buffer, MAX_AVI_BUFFER, afd.idxF);
+		Safefswrite(buffer, MAX_AVI_BUFFER, afd.f);
 		afd.fileSize += MAX_AVI_BUFFER;
 		indexRemainder -= MAX_AVI_BUFFER;
 	}
-	FS_Read(buffer, indexRemainder, afd.idxF);
-	SafeFS_Write(buffer, indexRemainder, afd.f);
+	fsread(buffer, indexRemainder, afd.idxF);
+	Safefswrite(buffer, indexRemainder, afd.f);
 	afd.fileSize += indexRemainder;
-	FS_FCloseFile(afd.idxF);
+	fsclose(afd.idxF);
 
 	/* Remove temp index file */
-	FS_HomeRemove(idxFileName);
+	fshomeremove(idxFileName);
 
 	/* Write the real header */
-	FS_Seek(afd.f, 0, FS_SEEK_SET);
+	fsseek(afd.f, 0, FS_SEEK_SET);
 	CL_WriteAVIHeader( );
 
 	bufIndex = 4;
@@ -603,11 +603,11 @@ CL_CloseAVI(void)
 	bufIndex = afd.moviOffset + 4;	/* Skip "LIST" */
 	WRITE_4BYTES(afd.moviSize);
 
-	SafeFS_Write(buffer, bufIndex, afd.f);
+	Safefswrite(buffer, bufIndex, afd.f);
 
 	zfree(afd.cBuffer);
 	zfree(afd.eBuffer);
-	FS_FCloseFile(afd.f);
+	fsclose(afd.f);
 
 	Com_Printf("Wrote %d:%d frames to %s\n", afd.numVideoFrames,
 		afd.numAudioFrames,

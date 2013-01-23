@@ -1796,7 +1796,7 @@ RE_LoadWorldMap(const char *name)
 	tr.worldMapLoaded = qtrue;
 
 	/* load it */
-	ri.FS_ReadFile(name, &buffer.v);
+	ri.fsreadfile(name, &buffer.v);
 	if(!buffer.b){
 		ri.Error (ERR_DROP, "RE_LoadWorldMap: %s not found", name);
 	}
@@ -1846,5 +1846,5 @@ RE_LoadWorldMap(const char *name)
 	/* only set tr.world now that we know the entire level has loaded properly */
 	tr.world = &s_worldData;
 
-	ri.FS_FreeFile(buffer.v);
+	ri.fsfreefile(buffer.v);
 }

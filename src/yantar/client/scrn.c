@@ -286,7 +286,7 @@ SCR_DrawDemoRecording(void)
 	if(clc.spDemoRecording)
 		return;
 
-	pos = FS_FTell(clc.demofile);
+	pos = fsftell(clc.demofile);
 	sprintf(string, "RECORDING %s: %ik", clc.demoName, pos / 1024);
 
 	SCR_DrawStringExt(320 - strlen(

@@ -10,10 +10,10 @@ equ	trap_cvargeti        -7
 equ	trap_cvargetstrbuf        -8
 equ	trap_Argc                             -9
 equ	trap_Argv                             -10
-equ	trap_FS_FOpenFile                     -11
-equ	trap_FS_Read                          -12
-equ	trap_FS_Write                         -13
-equ	trap_FS_FCloseFile                    -14
+equ	trap_fsopen                     -11
+equ	trap_fsread                          -12
+equ	trap_fswrite                         -13
+equ	trap_fsclose                    -14
 equ	trap_SendConsoleCommand               -15
 equ	trap_LocateGameData                   -16
 equ	trap_DropClient                       -17
@@ -38,14 +38,14 @@ equ	trap_BotAllocateClient                -35
 equ	trap_BotFreeClient                    -36
 equ	trap_GetUsercmd                       -37
 equ	trap_GetEntityToken                   -38
-equ	trap_FS_GetFileList                   -39
+equ	trap_fsgetfilelist                   -39
 equ	trap_DebugPolygonCreate               -40
 equ	trap_DebugPolygonDelete               -41
 equ	trap_RealTime                         -42
 equ	trap_snapv3                           -43
 equ	trap_TraceCapsule                     -44
 equ	trap_EntityContactCapsule             -45
-equ	trap_FS_Seek                          -46
+equ	trap_fsseek                          -46
 
 equ	memset                                -47
 equ	memcpy                                -48

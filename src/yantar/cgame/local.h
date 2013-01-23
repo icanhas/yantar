@@ -1391,11 +1391,11 @@ void	trap_Argv(int n, char *buffer, int bufferLength);
 void	trap_Args(char *buffer, int bufferLength);
 
 /* returns length of file */
-int	trap_FS_FOpenFile(const char *qpath, Fhandle *f, Fsmode mode);
-void	trap_FS_Read(void *buffer, int len, Fhandle f);
-void	trap_FS_Write(const void *buffer, int len, Fhandle f);
-void	trap_FS_FCloseFile(Fhandle f);
-int	trap_FS_Seek(Fhandle f, long offset, int origin);	/* Fsorigin */
+int	trap_fsopen(const char *qpath, Fhandle *f, Fsmode mode);
+void	trap_fsread(void *buffer, int len, Fhandle f);
+void	trap_fswrite(const void *buffer, int len, Fhandle f);
+void	trap_fsclose(Fhandle f);
+int	trap_fsseek(Fhandle f, long offset, int origin);	/* Fsorigin */
 
 /* add commands to the local console as if they were typed in
  * for map changing, etc.  The command is not executed immediately,

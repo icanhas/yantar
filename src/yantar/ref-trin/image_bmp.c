@@ -59,7 +59,7 @@ R_LoadBMP(const char *name, byte **pic, int *width, int *height)
 	/*
 	 * load the file
 	 *  */
-	length = ri.FS_ReadFile(( char* )name, &buffer.v);
+	length = ri.fsreadfile(( char* )name, &buffer.v);
 	if(!buffer.b || length < 0){
 		return;
 	}
@@ -214,6 +214,6 @@ R_LoadBMP(const char *name, byte **pic, int *width, int *height)
 		}
 	}
 
-	ri.FS_FreeFile(buffer.v);
+	ri.fsfreefile(buffer.v);
 
 }

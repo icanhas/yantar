@@ -793,7 +793,7 @@ char*	Q_skipcharset(char *s, char *sep);
 
 void		Com_Randombytes(byte *string, int len);
 
-/* mode parm for FS_FOpenFile */
+/* mode parm for fsopen */
 typedef enum {
 	FS_READ,
 	FS_WRITE,

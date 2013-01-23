@@ -42,21 +42,21 @@ LAN_LoadCachedServers(void)
 	Fhandle fileIn;
 	cls.numglobalservers = cls.numfavoriteservers = 0;
 	cls.numGlobalServerAddresses = 0;
-	if(FS_SV_FOpenFileRead("servercache.dat", &fileIn)){
-		FS_Read(&cls.numglobalservers, sizeof(int), fileIn);
-		FS_Read(&cls.numfavoriteservers, sizeof(int), fileIn);
-		FS_Read(&size, sizeof(int), fileIn);
+	if(fssvopenr("servercache.dat", &fileIn)){
+		fsread(&cls.numglobalservers, sizeof(int), fileIn);
+		fsread(&cls.numfavoriteservers, sizeof(int), fileIn);
+		fsread(&size, sizeof(int), fileIn);
 		if(size == sizeof(cls.globalServers) +
 		   sizeof(cls.favoriteServers)){
-			FS_Read(&cls.globalServers, sizeof(cls.globalServers),
+			fsread(&cls.globalServers, sizeof(cls.globalServers),
 				fileIn);
-			FS_Read(&cls.favoriteServers, sizeof(cls.favoriteServers),
+			fsread(&cls.favoriteServers, sizeof(cls.favoriteServers),
 				fileIn);
 		}else{
 			cls.numglobalservers = cls.numfavoriteservers = 0;
 			cls.numGlobalServerAddresses = 0;
 		}
-		FS_FCloseFile(fileIn);
+		fsclose(fileIn);
 	}
 }
 
@@ -67,14 +67,14 @@ void
 LAN_SaveServersToCache(void)
 {
 	int size;
-	Fhandle fileOut = FS_SV_FOpenFileWrite("servercache.dat");
-	FS_Write(&cls.numglobalservers, sizeof(int), fileOut);
-	FS_Write(&cls.numfavoriteservers, sizeof(int), fileOut);
+	Fhandle fileOut = fssvopenw("servercache.dat");
+	fswrite(&cls.numglobalservers, sizeof(int), fileOut);
+	fswrite(&cls.numfavoriteservers, sizeof(int), fileOut);
 	size = sizeof(cls.globalServers) + sizeof(cls.favoriteServers);
-	FS_Write(&size, sizeof(int), fileOut);
-	FS_Write(&cls.globalServers, sizeof(cls.globalServers), fileOut);
-	FS_Write(&cls.favoriteServers, sizeof(cls.favoriteServers), fileOut);
-	FS_FCloseFile(fileOut);
+	fswrite(&size, sizeof(int), fileOut);
+	fswrite(&cls.globalServers, sizeof(cls.globalServers), fileOut);
+	fswrite(&cls.favoriteServers, sizeof(cls.favoriteServers), fileOut);
+	fsclose(fileOut);
 }
 
 
@@ -700,25 +700,25 @@ CL_UISystemCalls(intptr_t *args)
 		return 0;
 
 	case UI_FS_FOPENFILE:
-		return FS_FOpenFileByMode(VMA(1), VMA(2), args[3]);
+		return fsopenmode(VMA(1), VMA(2), args[3]);
 
 	case UI_FS_READ:
-		FS_Read2(VMA(1), args[2], args[3]);
+		fsread2(VMA(1), args[2], args[3]);
 		return 0;
 
 	case UI_FS_WRITE:
-		FS_Write(VMA(1), args[2], args[3]);
+		fswrite(VMA(1), args[2], args[3]);
 		return 0;
 
 	case UI_FS_FCLOSEFILE:
-		FS_FCloseFile(args[1]);
+		fsclose(args[1]);
 		return 0;
 
 	case UI_FS_GETFILELIST:
-		return FS_GetFileList(VMA(1), VMA(2), VMA(3), args[4]);
+		return fsgetfilelist(VMA(1), VMA(2), VMA(3), args[4]);
 
 	case UI_FS_SEEK:
-		return FS_Seek(args[1], args[2], args[3]);
+		return fsseek(args[1], args[2], args[3]);
 
 	case UI_R_REGISTERMODEL:
 		return re.RegisterModel(VMA(1));

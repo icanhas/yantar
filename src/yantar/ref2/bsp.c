@@ -305,7 +305,7 @@ R_LoadLightmaps(Lump *l, Lump *surfs)
 					i * (tr.worldDeluxeMapping ? 2 : 1));
 				/* ri.Printf(PRINT_ALL, "looking for %s\n", filename); */
 
-				size = ri.FS_ReadFile(filename, (void**)&hdrLightmap);
+				size = ri.fsreadfile(filename, (void**)&hdrLightmap);
 			}
 
 			if(hdrLightmap){
@@ -425,7 +425,7 @@ R_LoadLightmaps(Lump *l, Lump *surfs)
 					IMGFLAG_NO_COMPRESSION | IMGFLAG_CLAMPTOEDGE, textureInternalFormat);
 
 			if(hdrLightmap)
-				ri.FS_FreeFile(hdrLightmap);
+				ri.fsfreefile(hdrLightmap);
 		}
 
 		if(tr.worldDeluxeMapping){
@@ -2011,7 +2011,7 @@ R_LoadSurfaces(Lump *surfs, Lump *verts, Lump *indexLump)
 		Q_sprintf(filename, sizeof(filename), Pmaps "/%s/vertlight.raw", s_worldData.baseName);
 		/* ri.Printf(PRINT_ALL, "looking for %s\n", filename); */
 
-		size = ri.FS_ReadFile(filename, (void**)&hdrVertColors);
+		size = ri.fsreadfile(filename, (void**)&hdrVertColors);
 
 		if(hdrVertColors){
 			/* ri.Printf(PRINT_ALL, "Found!\n"); */
@@ -2099,7 +2099,7 @@ R_LoadSurfaces(Lump *surfs, Lump *verts, Lump *indexLump)
 	}
 
 	if(hdrVertColors){
-		ri.FS_FreeFile(hdrVertColors);
+		ri.fsfreefile(hdrVertColors);
 	}
 
 #ifdef PATCH_STITCHING
@@ -2512,7 +2512,7 @@ R_LoadLightGrid(Lump *l)
 		Q_sprintf(filename, sizeof(filename), Pmaps "/%s/lightgrid.raw", s_worldData.baseName);
 		/* ri.Printf(PRINT_ALL, "looking for %s\n", filename); */
 
-		size = ri.FS_ReadFile(filename, (void**)&hdrLightGrid);
+		size = ri.fsreadfile(filename, (void**)&hdrLightGrid);
 
 		if(hdrLightGrid){
 			float lightScale = pow(2, r_mapOverBrightBits->integer - tr.overbrightBits);
@@ -2537,7 +2537,7 @@ R_LoadLightGrid(Lump *l)
 		}
 
 		if(hdrLightGrid)
-			ri.FS_FreeFile(hdrLightGrid);
+			ri.fsfreefile(hdrLightGrid);
 	}
 }
 
@@ -3089,7 +3089,7 @@ RE_LoadWorldMap(const char *name)
 	tr.worldMapLoaded = qtrue;
 
 	/* load it */
-	ri.FS_ReadFile(name, &buffer.v);
+	ri.fsreadfile(name, &buffer.v);
 	if(!buffer.b){
 		ri.Error (ERR_DROP, "RE_LoadWorldMap: %s not found", name);
 	}
@@ -3152,5 +3152,5 @@ RE_LoadWorldMap(const char *name)
 	R_BindNullVBO();
 	R_BindNullIBO();
 
-	ri.FS_FreeFile(buffer.v);
+	ri.fsfreefile(buffer.v);
 }

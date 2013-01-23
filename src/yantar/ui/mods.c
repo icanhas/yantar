@@ -115,7 +115,7 @@ UI_Mods_LoadMods(void)
 	s_mods.list.itemnames[0] = s_mods.descriptionList[0] = "Quake III Arena";
 	s_mods.fs_gameList[0] = "";
 
-	numdirs = trap_FS_GetFileList("$modlist", "", dirlist, sizeof(dirlist));
+	numdirs = trap_fsgetfilelist("$modlist", "", dirlist, sizeof(dirlist));
 	dirptr	= dirlist;
 	for(i = 0; i < numdirs; i++){
 		dirlen	= strlen(dirptr) + 1;

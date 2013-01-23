@@ -425,10 +425,10 @@ G_InitGame(int levelTime, int randomSeed, int restart)
 
 	if(g_gametype.integer != GT_SINGLE_PLAYER && g_logfile.string[0]){
 		if(g_logfileSync.integer)
-			trap_FS_FOpenFile(g_logfile.string, &level.logFile,
+			trap_fsopen(g_logfile.string, &level.logFile,
 				FS_APPEND_SYNC);
 		else
-			trap_FS_FOpenFile(g_logfile.string, &level.logFile,
+			trap_fsopen(g_logfile.string, &level.logFile,
 				FS_APPEND);
 		if(!level.logFile)
 			G_Printf("WARNING: Couldn't open logfile: %s\n",
@@ -520,7 +520,7 @@ G_ShutdownGame(int restart)
 		G_LogPrintf("ShutdownGame:\n");
 		G_LogPrintf(
 			"------------------------------------------------------------\n");
-		trap_FS_FCloseFile(level.logFile);
+		trap_fsclose(level.logFile);
 		level.logFile = 0;
 	}
 
@@ -1132,7 +1132,7 @@ G_LogPrintf(const char *fmt, ...)
 	if(!level.logFile)
 		return;
 
-	trap_FS_Write(string, strlen(string), level.logFile);
+	trap_fswrite(string, strlen(string), level.logFile);
 }
 
 /*

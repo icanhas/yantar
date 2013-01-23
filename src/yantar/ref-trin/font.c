@@ -158,7 +158,7 @@ WriteTGA(char *filename, byte *data, int width, int height)
 		buffer[i+3] = data[i-18+3];	/* alpha */
 	}
 
-	ri.FS_WriteFile(filename, buffer, c);
+	ri.fswritefile(filename, buffer, c);
 
 	/* f = fopen (filename, "wb");
 	 * fwrite (buffer, 1, c, f);
@@ -370,9 +370,9 @@ RE_RegisterFont(const char *fontName, int pointSize, Fontinfo *font)
 			return;
 		}
 
-	len = ri.FS_ReadFile(name, NULL);
+	len = ri.fsreadfile(name, NULL);
 	if(len == sizeof(Fontinfo)){
-		ri.FS_ReadFile(name, &faceData);
+		ri.fsreadfile(name, &faceData);
 		fdOffset = 0;
 		fdFile = faceData;
 		for(i=0; i<GLYPHS_PER_FONT; i++){
@@ -410,7 +410,7 @@ RE_RegisterFont(const char *fontName, int pointSize, Fontinfo *font)
 		return;
 	}
 
-	len = ri.FS_ReadFile(fontName, &faceData);
+	len = ri.fsreadfile(fontName, &faceData);
 	if(len <= 0){
 		ri.Printf(PRINT_ALL, "RE_RegisterFont: Unable to read font file\n");
 		return;
@@ -514,12 +514,12 @@ RE_RegisterFont(const char *fontName, int pointSize, Fontinfo *font)
 	Q_Memcpy(&registeredFont[registeredFontCount++], font, sizeof(Fontinfo));
 
 	if(r_saveFontData->integer){
-		ri.FS_WriteFile(va("fonts/fontImage_%i.dat", pointSize), font, sizeof(Fontinfo));
+		ri.fswritefile(va("fonts/fontImage_%i.dat", pointSize), font, sizeof(Fontinfo));
 	}
 
 	ri.Free(out);
 
-	ri.FS_FreeFile(faceData);
+	ri.fsfreefile(faceData);
 #endif
 }
 

@@ -160,7 +160,7 @@ Con_Dump_f(void)
 
 	Com_Printf ("Dumped console text to %s.\n", cmdargv(1));
 
-	f = FS_FOpenFileWrite(cmdargv(1));
+	f = fsopenw(cmdargv(1));
 	if(!f){
 		Com_Printf ("ERROR: couldn't open.\n");
 		return;
@@ -189,10 +189,10 @@ Con_Dump_f(void)
 				break;
 		}
 		strcat(buffer, "\n");
-		FS_Write(buffer, strlen(buffer), f);
+		fswrite(buffer, strlen(buffer), f);
 	}
 
-	FS_FCloseFile(f);
+	fsclose(f);
 }
 
 

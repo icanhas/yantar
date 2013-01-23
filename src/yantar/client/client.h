@@ -195,7 +195,7 @@ struct Clientconn {
 	int		downloadCount;			/* how many bytes we got */
 	int		downloadSize;			/* how many bytes we got */
 	char		downloadList[MAX_INFO_STRING];	/* list of paks we need to download */
-	qbool		downloadRestart;		/* if true, we need to do another FS_Restart because we downloaded a pak */
+	qbool		downloadRestart;		/* if true, we need to do another fsrestart because we downloaded a pak */
 
 	/* demo information */
 	char		demoName[MAX_QPATH];

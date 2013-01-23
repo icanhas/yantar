@@ -212,7 +212,7 @@ Sys_Mkfifo(const char *ospath)
 
 	/* if file already exists AND is a pipefile, remove it */
 	if(!stat(ospath, &buf) && S_ISFIFO(buf.st_mode))
-		FS_Remove(ospath);
+		fsremove(ospath);
 
 	result = mkfifo(ospath, 0600);
 	if(result != 0)
@@ -474,7 +474,7 @@ Sys_ErrorDialog(const char *error)
 	const char *homepath = cvargetstr("fs_homepath");
 	const char *gamedir = cvargetstr("fs_game");
 	const char *fileName = "crashlog.txt";
-	char *ospath = FS_BuildOSPath(homepath, gamedir, fileName);
+	char *ospath = fsbuildospath(homepath, gamedir, fileName);
 
 	Sys_Print(va("%s\n", error));
 	
@@ -483,7 +483,7 @@ Sys_ErrorDialog(const char *error)
 		   ospath), "Error");
 
 	/* Make sure the write path for the crashlog exists */
-	if(FS_CreatePath(ospath)){
+	if(fscreatepath(ospath)){
 		Com_Printf("ERROR: couldn't create path '%s' for crash log.\n",
 			ospath);
 		return;
@@ -491,7 +491,7 @@ Sys_ErrorDialog(const char *error)
 
 	/* We might be crashing because we maxed out the Quake MAX_FILE_HANDLES,
 	 * which will come through here, so we don't want to recurse forever by
-	 * calling FS_FOpenFileWrite()...use the Unix system APIs instead. */
+	 * calling fsopenw()...use the Unix system APIs instead. */
 	f = open(ospath, O_CREAT | O_TRUNC | O_WRONLY, 0640);
 	if(f == -1){
 		Com_Printf("ERROR: couldn't open %s\n", fileName);

@@ -328,7 +328,7 @@ R_ModeList_f(void)
  *
  * two commands: "screenshot" and "screenshotJPEG"
  * we use statics to store a count and start writing the first screenshot/screenshot????.tga (.jpg) available
- * (with FS_FileExists / FS_FOpenFileWrite calls)
+ * (with fsfileexists / fsopenw calls)
  * FIXME: the statics don't get a reinit between fs_game changes
  *
  */
@@ -425,7 +425,7 @@ RB_TakeScreenshot(int x, int y, int width, int height, char *fileName)
 	if(glConfig.deviceSupportsGamma)
 		R_GammaCorrect(allbuf + offset, memcount);
 
-	ri.FS_WriteFile(fileName, buffer, memcount + 18);
+	ri.fswritefile(fileName, buffer, memcount + 18);
 
 	ri.hunkfreetemp(allbuf);
 }
@@ -602,7 +602,7 @@ R_LevelShot(void)
 		R_GammaCorrect(buffer + 18, 128 * 128 * 3);
 	}
 
-	ri.FS_WriteFile(checkname, buffer, 128 * 128*3 + 18);
+	ri.fswritefile(checkname, buffer, 128 * 128*3 + 18);
 
 	ri.hunkfreetemp(buffer);
 	ri.hunkfreetemp(allsource);
@@ -654,7 +654,7 @@ R_ScreenShot_f(void)
 		for(; lastNumber <= 9999; lastNumber++){
 			R_ScreenshotFilename(lastNumber, checkname);
 
-			if(!ri.FS_FileExists(checkname)){
+			if(!ri.fsfileexists(checkname)){
 				break;	/* file doesn't exist */
 			}
 		}
@@ -708,7 +708,7 @@ R_ScreenShotJPEG_f(void)
 		for(; lastNumber <= 9999; lastNumber++){
 			R_ScreenshotFilenameJPEG(lastNumber, checkname);
 
-			if(!ri.FS_FileExists(checkname)){
+			if(!ri.fsfileexists(checkname)){
 				break;	/* file doesn't exist */
 			}
 		}

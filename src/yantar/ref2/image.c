@@ -2469,7 +2469,7 @@ RE_RegisterSkin(const char *name)
 	}
 
 	/* load and parse the skin file */
-	ri.FS_ReadFile(name, &text.v);
+	ri.fsreadfile(name, &text.v);
 	if(!text.c){
 		return 0;
 	}
@@ -2503,7 +2503,7 @@ RE_RegisterSkin(const char *name)
 		skin->numSurfaces++;
 	}
 
-	ri.FS_FreeFile(text.v);
+	ri.fsfreefile(text.v);
 
 
 	/* never let a skin have 0 shaders */

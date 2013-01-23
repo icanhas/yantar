@@ -168,11 +168,11 @@ typedef struct botlib_import_s {
 	int (*AvailableMemory)(void);			/* available Zone memory */
 	void            *(*HunkAlloc)(int size);	/* allocate from hunk */
 	/* file system access */
-	int (*FS_FOpenFile)(const char *qpath, Fhandle *file, Fsmode mode);
-	int (*FS_Read)(void *buffer, int len, Fhandle f);
-	int (*FS_Write)(const void *buffer, int len, Fhandle f);
-	void (*FS_FCloseFile)(Fhandle f);
-	int (*FS_Seek)(Fhandle f, long offset, int origin);
+	int (*fsopen)(const char *qpath, Fhandle *file, Fsmode mode);
+	int (*fsread)(void *buffer, int len, Fhandle f);
+	int (*fswrite)(const void *buffer, int len, Fhandle f);
+	void (*fsclose)(Fhandle f);
+	int (*fsseek)(Fhandle f, long offset, int origin);
 	/* debug visualisation stuff */
 	int (*DebugLineCreate)(void);
 	void (*DebugLineDelete)(int line);

@@ -49,7 +49,7 @@ R_RegisterMD3(const char *name, model_t *mod)
 		else
 			Q_sprintf(namebuf, sizeof(namebuf), "%s.%s", filename, fext);
 
-		size = ri.FS_ReadFile(namebuf, &buf.v);
+		size = ri.fsreadfile(namebuf, &buf.v);
 		if(!buf.u)
 			continue;
 
@@ -63,7 +63,7 @@ R_RegisterMD3(const char *name, model_t *mod)
 				ri.Printf(PRINT_WARNING,"R_RegisterMD3: unknown fileid for %s\n", name);
 		}
 
-		ri.FS_FreeFile(buf.v);
+		ri.fsfreefile(buf.v);
 
 		if(loaded){
 			mod->numLods++;
@@ -104,7 +104,7 @@ R_RegisterIQM(const char *name, model_t *mod)
 	qbool loaded = qfalse;
 	int filesize;
 
-	filesize = ri.FS_ReadFile(name, (void**)&buf.v);
+	filesize = ri.fsreadfile(name, (void**)&buf.v);
 	if(!buf.u){
 		mod->type = MOD_BAD;
 		return 0;
@@ -112,7 +112,7 @@ R_RegisterIQM(const char *name, model_t *mod)
 
 	loaded = R_LoadIQM(mod, buf.u, filesize, name);
 
-	ri.FS_FreeFile (buf.v);
+	ri.fsfreefile (buf.v);
 
 	if(!loaded){
 		ri.Printf(PRINT_WARNING,"R_RegisterIQM: couldn't load iqm file %s\n", name);

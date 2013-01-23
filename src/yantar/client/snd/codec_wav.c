@@ -14,7 +14,7 @@ FGetLittleLong(Fhandle f)
 {
 	int v;
 
-	FS_Read(&v, sizeof(v), f);
+	fsread(&v, sizeof(v), f);
 	return LittleLong(v);
 }
 
@@ -23,7 +23,7 @@ FGetLittleShort(Fhandle f)
 {
 	short v;
 
-	FS_Read(&v, sizeof(v), f);
+	fsread(&v, sizeof(v), f);
 	return LittleShort(v);
 }
 
@@ -34,7 +34,7 @@ S_ReadChunkInfo(Fhandle f, char *name)
 
 	name[4] = 0;
 
-	r = FS_Read(name, 4, f);
+	r = fsread(name, 4, f);
 	if(r != 4)
 		return -1;
 	len = FGetLittleLong(f);
@@ -58,7 +58,7 @@ S_FindRIFFChunk(Fhandle f, char *chunk)
 			return len;
 		len = PAD(len, 2);
 		/* Not the right chunk - skip it */
-		FS_Seek(f, len, FS_SEEK_CUR);
+		fsseek(f, len, FS_SEEK_CUR);
 	}
 	return -1;
 }
@@ -87,7 +87,7 @@ S_ReadRIFFHeader(Fhandle file, Sndinfo *info)
 	int	fmtlen = 0;
 
 	/* skip the riff wav header */
-	FS_Read(dump, 12, file);
+	fsread(dump, 12, file);
 	/* Scan for the format chunk */
 	if((fmtlen = S_FindRIFFChunk(file, "fmt ")) < 0){
 		Com_Printf(S_COLOR_RED "ERROR: Couldn't find 'fmt' chunk\n");
@@ -113,7 +113,7 @@ S_ReadRIFFHeader(Fhandle file, Sndinfo *info)
 	/* Skip the rest of the format chunk if required */
 	if(fmtlen > 16){
 		fmtlen -= 16;
-		FS_Seek(file, fmtlen, FS_SEEK_CUR);
+		fsseek(file, fmtlen, FS_SEEK_CUR);
 	}
 	/* Scan for the data chunk */
 	if((info->size = S_FindRIFFChunk(file, "data")) < 0){
@@ -140,11 +140,11 @@ S_WAV_CodecLoad(const char *filename, Sndinfo *info)
 	Fhandle file;
 	void *buffer;
 
-	FS_FOpenFileRead(filename, &file, qtrue);
+	fsopenr(filename, &file, qtrue);
 	if(!file)
 		return NULL;
 	if(!S_ReadRIFFHeader(file, info)){
-		FS_FCloseFile(file);
+		fsclose(file);
 		Com_Printf(S_COLOR_RED
 			"ERROR: Incorrect/unsupported format in '%s'\n",
 			filename);
@@ -153,16 +153,16 @@ S_WAV_CodecLoad(const char *filename, Sndinfo *info)
 
 	buffer = hunkalloctemp(info->size);
 	if(!buffer){
-		FS_FCloseFile(file);
+		fsclose(file);
 		Com_Printf(S_COLOR_RED "ERROR: Out of memory reading \"%s\"\n",
 			filename);
 		return NULL;
 	}
 
-	FS_Read(buffer, info->size, file);
+	fsread(buffer, info->size, file);
 	S_ByteSwapRawSamples(info->samples, info->width, info->channels,
 		(byte*)buffer);
-	FS_FCloseFile(file);
+	fsclose(file);
 	return buffer;
 }
 
@@ -199,7 +199,7 @@ S_WAV_CodecReadStream(Sndstream *stream, int bytes, void *buffer)
 		bytes = remaining;
 	stream->pos += bytes;
 	samples = (bytes / stream->info.width) / stream->info.channels;
-	FS_Read(buffer, bytes, stream->file);
+	fsread(buffer, bytes, stream->file);
 	S_ByteSwapRawSamples(samples, stream->info.width, stream->info.channels,
 		buffer);
 	return bytes;

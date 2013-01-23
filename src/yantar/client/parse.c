@@ -400,7 +400,7 @@ parsegamestate(Bitmsg *msg)
 		Q_strncpyz(cls.oldGame, oldGame, sizeof(cls.oldGame));
 	}
 
-	FS_ConditionalRestart(clc.checksumFeed, qfalse);
+	fscondrestart(clc.checksumFeed, qfalse);
 
 	/* 
 	 * This used to call CL_StartHunkUsers, but now we enter the download state before loading the
@@ -462,7 +462,7 @@ parsedownload(Bitmsg *msg)
 
 	/* open the file if not opened yet */
 	if(!clc.download){
-		clc.download = FS_SV_FOpenFileWrite(clc.downloadTempName);
+		clc.download = fssvopenw(clc.downloadTempName);
 
 		if(!clc.download){
 			Com_Printf("Could not create %s\n", clc.downloadTempName);
@@ -473,7 +473,7 @@ parsedownload(Bitmsg *msg)
 	}
 
 	if(size)
-		FS_Write(data, size, clc.download);
+		fswrite(data, size, clc.download);
 
 	CL_AddReliableCommand(va("nextdl %d", clc.downloadBlock), qfalse);
 	clc.downloadBlock++;
@@ -485,11 +485,11 @@ parsedownload(Bitmsg *msg)
 
 	if(!size){	/* A zero length block means EOF */
 		if(clc.download){
-			FS_FCloseFile(clc.download);
+			fsclose(clc.download);
 			clc.download = 0;
 
 			/* rename the file */
-			FS_SV_Rename (clc.downloadTempName, clc.downloadName);
+			fssvrename (clc.downloadTempName, clc.downloadName);
 		}
 
 		/* send intentions now
@@ -756,11 +756,11 @@ CL_SystemInfoChanged(void)
 	/* check pure server string */
 	s = Info_ValueForKey(systemInfo, "sv_paks");
 	t = Info_ValueForKey(systemInfo, "sv_pakNames");
-	FS_PureServerSetLoadedPaks(s, t);
+	fspureservsetloadedpaks(s, t);
 
 	s = Info_ValueForKey(systemInfo, "sv_referencedPaks");
 	t = Info_ValueForKey(systemInfo, "sv_referencedPakNames");
-	FS_PureServerSetReferencedPaks(s, t);
+	fspureservsetreferencedpaks(s, t);
 
 	gameSet = qfalse;
 	/* scan through all the variables in the systeminfo and locally set cvars to match */
@@ -774,7 +774,7 @@ CL_SystemInfoChanged(void)
 
 		/* ehw! */
 		if(!Q_stricmp(key, "fs_game")){
-			if(FS_CheckDirTraversal(value)){
+			if(fscheckdirtraversal(value)){
 				Com_Printf(S_COLOR_YELLOW
 					"WARNING: Server sent invalid fs_game value %s\n",
 					value);

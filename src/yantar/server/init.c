@@ -298,9 +298,9 @@ SV_TouchCGame(void)
 	char filename[MAX_QPATH];
 
 	Q_sprintf(filename, sizeof(filename), Pvmfiles "/%s.qvm", "cgame");
-	FS_FOpenFileRead(filename, &f, qfalse);
+	fsopenr(filename, &f, qfalse);
 	if(f)
-		FS_FCloseFile(f);
+		fsclose(f);
 }
 
 /*
@@ -339,7 +339,7 @@ SV_SpawnServer(char *server, qbool killBots)
 	else if(sv_maxclients->modified)
 		SV_ChangeMaxClients();
 
-	FS_ClearPakReferences(0);
+	fsclearpakrefs(0);
 	
 	svs.snapshotEntities = hunkalloc(sizeof(Entstate)*svs.numSnapshotEntities, h_high);
 	svs.nextSnapshotEntities = 0;
@@ -372,7 +372,7 @@ SV_SpawnServer(char *server, qbool killBots)
 
 	/* get a new checksum feed and restart the file system */
 	sv.checksumFeed = (((int)rand() << 16) ^ rand()) ^ Com_Millisecs();
-	FS_Restart(sv.checksumFeed);
+	fsrestart(sv.checksumFeed);
 
 	CM_LoadMap(va(Pmaps "/%s.bsp", server), qfalse, &checksum);
 
@@ -469,12 +469,12 @@ SV_SpawnServer(char *server, qbool killBots)
 		 * the server sends these to the clients so they will only
 		 * load pk3s also loaded at the server 
 		 */
-		p = FS_LoadedPakChecksums();
+		p = fsloadedpakchecksums();
 		cvarsetstr("sv_paks", p);
 		if(strlen(p) == 0)
 			Com_Printf(
 				"WARNING: sv_pure set but no PK3 files loaded\n");
-		p = FS_LoadedPakNames();
+		p = fsloadedpaknames();
 		cvarsetstr("sv_pakNames", p);
 
 		/* 
@@ -491,9 +491,9 @@ SV_SpawnServer(char *server, qbool killBots)
 	 * the server sends these to the clients so they can figure
 	 * out which pk3s should be auto-downloaded 
 	 */
-	p = FS_ReferencedPakChecksums();
+	p = fsreferencedpakchecksums();
 	cvarsetstr("sv_referencedPaks", p);
-	p = FS_ReferencedPakNames();
+	p = fsreferencedpaknames();
 	cvarsetstr("sv_referencedPakNames", p);
 
 	/* save systeminfo and serverinfo strings */

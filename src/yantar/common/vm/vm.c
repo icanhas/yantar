@@ -174,7 +174,7 @@ VM_LoadSymbols(Vm *vm)
 
 	Q_stripext(vm->name, name, sizeof(name));
 	Q_sprintf(symbols, sizeof(symbols), Pvmfiles "/%s.map", name);
-	FS_ReadFile(symbols, &mapfile.v);
+	fsreadfile(symbols, &mapfile.v);
 	if(!mapfile.c){
 		Com_Printf("Couldn't load symbol file: %s\n", symbols);
 		return;
@@ -228,7 +228,7 @@ VM_LoadSymbols(Vm *vm)
 
 	vm->numSymbols = count;
 	Com_Printf("%i symbols parsed from %s\n", count, symbols);
-	FS_FreeFile(mapfile.v);
+	fsfreefile(mapfile.v);
 }
 
 /*
@@ -303,7 +303,7 @@ VM_LoadQVM(Vm *vm, qbool alloc, qbool unpure)
 	Q_sprintf(filename, sizeof(filename), Pvmfiles "/%s.qvm", vm->name);
 	Com_Printf("Loading vm file %s...\n", filename);
 
-	FS_ReadFileDir(filename, vm->searchPath, unpure, &header.v);
+	fsreadfiledir(filename, vm->searchPath, unpure, &header.v);
 
 	if(!header.h){
 		Com_Printf("Failed.\n");
@@ -314,7 +314,7 @@ VM_LoadQVM(Vm *vm, qbool alloc, qbool unpure)
 	}
 
 	/* show where the qvm was loaded from */
-	FS_Which(filename, vm->searchPath);
+	fswhich(filename, vm->searchPath);
 
 	if(LittleLong(header.h->vmMagic) == VM_MAGIC_VER2){
 		Com_Printf("...which has vmMagic VM_MAGIC_VER2\n");
@@ -330,7 +330,7 @@ VM_LoadQVM(Vm *vm, qbool alloc, qbool unpure)
 		   || header.h->litLength < 0
 		   || header.h->codeLength <= 0){
 			vmfree(vm);
-			FS_FreeFile(header.v);
+			fsfreefile(header.v);
 
 			Com_Printf(S_COLOR_YELLOW "Warning: %s has bad header\n",
 				filename);
@@ -348,7 +348,7 @@ VM_LoadQVM(Vm *vm, qbool alloc, qbool unpure)
 		   || header.h->litLength < 0
 		   || header.h->codeLength <= 0){
 			vmfree(vm);
-			FS_FreeFile(header.v);
+			fsfreefile(header.v);
 
 			Com_Printf(S_COLOR_YELLOW "Warning: %s has bad header\n",
 				filename);
@@ -356,7 +356,7 @@ VM_LoadQVM(Vm *vm, qbool alloc, qbool unpure)
 		}
 	}else{
 		vmfree(vm);
-		FS_FreeFile(header.v);
+		fsfreefile(header.v);
 
 		Com_Printf(
 			S_COLOR_YELLOW
@@ -382,7 +382,7 @@ VM_LoadQVM(Vm *vm, qbool alloc, qbool unpure)
 		/* clear the data, but make sure we're not clearing more than allocated */
 		if(vm->dataMask + 1 != dataLength){
 			vmfree(vm);
-			FS_FreeFile(header.v);
+			fsfreefile(header.v);
 
 			Com_Printf(S_COLOR_YELLOW
 				"Warning: Data region size of %s not matching after "
@@ -416,7 +416,7 @@ VM_LoadQVM(Vm *vm, qbool alloc, qbool unpure)
 		else{
 			if(vm->numJumpTableTargets != prevNumJumpTableTargets){
 				vmfree(vm);
-				FS_FreeFile(header.v);
+				fsfreefile(header.v);
 
 				Com_Printf(
 					S_COLOR_YELLOW
@@ -479,7 +479,7 @@ vmrestart(Vm *vm, qbool unpure)
 	}
 
 	/* free the original file */
-	FS_FreeFile(header);
+	fsfreefile(header);
 	return vm;
 }
 
@@ -522,7 +522,7 @@ vmcreate(const char *module, intptr_t (*systemCalls)(intptr_t *),
 	Q_strncpyz(vm->name, module, sizeof(vm->name));
 
 	do {
-		retval = FS_FindVM(&startSearch, filename, sizeof(filename),
+		retval = fsfindvm(&startSearch, filename, sizeof(filename),
 				module,
 				(interpret == VMnative));
 
@@ -582,7 +582,7 @@ vmcreate(const char *module, intptr_t (*systemCalls)(intptr_t *),
 		VM_PrepareInterpreter(vm, header);
 
 	/* free the original file */
-	FS_FreeFile(header);
+	fsfreefile(header);
 	
 	/* load the map file */
 	VM_LoadSymbols(vm);

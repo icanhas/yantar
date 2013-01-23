@@ -118,7 +118,7 @@ SV_Map_f(void)
 	/* make sure the level exists before trying to change, so that
 	 * a typo at the server console won't end the game */
 	Q_sprintf (expanded, sizeof(expanded), Pmaps "/%s.bsp", map);
-	if(FS_ReadFile (expanded, NULL) == -1){
+	if(fsreadfile (expanded, NULL) == -1){
 		Com_Printf ("Can't find map %s\n", expanded);
 		return;
 	}
@@ -491,17 +491,17 @@ SV_RehashBans_f(void)
 		return;
 
 	Q_sprintf(path, sizeof(path), "%s/%s",
-		FS_GetCurrentGameDir(), sv_banFile->string);
-	flen = FS_SV_FOpenFileRead(path, &readfrom);
+		fsgetcurrentgamedir(), sv_banFile->string);
+	flen = fssvopenr(path, &readfrom);
 	if(flen < 2){
 		/* Don't bother if file is too short. */
-		FS_FCloseFile(readfrom);
+		fsclose(readfrom);
 		return;
 	}
 
 	curpos = textbuf = zalloc(flen);
-	flen = FS_Read(textbuf, flen, readfrom);
-	FS_FCloseFile(readfrom);
+	flen = fsread(textbuf, flen, readfrom);
+	fsclose(readfrom);
 	endpos = textbuf + flen;
 
 	for(i = 0; i < SERVER_MAXBANS && curpos + 2 < endpos; i++){
@@ -561,9 +561,9 @@ SV_WriteBans(void)
 		return;
 
 	Q_sprintf(filepath, sizeof(filepath), "%s/%s",
-		FS_GetCurrentGameDir(), sv_banFile->string);
+		fsgetcurrentgamedir(), sv_banFile->string);
 
-	if((writeto = FS_SV_FOpenFileWrite(filepath))){
+	if((writeto = fssvopenw(filepath))){
 		char writebuf[128];
 		serverBan_t *curban;
 
@@ -573,10 +573,10 @@ SV_WriteBans(void)
 			Q_sprintf(writebuf, sizeof(writebuf), "%d %s %d\n",
 				curban->isexception, NET_AdrToString(
 					curban->ip), curban->subnet);
-			FS_Write(writebuf, strlen(writebuf), writeto);
+			fswrite(writebuf, strlen(writebuf), writeto);
 		}
 
-		FS_FCloseFile(writeto);
+		fsclose(writeto);
 	}
 }
 

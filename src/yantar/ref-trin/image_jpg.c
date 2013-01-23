@@ -66,7 +66,7 @@ R_LoadJPG(const char *filename, unsigned char **pic, int *width, int *height)
 	byte *buf;
 
 	/* Read the JPEG file */
-	len = ri.FS_ReadFile (( char* )filename, &fbuffer.v);
+	len = ri.fsreadfile (( char* )filename, &fbuffer.v);
 	if(!fbuffer.b || len < 0){
 		return;
 	}
@@ -102,7 +102,7 @@ R_LoadJPG(const char *filename, unsigned char **pic, int *width, int *height)
 	   || ((pixelcount * 4) / cinfo.output_width) / 4 != cinfo.output_height
 	   || pixelcount > 0x1FFFFFFF || cinfo.output_components != 3){
 		/* Free to make sure we don't leak memory */
-		ri.FS_FreeFile (fbuffer.v);
+		ri.fsfreefile (fbuffer.v);
 		jpeg_destroy_decompress(&cinfo);
 
 		ri.Error(ERR_DROP, "LoadJPG: %s has an invalid image format: "
@@ -152,7 +152,7 @@ R_LoadJPG(const char *filename, unsigned char **pic, int *width, int *height)
 
 	/* This is an important step since it will release a good deal of memory. */
 	jpeg_destroy_decompress(&cinfo);
-	ri.FS_FreeFile (fbuffer.v);
+	ri.fsfreefile (fbuffer.v);
 
 	/* At this point you may want to check to see whether any corrupt-data
 	 * warnings occurred (test whether jerr.pub.num_warnings is nonzero). */
@@ -314,7 +314,7 @@ RE_SaveJPG(char * filename, int quality, int image_width, int image_height, byte
 	out = ri.hunkalloctemp(bufSize);
 
 	bufSize = RE_SaveJPGToBuffer(out, bufSize, quality, image_width, image_height, image_buffer, padding);
-	ri.FS_WriteFile(filename, out, bufSize);
+	ri.fswritefile(filename, out, bufSize);
 
 	ri.hunkfreetemp(out);
 }

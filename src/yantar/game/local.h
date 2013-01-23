@@ -733,14 +733,14 @@ int	trap_RealTime(Qtime *qtime);
 int	trap_Argc(void);
 void	trap_Argv(int n, char *buffer, int bufferLength);
 void	trap_Args(char *buffer, int bufferLength);
-int	trap_FS_FOpenFile(const char *qpath, Fhandle *f,
+int	trap_fsopen(const char *qpath, Fhandle *f,
 		Fsmode mode);
-void	trap_FS_Read(void *buffer, int len, Fhandle f);
-void	trap_FS_Write(const void *buffer, int len, Fhandle f);
-void	trap_FS_FCloseFile(Fhandle f);
-int	trap_FS_GetFileList(const char *path, const char *extension,
+void	trap_fsread(void *buffer, int len, Fhandle f);
+void	trap_fswrite(const void *buffer, int len, Fhandle f);
+void	trap_fsclose(Fhandle f);
+int	trap_fsgetfilelist(const char *path, const char *extension,
 		char *listbuf, int bufsize);
-int	trap_FS_Seek(Fhandle f, long offset, int origin);	/* Fsorigin */
+int	trap_fsseek(Fhandle f, long offset, int origin);	/* Fsorigin */
 void	trap_SendConsoleCommand(int exec_when, const char *text);
 void	trap_cvarregister(Vmcvar *cvar, const char *var_name,
 		const char *value, int flags);

@@ -640,18 +640,18 @@ void                    trap_cvargetinfostrbuf(int bit, char *buffer,
 int                             trap_Argc(void);
 void                    trap_Argv(int n, char *buffer, int bufferLength);
 void                    trap_Cmd_ExecuteText(int exec_when, const char *text);	/* don't use EXEC_NOW! */
-int                             trap_FS_FOpenFile(const char *qpath,
+int                             trap_fsopen(const char *qpath,
 						  Fhandle *f,
 						  Fsmode mode);
-void                    trap_FS_Read(void *buffer, int len, Fhandle f);
-void                    trap_FS_Write(const void *buffer, int len,
+void                    trap_fsread(void *buffer, int len, Fhandle f);
+void                    trap_fswrite(const void *buffer, int len,
 				      Fhandle f);
-void                    trap_FS_FCloseFile(Fhandle f);
-int                             trap_FS_GetFileList(const char *path,
+void                    trap_fsclose(Fhandle f);
+int                             trap_fsgetfilelist(const char *path,
 						    const char *extension,
 						    char *listbuf,
 						    int bufsize);
-int                             trap_FS_Seek(Fhandle f, long offset,
+int                             trap_fsseek(Fhandle f, long offset,
 					     int origin);	/* Fsorigin */
 Handle               trap_R_RegisterModel(const char *name);
 Handle               trap_R_RegisterSkin(const char *name);

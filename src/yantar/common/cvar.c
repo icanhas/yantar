@@ -806,7 +806,7 @@ cvarwritevars(Fhandle f)
 				"seta %s \"%s\"\n", var->name,
 				var->string);
 		}
-		FS_Write(buffer, strlen(buffer), f);
+		fswrite(buffer, strlen(buffer), f);
 	}
 }
 

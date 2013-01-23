@@ -491,7 +491,7 @@ CG_ParseVoiceChats(const char *filename, voiceChatList_t *voiceChatList,
 	if(cg_buildScript.integer)
 		compress = qfalse;
 
-	len = trap_FS_FOpenFile(filename, &f, FS_READ);
+	len = trap_fsopen(filename, &f, FS_READ);
 	if(!f){
 		trap_Print(va(S_COLOR_RED "voice chat file not found: %s\n",
 				filename));
@@ -501,13 +501,13 @@ CG_ParseVoiceChats(const char *filename, voiceChatList_t *voiceChatList,
 		trap_Print(va(S_COLOR_RED
 				"voice chat file too large: %s is %i, max allowed is %i\n",
 				filename, len, MAX_VOICEFILESIZE));
-		trap_FS_FCloseFile(f);
+		trap_fsclose(f);
 		return qfalse;
 	}
 
-	trap_FS_Read(buf, len, f);
+	trap_fsread(buf, len, f);
 	buf[len] = 0;
-	trap_FS_FCloseFile(f);
+	trap_fsclose(f);
 
 	ptr = buf;
 	p = &ptr;
@@ -623,7 +623,7 @@ CG_HeadModelVoiceChats(char *filename)
 	char **p, *ptr;
 	char *token;
 
-	len = trap_FS_FOpenFile(filename, &f, FS_READ);
+	len = trap_fsopen(filename, &f, FS_READ);
 	if(!f)
 		/* trap_Print( va( "voice chat file not found: %s\n", filename ) ); */
 		return -1;
@@ -631,13 +631,13 @@ CG_HeadModelVoiceChats(char *filename)
 		trap_Print(va(S_COLOR_RED
 				"voice chat file too large: %s is %i, max allowed is %i\n",
 				filename, len, MAX_VOICEFILESIZE));
-		trap_FS_FCloseFile(f);
+		trap_fsclose(f);
 		return -1;
 	}
 
-	trap_FS_Read(buf, len, f);
+	trap_fsread(buf, len, f);
 	buf[len] = 0;
-	trap_FS_FCloseFile(f);
+	trap_fsclose(f);
 
 	ptr = buf;
 	p = &ptr;

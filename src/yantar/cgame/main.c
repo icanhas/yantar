@@ -1182,7 +1182,7 @@ CG_GetMenuBuffer(const char *filename)
 	Fhandle	f;
 	static char	buf[MAX_MENUFILE];
 
-	len = trap_FS_FOpenFile(filename, &f, FS_READ);
+	len = trap_fsopen(filename, &f, FS_READ);
 	if(!f){
 		trap_Print(va(S_COLOR_RED
 				"menu file not found: %s, using default\n",
@@ -1194,13 +1194,13 @@ CG_GetMenuBuffer(const char *filename)
 				"menu file too large: %s is %i, max allowed is %i\n",
 				filename,
 				len, MAX_MENUFILE));
-		trap_FS_FCloseFile(f);
+		trap_fsclose(f);
 		return NULL;
 	}
 
-	trap_FS_Read(buf, len, f);
+	trap_fsread(buf, len, f);
 	buf[len] = 0;
-	trap_FS_FCloseFile(f);
+	trap_fsclose(f);
 
 	return buf;
 }
@@ -1435,13 +1435,13 @@ CG_LoadMenus(const char *menuFile)
 
 	start = trap_Milliseconds();
 
-	len = trap_FS_FOpenFile(menuFile, &f, FS_READ);
+	len = trap_fsopen(menuFile, &f, FS_READ);
 	if(!f){
 		Com_Printf(
 			S_COLOR_YELLOW
 			"menu file not found: %s, using default\n",
 			menuFile);
-		len = trap_FS_FOpenFile("ui/hud.txt", &f, FS_READ);
+		len = trap_fsopen("ui/hud.txt", &f, FS_READ);
 		if(!f)
 			trap_Error(va(S_COLOR_RED
 					"default menu file not found: ui/hud.txt, unable to continue!\n"));
@@ -1452,13 +1452,13 @@ CG_LoadMenus(const char *menuFile)
 				"menu file too large: %s is %i, max allowed is %i\n",
 				menuFile,
 				len, MAX_MENUDEFFILE));
-		trap_FS_FCloseFile(f);
+		trap_fsclose(f);
 		return;
 	}
 
-	trap_FS_Read(buf, len, f);
+	trap_fsread(buf, len, f);
 	buf[len] = 0;
-	trap_FS_FCloseFile(f);
+	trap_fsclose(f);
 
 	Q_compresstr(buf);
 

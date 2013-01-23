@@ -65,17 +65,17 @@ parseanimfile(const char *filename, Clientinfo *ci)
 	Anim *p, *anims;
 
 	/* load the file */
-	len = trap_FS_FOpenFile(filename, &f, FS_READ);
+	len = trap_fsopen(filename, &f, FS_READ);
 	if(len <= 0)
 		return qfalse;
 	if(len >= sizeof(txt) - 1){
 		CG_Printf("File %s too long\n", filename);
-		trap_FS_FCloseFile(f);
+		trap_fsclose(f);
 		return qfalse;
 	}
-	trap_FS_Read(txt, len, f);
+	trap_fsread(txt, len, f);
 	txt[len] = 0;
-	trap_FS_FCloseFile(f);
+	trap_fsclose(f);
 
 	/* parse the text */
 	txtp = txt;
@@ -256,7 +256,7 @@ fileexists(const char *name)
 {
 	int len;
 
-	len = trap_FS_FOpenFile(name, NULL, FS_READ);
+	len = trap_fsopen(name, NULL, FS_READ);
 	if(len>0)
 		return qtrue;
 	return qfalse;

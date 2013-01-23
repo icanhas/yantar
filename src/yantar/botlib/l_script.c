@@ -1284,7 +1284,7 @@ LoadScriptFile(const char *filename)
 			filename);
 	else
 		Q_sprintf(pathname, sizeof(pathname), "%s", filename);
-	length = botimport.FS_FOpenFile(pathname, &fp, FS_READ);
+	length = botimport.fsopen(pathname, &fp, FS_READ);
 	if(!fp) return NULL;
 #else
 	fp = fopen(filename, "rb");
@@ -1312,8 +1312,8 @@ LoadScriptFile(const char *filename)
 	script->lastline = 1;
 	SetScriptPunctuations(script, NULL);
 #ifdef BOTLIB
-	botimport.FS_Read(script->buffer, length, fp);
-	botimport.FS_FCloseFile(fp);
+	botimport.fsread(script->buffer, length, fp);
+	botimport.fsclose(fp);
 #else
 	if(fread(script->buffer, length, 1, fp) != 1){
 		FreeMemory(buffer);

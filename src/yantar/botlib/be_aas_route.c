@@ -718,7 +718,7 @@ AAS_WriteRouteCache(void)
 	}
 	/* open the file for writing */
 	Q_sprintf(filename, MAX_QPATH, Pmaps "/%s.rcd", aasworld.mapname);
-	botimport.FS_FOpenFile(filename, &fp, FS_WRITE);
+	botimport.fsopen(filename, &fp, FS_WRITE);
 	if(!fp){
 		AAS_Error("Unable to open file: %s\n", filename);
 		return;
@@ -737,13 +737,13 @@ AAS_WriteRouteCache(void)
 	routecacheheader.numportalcache = numportalcache;
 	routecacheheader.numareacache	= numareacache;
 	/* write the header */
-	botimport.FS_Write(&routecacheheader, sizeof(routecacheheader_t), fp);
+	botimport.fswrite(&routecacheheader, sizeof(routecacheheader_t), fp);
 	totalsize = 0;
 	/* write all the cache */
 	for(i = 0; i < aasworld.numareas; i++)
 		for(cache = aasworld.portalcache[i]; cache; cache =
 			    cache->next){
-			botimport.FS_Write(cache, cache->size, fp);
+			botimport.fswrite(cache, cache->size, fp);
 			totalsize += cache->size;
 		}
 	for(i = 0; i < aasworld.numclusters; i++){
@@ -751,7 +751,7 @@ AAS_WriteRouteCache(void)
 		for(j = 0; j < cluster->numareas; j++)
 			for(cache = aasworld.clusterareacache[i][j]; cache;
 			    cache = cache->next){
-				botimport.FS_Write(cache, cache->size, fp);
+				botimport.fswrite(cache, cache->size, fp);
 				totalsize += cache->size;
 			}
 	}
@@ -761,16 +761,16 @@ AAS_WriteRouteCache(void)
 	 * {
 	 *      if (!aasworld.areavisibility[i]) {
 	 *              size = 0;
-	 *              botimport.FS_Write(&size, sizeof(int), fp);
+	 *              botimport.fswrite(&size, sizeof(int), fp);
 	 *              continue;
 	 *      }
 	 *      AAS_DecompressVis( aasworld.areavisibility[i], aasworld.numareas, aasworld.decompressedvis );
 	 *      size = AAS_CompressVis( aasworld.decompressedvis, aasworld.numareas, aasworld.decompressedvis );
-	 *      botimport.FS_Write(&size, sizeof(int), fp);
-	 *      botimport.FS_Write(aasworld.decompressedvis, size, fp);
+	 *      botimport.fswrite(&size, sizeof(int), fp);
+	 *      botimport.fswrite(aasworld.decompressedvis, size, fp);
 	 * }
 	 */
-	botimport.FS_FCloseFile(fp);
+	botimport.fsclose(fp);
 	botimport.Print(PRT_MESSAGE, "\nroute cache written to %s\n", filename);
 	botimport.Print(PRT_MESSAGE, "written %d bytes of routing cache\n",
 		totalsize);
@@ -782,10 +782,10 @@ AAS_ReadCache(Fhandle fp)
 	int size;
 	aas_routingcache_t *cache;
 
-	botimport.FS_Read(&size, sizeof(size), fp);
+	botimport.fsread(&size, sizeof(size), fp);
 	cache = (aas_routingcache_t*)GetMemory(size);
 	cache->size = size;
-	botimport.FS_Read((unsigned char*)cache + sizeof(size), size -
+	botimport.fsread((unsigned char*)cache + sizeof(size), size -
 		sizeof(size), fp);
 	cache->reachabilities = (unsigned char*)cache +
 				sizeof(aas_routingcache_t) -
@@ -805,10 +805,10 @@ AAS_ReadRouteCache(void)
 	aas_routingcache_t	*cache;
 
 	Q_sprintf(filename, MAX_QPATH, Pmaps "/%s.rcd", aasworld.mapname);
-	botimport.FS_FOpenFile(filename, &fp, FS_READ);
+	botimport.fsopen(filename, &fp, FS_READ);
 	if(!fp)
 		return qfalse;
-	botimport.FS_Read(&routecacheheader, sizeof(routecacheheader_t), fp);
+	botimport.fsread(&routecacheheader, sizeof(routecacheheader_t), fp);
 	if(routecacheheader.ident != RCID){
 		AAS_Error("%s is not a route cache dump\n", filename);
 		return qfalse;
@@ -865,14 +865,14 @@ AAS_ReadRouteCache(void)
 	 * aasworld.decompressedvis = (byte *) GetClearedMemory(aasworld.numareas * sizeof(byte));
 	 * for (i = 0; i < aasworld.numareas; i++)
 	 * {
-	 *      botimport.FS_Read(&size, sizeof(size), fp );
+	 *      botimport.fsread(&size, sizeof(size), fp );
 	 *      if (size) {
 	 *              aasworld.areavisibility[i] = (byte *) GetMemory(size);
-	 *              botimport.FS_Read(aasworld.areavisibility[i], size, fp );
+	 *              botimport.fsread(aasworld.areavisibility[i], size, fp );
 	 *      }
 	 * }
 	 */
-	botimport.FS_FCloseFile(fp);
+	botimport.fsclose(fp);
 	return qtrue;
 }
 

@@ -247,7 +247,7 @@ ReadBufferedFile(const char *name)
 	 *  Read the file.
 	 */
 
-	BF->Length = ri.FS_ReadFile((char*)name, &buffer.v);
+	BF->Length = ri.fsreadfile((char*)name, &buffer.v);
 	BF->Buffer = buffer.b;
 
 	/*
@@ -279,7 +279,7 @@ CloseBufferedFile(struct BufferedFile *BF)
 {
 	if(BF){
 		if(BF->Buffer){
-			ri.FS_FreeFile(BF->Buffer);
+			ri.fsfreefile(BF->Buffer);
 		}
 
 		ri.Free(BF);

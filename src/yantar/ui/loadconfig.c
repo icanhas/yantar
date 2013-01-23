@@ -193,7 +193,7 @@ LoadConfig_MenuInit(void)
 	s_configs.list.width = 16;
 	s_configs.list.height	= 14;
 	s_configs.list.numitems =
-		trap_FS_GetFileList("", "cfg", s_configs.names,
+		trap_fsgetfilelist("", "cfg", s_configs.names,
 			NAMEBUFSIZE);
 	s_configs.list.itemnames = (const char**)s_configs.configlist;
 	s_configs.list.columns = 3;

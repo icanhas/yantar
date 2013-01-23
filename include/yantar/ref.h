@@ -328,13 +328,13 @@ struct Refimport {
 
 	/* a -1 return means the file does not exist
 	 * NULL can be passed for buf to just determine existance */
-	int (*FS_FileIsInPAK)(const char *name, int *pCheckSum);
-	long (*FS_ReadFile)(const char *name, void **buf);
-	void (*FS_FreeFile)(void *buf);
-	char ** (*FS_ListFiles)(const char *name, const char *extension, int *numfilesfound);
-	void (*FS_FreeFileList)(char **filelist);
-	void (*FS_WriteFile)(const char *qpath, const void *buffer, int size);
-	qbool (*FS_FileExists)(const char *file);
+	int (*fsfileisinpak)(const char *name, int *pCheckSum);
+	long (*fsreadfile)(const char *name, void **buf);
+	void (*fsfreefile)(void *buf);
+	char ** (*fslistfiles)(const char *name, const char *extension, int *numfilesfound);
+	void (*fsfreefilelist)(char **filelist);
+	void (*fswritefile)(const char *qpath, const void *buffer, int size);
+	qbool (*fsfileexists)(const char *file);
 
 	/* cinematic stuff */
 	void (*CIN_UploadCinematic)(int handle);

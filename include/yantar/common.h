@@ -485,75 +485,75 @@ enum {
 # define Q3CONFIG_CFG	"user.cfg"
 #endif
 
-qbool FS_Initialized(void);
-void FS_InitFilesystem(void);
-void FS_Shutdown(qbool closemfp);
-qbool FS_ConditionalRestart(int checksumFeed, qbool disconnect);
-void FS_Restart(int checksumFeed);
-void FS_AddGameDirectory(const char *path, const char *dir);
-char** FS_ListFiles(const char *directory, const char *extension,
+qbool fsisinitialized(void);
+void fsinit(void);
+void fsshutdown(qbool closemfp);
+qbool fscondrestart(int checksumFeed, qbool disconnect);
+void fsrestart(int checksumFeed);
+void fsaddgamedir(const char *path, const char *dir);
+char** fslistfiles(const char *directory, const char *extension,
 		int *numfiles);
-void FS_FreeFileList(char **list);
-qbool FS_FileExists(const char *file);
-qbool FS_CreatePath(char *OSPath);
-Vmmode FS_FindVM(void **startSearch, char *found, int foundlen,
+void fsfreefilelist(char **list);
+qbool fsfileexists(const char *file);
+qbool fscreatepath(char *OSPath);
+Vmmode fsfindvm(void **startSearch, char *found, int foundlen,
 		const char *name,
 		int enableDll);
-char*FS_BuildOSPath(const char *base, const char *game, const char *qpath);
-qbool FS_CompareZipChecksum(const char *zipfile);
-int FS_LoadStack(void);
-int FS_GetFileList(const char *path, const char *extension,
+char*fsbuildospath(const char *base, const char *game, const char *qpath);
+qbool fscompzipchecksum(const char *zipfile);
+int fsloadstack(void);
+int fsgetfilelist(const char *path, const char *extension,
 		char *listbuf,
 		int bufsize);
-int FS_GetModList(char *listbuf, int bufsize);
-Fhandle FS_FOpenFileWrite(const char *qpath);
-Fhandle FS_FOpenFileAppend(const char *filename);
-Fhandle FS_FCreateOpenPipeFile(const char *filename);
-Fhandle FS_SV_FOpenFileWrite(const char *filename);
-long FS_SV_FOpenFileRead(const char *filename, Fhandle *fp);
-void FS_SV_Rename(const char *from, const char *to);
-long FS_FOpenFileRead(const char *qpath, Fhandle *file,
+int fsgetmodlist(char *listbuf, int bufsize);
+Fhandle fsopenw(const char *qpath);
+Fhandle fsopena(const char *filename);
+Fhandle fscreatepipefile(const char *filename);
+Fhandle fssvopenw(const char *filename);
+long fssvopenr(const char *filename, Fhandle *fp);
+void fssvrename(const char *from, const char *to);
+long fsopenr(const char *qpath, Fhandle *file,
 		qbool uniqueFILE);
-int FS_FileIsInPAK(const char *filename, int *pChecksum);
-int FS_Write(const void *buffer, int len, Fhandle f);
-int FS_Read2(void *buffer, int len, Fhandle f);
-int FS_Read(void *buffer, int len, Fhandle f);
-void FS_FCloseFile(Fhandle f);
-long FS_ReadFileDir(const char *qpath, void *searchPath, qbool unpure,
+int fsfileisinpak(const char *filename, int *pChecksum);
+int fswrite(const void *buffer, int len, Fhandle f);
+int fsread2(void *buffer, int len, Fhandle f);
+int fsread(void *buffer, int len, Fhandle f);
+void fsclose(Fhandle f);
+long fsreadfiledir(const char *qpath, void *searchPath, qbool unpure,
 		void **buffer);
-long FS_ReadFile(const char *qpath, void **buffer);
-void FS_ForceFlush(Fhandle f);
-void FS_FreeFile(void *buffer);
-void FS_WriteFile(const char *qpath, const void *buffer, int size);
-long FS_filelength(Fhandle f);
-int FS_FTell(Fhandle f);
-void FS_Flush(Fhandle f);
-void QDECL FS_Printf(Fhandle f, const char *fmt,
+long fsreadfile(const char *qpath, void **buffer);
+void fsforceflush(Fhandle f);
+void fsfreefile(void *buffer);
+void fswritefile(const char *qpath, const void *buffer, int size);
+long fsfilelen(Fhandle f);
+int fsftell(Fhandle f);
+void fsflush(Fhandle f);
+void QDECL fsprintf(Fhandle f, const char *fmt,
 			...) __attribute__ ((format (printf, 2, 3)));
-int FS_FOpenFileByMode(const char *qpath, Fhandle *f,
+int fsopenmode(const char *qpath, Fhandle *f,
  			 Fsmode mode);
-int FS_Seek(Fhandle f, long offset, int origin);
-qbool FS_FilenameCompare(const char *s1, const char *s2);
-const char* FS_LoadedPakNames(void);
-const char* FS_LoadedPakChecksums(void);
-const char* FS_LoadedPakPureChecksums(void);
-const char* FS_ReferencedPakNames(void);
-const char* FS_ReferencedPakChecksums(void);
-const char* FS_ReferencedPakPureChecksums(void);
-void 	FS_ClearPakReferences(int flags);
-void 	FS_PureServerSetReferencedPaks(const char *pakSums, const char *pakNames);
-void 	FS_PureServerSetLoadedPaks(const char *pakSums, const char *pakNames);
-qbool FS_CheckDirTraversal(const char *checkdir);
-qbool FS_idPak(char *pak, char *base, int numPaks);
-qbool FS_ComparePaks(char *neededpaks, int len, qbool dlstring);
-void 	FS_Rename(const char *from, const char *to);
-void 	FS_Remove(const char *osPath);
-void 	FS_HomeRemove(const char *homePath);
-void 	FS_FilenameCompletion(const char *dir, const char *ext,
+int fsseek(Fhandle f, long offset, int origin);
+qbool fscomparefname(const char *s1, const char *s2);
+const char* fsloadedpaknames(void);
+const char* fsloadedpakchecksums(void);
+const char* fsloadedpakpurechecksums(void);
+const char* fsreferencedpaknames(void);
+const char* fsreferencedpakchecksums(void);
+const char* fsreferencedpakpurechecksums(void);
+void 	fsclearpakrefs(int flags);
+void 	fspureservsetreferencedpaks(const char *pakSums, const char *pakNames);
+void 	fspureservsetloadedpaks(const char *pakSums, const char *pakNames);
+qbool fscheckdirtraversal(const char *checkdir);
+qbool fsispak(char *pak, char *base, int numPaks);
+qbool fscomparepaks(char *neededpaks, int len, qbool dlstring);
+void 	fsrename(const char *from, const char *to);
+void 	fsremove(const char *osPath);
+void 	fshomeremove(const char *homePath);
+void 	fsfnamecompletion(const char *dir, const char *ext,
 		qbool stripExt, void (*callback)(const char *s),
 		qbool allowNonPureFilesOnDisk);
-const char* FS_GetCurrentGameDir(void);
-qbool FS_Which(const char *filename, void *searchPath);
+const char* fsgetcurrentgamedir(void);
+qbool fswhich(const char *filename, void *searchPath);
 
 /*
  * Edit fields and command line history/completion

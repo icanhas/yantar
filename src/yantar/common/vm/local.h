@@ -127,7 +127,7 @@ struct Vm {
 	/* ------------------------------------ */
 
 	char	name[MAX_QPATH];
-	void	*searchPath;	/* hint for FS_ReadFileDir() */
+	void	*searchPath;	/* hint for fsreadfiledir() */
 
 	/* for dynamic linked modules */
 	void		*dllHandle;

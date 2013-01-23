@@ -183,7 +183,7 @@ static size_t
 CL_cURL_CallbackWrite(void *buffer, size_t size, size_t nmemb,
 		      void *stream)
 {
-	FS_Write(buffer, size*nmemb, ((Fhandle*)stream)[0]);
+	fswrite(buffer, size*nmemb, ((Fhandle*)stream)[0]);
 	return size*nmemb;
 }
 
@@ -217,7 +217,7 @@ CL_cURL_BeginDownload(const char *localName, const char *remoteURL)
 				    "failed");
 		return;
 	}
-	clc.download = FS_SV_FOpenFileWrite(clc.downloadTempName);
+	clc.download = fssvopenw(clc.downloadTempName);
 	if(!clc.download){
 		Com_Errorf(ERR_DROP, "CL_cURL_BeginDownload: failed to open "
 				    "%s for writing", clc.downloadTempName);
@@ -281,9 +281,9 @@ CL_cURL_PerformDownload(void)
 	msg = qcurl_multi_info_read(clc.downloadCURLM, &c);
 	if(msg == NULL)
 		return;
-	FS_FCloseFile(clc.download);
+	fsclose(clc.download);
 	if(msg->msg == CURLMSG_DONE && msg->data.result == CURLE_OK){
-		FS_SV_Rename(clc.downloadTempName, clc.downloadName);
+		fssvrename(clc.downloadTempName, clc.downloadName);
 		clc.downloadRestart = qtrue;
 	}else{
 		long code;

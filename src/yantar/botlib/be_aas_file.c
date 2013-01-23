@@ -292,10 +292,10 @@ AAS_LoadAASLump(Fhandle fp, int offset, int length, int *lastoffset,
 	/* seek to the data */
 	if(offset != *lastoffset){
 		botimport.Print(PRT_WARNING, "AAS file not sequentially read\n");
-		if(botimport.FS_Seek(fp, offset, FS_SEEK_SET)){
+		if(botimport.fsseek(fp, offset, FS_SEEK_SET)){
 			AAS_Error("can't seek to aas lump\n");
 			AAS_DumpAASData();
-			botimport.FS_FCloseFile(fp);
+			botimport.fsclose(fp);
 			return NULL;
 		}
 	}
@@ -303,7 +303,7 @@ AAS_LoadAASLump(Fhandle fp, int offset, int length, int *lastoffset,
 	buf = (char*)GetClearedHunkMemory(length+1);
 	/* read the data */
 	if(length){
-		botimport.FS_Read(buf, length, fp);
+		botimport.fsread(buf, length, fp);
 		*lastoffset += length;
 	}
 	return buf;
@@ -329,19 +329,19 @@ AAS_LoadAASFile(char *filename)
 	/* dump current loaded aas file */
 	AAS_DumpAASData();
 	/* open the file */
-	botimport.FS_FOpenFile(filename, &fp, FS_READ);
+	botimport.fsopen(filename, &fp, FS_READ);
 	if(!fp){
 		AAS_Error("can't open %s\n", filename);
 		return BLERR_CANNOTOPENAASFILE;
 	}
 	/* read the header */
-	botimport.FS_Read(&header, sizeof(aas_header_t), fp);
+	botimport.fsread(&header, sizeof(aas_header_t), fp);
 	lastoffset = sizeof(aas_header_t);
 	/* check header identification */
 	header.ident = LittleLong(header.ident);
 	if(header.ident != AASID){
 		AAS_Error("%s is not an AAS file\n", filename);
-		botimport.FS_FCloseFile(fp);
+		botimport.fsclose(fp);
 		return BLERR_WRONGAASFILEID;
 	}
 	/* check the version */
@@ -350,7 +350,7 @@ AAS_LoadAASFile(char *filename)
 		AAS_Error("aas file %s is version %i, not %i\n", filename,
 			header.version,
 			AASVERSION);
-		botimport.FS_FCloseFile(fp);
+		botimport.fsclose(fp);
 		return BLERR_WRONGAASFILEVERSION;
 	}
 	if(header.version == AASVERSION)
@@ -359,7 +359,7 @@ AAS_LoadAASFile(char *filename)
 	aasworld.bspchecksum = atoi(LibVarGetString("sv_mapChecksum"));
 	if(LittleLong(header.bspchecksum) != aasworld.bspchecksum){
 		AAS_Error("aas file %s is out of date\n", filename);
-		botimport.FS_FCloseFile(fp);
+		botimport.fsclose(fp);
 		return BLERR_WRONGAASFILEVERSION;
 	}
 	/* load the lumps: */
@@ -483,7 +483,7 @@ AAS_LoadAASFile(char *filename)
 	/* aas file is loaded */
 	aasworld.loaded = qtrue;
 	/* close the file */
-	botimport.FS_FCloseFile(fp);
+	botimport.fsclose(fp);
 #ifdef AASFILEDEBUG
 	AAS_FileInfo();
 #endif	/* AASFILEDEBUG */
@@ -504,7 +504,7 @@ AAS_WriteAASLump(Fhandle fp, aas_header_t *h, int lumpnum, void *data,
 	lump->filelen	= LittleLong(length);
 
 	if(length > 0)
-		botimport.FS_Write(data, length, fp);
+		botimport.fswrite(data, length, fp);
 
 	AAS_WriteAASLump_offset += length;
 
@@ -530,13 +530,13 @@ AAS_WriteAASFile(char *filename)
 	header.version	= LittleLong(AASVERSION);
 	header.bspchecksum = LittleLong(aasworld.bspchecksum);
 	/* open a new file */
-	botimport.FS_FOpenFile(filename, &fp, FS_WRITE);
+	botimport.fsopen(filename, &fp, FS_WRITE);
 	if(!fp){
 		botimport.Print(PRT_ERROR, "error opening %s\n", filename);
 		return qfalse;
 	}
 	/* write the header */
-	botimport.FS_Write(&header, sizeof(aas_header_t), fp);
+	botimport.fswrite(&header, sizeof(aas_header_t), fp);
 	AAS_WriteAASLump_offset = sizeof(aas_header_t);
 	/* add the data lumps to the file */
 	if(!AAS_WriteAASLump(fp, &header, AASLUMP_BBOXES, aasworld.bboxes,
@@ -576,10 +576,10 @@ AAS_WriteAASFile(char *filename)
 	if(!AAS_WriteAASLump(fp, &header, AASLUMP_CLUSTERS, aasworld.clusters,
 		   aasworld.numclusters * sizeof(aas_cluster_t))) return qfalse;
 	/* rewrite the header with the added lumps */
-	botimport.FS_Seek(fp, 0, FS_SEEK_SET);
+	botimport.fsseek(fp, 0, FS_SEEK_SET);
 	AAS_DData((unsigned char*)&header + 8, sizeof(aas_header_t) - 8);
-	botimport.FS_Write(&header, sizeof(aas_header_t), fp);
+	botimport.fswrite(&header, sizeof(aas_header_t), fp);
 	/* close the file */
-	botimport.FS_FCloseFile(fp);
+	botimport.fsclose(fp);
 	return qtrue;
 }

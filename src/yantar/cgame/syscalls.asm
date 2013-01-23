@@ -10,11 +10,11 @@ equ	trap_cvargetstrbuf        -7
 equ	trap_Argc                             -8
 equ	trap_Argv                             -9
 equ	trap_Args                             -10
-equ	trap_FS_FOpenFile                     -11
-equ	trap_FS_Seek                          -12
-equ	trap_FS_Read                          -13
-equ	trap_FS_Write                         -14
-equ	trap_FS_FCloseFile                    -15
+equ	trap_fsopen                     -11
+equ	trap_fsseek                          -12
+equ	trap_fsread                          -13
+equ	trap_fswrite                         -14
+equ	trap_fsclose                    -15
 equ	trap_SendConsoleCommand               -16
 equ	trap_AddCommand                       -17
 equ	trap_RemoveCommand                    -18
