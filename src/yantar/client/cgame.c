@@ -145,7 +145,7 @@ CL_SetUserCmdValue(int weap1, int weap2, float sensitivityScale)
 void
 CL_AddCgameCommand(const char *cmdName)
 {
-	Cmd_AddCommand(cmdName, NULL);
+	cmdadd(cmdName, NULL);
 }
 
 void
@@ -163,11 +163,11 @@ CL_ConfigstringModified(void)
 	Gamestate oldGs;
 	int	len;
 
-	index = atoi(Cmd_Argv(1));
+	index = atoi(cmdargv(1));
 	if(index < 0 || index >= MAX_CONFIGSTRINGS)
 		Com_Errorf(ERR_DROP, "configstring > MAX_CONFIGSTRINGS");
 	/* get everything after "cs <num>" */
-	s = Cmd_ArgsFrom(2);
+	s = cmdargsfrom(2);
 
 	old = cl.gameState.stringData + cl.gameState.stringOffsets[ index ];
 	if(!strcmp(old, s))
@@ -240,27 +240,27 @@ CL_GetServerCommand(int serverCommandNumber)
 	Com_DPrintf("serverCommand: %i : %s\n", serverCommandNumber, s);
 
 Rescan:
-	Cmd_TokenizeString(s);
-	cmd = Cmd_Argv(0);
-	argc = Cmd_Argc();
+	cmdstrtok(s);
+	cmd = cmdargv(0);
+	argc = cmdargc();
 
 	if(!strcmp(cmd, "disconnect")){
 		/* allow server to indicate why they were disconnected */
 		if(argc >= 2)
 			Com_Errorf(ERR_SERVERDISCONNECT,
-				"Server disconnected - %s", Cmd_Argv(1));
+				"Server disconnected - %s", cmdargv(1));
 		else
 			Com_Errorf(ERR_SERVERDISCONNECT, "Server disconnected");
 	}
 
 	if(!strcmp(cmd, "bcs0")){
 		Q_sprintf(bigConfigString, BIG_INFO_STRING, "cs %s \"%s",
-			Cmd_Argv(1), Cmd_Argv(2));
+			cmdargv(1), cmdargv(2));
 		return qfalse;
 	}
 
 	if(!strcmp(cmd, "bcs1")){
-		s = Cmd_Argv(2);
+		s = cmdargv(2);
 		if(strlen(bigConfigString) + strlen(s) >= BIG_INFO_STRING)
 			Com_Errorf(ERR_DROP, "bcs exceeded BIG_INFO_STRING");
 		strcat(bigConfigString, s);
@@ -268,7 +268,7 @@ Rescan:
 	}
 
 	if(!strcmp(cmd, "bcs2")){
-		s = Cmd_Argv(2);
+		s = cmdargv(2);
 		if(strlen(bigConfigString) + strlen(s) + 1 >= BIG_INFO_STRING)
 			Com_Errorf(ERR_DROP, "bcs exceeded BIG_INFO_STRING");
 		strcat(bigConfigString, s);
@@ -279,8 +279,8 @@ Rescan:
 
 	if(!strcmp(cmd, "cs")){
 		CL_ConfigstringModified();
-		/* reparse the string, because CL_ConfigstringModified may have done another Cmd_TokenizeString() */
-		Cmd_TokenizeString(s);
+		/* reparse the string, because CL_ConfigstringModified may have done another cmdstrtok() */
+		cmdstrtok(s);
 		return qtrue;
 	}
 
@@ -288,8 +288,8 @@ Rescan:
 		/* clear notify lines and outgoing commands before passing
 		 * the restart to the cgame */
 		Con_ClearNotify();
-		/* reparse the string, because Con_ClearNotify() may have done another Cmd_TokenizeString() */
-		Cmd_TokenizeString(s);
+		/* reparse the string, because Con_ClearNotify() may have done another cmdstrtok() */
+		cmdstrtok(s);
 		Q_Memset(cl.cmds, 0, sizeof(cl.cmds));
 		return qtrue;
 	}
@@ -381,12 +381,12 @@ CL_CgameSystemCalls(intptr_t *args)
 		Cvar_VariableStringBuffer(VMA(1), VMA(2), args[3]);
 		return 0;
 	case CG_ARGC:
-		return Cmd_Argc();
+		return cmdargc();
 	case CG_ARGV:
-		Cmd_ArgvBuffer(args[1], VMA(2), args[3]);
+		cmdargvbuf(args[1], VMA(2), args[3]);
 		return 0;
 	case CG_ARGS:
-		Cmd_ArgsBuffer(VMA(1), args[2]);
+		cmdargsbuf(VMA(1), args[2]);
 		return 0;
 	case CG_FS_FOPENFILE:
 		return FS_FOpenFileByMode(VMA(1), VMA(2), args[3]);
@@ -408,7 +408,7 @@ CL_CgameSystemCalls(intptr_t *args)
 		CL_AddCgameCommand(VMA(1));
 		return 0;
 	case CG_REMOVECOMMAND:
-		Cmd_RemoveCommandSafe(VMA(1));
+		cmdsaferemove(VMA(1));
 		return 0;
 	case CG_SENDCLIENTCOMMAND:
 		CL_AddReliableCommand(VMA(1), qfalse);
@@ -860,7 +860,7 @@ CL_FirstSnapshot(void)
 		}
 		clc.speexInitialized = qtrue;
 		clc.voipMuteAll = qfalse;
-		Cmd_AddCommand ("voip", CL_Voip_f);
+		cmdadd ("voip", CL_Voip_f);
 		Cvar_Set("cl_voipSendTarget", "spatial");
 		Q_Memset(clc.voipTargets, ~0, sizeof(clc.voipTargets));
 	}

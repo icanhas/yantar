@@ -1591,7 +1591,7 @@ NET_Init(void)
 
 	NET_Config(qtrue);
 
-	Cmd_AddCommand ("net_restart", NET_Restart_f);
+	cmdadd ("net_restart", NET_Restart_f);
 }
 
 

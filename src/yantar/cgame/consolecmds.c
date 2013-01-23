@@ -471,7 +471,7 @@ struct {
 
 /*
  * The string has been tokenized and can be retrieved with
- * Cmd_Argc() / Cmd_Argv()
+ * cmdargc() / cmdargv()
  */
 qbool
 CG_ConsoleCommand(void)

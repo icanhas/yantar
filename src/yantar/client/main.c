@@ -194,7 +194,7 @@ CL_UpdateVoipGain(const char *idstr, float gain)
 void
 CL_Voip_f(void)
 {
-	const char	*cmd = Cmd_Argv(1);
+	const char	*cmd = cmdargv(1);
 	const char	*reason = NULL;
 
 	if(clc.state != CA_ACTIVE)
@@ -213,14 +213,14 @@ CL_Voip_f(void)
 	}
 
 	if(strcmp(cmd, "ignore") == 0)
-		CL_UpdateVoipIgnore(Cmd_Argv(2), qtrue);
+		CL_UpdateVoipIgnore(cmdargv(2), qtrue);
 	else if(strcmp(cmd, "unignore") == 0)
-		CL_UpdateVoipIgnore(Cmd_Argv(2), qfalse);
+		CL_UpdateVoipIgnore(cmdargv(2), qfalse);
 	else if(strcmp(cmd, "gain") == 0){
-		if(Cmd_Argc() > 3)
-			CL_UpdateVoipGain(Cmd_Argv(2), atof(Cmd_Argv(3)));
-		else if(Q_isanumber(Cmd_Argv(2))){
-			int id = atoi(Cmd_Argv(2));
+		if(cmdargc() > 3)
+			CL_UpdateVoipGain(cmdargv(2), atof(cmdargv(3)));
+		else if(Q_isanumber(cmdargv(2))){
+			int id = atoi(cmdargv(2));
 			if(id >= 0 && id < MAX_CLIENTS)
 				Com_Printf("VoIP: current gain for player #%d "
 					   "is %f\n", id, clc.voipGain[id]);
@@ -629,7 +629,7 @@ CL_Record_f(void)
 	Entstate	nullstate;
 	char *s;
 
-	if(Cmd_Argc() > 2){
+	if(cmdargc() > 2){
 		Com_Printf ("record <demoname>\n");
 		return;
 	}
@@ -652,8 +652,8 @@ CL_Record_f(void)
 			S_COLOR_YELLOW
 			"WARNING: You should set 'g_synchronousClients 1' for smoother demo recording\n");
 
-	if(Cmd_Argc() == 2){
-		s = Cmd_Argv(1);
+	if(cmdargc() == 2){
+		s = cmdargv(1);
 		Q_strncpyz(demoName, s, sizeof(demoName));
 		Q_sprintf(name, sizeof(name), "demos/%s.%s%d", demoName,
 			DEMOEXT,
@@ -949,7 +949,7 @@ CL_PlayDemo_f(void)
 	int	protocol, i;
 	char	retry[MAX_OSPATH];
 
-	if(Cmd_Argc() != 2){
+	if(cmdargc() != 2){
 		Com_Printf ("demo <demoname>\n");
 		return;
 	}
@@ -959,7 +959,7 @@ CL_PlayDemo_f(void)
 	Cvar_Set("sv_killserver", "2");
 
 	/* open the demo file */
-	arg = Cmd_Argv(1);
+	arg = cmdargv(1);
 
 	CL_Disconnect(qtrue);
 
@@ -1000,13 +1000,13 @@ CL_PlayDemo_f(void)
 		Com_Errorf(ERR_DROP, "couldn't open %s", name);
 		return;
 	}
-	Q_strncpyz(clc.demoName, Cmd_Argv(1), sizeof(clc.demoName));
+	Q_strncpyz(clc.demoName, cmdargv(1), sizeof(clc.demoName));
 
 	Con_Close();
 
 	clc.state = CA_CONNECTED;
 	clc.demoplaying = qtrue;
-	Q_strncpyz(clc.servername, Cmd_Argv(1), sizeof(clc.servername));
+	Q_strncpyz(clc.servername, cmdargv(1), sizeof(clc.servername));
 
 
 	/* read demo messages until connected */
@@ -1254,7 +1254,7 @@ CL_Disconnect(qbool showMainMenu)
 			speex_decoder_destroy(clc.speexDecoder[i]);
 		}
 	}
-	Cmd_RemoveCommand ("voip");
+	cmdremove ("voip");
 #endif
 
 	if(clc.demofile){
@@ -1323,7 +1323,7 @@ CL_ForwardCommandToServer(const char *string)
 {
 	char *cmd;
 
-	cmd = Cmd_Argv(0);
+	cmd = cmdargv(0);
 
 	/* ignore key up commands */
 	if(cmd[0] == '-')
@@ -1334,7 +1334,7 @@ CL_ForwardCommandToServer(const char *string)
 		return;
 	}
 
-	if(Cmd_Argc() > 1)
+	if(cmdargc() > 1)
 		CL_AddReliableCommand(string, qfalse);
 	else
 		CL_AddReliableCommand(cmd, qfalse);
@@ -1473,8 +1473,8 @@ CL_ForwardToServer_f(void)
 	}
 
 	/* don't forward the first argument */
-	if(Cmd_Argc() > 1)
-		CL_AddReliableCommand(Cmd_Args(), qfalse);
+	if(cmdargc() > 1)
+		CL_AddReliableCommand(cmdargs(), qfalse);
 }
 
 void
@@ -1502,7 +1502,7 @@ CL_Connect_f(void)
 {
 	char	*server;
 	const char *serverString;
-	int	argc = Cmd_Argc();
+	int	argc = cmdargc();
 	Netaddrtype family = NA_UNSPEC;
 
 	if(argc != 2 && argc != 3){
@@ -1511,17 +1511,17 @@ CL_Connect_f(void)
 	}
 
 	if(argc == 2)
-		server = Cmd_Argv(1);
+		server = cmdargv(1);
 	else{
-		if(!strcmp(Cmd_Argv(1), "-4"))
+		if(!strcmp(cmdargv(1), "-4"))
 			family = NA_IP;
-		else if(!strcmp(Cmd_Argv(1), "-6"))
+		else if(!strcmp(cmdargv(1), "-6"))
 			family = NA_IP6;
 		else
 			Com_Printf(
 				"warning: only -4 or -6 as address type understood.\n");
 
-		server = Cmd_Argv(2);
+		server = cmdargv(2);
 	}
 
 	Cvar_Set("ui_singlePlayerActive", "0");
@@ -1624,7 +1624,7 @@ CL_Rcon_f(void)
 	Q_strcat (message, MAX_RCON_MESSAGE, " ");
 
 	/* https://zerowing.idsoftware.com/bugzilla/show_bug.cgi?id=543 */
-	Q_strcat (message, MAX_RCON_MESSAGE, Cmd_Cmd()+5);
+	Q_strcat (message, MAX_RCON_MESSAGE, cmdcmd()+5);
 
 	if(clc.state >= CA_CONNECTED)
 		to = clc.netchan.remoteAddress;
@@ -2141,7 +2141,7 @@ CL_MotdPacket(Netaddr from)
 	if(!NET_CompareAdr(from, cls.updateServer))
 		return;
 
-	info = Cmd_Argv(1);
+	info = cmdargv(1);
 
 	/* check challenge */
 	challenge = Info_ValueForKey(info, "challenge");
@@ -2304,9 +2304,9 @@ CL_ConnectionlessPacket(Netaddr from, Bitmsg *msg)
 
 	s = MSG_ReadStringLine(msg);
 
-	Cmd_TokenizeString(s);
+	cmdstrtok(s);
 
-	c = Cmd_Argv(0);
+	c = cmdargv(0);
 
 	Com_DPrintf ("CL packet %s: %s\n", NET_AdrToStringwPort(from), c);
 
@@ -2321,11 +2321,11 @@ CL_ConnectionlessPacket(Netaddr from, Bitmsg *msg)
 			return;
 		}
 
-		c = Cmd_Argv(2);
+		c = cmdargv(2);
 		if(*c)
 			challenge = atoi(c);
 
-		strver = Cmd_Argv(3);
+		strver = cmdargv(3);
 		if(*strver){
 			ver = atoi(strver);
 
@@ -2348,7 +2348,7 @@ CL_ConnectionlessPacket(Netaddr from, Bitmsg *msg)
 		}
 
 		/* start sending challenge response instead of challenge request packets */
-		clc.challenge = atoi(Cmd_Argv(1));
+		clc.challenge = atoi(cmdargv(1));
 		clc.state = CA_CHALLENGING;
 		clc.connectPacketCount = 0;
 		clc.connectTime = -99999;
@@ -2378,7 +2378,7 @@ CL_ConnectionlessPacket(Netaddr from, Bitmsg *msg)
 		}
 
 		{
-			c = Cmd_Argv(1);
+			c = cmdargv(1);
 
 			if(*c)
 				challenge = atoi(c);
@@ -2418,7 +2418,7 @@ CL_ConnectionlessPacket(Netaddr from, Bitmsg *msg)
 
 	/* echo request from server */
 	if(!Q_stricmp(c, "echo")){
-		NET_OutOfBandPrint(NS_CLIENT, from, "%s", Cmd_Argv(1));
+		NET_OutOfBandPrint(NS_CLIENT, from, "%s", cmdargv(1));
 		return;
 	}
 
@@ -2828,10 +2828,10 @@ CL_InitRef(void)
 			Sys_LibraryError());
 #endif
 
-	ri.Cmd_AddCommand = Cmd_AddCommand;
-	ri.Cmd_RemoveCommand = Cmd_RemoveCommand;
-	ri.Cmd_Argc	= Cmd_Argc;
-	ri.Cmd_Argv	= Cmd_Argv;
+	ri.cmdadd = cmdadd;
+	ri.cmdremove = cmdremove;
+	ri.cmdargc	= cmdargc;
+	ri.cmdargv	= cmdargv;
 	ri.Cmd_ExecuteText = cbufexecstr;
 	ri.Printf	= CL_RefPrintf;
 	ri.Error	= Com_Errorf;
@@ -2900,7 +2900,7 @@ CL_SetModel_f(void)
 	char	*arg;
 	char	name[256];
 
-	arg = Cmd_Argv(1);
+	arg = cmdargv(1);
 	if(arg[0]){
 		Cvar_Set("model", arg);
 		Cvar_Set("headmodel", arg);
@@ -2926,9 +2926,9 @@ CL_Video_f(void)
 		return;
 	}
 
-	if(Cmd_Argc( ) == 2)
+	if(cmdargc( ) == 2)
 		/* explicit filename */
-		Q_sprintf(filename, MAX_OSPATH, "videos/%s.avi", Cmd_Argv(1));
+		Q_sprintf(filename, MAX_OSPATH, "videos/%s.avi", cmdargv(1));
 	else{
 		/* scan for a free filename */
 		for(i = 0; i <= 9999; i++){
@@ -3203,31 +3203,31 @@ CL_Init(void)
 	/*
 	 * register our commands
 	 *  */
-	Cmd_AddCommand ("cmd", CL_ForwardToServer_f);
-	Cmd_AddCommand ("configstrings", CL_Configstrings_f);
-	Cmd_AddCommand ("clientinfo", CL_Clientinfo_f);
-	Cmd_AddCommand ("snd_restart", CL_Snd_Restart_f);
-	Cmd_AddCommand ("vid_restart", CL_Vid_Restart_f);
-	Cmd_AddCommand ("disconnect", CL_Disconnect_f);
-	Cmd_AddCommand ("record", CL_Record_f);
-	Cmd_AddCommand ("demo", CL_PlayDemo_f);
-	Cmd_SetCommandCompletionFunc("demo", CL_CompleteDemoName);
-	Cmd_AddCommand ("cinematic", CL_PlayCinematic_f);
-	Cmd_AddCommand ("stoprecord", CL_StopRecord_f);
-	Cmd_AddCommand ("connect", CL_Connect_f);
-	Cmd_AddCommand ("reconnect", CL_Reconnect_f);
-	Cmd_AddCommand ("localservers", CL_LocalServers_f);
-	Cmd_AddCommand ("globalservers", CL_GlobalServers_f);
-	Cmd_AddCommand ("rcon", CL_Rcon_f);
-	Cmd_SetCommandCompletionFunc("rcon", CL_CompleteRcon);
-	Cmd_AddCommand ("ping", CL_Ping_f);
-	Cmd_AddCommand ("serverstatus", CL_ServerStatus_f);
-	Cmd_AddCommand ("showip", CL_ShowIP_f);
-	Cmd_AddCommand ("fs_openedList", CL_OpenedPK3List_f);
-	Cmd_AddCommand ("fs_referencedList", CL_ReferencedPK3List_f);
-	Cmd_AddCommand ("model", CL_SetModel_f);
-	Cmd_AddCommand ("video", CL_Video_f);
-	Cmd_AddCommand ("stopvideo", CL_StopVideo_f);
+	cmdadd ("cmd", CL_ForwardToServer_f);
+	cmdadd ("configstrings", CL_Configstrings_f);
+	cmdadd ("clientinfo", CL_Clientinfo_f);
+	cmdadd ("snd_restart", CL_Snd_Restart_f);
+	cmdadd ("vid_restart", CL_Vid_Restart_f);
+	cmdadd ("disconnect", CL_Disconnect_f);
+	cmdadd ("record", CL_Record_f);
+	cmdadd ("demo", CL_PlayDemo_f);
+	cmdsetcompletion("demo", CL_CompleteDemoName);
+	cmdadd ("cinematic", CL_PlayCinematic_f);
+	cmdadd ("stoprecord", CL_StopRecord_f);
+	cmdadd ("connect", CL_Connect_f);
+	cmdadd ("reconnect", CL_Reconnect_f);
+	cmdadd ("localservers", CL_LocalServers_f);
+	cmdadd ("globalservers", CL_GlobalServers_f);
+	cmdadd ("rcon", CL_Rcon_f);
+	cmdsetcompletion("rcon", CL_CompleteRcon);
+	cmdadd ("ping", CL_Ping_f);
+	cmdadd ("serverstatus", CL_ServerStatus_f);
+	cmdadd ("showip", CL_ShowIP_f);
+	cmdadd ("fs_openedList", CL_OpenedPK3List_f);
+	cmdadd ("fs_referencedList", CL_ReferencedPK3List_f);
+	cmdadd ("model", CL_SetModel_f);
+	cmdadd ("video", CL_Video_f);
+	cmdadd ("stopvideo", CL_StopVideo_f);
 	CL_InitRef();
 
 	SCR_Init ();
@@ -3268,29 +3268,29 @@ CL_Shutdown(char *finalmsg, qbool disconnect, qbool quit)
 	CL_ClearMemory(qtrue);
 	CL_Snd_Shutdown();
 
-	Cmd_RemoveCommand ("cmd");
-	Cmd_RemoveCommand ("configstrings");
-	Cmd_RemoveCommand ("clientinfo");
-	Cmd_RemoveCommand ("snd_restart");
-	Cmd_RemoveCommand ("vid_restart");
-	Cmd_RemoveCommand ("disconnect");
-	Cmd_RemoveCommand ("record");
-	Cmd_RemoveCommand ("demo");
-	Cmd_RemoveCommand ("cinematic");
-	Cmd_RemoveCommand ("stoprecord");
-	Cmd_RemoveCommand ("connect");
-	Cmd_RemoveCommand ("reconnect");
-	Cmd_RemoveCommand ("localservers");
-	Cmd_RemoveCommand ("globalservers");
-	Cmd_RemoveCommand ("rcon");
-	Cmd_RemoveCommand ("ping");
-	Cmd_RemoveCommand ("serverstatus");
-	Cmd_RemoveCommand ("showip");
-	Cmd_RemoveCommand ("fs_openedList");
-	Cmd_RemoveCommand ("fs_referencedList");
-	Cmd_RemoveCommand ("model");
-	Cmd_RemoveCommand ("video");
-	Cmd_RemoveCommand ("stopvideo");
+	cmdremove ("cmd");
+	cmdremove ("configstrings");
+	cmdremove ("clientinfo");
+	cmdremove ("snd_restart");
+	cmdremove ("vid_restart");
+	cmdremove ("disconnect");
+	cmdremove ("record");
+	cmdremove ("demo");
+	cmdremove ("cinematic");
+	cmdremove ("stoprecord");
+	cmdremove ("connect");
+	cmdremove ("reconnect");
+	cmdremove ("localservers");
+	cmdremove ("globalservers");
+	cmdremove ("rcon");
+	cmdremove ("ping");
+	cmdremove ("serverstatus");
+	cmdremove ("showip");
+	cmdremove ("fs_openedList");
+	cmdremove ("fs_referencedList");
+	cmdremove ("model");
+	cmdremove ("video");
+	cmdremove ("stopvideo");
 
 	CL_ShutdownInput();
 	Con_Shutdown();
@@ -3693,7 +3693,7 @@ CL_GlobalServers_f(void)
 	int	count, i, masterNum;
 	char	command[1024], *masteraddress;
 
-	if((count = Cmd_Argc()) < 3 || (masterNum = atoi(Cmd_Argv(1))) < 0 ||
+	if((count = cmdargc()) < 3 || (masterNum = atoi(cmdargv(1))) < 0 ||
 	   masterNum > MAX_MASTER_SERVERS - 1){
 		Com_Printf(
 			"usage: globalservers <master# 0-%d> <protocol> [keywords]\n",
@@ -3736,20 +3736,20 @@ CL_GlobalServers_f(void)
 		if(v4enabled)
 			Q_sprintf(command, sizeof(command),
 				"getserversExt %s %s",
-				com_gamename->string, Cmd_Argv(
+				com_gamename->string, cmdargv(
 					2));
 		else
 			Q_sprintf(command, sizeof(command),
 				"getserversExt %s %s ipv6",
-				com_gamename->string, Cmd_Argv(
+				com_gamename->string, cmdargv(
 					2));
 	}else
 		Q_sprintf(command, sizeof(command), "getservers %s %s",
-			com_gamename->string, Cmd_Argv(2));
+			com_gamename->string, cmdargv(2));
 
 	for(i=3; i < count; i++){
 		Q_strcat(command, sizeof(command), " ");
-		Q_strcat(command, sizeof(command), Cmd_Argv(i));
+		Q_strcat(command, sizeof(command), cmdargv(i));
 	}
 
 	NET_OutOfBandPrint(NS_SERVER, to, "%s", command);
@@ -3881,7 +3881,7 @@ CL_Ping_f(void)
 	int	argc;
 	Netaddrtype family = NA_UNSPEC;
 
-	argc = Cmd_Argc();
+	argc = cmdargc();
 
 	if(argc != 2 && argc != 3){
 		Com_Printf("usage: ping [-4|-6] server\n");
@@ -3889,17 +3889,17 @@ CL_Ping_f(void)
 	}
 
 	if(argc == 2)
-		server = Cmd_Argv(1);
+		server = cmdargv(1);
 	else{
-		if(!strcmp(Cmd_Argv(1), "-4"))
+		if(!strcmp(cmdargv(1), "-4"))
 			family = NA_IP;
-		else if(!strcmp(Cmd_Argv(1), "-6"))
+		else if(!strcmp(cmdargv(1), "-6"))
 			family = NA_IP6;
 		else
 			Com_Printf(
 				"warning: only -4 or -6 as address type understood.\n");
 
-		server = Cmd_Argv(2);
+		server = cmdargv(2);
 	}
 
 	Q_Memset(&to, 0, sizeof(Netaddr));
@@ -4022,7 +4022,7 @@ CL_ServerStatus_f(void)
 	int argc;
 	Netaddrtype	family = NA_UNSPEC;
 
-	argc = Cmd_Argc();
+	argc = cmdargc();
 
 	if(argc != 2 && argc != 3){
 		if(clc.state != CA_ACTIVE || clc.demoplaying){
@@ -4038,17 +4038,17 @@ CL_ServerStatus_f(void)
 		Q_Memset(&to, 0, sizeof(Netaddr));
 
 		if(argc == 2)
-			server = Cmd_Argv(1);
+			server = cmdargv(1);
 		else{
-			if(!strcmp(Cmd_Argv(1), "-4"))
+			if(!strcmp(cmdargv(1), "-4"))
 				family = NA_IP;
-			else if(!strcmp(Cmd_Argv(1), "-6"))
+			else if(!strcmp(cmdargv(1), "-6"))
 				family = NA_IP6;
 			else
 				Com_Printf(
 					"warning: only -4 or -6 as address type understood.\n");
 
-			server = Cmd_Argv(2);
+			server = cmdargv(2);
 		}
 
 		toptr = &to;

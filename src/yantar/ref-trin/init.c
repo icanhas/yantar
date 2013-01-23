@@ -627,20 +627,20 @@ R_ScreenShot_f(void)
 	static int	lastNumber = -1;
 	qbool		silent;
 
-	if(!strcmp(ri.Cmd_Argv(1), "levelshot")){
+	if(!strcmp(ri.cmdargv(1), "levelshot")){
 		R_LevelShot();
 		return;
 	}
 
-	if(!strcmp(ri.Cmd_Argv(1), "silent")){
+	if(!strcmp(ri.cmdargv(1), "silent")){
 		silent = qtrue;
 	}else{
 		silent = qfalse;
 	}
 
-	if(ri.Cmd_Argc() == 2 && !silent){
+	if(ri.cmdargc() == 2 && !silent){
 		/* explicit filename */
-		Q_sprintf(checkname, MAX_OSPATH, "screenshots/%s.tga", ri.Cmd_Argv(1));
+		Q_sprintf(checkname, MAX_OSPATH, "screenshots/%s.tga", ri.cmdargv(1));
 	}else{
 		/* scan for a free filename */
 
@@ -681,20 +681,20 @@ R_ScreenShotJPEG_f(void)
 	static int	lastNumber = -1;
 	qbool		silent;
 
-	if(!strcmp(ri.Cmd_Argv(1), "levelshot")){
+	if(!strcmp(ri.cmdargv(1), "levelshot")){
 		R_LevelShot();
 		return;
 	}
 
-	if(!strcmp(ri.Cmd_Argv(1), "silent")){
+	if(!strcmp(ri.cmdargv(1), "silent")){
 		silent = qtrue;
 	}else{
 		silent = qfalse;
 	}
 
-	if(ri.Cmd_Argc() == 2 && !silent){
+	if(ri.cmdargc() == 2 && !silent){
 		/* explicit filename */
-		Q_sprintf(checkname, MAX_OSPATH, "screenshots/%s.jpg", ri.Cmd_Argv(1));
+		Q_sprintf(checkname, MAX_OSPATH, "screenshots/%s.jpg", ri.cmdargv(1));
 	}else{
 		/* scan for a free filename */
 
@@ -1086,15 +1086,15 @@ R_Register(void)
 
 	/* make sure all the commands added here are also
 	 * removed in R_Shutdown */
-	ri.Cmd_AddCommand("imagelist", R_ImageList_f);
-	ri.Cmd_AddCommand("shaderlist", R_ShaderList_f);
-	ri.Cmd_AddCommand("skinlist", R_SkinList_f);
-	ri.Cmd_AddCommand("modellist", R_Modellist_f);
-	ri.Cmd_AddCommand("modelist", R_ModeList_f);
-	ri.Cmd_AddCommand("screenshot", R_ScreenShot_f);
-	ri.Cmd_AddCommand("screenshotJPEG", R_ScreenShotJPEG_f);
-	ri.Cmd_AddCommand("gfxinfo", GfxInfo_f);
-	ri.Cmd_AddCommand("minimize", GLimp_Minimize);
+	ri.cmdadd("imagelist", R_ImageList_f);
+	ri.cmdadd("shaderlist", R_ShaderList_f);
+	ri.cmdadd("skinlist", R_SkinList_f);
+	ri.cmdadd("modellist", R_Modellist_f);
+	ri.cmdadd("modelist", R_ModeList_f);
+	ri.cmdadd("screenshot", R_ScreenShot_f);
+	ri.cmdadd("screenshotJPEG", R_ScreenShotJPEG_f);
+	ri.cmdadd("gfxinfo", GfxInfo_f);
+	ri.cmdadd("minimize", GLimp_Minimize);
 }
 
 /*
@@ -1210,16 +1210,16 @@ RE_Shutdown(qbool destroyWindow)
 
 	ri.Printf(PRINT_ALL, "RE_Shutdown( %i )\n", destroyWindow);
 
-	ri.Cmd_RemoveCommand ("modellist");
-	ri.Cmd_RemoveCommand ("screenshotJPEG");
-	ri.Cmd_RemoveCommand ("screenshot");
-	ri.Cmd_RemoveCommand ("imagelist");
-	ri.Cmd_RemoveCommand ("shaderlist");
-	ri.Cmd_RemoveCommand ("skinlist");
-	ri.Cmd_RemoveCommand ("gfxinfo");
-	ri.Cmd_RemoveCommand("minimize");
-	ri.Cmd_RemoveCommand("modelist");
-	ri.Cmd_RemoveCommand("shaderstate");
+	ri.cmdremove ("modellist");
+	ri.cmdremove ("screenshotJPEG");
+	ri.cmdremove ("screenshot");
+	ri.cmdremove ("imagelist");
+	ri.cmdremove ("shaderlist");
+	ri.cmdremove ("skinlist");
+	ri.cmdremove ("gfxinfo");
+	ri.cmdremove("minimize");
+	ri.cmdremove("modelist");
+	ri.cmdremove("shaderstate");
 
 
 	if(tr.registered){

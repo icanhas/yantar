@@ -51,7 +51,7 @@ SV_GetChallenge(Netaddr from)
 	   Cvar_VariableValue("ui_singlePlayerActive"))
 		return;
 
-	gameName = Cmd_Argv(2);
+	gameName = cmdargv(2);
 
 	gameMismatch = !*gameName || strcmp(gameName, com_gamename->string) != 0;
 
@@ -68,7 +68,7 @@ SV_GetChallenge(Netaddr from)
 
 	/* see if we already have a challenge for this ip */
 	challenge = &svs.challenges[0];
-	clientChallenge = atoi(Cmd_Argv(1));
+	clientChallenge = atoi(cmdargv(1));
 
 	for(i = 0; i < MAX_CHALLENGES; i++, challenge++){
 		if(!challenge->connected &&
@@ -194,7 +194,7 @@ SV_AuthorizeIpPacket(Netaddr from)
 		return;
 	}
 
-	challenge = atoi(Cmd_Argv(1));
+	challenge = atoi(cmdargv(1));
 
 	for(i = 0; i < MAX_CHALLENGES; i++)
 		if(svs.challenges[i].challenge == challenge)
@@ -208,8 +208,8 @@ SV_AuthorizeIpPacket(Netaddr from)
 
 	/* send a packet back to the original client */
 	challengeptr->pingTime = svs.time;
-	s = Cmd_Argv(2);
-	r = Cmd_Argv(3);	/* reason */
+	s = cmdargv(2);
+	r = cmdargv(3);	/* reason */
 
 	if(!Q_stricmp(s, "demo")){
 		/* they are a demo client trying to connect to a real server */
@@ -315,7 +315,7 @@ SV_DirectConnect(Netaddr from)
 		return;
 	}
 
-	Q_strncpyz(userinfo, Cmd_Argv(1), sizeof(userinfo));
+	Q_strncpyz(userinfo, cmdargv(1), sizeof(userinfo));
 
 	version = atoi(Info_ValueForKey(userinfo, "protocol"));
 
@@ -830,7 +830,7 @@ SV_DoneDownload_f(Client *cl)
 static void
 SV_NextDownload_f(Client *cl)
 {
-	int block = atoi(Cmd_Argv(1));
+	int block = atoi(cmdargv(1));
 
 	if(block == cl->downloadClientBlock){
 		Com_DPrintf(
@@ -869,7 +869,7 @@ SV_BeginDownload_f(Client *cl)
 
 	/* cl->downloadName is non-zero now, SV_WriteDownloadToClient will see this and open
 	 * the file itself */
-	Q_strncpyz(cl->downloadName, Cmd_Argv(1), sizeof(cl->downloadName));
+	Q_strncpyz(cl->downloadName, cmdargv(1), sizeof(cl->downloadName));
 }
 
 /*
@@ -907,12 +907,12 @@ SV_WriteDownloadToClient(Client *cl, Bitmsg *msg)
 
 				/* Check whether the file appears in the list of referenced
 				 * paks to prevent downloading of arbitrary files. */
-				Cmd_TokenizeStringIgnoreQuotes(referencedPaks);
-				numRefPaks = Cmd_Argc();
+				cmdstrtokignorequotes(referencedPaks);
+				numRefPaks = cmdargc();
 
 				for(curindex = 0; curindex < numRefPaks;
 				    curindex++){
-					if(!FS_FilenameCompare(Cmd_Argv(curindex),
+					if(!FS_FilenameCompare(cmdargv(curindex),
 						   pakbuf)){
 						unreferenced = 0;
 
@@ -1204,12 +1204,12 @@ SV_VerifyPaks_f(Client *cl)
 		if(bGood)
 			bGood = (FS_FileIsInPAK(Pvmfiles "/ui.qvm", &nChkSum2) == 1);
 
-		nClientPaks = Cmd_Argc();
+		nClientPaks = cmdargc();
 
 		/* start at arg 2 ( skip serverId cl_paks ) */
 		nCurArg = 1;
 
-		pArg = Cmd_Argv(nCurArg++);
+		pArg = cmdargv(nCurArg++);
 		if(!pArg)
 			bGood = qfalse;
 		else
@@ -1233,26 +1233,26 @@ SV_VerifyPaks_f(Client *cl)
 				break;
 			}
 			/* verify first to be the cgame checksum */
-			pArg = Cmd_Argv(nCurArg++);
+			pArg = cmdargv(nCurArg++);
 			if(!pArg || *pArg == '@' || atoi(pArg) != nChkSum1){
 				bGood = qfalse;
 				break;
 			}
 			/* verify the second to be the ui checksum */
-			pArg = Cmd_Argv(nCurArg++);
+			pArg = cmdargv(nCurArg++);
 			if(!pArg || *pArg == '@' || atoi(pArg) != nChkSum2){
 				bGood = qfalse;
 				break;
 			}
 			/* should be sitting at the delimeter now */
-			pArg = Cmd_Argv(nCurArg++);
+			pArg = cmdargv(nCurArg++);
 			if(*pArg != '@'){
 				bGood = qfalse;
 				break;
 			}
 			/* store checksums since tokenization is not re-entrant */
 			for(i = 0; nCurArg < nClientPaks; i++)
-				nClientChkSum[i] = atoi(Cmd_Argv(nCurArg++));
+				nClientChkSum[i] = atoi(cmdargv(nCurArg++));
 
 			/* store number to compare against (minus one cause the last is the number of checksums) */
 			nClientPaks = i - 1;
@@ -1277,13 +1277,13 @@ SV_VerifyPaks_f(Client *cl)
 
 			/* get the pure checksums of the pk3 files loaded by the server */
 			pPaks = FS_LoadedPakPureChecksums();
-			Cmd_TokenizeString(pPaks);
-			nServerPaks = Cmd_Argc();
+			cmdstrtok(pPaks);
+			nServerPaks = cmdargc();
 			if(nServerPaks > 1024)
 				nServerPaks = 1024;
 
 			for(i = 0; i < nServerPaks; i++)
-				nServerChkSum[i] = atoi(Cmd_Argv(i));
+				nServerChkSum[i] = atoi(cmdargv(i));
 
 			/* check if the client has provided any pure checksums of pk3 files not loaded by the server */
 			for(i = 0; i < nClientPaks; i++){
@@ -1438,7 +1438,7 @@ SV_UserinfoChanged(Client *cl)
 static void
 SV_UpdateUserinfo_f(Client *cl)
 {
-	Q_strncpyz(cl->userinfo, Cmd_Argv(1), sizeof(cl->userinfo));
+	Q_strncpyz(cl->userinfo, cmdargv(1), sizeof(cl->userinfo));
 
 	SV_UserinfoChanged(cl);
 	/* call prog code to allow overrides */
@@ -1464,11 +1464,11 @@ SV_UpdateVoipIgnore(Client *cl, const char *idstr, qbool ignore)
 static void
 SV_Voip_f(Client *cl)
 {
-	const char *cmd = Cmd_Argv(1);
+	const char *cmd = cmdargv(1);
 	if(strcmp(cmd, "ignore") == 0)
-		SV_UpdateVoipIgnore(cl, Cmd_Argv(2), qtrue);
+		SV_UpdateVoipIgnore(cl, cmdargv(2), qtrue);
 	else if(strcmp(cmd, "unignore") == 0)
-		SV_UpdateVoipIgnore(cl, Cmd_Argv(2), qfalse);
+		SV_UpdateVoipIgnore(cl, cmdargv(2), qfalse);
 	else if(strcmp(cmd, "muteall") == 0)
 		cl->muteAllVoip = qtrue;
 	else if(strcmp(cmd, "unmuteall") == 0)
@@ -1510,11 +1510,11 @@ SV_ExecuteClientCommand(Client *cl, const char *s, qbool clientOK)
 	Ucmd *u;
 	qbool bProcessed = qfalse;
 
-	Cmd_TokenizeString(s);
+	cmdstrtok(s);
 
 	/* see if it is a server level command */
 	for(u=ucmds; u->name; u++)
-		if(!strcmp (Cmd_Argv(0), u->name)){
+		if(!strcmp (cmdargv(0), u->name)){
 			u->func(cl);
 			bProcessed = qtrue;
 			break;
@@ -1524,12 +1524,12 @@ SV_ExecuteClientCommand(Client *cl, const char *s, qbool clientOK)
 		/* pass unknown strings to the game */
 		if(!u->name && sv.state == SS_GAME &&
 		   (cl->state == CS_ACTIVE || cl->state == CS_PRIMED)){
-			Cmd_Args_Sanitize();
+			cmdsanitizeargs();
 			vmcall(gvm, GAME_CLIENT_COMMAND, cl - svs.clients);
 		}
 	}else if(!bProcessed)
 		Com_DPrintf("client text ignored for %s: %s\n", cl->name,
-			Cmd_Argv(
+			cmdargv(
 				0));
 }
 

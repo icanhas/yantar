@@ -577,7 +577,7 @@ SVC_Status(Netaddr from)
 
 	/* echo back the parameter to status. so master servers can use it as a challenge
 	 * to prevent timed spoofed reply packets that add ghost servers */
-	Info_SetValueForKey(infostring, "challenge", Cmd_Argv(1));
+	Info_SetValueForKey(infostring, "challenge", cmdargv(1));
 
 	status[0] = 0;
 	statusLength = 0;
@@ -619,12 +619,12 @@ SVC_Info(Netaddr from)
 		return;
 
 	/*
-	 * Check whether Cmd_Argv(1) has a sane length. This was not done in the original Quake3 version which led
+	 * Check whether cmdargv(1) has a sane length. This was not done in the original Quake3 version which led
 	 * to the Infostring bug discovered by Luigi Auriemma. See http://aluigi.altervista.org/ for the advisory.
 	 */
 
 	/* A maximum challenge length of 128 should be more than plenty. */
-	if(strlen(Cmd_Argv(1)) > 128)
+	if(strlen(cmdargv(1)) > 128)
 		return;
 
 	/* don't count privateclients */
@@ -640,7 +640,7 @@ SVC_Info(Netaddr from)
 
 	/* echo back the parameter to status. so servers can use it as a challenge
 	 * to prevent timed spoofed reply packets that add ghost servers */
-	Info_SetValueForKey(infostring, "challenge", Cmd_Argv(1));
+	Info_SetValueForKey(infostring, "challenge", cmdargv(1));
 
 	Info_SetValueForKey(infostring, "gamename", com_gamename->string);
 
@@ -717,7 +717,7 @@ SVC_RemoteCommand(Netaddr from, Bitmsg *msg)
 	}
 
 	if(!strlen(sv_rconPassword->string) ||
-	   strcmp (Cmd_Argv(1), sv_rconPassword->string)){
+	   strcmp (cmdargv(1), sv_rconPassword->string)){
 		static Leakybucket bucket;
 
 		/* Make DoS via rcon impractical */
@@ -729,11 +729,11 @@ SVC_RemoteCommand(Netaddr from, Bitmsg *msg)
 
 		valid = qfalse;
 		Com_Printf ("Bad rcon from %s: %s\n", NET_AdrToString (
-				from), Cmd_ArgsFrom(2));
+				from), cmdargsfrom(2));
 	}else{
 		valid = qtrue;
 		Com_Printf ("Rcon from %s: %s\n", NET_AdrToString (
-				from), Cmd_ArgsFrom(2));
+				from), cmdargsfrom(2));
 	}
 
 	/* start redirecting all print outputs to the packet */
@@ -751,7 +751,7 @@ SVC_RemoteCommand(Netaddr from, Bitmsg *msg)
 		 * get the command directly, "rcon <pass> <command>" to avoid quoting issues
 		 * extract the command by walking
 		 * since the cmd formatting can fuckup (amount of spaces), using a dumb step by step parsing */
-		cmd_aux = Cmd_Cmd();
+		cmd_aux = cmdcmd();
 		cmd_aux +=4;
 		while(cmd_aux[0]==' ')
 			cmd_aux++;
@@ -762,7 +762,7 @@ SVC_RemoteCommand(Netaddr from, Bitmsg *msg)
 
 		Q_strcat(remaining, sizeof(remaining), cmd_aux);
 
-		Cmd_ExecuteString (remaining);
+		cmdexecstr (remaining);
 
 	}
 
@@ -790,9 +790,9 @@ SV_ConnectionlessPacket(Netaddr from, Bitmsg *msg)
 		Huff_Decompress(msg, 12);
 
 	s = MSG_ReadStringLine(msg);
-	Cmd_TokenizeString(s);
+	cmdstrtok(s);
 
-	c = Cmd_Argv(0);
+	c = cmdargv(0);
 	Com_DPrintf ("SV packet %s : %s\n", NET_AdrToString(from), c);
 
 	if(!Q_stricmp(c, "getstatus"))

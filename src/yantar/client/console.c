@@ -153,14 +153,14 @@ Con_Dump_f(void)
 	Fhandle f;
 	char	buffer[1024];
 
-	if(Cmd_Argc() != 2){
+	if(cmdargc() != 2){
 		Com_Printf ("usage: condump <filename>\n");
 		return;
 	}
 
-	Com_Printf ("Dumped console text to %s.\n", Cmd_Argv(1));
+	Com_Printf ("Dumped console text to %s.\n", cmdargv(1));
 
-	f = FS_FOpenFileWrite(Cmd_Argv(1));
+	f = FS_FOpenFileWrite(cmdargv(1));
 	if(!f){
 		Com_Printf ("ERROR: couldn't open.\n");
 		return;
@@ -299,14 +299,14 @@ Con_Init(void)
 	}
 	CL_LoadConsoleHistory( );
 
-	Cmd_AddCommand ("toggleconsole", Con_ToggleConsole_f);
-	Cmd_AddCommand ("messagemode", Con_MessageMode_f);
-	Cmd_AddCommand ("messagemode2", Con_MessageMode2_f);
-	Cmd_AddCommand ("messagemode3", Con_MessageMode3_f);
-	Cmd_AddCommand ("messagemode4", Con_MessageMode4_f);
-	Cmd_AddCommand ("clear", Con_Clear_f);
-	Cmd_AddCommand ("condump", Con_Dump_f);
-	Cmd_SetCommandCompletionFunc("condump", Cmd_CompleteTxtName);
+	cmdadd ("toggleconsole", Con_ToggleConsole_f);
+	cmdadd ("messagemode", Con_MessageMode_f);
+	cmdadd ("messagemode2", Con_MessageMode2_f);
+	cmdadd ("messagemode3", Con_MessageMode3_f);
+	cmdadd ("messagemode4", Con_MessageMode4_f);
+	cmdadd ("clear", Con_Clear_f);
+	cmdadd ("condump", Con_Dump_f);
+	cmdsetcompletion("condump", Cmd_CompleteTxtName);
 }
 
 /*
@@ -315,13 +315,13 @@ Con_Init(void)
 void
 Con_Shutdown(void)
 {
-	Cmd_RemoveCommand("toggleconsole");
-	Cmd_RemoveCommand("messagemode");
-	Cmd_RemoveCommand("messagemode2");
-	Cmd_RemoveCommand("messagemode3");
-	Cmd_RemoveCommand("messagemode4");
-	Cmd_RemoveCommand("clear");
-	Cmd_RemoveCommand("condump");
+	cmdremove("toggleconsole");
+	cmdremove("messagemode");
+	cmdremove("messagemode2");
+	cmdremove("messagemode3");
+	cmdremove("messagemode4");
+	cmdremove("clear");
+	cmdremove("condump");
 }
 
 /*

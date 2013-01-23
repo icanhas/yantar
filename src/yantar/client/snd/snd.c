@@ -259,8 +259,8 @@ S_Play_f(void)
 		return;
 
 	i = 1;
-	while(i<Cmd_Argc()){
-		Q_strncpyz(name, Cmd_Argv(i), sizeof(name));
+	while(i<cmdargc()){
+		Q_strncpyz(name, cmdargv(i), sizeof(name));
 		h = si.RegisterSound(name, qfalse);
 
 		if(h)
@@ -277,12 +277,12 @@ S_Music_f(void)
 	if(!si.StartBackgroundTrack)
 		return;
 
-	c = Cmd_Argc();
+	c = cmdargc();
 
 	if(c == 2)
-		si.StartBackgroundTrack(Cmd_Argv(1), NULL);
+		si.StartBackgroundTrack(cmdargv(1), NULL);
 	else if(c == 3)
-		si.StartBackgroundTrack(Cmd_Argv(1), Cmd_Argv(2));
+		si.StartBackgroundTrack(cmdargv(1), cmdargv(2));
 	else{
 		Com_Printf ("music <musicfile> [loopfile]\n");
 		return;
@@ -324,12 +324,12 @@ S_Init(void)
 
 		S_CodecInit( );
 
-		Cmd_AddCommand("play", S_Play_f);
-		Cmd_AddCommand("music", S_Music_f);
-		Cmd_AddCommand("stopmusic", S_StopMusic_f);
-		Cmd_AddCommand("s_list", S_SoundList);
-		Cmd_AddCommand("s_stop", S_StopAllSounds);
-		Cmd_AddCommand("s_info", S_SoundInfo);
+		cmdadd("play", S_Play_f);
+		cmdadd("music", S_Music_f);
+		cmdadd("stopmusic", S_StopMusic_f);
+		cmdadd("s_list", S_SoundList);
+		cmdadd("s_stop", S_StopAllSounds);
+		cmdadd("s_info", S_SoundInfo);
 
 		if(!started){
 			started = S_Base_Init(&si);
@@ -355,11 +355,11 @@ S_Shutdown(void)
 	if(si.Shutdown)
 		si.Shutdown( );
 	Q_Memset(&si, 0, sizeof(Sndinterface));
-	Cmd_RemoveCommand("play");
-	Cmd_RemoveCommand("music");
-	Cmd_RemoveCommand("stopmusic");
-	Cmd_RemoveCommand("s_list");
-	Cmd_RemoveCommand("s_stop");
-	Cmd_RemoveCommand("s_info");
+	cmdremove("play");
+	cmdremove("music");
+	cmdremove("stopmusic");
+	cmdremove("s_list");
+	cmdremove("s_stop");
+	cmdremove("s_info");
 	S_CodecShutdown( );
 }

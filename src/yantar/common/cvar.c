@@ -613,7 +613,7 @@ Cvar_SetCheatState(void)
 /*
  * Handles variable inspection and changing from the console
  *
- * called by Cmd_ExecuteString when Cmd_Argv(0) doesn't match a known
+ * called by cmdexecstr when cmdargv(0) doesn't match a known
  * command. Returns true if the command was a variable reference that
  * was handled. (print or change)
  */
@@ -623,18 +623,18 @@ Cvar_Command(void)
 	Cvar *v;
 
 	/* check variables */
-	v = Cvar_FindVar(Cmd_Argv(0));
+	v = Cvar_FindVar(cmdargv(0));
 	if(v == nil)
 		return qfalse;
 
 	/* perform a variable print or set */
-	if(Cmd_Argc() == 1){
+	if(cmdargc() == 1){
 		Cvar_Print(v);
 		return qtrue;
 	}
 
 	/* set the value if forcing isn't required */
-	Cvar_Set2(v->name, Cmd_Args(), qfalse);
+	Cvar_Set2(v->name, cmdargs(), qfalse);
 	return qtrue;
 }
 
@@ -648,12 +648,12 @@ Cvar_Print_f(void)
 	char *name;
 	Cvar *cv;
 
-	if(Cmd_Argc() != 2){
+	if(cmdargc() != 2){
 		Com_Printf ("usage: print <variable>\n");
 		return;
 	}
 
-	name = Cmd_Argv(1);
+	name = cmdargv(1);
 
 	cv = Cvar_FindVar(name);
 
@@ -670,7 +670,7 @@ Cvar_Print_f(void)
 void
 Cvar_Toggle_f(void)
 {
-	int i, c = Cmd_Argc();
+	int i, c = cmdargc();
 	char *curval;
 
 	if(c < 2){
@@ -679,8 +679,8 @@ Cvar_Toggle_f(void)
 	}
 
 	if(c == 2){
-		Cvar_Set2(Cmd_Argv(1), va("%d",
-				!Cvar_VariableValue(Cmd_Argv(1))),
+		Cvar_Set2(cmdargv(1), va("%d",
+				!Cvar_VariableValue(cmdargv(1))),
 			qfalse);
 		return;
 	}
@@ -690,17 +690,17 @@ Cvar_Toggle_f(void)
 		return;
 	}
 
-	curval = Cvar_VariableString(Cmd_Argv(1));
+	curval = Cvar_VariableString(cmdargv(1));
 
 	/* don't bother checking the last arg for a match since the desired
 	 * behaviour is the same as no match (set to the first argument) */
 	for(i = 2; i+1 < c; i++)
-		if(strcmp(curval, Cmd_Argv(i)) == 0){
-			Cvar_Set2(Cmd_Argv(1), Cmd_Argv(i + 1), qfalse);
+		if(strcmp(curval, cmdargv(i)) == 0){
+			Cvar_Set2(cmdargv(1), cmdargv(i + 1), qfalse);
 			return;
 		}
 	/* fallback */
-	Cvar_Set2(Cmd_Argv(1), Cmd_Argv(2), qfalse);
+	Cvar_Set2(cmdargv(1), cmdargv(2), qfalse);
 }
 
 /*
@@ -714,8 +714,8 @@ Cvar_Set_f(void)
 	char *cmd;
 	Cvar *v;
 
-	c	= Cmd_Argc();
-	cmd	= Cmd_Argv(0);
+	c	= cmdargc();
+	cmd	= cmdargv(0);
 
 	if(c < 2){
 		Com_Printf("usage: %s <variable> <value>\n", cmd);
@@ -726,7 +726,7 @@ Cvar_Set_f(void)
 		return;
 	}
 
-	v = Cvar_Set2 (Cmd_Argv(1), Cmd_ArgsFrom(2), qfalse);
+	v = Cvar_Set2 (cmdargv(1), cmdargsfrom(2), qfalse);
 	if(v == nil)
 		return;
 	switch(cmd[3]){
@@ -754,11 +754,11 @@ Cvar_Set_f(void)
 void
 Cvar_Reset_f(void)
 {
-	if(Cmd_Argc() != 2){
+	if(cmdargc() != 2){
 		Com_Printf("usage: reset <variable>\n");
 		return;
 	}
-	Cvar_Reset(Cmd_Argv(1));
+	Cvar_Reset(cmdargv(1));
 }
 
 /*
@@ -817,8 +817,8 @@ Cvar_List_f(void)
 	int	i;
 	char *match;
 
-	if(Cmd_Argc() > 1)
-		match = Cmd_Argv(1);
+	if(cmdargc() > 1)
+		match = cmdargv(1);
 	else
 		match = nil;
 
@@ -923,12 +923,12 @@ Cvar_Unset_f(void)
 {
 	Cvar *cv;
 
-	if(Cmd_Argc() != 2){
-		Com_Printf("Usage: %s <varname>\n", Cmd_Argv(0));
+	if(cmdargc() != 2){
+		Com_Printf("Usage: %s <varname>\n", cmdargv(0));
 		return;
 	}
 
-	cv = Cvar_FindVar(Cmd_Argv(1));
+	cv = Cvar_FindVar(cmdargv(1));
 
 	if(cv == nil)
 		return;
@@ -937,7 +937,7 @@ Cvar_Unset_f(void)
 		Cvar_Unset(cv);
 	else
 		Com_Printf("Error: %s: Variable %s is not user created.\n",
-			Cmd_Argv(0), cv->name);
+			cmdargv(0), cv->name);
 }
 
 /*
@@ -1102,23 +1102,23 @@ Cvar_Init(void)
 
 	cvar_cheats = Cvar_Get("sv_cheats", "1", CVAR_ROM | CVAR_SYSTEMINFO);
 
-	Cmd_AddCommand("print", Cvar_Print_f);
-	Cmd_AddCommand("toggle", Cvar_Toggle_f);
-	Cmd_SetCommandCompletionFunc("toggle", Cvar_CompleteCvarName);
-	Cmd_AddCommand("set", Cvar_Set_f);
-	Cmd_SetCommandCompletionFunc("set", Cvar_CompleteCvarName);
-	Cmd_AddCommand("sets", Cvar_Set_f);
-	Cmd_SetCommandCompletionFunc("sets", Cvar_CompleteCvarName);
-	Cmd_AddCommand("setu", Cvar_Set_f);
-	Cmd_SetCommandCompletionFunc("setu", Cvar_CompleteCvarName);
-	Cmd_AddCommand("seta", Cvar_Set_f);
-	Cmd_SetCommandCompletionFunc("seta", Cvar_CompleteCvarName);
-	Cmd_AddCommand("reset", Cvar_Reset_f);
-	Cmd_SetCommandCompletionFunc("reset", Cvar_CompleteCvarName);
-	Cmd_AddCommand("unset", Cvar_Unset_f);
-	Cmd_SetCommandCompletionFunc("unset", Cvar_CompleteCvarName);
+	cmdadd("print", Cvar_Print_f);
+	cmdadd("toggle", Cvar_Toggle_f);
+	cmdsetcompletion("toggle", Cvar_CompleteCvarName);
+	cmdadd("set", Cvar_Set_f);
+	cmdsetcompletion("set", Cvar_CompleteCvarName);
+	cmdadd("sets", Cvar_Set_f);
+	cmdsetcompletion("sets", Cvar_CompleteCvarName);
+	cmdadd("setu", Cvar_Set_f);
+	cmdsetcompletion("setu", Cvar_CompleteCvarName);
+	cmdadd("seta", Cvar_Set_f);
+	cmdsetcompletion("seta", Cvar_CompleteCvarName);
+	cmdadd("reset", Cvar_Reset_f);
+	cmdsetcompletion("reset", Cvar_CompleteCvarName);
+	cmdadd("unset", Cvar_Unset_f);
+	cmdsetcompletion("unset", Cvar_CompleteCvarName);
 
-	Cmd_AddCommand("cvarlist", Cvar_List_f);
-	Cmd_AddCommand("find", Cvar_List_f);
-	Cmd_AddCommand("cvar_reset", Cvar_Restart_f);
+	cmdadd("cvarlist", Cvar_List_f);
+	cmdadd("find", Cvar_List_f);
+	cmdadd("cvar_reset", Cvar_Restart_f);
 }

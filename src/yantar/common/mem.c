@@ -536,7 +536,7 @@ Q_Meminfo_f(void)
 	rendererBytes	= 0;
 	zoneBlocks	= 0;
 	for(block = mainzone->blocklist.next;; block = block->next){
-		if(Cmd_Argc() != 1)
+		if(cmdargc() != 1)
 			Com_Printf ("block:%p    size:%7i    tag:%3i\n",
 				(void*)block, block->size, block->tag);
 		if(block->tag){
@@ -801,13 +801,13 @@ Com_Inithunk(void)
 	s_hunkData = (byte*)(((intptr_t)s_hunkData + 31) & ~31);
 	hunkclear();
 
-	Cmd_AddCommand("meminfo", Q_Meminfo_f);
+	cmdadd("meminfo", Q_Meminfo_f);
 #ifdef ZONE_DEBUG
-	Cmd_AddCommand("zonelog", zlogheap);
+	cmdadd("zonelog", zlogheap);
 #endif
 #ifdef HUNK_DEBUG
-	Cmd_AddCommand("hunklog", hunklog);
-	Cmd_AddCommand("hunksmalllog", Hunk_SmallLog);
+	cmdadd("hunklog", hunklog);
+	cmdadd("hunksmalllog", Hunk_SmallLog);
 #endif
 }
 

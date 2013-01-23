@@ -27,7 +27,7 @@ struct Cmdfunc {
 	Cmdfunc			*next;
 	char				*name;
 	xcommand_t		function;
-	completionFunc_t	complete;
+	Completionfunc	complete;
 };
 
 int cmd_wait;
@@ -42,8 +42,8 @@ byte cmd_text_buf[Maxcmdbuf];
 void
 Cmd_Wait_f(void)
 {
-	if(Cmd_Argc() == 2){
-		cmd_wait = atoi(Cmd_Argv(1));
+	if(cmdargc() == 2){
+		cmd_wait = atoi(cmdargv(1));
 		if(cmd_wait < 0)
 			cmd_wait = 1;	/* ignore the argument */
 	}else
@@ -116,7 +116,7 @@ cbufexecstr(int exec_when, const char *text)
 	case EXEC_NOW:
 		if(text && strlen(text) > 0){
 			Com_DPrintf(S_COLOR_YELLOW "EXEC_NOW %s\n", text);
-			Cmd_ExecuteString(text);
+			cmdexecstr(text);
 		}else{
 			cbufflush();
 			Com_DPrintf(S_COLOR_YELLOW "EXEC_NOW %s\n",
@@ -136,7 +136,7 @@ cbufexecstr(int exec_when, const char *text)
 
 /* 
  * Pulls off \n-terminated lines of text from the command buffer and sends
- * them through Cmd_ExecuteString.  Stops when the buffer is empty.
+ * them through cmdexecstr.  Stops when the buffer is empty.
  * Normally called once per frame, but may be explicitly invoked.
  * Do not call inside a command function, or current args will be destroyed. 
  */
@@ -223,7 +223,7 @@ cbufflush(void)
 			memmove(text, text+i, cmd_text.cursize);
 		}
 		/* execute the command line */
-		Cmd_ExecuteString(line);
+		cmdexecstr(line);
 	}
 }
 
@@ -240,19 +240,19 @@ Cmd_Exec_f(void)
 	} f;
 	char filename[MAX_QPATH];
 
-	if(Cmd_Argc() != 2){
+	if(cmdargc() != 2){
 		Com_Printf("exec <filename> : execute a script file\n");
 		return;
 	}
 
-	Q_strncpyz(filename, Cmd_Argv(1), sizeof(filename));
+	Q_strncpyz(filename, cmdargv(1), sizeof(filename));
 	Q_defaultext(filename, sizeof(filename), ".cfg");
 	FS_ReadFile(filename, &f.v);
 	if(!f.c){
-		Com_Printf("couldn't exec %s\n",Cmd_Argv(1));
+		Com_Printf("couldn't exec %s\n",cmdargv(1));
 		return;
 	}
-	Com_Printf("execing %s\n",Cmd_Argv(1));
+	Com_Printf("execing %s\n",cmdargv(1));
 	cbufinsertstr(f.c);
 
 	FS_FreeFile(f.v);
@@ -266,12 +266,12 @@ Cmd_Vstr_f(void)
 {
 	char *v;
 
-	if(Cmd_Argc() != 2){
+	if(cmdargc() != 2){
 		Com_Printf("vstr <variablename> : execute a variable command\n");
 		return;
 	}
 
-	v = Cvar_VariableString(Cmd_Argv(1));
+	v = Cvar_VariableString(cmdargv(1));
 	cbufinsertstr(va("%s\n", v));
 }
 
@@ -281,7 +281,7 @@ Cmd_Vstr_f(void)
 void
 Cmd_Echo_f(void)
 {
-	Com_Printf("%s\n", Cmd_Args());
+	Com_Printf("%s\n", cmdargs());
 }
 
 /*
@@ -295,13 +295,13 @@ static char cmd_cmd[BIG_INFO_STRING];				/* the original command we received (no
 static Cmdfunc *cmd_functions;	/* possible commands to execute */
 
 int
-Cmd_Argc(void)
+cmdargc(void)
 {
 	return cmd_argc;
 }
 
 char*
-Cmd_Argv(int arg)
+cmdargv(int arg)
 {
 	if(arg >= cmd_argc)
 		return "";
@@ -313,16 +313,16 @@ Cmd_Argv(int arg)
  * they can't have pointers returned to them
  */
 void
-Cmd_ArgvBuffer(int arg, char *buffer, int bufferLength)
+cmdargvbuf(int arg, char *buffer, int bufferLength)
 {
-	Q_strncpyz(buffer, Cmd_Argv(arg), bufferLength);
+	Q_strncpyz(buffer, cmdargv(arg), bufferLength);
 }
 
 /*
  * Returns a single string containing argv(1) to argv(argc()-1)
  */
 char*
-Cmd_Args(void)
+cmdargs(void)
 {
 	static char cmd_args[MAX_STRING_CHARS];
 	int i;
@@ -341,7 +341,7 @@ Cmd_Args(void)
  * Returns a single string containing argv(arg) to argv(argc()-1)
  */
 char *
-Cmd_ArgsFrom(int arg)
+cmdargsfrom(int arg)
 {
 	static char cmd_args[BIG_INFO_STRING];
 	int i;
@@ -363,9 +363,9 @@ Cmd_ArgsFrom(int arg)
  * they can't have pointers returned to them
  */
 void
-Cmd_ArgsBuffer(char *buffer, int bufferLength)
+cmdargsbuf(char *buffer, int bufferLength)
 {
-	Q_strncpyz(buffer, Cmd_Args(), bufferLength);
+	Q_strncpyz(buffer, cmdargs(), bufferLength);
 }
 
 /*
@@ -373,14 +373,14 @@ Cmd_ArgsBuffer(char *buffer, int bufferLength)
  * For rcon use when you want to transmit without altering quoting
  */
 char *
-Cmd_Cmd(void)
+cmdcmd(void)
 {
 	return cmd_cmd;
 }
 
 /*
  * The functions that execute commands get their parameters with these
- * functions. Cmd_Argv() will return an empty string, not a NULL
+ * functions. cmdargv() will return an empty string, not a NULL
  * if arg > argc, so string operations are allways safe. 
  */
 
@@ -389,7 +389,7 @@ Cmd_Cmd(void)
  * This is a hack to protect buggy qvms
  */
 void
-Cmd_Args_Sanitize(void)
+cmdsanitizeargs(void)
 {
 	int i;
 
@@ -413,14 +413,14 @@ Cmd_Args_Sanitize(void)
  * will point into this temporary buffer.
  */
 static void
-Cmd_TokenizeString2(const char *text_in, qbool ignoreQuotes)
+cmdstrtok2(const char *text_in, qbool ignoreQuotes)
 {
 	const char *text;
 	char *textOut;
 
 #ifdef TKN_DBG
 	/* FIXME TTimo blunt hook to try to find the tokenization of userinfo */
-	Com_DPrintf("Cmd_TokenizeString: %s\n", text_in);
+	Com_DPrintf("cmdstrtok: %s\n", text_in);
 #endif
 	cmd_argc = 0;	/* clear prev args */
 
@@ -494,15 +494,15 @@ Cmd_TokenizeString2(const char *text_in, qbool ignoreQuotes)
 }
 
 void
-Cmd_TokenizeString(const char *text_in)
+cmdstrtok(const char *text_in)
 {
-	Cmd_TokenizeString2(text_in, qfalse);
+	cmdstrtok2(text_in, qfalse);
 }
 
 void
-Cmd_TokenizeStringIgnoreQuotes(const char *text_in)
+cmdstrtokignorequotes(const char *text_in)
 {
-	Cmd_TokenizeString2(text_in, qtrue);
+	cmdstrtok2(text_in, qtrue);
 }
 
 Cmdfunc*
@@ -523,7 +523,7 @@ Cmd_FindCommand(const char *cmd_name)
  * as a clc_clientCommand instead of executed locally 
  */
 void
-Cmd_AddCommand(const char *cmd_name, xcommand_t function)
+cmdadd(const char *cmd_name, xcommand_t function)
 {
 	Cmdfunc *cmd;
 
@@ -531,7 +531,7 @@ Cmd_AddCommand(const char *cmd_name, xcommand_t function)
 	if(Cmd_FindCommand(cmd_name)){
 		/* allow completion-only commands to be silently doubled */
 		if(function != NULL)
-			Com_Printf("Cmd_AddCommand: %s already defined\n", cmd_name);
+			Com_Printf("cmdadd: %s already defined\n", cmd_name);
 		return;
 	}
 	/* use a small malloc to avoid zone fragmentation */
@@ -545,7 +545,7 @@ Cmd_AddCommand(const char *cmd_name, xcommand_t function)
 
 /* callback with each valid string */
 void
-Cmd_SetCommandCompletionFunc(const char *command, completionFunc_t complete)
+cmdsetcompletion(const char *command, Completionfunc complete)
 {
 	Cmdfunc *cmd;
 
@@ -555,7 +555,7 @@ Cmd_SetCommandCompletionFunc(const char *command, completionFunc_t complete)
 }
 
 void
-Cmd_RemoveCommand(const char *cmd_name)
+cmdremove(const char *cmd_name)
 {
 	Cmdfunc *cmd, **back;
 
@@ -577,7 +577,7 @@ Cmd_RemoveCommand(const char *cmd_name)
 
 /* Only remove commands with no associated function */
 void
-Cmd_RemoveCommandSafe(const char *cmd_name)
+cmdsaferemove(const char *cmd_name)
 {
 	Cmdfunc *cmd;
 
@@ -588,11 +588,11 @@ Cmd_RemoveCommandSafe(const char *cmd_name)
 				    "system command \"%s\"", cmd_name);
 		return;
 	}
-	Cmd_RemoveCommand(cmd_name);
+	cmdremove(cmd_name);
 }
 
 void
-Cmd_CommandCompletion(void (*callback)(const char *s))
+cmdcompletion(void (*callback)(const char *s))
 {
 	Cmdfunc *cmd;
 
@@ -601,7 +601,7 @@ Cmd_CommandCompletion(void (*callback)(const char *s))
 }
 
 void
-Cmd_CompleteArgument(const char *command, char *args, int argNum)
+cmdcompletearg(const char *command, char *args, int argNum)
 {
 	Cmdfunc *cmd;
 
@@ -614,13 +614,13 @@ Cmd_CompleteArgument(const char *command, char *args, int argNum)
  * as if it was typed at the console */
 /* A complete command line has been parsed, so try to execute it */
 void
-Cmd_ExecuteString(const char *text)
+cmdexecstr(const char *text)
 {
 	Cmdfunc *cmd, **prev;
 
 	/* execute the command line */
-	Cmd_TokenizeString(text);
-	if(!Cmd_Argc())
+	cmdstrtok(text);
+	if(!cmdargc())
 		return;	/* no tokens */
 
 	/* check registered command functions */
@@ -670,8 +670,8 @@ Cmd_List_f(void)
 	char *match;
 	int i;
 
-	if(Cmd_Argc() > 1)
-		match = Cmd_Argv(1);
+	if(cmdargc() > 1)
+		match = cmdargv(1);
 	else
 		match = NULL;
 
@@ -686,7 +686,7 @@ Cmd_List_f(void)
 }
 
 void
-Cmd_CompleteCfgName(char *args, int argNum)
+cmdcompletecfgname(char *args, int argNum)
 {
 	UNUSED(args);
 	if(argNum == 2)
@@ -694,13 +694,13 @@ Cmd_CompleteCfgName(char *args, int argNum)
 }
 
 void
-Cmd_Init(void)
+cmdinit(void)
 {
-	Cmd_AddCommand("cmdlist",Cmd_List_f);
-	Cmd_AddCommand("exec",Cmd_Exec_f);
-	Cmd_SetCommandCompletionFunc("exec", Cmd_CompleteCfgName);
-	Cmd_AddCommand("vstr",Cmd_Vstr_f);
-	Cmd_SetCommandCompletionFunc("vstr", Cvar_CompleteCvarName);
-	Cmd_AddCommand("echo",Cmd_Echo_f);
-	Cmd_AddCommand("wait", Cmd_Wait_f);
+	cmdadd("cmdlist",Cmd_List_f);
+	cmdadd("exec",Cmd_Exec_f);
+	cmdsetcompletion("exec", cmdcompletecfgname);
+	cmdadd("vstr",Cmd_Vstr_f);
+	cmdsetcompletion("vstr", Cvar_CompleteCvarName);
+	cmdadd("echo",Cmd_Echo_f);
+	cmdadd("wait", Cmd_Wait_f);
 }

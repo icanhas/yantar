@@ -290,7 +290,7 @@ void
 Com_Quit_f(void)
 {
 	/* don't try to shutdown if we are in a recursive error */
-	char *p = Cmd_Args( );
+	char *p = cmdargs( );
 	if(!com_errorEntered){
 		/* Some VMs might execute "quit" command directly,
 		 * which would trigger an unload of active VM error.
@@ -359,9 +359,9 @@ Com_Insafemode(void)
 	int i;
 
 	for(i = 0; i < com_numConsoleLines; i++){
-		Cmd_TokenizeString(com_consoleLines[i]);
-		if(!Q_stricmp(Cmd_Argv(0), "safe")
-		   || !Q_stricmp(Cmd_Argv(0), "cvar_restart")){
+		cmdstrtok(com_consoleLines[i]);
+		if(!Q_stricmp(cmdargv(0), "safe")
+		   || !Q_stricmp(cmdargv(0), "cvar_restart")){
 			com_consoleLines[i][0] = 0;
 			return qtrue;
 		}
@@ -383,17 +383,17 @@ Com_Startupvar(const char *match)
 	char *s;
 
 	for(i=0; i < com_numConsoleLines; i++){
-		Cmd_TokenizeString(com_consoleLines[i]);
-		if(strcmp(Cmd_Argv(0), "set"))
+		cmdstrtok(com_consoleLines[i]);
+		if(strcmp(cmdargv(0), "set"))
 			continue;
 
-		s = Cmd_Argv(1);
+		s = cmdargv(1);
 
 		if(!match || !strcmp(s, match)){
 			if(Cvar_Flags(s) == CVAR_NONEXISTENT)
-				Cvar_Get(s, Cmd_Argv(2), CVAR_USER_CREATED);
+				Cvar_Get(s, cmdargv(2), CVAR_USER_CREATED);
 			else
-				Cvar_Set2(s, Cmd_Argv(2), qfalse);
+				Cvar_Set2(s, cmdargv(2), qfalse);
 		}
 	}
 }
@@ -910,7 +910,7 @@ Com_Millisecs(void)
 static void
 Com_Errorf_f(void)
 {
-	if(Cmd_Argc() > 1)
+	if(cmdargc() > 1)
 		Com_Errorf(ERR_DROP, "Testing drop error");
 	else
 		Com_Errorf(ERR_FATAL, "Testing fatal error");
@@ -926,11 +926,11 @@ Com_Freeze_f(void)
 	float	s;
 	int	start, now;
 
-	if(Cmd_Argc() != 2){
+	if(cmdargc() != 2){
 		Com_Printf("freeze <seconds>\n");
 		return;
 	}
-	s = atof(Cmd_Argv(1));
+	s = atof(cmdargv(1));
 	start = Com_Millisecs();
 	for(;;){
 		now = Com_Millisecs();
@@ -1133,11 +1133,11 @@ Com_Testmaths_f(void)
 void
 Com_Setenv_f(void)
 {
-	int argc = Cmd_Argc();
-	char *arg1 = Cmd_Argv(1);
+	int argc = cmdargc();
+	char *arg1 = cmdargv(1);
 
 	if(argc > 2){
-		char *arg2 = Cmd_ArgsFrom(2);
+		char *arg2 = cmdargsfrom(2);
 
 		Sys_SetEnv(arg1, arg2);
 	}else if(argc == 2){
@@ -1214,13 +1214,13 @@ Com_Gamerestart(int checksumFeed, qbool disconnect)
 void
 Com_Gamerestart_f(void)
 {
-	if(!FS_FilenameCompare(Cmd_Argv(1), com_basegame->string))
+	if(!FS_FilenameCompare(cmdargv(1), com_basegame->string))
 		/* This is the standard base game. Servers and clients should
 		 * use "" and not the standard basegame name because this messes
 		 * up pak file negotiation and lots of other stuff */
 		Cvar_Set("fs_game", "");
 	else
-		Cvar_Set("fs_game", Cmd_Argv(1));
+		Cvar_Set("fs_game", cmdargv(1));
 
 	Com_Gamerestart(0, qtrue);
 }
@@ -1263,11 +1263,11 @@ Com_Writeconfig_f(void)
 {
 	char filename[MAX_QPATH];
 
-	if(Cmd_Argc() != 2){
+	if(cmdargc() != 2){
 		Com_Printf("Usage: writeconfig <filename>\n");
 		return;
 	}
-	Q_strncpyz(filename, Cmd_Argv(1), sizeof(filename));
+	Q_strncpyz(filename, cmdargv(1), sizeof(filename));
 	Q_defaultext(filename, sizeof(filename), ".cfg");
 	Com_Printf("Writing %s.\n", filename);
 	Com_Writeconfigtofile(filename);
@@ -1430,7 +1430,7 @@ Com_Init(char *commandLine)
 	Com_Startupvar(nil);
 
 	Com_Initzone();
-	Cmd_Init ();
+	cmdinit ();
 
 	/* get the developer cvar set as early as possible */
 	com_developer = Cvar_Get("developer", "0", CVAR_TEMP);
@@ -1450,19 +1450,19 @@ Com_Init(char *commandLine)
 	Com_Initjournaling();
 
 	/* Add some commands here already so users can use them from config files */
-	Cmd_AddCommand ("setenv", Com_Setenv_f);
+	cmdadd ("setenv", Com_Setenv_f);
 	if(com_developer && com_developer->integer){
-		Cmd_AddCommand("error", Com_Errorf_f);
-		Cmd_AddCommand("crash", Com_Crash_f);
-		Cmd_AddCommand("freeze", Com_Freeze_f);
+		cmdadd("error", Com_Errorf_f);
+		cmdadd("crash", Com_Crash_f);
+		cmdadd("freeze", Com_Freeze_f);
 	}
-	Cmd_AddCommand("testutf", Com_Testutf8_f);
-	Cmd_AddCommand("testmaths", Com_Testmaths_f);
-	Cmd_AddCommand("quit", Com_Quit_f);
-	Cmd_AddCommand("q", Com_Quit_f);
-	Cmd_AddCommand("writeconfig", Com_Writeconfig_f);
-	Cmd_SetCommandCompletionFunc("writeconfig", Cmd_CompleteCfgName);
-	Cmd_AddCommand("game_restart", Com_Gamerestart_f);
+	cmdadd("testutf", Com_Testutf8_f);
+	cmdadd("testmaths", Com_Testmaths_f);
+	cmdadd("quit", Com_Quit_f);
+	cmdadd("q", Com_Quit_f);
+	cmdadd("writeconfig", Com_Writeconfig_f);
+	cmdsetcompletion("writeconfig", cmdcompletecfgname);
+	cmdadd("game_restart", Com_Gamerestart_f);
 
 	Com_Execconfig();
 
@@ -1945,15 +1945,15 @@ Field_CompleteCommand(char *cmd,
 	/* Skip leading whitespace and quotes */
 	cmd = Q_skipcharset(cmd, " \"");
 
-	Cmd_TokenizeStringIgnoreQuotes(cmd);
-	completionArgument = Cmd_Argc( );
+	cmdstrtokignorequotes(cmd);
+	completionArgument = cmdargc( );
 
 	/* If there is trailing whitespace on the cmd */
 	if(*(cmd + strlen(cmd) - 1) == ' '){
 		completionString = "";
 		completionArgument++;
 	}else
-		completionString = Cmd_Argv(completionArgument - 1);
+		completionString = cmdargv(completionArgument - 1);
 		
 #ifndef DEDICATED
 	/* Unconditionally add a '/' to the start of the buffer */
@@ -1974,7 +1974,7 @@ Field_CompleteCommand(char *cmd,
 	}
 #endif
 	if(completionArgument > 1){
-		const char *baseCmd = Cmd_Argv(0);
+		const char *baseCmd = cmdargv(0);
 		char *p;
 
 #ifndef DEDICATED
@@ -1986,7 +1986,7 @@ Field_CompleteCommand(char *cmd,
 		if((p = Field_FindFirstSeparator(cmd)))
 			Field_CompleteCommand(p + 1, qtrue, qtrue);	/* Compound command */
 		else
-			Cmd_CompleteArgument(baseCmd, cmd, completionArgument);
+			cmdcompletearg(baseCmd, cmd, completionArgument);
 	}else{
 		if(completionString[0] == '\\' || completionString[0] == '/')
 			completionString++;
@@ -1998,7 +1998,7 @@ Field_CompleteCommand(char *cmd,
 			return;
 
 		if(doCommands)
-			Cmd_CommandCompletion(findmatches);
+			cmdcompletion(findmatches);
 
 		if(doCvars)
 			Cvar_CommandCompletion(findmatches);
@@ -2006,7 +2006,7 @@ Field_CompleteCommand(char *cmd,
 		if(!Field_Complete()){
 			/* run through again, printing matches */
 			if(doCommands)
-				Cmd_CommandCompletion(printmatches);
+				cmdcompletion(printmatches);
 
 			if(doCvars)
 				Cvar_CommandCompletion(printcvarmatches);

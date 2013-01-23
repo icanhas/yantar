@@ -2666,7 +2666,7 @@ R_ShaderList_f(void)
 
 	count = 0;
 	for(i = 0; i < tr.numShaders; i++){
-		if(ri.Cmd_Argc() > 1){
+		if(ri.cmdargc() > 1){
 			shader = tr.sortedShaders[i];
 		}else{
 			shader = tr.shaders[i];

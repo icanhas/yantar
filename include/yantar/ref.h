@@ -313,11 +313,11 @@ struct Refimport {
 
 	int (*Cvar_VariableIntegerValue)(const char *var_name);
 
-	void (*Cmd_AddCommand)(const char *name, void (*cmd)(void));
-	void (*Cmd_RemoveCommand)(const char *name);
+	void (*cmdadd)(const char *name, void (*cmd)(void));
+	void (*cmdremove)(const char *name);
 
-	int (*Cmd_Argc)(void);
-	char    *(*Cmd_Argv)(int i);
+	int (*cmdargc)(void);
+	char    *(*cmdargv)(int i);
 
 	void (*Cmd_ExecuteText)(int exec_when, const char *text);
 

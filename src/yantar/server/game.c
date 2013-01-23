@@ -304,9 +304,9 @@ SV_GameSystemCalls(intptr_t *args)
 		Cvar_VariableStringBuffer(VMA(1), VMA(2), args[3]);
 		return 0;
 	case G_ARGC:
-		return Cmd_Argc();
+		return cmdargc();
 	case G_ARGV:
-		Cmd_ArgvBuffer(args[1], VMA(2), args[3]);
+		cmdargvbuf(args[1], VMA(2), args[3]);
 		return 0;
 	case G_SEND_CONSOLE_COMMAND:
 		cbufexecstr(args[1], VMA(2));

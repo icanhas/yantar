@@ -50,8 +50,8 @@ vminit(void)
 	Cvar_Get("vm_game", "0", CVAR_ARCHIVE);		/* !@# SHIP WITH SET TO 2 */
 	Cvar_Get("vm_ui", "0", CVAR_ARCHIVE);			/* !@# SHIP WITH SET TO 2 */
 
-	Cmd_AddCommand ("vmprofile", VM_VmProfile_f);
-	Cmd_AddCommand ("vminfo", VM_VmInfo_f);
+	cmdadd ("vmprofile", VM_VmProfile_f);
+	cmdadd ("vminfo", VM_VmInfo_f);
 
 	Q_Memset(vmTable, 0, sizeof(vmTable));
 }

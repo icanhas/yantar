@@ -1448,8 +1448,8 @@ CL_PlayCinematic_f(void)
 	if(clc.state == CA_CINEMATIC)
 		SCR_StopCinematic();
 
-	arg = Cmd_Argv(1);
-	s = Cmd_Argv(2);
+	arg = cmdargv(1);
+	s = cmdargv(2);
 
 	if((s &&
 	    s[0] == '1') ||

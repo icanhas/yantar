@@ -181,9 +181,9 @@ enum {
 	 * exceed MAX_STRING_CHARS
 	 */
 	MAX_STRING_CHARS = 1024,	/* max len of a string passed
-					 * to Cmd_TokenizeString */
+					 * to cmdstrtok */
 	MAX_STRING_TOKENS = 1024,	/* max tokens resulting
-					 * from Cmd_TokenizeString */
+					 * from cmdstrtok */
 	MAX_TOKEN_CHARS = 1024,		/* max length of an individual token */
 
 	MAX_INFO_STRING = 1024,

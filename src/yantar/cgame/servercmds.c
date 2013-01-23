@@ -973,7 +973,7 @@ CG_RemoveChatEscapeChar(char *text)
  * CG_ServerCommand
  *
  * The string has been tokenized and can be retrieved with
- * Cmd_Argc() / Cmd_Argv()
+ * cmdargc() / cmdargv()
  */
 static void
 CG_ServerCommand(void)

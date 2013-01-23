@@ -679,10 +679,10 @@ CL_UISystemCalls(intptr_t *args)
 		return 0;
 
 	case UI_ARGC:
-		return Cmd_Argc();
+		return cmdargc();
 
 	case UI_ARGV:
-		Cmd_ArgvBuffer(args[1], VMA(2), args[3]);
+		cmdargvbuf(args[1], VMA(2), args[3]);
 		return 0;
 
 	case UI_CMD_EXECUTETEXT:

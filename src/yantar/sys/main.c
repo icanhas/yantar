@@ -143,7 +143,7 @@ Sys_Init(void)
 {
 	char pidbuf[16];
 
-	Cmd_AddCommand("in_restart", Sys_In_Restart_f);
+	cmdadd("in_restart", Sys_In_Restart_f);
 	Cvar_Set("arch", OS_STRING " " ARCH_STRING);
 	Cvar_Set("username", Sys_GetCurrentUser());
 	Q_sprintf(pidbuf, sizeof(pidbuf), "%d", Sys_PID());

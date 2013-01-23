@@ -385,31 +385,31 @@ void cbufflush(void);
 
 typedef void (*xcommand_t)(void);
 
-void Cmd_Init(void);
-void Cmd_AddCommand(const char *cmd_name, xcommand_t function);
-void Cmd_RemoveCommand(const char *cmd_name);
+void cmdinit(void);
+void cmdadd(const char *cmd_name, xcommand_t function);
+void cmdremove(const char *cmd_name);
 
-typedef void (*completionFunc_t)(char *args, int argNum);
+typedef void (*Completionfunc)(char *args, int argNum);
 
 /* don't allow VMs to remove system commands */
-void Cmd_RemoveCommandSafe(const char *cmd_name);
-void Cmd_CommandCompletion(void (*callback)(const char *s));
-void Cmd_SetCommandCompletionFunc(const char *command,
-				 completionFunc_t complete);
-void Cmd_CompleteArgument(const char *command, char *args, int argNum);
-void Cmd_CompleteCfgName(char *args, int argNum);
+void cmdsaferemove(const char *cmd_name);
+void cmdcompletion(void (*callback)(const char *s));
+void cmdsetcompletion(const char *command,
+				 Completionfunc complete);
+void cmdcompletearg(const char *command, char *args, int argNum);
+void cmdcompletecfgname(char *args, int argNum);
 
-int Cmd_Argc(void);
-char* Cmd_Argv(int arg);
-void Cmd_ArgvBuffer(int arg, char *buffer, int bufferLength);
-char* Cmd_Args(void);
-char* Cmd_ArgsFrom(int arg);
-void Cmd_ArgsBuffer(char *buffer, int bufferLength);
-char* Cmd_Cmd(void);
-void Cmd_Args_Sanitize(void);
-void Cmd_TokenizeString(const char *text);
-void Cmd_TokenizeStringIgnoreQuotes(const char *text_in);
-void Cmd_ExecuteString(const char *text);
+int cmdargc(void);
+char* cmdargv(int arg);
+void cmdargvbuf(int arg, char *buffer, int bufferLength);
+char* cmdargs(void);
+char* cmdargsfrom(int arg);
+void cmdargsbuf(char *buffer, int bufferLength);
+char* cmdcmd(void);
+void cmdsanitizeargs(void);
+void cmdstrtok(const char *text);
+void cmdstrtokignorequotes(const char *text_in);
+void cmdexecstr(const char *text);
 
 
 /*

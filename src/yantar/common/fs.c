@@ -2263,17 +2263,17 @@ FS_Dir_f(void)
 	int	ndirs;
 	int	i;
 
-	if(Cmd_Argc() < 2 || Cmd_Argc() > 3){
+	if(cmdargc() < 2 || cmdargc() > 3){
 		Com_Printf("usage: dir <directory> [extension]\n");
 		return;
 	}
 
-	if(Cmd_Argc() == 2){
-		path = Cmd_Argv(1);
+	if(cmdargc() == 2){
+		path = cmdargv(1);
 		extension = "";
 	}else{
-		path = Cmd_Argv(1);
-		extension = Cmd_Argv(2);
+		path = cmdargv(1);
+		extension = cmdargv(2);
 	}
 
 	Com_Printf("Directory of %s %s\n", path, extension);
@@ -2355,13 +2355,13 @@ FS_NewDir_f(void)
 	int	ndirs;
 	int	i;
 
-	if(Cmd_Argc() < 2){
+	if(cmdargc() < 2){
 		Com_Printf("usage: fdir <filter>\n");
 		Com_Printf("example: fdir *q3dm*.bsp\n");
 		return;
 	}
 
-	filter = Cmd_Argv(1);
+	filter = cmdargv(1);
 
 	Com_Printf("---------------\n");
 
@@ -2411,12 +2411,12 @@ FS_TouchFile_f(void)
 {
 	Fhandle f;
 
-	if(Cmd_Argc() != 2){
+	if(cmdargc() != 2){
 		Com_Printf("Usage: touchFile <file>\n");
 		return;
 	}
 
-	FS_FOpenFileRead(Cmd_Argv(1), &f, qfalse);
+	FS_FOpenFileRead(cmdargv(1), &f, qfalse);
 	if(f)
 		FS_FCloseFile(f);
 }
@@ -2447,7 +2447,7 @@ FS_Which_f(void)
 	Searchpath *search;
 	char *filename;
 
-	filename = Cmd_Argv(1);
+	filename = cmdargv(1);
 
 	if(!filename[0]){
 		Com_Printf("Usage: which <file>\n");
@@ -2755,11 +2755,11 @@ FS_Shutdown(qbool closemfp)
 	/* any FS_ calls will now be an error until reinitialized */
 	fs_searchpaths = NULL;
 
-	Cmd_RemoveCommand("path");
-	Cmd_RemoveCommand("dir");
-	Cmd_RemoveCommand("fdir");
-	Cmd_RemoveCommand("touchFile");
-	Cmd_RemoveCommand("which");
+	cmdremove("path");
+	cmdremove("dir");
+	cmdremove("fdir");
+	cmdremove("touchFile");
+	cmdremove("which");
 
 #ifdef FS_MISSING
 	if(closemfp)
@@ -2879,11 +2879,11 @@ FS_Startup(const char *gameName)
 	}
 
 	/* add our commands */
-	Cmd_AddCommand("path", FS_Path_f);
-	Cmd_AddCommand("dir", FS_Dir_f);
-	Cmd_AddCommand("fdir", FS_NewDir_f);
-	Cmd_AddCommand("touchFile", FS_TouchFile_f);
-	Cmd_AddCommand("which", FS_Which_f);
+	cmdadd("path", FS_Path_f);
+	cmdadd("dir", FS_Dir_f);
+	cmdadd("fdir", FS_NewDir_f);
+	cmdadd("touchFile", FS_TouchFile_f);
+	cmdadd("which", FS_Which_f);
 
 	/* https://zerowing.idsoftware.com/bugzilla/show_bug.cgi?id=506 */
 	/* reorder the pure pk3 files according to server order */
@@ -3233,16 +3233,16 @@ FS_PureServerSetLoadedPaks(const char *pakSums, const char *pakNames)
 {
 	int i, c, d;
 
-	Cmd_TokenizeString(pakSums);
+	cmdstrtok(pakSums);
 
-	c = Cmd_Argc();
+	c = cmdargc();
 	if(c > MAX_SEARCH_PATHS)
 		c = MAX_SEARCH_PATHS;
 
 	fs_numServerPaks = c;
 
 	for(i = 0; i < c; i++)
-		fs_serverPaks[i] = atoi(Cmd_Argv(i));
+		fs_serverPaks[i] = atoi(cmdargv(i));
 
 	if(fs_numServerPaks)
 		Com_DPrintf("Connected to a pure server.\n");
@@ -3260,14 +3260,14 @@ FS_PureServerSetLoadedPaks(const char *pakSums, const char *pakNames)
 		fs_serverPakNames[i] = NULL;
 	}
 	if(pakNames && *pakNames){
-		Cmd_TokenizeString(pakNames);
+		cmdstrtok(pakNames);
 
-		d = Cmd_Argc();
+		d = cmdargc();
 		if(d > MAX_SEARCH_PATHS)
 			d = MAX_SEARCH_PATHS;
 
 		for(i = 0; i < d; i++)
-			fs_serverPakNames[i] = Copystr(Cmd_Argv(i));
+			fs_serverPakNames[i] = Copystr(cmdargv(i));
 	}
 }
 
@@ -3281,14 +3281,14 @@ FS_PureServerSetReferencedPaks(const char *pakSums, const char *pakNames)
 {
 	int i, c, d = 0;
 
-	Cmd_TokenizeString(pakSums);
+	cmdstrtok(pakSums);
 
-	c = Cmd_Argc();
+	c = cmdargc();
 	if(c > MAX_SEARCH_PATHS)
 		c = MAX_SEARCH_PATHS;
 
 	for(i = 0; i < c; i++)
-		fs_serverReferencedPaks[i] = atoi(Cmd_Argv(i));
+		fs_serverReferencedPaks[i] = atoi(cmdargv(i));
 
 	for(i = 0; i < ARRAY_LEN(fs_serverReferencedPakNames); i++){
 		if(fs_serverReferencedPakNames[i])
@@ -3298,12 +3298,12 @@ FS_PureServerSetReferencedPaks(const char *pakSums, const char *pakNames)
 	}
 
 	if(pakNames && *pakNames){
-		Cmd_TokenizeString(pakNames);
-		d = Cmd_Argc();
+		cmdstrtok(pakNames);
+		d = cmdargc();
 		if(d > c)
 			d = c;
 		for(i = 0; i < d; i++)
-			fs_serverReferencedPakNames[i] = Copystr(Cmd_Argv(i));
+			fs_serverReferencedPakNames[i] = Copystr(cmdargv(i));
 	}
 	/* ensure that there are as many checksums as there are pak names. */
 	if(d < c)

@@ -881,13 +881,13 @@ Key_Unbind_f(void)
 {
 	int b;
 
-	if(Cmd_Argc() != 2){
+	if(cmdargc() != 2){
 		Com_Printf ("unbind <key> : remove commands from a key\n");
 		return;
 	}
-	b = Key_StringToKeynum (Cmd_Argv(1));
+	b = Key_StringToKeynum (cmdargv(1));
 	if(b==-1){
-		Com_Printf ("\"%s\" isn't a valid key\n", Cmd_Argv(1));
+		Com_Printf ("\"%s\" isn't a valid key\n", cmdargv(1));
 		return;
 	}
 	Key_SetBinding (b, "");
@@ -909,31 +909,31 @@ Key_Bind_f(void)
 	int	i, c, b;
 	char	cmd[1024];
 
-	c = Cmd_Argc();
+	c = cmdargc();
 
 	if(c < 2){
 		Com_Printf ("bind <key> [command] : attach a command to a key\n");
 		return;
 	}
-	b = Key_StringToKeynum (Cmd_Argv(1));
+	b = Key_StringToKeynum (cmdargv(1));
 	if(b==-1){
-		Com_Printf ("\"%s\" isn't a valid key\n", Cmd_Argv(1));
+		Com_Printf ("\"%s\" isn't a valid key\n", cmdargv(1));
 		return;
 	}
 
 	if(c == 2){
 		if(keys[b].binding)
-			Com_Printf ("\"%s\" = \"%s\"\n", Cmd_Argv(
+			Com_Printf ("\"%s\" = \"%s\"\n", cmdargv(
 					1), keys[b].binding);
 		else
-			Com_Printf ("\"%s\" is not bound\n", Cmd_Argv(1));
+			Com_Printf ("\"%s\" is not bound\n", cmdargv(1));
 		return;
 	}
 
 /* copy the rest of the command line */
 	cmd[0] = 0;	/* start out with a null string */
 	for(i=2; i< c; i++){
-		strcat (cmd, Cmd_Argv(i));
+		strcat (cmd, cmdargv(i));
 		if(i != (c-1))
 			strcat (cmd, " ");
 	}
@@ -1012,12 +1012,12 @@ void
 CL_InitKeyCommands(void)
 {
 	/* register our functions */
-	Cmd_AddCommand ("bind",Key_Bind_f);
-	Cmd_SetCommandCompletionFunc("bind", Key_CompleteBind);
-	Cmd_AddCommand ("unbind",Key_Unbind_f);
-	Cmd_SetCommandCompletionFunc("unbind", Key_CompleteUnbind);
-	Cmd_AddCommand ("unbindall",Key_Unbindall_f);
-	Cmd_AddCommand ("bindlist",Key_Bindlist_f);
+	cmdadd ("bind",Key_Bind_f);
+	cmdsetcompletion("bind", Key_CompleteBind);
+	cmdadd ("unbind",Key_Unbind_f);
+	cmdsetcompletion("unbind", Key_CompleteUnbind);
+	cmdadd ("unbindall",Key_Unbindall_f);
+	cmdadd ("bindlist",Key_Bindlist_f);
 }
 
 /*
