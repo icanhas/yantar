@@ -1261,16 +1261,16 @@ RE_EndRegistration(void)
  * @@@@@@@@@@@@@@@@@@@@@
  */
 #ifdef USE_RENDERER_DLOPEN
-Q_EXPORT refexport_t QDECL *
-GetRefAPI(int apiVersion, refimport_t *rimp)
+Q_EXPORT Refexport QDECL *
+GetRefAPI(int apiVersion, Refimport *rimp)
 {
 #else
-refexport_t *
-GetRefAPI(int apiVersion, refimport_t *rimp)
+Refexport *
+GetRefAPI(int apiVersion, Refimport *rimp)
 {
 #endif
 
-	static refexport_t re;
+	static Refexport re;
 
 	ri = *rimp;
 

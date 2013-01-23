@@ -196,20 +196,20 @@ typedef struct {
 } Glconfig;
 
 
-typedef struct refimport_t refimport_t;	/* funcs imported by the refresh module */
-typedef struct refexport_t refexport_t;	/* funcs exported by the refresh module */
+typedef struct Refimport Refimport;	/* funcs imported by the refresh module */
+typedef struct Refexport Refexport;	/* funcs exported by the refresh module */
 /*
  * this is the only function actually exported at the linker level
  * If the module can't init to a valid rendering state, NULL will be
  * returned.
  */
 #ifdef USE_RENDERER_DLOPEN
-typedef refexport_t* (QDECL *GetRefAPI_t)(int apiVersion, refimport_t * rimp);
+typedef Refexport* (QDECL *GetRefAPI_t)(int apiVersion, Refimport * rimp);
 #else
-refexport_t* GetRefAPI(int apiVersion, refimport_t *rimp);
+Refexport* GetRefAPI(int apiVersion, Refimport *rimp);
 #endif
 
-struct refexport_t {
+struct Refexport {
 	/* called before the library is unloaded
 	 * if the system is just reconfiguring, pass destroyWindow = qfalse,
 	 * which will keep the screen from flashing to the desktop. */
@@ -280,7 +280,7 @@ struct refexport_t {
 	void (*TakeVideoFrame)(int h, int w, byte* captureBuffer, byte *encodeBuffer, qbool motionJpeg);
 };
 
-struct refimport_t {
+struct Refimport {
 	/* print message on the local console */
 	void (QDECL *Printf)(int printLevel, const char *fmt, ...) __attribute__ ((format (printf, 2, 3)));
 

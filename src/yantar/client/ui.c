@@ -85,7 +85,7 @@ static void
 LAN_ResetPings(int source)
 {
 	int count,i;
-	serverInfo_t *servers = NULL;
+	Servinfo *servers = NULL;
 	count = 0;
 
 	switch(source){
@@ -116,7 +116,7 @@ LAN_AddServer(int source, const char *name, const char *address)
 {
 	int max, *count, i;
 	Netaddr adr;
-	serverInfo_t *servers = NULL;
+	Servinfo *servers = NULL;
 	max = MAX_OTHER_SERVERS;
 	count = NULL;
 
@@ -161,7 +161,7 @@ static void
 LAN_RemoveServer(int source, const char *addr)
 {
 	int *count, i;
-	serverInfo_t *servers = NULL;
+	Servinfo *servers = NULL;
 	count = NULL;
 	switch(source){
 	case AS_LOCAL:
@@ -260,7 +260,7 @@ static void
 LAN_GetServerInfo(int source, int n, char *buf, int buflen)
 {
 	char info[MAX_STRING_CHARS];
-	serverInfo_t *server = NULL;
+	Servinfo *server = NULL;
 	info[0] = '\0';
 	switch(source){
 	case AS_LOCAL:
@@ -308,7 +308,7 @@ LAN_GetServerInfo(int source, int n, char *buf, int buflen)
 static int
 LAN_GetServerPing(int source, int n)
 {
-	serverInfo_t *server = NULL;
+	Servinfo *server = NULL;
 	switch(source){
 	case AS_LOCAL:
 		if(n >= 0 && n < MAX_OTHER_SERVERS)
@@ -332,7 +332,7 @@ LAN_GetServerPing(int source, int n)
 /*
  * LAN_GetServerPtr
  */
-static serverInfo_t *
+static Servinfo *
 LAN_GetServerPtr(int source, int n)
 {
 	switch(source){
@@ -360,7 +360,7 @@ static int
 LAN_CompareServers(int source, int sortKey, int sortDir, int s1, int s2)
 {
 	int res;
-	serverInfo_t *server1, *server2;
+	Servinfo *server1, *server2;
 
 	server1 = LAN_GetServerPtr(source, s1);
 	server2 = LAN_GetServerPtr(source, s2);
@@ -456,7 +456,7 @@ LAN_MarkServerVisible(int source, int n, qbool visible)
 {
 	if(n == -1){
 		int count = MAX_OTHER_SERVERS;
-		serverInfo_t *server = NULL;
+		Servinfo *server = NULL;
 		switch(source){
 		case AS_LOCAL:
 			server = &cls.localServers[0];
@@ -986,14 +986,14 @@ void
 CL_InitUI(void)
 {
 	int v;
-	vmInterpret_t interpret;
+	Vmmode interpret;
 
 	/* load the dll or bytecode */
 	interpret = Cvar_VariableValue("vm_ui");
 	if(cl_connectedToPureServer)
 		/* if sv_pure is set we only allow qvms to be loaded */
-		if(interpret != VMI_COMPILED && interpret != VMI_BYTECODE)
-			interpret = VMI_COMPILED;
+		if(interpret != VMcompiled && interpret != VMbytecode)
+			interpret = VMcompiled;
 
 	uivm = VM_Create("ui", CL_UISystemCalls, interpret);
 	if(uivm == NULL)

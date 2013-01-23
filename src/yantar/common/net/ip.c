@@ -120,7 +120,7 @@ static struct sockaddr_in6 boundto;
 typedef struct {
 	char			ifname[IF_NAMESIZE];
 
-	netadrtype_t		type;
+	Netaddrtype		type;
 	sa_family_t		family;
 	struct sockaddr_storage addr;
 	struct sockaddr_storage netmask;
@@ -337,7 +337,7 @@ Sys_SockaddrToString(char *dest, int destlen, struct sockaddr *input)
  * Sys_StringToAdr
  */
 qbool
-Sys_StringToAdr(const char *s, Netaddr *a, netadrtype_t family)
+Sys_StringToAdr(const char *s, Netaddr *a, Netaddrtype family)
 {
 	struct sockaddr_storage sadr;
 	sa_family_t fam;

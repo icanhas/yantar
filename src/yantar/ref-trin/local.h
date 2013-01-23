@@ -781,7 +781,7 @@ void            R_ModelBounds(Handle handle, Vec3 mins, Vec3 maxs);
 void            R_Modellist_f(void);
 
 /* ==================================================== */
-extern refimport_t ri;
+extern Refimport ri;
 
 #define MAX_DRAWIMAGES	2048
 #define MAX_SKINS	1024

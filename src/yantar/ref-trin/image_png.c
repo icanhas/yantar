@@ -23,7 +23,7 @@
 #include "ref.h"
 #include "../common/puff.h"
 
-extern refimport_t ri;
+extern Refimport ri;
 
 /* we could limit the png size to a lower value here */
 #ifndef INT_MAX

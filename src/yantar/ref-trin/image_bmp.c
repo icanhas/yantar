@@ -10,7 +10,7 @@
 #include "common.h"
 #include "ref.h"
 
-extern refimport_t ri;
+extern Refimport ri;
 
 typedef struct {
 	char		id[2];

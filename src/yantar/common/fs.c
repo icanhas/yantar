@@ -1183,10 +1183,10 @@ FS_FOpenFileRead(const char *filename, Fhandle *file, qbool uniqueFILE)
  *
  * Enable search for DLL by setting enableDll to FSVM_ENABLEDLL
  *
- * write found DLL or QVM to "found" and return VMI_NATIVE if DLL, VMI_COMPILED if QVM
+ * write found DLL or QVM to "found" and return VMnative if DLL, VMcompiled if QVM
  * Return the searchpath in "startSearch".
  */
-vmInterpret_t
+Vmmode
 FS_FindVM(void **startSearch, char *found, int foundlen, const char *name,
 	  int enableDll)
 {
@@ -1224,14 +1224,14 @@ FS_FindVM(void **startSearch, char *found, int foundlen, const char *name,
 					Q_strncpyz(found, netpath, foundlen);
 					*startSearch = search;
 
-					return VMI_NATIVE;
+					return VMnative;
 				}
 			}
 
 			if(FS_FOpenFileReadDir(qvmName, search, NULL, qfalse,
 				   qfalse) > 0){
 				*startSearch = search;
-				return VMI_COMPILED;
+				return VMcompiled;
 			}
 		}else if(search->pack){
 			pack = search->pack;
@@ -1250,7 +1250,7 @@ FS_FindVM(void **startSearch, char *found, int foundlen, const char *name,
 				   qfalse) > 0){
 				*startSearch = search;
 
-				return VMI_COMPILED;
+				return VMcompiled;
 			}
 		}
 
@@ -1714,7 +1714,7 @@ FS_WriteFile(const char *qpath, const void *buffer, int size)
  */
 
 /*
- * Creates a new pak_t in the search chain for the contents
+ * Creates a new Pak in the search chain for the contents
  * of a zip file.
  */
 static Pak *

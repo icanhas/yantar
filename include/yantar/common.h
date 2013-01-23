@@ -144,12 +144,12 @@ enum {
 	MAX_DOWNLOAD_BLKSIZE= 1024	/* 896 byte block chunks */
 };
 
-typedef enum netadrtype_e netadrtype_t;
-typedef enum netsrc_e netsrc_t;
+typedef enum Netaddrtype Netaddrtype;
+typedef enum Netsrc Netsrc;
 typedef struct Netaddr Netaddr;
 typedef struct Netchan Netchan;
 
-enum netadrtype_e {
+enum Netaddrtype {
 	NA_BAD = 0,	/* an address lookup failed */
 	NA_BOT,
 	NA_LOOPBACK,
@@ -160,13 +160,13 @@ enum netadrtype_e {
 	NA_UNSPEC
 };
 
-enum netsrc_e {
+enum Netsrc {
 	NS_CLIENT,
 	NS_SERVER
 };
 
 struct Netaddr {
-	netadrtype_t	type;
+	Netaddrtype	type;
 
 	byte		ip[4];
 	byte		ip6[16];
@@ -180,12 +180,12 @@ void NET_Shutdown(void);
 void NET_Restart_f(void);
 void NET_Config(qbool enableNetworking);
 void NET_FlushPacketQueue(void);
-void NET_SendPacket(netsrc_t sock, int length, const void *data,
+void NET_SendPacket(Netsrc sock, int length, const void *data,
 			 Netaddr to);
-void QDECL NET_OutOfBandPrint(netsrc_t net_socket, Netaddr adr,
+void QDECL NET_OutOfBandPrint(Netsrc net_socket, Netaddr adr,
 			 const char *format,
 			 ...) __attribute__ ((format (printf, 3, 4)));
-void QDECL NET_OutOfBandData(netsrc_t sock, Netaddr adr, byte *format, int len);
+void QDECL NET_OutOfBandData(Netsrc sock, Netaddr adr, byte *format, int len);
 
 qbool NET_CompareAdr(Netaddr a, Netaddr b);
 qbool NET_CompareBaseAdrMask(Netaddr a, Netaddr b, int netmask);
@@ -193,8 +193,8 @@ qbool NET_CompareBaseAdr(Netaddr a, Netaddr b);
 qbool NET_IsLocalAddress(Netaddr adr);
 const char* NET_AdrToString(Netaddr a);
 const char* NET_AdrToStringwPort(Netaddr a);
-int NET_StringToAdr(const char *s, Netaddr *a, netadrtype_t family);
-qbool NET_GetLoopPacket(netsrc_t sock, Netaddr *net_from,
+int NET_StringToAdr(const char *s, Netaddr *a, Netaddrtype family);
+qbool NET_GetLoopPacket(Netsrc sock, Netaddr *net_from,
 			Bitmsg *net_message);
 void NET_JoinMulticast6(void);
 void NET_LeaveMulticast6(void);
@@ -208,7 +208,7 @@ void NET_Sleep(int msec);
  */
 
 struct Netchan {
-	netsrc_t	sock;
+	Netsrc	sock;
 
 	int		dropped;	/* between last packet and previous */
 
@@ -238,7 +238,7 @@ struct Netchan {
 };
 
 void Netchan_Init(int qport);
-void Netchan_Setup(netsrc_t sock, Netchan *chan, Netaddr adr, int qport,
+void Netchan_Setup(Netsrc sock, Netchan *chan, Netaddr adr, int qport,
 		 int challenge,
 		 qbool compat);
 void Netchan_Transmit(Netchan *chan, int length, const byte *data);
@@ -325,19 +325,19 @@ enum {
  */
 
 typedef struct Vm Vm;
-typedef enum vmInterpret_e vmInterpret_t;
-typedef enum sharedTraps_e sharedTraps_t;
+typedef enum Vmmode Vmmode;
+typedef enum Sharedtraps Sharedtraps;
 
-enum vmInterpret_e {
-	VMI_NATIVE,
-	VMI_BYTECODE,
-	VMI_COMPILED
+enum Vmmode {
+	VMnative,
+	VMbytecode,
+	VMcompiled
 };
 
 void VM_Init(void);
 /* module should be bare: "cgame", not "cgame.dll" or "vm/cgame.qvm" */
 Vm* VM_Create(const char *module, intptr_t (*systemCalls)(intptr_t *),
- 		vmInterpret_t interpret);
+ 		Vmmode interpret);
 void VM_Free(Vm *vm);
 void VM_Clear(void);
 void VM_Forced_Unload_Start(void);
@@ -496,7 +496,7 @@ char** FS_ListFiles(const char *directory, const char *extension,
 void FS_FreeFileList(char **list);
 qbool FS_FileExists(const char *file);
 qbool FS_CreatePath(char *OSPath);
-vmInterpret_t FS_FindVM(void **startSearch, char *found, int foundlen,
+Vmmode FS_FindVM(void **startSearch, char *found, int foundlen,
 		const char *name,
 		int enableDll);
 char*FS_BuildOSPath(const char *base, const char *game, const char *qpath);
@@ -866,7 +866,7 @@ CPUfeatures Sys_GetProcessorFeatures(void);
 void 	Sys_SetErrorText(const char *text);
 void 	Sys_SendPacket(int length, const void *data, Netaddr to);
 /* Does NOT parse port numbers, only base addresses. */
-qbool Sys_StringToAdr(const char *s, Netaddr *a, netadrtype_t family);
+qbool Sys_StringToAdr(const char *s, Netaddr *a, Netaddrtype family);
 qbool Sys_IsLANAddress(Netaddr adr);
 void 	Sys_ShowIP(void);
 qbool Sys_Mkdir(const char *path);

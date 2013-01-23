@@ -467,7 +467,7 @@ VM_Restart(Vm *vm, qbool unpure)
 
 		VM_Free(vm);
 
-		vm = VM_Create(name, systemCall, VMI_NATIVE);
+		vm = VM_Create(name, systemCall, VMnative);
 		return vm;
 	}
 	
@@ -489,7 +489,7 @@ VM_Restart(Vm *vm, qbool unpure)
  */
 Vm *
 VM_Create(const char *module, intptr_t (*systemCalls)(intptr_t *),
-	  vmInterpret_t interpret)
+	  Vmmode interpret)
 {
 	Vm	*vm;
 	Vmheader *header;
@@ -524,9 +524,9 @@ VM_Create(const char *module, intptr_t (*systemCalls)(intptr_t *),
 	do {
 		retval = FS_FindVM(&startSearch, filename, sizeof(filename),
 				module,
-				(interpret == VMI_NATIVE));
+				(interpret == VMnative));
 
-		if(retval == VMI_NATIVE){
+		if(retval == VMnative){
 			Com_Printf("Try loading dll file %s\n", filename);
 
 			vm->dllHandle =
@@ -539,7 +539,7 @@ VM_Create(const char *module, intptr_t (*systemCalls)(intptr_t *),
 			}
 
 			Com_Printf("Failed loading dll, trying next\n");
-		}else if(retval == VMI_COMPILED){
+		}else if(retval == VMcompiled){
 			vm->searchPath = startSearch;
 			if((header = VM_LoadQVM(vm, qtrue, qfalse)))
 				break;
@@ -566,13 +566,13 @@ VM_Create(const char *module, intptr_t (*systemCalls)(intptr_t *),
 	vm->compiled = qfalse;
 
 #ifdef NO_VM_COMPILED
-	if(interpret >= VMI_COMPILED){
+	if(interpret >= VMcompiled){
 		Com_Printf(
 			"Architecture doesn't have a bytecode compiler, using interpreter\n");
-		interpret = VMI_BYTECODE;
+		interpret = VMbytecode;
 	}
 #else
-	if(interpret != VMI_BYTECODE){
+	if(interpret != VMbytecode){
 		vm->compiled = qtrue;
 		VM_Compile(vm, header);
 	}

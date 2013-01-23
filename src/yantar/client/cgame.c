@@ -651,7 +651,7 @@ CL_InitCGame(void)
 	const char	*info;
 	const char	*mapname;
 	int t1, t2;
-	vmInterpret_t interpret;
+	Vmmode interpret;
 
 	t1 = Sys_Milliseconds();
 
@@ -668,8 +668,8 @@ CL_InitCGame(void)
 	interpret = Cvar_VariableValue("vm_cgame");
 	if(cl_connectedToPureServer)
 		/* if sv_pure is set we only allow qvms to be loaded */
-		if(interpret != VMI_COMPILED && interpret != VMI_BYTECODE)
-			interpret = VMI_COMPILED;
+		if(interpret != VMcompiled && interpret != VMbytecode)
+			interpret = VMcompiled;
 
 	cgvm = VM_Create("cgame", CL_CgameSystemCalls, interpret);
 	if(!cgvm)

@@ -18,8 +18,8 @@
 #include "libmumblelink.h"
 #endif
 
-typedef struct serverStatus_t serverStatus_t;
-struct serverStatus_t
+typedef struct Servstatus Servstatus;
+struct Servstatus
 {
 	char		string[BIG_INFO_STRING];
 	Netaddr	address;
@@ -109,12 +109,12 @@ Clientactive	cl;
 Clientconn clc;
 Clientstatic	cls;
 Vm *cgvm;
-refexport_t re;	/* Structure containing functions exported from refresh DLL */
+Refexport re;	/* Structure containing functions exported from refresh DLL */
 #ifdef USE_RENDERER_DLOPEN
 static void *rendererLib = NULL;
 #endif
 Ping cl_pinglist[MAX_PINGREQUESTS];
-serverStatus_t cl_serverStatusList[MAX_SERVERSTATUSREQUESTS];
+Servstatus cl_serverStatusList[MAX_SERVERSTATUSREQUESTS];
 int serverStatusCount;
 static int noGameRestart = qfalse;
 
@@ -1503,7 +1503,7 @@ CL_Connect_f(void)
 	char	*server;
 	const char *serverString;
 	int	argc = Cmd_Argc();
-	netadrtype_t family = NA_UNSPEC;
+	Netaddrtype family = NA_UNSPEC;
 
 	if(argc != 2 && argc != 3){
 		Com_Printf("usage: connect [-4|-6] server\n");
@@ -2156,7 +2156,7 @@ CL_MotdPacket(Netaddr from)
 }
 
 void
-CL_InitServerInfo(serverInfo_t *server, Netaddr *address)
+CL_InitServerInfo(Servinfo *server, Netaddr *address)
 {
 	server->adr = *address;
 	server->clients = 0;
@@ -2255,7 +2255,7 @@ CL_ServersResponsePacket(const Netaddr* from, Bitmsg *msg, qbool extended)
 
 	for(i = 0; i < numservers && count < MAX_GLOBAL_SERVERS; i++){
 		/* build net address */
-		serverInfo_t *server = &cls.globalServers[count];
+		Servinfo *server = &cls.globalServers[count];
 
 		/* Tequila: It's possible to have sent many master server requests. Then
 		 * we may receive many times the same addresses from the master server.
@@ -2793,8 +2793,8 @@ CL_ScaledMilliseconds(void)
 void
 CL_InitRef(void)
 {
-	refimport_t	ri;
-	refexport_t	*ret;
+	Refimport	ri;
+	Refexport	*ret;
 #ifdef USE_RENDERER_DLOPEN
 	GetRefAPI_t	GetRefAPI;
 	char dllName[MAX_OSPATH];
@@ -3307,7 +3307,7 @@ CL_Shutdown(char *finalmsg, qbool disconnect, qbool quit)
 }
 
 static void
-CL_SetServerInfo(serverInfo_t *server, const char *info, int ping)
+CL_SetServerInfo(Servinfo *server, const char *info, int ping)
 {
 	if(server){
 		if(info){
@@ -3469,7 +3469,7 @@ CL_ServerInfoPacket(Netaddr from, Bitmsg *msg)
 	}
 }
 
-serverStatus_t *
+Servstatus *
 CL_GetServerStatus(Netaddr from)
 {
 	int i, oldest, oldestTime;
@@ -3500,7 +3500,7 @@ CL_ServerStatus(char *serverAddress, char *serverStatusString, int maxLen)
 {
 	int i;
 	Netaddr to;
-	serverStatus_t *serverStatus;
+	Servstatus *serverStatus;
 
 	/* if no server address then reset all server status requests */
 	if(!serverAddress){
@@ -3563,7 +3563,7 @@ CL_ServerStatusResponse(Netaddr from, Bitmsg *msg)
 	char	info[MAX_INFO_STRING];
 	int	i, l, score, ping;
 	int	len;
-	serverStatus_t *serverStatus;
+	Servstatus *serverStatus;
 
 	serverStatus = NULL;
 	for(i = 0; i < MAX_SERVERSTATUSREQUESTS; i++)
@@ -3879,7 +3879,7 @@ CL_Ping_f(void)
 	Ping		* pingptr;
 	char	* server;
 	int	argc;
-	netadrtype_t family = NA_UNSPEC;
+	Netaddrtype family = NA_UNSPEC;
 
 	argc = Cmd_Argc();
 
@@ -3934,7 +3934,7 @@ CL_UpdateVisiblePings_f(int source)
 
 	slots = CL_GetPingQueueCount();
 	if(slots < MAX_PINGREQUESTS){
-		serverInfo_t *server = NULL;
+		Servinfo *server = NULL;
 
 		switch(source){
 		case AS_LOCAL:
@@ -4018,9 +4018,9 @@ CL_ServerStatus_f(void)
 {
 	Netaddr	to, *toptr = NULL;
 	char		*server;
-	serverStatus_t	*serverStatus;
+	Servstatus	*serverStatus;
 	int argc;
-	netadrtype_t	family = NA_UNSPEC;
+	Netaddrtype	family = NA_UNSPEC;
 
 	argc = Cmd_Argc();
 

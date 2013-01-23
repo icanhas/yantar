@@ -9,7 +9,7 @@
 #include <string.h>	/* memcpy */
 #include "local.h"
 
-refimport_t ri;
+Refimport ri;
 trGlobals_t tr;
 static float s_flipMatrix[16] = {
 	/* convert from our coordinate system (looking down X)

@@ -353,9 +353,9 @@ SV_MasterShutdown(void)
  *
  */
 
-typedef struct leakyBucket_s leakyBucket_t;
-struct leakyBucket_s {
-	netadrtype_t type;
+typedef struct Leakybucket Leakybucket;
+struct Leakybucket {
+	Netaddrtype type;
 
 	union {
 		byte	_4[4];
@@ -367,15 +367,15 @@ struct leakyBucket_s {
 
 	long		hash;
 
-	leakyBucket_t	*prev, *next;
+	Leakybucket	*prev, *next;
 };
 
 /* This is deliberately quite large to make it more of an effort to DoS */
 #define MAX_BUCKETS	16384
 #define MAX_HASHES	1024
 
-static leakyBucket_t	buckets[ MAX_BUCKETS ];
-static leakyBucket_t	*bucketHashes[ MAX_HASHES ];
+static Leakybucket	buckets[ MAX_BUCKETS ];
+static Leakybucket	*bucketHashes[ MAX_HASHES ];
 
 /*
  * SVC_HashForAddress
@@ -415,10 +415,10 @@ SVC_HashForAddress(Netaddr address)
  *
  * Find or allocate a bucket for an address
  */
-static leakyBucket_t *
+static Leakybucket *
 SVC_BucketForAddress(Netaddr address, int burst, int period)
 {
-	leakyBucket_t *bucket = NULL;
+	Leakybucket *bucket = NULL;
 	int	i;
 	long	hash = SVC_HashForAddress(address);
 	int	now = Sys_Milliseconds();
@@ -457,7 +457,7 @@ SVC_BucketForAddress(Netaddr address, int burst, int period)
 			if(bucket->next != NULL)
 				bucket->next->prev = bucket->prev;
 
-			Q_Memset(bucket, 0, sizeof(leakyBucket_t));
+			Q_Memset(bucket, 0, sizeof(Leakybucket));
 		}
 
 		if(bucket->type == NA_BAD){
@@ -494,7 +494,7 @@ SVC_BucketForAddress(Netaddr address, int burst, int period)
  * SVC_RateLimit
  */
 static qbool
-SVC_RateLimit(leakyBucket_t *bucket, int burst, int period)
+SVC_RateLimit(Leakybucket *bucket, int burst, int period)
 {
 	if(bucket != NULL){
 		int	now = Sys_Milliseconds();
@@ -528,7 +528,7 @@ SVC_RateLimit(leakyBucket_t *bucket, int burst, int period)
 static qbool
 SVC_RateLimitAddress(Netaddr from, int burst, int period)
 {
-	leakyBucket_t *bucket = SVC_BucketForAddress(from, burst, period);
+	Leakybucket *bucket = SVC_BucketForAddress(from, burst, period);
 
 	return SVC_RateLimit(bucket, burst, period);
 }
@@ -551,7 +551,7 @@ SVC_Status(Netaddr from)
 	int	statusLength;
 	int	playerLength;
 	char	infostring[MAX_INFO_STRING];
-	static leakyBucket_t bucket;
+	static Leakybucket bucket;
 
 	/* ignore if we are in single player */
 	if(Cvar_VariableValue("g_gametype") == GT_SINGLE_PLAYER)
@@ -718,7 +718,7 @@ SVC_RemoteCommand(Netaddr from, Bitmsg *msg)
 
 	if(!strlen(sv_rconPassword->string) ||
 	   strcmp (Cmd_Argv(1), sv_rconPassword->string)){
-		static leakyBucket_t bucket;
+		static Leakybucket bucket;
 
 		/* Make DoS via rcon impractical */
 		if(SVC_RateLimit(&bucket, 10, 1000)){

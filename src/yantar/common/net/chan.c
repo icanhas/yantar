@@ -67,7 +67,7 @@ Netchan_Init(int port)
  * called to open a channel to a remote system
  */
 void
-Netchan_Setup(netsrc_t sock, Netchan *chan, Netaddr adr, int qport,
+Netchan_Setup(Netsrc sock, Netchan *chan, Netaddr adr, int qport,
 	      int challenge,
 	      qbool compat)
 {
@@ -402,7 +402,7 @@ Loopback loopbacks[2];
 
 
 qbool
-NET_GetLoopPacket(netsrc_t sock, Netaddr *net_from, Bitmsg *net_message)
+NET_GetLoopPacket(Netsrc sock, Netaddr *net_from, Bitmsg *net_message)
 {
 	int i;
 	Loopback *loop;
@@ -428,7 +428,7 @@ NET_GetLoopPacket(netsrc_t sock, Netaddr *net_from, Bitmsg *net_message)
 
 
 void
-NET_SendLoopPacket(netsrc_t sock, int length, const void *data, Netaddr to)
+NET_SendLoopPacket(Netsrc sock, int length, const void *data, Netaddr to)
 {
 	int i;
 	Loopback *loop;
@@ -505,7 +505,7 @@ NET_FlushPacketQueue(void)
 }
 
 void
-NET_SendPacket(netsrc_t sock, int length, const void *data, Netaddr to)
+NET_SendPacket(Netsrc sock, int length, const void *data, Netaddr to)
 {
 
 	/* sequenced packets are shown in netchan, so just show oob */
@@ -535,7 +535,7 @@ NET_SendPacket(netsrc_t sock, int length, const void *data, Netaddr to)
  * Sends a text message in an out-of-band datagram
  */
 void QDECL
-NET_OutOfBandPrint(netsrc_t sock, Netaddr adr, const char *format, ...)
+NET_OutOfBandPrint(Netsrc sock, Netaddr adr, const char *format, ...)
 {
 	va_list argptr;
 	char	string[MAX_MSGLEN];
@@ -561,7 +561,7 @@ NET_OutOfBandPrint(netsrc_t sock, Netaddr adr, const char *format, ...)
  * Sends a data message in an out-of-band datagram (only used for "connect")
  */
 void QDECL
-NET_OutOfBandData(netsrc_t sock, Netaddr adr, byte *format, int len)
+NET_OutOfBandData(Netsrc sock, Netaddr adr, byte *format, int len)
 {
 	byte	string[MAX_MSGLEN*2];
 	int	i;
@@ -590,7 +590,7 @@ NET_OutOfBandData(netsrc_t sock, Netaddr adr, byte *format, int len)
  * return 0 on address not found, 1 on address found with port, 2 on address found without port.
  */
 int
-NET_StringToAdr(const char *s, Netaddr *a, netadrtype_t family)
+NET_StringToAdr(const char *s, Netaddr *a, Netaddrtype family)
 {
 	char base[MAX_STRING_CHARS], *search;
 	char *port = NULL;

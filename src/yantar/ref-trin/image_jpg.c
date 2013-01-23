@@ -9,7 +9,7 @@
 #include "qfiles.h"
 #include "common.h"
 #include "ref.h"
-extern refimport_t ri;
+extern Refimport ri;
 
 #ifdef USE_INTERNAL_JPEG
 #  define JPEG_INTERNALS

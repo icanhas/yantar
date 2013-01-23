@@ -39,7 +39,7 @@ enum {
 
 /*
  * The Clientactive structure is wiped completely at every
- * new gamestate_t, potentially several times during an established connection.
+ * new Gamestate, potentially several times during an established connection.
  *
  * The Clientconn structure is wiped when disconnecting from a server,
  * either to go to a full screen console, play a demo, or connect to a different server.
@@ -271,7 +271,7 @@ typedef struct {
 	qbool		visible;
 	int		g_humanplayers;
 	int		g_needpass;
-} serverInfo_t;
+} Servinfo;
 
 struct Clientstatic {
 	/* when the server clears the hunk, all of these must be restarted */
@@ -289,16 +289,16 @@ struct Clientstatic {
 	int		simframetime;	/* ignoring pause, so console always works */
 
 	int		numlocalservers;
-	serverInfo_t	localServers[MAX_OTHER_SERVERS];
+	Servinfo	localServers[MAX_OTHER_SERVERS];
 
 	int		numglobalservers;
-	serverInfo_t	globalServers[MAX_GLOBAL_SERVERS];
+	Servinfo	globalServers[MAX_GLOBAL_SERVERS];
 	/* additional global servers */
 	int		numGlobalServerAddresses;
 	Netaddr	globalServerAddresses[MAX_GLOBAL_SERVERS];
 
 	int		numfavoriteservers;
-	serverInfo_t	favoriteServers[MAX_OTHER_SERVERS];
+	Servinfo	favoriteServers[MAX_OTHER_SERVERS];
 
 	int		pingUpdateSource;	/* source currently pinging or updating */
 
@@ -322,7 +322,7 @@ struct Clientstatic {
 
 extern Vm *cgvm;		/* interface to cgame dll or vm */
 extern Vm *uivm;		/* interface to ui dll or vm */
-extern refexport_t re;	/* interface to refresh .dll */
+extern Refexport re;	/* interface to refresh .dll */
 
 extern Cvar *cl_nodelta;
 extern Cvar *cl_debugMove;
