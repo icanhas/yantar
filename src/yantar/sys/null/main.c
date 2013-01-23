@@ -129,8 +129,8 @@ Sys_EarlyOutput(char *string)
 void
 main(int argc, char **argv)
 {
-	Com_Init (argc, argv);
+	cominit (argc, argv);
 
 	while(1)
-		Com_Frame( );
+		comframe( );
 }

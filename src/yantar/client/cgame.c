@@ -707,7 +707,7 @@ clinitCGame(void)
 
 	/* make sure everything is paged in */
 	if(!syslowmem())
-		Com_Touchmem();
+		comtouchmem();
 
 	/* clear anything that got printed */
 	Con_ClearNotify ();

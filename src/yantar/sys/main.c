@@ -426,7 +426,7 @@ main(int argc, char **argv)
 	Sys_SetBinaryPath(sysdirname(argv[ 0 ]));
 	syssetdefaultinstallpath(DEFAULT_BASEDIR);
 
-	/* Concatenate the command line for passing to Com_Init */
+	/* Concatenate the command line for passing to cominit */
 	for(i = 1; i < argc; i++){
 		const qbool containsSpaces = strchr(argv[i], ' ') != NULL;
 		if(containsSpaces)
@@ -440,7 +440,7 @@ main(int argc, char **argv)
 		Q_strcat(commandLine, sizeof(commandLine), " ");
 	}
 
-	Com_Init(commandLine);
+	cominit(commandLine);
 	NET_Init();
 	CON_Init();
 
@@ -452,7 +452,7 @@ main(int argc, char **argv)
 
 	for(;;){
 		IN_Frame();
-		Com_Frame();
+		comframe();
 	}
 	return 0;
 }

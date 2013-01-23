@@ -90,9 +90,9 @@ qbool		com_gameRestarting = qfalse;
 
 char com_errorMessage[MAXPRINTMSG];
 
-extern void	Com_Inithunk(void);
-extern void	Com_Initsmallzone(void);
-extern void	Com_Initzone(void);
+extern void	cominithunk(void);
+extern void	cominitsmallzone(void);
+extern void	cominitzone(void);
 extern void	CIN_CloseAllVideos(void);
 
 static char	*rd_buffer;
@@ -277,7 +277,7 @@ comerrorf(int code, const char *fmt, ...)
 		vmclearforceunload();
 	}
 
-	Com_Shutdown ();
+	comshutdown ();
 
 	syserrorf ("%s", com_errorMessage);
 }
@@ -300,7 +300,7 @@ Com_Quit_f(void)
 		svshutdown(p[0] ? p : "Server quit");
 		clshutdown(p[0] ? p : "Client quit", qtrue, qtrue);
 		vmclearforceunload();
-		Com_Shutdown ();
+		comshutdown ();
 		fsshutdown(qtrue);
 	}
 	sysquit ();
@@ -620,7 +620,7 @@ static int	com_pushedEventsTail = 0;
 static Sysevent com_pushedEvents[MAX_PUSHED_EVENTS];
 
 void
-Com_Initjournaling(void)
+cominitjournaling(void)
 {
 	comstartupvar("journal");
 	com_journal = cvarget ("journal", "0", CVAR_INIT);
@@ -770,7 +770,7 @@ Com_Getrealevent(void)
 }
 
 void
-Com_Initpushevent(void)
+cominitpushevent(void)
 {
 	/* clear the static buffer array
 	 * this requires SE_NONE to be accepted as a valid but NOP event */
@@ -1383,7 +1383,7 @@ Com_Detectsse(void)
 
 /* Seed the random number generator, if possible with an OS supplied random seed. */
 static void
-Com_Initrand(void)
+cominitrand(void)
 {
 	unsigned int seed;
 
@@ -1395,7 +1395,7 @@ Com_Initrand(void)
 
 /* commandLine should not include the executable name (argv[0]) */
 void
-Com_Init(char *commandLine)
+cominit(char *commandLine)
 {
 	char	*s;
 	int	qport;
@@ -1409,12 +1409,12 @@ Com_Init(char *commandLine)
 	Q_Memset(&eventQueue[ 0 ], 0, MAX_QUEUED_EVENTS * sizeof(Sysevent));
 
 	/* initialize the weak pseudo-random number generator for use later. */
-	Com_Initrand();
+	cominitrand();
 
 	/* do this before anything else decides to push events */
-	Com_Initpushevent();
+	cominitpushevent();
 
-	Com_Initsmallzone();
+	cominitsmallzone();
 	cvarinit();
 
 	/* prepare enough of the subsystems to handle
@@ -1429,7 +1429,7 @@ Com_Init(char *commandLine)
 	/* override anything from the config files with command line args */
 	comstartupvar(nil);
 
-	Com_Initzone();
+	cominitzone();
 	cmdinit ();
 
 	/* get the developer cvar set as early as possible */
@@ -1447,7 +1447,7 @@ Com_Init(char *commandLine)
 
 	fsinit ();
 
-	Com_Initjournaling();
+	cominitjournaling();
 
 	/* Add some commands here already so users can use them from config files */
 	cmdadd ("setenv", Com_Setenv_f);
@@ -1478,7 +1478,7 @@ Com_Init(char *commandLine)
 	cvarcheckrange(com_dedicated, 0, 2, qtrue);
 #endif
 	/* allocate the stack based hunk allocator */
-	Com_Inithunk();
+	cominithunk();
 
 	/* 
 	 * if any archived cvars are modified after this, we will trigger a write
@@ -1586,7 +1586,7 @@ Com_Init(char *commandLine)
 }
 
 void
-Com_Shutdown(void)
+comshutdown(void)
 {
 	if(logfile){
 		fsclose (logfile);
@@ -1643,7 +1643,7 @@ Com_Readpipe(void)
 }
 
 void
-Com_Frame(void)
+comframe(void)
 {
 	int	msec, minMsec;
 	int	timeVal, timeValSV;

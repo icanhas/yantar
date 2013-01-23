@@ -605,7 +605,7 @@ Q_Meminfo_f(void)
 
 /* Touch all known used data to make sure it is paged in */
 void
-Com_Touchmem(void)
+comtouchmem(void)
 {
 	int	start, end;
 	int	i, j;
@@ -637,11 +637,11 @@ Com_Touchmem(void)
 	}
 
 	end = sysmillisecs();
-	comprintf("Com_Touchmem: %i msec\n", end - start);
+	comprintf("comtouchmem: %i msec\n", end - start);
 }
 
 void
-Com_Initsmallzone(void)
+cominitsmallzone(void)
 {
 	s_smallZoneTotal = 512 * 1024;
 	smallzone = calloc(s_smallZoneTotal, 1);
@@ -660,7 +660,7 @@ Com_Initsmallzone(void)
  * manager.
  */
 void
-Com_Initzone(void)
+cominitzone(void)
 {
 	Cvar *cv;
 
@@ -759,7 +759,7 @@ Hunk_SmallLog(void)
 }
 
 void
-Com_Inithunk(void)
+cominithunk(void)
 {
 	Cvar	*cv;
 	int	nMinAlloc;

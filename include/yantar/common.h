@@ -617,6 +617,10 @@ typedef struct {
 	void		*evPtr;		/* this must be manually freed if not NULL */
 } Sysevent;
 
+void	cominit(char *commandLine);
+void 	comtouchmem(void);
+void	comshutdown(void);
+void	comframe(void);
 void 	comqueueevent(int time, Syseventtype type, int value,
 		int value2, int ptrLength,
 		void *ptr);
@@ -624,7 +628,6 @@ int 	comflushevents(void);
 Sysevent comgetsysevent(void);
 char* copystr(const char *in);
 void 	infoprint(const char *s);
-
 void 	comstartredirect(char *buffer, int buffersize, void (*flush)(char *));
 void 	comendredirect(void);
 void QDECL comprintf(const char *fmt, ...) __attribute__ ((format (printf, 1, 2)));
@@ -641,7 +644,7 @@ char* md5file(const char *filename, int length,
 		 int prefix_len);
 int 	filterstr(char *filter, char *name, int casesensitive);
 int 	filterpath(char *filter, char *name,
-					int casesensitive);
+		int casesensitive);
 int 	comrealtime(Qtime *qtime);
 qbool cominsafemode(void);
 void 	comrunservpacket(Netaddr *evFrom, Bitmsg *buf);
@@ -734,12 +737,6 @@ void 	hunkfreetemp(void *buf);
 int 	hunkmemremaining(void);
 void 	hunklog(void);
 void 	hunktrash(void);
-
-void 	Com_Touchmem(void);
-
-void	Com_Init(char *commandLine);
-void	Com_Frame(void);
-void	Com_Shutdown(void);
 
 /*
  * CLIENT / SERVER SYSTEMS
