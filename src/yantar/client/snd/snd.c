@@ -284,7 +284,7 @@ S_Music_f(void)
 	else if(c == 3)
 		si.StartBackgroundTrack(cmdargv(1), cmdargv(2));
 	else{
-		Com_Printf ("music <musicfile> [loopfile]\n");
+		comprintf ("music <musicfile> [loopfile]\n");
 		return;
 	}
 
@@ -305,7 +305,7 @@ S_Init(void)
 	Cvar *cv;
 	qbool started = qfalse;
 
-	Com_Printf("------ Initializing Sound ------\n");
+	comprintf("------ Initializing Sound ------\n");
 
 	s_volume = cvarget("s_volume", "0.8", CVAR_ARCHIVE);
 	s_musicVolume	= cvarget("s_musicvolume", "0.25", CVAR_ARCHIVE);
@@ -319,7 +319,7 @@ S_Init(void)
 
 	cv = cvarget("s_initsound", "1", 0);
 	if(!cv->integer)
-		Com_Printf("Sound disabled.\n");
+		comprintf("Sound disabled.\n");
 	else{
 
 		S_CodecInit( );
@@ -338,15 +338,15 @@ S_Init(void)
 
 		if(started){
 			if(!S_ValidSoundInterface(&si))
-				Com_Errorf(ERR_FATAL, "Sound interface invalid");
+				comerrorf(ERR_FATAL, "Sound interface invalid");
 
 			S_SoundInfo( );
-			Com_Printf("Sound initialization successful.\n");
+			comprintf("Sound initialization successful.\n");
 		}else
-			Com_Printf("Sound initialization failed.\n");
+			comprintf("Sound initialization failed.\n");
 	}
 
-	Com_Printf("--------------------------------\n");
+	comprintf("--------------------------------\n");
 }
 
 void

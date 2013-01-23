@@ -206,7 +206,7 @@ mdfour(byte *out, byte *in, int n)
 /* =================================================================== */
 
 unsigned
-Q_BlockChecksum(const void *buffer, int length)
+blockchecksum(const void *buffer, int length)
 {
 	int digest[4];
 	unsigned val;

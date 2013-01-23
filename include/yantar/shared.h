@@ -921,9 +921,9 @@ qbool Info_Validate(const char *s);
 void Info_NextPair(const char **s, char *key, char *value);
 
 /* this is only here so the functions in q_shared.c and bg_*.c can link */
-void QDECL Com_Errorf(int level, const char *error,
+void QDECL comerrorf(int level, const char *error,
 		     ...) __attribute__ ((noreturn, format(printf, 2, 3)));
-void QDECL Com_Printf(const char *msg, ...) __attribute__ ((format (printf, 1, 2)));
+void QDECL comprintf(const char *msg, ...) __attribute__ ((format (printf, 1, 2)));
 
 
 /*

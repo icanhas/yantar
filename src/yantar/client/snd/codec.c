@@ -74,7 +74,7 @@ S_CodecGetSound(const char *filename, Sndinfo *info)
 
 		if(rtn){
 			if(orgNameFailed)
-				Com_DPrintf(
+				comdprintf(
 					S_COLOR_YELLOW
 					"WARNING: %s not present, using %s instead\n",
 					filename, altName);
@@ -83,7 +83,7 @@ S_CodecGetSound(const char *filename, Sndinfo *info)
 		}
 	}
 
-	Com_Printf(S_COLOR_YELLOW "WARNING: Failed to %s sound %s!\n",
+	comprintf(S_COLOR_YELLOW "WARNING: Failed to %s sound %s!\n",
 		info ? "load" : "open",
 		filename);
 
@@ -152,7 +152,7 @@ S_CodecUtilOpen(const char *filename, Sndcodec *codec)
 	/* Try to open the file */
 	length = fsopenr(filename, &hnd, qtrue);
 	if(!hnd){
-		Com_DPrintf("Can't read sound file %s\n", filename);
+		comdprintf("Can't read sound file %s\n", filename);
 		return NULL;
 	}
 

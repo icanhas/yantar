@@ -77,7 +77,7 @@ SV_SetConfigstring(int index, const char *val)
 	Client *client;
 
 	if(index < 0 || index >= MAX_CONFIGSTRINGS)
-		Com_Errorf (ERR_DROP, "SV_SetConfigstring: bad index %i", index);
+		comerrorf (ERR_DROP, "SV_SetConfigstring: bad index %i", index);
 
 	if(!val)
 		val = "";
@@ -88,7 +88,7 @@ SV_SetConfigstring(int index, const char *val)
 
 	/* change the string in sv */
 	zfree(sv.configstrings[index]);
-	sv.configstrings[index] = Copystr(val);
+	sv.configstrings[index] = copystr(val);
 
 	/* send it to all the clients if we aren't
 	 * spawning a new server */
@@ -115,10 +115,10 @@ void
 SV_GetConfigstring(int index, char *buffer, int bufferSize)
 {
 	if(bufferSize < 1)
-		Com_Errorf(ERR_DROP, "SV_GetConfigstring: bufferSize == %i",
+		comerrorf(ERR_DROP, "SV_GetConfigstring: bufferSize == %i",
 			bufferSize);
 	if(index < 0 || index >= MAX_CONFIGSTRINGS)
-		Com_Errorf (ERR_DROP, "SV_GetConfigstring: bad index %i", index);
+		comerrorf (ERR_DROP, "SV_GetConfigstring: bad index %i", index);
 	if(!sv.configstrings[index]){
 		buffer[0] = 0;
 		return;
@@ -131,7 +131,7 @@ void
 SV_SetUserinfo(int index, const char *val)
 {
 	if(index < 0 || index >= sv_maxclients->integer)
-		Com_Errorf (ERR_DROP, "SV_SetUserinfo: bad index %i", index);
+		comerrorf (ERR_DROP, "SV_SetUserinfo: bad index %i", index);
 
 	if(!val)
 		val = "";
@@ -146,10 +146,10 @@ void
 SV_GetUserinfo(int index, char *buffer, int bufferSize)
 {
 	if(bufferSize < 1)
-		Com_Errorf(ERR_DROP, "SV_GetUserinfo: bufferSize == %i",
+		comerrorf(ERR_DROP, "SV_GetUserinfo: bufferSize == %i",
 			bufferSize);
 	if(index < 0 || index >= sv_maxclients->integer)
-		Com_Errorf (ERR_DROP, "SV_GetUserinfo: bad index %i", index);
+		comerrorf (ERR_DROP, "SV_GetUserinfo: bad index %i", index);
 	Q_strncpyz(buffer, svs.clients[ index ].userinfo, bufferSize);
 }
 
@@ -201,7 +201,7 @@ static void
 SV_Startup(void)
 {
 	if(svs.initialized)
-		Com_Errorf(ERR_FATAL, "SV_Startup: svs.initialized");
+		comerrorf(ERR_FATAL, "SV_Startup: svs.initialized");
 	SV_BoundMaxClients(1);
 
 	svs.clients = zalloc (sizeof(Client) * sv_maxclients->integer);
@@ -318,8 +318,8 @@ SV_SpawnServer(char *server, qbool killBots)
 
 	SV_ShutdownGameProgs();	/* shut down any existing game */
 
-	Com_Printf("------ Server Initialization ------\n");
-	Com_Printf("Server: %s\n",server);
+	comprintf("------ Server Initialization ------\n");
+	comprintf("Server: %s\n",server);
 
 	/*
 	 * FIXME: CL_ stuff should not be here
@@ -366,12 +366,12 @@ SV_SpawnServer(char *server, qbool killBots)
 	/* wipe the entire per-level structure */
 	SV_ClearServer();
 	for(i = 0; i < MAX_CONFIGSTRINGS; i++)
-		sv.configstrings[i] = Copystr("");
+		sv.configstrings[i] = copystr("");
 
 	cvarsetstr("cl_paused", "0");
 
 	/* get a new checksum feed and restart the file system */
-	sv.checksumFeed = (((int)rand() << 16) ^ rand()) ^ Com_Millisecs();
+	sv.checksumFeed = (((int)rand() << 16) ^ rand()) ^ commillisecs();
 	fsrestart(sv.checksumFeed);
 
 	CM_LoadMap(va(Pmaps "/%s.bsp", server), qfalse, &checksum);
@@ -472,7 +472,7 @@ SV_SpawnServer(char *server, qbool killBots)
 		p = fsloadedpakchecksums();
 		cvarsetstr("sv_paks", p);
 		if(strlen(p) == 0)
-			Com_Printf(
+			comprintf(
 				"WARNING: sv_pure set but no PK3 files loaded\n");
 		p = fsloadedpaknames();
 		cvarsetstr("sv_pakNames", p);
@@ -514,7 +514,7 @@ SV_SpawnServer(char *server, qbool killBots)
 
 	SV_Heartbeat_f();	/* One night to be confused */
 	hunksetmark();
-	Com_Printf ("-----------------------------------\n");
+	comprintf ("-----------------------------------\n");
 }
 
 /*
@@ -643,7 +643,7 @@ SV_Shutdown(char *finalmsg)
 	if(!com_sv_running || !com_sv_running->integer)
 		return;
 
-	Com_Printf("----- Server Shutdown (%s) -----\n", finalmsg);
+	comprintf("----- Server Shutdown (%s) -----\n", finalmsg);
 
 	NET_LeaveMulticast6();
 
@@ -671,7 +671,7 @@ SV_Shutdown(char *finalmsg)
 	cvarsetstr("sv_running", "0");
 	cvarsetstr("ui_singlePlayerActive", "0");
 
-	Com_Printf("---------------------------\n");
+	comprintf("---------------------------\n");
 
 	/* disconnect any local clients */
 	if(sv_killserver->integer != 2)

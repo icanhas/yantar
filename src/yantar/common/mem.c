@@ -142,20 +142,20 @@ zfree(void *ptr)
 	Memzone *zone;
 
 	if(!ptr)
-		Com_Errorf(ERR_DROP, "zfree: nil pointer");
+		comerrorf(ERR_DROP, "zfree: nil pointer");
 
 	block = (Memblk*)((byte*)ptr - sizeof(Memblk));
 	if(block->id != Zoneid)
-		Com_Errorf(ERR_FATAL, "zfree: freed a pointer without Zoneid");
+		comerrorf(ERR_FATAL, "zfree: freed a pointer without Zoneid");
 	if(block->tag == 0)
-		Com_Errorf(ERR_FATAL, "zfree: freed a freed pointer");
+		comerrorf(ERR_FATAL, "zfree: freed a freed pointer");
 	/* if static memory */
 	if(block->tag == MTstatic)
 		return;
 
 	/* check the memory trash tester */
 	if(*(int*)((byte*)block + block->size - 4) != Zoneid)
-		Com_Errorf(ERR_FATAL, "zfree: memory block wrote past end");
+		comerrorf(ERR_FATAL, "zfree: memory block wrote past end");
 
 	if(block->tag == MTsmall)
 		zone = smallzone;
@@ -234,7 +234,7 @@ void* ztagalloc(int size, int tag)
 	Memzone *zone;
 
 	if(!tag)
-		Com_Errorf(ERR_FATAL, "ztagalloc: tried to use a 0 tag");
+		comerrorf(ERR_FATAL, "ztagalloc: tried to use a 0 tag");
 
 	if(tag == MTsmall)
 		zone = smallzone;
@@ -258,13 +258,13 @@ void* ztagalloc(int size, int tag)
 			/* scaned all the way around the list */
 #ifdef ZONE_DEBUG
 			zlogheap();
-			Com_Errorf(
+			comerrorf(
 				ERR_FATAL, "zalloc: failed on allocation of"
 					   " %i bytes from the %s zone: %s, line: %d (%s)",
 				size, zone == smallzone ? "small" : "main",
 				file, line, label);
 #else
-			Com_Errorf(ERR_FATAL, "zalloc: failed on allocation of"
+			comerrorf(ERR_FATAL, "zalloc: failed on allocation of"
 					     " %i bytes from the %s zone",
 				size, zone == smallzone ? "small" : "main");
 #endif
@@ -358,13 +358,13 @@ Z_CheckHeap(void)
 		if(block->next == &mainzone->blocklist)
 			break;	/* all blocks have been hit */
 		if((byte*)block + block->size != (byte*)block->next)
-			Com_Errorf(ERR_FATAL,
+			comerrorf(ERR_FATAL,
 				"Z_CheckHeap: block size does not touch the next block");
 		if(block->next->prev != block)
-			Com_Errorf(ERR_FATAL,
+			comerrorf(ERR_FATAL,
 				"Z_CheckHeap: next block doesn't have proper back link");
 		if(!block->tag && !block->next->tag)
-			Com_Errorf(ERR_FATAL,
+			comerrorf(ERR_FATAL,
 				"Z_CheckHeap: two consecutive free blocks");
 	}
 }
@@ -455,11 +455,11 @@ Memstatic numberstring[] = {
 };
 
 /*
- * NOTE:	never write over the memory Copystr returns because
+ * NOTE:	never write over the memory copystr returns because
  *              memory from a Memstatic might be returned
  */
 char*
-Copystr(const char *in)
+copystr(const char *in)
 {
 	char *out;
 
@@ -537,7 +537,7 @@ Q_Meminfo_f(void)
 	zoneBlocks	= 0;
 	for(block = mainzone->blocklist.next;; block = block->next){
 		if(cmdargc() != 1)
-			Com_Printf ("block:%p    size:%7i    tag:%3i\n",
+			comprintf ("block:%p    size:%7i    tag:%3i\n",
 				(void*)block, block->size, block->tag);
 		if(block->tag){
 			zoneBytes += block->size;
@@ -551,12 +551,12 @@ Q_Meminfo_f(void)
 		if(block->next == &mainzone->blocklist)
 			break;	/* all blocks have been hit */
 		if((byte*)block + block->size != (byte*)block->next)
-			Com_Printf ("ERROR: block size does not touch the next block\n");
+			comprintf ("ERROR: block size does not touch the next block\n");
 			/* FIXME: shouldn't this do ERR_FATAL? */
 		if(block->next->prev != block)
-			Com_Printf ("ERROR: next block doesn't have proper back link\n");
+			comprintf ("ERROR: next block doesn't have proper back link\n");
 		if(!block->tag && !block->next->tag)
-			Com_Printf ("ERROR: two consecutive free blocks\n");
+			comprintf ("ERROR: two consecutive free blocks\n");
 	}
 
 	smallZoneBytes	= 0;
@@ -571,36 +571,36 @@ Q_Meminfo_f(void)
 			break;	/* all blocks have been hit */
 	}
 
-	Com_Printf("%8i bytes total hunk\n", s_hunkTotal);
-	Com_Printf("%8i bytes total zone\n", s_zoneTotal);
-	Com_Printf("\n");
-	Com_Printf("%8i low mark\n", hunk_low.mark);
-	Com_Printf("%8i low permanent\n", hunk_low.permanent);
+	comprintf("%8i bytes total hunk\n", s_hunkTotal);
+	comprintf("%8i bytes total zone\n", s_zoneTotal);
+	comprintf("\n");
+	comprintf("%8i low mark\n", hunk_low.mark);
+	comprintf("%8i low permanent\n", hunk_low.permanent);
 	if(hunk_low.temp != hunk_low.permanent)
-		Com_Printf("%8i low temp\n", hunk_low.temp);
-	Com_Printf("%8i low tempHighwater\n", hunk_low.tempHighwater);
-	Com_Printf("\n");
-	Com_Printf("%8i high mark\n", hunk_high.mark);
-	Com_Printf("%8i high permanent\n", hunk_high.permanent);
+		comprintf("%8i low temp\n", hunk_low.temp);
+	comprintf("%8i low tempHighwater\n", hunk_low.tempHighwater);
+	comprintf("\n");
+	comprintf("%8i high mark\n", hunk_high.mark);
+	comprintf("%8i high permanent\n", hunk_high.permanent);
 	if(hunk_high.temp != hunk_high.permanent)
-		Com_Printf("%8i high temp\n", hunk_high.temp);
-	Com_Printf("%8i high tempHighwater\n", hunk_high.tempHighwater);
-	Com_Printf("\n");
-	Com_Printf("%8i total hunk in use\n",
+		comprintf("%8i high temp\n", hunk_high.temp);
+	comprintf("%8i high tempHighwater\n", hunk_high.tempHighwater);
+	comprintf("\n");
+	comprintf("%8i total hunk in use\n",
 		hunk_low.permanent + hunk_high.permanent);
 	unused = 0;
 	if(hunk_low.tempHighwater > hunk_low.permanent)
 		unused += hunk_low.tempHighwater - hunk_low.permanent;
 	if(hunk_high.tempHighwater > hunk_high.permanent)
 		unused += hunk_high.tempHighwater - hunk_high.permanent;
-	Com_Printf("%8i unused highwater\n", unused);
-	Com_Printf("\n");
-	Com_Printf("%8i bytes in %i zone blocks\n", zoneBytes, zoneBlocks);
-	Com_Printf("        %8i bytes in dynamic botlib\n", botlibBytes);
-	Com_Printf("        %8i bytes in dynamic renderer\n", rendererBytes);
-	Com_Printf("        %8i bytes in dynamic other\n", zoneBytes -
+	comprintf("%8i unused highwater\n", unused);
+	comprintf("\n");
+	comprintf("%8i bytes in %i zone blocks\n", zoneBytes, zoneBlocks);
+	comprintf("        %8i bytes in dynamic botlib\n", botlibBytes);
+	comprintf("        %8i bytes in dynamic renderer\n", rendererBytes);
+	comprintf("        %8i bytes in dynamic other\n", zoneBytes -
 		(botlibBytes + rendererBytes));
-	Com_Printf("        %8i bytes in small Zone memory\n", smallZoneBytes);
+	comprintf("        %8i bytes in small Zone memory\n", smallZoneBytes);
 }
 
 /* Touch all known used data to make sure it is paged in */
@@ -637,7 +637,7 @@ Com_Touchmem(void)
 	}
 
 	end = Sys_Milliseconds();
-	Com_Printf("Com_Touchmem: %i msec\n", end - start);
+	comprintf("Com_Touchmem: %i msec\n", end - start);
 }
 
 void
@@ -646,7 +646,7 @@ Com_Initsmallzone(void)
 	s_smallZoneTotal = 512 * 1024;
 	smallzone = calloc(s_smallZoneTotal, 1);
 	if(smallzone == nil)
-		Com_Errorf(ERR_FATAL, "Small zone data failed to allocate %1.1f"
+		comerrorf(ERR_FATAL, "Small zone data failed to allocate %1.1f"
 				     "megs", (float)s_smallZoneTotal /
 			(1024*1024));
 	Z_ClearZone(smallzone, s_smallZoneTotal);
@@ -654,7 +654,7 @@ Com_Initsmallzone(void)
 
 /*
  * N.B.: com_zoneMegs can only be set on the command line, and not in
- * user.cfg or Com_Startupvar, as they haven't been executed by this
+ * user.cfg or comstartupvar, as they haven't been executed by this
  * point.  It's a chicken and egg problem.  We need the memory manager
  * configured to handle those places where you would configure the memory
  * manager.
@@ -674,7 +674,7 @@ Com_Initzone(void)
 
 	mainzone = calloc(s_zoneTotal, 1);
 	if(!mainzone)
-		Com_Errorf(ERR_FATAL, "Zone data failed to allocate %i megs"
+		comerrorf(ERR_FATAL, "Zone data failed to allocate %i megs"
 			, s_zoneTotal / (1024*1024));
 	Z_ClearZone(mainzone, s_zoneTotal);
 }
@@ -770,7 +770,7 @@ Com_Inithunk(void)
 	 * by the file system without redunant routines in the file system utilizing different
 	 * memory systems */
 	if(fsloadstack() != 0)
-		Com_Errorf(ERR_FATAL,
+		comerrorf(ERR_FATAL,
 			"Hunk initialization failed. File system load stack not zero");
 
 	/* allocate the stack based hunk allocator */
@@ -789,13 +789,13 @@ Com_Inithunk(void)
 
 	if(cv->integer < nMinAlloc){
 		s_hunkTotal = 1024 * 1024 * nMinAlloc;
-		Com_Printf(pMsg, nMinAlloc, s_hunkTotal / (1024 * 1024));
+		comprintf(pMsg, nMinAlloc, s_hunkTotal / (1024 * 1024));
 	}else
 		s_hunkTotal = cv->integer * 1024 * 1024;
 
 	s_hunkData = calloc(s_hunkTotal + 31, 1);
 	if(!s_hunkData)
-		Com_Errorf(ERR_FATAL, "Hunk data failed to allocate %i megs",
+		comerrorf(ERR_FATAL, "Hunk data failed to allocate %i megs",
 			s_hunkTotal / (1024*1024));
 	/* cacheline align */
 	s_hunkData = (byte*)(((intptr_t)s_hunkData + 31) & ~31);
@@ -865,7 +865,7 @@ hunkclear(void)
 	hunk_permanent = &hunk_low;
 	hunk_temp = &hunk_high;
 
-	Com_Printf("hunkclear: reset the hunk ok\n");
+	comprintf("hunkclear: reset the hunk ok\n");
 	vmclear();
 #ifdef HUNK_DEBUG
 	hunkblocks = nil;
@@ -901,7 +901,7 @@ void* hunkalloc(int size, ha_pref preference)
 	void *buf;
 
 	if(s_hunkData == nil)
-		Com_Errorf(ERR_FATAL,
+		comerrorf(ERR_FATAL,
 			"hunkalloc: Hunk memory system not initialized");
 	/* can't do preference if there is any temp allocated */
 	if(preference == h_dontcare || hunk_temp->temp != hunk_temp->permanent)
@@ -923,10 +923,10 @@ void* hunkalloc(int size, ha_pref preference)
 		hunklog();
 		Hunk_SmallLog();
 
-		Com_Errorf(ERR_DROP, "hunkalloc failed on %i: %s, line: %d (%s)"
+		comerrorf(ERR_DROP, "hunkalloc failed on %i: %s, line: %d (%s)"
 			, size, file, line, label);
 #else
-		Com_Errorf(ERR_DROP, "hunkalloc failed on %i", size);
+		comerrorf(ERR_DROP, "hunkalloc failed on %i", size);
 #endif
 	}
 
@@ -984,7 +984,7 @@ hunkalloctemp(int size)
 	size = PAD(size, sizeof(intptr_t)) + sizeof(Hunkhdr);
 
 	if(hunk_temp->temp + hunk_permanent->permanent + size > s_hunkTotal)
-		Com_Errorf(ERR_DROP, "hunkalloctemp: failed on %i",
+		comerrorf(ERR_DROP, "hunkalloctemp: failed on %i",
 			size);
 
 	if(hunk_temp == &hunk_low){
@@ -1023,7 +1023,7 @@ hunkfreetemp(void *buf)
 	}
 	hdr = ((Hunkhdr*)buf) - 1;
 	if(hdr->magic != Hunkmagic)
-		Com_Errorf(ERR_FATAL, "hunkfreetemp: bad magic");
+		comerrorf(ERR_FATAL, "hunkfreetemp: bad magic");
 	hdr->magic = Hunkfreemagic;
 
 	/* this only works if the files are freed in stack order,
@@ -1032,12 +1032,12 @@ hunkfreetemp(void *buf)
 		if(hdr == (void*)(s_hunkData + hunk_temp->temp - hdr->size))
 			hunk_temp->temp -= hdr->size;
 		else
-			Com_Printf("hunkfreetemp: not the final block\n");
+			comprintf("hunkfreetemp: not the final block\n");
 	}else{
 		if(hdr == (void*)(s_hunkData + s_hunkTotal - hunk_temp->temp))
 			hunk_temp->temp -= hdr->size;
 		else
-			Com_Printf("hunkfreetemp: not the final block\n");
+			comprintf("hunkfreetemp: not the final block\n");
 	}
 }
 
@@ -1064,7 +1064,7 @@ hunktrash(void)
 	if(s_hunkData == nil)
 		return;
 #ifdef _DEBUG
-	Com_Errorf(ERR_DROP, "hunk trashed");
+	comerrorf(ERR_DROP, "hunk trashed");
 	return;
 #endif
 	cvarsetstr("com_jp", "1");

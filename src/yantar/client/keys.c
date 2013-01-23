@@ -320,7 +320,7 @@ Field_VariableSizeDraw(Field *edit, int x, int y, int width, int size,
 
 	/* extract <drawLen> characters from the field at <prestep> */
 	if(drawLen >= MAX_STRING_CHARS)
-		Com_Errorf(ERR_DROP, "drawLen >= MAX_STRING_CHARS");
+		comerrorf(ERR_DROP, "drawLen >= MAX_STRING_CHARS");
 
 	Q_Memcpy(str, edit->buffer + prestep, drawLen);
 	str[ drawLen ] = 0;
@@ -559,7 +559,7 @@ Console_Key(int key)
 			g_consoleField.cursor++;
 		}
 
-		Com_Printf("))) %s\n", g_consoleField.buffer);
+		comprintf("))) %s\n", g_consoleField.buffer);
 
 		/* leading slash is an explicit command */
 		if(g_consoleField.buffer[0] == '\\' ||
@@ -847,7 +847,7 @@ Key_SetBinding(int keynum, const char *binding)
 		zfree(keys[ keynum ].binding);
 
 	/* allocate memory for new binding */
-	keys[keynum].binding = Copystr(binding);
+	keys[keynum].binding = copystr(binding);
 
 	/* consider this like modifying an archived cvar, so the
 	* file write will be triggered at the next oportunity */
@@ -882,12 +882,12 @@ Key_Unbind_f(void)
 	int b;
 
 	if(cmdargc() != 2){
-		Com_Printf ("unbind <key> : remove commands from a key\n");
+		comprintf ("unbind <key> : remove commands from a key\n");
 		return;
 	}
 	b = Key_StringToKeynum (cmdargv(1));
 	if(b==-1){
-		Com_Printf ("\"%s\" isn't a valid key\n", cmdargv(1));
+		comprintf ("\"%s\" isn't a valid key\n", cmdargv(1));
 		return;
 	}
 	Key_SetBinding (b, "");
@@ -912,21 +912,21 @@ Key_Bind_f(void)
 	c = cmdargc();
 
 	if(c < 2){
-		Com_Printf ("bind <key> [command] : attach a command to a key\n");
+		comprintf ("bind <key> [command] : attach a command to a key\n");
 		return;
 	}
 	b = Key_StringToKeynum (cmdargv(1));
 	if(b==-1){
-		Com_Printf ("\"%s\" isn't a valid key\n", cmdargv(1));
+		comprintf ("\"%s\" isn't a valid key\n", cmdargv(1));
 		return;
 	}
 
 	if(c == 2){
 		if(keys[b].binding)
-			Com_Printf ("\"%s\" = \"%s\"\n", cmdargv(
+			comprintf ("\"%s\" = \"%s\"\n", cmdargv(
 					1), keys[b].binding);
 		else
-			Com_Printf ("\"%s\" is not bound\n", cmdargv(1));
+			comprintf ("\"%s\" is not bound\n", cmdargv(1));
 		return;
 	}
 
@@ -963,7 +963,7 @@ Key_Bindlist_f(void)
 
 	for(i = 0; i < MAX_KEYS; i++)
 		if(keys[i].binding && keys[i].binding[0])
-			Com_Printf("%s \"%s\"\n", Key_KeynumToString(
+			comprintf("%s \"%s\"\n", Key_KeynumToString(
 					i), keys[i].binding);
 }
 
@@ -1257,7 +1257,7 @@ CL_LoadConsoleHistory(void)
 	consoleSaveBufferSize = fsopenr(CONSOLE_HISTORY_FILE, &f,
 		qfalse);
 	if(!f){
-		Com_Printf("Couldn't read %s.\n", CONSOLE_HISTORY_FILE);
+		comprintf("Couldn't read %s.\n", CONSOLE_HISTORY_FILE);
 		return;
 	}
 
@@ -1285,7 +1285,7 @@ CL_LoadConsoleHistory(void)
 			if(numChars >
 			   (strlen(consoleSaveBuffer) -
 			    (text_p - consoleSaveBuffer))){
-				Com_DPrintf(
+				comdprintf(
 					S_COLOR_YELLOW
 					"WARNING: probable corrupt history\n");
 				break;
@@ -1305,7 +1305,7 @@ CL_LoadConsoleHistory(void)
 
 		historyLine = nextHistoryLine = numLines;
 	}else
-		Com_Printf("Couldn't read %s.\n", CONSOLE_HISTORY_FILE);
+		comprintf("Couldn't read %s.\n", CONSOLE_HISTORY_FILE);
 
 	fsclose(f);
 }
@@ -1351,12 +1351,12 @@ CL_SaveConsoleHistory(void)
 
 	f = fsopenw(CONSOLE_HISTORY_FILE);
 	if(!f){
-		Com_Printf("Couldn't write %s.\n", CONSOLE_HISTORY_FILE);
+		comprintf("Couldn't write %s.\n", CONSOLE_HISTORY_FILE);
 		return;
 	}
 
 	if(fswrite(consoleSaveBuffer, consoleSaveBufferSize,
 		   f) < consoleSaveBufferSize)
-		Com_Printf("Couldn't write %s.\n", CONSOLE_HISTORY_FILE);
+		comprintf("Couldn't write %s.\n", CONSOLE_HISTORY_FILE);
 	fsclose(f);
 }

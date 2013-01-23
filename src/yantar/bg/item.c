@@ -35,7 +35,7 @@ BG_FindItemForHoldable(Holdable pw)
 		   bg_itemlist[i].tag == pw)
 			return &bg_itemlist[i];
 
-	Com_Errorf(ERR_DROP, "HoldableItem not found");
+	comerrorf(ERR_DROP, "HoldableItem not found");
 
 	return NULL;
 }
@@ -52,7 +52,7 @@ BG_FindItemForWeapon(Weapon weapon)
 			return it;
 		}
 
-	Com_Errorf(ERR_DROP, "Couldn't find item for weapon %i", weapon);
+	comerrorf(ERR_DROP, "Couldn't find item for weapon %i", weapon);
 	return NULL;
 }
 
@@ -104,7 +104,7 @@ BG_CanItemBeGrabbed(int gametype, const Entstate *ent,
 	Gitem *item;
 
 	if(ent->modelindex < 1 || ent->modelindex >= bg_numItems)
-		Com_Errorf(ERR_DROP, "BG_CanItemBeGrabbed: index out of range");
+		comerrorf(ERR_DROP, "BG_CanItemBeGrabbed: index out of range");
 
 	item = &bg_itemlist[ent->modelindex];
 
@@ -186,11 +186,11 @@ BG_CanItemBeGrabbed(int gametype, const Entstate *ent,
 			return qfalse;
 		return qtrue;
 	case IT_BAD:
-		Com_Errorf(ERR_DROP, "BG_CanItemBeGrabbed: IT_BAD");
+		comerrorf(ERR_DROP, "BG_CanItemBeGrabbed: IT_BAD");
 	default:
 #ifndef Q3_VM
 #ifndef NDEBUG
-		Com_Printf("BG_CanItemBeGrabbed: unknown enum %d\n",
+		comprintf("BG_CanItemBeGrabbed: unknown enum %d\n",
 			item->type);
 #endif
 #endif

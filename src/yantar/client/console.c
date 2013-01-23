@@ -154,15 +154,15 @@ Con_Dump_f(void)
 	char	buffer[1024];
 
 	if(cmdargc() != 2){
-		Com_Printf ("usage: condump <filename>\n");
+		comprintf ("usage: condump <filename>\n");
 		return;
 	}
 
-	Com_Printf ("Dumped console text to %s.\n", cmdargv(1));
+	comprintf ("Dumped console text to %s.\n", cmdargv(1));
 
 	f = fsopenw(cmdargv(1));
 	if(!f){
-		Com_Printf ("ERROR: couldn't open.\n");
+		comprintf ("ERROR: couldn't open.\n");
 		return;
 	}
 

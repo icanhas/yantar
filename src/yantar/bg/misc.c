@@ -54,7 +54,7 @@ BG_EvaluateTrajectory(const Trajectory *tr, int atTime, Vec3 result)
 		addv3(result, dir, result);
 		break;
 	default:
-		Com_Errorf(ERR_DROP, "BG_EvaluateTrajectory: unknown type: %i", tr->type);
+		comerrorf(ERR_DROP, "BG_EvaluateTrajectory: unknown type: %i", tr->type);
 		break;
 	}
 }
@@ -105,7 +105,7 @@ BG_EvaluateTrajectoryDelta(const Trajectory *tr, int atTime, Vec3 result)
 		addv3(tr->delta, dir, result);
 		break;
 	default:
-		Com_Errorf(ERR_DROP,
+		comerrorf(ERR_DROP,
 			"BG_EvaluateTrajectoryDelta: unknown type: %i", tr->type);
 		break;
 	}
@@ -226,13 +226,13 @@ BG_AddPredictableEventToPlayerstate(int newEvent, int eventParm, Playerstate *ps
 		trap_cvargetstrbuf("showevents", buf, sizeof(buf));
 		if(atof(buf) != 0){
 #ifdef QAGAME
-			Com_Printf(
+			comprintf(
 				" game event svt %5d -> %5d: num = %20s parm %d\n",
 				ps->pmove_framecount /*ps->commandTime*/,
 				ps->eventSequence, eventnames[newEvent],
 				eventParm);
 #else
-			Com_Printf(
+			comprintf(
 				"Cgame event svt %5d -> %5d: num = %20s parm %d\n",
 				ps->pmove_framecount /*ps->commandTime*/,
 				ps->eventSequence, eventnames[newEvent],

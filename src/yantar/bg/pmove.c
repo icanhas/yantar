@@ -568,7 +568,7 @@ correctallsolid(Pmove *pm, Pml *pml, Trace *trace)
 	Vec3 point;
 
 	if(pm->debugLevel)
-		Com_Printf("%u:allsolid\n", cnt);
+		comprintf("%u:allsolid\n", cnt);
 	/* jitter around */
 	for(i = -1; i <= 1; i++){
 		for(j = -1; j <= 1; j++){
@@ -610,7 +610,7 @@ setfalling(Pmove *pm, Pml *pml)
 	if(pm->ps->groundEntityNum != ENTITYNUM_NONE){
 		/* we just transitioned into freefall */
 		if(pm->debugLevel)
-			Com_Printf("%u:lift\n", cnt);
+			comprintf("%u:lift\n", cnt);
 		/*
 		 * if they aren't in a jumping animation and the ground is a 
 		 * ways away, force into it. if we didn't do the trace, the 
@@ -667,7 +667,7 @@ groundtrace(Pmove *pm, Pml *pml)
 	   dotv3(vel, trace.plane.normal) > 10)
 	then{
 		if(pm->debugLevel)
-			Com_Printf("%u:kickoff\n", cnt);
+			comprintf("%u:kickoff\n", cnt);
 		/* go into jump animation */
 		if(pm->cmd.forwardmove >= 0){
 			forcelegsanim(pm, LEGS_JUMP);
@@ -685,7 +685,7 @@ groundtrace(Pmove *pm, Pml *pml)
 	/* slopes that are too steep will not be considered onground */
 	if(trace.plane.normal[2] < MIN_WALK_NORMAL){
 		if(pm->debugLevel)
-			Com_Printf("%u:steep\n", cnt);
+			comprintf("%u:steep\n", cnt);
 		/* FIXME: if they can't slide down the slope, let them
 		 * walk (sharp crevices) */
 		pm->ps->groundEntityNum = ENTITYNUM_NONE;
@@ -705,7 +705,7 @@ groundtrace(Pmove *pm, Pml *pml)
 	if(pm->ps->groundEntityNum == ENTITYNUM_NONE){
 		/* just hit the ground */
 		if(pm->debugLevel)
-			Com_Printf("%u:Land\n", cnt);
+			comprintf("%u:Land\n", cnt);
 		crashland(pm, pml);
 		/* don't do landing time if we were just going down a slope */
 		if(pml->previous_velocity[2] < -200){

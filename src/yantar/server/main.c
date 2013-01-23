@@ -105,7 +105,7 @@ SV_ReplacePendingServerCommands(Client *client, const char *cmd)
 					sizeof(client->reliableCommands[ index ]));
 				/*
 				 * if ( client->netchan.remoteAddress.type != NA_BOT ) {
-				 *      Com_Printf( "WARNING: client %i removed double pending config string %i: %s\n", client-svs.clients, csnum1, cmd );
+				 *      comprintf( "WARNING: client %i removed double pending config string %i: %s\n", client-svs.clients, csnum1, cmd );
 				 * }
 				 */
 				return qtrue;
@@ -144,14 +144,14 @@ SV_AddServerCommand(Client *client, const char *cmd)
 	 * doesn't cause a recursive drop client */
 	if(client->reliableSequence - client->reliableAcknowledge ==
 	   MAX_RELIABLE_COMMANDS + 1){
-		Com_Printf("===== pending server commands =====\n");
+		comprintf("===== pending server commands =====\n");
 		for(i = client->reliableAcknowledge + 1;
 		    i <= client->reliableSequence; i++)
-			Com_Printf("cmd %5d: %s\n", i,
+			comprintf("cmd %5d: %s\n", i,
 				client->reliableCommands[ i &
 							  (MAX_RELIABLE_COMMANDS
 							   -1) ]);
-		Com_Printf("cmd %5d: %s\n", i, cmd);
+		comprintf("cmd %5d: %s\n", i, cmd);
 		SV_DropClient(client, "Server command overflow");
 		return;
 	}
@@ -194,7 +194,7 @@ SV_SendServerCommand(Client *cl, const char *fmt, ...)
 
 	/* hack to echo broadcast prints to console */
 	if(com_dedicated->integer && !strncmp((char*)message, "print", 5))
-		Com_Printf ("broadcast: %s\n",
+		comprintf ("broadcast: %s\n",
 			SV_ExpandNewlines((char*)message));
 
 	/* send the data to all relevent clients */
@@ -254,7 +254,7 @@ SV_MasterHeartbeat(const char *message)
 			sv_master[i]->modified = qfalse;
 
 			if(netenabled & NET_ENABLEV4){
-				Com_Printf("Resolving %s (IPv4)\n",
+				comprintf("Resolving %s (IPv4)\n",
 					sv_master[i]->string);
 				res =
 					NET_StringToAdr(sv_master[i]->string,
@@ -266,17 +266,17 @@ SV_MasterHeartbeat(const char *message)
 					adr[i][0].port = BigShort(PORT_MASTER);
 
 				if(res)
-					Com_Printf(
+					comprintf(
 						"%s resolved to %s\n",
 						sv_master[i]->string,
 						NET_AdrToStringwPort(adr[i][0]));
 				else
-					Com_Printf("%s has no IPv4 address.\n",
+					comprintf("%s has no IPv4 address.\n",
 						sv_master[i]->string);
 			}
 
 			if(netenabled & NET_ENABLEV6){
-				Com_Printf("Resolving %s (IPv6)\n",
+				comprintf("Resolving %s (IPv6)\n",
 					sv_master[i]->string);
 				res =
 					NET_StringToAdr(sv_master[i]->string,
@@ -288,12 +288,12 @@ SV_MasterHeartbeat(const char *message)
 					adr[i][1].port = BigShort(PORT_MASTER);
 
 				if(res)
-					Com_Printf(
+					comprintf(
 						"%s resolved to %s\n",
 						sv_master[i]->string,
 						NET_AdrToStringwPort(adr[i][1]));
 				else
-					Com_Printf("%s has no IPv6 address.\n",
+					comprintf("%s has no IPv6 address.\n",
 						sv_master[i]->string);
 			}
 
@@ -301,7 +301,7 @@ SV_MasterHeartbeat(const char *message)
 			   NA_BAD){
 				/* if the address failed to resolve, clear it
 				 * so we don't take repeated dns hits */
-				Com_Printf("Couldn't resolve address: %s\n",
+				comprintf("Couldn't resolve address: %s\n",
 					sv_master[i]->string);
 				cvarsetstr(sv_master[i]->name, "");
 				sv_master[i]->modified = qfalse;
@@ -310,7 +310,7 @@ SV_MasterHeartbeat(const char *message)
 		}
 
 
-		Com_Printf ("Sending heartbeat to %s\n", sv_master[i]->string);
+		comprintf ("Sending heartbeat to %s\n", sv_master[i]->string);
 
 		/* this command should be changed if the server info / status format
 		 * ever incompatably changes */
@@ -559,7 +559,7 @@ SVC_Status(Netaddr from)
 
 	/* Prevent using getstatus as an amplifier */
 	if(SVC_RateLimitAddress(from, 10, 1000)){
-		Com_DPrintf(
+		comdprintf(
 			"SVC_Status: rate limit from %s exceeded, dropping request\n",
 			NET_AdrToString(from));
 		return;
@@ -568,7 +568,7 @@ SVC_Status(Netaddr from)
 	/* Allow getstatus to be DoSed relatively easily, but prevent
 	 * excess outbound bandwidth usage when being flooded inbound */
 	if(SVC_RateLimit(&bucket, 10, 100)){
-		Com_DPrintf(
+		comdprintf(
 			"SVC_Status: rate limit exceeded, dropping request\n");
 		return;
 	}
@@ -710,7 +710,7 @@ SVC_RemoteCommand(Netaddr from, Bitmsg *msg)
 
 	/* Prevent using rcon as an amplifier and make dictionary attacks impractical */
 	if(SVC_RateLimitAddress(from, 10, 1000)){
-		Com_DPrintf(
+		comdprintf(
 			"SVC_RemoteCommand: rate limit from %s exceeded, dropping request\n",
 			NET_AdrToString(from));
 		return;
@@ -722,28 +722,28 @@ SVC_RemoteCommand(Netaddr from, Bitmsg *msg)
 
 		/* Make DoS via rcon impractical */
 		if(SVC_RateLimit(&bucket, 10, 1000)){
-			Com_DPrintf(
+			comdprintf(
 				"SVC_RemoteCommand: rate limit exceeded, dropping request\n");
 			return;
 		}
 
 		valid = qfalse;
-		Com_Printf ("Bad rcon from %s: %s\n", NET_AdrToString (
+		comprintf ("Bad rcon from %s: %s\n", NET_AdrToString (
 				from), cmdargsfrom(2));
 	}else{
 		valid = qtrue;
-		Com_Printf ("Rcon from %s: %s\n", NET_AdrToString (
+		comprintf ("Rcon from %s: %s\n", NET_AdrToString (
 				from), cmdargsfrom(2));
 	}
 
 	/* start redirecting all print outputs to the packet */
 	svs.redirectAddress = from;
-	Com_Beginredirect (sv_outputbuf, SV_OUTPUTBUF_LENGTH, SV_FlushRedirect);
+	comstartredirect (sv_outputbuf, SV_OUTPUTBUF_LENGTH, SV_FlushRedirect);
 
 	if(!strlen(sv_rconPassword->string))
-		Com_Printf ("No rconpassword set on the server.\n");
+		comprintf ("No rconpassword set on the server.\n");
 	else if(!valid)
-		Com_Printf ("Bad rconpassword.\n");
+		comprintf ("Bad rconpassword.\n");
 	else{
 		remaining[0] = 0;
 
@@ -766,7 +766,7 @@ SVC_RemoteCommand(Netaddr from, Bitmsg *msg)
 
 	}
 
-	Com_Endredirect ();
+	comendredirect ();
 }
 
 /*
@@ -793,7 +793,7 @@ SV_ConnectionlessPacket(Netaddr from, Bitmsg *msg)
 	cmdstrtok(s);
 
 	c = cmdargv(0);
-	Com_DPrintf ("SV packet %s : %s\n", NET_AdrToString(from), c);
+	comdprintf ("SV packet %s : %s\n", NET_AdrToString(from), c);
 
 	if(!Q_stricmp(c, "getstatus"))
 		SVC_Status(from);
@@ -814,7 +814,7 @@ SV_ConnectionlessPacket(Netaddr from, Bitmsg *msg)
 		 * server disconnect messages when their new server sees our final
 		 * sequenced messages to the old client */
 	}else
-		Com_DPrintf ("bad connectionless packet from %s:\n%s\n",
+		comdprintf ("bad connectionless packet from %s:\n%s\n",
 			NET_AdrToString (from), s);
 }
 
@@ -857,7 +857,7 @@ SV_PacketEvent(Netaddr from, Bitmsg *msg)
 		 * some address translating routers periodically change UDP
 		 * port assignments */
 		if(cl->netchan.remoteAddress.port != from.port){
-			Com_Printf(
+			comprintf(
 				"SV_PacketEvent: fixing up a translated port\n");
 			cl->netchan.remoteAddress.port = from.port;
 		}
@@ -959,7 +959,7 @@ SV_CheckTimeouts(void)
 		if(cl->state == CS_ZOMBIE
 		   && cl->lastPacketTime < zombiepoint){
 			/* using the client id cause the cl->name is empty at this point */
-			Com_DPrintf(
+			comdprintf(
 				"Going from CS_ZOMBIE to CS_FREE for client %d\n",
 				i);
 			cl->state = CS_FREE;	/* can now be reused */

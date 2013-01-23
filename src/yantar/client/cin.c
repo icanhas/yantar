@@ -120,7 +120,7 @@ CIN_HandleForVideo(void)
 	for(i = 0; i < MAX_VIDEO_HANDLES; i++)
 		if(cinTable[i].fileName[0] == 0)
 			return i;
-	Com_Errorf(ERR_DROP, "CIN_HandleForVideo: none free");
+	comerrorf(ERR_DROP, "CIN_HandleForVideo: none free");
 	return -1;
 }
 
@@ -878,7 +878,7 @@ readQuadInfo(byte *qData)
 			cinTable[currentHandle].drawY = 256;
 		if(cinTable[currentHandle].CIN_WIDTH != 256 ||
 		   cinTable[currentHandle].CIN_HEIGHT != 256)
-			Com_Printf("HACK: approxmimating cinematic for Rage Pro or Voodoo\n");
+			comprintf("HACK: approxmimating cinematic for Rage Pro or Voodoo\n");
 	}
 }
 
@@ -1090,7 +1090,7 @@ redump:
 
 	if(cinTable[currentHandle].RoQFrameSize>65536||
 	   cinTable[currentHandle].roq_id==0x1084){
-		Com_DPrintf("roq_size>65536||roq_id==0x1084\n");
+		comdprintf("roq_size>65536||roq_id==0x1084\n");
 		cinTable[currentHandle].status = FMV_EOF;
 		if(cinTable[currentHandle].looping)
 			RoQReset();
@@ -1140,7 +1140,7 @@ RoQShutdown(void)
 		return;
 	if(cinTable[currentHandle].status == FMV_IDLE)
 		return;
-	Com_DPrintf("finished cinematic\n");
+	comdprintf("finished cinematic\n");
 	cinTable[currentHandle].status = FMV_IDLE;
 
 	if(cinTable[currentHandle].iFile){
@@ -1175,7 +1175,7 @@ CIN_StopCinematic(int handle)
 	   cinTable[handle].status == FMV_EOF) return FMV_EOF;
 	currentHandle = handle;
 
-	Com_DPrintf("CIN_StopCinematic: closing %s\n",
+	comdprintf("CIN_StopCinematic: closing %s\n",
 		cinTable[currentHandle].fileName);
 	if(!cinTable[currentHandle].buf)
 		return FMV_EOF;
@@ -1268,7 +1268,7 @@ CIN_PlayCinematic(const char *arg, int x, int y, int w, int h, int systemBits)
 			if(!strcmp(cinTable[i].fileName, name))
 				return i;
 
-	Com_DPrintf("CIN_PlayCinematic: %s\n", arg);
+	comdprintf("CIN_PlayCinematic: %s\n", arg);
 	Q_Memset(&cin, 0, sizeof(cinematics_t));
 	currentHandle = CIN_HandleForVideo();
 	cin.currentHandle = currentHandle;
@@ -1279,7 +1279,7 @@ CIN_PlayCinematic(const char *arg, int x, int y, int w, int h, int systemBits)
 			&cinTable[currentHandle].iFile, qtrue);
 
 	if(cinTable[currentHandle].ROQSize<=0){
-		Com_DPrintf("play(%s), ROQSize<=0\n", arg);
+		comdprintf("play(%s), ROQSize<=0\n", arg);
 		cinTable[currentHandle].fileName[0] = 0;
 		return -1;
 	}
@@ -1311,7 +1311,7 @@ CIN_PlayCinematic(const char *arg, int x, int y, int w, int h, int systemBits)
 	if(RoQID == 0x1084){
 		RoQ_init();
 		cinTable[currentHandle].status = FMV_PLAY;
-		Com_DPrintf("CIN_PlayCinematic: playing %s\n", arg);
+		comdprintf("CIN_PlayCinematic: playing %s\n", arg);
 
 		if(cinTable[currentHandle].alterGameState)
 			clc.state = CA_CINEMATIC;
@@ -1320,7 +1320,7 @@ CIN_PlayCinematic(const char *arg, int x, int y, int w, int h, int systemBits)
 		s_rawend[0] = s_soundtime;
 		return currentHandle;
 	}
-	Com_DPrintf("CIN_PlayCinematic: invalid RoQ ID\n");
+	comdprintf("CIN_PlayCinematic: invalid RoQ ID\n");
 
 	RoQShutdown();
 	return -1;
@@ -1444,7 +1444,7 @@ CL_PlayCinematic_f(void)
 	char	*arg, *s;
 	int	bits = CIN_system;
 
-	Com_DPrintf("CL_PlayCinematic_f\n");
+	comdprintf("CL_PlayCinematic_f\n");
 	if(clc.state == CA_CINEMATIC)
 		SCR_StopCinematic();
 

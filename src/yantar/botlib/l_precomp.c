@@ -227,7 +227,7 @@ PC_CopyToken(token_t *token)
 #ifdef BSPC
 		Error("out of token space\n");
 #else
-		Com_Errorf(ERR_FATAL, "out of token space");
+		comerrorf(ERR_FATAL, "out of token space");
 #endif
 		return NULL;
 	}

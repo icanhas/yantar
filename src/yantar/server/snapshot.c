@@ -128,7 +128,7 @@ SV_WriteSnapshotToClient(Client *client, Bitmsg *msg)
 	}else if(client->netchan.outgoingSequence - client->deltaMessage
 		 >= (PACKET_BACKUP - 3)){
 		/* client hasn't gotten a good message through in a long time */
-		Com_DPrintf ("%s: Delta request from out of date packet.\n",
+		comdprintf ("%s: Delta request from out of date packet.\n",
 			client->name);
 		oldframe = NULL;
 		lastframe = 0;
@@ -142,7 +142,7 @@ SV_WriteSnapshotToClient(Client *client, Bitmsg *msg)
 		/* the snapshot's entities may still have rolled off the buffer, though */
 		if(oldframe->first_entity <= svs.nextSnapshotEntities -
 		   svs.numSnapshotEntities){
-			Com_DPrintf (
+			comdprintf (
 				"%s: Delta request from out of date entities.\n",
 				client->name);
 			oldframe = NULL;
@@ -247,7 +247,7 @@ SV_QsortEntityNumbers(const void *a, const void *b)
 	eb = (int*)b;
 
 	if(*ea == *eb)
-		Com_Errorf(ERR_DROP, "SV_QsortEntityStates: duplicated entity");
+		comerrorf(ERR_DROP, "SV_QsortEntityStates: duplicated entity");
 
 	if(*ea < *eb)
 		return -1;
@@ -315,7 +315,7 @@ SV_AddEntitiesVisibleFromPoint(Vec3 origin, clientSnapshot_t *frame,
 			continue;
 
 		if(ent->s.number != e){
-			Com_DPrintf ("FIXING ENT->S.NUMBER!!!\n");
+			comdprintf ("FIXING ENT->S.NUMBER!!!\n");
 			ent->s.number = e;
 		}
 
@@ -334,7 +334,7 @@ SV_AddEntitiesVisibleFromPoint(Vec3 origin, clientSnapshot_t *frame,
 		/* entities can be flagged to be sent to a given mask of clients */
 		if(ent->r.svFlags & SVF_CLIENTMASK){
 			if(frame->ps.clientNum >= 32)
-				Com_Errorf(ERR_DROP,
+				comerrorf(ERR_DROP,
 					"SVF_CLIENTMASK: clientNum >= 32");
 			if(~ent->r.singleClient & (1 << frame->ps.clientNum))
 				continue;
@@ -457,7 +457,7 @@ SV_BuildClientSnapshot(Client *client)
 	 * be regenerated from the playerstate */
 	clientNum = frame->ps.clientNum;
 	if(clientNum < 0 || clientNum >= MAX_GENTITIES)
-		Com_Errorf(ERR_DROP, "SV_SvEntityForGentity: bad gEnt");
+		comerrorf(ERR_DROP, "SV_SvEntityForGentity: bad gEnt");
 	svEnt = &sv.svEntities[ clientNum ];
 
 	svEnt->snapshotCounter = sv.snapshotCounter;
@@ -494,7 +494,7 @@ SV_BuildClientSnapshot(Client *client)
 		svs.nextSnapshotEntities++;
 		/* this should never hit, map should always be restarted first in SV_Frame */
 		if(svs.nextSnapshotEntities >= 0x7FFFFFFE)
-			Com_Errorf(ERR_FATAL, "svs.nextSnapshotEntities wrapped");
+			comerrorf(ERR_FATAL, "svs.nextSnapshotEntities wrapped");
 		frame->num_entities++;
 	}
 }
@@ -607,7 +607,7 @@ SV_SendClientSnapshot(Client *client)
 
 	/* check for overflow */
 	if(msg.overflowed){
-		Com_Printf ("WARNING: msg overflowed for %s\n", client->name);
+		comprintf ("WARNING: msg overflowed for %s\n", client->name);
 		MSG_Clear (&msg);
 	}
 

@@ -32,7 +32,7 @@ static clock_t	time_total_vm	= 0;
 /* exit() won't be called but use it because it is marked with noreturn */
 #define DIE(reason) \
 	do { \
-		Com_Errorf(ERR_DROP, "vm_powerpc compiler error: " reason); \
+		comerrorf(ERR_DROP, "vm_powerpc compiler error: " reason); \
 		exit(1); \
 	} while(0)
 
@@ -1991,7 +1991,7 @@ VM_Destroy_Compiled(Vm *self)
 {
 	if(self->codeBase)
 		if(munmap(self->codeBase, self->codeLength))
-			Com_Printf(
+			comprintf(
 				S_COLOR_RED
 				"Memory unmap failed, possible memory leak\n");
 	self->codeBase = NULL;
@@ -2081,7 +2081,7 @@ VM_Compile(Vm *vm, Vmheader *header)
 	long int i;
 	for(i = 0; i < header->instructionCount; i++)
 		if(di_pointers[ i ] == 0)
-			Com_Printf(S_COLOR_RED "Pointer %ld not initialized !\n",
+			comprintf(S_COLOR_RED "Pointer %ld not initialized !\n",
 				i);
 #endif
 
@@ -2099,13 +2099,13 @@ VM_Compile(Vm *vm, Vmheader *header)
 	{
 		struct timeval	tvdone = {0, 0};
 		struct timeval	dur = {0, 0};
-		Com_Printf("VM file %s compiled to %i bytes of code (%p - %p)\n",
+		comprintf("VM file %s compiled to %i bytes of code (%p - %p)\n",
 			vm->name, vm->codeLength, vm->codeBase,
 			vm->codeBase+vm->codeLength);
 
 		gettimeofday(&tvdone, NULL);
 		timersub(&tvdone, &tvstart, &dur);
-		Com_Printf("compilation took %lu.%06lu seconds\n",
+		comprintf("compilation took %lu.%06lu seconds\n",
 			(long unsigned int)dur.tv_sec,
 			(long unsigned int)dur.tv_usec);
 	}

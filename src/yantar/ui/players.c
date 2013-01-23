@@ -909,7 +909,7 @@ UI_ParseAnimationFile(const char *filename, Anim *animations)
 	if(len <= 0)
 		return qfalse;
 	if(len >= (sizeof(text) - 1)){
-		Com_Printf("File %s too long\n", filename);
+		comprintf("File %s too long\n", filename);
 		trap_fsclose(f);
 		return qfalse;
 	}
@@ -952,7 +952,7 @@ UI_ParseAnimationFile(const char *filename, Anim *animations)
 			break;
 		}
 
-		Com_Printf("unknown token '%s' is %s\n", token, filename);
+		comprintf("unknown token '%s' is %s\n", token, filename);
 	}
 
 	/* read information for each frame */
@@ -990,7 +990,7 @@ UI_ParseAnimationFile(const char *filename, Anim *animations)
 	}
 
 	if(i != MAX_ANIMATIONS){
-		Com_Printf("Error parsing animation file: %s\n", filename);
+		comprintf("Error parsing animation file: %s\n", filename);
 		return qfalse;
 	}
 
@@ -1033,7 +1033,7 @@ UI_RegisterClientModelname(Playerinfo *pi, const char *modelSkinName)
 		modelName);
 	pi->legsModel = trap_R_RegisterModel(filename);
 	if(!pi->legsModel){
-		Com_Printf("Failed to load model file %s\n", filename);
+		comprintf("Failed to load model file %s\n", filename);
 		return qfalse;
 	}
 
@@ -1041,7 +1041,7 @@ UI_RegisterClientModelname(Playerinfo *pi, const char *modelSkinName)
 		modelName);
 	pi->torsoModel = trap_R_RegisterModel(filename);
 	if(!pi->torsoModel){
-		Com_Printf("Failed to load model file %s\n", filename);
+		comprintf("Failed to load model file %s\n", filename);
 		return qfalse;
 	}
 
@@ -1049,14 +1049,14 @@ UI_RegisterClientModelname(Playerinfo *pi, const char *modelSkinName)
 		modelName);
 	pi->headModel = trap_R_RegisterModel(filename);
 	if(!pi->headModel){
-		Com_Printf("Failed to load model file %s\n", filename);
+		comprintf("Failed to load model file %s\n", filename);
 		return qfalse;
 	}
 
 	/* if any skins failed to load, fall back to default */
 	if(!UI_RegisterClientSkin(pi, modelName, skinName))
 		if(!UI_RegisterClientSkin(pi, modelName, "default")){
-			Com_Printf("Failed to load skin file: %s : %s\n",
+			comprintf("Failed to load skin file: %s : %s\n",
 				modelName,
 				skinName);
 			return qfalse;
@@ -1067,7 +1067,7 @@ UI_RegisterClientModelname(Playerinfo *pi, const char *modelSkinName)
 		Pplayermodels "/%s/animation.cfg",
 		modelName);
 	if(!UI_ParseAnimationFile(filename, pi->animations)){
-		Com_Printf("Failed to load animation file %s\n", filename);
+		comprintf("Failed to load animation file %s\n", filename);
 		return qfalse;
 	}
 

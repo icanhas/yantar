@@ -74,7 +74,7 @@ void
 MSG_Copy(Bitmsg *buf, byte *data, int length, Bitmsg *src)
 {
 	if(length<src->cursize)
-		Com_Errorf(ERR_DROP,
+		comerrorf(ERR_DROP,
 			"MSG_Copy: can't copy into a smaller Bitmsg buffer");
 	Q_Memcpy(buf, src, sizeof(Bitmsg));
 	buf->data = data;
@@ -100,7 +100,7 @@ MSG_WriteBits(Bitmsg *msg, int value, int bits)
 		return;
 	}
 	if(bits == 0 || bits < -31 || bits > 32)
-		Com_Errorf(ERR_DROP, "MSG_WriteBits: bad bits %i", bits);
+		comerrorf(ERR_DROP, "MSG_WriteBits: bad bits %i", bits);
 	/* check for overflows */
 	if(bits != 32){
 		if(bits > 0){
@@ -133,7 +133,7 @@ MSG_WriteBits(Bitmsg *msg, int value, int bits)
 			msg->cursize += 4;
 			msg->bit += 32;
 		}else
-			Com_Errorf(ERR_DROP, "can't write %d bits", bits);
+			comerrorf(ERR_DROP, "can't write %d bits", bits);
 	}else{
 		value &= (0xffffffff>>(32-bits));
 		if(bits&7){
@@ -186,7 +186,7 @@ MSG_ReadBits(Bitmsg *msg, int bits)
 			msg->readcount += 4;
 			msg->bit += 32;
 		}else
-			Com_Errorf(ERR_DROP, "can't read %d bits", bits);
+			comerrorf(ERR_DROP, "can't read %d bits", bits);
 	}else{
 		nbits = 0;
 		if(bits&7){
@@ -219,7 +219,7 @@ MSG_WriteChar(Bitmsg *sb, int c)
 {
 #ifdef PARANOID
 	if(c < -128 || c > 127)
-		Com_Errorf (ERR_FATAL, "MSG_WriteChar: range error");
+		comerrorf (ERR_FATAL, "MSG_WriteChar: range error");
 #endif
 	MSG_WriteBits(sb, c, 8);
 }
@@ -229,7 +229,7 @@ MSG_WriteByte(Bitmsg *sb, int c)
 {
 #ifdef PARANOID
 	if(c < 0 || c > 255)
-		Com_Errorf (ERR_FATAL, "MSG_WriteByte: range error");
+		comerrorf (ERR_FATAL, "MSG_WriteByte: range error");
 #endif
 	MSG_WriteBits(sb, c, 8);
 }
@@ -248,7 +248,7 @@ MSG_WriteShort(Bitmsg *sb, int c)
 {
 #ifdef PARANOID
 	if(c < ((short)0x8000) || c > (short)0x7fff)
-		Com_Errorf (ERR_FATAL, "MSG_WriteShort: range error");
+		comerrorf (ERR_FATAL, "MSG_WriteShort: range error");
 #endif
 	MSG_WriteBits(sb, c, 16);
 }
@@ -279,7 +279,7 @@ MSG_WriteString(Bitmsg *sb, const char *s)
 
 		l = strlen(s);
 		if(l >= MAX_STRING_CHARS){
-			Com_Printf("MSG_WriteString: MAX_STRING_CHARS");
+			comprintf("MSG_WriteString: MAX_STRING_CHARS");
 			MSG_WriteData (sb, "", 1);
 			return;
 		}
@@ -304,7 +304,7 @@ MSG_WriteBigString(Bitmsg *sb, const char *s)
 
 		l = strlen(s);
 		if(l >= BIG_INFO_STRING){
-			Com_Printf("MSG_WriteString: BIG_INFO_STRING");
+			comprintf("MSG_WriteString: BIG_INFO_STRING");
 			MSG_WriteData (sb, "", 1);
 			return;
 		}
@@ -519,7 +519,7 @@ MSG_HashKey(const char *s, int maxlen)
  */
 
 extern Cvar *cl_shownet;
-#define LOG(x) if(cl_shownet->integer == 4){ Com_Printf("%s ", x); };
+#define LOG(x) if(cl_shownet->integer == 4){ comprintf("%s ", x); };
 
 void
 MSG_WriteDelta(Bitmsg *msg, int oldV, int newV, int bits)
@@ -877,7 +877,7 @@ MSG_WriteDeltaEntity(Bitmsg *msg, struct Entstate *from,
 		return;
 	}
 	if(to->number < 0 || to->number >= MAX_GENTITIES)
-		Com_Errorf (ERR_FATAL,
+		comerrorf (ERR_FATAL,
 			"MSG_WriteDeltaEntity: Bad entity number: %i",
 			to->number);
 	lc = 0;
@@ -969,7 +969,7 @@ MSG_ReadDeltaEntity(Bitmsg *msg, Entstate *from, Entstate *to,
 	int startBit, endBit;
 
 	if(number < 0 || number >= MAX_GENTITIES)
-		Com_Errorf(ERR_DROP, "Bad delta entity number: %i", number);
+		comerrorf(ERR_DROP, "Bad delta entity number: %i", number);
 		
 	if(msg->bit == 0)
 		startBit = msg->readcount * 8 - GENTITYNUM_BITS;
@@ -980,7 +980,7 @@ MSG_ReadDeltaEntity(Bitmsg *msg, Entstate *from, Entstate *to,
 		Q_Memset(to, 0, sizeof(*to));
 		to->number = MAX_GENTITIES - 1;
 		if(cl_shownet->integer >= 2 || cl_shownet->integer == -1)
-			Com_Printf("%3i: #%-3i remove\n", msg->readcount, number);
+			comprintf("%3i: #%-3i remove\n", msg->readcount, number);
 		return;
 	}
 	/* check for no delta */
@@ -993,7 +993,7 @@ MSG_ReadDeltaEntity(Bitmsg *msg, Entstate *from, Entstate *to,
 	numFields = ARRAY_LEN(entityStateFields);
 	lc = MSG_ReadByte(msg);
 	if(lc > numFields || lc < 0)
-		Com_Errorf(ERR_DROP, "invalid entityState field count");
+		comerrorf(ERR_DROP, "invalid entityState field count");
 
 	/*
 	 * shownet 2/3 will interleave with other printed info, -1 will
@@ -1001,7 +1001,7 @@ MSG_ReadDeltaEntity(Bitmsg *msg, Entstate *from, Entstate *to,
 	 */
 	if(cl_shownet->integer >= 2 || cl_shownet->integer == -1){
 		print = 1;
-		Com_Printf("%3i: #%-3i ", msg->readcount, to->number);
+		comprintf("%3i: #%-3i ", msg->readcount, to->number);
 	}else
 		print = 0;
 	to->number = number;
@@ -1025,14 +1025,14 @@ MSG_ReadDeltaEntity(Bitmsg *msg, Entstate *from, Entstate *to,
 						trunc -= FLOAT_INT_BIAS;
 						*(float*)toF = trunc;
 						if(print)
-							Com_Printf("%s:%i ",
+							comprintf("%s:%i ",
 								field->name,
 								trunc);
 					}else{
 						/* full floating point value */
 						*toF = MSG_ReadBits(msg, 32);
 						if(print)
-							Com_Printf(
+							comprintf(
 								"%s:%f ",
 								field->name,
 								*(float*)toF);
@@ -1045,7 +1045,7 @@ MSG_ReadDeltaEntity(Bitmsg *msg, Entstate *from, Entstate *to,
 					/* integer */
 					*toF = MSG_ReadBits(msg, field->bits);
 					if(print)
-						Com_Printf("%s:%i ", field->name,
+						comprintf("%s:%i ", field->name,
 							*toF);
 				}
 			}
@@ -1066,7 +1066,7 @@ MSG_ReadDeltaEntity(Bitmsg *msg, Entstate *from, Entstate *to,
 			endBit =
 				(msg->readcount -
 				 1) * 8 + msg->bit - GENTITYNUM_BITS;
-		Com_Printf(" (%i bits)\n", endBit - startBit);
+		comprintf(" (%i bits)\n", endBit - startBit);
 	}
 }
 
@@ -1290,14 +1290,14 @@ MSG_ReadDeltaPlayerstate(Bitmsg *msg, Playerstate *from, Playerstate *to)
 	 */
 	if(cl_shownet->integer >= 2 || cl_shownet->integer == -2){
 		print = 1;
-		Com_Printf("%3i: playerstate ", msg->readcount);
+		comprintf("%3i: playerstate ", msg->readcount);
 	}else
 		print = 0;
 
 	numFields = ARRAY_LEN(playerStateFields);
 	lc = MSG_ReadByte(msg);
 	if(lc > numFields || lc < 0)
-		Com_Errorf(ERR_DROP, "invalid playerState field count");
+		comerrorf(ERR_DROP, "invalid playerState field count");
 
 	for(i = 0, field = playerStateFields; i < lc; i++, field++){
 		fromF	= (int*)((byte*)from + field->offset);
@@ -1316,20 +1316,20 @@ MSG_ReadDeltaPlayerstate(Bitmsg *msg, Playerstate *from, Playerstate *to)
 					trunc -= FLOAT_INT_BIAS;
 					*(float*)toF = trunc;
 					if(print)
-						Com_Printf("%s:%i ", field->name,
+						comprintf("%s:%i ", field->name,
 							trunc);
 				}else{
 					/* full floating point value */
 					*toF = MSG_ReadBits(msg, 32);
 					if(print)
-						Com_Printf("%s:%f ", field->name,
+						comprintf("%s:%f ", field->name,
 							*(float*)toF);
 				}
 			}else{
 				/* integer */
 				*toF = MSG_ReadBits(msg, field->bits);
 				if(print)
-					Com_Printf("%s:%i ", field->name, *toF);
+					comprintf("%s:%i ", field->name, *toF);
 			}
 		}
 	}
@@ -1382,7 +1382,7 @@ MSG_ReadDeltaPlayerstate(Bitmsg *msg, Playerstate *from, Playerstate *to)
 		else
 			endBit =(msg->readcount -
 				 1) * 8 + msg->bit - GENTITYNUM_BITS;
-		Com_Printf(" (%i bits)\n", endBit - startBit);
+		comprintf(" (%i bits)\n", endBit - startBit);
 	}
 }
 

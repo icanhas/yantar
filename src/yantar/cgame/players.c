@@ -144,7 +144,7 @@ parseanimfile(const char *filename, Clientinfo *ci)
 			txtp = prev;	/* unget the tok */
 			break;
 		}
-		Com_Printf("unknown tok '%s' is %s\n", tok, filename);
+		comprintf("unknown tok '%s' is %s\n", tok, filename);
 	}
 
 	anims = ci->animations;
@@ -330,7 +330,7 @@ regclientskin(Clientinfo *ci, const char *team, const char *model,
 	if(findclientmodelfile(fname, sizeof fname, ci, team, model, skin, "hull", "skin"))
 		ci->hullskin = trap_R_RegisterSkin(fname);
 	if(!ci->hullskin){
-		Com_Printf("Head skin load failure: %s\n", fname);
+		comprintf("Head skin load failure: %s\n", fname);
 		return qfalse;
 	}
 	return qtrue;
@@ -349,14 +349,14 @@ regclientmodel(Clientinfo *ci, const char *name,
 	Q_sprintf(fname, sizeof fname, Pplayermodels "/%s/hull", name);
 	ci->hullmodel = trap_R_RegisterModel(fname);
 	if(!ci->hullmodel){
-		Com_Printf("Failed to load model file %s\n", fname);
+		comprintf("Failed to load model file %s\n", fname);
 		return qfalse;
 	}
 
 	/* register the skin */
 	if(!regclientskin(ci, team, name, skin)){
 		if((team != nil) && (*team != '\0')){
-			Com_Printf("Failed to load skin file: %s : %s : %s\n",
+			comprintf("Failed to load skin file: %s : %s : %s\n",
 				team, name, skin);
 			switch(ci->team){
 			case TEAM_BLUE:
@@ -368,12 +368,12 @@ regclientmodel(Clientinfo *ci, const char *name,
 					"%s/", DEFAULT_REDTEAM_NAME);
 			}
 			if(!regclientskin(ci, newteam, name, skin)){
-				Com_Printf("Failed to load skin file: %s : %s : %s\n",
+				comprintf("Failed to load skin file: %s : %s : %s\n",
 					newteam, name, skin);
 				return qfalse;
 			}
 		}else{
-			Com_Printf("Failed to load skin file: %s : %s\n",
+			comprintf("Failed to load skin file: %s : %s\n",
 				name, skin);
 			return qfalse;
 		}
@@ -382,7 +382,7 @@ regclientmodel(Clientinfo *ci, const char *name,
 	/* load the animations */
 	Q_sprintf(fname, sizeof fname, Pplayermodels "/%s/animation.cfg", name);
 	if(!parseanimfile(fname, ci)){
-		Com_Printf("Failed to load animation file %s\n", fname);
+		comprintf("Failed to load animation file %s\n", fname);
 		return qfalse;
 	}
 

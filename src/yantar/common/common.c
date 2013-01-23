@@ -100,7 +100,7 @@ static uint	rd_buffersize;
 static void	(*rd_flush)(char *buffer);
 
 void
-Com_Beginredirect(char *buffer, int buffersize, void (*flush)(char *))
+comstartredirect(char *buffer, int buffersize, void (*flush)(char *))
 {
 	if(!buffer || !buffersize || !flush)
 		return;
@@ -112,7 +112,7 @@ Com_Beginredirect(char *buffer, int buffersize, void (*flush)(char *))
 }
 
 void
-Com_Endredirect(void)
+comendredirect(void)
 {
 	if(rd_flush)
 		rd_flush(rd_buffer);
@@ -130,7 +130,7 @@ Com_Endredirect(void)
  * A string variable should NEVER be passed as fmt, because of "%f" type crashers.
  */
 void QDECL
-Com_Printf(const char *fmt, ...)
+comprintf(const char *fmt, ...)
 {
 	va_list argptr;
 	char	msg[MAXPRINTMSG];
@@ -170,7 +170,7 @@ Com_Printf(const char *fmt, ...)
 			newtime = localtime(&aclock);
 			logfile = fsopenw("qconsole.log");
 			if(logfile){
-				Com_Printf("logfile opened on %s\n",
+				comprintf("logfile opened on %s\n",
 					asctime(newtime));
 
 				if(com_logfile->integer > 1)
@@ -178,7 +178,7 @@ Com_Printf(const char *fmt, ...)
 					 * data even if we are crashing */
 					fsforceflush(logfile);
 			}else{
-				Com_Printf("Opening qconsole.log failed!\n");
+				comprintf("Opening qconsole.log failed!\n");
 				cvarsetf("logfile", 0);
 			}
 			opening_qconsole = qfalse;
@@ -189,10 +189,10 @@ Com_Printf(const char *fmt, ...)
 }
 
 /*
- * A Com_Printf that only shows up if the "developer" cvar is set
+ * A comprintf that only shows up if the "developer" cvar is set
  */
 void QDECL
-Com_DPrintf(const char *fmt, ...)
+comdprintf(const char *fmt, ...)
 {
 	va_list argptr;
 	char	msg[MAXPRINTMSG];
@@ -204,7 +204,7 @@ Com_DPrintf(const char *fmt, ...)
 	Q_vsnprintf (msg, sizeof(msg), fmt, argptr);
 	va_end (argptr);
 
-	Com_Printf ("%s", msg);
+	comprintf ("%s", msg);
 }
 
 /*
@@ -212,7 +212,7 @@ Com_DPrintf(const char *fmt, ...)
  * do the appropriate thing.
  */
 void QDECL
-Com_Errorf(int code, const char *fmt, ...)
+comerrorf(int code, const char *fmt, ...)
 {
 	va_list argptr;
 	static int	lastErrorTime;
@@ -258,7 +258,7 @@ Com_Errorf(int code, const char *fmt, ...)
 		com_errorEntered = qfalse;
 		longjmp (abortframe, -1);
 	}else if(code == ERR_DROP){
-		Com_Printf (
+		comprintf (
 			"********************\nERROR: %s\n********************\n",
 			com_errorMessage);
 		vmsetforceunload();
@@ -354,7 +354,7 @@ Com_Parsecmdline(char *commandLine)
  * skip loading of user.cfg
  */
 qbool
-Com_Insafemode(void)
+cominsafemode(void)
 {
 	int i;
 
@@ -377,7 +377,7 @@ Com_Insafemode(void)
  * be after execing the config and default.
  */
 void
-Com_Startupvar(const char *match)
+comstartupvar(const char *match)
 {
 	int i;
 	char *s;
@@ -416,7 +416,7 @@ Com_Addstartupcmds(void)
 	for(i=0; i < com_numConsoleLines; i++){
 		if(!com_consoleLines[i] || !com_consoleLines[i][0])
 			continue;
-		/* set commands already added with Com_Startupvar */
+		/* set commands already added with comstartupvar */
 		if(!Q_stricmpn(com_consoleLines[i], "set", 3))
 			continue;
 		added = qtrue;
@@ -427,7 +427,7 @@ Com_Addstartupcmds(void)
 }
 
 void
-Info_Print(const char *s)
+infoprint(const char *s)
 {
 	char key[BIG_INFO_KEY];
 	char	value[BIG_INFO_VALUE];
@@ -446,10 +446,10 @@ Info_Print(const char *s)
 			key[20] = 0;
 		}else
 			*o = 0;
-		Com_Printf ("%s ", key);
+		comprintf ("%s ", key);
 
 		if(!*s){
-			Com_Printf("MISSING VALUE\n");
+			comprintf("MISSING VALUE\n");
 			return;
 		}
 		o = value;
@@ -460,7 +460,7 @@ Info_Print(const char *s)
 
 		if(*s)
 			s++;
-		Com_Printf("%s\n", value);
+		comprintf("%s\n", value);
 	}
 }
 
@@ -485,7 +485,7 @@ Q_StringContains(char *str1, char *str2, int casesensitive)
 }
 
 int
-Q_Filter(char *filter, char *name, int casesensitive)
+filterstr(char *filter, char *name, int casesensitive)
 {
 	char buf[MAX_TOKEN_CHARS];
 	char *ptr;
@@ -560,7 +560,7 @@ Q_Filter(char *filter, char *name, int casesensitive)
 }
 
 int
-Q_FilterPath(char *filter, char *name, int casesensitive)
+filterpath(char *filter, char *name, int casesensitive)
 {
 	int	i;
 	char	new_filter[MAX_QPATH];
@@ -580,11 +580,11 @@ Q_FilterPath(char *filter, char *name, int casesensitive)
 			new_name[i] = name[i];
 	}
 	new_name[i] = '\0';
-	return Q_Filter(new_filter, new_name, casesensitive);
+	return filterstr(new_filter, new_name, casesensitive);
 }
 
 int
-Com_RealTime(Qtime *qtime)
+comrealtime(Qtime *qtime)
 {
 	time_t t;
 	struct tm *tms;
@@ -622,17 +622,17 @@ static Sysevent com_pushedEvents[MAX_PUSHED_EVENTS];
 void
 Com_Initjournaling(void)
 {
-	Com_Startupvar("journal");
+	comstartupvar("journal");
 	com_journal = cvarget ("journal", "0", CVAR_INIT);
 	if(!com_journal->integer)
 		return;
 
 	if(com_journal->integer == 1){
-		Com_Printf("Journaling events\n");
+		comprintf("Journaling events\n");
 		com_journalFile = fsopenw("journal.dat");
 		com_journalDataFile = fsopenw("journaldata.dat");
 	}else if(com_journal->integer == 2){
-		Com_Printf("Replaying journaled events\n");
+		comprintf("Replaying journaled events\n");
 		fsopenr("journal.dat", &com_journalFile, qtrue);
 		fsopenr("journaldata.dat", &com_journalDataFile, qtrue);
 	}
@@ -641,7 +641,7 @@ Com_Initjournaling(void)
 		cvarsetstr("com_journal", "0");
 		com_journalFile = 0;
 		com_journalDataFile = 0;
-		Com_Printf("Couldn't open journal files\n");
+		comprintf("Couldn't open journal files\n");
 	}
 }
 
@@ -662,7 +662,7 @@ static int	eventTail = 0;
  * be freed by the game later.
  */
 void
-Com_Queueevent(int time, Syseventtype type, int value, int value2,
+comqueueevent(int time, Syseventtype type, int value, int value2,
 	       int ptrLength,
 	       void *ptr)
 {
@@ -671,7 +671,7 @@ Com_Queueevent(int time, Syseventtype type, int value, int value2,
 	ev = &eventQueue[ eventHead & MASK_QUEUED_EVENTS ];
 
 	if(eventHead - eventTail >= MAX_QUEUED_EVENTS){
-		Com_Printf("Com_Queueevent: overflow\n");
+		comprintf("comqueueevent: overflow\n");
 		/* we are discarding an event, but don't leak memory */
 		if(ev->evPtr)
 			zfree(ev->evPtr);
@@ -692,7 +692,7 @@ Com_Queueevent(int time, Syseventtype type, int value, int value2,
 }
 
 Sysevent
-Com_Getsysevent(void)
+comgetsysevent(void)
 {
 	Sysevent ev;
 	char *s;
@@ -712,7 +712,7 @@ Com_Getsysevent(void)
 		len = strlen(s) + 1;
 		b = zalloc(len);
 		strcpy(b, s);
-		Com_Queueevent(0, SE_CONSOLE, 0, 0, len, b);
+		comqueueevent(0, SE_CONSOLE, 0, 0, len, b);
 	}
 
 	/* return if we have data */
@@ -738,28 +738,28 @@ Com_Getrealevent(void)
 	if(com_journal->integer == 2){
 		r = fsread(&ev, sizeof(ev), com_journalFile);
 		if(r != sizeof(ev))
-			Com_Errorf(ERR_FATAL, "Error reading from journal file");
+			comerrorf(ERR_FATAL, "Error reading from journal file");
 		if(ev.evPtrLength){
 			ev.evPtr = zalloc(ev.evPtrLength);
 			r = fsread(ev.evPtr, ev.evPtrLength, com_journalFile);
 			if(r != ev.evPtrLength)
-				Com_Errorf(ERR_FATAL,
+				comerrorf(ERR_FATAL,
 					"Error reading from journal file");
 		}
 	}else{
-		ev = Com_Getsysevent();
+		ev = comgetsysevent();
 
 		/* write the journal value out if needed */
 		if(com_journal->integer == 1){
 			r = fswrite(&ev, sizeof(ev), com_journalFile);
 			if(r != sizeof(ev))
-				Com_Errorf(ERR_FATAL,
+				comerrorf(ERR_FATAL,
 					"Error writing to journal file");
 			if(ev.evPtrLength){
 				r = fswrite(ev.evPtr, ev.evPtrLength,
 					com_journalFile);
 				if(r != ev.evPtrLength)
-					Com_Errorf(
+					comerrorf(
 						ERR_FATAL,
 						"Error writing to journal file");
 			}
@@ -794,7 +794,7 @@ Com_Pushevent(Sysevent *event)
 		/* don't print the warning constantly, or it can give time for more... */
 		if(!printedWarning){
 			printedWarning = qtrue;
-			Com_Printf("WARNING: Com_Pushevent overflow\n");
+			comprintf("WARNING: Com_Pushevent overflow\n");
 		}
 
 		if(ev->evPtr)
@@ -819,7 +819,7 @@ Q_GetEvent(void)
 }
 
 void
-Com_Runserverpacket(Netaddr *evFrom, Bitmsg *buf)
+comrunservpacket(Netaddr *evFrom, Bitmsg *buf)
 {
 	int t1, t2, msec;
 
@@ -831,13 +831,13 @@ Com_Runserverpacket(Netaddr *evFrom, Bitmsg *buf)
 		t2 = Sys_Milliseconds ();
 		msec = t2 - t1;
 		if(com_speeds->integer == 3)
-			Com_Printf("SV_PacketEvent time: %i\n", msec);
+			comprintf("SV_PacketEvent time: %i\n", msec);
 	}
 }
 
 /* Returns last event time */
 int
-Com_Eventloop(void)
+comflushevents(void)
 {
 	Sysevent	ev;
 	Netaddr	evFrom;
@@ -855,7 +855,7 @@ Com_Eventloop(void)
 			while(NET_GetLoopPacket(NS_SERVER, &evFrom, &buf))
 				/* if the server just shut down, flush the events */
 				if(com_sv_running->integer)
-					Com_Runserverpacket(&evFrom, &buf);
+					comrunservpacket(&evFrom, &buf);
 			return ev.evTime;
 		}
 
@@ -877,7 +877,7 @@ Com_Eventloop(void)
 			cbufaddstr("\n");
 			break;
 		default:
-			Com_Errorf(ERR_FATAL, "Com_Eventloop: bad event type %i",
+			comerrorf(ERR_FATAL, "comflushevents: bad event type %i",
 				ev.evType);
 			break;
 		}
@@ -891,7 +891,7 @@ Com_Eventloop(void)
 
 /* Can be used for profiling, but will be journaled accurately */
 int
-Com_Millisecs(void)
+commillisecs(void)
 {
 	Sysevent ev;
 
@@ -908,12 +908,12 @@ Com_Millisecs(void)
 
 /* Just throw a fatal error to test error shutdown procedures */
 static void
-Com_Errorf_f(void)
+comerrorf_f(void)
 {
 	if(cmdargc() > 1)
-		Com_Errorf(ERR_DROP, "Testing drop error");
+		comerrorf(ERR_DROP, "Testing drop error");
 	else
-		Com_Errorf(ERR_FATAL, "Testing fatal error");
+		comerrorf(ERR_FATAL, "Testing fatal error");
 }
 
 /*
@@ -927,13 +927,13 @@ Com_Freeze_f(void)
 	int	start, now;
 
 	if(cmdargc() != 2){
-		Com_Printf("freeze <seconds>\n");
+		comprintf("freeze <seconds>\n");
 		return;
 	}
 	s = atof(cmdargv(1));
-	start = Com_Millisecs();
+	start = commillisecs();
 	for(;;){
-		now = Com_Millisecs();
+		now = commillisecs();
 		if((now - start) * 0.001 > s)
 			break;
 	}
@@ -950,14 +950,14 @@ Com_Crash_f(void)
 static void
 runeprops(Rune r)
 {
-	Com_Printf("rune %#x properties:", r);
-	if(Q_isalpharune(r)) Com_Printf("isalpha ");
-	if(Q_isdigitrune(r)) Com_Printf("isdigit ");
-	if(Q_isupperrune(r)) Com_Printf("isupper ");
-	if(Q_islowerrune(r)) Com_Printf("islower ");
-	if(Q_istitlerune(r)) Com_Printf("istitle ");
-	if(Q_isspacerune(r)) Com_Printf("isspace");
-	Com_Printf("\n");
+	comprintf("rune %#x properties:", r);
+	if(Q_isalpharune(r)) comprintf("isalpha ");
+	if(Q_isdigitrune(r)) comprintf("isdigit ");
+	if(Q_isupperrune(r)) comprintf("isupper ");
+	if(Q_islowerrune(r)) comprintf("islower ");
+	if(Q_istitlerune(r)) comprintf("istitle ");
+	if(Q_isspacerune(r)) comprintf("isspace");
+	comprintf("\n");
 }
 
 /*
@@ -974,19 +974,19 @@ Com_Testutf8_f(void)
 	uint i;
 	
 	n = Q_chartorune(&r, &str[5]);
-	Com_Printf("read a utf sequence %i bytes long: %#x\n", n, r);
+	comprintf("read a utf sequence %i bytes long: %#x\n", n, r);
 	for(i = 0; i < 6; i++){
 		if(Q_fullrune(&str[5], i)){
-			Com_Printf("letter appears to be a full utf sequence at %u bytes long\n", i);
+			comprintf("letter appears to be a full utf sequence at %u bytes long\n", i);
 			break;
 		}
-		Com_Printf("letter doesn't appear to be a proper sequence at %u bytes long\n", i);
+		comprintf("letter doesn't appear to be a proper sequence at %u bytes long\n", i);
 	}
-	Com_Printf("%s\n", str);
+	comprintf("%s\n", str);
 	rstr[0] = r;
 	rstr[1] = 'a'; rstr[2] = 's'; rstr[3] = 'd'; rstr[4] = 'f'; rstr[5] = r;
-	Com_Printf("rstr has runestrlen %lu\n", (ulong)Q_runestrlen(rstr));
-	Com_Printf("str has utflen %lu\n", (ulong)Q_utflen(str));
+	comprintf("rstr has runestrlen %lu\n", (ulong)Q_runestrlen(rstr));
+	comprintf("str has utflen %lu\n", (ulong)Q_utflen(str));
 	runeprops(r);
 	runeprops(Q_toupperrune(r));
 	runeprops(Q_tolowerrune(r));
@@ -1010,16 +1010,16 @@ printmatrix(Scalar *m, int w, int h)
 
 	for(i = 0; i < h; ++i){
 		for(j = 0; j < w; ++j)
-			Com_Printf(" %-7.2f", m[i*w + j]);
-		Com_Printf("\n");
+			comprintf(" %-7.2f", m[i*w + j]);
+		comprintf("\n");
 	}
-	Com_Printf("\n");
+	comprintf("\n");
 }
 
 static void
 printquat(Quat q)
 {
-	Com_Printf("% .4g%+.4gi%+.4gj%+.4gk\n", q[0], q[1], q[2], q[3]);
+	comprintf("% .4g%+.4gi%+.4gj%+.4gk\n", q[0], q[1], q[2], q[3]);
 }
 
 static void
@@ -1041,9 +1041,9 @@ matrixtest(void)
 		13, 14, 15, 16
 	};
 	
-	Com_Printf("matrixtest:\n\n");
+	comprintf("matrixtest:\n\n");
 	#define test(stmt, var)	(stmt); \
-		Com_Printf("%s =\n", XSTRING(stmt)); \
+		comprintf("%s =\n", XSTRING(stmt)); \
 		printmatrix((var), 2, 2)
 	test(clearm2(a2), a2);
 	test(identm2(a2), a2);
@@ -1057,12 +1057,12 @@ matrixtest(void)
 	test(transposem2(c2, a2), a2);
 	test(mulm2(c2, a2, b2), b2);
 	clearm2(a2);
-	Com_Printf("c2 %s c2; ", (cmpm2(c2, c2)) ? "==" : "!=");
-	Com_Printf("c2 %s a2\n\n", (cmpm2(c2, a2)) ? "==" : "!=");
+	comprintf("c2 %s c2; ", (cmpm2(c2, c2)) ? "==" : "!=");
+	comprintf("c2 %s a2\n\n", (cmpm2(c2, a2)) ? "==" : "!=");
 	#undef test
 
 	#define test(stmt, var)	(stmt); \
-		Com_Printf("%s =\n", XSTRING(stmt)); \
+		comprintf("%s =\n", XSTRING(stmt)); \
 		printmatrix((var), 3, 3)
 	test(clearm3(a3), a3);
 	test(identm3(a3), a3);
@@ -1078,7 +1078,7 @@ matrixtest(void)
 	#undef test
 
 	#define test(stmt, var)	(stmt); \
-		Com_Printf("%s =\n", XSTRING(stmt)); \
+		comprintf("%s =\n", XSTRING(stmt)); \
 		printmatrix((var), 4, 4)
 	test(clearm4(a4), a4);
 	test(identm4(a4), a4);
@@ -1101,9 +1101,9 @@ catternyantest(void)
 	Vec3 eangle = { 23, -90, 353 };
 	Scalar m;
 	
-	Com_Printf("catternyantest:\n\n");
+	comprintf("catternyantest:\n\n");
 	#define test(stmt, var)	(stmt); \
-		Com_Printf("%-30s = ", XSTRING(stmt)); \
+		comprintf("%-30s = ", XSTRING(stmt)); \
 		printquat((var))
 	test(conjq(a, b), b);
 	test(invq(a, b), b);
@@ -1115,8 +1115,8 @@ catternyantest(void)
 	#undef test
 	
 	#define test(stmt, var)	(stmt); \
-		Com_Printf("%-30s = ", XSTRING(stmt)); \
-		Com_Printf("%f\n", (var))
+		comprintf("%-30s = ", XSTRING(stmt)); \
+		comprintf("%f\n", (var))
 	test(m = magq(a), m);
 	test(m = magq(angle), m);	/* norm of an angle should always be 1.0 */
 	#undef test
@@ -1144,9 +1144,9 @@ Com_Setenv_f(void)
 		char *env = getenv(arg1);
 
 		if(env)
-			Com_Printf("%s=%s\n", arg1, env);
+			comprintf("%s=%s\n", arg1, env);
 		else
-			Com_Printf("%s undefined\n", arg1);
+			comprintf("%s undefined\n", arg1);
 	}
 }
 
@@ -1157,7 +1157,7 @@ Com_Execconfig(void)
 	cbufexecstr(EXEC_NOW, "exec default.cfg\n");
 	cbufflush();	/* Always execute after exec to prevent text buffer overflowing */
 
-	if(!Com_Insafemode()){
+	if(!cominsafemode()){
 		/* skip the user.cfg if "safe" is on the command line */
 		cbufexecstr(EXEC_NOW, "exec " Q3CONFIG_CFG "\n");
 		cbufflush();
@@ -1166,7 +1166,7 @@ Com_Execconfig(void)
 
 /* Change to a new mod properly with cleaning up cvars before switching. */
 void
-Com_Gamerestart(int checksumFeed, qbool disconnect)
+comgamerestart(int checksumFeed, qbool disconnect)
 {
 	/* make sure no recursion can be triggered */
 	if(!com_gameRestarting && com_fullyInitialized){
@@ -1212,7 +1212,7 @@ Com_Gamerestart(int checksumFeed, qbool disconnect)
 
 /* Expose possibility to change current running mod to the user */
 void
-Com_Gamerestart_f(void)
+comgamerestart_f(void)
 {
 	if(!fscomparefname(cmdargv(1), com_basegame->string))
 		/* This is the standard base game. Servers and clients should
@@ -1222,7 +1222,7 @@ Com_Gamerestart_f(void)
 	else
 		cvarsetstr("fs_game", cmdargv(1));
 
-	Com_Gamerestart(0, qtrue);
+	comgamerestart(0, qtrue);
 }
 
 void
@@ -1232,7 +1232,7 @@ Com_Writeconfigtofile(const char *filename)
 
 	f = fsopenw(filename);
 	if(!f){
-		Com_Printf ("Couldn't write %s.\n", filename);
+		comprintf ("Couldn't write %s.\n", filename);
 		return;
 	}
 	fsprintf(f, "// ／人◕‿‿ ◕人＼\n");
@@ -1264,12 +1264,12 @@ Com_Writeconfig_f(void)
 	char filename[MAX_QPATH];
 
 	if(cmdargc() != 2){
-		Com_Printf("Usage: writeconfig <filename>\n");
+		comprintf("Usage: writeconfig <filename>\n");
 		return;
 	}
 	Q_strncpyz(filename, cmdargv(1), sizeof(filename));
 	Q_defaultext(filename, sizeof(filename), ".cfg");
-	Com_Printf("Writing %s.\n", filename);
+	comprintf("Writing %s.\n", filename);
 	Com_Writeconfigtofile(filename);
 }
 
@@ -1295,7 +1295,7 @@ Com_Modifymsec(int msec)
 		 * period, because it would mess up all the client's views
 		 * of time. */
 		if(com_sv_running->integer && msec > 500)
-			Com_Printf("Hitch warning: %i msec frame time\n", msec);
+			comprintf("Hitch warning: %i msec frame time\n", msec);
 
 		clampTime = 5000;
 	}else if(!com_sv_running->integer)
@@ -1361,13 +1361,13 @@ Com_Detectsse(void)
 		Q_ftol = qftolsse;
 #endif
 		Q_VMftol = qvmftolsse;
-		Com_Printf("Have SSE support\n");
+		comprintf("Have SSE support\n");
 #if !idx64
 	}else{
 		Q_ftol = qftolx87;
 		Q_VMftol = qvmftolx87;
 		Q_snapv3 = qsnapv3x87;
-		Com_Printf("No SSE support on this machine\n");
+		comprintf("No SSE support on this machine\n");
 	}
 #endif
 }
@@ -1400,7 +1400,7 @@ Com_Init(char *commandLine)
 	char	*s;
 	int	qport;
 
-	Com_Printf("%s %s %s\n", Q3_VERSION, PLATFORM_STRING, __DATE__);
+	comprintf("%s %s %s\n", Q3_VERSION, PLATFORM_STRING, __DATE__);
 
 	if(setjmp (abortframe))
 		Sys_Error ("Error during initialization");
@@ -1427,7 +1427,7 @@ Com_Init(char *commandLine)
 	Com_Detectsse();
 
 	/* override anything from the config files with command line args */
-	Com_Startupvar(nil);
+	comstartupvar(nil);
 
 	Com_Initzone();
 	cmdinit ();
@@ -1452,7 +1452,7 @@ Com_Init(char *commandLine)
 	/* Add some commands here already so users can use them from config files */
 	cmdadd ("setenv", Com_Setenv_f);
 	if(com_developer && com_developer->integer){
-		cmdadd("error", Com_Errorf_f);
+		cmdadd("error", comerrorf_f);
 		cmdadd("crash", Com_Crash_f);
 		cmdadd("freeze", Com_Freeze_f);
 	}
@@ -1462,12 +1462,12 @@ Com_Init(char *commandLine)
 	cmdadd("q", Com_Quit_f);
 	cmdadd("writeconfig", Com_Writeconfig_f);
 	cmdsetcompletion("writeconfig", cmdcompletecfgname);
-	cmdadd("game_restart", Com_Gamerestart_f);
+	cmdadd("game_restart", comgamerestart_f);
 
 	Com_Execconfig();
 
 	/* override anything from the config files with command line args */
-	Com_Startupvar(nil);
+	comstartupvar(nil);
 
 	/* get dedicated here for proper hunk megs initialization */
 #ifdef DEDICATED
@@ -1548,7 +1548,7 @@ Com_Init(char *commandLine)
 	 * command line it will still be able to count on com_frameTime
 	 * being random enough for a serverid 
 	 */
-	com_frameTime = Com_Millisecs();
+	com_frameTime = commillisecs();
 
 	/* add + commands from command line */
 	if(!Com_Addstartupcmds())
@@ -1574,7 +1574,7 @@ Com_Init(char *commandLine)
 	/* always set the cvar, but only print the info if it makes sense. */
 	Com_Detectaltivec();
 #if idppc
-	Com_Printf ("Altivec support is %s\n",
+	comprintf ("Altivec support is %s\n",
 		com_altivec->integer ? "enabled" : "disabled");
 #endif
 
@@ -1582,7 +1582,7 @@ Com_Init(char *commandLine)
 	if(com_pipefile->string[0])
 		pipefile = fscreatepipefile(com_pipefile->string);
 
-	Com_Printf ("--- Common Initialization Complete ---\n");
+	comprintf ("--- Common Initialization Complete ---\n");
 }
 
 void
@@ -1717,7 +1717,7 @@ Com_Frame(void)
 	}while(Q_TimeVal(minMsec));
 
 	lastTime = com_frameTime;
-	com_frameTime = Com_Eventloop();
+	com_frameTime = comflushevents();
 
 	msec = com_frameTime - lastTime;
 
@@ -1764,7 +1764,7 @@ Com_Frame(void)
 		 */
 		if(com_speeds->integer)
 			timeBeforeEvents = Sys_Milliseconds ();
-		Com_Eventloop();
+		comflushevents();
 		cbufflush ();
 
 
@@ -1789,7 +1789,7 @@ Com_Frame(void)
 		cl = timeAfter - timeBeforeClient;
 		sv -= time_game;
 		cl -= time_frontend + time_backend;
-		Com_Printf (
+		comprintf (
 			"frame:%i all:%3i sv:%3i ev:%3i cl:%3i gm:%3i rf:%3i bk:%3i\n",
 			com_frameNumber, all, sv, ev, cl, time_game,
 			time_frontend, time_backend);
@@ -1801,7 +1801,7 @@ Com_Frame(void)
 		extern int	c_traces, c_brush_traces, c_patch_traces;
 		extern int	c_pointcontents;
 
-		Com_Printf ("%4i traces  (%ib %ip) %4i points\n", c_traces,
+		comprintf ("%4i traces  (%ib %ip) %4i points\n", c_traces,
 			c_brush_traces, c_patch_traces, c_pointcontents);
 		c_traces = 0;
 		c_brush_traces	= 0;
@@ -1859,7 +1859,7 @@ static void
 printmatches(const char *s)
 {
 	if(!Q_stricmpn(s, shortestMatch, strlen(shortestMatch)))
-		Com_Printf("    %s\n", s);
+		comprintf("    %s\n", s);
 }
 
 static void
@@ -1869,7 +1869,7 @@ printcvarmatches(const char *s)
 
 	if(!Q_stricmpn(s, shortestMatch, strlen(shortestMatch))){
 		Q_truncstr(value, cvargetstr(s));
-		Com_Printf("    %s = \"%s\"\n", s, value);
+		comprintf("    %s = \"%s\"\n", s, value);
 	}
 }
 
@@ -1904,7 +1904,7 @@ Field_Complete(void)
 		completionField->cursor++;
 		return qtrue;
 	}
-	Com_Printf("]%s\n", completionField->buffer);
+	comprintf("]%s\n", completionField->buffer);
 	return qfalse;
 }
 
@@ -2031,7 +2031,7 @@ Com_Randombytes(byte *string, int len)
 
 	if(Sys_RandomBytes(string, len))
 		return;
-	Com_Printf("Com_Randombytes: using weak randomization\n");
+	comprintf("Com_Randombytes: using weak randomization\n");
 	for(i = 0; i < len; i++)
 		string[i] = (unsigned char)(rand() % 255);
 }
@@ -2041,7 +2041,7 @@ Com_Randombytes(byte *string, int len)
  * If clientNum is negative return if any bit is set.
  */
 qbool
-Com_Isvoiptarget(uint8_t *voipTargets, int voipTargetsSize, int clientNum)
+comisvoiptarget(uint8_t *voipTargets, int voipTargetsSize, int clientNum)
 {
 	int index;
 	if(clientNum < 0){

@@ -291,12 +291,12 @@ CON_Input(void)
 
 	if(!qconsole_linelen){
 		CON_Show();
-		Com_Printf("\n");
+		comprintf("\n");
 		return NULL;
 	}
 
 	CON_HistAdd();
-	Com_Printf("%s\n", qconsole_line);
+	comprintf("%s\n", qconsole_line);
 
 	qconsole_linelen = 0;
 	CON_Show();

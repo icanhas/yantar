@@ -225,7 +225,7 @@ PM_StepSlideMove(Pmove *pm, Pml *pml, qbool gravity)
 		pm->tracemask);
 	if(trace.allsolid){
 		if(pm->debugLevel)
-			Com_Printf("%u:bend can't step\n", cnt);
+			comprintf("%u:bend can't step\n", cnt);
 		return;	/* can't step up */
 	}
 
@@ -259,7 +259,7 @@ PM_StepSlideMove(Pmove *pm, Pml *pml, qbool gravity)
 		copyv3 (down_o, pm->ps->origin);
 		copyv3 (down_v, pm->ps->velocity);
 		if(pm->debugLevel)
-			Com_Printf("%u:bend\n", cnt);
+			comprintf("%u:bend\n", cnt);
 	}else
 #endif
 	/* use the step move */
@@ -275,5 +275,5 @@ PM_StepSlideMove(Pmove *pm, Pml *pml, qbool gravity)
 			PM_AddEvent(pm, pml, EV_STEP_16);
 	}
 	if(pm->debugLevel)
-		Com_Printf("%u:stepped\n", cnt);
+		comprintf("%u:stepped\n", cnt);
 }

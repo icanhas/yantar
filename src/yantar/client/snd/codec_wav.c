@@ -39,7 +39,7 @@ S_ReadChunkInfo(Fhandle f, char *name)
 		return -1;
 	len = FGetLittleLong(f);
 	if(len < 0){
-		Com_Printf(S_COLOR_YELLOW "WARNING: Negative chunk length\n");
+		comprintf(S_COLOR_YELLOW "WARNING: Negative chunk length\n");
 		return -1;
 	}
 	return len;
@@ -90,7 +90,7 @@ S_ReadRIFFHeader(Fhandle file, Sndinfo *info)
 	fsread(dump, 12, file);
 	/* Scan for the format chunk */
 	if((fmtlen = S_FindRIFFChunk(file, "fmt ")) < 0){
-		Com_Printf(S_COLOR_RED "ERROR: Couldn't find 'fmt' chunk\n");
+		comprintf(S_COLOR_RED "ERROR: Couldn't find 'fmt' chunk\n");
 		return qfalse;
 	}
 	/* Save the parameters */
@@ -102,7 +102,7 @@ S_ReadRIFFHeader(Fhandle file, Sndinfo *info)
 	bits = FGetLittleShort(file);
 
 	if(bits < 8){
-		Com_Printf(S_COLOR_RED
+		comprintf(S_COLOR_RED
 			"ERROR: Less than 8 bit sound is not supported\n");
 		return qfalse;
 	}
@@ -117,7 +117,7 @@ S_ReadRIFFHeader(Fhandle file, Sndinfo *info)
 	}
 	/* Scan for the data chunk */
 	if((info->size = S_FindRIFFChunk(file, "data")) < 0){
-		Com_Printf(S_COLOR_RED "ERROR: Couldn't find \"data\" chunk\n");
+		comprintf(S_COLOR_RED "ERROR: Couldn't find \"data\" chunk\n");
 		return qfalse;
 	}
 	info->samples = (info->size / info->width) / info->channels;
@@ -145,7 +145,7 @@ S_WAV_CodecLoad(const char *filename, Sndinfo *info)
 		return NULL;
 	if(!S_ReadRIFFHeader(file, info)){
 		fsclose(file);
-		Com_Printf(S_COLOR_RED
+		comprintf(S_COLOR_RED
 			"ERROR: Incorrect/unsupported format in '%s'\n",
 			filename);
 		return NULL;
@@ -154,7 +154,7 @@ S_WAV_CodecLoad(const char *filename, Sndinfo *info)
 	buffer = hunkalloctemp(info->size);
 	if(!buffer){
 		fsclose(file);
-		Com_Printf(S_COLOR_RED "ERROR: Out of memory reading \"%s\"\n",
+		comprintf(S_COLOR_RED "ERROR: Out of memory reading \"%s\"\n",
 			filename);
 		return NULL;
 	}

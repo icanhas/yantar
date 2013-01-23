@@ -72,7 +72,7 @@ cbufaddstr(const char *text)
 	l = strlen(text);
 
 	if(cmd_text.cursize + l >= cmd_text.maxsize){
-		Com_Printf("cbufaddstr: overflow\n");
+		comprintf("cbufaddstr: overflow\n");
 		return;
 	}
 	Q_Memcpy(&cmd_text.data[cmd_text.cursize], text, l);
@@ -91,7 +91,7 @@ cbufinsertstr(const char *text)
 
 	len = strlen(text) + 1;
 	if(len + cmd_text.cursize > cmd_text.maxsize){
-		Com_Printf("cbufinsertstr overflowed\n");
+		comprintf("cbufinsertstr overflowed\n");
 		return;
 	}
 
@@ -115,11 +115,11 @@ cbufexecstr(int exec_when, const char *text)
 	switch(exec_when){
 	case EXEC_NOW:
 		if(text && strlen(text) > 0){
-			Com_DPrintf(S_COLOR_YELLOW "EXEC_NOW %s\n", text);
+			comdprintf(S_COLOR_YELLOW "EXEC_NOW %s\n", text);
 			cmdexecstr(text);
 		}else{
 			cbufflush();
-			Com_DPrintf(S_COLOR_YELLOW "EXEC_NOW %s\n",
+			comdprintf(S_COLOR_YELLOW "EXEC_NOW %s\n",
 				cmd_text.data);
 		}
 		break;
@@ -130,7 +130,7 @@ cbufexecstr(int exec_when, const char *text)
 		cbufaddstr(text);
 		break;
 	default:
-		Com_Errorf(ERR_FATAL, "cbufexecstr: bad exec_when");
+		comerrorf(ERR_FATAL, "cbufexecstr: bad exec_when");
 	}
 }
 
@@ -241,7 +241,7 @@ Cmd_Exec_f(void)
 	char filename[MAX_QPATH];
 
 	if(cmdargc() != 2){
-		Com_Printf("exec <filename> : execute a script file\n");
+		comprintf("exec <filename> : execute a script file\n");
 		return;
 	}
 
@@ -249,10 +249,10 @@ Cmd_Exec_f(void)
 	Q_defaultext(filename, sizeof(filename), ".cfg");
 	fsreadfile(filename, &f.v);
 	if(!f.c){
-		Com_Printf("couldn't exec %s\n",cmdargv(1));
+		comprintf("couldn't exec %s\n",cmdargv(1));
 		return;
 	}
-	Com_Printf("execing %s\n",cmdargv(1));
+	comprintf("execing %s\n",cmdargv(1));
 	cbufinsertstr(f.c);
 
 	fsfreefile(f.v);
@@ -267,7 +267,7 @@ Cmd_Vstr_f(void)
 	char *v;
 
 	if(cmdargc() != 2){
-		Com_Printf("vstr <variablename> : execute a variable command\n");
+		comprintf("vstr <variablename> : execute a variable command\n");
 		return;
 	}
 
@@ -281,7 +281,7 @@ Cmd_Vstr_f(void)
 void
 Cmd_Echo_f(void)
 {
-	Com_Printf("%s\n", cmdargs());
+	comprintf("%s\n", cmdargs());
 }
 
 /*
@@ -420,7 +420,7 @@ cmdstrtok2(const char *text_in, qbool ignoreQuotes)
 
 #ifdef TKN_DBG
 	/* FIXME TTimo blunt hook to try to find the tokenization of userinfo */
-	Com_DPrintf("cmdstrtok: %s\n", text_in);
+	comdprintf("cmdstrtok: %s\n", text_in);
 #endif
 	cmd_argc = 0;	/* clear prev args */
 
@@ -531,12 +531,12 @@ cmdadd(const char *cmd_name, xcommand_t function)
 	if(Cmd_FindCommand(cmd_name)){
 		/* allow completion-only commands to be silently doubled */
 		if(function != NULL)
-			Com_Printf("cmdadd: %s already defined\n", cmd_name);
+			comprintf("cmdadd: %s already defined\n", cmd_name);
 		return;
 	}
 	/* use a small malloc to avoid zone fragmentation */
 	cmd = salloc(sizeof(*cmd));
-	cmd->name = Copystr(cmd_name);
+	cmd->name = copystr(cmd_name);
 	cmd->function = function;
 	cmd->complete = NULL;
 	cmd->next = cmd_functions;
@@ -584,7 +584,7 @@ cmdsaferemove(const char *cmd_name)
 	if(!(cmd = Cmd_FindCommand(cmd_name)))
 		return;
 	if(cmd->function){
-		Com_Errorf(ERR_DROP, "Restricted source tried to remove "
+		comerrorf(ERR_DROP, "Restricted source tried to remove "
 				    "system command \"%s\"", cmd_name);
 		return;
 	}
@@ -677,12 +677,12 @@ Cmd_List_f(void)
 
 	i = 0;
 	for(cmd=cmd_functions; cmd; cmd=cmd->next){
-		if(match && !Q_Filter(match, cmd->name, qfalse)) 
+		if(match && !filterstr(match, cmd->name, qfalse)) 
 			continue;
-		Com_Printf("%s\n", cmd->name);
+		comprintf("%s\n", cmd->name);
 		i++;
 	}
-	Com_Printf("%i commands\n", i);
+	comprintf("%i commands\n", i);
 }
 
 void

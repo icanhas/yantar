@@ -416,7 +416,7 @@ SCR_DrawScreenField(Stereoframe stereoFrame)
 	if(uivm && !uiFullscreen){
 		switch(clc.state){
 		default:
-			Com_Errorf(ERR_FATAL, "SCR_DrawScreenField: bad clc.state");
+			comerrorf(ERR_FATAL, "SCR_DrawScreenField: bad clc.state");
 			break;
 		case CA_CINEMATIC:
 			SCR_DrawCinematic();
@@ -481,7 +481,7 @@ SCR_UpdateScreen(void)
 		return;		/* not initialized yet */
 
 	if(++recursive > 2)
-		Com_Errorf(ERR_FATAL, "SCR_UpdateScreen: recursively called");
+		comerrorf(ERR_FATAL, "SCR_UpdateScreen: recursively called");
 	recursive = 1;
 
 	/* If there is no VM, there are also no rendering commands issued. Stop the renderer in

@@ -64,7 +64,7 @@ static ID_INLINE void
 Safefswrite(const void *buffer, int len, Fhandle f)
 {
 	if(fswrite(buffer, len, f) < len)
-		Com_Errorf(ERR_DROP, "Failed to write avi file");
+		comerrorf(ERR_DROP, "Failed to write avi file");
 }
 
 /*
@@ -118,7 +118,7 @@ static ID_INLINE void
 START_CHUNK(const char *s)
 {
 	if(afd.chunkStackTop == MAX_RIFF_CHUNKS)
-		Com_Errorf(ERR_DROP, "ERROR: Top of chunkstack breached");
+		comerrorf(ERR_DROP, "ERROR: Top of chunkstack breached");
 
 	afd.chunkStack[ afd.chunkStackTop ] = bufIndex;
 	afd.chunkStackTop++;
@@ -135,7 +135,7 @@ END_CHUNK(void)
 	int endIndex = bufIndex;
 
 	if(afd.chunkStackTop <= 0)
-		Com_Errorf(ERR_DROP, "ERROR: Bottom of chunkstack breached");
+		comerrorf(ERR_DROP, "ERROR: Bottom of chunkstack breached");
 
 	afd.chunkStackTop--;
 	bufIndex = afd.chunkStack[ afd.chunkStackTop ];
@@ -307,7 +307,7 @@ CL_OpenAVIForWriting(const char *fileName)
 
 	/* Don't start if a framerate has not been chosen */
 	if(cl_aviFrameRate->integer <= 0){
-		Com_Printf(S_COLOR_RED "cl_aviFrameRate must be >= 1\n");
+		comprintf(S_COLOR_RED "cl_aviFrameRate must be >= 1\n");
 		return qfalse;
 	}
 
@@ -354,7 +354,7 @@ CL_OpenAVIForWriting(const char *fileName)
 		while((afd.a.rate % suggestRate) && suggestRate >= 1)
 			suggestRate--;
 
-		Com_Printf(
+		comprintf(
 			S_COLOR_YELLOW
 			"WARNING: cl_aviFrameRate is not a divisor "
 			"of the audio rate, suggest %d\n",
@@ -365,7 +365,7 @@ CL_OpenAVIForWriting(const char *fileName)
 		afd.audio = qfalse;
 	else{
 		if(afd.a.bits != 16 || afd.a.channels != 2){
-			Com_Printf(S_COLOR_YELLOW
+			comprintf(S_COLOR_YELLOW
 				"WARNING: Audio format of %d bit/%d channels not supported",
 				afd.a.bits, afd.a.channels);
 			afd.audio = qfalse;
@@ -485,7 +485,7 @@ CL_WriteAVIAudioFrame(const byte *pcmBuffer, int size)
 		return;
 
 	if(bytesInBuffer + size > PCM_BUFFER_SIZE){
-		Com_Printf(S_COLOR_YELLOW
+		comprintf(S_COLOR_YELLOW
 			"WARNING: Audio capture buffer overflow -- truncating\n");
 		size = PCM_BUFFER_SIZE - bytesInBuffer;
 	}
@@ -609,7 +609,7 @@ CL_CloseAVI(void)
 	zfree(afd.eBuffer);
 	fsclose(afd.f);
 
-	Com_Printf("Wrote %d:%d frames to %s\n", afd.numVideoFrames,
+	comprintf("Wrote %d:%d frames to %s\n", afd.numVideoFrames,
 		afd.numAudioFrames,
 		afd.fileName);
 

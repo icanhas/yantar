@@ -244,7 +244,7 @@ void
 Sys_UnloadDll(void *dllHandle)
 {
 	if(!dllHandle){
-		Com_Printf("Sys_UnloadDll(NULL)\n");
+		comprintf("Sys_UnloadDll(NULL)\n");
 		return;
 	}
 	Sys_UnloadLibrary(dllHandle);
@@ -260,7 +260,7 @@ Sys_LoadDll(const char *name, qbool useSystemLib)
 	void *dllhandle;
 
 	if(useSystemLib)
-		Com_Printf("Trying to load \"%s\"...\n", name);
+		comprintf("Trying to load \"%s\"...\n", name);
 
 	if(!useSystemLib || !(dllhandle = Sys_LoadLibrary(name))){
 		const char *topDir;
@@ -271,7 +271,7 @@ Sys_LoadDll(const char *name, qbool useSystemLib)
 		if(!*topDir)
 			topDir = ".";
 
-		Com_Printf("Trying to load \"%s\" from \"%s\"...\n", name,
+		comprintf("Trying to load \"%s\" from \"%s\"...\n", name,
 			topDir);
 		Q_sprintf(libPath, sizeof(libPath), "%s%c%s", topDir, PATH_SEP,
 			name);
@@ -283,7 +283,7 @@ Sys_LoadDll(const char *name, qbool useSystemLib)
 				basePath = ".";
 
 			if(fscomparefname(topDir, basePath)){
-				Com_Printf("Trying to load \"%s\" from \"%s\"...\n",
+				comprintf("Trying to load \"%s\" from \"%s\"...\n",
 					name, basePath);
 				Q_sprintf(libPath, sizeof(libPath), "%s%c%s",
 					basePath, PATH_SEP, name);
@@ -291,7 +291,7 @@ Sys_LoadDll(const char *name, qbool useSystemLib)
 			}
 
 			if(!dllhandle)
-				Com_Printf("Loading \"%s\" failed\n", name);
+				comprintf("Loading \"%s\" failed\n", name);
 		}
 	}
 	return dllhandle;
@@ -307,11 +307,11 @@ Sys_LoadGameDll(const char *name,
 	void	(*dllEntry)(intptr_t (*syscallptr)(intptr_t, ...));
 
 	assert(name);
-	Com_Printf("Loading DLL file: %s\n", name);
+	comprintf("Loading DLL file: %s\n", name);
 	libHandle = Sys_LoadLibrary(name);
 
 	if(!libHandle){
-		Com_Printf("Sys_LoadGameDll(%s) failed:\n\"%s\"\n", name,
+		comprintf("Sys_LoadGameDll(%s) failed:\n\"%s\"\n", name,
 			Sys_LibraryError());
 		return NULL;
 	}
@@ -320,7 +320,7 @@ Sys_LoadGameDll(const char *name,
 	*entryPoint = Sys_LoadFunction(libHandle, "vmMain");
 
 	if(!*entryPoint || !dllEntry){
-		Com_Printf (
+		comprintf (
 			"Sys_LoadGameDll(%s) failed to find vmMain function:\n\"%s\" !\n",
 			name, Sys_LibraryError( ));
 		Sys_UnloadLibrary(libHandle);
@@ -328,7 +328,7 @@ Sys_LoadGameDll(const char *name,
 		return NULL;
 	}
 
-	Com_Printf ("Sys_LoadGameDll(%s) found vmMain function at %p\n", name,
+	comprintf ("Sys_LoadGameDll(%s) found vmMain function at %p\n", name,
 		*entryPoint);
 	dllEntry(systemcalls);
 	return libHandle;

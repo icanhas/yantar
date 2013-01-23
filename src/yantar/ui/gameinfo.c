@@ -81,12 +81,12 @@ UI_ParseInfos(char *buf, int max, char *infos[])
 		if(!token[0])
 			break;
 		if(strcmp(token, "{")){
-			Com_Printf("Missing { in info file\n");
+			comprintf("Missing { in info file\n");
 			break;
 		}
 
 		if(count == max){
-			Com_Printf("Max infos exceeded\n");
+			comprintf("Max infos exceeded\n");
 			break;
 		}
 
@@ -94,7 +94,7 @@ UI_ParseInfos(char *buf, int max, char *infos[])
 		while(1){
 			token = Q_readtok2(&buf, qtrue);
 			if(!token[0]){
-				Com_Printf("Unexpected end of info file\n");
+				comprintf("Unexpected end of info file\n");
 				break;
 			}
 			if(!strcmp(token, "}"))

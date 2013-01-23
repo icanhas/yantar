@@ -323,7 +323,7 @@ CM_FloodArea_r(int areaNum, int floodnum)
 	if(area->floodvalid == cm.floodvalid){
 		if(area->floodnum == floodnum)
 			return;
-		Com_Errorf (ERR_DROP, "FloodArea_r: reflooded");
+		comerrorf (ERR_DROP, "FloodArea_r: reflooded");
 	}
 
 	area->floodnum = floodnum;
@@ -370,7 +370,7 @@ CM_AdjustAreaPortalState(int area1, int area2, qbool open)
 		return;
 
 	if(area1 >= cm.numAreas || area2 >= cm.numAreas)
-		Com_Errorf (ERR_DROP, "CM_ChangeAreaPortalState: bad area number");
+		comerrorf (ERR_DROP, "CM_ChangeAreaPortalState: bad area number");
 
 	if(open){
 		cm.areaPortals[ area1 * cm.numAreas + area2 ]++;
@@ -379,7 +379,7 @@ CM_AdjustAreaPortalState(int area1, int area2, qbool open)
 		cm.areaPortals[ area1 * cm.numAreas + area2 ]--;
 		cm.areaPortals[ area2 * cm.numAreas + area1 ]--;
 		if(cm.areaPortals[ area2 * cm.numAreas + area1 ] < 0)
-			Com_Errorf (
+			comerrorf (
 				ERR_DROP,
 				"CM_AdjustAreaPortalState: negative reference count");
 	}
@@ -404,7 +404,7 @@ CM_AreasConnected(int area1, int area2)
 		return qfalse;
 
 	if(area1 >= cm.numAreas || area2 >= cm.numAreas)
-		Com_Errorf (ERR_DROP, "area >= cm.numAreas");
+		comerrorf (ERR_DROP, "area >= cm.numAreas");
 
 	if(cm.areas[area1].floodnum == cm.areas[area2].floodnum)
 		return qtrue;

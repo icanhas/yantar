@@ -727,10 +727,10 @@ GLimp_ShutdownRenderThread(void)
 static int
 GLimp_RenderThreadWrapper(void *arg)
 {
-	Com_Printf("Render thread starting\n");
+	comprintf("Render thread starting\n");
 	glimpRenderThread();
 	GLimp_SetCurrentContext(NULL);
-	Com_Printf("Render thread terminating\n");
+	comprintf("Render thread terminating\n");
 	return 0;
 }
 
@@ -739,7 +739,7 @@ GLimp_SpawnRenderThread(void (*function)(void))
 {
 	static qbool warned = qfalse;
 	if(!warned){
-		Com_Printf("WARNING: You enable r_smp at your own risk!\n");
+		comprintf("WARNING: You enable r_smp at your own risk!\n");
 		warned = qtrue;
 	}
 
@@ -748,7 +748,7 @@ GLimp_SpawnRenderThread(void (*function)(void))
 #endif
 
 	if(renderThread != NULL){	/* hopefully just a zombie at this point... */
-		Com_Printf("Already a render thread? Trying to clean it up...\n");
+		comprintf("Already a render thread? Trying to clean it up...\n");
 		SDL_WaitThread(renderThread, NULL);
 		renderThread = NULL;
 		GLimp_ShutdownRenderThread();
@@ -756,21 +756,21 @@ GLimp_SpawnRenderThread(void (*function)(void))
 
 	smpMutex = SDL_CreateMutex();
 	if(smpMutex == NULL){
-		Com_Printf("smpMutex creation failed: %s\n", SDL_GetError());
+		comprintf("smpMutex creation failed: %s\n", SDL_GetError());
 		GLimp_ShutdownRenderThread();
 		return qfalse;
 	}
 
 	renderCommandsEvent = SDL_CreateCond();
 	if(renderCommandsEvent == NULL){
-		Com_Printf("renderCommandsEvent creation failed: %s\n", SDL_GetError());
+		comprintf("renderCommandsEvent creation failed: %s\n", SDL_GetError());
 		GLimp_ShutdownRenderThread();
 		return qfalse;
 	}
 
 	renderCompletedEvent = SDL_CreateCond();
 	if(renderCompletedEvent == NULL){
-		Com_Printf("renderCompletedEvent creation failed: %s\n", SDL_GetError());
+		comprintf("renderCompletedEvent creation failed: %s\n", SDL_GetError());
 		GLimp_ShutdownRenderThread();
 		return qfalse;
 	}

@@ -9,7 +9,7 @@
 #include "local.h"
 
 void QDECL
-Com_Printf(const char *msg, ...)
+comprintf(const char *msg, ...)
 {
 	va_list argptr;
 	char	text[1024];
@@ -22,7 +22,7 @@ Com_Printf(const char *msg, ...)
 }
 
 void QDECL
-Com_Errorf(int level, const char *error, ...)
+comerrorf(int level, const char *error, ...)
 {
 	va_list argptr;
 	char	text[1024];
