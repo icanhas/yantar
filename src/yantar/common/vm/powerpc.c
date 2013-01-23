@@ -2112,7 +2112,7 @@ VM_Compile(Vm *vm, Vmheader *header)
 }
 
 int
-VM_CallCompiled(Vm *vm, int *args)
+vmcallCompiled(Vm *vm, int *args)
 {
 	int	retVal;
 	int	*argPointer;

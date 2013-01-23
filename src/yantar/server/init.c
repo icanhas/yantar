@@ -400,7 +400,7 @@ SV_SpawnServer(char *server, qbool killBots)
 
 	/* run a few frames to allow everything to settle */
 	for(i = 0; i < 3; i++){
-		VM_Call (gvm, GAME_RUN_FRAME, sv.time);
+		vmcall (gvm, GAME_RUN_FRAME, sv.time);
 		SV_BotFrame (sv.time);
 		sv.time += 100;
 		svs.time += 100;
@@ -425,8 +425,8 @@ SV_SpawnServer(char *server, qbool killBots)
 
 			/* connect the client again */
 			denied =
-				VM_ExplicitArgPtr(gvm,
-					VM_Call(gvm, GAME_CLIENT_CONNECT, i,
+				vmexplicitargptr(gvm,
+					vmcall(gvm, GAME_CLIENT_CONNECT, i,
 						qfalse, isBot));	/* firstTime = qfalse */
 			if(denied){
 				/* 
@@ -452,14 +452,14 @@ SV_SpawnServer(char *server, qbool killBots)
 					client->gentity = ent;
 					client->deltaMessage = -1;
 					client->lastSnapshotTime = 0;	/* generate a snapshot immediately */
-					VM_Call(gvm, GAME_CLIENT_BEGIN, i);
+					vmcall(gvm, GAME_CLIENT_BEGIN, i);
 				}
 			}
 		}
 	}
 
 	/* run another frame to allow things to look at all the players */
-	VM_Call (gvm, GAME_RUN_FRAME, sv.time);
+	vmcall (gvm, GAME_RUN_FRAME, sv.time);
 	SV_BotFrame (sv.time);
 	sv.time += 100;
 	svs.time += 100;

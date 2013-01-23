@@ -248,11 +248,11 @@ Com_Errorf(int code, const char *fmt, ...)
 		Cvar_Set("com_errorMessage", com_errorMessage);
 
 	if(code == ERR_DISCONNECT || code == ERR_SERVERDISCONNECT){
-		VM_Forced_Unload_Start();
+		vmsetforceunload();
 		SV_Shutdown("Server disconnected");
 		CL_Disconnect(qtrue);
 		CL_FlushMemory( );
-		VM_Forced_Unload_Done();
+		vmclearforceunload();
 		/* make sure we can get at our local stuff */
 		FS_PureServerSetLoadedPaks("", "");
 		com_errorEntered = qfalse;
@@ -261,20 +261,20 @@ Com_Errorf(int code, const char *fmt, ...)
 		Com_Printf (
 			"********************\nERROR: %s\n********************\n",
 			com_errorMessage);
-		VM_Forced_Unload_Start();
+		vmsetforceunload();
 		SV_Shutdown (va("Server crashed: %s",  com_errorMessage));
 		CL_Disconnect(qtrue);
 		CL_FlushMemory( );
-		VM_Forced_Unload_Done();
+		vmclearforceunload();
 		FS_PureServerSetLoadedPaks("", "");
 		com_errorEntered = qfalse;
 		longjmp(abortframe, -1);
 	}else{
-		VM_Forced_Unload_Start();
+		vmsetforceunload();
 		CL_Shutdown(va("Client fatal crashed: %s",
 				com_errorMessage), qtrue, qtrue);
 		SV_Shutdown(va("Server fatal crashed: %s", com_errorMessage));
-		VM_Forced_Unload_Done();
+		vmclearforceunload();
 	}
 
 	Com_Shutdown ();
@@ -296,10 +296,10 @@ Com_Quit_f(void)
 		 * which would trigger an unload of active VM error.
 		 * Sys_Quit will kill this process anyways, so
 		 * a corrupt call stack makes no difference */
-		VM_Forced_Unload_Start();
+		vmsetforceunload();
 		SV_Shutdown(p[0] ? p : "Server quit");
 		CL_Shutdown(p[0] ? p : "Client quit", qtrue, qtrue);
-		VM_Forced_Unload_Done();
+		vmclearforceunload();
 		Com_Shutdown ();
 		FS_Shutdown(qtrue);
 	}
@@ -1536,7 +1536,7 @@ Com_Init(char *commandLine)
 	Com_Randombytes((byte*)&qport, sizeof(int));
 	Netchan_Init(qport & 0xffff);
 
-	VM_Init();
+	vminit();
 	SV_Init();
 
 	com_dedicated->modified = qfalse;

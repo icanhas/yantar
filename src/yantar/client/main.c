@@ -292,10 +292,10 @@ CL_VoipParseTargets(void)
 				continue;
 			}else{
 				if(!Q_stricmpn(target, "attacker", 8)){
-					val = VM_Call(cgvm, CG_LAST_ATTACKER);
+					val = vmcall(cgvm, CG_LAST_ATTACKER);
 					target += 8;
 				}else if(!Q_stricmpn(target, "crosshair", 9)){
-					val = VM_Call(cgvm, CG_CROSSHAIR_PLAYER);
+					val = vmcall(cgvm, CG_CROSSHAIR_PLAYER);
 					target += 9;
 				}else{
 					while(*target && *target != ',' &&
@@ -1263,7 +1263,7 @@ CL_Disconnect(qbool showMainMenu)
 	}
 
 	if(uivm && showMainMenu)
-		VM_Call(uivm, UI_SET_ACTIVE_MENU, UIMENU_NONE);
+		vmcall(uivm, UI_SET_ACTIVE_MENU, UIMENU_NONE);
 
 	SCR_StopCinematic ();
 	S_ClearSoundBuffer();
@@ -2599,7 +2599,7 @@ CL_Frame(int msec)
 		 && !com_sv_running->integer && uivm){
 		/* if disconnected, bring up the menu */
 		S_StopAllSounds();
-		VM_Call(uivm, UI_SET_ACTIVE_MENU, UIMENU_MAIN);
+		vmcall(uivm, UI_SET_ACTIVE_MENU, UIMENU_MAIN);
 	}
 
 	/* if recording an avi, lock to a fixed fps */

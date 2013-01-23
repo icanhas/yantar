@@ -1691,13 +1691,13 @@ VM_Destroy_Compiled(Vm* self)
 }
 
 /*
- * VM_CallCompiled
+ * vmcallCompiled
  *
  * This function is called directly by the generated code
  */
 
 int
-VM_CallCompiled(Vm *vm, int *args)
+vmcallCompiled(Vm *vm, int *args)
 {
 	byte	stack[OPSTACK_SIZE + 15];
 	void    *entryPoint;

@@ -1104,22 +1104,22 @@ CL_KeyDownEvent(int key, unsigned time)
 		/* escape always gets out of CGAME stuff */
 		if(Key_GetCatcher( ) & KEYCATCH_CGAME){
 			Key_SetCatcher(Key_GetCatcher( ) & ~KEYCATCH_CGAME);
-			VM_Call (cgvm, CG_EVENT_HANDLING, CGAME_EVENT_NONE);
+			vmcall (cgvm, CG_EVENT_HANDLING, CGAME_EVENT_NONE);
 			return;
 		}
 
 		if(!(Key_GetCatcher( ) & KEYCATCH_UI)){
 			if(clc.state == CA_ACTIVE && !clc.demoplaying)
-				VM_Call(uivm, UI_SET_ACTIVE_MENU, UIMENU_INGAME);
+				vmcall(uivm, UI_SET_ACTIVE_MENU, UIMENU_INGAME);
 			else if(clc.state != CA_DISCONNECTED){
 				CL_Disconnect_f();
 				S_StopAllSounds();
-				VM_Call(uivm, UI_SET_ACTIVE_MENU, UIMENU_MAIN);
+				vmcall(uivm, UI_SET_ACTIVE_MENU, UIMENU_MAIN);
 			}
 			return;
 		}
 
-		VM_Call(uivm, UI_KEY_EVENT, key, qtrue);
+		vmcall(uivm, UI_KEY_EVENT, key, qtrue);
 		return;
 	}
 
@@ -1128,10 +1128,10 @@ CL_KeyDownEvent(int key, unsigned time)
 		Console_Key(key);
 	else if(Key_GetCatcher( ) & KEYCATCH_UI){
 		if(uivm)
-			VM_Call(uivm, UI_KEY_EVENT, key, qtrue);
+			vmcall(uivm, UI_KEY_EVENT, key, qtrue);
 	}else if(Key_GetCatcher( ) & KEYCATCH_CGAME){
 		if(cgvm)
-			VM_Call(cgvm, CG_KEY_EVENT, key, qtrue);
+			vmcall(cgvm, CG_KEY_EVENT, key, qtrue);
 	}else if(Key_GetCatcher( ) & KEYCATCH_MESSAGE)
 		Message_Key(key);
 	else if(clc.state == CA_DISCONNECTED)
@@ -1170,9 +1170,9 @@ CL_KeyUpEvent(int key, unsigned time)
 		CL_ParseBinding(key, qfalse, time);
 
 	if(Key_GetCatcher( ) & KEYCATCH_UI && uivm)
-		VM_Call(uivm, UI_KEY_EVENT, key, qfalse);
+		vmcall(uivm, UI_KEY_EVENT, key, qfalse);
 	else if(Key_GetCatcher( ) & KEYCATCH_CGAME && cgvm)
-		VM_Call(cgvm, CG_KEY_EVENT, key, qfalse);
+		vmcall(cgvm, CG_KEY_EVENT, key, qfalse);
 }
 
 /*
@@ -1202,7 +1202,7 @@ CL_CharEvent(int key)
 	if(Key_GetCatcher( ) & KEYCATCH_CONSOLE)
 		Field_CharEvent(&g_consoleField, key);
 	else if(Key_GetCatcher( ) & KEYCATCH_UI)
-		VM_Call(uivm, UI_KEY_EVENT, key | K_CHAR_FLAG, qtrue);
+		vmcall(uivm, UI_KEY_EVENT, key | K_CHAR_FLAG, qtrue);
 	else if(Key_GetCatcher( ) & KEYCATCH_MESSAGE)
 		Field_CharEvent(&chatField, key);
 	else if(clc.state == CA_DISCONNECTED)

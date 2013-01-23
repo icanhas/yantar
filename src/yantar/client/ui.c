@@ -973,8 +973,8 @@ CL_ShutdownUI(void)
 	cls.uiStarted = qfalse;
 	if(uivm == NULL)
 		return;
-	VM_Call(uivm, UI_SHUTDOWN);
-	VM_Free(uivm);
+	vmcall(uivm, UI_SHUTDOWN);
+	vmfree(uivm);
 	uivm = NULL;
 }
 
@@ -995,19 +995,19 @@ CL_InitUI(void)
 		if(interpret != VMcompiled && interpret != VMbytecode)
 			interpret = VMcompiled;
 
-	uivm = VM_Create("ui", CL_UISystemCalls, interpret);
+	uivm = vmcreate("ui", CL_UISystemCalls, interpret);
 	if(uivm == NULL)
-		Com_Errorf(ERR_FATAL, "VM_Create on UI failed");
+		Com_Errorf(ERR_FATAL, "vmcreate on UI failed");
 
 	/* sanity check */
-	v = VM_Call(uivm, UI_GETAPIVERSION);
+	v = vmcall(uivm, UI_GETAPIVERSION);
 	if(v == UI_OLD_API_VERSION)
 		/* Com_Printf(S_COLOR_YELLOW "WARNING: loading old Quake III Arena User Interface version %d\n", v ); */
 		/* init for this gamestate */
-		VM_Call(uivm, UI_INIT,
+		vmcall(uivm, UI_INIT,
 			(clc.state >= CA_AUTHORIZING && clc.state < CA_ACTIVE));
 	else if(v != UI_API_VERSION){
-		VM_Free(uivm);
+		vmfree(uivm);
 		uivm = NULL;
 		Com_Errorf(ERR_DROP, "User Interface is version %d, expected %d",
 			v,
@@ -1015,7 +1015,7 @@ CL_InitUI(void)
 		cls.uiStarted = qfalse;
 	}else
 		/* init for this gamestate */
-		VM_Call(uivm, UI_INIT,
+		vmcall(uivm, UI_INIT,
 			(clc.state >= CA_AUTHORIZING && clc.state < CA_ACTIVE));
 }
 
@@ -1025,5 +1025,5 @@ UI_GameCommand(void)
 {
 	if(uivm == NULL)
 		return qfalse;
-	return VM_Call(uivm, UI_CONSOLE_COMMAND, cls.simtime);
+	return vmcall(uivm, UI_CONSOLE_COMMAND, cls.simtime);
 }

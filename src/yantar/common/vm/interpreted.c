@@ -290,7 +290,7 @@ VM_PrepareInterpreter(Vm *vm, Vmheader *header)
 }
 
 /*
- * VM_Call
+ * vmcall
  *
  *
  * Upon a system call, the stack will look like:
@@ -314,7 +314,7 @@ VM_PrepareInterpreter(Vm *vm, Vmheader *header)
 #define DEBUGSTR va("%s%i", VM_Indent(vm), opStackOfs)
 
 int
-VM_CallInterpreted(Vm *vm, int *args)
+vmcallInterpreted(Vm *vm, int *args)
 {
 	byte stack[OPSTACK_SIZE + 15];
 	register int *opStack;
@@ -364,7 +364,7 @@ VM_CallInterpreted(Vm *vm, int *args)
 	*(int*)&image[ programStack + 4 ] = 0;	/* return stack */
 	*(int*)&image[ programStack ] = -1;	/* will terminate the loop on return */
 
-	VM_Debug(0);
+	vmdebug(0);
 
 	/* leave a free spot at start of stack so
 	 * that as long as opStack is valid, opStack-1 will

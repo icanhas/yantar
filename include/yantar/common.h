@@ -334,21 +334,21 @@ enum Vmmode {
 	VMcompiled
 };
 
-void VM_Init(void);
+void vminit(void);
 /* module should be bare: "cgame", not "cgame.dll" or "vm/cgame.qvm" */
-Vm* VM_Create(const char *module, intptr_t (*systemCalls)(intptr_t *),
+Vm* vmcreate(const char *module, intptr_t (*systemCalls)(intptr_t *),
  		Vmmode interpret);
-void VM_Free(Vm *vm);
-void VM_Clear(void);
-void VM_Forced_Unload_Start(void);
-void VM_Forced_Unload_Done(void);
-Vm* VM_Restart(Vm *vm, qbool unpure);
-intptr_t QDECL VM_Call(Vm *vm, int callNum, ...);
-void VM_Debug(int level);
-void* VM_ArgPtr(intptr_t intValue);
-void* VM_ExplicitArgPtr(Vm *vm, intptr_t intValue);
+void vmfree(Vm *vm);
+void vmclear(void);
+void vmsetforceunload(void);
+void vmclearforceunload(void);
+Vm* vmrestart(Vm *vm, qbool unpure);
+intptr_t QDECL vmcall(Vm *vm, int callNum, ...);
+void vmdebug(int level);
+void* vmargptr(intptr_t intValue);
+void* vmexplicitargptr(Vm *vm, intptr_t intValue);
 
-#define VMA(x) VM_ArgPtr(args[x])
+#define VMA(x) vmargptr(args[x])
 static ID_INLINE float
 _vmf(intptr_t x)
 {

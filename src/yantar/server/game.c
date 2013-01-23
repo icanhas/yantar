@@ -881,8 +881,8 @@ SV_ShutdownGameProgs(void)
 {
 	if(!gvm)
 		return;
-	VM_Call(gvm, GAME_SHUTDOWN, qfalse);
-	VM_Free(gvm);
+	vmcall(gvm, GAME_SHUTDOWN, qfalse);
+	vmfree(gvm);
 	gvm = NULL;
 }
 
@@ -908,7 +908,7 @@ SV_InitGameVM(qbool restart)
 
 	/* use the current msec count for a random seed
 	 * init for this gamestate */
-	VM_Call (gvm, GAME_INIT, sv.time, Com_Millisecs(), restart);
+	vmcall (gvm, GAME_INIT, sv.time, Com_Millisecs(), restart);
 }
 
 
@@ -923,12 +923,12 @@ SV_RestartGameProgs(void)
 {
 	if(!gvm)
 		return;
-	VM_Call(gvm, GAME_SHUTDOWN, qtrue);
+	vmcall(gvm, GAME_SHUTDOWN, qtrue);
 
 	/* do a restart instead of a free */
-	gvm = VM_Restart(gvm, qtrue);
+	gvm = vmrestart(gvm, qtrue);
 	if(!gvm)
-		Com_Errorf(ERR_FATAL, "VM_Restart on game failed");
+		Com_Errorf(ERR_FATAL, "vmrestart on game failed");
 
 	SV_InitGameVM(qtrue);
 }
@@ -954,10 +954,10 @@ SV_InitGameProgs(void)
 
 	/* load the dll or bytecode */
 	gvm =
-		VM_Create("game", SV_GameSystemCalls,
+		vmcreate("game", SV_GameSystemCalls,
 			Cvar_VariableValue("vm_game"));
 	if(!gvm)
-		Com_Errorf(ERR_FATAL, "VM_Create on game failed");
+		Com_Errorf(ERR_FATAL, "vmcreate on game failed");
 
 	SV_InitGameVM(qfalse);
 }
@@ -974,5 +974,5 @@ SV_GameCommand(void)
 	if(sv.state != SS_GAME)
 		return qfalse;
 
-	return VM_Call(gvm, GAME_CONSOLE_COMMAND);
+	return vmcall(gvm, GAME_CONSOLE_COMMAND);
 }

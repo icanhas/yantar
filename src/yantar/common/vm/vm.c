@@ -38,13 +38,13 @@ VM_VM2C(vmptr_t p, int length)
 #endif
 
 void
-VM_Debug(int level)
+vmdebug(int level)
 {
 	vm_debugLevel = level;
 }
 
 void
-VM_Init(void)
+vminit(void)
 {
 	Cvar_Get("vm_cgame", "0", CVAR_ARCHIVE);	/* !@# SHIP WITH SET TO 2 */
 	Cvar_Get("vm_game", "0", CVAR_ARCHIVE);		/* !@# SHIP WITH SET TO 2 */
@@ -307,7 +307,7 @@ VM_LoadQVM(Vm *vm, qbool alloc, qbool unpure)
 
 	if(!header.h){
 		Com_Printf("Failed.\n");
-		VM_Free(vm);
+		vmfree(vm);
 		Com_Printf(S_COLOR_YELLOW "Warning: Couldn't open VM file %s\n",
 			filename);
 		return NULL;
@@ -329,7 +329,7 @@ VM_LoadQVM(Vm *vm, qbool alloc, qbool unpure)
 		   || header.h->dataLength < 0
 		   || header.h->litLength < 0
 		   || header.h->codeLength <= 0){
-			VM_Free(vm);
+			vmfree(vm);
 			FS_FreeFile(header.v);
 
 			Com_Printf(S_COLOR_YELLOW "Warning: %s has bad header\n",
@@ -347,7 +347,7 @@ VM_LoadQVM(Vm *vm, qbool alloc, qbool unpure)
 		   || header.h->dataLength < 0
 		   || header.h->litLength < 0
 		   || header.h->codeLength <= 0){
-			VM_Free(vm);
+			vmfree(vm);
 			FS_FreeFile(header.v);
 
 			Com_Printf(S_COLOR_YELLOW "Warning: %s has bad header\n",
@@ -355,7 +355,7 @@ VM_LoadQVM(Vm *vm, qbool alloc, qbool unpure)
 			return NULL;
 		}
 	}else{
-		VM_Free(vm);
+		vmfree(vm);
 		FS_FreeFile(header.v);
 
 		Com_Printf(
@@ -381,12 +381,12 @@ VM_LoadQVM(Vm *vm, qbool alloc, qbool unpure)
 	}else{
 		/* clear the data, but make sure we're not clearing more than allocated */
 		if(vm->dataMask + 1 != dataLength){
-			VM_Free(vm);
+			vmfree(vm);
 			FS_FreeFile(header.v);
 
 			Com_Printf(S_COLOR_YELLOW
 				"Warning: Data region size of %s not matching after "
-				"VM_Restart()\n", filename);
+				"vmrestart()\n", filename);
 			return NULL;
 		}
 
@@ -415,13 +415,13 @@ VM_LoadQVM(Vm *vm, qbool alloc, qbool unpure)
 				h_high);
 		else{
 			if(vm->numJumpTableTargets != prevNumJumpTableTargets){
-				VM_Free(vm);
+				vmfree(vm);
 				FS_FreeFile(header.v);
 
 				Com_Printf(
 					S_COLOR_YELLOW
 					"Warning: Jump table size of %s not matching after "
-					"VM_Restart()\n",
+					"vmrestart()\n",
 					filename);
 				return NULL;
 			}
@@ -453,7 +453,7 @@ VM_LoadQVM(Vm *vm, qbool alloc, qbool unpure)
  * even if the client is pure, so take "unpure" as argument.
  */
 Vm *
-VM_Restart(Vm *vm, qbool unpure)
+vmrestart(Vm *vm, qbool unpure)
 {
 	Vmheader *header;
 
@@ -465,16 +465,16 @@ VM_Restart(Vm *vm, qbool unpure)
 		systemCall = vm->systemCall;
 		Q_strncpyz(name, vm->name, sizeof(name));
 
-		VM_Free(vm);
+		vmfree(vm);
 
-		vm = VM_Create(name, systemCall, VMnative);
+		vm = vmcreate(name, systemCall, VMnative);
 		return vm;
 	}
 	
 	/* load the image */
-	Com_Printf("VM_Restart()\n");
+	Com_Printf("vmrestart()\n");
 	if(!(header = VM_LoadQVM(vm, qfalse, unpure))){
-		Com_Errorf(ERR_DROP, "VM_Restart failed");
+		Com_Errorf(ERR_DROP, "vmrestart failed");
 		return NULL;
 	}
 
@@ -488,7 +488,7 @@ VM_Restart(Vm *vm, qbool unpure)
  * it will attempt to load as a system dll
  */
 Vm *
-VM_Create(const char *module, intptr_t (*systemCalls)(intptr_t *),
+vmcreate(const char *module, intptr_t (*systemCalls)(intptr_t *),
 	  Vmmode interpret)
 {
 	Vm	*vm;
@@ -498,7 +498,7 @@ VM_Create(const char *module, intptr_t (*systemCalls)(intptr_t *),
 	void	*startSearch = NULL;
 
 	if(!module || !module[0] || !systemCalls)
-		Com_Errorf(ERR_FATAL, "VM_Create: bad parms");
+		Com_Errorf(ERR_FATAL, "vmcreate: bad parms");
 
 	remaining = hunkmemremaining();
 
@@ -515,7 +515,7 @@ VM_Create(const char *module, intptr_t (*systemCalls)(intptr_t *),
 			break;
 
 	if(i == MAX_VM)
-		Com_Errorf(ERR_FATAL, "VM_Create: no free Vm");
+		Com_Errorf(ERR_FATAL, "vmcreate: no free Vm");
 
 	vm = &vmTable[i];
 
@@ -544,7 +544,7 @@ VM_Create(const char *module, intptr_t (*systemCalls)(intptr_t *),
 			if((header = VM_LoadQVM(vm, qtrue, qfalse)))
 				break;
 
-			/* VM_Free overwrites the name on failed load */
+			/* vmfree overwrites the name on failed load */
 			Q_strncpyz(vm->name, module, sizeof(vm->name));
 		}
 	} while(retval >= 0);
@@ -597,7 +597,7 @@ VM_Create(const char *module, intptr_t (*systemCalls)(intptr_t *),
 }
 
 void
-VM_Free(Vm *vm)
+vmfree(Vm *vm)
 {
 
 	if(!vm)
@@ -605,7 +605,7 @@ VM_Free(Vm *vm)
 
 	if(vm->callLevel){
 		if(!forced_unload){
-			Com_Errorf(ERR_FATAL, "VM_Free(%s) on running vm",
+			Com_Errorf(ERR_FATAL, "vmfree(%s) on running vm",
 				vm->name);
 			return;
 		}else
@@ -634,27 +634,27 @@ VM_Free(Vm *vm)
 }
 
 void
-VM_Clear(void)
+vmclear(void)
 {
 	int i;
 	for(i=0; i<MAX_VM; i++)
-		VM_Free(&vmTable[i]);
+		vmfree(&vmTable[i]);
 }
 
 void
-VM_Forced_Unload_Start(void)
+vmsetforceunload(void)
 {
 	forced_unload = 1;
 }
 
 void
-VM_Forced_Unload_Done(void)
+vmclearforceunload(void)
 {
 	forced_unload = 0;
 }
 
 void *
-VM_ArgPtr(intptr_t intValue)
+vmargptr(intptr_t intValue)
 {
 	if(!intValue)
 		return NULL;
@@ -669,7 +669,7 @@ VM_ArgPtr(intptr_t intValue)
 }
 
 void *
-VM_ExplicitArgPtr(Vm *vm, intptr_t intValue)
+vmexplicitargptr(Vm *vm, intptr_t intValue)
 {
 	if(!intValue)
 		return NULL;
@@ -701,19 +701,19 @@ VM_ExplicitArgPtr(Vm *vm, intptr_t intValue)
  * locals from sp
  */
 intptr_t QDECL
-VM_Call(Vm *vm, int callnum, ...)
+vmcall(Vm *vm, int callnum, ...)
 {
 	Vm	*oldVM;
 	intptr_t r;
 	int	i;
 
 	if(!vm || !vm->name[0])
-		Com_Errorf(ERR_FATAL, "VM_Call with NULL vm");
+		Com_Errorf(ERR_FATAL, "vmcall with NULL vm");
 	oldVM = currentVM;
 	currentVM = vm;
 	lastVM = vm;
 	if(vm_debugLevel)
-		Com_Printf("VM_Call( %d )\n", callnum);
+		Com_Printf("vmcall( %d )\n", callnum);
 
 	++vm->callLevel;
 	/* if we have a dll loaded, call it directly */
@@ -735,10 +735,10 @@ VM_Call(Vm *vm, int callnum, ...)
 #if (id386 || idsparc) && !defined(__clang__)	/* i386/sparc calling convention doesn't need conversion */
 #ifndef NO_VM_COMPILED
 		if(vm->compiled)
-			r = VM_CallCompiled(vm, (int*)&callnum);
+			r = vmcallCompiled(vm, (int*)&callnum);
 		else
 #endif
-		r = VM_CallInterpreted(vm, (int*)&callnum);
+		r = vmcallInterpreted(vm, (int*)&callnum);
 #else
 		struct {
 			int	callnum;
@@ -753,10 +753,10 @@ VM_Call(Vm *vm, int callnum, ...)
 		va_end(ap);
 #ifndef NO_VM_COMPILED
 		if(vm->compiled)
-			r = VM_CallCompiled(vm, &a.callnum);
+			r = vmcallCompiled(vm, &a.callnum);
 		else
 #endif
-		r = VM_CallInterpreted(vm, &a.callnum);
+		r = vmcallInterpreted(vm, &a.callnum);
 #endif
 	}
 	--vm->callLevel;

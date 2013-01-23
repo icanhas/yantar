@@ -1015,7 +1015,7 @@ VM_Destroy_Compiled(Vm* self)
 }
 
 /*
- * VM_CallCompiled
+ * vmcallCompiled
  *
  * This function is called directly by the generated code
  */
@@ -1025,7 +1025,7 @@ static char * memData;
 #endif
 
 int
-VM_CallCompiled(Vm *vm, int *args)
+vmcallCompiled(Vm *vm, int *args)
 {
 	int	stack[OPSTACK_SIZE + 15];
 	int	programCounter;

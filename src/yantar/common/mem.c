@@ -866,7 +866,7 @@ hunkclear(void)
 	hunk_temp = &hunk_high;
 
 	Com_Printf("hunkclear: reset the hunk ok\n");
-	VM_Clear();
+	vmclear();
 #ifdef HUNK_DEBUG
 	hunkblocks = nil;
 #endif

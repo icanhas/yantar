@@ -153,7 +153,7 @@ struct Vm {
 	int		numSymbols;
 	struct vmSymbol_s	*symbols;
 
-	int			callLevel;	/* counts recursive VM_Call */
+	int			callLevel;	/* counts recursive vmcall */
 	int			breakFunction;	/* increment breakCount on function entry to this */
 	int			breakCount;
 
@@ -166,10 +166,10 @@ extern Vm	*currentVM;
 extern int	vm_debugLevel;
 
 void VM_Compile(Vm *vm, Vmheader *header);
-int     VM_CallCompiled(Vm *vm, int *args);
+int     vmcallCompiled(Vm *vm, int *args);
 
 void VM_PrepareInterpreter(Vm *vm, Vmheader *header);
-int     VM_CallInterpreted(Vm *vm, int *args);
+int     vmcallInterpreted(Vm *vm, int *args);
 
 vmSymbol_t*VM_ValueToFunctionSymbol(Vm *vm, int value);
 int VM_SymbolToValue(Vm *vm, const char *symbol);

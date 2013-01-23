@@ -340,8 +340,8 @@ CL_ShutdownCGame(void)
 	cls.cgameStarted = qfalse;
 	if(!cgvm)
 		return;
-	VM_Call(cgvm, CG_SHUTDOWN);
-	VM_Free(cgvm);
+	vmcall(cgvm, CG_SHUTDOWN);
+	vmfree(cgvm);
 	cgvm = NULL;
 }
 
@@ -671,9 +671,9 @@ CL_InitCGame(void)
 		if(interpret != VMcompiled && interpret != VMbytecode)
 			interpret = VMcompiled;
 
-	cgvm = VM_Create("cgame", CL_CgameSystemCalls, interpret);
+	cgvm = vmcreate("cgame", CL_CgameSystemCalls, interpret);
 	if(!cgvm)
-		Com_Errorf(ERR_DROP, "VM_Create on cgame failed");
+		Com_Errorf(ERR_DROP, "vmcreate on cgame failed");
 	clc.state = CA_LOADING;
 
 	/*
@@ -681,7 +681,7 @@ CL_InitCGame(void)
 	 * use the lastExecutedServerCommand instead of the serverCommandSequence
 	 * otherwise server commands sent just before a gamestate are dropped 
 	 */
-	VM_Call(cgvm, CG_INIT, clc.serverMessageSequence,
+	vmcall(cgvm, CG_INIT, clc.serverMessageSequence,
 		clc.lastExecutedServerCommand,
 		clc.clientNum);
 
@@ -721,15 +721,15 @@ CL_GameCommand(void)
 {
 	if(!cgvm)
 		return qfalse;
-	return VM_Call(cgvm, CG_CONSOLE_COMMAND);
+	return vmcall(cgvm, CG_CONSOLE_COMMAND);
 }
 
 void
 CL_CGameRendering(Stereoframe stereo)
 {
-	VM_Call(cgvm, CG_DRAW_ACTIVE_FRAME, cl.serverTime, stereo,
+	vmcall(cgvm, CG_DRAW_ACTIVE_FRAME, cl.serverTime, stereo,
 		clc.demoplaying);
-	VM_Debug(0);
+	vmdebug(0);
 }
 
 /*
