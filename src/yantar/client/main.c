@@ -934,7 +934,7 @@ CL_CompleteDemoName(char *args, int argNum)
 
 		Q_sprintf(demoExt, sizeof(demoExt), ".%s%d", DEMOEXT,
 			com_protocol->integer);
-		Field_CompleteFilename("demos", demoExt, qtrue, qtrue);
+		fieldcompletefilename("demos", demoExt, qtrue, qtrue);
 	}
 }
 
@@ -1592,7 +1592,7 @@ CL_CompleteRcon(char *args, int argNum)
 		char *p = Q_skiptoks(args, 1, " ");
 
 		if(p > args)
-			Field_CompleteCommand(p, qtrue, qtrue);
+			fieldcompletecmd(p, qtrue, qtrue);
 	}
 }
 

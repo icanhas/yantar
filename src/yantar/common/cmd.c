@@ -690,7 +690,7 @@ cmdcompletecfgname(char *args, int argNum)
 {
 	UNUSED(args);
 	if(argNum == 2)
-		Field_CompleteFilename("", "cfg", qfalse, qtrue);
+		fieldcompletefilename("", "cfg", qfalse, qtrue);
 }
 
 void

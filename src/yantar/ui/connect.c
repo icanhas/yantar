@@ -205,7 +205,7 @@ UI_DrawConnectScreen(qbool overlay)
 		passwordField.generic.callback	= 0;
 		passwordField.generic.x		= 10;
 		passwordField.generic.y		= 180;
-		Field_Clear(&passwordField.field);
+		fieldclear(&passwordField.field);
 		passwordField.width = 256;
 		passwordField.field.widthInChars = 16;
 		Q_strncpyz(passwordField.field.buffer,

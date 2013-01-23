@@ -569,13 +569,13 @@ struct Field {
 	char	buffer[MAX_EDIT_LINE];
 };
 
-void Field_Clear(Field *edit);
-void Field_AutoComplete(Field *edit);
-void Field_CompleteKeyname(void);
-void Field_CompleteFilename(const char *dir,
+void fieldclear(Field *edit);
+void fieldautocomplete(Field *edit);
+void fieldcompletekeyname(void);
+void fieldcompletefilename(const char *dir,
 	 const char *ext, qbool stripExt,
 			 qbool allowNonPureFilesOnDisk);
-void Field_CompleteCommand(char *cmd,
+void fieldcompletecmd(char *cmd,
 	 qbool doCommands, qbool doCvars);
 
 

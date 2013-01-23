@@ -469,7 +469,7 @@ Field_CharEvent(Field *edit, int ch)
 	}
 
 	if(ch == 'c' - 'a' + 1){	/* ctrl-c clears the field */
-		Field_Clear(edit);
+		fieldclear(edit);
 		return;
 	}
 
@@ -587,7 +587,7 @@ Console_Key(int key)
 			nextHistoryLine++;
 		}
 		historyLine = nextHistoryLine;
-		Field_Clear(&g_consoleField);
+		fieldclear(&g_consoleField);
 		g_consoleField.widthInChars = g_console_field_width;
 		CL_SaveConsoleHistory();
 
@@ -601,7 +601,7 @@ Console_Key(int key)
 	 * command completion
 	 */
 	if(key == K_TAB){
-		Field_AutoComplete(&g_consoleField);
+		fieldautocomplete(&g_consoleField);
 		return;
 	}
 
@@ -627,7 +627,7 @@ Console_Key(int key)
 		historyLine++;
 		if(historyLine >= nextHistoryLine){
 			historyLine = nextHistoryLine;
-			Field_Clear(&g_consoleField);
+			fieldclear(&g_consoleField);
 			g_consoleField.widthInChars = g_console_field_width;
 			return;
 		}
@@ -705,7 +705,7 @@ Message_Key(int key)
 
 	if(key == K_ESCAPE){
 		Key_SetCatcher(Key_GetCatcher( ) & ~KEYCATCH_MESSAGE);
-		Field_Clear(&chatField);
+		fieldclear(&chatField);
 		return;
 	}
 
@@ -732,7 +732,7 @@ Message_Key(int key)
 			CL_AddReliableCommand(buffer, qfalse);
 		}
 		Key_SetCatcher(Key_GetCatcher( ) & ~KEYCATCH_MESSAGE);
-		Field_Clear(&chatField);
+		fieldclear(&chatField);
 		return;
 	}
 
@@ -984,7 +984,7 @@ Key_CompleteUnbind(char *args, int argNum)
 		char *p = Q_skiptoks(args, 1, " ");
 
 		if(p > args)
-			Field_CompleteKeyname( );
+			fieldcompletekeyname( );
 	}
 }
 
@@ -998,13 +998,13 @@ Key_CompleteBind(char *args, int argNum)
 		p = Q_skiptoks(args, 1, " ");
 
 		if(p > args)
-			Field_CompleteKeyname( );
+			fieldcompletekeyname( );
 	}else if(argNum >= 3){
 		/* Skip "bind <key> " */
 		p = Q_skiptoks(args, 2, " ");
 
 		if(p > args)
-			Field_CompleteCommand(p, qtrue, qtrue);
+			fieldcompletecmd(p, qtrue, qtrue);
 	}
 }
 
@@ -1301,7 +1301,7 @@ CL_LoadConsoleHistory(void)
 		memmove(&historyEditLines[ 0 ], &historyEditLines[ i + 1 ],
 			numLines * sizeof(Field));
 		for(i = numLines; i < COMMAND_HISTORY; i++)
-			Field_Clear(&historyEditLines[ i ]);
+			fieldclear(&historyEditLines[ i ]);
 
 		historyLine = nextHistoryLine = numLines;
 	}else

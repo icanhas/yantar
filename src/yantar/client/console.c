@@ -57,7 +57,7 @@ Con_ToggleConsole_f(void)
 	   KEYCATCH_CONSOLE)
 		return;
 
-	Field_Clear(&g_consoleField);
+	fieldclear(&g_consoleField);
 	g_consoleField.widthInChars = g_console_field_width;
 
 	Con_ClearNotify ();
@@ -72,7 +72,7 @@ Con_MessageMode_f(void)
 {
 	chat_playerNum = -1;
 	chat_team = qfalse;
-	Field_Clear(&chatField);
+	fieldclear(&chatField);
 	chatField.widthInChars = 30;
 
 	Key_SetCatcher(Key_GetCatcher( ) ^ KEYCATCH_MESSAGE);
@@ -86,7 +86,7 @@ Con_MessageMode2_f(void)
 {
 	chat_playerNum = -1;
 	chat_team = qtrue;
-	Field_Clear(&chatField);
+	fieldclear(&chatField);
 	chatField.widthInChars = 25;
 	Key_SetCatcher(Key_GetCatcher( ) ^ KEYCATCH_MESSAGE);
 }
@@ -103,7 +103,7 @@ Con_MessageMode3_f(void)
 		return;
 	}
 	chat_team = qfalse;
-	Field_Clear(&chatField);
+	fieldclear(&chatField);
 	chatField.widthInChars = 30;
 	Key_SetCatcher(Key_GetCatcher( ) ^ KEYCATCH_MESSAGE);
 }
@@ -120,7 +120,7 @@ Con_MessageMode4_f(void)
 		return;
 	}
 	chat_team = qfalse;
-	Field_Clear(&chatField);
+	fieldclear(&chatField);
 	chatField.widthInChars = 30;
 	Key_SetCatcher(Key_GetCatcher( ) ^ KEYCATCH_MESSAGE);
 }
@@ -276,7 +276,7 @@ void
 Cmd_CompleteTxtName(char *args, int argNum)
 {
 	if(argNum == 2)
-		Field_CompleteFilename("", "txt", qfalse, qtrue);
+		fieldcompletefilename("", "txt", qfalse, qtrue);
 }
 
 
@@ -291,10 +291,10 @@ Con_Init(void)
 	con_notifytime	= cvarget("con_notifytime", "3", 0);
 	con_conspeed	= cvarget("scr_conspeed", "3", 0);
 
-	Field_Clear(&g_consoleField);
+	fieldclear(&g_consoleField);
 	g_consoleField.widthInChars = g_console_field_width;
 	for(i = 0; i < COMMAND_HISTORY; i++){
-		Field_Clear(&historyEditLines[i]);
+		fieldclear(&historyEditLines[i]);
 		historyEditLines[i].widthInChars = g_console_field_width;
 	}
 	CL_LoadConsoleHistory( );
@@ -735,7 +735,7 @@ Con_Close(void)
 {
 	if(!com_cl_running->integer)
 		return;
-	Field_Clear(&g_consoleField);
+	fieldclear(&g_consoleField);
 	Con_ClearNotify ();
 	Key_SetCatcher(Key_GetCatcher( ) & ~KEYCATCH_CONSOLE);
 	con.finalopac	= 0;	/* none visible */

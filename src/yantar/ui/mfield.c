@@ -183,7 +183,7 @@ MField_CharEvent(mfield_t *edit, int ch)
 	}
 
 	if(ch == 'c' - 'a' + 1){	/* ctrl-c clears the field */
-		MField_Clear(edit);
+		Mfieldclear(edit);
 		return;
 	}
 
@@ -247,10 +247,10 @@ MField_CharEvent(mfield_t *edit, int ch)
 }
 
 /*
- * MField_Clear
+ * Mfieldclear
  */
 void
-MField_Clear(mfield_t *edit)
+Mfieldclear(mfield_t *edit)
 {
 	edit->buffer[0] = 0;
 	edit->cursor	= 0;
@@ -267,7 +267,7 @@ MenuField_Init(menufield_s* m)
 	int	w;
 	int	h;
 
-	MField_Clear(&m->field);
+	Mfieldclear(&m->field);
 
 	if(m->generic.flags & QMF_SMALLFONT){
 		w	= SMALLCHAR_WIDTH;

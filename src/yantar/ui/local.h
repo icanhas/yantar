@@ -277,7 +277,7 @@ extern char *ui_medalSounds[];
 /*
  * ui_mfield.c
  *  */
-extern void                     MField_Clear(mfield_t *edit);
+extern void                     Mfieldclear(mfield_t *edit);
 extern void                     MField_KeyDownEvent(mfield_t *edit, int key);
 extern void                     MField_CharEvent(mfield_t *edit, int ch);
 extern void                     MField_Draw(mfield_t *edit, int x, int y,

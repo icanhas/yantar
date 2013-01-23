@@ -1819,7 +1819,7 @@ Com_Frame(void)
  */
 
 void
-Field_Clear(Field *edit)
+fieldclear(Field *edit)
 {
 	memset(edit->buffer, 0, MAX_EDIT_LINE);
 	edit->cursor = 0;
@@ -1829,7 +1829,7 @@ Field_Clear(Field *edit)
 static const char *completionString;
 static char	shortestMatch[MAX_TOKEN_CHARS];
 static int	matchCount;
-/* field we are working on, passed to Field_AutoComplete(&g_consoleCommand for instance) */
+/* field we are working on, passed to fieldautocomplete(&g_consoleCommand for instance) */
 static Field *completionField;
 
 static void
@@ -1910,7 +1910,7 @@ Field_Complete(void)
 
 #ifndef DEDICATED
 void
-Field_CompleteKeyname(void)
+fieldcompletekeyname(void)
 {
 	matchCount = 0;
 	shortestMatch[ 0 ] = 0;
@@ -1923,7 +1923,7 @@ Field_CompleteKeyname(void)
 #endif
 
 void
-Field_CompleteFilename(const char *dir, const char *ext, qbool stripExt,
+fieldcompletefilename(const char *dir, const char *ext, qbool stripExt,
 	qbool allowNonPureFilesOnDisk)
 {
 	matchCount = 0;
@@ -1937,7 +1937,7 @@ Field_CompleteFilename(const char *dir, const char *ext, qbool stripExt,
 }
 
 void
-Field_CompleteCommand(char *cmd,
+fieldcompletecmd(char *cmd,
 		      qbool doCommands, qbool doCvars)
 {
 	int completionArgument = 0;
@@ -1984,7 +1984,7 @@ Field_CompleteCommand(char *cmd,
 #endif
 
 		if((p = Field_FindFirstSeparator(cmd)))
-			Field_CompleteCommand(p + 1, qtrue, qtrue);	/* Compound command */
+			fieldcompletecmd(p + 1, qtrue, qtrue);	/* Compound command */
 		else
 			cmdcompletearg(baseCmd, cmd, completionArgument);
 	}else{
@@ -2016,11 +2016,11 @@ Field_CompleteCommand(char *cmd,
 
 /* Perform Tab expansion */
 void
-Field_AutoComplete(Field *field)
+fieldautocomplete(Field *field)
 {
 	completionField = field;
 
-	Field_CompleteCommand(completionField->buffer, qtrue, qtrue);
+	fieldcompletecmd(completionField->buffer, qtrue, qtrue);
 }
 
 /* fills string array with len radom bytes, peferably from the OS randomizer */

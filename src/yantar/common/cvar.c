@@ -1089,7 +1089,7 @@ cvarcompletename(char *args, int argNum)
 
 		p = Q_skiptoks(args, 1, " ");
 		if(p > args)
-			Field_CompleteCommand(p, qfalse, qtrue);
+			fieldcompletecmd(p, qfalse, qtrue);
 	}
 }
 

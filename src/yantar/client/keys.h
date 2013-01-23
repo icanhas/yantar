@@ -24,7 +24,7 @@ extern int		chat_playerNum;
 extern qbool	key_overstrikeMode;
 extern Qkey	keys[MAX_KEYS];
 
-/* NOTE TTimo the declaration of Field and Field_Clear is now in qcommon/qcommon.h */
+/* NOTE TTimo the declaration of Field and fieldclear is now in qcommon/qcommon.h */
 /* well done ttimo! go on my son! */
 void		Field_KeyDownEvent(Field *edit, int key);
 void		Field_CharEvent(Field *edit, int ch);

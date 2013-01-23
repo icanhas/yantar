@@ -192,7 +192,7 @@ CON_Init(void)
 		return;
 	}
 
-	Field_Clear(&TTY_con);
+	fieldclear(&TTY_con);
 	tcgetattr (STDIN_FILENO, &TTY_tc);
 	TTY_erase = TTY_tc.c_cc[VERASE];
 	TTY_eof = TTY_tc.c_cc[VEOF];
@@ -263,7 +263,7 @@ CON_Input(void)
 					/* push it in history */
 					HistAdd(&TTY_con);
 					Q_strncpyz(text, TTY_con.buffer, sizeof(text));
-					Field_Clear(&TTY_con);
+					fieldclear(&TTY_con);
 					key = '\n';
 					(void)write(STDOUT_FILENO, &key, 1);
 					(void)write(STDOUT_FILENO, "]", 1);
@@ -271,7 +271,7 @@ CON_Input(void)
 				}
 				if(key == '\t'){
 					Hide();
-					Field_AutoComplete(&TTY_con);
+					fieldautocomplete(&TTY_con);
 					Show();
 					return NULL;
 				}
@@ -298,7 +298,7 @@ CON_Input(void)
 								if(history)
 									TTY_con = *history;
 								else
-									Field_Clear(&TTY_con);
+									fieldclear(&TTY_con);
 								Show();
 								FlushIn();
 								return NULL;

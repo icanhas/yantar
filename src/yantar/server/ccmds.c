@@ -1110,7 +1110,7 @@ SV_CompleteMapName(char *args, int argNum)
 {
 	UNUSED(args);
 	if(argNum == 2)
-		Field_CompleteFilename("maps", "bsp", qtrue, qfalse);
+		fieldcompletefilename("maps", "bsp", qtrue, qfalse);
 }
 
 void
