@@ -901,37 +901,40 @@ dialogResult_t sysmkdialog(dialogType_t type, const char *message,
  * by the location of a node within a doubly-linked list
  */
 
-#define NYT		HMAX	/* NYT = Not Yet Transmitted */
-#define INTERNAL_NODE	(HMAX+1)
+enum {
+	HMAX		= 256,	/* Maximum symbol */
+	NYT		= HMAX,	/* Not Yet Transmitted */
+	INTERNAL_NODE	= (HMAX+1)
+};
 
-typedef struct nodetype {
-	struct nodetype	*left, *right, *parent;	/* tree structure */
-	struct nodetype	*next, *prev;		/* doubly-linked list */
-	struct nodetype	**head;			/* highest ranked node in block */
-	int			weight;
-	int			symbol;
-} Node;
+typedef struct Node	Node;
+typedef struct Huff	Huff;
+typedef struct Huffman	Huffman;
 
-#define HMAX 256	/* Maximum symbol */
+struct Node {
+	Node	*left, *right, *parent;	/* tree structure */
+	Node	*next, *prev;		/* doubly-linked list */
+	Node	**head;			/* highest ranked node in block */
+	int	weight;
+	int	symbol;
+};
 
-typedef struct {
+struct Huff {
 	int	blocNode;
 	int	blocPtrs;
-
-	Node	* tree;
-	Node	* lhead;
-	Node	* ltail;
-	Node	* loc[HMAX+1];
-	Node	** freelist;
-
+	Node	*tree;
+	Node	*lhead;
+	Node	*ltail;
+	Node	*loc[HMAX+1];
+	Node	**freelist;
 	Node	nodeList[768];
-	Node	* nodePtrs[768];
-} Huff;
+	Node	*nodePtrs[768];
+};
 
-typedef struct {
+struct Huffman {
 	Huff	compressor;
 	Huff	decompressor;
-} Huffman;
+};
 
 void Huff_Compress(Bitmsg *buf, int offset);
 void Huff_Decompress(Bitmsg *buf, int offset);
