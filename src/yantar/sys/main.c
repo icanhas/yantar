@@ -373,7 +373,7 @@ Sys_SigHandler(int signal)
 		signalcaught = qtrue;
 		vmsetforceunload();
 		if(!com_dedicated->integer)
-			CL_Shutdown(va("received signal %d (%s)", signal, name), qtrue, qtrue);
+			clshutdown(va("received signal %d (%s)", signal, name), qtrue, qtrue);
 		SV_Shutdown(va("received signal %d (%s)", signal, name));
 		vmclearforceunload();
 	}

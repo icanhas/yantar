@@ -1640,7 +1640,7 @@ NET_Event(fd_set *fdr)
 			if(com_sv_running->integer)
 				comrunservpacket(&from, &netmsg);
 			else
-				CL_PacketEvent(from, &netmsg);
+				clpacketevent(from, &netmsg);
 		}else
 			break;
 	}

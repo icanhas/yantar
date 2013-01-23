@@ -834,7 +834,7 @@ CL_DemoCompleted(void)
 		}
 	}
 
-	CL_Disconnect(qtrue);
+	cldisconnect(qtrue);
 	CL_NextDemo();
 }
 
@@ -961,7 +961,7 @@ CL_PlayDemo_f(void)
 	/* open the demo file */
 	arg = cmdargv(1);
 
-	CL_Disconnect(qtrue);
+	cldisconnect(qtrue);
 
 	/* check for an extension .DEMOEXT_?? (?? is protocol) */
 	ext_test = strrchr(arg, '.');
@@ -1050,7 +1050,7 @@ CL_NextDemo(void)
 }
 
 void
-CL_ShutdownAll(qbool shutdownRef)
+clshutdownall(qbool shutdownRef)
 {
 	if(CL_VideoRecording())
 		CL_CloseAVI();
@@ -1064,13 +1064,13 @@ CL_ShutdownAll(qbool shutdownRef)
 	/* clear sounds */
 	S_DisableSounds();
 	/* shutdown CGame */
-	CL_ShutdownCGame();
+	clshutdownCGame();
 	/* shutdown UI */
-	CL_ShutdownUI();
+	clshutdownUI();
 
 	/* shutdown the renderer */
 	if(shutdownRef)
-		CL_ShutdownRef();
+		clshutdownRef();
 	else if(re.Shutdown)
 		re.Shutdown(qfalse);	/* don't destroy window or context */
 
@@ -1087,12 +1087,12 @@ void
 CL_ClearMemory(qbool shutdownRef)
 {
 	/* shutdown all the client stuff */
-	CL_ShutdownAll(shutdownRef);
+	clshutdownall(shutdownRef);
 
 	/* if not running a server clear the whole hunk */
 	if(!com_sv_running->integer){
-		CL_ShutdownCGame();
-		CL_ShutdownUI();
+		clshutdownCGame();
+		clshutdownUI();
 		CIN_CloseAllVideos();
 		/* clear the whole hunk */
 		hunkclear();
@@ -1104,15 +1104,15 @@ CL_ClearMemory(qbool shutdownRef)
 }
 
 /*
- * Called by CL_MapLoading, CL_Connect_f, CL_PlayDemo_f, and CL_ParseGamestate the only
+ * Called by clmaploading, CL_Connect_f, CL_PlayDemo_f, and CL_ParseGamestate the only
  * ways a client gets into a game
  * Also called by comerrorf
  */
 void
-CL_FlushMemory(void)
+clflushmem(void)
 {
 	CL_ClearMemory(qfalse);
-	CL_StartHunkUsers(qfalse);
+	clstarthunkusers(qfalse);
 }
 
 /*
@@ -1121,7 +1121,7 @@ CL_FlushMemory(void)
  * memory on the hunk from cgame, ui, and renderer
  */
 void
-CL_MapLoading(void)
+clmaploading(void)
 {
 	if(com_dedicated->integer){
 		clc.state = CA_DISCONNECTED;
@@ -1147,7 +1147,7 @@ CL_MapLoading(void)
 	}else{
 		/* clear nextmap so the cinematic shutdown doesn't execute it */
 		cvarsetstr("nextmap", "");
-		CL_Disconnect(qtrue);
+		cldisconnect(qtrue);
 		Q_strncpyz(clc.servername, "localhost", sizeof(clc.servername));
 		clc.state = CA_CHALLENGING;	/* so the connect screen is drawn */
 		Key_SetCatcher(0);
@@ -1209,7 +1209,7 @@ CL_OldGame(void)
  * This is also called on comerrorf and Q_Quit, so it shouldn't cause any errors
  */
 void
-CL_Disconnect(qbool showMainMenu)
+cldisconnect(qbool showMainMenu)
 {
 	if(!com_cl_running || !com_cl_running->integer)
 		return;
@@ -1266,7 +1266,7 @@ CL_Disconnect(qbool showMainMenu)
 		vmcall(uivm, UI_SET_ACTIVE_MENU, UIMENU_NONE);
 
 	SCR_StopCinematic ();
-	S_ClearSoundBuffer();
+	sndclearbuffer();
 
 	/* send a disconnect message to the server
 	 * send it a few times in case one is dropped */
@@ -1319,7 +1319,7 @@ CL_Disconnect(qbool showMainMenu)
  * so when they are typed in at the console, they will need to be forwarded.
  */
 void
-CL_ForwardCommandToServer(const char *string)
+clforwardcmdtoserver(const char *string)
 {
 	char *cmd;
 
@@ -1478,7 +1478,7 @@ CL_ForwardToServer_f(void)
 }
 
 void
-CL_Disconnect_f(void)
+cldisconnect_f(void)
 {
 	SCR_StopCinematic();
 	cvarsetstr("ui_singlePlayerActive", "0");
@@ -1541,7 +1541,7 @@ CL_Connect_f(void)
 	SV_Frame(0);
 
 	noGameRestart = qtrue;
-	CL_Disconnect(qtrue);
+	cldisconnect(qtrue);
 	Con_Close();
 
 	Q_strncpyz(clc.servername, server, sizeof(clc.servername));
@@ -1688,16 +1688,16 @@ CL_Vid_Restart_f(void)
 			/* clear all the client data on the hunk */
 			hunkcleartomark();
 		else{
-			CL_ShutdownCGame();
-			CL_ShutdownUI();
+			clshutdownCGame();
+			clshutdownUI();
 			CIN_CloseAllVideos();
 			/* clear the whole hunk */
 			hunkclear();
 		}
 
-		CL_ShutdownUI();
-		CL_ShutdownCGame();
-		CL_ShutdownRef();
+		clshutdownUI();
+		clshutdownCGame();
+		clshutdownRef();
 		CL_ResetPureClientAtServer();	/* client is no longer pure untill new checksums are sent */
 		fsclearpakrefs(FS_UI_REF | FS_CGAME_REF);
 		/* reinitialize the filesystem if the game directory or checksum has changed */
@@ -1711,15 +1711,15 @@ CL_Vid_Restart_f(void)
 		cvarsetstr("cl_paused", "0");
 
 		/* initialize the renderer interface */
-		CL_InitRef();
+		clinitref();
 
 		/* startup all the client stuff */
-		CL_StartHunkUsers(qfalse);
+		clstarthunkusers(qfalse);
 
 		/* start the cgame if connected */
 		if(clc.state > CA_CONNECTED && clc.state != CA_CINEMATIC){
 			cls.cgameStarted = qtrue;
-			CL_InitCGame();
+			clinitCGame();
 			/* send pure checksums */
 			CL_SendPureChecksums();
 		}
@@ -1730,7 +1730,7 @@ CL_Vid_Restart_f(void)
  * Restart the sound subsystem
  */
 void
-CL_Snd_Shutdown(void)
+clsndshutdown(void)
 {
 	S_Shutdown();
 	cls.soundStarted = qfalse;
@@ -1744,7 +1744,7 @@ CL_Snd_Shutdown(void)
 void
 CL_Snd_Restart_f(void)
 {
-	CL_Snd_Shutdown();
+	clsndshutdown();
 	/* sound will be reinitialized by vid_restart */
 	CL_Vid_Restart_f();
 }
@@ -1847,11 +1847,11 @@ CL_DownloadsComplete(void)
 	 * this will also (re)load the UI
 	 * if this is a local client then only the client part of the hunk
 	 * will be cleared, note that this is done after the hunk mark has been set */
-	CL_FlushMemory();
+	clflushmem();
 
 	/* initialize the CGame */
 	cls.cgameStarted = qtrue;
-	CL_InitCGame();
+	clinitCGame();
 
 	/* set pure checksums */
 	CL_SendPureChecksums();
@@ -1988,7 +1988,7 @@ CL_NextDownload(void)
  * and determine if we need to download them
  */
 void
-CL_InitDownloads(void)
+clinitDownloads(void)
 {
 	char missingfiles[1024];
 
@@ -2110,7 +2110,7 @@ CL_CheckForResend(void)
  * to the client so it doesn't have to wait for the full timeout period.
  */
 void
-CL_DisconnectPacket(Netaddr from)
+cldisconnectPacket(Netaddr from)
 {
 	if(clc.state < CA_AUTHORIZING)
 		return;
@@ -2127,7 +2127,7 @@ CL_DisconnectPacket(Netaddr from)
 	/* drop the connection */
 	comprintf("Server disconnected for unknown reason\n");
 	cvarsetstr("com_errorMessage", "Server disconnected for unknown reason\n");
-	CL_Disconnect(qtrue);
+	cldisconnect(qtrue);
 }
 
 void
@@ -2156,7 +2156,7 @@ CL_MotdPacket(Netaddr from)
 }
 
 void
-CL_InitServerInfo(Servinfo *server, Netaddr *address)
+clinitServerInfo(Servinfo *server, Netaddr *address)
 {
 	server->adr = *address;
 	server->clients = 0;
@@ -2267,7 +2267,7 @@ CL_ServersResponsePacket(const Netaddr* from, Bitmsg *msg, qbool extended)
 		if(j < count)
 			continue;
 
-		CL_InitServerInfo(server, &addresses[i]);
+		clinitServerInfo(server, &addresses[i]);
 		/* advance to next slot */
 		count++;
 	}
@@ -2462,7 +2462,7 @@ CL_ConnectionlessPacket(Netaddr from, Bitmsg *msg)
  * A packet has arrived from the main event loop
  */
 void
-CL_PacketEvent(Netaddr from, Bitmsg *msg)
+clpacketevent(Netaddr from, Bitmsg *msg)
 {
 	int headerBytes;
 
@@ -2524,7 +2524,7 @@ CL_CheckTimeout(void)
 	   && cls.simtime - clc.lastPacketTime > cl_timeout->value*1000){
 		if(++cl.timeoutcount > 5){	/* timeoutcount saves debugger */
 			comprintf ("\nServer connection timed out.\n");
-			CL_Disconnect(qtrue);
+			cldisconnect(qtrue);
 			return;
 		}
 	}else
@@ -2566,7 +2566,7 @@ CL_CheckUserinfo(void)
 }
 
 void
-CL_Frame(int msec)
+clframe(int msec)
 {
 	int realframetime, lasttime;
 
@@ -2660,7 +2660,7 @@ CL_Frame(int msec)
 	cls.realtime += cls.realframetime;
 
 	if(cl_timegraph->integer)
-		SCR_DebugGraph (cls.simframetime * 0.25);
+		scrdebuggraph (cls.simframetime * 0.25);
 
 	/* see if we need to update any userinfo */
 	CL_CheckUserinfo();
@@ -2722,7 +2722,7 @@ CL_RefPrintf(int print_level, const char *fmt, ...)
 }
 
 void
-CL_ShutdownRef(void)
+clshutdownRef(void)
 {
 	if(!re.Shutdown)
 		return;
@@ -2731,7 +2731,7 @@ CL_ShutdownRef(void)
 }
 
 void
-CL_InitRenderer(void)
+clinitRenderer(void)
 {
 	/* this sets up the renderer and calls R_Init */
 	re.BeginRegistration(&cls.glconfig);
@@ -2750,7 +2750,7 @@ CL_InitRenderer(void)
  * This is the only place that any of these functions are called from
  */
 void
-CL_StartHunkUsers(qbool rendererOnly)
+clstarthunkusers(qbool rendererOnly)
 {
 	if(!com_cl_running)
 		return;
@@ -2758,7 +2758,7 @@ CL_StartHunkUsers(qbool rendererOnly)
 		return;
 	if(!cls.rendererStarted){
 		cls.rendererStarted = qtrue;
-		CL_InitRenderer();
+		clinitRenderer();
 	}
 	if(rendererOnly)
 		return;
@@ -2774,7 +2774,7 @@ CL_StartHunkUsers(qbool rendererOnly)
 		return;
 	if(!cls.uiStarted){
 		cls.uiStarted = qtrue;
-		CL_InitUI();
+		clinitUI();
 	}
 }
 
@@ -2791,7 +2791,7 @@ CL_ScaledMilliseconds(void)
 }
 
 void
-CL_InitRef(void)
+clinitref(void)
 {
 	Refimport	ri;
 	Refexport	*ret;
@@ -3007,7 +3007,7 @@ CL_GenerateQKey(void)
 }
 
 void
-CL_Init(void)
+clinit(void)
 {
 	comprintf("----- Client Initialization -----\n");
 
@@ -3022,7 +3022,7 @@ CL_Init(void)
 	cls.simtime = 0;
 	cls.realtime = 0;
 
-	CL_InitInput ();
+	clinitInput ();
 
 	/*
 	 * register our variables
@@ -3208,7 +3208,7 @@ CL_Init(void)
 	cmdadd ("clientinfo", CL_Clientinfo_f);
 	cmdadd ("snd_restart", CL_Snd_Restart_f);
 	cmdadd ("vid_restart", CL_Vid_Restart_f);
-	cmdadd ("disconnect", CL_Disconnect_f);
+	cmdadd ("disconnect", cldisconnect_f);
 	cmdadd ("record", CL_Record_f);
 	cmdadd ("demo", CL_PlayDemo_f);
 	cmdsetcompletion("demo", CL_CompleteDemoName);
@@ -3228,7 +3228,7 @@ CL_Init(void)
 	cmdadd ("model", CL_SetModel_f);
 	cmdadd ("video", CL_Video_f);
 	cmdadd ("stopvideo", CL_StopVideo_f);
-	CL_InitRef();
+	clinitref();
 
 	SCR_Init ();
 
@@ -3244,7 +3244,7 @@ CL_Init(void)
 }
 
 void
-CL_Shutdown(char *finalmsg, qbool disconnect, qbool quit)
+clshutdown(char *finalmsg, qbool disconnect, qbool quit)
 {
 	static qbool recursive = qfalse;
 
@@ -3263,10 +3263,10 @@ CL_Shutdown(char *finalmsg, qbool disconnect, qbool quit)
 	noGameRestart = quit;
 
 	if(disconnect)
-		CL_Disconnect(qtrue);
+		cldisconnect(qtrue);
 
 	CL_ClearMemory(qtrue);
-	CL_Snd_Shutdown();
+	clsndshutdown();
 
 	cmdremove ("cmd");
 	cmdremove ("configstrings");
@@ -3292,7 +3292,7 @@ CL_Shutdown(char *finalmsg, qbool disconnect, qbool quit)
 	cmdremove ("video");
 	cmdremove ("stopvideo");
 
-	CL_ShutdownInput();
+	clshutdownInput();
 	Con_Shutdown();
 
 	cvarsetstr("cl_running", "0");
@@ -3991,7 +3991,7 @@ CL_UpdateVisiblePings_f(int source)
 						if(cls.numGlobalServerAddresses > 0){
 							/* overwrite this server with one from the additional global servers */
 							cls.numGlobalServerAddresses--;
-							CL_InitServerInfo(&server[i], &cls.globalServerAddresses[cls.numGlobalServerAddresses]);
+							clinitServerInfo(&server[i], &cls.globalServerAddresses[cls.numGlobalServerAddresses]);
 							/* NOTE: the server[i].visible flag stays untouched */
 						}
 				}

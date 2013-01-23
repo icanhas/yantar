@@ -351,14 +351,14 @@ Con_Linefeed(qbool skipnotify)
 }
 
 /*
- * CL_ConsolePrint
+ * clconsoleprint
  *
  * Handles cursor positioning, line wrapping, etc
  * All console printing must go through this in order to be logged to disk
  * If no console is visible, the text will appear at the top of the game window
  */
 void
-CL_ConsolePrint(char *txt)
+clconsoleprint(char *txt)
 {
 	int y, l;
 	unsigned char	c;

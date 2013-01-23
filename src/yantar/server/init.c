@@ -325,9 +325,9 @@ SV_SpawnServer(char *server, qbool killBots)
 	 * FIXME: CL_ stuff should not be here
 	 */
 	if(!com_dedicated->integer){
-		CL_MapLoading();		/* connect the client to the server and print some status stuff */
-		CL_ShutdownAll(qfalse);	/* make sure all the client stuff is unloaded */
-		CL_StartHunkUsers(qtrue);	/* Restart renderer */
+		clmaploading();		/* connect the client to the server and print some status stuff */
+		clshutdownall(qfalse);	/* make sure all the client stuff is unloaded */
+		clstarthunkusers(qtrue);	/* Restart renderer */
 	}
 	hunkclear();	/* clear it all because we're (re)loading the server */
 
@@ -675,5 +675,5 @@ SV_Shutdown(char *finalmsg)
 
 	/* disconnect any local clients */
 	if(sv_killserver->integer != 2)
-		CL_Disconnect(qfalse);
+		cldisconnect(qfalse);
 }

@@ -338,7 +338,7 @@ static int current;
 static float values[1024];
 
 void
-SCR_DebugGraph(float value)
+scrdebuggraph(float value)
 {
 	values[current] = value;
 	current = (current + 1) % ARRAY_LEN(values);

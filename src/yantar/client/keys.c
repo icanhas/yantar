@@ -944,7 +944,7 @@ Key_Bind_f(void)
  * Writes lines containing "bind key value"
  */
 void
-Key_WriteBindings(Fhandle f)
+keywritebindings(Fhandle f)
 {
 	int i;
 
@@ -968,7 +968,7 @@ Key_Bindlist_f(void)
 }
 
 void
-Key_KeynameCompletion(void (*callback)(const char *s))
+keykeynamecompletion(void (*callback)(const char *s))
 {
 	int i;
 
@@ -1009,7 +1009,7 @@ Key_CompleteBind(char *args, int argNum)
 }
 
 void
-CL_InitKeyCommands(void)
+clinitkeycmds(void)
 {
 	/* register our functions */
 	cmdadd ("bind",Key_Bind_f);
@@ -1058,7 +1058,7 @@ CL_ParseBinding(int key, qbool down, unsigned time)
 }
 
 /*
- * Called by CL_KeyEvent to handle a keypress
+ * Called by clkeyevent to handle a keypress
  */
 void
 CL_KeyDownEvent(int key, unsigned time)
@@ -1112,7 +1112,7 @@ CL_KeyDownEvent(int key, unsigned time)
 			if(clc.state == CA_ACTIVE && !clc.demoplaying)
 				vmcall(uivm, UI_SET_ACTIVE_MENU, UIMENU_INGAME);
 			else if(clc.state != CA_DISCONNECTED){
-				CL_Disconnect_f();
+				cldisconnect_f();
 				S_StopAllSounds();
 				vmcall(uivm, UI_SET_ACTIVE_MENU, UIMENU_MAIN);
 			}
@@ -1143,7 +1143,7 @@ CL_KeyDownEvent(int key, unsigned time)
 }
 
 /*
- * Called by CL_KeyEvent to handle a keyrelease
+ * Called by clkeyevent to handle a keyrelease
  */
 void
 CL_KeyUpEvent(int key, unsigned time)
@@ -1179,7 +1179,7 @@ CL_KeyUpEvent(int key, unsigned time)
  * Called by the system for both key up and key down events
  */
 void
-CL_KeyEvent(int key, qbool down, unsigned time)
+clkeyevent(int key, qbool down, unsigned time)
 {
 	if(down)
 		CL_KeyDownEvent(key, time);
@@ -1191,7 +1191,7 @@ CL_KeyEvent(int key, qbool down, unsigned time)
  * Normal keyboard characters, already shifted / capslocked / etc
  */
 void
-CL_CharEvent(int key)
+clcharevent(int key)
 {
 	/* delete is not a printable character and is
 	 * otherwise handled by Field_KeyDownEvent */
@@ -1221,7 +1221,7 @@ Key_ClearStates(void)
 			continue;
 
 		if(keys[i].down)
-			CL_KeyEvent(i, qfalse, 0);
+			clkeyevent(i, qfalse, 0);
 
 		keys[i].down = 0;
 		keys[i].repeats = 0;

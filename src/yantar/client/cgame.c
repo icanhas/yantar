@@ -334,7 +334,7 @@ CL_CM_LoadMap(const char *mapname)
 }
 
 void
-CL_ShutdownCGame(void)
+clshutdownCGame(void)
 {
 	Key_SetCatcher(Key_GetCatcher( ) & ~KEYCATCH_CGAME);
 	cls.cgameStarted = qfalse;
@@ -643,10 +643,10 @@ CL_CgameSystemCalls(intptr_t *args)
 }
 
 /*
- * Should only be called by CL_StartHunkUsers
+ * Should only be called by clstarthunkusers
  */
 void
-CL_InitCGame(void)
+clinitCGame(void)
 {
 	const char	*info;
 	const char	*mapname;
@@ -697,7 +697,7 @@ CL_InitCGame(void)
 
 	t2 = Sys_Milliseconds();
 
-	comprintf("CL_InitCGame: %5.2f seconds\n", (t2-t1)/1000.0);
+	comprintf("clinitCGame: %5.2f seconds\n", (t2-t1)/1000.0);
 
 	/* 
 	 * have the renderer touch all its images, so they are present
@@ -717,7 +717,7 @@ CL_InitCGame(void)
  * See if the current console command is claimed by the cgame
  */
 qbool
-CL_GameCommand(void)
+clgamecmd(void)
 {
 	if(!cgvm)
 		return qfalse;

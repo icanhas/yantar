@@ -597,7 +597,7 @@ fssvopenr(const char *filename, Fhandle *fp)
 	Q_strncpyz(fsh[f].name, filename, sizeof(fsh[f].name));
 
 	/* don't let sound stutter */
-	S_ClearSoundBuffer();
+	sndclearbuffer();
 
 	/* search homepath */
 	ospath = fsbuildospath(fs_homepath->string, filename, "");
@@ -647,7 +647,7 @@ fssvrename(const char *from, const char *to)
 			"Filesystem call made without initialization");
 
 	/* don't let sound stutter */
-	S_ClearSoundBuffer();
+	sndclearbuffer();
 
 	from_ospath = fsbuildospath(fs_homepath->string, from, "");
 	to_ospath = fsbuildospath(fs_homepath->string, to, "");
@@ -672,7 +672,7 @@ fsrename(const char *from, const char *to)
 			"Filesystem call made without initialization");
 
 	/* don't let sound stutter */
-	S_ClearSoundBuffer();
+	sndclearbuffer();
 
 	from_ospath = fsbuildospath(fs_homepath->string, fs_gamedir, from);
 	to_ospath = fsbuildospath(fs_homepath->string, fs_gamedir, to);
@@ -764,7 +764,7 @@ fsopena(const char *filename)
 	Q_strncpyz(fsh[f].name, filename, sizeof(fsh[f].name));
 
 	/* don't let sound stutter */
-	S_ClearSoundBuffer();
+	sndclearbuffer();
 
 	ospath = fsbuildospath(fs_homepath->string, fs_gamedir, filename);
 
@@ -800,7 +800,7 @@ fscreatepipefile(const char *filename)
 	Q_strncpyz(fsh[f].name, filename, sizeof(fsh[f].name));
 
 	/* don't let sound stutter */
-	S_ClearSoundBuffer();
+	sndclearbuffer();
 
 	ospath = fsbuildospath(fs_homepath->string, fs_gamedir, filename);
 

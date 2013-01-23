@@ -750,46 +750,46 @@ void	Com_Shutdown(void);
  */
 /* the keyboard binding interface must be setup before execing
  * config files, but the rest of client startup will happen later */
-void CL_InitKeyCommands(void);
-void CL_Init(void);
-void CL_Disconnect(qbool showMainMenu);
-void CL_Shutdown(char *finalmsg, qbool disconnect, qbool quit);
-void CL_Frame(int msec);
-qbool CL_GameCommand(void);
-void CL_KeyEvent(int key, qbool down, unsigned time);
+void clinitkeycmds(void);
+void clinit(void);
+void cldisconnect(qbool showMainMenu);
+void clshutdown(char *finalmsg, qbool disconnect, qbool quit);
+void clframe(int msec);
+qbool clgamecmd(void);
+void clkeyevent(int key, qbool down, unsigned time);
 /* char events are for field typing, not game control */
-void CL_CharEvent(int key);
-void CL_MouseEvent(int dx, int dy, int time);
-void CL_JoystickEvent(int axis, int value, int time);
-void CL_PacketEvent(Netaddr from, Bitmsg *msg);
-void CL_ConsolePrint(char *text);
+void clcharevent(int key);
+void clmouseevent(int dx, int dy, int time);
+void cljoystickevent(int axis, int value, int time);
+void clpacketevent(Netaddr from, Bitmsg *msg);
+void clconsoleprint(char *text);
 /* do a screen update before starting to load a map
  * when the server is going to load a new map, the entire hunk
  * will be cleared, so the client must shutdown cgame, ui, and
  * the renderer */
-void CL_MapLoading(void);
+void clmaploading(void);
 /* adds the current command line as a clc_clientCommand to the client message.
 * things like godmode, noclip, etc, are commands directed to the server,
 * so when they are typed in at the console, they will need to be forwarded. */
-void CL_ForwardCommandToServer(const char *string);
+void clforwardcmdtoserver(const char *string);
 /* dump all memory on an error */
-void CL_FlushMemory(void);
+void clflushmem(void);
 /* shutdown client */
-void CL_ShutdownAll(qbool shutdownRef);
+void clshutdownall(qbool shutdownRef);
 /* initialize renderer interface */
-void CL_InitRef(void);
+void clinitref(void);
 /* start all the client stuff using the hunk */
-void CL_StartHunkUsers(qbool rendererOnly);
+void clstarthunkusers(qbool rendererOnly);
 /* Restart sound subsystem */
-void CL_Snd_Shutdown(void);
+void clsndshutdown(void);
 /* for keyname autocompletion */
-void Key_KeynameCompletion(void (*callback)(const char *s));
+void keykeynamecompletion(void (*callback)(const char *s));
 /* for writing the config files */
-void Key_WriteBindings(Fhandle f);
+void keywritebindings(Fhandle f);
 /* call before filesystem access */
-void S_ClearSoundBuffer(void);
+void sndclearbuffer(void);
 
-void SCR_DebugGraph(float value); /* FIXME: move logging to common? */
+void scrdebuggraph(float value); /* FIXME: move logging to common? */
 
 /* AVI files have the start of pixel lines 4 byte-aligned */
 enum { AVI_LINE_PADDING = 4 };

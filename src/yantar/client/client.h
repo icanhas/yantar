@@ -405,10 +405,10 @@ extern Cvar *cl_voip;
 /*
  * cl_main.c
  */
-void	CL_Init(void);
+void	clinit(void);
 void	CL_AddReliableCommand(const char *cmd, qbool isDisconnectCmd);
-void	CL_StartHunkUsers(qbool rendererOnly);
-void	CL_Disconnect_f(void);
+void	clstarthunkusers(qbool rendererOnly);
+void	cldisconnect_f(void);
 void	CL_GetChallengePacket(void);
 void	CL_Vid_Restart_f(void);
 void	CL_Snd_Restart_f(void);
@@ -416,14 +416,14 @@ void	CL_StartDemoLoop(void);
 void	CL_NextDemo(void);
 void	CL_ReadDemoMessage(void);
 void	CL_StopRecord_f(void);
-void	CL_InitDownloads(void);
+void	clinitDownloads(void);
 void	CL_NextDownload(void);
 void	CL_GetPing(int n, char *buf, int buflen, int *pingtime);
 void	CL_GetPingInfo(int n, char *buf, int buflen);
 void	CL_ClearPing(int n);
 int	CL_GetPingQueueCount(void);
-void	CL_ShutdownRef(void);
-void	CL_InitRef(void);
+void	clshutdownRef(void);
+void	clinitref(void);
 int	CL_ServerStatus(char *serverAddress, char *serverStatusString, int maxLen);
 qbool	CL_CheckPaused(void);
 
@@ -438,8 +438,8 @@ typedef struct {
 	qbool	wasPressed;	/* set when down, not cleared when up */
 } Kbutton;
 
-void	CL_InitInput(void);
-void	CL_ShutdownInput(void);
+void	clinitInput(void);
+void	clshutdownInput(void);
 void	CL_SendCmd(void);
 void	CL_ClearState(void);
 void	CL_WritePacket(void);
@@ -496,7 +496,7 @@ void	CL_SaveConsoleHistory(void);
  */
 void	SCR_Init(void);
 void	SCR_UpdateScreen(void);
-void	SCR_DebugGraph(float value);
+void	scrdebuggraph(float value);
 int	SCR_GetBigStringWidth(const	char *str);	/* returns in virtual 640x480 coordinates */
 void	SCR_AdjustFrom640(float *x, float *y, float *w, float *h);
 void	SCR_FillRect(float x, float y, float width, float height,
@@ -533,9 +533,9 @@ void	CIN_CloseAllVideos(void);
 /*
  * cl_cgame.c
  */
-void CL_InitCGame(void);
-void CL_ShutdownCGame(void);
-qbool CL_GameCommand(void);
+void clinitCGame(void);
+void clshutdownCGame(void);
+qbool clgamecmd(void);
 void CL_CGameRendering(Stereoframe stereo);
 void CL_SetCGameTime(void);
 void CL_FirstSnapshot(void);
@@ -544,8 +544,8 @@ void CL_ShaderStateChanged(void);
 /*
  * cl_ui.c
  */
-void CL_InitUI(void);
-void CL_ShutdownUI(void);
+void clinitUI(void);
+void clshutdownUI(void);
 int Key_GetCatcher(void);
 void Key_SetCatcher(int catcher);
 void LAN_LoadCachedServers(void);

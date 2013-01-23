@@ -403,10 +403,10 @@ parsegamestate(Bitmsg *msg)
 	fscondrestart(clc.checksumFeed, qfalse);
 
 	/* 
-	 * This used to call CL_StartHunkUsers, but now we enter the download state before loading the
+	 * This used to call clstarthunkusers, but now we enter the download state before loading the
 	 * cgame 
 	 */
-	CL_InitDownloads();
+	clinitDownloads();
 
 	/* make sure the game starts */
 	cvarsetstr("cl_paused", "0");

@@ -46,7 +46,7 @@ void	S_BeginRegistration(void);
  */
 Sfxhandle	S_RegisterSound(const char *sample, qbool compressed);
 void	S_DisplayFreeMemory(void);
-void	S_ClearSoundBuffer(void);
+void	sndclearbuffer(void);
 void	SNDDMA_Activate(void);
 void	S_UpdateBackgroundTrack(void);
 #ifdef USE_VOIP

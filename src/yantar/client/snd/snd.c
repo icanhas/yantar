@@ -190,7 +190,7 @@ S_RegisterSound(const char *sample, qbool compressed)
 }
 
 void
-S_ClearSoundBuffer(void)
+sndclearbuffer(void)
 {
 	if(si.ClearSoundBuffer)
 		si.ClearSoundBuffer( );

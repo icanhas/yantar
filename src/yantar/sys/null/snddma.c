@@ -52,6 +52,6 @@ S_StartLocalSound(Sfxhandle sfxHandle, int channelNum)
 }
 
 void
-S_ClearSoundBuffer(void)
+sndclearbuffer(void)
 {
 }

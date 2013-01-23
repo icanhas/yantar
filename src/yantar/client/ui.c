@@ -967,7 +967,7 @@ CL_UISystemCalls(intptr_t *args)
 }
 
 void
-CL_ShutdownUI(void)
+clshutdownUI(void)
 {
 	Key_SetCatcher(Key_GetCatcher() & ~KEYCATCH_UI);
 	cls.uiStarted = qfalse;
@@ -983,7 +983,7 @@ enum {
 };
 
 void
-CL_InitUI(void)
+clinitUI(void)
 {
 	int v;
 	Vmmode interpret;

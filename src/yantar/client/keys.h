@@ -32,7 +32,7 @@ void		Field_Draw(Field *edit, int x, int y, int width, qbool showCursor,
 			qbool noColorEscape);
 void		Field_BigDraw(Field *edit, int x, int y, int width, qbool showCursor,
 			qbool noColorEscape);
-void		Key_WriteBindings(Fhandle f);
+void		keywritebindings(Fhandle f);
 void		Key_SetBinding(int keynum, const char *binding);
 char*	Key_GetBinding(int keynum);
 qbool	Key_IsDown(int keynum);

@@ -153,7 +153,7 @@ comprintf(const char *fmt, ...)
 	}
 
 #ifndef DEDICATED
-	CL_ConsolePrint(msg);
+	clconsoleprint(msg);
 #endif
 	Sys_Print(msg); /* echo to dedicated console and early console */
 	
@@ -250,8 +250,8 @@ comerrorf(int code, const char *fmt, ...)
 	if(code == ERR_DISCONNECT || code == ERR_SERVERDISCONNECT){
 		vmsetforceunload();
 		SV_Shutdown("Server disconnected");
-		CL_Disconnect(qtrue);
-		CL_FlushMemory( );
+		cldisconnect(qtrue);
+		clflushmem( );
 		vmclearforceunload();
 		/* make sure we can get at our local stuff */
 		fspureservsetloadedpaks("", "");
@@ -263,15 +263,15 @@ comerrorf(int code, const char *fmt, ...)
 			com_errorMessage);
 		vmsetforceunload();
 		SV_Shutdown (va("Server crashed: %s",  com_errorMessage));
-		CL_Disconnect(qtrue);
-		CL_FlushMemory( );
+		cldisconnect(qtrue);
+		clflushmem( );
 		vmclearforceunload();
 		fspureservsetloadedpaks("", "");
 		com_errorEntered = qfalse;
 		longjmp(abortframe, -1);
 	}else{
 		vmsetforceunload();
-		CL_Shutdown(va("Client fatal crashed: %s",
+		clshutdown(va("Client fatal crashed: %s",
 				com_errorMessage), qtrue, qtrue);
 		SV_Shutdown(va("Server fatal crashed: %s", com_errorMessage));
 		vmclearforceunload();
@@ -298,7 +298,7 @@ Com_Quit_f(void)
 		 * a corrupt call stack makes no difference */
 		vmsetforceunload();
 		SV_Shutdown(p[0] ? p : "Server quit");
-		CL_Shutdown(p[0] ? p : "Client quit", qtrue, qtrue);
+		clshutdown(p[0] ? p : "Client quit", qtrue, qtrue);
 		vmclearforceunload();
 		Com_Shutdown ();
 		fsshutdown(qtrue);
@@ -851,7 +851,7 @@ comflushevents(void)
 		if(ev.evType == SE_NONE){
 			/* manually send packet events for the loopback channel */
 			while(NET_GetLoopPacket(NS_CLIENT, &evFrom, &buf))
-				CL_PacketEvent(evFrom, &buf);
+				clpacketevent(evFrom, &buf);
 			while(NET_GetLoopPacket(NS_SERVER, &evFrom, &buf))
 				/* if the server just shut down, flush the events */
 				if(com_sv_running->integer)
@@ -861,16 +861,16 @@ comflushevents(void)
 
 		switch(ev.evType){
 		case SE_KEY:
-			CL_KeyEvent(ev.evValue, ev.evValue2, ev.evTime);
+			clkeyevent(ev.evValue, ev.evValue2, ev.evTime);
 			break;
 		case SE_CHAR:
-			CL_CharEvent(ev.evValue);
+			clcharevent(ev.evValue);
 			break;
 		case SE_MOUSE:
-			CL_MouseEvent(ev.evValue, ev.evValue2, ev.evTime);
+			clmouseevent(ev.evValue, ev.evValue2, ev.evTime);
 			break;
 		case SE_JOYSTICK_AXIS:
-			CL_JoystickEvent(ev.evValue, ev.evValue2, ev.evTime);
+			cljoystickevent(ev.evValue, ev.evValue2, ev.evTime);
 			break;
 		case SE_CONSOLE:
 			cbufaddstr((char*)ev.evPtr);
@@ -1181,9 +1181,9 @@ comgamerestart(int checksumFeed, qbool disconnect)
 
 		if(clWasRunning){
 			if(disconnect)
-				CL_Disconnect(qfalse);
+				cldisconnect(qfalse);
 
-			CL_Shutdown("Game directory changed", disconnect, qfalse);
+			clshutdown("Game directory changed", disconnect, qfalse);
 		}
 
 		fsrestart(checksumFeed);
@@ -1202,8 +1202,8 @@ comgamerestart(int checksumFeed, qbool disconnect)
 		}
 
 		if(clWasRunning){
-			CL_Init();
-			CL_StartHunkUsers(qfalse);
+			clinit();
+			clstarthunkusers(qfalse);
 		}
 
 		com_gameRestarting = qfalse;
@@ -1236,7 +1236,7 @@ Com_Writeconfigtofile(const char *filename)
 		return;
 	}
 	fsprintf(f, "// ／人◕‿‿ ◕人＼\n");
-	Key_WriteBindings(f);
+	keywritebindings(f);
 	cvarwritevars(f);
 	fsclose(f);
 }
@@ -1436,7 +1436,7 @@ Com_Init(char *commandLine)
 	com_developer = cvarget("developer", "0", CVAR_TEMP);
 
 	/* done early so bind command exists */
-	CL_InitKeyCommands();
+	clinitkeycmds();
 
 	com_standalone	= cvarget("com_standalone", "0", CVAR_ROM);
 	com_basegame	= cvarget("com_basegame", BASEGAME, CVAR_INIT);
@@ -1541,7 +1541,7 @@ Com_Init(char *commandLine)
 
 	com_dedicated->modified = qfalse;
 	if(!com_dedicated->integer)
-		CL_Init();
+		clinit();
 
 	/* 
 	 * set com_frameTime so that if a map is started on the
@@ -1564,7 +1564,7 @@ Com_Init(char *commandLine)
 	/* start in full screen ui mode */
 	cvarsetstr("r_uiFullScreen", "1");
 
-	CL_StartHunkUsers(qfalse);
+	clstarthunkusers(qfalse);
 
 	/* make sure single player is off by default */
 	cvarsetstr("ui_singlePlayerActive", "0");
@@ -1745,7 +1745,7 @@ Com_Frame(void)
 		com_dedicated->modified = qfalse;
 		if(!com_dedicated->integer){
 			SV_Shutdown("dedicated set to 0");
-			CL_FlushMemory();
+			clflushmem();
 		}
 	}
 
@@ -1771,7 +1771,7 @@ Com_Frame(void)
 		/* client side */
 		if(com_speeds->integer)
 			timeBeforeClient = Sys_Milliseconds ();
-		CL_Frame(msec);
+		clframe(msec);
 		if(com_speeds->integer)
 			timeAfter = Sys_Milliseconds ();
 	}
@@ -1915,10 +1915,10 @@ fieldcompletekeyname(void)
 	matchCount = 0;
 	shortestMatch[ 0 ] = 0;
 
-	Key_KeynameCompletion(findmatches);
+	keykeynamecompletion(findmatches);
 
 	if(!Field_Complete( ))
-		Key_KeynameCompletion(printmatches);
+		keykeynamecompletion(printmatches);
 }
 #endif
 

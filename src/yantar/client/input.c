@@ -217,7 +217,7 @@ keymove(Usrcmd *cmd)
 }
 
 void
-CL_MouseEvent(int dx, int dy, int time)
+clmouseevent(int dx, int dy, int time)
 {
 	UNUSED(time);
 	if(Key_GetCatcher() & KEYCATCH_UI)
@@ -232,11 +232,11 @@ CL_MouseEvent(int dx, int dy, int time)
 
 /* Joystick values stay set until changed */
 void
-CL_JoystickEvent(int axis, int value, int time)
+cljoystickevent(int axis, int value, int time)
 {
 	UNUSED(time);
 	if(axis < 0 || axis >= MAX_JOYSTICK_AXIS)
-		comerrorf(ERR_DROP, "CL_JoystickEvent: bad axis %i", axis);
+		comerrorf(ERR_DROP, "cljoystickevent: bad axis %i", axis);
 	cl.joystickAxis[axis] = value;
 }
 
@@ -458,9 +458,9 @@ createcmd(void)
 	/* draw debug graphs of turning for mouse testing */
 	if(cl_debugMove->integer){
 		if(cl_debugMove->integer == 1)
-			SCR_DebugGraph(abs(cl.viewangles[YAW] - oldangles[YAW]));
+			scrdebuggraph(abs(cl.viewangles[YAW] - oldangles[YAW]));
 		if(cl_debugMove->integer == 2)
-			SCR_DebugGraph(abs(cl.viewangles[PITCH] -
+			scrdebuggraph(abs(cl.viewangles[PITCH] -
 					oldangles[PITCH]));
 	}
 	return cmd;
@@ -1125,7 +1125,7 @@ mlookup(void)
 }
 
 void
-CL_InitInput(void)
+clinitInput(void)
 {
 	cmdadd("centerview", centerview);
 	cmdadd("+moveup", UpDown);
@@ -1207,7 +1207,7 @@ CL_InitInput(void)
 }
 
 void
-CL_ShutdownInput(void)
+clshutdownInput(void)
 {
 	cmdremove("centerview");
 	cmdremove("+moveup");
