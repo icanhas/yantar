@@ -1024,7 +1024,7 @@ void
 CL_StartDemoLoop(void)
 {
 	/* start the demo loop again */
-	Cbuf_AddText ("d1\n");
+	cbufaddstr ("d1\n");
 	Key_SetCatcher(0);
 }
 
@@ -1044,9 +1044,9 @@ CL_NextDemo(void)
 		return;
 
 	Cvar_Set ("nextdemo","");
-	Cbuf_AddText (v);
-	Cbuf_AddText ("\n");
-	Cbuf_Execute();
+	cbufaddstr (v);
+	cbufaddstr ("\n");
+	cbufflush();
 }
 
 void
@@ -1494,7 +1494,7 @@ CL_Reconnect_f(void)
 		return;
 	}
 	Cvar_Set("ui_singlePlayerActive", "0");
-	Cbuf_AddText(va("connect %s\n", clc.servername));
+	cbufaddstr(va("connect %s\n", clc.servername));
 }
 
 void
@@ -2646,7 +2646,7 @@ CL_Frame(int msec)
 				sizeof(cl.mapname));
 			Q_stripext(mapName, mapName, sizeof(mapName));
 
-			Cbuf_ExecuteText(EXEC_NOW,
+			cbufexecstr(EXEC_NOW,
 				va("record %s-%s-%s", nowString, serverName,
 					mapName));
 		}else if(clc.state != CA_ACTIVE && clc.demorecording)
@@ -2832,7 +2832,7 @@ CL_InitRef(void)
 	ri.Cmd_RemoveCommand = Cmd_RemoveCommand;
 	ri.Cmd_Argc	= Cmd_Argc;
 	ri.Cmd_Argv	= Cmd_Argv;
-	ri.Cmd_ExecuteText = Cbuf_ExecuteText;
+	ri.Cmd_ExecuteText = cbufexecstr;
 	ri.Printf	= CL_RefPrintf;
 	ri.Error	= Com_Errorf;
 	ri.Milliseconds	= CL_ScaledMilliseconds;
@@ -3232,7 +3232,7 @@ CL_Init(void)
 
 	SCR_Init ();
 
-/*	Cbuf_Execute (); */
+/*	cbufflush (); */
 
 	Cvar_Set("cl_running", "1");
 

@@ -601,7 +601,7 @@ SV_Init(void)
 	SV_BotInitBotLib();
 
 	/* Load saved bans */
-	Cbuf_AddText("rehashbans\n");
+	cbufaddstr("rehashbans\n");
 }
 
 /*

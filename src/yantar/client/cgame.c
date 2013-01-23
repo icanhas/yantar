@@ -312,7 +312,7 @@ Rescan:
 		/* close the console */
 		Con_Close();
 		/* take a special screenshot next frame */
-		Cbuf_AddText("wait ; wait ; wait ; wait ; screenshot levelshot\n");
+		cbufaddstr("wait ; wait ; wait ; wait ; screenshot levelshot\n");
 		return qtrue;
 	}
 
@@ -402,7 +402,7 @@ CL_CgameSystemCalls(intptr_t *args)
 	case CG_FS_SEEK:
 		return FS_Seek(args[1], args[2], args[3]);
 	case CG_SENDCONSOLECOMMAND:
-		Cbuf_AddText(VMA(1));
+		cbufaddstr(VMA(1));
 		return 0;
 	case CG_ADDCOMMAND:
 		CL_AddCgameCommand(VMA(1));
@@ -816,7 +816,7 @@ CL_FirstSnapshot(void)
 	 * after loading 
 	 */
 	if(cl_activeAction->string[0]){
-		Cbuf_AddText(cl_activeAction->string);
+		cbufaddstr(cl_activeAction->string);
 		Cvar_Set("activeAction", "");
 	}
 

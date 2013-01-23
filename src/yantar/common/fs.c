@@ -3383,7 +3383,7 @@ FS_Restart(int checksumFeed)
 	if(Q_stricmp(fs_gamedirvar->string, lastValidGame))
 		/* skip the user.cfg if "safe" is on the command line */
 		if(!Com_Insafemode())
-			Cbuf_AddText ("exec " Q3CONFIG_CFG "\n");
+			cbufaddstr ("exec " Q3CONFIG_CFG "\n");
 	Q_strncpyz(lastValidBase, fs_basepath->string, sizeof(lastValidBase));
 	Q_strncpyz(lastValidGame, fs_gamedirvar->string, sizeof(lastValidGame));
 }

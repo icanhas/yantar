@@ -811,7 +811,7 @@ IN_ProcessEvents(void)
 		break;
 
 		case SDL_QUIT:
-			Cbuf_ExecuteText(EXEC_NOW, "quit Closed window\n");
+			cbufexecstr(EXEC_NOW, "quit Closed window\n");
 			break;
 
 		case SDL_VIDEORESIZE:
@@ -869,7 +869,7 @@ IN_Frame(void)
 	/* in case we had to delay actual restart of video system... */
 	if((vidRestartTime != 0) && (vidRestartTime < Sys_Milliseconds())){
 		vidRestartTime = 0;
-		Cbuf_AddText("vid_restart");
+		cbufaddstr("vid_restart");
 	}
 }
 

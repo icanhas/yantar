@@ -56,7 +56,7 @@ Cmd_Wait_f(void)
 
 /* allocates an initial text buffer that will grow as needed */
 void
-Cbuf_Init(void)
+cbufinit(void)
 {
 	cmd_text.data = cmd_text_buf;
 	cmd_text.maxsize = Maxcmdbuf;
@@ -65,14 +65,14 @@ Cbuf_Init(void)
 
 /* Adds command text at the end of the buffer, does NOT add a final \n */
 void
-Cbuf_AddText(const char *text)
+cbufaddstr(const char *text)
 {
 	int l;
 
 	l = strlen(text);
 
 	if(cmd_text.cursize + l >= cmd_text.maxsize){
-		Com_Printf("Cbuf_AddText: overflow\n");
+		Com_Printf("cbufaddstr: overflow\n");
 		return;
 	}
 	Q_Memcpy(&cmd_text.data[cmd_text.cursize], text, l);
@@ -84,14 +84,14 @@ Cbuf_AddText(const char *text)
  * Adds a \n to the text
  */
 void
-Cbuf_InsertText(const char *text)
+cbufinsertstr(const char *text)
 {
 	int	len;
 	int	i;
 
 	len = strlen(text) + 1;
 	if(len + cmd_text.cursize > cmd_text.maxsize){
-		Com_Printf("Cbuf_InsertText overflowed\n");
+		Com_Printf("cbufinsertstr overflowed\n");
 		return;
 	}
 
@@ -108,9 +108,9 @@ Cbuf_InsertText(const char *text)
 	cmd_text.cursize += len;
 }
 
-/* this can be used in place of either Cbuf_AddText or Cbuf_InsertText */
+/* this can be used in place of either cbufaddstr or cbufinsertstr */
 void
-Cbuf_ExecuteText(int exec_when, const char *text)
+cbufexecstr(int exec_when, const char *text)
 {
 	switch(exec_when){
 	case EXEC_NOW:
@@ -118,19 +118,19 @@ Cbuf_ExecuteText(int exec_when, const char *text)
 			Com_DPrintf(S_COLOR_YELLOW "EXEC_NOW %s\n", text);
 			Cmd_ExecuteString(text);
 		}else{
-			Cbuf_Execute();
+			cbufflush();
 			Com_DPrintf(S_COLOR_YELLOW "EXEC_NOW %s\n",
 				cmd_text.data);
 		}
 		break;
 	case EXEC_INSERT:
-		Cbuf_InsertText(text);
+		cbufinsertstr(text);
 		break;
 	case EXEC_APPEND:
-		Cbuf_AddText(text);
+		cbufaddstr(text);
 		break;
 	default:
-		Com_Errorf(ERR_FATAL, "Cbuf_ExecuteText: bad exec_when");
+		Com_Errorf(ERR_FATAL, "cbufexecstr: bad exec_when");
 	}
 }
 
@@ -141,7 +141,7 @@ Cbuf_ExecuteText(int exec_when, const char *text)
  * Do not call inside a command function, or current args will be destroyed. 
  */
 void
-Cbuf_Execute(void)
+cbufflush(void)
 {
 	int i, quotes;
 	char *text;
@@ -253,7 +253,7 @@ Cmd_Exec_f(void)
 		return;
 	}
 	Com_Printf("execing %s\n",Cmd_Argv(1));
-	Cbuf_InsertText(f.c);
+	cbufinsertstr(f.c);
 
 	FS_FreeFile(f.v);
 }
@@ -272,7 +272,7 @@ Cmd_Vstr_f(void)
 	}
 
 	v = Cvar_VariableString(Cmd_Argv(1));
-	Cbuf_InsertText(va("%s\n", v));
+	cbufinsertstr(va("%s\n", v));
 }
 
 /*

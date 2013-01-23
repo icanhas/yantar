@@ -371,10 +371,10 @@ _vmf(intptr_t x)
  * files can be execed.
  */
 
-void Cbuf_Init(void);
-void Cbuf_AddText(const char *text);
-void Cbuf_ExecuteText(int exec_when, const char *text);
-void Cbuf_Execute(void);
+void cbufinit(void);
+void cbufaddstr(const char *text);
+void cbufexecstr(int exec_when, const char *text);
+void cbufflush(void);
 
 /*
  *

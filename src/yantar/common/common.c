@@ -420,8 +420,8 @@ Com_Addstartupcmds(void)
 		if(!Q_stricmpn(com_consoleLines[i], "set", 3))
 			continue;
 		added = qtrue;
-		Cbuf_AddText(com_consoleLines[i]);
-		Cbuf_AddText("\n");
+		cbufaddstr(com_consoleLines[i]);
+		cbufaddstr("\n");
 	}
 	return added;
 }
@@ -873,8 +873,8 @@ Com_Eventloop(void)
 			CL_JoystickEvent(ev.evValue, ev.evValue2, ev.evTime);
 			break;
 		case SE_CONSOLE:
-			Cbuf_AddText((char*)ev.evPtr);
-			Cbuf_AddText("\n");
+			cbufaddstr((char*)ev.evPtr);
+			cbufaddstr("\n");
 			break;
 		default:
 			Com_Errorf(ERR_FATAL, "Com_Eventloop: bad event type %i",
@@ -1154,13 +1154,13 @@ Com_Setenv_f(void)
 void
 Com_Execconfig(void)
 {
-	Cbuf_ExecuteText(EXEC_NOW, "exec default.cfg\n");
-	Cbuf_Execute();	/* Always execute after exec to prevent text buffer overflowing */
+	cbufexecstr(EXEC_NOW, "exec default.cfg\n");
+	cbufflush();	/* Always execute after exec to prevent text buffer overflowing */
 
 	if(!Com_Insafemode()){
 		/* skip the user.cfg if "safe" is on the command line */
-		Cbuf_ExecuteText(EXEC_NOW, "exec " Q3CONFIG_CFG "\n");
-		Cbuf_Execute();
+		cbufexecstr(EXEC_NOW, "exec " Q3CONFIG_CFG "\n");
+		cbufflush();
 	}
 }
 
@@ -1422,7 +1422,7 @@ Com_Init(char *commandLine)
 	Com_Parsecmdline(commandLine);
 
 /*	Swap_Init (); */
-	Cbuf_Init ();
+	cbufinit ();
 
 	Com_Detectsse();
 
@@ -1554,7 +1554,7 @@ Com_Init(char *commandLine)
 	if(!Com_Addstartupcmds())
 		/* if the user didn't give any commands, run default action */
 		if(!com_dedicated->integer){
-			Cbuf_AddText ("cinematic idlogo.RoQ\n");
+			cbufaddstr ("cinematic idlogo.RoQ\n");
 			if(!com_introPlayed->integer){
 				Cvar_Set(com_introPlayed->name, "1");
 				Cvar_Set("nextmap", "cinematic intro.RoQ");
@@ -1630,13 +1630,13 @@ Com_Readpipe(void)
 		if(brk){
 			char tmp = *brk;
 			*brk = '\0';
-			Cbuf_ExecuteText(EXEC_APPEND, buf);
+			cbufexecstr(EXEC_APPEND, buf);
 			*brk = tmp;
 
 			accu -= brk - buf;
 			memmove(buf, brk, accu + 1);
 		}else if(accu >= sizeof(buf) - 1){	/* full */
-			Cbuf_ExecuteText(EXEC_APPEND, buf);
+			cbufexecstr(EXEC_APPEND, buf);
 			accu = 0;
 		}
 	}
@@ -1721,7 +1721,7 @@ Com_Frame(void)
 
 	msec = com_frameTime - lastTime;
 
-	Cbuf_Execute();
+	cbufflush();
 
 	if(com_altivec->modified){
 		Com_Detectaltivec();
@@ -1765,7 +1765,7 @@ Com_Frame(void)
 		if(com_speeds->integer)
 			timeBeforeEvents = Sys_Milliseconds ();
 		Com_Eventloop();
-		Cbuf_Execute ();
+		cbufflush ();
 
 
 		/* client side */

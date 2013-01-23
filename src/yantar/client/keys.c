@@ -540,7 +540,7 @@ Console_Key(int key)
 	
 	/* ctrl-L clears screen */
 	if(key == 'l' && keys[K_CTRL].down){
-		Cbuf_AddText("clear\n");
+		cbufaddstr("clear\n");
 		return;
 	}
 
@@ -564,16 +564,16 @@ Console_Key(int key)
 		/* leading slash is an explicit command */
 		if(g_consoleField.buffer[0] == '\\' ||
 		   g_consoleField.buffer[0] == '/'){
-			Cbuf_AddText(g_consoleField.buffer+1);	/* valid command */
-			Cbuf_AddText ("\n");
+			cbufaddstr(g_consoleField.buffer+1);	/* valid command */
+			cbufaddstr ("\n");
 		}else{
 			/* other text will be chat messages */
 			if(!g_consoleField.buffer[0])
 				return;		/* empty lines just scroll the console without adding to history */
 			else{
-				Cbuf_AddText ("cmd say ");
-				Cbuf_AddText(g_consoleField.buffer);
-				Cbuf_AddText ("\n");
+				cbufaddstr ("cmd say ");
+				cbufaddstr(g_consoleField.buffer);
+				cbufaddstr ("\n");
 			}
 		}
 
@@ -1045,11 +1045,11 @@ CL_ParseBinding(int key, qbool down, unsigned time)
 			char cmd[1024];
 			Q_sprintf(cmd, sizeof(cmd), "%c%s %d %d\n",
 				(down) ? '+' : '-', p + 1, key, time);
-			Cbuf_AddText(cmd);
+			cbufaddstr(cmd);
 		}else if(down){
 			/* normal commands only execute on key press */
-			Cbuf_AddText(p);
-			Cbuf_AddText("\n");
+			cbufaddstr(p);
+			cbufaddstr("\n");
 		}
 		if(!end)
 			break;

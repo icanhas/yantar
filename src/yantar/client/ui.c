@@ -696,7 +696,7 @@ CL_UISystemCalls(intptr_t *args)
 				(const char*)VMA(2));
 			args[1] = EXEC_INSERT;
 		}
-		Cbuf_ExecuteText(args[1], VMA(2));
+		cbufexecstr(args[1], VMA(2));
 		return 0;
 
 	case UI_FS_FOPENFILE:

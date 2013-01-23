@@ -1158,7 +1158,7 @@ RoQShutdown(void)
 		 */
 		s = Cvar_VariableString("nextmap");
 		if(s[0]){
-			Cbuf_ExecuteText(EXEC_APPEND, va("%s\n", s));
+			cbufexecstr(EXEC_APPEND, va("%s\n", s));
 			Cvar_Set("nextmap", "");
 		}
 		CL_handle = -1;
