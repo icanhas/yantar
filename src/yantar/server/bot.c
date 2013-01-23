@@ -446,7 +446,7 @@ SV_BotLibSetup(void)
 }
 
 /*
- * SV_ShutdownBotLib
+ * svshutdownBotLib
  *
  * Called when either the entire server is being killed, or
  * it is changing to a different game directory.

@@ -797,13 +797,13 @@ enum { AVI_LINE_PADDING = 4 };
 /*
  * server interface
  */
-void SV_Init(void);
-void SV_Shutdown(char *finalmsg);
-void SV_Frame(int msec);
-void SV_PacketEvent(Netaddr from, Bitmsg *msg);
-int SV_FrameMsec(void);
-qbool SV_GameCommand(void);
-int SV_SendQueuedPackets(void);
+void svinit(void);
+void svshutdown(char *finalmsg);
+void svframe(int msec);
+void svpacketevent(Netaddr from, Bitmsg *msg);
+int svframemsec(void);
+qbool svgamecmd(void);
+int svsendqueuedpackets(void);
 
 /*
  * UI interface

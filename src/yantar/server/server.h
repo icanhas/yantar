@@ -364,8 +364,8 @@ Sharedent*SV_GentityNum(int num);
 Playerstate*SV_GameClientNum(int num);
 Svent*SV_SvEntityForGentity(Sharedent *gEnt);
 Sharedent*SV_GEntityForSvEntity(Svent *svEnt);
-void            SV_InitGameProgs(void);
-void            SV_ShutdownGameProgs(void);
+void            svinitGameProgs(void);
+void            svshutdownGameProgs(void);
 void            SV_RestartGameProgs(void);
 qbool        SV_inPVS(const Vec3 p1, const Vec3 p2);
 

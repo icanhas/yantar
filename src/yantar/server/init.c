@@ -316,7 +316,7 @@ SV_SpawnServer(char *server, qbool killBots)
 	char	systemInfo[16384];
 	const char *p;
 
-	SV_ShutdownGameProgs();	/* shut down any existing game */
+	svshutdownGameProgs();	/* shut down any existing game */
 
 	comprintf("------ Server Initialization ------\n");
 	comprintf("Server: %s\n",server);
@@ -395,7 +395,7 @@ SV_SpawnServer(char *server, qbool killBots)
 	 */
 	sv.state = SS_LOADING;
 
-	SV_InitGameProgs();	/* load and spawn all other entities */
+	svinitGameProgs();	/* load and spawn all other entities */
 	sv_gametype->modified = qfalse;	/* don't allow a map_restart if game is modified */
 
 	/* run a few frames to allow everything to settle */
@@ -521,7 +521,7 @@ SV_SpawnServer(char *server, qbool killBots)
  * Only called at main exe startup, not for each game
  */
 void
-SV_Init(void)
+svinit(void)
 {
 	int index;
 
@@ -605,7 +605,7 @@ SV_Init(void)
 }
 
 /*
- * Used by SV_Shutdown to send a final message to all
+ * Used by svshutdown to send a final message to all
  * connected clients before the server goes down.  The messages are sent immediately,
  * not just stuck on the outgoing message list, because the server is going
  * to totally exit after returning from this function.
@@ -638,7 +638,7 @@ SV_FinalMessage(char *message)
  * before Sys_Quit or Sys_Error
  */
 void
-SV_Shutdown(char *finalmsg)
+svshutdown(char *finalmsg)
 {
 	if(!com_sv_running || !com_sv_running->integer)
 		return;
@@ -652,7 +652,7 @@ SV_Shutdown(char *finalmsg)
 
 	SV_RemoveOperatorCommands();
 	SV_MasterShutdown();
-	SV_ShutdownGameProgs();
+	svshutdownGameProgs();
 
 	/* free current level */
 	SV_ClearServer();

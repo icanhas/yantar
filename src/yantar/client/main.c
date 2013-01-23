@@ -1534,11 +1534,11 @@ CL_Connect_f(void)
 
 	if(com_sv_running->integer && !strcmp(server, "localhost"))
 		/* if running a local server, kill it */
-		SV_Shutdown("Server quit");
+		svshutdown("Server quit");
 
 	/* make sure a local server is killed */
 	cvarsetstr("sv_killserver", "1");
-	SV_Frame(0);
+	svframe(0);
 
 	noGameRestart = qtrue;
 	cldisconnect(qtrue);

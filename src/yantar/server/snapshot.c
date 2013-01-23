@@ -492,7 +492,7 @@ SV_BuildClientSnapshot(Client *client)
 					      svs.numSnapshotEntities];
 		*state = ent->s;
 		svs.nextSnapshotEntities++;
-		/* this should never hit, map should always be restarted first in SV_Frame */
+		/* this should never hit, map should always be restarted first in svframe */
 		if(svs.nextSnapshotEntities >= 0x7FFFFFFE)
 			comerrorf(ERR_FATAL, "svs.nextSnapshotEntities wrapped");
 		frame->num_entities++;

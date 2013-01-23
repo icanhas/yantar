@@ -872,12 +872,12 @@ SV_GameSystemCalls(intptr_t *args)
 }
 
 /*
- * SV_ShutdownGameProgs
+ * svshutdownGameProgs
  *
  * Called every time a map changes
  */
 void
-SV_ShutdownGameProgs(void)
+svshutdownGameProgs(void)
 {
 	if(!gvm)
 		return;
@@ -887,12 +887,12 @@ SV_ShutdownGameProgs(void)
 }
 
 /*
- * SV_InitGameVM
+ * svinitGameVM
  *
  * Called for both a full init and a restart
  */
 static void
-SV_InitGameVM(qbool restart)
+svinitGameVM(qbool restart)
 {
 	int i;
 
@@ -930,17 +930,17 @@ SV_RestartGameProgs(void)
 	if(!gvm)
 		comerrorf(ERR_FATAL, "vmrestart on game failed");
 
-	SV_InitGameVM(qtrue);
+	svinitGameVM(qtrue);
 }
 
 
 /*
- * SV_InitGameProgs
+ * svinitGameProgs
  *
  * Called on a normal map change, not on a map_restart
  */
 void
-SV_InitGameProgs(void)
+svinitGameProgs(void)
 {
 	Cvar *var;
 	/* FIXME these are temp while I make bots run in vm */
@@ -959,17 +959,17 @@ SV_InitGameProgs(void)
 	if(!gvm)
 		comerrorf(ERR_FATAL, "vmcreate on game failed");
 
-	SV_InitGameVM(qfalse);
+	svinitGameVM(qfalse);
 }
 
 
 /*
- * SV_GameCommand
+ * svgamecmd
  *
  * See if the current console command is claimed by the game
  */
 qbool
-SV_GameCommand(void)
+svgamecmd(void)
 {
 	if(sv.state != SS_GAME)
 		return qfalse;

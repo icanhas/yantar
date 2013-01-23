@@ -821,10 +821,10 @@ SV_ConnectionlessPacket(Netaddr from, Bitmsg *msg)
 /* ============================================================================ */
 
 /*
- * SV_PacketEvent
+ * svpacketevent
  */
 void
-SV_PacketEvent(Netaddr from, Bitmsg *msg)
+svpacketevent(Netaddr from, Bitmsg *msg)
 {
 	int	i;
 	Client *cl;
@@ -858,7 +858,7 @@ SV_PacketEvent(Netaddr from, Bitmsg *msg)
 		 * port assignments */
 		if(cl->netchan.remoteAddress.port != from.port){
 			comprintf(
-				"SV_PacketEvent: fixing up a translated port\n");
+				"svpacketevent: fixing up a translated port\n");
 			cl->netchan.remoteAddress.port = from.port;
 		}
 
@@ -1012,11 +1012,11 @@ SV_CheckPaused(void)
 }
 
 /*
- * SV_FrameMsec
+ * svframemsec
  * Return time in millseconds until processing of the next server frame.
  */
 int
-SV_FrameMsec()
+svframemsec()
 {
 	if(sv_fps){
 		int frameMsec;
@@ -1033,16 +1033,16 @@ SV_FrameMsec()
 
 /*
  * Player movement occurs as a result of packet events, which
- * happen before SV_Frame is called
+ * happen before svframe is called
  */
 void
-SV_Frame(int msec)
+svframe(int msec)
 {
 	int frameMsec, startTime;
 
 	/* the menu kills the server with this cvar */
 	if(sv_killserver->integer){
-		SV_Shutdown ("Server was killed");
+		svshutdown ("Server was killed");
 		cvarsetstr("sv_killserver", "0");
 		return;
 	}
@@ -1079,13 +1079,13 @@ SV_Frame(int msec)
 	 * 2giga-milliseconds = 23 days, so it won't be too often 
 	 */
 	if(svs.time > 0x70000000){
-		SV_Shutdown("Restarting server due to time wrapping");
+		svshutdown("Restarting server due to time wrapping");
 		cbufaddstr(va("map %s\n", cvargetstr("mapname")));
 		return;
 	}
 	/* this can happen considerably earlier when lots of clients play and the map doesn't change */
 	if(svs.nextSnapshotEntities >= 0x7FFFFFFE - svs.numSnapshotEntities){
-		SV_Shutdown(
+		svshutdown(
 			"Restarting server due to numSnapshotEntities wrapping");
 		cbufaddstr(va("map %s\n", cvargetstr("mapname")));
 		return;
@@ -1190,7 +1190,7 @@ SV_RateMsec(Client *client)
 }
 
 /*
- * SV_SendQueuedPackets
+ * svsendqueuedpackets
  *
  * Send download messages and queued packets in the time that we're idle, i.e.
  * not computing a server frame or sending client snapshots.
@@ -1198,7 +1198,7 @@ SV_RateMsec(Client *client)
  */
 
 int
-SV_SendQueuedPackets()
+svsendqueuedpackets()
 {
 	int	numBlocks;
 	int	dlStart, deltaT, delayT;

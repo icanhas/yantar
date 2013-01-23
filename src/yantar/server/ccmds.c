@@ -1102,7 +1102,7 @@ SV_DumpUser_f(void)
 static void
 SV_KillServer_f(void)
 {
-	SV_Shutdown("killserver");
+	svshutdown("killserver");
 }
 
 static void

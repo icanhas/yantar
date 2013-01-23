@@ -249,7 +249,7 @@ comerrorf(int code, const char *fmt, ...)
 
 	if(code == ERR_DISCONNECT || code == ERR_SERVERDISCONNECT){
 		vmsetforceunload();
-		SV_Shutdown("Server disconnected");
+		svshutdown("Server disconnected");
 		cldisconnect(qtrue);
 		clflushmem( );
 		vmclearforceunload();
@@ -262,7 +262,7 @@ comerrorf(int code, const char *fmt, ...)
 			"********************\nERROR: %s\n********************\n",
 			com_errorMessage);
 		vmsetforceunload();
-		SV_Shutdown (va("Server crashed: %s",  com_errorMessage));
+		svshutdown (va("Server crashed: %s",  com_errorMessage));
 		cldisconnect(qtrue);
 		clflushmem( );
 		vmclearforceunload();
@@ -273,7 +273,7 @@ comerrorf(int code, const char *fmt, ...)
 		vmsetforceunload();
 		clshutdown(va("Client fatal crashed: %s",
 				com_errorMessage), qtrue, qtrue);
-		SV_Shutdown(va("Server fatal crashed: %s", com_errorMessage));
+		svshutdown(va("Server fatal crashed: %s", com_errorMessage));
 		vmclearforceunload();
 	}
 
@@ -297,7 +297,7 @@ Com_Quit_f(void)
 		 * Sys_Quit will kill this process anyways, so
 		 * a corrupt call stack makes no difference */
 		vmsetforceunload();
-		SV_Shutdown(p[0] ? p : "Server quit");
+		svshutdown(p[0] ? p : "Server quit");
 		clshutdown(p[0] ? p : "Client quit", qtrue, qtrue);
 		vmclearforceunload();
 		Com_Shutdown ();
@@ -826,12 +826,12 @@ comrunservpacket(Netaddr *evFrom, Bitmsg *buf)
 	t1 = 0;
 	if(com_speeds->integer)
 		t1 = Sys_Milliseconds ();
-	SV_PacketEvent(*evFrom, buf);
+	svpacketevent(*evFrom, buf);
 	if(com_speeds->integer){
 		t2 = Sys_Milliseconds ();
 		msec = t2 - t1;
 		if(com_speeds->integer == 3)
-			comprintf("SV_PacketEvent time: %i\n", msec);
+			comprintf("svpacketevent time: %i\n", msec);
 	}
 }
 
@@ -1177,7 +1177,7 @@ comgamerestart(int checksumFeed, qbool disconnect)
 
 		/* Kill server if we have one */
 		if(com_sv_running->integer)
-			SV_Shutdown("Game directory changed");
+			svshutdown("Game directory changed");
 
 		if(clWasRunning){
 			if(disconnect)
@@ -1537,7 +1537,7 @@ Com_Init(char *commandLine)
 	Netchan_Init(qport & 0xffff);
 
 	vminit();
-	SV_Init();
+	svinit();
 
 	com_dedicated->modified = qfalse;
 	if(!com_dedicated->integer)
@@ -1673,7 +1673,7 @@ Com_Frame(void)
 	/* Figure out how much time we have */
 	if(!com_timedemo->integer){
 		if(com_dedicated->integer)
-			minMsec = SV_FrameMsec();
+			minMsec = svframemsec();
 		else{
 			if(com_minimized->integer &&
 			   com_maxfpsMinimized->integer > 0)
@@ -1701,7 +1701,7 @@ Com_Frame(void)
 
 	do{
 		if(com_sv_running->integer){
-			timeValSV = SV_SendQueuedPackets();
+			timeValSV = svsendqueuedpackets();
 
 			timeVal = Q_TimeVal(minMsec);
 
@@ -1734,7 +1734,7 @@ Com_Frame(void)
 	/* server side */
 	if(com_speeds->integer)
 		timeBeforeServer = Sys_Milliseconds ();
-	SV_Frame(msec);
+	svframe(msec);
 	/* if "dedicated" has been modified, start up
 	 * or shut down the client system.
 	 * Do this after the server may have started,
@@ -1744,7 +1744,7 @@ Com_Frame(void)
 		cvarget("dedicated", "0", 0);
 		com_dedicated->modified = qfalse;
 		if(!com_dedicated->integer){
-			SV_Shutdown("dedicated set to 0");
+			svshutdown("dedicated set to 0");
 			clflushmem();
 		}
 	}
