@@ -1873,10 +1873,10 @@ CG_DrawCrosshair3D(void)
 	 * We are going to trace to the next shootable object and place the crosshair in front of it. */
 
 	/* first get all the important renderer information */
-	trap_Cvar_VariableStringBuffer("r_zProj", rendererinfos,
+	trap_cvargetstrbuf("r_zProj", rendererinfos,
 		sizeof(rendererinfos));
 	zProj = atof(rendererinfos);
-	trap_Cvar_VariableStringBuffer("r_stereoSeparation", rendererinfos,
+	trap_cvargetstrbuf("r_stereoSeparation", rendererinfos,
 		sizeof(rendererinfos));
 	stereoSep = zProj / atof(rendererinfos);
 
@@ -2365,7 +2365,7 @@ CG_DrawTimedMenus(void)
 		int t = cg.time - cg.voiceTime;
 		if(t > 2500){
 			Menus_CloseByName("voiceMenu");
-			trap_Cvar_Set("cl_conXOffset", "0");
+			trap_cvarsetstr("cl_conXOffset", "0");
 			cg.voiceTime = 0;
 		}
 	}

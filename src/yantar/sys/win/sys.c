@@ -637,7 +637,7 @@ Sys_GLimpInit(void)
 		/* It's a little bit weird having in_mouse control the
 		 * video driver, but from ioq3's point of view they're
 		 * virtually the same except for the mouse input anyway */
-		if(Cvar_VariableIntegerValue("in_mouse") == -1)
+		if(cvargeti("in_mouse") == -1)
 			/* Use the windib SDL backend, which is closest to
 			* the behaviour of idq3 with in_mouse set to -1 */
 			_putenv("SDL_VIDEODRIVER=windib");

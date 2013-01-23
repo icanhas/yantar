@@ -179,9 +179,9 @@ InGame_MenuInit(void)
 	s_ingame.addbots.string = "ADD BOTS";
 	s_ingame.addbots.color	= color_white;
 	s_ingame.addbots.style	= UI_CENTER|UI_SMALLFONT;
-	if(!trap_Cvar_VariableValue("sv_running") ||
-	   !trap_Cvar_VariableValue("bot_enable") ||
-	   (trap_Cvar_VariableValue("g_gametype") == GT_SINGLE_PLAYER))
+	if(!trap_cvargetf("sv_running") ||
+	   !trap_cvargetf("bot_enable") ||
+	   (trap_cvargetf("g_gametype") == GT_SINGLE_PLAYER))
 		s_ingame.addbots.generic.flags |= QMF_GRAYED;
 
 	y += INGAME_MENU_VERTICAL_SPACING;
@@ -195,9 +195,9 @@ InGame_MenuInit(void)
 	s_ingame.removebots.string	= "REMOVE BOTS";
 	s_ingame.removebots.color	= color_white;
 	s_ingame.removebots.style	= UI_CENTER|UI_SMALLFONT;
-	if(!trap_Cvar_VariableValue("sv_running") ||
-	   !trap_Cvar_VariableValue("bot_enable") ||
-	   (trap_Cvar_VariableValue("g_gametype") == GT_SINGLE_PLAYER))
+	if(!trap_cvargetf("sv_running") ||
+	   !trap_cvargetf("bot_enable") ||
+	   (trap_cvargetf("g_gametype") == GT_SINGLE_PLAYER))
 		s_ingame.removebots.generic.flags |= QMF_GRAYED;
 
 	y += INGAME_MENU_VERTICAL_SPACING;
@@ -211,7 +211,7 @@ InGame_MenuInit(void)
 	s_ingame.teamorders.string	= "TEAM ORDERS";
 	s_ingame.teamorders.color	= color_white;
 	s_ingame.teamorders.style	= UI_CENTER|UI_SMALLFONT;
-	if(!(trap_Cvar_VariableValue("g_gametype") >= GT_TEAM))
+	if(!(trap_cvargetf("g_gametype") >= GT_TEAM))
 		s_ingame.teamorders.generic.flags |= QMF_GRAYED;
 	else{
 		trap_GetClientState(&cs);
@@ -254,7 +254,7 @@ InGame_MenuInit(void)
 	s_ingame.restart.string = "RESTART ARENA";
 	s_ingame.restart.color	= color_white;
 	s_ingame.restart.style	= UI_CENTER|UI_SMALLFONT;
-	if(!trap_Cvar_VariableValue("sv_running"))
+	if(!trap_cvargetf("sv_running"))
 		s_ingame.restart.generic.flags |= QMF_GRAYED;
 
 	y += INGAME_MENU_VERTICAL_SPACING;

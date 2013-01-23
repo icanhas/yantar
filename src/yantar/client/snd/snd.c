@@ -307,17 +307,17 @@ S_Init(void)
 
 	Com_Printf("------ Initializing Sound ------\n");
 
-	s_volume = Cvar_Get("s_volume", "0.8", CVAR_ARCHIVE);
-	s_musicVolume	= Cvar_Get("s_musicvolume", "0.25", CVAR_ARCHIVE);
-	s_muted		= Cvar_Get("s_muted", "0", CVAR_ROM);
-	s_doppler	= Cvar_Get("s_doppler", "1", CVAR_ARCHIVE);
-	s_backend	= Cvar_Get("s_backend", "", CVAR_ROM);
-	s_muteWhenMinimized = Cvar_Get("s_muteWhenMinimized", "0",
+	s_volume = cvarget("s_volume", "0.8", CVAR_ARCHIVE);
+	s_musicVolume	= cvarget("s_musicvolume", "0.25", CVAR_ARCHIVE);
+	s_muted		= cvarget("s_muted", "0", CVAR_ROM);
+	s_doppler	= cvarget("s_doppler", "1", CVAR_ARCHIVE);
+	s_backend	= cvarget("s_backend", "", CVAR_ROM);
+	s_muteWhenMinimized = cvarget("s_muteWhenMinimized", "0",
 		CVAR_ARCHIVE);
-	s_muteWhenUnfocused = Cvar_Get("s_muteWhenUnfocused", "0",
+	s_muteWhenUnfocused = cvarget("s_muteWhenUnfocused", "0",
 		CVAR_ARCHIVE);
 
-	cv = Cvar_Get("s_initsound", "1", 0);
+	cv = cvarget("s_initsound", "1", 0);
 	if(!cv->integer)
 		Com_Printf("Sound disabled.\n");
 	else{
@@ -333,7 +333,7 @@ S_Init(void)
 
 		if(!started){
 			started = S_Base_Init(&si);
-			Cvar_Set("s_backend", "base");
+			cvarsetstr("s_backend", "base");
 		}
 
 		if(started){

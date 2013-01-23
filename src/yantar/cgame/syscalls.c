@@ -53,7 +53,7 @@ trap_Milliseconds(void)
 }
 
 void
-trap_Cvar_Register(Vmcvar *vmCvar, const char *varName,
+trap_cvarregister(Vmcvar *vmCvar, const char *varName,
 		   const char *defaultValue,
 		   int flags)
 {
@@ -61,19 +61,19 @@ trap_Cvar_Register(Vmcvar *vmCvar, const char *varName,
 }
 
 void
-trap_Cvar_Update(Vmcvar *vmCvar)
+trap_cvarupdate(Vmcvar *vmCvar)
 {
 	syscall(CG_CVAR_UPDATE, vmCvar);
 }
 
 void
-trap_Cvar_Set(const char *var_name, const char *value)
+trap_cvarsetstr(const char *var_name, const char *value)
 {
 	syscall(CG_CVAR_SET, var_name, value);
 }
 
 void
-trap_Cvar_VariableStringBuffer(const char *var_name, char *buffer, int bufsize)
+trap_cvargetstrbuf(const char *var_name, char *buffer, int bufsize)
 {
 	syscall(CG_CVAR_VARIABLESTRINGBUFFER, var_name, buffer, bufsize);
 }

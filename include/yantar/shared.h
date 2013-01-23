@@ -946,7 +946,7 @@ enum {
 	CVAR_INIT = 1 << 4,		/* don't allow change from console at all,
 					 * but can be set from the command line */
 	CVAR_LATCH = 1 << 5,		/* will only change when C code next does
-					 * a Cvar_Get(), so it can't be changed
+					 * a cvarget(), so it can't be changed
 					 * without proper initialization.  modified
 					 * will be set, even though the value hasn't
 					 * changed yet */
@@ -959,7 +959,7 @@ enum {
 	CVAR_SERVER_CREATED = 1 << 11,	/* cvar was created by a server the client connected to. */
 	CVAR_VM_CREATED = 1 << 12,	/* cvar was created exclusively in one of the VMs. */
 	CVAR_PROTECTED = 1 << 13,	/* prevent modifying this var from VMs or the server */
-	/* These flags are only returned by the Cvar_Flags() function */
+	/* These flags are only returned by the cvarflags() function */
 	CVAR_MODIFIED = 1 << 30,	/* Cvar was modified */
 	CVAR_NONEXISTENT = 1 << 31	/* Cvar doesn't exist. */
 };

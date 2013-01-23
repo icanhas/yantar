@@ -46,7 +46,7 @@ Reset_MenuEvent(void* ptr, int event)
 
 	/* reset the game, pop the level menu and restart it so it updates */
 	UI_NewGame();
-	trap_Cvar_SetValue("ui_spSelection", 0);
+	trap_cvarsetf("ui_spSelection", 0);
 	UI_PopMenu();
 	UI_SPLevelMenu();
 }

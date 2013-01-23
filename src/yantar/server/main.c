@@ -228,7 +228,7 @@ SV_MasterHeartbeat(const char *message)
 	int	res;
 	int	netenabled;
 
-	netenabled = Cvar_VariableIntegerValue("net_enabled");
+	netenabled = cvargeti("net_enabled");
 
 	/* "dedicated 1" is for lan play, "dedicated 2" is for inet public play */
 	if(!com_dedicated || com_dedicated->integer != 2 ||
@@ -303,7 +303,7 @@ SV_MasterHeartbeat(const char *message)
 				 * so we don't take repeated dns hits */
 				Com_Printf("Couldn't resolve address: %s\n",
 					sv_master[i]->string);
-				Cvar_Set(sv_master[i]->name, "");
+				cvarsetstr(sv_master[i]->name, "");
 				sv_master[i]->modified = qfalse;
 				continue;
 			}
@@ -554,7 +554,7 @@ SVC_Status(Netaddr from)
 	static Leakybucket bucket;
 
 	/* ignore if we are in single player */
-	if(Cvar_VariableValue("g_gametype") == GT_SINGLE_PLAYER)
+	if(cvargetf("g_gametype") == GT_SINGLE_PLAYER)
 		return;
 
 	/* Prevent using getstatus as an amplifier */
@@ -573,7 +573,7 @@ SVC_Status(Netaddr from)
 		return;
 	}
 
-	strcpy(infostring, Cvar_InfoString(CVAR_SERVERINFO));
+	strcpy(infostring, cvargetinfostr(CVAR_SERVERINFO));
 
 	/* echo back the parameter to status. so master servers can use it as a challenge
 	 * to prevent timed spoofed reply packets that add ghost servers */
@@ -614,8 +614,8 @@ SVC_Info(Netaddr from)
 	char	infostring[MAX_INFO_STRING];
 
 	/* ignore if we are in single player */
-	if(Cvar_VariableValue("g_gametype") == GT_SINGLE_PLAYER ||
-	   Cvar_VariableValue("ui_singlePlayerActive"))
+	if(cvargetf("g_gametype") == GT_SINGLE_PLAYER ||
+	   cvargetf("ui_singlePlayerActive"))
 		return;
 
 	/*
@@ -657,7 +657,7 @@ SVC_Info(Netaddr from)
 		va("%i", sv_gametype->integer));
 	Info_SetValueForKey(infostring, "pure", va("%i", sv_pure->integer));
 	Info_SetValueForKey(infostring, "g_needpass",
-		va("%d", Cvar_VariableIntegerValue("g_needpass")));
+		va("%d", cvargeti("g_needpass")));
 
 #ifdef USE_VOIP
 	if(sv_voip->integer)
@@ -672,7 +672,7 @@ SVC_Info(Netaddr from)
 	if(sv_maxPing->integer)
 		Info_SetValueForKey(infostring, "maxPing",
 			va("%i", sv_maxPing->integer));
-	gamedir = Cvar_VariableString("fs_game");
+	gamedir = cvargetstr("fs_game");
 	if(*gamedir)
 		Info_SetValueForKey(infostring, "game", gamedir);
 
@@ -1002,12 +1002,12 @@ SV_CheckPaused(void)
 	if(count > 1){
 		/* don't pause */
 		if(sv_paused->integer)
-			Cvar_Set("sv_paused", "0");
+			cvarsetstr("sv_paused", "0");
 		return qfalse;
 	}
 
 	if(!sv_paused->integer)
-		Cvar_Set("sv_paused", "1");
+		cvarsetstr("sv_paused", "1");
 	return qtrue;
 }
 
@@ -1043,7 +1043,7 @@ SV_Frame(int msec)
 	/* the menu kills the server with this cvar */
 	if(sv_killserver->integer){
 		SV_Shutdown ("Server was killed");
-		Cvar_Set("sv_killserver", "0");
+		cvarsetstr("sv_killserver", "0");
 		return;
 	}
 
@@ -1059,12 +1059,12 @@ SV_Frame(int msec)
 
 	/* if it isn't time for the next frame, do nothing */
 	if(sv_fps->integer < 1)
-		Cvar_Set("sv_fps", "10");
+		cvarsetstr("sv_fps", "10");
 
 	frameMsec = 1000 / sv_fps->integer * com_timescale->value;
 	/* don't let it scale below 1ms */
 	if(frameMsec < 1){
-		Cvar_Set("timescale", va("%f", sv_fps->integer / 1000.0f));
+		cvarsetstr("timescale", va("%f", sv_fps->integer / 1000.0f));
 		frameMsec = 1;
 	}
 
@@ -1080,14 +1080,14 @@ SV_Frame(int msec)
 	 */
 	if(svs.time > 0x70000000){
 		SV_Shutdown("Restarting server due to time wrapping");
-		cbufaddstr(va("map %s\n", Cvar_VariableString("mapname")));
+		cbufaddstr(va("map %s\n", cvargetstr("mapname")));
 		return;
 	}
 	/* this can happen considerably earlier when lots of clients play and the map doesn't change */
 	if(svs.nextSnapshotEntities >= 0x7FFFFFFE - svs.numSnapshotEntities){
 		SV_Shutdown(
 			"Restarting server due to numSnapshotEntities wrapping");
-		cbufaddstr(va("map %s\n", Cvar_VariableString("mapname")));
+		cbufaddstr(va("map %s\n", cvargetstr("mapname")));
 		return;
 	}
 
@@ -1100,12 +1100,12 @@ SV_Frame(int msec)
 	/* update infostrings if anything has been changed */
 	if(cvar_modifiedFlags & CVAR_SERVERINFO){
 		SV_SetConfigstring(CS_SERVERINFO,
-			Cvar_InfoString(CVAR_SERVERINFO));
+			cvargetinfostr(CVAR_SERVERINFO));
 		cvar_modifiedFlags &= ~CVAR_SERVERINFO;
 	}
 	if(cvar_modifiedFlags & CVAR_SYSTEMINFO){
 		SV_SetConfigstring(CS_SYSTEMINFO,
-			Cvar_InfoString_Big(CVAR_SYSTEMINFO));
+			cvargetbiginfostr(CVAR_SYSTEMINFO));
 		cvar_modifiedFlags &= ~CVAR_SYSTEMINFO;
 	}
 
@@ -1163,14 +1163,14 @@ SV_RateMsec(Client *client)
 
 	if(sv_maxRate->integer){
 		if(sv_maxRate->integer < 1000)
-			Cvar_Set("sv_MaxRate", "1000");
+			cvarsetstr("sv_MaxRate", "1000");
 		if(sv_maxRate->integer < rate)
 			rate = sv_maxRate->integer;
 	}
 
 	if(sv_minRate->integer){
 		if(sv_minRate->integer < 1000)
-			Cvar_Set("sv_minRate", "1000");
+			cvarsetstr("sv_minRate", "1000");
 		if(sv_minRate->integer > rate)
 			rate = sv_minRate->integer;
 	}

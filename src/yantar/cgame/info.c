@@ -149,7 +149,7 @@ CG_DrawInformation(void)
 	y = 180-32;
 
 	/* don't print server lines if playing a local game */
-	trap_Cvar_VariableStringBuffer("sv_running", buf, sizeof(buf));
+	trap_cvargetstrbuf("sv_running", buf, sizeof(buf));
 	if(!atoi(buf)){
 		/* server hostname */
 		Q_strncpyz(buf, Info_ValueForKey(info, "sv_hostname"), 1024);

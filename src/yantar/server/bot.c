@@ -83,17 +83,17 @@ BotDrawDebugPolygons(void (*drawPoly)(int color, int numPoints,
 	if(!debugpolygons)
 		return;
 	/* bot debugging */
-	if(!bot_debug) bot_debug = Cvar_Get("bot_debug", "0", 0);
+	if(!bot_debug) bot_debug = cvarget("bot_debug", "0", 0);
 	if(bot_enable && bot_debug->integer){
 		/* show reachabilities */
-		if(!bot_reachability) bot_reachability = Cvar_Get(
+		if(!bot_reachability) bot_reachability = cvarget(
 				"bot_reachability", "0", 0);
 		/* show ground faces only */
 		if(!bot_groundonly) bot_groundonly =
-				Cvar_Get("bot_groundonly", "1",
+				cvarget("bot_groundonly", "1",
 					0);
 		/* get the hightlight area */
-		if(!bot_highlightarea) bot_highlightarea = Cvar_Get(
+		if(!bot_highlightarea) bot_highlightarea = cvarget(
 				"bot_highlightarea", "0", 0);
 		parm0 = 0;
 		if(svs.clients[0].lastUsercmd.buttons & BUTTON_PRIATTACK) parm0 |=
@@ -468,36 +468,36 @@ void
 SV_BotInitCvars(void)
 {
 
-	Cvar_Get("bot_enable", "1", 0);				/* enable the bot */
-	Cvar_Get("bot_developer", "0", CVAR_CHEAT);		/* bot developer mode */
-	Cvar_Get("bot_debug", "0", CVAR_CHEAT);			/* enable bot debugging */
-	Cvar_Get("bot_maxdebugpolys", "2", 0);			/* maximum number of debug polys */
-	Cvar_Get("bot_groundonly", "1", 0);			/* only show ground faces of areas */
-	Cvar_Get("bot_reachability", "0", 0);			/* show all reachabilities to other areas */
-	Cvar_Get("bot_visualizejumppads", "0", CVAR_CHEAT);	/* show jumppads */
-	Cvar_Get("bot_forceclustering", "0", 0);		/* force cluster calculations */
-	Cvar_Get("bot_forcereachability", "0", 0);		/* force reachability calculations */
-	Cvar_Get("bot_forcewrite", "0", 0);			/* force writing aas file */
-	Cvar_Get("bot_aasoptimize", "0", 0);			/* no aas file optimisation */
-	Cvar_Get("bot_saveroutingcache", "0", 0);		/* save routing cache */
-	Cvar_Get("bot_thinktime", "100", CVAR_CHEAT);		/* msec the bots thinks */
-	Cvar_Get("bot_reloadcharacters", "0", 0);		/* reload the bot characters each time */
-	Cvar_Get("bot_testichat", "0", 0);			/* test ichats */
-	Cvar_Get("bot_testrchat", "0", 0);			/* test rchats */
-	Cvar_Get("bot_testsolid", "0", CVAR_CHEAT);		/* test for solid areas */
-	Cvar_Get("bot_testclusters", "0", CVAR_CHEAT);		/* test the AAS clusters */
-	Cvar_Get("bot_fastchat", "0", 0);			/* fast chatting bots */
-	Cvar_Get("bot_nochat", "0", 0);				/* disable chats */
-	Cvar_Get("bot_pause", "0", CVAR_CHEAT);			/* pause the bots thinking */
-	Cvar_Get("bot_report", "0", CVAR_CHEAT);		/* get a full report in ctf */
-	Cvar_Get("bot_grapple", "0", 0);			/* enable grapple */
-	Cvar_Get("bot_rocketjump", "1", 0);			/* enable rocket jumping */
-	Cvar_Get("bot_challenge", "0", 0);			/* challenging bot */
-	Cvar_Get("bot_minplayers", "0", 0);			/* minimum players in a team or the game */
-	Cvar_Get("bot_interbreedchar", "", CVAR_CHEAT);		/* bot character used for interbreeding */
-	Cvar_Get("bot_interbreedbots", "10", CVAR_CHEAT);	/* number of bots used for interbreeding */
-	Cvar_Get("bot_interbreedcycle", "20", CVAR_CHEAT);	/* bot interbreeding cycle */
-	Cvar_Get("bot_interbreedwrite", "", CVAR_CHEAT);	/* write interbreeded bots to this file */
+	cvarget("bot_enable", "1", 0);				/* enable the bot */
+	cvarget("bot_developer", "0", CVAR_CHEAT);		/* bot developer mode */
+	cvarget("bot_debug", "0", CVAR_CHEAT);			/* enable bot debugging */
+	cvarget("bot_maxdebugpolys", "2", 0);			/* maximum number of debug polys */
+	cvarget("bot_groundonly", "1", 0);			/* only show ground faces of areas */
+	cvarget("bot_reachability", "0", 0);			/* show all reachabilities to other areas */
+	cvarget("bot_visualizejumppads", "0", CVAR_CHEAT);	/* show jumppads */
+	cvarget("bot_forceclustering", "0", 0);		/* force cluster calculations */
+	cvarget("bot_forcereachability", "0", 0);		/* force reachability calculations */
+	cvarget("bot_forcewrite", "0", 0);			/* force writing aas file */
+	cvarget("bot_aasoptimize", "0", 0);			/* no aas file optimisation */
+	cvarget("bot_saveroutingcache", "0", 0);		/* save routing cache */
+	cvarget("bot_thinktime", "100", CVAR_CHEAT);		/* msec the bots thinks */
+	cvarget("bot_reloadcharacters", "0", 0);		/* reload the bot characters each time */
+	cvarget("bot_testichat", "0", 0);			/* test ichats */
+	cvarget("bot_testrchat", "0", 0);			/* test rchats */
+	cvarget("bot_testsolid", "0", CVAR_CHEAT);		/* test for solid areas */
+	cvarget("bot_testclusters", "0", CVAR_CHEAT);		/* test the AAS clusters */
+	cvarget("bot_fastchat", "0", 0);			/* fast chatting bots */
+	cvarget("bot_nochat", "0", 0);				/* disable chats */
+	cvarget("bot_pause", "0", CVAR_CHEAT);			/* pause the bots thinking */
+	cvarget("bot_report", "0", CVAR_CHEAT);		/* get a full report in ctf */
+	cvarget("bot_grapple", "0", 0);			/* enable grapple */
+	cvarget("bot_rocketjump", "1", 0);			/* enable rocket jumping */
+	cvarget("bot_challenge", "0", 0);			/* challenging bot */
+	cvarget("bot_minplayers", "0", 0);			/* minimum players in a team or the game */
+	cvarget("bot_interbreedchar", "", CVAR_CHEAT);		/* bot character used for interbreeding */
+	cvarget("bot_interbreedbots", "10", CVAR_CHEAT);	/* number of bots used for interbreeding */
+	cvarget("bot_interbreedcycle", "20", CVAR_CHEAT);	/* bot interbreeding cycle */
+	cvarget("bot_interbreedwrite", "", CVAR_CHEAT);	/* write interbreeded bots to this file */
 }
 
 /*
@@ -509,7 +509,7 @@ SV_BotInitBotLib(void)
 	botlib_import_t botlib_import;
 
 	if(debugpolygons) zfree(debugpolygons);
-	bot_maxdebugpolys = Cvar_VariableIntegerValue("bot_maxdebugpolys");
+	bot_maxdebugpolys = cvargeti("bot_maxdebugpolys");
 	debugpolygons = zalloc(sizeof(bot_debugpoly_t) * bot_maxdebugpolys);
 
 	botlib_import.Print	= BotImport_Print;

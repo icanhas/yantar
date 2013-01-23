@@ -230,7 +230,7 @@ SV_GetServerinfo(char *buffer, int bufferSize)
 	if(bufferSize < 1)
 		Com_Errorf(ERR_DROP, "SV_GetServerinfo: bufferSize == %i",
 			bufferSize);
-	Q_strncpyz(buffer, Cvar_InfoString(CVAR_SERVERINFO), bufferSize);
+	Q_strncpyz(buffer, cvargetinfostr(CVAR_SERVERINFO), bufferSize);
 }
 
 /*
@@ -290,18 +290,18 @@ SV_GameSystemCalls(intptr_t *args)
 	case G_MILLISECONDS:
 		return Sys_Milliseconds();
 	case G_CVAR_REGISTER:
-		Cvar_Register(VMA(1), VMA(2), VMA(3), args[4]);
+		cvarregister(VMA(1), VMA(2), VMA(3), args[4]);
 		return 0;
 	case G_CVAR_UPDATE:
-		Cvar_Update(VMA(1));
+		cvarupdate(VMA(1));
 		return 0;
 	case G_CVAR_SET:
-		Cvar_SetSafe((const char*)VMA(1), (const char*)VMA(2));
+		cvarsetstrsafe((const char*)VMA(1), (const char*)VMA(2));
 		return 0;
 	case G_CVAR_VARIABLE_INTEGER_VALUE:
-		return Cvar_VariableIntegerValue((const char*)VMA(1));
+		return cvargeti((const char*)VMA(1));
 	case G_CVAR_VARIABLE_STRING_BUFFER:
-		Cvar_VariableStringBuffer(VMA(1), VMA(2), args[3]);
+		cvargetstrbuf(VMA(1), VMA(2), args[3]);
 		return 0;
 	case G_ARGC:
 		return cmdargc();
@@ -946,7 +946,7 @@ SV_InitGameProgs(void)
 	/* FIXME these are temp while I make bots run in vm */
 	extern int bot_enable;
 
-	var = Cvar_Get("bot_enable", "1", CVAR_LATCH);
+	var = cvarget("bot_enable", "1", CVAR_LATCH);
 	if(var)
 		bot_enable = var->integer;
 	else
@@ -955,7 +955,7 @@ SV_InitGameProgs(void)
 	/* load the dll or bytecode */
 	gvm =
 		vmcreate("game", SV_GameSystemCalls,
-			Cvar_VariableValue("vm_game"));
+			cvargetf("vm_game"));
 	if(!gvm)
 		Com_Errorf(ERR_FATAL, "vmcreate on game failed");
 

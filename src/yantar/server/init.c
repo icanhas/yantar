@@ -181,14 +181,14 @@ static void
 SV_BoundMaxClients(int minimum)
 {
 	/* get the current maxclients value */
-	Cvar_Get("sv_maxclients", "8", 0);
+	cvarget("sv_maxclients", "8", 0);
 
 	sv_maxclients->modified = qfalse;
 
 	if(sv_maxclients->integer < minimum)
-		Cvar_Set("sv_maxclients", va("%i", minimum));
+		cvarsetstr("sv_maxclients", va("%i", minimum));
 	else if(sv_maxclients->integer > MAX_CLIENTS)
-		Cvar_Set("sv_maxclients", va("%i", MAX_CLIENTS));
+		cvarsetstr("sv_maxclients", va("%i", MAX_CLIENTS));
 }
 
 /*
@@ -215,9 +215,9 @@ SV_Startup(void)
 
 	/* Don't respect sv_killserver unless a server is actually running */
 	if(sv_killserver->integer)
-		Cvar_Set("sv_killserver", "0");
+		cvarsetstr("sv_killserver", "0");
 
-	Cvar_Set("sv_running", "1");
+	cvarsetstr("sv_running", "1");
 
 	/* Join the ipv6 multicast group now that a map is running so clients can scan for us on the local network. */
 	NET_JoinMulticast6();
@@ -334,7 +334,7 @@ SV_SpawnServer(char *server, qbool killBots)
 	CM_ClearMap();
 
 	/* init client structures and svs.numSnapshotEntities */
-	if(!Cvar_VariableValue("sv_running"))
+	if(!cvargetf("sv_running"))
 		SV_Startup();
 	else if(sv_maxclients->modified)
 		SV_ChangeMaxClients();
@@ -354,8 +354,8 @@ SV_SpawnServer(char *server, qbool killBots)
 	 * set nextmap to the same map, but it may be overriden
 	 * by the game startup or another console command 
 	 */
-	Cvar_Set("nextmap", "map_restart 0");
-/*	Cvar_Set( "nextmap", va("map %s", server) ); */
+	cvarsetstr("nextmap", "map_restart 0");
+/*	cvarsetstr( "nextmap", va("map %s", server) ); */
 
 	for(i=0; i<sv_maxclients->integer; i++){
 		/* save when the server started for each client already connected */
@@ -368,7 +368,7 @@ SV_SpawnServer(char *server, qbool killBots)
 	for(i = 0; i < MAX_CONFIGSTRINGS; i++)
 		sv.configstrings[i] = Copystr("");
 
-	Cvar_Set("cl_paused", "0");
+	cvarsetstr("cl_paused", "0");
 
 	/* get a new checksum feed and restart the file system */
 	sv.checksumFeed = (((int)rand() << 16) ^ rand()) ^ Com_Millisecs();
@@ -377,14 +377,14 @@ SV_SpawnServer(char *server, qbool killBots)
 	CM_LoadMap(va(Pmaps "/%s.bsp", server), qfalse, &checksum);
 
 
-	Cvar_Set("mapname", server);	/* set serverinfo visible name */
+	cvarsetstr("mapname", server);	/* set serverinfo visible name */
 
-	Cvar_Set("sv_mapChecksum", va("%i",checksum));
+	cvarsetstr("sv_mapChecksum", va("%i",checksum));
 
 	sv.serverId = com_frameTime;	/* serverid should be different each time */
 	sv.restartedServerId = sv.serverId;	/* I suppose the init here is just to be safe */
 	sv.checksumFeedServerId = sv.serverId;
-	Cvar_Set("sv_serverid", va("%i", sv.serverId));
+	cvarsetstr("sv_serverid", va("%i", sv.serverId));
 
 	SV_ClearWorld();	/* clear physics interaction links */
 
@@ -470,12 +470,12 @@ SV_SpawnServer(char *server, qbool killBots)
 		 * load pk3s also loaded at the server 
 		 */
 		p = FS_LoadedPakChecksums();
-		Cvar_Set("sv_paks", p);
+		cvarsetstr("sv_paks", p);
 		if(strlen(p) == 0)
 			Com_Printf(
 				"WARNING: sv_pure set but no PK3 files loaded\n");
 		p = FS_LoadedPakNames();
-		Cvar_Set("sv_pakNames", p);
+		cvarsetstr("sv_pakNames", p);
 
 		/* 
 		 * if a dedicated pure server we need to touch the cgame because it could be in a
@@ -484,25 +484,25 @@ SV_SpawnServer(char *server, qbool killBots)
 		if(com_dedicated->integer)
 			SV_TouchCGame();
 	}else{
-		Cvar_Set("sv_paks", "");
-		Cvar_Set("sv_pakNames", "");
+		cvarsetstr("sv_paks", "");
+		cvarsetstr("sv_pakNames", "");
 	}
 	/* 
 	 * the server sends these to the clients so they can figure
 	 * out which pk3s should be auto-downloaded 
 	 */
 	p = FS_ReferencedPakChecksums();
-	Cvar_Set("sv_referencedPaks", p);
+	cvarsetstr("sv_referencedPaks", p);
 	p = FS_ReferencedPakNames();
-	Cvar_Set("sv_referencedPakNames", p);
+	cvarsetstr("sv_referencedPakNames", p);
 
 	/* save systeminfo and serverinfo strings */
-	Q_strncpyz(systemInfo, Cvar_InfoString_Big(CVAR_SYSTEMINFO),
+	Q_strncpyz(systemInfo, cvargetbiginfostr(CVAR_SYSTEMINFO),
 		sizeof(systemInfo));
 	cvar_modifiedFlags &= ~CVAR_SYSTEMINFO;
 	SV_SetConfigstring(CS_SYSTEMINFO, systemInfo);
 
-	SV_SetConfigstring(CS_SERVERINFO, Cvar_InfoString(CVAR_SERVERINFO));
+	SV_SetConfigstring(CS_SERVERINFO, cvargetinfostr(CVAR_SERVERINFO));
 	cvar_modifiedFlags &= ~CVAR_SERVERINFO;
 
 	/* 
@@ -528,71 +528,71 @@ SV_Init(void)
 	SV_AddOperatorCommands ();
 
 	/* serverinfo vars */
-	Cvar_Get ("dmflags", "0", CVAR_SERVERINFO);
-	Cvar_Get ("fraglimit", "20", CVAR_SERVERINFO);
-	Cvar_Get ("timelimit", "0", CVAR_SERVERINFO);
-	sv_gametype = Cvar_Get ("g_gametype", "0", CVAR_SERVERINFO | CVAR_LATCH);
-	Cvar_Get ("sv_keywords", "", CVAR_SERVERINFO);
-	sv_mapname = Cvar_Get ("mapname", "nomap", CVAR_SERVERINFO | CVAR_ROM);
-	sv_privateClients = Cvar_Get ("sv_privateClients", "0",
+	cvarget ("dmflags", "0", CVAR_SERVERINFO);
+	cvarget ("fraglimit", "20", CVAR_SERVERINFO);
+	cvarget ("timelimit", "0", CVAR_SERVERINFO);
+	sv_gametype = cvarget ("g_gametype", "0", CVAR_SERVERINFO | CVAR_LATCH);
+	cvarget ("sv_keywords", "", CVAR_SERVERINFO);
+	sv_mapname = cvarget ("mapname", "nomap", CVAR_SERVERINFO | CVAR_ROM);
+	sv_privateClients = cvarget ("sv_privateClients", "0",
 		CVAR_SERVERINFO);
-	sv_hostname = Cvar_Get ("sv_hostname", "noname",
+	sv_hostname = cvarget ("sv_hostname", "noname",
 		CVAR_SERVERINFO | CVAR_ARCHIVE);
-	sv_maxclients = Cvar_Get ("sv_maxclients", "8",
+	sv_maxclients = cvarget ("sv_maxclients", "8",
 		CVAR_SERVERINFO | CVAR_LATCH);
 
-	sv_minRate = Cvar_Get ("sv_minRate", "0",
+	sv_minRate = cvarget ("sv_minRate", "0",
 		CVAR_ARCHIVE | CVAR_SERVERINFO);
-	sv_maxRate = Cvar_Get ("sv_maxRate", "0",
+	sv_maxRate = cvarget ("sv_maxRate", "0",
 		CVAR_ARCHIVE | CVAR_SERVERINFO);
-	sv_dlRate = Cvar_Get("sv_dlRate", "100",
+	sv_dlRate = cvarget("sv_dlRate", "100",
 		CVAR_ARCHIVE | CVAR_SERVERINFO);
-	sv_minPing = Cvar_Get ("sv_minPing", "0",
+	sv_minPing = cvarget ("sv_minPing", "0",
 		CVAR_ARCHIVE | CVAR_SERVERINFO);
-	sv_maxPing = Cvar_Get ("sv_maxPing", "0",
+	sv_maxPing = cvarget ("sv_maxPing", "0",
 		CVAR_ARCHIVE | CVAR_SERVERINFO);
-	sv_floodProtect = Cvar_Get ("sv_floodProtect", "1",
+	sv_floodProtect = cvarget ("sv_floodProtect", "1",
 		CVAR_ARCHIVE | CVAR_SERVERINFO);
 
 	/* systeminfo */
-	Cvar_Get ("sv_cheats", "1", CVAR_SYSTEMINFO | CVAR_ROM);
-	sv_serverid = Cvar_Get ("sv_serverid", "0", CVAR_SYSTEMINFO | CVAR_ROM);
-	sv_pure = Cvar_Get ("sv_pure", "0", CVAR_SYSTEMINFO);
+	cvarget ("sv_cheats", "1", CVAR_SYSTEMINFO | CVAR_ROM);
+	sv_serverid = cvarget ("sv_serverid", "0", CVAR_SYSTEMINFO | CVAR_ROM);
+	sv_pure = cvarget ("sv_pure", "0", CVAR_SYSTEMINFO);
 #ifdef USE_VOIP
-	sv_voip = Cvar_Get("sv_voip", "1", CVAR_SYSTEMINFO | CVAR_LATCH);
-	Cvar_CheckRange(sv_voip, 0, 1, qtrue);
+	sv_voip = cvarget("sv_voip", "1", CVAR_SYSTEMINFO | CVAR_LATCH);
+	cvarcheckrange(sv_voip, 0, 1, qtrue);
 #endif
-	Cvar_Get ("sv_paks", "", CVAR_SYSTEMINFO | CVAR_ROM);
-	Cvar_Get ("sv_pakNames", "", CVAR_SYSTEMINFO | CVAR_ROM);
-	Cvar_Get ("sv_referencedPaks", "", CVAR_SYSTEMINFO | CVAR_ROM);
-	Cvar_Get ("sv_referencedPakNames", "", CVAR_SYSTEMINFO | CVAR_ROM);
+	cvarget ("sv_paks", "", CVAR_SYSTEMINFO | CVAR_ROM);
+	cvarget ("sv_pakNames", "", CVAR_SYSTEMINFO | CVAR_ROM);
+	cvarget ("sv_referencedPaks", "", CVAR_SYSTEMINFO | CVAR_ROM);
+	cvarget ("sv_referencedPakNames", "", CVAR_SYSTEMINFO | CVAR_ROM);
 
 	/* server vars */
-	sv_rconPassword = Cvar_Get ("rconPassword", "", CVAR_TEMP);
-	sv_privatePassword = Cvar_Get ("sv_privatePassword", "", CVAR_TEMP);
-	sv_fps = Cvar_Get ("sv_fps", "20", CVAR_TEMP);
-	sv_timeout = Cvar_Get ("sv_timeout", "200", CVAR_TEMP);
-	sv_zombietime = Cvar_Get ("sv_zombietime", "2", CVAR_TEMP);
-	Cvar_Get ("nextmap", "", CVAR_TEMP);
+	sv_rconPassword = cvarget ("rconPassword", "", CVAR_TEMP);
+	sv_privatePassword = cvarget ("sv_privatePassword", "", CVAR_TEMP);
+	sv_fps = cvarget ("sv_fps", "20", CVAR_TEMP);
+	sv_timeout = cvarget ("sv_timeout", "200", CVAR_TEMP);
+	sv_zombietime = cvarget ("sv_zombietime", "2", CVAR_TEMP);
+	cvarget ("nextmap", "", CVAR_TEMP);
 
-	sv_allowDownload = Cvar_Get ("sv_allowDownload", "0", CVAR_SERVERINFO);
-	Cvar_Get ("sv_dlURL", "", CVAR_SERVERINFO | CVAR_ARCHIVE);
+	sv_allowDownload = cvarget ("sv_allowDownload", "0", CVAR_SERVERINFO);
+	cvarget ("sv_dlURL", "", CVAR_SERVERINFO | CVAR_ARCHIVE);
 
-	sv_master[0] = Cvar_Get("sv_master1", MASTER_SERVER_NAME, 0);
+	sv_master[0] = cvarget("sv_master1", MASTER_SERVER_NAME, 0);
 	for(index = 1; index < MAX_MASTER_SERVERS; index++)
-		sv_master[index] = Cvar_Get(va("sv_master%d",
+		sv_master[index] = cvarget(va("sv_master%d",
 				index + 1), "", CVAR_ARCHIVE);
 
-	sv_reconnectlimit = Cvar_Get ("sv_reconnectlimit", "3", 0);
-	sv_showloss = Cvar_Get ("sv_showloss", "0", 0);
-	sv_padPackets	 = Cvar_Get ("sv_padPackets", "0", 0);
-	sv_killserver = Cvar_Get ("sv_killserver", "0", 0);
-	sv_mapChecksum = Cvar_Get ("sv_mapChecksum", "", CVAR_ROM);
-	sv_lanForceRate = Cvar_Get ("sv_lanForceRate", "1", CVAR_ARCHIVE);
+	sv_reconnectlimit = cvarget ("sv_reconnectlimit", "3", 0);
+	sv_showloss = cvarget ("sv_showloss", "0", 0);
+	sv_padPackets	 = cvarget ("sv_padPackets", "0", 0);
+	sv_killserver = cvarget ("sv_killserver", "0", 0);
+	sv_mapChecksum = cvarget ("sv_mapChecksum", "", CVAR_ROM);
+	sv_lanForceRate = cvarget ("sv_lanForceRate", "1", CVAR_ARCHIVE);
 #ifndef STANDALONE
-	sv_strictAuth = Cvar_Get ("sv_strictAuth", "1", CVAR_ARCHIVE);
+	sv_strictAuth = cvarget ("sv_strictAuth", "1", CVAR_ARCHIVE);
 #endif
-	sv_banFile = Cvar_Get("sv_banFile", "serverbans.dat", CVAR_ARCHIVE);
+	sv_banFile = cvarget("sv_banFile", "serverbans.dat", CVAR_ARCHIVE);
 
 	/* initialize bot cvars so they are listed and can be set before loading the botlib */
 	SV_BotInitCvars();
@@ -668,8 +668,8 @@ SV_Shutdown(char *finalmsg)
 	}
 	Q_Memset(&svs, 0, sizeof(svs));
 
-	Cvar_Set("sv_running", "0");
-	Cvar_Set("ui_singlePlayerActive", "0");
+	cvarsetstr("sv_running", "0");
+	cvarsetstr("ui_singlePlayerActive", "0");
 
 	Com_Printf("---------------------------\n");
 

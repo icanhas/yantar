@@ -329,7 +329,7 @@ Rankings_MenuInit(void)
 	s_rankings.leave.color	= colorRed;
 	y += 20;
 
-	status = (grank_status_t)trap_Cvar_VariableValue("client_status");
+	status = (grank_status_t)trap_cvargetf("client_status");
 	if((status != QGR_STATUS_NEW) && (status != QGR_STATUS_SPECTATOR)){
 		s_rankings.login.generic.flags |= QMF_HIDDEN |
 						  QMF_INACTIVE;

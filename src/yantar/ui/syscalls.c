@@ -53,26 +53,26 @@ trap_Milliseconds(void)
 }
 
 void
-trap_Cvar_Register(Vmcvar *cvar, const char *var_name, const char *value,
+trap_cvarregister(Vmcvar *cvar, const char *var_name, const char *value,
 		   int flags)
 {
 	syscall(UI_CVAR_REGISTER, cvar, var_name, value, flags);
 }
 
 void
-trap_Cvar_Update(Vmcvar *cvar)
+trap_cvarupdate(Vmcvar *cvar)
 {
 	syscall(UI_CVAR_UPDATE, cvar);
 }
 
 void
-trap_Cvar_Set(const char *var_name, const char *value)
+trap_cvarsetstr(const char *var_name, const char *value)
 {
 	syscall(UI_CVAR_SET, var_name, value);
 }
 
 float
-trap_Cvar_VariableValue(const char *var_name)
+trap_cvargetf(const char *var_name)
 {
 	Flint fi;
 	fi.i = syscall(UI_CVAR_VARIABLEVALUE, var_name);
@@ -80,19 +80,19 @@ trap_Cvar_VariableValue(const char *var_name)
 }
 
 void
-trap_Cvar_VariableStringBuffer(const char *var_name, char *buffer, int bufsize)
+trap_cvargetstrbuf(const char *var_name, char *buffer, int bufsize)
 {
 	syscall(UI_CVAR_VARIABLESTRINGBUFFER, var_name, buffer, bufsize);
 }
 
 void
-trap_Cvar_SetValue(const char *var_name, float value)
+trap_cvarsetf(const char *var_name, float value)
 {
 	syscall(UI_CVAR_SETVALUE, var_name, PASSFLOAT(value));
 }
 
 void
-trap_Cvar_Reset(const char *name)
+trap_cvarreset(const char *name)
 {
 	syscall(UI_CVAR_RESET, name);
 }
@@ -104,7 +104,7 @@ trap_Cvar_Create(const char *var_name, const char *var_value, int flags)
 }
 
 void
-trap_Cvar_InfoStringBuffer(int bit, char *buffer, int bufsize)
+trap_cvargetinfostrbuf(int bit, char *buffer, int bufsize)
 {
 	syscall(UI_CVAR_INFOSTRINGBUFFER, bit, buffer, bufsize);
 }

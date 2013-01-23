@@ -369,16 +369,16 @@ CL_CgameSystemCalls(intptr_t *args)
 	case CG_MILLISECONDS:
 		return Sys_Milliseconds();
 	case CG_CVAR_REGISTER:
-		Cvar_Register(VMA(1), VMA(2), VMA(3), args[4]);
+		cvarregister(VMA(1), VMA(2), VMA(3), args[4]);
 		return 0;
 	case CG_CVAR_UPDATE:
-		Cvar_Update(VMA(1));
+		cvarupdate(VMA(1));
 		return 0;
 	case CG_CVAR_SET:
-		Cvar_SetSafe(VMA(1), VMA(2));
+		cvarsetstrsafe(VMA(1), VMA(2));
 		return 0;
 	case CG_CVAR_VARIABLESTRINGBUFFER:
-		Cvar_VariableStringBuffer(VMA(1), VMA(2), args[3]);
+		cvargetstrbuf(VMA(1), VMA(2), args[3]);
 		return 0;
 	case CG_ARGC:
 		return cmdargc();
@@ -665,7 +665,7 @@ CL_InitCGame(void)
 	Q_sprintf(cl.mapname, sizeof(cl.mapname), Pmaps "/%s.bsp", mapname);
 
 	/* load the dll or bytecode */
-	interpret = Cvar_VariableValue("vm_cgame");
+	interpret = cvargetf("vm_cgame");
 	if(cl_connectedToPureServer)
 		/* if sv_pure is set we only allow qvms to be loaded */
 		if(interpret != VMcompiled && interpret != VMbytecode)
@@ -687,7 +687,7 @@ CL_InitCGame(void)
 
 	/* reset any CVAR_CHEAT cvars registered by cgame */
 	if(!clc.demoplaying && !cl_connectedToCheatServer)
-		Cvar_SetCheatState();
+		cvarsetcheatstate();
 
 	/* 
 	 * we will send a usercmd this frame, which
@@ -817,7 +817,7 @@ CL_FirstSnapshot(void)
 	 */
 	if(cl_activeAction->string[0]){
 		cbufaddstr(cl_activeAction->string);
-		Cvar_Set("activeAction", "");
+		cvarsetstr("activeAction", "");
 	}
 
 #ifdef USE_MUMBLE
@@ -861,7 +861,7 @@ CL_FirstSnapshot(void)
 		clc.speexInitialized = qtrue;
 		clc.voipMuteAll = qfalse;
 		cmdadd ("voip", CL_Voip_f);
-		Cvar_Set("cl_voipSendTarget", "spatial");
+		cvarsetstr("cl_voipSendTarget", "spatial");
 		Q_Memset(clc.voipTargets, ~0, sizeof(clc.voipTargets));
 	}
 #endif

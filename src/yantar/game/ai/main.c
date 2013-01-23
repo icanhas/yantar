@@ -231,8 +231,8 @@ BotTestAAS(Vec3 origin)
 	int areanum;
 	aas_areainfo_t info;
 
-	trap_Cvar_Update(&bot_testsolid);
-	trap_Cvar_Update(&bot_testclusters);
+	trap_cvarupdate(&bot_testsolid);
+	trap_cvarupdate(&bot_testclusters);
 	if(bot_testsolid.integer){
 		if(!trap_AAS_Initialized()) return;
 		areanum = BotPointAreaNum(origin);
@@ -600,10 +600,10 @@ BotInterbreedEndMatch(void)
 	bot_interbreedmatchcount++;
 	if(bot_interbreedmatchcount >= bot_interbreedcycle.integer){
 		bot_interbreedmatchcount = 0;
-		trap_Cvar_Update(&bot_interbreedwrite);
+		trap_cvarupdate(&bot_interbreedwrite);
 		if(strlen(bot_interbreedwrite.string)){
 			BotWriteInterbreeded(bot_interbreedwrite.string);
-			trap_Cvar_Set("bot_interbreedwrite", "");
+			trap_cvarsetstr("bot_interbreedwrite", "");
 		}
 		BotInterbreedBots();
 	}
@@ -617,11 +617,11 @@ BotInterbreeding(void)
 {
 	int i;
 
-	trap_Cvar_Update(&bot_interbreedchar);
+	trap_cvarupdate(&bot_interbreedchar);
 	if(!strlen(bot_interbreedchar.string)) return;
 	/* make sure we are in tournament mode */
 	if(gametype != GT_TOURNAMENT){
-		trap_Cvar_Set("g_gametype", va("%d", GT_TOURNAMENT));
+		trap_cvarsetstr("g_gametype", va("%d", GT_TOURNAMENT));
 		ExitLevel();
 		return;
 	}
@@ -637,7 +637,7 @@ BotInterbreeding(void)
 			va("addbot %s 4 free %i %s%d\n",
 				bot_interbreedchar.string, i * 50,
 				bot_interbreedchar.string, i));
-	trap_Cvar_Set("bot_interbreedchar", "");
+	trap_cvarsetstr("bot_interbreedchar", "");
 	bot_interbreed = qtrue;
 }
 
@@ -1076,7 +1076,7 @@ BotWriteSessionData(bot_state_t *bs)
 
 	var = va("botsession%i", bs->client);
 
-	trap_Cvar_Set(var, s);
+	trap_cvarsetstr(var, s);
 }
 
 /*
@@ -1089,7 +1089,7 @@ BotReadSessionData(bot_state_t *bs)
 	const char *var;
 
 	var = va("botsession%i", bs->client);
-	trap_Cvar_VariableStringBuffer(var, s, sizeof(s));
+	trap_cvargetstrbuf(var, s, sizeof(s));
 
 	sscanf(s,
 		"%i %i %i %i %i %i %i %i"
@@ -1212,7 +1212,7 @@ BotAISetupClient(int client, struct bot_settings_s *settings, qbool restart)
 			1);
 	numbots++;
 
-	if(trap_Cvar_VariableIntegerValue("bot_testichat")){
+	if(trap_cvargeti("bot_testichat")){
 		trap_BotLibVarSet("bot_testichat", "1");
 		BotChatTest(bs);
 	}
@@ -1333,7 +1333,7 @@ BotAILoadMap(int restart)
 	Vmcvar mapname;
 
 	if(!restart){
-		trap_Cvar_Register(&mapname, "mapname", "",
+		trap_cvarregister(&mapname, "mapname", "",
 			CVAR_SERVERINFO | CVAR_ROM);
 		trap_BotLibLoadMap(mapname.string);
 	}
@@ -1369,20 +1369,20 @@ BotAIStartFrame(int time)
 
 	G_CheckBotSpawn();
 
-	trap_Cvar_Update(&bot_rocketjump);
-	trap_Cvar_Update(&bot_grapple);
-	trap_Cvar_Update(&bot_fastchat);
-	trap_Cvar_Update(&bot_nochat);
-	trap_Cvar_Update(&bot_testrchat);
-	trap_Cvar_Update(&bot_thinktime);
-	trap_Cvar_Update(&bot_memorydump);
-	trap_Cvar_Update(&bot_saveroutingcache);
-	trap_Cvar_Update(&bot_pause);
-	trap_Cvar_Update(&bot_report);
+	trap_cvarupdate(&bot_rocketjump);
+	trap_cvarupdate(&bot_grapple);
+	trap_cvarupdate(&bot_fastchat);
+	trap_cvarupdate(&bot_nochat);
+	trap_cvarupdate(&bot_testrchat);
+	trap_cvarupdate(&bot_thinktime);
+	trap_cvarupdate(&bot_memorydump);
+	trap_cvarupdate(&bot_saveroutingcache);
+	trap_cvarupdate(&bot_pause);
+	trap_cvarupdate(&bot_report);
 
 	if(bot_report.integer)
 /*      BotTeamplayReport();
- *      trap_Cvar_Set("bot_report", "0"); */
+ *      trap_cvarsetstr("bot_report", "0"); */
 		BotUpdateInfoConfigStrings();
 
 	if(bot_pause.integer){
@@ -1406,17 +1406,17 @@ BotAIStartFrame(int time)
 
 	if(bot_memorydump.integer){
 		trap_BotLibVarSet("memorydump", "1");
-		trap_Cvar_Set("bot_memorydump", "0");
+		trap_cvarsetstr("bot_memorydump", "0");
 	}
 	if(bot_saveroutingcache.integer){
 		trap_BotLibVarSet("saveroutingcache", "1");
-		trap_Cvar_Set("bot_saveroutingcache", "0");
+		trap_cvarsetstr("bot_saveroutingcache", "0");
 	}
 	/* check if bot interbreeding is activated */
 	BotInterbreeding();
 	/* cap the bot think time */
 	if(bot_thinktime.integer > 200)
-		trap_Cvar_Set("bot_thinktime", "200");
+		trap_cvarsetstr("bot_thinktime", "200");
 	/* if the bot think time changed we should reschedule the bots */
 	if(bot_thinktime.integer != lastbotthink_time){
 		lastbotthink_time = bot_thinktime.integer;
@@ -1545,60 +1545,60 @@ BotInitLibrary(void)
 	char buf[144];
 
 	/* set the maxclients and maxentities library variables before calling BotSetupLibrary */
-	trap_Cvar_VariableStringBuffer("sv_maxclients", buf, sizeof(buf));
+	trap_cvargetstrbuf("sv_maxclients", buf, sizeof(buf));
 	if(!strlen(buf)) strcpy(buf, "8");
 	trap_BotLibVarSet("maxclients", buf);
 	Q_sprintf(buf, sizeof(buf), "%d", MAX_GENTITIES);
 	trap_BotLibVarSet("maxentities", buf);
 	/* bsp checksum */
-	trap_Cvar_VariableStringBuffer("sv_mapChecksum", buf, sizeof(buf));
+	trap_cvargetstrbuf("sv_mapChecksum", buf, sizeof(buf));
 	if(strlen(buf)) trap_BotLibVarSet("sv_mapChecksum", buf);
 	/* maximum number of aas links */
-	trap_Cvar_VariableStringBuffer("max_aaslinks", buf, sizeof(buf));
+	trap_cvargetstrbuf("max_aaslinks", buf, sizeof(buf));
 	if(strlen(buf)) trap_BotLibVarSet("max_aaslinks", buf);
 	/* maximum number of items in a level */
-	trap_Cvar_VariableStringBuffer("max_levelitems", buf, sizeof(buf));
+	trap_cvargetstrbuf("max_levelitems", buf, sizeof(buf));
 	if(strlen(buf)) trap_BotLibVarSet("max_levelitems", buf);
 	/* game type */
-	trap_Cvar_VariableStringBuffer("g_gametype", buf, sizeof(buf));
+	trap_cvargetstrbuf("g_gametype", buf, sizeof(buf));
 	if(!strlen(buf)) strcpy(buf, "0");
 	trap_BotLibVarSet("g_gametype", buf);
 	/* bot developer mode and log file */
 	trap_BotLibVarSet("bot_developer", bot_developer.string);
-	trap_Cvar_VariableStringBuffer("logfile", buf, sizeof(buf));
+	trap_cvargetstrbuf("logfile", buf, sizeof(buf));
 	trap_BotLibVarSet("log", buf);
 	/* no chatting */
-	trap_Cvar_VariableStringBuffer("bot_nochat", buf, sizeof(buf));
+	trap_cvargetstrbuf("bot_nochat", buf, sizeof(buf));
 	if(strlen(buf)) trap_BotLibVarSet("nochat", buf);
 	/* visualize jump pads */
-	trap_Cvar_VariableStringBuffer("bot_visualizejumppads", buf, sizeof(buf));
+	trap_cvargetstrbuf("bot_visualizejumppads", buf, sizeof(buf));
 	if(strlen(buf)) trap_BotLibVarSet("bot_visualizejumppads", buf);
 	/* forced clustering calculations */
-	trap_Cvar_VariableStringBuffer("bot_forceclustering", buf, sizeof(buf));
+	trap_cvargetstrbuf("bot_forceclustering", buf, sizeof(buf));
 	if(strlen(buf)) trap_BotLibVarSet("forceclustering", buf);
 	/* forced reachability calculations */
-	trap_Cvar_VariableStringBuffer("bot_forcereachability", buf, sizeof(buf));
+	trap_cvargetstrbuf("bot_forcereachability", buf, sizeof(buf));
 	if(strlen(buf)) trap_BotLibVarSet("forcereachability", buf);
 	/* force writing of AAS to file */
-	trap_Cvar_VariableStringBuffer("bot_forcewrite", buf, sizeof(buf));
+	trap_cvargetstrbuf("bot_forcewrite", buf, sizeof(buf));
 	if(strlen(buf)) trap_BotLibVarSet("forcewrite", buf);
 	/* no AAS optimization */
-	trap_Cvar_VariableStringBuffer("bot_aasoptimize", buf, sizeof(buf));
+	trap_cvargetstrbuf("bot_aasoptimize", buf, sizeof(buf));
 	if(strlen(buf)) trap_BotLibVarSet("aasoptimize", buf);
-	trap_Cvar_VariableStringBuffer("bot_saveroutingcache", buf, sizeof(buf));
+	trap_cvargetstrbuf("bot_saveroutingcache", buf, sizeof(buf));
 	if(strlen(buf)) trap_BotLibVarSet("saveroutingcache", buf);
 	/* reload instead of cache bot character files */
-	trap_Cvar_VariableStringBuffer("bot_reloadcharacters", buf, sizeof(buf));
+	trap_cvargetstrbuf("bot_reloadcharacters", buf, sizeof(buf));
 	if(!strlen(buf)) strcpy(buf, "0");
 	trap_BotLibVarSet("bot_reloadcharacters", buf);
 	/* base directory */
-	trap_Cvar_VariableStringBuffer("fs_basepath", buf, sizeof(buf));
+	trap_cvargetstrbuf("fs_basepath", buf, sizeof(buf));
 	if(strlen(buf)) trap_BotLibVarSet("basedir", buf);
 	/* game directory */
-	trap_Cvar_VariableStringBuffer("fs_game", buf, sizeof(buf));
+	trap_cvargetstrbuf("fs_game", buf, sizeof(buf));
 	if(strlen(buf)) trap_BotLibVarSet("gamedir", buf);
 	/* home directory */
-	trap_Cvar_VariableStringBuffer("fs_homepath", buf, sizeof(buf));
+	trap_cvargetstrbuf("fs_homepath", buf, sizeof(buf));
 	if(strlen(buf)) trap_BotLibVarSet("homedir", buf);
 #ifdef MISSIONPACK
 	trap_BotLibDefine("MISSIONPACK");
@@ -1615,20 +1615,20 @@ BotAISetup(int restart)
 {
 	int errnum;
 
-	trap_Cvar_Register(&bot_thinktime, "bot_thinktime", "100", CVAR_CHEAT);
-	trap_Cvar_Register(&bot_memorydump, "bot_memorydump", "0", CVAR_CHEAT);
-	trap_Cvar_Register(&bot_saveroutingcache, "bot_saveroutingcache", "0",
+	trap_cvarregister(&bot_thinktime, "bot_thinktime", "100", CVAR_CHEAT);
+	trap_cvarregister(&bot_memorydump, "bot_memorydump", "0", CVAR_CHEAT);
+	trap_cvarregister(&bot_saveroutingcache, "bot_saveroutingcache", "0",
 		CVAR_CHEAT);
-	trap_Cvar_Register(&bot_pause, "bot_pause", "0", CVAR_CHEAT);
-	trap_Cvar_Register(&bot_report, "bot_report", "0", CVAR_CHEAT);
-	trap_Cvar_Register(&bot_testsolid, "bot_testsolid", "0", CVAR_CHEAT);
-	trap_Cvar_Register(&bot_testclusters, "bot_testclusters", "0",
+	trap_cvarregister(&bot_pause, "bot_pause", "0", CVAR_CHEAT);
+	trap_cvarregister(&bot_report, "bot_report", "0", CVAR_CHEAT);
+	trap_cvarregister(&bot_testsolid, "bot_testsolid", "0", CVAR_CHEAT);
+	trap_cvarregister(&bot_testclusters, "bot_testclusters", "0",
 		CVAR_CHEAT);
-	trap_Cvar_Register(&bot_developer, "bot_developer", "0", CVAR_CHEAT);
-	trap_Cvar_Register(&bot_interbreedchar, "bot_interbreedchar", "", 0);
-	trap_Cvar_Register(&bot_interbreedbots, "bot_interbreedbots", "10", 0);
-	trap_Cvar_Register(&bot_interbreedcycle, "bot_interbreedcycle", "20", 0);
-	trap_Cvar_Register(&bot_interbreedwrite, "bot_interbreedwrite", "", 0);
+	trap_cvarregister(&bot_developer, "bot_developer", "0", CVAR_CHEAT);
+	trap_cvarregister(&bot_interbreedchar, "bot_interbreedchar", "", 0);
+	trap_cvarregister(&bot_interbreedbots, "bot_interbreedbots", "10", 0);
+	trap_cvarregister(&bot_interbreedcycle, "bot_interbreedcycle", "20", 0);
+	trap_cvarregister(&bot_interbreedwrite, "bot_interbreedwrite", "", 0);
 
 	/* if the game is restarted for a tournament */
 	if(restart)

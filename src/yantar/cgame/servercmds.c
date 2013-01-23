@@ -111,7 +111,7 @@ CG_ParseServerinfo(void)
 
 	info = CG_ConfigString(CS_SERVERINFO);
 	cgs.gametype = atoi(Info_ValueForKey(info, "g_gametype"));
-	trap_Cvar_Set("g_gametype", va("%i", cgs.gametype));
+	trap_cvarsetstr("g_gametype", va("%i", cgs.gametype));
 	cgs.dmflags = atoi(Info_ValueForKey(info, "dmflags"));
 	cgs.teamflags	= atoi(Info_ValueForKey(info, "teamflags"));
 	cgs.fraglimit	= atoi(Info_ValueForKey(info, "fraglimit"));
@@ -122,10 +122,10 @@ CG_ParseServerinfo(void)
 	Q_sprintf(cgs.mapname, sizeof(cgs.mapname), Pmaps "/%s.bsp", mapname);
 	Q_strncpyz(cgs.redTeam,
 		Info_ValueForKey(info, "g_redTeam"), sizeof(cgs.redTeam));
-	trap_Cvar_Set("g_redTeam", cgs.redTeam);
+	trap_cvarsetstr("g_redTeam", cgs.redTeam);
 	Q_strncpyz(cgs.blueTeam,
 		Info_ValueForKey(info, "g_blueTeam"), sizeof(cgs.blueTeam));
-	trap_Cvar_Set("g_blueTeam", cgs.blueTeam);
+	trap_cvarsetstr("g_blueTeam", cgs.blueTeam);
 }
 
 /*
@@ -431,7 +431,7 @@ CG_MapRestart(void)
 	}
 #ifdef MISSIONPACK
 	if(cg_singlePlayerActive.integer){
-		trap_Cvar_Set("ui_matchStartTime", va("%i", cg.time));
+		trap_cvarsetstr("ui_matchStartTime", va("%i", cg.time));
 		if(cg_recordSPDemo.integer && cg_recordSPDemoName.string &&
 		   *cg_recordSPDemoName.string)
 			trap_SendConsoleCommand(va(
@@ -439,7 +439,7 @@ CG_MapRestart(void)
 					cg_recordSPDemoName.string));
 	}
 #endif
-	trap_Cvar_Set("cg_thirdPerson", "0");
+	trap_cvarsetstr("cg_thirdPerson", "0");
 }
 
 #define MAX_VOICEFILESIZE	16384

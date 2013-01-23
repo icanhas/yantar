@@ -174,10 +174,10 @@ PlayerModel_UpdateModel(void)
 static void
 PlayerModel_SaveChanges(void)
 {
-	trap_Cvar_Set("model", s_playermodel.modelskin);
-	trap_Cvar_Set("headmodel", s_playermodel.modelskin);
-	trap_Cvar_Set("team_model", s_playermodel.modelskin);
-	trap_Cvar_Set("team_headmodel", s_playermodel.modelskin);
+	trap_cvarsetstr("model", s_playermodel.modelskin);
+	trap_cvarsetstr("headmodel", s_playermodel.modelskin);
+	trap_cvarsetstr("team_model", s_playermodel.modelskin);
+	trap_cvarsetstr("team_headmodel", s_playermodel.modelskin);
 }
 
 /*
@@ -373,7 +373,7 @@ PlayerModel_BuildList(void)
 	int	filelen;
 	qbool precache;
 
-	precache = trap_Cvar_VariableValue("com_buildscript");
+	precache = trap_cvargetf("com_buildscript");
 
 	s_playermodel.modelpage = 0;
 	s_playermodel.nummodels = 0;
@@ -438,12 +438,12 @@ PlayerModel_SetMenuItems(void)
 	char * pdest;
 
 	/* name */
-	trap_Cvar_VariableStringBuffer("name", s_playermodel.playername.string,
+	trap_cvargetstrbuf("name", s_playermodel.playername.string,
 		16);
 	Q_cleanstr(s_playermodel.playername.string);
 
 	/* model */
-	trap_Cvar_VariableStringBuffer("model", s_playermodel.modelskin, 64);
+	trap_cvargetstrbuf("model", s_playermodel.modelskin, 64);
 
 	/* use default skin if none is set */
 	if(!strchr(s_playermodel.modelskin, '/'))

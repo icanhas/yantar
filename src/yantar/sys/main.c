@@ -144,11 +144,11 @@ Sys_Init(void)
 	char pidbuf[16];
 
 	cmdadd("in_restart", Sys_In_Restart_f);
-	Cvar_Set("arch", OS_STRING " " ARCH_STRING);
-	Cvar_Set("username", Sys_GetCurrentUser());
+	cvarsetstr("arch", OS_STRING " " ARCH_STRING);
+	cvarsetstr("username", Sys_GetCurrentUser());
 	Q_sprintf(pidbuf, sizeof(pidbuf), "%d", Sys_PID());
-	Cvar_Get("pid", pidbuf, CVAR_ROM);
-	Cvar_SetDesc("pid", "process ID, for debugging purposes");
+	cvarget("pid", pidbuf, CVAR_ROM);
+	cvarsetdesc("pid", "process ID, for debugging purposes");
 }
 
 /* Transform Q3 colour codes to ANSI escape sequences */
@@ -277,7 +277,7 @@ Sys_LoadDll(const char *name, qbool useSystemLib)
 			name);
 
 		if(!(dllhandle = Sys_LoadLibrary(libPath))){
-			const char *basePath = Cvar_VariableString("fs_basepath");
+			const char *basePath = cvargetstr("fs_basepath");
 
 			if(!basePath || !*basePath)
 				basePath = ".";

@@ -1156,10 +1156,10 @@ RoQShutdown(void)
 		 * a devmap command, nextmap would be valid by
 		 * the time it was referenced
 		 */
-		s = Cvar_VariableString("nextmap");
+		s = cvargetstr("nextmap");
 		if(s[0]){
 			cbufexecstr(EXEC_APPEND, va("%s\n", s));
-			Cvar_Set("nextmap", "");
+			cvarsetstr("nextmap", "");
 		}
 		CL_handle = -1;
 	}

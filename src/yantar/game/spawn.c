@@ -569,13 +569,13 @@ SP_worldspawn(void)
 	trap_SetConfigstring(CS_MOTD, g_motd.string);	/* message of the day */
 
 	G_SpawnString("gravity", "800", &s);
-	trap_Cvar_Set("g_gravity", s);
+	trap_cvarsetstr("g_gravity", s);
 
 	G_SpawnString("enableDust", "0", &s);
-	trap_Cvar_Set("g_enableDust", s);
+	trap_cvarsetstr("g_enableDust", s);
 
 	G_SpawnString("enableBreath", "0", &s);
-	trap_Cvar_Set("g_enableBreath", s);
+	trap_cvarsetstr("g_enableBreath", s);
 
 	g_entities[ENTITYNUM_WORLD].s.number = ENTITYNUM_WORLD;
 	g_entities[ENTITYNUM_WORLD].r.ownerNum	= ENTITYNUM_NONE;
@@ -588,7 +588,7 @@ SP_worldspawn(void)
 	/* see if we want a warmup time */
 	trap_SetConfigstring(CS_WARMUP, "");
 	if(g_restarted.integer){
-		trap_Cvar_Set("g_restarted", "0");
+		trap_cvarsetstr("g_restarted", "0");
 		level.warmupTime = 0;
 	}else if(g_doWarmup.integer){	/* Turn it on */
 		level.warmupTime = -1;

@@ -215,7 +215,7 @@ char *eventnames[] = {
  * Handles the sequence numbers
  */
 
-void trap_Cvar_VariableStringBuffer(const char *var_name, char *buffer, int bufsize);
+void trap_cvargetstrbuf(const char *var_name, char *buffer, int bufsize);
 
 void
 BG_AddPredictableEventToPlayerstate(int newEvent, int eventParm, Playerstate *ps)
@@ -223,7 +223,7 @@ BG_AddPredictableEventToPlayerstate(int newEvent, int eventParm, Playerstate *ps
 #ifdef _DEBUG
 	{
 		char buf[256];
-		trap_Cvar_VariableStringBuffer("showevents", buf, sizeof(buf));
+		trap_cvargetstrbuf("showevents", buf, sizeof(buf));
 		if(atof(buf) != 0){
 #ifdef QAGAME
 			Com_Printf(

@@ -137,7 +137,7 @@ UI_ForceMenuOff(void)
 
 	trap_Key_SetCatcher(trap_Key_GetCatcher() & ~KEYCATCH_UI);
 	trap_Key_ClearStates();
-	trap_Cvar_Set("cl_paused", "0");
+	trap_cvarsetstr("cl_paused", "0");
 }
 
 /*
@@ -799,7 +799,7 @@ UI_SetActiveMenu(uiMenuCommand_t menu)
 		 * UI_RankingsMenu();
 		 * return;
 		 */
-		trap_Cvar_Set("cl_paused", "1");
+		trap_cvarsetstr("cl_paused", "1");
 		UI_InGameMenu();
 		return;
 
@@ -913,11 +913,11 @@ UI_Argv(int arg)
 
 
 char *
-UI_Cvar_VariableString(const char *var_name)
+UI_cvargetstr(const char *var_name)
 {
 	static char buffer[MAX_STRING_CHARS];
 
-	trap_Cvar_VariableStringBuffer(var_name, buffer, sizeof(buffer));
+	trap_cvargetstrbuf(var_name, buffer, sizeof(buffer));
 
 	return buffer;
 }

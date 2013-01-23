@@ -367,18 +367,18 @@ IN_ActivateMouse(void)
 						   -1.0) != kIOReturnSuccess){
 						Com_Printf(
 							"Could not disable mouse acceleration (failed at IOHIDSetAccelerationWithKey).\n");
-						Cvar_Set ("in_disablemacosxmouseaccel", 0);
+						cvarsetstr ("in_disablemacosxmouseaccel", 0);
 					}
 				}else{
 					Com_Printf(
 						"Could not disable mouse acceleration (failed at IOHIDGetAccelerationWithKey).\n");
-					Cvar_Set ("in_disablemacosxmouseaccel", 0);
+					cvarsetstr ("in_disablemacosxmouseaccel", 0);
 				}
 				IOServiceClose(mouseDev);
 			}else{
 				Com_Printf(
 					"Could not disable mouse acceleration (failed at IO_GetIOHandle).\n");
-				Cvar_Set ("in_disablemacosxmouseaccel", 0);
+				cvarsetstr ("in_disablemacosxmouseaccel", 0);
 			}
 		}
 	}
@@ -398,7 +398,7 @@ IN_ActivateMouse(void)
 	}
 
 	/* in_nograb makes no sense in fullscreen mode */
-	if(!Cvar_VariableIntegerValue("r_fullscreen")){
+	if(!cvargeti("r_fullscreen")){
 		if(in_nograb->modified || !mouseActive){
 			if(in_nograb->integer)
 				SDL_WM_GrabInput(SDL_GRAB_OFF);
@@ -420,7 +420,7 @@ IN_DeactivateMouse(void)
 
 	/* Always show the cursor when the mouse is disabled,
 	 * but not when fullscreen */
-	if(!Cvar_VariableIntegerValue("r_fullscreen"))
+	if(!cvargeti("r_fullscreen"))
 		SDL_ShowCursor(1);
 
 	if(!mouseAvailable)
@@ -521,7 +521,7 @@ IN_InitJoystick(void)
 		Q_strcat(buf, sizeof(buf), "\n");
 	}
 
-	Cvar_Get("in_availableJoysticks", buf, CVAR_ROM);
+	cvarget("in_availableJoysticks", buf, CVAR_ROM);
 
 	if(!in_joystick->integer){
 		Com_DPrintf("Joystick is not active.\n");
@@ -529,11 +529,11 @@ IN_InitJoystick(void)
 		return;
 	}
 
-	in_joystickNo = Cvar_Get("in_joystickNo", "0", CVAR_ARCHIVE);
+	in_joystickNo = cvarget("in_joystickNo", "0", CVAR_ARCHIVE);
 	if(in_joystickNo->integer < 0 || in_joystickNo->integer >= total)
-		Cvar_Set("in_joystickNo", "0");
+		cvarsetstr("in_joystickNo", "0");
 
-	in_joystickUseAnalog = Cvar_Get("in_joystickUseAnalog", "0", CVAR_ARCHIVE);
+	in_joystickUseAnalog = cvarget("in_joystickUseAnalog", "0", CVAR_ARCHIVE);
 
 	stick = SDL_JoystickOpen(in_joystickNo->integer);
 
@@ -819,9 +819,9 @@ IN_ProcessEvents(void)
 			char width[32], height[32];
 			Q_sprintf(width, sizeof(width), "%d", e.resize.w);
 			Q_sprintf(height, sizeof(height), "%d", e.resize.h);
-			Cvar_Set("r_customwidth", width);
-			Cvar_Set("r_customheight", height);
-			Cvar_Set("r_mode", "-1");
+			cvarsetstr("r_customwidth", width);
+			cvarsetstr("r_customheight", height);
+			cvarsetstr("r_mode", "-1");
 			/* wait until user stops dragging for 1 second, so
 			 * we aren't constantly recreating the GL context while
 			 * he tries to drag...*/
@@ -830,10 +830,10 @@ IN_ProcessEvents(void)
 		break;
 		case SDL_ACTIVEEVENT:
 			if(e.active.state & SDL_APPINPUTFOCUS){
-				Cvar_SetValue("com_unfocused", !e.active.gain);
+				cvarsetf("com_unfocused", !e.active.gain);
 			}
 			if(e.active.state & SDL_APPACTIVE){
-				Cvar_SetValue("com_minimized", !e.active.gain);
+				cvarsetf("com_minimized", !e.active.gain);
 			}
 			break;
 
@@ -854,10 +854,10 @@ IN_Frame(void)
 	/* If not DISCONNECTED (main menu) or ACTIVE (in game), we're loading */
 	loading = !!(clc.state != CA_DISCONNECTED && clc.state != CA_ACTIVE);
 
-	if(!Cvar_VariableIntegerValue("r_fullscreen") && (Key_GetCatcher( ) & KEYCATCH_CONSOLE)){
+	if(!cvargeti("r_fullscreen") && (Key_GetCatcher( ) & KEYCATCH_CONSOLE)){
 		/* Console is down in windowed mode */
 		IN_DeactivateMouse( );
-	}else if(!Cvar_VariableIntegerValue("r_fullscreen") && loading){
+	}else if(!cvargeti("r_fullscreen") && loading){
 		/* Loading in windowed mode */
 		IN_DeactivateMouse( );
 	}else if(!(SDL_GetAppState() & SDL_APPINPUTFOCUS)){
@@ -895,18 +895,18 @@ IN_Init(void)
 
 	Com_DPrintf("\n------- Input Initialization -------\n");
 
-	in_keyboardDebug = Cvar_Get("in_keyboardDebug", "0", CVAR_ARCHIVE);
+	in_keyboardDebug = cvarget("in_keyboardDebug", "0", CVAR_ARCHIVE);
 
 	/* mouse variables */
-	in_mouse	= Cvar_Get("in_mouse", "1", CVAR_ARCHIVE);
-	in_nograb	= Cvar_Get("in_nograb", "0", CVAR_ARCHIVE);
+	in_mouse	= cvarget("in_mouse", "1", CVAR_ARCHIVE);
+	in_nograb	= cvarget("in_nograb", "0", CVAR_ARCHIVE);
 
-	in_joystick = Cvar_Get("in_joystick", "0", CVAR_ARCHIVE|CVAR_LATCH);
-	in_joystickDebug = Cvar_Get("in_joystickDebug", "0", CVAR_TEMP);
-	in_joystickThreshold = Cvar_Get("joy_threshold", "0.15", CVAR_ARCHIVE);
+	in_joystick = cvarget("in_joystick", "0", CVAR_ARCHIVE|CVAR_LATCH);
+	in_joystickDebug = cvarget("in_joystickDebug", "0", CVAR_TEMP);
+	in_joystickThreshold = cvarget("joy_threshold", "0.15", CVAR_ARCHIVE);
 
 #ifdef MACOS_X_ACCELERATION_HACK
-	in_disablemacosxmouseaccel = Cvar_Get("in_disablemacosxmouseaccel", "1", CVAR_ARCHIVE);
+	in_disablemacosxmouseaccel = cvarget("in_disablemacosxmouseaccel", "1", CVAR_ARCHIVE);
 #endif
 
 	SDL_EnableUNICODE(1);
@@ -917,8 +917,8 @@ IN_Init(void)
 	IN_DeactivateMouse( );
 
 	appState = SDL_GetAppState( );
-	Cvar_SetValue("com_unfocused", !(appState & SDL_APPINPUTFOCUS));
-	Cvar_SetValue("com_minimized", !(appState & SDL_APPACTIVE));
+	cvarsetf("com_unfocused", !(appState & SDL_APPINPUTFOCUS));
+	cvarsetf("com_minimized", !(appState & SDL_APPACTIVE));
 
 	IN_InitKeyLockStates( );
 

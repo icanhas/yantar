@@ -271,7 +271,7 @@ Cmd_Vstr_f(void)
 		return;
 	}
 
-	v = Cvar_VariableString(cmdargv(1));
+	v = cvargetstr(cmdargv(1));
 	cbufinsertstr(va("%s\n", v));
 }
 
@@ -645,7 +645,7 @@ cmdexecstr(const char *text)
 		}
 	}
 	/* check cvars */
-	if(Cvar_Command())
+	if(cvariscmd())
 		return;
 	/* check client game commands */
 	if(com_cl_running && com_cl_running->integer && CL_GameCommand())
@@ -700,7 +700,7 @@ cmdinit(void)
 	cmdadd("exec",Cmd_Exec_f);
 	cmdsetcompletion("exec", cmdcompletecfgname);
 	cmdadd("vstr",Cmd_Vstr_f);
-	cmdsetcompletion("vstr", Cvar_CompleteCvarName);
+	cmdsetcompletion("vstr", cvarcompletename);
 	cmdadd("echo",Cmd_Echo_f);
 	cmdadd("wait", Cmd_Wait_f);
 }

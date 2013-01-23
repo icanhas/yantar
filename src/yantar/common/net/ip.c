@@ -977,7 +977,7 @@ NET_SetMulticast6(void)
 			"please set cvar %s to a sane value.\n",
 			net_mcast6addr->name);
 
-		Cvar_SetValue(net_enabled->name,
+		cvarsetf(net_enabled->name,
 			net_enabled->integer | NET_DISABLEMCAST);
 
 		return;
@@ -1380,7 +1380,7 @@ NET_OpenIP(void)
 					&boundto,
 					&err);
 			if(ip6_socket != INVALID_SOCKET){
-				Cvar_SetValue("net_port6", port6 + i);
+				cvarsetf("net_port6", port6 + i);
 				break;
 			}else if(err == EAFNOSUPPORT)
 				break;
@@ -1394,7 +1394,7 @@ NET_OpenIP(void)
 		for(i = 0; i < 10; i++){
 			ip_socket = NET_IPSocket(net_ip->string, port + i, &err);
 			if(ip_socket != INVALID_SOCKET){
-				Cvar_SetValue("net_port", port + i);
+				cvarsetf("net_port", port + i);
 
 				if(net_socksEnabled->integer)
 					NET_OpenSocks(port + i);
@@ -1424,74 +1424,74 @@ NET_GetCvars(void)
 
 #ifdef DEDICATED
 	/* I want server owners to explicitly turn on ipv6 support. */
-	net_enabled = Cvar_Get("net_enabled", "1", CVAR_LATCH | CVAR_ARCHIVE);
+	net_enabled = cvarget("net_enabled", "1", CVAR_LATCH | CVAR_ARCHIVE);
 #else
 	/* End users have it enabled so they can connect to ipv6-only hosts, but ipv4 will be
 	 * used if available due to ping */
-	net_enabled = Cvar_Get("net_enabled", "3", CVAR_LATCH | CVAR_ARCHIVE);
+	net_enabled = cvarget("net_enabled", "3", CVAR_LATCH | CVAR_ARCHIVE);
 #endif
 	modified = net_enabled->modified;
 	net_enabled->modified = qfalse;
 
-	net_ip = Cvar_Get("net_ip", "0.0.0.0", CVAR_LATCH);
+	net_ip = cvarget("net_ip", "0.0.0.0", CVAR_LATCH);
 	modified += net_ip->modified;
 	net_ip->modified = qfalse;
 
-	net_ip6 = Cvar_Get("net_ip6", "::", CVAR_LATCH);
+	net_ip6 = cvarget("net_ip6", "::", CVAR_LATCH);
 	modified += net_ip6->modified;
 	net_ip6->modified = qfalse;
 
-	net_port = Cvar_Get("net_port", va("%i", PORT_SERVER), CVAR_LATCH);
+	net_port = cvarget("net_port", va("%i", PORT_SERVER), CVAR_LATCH);
 	modified += net_port->modified;
 	net_port->modified = qfalse;
 
-	net_port6 = Cvar_Get("net_port6", va("%i",
+	net_port6 = cvarget("net_port6", va("%i",
 			PORT_SERVER), CVAR_LATCH);
 	modified += net_port6->modified;
 	net_port6->modified = qfalse;
 
 	/* Some cvars for configuring multicast options which facilitates scanning for servers on local subnets. */
-	net_mcast6addr = Cvar_Get("net_mcast6addr", NET_MULTICAST_IP6,
+	net_mcast6addr = cvarget("net_mcast6addr", NET_MULTICAST_IP6,
 		CVAR_LATCH | CVAR_ARCHIVE);
 	modified += net_mcast6addr->modified;
 	net_mcast6addr->modified = qfalse;
 
 #ifdef _WIN32
-	net_mcast6iface = Cvar_Get("net_mcast6iface", "0",
+	net_mcast6iface = cvarget("net_mcast6iface", "0",
 		CVAR_LATCH | CVAR_ARCHIVE);
 #else
-	net_mcast6iface = Cvar_Get("net_mcast6iface", "",
+	net_mcast6iface = cvarget("net_mcast6iface", "",
 		CVAR_LATCH | CVAR_ARCHIVE);
 #endif
 	modified += net_mcast6iface->modified;
 	net_mcast6iface->modified = qfalse;
 
-	net_socksEnabled = Cvar_Get("net_socksEnabled", "0",
+	net_socksEnabled = cvarget("net_socksEnabled", "0",
 		CVAR_LATCH | CVAR_ARCHIVE);
 	modified += net_socksEnabled->modified;
 	net_socksEnabled->modified = qfalse;
 
-	net_socksServer = Cvar_Get("net_socksServer", "",
+	net_socksServer = cvarget("net_socksServer", "",
 		CVAR_LATCH | CVAR_ARCHIVE);
 	modified += net_socksServer->modified;
 	net_socksServer->modified = qfalse;
 
-	net_socksPort = Cvar_Get("net_socksPort", "1080",
+	net_socksPort = cvarget("net_socksPort", "1080",
 		CVAR_LATCH | CVAR_ARCHIVE);
 	modified += net_socksPort->modified;
 	net_socksPort->modified = qfalse;
 
-	net_socksUsername = Cvar_Get("net_socksUsername", "",
+	net_socksUsername = cvarget("net_socksUsername", "",
 		CVAR_LATCH | CVAR_ARCHIVE);
 	modified += net_socksUsername->modified;
 	net_socksUsername->modified = qfalse;
 
-	net_socksPassword = Cvar_Get("net_socksPassword", "",
+	net_socksPassword = cvarget("net_socksPassword", "",
 		CVAR_LATCH | CVAR_ARCHIVE);
 	modified += net_socksPassword->modified;
 	net_socksPassword->modified = qfalse;
 
-	net_dropsim = Cvar_Get("net_dropsim", "", CVAR_TEMP);
+	net_dropsim = cvarget("net_dropsim", "", CVAR_TEMP);
 
 	return modified ? qtrue : qfalse;
 }

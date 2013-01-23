@@ -127,7 +127,7 @@ G_RankRunFrame()
 		if(((g_fraglimit.integer == 0) ||
 		    (g_fraglimit.integer > 100)) &&
 		   ((g_timelimit.integer == 0) || (g_timelimit.integer > 1000)))
-			trap_Cvar_Set("timelimit", "1000");
+			trap_cvarsetstr("timelimit", "1000");
 	}
 
 	/* tell time to clients so they can show current match rating */
@@ -992,50 +992,50 @@ G_RankGameOver(void)
 			G_RankClientDisconnect(i);
 
 	/* hostname */
-	trap_Cvar_VariableStringBuffer("sv_hostname", str, sizeof(str));
+	trap_cvargetstrbuf("sv_hostname", str, sizeof(str));
 	trap_RankReportStr(-1, -1, QGR_KEY_HOSTNAME, str);
 
 	/* map */
-	trap_Cvar_VariableStringBuffer("mapname", str, sizeof(str));
+	trap_cvargetstrbuf("mapname", str, sizeof(str));
 	trap_RankReportStr(-1, -1, QGR_KEY_MAP, str);
 
 	/* mod */
-	trap_Cvar_VariableStringBuffer("fs_game", str, sizeof(str));
+	trap_cvargetstrbuf("fs_game", str, sizeof(str));
 	trap_RankReportStr(-1, -1, QGR_KEY_MOD, str);
 
 	/* gametype */
-	num = trap_Cvar_VariableIntegerValue("g_gametype");
+	num = trap_cvargeti("g_gametype");
 	trap_RankReportInt(-1, -1, QGR_KEY_GAMETYPE, num, 0);
 
 	/* fraglimit */
-	num = trap_Cvar_VariableIntegerValue("fraglimit");
+	num = trap_cvargeti("fraglimit");
 	trap_RankReportInt(-1, -1, QGR_KEY_FRAGLIMIT, num, 0);
 
 	/* timelimit */
-	num = trap_Cvar_VariableIntegerValue("timelimit");
+	num = trap_cvargeti("timelimit");
 	trap_RankReportInt(-1, -1, QGR_KEY_TIMELIMIT, num, 0);
 
 	/* maxclients */
-	num = trap_Cvar_VariableIntegerValue("sv_maxclients");
+	num = trap_cvargeti("sv_maxclients");
 	trap_RankReportInt(-1, -1, QGR_KEY_MAXCLIENTS, num, 0);
 
 	/* maxrate */
-	num = trap_Cvar_VariableIntegerValue("sv_maxRate");
+	num = trap_cvargeti("sv_maxRate");
 	trap_RankReportInt(-1, -1, QGR_KEY_MAXRATE, num, 0);
 
 	/* minping */
-	num = trap_Cvar_VariableIntegerValue("sv_minPing");
+	num = trap_cvargeti("sv_minPing");
 	trap_RankReportInt(-1, -1, QGR_KEY_MINPING, num, 0);
 
 	/* maxping */
-	num = trap_Cvar_VariableIntegerValue("sv_maxPing");
+	num = trap_cvargeti("sv_maxPing");
 	trap_RankReportInt(-1, -1, QGR_KEY_MAXPING, num, 0);
 
 	/* dedicated */
-	num = trap_Cvar_VariableIntegerValue("dedicated");
+	num = trap_cvargeti("dedicated");
 	trap_RankReportInt(-1, -1, QGR_KEY_DEDICATED, num, 0);
 
 	/* version */
-	trap_Cvar_VariableStringBuffer("version", str, sizeof(str));
+	trap_cvargetstrbuf("version", str, sizeof(str));
 	trap_RankReportStr(-1, -1, QGR_KEY_VERSION, str);
 }

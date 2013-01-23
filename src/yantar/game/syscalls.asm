@@ -3,11 +3,11 @@ code
 equ	trap_Print                            -1
 equ	trap_Error                            -2
 equ	trap_Milliseconds                     -3
-equ	trap_Cvar_Register                    -4
-equ	trap_Cvar_Update                      -5
-equ	trap_Cvar_Set                         -6
-equ	trap_Cvar_VariableIntegerValue        -7
-equ	trap_Cvar_VariableStringBuffer        -8
+equ	trap_cvarregister                    -4
+equ	trap_cvarupdate                      -5
+equ	trap_cvarsetstr                         -6
+equ	trap_cvargeti        -7
+equ	trap_cvargetstrbuf        -8
 equ	trap_Argc                             -9
 equ	trap_Argv                             -10
 equ	trap_FS_FOpenFile                     -11

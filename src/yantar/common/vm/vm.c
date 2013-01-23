@@ -46,9 +46,9 @@ vmdebug(int level)
 void
 vminit(void)
 {
-	Cvar_Get("vm_cgame", "0", CVAR_ARCHIVE);	/* !@# SHIP WITH SET TO 2 */
-	Cvar_Get("vm_game", "0", CVAR_ARCHIVE);		/* !@# SHIP WITH SET TO 2 */
-	Cvar_Get("vm_ui", "0", CVAR_ARCHIVE);			/* !@# SHIP WITH SET TO 2 */
+	cvarget("vm_cgame", "0", CVAR_ARCHIVE);	/* !@# SHIP WITH SET TO 2 */
+	cvarget("vm_game", "0", CVAR_ARCHIVE);		/* !@# SHIP WITH SET TO 2 */
+	cvarget("vm_ui", "0", CVAR_ARCHIVE);			/* !@# SHIP WITH SET TO 2 */
 
 	cmdadd ("vmprofile", VM_VmProfile_f);
 	cmdadd ("vminfo", VM_VmInfo_f);

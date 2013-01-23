@@ -2813,10 +2813,10 @@ FS_Startup(const char *gameName)
 
 	Com_Printf("----- FS_Startup -----\n");
 	fs_packFiles = 0;
-	fs_debug = Cvar_Get("fs_debug", "0", 0);
-	fs_basepath = Cvar_Get("fs_basepath",
+	fs_debug = cvarget("fs_debug", "0", 0);
+	fs_basepath = cvarget("fs_basepath",
 		Sys_DefaultInstallPath(), CVAR_INIT|CVAR_PROTECTED);
-	fs_basegame = Cvar_Get("fs_basegame", "", CVAR_INIT);
+	fs_basegame = cvarget("fs_basegame", "", CVAR_INIT);
 #ifdef _WIN32
 	/*
 	 * Don't use home on windows. It would be cleaner to allow the user to
@@ -2831,9 +2831,9 @@ FS_Startup(const char *gameName)
 		homePath = fs_basepath->string;		/* fallback */
 
 #endif
-	fs_homepath = Cvar_Get("fs_homepath", homePath,
+	fs_homepath = cvarget("fs_homepath", homePath,
 		CVAR_INIT|CVAR_PROTECTED);
-	fs_gamedirvar = Cvar_Get("fs_game", "", CVAR_INIT|CVAR_SYSTEMINFO);
+	fs_gamedirvar = cvarget("fs_game", "", CVAR_INIT|CVAR_SYSTEMINFO);
 
 	/* add search path elements in reverse priority order */
 	if(fs_basepath->string[0])
@@ -2841,7 +2841,7 @@ FS_Startup(const char *gameName)
 	/* fs_homepath is somewhat particular to *nix systems, only add if relevant */
 
 	#ifdef MACOS_X
-	fs_apppath = Cvar_Get("fs_apppath", Sys_DefaultAppPath(),
+	fs_apppath = cvarget("fs_apppath", Sys_DefaultAppPath(),
 		CVAR_INIT|CVAR_PROTECTED);
 	/* Make MacOSX also include the base path included with the .app bundle */
 	if(fs_apppath->string[0])
@@ -2988,9 +2988,9 @@ FS_CheckPak0(void)
 	}
 
 	if(!foundPak && Q_stricmp(com_basegame->string, BASEGAME))
-		Cvar_Set("com_standalone", "1");
+		cvarsetstr("com_standalone", "1");
 	else
-		Cvar_Set("com_standalone", "0");
+		cvarsetstr("com_standalone", "0");
 
 	if(!com_standalone->integer){
 		if(!(foundPak & 0x01))
@@ -3326,9 +3326,9 @@ FS_InitFilesystem(void)
 	Com_Startupvar("fs_homepath");
 	Com_Startupvar("fs_game");
 
-	if(!FS_FilenameCompare(Cvar_VariableString("fs_game"),
+	if(!FS_FilenameCompare(cvargetstr("fs_game"),
 		   com_basegame->string))
-		Cvar_Set("fs_game", "");
+		cvarsetstr("fs_game", "");
 
 	/* try to start up normally */
 	FS_Startup(com_basegame->string);
@@ -3370,8 +3370,8 @@ FS_Restart(int checksumFeed)
 		 */
 		if(lastValidBase[0]){
 			FS_PureServerSetLoadedPaks("", "");
-			Cvar_Set("fs_basepath", lastValidBase);
-			Cvar_Set("fs_gamedirvar", lastValidGame);
+			cvarsetstr("fs_basepath", lastValidBase);
+			cvarsetstr("fs_gamedirvar", lastValidGame);
 			lastValidBase[0] = '\0';
 			lastValidGame[0] = '\0';
 			FS_Restart(checksumFeed);

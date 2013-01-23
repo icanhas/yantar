@@ -1109,7 +1109,7 @@ UI_PlayerInfo_SetInfo(Playerinfo *pi, int legsAnim, int torsoAnim,
 
 	pi->chat = chat;
 
-	c = (int)trap_Cvar_VariableValue("color1");
+	c = (int)trap_cvargetf("color1");
 
 	clearv3(pi->color1);
 

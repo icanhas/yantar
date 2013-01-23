@@ -338,7 +338,7 @@ G_RegisterCvars(void)
 	qbool		remapped = qfalse;
 
 	for(i = 0, cv = gameCvarTable; i < gameCvarTableSize; i++, cv++){
-		trap_Cvar_Register(cv->vmCvar, cv->cvarName,
+		trap_cvarregister(cv->vmCvar, cv->cvarName,
 			cv->defaultString, cv->cvarFlags);
 		if(cv->vmCvar)
 			cv->modificationCount = cv->vmCvar->modificationCount;
@@ -354,7 +354,7 @@ G_RegisterCvars(void)
 	if(g_gametype.integer < 0 || g_gametype.integer >= GT_MAX_GAME_TYPE){
 		G_Printf("g_gametype %i is out of range, defaulting to 0\n",
 			g_gametype.integer);
-		trap_Cvar_Set("g_gametype", "0");
+		trap_cvarsetstr("g_gametype", "0");
 	}
 
 	level.warmupModificationCount = g_warmup.modificationCount;
@@ -372,7 +372,7 @@ G_UpdateCvars(void)
 
 	for(i = 0, cv = gameCvarTable; i < gameCvarTableSize; i++, cv++)
 		if(cv->vmCvar){
-			trap_Cvar_Update(cv->vmCvar);
+			trap_cvarupdate(cv->vmCvar);
 
 			if(cv->modificationCount !=
 			   cv->vmCvar->modificationCount){
@@ -493,10 +493,10 @@ G_InitGame(int levelTime, int randomSeed, int restart)
 	G_Printf ("-----------------------------------\n");
 
 	if(g_gametype.integer == GT_SINGLE_PLAYER ||
-	   trap_Cvar_VariableIntegerValue("com_buildScript"))
+	   trap_cvargeti("com_buildScript"))
 		G_ModelIndex(SP_PODIUM_MODEL);
 
-	if(trap_Cvar_VariableIntegerValue("bot_enable")){
+	if(trap_cvargeti("bot_enable")){
 		BotAISetup(restart);
 		BotAILoadMap(restart);
 		G_InitBots(restart);
@@ -527,7 +527,7 @@ G_ShutdownGame(int restart)
 	/* write all the client session data so we can get it back */
 	G_WriteSessionData();
 
-	if(trap_Cvar_VariableIntegerValue("bot_enable"))
+	if(trap_cvargeti("bot_enable"))
 		BotAIShutdown(restart);
 }
 
@@ -1021,7 +1021,7 @@ BeginIntermission(void)
 	}
 #ifdef MISSIONPACK
 	if(g_singlePlayer.integer){
-		trap_Cvar_Set("ui_singlePlayerActive", "0");
+		trap_cvarsetstr("ui_singlePlayerActive", "0");
 		UpdateTournamentInfo();
 	}
 #else
@@ -1068,11 +1068,11 @@ ExitLevel(void)
 		return;
 	}
 
-	trap_Cvar_VariableStringBuffer("nextmap", nextmap, sizeof(nextmap));
-	trap_Cvar_VariableStringBuffer("d1", d1, sizeof(d1));
+	trap_cvargetstrbuf("nextmap", nextmap, sizeof(nextmap));
+	trap_cvargetstrbuf("d1", d1, sizeof(d1));
 
 	if(!Q_stricmp(nextmap, "map_restart 0") && Q_stricmp(d1, "")){
-		trap_Cvar_Set("nextmap", "vstr d2");
+		trap_cvarsetstr("nextmap", "vstr d2");
 		trap_SendConsoleCommand(EXEC_APPEND, "vstr d1\n");
 	}else
 		trap_SendConsoleCommand(EXEC_APPEND, "vstr nextmap\n");
@@ -1481,7 +1481,7 @@ CheckTournament(void)
 		/* if the warmup time has counted down, restart */
 		if(level.time > level.warmupTime){
 			level.warmupTime += 10000;
-			trap_Cvar_Set("g_restarted", "1");
+			trap_cvarsetstr("g_restarted", "1");
 			trap_SendConsoleCommand(EXEC_APPEND, "map_restart 0\n");
 			level.restarted = qtrue;
 			return;
@@ -1536,7 +1536,7 @@ CheckTournament(void)
 		/* if the warmup time has counted down, restart */
 		if(level.time > level.warmupTime){
 			level.warmupTime += 10000;
-			trap_Cvar_Set("g_restarted", "1");
+			trap_cvarsetstr("g_restarted", "1");
 			trap_SendConsoleCommand(EXEC_APPEND, "map_restart 0\n");
 			level.restarted = qtrue;
 			return;
@@ -1721,9 +1721,9 @@ CheckCvars(void)
 	if(g_password.modificationCount != lastMod){
 		lastMod = g_password.modificationCount;
 		if(*g_password.string && Q_stricmp(g_password.string, "none"))
-			trap_Cvar_Set("g_needpass", "1");
+			trap_cvarsetstr("g_needpass", "1");
 		else
-			trap_Cvar_Set("g_needpass", "0");
+			trap_cvarsetstr("g_needpass", "0");
 	}
 }
 
@@ -1858,6 +1858,6 @@ G_RunFrame(int levelTime)
 	if(g_listEntity.integer){
 		for(i = 0; i < MAX_GENTITIES; i++)
 			G_Printf("%4i: %s\n", i, g_entities[i].classname);
-		trap_Cvar_Set("g_listEntity", "0");
+		trap_cvarsetstr("g_listEntity", "0");
 	}
 }

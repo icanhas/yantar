@@ -218,7 +218,7 @@ UI_SetupMenu_Init(void)
 	setupMenuInfo.game.color	= color_black;
 	setupMenuInfo.game.style	= UI_LEFT;
 
-	if(!trap_Cvar_VariableValue("cl_paused")){
+	if(!trap_cvargetf("cl_paused")){
 #if 0
 		y += Yspacing;
 		setupMenuInfo.load.generic.type		= MTYPE_PTEXT;
@@ -281,7 +281,7 @@ UI_SetupMenu_Init(void)
 	Menu_AddItem(&setupMenuInfo.menu, &setupMenuInfo.game);
 /* Menu_AddItem( &setupMenuInfo.menu, &setupMenuInfo.load );
  * Menu_AddItem( &setupMenuInfo.menu, &setupMenuInfo.save ); */
-	if(!trap_Cvar_VariableValue("cl_paused"))
+	if(!trap_cvargetf("cl_paused"))
 		Menu_AddItem(&setupMenuInfo.menu, &setupMenuInfo.defaults);
 	Menu_AddItem(&setupMenuInfo.menu, &setupMenuInfo.back);
 }

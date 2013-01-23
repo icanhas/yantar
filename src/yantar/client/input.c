@@ -527,9 +527,9 @@ readytosend(void)
 		return qtrue;
 	/* check for exceeding cl_maxpackets */
 	if(cl_maxpackets->integer < 15)
-		Cvar_Set("cl_maxpackets", "15");
+		cvarsetstr("cl_maxpackets", "15");
 	else if(cl_maxpackets->integer > 125)
-		Cvar_Set("cl_maxpackets", "125");
+		cvarsetstr("cl_maxpackets", "125");
 	oldPacketNum = (clc.netchan.outgoingSequence - 1) & PACKET_MASK;
 	delta = cls.simtime -  cl.outPackets[oldPacketNum].p_simtime;
 	if(delta < 1000 / cl_maxpackets->integer)
@@ -599,9 +599,9 @@ CL_WritePacket(void)
 	 * all the cmds will make it to the server
 	 */
 	if(cl_packetdup->integer < 0)
-		Cvar_Set("cl_packetdup", "0");
+		cvarsetstr("cl_packetdup", "0");
 	else if(cl_packetdup->integer > 5)
-		Cvar_Set("cl_packetdup", "5");
+		cvarsetstr("cl_packetdup", "5");
 	oldPacketNum = (clc.netchan.outgoingSequence - 1
 		- cl_packetdup->integer) & PACKET_MASK;
 	count = cl.cmdNumber - cl.outPackets[oldPacketNum].p_cmdNumber;
@@ -877,14 +877,14 @@ static void
 VoipRecordDown(void)
 {
 	keydown(&voiprecord);
-	Cvar_Set("cl_voipSend", "1");
+	cvarsetstr("cl_voipSend", "1");
 }
 
 static void
 VoipRecordUp(void)
 {
 	keyup(&voiprecord);
-	Cvar_Set("cl_voipSend", "0");
+	cvarsetstr("cl_voipSend", "0");
 }
 #endif
 
@@ -1202,8 +1202,8 @@ CL_InitInput(void)
 	cmdadd("+voiprecord", VoipRecordDown);
 	cmdadd("-voiprecord", VoipRecordUp);
 #endif
-	cl_nodelta = Cvar_Get ("cl_nodelta", "0", 0);
-	cl_debugMove = Cvar_Get ("cl_debugMove", "0", 0);
+	cl_nodelta = cvarget ("cl_nodelta", "0", 0);
+	cl_debugMove = cvarget ("cl_debugMove", "0", 0);
 }
 
 void

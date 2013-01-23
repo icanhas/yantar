@@ -97,7 +97,7 @@ MainMenu_Cache(void)
 Sfxhandle
 ErrorMessage_Key(int key)
 {
-	trap_Cvar_Set("com_errorMessage", "");
+	trap_cvarsetstr("com_errorMessage", "");
 	UI_MainMenu();
 	return menu_null_sound;
 }
@@ -174,7 +174,7 @@ UI_MainMenu(void)
 	qbool teamArena = qfalse;
 	int	style = 0;	/* UI_CENTER | UI_DROPSHADOW; */
 
-	trap_Cvar_Set("sv_killserver", "1");
+	trap_cvarsetstr("sv_killserver", "1");
 
 	memset(&s_main, 0,sizeof(mainmenu_t));
 	memset(&s_errorMessage, 0,sizeof(errorMessage_t));
@@ -182,7 +182,7 @@ UI_MainMenu(void)
 	/* com_errorMessage would need that too */
 	MainMenu_Cache();	/* cleanme... */
 
-	trap_Cvar_VariableStringBuffer("com_errorMessage",
+	trap_cvargetstrbuf("com_errorMessage",
 		s_errorMessage.errorMessage,
 		sizeof(s_errorMessage.errorMessage));
 	if(strlen(s_errorMessage.errorMessage)){

@@ -584,7 +584,7 @@ extern void                     UI_PushMenu(menuframework_s *menu);
 extern void                     UI_PopMenu(void);
 extern void                     UI_ForceMenuOff(void);
 extern char*UI_Argv(int arg);
-extern char*UI_Cvar_VariableString(const char *var_name);
+extern char*UI_cvargetstr(const char *var_name);
 extern void                     UI_Refresh(int time);
 extern void                     UI_StartDemoLoop(void);
 extern qbool m_entersound;
@@ -621,21 +621,21 @@ void UI_SPSkillMenu_Cache(void);
 void                    trap_Print(const char *string);
 void                    trap_Error(const char *string) __attribute__((noreturn));
 int                             trap_Milliseconds(void);
-void                    trap_Cvar_Register(Vmcvar *vmCvar, const char *varName,
+void                    trap_cvarregister(Vmcvar *vmCvar, const char *varName,
 					   const char *defaultValue,
 					   int flags);
-void                    trap_Cvar_Update(Vmcvar *vmCvar);
-void                    trap_Cvar_Set(const char *var_name, const char *value);
-float                   trap_Cvar_VariableValue(const char *var_name);
-void                    trap_Cvar_VariableStringBuffer(const char *var_name,
+void                    trap_cvarupdate(Vmcvar *vmCvar);
+void                    trap_cvarsetstr(const char *var_name, const char *value);
+float                   trap_cvargetf(const char *var_name);
+void                    trap_cvargetstrbuf(const char *var_name,
 						       char *buffer,
 						       int bufsize);
-void                    trap_Cvar_SetValue(const char *var_name, float value);
-void                    trap_Cvar_Reset(const char *name);
+void                    trap_cvarsetf(const char *var_name, float value);
+void                    trap_cvarreset(const char *name);
 void                    trap_Cvar_Create(const char *var_name,
 					 const char *var_value,
 					 int flags);
-void                    trap_Cvar_InfoStringBuffer(int bit, char *buffer,
+void                    trap_cvargetinfostrbuf(int bit, char *buffer,
 						   int bufsize);
 int                             trap_Argc(void);
 void                    trap_Argv(int n, char *buffer, int bufferLength);

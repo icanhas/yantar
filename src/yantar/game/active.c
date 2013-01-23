@@ -594,9 +594,9 @@ ClientThink_real(Gentity *ent)
 		msec = 200;
 
 	if(pmove_msec.integer < 8)
-		trap_Cvar_Set("pmove_msec", "8");
+		trap_cvarsetstr("pmove_msec", "8");
 	else if(pmove_msec.integer > 33)
-		trap_Cvar_Set("pmove_msec", "33");
+		trap_cvarsetstr("pmove_msec", "33");
 
 	if(pmove_fixed.integer || client->pers.pmoveFixed)
 		ucmd->serverTime =

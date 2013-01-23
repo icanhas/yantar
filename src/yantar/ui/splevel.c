@@ -257,7 +257,7 @@ UI_SPLevelMenu_SetMenuItems(void)
 		selectedArena = 0;
 
 	if(selectedArena != -1)
-		trap_Cvar_SetValue(
+		trap_cvarsetf(
 			"ui_spSelection", selectedArenaSet * ARENAS_PER_TIER +
 			selectedArena);
 
@@ -367,7 +367,7 @@ UI_SPLevelMenu_ResetAction(qbool result)
 
 	/* clear game variables */
 	UI_NewGame();
-	trap_Cvar_SetValue("ui_spSelection", -4);
+	trap_cvarsetf("ui_spSelection", -4);
 
 	/* make the level select menu re-initialize */
 	UI_PopMenu();
@@ -402,7 +402,7 @@ UI_SPLevelMenu_LevelEvent(void* ptr, int notification)
 		selectedArenaSet * ARENAS_PER_TIER + selectedArena);
 	UI_SPLevelMenu_SetBots();
 
-	trap_Cvar_SetValue("ui_spSelection",
+	trap_cvarsetf("ui_spSelection",
 		selectedArenaSet * ARENAS_PER_TIER + selectedArena);
 }
 
@@ -542,13 +542,13 @@ UI_SPLevelMenu_MenuDraw(void)
 	}
 
 	/* draw player name */
-	trap_Cvar_VariableStringBuffer("name", string, 32);
+	trap_cvargetstrbuf("name", string, 32);
 	Q_cleanstr(string);
 	UI_DrawProportionalString(320, PLAYER_Y, string, UI_CENTER|UI_SMALLFONT,
 		color_orange);
 
 	/* check for model changes */
-	trap_Cvar_VariableStringBuffer("model", buf, sizeof(buf));
+	trap_cvargetstrbuf("model", buf, sizeof(buf));
 	if(Q_stricmp(buf, levelMenuInfo.playerModel) != 0){
 		Q_strncpyz(levelMenuInfo.playerModel, buf,
 			sizeof(levelMenuInfo.playerModel));
@@ -735,9 +735,9 @@ UI_SPLevelMenu_Init(void)
 	int	count;
 	char	buf[MAX_QPATH];
 
-	skill = (int)trap_Cvar_VariableValue("g_spSkill");
+	skill = (int)trap_cvargetf("g_spSkill");
 	if(skill < 1 || skill > 5)
-		trap_Cvar_Set("g_spSkill", "2");
+		trap_cvarsetstr("g_spSkill", "2");
 
 	memset(&levelMenuInfo, 0, sizeof(levelMenuInfo));
 	levelMenuInfo.menu.fullscreen	= qtrue;
@@ -823,7 +823,7 @@ UI_SPLevelMenu_Init(void)
 	levelMenuInfo.item_rightarrow.height		= 114;
 	levelMenuInfo.item_rightarrow.focuspic		= ART_ARROW_FOCUS;
 
-	trap_Cvar_VariableStringBuffer("model", levelMenuInfo.playerModel,
+	trap_cvargetstrbuf("model", levelMenuInfo.playerModel,
 		sizeof(levelMenuInfo.playerModel));
 	PlayerIcon(levelMenuInfo.playerModel, levelMenuInfo.playerPicName,
 		sizeof(levelMenuInfo.playerPicName));
@@ -949,7 +949,7 @@ UI_SPLevelMenu_Init(void)
 	Menu_AddItem(&levelMenuInfo.menu, &levelMenuInfo.item_next);
 	Menu_AddItem(&levelMenuInfo.menu, &levelMenuInfo.item_null);
 
-	trap_Cvar_VariableStringBuffer("ui_spSelection", buf, sizeof(buf));
+	trap_cvargetstrbuf("ui_spSelection", buf, sizeof(buf));
 	if(*buf){
 		n = atoi(buf);
 		selectedArenaSet = n / ARENAS_PER_TIER;

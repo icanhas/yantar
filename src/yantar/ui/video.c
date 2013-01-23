@@ -464,7 +464,7 @@ GraphicsOptions_GetInitialVideo(void)
 static void
 GraphicsOptions_GetResolutions(void)
 {
-	Q_strncpyz(resbuf, UI_Cvar_VariableString("r_availableModes"),
+	Q_strncpyz(resbuf, UI_cvargetstr("r_availableModes"),
 		sizeof(resbuf));
 	if(*resbuf){
 		char * s = resbuf;
@@ -583,17 +583,17 @@ GraphicsOptions_ApplyChanges(void *unused, int notification)
 
 	switch(s_graphicsoptions.texturebits.curvalue){
 	case 0:
-		trap_Cvar_SetValue("r_texturebits", 0);
+		trap_cvarsetf("r_texturebits", 0);
 		break;
 	case 1:
-		trap_Cvar_SetValue("r_texturebits", 16);
+		trap_cvarsetf("r_texturebits", 16);
 		break;
 	case 2:
-		trap_Cvar_SetValue("r_texturebits", 32);
+		trap_cvarsetf("r_texturebits", 32);
 		break;
 	}
-	trap_Cvar_SetValue("r_picmip", 3 - s_graphicsoptions.tq.curvalue);
-	trap_Cvar_SetValue("r_allowExtensions",
+	trap_cvarsetf("r_picmip", 3 - s_graphicsoptions.tq.curvalue);
+	trap_cvarsetf("r_allowExtensions",
 		s_graphicsoptions.allow_extensions.curvalue);
 
 	if(resolutionsDetected){
@@ -619,37 +619,37 @@ GraphicsOptions_ApplyChanges(void *unused, int notification)
 					detectedResolutions[ s_graphicsoptions.
 							     mode.curvalue ],
 					'x') + 1, sizeof(h));
-			trap_Cvar_Set("r_customwidth", w);
-			trap_Cvar_Set("r_customheight", h);
+			trap_cvarsetstr("r_customwidth", w);
+			trap_cvarsetstr("r_customheight", h);
 		}
 
-		trap_Cvar_SetValue("r_mode", mode);
+		trap_cvarsetf("r_mode", mode);
 	}else
-		trap_Cvar_SetValue("r_mode", s_graphicsoptions.mode.curvalue);
+		trap_cvarsetf("r_mode", s_graphicsoptions.mode.curvalue);
 
-	trap_Cvar_SetValue("r_fullscreen", s_graphicsoptions.fs.curvalue);
+	trap_cvarsetf("r_fullscreen", s_graphicsoptions.fs.curvalue);
 
-	trap_Cvar_Reset("r_colorbits");
-	trap_Cvar_Reset("r_depthbits");
-	trap_Cvar_Reset("r_stencilbits");
+	trap_cvarreset("r_colorbits");
+	trap_cvarreset("r_depthbits");
+	trap_cvarreset("r_stencilbits");
 
-	trap_Cvar_SetValue("r_vertexLight", s_graphicsoptions.lighting.curvalue);
+	trap_cvarsetf("r_vertexLight", s_graphicsoptions.lighting.curvalue);
 
 	if(s_graphicsoptions.geometry.curvalue == 2){
-		trap_Cvar_SetValue("r_lodBias", 0);
-		trap_Cvar_SetValue("r_subdivisions", 4);
+		trap_cvarsetf("r_lodBias", 0);
+		trap_cvarsetf("r_subdivisions", 4);
 	}else if(s_graphicsoptions.geometry.curvalue == 1){
-		trap_Cvar_SetValue("r_lodBias", 1);
-		trap_Cvar_SetValue("r_subdivisions", 12);
+		trap_cvarsetf("r_lodBias", 1);
+		trap_cvarsetf("r_subdivisions", 12);
 	}else{
-		trap_Cvar_SetValue("r_lodBias", 1);
-		trap_Cvar_SetValue("r_subdivisions", 20);
+		trap_cvarsetf("r_lodBias", 1);
+		trap_cvarsetf("r_subdivisions", 20);
 	}
 
 	if(s_graphicsoptions.filter.curvalue)
-		trap_Cvar_Set("r_textureMode", "GL_LINEAR_MIPMAP_LINEAR");
+		trap_cvarsetstr("r_textureMode", "GL_LINEAR_MIPMAP_LINEAR");
 	else
-		trap_Cvar_Set("r_textureMode", "GL_LINEAR_MIPMAP_NEAREST");
+		trap_cvarsetstr("r_textureMode", "GL_LINEAR_MIPMAP_NEAREST");
 
 	trap_Cmd_ExecuteText(EXEC_APPEND, "vid_restart\n");
 }
@@ -759,18 +759,18 @@ static void
 GraphicsOptions_SetMenuItems(void)
 {
 	s_graphicsoptions.mode.curvalue =
-		GraphicsOptions_FindDetectedResolution(trap_Cvar_VariableValue(
+		GraphicsOptions_FindDetectedResolution(trap_cvargetf(
 				"r_mode"));
 
 	if(s_graphicsoptions.mode.curvalue < 0){
 		if(resolutionsDetected){
 			int	i;
 			char	buf[MAX_STRING_CHARS];
-			trap_Cvar_VariableStringBuffer("r_customwidth", buf,
+			trap_cvargetstrbuf("r_customwidth", buf,
 				sizeof(buf)-2);
 			buf[strlen(buf)+1] = 0;
 			buf[strlen(buf)] = 'x';
-			trap_Cvar_VariableStringBuffer("r_customheight", buf+
+			trap_cvargetstrbuf("r_customheight", buf+
 				strlen(
 					buf), sizeof(buf)-strlen(buf));
 
@@ -786,18 +786,18 @@ GraphicsOptions_SetMenuItems(void)
 	}
 	s_graphicsoptions.ratio.curvalue =
 		resToRatio[ s_graphicsoptions.mode.curvalue ];
-	s_graphicsoptions.fs.curvalue = trap_Cvar_VariableValue("r_fullscreen");
-	s_graphicsoptions.allow_extensions.curvalue = trap_Cvar_VariableValue(
+	s_graphicsoptions.fs.curvalue = trap_cvargetf("r_fullscreen");
+	s_graphicsoptions.allow_extensions.curvalue = trap_cvargetf(
 		"r_allowExtensions");
-	s_graphicsoptions.tq.curvalue = 3-trap_Cvar_VariableValue("r_picmip");
+	s_graphicsoptions.tq.curvalue = 3-trap_cvargetf("r_picmip");
 	if(s_graphicsoptions.tq.curvalue < 0)
 		s_graphicsoptions.tq.curvalue = 0;
 	else if(s_graphicsoptions.tq.curvalue > 3)
 		s_graphicsoptions.tq.curvalue = 3;
 
-	s_graphicsoptions.lighting.curvalue = trap_Cvar_VariableValue(
+	s_graphicsoptions.lighting.curvalue = trap_cvargetf(
 		"r_vertexLight") != 0;
-	switch(( int )trap_Cvar_VariableValue("r_texturebits")){
+	switch(( int )trap_cvargetf("r_texturebits")){
 	default:
 	case 0:
 		s_graphicsoptions.texturebits.curvalue = 0;
@@ -810,14 +810,14 @@ GraphicsOptions_SetMenuItems(void)
 		break;
 	}
 
-	if(!Q_stricmp(UI_Cvar_VariableString("r_textureMode"),
+	if(!Q_stricmp(UI_cvargetstr("r_textureMode"),
 		   "GL_LINEAR_MIPMAP_NEAREST"))
 		s_graphicsoptions.filter.curvalue = 0;
 	else
 		s_graphicsoptions.filter.curvalue = 1;
 
-	if(trap_Cvar_VariableValue("r_lodBias") > 0){
-		if(trap_Cvar_VariableValue("r_subdivisions") >= 20)
+	if(trap_cvargetf("r_lodBias") > 0){
+		if(trap_cvargetf("r_subdivisions") >= 20)
 			s_graphicsoptions.geometry.curvalue = 0;
 		else
 			s_graphicsoptions.geometry.curvalue = 1;

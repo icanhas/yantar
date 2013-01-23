@@ -377,11 +377,11 @@ SCR_DrawDebugGraph(void)
 void
 SCR_Init(void)
 {
-	cl_timegraph = Cvar_Get ("timegraph", "0", CVAR_CHEAT);
-	cl_debuggraph	= Cvar_Get ("debuggraph", "0", CVAR_CHEAT);
-	cl_graphheight	= Cvar_Get ("graphheight", "32", CVAR_CHEAT);
-	cl_graphscale	= Cvar_Get ("graphscale", "1", CVAR_CHEAT);
-	cl_graphshift	= Cvar_Get ("graphshift", "0", CVAR_CHEAT);
+	cl_timegraph = cvarget ("timegraph", "0", CVAR_CHEAT);
+	cl_debuggraph	= cvarget ("debuggraph", "0", CVAR_CHEAT);
+	cl_graphheight	= cvarget ("graphheight", "32", CVAR_CHEAT);
+	cl_graphscale	= cvarget ("graphscale", "1", CVAR_CHEAT);
+	cl_graphshift	= cvarget ("graphshift", "0", CVAR_CHEAT);
 
 	scr_initialized = qtrue;
 }
@@ -488,7 +488,7 @@ SCR_UpdateScreen(void)
 	 * that case. */
 	if(uivm || com_dedicated->integer){
 		/* XXX */
-		int in_anaglyphMode = Cvar_VariableIntegerValue("r_anaglyphMode");
+		int in_anaglyphMode = cvargeti("r_anaglyphMode");
 		/* if running in stereo, we need to draw the frame twice */
 		if(cls.glconfig.stereoEnabled || in_anaglyphMode){
 			SCR_DrawScreenField(STEREO_LEFT);

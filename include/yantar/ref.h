@@ -306,12 +306,12 @@ struct Refimport {
 	void    *(*Malloc)(int bytes);
 	void (*Free)(void *buf);
 
-	Cvar  *(*Cvar_Get)(const char *name, const char *value, int flags);
-	void (*Cvar_Set)(const char *name, const char *value);
-	void (*Cvar_SetValue)(const char *name, float value);
-	void (*Cvar_CheckRange)(Cvar *cv, float minVal, float maxVal, qbool shouldBeIntegral);
+	Cvar  *(*cvarget)(const char *name, const char *value, int flags);
+	void (*cvarsetstr)(const char *name, const char *value);
+	void (*cvarsetf)(const char *name, float value);
+	void (*cvarcheckrange)(Cvar *cv, float minVal, float maxVal, qbool shouldBeIntegral);
 
-	int (*Cvar_VariableIntegerValue)(const char *var_name);
+	int (*cvargeti)(const char *var_name);
 
 	void (*cmdadd)(const char *name, void (*cmd)(void));
 	void (*cmdremove)(const char *name);

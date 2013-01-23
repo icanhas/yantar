@@ -57,7 +57,7 @@ BotNumActivePlayers(void)
 	static int maxclients;
 
 	if(!maxclients)
-		maxclients = trap_Cvar_VariableIntegerValue("sv_maxclients");
+		maxclients = trap_cvargeti("sv_maxclients");
 
 	num = 0;
 	for(i = 0; i < maxclients && i < MAX_CLIENTS; i++){
@@ -83,7 +83,7 @@ BotIsFirstInRankings(bot_state_t *bs)
 	Playerstate ps;
 
 	if(!maxclients)
-		maxclients = trap_Cvar_VariableIntegerValue("sv_maxclients");
+		maxclients = trap_cvargeti("sv_maxclients");
 
 	score = bs->cur_ps.persistant[PERS_SCORE];
 	for(i = 0; i < maxclients && i < MAX_CLIENTS; i++){
@@ -110,7 +110,7 @@ BotIsLastInRankings(bot_state_t *bs)
 	Playerstate ps;
 
 	if(!maxclients)
-		maxclients = trap_Cvar_VariableIntegerValue("sv_maxclients");
+		maxclients = trap_cvargeti("sv_maxclients");
 
 	score = bs->cur_ps.persistant[PERS_SCORE];
 	for(i = 0; i < maxclients && i < MAX_CLIENTS; i++){
@@ -138,7 +138,7 @@ BotFirstClientInRankings(void)
 	Playerstate ps;
 
 	if(!maxclients)
-		maxclients = trap_Cvar_VariableIntegerValue("sv_maxclients");
+		maxclients = trap_cvargeti("sv_maxclients");
 
 	bestscore = -999999;
 	bestclient = 0;
@@ -171,7 +171,7 @@ BotLastClientInRankings(void)
 	Playerstate ps;
 
 	if(!maxclients)
-		maxclients = trap_Cvar_VariableIntegerValue("sv_maxclients");
+		maxclients = trap_cvargeti("sv_maxclients");
 
 	worstscore = 999999;
 	bestclient = 0;
@@ -204,7 +204,7 @@ BotRandomOpponentName(bot_state_t *bs)
 	static char	name[32];
 
 	if(!maxclients)
-		maxclients = trap_Cvar_VariableIntegerValue("sv_maxclients");
+		maxclients = trap_cvargeti("sv_maxclients");
 
 	numopponents = 0;
 	opponents[0] = 0;

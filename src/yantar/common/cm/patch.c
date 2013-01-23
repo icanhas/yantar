@@ -1284,7 +1284,7 @@ CM_TracePointThroughPatchCollide(Tracework *tw,
 			/* we hit this facet */
 #ifndef BSPC
 			if(!cv)
-				cv = Cvar_Get("r_debugSurfaceUpdate", "1", 0);
+				cv = cvarget("r_debugSurfaceUpdate", "1", 0);
 			if(cv->integer){
 				debugPatchCollide = pc;
 				debugFacet = facet;
@@ -1479,7 +1479,7 @@ CM_TraceThroughPatchCollide(Tracework *tw, const struct patchCollide_s *pc)
 #ifndef BSPC
 				if(!cv)
 					cv =
-						Cvar_Get("r_debugSurfaceUpdate",
+						cvarget("r_debugSurfaceUpdate",
 							"1",
 							0);
 				if(cv && cv->integer){
@@ -1624,7 +1624,7 @@ CM_DrawDebugSurface(void (*drawPoly)(int color, int numPoints, float *points))
 
 #ifndef BSPC
 	if(!cv2)
-		cv2 = Cvar_Get("r_debugSurface", "0", 0);
+		cv2 = cvarget("r_debugSurface", "0", 0);
 
 	if(cv2->integer != 1){
 		BotDrawDebugPolygons(drawPoly, cv2->integer);
@@ -1637,7 +1637,7 @@ CM_DrawDebugSurface(void (*drawPoly)(int color, int numPoints, float *points))
 
 #ifndef BSPC
 	if(!cv)
-		cv = Cvar_Get("cm_debugSize", "2", 0);
+		cv = cvarget("cm_debugSize", "2", 0);
 
 #endif
 	pc = debugPatchCollide;

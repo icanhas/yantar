@@ -73,25 +73,25 @@ SV_RankBegin(char *gamekey)
 	assert(s_ranked_players == NULL);
 
 	if(sv_enableRankings->integer == 0 ||
-	   Cvar_VariableValue("g_gametype") == GT_SINGLE_PLAYER){
+	   cvargetf("g_gametype") == GT_SINGLE_PLAYER){
 		s_rankings_active = qfalse;
 		if(sv_rankingsActive->integer == 1)
-			Cvar_Set("sv_rankingsActive", "0");
+			cvarsetstr("sv_rankingsActive", "0");
 		return;
 	}
 
 	/* only allow official game key on pure servers */
 	if(strcmp(gamekey, GR_GAMEKEY) == 0){
 /*
- *              if( Cvar_VariableValue("sv_pure") != 1 )
+ *              if( cvargetf("sv_pure") != 1 )
  *              {
- *                      Cvar_Set( "sv_enableRankings", "0" );
+ *                      cvarsetstr( "sv_enableRankings", "0" );
  *                      return;
  *              }
  */
 
 		/* substitute game-specific game key */
-		switch((int)Cvar_VariableValue("g_gametype")){
+		switch((int)cvargetf("g_gametype")){
 		case GT_FFA:
 			gamekey = "Q3 Free For All";
 			break;
@@ -132,14 +132,14 @@ SV_RankBegin(char *gamekey)
 	Com_DPrintf("SV_RankBegin(); s_server_context=%d\n",init.context);
 
 	/* new game */
-	if(!strlen(Cvar_VariableString("sv_leagueName")))
+	if(!strlen(cvargetstr("sv_leagueName")))
 		status = GRankNewGameAsync
 			 (
 			s_server_context,
 			SV_RankNewGameCBF,
 			NULL,
 			GR_OPT_LEAGUENAME,
-			(void*)(Cvar_VariableString("sv_leagueName")),
+			(void*)(cvargetstr("sv_leagueName")),
 			GR_OPT_END
 			 );
 	else
@@ -215,7 +215,7 @@ SV_RankEnd(void)
 			SV_RankStatusString(status));
 
 	s_rankings_active = qfalse;
-	Cvar_Set("sv_rankingsActive", "0");
+	cvarsetstr("sv_rankingsActive", "0");
 }
 
 /*
@@ -894,7 +894,7 @@ SV_RankNewGameCBF(GR_NEWGAME* gr_newgame, void* cbf_arg)
 
 		/* ready to go */
 		s_rankings_active = qtrue;
-		Cvar_Set("sv_rankingsActive", "1");
+		cvarsetstr("sv_rankingsActive", "1");
 
 	}else if(gr_newgame->status == GR_STATUS_BADLEAGUE)
 		SV_RankError("SV_RankNewGameCBF: Invalid League name\n");
@@ -1160,7 +1160,7 @@ SV_RankCloseContext(ranked_player_t* ranked_player)
 		}
 
 		s_rankings_active = qfalse;
-		Cvar_Set("sv_rankingsActive", "0");
+		cvarsetstr("sv_rankingsActive", "0");
 	}
 }
 
@@ -1369,6 +1369,6 @@ SV_RankError(const char* fmt, ...)
 	Com_DPrintf("****************************************\n");
 
 	s_rankings_active = qfalse;
-	Cvar_Set("sv_rankingsActive", "0");
+	cvarsetstr("sv_rankingsActive", "0");
 	/* FIXME - attempt clean shutdown? */
 }

@@ -179,7 +179,7 @@ Com_Printf(const char *fmt, ...)
 					FS_ForceFlush(logfile);
 			}else{
 				Com_Printf("Opening qconsole.log failed!\n");
-				Cvar_SetValue("logfile", 0);
+				cvarsetf("logfile", 0);
 			}
 			opening_qconsole = qfalse;
 		}
@@ -224,7 +224,7 @@ Com_Errorf(int code, const char *fmt, ...)
 
 	com_errorEntered = qtrue;
 
-	Cvar_Set("com_errorCode", va("%i", code));
+	cvarsetstr("com_errorCode", va("%i", code));
 
 	/* when we are running automated scripts, make sure we
 	 * know if anything failed */
@@ -245,7 +245,7 @@ Com_Errorf(int code, const char *fmt, ...)
 	va_end (argptr);
 
 	if(code != ERR_DISCONNECT)
-		Cvar_Set("com_errorMessage", com_errorMessage);
+		cvarsetstr("com_errorMessage", com_errorMessage);
 
 	if(code == ERR_DISCONNECT || code == ERR_SERVERDISCONNECT){
 		vmsetforceunload();
@@ -390,10 +390,10 @@ Com_Startupvar(const char *match)
 		s = cmdargv(1);
 
 		if(!match || !strcmp(s, match)){
-			if(Cvar_Flags(s) == CVAR_NONEXISTENT)
-				Cvar_Get(s, cmdargv(2), CVAR_USER_CREATED);
+			if(cvarflags(s) == CVAR_NONEXISTENT)
+				cvarget(s, cmdargv(2), CVAR_USER_CREATED);
 			else
-				Cvar_Set2(s, cmdargv(2), qfalse);
+				cvarsetstr2(s, cmdargv(2), qfalse);
 		}
 	}
 }
@@ -623,7 +623,7 @@ void
 Com_Initjournaling(void)
 {
 	Com_Startupvar("journal");
-	com_journal = Cvar_Get ("journal", "0", CVAR_INIT);
+	com_journal = cvarget ("journal", "0", CVAR_INIT);
 	if(!com_journal->integer)
 		return;
 
@@ -638,7 +638,7 @@ Com_Initjournaling(void)
 	}
 
 	if(!com_journalFile || !com_journalDataFile){
-		Cvar_Set("com_journal", "0");
+		cvarsetstr("com_journal", "0");
 		com_journalFile = 0;
 		com_journalDataFile = 0;
 		Com_Printf("Couldn't open journal files\n");
@@ -1189,7 +1189,7 @@ Com_Gamerestart(int checksumFeed, qbool disconnect)
 		FS_Restart(checksumFeed);
 
 		/* Clean out any user and VM created cvars */
-		Cvar_Restart(qtrue);
+		cvarrestart(qtrue);
 		Com_Execconfig();
 
 		if(disconnect){
@@ -1218,9 +1218,9 @@ Com_Gamerestart_f(void)
 		/* This is the standard base game. Servers and clients should
 		 * use "" and not the standard basegame name because this messes
 		 * up pak file negotiation and lots of other stuff */
-		Cvar_Set("fs_game", "");
+		cvarsetstr("fs_game", "");
 	else
-		Cvar_Set("fs_game", cmdargv(1));
+		cvarsetstr("fs_game", cmdargv(1));
 
 	Com_Gamerestart(0, qtrue);
 }
@@ -1237,7 +1237,7 @@ Com_Writeconfigtofile(const char *filename)
 	}
 	FS_Printf(f, "// ／人◕‿‿ ◕人＼\n");
 	Key_WriteBindings(f);
-	Cvar_WriteVariables(f);
+	cvarwritevars(f);
 	FS_FCloseFile(f);
 }
 
@@ -1340,7 +1340,7 @@ Com_Detectaltivec(void)
 			detected = qtrue;
 		}
 		if(!altivec)
-			Cvar_Set("com_altivec", "0");	/* we don't have it! Disable support! */
+			cvarsetstr("com_altivec", "0");	/* we don't have it! Disable support! */
 	}
 }
 
@@ -1415,7 +1415,7 @@ Com_Init(char *commandLine)
 	Com_Initpushevent();
 
 	Com_Initsmallzone();
-	Cvar_Init();
+	cvarinit();
 
 	/* prepare enough of the subsystems to handle
 	 * cvar and command buffer management */
@@ -1433,17 +1433,17 @@ Com_Init(char *commandLine)
 	cmdinit ();
 
 	/* get the developer cvar set as early as possible */
-	com_developer = Cvar_Get("developer", "0", CVAR_TEMP);
+	com_developer = cvarget("developer", "0", CVAR_TEMP);
 
 	/* done early so bind command exists */
 	CL_InitKeyCommands();
 
-	com_standalone	= Cvar_Get("com_standalone", "0", CVAR_ROM);
-	com_basegame	= Cvar_Get("com_basegame", BASEGAME, CVAR_INIT);
-	com_homepath	= Cvar_Get("com_homepath", "", CVAR_INIT);
+	com_standalone	= cvarget("com_standalone", "0", CVAR_ROM);
+	com_basegame	= cvarget("com_basegame", BASEGAME, CVAR_INIT);
+	com_homepath	= cvarget("com_homepath", "", CVAR_INIT);
 
 	if(!com_basegame->string[0])
-		Cvar_ForceReset("com_basegame");
+		cvarforcereset("com_basegame");
 
 	FS_InitFilesystem ();
 
@@ -1471,11 +1471,11 @@ Com_Init(char *commandLine)
 
 	/* get dedicated here for proper hunk megs initialization */
 #ifdef DEDICATED
-	com_dedicated = Cvar_Get("dedicated", "1", CVAR_INIT);
-	Cvar_CheckRange(com_dedicated, 1, 2, qtrue);
+	com_dedicated = cvarget("dedicated", "1", CVAR_INIT);
+	cvarcheckrange(com_dedicated, 1, 2, qtrue);
 #else
-	com_dedicated = Cvar_Get("dedicated", "0", CVAR_LATCH);
-	Cvar_CheckRange(com_dedicated, 0, 2, qtrue);
+	com_dedicated = cvarget("dedicated", "0", CVAR_LATCH);
+	cvarcheckrange(com_dedicated, 0, 2, qtrue);
 #endif
 	/* allocate the stack based hunk allocator */
 	Com_Inithunk();
@@ -1489,46 +1489,46 @@ Com_Init(char *commandLine)
 	/*
 	 * init commands and vars
 	 *  */
-	com_altivec = Cvar_Get("com_altivec", "1", CVAR_ARCHIVE);
-	com_maxfps = Cvar_Get("com_maxfps", "85", CVAR_ARCHIVE);
-	com_blood = Cvar_Get("com_blood", "1", CVAR_ARCHIVE);
+	com_altivec = cvarget("com_altivec", "1", CVAR_ARCHIVE);
+	com_maxfps = cvarget("com_maxfps", "85", CVAR_ARCHIVE);
+	com_blood = cvarget("com_blood", "1", CVAR_ARCHIVE);
 
-	com_logfile = Cvar_Get("logfile", "0", CVAR_TEMP);
+	com_logfile = cvarget("logfile", "0", CVAR_TEMP);
 
-	com_timescale = Cvar_Get ("timescale", "1",
+	com_timescale = cvarget ("timescale", "1",
 		CVAR_CHEAT | CVAR_SYSTEMINFO);
-	com_fixedtime	= Cvar_Get("fixedtime", "0", CVAR_CHEAT);
-	com_showtrace	= Cvar_Get("com_showtrace", "0", CVAR_CHEAT);
-	com_speeds	= Cvar_Get("com_speeds", "0", 0);
-	com_timedemo	= Cvar_Get("timedemo", "0", CVAR_CHEAT);
-	com_cameraMode	= Cvar_Get("com_cameraMode", "0", CVAR_CHEAT);
+	com_fixedtime	= cvarget("fixedtime", "0", CVAR_CHEAT);
+	com_showtrace	= cvarget("com_showtrace", "0", CVAR_CHEAT);
+	com_speeds	= cvarget("com_speeds", "0", 0);
+	com_timedemo	= cvarget("timedemo", "0", CVAR_CHEAT);
+	com_cameraMode	= cvarget("com_cameraMode", "0", CVAR_CHEAT);
 
-	cl_paused = Cvar_Get ("cl_paused", "0", CVAR_ROM);
-	sv_paused = Cvar_Get ("sv_paused", "0", CVAR_ROM);
-	cl_packetdelay	= Cvar_Get ("cl_packetdelay", "0", CVAR_CHEAT);
-	sv_packetdelay	= Cvar_Get ("sv_packetdelay", "0", CVAR_CHEAT);
-	com_sv_running	= Cvar_Get ("sv_running", "0", CVAR_ROM);
-	com_cl_running	= Cvar_Get ("cl_running", "0", CVAR_ROM);
-	com_buildScript = Cvar_Get("com_buildScript", "0", 0);
-	com_ansiColor	= Cvar_Get("com_ansiColor", "0", CVAR_ARCHIVE);
+	cl_paused = cvarget ("cl_paused", "0", CVAR_ROM);
+	sv_paused = cvarget ("sv_paused", "0", CVAR_ROM);
+	cl_packetdelay	= cvarget ("cl_packetdelay", "0", CVAR_CHEAT);
+	sv_packetdelay	= cvarget ("sv_packetdelay", "0", CVAR_CHEAT);
+	com_sv_running	= cvarget ("sv_running", "0", CVAR_ROM);
+	com_cl_running	= cvarget ("cl_running", "0", CVAR_ROM);
+	com_buildScript = cvarget("com_buildScript", "0", 0);
+	com_ansiColor	= cvarget("com_ansiColor", "0", CVAR_ARCHIVE);
 
-	com_unfocused = Cvar_Get("com_unfocused", "0", CVAR_ROM);
-	com_maxfpsUnfocused = Cvar_Get("com_maxfpsUnfocused", "0", CVAR_ARCHIVE);
-	com_minimized = Cvar_Get("com_minimized", "0", CVAR_ROM);
-	com_maxfpsMinimized = Cvar_Get("com_maxfpsMinimized", "0", CVAR_ARCHIVE);
-	com_abnormalExit = Cvar_Get("com_abnormalExit", "0", CVAR_ROM);
-	com_busyWait = Cvar_Get("com_busyWait", "0", CVAR_ARCHIVE);
-	Cvar_Get("com_errorMessage", "", CVAR_ROM | CVAR_NORESTART);
+	com_unfocused = cvarget("com_unfocused", "0", CVAR_ROM);
+	com_maxfpsUnfocused = cvarget("com_maxfpsUnfocused", "0", CVAR_ARCHIVE);
+	com_minimized = cvarget("com_minimized", "0", CVAR_ROM);
+	com_maxfpsMinimized = cvarget("com_maxfpsMinimized", "0", CVAR_ARCHIVE);
+	com_abnormalExit = cvarget("com_abnormalExit", "0", CVAR_ROM);
+	com_busyWait = cvarget("com_busyWait", "0", CVAR_ARCHIVE);
+	cvarget("com_errorMessage", "", CVAR_ROM | CVAR_NORESTART);
 
-	com_introPlayed = Cvar_Get("com_introplayed", "0", CVAR_ARCHIVE);
+	com_introPlayed = cvarget("com_introplayed", "0", CVAR_ARCHIVE);
 
 	s = va("%s %s %s", Q3_VERSION, PLATFORM_STRING, __DATE__);
-	com_version = Cvar_Get ("version", s, CVAR_ROM | CVAR_SERVERINFO);
-	com_gamename = Cvar_Get("com_gamename", GAMENAME_FOR_MASTER,
+	com_version = cvarget ("version", s, CVAR_ROM | CVAR_SERVERINFO);
+	com_gamename = cvarget("com_gamename", GAMENAME_FOR_MASTER,
 		CVAR_SERVERINFO | CVAR_INIT);
-	com_protocol = Cvar_Get("com_protocol", va("%i",
+	com_protocol = cvarget("com_protocol", va("%i",
 			PROTOCOL_VERSION), CVAR_SERVERINFO | CVAR_INIT);
-	Cvar_Get("protocol", com_protocol->string, CVAR_ROM);
+	cvarget("protocol", com_protocol->string, CVAR_ROM);
 
 	Sys_Init();
 	
@@ -1556,18 +1556,18 @@ Com_Init(char *commandLine)
 		if(!com_dedicated->integer){
 			cbufaddstr ("cinematic idlogo.RoQ\n");
 			if(!com_introPlayed->integer){
-				Cvar_Set(com_introPlayed->name, "1");
-				Cvar_Set("nextmap", "cinematic intro.RoQ");
+				cvarsetstr(com_introPlayed->name, "1");
+				cvarsetstr("nextmap", "cinematic intro.RoQ");
 			}
 		}
 
 	/* start in full screen ui mode */
-	Cvar_Set("r_uiFullScreen", "1");
+	cvarsetstr("r_uiFullScreen", "1");
 
 	CL_StartHunkUsers(qfalse);
 
 	/* make sure single player is off by default */
-	Cvar_Set("ui_singlePlayerActive", "0");
+	cvarsetstr("ui_singlePlayerActive", "0");
 
 	com_fullyInitialized = qtrue;
 
@@ -1578,7 +1578,7 @@ Com_Init(char *commandLine)
 		com_altivec->integer ? "enabled" : "disabled");
 #endif
 
-	com_pipefile = Cvar_Get("com_pipefile", "", CVAR_ARCHIVE|CVAR_LATCH);
+	com_pipefile = cvarget("com_pipefile", "", CVAR_ARCHIVE|CVAR_LATCH);
 	if(com_pipefile->string[0])
 		pipefile = FS_FCreateOpenPipeFile(com_pipefile->string);
 
@@ -1741,7 +1741,7 @@ Com_Frame(void)
 	 * but before the client tries to auto-connect */
 	if(com_dedicated->modified){
 		/* get the latched value */
-		Cvar_Get("dedicated", "0", 0);
+		cvarget("dedicated", "0", 0);
 		com_dedicated->modified = qfalse;
 		if(!com_dedicated->integer){
 			SV_Shutdown("dedicated set to 0");
@@ -1868,7 +1868,7 @@ printcvarmatches(const char *s)
 	char value[ TRUNCATE_LENGTH ];
 
 	if(!Q_stricmpn(s, shortestMatch, strlen(shortestMatch))){
-		Q_truncstr(value, Cvar_VariableString(s));
+		Q_truncstr(value, cvargetstr(s));
 		Com_Printf("    %s = \"%s\"\n", s, value);
 	}
 }
@@ -2001,7 +2001,7 @@ Field_CompleteCommand(char *cmd,
 			cmdcompletion(findmatches);
 
 		if(doCvars)
-			Cvar_CommandCompletion(findmatches);
+			cvarcmdcompletion(findmatches);
 
 		if(!Field_Complete()){
 			/* run through again, printing matches */
@@ -2009,7 +2009,7 @@ Field_CompleteCommand(char *cmd,
 				cmdcompletion(printmatches);
 
 			if(doCvars)
-				Cvar_CommandCompletion(printcvarmatches);
+				cvarcmdcompletion(printcvarmatches);
 		}
 	}
 }

@@ -290,7 +290,7 @@ StartServer_MenuEvent(void* ptr, int event)
 		break;
 
 	case ID_STARTSERVERNEXT:
-		trap_Cvar_SetValue("g_gameType",
+		trap_cvarsetf("g_gameType",
 			gametype_remap[s_startserver.gametype.curvalue]);
 		UI_ServerOptionsMenu(s_startserver.multiplayer);
 		break;
@@ -566,7 +566,7 @@ StartServer_Cache(void)
 	trap_R_RegisterShaderNoMip(GAMESERVER_ARROWSL);
 	trap_R_RegisterShaderNoMip(GAMESERVER_ARROWSR);
 
-	precache = trap_Cvar_VariableValue("com_buildscript");
+	precache = trap_cvargetf("com_buildscript");
 
 	if(precache)
 		for(i = 0; i < UI_GetNumArenas(); i++){
@@ -738,36 +738,36 @@ ServerOptions_Start(void)
 	switch(s_serveroptions.gametype){
 	case GT_FFA:
 	default:
-		trap_Cvar_SetValue("ui_ffa_fraglimit", fraglimit);
-		trap_Cvar_SetValue("ui_ffa_timelimit", timelimit);
+		trap_cvarsetf("ui_ffa_fraglimit", fraglimit);
+		trap_cvarsetf("ui_ffa_timelimit", timelimit);
 		break;
 
 	case GT_TOURNAMENT:
-		trap_Cvar_SetValue("ui_tourney_fraglimit", fraglimit);
-		trap_Cvar_SetValue("ui_tourney_timelimit", timelimit);
+		trap_cvarsetf("ui_tourney_fraglimit", fraglimit);
+		trap_cvarsetf("ui_tourney_timelimit", timelimit);
 		break;
 
 	case GT_TEAM:
-		trap_Cvar_SetValue("ui_team_fraglimit", fraglimit);
-		trap_Cvar_SetValue("ui_team_timelimit", timelimit);
-		trap_Cvar_SetValue("ui_team_friendly", friendlyfire);
+		trap_cvarsetf("ui_team_fraglimit", fraglimit);
+		trap_cvarsetf("ui_team_timelimit", timelimit);
+		trap_cvarsetf("ui_team_friendly", friendlyfire);
 		break;
 
 	case GT_CTF:
-		trap_Cvar_SetValue("ui_ctf_capturelimit", flaglimit);
-		trap_Cvar_SetValue("ui_ctf_timelimit", timelimit);
-		trap_Cvar_SetValue("ui_ctf_friendly", friendlyfire);
+		trap_cvarsetf("ui_ctf_capturelimit", flaglimit);
+		trap_cvarsetf("ui_ctf_timelimit", timelimit);
+		trap_cvarsetf("ui_ctf_friendly", friendlyfire);
 		break;
 	}
 
-	trap_Cvar_SetValue("sv_maxclients", Q_clamp(0, 12, maxclients));
-	trap_Cvar_SetValue("dedicated", Q_clamp(0, 2, dedicated));
-	trap_Cvar_SetValue ("timelimit", Q_clamp(0, timelimit, timelimit));
-	trap_Cvar_SetValue ("fraglimit", Q_clamp(0, fraglimit, fraglimit));
-	trap_Cvar_SetValue ("capturelimit", Q_clamp(0, flaglimit, flaglimit));
-	trap_Cvar_SetValue("g_friendlyfire", friendlyfire);
-	trap_Cvar_SetValue("sv_pure", pure);
-	trap_Cvar_Set("sv_hostname", s_serveroptions.hostname.field.buffer);
+	trap_cvarsetf("sv_maxclients", Q_clamp(0, 12, maxclients));
+	trap_cvarsetf("dedicated", Q_clamp(0, 2, dedicated));
+	trap_cvarsetf ("timelimit", Q_clamp(0, timelimit, timelimit));
+	trap_cvarsetf ("fraglimit", Q_clamp(0, fraglimit, fraglimit));
+	trap_cvarsetf ("capturelimit", Q_clamp(0, flaglimit, flaglimit));
+	trap_cvarsetf("g_friendlyfire", friendlyfire);
+	trap_cvarsetf("sv_pure", pure);
+	trap_cvarsetstr("sv_hostname", s_serveroptions.hostname.field.buffer);
 
 	/* the wait commands will allow the dedicated to take effect */
 	info =
@@ -834,7 +834,7 @@ ServerOptions_InitPlayerItems(void)
 		/* human */
 		s_serveroptions.playerType[0].generic.flags |= QMF_INACTIVE;
 		s_serveroptions.playerType[0].curvalue = 0;
-		trap_Cvar_VariableStringBuffer(
+		trap_cvargetstrbuf(
 			"name", s_serveroptions.playerNameBuffers[0],
 			sizeof(s_serveroptions.playerNameBuffers[0]));
 		Q_cleanstr(s_serveroptions.playerNameBuffers[0]);
@@ -1112,49 +1112,49 @@ ServerOptions_SetMenuItems(void)
 	default:
 		Q_sprintf(s_serveroptions.fraglimit.field.buffer, 4, "%i",
 			(int)Q_clamp(0, 999,
-				trap_Cvar_VariableValue("ui_ffa_fraglimit")));
+				trap_cvargetf("ui_ffa_fraglimit")));
 		Q_sprintf(s_serveroptions.timelimit.field.buffer, 4, "%i",
 			(int)Q_clamp(0, 999,
-				trap_Cvar_VariableValue("ui_ffa_timelimit")));
+				trap_cvargetf("ui_ffa_timelimit")));
 		break;
 
 	case GT_TOURNAMENT:
 		Q_sprintf(s_serveroptions.fraglimit.field.buffer, 4, "%i",
 			(int)Q_clamp(0, 999,
-				trap_Cvar_VariableValue("ui_tourney_fraglimit")));
+				trap_cvargetf("ui_tourney_fraglimit")));
 		Q_sprintf(s_serveroptions.timelimit.field.buffer, 4, "%i",
 			(int)Q_clamp(0, 999,
-				trap_Cvar_VariableValue("ui_tourney_timelimit")));
+				trap_cvargetf("ui_tourney_timelimit")));
 		break;
 
 	case GT_TEAM:
 		Q_sprintf(s_serveroptions.fraglimit.field.buffer, 4, "%i",
 			(int)Q_clamp(0, 999,
-				trap_Cvar_VariableValue("ui_team_fraglimit")));
+				trap_cvargetf("ui_team_fraglimit")));
 		Q_sprintf(s_serveroptions.timelimit.field.buffer, 4, "%i",
 			(int)Q_clamp(0, 999,
-				trap_Cvar_VariableValue("ui_team_timelimit")));
+				trap_cvargetf("ui_team_timelimit")));
 		s_serveroptions.friendlyfire.curvalue = (int)Q_clamp(
-			0, 1, trap_Cvar_VariableValue("ui_team_friendly"));
+			0, 1, trap_cvargetf("ui_team_friendly"));
 		break;
 
 	case GT_CTF:
 		Q_sprintf(s_serveroptions.flaglimit.field.buffer, 4, "%i",
 			(int)Q_clamp(0, 100,
-				trap_Cvar_VariableValue("ui_ctf_capturelimit")));
+				trap_cvargetf("ui_ctf_capturelimit")));
 		Q_sprintf(s_serveroptions.timelimit.field.buffer, 4, "%i",
 			(int)Q_clamp(0, 999,
-				trap_Cvar_VariableValue("ui_ctf_timelimit")));
+				trap_cvargetf("ui_ctf_timelimit")));
 		s_serveroptions.friendlyfire.curvalue = (int)Q_clamp(
-			0, 1, trap_Cvar_VariableValue("ui_ctf_friendly"));
+			0, 1, trap_cvargetf("ui_ctf_friendly"));
 		break;
 	}
 
 	Q_strncpyz(s_serveroptions.hostname.field.buffer,
-		UI_Cvar_VariableString("sv_hostname"),
+		UI_cvargetstr("sv_hostname"),
 		sizeof(s_serveroptions.hostname.field.buffer));
 	s_serveroptions.pure.curvalue =
-		Q_clamp(0, 1, trap_Cvar_VariableValue("sv_pure"));
+		Q_clamp(0, 1, trap_cvargetf("sv_pure"));
 
 	/* set the map pic */
 	info =
@@ -1238,7 +1238,7 @@ ServerOptions_MenuInit(qbool multiplayer)
 	s_serveroptions.multiplayer = multiplayer;
 	s_serveroptions.gametype = (int)Q_clamp(0, ARRAY_LEN(
 			gametype_remap2) - 1,
-		trap_Cvar_VariableValue("g_gametype"));
+		trap_cvargetf("g_gametype"));
 
 	ServerOptions_Cache();
 

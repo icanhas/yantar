@@ -997,7 +997,7 @@ ClientFromName(char *name)
 	static int maxclients;
 
 	if(!maxclients)
-		maxclients = trap_Cvar_VariableIntegerValue("sv_maxclients");
+		maxclients = trap_cvargeti("sv_maxclients");
 	for(i = 0; i < maxclients && i < MAX_CLIENTS; i++){
 		trap_GetConfigstring(CS_PLAYERS+i, buf, sizeof(buf));
 		Q_cleanstr(buf);
@@ -1017,7 +1017,7 @@ ClientOnSameTeamFromName(bot_state_t *bs, char *name)
 	static int maxclients;
 
 	if(!maxclients)
-		maxclients = trap_Cvar_VariableIntegerValue("sv_maxclients");
+		maxclients = trap_cvargeti("sv_maxclients");
 	for(i = 0; i < maxclients && i < MAX_CLIENTS; i++){
 		if(!BotSameTeam(bs, i))
 			continue;
@@ -4007,7 +4007,7 @@ BotCheckConsoleMessages(bot_state_t *bs)
 				}
 				/* unify the message */
 				trap_UnifyWhiteSpaces(message);
-				trap_Cvar_Update(&bot_testrchat);
+				trap_cvarupdate(&bot_testrchat);
 				if(bot_testrchat.integer){
 					trap_BotLibVarSet("bot_testrchat", "1");
 					/* if bot replies with a chat message */
@@ -4679,17 +4679,17 @@ BotSetupDeathmatchAI(void)
 	int	ent, modelnum;
 	char	model[128];
 
-	gametype	= trap_Cvar_VariableIntegerValue("g_gametype");
-	maxclients	= trap_Cvar_VariableIntegerValue("sv_maxclients");
+	gametype	= trap_cvargeti("g_gametype");
+	maxclients	= trap_cvargeti("sv_maxclients");
 
-	trap_Cvar_Register(&bot_rocketjump, "bot_rocketjump", "1", 0);
-	trap_Cvar_Register(&bot_grapple, "bot_grapple", "0", 0);
-	trap_Cvar_Register(&bot_fastchat, "bot_fastchat", "0", 0);
-	trap_Cvar_Register(&bot_nochat, "bot_nochat", "0", 0);
-	trap_Cvar_Register(&bot_testrchat, "bot_testrchat", "0", 0);
-	trap_Cvar_Register(&bot_challenge, "bot_challenge", "0", 0);
-	trap_Cvar_Register(&bot_predictobstacles, "bot_predictobstacles", "1", 0);
-	trap_Cvar_Register(&g_spSkill, "g_spSkill", "2", 0);
+	trap_cvarregister(&bot_rocketjump, "bot_rocketjump", "1", 0);
+	trap_cvarregister(&bot_grapple, "bot_grapple", "0", 0);
+	trap_cvarregister(&bot_fastchat, "bot_fastchat", "0", 0);
+	trap_cvarregister(&bot_nochat, "bot_nochat", "0", 0);
+	trap_cvarregister(&bot_testrchat, "bot_testrchat", "0", 0);
+	trap_cvarregister(&bot_challenge, "bot_challenge", "0", 0);
+	trap_cvarregister(&bot_predictobstacles, "bot_predictobstacles", "1", 0);
+	trap_cvarregister(&g_spSkill, "g_spSkill", "2", 0);
 	if(gametype == GT_CTF){
 		if(trap_BotGetLevelItemGoal(-1, "Red Flag", &ctf_redflag) < 0)
 			BotAI_Print(PRT_WARNING, "CTF without Red Flag\n");

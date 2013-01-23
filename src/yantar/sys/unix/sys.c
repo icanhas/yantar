@@ -471,8 +471,8 @@ Sys_ErrorDialog(const char *error)
 	char	buffer[ 1024 ];
 	unsigned int size;
 	int	f = -1;
-	const char *homepath = Cvar_VariableString("fs_homepath");
-	const char *gamedir = Cvar_VariableString("fs_game");
+	const char *homepath = cvargetstr("fs_homepath");
+	const char *gamedir = cvargetstr("fs_game");
 	const char *fileName = "crashlog.txt";
 	char *ospath = FS_BuildOSPath(homepath, gamedir, fileName);
 

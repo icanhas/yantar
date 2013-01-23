@@ -65,10 +65,10 @@ Signup_MenuEvent(void* ptr, int event)
 			/* GRANK_FIXME - password mismatch */
 			break;
 		/* set name
-		 * trap_Cvar_Set( "name", s_signup.name_box.field.buffer ); */
+		 * trap_cvarsetstr( "name", s_signup.name_box.field.buffer ); */
 		/*
-		 * trap_Cvar_Set( "rank_name", s_signup.name_box.field.buffer );
-		 * trap_Cvar_Set( "rank_pwd", s_signup.password_box.field.buffer );
+		 * trap_cvarsetstr( "rank_name", s_signup.name_box.field.buffer );
+		 * trap_cvarsetstr( "rank_pwd", s_signup.password_box.field.buffer );
 		 */
 
 		/* create account */
@@ -216,7 +216,7 @@ Signup_MenuInit(void)
 	s_signup.cancel.color	= colorRed;
 	y += 20;
 
-	status = (grank_status_t)trap_Cvar_VariableValue("client_status");
+	status = (grank_status_t)trap_cvargetf("client_status");
 	if((status != QGR_STATUS_NEW) && (status != QGR_STATUS_SPECTATOR)){
 		s_signup.name_box.generic.flags |= QMF_INACTIVE;
 		s_signup.password_box.generic.flags |= QMF_INACTIVE;

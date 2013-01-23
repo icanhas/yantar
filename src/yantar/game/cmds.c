@@ -1232,7 +1232,7 @@ Cmd_CallVote_f(Gentity *ent)
 		 * this allows a player to change maps, but not upset the map rotation */
 		char s[MAX_STRING_CHARS];
 
-		trap_Cvar_VariableStringBuffer("nextmap", s, sizeof(s));
+		trap_cvargetstrbuf("nextmap", s, sizeof(s));
 		if(*s)
 			Q_sprintf(level.voteString, sizeof(level.voteString),
 				"%s %s; set nextmap \"%s\"", arg1, arg2,
@@ -1246,7 +1246,7 @@ Cmd_CallVote_f(Gentity *ent)
 	}else if(!Q_stricmp(arg1, "nextmap")){
 		char s[MAX_STRING_CHARS];
 
-		trap_Cvar_VariableStringBuffer("nextmap", s, sizeof(s));
+		trap_cvargetstrbuf("nextmap", s, sizeof(s));
 		if(!*s){
 			trap_SendServerCommand(ent-g_entities,
 				"print \"nextmap not set.\n\"");

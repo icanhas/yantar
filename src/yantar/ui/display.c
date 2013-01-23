@@ -78,13 +78,13 @@ UI_DisplayOptionsMenu_Event(void* ptr, int event)
 		break;
 
 	case ID_BRIGHTNESS:
-		trap_Cvar_SetValue(
+		trap_cvarsetf(
 			"r_gamma", displayOptionsInfo.brightness.curvalue /
 			10.0f);
 		break;
 
 	case ID_SCREENSIZE:
-		trap_Cvar_SetValue("cg_viewsize",
+		trap_cvarsetf("cg_viewsize",
 			displayOptionsInfo.screensize.curvalue * 10);
 		break;
 
@@ -242,9 +242,9 @@ UI_DisplayOptionsMenu_Init(void)
 	Menu_AddItem(&displayOptionsInfo.menu,
 		( void* )&displayOptionsInfo.back);
 
-	displayOptionsInfo.brightness.curvalue = trap_Cvar_VariableValue(
+	displayOptionsInfo.brightness.curvalue = trap_cvargetf(
 		"r_gamma") * 10;
-	displayOptionsInfo.screensize.curvalue = trap_Cvar_VariableValue(
+	displayOptionsInfo.screensize.curvalue = trap_cvargetf(
 		"cg_viewsize")/10;
 }
 

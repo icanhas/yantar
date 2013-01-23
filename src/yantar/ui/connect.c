@@ -62,9 +62,9 @@ UI_DisplayDownloadInfo(const char *downloadName)
 	int	style = UI_LEFT|UI_SMALLFONT|UI_DROPSHADOW;
 	const char *s;
 
-	downloadSize = trap_Cvar_VariableValue("cl_downloadSize");
-	downloadCount	= trap_Cvar_VariableValue("cl_downloadCount");
-	downloadTime	= trap_Cvar_VariableValue("cl_downloadTime");
+	downloadSize = trap_cvargetf("cl_downloadSize");
+	downloadCount	= trap_cvargetf("cl_downloadCount");
+	downloadTime	= trap_cvargetf("cl_downloadTime");
 
 	leftWidth = UI_ProportionalStringWidth(dlText) *
 		    UI_ProportionalSizeScale(style);
@@ -209,7 +209,7 @@ UI_DrawConnectScreen(qbool overlay)
 		passwordField.width = 256;
 		passwordField.field.widthInChars = 16;
 		Q_strncpyz(passwordField.field.buffer,
-			Cvar_VariableString("password"),
+			cvargetstr("password"),
 			sizeof(passwordField.field.buffer));
 
 		Menu_AddItem(&s_ingame_menu,
@@ -233,7 +233,7 @@ UI_DrawConnectScreen(qbool overlay)
 	case CA_CONNECTED: {
 		char downloadName[MAX_INFO_VALUE];
 
-		trap_Cvar_VariableStringBuffer("cl_downloadName",
+		trap_cvargetstrbuf("cl_downloadName",
 			downloadName, sizeof(downloadName));
 		if(*downloadName){
 			UI_DisplayDownloadInfo(downloadName);

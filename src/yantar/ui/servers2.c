@@ -227,7 +227,7 @@ ArenaServers_MaxPing(void)
 {
 	int maxPing;
 
-	maxPing = (int)trap_Cvar_VariableValue("cl_maxPing");
+	maxPing = (int)trap_cvargetf("cl_maxPing");
 	if(maxPing < 100)
 		maxPing = 100;
 	return maxPing;
@@ -738,7 +738,7 @@ ArenaServers_LoadFavorites(void)
 
 	/* resync existing results with new or deleted cvars */
 	for(i=0; i<MAX_FAVORITESERVERS; i++){
-		trap_Cvar_VariableStringBuffer(va("server%d",
+		trap_cvargetstrbuf(va("server%d",
 				i+1), adrstr, MAX_ADDRESSLENGTH);
 		if(!adrstr[0])
 			continue;
@@ -1017,7 +1017,7 @@ ArenaServers_StartRefresh(void)
 			strcat(myargs, " full");
 
 		protocol[0] = '\0';
-		trap_Cvar_VariableStringBuffer("debug_protocol", protocol,
+		trap_cvargetstrbuf("debug_protocol", protocol,
 			sizeof(protocol));
 		if(strlen(protocol))
 			trap_Cmd_ExecuteText(EXEC_APPEND,
@@ -1027,7 +1027,7 @@ ArenaServers_StartRefresh(void)
 		else
 			trap_Cmd_ExecuteText(EXEC_APPEND,
 				va("globalservers %d %d%s\n", g_servertype - 1,
-					(int)trap_Cvar_VariableValue("protocol"),
+					(int)trap_cvargetf("protocol"),
 					myargs));
 	}
 }
@@ -1042,11 +1042,11 @@ ArenaServers_SaveChanges(void)
 	int i;
 
 	for(i=0; i<g_arenaservers.numfavoriteaddresses; i++)
-		trap_Cvar_Set(va("server%d",
+		trap_cvarsetstr(va("server%d",
 				i+1), g_arenaservers.favoriteaddresses[i]);
 
 	for(; i<MAX_FAVORITESERVERS; i++)
-		trap_Cvar_Set(va("server%d",i+1), "");
+		trap_cvarsetstr(va("server%d",i+1), "");
 }
 
 
@@ -1077,7 +1077,7 @@ ArenaServers_SetType(int type)
 		while(type <= UIAS_GLOBAL5){
 			Q_sprintf(cvarname, sizeof(cvarname), "sv_master%d",
 				type);
-			trap_Cvar_VariableStringBuffer(cvarname, masterstr,
+			trap_cvargetstrbuf(cvarname, masterstr,
 				sizeof(masterstr));
 			if(*masterstr)
 				break;
@@ -1147,33 +1147,33 @@ ArenaServers_Event(void* ptr, int event)
 	case ID_MASTER:
 		g_arenaservers.master.curvalue = ArenaServers_SetType(
 			g_arenaservers.master.curvalue);
-		trap_Cvar_SetValue("ui_browserMaster",
+		trap_cvarsetf("ui_browserMaster",
 			g_arenaservers.master.curvalue);
 		break;
 
 	case ID_GAMETYPE:
-		trap_Cvar_SetValue("ui_browserGameType",
+		trap_cvarsetf("ui_browserGameType",
 			g_arenaservers.gametype.curvalue);
 		g_gametype = g_arenaservers.gametype.curvalue;
 		ArenaServers_UpdateMenu();
 		break;
 
 	case ID_SORTKEY:
-		trap_Cvar_SetValue("ui_browserSortKey",
+		trap_cvarsetf("ui_browserSortKey",
 			g_arenaservers.sortkey.curvalue);
 		ArenaServers_Sort(g_arenaservers.sortkey.curvalue);
 		ArenaServers_UpdateMenu();
 		break;
 
 	case ID_SHOW_FULL:
-		trap_Cvar_SetValue("ui_browserShowFull",
+		trap_cvarsetf("ui_browserShowFull",
 			g_arenaservers.showfull.curvalue);
 		g_fullservers = g_arenaservers.showfull.curvalue;
 		ArenaServers_UpdateMenu();
 		break;
 
 	case ID_SHOW_EMPTY:
-		trap_Cvar_SetValue("ui_browserShowEmpty",
+		trap_cvarsetf("ui_browserShowEmpty",
 			g_arenaservers.showempty.curvalue);
 		g_emptyservers = g_arenaservers.showempty.curvalue;
 		ArenaServers_UpdateMenu();
@@ -1524,7 +1524,7 @@ ArenaServers_MenuInit(void)
 	g_arenaservers.master.curvalue = g_servertype = ArenaServers_SetType(
 		g_servertype);
 
-	trap_Cvar_Register(NULL, "debug_protocol", "", 0);
+	trap_cvarregister(NULL, "debug_protocol", "", 0);
 }
 
 

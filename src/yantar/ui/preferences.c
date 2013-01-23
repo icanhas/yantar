@@ -76,27 +76,27 @@ static const char *teamoverlay_names[] =
 static void
 Preferences_SetMenuItems(void)
 {
-	s_preferences.crosshair.curvalue = (int)trap_Cvar_VariableValue(
+	s_preferences.crosshair.curvalue = (int)trap_cvargetf(
 		"cg_drawCrosshair") % NUM_CROSSHAIRS;
-	s_preferences.simpleitems.curvalue = trap_Cvar_VariableValue(
+	s_preferences.simpleitems.curvalue = trap_cvargetf(
 		"cg_simpleItems") != 0;
 	s_preferences.brass.curvalue =
-		trap_Cvar_VariableValue("cg_brassTime") != 0;
+		trap_cvargetf("cg_brassTime") != 0;
 	s_preferences.wallmarks.curvalue =
-		trap_Cvar_VariableValue("cg_marks") != 0;
-	s_preferences.identifytarget.curvalue = trap_Cvar_VariableValue(
+		trap_cvargetf("cg_marks") != 0;
+	s_preferences.identifytarget.curvalue = trap_cvargetf(
 		"cg_drawCrosshairNames") != 0;
-	s_preferences.dynamiclights.curvalue = trap_Cvar_VariableValue(
+	s_preferences.dynamiclights.curvalue = trap_cvargetf(
 		"r_dynamiclight") != 0;
-	s_preferences.highqualitysky.curvalue = trap_Cvar_VariableValue (
+	s_preferences.highqualitysky.curvalue = trap_cvargetf (
 		"r_fastsky") == 0;
-	s_preferences.synceveryframe.curvalue = trap_Cvar_VariableValue(
+	s_preferences.synceveryframe.curvalue = trap_cvargetf(
 		"r_finish") != 0;
-	s_preferences.forcemodel.curvalue = trap_Cvar_VariableValue(
+	s_preferences.forcemodel.curvalue = trap_cvargetf(
 		"cg_forcemodel") != 0;
 	s_preferences.drawteamoverlay.curvalue = Q_clamp(
-		0, 3, trap_Cvar_VariableValue("cg_drawTeamOverlay"));
-	s_preferences.allowdownload.curvalue = trap_Cvar_VariableValue(
+		0, 3, trap_cvargetf("cg_drawTeamOverlay"));
+	s_preferences.allowdownload.curvalue = trap_cvargetf(
 		"cl_allowDownload") != 0;
 }
 
@@ -109,60 +109,60 @@ Preferences_Event(void* ptr, int notification)
 
 	switch(((menucommon_s*)ptr)->id){
 	case ID_CROSSHAIR:
-		trap_Cvar_SetValue("cg_drawCrosshair",
+		trap_cvarsetf("cg_drawCrosshair",
 			s_preferences.crosshair.curvalue);
 		break;
 
 	case ID_SIMPLEITEMS:
-		trap_Cvar_SetValue("cg_simpleItems",
+		trap_cvarsetf("cg_simpleItems",
 			s_preferences.simpleitems.curvalue);
 		break;
 
 	case ID_HIGHQUALITYSKY:
-		trap_Cvar_SetValue("r_fastsky",
+		trap_cvarsetf("r_fastsky",
 			!s_preferences.highqualitysky.curvalue);
 		break;
 
 	case ID_EJECTINGBRASS:
 		if(s_preferences.brass.curvalue)
-			trap_Cvar_Reset("cg_brassTime");
+			trap_cvarreset("cg_brassTime");
 		else
-			trap_Cvar_SetValue("cg_brassTime", 0);
+			trap_cvarsetf("cg_brassTime", 0);
 		break;
 
 	case ID_WALLMARKS:
-		trap_Cvar_SetValue("cg_marks", s_preferences.wallmarks.curvalue);
+		trap_cvarsetf("cg_marks", s_preferences.wallmarks.curvalue);
 		break;
 
 	case ID_DYNAMICLIGHTS:
-		trap_Cvar_SetValue("r_dynamiclight",
+		trap_cvarsetf("r_dynamiclight",
 			s_preferences.dynamiclights.curvalue);
 		break;
 
 	case ID_IDENTIFYTARGET:
-		trap_Cvar_SetValue("cg_drawCrosshairNames",
+		trap_cvarsetf("cg_drawCrosshairNames",
 			s_preferences.identifytarget.curvalue);
 		break;
 
 	case ID_SYNCEVERYFRAME:
-		trap_Cvar_SetValue("r_finish",
+		trap_cvarsetf("r_finish",
 			s_preferences.synceveryframe.curvalue);
 		break;
 
 	case ID_FORCEMODEL:
-		trap_Cvar_SetValue("cg_forcemodel",
+		trap_cvarsetf("cg_forcemodel",
 			s_preferences.forcemodel.curvalue);
 		break;
 
 	case ID_DRAWTEAMOVERLAY:
-		trap_Cvar_SetValue("cg_drawTeamOverlay",
+		trap_cvarsetf("cg_drawTeamOverlay",
 			s_preferences.drawteamoverlay.curvalue);
 		break;
 
 	case ID_ALLOWDOWNLOAD:
-		trap_Cvar_SetValue("cl_allowDownload",
+		trap_cvarsetf("cl_allowDownload",
 			s_preferences.allowdownload.curvalue);
-		trap_Cvar_SetValue("sv_allowDownload",
+		trap_cvarsetf("sv_allowDownload",
 			s_preferences.allowdownload.curvalue);
 		break;
 

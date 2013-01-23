@@ -67,7 +67,7 @@ BotNumTeamMates(bot_state_t *bs)
 	static int maxclients;
 
 	if(!maxclients)
-		maxclients = trap_Cvar_VariableIntegerValue("sv_maxclients");
+		maxclients = trap_cvargeti("sv_maxclients");
 
 	numplayers = 0;
 	for(i = 0; i < maxclients && i < MAX_CLIENTS; i++){
@@ -120,7 +120,7 @@ BotSortTeamMatesByBaseTravelTime(bot_state_t *bs, int *teammates,
 			goal = &ctf_blueflag;
 	}
 	if(!maxclients)
-		maxclients = trap_Cvar_VariableIntegerValue("sv_maxclients");
+		maxclients = trap_cvargeti("sv_maxclients");
 
 	numteammates = 0;
 	for(i = 0; i < maxclients && i < MAX_CLIENTS; i++){
@@ -803,7 +803,7 @@ BotTeamOrders(bot_state_t *bs)
 	static int maxclients;
 
 	if(!maxclients)
-		maxclients = trap_Cvar_VariableIntegerValue("sv_maxclients");
+		maxclients = trap_cvargeti("sv_maxclients");
 
 	numteammates = 0;
 	for(i = 0; i < maxclients && i < MAX_CLIENTS; i++){

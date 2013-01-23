@@ -3,10 +3,10 @@ code
 equ	trap_Print                            -1
 equ	trap_Error                            -2
 equ	trap_Milliseconds                     -3
-equ	trap_Cvar_Register                    -4
-equ	trap_Cvar_Update                      -5
-equ	trap_Cvar_Set                         -6
-equ	trap_Cvar_VariableStringBuffer        -7
+equ	trap_cvarregister                    -4
+equ	trap_cvarupdate                      -5
+equ	trap_cvarsetstr                         -6
+equ	trap_cvargetstrbuf        -7
 equ	trap_Argc                             -8
 equ	trap_Argv                             -9
 equ	trap_Args                             -10

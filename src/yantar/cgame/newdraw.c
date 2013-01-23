@@ -124,12 +124,12 @@ CG_SetSelectedPlayerName(void)
 	   	i = cg_currentSelectedPlayer.integer;
 		ci = cgs.clientinfo + sortedTeamPlayers[i];
 		if(ci){
-			trap_Cvar_Set("cg_selectedPlayerName", ci->name);
-			trap_Cvar_Set("cg_selectedPlayer", va("%d", sortedTeamPlayers[i]));
+			trap_cvarsetstr("cg_selectedPlayerName", ci->name);
+			trap_cvarsetstr("cg_selectedPlayer", va("%d", sortedTeamPlayers[i]));
 			cgs.currentOrder = ci->teamTask;
 		}
 	}else
-		trap_Cvar_Set("cg_selectedPlayerName", "Everyone");
+		trap_cvarsetstr("cg_selectedPlayerName", "Everyone");
 }
 
 int
@@ -1995,7 +1995,7 @@ void
 CG_ShowResponseHead(void)
 {
 	Menus_OpenByName("voiceMenu");
-	trap_Cvar_Set("cl_conXOffset", "72");
+	trap_cvarsetstr("cl_conXOffset", "72");
 	cg.voiceTime = cg.time;
 }
 

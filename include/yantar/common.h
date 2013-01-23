@@ -416,41 +416,41 @@ void cmdexecstr(const char *text);
  * CVAR
  */
 
-Cvar* Cvar_Get(const char *var_name, const char *value, int flags);
-/* basically a slightly modified Cvar_Get for the interpreted modules */
-void Cvar_Register(Vmcvar *vmCvar, const char *varName,
+Cvar* cvarget(const char *var_name, const char *value, int flags);
+/* basically a slightly modified cvarget for the interpreted modules */
+void cvarregister(Vmcvar *vmCvar, const char *varName,
  		const char *defaultValue,
  		int flags);
-void Cvar_Update(Vmcvar *vmCvar);
-void Cvar_SetDesc(const char *name, const char *desc);
-void Cvar_Set(const char *var_name, const char *value);
-Cvar* Cvar_Set2(const char *var_name, const char *value, qbool force);
-void Cvar_SetSafe(const char *var_name, const char *value);
-void Cvar_SetLatched(const char *var_name, const char *value);
-void Cvar_SetValue(const char *var_name, float value);
-void Cvar_SetValueSafe(const char *var_name, float value);
-float Cvar_VariableValue(const char *var_name);
-int Cvar_VariableIntegerValue(const char *var_name);
-char* Cvar_VariableString(const char *var_name);
-void Cvar_VariableStringBuffer(const char *var_name, char *buffer,
+void cvarupdate(Vmcvar *vmCvar);
+void cvarsetdesc(const char *name, const char *desc);
+void cvarsetstr(const char *var_name, const char *value);
+Cvar* cvarsetstr2(const char *var_name, const char *value, qbool force);
+void cvarsetstrsafe(const char *var_name, const char *value);
+void cvarsetstrlatched(const char *var_name, const char *value);
+void cvarsetf(const char *var_name, float value);
+void cvarsetfsafe(const char *var_name, float value);
+float cvargetf(const char *var_name);
+int cvargeti(const char *var_name);
+char* cvargetstr(const char *var_name);
+void cvargetstrbuf(const char *var_name, char *buffer,
  				int bufsize);
-int Cvar_Flags(const char *var_name);
+int cvarflags(const char *var_name);
 /* callback with each valid string */
-void Cvar_CommandCompletion(void (*callback)(const char *s));
-void Cvar_Reset(const char *var_name);
-void Cvar_ForceReset(const char *var_name);
-void Cvar_SetCheatState(void);
-qbool Cvar_Command(void);
-void Cvar_WriteVariables(Fhandle f);
-void Cvar_Init(void);
-char* Cvar_InfoString(int bit);
-char* Cvar_InfoString_Big(int bit);
-void Cvar_InfoStringBuffer(int bit, char *buff, int buffsize);
-void Cvar_CheckRange(Cvar *cv, float minVal, float maxVal,
+void cvarcmdcompletion(void (*callback)(const char *s));
+void cvarreset(const char *var_name);
+void cvarforcereset(const char *var_name);
+void cvarsetcheatstate(void);
+qbool cvariscmd(void);
+void cvarwritevars(Fhandle f);
+void cvarinit(void);
+char* cvargetinfostr(int bit);
+char* cvargetbiginfostr(int bit);
+void cvargetinfostrbuf(int bit, char *buff, int buffsize);
+void cvarcheckrange(Cvar *cv, float minVal, float maxVal,
  qbool shouldBeIntegral);
-void Cvar_Restart(qbool unsetVM);
-void Cvar_Restart_f(void);
-void Cvar_CompleteCvarName(char *args, int argNum);
+void cvarrestart(qbool unsetVM);
+void cvarrestart_f(void);
+void cvarcompletename(char *args, int argNum);
 
 /* whenever a cvar is modifed, its flags will be OR'd into this, so
  * a single check can determine if any CVAR_USERINFO, CVAR_SERVERINFO,

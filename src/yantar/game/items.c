@@ -740,7 +740,7 @@ G_ItemDisabled(Gitem *item)
 	char name[128];
 
 	Q_sprintf(name, sizeof(name), "disable_%s", item->classname);
-	return trap_Cvar_VariableIntegerValue(name);
+	return trap_cvargeti(name);
 }
 
 /*

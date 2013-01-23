@@ -1378,11 +1378,11 @@ void	trap_Error(const char *fmt) __attribute__((noreturn));
 int	trap_Milliseconds(void);
 
 /* console variable interaction */
-void	trap_Cvar_Register(Vmcvar *vmCvar, const char *varName,
+void	trap_cvarregister(Vmcvar *vmCvar, const char *varName,
 		const char *defaultValue, int flags);
-void	trap_Cvar_Update(Vmcvar *vmCvar);
-void	trap_Cvar_Set(const char *var_name, const char *value);
-void	trap_Cvar_VariableStringBuffer(const char *var_name,
+void	trap_cvarupdate(Vmcvar *vmCvar);
+void	trap_cvarsetstr(const char *var_name, const char *value);
+void	trap_cvargetstrbuf(const char *var_name,
 		char *buffer, int bufsize);
 
 /* ServerCommand and ConsoleCommand parameter access */

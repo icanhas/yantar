@@ -136,7 +136,7 @@ UpdateIPBans(void)
 		}
 	}
 
-	trap_Cvar_Set("g_banIPs", iplist_final);
+	trap_cvarsetstr("g_banIPs", iplist_final);
 }
 
 /*

@@ -54,10 +54,10 @@ Login_MenuEvent(void* ptr, int event)
 	switch(((menucommon_s*)ptr)->id){
 	case ID_LOGIN:
 		/* set name								``
-		 * trap_Cvar_Set( "name", s_login.name_box.field.buffer ); */
+		 * trap_cvarsetstr( "name", s_login.name_box.field.buffer ); */
 		/*
-		 * trap_Cvar_Set( "rank_name", s_login.name_box.field.buffer );
-		 * trap_Cvar_Set( "rank_pwd", s_login.password_box.field.buffer );
+		 * trap_cvarsetstr( "rank_name", s_login.name_box.field.buffer );
+		 * trap_cvarsetstr( "rank_pwd", s_login.password_box.field.buffer );
 		 */
 
 		/* login */

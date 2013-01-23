@@ -92,7 +92,7 @@ SpecifyLeague_GetList()
 		char s[MAX_LEAGUENAME];
 		const char *var;
 		var = va("leaguename%i", i+1);
-		trap_Cvar_VariableStringBuffer(var, s, sizeof(s));
+		trap_cvargetstrbuf(var, s, sizeof(s));
 		Q_strncpyz(league_table[i].leaguename, s,
 			sizeof(league_table[i].leaguename));
 		Q_strncpyz(league_table[i].buff, league_table[i].leaguename,
@@ -141,7 +141,7 @@ SpecifyLeague_Event(void* ptr, int event)
 
 	case ID_SPECIFYLEAGUEBACK:
 		if(event == QM_ACTIVATED){
-			trap_Cvar_Set(
+			trap_cvarsetstr(
 				"sv_leagueName",
 				league_table[s_specifyleague.list.curvalue].
 				leaguename);
@@ -282,11 +282,11 @@ SpecifyLeague_MenuInit(void)
 
 	/* initialize any menu variables */
 	Q_strncpyz(s_specifyleague.rankname.field.buffer,
-		UI_Cvar_VariableString("name"),
+		UI_cvargetstr("name"),
 		sizeof(s_specifyleague.rankname.field.buffer));
 
 	Q_strncpyz(playername,
-		UI_Cvar_VariableString("name"),
+		UI_cvargetstr("name"),
 		sizeof(playername));
 
 	SpecifyLeague_GetList();

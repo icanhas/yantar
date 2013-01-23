@@ -141,7 +141,7 @@ GLimp_DetectAvailableModes(void)
 	if(*buf){
 		buf[ strlen(buf) - 1 ] = 0;
 		ri.Printf(PRINT_ALL, "Available modes: '%s'\n", buf);
-		ri.Cvar_Set("r_availableModes", buf);
+		ri.cvarsetstr("r_availableModes", buf);
 	}
 }
 
@@ -396,12 +396,12 @@ GLimp_StartDriverAndSetMode(int mode, qbool fullscreen, qbool noborder)
 
 		SDL_VideoDriverName(driverName, sizeof(driverName) - 1);
 		ri.Printf(PRINT_ALL, "SDL using driver \"%s\"\n", driverName);
-		ri.Cvar_Set("r_sdlDriver", driverName);
+		ri.cvarsetstr("r_sdlDriver", driverName);
 	}
 
-	if(fullscreen && ri.Cvar_VariableIntegerValue("in_nograb")){
+	if(fullscreen && ri.cvargeti("in_nograb")){
 		ri.Printf(PRINT_ALL, "Fullscreen not allowed with in_nograb 1\n");
-		ri.Cvar_Set("r_fullscreen", "0");
+		ri.cvarsetstr("r_fullscreen", "0");
 		r_fullscreen->modified = qfalse;
 		fullscreen = qfalse;
 	}
@@ -565,16 +565,16 @@ GLimp_InitExtensions(void)
 void
 GLimp_Init(void)
 {
-	r_allowSoftwareGL	= ri.Cvar_Get("r_allowSoftwareGL", "0", CVAR_LATCH);
-	r_sdlDriver	= ri.Cvar_Get("r_sdlDriver", "", CVAR_ROM);
-	r_allowResize	= ri.Cvar_Get("r_allowResize", "0", CVAR_ARCHIVE);
-	r_centerWindow	= ri.Cvar_Get("r_centerWindow", "0", CVAR_ARCHIVE);
+	r_allowSoftwareGL	= ri.cvarget("r_allowSoftwareGL", "0", CVAR_LATCH);
+	r_sdlDriver	= ri.cvarget("r_sdlDriver", "", CVAR_ROM);
+	r_allowResize	= ri.cvarget("r_allowResize", "0", CVAR_ARCHIVE);
+	r_centerWindow	= ri.cvarget("r_centerWindow", "0", CVAR_ARCHIVE);
 
-	if(ri.Cvar_VariableIntegerValue("com_abnormalExit")){
-		ri.Cvar_Set("r_mode", va("%d", R_MODE_FALLBACK));
-		ri.Cvar_Set("r_fullscreen", "0");
-		ri.Cvar_Set("r_centerWindow", "0");
-		ri.Cvar_Set("com_abnormalExit", "0");
+	if(ri.cvargeti("com_abnormalExit")){
+		ri.cvarsetstr("r_mode", va("%d", R_MODE_FALLBACK));
+		ri.cvarsetstr("r_fullscreen", "0");
+		ri.cvarsetstr("r_centerWindow", "0");
+		ri.cvarsetstr("com_abnormalExit", "0");
 	}
 
 	ri.Sys_SetEnv("SDL_VIDEO_CENTERED", r_centerWindow->integer ? "1" : "");
@@ -636,7 +636,7 @@ success:
 	/* initialize extensions */
 	GLimp_InitExtensions( );
 
-	ri.Cvar_Get("r_availableModes", "", CVAR_ROM);
+	ri.cvarget("r_availableModes", "", CVAR_ROM);
 
 	/* This depends on SDL_INIT_VIDEO, hence having it here */
 	ri.IN_Init( );
@@ -663,9 +663,9 @@ GLimp_EndFrame(void)
 			/* Find out the current state */
 			fullscreen = !!(s->flags & SDL_FULLSCREEN);
 
-			if(r_fullscreen->integer && ri.Cvar_VariableIntegerValue("in_nograb")){
+			if(r_fullscreen->integer && ri.cvargeti("in_nograb")){
 				ri.Printf(PRINT_ALL, "Fullscreen not allowed with in_nograb 1\n");
-				ri.Cvar_Set("r_fullscreen", "0");
+				ri.cvarsetstr("r_fullscreen", "0");
 				r_fullscreen->modified = qfalse;
 			}
 

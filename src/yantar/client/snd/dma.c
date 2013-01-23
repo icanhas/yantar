@@ -404,7 +404,7 @@ S_Base_StartSound(Vec3 origin, int entityNum, int entchannel,
 	for(i = 0; i < MAX_CHANNELS; i++, ch++)
 		if(ch->entnum == entityNum && ch->thesfx == sfx){
 			if(time - ch->allocTime < 50)
-/*                      if (Cvar_VariableValue( "cg_showmiss" )) {
+/*                      if (cvargetf( "cg_showmiss" )) {
  *                              Com_Printf("double sound start\n");
  *                      } */
 				return;
@@ -1208,10 +1208,10 @@ S_Base_Init(Sndinterface *si)
 
 	if(!si)
 		return qfalse;
-	s_mixahead = Cvar_Get("s_mixahead", "0.2", CVAR_ARCHIVE);
-	s_mixPreStep = Cvar_Get("s_mixPreStep", "0.05", CVAR_ARCHIVE);
-	s_show = Cvar_Get("s_show", "0", CVAR_CHEAT);
-	s_testsound = Cvar_Get("s_testsound", "0", CVAR_CHEAT);
+	s_mixahead = cvarget("s_mixahead", "0.2", CVAR_ARCHIVE);
+	s_mixPreStep = cvarget("s_mixPreStep", "0.05", CVAR_ARCHIVE);
+	s_show = cvarget("s_show", "0", CVAR_CHEAT);
+	s_testsound = cvarget("s_testsound", "0", CVAR_CHEAT);
 	r = SNDDMA_Init();
 
 	if(r){

@@ -644,38 +644,38 @@ CL_UISystemCalls(intptr_t *args)
 		return Sys_Milliseconds();
 
 	case UI_CVAR_REGISTER:
-		Cvar_Register(VMA(1), VMA(2), VMA(3), args[4]);
+		cvarregister(VMA(1), VMA(2), VMA(3), args[4]);
 		return 0;
 
 	case UI_CVAR_UPDATE:
-		Cvar_Update(VMA(1));
+		cvarupdate(VMA(1));
 		return 0;
 
 	case UI_CVAR_SET:
-		Cvar_SetSafe(VMA(1), VMA(2));
+		cvarsetstrsafe(VMA(1), VMA(2));
 		return 0;
 
 	case UI_CVAR_VARIABLEVALUE:
-		return FloatAsInt(Cvar_VariableValue(VMA(1)));
+		return FloatAsInt(cvargetf(VMA(1)));
 
 	case UI_CVAR_VARIABLESTRINGBUFFER:
-		Cvar_VariableStringBuffer(VMA(1), VMA(2), args[3]);
+		cvargetstrbuf(VMA(1), VMA(2), args[3]);
 		return 0;
 
 	case UI_CVAR_SETVALUE:
-		Cvar_SetValueSafe(VMA(1), VMF(2));
+		cvarsetfsafe(VMA(1), VMF(2));
 		return 0;
 
 	case UI_CVAR_RESET:
-		Cvar_Reset(VMA(1));
+		cvarreset(VMA(1));
 		return 0;
 
 	case UI_CVAR_CREATE:
-		Cvar_Get(VMA(1), VMA(2), args[3]);
+		cvarget(VMA(1), VMA(2), args[3]);
 		return 0;
 
 	case UI_CVAR_INFOSTRINGBUFFER:
-		Cvar_InfoStringBuffer(args[1], VMA(2), args[3]);
+		cvargetinfostrbuf(args[1], VMA(2), args[3]);
 		return 0;
 
 	case UI_ARGC:
@@ -989,7 +989,7 @@ CL_InitUI(void)
 	Vmmode interpret;
 
 	/* load the dll or bytecode */
-	interpret = Cvar_VariableValue("vm_ui");
+	interpret = cvargetf("vm_ui");
 	if(cl_connectedToPureServer)
 		/* if sv_pure is set we only allow qvms to be loaded */
 		if(interpret != VMcompiled && interpret != VMbytecode)

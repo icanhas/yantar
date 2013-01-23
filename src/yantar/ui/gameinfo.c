@@ -168,7 +168,7 @@ UI_LoadArenas(void)
 
 	ui_numArenas = 0;
 
-	trap_Cvar_Register(&arenasFile, "g_arenasFile", "", CVAR_INIT|CVAR_ROM);
+	trap_cvarregister(&arenasFile, "g_arenasFile", "", CVAR_INIT|CVAR_ROM);
 	if(*arenasFile.string)
 		UI_LoadArenasFromFile(arenasFile.string);
 	else
@@ -363,7 +363,7 @@ UI_LoadBots(void)
 
 	ui_numBots = 0;
 
-	trap_Cvar_Register(&botsFile, "g_botsFile", "", CVAR_INIT|CVAR_ROM);
+	trap_cvarregister(&botsFile, "g_botsFile", "", CVAR_INIT|CVAR_ROM);
 	if(*botsFile.string)
 		UI_LoadBotsFromFile(botsFile.string);
 	else
@@ -444,7 +444,7 @@ UI_GetBestScore(int level, int *score, int *skill)
 	bestScoreSkill = 0;
 
 	for(n = 1; n <= 5; n++){
-		trap_Cvar_VariableStringBuffer(va("g_spScores%i",
+		trap_cvargetstrbuf(va("g_spScores%i",
 				n), scores, MAX_INFO_VALUE);
 
 		Q_sprintf(arenaKey, sizeof(arenaKey), "l%i", level);
@@ -482,12 +482,12 @@ UI_SetBestScore(int level, int score)
 		return;
 
 	/* validate skill */
-	skill = (int)trap_Cvar_VariableValue("g_spSkill");
+	skill = (int)trap_cvargetf("g_spSkill");
 	if(skill < 1 || skill > 5)
 		return;
 
 	/* get scores */
-	trap_Cvar_VariableStringBuffer(va("g_spScores%i",
+	trap_cvargetstrbuf(va("g_spScores%i",
 			skill), scores, MAX_INFO_VALUE);
 
 	/* see if this is better */
@@ -498,7 +498,7 @@ UI_SetBestScore(int level, int score)
 
 	/* update scores */
 	Info_SetValueForKey(scores, arenaKey, va("%i", score));
-	trap_Cvar_Set(va("g_spScores%i", skill), scores);
+	trap_cvarsetstr(va("g_spScores%i", skill), scores);
 }
 
 
@@ -521,13 +521,13 @@ UI_LogAwardData(int award, int data)
 		return;
 	}
 
-	trap_Cvar_VariableStringBuffer("g_spAwards", awardData, sizeof(awardData));
+	trap_cvargetstrbuf("g_spAwards", awardData, sizeof(awardData));
 
 	Q_sprintf(key, sizeof(key), "a%i", award);
 	oldValue = atoi(Info_ValueForKey(awardData, key));
 
 	Info_SetValueForKey(awardData, key, va("%i", oldValue + data));
-	trap_Cvar_Set("g_spAwards", awardData);
+	trap_cvarsetstr("g_spAwards", awardData);
 }
 
 
@@ -540,7 +540,7 @@ UI_GetAwardLevel(int award)
 	char	key[16];
 	char	awardData[MAX_INFO_VALUE];
 
-	trap_Cvar_VariableStringBuffer("g_spAwards", awardData, sizeof(awardData));
+	trap_cvargetstrbuf("g_spAwards", awardData, sizeof(awardData));
 
 	Q_sprintf(key, sizeof(key), "a%i", award);
 	return atoi(Info_ValueForKey(awardData, key));
@@ -594,14 +594,14 @@ UI_ShowTierVideo(int tier)
 	if(tier <= 0)
 		return qfalse;
 
-	trap_Cvar_VariableStringBuffer("g_spVideos", videos, sizeof(videos));
+	trap_cvargetstrbuf("g_spVideos", videos, sizeof(videos));
 
 	Q_sprintf(key, sizeof(key), "tier%i", tier);
 	if(atoi(Info_ValueForKey(videos, key)))
 		return qfalse;
 
 	Info_SetValueForKey(videos, key, va("%i", 1));
-	trap_Cvar_Set("g_spVideos", videos);
+	trap_cvarsetstr("g_spVideos", videos);
 
 	return qtrue;
 }
@@ -622,7 +622,7 @@ UI_CanShowTierVideo(int tier)
 	if(uis.demoversion && tier != 8)
 		return qfalse;
 
-	trap_Cvar_VariableStringBuffer("g_spVideos", videos, sizeof(videos));
+	trap_cvargetstrbuf("g_spVideos", videos, sizeof(videos));
 
 	Q_sprintf(key, sizeof(key), "tier%i", tier);
 	if(atoi(Info_ValueForKey(videos, key)))
@@ -674,13 +674,13 @@ UI_GetCurrentGame(void)
 void
 UI_NewGame(void)
 {
-	trap_Cvar_Set("g_spScores1", "");
-	trap_Cvar_Set("g_spScores2", "");
-	trap_Cvar_Set("g_spScores3", "");
-	trap_Cvar_Set("g_spScores4", "");
-	trap_Cvar_Set("g_spScores5", "");
-	trap_Cvar_Set("g_spAwards", "");
-	trap_Cvar_Set("g_spVideos", "");
+	trap_cvarsetstr("g_spScores1", "");
+	trap_cvarsetstr("g_spScores2", "");
+	trap_cvarsetstr("g_spScores3", "");
+	trap_cvarsetstr("g_spScores4", "");
+	trap_cvarsetstr("g_spScores5", "");
+	trap_cvarsetstr("g_spAwards", "");
+	trap_cvarsetstr("g_spVideos", "");
 }
 
 
@@ -736,7 +736,7 @@ UI_SPUnlock_f(void)
 	int	tier;
 
 	/* get scores for skill 1 */
-	trap_Cvar_VariableStringBuffer("g_spScores1", scores, MAX_INFO_VALUE);
+	trap_cvargetstrbuf("g_spScores1", scores, MAX_INFO_VALUE);
 
 	/* update scores */
 	for(level = 0;
@@ -745,7 +745,7 @@ UI_SPUnlock_f(void)
 		Q_sprintf(arenaKey, sizeof(arenaKey), "l%i", level);
 		Info_SetValueForKey(scores, arenaKey, "1");
 	}
-	trap_Cvar_Set("g_spScores1", scores);
+	trap_cvarsetstr("g_spScores1", scores);
 
 	/* unlock cinematics */
 	for(tier = 1; tier <= 8; tier++)
@@ -767,14 +767,14 @@ UI_SPUnlockMedals_f(void)
 	char	key[16];
 	char	awardData[MAX_INFO_VALUE];
 
-	trap_Cvar_VariableStringBuffer("g_spAwards", awardData, MAX_INFO_VALUE);
+	trap_cvargetstrbuf("g_spAwards", awardData, MAX_INFO_VALUE);
 
 	for(n = 0; n < 6; n++){
 		Q_sprintf(key, sizeof(key), "a%i", n);
 		Info_SetValueForKey(awardData, key, "100");
 	}
 
-	trap_Cvar_Set("g_spAwards", awardData);
+	trap_cvarsetstr("g_spAwards", awardData);
 
 	trap_Print("All levels unlocked at 100\n");
 }

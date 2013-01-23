@@ -33,13 +33,13 @@ CG_TargetCommand_f(void)
 static void
 CG_SizeUp_f(void)
 {
-	trap_Cvar_Set("cg_viewsize", va("%i",(int)(cg_viewsize.integer+10)));
+	trap_cvarsetstr("cg_viewsize", va("%i",(int)(cg_viewsize.integer+10)));
 }
 
 static void
 CG_SizeDown_f(void)
 {
-	trap_Cvar_Set("cg_viewsize", va("%i",(int)(cg_viewsize.integer-10)));
+	trap_cvarsetstr("cg_viewsize", va("%i",(int)(cg_viewsize.integer-10)));
 }
 
 /* Debugging command to print the current position */
@@ -97,7 +97,7 @@ CG_LoadHud_f(void)
 	memset(buff, 0, sizeof(buff));
 	String_Init();
 	Menu_Reset();
-	trap_Cvar_VariableStringBuffer("cg_hudFiles", buff, sizeof(buff));
+	trap_cvargetstrbuf("cg_hudFiles", buff, sizeof(buff));
 	hudSet = buff;
 	if(hudSet[0] == '\0')
 		hudSet = "ui/hud.txt";
@@ -129,11 +129,11 @@ CG_scrollScoresUp_f(void)
 static void
 CG_spWin_f(void)
 {
-	trap_Cvar_Set("cg_cameraOrbit", "2");
-	trap_Cvar_Set("cg_cameraOrbitDelay", "35");
-	trap_Cvar_Set("cg_thirdPerson", "1");
-	trap_Cvar_Set("cg_thirdPersonAngle", "0");
-	trap_Cvar_Set("cg_thirdPersonRange", "100");
+	trap_cvarsetstr("cg_cameraOrbit", "2");
+	trap_cvarsetstr("cg_cameraOrbitDelay", "35");
+	trap_cvarsetstr("cg_thirdPerson", "1");
+	trap_cvarsetstr("cg_thirdPersonAngle", "0");
+	trap_cvarsetstr("cg_thirdPersonRange", "100");
 	CG_AddBufferedSound(cgs.media.winnerSound);
 	/* trap_S_StartLocalSound(cgs.media.winnerSound, CHAN_ANNOUNCER); */
 	CG_CenterPrint("YOU WIN!", SCREEN_HEIGHT * .30, 0);
@@ -142,11 +142,11 @@ CG_spWin_f(void)
 static void
 CG_spLose_f(void)
 {
-	trap_Cvar_Set("cg_cameraOrbit", "2");
-	trap_Cvar_Set("cg_cameraOrbitDelay", "35");
-	trap_Cvar_Set("cg_thirdPerson", "1");
-	trap_Cvar_Set("cg_thirdPersonAngle", "0");
-	trap_Cvar_Set("cg_thirdPersonRange", "100");
+	trap_cvarsetstr("cg_cameraOrbit", "2");
+	trap_cvarsetstr("cg_cameraOrbitDelay", "35");
+	trap_cvarsetstr("cg_thirdPerson", "1");
+	trap_cvarsetstr("cg_thirdPersonAngle", "0");
+	trap_cvarsetstr("cg_thirdPersonRange", "100");
 	CG_AddBufferedSound(cgs.media.loserSound);
 	/* trap_S_StartLocalSound(cgs.media.loserSound, CHAN_ANNOUNCER); */
 	CG_CenterPrint("YOU LOSE...", SCREEN_HEIGHT * .30, 0);
@@ -395,17 +395,17 @@ CG_StartOrbit_f(void)
 {
 	char var[MAX_TOKEN_CHARS];
 
-	trap_Cvar_VariableStringBuffer("developer", var, sizeof(var));
+	trap_cvargetstrbuf("developer", var, sizeof(var));
 	if(!atoi(var))
 		return;
 	if(cg_cameraOrbit.value != 0){
-		trap_Cvar_Set ("cg_cameraOrbit", "0");
-		trap_Cvar_Set("cg_thirdPerson", "0");
+		trap_cvarsetstr ("cg_cameraOrbit", "0");
+		trap_cvarsetstr("cg_thirdPerson", "0");
 	}else{
-		trap_Cvar_Set("cg_cameraOrbit", "5");
-		trap_Cvar_Set("cg_thirdPerson", "1");
-		trap_Cvar_Set("cg_thirdPersonAngle", "0");
-		trap_Cvar_Set("cg_thirdPersonRange", "100");
+		trap_cvarsetstr("cg_cameraOrbit", "5");
+		trap_cvarsetstr("cg_thirdPerson", "1");
+		trap_cvarsetstr("cg_thirdPersonAngle", "0");
+		trap_cvarsetstr("cg_thirdPersonRange", "100");
 	}
 }
 

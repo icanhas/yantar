@@ -386,7 +386,7 @@ parsegamestate(Bitmsg *msg)
 	clc.clientNum = MSG_ReadLong(msg);
 	clc.checksumFeed = MSG_ReadLong(msg);
 
-	Cvar_VariableStringBuffer("fs_game", oldGame, sizeof(oldGame));	/* save old gamedir */
+	cvargetstrbuf("fs_game", oldGame, sizeof(oldGame));	/* save old gamedir */
 	parseservinfo();	/* parse useful values out of CS_SERVERINFO */
 	CL_SystemInfoChanged();	/* parse serverId and other cvars */
 
@@ -395,7 +395,7 @@ parsegamestate(Bitmsg *msg)
 		CL_StopRecord_f();
 
 	/* reinitialize the filesystem if the game directory has changed */
-	if(!cls.oldGameSet && (Cvar_Flags("fs_game") & CVAR_MODIFIED)){
+	if(!cls.oldGameSet && (cvarflags("fs_game") & CVAR_MODIFIED)){
 		cls.oldGameSet = qtrue;
 		Q_strncpyz(cls.oldGame, oldGame, sizeof(cls.oldGame));
 	}
@@ -409,7 +409,7 @@ parsegamestate(Bitmsg *msg)
 	CL_InitDownloads();
 
 	/* make sure the game starts */
-	Cvar_Set("cl_paused", "0");
+	cvarsetstr("cl_paused", "0");
 }
 
 /*
@@ -436,7 +436,7 @@ parsedownload(Bitmsg *msg)
 		/* block zero is special, contains file size */
 		clc.downloadSize = MSG_ReadLong(msg);
 
-		Cvar_SetValue("cl_downloadSize", clc.downloadSize);
+		cvarsetf("cl_downloadSize", clc.downloadSize);
 
 		if(clc.downloadSize < 0){
 			Com_Errorf(ERR_DROP, "%s", MSG_ReadString(msg));
@@ -481,7 +481,7 @@ parsedownload(Bitmsg *msg)
 	clc.downloadCount += size;
 
 	/* So UI gets access to it */
-	Cvar_SetValue("cl_downloadCount", clc.downloadCount);
+	cvarsetf("cl_downloadCount", clc.downloadCount);
 
 	if(!size){	/* A zero length block means EOF */
 		if(clc.download){
@@ -740,8 +740,8 @@ CL_SystemInfoChanged(void)
 #ifdef USE_VOIP
 	{
 		s = Info_ValueForKey(systemInfo, "sv_voip");
-		if(Cvar_VariableValue("g_gametype") == GT_SINGLE_PLAYER ||
-		   Cvar_VariableValue("ui_singlePlayerActive"))
+		if(cvargetf("g_gametype") == GT_SINGLE_PLAYER ||
+		   cvargetf("ui_singlePlayerActive"))
 			clc.voipEnabled = qfalse;
 		else
 			clc.voipEnabled = atoi(s);
@@ -751,7 +751,7 @@ CL_SystemInfoChanged(void)
 	s = Info_ValueForKey(systemInfo, "sv_cheats");
 	cl_connectedToCheatServer = atoi(s);
 	if(!cl_connectedToCheatServer)
-		Cvar_SetCheatState();
+		cvarsetcheatstate();
 
 	/* check pure server string */
 	s = Info_ValueForKey(systemInfo, "sv_paks");
@@ -784,8 +784,8 @@ CL_SystemInfoChanged(void)
 			gameSet = qtrue;
 		}
 
-		if((cvar_flags = Cvar_Flags(key)) == CVAR_NONEXISTENT)
-			Cvar_Get(key, value, CVAR_SERVER_CREATED | CVAR_ROM);
+		if((cvar_flags = cvarflags(key)) == CVAR_NONEXISTENT)
+			cvarget(key, value, CVAR_SERVER_CREATED | CVAR_ROM);
 		else{
 			/* If this cvar may not be modified by a server discard the value. */
 			if(!(cvar_flags &
@@ -804,13 +804,13 @@ CL_SystemInfoChanged(void)
 				}
 			}
 
-			Cvar_SetSafe(key, value);
+			cvarsetstrsafe(key, value);
 		}
 	}
 	/* if game folder should not be set and it is set at the client side */
-	if(!gameSet && *Cvar_VariableString("fs_game"))
-		Cvar_Set("fs_game", "");
-	cl_connectedToPureServer = Cvar_VariableValue("sv_pure");
+	if(!gameSet && *cvargetstr("fs_game"))
+		cvarsetstr("fs_game", "");
+	cl_connectedToPureServer = cvargetf("sv_pure");
 }
 
 void

@@ -53,14 +53,14 @@ Favorites_Add(void)
 	int	i;
 	int	best;
 
-	trap_Cvar_VariableStringBuffer("cl_currentServerAddress", serverbuff,
+	trap_cvargetstrbuf("cl_currentServerAddress", serverbuff,
 		sizeof(serverbuff));
 	if(!serverbuff[0])
 		return;
 
 	best = 0;
 	for(i=0; i<MAX_FAVORITESERVERS; i++){
-		trap_Cvar_VariableStringBuffer(va("server%d",
+		trap_cvargetstrbuf(va("server%d",
 				i+1), adrstr, sizeof(adrstr));
 		if(!Q_stricmp(serverbuff,adrstr))
 			/* already in list */
@@ -72,7 +72,7 @@ Favorites_Add(void)
 	}
 
 	if(best)
-		trap_Cvar_Set(va("server%d",best), serverbuff);
+		trap_cvarsetstr(va("server%d",best), serverbuff);
 }
 
 
@@ -210,7 +210,7 @@ UI_ServerInfoMenu(void)
 	s_serverinfo.add.string = "ADD TO FAVORITES";
 	s_serverinfo.add.style	= UI_CENTER|UI_SMALLFONT;
 	s_serverinfo.add.color	=     color_red;
-	if(trap_Cvar_VariableValue("sv_running"))
+	if(trap_cvargetf("sv_running"))
 		s_serverinfo.add.generic.flags |= QMF_GRAYED;
 
 	s_serverinfo.back.generic.type	= MTYPE_BITMAP;

@@ -665,7 +665,7 @@ Com_Initzone(void)
 	Cvar *cv;
 
 	/* allocate the random block zone */
-	cv = Cvar_Get("com_zoneMegs", XSTRING(Defzonemegs),
+	cv = cvarget("com_zoneMegs", XSTRING(Defzonemegs),
 		CVAR_LATCH | CVAR_ARCHIVE);
 	if(cv->integer < Defzonemegs)
 		s_zoneTotal = 1024 * 1024 * Defzonemegs;
@@ -774,7 +774,7 @@ Com_Inithunk(void)
 			"Hunk initialization failed. File system load stack not zero");
 
 	/* allocate the stack based hunk allocator */
-	cv = Cvar_Get("com_hunkMegs", XSTRING(Defhunkmegs),
+	cv = cvarget("com_hunkMegs", XSTRING(Defhunkmegs),
 		CVAR_LATCH | CVAR_ARCHIVE);
 
 	/* if we are not dedicated min allocation is 56, otherwise min is 1 */
@@ -1067,7 +1067,7 @@ hunktrash(void)
 	Com_Errorf(ERR_DROP, "hunk trashed");
 	return;
 #endif
-	Cvar_Set("com_jp", "1");
+	cvarsetstr("com_jp", "1");
 	Hunk_SwapBanks();
 
 	if(hunk_permanent == &hunk_low)

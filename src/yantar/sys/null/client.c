@@ -18,7 +18,7 @@ CL_Shutdown(char *finalmsg, qbool disconnect, qbool quit)
 void
 CL_Init(void)
 {
-	cl_shownet = Cvar_Get ("cl_shownet", "0", CVAR_TEMP);
+	cl_shownet = cvarget ("cl_shownet", "0", CVAR_TEMP);
 }
 
 void

@@ -49,7 +49,7 @@ SND_setup(void)
 	Cvar		*cv;
 	int scs;
 
-	cv = Cvar_Get("com_soundMegs", DEF_COMSOUNDMEGS,
+	cv = cvarget("com_soundMegs", DEF_COMSOUNDMEGS,
 		CVAR_LATCH | CVAR_ARCHIVE);
 
 	scs = (cv->integer*1536);

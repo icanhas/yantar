@@ -196,11 +196,11 @@ Demos_MenuInit(void)
 	s_demos.list.itemnames	= (const char**)s_demos.demolist;
 	s_demos.list.columns	= 3;
 
-	protocolLegacy = trap_Cvar_VariableValue("com_legacyprotocol");
-	protocol = trap_Cvar_VariableValue("com_protocol");
+	protocolLegacy = trap_cvargetf("com_legacyprotocol");
+	protocol = trap_cvargetf("com_protocol");
 
 	if(!protocol)
-		protocol = trap_Cvar_VariableValue("protocol");
+		protocol = trap_cvargetf("protocol");
 	if(protocolLegacy == protocol)
 		protocolLegacy = 0;
 

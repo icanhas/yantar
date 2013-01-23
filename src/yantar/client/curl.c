@@ -173,9 +173,9 @@ CL_cURL_CallbackProgress(void *dummy, double dltotal, double dlnow,
 			 double ultotal, double ulnow)
 {
 	clc.downloadSize = (int)dltotal;
-	Cvar_SetValue("cl_downloadSize", clc.downloadSize);
+	cvarsetf("cl_downloadSize", clc.downloadSize);
 	clc.downloadCount = (int)dlnow;
-	Cvar_SetValue("cl_downloadCount", clc.downloadCount);
+	cvarsetf("cl_downloadCount", clc.downloadCount);
 	return 0;
 }
 
@@ -203,10 +203,10 @@ CL_cURL_BeginDownload(const char *localName, const char *remoteURL)
 		"%s.tmp", localName);
 
 	/* Set so UI gets access to it */
-	Cvar_Set("cl_downloadName", localName);
-	Cvar_Set("cl_downloadSize", "0");
-	Cvar_Set("cl_downloadCount", "0");
-	Cvar_SetValue("cl_downloadTime", cls.simtime);
+	cvarsetstr("cl_downloadName", localName);
+	cvarsetstr("cl_downloadSize", "0");
+	cvarsetstr("cl_downloadCount", "0");
+	cvarsetf("cl_downloadTime", cls.simtime);
 
 	clc.downloadBlock = 0;	/* Starting new file */
 	clc.downloadCount = 0;

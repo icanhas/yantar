@@ -361,7 +361,7 @@ CL_OpenAVIForWriting(const char *fileName)
 			suggestRate);
 	}
 
-	if(!Cvar_VariableIntegerValue("s_initsound"))
+	if(!cvargeti("s_initsound"))
 		afd.audio = qfalse;
 	else{
 		if(afd.a.bits != 16 || afd.a.channels != 2){

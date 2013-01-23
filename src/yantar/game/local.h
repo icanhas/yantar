@@ -742,13 +742,13 @@ int	trap_FS_GetFileList(const char *path, const char *extension,
 		char *listbuf, int bufsize);
 int	trap_FS_Seek(Fhandle f, long offset, int origin);	/* Fsorigin */
 void	trap_SendConsoleCommand(int exec_when, const char *text);
-void	trap_Cvar_Register(Vmcvar *cvar, const char *var_name,
+void	trap_cvarregister(Vmcvar *cvar, const char *var_name,
 		const char *value, int flags);
-void	trap_Cvar_Update(Vmcvar *cvar);
-void	trap_Cvar_Set(const char *var_name, const char *value);
-int	trap_Cvar_VariableIntegerValue(const char *var_name);
-float	trap_Cvar_VariableValue(const char *var_name);
-void	trap_Cvar_VariableStringBuffer(const char *var_name, char *buffer,
+void	trap_cvarupdate(Vmcvar *cvar);
+void	trap_cvarsetstr(const char *var_name, const char *value);
+int	trap_cvargeti(const char *var_name);
+float	trap_cvargetf(const char *var_name);
+void	trap_cvargetstrbuf(const char *var_name, char *buffer,
 		int bufsize);
 void	trap_LocateGameData(Gentity *gEnts, int numGEntities,
 		int sizeofGEntity_t, Playerstate *gameClients,

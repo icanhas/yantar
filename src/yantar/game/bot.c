@@ -37,11 +37,11 @@ extern Gentity	*podium2;
 extern Gentity	*podium3;
 
 float
-trap_Cvar_VariableValue(const char *var_name)
+trap_cvargetf(const char *var_name)
 {
 	char buf[128];
 
-	trap_Cvar_VariableStringBuffer(var_name, buf, sizeof(buf));
+	trap_cvargetstrbuf(var_name, buf, sizeof(buf));
 	return atof(buf);
 }
 
@@ -150,7 +150,7 @@ G_LoadArenas(void)
 
 	g_numArenas = 0;
 
-	trap_Cvar_Register(&arenasFile, "g_arenasFile", "", CVAR_INIT|CVAR_ROM);
+	trap_cvarregister(&arenasFile, "g_arenasFile", "", CVAR_INIT|CVAR_ROM);
 	if(*arenasFile.string)
 		G_LoadArenasFromFile(arenasFile.string);
 	else
@@ -257,7 +257,7 @@ G_AddRandomBot(int team)
 		if(i >= g_maxclients.integer){
 			num--;
 			if(num <= 0){
-				skill = trap_Cvar_VariableValue("g_spSkill");
+				skill = trap_cvargetf("g_spSkill");
 				if(team == TEAM_RED) teamstr = "red";
 				else if(team == TEAM_BLUE) teamstr = "blue";
 				else teamstr = "";
@@ -366,7 +366,7 @@ G_CheckMinimumPlayers(void)
 	if(checkminimumplayers_time > level.time - 10000)
 		return;
 	checkminimumplayers_time = level.time;
-	trap_Cvar_Update(&bot_minplayers);
+	trap_cvarupdate(&bot_minplayers);
 	minplayers = bot_minplayers.integer;
 	if(minplayers <= 0) return;
 
@@ -650,7 +650,7 @@ Svcmd_AddBot_f(void)
 	char	team[MAX_TOKEN_CHARS];
 
 	/* are bots enabled? */
-	if(!trap_Cvar_VariableIntegerValue("bot_enable"))
+	if(!trap_cvargeti("bot_enable"))
 		return;
 
 	/* name */
@@ -686,7 +686,7 @@ Svcmd_AddBot_f(void)
 	/* if this was issued during gameplay and we are playing locally,
 	 * go ahead and load the bot's media immediately */
 	if(level.time - level.startTime > 1000 &&
-	   trap_Cvar_VariableIntegerValue("cl_running"))
+	   trap_cvargeti("cl_running"))
 		trap_SendServerCommand(-1, "loaddeferred\n");
 }
 
@@ -739,12 +739,12 @@ G_SpawnBots(char *botList, int baseDelay)
 	podium2 = NULL;
 	podium3 = NULL;
 
-	skill = trap_Cvar_VariableValue("g_spSkill");
+	skill = trap_cvargetf("g_spSkill");
 	if(skill < 1){
-		trap_Cvar_Set("g_spSkill", "1");
+		trap_cvarsetstr("g_spSkill", "1");
 		skill = 1;
 	}else if(skill > 5){
-		trap_Cvar_Set("g_spSkill", "5");
+		trap_cvarsetstr("g_spSkill", "5");
 		skill = 5;
 	}
 
@@ -823,12 +823,12 @@ G_LoadBots(void)
 	int	i;
 	int	dirlen;
 
-	if(!trap_Cvar_VariableIntegerValue("bot_enable"))
+	if(!trap_cvargeti("bot_enable"))
 		return;
 
 	g_numBots = 0;
 
-	trap_Cvar_Register(&botsFile, "g_botsFile", "", CVAR_INIT|CVAR_ROM);
+	trap_cvarregister(&botsFile, "g_botsFile", "", CVAR_INIT|CVAR_ROM);
 	if(*botsFile.string)
 		G_LoadBotsFromFile(botsFile.string);
 	else
@@ -897,7 +897,7 @@ G_InitBots(qbool restart)
 	G_LoadBots();
 	G_LoadArenas();
 
-	trap_Cvar_Register(&bot_minplayers, "bot_minplayers", "0",
+	trap_cvarregister(&bot_minplayers, "bot_minplayers", "0",
 		CVAR_SERVERINFO);
 
 	if(g_gametype.integer == GT_SINGLE_PLAYER){
@@ -911,20 +911,20 @@ G_InitBots(qbool restart)
 		strValue = Info_ValueForKey(arenainfo, "fraglimit");
 		fragLimit = atoi(strValue);
 		if(fragLimit)
-			trap_Cvar_Set("fraglimit", strValue);
+			trap_cvarsetstr("fraglimit", strValue);
 		else
-			trap_Cvar_Set("fraglimit", "0");
+			trap_cvarsetstr("fraglimit", "0");
 
 		strValue = Info_ValueForKey(arenainfo, "timelimit");
 		timeLimit = atoi(strValue);
 		if(timeLimit)
-			trap_Cvar_Set("timelimit", strValue);
+			trap_cvarsetstr("timelimit", strValue);
 		else
-			trap_Cvar_Set("timelimit", "0");
+			trap_cvarsetstr("timelimit", "0");
 
 		if(!fragLimit && !timeLimit){
-			trap_Cvar_Set("fraglimit", "10");
-			trap_Cvar_Set("timelimit", "0");
+			trap_cvarsetstr("fraglimit", "10");
+			trap_cvarsetstr("timelimit", "0");
 		}
 
 		basedelay = BOT_BEGIN_DELAY_BASE;

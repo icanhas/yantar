@@ -296,22 +296,22 @@ MenuDraw(void)
 	}else if(postgame.phase == 3){
 		if(uis.demoversion){
 			if(postgame.won == 1 && UI_ShowTierVideo(8)){
-				trap_Cvar_Set("nextmap", "");
+				trap_cvarsetstr("nextmap", "");
 				trap_Cmd_ExecuteText(EXEC_APPEND,
 					"disconnect; cinematic demoEnd.RoQ\n");
 				return;
 			}
 		}else if(postgame.won > -1 && UI_ShowTierVideo(postgame.won + 1)){
 			if(postgame.won == postgame.lastTier){
-				trap_Cvar_Set("nextmap", "");
+				trap_cvarsetstr("nextmap", "");
 				trap_Cmd_ExecuteText(EXEC_APPEND,
 					"disconnect; cinematic end.RoQ\n");
 				return;
 			}
 
-			trap_Cvar_SetValue("ui_spSelection",
+			trap_cvarsetf("ui_spSelection",
 				postgame.won * ARENAS_PER_TIER);
-			trap_Cvar_Set("nextmap", "levelselect");
+			trap_cvarsetstr("nextmap", "levelselect");
 			trap_Cmd_ExecuteText(EXEC_APPEND,
 				va("disconnect; cinematic tier%i.RoQ\n",
 					postgame.won + 1));
@@ -328,7 +328,7 @@ MenuDraw(void)
 	}
 
 	/* draw the scoreboard */
-	if(!trap_Cvar_VariableValue("ui_spScoreboard"))
+	if(!trap_cvargetf("ui_spScoreboard"))
 		return;
 
 	timer = uis.realtime - postgame.scoreboardtime;
@@ -347,7 +347,7 @@ UI_SPPostgameMenu_Cache(void)
 	int n;
 	qbool buildscript;
 
-	buildscript = trap_Cvar_VariableValue("com_buildscript");
+	buildscript = trap_cvargetf("com_buildscript");
 
 	trap_R_RegisterShaderNoMip(ART_MENU0);
 	trap_R_RegisterShaderNoMip(ART_MENU1);

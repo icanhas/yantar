@@ -393,14 +393,14 @@ Controls_InitCvars(void)
 			break;
 
 		/* get current value */
-		cvarptr->value = trap_Cvar_VariableValue(cvarptr->name);
+		cvarptr->value = trap_cvargetf(cvarptr->name);
 
 		/* get default value */
-		trap_Cvar_Reset(cvarptr->name);
-		cvarptr->defaultvalue = trap_Cvar_VariableValue(cvarptr->name);
+		trap_cvarreset(cvarptr->name);
+		cvarptr->defaultvalue = trap_cvargetf(cvarptr->name);
 
 		/* restore current value */
-		trap_Cvar_SetValue(cvarptr->name, cvarptr->value);
+		trap_cvarsetf(cvarptr->name, cvarptr->value);
 	}
 }
 
@@ -795,7 +795,7 @@ Controls_DrawPlayer(void *self)
 	menubitmap_s *b;
 	char buf[MAX_QPATH];
 
-	trap_Cvar_VariableStringBuffer("model", buf, sizeof(buf));
+	trap_cvargetstrbuf("model", buf, sizeof(buf));
 	if(strcmp(buf, s_controls.playerModel) != 0){
 		UI_PlayerInfo_SetModel(&s_controls.playerinfo, buf);
 		strcpy(s_controls.playerModel, buf);
@@ -904,19 +904,19 @@ Controls_SetConfig(void)
 	}
 
 	if(s_controls.invertmouse.curvalue)
-		trap_Cvar_SetValue("m_pitch",
-			-fabs(trap_Cvar_VariableValue("m_pitch")));
+		trap_cvarsetf("m_pitch",
+			-fabs(trap_cvargetf("m_pitch")));
 	else
-		trap_Cvar_SetValue("m_pitch",
-			fabs(trap_Cvar_VariableValue("m_pitch")));
+		trap_cvarsetf("m_pitch",
+			fabs(trap_cvargetf("m_pitch")));
 
-	trap_Cvar_SetValue("m_filter", s_controls.smoothmouse.curvalue);
-	trap_Cvar_SetValue("cl_run", s_controls.alwaysrun.curvalue);
-	trap_Cvar_SetValue("cg_autoswitch", s_controls.autoswitch.curvalue);
-	trap_Cvar_SetValue("sensitivity", s_controls.sensitivity.curvalue);
-	trap_Cvar_SetValue("in_joystick", s_controls.joyenable.curvalue);
-	trap_Cvar_SetValue("joy_threshold", s_controls.joythreshold.curvalue);
-	trap_Cvar_SetValue("cl_freelook", s_controls.freelook.curvalue);
+	trap_cvarsetf("m_filter", s_controls.smoothmouse.curvalue);
+	trap_cvarsetf("cl_run", s_controls.alwaysrun.curvalue);
+	trap_cvarsetf("cg_autoswitch", s_controls.autoswitch.curvalue);
+	trap_cvarsetf("sensitivity", s_controls.sensitivity.curvalue);
+	trap_cvarsetf("in_joystick", s_controls.joyenable.curvalue);
+	trap_cvarsetf("joy_threshold", s_controls.joythreshold.curvalue);
+	trap_cvarsetf("cl_freelook", s_controls.freelook.curvalue);
 	trap_Cmd_ExecuteText(EXEC_APPEND, "in_restart\n");
 }
 
@@ -1194,7 +1194,7 @@ Controls_InitModel(void)
 	memset(&s_controls.playerinfo, 0, sizeof(Playerinfo));
 
 	UI_PlayerInfo_SetModel(&s_controls.playerinfo,
-		UI_Cvar_VariableString("model"));
+		UI_cvargetstr("model"));
 
 	Controls_UpdateModel(ANIM_IDLE);
 }
@@ -1717,7 +1717,7 @@ Controls_MenuInit(void)
 
 	Menu_AddItem(&s_controls.menu, &s_controls.back);
 
-	trap_Cvar_VariableStringBuffer("name", s_controls.name.string, 16);
+	trap_cvargetstrbuf("name", s_controls.name.string, 16);
 	Q_cleanstr(s_controls.name.string);
 
 	/* initialize the configurable cvars */

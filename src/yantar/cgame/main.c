@@ -304,22 +304,22 @@ CG_RegisterCvars(void)
 	char	var[MAX_TOKEN_CHARS];
 
 	for(i = 0, cv = cvarTable; i < cvarTableSize; i++, cv++)
-		trap_Cvar_Register(cv->vmCvar, cv->cvarName,
+		trap_cvarregister(cv->vmCvar, cv->cvarName,
 			cv->defaultString, cv->cvarFlags);
 
 	/* see if we are also running the server on this machine */
-	trap_Cvar_VariableStringBuffer("sv_running", var, sizeof(var));
+	trap_cvargetstrbuf("sv_running", var, sizeof(var));
 	cgs.localServer = atoi(var);
 
 	forceModelModificationCount = cg_forceModel.modificationCount;
 
-	trap_Cvar_Register(NULL, "model", DEFAULT_MODEL,
+	trap_cvarregister(NULL, "model", DEFAULT_MODEL,
 		CVAR_USERINFO | CVAR_ARCHIVE);
-	trap_Cvar_Register(NULL, "headmodel", DEFAULT_MODEL,
+	trap_cvarregister(NULL, "headmodel", DEFAULT_MODEL,
 		CVAR_USERINFO | CVAR_ARCHIVE);
-	trap_Cvar_Register(NULL, "team_model", DEFAULT_TEAM_MODEL,
+	trap_cvarregister(NULL, "team_model", DEFAULT_TEAM_MODEL,
 		CVAR_USERINFO | CVAR_ARCHIVE);
-	trap_Cvar_Register(NULL, "team_headmodel", DEFAULT_TEAM_HEAD,
+	trap_cvarregister(NULL, "team_headmodel", DEFAULT_TEAM_HEAD,
 		CVAR_USERINFO | CVAR_ARCHIVE);
 }
 
@@ -345,7 +345,7 @@ CG_UpdateCvars(void)
 	Cvartable *cv;
 
 	for(i = 0, cv = cvarTable; i < cvarTableSize; i++, cv++)
-		trap_Cvar_Update(cv->vmCvar);
+		trap_cvarupdate(cv->vmCvar);
 
 	/* check for modications here */
 
@@ -357,9 +357,9 @@ CG_UpdateCvars(void)
 			cg_drawTeamOverlay.modificationCount;
 
 		if(cg_drawTeamOverlay.integer > 0)
-			trap_Cvar_Set("teamoverlay", "1");
+			trap_cvarsetstr("teamoverlay", "1");
 		else
-			trap_Cvar_Set("teamoverlay", "0");
+			trap_cvarsetstr("teamoverlay", "0");
 	}
 
 	/* if force model changed */
@@ -1688,11 +1688,11 @@ CG_FeederSelection(float feederID, int index)
 
 #ifdef MISSIONPACK
 static float
-CG_Cvar_Get(const char *cvar)
+CG_cvarget(const char *cvar)
 {
 	char buff[128];
 	memset(buff, 0, sizeof(buff));
-	trap_Cvar_VariableStringBuffer(cvar, buff, sizeof(buff));
+	trap_cvargetstrbuf(cvar, buff, sizeof(buff));
 	return atof(buff);
 }
 #endif
@@ -1783,9 +1783,9 @@ CG_LoadHudMenu(void)
 	cgDC.ownerDrawVisible = &CG_OwnerDrawVisible;
 	cgDC.runScript = &CG_RunMenuScript;
 	cgDC.getTeamColor = &CG_GetTeamColor;
-	cgDC.setCVar = trap_Cvar_Set;
-	cgDC.getCVarString	= trap_Cvar_VariableStringBuffer;
-	cgDC.getCVarValue	= CG_Cvar_Get;
+	cgDC.setCVar = trap_cvarsetstr;
+	cgDC.getCVarString	= trap_cvargetstrbuf;
+	cgDC.getCVarValue	= CG_cvarget;
 	cgDC.drawTextWithCursor = &CG_Text_PaintWithCursor;
 	/* cgDC.setOverstrikeMode = &trap_Key_SetOverstrikeMode;
 	 * cgDC.getOverstrikeMode = &trap_Key_GetOverstrikeMode; */
@@ -1815,7 +1815,7 @@ CG_LoadHudMenu(void)
 
 	Menu_Reset();
 
-	trap_Cvar_VariableStringBuffer("cg_hudFiles", buff, sizeof(buff));
+	trap_cvargetstrbuf("cg_hudFiles", buff, sizeof(buff));
 	hudSet = buff;
 	if(hudSet[0] == '\0')
 		hudSet = "ui/hud.txt";

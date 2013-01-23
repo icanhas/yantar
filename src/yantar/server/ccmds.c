@@ -124,15 +124,15 @@ SV_Map_f(void)
 	}
 
 	/* force latched values to get set */
-	Cvar_Get ("g_gametype", "0",
+	cvarget ("g_gametype", "0",
 		CVAR_SERVERINFO | CVAR_USERINFO | CVAR_LATCH);
 
 	cmd = cmdargv(0);
 	if(Q_stricmpn(cmd, "sp", 2) == 0){
-		Cvar_SetValue("g_gametype", GT_SINGLE_PLAYER);
-		Cvar_SetValue("g_doWarmup", 0);
+		cvarsetf("g_gametype", GT_SINGLE_PLAYER);
+		cvarsetf("g_doWarmup", 0);
 		/* may not set sv_maxclients directly, always set latched */
-		Cvar_SetLatched("sv_maxclients", "8");
+		cvarsetstrlatched("sv_maxclients", "8");
 		cmd += 2;
 		if(!Q_stricmp(cmd, "devmap"))
 			cheat = qtrue;
@@ -148,7 +148,7 @@ SV_Map_f(void)
 			killBots = qfalse;
 		}
 		if(sv_gametype->integer == GT_SINGLE_PLAYER)
-			Cvar_SetValue("g_gametype", GT_FFA);
+			cvarsetf("g_gametype", GT_FFA);
 	}
 
 	/* save the map name here cause on a map restart we reload the user.cfg
@@ -163,9 +163,9 @@ SV_Map_f(void)
 	 * cheats will not be allowed.  If started with "devmap <levelname>"
 	 * then cheats will be allowed */
 	if(cheat)
-		Cvar_Set("sv_cheats", "1");
+		cvarsetstr("sv_cheats", "1");
 	else
-		Cvar_Set("sv_cheats", "0");
+		cvarsetstr("sv_cheats", "0");
 }
 
 /*
@@ -195,7 +195,7 @@ SV_MapRestart_f(void)
 		delay = atoi(cmdargv(1));
 	else
 		delay = 5;
-	if(delay && !Cvar_VariableValue("g_doWarmup")){
+	if(delay && !cvargetf("g_doWarmup")){
 		sv.restartTime = sv.time + delay * 1000;
 		SV_SetConfigstring(CS_WARMUP, va("%i", sv.restartTime));
 		return;
@@ -210,7 +210,7 @@ SV_MapRestart_f(void)
 
 		Com_Printf("variable change -- restarting.\n");
 		/* restart the map the slow way */
-		Q_strncpyz(mapname, Cvar_VariableString("mapname"), sizeof(mapname));
+		Q_strncpyz(mapname, cvargetstr("mapname"), sizeof(mapname));
 		SV_SpawnServer(mapname, qfalse);
 		return;
 	}
@@ -227,7 +227,7 @@ SV_MapRestart_f(void)
 	 * correctly with multiple map_restart
 	 */
 	sv.serverId = com_frameTime;
-	Cvar_Set("sv_serverid", va("%i", sv.serverId));
+	cvarsetstr("sv_serverid", va("%i", sv.serverId));
 
 	/* if a map_restart occurs while a client is changing maps, we need
 	 * to give them the correct time so that when they finish loading
@@ -1060,7 +1060,7 @@ static void
 SV_Serverinfo_f(void)
 {
 	Com_Printf ("Server info settings:\n");
-	Info_Print (Cvar_InfoString(CVAR_SERVERINFO));
+	Info_Print (cvargetinfostr(CVAR_SERVERINFO));
 }
 
 /*
@@ -1070,7 +1070,7 @@ static void
 SV_Systeminfo_f(void)
 {
 	Com_Printf ("System info settings:\n");
-	Info_Print (Cvar_InfoString_Big(CVAR_SYSTEMINFO));
+	Info_Print (cvargetbiginfostr(CVAR_SYSTEMINFO));
 }
 
 /*

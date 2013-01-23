@@ -47,8 +47,8 @@ SV_GetChallenge(Netaddr from)
 	qbool		gameMismatch;
 
 	/* ignore if we are in single player */
-	if(Cvar_VariableValue("g_gametype") == GT_SINGLE_PLAYER ||
-	   Cvar_VariableValue("ui_singlePlayerActive"))
+	if(cvargetf("g_gametype") == GT_SINGLE_PLAYER ||
+	   cvargetf("ui_singlePlayerActive"))
 		return;
 
 	gameName = cmdargv(2);
@@ -147,7 +147,7 @@ SV_GetChallenge(Netaddr from)
 					from));
 
 			strcpy(game, BASEGAME);
-			fs = Cvar_Get ("fs_game", "", CVAR_INIT|CVAR_SYSTEMINFO);
+			fs = cvarget ("fs_game", "", CVAR_INIT|CVAR_SYSTEMINFO);
 			if(fs && fs->string[0] != 0)
 				strcpy(game, fs->string);
 

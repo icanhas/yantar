@@ -264,8 +264,8 @@ PodiumPlacementThink(Gentity *podium)
 
 	anglev3s(level.intermission_angle, vec, NULL, NULL);
 	saddv3(level.intermission_origin,
-		trap_Cvar_VariableIntegerValue("g_podiumDist"), vec, origin);
-	origin[2] -= trap_Cvar_VariableIntegerValue("g_podiumDrop");
+		trap_cvargeti("g_podiumDist"), vec, origin);
+	origin[2] -= trap_cvargeti("g_podiumDrop");
 	G_SetOrigin(podium, origin);
 
 	if(podium1){
@@ -338,8 +338,8 @@ SpawnPodium(void)
 
 	anglev3s(level.intermission_angle, vec, NULL, NULL);
 	saddv3(level.intermission_origin,
-		trap_Cvar_VariableIntegerValue("g_podiumDist"), vec, origin);
-	origin[2] -= trap_Cvar_VariableIntegerValue("g_podiumDrop");
+		trap_cvargeti("g_podiumDist"), vec, origin);
+	origin[2] -= trap_cvargeti("g_podiumDrop");
 	G_SetOrigin(podium, origin);
 
 	subv3(level.intermission_origin, podium->r.currentOrigin, vec);

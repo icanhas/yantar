@@ -1212,13 +1212,13 @@ R_SetColorMappings(void)
 
 
 	if(r_intensity->value <= 1){
-		ri.Cvar_Set("r_intensity", "1");
+		ri.cvarsetstr("r_intensity", "1");
 	}
 
 	if(r_gamma->value < 0.5f){
-		ri.Cvar_Set("r_gamma", "0.5");
+		ri.cvarsetstr("r_gamma", "0.5");
 	}else if(r_gamma->value > 3.0f){
-		ri.Cvar_Set("r_gamma", "3.0");
+		ri.cvarsetstr("r_gamma", "3.0");
 	}
 
 	g = r_gamma->value;

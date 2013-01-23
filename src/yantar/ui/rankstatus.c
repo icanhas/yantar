@@ -147,7 +147,7 @@ void
 UI_RankStatusMenu(void)
 {
 
-	s_status = (grank_status_t)trap_Cvar_VariableValue("client_status");
+	s_status = (grank_status_t)trap_cvargetf("client_status");
 
 	switch(s_status){
 	case QGR_STATUS_NEW:

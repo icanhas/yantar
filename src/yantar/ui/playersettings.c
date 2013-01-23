@@ -233,7 +233,7 @@ PlayerSettings_DrawPlayer(void *self)
 	Vec3	viewangles;
 	char	buf[MAX_QPATH];
 
-	trap_Cvar_VariableStringBuffer("model", buf, sizeof(buf));
+	trap_cvargetstrbuf("model", buf, sizeof(buf));
 	if(strcmp(buf, s_playersettings.playerModel) != 0){
 		UI_PlayerInfo_SetModel(&s_playersettings.playerinfo, buf);
 		strcpy(s_playersettings.playerModel, buf);
@@ -260,14 +260,14 @@ static void
 PlayerSettings_SaveChanges(void)
 {
 	/* name */
-	trap_Cvar_Set("name", s_playersettings.name.field.buffer);
+	trap_cvarsetstr("name", s_playersettings.name.field.buffer);
 
 	/* handicap */
-	trap_Cvar_SetValue("handicap",
+	trap_cvarsetf("handicap",
 		100 - s_playersettings.handicap.curvalue * 5);
 
 	/* effects color */
-	trap_Cvar_SetValue("color1",
+	trap_cvarsetf("color1",
 		uitogamecode[s_playersettings.effects.curvalue]);
 }
 
@@ -296,11 +296,11 @@ PlayerSettings_SetMenuItems(void)
 
 	/* name */
 	Q_strncpyz(s_playersettings.name.field.buffer,
-		UI_Cvar_VariableString("name"),
+		UI_cvargetstr("name"),
 		sizeof(s_playersettings.name.field.buffer));
 
 	/* effects color */
-	c = trap_Cvar_VariableValue("color1") - 1;
+	c = trap_cvargetf("color1") - 1;
 	if(c < 0 || c > 6)
 		c = 6;
 	s_playersettings.effects.curvalue = gamecodetoui[c];
@@ -313,14 +313,14 @@ PlayerSettings_SetMenuItems(void)
 	viewangles[ROLL]	= 0;
 
 	UI_PlayerInfo_SetModel(&s_playersettings.playerinfo,
-		UI_Cvar_VariableString(
+		UI_cvargetstr(
 			"model"));
 	UI_PlayerInfo_SetInfo(&s_playersettings.playerinfo, LEGS_IDLE,
 		TORSO_STAND, viewangles, vec3_origin, Wmachinegun,
 		qfalse);
 
 	/* handicap */
-	h = Q_clamp(5, 100, trap_Cvar_VariableValue("handicap"));
+	h = Q_clamp(5, 100, trap_cvargetf("handicap"));
 	s_playersettings.handicap.curvalue = 20 - h / 5;
 }
 
@@ -336,7 +336,7 @@ PlayerSettings_MenuEvent(void* ptr, int event)
 
 	switch(((menucommon_s*)ptr)->id){
 	case ID_HANDICAP:
-		trap_Cvar_Set("handicap",
+		trap_cvarsetstr("handicap",
 			va("%i", 100 - 25 * s_playersettings.handicap.curvalue));
 		break;
 

@@ -1070,8 +1070,8 @@ CL_KeyDownEvent(int key, unsigned time)
 		anykeydown++;
 
 	if(keys[K_ALT].down && key == K_ENTER){
-		Cvar_SetValue("r_fullscreen",
-			!Cvar_VariableIntegerValue("r_fullscreen"));
+		cvarsetf("r_fullscreen",
+			!cvargeti("r_fullscreen"));
 		return;
 	}
 
@@ -1088,8 +1088,8 @@ CL_KeyDownEvent(int key, unsigned time)
 	   (clc.demoplaying ||
 	    clc.state == CA_CINEMATIC) && Key_GetCatcher( ) == 0)
 
-		if(Cvar_VariableValue ("com_cameraMode") == 0){
-			Cvar_Set ("nextdemo","");
+		if(cvargetf ("com_cameraMode") == 0){
+			cvarsetstr ("nextdemo","");
 			key = K_ESCAPE;
 		}
 

@@ -107,12 +107,12 @@ UI_SoundOptionsMenu_Event(void* ptr, int event)
 		break;
 
 	case ID_APPLY:
-		trap_Cvar_SetValue("s_volume",
+		trap_cvarsetf("s_volume",
 			soundOptionsInfo.sfxvolume.curvalue / 10);
 		soundOptionsInfo.sfxvolume_original =
 			soundOptionsInfo.sfxvolume.curvalue;
 
-		trap_Cvar_SetValue("s_musicvolume",
+		trap_cvarsetf("s_musicvolume",
 			soundOptionsInfo.musicvolume.curvalue / 10);
 		soundOptionsInfo.musicvolume_original =
 			soundOptionsInfo.musicvolume.curvalue;
@@ -140,7 +140,7 @@ UI_SoundOptionsMenu_Event(void* ptr, int event)
 			if(speed == DEFAULT_SDL_SND_SPEED)
 				speed = 0;
 
-			trap_Cvar_SetValue("s_sdlSpeed", speed);
+			trap_cvarsetf("s_sdlSpeed", speed);
 			soundOptionsInfo.quality_original =
 				soundOptionsInfo.quality.curvalue;
 
@@ -378,10 +378,10 @@ UI_SoundOptionsMenu_Init(void)
 
 	soundOptionsInfo.sfxvolume.curvalue =
 		soundOptionsInfo.sfxvolume_original =
-			trap_Cvar_VariableValue("s_volume") * 10;
+			trap_cvargetf("s_volume") * 10;
 	soundOptionsInfo.musicvolume.curvalue =
 		soundOptionsInfo.musicvolume_original =
-			trap_Cvar_VariableValue(
+			trap_cvargetf(
 				"s_musicvolume") * 10;
 
 	/* 
@@ -391,7 +391,7 @@ UI_SoundOptionsMenu_Init(void)
 	soundOptionsInfo.soundSystem_original = UISND_SDL;
 	soundOptionsInfo.soundSystem.curvalue = soundOptionsInfo.soundSystem_original;
 
-	speed = trap_Cvar_VariableValue("s_sdlSpeed");
+	speed = trap_cvargetf("s_sdlSpeed");
 	if(!speed)	/* Check for default */
 		speed = DEFAULT_SDL_SND_SPEED;
 

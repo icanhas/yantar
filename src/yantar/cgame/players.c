@@ -709,7 +709,7 @@ CG_NewClientInfo(int clientNum)
 			Q_strncpyz(newinfo.skinName, "default",
 				sizeof(newinfo.skinName));
 		}else{
-			trap_Cvar_VariableStringBuffer("model", modelStr,
+			trap_cvargetstrbuf("model", modelStr,
 				sizeof(modelStr));
 			if((skin = strchr(modelStr, '/')) == NULL)
 				skin = "default";
@@ -762,7 +762,7 @@ CG_NewClientInfo(int clientNum)
 			Q_strncpyz(newinfo.hullskinName, "default",
 				sizeof(newinfo.hullskinName));
 		}else{
-			trap_Cvar_VariableStringBuffer("headmodel", modelStr,
+			trap_cvargetstrbuf("headmodel", modelStr,
 				sizeof(modelStr));
 			if((skin = strchr(modelStr, '/')) == NULL)
 				skin = "default";
