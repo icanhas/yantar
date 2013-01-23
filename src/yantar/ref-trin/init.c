@@ -1248,7 +1248,7 @@ void
 RE_EndRegistration(void)
 {
 	R_SyncRenderThread();
-	if(!ri.Sys_LowPhysicalMemory()){
+	if(!ri.syslowmem()){
 		RB_ShowImages();
 	}
 }

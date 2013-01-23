@@ -108,7 +108,7 @@ SV_GetChallenge(Netaddr from)
 	/* Drop the authorize stuff if this client is coming in via v6 as the auth server does not support ipv6.
 	 * Drop also for addresses coming in on local LAN and for stand-alone games independent from id's assets. */
 	if(challenge->adr.type == NA_IP && !com_standalone->integer &&
-	   !Sys_IsLANAddress(from)){
+	   !sysisLANaddr(from)){
 		/* look up the authorize server's IP */
 		if(svs.authorizeAddress.type == NA_BAD){
 			comprintf("Resolving %s\n", AUTHORIZE_SERVER_NAME);
@@ -392,7 +392,7 @@ SV_DirectConnect(Netaddr from)
 		ping = svs.time - challengeptr->pingTime;
 
 		/* never reject a LAN client based on ping */
-		if(!Sys_IsLANAddress(from)){
+		if(!sysisLANaddr(from)){
 			if(sv_minPing->value && ping < sv_minPing->value){
 				NET_OutOfBandPrint(
 					NS_SERVER, from,
@@ -1360,7 +1360,7 @@ SV_UserinfoChanged(Client *cl)
 
 	/* if the client is on the same subnet as the server and we aren't running an
 	 * internet public server, assume they don't need a rate choke */
-	if(Sys_IsLANAddress(cl->netchan.remoteAddress) &&
+	if(sysisLANaddr(cl->netchan.remoteAddress) &&
 	   com_dedicated->integer != 2 && sv_lanForceRate->integer == 1)
 		cl->rate = 99999;	/* lans should not rate limit */
 	else{

@@ -30,10 +30,10 @@ qbool stdinIsATTY;
 static char homePath[ MAX_OSPATH ] = { 0 };
 
 /*
- * Sys_DefaultHomePath
+ * sysgetdefaulthomepath
  */
 char *
-Sys_DefaultHomePath(void)
+sysgetdefaulthomepath(void)
 {
 	char *p;
 
@@ -67,10 +67,10 @@ Sys_DefaultHomePath(void)
 
 #ifndef MACOS_X
 /*
- * Sys_TempPath
+ * systemppath
  */
 const char *
-Sys_TempPath(void)
+systemppath(void)
 {
 	const char *TMPDIR = getenv("TMPDIR");
 
@@ -82,7 +82,7 @@ Sys_TempPath(void)
 #endif
 
 /*
- * Sys_Milliseconds
+ * sysmillisecs
  */
 /* base time in seconds, that's our origin
  * timeval:tv_sec is an int:
@@ -95,7 +95,7 @@ unsigned long sys_timeBase = 0;
  *   (which would affect the wrap period) */
 int curtime;
 int
-Sys_Milliseconds(void)
+sysmillisecs(void)
 {
 	struct timeval tp;
 
@@ -112,10 +112,10 @@ Sys_Milliseconds(void)
 }
 
 /*
- * Sys_RandomBytes
+ * sysrandbytes
  */
 qbool
-Sys_RandomBytes(byte *string, int len)
+sysrandbytes(byte *string, int len)
 {
 	FILE *fp;
 
@@ -133,10 +133,10 @@ Sys_RandomBytes(byte *string, int len)
 }
 
 /*
- * Sys_GetCurrentUser
+ * sysgetcurrentuser
  */
 char *
-Sys_GetCurrentUser(void)
+sysgetcurrentuser(void)
 {
 	struct passwd *p;
 
@@ -146,10 +146,10 @@ Sys_GetCurrentUser(void)
 }
 
 /*
- * Sys_GetClipboardData
+ * sysgetclipboarddata
  */
 char *
-Sys_GetClipboardData(void)
+sysgetclipboarddata(void)
 {
 	return NULL;
 }
@@ -157,39 +157,39 @@ Sys_GetClipboardData(void)
 #define MEM_THRESHOLD 96*1024*1024
 
 /*
- * Sys_LowPhysicalMemory
+ * syslowmem
  *
  * TODO
  */
 qbool
-Sys_LowPhysicalMemory(void)
+syslowmem(void)
 {
 	return qfalse;
 }
 
 /*
- * Sys_Basename
+ * sysbasename
  */
 const char *
-Sys_Basename(char *path)
+sysbasename(char *path)
 {
 	return basename(path);
 }
 
 /*
- * Sys_Dirname
+ * sysdirname
  */
 const char *
-Sys_Dirname(char *path)
+sysdirname(char *path)
 {
 	return dirname(path);
 }
 
 /*
- * Sys_Mkdir
+ * sysmkdir
  */
 qbool
-Sys_Mkdir(const char *path)
+sysmkdir(const char *path)
 {
 	int result = mkdir(path, 0750);
 
@@ -200,10 +200,10 @@ Sys_Mkdir(const char *path)
 }
 
 /*
- * Sys_Mkfifo
+ * sysmkfifo
  */
 FILE *
-Sys_Mkfifo(const char *ospath)
+sysmkfifo(const char *ospath)
 {
 	FILE	*fifo;
 	int	result;
@@ -228,10 +228,10 @@ Sys_Mkfifo(const char *ospath)
 }
 
 /*
- * Sys_Cwd
+ * syspwd
  */
 char *
-Sys_Cwd(void)
+syspwd(void)
 {
 	static char cwd[MAX_OSPATH];
 
@@ -313,10 +313,10 @@ Sys_ListFilteredFiles(const char *basedir, char *subdirs, char *filter,
 }
 
 /*
- * Sys_ListFiles
+ * syslistfiles
  */
 char **
-Sys_ListFiles(const char *directory, const char *extension, char *filter,
+syslistfiles(const char *directory, const char *extension, char *filter,
 	      int *numfiles,
 	      qbool wantsubs)
 {
@@ -410,10 +410,10 @@ Sys_ListFiles(const char *directory, const char *extension, char *filter,
 }
 
 /*
- * Sys_FreeFileList
+ * sysfreefilelist
  */
 void
-Sys_FreeFileList(char **list)
+sysfreefilelist(char **list)
 {
 	int i;
 
@@ -427,12 +427,12 @@ Sys_FreeFileList(char **list)
 }
 
 /*
- * Sys_Sleep
+ * syssleep
  *
  * Block execution for msec or until input is recieved.
  */
 void
-Sys_Sleep(int msec)
+syssleep(int msec)
 {
 	if(msec == 0)
 		return;
@@ -461,12 +461,12 @@ Sys_Sleep(int msec)
 }
 
 /*
- * Sys_ErrorDialog
+ * syserrorfDialog
  *
  * Display an error message
  */
 void
-Sys_ErrorDialog(const char *error)
+syserrorfDialog(const char *error)
 {
 	char	buffer[ 1024 ];
 	unsigned int size;
@@ -476,10 +476,10 @@ Sys_ErrorDialog(const char *error)
 	const char *fileName = "crashlog.txt";
 	char *ospath = fsbuildospath(homepath, gamedir, fileName);
 
-	Sys_Print(va("%s\n", error));
+	sysprint(va("%s\n", error));
 	
 	if(!com_dedicated->integer)
-		Sys_Dialog(DT_ERROR, va("%s. See \"%s\" for details.", error,
+		sysmkdialog(DT_ERROR, va("%s. See \"%s\" for details.", error,
 		   ospath), "Error");
 
 	/* Make sure the write path for the crashlog exists */
@@ -648,12 +648,12 @@ Sys_XmessageCommand(dialogType_t type, const char *message, const char *title)
 }
 
 /*
- * Sys_Dialog
+ * sysmkdialog
  *
  * Display a *nix dialog box
  */
 dialogResult_t
-Sys_Dialog(dialogType_t type, const char *message, const char *title)
+sysmkdialog(dialogType_t type, const char *message, const char *title)
 {
 	typedef enum {
 		NONE = 0,
@@ -786,13 +786,13 @@ Sys_PlatformExit(void)
 }
 
 /*
- * Sys_SetEnv
+ * syssetenv
  *
  * set/unset environment variables (empty value removes it)
  */
 
 void
-Sys_SetEnv(const char *name, const char *value)
+syssetenv(const char *name, const char *value)
 {
 	if(value && *value)
 		setenv(name, value, 1);

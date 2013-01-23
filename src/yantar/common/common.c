@@ -155,7 +155,7 @@ comprintf(const char *fmt, ...)
 #ifndef DEDICATED
 	clconsoleprint(msg);
 #endif
-	Sys_Print(msg); /* echo to dedicated console and early console */
+	sysprint(msg); /* echo to dedicated console and early console */
 	
 	/* logfile */
 	if(com_logfile && com_logfile->integer){
@@ -220,7 +220,7 @@ comerrorf(int code, const char *fmt, ...)
 	int currentTime;
 
 	if(com_errorEntered)
-		Sys_Error("recursive error after: %s", com_errorMessage);
+		syserrorf("recursive error after: %s", com_errorMessage);
 
 	com_errorEntered = qtrue;
 
@@ -232,7 +232,7 @@ comerrorf(int code, const char *fmt, ...)
 		code = ERR_FATAL;
 
 	/* if we are getting a solid stream of ERR_DROP, do an ERR_FATAL */
-	currentTime = Sys_Milliseconds();
+	currentTime = sysmillisecs();
 	if(currentTime - lastErrorTime < 100){
 		if(++errorCount > 3)
 			code = ERR_FATAL;
@@ -279,7 +279,7 @@ comerrorf(int code, const char *fmt, ...)
 
 	Com_Shutdown ();
 
-	Sys_Error ("%s", com_errorMessage);
+	syserrorf ("%s", com_errorMessage);
 }
 
 /*
@@ -294,7 +294,7 @@ Com_Quit_f(void)
 	if(!com_errorEntered){
 		/* Some VMs might execute "quit" command directly,
 		 * which would trigger an unload of active VM error.
-		 * Sys_Quit will kill this process anyways, so
+		 * sysquit will kill this process anyways, so
 		 * a corrupt call stack makes no difference */
 		vmsetforceunload();
 		svshutdown(p[0] ? p : "Server quit");
@@ -303,7 +303,7 @@ Com_Quit_f(void)
 		Com_Shutdown ();
 		fsshutdown(qtrue);
 	}
-	Sys_Quit ();
+	sysquit ();
 }
 
 /*
@@ -681,7 +681,7 @@ comqueueevent(int time, Syseventtype type, int value, int value2,
 	eventHead++;
 
 	if(time == 0)
-		time = Sys_Milliseconds();
+		time = sysmillisecs();
 
 	ev->evTime = time;
 	ev->evType = type;
@@ -704,7 +704,7 @@ comgetsysevent(void)
 	}
 
 	/* check for console commands */
-	s = Sys_ConsoleInput();
+	s = sysconsoleinput();
 	if(s){
 		char	*b;
 		int	len;
@@ -723,7 +723,7 @@ comgetsysevent(void)
 
 	/* create an empty event to return */
 	memset(&ev, 0, sizeof(ev));
-	ev.evTime = Sys_Milliseconds();
+	ev.evTime = sysmillisecs();
 
 	return ev;
 }
@@ -825,10 +825,10 @@ comrunservpacket(Netaddr *evFrom, Bitmsg *buf)
 
 	t1 = 0;
 	if(com_speeds->integer)
-		t1 = Sys_Milliseconds ();
+		t1 = sysmillisecs ();
 	svpacketevent(*evFrom, buf);
 	if(com_speeds->integer){
-		t2 = Sys_Milliseconds ();
+		t2 = sysmillisecs ();
 		msec = t2 - t1;
 		if(com_speeds->integer == 3)
 			comprintf("svpacketevent time: %i\n", msec);
@@ -1139,7 +1139,7 @@ Com_Setenv_f(void)
 	if(argc > 2){
 		char *arg2 = cmdargsfrom(2);
 
-		Sys_SetEnv(arg1, arg2);
+		syssetenv(arg1, arg2);
 	}else if(argc == 2){
 		char *env = getenv(arg1);
 
@@ -1319,7 +1319,7 @@ Q_TimeVal(int minMsec)
 {
 	int timeVal;
 
-	timeVal = Sys_Milliseconds() - com_frameTime;
+	timeVal = sysmillisecs() - com_frameTime;
 
 	if(timeVal >= minMsec)
 		timeVal = 0;
@@ -1336,7 +1336,7 @@ Com_Detectaltivec(void)
 		static qbool altivec = qfalse;
 		static qbool detected = qfalse;
 		if(!detected){
-			altivec = (Sys_GetProcessorFeatures( ) & CF_ALTIVEC);
+			altivec = (sysgetprocessorfeatures( ) & CF_ALTIVEC);
 			detected = qtrue;
 		}
 		if(!altivec)
@@ -1352,7 +1352,7 @@ Com_Detectsse(void)
 #if !idx64
 	CPUfeatures feat;
 
-	feat = Sys_GetProcessorFeatures();
+	feat = sysgetprocessorfeatures();
 	if(feat & CF_SSE){
 		if(feat & CF_SSE2)
 			Q_snapv3 = qsnapv3sse;
@@ -1387,7 +1387,7 @@ Com_Initrand(void)
 {
 	unsigned int seed;
 
-	if(Sys_RandomBytes((byte*)&seed, sizeof(seed)))
+	if(sysrandbytes((byte*)&seed, sizeof(seed)))
 		srand(seed);
 	else
 		srand(time(nil));
@@ -1403,7 +1403,7 @@ Com_Init(char *commandLine)
 	comprintf("%s %s %s\n", Q3_VERSION, PLATFORM_STRING, __DATE__);
 
 	if(setjmp (abortframe))
-		Sys_Error ("Error during initialization");
+		syserrorf ("Error during initialization");
 
 	/* Clear queues */
 	Q_Memset(&eventQueue[ 0 ], 0, MAX_QUEUED_EVENTS * sizeof(Sysevent));
@@ -1530,7 +1530,7 @@ Com_Init(char *commandLine)
 			PROTOCOL_VERSION), CVAR_SERVERINFO | CVAR_INIT);
 	cvarget("protocol", com_protocol->string, CVAR_ROM);
 
-	Sys_Init();
+	sysinit();
 	
 	/* Pick a random port value */
 	Com_Randombytes((byte*)&qport, sizeof(int));
@@ -1669,7 +1669,7 @@ Com_Frame(void)
 
 	/* main event loop */
 	if(com_speeds->integer)
-		timeBeforeFirstEvents = Sys_Milliseconds ();
+		timeBeforeFirstEvents = sysmillisecs ();
 	/* Figure out how much time we have */
 	if(!com_timedemo->integer){
 		if(com_dedicated->integer)
@@ -1733,7 +1733,7 @@ Com_Frame(void)
 
 	/* server side */
 	if(com_speeds->integer)
-		timeBeforeServer = Sys_Milliseconds ();
+		timeBeforeServer = sysmillisecs ();
 	svframe(msec);
 	/* if "dedicated" has been modified, start up
 	 * or shut down the client system.
@@ -1751,7 +1751,7 @@ Com_Frame(void)
 
 	if(com_dedicated->integer){
 		if(com_speeds->integer){
-			timeAfter = Sys_Milliseconds ();
+			timeAfter = sysmillisecs ();
 			timeBeforeEvents = timeAfter;
 			timeBeforeClient = timeAfter;
 		}
@@ -1763,17 +1763,17 @@ Com_Frame(void)
 		 * without a frame of latency
 		 */
 		if(com_speeds->integer)
-			timeBeforeEvents = Sys_Milliseconds ();
+			timeBeforeEvents = sysmillisecs ();
 		comflushevents();
 		cbufflush ();
 
 
 		/* client side */
 		if(com_speeds->integer)
-			timeBeforeClient = Sys_Milliseconds ();
+			timeBeforeClient = sysmillisecs ();
 		clframe(msec);
 		if(com_speeds->integer)
-			timeAfter = Sys_Milliseconds ();
+			timeAfter = sysmillisecs ();
 	}
 
 	NET_FlushPacketQueue();
@@ -2029,7 +2029,7 @@ Com_Randombytes(byte *string, int len)
 {
 	int i;
 
-	if(Sys_RandomBytes(string, len))
+	if(sysrandbytes(string, len))
 		return;
 	comprintf("Com_Randombytes: using weak randomization\n");
 	for(i = 0; i < len; i++)

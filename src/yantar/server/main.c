@@ -421,7 +421,7 @@ SVC_BucketForAddress(Netaddr address, int burst, int period)
 	Leakybucket *bucket = NULL;
 	int	i;
 	long	hash = SVC_HashForAddress(address);
-	int	now = Sys_Milliseconds();
+	int	now = sysmillisecs();
 
 	for(bucket = bucketHashes[ hash ]; bucket; bucket = bucket->next){
 		switch(bucket->type){
@@ -497,7 +497,7 @@ static qbool
 SVC_RateLimit(Leakybucket *bucket, int burst, int period)
 {
 	if(bucket != NULL){
-		int	now = Sys_Milliseconds();
+		int	now = sysmillisecs();
 		int	interval	= now - bucket->lastTime;
 		int	expired		= interval / period;
 		int	expiredRemainder = interval % period;
@@ -1050,7 +1050,7 @@ svframe(int msec)
 	if(!com_sv_running->integer){
 		/* Running as a server, but no map loaded */
 		if(com_dedicated->integer)
-			Sys_Sleep(-1);	/* Block till something interesting happens */
+			syssleep(-1);	/* Block till something interesting happens */
 		return;
 	}
 
@@ -1110,7 +1110,7 @@ svframe(int msec)
 	}
 
 	if(com_speeds->integer)
-		startTime = Sys_Milliseconds ();
+		startTime = sysmillisecs ();
 	else
 		startTime = 0;	/* quite a compiler warning */
 
@@ -1130,7 +1130,7 @@ svframe(int msec)
 	}
 
 	if(com_speeds->integer)
-		time_game = Sys_Milliseconds () - startTime;
+		time_game = sysmillisecs () - startTime;
 
 	/* check timeouts */
 	SV_CheckTimeouts();
@@ -1181,7 +1181,7 @@ SV_RateMsec(Client *client)
 		messageSize += UDPIP_HEADER_SIZE;
 
 	rateMsec = messageSize * 1000 / ((int)(rate * com_timescale->value));
-	rate = Sys_Milliseconds() - client->netchan.lastSentTime;
+	rate = sysmillisecs() - client->netchan.lastSentTime;
 
 	if(rate > rateMsec)
 		return 0;
@@ -1213,7 +1213,7 @@ svsendqueuedpackets()
 	if(sv_dlRate->integer){
 		/* Rate limiting. This is very imprecise for high
 		 * download rates due to millisecond timedelta resolution */
-		dlStart = Sys_Milliseconds();
+		dlStart = sysmillisecs();
 		deltaT	= dlNextRound - dlStart;
 
 		if(deltaT > 0){
@@ -1224,7 +1224,7 @@ svsendqueuedpackets()
 
 			if(numBlocks){
 				/* There are active downloads */
-				deltaT = Sys_Milliseconds() - dlStart;
+				deltaT = sysmillisecs() - dlStart;
 
 				delayT = 1000 * numBlocks *
 					 MAX_DOWNLOAD_BLKSIZE;

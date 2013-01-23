@@ -523,7 +523,7 @@ readytosend(void)
 		return qtrue;
 	/* send every frame for LAN */
 	if(cl_lanForcePackets->integer &&
-	   Sys_IsLANAddress(clc.netchan.remoteAddress))
+	   sysisLANaddr(clc.netchan.remoteAddress))
 		return qtrue;
 	/* check for exceeding cl_maxpackets */
 	if(cl_maxpackets->integer < 15)

@@ -577,7 +577,7 @@ GLimp_Init(void)
 		ri.cvarsetstr("com_abnormalExit", "0");
 	}
 
-	ri.Sys_SetEnv("SDL_VIDEO_CENTERED", r_centerWindow->integer ? "1" : "");
+	ri.syssetenv("SDL_VIDEO_CENTERED", r_centerWindow->integer ? "1" : "");
 
 	ri.Sys_GLimpInit( );
 

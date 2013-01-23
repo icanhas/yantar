@@ -784,7 +784,7 @@ CL_DemoCompleted(void)
 	if(cl_timedemo && cl_timedemo->integer){
 		int time;
 
-		time = Sys_Milliseconds() - clc.timeDemoStart;
+		time = sysmillisecs() - clc.timeDemoStart;
 		if(time > 0){
 			/* Millisecond times are frame durations:
 			 * minimum/average/maximum/std deviation */
@@ -2054,7 +2054,7 @@ CL_CheckForResend(void)
 		/* requesting a challenge .. IPv6 users always get in as authorize server supports no ipv6. */
 #ifndef STANDALONE
 		if(!com_standalone->integer && clc.serverAddress.type ==
-		   NA_IP && !Sys_IsLANAddress(clc.serverAddress))
+		   NA_IP && !sysisLANaddr(clc.serverAddress))
 			CL_RequestAuthorization();
 #endif
 
@@ -2583,7 +2583,7 @@ clframe(int msec)
 		if(clc.cURLDisconnected){
 			cls.simframetime = msec;	/* save the msec before checking pause */
 			cls.simtime += cls.simframetime;	/* decide the simulation time */
-			cls.realframetime = Sys_Milliseconds() - lasttime;
+			cls.realframetime = sysmillisecs() - lasttime;
 			cls.realtime += cls.realframetime;
 			SCR_UpdateScreen();
 			S_Update();
@@ -2656,7 +2656,7 @@ clframe(int msec)
 
 	cls.simframetime = msec;	/* save the msec before checking pause */
 	cls.simtime += cls.simframetime;	/* decide the simulation time */
-	cls.realframetime = Sys_Milliseconds() - lasttime;
+	cls.realframetime = sysmillisecs() - lasttime;
 	cls.realtime += cls.realframetime;
 
 	if(cl_timegraph->integer)
@@ -2787,7 +2787,7 @@ CL_RefMalloc(int size)
 int
 CL_ScaledMilliseconds(void)
 {
-	return Sys_Milliseconds()*com_timescale->value;
+	return sysmillisecs()*com_timescale->value;
 }
 
 void
@@ -2876,10 +2876,10 @@ clinitref(void)
 
 	ri.ftol = Q_ftol;
 
-	ri.Sys_SetEnv = Sys_SetEnv;
+	ri.syssetenv = syssetenv;
 	ri.Sys_GLimpSafeInit = Sys_GLimpSafeInit;
 	ri.Sys_GLimpInit = Sys_GLimpInit;
-	ri.Sys_LowPhysicalMemory = Sys_LowPhysicalMemory;
+	ri.syslowmem = syslowmem;
 
 	ret = GetRefAPI(REF_API_VERSION, &ri);
 
@@ -3394,7 +3394,7 @@ CL_ServerInfoPacket(Netaddr from, Bitmsg *msg)
 		if(cl_pinglist[i].adr.port && !cl_pinglist[i].time &&
 		   NET_CompareAdr(from, cl_pinglist[i].adr)){
 			/* calc ping time */
-			cl_pinglist[i].time = Sys_Milliseconds() -
+			cl_pinglist[i].time = sysmillisecs() -
 					      cl_pinglist[i].start;
 			comdprintf("ping time %dms from %s\n",
 				cl_pinglist[i].time, NET_AdrToString(
@@ -3775,7 +3775,7 @@ CL_GetPing(int n, char *buf, int buflen, int *pingtime)
 	time = cl_pinglist[n].time;
 	if(!time){
 		/* check for timeout */
-		time = Sys_Milliseconds() - cl_pinglist[n].start;
+		time = sysmillisecs() - cl_pinglist[n].start;
 		maxPing = cvargeti("cl_maxPing");
 		if(maxPing < 100)
 			maxPing = 100;
@@ -3843,7 +3843,7 @@ CL_GetFreePing(void)
 		/* find free ping slot */
 		if(pingptr->adr.port){
 			if(!pingptr->time){
-				if(Sys_Milliseconds() - pingptr->start < 500)
+				if(sysmillisecs() - pingptr->start < 500)
 					/* still waiting for response */
 					continue;
 			}else if(pingptr->time < 500)
@@ -3862,7 +3862,7 @@ CL_GetFreePing(void)
 	oldest	= INT_MIN;
 	for(i=0; i<MAX_PINGREQUESTS; i++, pingptr++){
 		/* scan for oldest */
-		time = Sys_Milliseconds() - pingptr->start;
+		time = sysmillisecs() - pingptr->start;
 		if(time > oldest){
 			oldest	= time;
 			best	= pingptr;
@@ -3910,7 +3910,7 @@ CL_Ping_f(void)
 	pingptr = CL_GetFreePing();
 
 	memcpy(&pingptr->adr, &to, sizeof(Netaddr));
-	pingptr->start	= Sys_Milliseconds();
+	pingptr->start	= sysmillisecs();
 	pingptr->time	= 0;
 
 	CL_SetServerInfoByAddress(pingptr->adr, NULL, 0);
@@ -3975,7 +3975,7 @@ CL_UpdateVisiblePings_f(int source)
 						memcpy(&cl_pinglist[j].adr,
 							&server[i].adr,
 							sizeof(Netaddr));
-						cl_pinglist[j].start = Sys_Milliseconds();
+						cl_pinglist[j].start = sysmillisecs();
 						cl_pinglist[j].time = 0;
 						NET_OutOfBandPrint(NS_CLIENT,
 							cl_pinglist[j].adr,
@@ -4067,5 +4067,5 @@ CL_ServerStatus_f(void)
 void
 CL_ShowIP_f(void)
 {
-	Sys_ShowIP();
+	sysshowIP();
 }

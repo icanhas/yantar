@@ -35,10 +35,10 @@ NET_StringToAdr(char *s, Netaddr *a)
 
 /*
  * ==================
- * Sys_SendPacket
+ * syssendpacket
  * ==================
  */
 void
-Sys_SendPacket(int length, void *data, Netaddr to)
+syssendpacket(int length, void *data, Netaddr to)
 {
 }

@@ -583,7 +583,7 @@ void fieldcompletecmd(char *cmd,
  * MISC
  */
 
-/* returned by Sys_GetProcessorFeatures */
+/* returned by sysgetprocessorfeatures */
 typedef enum {
 	CF_RDTSC		= 1 << 0,
 	CF_MMX			= 1 << 1,
@@ -832,65 +832,65 @@ typedef enum {
 	DT_OK_CANCEL
 } dialogType_t;
 
-void Sys_Init(void);
+void sysinit(void);
 
 /* general development dll loading for virtual machine testing */
-void* QDECL Sys_LoadGameDll(const char *name, 
+void* QDECL sysloadgamedll(const char *name, 
 			intptr_t (QDECL **entryPoint)(int, ...),
 			intptr_t (QDECL *systemcalls)(intptr_t, ...));
-void 	Sys_UnloadDll(void *dllHandle);
-void 	Sys_UnloadGame(void);
-void* Sys_GetGameAPI(void *parms);
-void 	Sys_UnloadCGame(void);
-void* Sys_GetCGameAPI(void);
-void 	Sys_UnloadUI(void);
-void* Sys_GetUIAPI(void);
+void 	sysunloaddll(void *dllHandle);
+void 	sysunloadgame(void);
+void* sysgetgameapi(void *parms);
+void 	sysunloadcgame(void);
+void* sysgetcgameapi(void);
+void 	sysunloadui(void);
+void* sysgetuiapi(void);
 
 /* bot libraries */
-void 	Sys_UnloadBotLib(void);
-void* Sys_GetBotLibAPI(void *parms);
-char* Sys_GetCurrentUser(void);
-void QDECL Sys_Error(const char *error,
+void 	sysunloadbotlib(void);
+void* sysgetbotlibapi(void *parms);
+char* sysgetcurrentuser(void);
+void QDECL syserrorf(const char *error,
 			...) __attribute__ ((noreturn, format (printf, 1, 2)));
-void 	Sys_Quit(void) __attribute__ ((noreturn));
-char* Sys_GetClipboardData(void);	/* note that this isn't journaled... */
-void 	Sys_Print(const char *msg);
-/* Sys_Milliseconds should only be used for profiling purposes,
+void 	sysquit(void) __attribute__ ((noreturn));
+char* sysgetclipboarddata(void);	/* note that this isn't journaled... */
+void 	sysprint(const char *msg);
+/* sysmillisecs should only be used for profiling purposes,
  * any game related timing information should come from event timestamps */
-int 	Sys_Milliseconds(void);
-void 	Sys_snapv3(float *v);
-qbool Sys_RandomBytes(byte *string, int len);
+int 	sysmillisecs(void);
+void 	syssnapv3(float *v);
+qbool sysrandbytes(byte *string, int len);
 /* the system console is shown when a dedicated server is running */
-void 	Sys_DisplaySystemConsole(qbool show);
-CPUfeatures Sys_GetProcessorFeatures(void);
-void 	Sys_SetErrorText(const char *text);
-void 	Sys_SendPacket(int length, const void *data, Netaddr to);
+void 	sysdisplaysysconsole(qbool show);
+CPUfeatures sysgetprocessorfeatures(void);
+void 	sysseterrortext(const char *text);
+void 	syssendpacket(int length, const void *data, Netaddr to);
 /* Does NOT parse port numbers, only base addresses. */
-qbool Sys_StringToAdr(const char *s, Netaddr *a, Netaddrtype family);
-qbool Sys_IsLANAddress(Netaddr adr);
-void 	Sys_ShowIP(void);
-qbool Sys_Mkdir(const char *path);
-FILE* Sys_Mkfifo(const char *ospath);
-char* Sys_Cwd(void);
-void 	Sys_SetDefaultInstallPath(const char *path);
-char* Sys_DefaultInstallPath(void);
+qbool sysstrtoaddr(const char *s, Netaddr *a, Netaddrtype family);
+qbool sysisLANaddr(Netaddr adr);
+void 	sysshowIP(void);
+qbool sysmkdir(const char *path);
+FILE* sysmkfifo(const char *ospath);
+char* syspwd(void);
+void 	syssetdefaultinstallpath(const char *path);
+char* sysgetdefaultinstallpath(void);
 #ifdef MACOS_X
-char* Sys_DefaultAppPath(void);
+char* sysgetdefaultapppath(void);
 #endif
-void 	Sys_SetDefaultHomePath(const char *path);
-char* Sys_DefaultHomePath(void);
-const char* Sys_TempPath(void);
-const char* Sys_Dirname(char *path);
-const char* Sys_Basename(char *path);
-char* Sys_ConsoleInput(void);
-char** Sys_ListFiles(const char *directory, const char *extension, char *filter,
+void 	syssetdefaulthomepath(const char *path);
+char* sysgetdefaulthomepath(void);
+const char* systemppath(void);
+const char* sysdirname(char *path);
+const char* sysbasename(char *path);
+char* sysconsoleinput(void);
+char** syslistfiles(const char *directory, const char *extension, char *filter,
 			int *numfiles,
 			qbool wantsubs);
-void 	Sys_FreeFileList(char **list);
-void 	Sys_Sleep(int msec);
-qbool Sys_LowPhysicalMemory(void);
-void 	Sys_SetEnv(const char *name, const char *value);
-dialogResult_t Sys_Dialog(dialogType_t type, const char *message,
+void 	sysfreefilelist(char **list);
+void 	syssleep(int msec);
+qbool syslowmem(void);
+void 	syssetenv(const char *name, const char *value);
+dialogResult_t sysmkdialog(dialogType_t type, const char *message,
 				const char *title);
 
 /*

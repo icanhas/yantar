@@ -352,10 +352,10 @@ struct Refimport {
 	long (*ftol)(float f);
 
 	/* system stuff */
-	void (*Sys_SetEnv)(const char *name, const char *value);
+	void (*syssetenv)(const char *name, const char *value);
 	void (*Sys_GLimpSafeInit)(void);
 	void (*Sys_GLimpInit)(void);
-	qbool (*Sys_LowPhysicalMemory)(void);
+	qbool (*syslowmem)(void);
 };
 
 #endif	/* __TR_PUBLIC_H */

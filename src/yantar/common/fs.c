@@ -456,7 +456,7 @@ fscreatepath(char *OSPath)
 		if(*ofs == PATH_SEP){
 			/* create the directory */
 			*ofs = 0;
-			if(!Sys_Mkdir (path))
+			if(!sysmkdir (path))
 				comerrorf(ERR_FATAL,
 					"fscreatepath: failed to create path \"%s\"",
 					path);
@@ -809,7 +809,7 @@ fscreatepipefile(const char *filename)
 
 	FS_CheckFilenameIsNotExecutable(ospath, __func__);
 
-	fifo = Sys_Mkfifo(ospath);
+	fifo = sysmkfifo(ospath);
 	if(fifo){
 		fsh[f].handleFiles.file.o = fifo;
 		fsh[f].handleSync = qfalse;
@@ -2010,7 +2010,7 @@ FS_ListFilteredFiles(const char *path, const char *extension, char *filter,
 					search->dir->path, search->dir->gamedir,
 					path);
 				sysFiles =
-					Sys_ListFiles(netpath, extension, filter,
+					syslistfiles(netpath, extension, filter,
 						&numSysFiles,
 						qfalse);
 				for(i = 0; i < numSysFiles; i++){
@@ -2019,7 +2019,7 @@ FS_ListFilteredFiles(const char *path, const char *extension, char *filter,
 					nfiles = FS_AddFileToList(name, list,
 						nfiles);
 				}
-				Sys_FreeFileList(sysFiles);
+				sysfreefilelist(sysFiles);
 			}
 		}
 	}
@@ -2099,7 +2099,7 @@ fsgetfilelist(const char *path, const char *extension, char *listbuf,
  * Naive implementation. Concatenates three lists into a
  * new list, and frees the old lists from the heap.
  *
- * FIXME TTimo those two should move to common.c next to Sys_ListFiles
+ * FIXME TTimo those two should move to common.c next to syslistfiles
  */
 static unsigned int
 Sys_CountFileList(char **list)
@@ -2168,8 +2168,8 @@ fsgetmodlist(char *listbuf, int bufsize)
 	*listbuf = 0;
 	nMods = nTotal = 0;
 
-	pFiles0 = Sys_ListFiles(fs_homepath->string, NULL, NULL, &dummy, qtrue);
-	pFiles1 = Sys_ListFiles(fs_basepath->string, NULL, NULL, &dummy, qtrue);
+	pFiles0 = syslistfiles(fs_homepath->string, NULL, NULL, &dummy, qtrue);
+	pFiles1 = syslistfiles(fs_basepath->string, NULL, NULL, &dummy, qtrue);
 	/* we searched for mods in the three paths
 	 * it is likely that we have duplicate names now, which we will cleanup below */
 	pFiles = Sys_ConcatenateFileLists(pFiles0, pFiles1);
@@ -2200,9 +2200,9 @@ fsgetmodlist(char *listbuf, int bufsize)
 			 *   we will try each three of them here (yes, it's a bit messy) */
 			path = fsbuildospath(fs_basepath->string, name, "");
 			nPaks	= 0;
-			pPaks	= Sys_ListFiles(path, ".pk3", NULL, &nPaks,
+			pPaks	= syslistfiles(path, ".pk3", NULL, &nPaks,
 				qfalse);
-			Sys_FreeFileList(pPaks);	/* we only use Sys_ListFiles to check wether .pk3 files are present */
+			sysfreefilelist(pPaks);	/* we only use syslistfiles to check wether .pk3 files are present */
 
 			/* try on home path */
 			if(nPaks <= 0){
@@ -2211,9 +2211,9 @@ fsgetmodlist(char *listbuf, int bufsize)
 						"");
 				nPaks	= 0;
 				pPaks	=
-					Sys_ListFiles(path, ".pk3", NULL, &nPaks,
+					syslistfiles(path, ".pk3", NULL, &nPaks,
 						qfalse);
-				Sys_FreeFileList(pPaks);
+				sysfreefilelist(pPaks);
 			}
 
 			if(nPaks > 0){
@@ -2249,7 +2249,7 @@ fsgetmodlist(char *listbuf, int bufsize)
 			}
 		}
 	}
-	Sys_FreeFileList(pFiles);
+	sysfreefilelist(pFiles);
 
 	return nMods;
 }
@@ -2507,8 +2507,8 @@ fsaddgamedir(const char *path, const char *dir)
 	 */
 	Q_strncpyz(curpath, fsbuildospath(path, dir, ""), sizeof(curpath));
 	curpath[strlen(curpath) - 1] = '\0';	/* strip trailing slash */
-	pakfiles = Sys_ListFiles(curpath, ".pk3", NULL, &nfiles, qfalse);
-	pakdirs = Sys_ListFiles(curpath, "/", NULL, &ndirs, qfalse);
+	pakfiles = syslistfiles(curpath, ".pk3", NULL, &nfiles, qfalse);
+	pakdirs = syslistfiles(curpath, "/", NULL, &ndirs, qfalse);
 	qsort(pakfiles, nfiles, sizeof(char *), paksort);
 	qsort(pakdirs, ndirs, sizeof(char *), paksort);
 
@@ -2567,8 +2567,8 @@ fsaddgamedir(const char *path, const char *dir)
 			++j;
 		}
 	}
-	Sys_FreeFileList(pakfiles);
-	Sys_FreeFileList(pakdirs);
+	sysfreefilelist(pakfiles);
+	sysfreefilelist(pakdirs);
 
 	/* add the directory to the search path */
 	sp = zalloc(sizeof(*sp));
@@ -2815,7 +2815,7 @@ FS_Startup(const char *gameName)
 	fs_packFiles = 0;
 	fs_debug = cvarget("fs_debug", "0", 0);
 	fs_basepath = cvarget("fs_basepath",
-		Sys_DefaultInstallPath(), CVAR_INIT|CVAR_PROTECTED);
+		sysgetdefaultinstallpath(), CVAR_INIT|CVAR_PROTECTED);
 	fs_basegame = cvarget("fs_basegame", "", CVAR_INIT);
 #ifdef _WIN32
 	/*
@@ -2826,7 +2826,7 @@ FS_Startup(const char *gameName)
 	 */
 	homePath = fs_basepath->string;
 #else
-	homePath = Sys_DefaultHomePath();
+	homePath = sysgetdefaulthomepath();
 	if(!homePath || !homePath[0])
 		homePath = fs_basepath->string;		/* fallback */
 
@@ -2841,7 +2841,7 @@ FS_Startup(const char *gameName)
 	/* fs_homepath is somewhat particular to *nix systems, only add if relevant */
 
 	#ifdef MACOS_X
-	fs_apppath = cvarget("fs_apppath", Sys_DefaultAppPath(),
+	fs_apppath = cvarget("fs_apppath", sysgetdefaultapppath(),
 		CVAR_INIT|CVAR_PROTECTED);
 	/* Make MacOSX also include the base path included with the .app bundle */
 	if(fs_apppath->string[0])

@@ -334,10 +334,10 @@ Sys_SockaddrToString(char *dest, int destlen, struct sockaddr *input)
 }
 
 /*
- * Sys_StringToAdr
+ * sysstrtoaddr
  */
 qbool
-Sys_StringToAdr(const char *s, Netaddr *a, Netaddrtype family)
+sysstrtoaddr(const char *s, Netaddr *a, Netaddrtype family)
 {
 	struct sockaddr_storage sadr;
 	sa_family_t fam;
@@ -631,17 +631,17 @@ NET_GetPacket(Netaddr *net_from, Bitmsg *net_message, fd_set *fdr)
 static char socksBuf[4096];
 
 /*
- * Sys_SendPacket
+ * syssendpacket
  */
 void
-Sys_SendPacket(int length, const void *data, Netaddr to)
+syssendpacket(int length, const void *data, Netaddr to)
 {
 	int ret = SOCKET_ERROR;
 	struct sockaddr_storage addr;
 
 	if(to.type != NA_BROADCAST && to.type != NA_IP && to.type != NA_IP6 &&
 	   to.type != NA_MULTICAST6){
-		comerrorf(ERR_FATAL, "Sys_SendPacket: bad address type");
+		comerrorf(ERR_FATAL, "syssendpacket: bad address type");
 		return;
 	}
 
@@ -699,12 +699,12 @@ Sys_SendPacket(int length, const void *data, Netaddr to)
 /* ============================================================================= */
 
 /*
- * Sys_IsLANAddress
+ * sysisLANaddr
  *
  * LAN clients will have their rate var ignored
  */
 qbool
-Sys_IsLANAddress(Netaddr adr)
+sysisLANaddr(Netaddr adr)
 {
 	int index, run, addrsize;
 	qbool differed;
@@ -782,10 +782,10 @@ Sys_IsLANAddress(Netaddr adr)
 }
 
 /*
- * Sys_ShowIP
+ * sysshowIP
  */
 void
-Sys_ShowIP(void)
+sysshowIP(void)
 {
 	int	i;
 	char	addrbuf[NET_ADDRSTRMAXLEN];
@@ -1296,7 +1296,7 @@ NET_GetLocalAddress(void)
 
 		freeifaddrs(ifap);
 
-		Sys_ShowIP();
+		sysshowIP();
 	}
 }
 #else
@@ -1345,7 +1345,7 @@ NET_GetLocalAddress(void)
 					(struct sockaddr*)&mask6);
 		}
 
-		Sys_ShowIP();
+		sysshowIP();
 	}
 
 	if(res)

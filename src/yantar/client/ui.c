@@ -553,7 +553,7 @@ CL_GetClipboardData(char *buf, int buflen)
 {
 	char *cbd;
 
-	cbd = Sys_GetClipboardData();
+	cbd = sysgetclipboarddata();
 
 	if(!cbd){
 		*buf = 0;
@@ -641,7 +641,7 @@ CL_UISystemCalls(intptr_t *args)
 		return 0;
 
 	case UI_MILLISECONDS:
-		return Sys_Milliseconds();
+		return sysmillisecs();
 
 	case UI_CVAR_REGISTER:
 		cvarregister(VMA(1), VMA(2), VMA(3), args[4]);

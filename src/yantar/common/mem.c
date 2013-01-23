@@ -614,7 +614,7 @@ Com_Touchmem(void)
 
 	Z_CheckHeap();
 
-	start	= Sys_Milliseconds();
+	start	= sysmillisecs();
 	sum	= 0;
 
 	j = hunk_low.permanent >> 2;
@@ -636,7 +636,7 @@ Com_Touchmem(void)
 			break;	/* all blocks have been hit */
 	}
 
-	end = Sys_Milliseconds();
+	end = sysmillisecs();
 	comprintf("Com_Touchmem: %i msec\n", end - start);
 }
 

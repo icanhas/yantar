@@ -367,7 +367,7 @@ CL_CgameSystemCalls(intptr_t *args)
 		comerrorf(ERR_DROP, "%s", (const char*)VMA(1));
 		return 0;
 	case CG_MILLISECONDS:
-		return Sys_Milliseconds();
+		return sysmillisecs();
 	case CG_CVAR_REGISTER:
 		cvarregister(VMA(1), VMA(2), VMA(3), args[4]);
 		return 0;
@@ -653,7 +653,7 @@ clinitCGame(void)
 	int t1, t2;
 	Vmmode interpret;
 
-	t1 = Sys_Milliseconds();
+	t1 = sysmillisecs();
 
 	/* put away the console */
 	Con_Close();
@@ -695,7 +695,7 @@ clinitCGame(void)
 	 */
 	clc.state = CA_PRIMED;
 
-	t2 = Sys_Milliseconds();
+	t2 = sysmillisecs();
 
 	comprintf("clinitCGame: %5.2f seconds\n", (t2-t1)/1000.0);
 
@@ -706,7 +706,7 @@ clinitCGame(void)
 	re.EndRegistration();
 
 	/* make sure everything is paged in */
-	if(!Sys_LowPhysicalMemory())
+	if(!syslowmem())
 		Com_Touchmem();
 
 	/* clear anything that got printed */
@@ -963,7 +963,7 @@ CL_SetCGameTime(void)
 	 * each time it is played back
 	 */
 	if(cl_timedemo->integer){
-		int	now = Sys_Milliseconds( );
+		int	now = sysmillisecs( );
 		int	frameDuration;
 
 		if(!clc.timeDemoStart){

@@ -825,7 +825,7 @@ IN_ProcessEvents(void)
 			/* wait until user stops dragging for 1 second, so
 			 * we aren't constantly recreating the GL context while
 			 * he tries to drag...*/
-			vidRestartTime = Sys_Milliseconds() + 1000;
+			vidRestartTime = sysmillisecs() + 1000;
 		}
 		break;
 		case SDL_ACTIVEEVENT:
@@ -867,7 +867,7 @@ IN_Frame(void)
 		IN_ActivateMouse( );
 
 	/* in case we had to delay actual restart of video system... */
-	if((vidRestartTime != 0) && (vidRestartTime < Sys_Milliseconds())){
+	if((vidRestartTime != 0) && (vidRestartTime < sysmillisecs())){
 		vidRestartTime = 0;
 		cbufaddstr("vid_restart");
 	}

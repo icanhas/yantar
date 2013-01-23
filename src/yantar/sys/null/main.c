@@ -49,11 +49,11 @@ Sys_mkdir(const char *path)
 }
 
 void
-Sys_Error(char *error, ...)
+syserrorf(char *error, ...)
 {
 	va_list argptr;
 
-	printf ("Sys_Error: ");
+	printf ("syserrorf: ");
 	va_start (argptr,error);
 	vprintf (error,argptr);
 	va_end (argptr);
@@ -63,36 +63,36 @@ Sys_Error(char *error, ...)
 }
 
 void
-Sys_Quit(void)
+sysquit(void)
 {
 	exit (0);
 }
 
 void
-Sys_UnloadGame(void)
+sysunloadgame(void)
 {
 }
 
 void    *
-Sys_GetGameAPI(void *parms)
+sysgetgameapi(void *parms)
 {
 	return NULL;
 }
 
 char *
-Sys_GetClipboardData(void)
+sysgetclipboarddata(void)
 {
 	return NULL;
 }
 
 int
-Sys_Milliseconds(void)
+sysmillisecs(void)
 {
 	return 0;
 }
 
 void
-Sys_Mkdir(char *path)
+sysmkdir(char *path)
 {
 }
 
@@ -114,7 +114,7 @@ Sys_FindClose(void)
 }
 
 void
-Sys_Init(void)
+sysinit(void)
 {
 }
 

@@ -383,7 +383,7 @@ Field_Paste(Field *edit)
 	char	*cbd;
 	int	pasteLen, i;
 
-	cbd = Sys_GetClipboardData();
+	cbd = sysgetclipboarddata();
 
 	if(!cbd)
 		return;

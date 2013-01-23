@@ -635,7 +635,7 @@ SV_FinalMessage(char *message)
 
 /*
  * Called when each game quits,
- * before Sys_Quit or Sys_Error
+ * before sysquit or syserrorf
  */
 void
 svshutdown(char *finalmsg)

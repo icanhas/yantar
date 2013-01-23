@@ -530,7 +530,7 @@ vmcreate(const char *module, intptr_t (*systemCalls)(intptr_t *),
 			comprintf("Try loading dll file %s\n", filename);
 
 			vm->dllHandle =
-				Sys_LoadGameDll(filename, &vm->entryPoint,
+				sysloadgamedll(filename, &vm->entryPoint,
 					VM_DllSyscall);
 
 			if(vm->dllHandle){
@@ -615,7 +615,7 @@ vmfree(Vm *vm)
 	if(vm->destroy)
 		vm->destroy(vm);
 	if(vm->dllHandle){
-		Sys_UnloadDll(vm->dllHandle);
+		sysunloaddll(vm->dllHandle);
 		Q_Memset(vm, 0, sizeof(*vm));
 	}
 #if 0	/* now automatically freed by hunk */

@@ -288,7 +288,7 @@ SV_GameSystemCalls(intptr_t *args)
 		comerrorf(ERR_DROP, "%s", (const char*)VMA(1));
 		return 0;
 	case G_MILLISECONDS:
-		return Sys_Milliseconds();
+		return sysmillisecs();
 	case G_CVAR_REGISTER:
 		cvarregister(VMA(1), VMA(2), VMA(3), args[4]);
 		return 0;

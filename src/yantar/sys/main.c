@@ -66,22 +66,22 @@ Sys_BinaryPath(void)
 }
 
 void
-Sys_SetDefaultInstallPath(const char *path)
+syssetdefaultinstallpath(const char *path)
 {
 	Q_strncpyz(installPath, path, sizeof(installPath));
 }
 
 char*
-Sys_DefaultInstallPath(void)
+sysgetdefaultinstallpath(void)
 {
 	if(*installPath)
 		return installPath;
 	else
-		return Sys_Cwd();
+		return syspwd();
 }
 
 char*
-Sys_DefaultAppPath(void)
+sysgetdefaultapppath(void)
 {
 	return Sys_BinaryPath();
 }
@@ -95,7 +95,7 @@ Sys_In_Restart_f(void)
 
 /* Handle new console input */
 char *
-Sys_ConsoleInput(void)
+sysconsoleinput(void)
 {
 	return CON_Input();
 }
@@ -113,13 +113,13 @@ Sys_Exit(int exitCode)
 }
 
 void
-Sys_Quit(void)
+sysquit(void)
 {
 	Sys_Exit(0);
 }
 
 CPUfeatures
-Sys_GetProcessorFeatures(void)
+sysgetprocessorfeatures(void)
 {
 	CPUfeatures f;
 	
@@ -139,13 +139,13 @@ Sys_GetProcessorFeatures(void)
 }
 
 void
-Sys_Init(void)
+sysinit(void)
 {
 	char pidbuf[16];
 
 	cmdadd("in_restart", Sys_In_Restart_f);
 	cvarsetstr("arch", OS_STRING " " ARCH_STRING);
-	cvarsetstr("username", Sys_GetCurrentUser());
+	cvarsetstr("username", sysgetcurrentuser());
 	Q_sprintf(pidbuf, sizeof(pidbuf), "%d", Sys_PID());
 	cvarget("pid", pidbuf, CVAR_ROM);
 	cvarsetdesc("pid", "process ID, for debugging purposes");
@@ -195,14 +195,14 @@ Sys_AnsiColorPrint(const char *msg)
 }
 
 void
-Sys_Print(const char *msg)
+sysprint(const char *msg)
 {
 	CON_LogWrite(msg);
 	CON_Print(msg);
 }
 
 void
-Sys_Error(const char *error, ...)
+syserrorf(const char *error, ...)
 {
 	va_list argptr;
 	char	string[1024];
@@ -211,7 +211,7 @@ Sys_Error(const char *error, ...)
 	Q_vsnprintf(string, sizeof(string), error, argptr);
 	va_end(argptr);
 
-	Sys_ErrorDialog(string);
+	syserrorfDialog(string);
 	Sys_Exit(3);
 }
 
@@ -241,10 +241,10 @@ Sys_FileTime(char *path)
 }
 
 void
-Sys_UnloadDll(void *dllHandle)
+sysunloaddll(void *dllHandle)
 {
 	if(!dllHandle){
-		comprintf("Sys_UnloadDll(NULL)\n");
+		comprintf("sysunloaddll(NULL)\n");
 		return;
 	}
 	Sys_UnloadLibrary(dllHandle);
@@ -299,7 +299,7 @@ Sys_LoadDll(const char *name, qbool useSystemLib)
 
 /* Used to load a development dll instead of a virtual machine */
 void *
-Sys_LoadGameDll(const char *name,
+sysloadgamedll(const char *name,
 	intptr_t (QDECL **entryPoint) (int, ...),
 	intptr_t (*systemcalls)(intptr_t, ...))
 {
@@ -311,7 +311,7 @@ Sys_LoadGameDll(const char *name,
 	libHandle = Sys_LoadLibrary(name);
 
 	if(!libHandle){
-		comprintf("Sys_LoadGameDll(%s) failed:\n\"%s\"\n", name,
+		comprintf("sysloadgamedll(%s) failed:\n\"%s\"\n", name,
 			Sys_LibraryError());
 		return NULL;
 	}
@@ -321,14 +321,14 @@ Sys_LoadGameDll(const char *name,
 
 	if(!*entryPoint || !dllEntry){
 		comprintf (
-			"Sys_LoadGameDll(%s) failed to find vmMain function:\n\"%s\" !\n",
+			"sysloadgamedll(%s) failed to find vmMain function:\n\"%s\" !\n",
 			name, Sys_LibraryError( ));
 		Sys_UnloadLibrary(libHandle);
 
 		return NULL;
 	}
 
-	comprintf ("Sys_LoadGameDll(%s) found vmMain function at %p\n", name,
+	comprintf ("sysloadgamedll(%s) found vmMain function at %p\n", name,
 		*entryPoint);
 	dllEntry(systemcalls);
 	return libHandle;
@@ -409,7 +409,7 @@ main(int argc, char **argv)
 
 	if(SDL_VERSIONNUM(ver->major, ver->minor, ver->patch) <
 	   SDL_VERSIONNUM(MINSDL_MAJOR, MINSDL_MINOR, MINSDL_PATCH)){
-		Sys_Dialog(DT_ERROR,
+		sysmkdialog(DT_ERROR,
 			va(
 				"SDL version " MINSDL_VERSION
 				" or greater is required, "
@@ -421,10 +421,10 @@ main(int argc, char **argv)
 #endif
 	Sys_PlatformInit( );
 	/* Set the initial time base */
-	Sys_Milliseconds( );
+	sysmillisecs( );
 	Sys_ParseArgs(argc, argv);
-	Sys_SetBinaryPath(Sys_Dirname(argv[ 0 ]));
-	Sys_SetDefaultInstallPath(DEFAULT_BASEDIR);
+	Sys_SetBinaryPath(sysdirname(argv[ 0 ]));
+	syssetdefaultinstallpath(DEFAULT_BASEDIR);
 
 	/* Concatenate the command line for passing to Com_Init */
 	for(i = 1; i < argc; i++){

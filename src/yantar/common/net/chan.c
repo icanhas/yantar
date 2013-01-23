@@ -122,7 +122,7 @@ Netchan_TransmitNextFragment(Netchan *chan)
 	NET_SendPacket(chan->sock, send.cursize, send.data, chan->remoteAddress);
 
 	/* Store send time and size of this packet for rate control */
-	chan->lastSentTime	= Sys_Milliseconds();
+	chan->lastSentTime	= sysmillisecs();
 	chan->lastSentSize	= send.cursize;
 
 	if(showpackets->integer)
@@ -194,7 +194,7 @@ Netchan_Transmit(Netchan *chan, int length, const byte *data)
 	NET_SendPacket(chan->sock, send.cursize, send.data, chan->remoteAddress);
 
 	/* Store send time and size of this packet for rate control */
-	chan->lastSentTime	= Sys_Milliseconds();
+	chan->lastSentTime	= sysmillisecs();
 	chan->lastSentSize	= send.cursize;
 
 	if(showpackets->integer)
@@ -468,7 +468,7 @@ NET_QueuePacket(int length, const void *data, Netaddr to,
 	Q_Memcpy(new->data, data, length);
 	new->length = length;
 	new->to = to;
-	new->release = Sys_Milliseconds() +
+	new->release = sysmillisecs() +
 		       (int)((float)offset / com_timescale->value);
 	new->next = NULL;
 
@@ -492,10 +492,10 @@ NET_FlushPacketQueue(void)
 	int now;
 
 	while(packetQueue){
-		now = Sys_Milliseconds();
+		now = sysmillisecs();
 		if(packetQueue->release >= now)
 			break;
-		Sys_SendPacket(packetQueue->length, packetQueue->data,
+		syssendpacket(packetQueue->length, packetQueue->data,
 			packetQueue->to);
 		last = packetQueue;
 		packetQueue = packetQueue->next;
@@ -526,7 +526,7 @@ NET_SendPacket(Netsrc sock, int length, const void *data, Netaddr to)
 	else if(sock == NS_SERVER && sv_packetdelay->integer > 0)
 		NET_QueuePacket(length, data, to, sv_packetdelay->integer);
 	else
-		Sys_SendPacket(length, data, to);
+		syssendpacket(length, data, to);
 }
 
 /*
@@ -631,7 +631,7 @@ NET_StringToAdr(const char *s, Netaddr *a, Netaddrtype family)
 		search = base;
 	}
 
-	if(!Sys_StringToAdr(search, a, family)){
+	if(!sysstrtoaddr(search, a, family)){
 		a->type = NA_BAD;
 		return 0;
 	}

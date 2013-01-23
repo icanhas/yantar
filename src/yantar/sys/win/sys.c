@@ -64,10 +64,10 @@ Sys_SetFloatEnv(void)
 }
 
 /*
- * Sys_DefaultHomePath
+ * sysgetdefaulthomepath
  */
 char *
-Sys_DefaultHomePath(void)
+sysgetdefaulthomepath(void)
 {
 	TCHAR szPath[MAX_PATH];
 	FARPROC qSHGetFolderPath;
@@ -109,10 +109,10 @@ Sys_DefaultHomePath(void)
 }
 
 /*
- * Sys_TempPath
+ * systemppath
  */
 const char *
-Sys_TempPath(void)
+systemppath(void)
 {
 	static TCHAR path[ MAX_PATH ];
 	DWORD length;
@@ -120,17 +120,17 @@ Sys_TempPath(void)
 	length = GetTempPath(sizeof(path), path);
 
 	if(length > sizeof(path) || length == 0)
-		return Sys_DefaultHomePath( );
+		return sysgetdefaulthomepath( );
 	else
 		return path;
 }
 
 /*
- * Sys_Milliseconds
+ * sysmillisecs
  */
 int sys_timeBase;
 int
-Sys_Milliseconds(void)
+sysmillisecs(void)
 {
 	int sys_curtime;
 	static qbool initialized = qfalse;
@@ -145,10 +145,10 @@ Sys_Milliseconds(void)
 }
 
 /*
- * Sys_RandomBytes
+ * sysrandbytes
  */
 qbool
-Sys_RandomBytes(byte *string, int len)
+sysrandbytes(byte *string, int len)
 {
 	HCRYPTPROV prov;
 
@@ -166,10 +166,10 @@ Sys_RandomBytes(byte *string, int len)
 }
 
 /*
- * Sys_GetCurrentUser
+ * sysgetcurrentuser
  */
 char *
-Sys_GetCurrentUser(void)
+sysgetcurrentuser(void)
 {
 	static char s_userName[1024];
 	unsigned long size = sizeof(s_userName);
@@ -184,10 +184,10 @@ Sys_GetCurrentUser(void)
 }
 
 /*
- * Sys_GetClipboardData
+ * sysgetclipboarddata
  */
 char *
-Sys_GetClipboardData(void)
+sysgetclipboarddata(void)
 {
 	char *data = NULL;
 	char *cliptext;
@@ -212,10 +212,10 @@ Sys_GetClipboardData(void)
 #define MEM_THRESHOLD 96*1024*1024
 
 /*
- * Sys_LowPhysicalMemory
+ * syslowmem
  */
 qbool
-Sys_LowPhysicalMemory(void)
+syslowmem(void)
 {
 	MEMORYSTATUS stat;
 	GlobalMemoryStatus (&stat);
@@ -223,10 +223,10 @@ Sys_LowPhysicalMemory(void)
 }
 
 /*
- * Sys_Basename
+ * sysbasename
  */
 const char *
-Sys_Basename(char *path)
+sysbasename(char *path)
 {
 	static char base[ MAX_OSPATH ] = { 0 };
 	int length;
@@ -252,10 +252,10 @@ Sys_Basename(char *path)
 }
 
 /*
- * Sys_Dirname
+ * sysdirname
  */
 const char *
-Sys_Dirname(char *path)
+sysdirname(char *path)
 {
 	static char dir[ MAX_OSPATH ] = { 0 };
 	int length;
@@ -272,10 +272,10 @@ Sys_Dirname(char *path)
 }
 
 /*
- * Sys_Mkdir
+ * sysmkdir
  */
 qbool
-Sys_Mkdir(const char *path)
+sysmkdir(const char *path)
 {
 	if(!CreateDirectory(path, NULL))
 		if(GetLastError( ) != ERROR_ALREADY_EXISTS)
@@ -285,20 +285,20 @@ Sys_Mkdir(const char *path)
 }
 
 /*
- * Sys_Mkfifo
+ * sysmkfifo
  * Noop on windows because named pipes do not function the same way
  */
 FILE *
-Sys_Mkfifo(const char *ospath)
+sysmkfifo(const char *ospath)
 {
 	return NULL;
 }
 
 /*
- * Sys_Cwd
+ * syspwd
  */
 char *
-Sys_Cwd(void)
+syspwd(void)
 {
 	static char cwd[MAX_OSPATH];
 
@@ -396,10 +396,10 @@ strgtr(const char *s0, const char *s1)
 }
 
 /*
- * Sys_ListFiles
+ * syslistfiles
  */
 char **
-Sys_ListFiles(const char *directory, const char *extension, char *filter,
+syslistfiles(const char *directory, const char *extension, char *filter,
 	      int *numfiles,
 	      qbool wantsubs)
 {
@@ -493,10 +493,10 @@ Sys_ListFiles(const char *directory, const char *extension, char *filter,
 }
 
 /*
- * Sys_FreeFileList
+ * sysfreefilelist
  */
 void
-Sys_FreeFileList(char **list)
+sysfreefilelist(char **list)
 {
 	int i;
 
@@ -511,12 +511,12 @@ Sys_FreeFileList(char **list)
 
 
 /*
- * Sys_Sleep
+ * syssleep
  *
  * Block execution for msec or until input is received.
  */
 void
-Sys_Sleep(int msec)
+syssleep(int msec)
 {
 	if(msec == 0)
 		return;
@@ -527,7 +527,7 @@ Sys_Sleep(int msec)
 	else
 		WaitForSingleObject(GetStdHandle(STD_INPUT_HANDLE), msec);
 #else
-	/* Client Sys_Sleep doesn't support waiting on stdin */
+	/* Client syssleep doesn't support waiting on stdin */
 	if(msec < 0)
 		return;
 
@@ -536,14 +536,14 @@ Sys_Sleep(int msec)
 }
 
 /*
- * Sys_ErrorDialog
+ * syserrorfDialog
  *
  * Display an error message
  */
 void
-Sys_ErrorDialog(const char *error)
+syserrorfDialog(const char *error)
 {
-	if(Sys_Dialog(DT_YES_NO, va("%s. Copy console log to clipboard?", error),
+	if(sysmkdialog(DT_YES_NO, va("%s. Copy console log to clipboard?", error),
 		   "Error") == DR_YES){
 		HGLOBAL memoryHandle;
 		char	*clipMemory;
@@ -576,12 +576,12 @@ Sys_ErrorDialog(const char *error)
 }
 
 /*
- * Sys_Dialog
+ * sysmkdialog
  *
  * Display a win32 dialog box
  */
 dialogResult_t
-Sys_Dialog(dialogType_t type, const char *message, const char *title)
+sysmkdialog(dialogType_t type, const char *message, const char *title)
 {
 	UINT uType;
 
@@ -701,12 +701,12 @@ Sys_PlatformExit(void)
 }
 
 /*
- * Sys_SetEnv
+ * syssetenv
  *
  * set/unset environment variables (empty value removes it)
  */
 void
-Sys_SetEnv(const char *name, const char *value)
+syssetenv(const char *name, const char *value)
 {
 	if(value)
 		_putenv(va("%s=%s", name, value));
