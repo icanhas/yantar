@@ -35,7 +35,7 @@ R_CreateVBO(const char *name, byte * vertexes, int vertexesSize, vboUsage_t usag
 	/* make sure the render thread is stopped */
 	R_SyncRenderThread();
 
-	vbo =  ri.hunkalloc(sizeof(*vbo), h_low);
+	vbo =  ri.hunkalloc(sizeof(*vbo), Hlow);
 	tr.vbos[tr.numVBOs] = vbo;
 	tr.numVBOs++;
 	memset(vbo, 0, sizeof(*vbo));
@@ -87,7 +87,7 @@ R_CreateVBO2(const char *name, int nverts, srfVert_t *verts,
 	/* make sure the render thread is stopped */
 	R_SyncRenderThread();
 
-	vbo = ri.hunkalloc(sizeof(*vbo), h_low);
+	vbo = ri.hunkalloc(sizeof(*vbo), Hlow);
 	tr.vbos[tr.numVBOs] = vbo;
 	tr.numVBOs++;
 	memset(vbo, 0, sizeof(*vbo));
@@ -336,7 +336,7 @@ R_CreateIBO(const char *name, byte *indexes, int indexesSize, vboUsage_t usage)
 	/* make sure the render thread is stopped */
 	R_SyncRenderThread();
 
-	ibo = ri.hunkalloc(sizeof(*ibo), h_low);
+	ibo = ri.hunkalloc(sizeof(*ibo), Hlow);
 	tr.ibos[tr.numIBOs] = ibo;
 	tr.numIBOs++;
 	Q_strncpyz(ibo->name, name, sizeof(ibo->name));
@@ -388,7 +388,7 @@ R_CreateIBO2(const char *name, int ntris, srfTriangle_t *triangles, vboUsage_t u
 	/* make sure the render thread is stopped */
 	R_SyncRenderThread();
 
-	ibo = ri.hunkalloc(sizeof(*ibo), h_low);
+	ibo = ri.hunkalloc(sizeof(*ibo), Hlow);
 	tr.ibos[tr.numIBOs] = ibo;
 	tr.numIBOs++;
 	Q_strncpyz(ibo->name, name, sizeof(ibo->name));

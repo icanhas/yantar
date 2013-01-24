@@ -751,7 +751,7 @@ GeneratePermanentShader(void)
 		return tr.defaultShader;
 	}
 
-	newShader = ri.hunkalloc(sizeof(material_t), h_low);
+	newShader = ri.hunkalloc(sizeof(material_t), Hlow);
 
 	*newShader = shader;
 
@@ -773,12 +773,12 @@ GeneratePermanentShader(void)
 		if(!stages[i].active){
 			break;
 		}
-		newShader->stages[i]	= ri.hunkalloc(sizeof(stages[i]), h_low);
+		newShader->stages[i]	= ri.hunkalloc(sizeof(stages[i]), Hlow);
 		*newShader->stages[i]	= stages[i];
 
 		for(b = 0; b < NUM_TEXTURE_BUNDLES; b++){
 			size = newShader->stages[i]->bundle[b].numTexMods * sizeof(texModInfo_t);
-			newShader->stages[i]->bundle[b].texMods = ri.hunkalloc(size, h_low);
+			newShader->stages[i]->bundle[b].texMods = ri.hunkalloc(size, Hlow);
 			Q_Memcpy(newShader->stages[i]->bundle[b].texMods, stages[i].bundle[b].texMods, size);
 		}
 	}
@@ -1725,7 +1725,7 @@ ScanAndLoadShaderFiles(void)
 	}
 
 	/* build single large buffer */
-	s_shaderText = ri.hunkalloc(sum + numShaderFiles*2, h_low);
+	s_shaderText = ri.hunkalloc(sum + numShaderFiles*2, Hlow);
 	s_shaderText[ 0 ] = '\0';
 	textEnd = s_shaderText;
 
@@ -1763,7 +1763,7 @@ ScanAndLoadShaderFiles(void)
 
 	size += MAX_SHADERTEXT_HASH;
 
-	hashMem = ri.hunkalloc(size * sizeof(char *), h_low);
+	hashMem = ri.hunkalloc(size * sizeof(char *), Hlow);
 
 	for(i = 0; i < MAX_SHADERTEXT_HASH; i++){
 		shaderTextHashTable[i] = (char**)hashMem;

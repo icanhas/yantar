@@ -1535,7 +1535,7 @@ R_CreateImage2(const char *name, byte *pic, int width, int height, imgFlags_t fl
 		ri.Error(ERR_DROP, "R_CreateImage: MAX_DRAWIMAGES hit");
 	}
 
-	image = tr.images[tr.numImages] = ri.hunkalloc(sizeof(Img), h_low);
+	image = tr.images[tr.numImages] = ri.hunkalloc(sizeof(Img), Hlow);
 	image->texnum = 1024 + tr.numImages;
 	tr.numImages++;
 
@@ -2452,7 +2452,7 @@ RE_RegisterSkin(const char *name)
 		return 0;
 	}
 	tr.numSkins++;
-	skin = ri.hunkalloc(sizeof(skin_t), h_low);
+	skin = ri.hunkalloc(sizeof(skin_t), Hlow);
 	tr.skins[hSkin] = skin;
 	Q_strncpyz(skin->name, name, sizeof(skin->name));
 	skin->numSurfaces = 0;
@@ -2463,7 +2463,7 @@ RE_RegisterSkin(const char *name)
 	/* If not a .skin file, load as a single shader */
 	if(strcmp(name + strlen(name) - 5, ".skin")){
 		skin->numSurfaces = 1;
-		skin->surfaces[0] = ri.hunkalloc(sizeof(skin->surfaces[0]), h_low);
+		skin->surfaces[0] = ri.hunkalloc(sizeof(skin->surfaces[0]), Hlow);
 		skin->surfaces[0]->shader = R_FindShader(name, LIGHTMAP_NONE, qtrue);
 		return hSkin;
 	}
@@ -2497,7 +2497,7 @@ RE_RegisterSkin(const char *name)
 		/* parse the shader name */
 		token = CommaParse(&text_p);
 
-		surf = skin->surfaces[ skin->numSurfaces ] = ri.hunkalloc(sizeof(*skin->surfaces[0]), h_low);
+		surf = skin->surfaces[ skin->numSurfaces ] = ri.hunkalloc(sizeof(*skin->surfaces[0]), Hlow);
 		Q_strncpyz(surf->name, surfName, sizeof(surf->name));
 		surf->shader = R_FindShader(token, LIGHTMAP_NONE, qtrue);
 		skin->numSurfaces++;
@@ -2526,10 +2526,10 @@ R_InitSkins(void)
 	tr.numSkins = 1;
 
 	/* make the default skin have all default shaders */
-	skin = tr.skins[0] = ri.hunkalloc(sizeof(skin_t), h_low);
+	skin = tr.skins[0] = ri.hunkalloc(sizeof(skin_t), Hlow);
 	Q_strncpyz(skin->name, "<default skin>", sizeof(skin->name));
 	skin->numSurfaces = 1;
-	skin->surfaces[0] = ri.hunkalloc(sizeof(*skin->surfaces), h_low);
+	skin->surfaces[0] = ri.hunkalloc(sizeof(*skin->surfaces), Hlow);
 	skin->surfaces[0]->shader = tr.defaultShader;
 }
 

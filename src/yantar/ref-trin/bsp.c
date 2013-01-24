@@ -146,7 +146,7 @@ R_LoadLightmaps(Lump *l)
 		return;
 	}
 
-	tr.lightmaps = ri.hunkalloc(tr.numLightmaps * sizeof(Img *), h_low);
+	tr.lightmaps = ri.hunkalloc(tr.numLightmaps * sizeof(Img *), Hlow);
 	for(i = 0; i < tr.numLightmaps; i++){
 		/* expand the 24 bit on-disk to 32 bit */
 		buf_p = buf + i * LIGHTMAP_SIZE*LIGHTMAP_SIZE * 3;
@@ -217,7 +217,7 @@ R_LoadVisibility(Lump *l)
 	byte *buf;
 
 	len = (s_worldData.numClusters + 63) & ~63;
-	s_worldData.novis = ri.hunkalloc(len, h_low);
+	s_worldData.novis = ri.hunkalloc(len, Hlow);
 	Q_Memset(s_worldData.novis, 0xff, len);
 
 	len = l->filelen;
@@ -236,7 +236,7 @@ R_LoadVisibility(Lump *l)
 	}else{
 		byte *dest;
 
-		dest = ri.hunkalloc(len - 8, h_low);
+		dest = ri.hunkalloc(len - 8, Hlow);
 		Q_Memcpy(dest, buf + 8, len - 8);
 		s_worldData.vis = dest;
 	}
@@ -315,7 +315,7 @@ ParseFace(Dsurf *ds, Drawvert *verts, msurface_t *surf, int *indexes)
 	ofsIndexes	= sfaceSize;
 	sfaceSize	+= sizeof(int) * numIndexes;
 
-	cv = ri.hunkalloc(sfaceSize, h_low);
+	cv = ri.hunkalloc(sfaceSize, Hlow);
 	cv->surfaceType = SF_FACE;
 	cv->numPoints	= numPoints;
 	cv->numIndices	= numIndexes;
@@ -437,7 +437,7 @@ ParseTriSurf(Dsurf *ds, Drawvert *verts, msurface_t *surf, int *indexes)
 	numIndexes	= LittleLong(ds->numIndexes);
 
 	tri = ri.hunkalloc(sizeof(*tri) + numVerts * sizeof(tri->verts[0])
-		+ numIndexes * sizeof(tri->indexes[0]), h_low);
+		+ numIndexes * sizeof(tri->indexes[0]), Hlow);
 	tri->surfaceType	= SF_TRIANGLES;
 	tri->numVerts	= numVerts;
 	tri->numIndexes = numIndexes;
@@ -491,7 +491,7 @@ ParseFlare(Dsurf *ds, Drawvert *verts, msurface_t *surf, int *indexes)
 		surf->shader = tr.defaultShader;
 	}
 
-	flare = ri.hunkalloc(sizeof(*flare), h_low);
+	flare = ri.hunkalloc(sizeof(*flare), Hlow);
 	flare->surfaceType = SF_FLARE;
 
 	surf->data = (surfaceType_t*)flare;
@@ -1192,13 +1192,13 @@ R_MovePatchSurfacesToHunk(void)
 		if(grid->surfaceType != SF_GRID)
 			continue;
 		size = (grid->width * grid->height - 1) * sizeof(Drawvert) + sizeof(*grid);
-		hunkgrid = ri.hunkalloc(size, h_low);
+		hunkgrid = ri.hunkalloc(size, Hlow);
 		Q_Memcpy(hunkgrid, grid, size);
 
-		hunkgrid->widthLodError = ri.hunkalloc(grid->width * 4, h_low);
+		hunkgrid->widthLodError = ri.hunkalloc(grid->width * 4, Hlow);
 		Q_Memcpy(hunkgrid->widthLodError, grid->widthLodError, grid->width * 4);
 
-		hunkgrid->heightLodError = ri.hunkalloc(grid->height * 4, h_low);
+		hunkgrid->heightLodError = ri.hunkalloc(grid->height * 4, Hlow);
 		Q_Memcpy(hunkgrid->heightLodError, grid->heightLodError, grid->height * 4);
 
 		R_FreeSurfaceGridMesh(grid);
@@ -1239,7 +1239,7 @@ R_LoadSurfaces(Lump *surfs, Lump *verts, Lump *indexLump)
 	if(indexLump->filelen % sizeof(*indexes))
 		ri.Error (ERR_DROP, "LoadMap: funny lump size in %s",s_worldData.name);
 
-	out = ri.hunkalloc (count * sizeof(*out), h_low);
+	out = ri.hunkalloc (count * sizeof(*out), Hlow);
 
 	s_worldData.surfaces = out;
 	s_worldData.numsurfaces = count;
@@ -1298,7 +1298,7 @@ R_LoadSubmodels(Lump *l)
 		ri.Error (ERR_DROP, "LoadMap: funny lump size in %s",s_worldData.name);
 	count = l->filelen / sizeof(*in);
 
-	s_worldData.bmodels = out = ri.hunkalloc(count * sizeof(*out), h_low);
+	s_worldData.bmodels = out = ri.hunkalloc(count * sizeof(*out), Hlow);
 
 	for(i=0; i<count; i++, in++, out++){
 		model_t *model;
@@ -1361,7 +1361,7 @@ R_LoadNodesAndLeafs(Lump *nodeLump, Lump *leafLump)
 	numNodes	= nodeLump->filelen / sizeof(Dnode);
 	numLeafs	= leafLump->filelen / sizeof(Dleaf);
 
-	out = ri.hunkalloc ((numNodes + numLeafs) * sizeof(*out), h_low);
+	out = ri.hunkalloc ((numNodes + numLeafs) * sizeof(*out), Hlow);
 
 	s_worldData.nodes = out;
 	s_worldData.numnodes = numNodes + numLeafs;
@@ -1427,7 +1427,7 @@ R_LoadShaders(Lump *l)
 	if(l->filelen % sizeof(*in))
 		ri.Error (ERR_DROP, "LoadMap: funny lump size in %s",s_worldData.name);
 	count	= l->filelen / sizeof(*in);
-	out	= ri.hunkalloc (count*sizeof(*out), h_low);
+	out	= ri.hunkalloc (count*sizeof(*out), Hlow);
 
 	s_worldData.shaders = out;
 	s_worldData.numShaders = count;
@@ -1455,7 +1455,7 @@ R_LoadMarksurfaces(Lump *l)
 	if(l->filelen % sizeof(*in))
 		ri.Error (ERR_DROP, "LoadMap: funny lump size in %s",s_worldData.name);
 	count	= l->filelen / sizeof(*in);
-	out	= ri.hunkalloc (count*sizeof(*out), h_low);
+	out	= ri.hunkalloc (count*sizeof(*out), Hlow);
 
 	s_worldData.marksurfaces = out;
 	s_worldData.nummarksurfaces = count;
@@ -1483,7 +1483,7 @@ R_LoadPlanes(Lump *l)
 	if(l->filelen % sizeof(*in))
 		ri.Error (ERR_DROP, "LoadMap: funny lump size in %s",s_worldData.name);
 	count	= l->filelen / sizeof(*in);
-	out	= ri.hunkalloc (count*2*sizeof(*out), h_low);
+	out	= ri.hunkalloc (count*2*sizeof(*out), Hlow);
 
 	s_worldData.planes = out;
 	s_worldData.numplanes = count;
@@ -1530,7 +1530,7 @@ R_LoadFogs(Lump *l, Lump *brushesLump, Lump *sidesLump)
 
 	/* create fog strucutres for them */
 	s_worldData.numfogs = count + 1;
-	s_worldData.fogs = ri.hunkalloc (s_worldData.numfogs*sizeof(*out), h_low);
+	s_worldData.fogs = ri.hunkalloc (s_worldData.numfogs*sizeof(*out), Hlow);
 	out = s_worldData.fogs + 1;
 
 	if(!count){
@@ -1654,7 +1654,7 @@ R_LoadLightGrid(Lump *l)
 		return;
 	}
 
-	w->lightGridData = ri.hunkalloc(l->filelen, h_low);
+	w->lightGridData = ri.hunkalloc(l->filelen, Hlow);
 	Q_Memcpy(w->lightGridData, (void*)(fileBase + l->fileofs), l->filelen);
 
 	/* deal with overbright bits */
@@ -1683,7 +1683,7 @@ R_LoadEntities(Lump *l)
 	p = (char*)(fileBase + l->fileofs);
 
 	/* store for reference by the cgame */
-	w->entityString = ri.hunkalloc(l->filelen + 1, h_low);
+	w->entityString = ri.hunkalloc(l->filelen + 1, Hlow);
 	strcpy(w->entityString, p);
 	w->entityParsePoint = w->entityString;
 
@@ -1811,7 +1811,7 @@ RE_LoadWorldMap(const char *name)
 	Q_strncpyz(s_worldData.baseName, Q_skippath(s_worldData.name), sizeof(s_worldData.name));
 	Q_stripext(s_worldData.baseName, s_worldData.baseName, sizeof(s_worldData.baseName));
 
-	startMarker	= ri.hunkalloc(0, h_low);
+	startMarker	= ri.hunkalloc(0, Hlow);
 	c_gridVerts	= 0;
 
 	header		= (Dheader*)buffer.b;
@@ -1841,7 +1841,7 @@ RE_LoadWorldMap(const char *name)
 	R_LoadEntities(&header->lumps[LUMP_ENTITIES]);
 	R_LoadLightGrid(&header->lumps[LUMP_LIGHTGRID]);
 
-	s_worldData.dataSize = (byte*)ri.hunkalloc(0, h_low) - startMarker;
+	s_worldData.dataSize = (byte*)ri.hunkalloc(0, Hlow) - startMarker;
 
 	/* only set tr.world now that we know the entire level has loaded properly */
 	tr.world = &s_worldData;

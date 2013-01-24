@@ -108,7 +108,7 @@ FBO_Create(const char *name, int width, int height)
 		ri.Error(ERR_DROP, "FBO_Create: MAX_FBOS hit");
 	}
 
-	fbo = tr.fbos[tr.numFBOs] = ri.hunkalloc(sizeof(*fbo), h_low);
+	fbo = tr.fbos[tr.numFBOs] = ri.hunkalloc(sizeof(*fbo), Hlow);
 	Q_strncpyz(fbo->name, name, sizeof(fbo->name));
 	fbo->index	= tr.numFBOs++;
 	fbo->width	= width;

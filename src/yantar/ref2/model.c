@@ -174,7 +174,7 @@ R_AllocModel(void)
 		return NULL;
 	}
 
-	mod = ri.hunkalloc(sizeof(*tr.models[tr.numModels]), h_low);
+	mod = ri.hunkalloc(sizeof(*tr.models[tr.numModels]), Hlow);
 	mod->index = tr.numModels;
 	tr.models[tr.numModels] = mod;
 	tr.numModels++;
@@ -343,7 +343,7 @@ R_LoadMD3(model_t * mod, int lod, void *buffer, int bufferSize, const char *modN
 	mod->type = MOD_MESH;
 	size = LittleLong(md3Model->ofsEnd);
 	mod->dataSize += size;
-	mdvModel = mod->mdv[lod] = ri.hunkalloc(sizeof(mdvModel_t), h_low);
+	mdvModel = mod->mdv[lod] = ri.hunkalloc(sizeof(mdvModel_t), Hlow);
 
 /*  Q_Memcpy(mod->md3[lod], buffer, LittleLong(md3Model->ofsEnd)); */
 
@@ -364,7 +364,7 @@ R_LoadMD3(model_t * mod, int lod, void *buffer, int bufferSize, const char *modN
 
 	/* swap all the frames */
 	mdvModel->numFrames = md3Model->numFrames;
-	mdvModel->frames = frame = ri.hunkalloc(sizeof(*frame) * md3Model->numFrames, h_low);
+	mdvModel->frames = frame = ri.hunkalloc(sizeof(*frame) * md3Model->numFrames, Hlow);
 
 	md3Frame = (MD3frame*)((byte*)md3Model + md3Model->ofsFrames);
 	for(i = 0; i < md3Model->numFrames; i++, frame++, md3Frame++){
@@ -378,7 +378,7 @@ R_LoadMD3(model_t * mod, int lod, void *buffer, int bufferSize, const char *modN
 
 	/* swap all the tags */
 	mdvModel->numTags = md3Model->numTags;
-	mdvModel->tags = tag = ri.hunkalloc(sizeof(*tag) * (md3Model->numTags * md3Model->numFrames), h_low);
+	mdvModel->tags = tag = ri.hunkalloc(sizeof(*tag) * (md3Model->numTags * md3Model->numFrames), Hlow);
 
 	md3Tag = (MD3tag*)((byte*)md3Model + md3Model->ofsTags);
 	for(i = 0; i < md3Model->numTags * md3Model->numFrames; i++, tag++, md3Tag++)
@@ -390,7 +390,7 @@ R_LoadMD3(model_t * mod, int lod, void *buffer, int bufferSize, const char *modN
 		}
 
 
-	mdvModel->tagNames = tagName = ri.hunkalloc(sizeof(*tagName) * (md3Model->numTags), h_low);
+	mdvModel->tagNames = tagName = ri.hunkalloc(sizeof(*tagName) * (md3Model->numTags), Hlow);
 
 	md3Tag = (MD3tag*)((byte*)md3Model + md3Model->ofsTags);
 	for(i = 0; i < md3Model->numTags; i++, tagName++, md3Tag++)
@@ -398,7 +398,7 @@ R_LoadMD3(model_t * mod, int lod, void *buffer, int bufferSize, const char *modN
 
 	/* swap all the surfaces */
 	mdvModel->numSurfaces = md3Model->numSurfaces;
-	mdvModel->surfaces = surf = ri.hunkalloc(sizeof(*surf) * md3Model->numSurfaces, h_low);
+	mdvModel->surfaces = surf = ri.hunkalloc(sizeof(*surf) * md3Model->numSurfaces, Hlow);
 
 	md3Surf = (MD3surf*)((byte*)md3Model + md3Model->ofsSurfaces);
 	for(i = 0; i < md3Model->numSurfaces; i++){
@@ -447,7 +447,7 @@ R_LoadMD3(model_t * mod, int lod, void *buffer, int bufferSize, const char *modN
 		/* register the shaders */
 		surf->numShaderIndexes = md3Surf->numShaders;
 		surf->shaderIndexes = shaderIndex = ri.hunkalloc(sizeof(*shaderIndex) * md3Surf->numShaders,
-			h_low);
+			Hlow);
 
 		md3Shader = (MD3shader*)((byte*)md3Surf + md3Surf->ofsShaders);
 		for(j = 0; j < md3Surf->numShaders; j++, shaderIndex++, md3Shader++){
@@ -463,7 +463,7 @@ R_LoadMD3(model_t * mod, int lod, void *buffer, int bufferSize, const char *modN
 
 		/* swap all the triangles */
 		surf->numTriangles = md3Surf->numTriangles;
-		surf->triangles = tri = ri.hunkalloc(sizeof(*tri) * md3Surf->numTriangles, h_low);
+		surf->triangles = tri = ri.hunkalloc(sizeof(*tri) * md3Surf->numTriangles, Hlow);
 
 		md3Tri = (MD3tri*)((byte*)md3Surf + md3Surf->ofsTriangles);
 		for(j = 0; j < md3Surf->numTriangles; j++, tri++, md3Tri++){
@@ -476,7 +476,7 @@ R_LoadMD3(model_t * mod, int lod, void *buffer, int bufferSize, const char *modN
 
 		/* swap all the XyzNormals */
 		surf->numVerts = md3Surf->numVerts;
-		surf->verts = v = ri.hunkalloc(sizeof(*v) * (md3Surf->numVerts * md3Surf->numFrames), h_low);
+		surf->verts = v = ri.hunkalloc(sizeof(*v) * (md3Surf->numVerts * md3Surf->numFrames), Hlow);
 
 		md3xyz = (MD3xyznorm*)((byte*)md3Surf + md3Surf->ofsXyzNormals);
 		for(j = 0; j < md3Surf->numVerts * md3Surf->numFrames; j++, md3xyz++, v++){
@@ -505,7 +505,7 @@ R_LoadMD3(model_t * mod, int lod, void *buffer, int bufferSize, const char *modN
 		}
 
 		/* swap all the ST */
-		surf->st = st = ri.hunkalloc(sizeof(*st) * md3Surf->numVerts, h_low);
+		surf->st = st = ri.hunkalloc(sizeof(*st) * md3Surf->numVerts, Hlow);
 
 		md3st = (md3St_t*)((byte*)md3Surf + md3Surf->ofsSt);
 		for(j = 0; j < md3Surf->numVerts; j++, md3st++, st++){
@@ -586,7 +586,7 @@ R_LoadMD3(model_t * mod, int lod, void *buffer, int bufferSize, const char *modN
 
 		mdvModel->numVBOSurfaces = mdvModel->numSurfaces;
 		mdvModel->vboSurfaces = ri.hunkalloc(sizeof(*mdvModel->vboSurfaces) * mdvModel->numSurfaces,
-			h_low);
+			Hlow);
 
 		vboSurf = mdvModel->vboSurfaces;
 		surf = mdvModel->surfaces;
@@ -704,7 +704,7 @@ R_LoadMD4(model_t *mod, void *buffer, const char *mod_name)
 	mod->type = MOD_MD4;
 	size = LittleLong(pinmodel->ofsEnd);
 	mod->dataSize	+= size;
-	mod->modelData	= md4 = ri.hunkalloc(size, h_low);
+	mod->modelData	= md4 = ri.hunkalloc(size, Hlow);
 
 	Q_Memcpy(md4, buffer, size);
 

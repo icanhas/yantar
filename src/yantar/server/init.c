@@ -341,7 +341,7 @@ SV_SpawnServer(char *server, qbool killBots)
 
 	fsclearpakrefs(0);
 	
-	svs.snapshotEntities = hunkalloc(sizeof(Entstate)*svs.numSnapshotEntities, h_high);
+	svs.snapshotEntities = hunkalloc(sizeof(Entstate)*svs.numSnapshotEntities, Hhigh);
 	svs.nextSnapshotEntities = 0;
 
 	/* 

@@ -299,7 +299,7 @@ BotImport_HunkAlloc(int size)
 	if(hunkcheckmark())
 		comerrorf(ERR_DROP,
 			"SV_Bot_HunkAlloc: Alloc with marks already set");
-	return hunkalloc(size, h_high);
+	return hunkalloc(size, Hhigh);
 }
 
 /*

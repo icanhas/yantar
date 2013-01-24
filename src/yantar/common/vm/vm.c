@@ -211,7 +211,7 @@ VM_LoadSymbols(Vm *vm)
 			break;
 		}
 		chars	= strlen(token);
-		sym	= hunkalloc(sizeof(*sym) + chars, h_high);
+		sym	= hunkalloc(sizeof(*sym) + chars, Hhigh);
 		*prev	= sym;
 		prev	= &sym->next;
 		sym->next = NULL;
@@ -376,7 +376,7 @@ VM_LoadQVM(Vm *vm, qbool alloc, qbool unpure)
 
 	if(alloc){
 		/* allocate zero filled space for initialized and uninitialized data */
-		vm->dataBase = hunkalloc(dataLength, h_high);
+		vm->dataBase = hunkalloc(dataLength, Hhigh);
 		vm->dataMask = dataLength - 1;
 	}else{
 		/* clear the data, but make sure we're not clearing more than allocated */
@@ -412,7 +412,7 @@ VM_LoadQVM(Vm *vm, qbool alloc, qbool unpure)
 
 		if(alloc)
 			vm->jumpTableTargets = hunkalloc(header.h->jtrgLength,
-				h_high);
+				Hhigh);
 		else{
 			if(vm->numJumpTableTargets != prevNumJumpTableTargets){
 				vmfree(vm);
@@ -559,7 +559,7 @@ vmcreate(const char *module, intptr_t (*systemCalls)(intptr_t *),
 	vm->instructionPointers =
 		hunkalloc(vm->instructionCount *
 			sizeof(*vm->instructionPointers),
-			h_high);
+			Hhigh);
 
 	/* copy or compile the instructions */
 	vm->codeLength = header->codeLength;

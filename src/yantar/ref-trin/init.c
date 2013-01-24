@@ -1161,7 +1161,7 @@ R_Init(void)
 
 	ptr = ri.hunkalloc(
 		sizeof(*backEndData[0]) + sizeof(srfPoly_t) * max_polys + sizeof(Polyvert) * max_polyverts,
-		h_low);
+		Hlow);
 	backEndData[0] = (backEndData_t*)ptr;
 	backEndData[0]->polys = (srfPoly_t*)((char*)ptr + sizeof(*backEndData[0]));
 	backEndData[0]->polyVerts =
@@ -1171,7 +1171,7 @@ R_Init(void)
 			ri.hunkalloc(
 				sizeof(*backEndData[1]) + sizeof(srfPoly_t) * max_polys +
 				sizeof(Polyvert) * max_polyverts,
-				h_low);
+				Hlow);
 		backEndData[1] = (backEndData_t*)ptr;
 		backEndData[1]->polys = (srfPoly_t*)((char*)ptr + sizeof(*backEndData[1]));
 		backEndData[1]->polyVerts =

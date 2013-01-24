@@ -268,19 +268,19 @@ enum {
 #endif
 
 typedef enum {
-	h_high,
-	h_low,
-	h_dontcare
-} ha_pref;
+	Hhigh,
+	Hlow,
+	Hdontcare
+} Hunkpref;
 
 #ifdef HUNK_DEBUG
 #define hunkalloc(size, preference) hunkallocdebug(size, preference, # size, \
 	__FILE__, \
 	__LINE__)
-void*	hunkallocdebug(int size, ha_pref preference, char *label, char *file,
+void*	hunkallocdebug(int size, Hunkpref preference, char *label, char *file,
 		     int line);
 #else
-void*	hunkalloc(int size, ha_pref preference);
+void*	hunkalloc(int size, Hunkpref preference);
 #endif
 
 #define Q_Memset memset

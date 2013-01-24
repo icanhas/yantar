@@ -893,9 +893,9 @@ Hunk_SwapBanks(void)
 
 /* Allocate permanent (until the hunk is cleared) memory */
 #ifdef HUNK_DEBUG
-void* hunkallocdebug(int size, ha_pref preference, char *label, char *file, int line)
+void* hunkallocdebug(int size, Hunkpref preference, char *label, char *file, int line)
 #else
-void* hunkalloc(int size, ha_pref preference)
+void* hunkalloc(int size, Hunkpref preference)
 #endif
 {
 	void *buf;
@@ -904,12 +904,12 @@ void* hunkalloc(int size, ha_pref preference)
 		comerrorf(ERR_FATAL,
 			"hunkalloc: Hunk memory system not initialized");
 	/* can't do preference if there is any temp allocated */
-	if(preference == h_dontcare || hunk_temp->temp != hunk_temp->permanent)
+	if(preference == Hdontcare || hunk_temp->temp != hunk_temp->permanent)
 		Hunk_SwapBanks();
 	else{
-		if(preference == h_low && hunk_permanent != &hunk_low)
+		if(preference == Hlow && hunk_permanent != &hunk_low)
 			Hunk_SwapBanks();
-		else if(preference == h_high && hunk_permanent != &hunk_high)
+		else if(preference == Hhigh && hunk_permanent != &hunk_high)
 			Hunk_SwapBanks();
 	}
 #ifdef HUNK_DEBUG

@@ -418,11 +418,11 @@ R_CreateSurfaceGridMesh(int width, int height,
 	Q_Memcpy(grid->heightLodError, errorTable[1], height * 4);
 
 	grid->numTriangles = numTriangles;
-	grid->triangles = ri.hunkalloc(grid->numTriangles * sizeof(srfTriangle_t), h_low);
+	grid->triangles = ri.hunkalloc(grid->numTriangles * sizeof(srfTriangle_t), Hlow);
 	Q_Memcpy(grid->triangles, triangles, numTriangles * sizeof(srfTriangle_t));
 
 	grid->numVerts = (width * height);
-	grid->verts = ri.hunkalloc(grid->numVerts * sizeof(srfVert_t), h_low);
+	grid->verts = ri.hunkalloc(grid->numVerts * sizeof(srfVert_t), Hlow);
 #endif
 
 	grid->width = width;

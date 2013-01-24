@@ -295,9 +295,9 @@ struct Refimport {
 	/* stack based memory allocation for per-level things that
 	 * won't be freed */
 	#ifdef HUNK_DEBUG
-	void    *(*hunkallocdebug)(int size, ha_pref pref, char *label, char *file, int line);
+	void    *(*hunkallocdebug)(int size, Hunkpref pref, char *label, char *file, int line);
 	#else
-	void    *(*hunkalloc)(int size, ha_pref pref);
+	void    *(*hunkalloc)(int size, Hunkpref pref);
 	#endif
 	void    *(*hunkalloctemp)(int size);
 	void (*hunkfreetemp)(void *block);
