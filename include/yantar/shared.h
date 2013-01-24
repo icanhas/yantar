@@ -791,8 +791,6 @@ int QDECL	Q_sprintf(char *dest, int size,
 char*	Q_skiptoks(char *s, int numTokens, char *sep);
 char*	Q_skipcharset(char *s, char *sep);
 
-void		Com_Randombytes(byte *string, int len);
-
 /* mode parm for fsopen */
 typedef enum {
 	FS_READ,

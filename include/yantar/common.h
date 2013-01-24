@@ -618,39 +618,40 @@ typedef struct {
 } Sysevent;
 
 void	cominit(char *commandLine);
-void 	comtouchmem(void);
+void	comtouchmem(void);
 void	comshutdown(void);
 void	comframe(void);
-void 	comqueueevent(int time, Syseventtype type, int value,
+void	comqueueevent(int time, Syseventtype type, int value,
 		int value2, int ptrLength,
 		void *ptr);
-int 	comflushevents(void);
-Sysevent comgetsysevent(void);
-char* copystr(const char *in);
-void 	infoprint(const char *s);
-void 	comstartredirect(char *buffer, int buffersize, void (*flush)(char *));
-void 	comendredirect(void);
-void QDECL comprintf(const char *fmt, ...) __attribute__ ((format (printf, 1, 2)));
-void QDECL comdprintf(const char *fmt,
+int	comflushevents(void);
+Sysevent	comgetsysevent(void);
+char*	copystr(const char *in);
+void	infoprint(const char *s);
+void	comstartredirect(char *buffer, int buffersize, void (*flush)(char *));
+void	comendredirect(void);
+void QDECL	comprintf(const char *fmt, ...) __attribute__ ((format (printf, 1, 2)));
+void QDECL	comdprintf(const char *fmt,
 			...) __attribute__ ((format (printf, 1, 2)));
-void QDECL comerrorf(int code, const char *fmt,
+void QDECL	comerrorf(int code, const char *fmt,
 			...) __attribute__ ((noreturn, format(printf, 2, 3)));
 void 	Com_Quit_f(void) __attribute__ ((noreturn));
 void 	comgamerestart(int checksumFeed, qbool disconnect);
 int 	commillisecs(void);	/* will be journaled properly */
-unsigned blockchecksum(const void *buffer, int length);
-char* md5file(const char *filename, int length,
+uint	blockchecksum(const void *buffer, int length);
+char*	md5file(const char *filename, int length,
 		 const char *prefix,
 		 int prefix_len);
 int 	filterstr(char *filter, char *name, int casesensitive);
 int 	filterpath(char *filter, char *name,
 		int casesensitive);
-int 	comrealtime(Qtime *qtime);
-qbool cominsafemode(void);
-void 	comrunservpacket(Netaddr *evFrom, Bitmsg *buf);
-qbool comisvoiptarget(uint8_t *voipTargets, int voipTargetsSize,
+int	comrealtime(Qtime *qtime);
+qbool	cominsafemode(void);
+void	comrunservpacket(Netaddr *evFrom, Bitmsg *buf);
+qbool	comisvoiptarget(uint8_t *voipTargets, int voipTargetsSize,
 			int clientNum);
-void 	comstartupvar(const char *match);
+void	comstartupvar(const char *match);
+void	comrandbytes(byte *string, int len);
 
 extern Cvar	*com_developer;
 extern Cvar	*com_dedicated;

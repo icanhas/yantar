@@ -2992,7 +2992,7 @@ CL_GenerateQKey(void)
 				QKEY_SIZE);
 
 		comprintf("QKEY building random string\n");
-		Com_Randombytes(buff, sizeof(buff));
+		comrandbytes(buff, sizeof(buff));
 
 		f = fssvopenw(QKEY_FILE);
 		if(!f){

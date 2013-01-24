@@ -325,8 +325,8 @@ char *com_consoleLines[MAX_CONSOLE_LINES];
 /*
  * Break it up into multiple console lines
  */
-void
-Com_Parsecmdline(char *commandLine)
+static void
+parsecmdline(char *commandLine)
 {
 	int inq = 0;
 	com_consoleLines[0] = commandLine;
@@ -405,8 +405,8 @@ comstartupvar(const char *match)
  * Returns qtrue if any late commands were added, which
  * will keep the demoloop from immediately starting
  */
-qbool
-Com_Addstartupcmds(void)
+static qbool
+addstartupcmds(void)
 {
 	int i;
 	qbool added;
@@ -464,7 +464,7 @@ infoprint(const char *s)
 	}
 }
 
-char *
+static char *
 Q_StringContains(char *str1, char *str2, int casesensitive)
 {
 	int len, i, j;
@@ -728,8 +728,8 @@ comgetsysevent(void)
 	return ev;
 }
 
-Sysevent
-Com_Getrealevent(void)
+static Sysevent
+getrealevent(void)
 {
 	int r;
 	Sysevent ev;
@@ -781,8 +781,8 @@ cominitpushevent(void)
 	com_pushedEventsTail = 0;
 }
 
-void
-Com_Pushevent(Sysevent *event)
+static void
+pushevent(Sysevent *event)
 {
 	Sysevent	*ev;
 	static int	printedWarning = 0;
@@ -794,7 +794,7 @@ Com_Pushevent(Sysevent *event)
 		/* don't print the warning constantly, or it can give time for more... */
 		if(!printedWarning){
 			printedWarning = qtrue;
-			comprintf("WARNING: Com_Pushevent overflow\n");
+			comprintf("WARNING: pushevent overflow\n");
 		}
 
 		if(ev->evPtr)
@@ -807,15 +807,15 @@ Com_Pushevent(Sysevent *event)
 	com_pushedEventsHead++;
 }
 
-Sysevent
-Q_GetEvent(void)
+static Sysevent
+getevent(void)
 {
 	if(com_pushedEventsHead > com_pushedEventsTail){
 		com_pushedEventsTail++;
 		return com_pushedEvents[ (com_pushedEventsTail-
 					  1) & (MAX_PUSHED_EVENTS-1) ];
 	}
-	return Com_Getrealevent();
+	return getrealevent();
 }
 
 void
@@ -846,7 +846,7 @@ comflushevents(void)
 
 	MSG_Init(&buf, bufData, sizeof(bufData));
 	while(1){
-		ev = Q_GetEvent();
+		ev = getevent();
 		/* if no more events are available */
 		if(ev.evType == SE_NONE){
 			/* manually send packet events for the loopback channel */
@@ -897,18 +897,16 @@ commillisecs(void)
 
 	/* get events and push them until we get a null event with the current time */
 	do{
-		ev = Com_Getrealevent();
+		ev = getrealevent();
 		if(ev.evType != SE_NONE)
-			Com_Pushevent(&ev);
+			pushevent(&ev);
 	}while(ev.evType != SE_NONE);
 	return ev.evTime;
 }
 
-/* ============================================================================ */
-
 /* Just throw a fatal error to test error shutdown procedures */
 static void
-comerrorf_f(void)
+error_f(void)
 {
 	if(cmdargc() > 1)
 		comerrorf(ERR_DROP, "Testing drop error");
@@ -921,7 +919,7 @@ comerrorf_f(void)
  * error recovery
  */
 static void
-Com_Freeze_f(void)
+freeze_f(void)
 {
 	float	s;
 	int	start, now;
@@ -941,12 +939,12 @@ Com_Freeze_f(void)
 
 /* A way to force a bus error for development reasons */
 static void
-Com_Crash_f(void)
+crash_f(void)
 {
 	*(volatile int*)0x0000dead = 0xdeaddead;
 }
 
-/* just for Com_Testutf8_f */
+/* just for testutf8_f */
 static void
 runeprops(Rune r)
 {
@@ -965,7 +963,7 @@ runeprops(Rune r)
  */
 
 static void
-Com_Testutf8_f(void)
+testutf8_f(void)
 {
 	char str[50] = "test тест δοκιμή próf 시험 テスト";
 	Rune r;
@@ -1123,15 +1121,15 @@ catternyantest(void)
 }
 
 static void
-Com_Testmaths_f(void)
+testmaths_f(void)
 {
 	matrixtest();
 	catternyantest();
 }
 	
 /* For controlling environment variables */
-void
-Com_Setenv_f(void)
+static void
+setenv_f(void)
 {
 	int argc = cmdargc();
 	char *arg1 = cmdargv(1);
@@ -1151,8 +1149,8 @@ Com_Setenv_f(void)
 }
 
 /* For controlling environment variables */
-void
-Com_Execconfig(void)
+static void
+execconfig(void)
 {
 	cbufexecstr(EXEC_NOW, "exec default.cfg\n");
 	cbufflush();	/* Always execute after exec to prevent text buffer overflowing */
@@ -1190,7 +1188,7 @@ comgamerestart(int checksumFeed, qbool disconnect)
 
 		/* Clean out any user and VM created cvars */
 		cvarrestart(qtrue);
-		Com_Execconfig();
+		execconfig();
 
 		if(disconnect){
 			/* 
@@ -1225,8 +1223,8 @@ comgamerestart_f(void)
 	comgamerestart(0, qtrue);
 }
 
-void
-Com_Writeconfigtofile(const char *filename)
+static void
+writeconfigfile(const char *filename)
 {
 	Fhandle f;
 
@@ -1242,8 +1240,8 @@ Com_Writeconfigtofile(const char *filename)
 }
 
 /* Writes key bindings and archived cvars to config file if modified */
-void
-Com_Writeconfig(void)
+static void
+writeconfig(void)
 {
 	/* if we are quitting without fully initializing, make sure
 	 * we don't write out anything */
@@ -1254,12 +1252,12 @@ Com_Writeconfig(void)
 		return;
 	cvar_modifiedFlags &= ~CVAR_ARCHIVE;
 
-	Com_Writeconfigtofile(Q3CONFIG_CFG);
+	writeconfigfile(Q3CONFIG_CFG);
 }
 
 /* Write the config file to a specific name */
-void
-Com_Writeconfig_f(void)
+static void
+writeconfig_f(void)
 {
 	char filename[MAX_QPATH];
 
@@ -1270,11 +1268,11 @@ Com_Writeconfig_f(void)
 	Q_strncpyz(filename, cmdargv(1), sizeof(filename));
 	Q_defaultext(filename, sizeof(filename), ".cfg");
 	comprintf("Writing %s.\n", filename);
-	Com_Writeconfigtofile(filename);
+	writeconfigfile(filename);
 }
 
-int
-Com_Modifymsec(int msec)
+static int
+modifymsec(int msec)
 {
 	int clampTime;
 
@@ -1329,7 +1327,7 @@ Q_TimeVal(int minMsec)
 }
 
 static void
-Com_Detectaltivec(void)
+detectaltivec(void)
 {
 	/* Only detect if user hasn't forcibly disabled it. */
 	if(com_altivec->integer){
@@ -1347,7 +1345,7 @@ Com_Detectaltivec(void)
 #if id386 || idx64
 /* Find out whether we have SSE support for Q_ftol function */
 static void
-Com_Detectsse(void)
+detectsse(void)
 {
 #if !idx64
 	CPUfeatures feat;
@@ -1375,7 +1373,7 @@ Com_Detectsse(void)
 #else
 
 static void
-Com_Detectsse(void)
+detectsse(void)
 {
 	;
 }
@@ -1419,12 +1417,12 @@ cominit(char *commandLine)
 
 	/* prepare enough of the subsystems to handle
 	 * cvar and command buffer management */
-	Com_Parsecmdline(commandLine);
+	parsecmdline(commandLine);
 
 /*	Swap_Init (); */
 	cbufinit ();
 
-	Com_Detectsse();
+	detectsse();
 
 	/* override anything from the config files with command line args */
 	comstartupvar(nil);
@@ -1450,21 +1448,21 @@ cominit(char *commandLine)
 	cominitjournaling();
 
 	/* Add some commands here already so users can use them from config files */
-	cmdadd ("setenv", Com_Setenv_f);
+	cmdadd ("setenv", setenv_f);
 	if(com_developer && com_developer->integer){
-		cmdadd("error", comerrorf_f);
-		cmdadd("crash", Com_Crash_f);
-		cmdadd("freeze", Com_Freeze_f);
+		cmdadd("error", error_f);
+		cmdadd("crash", crash_f);
+		cmdadd("freeze", freeze_f);
 	}
-	cmdadd("testutf", Com_Testutf8_f);
-	cmdadd("testmaths", Com_Testmaths_f);
+	cmdadd("testutf", testutf8_f);
+	cmdadd("testmaths", testmaths_f);
 	cmdadd("quit", Com_Quit_f);
 	cmdadd("q", Com_Quit_f);
-	cmdadd("writeconfig", Com_Writeconfig_f);
+	cmdadd("writeconfig", writeconfig_f);
 	cmdsetcompletion("writeconfig", cmdcompletecfgname);
 	cmdadd("game_restart", comgamerestart_f);
 
-	Com_Execconfig();
+	execconfig();
 
 	/* override anything from the config files with command line args */
 	comstartupvar(nil);
@@ -1533,7 +1531,7 @@ cominit(char *commandLine)
 	sysinit();
 	
 	/* Pick a random port value */
-	Com_Randombytes((byte*)&qport, sizeof(int));
+	comrandbytes((byte*)&qport, sizeof(int));
 	Netchan_Init(qport & 0xffff);
 
 	vminit();
@@ -1551,7 +1549,7 @@ cominit(char *commandLine)
 	com_frameTime = commillisecs();
 
 	/* add + commands from command line */
-	if(!Com_Addstartupcmds())
+	if(!addstartupcmds())
 		/* if the user didn't give any commands, run default action */
 		if(!com_dedicated->integer){
 			cbufaddstr ("cinematic idlogo.RoQ\n");
@@ -1572,7 +1570,7 @@ cominit(char *commandLine)
 	com_fullyInitialized = qtrue;
 
 	/* always set the cvar, but only print the info if it makes sense. */
-	Com_Detectaltivec();
+	detectaltivec();
 #if idppc
 	comprintf ("Altivec support is %s\n",
 		com_altivec->integer ? "enabled" : "disabled");
@@ -1606,8 +1604,8 @@ comshutdown(void)
 }
 
 /* Read whatever is in com_pipefile, if anything, and execute it */
-void
-Com_Readpipe(void)
+static void
+readpipe(void)
 {
 	static char	buf[MAX_STRING_CHARS];
 	static uint	accu = 0;
@@ -1665,7 +1663,7 @@ comframe(void)
 
 	/* write config file if anything changed */
 	/* FIXME: add interval? */
-	Com_Writeconfig();
+	writeconfig();
 
 	/* main event loop */
 	if(com_speeds->integer)
@@ -1724,12 +1722,12 @@ comframe(void)
 	cbufflush();
 
 	if(com_altivec->modified){
-		Com_Detectaltivec();
+		detectaltivec();
 		com_altivec->modified = qfalse;
 	}
 
 	/* mess with msec if needed */
-	msec = Com_Modifymsec(msec);
+	msec = modifymsec(msec);
 
 	/* server side */
 	if(com_speeds->integer)
@@ -1809,7 +1807,7 @@ comframe(void)
 		c_pointcontents = 0;
 	}
 
-	Com_Readpipe( );
+	readpipe( );
 
 	com_frameNumber++;
 }
@@ -1874,7 +1872,7 @@ printcvarmatches(const char *s)
 }
 
 static char *
-Field_FindFirstSeparator(char *s)
+findfirstsep(char *s)
 {
 	uint i;
 
@@ -1886,7 +1884,7 @@ Field_FindFirstSeparator(char *s)
 }
 
 static qbool
-Field_Complete(void)
+fieldcomplete(void)
 {
 	int completionOffset;
 
@@ -1917,7 +1915,7 @@ fieldcompletekeyname(void)
 
 	keykeynamecompletion(findmatches);
 
-	if(!Field_Complete( ))
+	if(!fieldcomplete( ))
 		keykeynamecompletion(printmatches);
 }
 #endif
@@ -1931,7 +1929,7 @@ fieldcompletefilename(const char *dir, const char *ext, qbool stripExt,
 
 	fsfnamecompletion(dir, ext, stripExt, findmatches,
 		allowNonPureFilesOnDisk);
-	if(!Field_Complete( ))
+	if(!fieldcomplete( ))
 		fsfnamecompletion(dir, ext, stripExt, printmatches,
 			allowNonPureFilesOnDisk);
 }
@@ -1983,7 +1981,7 @@ fieldcompletecmd(char *cmd,
 			baseCmd++;
 #endif
 
-		if((p = Field_FindFirstSeparator(cmd)))
+		if((p = findfirstsep(cmd)))
 			fieldcompletecmd(p + 1, qtrue, qtrue);	/* Compound command */
 		else
 			cmdcompletearg(baseCmd, cmd, completionArgument);
@@ -2003,7 +2001,7 @@ fieldcompletecmd(char *cmd,
 		if(doCvars)
 			cvarcmdcompletion(findmatches);
 
-		if(!Field_Complete()){
+		if(!fieldcomplete()){
 			/* run through again, printing matches */
 			if(doCommands)
 				cmdcompletion(printmatches);
@@ -2025,13 +2023,13 @@ fieldautocomplete(Field *field)
 
 /* fills string array with len radom bytes, peferably from the OS randomizer */
 void
-Com_Randombytes(byte *string, int len)
+comrandbytes(byte *string, int len)
 {
 	int i;
 
 	if(sysrandbytes(string, len))
 		return;
-	comprintf("Com_Randombytes: using weak randomization\n");
+	comprintf("comrandbytes: using weak randomization\n");
 	for(i = 0; i < len; i++)
 		string[i] = (unsigned char)(rand() % 255);
 }
