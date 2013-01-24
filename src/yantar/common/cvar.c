@@ -5,12 +5,8 @@
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License.
  */
-
-#include "shared.h"
-#include "common.h"
-
 /*
- * Cvar variables are used to hold scalar or string variables that can be changed
+ * Cvars are used to hold scalar or string variables that can be changed
  * or displayed at the console or prog code as well as accessed directly
  * in C code.
  *
@@ -26,21 +22,28 @@
  * modules of the program.
  */
 
+#include "shared.h"
+#include "common.h"
+
 enum {
-	MAX_CVARS = 1024,
-	HASH_SIZE = 512
+	/*
+	 * FIXME: having a hard limit defeats one advantage of hash tables
+	 * straight away
+	 */
+	MAX_CVARS	= 1024,
+	HASH_SIZE	= 512
 };
 
 int cvar_modifiedFlags;
 
-static Cvar	*cvar_vars = nil;
-static Cvar   *cvar_cheats;
-static Cvar	cvar_indexes[MAX_CVARS];
-static int	cvar_numIndexes;
-static Cvar *hashTable[HASH_SIZE];
+static Cvar *cvarlist = nil;
+static Cvar *cheatsenabled;
+static Cvar indices[MAX_CVARS];
+static int numindices;
+static Cvar *hashtab[HASH_SIZE];
 
 static qbool
-Cvar_ValidateString(const char *s)
+validatestr(const char *s)
 {
 	if(s == nil)
 		return qfalse;
@@ -53,15 +56,15 @@ Cvar_ValidateString(const char *s)
 	return qtrue;
 }
 
-static Cvar *
-Cvar_FindVar(const char *var_name)
+static Cvar*
+look(const char *var_name)
 {
 	Cvar	*var;
 	long	hash;
 
 	hash = Q_hashstr(var_name, HASH_SIZE);
 
-	for(var=hashTable[hash]; var != nil; var=var->hashNext)
+	for(var=hashtab[hash]; var != nil; var=var->hashNext)
 		if(!Q_stricmp(var_name, var->name))
 			return var;
 
@@ -74,7 +77,7 @@ cvargetf(const char *var_name)
 {
 	Cvar *var;
 
-	var = Cvar_FindVar(var_name);
+	var = look(var_name);
 	if(var == nil)
 		return 0;
 	return var->value;
@@ -85,19 +88,19 @@ cvargeti(const char *var_name)
 {
 	Cvar *var;
 
-	var = Cvar_FindVar(var_name);
+	var = look(var_name);
 	if(var == nil)
 		return 0;
 	return var->integer;
 }
 
 /* returns an empty string if not defined */
-char *
+char*
 cvargetstr(const char *var_name)
 {
 	Cvar *var;
 
-	var = Cvar_FindVar(var_name);
+	var = look(var_name);
 	if(var == nil)
 		return "";
 	return var->string;
@@ -108,7 +111,7 @@ cvargetstrbuf(const char *var_name, char *buffer, int bufsize)
 {
 	Cvar *var;
 
-	var = Cvar_FindVar(var_name);
+	var = look(var_name);
 	if(var == nil)
 		*buffer = 0;
 	else
@@ -120,7 +123,7 @@ cvarflags(const char *var_name)
 {
 	Cvar *var;
 
-	var = Cvar_FindVar(var_name);
+	var = look(var_name);
 	if(var == nil)
 		return CVAR_NONEXISTENT;
 	else{
@@ -136,13 +139,13 @@ cvarcmdcompletion(void (*callback)(const char *s))
 {
 	Cvar *cvar;
 
-	for(cvar = cvar_vars; cvar; cvar = cvar->next)
+	for(cvar = cvarlist; cvar; cvar = cvar->next)
 		if(cvar->name != nil)
 			callback(cvar->name);
 }
 
 static const char *
-Cvar_Validate(Cvar *var, const char *value, qbool warn)
+validate(Cvar *var, const char *value, qbool warn)
 {
 	static char	s[MAX_CVAR_VALUE_STRING];
 	float valuef;
@@ -228,9 +231,9 @@ Cvar_Validate(Cvar *var, const char *value, qbool warn)
 
 /* set value of an existing cvar */
 static void
-setNewVal(Cvar *var, const char *var_name, const char *var_value, int flags)
+setnewval(Cvar *var, const char *var_name, const char *var_value, int flags)
 {
-	var_value = Cvar_Validate(var, var_value, qfalse);
+	var_value = validate(var, var_value, qfalse);
 	/*
 	 * if the C code is now specifying a variable that the user already
 	 * set a value for, take the new value as the reset value
@@ -293,38 +296,38 @@ setNewVal(Cvar *var, const char *var_name, const char *var_value, int flags)
  * If the variable already exists, the value will not be set unless
  * CVAR_ROM. The flags will be or'ed in if the variable exists.
  */
-Cvar *
+Cvar*
 cvarget(const char *var_name, const char *var_value, int flags)
 {
-	Cvar	*var;
-	long	hash;
-	int	index;
+	Cvar *var;
+	long hash;
+	int index;
 
 	if(var_name == nil || var_value == nil)
 		comerrorf(ERR_FATAL, "cvarget: nil parameter");
 
-	if(!Cvar_ValidateString(var_name)){
+	if(!validatestr(var_name)){
 		comprintf("invalid cvar name string: %s\n", var_name);
 		var_name = "BADNAME";
 	}
 
 #if 0	/* FIXME: values with backslash happen */
-	if(!Cvar_ValidateString(var_value)){
+	if(!validatestr(var_value)){
 		comprintf("invalid cvar value string: %s\n", var_value);
 		var_value = "BADVALUE";
 	}
 #endif
 
-	var = Cvar_FindVar(var_name);
+	var = look(var_name);
 	if(var != nil){
-		setNewVal(var, var_name, var_value, flags);
+		setnewval(var, var_name, var_value, flags);
 		return var;
 	}
 
 	/* allocate a new cvar... */
 	/* find a free cvar */
 	for(index = 0; index < MAX_CVARS; index++)
-		if(cvar_indexes[index].name == nil)
+		if(indices[index].name == nil)
 			break;
 
 	if(index >= MAX_CVARS){
@@ -335,27 +338,27 @@ cvarget(const char *var_name, const char *var_value, int flags)
 		return nil;
 	}
 
-	var = &cvar_indexes[index];
+	var = &indices[index];
 
-	if(index >= cvar_numIndexes)
-		cvar_numIndexes = index + 1;
+	if(index >= numindices)
+		numindices = index + 1;
 
-	var->name	= copystr (var_name);
-	var->string	= copystr (var_value);
-	var->modified	= qtrue;
+	var->name = copystr(var_name);
+	var->string = copystr(var_value);
+	var->modified = qtrue;
 	var->modificationCount = 1;
-	var->value	= atof(var->string);
-	var->integer	= atoi(var->string);
+	var->value = atof(var->string);
+	var->integer = atoi(var->string);
 	var->resetString = copystr(var_value);
 	var->validate = qfalse;
 
 	/* link the variable in */
-	var->next = cvar_vars;
-	if(cvar_vars != nil)
-		cvar_vars->prev = var;
+	var->next = cvarlist;
+	if(cvarlist != nil)
+		cvarlist->prev = var;
 
-	var->prev	= nil;
-	cvar_vars	= var;
+	var->prev = nil;
+	cvarlist = var;
 
 	var->flags = flags;
 	/* note what types of cvars have been modified (userinfo, archive, serverinfo, systeminfo) */
@@ -364,12 +367,12 @@ cvarget(const char *var_name, const char *var_value, int flags)
 	hash = Q_hashstr(var_name, HASH_SIZE);
 	var->hashIndex = hash;
 
-	var->hashNext = hashTable[hash];
-	if(hashTable[hash])
-		hashTable[hash]->hashPrev = var;
+	var->hashNext = hashtab[hash];
+	if(hashtab[hash])
+		hashtab[hash]->hashPrev = var;
 
-	var->hashPrev	= nil;
-	hashTable[hash] = var;
+	var->hashPrev = nil;
+	hashtab[hash] = var;
 
 	return var;
 }
@@ -378,8 +381,8 @@ cvarget(const char *var_name, const char *var_value, int flags)
  * Prints the description, value, default, and latched string of
  * the given variable
  */
-void
-Cvar_Print(Cvar *v)
+static void
+printcvar(Cvar *v)
 {
 	comprintf("%s: ", v->name);
 	if(v->desc != nil)
@@ -407,7 +410,7 @@ cvarsetdesc(const char *name, const char *desc)
 {
 	Cvar *cv;
 
-	cv = Cvar_FindVar(name);
+	cv = look(name);
 	if((cv == nil) || (desc == nil))
 		return;
 	if(cv->desc != nil)
@@ -416,26 +419,26 @@ cvarsetdesc(const char *name, const char *desc)
 }
 
 /* same as cvarsetstr, but allows more control over setting of cvar */
-Cvar *
+Cvar*
 cvarsetstr2(const char *var_name, const char *value, qbool force)
 {
 	Cvar *var;
 
-/*	comdprintf( "cvarsetstr2: %s %s\n", var_name, value ); */
+	/* comdprintf( "cvarsetstr2: %s %s\n", var_name, value ); */
 
-	if(!Cvar_ValidateString(var_name)){
+	if(!validatestr(var_name)){
 		comprintf("invalid cvar name string: %s\n", var_name);
 		var_name = "BADNAME";
 	}
 
 #if 0	/* FIXME */
-	if(value && !Cvar_ValidateString(value)){
+	if(value && !validatestr(value)){
 		comprintf("invalid cvar value string: %s\n", value);
 		var_value = "BADVALUE";
 	}
 #endif
 
-	var = Cvar_FindVar(var_name);
+	var = look(var_name);
 	if(var == nil){
 		if(value == nil)
 			return nil;
@@ -449,7 +452,7 @@ cvarsetstr2(const char *var_name, const char *value, qbool force)
 	if(value == nil)
 		value = var->resetString;
 
-	value = Cvar_Validate(var, value, qtrue);
+	value = validate(var, value, qtrue);
 
 	if((var->flags & CVAR_LATCH) && (var->latchedString != nil)){
 		if(!strcmp(value, var->string)){
@@ -493,7 +496,7 @@ cvarsetstr2(const char *var_name, const char *value, qbool force)
 			return var;
 		}
 
-		if((var->flags & CVAR_CHEAT) && (cvar_cheats->integer <= 0)){
+		if((var->flags & CVAR_CHEAT) && (cheatsenabled->integer <= 0)){
 			comprintf ("%s is cheat protected.\n", var_name);
 			return var;
 		}
@@ -594,7 +597,7 @@ cvarsetcheatstate(void)
 	Cvar *var;
 
 	/* set all default vars to the safe value */
-	for(var = cvar_vars; var != nil; var = var->next)
+	for(var = cvarlist; var != nil; var = var->next)
 		if(var->flags & CVAR_CHEAT){
 			/*
 			 * the CVAR_LATCHED|CVAR_CHEAT vars might escape the
@@ -623,13 +626,13 @@ cvariscmd(void)
 	Cvar *v;
 
 	/* check variables */
-	v = Cvar_FindVar(cmdargv(0));
+	v = look(cmdargv(0));
 	if(v == nil)
 		return qfalse;
 
 	/* perform a variable print or set */
 	if(cmdargc() == 1){
-		Cvar_Print(v);
+		printcvar(v);
 		return qtrue;
 	}
 
@@ -639,11 +642,11 @@ cvariscmd(void)
 }
 
 /*
- * Cvar_Print_f: Prints the contents of a cvar
+ * printcvar_f: Prints the contents of a cvar
  * (preferred over cvariscmd where cvar names and commands conflict)
  */
-void
-Cvar_Print_f(void)
+static void
+printcvar_f(void)
 {
 	char *name;
 	Cvar *cv;
@@ -655,10 +658,10 @@ Cvar_Print_f(void)
 
 	name = cmdargv(1);
 
-	cv = Cvar_FindVar(name);
+	cv = look(name);
 
 	if(cv != nil)
-		Cvar_Print(cv);
+		printcvar(cv);
 	else
 		comprintf("Cvar %s does not exist.\n", name);
 }
@@ -667,8 +670,8 @@ Cvar_Print_f(void)
  * Toggles a cvar for easy single key binding, optionally
  * through a list of given values.
  */
-void
-Cvar_Toggle_f(void)
+static void
+toggle_f(void)
 {
 	int i, c = cmdargc();
 	char *curval;
@@ -707,26 +710,26 @@ Cvar_Toggle_f(void)
  * Allows setting and defining of arbitrary cvars from console,
  * even if they weren't declared in C code.
  */
-void
-cvarsetstr_f(void)
+static void
+set_f(void)
 {
 	int c;
 	char *cmd;
 	Cvar *v;
 
-	c	= cmdargc();
-	cmd	= cmdargv(0);
+	c = cmdargc();
+	cmd = cmdargv(0);
 
 	if(c < 2){
 		comprintf("usage: %s <variable> <value>\n", cmd);
 		return;
 	}
 	if(c == 2){
-		Cvar_Print_f();
+		printcvar_f();
 		return;
 	}
 
-	v = cvarsetstr2 (cmdargv(1), cmdargsfrom(2), qfalse);
+	v = cvarsetstr2(cmdargv(1), cmdargsfrom(2), qfalse);
 	if(v == nil)
 		return;
 	switch(cmd[3]){
@@ -751,8 +754,8 @@ cvarsetstr_f(void)
 	}
 }
 
-void
-cvarreset_f(void)
+static void
+reset_f(void)
 {
 	if(cmdargc() != 2){
 		comprintf("usage: reset <variable>\n");
@@ -768,11 +771,11 @@ cvarreset_f(void)
 void
 cvarwritevars(Fhandle f)
 {
-	int	len;	/* total length of name + archival string */
-	char	buffer[1024];
+	int len;	/* total length of name + archival string */
+	char buffer[1024];
 	Cvar *var;
 
-	for(var = cvar_vars; var != nil; var = var->next){
+	for(var = cvarlist; var != nil; var = var->next){
 		if(var->name == nil)
 			continue;
 
@@ -810,11 +813,11 @@ cvarwritevars(Fhandle f)
 	}
 }
 
-void
-Cvar_List_f(void)
+static void
+list_f(void)
 {
-	Cvar	*var;
-	int	i;
+	Cvar *var;
+	int i;
 	char *match;
 
 	if(cmdargc() > 1)
@@ -822,7 +825,7 @@ Cvar_List_f(void)
 	else
 		match = nil;
 
-	for(var = cvar_vars, i = 0; var != nil; var = var->next, i++){
+	for(var = cvarlist, i = 0; var != nil; var = var->next, i++){
 		if((var->name == nil) ||
 		   (match && !filterstr(match, var->name, qfalse))){
 			continue;
@@ -876,12 +879,12 @@ Cvar_List_f(void)
 		comprintf(" %s \"%s\"\n", var->name, var->string);
 	}
 	comprintf("\n%i total cvars\n", i);
-	comprintf("%i cvar indexes\n", cvar_numIndexes);
+	comprintf("%i cvar indexes\n", numindices);
 }
 
 /* Unsets a cvar */
-Cvar *
-Cvar_Unset(Cvar *cv)
+static Cvar*
+unset(Cvar *cv)
 {
 	Cvar *next = cv->next;
 
@@ -897,7 +900,7 @@ Cvar_Unset(Cvar *cv)
 	if(cv->prev)
 		cv->prev->next = cv->next;
 	else
-		cvar_vars = cv->next;
+		cvarlist = cv->next;
 
 	if(cv->next)
 		cv->next->prev = cv->prev;
@@ -905,7 +908,7 @@ Cvar_Unset(Cvar *cv)
 	if(cv->hashPrev)
 		cv->hashPrev->hashNext = cv->hashNext;
 	else
-		hashTable[cv->hashIndex] = cv->hashNext;
+		hashtab[cv->hashIndex] = cv->hashNext;
 
 	if(cv->hashNext)
 		cv->hashNext->hashPrev = cv->hashPrev;
@@ -918,8 +921,8 @@ Cvar_Unset(Cvar *cv)
 /*
  * Unsets a user-defined cvar
  */
-void
-Cvar_Unset_f(void)
+static void
+unset_f(void)
 {
 	Cvar *cv;
 
@@ -928,13 +931,13 @@ Cvar_Unset_f(void)
 		return;
 	}
 
-	cv = Cvar_FindVar(cmdargv(1));
+	cv = look(cmdargv(1));
 
 	if(cv == nil)
 		return;
 
 	if(cv->flags & CVAR_USER_CREATED)
-		Cvar_Unset(cv);
+		unset(cv);
 	else
 		comprintf("Error: %s: Variable %s is not user created.\n",
 			cmdargv(0), cv->name);
@@ -949,11 +952,11 @@ cvarrestart(qbool unsetVM)
 {
 	Cvar *var;
 
-	for(var = cvar_vars; var != nil; var = var->next){
+	for(var = cvarlist; var != nil; var = var->next){
 		if((var->flags & CVAR_USER_CREATED) ||
 		   (unsetVM && (var->flags & CVAR_VM_CREATED))){
 			/* throw out any variables the user/vm created */
-			var = Cvar_Unset(var);
+			var = unset(var);
 			continue;
 		}
 
@@ -982,7 +985,7 @@ cvargetinfostr(int bit)
 
 	info[0] = 0;
 
-	for(var = cvar_vars; var != nil; var = var->next)
+	for(var = cvarlist; var != nil; var = var->next)
 		if(var->name && (var->flags & bit))
 			Info_SetValueForKey(info, var->name, var->string);
 	return info;
@@ -999,7 +1002,7 @@ cvargetbiginfostr(int bit)
 
 	info[0] = 0;
 
-	for(var = cvar_vars; var != nil; var = var->next)
+	for(var = cvarlist; var != nil; var = var->next)
 		if((var->name != nil) && (var->flags & bit))
 			Info_SetValueForKey_Big(info, var->name, var->string);
 	return info;
@@ -1014,10 +1017,10 @@ cvargetinfostrbuf(int bit, char* buff, int buffsize)
 void
 cvarcheckrange(Cvar *var, float min, float max, qbool integral)
 {
-	var->validate	= qtrue;
-	var->min	= min;
-	var->max	= max;
-	var->integral	= integral;
+	var->validate = qtrue;
+	var->min = min;
+	var->max = max;
+	var->integral = integral;
 	/* Force an initial range check */
 	cvarsetstr(var->name, var->string);
 }
@@ -1031,10 +1034,12 @@ cvarregister(Vmcvar *vmCvar, const char *varName, const char *defaultValue,
 {
 	Cvar *cv;
 
-	/* There is code in cvarget to prevent CVAR_ROM cvars being changed by the
+	/* 
+	 * There is code in cvarget to prevent CVAR_ROM cvars being changed by the
 	 * user. In other words CVAR_ARCHIVE and CVAR_ROM are mutually exclusive
-	 * flags. Unfortunately some historical game code (including single player
-	 * baseq3) sets both flags. We unset CVAR_ROM for such cvars. */
+	 * flags.  Unfortunately some historical game code (including single player
+	 * baseq3) sets both flags. We unset CVAR_ROM for such cvars. 
+	 */
 	if((flags & (CVAR_ARCHIVE | CVAR_ROM)) == (CVAR_ARCHIVE | CVAR_ROM)){
 		comdprintf(
 			S_COLOR_YELLOW "WARNING: Unsetting CVAR_ROM cvar '%s', "
@@ -1048,7 +1053,7 @@ cvarregister(Vmcvar *vmCvar, const char *varName, const char *defaultValue,
 	if(vmCvar == nil)
 		return;
 
-	vmCvar->handle = cv - cvar_indexes;
+	vmCvar->handle = cv - indices;
 	vmCvar->modificationCount = -1;
 	cvarupdate(vmCvar);
 }
@@ -1058,12 +1063,12 @@ void
 cvarupdate(Vmcvar *vmCvar)
 {
 	Cvar *cv = nil;
-	assert(vmCvar != nil);
 
-	if((unsigned)vmCvar->handle >= cvar_numIndexes)
+	assert(vmCvar != nil);
+	if((unsigned)vmCvar->handle >= numindices)
 		comerrorf(ERR_DROP, "cvarupdate: handle out of range");
 
-	cv = cvar_indexes + vmCvar->handle;
+	cv = indices + vmCvar->handle;
 	if(cv->modificationCount == vmCvar->modificationCount)
 		return;
 	if(cv->string == nil)
@@ -1076,7 +1081,7 @@ cvarupdate(Vmcvar *vmCvar)
 			cv->string,
 			(uint)strlen(cv->string));
 	Q_strncpyz(vmCvar->string, cv->string,  MAX_CVAR_VALUE_STRING);
-	vmCvar->value	= cv->value;
+	vmCvar->value = cv->value;
 	vmCvar->integer = cv->integer;
 }
 
@@ -1097,28 +1102,27 @@ cvarcompletename(char *args, int argNum)
 void
 cvarinit(void)
 {
-	Q_Memset(cvar_indexes, '\0', sizeof(cvar_indexes));
-	Q_Memset(hashTable, '\0', sizeof(hashTable));
+	Q_Memset(indices, '\0', sizeof(indices));
+	Q_Memset(hashtab, '\0', sizeof(hashtab));
 
-	cvar_cheats = cvarget("sv_cheats", "1", CVAR_ROM | CVAR_SYSTEMINFO);
+	cheatsenabled = cvarget("sv_cheats", "1", CVAR_ROM | CVAR_SYSTEMINFO);
 
-	cmdadd("print", Cvar_Print_f);
-	cmdadd("toggle", Cvar_Toggle_f);
+	cmdadd("print", printcvar_f);
+	cmdadd("toggle", toggle_f);
 	cmdsetcompletion("toggle", cvarcompletename);
-	cmdadd("set", cvarsetstr_f);
+	cmdadd("set", set_f);
 	cmdsetcompletion("set", cvarcompletename);
-	cmdadd("sets", cvarsetstr_f);
+	cmdadd("sets", set_f);
 	cmdsetcompletion("sets", cvarcompletename);
-	cmdadd("setu", cvarsetstr_f);
+	cmdadd("setu", set_f);
 	cmdsetcompletion("setu", cvarcompletename);
-	cmdadd("seta", cvarsetstr_f);
+	cmdadd("seta", set_f);
 	cmdsetcompletion("seta", cvarcompletename);
-	cmdadd("reset", cvarreset_f);
+	cmdadd("reset", reset_f);
 	cmdsetcompletion("reset", cvarcompletename);
-	cmdadd("unset", Cvar_Unset_f);
+	cmdadd("unset", unset_f);
 	cmdsetcompletion("unset", cvarcompletename);
-
-	cmdadd("cvarlist", Cvar_List_f);
-	cmdadd("find", Cvar_List_f);
+	cmdadd("cvarlist", list_f);
+	cmdadd("find", list_f);
 	cmdadd("cvar_reset", cvarrestart_f);
 }
