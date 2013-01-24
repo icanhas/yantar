@@ -115,10 +115,11 @@ int Q_vsnprintf(char *str, size_t size, const char *format, va_list ap);
 
 #include "platform.h"
 
-typedef unsigned char byte;
-typedef unsigned short ushort;
-typedef unsigned int uint;
-typedef unsigned long ulong;
+typedef unsigned char	byte;
+typedef unsigned char	uchar
+typedef unsigned short	ushort;
+typedef unsigned int	uint;
+typedef unsigned long	ulong;
 
 typedef enum {
 	qfalse,
@@ -137,8 +138,7 @@ typedef int Fhandle;
 typedef int Cliphandle;
 
 #define PAD(base, alignment)	(((base)+(alignment)-1) & ~((alignment)-1))
-#define PADLEN(base, alignment) (PAD((base), (alignment)) - (base))
-
+#define PADLEN(base, alignment)	(PAD((base), (alignment)) - (base))
 #define PADP(base, alignment)	((void*)PAD((intptr_t)(base), (alignment)))
 
 #ifdef __GNUC__
@@ -153,22 +153,23 @@ typedef int Cliphandle;
 
 /* pseudo-keyword, same as Tcl's 'then' */
 #define then
+/* this one may be summarised as 'wank' */
+#define fallthrough
 
 #ifndef NULL
 #define NULL ((void*)0)
 #endif
-
 #define nil NULL
 
 #define STRING(s)	# s
-/* expand constants before stringifying them */
+/* expand constants before token-pasting them */
 #define XSTRING(s)	STRING(s)
 
 #define MAX_QINT	0x7fffffff
 #define MIN_QINT	(-MAX_QINT-1)
 
 #define ARRAY_LEN(x)	(sizeof(x) / sizeof(*(x)))
-#define STRARRAY_LEN(x) (ARRAY_LEN(x) - 1)
+#define STRARRAY_LEN(x)	(ARRAY_LEN(x) - 1)
 
 enum {
 	/* angle indexes */
@@ -360,7 +361,7 @@ extern Vec4	colorDkGrey;
 #define COLOR_CYAN	'5'
 #define COLOR_MAGENTA	'6'
 #define COLOR_WHITE	'7'
-#define ColorIndex(c) (((c) - '0') & 0x07)
+#define ColorIndex(c)	(((c) - '0') & 0x07)
 
 #define S_COLOR_BLACK	"^0"
 #define S_COLOR_RED	"^1"
@@ -368,16 +369,16 @@ extern Vec4	colorDkGrey;
 #define S_COLOR_YELLOW	"^3"
 #define S_COLOR_BLUE	"^4"
 #define S_COLOR_CYAN	"^5"
-#define S_COLOR_MAGENTA "^6"
+#define S_COLOR_MAGENTA	"^6"
 #define S_COLOR_WHITE	"^7"
 
 extern Vec4 g_color_table[8];
 
-#define MAKERGB(v, r, g, b)	v[0]	=r; v[1]=g; v[2]=b
-#define MAKERGBA(v, r, g, b, a) v[0]	=r; v[1]=g; v[2]=b; v[3]=a
+#define MAKERGB(v, r, g, b)	(v[0]=r; v[1]=g; v[2]=b)
+#define MAKERGBA(v, r, g, b, a)	(v[0]=r; v[1]=g; v[2]=b; v[3]=a)
 
-#define DEG2RAD(a)		(((a) * M_PI) / 180.0F)
-#define RAD2DEG(a)		(((a) * 180.0f) / M_PI)
+#define DEG2RAD(a)	(((a) * M_PI) / 180.0F)
+#define RAD2DEG(a)	(((a) * 180.0f) / M_PI)
 
 struct Cplane;
 
