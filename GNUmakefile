@@ -58,7 +58,7 @@ else
 endif
 export CROSS_COMPILING
 
-VERSION?=0.1.6
+VERSION?=0.1.7
 CLIENTBIN?=yantar
 SERVERBIN?=yantarded
 BASEGAME?=base
