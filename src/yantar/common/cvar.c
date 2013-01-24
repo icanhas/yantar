@@ -771,7 +771,7 @@ reset_f(void)
 void
 cvarwritevars(Fhandle f)
 {
-	int len;	/* total length of name + archival string */
+	size_t len;	/* total length of name + archival string */
 	char buffer[1024];
 	Cvar *var;
 
