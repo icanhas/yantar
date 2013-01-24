@@ -116,7 +116,7 @@ int Q_vsnprintf(char *str, size_t size, const char *format, va_list ap);
 #include "platform.h"
 
 typedef unsigned char	byte;
-typedef unsigned char	uchar
+typedef unsigned char	uchar;
 typedef unsigned short	ushort;
 typedef unsigned int	uint;
 typedef unsigned long	ulong;
@@ -374,8 +374,8 @@ extern Vec4	colorDkGrey;
 
 extern Vec4 g_color_table[8];
 
-#define MAKERGB(v, r, g, b)	(v[0]=r; v[1]=g; v[2]=b)
-#define MAKERGBA(v, r, g, b, a)	(v[0]=r; v[1]=g; v[2]=b; v[3]=a)
+#define MAKERGB(v, r, g, b)	(v)[0]=(r); (v)[1]=(g); (v)[2]=(b)
+#define MAKERGBA(v, r, g, b, a)	(v)[0]=(r); (v)[1]=(g); (v)[2]=(b); (v)[3]=(a)
 
 #define DEG2RAD(a)	(((a) * M_PI) / 180.0F)
 #define RAD2DEG(a)	(((a) * 180.0f) / M_PI)
@@ -1440,11 +1440,9 @@ typedef struct Qtime {
 	int	tm_isdst;	/* daylight savings time flag */
 } Qtime;
 
-/* server browser sources
- * TTimo: AS_MPLAYER is no longer used */
+/* server browser sources  */
 enum {
 	AS_LOCAL,
-	AS_MPLAYER,
 	AS_GLOBAL,
 	AS_FAVORITES
 };
