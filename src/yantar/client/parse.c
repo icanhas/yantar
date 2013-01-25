@@ -846,7 +846,7 @@ CL_ParseServerMessage(Bitmsg *msg)
 			break;
 		}
 		if(cl_shownet->integer >= 2){
-			if(cmd < 0 || cmd >= svc_numsvc)
+			if(cmd < 0 || cmd >= ARRAY_LEN(svcstr))
 				comprintf("%3i: BAD CMD %i\n", msg->readcount-1, cmd);
 			else
 				SHOWNET(msg, svcstr[cmd]);
