@@ -4,19 +4,24 @@
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License.
  */
+ 
+ /*
+  * FIXME: this is total bollocks
+  */
 
+#include "shared.h"
 #include "local.h"
 #include "codec.h"
 
 #define DEF_COMSOUNDMEGS "8"
 
-static sndBuffer *buffer = NULL;
-static sndBuffer *freelist = NULL;
+static sndBuffer *buffer = nil;
+static sndBuffer *freelist = nil;
 static int	inUse = 0;
 static int	totalInUse = 0;
 
-short		*sfxScratchBuffer = NULL;
-Sfx		*sfxScratchPointer = NULL;
+short *sfxScratchBuffer = nil;
+Sfx *sfxScratchPointer = nil;
 int sfxScratchIndex = 0;
 
 void
@@ -38,7 +43,7 @@ SND_malloc(void)
 	totalInUse += sizeof(sndBuffer);
 	v = freelist;
 	freelist = *(sndBuffer**)freelist;
-	v->next = NULL;
+	v->next = nil;
 	return v;
 }
 
@@ -49,22 +54,20 @@ SND_setup(void)
 	Cvar		*cv;
 	int scs;
 
-	cv = cvarget("com_soundMegs", DEF_COMSOUNDMEGS,
-		CVAR_LATCH | CVAR_ARCHIVE);
-
+	cv = cvarget("com_soundMegs", DEF_COMSOUNDMEGS, CVAR_LATCH | CVAR_ARCHIVE);
 	scs = (cv->integer*1536);
 
 	buffer = malloc(scs*sizeof(sndBuffer));
 	/* allocate the stack based hunk allocator */
 	sfxScratchBuffer = malloc(SND_CHUNK_SIZE * sizeof(short) * 4);	/* hunkalloc(SND_CHUNK_SIZE * sizeof(short) * 4); */
-	sfxScratchPointer = NULL;
+	sfxScratchPointer = nil;
 
 	inUse	= scs*sizeof(sndBuffer);
 	p	= buffer;;
 	q	= p + scs;
 	while(--q > p)
 		*(sndBuffer**)q = q-1;
-	*(sndBuffer**)q = NULL;
+	*(sndBuffer**)q = nil;
 	freelist = p + scs - 1;
 	comprintf("Sound memory manager started\n");
 }
@@ -76,16 +79,13 @@ SND_shutdown(void)
 	free(buffer);
 }
 
-/* resample / decimate to the current source rate */
+/* resample/decimate to the current source rate */
 static void
-ResampleSfx(Sfx *sfx, int inrate, int inwidth, byte *data, qbool compressed)
+ResampleSfx(Sfx *sfx, int inrate, int inwidth, byte *data)
 {
-	int	outcount;
-	int	srcsample;
+	int outcount, srcsample;
+	int i, sample, samplefrac, fracstep, part;
 	float stepscale;
-	int	i;
-	int	sample, samplefrac, fracstep;
-	int	part;
 	sndBuffer *chunk;
 
 	stepscale = (float)inrate / dma.speed;	/* this is usually 0.5, 1, or 2 */
@@ -103,53 +103,19 @@ ResampleSfx(Sfx *sfx, int inrate, int inwidth, byte *data, qbool compressed)
 		if(inwidth == 2)
 			sample = (((short*)data)[srcsample]);
 		else
-			sample =
-				(int)((unsigned char)(data[srcsample]) -
-				      128) << 8;
-		part = (i&(SND_CHUNK_SIZE-1));
+			sample = (int)((uchar)(data[srcsample]) - 128) << 8;
+		part = (i & (SND_CHUNK_SIZE-1));
 		if(part == 0){
 			sndBuffer *newchunk;
 			newchunk = SND_malloc();
-			if(chunk == NULL)
+			if(chunk == nil)
 				sfx->soundData = newchunk;
 			else
 				chunk->next = newchunk;
 			chunk = newchunk;
 		}
-
 		chunk->sndChunk[part] = sample;
 	}
-}
-
-/* resample / decimate to the current source rate */
-static int
-ResampleSfxRaw(short *sfx, int inrate, int inwidth, int samples, byte *data)
-{
-	int	outcount;
-	int	srcsample;
-	float stepscale;
-	int	i;
-	int	sample, samplefrac, fracstep;
-
-	stepscale = (float)inrate / dma.speed;	/* this is usually 0.5, 1, or 2 */
-
-	outcount = samples / stepscale;
-
-	samplefrac = 0;
-	fracstep = stepscale * 256;
-
-	for(i=0; i<outcount; i++){
-		srcsample = samplefrac >> 8;
-		samplefrac += fracstep;
-		if(inwidth == 2)
-			sample = LittleShort (((short*)data)[srcsample]);
-		else
-			sample =
-				(int)((unsigned char)(data[srcsample]) -
-				      128) << 8;
-		sfx[i] = sample;
-	}
-	return outcount;
 }
 
 /*
@@ -160,7 +126,6 @@ qbool
 S_LoadSound(Sfx *sfx)
 {
 	byte *data;
-	short *samples;
 	Sndinfo info;
 /*	int		size; */
 
@@ -181,51 +146,13 @@ S_LoadSound(Sfx *sfx)
 		comdprintf(S_COLOR_YELLOW "WARNING: %s is not a 22kHz sound file\n",
 			sfx->soundName);
 
-	samples = hunkalloctemp(info.samples * sizeof(short) * 2);
-
 	sfx->lastTimeUsed = commillisecs()+1;
+	
+	sfx->soundCompressionMethod = 0;
+	sfx->soundLength = info.samples;
+	sfx->soundData = nil;
+	ResampleSfx(sfx, info.rate, info.width, data + info.dataofs);
 
-	/* each of these compression schemes works just fine
-	 * but the 16bit quality is much nicer and with a local
-	 * install assured we can rely upon the sound memory
-	 * manager to do the right thing for us and page
-	 * sound in as needed */
-
-	if(sfx->soundCompressed == qtrue){
-		sfx->soundCompressionMethod = 1;
-		sfx->soundData = NULL;
-		sfx->soundLength =
-			ResampleSfxRaw(samples, info.rate, info.width,
-				info.samples,
-				data + info.dataofs);
-		S_AdpcmEncodeSound(sfx, samples);
-#if 0
-	}else if(info.samples>(SND_CHUNK_SIZE*16) && info.width >1){
-		sfx->soundCompressionMethod = 3;
-		sfx->soundData = NULL;
-		sfx->soundLength =
-			ResampleSfxRaw(samples, info.rate, info.width,
-				info.samples,
-				(data + info.dataofs));
-		encodeMuLaw(sfx, samples);
-	}else if(info.samples>(SND_CHUNK_SIZE*6400) && info.width >1){
-		sfx->soundCompressionMethod = 2;
-		sfx->soundData = NULL;
-		sfx->soundLength =
-			ResampleSfxRaw(samples, info.rate, info.width,
-				info.samples,
-				(data + info.dataofs));
-		encodeWavelet(sfx, samples);
-#endif
-	}else{
-		sfx->soundCompressionMethod = 0;
-		sfx->soundLength = info.samples;
-		sfx->soundData = NULL;
-		ResampleSfx(sfx, info.rate, info.width, data + info.dataofs,
-			qfalse);
-	}
-
-	hunkfreetemp(samples);
 	hunkfreetemp(data);
 
 	return qtrue;
