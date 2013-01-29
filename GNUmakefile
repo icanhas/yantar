@@ -1072,7 +1072,6 @@ R2OBJ = \
 
 ifeq ($(ARCH),x86)
   YOBJ += \
-    $(O)/client/snd_mixa.o \
     $(O)/client/matha.o \
     $(O)/client/snapvector.o \
     $(O)/client/ftola.o
