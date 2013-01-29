@@ -8,9 +8,10 @@ enum {
 	Hunkfreemagic	= 0xfeeee717,
 
 	Minhunkmegs	= 56,
-	Mindedhunkmegs	= 1,
-	Defhunkmegs	= 128,
-	Defzonemegs	= 24
+	Mindedhunkmegs	= 1
+	/* these two are #defined for XSTRING() */
+	#define Defhunkmegs	128
+	#define Defzonemegs	24
 };
 
 typedef struct Zonedebug	Zonedebug;
