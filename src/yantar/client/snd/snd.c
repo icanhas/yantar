@@ -341,7 +341,7 @@ S_Init(void)
 				comerrorf(ERR_FATAL, "Sound interface invalid");
 
 			S_SoundInfo( );
-			comprintf("Sound initialization successful.\n");
+			comprintf("Sound initialized.\n");
 		}else
 			comprintf("Sound initialization failed.\n");
 	}

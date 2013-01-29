@@ -16,13 +16,7 @@ typedef struct Sndinfo Sndinfo;
 typedef struct Sndstream Sndstream;
 typedef struct Sndcodec Sndcodec;
 
-/* Codec op types */
-typedef void *(*CODEC_LOAD)(const char *filename, Sndinfo *info);
-typedef Sndstream *(*CODEC_OPEN)(const char *filename);
-typedef int (*CODEC_READ)(Sndstream *stream, int bytes, void *buffer);
-typedef void (*CODEC_CLOSE)(Sndstream *stream);
-
-typedef struct Sndinfo {
+struct Sndinfo {
 	int	rate;
 	int	width;
 	int	channels;
@@ -32,22 +26,22 @@ typedef struct Sndinfo {
 };
 
 struct Sndstream {
-	Sndcodec	*codec;
-	Fhandle	file;
-	Sndinfo	info;
+	Sndcodec*	codec;
+	Fhandle		file;
+	Sndinfo		info;
 	int		length;
 	int		pos;
-	void		*ptr;
+	void*		ptr;
 };
 
 /* Codec data structure */
 struct Sndcodec {
-	char		*ext;
-	CODEC_LOAD	load;
-	CODEC_OPEN	open;
-	CODEC_READ	read;
-	CODEC_CLOSE	close;
-	Sndcodec	*next;
+	char*		ext;
+	void*		(*load)(const char* fname, Sndinfo*);
+	Sndstream*	(*open)(const char* fname);
+	int		(*read)(Sndstream*, int, void*);
+	void		(*close)(Sndstream*);
+	Sndcodec*	next;
 };
 
 /* Codec management */
