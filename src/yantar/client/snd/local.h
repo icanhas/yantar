@@ -21,16 +21,10 @@ typedef struct {
 	int	right;
 } Samppair;
 
-typedef struct adpcm_state {
-	short	sample;	/* Previous output value */
-	char	index;	/* Index into stepsize table */
-} adpcm_state_t;
-
 typedef struct sndBuffer_s {
 	short		sndChunk[SND_CHUNK_SIZE];
 	struct sndBuffer_s              *next;
 	int		size;
-	adpcm_state_t	adpcm;
 } sndBuffer;
 
 typedef struct Sfx {
@@ -196,11 +190,6 @@ void S_memoryLoad(Sfx *sfx);
 
 /* spatializes a channel */
 void S_Spatialize(Channel *ch);
-
-/* adpcm functions */
-int  S_AdpcmMemoryNeeded(const Wavinfo *info);
-void S_AdpcmEncodeSound(Sfx *sfx, short *samples);
-void S_AdpcmGetSamples(sndBuffer *chunk, short *to);
 
 /* wavelet function */
 

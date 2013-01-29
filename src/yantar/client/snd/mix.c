@@ -494,7 +494,7 @@ S_PaintChannelFromWavelet(Channel *ch, Sfx *sc, int count, int sampleOffset,
 	}
 
 	if(i!=sfxScratchIndex || sfxScratchPointer != sc){
-		S_AdpcmGetSamples(chunk, sfxScratchBuffer);
+		//  FIXME: S_AdpcmGetSamples(chunk, sfxScratchBuffer);
 		sfxScratchIndex		= i;
 		sfxScratchPointer	= sc;
 	}
@@ -511,55 +511,6 @@ S_PaintChannelFromWavelet(Channel *ch, Sfx *sc, int count, int sampleOffset,
 			decodeWavelet(chunk, sfxScratchBuffer);
 			sfxScratchIndex++;
 			sampleOffset = 0;
-		}
-	}
-}
-
-static void
-S_PaintChannelFromADPCM(Channel *ch, Sfx *sc, int count, int sampleOffset,
-			int bufferOffset)
-{
-	int	data;
-	int	leftvol, rightvol;
-	int	i;
-	Samppair *samp;
-	sndBuffer *chunk;
-	short *samples;
-
-	leftvol		= ch->leftvol*snd_vol;
-	rightvol	= ch->rightvol*snd_vol;
-
-	i = 0;
-	samp	= &paintbuffer[ bufferOffset ];
-	chunk	= sc->soundData;
-
-	if(ch->doppler)
-		sampleOffset = sampleOffset*ch->oldDopplerScale;
-
-	while(sampleOffset>=(SND_CHUNK_SIZE*4)){
-		chunk = chunk->next;
-		sampleOffset -= (SND_CHUNK_SIZE*4);
-		i++;
-	}
-
-	if(i!=sfxScratchIndex || sfxScratchPointer != sc){
-		S_AdpcmGetSamples(chunk, sfxScratchBuffer);
-		sfxScratchIndex		= i;
-		sfxScratchPointer	= sc;
-	}
-
-	samples = sfxScratchBuffer;
-
-	for(i=0; i<count; i++){
-		data = samples[sampleOffset++];
-		samp[i].left	+= (data * leftvol)>>8;
-		samp[i].right	+= (data * rightvol)>>8;
-
-		if(sampleOffset == SND_CHUNK_SIZE*4){
-			chunk = chunk->next;
-			S_AdpcmGetSamples(chunk, sfxScratchBuffer);
-			sampleOffset = 0;
-			sfxScratchIndex++;
 		}
 	}
 }
@@ -682,12 +633,7 @@ S_PaintChannels(int endtime)
 				count = sc->soundLength - sampleOffset;
 
 			if(count > 0){
-				if(sc->soundCompressionMethod == 1)
-					S_PaintChannelFromADPCM         (
-						ch, sc, count, sampleOffset,
-						ltime -
-						s_paintedtime);
-				else if(sc->soundCompressionMethod == 2)
+				if(sc->soundCompressionMethod == 2)
 					S_PaintChannelFromWavelet       (
 						ch, sc, count, sampleOffset,
 						ltime -
@@ -727,12 +673,7 @@ S_PaintChannels(int endtime)
 					count = sc->soundLength - sampleOffset;
 
 				if(count > 0){
-					if(sc->soundCompressionMethod == 1)
-						S_PaintChannelFromADPCM         (
-							ch, sc, count,
-							sampleOffset,
-							ltime - s_paintedtime);
-					else if(sc->soundCompressionMethod == 2)
+					if(sc->soundCompressionMethod == 2)
 						S_PaintChannelFromWavelet       (
 							ch, sc, count,
 							sampleOffset,

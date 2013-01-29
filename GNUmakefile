@@ -962,7 +962,6 @@ YOBJ = \
   $(O)/client/net/chan.o \
   $(O)/client/net/ip.o \
   \
-  $(O)/client/snd/adpcm.o \
   $(O)/client/snd/dma.o \
   $(O)/client/snd/mem.o \
   $(O)/client/snd/mix.o \
