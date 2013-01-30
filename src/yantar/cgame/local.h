@@ -1217,7 +1217,7 @@ Sfxhandle	CG_CustomSound(int clientNum, const char *soundName);
 
 /*
  * predict.c
- *  */
+ */
 void	CG_BuildSolidList(void);
 int	CG_PointContents(const Vec3 point, int passEntityNum);
 void	CG_Trace(Trace *result, const Vec3 start, const Vec3 mins,
@@ -1225,6 +1225,9 @@ void	CG_Trace(Trace *result, const Vec3 start, const Vec3 mins,
 		int skipNumber, int mask);
 void	CG_TraceCapsule(Trace *result, const Vec3 start, const Vec3 mins,
 		const Vec3 maxs, const Vec3 end,
+		int skipNumber, int mask);
+void	CG_TraceTransformedCapsule(Trace *result, const Vec3 start, const Vec3 mins,
+		const Vec3 maxs, const Vec3 end, const Vec3 origin, const Vec3 angles,
 		int skipNumber, int mask);
 void	CG_PredictPlayerState(void);
 void	CG_LoadDeferredPlayers(void);
@@ -1436,6 +1439,10 @@ void	trap_CM_CapsuleTrace(Trace *results, const Vec3 start,
 		Cliphandle model,
 		int brushmask);
 void	trap_CM_TransformedBoxTrace(Trace *results, const Vec3 start,
+		const Vec3 end, const Vec3 mins, const Vec3 maxs,
+		Cliphandle model, int brushmask,
+		const Vec3 origin, const Vec3 angles);
+void	trap_CM_TransformedCapsuleTrace(Trace *results, const Vec3 start,
 		const Vec3 end, const Vec3 mins, const Vec3 maxs,
 		Cliphandle model, int brushmask,
 		const Vec3 origin, const Vec3 angles);

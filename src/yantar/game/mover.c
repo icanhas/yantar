@@ -41,13 +41,12 @@ G_TestEntityPosition(Gentity *ent)
 	else
 		mask = MASK_SOLID;
 	if(ent->client)
-		trap_Trace(&tr, ent->client->ps.origin, ent->r.mins, ent->r.maxs,
-			ent->client->ps.origin, ent->s.number,
-			mask);
+		trap_Trace(&tr, ent->client->ps.origin, ent->r.mins,
+			   ent->r.maxs, ent->client->ps.origin, nil, nil,
+			   ent->s.number, mask);
 	else
 		trap_Trace(&tr, ent->s.traj.base, ent->r.mins, ent->r.maxs,
-			ent->s.traj.base, ent->s.number,
-			mask);
+			   ent->s.traj.base, nil, nil, ent->s.number, mask);
 
 	if(tr.startsolid)
 		return &g_entities[ tr.entityNum ];
@@ -193,7 +192,8 @@ G_CheckProxMinePosition(Gentity *check)
 
 	saddv3(check->s.traj.base, 0.125, check->movedir, start);
 	saddv3(check->s.traj.base, 2, check->movedir, end);
-	trap_Trace(&tr, start, NULL, NULL, end, check->s.number, MASK_SOLID);
+	trap_Trace(&tr, start, NULL, NULL, end, nil, nil, check->s.number,
+		   MASK_SOLID);
 
 	if(tr.startsolid || tr.fraction < 1)
 		return qfalse;

@@ -348,15 +348,14 @@ G_RunMissile(Gentity *ent)
 		/* ignore interactions with the missile owner */
 		passent = ent->r.ownerNum;
 	/* trace a line from the previous position to the current position */
-	trap_Trace(&tr, ent->r.currentOrigin, ent->r.mins, ent->r.maxs, origin,
-		passent,
-		ent->clipmask);
+	trap_Trace(&tr, ent->r.currentOrigin, ent->r.mins, ent->r.maxs,
+		   origin, nil, nil, passent, ent->clipmask);
 
 	if(tr.startsolid || tr.allsolid){
 		/* make sure the tr.entityNum is set to the entity we're stuck in */
-		trap_Trace(&tr, ent->r.currentOrigin, ent->r.mins, ent->r.maxs,
-			ent->r.currentOrigin, passent,
-			ent->clipmask);
+		trap_Trace(&tr, ent->r.currentOrigin, ent->r.mins,
+			   ent->r.maxs, ent->r.currentOrigin, nil, nil,
+			   passent, ent->clipmask);
 		tr.fraction = 0;
 	}else
 		copyv3(tr.endpos, ent->r.currentOrigin);
@@ -380,9 +379,9 @@ G_RunMissile(Gentity *ent)
 	/* if the prox mine wasn't yet outside the player body */
 	if(ent->s.parentweap == Wproxlauncher && !ent->count){
 		/* check if the prox mine is outside the owner bbox */
-		trap_Trace(&tr, ent->r.currentOrigin, ent->r.mins, ent->r.maxs,
-			ent->r.currentOrigin, ENTITYNUM_NONE,
-			ent->clipmask);
+		trap_Trace(&tr, ent->r.currentOrigin, ent->r.mins,
+			   ent->r.maxs, ent->r.currentOrigin, nil, nil,
+			   ENTITYNUM_NONE, ent->clipmask);
 		if(!tr.startsolid || tr.entityNum != ent->r.ownerNum)
 			ent->count = 1;
 	}

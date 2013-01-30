@@ -577,8 +577,8 @@ correctallsolid(Pmove *pm, Pml *pml, Trace *trace)
 				point[0] += (float)i;
 				point[1] += (float)j;
 				point[2] += (float)k;
-				pm->trace(trace, point, pm->mins, pm->maxs,
-					point, pm->ps->clientNum,
+				pm->trace(trace, point, pm->mins, pm->maxs, point,
+					vec3_origin, pm->ps->viewangles, pm->ps->clientNum,
 					pm->tracemask);
 				if(!trace->allsolid){
 					point[0] = pm->ps->origin[0];
@@ -586,7 +586,7 @@ correctallsolid(Pmove *pm, Pml *pml, Trace *trace)
 					point[2] = pm->ps->origin[2] - 0.25f;
 					pm->trace(trace, pm->ps->origin,
 						pm->mins, pm->maxs, point,
-						pm->ps->clientNum,
+						vec3_origin, pm->ps->viewangles, pm->ps->clientNum,
 						pm->tracemask);
 					pml->groundTrace = *trace;
 					return qtrue;
@@ -619,7 +619,7 @@ setfalling(Pmove *pm, Pml *pml)
 		copyv3(pm->ps->origin, point);
 		point[2] -= 64.0f;
 		pm->trace(&trace, pm->ps->origin, pm->mins, pm->maxs, point,
-			pm->ps->clientNum,
+			vec3_origin, pm->ps->viewangles, pm->ps->clientNum,
 			pm->tracemask);
 		if(trace.fraction == 1.0f){
 			if(pm->cmd.forwardmove >= 0){
@@ -647,7 +647,7 @@ groundtrace(Pmove *pm, Pml *pml)
 	point[1] = pm->ps->origin[1];
 	point[2] = pm->ps->origin[2] - 0.25f;
 	pm->trace(&trace, pm->ps->origin, pm->mins, pm->maxs, point,
-		pm->ps->clientNum,
+		vec3_origin, pm->ps->viewangles, pm->ps->clientNum,
 		pm->tracemask);
 	pml->groundTrace = trace;
 	/* do something corrective if the trace starts in a solid... */

@@ -271,8 +271,9 @@ target_laser_think(Gentity *self)
 	/* fire forward and see what we hit */
 	saddv3 (self->s.origin, 2048, self->movedir, end);
 
-	trap_Trace(&tr, self->s.origin, NULL, NULL, end, self->s.number,
-		CONTENTS_SOLID|CONTENTS_BODY|CONTENTS_CORPSE);
+	trap_Trace(&tr, self->s.origin, NULL, NULL, end, nil, nil,
+		   self->s.number,
+		   CONTENTS_SOLID | CONTENTS_BODY | CONTENTS_CORPSE);
 
 	if(tr.entityNum)
 		/* hurt it if we can */

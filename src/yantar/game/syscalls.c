@@ -198,19 +198,21 @@ trap_SetBrushModel(Gentity *ent, const char *name)
 
 void
 trap_Trace(Trace *results, const Vec3 start, const Vec3 mins,
-	   const Vec3 maxs, const Vec3 end, int passEntityNum,
+	   const Vec3 maxs, const Vec3 end, const Vec3 origin,
+	   const Vec3 angles, int passEntityNum,
 	   int contentmask)
 {
-	syscall(G_TRACE, results, start, mins, maxs, end, passEntityNum,
+	syscall(G_TRACE, results, start, mins, maxs, end, origin, angles, passEntityNum,
 		contentmask);
 }
 
 void
 trap_TraceCapsule(Trace *results, const Vec3 start, const Vec3 mins,
-		  const Vec3 maxs, const Vec3 end, int passEntityNum,
-		  int contentmask)
+	const Vec3 maxs, const Vec3 end,  const Vec3 origin,
+	const Vec3 angles, int passEntityNum,
+	int contentmask)
 {
-	syscall(G_TRACECAPSULE, results, start, mins, maxs, end, passEntityNum,
+	syscall(G_TRACECAPSULE, results, start, mins, maxs, end, origin, angles, passEntityNum,
 		contentmask);
 }
 

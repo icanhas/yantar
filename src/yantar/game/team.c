@@ -1341,9 +1341,8 @@ SpawnObelisk(Vec3 origin, int team, int spawnflags)
 		/* drop to floor */
 		setv3(dest, ent->s.origin[0], ent->s.origin[1],
 			ent->s.origin[2] - 4096);
-		trap_Trace(&tr, ent->s.origin, ent->r.mins, ent->r.maxs, dest,
-			ent->s.number,
-			MASK_SOLID);
+		trap_Trace(&tr, ent->s.origin, ent->r.mins, ent->r.maxs,
+			   dest, nil, nil, ent->s.number, MASK_SOLID);
 		if(tr.startsolid){
 			ent->s.origin[2] -= 1;
 			G_Printf("SpawnObelisk: %s startsolid at %s\n",

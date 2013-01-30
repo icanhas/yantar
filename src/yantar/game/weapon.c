@@ -90,7 +90,7 @@ CheckGauntletAttack(Gentity *ent)
 
 	saddv3 (muzzle, 32, forward, end);
 
-	trap_Trace (&tr, muzzle, NULL, NULL, end, ent->s.number, MASK_SHOT);
+	trap_Trace (&tr, muzzle, NULL, NULL, end, nil, nil, ent->s.number, MASK_SHOT);
 	if(tr.surfaceFlags & SURF_NOIMPACT)
 		return qfalse;
 	if(ent->client->noclip)
@@ -160,7 +160,7 @@ Bullet_Fire(Gentity *ent, float spread, int damage)
 	passent = ent->s.number;
 	for(i = 0; i < 10; i++){
 
-		trap_Trace (&tr, muzzle, NULL, NULL, end, passent, MASK_SHOT);
+		trap_Trace (&tr, muzzle, NULL, NULL, end, nil, nil, passent, MASK_SHOT);
 		if(tr.surfaceFlags & SURF_NOIMPACT)
 			return;
 
@@ -246,7 +246,8 @@ ShotgunPellet(Vec3 start, Vec3 end, Gentity *ent)
 	copyv3(start, tr_start);
 	copyv3(end, tr_end);
 	for(i = 0; i < 10; i++){
-		trap_Trace(&tr, tr_start, NULL, NULL, tr_end, passent, MASK_SHOT);
+		trap_Trace(&tr, tr_start, NULL, NULL, tr_end, nil, nil,
+			   passent, MASK_SHOT);
 		traceEnt = &g_entities[tr.entityNum];
 
 		/* send bullet impact */
@@ -410,7 +411,8 @@ weapon_railgun_fire(Gentity *ent)
 	hits = 0;
 	passent = ent->s.number;
 	do {
-		trap_Trace (&trace, muzzle, NULL, NULL, end, passent, MASK_SHOT);
+		trap_Trace(&trace, muzzle, NULL, NULL, end, nil, nil,
+			   passent, MASK_SHOT);
 		if(trace.entityNum >= ENTITYNUM_MAX_NORMAL)
 			break;
 		traceEnt = &g_entities[ trace.entityNum ];
@@ -543,7 +545,8 @@ Weapon_LightningFire(Gentity *ent)
 	for(i = 0; i < 10; i++){
 		saddv3(muzzle, LIGHTNING_RANGE, forward, end);
 
-		trap_Trace(&tr, muzzle, NULL, NULL, end, passent, MASK_SHOT);
+		trap_Trace(&tr, muzzle, NULL, NULL, end, nil, nil, passent,
+			   MASK_SHOT);
 
 #ifdef MISSIONPACK
 		/* if not the first trace (the lightning bounced of an invulnerability sphere) */

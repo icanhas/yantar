@@ -865,8 +865,8 @@ CanDamage(Gentity *targ, Vec3 origin)
 	scalev3 (midpoint, 0.5, midpoint);
 
 	copyv3 (midpoint, dest);
-	trap_Trace (&tr, origin, vec3_origin, vec3_origin, dest, ENTITYNUM_NONE,
-		MASK_SOLID);
+	trap_Trace(&tr, origin, vec3_origin, vec3_origin, dest, nil, nil,
+		   ENTITYNUM_NONE, MASK_SOLID);
 	if(tr.fraction == 1.0 || tr.entityNum == targ->s.number)
 		return qtrue;
 
@@ -875,32 +875,32 @@ CanDamage(Gentity *targ, Vec3 origin)
 	copyv3 (midpoint, dest);
 	dest[0] += 15.0;
 	dest[1] += 15.0;
-	trap_Trace (&tr, origin, vec3_origin, vec3_origin, dest, ENTITYNUM_NONE,
-		MASK_SOLID);
+	trap_Trace(&tr, origin, vec3_origin, vec3_origin, dest, nil, nil,
+		   ENTITYNUM_NONE, MASK_SOLID);
 	if(tr.fraction == 1.0)
 		return qtrue;
 
 	copyv3 (midpoint, dest);
 	dest[0] += 15.0;
 	dest[1] -= 15.0;
-	trap_Trace (&tr, origin, vec3_origin, vec3_origin, dest, ENTITYNUM_NONE,
-		MASK_SOLID);
+	trap_Trace(&tr, origin, vec3_origin, vec3_origin, dest, nil, nil,
+		   ENTITYNUM_NONE, MASK_SOLID);
 	if(tr.fraction == 1.0)
 		return qtrue;
 
 	copyv3 (midpoint, dest);
 	dest[0] -= 15.0;
 	dest[1] += 15.0;
-	trap_Trace (&tr, origin, vec3_origin, vec3_origin, dest, ENTITYNUM_NONE,
-		MASK_SOLID);
+	trap_Trace(&tr, origin, vec3_origin, vec3_origin, dest, nil, nil,
+		   ENTITYNUM_NONE, MASK_SOLID);
 	if(tr.fraction == 1.0)
 		return qtrue;
 
 	copyv3 (midpoint, dest);
 	dest[0] -= 15.0;
 	dest[1] -= 15.0;
-	trap_Trace (&tr, origin, vec3_origin, vec3_origin, dest, ENTITYNUM_NONE,
-		MASK_SOLID);
+	trap_Trace(&tr, origin, vec3_origin, vec3_origin, dest, nil, nil,
+		   ENTITYNUM_NONE, MASK_SOLID);
 	if(tr.fraction == 1.0)
 		return qtrue;
 

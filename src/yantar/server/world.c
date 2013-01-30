@@ -558,11 +558,14 @@ SV_ClipMoveToEntities(moveclip_t *clip)
  *
  * Moves the given mins/maxs volume through the world from start to end.
  * passEntityNum and entities owned by passEntityNum are explicitly not checked.
+ *
+ * If origin & angles are non-nil, the trace volume is transformed
+ * according to them.  Otherwise, the trace volume is axis-aligned.
  */
 void
 SV_Trace(Trace *results, const Vec3 start, Vec3 mins, Vec3 maxs,
-	 const Vec3 end, int passEntityNum, int contentmask,
-	 int capsule)
+	 const Vec3 end, const Vec3 origin, const Vec3 angles,
+	 int passEntityNum, int contentmask, int capsule)
 {
 	moveclip_t clip;
 	int i;
@@ -575,7 +578,13 @@ SV_Trace(Trace *results, const Vec3 start, Vec3 mins, Vec3 maxs,
 	Q_Memset (&clip, 0, sizeof(moveclip_t));
 
 	/* clip to world */
-	CM_BoxTrace(&clip.trace, start, end, mins, maxs, 0, contentmask, capsule);
+	if(origin != nil && angles != nil){
+		CM_TransformedBoxTrace(&clip.trace, start, end, mins, maxs, 
+			0, contentmask, origin, angles, capsule);
+	}else{
+		CM_BoxTrace(&clip.trace, start, end, mins, maxs, 0, 
+			contentmask, capsule);
+	}
 	clip.trace.entityNum = clip.trace.fraction !=
 			       1.0 ? ENTITYNUM_WORLD : ENTITYNUM_NONE;
 	if(clip.trace.fraction == 0){

@@ -178,9 +178,9 @@ struct Pmove {
 	 * callbacks to test the world
 	 * these will be different functions during game and cgame 
 	 */
-	void (*trace)(Trace *results, const Vec3 start, const Vec3 mins,
-		const Vec3 maxs, const Vec3 end, int passEntityNum,
-		int contentMask);
+	void (*trace)(Trace *result, const Vec3 start, const Vec3 mins,
+		const Vec3 maxs, const Vec3 end, const Vec3 origin, const Vec3 angles,
+		int skipNumber, int mask);
 	int (*pointcontents)(const Vec3 point, int passEntityNum);
 };
 

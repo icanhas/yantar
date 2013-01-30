@@ -352,12 +352,12 @@ SV_GameSystemCalls(intptr_t *args)
 		return SV_EntityContact(VMA(1), VMA(2), VMA(
 				3), /*int capsule*/ qtrue);
 	case G_TRACE:
-		SV_Trace(VMA(1), VMA(2), VMA(3), VMA(4), VMA(
-				5), args[6], args[7], /*int capsule*/ qfalse);
+		SV_Trace(VMA(1), VMA(2), VMA(3), VMA(4), VMA(5), 
+			VMA(6), VMA(7), args[8], args[9], qfalse);
 		return 0;
 	case G_TRACECAPSULE:
-		SV_Trace(VMA(1), VMA(2), VMA(3), VMA(4), VMA(
-				5), args[6], args[7], /*int capsule*/ qtrue);
+		SV_Trace(VMA(1), VMA(2), VMA(3), VMA(4), VMA(5), 
+			VMA(6), VMA(7), args[8], args[9], qtrue);
 		return 0;
 	case G_POINT_CONTENTS:
 		return SV_PointContents(VMA(1), args[2]);
