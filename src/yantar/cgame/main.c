@@ -796,7 +796,7 @@ CG_RegisterSounds(void)
 	cgs.media.wstbimpdSound = trap_S_RegisterSound(
 		Pproxsounds "/wstbimpd", qfalse);
 	cgs.media.wstbactvSound = trap_S_RegisterSound(
-		Pproxsounds "/wstbactv", qfalse);
+		Pproxsounds "/trigger", qfalse);
 
 	cgs.media.regenSound = trap_S_RegisterSound(Pitemsounds "/regen",
 		qfalse);
