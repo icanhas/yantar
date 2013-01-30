@@ -764,6 +764,9 @@ void	trap_SetBrushModel(Gentity *ent, const char *name);
 void	trap_Trace(Trace *results, const Vec3 start, const Vec3 mins,
 		const Vec3 maxs, const Vec3 end, int passEntityNum,
 		int contentmask);
+void	trap_TraceCapsule(Trace *results, const Vec3 start, const Vec3 mins,
+		const Vec3 maxs, const Vec3 end, int passEntityNum,
+		int contentmask);
 int	trap_PointContents(const Vec3 point, int passEntityNum);
 qbool	trap_InPVS(const Vec3 p1, const Vec3 p2);
 qbool	trap_InPVSIgnorePortals(const Vec3 p1, const Vec3 p2);

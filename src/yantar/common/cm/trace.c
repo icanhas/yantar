@@ -995,13 +995,13 @@ CM_Trace(Trace *results, const Vec3 start, const Vec3 end, Vec3 mins,
 	/* set basic parms */
 	tw.contents = brushmask;
 
-	/* adjust so that mins and maxs are always symetric, which
+	/* adjust so that mins and maxs are always symmetric, which
 	 * avoids some complications with plane expanding of rotated
 	 * bmodels */
 	for(i = 0; i < 3; i++){
 		offset[i] = (mins[i] + maxs[i]) * 0.5;
-		tw.size[0][i]	= mins[i] - offset[i];
-		tw.size[1][i]	= maxs[i] - offset[i];
+		tw.size[0][i] = mins[i] - offset[i];
+		tw.size[1][i] = maxs[i] - offset[i];
 		tw.start[i]	= start[i] + offset[i];
 		tw.end[i] = end[i] + offset[i];
 	}
@@ -1011,17 +1011,14 @@ CM_Trace(Trace *results, const Vec3 start, const Vec3 end, Vec3 mins,
 		tw.sphere = *sphere;
 	else{
 		tw.sphere.use = capsule;
-		tw.sphere.radius =
-			(tw.size[1][0] >
-			 tw.size[1][2]) ? tw.size[1][2] : tw.size[1][0];
+		tw.sphere.radius = min(tw.size[1][0], tw.size[1][2]);
 		tw.sphere.halfheight = tw.size[1][2];
-		setv3(tw.sphere.offset, 0, 0,
-			tw.size[1][2] - tw.sphere.radius);
+		setv3(tw.sphere.offset, 0, 0, tw.size[1][2] - tw.sphere.radius);
 	}
 
 	tw.maxOffset = tw.size[1][0] + tw.size[1][1] + tw.size[1][2];
 
-	/* tw.offsets[signbits] = vector to apropriate corner from origin */
+	/* tw.offsets[signbits] = vector to appropriate corner from origin */
 	tw.offsets[0][0] = tw.size[0][0];
 	tw.offsets[0][1] = tw.size[0][1];
 	tw.offsets[0][2] = tw.size[0][2];
@@ -1057,21 +1054,21 @@ CM_Trace(Trace *results, const Vec3 start, const Vec3 end, Vec3 mins,
 	/*
 	 * calculate bounds
 	 */
-	if(tw.sphere.use)
+	if(tw.sphere.use){
+		Scalar off, rad;
+
+		rad = tw.sphere.radius;
 		for(i = 0; i < 3; i++){
+			off = fabs(tw.sphere.offset[i]);
 			if(tw.start[i] < tw.end[i]){
-				tw.bounds[0][i] = tw.start[i] - fabs(
-					tw.sphere.offset[i]) - tw.sphere.radius;
-				tw.bounds[1][i] = tw.end[i] + fabs(
-					tw.sphere.offset[i]) + tw.sphere.radius;
+				tw.bounds[0][i] = tw.start[i] - off - rad;
+				tw.bounds[1][i] = tw.end[i] + off + rad;
 			}else{
-				tw.bounds[0][i] = tw.end[i] - fabs(
-					tw.sphere.offset[i]) - tw.sphere.radius;
-				tw.bounds[1][i] = tw.start[i] + fabs(
-					tw.sphere.offset[i]) + tw.sphere.radius;
+				tw.bounds[0][i] = tw.end[i] - off - rad;
+				tw.bounds[1][i] = tw.start[i] + off + rad;
 			}
 		}
-	else
+	}else{
 		for(i = 0; i < 3; i++){
 			if(tw.start[i] < tw.end[i]){
 				tw.bounds[0][i] = tw.start[i] + tw.size[0][i];
@@ -1081,7 +1078,7 @@ CM_Trace(Trace *results, const Vec3 start, const Vec3 end, Vec3 mins,
 				tw.bounds[1][i] = tw.start[i] + tw.size[1][i];
 			}
 		}
-
+	}
 	/*
 	 * check for position test special case
 	 */
@@ -1112,8 +1109,7 @@ CM_Trace(Trace *results, const Vec3 start, const Vec3 end, Vec3 mins,
 		/*
 		 * check for point special case
 		 */
-		if(tw.size[0][0] == 0 && tw.size[0][1] == 0 && tw.size[0][2] ==
-		   0){
+		if(tw.size[0][0] == 0 && tw.size[0][1] == 0 && tw.size[0][2] == 0){
 			tw.isPoint = qtrue;
 			clearv3(tw.extents);
 		}else{

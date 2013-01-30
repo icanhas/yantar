@@ -142,6 +142,22 @@ CG_Trace(Trace *result, const Vec3 start, const Vec3 mins,
 	*result = t;
 }
 
+void
+CG_TraceCapsule(Trace *result, const Vec3 start, const Vec3 mins,
+	 const Vec3 maxs, const Vec3 end,
+	 int skipNumber,
+	 int mask)
+{
+	Trace t;
+
+	trap_CM_CapsuleTrace(&t, start, end, mins, maxs, 0, mask);
+	t.entityNum = t.fraction != 1.0 ? ENTITYNUM_WORLD : ENTITYNUM_NONE;
+	/* check all other solid models */
+	CG_ClipMoveToEntities(start, mins, maxs, end, skipNumber, mask, &t);
+
+	*result = t;
+}
+
 /*
  * CG_PointContents
  */
@@ -434,7 +450,7 @@ CG_PredictPlayerState(void)
 
 	/* prepare for pmove */
 	cg_pmove.ps = &cg.predictedPlayerState;
-	cg_pmove.trace = CG_Trace;
+	cg_pmove.trace = CG_TraceCapsule;
 	cg_pmove.pointcontents = CG_PointContents;
 	if(cg_pmove.ps->pm_type == PM_DEAD)
 		cg_pmove.tracemask = MASK_PLAYERSOLID & ~CONTENTS_BODY;

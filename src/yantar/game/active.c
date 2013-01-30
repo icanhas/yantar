@@ -267,7 +267,7 @@ SpectatorThink(Gentity *ent, Usrcmd *ucmd)
 		pm.ps	= &client->ps;
 		pm.cmd	= *ucmd;
 		pm.tracemask = MASK_PLAYERSOLID & ~CONTENTS_BODY;	/* spectators can fly through bodies */
-		pm.trace = trap_Trace;
+		pm.trace = trap_TraceCapsule;
 		pm.pointcontents = trap_PointContents;
 
 		/* perform a pmove */
@@ -680,7 +680,7 @@ ClientThink_real(Gentity *ent)
 		pm.tracemask = MASK_PLAYERSOLID | CONTENTS_BOTCLIP;
 	else
 		pm.tracemask = MASK_PLAYERSOLID;
-	pm.trace = trap_Trace;
+	pm.trace = trap_TraceCapsule;
 	pm.pointcontents	= trap_PointContents;
 	pm.debugLevel		= g_debugMove.integer;
 	pm.noFootsteps		= (g_dmflags.integer & DF_NO_FOOTSTEPS) > 0;

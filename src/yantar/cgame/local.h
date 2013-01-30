@@ -1223,6 +1223,9 @@ int	CG_PointContents(const Vec3 point, int passEntityNum);
 void	CG_Trace(Trace *result, const Vec3 start, const Vec3 mins,
 		const Vec3 maxs, const Vec3 end,
 		int skipNumber, int mask);
+void	CG_TraceCapsule(Trace *result, const Vec3 start, const Vec3 mins,
+		const Vec3 maxs, const Vec3 end,
+		int skipNumber, int mask);
 void	CG_PredictPlayerState(void);
 void	CG_LoadDeferredPlayers(void);
 
@@ -1423,6 +1426,11 @@ int	trap_CM_TransformedPointContents(const Vec3 p,
 		Cliphandle model, const Vec3 origin,
 		const Vec3 angles);
 void	trap_CM_BoxTrace(Trace *results, const Vec3 start,
+		const Vec3 end,
+		const Vec3 mins, const Vec3 maxs,
+		Cliphandle model,
+		int brushmask);
+void	trap_CM_CapsuleTrace(Trace *results, const Vec3 start,
 		const Vec3 end,
 		const Vec3 mins, const Vec3 maxs,
 		Cliphandle model,
