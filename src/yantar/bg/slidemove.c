@@ -66,7 +66,7 @@ PM_SlideMove(Pmove *pm, Pml *pml, qbool gravity)
 
 		/* see if we can make it there */
 		pm->trace (&trace, pm->ps->origin, pm->mins, pm->maxs, end,
-			vec3_origin, pm->ps->viewangles, pm->ps->clientNum,
+			pm->ps->clientNum,
 			pm->tracemask);
 
 		if(trace.allsolid){
@@ -206,7 +206,7 @@ PM_StepSlideMove(Pmove *pm, Pml *pml, qbool gravity)
 
 	copyv3(start_o, down);
 	down[2] -= STEPSIZE;
-	pm->trace (&trace, start_o, pm->mins, pm->maxs, down, vec3_origin, pm->ps->viewangles, pm->ps->clientNum,
+	pm->trace (&trace, start_o, pm->mins, pm->maxs, down, pm->ps->clientNum,
 		pm->tracemask);
 	setv3(up, 0, 0, 1);
 	/* never step up when you still have up velocity */
@@ -221,7 +221,7 @@ PM_StepSlideMove(Pmove *pm, Pml *pml, qbool gravity)
 	up[2] += STEPSIZE;
 
 	/* test the player position if they were a stepheight higher */
-	pm->trace (&trace, start_o, pm->mins, pm->maxs, up, vec3_origin, pm->ps->viewangles, pm->ps->clientNum,
+	pm->trace (&trace, start_o, pm->mins, pm->maxs, up, pm->ps->clientNum,
 		pm->tracemask);
 	if(trace.allsolid){
 		if(pm->debugLevel)
@@ -240,7 +240,7 @@ PM_StepSlideMove(Pmove *pm, Pml *pml, qbool gravity)
 	copyv3 (pm->ps->origin, down);
 	down[2] -= stepSize;
 	pm->trace (&trace, pm->ps->origin, pm->mins, pm->maxs, down,
-		vec3_origin, pm->ps->viewangles, pm->ps->clientNum,
+		pm->ps->clientNum,
 		pm->tracemask);
 	if(!trace.allsolid)
 		copyv3 (trace.endpos, pm->ps->origin);
@@ -252,7 +252,7 @@ PM_StepSlideMove(Pmove *pm, Pml *pml, qbool gravity)
 #if 0
 	/* if the down trace can trace back to the original position directly, don't step */
 	pm->trace(&trace, pm->ps->origin, pm->mins, pm->maxs, start_o,
-		vec3_origin, pm->ps->viewangles, pm->ps->clientNum,
+		pm->ps->clientNum,
 		pm->tracemask);
 	if(trace.fraction == 1.0f){
 		/* use the original move */

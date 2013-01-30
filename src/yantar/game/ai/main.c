@@ -121,8 +121,7 @@ BotAI_Trace(bsp_Trace *bsptrace, Vec3 start, Vec3 mins, Vec3 maxs,
 {
 	Trace trace;
 
-	trap_Trace(&trace, start, mins, maxs, end, nil, nil, passent,
-		   contentmask);
+	trap_Trace(&trace, start, mins, maxs, end, passent, contentmask);
 	/* copy the trace information */
 	bsptrace->allsolid = trace.allsolid;
 	bsptrace->startsolid = trace.startsolid;

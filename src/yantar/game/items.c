@@ -83,9 +83,9 @@ Pickup_Powerup(Gentity *ent, Gentity *other)
 			continue;
 
 		/* if not line of sight, no sound */
-		trap_Trace(&tr, client->ps.origin, NULL, NULL,
-			   ent->s.traj.base, nil, nil, ENTITYNUM_NONE,
-			   CONTENTS_SOLID);
+		trap_Trace(&tr, client->ps.origin, NULL, NULL, ent->s.traj.base,
+			ENTITYNUM_NONE,
+			CONTENTS_SOLID);
 		if(tr.fraction != 1.0)
 			continue;
 
@@ -599,8 +599,9 @@ FinishSpawningItem(Gentity *ent)
 		/* drop to floor */
 		setv3(dest, ent->s.origin[0], ent->s.origin[1],
 			ent->s.origin[2] - 4096);
-		trap_Trace(&tr, ent->s.origin, ent->r.mins, ent->r.maxs,
-			   dest, nil, nil, ent->s.number, MASK_SOLID);
+		trap_Trace(&tr, ent->s.origin, ent->r.mins, ent->r.maxs, dest,
+			ent->s.number,
+			MASK_SOLID);
 		if(tr.startsolid){
 			G_Printf ("FinishSpawningItem: %s startsolid at %s\n",
 			  ent->classname, vtos(ent->s.origin));
@@ -838,8 +839,8 @@ G_RunItem(Gentity *ent)
 		mask = ent->clipmask;
 	else
 		mask = MASK_PLAYERSOLID & ~CONTENTS_BODY;	/* MASK_SOLID; */
-	trap_Trace(&tr, ent->r.currentOrigin, ent->r.mins, ent->r.maxs,
-		   origin, nil, nil, ent->r.ownerNum, mask);
+	trap_Trace(&tr, ent->r.currentOrigin, ent->r.mins, ent->r.maxs, origin,
+		ent->r.ownerNum, mask);
 
 	copyv3(tr.endpos, ent->r.currentOrigin);
 
