@@ -96,38 +96,38 @@ typedef struct {
 
 /* Interface between Q3 sound "api" and the sound backend */
 typedef struct {
-	void (*Shutdown)(void);
-	void (*StartSound)(Vec3 origin, int entnum, int entchannel,
+	void (*shutdown)(void);
+	void (*startsnd)(Vec3 origin, int entnum, int entchannel,
 			   Handle sfx);
-	void (*StartLocalSound)(Handle sfx, int channelNum);
-	void (*StartBackgroundTrack)(const char *intro, const char *loop);
-	void (*StopBackgroundTrack)(void);
-	void (*RawSamples)(int stream, int samples, int rate, int width,
+	void (*startlocalsnd)(Handle sfx, int channelNum);
+	void (*startbackgroundtrack)(const char *intro, const char *loop);
+	void (*stopbackgroundtrack)(void);
+	void (*rawsamps)(int stream, int samples, int rate, int width,
 			   int channels, const byte *data, float volume,
 			   int entityNum);
-	void (*StopAllSounds)(void);
-	void (*ClearLoopingSounds)(qbool killall);
-	void (*AddLoopingSound)(int entityNum, const Vec3 origin,
+	void (*stopall)(void);
+	void (*clearloops)(qbool killall);
+	void (*addloop)(int entityNum, const Vec3 origin,
 				const Vec3 velocity, Handle sfx);
-	void (*AddRealLoopingSound)(int entityNum, const Vec3 origin,
+	void (*addrealloop)(int entityNum, const Vec3 origin,
 				    const Vec3 velocity, Handle sfx);
-	void (*StopLoopingSound)(int entityNum);
-	void (*Respatialize)(int entityNum, const Vec3 origin, Vec3 axis[3],
+	void (*stoploops)(int entityNum);
+	void (*respatialize)(int entityNum, const Vec3 origin, Vec3 axis[3],
 			     int inwater);
-	void (*UpdateEntityPosition)(int entityNum, const Vec3 origin);
-	void (*Update)(void);
-	void (*DisableSounds)(void);
-	void (*BeginRegistration)(void);
-	Handle (*RegisterSound)(const char *sample, qbool compressed);
-	void (*ClearSoundBuffer)(void);
-	void (*SoundInfo)(void);
-	void (*SoundList)(void);
+	void (*updateentpos)(int entityNum, const Vec3 origin);
+	void (*update)(void);
+	void (*disablesnds)(void);
+	void (*beginreg)(void);
+	Handle (*registersnd)(const char *sample, qbool compressed);
+	void (*clearsndbuf)(void);
+	void (*sndinfo)(void);
+	void (*sndlist)(void);
 #ifdef USE_VOIP
-	void (*StartCapture)(void);
-	int (*AvailableCaptureSamples)(void);
-	void (*Capture)(int samples, byte *data);
-	void (*StopCapture)(void);
-	void (*MasterGain)(float gain);
+	void (*startcapture)(void);
+	int (*availcapturesamps)(void);
+	void (*capture)(int samples, byte *data);
+	void (*stopcapture)(void);
+	void (*mastergain)(float gain);
 #endif
 } Sndinterface;
 

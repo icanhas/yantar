@@ -1188,7 +1188,7 @@ S_FreeOldestSound(void)
 	sfx->soundData	= NULL;
 }
 
-/* Shutdown sound engine */
+/* shutdown sound engine */
 static void
 S_Base_Shutdown(void)
 {
@@ -1225,32 +1225,32 @@ S_Base_Init(Sndinterface *si)
 	}else
 		return qfalse;
 
-	si->Shutdown = S_Base_Shutdown;
-	si->StartSound = S_Base_StartSound;
-	si->StartLocalSound = S_Base_StartLocalSound;
-	si->StartBackgroundTrack = S_Base_StartBackgroundTrack;
-	si->StopBackgroundTrack = S_Base_StopBackgroundTrack;
-	si->RawSamples = S_Base_RawSamples;
-	si->StopAllSounds = S_Base_StopAllSounds;
-	si->ClearLoopingSounds = S_Base_ClearLoopingSounds;
-	si->AddLoopingSound = S_Base_AddLoopingSound;
-	si->AddRealLoopingSound = S_Base_AddRealLoopingSound;
-	si->StopLoopingSound = S_Base_StopLoopingSound;
-	si->Respatialize = S_Base_Respatialize;
-	si->UpdateEntityPosition = S_Base_UpdateEntityPosition;
-	si->Update = S_Base_Update;
-	si->DisableSounds = S_Base_DisableSounds;
-	si->BeginRegistration = S_Base_BeginRegistration;
-	si->RegisterSound = S_Base_RegisterSound;
-	si->ClearSoundBuffer = S_Base_ClearSoundBuffer;
-	si->SoundInfo	= S_Base_SoundInfo;
-	si->SoundList	= S_Base_SoundList;
+	si->shutdown = S_Base_Shutdown;
+	si->startsnd = S_Base_StartSound;
+	si->startlocalsnd = S_Base_StartLocalSound;
+	si->startbackgroundtrack = S_Base_StartBackgroundTrack;
+	si->stopbackgroundtrack = S_Base_StopBackgroundTrack;
+	si->rawsamps = S_Base_RawSamples;
+	si->stopall = S_Base_StopAllSounds;
+	si->clearloops = S_Base_ClearLoopingSounds;
+	si->addloop = S_Base_AddLoopingSound;
+	si->addrealloop = S_Base_AddRealLoopingSound;
+	si->stoploops = S_Base_StopLoopingSound;
+	si->respatialize = S_Base_Respatialize;
+	si->updateentpos = S_Base_UpdateEntityPosition;
+	si->update = S_Base_Update;
+	si->disablesnds = S_Base_DisableSounds;
+	si->beginreg = S_Base_BeginRegistration;
+	si->registersnd = S_Base_RegisterSound;
+	si->clearsndbuf = S_Base_ClearSoundBuffer;
+	si->sndinfo	= S_Base_SoundInfo;
+	si->sndlist	= S_Base_SoundList;
 #ifdef USE_VOIP
-	si->StartCapture = S_Base_StartCapture;
-	si->AvailableCaptureSamples = S_Base_AvailableCaptureSamples;
-	si->Capture = S_Base_Capture;
-	si->StopCapture = S_Base_StopCapture;
-	si->MasterGain	= S_Base_MasterGain;
+	si->startcapture = S_Base_StartCapture;
+	si->availcapturesamps = S_Base_AvailableCaptureSamples;
+	si->capture = S_Base_Capture;
+	si->stopcapture = S_Base_StopCapture;
+	si->mastergain	= S_Base_MasterGain;
 #endif
 	return qtrue;
 }
