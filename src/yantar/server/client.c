@@ -514,7 +514,7 @@ gotnewcl:
 	newcl->challenge = challenge;
 
 	/* save the address */
-	Netchan_Setup(NS_SERVER, &newcl->netchan, from, qport, challenge, qfalse);
+	ncsetup(NS_SERVER, &newcl->netchan, from, qport, challenge, qfalse);
 	/* init the netchan queue */
 	newcl->netchan_end_queue = &newcl->netchan_start_queue;
 

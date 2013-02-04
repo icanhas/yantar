@@ -38,20 +38,20 @@ SV_Netchan_TransmitNextInQueue(Client *client)
 	netchan_buffer_t *netbuf;
 
 	comdprintf(
-		"#462 Netchan_TransmitNextFragment: popping a queued message for transmit\n");
+		"#462 ncsendnextfrag: popping a queued message for transmit\n");
 	netbuf = client->netchan_start_queue;
 
 
-	Netchan_Transmit(&client->netchan, netbuf->msg.cursize, netbuf->msg.data);
+	ncsend(&client->netchan, netbuf->msg.cursize, netbuf->msg.data);
 
 	/* pop from queue */
 	client->netchan_start_queue = netbuf->next;
 	if(!client->netchan_start_queue){
-		comdprintf("#462 Netchan_TransmitNextFragment: emptied queue\n");
+		comdprintf("#462 ncsendnextfrag: emptied queue\n");
 		client->netchan_end_queue = &client->netchan_start_queue;
 	}else
 		comdprintf(
-			"#462 Netchan_TransmitNextFragment: remaining queued message\n");
+			"#462 ncsendnextfrag: remaining queued message\n");
 
 	zfree(netbuf);
 }
@@ -67,7 +67,7 @@ int
 SV_Netchan_TransmitNextFragment(Client *client)
 {
 	if(client->netchan.unsentFragments){
-		Netchan_TransmitNextFragment(&client->netchan);
+		ncsendnextfrag(&client->netchan);
 		return SV_RateMsec(client);
 	}else if(client->netchan_start_queue){
 		SV_Netchan_TransmitNextInQueue(client);
@@ -106,7 +106,7 @@ SV_Netchan_Transmit(Client *client, Bitmsg *msg)
 		client->netchan_end_queue	=
 			&(*client->netchan_end_queue)->next;
 	}else{
-		Netchan_Transmit(&client->netchan, msg->cursize, msg->data);
+		ncsend(&client->netchan, msg->cursize, msg->data);
 	}
 }
 
@@ -117,7 +117,7 @@ qbool
 SV_Netchan_Process(Client *client, Bitmsg *msg)
 {
 	int ret;
-	ret = Netchan_Process(&client->netchan, msg);
+	ret = ncprocess(&client->netchan, msg);
 	if(!ret)
 		return qfalse;
 

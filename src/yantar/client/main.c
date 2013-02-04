@@ -2395,7 +2395,7 @@ CL_ConnectionlessPacket(Netaddr from, Bitmsg *msg)
 			}
 		}
 
-		Netchan_Setup(NS_CLIENT, &clc.netchan, from,
+		ncsetup(NS_CLIENT, &clc.netchan, from,
 			cvargetf("net_qport"),
 			clc.challenge, qfalse);
 

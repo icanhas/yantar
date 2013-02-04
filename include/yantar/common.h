@@ -237,13 +237,13 @@ struct Netchan {
 
 };
 
-void Netchan_Init(int qport);
-void Netchan_Setup(Netsrc sock, Netchan *chan, Netaddr adr, int qport,
+void ncinit(int qport);
+void ncsetup(Netsrc sock, Netchan *chan, Netaddr adr, int qport,
 		 int challenge,
 		 qbool compat);
-void Netchan_Transmit(Netchan *chan, int length, const byte *data);
-void Netchan_TransmitNextFragment(Netchan *chan);
-qbool Netchan_Process(Netchan *chan, Bitmsg *msg);
+void ncsend(Netchan *chan, int length, const byte *data);
+void ncsendnextfrag(Netchan *chan);
+qbool ncprocess(Netchan *chan, Bitmsg *msg);
 
 
 /*

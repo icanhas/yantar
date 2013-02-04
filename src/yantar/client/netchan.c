@@ -17,7 +17,7 @@ qbool
 CL_Netchan_TransmitNextFragment(Netchan *chan)
 {
 	if(chan->unsentFragments){
-		Netchan_TransmitNextFragment(chan);
+		ncsendnextfrag(chan);
 		return qtrue;
 	}
 
@@ -33,7 +33,7 @@ CL_Netchan_Transmit(Netchan *chan, Bitmsg* msg)
 	bmwriteb(msg, clc_EOF);
 
 
-	Netchan_Transmit(chan, msg->cursize, msg->data);
+	ncsend(chan, msg->cursize, msg->data);
 
 	/* Transmit all fragments without delay */
 	while(CL_Netchan_TransmitNextFragment(chan))
@@ -49,7 +49,7 @@ CL_Netchan_Process(Netchan *chan, Bitmsg *msg)
 {
 	int ret;
 
-	ret = Netchan_Process(chan, msg);
+	ret = ncprocess(chan, msg);
 	if(!ret)
 		return qfalse;
 

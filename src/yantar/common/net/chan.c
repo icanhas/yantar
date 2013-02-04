@@ -49,11 +49,11 @@ static char *netsrcString[2] = {
 };
 
 /*
- * Netchan_Init
+ * ncinit
  *
  */
 void
-Netchan_Init(int port)
+ncinit(int port)
 {
 	port &= 0xffff;
 	showpackets = cvarget ("showpackets", "0", CVAR_TEMP);
@@ -62,12 +62,12 @@ Netchan_Init(int port)
 }
 
 /*
- * Netchan_Setup
+ * ncsetup
  *
  * called to open a channel to a remote system
  */
 void
-Netchan_Setup(Netsrc sock, Netchan *chan, Netaddr adr, int qport,
+ncsetup(Netsrc sock, Netchan *chan, Netaddr adr, int qport,
 	      int challenge,
 	      qbool compat)
 {
@@ -83,12 +83,12 @@ Netchan_Setup(Netsrc sock, Netchan *chan, Netaddr adr, int qport,
 }
 
 /*
- * Netchan_TransmitNextFragment
+ * ncsendnextfrag
  *
  * Send one fragment of the current message
  */
 void
-Netchan_TransmitNextFragment(Netchan *chan)
+ncsendnextfrag(Netchan *chan)
 {
 	Bitmsg	send;
 	byte	send_buf[MAX_PACKETLEN];
@@ -147,19 +147,19 @@ Netchan_TransmitNextFragment(Netchan *chan)
 
 
 /*
- * Netchan_Transmit
+ * ncsend
  *
  * Sends a message to a connection, fragmenting if necessary
  * A 0 length will still generate a packet.
  */
 void
-Netchan_Transmit(Netchan *chan, int length, const byte *data)
+ncsend(Netchan *chan, int length, const byte *data)
 {
 	Bitmsg	send;
 	byte	send_buf[MAX_PACKETLEN];
 
 	if(length > MAX_MSGLEN)
-		comerrorf(ERR_DROP, "Netchan_Transmit: length = %i", length);
+		comerrorf(ERR_DROP, "ncsend: length = %i", length);
 	chan->unsentFragmentStart = 0;
 
 	/* fragment large reliable messages */
@@ -169,7 +169,7 @@ Netchan_Transmit(Netchan *chan, int length, const byte *data)
 		Q_Memcpy(chan->unsentBuffer, data, length);
 
 		/* only send the first fragment now */
-		Netchan_TransmitNextFragment(chan);
+		ncsendnextfrag(chan);
 
 		return;
 	}
@@ -206,7 +206,7 @@ Netchan_Transmit(Netchan *chan, int length, const byte *data)
 }
 
 /*
- * Netchan_Process
+ * ncprocess
  *
  * Returns qfalse if the message should not be processed due to being
  * out of order or a fragment.
@@ -216,7 +216,7 @@ Netchan_Transmit(Netchan *chan, int length, const byte *data)
  * copied out.
  */
 qbool
-Netchan_Process(Netchan *chan, Bitmsg *msg)
+ncprocess(Netchan *chan, Bitmsg *msg)
 {
 	int	sequence;
 	int	fragmentStart, fragmentLength;

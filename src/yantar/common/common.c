@@ -1532,7 +1532,7 @@ cominit(char *commandLine)
 	
 	/* Pick a random port value */
 	comrandbytes((byte*)&qport, sizeof(int));
-	Netchan_Init(qport & 0xffff);
+	ncinit(qport & 0xffff);
 
 	vminit();
 	svinit();

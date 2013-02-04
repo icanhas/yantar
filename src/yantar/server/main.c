@@ -864,7 +864,7 @@ svpacketevent(Netaddr from, Bitmsg *msg)
 
 		/* make sure it is a valid, in sequence packet */
 		if(SV_Netchan_Process(cl, msg))
-			/* zombie clients still need to do the Netchan_Process
+			/* zombie clients still need to do the ncprocess
 			 * to make sure they don't need to retransmit the final
 			 * reliable message, but they don't do any other processing */
 			if(cl->state != CS_ZOMBIE){
