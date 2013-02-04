@@ -37,10 +37,10 @@ equ	trap_R_DrawStretchPic                 -34
 equ	trap_UpdateScreen                     -35
 equ	trap_CM_LerpTag                       -36
 equ	trap_CM_LoadModel                     -37
-equ	trap_S_RegisterSound                  -38
-equ	trap_S_StartLocalSound                -39
-equ	trap_S_StopBackgroundTrack            -40
-equ	trap_S_StartBackgroundTrack           -41
+equ	trap_sndregister                  -38
+equ	trap_sndstartlocalsound                -39
+equ	trap_sndstopbackgroundtrack            -40
+equ	trap_sndstartbackgroundtrack           -41
 equ	trap_Key_KeynumToStringBuf            -42
 equ	trap_Key_GetBindingBuf                -43
 equ	trap_Key_SetBinding                   -44

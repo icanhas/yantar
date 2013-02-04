@@ -32,7 +32,7 @@ CG_CustomSound(int cnum, const char *soundname)
 	int i;
 
 	if(soundname[0] != '*')
-		return trap_S_RegisterSound(soundname, qfalse);
+		return trap_sndregister(soundname, qfalse);
 
 	if(cnum < 0 || cnum >= MAX_CLIENTS)
 		cnum = 0;
@@ -489,10 +489,10 @@ loadclientinfo(int clientNum, Clientinfo *ci)
 		ci->sounds[i] = 0;
 		/* if the model didn't load use the sounds of the default model */
 		if(modelloaded)
-			ci->sounds[i] = trap_S_RegisterSound(
+			ci->sounds[i] = trap_sndregister(
 				va(Pplayersounds "/%s/%s", dir, s+1), qfalse);
 		if(!ci->sounds[i])
-			ci->sounds[i] = trap_S_RegisterSound(
+			ci->sounds[i] = trap_sndregister(
 				va(Pplayersounds "/%s/%s", fallback, s+1), qfalse);
 	}
 	ci->deferred = qfalse;
@@ -1326,7 +1326,7 @@ playerpowerups(Centity *cent, Refent *torso)
 
 	/* flight plays a looped sound */
 	if(powerups & (1 << PW_FLIGHT))
-		trap_S_AddLoopingSound(cent->currentState.number,
+		trap_sndaddloop(cent->currentState.number,
 			cent->lerpOrigin, vec3_origin,
 			cgs.media.flightSound);
 

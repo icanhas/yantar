@@ -115,7 +115,7 @@ UI_PushMenu(menuframework_s *menu)
 void
 UI_PopMenu(void)
 {
-	trap_S_StartLocalSound(menu_out_sound, CHAN_LOCAL_SOUND);
+	trap_sndstartlocalsound(menu_out_sound, CHAN_LOCAL_SOUND);
 
 	uis.menusp--;
 
@@ -833,7 +833,7 @@ UI_KeyEvent(int key, int down)
 		s = Menu_DefaultKey(uis.activemenu, key);
 
 	if((s > 0) && (s != menu_null_sound))
-		trap_S_StartLocalSound(s, CHAN_LOCAL_SOUND);
+		trap_sndstartlocalsound(s, CHAN_LOCAL_SOUND);
 }
 
 /*
@@ -886,7 +886,7 @@ UI_MouseEvent(int dx, int dy)
 								    activemenu
 								    ->cursor]))
 			     ->flags & QMF_SILENT))
-				trap_S_StartLocalSound(menu_move_sound,
+				trap_sndstartlocalsound(menu_move_sound,
 					CHAN_LOCAL_SOUND);
 		}
 
@@ -1217,7 +1217,7 @@ UI_Refresh(int realtime)
 	 * menu has been drawn, to avoid delay while
 	 * caching images */
 	if(m_entersound){
-		trap_S_StartLocalSound(menu_in_sound, CHAN_LOCAL_SOUND);
+		trap_sndstartlocalsound(menu_in_sound, CHAN_LOCAL_SOUND);
 		m_entersound = qfalse;
 	}
 }

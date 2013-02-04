@@ -674,8 +674,8 @@ int                             trap_CM_LerpTag(Orient *tag,
 						Cliphandle mod, int startFrame,
 						int endFrame, float frac,
 						const char *tagName);
-void                    trap_S_StartLocalSound(Sfxhandle sfx, int channelNum);
-Sfxhandle     trap_S_RegisterSound(const char *sample, qbool compressed);
+void                    trap_sndstartlocalsound(Sfxhandle sfx, int channelNum);
+Sfxhandle     trap_sndregister(const char *sample, qbool compressed);
 void                    trap_Key_KeynumToStringBuf(int keynum, char *buf,
 						   int buflen);
 void                    trap_Key_GetBindingBuf(int keynum, char *buf, int buflen);

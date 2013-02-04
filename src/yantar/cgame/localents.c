@@ -175,7 +175,7 @@ CG_FragmentBounceSound(Localent *le, Trace *trace)
 				s = cgs.media.gibBounce2Sound;
 			else
 				s = cgs.media.gibBounce3Sound;
-			trap_S_StartSound(trace->endpos, ENTITYNUM_WORLD,
+			trap_sndstartsound(trace->endpos, ENTITYNUM_WORLD,
 				CHAN_AUTO,
 				s);
 		}

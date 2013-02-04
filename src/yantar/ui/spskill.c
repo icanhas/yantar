@@ -107,10 +107,10 @@ UI_SPSkillMenu_SkillEvent(void *ptr, int notification)
 	skillMenuInfo.art_skillPic.shader = skillMenuInfo.skillpics[skill - 1];
 
 	if(id == ID_NIGHTMARE)
-		trap_S_StartLocalSound(skillMenuInfo.nightmareSound,
+		trap_sndstartlocalsound(skillMenuInfo.nightmareSound,
 			CHAN_ANNOUNCER);
 	else
-		trap_S_StartLocalSound(skillMenuInfo.silenceSound,
+		trap_sndstartlocalsound(skillMenuInfo.silenceSound,
 			CHAN_ANNOUNCER);
 }
 
@@ -137,7 +137,7 @@ UI_SPSkillMenu_BackEvent(void* ptr, int notification)
 	if(notification != QM_ACTIVATED)
 		return;
 
-	trap_S_StartLocalSound(skillMenuInfo.silenceSound, CHAN_ANNOUNCER);
+	trap_sndstartlocalsound(skillMenuInfo.silenceSound, CHAN_ANNOUNCER);
 	UI_PopMenu();
 }
 
@@ -149,7 +149,7 @@ static Sfxhandle
 UI_SPSkillMenu_Key(int key)
 {
 	if(key == K_MOUSE2 || key == K_ESCAPE)
-		trap_S_StartLocalSound(skillMenuInfo.silenceSound,
+		trap_sndstartlocalsound(skillMenuInfo.silenceSound,
 			CHAN_ANNOUNCER);
 	return Menu_DefaultKey(&skillMenuInfo.menu, key);
 }
@@ -177,9 +177,9 @@ UI_SPSkillMenu_Cache(void)
 	skillMenuInfo.skillpics[4] = trap_R_RegisterShaderNoMip(
 		ART_MAP_COMPLETE5);
 
-	skillMenuInfo.nightmareSound = trap_S_RegisterSound(
+	skillMenuInfo.nightmareSound = trap_sndregister(
 		Pmiscsounds "/nightmare.wav", qfalse);
-	skillMenuInfo.silenceSound = trap_S_RegisterSound(
+	skillMenuInfo.silenceSound = trap_sndregister(
 		Pmiscsounds "/silence.wav", qfalse);
 }
 
@@ -319,7 +319,7 @@ UI_SPSkillMenu_Init(void)
 	SetSkillColor(skill, color_white);
 	skillMenuInfo.art_skillPic.shader = skillMenuInfo.skillpics[skill - 1];
 	if(skill == 5)
-		trap_S_StartLocalSound(skillMenuInfo.nightmareSound,
+		trap_sndstartlocalsound(skillMenuInfo.nightmareSound,
 			CHAN_ANNOUNCER);
 }
 

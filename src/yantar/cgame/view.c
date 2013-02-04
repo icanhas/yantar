@@ -619,7 +619,7 @@ poweruptimersounds(void)
 			continue;
 		if((t - cg.time) / POWERUP_BLINK_TIME !=
 		   (t - cg.oldTime) / POWERUP_BLINK_TIME)
-			trap_S_StartSound(NULL, cg.snap->ps.clientNum, CHAN_ITEM,
+			trap_sndstartsound(NULL, cg.snap->ps.clientNum, CHAN_ITEM,
 				cgs.media.wearOffSound);
 	}
 }
@@ -641,7 +641,7 @@ CG_PlayBufferedSounds(void)
 	if(cg.soundTime < cg.time)
 		if(cg.soundBufferOut != cg.soundBufferIn &&
 		   cg.soundBuffer[cg.soundBufferOut]){
-			trap_S_StartLocalSound(cg.soundBuffer[cg.soundBufferOut],
+			trap_sndstartlocalsound(cg.soundBuffer[cg.soundBufferOut],
 				CHAN_ANNOUNCER);
 			cg.soundBuffer[cg.soundBufferOut] = 0;
 			cg.soundBufferOut =
@@ -672,7 +672,7 @@ CG_DrawActiveFrame(int serverTime, Stereoframe stereoView,
 		return;
 	}
 
-	trap_S_ClearLoopingSounds(qfalse);
+	trap_sndclearloops(qfalse);
 	trap_R_ClearScene();
 	
 	/* 
@@ -727,7 +727,7 @@ CG_DrawActiveFrame(int serverTime, Stereoframe stereoView,
 	poweruptimersounds();
 
 	/* update audio positions */
-	trap_S_Respatialize(cg.snap->ps.clientNum, cg.refdef.vieworg,
+	trap_sndrespatialize(cg.snap->ps.clientNum, cg.refdef.vieworg,
 		cg.refdef.viewaxis,
 		inwater);
 

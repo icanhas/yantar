@@ -1586,15 +1586,15 @@ Menu_Cache(void)
 		uis.menuBackShader = trap_R_RegisterShaderNoMip("menuback");
 	uis.menuBackNoLogoShader = trap_R_RegisterShaderNoMip("menubacknologo");
 
-	menu_in_sound = trap_S_RegisterSound(Pmiscsounds "/menu1.wav",
+	menu_in_sound = trap_sndregister(Pmiscsounds "/menu1.wav",
 		qfalse);
-	menu_move_sound = trap_S_RegisterSound(Pmiscsounds "/menu2.wav",
+	menu_move_sound = trap_sndregister(Pmiscsounds "/menu2.wav",
 		qfalse);
-	menu_out_sound = trap_S_RegisterSound(Pmiscsounds "/menu3.wav",
+	menu_out_sound = trap_sndregister(Pmiscsounds "/menu3.wav",
 		qfalse);
-	menu_buzz_sound = trap_S_RegisterSound(Pmiscsounds "/menu4.wav",
+	menu_buzz_sound = trap_sndregister(Pmiscsounds "/menu4.wav",
 		qfalse);
-	weaponChangeSound = trap_S_RegisterSound(
+	weaponChangeSound = trap_sndregister(
 		Pweapsounds "/change.wav",
 		qfalse);
 

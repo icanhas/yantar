@@ -256,32 +256,32 @@ trap_CM_MarkFragments(int numPoints, const Vec3 *points,
 }
 
 void
-trap_S_StartSound(Vec3 origin, int entityNum, int entchannel, Sfxhandle sfx)
+trap_sndstartsound(Vec3 origin, int entityNum, int entchannel, Sfxhandle sfx)
 {
 	syscall(CG_S_STARTSOUND, origin, entityNum, entchannel, sfx);
 }
 
 void
-trap_S_StartLocalSound(Sfxhandle sfx, int channelNum)
+trap_sndstartlocalsound(Sfxhandle sfx, int channelNum)
 {
 	syscall(CG_S_STARTLOCALSOUND, sfx, channelNum);
 }
 
 void
-trap_S_ClearLoopingSounds(qbool killall)
+trap_sndclearloops(qbool killall)
 {
 	syscall(CG_S_CLEARLOOPINGSOUNDS, killall);
 }
 
 void
-trap_S_AddLoopingSound(int entityNum, const Vec3 origin, const Vec3 velocity,
+trap_sndaddloop(int entityNum, const Vec3 origin, const Vec3 velocity,
 		       Sfxhandle sfx)
 {
 	syscall(CG_S_ADDLOOPINGSOUND, entityNum, origin, velocity, sfx);
 }
 
 void
-trap_S_AddRealLoopingSound(int entityNum, const Vec3 origin,
+trap_sndaddrealloop(int entityNum, const Vec3 origin,
 			   const Vec3 velocity,
 			   Sfxhandle sfx)
 {
@@ -289,32 +289,32 @@ trap_S_AddRealLoopingSound(int entityNum, const Vec3 origin,
 }
 
 void
-trap_S_StopLoopingSound(int entityNum)
+trap_sndstoploop(int entityNum)
 {
 	syscall(CG_S_STOPLOOPINGSOUND, entityNum);
 }
 
 void
-trap_S_UpdateEntityPosition(int entityNum, const Vec3 origin)
+trap_sndupdateentpos(int entityNum, const Vec3 origin)
 {
 	syscall(CG_S_UPDATEENTITYPOSITION, entityNum, origin);
 }
 
 void
-trap_S_Respatialize(int entityNum, const Vec3 origin, Vec3 axis[3],
+trap_sndrespatialize(int entityNum, const Vec3 origin, Vec3 axis[3],
 		    int inwater)
 {
 	syscall(CG_S_RESPATIALIZE, entityNum, origin, axis, inwater);
 }
 
 Sfxhandle
-trap_S_RegisterSound(const char *sample, qbool compressed)
+trap_sndregister(const char *sample, qbool compressed)
 {
 	return syscall(CG_S_REGISTERSOUND, sample, compressed);
 }
 
 void
-trap_S_StartBackgroundTrack(const char *intro, const char *loop)
+trap_sndstartbackgroundtrack(const char *intro, const char *loop)
 {
 	syscall(CG_S_STARTBACKGROUNDTRACK, intro, loop);
 }
@@ -541,7 +541,7 @@ trap_Key_GetKey(const char *binding)
 }
 
 void
-trap_S_StopBackgroundTrack(void)
+trap_sndstopbackgroundtrack(void)
 {
 	syscall(CG_S_STOPBACKGROUNDTRACK);
 }

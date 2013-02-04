@@ -1113,7 +1113,7 @@ CL_KeyDownEvent(int key, unsigned time)
 				vmcall(uivm, UI_SET_ACTIVE_MENU, UIMENU_INGAME);
 			else if(clc.state != CA_DISCONNECTED){
 				cldisconnect_f();
-				S_StopAllSounds();
+				sndstopall();
 				vmcall(uivm, UI_SET_ACTIVE_MENU, UIMENU_MAIN);
 			}
 			return;

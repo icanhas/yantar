@@ -784,7 +784,7 @@ void keykeynamecompletion(void (*callback)(const char *s));
 /* for writing the config files */
 void keywritebindings(Fhandle f);
 /* call before filesystem access */
-void sndclearbuffer(void);
+void sndclearbuf(void);
 
 void scrdebuggraph(float value); /* FIXME: move logging to common? */
 

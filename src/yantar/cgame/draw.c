@@ -1426,7 +1426,7 @@ CG_DrawReward(void)
 			cg.rewardTime = cg.time;
 			cg.rewardStack--;
 			color = CG_FadeColor(cg.rewardTime, REWARD_TIME);
-			trap_S_StartLocalSound(cg.rewardSound[0], CHAN_ANNOUNCER);
+			trap_sndstartlocalsound(cg.rewardSound[0], CHAN_ANNOUNCER);
 		}else
 			return;
 	}
@@ -1991,7 +1991,7 @@ CG_DrawVote(void)
 	/* play a talk beep whenever it is modified */
 	if(cgs.voteModified){
 		cgs.voteModified = qfalse;
-		trap_S_StartLocalSound(cgs.media.talkSound, CHAN_LOCAL_SOUND);
+		trap_sndstartlocalsound(cgs.media.talkSound, CHAN_LOCAL_SOUND);
 	}
 
 	sec = (VOTE_TIME - (cg.time - cgs.voteTime)) / 1000;
@@ -2030,7 +2030,7 @@ CG_DrawTeamVote(void)
 	/* play a talk beep whenever it is modified */
 	if(cgs.teamVoteModified[cs_offset]){
 		cgs.teamVoteModified[cs_offset] = qfalse;
-		trap_S_StartLocalSound(cgs.media.talkSound, CHAN_LOCAL_SOUND);
+		trap_sndstartlocalsound(cgs.media.talkSound, CHAN_LOCAL_SOUND);
 	}
 
 	sec = (VOTE_TIME - (cg.time - cgs.teamVoteTime[cs_offset])) / 1000;
@@ -2300,15 +2300,15 @@ CG_DrawWarmup(void)
 		cg.warmupCount = sec;
 		switch(sec){
 		case 0:
-			trap_S_StartLocalSound(cgs.media.count1Sound,
+			trap_sndstartlocalsound(cgs.media.count1Sound,
 				CHAN_ANNOUNCER);
 			break;
 		case 1:
-			trap_S_StartLocalSound(cgs.media.count2Sound,
+			trap_sndstartlocalsound(cgs.media.count2Sound,
 				CHAN_ANNOUNCER);
 			break;
 		case 2:
-			trap_S_StartLocalSound(cgs.media.count3Sound,
+			trap_sndstartlocalsound(cgs.media.count3Sound,
 				CHAN_ANNOUNCER);
 			break;
 		default:

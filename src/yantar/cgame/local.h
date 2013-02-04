@@ -1448,26 +1448,26 @@ int	trap_CM_MarkFragments(int numPoints,
 
 /* normal sounds will have their volume dynamically changed as their entity
  * moves and the listener moves */
-void	trap_S_StartSound(Vec3 origin, int entityNum, int entchannel,
+void	trap_sndstartsound(Vec3 origin, int entityNum, int entchannel,
 		Sfxhandle sfx);
-void	trap_S_StopLoopingSound(int entnum);
+void	trap_sndstoploop(int entnum);
 
 /* a local sound is always played full volume */
-void	trap_S_StartLocalSound(Sfxhandle sfx, int channelNum);
-void	trap_S_ClearLoopingSounds(qbool killall);
-void	trap_S_AddLoopingSound(int entityNum, const Vec3 origin,
+void	trap_sndstartlocalsound(Sfxhandle sfx, int channelNum);
+void	trap_sndclearloops(qbool killall);
+void	trap_sndaddloop(int entityNum, const Vec3 origin,
 		const Vec3 velocity, Sfxhandle sfx);
-void	trap_S_AddRealLoopingSound(int entityNum, const Vec3 origin,
+void	trap_sndaddrealloop(int entityNum, const Vec3 origin,
 		const Vec3 velocity, Sfxhandle sfx);
-void	trap_S_UpdateEntityPosition(int entityNum, const Vec3 origin);
+void	trap_sndupdateentpos(int entityNum, const Vec3 origin);
 
 /* respatialize recalculates the volumes of sound as they should be heard by the
  * given entityNum and position */
-void	trap_S_Respatialize(int entityNum, const Vec3 origin, Vec3 axis[3],
+void	trap_sndrespatialize(int entityNum, const Vec3 origin, Vec3 axis[3],
 		int inwater);
-Sfxhandle	trap_S_RegisterSound(const char *sample, qbool compressed);		/* returns a beepif not found */
-void	trap_S_StartBackgroundTrack(const char *intro, const char *loop);	/* empty name stops music */
-void	trap_S_StopBackgroundTrack(void);
+Sfxhandle	trap_sndregister(const char *sample, qbool compressed);		/* returns a beepif not found */
+void	trap_sndstartbackgroundtrack(const char *intro, const char *loop);	/* empty name stops music */
+void	trap_sndstopbackgroundtrack(void);
 
 void	trap_R_LoadWorldMap(const char *mapname);
 

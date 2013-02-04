@@ -459,33 +459,33 @@ CL_CgameSystemCalls(intptr_t *args)
 		return re.MarkFragments(args[1], VMA(2), VMA(3), args[4], VMA(
 				5), args[6], VMA(7));
 	case CG_S_STARTSOUND:
-		S_StartSound(VMA(1), args[2], args[3], args[4]);
+		sndstartsound(VMA(1), args[2], args[3], args[4]);
 		return 0;
 	case CG_S_STARTLOCALSOUND:
-		S_StartLocalSound(args[1], args[2]);
+		sndstartlocalsound(args[1], args[2]);
 		return 0;
 	case CG_S_CLEARLOOPINGSOUNDS:
-		S_ClearLoopingSounds(args[1]);
+		sndclearloops(args[1]);
 		return 0;
 	case CG_S_ADDLOOPINGSOUND:
-		S_AddLoopingSound(args[1], VMA(2), VMA(3), args[4]);
+		sndaddloop(args[1], VMA(2), VMA(3), args[4]);
 		return 0;
 	case CG_S_ADDREALLOOPINGSOUND:
-		S_AddRealLoopingSound(args[1], VMA(2), VMA(3), args[4]);
+		sndaddrealloop(args[1], VMA(2), VMA(3), args[4]);
 		return 0;
 	case CG_S_STOPLOOPINGSOUND:
-		S_StopLoopingSound(args[1]);
+		sndstoploop(args[1]);
 		return 0;
 	case CG_S_UPDATEENTITYPOSITION:
-		S_UpdateEntityPosition(args[1], VMA(2));
+		sndupdateentpos(args[1], VMA(2));
 		return 0;
 	case CG_S_RESPATIALIZE:
-		S_Respatialize(args[1], VMA(2), VMA(3), args[4]);
+		sndrespatialize(args[1], VMA(2), VMA(3), args[4]);
 		return 0;
 	case CG_S_REGISTERSOUND:
-		return S_RegisterSound(VMA(1), args[2]);
+		return sndregister(VMA(1), args[2]);
 	case CG_S_STARTBACKGROUNDTRACK:
-		S_StartBackgroundTrack(VMA(1), VMA(2));
+		sndstartbackgroundtrack(VMA(1), VMA(2));
 		return 0;
 	case CG_R_LOADWORLDMAP:
 		re.LoadWorld(VMA(1));
@@ -571,7 +571,7 @@ CL_CgameSystemCalls(intptr_t *args)
 		return Key_GetKey(VMA(1));
 
 	case CG_S_STOPBACKGROUNDTRACK:
-		S_StopBackgroundTrack();
+		sndstopbackgroundtrack();
 		return 0;
 
 	case CG_REAL_TIME:

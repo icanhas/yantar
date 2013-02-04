@@ -132,7 +132,7 @@ S_Base_SoundList(void)
 			sfx->soundName, mem[sfx->inMemory]);
 	}
 	comprintf ("Total resident: %i\n", total);
-	S_DisplayFreeMemory();
+	sndshowfreemem();
 }
 
 static void
@@ -239,7 +239,7 @@ S_FindName(const char *name)
 }
 
 /*
- * Disables sounds until the next S_BeginRegistration.
+ * Disables sounds until the next sndbeginreg.
  * This is called when the hunk is cleared and the sounds
  * are no longer valid.
  */
@@ -375,10 +375,10 @@ S_Base_StartSound(Vec3 origin, int entityNum, int entchannel,
 	if(!s_soundStarted || s_soundMuted)
 		return;
 	if(!origin && (entityNum < 0 || entityNum > MAX_GENTITIES))
-		comerrorf(ERR_DROP, "S_StartSound: bad entitynum %i", entityNum);
+		comerrorf(ERR_DROP, "sndstartsound: bad entitynum %i", entityNum);
 
 	if(sfxHandle < 0 || sfxHandle >= s_numSfx){
-		comprintf(S_COLOR_YELLOW "S_StartSound: handle %i out of range\n",
+		comprintf(S_COLOR_YELLOW "sndstartsound: handle %i out of range\n",
 			sfxHandle);
 		return;
 	}
@@ -483,7 +483,7 @@ S_Base_StartLocalSound(Sfxhandle sfxHandle, int channelNum)
 	if(sfxHandle < 0 || sfxHandle >= s_numSfx){
 		comprintf(
 			S_COLOR_YELLOW
-			"S_StartLocalSound: handle %i out of range\n",
+			"sndstartlocalsound: handle %i out of range\n",
 			sfxHandle);
 		return;
 	}
@@ -571,7 +571,7 @@ S_Base_AddLoopingSound(int entityNum, const Vec3 origin, const Vec3 velocity,
 	if(sfxHandle < 0 || sfxHandle >= s_numSfx){
 		comprintf(
 			S_COLOR_YELLOW
-			"S_AddLoopingSound: handle %i out of range\n",
+			"sndaddloop: handle %i out of range\n",
 			sfxHandle);
 		return;
 	}
@@ -632,7 +632,7 @@ S_Base_AddRealLoopingSound(int entityNum, const Vec3 origin,
 	if(sfxHandle < 0 || sfxHandle >= s_numSfx){
 		comprintf(
 			S_COLOR_YELLOW
-			"S_AddRealLoopingSound: handle %i out of range\n",
+			"sndaddrealloop: handle %i out of range\n",
 			sfxHandle);
 		return;
 	}
@@ -835,7 +835,7 @@ static void
 S_Base_UpdateEntityPosition(int entityNum, const Vec3 origin)
 {
 	if((entityNum < 0) || (entityNum >= MAX_GENTITIES))
-		comerrorf(ERR_DROP, "S_UpdateEntityPosition: bad entitynum %i",
+		comerrorf(ERR_DROP, "sndupdateentpos: bad entitynum %i",
 			entityNum);
 	copyv3(origin, loopSounds[entityNum].origin);
 }
@@ -940,7 +940,7 @@ S_Base_Update(void)
 		comprintf ("----(%i)---- painted: %i\n", total, s_paintedtime);
 	}
 	/* add raw data from streamed samples */
-	S_UpdateBackgroundTrack();
+	sndupdatebackgroundtrack();
 	/* mix some sound */
 	S_Update_();
 }
@@ -961,7 +961,7 @@ S_GetSoundtime(void)
 
 	/* 
 	 * it is possible to miscount buffers if it has wrapped twice between
-	 * calls to S_Update.  Oh well. 
+	 * calls to sndupdate.  Oh well. 
 	 */
 	samplepos = SNDDMA_GetDMAPos();
 	if(samplepos < oldsamplepos){
@@ -1055,7 +1055,7 @@ S_Base_StartBackgroundTrack(const char *intro, const char *loop)
 		intro = "";
 	if(!loop || !loop[0])
 		loop = intro;
-	comdprintf("S_StartBackgroundTrack( %s, %s )\n", intro, loop);
+	comdprintf("sndstartbackgroundtrack( %s, %s )\n", intro, loop);
 
 	if(!*intro){
 		S_Base_StopBackgroundTrack();
@@ -1090,7 +1090,7 @@ S_Base_StartBackgroundTrack(const char *intro, const char *loop)
 }
 
 void
-S_UpdateBackgroundTrack(void)
+sndupdatebackgroundtrack(void)
 {
 	int	bufferSamples;
 	int	fileSamples;

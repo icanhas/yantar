@@ -259,25 +259,25 @@ trap_CM_LerpTag(Orient *tag, Cliphandle mod, int startFrame,
 }
 
 void
-trap_S_StartLocalSound(Sfxhandle sfx, int channelNum)
+trap_sndstartlocalsound(Sfxhandle sfx, int channelNum)
 {
 	syscall(UI_S_STARTLOCALSOUND, sfx, channelNum);
 }
 
 Sfxhandle
-trap_S_RegisterSound(const char *sample, qbool compressed)
+trap_sndregister(const char *sample, qbool compressed)
 {
 	return syscall(UI_S_REGISTERSOUND, sample, compressed);
 }
 
 void
-trap_S_StopBackgroundTrack(void)
+trap_sndstopbackgroundtrack(void)
 {
 	syscall(UI_S_STOPBACKGROUNDTRACK);
 }
 
 void
-trap_S_StartBackgroundTrack(const char *intro, const char *loop)
+trap_sndstartbackgroundtrack(const char *intro, const char *loop)
 {
 	syscall(UI_S_STARTBACKGROUNDTRACK, intro, loop);
 }

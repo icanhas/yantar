@@ -147,12 +147,12 @@ CG_ParseWarmup(void)
 	}else if(warmup > 0 && cg.warmup <= 0){
 #ifdef MISSIONPACK
 		if(cgs.gametype >= GT_CTF && cgs.gametype <= GT_HARVESTER)
-			trap_S_StartLocalSound(cgs.media.countPrepareTeamSound,
+			trap_sndstartlocalsound(cgs.media.countPrepareTeamSound,
 				CHAN_ANNOUNCER);
 		else
 #endif
 		{
-			trap_S_StartLocalSound(cgs.media.countPrepareSound,
+			trap_sndstartlocalsound(cgs.media.countPrepareSound,
 				CHAN_ANNOUNCER);
 		}
 	}
@@ -270,7 +270,7 @@ CG_ConfigStringModified(void)
 	}else if(num == CS_VOTE_STRING){
 		Q_strncpyz(cgs.voteString, str, sizeof(cgs.voteString));
 #ifdef MISSIONPACK
-		trap_S_StartLocalSound(cgs.media.voteNow, CHAN_ANNOUNCER);
+		trap_sndstartlocalsound(cgs.media.voteNow, CHAN_ANNOUNCER);
 #endif	/* MISSIONPACK */
 	}else if(num >= CS_TEAMVOTE_TIME && num <= CS_TEAMVOTE_TIME + 1){
 		cgs.teamVoteTime[num-CS_TEAMVOTE_TIME] = atoi(str);
@@ -285,7 +285,7 @@ CG_ConfigStringModified(void)
 		Q_strncpyz(cgs.teamVoteString[num-CS_TEAMVOTE_STRING], str,
 			sizeof(cgs.teamVoteString));
 #ifdef MISSIONPACK
-		trap_S_StartLocalSound(cgs.media.voteNow, CHAN_ANNOUNCER);
+		trap_sndstartlocalsound(cgs.media.voteNow, CHAN_ANNOUNCER);
 #endif
 	}else if(num == CS_INTERMISSION)
 		cg.intermissionStarted = atoi(str);
@@ -293,7 +293,7 @@ CG_ConfigStringModified(void)
 		cgs.gameModels[ num-CS_MODELS ] = trap_R_RegisterModel(str);
 	else if(num >= CS_SOUNDS && num < CS_SOUNDS+MAX_SOUNDS){
 		if(str[0] != '*')	/* player specific sounds don't register here */
-			cgs.gameSounds[ num-CS_SOUNDS] = trap_S_RegisterSound(
+			cgs.gameSounds[ num-CS_SOUNDS] = trap_sndregister(
 				str, qfalse);
 	}else if(num >= CS_PLAYERS && num < CS_PLAYERS+MAX_CLIENTS){
 		CG_NewClientInfo(num - CS_PLAYERS);
@@ -420,13 +420,13 @@ CG_MapRestart(void)
 
 	CG_StartMusic();
 
-	trap_S_ClearLoopingSounds(qtrue);
+	trap_sndclearloops(qtrue);
 
 	/* we really should clear more parts of cg here and stop sounds */
 
 	/* play the "fight" sound if this is a restart without warmup */
 	if(cg.warmup == 0 /* && cgs.gametype == GT_TOURNAMENT */){
-		trap_S_StartLocalSound(cgs.media.countFightSound, CHAN_ANNOUNCER);
+		trap_sndstartlocalsound(cgs.media.countFightSound, CHAN_ANNOUNCER);
 		CG_CenterPrint("FIGHT!", 120, GIANTCHAR_WIDTH*2);
 	}
 #ifdef MISSIONPACK
@@ -557,7 +557,7 @@ CG_ParseVoiceChats(const char *filename, voiceChatList_t *voiceChatList,
 				return qtrue;
 			if(!Q_stricmp(token, "}"))
 				break;
-			sound = trap_S_RegisterSound(token, compress);
+			sound = trap_sndregister(token, compress);
 			voiceChats[voiceChatList->numVoiceChats].sounds[
 				voiceChats[voiceChatList->numVoiceChats].
 				numSounds] =
@@ -806,7 +806,7 @@ CG_PlayVoiceChat(bufferedVoiceChat_t *vchat)
 		return;
 
 	if(!cg_noVoiceChats.integer){
-		trap_S_StartLocalSound(vchat->snd, CHAN_VOICE);
+		trap_sndstartlocalsound(vchat->snd, CHAN_VOICE);
 		if(vchat->clientNum != cg.snap->ps.clientNum){
 			int orderTask = CG_ValidOrder(vchat->cmd);
 			if(orderTask > 0){
@@ -1004,11 +1004,11 @@ CG_ServerCommand(void)
 		/* votes passing or failing */
 		if(!Q_stricmpn(cmd, "vote failed",
 			   11) || !Q_stricmpn(cmd, "team vote failed", 16))
-			trap_S_StartLocalSound(cgs.media.voteFailed,
+			trap_sndstartlocalsound(cgs.media.voteFailed,
 				CHAN_ANNOUNCER);
 		else if(!Q_stricmpn(cmd, "vote passed",
 				11) || !Q_stricmpn(cmd, "team vote passed", 16))
-			trap_S_StartLocalSound(cgs.media.votePassed,
+			trap_sndstartlocalsound(cgs.media.votePassed,
 				CHAN_ANNOUNCER);
 
 #endif
@@ -1017,7 +1017,7 @@ CG_ServerCommand(void)
 
 	if(!strcmp(cmd, "chat")){
 		if(!cg_ChatsOnly.integer){
-			trap_S_StartLocalSound(cgs.media.talkSound,
+			trap_sndstartlocalsound(cgs.media.talkSound,
 				CHAN_LOCAL_SOUND);
 			Q_strncpyz(text, CG_Argv(1), MAX_SAY_TEXT);
 			CG_RemoveChatEscapeChar(text);
@@ -1027,7 +1027,7 @@ CG_ServerCommand(void)
 	}
 
 	if(!strcmp(cmd, "tchat")){
-		trap_S_StartLocalSound(cgs.media.talkSound, CHAN_LOCAL_SOUND);
+		trap_sndstartlocalsound(cgs.media.talkSound, CHAN_LOCAL_SOUND);
 		Q_strncpyz(text, CG_Argv(1), MAX_SAY_TEXT);
 		CG_RemoveChatEscapeChar(text);
 		CG_AddToTeamChat(text);

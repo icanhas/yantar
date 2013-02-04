@@ -78,9 +78,9 @@ CG_SetEntitySoundPosition(Centity *cent)
 
 		v = cgs.inlineModelMidpoints[ cent->currentState.modelindex ];
 		addv3(cent->lerpOrigin, v, origin);
-		trap_S_UpdateEntityPosition(cent->currentState.number, origin);
+		trap_sndupdateentpos(cent->currentState.number, origin);
 	}else
-		trap_S_UpdateEntityPosition(cent->currentState.number,
+		trap_sndupdateentpos(cent->currentState.number,
 			cent->lerpOrigin);
 }
 
@@ -97,12 +97,12 @@ CG_EntityEffects(Centity *cent)
 	/* add loop sound */
 	if(cent->currentState.loopSound){
 		if(cent->currentState.eType != ET_SPEAKER)
-			trap_S_AddLoopingSound(
+			trap_sndaddloop(
 				cent->currentState.number, cent->lerpOrigin,
 				vec3_origin,
 				cgs.gameSounds[ cent->currentState.loopSound ]);
 		else
-			trap_S_AddRealLoopingSound(
+			trap_sndaddrealloop(
 				cent->currentState.number, cent->lerpOrigin,
 				vec3_origin,
 				cgs.gameSounds[ cent->currentState.loopSound ]);
@@ -172,7 +172,7 @@ CG_Speaker(Centity *cent)
 	if(cg.time < cent->miscTime)
 		return;
 
-	trap_S_StartSound (NULL, cent->currentState.number, CHAN_ITEM,
+	trap_sndstartsound (NULL, cent->currentState.number, CHAN_ITEM,
 		cgs.gameSounds[cent->currentState.eventParm]);
 
 	/* ent->s.frame = ent->wait * 10;
@@ -287,7 +287,7 @@ CG_Item(Centity *cent)
 		scalev3(ent.axis[1], 1.5, ent.axis[1]);
 		scalev3(ent.axis[2], 1.5, ent.axis[2]);
 		ent.nonNormalizedAxes = qtrue;
-		trap_S_AddLoopingSound(cent->currentState.number,
+		trap_sndaddloop(cent->currentState.number,
 			cent->lerpOrigin, vec3_origin,
 			cgs.media.weaponHoverSound);
 	}
@@ -399,7 +399,7 @@ CG_Missile(Centity *cent)
 		BG_EvaluateTrajectoryDelta(&cent->currentState.traj, cg.time,
 			velocity);
 
-		trap_S_AddLoopingSound(cent->currentState.number,
+		trap_sndaddloop(cent->currentState.number,
 			cent->lerpOrigin, velocity,
 			weapon->missileSound);
 	}
@@ -467,7 +467,7 @@ CG_Grapple(Centity *cent)
 #if 0	/* FIXME add grapple pull sound here..? */
 	/* add missile sound */
 	if(weapon->missileSound)
-		trap_S_AddLoopingSound(cent->currentState.number,
+		trap_sndaddloop(cent->currentState.number,
 			cent->lerpOrigin, vec3_origin,
 			weapon->missileSound);
 

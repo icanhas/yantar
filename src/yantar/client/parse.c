@@ -530,11 +530,11 @@ static void
 CL_PlayVoip(int sender, int samplecnt, const byte *data, int flags)
 {
 	if(flags & VOIP_DIRECT)
-		S_RawSamples(sender + 1, samplecnt, clc.speexSampleRate, 2, 1,
+		sndrawsamps(sender + 1, samplecnt, clc.speexSampleRate, 2, 1,
 			data, clc.voipGain[sender], -1);
 
 	if(flags & VOIP_SPATIAL)
-		S_RawSamples(sender + MAX_CLIENTS + 1, samplecnt,
+		sndrawsamps(sender + MAX_CLIENTS + 1, samplecnt,
 			clc.speexSampleRate, 2, 1,
 			data, 1.0f,
 			sender);

@@ -466,7 +466,7 @@ UI_SPLevelMenu_AwardEvent(void* ptr, int notification)
 		return;
 
 	n = ((menucommon_s*)ptr)->id - ID_AWARD1;
-	trap_S_StartLocalSound(levelMenuInfo.awardSounds[n], CHAN_ANNOUNCER);
+	trap_sndstartlocalsound(levelMenuInfo.awardSounds[n], CHAN_ANNOUNCER);
 }
 
 
@@ -702,7 +702,7 @@ UI_SPLevelMenu_Cache(void)
 
 	for(n = 0; n < 6; n++){
 		trap_R_RegisterShaderNoMip(ui_medalPicNames[n]);
-		levelMenuInfo.awardSounds[n] = trap_S_RegisterSound(
+		levelMenuInfo.awardSounds[n] = trap_sndregister(
 			ui_medalSounds[n], qfalse);
 	}
 

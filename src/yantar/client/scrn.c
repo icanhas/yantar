@@ -423,7 +423,7 @@ SCR_DrawScreenField(Stereoframe stereoFrame)
 			break;
 		case CA_DISCONNECTED:
 			/* force menu up */
-			S_StopAllSounds();
+			sndstopall();
 			vmcall(uivm, UI_SET_ACTIVE_MENU, UIMENU_MAIN);
 			break;
 		case CA_CONNECTING:

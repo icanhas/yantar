@@ -41,17 +41,17 @@ SNDDMA_Submit(void)
 }
 
 Sfxhandle
-S_RegisterSound(const char *name, qbool compressed)
+sndregister(const char *name, qbool compressed)
 {
 	return 0;
 }
 
 void
-S_StartLocalSound(Sfxhandle sfxHandle, int channelNum)
+sndstartlocalsound(Sfxhandle sfxHandle, int channelNum)
 {
 }
 
 void
-sndclearbuffer(void)
+sndclearbuf(void)
 {
 }

@@ -1019,14 +1019,14 @@ redump:
 					cinTable[currentHandle].RoQFrameSize, 0,
 					(ushort)cinTable[currentHandle]
 					.roq_flags);
-			S_RawSamples(0, ssize, 22050, 2, 1, (byte*)sbuf, 1.0f,
+			sndrawsamps(0, ssize, 22050, 2, 1, (byte*)sbuf, 1.0f,
 				-1);
 		}
 		break;
 	case    ZA_SOUND_STEREO:
 		if(!cinTable[currentHandle].silent){
 			if(cinTable[currentHandle].numQuads == -1){
-				S_Update();
+				sndupdate();
 				s_rawend[0] = s_soundtime;
 			}
 			ssize = RllDecodeStereoToStereo(
@@ -1034,7 +1034,7 @@ redump:
 				cinTable[currentHandle].RoQFrameSize, 0,
 				(ushort)cinTable[currentHandle].
 				roq_flags);
-			S_RawSamples(0, ssize, 22050, 2, 2, (byte*)sbuf, 1.0f,
+			sndrawsamps(0, ssize, 22050, 2, 2, (byte*)sbuf, 1.0f,
 				-1);
 		}
 		break;
@@ -1458,7 +1458,7 @@ CL_PlayCinematic_f(void)
 	if(s && s[0] == '2')
 		bits |= CIN_loop;
 
-	S_StopAllSounds ();
+	sndstopall ();
 
 	CL_handle = CIN_PlayCinematic(arg, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT,
 		bits);
@@ -1489,7 +1489,7 @@ SCR_StopCinematic(void)
 {
 	if(CL_handle >= 0 && CL_handle < MAX_VIDEO_HANDLES){
 		CIN_StopCinematic(CL_handle);
-		S_StopAllSounds ();
+		sndstopall ();
 		CL_handle = -1;
 	}
 }

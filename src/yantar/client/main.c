@@ -383,15 +383,15 @@ CL_CaptureVoip(void)
 	/* try to get more audio data from the sound card... */
 
 	if(initialFrame){
-		S_MasterGain(Q_clamp(0.0f, 1.0f,
+		sndmastergain(Q_clamp(0.0f, 1.0f,
 				cl_voipGainDuringCapture->value));
-		S_StartCapture();
+		sndstartcapture();
 		CL_VoipNewGeneration();
 		CL_VoipParseTargets();
 	}
 
 	if((cl_voipSend->integer) || (finalFrame)){	/* user wants to capture audio? */
-		int samples = S_AvailableCaptureSamples();
+		int samples = sndavailcapturesamps();
 		const int mult = (finalFrame) ? 1 : 4;	/* 4 == 80ms of audio. */
 
 		/* enough data buffered in audio hardware to process yet? */
@@ -411,7 +411,7 @@ CL_CaptureVoip(void)
 			 * !!! FIXME:  updates faster than 4Hz? */
 
 			samples -= samples % clc.speexFrameSize;
-			S_Capture(samples, (byte*)sampbuffer);	/* grab from audio card. */
+			sndcapture(samples, (byte*)sampbuffer);	/* grab from audio card. */
 
 			/* this will probably generate multiple speex packets each time. */
 			while(samples > 0){
@@ -495,8 +495,8 @@ CL_CaptureVoip(void)
 	/* User requested we stop recording, and we've now processed the last of
 	 *  any previously-buffered data. Pause the capture device, etc. */
 	if(finalFrame){
-		S_StopCapture();
-		S_MasterGain(1.0f);
+		sndstopcapture();
+		sndmastergain(1.0f);
 		clc.voipPower = 0.0f;	/* force this value so it doesn't linger. */
 	}
 }
@@ -1062,7 +1062,7 @@ clshutdownall(qbool shutdownRef)
 	CL_cURL_Shutdown();
 #endif
 	/* clear sounds */
-	S_DisableSounds();
+	snddisablesounds();
 	/* shutdown CGame */
 	clshutdownCGame();
 	/* shutdown UI */
@@ -1167,7 +1167,7 @@ void
 CL_ClearState(void)
 {
 
-/*	S_StopAllSounds(); */
+/*	sndstopall(); */
 
 	Q_Memset(&cl, 0, sizeof(cl));
 }
@@ -1266,7 +1266,7 @@ cldisconnect(qbool showMainMenu)
 		vmcall(uivm, UI_SET_ACTIVE_MENU, UIMENU_NONE);
 
 	SCR_StopCinematic ();
-	sndclearbuffer();
+	sndclearbuf();
 
 	/* send a disconnect message to the server
 	 * send it a few times in case one is dropped */
@@ -1680,7 +1680,7 @@ CL_Vid_Restart_f(void)
 		CL_StopRecord_f();
 
 	/* don't let them loop during the restart */
-	S_StopAllSounds();
+	sndstopall();
 
 	if(!fscondrestart(clc.checksumFeed, qtrue)){
 		/* if not running a server clear the whole hunk */
@@ -1732,7 +1732,7 @@ CL_Vid_Restart_f(void)
 void
 clsndshutdown(void)
 {
-	S_Shutdown();
+	sndshutdown();
 	cls.soundStarted = qfalse;
 }
 
@@ -2586,7 +2586,7 @@ clframe(int msec)
 			cls.realframetime = sysmillisecs() - lasttime;
 			cls.realtime += cls.realframetime;
 			SCR_UpdateScreen();
-			S_Update();
+			sndupdate();
 			Con_RunConsole();
 			cls.framecount++;
 			return;
@@ -2598,7 +2598,7 @@ clframe(int msec)
 		 !(Key_GetCatcher( ) & KEYCATCH_UI)
 		 && !com_sv_running->integer && uivm){
 		/* if disconnected, bring up the menu */
-		S_StopAllSounds();
+		sndstopall();
 		vmcall(uivm, UI_SET_ACTIVE_MENU, UIMENU_MAIN);
 	}
 
@@ -2682,7 +2682,7 @@ clframe(int msec)
 	SCR_UpdateScreen();
 
 	/* update audio */
-	S_Update();
+	sndupdate();
 
 #ifdef USE_VOIP
 	CL_CaptureVoip();
@@ -2764,11 +2764,11 @@ clstarthunkusers(qbool rendererOnly)
 		return;
 	if(!cls.soundStarted){
 		cls.soundStarted = qtrue;
-		S_Init();
+		sndinit();
 	}
 	if(!cls.soundRegistered){
 		cls.soundRegistered = qtrue;
-		S_BeginRegistration();
+		sndbeginreg();
 	}
 	if(com_dedicated->integer)
 		return;

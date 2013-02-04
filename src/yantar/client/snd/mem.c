@@ -159,7 +159,7 @@ S_LoadSound(Sfx *sfx)
 }
 
 void
-S_DisplayFreeMemory(void)
+sndshowfreemem(void)
 {
 	comprintf("%d bytes free sound buffer memory, %d total used\n", inUse,
 		totalInUse);

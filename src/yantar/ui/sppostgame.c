@@ -213,8 +213,8 @@ DrawAwardsPresentation(int timer)
 		Sfxhandle snd;
 
 		postgame.playedSound[awardNum] = qtrue;
-		snd = trap_S_RegisterSound(ui_medalSounds[a], qfalse);
-		trap_S_StartLocalSound(snd, CHAN_ANNOUNCER);
+		snd = trap_sndregister(ui_medalSounds[a], qfalse);
+		trap_sndstartlocalsound(snd, CHAN_ANNOUNCER);
 	}
 }
 
@@ -273,7 +273,7 @@ MenuDraw(void)
 		timer = uis.realtime - postgame.starttime;
 
 		if(timer >= 1000 && postgame.winnerSound){
-			trap_S_StartLocalSound(postgame.winnerSound,
+			trap_sndstartlocalsound(postgame.winnerSound,
 				CHAN_ANNOUNCER);
 			postgame.winnerSound = 0;
 		}
@@ -357,13 +357,13 @@ UI_SPPostgameMenu_Cache(void)
 	trap_R_RegisterShaderNoMip(ART_NEXT1);
 	for(n = 0; n < 6; n++){
 		trap_R_RegisterShaderNoMip(ui_medalPicNames[n]);
-		trap_S_RegisterSound(ui_medalSounds[n], qfalse);
+		trap_sndregister(ui_medalSounds[n], qfalse);
 	}
 
 	if(buildscript){
-		trap_S_RegisterSound(MUSIC_LOSS, qfalse);
-		trap_S_RegisterSound(MUSIC_WIN, qfalse);
-		trap_S_RegisterSound(ANNOUNCE_YOUWIN, qfalse);
+		trap_sndregister(MUSIC_LOSS, qfalse);
+		trap_sndregister(MUSIC_WIN, qfalse);
+		trap_sndregister(ANNOUNCE_YOUWIN, qfalse);
 	}
 }
 
@@ -568,11 +568,11 @@ UI_SPPostgameMenu_f(void)
 	Prepname(2);
 
 	if(playerGameRank != 1){
-		postgame.winnerSound = trap_S_RegisterSound(
+		postgame.winnerSound = trap_sndregister(
 			va(FMT_WHOWINS, postgame.placeNames[0]), qfalse);
 		trap_Cmd_ExecuteText(EXEC_APPEND, "music " MUSIC_LOSS "\n");
 	}else{
-		postgame.winnerSound = trap_S_RegisterSound(
+		postgame.winnerSound = trap_sndregister(
 			ANNOUNCE_YOUWIN, qfalse);
 		trap_Cmd_ExecuteText(EXEC_APPEND, "music " MUSIC_WIN "\n");
 	}

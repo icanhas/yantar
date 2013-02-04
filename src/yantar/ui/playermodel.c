@@ -412,7 +412,7 @@ PlayerModel_BuildList(void)
 			 * return; */
 
 			if(precache)
-				trap_S_RegisterSound(va(
+				trap_sndregister(va(
 						Pannounce "/%s_wins",
 						skinname), qfalse);
 		}

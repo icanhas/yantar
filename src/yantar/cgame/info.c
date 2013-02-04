@@ -102,7 +102,7 @@ CG_LoadingClient(int clientNum)
 	Q_cleanstr(personality);
 
 	if(cgs.gametype == GT_SINGLE_PLAYER)
-		trap_S_RegisterSound(va(Pannounce "/%s", personality), qtrue);
+		trap_sndregister(va(Pannounce "/%s", personality), qtrue);
 	CG_LoadingString(personality);
 }
 

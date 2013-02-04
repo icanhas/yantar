@@ -760,10 +760,10 @@ CL_UISystemCalls(intptr_t *args)
 		return 0;
 
 	case UI_S_REGISTERSOUND:
-		return S_RegisterSound(VMA(1), args[2]);
+		return sndregister(VMA(1), args[2]);
 
 	case UI_S_STARTLOCALSOUND:
-		S_StartLocalSound(args[1], args[2]);
+		sndstartlocalsound(args[1], args[2]);
 		return 0;
 
 	case UI_KEY_KEYNUMTOSTRINGBUF:
@@ -888,10 +888,10 @@ CL_UISystemCalls(intptr_t *args)
 		return 0;
 
 	case UI_S_STOPBACKGROUNDTRACK:
-		S_StopBackgroundTrack();
+		sndstopbackgroundtrack();
 		return 0;
 	case UI_S_STARTBACKGROUNDTRACK:
-		S_StartBackgroundTrack(VMA(1), VMA(2));
+		sndstartbackgroundtrack(VMA(1), VMA(2));
 		return 0;
 
 	case UI_REAL_TIME:

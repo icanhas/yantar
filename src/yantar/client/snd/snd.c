@@ -58,35 +58,35 @@ S_ValidSoundInterface(Sndinterface *si)
 }
 
 void
-S_StartSound(Vec3 origin, int entnum, int entchannel, Sfxhandle sfx)
+sndstartsound(Vec3 origin, int entnum, int entchannel, Sfxhandle sfx)
 {
 	if(si.StartSound)
 		si.StartSound(origin, entnum, entchannel, sfx);
 }
 
 void
-S_StartLocalSound(Sfxhandle sfx, int channelNum)
+sndstartlocalsound(Sfxhandle sfx, int channelNum)
 {
 	if(si.StartLocalSound)
 		si.StartLocalSound(sfx, channelNum);
 }
 
 void
-S_StartBackgroundTrack(const char *intro, const char *loop)
+sndstartbackgroundtrack(const char *intro, const char *loop)
 {
 	if(si.StartBackgroundTrack)
 		si.StartBackgroundTrack(intro, loop);
 }
 
 void
-S_StopBackgroundTrack(void)
+sndstopbackgroundtrack(void)
 {
 	if(si.StopBackgroundTrack)
 		si.StopBackgroundTrack( );
 }
 
 void
-S_RawSamples(int stream, int samples, int rate, int width, int channels,
+sndrawsamps(int stream, int samples, int rate, int width, int channels,
 	     const byte *data, float volume, int entityNum)
 {
 	if(si.RawSamples)
@@ -96,21 +96,21 @@ S_RawSamples(int stream, int samples, int rate, int width, int channels,
 }
 
 void
-S_StopAllSounds(void)
+sndstopall(void)
 {
 	if(si.StopAllSounds)
 		si.StopAllSounds( );
 }
 
 void
-S_ClearLoopingSounds(qbool killall)
+sndclearloops(qbool killall)
 {
 	if(si.ClearLoopingSounds)
 		si.ClearLoopingSounds(killall);
 }
 
 void
-S_AddLoopingSound(int entityNum, const Vec3 origin,
+sndaddloop(int entityNum, const Vec3 origin,
 		  const Vec3 velocity, Sfxhandle sfx)
 {
 	if(si.AddLoopingSound)
@@ -118,7 +118,7 @@ S_AddLoopingSound(int entityNum, const Vec3 origin,
 }
 
 void
-S_AddRealLoopingSound(int entityNum, const Vec3 origin,
+sndaddrealloop(int entityNum, const Vec3 origin,
 		      const Vec3 velocity, Sfxhandle sfx)
 {
 	if(si.AddRealLoopingSound)
@@ -126,14 +126,14 @@ S_AddRealLoopingSound(int entityNum, const Vec3 origin,
 }
 
 void
-S_StopLoopingSound(int entityNum)
+sndstoploop(int entityNum)
 {
 	if(si.StopLoopingSound)
 		si.StopLoopingSound(entityNum);
 }
 
 void
-S_Respatialize(int entityNum, const Vec3 origin,
+sndrespatialize(int entityNum, const Vec3 origin,
 	       Vec3 axis[3], int inwater)
 {
 	if(si.Respatialize)
@@ -141,14 +141,14 @@ S_Respatialize(int entityNum, const Vec3 origin,
 }
 
 void
-S_UpdateEntityPosition(int entityNum, const Vec3 origin)
+sndupdateentpos(int entityNum, const Vec3 origin)
 {
 	if(si.UpdateEntityPosition)
 		si.UpdateEntityPosition(entityNum, origin);
 }
 
 void
-S_Update(void)
+sndupdate(void)
 {
 	if(s_muted->integer){
 		if(!(s_muteWhenMinimized->integer && com_minimized->integer) &&
@@ -167,21 +167,21 @@ S_Update(void)
 }
 
 void
-S_DisableSounds(void)
+snddisablesounds(void)
 {
 	if(si.DisableSounds)
 		si.DisableSounds( );
 }
 
 void
-S_BeginRegistration(void)
+sndbeginreg(void)
 {
 	if(si.BeginRegistration)
 		si.BeginRegistration( );
 }
 
 Sfxhandle
-S_RegisterSound(const char *sample, qbool compressed)
+sndregister(const char *sample, qbool compressed)
 {
 	if(si.RegisterSound)
 		return si.RegisterSound(sample, compressed);
@@ -190,7 +190,7 @@ S_RegisterSound(const char *sample, qbool compressed)
 }
 
 void
-sndclearbuffer(void)
+sndclearbuf(void)
 {
 	if(si.ClearSoundBuffer)
 		si.ClearSoundBuffer( );
@@ -212,14 +212,14 @@ S_SoundList(void)
 
 #ifdef USE_VOIP
 void
-S_StartCapture(void)
+sndstartcapture(void)
 {
 	if(si.StartCapture)
 		si.StartCapture( );
 }
 
 int
-S_AvailableCaptureSamples(void)
+sndavailcapturesamps(void)
 {
 	if(si.AvailableCaptureSamples)
 		return si.AvailableCaptureSamples( );
@@ -227,21 +227,21 @@ S_AvailableCaptureSamples(void)
 }
 
 void
-S_Capture(int samples, byte *data)
+sndcapture(int samples, byte *data)
 {
 	if(si.Capture)
 		si.Capture(samples, data);
 }
 
 void
-S_StopCapture(void)
+sndstopcapture(void)
 {
 	if(si.StopCapture)
 		si.StopCapture( );
 }
 
 void
-S_MasterGain(float gain)
+sndmastergain(float gain)
 {
 	if(si.MasterGain)
 		si.MasterGain(gain);
@@ -300,7 +300,7 @@ S_StopMusic_f(void)
 }
 
 void
-S_Init(void)
+sndinit(void)
 {
 	Cvar *cv;
 	qbool started = qfalse;
@@ -328,7 +328,7 @@ S_Init(void)
 		cmdadd("music", S_Music_f);
 		cmdadd("stopmusic", S_StopMusic_f);
 		cmdadd("s_list", S_SoundList);
-		cmdadd("s_stop", S_StopAllSounds);
+		cmdadd("s_stop", sndstopall);
 		cmdadd("s_info", S_SoundInfo);
 
 		if(!started){
@@ -350,7 +350,7 @@ S_Init(void)
 }
 
 void
-S_Shutdown(void)
+sndshutdown(void)
 {
 	if(si.Shutdown)
 		si.Shutdown( );
