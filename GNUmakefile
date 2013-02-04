@@ -970,7 +970,7 @@ YOBJ = \
   $(O)/client/snd/codec.o \
   $(O)/client/snd/codec_ogg.o \
   $(O)/client/snd/codec_wav.o \
-  $(O)/client/snd/snd.o \
+  $(O)/client/snd.o \
   \
   $(O)/client/curl.o \
   \

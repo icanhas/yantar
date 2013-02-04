@@ -7,20 +7,24 @@
  */
 
 #include "shared.h"
-#include "../client.h"
-#include "codec.h"
-#include "local.h"
+#include "client.h"
 #include "snd.h"
+#include "snd/codec.h"
+#include "snd/local.h"
 
-Cvar	*s_volume;
-Cvar	*s_muted;
-Cvar	*s_musicVolume;
-Cvar	*s_doppler;
-Cvar	*s_backend;
-Cvar	*s_muteWhenMinimized;
-Cvar	*s_muteWhenUnfocused;
+Cvar *s_volume;
+Cvar *s_muted;
+Cvar *s_musicVolume;
+Cvar *s_doppler;
+Cvar *s_backend;
+Cvar *s_muteWhenMinimized;
+Cvar *s_muteWhenUnfocused;
 
 static Sndinterface si;
+
+static void	play_f(void);
+static void	music_f(void);
+static void	stopmusic_f(void);
 
 static qbool
 S_ValidSoundInterface(Sndinterface *si)
@@ -45,7 +49,6 @@ S_ValidSoundInterface(Sndinterface *si)
 	if(!si->clearsndbuf) return qfalse;
 	if(!si->sndinfo) return qfalse;
 	if(!si->sndlist) return qfalse;
-
 #ifdef USE_VOIP
 	if(!si->startcapture) return qfalse;
 	if(!si->availcapturesamps) return qfalse;
@@ -53,7 +56,6 @@ S_ValidSoundInterface(Sndinterface *si)
 	if(!si->stopcapture) return qfalse;
 	if(!si->mastergain) return qfalse;
 #endif
-
 	return qtrue;
 }
 
@@ -82,7 +84,7 @@ void
 sndstopbackgroundtrack(void)
 {
 	if(si.stopbackgroundtrack)
-		si.stopbackgroundtrack( );
+		si.stopbackgroundtrack();
 }
 
 void
@@ -91,15 +93,14 @@ sndrawsamps(int stream, int samples, int rate, int width, int channels,
 {
 	if(si.rawsamps)
 		si.rawsamps(stream, samples, rate, width, channels, data,
-			volume,
-			entityNum);
+			volume, entityNum);
 }
 
 void
 sndstopall(void)
 {
 	if(si.stopall)
-		si.stopall( );
+		si.stopall();
 }
 
 void
@@ -153,31 +154,31 @@ sndupdate(void)
 	if(s_muted->integer){
 		if(!(s_muteWhenMinimized->integer && com_minimized->integer) &&
 		   !(s_muteWhenUnfocused->integer && com_unfocused->integer)){
-			s_muted->integer	= qfalse;
-			s_muted->modified	= qtrue;
+			s_muted->integer = qfalse;
+			s_muted->modified = qtrue;
 		}
 	}else if((s_muteWhenMinimized->integer && com_minimized->integer) ||
 		 (s_muteWhenUnfocused->integer && com_unfocused->integer)){
-		s_muted->integer	= qtrue;
-		s_muted->modified	= qtrue;
+		s_muted->integer = qtrue;
+		s_muted->modified = qtrue;
 	}
 
 	if(si.update)
-		si.update( );
+		si.update();
 }
 
 void
 snddisablesounds(void)
 {
 	if(si.disablesnds)
-		si.disablesnds( );
+		si.disablesnds();
 }
 
 void
 sndbeginreg(void)
 {
 	if(si.beginreg)
-		si.beginreg( );
+		si.beginreg();
 }
 
 Handle
@@ -193,21 +194,21 @@ void
 sndclearbuf(void)
 {
 	if(si.clearsndbuf)
-		si.clearsndbuf( );
+		si.clearsndbuf();
 }
 
 void
 S_SoundInfo(void)
 {
 	if(si.sndinfo)
-		si.sndinfo( );
+		si.sndinfo();
 }
 
 void
 S_SoundList(void)
 {
 	if(si.sndlist)
-		si.sndlist( );
+		si.sndlist();
 }
 
 #ifdef USE_VOIP
@@ -215,14 +216,14 @@ void
 sndstartcapture(void)
 {
 	if(si.startcapture)
-		si.startcapture( );
+		si.startcapture();
 }
 
 int
 sndavailcapturesamps(void)
 {
 	if(si.availcapturesamps)
-		return si.availcapturesamps( );
+		return si.availcapturesamps();
 	return 0;
 }
 
@@ -237,7 +238,7 @@ void
 sndstopcapture(void)
 {
 	if(si.stopcapture)
-		si.stopcapture( );
+		si.stopcapture();
 }
 
 void
@@ -249,28 +250,92 @@ sndmastergain(float gain)
 #endif
 
 void
-S_Play_f(void)
+sndinit(void)
 {
-	int	i;
+	Cvar *cv;
+	qbool started = qfalse;
+
+	comprintf("------ Initializing Sound ------\n");
+
+	s_volume = cvarget("s_volume", "0.8", CVAR_ARCHIVE);
+	s_musicVolume = cvarget("s_musicvolume", "0.25", CVAR_ARCHIVE);
+	s_muted = cvarget("s_muted", "0", CVAR_ROM);
+	s_doppler = cvarget("s_doppler", "1", CVAR_ARCHIVE);
+	s_backend = cvarget("s_backend", "", CVAR_ROM);
+	s_muteWhenMinimized = cvarget("s_muteWhenMinimized", "0",
+		CVAR_ARCHIVE);
+	s_muteWhenUnfocused = cvarget("s_muteWhenUnfocused", "0",
+		CVAR_ARCHIVE);
+
+	cv = cvarget("s_initsound", "1", 0);
+	if(!cv->integer)
+		comprintf("Sound disabled.\n");
+	else{
+
+		S_CodecInit();
+
+		cmdadd("play", play_f);
+		cmdadd("music", music_f);
+		cmdadd("stopmusic", stopmusic_f);
+		cmdadd("s_list", S_SoundList);
+		cmdadd("s_stop", sndstopall);
+		cmdadd("s_info", S_SoundInfo);
+
+		if(!started){
+			started = S_Base_Init(&si);
+			cvarsetstr("s_backend", "base");
+		}
+
+		if(started){
+			if(!S_ValidSoundInterface(&si))
+				comerrorf(ERR_FATAL, "Sound interface invalid");
+
+			S_SoundInfo();
+			comprintf("Sound initialized.\n");
+		}else
+			comprintf("Sound initialization failed.\n");
+	}
+
+	comprintf("--------------------------------\n");
+}
+
+void
+sndshutdown(void)
+{
+	if(si.shutdown)
+		si.shutdown();
+	Q_Memset(&si, 0, sizeof(Sndinterface));
+	cmdremove("play");
+	cmdremove("music");
+	cmdremove("stopmusic");
+	cmdremove("s_list");
+	cmdremove("s_stop");
+	cmdremove("s_info");
+	S_CodecShutdown();
+}
+
+static void
+play_f(void)
+{
+	int i;
 	Handle h;
-	char	name[256];
+	char name[256];
 
 	if(!si.registersnd || !si.startlocalsnd)
 		return;
 
 	i = 1;
-	while(i<cmdargc()){
+	while(i < cmdargc()){
 		Q_strncpyz(name, cmdargv(i), sizeof(name));
 		h = si.registersnd(name, qfalse);
-
 		if(h)
 			si.startlocalsnd(h, CHAN_LOCAL_SOUND);
 		i++;
 	}
 }
 
-void
-S_Music_f(void)
+static void
+music_f(void)
 {
 	int c;
 
@@ -290,76 +355,11 @@ S_Music_f(void)
 
 }
 
-void
-S_StopMusic_f(void)
+static void
+stopmusic_f(void)
 {
 	if(!si.stopbackgroundtrack)
 		return;
 
 	si.stopbackgroundtrack();
-}
-
-void
-sndinit(void)
-{
-	Cvar *cv;
-	qbool started = qfalse;
-
-	comprintf("------ Initializing Sound ------\n");
-
-	s_volume = cvarget("s_volume", "0.8", CVAR_ARCHIVE);
-	s_musicVolume	= cvarget("s_musicvolume", "0.25", CVAR_ARCHIVE);
-	s_muted		= cvarget("s_muted", "0", CVAR_ROM);
-	s_doppler	= cvarget("s_doppler", "1", CVAR_ARCHIVE);
-	s_backend	= cvarget("s_backend", "", CVAR_ROM);
-	s_muteWhenMinimized = cvarget("s_muteWhenMinimized", "0",
-		CVAR_ARCHIVE);
-	s_muteWhenUnfocused = cvarget("s_muteWhenUnfocused", "0",
-		CVAR_ARCHIVE);
-
-	cv = cvarget("s_initsound", "1", 0);
-	if(!cv->integer)
-		comprintf("Sound disabled.\n");
-	else{
-
-		S_CodecInit( );
-
-		cmdadd("play", S_Play_f);
-		cmdadd("music", S_Music_f);
-		cmdadd("stopmusic", S_StopMusic_f);
-		cmdadd("s_list", S_SoundList);
-		cmdadd("s_stop", sndstopall);
-		cmdadd("s_info", S_SoundInfo);
-
-		if(!started){
-			started = S_Base_Init(&si);
-			cvarsetstr("s_backend", "base");
-		}
-
-		if(started){
-			if(!S_ValidSoundInterface(&si))
-				comerrorf(ERR_FATAL, "Sound interface invalid");
-
-			S_SoundInfo( );
-			comprintf("Sound initialized.\n");
-		}else
-			comprintf("Sound initialization failed.\n");
-	}
-
-	comprintf("--------------------------------\n");
-}
-
-void
-sndshutdown(void)
-{
-	if(si.shutdown)
-		si.shutdown( );
-	Q_Memset(&si, 0, sizeof(Sndinterface));
-	cmdremove("play");
-	cmdremove("music");
-	cmdremove("stopmusic");
-	cmdremove("s_list");
-	cmdremove("s_stop");
-	cmdremove("s_info");
-	S_CodecShutdown( );
 }
