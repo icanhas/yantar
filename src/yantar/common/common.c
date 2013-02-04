@@ -850,9 +850,9 @@ comflushevents(void)
 		/* if no more events are available */
 		if(ev.evType == SE_NONE){
 			/* manually send packet events for the loopback channel */
-			while(NET_GetLoopPacket(NS_CLIENT, &evFrom, &buf))
+			while(netgetlooppacket(NS_CLIENT, &evFrom, &buf))
 				clpacketevent(evFrom, &buf);
-			while(NET_GetLoopPacket(NS_SERVER, &evFrom, &buf))
+			while(netgetlooppacket(NS_SERVER, &evFrom, &buf))
 				/* if the server just shut down, flush the events */
 				if(com_sv_running->integer)
 					comrunservpacket(&evFrom, &buf);
@@ -1196,7 +1196,7 @@ comgamerestart(int checksumFeed, qbool disconnect)
 			 * change was triggered by a connect to server because the
 			 * new network settings might make the connection fail. 
 			 */
-			NET_Restart_f();
+			netrestart();
 		}
 
 		if(clWasRunning){
@@ -1709,9 +1709,9 @@ comframe(void)
 			timeVal = Q_TimeVal(minMsec);
 
 		if(com_busyWait->integer || timeVal < 1)
-			NET_Sleep(0);
+			netsleep(0);
 		else
-			NET_Sleep(timeVal - 1);
+			netsleep(timeVal - 1);
 	}while(Q_TimeVal(minMsec));
 
 	lastTime = com_frameTime;
@@ -1774,7 +1774,7 @@ comframe(void)
 			timeAfter = sysmillisecs ();
 	}
 
-	NET_FlushPacketQueue();
+	netflushpacketqueue();
 
 	/* report timing information */
 	if(com_speeds->integer){

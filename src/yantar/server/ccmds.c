@@ -393,7 +393,7 @@ SV_Ban_f(void)
 	if(!svs.authorizeAddress.ip[0] && svs.authorizeAddress.type !=
 	   NA_BAD){
 		comprintf("Resolving %s\n", AUTHORIZE_SERVER_NAME);
-		if(!NET_StringToAdr(AUTHORIZE_SERVER_NAME,
+		if(!strtoaddr(AUTHORIZE_SERVER_NAME,
 			   &svs.authorizeAddress, NA_IP)){
 			comprintf("Couldn't resolve address\n");
 			return;
@@ -409,7 +409,7 @@ SV_Ban_f(void)
 
 	/* otherwise send their ip to the authorize server */
 	if(svs.authorizeAddress.type != NA_BAD){
-		NET_OutOfBandPrint(NS_SERVER, svs.authorizeAddress,
+		netprintOOB(NS_SERVER, svs.authorizeAddress,
 			"banUser %i.%i.%i.%i", cl->netchan.remoteAddress.ip[0],
 			cl->netchan.remoteAddress.ip[1],
 			cl->netchan.remoteAddress.ip[2],
@@ -448,7 +448,7 @@ SV_BanNum_f(void)
 	if(!svs.authorizeAddress.ip[0] && svs.authorizeAddress.type !=
 	   NA_BAD){
 		comprintf("Resolving %s\n", AUTHORIZE_SERVER_NAME);
-		if(!NET_StringToAdr(AUTHORIZE_SERVER_NAME,
+		if(!strtoaddr(AUTHORIZE_SERVER_NAME,
 			   &svs.authorizeAddress, NA_IP)){
 			comprintf("Couldn't resolve address\n");
 			return;
@@ -464,7 +464,7 @@ SV_BanNum_f(void)
 
 	/* otherwise send their ip to the authorize server */
 	if(svs.authorizeAddress.type != NA_BAD){
-		NET_OutOfBandPrint(NS_SERVER, svs.authorizeAddress,
+		netprintOOB(NS_SERVER, svs.authorizeAddress,
 			"banUser %i.%i.%i.%i", cl->netchan.remoteAddress.ip[0],
 			cl->netchan.remoteAddress.ip[1],
 			cl->netchan.remoteAddress.ip[2],
@@ -526,7 +526,7 @@ SV_RehashBans_f(void)
 
 		*newlinepos = '\0';
 
-		if(NET_StringToAdr(curpos + 2, &serverBans[i].ip, NA_UNSPEC)){
+		if(strtoaddr(curpos + 2, &serverBans[i].ip, NA_UNSPEC)){
 			serverBans[i].isexception = (curpos[0] != '0');
 			serverBans[i].subnet = atoi(maskpos);
 
@@ -571,7 +571,7 @@ SV_WriteBans(void)
 			curban = &serverBans[i];
 
 			Q_sprintf(writebuf, sizeof(writebuf), "%d %s %d\n",
-				curban->isexception, NET_AdrToString(
+				curban->isexception, addrtostr(
 					curban->ip), curban->subnet);
 			fswrite(writebuf, strlen(writebuf), writeto);
 		}
@@ -612,7 +612,7 @@ SV_ParseCIDRNotation(Netaddr *dest, int *mask, char *adrstr)
 		suffix++;
 	}
 
-	if(!NET_StringToAdr(adrstr, dest, NA_UNSPEC))
+	if(!strtoaddr(adrstr, dest, NA_UNSPEC))
 		return qtrue;
 
 	if(suffix){
@@ -708,15 +708,15 @@ SV_AddBanToList(qbool isexception)
 		curban = &serverBans[index];
 		if(curban->subnet <= mask){
 			if((curban->isexception || !isexception) 
-			   && NET_CompareBaseAdrMask(curban->ip, ip, curban->subnet))
+			   && equalbaseaddrmask(curban->ip, ip, curban->subnet))
 			then{
-				Q_strncpyz(addy2, NET_AdrToString(ip),
+				Q_strncpyz(addy2, addrtostr(ip),
 					sizeof(addy2));
 
 				comprintf("Error: %s %s/%d supersedes %s %s/%d\n",
 					curban->isexception ? "Exception" :
 					"Ban",
-					NET_AdrToString(curban->ip), curban->subnet,
+					addrtostr(curban->ip), curban->subnet,
 					isexception ? "exception" : "ban", addy2,
 					mask);
 				return;
@@ -724,14 +724,14 @@ SV_AddBanToList(qbool isexception)
 		}
 		if(curban->subnet >= mask)
 			if(!curban->isexception && isexception &&
-			   NET_CompareBaseAdrMask(curban->ip, ip, mask)){
-				Q_strncpyz(addy2, NET_AdrToString(
+			   equalbaseaddrmask(curban->ip, ip, mask)){
+				Q_strncpyz(addy2, addrtostr(
 						curban->ip), sizeof(addy2));
 
 				comprintf(
 					"Error: %s %s/%d supersedes already existing %s %s/%d\n",
 					isexception ? "Exception" : "Ban",
-					NET_AdrToString(
+					addrtostr(
 						ip), mask,
 					curban->isexception ? "exception" :
 					"ban", addy2, curban->subnet);
@@ -746,7 +746,7 @@ SV_AddBanToList(qbool isexception)
 
 		if(curban->subnet > mask &&
 		   (!curban->isexception ||
-		    isexception) && NET_CompareBaseAdrMask(curban->ip, ip, mask))
+		    isexception) && equalbaseaddrmask(curban->ip, ip, mask))
 			SV_DelBanEntryFromList(index);
 		else
 			index++;
@@ -758,7 +758,7 @@ SV_AddBanToList(qbool isexception)
 	serverBansCount++;
 	SV_WriteBans();
 	comprintf("Added %s: %s/%d\n", isexception ? "ban exception" : "ban",
-		NET_AdrToString(ip), mask);
+		addrtostr(ip), mask);
 }
 
 /*
@@ -794,11 +794,11 @@ SV_DelBanFromList(qbool isexception)
 
 			if(curban->isexception == isexception
 			   && curban->subnet >= mask
-			   && NET_CompareBaseAdrMask(curban->ip, ip, mask))
+			   && equalbaseaddrmask(curban->ip, ip, mask))
 			then{
 				comprintf("Deleting %s %s/%d\n",
 					isexception ? "exception" : "ban",
-					NET_AdrToString(
+					addrtostr(
 						curban->ip), curban->subnet);
 				SV_DelBanEntryFromList(index);
 			}else
@@ -820,7 +820,7 @@ SV_DelBanFromList(qbool isexception)
 					comprintf("Deleting %s %s/%d\n",
 						isexception ? "exception" :
 						"ban",
-						NET_AdrToString(serverBans[index].ip),
+						addrtostr(serverBans[index].ip),
 						serverBans[index].subnet);
 					SV_DelBanEntryFromList(index);
 
@@ -849,7 +849,7 @@ SV_ListBans_f(void)
 			count++;
 
 			comprintf("Ban #%d: %s/%d\n", count,
-				NET_AdrToString(ban->ip), ban->subnet);
+				addrtostr(ban->ip), ban->subnet);
 		}
 	}
 	/* List all exceptions */
@@ -859,7 +859,7 @@ SV_ListBans_f(void)
 			count++;
 
 			comprintf("Except #%d: %s/%d\n", count,
-				NET_AdrToString(ban->ip), ban->subnet);
+				addrtostr(ban->ip), ban->subnet);
 		}
 	}
 }
@@ -978,7 +978,7 @@ SV_Status_f(void)
 
 		comprintf("%7i ", svs.time - cl->lastPacketTime);
 
-		s = NET_AdrToString(cl->netchan.remoteAddress);
+		s = addrtostr(cl->netchan.remoteAddress);
 		comprintf ("%s", s);
 		l = 22 - strlen(s);
 		j = 0;

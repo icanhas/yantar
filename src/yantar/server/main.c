@@ -257,7 +257,7 @@ SV_MasterHeartbeat(const char *message)
 				comprintf("Resolving %s (IPv4)\n",
 					sv_master[i]->string);
 				res =
-					NET_StringToAdr(sv_master[i]->string,
+					strtoaddr(sv_master[i]->string,
 						&adr[i][0],
 						NA_IP);
 
@@ -269,7 +269,7 @@ SV_MasterHeartbeat(const char *message)
 					comprintf(
 						"%s resolved to %s\n",
 						sv_master[i]->string,
-						NET_AdrToStringwPort(adr[i][0]));
+						addrporttostr(adr[i][0]));
 				else
 					comprintf("%s has no IPv4 address.\n",
 						sv_master[i]->string);
@@ -279,7 +279,7 @@ SV_MasterHeartbeat(const char *message)
 				comprintf("Resolving %s (IPv6)\n",
 					sv_master[i]->string);
 				res =
-					NET_StringToAdr(sv_master[i]->string,
+					strtoaddr(sv_master[i]->string,
 						&adr[i][1],
 						NA_IP6);
 
@@ -291,7 +291,7 @@ SV_MasterHeartbeat(const char *message)
 					comprintf(
 						"%s resolved to %s\n",
 						sv_master[i]->string,
-						NET_AdrToStringwPort(adr[i][1]));
+						addrporttostr(adr[i][1]));
 				else
 					comprintf("%s has no IPv6 address.\n",
 						sv_master[i]->string);
@@ -316,11 +316,11 @@ SV_MasterHeartbeat(const char *message)
 		 * ever incompatably changes */
 
 		if(adr[i][0].type != NA_BAD)
-			NET_OutOfBandPrint(NS_SERVER, adr[i][0],
+			netprintOOB(NS_SERVER, adr[i][0],
 				"heartbeat %s\n",
 				message);
 		if(adr[i][1].type != NA_BAD)
-			NET_OutOfBandPrint(NS_SERVER, adr[i][1],
+			netprintOOB(NS_SERVER, adr[i][1],
 				"heartbeat %s\n",
 				message);
 	}
@@ -561,7 +561,7 @@ SVC_Status(Netaddr from)
 	if(SVC_RateLimitAddress(from, 10, 1000)){
 		comdprintf(
 			"SVC_Status: rate limit from %s exceeded, dropping request\n",
-			NET_AdrToString(from));
+			addrtostr(from));
 		return;
 	}
 
@@ -596,7 +596,7 @@ SVC_Status(Netaddr from)
 		}
 	}
 
-	NET_OutOfBandPrint(NS_SERVER, from, "statusResponse\n%s\n%s", infostring,
+	netprintOOB(NS_SERVER, from, "statusResponse\n%s\n%s", infostring,
 		status);
 }
 
@@ -676,7 +676,7 @@ SVC_Info(Netaddr from)
 	if(*gamedir)
 		Info_SetValueForKey(infostring, "game", gamedir);
 
-	NET_OutOfBandPrint(NS_SERVER, from, "infoResponse\n%s", infostring);
+	netprintOOB(NS_SERVER, from, "infoResponse\n%s", infostring);
 }
 
 /*
@@ -686,7 +686,7 @@ SVC_Info(Netaddr from)
 static void
 SV_FlushRedirect(char *outputbuf)
 {
-	NET_OutOfBandPrint(NS_SERVER, svs.redirectAddress, "print\n%s",
+	netprintOOB(NS_SERVER, svs.redirectAddress, "print\n%s",
 		outputbuf);
 }
 
@@ -712,7 +712,7 @@ SVC_RemoteCommand(Netaddr from, Bitmsg *msg)
 	if(SVC_RateLimitAddress(from, 10, 1000)){
 		comdprintf(
 			"SVC_RemoteCommand: rate limit from %s exceeded, dropping request\n",
-			NET_AdrToString(from));
+			addrtostr(from));
 		return;
 	}
 
@@ -728,11 +728,11 @@ SVC_RemoteCommand(Netaddr from, Bitmsg *msg)
 		}
 
 		valid = qfalse;
-		comprintf ("Bad rcon from %s: %s\n", NET_AdrToString (
+		comprintf ("Bad rcon from %s: %s\n", addrtostr (
 				from), cmdargsfrom(2));
 	}else{
 		valid = qtrue;
-		comprintf ("Rcon from %s: %s\n", NET_AdrToString (
+		comprintf ("Rcon from %s: %s\n", addrtostr (
 				from), cmdargsfrom(2));
 	}
 
@@ -793,7 +793,7 @@ SV_ConnectionlessPacket(Netaddr from, Bitmsg *msg)
 	cmdstrtok(s);
 
 	c = cmdargv(0);
-	comdprintf ("SV packet %s : %s\n", NET_AdrToString(from), c);
+	comdprintf ("SV packet %s : %s\n", addrtostr(from), c);
 
 	if(!Q_stricmp(c, "getstatus"))
 		SVC_Status(from);
@@ -815,7 +815,7 @@ SV_ConnectionlessPacket(Netaddr from, Bitmsg *msg)
 		 * sequenced messages to the old client */
 	}else
 		comdprintf ("bad connectionless packet from %s:\n%s\n",
-			NET_AdrToString (from), s);
+			addrtostr (from), s);
 }
 
 /* ============================================================================ */
@@ -846,7 +846,7 @@ svpacketevent(Netaddr from, Bitmsg *msg)
 	for(i=0, cl=svs.clients; i < sv_maxclients->integer; i++,cl++){
 		if(cl->state == CS_FREE)
 			continue;
-		if(!NET_CompareBaseAdr(from, cl->netchan.remoteAddress))
+		if(!equalbaseaddr(from, cl->netchan.remoteAddress))
 			continue;
 		/* it is possible to have multiple clients from a single IP
 		 * address, so they are differentiated by the qport variable */

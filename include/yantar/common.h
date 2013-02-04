@@ -175,30 +175,30 @@ struct Netaddr {
 	unsigned long	scope_id;	/* Needed for IPv6 link-local addresses */
 };
 
-void NET_Init(void);
-void NET_Shutdown(void);
-void NET_Restart_f(void);
-void NET_Config(qbool enableNetworking);
-void NET_FlushPacketQueue(void);
-void NET_SendPacket(Netsrc sock, int length, const void *data,
+void netinit(void);
+void netshutdown(void);
+void netrestart(void);
+void netconfig(qbool enableNetworking);
+void netflushpacketqueue(void);
+void netsendpacket(Netsrc sock, int length, const void *data,
 			 Netaddr to);
-void QDECL NET_OutOfBandPrint(Netsrc net_socket, Netaddr adr,
+void QDECL netprintOOB(Netsrc net_socket, Netaddr adr,
 			 const char *format,
 			 ...) __attribute__ ((format (printf, 3, 4)));
-void QDECL NET_OutOfBandData(Netsrc sock, Netaddr adr, byte *format, int len);
+void QDECL netdataOOB(Netsrc sock, Netaddr adr, byte *format, int len);
 
-qbool NET_CompareAdr(Netaddr a, Netaddr b);
-qbool NET_CompareBaseAdrMask(Netaddr a, Netaddr b, int netmask);
-qbool NET_CompareBaseAdr(Netaddr a, Netaddr b);
-qbool NET_IsLocalAddress(Netaddr adr);
-const char* NET_AdrToString(Netaddr a);
-const char* NET_AdrToStringwPort(Netaddr a);
-int NET_StringToAdr(const char *s, Netaddr *a, Netaddrtype family);
-qbool NET_GetLoopPacket(Netsrc sock, Netaddr *net_from,
+qbool equaladdr(Netaddr a, Netaddr b);
+qbool equalbaseaddrmask(Netaddr a, Netaddr b, int netmask);
+qbool equalbaseaddr(Netaddr a, Netaddr b);
+qbool islocaladdr(Netaddr adr);
+const char* addrtostr(Netaddr a);
+const char* addrporttostr(Netaddr a);
+int strtoaddr(const char *s, Netaddr *a, Netaddrtype family);
+qbool netgetlooppacket(Netsrc sock, Netaddr *net_from,
 			Bitmsg *net_message);
-void NET_JoinMulticast6(void);
-void NET_LeaveMulticast6(void);
-void NET_Sleep(int msec);
+void netjoinmulticast6(void);
+void netleavemulticast6(void);
+void netsleep(int msec);
 
 #define NETCHAN_GENCHECKSUM(challenge, sequence) ((challenge) ^	\
 						 ((sequence) * (challenge)))

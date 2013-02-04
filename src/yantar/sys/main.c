@@ -441,7 +441,7 @@ main(int argc, char **argv)
 	}
 
 	cominit(commandLine);
-	NET_Init();
+	netinit();
 	CON_Init();
 
 	signal(SIGILL, Sys_SigHandler);

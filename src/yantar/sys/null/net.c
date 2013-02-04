@@ -11,7 +11,7 @@
 
 /*
  * =============
- * NET_StringToAdr
+ * strtoaddr
  *
  * localhost
  * idnewt
@@ -21,7 +21,7 @@
  * =============
  */
 qbool
-NET_StringToAdr(char *s, Netaddr *a)
+strtoaddr(char *s, Netaddr *a)
 {
 	if(!strcmp (s, "localhost")){
 		memset (a, 0, sizeof(*a));

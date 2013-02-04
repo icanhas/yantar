@@ -135,9 +135,9 @@ LAN_AddServer(int source, const char *name, const char *address)
 		break;
 	}
 	if(servers && *count < max){
-		NET_StringToAdr(address, &adr, NA_IP);
+		strtoaddr(address, &adr, NA_IP);
 		for(i = 0; i < *count; i++)
-			if(NET_CompareAdr(servers[i].adr, adr))
+			if(equaladdr(servers[i].adr, adr))
 				break;
 		if(i >= *count){
 			servers[*count].adr = adr;
@@ -177,9 +177,9 @@ LAN_RemoveServer(int source, const char *addr)
 	}
 	if(servers){
 		Netaddr comp;
-		NET_StringToAdr(addr, &comp, NA_IP);
+		strtoaddr(addr, &comp, NA_IP);
 		for(i = 0; i < *count; i++)
-			if(NET_CompareAdr(comp, servers[i].adr)){
+			if(equaladdr(comp, servers[i].adr)){
 				int j = i;
 				while(j < *count - 1){
 					Q_Memcpy(&servers[j], &servers[j+1],
@@ -223,7 +223,7 @@ LAN_GetServerAddressString(int source, int n, char *buf, int buflen)
 	case AS_LOCAL:
 		if(n >= 0 && n < MAX_OTHER_SERVERS){
 			Q_strncpyz(buf,
-				NET_AdrToStringwPort(
+				addrporttostr(
 					cls.localServers[n].adr), buflen);
 			return;
 		}
@@ -231,7 +231,7 @@ LAN_GetServerAddressString(int source, int n, char *buf, int buflen)
 	case AS_GLOBAL:
 		if(n >= 0 && n < MAX_GLOBAL_SERVERS){
 			Q_strncpyz(buf,
-				NET_AdrToStringwPort(
+				addrporttostr(
 					cls.globalServers[n].adr), buflen);
 			return;
 		}
@@ -239,7 +239,7 @@ LAN_GetServerAddressString(int source, int n, char *buf, int buflen)
 	case AS_FAVORITES:
 		if(n >= 0 && n < MAX_OTHER_SERVERS){
 			Q_strncpyz(buf,
-				NET_AdrToStringwPort(
+				addrporttostr(
 					cls.favoriteServers[n].adr), buflen);
 			return;
 		}
@@ -285,7 +285,7 @@ LAN_GetServerInfo(int source, int n, char *buf, int buflen)
 		Info_SetValueForKey(info, "gametype", va("%i",server->gameType));
 		Info_SetValueForKey(info, "nettype", va("%i",server->netType));
 		Info_SetValueForKey(info, "addr",
-			NET_AdrToStringwPort(server->adr));
+			addrporttostr(server->adr));
 		Info_SetValueForKey(info, "g_needpass",
 			va("%i", server->g_needpass));
 		Info_SetValueForKey(info, "g_humanplayers",

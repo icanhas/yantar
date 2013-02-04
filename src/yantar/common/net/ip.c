@@ -362,12 +362,12 @@ sysstrtoaddr(const char *s, Netaddr *a, Netaddrtype family)
 }
 
 /*
- * NET_CompareBaseAdrMask
+ * equalbaseaddrmask
  *
  * Compare without port, and up to the bit number given in netmask.
  */
 qbool
-NET_CompareBaseAdrMask(Netaddr a, Netaddr b, int netmask)
+equalbaseaddrmask(Netaddr a, Netaddr b, int netmask)
 {
 	byte	cmpmask, *addra, *addrb;
 	int	curbyte;
@@ -391,7 +391,7 @@ NET_CompareBaseAdrMask(Netaddr a, Netaddr b, int netmask)
 		if(netmask < 0 || netmask > 128)
 			netmask = 128;
 	}else{
-		comprintf ("NET_CompareBaseAdr: bad address type\n");
+		comprintf ("equalbaseaddr: bad address type\n");
 		return qfalse;
 	}
 
@@ -415,18 +415,18 @@ NET_CompareBaseAdrMask(Netaddr a, Netaddr b, int netmask)
 
 
 /*
- * NET_CompareBaseAdr
+ * equalbaseaddr
  *
  * Compares without the port
  */
 qbool
-NET_CompareBaseAdr(Netaddr a, Netaddr b)
+equalbaseaddr(Netaddr a, Netaddr b)
 {
-	return NET_CompareBaseAdrMask(a, b, -1);
+	return equalbaseaddrmask(a, b, -1);
 }
 
 const char      *
-NET_AdrToString(Netaddr a)
+addrtostr(Netaddr a)
 {
 	static char s[NET_ADDRSTRMAXLEN];
 
@@ -446,7 +446,7 @@ NET_AdrToString(Netaddr a)
 }
 
 const char      *
-NET_AdrToStringwPort(Netaddr a)
+addrporttostr(Netaddr a)
 {
 	static char s[NET_ADDRSTRMAXLEN];
 
@@ -455,10 +455,10 @@ NET_AdrToStringwPort(Netaddr a)
 	else if(a.type == NA_BOT)
 		Q_sprintf (s, sizeof(s), "bot");
 	else if(a.type == NA_IP)
-		Q_sprintf(s, sizeof(s), "%s:%hu", NET_AdrToString(a),
+		Q_sprintf(s, sizeof(s), "%s:%hu", addrtostr(a),
 			ntohs(a.port));
 	else if(a.type == NA_IP6)
-		Q_sprintf(s, sizeof(s), "[%s]:%hu", NET_AdrToString(a),
+		Q_sprintf(s, sizeof(s), "[%s]:%hu", addrtostr(a),
 			ntohs(a.port));
 
 	return s;
@@ -466,9 +466,9 @@ NET_AdrToStringwPort(Netaddr a)
 
 
 qbool
-NET_CompareAdr(Netaddr a, Netaddr b)
+equaladdr(Netaddr a, Netaddr b)
 {
-	if(!NET_CompareBaseAdr(a, b))
+	if(!equalbaseaddr(a, b))
 		return qfalse;
 
 	if(a.type == NA_IP || a.type == NA_IP6){
@@ -482,7 +482,7 @@ NET_CompareAdr(Netaddr a, Netaddr b)
 
 
 qbool
-NET_IsLocalAddress(Netaddr adr)
+islocaladdr(Netaddr adr)
 {
 	return adr.type == NA_LOOPBACK;
 }
@@ -551,7 +551,7 @@ NET_GetPacket(Netaddr *net_from, Bitmsg *net_message, fd_set *fdr)
 
 			if(ret >= net_message->maxsize){
 				comprintf("Oversize packet from %s\n",
-					NET_AdrToString (
+					addrtostr (
 						*net_from));
 				return qfalse;
 			}
@@ -581,7 +581,7 @@ NET_GetPacket(Netaddr *net_from, Bitmsg *net_message, fd_set *fdr)
 
 			if(ret >= net_message->maxsize){
 				comprintf("Oversize packet from %s\n",
-					NET_AdrToString (
+					addrtostr (
 						*net_from));
 				return qfalse;
 			}
@@ -612,7 +612,7 @@ NET_GetPacket(Netaddr *net_from, Bitmsg *net_message, fd_set *fdr)
 
 			if(ret >= net_message->maxsize){
 				comprintf("Oversize packet from %s\n",
-					NET_AdrToString (
+					addrtostr (
 						*net_from));
 				return qfalse;
 			}
@@ -691,7 +691,7 @@ syssendpacket(int length, const void *data, Netaddr to)
 		if((err == EADDRNOTAVAIL) && ((to.type == NA_BROADCAST)))
 			return;
 
-		comprintf("NET_SendPacket: %s\n", NET_ErrorString());
+		comprintf("netsendpacket: %s\n", NET_ErrorString());
 	}
 }
 
@@ -973,7 +973,7 @@ NET_SetMulticast6(void)
 		   (struct sockaddr*)&addr,
 		   sizeof(addr), AF_INET6)){
 		comprintf(
-			"WARNING: NET_JoinMulticast6: Incorrect multicast address given, "
+			"WARNING: netjoinmulticast6: Incorrect multicast address given, "
 			"please set cvar %s to a sane value.\n",
 			net_mcast6addr->name);
 
@@ -1002,7 +1002,7 @@ NET_SetMulticast6(void)
  * Join an ipv6 multicast group
  */
 void
-NET_JoinMulticast6(void)
+netjoinmulticast6(void)
 {
 	int err;
 
@@ -1027,7 +1027,7 @@ NET_JoinMulticast6(void)
 			   (char*)&curgroup.ipv6mr_interface,
 			   sizeof(curgroup.ipv6mr_interface)) < 0){
 			comprintf(
-				"NET_JoinMulticast6: Couldn't set scope on multicast socket: %s\n",
+				"netjoinmulticast6: Couldn't set scope on multicast socket: %s\n",
 				NET_ErrorString());
 
 			if(multicast6_socket != ip6_socket){
@@ -1040,7 +1040,7 @@ NET_JoinMulticast6(void)
 	if(setsockopt(multicast6_socket, IPPROTO_IPV6, IPV6_JOIN_GROUP,
 		   (char*)&curgroup, sizeof(curgroup))){
 		comprintf(
-			"NET_JoinMulticast6: Couldn't join multicast group: %s\n",
+			"netjoinmulticast6: Couldn't join multicast group: %s\n",
 			NET_ErrorString());
 
 		if(multicast6_socket != ip6_socket){
@@ -1052,7 +1052,7 @@ NET_JoinMulticast6(void)
 }
 
 void
-NET_LeaveMulticast6()
+netleavemulticast6()
 {
 	if(multicast6_socket != INVALID_SOCKET){
 		if(multicast6_socket != ip6_socket)
@@ -1498,10 +1498,10 @@ NET_GetCvars(void)
 
 
 /*
- * NET_Config
+ * netconfig
  */
 void
-NET_Config(qbool enableNetworking)
+netconfig(qbool enableNetworking)
 {
 	qbool		modified;
 	qbool		stop;
@@ -1569,10 +1569,10 @@ NET_Config(qbool enableNetworking)
 
 
 /*
- * NET_Init
+ * netinit
  */
 void
-NET_Init(void)
+netinit(void)
 {
 #ifdef _WIN32
 	int r;
@@ -1589,22 +1589,22 @@ NET_Init(void)
 	comprintf("Winsock Initialized\n");
 #endif
 
-	NET_Config(qtrue);
+	netconfig(qtrue);
 
-	cmdadd ("net_restart", NET_Restart_f);
+	cmdadd ("net_restart", netrestart);
 }
 
 
 /*
- * NET_Shutdown
+ * netshutdown
  */
 void
-NET_Shutdown(void)
+netshutdown(void)
 {
 	if(!networkingEnabled)
 		return;
 
-	NET_Config(qfalse);
+	netconfig(qfalse);
 
 #ifdef _WIN32
 	WSACleanup();
@@ -1615,7 +1615,7 @@ NET_Shutdown(void)
 /*
  * NET_Event
  *
- * Called from NET_Sleep which uses select() to determine which sockets have seen action.
+ * Called from netsleep which uses select() to determine which sockets have seen action.
  */
 
 void
@@ -1647,12 +1647,12 @@ NET_Event(fd_set *fdr)
 }
 
 /*
- * NET_Sleep
+ * netsleep
  *
  * Sleeps msec or until something happens on the network
  */
 void
-NET_Sleep(int msec)
+netsleep(int msec)
 {
 	struct timeval timeout;
 	fd_set	fdr;
@@ -1696,10 +1696,10 @@ NET_Sleep(int msec)
 }
 
 /*
- * NET_Restart_f
+ * netrestart
  */
 void
-NET_Restart_f(void)
+netrestart(void)
 {
-	NET_Config(networkingEnabled);
+	netconfig(networkingEnabled);
 }

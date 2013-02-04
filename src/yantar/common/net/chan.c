@@ -119,7 +119,7 @@ Netchan_TransmitNextFragment(Netchan *chan)
 		fragmentLength);
 
 	/* send the datagram */
-	NET_SendPacket(chan->sock, send.cursize, send.data, chan->remoteAddress);
+	netsendpacket(chan->sock, send.cursize, send.data, chan->remoteAddress);
 
 	/* Store send time and size of this packet for rate control */
 	chan->lastSentTime	= sysmillisecs();
@@ -191,7 +191,7 @@ Netchan_Transmit(Netchan *chan, int length, const byte *data)
 	bmwrite(&send, data, length);
 
 	/* send the datagram */
-	NET_SendPacket(chan->sock, send.cursize, send.data, chan->remoteAddress);
+	netsendpacket(chan->sock, send.cursize, send.data, chan->remoteAddress);
 
 	/* Store send time and size of this packet for rate control */
 	chan->lastSentTime	= sysmillisecs();
@@ -277,7 +277,7 @@ Netchan_Process(Netchan *chan, Bitmsg *msg)
 	if(sequence <= chan->incomingSequence){
 		if(showdrop->integer || showpackets->integer)
 			comprintf("%s:Out of order packet %i at %i\n"
-				, NET_AdrToString(chan->remoteAddress)
+				, addrtostr(chan->remoteAddress)
 				,  sequence
 				, chan->incomingSequence);
 		return qfalse;
@@ -290,7 +290,7 @@ Netchan_Process(Netchan *chan, Bitmsg *msg)
 	if(chan->dropped > 0)
 		if(showdrop->integer || showpackets->integer)
 			comprintf("%s:Dropped %i packets at %i\n"
-				, NET_AdrToString(chan->remoteAddress)
+				, addrtostr(chan->remoteAddress)
 				, chan->dropped
 				, sequence);
 
@@ -314,7 +314,7 @@ Netchan_Process(Netchan *chan, Bitmsg *msg)
 		if(fragmentStart != chan->fragmentLength){
 			if(showdrop->integer || showpackets->integer)
 				comprintf("%s:Dropped a message fragment\n"
-					, NET_AdrToString(chan->remoteAddress));
+					, addrtostr(chan->remoteAddress));
 			/* we can still keep the part that we have so far,
 			 * so we don't need to clear chan->fragmentLength */
 			return qfalse;
@@ -327,7 +327,7 @@ Netchan_Process(Netchan *chan, Bitmsg *msg)
 		   sizeof(chan->fragmentBuffer)){
 			if(showdrop->integer || showpackets->integer)
 				comprintf ("%s:illegal fragment length\n"
-					, NET_AdrToString (chan->remoteAddress));
+					, addrtostr (chan->remoteAddress));
 			return qfalse;
 		}
 
@@ -342,7 +342,7 @@ Netchan_Process(Netchan *chan, Bitmsg *msg)
 
 		if(chan->fragmentLength > msg->maxsize){
 			comprintf("%s:fragmentLength %i > msg->maxsize\n"
-				, NET_AdrToString (chan->remoteAddress),
+				, addrtostr (chan->remoteAddress),
 				chan->fragmentLength);
 			return qfalse;
 		}
@@ -402,7 +402,7 @@ Loopback loopbacks[2];
 
 
 qbool
-NET_GetLoopPacket(Netsrc sock, Netaddr *net_from, Bitmsg *net_message)
+netgetlooppacket(Netsrc sock, Netaddr *net_from, Bitmsg *net_message)
 {
 	int i;
 	Loopback *loop;
@@ -486,7 +486,7 @@ NET_QueuePacket(int length, const void *data, Netaddr to,
 }
 
 void
-NET_FlushPacketQueue(void)
+netflushpacketqueue(void)
 {
 	packetQueue_t *last;
 	int now;
@@ -505,7 +505,7 @@ NET_FlushPacketQueue(void)
 }
 
 void
-NET_SendPacket(Netsrc sock, int length, const void *data, Netaddr to)
+netsendpacket(Netsrc sock, int length, const void *data, Netaddr to)
 {
 
 	/* sequenced packets are shown in netchan, so just show oob */
@@ -530,12 +530,12 @@ NET_SendPacket(Netsrc sock, int length, const void *data, Netaddr to)
 }
 
 /*
- * NET_OutOfBandPrint
+ * netprintOOB
  *
  * Sends a text message in an out-of-band datagram
  */
 void QDECL
-NET_OutOfBandPrint(Netsrc sock, Netaddr adr, const char *format, ...)
+netprintOOB(Netsrc sock, Netaddr adr, const char *format, ...)
 {
 	va_list argptr;
 	char	string[MAX_MSGLEN];
@@ -552,16 +552,16 @@ NET_OutOfBandPrint(Netsrc sock, Netaddr adr, const char *format, ...)
 	va_end(argptr);
 
 	/* send the datagram */
-	NET_SendPacket(sock, strlen(string), string, adr);
+	netsendpacket(sock, strlen(string), string, adr);
 }
 
 /*
- * NET_OutOfBandPrint
+ * netprintOOB
  *
  * Sends a data message in an out-of-band datagram (only used for "connect")
  */
 void QDECL
-NET_OutOfBandData(Netsrc sock, Netaddr adr, byte *format, int len)
+netdataOOB(Netsrc sock, Netaddr adr, byte *format, int len)
 {
 	byte	string[MAX_MSGLEN*2];
 	int	i;
@@ -580,17 +580,17 @@ NET_OutOfBandData(Netsrc sock, Netaddr adr, byte *format, int len)
 	mbuf.cursize = len+4;
 	huffcompress(&mbuf, 12);
 	/* send the datagram */
-	NET_SendPacket(sock, mbuf.cursize, mbuf.data, adr);
+	netsendpacket(sock, mbuf.cursize, mbuf.data, adr);
 }
 
 /*
- * NET_StringToAdr
+ * strtoaddr
  *
  * Traps "localhost" for loopback, passes everything else to system
  * return 0 on address not found, 1 on address found with port, 2 on address found without port.
  */
 int
-NET_StringToAdr(const char *s, Netaddr *a, Netaddrtype family)
+strtoaddr(const char *s, Netaddr *a, Netaddrtype family)
 {
 	char base[MAX_STRING_CHARS], *search;
 	char *port = NULL;
