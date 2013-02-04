@@ -247,7 +247,7 @@ void
 CL_VoipNewGeneration(void)
 {
 	/* don't have a zero generation so new clients won't match, and don't
-	 *  wrap to negative so MSG_ReadLong() doesn't "fail." */
+	 *  wrap to negative so bmreadl() doesn't "fail." */
 	clc.voipOutgoingGeneration++;
 	if(clc.voipOutgoingGeneration <= 0)
 		clc.voipOutgoingGeneration = 1;
@@ -693,23 +693,23 @@ CL_Record_f(void)
 	clc.demowaiting = qtrue;
 
 	/* write out the gamestate message */
-	MSG_Init (&buf, bufData, sizeof(bufData));
-	MSG_Bitstream(&buf);
+	bminit (&buf, bufData, sizeof(bufData));
+	bmbitstream(&buf);
 
 	/* NOTE, MRE: all server->client messages now acknowledge */
-	MSG_WriteLong(&buf, clc.reliableSequence);
+	bmwritel(&buf, clc.reliableSequence);
 
-	MSG_WriteByte (&buf, svc_gamestate);
-	MSG_WriteLong (&buf, clc.serverCommandSequence);
+	bmwriteb (&buf, svc_gamestate);
+	bmwritel (&buf, clc.serverCommandSequence);
 
 	/* configstrings */
 	for(i = 0; i < MAX_CONFIGSTRINGS; i++){
 		if(!cl.gameState.stringOffsets[i])
 			continue;
 		s = cl.gameState.stringData + cl.gameState.stringOffsets[i];
-		MSG_WriteByte (&buf, svc_configstring);
-		MSG_WriteShort (&buf, i);
-		MSG_WriteBigString (&buf, s);
+		bmwriteb (&buf, svc_configstring);
+		bmwrites (&buf, i);
+		bmwritebigstr (&buf, s);
 	}
 
 	/* baselines */
@@ -718,21 +718,21 @@ CL_Record_f(void)
 		ent = &cl.entityBaselines[i];
 		if(!ent->number)
 			continue;
-		MSG_WriteByte (&buf, svc_baseline);
-		MSG_WriteDeltaEntity (&buf, &nullstate, ent, qtrue);
+		bmwriteb (&buf, svc_baseline);
+		bmwritedeltaEntstate (&buf, &nullstate, ent, qtrue);
 	}
 
-	MSG_WriteByte(&buf, svc_EOF);
+	bmwriteb(&buf, svc_EOF);
 
 	/* finished writing the gamestate stuff */
 
 	/* write the client num */
-	MSG_WriteLong(&buf, clc.clientNum);
+	bmwritel(&buf, clc.clientNum);
 	/* write the checksum feed */
-	MSG_WriteLong(&buf, clc.checksumFeed);
+	bmwritel(&buf, clc.checksumFeed);
 
 	/* finished writing the client packet */
-	MSG_WriteByte(&buf, svc_EOF);
+	bmwriteb(&buf, svc_EOF);
 
 	/* write it to the demo file */
 	len = LittleLong(clc.serverMessageSequence - 1);
@@ -860,7 +860,7 @@ CL_ReadDemoMessage(void)
 	clc.serverMessageSequence = LittleLong(s);
 
 	/* init the message */
-	MSG_Init(&buf, bufData, sizeof(bufData));
+	bminit(&buf, bufData, sizeof(bufData));
 
 	/* get the length */
 	r = fsread(&buf.cursize, 4, clc.demofile);
@@ -2299,10 +2299,10 @@ CL_ConnectionlessPacket(Netaddr from, Bitmsg *msg)
 	char	*c;
 	int	challenge = 0;
 
-	MSG_BeginReadingOOB(msg);
-	MSG_ReadLong(msg);	/* skip the -1 */
+	bmstartreadingOOB(msg);
+	bmreadl(msg);	/* skip the -1 */
 
-	s = MSG_ReadStringLine(msg);
+	s = bmreadstrline(msg);
 
 	cmdstrtok(s);
 
@@ -2435,7 +2435,7 @@ CL_ConnectionlessPacket(Netaddr from, Bitmsg *msg)
 
 	/* echo request from server */
 	if(!Q_stricmp(c, "print")){
-		s = MSG_ReadString(msg);
+		s = bmreadstr(msg);
 
 		Q_strncpyz(clc.serverMessage, s, sizeof(clc.serverMessage));
 		comprintf("%s", s);
@@ -3368,7 +3368,7 @@ CL_ServerInfoPacket(Netaddr from, Bitmsg *msg)
 	char *gamename;
 	qbool gameMismatch;
 
-	infoString = MSG_ReadString(msg);
+	infoString = bmreadstr(msg);
 
 	/* if this isn't the correct gamename, ignore it */
 	gamename = Info_ValueForKey(infoString, "gamename");
@@ -3461,7 +3461,7 @@ CL_ServerInfoPacket(Netaddr from, Bitmsg *msg)
 	cls.localServers[i].g_humanplayers = 0;
 	cls.localServers[i].g_needpass = 0;
 
-	Q_strncpyz(info, MSG_ReadString(msg), MAX_INFO_STRING);
+	Q_strncpyz(info, bmreadstr(msg), MAX_INFO_STRING);
 	if(strlen(info)){
 		if(info[strlen(info)-1] != '\n')
 			strncat(info, "\n", sizeof(info) - 1);
@@ -3575,7 +3575,7 @@ CL_ServerStatusResponse(Netaddr from, Bitmsg *msg)
 	if(!serverStatus)
 		return;
 
-	s = MSG_ReadStringLine(msg);
+	s = bmreadstrline(msg);
 
 	len = 0;
 	Q_sprintf(&serverStatus->string[len], sizeof(serverStatus->string)-len,
@@ -3614,8 +3614,8 @@ CL_ServerStatusResponse(Netaddr from, Bitmsg *msg)
 		comprintf("\nPlayers:\n");
 		comprintf("num: score: ping: name:\n");
 	}
-	for(i = 0, s = MSG_ReadStringLine(msg); *s;
-	    s = MSG_ReadStringLine(msg), i++){
+	for(i = 0, s = bmreadstrline(msg); *s;
+	    s = bmreadstrline(msg), i++){
 
 		len = strlen(serverStatus->string);
 		Q_sprintf(&serverStatus->string[len],

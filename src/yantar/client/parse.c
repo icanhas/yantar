@@ -55,7 +55,7 @@ deltaentity(Bitmsg *msg, Clsnapshot *frame, int newnum, Entstate *old, qbool unc
 	if(unchanged)
 		*state = *old;
 	else
-		MSG_ReadDeltaEntity(msg, old, state, newnum);
+		bmreaddeltaEntstate(msg, old, state, newnum);
 
 	if(state->number == (MAX_GENTITIES-1))
 		return;		/* entity was delta removed */
@@ -90,7 +90,7 @@ parsepacketentities(Bitmsg *msg, Clsnapshot *oldframe, Clsnapshot *newframe)
 
 	for(;;){
 		/* read the entity index number */
-		newnum = MSG_ReadBits(msg, GENTITYNUM_BITS);
+		newnum = bmreadbits(msg, GENTITYNUM_BITS);
 
 		if(newnum == (MAX_GENTITIES-1))
 			break;
@@ -187,7 +187,7 @@ parsesnap(Bitmsg *msg)
 	/* 
 	 * get the reliable sequence acknowledge number
 	 * NOTE: now sent with all server to client messages
-	 * clc.reliableAcknowledge = MSG_ReadLong(msg); 
+	 * clc.reliableAcknowledge = bmreadl(msg); 
 	 */
 
 	/* 
@@ -202,7 +202,7 @@ parsesnap(Bitmsg *msg)
 	 */
 	newSnap.serverCommandNum = clc.serverCommandSequence;
 
-	newSnap.serverTime = MSG_ReadLong(msg);
+	newSnap.serverTime = bmreadl(msg);
 
 	/* 
 	 * if we were just unpaused, we can only *now* really let the
@@ -212,12 +212,12 @@ parsesnap(Bitmsg *msg)
 
 	newSnap.messageNum = clc.serverMessageSequence;
 
-	deltaNum = MSG_ReadByte(msg);
+	deltaNum = bmreadb(msg);
 	if(!deltaNum)
 		newSnap.deltaNum = -1;
 	else
 		newSnap.deltaNum = newSnap.messageNum - deltaNum;
-	newSnap.snapFlags = MSG_ReadByte(msg);
+	newSnap.snapFlags = bmreadb(msg);
 
 	/* If the frame is delta compressed from data that we
 	 * no longer have available, we must suck up the rest of
@@ -246,7 +246,7 @@ parsesnap(Bitmsg *msg)
 	}
 
 	/* read areamask */
-	len = MSG_ReadByte(msg);
+	len = bmreadb(msg);
 
 	if(len > sizeof(newSnap.areamask)){
 		comerrorf (ERR_DROP,
@@ -255,14 +255,14 @@ parsesnap(Bitmsg *msg)
 		return;
 	}
 
-	MSG_ReadData(msg, &newSnap.areamask, len);
+	bmread(msg, &newSnap.areamask, len);
 
 	/* read playerinfo */
 	SHOWNET(msg, "playerstate");
 	if(old)
-		MSG_ReadDeltaPlayerstate(msg, &old->ps, &newSnap.ps);
+		bmreaddeltaPlayerstate(msg, &old->ps, &newSnap.ps);
 	else
-		MSG_ReadDeltaPlayerstate(msg, NULL, &newSnap.ps);
+		bmreaddeltaPlayerstate(msg, NULL, &newSnap.ps);
 
 	/* read packet entities */
 	SHOWNET(msg, "packet entities");
@@ -339,22 +339,22 @@ parsegamestate(Bitmsg *msg)
 	CL_ClearState();
 
 	/* a gamestate always marks a server command sequence */
-	clc.serverCommandSequence = MSG_ReadLong(msg);
+	clc.serverCommandSequence = bmreadl(msg);
 
 	/* parse all the configstrings and baselines */
 	cl.gameState.dataCount = 1;	/* leave a 0 at the beginning for uninitialized configstrings */
 	for(;;){
-		cmd = MSG_ReadByte(msg);
+		cmd = bmreadb(msg);
 		if(cmd == svc_EOF)
 			break;
 		if(cmd == svc_configstring){
 			int len;
 
-			i = MSG_ReadShort(msg);
+			i = bmreads(msg);
 			if(i < 0 || i >= MAX_CONFIGSTRINGS)
 				comerrorf(ERR_DROP,
 					"configstring > MAX_CONFIGSTRINGS");
-			s = MSG_ReadBigString(msg);
+			s = bmreadbigstr(msg);
 			len = strlen(s);
 
 			if(len + 1 + cl.gameState.dataCount >
@@ -370,21 +370,21 @@ parsegamestate(Bitmsg *msg)
 				len + 1);
 			cl.gameState.dataCount += len + 1;
 		}else if(cmd == svc_baseline){
-			newnum = MSG_ReadBits(msg, GENTITYNUM_BITS);
+			newnum = bmreadbits(msg, GENTITYNUM_BITS);
 			if(newnum < 0 || newnum >= MAX_GENTITIES)
 				comerrorf(ERR_DROP,
 					"Baseline number out of range: %i",
 					newnum);
 			Q_Memset (&nullstate, 0, sizeof(nullstate));
 			es = &cl.entityBaselines[ newnum ];
-			MSG_ReadDeltaEntity(msg, &nullstate, es, newnum);
+			bmreaddeltaEntstate(msg, &nullstate, es, newnum);
 		}else
 			comerrorf(ERR_DROP,
 				"parsegamestate: bad command byte");
 	}
 
-	clc.clientNum = MSG_ReadLong(msg);
-	clc.checksumFeed = MSG_ReadLong(msg);
+	clc.clientNum = bmreadl(msg);
+	clc.checksumFeed = bmreadl(msg);
 
 	cvargetstrbuf("fs_game", oldGame, sizeof(oldGame));	/* save old gamedir */
 	parseservinfo();	/* parse useful values out of CS_SERVERINFO */
@@ -430,21 +430,21 @@ parsedownload(Bitmsg *msg)
 	}
 
 	/* read the data */
-	block = MSG_ReadShort (msg);
+	block = bmreads (msg);
 
 	if(!block && !clc.downloadBlock){
 		/* block zero is special, contains file size */
-		clc.downloadSize = MSG_ReadLong(msg);
+		clc.downloadSize = bmreadl(msg);
 
 		cvarsetf("cl_downloadSize", clc.downloadSize);
 
 		if(clc.downloadSize < 0){
-			comerrorf(ERR_DROP, "%s", MSG_ReadString(msg));
+			comerrorf(ERR_DROP, "%s", bmreadstr(msg));
 			return;
 		}
 	}
 
-	size = MSG_ReadShort(msg);
+	size = bmreads(msg);
 	if(size < 0 || size > sizeof(data)){
 		comerrorf(ERR_DROP,
 			"parsedownload: Invalid size %d for download chunk",
@@ -452,7 +452,7 @@ parsedownload(Bitmsg *msg)
 		return;
 	}
 
-	MSG_ReadData(msg, data, size);
+	bmread(msg, data, size);
 
 	if((clc.downloadBlock & 0xFFFF) != block){
 		comdprintf("parsedownload: Expected block %d, got %d\n",
@@ -548,12 +548,12 @@ CL_ParseVoip(Bitmsg *msg)
 {
 	static short	decoded[4096];	/* !!! FIXME: don't hardcode. */
 
-	const int sender = MSG_ReadShort(msg);
-	const int generation = MSG_ReadByte(msg);
-	const int sequence	= MSG_ReadLong(msg);
-	const int frames = MSG_ReadByte(msg);
-	const int packetsize = MSG_ReadShort(msg);
-	const int flags = MSG_ReadBits(msg, VOIP_FLAGCNT);
+	const int sender = bmreads(msg);
+	const int generation = bmreadb(msg);
+	const int sequence	= bmreadl(msg);
+	const int frames = bmreadb(msg);
+	const int packetsize = bmreads(msg);
+	const int flags = bmreadbits(msg, VOIP_FLAGCNT);
 	char	encoded[1024];
 	int seqdiff = sequence - clc.voipIncomingSequence[sender];
 	int written = 0;
@@ -578,20 +578,20 @@ CL_ParseVoip(Bitmsg *msg)
 			int br = bytesleft;
 			if(br > sizeof(encoded))
 				br = sizeof(encoded);
-			MSG_ReadData(msg, encoded, br);
+			bmread(msg, encoded, br);
 			bytesleft -= br;
 		}
 		return;	/* overlarge packet, bail. */
 	}
 
 	if(!clc.speexInitialized){
-		MSG_ReadData(msg, encoded, packetsize);	/* skip payload. */
+		bmread(msg, encoded, packetsize);	/* skip payload. */
 		return;					/* can't handle VoIP without libspeex! */
 	}else if(sender >= MAX_CLIENTS){
-		MSG_ReadData(msg, encoded, packetsize);	/* skip payload. */
+		bmread(msg, encoded, packetsize);	/* skip payload. */
 		return;					/* bogus sender. */
 	}else if(CL_ShouldIgnoreVoipSender(sender)){
-		MSG_ReadData(msg, encoded, packetsize);	/* skip payload. */
+		bmread(msg, encoded, packetsize);	/* skip payload. */
 		return;					/* Channel is muted, bail. */
 	}
 
@@ -636,12 +636,12 @@ CL_ParseVoip(Bitmsg *msg)
 
 	for(i = 0; i < frames; i++){
 		char encoded[256];
-		const int len = MSG_ReadByte(msg);
+		const int len = bmreadb(msg);
 		if(len < 0){
 			comdprintf("VoIP: Short packet!\n");
 			break;
 		}
-		MSG_ReadData(msg, encoded, len);
+		bmread(msg, encoded, len);
 
 		/* shouldn't happen, but just in case... */
 		if((written + clc.speexFrameSize) * 2 > sizeof(decoded)){
@@ -699,8 +699,8 @@ parsecmdstr(Bitmsg *msg)
 	char *s;
 	int seq, i;
 
-	seq = MSG_ReadLong(msg);
-	s = MSG_ReadString(msg);
+	seq = bmreadl(msg);
+	s = bmreadstr(msg);
 
 	/* see if we have already executed stored it off */
 	if(clc.serverCommandSequence >= seq)
@@ -823,10 +823,10 @@ CL_ParseServerMessage(Bitmsg *msg)
 	else if(cl_shownet->integer >= 2)
 		comprintf ("------------------\n");
 
-	MSG_Bitstream(msg);
+	bmbitstream(msg);
 
 	/* get the reliable sequence acknowledge number */
-	clc.reliableAcknowledge = MSG_ReadLong(msg);
+	clc.reliableAcknowledge = bmreadl(msg);
 	if(clc.reliableAcknowledge < clc.reliableSequence - MAX_RELIABLE_COMMANDS)
 		clc.reliableAcknowledge = clc.reliableSequence;
 
@@ -840,7 +840,7 @@ CL_ParseServerMessage(Bitmsg *msg)
 			break;
 		}
 
-		cmd = MSG_ReadByte(msg);
+		cmd = bmreadb(msg);
 		if(cmd == svc_EOF){
 			SHOWNET(msg, "END OF MESSAGE");
 			break;

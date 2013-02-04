@@ -50,63 +50,63 @@ struct Bitmsg {
 	int		bit;	/* for bitwise reads and writes */
 };
 
-void MSG_Init(Bitmsg *buf, byte *data, int length);
-void MSG_InitOOB(Bitmsg *buf, byte *data, int length);
-void MSG_Clear(Bitmsg *buf);
-void MSG_WriteData(Bitmsg *buf, const void *data, int length);
-void MSG_Bitstream(Bitmsg *buf);
+void bminit(Bitmsg *buf, byte *data, int length);
+void bminitOOB(Bitmsg *buf, byte *data, int length);
+void bmclear(Bitmsg *buf);
+void bmwrite(Bitmsg *buf, const void *data, int length);
+void bmbitstream(Bitmsg *buf);
 
 /* TTimo
  * copy a Bitmsg in case we need to store it as is for a bit
  * (as I needed this to keep an Bitmsg from a static var for later use)
- * sets data buffer as MSG_Init does prior to do the copy */
-void MSG_Copy(Bitmsg *buf, byte *data, int length, Bitmsg *src);
-void MSG_WriteBits(Bitmsg *msg, int value, int bits);
+ * sets data buffer as bminit does prior to do the copy */
+void bmcopy(Bitmsg *buf, byte *data, int length, Bitmsg *src);
+void bmwritebits(Bitmsg *msg, int value, int bits);
 
-void MSG_WriteChar(Bitmsg *sb, int c);
-void MSG_WriteByte(Bitmsg *sb, int c);
-void MSG_WriteShort(Bitmsg *sb, int c);
-void MSG_WriteLong(Bitmsg *sb, int c);
-void MSG_WriteFloat(Bitmsg *sb, float f);
-void MSG_WriteString(Bitmsg *sb, const char *s);
-void MSG_WriteBigString(Bitmsg *sb, const char *s);
-void MSG_WriteAngle16(Bitmsg *sb, float f);
-int MSG_HashKey(const char *string, int maxlen);
+void bmwritec(Bitmsg *sb, int c);
+void bmwriteb(Bitmsg *sb, int c);
+void bmwrites(Bitmsg *sb, int c);
+void bmwritel(Bitmsg *sb, int c);
+void bmwritef(Bitmsg *sb, float f);
+void bmwritestr(Bitmsg *sb, const char *s);
+void bmwritebigstr(Bitmsg *sb, const char *s);
+void bmwriteangle16(Bitmsg *sb, float f);
+int bmhashkey(const char *string, int maxlen);
 
-void MSG_BeginReading(Bitmsg *sb);
-void MSG_BeginReadingOOB(Bitmsg *sb);
+void bmstartreading(Bitmsg *sb);
+void bmstartreadingOOB(Bitmsg *sb);
 
-int MSG_ReadBits(Bitmsg *msg, int bits);
+int bmreadbits(Bitmsg *msg, int bits);
 
-int MSG_ReadChar(Bitmsg *sb);
-int MSG_ReadByte(Bitmsg *sb);
-int MSG_ReadShort(Bitmsg *sb);
-int MSG_ReadLong(Bitmsg *sb);
-float MSG_ReadFloat(Bitmsg *sb);
-char* MSG_ReadString(Bitmsg *sb);
-char* MSG_ReadBigString(Bitmsg *sb);
-char* MSG_ReadStringLine(Bitmsg *sb);
-float MSG_ReadAngle16(Bitmsg *sb);
-void MSG_ReadData(Bitmsg *sb, void *buffer, int size);
-int MSG_LookaheadByte(Bitmsg *msg);
+int bmreadc(Bitmsg *sb);
+int bmreadb(Bitmsg *sb);
+int bmreads(Bitmsg *sb);
+int bmreadl(Bitmsg *sb);
+float bmreadf(Bitmsg *sb);
+char* bmreadstr(Bitmsg *sb);
+char* bmreadbigstr(Bitmsg *sb);
+char* bmreadstrline(Bitmsg *sb);
+float bmreadangle16(Bitmsg *sb);
+void bmread(Bitmsg *sb, void *buffer, int size);
+int bmlookaheadbyte(Bitmsg *msg);
 
-void MSG_WriteDeltaUsercmd(Bitmsg *msg, struct Usrcmd *from,
+void bmwritedeltaUsrcmd(Bitmsg *msg, struct Usrcmd *from,
 			 struct Usrcmd *to);
-void MSG_ReadDeltaUsercmd(Bitmsg *msg, struct Usrcmd *from,
+void bmreaddeltaUsrcmd(Bitmsg *msg, struct Usrcmd *from,
 			 struct Usrcmd *to);
 
-void MSG_WriteDeltaUsercmdKey(Bitmsg *msg, int key, Usrcmd *from,
+void bmwritedeltaUsrcmdkey(Bitmsg *msg, int key, Usrcmd *from,
 			 Usrcmd *to);
-void MSG_ReadDeltaUsercmdKey(Bitmsg *msg, int key, Usrcmd *from, Usrcmd *to);
+void bmreaddeltaUsrcmdkey(Bitmsg *msg, int key, Usrcmd *from, Usrcmd *to);
 
-void MSG_WriteDeltaEntity(Bitmsg *msg, struct Entstate *from,
+void bmwritedeltaEntstate(Bitmsg *msg, struct Entstate *from,
 			 struct Entstate *to, qbool force);
-void MSG_ReadDeltaEntity(Bitmsg *msg, Entstate *from, Entstate *to,
+void bmreaddeltaEntstate(Bitmsg *msg, Entstate *from, Entstate *to,
 			 int number);
 
-void MSG_WriteDeltaPlayerstate(Bitmsg *msg, struct Playerstate *from,
+void bmwritedeltaPlayerstate(Bitmsg *msg, struct Playerstate *from,
 			 struct Playerstate *to);
-void MSG_ReadDeltaPlayerstate(Bitmsg *msg, struct Playerstate *from,
+void bmreaddeltaPlayerstate(Bitmsg *msg, struct Playerstate *from,
 			 struct Playerstate *to);
 
 /*

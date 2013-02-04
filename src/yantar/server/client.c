@@ -682,11 +682,11 @@ SV_SendClientGameState(Client *client)
 	 * gamestate message was not just sent, forcing a retransmit */
 	client->gamestateMessageNum = client->netchan.outgoingSequence;
 
-	MSG_Init(&msg, msgBuffer, sizeof(msgBuffer));
+	bminit(&msg, msgBuffer, sizeof(msgBuffer));
 
 	/* NOTE, MRE: all server->client messages now acknowledge
 	 * let the client know which reliable clientCommands we have received */
-	MSG_WriteLong(&msg, client->lastClientCommand);
+	bmwritel(&msg, client->lastClientCommand);
 
 	/* send any server commands waiting to be sent first.
 	 * we have to do this cause we send the client->reliableSequence
@@ -695,15 +695,15 @@ SV_SendClientGameState(Client *client)
 	SV_UpdateServerCommandsToClient(client, &msg);
 
 	/* send the gamestate */
-	MSG_WriteByte(&msg, svc_gamestate);
-	MSG_WriteLong(&msg, client->reliableSequence);
+	bmwriteb(&msg, svc_gamestate);
+	bmwritel(&msg, client->reliableSequence);
 
 	/* write the configstrings */
 	for(start = 0; start < MAX_CONFIGSTRINGS; start++)
 		if(sv.configstrings[start][0]){
-			MSG_WriteByte(&msg, svc_configstring);
-			MSG_WriteShort(&msg, start);
-			MSG_WriteBigString(&msg, sv.configstrings[start]);
+			bmwriteb(&msg, svc_configstring);
+			bmwrites(&msg, start);
+			bmwritebigstr(&msg, sv.configstrings[start]);
 		}
 
 	/* write the baselines */
@@ -712,16 +712,16 @@ SV_SendClientGameState(Client *client)
 		base = &sv.svEntities[start].baseline;
 		if(!base->number)
 			continue;
-		MSG_WriteByte(&msg, svc_baseline);
-		MSG_WriteDeltaEntity(&msg, &nullstate, base, qtrue);
+		bmwriteb(&msg, svc_baseline);
+		bmwritedeltaEntstate(&msg, &nullstate, base, qtrue);
 	}
 
-	MSG_WriteByte(&msg, svc_EOF);
+	bmwriteb(&msg, svc_EOF);
 
-	MSG_WriteLong(&msg, client - svs.clients);
+	bmwritel(&msg, client - svs.clients);
 
 	/* write the checksum feed */
-	MSG_WriteLong(&msg, sv.checksumFeed);
+	bmwritel(&msg, sv.checksumFeed);
 
 	/* deliver this to the client */
 	SV_SendMessageToClient(&msg, client);
@@ -991,10 +991,10 @@ SV_WriteDownloadToClient(Client *cl, Bitmsg *msg)
 					"File \"%s\" not found on server for autodownloading.\n",
 					cl->downloadName);
 			}
-			MSG_WriteByte(msg, svc_download);
-			MSG_WriteShort(msg, 0);	/* client is expecting block zero */
-			MSG_WriteLong(msg, -1);	/* illegal file size */
-			MSG_WriteString(msg, errorMessage);
+			bmwriteb(msg, svc_download);
+			bmwrites(msg, 0);	/* client is expecting block zero */
+			bmwritel(msg, -1);	/* illegal file size */
+			bmwritestr(msg, errorMessage);
 
 			*cl->downloadName = 0;
 
@@ -1071,18 +1071,18 @@ SV_WriteDownloadToClient(Client *cl, Bitmsg *msg)
 	/* Send current block */
 	curindex = (cl->downloadXmitBlock % MAX_DOWNLOAD_WINDOW);
 
-	MSG_WriteByte(msg, svc_download);
-	MSG_WriteShort(msg, cl->downloadXmitBlock);
+	bmwriteb(msg, svc_download);
+	bmwrites(msg, cl->downloadXmitBlock);
 
 	/* block zero is special, contains file size */
 	if(cl->downloadXmitBlock == 0)
-		MSG_WriteLong(msg, cl->downloadSize);
+		bmwritel(msg, cl->downloadSize);
 
-	MSG_WriteShort(msg, cl->downloadBlockSize[curindex]);
+	bmwrites(msg, cl->downloadBlockSize[curindex]);
 
 	/* Write the block */
 	if(cl->downloadBlockSize[curindex])
-		MSG_WriteData(msg, cl->downloadBlocks[curindex],
+		bmwrite(msg, cl->downloadBlocks[curindex],
 			cl->downloadBlockSize[curindex]);
 
 	comdprintf("clientDownload: %d : writing block %d\n",
@@ -1145,13 +1145,13 @@ SV_SendDownloadMessages(void)
 		cl = &svs.clients[i];
 
 		if(cl->state && *cl->downloadName){
-			MSG_Init(&msg, msgBuffer, sizeof(msgBuffer));
-			MSG_WriteLong(&msg, cl->lastClientCommand);
+			bminit(&msg, msgBuffer, sizeof(msgBuffer));
+			bmwritel(&msg, cl->lastClientCommand);
 
 			retval = SV_WriteDownloadToClient(cl, &msg);
 
 			if(retval){
-				MSG_WriteByte(&msg, svc_EOF);
+				bmwriteb(&msg, svc_EOF);
 				SV_Netchan_Transmit(cl, &msg);
 				numDLs += retval;
 			}
@@ -1543,8 +1543,8 @@ SV_ClientCommand(Client *cl, Bitmsg *msg)
 	const char	*s;
 	qbool		clientOk = qtrue;
 
-	seq = MSG_ReadLong(msg);
-	s = MSG_ReadString(msg);
+	seq = bmreadl(msg);
+	s = bmreadstr(msg);
 
 	/* see if we have already executed it */
 	if(cl->lastClientCommand >= seq)
@@ -1631,7 +1631,7 @@ SV_UserMove(Client *cl, Bitmsg *msg, qbool delta)
 	else
 		cl->deltaMessage = -1;
 
-	cmdCount = MSG_ReadByte(msg);
+	cmdCount = bmreadb(msg);
 
 	if(cmdCount < 1){
 		comprintf("cmdCount < 1\n");
@@ -1649,7 +1649,7 @@ SV_UserMove(Client *cl, Bitmsg *msg, qbool delta)
 	key ^= cl->messageAcknowledge;
 	/* also use the last acknowledged server command in the key */
 	key ^=
-		MSG_HashKey(
+		bmhashkey(
 			cl->reliableCommands[ cl->reliableAcknowledge &
 					      (MAX_RELIABLE_COMMANDS-1) ],
 			32);
@@ -1658,7 +1658,7 @@ SV_UserMove(Client *cl, Bitmsg *msg, qbool delta)
 	oldcmd = &nullcmd;
 	for(i = 0; i < cmdCount; i++){
 		cmd = &cmds[i];
-		MSG_ReadDeltaUsercmdKey(msg, key, oldcmd, cmd);
+		bmreaddeltaUsrcmdkey(msg, key, oldcmd, cmd);
 		oldcmd = cmd;
 	}
 
@@ -1751,12 +1751,12 @@ SV_UserVoip(Client *cl, Bitmsg *msg)
 	int i;
 
 	sender = cl - svs.clients;
-	generation	= MSG_ReadByte(msg);
-	sequence	= MSG_ReadLong(msg);
-	frames = MSG_ReadByte(msg);
-	MSG_ReadData(msg, recips, sizeof(recips));
-	flags = MSG_ReadByte(msg);
-	packetsize = MSG_ReadShort(msg);
+	generation	= bmreadb(msg);
+	sequence	= bmreadl(msg);
+	frames = bmreadb(msg);
+	bmread(msg, recips, sizeof(recips));
+	flags = bmreadb(msg);
+	packetsize = bmreads(msg);
 
 	if(msg->readcount > msg->cursize)
 		return;		/* short/invalid packet, bail. */
@@ -1767,13 +1767,13 @@ SV_UserVoip(Client *cl, Bitmsg *msg)
 			int br = bytesleft;
 			if(br > sizeof(encoded))
 				br = sizeof(encoded);
-			MSG_ReadData(msg, encoded, br);
+			bmread(msg, encoded, br);
 			bytesleft -= br;
 		}
 		return;	/* overlarge packet, bail. */
 	}
 
-	MSG_ReadData(msg, encoded, packetsize);
+	bmread(msg, encoded, packetsize);
 
 	if(SV_ShouldIgnoreVoipSender(cl))
 		return;		/* Blacklisted, disabled, etc. */
@@ -1851,10 +1851,10 @@ SV_ExecuteClientMessage(Client *cl, Bitmsg *msg)
 	int	c;
 	int	serverId;
 
-	MSG_Bitstream(msg);
+	bmbitstream(msg);
 
-	serverId = MSG_ReadLong(msg);
-	cl->messageAcknowledge = MSG_ReadLong(msg);
+	serverId = bmreadl(msg);
+	cl->messageAcknowledge = bmreadl(msg);
 
 	if(cl->messageAcknowledge < 0){
 		/* usually only hackers create messages like this
@@ -1865,7 +1865,7 @@ SV_ExecuteClientMessage(Client *cl, Bitmsg *msg)
 		return;
 	}
 
-	cl->reliableAcknowledge = MSG_ReadLong(msg);
+	cl->reliableAcknowledge = bmreadl(msg);
 
 	/* NOTE: when the client message is fux0red the acknowledgement numbers
 	 * can be out of range, this could cause the server to send thousands of server
@@ -1921,7 +1921,7 @@ SV_ExecuteClientMessage(Client *cl, Bitmsg *msg)
 
 	/* read optional clientCommand strings */
 	do {
-		c = MSG_ReadByte(msg);
+		c = bmreadb(msg);
 
 		if(c == clc_EOF)
 			break;

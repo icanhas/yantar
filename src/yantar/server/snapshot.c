@@ -76,7 +76,7 @@ SV_EmitPacketEntities(clientSnapshot_t *from, clientSnapshot_t *to, Bitmsg *msg)
 			/* delta update from old position
 			 * because the force parm is qfalse, this will not result
 			 * in any bytes being emited if the entity has not changed at all */
-			MSG_WriteDeltaEntity (msg, oldent, newent, qfalse);
+			bmwritedeltaEntstate (msg, oldent, newent, qfalse);
 			oldindex++;
 			newindex++;
 			continue;
@@ -84,7 +84,7 @@ SV_EmitPacketEntities(clientSnapshot_t *from, clientSnapshot_t *to, Bitmsg *msg)
 
 		if(newnum < oldnum){
 			/* this is a new entity, send it from the baseline */
-			MSG_WriteDeltaEntity (msg,
+			bmwritedeltaEntstate (msg,
 				&sv.svEntities[newnum].baseline, newent,
 				qtrue);
 			newindex++;
@@ -93,13 +93,13 @@ SV_EmitPacketEntities(clientSnapshot_t *from, clientSnapshot_t *to, Bitmsg *msg)
 
 		if(newnum > oldnum){
 			/* the old entity isn't present in the new message */
-			MSG_WriteDeltaEntity (msg, oldent, NULL, qtrue);
+			bmwritedeltaEntstate (msg, oldent, NULL, qtrue);
 			oldindex++;
 			continue;
 		}
 	}
 
-	MSG_WriteBits(msg, (MAX_GENTITIES-1), GENTITYNUM_BITS);	/* end of packetentities */
+	bmwritebits(msg, (MAX_GENTITIES-1), GENTITYNUM_BITS);	/* end of packetentities */
 }
 
 
@@ -150,11 +150,11 @@ SV_WriteSnapshotToClient(Client *client, Bitmsg *msg)
 		}
 	}
 
-	MSG_WriteByte (msg, svc_snapshot);
+	bmwriteb (msg, svc_snapshot);
 
 	/* NOTE, MRE: now sent at the start of every message from server to client
 	 * let the client know which reliable clientCommands we have received
-	 * MSG_WriteLong( msg, client->lastClientCommand ); */
+	 * bmwritel( msg, client->lastClientCommand ); */
 
 	/* send over the current server time so the client can drift
 	 * its view of time to try to match */
@@ -165,12 +165,12 @@ SV_WriteSnapshotToClient(Client *client, Bitmsg *msg)
 		 * the client's perspective this time is strictly speaking
 		 * incorrect, but since it'll be busy loading a map at
 		 * the time it doesn't really matter. */
-		MSG_WriteLong (msg, sv.time + client->oldServerTime);
+		bmwritel (msg, sv.time + client->oldServerTime);
 	else
-		MSG_WriteLong (msg, sv.time);
+		bmwritel (msg, sv.time);
 
 	/* what we are delta'ing from */
-	MSG_WriteByte (msg, lastframe);
+	bmwriteb (msg, lastframe);
 
 	snapFlags = svs.snapFlagServerBit;
 	if(client->rateDelayed)
@@ -178,17 +178,17 @@ SV_WriteSnapshotToClient(Client *client, Bitmsg *msg)
 	if(client->state != CS_ACTIVE)
 		snapFlags |= SNAPFLAG_NOT_ACTIVE;
 
-	MSG_WriteByte (msg, snapFlags);
+	bmwriteb (msg, snapFlags);
 
 	/* send over the areabits */
-	MSG_WriteByte (msg, frame->areabytes);
-	MSG_WriteData (msg, frame->areabits, frame->areabytes);
+	bmwriteb (msg, frame->areabytes);
+	bmwrite (msg, frame->areabits, frame->areabytes);
 
 	/* delta encode the playerstate */
 	if(oldframe)
-		MSG_WriteDeltaPlayerstate(msg, &oldframe->ps, &frame->ps);
+		bmwritedeltaPlayerstate(msg, &oldframe->ps, &frame->ps);
 	else
-		MSG_WriteDeltaPlayerstate(msg, NULL, &frame->ps);
+		bmwritedeltaPlayerstate(msg, NULL, &frame->ps);
 
 	/* delta encode the entities */
 	SV_EmitPacketEntities (oldframe, frame, msg);
@@ -196,7 +196,7 @@ SV_WriteSnapshotToClient(Client *client, Bitmsg *msg)
 	/* padding for rate debugging */
 	if(sv_padPackets->integer)
 		for(i = 0; i < sv_padPackets->integer; i++)
-			MSG_WriteByte (msg, svc_nop);
+			bmwriteb (msg, svc_nop);
 }
 
 
@@ -213,9 +213,9 @@ SV_UpdateServerCommandsToClient(Client *client, Bitmsg *msg)
 	/* write any unacknowledged serverCommands */
 	for(i = client->reliableAcknowledge + 1; i <= client->reliableSequence;
 	    i++){
-		MSG_WriteByte(msg, svc_serverCommand);
-		MSG_WriteLong(msg, i);
-		MSG_WriteString(
+		bmwriteb(msg, svc_serverCommand);
+		bmwritel(msg, i);
+		bmwritestr(
 			msg,
 			client->reliableCommands[ i &
 						  (MAX_RELIABLE_COMMANDS-1) ]);
@@ -526,14 +526,14 @@ SV_WriteVoipToClient(Client *cl, Bitmsg *msg)
 				   (msg->maxsize - msg->cursize) / 2)
 					break;
 
-				MSG_WriteByte(msg, svc_voip);
-				MSG_WriteShort(msg, packet->sender);
-				MSG_WriteByte(msg, (byte)packet->generation);
-				MSG_WriteLong(msg, packet->sequence);
-				MSG_WriteByte(msg, packet->frames);
-				MSG_WriteShort(msg, packet->len);
-				MSG_WriteBits(msg, packet->flags, VOIP_FLAGCNT);
-				MSG_WriteData(msg, packet->data, packet->len);
+				bmwriteb(msg, svc_voip);
+				bmwrites(msg, packet->sender);
+				bmwriteb(msg, (byte)packet->generation);
+				bmwritel(msg, packet->sequence);
+				bmwriteb(msg, packet->frames);
+				bmwrites(msg, packet->len);
+				bmwritebits(msg, packet->flags, VOIP_FLAGCNT);
+				bmwrite(msg, packet->data, packet->len);
 			}
 
 			zfree(packet);
@@ -587,12 +587,12 @@ SV_SendClientSnapshot(Client *client)
 	if(client->gentity && client->gentity->r.svFlags & SVF_BOT)
 		return;
 
-	MSG_Init (&msg, msg_buf, sizeof(msg_buf));
+	bminit (&msg, msg_buf, sizeof(msg_buf));
 	msg.allowoverflow = qtrue;
 
 	/* NOTE, MRE: all server->client messages now acknowledge
 	 * let the client know which reliable clientCommands we have received */
-	MSG_WriteLong(&msg, client->lastClientCommand);
+	bmwritel(&msg, client->lastClientCommand);
 
 	/* (re)send any reliable server commands */
 	SV_UpdateServerCommandsToClient(client, &msg);
@@ -608,7 +608,7 @@ SV_SendClientSnapshot(Client *client)
 	/* check for overflow */
 	if(msg.overflowed){
 		comprintf ("WARNING: msg overflowed for %s\n", client->name);
-		MSG_Clear (&msg);
+		bmclear (&msg);
 	}
 
 	SV_SendMessageToClient(&msg, client);

@@ -844,7 +844,7 @@ comflushevents(void)
 	byte	bufData[MAX_MSGLEN];
 	Bitmsg	buf;
 
-	MSG_Init(&buf, bufData, sizeof(bufData));
+	bminit(&buf, bufData, sizeof(bufData));
 	while(1){
 		ev = getevent();
 		/* if no more events are available */

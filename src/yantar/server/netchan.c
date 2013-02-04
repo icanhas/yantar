@@ -90,7 +90,7 @@ SV_Netchan_TransmitNextFragment(Client *client)
 void
 SV_Netchan_Transmit(Client *client, Bitmsg *msg)
 {
-	MSG_WriteByte(msg, svc_EOF);
+	bmwriteb(msg, svc_EOF);
 
 	if(client->netchan.unsentFragments || client->netchan_start_queue){
 		netchan_buffer_t *netbuf;
@@ -98,7 +98,7 @@ SV_Netchan_Transmit(Client *client, Bitmsg *msg)
 			"#462 SV_Netchan_Transmit: unsent fragments, stacked\n");
 		netbuf = (netchan_buffer_t*)zalloc(sizeof(netchan_buffer_t));
 		/* store the msg, we can't store it encoded, as the encoding depends on stuff we still have to finish sending */
-		MSG_Copy(&netbuf->msg, netbuf->msgBuffer,
+		bmcopy(&netbuf->msg, netbuf->msgBuffer,
 			sizeof(netbuf->msgBuffer), msg);
 		netbuf->next = NULL;
 		/* insert it in the queue, the message will be encoded and sent later */

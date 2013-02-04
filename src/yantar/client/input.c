@@ -569,27 +569,27 @@ CL_WritePacket(void)
 		return;
 	Q_Memset(&nullcmd, 0, sizeof(nullcmd));
 	oldcmd = &nullcmd;
-	MSG_Init(&buf, data, sizeof(data));
-	MSG_Bitstream(&buf);
+	bminit(&buf, data, sizeof(data));
+	bmbitstream(&buf);
 	/*
 	 * write the current serverId so the server
 	 * can tell if this is from the current gameState
 	 */
-	MSG_WriteLong(&buf, cl.serverId);
+	bmwritel(&buf, cl.serverId);
 	/*
 	 * write the last message we received, which can
 	 * be used for delta compression, and is also used
 	 * to tell if we dropped a gamestate
 	 */
-	MSG_WriteLong(&buf, clc.serverMessageSequence);
+	bmwritel(&buf, clc.serverMessageSequence);
 	/* write the last reliable message we received */
-	MSG_WriteLong(&buf, clc.serverCommandSequence);
+	bmwritel(&buf, clc.serverCommandSequence);
 
 	/* write any unacknowledged clientCommands */
 	for(i = clc.reliableAcknowledge + 1; i <= clc.reliableSequence; i++){
-		MSG_WriteByte(&buf, clc_clientCommand);
-		MSG_WriteLong(&buf, i);
-		MSG_WriteString(&buf,
+		bmwriteb(&buf, clc_clientCommand);
+		bmwritel(&buf, i);
+		bmwritestr(&buf,
 			clc.reliableCommands[i & (MAX_RELIABLE_COMMANDS-1)]);
 	}
 
@@ -615,14 +615,14 @@ CL_WritePacket(void)
 		if((clc.voipFlags & VOIP_SPATIAL) ||
 		   comisvoiptarget(clc.voipTargets, sizeof(clc.voipTargets), -1))
 		then{
-			MSG_WriteByte(&buf, clc_voip);
-			MSG_WriteByte(&buf, clc.voipOutgoingGeneration);
-			MSG_WriteLong(&buf, clc.voipOutgoingSequence);
-			MSG_WriteByte(&buf, clc.voipOutgoingDataFrames);
-			MSG_WriteData(&buf, clc.voipTargets, sizeof(clc.voipTargets));
-			MSG_WriteByte(&buf, clc.voipFlags);
-			MSG_WriteShort(&buf, clc.voipOutgoingDataSize);
-			MSG_WriteData(&buf, clc.voipOutgoingData, 
+			bmwriteb(&buf, clc_voip);
+			bmwriteb(&buf, clc.voipOutgoingGeneration);
+			bmwritel(&buf, clc.voipOutgoingSequence);
+			bmwriteb(&buf, clc.voipOutgoingDataFrames);
+			bmwrite(&buf, clc.voipTargets, sizeof(clc.voipTargets));
+			bmwriteb(&buf, clc.voipFlags);
+			bmwrites(&buf, clc.voipOutgoingDataSize);
+			bmwrite(&buf, clc.voipOutgoingData, 
 				clc.voipOutgoingDataSize);
 
 			/* If we're recording a demo, we have to fake a server packet with
@@ -634,17 +634,17 @@ CL_WritePacket(void)
 				Bitmsg fakemsg;
 				byte fakedata[MAX_MSGLEN];
 				
-				MSG_Init (&fakemsg, fakedata, sizeof(fakedata));
-				MSG_Bitstream (&fakemsg);
-				MSG_WriteLong (&fakemsg, clc.reliableAcknowledge);
-				MSG_WriteByte (&fakemsg, svc_voip);
-				MSG_WriteShort (&fakemsg, clc.clientNum);
-				MSG_WriteByte (&fakemsg, clc.voipOutgoingGeneration);
-				MSG_WriteLong (&fakemsg, clc.voipOutgoingSequence);
-				MSG_WriteByte (&fakemsg, clc.voipOutgoingDataFrames);
-				MSG_WriteShort (&fakemsg, clc.voipOutgoingDataSize);
-				MSG_WriteData (&fakemsg, clc.voipOutgoingData, voipSize);
-				MSG_WriteByte (&fakemsg, svc_EOF);
+				bminit (&fakemsg, fakedata, sizeof(fakedata));
+				bmbitstream (&fakemsg);
+				bmwritel (&fakemsg, clc.reliableAcknowledge);
+				bmwriteb (&fakemsg, svc_voip);
+				bmwrites (&fakemsg, clc.clientNum);
+				bmwriteb (&fakemsg, clc.voipOutgoingGeneration);
+				bmwritel (&fakemsg, clc.voipOutgoingSequence);
+				bmwriteb (&fakemsg, clc.voipOutgoingDataFrames);
+				bmwrites (&fakemsg, clc.voipOutgoingDataSize);
+				bmwrite (&fakemsg, clc.voipOutgoingData, voipSize);
+				bmwriteb (&fakemsg, svc_EOF);
 				CL_WriteDemoMessage (&fakemsg, 0);
 			}
 
@@ -664,23 +664,23 @@ CL_WritePacket(void)
 		/* begin a client move command */
 		if(cl_nodelta->integer || !cl.snap.valid || clc.demowaiting
 		   || clc.serverMessageSequence != cl.snap.messageNum)
-			MSG_WriteByte(&buf, clc_moveNoDelta);
+			bmwriteb(&buf, clc_moveNoDelta);
 		else
-			MSG_WriteByte(&buf, clc_move);
+			bmwriteb(&buf, clc_move);
 
-		MSG_WriteByte(&buf, count);
+		bmwriteb(&buf, count);
 
 		key = clc.checksumFeed;
 		key ^= clc.serverMessageSequence;	/* also use the message acknowledge */
 		/* also use the last acknowledged server command in the key */
-		key ^= MSG_HashKey(clc.serverCommands[clc.serverCommandSequence &
+		key ^= bmhashkey(clc.serverCommands[clc.serverCommandSequence &
 			(MAX_RELIABLE_COMMANDS-1)], 32);
 
 		/* write all the commands, including the predicted command */
 		for(i = 0; i < count; i++){
 			j = (cl.cmdNumber - count + i + 1) & CMD_MASK;
 			cmd = &cl.cmds[j];
-			MSG_WriteDeltaUsercmdKey (&buf, key, oldcmd, cmd);
+			bmwritedeltaUsrcmdkey (&buf, key, oldcmd, cmd);
 			oldcmd = cmd;
 		}
 	}

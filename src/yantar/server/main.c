@@ -783,13 +783,13 @@ SV_ConnectionlessPacket(Netaddr from, Bitmsg *msg)
 	char *s;
 	char *c;
 
-	MSG_BeginReadingOOB(msg);
-	MSG_ReadLong(msg);	/* skip the -1 marker */
+	bmstartreadingOOB(msg);
+	bmreadl(msg);	/* skip the -1 marker */
 
 	if(!Q_strncmp("connect", (char*)&msg->data[4], 7))
 		huffdecompress(msg, 12);
 
-	s = MSG_ReadStringLine(msg);
+	s = bmreadstrline(msg);
 	cmdstrtok(s);
 
 	c = cmdargv(0);
@@ -838,9 +838,9 @@ svpacketevent(Netaddr from, Bitmsg *msg)
 
 	/* read the qport out of the message so we can fix up
 	 * stupid address translating routers */
-	MSG_BeginReadingOOB(msg);
-	MSG_ReadLong(msg);	/* sequence number */
-	qport = MSG_ReadShort(msg) & 0xffff;
+	bmstartreadingOOB(msg);
+	bmreadl(msg);	/* sequence number */
+	qport = bmreads(msg) & 0xffff;
 
 	/* find which client the message is from */
 	for(i=0, cl=svs.clients; i < sv_maxclients->integer; i++,cl++){

@@ -1626,7 +1626,7 @@ NET_Event(fd_set *fdr)
 	Bitmsg	netmsg;
 
 	while(1){
-		MSG_Init(&netmsg, bufData, sizeof(bufData));
+		bminit(&netmsg, bufData, sizeof(bufData));
 
 		if(NET_GetPacket(&from, &netmsg, fdr)){
 			if(net_dropsim->value > 0.0f && net_dropsim->value <=

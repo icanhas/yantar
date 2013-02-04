@@ -96,16 +96,16 @@ Netchan_TransmitNextFragment(Netchan *chan)
 	int	outgoingSequence;
 
 	/* write the packet header */
-	MSG_InitOOB (&send, send_buf, sizeof(send_buf));	/* <-- only do the oob here */
+	bminitOOB (&send, send_buf, sizeof(send_buf));	/* <-- only do the oob here */
 
 	outgoingSequence = chan->outgoingSequence | FRAGMENT_BIT;
-	MSG_WriteLong(&send, outgoingSequence);
+	bmwritel(&send, outgoingSequence);
 
 	/* send the qport if we are a client */
 	if(chan->sock == NS_CLIENT)
-		MSG_WriteShort(&send, qport->integer);
+		bmwrites(&send, qport->integer);
 
-	MSG_WriteLong(&send,
+	bmwritel(&send,
 		NETCHAN_GENCHECKSUM(chan->challenge, chan->outgoingSequence));
 
 	/* copy the reliable message to the packet first */
@@ -113,9 +113,9 @@ Netchan_TransmitNextFragment(Netchan *chan)
 	if(chan->unsentFragmentStart  + fragmentLength > chan->unsentLength)
 		fragmentLength = chan->unsentLength - chan->unsentFragmentStart;
 
-	MSG_WriteShort(&send, chan->unsentFragmentStart);
-	MSG_WriteShort(&send, fragmentLength);
-	MSG_WriteData(&send, chan->unsentBuffer + chan->unsentFragmentStart,
+	bmwrites(&send, chan->unsentFragmentStart);
+	bmwrites(&send, fragmentLength);
+	bmwrite(&send, chan->unsentBuffer + chan->unsentFragmentStart,
 		fragmentLength);
 
 	/* send the datagram */
@@ -175,20 +175,20 @@ Netchan_Transmit(Netchan *chan, int length, const byte *data)
 	}
 
 	/* write the packet header */
-	MSG_InitOOB (&send, send_buf, sizeof(send_buf));
+	bminitOOB (&send, send_buf, sizeof(send_buf));
 
-	MSG_WriteLong(&send, chan->outgoingSequence);
+	bmwritel(&send, chan->outgoingSequence);
 
 	/* send the qport if we are a client */
 	if(chan->sock == NS_CLIENT)
-		MSG_WriteShort(&send, qport->integer);
+		bmwrites(&send, qport->integer);
 
-	MSG_WriteLong(&send,
+	bmwritel(&send,
 		NETCHAN_GENCHECKSUM(chan->challenge, chan->outgoingSequence));
 
 	chan->outgoingSequence++;
 
-	MSG_WriteData(&send, data, length);
+	bmwrite(&send, data, length);
 
 	/* send the datagram */
 	NET_SendPacket(chan->sock, send.cursize, send.data, chan->remoteAddress);
@@ -226,8 +226,8 @@ Netchan_Process(Netchan *chan, Bitmsg *msg)
 /*	Netchan_UnScramblePacket( msg ); */
 
 	/* get sequence numbers */
-	MSG_BeginReadingOOB(msg);
-	sequence = MSG_ReadLong(msg);
+	bmstartreadingOOB(msg);
+	sequence = bmreadl(msg);
 
 	/* check for fragment information */
 	if(sequence & FRAGMENT_BIT){
@@ -238,10 +238,10 @@ Netchan_Process(Netchan *chan, Bitmsg *msg)
 
 	/* read the qport if we are a server */
 	if(chan->sock == NS_SERVER)
-		MSG_ReadShort(msg);
+		bmreads(msg);
 
 	{
-		int checksum = MSG_ReadLong(msg);
+		int checksum = bmreadl(msg);
 
 		/* UDP spoofing protection */
 		if(NETCHAN_GENCHECKSUM(chan->challenge, sequence) != checksum)
@@ -250,8 +250,8 @@ Netchan_Process(Netchan *chan, Bitmsg *msg)
 
 	/* read the fragment information */
 	if(fragmented){
-		fragmentStart	= MSG_ReadShort(msg);
-		fragmentLength	= MSG_ReadShort(msg);
+		fragmentStart	= bmreads(msg);
+		fragmentLength	= bmreads(msg);
 	}else{
 		fragmentStart	= 0;	/* stop warning message */
 		fragmentLength	= 0;

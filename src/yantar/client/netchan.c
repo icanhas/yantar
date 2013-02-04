@@ -30,7 +30,7 @@ CL_Netchan_TransmitNextFragment(Netchan *chan)
 void
 CL_Netchan_Transmit(Netchan *chan, Bitmsg* msg)
 {
-	MSG_WriteByte(msg, clc_EOF);
+	bmwriteb(msg, clc_EOF);
 
 
 	Netchan_Transmit(chan, msg->cursize, msg->data);
