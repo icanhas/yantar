@@ -1686,7 +1686,7 @@ CG_MissileHitWall(int weapon, int clientNum, Vec3 origin, Vec3 dir,
 		  Impactsnd soundType)
 {
 	Handle		mod, mark, shader;
-	Sfxhandle sfx;
+	Handle sfx;
 	float	radius, light;
 	Vec3	lightColor;
 	Localent   *le;

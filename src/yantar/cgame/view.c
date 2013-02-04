@@ -625,7 +625,7 @@ poweruptimersounds(void)
 }
 
 void
-CG_AddBufferedSound(Sfxhandle sfx)
+CG_AddBufferedSound(Handle sfx)
 {
 	if(!sfx)
 		return;

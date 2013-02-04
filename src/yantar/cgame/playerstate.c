@@ -238,7 +238,7 @@ CG_CheckChangedPredictableEvents(Playerstate *ps)
 }
 
 static void
-pushReward(Sfxhandle sfx, Handle shader, int rewardCount)
+pushReward(Handle sfx, Handle shader, int rewardCount)
 {
 	if(cg.rewardStack < (MAX_REWARDSTACK-1)){
 		cg.rewardStack++;
@@ -255,7 +255,7 @@ CG_CheckLocalSounds(Playerstate *ps, Playerstate *ops)
 #ifdef MISSIONPACK
 	int	health, armor;
 #endif
-	Sfxhandle sfx;
+	Handle sfx;
 
 	/* don't play the sounds if the player just changed teams */
 	if(ps->persistant[PERS_TEAM] != ops->persistant[PERS_TEAM])

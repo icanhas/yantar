@@ -962,7 +962,7 @@ Controls_SetDefaults(void)
 /*
  * Controls_MenuKey
  */
-static Sfxhandle
+static Handle
 Controls_MenuKey(int key)
 {
 	int	id;

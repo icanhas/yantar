@@ -275,7 +275,7 @@ PlayerSettings_SaveChanges(void)
 /*
  * PlayerSettings_MenuKey
  */
-static Sfxhandle
+static Handle
 PlayerSettings_MenuKey(int key)
 {
 	if(key == K_MOUSE2 || key == K_ESCAPE)

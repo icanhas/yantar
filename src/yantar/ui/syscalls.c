@@ -259,12 +259,12 @@ trap_CM_LerpTag(Orient *tag, Cliphandle mod, int startFrame,
 }
 
 void
-trap_sndstartlocalsound(Sfxhandle sfx, int channelNum)
+trap_sndstartlocalsound(Handle sfx, int channelNum)
 {
 	syscall(UI_S_STARTLOCALSOUND, sfx, channelNum);
 }
 
-Sfxhandle
+Handle
 trap_sndregister(const char *sample, qbool compressed)
 {
 	return syscall(UI_S_REGISTERSOUND, sample, compressed);

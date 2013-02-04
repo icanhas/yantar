@@ -251,7 +251,7 @@ S_Base_DisableSounds(void)
 }
 
 /* Creates a default buzz sound if the file can't be loaded */
-static Sfxhandle
+static Handle
 S_Base_RegisterSound(const char *name, qbool compressed)
 {
 	Sfx *sfx;
@@ -365,7 +365,7 @@ S_SpatializeOrigin(Vec3 origin, int master_vol, int *left_vol, int *right_vol)
  */
 static void
 S_Base_StartSound(Vec3 origin, int entityNum, int entchannel,
-		  Sfxhandle sfxHandle)
+		  Handle sfxHandle)
 {
 	Channel	*ch;
 	Sfx		*sfx;
@@ -475,7 +475,7 @@ S_Base_StartSound(Vec3 origin, int entityNum, int entchannel,
 }
 
 static void
-S_Base_StartLocalSound(Sfxhandle sfxHandle, int channelNum)
+S_Base_StartLocalSound(Handle sfxHandle, int channelNum)
 {
 	if(!s_soundStarted || s_soundMuted)
 		return;
@@ -562,7 +562,7 @@ S_Base_ClearLoopingSounds(qbool killall)
  */
 static void
 S_Base_AddLoopingSound(int entityNum, const Vec3 origin, const Vec3 velocity,
-		       Sfxhandle sfxHandle)
+		       Handle sfxHandle)
 {
 	Sfx *sfx;
 
@@ -623,7 +623,7 @@ S_Base_AddLoopingSound(int entityNum, const Vec3 origin, const Vec3 velocity,
 static void
 S_Base_AddRealLoopingSound(int entityNum, const Vec3 origin,
 			   const Vec3 velocity,
-			   Sfxhandle sfxHandle)
+			   Handle sfxHandle)
 {
 	Sfx *sfx;
 

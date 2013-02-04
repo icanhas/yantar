@@ -256,13 +256,13 @@ trap_CM_MarkFragments(int numPoints, const Vec3 *points,
 }
 
 void
-trap_sndstartsound(Vec3 origin, int entityNum, int entchannel, Sfxhandle sfx)
+trap_sndstartsound(Vec3 origin, int entityNum, int entchannel, Handle sfx)
 {
 	syscall(CG_S_STARTSOUND, origin, entityNum, entchannel, sfx);
 }
 
 void
-trap_sndstartlocalsound(Sfxhandle sfx, int channelNum)
+trap_sndstartlocalsound(Handle sfx, int channelNum)
 {
 	syscall(CG_S_STARTLOCALSOUND, sfx, channelNum);
 }
@@ -275,7 +275,7 @@ trap_sndclearloops(qbool killall)
 
 void
 trap_sndaddloop(int entityNum, const Vec3 origin, const Vec3 velocity,
-		       Sfxhandle sfx)
+		       Handle sfx)
 {
 	syscall(CG_S_ADDLOOPINGSOUND, entityNum, origin, velocity, sfx);
 }
@@ -283,7 +283,7 @@ trap_sndaddloop(int entityNum, const Vec3 origin, const Vec3 velocity,
 void
 trap_sndaddrealloop(int entityNum, const Vec3 origin,
 			   const Vec3 velocity,
-			   Sfxhandle sfx)
+			   Handle sfx)
 {
 	syscall(CG_S_ADDREALLOOPINGSOUND, entityNum, origin, velocity, sfx);
 }
@@ -307,7 +307,7 @@ trap_sndrespatialize(int entityNum, const Vec3 origin, Vec3 axis[3],
 	syscall(CG_S_RESPATIALIZE, entityNum, origin, axis, inwater);
 }
 
-Sfxhandle
+Handle
 trap_sndregister(const char *sample, qbool compressed)
 {
 	return syscall(CG_S_REGISTERSOUND, sample, compressed);

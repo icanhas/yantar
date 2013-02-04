@@ -24,7 +24,7 @@ char *cg_customSoundNames[] = {
 	nil
 };
 
-Sfxhandle
+Handle
 CG_CustomSound(int cnum, const char *soundname)
 {
 	Clientinfo *ci;

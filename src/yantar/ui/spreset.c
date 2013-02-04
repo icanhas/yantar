@@ -55,7 +55,7 @@ Reset_MenuEvent(void* ptr, int event)
 /*
  * Reset_MenuKey
  */
-static Sfxhandle
+static Handle
 Reset_MenuKey(int key)
 {
 	switch(key){

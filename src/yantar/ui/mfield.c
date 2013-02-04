@@ -342,7 +342,7 @@ MenuField_Draw(menufield_s *f)
 /*
  * MenuField_Key
  */
-Sfxhandle
+Handle
 MenuField_Key(menufield_s* m, int* key)
 {
 	int keycode;

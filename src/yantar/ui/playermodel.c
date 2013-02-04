@@ -214,7 +214,7 @@ PlayerModel_MenuEvent(void* ptr, int event)
 /*
  * PlayerModel_MenuKey
  */
-static Sfxhandle
+static Handle
 PlayerModel_MenuKey(int key)
 {
 	menucommon_s * m;

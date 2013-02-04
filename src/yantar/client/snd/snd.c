@@ -58,14 +58,14 @@ S_ValidSoundInterface(Sndinterface *si)
 }
 
 void
-sndstartsound(Vec3 origin, int entnum, int entchannel, Sfxhandle sfx)
+sndstartsound(Vec3 origin, int entnum, int entchannel, Handle sfx)
 {
 	if(si.StartSound)
 		si.StartSound(origin, entnum, entchannel, sfx);
 }
 
 void
-sndstartlocalsound(Sfxhandle sfx, int channelNum)
+sndstartlocalsound(Handle sfx, int channelNum)
 {
 	if(si.StartLocalSound)
 		si.StartLocalSound(sfx, channelNum);
@@ -111,7 +111,7 @@ sndclearloops(qbool killall)
 
 void
 sndaddloop(int entityNum, const Vec3 origin,
-		  const Vec3 velocity, Sfxhandle sfx)
+		  const Vec3 velocity, Handle sfx)
 {
 	if(si.AddLoopingSound)
 		si.AddLoopingSound(entityNum, origin, velocity, sfx);
@@ -119,7 +119,7 @@ sndaddloop(int entityNum, const Vec3 origin,
 
 void
 sndaddrealloop(int entityNum, const Vec3 origin,
-		      const Vec3 velocity, Sfxhandle sfx)
+		      const Vec3 velocity, Handle sfx)
 {
 	if(si.AddRealLoopingSound)
 		si.AddRealLoopingSound(entityNum, origin, velocity, sfx);
@@ -180,7 +180,7 @@ sndbeginreg(void)
 		si.BeginRegistration( );
 }
 
-Sfxhandle
+Handle
 sndregister(const char *sample, qbool compressed)
 {
 	if(si.RegisterSound)
@@ -252,7 +252,7 @@ void
 S_Play_f(void)
 {
 	int	i;
-	Sfxhandle h;
+	Handle h;
 	char	name[256];
 
 	if(!si.RegisterSound || !si.StartLocalSound)

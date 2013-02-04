@@ -133,7 +133,6 @@ typedef union {
 } Flint;
 
 typedef int Handle;
-typedef int Sfxhandle;
 typedef int Fhandle;
 typedef int Cliphandle;
 

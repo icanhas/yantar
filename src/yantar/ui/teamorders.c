@@ -138,7 +138,7 @@ UI_TeamOrdersMenu_SetList(int id)
 /*
  * UI_TeamOrdersMenu_Key
  */
-Sfxhandle
+Handle
 UI_TeamOrdersMenu_Key(int key)
 {
 	menulist_s *l;

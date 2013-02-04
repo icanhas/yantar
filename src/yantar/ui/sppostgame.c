@@ -59,7 +59,7 @@ typedef struct
 	int		awardsLevels[6];
 	qbool		playedSound[6];
 	int		lastTier;
-	Sfxhandle	winnerSound;
+	Handle	winnerSound;
 } postgame_t;
 
 static postgame_t postgame;
@@ -139,7 +139,7 @@ MenuEvent(void* ptr, int event)
 	trap_Cmd_ExecuteText(EXEC_APPEND, "disconnect; levelselect\n");
 }
 
-static Sfxhandle
+static Handle
 MenuKey(int key)
 {
 	if(uis.realtime < postgame.ignoreKeysTime)
@@ -210,7 +210,7 @@ DrawAwardsPresentation(int timer)
 	DrawAwardsMedals(awardNum + 1);
 
 	if(!postgame.playedSound[awardNum]){
-		Sfxhandle snd;
+		Handle snd;
 
 		postgame.playedSound[awardNum] = qtrue;
 		snd = trap_sndregister(ui_medalSounds[a], qfalse);

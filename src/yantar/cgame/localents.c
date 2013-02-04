@@ -167,7 +167,7 @@ CG_FragmentBounceSound(Localent *le, Trace *trace)
 		/* half the gibs will make splat sounds */
 		if(rand() & 1){
 			int r = rand()&3;
-			Sfxhandle s;
+			Handle s;
 
 			if(r == 0)
 				s = cgs.media.gibBounce1Sound;

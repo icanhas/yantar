@@ -98,8 +98,8 @@ typedef struct {
 typedef struct {
 	void (*Shutdown)(void);
 	void (*StartSound)(Vec3 origin, int entnum, int entchannel,
-			   Sfxhandle sfx);
-	void (*StartLocalSound)(Sfxhandle sfx, int channelNum);
+			   Handle sfx);
+	void (*StartLocalSound)(Handle sfx, int channelNum);
 	void (*StartBackgroundTrack)(const char *intro, const char *loop);
 	void (*StopBackgroundTrack)(void);
 	void (*RawSamples)(int stream, int samples, int rate, int width,
@@ -108,9 +108,9 @@ typedef struct {
 	void (*StopAllSounds)(void);
 	void (*ClearLoopingSounds)(qbool killall);
 	void (*AddLoopingSound)(int entityNum, const Vec3 origin,
-				const Vec3 velocity, Sfxhandle sfx);
+				const Vec3 velocity, Handle sfx);
 	void (*AddRealLoopingSound)(int entityNum, const Vec3 origin,
-				    const Vec3 velocity, Sfxhandle sfx);
+				    const Vec3 velocity, Handle sfx);
 	void (*StopLoopingSound)(int entityNum);
 	void (*Respatialize)(int entityNum, const Vec3 origin, Vec3 axis[3],
 			     int inwater);
@@ -118,7 +118,7 @@ typedef struct {
 	void (*Update)(void);
 	void (*DisableSounds)(void);
 	void (*BeginRegistration)(void);
-	Sfxhandle (*RegisterSound)(const char *sample, qbool compressed);
+	Handle (*RegisterSound)(const char *sample, qbool compressed);
 	void (*ClearSoundBuffer)(void);
 	void (*SoundInfo)(void);
 	void (*SoundList)(void);

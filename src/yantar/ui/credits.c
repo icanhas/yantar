@@ -76,7 +76,7 @@ UI_CreditMenu_Draw_ioq3(void)
 /*
  * UI_CreditMenu_Key
  */
-static Sfxhandle
+static Handle
 UI_CreditMenu_Key(int key)
 {
 	if(key & K_CHAR_FLAG)

@@ -136,7 +136,7 @@ ServerInfo_MenuDraw(void)
 /*
  * ServerInfo_MenuKey
  */
-static Sfxhandle
+static Handle
 ServerInfo_MenuKey(int key)
 {
 	return (Menu_DefaultKey(&s_serverinfo.menu, key));

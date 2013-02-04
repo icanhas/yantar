@@ -336,7 +336,7 @@ typedef struct {
 
 	Anim	animations[MAX_TOTALANIMATIONS];
 
-	Sfxhandle	sounds[MAX_CUSTOM_SOUNDS];
+	Handle	sounds[MAX_CUSTOM_SOUNDS];
 	
 	// remove these
 	char		headModelName[MAX_QPATH];
@@ -367,7 +367,7 @@ typedef struct Weapinfo {
 
 	float		flashDlight;
 	Vec3		flashDlightColor;
-	Sfxhandle	flashSound[4];	/* fast firing weapons randomly choose */
+	Handle	flashSound[4];	/* fast firing weapons randomly choose */
 
 	Handle		weaponIcon;
 	Handle		ammoIcon;
@@ -375,7 +375,7 @@ typedef struct Weapinfo {
 	Handle		ammoModel;
 
 	Handle		missileModel;
-	Sfxhandle	missileSound;
+	Handle	missileSound;
 	void (*missileTrailFunc)(Centity *, const struct Weapinfo *wi);
 	float		missileDlight;
 	Vec3		missileDlightColor;
@@ -386,8 +386,8 @@ typedef struct Weapinfo {
 	float		trailRadius;
 	float		wiTrailTime;
 
-	Sfxhandle	readySound;
-	Sfxhandle	firingSound;
+	Handle	readySound;
+	Handle	firingSound;
 } Weapinfo;
 
 /* 
@@ -750,114 +750,114 @@ typedef struct {
 	Handle		medalCapture;
 
 	/* sounds */
-	Sfxhandle	quadSound;
-	Sfxhandle	tracerSound;
-	Sfxhandle	selectSound;
-	Sfxhandle	useNothingSound;
-	Sfxhandle	wearOffSound;
-	Sfxhandle	footsteps[FOOTSTEP_TOTAL][4];
-	Sfxhandle	sfx_lghit1;
-	Sfxhandle	sfx_lghit2;
-	Sfxhandle	sfx_lghit3;
-	Sfxhandle	sfx_ric1;
-	Sfxhandle	sfx_ric2;
-	Sfxhandle	sfx_ric3;
-	/* Sfxhandle	sfx_railg; */
-	Sfxhandle	sfx_rockexp;
-	Sfxhandle	sfx_plasmaexp;
-	Sfxhandle	sfx_proxexp;
-	Sfxhandle	sfx_nghit;
-	Sfxhandle	sfx_nghitflesh;
-	Sfxhandle	sfx_nghitmetal;
-	Sfxhandle	sfx_chghit;
-	Sfxhandle	sfx_chghitflesh;
-	Sfxhandle	sfx_chghitmetal;
-	Sfxhandle	winnerSound;
-	Sfxhandle	loserSound;
-	Sfxhandle	gibSound;
-	Sfxhandle	gibBounce1Sound;
-	Sfxhandle	gibBounce2Sound;
-	Sfxhandle	gibBounce3Sound;
-	Sfxhandle	teleInSound;
-	Sfxhandle	teleOutSound;
-	Sfxhandle	noAmmoSound;
-	Sfxhandle	respawnSound;
-	Sfxhandle	talkSound;
-	Sfxhandle	landSound;
-	Sfxhandle	fallSound;
-	Sfxhandle	jumpPadSound;
+	Handle	quadSound;
+	Handle	tracerSound;
+	Handle	selectSound;
+	Handle	useNothingSound;
+	Handle	wearOffSound;
+	Handle	footsteps[FOOTSTEP_TOTAL][4];
+	Handle	sfx_lghit1;
+	Handle	sfx_lghit2;
+	Handle	sfx_lghit3;
+	Handle	sfx_ric1;
+	Handle	sfx_ric2;
+	Handle	sfx_ric3;
+	/* Handle	sfx_railg; */
+	Handle	sfx_rockexp;
+	Handle	sfx_plasmaexp;
+	Handle	sfx_proxexp;
+	Handle	sfx_nghit;
+	Handle	sfx_nghitflesh;
+	Handle	sfx_nghitmetal;
+	Handle	sfx_chghit;
+	Handle	sfx_chghitflesh;
+	Handle	sfx_chghitmetal;
+	Handle	winnerSound;
+	Handle	loserSound;
+	Handle	gibSound;
+	Handle	gibBounce1Sound;
+	Handle	gibBounce2Sound;
+	Handle	gibBounce3Sound;
+	Handle	teleInSound;
+	Handle	teleOutSound;
+	Handle	noAmmoSound;
+	Handle	respawnSound;
+	Handle	talkSound;
+	Handle	landSound;
+	Handle	fallSound;
+	Handle	jumpPadSound;
 
-	Sfxhandle	oneMinuteSound;
-	Sfxhandle	fiveMinuteSound;
-	Sfxhandle	suddenDeathSound;
+	Handle	oneMinuteSound;
+	Handle	fiveMinuteSound;
+	Handle	suddenDeathSound;
 
-	Sfxhandle	threeFragSound;
-	Sfxhandle	twoFragSound;
-	Sfxhandle	oneFragSound;
+	Handle	threeFragSound;
+	Handle	twoFragSound;
+	Handle	oneFragSound;
 
-	Sfxhandle	hitSound;
-	Sfxhandle	hitSoundHighArmor;
-	Sfxhandle	hitSoundLowArmor;
-	Sfxhandle	hitTeamSound;
-	Sfxhandle	impressiveSound;
-	Sfxhandle	excellentSound;
-	Sfxhandle	deniedSound;
-	Sfxhandle	humiliationSound;
-	Sfxhandle	assistSound;
-	Sfxhandle	defendSound;
-	Sfxhandle	firstImpressiveSound;
-	Sfxhandle	firstExcellentSound;
-	Sfxhandle	firstHumiliationSound;
+	Handle	hitSound;
+	Handle	hitSoundHighArmor;
+	Handle	hitSoundLowArmor;
+	Handle	hitTeamSound;
+	Handle	impressiveSound;
+	Handle	excellentSound;
+	Handle	deniedSound;
+	Handle	humiliationSound;
+	Handle	assistSound;
+	Handle	defendSound;
+	Handle	firstImpressiveSound;
+	Handle	firstExcellentSound;
+	Handle	firstHumiliationSound;
 
-	Sfxhandle	takenLeadSound;
-	Sfxhandle	tiedLeadSound;
-	Sfxhandle	lostLeadSound;
+	Handle	takenLeadSound;
+	Handle	tiedLeadSound;
+	Handle	lostLeadSound;
 
-	Sfxhandle	voteNow;
-	Sfxhandle	votePassed;
-	Sfxhandle	voteFailed;
+	Handle	voteNow;
+	Handle	votePassed;
+	Handle	voteFailed;
 
-	Sfxhandle	watrInSound;
-	Sfxhandle	watrOutSound;
-	Sfxhandle	watrUnSound;
+	Handle	watrInSound;
+	Handle	watrOutSound;
+	Handle	watrUnSound;
 
-	Sfxhandle	flightSound;
-	Sfxhandle	medkitSound;
+	Handle	flightSound;
+	Handle	medkitSound;
 
-	Sfxhandle	weaponHoverSound;
+	Handle	weaponHoverSound;
 
 	/* teamplay sounds */
-	Sfxhandle	captureAwardSound;
-	Sfxhandle	redScoredSound;
-	Sfxhandle	blueScoredSound;
-	Sfxhandle	redLeadsSound;
-	Sfxhandle	blueLeadsSound;
-	Sfxhandle	teamsTiedSound;
+	Handle	captureAwardSound;
+	Handle	redScoredSound;
+	Handle	blueScoredSound;
+	Handle	redLeadsSound;
+	Handle	blueLeadsSound;
+	Handle	teamsTiedSound;
 
-	Sfxhandle	captureYourTeamSound;
-	Sfxhandle	captureOpponentSound;
-	Sfxhandle	returnYourTeamSound;
-	Sfxhandle	returnOpponentSound;
-	Sfxhandle	takenYourTeamSound;
-	Sfxhandle	takenOpponentSound;
+	Handle	captureYourTeamSound;
+	Handle	captureOpponentSound;
+	Handle	returnYourTeamSound;
+	Handle	returnOpponentSound;
+	Handle	takenYourTeamSound;
+	Handle	takenOpponentSound;
 
-	Sfxhandle	redFlagReturnedSound;
-	Sfxhandle	blueFlagReturnedSound;
-	Sfxhandle	neutralFlagReturnedSound;
-	Sfxhandle	enemyTookYourFlagSound;
-	Sfxhandle	enemyTookTheFlagSound;
-	Sfxhandle	yourTeamTookEnemyFlagSound;
-	Sfxhandle	yourTeamTookTheFlagSound;
-	Sfxhandle	youHaveFlagSound;
-	Sfxhandle	yourBaseIsUnderAttackSound;
-	Sfxhandle	holyShitSound;
+	Handle	redFlagReturnedSound;
+	Handle	blueFlagReturnedSound;
+	Handle	neutralFlagReturnedSound;
+	Handle	enemyTookYourFlagSound;
+	Handle	enemyTookTheFlagSound;
+	Handle	yourTeamTookEnemyFlagSound;
+	Handle	yourTeamTookTheFlagSound;
+	Handle	youHaveFlagSound;
+	Handle	yourBaseIsUnderAttackSound;
+	Handle	holyShitSound;
 
 	/* tournament sounds */
-	Sfxhandle	count3Sound;
-	Sfxhandle	count2Sound;
-	Sfxhandle	count1Sound;
-	Sfxhandle	countFightSound;
-	Sfxhandle	countPrepareSound;
+	Handle	count3Sound;
+	Handle	count2Sound;
+	Handle	count1Sound;
+	Handle	countFightSound;
+	Handle	countPrepareSound;
 
 #ifdef MISSIONPACK
 	/* new stuff */
@@ -870,21 +870,21 @@ typedef struct {
 	Handle		retrieveShader;
 	Handle		escortShader;
 	Handle		flagShaders[3];
-	Sfxhandle	countPrepareTeamSound;
+	Handle	countPrepareTeamSound;
 #endif
 	Handle		cursor;
 	Handle		selectCursor;
 	Handle		sizeCursor;
 
-	Sfxhandle	regenSound;
-	Sfxhandle	protectSound;
-	Sfxhandle	n_healthSound;
-	Sfxhandle	hgrenb1aSound;
-	Sfxhandle	hgrenb2aSound;
-	Sfxhandle	wstbimplSound;
-	Sfxhandle	wstbimpmSound;
-	Sfxhandle	wstbimpdSound;
-	Sfxhandle	wstbactvSound;
+	Handle	regenSound;
+	Handle	protectSound;
+	Handle	n_healthSound;
+	Handle	hgrenb1aSound;
+	Handle	hgrenb2aSound;
+	Handle	wstbimplSound;
+	Handle	wstbimpmSound;
+	Handle	wstbimpdSound;
+	Handle	wstbactvSound;
 } Cgmedia;
 
 /* 
@@ -941,7 +941,7 @@ typedef struct {
 	 * locally derived information from gamestate
 	 *  */
 	Handle		gameModels[MAX_MODELS];
-	Sfxhandle	gameSounds[MAX_SOUNDS];
+	Handle	gameSounds[MAX_SOUNDS];
 
 	int		numInlineModels;
 	Handle		inlineDrawModel[MAX_MODELS];
@@ -1120,7 +1120,7 @@ void	CG_TestModelPrevSkin_f(void);
 void	CG_TestLight_f(void);
 void	CG_ZoomDown_f(void);
 void	CG_ZoomUp_f(void);
-void	CG_AddBufferedSound(Sfxhandle sfx);
+void	CG_AddBufferedSound(Handle sfx);
 void	CG_DrawActiveFrame(int serverTime, Stereoframe stereoView,
 			qbool	demoPlayback);
 
@@ -1213,7 +1213,7 @@ void	CG_ResetPlayerEntity(Centity *cent);
 void	CG_AddRefEntityWithPowerups(Refent *ent, Entstate *state,
 		int team);
 void	CG_NewClientInfo(int clientNum);
-Sfxhandle	CG_CustomSound(int clientNum, const char *soundName);
+Handle	CG_CustomSound(int clientNum, const char *soundName);
 
 /*
  * predict.c
@@ -1449,23 +1449,23 @@ int	trap_CM_MarkFragments(int numPoints,
 /* normal sounds will have their volume dynamically changed as their entity
  * moves and the listener moves */
 void	trap_sndstartsound(Vec3 origin, int entityNum, int entchannel,
-		Sfxhandle sfx);
+		Handle sfx);
 void	trap_sndstoploop(int entnum);
 
 /* a local sound is always played full volume */
-void	trap_sndstartlocalsound(Sfxhandle sfx, int channelNum);
+void	trap_sndstartlocalsound(Handle sfx, int channelNum);
 void	trap_sndclearloops(qbool killall);
 void	trap_sndaddloop(int entityNum, const Vec3 origin,
-		const Vec3 velocity, Sfxhandle sfx);
+		const Vec3 velocity, Handle sfx);
 void	trap_sndaddrealloop(int entityNum, const Vec3 origin,
-		const Vec3 velocity, Sfxhandle sfx);
+		const Vec3 velocity, Handle sfx);
 void	trap_sndupdateentpos(int entityNum, const Vec3 origin);
 
 /* respatialize recalculates the volumes of sound as they should be heard by the
  * given entityNum and position */
 void	trap_sndrespatialize(int entityNum, const Vec3 origin, Vec3 axis[3],
 		int inwater);
-Sfxhandle	trap_sndregister(const char *sample, qbool compressed);		/* returns a beepif not found */
+Handle	trap_sndregister(const char *sample, qbool compressed);		/* returns a beepif not found */
 void	trap_sndstartbackgroundtrack(const char *intro, const char *loop);	/* empty name stops music */
 void	trap_sndstopbackgroundtrack(void);
 

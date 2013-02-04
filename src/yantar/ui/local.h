@@ -137,7 +137,7 @@ typedef struct _tag_menuframework {
 	void	*items[MAX_MENUITEMS];
 
 	void (*draw)(void);
-	Sfxhandle (*key)(int key);
+	Handle (*key)(int key);
 
 	qbool		wrapAround;
 	qbool		fullscreen;
@@ -234,21 +234,21 @@ extern void                     Menu_AddItem(menuframework_s *menu, void *item);
 extern void                     Menu_AdjustCursor(menuframework_s *menu, int dir);
 extern void                     Menu_Draw(menuframework_s *menu);
 extern void*Menu_ItemAtCursor(menuframework_s *m);
-extern Sfxhandle      Menu_ActivateItem(menuframework_s *s, menucommon_s* item);
+extern Handle      Menu_ActivateItem(menuframework_s *s, menucommon_s* item);
 extern void                     Menu_SetCursor(menuframework_s *s, int cursor);
 extern void                     Menu_SetCursorToItem(menuframework_s *m,
 						     void* ptr);
-extern Sfxhandle      Menu_DefaultKey(menuframework_s *s, int key);
+extern Handle      Menu_DefaultKey(menuframework_s *s, int key);
 extern void                     Bitmap_Init(menubitmap_s *b);
 extern void                     Bitmap_Draw(menubitmap_s *b);
 extern void                     ScrollList_Draw(menulist_s *l);
-extern Sfxhandle      ScrollList_Key(menulist_s *l, int key);
-extern Sfxhandle	menu_in_sound;
-extern Sfxhandle	menu_move_sound;
-extern Sfxhandle	menu_out_sound;
-extern Sfxhandle	menu_buzz_sound;
-extern Sfxhandle	menu_null_sound;
-extern Sfxhandle	weaponChangeSound;
+extern Handle      ScrollList_Key(menulist_s *l, int key);
+extern Handle	menu_in_sound;
+extern Handle	menu_move_sound;
+extern Handle	menu_out_sound;
+extern Handle	menu_buzz_sound;
+extern Handle	menu_null_sound;
+extern Handle	weaponChangeSound;
 extern Vec4	menu_text_color;
 extern Vec4	menu_grayed_color;
 extern Vec4	menu_dark_color;
@@ -285,7 +285,7 @@ extern void                     MField_Draw(mfield_t *edit, int x, int y,
 					    Vec4 color);
 extern void                     MenuField_Init(menufield_s* m);
 extern void                     MenuField_Draw(menufield_s *f);
-extern Sfxhandle      MenuField_Key(menufield_s* m, int* key);
+extern Handle      MenuField_Key(menufield_s* m, int* key);
 
 /*
  * ui_menu.c
@@ -674,8 +674,8 @@ int                             trap_CM_LerpTag(Orient *tag,
 						Cliphandle mod, int startFrame,
 						int endFrame, float frac,
 						const char *tagName);
-void                    trap_sndstartlocalsound(Sfxhandle sfx, int channelNum);
-Sfxhandle     trap_sndregister(const char *sample, qbool compressed);
+void                    trap_sndstartlocalsound(Handle sfx, int channelNum);
+Handle     trap_sndregister(const char *sample, qbool compressed);
 void                    trap_Key_KeynumToStringBuf(int keynum, char *buf,
 						   int buflen);
 void                    trap_Key_GetBindingBuf(int keynum, char *buf, int buflen);

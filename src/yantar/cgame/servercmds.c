@@ -452,7 +452,7 @@ CG_MapRestart(void)
 typedef struct voiceChat_s {
 	char		id[64];
 	int		numSounds;
-	Sfxhandle	sounds[MAX_VOICESOUNDS];
+	Handle	sounds[MAX_VOICESOUNDS];
 	char		chats[MAX_VOICESOUNDS][MAX_CHATSIZE];
 } voiceChat_t;
 
@@ -485,7 +485,7 @@ CG_ParseVoiceChats(const char *filename, voiceChatList_t *voiceChatList,
 	char *token;
 	voiceChat_t	*voiceChats;
 	qbool		compress;
-	Sfxhandle	sound;
+	Handle	sound;
 
 	compress = qtrue;
 	if(cg_buildScript.integer)
@@ -660,7 +660,7 @@ CG_HeadModelVoiceChats(char *filename)
  * CG_GetVoiceChat
  */
 int
-CG_GetVoiceChat(voiceChatList_t *voiceChatList, const char *id, Sfxhandle *snd,
+CG_GetVoiceChat(voiceChatList_t *voiceChatList, const char *id, Handle *snd,
 		char **chat)
 {
 	int i, rnd;
@@ -786,7 +786,7 @@ CG_VoiceChatListForClient(int clientNum)
 
 typedef struct bufferedVoiceChat_s {
 	int		clientNum;
-	Sfxhandle	snd;
+	Handle	snd;
 	int		voiceOnly;
 	char		cmd[MAX_SAY_TEXT];
 	char		message[MAX_SAY_TEXT];
@@ -880,7 +880,7 @@ CG_VoiceChatLocal(int mode, qbool voiceOnly, int clientNum, int color,
 	char *chat;
 	voiceChatList_t *voiceChatList;
 	Clientinfo	*ci;
-	Sfxhandle snd;
+	Handle snd;
 	bufferedVoiceChat_t vchat;
 
 	/* if we are going into the intermission, don't start any voices */

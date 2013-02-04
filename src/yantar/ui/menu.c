@@ -94,7 +94,7 @@ MainMenu_Cache(void)
 {
 }
 
-Sfxhandle
+Handle
 ErrorMessage_Key(int key)
 {
 	trap_cvarsetstr("com_errorMessage", "");

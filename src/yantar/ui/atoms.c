@@ -819,7 +819,7 @@ UI_SetActiveMenu(uiMenuCommand_t menu)
 void
 UI_KeyEvent(int key, int down)
 {
-	Sfxhandle s;
+	Handle s;
 
 	if(!uis.activemenu)
 		return;
