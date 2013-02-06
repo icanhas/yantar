@@ -498,10 +498,10 @@ CG_DrawStatusBar(void)
 
 	static float colors[4][4] = {
 /*		{ 0.2, 1.0, 0.2, 1.0 } , { 1.0, 0.2, 0.2, 1.0 }, {0.5, 0.5, 0.5, 1} }; */
-		{ 1.0f, 0.69f, 0.0f, 1.0f },	/* normal */
-		{ 1.0f, 0.2f, 0.2f, 1.0f },	/* low health */
-		{ 0.5f, 0.5f, 0.5f, 1.0f },	/* weapon firing */
-		{ 1.0f, 1.0f, 1.0f, 1.0f }
+		{ 1.0f, 1.0f, 1.0f, 0.7f },	/* normal */
+		{ 1.0f, 0.2f, 0.2f, 0.7f },	/* low health */
+		{ 0.5f, 0.5f, 0.5f, 0.7f },	/* weapon firing */
+		{ 1.0f, 1.0f, 1.0f, 0.7f }
 	};	/* health > 100 */
 
 	if(cg_drawStatus.integer == 0)
