@@ -418,6 +418,7 @@ main(int argc, char **argv)
 			ver->patch), "SDL library too old");
 		Sys_Exit(1);
 	}
+	syssetenv("SDL_DISABLE_LOCK_KEYS", "1");
 #endif
 	Sys_PlatformInit( );
 	/* Set the initial time base */
