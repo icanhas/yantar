@@ -4,7 +4,7 @@
 # & ports systems (e.g.  OpenBSD, FreeBSD), or if we're cross-compiling.
 
 if [ "X$procs" = "X" ]; then
-	procs=4
+	procs=3
 fi
 if [ "X$make" = "X" ]; then
 	make="make"
@@ -26,7 +26,12 @@ rm -rf $prefix/lib/libvorbis.a $prefix/lib/libogg.a $prefix/lib/libfreetype.a \
 mkdir -p /tmp/getlibs
 (cd /tmp/getlibs
 
-echo && echo mkzlib
+echo && echo mk libccco
+curl -L -# http://downloads.sf.net/project/libccco/libccco-0.1.1.tar.bz2 | bunzip2 | tar xf -
+(cd libccco-0.1.1
+$make -s -j$procs install $libcccomkflags && $make tests $libcccomkflags)
+
+echo && echo mk zlib
 curl -# http://zlib.net/zlib-1.2.7.tar.gz | gunzip | tar xf -
 (cd zlib-1.2.7
 ./configure --prefix=$prefix --static
@@ -34,14 +39,14 @@ $make -s -j$procs $zcross \
 	BINARY_PATH=$prefix/bin INCLUDE_PATH=$prefix/include \
 	LIBRARY_PATH=$prefix/lib install) &&
 
-echo && echo mklibogg
+echo && echo mk libogg
 curl -# http://downloads.xiph.org/releases/ogg/libogg-1.3.0.tar.gz | gunzip | tar xf -
 (cd libogg-1.3.0
 ./configure --prefix=$prefix $cross --enable-static \
 	--disable-shared >/dev/null
 $make -s -j$procs && $make -s install) &&
 
-echo && echo mklibvorbis
+echo && echo mk libvorbis
 curl -# http://downloads.xiph.org/releases/vorbis/libvorbis-1.3.3.tar.gz | gunzip | tar xf -
 (cd libvorbis-1.3.3
 ./configure --prefix=$prefix $cross --enable-static \
@@ -49,7 +54,7 @@ curl -# http://downloads.xiph.org/releases/vorbis/libvorbis-1.3.3.tar.gz | gunzi
 $make -s -j$procs
 $make -s install) &&
 
-echo && echo mklibfreetype
+echo && echo mk libfreetype
 curl -# ftp://ftp.igh.cnrs.fr/pub/nongnu/freetype/freetype-2.4.10.tar.bz2 | bunzip2 | tar xf -
 (cd freetype-2.4.10
 ./configure --prefix=$prefix $cross --enable-static \
@@ -58,7 +63,7 @@ $make -j$procs
 $make -s install &&
 ln -sf /usr/$chain/include/freetype2/freetype /usr/$chain/include/freetype) &&
 
-echo && echo mklibsdl
+echo && echo mk libsdl
 curl -# http://www.libsdl.org/release/SDL-1.2.15.tar.gz | gunzip | tar xf -
 (cd SDL-1.2.15
 ./configure --prefix=$prefix $cross --enable-static \
@@ -68,7 +73,7 @@ curl -# http://www.libsdl.org/release/SDL-1.2.15.tar.gz | gunzip | tar xf -
 $make -s -j$procs
 $make -s install) &&
 
-echo && echo mklibjpeg
+echo && echo mk libjpeg
 curl -# http://ijg.org/files/jpegsrc.v8d.tar.gz | gunzip | tar xf -
 (cd jpeg-8d
 ./configure --prefix=$prefix $cross --enable-static \
@@ -76,7 +81,7 @@ curl -# http://ijg.org/files/jpegsrc.v8d.tar.gz | gunzip | tar xf -
 $make -s -j$procs
 $make -s install) &&
 
-echo && echo mklibcurl
+echo && echo mk libcurl
 curl -# http://curl.haxx.se/download/curl-7.28.1.tar.bz2 | bunzip2 | tar xf -
 (cd curl-7.28.1
 ./configure --prefix=$prefix $cross --enable-static \

@@ -10,6 +10,11 @@ prefixes="i386-mingw32 i486-mingw32 i586-mingw32 i686-mingw32 \
 for try in $prefixes; do
 	if [ ! $(which "${try}-gcc" 2>/dev/null) = "" ]; then
 		chain=$try
+		CC=$try-gcc
+		AS=$try-as
+		LD=$try-ld
+		AR=$try-ar
+		RANLIB=$try-ranlib
 	fi
 	# known path on Debian
 	if [ -d /usr/$try ]; then
@@ -30,6 +35,14 @@ if [ "X$prefix" = "X" ]; then
 	exit 1
 fi
 
+libcccomkflags="OS=windows PREFIX=$prefix"
+
 export chain
 export prefix
+export libcspmkflags
+export CC
+export AS
+export LD
+export AR
+export RANLIB
 ./getlibs.sh
