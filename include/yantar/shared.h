@@ -1222,6 +1222,8 @@ typedef struct Playerstate {
 	 * used to twist the legs during strafing */
 
 	Vec3	grapplePoint;	/* location of grapple to pull towards if PMF_GRAPPLE_PULL */
+	qbool	grapplelast;
+	float		oldgrapplelen;
 
 	int	eFlags;	/* copied to Entstate->eFlags */
 

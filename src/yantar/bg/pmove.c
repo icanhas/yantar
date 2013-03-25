@@ -16,6 +16,7 @@
  */
 uint cnt = 0;
 
+static const Scalar GrapplePullSpeed	= 400.0f;
 static const Scalar Hooklinelen		= 2.0f;
 static const Scalar Maxhookforce	= 6.0f;
 static const Scalar pm_stopspeed	= 100.0f;
@@ -109,7 +110,7 @@ dofriction(Pmove *pm, Pml *pml)
 			if(!(pm->ps->pm_flags & PMF_TIME_KNOCKBACK)){
 				control = speed < pm_stopspeed
 					? pm_stopspeed : speed;
-				drop += control*pm_flightfriction*pml->frametime;
+				drop += control*pm_friction*pml->frametime;
 			}
 	}
 	if(pm->waterlevel)
@@ -135,10 +136,13 @@ static void
 q2accelerate(Pmove *pm, Pml *pml, Vec3 wishdir, float wishspeed, float accel)
 {
 	/* q2 style */
+	int i;
 	float addspeed, accelspeed, currentspeed;
 
 	currentspeed = dotv3(pm->ps->velocity, wishdir);
 	addspeed = wishspeed;
+	if(addspeed <= 0)
+		return;
 	accelspeed = accel*pml->frametime*wishspeed;
 	if(accelspeed > addspeed)
 		accelspeed = addspeed;
@@ -458,22 +462,32 @@ airmove(Pmove *pm, Pml *pml)
 static void
 grapplemove(Pmove *pm, Pml *pml)
 {
-	Vec3 wishvel, wishdir, line;
-	Scalar f, k, x, wishspeed;
+	Vec3 wishvel, wishdir, vel, v;
+	float	wishspeed, vlen, oldlen, pullspeedcoef, grspd = GrapplePullSpeed;
 
-	dofriction(pm, pml);
 	_airmove(pm, pml, &pm->cmd, &wishvel, &wishdir, &wishspeed);
-
-	subv3(pm->ps->origin, pm->ps->grapplePoint, line);
-	x = normv3(line) - Hooklinelen;
-	k = pm->ps->swingstrength;
-	f = (-k)*x;
-	f = Q_clamp(-Maxhookforce, Maxhookforce, f);
-
+	scalev3(pml->forward, -16, v);
+	addv3(pm->ps->grapplePoint, v, v);
+	subv3(v, pm->ps->origin, vel);
+	vlen = lenv3(vel);
+	if(pm->ps->grapplelast == qfalse)
+		oldlen = vlen;
+	else
+		oldlen = pm->ps->oldgrapplelen;
+	if(vlen > oldlen){
+		pullspeedcoef = vlen - oldlen;
+		pullspeedcoef *= pm->ps->swingstrength;
+		grspd *= pullspeedcoef;
+	}
+	if(grspd < GrapplePullSpeed)
+		grspd = GrapplePullSpeed;
+	
+	normv3(vel);
 	q2accelerate(pm, pml, wishdir, wishspeed, pm_airaccelerate);
-	q2accelerate(pm, pml, line, f, pm_airaccelerate);
+	q2accelerate(pm, pml, vel, grspd, pm_airaccelerate);
 	pml->groundPlane = qfalse;
 	PM_StepSlideMove(pm, pml, qtrue);
+	pm->ps->oldgrapplelen = vlen;
 }
 
 static void
@@ -1255,12 +1269,15 @@ PmoveSingle(Pmove *pm)
 		return;
 	}else if(pm->ps->pm_flags & PMF_GRAPPLE_PULL){
 		grapplemove(pm, &pml);
+		pm->ps->grapplelast = qtrue;
 	}else if(pm->ps->pm_flags & PMF_TIME_WATERJUMP)
 		waterjumpmove(pm, &pml);
 	else if(pm->waterlevel > 1)	/* swimming */
 		watermove(pm, &pml);
 	else{	/* airborne */
 		airmove(pm, &pml);
+		pm->ps->grapplelast = qfalse;
+		pm->ps->oldgrapplelen = 0.0f;
 	}
 	
 	if(pm->cmd.brakefrac > 0)
