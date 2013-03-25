@@ -2,9 +2,7 @@
 
 # You need to have mingw, curl, and libtool installed, or this will fail.
 
-# amd64 chains are given precedence here
-prefixes="i386-mingw32 i486-mingw32 i586-mingw32 i686-mingw32 \
-	i586-mingw32msvc i686-w64-mingw32 mingw32"
+prefixes="amd64-mingw32 x86_64-w64-mingw32 amd64-mingw32msvc"
 
 for try in $prefixes; do
 	if [ ! $(which "${try}-gcc" 2>/dev/null) = "" ]; then
