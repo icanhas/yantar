@@ -38,7 +38,7 @@ libcccomkflags="OS=windows PREFIX=$prefix"
 
 export chain
 export prefix
-export libcspmkflags
+export libcccomkflags
 export CC
 export AS
 export LD
