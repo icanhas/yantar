@@ -670,16 +670,16 @@ CG_RegisterWeapon(int weaponNum)
 		break;
 	case Wchaingun:
 		wp->firingSound = trap_sndregister(
-			Pgattlingsounds "/wvulfire", qfalse);
+			Phemgsounds "/wvulfire", qfalse);
 		MAKERGB(wp->flashDlightColor, 1, 1, 0);
 		wp->flashSound[0] = trap_sndregister(
-			Pgattlingsounds "/vulcanf1b", qfalse);
+			Phemgsounds "/vulcanf1b", qfalse);
 		wp->flashSound[1] = trap_sndregister(
-			Pgattlingsounds "/vulcanf2b", qfalse);
+			Phemgsounds "/vulcanf2b", qfalse);
 		wp->flashSound[2] = trap_sndregister(
-			Pgattlingsounds "/vulcanf3b", qfalse);
+			Phemgsounds "/vulcanf3b", qfalse);
 		wp->flashSound[3] = trap_sndregister(
-			Pgattlingsounds "/vulcanf4b", qfalse);
+			Phemgsounds "/vulcanf4b", qfalse);
 		wp->ejectBrassFunc = CG_MachineGunEjectBrass;
 		cgs.media.bulletExplosionShader = trap_R_RegisterShader(
 			"bulletExplosion");
@@ -1111,7 +1111,7 @@ CG_MachinegunSpinAngle(Centity *cent, Weapslot sl)
 			trap_sndstartsound(
 				NULL, cent->currentState.number, CHAN_WEAPON,
 				trap_sndregister(
-					Pgattlingsounds "/wvulwind",
+					Phemgsounds "/wvulwind",
 					qfalse));
 	}
 	return angle;

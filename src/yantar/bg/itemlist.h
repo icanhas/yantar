@@ -675,14 +675,14 @@ Gitem bg_itemlist[] =
 	{
 		"weapon_heminigun",
 		Pmiscsounds "/w_pkup",
-		{ Pgattlingmodels "/heminigun" },
+		{ Phemgmodels "/heminigun" },
 		 Picons "/heminigun",
 		 "HE Minigun",
 		80,
 		IT_PRIWEAP,
 		Wchaingun,
 		 "",
-		 Pgattlingsounds "/wvulwind"
+		 Phemgsounds "/wvulwind"
 	},
 	
 	{nil, nil, {nil}, nil, nil, 0, 0, 0, "", ""}	/* end of list marker */

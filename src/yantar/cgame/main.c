@@ -777,11 +777,11 @@ CG_RegisterSounds(void)
 	cgs.media.sfx_nghitmetal = trap_sndregister(
 		"sound/weapons/nailgun/wnalimpm", qfalse);
 	cgs.media.sfx_chghit = trap_sndregister(
-		Pgattlingsounds "/wvulimpd", qfalse);
+		Phemgsounds "/wvulimpd", qfalse);
 	cgs.media.sfx_chghitflesh = trap_sndregister(
-		Pgattlingsounds "/wvulimpl", qfalse);
+		Phemgsounds "/wvulimpl", qfalse);
 	cgs.media.sfx_chghitmetal = trap_sndregister(
-		Pgattlingsounds "/wvulimpm", qfalse);
+		Phemgsounds "/wvulimpm", qfalse);
 	cgs.media.weaponHoverSound = trap_sndregister(
 		Pweapsounds "/weaphover", qfalse);
 	cgs.media.winnerSound = trap_sndregister(

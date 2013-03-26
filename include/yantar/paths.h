@@ -25,7 +25,7 @@
 #define Pplatformsounds	Pmoversounds "/plats"
 
 #define Pbfgsounds	Pweapsounds "/bfg"
-#define Pgattlingsounds	Pweapsounds "/vulcan"
+#define Phemgsounds	Pweapsounds "/heminigun"
 #define Pgrenadesounds	Pweapsounds "/grenade"
 #define Plgsounds	Pweapsounds "/lightning"
 #define Pmgsounds	Pweapsounds "/machinegun"
@@ -66,7 +66,7 @@
 #define Pmiscmodels	Pmodels "/misc"
 #define Pprojectilemodels	Pmodels "/projectiles"
 
-#define Pgattlingmodels	Pweapmodels "/heminigun"
+#define Phemgmodels	Pweapmodels "/heminigun"
 #define Plgmodels	Pweapmodels "/lightning"
 #define Pmgmodels	Pweapmodels "/machinegun"
 #define Pmeleemodels	Pweapmodels "/melee"
