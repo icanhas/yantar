@@ -813,7 +813,7 @@ weaptimetab(Weapon wp)
 	case Wlightning:	return 50;
 	case Wrailgun:		return 1500;
 	case Wplasmagun:	return 100;
-	case Whook:		return 1;
+	case Whook:		return 10;
 	case Wnanoidcannon:	return 1000;
 	case Wchaingun:		return 30;
 	case Wrocketlauncher:

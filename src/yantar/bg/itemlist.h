@@ -613,9 +613,9 @@ Gitem bg_itemlist[] =
 	{
 		"ammo_belt",
 		Pmiscsounds "/am_pkup",
-		{ Pammomodels "/chaingunam" },
-		 Picons "/icona_chaingun",
-		 "Chaingun Belt",
+		{ Pammomodels "/heminigun" },
+		 Picons "/heminigun",
+		 "HE Minigun Ammo",
 		100,
 		IT_AMMO,
 		Wchaingun,
@@ -671,13 +671,13 @@ Gitem bg_itemlist[] =
 	     Pproxsounds "/bimpd "
 	},
 
-	/* QUAKED weapon_chaingun (.3 .3 1) (-16 -16 -16) (16 16 16) suspended */
+	/* QUAKED weapon_heminigun (.3 .3 1) (-16 -16 -16) (16 16 16) suspended */
 	{
-		"weapon_chaingun",
+		"weapon_heminigun",
 		Pmiscsounds "/w_pkup",
-		{ Pgattlingmodels "/vulcan" },
-		 Picons "/iconw_chaingun",
-		 "Chaingun",
+		{ Pgattlingmodels "/heminigun" },
+		 Picons "/heminigun",
+		 "HE Minigun",
 		80,
 		IT_PRIWEAP,
 		Wchaingun,
