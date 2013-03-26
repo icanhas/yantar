@@ -579,8 +579,9 @@ CG_RegisterWeapon(int weaponNum)
 	memset(wp, 0, sizeof(*wp));
 	wp->registered = qtrue;
 	for(item = bg_itemlist + 1; item->classname; item++)
-		if((item->type == IT_PRIWEAP || item->type == IT_SECWEAP) 
-		  && item->tag == weaponNum)
+		if((item->type == IT_PRIWEAP 
+		|| item->type == IT_SECWEAP) 
+		&& item->tag == weaponNum)
 		then{
 			wp->item = item;
 			break;
@@ -598,8 +599,8 @@ CG_RegisterWeapon(int weaponNum)
 		wp->weaponMidpoint[i] = mins[i] + 0.5 *
 						(maxs[i] - mins[i]);
 
-	wp->weaponIcon	= trap_R_RegisterShader(item->icon);
-	wp->ammoIcon	= trap_R_RegisterShader(item->icon);
+	wp->weaponIcon = trap_R_RegisterShader(item->icon);
+	wp->ammoIcon = trap_R_RegisterShader(item->icon);
 
 	for(ammo = bg_itemlist + 1; ammo->classname; ammo++)
 		if(ammo->type == IT_AMMO && ammo->tag == weaponNum)

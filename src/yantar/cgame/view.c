@@ -712,6 +712,7 @@ CG_DrawActiveFrame(int serverTime, Stereoframe stereoView,
 	}
 	CG_AddViewWeapon(&cg.predictedPlayerState, WSpri);
 	CG_AddViewWeapon(&cg.predictedPlayerState, WSsec);
+	CG_AddViewWeapon(&cg.predictedPlayerState, WShook);
 	CG_PlayBufferedSounds();
 	CG_PlayBufferedVoiceChats();
 
