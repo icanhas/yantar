@@ -3148,7 +3148,7 @@ clinit(void)
 	cvarget ("g_blueTeam", "Pagans", CVAR_SERVERINFO | CVAR_ARCHIVE);
 	cvarget ("color1",  "4", CVAR_USERINFO | CVAR_ARCHIVE);
 	cvarget ("color2", "5", CVAR_USERINFO | CVAR_ARCHIVE);
-	cvarget ("handicap", "100", CVAR_USERINFO | CVAR_ARCHIVE);
+	cvarget ("handicap", "1000", CVAR_USERINFO | CVAR_ARCHIVE);
 	cvarget ("teamtask", "0", CVAR_USERINFO);
 	cvarget ("sex", "male", CVAR_USERINFO | CVAR_ARCHIVE);
 	cvarget ("cl_anonymous", "0", CVAR_USERINFO | CVAR_ARCHIVE);

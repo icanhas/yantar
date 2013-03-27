@@ -1375,12 +1375,6 @@ SV_UserinfoChanged(Client *cl)
 		}else
 			cl->rate = 3000;
 	}
-	val = Info_ValueForKey (cl->userinfo, "handicap");
-	if(strlen(val)){
-		i = atoi(val);
-		if(i<=0 || i>100 || strlen(val) > 4)
-			Info_SetValueForKey(cl->userinfo, "handicap", "100");
-	}
 
 	/* snaps command */
 	val = Info_ValueForKey (cl->userinfo, "snaps");

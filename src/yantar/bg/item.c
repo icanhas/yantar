@@ -121,15 +121,16 @@ BG_CanItemBeGrabbed(int gametype, const Entstate *ent,
 			return qfalse;
 		return qtrue;
 	case IT_HEALTH:
-		/* small and mega healths will go over the max, otherwise
-		 * don't pick up if already at max */
+		/* 
+		 * Small and mega healths will go over the max, otherwise
+		 * don't pick up if already at max 
+		 */
 		if(item->quantity == 5 || item->quantity == 100){
 			if(ps->stats[STAT_HEALTH] >=
 			   ps->stats[STAT_MAX_HEALTH] * 2)
 				return qfalse;
 			return qtrue;
 		}
-
 		if(ps->stats[STAT_HEALTH] >= ps->stats[STAT_MAX_HEALTH])
 			return qfalse;
 		return qtrue;

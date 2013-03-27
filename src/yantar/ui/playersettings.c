@@ -320,7 +320,7 @@ PlayerSettings_SetMenuItems(void)
 		qfalse);
 
 	/* handicap */
-	h = Q_clamp(5, 100, trap_cvargetf("handicap"));
+	h = Q_clamp(5, 1000, trap_cvargetf("handicap"));
 	s_playersettings.handicap.curvalue = 20 - h / 5;
 }
 

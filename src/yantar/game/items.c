@@ -112,8 +112,8 @@ Pickup_PersistantPowerup(Gentity *ent, Gentity *other)
 		clientNum = other->client->ps.clientNum;
 		trap_GetUserinfo(clientNum, userinfo, sizeof(userinfo));
 		handicap = atof(Info_ValueForKey(userinfo, "handicap"));
-		if(handicap<=0.0f || handicap>100.0f)
-			handicap = 100.0f;
+		if(handicap<=0.0f || handicap>Maxhealth)
+			handicap = Maxhealth;
 		max = (int)(2 *  handicap);
 
 		other->health = max;
@@ -128,8 +128,8 @@ Pickup_PersistantPowerup(Gentity *ent, Gentity *other)
 		clientNum = other->client->ps.clientNum;
 		trap_GetUserinfo(clientNum, userinfo, sizeof(userinfo));
 		handicap = atof(Info_ValueForKey(userinfo, "handicap"));
-		if(handicap<=0.0f || handicap>100.0f)
-			handicap = 100.0f;
+		if(handicap<=0.0f || handicap>Maxhealth)
+			handicap = Maxhealth;
 		other->client->pers.maxHealth = handicap;
 		other->client->ps.stats[STAT_SHIELD] = 0;
 		break;
@@ -138,24 +138,24 @@ Pickup_PersistantPowerup(Gentity *ent, Gentity *other)
 		clientNum = other->client->ps.clientNum;
 		trap_GetUserinfo(clientNum, userinfo, sizeof(userinfo));
 		handicap = atof(Info_ValueForKey(userinfo, "handicap"));
-		if(handicap<=0.0f || handicap>100.0f)
-			handicap = 100.0f;
+		if(handicap<=0.0f || handicap>Maxhealth)
+			handicap = Maxhealth;
 		other->client->pers.maxHealth = handicap;
 		break;
 	case PW_AMMOREGEN:
 		clientNum = other->client->ps.clientNum;
 		trap_GetUserinfo(clientNum, userinfo, sizeof(userinfo));
 		handicap = atof(Info_ValueForKey(userinfo, "handicap"));
-		if(handicap<=0.0f || handicap>100.0f)
-			handicap = 100.0f;
+		if(handicap<=0.0f || handicap>Maxhealth)
+			handicap = Maxhealth;
 		other->client->pers.maxHealth = handicap;
 		break;
 	default:
 		clientNum = other->client->ps.clientNum;
 		trap_GetUserinfo(clientNum, userinfo, sizeof(userinfo));
 		handicap = atof(Info_ValueForKey(userinfo, "handicap"));
-		if(handicap<=0.0f || handicap>100.0f)
-			handicap = 100.0f;
+		if(handicap<=0.0f || handicap>Maxhealth)
+			handicap = Maxhealth;
 		other->client->pers.maxHealth = handicap;
 		break;
 	}

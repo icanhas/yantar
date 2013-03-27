@@ -199,6 +199,11 @@ typedef enum {
 	STAT_MAX_HEALTH		/* health / armor limit, changable by handicap */
 } Statindex;
 
+enum {
+	Maxhealth	= 1000,	/* default HP/shield limit */
+	Maxhealthguard	= 2000,	/* boosted HP limit (guard) */
+};
+
 /* 
  * player_state->persistant[] indexes
  * these fields are the only part of player_state that isn't

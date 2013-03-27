@@ -653,18 +653,18 @@ ClientUserinfoChanged(int clientNum)
 	/* set max health */
 #ifdef MISSIONPACK
 	if(client->ps.powerups[PW_GUARD])
-		client->pers.maxHealth = 200;
+		client->pers.maxHealth = Maxhealthguard;
 	else{
 		health = atoi(Info_ValueForKey(userinfo, "handicap"));
 		client->pers.maxHealth = health;
-		if(client->pers.maxHealth < 1 || client->pers.maxHealth > 100)
-			client->pers.maxHealth = 100;
+		if(client->pers.maxHealth < 1 || client->pers.maxHealth > Maxhealth)
+			client->pers.maxHealth = Maxhealth;
 	}
 #else
 	health = atoi(Info_ValueForKey(userinfo, "handicap"));
 	client->pers.maxHealth = health;
-	if(client->pers.maxHealth < 1 || client->pers.maxHealth > 100)
-		client->pers.maxHealth = 100;
+	if(client->pers.maxHealth < 1 || client->pers.maxHealth > Maxhealth)
+		client->pers.maxHealth = Maxhealth;
 
 #endif
 	client->ps.stats[STAT_MAX_HEALTH] = client->pers.maxHealth;
@@ -1031,8 +1031,8 @@ ClientSpawn(Gentity *ent)
 	trap_GetUserinfo(index, userinfo, sizeof(userinfo));
 	/* set max health */
 	client->pers.maxHealth = atoi(Info_ValueForKey(userinfo, "handicap"));
-	if(client->pers.maxHealth < 1 || client->pers.maxHealth > 100)
-		client->pers.maxHealth = 100;
+	if(client->pers.maxHealth < 1 || client->pers.maxHealth > Maxhealth)
+		client->pers.maxHealth = Maxhealth;
 	/* clear entity values */
 	client->ps.stats[STAT_MAX_HEALTH] = client->pers.maxHealth;
 	client->ps.eFlags = flags;

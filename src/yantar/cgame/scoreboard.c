@@ -122,7 +122,7 @@ CG_DrawClientScore(int y, Score *score, float *color, float fade,
 									   -
 									   1 ]);
 			}
-		}else if(ci->handicap < 100){
+		}else if(ci->handicap < Maxhealth){
 			Q_sprintf(string, sizeof(string), "%i", ci->handicap);
 			if(cgs.gametype == GT_TOURNAMENT)
 				CG_DrawSmallStringColor(iconx, y -
@@ -136,7 +136,7 @@ CG_DrawClientScore(int y, Score *score, float *color, float fade,
 		if(cgs.gametype == GT_TOURNAMENT){
 			Q_sprintf(string, sizeof(string), "%i/%i", ci->wins,
 				ci->losses);
-			if(ci->handicap < 100 && !ci->botSkill)
+			if(ci->handicap < Maxhealth && !ci->botSkill)
 				CG_DrawSmallStringColor(iconx, y +
 					SMALLCHAR_HEIGHT/2, string,
 					color);

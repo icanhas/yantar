@@ -1614,7 +1614,7 @@ CG_FeederItemText(float feederID, int index, int column, Handle *handle)
 									   ->
 									   botSkill
 									   - 1 ];
-				else if(info->handicap < 100)
+				else if(info->handicap < Maxhealth)
 					return va("%i", info->handicap);
 			}
 			break;
