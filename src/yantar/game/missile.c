@@ -405,8 +405,8 @@ fire_plasma(Gentity *self, Vec3 start, Vec3 dir)
 	bolt->s.parentweap = Wplasmagun;
 	bolt->r.ownerNum = self->s.number;
 	bolt->parent = self;
-	bolt->damage = 20;
-	bolt->splashDamage = 15;
+	bolt->damage = 200;
+	bolt->splashDamage = 150;
 	bolt->splashRadius = 20;
 	bolt->methodOfDeath = MOD_PLASMA;
 	bolt->splashMethodOfDeath = MOD_PLASMA_SPLASH;
@@ -437,8 +437,8 @@ fire_grenade(Gentity *self, Vec3 start, Vec3 dir)
 	bolt->s.eFlags = EF_BOUNCE_HALF;
 	bolt->r.ownerNum = self->s.number;
 	bolt->parent = self;
-	bolt->damage = 100;
-	bolt->splashDamage = 100;
+	bolt->damage = 1000;
+	bolt->splashDamage = 1000;
 	bolt->splashRadius = 150;
 	bolt->methodOfDeath = MOD_GRENADE;
 	bolt->splashMethodOfDeath = MOD_GRENADE_SPLASH;
@@ -468,8 +468,8 @@ fire_bfg(Gentity *self, Vec3 start, Vec3 dir)
 	bolt->s.parentweap = Wbfg;
 	bolt->r.ownerNum = self->s.number;
 	bolt->parent = self;
-	bolt->damage = 100;
-	bolt->splashDamage = 100;
+	bolt->damage = 1000;
+	bolt->splashDamage = 1000;
 	bolt->splashRadius = 120;
 	bolt->methodOfDeath = MOD_BFG;
 	bolt->splashMethodOfDeath = MOD_BFG_SPLASH;
@@ -499,8 +499,8 @@ fire_rocket(Gentity *self, Vec3 start, Vec3 dir)
 	bolt->s.parentweap = Wrocketlauncher;
 	bolt->r.ownerNum = self->s.number;
 	bolt->parent = self;
-	bolt->damage = 100;
-	bolt->splashDamage = 100;
+	bolt->damage = 1000;
+	bolt->splashDamage = 1000;
 	bolt->splashRadius = 120;
 	bolt->methodOfDeath = MOD_ROCKET;
 	bolt->splashMethodOfDeath	= MOD_ROCKET_SPLASH;
@@ -531,8 +531,8 @@ firehoming(Gentity *self, Vec3 start, Vec3 forward, Vec3 right, Vec3 up)
 	bolt->s.parentweap = Whominglauncher;
 	bolt->r.ownerNum = self->s.number;
 	bolt->parent = self;
-	bolt->damage = 24;
-	bolt->splashDamage = 10;
+	bolt->damage = 240;
+	bolt->splashDamage = 100;
 	bolt->splashRadius = 100;
 	bolt->methodOfDeath = MOD_HOMINGROCKET;
 	bolt->splashMethodOfDeath = MOD_HOMINGROCKET_SPLASH;
@@ -577,6 +577,7 @@ fire_grapple(Gentity *self, Vec3 start, Vec3 dir)
 	hook->s.traj.type = TR_LINEAR;
 	hook->s.traj.time = level.time - Presteptime;	/* move a bit on the very first frame */
 	hook->s.otherEntityNum = self->s.number;		/* use to match beam in client */
+	hook->damage = 10;
 	copyv3(start, hook->s.traj.base);
 	scalev3(dir, 3000, hook->s.traj.delta);
 	snapv3(hook->s.traj.delta);	/* save net bandwidth */
@@ -602,7 +603,7 @@ firenanoid(Gentity *self, Vec3 start, Vec3 forward, Vec3 right, Vec3 up)
 	bolt->s.eFlags = EF_BOUNCE_HALF;
 	bolt->r.ownerNum = self->s.number;
 	bolt->parent = self;
-	bolt->damage = 10;
+	bolt->damage = 100;
 	bolt->methodOfDeath = MOD_NANOID;
 	bolt->clipmask = MASK_SHOT;
 	bolt->target_ent = nil;
@@ -641,7 +642,7 @@ fire_prox(Gentity *self, Vec3 start, Vec3 dir)
 	bolt->r.ownerNum = self->s.number;
 	bolt->parent = self;
 	bolt->damage = 0;
-	bolt->splashDamage = 100;
+	bolt->splashDamage = 1000;
 	bolt->splashRadius = 150;
 	bolt->methodOfDeath = MOD_PROXIMITY_MINE;
 	bolt->splashMethodOfDeath = MOD_PROXIMITY_MINE;
