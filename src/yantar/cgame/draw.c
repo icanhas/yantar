@@ -574,7 +574,7 @@ CG_DrawStatusBar(void)
 			}
 			trap_R_SetColor(colors[color]);
 
-			CG_DrawField (0, 384, 3, value);
+			CG_DrawField (0, 384, 4, value);
 			trap_R_SetColor(NULL);
 
 			/* if we didn't draw a 3D icon, draw a 2D icon for ammo */
@@ -605,7 +605,7 @@ CG_DrawStatusBar(void)
 			}
 			trap_R_SetColor(colors[color]);
 
-			CG_DrawField(0, 432, 3, value);
+			CG_DrawField(0, 432, 4, value);
 			trap_R_SetColor(NULL);
 
 			/* if we didn't draw a 3D icon, draw a 2D icon for ammo */
@@ -636,7 +636,7 @@ CG_DrawStatusBar(void)
 		trap_R_SetColor(colors[1]);	/* red */
 
 	/* stretch the health up when taking damage */
-	CG_DrawField (185, 432, 3, value);
+	CG_DrawField (185, 432, 4, value);
 	CG_ColorForHealth(hcolor);
 	trap_R_SetColor(hcolor);
 
@@ -646,7 +646,7 @@ CG_DrawStatusBar(void)
 	value = ps->stats[STAT_SHIELD];
 	if(value > 0){
 		trap_R_SetColor(colors[0]);
-		CG_DrawField (370, 432, 3, value);
+		CG_DrawField (370, 432, 4, value);
 		trap_R_SetColor(NULL);
 		/* if we didn't draw a 3D icon, draw a 2D icon for armor */
 		if(!cg_draw3dIcons.integer && cg_drawIcons.integer)
