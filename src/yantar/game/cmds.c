@@ -235,13 +235,13 @@ Cmd_Give_f(Gentity *ent)
 	if(give_all || Q_stricmp(name, "ammo") == 0){
 		for(i = Wnone+1; i < Wnumweaps; i++)
 			if(i != Whook && i != Wmelee)
-				ent->client->ps.ammo[i] = 999;
+				ent->client->ps.ammo[i] = 5000;
 		if(!give_all)
 			return;
 	}
 
 	if(give_all || Q_stricmp(name, "armor") == 0){
-		ent->client->ps.stats[STAT_SHIELD] = 200;
+		ent->client->ps.stats[STAT_SHIELD] = 5000;
 
 		if(!give_all)
 			return;
