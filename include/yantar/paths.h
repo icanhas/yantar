@@ -36,6 +36,7 @@
 #define Prailsounds	Pweapsounds "/rail"
 #define Prlsounds	Pweapsounds "/rocket"
 #define Pshotgunsounds	Pweapsounds "/shotgun"
+#define Phooksounds	Pweapsounds "/hook"
 
 /* 
  * vis (textures, models, etc.) 
@@ -79,6 +80,7 @@
 #define Phookmodels	Pweapmodels "/hook"
 #define Pplasmamodels	Pweapmodels "/plasma"
 #define Prailmodels		Pweapmodels "/rail"
+#define Phookmodels	Pweapmodels "/hook"
 #define Pbfgmodels		Pweapmodels "/bfg"
 
 #define Pflagbasemodels	Pobjectmodels "/flagbase"

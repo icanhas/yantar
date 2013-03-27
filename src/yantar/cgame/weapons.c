@@ -658,14 +658,14 @@ CG_RegisterWeapon(int weaponNum)
 	case Whook:
 		MAKERGB(wp->flashDlightColor, 0.6f, 0.6f, 1.0f);
 		wp->missileModel = trap_R_RegisterModel(
-			Prlmodels "/rocket");
+			Phookmodels "/hook");
 		wp->missileTrailFunc = CG_GrappleTrail;
-		wp->missileDlight = 200;
-		MAKERGB(wp->missileDlightColor, 1, 0.75f, 0);
+		wp->missileDlight = 100;
+		MAKERGB(wp->missileDlightColor, 0.8f, 0.3f, 1.0f);
 		wp->readySound = trap_sndregister(
-			Pmeleesounds "/fsthum", qfalse);
+			Phooksounds "/ready", qfalse);
 		wp->firingSound = trap_sndregister(
-			Pmeleesounds "/fstrun", qfalse);
+			Phooksounds "/fire", qfalse);
 		cgs.media.lightningShader = trap_R_RegisterShader(
 			"lightningBoltNew");
 		break;
