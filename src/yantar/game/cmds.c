@@ -219,9 +219,12 @@ Cmd_Give_f(Gentity *ent)
 	}
 
 	if(give_all || Q_stricmp(name, "weapons") == 0){
+		/*
+		 * Give all weapons except hook and Wnone
+		 */
 		ent->client->ps.stats[STAT_PRIWEAPS] =
 			(1<<Wnumweaps) 
-			- 1 - (1<<Wnone);
+			- 1 - (1<<Whook) - (1<<Wnone);
 		ent->client->ps.stats[STAT_SECWEAPS] =
 			(1<<Wnumweaps) 
 			- 1 - (1<<Whook) - (1<<Wnone);
@@ -230,8 +233,9 @@ Cmd_Give_f(Gentity *ent)
 	}
 
 	if(give_all || Q_stricmp(name, "ammo") == 0){
-		for(i = 0; i < MAX_WEAPONS; i++)
-			ent->client->ps.ammo[i] = 999;
+		for(i = Wnone+1; i < Wnumweaps; i++)
+			if(i != Whook && i != Wmelee)
+				ent->client->ps.ammo[i] = 999;
 		if(!give_all)
 			return;
 	}
