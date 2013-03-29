@@ -601,7 +601,7 @@ firenanoidcannon(Gentity *ent)
 		m->splashDamage *= s_quadFactor;
 	}
 	
-/*	addv3( m->s.traj.delta, ent->client->ps.velocity, m->s.traj.delta );	// "real" physics */
+	addv3( m->s.traj.delta, ent->client->ps.velocity, m->s.traj.delta );	// "real" physics
 }
 
 /*
@@ -620,7 +620,7 @@ weapon_proxlauncher_fire(Gentity *ent)
 	m->damage *= s_quadFactor;
 	m->splashDamage *= s_quadFactor;
 	
-/*	addv3( m->s.traj.delta, ent->client->ps.velocity, m->s.traj.delta );	// "real" physics */
+	addv3( m->s.traj.delta, ent->client->ps.velocity, m->s.traj.delta );	// "real" physics 
 }
 
 /*

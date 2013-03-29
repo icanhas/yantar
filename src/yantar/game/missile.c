@@ -582,6 +582,7 @@ fire_grapple(Gentity *self, Vec3 start, Vec3 dir)
 	scalev3(dir, 3000, hook->s.traj.delta);
 	snapv3(hook->s.traj.delta);	/* save net bandwidth */
 	copyv3(start, hook->r.currentOrigin);
+	addv3(hook->s.traj.delta, self->client->ps.velocity, hook->s.traj.delta);	// "real" physics
 	self->client->hook = hook;
 	return hook;
 }
