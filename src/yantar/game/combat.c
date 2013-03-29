@@ -680,7 +680,7 @@ G_Damage(Gentity *targ, Gentity *inflictor, Gentity *attacker,
 	 * unless they are rocket jumping */
 	if(attacker->client && attacker != targ){
 		max = attacker->client->ps.stats[STAT_MAX_HEALTH];
-		damage = damage * max / 100;
+		damage = damage * max / Maxhealth;
 	}
 
 	client = targ->client;
@@ -694,9 +694,7 @@ G_Damage(Gentity *targ, Gentity *inflictor, Gentity *attacker,
 	else
 		normv3(dir);
 
-	knockback = damage;
-	if(knockback > 200)
-		knockback = 200;
+	knockback = damage/10;
 	if(targ->flags & FL_NO_KNOCKBACK)
 		knockback = 0;
 	if(dflags & DAMAGE_NO_KNOCKBACK)
