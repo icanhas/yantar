@@ -599,9 +599,8 @@ firenanoidcannon(Gentity *ent)
 		m = firenanoid(ent, muzzle, forward, right, up);
 		m->damage *= s_quadFactor;
 		m->splashDamage *= s_quadFactor;
+		addv3( m->s.traj.delta, ent->client->ps.velocity, m->s.traj.delta );	// "real" physics
 	}
-	
-	addv3( m->s.traj.delta, ent->client->ps.velocity, m->s.traj.delta );	// "real" physics
 }
 
 /*
