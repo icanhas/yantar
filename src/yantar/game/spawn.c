@@ -10,6 +10,52 @@
 #include "game.h"
 #include "local.h"
 
+/*
+ * fields are needed for spawning from the entity string
+ */
+typedef struct Field	Field;
+typedef enum {
+	F_INT,
+	F_FLOAT,
+	F_STRING,
+	F_VECTOR,
+	F_ANGLEHACK
+} fieldtype_t;
+
+struct Field {
+	char		*name;
+	size_t		ofs;
+	fieldtype_t	type;
+};
+
+Field fields[] = {
+	{"classname", FOFS(classname), F_STRING},
+	{"origin", FOFS(s.origin), F_VECTOR},
+	{"model", FOFS(model), F_STRING},
+	{"model2", FOFS(model2), F_STRING},
+	{"spawnflags", FOFS(spawnflags), F_INT},
+	{"speed", FOFS(speed), F_FLOAT},
+	{"target", FOFS(target), F_STRING},
+	{"targetname", FOFS(targetname), F_STRING},
+	{"message", FOFS(message), F_STRING},
+	{"team", FOFS(team), F_STRING},
+	{"wait", FOFS(wait), F_FLOAT},
+	{"random", FOFS(random), F_FLOAT},
+	{"count", FOFS(count), F_INT},
+	{"health", FOFS(health), F_INT},
+	{"dmg", FOFS(damage), F_INT},
+	{"angles", FOFS(s.angles), F_VECTOR},
+	{"angle", FOFS(s.angles), F_ANGLEHACK},
+	{"targetShaderName", FOFS(targetShaderName), F_STRING},
+	{"targetShaderNewName", FOFS(targetShaderNewName), F_STRING},
+	{nil, 0, 0}
+};
+
+typedef struct {
+	char *name;
+	void (*spawn)(Gentity *ent);
+} Spawn;
+
 qbool
 G_SpawnString(const char *key, const char *defaultString, char **out)
 {
@@ -61,55 +107,6 @@ G_SpawnVector(const char *key, const char *defaultString, float *out)
 	sscanf(s, "%f %f %f", &out[0], &out[1], &out[2]);
 	return present;
 }
-
-
-
-/*
- * fields are needed for spawning from the entity string
- *  */
-typedef enum {
-	F_INT,
-	F_FLOAT,
-	F_STRING,
-	F_VECTOR,
-	F_ANGLEHACK
-} fieldtype_t;
-
-typedef struct {
-	char		*name;
-	size_t		ofs;
-	fieldtype_t	type;
-} Field;
-
-Field fields[] = {
-	{"classname", FOFS(classname), F_STRING},
-	{"origin", FOFS(s.origin), F_VECTOR},
-	{"model", FOFS(model), F_STRING},
-	{"model2", FOFS(model2), F_STRING},
-	{"spawnflags", FOFS(spawnflags), F_INT},
-	{"speed", FOFS(speed), F_FLOAT},
-	{"target", FOFS(target), F_STRING},
-	{"targetname", FOFS(targetname), F_STRING},
-	{"message", FOFS(message), F_STRING},
-	{"team", FOFS(team), F_STRING},
-	{"wait", FOFS(wait), F_FLOAT},
-	{"random", FOFS(random), F_FLOAT},
-	{"count", FOFS(count), F_INT},
-	{"health", FOFS(health), F_INT},
-	{"dmg", FOFS(damage), F_INT},
-	{"angles", FOFS(s.angles), F_VECTOR},
-	{"angle", FOFS(s.angles), F_ANGLEHACK},
-	{"targetShaderName", FOFS(targetShaderName), F_STRING},
-	{"targetShaderNewName", FOFS(targetShaderNewName), F_STRING},
-
-	{NULL}
-};
-
-
-typedef struct {
-	char *name;
-	void (*spawn)(Gentity *ent);
-} Spawn;
 
 void SP_info_player_start(Gentity *ent);
 void SP_info_player_deathmatch(Gentity *ent);
@@ -171,14 +168,18 @@ void SP_team_blueobelisk(Gentity *ent);
 void SP_team_redobelisk(Gentity *ent);
 void SP_team_neutralobelisk(Gentity *ent);
 #endif
+
 void
 SP_item_botroam(Gentity *ent)
 {
+	UNUSED(ent);
 }
 
 Spawn spawns[] = {
-	/* info entities don't do anything at all, but provide positional
-	 * information for things controlled by other processes */
+	/* 
+	 * info entities don't do anything at all, but provide positional
+	 * information for things controlled by other processes 
+	 */
 	{"info_player_start", SP_info_player_start},
 	{"info_player_deathmatch", SP_info_player_deathmatch},
 	{"info_player_intermission", SP_info_player_intermission},
@@ -197,19 +198,23 @@ Spawn spawns[] = {
 	{"func_group", SP_info_null},
 	{"func_timer", SP_func_timer},	/* rename trigger_timer? */
 
-	/* Triggers are brush objects that cause an effect when contacted
+	/* 
+	 * Triggers are brush objects that cause an effect when contacted
 	 * by a living player, usually involving firing targets.
 	 * While almost everything could be done with
 	 * a single trigger class and different targets, triggered effects
-	 * could not be client side predicted (push and teleport). */
+	 * could not be client side predicted (push and teleport). 
+	 */
 	{"trigger_always", SP_trigger_always},
 	{"trigger_multiple", SP_trigger_multiple},
 	{"trigger_push", SP_trigger_push},
 	{"trigger_teleport", SP_trigger_teleport},
 	{"trigger_hurt", SP_trigger_hurt},
 
-	/* targets perform no action by themselves, but must be triggered
-	 * by another entity */
+	/* 
+	 * Targets perform no action by themselves, but must be triggered
+	 * by another entity 
+	 */
 	{"target_give", SP_target_give},
 	{"target_remove_powerups", SP_target_remove_powerups},
 	{"target_delay", SP_target_delay},
@@ -253,8 +258,6 @@ Spawn spawns[] = {
 };
 
 /*
- * G_CallSpawn
- *
  * Finds the spawn function for the entity and calls it,
  * returning qfalse if not found
  */
@@ -288,12 +291,10 @@ G_CallSpawn(Gentity *ent)
 }
 
 /*
- * G_NewString
- *
  * Builds a copy of the string, translating \n to real linefeeds
  * so message texts can be multi-line
  */
-char *
+char*
 G_NewString(const char *string)
 {
 	char	*newb, *new_p;
@@ -320,12 +321,7 @@ G_NewString(const char *string)
 	return newb;
 }
 
-
-
-
 /*
- * G_ParseField
- *
  * Takes a key/value pair and sets the binary values
  * in a gentity
  */
@@ -378,8 +374,6 @@ G_ParseField(const char *key, const char *value, Gentity *ent)
 	}
 
 /*
- * G_SpawnGEntityFromSpawnVars
- *
  * Spawn an entity and fill in all of the level fields from
  * level.spawnVars[], then call the class specfic spawn function
  */
@@ -463,12 +457,7 @@ G_SpawnGEntityFromSpawnVars(void)
 		G_FreeEntity(ent);
 }
 
-
-
-/*
- * G_AddSpawnVarToken
- */
-char *
+char*
 G_AddSpawnVarToken(const char *string)
 {
 	int l;
@@ -487,8 +476,6 @@ G_AddSpawnVarToken(const char *string)
 }
 
 /*
- * G_ParseSpawnVars
- *
  * Parses a brace bounded set of key / value pairs out of the
  * level's entity strings into level.spawnVars[]
  *
@@ -497,8 +484,8 @@ G_AddSpawnVarToken(const char *string)
 qbool
 G_ParseSpawnVars(void)
 {
-	char	keyname[MAX_TOKEN_CHARS];
-	char	com_token[MAX_TOKEN_CHARS];
+	char keyname[MAX_TOKEN_CHARS];
+	char com_token[MAX_TOKEN_CHARS];
 
 	level.numSpawnVars = 0;
 	level.numSpawnVarChars = 0;
@@ -511,7 +498,7 @@ G_ParseSpawnVars(void)
 		G_Error("G_ParseSpawnVars: found %s when expecting {",com_token);
 
 	/* go through all the key / value pairs */
-	while(1){
+	for(;;){
 		/* parse key */
 		if(!trap_GetEntityToken(keyname, sizeof(keyname)))
 			G_Error("G_ParseSpawnVars: EOF without closing brace");
@@ -536,8 +523,6 @@ G_ParseSpawnVars(void)
 
 	return qtrue;
 }
-
-
 
 /*QUAKED worldspawn (0 0 0) ?
  *
@@ -598,10 +583,7 @@ SP_worldspawn(void)
 
 }
 
-
 /*
- * G_SpawnEntitiesFromString
- *
  * Parses textual entity definitions out of an entstring and spawns gentities.
  */
 void
