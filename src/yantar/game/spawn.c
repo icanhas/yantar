@@ -568,7 +568,7 @@ SP_worldspawn(void)
 
 	trap_SetConfigstring(CS_MOTD, g_motd.string);	/* message of the day */
 
-	G_SpawnString("gravity", "800", &s);
+	G_SpawnString("gravity", "0", &s);
 	trap_cvarsetstr("g_gravity", s);
 
 	G_SpawnString("enableDust", "0", &s);
