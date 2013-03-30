@@ -122,6 +122,9 @@ Vmcvar	cg_ignore;
 Vmcvar	cg_simpleItems;
 Vmcvar	cg_fov;
 Vmcvar	cg_zoomFov;
+Vmcvar	cg_zoomintime;
+Vmcvar	cg_zoomouttime;
+Vmcvar	cg_zoomtoggle;
 Vmcvar	cg_thirdPerson;
 Vmcvar	cg_thirdPersonRange;
 Vmcvar	cg_thirdPersonAngle;
@@ -182,6 +185,9 @@ static Cvartable cvarTable[] = {
 	{ &cg_autoswitch, "cg_autoswitch", "1", CVAR_ARCHIVE },
 	{ &cg_drawGun, "cg_drawGun", "1", CVAR_ARCHIVE },
 	{ &cg_zoomFov, "cg_zoomfov", "22.5", CVAR_ARCHIVE },
+	{ &cg_zoomintime, "cg_zoomintime", "150", CVAR_ARCHIVE },
+	{ &cg_zoomouttime, "cg_zoomouttime", "150", CVAR_ARCHIVE },
+	{ &cg_zoomtoggle, "cg_zoomtoggle", "0", CVAR_ARCHIVE },
 	{ &cg_fov, "fov", "90", CVAR_ARCHIVE },
 	{ &cg_viewsize, "cg_viewsize", "100", CVAR_ARCHIVE },
 	{ &cg_shadows, "cg_shadows", "1", CVAR_ARCHIVE  },

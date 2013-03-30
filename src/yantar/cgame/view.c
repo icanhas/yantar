@@ -406,15 +406,18 @@ offset3rdpersonview(void)
 void
 CG_ZoomDown_f(void)
 {
-	if(cg.zoomed)
-		return;
-	cg.zoomed = qtrue;
+	if(cg_zoomtoggle.integer)
+		cg.zoomed ^= qtrue;
+	else
+		cg.zoomed = qtrue;
 	cg.zoomTime = cg.time;
 }
 
 void
 CG_ZoomUp_f(void)
 {
+	if(cg_zoomtoggle.integer)
+		return;
 	if(!cg.zoomed)
 		return;
 	cg.zoomed = qfalse;
@@ -454,13 +457,19 @@ calcfov(void)
 			zoomfov = 160;
 
 		if(cg.zoomed){
-			f = (cg.time - cg.zoomTime) / (float)ZOOM_TIME;
+			if(cg_zoomintime.value <= 0.001f)
+				f = (cg.time - cg.zoomTime) / 0.001f;
+			else
+				f = (cg.time - cg.zoomTime) / cg_zoomintime.value;
 			if(f > 1.0)
 				fovx = zoomfov;
 			else
 				fovx = fovx + f * (zoomfov - fovx);
 		}else{
-			f = (cg.time - cg.zoomTime) / (float)ZOOM_TIME;
+			if(cg_zoomouttime.value <= 0.001f)
+				f = (cg.time - cg.zoomTime) / 0.001f;
+			else
+				f = (cg.time - cg.zoomTime) / cg_zoomouttime.value;
 			if(f <= 1.0)
 				fovx = zoomfov + f * (fovx - zoomfov);
 		}

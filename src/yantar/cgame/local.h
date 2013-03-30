@@ -36,7 +36,6 @@
 #define PAIN_TWITCH_TIME	200
 #define WEAPON_SELECT_TIME	1400
 #define ITEM_SCALEUP_TIME	1000
-#define ZOOM_TIME		150
 #define ITEM_BLOB_TIME		200
 #define MUZZLE_FLASH_TIME	20
 #define SINK_TIME		1000	/* time for fragments to sink into ground before going away */
@@ -1037,6 +1036,9 @@ extern Vmcvar		cg_ignore;
 extern Vmcvar		cg_simpleItems;
 extern Vmcvar		cg_fov;
 extern Vmcvar		cg_zoomFov;
+extern Vmcvar		cg_zoomintime;
+extern Vmcvar		cg_zoomouttime;
+extern Vmcvar		cg_zoomtoggle;
 extern Vmcvar		cg_thirdPersonRange;
 extern Vmcvar		cg_thirdPersonAngle;
 extern Vmcvar		cg_thirdPerson;
