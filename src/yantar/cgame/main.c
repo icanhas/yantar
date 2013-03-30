@@ -127,7 +127,8 @@ Vmcvar	cg_zoomouttime;
 Vmcvar	cg_zoomtoggle;
 Vmcvar	cg_thirdPerson;
 Vmcvar	cg_thirdPersonRange;
-Vmcvar	cg_thirdPersonAngle;
+Vmcvar	cg_thirdpersonyaw;
+Vmcvar	cg_thirdpersonpitch;
 Vmcvar	cg_lagometer;
 Vmcvar	cg_drawAttacker;
 Vmcvar	cg_synchronousClients;
@@ -237,7 +238,8 @@ static Cvartable cvarTable[] = {
 	{ &cg_tracerWidth, "cg_tracerwidth", "1", CVAR_CHEAT },
 	{ &cg_tracerLength, "cg_tracerlength", "100", CVAR_CHEAT },
 	{ &cg_thirdPersonRange, "cg_thirdPersonRange", "40", CVAR_CHEAT },
-	{ &cg_thirdPersonAngle, "cg_thirdPersonAngle", "0", CVAR_CHEAT },
+	{ &cg_thirdpersonyaw, "cg_thirdpersonyaw", "0", CVAR_CHEAT },
+	{ &cg_thirdpersonpitch, "cg_thirdpersonpitch", "0", CVAR_CHEAT },
 	{ &cg_thirdPerson, "cg_thirdPerson", "0", 0 },
 	{ &cg_ChatTime, "cg_ChatTime", "3000", CVAR_ARCHIVE  },
 	{ &cg_ChatHeight, "cg_ChatHeight", "0", CVAR_ARCHIVE  },

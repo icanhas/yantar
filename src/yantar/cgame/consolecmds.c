@@ -132,7 +132,8 @@ CG_spWin_f(void)
 	trap_cvarsetstr("cg_cameraOrbit", "2");
 	trap_cvarsetstr("cg_cameraOrbitDelay", "35");
 	trap_cvarsetstr("cg_thirdPerson", "1");
-	trap_cvarsetstr("cg_thirdPersonAngle", "0");
+	trap_cvarsetstr("cg_thirdpersonyaw", "0");
+	trap_cvarsetstr("cg_thirdpersonpitch", "0");
 	trap_cvarsetstr("cg_thirdPersonRange", "100");
 	CG_AddBufferedSound(cgs.media.winnerSound);
 	/* trap_sndstartlocalsound(cgs.media.winnerSound, CHAN_ANNOUNCER); */

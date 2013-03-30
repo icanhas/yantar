@@ -349,9 +349,9 @@ offset3rdpersonview(void)
 	Trace trace;
 	Vec3 focusPoint;
 	float focusDist;
-	float forwardScale, sideScale;
+	float forwardScale, sideScale, upscale;
 
-	cg.refdef.vieworg[2] += cg.predictedPlayerState.viewheight;
+	//cg.refdef.vieworg[2] += cg.predictedPlayerState.viewheight;
 	copyv3(cg.refdefViewAngles, focusAngles);
 	/* if dead, look at killer */
 	if(cg.predictedPlayerState.stats[STAT_HEALTH] <= 0){
@@ -364,10 +364,12 @@ offset3rdpersonview(void)
 	saddv3(cg.refdef.vieworg, Focusdistance, forward, focusPoint);
 	copyv3(cg.refdef.vieworg, view);
 	anglev3s(cg.refdefViewAngles, forward, right, up);
-	forwardScale = cos(cg_thirdPersonAngle.value / 180 * M_PI);
-	sideScale = sin(cg_thirdPersonAngle.value / 180 * M_PI);
+	forwardScale = cos(DEG2RAD(cg_thirdpersonyaw.value)) - sin(DEG2RAD(cg_thirdpersonpitch.value));
+	sideScale = sin(DEG2RAD(cg_thirdpersonyaw.value));
+	upscale = sin(-DEG2RAD(cg_thirdpersonpitch.value));
 	saddv3(view, -cg_thirdPersonRange.value * forwardScale, forward, view);
 	saddv3(view, -cg_thirdPersonRange.value * sideScale, right, view);
+	saddv3(view, -cg_thirdPersonRange.value * upscale, up, view);
 	/* 
 	 * trace a ray from the origin to the viewpoint to make sure
 	 * the view isn't in a solid block.  Use an 8 by 8 block to
@@ -400,7 +402,7 @@ offset3rdpersonview(void)
 		focusDist = 1;	/* should never happen */
 	cg.refdefViewAngles[PITCH] = -180 / M_PI*atan2(focusPoint[2],
 						       focusDist);
-	cg.refdefViewAngles[YAW] -= cg_thirdPersonAngle.value;
+	cg.refdefViewAngles[YAW] -= cg_thirdpersonyaw.value;
 }
 
 void
@@ -584,7 +586,7 @@ calcviewvals(void)
 	if(cg_cameraOrbit.integer)
 		if(cg.time > cg.nextOrbitTime){
 			cg.nextOrbitTime = cg.time + cg_cameraOrbitDelay.integer;
-			cg_thirdPersonAngle.value += cg_cameraOrbit.value;
+			cg_thirdpersonyaw.value += cg_cameraOrbit.value;
 		}
 	/* add error decay */
 	if(cg_errorDecay.value > 0){
