@@ -579,7 +579,7 @@ fire_grapple(Gentity *self, Vec3 start, Vec3 dir)
 	hook->s.otherEntityNum = self->s.number;		/* use to match beam in client */
 	hook->damage = 10;
 	copyv3(start, hook->s.traj.base);
-	scalev3(dir, 3000, hook->s.traj.delta);
+	scalev3(dir, g_hookspeed.value * 100.0f, hook->s.traj.delta);
 	snapv3(hook->s.traj.delta);	/* save net bandwidth */
 	copyv3(start, hook->r.currentOrigin);
 	addv3(hook->s.traj.delta, self->client->ps.velocity, hook->s.traj.delta);	// "real" physics

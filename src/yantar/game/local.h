@@ -687,6 +687,7 @@ extern Vmcvar g_password;
 extern Vmcvar g_needpass;
 extern Vmcvar g_gravity;
 extern Vmcvar g_speed;
+extern Vmcvar g_hookspeed;	/* hook travel time in metres per second */
 extern Vmcvar g_swingstrength;
 extern Vmcvar g_knockback;
 extern Vmcvar g_quadfactor;
