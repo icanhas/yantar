@@ -529,18 +529,11 @@ CG_GrappleTrail(Centity *ent, const Weapinfo *wi)
 	ent->trailTime = cg.time;
 
 	memset(&beam, 0, sizeof(beam));
-	/* FIXME adjust for muzzle position */
-	copyv3 (cg_entities[ent->currentState.otherEntityNum].lerpOrigin,
-		beam.origin);
-	beam.origin[2] += 26;
-	anglev3s(cg_entities[ent->currentState.otherEntityNum].lerpAngles,
-		forward, NULL,
-		up);
-	saddv3(beam.origin, -6, up, beam.origin);
+	copyv3(cg_entities[ent->currentState.otherEntityNum].lerpOrigin, beam.origin);
+	beam.origin[2] += DEFAULT_VIEWHEIGHT;
+	anglev3s(cg_entities[ent->currentState.otherEntityNum].lerpAngles, forward, nil, up);
+	saddv3(beam.origin, 14, forward, beam.origin);
 	copyv3(origin, beam.oldorigin);
-
-	if(distv3(beam.origin, beam.oldorigin) < 64)
-		return;		/* Don't draw if close */
 
 	beam.reType = RT_LIGHTNING;
 	beam.customShader = cgs.media.lightningShader;
