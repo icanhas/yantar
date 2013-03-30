@@ -8,6 +8,21 @@
  
 #include "local.h"
 
+static qbool
+weapslotfiring(int entflags, Weapslot sl)
+{
+	switch(sl){
+	case WSpri:
+		return !!(entflags & EF_PRIFIRING);
+	case WSsec:
+		return !!(entflags & EF_SECFIRING);
+	case WShook:
+		return !!(entflags & EF_HOOKFIRING);
+	default:
+		return qfalse;
+	}
+}
+
 static void
 CG_MachineGunEjectBrass(Centity *cent)
 {
@@ -1110,11 +1125,10 @@ CG_MachinegunSpinAngle(Centity *cent, Weapslot sl)
 	}
 
 	if(cent->w[sl].barrelSpinning ==
-	   !(cent->currentState.eFlags & EF_FIRING)){
+	   !weapslotfiring(cent->currentState.eFlags, sl)){
 		cent->w[sl].barrelTime = cg.time;
 		cent->w[sl].barrelAngle = modeuler(angle);
-		cent->w[sl].barrelSpinning =
-			!!(cent->currentState.eFlags & EF_FIRING);
+		cent->w[sl].barrelSpinning = weapslotfiring(cent->currentState.eFlags, sl);
 		if(cent->currentState.weap[sl] == Wchaingun &&
 		   !cent->w[sl].barrelSpinning)
 			trap_sndstartsound(
@@ -1196,8 +1210,8 @@ CG_AddPlayerWeapon(Refent *parent, Playerstate *ps, Centity *cent,
 	if(!ps){
 		/* add weapon ready sound */
 		cent->w[slot].lightningFiring = qfalse;
-		if((cent->currentState.eFlags & EF_FIRING) &&
-		   weapon->firingSound){
+		if(weapslotfiring(cent->currentState.eFlags, slot)
+		&& weapon->firingSound){
 			/* lightning gun and guantlet make a different sound when fire is held down */
 			trap_sndaddloop(cent->currentState.number,
 				cent->lerpOrigin, vec3_origin,
@@ -1259,9 +1273,8 @@ CG_AddPlayerWeapon(Refent *parent, Playerstate *ps, Centity *cent,
 		nonPredictedCent = cent;
 
 	/* add the flash */
-	if((weaponNum == Wlightning || weaponNum == Wmelee ||
-	    weaponNum == Whook)
-	   && (nonPredictedCent->currentState.eFlags & EF_FIRING)){
+	if((weaponNum == Wlightning || weaponNum == Wmelee || weaponNum == Whook)
+	&& weapslotfiring(nonPredictedCent->currentState.eFlags, slot)){
 		/* continuous flash */
 	}else
 	/* impulse flash */
@@ -1335,7 +1348,7 @@ CG_AddViewWeapon(Playerstate *ps, Weapslot slot)
 	if(!cg_drawGun.integer){
 		Vec3 origin;
 
-		if(cg.predictedPlayerState.eFlags & EF_FIRING){
+		if(weapslotfiring(cg.predictedPlayerState.eFlags, slot)){
 			/* special hack for lightning gun... */
 			copyv3(cg.refdef.vieworg, origin);
 			saddv3(origin, -8, cg.refdef.viewaxis[2], origin);

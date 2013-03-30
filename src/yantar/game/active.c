@@ -376,8 +376,7 @@ ClientTimerActions(Gentity *ent, int msec)
 void
 ClientIntermissionThink(gClient *client)
 {
-	client->ps.eFlags &= ~EF_TALK;
-	client->ps.eFlags &= ~EF_FIRING;
+	client->ps.eFlags &= ~(EF_TALK | EF_PRIFIRING | EF_SECFIRING | EF_HOOKFIRING);
 
 	/* the level will exit when everyone wants to or after timeouts */
 
@@ -719,7 +718,7 @@ ClientThink_real(Gentity *ent)
 		BG_PlayerStateToEntityState(&ent->client->ps, &ent->s, qtrue);
 	SendPendingPredictableEvents(&ent->client->ps);
 
-	if(!(ent->client->ps.eFlags & EF_FIRING))
+	if(!(ent->client->ps.eFlags & EF_HOOKFIRING))
 		client->fireHeld = qfalse;	/* for grapple */
 
 	/* use the snapped origin for linking so it matches client predicted versions */

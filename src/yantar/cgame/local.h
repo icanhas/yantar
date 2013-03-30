@@ -132,7 +132,7 @@ typedef struct {
 typedef struct Weapent	Weapent;
 struct Weapent {
 	int		muzzleFlashTime;
-	int		lightningFiring;
+	qbool		lightningFiring;
 	int		railFireTime;
 	float		barrelAngle;	/* machinegun spinning */
 	int		barrelTime;

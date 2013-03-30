@@ -242,18 +242,20 @@ enum entflags {
 	EF_BOUNCE_HALF		= (1<<6),	/* for missiles */
 	EF_AWARD_GAUNTLET	= (1<<7),	/* draw a gauntlet sprite */
 	EF_NODRAW		= (1<<8),	/* may have an event, but no model (unspawned items) */
-	EF_FIRING		= (1<<9),	/* for continuous-fire weapons like LG */
-	EF_KAMIKAZE		= (1<<10),
-	EF_MOVER_STOP		= (1<<11),	/* will push otherwise */
-	EF_AWARD_CAP		= (1<<12),	/* draw the capture sprite */
-	EF_TALK			= (1<<13),	/* draw a talk balloon */
-	EF_CONNECTION		= (1<<14),	/* draw a connection trouble sprite */
-	EF_VOTED		= (1<<15),	/* already cast a vote */
-	EF_AWARD_IMPRESSIVE	= (1<<16),	/* draw an impressive sprite */
-	EF_AWARD_DEFEND		= (1<<17),	/* draw a defend sprite */
-	EF_AWARD_ASSIST		= (1<<18),	/* draw a assist sprite */
-	EF_AWARD_DENIED		= (1<<19),	/* denied */
-	EF_TEAMVOTED		= (1<<20)	/* already cast a team vote */
+	EF_PRIFIRING		= (1<<9),	/* for continuous-fire weapons like LG (FIXME: feels hacky) */
+	EF_SECFIRING		= (1<<10),
+	EF_HOOKFIRING		= (1<<11),
+	EF_KAMIKAZE		= (1<<12),
+	EF_MOVER_STOP		= (1<<13),	/* will push otherwise */
+	EF_AWARD_CAP		= (1<<14),	/* draw the capture sprite */
+	EF_TALK			= (1<<15),	/* draw a talk balloon */
+	EF_CONNECTION		= (1<<16),	/* draw a connection trouble sprite */
+	EF_VOTED		= (1<<17),	/* already cast a vote */
+	EF_AWARD_IMPRESSIVE	= (1<<18),	/* draw an impressive sprite */
+	EF_AWARD_DEFEND		= (1<<19),	/* draw a defend sprite */
+	EF_AWARD_ASSIST		= (1<<20),	/* draw a assist sprite */
+	EF_AWARD_DENIED		= (1<<21),	/* denied */
+	EF_TEAMVOTED		= (1<<22)	/* already cast a team vote */
 };
 
 /* NOTE: may not have more than 16 */

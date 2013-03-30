@@ -1225,7 +1225,7 @@ typedef struct Playerstate {
 	qbool	grapplelast;
 	float		oldgrapplelen;
 
-	int	eFlags;	/* copied to Entstate->eFlags */
+	long	eFlags;	/* copied to Entstate->eFlags */
 
 	int	eventSequence;	/* pmove generated events */
 	int	events[MAX_PS_EVENTS];
@@ -1339,7 +1339,7 @@ typedef struct {
 typedef struct Entstate {
 	int		number;	/* entity index */
 	int		eType;	/* Enttype */
-	int		eFlags;
+	long		eFlags;
 
 	Trajectory	traj;	/* for calculating position */
 	Trajectory	apos;	/* for calculating angles */

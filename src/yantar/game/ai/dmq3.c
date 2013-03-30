@@ -219,7 +219,7 @@ EntityIsInvisible(aas_entityinfo_t *entinfo)
 qbool
 EntityIsShooting(aas_entityinfo_t *entinfo)
 {
-	if(entinfo->flags & EF_FIRING)
+	if(entinfo->flags & (EF_PRIFIRING | EF_SECFIRING | EF_HOOKFIRING))
 		return qtrue;
 	return qfalse;
 }

@@ -1179,20 +1179,25 @@ PmoveSingle(Pmove *pm)
 	   PM_INTERMISSION)
 	then{
 		if((pm->cmd.buttons & BUTTON_PRIATTACK)
-		  && pm->ps->ammo[pm->ps->weap[WSpri]])
+		&& pm->ps->ammo[pm->ps->weap[WSpri]])
 		then{
-			pm->ps->eFlags |= EF_FIRING;
-		}else if((pm->cmd.buttons & BUTTON_SECATTACK)
-		  && pm->ps->ammo[pm->ps->weap[WSsec]])
+			pm->ps->eFlags |= EF_PRIFIRING;
+		}else 
+			pm->ps->eFlags &= ~EF_PRIFIRING;
+		
+		if((pm->cmd.buttons & BUTTON_SECATTACK)
+		&& pm->ps->ammo[pm->ps->weap[WSsec]])
 		then{
-		   	pm->ps->eFlags |= EF_FIRING;
-		}else if((pm->cmd.buttons & BUTTON_HOOKFIRE)
-		  && pm->ps->ammo[pm->ps->weap[WShook]])
+		   	pm->ps->eFlags |= EF_SECFIRING;
+		}else 
+			pm->ps->eFlags &= ~EF_SECFIRING;
+
+		if((pm->cmd.buttons & BUTTON_HOOKFIRE)
+		&& pm->ps->ammo[pm->ps->weap[WShook]])
 		then{
-		   	pm->ps->eFlags |= EF_FIRING;
-		}else{
-			pm->ps->eFlags &= ~EF_FIRING;
-		}
+		   	pm->ps->eFlags |= EF_HOOKFIRING;
+		}else
+			pm->ps->eFlags &= ~EF_HOOKFIRING;
 	}
 
 	/* clear the respawned flag if attack and use are cleared */
