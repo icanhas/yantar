@@ -576,7 +576,10 @@ calcviewvals(void)
 		ps->velocity[1] * ps->velocity[1]);
 
 	copyv3(ps->origin, cg.refdef.vieworg);
-	copyv3(ps->viewangles, cg.refdefViewAngles);
+	if(cg_thirdPerson.integer != 2)
+		copyv3(ps->viewangles, cg.refdefViewAngles);
+	if(cg_thirdPerson.integer == 3)
+		setv3(ps->viewangles, 0, 0, 0);
 
 	if(cg_cameraOrbit.integer)
 		if(cg.time > cg.nextOrbitTime){
