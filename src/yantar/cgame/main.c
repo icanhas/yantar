@@ -237,7 +237,7 @@ static Cvartable cvarTable[] = {
 	{ &cg_tracerChance, "cg_tracerchance", "0.4", CVAR_CHEAT },
 	{ &cg_tracerWidth, "cg_tracerwidth", "1", CVAR_CHEAT },
 	{ &cg_tracerLength, "cg_tracerlength", "100", CVAR_CHEAT },
-	{ &cg_thirdpersonrange, "cg_thirdpersonrange", "40", CVAR_CHEAT },
+	{ &cg_thirdpersonrange, "cg_thirdpersonrange", "100", CVAR_CHEAT },
 	{ &cg_thirdpersonyaw, "cg_thirdpersonyaw", "0", CVAR_CHEAT },
 	{ &cg_thirdpersonpitch, "cg_thirdpersonpitch", "0", CVAR_CHEAT },
 	{ &cg_thirdperson, "cg_thirdperson", "0", 0 },
