@@ -439,7 +439,7 @@ CG_MapRestart(void)
 					cg_recordSPDemoName.string));
 	}
 #endif
-	trap_cvarsetstr("cg_thirdPerson", "0");
+	trap_cvarsetstr("cg_thirdperson", "0");
 }
 
 #define MAX_VOICEFILESIZE	16384

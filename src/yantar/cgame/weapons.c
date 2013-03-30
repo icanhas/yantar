@@ -548,7 +548,7 @@ CG_GrappleTrail(Centity *ent, const Weapinfo *wi)
 	copyv3(other->lerpOrigin, beam.origin);
 	beam.origin[2] += DEFAULT_VIEWHEIGHT;
 	anglev3s(other->lerpAngles, fwd, nil, up);
-	if(!cg_thirdPerson.integer 
+	if(!cg_thirdperson.integer 
 	&& other->currentState.number == cg.predictedPlayerState.clientNum)
 	then{
 		/*

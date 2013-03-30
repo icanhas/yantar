@@ -367,9 +367,9 @@ offset3rdpersonview(void)
 	forwardScale = cos(DEG2RAD(cg_thirdpersonyaw.value)) - sin(DEG2RAD(cg_thirdpersonpitch.value));
 	sideScale = sin(DEG2RAD(cg_thirdpersonyaw.value));
 	upscale = sin(-DEG2RAD(cg_thirdpersonpitch.value));
-	saddv3(view, -cg_thirdPersonRange.value * forwardScale, forward, view);
-	saddv3(view, -cg_thirdPersonRange.value * sideScale, right, view);
-	saddv3(view, -cg_thirdPersonRange.value * upscale, up, view);
+	saddv3(view, -cg_thirdpersonrange.value * forwardScale, forward, view);
+	saddv3(view, -cg_thirdpersonrange.value * sideScale, right, view);
+	saddv3(view, -cg_thirdpersonrange.value * upscale, up, view);
 	/* 
 	 * trace a ray from the origin to the viewpoint to make sure
 	 * the view isn't in a solid block.  Use an 8 by 8 block to
@@ -578,9 +578,9 @@ calcviewvals(void)
 		ps->velocity[1] * ps->velocity[1]);
 
 	copyv3(ps->origin, cg.refdef.vieworg);
-	if(cg_thirdPerson.integer != 2)
+	if(cg_thirdperson.integer != 2)
 		copyv3(ps->viewangles, cg.refdefViewAngles);
-	if(cg_thirdPerson.integer == 3)
+	if(cg_thirdperson.integer == 3)
 		setv3(ps->viewangles, 0, 0, 0);
 
 	if(cg_cameraOrbit.integer)
@@ -707,7 +707,7 @@ CG_DrawActiveFrame(int serverTime, Stereoframe stereoView,
 	CG_PredictPlayerState();	/* update cg.predictedPlayerState */
 
 	/* decide on third person view */
-	cg.renderingThirdPerson = cg_thirdPerson.integer ||
+	cg.renderingThirdPerson = cg_thirdperson.integer ||
 				  (cg.snap->ps.stats[STAT_HEALTH] <= 0);
 
 	inwater = calcviewvals();	/* build cg.refdef */
