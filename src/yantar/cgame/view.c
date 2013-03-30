@@ -364,9 +364,15 @@ offset3rdpersonview(void)
 	saddv3(cg.refdef.vieworg, Focusdistance, forward, focusPoint);
 	copyv3(cg.refdef.vieworg, view);
 	anglev3s(cg.refdefViewAngles, forward, right, up);
-	forwardScale = cos(DEG2RAD(cg_thirdpersonyaw.value)) - sin(DEG2RAD(cg_thirdpersonpitch.value));
-	sideScale = sin(DEG2RAD(cg_thirdpersonyaw.value));
-	upscale = sin(-DEG2RAD(cg_thirdpersonpitch.value));
+	if(cg_thirdperson.integer == 1){
+		forwardScale = cos(DEG2RAD(cg_thirdpersonyaw.value)) - sin(DEG2RAD(cg_thirdpersonpitch.value));
+		sideScale = sin(DEG2RAD(cg_thirdpersonyaw.value));
+		upscale = sin(-DEG2RAD(cg_thirdpersonpitch.value));
+	}else{
+		forwardScale = 1.0f;
+		sideScale = 0.0f;
+		upscale = 0.0f;
+	}
 	saddv3(view, -cg_thirdpersonrange.value * forwardScale, forward, view);
 	saddv3(view, -cg_thirdpersonrange.value * sideScale, right, view);
 	saddv3(view, -cg_thirdpersonrange.value * upscale, up, view);
@@ -400,9 +406,11 @@ offset3rdpersonview(void)
 	focusDist = sqrt(focusPoint[0] * focusPoint[0] + focusPoint[1] * focusPoint[1]);
 	if(focusDist < 1)
 		focusDist = 1;	/* should never happen */
-	cg.refdefViewAngles[PITCH] = -180 / M_PI*atan2(focusPoint[2],
-						       focusDist);
-	cg.refdefViewAngles[YAW] -= cg_thirdpersonyaw.value;
+	if(cg_thirdperson.integer == 1){
+		cg.refdefViewAngles[PITCH] = -180 / M_PI*atan2(focusPoint[2],
+			focusDist);
+		cg.refdefViewAngles[YAW] -= cg_thirdpersonyaw.value;
+	}
 }
 
 void
