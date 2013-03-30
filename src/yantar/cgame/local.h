@@ -602,7 +602,7 @@ typedef struct {
 	qbool		testGun;
 	uint		ntestlights;
 	Vec3	testlightorigs[Maxtestlights];
-} Gg;
+} Cg;
 
 /* 
  * all of the model, shader, and sound references that are
@@ -977,7 +977,7 @@ typedef struct {
 } Cgs;
 
 extern Cgs	cgs;
-extern Gg	cg;
+extern Cg	cg;
 extern Centity	cg_entities[MAX_GENTITIES];
 extern Weapinfo cg_weapons[MAX_WEAPONS];
 extern Iteminfo	cg_items[MAX_ITEMS];
