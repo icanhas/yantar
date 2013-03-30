@@ -517,22 +517,37 @@ CG_PlasmaTrail(Centity *cent, const Weapinfo *wi)
 void
 CG_GrappleTrail(Centity *ent, const Weapinfo *wi)
 {
-	Vec3	origin;
-	Entstate   *es;
-	Vec3	forward, up;
+	Vec3 origin, fwd, up;
+	Entstate *es;
+	Centity *other;	/* whatever started the trail */
 	Refent beam;
 
 	UNUSED(wi);
 	es = &ent->currentState;
+	other = &cg_entities[ent->currentState.otherEntityNum];
 
 	BG_EvaluateTrajectory(&es->traj, cg.time, origin);
 	ent->trailTime = cg.time;
 
 	memset(&beam, 0, sizeof(beam));
-	copyv3(cg_entities[ent->currentState.otherEntityNum].lerpOrigin, beam.origin);
+	copyv3(other->lerpOrigin, beam.origin);
 	beam.origin[2] += DEFAULT_VIEWHEIGHT;
-	anglev3s(cg_entities[ent->currentState.otherEntityNum].lerpAngles, forward, nil, up);
-	saddv3(beam.origin, 14, forward, beam.origin);
+	anglev3s(other->lerpAngles, fwd, nil, up);
+	if(!cg_thirdPerson.integer 
+	&& other->currentState.number == cg.predictedPlayerState.clientNum)
+	then{
+		/*
+		 * If in first person, offset trail origin upward a
+		 * bit so it doesn't appear in centre of view.
+		 */
+		saddv3(beam.origin, 7, fwd, beam.origin);
+		saddv3(beam.origin, 10, up, beam.origin);
+	}else{
+		/*
+		 * Otherwise, only offset it forward.
+		 */
+		saddv3(beam.origin, 14, fwd, beam.origin);
+	}
 	copyv3(origin, beam.oldorigin);
 
 	beam.reType = RT_LIGHTNING;
