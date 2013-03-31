@@ -279,6 +279,10 @@ int
 BotExportTest(int parm0, char *parm1, Vec3 parm2, Vec3 parm3)
 {
 
+	UNUSED(parm0);
+	UNUSED(parm1);
+	UNUSED(parm2);
+	UNUSED(parm3);
 /*	return AAS_PointLight(parm2, NULL, NULL, NULL); */
 
 #ifdef DEBUG
@@ -472,7 +476,7 @@ BotExportTest(int parm0, char *parm1, Vec3 parm2, Vec3 parm3)
 		 * reachnum = BotGetReachabilityToGoal(origin, newarea,
 		 *                                                        lastgoalareanum, lastareanum,
 		 *                                                        avoidreach, avoidreachtimes, avoidreachtries,
-		 *                                                        &goal, TFL_DEFAULT|TFL_FUNCBOB|TFL_ROCKETJUMP, TFL_DEFAULT|TFL_FUNCBOB|TFL_ROCKETJUMP,
+		 *                                                        &goal, TFL_DEFAULT|TFL_FUNCBOB|TFL_ROCKETJUMP,
 		 *                                                        NULL, 0, &resultFlags);
 		 * AAS_ReachabilityFromNum(reachnum, &reach);
 		 * AAS_ShowReachability(&reach);
@@ -492,7 +496,6 @@ BotExportTest(int parm0, char *parm1, Vec3 parm2, Vec3 parm3)
 				lastgoalareanum, lastareanum,
 				avoidreach, avoidreachtimes, avoidreachtries,
 				&goal, TFL_DEFAULT|TFL_FUNCBOB|TFL_ROCKETJUMP,
-				TFL_DEFAULT|TFL_FUNCBOB|TFL_ROCKETJUMP,
 				NULL, 0, &resultFlags);
 			AAS_ReachabilityFromNum(reachnum, &reach);
 			AAS_ShowReachability(&reach);
