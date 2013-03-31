@@ -1412,6 +1412,7 @@ void	trap_SendConsoleCommand(const char *text);
 /* register a command name so the console can perform command completion.
  * FIXME: replace this with a normal console command "defineCommand"? */
 void	trap_AddCommand(const char *cmdName);
+void	trap_RemoveCommand( const char *cmdName );
 
 /* send a string to the server over the network */
 void	trap_SendClientCommand(const char *s);
@@ -1495,6 +1496,8 @@ void	trap_R_AddPolysToScene(Handle hShader, int numVerts,
 		int numPolys);
 void	trap_R_AddLightToScene(const Vec3 org, float intensity,
 		float r, float g, float b);
+void	trap_R_AddAdditiveLightToScene(const Vec3 org, 
+		float intensity, float r, float g, float b);
 int	trap_R_LightForPoint(Vec3 point, Vec3 ambientLight,
 		Vec3 directedLight, Vec3 lightDir);
 void	trap_R_RenderScene(const Refdef *fd);
@@ -1508,6 +1511,7 @@ int	trap_R_LerpTag(Orient *tag, Cliphandle mod,
 		float frac, const char *tagName);
 void	trap_R_RemapShader(const char *oldShader, const char *newShader,
 		const char *timeOffset);
+qbool	trap_R_inPVS(const Vec3 p1, const Vec3 p2);
 
 /* The Glconfig will not change during the life of a cgame.
  * If it needs to change, the entire cgame will be restarted, because
@@ -1568,6 +1572,7 @@ Cinstatus	trap_CIN_RunCinematic(int handle);
 void	trap_CIN_DrawCinematic(int handle);
 void	trap_CIN_SetExtents(int handle, int x, int y, int w, int h);
 
+int	trap_RealTime(Qtime *qtime);
 void	trap_snapv3(float *v);
 
 qbool	trap_loadCamera(const char *name);
