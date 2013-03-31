@@ -66,8 +66,8 @@ Favorites_Add(void)
 			/* already in list */
 			return;
 
-		/* use first empty or non-numeric available slot */
-		if((adrstr[0]  < '0' || adrstr[0] > '9') && !best)
+		/* use first available slot */
+		if((adrstr[0] == '\0') && !best)
 			best = i+1;
 	}
 
