@@ -596,7 +596,7 @@ int
 MSG_ReadDeltaKey(Bitmsg *msg, int key, int oldV, int bits)
 {
 	if(bmreadbits(msg, 1))
-		return bmreadbits(msg, bits) ^ (key & kbitmask[bits]);
+		return bmreadbits(msg, bits) ^ (key & kbitmask[bits-1]);
 	return oldV;
 }
 
@@ -626,68 +626,9 @@ MSG_ReadDeltaKeyFloat(Bitmsg *msg, int key, float oldV)
 	return oldV;
 }
 
-
 /*
  * Usrcmd communication
  */
-
-/* ms is allways sent, the others are optional */
-#define CM_ANGLE1	(1<<0)
-#define CM_ANGLE2	(1<<1)
-#define CM_ANGLE3	(1<<2)
-#define CM_FORWARD	(1<<3)
-#define CM_SIDE		(1<<4)
-#define CM_UP		(1<<5)
-#define CM_BUTTONS	(1<<6)
-#define CM_WEAPON	(1<<7)
-
-void
-bmwritedeltaUsrcmd(Bitmsg *msg, Usrcmd *from, Usrcmd *to)
-{
-	if(to->serverTime - from->serverTime < 256){
-		bmwritebits(msg, 1, 1);
-		bmwritebits(msg, to->serverTime - from->serverTime, 8);
-	}else{
-		bmwritebits(msg, 0, 1);
-		bmwritebits(msg, to->serverTime, 32);
-	}
-	MSG_WriteDelta(msg, from->angles[0], to->angles[0], 16);
-	MSG_WriteDelta(msg, from->angles[1], to->angles[1], 16);
-	MSG_WriteDelta(msg, from->angles[2], to->angles[2], 16);
-	MSG_WriteDelta(msg, from->forwardmove, to->forwardmove, 8);
-	MSG_WriteDelta(msg, from->rightmove, to->rightmove, 8);
-	MSG_WriteDelta(msg, from->upmove, to->upmove, 8);
-	MSG_WriteDelta(msg, from->buttons, to->buttons, 16);
-	MSG_WriteDelta(msg, from->weap[WSpri], to->weap[WSpri], 8);
-	MSG_WriteDelta(msg, from->weap[WSsec], to->weap[WSsec], 8);
-	MSG_WriteDelta(msg, from->weap[WShook], to->weap[WShook], 8);
-}
-
-void
-bmreaddeltaUsrcmd(Bitmsg *msg, Usrcmd *from, Usrcmd *to)
-{
-	if(bmreadbits(msg, 1))
-		to->serverTime = from->serverTime + bmreadbits(msg, 8);
-	else
-		to->serverTime = bmreadbits(msg, 32);
-	to->angles[0]	= MSG_ReadDelta(msg, from->angles[0], 16);
-	to->angles[1]	= MSG_ReadDelta(msg, from->angles[1], 16);
-	to->angles[2]	= MSG_ReadDelta(msg, from->angles[2], 16);
-	to->forwardmove = MSG_ReadDelta(msg, from->forwardmove, 8);
-	if(to->forwardmove == -128)
-		to->forwardmove = -127;
-	to->rightmove = MSG_ReadDelta(msg, from->rightmove, 8);
-	if(to->rightmove == -128)
-		to->rightmove = -127;
-	to->upmove = MSG_ReadDelta(msg, from->upmove, 8);
-	if(to->upmove == -128)
-		to->upmove = -127;
-	to->brakefrac = MSG_ReadDelta(msg, from->brakefrac, 8);
-	to->buttons = MSG_ReadDelta(msg, from->buttons, 16);
-	to->weap[WSpri] = MSG_ReadDelta(msg, from->weap[WSpri], 8);
-	to->weap[WSsec] = MSG_ReadDelta(msg, from->weap[WSsec], 8);
-	to->weap[WShook] = MSG_ReadDelta(msg, from->weap[WShook], 8);
-}
 
 void
 bmwritedeltaUsrcmdkey(Bitmsg *msg, int key, Usrcmd *from, Usrcmd *to)

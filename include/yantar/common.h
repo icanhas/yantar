@@ -90,11 +90,6 @@ float bmreadangle16(Bitmsg *sb);
 void bmread(Bitmsg *sb, void *buffer, int size);
 int bmlookaheadbyte(Bitmsg *msg);
 
-void bmwritedeltaUsrcmd(Bitmsg *msg, struct Usrcmd *from,
-			 struct Usrcmd *to);
-void bmreaddeltaUsrcmd(Bitmsg *msg, struct Usrcmd *from,
-			 struct Usrcmd *to);
-
 void bmwritedeltaUsrcmdkey(Bitmsg *msg, int key, Usrcmd *from,
 			 Usrcmd *to);
 void bmreaddeltaUsrcmdkey(Bitmsg *msg, int key, Usrcmd *from, Usrcmd *to);
