@@ -464,17 +464,15 @@ CG_Grapple(Centity *cent)
 	/* calculate the axis */
 	copyv3(s1->angles, cent->lerpAngles);
 
-#if 0	/* FIXME add grapple pull sound here..? */
+	/* FIXME: add grapple pull sound */
 	/* add missile sound */
 	if(weapon->missileSound)
 		trap_sndaddloop(cent->currentState.number,
 			cent->lerpOrigin, vec3_origin,
 			weapon->missileSound);
 
-#endif
-
 	/* Will draw cable if needed */
-	CG_GrappleTrail (cent, weapon);
+	CG_GrappleTrail(cent, weapon);
 
 	/* create the render entity */
 	memset (&ent, 0, sizeof(ent));
