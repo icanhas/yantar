@@ -392,7 +392,7 @@ void
 trap_R_AddLightToScene(const Vec3 org, float intensity, float r, float g,
 		       float b)
 {
-	syscall(CG_R_ADDLIGHTTOSCENE, org, PASSFLOAT(intensity), PASSFLOAT(
+	syscall(CG_R_ADDADDITIVELIGHTTOSCENE, org, PASSFLOAT(intensity), PASSFLOAT(
 			r), PASSFLOAT(g), PASSFLOAT(b));
 }
 
