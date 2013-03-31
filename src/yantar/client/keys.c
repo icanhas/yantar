@@ -778,7 +778,7 @@ Key_StringToKeynum(char *str)
 	if(!str || !str[0])
 		return -1;
 	if(!str[1])
-		return str[0];
+		return tolower(str[0]);
 
 	/* check for hex code */
 	if(strlen(str) == 4){
