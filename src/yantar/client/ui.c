@@ -660,7 +660,7 @@ CL_UISystemCalls(intptr_t *args)
 		return 0;
 
 	case UI_CVAR_CREATE:
-		cvarget(VMA(1), VMA(2), args[3]);
+		cvarregister(nil, VMA(1), VMA(2), args[3]);
 		return 0;
 
 	case UI_CVAR_INFOSTRINGBUFFER:
