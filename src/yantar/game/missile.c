@@ -45,13 +45,14 @@ G_BounceMissile(Gentity *ent, Trace *trace)
 	ent->s.traj.time = level.time;
 }
 
-
 /* Explode a missile without an impact */
 void
 G_ExplodeMissile(Gentity *ent)
 {
 	Vec3 dir;
 	Vec3 origin;
+	
+	ent->takedamage = qfalse;
 
 	BG_EvaluateTrajectory(&ent->s.traj, level.time, origin);
 	snapv3(origin);
@@ -71,6 +72,18 @@ G_ExplodeMissile(Gentity *ent)
 			   , ent->splashMethodOfDeath))
 			g_entities[ent->r.ownerNum].client->accuracy_hits++;
 	trap_LinkEntity(ent);
+}
+
+static void
+missiledie(Gentity *self, Gentity *inflictor, Gentity *attacker, int dmg, int mod)
+{
+	UNUSED(dmg | mod);
+	UNUSED(attacker);
+	if(inflictor == self)
+		return;
+	self->takedamage = qfalse;
+	self->think = G_ExplodeMissile;
+	self->nextthink = level.time + 50;
 }
 
 static void
@@ -214,6 +227,7 @@ G_MissileImpact(Gentity *ent, Trace *trace)
 		G_AddEvent(ent, EV_GRENADE_BOUNCE, 0);
 		return;
 	}
+	ent->takedamage = qfalse;
 	/* impact damage */
 	if(other->takedamage)
 		/* FIXME: wrong damage direction? */
@@ -525,11 +539,15 @@ firehoming(Gentity *self, Vec3 start, Vec3 forward, Vec3 right, Vec3 up)
 	bolt = G_Spawn();
 	bolt->classname = "homingrocket";
 	bolt->nextthink = level.time + 14000 + random()*1000;
+	bolt->health = 30;	/* homers can be shot out of the air */
+	bolt->takedamage = qtrue;
 	bolt->think = G_ExplodeMissile;
+	bolt->die = missiledie;
 	bolt->s.eType = ET_MISSILE;
 	bolt->r.svFlags = SVF_USE_CURRENT_ORIGIN;
 	bolt->s.parentweap = Whominglauncher;
 	bolt->r.ownerNum = self->s.number;
+	bolt->r.contents = CONTENTS_BODY;
 	bolt->parent = self;
 	bolt->damage = 240;
 	bolt->splashDamage = 100;
@@ -540,6 +558,12 @@ firehoming(Gentity *self, Vec3 start, Vec3 forward, Vec3 right, Vec3 up)
 	bolt->target_ent = nil;
 	bolt->s.traj.type = TR_LINEAR;
 	bolt->s.traj.time = level.time - Presteptime;	/* move a bit on the very first frame */
+	/* set bounds for taking damage */
+	setv3(bolt->r.mins, -10.0f, -3.0f, 0.0f);
+	copyv3(bolt->r.mins, bolt->r.absmin);
+	setv3(bolt->r.maxs, 10.0f, 3.0f, 6.0f);
+	copyv3(bolt->r.maxs, bolt->r.absmax);
+	/* set trajectory */
 	copyv3(start, bolt->s.traj.base);
 	r = random() * M_PI * 2.0f;
 	u = sin(r) * crandom() * Nanospread * 16;
