@@ -2487,19 +2487,21 @@ paksort(const void *a, const void *b)
 void
 fsaddgamedir(const char *path, const char *dir)
 {
-	int	i;	/* index into pakfiles */
-	int	j;	/* index into pakdirs */
-	int	nfiles, ndirs;
-	char	**pakfiles, **pakdirs;
-	char	*pakfile, curpath[MAX_OSPATH + 1];
+	int i;	/* index into pakfiles */
+	int j;	/* index into pakdirs */
+	int nfiles, ndirs;
+	char **pakfiles, **pakdirs;
+	char *pakfile, curpath[MAX_OSPATH + 1];
 	enum {Pakfile, Pakdir} paktype;
 	Pak *pak;
 	Searchpath *sp;
 
-	for(sp = fs_searchpaths; sp != NULL; sp = sp->next)
+	for(sp = fs_searchpaths; sp != nil; sp = sp->next)
 		if(sp->dir && Q_stricmp(sp->dir->gamedir, dir)
-		   && Q_stricmp(sp->dir->path, path)
-		   ) return;	/* ignore; we've already got this one */
+		&& Q_stricmp(sp->dir->path, path))
+		then{
+			return;	/* ignore; we've already got this one */
+		}
 
 	Q_strncpyz(fs_gamedir, dir, sizeof(fs_gamedir));
 	/*
@@ -2509,9 +2511,19 @@ fsaddgamedir(const char *path, const char *dir)
 	Q_strncpyz(curpath, fsbuildospath(path, dir, ""), sizeof(curpath));
 	curpath[strlen(curpath) - 1] = '\0';	/* strip trailing slash */
 	pakfiles = syslistfiles(curpath, ".pk3", NULL, &nfiles, qfalse);
-	pakdirs = syslistfiles(curpath, "/", NULL, &ndirs, qfalse);
 	qsort(pakfiles, nfiles, sizeof(char *), paksort);
-	qsort(pakdirs, ndirs, sizeof(char *), paksort);
+	
+	if(fs_numServerPaks){
+		ndirs = 0;
+		pakdirs = nil;
+	}else{
+		/* 
+		 * Get top level directories (we'll filter them later
+		 * since the syslistfiles filtering is terrible).
+		 */
+		pakdirs = syslistfiles(curpath, "/", NULL, &ndirs, qfalse);
+		qsort(pakdirs, ndirs, sizeof(char *), paksort);
+	}
 
 	for(i = 0, j = 0; ((i + j) < (nfiles + ndirs)); ){
 		if(i >= nfiles)
