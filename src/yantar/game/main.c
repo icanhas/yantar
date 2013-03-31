@@ -357,6 +357,7 @@ G_RegisterCvars(void)
 		G_Printf("g_gametype %i is out of range, defaulting to 0\n",
 			g_gametype.integer);
 		trap_cvarsetstr("g_gametype", "0");
+		trap_cvarupdate(&g_gametype);
 	}
 
 	level.warmupModificationCount = g_warmup.modificationCount;
