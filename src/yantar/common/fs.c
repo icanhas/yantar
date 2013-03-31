@@ -1168,10 +1168,11 @@ fsopenr(const char *filename, Fhandle *file, qbool uniqueFILE)
 		fprintf(missingFiles, "%s\n", filename);
 #endif
 
-	if(file)
+	if(file){
 		*file = 0;
-
-	return -1;
+		return -1;
+	}
+	return 0;	/* File doesn't exist. */
 }
 
 /*
