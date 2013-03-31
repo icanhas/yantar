@@ -41,9 +41,9 @@ qsnapv3sse(Vec3 vec)
 
 #define QROUNDX87(src) \
 	"flds " src "\n" \
-		    "fistps " src "\n" \
-				  "filds " src "\n" \
-					       "fstps " src "\n"
+	"fistpl " src "\n" \
+	"fildl " src "\n" \
+	"fstps " src "\n"
 
 void
 qsnapv3x87(Vec3 vec)
