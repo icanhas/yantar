@@ -1159,8 +1159,7 @@ GraphicsOptions_MenuInit(void)
 	GraphicsOptions_SetMenuItems();
 	GraphicsOptions_GetInitialVideo();
 
-	if(uis.glconfig.driverType == GLDRV_ICD &&
-	   uis.glconfig.hardwareType == GLHW_3DFX_2D3D)
+	if(uis.glconfig.driverType == GLDRV_ICD)
 		s_graphicsoptions.driver.generic.flags |= QMF_HIDDEN|
 							  QMF_INACTIVE;
 }

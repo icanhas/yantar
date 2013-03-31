@@ -1032,7 +1032,7 @@ FinishShader(void)
 	 *  */
 	if(stage > 1 &&
 	   ((r_vertexLight->integer &&
-	     !r_uiFullScreen->integer) || glConfig.hardwareType == GLHW_PERMEDIA2)){
+	     !r_uiFullScreen->integer))){
 		VertexLightingCollapse();
 		stage = 1;
 		hasLightmapStage = qfalse;

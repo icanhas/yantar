@@ -2114,9 +2114,9 @@ FinishShader(void)
 	/*
 	 * if we are in r_vertexLight mode, never use a lightmap texture
 	 *  */
-	if(stage > 1 &&
-	   ((r_vertexLight->integer &&
-	     !r_uiFullScreen->integer) || glConfig.hardwareType == GLHW_PERMEDIA2)){
+	if(stage > 1 && (r_vertexLight->integer 
+	&& !r_uiFullScreen->integer))
+	then{
 		VertexLightingCollapse();
 		stage = 1;
 		hasLightmapStage = qfalse;

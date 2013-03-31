@@ -79,13 +79,6 @@ GL_TextureMode(const char *string)
 			break;
 		}
 
-	/* hack to prevent trilinear from being set on voodoo,
-	 * because their driver freaks... */
-	if(i == 5 && glConfig.hardwareType == GLHW_3DFX_2D3D){
-		ri.Printf(PRINT_ALL, "Refusing to set trilinear on a voodoo.\n");
-		i = 3;
-	}
-
 
 	if(i == 6){
 		ri.Printf (PRINT_ALL, "bad filter name\n");
