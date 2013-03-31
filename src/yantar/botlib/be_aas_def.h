@@ -10,10 +10,6 @@
 /* debugging on */
 #define AAS_DEBUG
 
-#define CS_SCORES	32
-#define CS_MODELS	(CS_SCORES+MAX_CLIENTS)
-#define CS_SOUNDS	(CS_MODELS+MAX_MODELS)
-
 #define DF_AASENTNUMBER(x)	(x - aasworld.entities)
 #define DF_NUMBERAASENT(x)	(&aasworld.entities[x])
 #define DF_AASENTCLIENT(x)	(x - aasworld.entities - 1)
@@ -22,12 +18,6 @@
 #ifndef MAX_PATH
 	#define MAX_PATH MAX_QPATH
 #endif
-
-/* string index (for model, sound and image index) */
-typedef struct aas_stringindex_s {
-	int	numindexes;
-	char	**index;
-} aas_stringindex_t;
 
 /* structure to link entities to areas and areas to entities */
 typedef struct aas_link_s {
@@ -201,8 +191,6 @@ typedef struct aas_s {
 	int				maxentities;	/* entities */
 	int				maxclients;
 	aas_entity_t			*entities;
-	char				*configstrings[MAX_CONFIGSTRINGS];	/* string indexes */
-	int				indexessetup;
 	/* index to retrieve travel flag for a travel type */
 	int				travelflagfortype[MAX_TRAVELTYPES];
 	/* travel flags for each area based on contents */

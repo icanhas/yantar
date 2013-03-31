@@ -22,8 +22,6 @@ int	AAS_StartFrame(float time);
 int	AAS_Initialized(void);
 /* returns true if the AAS file is loaded */
 int	AAS_Loaded(void);
-char*	AAS_ModelFromIndex(int index);
-int	AAS_IndexFromModel(char *modelname);
 /* returns the current time */
 float	AAS_Time(void);
 void	AAS_ProjectPointOntoVector(Vec3 point, Vec3 vStart, Vec3 vEnd,
