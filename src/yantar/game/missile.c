@@ -529,6 +529,52 @@ fire_rocket(Gentity *self, Vec3 start, Vec3 dir)
 	return bolt;
 }
 
+static void
+homingrocketthink(Gentity *ent)
+{
+	Gentity *targ, *tent;
+	Trace tr;
+	Scalar targlen, tentlen;
+	Vec3 targdir, tentdir, fwd, mid;
+	int i;
+	
+	targ = nil;
+	targlen = 1000;
+	copyv3(ent->s.traj.delta, fwd);
+	normv3(fwd);
+	for(i = 0; i < level.maxclients; i++){
+		tent = &g_entities[i];
+		if(OnSameTeam(tent, ent->parent)
+		|| tent == ent->parent || !tent->inuse)
+		then
+			continue;
+		/* 
+		 * Obtain midpoint of player
+		 */
+		addv3(tent->r.mins, tent->r.maxs, mid);
+		scalev3(mid, 0.5f, mid);
+		addv3(mid, tent->r.currentOrigin, mid);
+		
+		subv3(mid, ent->r.currentOrigin, tentdir);
+		tentlen = normv3(tentdir);
+		if(tentlen > targlen		/* Out of scan range */
+		|| dotv3(fwd, tentdir) < 0.8f	/* Angle too wide */
+		|| tent != &g_entities[tr.entityNum])
+		then
+			continue;
+		targ = tent;
+		targlen = tentlen;
+		copyv3(tentdir, targdir);
+	}
+	
+	ent->nextthink += 50;
+	if(targ == nil)
+		return;
+	saddv3(fwd, 0.05f, targdir, targdir);
+	normv3(targdir);
+	scalev3(targdir, 600, ent->s.traj.delta);
+}
+
 Gentity*
 firehoming(Gentity *self, Vec3 start, Vec3 forward, Vec3 right, Vec3 up)
 {
@@ -538,10 +584,10 @@ firehoming(Gentity *self, Vec3 start, Vec3 forward, Vec3 right, Vec3 up)
 
 	bolt = G_Spawn();
 	bolt->classname = "homingrocket";
-	bolt->nextthink = level.time + 14000 + random()*1000;
+	bolt->nextthink = level.time + 1;
 	bolt->health = 30;	/* homers can be shot out of the air */
 	bolt->takedamage = qtrue;
-	bolt->think = G_ExplodeMissile;
+	bolt->think = homingrocketthink;
 	bolt->die = missiledie;
 	bolt->s.eType = ET_MISSILE;
 	bolt->r.svFlags = SVF_USE_CURRENT_ORIGIN;
@@ -573,7 +619,8 @@ firehoming(Gentity *self, Vec3 start, Vec3 forward, Vec3 right, Vec3 up)
 	saddv3(end, u, up, end);
 	subv3(end, start, dir);
 	normv3(dir);
-	scale = 555 + random() * 1800;
+	//scale = 555 + random() * 1800;
+	scale = 600;
 	scalev3(dir, scale, bolt->s.traj.delta);
 	snapv3(bolt->s.traj.delta);
 	copyv3(start, bolt->r.currentOrigin);
