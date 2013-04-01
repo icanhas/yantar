@@ -44,6 +44,7 @@ Vmcvar	g_swingstrength;
 Vmcvar	g_cheats;
 Vmcvar	g_knockback;
 Vmcvar	g_quadfactor;
+Vmcvar	g_numhomingrockets;
 Vmcvar	g_forcerespawn;
 Vmcvar	g_inactivity;
 Vmcvar	g_debugMove;
@@ -133,6 +134,7 @@ static Cvartable gameCvarTable[] = {
 	{ &g_swingstrength, "g_swingstrength", "6.0", CVAR_CHEAT, 0, qtrue },
 	{ &g_knockback, "g_knockback", "1000", 0, 0, qtrue  },
 	{ &g_quadfactor, "g_quadfactor", "3", 0, 0, qtrue  },
+	{ &g_numhomingrockets, "g_numhomingrockets", "3", 0, 0, qtrue },
 	{ &g_weaponRespawn, "g_weaponrespawn", "5", 0, 0, qtrue  },
 	{ &g_weaponTeamRespawn, "g_weaponTeamRespawn", "30", 0, 0, qtrue },
 	{ &g_forcerespawn, "g_forcerespawn", "20", 0, 0, qtrue },
@@ -140,7 +142,7 @@ static Cvartable gameCvarTable[] = {
 	{ &g_debugMove, "g_debugMove", "0", 0, 0, qfalse },
 	{ &g_debugDamage, "g_debugDamage", "0", 0, 0, qfalse },
 	{ &g_debugAlloc, "g_debugAlloc", "0", 0, 0, qfalse },
-	{ &g_motd, "g_motd", "", 0, 0, qfalse },
+	{ &g_motd, "g_motd", "WELCOMETOTHEWORLDOFTOMORROW", 0, 0, qfalse },
 	{ &g_blood, "com_blood", "1", 0, 0, qfalse },
 
 	{ &g_podiumDist, "g_podiumDist", "80", 0, 0, qfalse },

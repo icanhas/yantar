@@ -355,13 +355,12 @@ firehominglauncher(Gentity *ent)
 	Gentity *m;
 	int n;
 
-	for(n = 0; n < Nhomingshots; ++n){
+	for(n = 0; n < g_numhomingrockets.integer; n++){
 		m = firehoming(ent, muzzle, forward, right, up);
 		m->damage *= s_quadFactor;
 		m->splashDamage *= s_quadFactor;
 		addv3(m->s.traj.delta, ent->client->ps.velocity, m->s.traj.delta);	// "real" physics
-	}
-	
+	}	
 }
 
 /*

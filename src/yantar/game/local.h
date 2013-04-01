@@ -691,6 +691,7 @@ extern Vmcvar g_hookspeed;	/* hook travel time in metres per second */
 extern Vmcvar g_swingstrength;
 extern Vmcvar g_knockback;
 extern Vmcvar g_quadfactor;
+extern Vmcvar g_numhomingrockets;
 extern Vmcvar g_forcerespawn;
 extern Vmcvar g_inactivity;
 extern Vmcvar g_debugMove;
