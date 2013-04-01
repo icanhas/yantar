@@ -529,6 +529,9 @@ fire_rocket(Gentity *self, Vec3 start, Vec3 dir)
 	return bolt;
 }
 
+/*
+ * Homing rocket in full flight
+ */
 static void
 homingrocketthink(Gentity *ent)
 {
@@ -567,12 +570,28 @@ homingrocketthink(Gentity *ent)
 		copyv3(tentdir, targdir);
 	}
 	
-	ent->nextthink += 50;
+	ent->nextthink = level.time + 50;
 	if(targ == nil)
 		return;
 	saddv3(fwd, 0.05f, targdir, targdir);
 	normv3(targdir);
 	scalev3(targdir, 600, ent->s.traj.delta);
+}
+
+/*
+ * Primes homing rocket
+ */
+static void
+inerthomingrocketthink(Gentity *ent)
+{
+	Vec3 origin;
+	
+	ent->nextthink = level.time;
+	ent->think = homingrocketthink;
+	BG_EvaluateTrajectory(&ent->s.traj, level.time, origin);
+	copyv3(origin, ent->s.traj.base);
+	ent->s.traj.type = TR_LINEAR;
+	ent->s.traj.time = level.time;
 }
 
 Gentity*
@@ -584,10 +603,10 @@ firehoming(Gentity *self, Vec3 start, Vec3 forward, Vec3 right, Vec3 up)
 
 	bolt = G_Spawn();
 	bolt->classname = "homingrocket";
-	bolt->nextthink = level.time + 1;
+	bolt->nextthink = level.time + 400;
 	bolt->health = 30;	/* homers can be shot out of the air */
 	bolt->takedamage = qtrue;
-	bolt->think = homingrocketthink;
+	bolt->think = inerthomingrocketthink;
 	bolt->die = missiledie;
 	bolt->s.eType = ET_MISSILE;
 	bolt->r.svFlags = SVF_USE_CURRENT_ORIGIN;
@@ -602,7 +621,7 @@ firehoming(Gentity *self, Vec3 start, Vec3 forward, Vec3 right, Vec3 up)
 	bolt->splashMethodOfDeath = MOD_HOMINGROCKET_SPLASH;
 	bolt->clipmask = MASK_SHOT;
 	bolt->target_ent = nil;
-	bolt->s.traj.type = TR_LINEAR;
+	bolt->s.traj.type = TR_GRAVITY;
 	bolt->s.traj.time = level.time - Presteptime;	/* move a bit on the very first frame */
 	/* set bounds for taking damage */
 	setv3(bolt->r.mins, -10.0f, -3.0f, 0.0f);
