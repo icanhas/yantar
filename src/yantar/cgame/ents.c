@@ -447,6 +447,46 @@ CG_Missile(Centity *cent)
 }
 
 /*
+ * Ignores light, smoke trail, etc.
+ */
+static void
+CG_Inertmissile(Centity *cent)
+{
+	Refent ent;
+	Entstate *s1;
+	const Weapinfo *weapon;
+
+	s1 = &cent->currentState;
+	if(s1->parentweap >= Wnumweaps)
+		s1->parentweap = Wnone;
+	weapon = &cg_weapons[s1->parentweap];
+
+	/* calculate the axis */
+	copyv3(s1->angles, cent->lerpAngles);
+
+	/* create the render entity */
+	memset (&ent, 0, sizeof(ent));
+	copyv3(cent->lerpOrigin, ent.origin);
+	copyv3(cent->lerpOrigin, ent.oldorigin);
+
+	/* flicker between two skins */
+	ent.skinNum = cg.clientFrame & 1;
+	ent.hModel = weapon->missileModel;
+	ent.renderfx = weapon->missileRenderfx | RF_NOSHADOW;
+
+	/* convert direction of travel into axis */
+	if(norm2v3(s1->traj.delta, ent.axis[0]) == 0)
+		ent.axis[0][2] = 1;
+
+	/* spin as it moves */
+	if(s1->traj.type != TR_STATIONARY)
+		RotateAroundDirection(ent.axis, cg.time / 8);
+
+	/* add to refresh list, possibly with quad glow */
+	CG_AddRefEntityWithPowerups(&ent, s1, TEAM_FREE);
+}
+
+/*
  * This is called when the grapple is sitting up against the wall
  */
 static void
@@ -746,6 +786,9 @@ CG_AddCEntity(Centity *cent)
 		break;
 	case ET_ITEM:
 		CG_Item(cent);
+		break;
+	case ET_INERTMISSILE:
+		CG_Inertmissile(cent);
 		break;
 	case ET_MISSILE:
 		CG_Missile(cent);

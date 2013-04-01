@@ -748,11 +748,12 @@ CG_RegisterWeapon(int weaponNum)
 		wp->missileSound = trap_sndregister(Prlsounds "/rockfly", qfalse);
 		wp->missileTrailFunc = CG_RocketTrail;
 		wp->missileDlight = 200;
-		wp->wiTrailTime = 4000;
-		wp->trailRadius = 50;
+		wp->wiTrailTime = 5000;
+		wp->trailRadius = 20;
 		MAKERGB(wp->missileDlightColor, 1.0f, 0.75f, 0.3f);
 		MAKERGB(wp->flashDlightColor, 1.0f, 0.75f, 0.3f);
-		wp->flashSound[0] = trap_sndregister(Prlsounds "/rocklf1a", qfalse);
+		wp->flashSound[0] = trap_sndregister(Pgrenadesounds "/grenlf1a", qfalse);
+		wp->flashSound[1] = trap_sndregister(Prlsounds "/rocklf1a", qfalse);
 		cgs.media.rocketExplosionShader = trap_R_RegisterShader("rocketExplosion");
 		break;
 	case Wproxlauncher:

@@ -1812,7 +1812,7 @@ G_RunFrame(int levelTime)
 		if(!ent->r.linked && ent->neverFree)
 			continue;
 
-		if(ent->s.eType == ET_MISSILE){
+		if(ent->s.eType == ET_MISSILE || ent->s.eType == ET_INERTMISSILE){
 			G_RunMissile(ent);
 			continue;
 		}

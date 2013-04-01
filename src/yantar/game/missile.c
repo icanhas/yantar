@@ -388,7 +388,7 @@ G_RunMissile(Gentity *ent)
 			return;
 		}
 		G_MissileImpact(ent, &tr);
-		if(ent->s.eType != ET_MISSILE)
+		if(ent->s.eType != ET_MISSILE && ent->s.eType != ET_INERTMISSILE)
 			return;		/* exploded */
 	}
 	/* if the prox mine wasn't yet outside the player body */
@@ -530,7 +530,7 @@ fire_rocket(Gentity *self, Vec3 start, Vec3 dir)
 }
 
 /*
- * Homing rocket in full flight
+ * Full flight
  */
 static void
 homingrocketthink(Gentity *ent)
@@ -590,6 +590,7 @@ inerthomingrocketthink(Gentity *ent)
 	ent->think = homingrocketthink;
 	BG_EvaluateTrajectory(&ent->s.traj, level.time, origin);
 	copyv3(origin, ent->s.traj.base);
+	ent->s.eType = ET_MISSILE;
 	ent->s.traj.type = TR_LINEAR;
 	ent->s.traj.time = level.time;
 }
@@ -608,7 +609,7 @@ firehoming(Gentity *self, Vec3 start, Vec3 forward, Vec3 right, Vec3 up)
 	bolt->takedamage = qtrue;
 	bolt->think = inerthomingrocketthink;
 	bolt->die = missiledie;
-	bolt->s.eType = ET_MISSILE;
+	bolt->s.eType = ET_INERTMISSILE;
 	bolt->r.svFlags = SVF_USE_CURRENT_ORIGIN;
 	bolt->s.parentweap = Whominglauncher;
 	bolt->r.ownerNum = self->s.number;
@@ -639,7 +640,7 @@ firehoming(Gentity *self, Vec3 start, Vec3 forward, Vec3 right, Vec3 up)
 	subv3(end, start, dir);
 	normv3(dir);
 	//scale = 555 + random() * 1800;
-	scale = 600;
+	scale = 320 + random()*100;
 	scalev3(dir, scale, bolt->s.traj.delta);
 	snapv3(bolt->s.traj.delta);
 	copyv3(start, bolt->r.currentOrigin);
