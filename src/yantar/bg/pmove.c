@@ -173,7 +173,7 @@ accelerate(Pmove *pm, Pml *pml, Vec3 wishdir, float wishspeed, float accel)
 	 * turns will give the player unreasonable orthogonal momentum
 	 * that is difficult to steer out of.
 	 */
-	if(div > 0.0f){
+	if(1){
 		scalev3(vel, speed, vel);
 		saddv3(vel, d, wishdir, vel);
 		normv3(vel);
