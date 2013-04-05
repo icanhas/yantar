@@ -223,8 +223,6 @@ BFG_Fire(Gentity *ent)
 	m = fire_bfg(ent, muzzle, forward);
 	m->damage *= s_quadFactor;
 	m->splashDamage *= s_quadFactor;
-
-/*	addv3( m->s.traj.delta, ent->client->ps.velocity, m->s.traj.delta );	// "real" physics */
 }
 
 /*
@@ -323,8 +321,6 @@ weapon_grenadelauncher_fire(Gentity *ent)
 	m = fire_grenade(ent, muzzle, forward);
 	m->damage *= s_quadFactor;
 	m->splashDamage *= s_quadFactor;
-
-	addv3(m->s.traj.delta, ent->client->ps.velocity, m->s.traj.delta);	// "real" physics
 }
 
 /*
@@ -341,8 +337,6 @@ Weapon_RocketLauncher_Fire(Gentity *ent)
 	m = fire_rocket(ent, muzzle, forward);
 	m->damage *= s_quadFactor;
 	m->splashDamage *= s_quadFactor;
-
-	addv3(m->s.traj.delta, ent->client->ps.velocity, m->s.traj.delta);	// "real" physics
 }
 
 /*
@@ -359,7 +353,6 @@ firehominglauncher(Gentity *ent)
 		m = firehoming(ent, muzzle, forward, right, up);
 		m->damage *= s_quadFactor;
 		m->splashDamage *= s_quadFactor;
-		addv3(m->s.traj.delta, ent->client->ps.velocity, m->s.traj.delta);	// "real" physics
 	}	
 }
 
@@ -375,8 +368,6 @@ Weapon_Plasmagun_Fire(Gentity *ent)
 	m = fire_plasma (ent, muzzle, forward);
 	m->damage *= s_quadFactor;
 	m->splashDamage *= s_quadFactor;
-
-	addv3(m->s.traj.delta, ent->client->ps.velocity, m->s.traj.delta);	// "real" physics
 }
 
 /*
@@ -598,7 +589,6 @@ firenanoidcannon(Gentity *ent)
 		m = firenanoid(ent, muzzle, forward, right, up);
 		m->damage *= s_quadFactor;
 		m->splashDamage *= s_quadFactor;
-		addv3( m->s.traj.delta, ent->client->ps.velocity, m->s.traj.delta );	// "real" physics
 	}
 }
 
@@ -617,8 +607,6 @@ weapon_proxlauncher_fire(Gentity *ent)
 	m = fire_prox(ent, muzzle, forward);
 	m->damage *= s_quadFactor;
 	m->splashDamage *= s_quadFactor;
-	
-	addv3( m->s.traj.delta, ent->client->ps.velocity, m->s.traj.delta );	// "real" physics 
 }
 
 /*

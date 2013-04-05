@@ -15,6 +15,25 @@ enum {
 	Nanospread = 500
 };
 
+/*
+ * Give a trajectory additional velocity if the two are not going
+ * strongly against each other.
+ */
+static void
+inheritvel(const Trajectory *t, const Vec3 vel, Trajectory *out)
+{
+	Vec3 a, b;
+	
+	copyv3(t->delta, a);
+	copyv3(vel, b);
+	normv3(a);
+	normv3(b);
+	if(dotv3(a, b) > -0.3f)
+		addv3(t->delta, vel, out->delta);
+	else
+		copyv3(t->delta, out->delta);
+}
+
 void
 G_BounceMissile(Gentity *ent, Trace *trace)
 {
@@ -430,8 +449,9 @@ fire_plasma(Gentity *self, Vec3 start, Vec3 dir)
 	bolt->s.traj.time = level.time - Presteptime;	/* move a bit on the very first frame */
 	copyv3(start, bolt->s.traj.base);
 	scalev3(dir, 2000, bolt->s.traj.delta);
+	inheritvel(&bolt->s.traj, self->client->ps.velocity, &bolt->s.traj);
 	snapv3(bolt->s.traj.delta);	/* save net bandwidth */
-	copyv3 (start, bolt->r.currentOrigin);
+	copyv3(start, bolt->r.currentOrigin);
 	return bolt;
 }
 
@@ -462,8 +482,9 @@ fire_grenade(Gentity *self, Vec3 start, Vec3 dir)
 	bolt->s.traj.time = level.time - Presteptime;	/* move a bit on the very first frame */
 	copyv3(start, bolt->s.traj.base);
 	scalev3(dir, 700, bolt->s.traj.delta);
+	inheritvel(&bolt->s.traj, self->client->ps.velocity, &bolt->s.traj);
 	snapv3(bolt->s.traj.delta);	/* save net bandwidth */
-	copyv3 (start, bolt->r.currentOrigin);
+	copyv3(start, bolt->r.currentOrigin);
 	return bolt;
 }
 
@@ -493,8 +514,9 @@ fire_bfg(Gentity *self, Vec3 start, Vec3 dir)
 	bolt->s.traj.time = level.time - Presteptime;	/* move a bit on the very first frame */
 	copyv3(start, bolt->s.traj.base);
 	scalev3(dir, 2000, bolt->s.traj.delta);
+	inheritvel(&bolt->s.traj, self->client->ps.velocity, &bolt->s.traj);
 	snapv3(bolt->s.traj.delta);	/* save net bandwidth */
-	copyv3 (start, bolt->r.currentOrigin);
+	copyv3(start, bolt->r.currentOrigin);
 	return bolt;
 }
 
@@ -517,15 +539,16 @@ fire_rocket(Gentity *self, Vec3 start, Vec3 dir)
 	bolt->splashDamage = 1000;
 	bolt->splashRadius = 120;
 	bolt->methodOfDeath = MOD_ROCKET;
-	bolt->splashMethodOfDeath	= MOD_ROCKET_SPLASH;
-	bolt->clipmask			= MASK_SHOT;
-	bolt->target_ent		= nil;
+	bolt->splashMethodOfDeath = MOD_ROCKET_SPLASH;
+	bolt->clipmask = MASK_SHOT;
+	bolt->target_ent = nil;
 	bolt->s.traj.type = TR_LINEAR;
 	bolt->s.traj.time = level.time - Presteptime;	/* move a bit on the very first frame */
 	copyv3(start, bolt->s.traj.base);
 	scalev3(dir, 900, bolt->s.traj.delta);
+	inheritvel(&bolt->s.traj, self->client->ps.velocity, &bolt->s.traj);
 	snapv3(bolt->s.traj.delta);	/* save net bandwidth */
-	copyv3 (start, bolt->r.currentOrigin);
+	copyv3(start, bolt->r.currentOrigin);
 	return bolt;
 }
 
@@ -642,6 +665,7 @@ firehoming(Gentity *self, Vec3 start, Vec3 forward, Vec3 right, Vec3 up)
 	//scale = 555 + random() * 1800;
 	scale = 320 + random()*100;
 	scalev3(dir, scale, bolt->s.traj.delta);
+	inheritvel(&bolt->s.traj, self->client->ps.velocity, &bolt->s.traj);
 	snapv3(bolt->s.traj.delta);
 	copyv3(start, bolt->r.currentOrigin);
 	return bolt;
@@ -673,7 +697,7 @@ fire_grapple(Gentity *self, Vec3 start, Vec3 dir)
 	scalev3(dir, g_hookspeed.value * 100.0f, hook->s.traj.delta);
 	snapv3(hook->s.traj.delta);	/* save net bandwidth */
 	copyv3(start, hook->r.currentOrigin);
-	addv3(hook->s.traj.delta, self->client->ps.velocity, hook->s.traj.delta);	// "real" physics
+	inheritvel(&hook->s.traj, self->client->ps.velocity, &hook->s.traj);
 	self->client->hook = hook;
 	return hook;
 }
@@ -712,6 +736,7 @@ firenanoid(Gentity *self, Vec3 start, Vec3 forward, Vec3 right, Vec3 up)
 	normv3(dir);
 	scale = 555 + random() * 1800;
 	scalev3(dir, scale, bolt->s.traj.delta);
+	inheritvel(&bolt->s.traj, self->client->ps.velocity, &bolt->s.traj);
 	snapv3(bolt->s.traj.delta);
 	copyv3(start, bolt->r.currentOrigin);
 	return bolt;
@@ -753,6 +778,7 @@ fire_prox(Gentity *self, Vec3 start, Vec3 dir)
 	bolt->s.traj.time = level.time - Presteptime;	/* move a bit on the very first frame */
 	copyv3(start, bolt->s.traj.base);
 	scalev3(dir, 700, bolt->s.traj.delta);
+	inheritvel(&bolt->s.traj, self->client->ps.velocity, &bolt->s.traj);
 	snapv3(bolt->s.traj.delta);	/* save net bandwidth */
 	copyv3 (start, bolt->r.currentOrigin);
 	return bolt;
