@@ -16,7 +16,6 @@ static Vec3 forward, right, up;
 static Vec3 muzzle;
 
 enum {
-	Nhomingshots	= 3,
 	Nnanoshots	= 16
 };
 
@@ -685,7 +684,7 @@ FireWeapon(Gentity *ent, Weapslot slot)
 #endif
 
 	/* track shots taken for accuracy tracking.  Grapple is not a weapon and gauntet is just not tracked */
-	if(w != Whook && w != Wmelee){
+	if(w != Whook && w != Wmelee && w != Whominglauncher){
 		if(w == Wnanoidcannon)
 			ent->client->accuracy_shots += Nnanoshots;
 		else

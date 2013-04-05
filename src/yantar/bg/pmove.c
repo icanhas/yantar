@@ -470,6 +470,7 @@ airmove(Pmove *pm, Pml *pml)
 	_airmove(pm, pml, &pm->cmd, &wishvel, &wishdir, &wishspeed);
 	/* not on ground, so little effect on velocity */
 	accelerate(pm, pml, wishdir, wishspeed, pm_airaccelerate);
+	pml->groundPlane = qfalse;
 	PM_StepSlideMove(pm, pml, qtrue);
 }
 
