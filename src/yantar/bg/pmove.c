@@ -16,7 +16,9 @@
  */
 uint cnt = 0;
 
-static const Scalar Hookpullspeed	= 400.0f;
+static const Scalar GrapplePullSpeed	= 400.0f;
+static const Scalar Hooklinelen		= 2.0f;
+static const Scalar Maxhookforce	= 6.0f;
 static const Scalar pm_stopspeed	= 100.0f;
 static const Scalar pm_duckScale	= 0.25f;
 static const Scalar pm_swimScale	= 0.50f;
@@ -138,8 +140,7 @@ q2accelerate(Pmove *pm, Pml *pml, Vec3 wishdir, float wishspeed, float accel)
 	float addspeed, accelspeed, currentspeed;
 
 	currentspeed = dotv3(pm->ps->velocity, wishdir);
-	/* addspeed = wishspeed - currentspeed */
-	addspeed = wishspeed;	/* unlimited */
+	addspeed = wishspeed;
 	if(addspeed <= 0)
 		return;
 	accelspeed = accel*pml->frametime*wishspeed;
@@ -151,34 +152,19 @@ q2accelerate(Pmove *pm, Pml *pml, Vec3 wishdir, float wishspeed, float accel)
 static void
 accelerate(Pmove *pm, Pml *pml, Vec3 wishdir, float wishspeed, float accel)
 {
-	int i;
-	float addspeed, accelspeed, speed, div, d;
-	Vec3 vel;
+	/* proper way (avoids strafe jump maxspeed bug), but feels bad */
+	Vec3	wishVelocity;
+	Vec3	pushDir;
+	float	pushLen;
+	float	canPush;
 
-	speed = dotv3(pm->ps->velocity, wishdir);
-	addspeed = wishspeed - 0.25f*speed;
-	if(addspeed <= 0)
-		return;
-	accelspeed = accel*pml->frametime*wishspeed;
-	if(accelspeed > addspeed)
-		accelspeed = addspeed;
-	saddv3(pm->ps->velocity, accelspeed, wishdir, vel);
-	
-	speed = normv3(vel);
-	div = dotv3(vel, wishdir);
-	d = 32;
-	d *= 150.0f * div * div * pml->frametime;
-	/*
-	 * Do nothing extra if the angle is too great, otherwise any large
-	 * turns will give the player unreasonable orthogonal momentum
-	 * that is difficult to steer out of.
-	 */
-	if(div > 0.0f){
-		scalev3(vel, speed, vel);
-		saddv3(vel, d, wishdir, vel);
-		normv3(vel);
-	}
-	scalev3(vel, speed, pm->ps->velocity);
+	scalev3(wishdir, wishspeed, wishVelocity);
+	subv3(wishVelocity, pm->ps->velocity, pushDir);
+	pushLen = normv3(pushDir);
+	canPush = accel*pml->frametime*wishspeed;
+	if(canPush > pushLen)
+		canPush = pushLen;
+	saddv3(pm->ps->velocity, canPush, pushDir, pm->ps->velocity);
 }
 
 /*
@@ -469,7 +455,7 @@ airmove(Pmove *pm, Pml *pml)
 	dofriction(pm, pml);
 	_airmove(pm, pml, &pm->cmd, &wishvel, &wishdir, &wishspeed);
 	/* not on ground, so little effect on velocity */
-	accelerate(pm, pml, wishdir, wishspeed, pm_airaccelerate);
+	q2accelerate(pm, pml, wishdir, wishspeed, pm_airaccelerate);
 	PM_StepSlideMove(pm, pml, qtrue);
 }
 
@@ -477,7 +463,7 @@ static void
 grapplemove(Pmove *pm, Pml *pml)
 {
 	Vec3 wishvel, wishdir, vel, v;
-	float	wishspeed, vlen, oldlen, pullspeedcoef, grspd = Hookpullspeed;
+	float	wishspeed, vlen, oldlen, pullspeedcoef, grspd = GrapplePullSpeed;
 
 	_airmove(pm, pml, &pm->cmd, &wishvel, &wishdir, &wishspeed);
 	scalev3(pml->forward, -16, v);
@@ -493,8 +479,8 @@ grapplemove(Pmove *pm, Pml *pml)
 		pullspeedcoef *= pm->ps->swingstrength;
 		grspd *= pullspeedcoef;
 	}
-	if(grspd < Hookpullspeed)
-		grspd = Hookpullspeed;
+	if(grspd < GrapplePullSpeed)
+		grspd = GrapplePullSpeed;
 	
 	normv3(vel);
 	q2accelerate(pm, pml, wishdir, wishspeed, pm_airaccelerate);
