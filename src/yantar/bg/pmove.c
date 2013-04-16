@@ -156,7 +156,7 @@ accelerate(Pmove *pm, Pml *pml, Vec3 wishdir, float wishspeed, float accel)
 	Vec3 vel;
 
 	speed = dotv3(pm->ps->velocity, wishdir);
-	addspeed = wishspeed; // - 0.25f*speed;
+	addspeed = wishspeed - 0.25f*speed;
 	if(addspeed <= 0)
 		return;
 	accelspeed = accel*pml->frametime*wishspeed;
@@ -167,13 +167,13 @@ accelerate(Pmove *pm, Pml *pml, Vec3 wishdir, float wishspeed, float accel)
 	speed = normv3(vel);
 	div = dotv3(vel, wishdir);
 	d = 32;
-	d *= 100.0f * div * div * pml->frametime;
+	d *= 150.0f * div * div * pml->frametime;
 	/*
 	 * Do nothing extra if the angle is too great, otherwise any large
 	 * turns will give the player unreasonable orthogonal momentum
 	 * that is difficult to steer out of.
 	 */
-	if(div > 0.0f){
+	if(1){
 		scalev3(vel, speed, vel);
 		saddv3(vel, d, wishdir, vel);
 		normv3(vel);
