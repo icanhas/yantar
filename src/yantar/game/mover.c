@@ -11,26 +11,17 @@
 #include "local.h"
 #include "team.h"
 
-/*
- *
- * PUSHMOVE
- *
- */
-
-typedef struct {
+typedef struct Pushed	Pushed;
+struct Pushed {
 	Gentity	*ent;
 	Vec3		origin;
 	Vec3		angles;
 	float		deltayaw;
-} Pushed;
+};
+
 Pushed pushed[MAX_GENTITIES], *pushed_p;
 
-
-/*
- * G_TestEntityPosition
- *
- */
-Gentity       *
+Gentity*
 G_TestEntityPosition(Gentity *ent)
 {
 	Trace tr;
@@ -55,9 +46,6 @@ G_TestEntityPosition(Gentity *ent)
 	return NULL;
 }
 
-/*
- * G_CreateRotationMatrix
- */
 void
 G_CreateRotationMatrix(Vec3 angles, Vec3 matrix[3])
 {
@@ -65,9 +53,6 @@ G_CreateRotationMatrix(Vec3 angles, Vec3 matrix[3])
 	invv3(matrix[1]);
 }
 
-/*
- * G_TransposeMatrix
- */
 void
 G_TransposeMatrix(Vec3 matrix[3], Vec3 transpose[3])
 {
@@ -77,9 +62,6 @@ G_TransposeMatrix(Vec3 matrix[3], Vec3 transpose[3])
 			transpose[i][j] = matrix[j][i];
 }
 
-/*
- * G_RotatePoint
- */
 void
 G_RotatePoint(Vec3 point, Vec3 matrix[3])
 {
@@ -92,16 +74,14 @@ G_RotatePoint(Vec3 point, Vec3 matrix[3])
 }
 
 /*
- * G_TryPushingEntity
- *
  * Returns qfalse if the move is blocked
  */
 qbool
 G_TryPushingEntity(Gentity *check, Gentity *pusher, Vec3 move,
 		   Vec3 amove)
 {
-	Vec3	matrix[3], transpose[3];
-	Vec3	org, org2, move2;
+	Vec3 matrix[3], transpose[3];
+	Vec3 org, org2, move2;
 	Gentity *block;
 
 	/* EF_MOVER_STOP will just stop when contacting another entity
@@ -182,13 +162,10 @@ G_TryPushingEntity(Gentity *check, Gentity *pusher, Vec3 move,
 	return qfalse;
 }
 
-/*
- * G_CheckProxMinePosition
- */
 qbool
 G_CheckProxMinePosition(Gentity *check)
 {
-	Vec3	start, end;
+	Vec3 start, end;
 	Trace tr;
 
 	saddv3(check->s.traj.base, 0.125, check->movedir, start);
@@ -201,16 +178,13 @@ G_CheckProxMinePosition(Gentity *check)
 	return qtrue;
 }
 
-/*
- * G_TryPushingProxMine
- */
 qbool
 G_TryPushingProxMine(Gentity *check, Gentity *pusher, Vec3 move,
 		     Vec3 amove)
 {
-	Vec3	forward, right, up;
-	Vec3	org, org2, move2;
-	int	ret;
+	Vec3 forward, right, up;
+	Vec3 org, org2, move2;
+	int ret;
 
 	/* we need this for pushing things later */
 	subv3 (vec3_origin, amove, org);
@@ -238,8 +212,6 @@ G_TryPushingProxMine(Gentity *check, Gentity *pusher, Vec3 move,
 void G_ExplodeMissile(Gentity *ent);
 
 /*
- * G_MoverPush
- *
  * Objects need to be moved back on a failed push,
  * otherwise riders would continue to slide.
  * If qfalse is returned, *obstacle will be the blocking entity
@@ -248,11 +220,11 @@ qbool
 G_MoverPush(Gentity *pusher, Vec3 move, Vec3 amove, Gentity **obstacle)
 {
 	int i, e;
-	Gentity	*check;
-	Vec3		mins, maxs;
+	Gentity *check;
+	Vec3 mins, maxs;
 	Pushed *p;
-	int	entityList[MAX_GENTITIES];
-	int	listedEntities;
+	int entityList[MAX_GENTITIES];
+	int listedEntities;
 	Vec3 totalMins, totalMaxs;
 
 	*obstacle = NULL;
@@ -398,20 +370,15 @@ G_MoverPush(Gentity *pusher, Vec3 move, Vec3 amove, Gentity **obstacle)
 		}
 		return qfalse;
 	}
-
 	return qtrue;
 }
 
-
-/*
- * G_MoverTeam
- */
 void
 G_MoverTeam(Gentity *ent)
 {
-	Vec3	move, amove;
-	Gentity       *part, *obstacle;
-	Vec3	origin, angles;
+	Vec3 move, amove;
+	Gentity *part, *obstacle;
+	Vec3 origin, angles;
 
 	obstacle = NULL;
 
@@ -459,10 +426,6 @@ G_MoverTeam(Gentity *ent)
 					part->reached(part);
 }
 
-/*
- * G_RunMover
- *
- */
 void
 G_RunMover(Gentity *ent)
 {
@@ -481,21 +444,17 @@ G_RunMover(Gentity *ent)
 }
 
 /*
- *
- * GENERAL MOVERS
+ * General movers
  *
  * Doors, plats, and buttons are all binary (two position) movers
  * Pos1 is "at rest", pos2 is "activated"
  */
 
-/*
- * SetMoverState
- */
 void
 SetMoverState(Gentity *ent, moverState_t moverState, int time)
 {
-	Vec3	delta;
-	float	f;
+	Vec3 delta;
+	float f;
 
 	ent->moverState = moverState;
 
@@ -529,8 +488,6 @@ SetMoverState(Gentity *ent, moverState_t moverState, int time)
 }
 
 /*
- * MatchTeam
- *
  * All entities in a mover team will move from pos1 to pos2
  * in the same amount of time
  */
@@ -543,11 +500,6 @@ MatchTeam(Gentity *teamLeader, int moverState, int time)
 		SetMoverState(slave, moverState, time);
 }
 
-
-
-/*
- * ReturnToPos1
- */
 void
 ReturnToPos1(Gentity *ent)
 {
@@ -555,20 +507,14 @@ ReturnToPos1(Gentity *ent)
 
 	/* looping sound */
 	ent->s.loopSound = ent->soundLoop;
-
 	/* starting sound */
 	if(ent->sound2to1)
 		G_AddEvent(ent, EV_GENERAL_SOUND, ent->sound2to1);
 }
 
-
-/*
- * Reached_BinaryMover
- */
 void
 Reached_BinaryMover(Gentity *ent)
 {
-
 	/* stop the looping sound */
 	ent->s.loopSound = ent->soundLoop;
 
@@ -603,15 +549,11 @@ Reached_BinaryMover(Gentity *ent)
 		G_Error("Reached_BinaryMover: bad moverState");
 }
 
-
-/*
- * Use_BinaryMover
- */
 void
 Use_BinaryMover(Gentity *ent, Gentity *other, Gentity *activator)
 {
-	int	total;
-	int	partial;
+	int total;
+	int partial;
 
 	/* only the master should be used */
 	if(ent->flags & FL_TEAMSLAVE){
@@ -674,21 +616,17 @@ Use_BinaryMover(Gentity *ent, Gentity *other, Gentity *activator)
 	}
 }
 
-
-
 /*
- * InitMover
- *
  * "pos1", "pos2", and "speed" should be set before calling,
  * so the movement delta can be calculated
  */
 void
 InitMover(Gentity *ent)
 {
-	Vec3	move;
-	float	distance;
-	float	light;
-	Vec3	color;
+	Vec3 move;
+	float distance;
+	float light;
+	Vec3 color;
 	qbool lightSet, colorSet;
 	char *sound;
 
@@ -746,19 +684,13 @@ InitMover(Gentity *ent)
 		ent->s.traj.duration = 1;
 }
 
-
 /*
- *
- * DOOR
+ * Door
  *
  * A use can be triggered either by a touch function, by being shot, or by being
  * targeted by another entity.
- *
  */
 
-/*
- * Blocked_Door
- */
 void
 Blocked_Door(Gentity *ent, Gentity *other)
 {
@@ -784,15 +716,12 @@ Blocked_Door(Gentity *ent, Gentity *other)
 	Use_BinaryMover(ent, ent, other);
 }
 
-/*
- * Touch_DoorTriggerSpectator
- */
 static void
 Touch_DoorTriggerSpectator(Gentity *ent, Gentity *other, Trace *trace)
 {
 	int axis;
-	float	doorMin, doorMax;
-	Vec3	origin;
+	float doorMin, doorMax;
+	Vec3 origin;
 
 	axis = ent->count;
 	/* the constants below relate to constants in Think_SpawnNewDoorTrigger() */
@@ -811,9 +740,6 @@ Touch_DoorTriggerSpectator(Gentity *ent, Gentity *other, Trace *trace)
 	TeleportPlayer(other, origin, tv(10000000.0, 0, 0));
 }
 
-/*
- * Touch_DoorTrigger
- */
 void
 Touch_DoorTrigger(Gentity *ent, Gentity *other, Trace *trace)
 {
@@ -827,18 +753,15 @@ Touch_DoorTrigger(Gentity *ent, Gentity *other, Trace *trace)
 		Use_BinaryMover(ent->parent, ent, other);
 }
 
-
 /*
- * Think_SpawnNewDoorTrigger
- *
  * All of the parts of a door have been spawned, so create
  * a trigger that encloses all of them
  */
 void
 Think_SpawnNewDoorTrigger(Gentity *ent)
 {
-	Gentity	*other;
-	Vec3		mins, maxs;
+	Gentity *other;
+	Vec3 mins, maxs;
 	int i, best;
 
 	/* set all of the slaves as shootable */
@@ -846,12 +769,12 @@ Think_SpawnNewDoorTrigger(Gentity *ent)
 		other->takedamage = qtrue;
 
 	/* find the bounds of everything on the team */
-	copyv3 (ent->r.absmin, mins);
-	copyv3 (ent->r.absmax, maxs);
+	copyv3(ent->r.absmin, mins);
+	copyv3(ent->r.absmax, maxs);
 
 	for(other = ent->teamchain; other; other=other->teamchain){
-		AddPointToBounds (other->r.absmin, mins, maxs);
-		AddPointToBounds (other->r.absmax, mins, maxs);
+		AddPointToBounds(other->r.absmin, mins, maxs);
+		AddPointToBounds(other->r.absmax, mins, maxs);
 	}
 
 	/* find the thinnest axis, which will be the one we expand */
@@ -863,16 +786,16 @@ Think_SpawnNewDoorTrigger(Gentity *ent)
 	mins[best] -= 120;
 
 	/* create a trigger with this size */
-	other = G_Spawn ();
+	other = G_Spawn();
 	other->classname = "door_trigger";
-	copyv3 (mins, other->r.mins);
-	copyv3 (maxs, other->r.maxs);
+	copyv3(mins, other->r.mins);
+	copyv3(maxs, other->r.maxs);
 	other->parent = ent;
 	other->r.contents = CONTENTS_TRIGGER;
 	other->touch = Touch_DoorTrigger;
 	/* remember the thinnest axis */
 	other->count = best;
-	trap_LinkEntity (other);
+	trap_LinkEntity(other);
 
 	MatchTeam(ent, ent->moverState, level.time);
 }
@@ -882,7 +805,6 @@ Think_MatchTeam(Gentity *ent)
 {
 	MatchTeam(ent, ent->moverState, level.time);
 }
-
 
 /*QUAKED func_door (0 .5 .8) ? START_OPEN x CRUSHER
  * TOGGLE		wait in both the start and end states for a trigger event.
@@ -903,10 +825,10 @@ Think_MatchTeam(Gentity *ent)
 void
 SP_func_door(Gentity *ent)
 {
-	Vec3	abs_movedir;
-	float	distance;
-	Vec3	size;
-	float	lip;
+	Vec3 abs_movedir;
+	float distance;
+	Vec3 size;
+	float lip;
 
 	ent->sound1to2 = ent->sound2to1 = G_SoundIndex(
 		Pdoorsounds "/dr1_strt.wav");
@@ -973,14 +895,10 @@ SP_func_door(Gentity *ent)
 }
 
 /*
- *
- * PLAT
- *
+ * Plat
  */
 
 /*
- * Touch_Plat
- *
  * Don't allow decent if a living player is on it
  */
 void
@@ -995,8 +913,6 @@ Touch_Plat(Gentity *ent, Gentity *other, Trace *trace)
 }
 
 /*
- * Touch_PlatCenterTrigger
- *
  * If the plat is at the bottom position, start it going up
  */
 void
@@ -1009,10 +925,7 @@ Touch_PlatCenterTrigger(Gentity *ent, Gentity *other, Trace *trace)
 		Use_BinaryMover(ent->parent, ent, other);
 }
 
-
 /*
- * SpawnPlatTrigger
- *
  * Spawn a trigger in the middle of the plat's low position
  * Elevator cars require that the trigger extend through the entire low position,
  * not just sit on top of it.
@@ -1020,8 +933,8 @@ Touch_PlatCenterTrigger(Gentity *ent, Gentity *other, Trace *trace)
 void
 SpawnPlatTrigger(Gentity *ent)
 {
-	Gentity	*trigger;
-	Vec3		tmin, tmax;
+	Gentity *trigger;
+	Vec3 tmin, tmax;
 
 	/* the middle trigger will be a thin trigger just
 	 * above the starting position */
@@ -1053,7 +966,6 @@ SpawnPlatTrigger(Gentity *ent)
 
 	trap_LinkEntity (trigger);
 }
-
 
 /*QUAKED func_plat (0 .5 .8) ?
  * Plats are always drawn in the extended position so they will light correctly.
@@ -1113,15 +1025,9 @@ SP_func_plat(Gentity *ent)
 
 
 /*
- *
- * BUTTON
- *
+ * Button
  */
 
-/*
- * Touch_Button
- *
- */
 void
 Touch_Button(Gentity *ent, Gentity *other, Trace *trace)
 {
@@ -1131,7 +1037,6 @@ Touch_Button(Gentity *ent, Gentity *other, Trace *trace)
 	if(ent->moverState == MOVER_POS1)
 		Use_BinaryMover(ent, other, other);
 }
-
 
 /*QUAKED func_button (0 .5 .8) ?
  * When a button is touched, it moves some distance in the direction of its angle, triggers all of its targets, waits some time, then returns to its original position where it can be triggered again.
@@ -1149,10 +1054,10 @@ Touch_Button(Gentity *ent, Gentity *other, Trace *trace)
 void
 SP_func_button(Gentity *ent)
 {
-	Vec3	abs_movedir;
-	float	distance;
-	Vec3	size;
-	float	lip;
+	Vec3 abs_movedir;
+	float distance;
+	Vec3 size;
+	float lip;
 
 	ent->sound1to2 = G_SoundIndex(Pswitchsounds "/butn2.wav");
 
@@ -1178,7 +1083,7 @@ SP_func_button(Gentity *ent)
 	subv3(ent->r.maxs, ent->r.mins, size);
 	distance = abs_movedir[0] * size[0] + abs_movedir[1] * size[1] +
 		   abs_movedir[2] * size[2] - lip;
-	saddv3 (ent->pos1, distance, ent->movedir, ent->pos2);
+	saddv3(ent->pos1, distance, ent->movedir, ent->pos2);
 
 	if(ent->health)
 		/* shootable button */
@@ -1186,26 +1091,18 @@ SP_func_button(Gentity *ent)
 	else
 		/* touchable button */
 		ent->touch = Touch_Button;
-
 	InitMover(ent);
 }
 
-
-
 /*
- *
- * TRAIN
- *
+ * Train
  */
-
 
 #define TRAIN_START_ON		1
 #define TRAIN_TOGGLE		2
 #define TRAIN_BLOCK_STOPS	4
 
 /*
- * Think_BeginMoving
- *
  * The wait time at a corner has completed, so start moving again
  */
 void
@@ -1215,15 +1112,12 @@ Think_BeginMoving(Gentity *ent)
 	ent->s.traj.type = TR_LINEAR_STOP;
 }
 
-/*
- * Reached_Train
- */
 void
 Reached_Train(Gentity *ent)
 {
-	Gentity	*next;
+	Gentity *next;
 	float speed;
-	Vec3		move;
+	Vec3 move;
 	float length;
 
 	/* copy the apropriate values */
@@ -1259,7 +1153,7 @@ Reached_Train(Gentity *ent)
 
 	/* Tequila comment: Fast move case */
 	if(ent->s.traj.duration<1){
-		/* Tequila comment: As duration is used later in a division, we need to avoid that case now
+		/* As duration is used later in a division, we need to avoid that case now
 		 * With null duration,
 		 * the calculated rocks bounding box becomes infinite and the engine think for a short time
 		 * any entity is riding that mover but not the world entity... In rare case, I found it
@@ -1287,10 +1181,7 @@ Reached_Train(Gentity *ent)
 	}
 }
 
-
 /*
- * Think_SetupTrainTargets
- *
  * Link all the corners together
  */
 void
@@ -1337,8 +1228,6 @@ Think_SetupTrainTargets(Gentity *ent)
 	Reached_Train(ent);
 }
 
-
-
 /*QUAKED path_corner (.5 .3 0) (-8 -8 -8) (8 8 8)
  * Train path corners.
  * Target: next path corner and other targets to fire
@@ -1356,8 +1245,6 @@ SP_path_corner(Gentity *self)
 	}
 	/* path corners don't need to be linked in */
 }
-
-
 
 /*QUAKED func_train (0 .5 .8) ? START_ON TOGGLE BLOCK_STOPS
  * A train is a mover that moves between path_corner target points.
@@ -1404,11 +1291,8 @@ SP_func_train(Gentity *self)
 }
 
 /*
- *
- * STATIC
- *
+ * Static
  */
-
 
 /*QUAKED func_static (0 .5 .8) ?
  * A bmodel that just sits there, doing nothing.  Can be used for conditional walls and models.
@@ -1425,13 +1309,9 @@ SP_func_static(Gentity *ent)
 	copyv3(ent->s.origin, ent->r.currentOrigin);
 }
 
-
 /*
- *
- * ROTATING
- *
+ * Rotating
  */
-
 
 /*QUAKED func_rotating (0 .5 .8) ? START_ON - X_AXIS Y_AXIS
  * You need to have an origin brush as part of this entity.  The center of that brush will be
@@ -1472,13 +1352,9 @@ SP_func_rotating(Gentity *ent)
 	trap_LinkEntity(ent);
 }
 
-
 /*
- *
- * BOBBING
- *
+ * Bobbing
  */
-
 
 /*QUAKED func_bobbing (0 .5 .8) ? X_AXIS Y_AXIS
  * Normally bobs on the Z axis
@@ -1493,8 +1369,7 @@ SP_func_rotating(Gentity *ent)
 void
 SP_func_bobbing(Gentity *ent)
 {
-	float	height;
-	float	phase;
+	float height, phase;
 
 	G_SpawnFloat("speed", "4", &ent->speed);
 	G_SpawnFloat("height", "32", &height);
@@ -1507,9 +1382,9 @@ SP_func_bobbing(Gentity *ent)
 	copyv3(ent->s.origin, ent->s.traj.base);
 	copyv3(ent->s.origin, ent->r.currentOrigin);
 
-	ent->s.traj.duration	= ent->speed * 1000;
-	ent->s.traj.time	= ent->s.traj.duration * phase;
-	ent->s.traj.type	= TR_SINE;
+	ent->s.traj.duration = ent->speed * 1000;
+	ent->s.traj.time = ent->s.traj.duration * phase;
+	ent->s.traj.type = TR_SINE;
 
 	/* set the axis of bobbing */
 	if(ent->spawnflags & 1)
@@ -1521,11 +1396,8 @@ SP_func_bobbing(Gentity *ent)
 }
 
 /*
- *
- * PENDULUM
- *
+ * Pendulum
  */
-
 
 /*QUAKED func_pendulum (0 .5 .8) ?
  * You need to have an origin brush as part of this entity.
@@ -1541,10 +1413,7 @@ SP_func_bobbing(Gentity *ent)
 void
 SP_func_pendulum(Gentity *ent)
 {
-	float	freq;
-	float	length;
-	float	phase;
-	float	speed;
+	float freq, length, phase, speed;
 
 	G_SpawnFloat("speed", "30", &speed);
 	G_SpawnInt("dmg", "2", &ent->damage);
@@ -1568,8 +1437,8 @@ SP_func_pendulum(Gentity *ent)
 
 	copyv3(ent->s.angles, ent->s.apos.base);
 
-	ent->s.apos.duration	= 1000 / freq;
-	ent->s.apos.time	= ent->s.apos.duration * phase;
-	ent->s.apos.type	= TR_SINE;
-	ent->s.apos.delta[2]	= speed;
+	ent->s.apos.duration = 1000 / freq;
+	ent->s.apos.time = ent->s.apos.duration * phase;
+	ent->s.apos.type = TR_SINE;
+	ent->s.apos.delta[2] = speed;
 }
