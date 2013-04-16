@@ -535,8 +535,10 @@ fire_rocket(Gentity *self, Vec3 start, Vec3 dir)
 	bolt->s.traj.type = TR_LINEAR;
 	bolt->s.traj.time = level.time - Presteptime;	/* move a bit on the very first frame */
 	copyv3(start, bolt->s.traj.base);
-	scalev3(dir, 900, bolt->s.traj.delta);
+	scalev3(dir, 100, bolt->s.traj.delta);
 	inheritvel(&bolt->s.traj, self->client->ps.velocity, &bolt->s.traj);
+	bolt->s.traj.accel = 400.0f;
+	copyv3(dir, bolt->s.traj.wishdir);
 	snapv3(bolt->s.traj.delta);	/* save net bandwidth */
 	copyv3(start, bolt->r.currentOrigin);
 	return bolt;
@@ -584,11 +586,15 @@ homingrocketthink(Gentity *ent)
 	}
 	
 	ent->nextthink = level.time + 50;
-	if(targ == nil)
+	if(targ == nil){
+		ent->s.traj.accel = 200.0f;
 		return;
+	}
 	saddv3(fwd, 0.05f, targdir, targdir);
+	ent->s.traj.accel = 500.0f;
 	normv3(targdir);
-	scalev3(targdir, 600, ent->s.traj.delta);
+	copyv3(targdir, ent->s.traj.wishdir);
+	copyv3(targdir, ent->s.traj.delta);
 }
 
 /*
@@ -656,6 +662,7 @@ firehoming(Gentity *self, Vec3 start, Vec3 forward, Vec3 right, Vec3 up)
 	scale = 320 + random()*100;
 	scalev3(dir, scale, bolt->s.traj.delta);
 	inheritvel(&bolt->s.traj, self->client->ps.velocity, &bolt->s.traj);
+	copyv3(dir, bolt->s.traj.wishdir);
 	snapv3(bolt->s.traj.delta);
 	copyv3(start, bolt->r.currentOrigin);
 	return bolt;

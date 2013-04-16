@@ -25,6 +25,7 @@ BG_EvaluateTrajectory(const Trajectory *tr, int atTime, Vec3 result)
 	case TR_LINEAR:
 		deltaTime = (atTime - tr->time) * 0.001;	/* milliseconds to seconds */
 		saddv3(tr->base, deltaTime, tr->delta, result);
+		saddv3(result, Square(deltaTime) * tr->accel, tr->wishdir, result);
 		break;
 	case TR_SINE:
 		deltaTime = (atTime - tr->time) / (float)tr->duration;
@@ -76,7 +77,9 @@ BG_EvaluateTrajectoryDelta(const Trajectory *tr, int atTime, Vec3 result)
 		clearv3(result);
 		break;
 	case TR_LINEAR:
+		deltaTime = (atTime - tr->time) * 0.001f;
 		copyv3(tr->delta, result);
+		saddv3(result, 2 * deltaTime * tr->accel, tr->wishdir, result);	/* derivative of deltaTime^2 * tr->accel */
 		break;
 	case TR_SINE:
 		deltaTime	= (atTime - tr->time) / (float)tr->duration;

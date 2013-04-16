@@ -1325,7 +1325,9 @@ typedef struct {
 	int		time;
 	int		duration;	/* if non 0, time + duration = stop time */
 	Vec3		base;
-	Vec3		delta;	/* velocity, etc */
+	Vec3		delta;	/* relative velocity, etc */
+	Vec3		wishdir;	/* dir to accelerate towards at (accel m/s^2), or zero if none */
+	Scalar		accel;
 } Trajectory;
 
 /* 
