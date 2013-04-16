@@ -16,22 +16,12 @@ enum {
 };
 
 /*
- * Give a trajectory additional velocity if the two are not going
- * strongly against each other.
+ * Give a trajectory additional velocity
  */
 static void
 inheritvel(const Trajectory *t, const Vec3 vel, Trajectory *out)
 {
-	Vec3 a, b;
-	
-	copyv3(t->delta, a);
-	copyv3(vel, b);
-	normv3(a);
-	normv3(b);
-	if(dotv3(a, b) > -0.3f)
-		addv3(t->delta, vel, out->delta);
-	else
-		copyv3(t->delta, out->delta);
+	addv3(t->delta, vel, out->delta);
 }
 
 void
