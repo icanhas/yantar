@@ -393,10 +393,10 @@ void
 target_relay_use(Gentity *self, Gentity *other, Gentity *activator)
 {
 	if((self->spawnflags & 1) && activator->client
-	   && activator->client->sess.sessionTeam != TEAM_RED)
+	   && activator->client->sess.team != TEAM_RED)
 		return;
 	if((self->spawnflags & 2) && activator->client
-	   && activator->client->sess.sessionTeam != TEAM_BLUE)
+	   && activator->client->sess.team != TEAM_BLUE)
 		return;
 	if(self->spawnflags & 4){
 		Gentity *ent;

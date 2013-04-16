@@ -249,12 +249,12 @@ CheckAlmostCapture(Gentity *self, Gentity *attacker)
 	   self->client->ps.powerups[PW_NEUTRALFLAG]){
 		/* get the goal flag this player should have been going for */
 		if(g_gametype.integer == GT_CTF){
-			if(self->client->sess.sessionTeam == TEAM_BLUE)
+			if(self->client->sess.team == TEAM_BLUE)
 				classname = "team_CTF_blueflag";
 			else
 				classname = "team_CTF_redflag";
 		}else{
-			if(self->client->sess.sessionTeam == TEAM_BLUE)
+			if(self->client->sess.team == TEAM_BLUE)
 				classname = "team_CTF_redflag";
 			else
 				classname = "team_CTF_blueflag";
@@ -292,7 +292,7 @@ CheckAlmostScored(Gentity *self, Gentity *attacker)
 
 	/* if the player was carrying cubes */
 	if(self->client->ps.generic1){
-		if(self->client->sess.sessionTeam == TEAM_BLUE)
+		if(self->client->sess.team == TEAM_BLUE)
 			classname = "team_redobelisk";
 		else
 			classname = "team_blueobelisk";
@@ -461,14 +461,14 @@ player_die(Gentity *self, Gentity *inflictor, Gentity *attacker,
 	/* send updated scores to any clients that are following this one,
 	 * or they would get stale scoreboards */
 	for(i = 0; i < level.maxclients; i++){
-		gClient *client;
+		Gclient *client;
 
 		client = &level.clients[i];
 		if(client->pers.connected != CON_CONNECTED)
 			continue;
-		if(client->sess.sessionTeam != TEAM_SPECTATOR)
+		if(client->sess.team != TEAM_SPECTATOR)
 			continue;
-		if(client->sess.spectatorClient == self->s.number)
+		if(client->sess.specclient == self->s.number)
 			Cmd_Score_f(g_entities + i);
 	}
 
@@ -553,7 +553,7 @@ player_die(Gentity *self, Gentity *inflictor, Gentity *attacker,
 int
 CheckArmor(Gentity *ent, int damage, int dflags)
 {
-	gClient *client;
+	Gclient *client;
 	int	save;
 	int	count;
 
@@ -649,7 +649,7 @@ void
 G_Damage(Gentity *targ, Gentity *inflictor, Gentity *attacker,
 	 Vec3 dir, Vec3 point, int damage, int dflags, int mod)
 {
-	gClient *client;
+	Gclient *client;
 	int	take;
 	int	asave;
 	int	knockback;

@@ -687,7 +687,7 @@ CG_NewClientInfo(int clientNum)
 
 	/* team leader */
 	v = Info_ValueForKey(configstring, "tl");
-	newinfo.teamLeader = atoi(v);
+	newinfo.teamleader = atoi(v);
 
 	v = Info_ValueForKey(configstring, "g_redteam");
 	Q_strncpyz(newinfo.redTeam, v, MAX_TEAMNAME);

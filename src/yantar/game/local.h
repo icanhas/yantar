@@ -44,7 +44,7 @@ typedef enum {
 #define SP_PODIUM_MODEL Pobjectmodels "/podium/podium4.md3"
 
 typedef struct Gentity Gentity;
-typedef struct Gclient gClient;
+typedef struct Gclient Gclient;
 
 struct Gentity {
 	Entstate	s;	/* communicated by server to clients */
@@ -169,7 +169,7 @@ typedef enum {
 	SPECTATOR_FREE,
 	SPECTATOR_FOLLOW,
 	SPECTATOR_SCOREBOARD
-} spectatorState_t;
+} Spectatorstate;
 
 typedef enum {
 	TEAM_BEGIN,	/* Beginning a team game, spawn at base */
@@ -199,13 +199,13 @@ typedef struct {
  * time and reading them back at connection time.  Anything added here
  * MUST be dealt with in G_InitSessionData() / G_ReadSessionData() / G_WriteSessionData() */
 typedef struct {
-	Team			sessionTeam;
-	int			spectatorNum;		/* for determining next-in-line to play */
-	spectatorState_t	spectatorState;
-	int			spectatorClient;	/* for chasecam and follow mode */
+	Team			team;
+	int			specnum;		/* for determining next-in-line to play */
+	Spectatorstate	specstate;
+	int			specclient;	/* for chasecam and follow mode */
 	int			wins, losses;		/* tournament stats */
-	qbool			teamLeader;		/* true when this client is a team leader */
-} clientSession_t;
+	qbool			teamleader;		/* true when this client is a team leader */
+} Clientsess;
 
 #define MAX_NETNAME	36
 #define MAX_VOTE_COUNT	3
@@ -236,7 +236,7 @@ struct Gclient {
 
 	/* the rest of the structure is private to game */
 	clientPersistant_t	pers;
-	clientSession_t		sess;
+	Clientsess		sess;
 
 	qbool			readyToExit;	/* wishes to leave the intermission */
 
@@ -400,7 +400,7 @@ char*	G_NewString(const char *string);
  */
 void	Cmd_Score_f(Gentity *ent);
 void	StopFollowing(Gentity *ent);
-void	BroadcastTeamChange(gClient *client, int oldTeam);
+void	BroadcastTeamChange(Gclient *client, int oldTeam);
 void	SetTeam(Gentity *ent, char *s);
 void	Cmd_FollowCycle_f(Gentity *ent, int dir);
 
@@ -579,7 +579,7 @@ void	FindIntermissionPoint(void);
 void	SetLeader(int team, uint client);
 void	CheckTeamLeader(int team);
 void	G_RunThink(Gentity *ent);
-void	AddTournamentQueue(gClient *client);
+void	AddTournamentQueue(Gclient *client);
 void	QDECL G_LogPrintf(const char *fmt,
 		...) __attribute__ ((format (printf, 1, 2)));
 void	SendScoreboardMessageToAllClients(void);
@@ -620,8 +620,8 @@ void	Svcmd_GameMem_f(void);
 /*
  * session.c
  */
-void	G_ReadSessionData(gClient *client);
-void	G_InitSessionData(gClient *client, char *userinfo);
+void	G_ReadSessionData(Gclient *client);
+void	G_InitSessionData(Gclient *client, char *userinfo);
 void	G_InitWorldSession(void);
 void	G_WriteSessionData(void);
 

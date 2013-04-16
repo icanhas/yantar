@@ -115,7 +115,7 @@ G_TeamCommand(Team team, char *cmd)
 
 	for(i = 0; i < level.maxclients; i++)
 		if(level.clients[i].pers.connected == CON_CONNECTED)
-			if(level.clients[i].sess.sessionTeam == team)
+			if(level.clients[i].sess.team == team)
 				trap_SendServerCommand(i, va("%s", cmd));
 }
 

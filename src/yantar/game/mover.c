@@ -492,11 +492,11 @@ SetMoverState(Gentity *ent, moverState_t moverState, int time)
  * in the same amount of time
  */
 void
-MatchTeam(Gentity *teamLeader, int moverState, int time)
+MatchTeam(Gentity *teamleader, int moverState, int time)
 {
 	Gentity *slave;
 
-	for(slave = teamLeader; slave; slave = slave->teamchain)
+	for(slave = teamleader; slave; slave = slave->teamchain)
 		SetMoverState(slave, moverState, time);
 }
 
@@ -743,7 +743,7 @@ Touch_DoorTriggerSpectator(Gentity *ent, Gentity *other, Trace *trace)
 void
 Touch_DoorTrigger(Gentity *ent, Gentity *other, Trace *trace)
 {
-	if(other->client && other->client->sess.sessionTeam ==
+	if(other->client && other->client->sess.team ==
 	   TEAM_SPECTATOR){
 		/* if the door is not open and not opening */
 		if(ent->parent->moverState != MOVER_1TO2 &&

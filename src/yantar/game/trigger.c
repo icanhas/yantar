@@ -42,10 +42,10 @@ multi_trigger(Gentity *ent, Gentity *activator)
 
 	if(activator->client){
 		if((ent->spawnflags & 1) &&
-		   activator->client->sess.sessionTeam != TEAM_RED)
+		   activator->client->sess.team != TEAM_RED)
 			return;
 		if((ent->spawnflags & 2) &&
-		   activator->client->sess.sessionTeam != TEAM_BLUE)
+		   activator->client->sess.team != TEAM_BLUE)
 			return;
 	}
 
@@ -275,7 +275,7 @@ trigger_teleporter_touch(Gentity *self, Gentity *other, Trace *trace)
 		return;
 	/* Spectators only? */
 	if((self->spawnflags & 1) &&
-	   other->client->sess.sessionTeam != TEAM_SPECTATOR)
+	   other->client->sess.team != TEAM_SPECTATOR)
 		return;
 
 

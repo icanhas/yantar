@@ -22,7 +22,7 @@ DeathmatchScoreboardMessage(Gentity *ent)
 	char	string[1400];
 	int	stringlength;
 	int	i, j;
-	gClient *cl;
+	Gclient *cl;
 	int	numSorted, scoreFlags, accuracy, perfect;
 
 	/* send the latest information on all clients */
@@ -150,7 +150,7 @@ ConcatArgs(int start)
 int
 ClientNumberFromString(Gentity *to, char *s)
 {
-	gClient *cl;
+	Gclient *cl;
 	int	idnum;
 	char	cleanName[MAX_STRING_CHARS];
 
@@ -423,7 +423,7 @@ Cmd_TeamTask_f(Gentity *ent)
 void
 Cmd_Kill_f(Gentity *ent)
 {
-	if(ent->client->sess.sessionTeam == TEAM_SPECTATOR)
+	if(ent->client->sess.team == TEAM_SPECTATOR)
 		return;
 	if(ent->health <= 0)
 		return;
@@ -438,22 +438,22 @@ Cmd_Kill_f(Gentity *ent)
  * Let everyone know about a team change
  */
 void
-BroadcastTeamChange(gClient *client, int oldTeam)
+BroadcastTeamChange(Gclient *client, int oldTeam)
 {
-	if(client->sess.sessionTeam == TEAM_RED)
+	if(client->sess.team == TEAM_RED)
 		trap_SendServerCommand(-1,
 			va("cp \"%s" S_COLOR_WHITE " joined the red team.\n\"",
 				client->pers.netname));
-	else if(client->sess.sessionTeam == TEAM_BLUE)
+	else if(client->sess.team == TEAM_BLUE)
 		trap_SendServerCommand(-1,
 			va("cp \"%s" S_COLOR_WHITE " joined the blue team.\n\"",
 				client->pers.netname));
-	else if(client->sess.sessionTeam == TEAM_SPECTATOR && oldTeam !=
+	else if(client->sess.team == TEAM_SPECTATOR && oldTeam !=
 		TEAM_SPECTATOR)
 		trap_SendServerCommand(-1,
 			va("cp \"%s" S_COLOR_WHITE " joined the spectators.\n\"",
 				client->pers.netname));
-	else if(client->sess.sessionTeam == TEAM_FREE)
+	else if(client->sess.team == TEAM_FREE)
 		trap_SendServerCommand(-1,
 			va("cp \"%s" S_COLOR_WHITE " joined the battle.\n\"",
 				client->pers.netname));
@@ -466,11 +466,11 @@ void
 SetTeam(Gentity *ent, char *s)
 {
 	int	team, oldTeam;
-	gClient *client;
+	Gclient *client;
 	int	clientNum;
-	spectatorState_t specState;
+	Spectatorstate specState;
 	int	specClient;
-	int	teamLeader;
+	int	teamleader;
 
 	/*
 	 * see what change is requested
@@ -545,7 +545,7 @@ SetTeam(Gentity *ent, char *s)
 	/*
 	 * decide if we will allow the change
 	 *  */
-	oldTeam = client->sess.sessionTeam;
+	oldTeam = client->sess.team;
 	if(team == oldTeam && team != TEAM_SPECTATOR)
 		return;
 
@@ -571,17 +571,17 @@ SetTeam(Gentity *ent, char *s)
 	if(team == TEAM_SPECTATOR && oldTeam != team)
 		AddTournamentQueue(client);
 
-	client->sess.sessionTeam = team;
-	client->sess.spectatorState	= specState;
-	client->sess.spectatorClient	= specClient;
+	client->sess.team = team;
+	client->sess.specstate	= specState;
+	client->sess.specclient	= specClient;
 
-	client->sess.teamLeader = qfalse;
+	client->sess.teamleader = qfalse;
 	if(team == TEAM_RED || team == TEAM_BLUE){
-		teamLeader = TeamLeader(team);
+		teamleader = TeamLeader(team);
 		/* if there is no team leader or the team leader is a bot and this client is not a bot */
-		if(teamLeader == -1 ||
+		if(teamleader == -1 ||
 		   (!(g_entities[clientNum].r.svFlags & SVF_BOT) &&
-		    (g_entities[teamLeader].r.svFlags & SVF_BOT)))
+		    (g_entities[teamleader].r.svFlags & SVF_BOT)))
 			SetLeader(team, clientNum);
 	}
 	/* make sure there is a team leader on the team the player came from */
@@ -606,8 +606,8 @@ void
 StopFollowing(Gentity *ent)
 {
 	ent->client->ps.persistant[ PERS_TEAM ] = TEAM_SPECTATOR;
-	ent->client->sess.sessionTeam = TEAM_SPECTATOR;
-	ent->client->sess.spectatorState = SPECTATOR_FREE;
+	ent->client->sess.team = TEAM_SPECTATOR;
+	ent->client->sess.specstate = SPECTATOR_FREE;
 	ent->client->ps.pm_flags &= ~PMF_FOLLOW;
 	ent->r.svFlags &= ~SVF_BOT;
 	ent->client->ps.clientNum = ent - g_entities;
@@ -623,7 +623,7 @@ Cmd_Team_f(Gentity *ent)
 	char	s[MAX_TOKEN_CHARS];
 
 	if(trap_Argc() != 2){
-		oldTeam = ent->client->sess.sessionTeam;
+		oldTeam = ent->client->sess.team;
 		switch(oldTeam){
 		case TEAM_BLUE:
 			trap_SendServerCommand(ent-g_entities,
@@ -654,7 +654,7 @@ Cmd_Team_f(Gentity *ent)
 
 	/* if they are playing a tournement game, count as a loss */
 	if((g_gametype.integer == GT_TOURNAMENT)
-	   && ent->client->sess.sessionTeam == TEAM_FREE)
+	   && ent->client->sess.team == TEAM_FREE)
 		ent->client->sess.losses++;
 
 	trap_Argv(1, s, sizeof(s));
@@ -675,7 +675,7 @@ Cmd_Follow_f(Gentity *ent)
 	char	arg[MAX_TOKEN_CHARS];
 
 	if(trap_Argc() != 2){
-		if(ent->client->sess.spectatorState == SPECTATOR_FOLLOW)
+		if(ent->client->sess.specstate == SPECTATOR_FOLLOW)
 			StopFollowing(ent);
 		return;
 	}
@@ -690,20 +690,20 @@ Cmd_Follow_f(Gentity *ent)
 		return;
 
 	/* can't follow another spectator */
-	if(level.clients[ i ].sess.sessionTeam == TEAM_SPECTATOR)
+	if(level.clients[ i ].sess.team == TEAM_SPECTATOR)
 		return;
 
 	/* if they are playing a tournement game, count as a loss */
 	if((g_gametype.integer == GT_TOURNAMENT)
-	   && ent->client->sess.sessionTeam == TEAM_FREE)
+	   && ent->client->sess.team == TEAM_FREE)
 		ent->client->sess.losses++;
 
 	/* first set them to spectator */
-	if(ent->client->sess.sessionTeam != TEAM_SPECTATOR)
+	if(ent->client->sess.team != TEAM_SPECTATOR)
 		SetTeam(ent, "spectator");
 
-	ent->client->sess.spectatorState	= SPECTATOR_FOLLOW;
-	ent->client->sess.spectatorClient	= i;
+	ent->client->sess.specstate	= SPECTATOR_FOLLOW;
+	ent->client->sess.specclient	= i;
 }
 
 /*
@@ -717,16 +717,16 @@ Cmd_FollowCycle_f(Gentity *ent, int dir)
 
 	/* if they are playing a tournement game, count as a loss */
 	if((g_gametype.integer == GT_TOURNAMENT)
-	   && ent->client->sess.sessionTeam == TEAM_FREE)
+	   && ent->client->sess.team == TEAM_FREE)
 		ent->client->sess.losses++;
 	/* first set them to spectator */
-	if(ent->client->sess.spectatorState == SPECTATOR_NOT)
+	if(ent->client->sess.specstate == SPECTATOR_NOT)
 		SetTeam(ent, "spectator");
 
 	if(dir != 1 && dir != -1)
 		G_Error("Cmd_FollowCycle_f: bad dir %i", dir);
 
-	clientnum	= ent->client->sess.spectatorClient;
+	clientnum	= ent->client->sess.specclient;
 	original	= clientnum;
 	do {
 		clientnum += dir;
@@ -740,13 +740,13 @@ Cmd_FollowCycle_f(Gentity *ent, int dir)
 			continue;
 
 		/* can't follow another spectator */
-		if(level.clients[ clientnum ].sess.sessionTeam ==
+		if(level.clients[ clientnum ].sess.team ==
 		   TEAM_SPECTATOR)
 			continue;
 
 		/* this is good, we can use it */
-		ent->client->sess.spectatorClient	= clientnum;
-		ent->client->sess.spectatorState	= SPECTATOR_FOLLOW;
+		ent->client->sess.specclient	= clientnum;
+		ent->client->sess.specstate	= SPECTATOR_FOLLOW;
 		return;
 	} while(clientnum != original);
 
@@ -774,8 +774,8 @@ G_SayTo(Gentity *ent, Gentity *other, int mode, int color, const char *name,
 		return;
 	/* no chatting to players in tournements */
 	if((g_gametype.integer == GT_TOURNAMENT)
-	   && other->client->sess.sessionTeam == TEAM_FREE
-	   && ent->client->sess.sessionTeam != TEAM_FREE)
+	   && other->client->sess.team == TEAM_FREE
+	   && ent->client->sess.team != TEAM_FREE)
 		return;
 
 	trap_SendServerCommand(other-g_entities, va("%s \"%s%c%c%s\"",
@@ -826,8 +826,8 @@ G_Say(Gentity *ent, Gentity *target, int mode, const char *chatText)
 		break;
 	case SAY_TELL:
 		if(target && g_gametype.integer >= GT_TEAM &&
-		   target->client->sess.sessionTeam ==
-		   ent->client->sess.sessionTeam &&
+		   target->client->sess.team ==
+		   ent->client->sess.team &&
 		   Team_GetLocationMsg(ent, location, sizeof(location)))
 			Q_sprintf (name, sizeof(name),
 				EC "[%s%c%c"EC "] (%s)"EC ": ",
@@ -1072,8 +1072,8 @@ Cmd_VoiceTaunt_f(Gentity *ent)
 		for(i = 0; i < MAX_CLIENTS; i++){
 			who = g_entities + i;
 			if(who->client && who != ent &&
-			   who->client->sess.sessionTeam ==
-			   ent->client->sess.sessionTeam)
+			   who->client->sess.team ==
+			   ent->client->sess.team)
 				if(who->client->rewardTime > level.time){
 					if(!(who->r.svFlags & SVF_BOT)){
 						;
@@ -1166,7 +1166,7 @@ Cmd_CallVote_f(Gentity *ent)
 			"print \"You have called the maximum number of votes.\n\"");
 		return;
 	}
-	if(ent->client->sess.sessionTeam == TEAM_SPECTATOR){
+	if(ent->client->sess.team == TEAM_SPECTATOR){
 		trap_SendServerCommand(
 			ent-g_entities,
 			"print \"Not allowed to call a vote as spectator.\n\"");
@@ -1304,7 +1304,7 @@ Cmd_Vote_f(Gentity *ent)
 			"print \"Vote already cast.\n\"");
 		return;
 	}
-	if(ent->client->sess.sessionTeam == TEAM_SPECTATOR){
+	if(ent->client->sess.team == TEAM_SPECTATOR){
 		trap_SendServerCommand(
 			ent-g_entities,
 			"print \"Not allowed to vote as spectator.\n\"");
@@ -1339,7 +1339,7 @@ Cmd_CallTeamVote_f(Gentity *ent)
 	char	arg1[MAX_STRING_TOKENS];
 	char	arg2[MAX_STRING_TOKENS];
 
-	team = ent->client->sess.sessionTeam;
+	team = ent->client->sess.team;
 	if(team == TEAM_RED)
 		cs_offset = 0;
 	else if(team == TEAM_BLUE)
@@ -1365,7 +1365,7 @@ Cmd_CallTeamVote_f(Gentity *ent)
 			"print \"You have called the maximum number of team votes.\n\"");
 		return;
 	}
-	if(ent->client->sess.sessionTeam == TEAM_SPECTATOR){
+	if(ent->client->sess.team == TEAM_SPECTATOR){
 		trap_SendServerCommand(
 			ent-g_entities,
 			"print \"Not allowed to call a vote as spectator.\n\"");
@@ -1423,7 +1423,7 @@ Cmd_CallTeamVote_f(Gentity *ent)
 					if(level.clients[i].pers.connected ==
 					   CON_DISCONNECTED)
 						continue;
-					if(level.clients[i].sess.sessionTeam !=
+					if(level.clients[i].sess.team !=
 					   team)
 						continue;
 					Q_strncpyz(netname,
@@ -1459,7 +1459,7 @@ Cmd_CallTeamVote_f(Gentity *ent)
 	for(i = 0; i < level.maxclients; i++){
 		if(level.clients[i].pers.connected == CON_DISCONNECTED)
 			continue;
-		if(level.clients[i].sess.sessionTeam == team)
+		if(level.clients[i].sess.team == team)
 			trap_SendServerCommand(i,
 				va("print \"%s called a team vote.\n\"",
 					ent->client->pers.netname));
@@ -1471,7 +1471,7 @@ Cmd_CallTeamVote_f(Gentity *ent)
 	level.teamVoteNo[cs_offset]	= 0;
 
 	for(i = 0; i < level.maxclients; i++)
-		if(level.clients[i].sess.sessionTeam == team)
+		if(level.clients[i].sess.team == team)
 			level.clients[i].ps.eFlags &= ~EF_TEAMVOTED;
 	ent->client->ps.eFlags |= EF_TEAMVOTED;
 
@@ -1494,7 +1494,7 @@ Cmd_TeamVote_f(Gentity *ent)
 	int	team, cs_offset;
 	char	msg[64];
 
-	team = ent->client->sess.sessionTeam;
+	team = ent->client->sess.team;
 	if(team == TEAM_RED)
 		cs_offset = 0;
 	else if(team == TEAM_BLUE)
@@ -1512,7 +1512,7 @@ Cmd_TeamVote_f(Gentity *ent)
 			"print \"Team vote already cast.\n\"");
 		return;
 	}
-	if(ent->client->sess.sessionTeam == TEAM_SPECTATOR){
+	if(ent->client->sess.team == TEAM_SPECTATOR){
 		trap_SendServerCommand(
 			ent-g_entities,
 			"print \"Not allowed to vote as spectator.\n\"");

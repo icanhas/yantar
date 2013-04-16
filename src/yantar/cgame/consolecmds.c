@@ -241,7 +241,7 @@ CG_NextOrder_f(void)
 {
 	Clientinfo *ci = cgs.clientinfo + cg.snap->ps.clientNum;
 	if(ci)
-		if(!ci->teamLeader &&
+		if(!ci->teamleader &&
 		   sortedTeamPlayers[cg_currentSelectedPlayer.integer] !=
 		   cg.snap->ps.clientNum)
 			return;

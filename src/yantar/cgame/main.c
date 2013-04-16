@@ -1645,7 +1645,7 @@ CG_FeederItemText(float feederID, int index, int column, Handle *handle)
 					return "Spectator";
 				else
 					return "";
-			}else if(info->teamLeader)
+			}else if(info->teamleader)
 				return "Leader";
 
 			break;

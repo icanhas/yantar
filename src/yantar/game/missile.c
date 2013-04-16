@@ -134,7 +134,7 @@ ProximityMine_Trigger(Gentity *trigger, Gentity *other, Trace *trace)
 		
 	if(g_gametype.integer >= GT_TEAM)
 		/* don't trigger same team mines */
-		if(trigger->parent->s.generic1 == other->client->sess.sessionTeam)
+		if(trigger->parent->s.generic1 == other->client->sess.team)
 			return;
 	/*
 	 * now check for ability to damage so we don't get triggered through
@@ -769,7 +769,7 @@ fire_prox(Gentity *self, Vec3 start, Vec3 dir)
 	 */
 	bolt->count = 0;
 	/* FIXME: we prolly wanna abuse another field */
-	bolt->s.generic1 = self->client->sess.sessionTeam;
+	bolt->s.generic1 = self->client->sess.team;
 
 	bolt->s.traj.type = TR_GRAVITY;
 	bolt->s.traj.time = level.time - Presteptime;	/* move a bit on the very first frame */

@@ -24,7 +24,7 @@ typedef struct {
 } Cvartable;
 
 Gentity	g_entities[MAX_GENTITIES];
-gClient	g_clients[MAX_CLIENTS];
+Gclient	g_clients[MAX_CLIENTS];
 
 Vmcvar	g_gametype;
 Vmcvar	g_dmflags;
@@ -582,8 +582,8 @@ void
 AddTournamentPlayer(void)
 {
 	int i;
-	gClient	*client;
-	gClient	*nextInLine;
+	Gclient	*client;
+	Gclient	*nextInLine;
 
 	if(level.numPlayingClients >= 2)
 		return;
@@ -598,15 +598,15 @@ AddTournamentPlayer(void)
 		client = &level.clients[i];
 		if(client->pers.connected != CON_CONNECTED)
 			continue;
-		if(client->sess.sessionTeam != TEAM_SPECTATOR)
+		if(client->sess.team != TEAM_SPECTATOR)
 			continue;
 		/* never select the dedicated follow or scoreboard clients */
-		if(client->sess.spectatorState == SPECTATOR_SCOREBOARD ||
-		   client->sess.spectatorClient < 0)
+		if(client->sess.specstate == SPECTATOR_SCOREBOARD ||
+		   client->sess.specclient < 0)
 			continue;
 
-		if(!nextInLine || client->sess.spectatorNum >
-		   nextInLine->sess.spectatorNum)
+		if(!nextInLine || client->sess.specnum >
+		   nextInLine->sess.specnum)
 			nextInLine = client;
 	}
 
@@ -626,19 +626,19 @@ AddTournamentPlayer(void)
  */
 
 void
-AddTournamentQueue(gClient *client)
+AddTournamentQueue(Gclient *client)
 {
 	int index;
-	gClient *curclient;
+	Gclient *curclient;
 
 	for(index = 0; index < level.maxclients; index++){
 		curclient = &level.clients[index];
 
 		if(curclient->pers.connected != CON_DISCONNECTED){
 			if(curclient == client)
-				curclient->sess.spectatorNum = 0;
-			else if(curclient->sess.sessionTeam == TEAM_SPECTATOR)
-				curclient->sess.spectatorNum++;
+				curclient->sess.specnum = 0;
+			else if(curclient->sess.team == TEAM_SPECTATOR)
+				curclient->sess.specnum++;
 		}
 	}
 }
@@ -714,17 +714,17 @@ AdjustTournamentScores(void)
 int QDECL
 SortRanks(const void *a, const void *b)
 {
-	gClient *ca, *cb;
+	Gclient *ca, *cb;
 
 	ca = &level.clients[*(int*)a];
 	cb = &level.clients[*(int*)b];
 
 	/* sort special clients last */
-	if(ca->sess.spectatorState == SPECTATOR_SCOREBOARD ||
-	   ca->sess.spectatorClient < 0)
+	if(ca->sess.specstate == SPECTATOR_SCOREBOARD ||
+	   ca->sess.specclient < 0)
 		return 1;
-	if(cb->sess.spectatorState == SPECTATOR_SCOREBOARD ||
-	   cb->sess.spectatorClient < 0)
+	if(cb->sess.specstate == SPECTATOR_SCOREBOARD ||
+	   cb->sess.specclient < 0)
 		return -1;
 
 	/* then connecting clients */
@@ -735,17 +735,17 @@ SortRanks(const void *a, const void *b)
 
 
 	/* then spectators */
-	if(ca->sess.sessionTeam == TEAM_SPECTATOR && cb->sess.sessionTeam ==
+	if(ca->sess.team == TEAM_SPECTATOR && cb->sess.team ==
 	   TEAM_SPECTATOR){
-		if(ca->sess.spectatorNum > cb->sess.spectatorNum)
+		if(ca->sess.specnum > cb->sess.specnum)
 			return -1;
-		if(ca->sess.spectatorNum < cb->sess.spectatorNum)
+		if(ca->sess.specnum < cb->sess.specnum)
 			return 1;
 		return 0;
 	}
-	if(ca->sess.sessionTeam == TEAM_SPECTATOR)
+	if(ca->sess.team == TEAM_SPECTATOR)
 		return 1;
-	if(cb->sess.sessionTeam == TEAM_SPECTATOR)
+	if(cb->sess.team == TEAM_SPECTATOR)
 		return -1;
 
 	/* then sort by score */
@@ -772,7 +772,7 @@ CalculateRanks(void)
 	int	rank;
 	int	score;
 	int	newScore;
-	gClient *cl;
+	Gclient *cl;
 
 	level.follow1	= -1;
 	level.follow2	= -1;
@@ -789,7 +789,7 @@ CalculateRanks(void)
 			level.sortedClients[level.numConnectedClients] = i;
 			level.numConnectedClients++;
 
-			if(level.clients[i].sess.sessionTeam !=
+			if(level.clients[i].sess.team !=
 			   TEAM_SPECTATOR){
 				level.numNonSpectatorClients++;
 
@@ -801,12 +801,12 @@ CalculateRanks(void)
 					     SVF_BOT)){
 						level.numVotingClients++;
 						if(level.clients[i].sess.
-						   sessionTeam == TEAM_RED)
+						   team == TEAM_RED)
 							level.
 							numteamVotingClients[0]
 							++;
 						else if(level.clients[i].sess.
-							sessionTeam ==
+							team ==
 							TEAM_BLUE)
 							level.
 							numteamVotingClients[1]
@@ -941,7 +941,7 @@ void
 MoveClientToIntermission(Gentity *ent)
 {
 	/* take out of follow mode if needed */
-	if(ent->client->sess.spectatorState == SPECTATOR_FOLLOW)
+	if(ent->client->sess.specstate == SPECTATOR_FOLLOW)
 		StopFollowing(ent);
 
 	FindIntermissionPoint();
@@ -1053,7 +1053,7 @@ void
 ExitLevel(void)
 {
 	int	i;
-	gClient *cl;
+	Gclient *cl;
 	char	nextmap[MAX_STRING_CHARS];
 	char	d1[MAX_STRING_CHARS];
 
@@ -1149,7 +1149,7 @@ void
 LogExit(const char *string)
 {
 	int i, numSorted;
-	gClient	*cl;
+	Gclient	*cl;
 #ifdef MISSIONPACK
 	qbool		won = qtrue;
 #endif
@@ -1175,7 +1175,7 @@ LogExit(const char *string)
 
 		cl = &level.clients[level.sortedClients[i]];
 
-		if(cl->sess.sessionTeam == TEAM_SPECTATOR)
+		if(cl->sess.team == TEAM_SPECTATOR)
 			continue;
 		if(cl->pers.connected == CON_CONNECTING)
 			continue;
@@ -1223,7 +1223,7 @@ CheckIntermissionExit(void)
 {
 	int	ready, notReady, playerCount;
 	int	i;
-	gClient *cl;
+	Gclient *cl;
 	int	readyMask;
 
 	if(g_gametype.integer == GT_SINGLE_PLAYER)
@@ -1325,7 +1325,7 @@ void
 CheckExitRules(void)
 {
 	int i;
-	gClient *cl;
+	Gclient *cl;
 	/* if at the intermission, wait for all non-bots to
 	 * signal ready, then go to next level */
 	if(level.intermissiontime){
@@ -1386,7 +1386,7 @@ CheckExitRules(void)
 			cl = level.clients + i;
 			if(cl->pers.connected != CON_CONNECTED)
 				continue;
-			if(cl->sess.sessionTeam != TEAM_FREE)
+			if(cl->sess.team != TEAM_FREE)
 				continue;
 
 			if(cl->ps.persistant[PERS_SCORE] >=
@@ -1591,7 +1591,7 @@ PrintTeam(int team, char *message)
 	uint i;
 
 	for(i = 0; i < level.maxclients; i++){
-		if(level.clients[i].sess.sessionTeam != team)
+		if(level.clients[i].sess.team != team)
 			continue;
 		trap_SendServerCommand(i, message);
 	}
@@ -1611,21 +1611,21 @@ SetLeader(int team, uint client)
 				level.clients[client].pers.netname));
 		return;
 	}
-	if(level.clients[client].sess.sessionTeam != team){
+	if(level.clients[client].sess.team != team){
 		PrintTeam(team,
 			va("print \"%s is not on the team anymore\n\"",
 				level.clients[client].pers.netname));
 		return;
 	}
 	for(i = 0; i < level.maxclients; i++){
-		if(level.clients[i].sess.sessionTeam != team)
+		if(level.clients[i].sess.team != team)
 			continue;
-		if(level.clients[i].sess.teamLeader){
-			level.clients[i].sess.teamLeader = qfalse;
+		if(level.clients[i].sess.teamleader){
+			level.clients[i].sess.teamleader = qfalse;
 			ClientUserinfoChanged(i);
 		}
 	}
-	level.clients[client].sess.teamLeader = qtrue;
+	level.clients[client].sess.teamleader = qtrue;
 	ClientUserinfoChanged(client);
 	PrintTeam(team,
 		va("print \"%s is the new team leader\n\"",
@@ -1641,25 +1641,25 @@ CheckTeamLeader(int team)
 	uint i;
 
 	for(i = 0; i < level.maxclients; i++){
-		if(level.clients[i].sess.sessionTeam != team)
+		if(level.clients[i].sess.team != team)
 			continue;
-		if(level.clients[i].sess.teamLeader)
+		if(level.clients[i].sess.teamleader)
 			break;
 	}
 	if(i >= level.maxclients){
 		for(i = 0; i < level.maxclients; i++){
-			if(level.clients[i].sess.sessionTeam != team)
+			if(level.clients[i].sess.team != team)
 				continue;
 			if(!(g_entities[i].r.svFlags & SVF_BOT)){
-				level.clients[i].sess.teamLeader = qtrue;
+				level.clients[i].sess.teamleader = qtrue;
 				break;
 			}
 		}
 		if(i >= level.maxclients){
 			for(i = 0 ; i < level.maxclients ; i++ ){
-				if (level.clients[i].sess.sessionTeam != team)
+				if (level.clients[i].sess.team != team)
 					continue;
-				level.clients[i].sess.teamLeader = qtrue;
+				level.clients[i].sess.teamleader = qtrue;
 				break;
 			}
 		}

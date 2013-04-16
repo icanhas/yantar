@@ -122,9 +122,9 @@ BotTeam(bot_state_t *bs)
 	if(bs->client < 0 || bs->client >= MAX_CLIENTS)
 		return qfalse;
 
-	if(level.clients[bs->client].sess.sessionTeam == TEAM_RED)
+	if(level.clients[bs->client].sess.team == TEAM_RED)
 		return TEAM_RED;
-	else if(level.clients[bs->client].sess.sessionTeam == TEAM_BLUE)
+	else if(level.clients[bs->client].sess.team == TEAM_BLUE)
 		return TEAM_BLUE;
 
 	return TEAM_FREE;
@@ -2070,8 +2070,8 @@ BotSameTeam(bot_state_t *bs, int entnum)
 		return qfalse;
 
 	if(gametype >= GT_TEAM)
-		if(level.clients[bs->client].sess.sessionTeam ==
-		   level.clients[entnum].sess.sessionTeam) return qtrue;
+		if(level.clients[bs->client].sess.team ==
+		   level.clients[entnum].sess.team) return qtrue;
 
 	return qfalse;
 }

@@ -19,7 +19,7 @@
 void
 P_DamageFeedback(Gentity *player)
 {
-	gClient	*client;
+	Gclient	*client;
 	float count;
 	Vec3		angles;
 
@@ -217,7 +217,7 @@ G_TouchTriggers(Gentity *ent)
 			continue;
 
 		/* ignore most entities if a spectator */
-		if(ent->client->sess.sessionTeam == TEAM_SPECTATOR)
+		if(ent->client->sess.team == TEAM_SPECTATOR)
 			if(hit->s.eType != ET_TELEPORT_TRIGGER &&
 				/* this is ugly but adding a new ET_? type will */
 				/* most likely cause network incompatibilities */
@@ -254,11 +254,11 @@ void
 SpectatorThink(Gentity *ent, Usrcmd *ucmd)
 {
 	Pmove pm;
-	gClient *client;
+	Gclient *client;
 
 	client = ent->client;
 
-	if(client->sess.spectatorState != SPECTATOR_FOLLOW){
+	if(client->sess.specstate != SPECTATOR_FOLLOW){
 		client->ps.pm_type = PM_SPECTATOR;
 		client->ps.speed = 400;	/* faster than normal */
 
@@ -292,7 +292,7 @@ SpectatorThink(Gentity *ent, Usrcmd *ucmd)
  * Returns qfalse if the client is dropped
  */
 qbool
-ClientInactivityTimer(gClient *client)
+ClientInactivityTimer(Gclient *client)
 {
 	if(!g_inactivity.integer){
 		/* give everyone some time, so if the operator sets g_inactivity during
@@ -332,7 +332,7 @@ ClientInactivityTimer(gClient *client)
 void
 ClientTimerActions(Gentity *ent, int msec)
 {
-	gClient *client;
+	Gclient *client;
 
 	client = ent->client;
 	client->timeResidual += msec;
@@ -374,7 +374,7 @@ ClientTimerActions(Gentity *ent, int msec)
 }
 
 void
-ClientIntermissionThink(gClient *client)
+ClientIntermissionThink(Gclient *client)
 {
 	client->ps.eFlags &= ~(EF_TALK | EF_PRIFIRING | EF_SECFIRING | EF_HOOKFIRING);
 
@@ -399,7 +399,7 @@ ClientEvents(Gentity *ent, int oldEventSequence)
 {
 	int	i, j;
 	int	event;
-	gClient *client;
+	Gclient *client;
 	int	damage;
 	Vec3 origin, angles;
 /*	qbool		fired; */
@@ -562,7 +562,7 @@ SendPendingPredictableEvents(Playerstate *ps)
 void
 ClientThink_real(Gentity *ent)
 {
-	gClient	*client;
+	Gclient	*client;
 	Pmove		pm;
 	int	oldEventSequence;
 	int	msec;
@@ -587,7 +587,7 @@ ClientThink_real(Gentity *ent)
 	msec = ucmd->serverTime - client->ps.commandTime;
 	/* following others may result in bad times, but we still want
 	 * to check for follow toggles */
-	if(msec < 1 && client->sess.spectatorState != SPECTATOR_FOLLOW)
+	if(msec < 1 && client->sess.specstate != SPECTATOR_FOLLOW)
 		return;
 	if(msec > 200)
 		msec = 200;
@@ -613,8 +613,8 @@ ClientThink_real(Gentity *ent)
 	}
 
 	/* spectators don't do much */
-	if(client->sess.sessionTeam == TEAM_SPECTATOR){
-		if(client->sess.spectatorState == SPECTATOR_SCOREBOARD)
+	if(client->sess.team == TEAM_SPECTATOR){
+		if(client->sess.specstate == SPECTATOR_SCOREBOARD)
 			return;
 		SpectatorThink(ent, ucmd);
 		return;
@@ -818,13 +818,13 @@ G_RunClient(Gentity *ent)
 void
 SpectatorClientEndFrame(Gentity *ent)
 {
-	gClient *cl;
+	Gclient *cl;
 
 	/* if we are doing a chase cam or a remote view, grab the latest info */
-	if(ent->client->sess.spectatorState == SPECTATOR_FOLLOW){
+	if(ent->client->sess.specstate == SPECTATOR_FOLLOW){
 		int clientNum, flags;
 
-		clientNum = ent->client->sess.spectatorClient;
+		clientNum = ent->client->sess.specclient;
 
 		/* team follow1 and team follow2 go to whatever clients are playing */
 		if(clientNum == -1)
@@ -834,7 +834,7 @@ SpectatorClientEndFrame(Gentity *ent)
 		if(clientNum >= 0){
 			cl = &level.clients[ clientNum ];
 			if(cl->pers.connected == CON_CONNECTED &&
-			   cl->sess.sessionTeam != TEAM_SPECTATOR){
+			   cl->sess.team != TEAM_SPECTATOR){
 				flags =
 					(cl->ps.eFlags &
 					 ~(EF_VOTED |
@@ -847,15 +847,15 @@ SpectatorClientEndFrame(Gentity *ent)
 				return;
 			}else
 			/* drop them to free spectators unless they are dedicated camera followers */
-			if(ent->client->sess.spectatorClient >= 0){
-				ent->client->sess.spectatorState =
+			if(ent->client->sess.specclient >= 0){
+				ent->client->sess.specstate =
 					SPECTATOR_FREE;
 				ClientBegin(ent->client - level.clients);
 			}
 		}
 	}
 
-	if(ent->client->sess.spectatorState == SPECTATOR_SCOREBOARD)
+	if(ent->client->sess.specstate == SPECTATOR_SCOREBOARD)
 		ent->client->ps.pm_flags |= PMF_SCOREBOARD;
 	else
 		ent->client->ps.pm_flags &= ~PMF_SCOREBOARD;
@@ -871,7 +871,7 @@ ClientEndFrame(Gentity *ent)
 {
 	int i;
 
-	if(ent->client->sess.sessionTeam == TEAM_SPECTATOR){
+	if(ent->client->sess.team == TEAM_SPECTATOR){
 		SpectatorClientEndFrame(ent);
 		return;
 	}

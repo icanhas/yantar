@@ -163,7 +163,7 @@ OnSameTeam(Gentity *ent1, Gentity *ent2)
 	if(g_gametype.integer < GT_TEAM)
 		return qfalse;
 
-	if(ent1->client->sess.sessionTeam == ent2->client->sess.sessionTeam)
+	if(ent1->client->sess.team == ent2->client->sess.team)
 		return qtrue;
 
 	return qfalse;
@@ -243,7 +243,7 @@ Team_ForceGesture(int team)
 			continue;
 		if(!ent->client)
 			continue;
-		if(ent->client->sess.sessionTeam != team)
+		if(ent->client->sess.team != team)
 			continue;
 		ent->flags |= FL_FORCE_GESTURE;
 	}
@@ -274,8 +274,8 @@ Team_FragBonuses(Gentity *targ, Gentity *inflictor, Gentity *attacker)
 	   OnSameTeam(targ, attacker))
 		return;
 
-	team = targ->client->sess.sessionTeam;
-	otherteam = OtherTeam(targ->client->sess.sessionTeam);
+	team = targ->client->sess.team;
+	otherteam = OtherTeam(targ->client->sess.team);
 	if(otherteam < 0)
 		return;		/* whoever died isn't on a team */
 
@@ -306,7 +306,7 @@ Team_FragBonuses(Gentity *targ, Gentity *inflictor, Gentity *attacker)
 		 * field on the other team */
 		for(i = 0; i < g_maxclients.integer; i++){
 			ent = g_entities + i;
-			if(ent->inuse && ent->client->sess.sessionTeam ==
+			if(ent->inuse && ent->client->sess.team ==
 			   otherteam)
 				ent->client->pers.teamState.lasthurtcarrier = 0;
 		}
@@ -328,7 +328,7 @@ Team_FragBonuses(Gentity *targ, Gentity *inflictor, Gentity *attacker)
 		 * field on the other team */
 		for(i = 0; i < g_maxclients.integer; i++){
 			ent = g_entities + i;
-			if(ent->inuse && ent->client->sess.sessionTeam ==
+			if(ent->inuse && ent->client->sess.team ==
 			   otherteam)
 				ent->client->pers.teamState.lasthurtcarrier = 0;
 		}
@@ -387,7 +387,7 @@ Team_FragBonuses(Gentity *targ, Gentity *inflictor, Gentity *attacker)
 
 	/* we have to find the flag and carrier entities */
 	/* find the flag */
-	switch(attacker->client->sess.sessionTeam){
+	switch(attacker->client->sess.team){
 	case TEAM_RED:
 		c = "team_CTF_redflag";
 		break;
@@ -422,8 +422,8 @@ Team_FragBonuses(Gentity *targ, Gentity *inflictor, Gentity *attacker)
 	     trap_InPVS(flag->r.currentOrigin, targ->r.currentOrigin)) ||
 	    (lenv3(v2) < CTF_TARGET_PROTECT_RADIUS &&
 	     trap_InPVS(flag->r.currentOrigin, attacker->r.currentOrigin))) &&
-	   attacker->client->sess.sessionTeam !=
-	   targ->client->sess.sessionTeam){
+	   attacker->client->sess.team !=
+	   targ->client->sess.team){
 
 		/* we defended the base flag */
 		AddScore(attacker, targ->r.currentOrigin, CTF_FLAG_DEFENSE_BONUS);
@@ -455,8 +455,8 @@ Team_FragBonuses(Gentity *targ, Gentity *inflictor, Gentity *attacker)
 		    (lenv3(v2) < CTF_ATTACKER_PROTECT_RADIUS &&
 		     trap_InPVS(carrier->r.currentOrigin,
 			     attacker->r.currentOrigin))) &&
-		   attacker->client->sess.sessionTeam !=
-		   targ->client->sess.sessionTeam){
+		   attacker->client->sess.team !=
+		   targ->client->sess.team){
 			AddScore(attacker, targ->r.currentOrigin,
 				CTF_CARRIER_PROTECT_BONUS);
 			attacker->client->pers.teamState.carrierdefense++;
@@ -491,19 +491,19 @@ Team_CheckHurtCarrier(Gentity *targ, Gentity *attacker)
 	if(!targ->client || !attacker->client)
 		return;
 
-	if(targ->client->sess.sessionTeam == TEAM_RED)
+	if(targ->client->sess.team == TEAM_RED)
 		flag_pw = PW_BLUEFLAG;
 	else
 		flag_pw = PW_REDFLAG;
 
 	/* flags */
 	if(targ->client->ps.powerups[flag_pw] &&
-	   targ->client->sess.sessionTeam != attacker->client->sess.sessionTeam)
+	   targ->client->sess.team != attacker->client->sess.team)
 		attacker->client->pers.teamState.lasthurtcarrier = level.time;
 
 	/* skulls */
 	if(targ->client->ps.generic1 &&
-	   targ->client->sess.sessionTeam != attacker->client->sess.sessionTeam)
+	   targ->client->sess.team != attacker->client->sess.team)
 		attacker->client->pers.teamState.lasthurtcarrier = level.time;
 }
 
@@ -679,13 +679,13 @@ Team_TouchOurFlag(Gentity *ent, Gentity *other, int team)
 {
 	int i;
 	Gentity	*player;
-	gClient	*cl = other->client;
+	Gclient	*cl = other->client;
 	int enemy_flag;
 
 	if(g_gametype.integer == GT_1FCTF)
 		enemy_flag = PW_NEUTRALFLAG;
 	else{
-	if(cl->sess.sessionTeam == TEAM_RED)
+	if(cl->sess.team == TEAM_RED)
 		enemy_flag = PW_BLUEFLAG;
 	else
 		enemy_flag = PW_REDFLAG;
@@ -722,8 +722,8 @@ Team_TouchOurFlag(Gentity *ent, Gentity *other, int team)
 	teamgame.last_capture_team = team;
 
 	/* Increase the team's score */
-	AddTeamScore(ent->s.traj.base, other->client->sess.sessionTeam, 1);
-	Team_ForceGesture(other->client->sess.sessionTeam);
+	AddTeamScore(ent->s.traj.base, other->client->sess.team, 1);
+	Team_ForceGesture(other->client->sess.team);
 
 	other->client->pers.teamState.captures++;
 	/* add the sprite over the player's head */
@@ -747,11 +747,11 @@ Team_TouchOurFlag(Gentity *ent, Gentity *other, int team)
 		if(!player->inuse || player == other)
 			continue;
 
-		if(player->client->sess.sessionTeam !=
-		   cl->sess.sessionTeam)
+		if(player->client->sess.team !=
+		   cl->sess.team)
 			player->client->pers.teamState.lasthurtcarrier = -5;
-		else if(player->client->sess.sessionTeam ==
-			cl->sess.sessionTeam){
+		else if(player->client->sess.team ==
+			cl->sess.team){
 			if(player != other)
 				AddScore(player, ent->r.currentOrigin,
 					CTF_TEAM_BONUS);
@@ -806,7 +806,7 @@ Team_TouchOurFlag(Gentity *ent, Gentity *other, int team)
 int
 Team_TouchEnemyFlag(Gentity *ent, Gentity *other, int team)
 {
-	gClient *cl = other->client;
+	Gclient *cl = other->client;
 
 	if(g_gametype.integer == GT_1FCTF){
 		PrintMsg (NULL, "%s" S_COLOR_WHITE " got the flag!\n",
@@ -841,7 +841,7 @@ int
 Pickup_Team(Gentity *ent, Gentity *other)
 {
 	int team;
-	gClient *cl = other->client;
+	Gclient *cl = other->client;
 	
 	/* figure out what team this flag is */
 	if(strcmp(ent->classname, "team_CTF_redflag") == 0)
@@ -857,14 +857,14 @@ Pickup_Team(Gentity *ent, Gentity *other)
 	if(g_gametype.integer == GT_1FCTF){
 		if(team == TEAM_FREE)
 			return Team_TouchEnemyFlag(ent, other,
-				cl->sess.sessionTeam);
-		if(team != cl->sess.sessionTeam)
+				cl->sess.team);
+		if(team != cl->sess.team)
 			return Team_TouchOurFlag(ent, other,
-				cl->sess.sessionTeam);
+				cl->sess.team);
 		return 0;
 	}
 	/* GT_CTF */
-	if(team == cl->sess.sessionTeam)
+	if(team == cl->sess.team)
 		return Team_TouchOurFlag(ent, other, team);
 	return Team_TouchEnemyFlag(ent, other, team);
 }
@@ -1043,13 +1043,13 @@ TeamplayInfoMessage(Gentity *ent)
 		return;
 
 	/* send info about followed client's team to spectator */
-	if(ent->client->sess.sessionTeam == TEAM_SPECTATOR){
-		if(ent->client->sess.spectatorClient != SPECTATOR_FOLLOW
-		   || ent->client->sess.spectatorClient < 0)
+	if(ent->client->sess.team == TEAM_SPECTATOR){
+		if(ent->client->sess.specclient != SPECTATOR_FOLLOW
+		   || ent->client->sess.specclient < 0)
 			return;
-		team = g_entities[ent->client->sess.spectatorClient].client->sess.sessionTeam;
+		team = g_entities[ent->client->sess.specclient].client->sess.team;
 	}else
-		team = ent->client->sess.sessionTeam;
+		team = ent->client->sess.team;
 	if(team != TEAM_RED && team != TEAM_BLUE)
 		return;
 
@@ -1060,7 +1060,7 @@ TeamplayInfoMessage(Gentity *ent)
 	 */
 	for(i = 0, cnt = 0; i < g_maxclients.integer && cnt < TEAM_MAXOVERLAY; i++){
 		player = g_entities + level.sortedClients[i];
-		if(player->inuse && player->client->sess.sessionTeam == team)
+		if(player->inuse && player->client->sess.team == team)
 			clients[cnt++] = level.sortedClients[i];
 	}
 
@@ -1074,7 +1074,7 @@ TeamplayInfoMessage(Gentity *ent)
 	for(i = 0, cnt = 0; i < g_maxclients.integer && cnt < TEAM_MAXOVERLAY;
 	    i++){
 		player = g_entities + i;
-		if(player->inuse && player->client->sess.sessionTeam == team){
+		if(player->inuse && player->client->sess.team == team){
 			h = player->client->ps.stats[STAT_HEALTH];
 			a = player->client->ps.stats[STAT_SHIELD];
 			if(h < 0) h = 0;
@@ -1112,8 +1112,8 @@ CheckTeamStatus(void)
 				continue;
 
 			if(ent->inuse &&
-			   (ent->client->sess.sessionTeam == TEAM_RED ||
-			    ent->client->sess.sessionTeam == TEAM_BLUE)){
+			   (ent->client->sess.team == TEAM_RED ||
+			    ent->client->sess.team == TEAM_BLUE)){
 				loc = Team_GetLocation(ent);
 				if(loc)
 					ent->client->pers.teamState.location =
@@ -1253,7 +1253,7 @@ ObeliskTouch(Gentity *self, Gentity *other, Trace *trace)
 	if(!other->client)
 		return;
 
-	if(OtherTeam(other->client->sess.sessionTeam) != self->spawnflags)
+	if(OtherTeam(other->client->sess.team) != self->spawnflags)
 		return;
 
 	tokens = other->client->ps.generic1;
@@ -1263,8 +1263,8 @@ ObeliskTouch(Gentity *self, Gentity *other, Trace *trace)
 	PrintMsg(NULL, "%s" S_COLOR_WHITE " brought in %i skull%s.\n",
 		other->client->pers.netname, tokens, tokens ? "s" : "");
 
-	AddTeamScore(self->s.pos.base, other->client->sess.sessionTeam, tokens);
-	Team_ForceGesture(other->client->sess.sessionTeam);
+	AddTeamScore(self->s.pos.base, other->client->sess.team, tokens);
+	Team_ForceGesture(other->client->sess.team);
 
 	AddScore(other, self->r.currentOrigin, CTF_CAPTURE_BONUS*tokens);
 
@@ -1452,7 +1452,7 @@ CheckObeliskAttack(Gentity *obelisk, Gentity *attacker)
 		return qfalse;
 
 	/* if the obelisk is on the same team as the attacker then don't hurt it */
-	if(obelisk->spawnflags == attacker->client->sess.sessionTeam)
+	if(obelisk->spawnflags == attacker->client->sess.team)
 		return qtrue;
 
 	/* obelisk may be hurt */

@@ -35,7 +35,7 @@ Pickup_Powerup(Gentity *ent, Gentity *other)
 {
 	int	quantity;
 	int	i;
-	gClient *client;
+	Gclient *client;
 
 	if(!other->client->ps.powerups[ent->item->tag])
 		/* round timing to seconds to make multiple powerup timers
@@ -68,7 +68,7 @@ Pickup_Powerup(Gentity *ent, Gentity *other)
 		/* if same team in team game, no sound
 		 * cannot use OnSameTeam as it expects to g_entities, not clients */
 		if(g_gametype.integer >= GT_TEAM &&
-		   other->client->sess.sessionTeam == client->sess.sessionTeam)
+		   other->client->sess.team == client->sess.team)
 			continue;
 
 		/* if too far away, no sound */

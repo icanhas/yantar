@@ -19,18 +19,18 @@
  * Called on game shutdown
  */
 void
-G_WriteClientSessionData(gClient *client)
+G_WriteClientSessionData(Gclient *client)
 {
 	const char *s, *var;
 
 	s = va("%i %i %i %i %i %i %i",
-		client->sess.sessionTeam,
-		client->sess.spectatorNum,
-		client->sess.spectatorState,
-		client->sess.spectatorClient,
+		client->sess.team,
+		client->sess.specnum,
+		client->sess.specstate,
+		client->sess.specclient,
 		client->sess.wins,
 		client->sess.losses,
-		client->sess.teamLeader);
+		client->sess.teamleader);
 	var = va("session%i", (int)(client - level.clients));
 	trap_cvarsetstr(var, s);
 }
@@ -39,34 +39,34 @@ G_WriteClientSessionData(gClient *client)
  * Called on a reconnect
  */
 void
-G_ReadSessionData(gClient *client)
+G_ReadSessionData(Gclient *client)
 {
 	char s[MAX_STRING_CHARS];
 	const char *var;
-	int teamLeader, spectatorState, sessionTeam;
+	int teamleader, specstate, team;
 
 	var = va("session%i", (int)(client - level.clients));
 	trap_cvargetstrbuf(var, s, sizeof(s));
 	sscanf(s, "%i %i %i %i %i %i %i",
-		&sessionTeam,
-		&client->sess.spectatorNum,
-		&spectatorState,
-		&client->sess.spectatorClient,
+		&team,
+		&client->sess.specnum,
+		&specstate,
+		&client->sess.specclient,
 		&client->sess.wins,
 		&client->sess.losses,
-		&teamLeader);
-	client->sess.sessionTeam = (Team)sessionTeam;
-	client->sess.spectatorState = (spectatorState_t)spectatorState;
-	client->sess.teamLeader = (qbool)teamLeader;
+		&teamleader);
+	client->sess.team = (Team)team;
+	client->sess.specstate = (Spectatorstate)specstate;
+	client->sess.teamleader = (qbool)teamleader;
 }
 
 /*
  * Called on a first-time connect
  */
 void
-G_InitSessionData(gClient *client, char *userinfo)
+G_InitSessionData(Gclient *client, char *userinfo)
 {
-	clientSession_t *sess;
+	Clientsess *sess;
 	const char *value;
 
 	sess = &client->sess;
@@ -74,16 +74,16 @@ G_InitSessionData(gClient *client, char *userinfo)
 	/* initial team determination */
 	if(g_gametype.integer >= GT_TEAM){
 		if(g_teamAutoJoin.integer){
-			sess->sessionTeam = PickTeam(-1);
+			sess->team = PickTeam(-1);
 			BroadcastTeamChange(client, -1);
 		}else
 			/* always spawn as spectator in team games */
-			sess->sessionTeam = TEAM_SPECTATOR;
+			sess->team = TEAM_SPECTATOR;
 	}else{
 		value = Info_ValueForKey(userinfo, "team");
 		if(value[0] == 's')
 			/* a willing spectator, not a waiting-in-line */
-			sess->sessionTeam = TEAM_SPECTATOR;
+			sess->team = TEAM_SPECTATOR;
 		else{
 			switch(g_gametype.integer){
 			default:
@@ -92,21 +92,21 @@ G_InitSessionData(gClient *client, char *userinfo)
 				if(g_maxGameClients.integer > 0 
 				&& level.numNonSpectatorClients >= g_maxGameClients.integer)
 				then
-					sess->sessionTeam = TEAM_SPECTATOR;
+					sess->team = TEAM_SPECTATOR;
 				else
-					sess->sessionTeam = TEAM_FREE;
+					sess->team = TEAM_FREE;
 				break;
 			case GT_TOURNAMENT:
 				/* if the game is full, go into a waiting mode */
 				if(level.numNonSpectatorClients >= 2)
-					sess->sessionTeam = TEAM_SPECTATOR;
+					sess->team = TEAM_SPECTATOR;
 				else
-					sess->sessionTeam = TEAM_FREE;
+					sess->team = TEAM_FREE;
 				break;
 			}
 		}
 	}
-	sess->spectatorState = SPECTATOR_FREE;
+	sess->specstate = SPECTATOR_FREE;
 	AddTournamentQueue(client);
 	G_WriteClientSessionData(client);
 }

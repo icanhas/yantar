@@ -482,7 +482,7 @@ TeamCount(int ignoreClientNum, int team)
 			continue;
 		if(level.clients[i].pers.connected == CON_DISCONNECTED)
 			continue;
-		if(level.clients[i].sess.sessionTeam == team)
+		if(level.clients[i].sess.team == team)
 			count++;
 	}
 
@@ -500,8 +500,8 @@ TeamLeader(int team)
 	for(i = 0; i < level.maxclients; i++){
 		if(level.clients[i].pers.connected == CON_DISCONNECTED)
 			continue;
-		if(level.clients[i].sess.sessionTeam == team)
-			if(level.clients[i].sess.teamLeader)
+		if(level.clients[i].sess.team == team)
+			if(level.clients[i].sess.teamleader)
 				return i;
 	}
 
@@ -530,7 +530,7 @@ PickTeam(int ignoreClientNum)
  * Forces a client's skin (for teamplay)
  */
 /*
- * static void ForceClientSkin( gClient *client, char *model, const char *skin ) {
+ * static void ForceClientSkin( Gclient *client, char *model, const char *skin ) {
  *      char *p;
  *
  *      if ((p = strrchr(model, '/')) != 0) {
@@ -599,12 +599,12 @@ void
 ClientUserinfoChanged(int clientNum)
 {
 	Gentity	*ent;
-	int teamTask, teamLeader, team, health;
+	int teamTask, teamleader, team, health;
 	char		*s;
 	char		model[MAX_QPATH];
 	char		headModel[MAX_QPATH];
 	char		oldname[MAX_STRING_CHARS];
-	gClient	*client;
+	Gclient	*client;
 	char		c1[MAX_INFO_STRING];
 	char		c2[MAX_INFO_STRING];
 	char		redTeam[MAX_INFO_STRING];
@@ -637,8 +637,8 @@ ClientUserinfoChanged(int clientNum)
 	s = Info_ValueForKey (userinfo, "name");
 	ClientCleanName(s, client->pers.netname, sizeof(client->pers.netname));
 
-	if(client->sess.sessionTeam == TEAM_SPECTATOR)
-		if(client->sess.spectatorState == SPECTATOR_SCOREBOARD)
+	if(client->sess.team == TEAM_SPECTATOR)
+		if(client->sess.specstate == SPECTATOR_SCOREBOARD)
 			Q_strncpyz(client->pers.netname, "scoreboard",
 				sizeof(client->pers.netname));
 
@@ -695,7 +695,7 @@ ClientUserinfoChanged(int clientNum)
 			/* pick the team with the least number of players */
 			team = PickTeam(clientNum);
 	}else
-		team = client->sess.sessionTeam;
+		team = client->sess.team;
 
 /*	NOTE: all client side now
  *
@@ -750,7 +750,7 @@ ClientUserinfoChanged(int clientNum)
 	/* team task (0 = none, 1 = offence, 2 = defence) */
 	teamTask = atoi(Info_ValueForKey(userinfo, "teamtask"));
 	/* team Leader (1 = leader, 0 is normal player) */
-	teamLeader = client->sess.teamLeader;
+	teamleader = client->sess.teamleader;
 
 	/* colors */
 	strcpy(c1, Info_ValueForKey(userinfo, "color1"));
@@ -768,14 +768,14 @@ ClientUserinfoChanged(int clientNum)
 			client->pers.maxHealth, client->sess.wins,
 			client->sess.losses,
 			Info_ValueForKey(userinfo,
-				"skill"), teamTask, teamLeader);
+				"skill"), teamTask, teamleader);
 	else
 		s = va(
 			"n\\%s\\t\\%i\\model\\%s\\hmodel\\%s\\g_redteam\\%s\\g_blueteam\\%s\\c1\\%s\\c2\\%s\\hc\\%i\\w\\%i\\l\\%i\\tt\\%d\\tl\\%d",
-			client->pers.netname, client->sess.sessionTeam, model,
+			client->pers.netname, client->sess.team, model,
 			headModel, redTeam, blueTeam, c1, c2,
 			client->pers.maxHealth, client->sess.wins,
-			client->sess.losses, teamTask, teamLeader);
+			client->sess.losses, teamTask, teamleader);
 
 	trap_SetConfigstring(CS_PLAYERS+clientNum, s);
 
@@ -804,7 +804,7 @@ ClientConnect(int clientNum, qbool firstTime, qbool isBot)
 {
 	char *value;
 /*	char		*areabits; */
-	gClient	*client;
+	Gclient	*client;
 	char userinfo[MAX_INFO_STRING];
 	Gentity	*ent;
 
@@ -865,7 +865,7 @@ ClientConnect(int clientNum, qbool firstTime, qbool isBot)
 				client->pers.netname));
 
 	if(g_gametype.integer >= GT_TEAM &&
-	   client->sess.sessionTeam != TEAM_SPECTATOR)
+	   client->sess.team != TEAM_SPECTATOR)
 		BroadcastTeamChange(client, -1);
 
 	/* count current clients and rank for scoreboard */
@@ -888,7 +888,7 @@ void
 ClientBegin(int clientNum)
 {
 	Gentity	*ent;
-	gClient	*client;
+	Gclient	*client;
 	int flags;
 
 	ent = g_entities + clientNum;
@@ -918,7 +918,7 @@ ClientBegin(int clientNum)
 	/* locate ent at a spawn point */
 	ClientSpawn(ent);
 
-	if(client->sess.sessionTeam != TEAM_SPECTATOR)
+	if(client->sess.team != TEAM_SPECTATOR)
 		if(g_gametype.integer != GT_TOURNAMENT)
 			trap_SendServerCommand(-1,
 				va("print \"%s" S_COLOR_WHITE
@@ -940,10 +940,10 @@ ClientSpawn(Gentity *ent)
 {
 	int index;
 	Vec3	spawn_origin, spawn_angles;
-	gClient       *client;
+	Gclient       *client;
 	int	i;
 	clientPersistant_t	saved;
-	clientSession_t		savedSess;
+	Clientsess		savedSess;
 	int persistant[MAX_PERSISTANT];
 	Gentity		*spawnPoint;
 	Gentity		*tent;
@@ -962,13 +962,13 @@ ClientSpawn(Gentity *ent)
 	/* find a spawn point
 	 * do it before setting health back up, so farthest
 	 * ranging doesn't count this client */
-	if(client->sess.sessionTeam == TEAM_SPECTATOR)
+	if(client->sess.team == TEAM_SPECTATOR)
 		spawnPoint = SelectSpectatorSpawnPoint (
 			spawn_origin, spawn_angles);
 	else if(g_gametype.integer >= GT_CTF)
 		/* all base oriented team games use the CTF spawn points */
 		spawnPoint = SelectCTFSpawnPoint (
-			client->sess.sessionTeam,
+			client->sess.team,
 			client->pers.teamState.state,
 			spawn_origin, spawn_angles,
 			!!(ent->r.svFlags & SVF_BOT));
@@ -1024,7 +1024,7 @@ ClientSpawn(Gentity *ent)
 	client->ps.eventSequence = eventSequence;
 	/* increment the spawncount so the client will detect the respawn */
 	client->ps.persistant[PERS_SPAWN_COUNT]++;
-	client->ps.persistant[PERS_TEAM] = client->sess.sessionTeam;
+	client->ps.persistant[PERS_TEAM] = client->sess.team;
 
 	client->airOutTime = level.time + 12000;
 
@@ -1095,7 +1095,7 @@ ClientSpawn(Gentity *ent)
 	client->ps.legsAnim = LEGS_IDLE;
 
 	if(!level.intermissiontime){
-		if(ent->client->sess.sessionTeam != TEAM_SPECTATOR){
+		if(ent->client->sess.team != TEAM_SPECTATOR){
 			G_KillBox(ent);
 			/* force the base weapon up */
 			client->ps.weap[WSpri] = Wmachinegun;
@@ -1181,14 +1181,14 @@ ClientDisconnect(int clientNum)
 
 	/* stop any following clients */
 	for(i = 0; i < level.maxclients; i++)
-		if(level.clients[i].sess.sessionTeam == TEAM_SPECTATOR
-		   && level.clients[i].sess.spectatorState == SPECTATOR_FOLLOW
-		   && level.clients[i].sess.spectatorClient == clientNum)
+		if(level.clients[i].sess.team == TEAM_SPECTATOR
+		   && level.clients[i].sess.specstate == SPECTATOR_FOLLOW
+		   && level.clients[i].sess.specclient == clientNum)
 			StopFollowing(&g_entities[i]);
 
 	/* send effect if they were completely connected */
 	if(ent->client->pers.connected == CON_CONNECTED
-	   && ent->client->sess.sessionTeam != TEAM_SPECTATOR){
+	   && ent->client->sess.team != TEAM_SPECTATOR){
 		tent = G_TempEntity(ent->client->ps.origin,
 			EV_PLAYER_TELEPORT_OUT);
 		tent->s.clientNum = ent->s.clientNum;
@@ -1216,7 +1216,7 @@ ClientDisconnect(int clientNum)
 	}
 
 	if(g_gametype.integer == GT_TOURNAMENT &&
-	   ent->client->sess.sessionTeam == TEAM_FREE &&
+	   ent->client->sess.team == TEAM_FREE &&
 	   level.intermissiontime){
 
 		trap_SendConsoleCommand(EXEC_APPEND, "map_restart 0\n");
@@ -1231,7 +1231,7 @@ ClientDisconnect(int clientNum)
 	ent->classname = "disconnected";
 	ent->client->pers.connected = CON_DISCONNECTED;
 	ent->client->ps.persistant[PERS_TEAM] = TEAM_FREE;
-	ent->client->sess.sessionTeam = TEAM_FREE;
+	ent->client->sess.team = TEAM_FREE;
 
 	trap_SetConfigstring(CS_PLAYERS + clientNum, "");
 

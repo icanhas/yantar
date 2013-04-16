@@ -76,7 +76,7 @@ TeleportPlayer(Gentity *player, Vec3 origin, Vec3 angles)
 	noAngles = (angles[0] > 999999.0);
 	/* use temp events at source and destination to prevent the effect
 	 * from getting dropped by a second player event */
-	if(player->client->sess.sessionTeam != TEAM_SPECTATOR){
+	if(player->client->sess.team != TEAM_SPECTATOR){
 		tent = G_TempEntity(player->client->ps.origin,
 			EV_PLAYER_TELEPORT_OUT);
 		tent->s.clientNum = player->s.clientNum;
@@ -103,7 +103,7 @@ TeleportPlayer(Gentity *player, Vec3 origin, Vec3 angles)
 	/* toggle the teleport bit so the client knows to not lerp */
 	player->client->ps.eFlags ^= EF_TELEPORT_BIT;
 	/* kill anything at the destination */
-	if(player->client->sess.sessionTeam != TEAM_SPECTATOR)
+	if(player->client->sess.team != TEAM_SPECTATOR)
 		G_KillBox (player);
 
 	/* save results of pmove */
@@ -112,7 +112,7 @@ TeleportPlayer(Gentity *player, Vec3 origin, Vec3 angles)
 	/* use the precise origin for linking */
 	copyv3(player->client->ps.origin, player->r.currentOrigin);
 
-	if(player->client->sess.sessionTeam != TEAM_SPECTATOR)
+	if(player->client->sess.team != TEAM_SPECTATOR)
 		trap_LinkEntity (player);
 }
 

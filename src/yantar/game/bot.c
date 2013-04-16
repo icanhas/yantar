@@ -221,7 +221,7 @@ G_AddRandomBot(int team)
 	int i, n, num;
 	float	skill;
 	char	*value, netname[36], *teamstr;
-	gClient *cl;
+	Gclient *cl;
 
 	num = 0;
 	for(n = 0; n < g_numBots; n++){
@@ -232,7 +232,7 @@ G_AddRandomBot(int team)
 				continue;
 			if(!(g_entities[cl->ps.clientNum].r.svFlags & SVF_BOT))
 				continue;
-			if(team >= 0 && cl->sess.sessionTeam != team)
+			if(team >= 0 && cl->sess.team != team)
 				continue;
 			if(!Q_stricmp(value, cl->pers.netname))
 				break;
@@ -249,7 +249,7 @@ G_AddRandomBot(int team)
 				continue;
 			if(!(g_entities[cl->ps.clientNum].r.svFlags & SVF_BOT))
 				continue;
-			if(team >= 0 && cl->sess.sessionTeam != team)
+			if(team >= 0 && cl->sess.team != team)
 				continue;
 			if(!Q_stricmp(value, cl->pers.netname))
 				break;
@@ -281,7 +281,7 @@ int
 G_RemoveRandomBot(int team)
 {
 	int i;
-	gClient *cl;
+	Gclient *cl;
 
 	for(i=0; i< g_maxclients.integer; i++){
 		cl = level.clients + i;
@@ -289,7 +289,7 @@ G_RemoveRandomBot(int team)
 			continue;
 		if(!(g_entities[cl->ps.clientNum].r.svFlags & SVF_BOT))
 			continue;
-		if(team >= 0 && cl->sess.sessionTeam != team)
+		if(team >= 0 && cl->sess.team != team)
 			continue;
 		trap_SendConsoleCommand(EXEC_INSERT,
 			va("clientkick %d\n", cl->ps.clientNum));
@@ -305,7 +305,7 @@ int
 G_CountHumanPlayers(int team)
 {
 	int i, num;
-	gClient *cl;
+	Gclient *cl;
 
 	num = 0;
 	for(i=0; i< g_maxclients.integer; i++){
@@ -314,7 +314,7 @@ G_CountHumanPlayers(int team)
 			continue;
 		if(g_entities[cl->ps.clientNum].r.svFlags & SVF_BOT)
 			continue;
-		if(team >= 0 && cl->sess.sessionTeam != team)
+		if(team >= 0 && cl->sess.team != team)
 			continue;
 		num++;
 	}
@@ -328,7 +328,7 @@ int
 G_CountBotPlayers(int team)
 {
 	int i, n, num;
-	gClient *cl;
+	Gclient *cl;
 
 	num = 0;
 	for(i=0; i< g_maxclients.integer; i++){
@@ -337,7 +337,7 @@ G_CountBotPlayers(int team)
 			continue;
 		if(!(g_entities[cl->ps.clientNum].r.svFlags & SVF_BOT))
 			continue;
-		if(team >= 0 && cl->sess.sessionTeam != team)
+		if(team >= 0 && cl->sess.team != team)
 			continue;
 		num++;
 	}

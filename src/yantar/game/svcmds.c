@@ -335,10 +335,10 @@ Svcmd_EntityList_f(void)
 	}
 }
 
-gClient       *
+Gclient       *
 ClientForString(const char *s)
 {
-	gClient *cl;
+	Gclient *cl;
 	int	i;
 	int	idnum;
 
@@ -376,7 +376,7 @@ ClientForString(const char *s)
 void
 Svcmd_ForceTeam_f(void)
 {
-	gClient *cl;
+	Gclient *cl;
 	char str[MAX_TOKEN_CHARS];
 	
 	if(trap_Argc() < 3){

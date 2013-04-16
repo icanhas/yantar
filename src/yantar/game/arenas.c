@@ -48,7 +48,7 @@ UpdateTournamentInfo(void)
 
 	CalculateRanks();
 
-	if(level.clients[playerClientNum].sess.sessionTeam == TEAM_SPECTATOR){
+	if(level.clients[playerClientNum].sess.team == TEAM_SPECTATOR){
 #ifdef MISSIONPACK
 		Q_sprintf(msg, sizeof(msg),
 			"postgame %i %i 0 0 0 0 0 0 0 0 0 0 0",
@@ -71,7 +71,7 @@ UpdateTournamentInfo(void)
 		if(g_gametype.integer >= GT_CTF){
 			score1	= level.teamScores[TEAM_RED];
 			score2	= level.teamScores[TEAM_BLUE];
-			if(level.clients[playerClientNum].sess.sessionTeam
+			if(level.clients[playerClientNum].sess.team
 			   == TEAM_RED)
 				won =
 					(level.teamScores[TEAM_RED] >

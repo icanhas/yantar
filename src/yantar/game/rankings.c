@@ -66,11 +66,11 @@ G_RankRunFrame()
 			switch(status){
 			case QGR_STATUS_NEW:
 			case QGR_STATUS_SPECTATOR:
-				if(ent->client->sess.sessionTeam !=
+				if(ent->client->sess.team !=
 				   TEAM_SPECTATOR){
-					ent->client->sess.sessionTeam =
+					ent->client->sess.team =
 						TEAM_SPECTATOR;
-					ent->client->sess.spectatorState =
+					ent->client->sess.specstate =
 						SPECTATOR_FREE;
 					ClientSpawn(ent);
 					/* make sure by now CS_GRAND rankingsGameID is ready */
@@ -89,7 +89,7 @@ G_RankRunFrame()
 					trap_RankUserReset(ent->s.clientNum);
 				break;
 			case QGR_STATUS_ACTIVE:
-				if((ent->client->sess.sessionTeam ==
+				if((ent->client->sess.team ==
 				    TEAM_SPECTATOR) &&
 				   (g_gametype.integer < GT_TEAM))
 					SetTeam(ent, "free");
@@ -604,7 +604,7 @@ G_RankPlayerDie(int self, int attacker, int means_of_death)
 void
 G_RankWeaponTime(int self, int weapon)
 {
-	gClient * client;
+	Gclient * client;
 	int time;
 
 	if(level.warmupTime != 0)
@@ -955,7 +955,7 @@ G_RankUserTeamName(int self, char* team_name)
 void
 G_RankClientDisconnect(int self)
 {
-	gClient * client;
+	Gclient * client;
 	int	time;
 	int	match_rating;
 
