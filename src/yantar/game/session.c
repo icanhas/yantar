@@ -11,23 +11,17 @@
 #include "local.h"
 
 /*
- *
- * SESSION DATA
- *
  * Session data is the only data that stays persistant across level loads
  * and tournament restarts.
  */
 
 /*
- * G_WriteClientSessionData
- *
  * Called on game shutdown
  */
 void
 G_WriteClientSessionData(gClient *client)
 {
-	const char *s;
-	const char *var;
+	const char *s, *var;
 
 	s = va("%i %i %i %i %i %i %i",
 		client->sess.sessionTeam,
@@ -36,31 +30,23 @@ G_WriteClientSessionData(gClient *client)
 		client->sess.spectatorClient,
 		client->sess.wins,
 		client->sess.losses,
-		client->sess.teamLeader
-		);
-
+		client->sess.teamLeader);
 	var = va("session%i", (int)(client - level.clients));
-
 	trap_cvarsetstr(var, s);
 }
 
 /*
- * G_ReadSessionData
- *
  * Called on a reconnect
  */
 void
 G_ReadSessionData(gClient *client)
 {
-	char	s[MAX_STRING_CHARS];
-	const char      *var;
-	int	teamLeader;
-	int	spectatorState;
-	int	sessionTeam;
+	char s[MAX_STRING_CHARS];
+	const char *var;
+	int teamLeader, spectatorState, sessionTeam;
 
 	var = va("session%i", (int)(client - level.clients));
 	trap_cvargetstrbuf(var, s, sizeof(s));
-
 	sscanf(s, "%i %i %i %i %i %i %i",
 		&sessionTeam,
 		&client->sess.spectatorNum,
@@ -68,18 +54,13 @@ G_ReadSessionData(gClient *client)
 		&client->sess.spectatorClient,
 		&client->sess.wins,
 		&client->sess.losses,
-		&teamLeader
-		);
-
+		&teamLeader);
 	client->sess.sessionTeam = (Team)sessionTeam;
 	client->sess.spectatorState = (spectatorState_t)spectatorState;
 	client->sess.teamLeader = (qbool)teamLeader;
 }
 
-
 /*
- * G_InitSessionData
- *
  * Called on a first-time connect
  */
 void
@@ -108,9 +89,9 @@ G_InitSessionData(gClient *client, char *userinfo)
 			default:
 			case GT_FFA:
 			case GT_SINGLE_PLAYER:
-				if(g_maxGameClients.integer > 0 &&
-				   level.numNonSpectatorClients >=
-				   g_maxGameClients.integer)
+				if(g_maxGameClients.integer > 0 
+				&& level.numNonSpectatorClients >= g_maxGameClients.integer)
+				then
 					sess->sessionTeam = TEAM_SPECTATOR;
 				else
 					sess->sessionTeam = TEAM_FREE;
@@ -125,39 +106,30 @@ G_InitSessionData(gClient *client, char *userinfo)
 			}
 		}
 	}
-
 	sess->spectatorState = SPECTATOR_FREE;
 	AddTournamentQueue(client);
-
 	G_WriteClientSessionData(client);
 }
 
-
-/*
- * G_InitWorldSession
- *
- */
 void
 G_InitWorldSession(void)
 {
-	char	s[MAX_STRING_CHARS];
-	int	gt;
+	char s[MAX_STRING_CHARS];
+	int gt;
 
 	trap_cvargetstrbuf("session", s, sizeof(s));
 	gt = atoi(s);
 
-	/* if the gametype changed since the last session, don't use any
-	 * client sessions */
+	/* 
+	 * if the gametype changed since the last session, don't use any
+	 * client sessions 
+	 */
 	if(g_gametype.integer != gt){
 		level.newSession = qtrue;
 		G_Printf("Gametype changed, clearing session data.\n");
 	}
 }
 
-/*
- * G_WriteSessionData
- *
- */
 void
 G_WriteSessionData(void)
 {
