@@ -1971,7 +1971,7 @@ static void
 CG_DrawSpectator(void)
 {
 	CG_DrawBigString(320 - 9 * 8, 440, "SPECTATOR", 1.0F);
-	if(cgs.gametype == GT_TOURNAMENT)
+	if(cgs.gametype == GT_TOURNAMENT || cgs.gametype == GT_DUEL)
 		CG_DrawBigString(320 - 15 * 8, 460, "waiting to play", 1.0F);
 	else if(cgs.gametype >= GT_TEAM)
 		CG_DrawBigString(320 - 39 * 8, 460,

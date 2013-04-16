@@ -384,7 +384,7 @@ G_SpawnGEntityFromSpawnVars(void)
 	Gentity *ent;
 	char *s, *value, *gametypeName;
 	static char *gametypeNames[] =
-	{"ffa", "tournament", "single", "team", "ctf", "oneflag", "obelisk",
+	{"ffa", "duel", "tournament", "single", "team", "ctf", "oneflag", "obelisk",
 	 "harvester"};
 
 	/* get the next free entity */

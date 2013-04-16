@@ -64,7 +64,8 @@ typedef struct campspot_s {
 /* FIXME: these are game specific */
 typedef enum {
 	GT_FFA,			/* free for all */
-	GT_TOURNAMENT,		/* one on one tournament */
+	GT_DUEL,			/* 1v1 pool */
+	GT_TOURNAMENT,		/* 1v1 tournament */
 	GT_SINGLE_PLAYER,	/* single player tournament */
 
 	/* -- team games go after this -- */
