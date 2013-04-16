@@ -535,9 +535,9 @@ fire_rocket(Gentity *self, Vec3 start, Vec3 dir)
 	bolt->s.traj.type = TR_LINEAR;
 	bolt->s.traj.time = level.time - Presteptime;	/* move a bit on the very first frame */
 	copyv3(start, bolt->s.traj.base);
-	scalev3(dir, 100, bolt->s.traj.delta);
+	scalev3(dir, 10, bolt->s.traj.delta);
 	inheritvel(&bolt->s.traj, self->client->ps.velocity, &bolt->s.traj);
-	bolt->s.traj.accel = 400.0f;
+	bolt->s.traj.accel = 1200.0f;
 	copyv3(dir, bolt->s.traj.wishdir);
 	snapv3(bolt->s.traj.delta);	/* save net bandwidth */
 	copyv3(start, bolt->r.currentOrigin);
