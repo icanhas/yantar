@@ -11,8 +11,6 @@
  * always use capsule vs. capsule collision and never capsule vs. bbox or vice versa
  * #define ALWAYS_CAPSULE_VS_CAPSULE */
 
-/* #define CAPSULE_DEBUG */
-
 void
 TransposeMatrix(/*const*/ Vec3 matrix[3], Vec3 transpose[3])	/* FIXME */
 {
@@ -635,12 +633,6 @@ CM_TraceThroughSphere(Tracework *tw, Vec3 origin, float radius, Vec3 start,
 			subv3(end, start, dir);
 			saddv3(start, fraction, dir, intersection);
 			subv3(intersection, origin, dir);
-			#ifdef CAPSULE_DEBUG
-			l2 = lenv3(dir);
-			if(l2 < radius)
-				int bah = 1;
-
-			#endif
 			scale = 1 / (radius+RADIUS_EPSILON);
 			scalev3(dir, scale, dir);
 			copyv3(dir, tw->trace.plane.normal);
@@ -732,12 +724,6 @@ CM_TraceThroughVerticalCylinder(Tracework *tw, Vec3 origin, float radius,
 				tw->trace.fraction = fraction;
 				subv3(intersection, origin, dir);
 				dir[2] = 0;
-				#ifdef CAPSULE_DEBUG
-				l2 = lenv3(dir);
-				if(l2 <= radius)
-					int bah = 1;
-
-				#endif
 				scale = 1 / (radius+RADIUS_EPSILON);
 				scalev3(dir, scale, dir);
 				copyv3(dir, tw->trace.plane.normal);
