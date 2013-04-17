@@ -49,7 +49,6 @@ Cvar	*com_showtrace;
 Cvar	*com_version;
 Cvar	*com_blood;
 Cvar	*com_buildScript;	/* for automated data building scripts */
-Cvar	*com_introPlayed;
 Cvar	*cl_paused;
 Cvar	*sv_paused;
 Cvar	*cl_packetdelay;
@@ -1518,8 +1517,6 @@ cominit(char *commandLine)
 	com_busyWait = cvarget("com_busyWait", "0", CVAR_ARCHIVE);
 	cvarget("com_errorMessage", "", CVAR_ROM | CVAR_NORESTART);
 
-	com_introPlayed = cvarget("com_introplayed", "0", CVAR_ARCHIVE);
-
 	s = va("%s %s %s", Q3_VERSION, PLATFORM_STRING, __DATE__);
 	com_version = cvarget ("version", s, CVAR_ROM | CVAR_SERVERINFO);
 	com_gamename = cvarget("com_gamename", GAMENAME_FOR_MASTER,
@@ -1552,11 +1549,8 @@ cominit(char *commandLine)
 	if(!addstartupcmds())
 		/* if the user didn't give any commands, run default action */
 		if(!com_dedicated->integer){
-			cbufaddstr ("cinematic idlogo.RoQ\n");
-			if(!com_introPlayed->integer){
-				cvarsetstr(com_introPlayed->name, "1");
-				cvarsetstr("nextmap", "cinematic intro.RoQ");
-			}
+			/* (used to play intro cinematic) */
+			;
 		}
 
 	/* start in full screen ui mode */
