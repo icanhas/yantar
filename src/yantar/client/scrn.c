@@ -431,7 +431,7 @@ SCR_DrawScreenField(Stereoframe stereoFrame)
 		case CA_CONNECTED:
 			/* connecting clients will only show the connection dialog
 			 * refresh to update the time */
-			vmcall(uivm, UI_REFRESH, cls.simtime);
+			vmcall(uivm, UI_REFRESH, cls.realtime);
 			vmcall(uivm, UI_DRAW_CONNECT_SCREEN, qfalse);
 			break;
 		case CA_LOADING:
@@ -442,7 +442,7 @@ SCR_DrawScreenField(Stereoframe stereoFrame)
 			/* also draw the connection information, so it doesn't
 			 * flash away too briefly on local or lan games
 			 * refresh to update the time */
-			vmcall(uivm, UI_REFRESH, cls.simtime);
+			vmcall(uivm, UI_REFRESH, cls.realtime);
 			vmcall(uivm, UI_DRAW_CONNECT_SCREEN, qtrue);
 			break;
 		case CA_ACTIVE:
@@ -458,7 +458,7 @@ SCR_DrawScreenField(Stereoframe stereoFrame)
 
 	/* the menu draws next */
 	if(Key_GetCatcher() & KEYCATCH_UI && uivm)
-		vmcall(uivm, UI_REFRESH, cls.simtime);
+		vmcall(uivm, UI_REFRESH, cls.realtime);
 
 	/* console draws next */
 	Con_DrawConsole();
