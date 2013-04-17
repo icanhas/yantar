@@ -450,7 +450,7 @@ CG_PredictPlayerState(void)
 
 	/* prepare for pmove */
 	cg_pmove.ps = &cg.predictedPlayerState;
-	cg_pmove.trace = CG_TraceCapsule;
+	cg_pmove.trace = CG_Trace;
 	cg_pmove.pointcontents = CG_PointContents;
 	if(cg_pmove.ps->pm_type == PM_DEAD)
 		cg_pmove.tracemask = MASK_PLAYERSOLID & ~CONTENTS_BODY;
