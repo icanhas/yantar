@@ -303,7 +303,10 @@ cmdargc(void)
 char*
 cmdargv(int arg)
 {
-	if(arg >= cmd_argc)
+	/*
+	 * FIXME: this ends up causing crashes later if not casted to uint
+	 */
+	if((uint)arg >= cmd_argc)
 		return "";
 	return cmd_argv[arg];
 }
