@@ -882,7 +882,7 @@ startweapchange(Pmove *pm, Pml *pml, Weapslot sl, int weapon)
 		return;
 	PM_AddEvent(pm, pml, EV_CHANGE_WEAPON);
 	pm->ps->weapstate[sl] = WEAPON_DROPPING;
-	pm->ps->weaptime[sl] += 200;
+	pm->ps->weaptime[sl] += 100;
 	starttorsoanim(pm, TORSO_DROP);
 }
 
@@ -901,7 +901,7 @@ finishweapchange(Pmove *pm, Pml *pml, Weapslot sl)
 		weap = Wnone;
 	pm->ps->weap[sl] = weap;
 	pm->ps->weapstate[sl] = WEAPON_RAISING;
-	pm->ps->weaptime[sl] += 250;
+	pm->ps->weaptime[sl] += 100;
 	starttorsoanim(pm, TORSO_RAISE);
 }
 
