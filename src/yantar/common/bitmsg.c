@@ -1063,7 +1063,7 @@ Netfield playerStateFields[] =
 	{ PSF(swingstrength), 0 },
 	{ PSF(delta_angles[1]), 16 },
 	{ PSF(externalEventParm), 8 },
-	{ PSF(viewheight), -8 },
+	{ PSF(viewheight), 8 },
 	{ PSF(damageEvent), 8 },
 	{ PSF(damageYaw), 8 },
 	{ PSF(damagePitch), 8 },

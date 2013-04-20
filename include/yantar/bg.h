@@ -34,12 +34,12 @@
 
 /* default player bounds when alive and well */
 #define MaxsX			30
-#define MaxsY			40
+#define MaxsY			30
 #define MaxsZ			30
 #define MinsX			-MaxsX
 #define MinsY			-MaxsY
 #define MinsZ			-MaxsZ
-#define DEFAULT_VIEWHEIGHT	15
+#define DEFAULT_VIEWHEIGHT	0
 #define CROUCH_VIEWHEIGHT	4
 #define DEAD_VIEWHEIGHT		-16
 
