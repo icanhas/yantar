@@ -157,9 +157,9 @@ accelerate(Pmove *pm, Pml *pml, Vec3 wishdir, float wishspeed, float accel)
 
 	speed = dotv3(pm->ps->velocity, wishdir);
 	if(RAD2DEG(acos(speed) > 85.0f))
-		addspeed = wishspeed - 0.25f*speed;
+		addspeed = wishspeed - speed;
 	else
-		addspeed = 0.0f;
+		addspeed = speed;
 	if(addspeed <= 0)
 		return;
 	accelspeed = accel*pml->frametime*wishspeed;
