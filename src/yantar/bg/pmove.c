@@ -153,13 +153,15 @@ accelerate(Pmove *pm, Pml *pml, Vec3 wishdir, float wishspeed, float accel)
 {
 	int i;
 	float addspeed, accelspeed, speed, div, d;
-	Vec3 vel;
+	Vec3 vel, dir;
 
+	copyv3(pm->ps->velocity, dir);
+	normv3(dir);
 	speed = dotv3(pm->ps->velocity, wishdir);
-	if(RAD2DEG(acos(speed) > 85.0f))
-		addspeed = wishspeed - speed;
+	if(RAD2DEG(acos(dotv3(dir, wishdir))) >= 85.0f)
+		addspeed = wishspeed;
 	else
-		addspeed = speed;
+		addspeed = 0.0f;
 	if(addspeed <= 0)
 		return;
 	accelspeed = accel*pml->frametime*wishspeed;
@@ -171,7 +173,7 @@ accelerate(Pmove *pm, Pml *pml, Vec3 wishdir, float wishspeed, float accel)
 	div = dotv3(vel, wishdir);
 	d = 32;
 	d *= 150.0f * div * div * pml->frametime;
-	if(RAD2DEG(acos(div) > 85.0f)){	/* same as div < 0.08715574692f */
+	if(RAD2DEG(acos(div)) >= 85.0f){	/* same as div < 0.08715574692f */
 		scalev3(vel, speed, vel);
 		saddv3(vel, d, wishdir, vel);
 		normv3(vel);
