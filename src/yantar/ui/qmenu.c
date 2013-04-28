@@ -1573,7 +1573,7 @@ Menu_Cache(void)
 		Pmenuart "/font1_prop_glo.tga");
 	uis.charsetPropB = trap_R_RegisterShaderNoMip(
 		Pmenuart "/font2_prop.tga");
-	uis.cursor = trap_R_RegisterShaderNoMip(Pmenuart "/cursor");
+	uis.cursor = trap_R_RegisterShaderNoMip(Pmenuart "/pointer");
 	uis.rb_on = trap_R_RegisterShaderNoMip(Pmenuart "/switch_on");
 	uis.rb_off = trap_R_RegisterShaderNoMip(Pmenuart "/switch_off");
 
