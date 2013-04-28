@@ -898,8 +898,7 @@ CG_RegisterGraphics(void)
 	cgs.media.selectShader	= trap_R_RegisterShader(P2dart "/select");
 
 	for(i = 0; i < NUM_CROSSHAIRS; i++)
-		cgs.media.crosshairShader[i] =
-			trap_R_RegisterShader(va(P2dart "/crosshair%c", 'a'+i));
+		cgs.media.crosshairShader[i] = trap_R_RegisterShader(va(Pxhairs "/crosshair%d", i+1));
 
 	cgs.media.backTileShader = trap_R_RegisterShader(
 		P2dart "/backtile");

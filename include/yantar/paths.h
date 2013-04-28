@@ -43,16 +43,16 @@
  */
 #define Pvis		"vis"
 
-#define Pgraphics	Pvis ""
 #define Pmodels		Pvis "/models"
 #define Psprites	Pvis "/sprites"
 #define Ptex		Pvis "/textures"
 
-#define Pmenuart	Pgraphics "/menu"
-#define P2dart		Pgraphics "/2d"
-#define Pdmgart	Pgraphics "/dmg"
-#define Pmiscart	Pgraphics "/misc"
-#define Pmedalart	Pgraphics	"/medals"
+#define Pmenuart	Ptex "/menu"
+#define P2dart		Ptex "/2d"
+#define Pdmgart	Ptex "/dmg"
+#define Pmiscart	Ptex "/misc"
+#define Pmedalart	Ptex	"/medals"
+#define Pxhairs	Ptex	"/xhairs"
 
 #define Picons		Ptex "/icons"
 
