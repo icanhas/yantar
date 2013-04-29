@@ -145,7 +145,7 @@ Gitem bg_itemlist[] =
 	{
 		"weapon_gauntlet",
 		Pmiscsounds "/w_pkup",
-		{ Pmeleemodels "/gauntlet" },
+		{ Pmeleemodels "/melee" },
 		 Picons "/iconw_gauntlet",
 		 "Gauntlet",
 		0,
