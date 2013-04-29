@@ -187,7 +187,7 @@ Gitem bg_itemlist[] =
 	{
 		"weapon_grenadelauncher",
 		Pmiscsounds "/w_pkup",
-		{ Pgrenademodels "/grenadel" },
+		{ Pgrenademodels "/nadelauncher" },
 		 Picons "/iconw_grenade",
 		 "Grenade Launcher",
 		10,

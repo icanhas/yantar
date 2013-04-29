@@ -26,7 +26,7 @@
 
 #define Pbfgsounds	Pweapsounds "/bfg"
 #define Phemgsounds	Pweapsounds "/heminigun"
-#define Pgrenadesounds	Pweapsounds "/grenade"
+#define Pgrenadesounds	Pweapsounds "/nadelauncher"
 #define Plgsounds	Pweapsounds "/lightning"
 #define Pmgsounds	Pweapsounds "/machinegun"
 #define Pmeleesounds	Pweapsounds "/melee"
@@ -71,7 +71,7 @@
 #define Plgmodels	Pweapmodels "/lightning"
 #define Pmgmodels	Pweapmodels "/machinegun"
 #define Pmeleemodels	Pweapmodels "/melee"
-#define Pgrenademodels	Pweapmodels "/grenade"
+#define Pgrenademodels	Pweapmodels "/nadelauncher"
 #define Pproxmodels	Pweapmodels "/prox"
 #define Pnanoidmodels	Pweapmodels "/nanoid"
 #define Prlmodels	Pweapmodels "/rocket"
