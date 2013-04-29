@@ -202,7 +202,7 @@ Gitem bg_itemlist[] =
 	{
 		"weapon_rocketlauncher",
 		Pmiscsounds "/w_pkup",
-		{ Prlmodels "/rocketl" },
+		{ Prlmodels "/rocketpodstrong" },
 		 Picons "/iconw_rocket",
 		 "Rocket Launcher",
 		10,
