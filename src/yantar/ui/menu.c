@@ -201,6 +201,8 @@ UI_MainMenu(void)
 	s_main.menu.showlogo	= qtrue;
 
 	y = Ybegin;
+	
+	if(0){
 	s_main.singleplayer.generic.type	= MTYPE_PTEXT;
 	s_main.singleplayer.generic.flags	= QMF_LEFT_JUSTIFY|
 						  QMF_PULSEIFFOCUS;
@@ -211,6 +213,7 @@ UI_MainMenu(void)
 	s_main.singleplayer.string	= "SINGLE PLAYER";
 	s_main.singleplayer.color	= menu_text_color;
 	s_main.singleplayer.style	= style;
+	}
 
 	y += Yspacing;
 	s_main.multiplayer.generic.type		= MTYPE_PTEXT;
@@ -220,7 +223,7 @@ UI_MainMenu(void)
 	s_main.multiplayer.generic.y	= y;
 	s_main.multiplayer.generic.id	= ID_MULTIPLAYER;
 	s_main.multiplayer.generic.callback = Main_MenuEvent;
-	s_main.multiplayer.string	= "MULTIPLAYER";
+	s_main.multiplayer.string	= "Multiplayer";
 	s_main.multiplayer.color	= menu_text_color;
 	s_main.multiplayer.style	= style;
 
@@ -246,6 +249,7 @@ UI_MainMenu(void)
 	s_main.demos.color	= menu_text_color;
 	s_main.demos.style	= style;
 
+	if(0){
 	y += Yspacing;
 	s_main.cinematics.generic.type	= MTYPE_PTEXT;
 	s_main.cinematics.generic.flags = QMF_LEFT_JUSTIFY|QMF_PULSEIFFOCUS;
@@ -256,6 +260,7 @@ UI_MainMenu(void)
 	s_main.cinematics.string	= "CINEMATICS";
 	s_main.cinematics.color		= menu_text_color;
 	s_main.cinematics.style		= style;
+	}
 
 	y += Yspacing;
 	s_main.mods.generic.type = MTYPE_PTEXT;
@@ -279,13 +284,13 @@ UI_MainMenu(void)
 	s_main.exit.color	= menu_text_color;
 	s_main.exit.style	= style;
 
-	Menu_AddItem(&s_main.menu, &s_main.singleplayer);
+	if(0)
+		Menu_AddItem(&s_main.menu, &s_main.singleplayer);
 	Menu_AddItem(&s_main.menu, &s_main.multiplayer);
 	Menu_AddItem(&s_main.menu, &s_main.setup);
 	Menu_AddItem(&s_main.menu, &s_main.demos);
-	Menu_AddItem(&s_main.menu, &s_main.cinematics);
-	if(teamArena)
-		Menu_AddItem(&s_main.menu, &s_main.teamArena);
+	if(0)
+		Menu_AddItem(&s_main.menu, &s_main.cinematics);
 	Menu_AddItem(&s_main.menu,&s_main.mods);
 	Menu_AddItem(&s_main.menu,&s_main.exit);
 
