@@ -217,8 +217,6 @@ mod2str(Meansofdeath mod)
 	case MOD_ROCKET:	return "MOD_ROCKET";
 	case MOD_ROCKET_SPLASH:	return "MOD_ROCKET_SPLASH";
 	case MOD_PROXIMITY_MINE:	return "MOD_PROXIMITY_MINE";
-	case MOD_BFG:		return "MOD_BFG";
-	case MOD_BFG_SPLASH:	return "MOD_BFG_SPLASH";
 	case MOD_WATER:		return "MOD_WATER";
 	case MOD_SLIME:		return "MOD_SLIME";
 	case MOD_LAVA:		return "MOD_LAVA";

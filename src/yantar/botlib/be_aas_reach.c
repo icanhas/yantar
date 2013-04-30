@@ -64,7 +64,6 @@ int	reach_doublejump;	/* double jump */
 int	reach_rampjump;		/* ramp jump */
 int	reach_strafejump;	/* strafe jump (just normal jump but further) */
 int	reach_rocketjump;	/* rocket jump */
-int	reach_bfgjump;		/* bfg jump */
 int	reach_jumppad;		/* jump pads */
 /* if true grapple reachabilities are skipped */
 int	calcgrapplereach;
@@ -1656,7 +1655,7 @@ AAS_Reachability_Step_Barrier_WaterJump_WalkOffLedge(int area1num, int area2num)
 								area1num] =
 								lreach;
 							reach_walkoffledge++;
-							/* NOTE: don't create a weapon (rl, bfg) jump reachability here
+							/* NOTE: don't create a weapon (rl) jump reachability here
 							 * because it interferes with other reachabilities
 							 * like the ladder reachability */
 							return qtrue;
@@ -3760,7 +3759,7 @@ AAS_Reachability_JumpPad(void)
 						continue;
 					if(AAS_ReachabilityExists(link->areanum,
 						   area2num)) continue;
-					/* create a rocket or bfg jump reachability from area1 to area2 */
+					/* create a rocket jump reachability from area1 to area2 */
 					lreach = AAS_AllocReachability();
 					if(!lreach){
 						AAS_UnlinkFromAreas(areas);
@@ -4166,7 +4165,6 @@ AAS_SetWeaponJumpAreaFlags(void)
 			!strcmp(classname, "weapon_lightning") ||
 			!strcmp(classname, "weapon_plasmagun") ||
 			!strcmp(classname, "weapon_railgun") ||
-			!strcmp(classname, "weapon_bfg") ||
 			!strcmp(classname, "item_quad") ||
 			!strcmp(classname, "item_regen") ||
 			!strcmp(classname, "item_invulnerability"))
@@ -4264,11 +4262,9 @@ AAS_Reachability_WeaponJump(int area1num, int area2num)
 		AAS_FaceCenter(face2num, facecenter);
 		/* only go higher up with weapon jumps */
 		if(facecenter[2] < areastart[2] + 64) continue;
-		/* NOTE: set to 2 to allow bfg jump reachabilities */
-		for(n = 0; n < 1 /*2*/; n++){
+		for(n = 0; n < 1; n++){
 			/* get the rocket jump z velocity */
-			if(n) zvel = AAS_BFGJumpZVelocity(areastart);
-			else zvel = AAS_RocketJumpZVelocity(areastart);
+			zvel = AAS_RocketJumpZVelocity(areastart);
 			/* get the horizontal speed for the jump, if it isn't possible to calculate this
 			 * speed (the jump is not possible) then there's no jump reachability created */
 			ret =
@@ -4310,7 +4306,7 @@ AAS_Reachability_WeaponJump(int area1num, int area2num)
 					   && (move.stopevent &
 					       (SE_HITGROUNDAREA|
 						SE_TOUCHJUMPPAD))){
-						/* create a rocket or bfg jump reachability from area1 to area2 */
+						/* create a rocket jump reachability from area1 to area2 */
 						lreach = AAS_AllocReachability();
 						if(!lreach) return qfalse;
 						lreach->areanum = area2num;
@@ -4320,25 +4316,10 @@ AAS_Reachability_WeaponJump(int area1num, int area2num)
 							lreach->start);
 						copyv3(facecenter,
 							lreach->end);
-						if(n){
-							lreach->traveltype
-								= TRAVEL_BFGJUMP;
-							lreach->traveltime
-								= aassettings.
-								  rs_bfgjump;
-						}else{
-							lreach->traveltype
-								=
-									TRAVEL_ROCKETJUMP;
-							lreach->traveltime
-								= aassettings.
-								  rs_rocketjump;
-						}
-						lreach->next =
-							areareachability[
-								area1num];
-						areareachability[area1num] =
-							lreach;
+						lreach->traveltype = TRAVEL_ROCKETJUMP;
+						lreach->traveltime = aassettings.rs_rocketjump;
+						lreach->next = areareachability[area1num];
+						areareachability[area1num] = lreach;
 						reach_rocketjump++;
 						return qtrue;
 					}
@@ -4685,7 +4666,6 @@ AAS_StoreReachability(void)
  * TRAVEL_RAMPJUMP				  0%
  * TRAVEL_STRAFEJUMP			  0%
  * TRAVEL_ROCKETJUMP			100%	(currently limited towards areas with items)
- * TRAVEL_BFGJUMP				  0%	(currently disabled)
  * TRAVEL_JUMPPAD				100%
  * TRAVEL_FUNCBOB				100%
  *

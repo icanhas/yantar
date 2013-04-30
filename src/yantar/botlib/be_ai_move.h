@@ -14,7 +14,6 @@
 #define MOVE_JUMP			4
 #define MOVE_GRAPPLE			8
 #define MOVE_ROCKETJUMP			16
-#define MOVE_BFGJUMP			32
 /* move flags */
 #define MFL_BARRIERJUMP			1	/* bot is performing a barrier jump */
 #define MFL_ONGROUND			2	/* bot is in the ground */

@@ -65,8 +65,7 @@ tryagain:
 		goto tryagain;
 	}
 
-	if(weaponNum == Wmachinegun || weaponNum == Wmelee ||
-	   weaponNum == Wbfg){
+	if(weaponNum == Wmachinegun || weaponNum == Wmelee){
 		strcpy(path, item->worldmodel[0]);
 		Q_stripext(path, path, sizeof(path));
 		strcat(path, "_barrel");
@@ -102,9 +101,6 @@ tryagain:
 		break;
 	case Wplasmagun:
 		MAKERGB(pi->flashDlightColor, 0.6f, 0.6f, 1);
-		break;
-	case Wbfg:
-		MAKERGB(pi->flashDlightColor, 1, 0.7f, 1);
 		break;
 	case Whook:
 		MAKERGB(pi->flashDlightColor, 0.6f, 0.6f, 1);
@@ -782,8 +778,7 @@ UI_DrawPlayer(float x, float y, float w, float h, Playerinfo *pi, int time)
 	/*
 	 * add the spinning barrel
 	 *  */
-	if(pi->realWeapon == Wmachinegun || pi->realWeapon == Wmelee ||
-	   pi->realWeapon == Wbfg){
+	if(pi->realWeapon == Wmachinegun || pi->realWeapon == Wmelee){
 		Vec3 angles;
 
 		memset(&barrel, 0, sizeof(barrel));
@@ -794,9 +789,9 @@ UI_DrawPlayer(float x, float y, float w, float h, Playerinfo *pi, int time)
 		angles[YAW]	= 0;
 		angles[PITCH]	= 0;
 		angles[ROLL]	= UI_MachinegunSpinAngle(pi);
-		if(pi->realWeapon == Wmelee || pi->realWeapon == Wbfg){
-			angles[PITCH]	= angles[ROLL];
-			angles[ROLL]	= 0;
+		if(pi->realWeapon == Wmelee){
+			angles[PITCH] = angles[ROLL];
+			angles[ROLL] = 0;
 		}
 		eulertoaxis(angles, barrel.axis);
 

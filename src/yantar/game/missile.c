@@ -479,38 +479,6 @@ fire_grenade(Gentity *self, Vec3 start, Vec3 dir)
 }
 
 Gentity *
-fire_bfg(Gentity *self, Vec3 start, Vec3 dir)
-{
-	Gentity *bolt;
-
-	normv3 (dir);
-	bolt = G_Spawn();
-	bolt->classname = "bfg";
-	bolt->nextthink = level.time + 10000;
-	bolt->think = G_ExplodeMissile;
-	bolt->s.eType = ET_MISSILE;
-	bolt->r.svFlags = SVF_USE_CURRENT_ORIGIN;
-	bolt->s.parentweap = Wbfg;
-	bolt->r.ownerNum = self->s.number;
-	bolt->parent = self;
-	bolt->damage = 1000;
-	bolt->splashDamage = 1000;
-	bolt->splashRadius = 120;
-	bolt->methodOfDeath = MOD_BFG;
-	bolt->splashMethodOfDeath = MOD_BFG_SPLASH;
-	bolt->clipmask = MASK_SHOT;
-	bolt->target_ent = nil;
-	bolt->s.traj.type = TR_LINEAR;
-	bolt->s.traj.time = level.time - Presteptime;	/* move a bit on the very first frame */
-	copyv3(start, bolt->s.traj.base);
-	scalev3(dir, 2000, bolt->s.traj.delta);
-	inheritvel(&bolt->s.traj, self->client->ps.velocity, &bolt->s.traj);
-	snapv3(bolt->s.traj.delta);	/* save net bandwidth */
-	copyv3(start, bolt->r.currentOrigin);
-	return bolt;
-}
-
-Gentity *
 fire_rocket(Gentity *self, Vec3 start, Vec3 dir)
 {
 	Gentity *bolt;

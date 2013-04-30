@@ -81,7 +81,6 @@ AAS_InitSettings(void)
 		"70");
 	aassettings.rs_startjump = LibVarValue("rs_startjump", "300");
 	aassettings.rs_rocketjump	= LibVarValue("rs_rocketjump", "500");
-	aassettings.rs_bfgjump		= LibVarValue("rs_bfgjump", "500");
 	aassettings.rs_jumppad		= LibVarValue("rs_jumppad", "250");
 	aassettings.rs_aircontrolledjumppad = LibVarValue(
 		"rs_aircontrolledjumppad", "300");
@@ -291,13 +290,6 @@ float
 AAS_RocketJumpZVelocity(Vec3 origin)
 {
 	/* rocket radius damage is 120 (p_weapon.c: Weapon_RocketLauncher_Fire) */
-	return AAS_WeaponJumpZVelocity(origin, 120);
-}
-
-float
-AAS_BFGJumpZVelocity(Vec3 origin)
-{
-	/* bfg radius damage is 1000 (p_weapon.c: weapon_bfg_fire) */
 	return AAS_WeaponJumpZVelocity(origin, 120);
 }
 

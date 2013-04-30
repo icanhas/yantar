@@ -815,19 +815,6 @@ CG_RegisterWeapon(int weaponNum)
 		cgs.media.railCoreShader = trap_R_RegisterShader(
 			"railCore");
 		break;
-	case Wbfg:
-		wp->readySound = trap_sndregister(
-			Pbfgsounds "/bfg_hum", qfalse);
-		MAKERGB(wp->flashDlightColor, 1, 0.7f, 1);
-		wp->flashSound[0] = trap_sndregister(
-			Pbfgsounds "/bfg_fire", qfalse);
-		cgs.media.bfgExplosionShader = trap_R_RegisterShader(
-			"bfgExplosion");
-		wp->missileModel = trap_R_RegisterModel(
-			Pweaphitmodels "/bfg");
-		wp->missileSound = trap_sndregister(
-			Prlsounds "/rockfly", qfalse);
-		break;
 	default:
 		MAKERGB(wp->flashDlightColor, 1, 1, 1);
 		wp->flashSound[0] = trap_sndregister(
@@ -1833,14 +1820,6 @@ CG_MissileHitWall(int weapon, int clientNum, Vec3 origin, Vec3 dir,
 		mark	= cgs.media.energyMarkShader;
 		radius	= 16;
 		break;
-	case Wbfg:
-		mod = cgs.media.dishFlashModel;
-		shader = cgs.media.bfgExplosionShader;
-		sfx = cgs.media.sfx_rockexp;
-		mark = cgs.media.burnMarkShader;
-		radius = 32;
-		isSprite = qtrue;
-		break;
 	case Wshotgun:
 		mod = cgs.media.bulletFlashModel;
 		shader	= cgs.media.bulletExplosionShader;
@@ -1927,7 +1906,6 @@ CG_MissileHitPlayer(int weapon, Vec3 origin, Vec3 dir, int entityNum)
 	case Wrocketlauncher:
 	case Whominglauncher:
 	case Wplasmagun:
-	case Wbfg:
 	case Wnanoidcannon:
 	case Wchaingun:
 	case Wproxlauncher:

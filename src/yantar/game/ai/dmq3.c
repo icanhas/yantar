@@ -1286,8 +1286,6 @@ BotUpdateInventory(bot_state_t *bs)
 		(bs->cur_ps.stats[STAT_PRIWEAPS] & (1 << Wrailgun)) != 0;
 	bs->inventory[INVENTORY_PLASMAGUN] =
 		(bs->cur_ps.stats[STAT_PRIWEAPS] & (1 << Wplasmagun)) != 0;
-	bs->inventory[INVENTORY_BFG10K] =
-		(bs->cur_ps.stats[STAT_PRIWEAPS] & (1 << Wbfg)) != 0;
 	bs->inventory[INVENTORY_GRAPPLINGHOOK] =
 		(bs->cur_ps.stats[STAT_PRIWEAPS] & (1 << Whook)) != 0;
 	bs->inventory[INVENTORY_NAILGUN] =
@@ -1306,7 +1304,6 @@ BotUpdateInventory(bot_state_t *bs)
 	bs->inventory[INVENTORY_ROCKETS]	=
 		bs->cur_ps.ammo[Wrocketlauncher];
 	bs->inventory[INVENTORY_SLUGS]		= bs->cur_ps.ammo[Wrailgun];
-	bs->inventory[INVENTORY_BFGAMMO]	= bs->cur_ps.ammo[Wbfg];
 	bs->inventory[INVENTORY_NAILS]	= bs->cur_ps.ammo[Wnanoidcannon];
 	bs->inventory[INVENTORY_MINES]	= bs->cur_ps.ammo[Wproxlauncher];
 	bs->inventory[INVENTORY_BELT]	= bs->cur_ps.ammo[Wchaingun];
@@ -1540,9 +1537,6 @@ BotAggression(bot_state_t *bs)
 	if(bs->inventory[INVENTORY_HEALTH] < 80)
 		/* if the bot has insufficient armor */
 		if(bs->inventory[INVENTORY_SHIELD] < 40) return 0;
-	/* if the bot can use the bfg */
-	if(bs->inventory[INVENTORY_BFG10K] > 0 &&
-	   bs->inventory[INVENTORY_BFGAMMO] > 7) return 100;
 	/* if the bot can use the railgun */
 	if(bs->inventory[INVENTORY_RAILGUN] > 0 &&
 	   bs->inventory[INVENTORY_SLUGS] > 5) return 95;
@@ -1711,9 +1705,6 @@ BotHasPersistantPowerupAndWeapon(bot_state_t *bs)
 	if(bs->inventory[INVENTORY_HEALTH] < 80)
 		/* if the bot has insufficient armor */
 		if(bs->inventory[INVENTORY_SHIELD] < 40) return qfalse;
-	/* if the bot can use the bfg */
-	if(bs->inventory[INVENTORY_BFG10K] > 0 &&
-	   bs->inventory[INVENTORY_BFGAMMO] > 7) return qtrue;
 	/* if the bot can use the railgun */
 	if(bs->inventory[INVENTORY_RAILGUN] > 0 &&
 	   bs->inventory[INVENTORY_SLUGS] > 5) return qtrue;
@@ -1799,13 +1790,11 @@ BotWantsToCamp(bot_state_t *bs)
 	}
 	/* if the bot isn't healthy anough */
 	if(BotAggression(bs) < 50) return qfalse;
-	/* the bot should have at least have the rocket launcher, the railgun or the bfg10k with some ammo */
+	/* the bot should have at least have the rocket launcher or the railgun or with some ammo */
 	if((bs->inventory[INVENTORY_ROCKETLAUNCHER] <= 0 ||
 	    bs->inventory[INVENTORY_ROCKETS] < 10) &&
 	   (bs->inventory[INVENTORY_RAILGUN] <= 0 ||
-	    bs->inventory[INVENTORY_SLUGS] < 10) &&
-	   (bs->inventory[INVENTORY_BFG10K] <= 0 ||
-	    bs->inventory[INVENTORY_BFGAMMO] < 10))
+	    bs->inventory[INVENTORY_SLUGS] < 10))
 		return qfalse;
 	/* find the closest camp spot */
 	besttraveltime = 99999;
@@ -2643,11 +2632,6 @@ BotAimAtEnemy(bot_state_t *bs)
 			1);
 		aim_skill = trap_Characteristic_BFloat(
 			bs->character, CHARACTERISTIC_AIM_SKILL_PLASMAGUN, 0, 1);
-	}else if(wi.number == Wbfg){
-		aim_accuracy = trap_Characteristic_BFloat(
-			bs->character, CHARACTERISTIC_AIM_ACCURACY_BFG10K, 0, 1);
-		aim_skill = trap_Characteristic_BFloat(
-			bs->character, CHARACTERISTIC_AIM_SKILL_BFG10K, 0, 1);
 	}
 	if(aim_accuracy <= 0) aim_accuracy = 0.0001f;
 	/* get the enemy entity information */
@@ -2812,8 +2796,7 @@ BotAimAtEnemy(bot_state_t *bs)
 		/* if the bot is skilled anough */
 		if(aim_skill > 0.5)
 			/* do prediction shots around corners */
-			if(wi.number == Wbfg ||
-			   wi.number == Wrocketlauncher ||
+			if(wi.number == Wrocketlauncher ||
 			   wi.number == Wgrenadelauncher){
 				/* create the chase goal */
 				goal.entitynum	= bs->client;
@@ -4092,9 +4075,7 @@ BotCheckForProxMines(bot_state_t *bs, Entstate *state)
 	if(!(bs->inventory[INVENTORY_PLASMAGUN] > 0 &&
 	     bs->inventory[INVENTORY_CELLS] > 0) &&
 	   !(bs->inventory[INVENTORY_ROCKETLAUNCHER] > 0 &&
-	     bs->inventory[INVENTORY_ROCKETS] > 0) &&
-	   !(bs->inventory[INVENTORY_BFG10K] > 0 &&
-	     bs->inventory[INVENTORY_BFGAMMO] > 0))
+	     bs->inventory[INVENTORY_ROCKETS] > 0))
 		return;
 	/* try to avoid the prox mine */
 	trap_BotAddAvoidSpot(bs->ms, state->traj.base, 160, AVOID_ALWAYS);

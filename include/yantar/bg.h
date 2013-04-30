@@ -301,7 +301,6 @@ typedef enum {
 	Whominglauncher,
 	Wgrenadelauncher,
 	Wproxlauncher,
-	Wbfg,
 	Wnumweaps
 } Weapon;
 
@@ -563,8 +562,6 @@ typedef enum {
 	MOD_PLASMA_SPLASH,
 	MOD_RAILGUN,
 	MOD_LIGHTNING,
-	MOD_BFG,
-	MOD_BFG_SPLASH,
 	MOD_WATER,
 	MOD_SLIME,
 	MOD_LAVA,

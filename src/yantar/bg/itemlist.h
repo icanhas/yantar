@@ -268,20 +268,6 @@ Gitem bg_itemlist[] =
 		 ""
 	},
 
-	/* QUAKED weapon_bfg (.3 .3 1) (-16 -16 -16) (16 16 16) suspended */
-	{
-		"weapon_bfg",
-		Pmiscsounds "/w_pkup",
-		{ Pbfgmodels "/bfg" },
-		 Picons "/bfg",
-		 "BFG10K",
-		20,
-		IT_SECWEAP,
-		Wbfg,
-		 "",
-		 ""
-	},
-
 	/* QUAKED weapon_grapplinghook (.3 .3 1) (-16 -16 -16) (16 16 16) suspended */
 	{
 		"weapon_grapplinghook",
@@ -407,20 +393,6 @@ Gitem bg_itemlist[] =
 		10,
 		IT_AMMO,
 		Wrailgun,
-		 "",
-		 ""
-	},
-
-	/* QUAKED ammo_bfg (.3 .3 1) (-16 -16 -16) (16 16 16) suspended */
-	{
-		"ammo_bfg",
-		Pmiscsounds "/am_pkup",
-		{ Pammomodels "/bfgs" },
-		 Picons "/bfgs",
-		 "Bfg Ammo",
-		15,
-		IT_AMMO,
-		Wbfg,
 		 "",
 		 ""
 	},

@@ -69,7 +69,6 @@ typedef struct bot_movestate_s {
 #define PREDICTIONTIME_MOVE		2	/* in seconds */
 /* weapon indexes for weapon jumping */
 #define WEAPONINDEX_ROCKET_LAUNCHER	5
-#define WEAPONINDEX_BFG			9
 
 #define MODELTYPE_FUNC_PLAT		1
 #define MODELTYPE_FUNC_BOB		2
@@ -80,7 +79,6 @@ libvar_t *sv_maxstep;
 libvar_t *sv_maxbarrier;
 libvar_t *sv_gravity;
 libvar_t *weapindex_rocketlauncher;
-libvar_t *weapindex_bfg10k;
 libvar_t *weapindex_grapple;
 libvar_t *entitytypemissile;
 libvar_t *offhandgrapple;
@@ -472,7 +470,6 @@ BotAvoidSpots(Vec3 origin, aas_reachability_t *reach,
 	case TRAVEL_ELEVATOR: checkbetween = qfalse; break;
 	case TRAVEL_GRAPPLEHOOK: checkbetween	= qfalse; break;
 	case TRAVEL_ROCKETJUMP: checkbetween	= qfalse; break;
-	case TRAVEL_BFGJUMP: checkbetween	= qfalse; break;
 	case TRAVEL_JUMPPAD: checkbetween	= qfalse; break;
 	case TRAVEL_FUNCBOB: checkbetween	= qfalse; break;
 	default: checkbetween = qtrue; break;
@@ -653,8 +650,6 @@ BotMovementViewTarget(int movestate, bot_goal_t *goal, int travelflags,
 		/* never look beyond the weapon jump point */
 		if((reach.traveltype & TRAVELTYPE_MASK) ==
 		   TRAVEL_ROCKETJUMP) return qtrue;
-		if((reach.traveltype & TRAVELTYPE_MASK) ==
-		   TRAVEL_BFGJUMP) return qtrue;
 		/* don't add jump pad distances */
 		if((reach.traveltype & TRAVELTYPE_MASK) != TRAVEL_JUMPPAD &&
 		   (reach.traveltype & TRAVELTYPE_MASK) != TRAVEL_ELEVATOR &&
@@ -2218,54 +2213,6 @@ BotTravel_RocketJump(bot_movestate_t *ms, aas_reachability_t *reach)
 }
 
 bot_moveresult_t
-BotTravel_BFGJump(bot_movestate_t *ms, aas_reachability_t *reach)
-{
-	Vec3	hordir;
-	float	dist, speed;
-	bot_moveresult_t_cleared(result);
-
-	/* botimport.Print(PRT_MESSAGE, "BotTravel_BFGJump: bah\n");
-	 *  */
-	hordir[0] = reach->start[0] - ms->origin[0];
-	hordir[1] = reach->start[1] - ms->origin[1];
-	hordir[2] = 0;
-	dist = normv3(hordir);
-	if(dist < 5 &&
-	   fabs(AngleDiff(result.ideal_viewangles[0], ms->viewangles[0])) < 5 &&
-	   fabs(AngleDiff(result.ideal_viewangles[1], ms->viewangles[1])) < 5){
-		/* botimport.Print(PRT_MESSAGE, "between jump start and run start point\n"); */
-		hordir[0] = reach->end[0] - ms->origin[0];
-		hordir[1] = reach->end[1] - ms->origin[1];
-		hordir[2] = 0;
-		normv3(hordir);
-		/* elemantary action jump */
-		EA_Jump(ms->client);
-		EA_Attack(ms->client);
-		EA_Move(ms->client, hordir, 800);
-		ms->jumpreach = ms->lastreachnum;
-	}else{
-		if(dist > 80) dist = 80;
-		speed = 400 - (400 - 5 * dist);
-		EA_Move(ms->client, hordir, speed);
-	}
-	/* look in the movement direction */
-	Vector2Angles(hordir, result.ideal_viewangles);
-	/* look straight down */
-	result.ideal_viewangles[PITCH] = 90;
-	/* set the view angles directly */
-	EA_View(ms->client, result.ideal_viewangles);
-	/* view is important for the movment */
-	result.flags |= MOVERESULT_MOVEMENTVIEWSET;
-	/* select the rocket launcher */
-	EA_SelectWeapon(ms->client, (int)weapindex_bfg10k->value);
-	/* weapon is used for movement */
-	result.weapon	= (int)weapindex_bfg10k->value;
-	result.flags	|= MOVERESULT_MOVEMENTWEAPON;
-	copyv3(hordir, result.movedir);
-	return result;
-}
-
-bot_moveresult_t
 BotFinishTravel_WeaponJump(bot_movestate_t *ms, aas_reachability_t *reach)
 {
 	Vec3	hordir;
@@ -2355,7 +2302,6 @@ BotReachabilityTime(aas_reachability_t *reach)
 	case TRAVEL_ELEVATOR: return 10;
 	case TRAVEL_GRAPPLEHOOK: return 8;
 	case TRAVEL_ROCKETJUMP: return 6;
-	case TRAVEL_BFGJUMP: return 6;
 	case TRAVEL_JUMPPAD: return 10;
 	case TRAVEL_FUNCBOB: return 10;
 	default:
@@ -2745,8 +2691,6 @@ BotMoveToGoal(bot_moveresult_t *result, int movestate, bot_goal_t *goal,
 				BotTravel_Grapple(ms, &reach); break;
 			case TRAVEL_ROCKETJUMP: *result =
 				BotTravel_RocketJump(ms, &reach); break;
-			case TRAVEL_BFGJUMP: *result = BotTravel_BFGJump(
-					ms, &reach); break;
 			case TRAVEL_JUMPPAD: *result = BotTravel_JumpPad(
 					ms, &reach); break;
 			case TRAVEL_FUNCBOB: *result = BotTravel_FuncBobbing(
@@ -2867,8 +2811,7 @@ BotMoveToGoal(bot_moveresult_t *result, int movestate, bot_goal_t *goal,
 					ms, &reach); break;
 			case TRAVEL_GRAPPLEHOOK: *result = BotTravel_Grapple(
 					ms, &reach); break;
-			case TRAVEL_ROCKETJUMP:
-			case TRAVEL_BFGJUMP: *result =
+			case TRAVEL_ROCKETJUMP: *result =
 				BotFinishTravel_WeaponJump(ms, &reach); break;
 			case TRAVEL_JUMPPAD: *result =
 				BotFinishTravel_JumpPad(ms, &reach); break;
@@ -2958,7 +2901,6 @@ BotSetupMoveAI(void)
 	sv_maxbarrier = LibVar("sv_maxbarrier", "32");
 	sv_gravity = LibVar("sv_gravity", "800");
 	weapindex_rocketlauncher	= LibVar("weapindex_rocketlauncher", "5");
-	weapindex_bfg10k		= LibVar("weapindex_bfg10k", "9");
 	weapindex_grapple		= LibVar("weapindex_grapple", "10");
 	entitytypemissile		= LibVar("entitytypemissile", "3");
 	offhandgrapple	= LibVar("offhandgrapple", "0");

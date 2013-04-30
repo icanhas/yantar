@@ -440,7 +440,6 @@ botlib_export_t*	GetBotLibAPI(int apiVersion, botlib_import_t *import);
  * "rs_startwalkoffledge"		"70"				be_aas_move.c
  * "rs_startjump"				"300"				be_aas_move.c
  * "rs_rocketjump"				"500"				be_aas_move.c
- * "rs_bfgjump"				"500"				be_aas_move.c
  * "rs_jumppad"				"250"				be_aas_move.c
  * "rs_aircontrolledjumppad"	"300"				be_aas_move.c
  * "rs_funcbob"				"300"				be_aas_move.c

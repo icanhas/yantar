@@ -24,7 +24,6 @@
 #define Pswitchsounds	Pmoversounds "/switches"
 #define Pplatformsounds	Pmoversounds "/plats"
 
-#define Pbfgsounds	Pweapsounds "/bfg"
 #define Phemgsounds	Pweapsounds "/heminigun"
 #define Pgrenadesounds	Pweapsounds "/nadelauncher"
 #define Plgsounds	Pweapsounds "/lightning"
@@ -81,7 +80,6 @@
 #define Pplasmamodels	Pweapmodels "/plasma"
 #define Prailmodels		Pweapmodels "/rail"
 #define Phookmodels	Pweapmodels "/hook"
-#define Pbfgmodels		Pweapmodels "/bfg"
 
 #define Pflagbasemodels	Pobjectmodels "/flagbase"
 

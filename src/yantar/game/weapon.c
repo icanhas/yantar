@@ -211,20 +211,6 @@ Bullet_Fire(Gentity *ent, float spread, int damage)
 }
 
 /*
- * BFG
- */
-
-void
-BFG_Fire(Gentity *ent)
-{
-	Gentity       *m;
-
-	m = fire_bfg(ent, muzzle, forward);
-	m->damage *= s_quadFactor;
-	m->splashDamage *= s_quadFactor;
-}
-
-/*
  * Shotgun
  */
 
@@ -737,9 +723,6 @@ FireWeapon(Gentity *ent, Weapslot slot)
 		break;
 	case Wproxlauncher:
 		weapon_proxlauncher_fire(ent);
-		break;
-	case Wbfg:
-		BFG_Fire(ent);
 		break;
 	case Whook:
 		Weapon_GrapplingHook_Fire(ent);

@@ -724,7 +724,6 @@ typedef struct {
 	Handle		bulletExplosionShader;
 	Handle		rocketExplosionShader;
 	Handle		grenadeExplosionShader;
-	Handle		bfgExplosionShader;
 	Handle		bloodExplosionShader;
 
 	/* special effects models */

@@ -114,7 +114,6 @@ AAS_InitTravelFlagFromType(void)
 	aasworld.travelflagfortype[TRAVEL_TELEPORT]	= TFL_TELEPORT;
 	aasworld.travelflagfortype[TRAVEL_ELEVATOR]	= TFL_ELEVATOR;
 	aasworld.travelflagfortype[TRAVEL_ROCKETJUMP]	= TFL_ROCKETJUMP;
-	aasworld.travelflagfortype[TRAVEL_BFGJUMP]	= TFL_BFGJUMP;
 	aasworld.travelflagfortype[TRAVEL_GRAPPLEHOOK]	= TFL_GRAPPLEHOOK;
 	aasworld.travelflagfortype[TRAVEL_DOUBLEJUMP]	= TFL_DOUBLEJUMP;
 	aasworld.travelflagfortype[TRAVEL_RAMPJUMP]	= TFL_RAMPJUMP;
@@ -929,7 +928,6 @@ AAS_InitReachabilityAreas(void)
 		/* trace arch */
 		case TRAVEL_JUMP: break;
 		case TRAVEL_ROCKETJUMP: break;
-		case TRAVEL_BFGJUMP: break;
 		case TRAVEL_JUMPPAD: break;
 
 		/* trace from reach->start to entity center, along entity movement

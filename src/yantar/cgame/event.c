@@ -149,9 +149,6 @@ CG_Obituary(Entstate *ent)
 			else
 				message = "melted himself";
 			break;
-		case MOD_BFG_SPLASH:
-			message = "should have used a smaller gun";
-			break;
 		case MOD_PROXIMITY_MINE:
 			if(gender == GENDER_FEMALE)
 				message = "found her prox mine";
@@ -256,11 +253,6 @@ CG_Obituary(Entstate *ent)
 			break;
 		case MOD_LIGHTNING:
 			message = "was electrocuted by";
-			break;
-		case MOD_BFG:
-		case MOD_BFG_SPLASH:
-			message = "was blasted by";
-			message2 = "'s BFG";
 			break;
 		case MOD_NANOID:
 			message = "was wracked by";
