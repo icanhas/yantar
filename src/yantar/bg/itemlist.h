@@ -303,7 +303,7 @@ Gitem bg_itemlist[] =
 	{
 		"ammo_shells",
 		Pmiscsounds "/am_pkup",
-		{ Pammomodels "/shotgunam" },
+		{ Pammomodels "/shotgunshells" },
 		 Picons "/shotgunshells",
 		 "Shells",
 		10,
@@ -317,7 +317,7 @@ Gitem bg_itemlist[] =
 	{
 		"ammo_bullets",
 		Pmiscsounds "/am_pkup",
-		{ Pammomodels "/machinegunam" },
+		{ Pammomodels "/rounds" },
 		 Picons "/rounds",
 		 "Rounds",
 		50,
@@ -331,7 +331,7 @@ Gitem bg_itemlist[] =
 	{
 		"ammo_grenades",
 		Pmiscsounds "/am_pkup",
-		{ Pammomodels "/grenadeam" },
+		{ Pammomodels "/grenades" },
 		 Picons "/grenades",
 		 "Grenades",
 		5,
@@ -345,7 +345,7 @@ Gitem bg_itemlist[] =
 	{
 		"ammo_cells",
 		Pmiscsounds "/am_pkup",
-		{ Pammomodels "/plasmaam" },
+		{ Pammomodels "/plasma" },
 		 Picons "/plasma",
 		 "Cells",
 		30,
@@ -359,9 +359,9 @@ Gitem bg_itemlist[] =
 	{
 		"ammo_lightning",
 		Pmiscsounds "/am_pkup",
-		{ Pammomodels "/lightningam" },
+		{ Pammomodels "/lightningcells" },
 		 Picons "/lightningcells",
-		 "Lightning",
+		 "Lightning Cells",
 		60,
 		IT_AMMO,
 		Wlightning,
@@ -373,7 +373,7 @@ Gitem bg_itemlist[] =
 	{
 		"ammo_rockets",
 		Pmiscsounds "/am_pkup",
-		{ Pammomodels "/rocketam" },
+		{ Pammomodels "/rockets" },
 		 Picons "/rockets",
 		 "Rockets",
 		5,
@@ -401,7 +401,7 @@ Gitem bg_itemlist[] =
 	{
 		"ammo_slugs",
 		Pmiscsounds "/am_pkup",
-		{ Pammomodels "/railgunam" },
+		{ Pammomodels "/slugs" },
 		 Picons "/slugs",
 		 "Slugs",
 		10,
@@ -415,7 +415,7 @@ Gitem bg_itemlist[] =
 	{
 		"ammo_bfg",
 		Pmiscsounds "/am_pkup",
-		{ Pammomodels "/bfgam" },
+		{ Pammomodels "/bfgs" },
 		 Picons "/bfgs",
 		 "Bfg Ammo",
 		15,
@@ -555,7 +555,7 @@ Gitem bg_itemlist[] =
 	{
 		"team_CTF_redflag",
 		nil,
-		{ Pflagmodels "/r_flag" },
+		{ Pflagmodels "/redflag" },
 		 Picons "/redflag",
 		 "Red Flag",
 		0,
@@ -571,7 +571,7 @@ Gitem bg_itemlist[] =
 	{
 		"team_CTF_blueflag",
 		nil,
-		{ Pflagmodels "/b_flag" },
+		{ Pflagmodels "/blueflag" },
 		 Picons "/blueflag",
 		 "Blue Flag",
 		0,
@@ -613,7 +613,7 @@ Gitem bg_itemlist[] =
 	{
 		"ammo_belt",
 		Pmiscsounds "/am_pkup",
-		{ Pammomodels "/heminigun" },
+		{ Pammomodels "/herounds" },
 		 Picons "/herounds",
 		 "HE Rounds",
 		100,
@@ -629,7 +629,7 @@ Gitem bg_itemlist[] =
 	{
 		"team_CTF_neutralflag",
 		nil,
-		{ Pflagmodels "/n_flag" },
+		{ Pflagmodels "/neutralflag" },
 		 Picons "/neutralflag",
 		 "Neutral Flag",
 		0,
