@@ -730,7 +730,7 @@ CG_RegisterWeapon(int weaponNum)
 		break;
 	case Wrocketlauncher:
 		wp->missileModel = trap_R_RegisterModel(
-			Prlmodels "/rocket");
+			Pprojectilemodels "/rocket");
 		wp->missileSound = trap_sndregister(
 			Prlsounds "/rockfly", qfalse);
 		wp->missileTrailFunc = CG_RocketTrail;
@@ -770,7 +770,7 @@ CG_RegisterWeapon(int weaponNum)
 		break;
 	case Wgrenadelauncher:
 		wp->missileModel = trap_R_RegisterModel(
-			Pammomodels "/grenade1");
+			Pprojectilemodels "/grenade");
 		wp->missileTrailFunc = CG_GrenadeTrail;
 		wp->wiTrailTime = 700;
 		wp->trailRadius = 32;
