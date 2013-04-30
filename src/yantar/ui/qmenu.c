@@ -25,8 +25,8 @@ static Handle		sliderBar;
 static Handle		sliderButton_0;
 static Handle		sliderButton_1;
 
-Vec4	menu_text_color = {0.0f, 0.0f, 0.0f, 1.0f};
-Vec4	menu_dim_color = {0.0f, 0.0f, 0.0f, 0.75f};
+Vec4	menu_text_color = {1.0f, 1.0f, 1.0f, 1.0f};
+Vec4	menu_dim_color = {1.0f, 1.0f, 1.0f, 0.75f};
 Vec4	color_black = {0.00f, 0.00f, 0.00f, 1.00f};
 Vec4	color_white = {1.00f, 1.00f, 1.00f, 1.00f};
 Vec4	color_yellow = {1.00f, 1.00f, 0.00f, 1.00f};

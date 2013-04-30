@@ -21,7 +21,6 @@ enum {
 
 	Xbegin	= 16,	/* starting position of menu items */
 	Ybegin	= 134,
-
 	Yspacing	= 24	/* vertical space between items */
 };
 
@@ -111,7 +110,6 @@ Main_MenuDraw(void)
 {
 	Refdef	refdef;
 	float		x, y, w, h;
-	Vec4		color = {0.5, 0, 0.5, 0.8};
 
 	/* setup the refdef */
 	memset(&refdef, 0, sizeof(refdef));
@@ -158,9 +156,6 @@ Main_MenuDraw(void)
 			UI_CENTER|UI_SMALLFONT|UI_DROPSHADOW, menu_text_color);
 	else
 		Menu_Draw(&s_main.menu);
-
-
-	UI_DrawString(320, 450, "Y A N T A R", UI_CENTER|UI_SMALLFONT, color);
 }
 
 /*
@@ -214,7 +209,7 @@ UI_MainMenu(void)
 	s_main.singleplayer.generic.id	= ID_SINGLEPLAYER;
 	s_main.singleplayer.generic.callback = Main_MenuEvent;
 	s_main.singleplayer.string	= "SINGLE PLAYER";
-	s_main.singleplayer.color	= color_black;
+	s_main.singleplayer.color	= menu_text_color;
 	s_main.singleplayer.style	= style;
 
 	y += Yspacing;
@@ -226,7 +221,7 @@ UI_MainMenu(void)
 	s_main.multiplayer.generic.id	= ID_MULTIPLAYER;
 	s_main.multiplayer.generic.callback = Main_MenuEvent;
 	s_main.multiplayer.string	= "MULTIPLAYER";
-	s_main.multiplayer.color	= color_black;
+	s_main.multiplayer.color	= menu_text_color;
 	s_main.multiplayer.style	= style;
 
 	y += Yspacing;
@@ -237,7 +232,7 @@ UI_MainMenu(void)
 	s_main.setup.generic.id = ID_SETUP;
 	s_main.setup.generic.callback = Main_MenuEvent;
 	s_main.setup.string	= "Options";
-	s_main.setup.color	= color_black;
+	s_main.setup.color	= menu_text_color;
 	s_main.setup.style	= style;
 
 	y += Yspacing;
@@ -248,7 +243,7 @@ UI_MainMenu(void)
 	s_main.demos.generic.id = ID_DEMOS;
 	s_main.demos.generic.callback = Main_MenuEvent;
 	s_main.demos.string	= "DEMOS";
-	s_main.demos.color	= color_black;
+	s_main.demos.color	= menu_text_color;
 	s_main.demos.style	= style;
 
 	y += Yspacing;
@@ -259,7 +254,7 @@ UI_MainMenu(void)
 	s_main.cinematics.generic.id	= ID_CINEMATICS;
 	s_main.cinematics.generic.callback = Main_MenuEvent;
 	s_main.cinematics.string	= "CINEMATICS";
-	s_main.cinematics.color		= color_black;
+	s_main.cinematics.color		= menu_text_color;
 	s_main.cinematics.style		= style;
 
 	y += Yspacing;
@@ -270,7 +265,7 @@ UI_MainMenu(void)
 	s_main.mods.generic.id		= ID_MODS;
 	s_main.mods.generic.callback = Main_MenuEvent;
 	s_main.mods.string	= "MODS";
-	s_main.mods.color	= color_black;
+	s_main.mods.color	= menu_text_color;
 	s_main.mods.style	= style;
 
 	y += Yspacing;
@@ -281,7 +276,7 @@ UI_MainMenu(void)
 	s_main.exit.generic.id		= ID_EXIT;
 	s_main.exit.generic.callback = Main_MenuEvent;
 	s_main.exit.string	= "EXIT";
-	s_main.exit.color	= color_black;
+	s_main.exit.color	= menu_text_color;
 	s_main.exit.style	= style;
 
 	Menu_AddItem(&s_main.menu, &s_main.singleplayer);
