@@ -2003,20 +2003,6 @@ CG_ShotgunPattern(Vec3 origin, Vec3 origin2, int seed, int otherEntNum)
 void
 CG_ShotgunFire(Entstate *es)
 {
-	Vec3	v, up;
-	int	contents;
-
-	subv3(es->origin2, es->traj.base, v);
-	normv3(v);
-	scalev3(v, 32, v);
-	addv3(es->traj.base, v, v);
-	contents = CG_PointContents(es->traj.base, 0);
-	if(!(contents & CONTENTS_WATER)){
-		setv3(up, 0, 0, 8);
-		CG_SmokePuff(v, up, 32, 1, 1, 1, 0.33f, 900, cg.time, 0,
-			LEF_PUFF_DONT_SCALE,
-			cgs.media.shotgunSmokePuffShader);
-	}
 	CG_ShotgunPattern(es->traj.base, es->origin2, es->eventParm,
 		es->otherEntityNum);
 }

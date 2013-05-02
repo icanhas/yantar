@@ -678,8 +678,6 @@ typedef struct {
 	Handle		noammoShader;
 
 	Handle		smokePuffShader;
-	Handle		smokePuffRageProShader;
-	Handle		shotgunSmokePuffShader;
 	Handle		plasmaBallShader;
 	Handle		waterBubbleShader;
 	Handle		bloodTrailShader;

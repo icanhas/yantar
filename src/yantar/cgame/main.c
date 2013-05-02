@@ -879,11 +879,6 @@ CG_RegisterGraphics(void)
 		Pmenuart "/time");
 
 	cgs.media.smokePuffShader = trap_R_RegisterShader("smokePuff");
-	cgs.media.smokePuffRageProShader = trap_R_RegisterShader(
-		"smokePuffRagePro");
-	cgs.media.shotgunSmokePuffShader = trap_R_RegisterShader(
-		"shotgunSmokePuff");
-	cgs.media.nailPuffShader	= trap_R_RegisterShader("nailtrail");
 	cgs.media.blueProxMine		= trap_R_RegisterModel(
 		Pweaphitmodels "/proxmineb");
 	cgs.media.plasmaBallShader = trap_R_RegisterShader(
