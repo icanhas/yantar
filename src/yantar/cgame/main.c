@@ -112,9 +112,12 @@ Vmcvar	cg_brassTime;
 Vmcvar	cg_viewsize;
 Vmcvar	cg_drawGun;
 Vmcvar	cg_gun_frame;
-Vmcvar	cg_gun_x;
-Vmcvar	cg_gun_y;
-Vmcvar	cg_gun_z;
+Vmcvar	cg_gun1X;
+Vmcvar	cg_gun1Y;
+Vmcvar	cg_gun1Z;
+Vmcvar	cg_gun2X;
+Vmcvar	cg_gun2Y;
+Vmcvar	cg_gun2Z;
 Vmcvar	cg_tracerChance;
 Vmcvar	cg_tracerWidth;
 Vmcvar	cg_tracerLength;
@@ -217,9 +220,12 @@ static Cvartable cvarTable[] = {
 	{ &cg_addMarks, "cg_marks", "1", CVAR_ARCHIVE },
 	{ &cg_lagometer, "cg_lagometer", "1", CVAR_ARCHIVE },
 	{ &cg_railTrailTime, "cg_railTrailTime", "400", CVAR_ARCHIVE  },
-	{ &cg_gun_x, "cg_gunX", "0", CVAR_CHEAT },
-	{ &cg_gun_y, "cg_gunY", "0", CVAR_CHEAT },
-	{ &cg_gun_z, "cg_gunZ", "0", CVAR_CHEAT },
+	{ &cg_gun1X, "cg_gun1X", "4", CVAR_ARCHIVE },
+	{ &cg_gun1Y, "cg_gun1Y", "0", CVAR_ARCHIVE },
+	{ &cg_gun1Z, "cg_gun1Z", "-5", CVAR_ARCHIVE },
+	{ &cg_gun2X, "cg_gun2X", "3", CVAR_ARCHIVE },
+	{ &cg_gun2Y, "cg_gun2Y", "6.7", CVAR_ARCHIVE },
+	{ &cg_gun2Z, "cg_gun2Z", "3", CVAR_ARCHIVE },
 	{ &cg_centertime, "cg_centertime", "3", CVAR_CHEAT },
 	{ &cg_runpitch, "cg_runpitch", "0.002", CVAR_ARCHIVE},
 	{ &cg_runroll, "cg_runroll", "0.005", CVAR_ARCHIVE },

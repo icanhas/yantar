@@ -1319,8 +1319,9 @@ CG_AddViewWeapon(Playerstate *ps, Weapslot slot)
 	Centity *cent;
 	Clientinfo *ci;
 	float fovOffset;
-	Vec3 angles;
+	Vec3 gunoffs, angles;
 	Weapinfo *weapon;
+	int numdraws;
 
 	if(ps->persistant[PERS_TEAM] == TEAM_SPECTATOR)
 		return;
@@ -1364,10 +1365,22 @@ CG_AddViewWeapon(Playerstate *ps, Weapslot slot)
 	/* set up gun position */
 	CG_CalculateWeaponPosition(hand.origin, angles);
 
-	saddv3(hand.origin, cg_gun_x.value, cg.refdef.viewaxis[0], hand.origin);
-	saddv3(hand.origin, cg_gun_y.value, cg.refdef.viewaxis[1], hand.origin);
-	saddv3(hand.origin, (cg_gun_z.value+fovOffset), cg.refdef.viewaxis[2],
-		hand.origin);
+	switch(slot){
+	case WSpri:
+		setv3(gunoffs, cg_gun1X.value, cg_gun1Y.value, cg_gun1Z.value);
+		break;
+	case WSsec:
+		setv3(gunoffs, cg_gun2X.value, cg_gun2Y.value, cg_gun2Z.value);
+		break;
+	default:
+		setv3(gunoffs, 0.0f, 0.0f, 0.0f);
+		break;
+	}
+	numdraws = 1;
+Again:
+	saddv3(hand.origin, gunoffs[0], cg.refdef.viewaxis[0], hand.origin);
+	saddv3(hand.origin, gunoffs[1], cg.refdef.viewaxis[1], hand.origin);
+	saddv3(hand.origin, (gunoffs[2]+fovOffset), cg.refdef.viewaxis[2], hand.origin);
 
 	eulertoaxis(angles, hand.axis);
 
@@ -1389,6 +1402,15 @@ CG_AddViewWeapon(Playerstate *ps, Weapslot slot)
 	/* add everything onto the hand */
 	CG_AddPlayerWeapon(&hand, ps, &cg.predictedPlayerEntity,
 		slot, ps->persistant[PERS_TEAM]);
+	if(slot == WSsec && numdraws < 2){
+		/*
+		 * Draw another secondary on the opposite side
+		 */
+		numdraws++;
+		CG_CalculateWeaponPosition(hand.origin, angles);
+		gunoffs[1] = -gunoffs[1];
+		goto Again;
+	}
 }
 
 /*

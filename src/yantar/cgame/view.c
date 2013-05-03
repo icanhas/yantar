@@ -146,11 +146,11 @@ addtestmodel(void)
 		/* allow the position to be adjusted */
 		for(i=0; i<3; i++){
 			cg.testModelEntity.origin[i] +=
-				cg.refdef.viewaxis[0][i] * cg_gun_x.value;
+				cg.refdef.viewaxis[0][i] * cg_gun1X.value;
 			cg.testModelEntity.origin[i] +=
-				cg.refdef.viewaxis[1][i] * cg_gun_y.value;
+				cg.refdef.viewaxis[1][i] * cg_gun1Y.value;
 			cg.testModelEntity.origin[i] +=
-				cg.refdef.viewaxis[2][i] * cg_gun_z.value;
+				cg.refdef.viewaxis[2][i] * cg_gun1Z.value;
 		}
 	}
 	trap_R_AddRefEntityToScene(&cg.testModelEntity);
