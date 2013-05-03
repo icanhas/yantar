@@ -202,7 +202,7 @@ Gitem bg_itemlist[] =
 	{
 		"weapon_rocketlauncher",
 		Pmiscsounds "/w_pkup",
-		{ Prlmodels "/rocketpodstrong" },
+		{ Procketpodmodels "/strong" },
 		 Picons "/rocket",
 		 "Rocket Launcher",
 		10,
@@ -216,7 +216,7 @@ Gitem bg_itemlist[] =
 	{
 		"weapon_hominglauncher",
 		Pweapsounds "/pickup",
-		{ Prlmodels "/rocketpodweak" },
+		{ Procketpodmodels "/weak" },
 		 Picons "/homing",
 		 "Homing Rocket Launcher",
 		30,
