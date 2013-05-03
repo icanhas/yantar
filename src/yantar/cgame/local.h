@@ -998,6 +998,7 @@ extern Vmcvar		cg_drawIcons;
 extern Vmcvar		cg_drawAmmoWarning;
 extern Vmcvar		cg_drawCrosshair;
 extern Vmcvar		cg_drawCrosshairNames;
+extern Vmcvar		cg_drawdmgindicator;
 extern Vmcvar		cg_drawRewards;
 extern Vmcvar		cg_drawTeamOverlay;
 extern Vmcvar		cg_teamOverlayUserinfo;

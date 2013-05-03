@@ -716,7 +716,7 @@ CG_DrawActiveFrame(int serverTime, Stereoframe stereoView,
 
 	inwater = calcviewvals();	/* build cg.refdef */
 
-	if(!cg.renderingThirdPerson)
+	if(cg_drawdmgindicator.integer && !cg.renderingThirdPerson)
 		dmgblendblob();
 
 	/* build the render lists */
