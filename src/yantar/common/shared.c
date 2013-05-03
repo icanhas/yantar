@@ -576,6 +576,66 @@ Q_hexstr2int(const char *str)
 	return -1;
 }
 
+static uint
+hexdigit2int(char n)
+{
+	if(n >= '0' && n <= '9')
+		return n - '0';
+	else if(n >= 'A' && n <= 'F')
+		return 10 + n - 'A';
+	else if(n >= 'a' && n <= 'f')
+		return 10 + n - 'a';
+	else
+		return 0;
+}
+
+qbool
+hextriplet2colour(const char *hex, Vec4 out)
+{
+	const char *p;
+	int i;
+	
+	p = hex;
+	if(strlen(p) < 3){
+		setv4(out, 1.0f, 0.0f, 1.0f, 0.8f);
+		return qfalse;
+	}
+	if(p[0] == '0' && (p[1] == 'x' || p[2] == 'X'))
+		p = &hex[2];
+	switch(strlen(p)){
+	case 3:
+		out[0] = hexdigit2int(p[0])*0x10 + hexdigit2int(p[0]);
+		out[1] = hexdigit2int(p[1])*0x10 + hexdigit2int(p[1]);
+		out[2] = hexdigit2int(p[2])*0x10 + hexdigit2int(p[2]);
+		out[3] = 255.0f;
+		break;
+	case 4:
+		out[0] = hexdigit2int(p[0])*0x10 + hexdigit2int(p[0]);
+		out[1] = hexdigit2int(p[1])*0x10 + hexdigit2int(p[1]);
+		out[2] = hexdigit2int(p[2])*0x10 + hexdigit2int(p[2]);
+		out[3] = hexdigit2int(p[3])*0x10 + hexdigit2int(p[3]);
+		break;
+	case 6:
+		out[0] = hexdigit2int(p[0])*0x10 + hexdigit2int(p[1]);
+		out[1] = hexdigit2int(p[2])*0x10 + hexdigit2int(p[3]);
+		out[2] = hexdigit2int(p[4])*0x10 + hexdigit2int(p[5]);
+		out[3] = 255.0f;
+		break;
+	case 8:
+		out[0] = hexdigit2int(p[0])*0x10 + hexdigit2int(p[1]);
+		out[1] = hexdigit2int(p[2])*0x10 + hexdigit2int(p[3]);
+		out[2] = hexdigit2int(p[4])*0x10 + hexdigit2int(p[5]);
+		out[3] = hexdigit2int(p[6])*0x10 + hexdigit2int(p[7]);
+		break;
+	default:
+		setv4(out, 1.0f, 0.0f, 1.0f, 0.8f);
+		return qfalse;
+	}
+	for(i = 0; i < 4; i++)
+		out[i] /= 255.0f;
+	return qtrue;
+}
+
 /*
  * Library replacement functions
  */

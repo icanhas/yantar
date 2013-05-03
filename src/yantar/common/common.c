@@ -1125,7 +1125,38 @@ testmaths_f(void)
 	matrixtest();
 	catternyantest();
 }
+
+static void
+teststrfuncs_f(void)
+{
+	Vec4 c;
 	
+	hextriplet2colour("ff00ff", c);
+	comprintf("(%f, %f, %f, %f)\n", c[0], c[1], c[2], c[3]);
+	hextriplet2colour("12345611", c);
+	comprintf("(%f, %f, %f, %f)\n", c[0], c[1], c[2], c[3]);
+	hextriplet2colour("0xff332299", c);
+	comprintf("(%f, %f, %f, %f)\n", c[0], c[1], c[2], c[3]);
+	hextriplet2colour("fff", c);
+	comprintf("(%f, %f, %f, %f)\n", c[0], c[1], c[2], c[3]);
+	hextriplet2colour("zkxljlzxjcvlkxjcv", c);
+	comprintf("(%f, %f, %f, %f)\n", c[0], c[1], c[2], c[3]);
+	hextriplet2colour("There's no cure for being a cunt.", c);
+	comprintf("(%f, %f, %f, %f)\n", c[0], c[1], c[2], c[3]);
+	hextriplet2colour("0X123", c);
+	comprintf("(%f, %f, %f, %f)\n", c[0], c[1], c[2], c[3]);
+	hextriplet2colour("0X", c);
+	comprintf("(%f, %f, %f, %f)\n", c[0], c[1], c[2], c[3]);
+	hextriplet2colour("0x", c);
+	comprintf("(%f, %f, %f, %f)\n", c[0], c[1], c[2], c[3]);
+	hextriplet2colour("0xx", c);
+	comprintf("(%f, %f, %f, %f)\n", c[0], c[1], c[2], c[3]);
+	hextriplet2colour("0xxx", c);
+	comprintf("(%f, %f, %f, %f)\n", c[0], c[1], c[2], c[3]);
+	hextriplet2colour("", c);
+	comprintf("(%f, %f, %f, %f)\n", c[0], c[1], c[2], c[3]);
+}
+
 /* For controlling environment variables */
 static void
 setenv_f(void)
@@ -1455,6 +1486,7 @@ cominit(char *commandLine)
 	}
 	cmdadd("testutf", testutf8_f);
 	cmdadd("testmaths", testmaths_f);
+	cmdadd("teststrfuncs", teststrfuncs_f);
 	cmdadd("quit", Com_Quit_f);
 	cmdadd("q", Com_Quit_f);
 	cmdadd("writeconfig", writeconfig_f);
