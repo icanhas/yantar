@@ -532,6 +532,9 @@ typedef struct {
 #define clearv3(a)		((a)[0]=(a)[1]=(a)[2]=0)
 #define negv3(a,b)	((b)[0]=-(a)[0],(b)[1]=-(a)[1],(b)[2]=-(a)[2])
 #define setv3(v, x, y, z)	((v)[0]=(x), (v)[1]=(y), (v)[2]=(z))
+#define clearv4(a)		((a)[0]=(a)[1]=(a)[2]=(a)[3]=0)
+#define negv4(a,b)	((b)[0]=-(a)[0],(b)[1]=-(a)[1],(b)[2]=-(a)[2],(b)[3]=-(a)[3])
+#define setv4(v, x, y, z, w)	((v)[0]=(x), (v)[1]=(y), (v)[2]=(z), (v)[3]=(w))
 #define copyv4(a,b)	((b)[0]=(a)[0],(b)[1]=(a)[1],(b)[2]=(a)[2], \
 				 (b)[3]=(a)[3])
 
