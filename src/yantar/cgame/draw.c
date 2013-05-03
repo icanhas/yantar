@@ -1783,54 +1783,60 @@ CG_DrawCenterString(void)
 static void
 CG_DrawCrosshair(void)
 {
-	float	w, h;
+	Scalar dotw, doth, ringw, ringh;
 	Handle hShader;
-	float	f;
-	float	x, y;
-	int	ca;
+	float f;
+	float x, y;
+	int ca;
+	Vec4 c1, c2;
+	Handle dot, ring;
 
 	if(!cg_drawCrosshair.integer)
 		return;
-
 	if(cg.snap->ps.persistant[PERS_TEAM] == TEAM_SPECTATOR)
 		return;
-
-	if(cg.renderingThirdPerson)
+	if(cg.renderingThirdPerson)	/* FIXME */
 		return;
 
-	/* set color based on health */
-	if(cg_crosshairHealth.integer){
-		Vec4 hcolor;
+	if(cg_crosshairHealth.integer)
+		CG_ColorForHealth(c1);	/* set color based on health */
+	else
+		hextriplet2colour(cg_crosshaircolour1.string, c1);
+	hextriplet2colour(cg_crosshaircolour2.string, c2);
 
-		CG_ColorForHealth(hcolor);
-		trap_R_SetColor(hcolor);
-	}else
-		trap_R_SetColor(NULL);
-
-	w = h = cg_crosshairSize.value;
+	dotw = doth = cg_crosshairdotdiameter.value;
+	ringw = ringh = cg_crosshairringdiameter.value;
 
 	/* pulse the size of the crosshair when picking up items */
 	f = cg.time - cg.itemPickupBlendTime;
 	if(f > 0 && f < ITEM_BLOB_TIME){
-		f	/= ITEM_BLOB_TIME;
-		w	*= (1 + f);
-		h	*= (1 + f);
+		f /= ITEM_BLOB_TIME;
+		dotw *= (1 + f);
+		doth *= (1 + f);
+		ringw *= (1 + f);
+		ringh *= (1 + f);
 	}
 
-	x	= cg_crosshairX.integer;
-	y	= cg_crosshairY.integer;
-	CG_AdjustFrom640(&x, &y, &w, &h);
+	x = cg_crosshairX.integer;
+	y = cg_crosshairY.integer;
+	CG_AdjustFrom640(&x, &y, &dotw, &doth);
+	CG_AdjustFrom640(&x, &y, &ringw, &ringh);
 
-	ca = cg_drawCrosshair.integer;
-	if(ca < 1)
-		return;
-	hShader = cgs.media.crosshairShader[ (ca - 1) % NUM_CROSSHAIRS ];
+	/* FIXME */
+	dot = trap_R_RegisterShader(Pxhairs "/dot");
+	ring = trap_R_RegisterShader(Pxhairs "/ring");
 
-	trap_R_DrawStretchPic(x + cg.refdef.x + 0.5 * (cg.refdef.width - w),
-		y + cg.refdef.y + 0.5 * (cg.refdef.height - h),
-		w, h, 0, 0, 1, 1, hShader);
+	trap_R_SetColor(c1);
+	trap_R_DrawStretchPic(x + cg.refdef.x + 0.5 * (cg.refdef.width - dotw),
+		y + cg.refdef.y + 0.5 * (cg.refdef.height - doth),
+		dotw, doth, 0, 0, 1, 1, dot);
+	trap_R_DrawStretchPic(x + cg.refdef.x + 0.5 * (cg.refdef.width - ringw),
+		y + cg.refdef.y + 0.5 * (cg.refdef.height - ringh),
+		ringw, ringh, 0, 0, 1, 1, ring);
+	trap_R_SetColor(nil);
 }
 
+/* FIXME: implement this with new crosshairs */
 static void
 CG_DrawCrosshair3D(void)
 {
@@ -1854,7 +1860,7 @@ CG_DrawCrosshair3D(void)
 	if(cg.renderingThirdPerson)
 		return;
 
-	w = cg_crosshairSize.value;
+	//w = cg_crosshairSize.value;
 
 	/* pulse the size of the crosshair when picking up items */
 	f = cg.time - cg.itemPickupBlendTime;

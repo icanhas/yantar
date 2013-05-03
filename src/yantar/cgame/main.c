@@ -92,9 +92,16 @@ Vmcvar	cg_drawCrosshair;
 Vmcvar	cg_drawCrosshairNames;
 Vmcvar	cg_drawdmgindicator;
 Vmcvar	cg_drawRewards;
-Vmcvar	cg_crosshairSize;
 Vmcvar	cg_crosshairX;
 Vmcvar	cg_crosshairY;
+Vmcvar	cg_crosshairstrokeinner;
+Vmcvar	cg_crosshairstrokeouter;
+Vmcvar	cg_crosshairstrokewidth;
+Vmcvar	cg_crosshairdotdiameter;
+Vmcvar	cg_crosshairringdiameter;
+Vmcvar	cg_crosshairoutline;
+Vmcvar	cg_crosshaircolour1;
+Vmcvar	cg_crosshaircolour2;
 Vmcvar	cg_crosshairHealth;
 Vmcvar	cg_draw2D;
 Vmcvar	cg_drawStatus;
@@ -211,10 +218,16 @@ static Cvartable cvarTable[] = {
 	{ &cg_drawCrosshairNames, "cg_drawCrosshairNames", "1", CVAR_ARCHIVE },
 	{ &cg_drawdmgindicator, "cg_drawdmgindicator", "1", CVAR_ARCHIVE },
 	{ &cg_drawRewards, "cg_drawRewards", "1", CVAR_ARCHIVE },
-	{ &cg_crosshairSize, "cg_crosshairSize", "24", CVAR_ARCHIVE },
-	{ &cg_crosshairHealth, "cg_crosshairHealth", "1", CVAR_ARCHIVE },
 	{ &cg_crosshairX, "cg_crosshairX", "0", CVAR_ARCHIVE },
 	{ &cg_crosshairY, "cg_crosshairY", "0", CVAR_ARCHIVE },
+	/* .... */
+	{ &cg_crosshairstrokeinner, "cg_crosshairstrokeinner", "24", CVAR_ARCHIVE },
+	{ &cg_crosshairdotdiameter, "cg_crosshairdotdiameter", "6", CVAR_ARCHIVE },
+	{ &cg_crosshairringdiameter, "cg_crosshairringdiameter", "26", CVAR_ARCHIVE },
+	{ &cg_crosshaircolour1, "cg_crosshaircolour1", "ffffff99", CVAR_ARCHIVE },
+	{ &cg_crosshaircolour2, "cg_crosshaircolour2", "00000099", CVAR_ARCHIVE },
+	/* .... */
+	{ &cg_crosshairHealth, "cg_crosshairHealth", "1", CVAR_ARCHIVE },
 	{ &cg_brassTime, "cg_brassTime", "60000", CVAR_ARCHIVE },
 	{ &cg_simpleItems, "cg_simpleItems", "0", CVAR_ARCHIVE },
 	{ &cg_addMarks, "cg_marks", "1", CVAR_ARCHIVE },
