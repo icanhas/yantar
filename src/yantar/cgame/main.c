@@ -223,9 +223,10 @@ static Cvartable cvarTable[] = {
 	/* .... */
 	{ &cg_crosshairstrokeinner, "cg_crosshairstrokeinner", "24", CVAR_ARCHIVE },
 	{ &cg_crosshairdotdiameter, "cg_crosshairdotdiameter", "6", CVAR_ARCHIVE },
-	{ &cg_crosshairringdiameter, "cg_crosshairringdiameter", "26", CVAR_ARCHIVE },
-	{ &cg_crosshaircolour1, "cg_crosshaircolour1", "ffffff99", CVAR_ARCHIVE },
-	{ &cg_crosshaircolour2, "cg_crosshaircolour2", "00000099", CVAR_ARCHIVE },
+	{ &cg_crosshairringdiameter, "cg_crosshairringdiameter", "32", CVAR_ARCHIVE },
+	{ &cg_crosshairoutline, "cg_crosshairoutline", "3.95", CVAR_ARCHIVE },
+	{ &cg_crosshaircolour1, "cg_crosshaircolour1", "fff", CVAR_ARCHIVE },
+	{ &cg_crosshaircolour2, "cg_crosshaircolour2", "000000bb", CVAR_ARCHIVE },
 	/* .... */
 	{ &cg_crosshairHealth, "cg_crosshairHealth", "1", CVAR_ARCHIVE },
 	{ &cg_brassTime, "cg_brassTime", "60000", CVAR_ARCHIVE },

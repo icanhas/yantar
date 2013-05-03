@@ -1783,7 +1783,7 @@ CG_DrawCenterString(void)
 static void
 CG_DrawCrosshair(void)
 {
-	Scalar dotw, doth, ringw, ringh;
+	Scalar dotw, doth, ringw, ringh, outline;
 	Handle hShader;
 	float f;
 	float x, y;
@@ -1806,6 +1806,7 @@ CG_DrawCrosshair(void)
 
 	dotw = doth = cg_crosshairdotdiameter.value;
 	ringw = ringh = cg_crosshairringdiameter.value;
+	outline = cg_crosshairoutline.value;
 
 	/* pulse the size of the crosshair when picking up items */
 	f = cg.time - cg.itemPickupBlendTime;
@@ -1826,6 +1827,25 @@ CG_DrawCrosshair(void)
 	dot = trap_R_RegisterShader(Pxhairs "/dot");
 	ring = trap_R_RegisterShader(Pxhairs "/ring");
 
+	/*
+	 * Draw the outlines
+	 */
+	trap_R_SetColor(c2);
+	trap_R_DrawStretchPic(x + cg.refdef.x + 0.5 * (cg.refdef.width - dotw - outline),
+		y + cg.refdef.y + 0.5 * (cg.refdef.height - doth - outline),
+		dotw + outline, doth + outline, 0, 0, 1, 1, dot);
+	trap_R_DrawStretchPic(x + cg.refdef.x + 0.5 * (cg.refdef.width - ringw - outline),
+		y + cg.refdef.y + 0.5 * (cg.refdef.height - ringh - outline),
+		ringw + outline, ringh + outline, 0, 0, 1, 1, ring);
+	trap_R_DrawStretchPic(x + cg.refdef.x + 0.5 * (cg.refdef.width - dotw + outline),
+		y + cg.refdef.y + 0.5 * (cg.refdef.height - doth + outline),
+		dotw - outline, doth - outline, 0, 0, 1, 1, dot);
+	trap_R_DrawStretchPic(x + cg.refdef.x + 0.5 * (cg.refdef.width - ringw + outline),
+		y + cg.refdef.y + 0.5 * (cg.refdef.height - ringh + outline),
+		ringw - outline, ringh - outline, 0, 0, 1, 1, ring);
+	/*
+	 * Draw the main parts
+	 */
 	trap_R_SetColor(c1);
 	trap_R_DrawStretchPic(x + cg.refdef.x + 0.5 * (cg.refdef.width - dotw),
 		y + cg.refdef.y + 0.5 * (cg.refdef.height - doth),
