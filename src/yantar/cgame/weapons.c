@@ -1171,6 +1171,9 @@ CG_AddPlayerWeapon(Refent *parent, Playerstate *ps, Centity *cent,
 	CG_RegisterWeapon(weaponNum);
 	weapon = &cg_weapons[weaponNum];
 
+	/* make sure we aren't looking at cg.predictedPlayerEntity for LG */
+	nonPredictedCent = &cg_entities[cent->currentState.clientNum];
+
 	/* add the weapon */
 	memset(&gun, 0, sizeof(gun));
 	copyv3(parent->lightingOrigin, gun.lightingOrigin);
@@ -1210,9 +1213,15 @@ CG_AddPlayerWeapon(Refent *parent, Playerstate *ps, Centity *cent,
 				cent->lerpOrigin, vec3_origin,
 				weapon->readySound);
 	}
-
-	trap_R_LerpTag(&lerped, parent->hModel, parent->oldframe, parent->frame,
-		1.0 - parent->backlerp, "tag_weapon");
+	if(!cg_thirdperson.integer && nonPredictedCent->currentState.number == cg.predictedPlayerState.clientNum){
+		/* In first-person we use tag_viewmodel */
+		trap_R_LerpTag(&lerped, parent->hModel, parent->oldframe, parent->frame,
+			1.0 - parent->backlerp, "tag_viewmodel");
+	}else{
+		/* Else, we use tag_weapon */
+		trap_R_LerpTag(&lerped, parent->hModel, parent->oldframe, parent->frame,
+			1.0 - parent->backlerp, "tag_weapon");
+	}
 	copyv3(parent->origin, gun.origin);
 
 	saddv3(gun.origin, lerped.origin[0], parent->axis[0], gun.origin);
@@ -1249,9 +1258,6 @@ CG_AddPlayerWeapon(Refent *parent, Playerstate *ps, Centity *cent,
 
 		CG_AddWeaponWithPowerups(&barrel, cent->currentState.powerups);
 	}
-
-	/* make sure we aren't looking at cg.predictedPlayerEntity for LG */
-	nonPredictedCent = &cg_entities[cent->currentState.clientNum];
 	/* 
 	 * if the index of the nonPredictedCent is not the same as the clientNum
 	 * then this is a fake player (like on the single player podiums), so
