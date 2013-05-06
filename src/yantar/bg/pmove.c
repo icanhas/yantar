@@ -625,8 +625,6 @@ correctallsolid(Pmove *pm, Pml *pml, Trace *trace)
 					/* FIXME: we don't care about the ground at present */
 					if(0)
 						pml->groundTrace = *trace;
-					else
-						pml->groundTrace = qfalse;
 					return qtrue;
 				}
 			}
@@ -1286,7 +1284,7 @@ PmoveSingle(Pmove *pm)
 
 	setplayerbounds(pm, &pml);
 	droptimers(pm, &pml);
-	groundtrace(pm, &pml);	/* set groundentity */
+	//groundtrace(pm, &pml);	/* set groundentity */
 	
 	if(pm->ps->pm_type == PM_DEAD)
 		deadmove(pm, &pml);
