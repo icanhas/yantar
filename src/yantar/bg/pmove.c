@@ -24,6 +24,7 @@ static const Scalar pm_duckScale	= 0.25f;
 static const Scalar pm_swimScale	= 0.50f;
 static const Scalar pm_accelerate	= 10.0f;
 static const Scalar pm_airaccelerate	= 1.0f;
+static const Scalar pm_brakeforce	= 2.0f;
 static const Scalar pm_wateraccelerate	= 4.0f;
 static const Scalar pm_flyaccelerate	= 8.0f;
 static const Scalar pm_friction		= 6.0f;
@@ -141,7 +142,7 @@ q2accelerate(Pmove *pm, Pml *pml, Vec3 wishdir, float wishspeed, float accel)
 
 	currentspeed = dotv3(pm->ps->velocity, wishdir);
 	addspeed = wishspeed;
-	if(addspeed <= 0)
+	if(addspeed < 0)
 		return;
 	accelspeed = accel*pml->frametime*wishspeed;
 	if(accelspeed > addspeed)
@@ -418,11 +419,13 @@ static ID_INLINE void
 _airmove(Pmove *pm, Pml *pml, const Usrcmd *cmd, Vec3 *wvel, Vec3 *wdir, float *wspeed)
 {
 	uint i;
-	float fm, sm, um, scale;
+	Scalar fm, sm, um, scale, wishspeed;
+	Vec3 wishvel, wishdir;
 	
 	fm = cmd->forwardmove;
 	sm = cmd->rightmove;
 	um = cmd->upmove;
+	wishspeed = 0.0f;
 	scale = calccmdscale(pm, pml, cmd);
 	setmovedir(pm, pml);
 	/* project moves down to flat plane */
@@ -430,20 +433,37 @@ _airmove(Pmove *pm, Pml *pml, const Usrcmd *cmd, Vec3 *wvel, Vec3 *wdir, float *
 	normv3(pml->right);
 	normv3(pml->up);
 	for(i = 0; i < 3; i++)
-		(*wvel)[i] = pml->forward[i]*fm + pml->right[i]*sm + pml->up[i]*um;
-	copyv3(*wvel, *wdir);
-	*wspeed = normv3(*wdir);
-	*wspeed *= scale;
+		(wishvel)[i] = pml->forward[i]*fm + pml->right[i]*sm + pml->up[i]*um;
+	wishspeed = lenv3(wishvel);
+	if(wvel != nil)
+		copyv3(wishvel, *wvel);
+	if(wdir != nil){
+		copyv3(wishvel, *wdir);
+		normv3(*wdir);
+	}
+	if(wspeed != nil)
+		*wspeed = wishspeed * scale;
 }
 
-/* FIXME */
 static void
 brakemove(Pmove *pm, Pml *pml)
 {
-	float	amt;
+	Vec3 bk, wdir;
+	Scalar frac, currspeed;
 
-	amt = 4.0 * (float)pm->cmd.brakefrac / 127.0f;
-	q2accelerate(pm, pml, pm->ps->velocity, amt, -1);
+	copyv3(pm->ps->velocity, bk);
+	invv3(bk);
+	currspeed = normv3(bk);
+	_airmove(pm, pml, &pm->cmd, nil, &wdir, nil);
+	addv3(wdir, bk, wdir);
+	frac = (Scalar)pm->cmd.brakefrac / 127.0f;
+	if(1)	
+		/* feels rigid but difficult to control at high speeds, abruptly stops at zero */
+		accelerate(pm, pml, wdir, frac*pm->ps->speed, pm_brakeforce);
+	else	
+		/* slidey, brakes well at high speeds, has 'drift' bug */
+		accelerate(pm, pml, wdir, frac*currspeed, pm_brakeforce);
+	PM_StepSlideMove(pm, pml, qtrue);
 }
 
 static void
@@ -1278,14 +1298,13 @@ PmoveSingle(Pmove *pm)
 		waterjumpmove(pm, &pml);
 	else if(pm->waterlevel > 1)	/* swimming */
 		watermove(pm, &pml);
+	else if(pm->cmd.brakefrac > 0)
+		brakemove(pm, &pml);
 	else{	/* airborne */
 		airmove(pm, &pml);
 		pm->ps->grapplelast = qfalse;
 		pm->ps->oldgrapplelen = 0.0f;
 	}
-	
-	if(pm->cmd.brakefrac > 0)
-		brakemove(pm, &pml);
 
 	animate(pm, &pml);
 	for(sl = 0; sl < WSnumslots; ++sl)
