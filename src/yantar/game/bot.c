@@ -565,12 +565,6 @@ G_AddBot(const char *name, float skill, const char *team, int delay,
 	key = "team_headmodel";
 	Info_SetValueForKey(userinfo, key, headmodel);
 
-	key = "gender";
-	s = Info_ValueForKey(botinfo, key);
-	if(!*s)
-		s = "male";
-	Info_SetValueForKey(userinfo, "sex", s);
-
 	key = "color1";
 	s = Info_ValueForKey(botinfo, key);
 	if(!*s)

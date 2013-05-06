@@ -83,7 +83,6 @@ parseanimfile(const char *filename, Clientinfo *ci)
 
 	ci->footsteps = FOOTSTEP_NORMAL;
 	clearv3(ci->headOffset);
-	ci->gender = GENDER_MALE;
 	ci->fixedlegs	= qfalse;
 	ci->fixedtorso	= qfalse;
 
@@ -119,17 +118,6 @@ parseanimfile(const char *filename, Clientinfo *ci)
 					break;
 				ci->headOffset[i] = atof(tok);
 			}
-			continue;
-		}else if(!Q_stricmp(tok, "sex")){
-			tok = Q_readtok(&txtp);
-			if(!tok)
-				break;
-			if(tok[0] == 'f' || tok[0] == 'F')
-				ci->gender = GENDER_FEMALE;
-			else if(tok[0] == 'n' || tok[0] == 'N')
-				ci->gender = GENDER_NEUTER;
-			else
-				ci->gender = GENDER_MALE;
 			continue;
 		}else if(!Q_stricmp(tok, "fixedlegs")){
 			ci->fixedlegs = qtrue;
@@ -513,7 +501,6 @@ cpclientinfomodel(Clientinfo *from, Clientinfo *to)
 {
 	copyv3(from->headOffset, to->headOffset);
 	to->footsteps = from->footsteps;
-	to->gender = from->gender;
 	to->hullmodel = from->hullmodel;
 	to->hullskin = from->hullskin;
 	to->modelIcon = from->modelIcon;

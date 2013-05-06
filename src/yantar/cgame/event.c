@@ -64,7 +64,6 @@ CG_Obituary(Entstate *ent)
 	const char	*attackerInfo;
 	char	targetName[32];
 	char	attackerName[32];
-	Gender gender;
 	Clientinfo *ci;
 
 	target = ent->otherEntityNum;
@@ -123,47 +122,21 @@ CG_Obituary(Entstate *ent)
 	}
 
 	if(attacker == target){
-		gender = ci->gender;
 		switch(mod){
 		case MOD_GRENADE_SPLASH:
-			if(gender == GENDER_FEMALE)
-				message = "tripped on her own grenade";
-			else if(gender == GENDER_NEUTER)
-				message = "tripped on its own grenade";
-			else
-				message = "tripped on his own grenade";
+			message = "caught its own grenade";
 			break;
 		case MOD_ROCKET_SPLASH:
-			if(gender == GENDER_FEMALE)
-				message = "blew herself up";
-			else if(gender == GENDER_NEUTER)
-				message = "blew itself up";
-			else
-				message = "blew himself up";
+			message = "blew itself up";
 			break;
 		case MOD_PLASMA_SPLASH:
-			if(gender == GENDER_FEMALE)
-				message = "melted herself";
-			else if(gender == GENDER_NEUTER)
-				message = "melted itself";
-			else
-				message = "melted himself";
+			message = "melted itself";
 			break;
 		case MOD_PROXIMITY_MINE:
-			if(gender == GENDER_FEMALE)
-				message = "found her prox mine";
-			else if(gender == GENDER_NEUTER)
-				message = "found its prox mine";
-			else
-				message = "found his prox mine";
+			message = "found its prox mine";
 			break;
 		default:
-			if(gender == GENDER_FEMALE)
-				message = "killed herself";
-			else if(gender == GENDER_NEUTER)
-				message = "killed itself";
-			else
-				message = "killed himself";
+			message = "killed itself";
 			break;
 		}
 	}

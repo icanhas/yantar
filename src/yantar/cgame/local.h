@@ -326,7 +326,6 @@ typedef struct {
 
 	Vec3		headOffset;	/* move head in icon views */
 	Footstep	footsteps;
-	Gender	gender;	/* from model */
 
 	Handle hullmodel;	/* craft body */
 	Handle hullskin;

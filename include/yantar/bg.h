@@ -103,13 +103,6 @@ typedef enum {
 	GT_MAX_GAME_TYPE
 } Gametype;
 
-/* FIXME: remarkably, machines don't have genders */
-typedef enum { 
-	GENDER_MALE, 
-	GENDER_FEMALE, 
-	GENDER_NEUTER 
-} Gender;
-
 /*
  * pmove module
  *

@@ -458,7 +458,6 @@ typedef struct voiceChat_s {
 
 typedef struct voiceChatList_s {
 	char		name[64];
-	int		gender;
 	int		numVoiceChats;
 	voiceChat_t	voiceChats[MAX_VOICECHATS];
 } voiceChatList_t;
@@ -520,19 +519,7 @@ CG_ParseVoiceChats(const char *filename, voiceChatList_t *voiceChatList,
 	token = Q_readtok2(p, qtrue);
 	if(!token || token[0] == 0)
 		return qtrue;
-	if(!Q_stricmp(token, "female"))
-		voiceChatList->gender = GENDER_FEMALE;
-	else if(!Q_stricmp(token, "male"))
-		voiceChatList->gender = GENDER_MALE;
-	else if(!Q_stricmp(token, "neuter"))
-		voiceChatList->gender = GENDER_NEUTER;
-	else{
-		trap_Print(va(S_COLOR_RED
-				"expected gender not found in voice chat file: %s\n",
-				filename));
-		return qfalse;
-	}
-
+	
 	voiceChatList->numVoiceChats = 0;
 	while(1){
 		token = Q_readtok2(p, qtrue);
@@ -683,7 +670,7 @@ voiceChatList_t *
 CG_VoiceChatListForClient(int clientNum)
 {
 	Clientinfo *ci;
-	int	voiceChatNum, i, j, k, gender;
+	int	voiceChatNum, i, j, k;
 	char	filename[MAX_QPATH], headModelName[MAX_QPATH];
 
 	if(clientNum < 0 || clientNum >= MAX_CLIENTS)
@@ -737,8 +724,8 @@ CG_VoiceChatListForClient(int clientNum)
 						       voiceChatNum];
 			}
 	}
-	gender = ci->gender;
 	for(k = 0; k < 2; k++){
+#if 0
 		/* just pick the first with the right gender */
 		for(i = 0; i < MAX_VOICEFILES; i++){
 			if(strlen(voiceChatLists[i].name))
@@ -768,6 +755,7 @@ CG_VoiceChatListForClient(int clientNum)
 		if(gender == GENDER_MALE)
 			break;
 		gender = GENDER_MALE;
+#endif
 	}
 	/* store this head model with voice chat for future reference */
 	for(j = 0; j < MAX_HEADMODELS; j++)
