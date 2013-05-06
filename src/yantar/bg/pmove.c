@@ -622,7 +622,11 @@ correctallsolid(Pmove *pm, Pml *pml, Trace *trace)
 						pm->mins, pm->maxs, point,
 						pm->ps->clientNum,
 						pm->tracemask);
-					pml->groundTrace = *trace;
+					/* FIXME: we don't care about the ground at present */
+					if(0)
+						pml->groundTrace = *trace;
+					else
+						pml->groundTrace = qfalse;
 					return qtrue;
 				}
 			}
