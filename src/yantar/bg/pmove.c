@@ -1304,6 +1304,9 @@ PmoveSingle(Pmove *pm)
 		brakemove(pm, &pml);
 	else{	/* airborne */
 		airmove(pm, &pml);
+	}
+	
+	if(!(pm->ps->pm_flags & PMF_GRAPPLE_PULL)){
 		pm->ps->grapplelast = qfalse;
 		pm->ps->oldgrapplelen = 0.0f;
 	}
