@@ -74,7 +74,6 @@ Cvar *cl_autoRecordDemo;
 Cvar *cl_aviFrameRate;
 Cvar *cl_aviMotionJpeg;
 Cvar *cl_forceavidemo;
-Cvar *cl_freelook;
 Cvar *cl_sensitivity;
 Cvar *cl_mouseAccel;
 Cvar *cl_mouseAccelOffset;
@@ -3065,7 +3064,6 @@ clinit(void)
 	cl_run = cvarget ("cl_run", "1", CVAR_ARCHIVE);
 	cl_sensitivity	= cvarget ("sensitivity", "5", CVAR_ARCHIVE);
 	cl_mouseAccel	= cvarget ("cl_mouseAccel", "0", CVAR_ARCHIVE);
-	cl_freelook = cvarget("cl_freelook", "1", CVAR_ARCHIVE);
 
 	/* 0: legacy mouse acceleration
 	 * 1: new implementation */

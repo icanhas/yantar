@@ -343,7 +343,6 @@ extern Cvar *cl_run;
 extern Cvar *cl_anglespeedkey;
 
 extern Cvar *cl_sensitivity;
-extern Cvar *cl_freelook;
 
 extern Cvar *cl_mouseAccel;
 extern Cvar *cl_mouseAccelOffset;

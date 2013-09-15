@@ -39,7 +39,7 @@ static uint frame_msec;
 static int old_com_frameTime;
 static Kbutton left, right, forward, back;
 static Kbutton lookup, lookdown, moveleft, moveright;
-static Kbutton strafe, speed, brake;
+static Kbutton speed, brake;
 static Kbutton up, down;
 static Kbutton rollleft, rollright;
 #ifdef USE_VOIP
@@ -167,9 +167,7 @@ keybangles(const Vec3 initial, Vec3 out)
 	else
 		spd = 0.001 * cls.realframetime;
 
-	if(!strafe.active){
-		out[YAW] -= spd * ys * (keystate(&right) - keystate(&left));
-	}
+	out[YAW] -= spd * ys * (keystate(&right) - keystate(&left));
 	out[PITCH] -= spd * ps * (keystate(&lookup) - keystate(&lookdown));
 	out[ROLL] += spd * rs * (keystate(&rollright) - keystate(&rollleft));
 }
@@ -195,11 +193,6 @@ keymove(Usrcmd *cmd)
 	}else{
 		cmd->buttons |= BUTTON_WALKING;
 		mvspeed = 64;
-	}
-
-	if(strafe.active){
-		side += mvspeed * keystate(&right);
-		side -= mvspeed * keystate(&left);
 	}
 
 	side += mvspeed * keystate(&moveright);
@@ -254,21 +247,10 @@ joystickmove(Usrcmd *cmd, const Vec3 initialangles, Vec3 angles)
 	else
 		anglespeed = 0.001 * cls.realframetime;
 
-	if(!strafe.active){
-		angles[YAW] += anglespeed * j_yaw->value *
-				      cl.joystickAxis[j_yaw_axis->integer];
-		cmd->rightmove =
-			clampchar(cmd->rightmove +
-				(int)(j_side->value *
-				      cl.joystickAxis[j_side_axis->integer]));
-	}else{
-		angles[YAW] += anglespeed * j_side->value *
-				      cl.joystickAxis[j_side_axis->integer];
-		cmd->rightmove =
-			clampchar(cmd->rightmove +
-				(int)(j_yaw->value *
-				      cl.joystickAxis[j_yaw_axis->integer]));
-	}
+	angles[YAW] += anglespeed * j_yaw->value *
+		cl.joystickAxis[j_yaw_axis->integer];
+	cmd->rightmove = clampchar(cmd->rightmove +
+		(int)(j_side->value * cl.joystickAxis[j_side_axis->integer]));
 
 	if(mlooking){
 		angles[PITCH] += anglespeed * j_forward->value *
@@ -368,16 +350,8 @@ mousemove(Usrcmd *cmd, const Vec3 initialangles, Vec3 angles)
 	my *= cl.cgameSensitivity;
 
 	/* add mouse X/Y movement to cmd */
-	if(strafe.active)
-		cmd->rightmove = clampchar(cmd->rightmove + m_side->value * mx);
-	else
-		angles[YAW] -= m_yaw->value * mx;
-
-	if((mlooking || cl_freelook->integer) && !strafe.active)
-		angles[PITCH] += m_pitch->value * my;
-	else
-		cmd->forwardmove = clampchar(
-			cmd->forwardmove - m_forward->value * my);
+	angles[YAW] -= m_yaw->value * mx;
+	angles[PITCH] += m_pitch->value * my;
 }
 
 static void
@@ -860,18 +834,6 @@ BrakeUp(void)
 	keyup(&brake);
 }
 
-static void
-StrafeDown(void)
-{
-	keydown(&strafe);
-}
-
-static void
-StrafeUp(void)
-{
-	keyup(&strafe);
-}
-
 #ifdef USE_VOIP
 static void
 VoipRecordDown(void)
@@ -1135,8 +1097,6 @@ clinitInput(void)
 	cmdadd("-lookup", LookupUp);
 	cmdadd("+lookdown", LookdownDown);
 	cmdadd("-lookdown", LookdownUp);
-	cmdadd("+strafe", StrafeDown);
-	cmdadd("-strafe", StrafeUp);
 	cmdadd("+moveleft", MoveleftDown);
 	cmdadd("-moveleft", MoveleftUp);
 	cmdadd("+moveright", MoverightDown);
@@ -1216,8 +1176,6 @@ clshutdownInput(void)
 	cmdremove("-lookup");
 	cmdremove("+lookdown");
 	cmdremove("-lookdown");
-	cmdremove("+strafe");
-	cmdremove("-strafe");
 	cmdremove("+moveleft");
 	cmdremove("-moveleft");
 	cmdremove("+moveright");
