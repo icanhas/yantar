@@ -783,7 +783,7 @@ CG_DrawTimer(float y)
 	return y + BIGCHAR_HEIGHT + 4;
 }
 
-/* FIXME: is this correct? */
+/* FIXME: this is well wrong, like */
 static float
 CG_Drawspeed(float y)
 {
@@ -792,7 +792,7 @@ CG_Drawspeed(float y)
 	int w;
 	
 	speed = lenv3(cg.snap->ps.velocity);
-	s = va("%.2f m/s", speed/100.0f);
+	s = va("%.2f km/h", ((speed/100.0f)/1000.0f)*60.0f*60.0f);
 	w = CG_DrawStrlen(s) * BIGCHAR_WIDTH;
 	CG_DrawBigString(635 - w, y + 2, s, 1.0f);
 	return y + BIGCHAR_HEIGHT + 4;
