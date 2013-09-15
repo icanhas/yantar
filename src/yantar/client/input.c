@@ -1105,12 +1105,6 @@ RollRightUp(void)
 }
 
 static void
-centerview(void)
-{
-	cl.viewangles[PITCH] = -SHORT2ANGLE(cl.snap.ps.delta_angles[PITCH]);
-}
-
-static void
 mlookdown(void)
 {
 	mlooking = qtrue;
@@ -1120,14 +1114,11 @@ static void
 mlookup(void)
 {
 	mlooking = qfalse;
-	if(!cl_freelook->integer)
-		centerview();
 }
 
 void
 clinitInput(void)
 {
-	cmdadd("centerview", centerview);
 	cmdadd("+moveup", UpDown);
 	cmdadd("-moveup", UpUp);
 	cmdadd("+movedown", DownDown);
@@ -1209,7 +1200,6 @@ clinitInput(void)
 void
 clshutdownInput(void)
 {
-	cmdremove("centerview");
 	cmdremove("+moveup");
 	cmdremove("-moveup");
 	cmdremove("+movedown");
