@@ -38,7 +38,7 @@ static uint frame_msec;
 static int old_com_frameTime;
 static Kbutton left, right, forward, back;
 static Kbutton lookup, lookdown, moveleft, moveright;
-static Kbutton speed, brake;
+static Kbutton brake;
 static Kbutton up, down;
 static Kbutton rollleft, rollright;
 #ifdef USE_VOIP
@@ -161,10 +161,7 @@ keybangles(const Vec3 initial, Vec3 out)
 	ys = cl_yawspeed->value;
 	ps = cl_pitchspeed->value;
 	rs = cl_rollspeed->value;
-	if(speed.active)
-		spd = 0.001 * cls.realframetime * cl_anglespeedkey->value;
-	else
-		spd = 0.001 * cls.realframetime;
+	spd = 0.001 * cls.realframetime * cl_anglespeedkey->value;
 
 	out[YAW] -= spd * ys * (keystate(&right) - keystate(&left));
 	out[PITCH] -= spd * ps * (keystate(&lookup) - keystate(&lookdown));
@@ -228,10 +225,7 @@ joystickmove(Usrcmd *cmd, const Vec3 initialangles, Vec3 angles)
 
 	copyv3(initialangles, angles);
 
-	if(speed.active)
-		anglespeed = 0.001 * cls.realframetime * cl_anglespeedkey->value;
-	else
-		anglespeed = 0.001 * cls.realframetime;
+	anglespeed = 0.001 * cls.realframetime * cl_anglespeedkey->value;
 
 	angles[YAW] += anglespeed * j_yaw->value *
 		cl.joystickAxis[j_yaw_axis->integer];
@@ -797,18 +791,6 @@ MoverightUp(void)
 }
 
 static void
-SpeedDown(void)
-{
-	keydown(&speed);
-}
-
-static void
-SpeedUp(void)
-{
-	keyup(&speed);
-}
-
-static void
 BrakeDown(void)
 {
 	keydown(&brake);
@@ -1087,8 +1069,6 @@ clinitInput(void)
 	cmdadd("-moveleft", MoveleftUp);
 	cmdadd("+moveright", MoverightDown);
 	cmdadd("-moveright", MoverightUp);
-	cmdadd("+speed", SpeedDown);
-	cmdadd("-speed", SpeedUp);
 	cmdadd("+brake", BrakeDown);
 	cmdadd("-brake", BrakeUp);
 	cmdadd("+attack", Button0Down);
@@ -1166,8 +1146,6 @@ clshutdownInput(void)
 	cmdremove("-moveleft");
 	cmdremove("+moveright");
 	cmdremove("-moveright");
-	cmdremove("+speed");
-	cmdremove("-speed");
 	cmdremove("+brake");
 	cmdremove("-brake");
 	cmdremove("+attack");
