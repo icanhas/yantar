@@ -80,12 +80,12 @@ BG_PlayerTouchesItem(Playerstate *ps, Entstate *item, int atTime)
 	BG_EvaluateTrajectory(&item->traj, atTime, origin);
 
 	/* we are ignoring ducked differences here */
-	if(ps->origin[0] - origin[0] > 42
-	   || ps->origin[0] - origin[0] < -42
-	   || ps->origin[1] - origin[1] > 42
-	   || ps->origin[1] - origin[1] < -42
-	   || ps->origin[2] - origin[2] > 42
-	   || ps->origin[2] - origin[2] < -42)
+	if(ps->origin[0] - origin[0] > ITEM_PICKUPRADIUS
+	   || ps->origin[0] - origin[0] < -ITEM_PICKUPRADIUS
+	   || ps->origin[1] - origin[1] > ITEM_PICKUPRADIUS
+	   || ps->origin[1] - origin[1] < -ITEM_PICKUPRADIUS
+	   || ps->origin[2] - origin[2] > ITEM_PICKUPRADIUS
+	   || ps->origin[2] - origin[2] < -ITEM_PICKUPRADIUS)
 	then{
 		return qfalse;
 	}

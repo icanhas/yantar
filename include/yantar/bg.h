@@ -24,7 +24,8 @@
 #define DEFAULT_SHOTGUN_SPREAD	700
 #define DEFAULT_SHOTGUN_COUNT	11
 
-#define ITEM_RADIUS		15	/* item sizes are needed for client side pickup detection */
+#define ITEM_RADIUS		16	/* item sizes are needed for client side pickup detection */
+#define ITEM_PICKUPRADIUS		42
 
 #define LIGHTNING_RANGE		768
 
