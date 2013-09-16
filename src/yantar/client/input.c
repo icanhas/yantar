@@ -32,7 +32,6 @@
 Cvar *cl_yawspeed;
 Cvar *cl_pitchspeed;
 Cvar *cl_rollspeed;
-Cvar *cl_run;
 Cvar *cl_anglespeedkey;
 
 static uint frame_msec;
@@ -182,19 +181,8 @@ keymove(Usrcmd *cmd)
 	side = 0;
 	_up = 0;
 	brk = 0;
-	/*
-	 * adjust for speed key / running
-	 * the walking flag is to keep animations consistant
-	 * even during acceleration and deceleration
-	 */
-	if(speed.active ^ cl_run->integer){
-		mvspeed = 127;
-		cmd->buttons &= ~BUTTON_WALKING;
-	}else{
-		cmd->buttons |= BUTTON_WALKING;
-		mvspeed = 64;
-	}
-
+	mvspeed = 127;
+	cmd->buttons &= ~BUTTON_WALKING;
 	side += mvspeed * keystate(&moveright);
 	side -= mvspeed * keystate(&moveleft);
 	_up += mvspeed * keystate(&up);
@@ -239,8 +227,6 @@ joystickmove(Usrcmd *cmd, const Vec3 initialangles, Vec3 angles)
 	float anglespeed;
 
 	copyv3(initialangles, angles);
-	if(!(speed.active ^ cl_run->integer))
-		cmd->buttons |= BUTTON_WALKING;
 
 	if(speed.active)
 		anglespeed = 0.001 * cls.realframetime * cl_anglespeedkey->value;

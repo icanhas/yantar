@@ -3061,7 +3061,6 @@ clinit(void)
 	cl_maxpackets	= cvarget ("cl_maxpackets", "30", CVAR_ARCHIVE);
 	cl_packetdup	= cvarget ("cl_packetdup", "1", CVAR_ARCHIVE);
 
-	cl_run = cvarget ("cl_run", "1", CVAR_ARCHIVE);
 	cl_sensitivity	= cvarget ("sensitivity", "5", CVAR_ARCHIVE);
 	cl_mouseAccel	= cvarget ("cl_mouseAccel", "0", CVAR_ARCHIVE);
 

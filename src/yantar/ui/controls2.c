@@ -152,7 +152,6 @@ typedef struct {
 	menuaction_s		turnleft;
 	menuaction_s		turnright;
 	menuaction_s		sidestep;
-	menuaction_s		run;
 	menuaction_s		machinegun;
 	menuaction_s		chainsaw;
 	menuaction_s		shotgun;
@@ -174,7 +173,6 @@ typedef struct {
 	menuradiobutton_s	invertmouse;
 	menuslider_s		sensitivity;
 	menuradiobutton_s	smoothmouse;
-	menuradiobutton_s	alwaysrun;
 	menuaction_s		showscores;
 	menuradiobutton_s	autoswitch;
 	menuaction_s		useitem;
@@ -212,9 +210,6 @@ static Bind	g_bindings[] =
 	{"+button2",            "use item",                     ID_USEITEM,
 	 ANIM_IDLE,              K_ENTER,                -1,
 	 -1, -1},
-	{"+speed",                      "run / walk",           ID_SPEED,
-	 ANIM_RUN,               K_SHIFT,                -1,
-	 -1,     -1},
 	{"+forward",            "walk forward",         ID_FORWARD,
 	 ANIM_WALK,              K_UPARROW,              -1,
 	 -1, -1},
@@ -294,8 +289,6 @@ static Bind	g_bindings[] =
 
 static configCvar g_configcvars[] =
 {
-	{"cl_run",                      0,
-	 0},
 	{"m_pitch",                     0,
 	 0},
 	{"cg_autoswitch",       0,                                      0},
@@ -310,8 +303,6 @@ static configCvar g_configcvars[] =
 
 static menucommon_s *g_movement_controls[] =
 {
-	(menucommon_s*)&s_controls.alwaysrun,
-	(menucommon_s*)&s_controls.run,
 	(menucommon_s*)&s_controls.walkforward,
 	(menucommon_s*)&s_controls.backpedal,
 	(menucommon_s*)&s_controls.stepleft,
@@ -854,8 +845,6 @@ Controls_GetConfig(void)
 		"m_pitch") < 0;
 	s_controls.smoothmouse.curvalue = UI_ClampCvar(
 		0, 1, Controls_GetCvarValue("m_filter"));
-	s_controls.alwaysrun.curvalue = UI_ClampCvar(
-		0, 1, Controls_GetCvarValue("cl_run"));
 	s_controls.autoswitch.curvalue = UI_ClampCvar(
 		0, 1, Controls_GetCvarValue("cg_autoswitch"));
 	s_controls.sensitivity.curvalue = UI_ClampCvar(
@@ -902,7 +891,6 @@ Controls_SetConfig(void)
 			fabs(trap_cvargetf("m_pitch")));
 
 	trap_cvarsetf("m_filter", s_controls.smoothmouse.curvalue);
-	trap_cvarsetf("cl_run", s_controls.alwaysrun.curvalue);
 	trap_cvarsetf("cg_autoswitch", s_controls.autoswitch.curvalue);
 	trap_cvarsetf("sensitivity", s_controls.sensitivity.curvalue);
 	trap_cvarsetf("in_joystick", s_controls.joyenable.curvalue);
@@ -936,8 +924,6 @@ Controls_SetDefaults(void)
 		"m_pitch") < 0;
 	s_controls.smoothmouse.curvalue = Controls_GetCvarDefault(
 		"m_filter");
-	s_controls.alwaysrun.curvalue = Controls_GetCvarDefault(
-		"cl_run");
 	s_controls.autoswitch.curvalue = Controls_GetCvarDefault(
 		"cg_autoswitch");
 	s_controls.sensitivity.curvalue = Controls_GetCvarDefault(
@@ -1380,13 +1366,6 @@ Controls_MenuInit(void)
 	s_controls.sidestep.generic.ownerdraw	= Controls_DrawKeyBinding;
 	s_controls.sidestep.generic.id		= ID_STRAFE;
 
-	s_controls.run.generic.type	= MTYPE_ACTION;
-	s_controls.run.generic.flags	= QMF_LEFT_JUSTIFY|QMF_PULSEIFFOCUS|
-					  QMF_GRAYED|QMF_HIDDEN;
-	s_controls.run.generic.callback = Controls_ActionEvent;
-	s_controls.run.generic.ownerdraw = Controls_DrawKeyBinding;
-	s_controls.run.generic.id = ID_SPEED;
-
 	s_controls.chainsaw.generic.type	= MTYPE_ACTION;
 	s_controls.chainsaw.generic.flags	= QMF_LEFT_JUSTIFY|
 						  QMF_PULSEIFFOCUS|
@@ -1554,14 +1533,6 @@ Controls_MenuInit(void)
 	s_controls.smoothmouse.generic.callback = Controls_MenuEvent;
 	s_controls.smoothmouse.generic.statusbar = Controls_StatusBar;
 
-	s_controls.alwaysrun.generic.type	= MTYPE_RADIOBUTTON;
-	s_controls.alwaysrun.generic.flags	= QMF_SMALLFONT;
-	s_controls.alwaysrun.generic.x = SCREEN_WIDTH/2;
-	s_controls.alwaysrun.generic.name	= "always run";
-	s_controls.alwaysrun.generic.id		= ID_ALWAYSRUN;
-	s_controls.alwaysrun.generic.callback	= Controls_MenuEvent;
-	s_controls.alwaysrun.generic.statusbar	= Controls_StatusBar;
-
 	s_controls.autoswitch.generic.type	= MTYPE_RADIOBUTTON;
 	s_controls.autoswitch.generic.flags	= QMF_SMALLFONT;
 	s_controls.autoswitch.generic.x = SCREEN_WIDTH/2;
@@ -1665,8 +1636,6 @@ Controls_MenuInit(void)
 	Menu_AddItem(&s_controls.menu, &s_controls.joyenable);
 	Menu_AddItem(&s_controls.menu, &s_controls.joythreshold);
 
-	Menu_AddItem(&s_controls.menu, &s_controls.alwaysrun);
-	Menu_AddItem(&s_controls.menu, &s_controls.run);
 	Menu_AddItem(&s_controls.menu, &s_controls.walkforward);
 	Menu_AddItem(&s_controls.menu, &s_controls.backpedal);
 	Menu_AddItem(&s_controls.menu, &s_controls.stepleft);
