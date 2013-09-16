@@ -373,11 +373,12 @@ specmove(Pmove *pm, Pml *pml)
 static void
 noclipmove(Pmove *pm, Pml *pml)
 {
-	float speed, drop, friction, control, newspeed;
-	float fmove, smove, wishspeed, scale;
+	Scalar speed, drop, friction, control, newspeed;
+	Scalar fmove, smove, umove, wishspeed, scale, frac;
 	uint i;
 	Vec3 wishvel, wishdir;
 
+	frac = 1.0f + 4.0f * (Scalar)pm->cmd.brakefrac / 127.0f;	/* braking multiplies vel */
 	pm->ps->viewheight = DEFAULT_VIEWHEIGHT;
 	/* friction */
 	speed = lenv3 (pm->ps->velocity);
@@ -400,11 +401,11 @@ noclipmove(Pmove *pm, Pml *pml)
 
 	/* accelerate */
 	scale = calccmdscale(pm, pml, &pm->cmd);
-	fmove = pm->cmd.forwardmove;
-	smove = pm->cmd.rightmove;
+	fmove = pm->cmd.forwardmove * frac;
+	smove = pm->cmd.rightmove * frac;
+	umove = pm->cmd.upmove * frac;
 	for(i=0; i<3; i++)
-		wishvel[i] = pml->forward[i]*fmove + pml->right[i]*smove;
-	wishvel[2] += pm->cmd.upmove;
+		wishvel[i] = pml->forward[i]*fmove + pml->right[i]*smove + pml->up[i]*umove;
 	copyv3(wishvel, wishdir);
 	wishspeed = normv3(wishdir);
 	wishspeed *= scale;
