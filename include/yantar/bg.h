@@ -13,7 +13,7 @@
  */
 #define GAME_VERSION		BASEGAME "-1"
 
-#define DEFAULT_GRAVITY		800
+#define DEFAULT_GRAVITY		0
 #define GIB_HEALTH		-40
 #define SHIELD_PROTECTION	0.66f
 
