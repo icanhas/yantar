@@ -205,7 +205,7 @@ CG_Item(Centity *cent)
 		memset(&ent, 0, sizeof(ent));
 		ent.reType = RT_SPRITE;
 		copyv3(cent->lerpOrigin, ent.origin);
-		ent.radius = 14 * cg_simpleItems.value;
+		ent.radius = 16 * cg_simpleItems.value;
 		ent.customShader = cg_items[es->modelindex].icon;
 		ent.shaderRGBA[0] = 255;
 		ent.shaderRGBA[1] = 255;
