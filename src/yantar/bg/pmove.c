@@ -27,10 +27,9 @@ static const Scalar pm_airaccelerate	= 1.0f;
 static const Scalar pm_brakeforce	= 2.0f;
 static const Scalar pm_wateraccelerate	= 4.0f;
 static const Scalar pm_flyaccelerate	= 8.0f;
-static const Scalar pm_friction		= 6.0f;
+static const Scalar pm_airfriction	= 0.08f;
 static const Scalar pm_waterfriction	= 1.0f;
-static const Scalar pm_flightfriction	= 0.2f;
-static const Scalar pm_spectatorfriction	= 5.0f;
+static const Scalar pm_spectatorfriction	= 6.0f;
 
 static void
 starttorsoanim(Pmove *pm, int anim)
@@ -96,7 +95,7 @@ dofriction(Pmove *pm, Pml *pml)
 	vel = pm->ps->velocity;
 	copyv3(vel, vec);
 	speed = lenv3(vec);
-	if(speed < 1){
+	if(speed < 0.1f){
 		vel[0] = 0;
 		vel[1] = 0;	/* allow sinking underwater */
 		vel[2] = 0;
@@ -104,22 +103,11 @@ dofriction(Pmove *pm, Pml *pml)
 		return;
 	}
 	drop = 0;
-	/* apply ground friction */
-	if(pm->waterlevel <= 1){
-		if(pml->walking && !(pml->groundTrace.surfaceFlags & SURF_SLICK))
-			/* if getting knocked back, no friction */
-			if(!(pm->ps->pm_flags & PMF_TIME_KNOCKBACK)){
-				control = speed < pm_stopspeed
-					? pm_stopspeed : speed;
-				drop += control*pm_friction*pml->frametime;
-			}
-	}
+	/* apply air  friction */
+	drop += speed*pm_airfriction*pml->frametime;
 	if(pm->waterlevel)
 		/* apply water friction even if just wading */
 		drop += speed * pm_waterfriction * pm->waterlevel * pml->frametime;
-	if(pm->ps->powerups[PW_FLIGHT])
-		/* apply flying friction */
-		drop += speed * pm_flightfriction * pml->frametime;
 	if(pm->ps->pm_type == PM_SPECTATOR)
 		drop += speed * pm_spectatorfriction * pml->frametime;
 	/* scale the velocity */
@@ -387,7 +375,7 @@ noclipmove(Pmove *pm, Pml *pml)
 	else{
 		drop = 0;
 
-		friction = pm_friction*1.5f;	/* extra friction */
+		friction = pm_spectatorfriction*1.5f;	/* extra friction */
 		control = speed < pm_stopspeed ? pm_stopspeed : speed;
 		drop += control * friction * pml->frametime;
 
