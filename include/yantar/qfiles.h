@@ -292,8 +292,7 @@ typedef struct {
 #define ANGLE_UP	-1
 #define ANGLE_DOWN	-2
 
-#define LIGHTMAP_WIDTH	128
-#define LIGHTMAP_HEIGHT 128
+#define LIGHTMAP_WIDTH	256
 
 #define MAX_WORLD_COORD (128*1024)
 #define MIN_WORLD_COORD (-128*1024)

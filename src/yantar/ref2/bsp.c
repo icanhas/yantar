@@ -180,7 +180,8 @@ ColorToRGBA16F(const Vec3 color, unsigned short rgba16f[4])
  * R_LoadLightmaps
  *
  */
-#define DEFAULT_LIGHTMAP_SIZE	128
+#define DEFAULT_LIGHTMAP_SIZE	(LIGHTMAP_WIDTH)
+#define DEFAULT_FATLIGHTMAP_SIZE	(LIGHTMAP_WIDTH * 4)
 #define MAX_LIGHTMAP_PAGES	2
 static void
 R_LoadLightmaps(Lump *l, Lump *surfs)
@@ -234,7 +235,7 @@ R_LoadLightmaps(Lump *l, Lump *surfs)
 
 	/* use fat lightmaps of an appropriate size */
 	if(r_mergeLightmaps->integer){
-		tr.fatLightmapSize	= 512;
+		tr.fatLightmapSize	= DEFAULT_FATLIGHTMAP_SIZE;
 		tr.fatLightmapStep	= tr.fatLightmapSize / tr.lightmapSize;
 
 		/* at most MAX_LIGHTMAP_PAGES */
