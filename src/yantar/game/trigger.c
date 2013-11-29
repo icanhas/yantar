@@ -170,7 +170,13 @@ AimAtTarget(Gentity *self)
 	}
 
 	height	= ent->s.origin[2] - origin[2];
-	gravity = g_gravity.value;
+	/*
+	 * FIXME: this probably gives too much speed for gravity = 0
+	 */
+	if(g_gravity.integer != 0)
+		gravity = g_gravity.value;
+	else
+		gravity = 800;
 	time = sqrt(height / (.5 * gravity));
 	if(!time){
 		G_FreeEntity(self);
