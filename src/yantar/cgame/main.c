@@ -936,9 +936,9 @@ CG_RegisterGraphics(void)
 	if(cgs.gametype == GT_CTF || cgs.gametype == GT_1FCTF ||
 	   cg_buildScript.integer){
 		cgs.media.redFlagModel = trap_R_RegisterModel(
-			Pflagmodels "/r_flag");
+			Pflagmodels "/flag");
 		cgs.media.blueFlagModel = trap_R_RegisterModel(
-			Pflagmodels "/b_flag");
+			Pflagmodels "/flag");
 		cgs.media.redFlagShader[0] = trap_R_RegisterShaderNoMip(
 			Picons "/iconf_red1");
 		cgs.media.redFlagShader[1] = trap_R_RegisterShaderNoMip(
