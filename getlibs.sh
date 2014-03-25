@@ -32,7 +32,7 @@ curl -L -# http://downloads.sf.net/project/libccco/libccco-0.1.1.tar.bz2 | bunzi
 $make -s -j$procs install $libcccomkflags && $make tests $libcccomkflags)
 
 echo && echo mk zlib
-curl -# http://zlib.net/zlib-1.2.7.tar.gz | gunzip | tar xf -
+curl -# http://zlib.net/zlib-1.2.8.tar.gz | gunzip | tar xf -
 (cd zlib-1.2.7
 ./configure --prefix=$prefix --static
 $make -s -j$procs $zcross \
