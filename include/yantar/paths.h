@@ -68,7 +68,7 @@
 
 #define Phemgmodels	Pweapmodels "/heminigun"
 #define Plgmodels	Pweapmodels "/lightning"
-#define Pmgmodels	Pweapmodels "/machinegun"
+#define Pmgmodels	Pweapmodels "/minigun"
 #define Pmeleemodels	Pweapmodels "/melee"
 #define Pgrenademodels	Pweapmodels "/nadelauncher"
 #define Pproxmodels	Pweapmodels "/prox"

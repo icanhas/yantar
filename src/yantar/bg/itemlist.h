@@ -171,11 +171,11 @@ Gitem bg_itemlist[] =
 
 	/* QUAKED weapon_machinegun (.3 .3 1) (-16 -16 -16) (16 16 16) suspended */
 	{
-		"weapon_machinegun",
+		"weapon_minigun",
 		Pmiscsounds "/w_pkup",
-		{ Pmgmodels "/machinegun" },
-		 Picons "/machinegun",
-		 "Machinegun",
+		{ Pmgmodels "/minigun" },
+		 Picons "/minigun",
+		 "Minigun",
 		200,
 		IT_PRIWEAP,
 		Wmachinegun,

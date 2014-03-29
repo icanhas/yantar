@@ -1274,8 +1274,6 @@ CG_AddPlayerWeapon(Refent *parent, Playerstate *ps, Centity *cent,
 	/* impulse flash */
 	if(cg.time - cent->w[slot].muzzleFlashTime > MUZZLE_FLASH_TIME)
 		return;
-
-
 	memset(&flash, 0, sizeof(flash));
 	copyv3(parent->lightingOrigin, flash.lightingOrigin);
 	flash.shadowPlane = parent->shadowPlane;
